@@ -2,80 +2,124 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB3E8C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:39:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B762C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:39:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C575D2082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:39:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF69B21929
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:39:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553254767;
+	bh=y7orHly8pY4hOrfuf0vM8Bm1e8V3a83myHjWFa0wJLw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=eALGTqI2aia3L7jPY5p1vSaTin+jcMb3povezUaLNn6tXB+LSeJvats8IjVv5BdUU
+	 goC44KvYYqjX1vioSkahSy0SxKdYXV8fuV2iv4EGN5CQrYG5pFoSeINynltDLheAcj
+	 z3Y70FHj/kZxA9QbDWKNmuLUSXr+siAJekBIRLrg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730897AbfCVLjR (ORCPT
+        id S1731137AbfCVLjZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:39:17 -0400
-Received: from vegas.theobroma-systems.com ([144.76.126.164]:38533 "EHLO
-        mail.theobroma-systems.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731077AbfCVLjN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:39:13 -0400
-Received: from ip092042140082.rev.nessus.at ([92.42.140.82]:55278 helo=purcell.lan)
-        by mail.theobroma-systems.com with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA1:256)
-        (Exim 4.80)
-        (envelope-from <christoph.muellner@theobroma-systems.com>)
-        id 1h7IVj-0006yM-Qa; Fri, 22 Mar 2019 12:38:55 +0100
-From:   Christoph Muellner <christoph.muellner@theobroma-systems.com>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, heiko@sntech.de,
-        shawn.lin@rock-chips.com, ulf.hansson@linaro.org,
-        adrian.hunter@intel.com
-Cc:     Christoph Muellner <christoph.muellner@theobroma-systems.com>,
-        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Klaus Goger <klaus.goger@theobroma-systems.com>,
-        Lin Huang <hl@rock-chips.com>, Randy Li <ayaka@soulik.info>,
-        Tony Xie <tony.xie@rock-chips.com>,
-        Vicente Bergas <vicencb@gmail.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Subject: [PATCH v3 1/3] dt-bindings: mmc: Add disable-cqe-dcmd property.
-Date:   Fri, 22 Mar 2019 12:38:04 +0100
-Message-Id: <20190322113808.16858-1-christoph.muellner@theobroma-systems.com>
-X-Mailer: git-send-email 2.11.0
+        Fri, 22 Mar 2019 07:39:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41022 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731108AbfCVLjV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:39:21 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA59A2082C;
+        Fri, 22 Mar 2019 11:39:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553254761;
+        bh=y7orHly8pY4hOrfuf0vM8Bm1e8V3a83myHjWFa0wJLw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=u0IaTy1aGiE11wX4OGMmFbOYhDs7l0sc7IIPh4ETyg4QyEdzfquKHRDAWXeB6eLaF
+         v7JnByFHohfT85JhrLgnzINEVlrGU3iQpZoNCMlQuk8y3kr6AuJOOYpV2th4+96FPC
+         GOKswoSzwouX54LqJ2xlpyEq5ZTcsi8k4KhuIuIg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: [PATCH 4.4 226/230] media: uvcvideo: Avoid NULL pointer dereference at the end of streaming
+Date:   Fri, 22 Mar 2019 12:16:04 +0100
+Message-Id: <20190322111252.811811099@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
+References: <20190322111236.796964179@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add disable-cqe-dcmd as optional property for MMC hosts.
-This property allows to disable or not enable the direct command
-features of the command queue engine.
+4.4-stable review patch.  If anyone has any objections, please let me know.
 
-Signed-off-by: Christoph Muellner <christoph.muellner@theobroma-systems.com>
-Signed-off-by: Philipp Tomsich <philipp.tomsich@theobroma-systems.com>
+------------------
+
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+
+commit 9dd0627d8d62a7ddb001a75f63942d92b5336561 upstream.
+
+The UVC video driver converts the timestamp from hardware specific unit
+to one known by the kernel at the time when the buffer is dequeued. This
+is fine in general, but the streamoff operation consists of the
+following steps (among other things):
+
+1. uvc_video_clock_cleanup --- the hardware clock sample array is
+   released and the pointer to the array is set to NULL,
+
+2. buffers in active state are returned to the user and
+
+3. buf_finish callback is called on buffers that are prepared.
+   buf_finish includes calling uvc_video_clock_update that accesses the
+   hardware clock sample array.
+
+The above is serialised by a queue specific mutex. Address the problem
+by skipping the clock conversion if the hardware clock sample array is
+already released.
+
+Fixes: 9c0863b1cc48 ("[media] vb2: call buf_finish from __queue_cancel")
+
+Reported-by: Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>
+Tested-by: Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- Documentation/devicetree/bindings/mmc/mmc.txt | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/media/usb/uvc/uvc_video.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
-index cdbcfd3a4ff2..c269dbe384fe 100644
---- a/Documentation/devicetree/bindings/mmc/mmc.txt
-+++ b/Documentation/devicetree/bindings/mmc/mmc.txt
-@@ -64,6 +64,8 @@ Optional properties:
-   whether pwrseq-simple is used. Default to 10ms if no available.
- - supports-cqe : The presence of this property indicates that the corresponding
-   MMC host controller supports HW command queue feature.
-+- disable-cqe-dcmd: This property indicates that the MMC controller's command
-+  queue engine (CQE) does not support direct commands (DCMDs).
+--- a/drivers/media/usb/uvc/uvc_video.c
++++ b/drivers/media/usb/uvc/uvc_video.c
+@@ -638,6 +638,14 @@ void uvc_video_clock_update(struct uvc_s
+ 	if (!uvc_hw_timestamps_param)
+ 		return;
  
- *NOTE* on CD and WP polarity. To use common for all SD/MMC host controllers line
- polarity properties, we have to fix the meaning of the "normal" and "inverted"
--- 
-2.11.0
++	/*
++	 * We will get called from __vb2_queue_cancel() if there are buffers
++	 * done but not dequeued by the user, but the sample array has already
++	 * been released at that time. Just bail out in that case.
++	 */
++	if (!clock->samples)
++		return;
++
+ 	spin_lock_irqsave(&clock->lock, flags);
+ 
+ 	if (clock->count < clock->size)
+
 
