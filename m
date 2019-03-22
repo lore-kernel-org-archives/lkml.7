@@ -2,240 +2,274 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 524DEC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:50:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA8AAC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:51:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14F0721841
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:50:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90C0121841
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:51:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="DhfsOzmg"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bXCmqdMk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728650AbfCVPux (ORCPT
+        id S1728678AbfCVPvQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 11:50:53 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:33463 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727363AbfCVPuw (ORCPT
+        Fri, 22 Mar 2019 11:51:16 -0400
+Received: from mail-qk1-f202.google.com ([209.85.222.202]:54832 "EHLO
+        mail-qk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727363AbfCVPvP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 11:50:52 -0400
-Received: by mail-pg1-f195.google.com with SMTP id b12so1820949pgk.0
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 08:50:52 -0700 (PDT)
+        Fri, 22 Mar 2019 11:51:15 -0400
+Received: by mail-qk1-f202.google.com with SMTP id v2so2238704qkf.21
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 08:51:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=AM2zwyWctDQ2UX6SHcdI5QG21PJCaZEAyYeGKJYkSzU=;
-        b=DhfsOzmg8c0pXR0EphcZ6NyAftJb5+sZo/AsfxUdwz00vJ1BxEmOsOeHk3ZYQZYiF5
-         I12uB+SBhIums7U7IKigFO3I9sFdwZHu4LLM7swWD4JDAMgoRoOKAr774f3V7koUKSKy
-         2Lq7+vKxpKYixXWvcSzMJLUglpo5RchxFn4g4=
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=yUz3y/zqCbfeOFiLbP3Lq55devgNy7EQ14ho/1e7cgg=;
+        b=bXCmqdMkoVV++PgP0anhaNAJ8So6+rSMdfLApto1SqkbAfSqbdqGbQyrSMiFIhyJCA
+         YswP0mUnanDjEBjbZjdh2zxumEHNvja3fuNZTXyz+vVJYXFc0Idv891emys/ULPH1QjZ
+         Iw9uqC0328+QH2KZO7fdZJa17ynpNymArlEZWmcU7SzKEM43Irv/lB5wcF5D5rTL435S
+         rcqPNHA5ZjCLycJmFTyjU23ut/QF+DNhIMCbRAd/3AHyNACzgvkmGeRgkfAf4ascQkFu
+         VRRCSKV0UUrREcxduPo9F4KiTfJGNV8RlKEs+tShpTIKIuWFrU1+Yv0yn5PwYicyRKJJ
+         +54g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=AM2zwyWctDQ2UX6SHcdI5QG21PJCaZEAyYeGKJYkSzU=;
-        b=NnFuk2Ppjy8q8RQhbY/P3ObWD+4MlqxEDIkhfXBDdB/tOqaer3OAltoeevL7vpSW2M
-         Reswa77+KFVEA5mHcva3Aotl0722nM70lVYv14SN0oc0gsyP7oZ9Y4Urd+hGm/ws0JoJ
-         rz+oQlHWDlMawLJr2YZ84Lk1CpfC+h8VCK6rKjdOUhJdwBHfoeuxE6xXGrzO87MWXUyW
-         pHMlc4EdLu8DqeDT4riWx2O452AVp9t0aC/P59j5voAZM9ZELIrZXV3NV6CeBpICxLqb
-         cWTKNsYGv8UyGG5X2LoOxK4BKKXF25WpzDp/YLd+Q87sC04z7SfD8kBrcI+D6W3VqaaA
-         nmsQ==
-X-Gm-Message-State: APjAAAVEaD5ytj6AwyQhgGBnfvWvWgnfe/+Sy1m1IUPhruojlN6udOCI
-        mYtHrDJaTmEqYRY2a2/uuUwJYQ==
-X-Google-Smtp-Source: APXvYqymfoVkkzHX1gsyKJs1jP50kS7smzyYqHY8aBmNP179PXjoFl3HQxq8n9YPcWuNfO3l2VyENw==
-X-Received: by 2002:a63:fc49:: with SMTP id r9mr9427942pgk.447.1553269851637;
-        Fri, 22 Mar 2019 08:50:51 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id x13sm9251540pgr.87.2019.03.22.08.50.49
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 22 Mar 2019 08:50:50 -0700 (PDT)
-Date:   Fri, 22 Mar 2019 11:50:49 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        linux-kernel@vger.kernel.org,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>, tglx@linutronix.de,
-        Mike Galbraith <efault@gmx.de>
-Subject: Re: [PATCH v3] rcu: Allow to eliminate softirq processing from
- rcutree
-Message-ID: <20190322155049.GA86662@google.com>
-References: <20190320163532.mr32oi53iaueuizw@linutronix.de>
- <20190320173001.GM4102@linux.ibm.com>
- <20190320175952.yh6yfy64vaiurszw@linutronix.de>
- <20190320181210.GO4102@linux.ibm.com>
- <20190320181435.x3qyutwqllmq5zbk@linutronix.de>
- <20190320211333.eq7pwxnte7la67ph@linutronix.de>
- <20190320234601.GQ4102@linux.ibm.com>
- <20190321233244.GA11476@linux.ibm.com>
- <20190322134207.GA56461@google.com>
- <20190322145823.GM4102@linux.ibm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190322145823.GM4102@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=yUz3y/zqCbfeOFiLbP3Lq55devgNy7EQ14ho/1e7cgg=;
+        b=VZta1Q4oYlcBDKeRFpc8R8i5RpLZ4/SzBKVBZA+5gB/xZ/MnsjOLeQoDeEw1i5voAR
+         PjVpGivcAH9WUz5JRz/mu5m7VeU20xgdGSE0usW9l1FEvACt/ZZzFM6F6s8YnKOxY8QY
+         l/N/qIb3+wab1h+Ac3kIDUBRQUailXYbMRixZUffzQr2eoAnRz+cf6X3LjSl0wNb5Bj7
+         I+uCyOpk5q27+D6HauTUciviJKKgX5qtCbCyLnaln37CbNUjM/u/OI1DOteCSx5peuo+
+         hb9kMIUZ0S5Qe8cdSfVc5ahYuFnbulQANUUu2OQceZ5n515pagHBBY3GZifvYeszdsCu
+         eJIA==
+X-Gm-Message-State: APjAAAWL9Fdq1s9qZoavrSxT4D7kpDm3caU14kXrK4sslHqZ0cIMf0v2
+        6BLcFpr36b4aP96mrW/bJxMfMVBTgekfsXI=
+X-Google-Smtp-Source: APXvYqx1lOi+X0TXvG1ak5iG/8IAbp0LG/ylIQiPjgHJ5dOLYLpuGJ5zx9MnZ+d1i19F1/rVzYiOo5U62EACGVg=
+X-Received: by 2002:ac8:1be8:: with SMTP id m37mr1933756qtk.148.1553269874386;
+ Fri, 22 Mar 2019 08:51:14 -0700 (PDT)
+Date:   Fri, 22 Mar 2019 23:46:11 +0800
+Message-Id: <20190322154610.164564-1-liumartin@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
+Subject: [RFC PATCH] mm: readahead: add readahead_shift into backing device
+From:   Martin Liu <liumartin@google.com>
+To:     akpm@linux-foundation.org, fengguang.wu@intel.com, axboe@kernel.dk,
+        dchinner@redhat.com
+Cc:     jenhaochen@google.com, salyzyn@google.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        liumartin@google.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 22, 2019 at 07:58:23AM -0700, Paul E. McKenney wrote:
-[snip]
-> > > >  #ifdef CONFIG_RCU_NOCB_CPU
-> > > >  static cpumask_var_t rcu_nocb_mask; /* CPUs to have callbacks offloaded. */
-> > > > @@ -94,6 +72,8 @@ static void __init rcu_bootup_announce_oddness(void)
-> > > >  		pr_info("\tRCU debug GP init slowdown %d jiffies.\n", gp_init_delay);
-> > > >  	if (gp_cleanup_delay)
-> > > >  		pr_info("\tRCU debug GP init slowdown %d jiffies.\n", gp_cleanup_delay);
-> > > > +	if (!use_softirq)
-> > > > +		pr_info("\tRCU_SOFTIRQ processing moved to rcuc kthreads.\n");
-> > > >  	if (IS_ENABLED(CONFIG_RCU_EQS_DEBUG))
-> > > >  		pr_info("\tRCU debug extended QS entry/exit.\n");
-> > > >  	rcupdate_announce_bootup_oddness();
-> > > > @@ -629,7 +609,10 @@ static void rcu_read_unlock_special(struct task_struct *t)
-> > > >  		/* Need to defer quiescent state until everything is enabled. */
-> > > >  		if (irqs_were_disabled) {
-> > > >  			/* Enabling irqs does not reschedule, so... */
-> > > > -			raise_softirq_irqoff(RCU_SOFTIRQ);
-> > > > +			if (!use_softirq)
-> > > > +				raise_softirq_irqoff(RCU_SOFTIRQ);
-> > > > +			else
-> > > > +				invoke_rcu_core();
-> > > 
-> > > This can result in deadlock.  This happens when the scheduler invokes
-> > > rcu_read_unlock() with one of the rq or pi locks held, which means that
-> > > interrupts are disabled.  And it also means that the wakeup done in
-> > > invoke_rcu_core() could go after the same rq or pi lock.
-> > > 
-> > > What we really need here is some way to make soemthing happen on this
-> > > CPU just after interrupts are re-enabled.  Here are the options I see:
-> > > 
-> > > 1.	Do set_tsk_need_resched() and set_preempt_need_resched(),
-> > > 	just like in the "else" clause below.  This sort of works, but
-> > > 	relies on some later interrupt or similar to get things started.
-> > > 	This is just fine for normal grace periods, but not so much for
-> > > 	expedited grace periods.
-> > > 
-> > > 2.	IPI some other CPU and have it IPI us back.  Not such a good plan
-> > > 	when running an SMP kernel on a single CPU.
-> > > 
-> > > 3.	Have a "stub" RCU_SOFTIRQ that contains only the following:
-> > > 
-> > > 	/* Report any deferred quiescent states if preemption enabled. */
-> > > 	if (!(preempt_count() & PREEMPT_MASK)) {
-> > > 		rcu_preempt_deferred_qs(current);
-> > > 	} else if (rcu_preempt_need_deferred_qs(current)) {
-> > > 		set_tsk_need_resched(current);
-> > > 		set_preempt_need_resched();
-> > > 	}
-> > > 
-> > > 4.	Except that raise_softirq_irqoff() could potentially have this
-> > > 	same problem if rcu_read_unlock() is invoked at process level
-> > > 	from the scheduler with either rq or pi locks held.  :-/
-> > > 
-> > > 	Which raises the question "why aren't I seeing hangs and
-> > > 	lockdep splats?"
-> > 
-> > Interesting, could it be you're not seeing a hang in the regular case,
-> > because enqueuing ksoftirqd on the same CPU as where the rcu_read_unlock is
-> > happening is a rare event? First, ksoftirqd has to even be awakened in the
-> > first place. On the other hand, with the new code the thread is always awaked
-> > and is more likely to run into the issue you found?
-> 
-> No, in many cases, including the self-deadlock that showed up last night,
-> raise_softirq_irqoff() will simply set a bit in a per-CPU variable.
-> One case where this happens is when called from an interrupt handler.
+As the discussion https://lore.kernel.org/patchwork/patch/334982/
+We know an open file's ra_pages might run out of sync from
+bdi.ra_pages since sequential, random or error read. Current design
+is we have to ask users to reopen the file or use fdavise system
+call to get it sync. However, we might have some cases to change
+system wide file ra_pages to enhance system performance such as
+enhance the boot time by increasing the ra_pages or decrease it to
+mitigate the trashing under memory pressure. Those are the cases
+we need to globally and immediately change this value. However,
+from the discussion, we know bdi readahead tend to be an optimal
+value to be a physical property of the storage and doesn't tend to
+change dynamically. Thus we'd like to purpose readahead_shift into
+backing device. This value is used as a shift bit number with bdi
+readahead value to come out the readahead value and the negative
+value means the division effect in the fixup function. The fixup
+would only take effect when shift value is not zero;otherwise,
+it returns file's ra_pages directly. Thus, an administrator could
+use this value to control the amount readahead referred to
+its backing device to achieve its goal.
 
-I think we are saying the same thing, in some cases ksoftirqd will be
-awakened and some case it will not. I will go through all scenarios to
-convince myself it is safe, if I find some issue I will let you know.
+Signed-off-by: Martin Liu <liumartin@google.com>
+---
+I'd like to get some feedback about the patch. If you have any
+concern, please let me know. Thanks. 
+---
+ block/blk-sysfs.c                | 28 ++++++++++++++++++++++++++++
+ include/linux/backing-dev-defs.h |  1 +
+ include/linux/backing-dev.h      | 10 ++++++++++
+ mm/backing-dev.c                 | 27 +++++++++++++++++++++++++++
+ mm/filemap.c                     |  8 +++++---
+ mm/readahead.c                   |  2 +-
+ 6 files changed, 72 insertions(+), 4 deletions(-)
 
-> > The lockdep splats should be a more common occurence though IMO. If you could
-> > let me know which RCU config is hanging, I can try to debug this at my end as
-> > well.
-> 
-> TREE01, TREE02, TREE03, and TREE09.  I would guess that TREE08 would also
-> do the same thing, given that it also sets PREEMPT=y and tests Tree RCU.
-> 
-> Please see the patch I posted and tested overnight.  I suspect that there
-> is a better fix, but this does at least seem to suppress the error.
+diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
+index 59685918167e..f48b68e05d0e 100644
+--- a/block/blk-sysfs.c
++++ b/block/blk-sysfs.c
+@@ -107,6 +107,27 @@ queue_ra_store(struct request_queue *q, const char *page, size_t count)
+ 	return ret;
+ }
+ 
++static ssize_t queue_ra_shift_show(struct request_queue *q, char *page)
++{
++	int ra_shift = q->backing_dev_info->read_ahead_shift;
++
++	return scnprintf(page, PAGE_SIZE - 1, "%d\n", ra_shift);
++}
++
++static ssize_t queue_ra_shift_store(struct request_queue *q, const char *page,
++				    size_t count)
++{
++	s8 ra_shift;
++	ssize_t ret = kstrtos8(page, 10, &ra_shift);
++
++	if (ret)
++		return ret;
++
++	q->backing_dev_info->read_ahead_shift = ra_shift;
++
++	return count;
++}
++
+ static ssize_t queue_max_sectors_show(struct request_queue *q, char *page)
+ {
+ 	int max_sectors_kb = queue_max_sectors(q) >> 1;
+@@ -540,6 +561,12 @@ static struct queue_sysfs_entry queue_ra_entry = {
+ 	.store = queue_ra_store,
+ };
+ 
++static struct queue_sysfs_entry queue_ra_shift_entry = {
++	.attr = {.name = "read_ahead_shift", .mode = 0644 },
++	.show = queue_ra_shift_show,
++	.store = queue_ra_shift_store,
++};
++
+ static struct queue_sysfs_entry queue_max_sectors_entry = {
+ 	.attr = {.name = "max_sectors_kb", .mode = 0644 },
+ 	.show = queue_max_sectors_show,
+@@ -729,6 +756,7 @@ static struct queue_sysfs_entry throtl_sample_time_entry = {
+ static struct attribute *default_attrs[] = {
+ 	&queue_requests_entry.attr,
+ 	&queue_ra_entry.attr,
++	&queue_ra_shift_entry.attr,
+ 	&queue_max_hw_sectors_entry.attr,
+ 	&queue_max_sectors_entry.attr,
+ 	&queue_max_segments_entry.attr,
+diff --git a/include/linux/backing-dev-defs.h b/include/linux/backing-dev-defs.h
+index 07e02d6df5ad..452002df5232 100644
+--- a/include/linux/backing-dev-defs.h
++++ b/include/linux/backing-dev-defs.h
+@@ -167,6 +167,7 @@ struct bdi_writeback {
+ struct backing_dev_info {
+ 	struct list_head bdi_list;
+ 	unsigned long ra_pages;	/* max readahead in PAGE_SIZE units */
++	s8 read_ahead_shift; /* shift to ra_pages */
+ 	unsigned long io_pages;	/* max allowed IO size */
+ 	congested_fn *congested_fn; /* Function pointer if device is md/dm */
+ 	void *congested_data;	/* Pointer to aux data for congested func */
+diff --git a/include/linux/backing-dev.h b/include/linux/backing-dev.h
+index f9b029180241..23f755fe386e 100644
+--- a/include/linux/backing-dev.h
++++ b/include/linux/backing-dev.h
+@@ -221,6 +221,16 @@ static inline int bdi_sched_wait(void *word)
+ 	return 0;
+ }
+ 
++static inline unsigned long read_ahead_fixup(struct file *file)
++{
++	unsigned long ra = file->f_ra.ra_pages;
++	s8 shift = (inode_to_bdi(file->f_mapping->host))->read_ahead_shift;
++
++	ra = (shift >= 0) ? ra << shift : ra >> abs(shift);
++
++	return ra;
++}
++
+ #ifdef CONFIG_CGROUP_WRITEBACK
+ 
+ struct bdi_writeback_congested *
+diff --git a/mm/backing-dev.c b/mm/backing-dev.c
+index 72e6d0c55cfa..1b5163a5ead5 100644
+--- a/mm/backing-dev.c
++++ b/mm/backing-dev.c
+@@ -172,6 +172,32 @@ static DEVICE_ATTR_RW(name);
+ 
+ BDI_SHOW(read_ahead_kb, K(bdi->ra_pages))
+ 
++static ssize_t read_ahead_shift_store(struct device *dev,
++				      struct device_attribute *attr,
++				      const char *buf, size_t count)
++{
++	struct backing_dev_info *bdi = dev_get_drvdata(dev);
++	s8 read_ahead_shift;
++	ssize_t ret = kstrtos8(buf, 10, &read_ahead_shift);
++
++	if (ret)
++		return ret;
++
++	bdi->read_ahead_shift = read_ahead_shift;
++
++	return count;
++}
++
++static ssize_t read_ahead_shift_show(struct device *dev,
++				     struct device_attribute *attr, char *page)
++{
++	struct backing_dev_info *bdi = dev_get_drvdata(dev);
++
++	return scnprintf(page, PAGE_SIZE - 1, "%d\n", bdi->read_ahead_shift);
++}
++
++static DEVICE_ATTR_RW(read_ahead_shift);
++
+ static ssize_t min_ratio_store(struct device *dev,
+ 		struct device_attribute *attr, const char *buf, size_t count)
+ {
+@@ -223,6 +249,7 @@ static DEVICE_ATTR_RO(stable_pages_required);
+ 
+ static struct attribute *bdi_dev_attrs[] = {
+ 	&dev_attr_read_ahead_kb.attr,
++	&dev_attr_read_ahead_shift.attr,
+ 	&dev_attr_min_ratio.attr,
+ 	&dev_attr_max_ratio.attr,
+ 	&dev_attr_stable_pages_required.attr,
+diff --git a/mm/filemap.c b/mm/filemap.c
+index d78f577baef2..cd8d0e00ff93 100644
+--- a/mm/filemap.c
++++ b/mm/filemap.c
+@@ -2469,6 +2469,7 @@ static struct file *do_sync_mmap_readahead(struct vm_fault *vmf)
+ 	struct address_space *mapping = file->f_mapping;
+ 	struct file *fpin = NULL;
+ 	pgoff_t offset = vmf->pgoff;
++	unsigned long max;
+ 
+ 	/* If we don't want any read-ahead, don't bother */
+ 	if (vmf->vma->vm_flags & VM_RAND_READ)
+@@ -2498,9 +2499,10 @@ static struct file *do_sync_mmap_readahead(struct vm_fault *vmf)
+ 	 * mmap read-around
+ 	 */
+ 	fpin = maybe_unlock_mmap_for_io(vmf, fpin);
+-	ra->start = max_t(long, 0, offset - ra->ra_pages / 2);
+-	ra->size = ra->ra_pages;
+-	ra->async_size = ra->ra_pages / 4;
++	max = read_ahead_fixup(file);
++	ra->start = max_t(long, 0, offset - max / 2);
++	ra->size = max;
++	ra->async_size = max / 4;
+ 	ra_submit(ra, mapping, file);
+ 	return fpin;
+ }
+diff --git a/mm/readahead.c b/mm/readahead.c
+index a4593654a26c..546bf344fc4d 100644
+--- a/mm/readahead.c
++++ b/mm/readahead.c
+@@ -384,7 +384,7 @@ ondemand_readahead(struct address_space *mapping,
+ 		   unsigned long req_size)
+ {
+ 	struct backing_dev_info *bdi = inode_to_bdi(mapping->host);
+-	unsigned long max_pages = ra->ra_pages;
++	unsigned long max_pages = read_ahead_fixup(filp);
+ 	unsigned long add_pages;
+ 	pgoff_t prev_offset;
+ 
+-- 
+2.21.0.392.gf8f6787159e-goog
 
-Ok, will do.
-
-> > > Also, having lots of non-migratable timers might be considered unfriendly,
-> > > though they shouldn't be -that- heavily utilized.  Yet, anyway...
-> > > I could try adding logic to local_irq_enable() and local_irq_restore(),
-> > > but that probably wouldn't go over all that well.  Besides, sometimes
-> > > interrupt enabling happens in assembly language.
-> > > 
-> > > It is quite likely that delays to expedited grace periods wouldn't
-> > > happen all that often.  First, the grace period has to start while
-> > > the CPU itself (not some blocked task) is in an RCU read-side critical
-> > > section, second, that critical section cannot be preempted, and third
-> > > the rcu_read_unlock() must run with interrupts disabled.
-> > > 
-> > > Ah, but that sequence of events is not supposed to happen with the
-> > > scheduler lock!
-> > > 
-> > > From Documentation/RCU/Design/Requirements/Requirements.html:
-> > > 
-> > > 	It is forbidden to hold any of scheduler's runqueue or
-> > > 	priority-inheritance spinlocks across an rcu_read_unlock()
-> > > 	unless interrupts have been disabled across the entire RCU
-> > > 	read-side critical section, that is, up to and including the
-> > > 	matching rcu_read_lock().
-> > > 
-> > > Here are the reasons we even get to rcu_read_unlock_special():
-> > > 
-> > > 1.	The just-ended RCU read-side critical section was preempted.
-> > > 	This clearly cannot happen if interrupts are disabled across
-> > > 	the entire critical section.
-> > > 
-> > > 2.	The scheduling-clock interrupt noticed that this critical
-> > > 	section has been taking a long time.  But scheduling-clock
-> > > 	interrupts also cannot happen while interrupts are disabled.
-> > > 
-> > > 3.	An expedited grace periods started during this critical
-> > > 	section.  But if that happened, the corresponding IPI would
-> > > 	have waited until this CPU enabled interrupts, so this
-> > > 	cannot happen either.
-> > > 
-> > > So the call to invoke_rcu_core() should be OK after all.
-> > > 
-> > > Which is a bit of a disappointment, given that I am still seeing hangs!
-> > 
-> > Oh ok, discount whatever I just said then ;-) Indeed I remember this
-> > requirement too now. Your neat documentation skills are indeed life saving :D
-> 
-> No, this did turn out to be the problem area.  Or at least one of the
-> problem areas.  Again, see my earlier email.
-
-Ok. Too many emails so I got confused :-D. I also forgot which version of the
-patch are we testing since I don't think an updated one was posted. But I
-will refer to your last night diff dig out the base patch from your git tree,
-no problem.
-
-> > > I might replace this invoke_rcu_core() with set_tsk_need_resched() and
-> > > set_preempt_need_resched() to see if that gets rid of the hangs, but
-> > > first...
-> > 
-> > Could we use the NMI watchdog to dump the stack at the time of the hang? May
-> > be a deadlock will present on the stack (I think its config is called
-> > HARDLOCKUP_DETECTOR or something).
-> 
-> Another approach would be to instrument the locking code that notices
-> the recursive acquisition.  Or to run lockdep...  Because none of the
-> failing scenarios enable lockdep!  ;-)
-
-I was wondering why lockdep is not always turned on in your testing. Is it
-due to performance concerns?
-
-thanks,
-
- - Joel
