@@ -2,81 +2,110 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84552C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:21:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7908C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:21:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0277C21873
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:21:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A88A221873
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:21:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="R2myvgJn"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Zbt4AiAW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728233AbfCVLTu (ORCPT
+        id S1728697AbfCVNVk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:19:50 -0400
-Received: from conuserg-09.nifty.com ([210.131.2.76]:49955 "EHLO
-        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726667AbfCVLTs (ORCPT
+        Fri, 22 Mar 2019 09:21:40 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:44700 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728330AbfCVNVk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:19:48 -0400
-Received: from grover.tkatk1.zaq.ne.jp (zaqdadce369.zaq.ne.jp [218.220.227.105]) (authenticated)
-        by conuserg-09.nifty.com with ESMTP id x2MBJOAx005370;
-        Fri, 22 Mar 2019 20:19:25 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com x2MBJOAx005370
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1553253565;
-        bh=mjX7gWLqxfrSGG3MxUHbg7ISc2KHT2li4GGCKm5wk8E=;
-        h=From:To:Cc:Subject:Date:From;
-        b=R2myvgJnpb+V9Zc5zA5hdagmwGCrhhC9EaSNL5DvY6XEDtVIQbwlwMjgU+jWnwufb
-         WxV7f3kHX0078AOtLJAkdA7e3W5BykURq0etRqOtG0Id2lmHY9AxME7evrVph3utyG
-         fP37EKETU2CEfaQxEVe3uedyV44ZUTPviyOtCIFrzwRFSBJECeAhsU0m36HYxP+DmV
-         S7J1XJLDWEwMV5lT5vfbdROklgbupAUtsP3S+seQ2++X0ZodFqHQgX1/RUEKTfAs0v
-         3KwExE+LCNA6CWTOCMHvs6HOsUPBZCLuIxNG8yLLZPLoS3kcDrhkZAtgaaYrbpOZvB
-         r6DrOBZk0xGAQ==
-X-Nifty-SrcIP: [218.220.227.105]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     Guo Ren <guoren@kernel.org>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
-Subject: [PATCH] csky: remove redundant generic-y
-Date:   Fri, 22 Mar 2019 20:19:14 +0900
-Message-Id: <1553253554-5307-1-git-send-email-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 22 Mar 2019 09:21:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=hw3ZtZSh4y78LcwFC7knlBZdOdzIfUNtqXkI2P++IvI=; b=Zbt4AiAWGBY6okvEekZtK6TS4F
+        PTLe64W03umLD5nMSHvoCMhFEc4lCxttGX4EneARFbw7Wk07uvTnz/Ir8Hl1nAuKuj3nWtYcwKHfG
+        4lnt+VewjSCFLnWQf0H6NwJw0adquIeo05Oj6qlq6AOFapqexQfI8VP518uRb7Pi5IqICBdl92ARY
+        tDAnHXgUGavzntghHV+Bay6zLlMg1KYzVuN20T34X59Oc8MmgfVAJgxJQwa0GUnqoz9YSMbg9h/Ow
+        IH3z+678WV11fgVbeRfilpWZX1p31/flKDOsK2UqdbN/QAWsLrzzQAqzjhUf2yTf9GSLzrZZqdNLG
+        r47bHwFQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h7K6x-00047T-Fh; Fri, 22 Mar 2019 13:21:27 +0000
+Date:   Fri, 22 Mar 2019 06:21:27 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Alexandre Ghiti <alex@ghiti.fr>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH 1/4] arm64, mm: Move generic mmap layout functions to mm
+Message-ID: <20190322132127.GA18602@infradead.org>
+References: <20190322074225.22282-1-alex@ghiti.fr>
+ <20190322074225.22282-2-alex@ghiti.fr>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190322074225.22282-2-alex@ghiti.fr>
+User-Agent: Mutt/1.9.2 (2017-12-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit 7cbbbb8bc297 ("kbuild: warn redundant generic-y"),
-redundant generic-y is reported. I missed to delete this one.
+> It then introduces a new define ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT
+> that can be defined by other architectures to benefit from those functions.
 
-scripts/Makefile.asm-generic:25: redundant generic-y found in arch/csky/include/asm/Kbuild: ftrace.h
+Can you make this a Kconfig option defined in arch/Kconfig or mm/Kconfig
+and selected by the architectures?
 
-In this case, csky-specific implementation exists in
-arch/csky/include/asm/ftrace.h
+> -#ifndef STACK_RND_MASK
+> -#define STACK_RND_MASK (0x7ff >> (PAGE_SHIFT - 12))	/* 8MB of VA */
+> -#endif
+> -
+> -static unsigned long randomize_stack_top(unsigned long stack_top)
+> -{
+> -	unsigned long random_variable = 0;
+> -
+> -	if (current->flags & PF_RANDOMIZE) {
+> -		random_variable = get_random_long();
+> -		random_variable &= STACK_RND_MASK;
+> -		random_variable <<= PAGE_SHIFT;
+> -	}
+> -#ifdef CONFIG_STACK_GROWSUP
+> -	return PAGE_ALIGN(stack_top) + random_variable;
+> -#else
+> -	return PAGE_ALIGN(stack_top) - random_variable;
+> -#endif
+> -}
+> -
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+Maybe the move of this function can be split into another prep patch,
+as it is only very lightly related?
 
- arch/csky/include/asm/Kbuild | 1 -
- 1 file changed, 1 deletion(-)
+> +#if defined(HAVE_ARCH_PICK_MMAP_LAYOUT) || \
+> +	defined(ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT)
 
-diff --git a/arch/csky/include/asm/Kbuild b/arch/csky/include/asm/Kbuild
-index 2a0abe8..e01a576 100644
---- a/arch/csky/include/asm/Kbuild
-+++ b/arch/csky/include/asm/Kbuild
-@@ -12,7 +12,6 @@ generic-y += dma-mapping.h
- generic-y += emergency-restart.h
- generic-y += exec.h
- generic-y += fb.h
--generic-y += ftrace.h
- generic-y += futex.h
- generic-y += gpio.h
- generic-y += hardirq.h
--- 
-2.7.4
+Not sure if it is wrіtten down somehwere or just convention, but I
+general see cpp defined statements aligned with spaces to the
+one on the previous line.
 
+Except for these nitpicks this looks very nice to me, thanks for doing
+this work!
