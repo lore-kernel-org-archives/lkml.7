@@ -2,50 +2,53 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BIGNUM_EMAILS,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F41C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:25:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F7A3C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:25:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8627F21934
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:25:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E235420657
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:25:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553253932;
-	bh=rx7udbyzE2256/Dc/+4SnG69HLGNw5YVwkUKIImvPAg=;
+	s=default; t=1553253936;
+	bh=hYpOdPjGUmDeh0vwJDPNgkS1I5zR9ewbYgJL7d6p3FE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BhHSpdSW6rceScIank//hOkxTH1+XDbm/7Np4Egov7+LwdlLI6gf5qw3AlffOIF4j
-	 Q1j1/F+Lju1yjnoU/xxywkX7xV25flr3xmpcMg+L0LP0uVecGp8fyXr0UJ4FhsOIMg
-	 iLYxYR5Kj2o6rPJ6To5r3+/ZED5BEeO8Tnk1Qbkg=
+	b=tLhhgTJUh9VTgsGgSlb82H2ZmAqGDthZVHIqBu6HOf7w5lCQb0ax15SnivchcHztR
+	 FxasO3exk7A0aM2+9vz0OKtjJUJDm/KuXxQg4mGQ79g+9pLKZ0tWK4yRCVoCE6QzLm
+	 b37QM9I06X18NGg6DusOGzGpdenHAdO3TVfjgdzI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729295AbfCVLZb (ORCPT
+        id S1729305AbfCVLZe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:25:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52836 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:25:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729286AbfCVLZ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:25:28 -0400
+        id S1729290AbfCVLZb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:25:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8865D218A2;
-        Fri, 22 Mar 2019 11:25:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 638B120657;
+        Fri, 22 Mar 2019 11:25:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553253928;
-        bh=rx7udbyzE2256/Dc/+4SnG69HLGNw5YVwkUKIImvPAg=;
+        s=default; t=1553253930;
+        bh=hYpOdPjGUmDeh0vwJDPNgkS1I5zR9ewbYgJL7d6p3FE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U9LzRwNnuZB3YLtAlvs5M4EADNzspbWU7hKmGSI+Gn3kjulglomG89yxWH+XgESaZ
-         5BChnovrxXOeHnDJH/PDvvnuO/yzW36Dr3wAwWDcpQBQB48dnrf8GUWV6HSmjRRwzz
-         vGQkvmPrxPd30e7qjURwVO0hyqwyS2nKwWKeDWM4=
+        b=jT4QAmJUJj8vulbbXkV+SdyJGw3NquwL5gvvG5yh6e7P5NX/ghSF9+shaLvaI60hT
+         udn70NV0r/RnPgQPxj2FvCMGX+5AkXbuQUjbkTDmDT+IRflerO6K2FmqzTRCUf1Oux
+         9IKEs9EH1XkbFaoNPVVeiempkL3TZkPm9JMDQ55s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 3.18 097/134] crypto: ahash - fix another early termination in hash walk
-Date:   Fri, 22 Mar 2019 12:15:10 +0100
-Message-Id: <20190322111217.186866547@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Stefan Haberland <sth@linux.ibm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 3.18 098/134] s390/dasd: fix using offset into zero size array error
+Date:   Fri, 22 Mar 2019 12:15:11 +0100
+Message-Id: <20190322111217.254608183@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111210.465931067@linuxfoundation.org>
 References: <20190322111210.465931067@linuxfoundation.org>
@@ -64,63 +67,96 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Eric Biggers <ebiggers@google.com>
+[ Upstream commit 4a8ef6999bce998fa5813023a9a6b56eea329dba ]
 
-commit 77568e535af7c4f97eaef1e555bf0af83772456c upstream.
+Dan Carpenter reported the following:
 
-Hash algorithms with an alignmask set, e.g. "xcbc(aes-aesni)" and
-"michael_mic", fail the improved hash tests because they sometimes
-produce the wrong digest.  The bug is that in the case where a
-scatterlist element crosses pages, not all the data is actually hashed
-because the scatterlist walk terminates too early.  This happens because
-the 'nbytes' variable in crypto_hash_walk_done() is assigned the number
-of bytes remaining in the page, then later interpreted as the number of
-bytes remaining in the scatterlist element.  Fix it.
+The patch 52898025cf7d: "[S390] dasd: security and PSF update patch
+for EMC CKD ioctl" from Mar 8, 2010, leads to the following static
+checker warning:
 
-Fixes: 900a081f6912 ("crypto: ahash - Fix early termination in hash walk")
-Cc: stable@vger.kernel.org
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+	drivers/s390/block/dasd_eckd.c:4486 dasd_symm_io()
+	error: using offset into zero size array 'psf_data[]'
 
+drivers/s390/block/dasd_eckd.c
+  4458          /* Copy parms from caller */
+  4459          rc = -EFAULT;
+  4460          if (copy_from_user(&usrparm, argp, sizeof(usrparm)))
+                                    ^^^^^^^
+The user can specify any "usrparm.psf_data_len".  They choose zero by
+mistake.
+
+  4461                  goto out;
+  4462          if (is_compat_task()) {
+  4463                  /* Make sure pointers are sane even on 31 bit. */
+  4464                  rc = -EINVAL;
+  4465                  if ((usrparm.psf_data >> 32) != 0)
+  4466                          goto out;
+  4467                  if ((usrparm.rssd_result >> 32) != 0)
+  4468                          goto out;
+  4469                  usrparm.psf_data &= 0x7fffffffULL;
+  4470                  usrparm.rssd_result &= 0x7fffffffULL;
+  4471          }
+  4472          /* alloc I/O data area */
+  4473          psf_data = kzalloc(usrparm.psf_data_len, GFP_KERNEL
+  			   				 | GFP_DMA);
+  4474          rssd_result = kzalloc(usrparm.rssd_result_len, GFP_KERNEL
+							       | GFP_DMA);
+  4475          if (!psf_data || !rssd_result) {
+
+kzalloc() returns a ZERO_SIZE_PTR (0x16).
+
+  4476                  rc = -ENOMEM;
+  4477                  goto out_free;
+  4478          }
+  4479
+  4480          /* get syscall header from user space */
+  4481          rc = -EFAULT;
+  4482          if (copy_from_user(psf_data,
+  4483                             (void __user *)(unsigned long)
+  				   	 		 usrparm.psf_data,
+  4484                             usrparm.psf_data_len))
+
+That all works great.
+
+  4485                  goto out_free;
+  4486          psf0 = psf_data[0];
+  4487          psf1 = psf_data[1];
+
+But now we're assuming that "->psf_data_len" was at least 2 bytes.
+
+Fix this by checking the user specified length psf_data_len.
+
+Fixes: 52898025cf7d ("[S390] dasd: security and PSF update patch for EMC CKD ioctl")
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Stefan Haberland <sth@linux.ibm.com>
+Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- crypto/ahash.c |   14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ drivers/s390/block/dasd_eckd.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/crypto/ahash.c
-+++ b/crypto/ahash.c
-@@ -84,17 +84,17 @@ static int hash_walk_new_entry(struct cr
- int crypto_hash_walk_done(struct crypto_hash_walk *walk, int err)
- {
- 	unsigned int alignmask = walk->alignmask;
--	unsigned int nbytes = walk->entrylen;
- 
- 	walk->data -= walk->offset;
- 
--	if (nbytes && walk->offset & alignmask && !err) {
--		walk->offset = ALIGN(walk->offset, alignmask + 1);
--		nbytes = min(nbytes,
--			     ((unsigned int)(PAGE_SIZE)) - walk->offset);
--		walk->entrylen -= nbytes;
-+	if (walk->entrylen && (walk->offset & alignmask) && !err) {
-+		unsigned int nbytes;
- 
-+		walk->offset = ALIGN(walk->offset, alignmask + 1);
-+		nbytes = min(walk->entrylen,
-+			     (unsigned int)(PAGE_SIZE - walk->offset));
- 		if (nbytes) {
-+			walk->entrylen -= nbytes;
- 			walk->data += walk->offset;
- 			return nbytes;
- 		}
-@@ -114,7 +114,7 @@ int crypto_hash_walk_done(struct crypto_
- 	if (err)
- 		return err;
- 
--	if (nbytes) {
-+	if (walk->entrylen) {
- 		walk->offset = 0;
- 		walk->pg++;
- 		return hash_walk_next(walk);
+diff --git a/drivers/s390/block/dasd_eckd.c b/drivers/s390/block/dasd_eckd.c
+index ff1ab6da8cff..4bbcdf991c26 100644
+--- a/drivers/s390/block/dasd_eckd.c
++++ b/drivers/s390/block/dasd_eckd.c
+@@ -3990,6 +3990,14 @@ static int dasd_symm_io(struct dasd_device *device, void __user *argp)
+ 		usrparm.psf_data &= 0x7fffffffULL;
+ 		usrparm.rssd_result &= 0x7fffffffULL;
+ 	}
++	/* at least 2 bytes are accessed and should be allocated */
++	if (usrparm.psf_data_len < 2) {
++		DBF_DEV_EVENT(DBF_WARNING, device,
++			      "Symmetrix ioctl invalid data length %d",
++			      usrparm.psf_data_len);
++		rc = -EINVAL;
++		goto out;
++	}
+ 	/* alloc I/O data area */
+ 	psf_data = kzalloc(usrparm.psf_data_len, GFP_KERNEL | GFP_DMA);
+ 	rssd_result = kzalloc(usrparm.rssd_result_len, GFP_KERNEL | GFP_DMA);
+-- 
+2.19.1
+
 
 
