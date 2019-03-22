@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECBE9C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:20:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C537C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:20:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B22E22190A
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:20:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AD242190A
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:20:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553253633;
-	bh=W/zAZItphTK6xwyTX3Rq8ezjf79qTQHew8biQsbiNEE=;
+	s=default; t=1553253636;
+	bh=Aja7D/LZnNXrFMxTFouaO9Kl2WyWhkfXMkbheuLpPmE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OfV26hP5VYMWw/381CSP31q4iAE/aUt+ftIMH9I8ebny764dgCraIfxPfS9W2MTtg
-	 b2x9kcRZhOObAGMcRr5LpnBylqD5u0J6N3odRiUhZhYhPlJroxsx3pGCDY2z5Ad5+N
-	 PS/b2Rrufy3zet7sBnnrxVE3alp59Y8zd/w6yBxo=
+	b=OUbG0z2OmYMgIu5gAY3K1svjdTty9VMpX+BngZq/jY3yNxtcCVzUUz9hluMQIgTJh
+	 TKE+6/IS8Q9yOlo6t/wZie2TJqUf0F3WZ4qc+VQFoVELv0bceWrhkpYW0I8V6EwAs2
+	 p+Zkv5jrNh0IeNGqkz/P3CgQIImpf4D+GNYlY5HY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728386AbfCVLUc (ORCPT
+        id S1728397AbfCVLUe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:20:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46812 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:20:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728363AbfCVLU2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:20:28 -0400
+        id S1728378AbfCVLUb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:20:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF890218A2;
-        Fri, 22 Mar 2019 11:20:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77E9321916;
+        Fri, 22 Mar 2019 11:20:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553253628;
-        bh=W/zAZItphTK6xwyTX3Rq8ezjf79qTQHew8biQsbiNEE=;
+        s=default; t=1553253631;
+        bh=Aja7D/LZnNXrFMxTFouaO9Kl2WyWhkfXMkbheuLpPmE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wl+jQwUS4GK/ySiK0ljMjerVqJB9V2MvjwS3Ggq7eEPe8LFxkLkOc5mCaEIcsnRwb
-         3M+eEw65Uf6DfPKWfxh3NhjDgkEXvmM2NFqpqvmKHd7lyIeSMg0jtzinW9hijMgVSa
-         ezbUf6cT+gp59uMWoQsYjMET5YLfbtkdeOhl49V8=
+        b=tg5IMyhLNn7pgQL8xbyyuIYCURK/YBsGqehG4DOKiBQmGjBdusqaCQ3KIfjfyyCs3
+         bRpNhJJgZ/VBS1E51SNUTke1UChqGt/+/tdALF+Yy/xmlWaON4mBAg6IO0TMWPkciU
+         khfP/w4JhcRaO1foj9NuIvM0HhZfkrXFeBCaZdOg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        stable@vger.kernel.org,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
         Lee Jones <lee.jones@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 3.18 007/134] mfd: ab8500-core: Return zero in get_register_interruptible()
-Date:   Fri, 22 Mar 2019 12:13:40 +0100
-Message-Id: <20190322111210.743329126@linuxfoundation.org>
+Subject: [PATCH 3.18 008/134] mfd: wm5110: Add missing ASRC rate register
+Date:   Fri, 22 Mar 2019 12:13:41 +0100
+Message-Id: <20190322111210.785099499@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111210.465931067@linuxfoundation.org>
 References: <20190322111210.465931067@linuxfoundation.org>
@@ -67,38 +67,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 10628e3ecf544fa2e4e24f8e112d95c37884dc98 ]
+[ Upstream commit 04c801c18ded421845324255e660147a6f58dcd6 ]
 
-This function is supposed to return zero on success or negative error
-codes on error.  Unfortunately, there is a bug so it sometimes returns
-non-zero, positive numbers on success.
-
-I noticed this bug during review and I can't test it.  It does appear
-that the return is sometimes propogated back to _regmap_read() where all
-non-zero returns are treated as failure so this may affect run time.
-
-Fixes: 47c1697508f2 ("mfd: Align ab8500 with the abx500 interface")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/ab8500-core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mfd/wm5110-tables.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/mfd/ab8500-core.c b/drivers/mfd/ab8500-core.c
-index bde2fc0724103..44ebb84c2e747 100644
---- a/drivers/mfd/ab8500-core.c
-+++ b/drivers/mfd/ab8500-core.c
-@@ -259,7 +259,7 @@ static int get_register_interruptible(struct ab8500 *ab8500, u8 bank,
- 	mutex_unlock(&ab8500->lock);
- 	dev_vdbg(ab8500->dev, "rd: addr %#x => data %#x\n", addr, ret);
- 
--	return ret;
-+	return (ret < 0) ? ret : 0;
- }
- 
- static int ab8500_get_register(struct device *dev, u8 bank,
+diff --git a/drivers/mfd/wm5110-tables.c b/drivers/mfd/wm5110-tables.c
+index 6ccc0fdab767f..85eccd796a856 100644
+--- a/drivers/mfd/wm5110-tables.c
++++ b/drivers/mfd/wm5110-tables.c
+@@ -1617,6 +1617,7 @@ static const struct reg_default wm5110_reg_default[] = {
+ 	{ 0x00000ECD, 0x0000 },    /* R3789  - HPLPF4_2 */
+ 	{ 0x00000EE0, 0x0000 },    /* R3808  - ASRC_ENABLE */
+ 	{ 0x00000EE2, 0x0000 },    /* R3810  - ASRC_RATE1 */
++	{ 0x00000EE3, 0x4000 },    /* R3811  - ASRC_RATE2 */
+ 	{ 0x00000EF0, 0x0000 },    /* R3824  - ISRC 1 CTRL 1 */
+ 	{ 0x00000EF1, 0x0000 },    /* R3825  - ISRC 1 CTRL 2 */
+ 	{ 0x00000EF2, 0x0000 },    /* R3826  - ISRC 1 CTRL 3 */
+@@ -2684,6 +2685,7 @@ static bool wm5110_readable_register(struct device *dev, unsigned int reg)
+ 	case ARIZONA_ASRC_ENABLE:
+ 	case ARIZONA_ASRC_STATUS:
+ 	case ARIZONA_ASRC_RATE1:
++	case ARIZONA_ASRC_RATE2:
+ 	case ARIZONA_ISRC_1_CTRL_1:
+ 	case ARIZONA_ISRC_1_CTRL_2:
+ 	case ARIZONA_ISRC_1_CTRL_3:
 -- 
 2.19.1
 
