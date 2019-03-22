@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6FA3C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:44:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE94C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:44:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 762EE2192C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:44:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C8AC218B0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:44:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255075;
-	bh=RZzt+7QbboBemUNLXImazGPIAxOeC2gbJspn0dOu80A=;
+	s=default; t=1553255079;
+	bh=4vhGvjomiRtmGHXYbOSOXDnwKsP36gYaoaYoAvxZdVk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HT6XJovS9JMDWmwJabugehYzJIERBoM0u+9ij1xbQa/y6pP1ph7YuuWOLEs2SUFEX
-	 Qe4xis1CCvoSiCrfUMPuu0Y8M8EwnL0jwsJJG404OyN4MA8nPJhlWkVRMpog0BODAt
-	 bclFDLEASCgmpsRu9mmwaKTWBZ1UnEEBgao4XHI8=
+	b=YKf6sPqALodvqfU9qlZjEQhcR/nj1PGMO8h4xufaXtOqcuLBxy3nfr/exz5aJ+8cN
+	 MNIxGx1Fsyf1ZH4xumh03GF/+RVQEjss8RmlnTBE1Mz+ToCztSEZW2MWQN50n2o0ZD
+	 MKI9ve2Qj9LySkBUwZgSW5FtJHaLCzOZjb3vQY3Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731588AbfCVLoe (ORCPT
+        id S1731439AbfCVLoi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:44:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47448 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:44:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731818AbfCVLoa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:44:30 -0400
+        id S1731352AbfCVLoe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:44:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 806112082C;
-        Fri, 22 Mar 2019 11:44:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E483218B0;
+        Fri, 22 Mar 2019 11:44:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255070;
-        bh=RZzt+7QbboBemUNLXImazGPIAxOeC2gbJspn0dOu80A=;
+        s=default; t=1553255072;
+        bh=4vhGvjomiRtmGHXYbOSOXDnwKsP36gYaoaYoAvxZdVk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RdWvxmyrBmDAN5T69egaTkMWgnH3v3/ZfFR93JesEpjPkqSwLOXWeyI4i0ZYEZZzC
-         oJf99SvCyy3ap05BUoGzoW1rQpTu3tRybGm8rpe8+VCM0XYPIFBZaHnaXn2r/lf1Se
-         pXGHjtNznO4IzOtRra6rn/EHxDpgeR9c5CTbMBhQ=
+        b=uI8iIOK5kh3YAL6XOoMCA9k/Pc5fj1Zvr54MJVrC5sL/Xw0TfzlcrlwFHVmB7tsZf
+         GZKjthleTp44+lOrH8QjcuoCgmBFOC59ucb6TimnBPrWNdo9Z0Zqo44dZqFlvnHybM
+         tDQUcVt6NzcTh9ElmuVqIioMU7n5bevkFlQrrjl4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk>,
+        stable@vger.kernel.org, Meelis Roos <mroos@linux.ee>,
+        Mathieu Malaterre <malat@debian.org>,
         Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.9 097/118] powerpc: Fix 32-bit KVM-PR lockup and host crash with MacOS guest
-Date:   Fri, 22 Mar 2019 12:16:09 +0100
-Message-Id: <20190322111223.302156129@linuxfoundation.org>
+Subject: [PATCH 4.9 098/118] powerpc/ptrace: Simplify vr_get/set() to avoid GCC warning
+Date:   Fri, 22 Mar 2019 12:16:10 +0100
+Message-Id: <20190322111223.354110625@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111215.873964544@linuxfoundation.org>
 References: <20190322111215.873964544@linuxfoundation.org>
@@ -66,48 +66,113 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-commit fe1ef6bcdb4fca33434256a802a3ed6aacf0bd2f upstream.
+commit ca6d5149d2ad0a8d2f9c28cbe379802260a0a5e0 upstream.
 
-Commit 8792468da5e1 "powerpc: Add the ability to save FPU without
-giving it up" unexpectedly removed the MSR_FE0 and MSR_FE1 bits from
-the bitmask used to update the MSR of the previous thread in
-__giveup_fpu() causing a KVM-PR MacOS guest to lockup and panic the
-host kernel.
+GCC 8 warns about the logic in vr_get/set(), which with -Werror breaks
+the build:
 
-Leaving FE0/1 enabled means unrelated processes might receive FPEs
-when they're not expecting them and crash. In particular if this
-happens to init the host will then panic.
+  In function ‘user_regset_copyin’,
+      inlined from ‘vr_set’ at arch/powerpc/kernel/ptrace.c:628:9:
+  include/linux/regset.h:295:4: error: ‘memcpy’ offset [-527, -529] is
+  out of the bounds [0, 16] of object ‘vrsave’ with type ‘union
+  <anonymous>’ [-Werror=array-bounds]
+  arch/powerpc/kernel/ptrace.c: In function ‘vr_set’:
+  arch/powerpc/kernel/ptrace.c:623:5: note: ‘vrsave’ declared here
+     } vrsave;
 
-eg (transcribed):
-  qemu-system-ppc[837]: unhandled signal 8 at 12cc9ce4 nip 12cc9ce4 lr 12cc9ca4 code 0
-  systemd[1]: unhandled signal 8 at 202f02e0 nip 202f02e0 lr 001003d4 code 0
-  Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b
+This has been identified as a regression in GCC, see GCC bug 88273.
 
-Reinstate these bits to the MSR bitmask to enable MacOS guests to run
-under 32-bit KVM-PR once again without issue.
+However we can avoid the warning and also simplify the logic and make
+it more robust.
 
-Fixes: 8792468da5e1 ("powerpc: Add the ability to save FPU without giving it up")
-Cc: stable@vger.kernel.org # v4.6+
-Signed-off-by: Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk>
+Currently we pass -1 as end_pos to user_regset_copyout(). This says
+"copy up to the end of the regset".
+
+The definition of the regset is:
+	[REGSET_VMX] = {
+		.core_note_type = NT_PPC_VMX, .n = 34,
+		.size = sizeof(vector128), .align = sizeof(vector128),
+		.active = vr_active, .get = vr_get, .set = vr_set
+	},
+
+The end is calculated as (n * size), ie. 34 * sizeof(vector128).
+
+In vr_get/set() we pass start_pos as 33 * sizeof(vector128), meaning
+we can copy up to sizeof(vector128) into/out-of vrsave.
+
+The on-stack vrsave is defined as:
+  union {
+	  elf_vrreg_t reg;
+	  u32 word;
+  } vrsave;
+
+And elf_vrreg_t is:
+  typedef __vector128 elf_vrreg_t;
+
+So there is no bug, but we rely on all those sizes lining up,
+otherwise we would have a kernel stack exposure/overwrite on our
+hands.
+
+Rather than relying on that we can pass an explict end_pos based on
+the sizeof(vrsave). The result should be exactly the same but it's
+more obviously not over-reading/writing the stack and it avoids the
+compiler warning.
+
+Reported-by: Meelis Roos <mroos@linux.ee>
+Reported-by: Mathieu Malaterre <malat@debian.org>
+Cc: stable@vger.kernel.org
+Tested-by: Mathieu Malaterre <malat@debian.org>
+Tested-by: Meelis Roos <mroos@linux.ee>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/kernel/process.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/kernel/ptrace.c |   10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
---- a/arch/powerpc/kernel/process.c
-+++ b/arch/powerpc/kernel/process.c
-@@ -153,7 +153,7 @@ void __giveup_fpu(struct task_struct *ts
+--- a/arch/powerpc/kernel/ptrace.c
++++ b/arch/powerpc/kernel/ptrace.c
+@@ -547,6 +547,7 @@ static int vr_get(struct task_struct *ta
+ 		/*
+ 		 * Copy out only the low-order word of vrsave.
+ 		 */
++		int start, end;
+ 		union {
+ 			elf_vrreg_t reg;
+ 			u32 word;
+@@ -555,8 +556,10 @@ static int vr_get(struct task_struct *ta
  
- 	save_fpu(tsk);
- 	msr = tsk->thread.regs->msr;
--	msr &= ~MSR_FP;
-+	msr &= ~(MSR_FP|MSR_FE0|MSR_FE1);
- #ifdef CONFIG_VSX
- 	if (cpu_has_feature(CPU_FTR_VSX))
- 		msr &= ~MSR_VSX;
+ 		vrsave.word = target->thread.vrsave;
+ 
++		start = 33 * sizeof(vector128);
++		end = start + sizeof(vrsave);
+ 		ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf, &vrsave,
+-					  33 * sizeof(vector128), -1);
++					  start, end);
+ 	}
+ 
+ 	return ret;
+@@ -594,6 +597,7 @@ static int vr_set(struct task_struct *ta
+ 		/*
+ 		 * We use only the first word of vrsave.
+ 		 */
++		int start, end;
+ 		union {
+ 			elf_vrreg_t reg;
+ 			u32 word;
+@@ -602,8 +606,10 @@ static int vr_set(struct task_struct *ta
+ 
+ 		vrsave.word = target->thread.vrsave;
+ 
++		start = 33 * sizeof(vector128);
++		end = start + sizeof(vrsave);
+ 		ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf, &vrsave,
+-					 33 * sizeof(vector128), -1);
++					 start, end);
+ 		if (!ret)
+ 			target->thread.vrsave = vrsave.word;
+ 	}
 
 
