@@ -2,54 +2,52 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ACAEC10F03
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:20:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A739C10F11
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:20:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B5E021929
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:20:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED94421971
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:20:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553253613;
-	bh=6ivpWA4uSWqJVJhEoEo8O8cJKOCmVYelnNdwlGAqVD4=;
+	s=default; t=1553253616;
+	bh=hi6mJt25cE86RVv4ESzBNUlLQDjnk49JNou5OvXAdJw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zMX/oVTpNThJ9hf7uyolgqBlu7hmUQ8SJ2VKbAquYduwiMsLpWS61386FTQTh1qOc
-	 UigiTPsJQZ99oFDXkjlBRqyphm5BlFMRLwRraegURCFP/0MGhttZiAzv2HyKJxiWLK
-	 7Q+AmTyShxnoyrQxD22Q/TdU/uc8wAjdtnQHeST8=
+	b=vWvPKWEykX7lqoZo04+uJur7MeTp0y/ULvacJRBw2/ZlwZxsdXz0G07eCBPFyiVQV
+	 7mZbM8jut8MfPu1sHokH31pysv7UK27GrLX6OWl8CGzBBKhCic2Jdmv3lXpzzTQ4u8
+	 RV62ZQvNDuu1qexVK046s8WHYFTSm1PBcC6x8mOo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728296AbfCVLUE (ORCPT
+        id S1728246AbfCVLTw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:20:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46460 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:19:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46296 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728273AbfCVLUD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:20:03 -0400
+        id S1728219AbfCVLTt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:19:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6CBF9218A2;
-        Fri, 22 Mar 2019 11:20:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E096421929;
+        Fri, 22 Mar 2019 11:19:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553253601;
-        bh=6ivpWA4uSWqJVJhEoEo8O8cJKOCmVYelnNdwlGAqVD4=;
+        s=default; t=1553253588;
+        bh=hi6mJt25cE86RVv4ESzBNUlLQDjnk49JNou5OvXAdJw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Grz4gk9fG808gQNG9SAQ2zOup86CTc0/g4B9gqMI9HtRoy6W3VVODCUcuL/7hIEz+
-         WcQo31+bO73SksQuvKBqM7binIqlHHQbeYRvDv8Q5fiJt+shOiBYyw2KvCz+bEi2OT
-         8ZJdhfYhiVvH28VWT1ifIubWVW7PBaS3fQCNRLAU=
+        b=C5oqlKKdgNrtTDxs+d05q1Hem8SIdcsxMp2DXoJL1kjJqp0/43/DpP2/jAQNB4k3b
+         2Cc5+WI5m/h0iRBB6y2T6mk0x2HA28wlIHq/tImdSw1lb1ZuqXRPjThn0KUuanvdxY
+         q2SViWzvVesQwIOIRsuJH35+WTHjhv8pzcWL2IQ8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ralph Campbell <rcampbell@nvidia.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        Waiman Long <longman@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 3.18 002/134] numa: change get_mempolicy() to use nr_node_ids instead of MAX_NUMNODES
-Date:   Fri, 22 Mar 2019 12:13:35 +0100
-Message-Id: <20190322111210.552368844@linuxfoundation.org>
+        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 3.18 014/134] isdn: i4l: isdn_tty: Fix some concurrency double-free bugs
+Date:   Fri, 22 Mar 2019 12:13:47 +0100
+Message-Id: <20190322111211.099297951@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111210.465931067@linuxfoundation.org>
 References: <20190322111210.465931067@linuxfoundation.org>
@@ -68,71 +66,67 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Ralph Campbell <rcampbell@nvidia.com>
+[ Upstream commit 2ff33d6637393fe9348357285931811b76e1402f ]
 
-commit 050c17f239fd53adb55aa768d4f41bc76c0fe045 upstream.
+The functions isdn_tty_tiocmset() and isdn_tty_set_termios() may be
+concurrently executed.
 
-The system call, get_mempolicy() [1], passes an unsigned long *nodemask
-pointer and an unsigned long maxnode argument which specifies the length
-of the user's nodemask array in bits (which is rounded up).  The manual
-page says that if the maxnode value is too small, get_mempolicy will
-return EINVAL but there is no system call to return this minimum value.
-To determine this value, some programs search /proc/<pid>/status for a
-line starting with "Mems_allowed:" and use the number of digits in the
-mask to determine the minimum value.  A recent change to the way this line
-is formatted [2] causes these programs to compute a value less than
-MAX_NUMNODES so get_mempolicy() returns EINVAL.
+isdn_tty_tiocmset
+  isdn_tty_modem_hup
+    line 719: kfree(info->dtmf_state);
+    line 721: kfree(info->silence_state);
+    line 723: kfree(info->adpcms);
+    line 725: kfree(info->adpcmr);
 
-Change get_mempolicy(), the older compat version of get_mempolicy(), and
-the copy_nodes_to_user() function to use nr_node_ids instead of
-MAX_NUMNODES, thus preserving the defacto method of computing the minimum
-size for the nodemask array and the maxnode argument.
+isdn_tty_set_termios
+  isdn_tty_modem_hup
+    line 719: kfree(info->dtmf_state);
+    line 721: kfree(info->silence_state);
+    line 723: kfree(info->adpcms);
+    line 725: kfree(info->adpcmr);
 
-[1] http://man7.org/linux/man-pages/man2/get_mempolicy.2.html
-[2] https://lore.kernel.org/lkml/1545405631-6808-1-git-send-email-longman@redhat.com
+Thus, some concurrency double-free bugs may occur.
 
-Link: http://lkml.kernel.org/r/20190211180245.22295-1-rcampbell@nvidia.com
-Fixes: 4fb8e5b89bcbbbb ("include/linux/nodemask.h: use nr_node_ids (not MAX_NUMNODES) in __nodemask_pr_numnodes()")
-Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
-Suggested-by: Alexander Duyck <alexander.duyck@gmail.com>
-Cc: Waiman Long <longman@redhat.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+These possible bugs are found by a static tool written by myself and
+my manual code review.
 
+To fix these possible bugs, the mutex lock "modem_info_mutex" used in
+isdn_tty_tiocmset() is added in isdn_tty_set_termios().
+
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/mempolicy.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/isdn/i4l/isdn_tty.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/mm/mempolicy.c
-+++ b/mm/mempolicy.c
-@@ -1349,7 +1349,7 @@ static int copy_nodes_to_user(unsigned l
- 			      nodemask_t *nodes)
+diff --git a/drivers/isdn/i4l/isdn_tty.c b/drivers/isdn/i4l/isdn_tty.c
+index bc912611fe097..b166354b80428 100644
+--- a/drivers/isdn/i4l/isdn_tty.c
++++ b/drivers/isdn/i4l/isdn_tty.c
+@@ -1459,15 +1459,19 @@ isdn_tty_set_termios(struct tty_struct *tty, struct ktermios *old_termios)
  {
- 	unsigned long copy = ALIGN(maxnode-1, 64) / 8;
--	const int nbytes = BITS_TO_LONGS(MAX_NUMNODES) * sizeof(long);
-+	unsigned int nbytes = BITS_TO_LONGS(nr_node_ids) * sizeof(long);
+ 	modem_info *info = (modem_info *) tty->driver_data;
  
- 	if (copy > nbytes) {
- 		if (copy > PAGE_SIZE)
-@@ -1510,7 +1510,7 @@ SYSCALL_DEFINE5(get_mempolicy, int __use
- 	int uninitialized_var(pval);
- 	nodemask_t nodes;
++	mutex_lock(&modem_info_mutex);
+ 	if (!old_termios)
+ 		isdn_tty_change_speed(info);
+ 	else {
+ 		if (tty->termios.c_cflag == old_termios->c_cflag &&
+ 		    tty->termios.c_ispeed == old_termios->c_ispeed &&
+-		    tty->termios.c_ospeed == old_termios->c_ospeed)
++		    tty->termios.c_ospeed == old_termios->c_ospeed) {
++			mutex_unlock(&modem_info_mutex);
+ 			return;
++		}
+ 		isdn_tty_change_speed(info);
+ 	}
++	mutex_unlock(&modem_info_mutex);
+ }
  
--	if (nmask != NULL && maxnode < MAX_NUMNODES)
-+	if (nmask != NULL && maxnode < nr_node_ids)
- 		return -EINVAL;
- 
- 	err = do_get_mempolicy(&pval, &nodes, addr, flags);
-@@ -1539,7 +1539,7 @@ COMPAT_SYSCALL_DEFINE5(get_mempolicy, in
- 	unsigned long nr_bits, alloc_size;
- 	DECLARE_BITMAP(bm, MAX_NUMNODES);
- 
--	nr_bits = min_t(unsigned long, maxnode-1, MAX_NUMNODES);
-+	nr_bits = min_t(unsigned long, maxnode-1, nr_node_ids);
- 	alloc_size = ALIGN(nr_bits, BITS_PER_LONG) / 8;
- 
- 	if (nmask)
+ /*
+-- 
+2.19.1
+
 
 
