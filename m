@@ -2,127 +2,97 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01DCEC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 20:35:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48EFEC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 20:36:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE44921900
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 20:35:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2292021900
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 20:36:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727762AbfCVUft (ORCPT
+        id S1727865AbfCVUgc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 16:35:49 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:42975 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726181AbfCVUfs (ORCPT
+        Fri, 22 Mar 2019 16:36:32 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:57394 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727330AbfCVUgc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 16:35:48 -0400
-Received: by mail-qt1-f196.google.com with SMTP id p20so4034153qtc.9;
-        Fri, 22 Mar 2019 13:35:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NXxQnRDNbnuxXP7bXuOZ11OG9/q91mbntkleNw0PwLo=;
-        b=nrGEwWSwmtHGlZfOD8lUDAHdVHiTANoILHYktTtnXd5AC7d7jPjv0PE0S/2AqV3Yl3
-         4Dv2WlVdbwatwzy+90ZjF5qPxy7ZfHcQQcANJt4WfH6A+9KqVVe7ZGlP51qM4Xz5OCf1
-         S/B6nE9V9UrAwiChRC4ncVmC7lCVR4fH++fqpH//iB5ZFTSuFiV5oi2bBCPpeLOjAF3o
-         ADzpYb0jsOM7VuIJrz9um1GTEFXIi2vM3jnFAcuT6Orxk3dQRPef+SQC5Ymh+JJN6cls
-         f21t3XCQ6eCYZO+GkeMGa8EytFWl5NNVabsanQdd+Ak8KFNgelWrdqQc5YQDOd6cukKa
-         XQIw==
-X-Gm-Message-State: APjAAAWyP9VLEEZ/dzCQzJakYTs11i20ORwhDTp8ke1uF762Nim7LaWf
-        DO3l5hoG8T70p9c6psAdf1g5T4p9T1QUC8rbeR0=
-X-Google-Smtp-Source: APXvYqzUlKJb4IxCjsGWdLShq+8Q1vx1PUEjVNBeSszoGq4puPUXowX7PAFBpRMTHAKcL2aEdpDGgYkNQv7kof7xwzQ=
-X-Received: by 2002:ac8:276b:: with SMTP id h40mr9905246qth.319.1553286947667;
- Fri, 22 Mar 2019 13:35:47 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190322141414.496017-1-arnd@arndb.de> <CAHC9VhQuSQr7+y1z3SmY=3s608zYo3JXhF3m_jUWXAo8i8swgw@mail.gmail.com>
-In-Reply-To: <CAHC9VhQuSQr7+y1z3SmY=3s608zYo3JXhF3m_jUWXAo8i8swgw@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 22 Mar 2019 21:35:30 +0100
-Message-ID: <CAK8P3a0EF-T7fySTCDBAFftWTKXPTBcCzj7afcVTP=_pemQdug@mail.gmail.com>
-Subject: Re: [PATCH] selinux: avoid uninitialized variable warning
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
-        Eric Paris <eparis@parisplace.org>,
-        clang-built-linux@googlegroups.com,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        selinux@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        Fri, 22 Mar 2019 16:36:32 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2MKYfHW010548
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 16:36:31 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rd4pydbc4-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 16:36:31 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Fri, 22 Mar 2019 20:36:18 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 22 Mar 2019 20:36:16 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2MKaPac60489922
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 22 Mar 2019 20:36:26 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D158611C050;
+        Fri, 22 Mar 2019 20:36:25 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5D11A11C04A;
+        Fri, 22 Mar 2019 20:36:25 +0000 (GMT)
+Received: from dhcp-9-31-103-153.watson.ibm.com (unknown [9.31.103.153])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 22 Mar 2019 20:36:25 +0000 (GMT)
+Subject: Re: Adding cmldine args measure to ima
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Prakhar Srivastava <prsriva@microsoft.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>
+Date:   Fri, 22 Mar 2019 16:36:24 -0400
+In-Reply-To: <DM5PR21MB0747326E1CAA3F66CE61B149BC430@DM5PR21MB0747.namprd21.prod.outlook.com>
+References: <DM5PR21MB0747326E1CAA3F66CE61B149BC430@DM5PR21MB0747.namprd21.prod.outlook.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19032220-0020-0000-0000-000003268396
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19032220-0021-0000-0000-00002178B1A3
+Message-Id: <1553286984.5291.2.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-22_12:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903220146
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 22, 2019 at 9:15 PM Paul Moore <paul@paul-moore.com> wrote:
-> On Fri, Mar 22, 2019 at 10:14 AM Arnd Bergmann <arnd@arndb.de> wrote:
+On Fri, 2019-03-22 at 17:27 +0000, Prakhar Srivastava wrote:
+> Hi,
+> 
+> Currently Kexec (kexec_file_load) code path does not measure the cmdline 
+> arguments passed to the next kernel.The boot_aggregate won't change since 
+> the EFI loader hasn't been triggered. Attesting the same in K2 has no impact.
+> Adding the cmdline measurement will add some attestable criteria.
+> 
+> To account for the cmdline passed, we are looking at using IMA to measure and 
+> pass the buffer so that it can be attested.
+> 
+> Do you have any alternate solutions/concerns with this approach?
 
-> Hi Arnd,
->
-> Thanks for pointing this out and providing a fix.  I think you're
-> right in that the should be pretty harmless, but I also agree that we
-> should fix it; some thoughts on the patch below ...
->
-> > diff --git a/security/selinux/netlabel.c b/security/selinux/netlabel.c
-> > index 186e727b737b..d0e549d4f486 100644
-> > --- a/security/selinux/netlabel.c
-> > +++ b/security/selinux/netlabel.c
-> > @@ -288,7 +288,6 @@ int selinux_netlbl_sctp_assoc_request(struct sctp_endpoint *ep,
-> >         int rc;
-> >         struct netlbl_lsm_secattr secattr;
-> >         struct sk_security_struct *sksec = ep->base.sk->sk_security;
-> > -       struct sockaddr *addr;
-> >         struct sockaddr_in addr4;
-> >  #if IS_ENABLED(CONFIG_IPV6)
-> >         struct sockaddr_in6 addr6;
-> > @@ -310,16 +309,15 @@ int selinux_netlbl_sctp_assoc_request(struct sctp_endpoint *ep,
-> >         if (ip_hdr(skb)->version == 4) {
-> >                 addr4.sin_family = AF_INET;
-> >                 addr4.sin_addr.s_addr = ip_hdr(skb)->saddr;
-> > -               addr = (struct sockaddr *)&addr4;
-> > +               rc = netlbl_conn_setattr(ep->base.sk, (void*)&addr4, &secattr);
-> >  #if IS_ENABLED(CONFIG_IPV6)
-> >         } else {
-> >                 addr6.sin6_family = AF_INET6;
-> >                 addr6.sin6_addr = ipv6_hdr(skb)->saddr;
-> > -               addr = (struct sockaddr *)&addr6;
-> > +               rc = netlbl_conn_setattr(ep->base.sk, (void*)&addr6, &secattr);
-> >  #endif
->
-> While we are hardening the code a bit, I'm thinking we should probably
-> refactor this if-else a bit, some pseudo code for example:
->
->     if (ip_hdr == 4) {
->       rc = netlbl_conn_setattr();
->   #if CONFIG_IPV6
->     } else if (ip_hdr == 6) {
->       rc = netlbl_conn_setattr();
->   #endif
->     } else {
->       rc = -EAFNOSUPPORT;
->     }
->
-> Thoughts?
->
+I started looking at this a couple of years ago, but haven't had time.
+I definitely don't have problems with extending IMA to measure the
+boot command line.
 
-Seems fine. We could go a step further and use IS_ENABLED()
-as C code here to get rid of the two #ifdef checks as well, like
+Mimi
 
-        if (ip_hdr(skb)->version == 4 ) {
-                addr4.sin_family = AF_INET;
-                addr4.sin_addr.s_addr = ip_hdr(skb)->saddr;
-                rc = netlbl_conn_setattr(ep->base.sk, &addr4, &secattr);
-        } else if (IS_ENABLED(CONFIG_IPV6) && ip_hdr(skb)->version == 6) {
-                addr6.sin6_family = AF_INET6;
-                addr6.sin6_addr = ipv6_hdr(skb)->saddr;
-                rc = netlbl_conn_setattr(ep->base.sk, &addr6, &secattr);
-        } else {
-               rc = -EAFNOSUPPORT;
-        }
-
-  Arnd
