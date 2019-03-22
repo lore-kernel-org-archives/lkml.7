@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7228AC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:32:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF8EC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:33:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40B272054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:32:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD4E32054F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:33:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553257972;
-	bh=I6TkfuPWmnzR3CR7AOsBI6PcKCUUh0Zi7ac5mG1HelQ=;
+	s=default; t=1553258003;
+	bh=LVmzGzdXQDF+iI2tiem7wO2p8OtOfqosvOv3ISN6Df8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0581T+WeUmbdo3adJGspQeGXw+r0TXYQ4QdbcHK5b1CsdJdYZSPqSuhIMt6v0AHIv
-	 CVfOVq7jhiequBoM2tivgbtX2iZDW1nYKWelgGE6LvcrkgHwMZ0FZg5gMHi3MaBAas
-	 Ta6OwIh4npBUH/dpQkugj82OTqCuXeDe/JMWbFbU=
+	b=PLbg+7LL+uhbs3v9jHcLha8PyZxWhdrhr3cIswFV0YxvfzUaksYXnw2I01e6z7LuP
+	 zH19Kp9M8zMtL2chmm/aRfO9fTnvkaHIqriqoadq+7560IQUQ46ovH4na2ZrFJ+ezr
+	 fOxcJWAMZmLGNCwBZu+JDDrNBbUpmbQstIgss3GE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390080AbfCVMPd (ORCPT
+        id S2389895AbfCVMdV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:15:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53988 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:33:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53102 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389861AbfCVMPa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:15:30 -0400
+        id S2389976AbfCVMOu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:14:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37E672082C;
-        Fri, 22 Mar 2019 12:15:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE0E62082C;
+        Fri, 22 Mar 2019 12:14:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256929;
-        bh=I6TkfuPWmnzR3CR7AOsBI6PcKCUUh0Zi7ac5mG1HelQ=;
+        s=default; t=1553256889;
+        bh=LVmzGzdXQDF+iI2tiem7wO2p8OtOfqosvOv3ISN6Df8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pauFkn0HZ7BnQcaZLvwxzGLefYrp7ZqT88VlAxuvIVHoC/vkM41NeRyS3aUW/467T
-         JBQ+UOD+AdavqC4BRqhcd9I38lZrxJ3X74AmbZWMCHaSj4kKVvhZWd0qsOlquTYL/F
-         eV3GSEkpmXkpZrzlZLjNEaGSX0gIQGk7bGOfCuIk=
+        b=g69ENPZLGEq71MqbyWLmeD+0UXiYDiuuwBZzI3e4TEfRaolMElreFTSJacpRmtk6k
+         aSIUYKeJ7UlK5Ydh2959pfMcrDI+bvOAkvIFhrDwZ/B7wIBr7IfBjt+HGkyhB2Kl9h
+         2nojGuN2JU9+N3UeBDdUNAHjisjecUz9Dp26veR4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Felipe Franciosi <felipe@nutanix.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 5.0 079/238] scsi: virtio_scsi: dont send sc payload with tmfs
-Date:   Fri, 22 Mar 2019 12:14:58 +0100
-Message-Id: <20190322111303.256891896@linuxfoundation.org>
+        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.0 068/238] spi: spi-gpio: fix SPI_CS_HIGH capability
+Date:   Fri, 22 Mar 2019 12:14:47 +0100
+Message-Id: <20190322111302.635574528@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -66,63 +65,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Felipe Franciosi <felipe@nutanix.com>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-commit 3722e6a52174d7c3a00e6f5efd006ca093f346c1 upstream.
+commit b89fefda7d4e3a649129584d855be233c7465264 upstream.
 
-The virtio scsi spec defines struct virtio_scsi_ctrl_tmf as a set of
-device-readable records and a single device-writable response entry:
+spi-gpio is capable of dealing with active-high chip-selects.
+Unfortunately, commit 4b859db2c606 ("spi: spi-gpio: add SPI_3WIRE
+support") broke this by setting master->mode_bits, which overrides
+the setting in the spi-bitbang code.  Fix this.
 
-    struct virtio_scsi_ctrl_tmf
-    {
-        // Device-readable part
-        le32 type;
-        le32 subtype;
-        u8 lun[8];
-        le64 id;
-        // Device-writable part
-        u8 response;
-    }
+[Fixed a trivial conflict with SPI_3WIRE_HIZ support -- broonie]
 
-The above should be organised as two descriptor entries (or potentially
-more if using VIRTIO_F_ANY_LAYOUT), but without any extra data after "le64
-id" or after "u8 response".
-
-The Linux driver doesn't respect that, with virtscsi_abort() and
-virtscsi_device_reset() setting cmd->sc before calling virtscsi_tmf().  It
-results in the original scsi command payload (or writable buffers) added to
-the tmf.
-
-This fixes the problem by leaving cmd->sc zeroed out, which makes
-virtscsi_kick_cmd() add the tmf to the control vq without any payload.
-
+Fixes: 4b859db2c606 ("spi: spi-gpio: add SPI_3WIRE support")
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Cc: stable@vger.kernel.org
-Signed-off-by: Felipe Franciosi <felipe@nutanix.com>
-Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/virtio_scsi.c |    2 --
- 1 file changed, 2 deletions(-)
+ drivers/spi/spi-gpio.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/scsi/virtio_scsi.c
-+++ b/drivers/scsi/virtio_scsi.c
-@@ -594,7 +594,6 @@ static int virtscsi_device_reset(struct
- 		return FAILED;
+--- a/drivers/spi/spi-gpio.c
++++ b/drivers/spi/spi-gpio.c
+@@ -428,7 +428,8 @@ static int spi_gpio_probe(struct platfor
+ 		return status;
  
- 	memset(cmd, 0, sizeof(*cmd));
--	cmd->sc = sc;
- 	cmd->req.tmf = (struct virtio_scsi_ctrl_tmf_req){
- 		.type = VIRTIO_SCSI_T_TMF,
- 		.subtype = cpu_to_virtio32(vscsi->vdev,
-@@ -653,7 +652,6 @@ static int virtscsi_abort(struct scsi_cm
- 		return FAILED;
+ 	master->bits_per_word_mask = SPI_BPW_RANGE_MASK(1, 32);
+-	master->mode_bits = SPI_3WIRE | SPI_3WIRE_HIZ | SPI_CPHA | SPI_CPOL;
++	master->mode_bits = SPI_3WIRE | SPI_3WIRE_HIZ | SPI_CPHA | SPI_CPOL |
++			    SPI_CS_HIGH;
+ 	master->flags = master_flags;
+ 	master->bus_num = pdev->id;
+ 	/* The master needs to think there is a chipselect even if not connected */
+@@ -455,7 +456,6 @@ static int spi_gpio_probe(struct platfor
+ 		spi_gpio->bitbang.txrx_word[SPI_MODE_3] = spi_gpio_spec_txrx_word_mode3;
+ 	}
+ 	spi_gpio->bitbang.setup_transfer = spi_bitbang_setup_transfer;
+-	spi_gpio->bitbang.flags = SPI_CS_HIGH;
  
- 	memset(cmd, 0, sizeof(*cmd));
--	cmd->sc = sc;
- 	cmd->req.tmf = (struct virtio_scsi_ctrl_tmf_req){
- 		.type = VIRTIO_SCSI_T_TMF,
- 		.subtype = VIRTIO_SCSI_T_TMF_ABORT_TASK,
+ 	status = spi_bitbang_start(&spi_gpio->bitbang);
+ 	if (status)
 
 
