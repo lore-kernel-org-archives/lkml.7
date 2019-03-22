@@ -4,61 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37806C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:06:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4888AC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:06:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07E6821934
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:06:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17CB8206C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:06:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256396;
-	bh=+38LEnwN+BU7HEdqjoIT5Cw9mNx5iDU2PgQUjcdNe3g=;
+	s=default; t=1553256403;
+	bh=nCZSLFuQYyGtZCDdFvyJeYLUixqvbNgZW9zA8nYyGzc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iM1XMchSjb0uRgDN+9TAk5VZgDtw+2gsiEa2EsS94gtWLXHxH43hzKIVbNFRSHzKx
-	 W9bjv2eIkl1yQwMUVkPUL1xWKgpxnoA9799XotBHzer31agG+52+OAMEYzEQ0VssWU
-	 E+mDkCVdeH266aKH3kLJVxbcQSBs+Vlq/OX83QaY=
+	b=eJoJZq7dbKKTIn3+gA5kmupOTcEbwb9pXr09ySYsEIDvOF56oXC0KV6PU4Al17FiY
+	 w2CNwdEgMfGytzosAAC9wZAnwHwcxnRD+oA5fdLzFbdMfCWSg3/d/RBA+Ee7bwdgFL
+	 KQI/6lka0mg1dVqzdnzKIko1O1MLTAFqGgD57c6E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388931AbfCVMGe (ORCPT
+        id S2388938AbfCVMGk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:06:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44860 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:06:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388925AbfCVMGZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:06:25 -0400
+        id S2388475AbfCVMGc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:06:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 689EF206C0;
-        Fri, 22 Mar 2019 12:06:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FD6921934;
+        Fri, 22 Mar 2019 12:06:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256384;
-        bh=+38LEnwN+BU7HEdqjoIT5Cw9mNx5iDU2PgQUjcdNe3g=;
+        s=default; t=1553256391;
+        bh=nCZSLFuQYyGtZCDdFvyJeYLUixqvbNgZW9zA8nYyGzc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=boQMMg/jeC3wWBOOEzDezDHaBYAjthkxpux1nx+XBJGlg9O9PgLBuBy8BKV5T4rzy
-         EWk8ikjQMbEbtjBeh4L8xF3XZsTvBIy19PbZgMWmXfJGNacEm0aIE1Xypmc4gX63Hd
-         ZspXNTk9+qhcqzT3dnUw9Or+pUokPJpTfji0+eQI=
+        b=wq+kuej+/y+s7xlzczdpJkc14BMzOHratIBQ2Wd1rcoufylhVNutFAh4/OSrexcX8
+         G+EqjMzZakhNvcjDfD40cieeQBg9VDnCvfCQTrsDFnNdhYmiH/Fgfyicnd32WHelfS
+         pdPKiV+N4YnoEqSNbIzw7sc9vLECevwqdYSi27QI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Varad Gautam <vrd@amazon.de>,
-        Zheng Wang <wanz@amazon.de>,
-        Brandon Schwartz <bsschwar@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Maximilian Heyne <mheyne@amazon.de>,
-        Stefan Nuernberger <snu@amazon.de>, Amit Shah <aams@amazon.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@ZenIV.linux.org.uk>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Eric Biggers <ebiggers@google.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Nicolas Pernas Maradei <npernas@amazon.de>
-Subject: [PATCH 4.19 163/280] fs/devpts: always delete dcache dentry-s in dput()
-Date:   Fri, 22 Mar 2019 12:15:16 +0100
-Message-Id: <20190322111322.870966478@linuxfoundation.org>
+        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        Peter Chen <peter.chen@nxp.com>
+Subject: [PATCH 4.19 197/280] usb: chipidea: tegra: Fix missed ci_hdrc_remove_device()
+Date:   Fri, 22 Mar 2019 12:15:50 +0100
+Message-Id: <20190322111329.970302642@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -77,80 +65,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Varad Gautam <vrd@amazon.de>
+From: Dmitry Osipenko <digetx@gmail.com>
 
-commit 73052b0daee0b750b39af18460dfec683e4f5887 upstream.
+commit 563b9372f7ec57e44e8f9a8600c5107d7ffdd166 upstream.
 
-d_delete only unhashes an entry if it is reached with
-dentry->d_lockref.count != 1. Prior to commit 8ead9dd54716 ("devpts:
-more pty driver interface cleanups"), d_delete was called on a dentry
-from devpts_pty_kill with two references held, which would trigger the
-unhashing, and the subsequent dputs would release it.
+The ChipIdea's platform device need to be unregistered on Tegra's driver
+module removal.
 
-Commit 8ead9dd54716 reworked devpts_pty_kill to stop acquiring the second
-reference from d_find_alias, and the d_delete call left the dentries
-still on the hashed list without actually ever being dropped from dcache
-before explicit cleanup. This causes the number of negative dentries for
-devpts to pile up, and an `ls /dev/pts` invocation can take seconds to
-return.
-
-Provide always_delete_dentry() from simple_dentry_operations
-as .d_delete for devpts, to make the dentry be dropped from dcache.
-
-Without this cleanup, the number of dentries in /dev/pts/ can be grown
-arbitrarily as:
-
-`python -c 'import pty; pty.spawn(["ls", "/dev/pts"])'`
-
-A systemtap probe on dcache_readdir to count d_subdirs shows this count
-to increase with each pty spawn invocation above:
-
-probe kernel.function("dcache_readdir") {
-    subdirs = &@cast($file->f_path->dentry, "dentry")->d_subdirs;
-    p = subdirs;
-    p = @cast(p, "list_head")->next;
-    i = 0
-    while (p != subdirs) {
-      p = @cast(p, "list_head")->next;
-      i = i+1;
-    }
-    printf("number of dentries: %d\n", i);
-}
-
-Fixes: 8ead9dd54716 ("devpts: more pty driver interface cleanups")
-Signed-off-by: Varad Gautam <vrd@amazon.de>
-Reported-by: Zheng Wang <wanz@amazon.de>
-Reported-by: Brandon Schwartz <bsschwar@amazon.de>
-Root-caused-by: Maximilian Heyne <mheyne@amazon.de>
-Root-caused-by: Nicolas Pernas Maradei <npernas@amazon.de>
-CC: David Woodhouse <dwmw@amazon.co.uk>
-CC: Maximilian Heyne <mheyne@amazon.de>
-CC: Stefan Nuernberger <snu@amazon.de>
-CC: Amit Shah <aams@amazon.de>
-CC: Linus Torvalds <torvalds@linux-foundation.org>
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: Al Viro <viro@ZenIV.linux.org.uk>
-CC: Christian Brauner <christian.brauner@ubuntu.com>
-CC: Eric W. Biederman <ebiederm@xmission.com>
-CC: Matthew Wilcox <willy@infradead.org>
-CC: Eric Biggers <ebiggers@google.com>
-CC: <stable@vger.kernel.org> # 4.9+
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Fixes: dfebb5f43a78827a ("usb: chipidea: Add support for Tegra20/30/114/124")
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Acked-by: Peter Chen <peter.chen@nxp.com>
+Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/devpts/inode.c |    1 +
+ drivers/usb/chipidea/ci_hdrc_tegra.c |    1 +
  1 file changed, 1 insertion(+)
 
---- a/fs/devpts/inode.c
-+++ b/fs/devpts/inode.c
-@@ -455,6 +455,7 @@ devpts_fill_super(struct super_block *s,
- 	s->s_blocksize_bits = 10;
- 	s->s_magic = DEVPTS_SUPER_MAGIC;
- 	s->s_op = &devpts_sops;
-+	s->s_d_op = &simple_dentry_operations;
- 	s->s_time_gran = 1;
+--- a/drivers/usb/chipidea/ci_hdrc_tegra.c
++++ b/drivers/usb/chipidea/ci_hdrc_tegra.c
+@@ -130,6 +130,7 @@ static int tegra_udc_remove(struct platf
+ {
+ 	struct tegra_udc *udc = platform_get_drvdata(pdev);
  
- 	error = -ENOMEM;
++	ci_hdrc_remove_device(udc->dev);
+ 	usb_phy_set_suspend(udc->phy, 1);
+ 	clk_disable_unprepare(udc->clk);
+ 
 
 
