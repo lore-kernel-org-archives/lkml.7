@@ -2,95 +2,73 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1F5CC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:52:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 058C0C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:52:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86ED320850
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:52:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAF8120850
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:52:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SoIIWRKq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728045AbfCVQwJ (ORCPT
+        id S1728230AbfCVQw1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 12:52:09 -0400
-Received: from smtprelay0139.hostedemail.com ([216.40.44.139]:53987 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727443AbfCVQwJ (ORCPT
+        Fri, 22 Mar 2019 12:52:27 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:51050 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727443AbfCVQw1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 12:52:09 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 731BC40F4;
-        Fri, 22 Mar 2019 16:52:07 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: week26_4c650743d8113
-X-Filterd-Recvd-Size: 2562
-Received: from XPS-9350.home (unknown [47.151.153.53])
-        (Authenticated sender: joe@perches.com)
-        by omf17.hostedemail.com (Postfix) with ESMTPA;
-        Fri, 22 Mar 2019 16:52:04 +0000 (UTC)
-Message-ID: <aa5e2a093bf1c2d7ef024348065249bb6e4518b2.camel@perches.com>
-Subject: Re: [PATCH 1/2] PM / arch: x86: Rework the
- MSR_IA32_ENERGY_PERF_BIAS handling
-From:   Joe Perches <joe@perches.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Len Brown <len.brown@intel.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Laura Abbott <labbott@fedoraproject.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Simon Schricker <sschricker@suse.de>,
-        Hannes Reinecke <hare@suse.de>
-Date:   Fri, 22 Mar 2019 09:52:03 -0700
-In-Reply-To: <alpine.DEB.2.21.1903221712020.1729@nanos.tec.linutronix.de>
-References: <1637073.gl2OfxWTjI@aspire.rjw.lan>
-         <1605148.8jT99SsvVP@aspire.rjw.lan> <20190322142828.GA12472@zn.tnic>
-         <alpine.DEB.2.21.1903221531080.1729@nanos.tec.linutronix.de>
-         <20190322143525.GB12472@zn.tnic>
-         <alpine.DEB.2.21.1903221712020.1729@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.1-1build1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Fri, 22 Mar 2019 12:52:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=43yWoHNsIC8YPsKPjdrRLXkYbp5BCR3I+6h2VPg3G2Q=; b=SoIIWRKqYcgcAypFylzNqem/l
+        xYfEClSFsoXMgl/znXpzKM57JoUolr1nk1HfWtKPAIM3vf0GI01kzFmXEa5CQ4wCmVmNKUkxtZ6GT
+        l3fIEqpU3AiKeZbhN14cnLqb/iMdvcTN+fg5drySVfie72W5767xQIVrp/ESwBblfgVPaNkurQRCE
+        t3ZaYeT4Zkzz2SGa1mKuelVC4GvvZcYfhz8uhxVMnkzd2hlpzhcRjC+Cfk/l3rz2CkQr28B3M2lca
+        uCF3viMTK56agTLE88pnUuA+hvbWcauM4Cchpwgy0zAmQ4Zncuoni4mdVTl91rLpCaykTQ0i67tKF
+        n9BQOTceA==;
+Received: from [31.161.229.66] (helo=worktop.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h7NOz-0003VU-Pq; Fri, 22 Mar 2019 16:52:18 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id CE103980317; Fri, 22 Mar 2019 17:52:14 +0100 (CET)
+Date:   Fri, 22 Mar 2019 17:52:14 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Pu Wen <puwen@hygon.cn>, "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "hpa@zytor.com" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH] x86/cpu/hygon: Fix phys_proc_id calculation logic
+ for multi-die processor
+Message-ID: <20190322165214.GI7905@worktop.programming.kicks-ass.net>
+References: <1553251380-7015-1-git-send-email-puwen@hygon.cn>
+ <20190322155449.GE12472@zn.tnic>
+ <639a5bc6-f821-ee9d-1594-d02701321192@hygon.cn>
+ <20190322164445.GG12472@zn.tnic>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190322164445.GG12472@zn.tnic>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-03-22 at 17:12 +0100, Thomas Gleixner wrote:
-> On Fri, 22 Mar 2019, Borislav Petkov wrote:
+On Fri, Mar 22, 2019 at 05:44:45PM +0100, Borislav Petkov wrote:
+> On Sat, Mar 23, 2019 at 12:19:01AM +0800, Pu Wen wrote:
+> > That 6 is not a magic number.
 > 
-> > On Fri, Mar 22, 2019 at 03:31:54PM +0100, Thomas Gleixner wrote:
-> > > We have no proper decision/recommendation about documentation
-> > > licensing. That's being worked on.
-> > 
-> > Ok, I'm ignoring this checkpatch warning from now on.
-> 
-> Only for Documentation/* files please.
+> Well, if I see a naked 6, then it is only magic to me. Now if it were a
+> proper define with a descriptive name...
 
-Perhaps
----
- scripts/checkpatch.pl | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index d0001fd1112d..00c1457fe79b 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -3058,7 +3058,8 @@ sub process {
- 					     "Improper SPDX comment style for '$realfile', please use '$comment' instead\n" . $herecurr);
- 				}
- 
--				if ($comment !~ /^$/ &&
-+				if ($realfile !~ m@^Documentation/@ &&
-+				    $comment !~ /^$/ &&
- 				    $rawline !~ m@^\+\Q$comment\E SPDX-License-Identifier: @) {
- 					WARN("SPDX_LICENSE_TAG",
- 					     "Missing or malformed SPDX-License-Identifier tag in line $checklicenseline\n" . $herecurr);
-
-
+Does AMD/Hygon not have a CPUID leaf to read useful things like this
+from?
