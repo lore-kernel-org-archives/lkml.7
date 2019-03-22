@@ -2,104 +2,116 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67313C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:13:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B32D7C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:18:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EB9F218A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:13:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C927218A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:18:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729601AbfCVQNi (ORCPT
+        id S1729470AbfCVQSN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 12:13:38 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:45955 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727169AbfCVQNh (ORCPT
+        Fri, 22 Mar 2019 12:18:13 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:59561 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727898AbfCVQSM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 12:13:37 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x2MGDJVb650421
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Fri, 22 Mar 2019 09:13:19 -0700
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x2MGDIOg650418;
-        Fri, 22 Mar 2019 09:13:18 -0700
-Date:   Fri, 22 Mar 2019 09:13:18 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Nathan Chancellor <tipbot@zytor.com>
-Message-ID: <tip-e898e69d6b9475bf123f99b3c5d1a67bb7cb2361@git.kernel.org>
-Cc:     ndesaulniers@google.com, linux-kernel@vger.kernel.org,
-        mingo@kernel.org, tglx@linutronix.de, bp@alien8.de, hpa@zytor.com,
-        natechancellor@gmail.com
-Reply-To: tglx@linutronix.de, bp@alien8.de, natechancellor@gmail.com,
-          ndesaulniers@google.com, mingo@kernel.org,
-          linux-kernel@vger.kernel.org, hpa@zytor.com
-In-Reply-To: <20190307212756.4648-1-natechancellor@gmail.com>
-References: <20190307212756.4648-1-natechancellor@gmail.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/urgent] x86/hw_breakpoints: Make default case in
- hw_breakpoint_arch_parse() return an error
-Git-Commit-ID: e898e69d6b9475bf123f99b3c5d1a67bb7cb2361
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Fri, 22 Mar 2019 12:18:12 -0400
+Received: from wuerfel.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1N5mSj-1gwtJa2zff-017GR7; Fri, 22 Mar 2019 17:17:53 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     stable@vger.kernel.org, Jingoo Han <jingoohan1@gmail.com>,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Niklas Cassel <niklas.cassel@axis.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Joao Pinto <jpinto@synopsys.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Sasha Levin <alexander.levin@microsoft.com>,
+        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [BACKPORT 4.14.y 2/8] PCI: designware-ep: dw_pcie_ep_set_msi() should only set MMC bits
+Date:   Fri, 22 Mar 2019 17:17:17 +0100
+Message-Id: <20190322161727.1153278-3-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20190322161727.1153278-1-arnd@arndb.de>
+References: <20190322161727.1153278-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+X-Provags-ID: V03:K1:Uo8SCd+/FXufp8zP23YIUZ9XHIAhfqzREoeT+kXGkT8DrQcIvtO
+ ISLMiq4LYOZCjxilA5CckNAfOAqFDM+LAjWLcxmlmgVxM4p5Bgr6VgHEQIuJGeRFS2s/GYC
+ ilIhAbagAtbWHr8HrO/vV7yevV+US9cos7fN8GQFx4BXmKoWrebgZilbJPg+jAo5alncl90
+ z1hU1IY884EbOkFU6yBvg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:JgGkVkB65co=:ZK0Oq82pszuJbkxPzXZ9Yj
+ 73QDqJompKb4wnxLc5id8fEuPESPHDKbHZD+sh2o9651pNR5mtS+elVnpUUQH1VfuTvwRE74a
+ jltal0bsxPt8UciDilVITIrcljRKJJk+Gnq9AHk3xZ2YArlfEv/Aop60qz8DIl1ssD/nfbQjS
+ ttClDHA1MxHmYMG60Tld6z3lC3PFxzRBnUuCDWnfguvkJl/fTOahNCwolB6HAMaZRESHHNECE
+ E1RKlc0Hl2miLYvVfK4vOajLAuoiO8yZhurMBKBfXBgWT8FtTW1mT/niodvRkm/QrS5q7o3Cg
+ 2cXEsm/LswE04L+gCAtyFepmsIVsEfloAT4xYv57+8CQxycUmmo4tUHEn+XeUSwvHso44d5o6
+ lpIb4+OpuEVkcwmeFb9EF91RlNjRhzBl8kfzEOMryFUCwflw7lUA0rCsTt1C6XE/gcTOgPHHM
+ wJm+y262gz8OXYGAQ38EJWrEajVIhzXImAbUXgu4uEHrReRU4w6JV2xl1S0TzFwVv85bUJqXj
+ DsYz0gF2/2VaGoKWkbrGjG7264IzWnugr2FP422/sn4l2++MjDsJ6925vL6PWKYkwqUAe+VD8
+ unr1v9Mri/9wzc5o35Gh7og3uKEMnU8Rz+Bdjy7RJ6iQYjScHYug1DY+n8uCkdnvIdpiDjF6i
+ lK13EFS/7jhs/GOfb7r8VZK+APxrrPFU9vzUlWYPYX9T4rqLkQrp1VwmJYWVT8YXuzZUhWru8
+ hI8Gv+CORdm2j3FXOkJPtSfJRGnVY7UoBS3xbg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  e898e69d6b9475bf123f99b3c5d1a67bb7cb2361
-Gitweb:     https://git.kernel.org/tip/e898e69d6b9475bf123f99b3c5d1a67bb7cb2361
-Author:     Nathan Chancellor <natechancellor@gmail.com>
-AuthorDate: Thu, 7 Mar 2019 14:27:56 -0700
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Fri, 22 Mar 2019 17:08:17 +0100
+From: Niklas Cassel <niklas.cassel@axis.com>
 
-x86/hw_breakpoints: Make default case in hw_breakpoint_arch_parse() return an error
+Previously, dw_pcie_ep_set_msi() wrote all bits in the Message Control
+register, thus overwriting the PCI_MSI_FLAGS_64BIT bit.
+By clearing the PCI_MSI_FLAGS_64BIT bit, we break MSI
+on systems where the RC has set a 64 bit MSI address.
+Fix dw_pcie_ep_set_msi() so that it only sets MMC bits.
 
-When building with -Wsometimes-uninitialized, Clang warns:
-
-arch/x86/kernel/hw_breakpoint.c:355:2: warning: variable 'align' is used
-uninitialized whenever switch default is taken
-[-Wsometimes-uninitialized]
-
-The default cannot be reached because arch_build_bp_info() initializes
-hw->len to one of the specified cases. Nevertheless the warning is valid
-and returning -EINVAL makes sure that this cannot be broken by future
-modifications.
-
-Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: clang-built-linux@googlegroups.com
-Link: https://github.com/ClangBuiltLinux/linux/issues/392
-Link: https://lkml.kernel.org/r/20190307212756.4648-1-natechancellor@gmail.com
-
+Tested-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Signed-off-by: Niklas Cassel <niklas.cassel@axis.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Joao Pinto <jpinto@synopsys.com>
+(cherry picked from commit 099a95f3591ade29da52131895a3ba9f92a0e82c)
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- arch/x86/kernel/hw_breakpoint.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pci/dwc/pcie-designware-ep.c | 4 +++-
+ drivers/pci/dwc/pcie-designware.h    | 1 +
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/hw_breakpoint.c b/arch/x86/kernel/hw_breakpoint.c
-index ff9bfd40429e..d73083021002 100644
---- a/arch/x86/kernel/hw_breakpoint.c
-+++ b/arch/x86/kernel/hw_breakpoint.c
-@@ -354,6 +354,7 @@ int hw_breakpoint_arch_parse(struct perf_event *bp,
- #endif
- 	default:
- 		WARN_ON_ONCE(1);
-+		return -EINVAL;
- 	}
+diff --git a/drivers/pci/dwc/pcie-designware-ep.c b/drivers/pci/dwc/pcie-designware-ep.c
+index 7c621877a939..df317d390317 100644
+--- a/drivers/pci/dwc/pcie-designware-ep.c
++++ b/drivers/pci/dwc/pcie-designware-ep.c
+@@ -214,7 +214,9 @@ static int dw_pcie_ep_set_msi(struct pci_epc *epc, u8 encode_int)
+ 	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
+ 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
  
- 	/*
+-	val = (encode_int << MSI_CAP_MMC_SHIFT);
++	val = dw_pcie_readw_dbi(pci, MSI_MESSAGE_CONTROL);
++	val &= ~MSI_CAP_MMC_MASK;
++	val |= (encode_int << MSI_CAP_MMC_SHIFT) & MSI_CAP_MMC_MASK;
+ 	dw_pcie_writew_dbi(pci, MSI_MESSAGE_CONTROL, val);
+ 
+ 	return 0;
+diff --git a/drivers/pci/dwc/pcie-designware.h b/drivers/pci/dwc/pcie-designware.h
+index 3551dd607b90..5af29d125c7e 100644
+--- a/drivers/pci/dwc/pcie-designware.h
++++ b/drivers/pci/dwc/pcie-designware.h
+@@ -99,6 +99,7 @@
+ 
+ #define MSI_MESSAGE_CONTROL		0x52
+ #define MSI_CAP_MMC_SHIFT		1
++#define MSI_CAP_MMC_MASK		(7 << MSI_CAP_MMC_SHIFT)
+ #define MSI_CAP_MME_SHIFT		4
+ #define MSI_CAP_MSI_EN_MASK		0x1
+ #define MSI_CAP_MME_MASK		(7 << MSI_CAP_MME_SHIFT)
+-- 
+2.20.0
+
