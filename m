@@ -2,51 +2,54 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D958C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:19:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E7AAC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:19:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43659218A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:19:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EFB721916
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:19:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553253573;
-	bh=GVqepg8j2feKULwFOgRtv40LNGib7ZBrE8EvgO88yPA=;
+	s=default; t=1553253579;
+	bh=6WUVgXePciz43c77DLKA5CyvH8zdcHKzt1+lQAzGSWw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KOW5LpVhvc0otSNXzDmPTQ8+GWTgbv8c/lbBIOxqItG+vGBxRqtVOgPZ9f9wpJ5X9
-	 ILjF6zpiMwO3chA98UVjsX8J43HMCJWeLKrQcVLRTmWKn6mMhNB/oTXue1x1cm46ML
-	 mD7B6i5veweSL3aIXGbH7CLS1SA0O5/qCfg6t1SY=
+	b=MEnJ/LqMzTVu1aj+PE0kL+MKL7JckhLCURipfQKP6VPpnJSGzERnBsAuf3SIiPscy
+	 5McEea1qfq+vYqE4AdsMMq5Lnt5bRhMfUBspjBlGV6cT9JaZhIcEYWzNazBXrxWZJq
+	 E3/GOJpxCCIaM03huAGY/Q1GJwXFWI73yMqRsd6A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728142AbfCVLTc (ORCPT
+        id S1728185AbfCVLTi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:19:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45886 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:19:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727957AbfCVLTb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:19:31 -0400
+        id S1726667AbfCVLTg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:19:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C7DB8218A2;
-        Fri, 22 Mar 2019 11:19:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D73E1218A2;
+        Fri, 22 Mar 2019 11:19:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553253571;
-        bh=GVqepg8j2feKULwFOgRtv40LNGib7ZBrE8EvgO88yPA=;
+        s=default; t=1553253575;
+        bh=6WUVgXePciz43c77DLKA5CyvH8zdcHKzt1+lQAzGSWw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sdYNvhVJRm/mXrSpUKaBQrV9fTU9eDplsIIOzn/qQQPwNaJmISRoYOIBy3p4hFfEh
-         07xAtGc/GeBTj8MUER+JczBZCsvArH9n2yYzhQYX8c8A7HlrGqDbbdFrjY87LYGO83
-         DeGx9w7wpk00LpoKcL+qpSPbLnhG1YX6tvz/2B/0=
+        b=ZXZGYEziqIgawO2dnaddFOKmszOXCLkYOzfZxVX/8mafUu2cFP1pwo3O9bH828Q8h
+         zQ9xMUZuTlEo8DbcaE42y7dpm8nfQPBVEbENB/d+beGJUk56Qn+z4elNXFqxqEDxSR
+         fJ5oVutOwMMKkWiyG76rshi1usbKD3MkmB2CdDjU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Yan, Zheng" <zyan@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>
-Subject: [PATCH 3.18 001/134] ceph: avoid repeatedly adding inode to mdsc->snap_flush_list
-Date:   Fri, 22 Mar 2019 12:13:34 +0100
-Message-Id: <20190322111210.519567556@linuxfoundation.org>
+        stable@vger.kernel.org, Alban Bedel <albeu@free.fr>,
+        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 3.18 010/134] MIPS: ath79: Enable OF serial ports in the default config
+Date:   Fri, 22 Mar 2019 12:13:43 +0100
+Message-Id: <20190322111210.852507617@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111210.465931067@linuxfoundation.org>
 References: <20190322111210.465931067@linuxfoundation.org>
@@ -65,33 +68,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Yan, Zheng <zyan@redhat.com>
+[ Upstream commit 565dc8a4f55e491935bfb04866068d21784ea9a4 ]
 
-commit 04242ff3ac0abbaa4362f97781dac268e6c3541a upstream.
+CONFIG_SERIAL_OF_PLATFORM is needed to get a working console on the OF
+boards, enable it in the default config to get a working setup out of
+the box.
 
-Otherwise, mdsc->snap_flush_list may get corrupted.
-
-Cc: stable@vger.kernel.org
-Signed-off-by: "Yan, Zheng" <zyan@redhat.com>
-Reviewed-by: Ilya Dryomov <idryomov@gmail.com>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Alban Bedel <albeu@free.fr>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: linux-mips@vger.kernel.org
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ceph/snap.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/mips/configs/ath79_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/fs/ceph/snap.c
-+++ b/fs/ceph/snap.c
-@@ -566,7 +566,8 @@ int __ceph_finish_cap_snap(struct ceph_i
- 	     capsnap->size);
- 
- 	spin_lock(&mdsc->snap_flush_lock);
--	list_add_tail(&ci->i_snap_flush_item, &mdsc->snap_flush_list);
-+	if (list_empty(&ci->i_snap_flush_item))
-+		list_add_tail(&ci->i_snap_flush_item, &mdsc->snap_flush_list);
- 	spin_unlock(&mdsc->snap_flush_lock);
- 	return 1;  /* caller may want to ceph_flush_snaps */
- }
+diff --git a/arch/mips/configs/ath79_defconfig b/arch/mips/configs/ath79_defconfig
+index 134879c1310a0..4ed369c0ec6a1 100644
+--- a/arch/mips/configs/ath79_defconfig
++++ b/arch/mips/configs/ath79_defconfig
+@@ -74,6 +74,7 @@ CONFIG_SERIAL_8250_CONSOLE=y
+ # CONFIG_SERIAL_8250_PCI is not set
+ CONFIG_SERIAL_8250_NR_UARTS=1
+ CONFIG_SERIAL_8250_RUNTIME_UARTS=1
++CONFIG_SERIAL_OF_PLATFORM=y
+ CONFIG_SERIAL_AR933X=y
+ CONFIG_SERIAL_AR933X_CONSOLE=y
+ # CONFIG_HW_RANDOM is not set
+-- 
+2.19.1
+
 
 
