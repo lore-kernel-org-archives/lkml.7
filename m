@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4F2FC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:22:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CC97C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:22:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 943362054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:22:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 313A8218A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:22:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553257331;
-	bh=zcFvwk4p1WpN8wUD9kOAOz9x642v6hAyabbyJ4p+Xuo=;
+	s=default; t=1553257336;
+	bh=6cYwg8mR2fztbGTMoM69A8M8l+sHwNYiE+EhfntxaDI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h83Mtl11xzsd3gxFmO2v/suww7Pnt2B84P5+7Fy+oRFw0zDPW6T5fisYw9/3VKcZo
-	 SVcgmGkulaPwcmBhlhAZQ/VbdkNyTW00OdxW54NePU0Szew5Bp8ikpRXr0RCA34PQ0
-	 Ha9kvXK6X7TW78f+SS9lt6sf1gJNCiH37FP05Sok=
+	b=w1Bvgjg/Gwk8bRUDom/PnlVMvrz1roy3K3klG2520yxFzpgkY3vOzsOFLU5WQsth7
+	 pwLZg81LH16nXqdVxOUL5Vhecg0eg3UN4lZAHbzPGPXICLH6dBnFmWdGLNxrDFK0YD
+	 ZdYIXYoP0FrpaQVMMcrY1itUrX40g8a029EiUBXE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390970AbfCVMWK (ORCPT
+        id S2390988AbfCVMWO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:22:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33024 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:22:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390942AbfCVMWD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:22:03 -0400
+        id S2390975AbfCVMWN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:22:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E6D62054F;
-        Fri, 22 Mar 2019 12:22:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3AD321917;
+        Fri, 22 Mar 2019 12:22:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553257323;
-        bh=zcFvwk4p1WpN8wUD9kOAOz9x642v6hAyabbyJ4p+Xuo=;
+        s=default; t=1553257332;
+        bh=6cYwg8mR2fztbGTMoM69A8M8l+sHwNYiE+EhfntxaDI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NvQnwB4tRaO8PMvnWOg1lDSegSGvzIKGkGhpwfL2NfMPiK9ubYn7o+0vFky87M43x
-         F6T6q9QCRY+siRMwNuvONe94bPui0ag32p5gPuxDtaiQ9BRCpFtDCdXlWwTeQ7NEBt
-         zWLDCEj4hfURkZXWdL7fHorzTtDw8z35Wp2Hc90A=
+        b=jREPnZrhddTSr8KeDVVA2csBzrSgk3xh/5QueH1EDC53TeP3QhXI2jkFFxGxwkqSb
+         so7+lwXK3LSXcMah4cQpKaXQ11UFrBy204iA8obyJoonBcBnpuI+kGI5Pme91lUSvC
+         7PMBRo9pnrHVr5KfriMSth/3fxXs26Q2QINBhw8o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.0 165/238] powerpc/hugetlb: Dont do runtime allocation of 16G pages in LPAR configuration
-Date:   Fri, 22 Mar 2019 12:16:24 +0100
-Message-Id: <20190322111308.031179738@linuxfoundation.org>
+        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 5.0 201/238] perf tools: Fix split_kallsyms_for_kcore() for trampoline symbols
+Date:   Fri, 22 Mar 2019 12:17:00 +0100
+Message-Id: <20190322111310.060917161@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -66,71 +66,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
 
-commit 35f2806b481f5b9207f25e1886cba5d1c4d12cc7 upstream.
+commit d6d457451eb94fa747dc202765592eb8885a7352 upstream.
 
-We added runtime allocation of 16G pages in commit 4ae279c2c96a
-("powerpc/mm/hugetlb: Allow runtime allocation of 16G.") That was done
-to enable 16G allocation on PowerNV and KVM config. In case of KVM
-config, we mostly would have the entire guest RAM backed by 16G
-hugetlb pages for this to work. PAPR do support partial backing of
-guest RAM with hugepages via ibm,expected#pages node of memory node in
-the device tree. This means rest of the guest RAM won't be backed by
-16G contiguous pages in the host and hence a hash page table insertion
-can fail in such case.
+Kallsyms symbols do not have a size, so the size becomes the distance to
+the next symbol.
 
-An example error message will look like
+Consequently the recently added trampoline symbols end up with large
+sizes because the trampolines are some distance from one another and the
+main kernel map.
 
-  hash-mmu: mm: Hashing failure ! EA=0x7efc00000000 access=0x8000000000000006 current=readback
-  hash-mmu:     trap=0x300 vsid=0x67af789 ssize=1 base psize=14 psize 14 pte=0xc000000400000386
-  readback[12260]: unhandled signal 7 at 00007efc00000000 nip 00000000100012d0 lr 000000001000127c code 2
+However, symbols that end outside their map can disrupt the symbol tree
+because, after mapping, it can appear incorrectly that they overlap
+other symbols.
 
-This patch address that by preventing runtime allocation of 16G
-hugepages in LPAR config. To allocate 16G hugetlb one need to kernel
-command line hugepagesz=16G hugepages=<number of 16G pages>
+Add logic to truncate symbol size to the end of the corresponding map.
 
-With radix translation mode we don't run into this issue.
-
-This change will prevent runtime allocation of 16G hugetlb pages on
-kvm with hash translation mode. However, with the current upstream it
-was observed that 16G hugetlbfs backed guest doesn't boot at all.
-
-We observe boot failure with the below message:
-  [131354.647546] KVM: map_vrma at 0 failed, ret=-4
-
-That means this patch is not resulting in an observable regression.
-Once we fix the boot issue with 16G hugetlb backed memory, we need to
-use ibm,expected#pages memory node attribute to indicate 16G page
-reservation to the guest. This will also enable partial backing of
-guest RAM with 16G pages.
-
-Fixes: 4ae279c2c96a ("powerpc/mm/hugetlb: Allow runtime allocation of 16G.")
-Cc: stable@vger.kernel.org # v4.14+
-Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: stable@vger.kernel.org
+Fixes: d83212d5dd67 ("kallsyms, x86: Export addresses of PTI entry trampolines")
+Link: http://lkml.kernel.org/r/20190109091835.5570-2-adrian.hunter@intel.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/include/asm/book3s/64/hugetlb.h |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ tools/perf/util/symbol.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/arch/powerpc/include/asm/book3s/64/hugetlb.h
-+++ b/arch/powerpc/include/asm/book3s/64/hugetlb.h
-@@ -35,6 +35,14 @@ static inline int hstate_get_psize(struc
- #ifdef CONFIG_ARCH_HAS_GIGANTIC_PAGE
- static inline bool gigantic_page_supported(void)
- {
-+	/*
-+	 * We used gigantic page reservation with hypervisor assist in some case.
-+	 * We cannot use runtime allocation of gigantic pages in those platforms
-+	 * This is hash translation mode LPARs.
-+	 */
-+	if (firmware_has_feature(FW_FEATURE_LPAR) && !radix_enabled())
-+		return false;
-+
- 	return true;
- }
- #endif
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -710,6 +710,8 @@ static int map_groups__split_kallsyms_fo
+ 		}
+ 
+ 		pos->start -= curr_map->start - curr_map->pgoff;
++		if (pos->end > curr_map->end)
++			pos->end = curr_map->end;
+ 		if (pos->end)
+ 			pos->end -= curr_map->start - curr_map->pgoff;
+ 		symbols__insert(&curr_map->dso->symbols, pos);
 
 
