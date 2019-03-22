@@ -6,105 +6,95 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C57DEC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:08:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79EBCC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:08:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A78321874
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:08:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52C2A21874
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:08:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728084AbfCVOIO (ORCPT
+        id S1728123AbfCVOI3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 10:08:14 -0400
-Received: from mout.kundenserver.de ([212.227.126.130]:53411 "EHLO
+        Fri, 22 Mar 2019 10:08:29 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:58071 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727487AbfCVOIN (ORCPT
+        with ESMTP id S1727487AbfCVOI2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 10:08:13 -0400
+        Fri, 22 Mar 2019 10:08:28 -0400
 Received: from wuerfel.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1N7xml-1gujVI0uTD-014xXn; Fri, 22 Mar 2019 15:06:51 +0100
+ (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1Mqrjz-1gcevc2lvt-00mwa8; Fri, 22 Mar 2019 15:08:21 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     Takashi Iwai <tiwai@suse.com>,
-        Connor McAdams <conmanx360@gmail.com>,
-        Takashi Sakamoto <o-takashi@sakamocchi.jp>
+To:     Ilya Dryomov <idryomov@gmail.com>, "Yan, Zheng" <zyan@redhat.com>,
+        Sage Weil <sage@redhat.com>
 Cc:     clang-built-linux@googlegroups.com,
         Nick Desaulniers <ndesaulniers@google.com>,
         Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Alastair Bridgewater <alastair.bridgewater@gmail.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ALSA: hda/ca0132: work around clang -Wuninitialized warning
-Date:   Fri, 22 Mar 2019 15:06:28 +0100
-Message-Id: <20190322140649.197027-1-arnd@arndb.de>
+        Arnd Bergmann <arnd@arndb.de>, Alex Elder <elder@linaro.org>,
+        ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ceph: fix clang warning for CEPH_DEFINE_OID_ONSTACK
+Date:   Fri, 22 Mar 2019 15:08:11 +0100
+Message-Id: <20190322140819.300740-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:evwjwt7mhgRLU3GN33j/cnsVOiV9wjtnPs/Dj8C9wsXFF7C7+eG
- KQftvmfclIpjzA1lm+KnVgJGY+aizj2DBCfem1Hi0U7EjOTEllryll26CsB42wPv6dsbF1E
- CEIvqkUZzFlTa2gp36kUqL23R0B+GNzD7O6D2N+Ac8hlmvWTh6S7+mXtd2jmlVenCxHydYA
- hQnSGqwKjuRwRm1r4vEgg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:3wEGlyncInU=:JLa7x3tbCMH4nqij1shbri
- 1xq5ojC/sg+a7kY5uMO4xkVsvGVDMMsQjuxcjIDblPP60GITXocCVHQ7xFhEQSjbmLnVjwnYp
- Tgc0jmUlMoTcYZVKy+Y3HX+MKSoewt7gEjeHNgy9/BOSrXDlcwIKRcLiA0qL/Y7mVF+G7heDu
- uYK2wNYWGLtdJ5XZbGZeI6ERlXCRI5RboGYefcKeOm8dzERDQtZhg+6v+hPtEIQ3M9SnWT79L
- eCP4HoljvvJPPWe6foESCtfg9UfiP/KSWjLBWOn5pnLEnNwIbv8rlDjCqFq9oksq40iM6EkGs
- naZpyz9qPuBvFcSvquPL0IaKftJIBZ0425E1E+GqQjKGAnV5F8zq+Z5nzlqnVjVbmoVbI4ucg
- 7b3WhkNCsEgmN7R9yjmjEYi3wAC7ym1iUzebRZ1D7CSAx8dDZDjvI+4umCKD6S3nE2rq2MYDn
- CH1bzybw0w39JvLmb+18jLZwMV5tIbRKB1X29xuiY5rEql06RzMR4onrsxj07lowf62E4iX3J
- /zgk7tLeMbz+Ai6i/IZJCsA79VIY2CyOA9oYjYJz7Fn/8xJo21w5l7N2GLodHwW4YKq1jrt6Y
- kEVn/7/uSczGN2zo3QeF9X9zoIa48+0xni9FsLfjaGxluG2y8zd+FATDyIW2/Z7WoGbEmsLNs
- pqmrbH/cksXIOVsAQ3HytSRx1gD9AqfADM4d6qDrZvER6o034q4SWHCVfdlIolDSwGdEE9AR2
- v624crwjxrDeOLPCOxBOtTH1HgikuOnqJVYnGw==
+X-Provags-ID: V03:K1:xmzUNNjc8rjml5exAxA6yJVE0D0zQCC4pJ+goEu42NQOun028TV
+ 6x2o0AL8lelqRC1SuI6igqzUUFxnejyhCKa9e7n4UJwheNK8NE/0Z6OdNujVaRdIZPaWhJF
+ qRyV/0YiFWz9iqxVBpjL084CKnoNvfNyVXJWnDhMnczBXQWh29liyzBnN5yiHwMCMYSLCOi
+ flS02ny6nUIxlgZQQimdw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:uWB2USANmXk=:4g9ePn/SIKxtGLVrQu0nMZ
+ Bzu6OUPVPt8oFptL/OZbiJaJP0ftZ28UPRwtkzhivsP9g20f8w7flnkHJbv4410WLPkcmOMSQ
+ BeeMkk1fnYyfZURYnMHVw3PKDi6wSTAcbmadxgWYbyN28O02vCaazi3MUK0NJnnBwiAZGM5Qk
+ H2bpEFR6gyx8cWBddZePg0YDWLKA/1OsLzezgbXiBWbMOQo7s2YzPW82tNTgKGoS2KYD06heN
+ ohdBkCKOdak+DdLN0TKzJD8rV5M87akdsFkPQgOImqrJExXlPi05WU1AUAOQ3CKXNorC3nNP9
+ sWXR+hMboWOjIGi/s5mOqmWvtneQeBOJc2hOM9El74iFEQLYH0LAKZPrlEv/ESbi+EzWvC8+Y
+ brNWOontrWyBeqlRFnedsCML/PhtNmzGWt/BzewAoqjAquCe32BeRRQbXR9YsMG2kYLqbKX5N
+ rUUPTTyEYGGebDrhjKIErd63L7GrfbQYQ+/t2k2FFZu/2qJPA2DEyc71tgUlb9G/gQYUy689z
+ 2lGIHJckOXtw97JceHUtS4Xeg8n52a8Vm2W4Cu/GxTqAOcgnF6hdvYXDEv3U7vK4HFA+i7Fh9
+ Ep9/h6aZUIooz6m+lBs4YCDeVUfSrCE57PxJbpSk7ska75ahlYRXNput+q4WvbOslvoa8u0Yj
+ JmA2jxLaYT6KQdAgEtgMWlGuuqqJmEzHFj93EHB8hW+Fo6aVAEG5gPqZsFKzpd/ULKIVz8t3L
+ h94CpkEo42ZTkPAgKxaOYrRNhvROUgA6ofsW+g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When CONFIG_PCI is disabled, clang gets confused about the
-control flow of the switch() statement always ending up
-in the default case, and warns:
+clang complains about assigning a variable to itself during the
+declaration:
 
-sound/pci/hda/patch_ca0132.c:7558:6: error: variable 'fw_entry' is used uninitialized whenever 'if' condition is false
-      [-Werror,-Wsometimes-uninitialized]
-        if (!spec->alt_firmware_present) {
-            ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-sound/pci/hda/patch_ca0132.c:7565:42: note: uninitialized use occurs here
-        dsp_os_image = (struct dsp_image_seg *)(fw_entry->data);
-                                                ^~~~~~~~
-sound/pci/hda/patch_ca0132.c:7558:2: note: remove the 'if' if its condition is always true
-        if (!spec->alt_firmware_present) {
-        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-sound/pci/hda/patch_ca0132.c:7521:33: note: initialize the variable 'fw_entry' to silence this warning
-        const struct firmware *fw_entry;
-                                       ^
-                                        = NULL
+fs/ceph/ioctl.c:187:26: error: variable 'oid' is uninitialized when used within its own initialization [-Werror,-Wuninitialized]
+        CEPH_DEFINE_OID_ONSTACK(oid);
+                                ^~~
+include/linux/ceph/osdmap.h:122:52: note: expanded from macro 'CEPH_DEFINE_OID_ONSTACK'
+        struct ceph_object_id oid = CEPH_OID_INIT_ONSTACK(oid)
+                              ~~~                         ^~~
+include/linux/ceph/osdmap.h:120:29: note: expanded from macro 'CEPH_OID_INIT_ONSTACK'
+    ({ ceph_oid_init(&oid); oid; })
+                            ^~~
 
-Adding an explicit check for CONFIG_PCI avoids the issue.
-Unfortunately this is not very intuitive here.
+We use this trick in other places, but it is completely unnecessary
+here, as we can just use a regular struct initializer.
 
-Link: https://bugs.llvm.org/show_bug.cgi?id=41197#c1
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
-Any suggestions for other workarounds appreciated. If you can think
-of a better fix, please treat this as a reported-by:
----
- sound/pci/hda/patch_ca0132.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/ceph/osdmap.h | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/sound/pci/hda/patch_ca0132.c b/sound/pci/hda/patch_ca0132.c
-index 29882bda7632..415b16b7db70 100644
---- a/sound/pci/hda/patch_ca0132.c
-+++ b/sound/pci/hda/patch_ca0132.c
-@@ -7555,7 +7555,7 @@ static bool ca0132_download_dsp_images(struct hda_codec *codec)
- 	 * Use default ctefx.bin if no alt firmware is detected, or if none
- 	 * exists for your particular codec.
- 	 */
--	if (!spec->alt_firmware_present) {
-+	if (!IS_ENABLED(CONFIG_PCI) || !spec->alt_firmware_present) {
- 		codec_dbg(codec, "Default firmware selected.");
- 		if (request_firmware(&fw_entry, EFX_FILE,
- 					codec->card->dev) != 0)
+diff --git a/include/linux/ceph/osdmap.h b/include/linux/ceph/osdmap.h
+index 5675b1f09bc5..82f957a7a0d6 100644
+--- a/include/linux/ceph/osdmap.h
++++ b/include/linux/ceph/osdmap.h
+@@ -116,10 +116,8 @@ static inline void ceph_oid_init(struct ceph_object_id *oid)
+ 	oid->name_len = 0;
+ }
+ 
+-#define CEPH_OID_INIT_ONSTACK(oid)					\
+-    ({ ceph_oid_init(&oid); oid; })
+ #define CEPH_DEFINE_OID_ONSTACK(oid)					\
+-	struct ceph_object_id oid = CEPH_OID_INIT_ONSTACK(oid)
++	struct ceph_object_id oid = { .name = oid.inline_name }
+ 
+ static inline bool ceph_oid_empty(const struct ceph_object_id *oid)
+ {
 -- 
 2.20.0
 
