@@ -2,68 +2,47 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 793EDC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 08:30:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E3C9C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 08:31:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CAE52083D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 08:30:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kalray.eu header.i=@kalray.eu header.b="pr/eyPLY"
+	by mail.kernel.org (Postfix) with ESMTP id 57ED92083D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 08:31:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727581AbfCVIaM (ORCPT
+        id S1727738AbfCVIbw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 04:30:12 -0400
-Received: from zimbra2.kalray.eu ([92.103.151.219]:58864 "EHLO
-        zimbra2.kalray.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726029AbfCVIaM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 04:30:12 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id 5D7A327E0325;
-        Fri, 22 Mar 2019 09:30:10 +0100 (CET)
-Received: from zimbra2.kalray.eu ([127.0.0.1])
-        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id bPEh3-2UzFND; Fri, 22 Mar 2019 09:30:10 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id 04FAA27E0404;
-        Fri, 22 Mar 2019 09:30:10 +0100 (CET)
-DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra2.kalray.eu 04FAA27E0404
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kalray.eu;
-        s=32AE1B44-9502-11E5-BA35-3734643DEF29; t=1553243410;
-        bh=pAt5bo1w0fujeK/gO18NIvOQ/KJwXWKF/XMl3ba247A=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=pr/eyPLY6PWFL4Lnw6m1xjqsVZELFO2fNWpyg+NirLaGT7EodUxGo1YBf2NOpRMxU
-         1xDcOga7lKK5GA+DM8uCBx4aMOqHwKSSwnda2pi+UqwI67UX12v9b8EpmkDy02wypn
-         NlDCPkav7MFAp4BTsqvF3+zEk95bnV9Qp7alnO8A=
-X-Virus-Scanned: amavisd-new at zimbra2.kalray.eu
-Received: from zimbra2.kalray.eu ([127.0.0.1])
-        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id HzhzvaWuKNBY; Fri, 22 Mar 2019 09:30:09 +0100 (CET)
-Received: from zimbra2.kalray.eu (zimbra2.kalray.eu [192.168.40.202])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id DCC5627E0325;
-        Fri, 22 Mar 2019 09:30:09 +0100 (CET)
-Date:   Fri, 22 Mar 2019 09:30:09 +0100 (CET)
-From:   =?utf-8?Q?Cl=C3=A9ment?= Leger <cleger@kalray.eu>
-To:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     iommu@lists.linux-foundation.org,
-        Robin Murphy <robin.murphy@arm.com>
-Message-ID: <1443307786.4859175.1553243409888.JavaMail.zimbra@kalray.eu>
-In-Reply-To: <1741404498.4767335.1553163629182.JavaMail.zimbra@kalray.eu>
-References: <1741404498.4767335.1553163629182.JavaMail.zimbra@kalray.eu>
-Subject: Re: [PATCH] dma: select GENERIC_ALLOCATOR for DMA_REMAP
+        Fri, 22 Mar 2019 04:31:52 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:40272 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726066AbfCVIbv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 04:31:51 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0A962A78;
+        Fri, 22 Mar 2019 01:31:51 -0700 (PDT)
+Received: from [10.1.197.45] (e112298-lin.cambridge.arm.com [10.1.197.45])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C98263F59C;
+        Fri, 22 Mar 2019 01:31:49 -0700 (PDT)
+Subject: Re: [PATCH] perf: Change PMCR write to read-modify-write
+To:     Sodagudi Prasad <psodagud@codeaurora.org>
+Cc:     will.deacon@arm.com, mingo@redhat.com, catalin.marinas@arm.com,
+        linux-arm-kernel@lists.infradead.org, peterz@infradead.org,
+        linux-kernel@vger.kernel.org
+References: <1553134066-20272-1-git-send-email-psodagud@codeaurora.org>
+ <bb4ece56-ac42-05f2-8475-38c49539999d@arm.com>
+ <b2e82eca3dec9d1ea9053e9e69223db3@codeaurora.org>
+From:   Julien Thierry <julien.thierry@arm.com>
+Message-ID: <ec1bda5b-9068-56a7-3ed0-9a606036d60a@arm.com>
+Date:   Fri, 22 Mar 2019 08:31:46 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
+In-Reply-To: <b2e82eca3dec9d1ea9053e9e69223db3@codeaurora.org>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Originating-IP: [192.168.40.202]
-X-Mailer: Zimbra 8.8.11_GA_3780 (ZimbraWebClient - GC71 (Linux)/8.8.11_GA_3787)
-Thread-Topic: select GENERIC_ALLOCATOR for DMA_REMAP
-Thread-Index: NGPCvDoj7yFWRpAnvrjujfr+mHAQTQM+LIVT
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -71,32 +50,75 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
------ Mail original -----
-De: "Cl=C3=A9ment Leger" <cleger@kalray.eu>
-=C3=80: "linux-kernel" <linux-kernel@vger.kernel.org>
-Envoy=C3=A9: Jeudi 21 Mars 2019 11:20:29
-Objet: [PATCH] dma: select GENERIC_ALLOCATOR for DMA_REMAP
+On 21/03/2019 20:02, Sodagudi Prasad wrote:
+> On 2019-03-21 06:34, Julien Thierry wrote:
+>> Hi Prasad,
+>>
+>> On 21/03/2019 02:07, Prasad Sodagudi wrote:
+>>> Preserves the bitfields of PMCR_EL0(AArch64) during PMU reset.
+>>> Reset routine should write a 1 to PMCR.C and PMCR.P fields only
+>>> to reset the counters. Other fields should not be changed
+>>> as they could be set before PMU initialization and their
+>>> value must be preserved even after reset.
+>>>
+>>
+>> Are there any particular bit you are concerned about? Apart from the RO
+>> ones and the Res0 ones (to which we are already writing 0), I see:
+>>
+>> DP -> irrelevant for non-secure
+>> X -> This one is the only potentially interesting, however it resets to
+>> an architecturally unknown value, so unless we know for a fact it was
+>> set before hand, we probably want to clear it
+>> D -> ignored when we have LC set (and we do)
+>> E -> Since this is the function we use to reset the PMU on the current
+>> CPU, we probably want to set this bit to 0 regardless of its previous
+>> value
+>>
+>> So, is there any issue this patch is solving?
+> 
+> Hi Julien,
+> 
+> Thanks for taking a look into this patch. Yes. On our Qualcomm
+> platforms, observed that X bit is getting cleared by kernel.
+> This bit is getting set by firmware for Qualcomm use cases and
+> non-secure world is resetting without this patch.
+> I think, changing that register this register modifications to
+> read-modify-write style make sense.
+> 
 
-When DMA_REMAP is enabled, code in remap.c needs generic allocator.
-It currently worked since few architectures uses it (arm64, csky) and
-they both select GENERIC_ALLOCATOR.
+Maybe for the X bit, but for the E bit this seems like the wrong thing
+to do. We want to set the E bit to 0 here.
 
-Signed-off-by: Clement Leger <clement.leger@kalray.eu>
----
- kernel/dma/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+And for platforms that don't have a firmware touching the X bit (or
+rather the pmcr as a whole), I'd like to understand whether it would be
+valid to leave this bit set to an architecturally unknown value and
+preserving that value.
 
-diff --git a/kernel/dma/Kconfig b/kernel/dma/Kconfig
-index a06ba3013b3b..6a43c4ae77f9 100644
---- a/kernel/dma/Kconfig
-+++ b/kernel/dma/Kconfig
-@@ -58,6 +58,7 @@ config SWIOTLB
- config DMA_REMAP
- =09depends on MMU
- =09bool
-+=09select GENERIC_ALLOCATOR
-=20
- config DMA_DIRECT_REMAP
- =09bool
---=20
-2.15.0.276.g89ea799
+Thanks,
+
+>>> Signed-off-by: Prasad Sodagudi <psodagud@codeaurora.org>
+>>> ---
+>>>  arch/arm64/kernel/perf_event.c | 4 ++--
+>>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/arch/arm64/kernel/perf_event.c
+>>> b/arch/arm64/kernel/perf_event.c
+>>> index 4addb38..0c1afdd 100644
+>>> --- a/arch/arm64/kernel/perf_event.c
+>>> +++ b/arch/arm64/kernel/perf_event.c
+>>> @@ -868,8 +868,8 @@ static void armv8pmu_reset(void *info)
+>>>       * Initialize & Reset PMNC. Request overflow interrupt for
+>>>       * 64 bit cycle counter but cheat in armv8pmu_write_counter().
+>>>       */
+>>> -    armv8pmu_pmcr_write(ARMV8_PMU_PMCR_P | ARMV8_PMU_PMCR_C |
+>>> -                ARMV8_PMU_PMCR_LC);
+>>> +    armv8pmu_pmcr_write(armv8pmu_pmcr_read() | ARMV8_PMU_PMCR_P |
+>>> +            ARMV8_PMU_PMCR_C | ARMV8_PMU_PMCR_LC);
+>>>  }
+>>>
+>>>  static int __armv8_pmuv3_map_event(struct perf_event *event,
+>>>
+> 
+
+-- 
+Julien Thierry
