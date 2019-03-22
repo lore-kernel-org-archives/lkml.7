@@ -2,103 +2,105 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E91B1C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:08:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0661BC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:09:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2D3B21874
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:08:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3CEA218E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:09:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728182AbfCVOIo (ORCPT
+        id S1728337AbfCVOJJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 10:08:44 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:49477 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727487AbfCVOIn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 10:08:43 -0400
-Received: from wuerfel.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MC2o9-1hHSly04XV-00CPFR; Fri, 22 Mar 2019 15:07:55 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>
-Cc:     clang-built-linux@googlegroups.com,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Nikolay Borisov <nborisov@suse.com>,
-        Lu Fengqi <lufq.fnst@cn.fujitsu.com>,
-        Anand Jain <anand.jain@oracle.com>,
-        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] btrfs: work around false-positive -Wsometimes-uninitialized warning
-Date:   Fri, 22 Mar 2019 15:07:47 +0100
-Message-Id: <20190322140753.286171-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Fri, 22 Mar 2019 10:09:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41114 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727487AbfCVOJI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 10:09:08 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE4C5218E2;
+        Fri, 22 Mar 2019 14:09:07 +0000 (UTC)
+Date:   Fri, 22 Mar 2019 10:09:05 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Tzvetomir Stoyanov <tstoyanov@vmware.com>
+Cc:     linux-trace-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] tools/perf,tools/lib/traceevent: Make traceevent APIs
+ more consistent
+Message-ID: <20190322100905.7d62691b@gandalf.local.home>
+In-Reply-To: <20190322130816.13903-1-tstoyanov@vmware.com>
+References: <20190322130816.13903-1-tstoyanov@vmware.com>
+X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:CSYo6DUUj4yfxJ2QTSL1M70TqeZn/gI2tHJcjNE7Bi4lNZg1sPl
- oc0yZzTWg8ego/C1EoZfkAFaWGqm5IhLsSCFcHk57Hsl8Kfw0bFwosz1sCFl998qSLWUTC2
- /rtQd4qujE2vdeZXSdE40Rt3GS5uSE6nhY9TwBKsLnZsXXZv+ZBNJ0i88IhULXr37zaL0Dh
- 7Wnt333AzMDK/6xV/iQYg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:5WWCgDRAZuM=:dSc3pDc6/RclNdtuOPPtqH
- jLO0ArEpOVUpdEdKPUr6Iv45fPwhtkZ9bCb+Yop3y7leu4D1Vw/MaO+NiPHQaPINty0F3W6ts
- Hl3WcGVH4QQxDZ97xvrQMLe2HpblHBsx95Rn+YXTAdTfBVY8zrY1jGXxUSh7vTpAmO0XzFWxW
- LdLnLHJtBJdmMCnGqqdXhz1eAk+BFYmvZEZYhYTqra9QaugVjwO76dhEFENlSXWM3cMBxaAqE
- +/+aVlRxq+AFCkTGZd38HmU3zRq/5GUlmmnhCGsU8E3u660VefDIjaRDvJAETT2/Qxd5Tl5Lv
- 8WQT5fPHZrZ6tc7Xx0NqhDsDC7sn6EWl/DxgckxXctCwOZ1szffDLhz0XuXpdmqDLEXkKBVY3
- EN9kpCvLKQGBPxJx1Six9IOyUdgOr8pYfIH9ZFvS9oJlA0kyAomtnFm4lLsSGfeWVOv7pZTrL
- Jn5llM4L3iQZvHN5g2a1ufN0xRC18A1CnIvm/im5qU7VvUJZ49pvVXH4jrG+D+lKAUSnzidd9
- cwyTEvQpnewkCC0Ay7u8CT8MAEPlteJKkuRBDceN17HvHKhKvi2+y/ThsU568R3oGbIJcJC7N
- YEejDu+dJdlLUGLfsGzxfcZ+sy+dYdvuGLnAaFhHEcACj8ghxAGkSJVkwEwoEpT5F2wfkKfvc
- ObherSYh7YCqVaJ5eXLHyuvyBKY3YFhmwgCuFqbQpVajUlEribRMFFUblmOJFbQM10JHhSvJV
- lerV3FkjiGcb/KgK6kngzDWc3VkKKJa1toMKew==
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-clang fails to see that the last 'else if() in btrfs_uuid_tree_add()
-is always true, so 'eb' is always initialized correctly:
+On Fri, 22 Mar 2019 15:08:16 +0200
+Tzvetomir Stoyanov <tstoyanov@vmware.com> wrote:
 
-fs/btrfs/uuid-tree.c:129:13: error: variable 'eb' is used uninitialized whenever 'if' condition is false [-Werror,-Wsometimes-uninitialized]
-        } else if (ret < 0) {
-                   ^~~~~~~
-fs/btrfs/uuid-tree.c:139:22: note: uninitialized use occurs here
-        write_extent_buffer(eb, &subid_le, offset, sizeof(subid_le));
-                            ^~
-fs/btrfs/uuid-tree.c:129:9: note: remove the 'if' if its condition is always true
-        } else if (ret < 0) {
-               ^~~~~~~~~~~~~
-fs/btrfs/uuid-tree.c:90:26: note: initialize the variable 'eb' to silence this warning
-        struct extent_buffer *eb;
-                                ^
-                                 = NULL
+> Rename few traceevent APIs, in order to make it more consistent:
+> tep_pid_is_registered(), tep_file_bigendian(),
+> tep_is_latency_format(), tep_get_header_page_ts_size(),
+> tep_set_host_bigendian(), tep_is_host_bigendian() and
+> tep_data_lat_fmt()
 
-Change it into a plain 'else' to shut up that warning.
+Note, change logs should be about "why" not "what". The above is mostly
+about "what" although you did state "to make it more consistent" which
+is a "why", but we should elaborate more. Something like this:
 
-Link: https://bugs.llvm.org/show_bug.cgi?id=41197
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- fs/btrfs/uuid-tree.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+=====================================
+Rename some traceevent APIs for consistency:
 
-diff --git a/fs/btrfs/uuid-tree.c b/fs/btrfs/uuid-tree.c
-index 3b2ae342e649..c1cc9a5c0024 100644
---- a/fs/btrfs/uuid-tree.c
-+++ b/fs/btrfs/uuid-tree.c
-@@ -126,7 +126,7 @@ int btrfs_uuid_tree_add(struct btrfs_trans_handle *trans, u8 *uuid, u8 type,
- 		slot = path->slots[0];
- 		offset = btrfs_item_ptr_offset(eb, slot);
- 		offset += btrfs_item_size_nr(eb, slot) - sizeof(subid_le);
--	} else if (ret < 0) {
-+	} else {
- 		btrfs_warn(fs_info,
- 			   "insert uuid item failed %d (0x%016llx, 0x%016llx) type %u!",
- 			   ret, (unsigned long long)key.objectid,
--- 
-2.20.0
+ tep_pid_is_registered() to tep_is_pid_registered()
+
+as the convention is "tep_is" not "tep_X_is".
+
+ tep_file_bigendian() to tep_is_file_bigendian()
+
+as boolean operations will now have "tep_is_" notation
+
+ tep_get_header_page_ts_size() to tep_get_header_timestamp_size()
+
+as the latter is more descriptive.
+
+ tep_set_host_bigendian() to tep_set_local_bigendian()
+ tep_is_host_bigendian() to tep_is_local_bigendian()
+
+because "host" can be confused with VMs, and "local" is about the local
+machine.
+
+ tep_host_bigendian() to tep_is_bigendian()
+
+Again "host" is confusing and we are converting to "tep_is_" notation,
+also this one checks the actual machine that is running. For
+consistency we have:
+
+  bool tep_is_bigendian(void);
+  bool tep_is_file_bigendian(struct tep_handle *tep);
+  bool tep_is_local_bigendian(struct tep_handle *tep);
+
+Where tep_is_X_bigendian(tep) returns the saved data in the tep handle,
+and tep_is_bigendian() returns the running machine's endianess.
+
+ tep_data_lat_fmt() to tep_data_latency_format()
+
+No need to obfuscate with shorten names here.
+
+Switching all "tep_is_" functions to return bool and not int.
+=====================================
+
+That is much more descriptive of the change, and lets anyone that looks
+at the git history see exactly why things have changed. With a more
+descriptive change log, it will cause less arguments as well.
+
+Please resend with an updated change log.
+
+-- Steve
 
