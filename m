@@ -4,50 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7755C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:49:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B266AC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:49:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 980AC20693
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:49:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82EAE20850
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:49:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255346;
-	bh=Zab4TPSCZLXcBCwxf3ppCvf2BTY7dPKKCAGixyBhnWY=;
+	s=default; t=1553255351;
+	bh=c3xVFY/ptbpShKRftobiukfgaRTmEYMRV238NpSGGew=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A/ZrsYX6bWjTwenSW29y9ERE76edMWBBz+Yv2jg4wE8t3U/Nvj4NxJvfylnFcN2Th
-	 9FbVVL1nnHa7bAzaBGS7tTsPdDdW+RRjYMOIQLoDkQxtg0J9DJP+b7+nLM3BE4Fi4L
-	 /x7sc8H8DV2+dR5vApb+ubNWVnOYsI/+8RZqQasc=
+	b=tX6Vuaars45bj2+WUd6iC4xoXNwYuwrQAz/RrOVmLd9cqKuXFXBzVPJrdjBfeHV1I
+	 dV9fpSbPaoiGRdbNrEszQVSbi/Hvks5sIWaB51PubobLPUkxmXyJ/rVvlrvRk3WJnw
+	 Q55WgJWuN/5TzpB+rSF4UB1j8RmfVjgtGH3l95QA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732399AbfCVLtF (ORCPT
+        id S1732420AbfCVLtK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:49:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52548 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:49:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52702 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732200AbfCVLtC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:49:02 -0400
+        id S1732038AbfCVLtI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:49:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 199C720693;
-        Fri, 22 Mar 2019 11:49:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DA522082C;
+        Fri, 22 Mar 2019 11:49:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255341;
-        bh=Zab4TPSCZLXcBCwxf3ppCvf2BTY7dPKKCAGixyBhnWY=;
+        s=default; t=1553255347;
+        bh=c3xVFY/ptbpShKRftobiukfgaRTmEYMRV238NpSGGew=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BQ5mxfi1ScfC3pc8hX8huyWwtlqQuS5vi0JWDXRu66iOhfDlfwreLnwo+915KWyGK
-         bVzPpLzNlKNg2yaPh0S3ex4oYSfU3FzXakEawzYD3BwigAI5Id4MKTRgwZ+y1u/Uxq
-         6O/5TQs7WgKYmLjCnGZFqtNv4JgfZP5UdlEhItQs=
+        b=bOggZClA1luh/YQKlMRlAXDvGTjSX5Fb3RnmRocrpGkywXu040ZiSd15Kojz6/6+S
+         ahSwl80O327d2l/EfvPeWndL3Jqoj/kO4uIYFpRBslKMOn8Q2K7mfqxbZqFBm6pJfS
+         cKyAnhdhDYYQA41p8gj764sr1Yj8Zr7zoFajER2E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
-        James Morris <james.morris@microsoft.com>,
+        stable@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Hugh Dickins <hughd@google.com>,
+        Matej Kupljen <matej.kupljen@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 042/183] assoc_array: Fix shortcut creation
-Date:   Fri, 22 Mar 2019 12:14:30 +0100
-Message-Id: <20190322111244.781451540@linuxfoundation.org>
+Subject: [PATCH 4.14 054/183] tmpfs: fix link accounting when a tmpfile is linked in
+Date:   Fri, 22 Mar 2019 12:14:42 +0100
+Message-Id: <20190322111245.626348662@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111241.819468003@linuxfoundation.org>
 References: <20190322111241.819468003@linuxfoundation.org>
@@ -66,55 +71,60 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit bb2ba2d75a2d673e76ddaf13a9bd30d6a8b1bb08 ]
+[ Upstream commit 1062af920c07f5b54cf5060fde3339da6df0cf6b ]
 
-Fix the creation of shortcuts for which the length of the index key value
-is an exact multiple of the machine word size.  The problem is that the
-code that blanks off the unused bits of the shortcut value malfunctions if
-the number of bits in the last word equals machine word size.  This is due
-to the "<<" operator being given a shift of zero in this case, and so the
-mask that should be all zeros is all ones instead.  This causes the
-subsequent masking operation to clear everything rather than clearing
-nothing.
+tmpfs has a peculiarity of accounting hard links as if they were
+separate inodes: so that when the number of inodes is limited, as it is
+by default, a user cannot soak up an unlimited amount of unreclaimable
+dcache memory just by repeatedly linking a file.
 
-Ordinarily, the presence of the hash at the beginning of the tree index key
-makes the issue very hard to test for, but in this case, it was encountered
-due to a development mistake that caused the hash output to be either 0
-(keyring) or 1 (non-keyring) only.  This made it susceptible to the
-keyctl/unlink/valid test in the keyutils package.
+But when v3.11 added O_TMPFILE, and the ability to use linkat() on the
+fd, we missed accommodating this new case in tmpfs: "df -i" shows that
+an extra "inode" remains accounted after the file is unlinked and the fd
+closed and the actual inode evicted.  If a user repeatedly links
+tmpfiles into a tmpfs, the limit will be hit (ENOSPC) even after they
+are deleted.
 
-The fix is simply to skip the blanking if the shift would be 0.  For
-example, an index key that is 64 bits long would produce a 0 shift and thus
-a 'blank' of all 1s.  This would then be inverted and AND'd onto the
-index_key, incorrectly clearing the entire last word.
+Just skip the extra reservation from shmem_link() in this case: there's
+a sense in which this first link of a tmpfile is then cheaper than a
+hard link of another file, but the accounting works out, and there's
+still good limiting, so no need to do anything more complicated.
 
-Fixes: 3cb989501c26 ("Add a generic associative array implementation.")
-Signed-off-by: David Howells <dhowells@redhat.com>
-Signed-off-by: James Morris <james.morris@microsoft.com>
+Link: http://lkml.kernel.org/r/alpine.LSU.2.11.1902182134370.7035@eggly.anvils
+Fixes: f4e0c30c191 ("allow the temp files created by open() to be linked to")
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Hugh Dickins <hughd@google.com>
+Reported-by: Matej Kupljen <matej.kupljen@gmail.com>
+Acked-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/assoc_array.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ mm/shmem.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/lib/assoc_array.c b/lib/assoc_array.c
-index 4e53be8bc590..9463d3445ccd 100644
---- a/lib/assoc_array.c
-+++ b/lib/assoc_array.c
-@@ -781,9 +781,11 @@ all_leaves_cluster_together:
- 		new_s0->index_key[i] =
- 			ops->get_key_chunk(index_key, i * ASSOC_ARRAY_KEY_CHUNK_SIZE);
- 
--	blank = ULONG_MAX << (level & ASSOC_ARRAY_KEY_CHUNK_MASK);
--	pr_devel("blank off [%zu] %d: %lx\n", keylen - 1, level, blank);
--	new_s0->index_key[keylen - 1] &= ~blank;
-+	if (level & ASSOC_ARRAY_KEY_CHUNK_MASK) {
-+		blank = ULONG_MAX << (level & ASSOC_ARRAY_KEY_CHUNK_MASK);
-+		pr_devel("blank off [%zu] %d: %lx\n", keylen - 1, level, blank);
-+		new_s0->index_key[keylen - 1] &= ~blank;
+diff --git a/mm/shmem.c b/mm/shmem.c
+index 6c10f1d92251..9b78c04f532b 100644
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -3102,10 +3102,14 @@ static int shmem_link(struct dentry *old_dentry, struct inode *dir, struct dentr
+ 	 * No ordinary (disk based) filesystem counts links as inodes;
+ 	 * but each new link needs a new dentry, pinning lowmem, and
+ 	 * tmpfs dentries cannot be pruned until they are unlinked.
++	 * But if an O_TMPFILE file is linked into the tmpfs, the
++	 * first link must skip that, to get the accounting right.
+ 	 */
+-	ret = shmem_reserve_inode(inode->i_sb);
+-	if (ret)
+-		goto out;
++	if (inode->i_nlink) {
++		ret = shmem_reserve_inode(inode->i_sb);
++		if (ret)
++			goto out;
 +	}
  
- 	/* This now reduces to a node splitting exercise for which we'll need
- 	 * to regenerate the disparity table.
+ 	dir->i_size += BOGO_DIRENT_SIZE;
+ 	inode->i_ctime = dir->i_ctime = dir->i_mtime = current_time(inode);
 -- 
 2.19.1
 
