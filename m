@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE3CC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:58:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA7C2C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:58:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B9832192C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:58:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB65620850
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:58:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255890;
-	bh=IZ7oe5vqKOhUmjmlBijT5wwSTL34MUSzWantOanFr3s=;
+	s=default; t=1553255894;
+	bh=rMKl+uHl9JDVW1O2rw/6StSy5cJmjt4XGIL2ulQNiJE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ppxlO2mBTMTYMDnws0U/oshGXn4la3eDyuq1A2IuDG4ZghKnibW0dvgLf75DZ0krE
-	 InMPMgrRsLPt1Z7c6ar6Rbg0GLJpTny9K2Q8FllcdUgWtnj3aWTAV/9Gx9PgN17D/O
-	 aoMoA13HYjujRc9uhKeXuUc36rhzuIRHPTeKLfTM=
+	b=rJCdHHE4Ezu7rF5poy2BF966ZQO1QgpSwdOgNNu/711BcaDlXTumAAoAUqHQZH+hy
+	 hRpiy3rTb5FYGPqAgn6kjmNaHk1Ql91tiT7rMgRvsJfuAg8l6E67YutH2iBXsRKgCO
+	 JEonMlIu/y4SLUDHkM4doxiagtVrS64bkHDfDD9o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387776AbfCVL6J (ORCPT
+        id S2387787AbfCVL6N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:58:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34652 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:58:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387406AbfCVL6F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:58:05 -0400
+        id S2387773AbfCVL6J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:58:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B91A20850;
-        Fri, 22 Mar 2019 11:58:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3442020850;
+        Fri, 22 Mar 2019 11:58:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255884;
-        bh=IZ7oe5vqKOhUmjmlBijT5wwSTL34MUSzWantOanFr3s=;
+        s=default; t=1553255888;
+        bh=rMKl+uHl9JDVW1O2rw/6StSy5cJmjt4XGIL2ulQNiJE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=15daWqkmGviKxpWSi7c6YeGkEF4nDpRUXiG8Kfbe2c2NTQ4IZJb4KKCkorsw4OR1O
-         UC0qsFDXLLU/n3XXsK2SK0oEb7qQPTyaTo2HADHm/WhJmnRn7midxWuSc986Z0Hu/X
-         pH8QwzPiHtSln29B7vCFfEF68xZT6HIhHgB8miws=
+        b=MJow4FGJhdBzO5QVoeaEJu1X6+IEO++KxK7MNRt9/FUKmk8KTDROtmWoMHdm2sY2I
+         OTVpjovlC11z5mxKgBUOciYC+Et99bbHbwdrxyiZYdGlgqavrSinKB8kpw1KUiB3U7
+         sQa5q7PG8rMyXYcHWZr3lutZeQRU2FlkzJ00a5+A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steve Longerbeam <slongerbeam@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
+        stable@vger.kernel.org, Shuming Fan <shumingf@realtek.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 026/280] gpu: ipu-v3: Fix CSI offsets for imx53
-Date:   Fri, 22 Mar 2019 12:12:59 +0100
-Message-Id: <20190322111307.766782031@linuxfoundation.org>
+Subject: [PATCH 4.19 027/280] ASoC: rt5682: Correct the setting while select ASRC clk for AD/DA filter
+Date:   Fri, 22 Mar 2019 12:13:00 +0100
+Message-Id: <20190322111307.825134270@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -66,35 +66,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit bb867d219fda7fbaabea3314702474c4eac2b91d ]
+[ Upstream commit 8077ec011b1ea26abb7ca786f28ecccfb352717f ]
 
-The CSI offsets are wrong for both CSI0 and CSI1. They are at
-physical address 0x1e030000 and 0x1e038000 respectively.
+AD/DA ASRC function control two ASRC clock sources separately.
+Whether AD/DA filter select which clock source, we enable AD/DA ASRC
+function for all cases.
 
-Fixes: 2ffd48f2e7 ("gpu: ipu-v3: Add Camera Sensor Interface unit")
-
-Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Shuming Fan <shumingf@realtek.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/ipu-v3/ipu-common.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/soc/codecs/rt5682.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/ipu-v3/ipu-common.c b/drivers/gpu/ipu-v3/ipu-common.c
-index 5b7cdbfe062f..0a7d4395d427 100644
---- a/drivers/gpu/ipu-v3/ipu-common.c
-+++ b/drivers/gpu/ipu-v3/ipu-common.c
-@@ -914,8 +914,8 @@ static struct ipu_devtype ipu_type_imx53 = {
- 	.cpmem_ofs = 0x07000000,
- 	.srm_ofs = 0x07040000,
- 	.tpm_ofs = 0x07060000,
--	.csi0_ofs = 0x07030000,
--	.csi1_ofs = 0x07038000,
-+	.csi0_ofs = 0x06030000,
-+	.csi1_ofs = 0x06038000,
- 	.ic_ofs = 0x06020000,
- 	.disp0_ofs = 0x06040000,
- 	.disp1_ofs = 0x06048000,
+diff --git a/sound/soc/codecs/rt5682.c b/sound/soc/codecs/rt5682.c
+index afe7d5b19313..79ebcc239786 100644
+--- a/sound/soc/codecs/rt5682.c
++++ b/sound/soc/codecs/rt5682.c
+@@ -1757,7 +1757,9 @@ static const struct snd_soc_dapm_route rt5682_dapm_routes[] = {
+ 	{"ADC Stereo1 Filter", NULL, "ADC STO1 ASRC", is_using_asrc},
+ 	{"DAC Stereo1 Filter", NULL, "DAC STO1 ASRC", is_using_asrc},
+ 	{"ADC STO1 ASRC", NULL, "AD ASRC"},
++	{"ADC STO1 ASRC", NULL, "DA ASRC"},
+ 	{"ADC STO1 ASRC", NULL, "CLKDET"},
++	{"DAC STO1 ASRC", NULL, "AD ASRC"},
+ 	{"DAC STO1 ASRC", NULL, "DA ASRC"},
+ 	{"DAC STO1 ASRC", NULL, "CLKDET"},
+ 
 -- 
 2.19.1
 
