@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99E33C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:33:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B8DC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:33:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F02A21916
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:33:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EFB721916
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:33:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254424;
-	bh=8D+fuASwKHMhJGJLzIOCvl2uszBmh0t2zQQLNNyrvwE=;
+	s=default; t=1553254435;
+	bh=i721EGfZ24JAuqsMgTQq07xjBicZ5WGeImgDtPnpZo4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y2U0H2naczokJbr/WRPLgZcO3Qeswmuq5NabO4uj5bRta4r0Uo2wdZ32u9jLDBdfA
-	 7HL/6RqR3Rn0AMWBzAq4oPNU5xO5640c29gytegpEArlpo4xu3tvgqA+NrtKffwT/T
-	 2wufAx4v20A0+BsUfRVMCaVDV6TvBN27jmeRxKug=
+	b=iXgjhAhQ1DJ76pKfLRRbClR4vI26B166KPewEPQXwGo7NhYk7EYbSvzaNTmXfDAwK
+	 dE1umB8rdxfcuj0WKcGYj+VoCSuCGgTG8vs8S4LFK0NOfk3A2XzuESasCmxa870tOX
+	 LFpXZ46ZKTpa++6mKCrdJU8nuzshUSi1w7jLxbuo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729939AbfCVLdn (ORCPT
+        id S1730329AbfCVLdy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:33:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34132 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:33:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729312AbfCVLdi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:33:38 -0400
+        id S1730317AbfCVLdt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:33:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA85221916;
-        Fri, 22 Mar 2019 11:33:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6247721916;
+        Fri, 22 Mar 2019 11:33:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254417;
-        bh=8D+fuASwKHMhJGJLzIOCvl2uszBmh0t2zQQLNNyrvwE=;
+        s=default; t=1553254427;
+        bh=i721EGfZ24JAuqsMgTQq07xjBicZ5WGeImgDtPnpZo4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SM2e+5Yj6wQFpeRBDhwuj+fFAiW5rocXKL0Bp9dHVTmclgdemUJvBitcmzvX2Dt3L
-         DME3ygtaJrz8k9jJbu6lEHemvNaRBed+Q1KbQafBqnrNdQR0YlDrqvlEJsSCP474aK
-         DPcnoU+3Td3cleSsyMSq6pbT/UpBEVjlSBHDIy74=
+        b=r6erh5zVo8MFC9Wj1SQjOHaiMAdkpGatJMEUT9EGIZpz0fAfdjyGvEArmxschGEsK
+         A1Rocp0/ep2hUSbBAp6xfVGPx6Sy4MeUUCh13brouglgnO6B4sLHzPfLrLF/8ZEura
+         5e39AJQPWUDNvCS5Zd/QNnn5ttHXaXara9FAPWzg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiumei Mu <xmu@redhat.com>,
-        Xin Long <lucien.xin@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 130/230] pptp: dst_release sk_dst_cache in pptp_sock_destruct
-Date:   Fri, 22 Mar 2019 12:14:28 +0100
-Message-Id: <20190322111245.810761709@linuxfoundation.org>
+        stable@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 117/230] Revert "x86/platform/UV: Use efi_runtime_lock to serialise BIOS calls"
+Date:   Fri, 22 Mar 2019 12:14:15 +0100
+Message-Id: <20190322111244.855972199@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -66,46 +64,110 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Xin Long <lucien.xin@gmail.com>
+This reverts commit 7212e37cbdf99f48e4a6c689a42f4bda1ae69001.
 
-[ Upstream commit 9417d81f4f8adfe20a12dd1fadf73a618cbd945d ]
+Hedi Berriche <hedi.berriche@hpe.com> notes:
 
-sk_setup_caps() is called to set sk->sk_dst_cache in pptp_connect,
-so we have to dst_release(sk->sk_dst_cache) in pptp_sock_destruct,
-otherwise, the dst refcnt will leak.
+> In 4.4-stable efi_runtime_lock as defined in drivers/firmware/efi/runtime-wrappers.c
+> is a spinlock (given it predates commit dce48e351c0d) and commit
+>
+>         f331e766c4be x86/platform/UV: Use efi_runtime_lock to serialise BIOS calls
+>
+> which 7212e37cbdf9 is a backport of, needs it to be a semaphore.
 
-It can be reproduced by this syz log:
-
-  r1 = socket$pptp(0x18, 0x1, 0x2)
-  bind$pptp(r1, &(0x7f0000000100)={0x18, 0x2, {0x0, @local}}, 0x1e)
-  connect$pptp(r1, &(0x7f0000000000)={0x18, 0x2, {0x3, @remote}}, 0x1e)
-
-Consecutive dmesg warnings will occur:
-
-  unregister_netdevice: waiting for lo to become free. Usage count = 1
-
-v1->v2:
-  - use rcu_dereference_protected() instead of rcu_dereference_check(),
-    as suggested by Eric.
-
-Fixes: 00959ade36ac ("PPTP: PPP over IPv4 (Point-to-Point Tunneling Protocol)")
-Reported-by: Xiumei Mu <xmu@redhat.com>
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ppp/pptp.c |    1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/include/asm/uv/bios.h          |    8 +-------
+ arch/x86/platform/uv/bios_uv.c          |   23 ++---------------------
+ drivers/firmware/efi/runtime-wrappers.c |    7 -------
+ 3 files changed, 3 insertions(+), 35 deletions(-)
 
---- a/drivers/net/ppp/pptp.c
-+++ b/drivers/net/ppp/pptp.c
-@@ -577,6 +577,7 @@ static void pptp_sock_destruct(struct so
- 		pppox_unbind_sock(sk);
- 	}
- 	skb_queue_purge(&sk->sk_receive_queue);
-+	dst_release(rcu_dereference_protected(sk->sk_dst_cache, 1));
+--- a/arch/x86/include/asm/uv/bios.h
++++ b/arch/x86/include/asm/uv/bios.h
+@@ -48,8 +48,7 @@ enum {
+ 	BIOS_STATUS_SUCCESS		=  0,
+ 	BIOS_STATUS_UNIMPLEMENTED	= -ENOSYS,
+ 	BIOS_STATUS_EINVAL		= -EINVAL,
+-	BIOS_STATUS_UNAVAIL		= -EBUSY,
+-	BIOS_STATUS_ABORT		= -EINTR,
++	BIOS_STATUS_UNAVAIL		= -EBUSY
+ };
+ 
+ /*
+@@ -112,9 +111,4 @@ extern long system_serial_number;
+ 
+ extern struct kobject *sgi_uv_kobj;	/* /sys/firmware/sgi_uv */
+ 
+-/*
+- * EFI runtime lock; cf. firmware/efi/runtime-wrappers.c for details
+- */
+-extern struct semaphore __efi_uv_runtime_lock;
+-
+ #endif /* _ASM_X86_UV_BIOS_H */
+--- a/arch/x86/platform/uv/bios_uv.c
++++ b/arch/x86/platform/uv/bios_uv.c
+@@ -28,8 +28,7 @@
+ 
+ static struct uv_systab uv_systab;
+ 
+-static s64 __uv_bios_call(enum uv_bios_cmd which, u64 a1, u64 a2, u64 a3,
+-			u64 a4, u64 a5)
++s64 uv_bios_call(enum uv_bios_cmd which, u64 a1, u64 a2, u64 a3, u64 a4, u64 a5)
+ {
+ 	struct uv_systab *tab = &uv_systab;
+ 	s64 ret;
+@@ -44,19 +43,6 @@ static s64 __uv_bios_call(enum uv_bios_c
+ 			a1, a2, a3, a4, a5);
+ 	return ret;
+ }
+-
+-s64 uv_bios_call(enum uv_bios_cmd which, u64 a1, u64 a2, u64 a3, u64 a4, u64 a5)
+-{
+-	s64 ret;
+-
+-	if (down_interruptible(&__efi_uv_runtime_lock))
+-		return BIOS_STATUS_ABORT;
+-
+-	ret = __uv_bios_call(which, a1, a2, a3, a4, a5);
+-	up(&__efi_uv_runtime_lock);
+-
+-	return ret;
+-}
+ EXPORT_SYMBOL_GPL(uv_bios_call);
+ 
+ s64 uv_bios_call_irqsave(enum uv_bios_cmd which, u64 a1, u64 a2, u64 a3,
+@@ -65,15 +51,10 @@ s64 uv_bios_call_irqsave(enum uv_bios_cm
+ 	unsigned long bios_flags;
+ 	s64 ret;
+ 
+-	if (down_interruptible(&__efi_uv_runtime_lock))
+-		return BIOS_STATUS_ABORT;
+-
+ 	local_irq_save(bios_flags);
+-	ret = __uv_bios_call(which, a1, a2, a3, a4, a5);
++	ret = uv_bios_call(which, a1, a2, a3, a4, a5);
+ 	local_irq_restore(bios_flags);
+ 
+-	up(&__efi_uv_runtime_lock);
+-
+ 	return ret;
  }
  
- static int pptp_create(struct net *net, struct socket *sock, int kern)
+--- a/drivers/firmware/efi/runtime-wrappers.c
++++ b/drivers/firmware/efi/runtime-wrappers.c
+@@ -88,13 +88,6 @@ static DEFINE_SPINLOCK(efi_runtime_lock)
+  */
+ 
+ /*
+- * Expose the EFI runtime lock to the UV platform
+- */
+-#ifdef CONFIG_X86_UV
+-extern struct semaphore __efi_uv_runtime_lock __alias(efi_runtime_lock);
+-#endif
+-
+-/*
+  * As per commit ef68c8f87ed1 ("x86: Serialize EFI time accesses on rtc_lock"),
+  * the EFI specification requires that callers of the time related runtime
+  * functions serialize with other CMOS accesses in the kernel, as the EFI time
 
 
