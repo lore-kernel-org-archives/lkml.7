@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45A12C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:20:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6A08C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:21:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 114F12075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:20:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 902E62075E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:21:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553260859;
-	bh=J3HqjFZ72iKIw6xQL5DarYOww9fuRRyNMJsLEP5x3FM=;
+	s=default; t=1553260873;
+	bh=bTIwpOOPUe5LpbjB2zaho4Q3rT8Nop7//JIb/GRkSlk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qXkgd3o0ZyQUswb1AwdLFcnbJACRCL9QpOQbPiwHBQU1qDE9BPt0iSmpTWxVXARKD
-	 fjsexkMraLJL2mD2/2kR+GCB5pIFOS4Q2H8IOBsxgMz7BvUCYjMmNDtWDcZOSm7GcI
-	 SpkIEHuwlhhSU0/qFdkWxxJMdakXlPRumyl1kjVg=
+	b=hRxbDoOTvIznBGm/9yjzjsnWXeO1njjHapW2wIDZzDZTYxKXkaX0wi5uamNczvjgf
+	 SKcqyD3sjHkMGDzJqjI05S0ujFFdkQvEzNWqpoyNUInHjTJaP/bk1JHo3ipQw8P8t8
+	 R0OKyZ9EvoGHxFpfpCU9ldnwyaEJ0x8wrOvim4o4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728617AbfCVNU6 (ORCPT
+        id S1728342AbfCVLUY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 09:20:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47214 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:20:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46720 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728451AbfCVLUt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:20:49 -0400
+        id S1728236AbfCVLUW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:20:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F4FE21916;
-        Fri, 22 Mar 2019 11:20:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0DCCB218A2;
+        Fri, 22 Mar 2019 11:20:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553253648;
-        bh=J3HqjFZ72iKIw6xQL5DarYOww9fuRRyNMJsLEP5x3FM=;
+        s=default; t=1553253621;
+        bh=bTIwpOOPUe5LpbjB2zaho4Q3rT8Nop7//JIb/GRkSlk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EBnriZ1WvwtSfKN7p4H9mcc7bWH/B9ueoTn23Ksxn6AyVt/4IF1Tm+NFfDqvo+Chc
-         YSUhAmPnPdsD+wUnWXSwkzEzVXGa5JNHVfr4G33kDBXBJtx7t5mmT2yVCTAD43USiC
-         cHe1baOSM+8P8nQOkuvLi4I7YhzAd5OZDiQHsE24=
+        b=QK6PvA4J9zjrJxZq4aSy1BG1jYPVfMTEEcOgeLtlCPZV6L1o74t8J8BE+8ECYszs2
+         fY/ZlzLrSj+lTI2SczW5KeeAZV30/+9B+VmUKG+PgKynbOPBULYk5zgN2s6CuhwKrR
+         szXp6/vR7vMBVmiyRNItbIF4uy0irfmnO64RV0eg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 3.18 029/134] ALSA: compress: prevent potential divide by zero bugs
-Date:   Fri, 22 Mar 2019 12:14:02 +0100
-Message-Id: <20190322111211.879359487@linuxfoundation.org>
+Subject: [PATCH 3.18 005/134] mfd: twl-core: Fix section annotations on {,un}protect_pm_master
+Date:   Fri, 22 Mar 2019 12:13:38 +0100
+Message-Id: <20190322111210.675947624@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111210.465931067@linuxfoundation.org>
 References: <20190322111210.465931067@linuxfoundation.org>
@@ -66,43 +67,51 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 678e2b44c8e3fec3afc7202f1996a4500a50be93 ]
+[ Upstream commit 8838555089f0345b87f4277fe5a8dd647dc65589 ]
 
-The problem is seen in the q6asm_dai_compr_set_params() function:
+When building the kernel with Clang, the following section mismatch
+warning appears:
 
-	ret = q6asm_map_memory_regions(dir, prtd->audio_client, prtd->phys,
-				       (prtd->pcm_size / prtd->periods),
-                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-				       prtd->periods);
+WARNING: vmlinux.o(.text+0x3d84a3b): Section mismatch in reference from
+the function twl_probe() to the function
+.init.text:unprotect_pm_master()
+The function twl_probe() references
+the function __init unprotect_pm_master().
+This is often because twl_probe lacks a __init
+annotation or the annotation of unprotect_pm_master is wrong.
 
-In this code prtd->pcm_size is the buffer_size and prtd->periods comes
-from params->buffer.fragments.  If we allow the number of fragments to
-be zero then it results in a divide by zero bug.  One possible fix would
-be to use prtd->pcm_count directly instead of using the division to
-re-calculate it.  But I decided that it doesn't really make sense to
-allow zero fragments.
+Remove the __init annotation on the *protect_pm_master functions so
+there is no more mismatch.
 
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/core/compress_offload.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/mfd/twl-core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/sound/core/compress_offload.c b/sound/core/compress_offload.c
-index 53cd5d69293e9..307344452b5c0 100644
---- a/sound/core/compress_offload.c
-+++ b/sound/core/compress_offload.c
-@@ -500,7 +500,8 @@ static int snd_compress_check_input(struct snd_compr_params *params)
+diff --git a/drivers/mfd/twl-core.c b/drivers/mfd/twl-core.c
+index db11b4f406116..2608c1d865857 100644
+--- a/drivers/mfd/twl-core.c
++++ b/drivers/mfd/twl-core.c
+@@ -983,7 +983,7 @@ add_children(struct twl4030_platform_data *pdata, unsigned irq_base,
+  * letting it generate the right frequencies for USB, MADC, and
+  * other purposes.
+  */
+-static inline int __init protect_pm_master(void)
++static inline int protect_pm_master(void)
  {
- 	/* first let's check the buffer parameter's */
- 	if (params->buffer.fragment_size == 0 ||
--	    params->buffer.fragments > INT_MAX / params->buffer.fragment_size)
-+	    params->buffer.fragments > INT_MAX / params->buffer.fragment_size ||
-+	    params->buffer.fragments == 0)
- 		return -EINVAL;
+ 	int e = 0;
  
- 	/* now codec parameters */
+@@ -992,7 +992,7 @@ static inline int __init protect_pm_master(void)
+ 	return e;
+ }
+ 
+-static inline int __init unprotect_pm_master(void)
++static inline int unprotect_pm_master(void)
+ {
+ 	int e = 0;
+ 
 -- 
 2.19.1
 
