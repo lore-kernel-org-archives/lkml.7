@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E5B8C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:13:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB039C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:13:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C50E20830
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:13:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA4662082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:13:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256818;
-	bh=3G89iVRL/cRyx4cpNBf/i/egoSOlvEoehkY2wUogK0s=;
+	s=default; t=1553256820;
+	bh=NyiOOjCpJtF9B1DrAXu6n4D3GaUnCt3o0/KFMmQ9l10=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H0LESRIpvaYYz5yvTFXltPynRQrsfTSAVnz3YfO7wycwdQE/fXLpClA/OUZvQkVHm
-	 qRgGUiRXYy44GGcxyZVmj0+UtPBysQmjugNhoBDJEOqX5c1I1PeJRFJOyt5jzJJpHe
-	 UlKpo7kwEhHxVZNzDEBtV+CK499WRo6Ha3WP+rLA=
+	b=WpKiqy8TlbdmWob3TpIwLtC5iiypWF4SFQSh/yenLQZD2+1nlSWS2DZdvVnJwHJpR
+	 z3lRjZhXr4vpcflN8hKgRXMfaD1DcMyF1zZRTmdgdQta4PTLv/JyImaYqKPbwX3KH0
+	 a39ZkdYq3mpnKFNh96x/miS1MQxauqChL1x/JsCU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389784AbfCVMNg (ORCPT
+        id S2389795AbfCVMNj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:13:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51814 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:13:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51884 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389770AbfCVMNd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:13:33 -0400
+        id S2389782AbfCVMNg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:13:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC6CC20830;
-        Fri, 22 Mar 2019 12:13:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 957142082C;
+        Fri, 22 Mar 2019 12:13:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256812;
-        bh=3G89iVRL/cRyx4cpNBf/i/egoSOlvEoehkY2wUogK0s=;
+        s=default; t=1553256816;
+        bh=NyiOOjCpJtF9B1DrAXu6n4D3GaUnCt3o0/KFMmQ9l10=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QXEFelXYVJprwHoa1VfhH05eQx/y8FJwBkrEqBqNvdUTJ5Uol7QkRTahCXO6ospLJ
-         +90RuUX45cs/SZ5RsfDM7eI30wP8msWJ7G0bXxARSpH0kjy6iVrOOtf83NuRagY+00
-         32MSGdoANO8Q4u9lU3oiKZPfKBGejx8JSMse8KzE=
+        b=1uCOJ71YafPJts2OxB4uTYwf5aWdwNXOEgnC78xYMEzYFyYVV5qE8NCPq2yYOD28C
+         +U3dWVSK0HcgasV9rrieTUW7HtOlaEr99R85lG6earIIrSz2w3gFvo9axh5I8/Xfnb
+         DlOlx1L3CffiqFCvoxH6yD22I8hv2/ddqG2JNjBU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.0 044/238] crypto: skcipher - set CRYPTO_TFM_NEED_KEY if ->setkey() fails
-Date:   Fri, 22 Mar 2019 12:14:23 +0100
-Message-Id: <20190322111301.005594456@linuxfoundation.org>
+Subject: [PATCH 5.0 045/238] crypto: testmgr - skip crc32c context test for ahash algorithms
+Date:   Fri, 22 Mar 2019 12:14:24 +0100
+Message-Id: <20190322111301.065611403@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -67,118 +67,67 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Eric Biggers <ebiggers@google.com>
 
-commit b1f6b4bf416b49f00f3abc49c639371cdecaaad1 upstream.
+commit eb5e6730db98fcc4b51148b4a819fa4bf864ae54 upstream.
 
-Some algorithms have a ->setkey() method that is not atomic, in the
-sense that setting a key can fail after changes were already made to the
-tfm context.  In this case, if a key was already set the tfm can end up
-in a state that corresponds to neither the old key nor the new key.
+Instantiating "cryptd(crc32c)" causes a crypto self-test failure because
+the crypto_alloc_shash() in alg_test_crc32c() fails.  This is because
+cryptd(crc32c) is an ahash algorithm, not a shash algorithm; so it can
+only be accessed through the ahash API, unlike shash algorithms which
+can be accessed through both the ahash and shash APIs.
 
-For example, in lrw.c, if gf128mul_init_64k_bbe() fails due to lack of
-memory, then priv::table will be left NULL.  After that, encryption with
-that tfm will cause a NULL pointer dereference.
+As the test is testing the shash descriptor format which is only
+applicable to shash algorithms, skip it for ahash algorithms.
 
-It's not feasible to make all ->setkey() methods atomic, especially ones
-that have to key multiple sub-tfms.  Therefore, make the crypto API set
-CRYPTO_TFM_NEED_KEY if ->setkey() fails and the algorithm requires a
-key, to prevent the tfm from being used until a new key is set.
+(Note that it's still important to fix crypto self-test failures even
+ for weird algorithm instantiations like cryptd(crc32c) that no one
+ would really use; in fips_enabled mode unprivileged users can use them
+ to panic the kernel, and also they prevent treating a crypto self-test
+ failure as a bug when fuzzing the kernel.)
 
-[Cc stable mainly because when introducing the NEED_KEY flag I changed
- AF_ALG to rely on it; and unlike in-kernel crypto API users, AF_ALG
- previously didn't have this problem.  So these "incompletely keyed"
- states became theoretically accessible via AF_ALG -- though, the
- opportunities for causing real mischief seem pretty limited.]
-
-Fixes: f8d33fac8480 ("crypto: skcipher - prevent using skciphers without setting key")
-Cc: <stable@vger.kernel.org> # v4.16+
+Fixes: 8e3ee85e68c5 ("crypto: crc32c - Test descriptor context format")
+Cc: stable@vger.kernel.org
 Signed-off-by: Eric Biggers <ebiggers@google.com>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- crypto/skcipher.c |   27 ++++++++++++++++++---------
- 1 file changed, 18 insertions(+), 9 deletions(-)
+ crypto/testmgr.c |   14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
---- a/crypto/skcipher.c
-+++ b/crypto/skcipher.c
-@@ -585,6 +585,12 @@ static unsigned int crypto_skcipher_exts
- 	return crypto_alg_extsize(alg);
+--- a/crypto/testmgr.c
++++ b/crypto/testmgr.c
+@@ -1894,14 +1894,21 @@ static int alg_test_crc32c(const struct
+ 
+ 	err = alg_test_hash(desc, driver, type, mask);
+ 	if (err)
+-		goto out;
++		return err;
+ 
+ 	tfm = crypto_alloc_shash(driver, type, mask);
+ 	if (IS_ERR(tfm)) {
++		if (PTR_ERR(tfm) == -ENOENT) {
++			/*
++			 * This crc32c implementation is only available through
++			 * ahash API, not the shash API, so the remaining part
++			 * of the test is not applicable to it.
++			 */
++			return 0;
++		}
+ 		printk(KERN_ERR "alg: crc32c: Failed to load transform for %s: "
+ 		       "%ld\n", driver, PTR_ERR(tfm));
+-		err = PTR_ERR(tfm);
+-		goto out;
++		return PTR_ERR(tfm);
+ 	}
+ 
+ 	do {
+@@ -1928,7 +1935,6 @@ static int alg_test_crc32c(const struct
+ 
+ 	crypto_free_shash(tfm);
+ 
+-out:
+ 	return err;
  }
  
-+static void skcipher_set_needkey(struct crypto_skcipher *tfm)
-+{
-+	if (tfm->keysize)
-+		crypto_skcipher_set_flags(tfm, CRYPTO_TFM_NEED_KEY);
-+}
-+
- static int skcipher_setkey_blkcipher(struct crypto_skcipher *tfm,
- 				     const u8 *key, unsigned int keylen)
- {
-@@ -598,8 +604,10 @@ static int skcipher_setkey_blkcipher(str
- 	err = crypto_blkcipher_setkey(blkcipher, key, keylen);
- 	crypto_skcipher_set_flags(tfm, crypto_blkcipher_get_flags(blkcipher) &
- 				       CRYPTO_TFM_RES_MASK);
--	if (err)
-+	if (unlikely(err)) {
-+		skcipher_set_needkey(tfm);
- 		return err;
-+	}
- 
- 	crypto_skcipher_clear_flags(tfm, CRYPTO_TFM_NEED_KEY);
- 	return 0;
-@@ -677,8 +685,7 @@ static int crypto_init_skcipher_ops_blkc
- 	skcipher->ivsize = crypto_blkcipher_ivsize(blkcipher);
- 	skcipher->keysize = calg->cra_blkcipher.max_keysize;
- 
--	if (skcipher->keysize)
--		crypto_skcipher_set_flags(skcipher, CRYPTO_TFM_NEED_KEY);
-+	skcipher_set_needkey(skcipher);
- 
- 	return 0;
- }
-@@ -698,8 +705,10 @@ static int skcipher_setkey_ablkcipher(st
- 	crypto_skcipher_set_flags(tfm,
- 				  crypto_ablkcipher_get_flags(ablkcipher) &
- 				  CRYPTO_TFM_RES_MASK);
--	if (err)
-+	if (unlikely(err)) {
-+		skcipher_set_needkey(tfm);
- 		return err;
-+	}
- 
- 	crypto_skcipher_clear_flags(tfm, CRYPTO_TFM_NEED_KEY);
- 	return 0;
-@@ -776,8 +785,7 @@ static int crypto_init_skcipher_ops_ablk
- 			    sizeof(struct ablkcipher_request);
- 	skcipher->keysize = calg->cra_ablkcipher.max_keysize;
- 
--	if (skcipher->keysize)
--		crypto_skcipher_set_flags(skcipher, CRYPTO_TFM_NEED_KEY);
-+	skcipher_set_needkey(skcipher);
- 
- 	return 0;
- }
-@@ -820,8 +828,10 @@ static int skcipher_setkey(struct crypto
- 	else
- 		err = cipher->setkey(tfm, key, keylen);
- 
--	if (err)
-+	if (unlikely(err)) {
-+		skcipher_set_needkey(tfm);
- 		return err;
-+	}
- 
- 	crypto_skcipher_clear_flags(tfm, CRYPTO_TFM_NEED_KEY);
- 	return 0;
-@@ -852,8 +862,7 @@ static int crypto_skcipher_init_tfm(stru
- 	skcipher->ivsize = alg->ivsize;
- 	skcipher->keysize = alg->max_keysize;
- 
--	if (skcipher->keysize)
--		crypto_skcipher_set_flags(skcipher, CRYPTO_TFM_NEED_KEY);
-+	skcipher_set_needkey(skcipher);
- 
- 	if (alg->exit)
- 		skcipher->base.exit = crypto_skcipher_exit_tfm;
 
 
