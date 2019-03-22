@@ -2,53 +2,52 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C138BC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:22:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D753FC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:22:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F8C021916
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:22:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5BD7218D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:22:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553253736;
-	bh=ghVbteYX+eXjRpHKGEuNO9WUlk8jzxVmiWEbFq/1oBg=;
+	s=default; t=1553253740;
+	bh=eJoTbw4jydd4/DME+CUaXafVk6kPfNmgrp9JLGgJNI8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=irRhAlCCOsIenbhqJAX4Wgd5e+RBMYFc6LvqMYisEU2/V7C1Hzx07Q+ykRKVik9F4
-	 1Sc6fvLi0uuVut0MZO4Z4h88UGkPwGOG1EdQ9C+6DDldftYx/ciQaGYXZV/hqJt82c
-	 vA3L5VlcTjqsnV1q0FExA8kGYJU8GZxWpvxJWzCA=
+	b=fSCcS6UsYUfNTknCKmPNhBR9KNRfJsel49XGW+qLZoURnol912NxMnbwaiyletRtM
+	 hMgy2OvqACSbZjlmQDnsqrOaIj4OqeAFsfK+qc/YF2TmWZ6IDRCzgYCTwms6c7WUMi
+	 CqpdTX1lyCMxg4yQWFHy5/njB1/hxDYHhqLWCFuA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728759AbfCVLWP (ORCPT
+        id S1728767AbfCVLWT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:22:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48860 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:22:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728743AbfCVLWL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:22:11 -0400
+        id S1728750AbfCVLWP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:22:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3FC4921916;
-        Fri, 22 Mar 2019 11:22:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73B1421925;
+        Fri, 22 Mar 2019 11:22:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553253730;
-        bh=ghVbteYX+eXjRpHKGEuNO9WUlk8jzxVmiWEbFq/1oBg=;
+        s=default; t=1553253734;
+        bh=eJoTbw4jydd4/DME+CUaXafVk6kPfNmgrp9JLGgJNI8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rqbCEs88ALy36eRokGYuMQTyU44/xdruW5kkRhV3W0FFcPyXvjwgcCV8t60DG/0BF
-         Oy+trjRrfN/clCG9wAFquUyVgT2rivZ2+7N8pKs3oPbjfEC5xlknxcW+O3h9xolsGN
-         p8VK2y4heeSStCCf2lvrrxSthoy+l71JsdUBufzA=
+        b=r4a39b4lWD7X5L057F58KfDoPmcs02qDXbSyqt/mlyOG/NoatxSNpoBzQodwY56gD
+         ngjMC8f/JY65AvPxE5xLbaQRxmgiDAECyKvXRXhh7SqdUVkeNWkN73pIffozecAZh8
+         ODj+dPyiNO9Vb3iUQXF51wgJbNes3mYfoRovVwTM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, syzbot <syzkaller@googlegroups.com>,
-        Alistair Strachan <astrachan@google.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 3.18 054/134] media: uvcvideo: Fix type check leading to overflow
-Date:   Fri, 22 Mar 2019 12:14:27 +0100
-Message-Id: <20190322111213.874706687@linuxfoundation.org>
+        stable@vger.kernel.org, Su Yanjun <suyj.fnst@cn.fujitsu.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 3.18 055/134] vti4: Fix a ipip packet processing bug in IPCOMP virtual tunnel
+Date:   Fri, 22 Mar 2019 12:14:28 +0100
+Message-Id: <20190322111213.949687070@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111210.465931067@linuxfoundation.org>
 References: <20190322111210.465931067@linuxfoundation.org>
@@ -67,62 +66,119 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Alistair Strachan <astrachan@google.com>
+[ Upstream commit dd9ee3444014e8f28c0eefc9fffc9ac9c5248c12 ]
 
-commit 47bb117911b051bbc90764a8bff96543cbd2005f upstream.
+Recently we run a network test over ipcomp virtual tunnel.We find that
+if a ipv4 packet needs fragment, then the peer can't receive
+it.
 
-When initially testing the Camera Terminal Descriptor wTerminalType
-field (buffer[4]), no mask is used. Later in the function, the MSB is
-overloaded to store the descriptor subtype, and so a mask of 0x7fff
-is used to check the type.
+We deep into the code and find that when packet need fragment the smaller
+fragment will be encapsulated by ipip not ipcomp. So when the ipip packet
+goes into xfrm, it's skb->dev is not properly set. The ipv4 reassembly code
+always set skb'dev to the last fragment's dev. After ipv4 defrag processing,
+when the kernel rp_filter parameter is set, the skb will be drop by -EXDEV
+error.
 
-If a descriptor is specially crafted to set this overloaded bit in the
-original wTerminalType field, the initial type check will fail (falling
-through, without adjusting the buffer size), but the later type checks
-will pass, assuming the buffer has been made suitably large, causing an
-overflow.
+This patch adds compatible support for the ipip process in ipcomp virtual tunnel.
 
-Avoid this problem by checking for the MSB in the wTerminalType field.
-If the bit is set, assume the descriptor is bad, and abort parsing it.
-
-Originally reported here:
-https://groups.google.com/forum/#!topic/syzkaller/Ot1fOE6v1d8
-A similar (non-compiling) patch was provided at that time.
-
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: Alistair Strachan <astrachan@google.com>
-Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Su Yanjun <suyj.fnst@cn.fujitsu.com>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/uvc/uvc_driver.c |   14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ net/ipv4/ip_vti.c | 50 +++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
 
---- a/drivers/media/usb/uvc/uvc_driver.c
-+++ b/drivers/media/usb/uvc/uvc_driver.c
-@@ -977,11 +977,19 @@ static int uvc_parse_standard_control(st
- 			return -EINVAL;
- 		}
+diff --git a/net/ipv4/ip_vti.c b/net/ipv4/ip_vti.c
+index c35e0aa57e66..e224ca2ea1c0 100644
+--- a/net/ipv4/ip_vti.c
++++ b/net/ipv4/ip_vti.c
+@@ -75,6 +75,33 @@ static int vti_input(struct sk_buff *skb, int nexthdr, __be32 spi,
+ 	return 0;
+ }
  
--		/* Make sure the terminal type MSB is not null, otherwise it
--		 * could be confused with a unit.
-+		/*
-+		 * Reject invalid terminal types that would cause issues:
-+		 *
-+		 * - The high byte must be non-zero, otherwise it would be
-+		 *   confused with a unit.
-+		 *
-+		 * - Bit 15 must be 0, as we use it internally as a terminal
-+		 *   direction flag.
-+		 *
-+		 * Other unknown types are accepted.
- 		 */
- 		type = get_unaligned_le16(&buffer[4]);
--		if ((type & 0xff00) == 0) {
-+		if ((type & 0x7f00) == 0 || (type & 0x8000) != 0) {
- 			uvc_trace(UVC_TRACE_DESCR, "device %d videocontrol "
- 				"interface %d INPUT_TERMINAL %d has invalid "
- 				"type 0x%04x, skipping\n", udev->devnum,
++static int vti_input_ipip(struct sk_buff *skb, int nexthdr, __be32 spi,
++		     int encap_type)
++{
++	struct ip_tunnel *tunnel;
++	const struct iphdr *iph = ip_hdr(skb);
++	struct net *net = dev_net(skb->dev);
++	struct ip_tunnel_net *itn = net_generic(net, vti_net_id);
++
++	tunnel = ip_tunnel_lookup(itn, skb->dev->ifindex, TUNNEL_NO_KEY,
++				  iph->saddr, iph->daddr, 0);
++	if (tunnel) {
++		if (!xfrm4_policy_check(NULL, XFRM_POLICY_IN, skb))
++			goto drop;
++
++		XFRM_TUNNEL_SKB_CB(skb)->tunnel.ip4 = tunnel;
++
++		skb->dev = tunnel->dev;
++
++		return xfrm_input(skb, nexthdr, spi, encap_type);
++	}
++
++	return -EINVAL;
++drop:
++	kfree_skb(skb);
++	return 0;
++}
++
+ static int vti_rcv(struct sk_buff *skb)
+ {
+ 	XFRM_SPI_SKB_CB(skb)->family = AF_INET;
+@@ -83,6 +110,14 @@ static int vti_rcv(struct sk_buff *skb)
+ 	return vti_input(skb, ip_hdr(skb)->protocol, 0, 0);
+ }
+ 
++static int vti_rcv_ipip(struct sk_buff *skb)
++{
++	XFRM_SPI_SKB_CB(skb)->family = AF_INET;
++	XFRM_SPI_SKB_CB(skb)->daddroff = offsetof(struct iphdr, daddr);
++
++	return vti_input_ipip(skb, ip_hdr(skb)->protocol, ip_hdr(skb)->saddr, 0);
++}
++
+ static int vti_rcv_cb(struct sk_buff *skb, int err)
+ {
+ 	unsigned short family;
+@@ -409,6 +444,12 @@ static struct xfrm4_protocol vti_ipcomp4_protocol __read_mostly = {
+ 	.priority	=	100,
+ };
+ 
++static struct xfrm_tunnel ipip_handler __read_mostly = {
++	.handler	=	vti_rcv_ipip,
++	.err_handler	=	vti4_err,
++	.priority	=	0,
++};
++
+ static int __net_init vti_init_net(struct net *net)
+ {
+ 	int err;
+@@ -562,6 +603,13 @@ static int __init vti_init(void)
+ 	if (err < 0)
+ 		goto xfrm_proto_comp_failed;
+ 
++	msg = "ipip tunnel";
++	err = xfrm4_tunnel_register(&ipip_handler, AF_INET);
++	if (err < 0) {
++		pr_info("%s: cant't register tunnel\n",__func__);
++		goto xfrm_tunnel_failed;
++	}
++
+ 	msg = "netlink interface";
+ 	err = rtnl_link_register(&vti_link_ops);
+ 	if (err < 0)
+@@ -571,6 +619,8 @@ static int __init vti_init(void)
+ 
+ rtnl_link_failed:
+ 	xfrm4_protocol_deregister(&vti_ipcomp4_protocol, IPPROTO_COMP);
++xfrm_tunnel_failed:
++	xfrm4_tunnel_deregister(&ipip_handler, AF_INET);
+ xfrm_proto_comp_failed:
+ 	xfrm4_protocol_deregister(&vti_ah4_protocol, IPPROTO_AH);
+ xfrm_proto_ah_failed:
+-- 
+2.19.1
+
 
 
