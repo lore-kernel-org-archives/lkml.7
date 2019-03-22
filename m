@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B77BCC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:50:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92EF9C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:50:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 777942082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:50:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5887A21873
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:50:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553259025;
-	bh=rgRs+JRvAdAjQ0GvzrGTezdUDhunQWbCTaAhU7L+0UA=;
+	s=default; t=1553259031;
+	bh=XM1spQhoIrcHoszklAO1nnYCqWn5br3UzeLSapTTVaw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N/1ufyX7GtQTdaRohw++ikDTOZXK60BmoCc2h/farmquTyIMaRrVqsLCPWggrj0jk
-	 Jz8T1jbrG+0ydsw+X0eKmweTfonuk4ZDj3gPn+qAOvsLxNFvbEdH+e77GZbvvEW6pv
-	 jmhcN9eEkuazCFz3ZVhz7qbFExVLDLdw6hX6zaxs=
+	b=Qoxqo28jDXmLPdc3NrzIsUwLIRKePywE6IjgnMU17TQxrn7T6i+4C24mIQKP36IZD
+	 eIZpGaEB4gpYOovfFECsbtVVRxPffueq/fBuJjyb5ES5YSjY80nJ4CI0rf0azv7GtF
+	 yAsLYxuoOsLBVWQm9Gir82LAFhEGvECSHVtak4yg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733018AbfCVLzp (ORCPT
+        id S1733233AbfCVMu3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:55:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59278 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:50:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60312 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733236AbfCVLyp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:54:45 -0400
+        id S1732458AbfCVLzn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:55:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D21F2082C;
-        Fri, 22 Mar 2019 11:54:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7945420850;
+        Fri, 22 Mar 2019 11:55:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255685;
-        bh=rgRs+JRvAdAjQ0GvzrGTezdUDhunQWbCTaAhU7L+0UA=;
+        s=default; t=1553255742;
+        bh=XM1spQhoIrcHoszklAO1nnYCqWn5br3UzeLSapTTVaw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zGYpma+9bdmdu3WEeabhY3SmtuVHMFr8znUEbNPRid0Lz6+6zRkjzcry4jLe7s/FT
-         iwFICMHTcfJeFfr2K5c4obVf4VtipfnLqXgKZpwnLCWXk1pyzHmnliu7VSr1Oonsc5
-         N1iOyMgByIgCU/tvKCxaY0/zsc3LuV98HmtQ7iPw=
+        b=ujsLyEc/f/i223ZiGGjbuyXnipoNfHA8BwFPhAaG7E/eV1UPYt7k4ovRfyC/Sa8kH
+         skD0MuBwmB02KCQ7R2IHzdaDkbq9FhYyQrXtSzw7FoNE1v5uUS7378TNLvrhw97ZtS
+         KfGFn390jcOwCrVKIaxfS61p9K5U0Q4dAjOjruyM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guoqing Jiang <gqjiang@suse.com>,
-        Aditya Pakki <pakki001@umn.edu>,
-        Song Liu <songliubraving@fb.com>
-Subject: [PATCH 4.14 167/183] md: Fix failed allocation of md_register_thread
-Date:   Fri, 22 Mar 2019 12:16:35 +0100
-Message-Id: <20190322111253.998668518@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 4.14 177/183] KVM: Call kvm_arch_memslots_updated() before updating memslots
+Date:   Fri, 22 Mar 2019 12:16:45 +0100
+Message-Id: <20190322111254.730818555@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111241.819468003@linuxfoundation.org>
 References: <20190322111241.819468003@linuxfoundation.org>
@@ -66,49 +66,170 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Aditya Pakki <pakki001@umn.edu>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit e406f12dde1a8375d77ea02d91f313fb1a9c6aec upstream.
+commit 152482580a1b0accb60676063a1ac57b2d12daf6 upstream.
 
-mddev->sync_thread can be set to NULL on kzalloc failure downstream.
-The patch checks for such a scenario and frees allocated resources.
+kvm_arch_memslots_updated() is at this point in time an x86-specific
+hook for handling MMIO generation wraparound.  x86 stashes 19 bits of
+the memslots generation number in its MMIO sptes in order to avoid
+full page fault walks for repeat faults on emulated MMIO addresses.
+Because only 19 bits are used, wrapping the MMIO generation number is
+possible, if unlikely.  kvm_arch_memslots_updated() alerts x86 that
+the generation has changed so that it can invalidate all MMIO sptes in
+case the effective MMIO generation has wrapped so as to avoid using a
+stale spte, e.g. a (very) old spte that was created with generation==0.
 
-Committer node:
+Given that the purpose of kvm_arch_memslots_updated() is to prevent
+consuming stale entries, it needs to be called before the new generation
+is propagated to memslots.  Invalidating the MMIO sptes after updating
+memslots means that there is a window where a vCPU could dereference
+the new memslots generation, e.g. 0, and incorrectly reuse an old MMIO
+spte that was created with (pre-wrap) generation==0.
 
-Added similar fix to raid5.c, as suggested by Guoqing.
-
-Cc: stable@vger.kernel.org # v3.16+
-Acked-by: Guoqing Jiang <gqjiang@suse.com>
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Signed-off-by: Song Liu <songliubraving@fb.com>
+Fixes: e59dbe09f8e6 ("KVM: Introduce kvm_arch_memslots_updated()")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/raid10.c |    2 ++
- drivers/md/raid5.c  |    2 ++
- 2 files changed, 4 insertions(+)
+ arch/mips/include/asm/kvm_host.h    |    2 +-
+ arch/powerpc/include/asm/kvm_host.h |    2 +-
+ arch/s390/include/asm/kvm_host.h    |    2 +-
+ arch/x86/include/asm/kvm_host.h     |    2 +-
+ arch/x86/kvm/mmu.c                  |    4 ++--
+ arch/x86/kvm/x86.c                  |    4 ++--
+ include/linux/kvm_host.h            |    2 +-
+ virt/kvm/arm/mmu.c                  |    2 +-
+ virt/kvm/kvm_main.c                 |    7 +++++--
+ 9 files changed, 15 insertions(+), 12 deletions(-)
 
---- a/drivers/md/raid10.c
-+++ b/drivers/md/raid10.c
-@@ -3821,6 +3821,8 @@ static int raid10_run(struct mddev *mdde
- 		set_bit(MD_RECOVERY_RUNNING, &mddev->recovery);
- 		mddev->sync_thread = md_register_thread(md_do_sync, mddev,
- 							"reshape");
-+		if (!mddev->sync_thread)
-+			goto out_free_conf;
- 	}
+--- a/arch/mips/include/asm/kvm_host.h
++++ b/arch/mips/include/asm/kvm_host.h
+@@ -1132,7 +1132,7 @@ static inline void kvm_arch_hardware_uns
+ static inline void kvm_arch_sync_events(struct kvm *kvm) {}
+ static inline void kvm_arch_free_memslot(struct kvm *kvm,
+ 		struct kvm_memory_slot *free, struct kvm_memory_slot *dont) {}
+-static inline void kvm_arch_memslots_updated(struct kvm *kvm, struct kvm_memslots *slots) {}
++static inline void kvm_arch_memslots_updated(struct kvm *kvm, u64 gen) {}
+ static inline void kvm_arch_sched_in(struct kvm_vcpu *vcpu, int cpu) {}
+ static inline void kvm_arch_vcpu_blocking(struct kvm_vcpu *vcpu) {}
+ static inline void kvm_arch_vcpu_unblocking(struct kvm_vcpu *vcpu) {}
+--- a/arch/powerpc/include/asm/kvm_host.h
++++ b/arch/powerpc/include/asm/kvm_host.h
+@@ -809,7 +809,7 @@ struct kvm_vcpu_arch {
+ static inline void kvm_arch_hardware_disable(void) {}
+ static inline void kvm_arch_hardware_unsetup(void) {}
+ static inline void kvm_arch_sync_events(struct kvm *kvm) {}
+-static inline void kvm_arch_memslots_updated(struct kvm *kvm, struct kvm_memslots *slots) {}
++static inline void kvm_arch_memslots_updated(struct kvm *kvm, u64 gen) {}
+ static inline void kvm_arch_flush_shadow_all(struct kvm *kvm) {}
+ static inline void kvm_arch_sched_in(struct kvm_vcpu *vcpu, int cpu) {}
+ static inline void kvm_arch_exit(void) {}
+--- a/arch/s390/include/asm/kvm_host.h
++++ b/arch/s390/include/asm/kvm_host.h
+@@ -784,7 +784,7 @@ static inline void kvm_arch_vcpu_uninit(
+ static inline void kvm_arch_sched_in(struct kvm_vcpu *vcpu, int cpu) {}
+ static inline void kvm_arch_free_memslot(struct kvm *kvm,
+ 		struct kvm_memory_slot *free, struct kvm_memory_slot *dont) {}
+-static inline void kvm_arch_memslots_updated(struct kvm *kvm, struct kvm_memslots *slots) {}
++static inline void kvm_arch_memslots_updated(struct kvm *kvm, u64 gen) {}
+ static inline void kvm_arch_flush_shadow_all(struct kvm *kvm) {}
+ static inline void kvm_arch_flush_shadow_memslot(struct kvm *kvm,
+ 		struct kvm_memory_slot *slot) {}
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1121,7 +1121,7 @@ void kvm_mmu_clear_dirty_pt_masked(struc
+ 				   struct kvm_memory_slot *slot,
+ 				   gfn_t gfn_offset, unsigned long mask);
+ void kvm_mmu_zap_all(struct kvm *kvm);
+-void kvm_mmu_invalidate_mmio_sptes(struct kvm *kvm, struct kvm_memslots *slots);
++void kvm_mmu_invalidate_mmio_sptes(struct kvm *kvm, u64 gen);
+ unsigned int kvm_mmu_calculate_mmu_pages(struct kvm *kvm);
+ void kvm_mmu_change_mmu_pages(struct kvm *kvm, unsigned int kvm_nr_mmu_pages);
  
+--- a/arch/x86/kvm/mmu.c
++++ b/arch/x86/kvm/mmu.c
+@@ -5418,13 +5418,13 @@ static bool kvm_has_zapped_obsolete_page
+ 	return unlikely(!list_empty_careful(&kvm->arch.zapped_obsolete_pages));
+ }
+ 
+-void kvm_mmu_invalidate_mmio_sptes(struct kvm *kvm, struct kvm_memslots *slots)
++void kvm_mmu_invalidate_mmio_sptes(struct kvm *kvm, u64 gen)
+ {
+ 	/*
+ 	 * The very rare case: if the generation-number is round,
+ 	 * zap all shadow pages.
+ 	 */
+-	if (unlikely((slots->generation & MMIO_GEN_MASK) == 0)) {
++	if (unlikely((gen & MMIO_GEN_MASK) == 0)) {
+ 		kvm_debug_ratelimited("kvm: zapping shadow pages for mmio generation wraparound\n");
+ 		kvm_mmu_invalidate_zap_all_pages(kvm);
+ 	}
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -8524,13 +8524,13 @@ out_free:
+ 	return -ENOMEM;
+ }
+ 
+-void kvm_arch_memslots_updated(struct kvm *kvm, struct kvm_memslots *slots)
++void kvm_arch_memslots_updated(struct kvm *kvm, u64 gen)
+ {
+ 	/*
+ 	 * memslots->generation has been incremented.
+ 	 * mmio generation may have reached its maximum value.
+ 	 */
+-	kvm_mmu_invalidate_mmio_sptes(kvm, slots);
++	kvm_mmu_invalidate_mmio_sptes(kvm, gen);
+ }
+ 
+ int kvm_arch_prepare_memory_region(struct kvm *kvm,
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -625,7 +625,7 @@ void kvm_arch_free_memslot(struct kvm *k
+ 			   struct kvm_memory_slot *dont);
+ int kvm_arch_create_memslot(struct kvm *kvm, struct kvm_memory_slot *slot,
+ 			    unsigned long npages);
+-void kvm_arch_memslots_updated(struct kvm *kvm, struct kvm_memslots *slots);
++void kvm_arch_memslots_updated(struct kvm *kvm, u64 gen);
+ int kvm_arch_prepare_memory_region(struct kvm *kvm,
+ 				struct kvm_memory_slot *memslot,
+ 				const struct kvm_userspace_memory_region *mem,
+--- a/virt/kvm/arm/mmu.c
++++ b/virt/kvm/arm/mmu.c
+@@ -1955,7 +1955,7 @@ int kvm_arch_create_memslot(struct kvm *
  	return 0;
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -7370,6 +7370,8 @@ static int raid5_run(struct mddev *mddev
- 		set_bit(MD_RECOVERY_RUNNING, &mddev->recovery);
- 		mddev->sync_thread = md_register_thread(md_do_sync, mddev,
- 							"reshape");
-+		if (!mddev->sync_thread)
-+			goto abort;
- 	}
+ }
  
- 	/* Ok, everything is just fine now */
+-void kvm_arch_memslots_updated(struct kvm *kvm, struct kvm_memslots *slots)
++void kvm_arch_memslots_updated(struct kvm *kvm, u64 gen)
+ {
+ }
+ 
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -856,6 +856,7 @@ static struct kvm_memslots *install_new_
+ 		int as_id, struct kvm_memslots *slots)
+ {
+ 	struct kvm_memslots *old_memslots = __kvm_memslots(kvm, as_id);
++	u64 gen;
+ 
+ 	/*
+ 	 * Set the low bit in the generation, which disables SPTE caching
+@@ -878,9 +879,11 @@ static struct kvm_memslots *install_new_
+ 	 * space 0 will use generations 0, 4, 8, ... while * address space 1 will
+ 	 * use generations 2, 6, 10, 14, ...
+ 	 */
+-	slots->generation += KVM_ADDRESS_SPACE_NUM * 2 - 1;
++	gen = slots->generation + KVM_ADDRESS_SPACE_NUM * 2 - 1;
+ 
+-	kvm_arch_memslots_updated(kvm, slots);
++	kvm_arch_memslots_updated(kvm, gen);
++
++	slots->generation = gen;
+ 
+ 	return old_memslots;
+ }
 
 
