@@ -2,75 +2,107 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15790C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:20:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5847CC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:20:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D658820883
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:20:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="eGKWgdzm"
+	by mail.kernel.org (Postfix) with ESMTP id 2AF8A20883
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:20:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727985AbfCVWUR (ORCPT
+        id S1728083AbfCVWU3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 18:20:17 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:53924 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726095AbfCVWUQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 18:20:16 -0400
-Received: from zn.tnic (p200300EC2F098000329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:8000:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 504071EC045C;
-        Fri, 22 Mar 2019 23:20:15 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1553293215;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=3tsXV/IkBDE5ASOcUZ+0ReV7XJVrHJUgUTNqHQJj2yY=;
-        b=eGKWgdzmQNiP1uLDnRo2yfJElP3ORN02TWodVIylH0UyGKBQo75IqnsM+YbR0Gi1iDB+OV
-        j8i24Ih+9JGMsM+Fo+tVsHXwQ2i0/qI1PPzjUBaSPfVbCucT1Pet8iCB+x/0jSrSCM3Ys5
-        /Rp0kjQdwDcRocFpN0XdUJOy4rj6v/k=
-Date:   Fri, 22 Mar 2019 23:20:18 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
-Cc:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "rafal@milecki.pl" <rafal@milecki.pl>,
-        "clemej@gmail.com" <clemej@gmail.com>
-Subject: Re: [PATCH v3 2/3] x86/MCE/AMD: Don't report L1 BTB MCA errors on
- some Family 17h models
-Message-ID: <20190322222018.GQ12472@zn.tnic>
-References: <20190322202848.20749-1-Yazen.Ghannam@amd.com>
- <20190322202848.20749-2-Yazen.Ghannam@amd.com>
- <bbcce693-496e-0ab9-f01e-66bc67347715@amd.com>
- <20190322205500.GP12472@zn.tnic>
- <SN6PR12MB26390B3260E0AE715DC5B279F8430@SN6PR12MB2639.namprd12.prod.outlook.com>
+        Fri, 22 Mar 2019 18:20:29 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:37079 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726095AbfCVWU2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 18:20:28 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x2MMKKtg750227
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Fri, 22 Mar 2019 15:20:20 -0700
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x2MMKKtG750222;
+        Fri, 22 Mar 2019 15:20:20 -0700
+Date:   Fri, 22 Mar 2019 15:20:20 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Andi Kleen <tipbot@zytor.com>
+Message-ID: <tip-9yecyuha04nyg8toyd1b2pgi@git.kernel.org>
+Cc:     jolsa@kernel.org, acme@redhat.com, tglx@linutronix.de,
+        ak@linux.intel.com, hpa@zytor.com, mingo@kernel.org,
+        linux-kernel@vger.kernel.org
+Reply-To: mingo@kernel.org, linux-kernel@vger.kernel.org, acme@redhat.com,
+          jolsa@kernel.org, ak@linux.intel.com, hpa@zytor.com,
+          tglx@linutronix.de
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:perf/urgent] perf record: Clarify help for --switch-output
+Git-Commit-ID: c38dab7df7ee4fdecd51e390d4d33d5ef5cff49d
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-In-Reply-To: <SN6PR12MB26390B3260E0AE715DC5B279F8430@SN6PR12MB2639.namprd12.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 22, 2019 at 09:35:41PM +0000, Ghannam, Yazen wrote:
-> Should this be a pre-patch, or just include it here?
+Commit-ID:  c38dab7df7ee4fdecd51e390d4d33d5ef5cff49d
+Gitweb:     https://git.kernel.org/tip/c38dab7df7ee4fdecd51e390d4d33d5ef5cff49d
+Author:     Andi Kleen <ak@linux.intel.com>
+AuthorDate: Thu, 14 Mar 2019 15:49:56 -0700
+Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitDate: Tue, 19 Mar 2019 16:15:42 -0300
 
-Should be small enough so you can include it with this one.
+perf record: Clarify help for --switch-output
 
-Thx.
+The help description for --switch-output looks like there are multiple
+comma separated fields. But it's actually a choice of different options.
+Make it clear and less confusing.
 
--- 
-Regards/Gruss,
-    Boris.
+Before:
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
+  % perf record -h
+  ...
+          --switch-output[=<signal,size,time>]
+                            Switch output when receive SIGUSR2 or cross size,time threshold
+
+After:
+
+  % perf record -h
+  ...
+
+          --switch-output[=<signal or size[BKMG] or time[smhd]>]
+                            Switch output when receiving SIGUSR2 (signal) or cross a size or time threshold
+
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+LPU-Reference: 20190314225002.30108-4-andi@firstfloor.org
+Link: https://lkml.kernel.org/n/tip-9yecyuha04nyg8toyd1b2pgi@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/builtin-record.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 02d7c40b2d10..e7144a1c1c82 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -1989,8 +1989,8 @@ static struct option __record_options[] = {
+ 	OPT_BOOLEAN(0, "timestamp-boundary", &record.timestamp_boundary,
+ 		    "Record timestamp boundary (time of first/last samples)"),
+ 	OPT_STRING_OPTARG_SET(0, "switch-output", &record.switch_output.str,
+-			  &record.switch_output.set, "signal,size,time",
+-			  "Switch output when receive SIGUSR2 or cross size,time threshold",
++			  &record.switch_output.set, "signal or size[BKMG] or time[smhd]",
++			  "Switch output when receiving SIGUSR2 (signal) or cross a size or time threshold",
+ 			  "signal"),
+ 	OPT_INTEGER(0, "switch-max-files", &record.switch_output.num_files,
+ 		   "Limit number of switch output generated files"),
