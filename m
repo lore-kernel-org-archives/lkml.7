@@ -7,52 +7,51 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECA6BC10F03
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:40:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82474C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:40:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA033218E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:40:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FFFB21929
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:40:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553258420;
-	bh=4v41zYViiNjDLv0PYtAgmrL5oYVfXU8Yamuqjydcg5c=;
+	s=default; t=1553258424;
+	bh=6KfBVJ3m5R21fDxFjxoQkNsL8x1SKclXLwAXu2VGBG4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wz8+Pw+yyTdGs6rCcJTI4+2O4Wzvd8hRNZv+mNzrMF1rqP8mCYmpn/FLiSvUHx2iG
-	 ZCEvN+3oOp4oT+T3NoIEc/ITjs4eWrz6SSgdgHucdPC91gYb9YMKl8vauSw2wj8XIy
-	 rzn/OJblBdgOtBNCr+F+6N2BJMfgwncq40C0OZMo=
+	b=yQxWtD0zr8e+wslWnvcdn3/Jla/V5kRFV0QsqwEgRT4X1QLsiBSjt7r6TDnhHAOUg
+	 r3bVkCqnKvyC08VdvsPzNdN5mZYHkmEY28XzvLg4v4Ie1awogNq5+ZkDyq44J7b/SJ
+	 tGU6DdhfGShpxiVljHJ3Mh3lXBtVAYuJPP19OnhI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388414AbfCVMGq (ORCPT
+        id S2389150AbfCVMkW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:06:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45140 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:40:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388475AbfCVMGn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:06:43 -0400
+        id S2388228AbfCVMGp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:06:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFBF521916;
-        Fri, 22 Mar 2019 12:06:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D997206C0;
+        Fri, 22 Mar 2019 12:06:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256402;
-        bh=4v41zYViiNjDLv0PYtAgmrL5oYVfXU8Yamuqjydcg5c=;
+        s=default; t=1553256405;
+        bh=6KfBVJ3m5R21fDxFjxoQkNsL8x1SKclXLwAXu2VGBG4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wI5fW52xY/WbRIyTg1VbkrGy/RUoikRB3lqmKlcKiiMH2kAzGRkrAg6l2giIYHZ87
-         NaxvVpL91xf28YD5k1pwDZ8yCfO6rVTJTPlU++0yRsW7VkKbYNEYxXACNCfNcxA8S7
-         oRFY4GD58YR6/KAPX/mndaJCInbwC9B+YYmXHu7E=
+        b=IACnXoVll7qIwbf348E691pmZGuFHNfZolL4HMwR/amnsr+j+qQ9Tn5IBmyVTRrBA
+         vQ30cN+ZIED8ulOdqvUjV9zhOKq2T8MYV3bt+7rg/TKK1vZMrCda+buv0Y+ILewwvK
+         n4/Vh0WFSMHRhDkc1DCiLiVWjmvBpYeUAegx9QDY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, zhongjiang <zhongjiang@huawei.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        stable@vger.kernel.org, Roman Penyaev <rpenyaev@suse.de>,
         Michal Hocko <mhocko@suse.com>,
-        Hugh Dickins <hughd@google.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Andrea Arcangeli <aarcange@redhat.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Joe Perches <joe@perches.com>,
+        "Luis R. Rodriguez" <mcgrof@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 200/280] mm: hwpoison: fix thp split handing in soft_offline_in_use_page()
-Date:   Fri, 22 Mar 2019 12:15:53 +0100
-Message-Id: <20190322111330.551251778@linuxfoundation.org>
+Subject: [PATCH 4.19 201/280] mm/vmalloc: fix size check for remap_vmalloc_range_partial()
+Date:   Fri, 22 Mar 2019 12:15:54 +0100
+Message-Id: <20190322111330.764404978@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -71,76 +70,86 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: zhongjiang <zhongjiang@huawei.com>
+From: Roman Penyaev <rpenyaev@suse.de>
 
-commit 46612b751c4941c5c0472ddf04027e877ae5990f upstream.
+commit 401592d2e095947344e10ec0623adbcd58934dd4 upstream.
 
-When soft_offline_in_use_page() runs on a thp tail page after pmd is
-split, we trigger the following VM_BUG_ON_PAGE():
+When VM_NO_GUARD is not set area->size includes adjacent guard page,
+thus for correct size checking get_vm_area_size() should be used, but
+not area->size.
 
-  Memory failure: 0x3755ff: non anonymous thp
-  __get_any_page: 0x3755ff: unknown zero refcount page type 2fffff80000000
-  Soft offlining pfn 0x34d805 at process virtual address 0x20fff000
-  page:ffffea000d360140 count:0 mapcount:0 mapping:0000000000000000 index:0x1
-  flags: 0x2fffff80000000()
-  raw: 002fffff80000000 ffffea000d360108 ffffea000d360188 0000000000000000
-  raw: 0000000000000001 0000000000000000 00000000ffffffff 0000000000000000
-  page dumped because: VM_BUG_ON_PAGE(page_ref_count(page) == 0)
-  ------------[ cut here ]------------
-  kernel BUG at ./include/linux/mm.h:519!
+This fixes possible kernel oops when userspace tries to mmap an area on
+1 page bigger than was allocated by vmalloc_user() call: the size check
+inside remap_vmalloc_range_partial() accounts non-existing guard page
+also, so check successfully passes but vmalloc_to_page() returns NULL
+(guard page does not physically exist).
 
-soft_offline_in_use_page() passed refcount and page lock from tail page
-to head page, which is not needed because we can pass any subpage to
-split_huge_page().
+The following code pattern example should trigger an oops:
 
-Naoya had fixed a similar issue in c3901e722b29 ("mm: hwpoison: fix thp
-split handling in memory_failure()").  But he missed fixing soft
-offline.
+  static int oops_mmap(struct file *file, struct vm_area_struct *vma)
+  {
+        void *mem;
 
-Link: http://lkml.kernel.org/r/1551452476-24000-1-git-send-email-zhongjiang@huawei.com
-Fixes: 61f5d698cc97 ("mm: re-enable THP")
-Signed-off-by: zhongjiang <zhongjiang@huawei.com>
-Acked-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Hugh Dickins <hughd@google.com>
-Cc: Kirill A. Shutemov <kirill@shutemov.name>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: <stable@vger.kernel.org>	[4.5+]
+        mem = vmalloc_user(4096);
+        BUG_ON(!mem);
+        /* Do not care about mem leak */
+
+        return remap_vmalloc_range(vma, mem, 0);
+  }
+
+And userspace simply mmaps size + PAGE_SIZE:
+
+  mmap(NULL, 8192, PROT_WRITE|PROT_READ, MAP_PRIVATE, fd, 0);
+
+Possible candidates for oops which do not have any explicit size
+checks:
+
+   *** drivers/media/usb/stkwebcam/stk-webcam.c:
+   v4l_stk_mmap[789]   ret = remap_vmalloc_range(vma, sbuf->buffer, 0);
+
+Or the following one:
+
+   *** drivers/video/fbdev/core/fbmem.c
+   static int
+   fb_mmap(struct file *file, struct vm_area_struct * vma)
+        ...
+        res = fb->fb_mmap(info, vma);
+
+Where fb_mmap callback calls remap_vmalloc_range() directly without any
+explicit checks:
+
+   *** drivers/video/fbdev/vfb.c
+   static int vfb_mmap(struct fb_info *info,
+             struct vm_area_struct *vma)
+   {
+       return remap_vmalloc_range(vma, (void *)info->fix.smem_start, vma->vm_pgoff);
+   }
+
+Link: http://lkml.kernel.org/r/20190103145954.16942-2-rpenyaev@suse.de
+Signed-off-by: Roman Penyaev <rpenyaev@suse.de>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Cc: Joe Perches <joe@perches.com>
+Cc: "Luis R. Rodriguez" <mcgrof@kernel.org>
+Cc: <stable@vger.kernel.org>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/memory-failure.c |   14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
+ mm/vmalloc.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/mm/memory-failure.c
-+++ b/mm/memory-failure.c
-@@ -1823,19 +1823,17 @@ static int soft_offline_in_use_page(stru
- 	struct page *hpage = compound_head(page);
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -2244,7 +2244,7 @@ int remap_vmalloc_range_partial(struct v
+ 	if (!(area->flags & VM_USERMAP))
+ 		return -EINVAL;
  
- 	if (!PageHuge(page) && PageTransHuge(hpage)) {
--		lock_page(hpage);
--		if (!PageAnon(hpage) || unlikely(split_huge_page(hpage))) {
--			unlock_page(hpage);
--			if (!PageAnon(hpage))
-+		lock_page(page);
-+		if (!PageAnon(page) || unlikely(split_huge_page(page))) {
-+			unlock_page(page);
-+			if (!PageAnon(page))
- 				pr_info("soft offline: %#lx: non anonymous thp\n", page_to_pfn(page));
- 			else
- 				pr_info("soft offline: %#lx: thp split failed\n", page_to_pfn(page));
--			put_hwpoison_page(hpage);
-+			put_hwpoison_page(page);
- 			return -EBUSY;
- 		}
--		unlock_page(hpage);
--		get_hwpoison_page(page);
--		put_hwpoison_page(hpage);
-+		unlock_page(page);
- 	}
+-	if (kaddr + size > area->addr + area->size)
++	if (kaddr + size > area->addr + get_vm_area_size(area))
+ 		return -EINVAL;
  
- 	/*
+ 	do {
 
 
