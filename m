@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 067B1C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:00:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41600C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:00:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6A4A21939
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:00:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10DC921934
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:00:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256031;
-	bh=FWaPtH9+v5541JsmLcW80Kt2u5fTgKvK18z9dkRDox8=;
+	s=default; t=1553256036;
+	bh=duyIjb2IZgwNBkddrSR0gTemKuPqnbfA6KVji79dTsw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U7eNgmAolDT1sZGRApIwEPBz1kR7AFkRCv8ycX+hwsJqucMtxHDc7Cx/97gdgRBEN
-	 djlVNCcc2bKZWKB4qwL/N+V7GI4Z2z5I1tVK1VY4qjC3QEMVYhgCHJkTFGFymfMztu
-	 T1bSA/2ChBRvWBwefVWDwJxmU5Em1b6IW5KH2jF0=
+	b=XJg85MkxUqQegb7Jg7izAStOGh7aA5wvneS/QP2k168uDUmbttx3nKYlqrb8TVGnO
+	 DtYJHBp6ulX67teANCoYI2TNmdmcHe2mZNzOfmOwKJ+M0lP6I6tqltWnoQuv8PyVcB
+	 NuU+20n4aHwPvd1FbgyysXeoA+zc3KAT047ikrYU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388089AbfCVMAa (ORCPT
+        id S2388099AbfCVMAe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:00:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37570 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:00:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388078AbfCVMAZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:00:25 -0400
+        id S1730518AbfCVMA3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:00:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CEFAD204FD;
-        Fri, 22 Mar 2019 12:00:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B511221934;
+        Fri, 22 Mar 2019 12:00:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256025;
-        bh=FWaPtH9+v5541JsmLcW80Kt2u5fTgKvK18z9dkRDox8=;
+        s=default; t=1553256029;
+        bh=duyIjb2IZgwNBkddrSR0gTemKuPqnbfA6KVji79dTsw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gXJvNyhXpg6NfnBG7ngAWBQ7rqFWpwwbs2zTxf8Wqzhd9Eod+RjHRAV1FSx3em7i3
-         1iQ7IlmlD99Dm4kLOB6gTs+64/XykzhkEglcrnE7qVKE29ru0zMa59rlyIq5Nboh9l
-         Yi+IMv+M2HKkFbNfVgy8uf9750BngfnCr9fWY25A=
+        b=ph8ltF9VEMLzLdRecljGM+8gIXKjJJz2koPSL8XzjrnDe3/eHFsgXTUYY8J4hyatv
+         RPvXhajPhs0tVTI2p+lZdp97OmnKL+c1ka0ZvjBfts3uET/y+0l3jBoXQEcPo8KAnx
+         O3NE9a7LIRpco/2Vn3npx45FbMGGMIKMUYVgtJ9o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eugene Loh <eugene.loh@oracle.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        stable@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 068/280] kallsyms: Handle too long symbols in kallsyms.c
-Date:   Fri, 22 Mar 2019 12:13:41 +0100
-Message-Id: <20190322111310.117043948@linuxfoundation.org>
+Subject: [PATCH 4.19 069/280] clk: sunxi: A31: Fix wrong AHB gate number
+Date:   Fri, 22 Mar 2019 12:13:42 +0100
+Message-Id: <20190322111310.174199655@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -67,35 +66,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 6db2983cd8064808141ccefd75218f5b4345ffae ]
+[ Upstream commit ee0b27a3a4da0b0ed2318aa092f8856896e9450b ]
 
-When checking for symbols with excessively long names,
-account for null terminating character.
+According to the manual the gate clock for MMC3 is at bit 11, and NAND1
+is controlled by bit 12.
 
-Fixes: f3462aa952cf ("Kbuild: Handle longer symbols in kallsyms.c")
-Signed-off-by: Eugene Loh <eugene.loh@oracle.com>
-Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Fix the gate bit definitions in the clock driver.
+
+Fixes: c6e6c96d8fa6 ("clk: sunxi-ng: Add A31/A31s clocks")
+Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/kallsyms.c | 4 ++--
+ drivers/clk/sunxi-ng/ccu-sun6i-a31.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/scripts/kallsyms.c b/scripts/kallsyms.c
-index a9186a98a37d..0c9c54b57515 100644
---- a/scripts/kallsyms.c
-+++ b/scripts/kallsyms.c
-@@ -120,8 +120,8 @@ static int read_symbol(FILE *in, struct sym_entry *s)
- 			fprintf(stderr, "Read error or end of file.\n");
- 		return -1;
- 	}
--	if (strlen(sym) > KSYM_NAME_LEN) {
--		fprintf(stderr, "Symbol %s too long for kallsyms (%zu vs %d).\n"
-+	if (strlen(sym) >= KSYM_NAME_LEN) {
-+		fprintf(stderr, "Symbol %s too long for kallsyms (%zu >= %d).\n"
- 				"Please increase KSYM_NAME_LEN both in kernel and kallsyms.c\n",
- 			sym, strlen(sym), KSYM_NAME_LEN);
- 		return -1;
+diff --git a/drivers/clk/sunxi-ng/ccu-sun6i-a31.c b/drivers/clk/sunxi-ng/ccu-sun6i-a31.c
+index 3b97f60540ad..609970c0b666 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun6i-a31.c
++++ b/drivers/clk/sunxi-ng/ccu-sun6i-a31.c
+@@ -264,9 +264,9 @@ static SUNXI_CCU_GATE(ahb1_mmc1_clk,	"ahb1-mmc1",	"ahb1",
+ static SUNXI_CCU_GATE(ahb1_mmc2_clk,	"ahb1-mmc2",	"ahb1",
+ 		      0x060, BIT(10), 0);
+ static SUNXI_CCU_GATE(ahb1_mmc3_clk,	"ahb1-mmc3",	"ahb1",
+-		      0x060, BIT(12), 0);
++		      0x060, BIT(11), 0);
+ static SUNXI_CCU_GATE(ahb1_nand1_clk,	"ahb1-nand1",	"ahb1",
+-		      0x060, BIT(13), 0);
++		      0x060, BIT(12), 0);
+ static SUNXI_CCU_GATE(ahb1_nand0_clk,	"ahb1-nand0",	"ahb1",
+ 		      0x060, BIT(13), 0);
+ static SUNXI_CCU_GATE(ahb1_sdram_clk,	"ahb1-sdram",	"ahb1",
 -- 
 2.19.1
 
