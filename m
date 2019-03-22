@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC990C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:12:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01559C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:12:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC40B20830
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:12:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C547B2083D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:12:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256738;
-	bh=SnVD/eR8xg31yLvxM6GYWPhra0WTpc0/RI95NEO40us=;
+	s=default; t=1553256742;
+	bh=lFmiHzMxA9irccZlgSBqnfmYinVia1Agczz5mLITE+M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c52oR0CTMeKOCqfva30/mnMkVM+53rqc4Gck7dM4qty8bf/HjBfh+VvK5eDkV9ELd
-	 hJTBVgPukfvhIRcKPjMnU+bCqSmhL9PfIArkj8x4gnMVER+YpJxeh12NfwWnLtWVR1
-	 0hqyhmS1jNrl+63wv1YltclKzSQC0RSgMVcWe7+Y=
+	b=og2yC92iX4NCEK/NORaljTUo1YPcS9N6V26s7Ae7x0sJ7QxJihsRBXFktSaOWnjkP
+	 Sv5A/zNd3IZ9wj5aVm8lY7Jqn4l0+FvXBEuyAZE4tuRBjDb5vRN7mxwtlybLFN9ybI
+	 +weze7BcBUy30YYh4shqq4oYmYM4i5OqVjtjTC4A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389318AbfCVMMR (ORCPT
+        id S2389619AbfCVMMV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:12:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50404 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:12:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389128AbfCVMMN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:12:13 -0400
+        id S2389608AbfCVMMR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:12:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 153D721929;
-        Fri, 22 Mar 2019 12:12:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E56C21929;
+        Fri, 22 Mar 2019 12:12:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256732;
-        bh=SnVD/eR8xg31yLvxM6GYWPhra0WTpc0/RI95NEO40us=;
+        s=default; t=1553256736;
+        bh=lFmiHzMxA9irccZlgSBqnfmYinVia1Agczz5mLITE+M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bv8X1Kj79LUXW3SIxMyJt3zjcSgf8672e2yVTQN9T/th6I8CQUrUr+0yXTNnGlEN3
-         UYgEJaYAn+K/HhTYLfiO1pNAL90uWZyKrOWA0Q2Wed+k/fILMLL66hbSlubUS/NbYD
-         e7OvoYTvpsjb/qJH/UjO9ky9A1sztpBc5PYkVRvQ=
+        b=yxlxMTKJLVWYdOp82m/ae0NTjoPqrm6dV9aZRV4wWHzTb5NaZ/O/Un6ECt8PlQV2I
+         fPgHUs/vu8yhTLGrhJGyeDlS8IsxA4TsS0pq+LT7qSefnVv0FKYdRy9TLKZcskLj3c
+         LJxFIszM2aXkn433WXq/L2nFnMZnnBPBmw2IM9PI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
         "Andrew F. Davis" <afd@ti.com>, Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.0 004/238] ASoC: codecs: pcm186x: fix wrong usage of DECLARE_TLV_DB_SCALE()
-Date:   Fri, 22 Mar 2019 12:13:43 +0100
-Message-Id: <20190322111258.597234748@linuxfoundation.org>
+Subject: [PATCH 5.0 005/238] ASoC: codecs: pcm186x: Fix energysense SLEEP bit
+Date:   Fri, 22 Mar 2019 12:13:44 +0100
+Message-Id: <20190322111258.642516886@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -68,9 +68,10 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
 
-commit fcf4daabf08079e6d09958a2992e7446ef8d0438 upstream.
+commit 05bd7fcdd06b19a10f069af1bea3ad9abac038d7 upstream.
 
-According to DS, the gain is between -12 dB and 40 dB, with a 0.5 dB step.
+The ADCs are sleeping when the SLEEP bit is set and running when it's
+cleared, so the bit should be inverted.
 Tested on pcm1863.
 
 Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
@@ -80,19 +81,30 @@ Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/codecs/pcm186x.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/codecs/pcm186x.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 --- a/sound/soc/codecs/pcm186x.c
 +++ b/sound/soc/codecs/pcm186x.c
-@@ -42,7 +42,7 @@ struct pcm186x_priv {
- 	bool is_master_mode;
+@@ -158,7 +158,7 @@ static const struct snd_soc_dapm_widget
+ 	 * Put the codec into SLEEP mode when not in use, allowing the
+ 	 * Energysense mechanism to operate.
+ 	 */
+-	SND_SOC_DAPM_ADC("ADC", "HiFi Capture", PCM186X_POWER_CTRL, 1,  0),
++	SND_SOC_DAPM_ADC("ADC", "HiFi Capture", PCM186X_POWER_CTRL, 1,  1),
  };
  
--static const DECLARE_TLV_DB_SCALE(pcm186x_pga_tlv, -1200, 4000, 50);
-+static const DECLARE_TLV_DB_SCALE(pcm186x_pga_tlv, -1200, 50, 0);
+ static const struct snd_soc_dapm_widget pcm1865_dapm_widgets[] = {
+@@ -184,8 +184,8 @@ static const struct snd_soc_dapm_widget
+ 	 * Put the codec into SLEEP mode when not in use, allowing the
+ 	 * Energysense mechanism to operate.
+ 	 */
+-	SND_SOC_DAPM_ADC("ADC1", "HiFi Capture 1", PCM186X_POWER_CTRL, 1,  0),
+-	SND_SOC_DAPM_ADC("ADC2", "HiFi Capture 2", PCM186X_POWER_CTRL, 1,  0),
++	SND_SOC_DAPM_ADC("ADC1", "HiFi Capture 1", PCM186X_POWER_CTRL, 1,  1),
++	SND_SOC_DAPM_ADC("ADC2", "HiFi Capture 2", PCM186X_POWER_CTRL, 1,  1),
+ };
  
- static const struct snd_kcontrol_new pcm1863_snd_controls[] = {
- 	SOC_DOUBLE_R_S_TLV("ADC Capture Volume", PCM186X_PGA_VAL_CH1_L,
+ static const struct snd_soc_dapm_route pcm1863_dapm_routes[] = {
 
 
