@@ -2,135 +2,139 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DCD1C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 19:05:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B06CC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 19:05:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA6B02190A
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 19:05:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 082F721917
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 19:05:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="C3NL5OAZ"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="2SPXe7l4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727706AbfCVTFJ (ORCPT
+        id S1727810AbfCVTFa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 15:05:09 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:33757 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725781AbfCVTFJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 15:05:09 -0400
-Received: by mail-vs1-f68.google.com with SMTP id z6so2004772vsc.0
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 12:05:07 -0700 (PDT)
+        Fri, 22 Mar 2019 15:05:30 -0400
+Received: from mail-eopbgr730056.outbound.protection.outlook.com ([40.107.73.56]:58115
+        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725781AbfCVTFa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 15:05:30 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GuGeYXYMxPj1xf5ZZS06FwRXke7aLba1dEUVGe11Odc=;
-        b=C3NL5OAZV4Kwj1I3rcIL7w++E99EMJ2BemYTOZfSlJWRilxLJgnYyKpc/WJXnywa+R
-         +o4y/z+fxNHoBFH+ee9GNF1FemPEgr/KP8FeSvhZNxvHR7pZzLlmUYtJplDMc426p6jT
-         n1ZOjCQu+ChmL6ELTd6sMVfgepveVeCuSNGmrKUwN1RQmbfgqnB47p6HJEdKiP52HgKu
-         cjJQIfClJRJUj1jskv2mnYdtqkiaLGuN7cTb2xU8aGPaKeLcFNNqiFYEOk5h3BcXZBBB
-         J+555EhC4G5b6f18EGJruwHlLLo1KzEDVVvby4YYd+WngKFi3huzy3LzFWqK2uCmPpH1
-         PyFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GuGeYXYMxPj1xf5ZZS06FwRXke7aLba1dEUVGe11Odc=;
-        b=Qg9HOZ+L3lgGkdyE8ABYaBAdqJegxdgiQD8D4aAbx+z8bVB1fx3mcLl2O0HZv+QfUV
-         lfQwPcSYP/vyG2JxPJ/X3KEl6MJp9/IN6znayH6+IevkpACrh0GXxM1z3eYzsQurZiuC
-         GKkx0fMiQJlR/7Py7VS7iRBbAcOCJTY7GyJjpskBtAzqV8O5ZQgGszkwGHQFTmbS7KjF
-         tFYbUwk/z/iCWYVrRWEO6kvF4nlYh9YbUiBw5njV6GD/nQCBPDPjjymH1wHdfzMDE8At
-         iLyWn0HL5ZEBYwpCl1ga5n1UxrDjKL+9ULPsAWBuwqgK/D3jnQMvJT/PI5D0aNI6ciBJ
-         K3Dw==
-X-Gm-Message-State: APjAAAX6bKLWI456PmbmRQa8B/va7h53JE3/GdkWHygT2lu86pdaX7ic
-        ewgUokMW1hYuyy2/Ka+kSsh9zCBYSqUVqK5PD7b4cw==
-X-Google-Smtp-Source: APXvYqwl17oviXYzHPfD3ms8L617n6oBYtTHLNW8HwYgUEG0yZDstZ+RnYtXw/42BFwon8JCORPBqoEoC0mHQvuKWko=
-X-Received: by 2002:a67:e9cc:: with SMTP id q12mr7026549vso.208.1553281507110;
- Fri, 22 Mar 2019 12:05:07 -0700 (PDT)
+ d=amdcloud.onmicrosoft.com; s=selector1-amd-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LikiyV2jklCfXH0DRkXIXTxC9rImI16qYurmTCtibck=;
+ b=2SPXe7l4Itis6+1y6z/zNQlvWMkATK0x7JFjTYmmgieYTaNOwZejV4WhyQyCyh+pBzv+tv1axgxFV7agVQB+xZWVfKZ/zRatSGVfFl6QGUn1FWdyOxHjaU5n6HHHST0Eo433Rydl5YR6Ym+y99NPObFOSj7pvEkcEIeLVP3j2gA=
+Received: from SN6PR12MB2639.namprd12.prod.outlook.com (52.135.103.16) by
+ SN6PR12MB2735.namprd12.prod.outlook.com (52.135.107.26) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1709.14; Fri, 22 Mar 2019 19:05:27 +0000
+Received: from SN6PR12MB2639.namprd12.prod.outlook.com
+ ([fe80::d49d:a1ee:9bcf:20e2]) by SN6PR12MB2639.namprd12.prod.outlook.com
+ ([fe80::d49d:a1ee:9bcf:20e2%5]) with mapi id 15.20.1730.013; Fri, 22 Mar 2019
+ 19:05:27 +0000
+From:   "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
+To:     Borislav Petkov <bp@alien8.de>
+CC:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "rafal@milecki.pl" <rafal@milecki.pl>,
+        "clemej@gmail.com" <clemej@gmail.com>
+Subject: Re: [PATCH v2 1/2] x86/MCE: Add function to allow filtering of MCA
+ errors
+Thread-Topic: [PATCH v2 1/2] x86/MCE: Add function to allow filtering of MCA
+ errors
+Thread-Index: AQHU4CQyTsE/SKvH9kGTin5rcQxftKYX59CAgAAcR4A=
+Date:   Fri, 22 Mar 2019 19:05:27 +0000
+Message-ID: <0a3f1341-35ec-a462-1f3f-a1c5cfe6decd@amd.com>
+References: <20190321202505.5553-1-Yazen.Ghannam@amd.com>
+ <20190322172405.GJ12472@zn.tnic>
+In-Reply-To: <20190322172405.GJ12472@zn.tnic>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BN7PR05CA0023.namprd05.prod.outlook.com
+ (2603:10b6:406:ee::36) To SN6PR12MB2639.namprd12.prod.outlook.com
+ (2603:10b6:805:6f::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Yazen.Ghannam@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [165.204.84.17]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f87d23ae-0a6a-44a4-3d97-08d6aef95846
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600127)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:SN6PR12MB2735;
+x-ms-traffictypediagnostic: SN6PR12MB2735:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <SN6PR12MB27357C43290F18562397A559F8430@SN6PR12MB2735.namprd12.prod.outlook.com>
+x-forefront-prvs: 09840A4839
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(396003)(376002)(39860400002)(346002)(136003)(189003)(199004)(486006)(476003)(14444005)(2616005)(229853002)(446003)(316002)(6306002)(6486002)(54906003)(6512007)(36756003)(8676002)(11346002)(68736007)(71190400001)(86362001)(97736004)(966005)(256004)(72206003)(478600001)(71200400001)(8936002)(26005)(6436002)(6246003)(186003)(6916009)(3846002)(14454004)(6116002)(25786009)(2906002)(5660300002)(4326008)(53936002)(106356001)(105586002)(31696002)(81156014)(81166006)(66066001)(31686004)(102836004)(6506007)(53546011)(305945005)(52116002)(99286004)(386003)(7736002)(76176011);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2735;H:SN6PR12MB2639.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 3liOsZlktYzSnMQSBeLy/cahFXlmoKHL54kRkuWgdifO+Fws8WRZB4iKdAU011iMm2qPNfRNdLFqxNO400obbkEMY6iAp3pAvkDKyKqP23NUyIP1AbNqGCXwZOs123cGTJPsu/1NOXkFV3uuv69XQQ1onoSLrquVa5fIDaHIsMmEBJiUrWAyw18HEp3zzaaaC7eHfYoTnUVP8xIc3t732TsDKoIfP8j+o9CsqaCv50Ns3y72V2Ac1fwABAICIR0GnKOT+hb7boJy2EN8PIAgKsAzsvjUzi+SuW+5JxdjUUrRKv0zzwvc5PJ9bRVIOL60yseV3/Cgs4yiFnscM7K5E6pREG13H7zBPEx/N2OMB1b96RgDV4rX/RckHxtwZggQr54TQVZCbp8vXncIYpqIq4qwHXI/XApsn7um7V0QWsg=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <2A890DE12BF29F48897EC13F0EF4C8CB@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20190314130113.919278615@infradead.org> <20190314130705.441549378@infradead.org>
- <CABPqkBT9=XRLinbhA0T5iztM6NGd5fO39-kQoB5j3Evfvfh2yA@mail.gmail.com>
- <20190319110549.GC5996@hirez.programming.kicks-ass.net> <CABPqkBQapZFCyJNRjP-GUjfOy62=rJU=Fv=cYPxPTnVFBkqtVA@mail.gmail.com>
- <20190319182041.GO5996@hirez.programming.kicks-ass.net> <CABPqkBQgmT+V29+eD6_rABzNBCo-R22N3PvPX4rWxSWEC0wPPg@mail.gmail.com>
- <20190320222220.GA2490@worktop.programming.kicks-ass.net> <20190321123849.GN6521@hirez.programming.kicks-ass.net>
- <alpine.DEB.2.21.1903211741120.1784@nanos.tec.linutronix.de>
- <CABPqkBSZbAbU5h=t2f=oMre080ezSq78LaNQO5xEdRV1nczuew@mail.gmail.com> <alpine.DEB.2.21.1903211844010.1784@nanos.tec.linutronix.de>
-In-Reply-To: <alpine.DEB.2.21.1903211844010.1784@nanos.tec.linutronix.de>
-From:   Stephane Eranian <eranian@google.com>
-Date:   Fri, 22 Mar 2019 12:04:55 -0700
-Message-ID: <CABPqkBQ=hGNY8nd5WTONaMepH1ma=dBN=AdWOyOF_xe1K5JGHA@mail.gmail.com>
-Subject: Re: [PATCH 1/8] perf/x86/intel: Fix memory corruption
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, tonyj@suse.com,
-        nelson.dsouza@intel.com
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f87d23ae-0a6a-44a4-3d97-08d6aef95846
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Mar 2019 19:05:27.3103
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2735
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 21, 2019 at 10:51 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> On Thu, 21 Mar 2019, Stephane Eranian wrote:
-> > On Thu, Mar 21, 2019 at 9:45 AM Thomas Gleixner <tglx@linutronix.de> wrote:
-> > >
-> > > On Thu, 21 Mar 2019, Peter Zijlstra wrote:
-> > > > Subject: perf/x86/intel: Initialize TFA MSR
-> > > >
-> > > > Stephane reported that we don't initialize the TFA MSR, which could lead
-> > > > to trouble if the RESET value is not 0 or on kexec.
-> > >
-> > > That sentence doesn't parse.
-> > >
-> > >   Stephane reported that the TFA MSR is not initialized by the kernel, but
-> > >   the TFA bit could set by firmware or as a leftover from a kexec, which
-> > >   makes the state inconsistent.
-> > >
-> > Correct. This is what I meant.
-> > The issue is what does the kernel guarantee when it boots?
-> >
-> > I see:
-> > static bool allow_tsx_force_abort = true;
-> >
-> > Therefore you must ensure the MSR is set to reflect that state on boot.
-> > So you have to force it to that value to be in sync which is what your
-> > new patch is doing.
->
-> The initial state should be that the MSR TFA bit is 0. The software state
-> is a different beast.
->
-> allow_tsx_force_abort
->
->   false                 Do not set MSR TFA bit (Make TSX work with PMC3) and
->                         exclude PMC3 from being used.
->
->   true                  Set the MSR TFA bit when PMC3 is used by perf, clear it
->                         when PMC3 is not longer in use.
->
-I would expect this description to be included in the source code where the
-allow_tsx_force_abort variable is defined and somewhere in the kernel
-Documentation
-because it is not trivial to understand what the control actually does
-and the guarantees
-you have when you toggle it.
-
-> Now, if the firmware or the kexec has the TFA bit set in the MSR and PMC3
-> is not in use then TSX always aborts pointlessly. It's not a fatal isseu,
-> but it's inconsistent.
->
-> So independent of the state of allow_tsx_force_abort the kernel has to
-> clear the MSR TSA bit when the CPUs are brought up.
->
-> The state of allow_tsx_force_abort is solely relevant after CPUs coming up
-> to decide whether PMC3 can be used by perf or not.
->
-> Thanks,
->
->         tglx
->
+T24gMy8yMi8yMDE5IDEyOjI0IFBNLCBCb3Jpc2xhdiBQZXRrb3Ygd3JvdGU6DQo+IE9uIFRodSwg
+TWFyIDIxLCAyMDE5IGF0IDA4OjI1OjE3UE0gKzAwMDAsIEdoYW5uYW0sIFlhemVuIHdyb3RlOg0K
+Pj4gRnJvbTogWWF6ZW4gR2hhbm5hbSA8eWF6ZW4uZ2hhbm5hbUBhbWQuY29tPg0KPj4NCj4+IFNv
+bWUgc3lzdGVtcyBtYXkgcmVwb3J0IHNwdXJpb3VzIE1DQSBlcnJvcnMuIEluIGdlbmVyYWwsIHNw
+dXJpb3VzIE1DQQ0KPj4gZXJyb3JzIG1heSBiZSBkaXNhYmxlZCBieSBjbGVhcmluZyBhIHBhcnRp
+Y3VsYXIgYml0IGluIE1DQV9DVEwuIEhvd2V2ZXIsDQo+PiBjbGVhcmluZyBhIGJpdCBpbiBNQ0Ff
+Q1RMIG1heSBub3QgYmUgcmVjb21tZW5kZWQgZm9yIHNvbWUgZXJyb3JzLCBzbyB0aGUNCj4+IG9u
+bHkgb3B0aW9uIGlzIHRvIGlnbm9yZSB0aGVtLg0KPj4NCj4+IEFuIE1DQSBlcnJvciBpcyBwcmlu
+dGVkIGFuZCBoYW5kbGVkIGFmdGVyIGl0IGhhcyBiZWVuIGFkZGVkIHRvIHRoZSBNQ0UNCj4+IGV2
+ZW50IHBvb2wuIFNvIGFuIE1DQSBlcnJvciBjYW4gYmUgaWdub3JlZCBieSBub3QgYWRkaW5nIGl0
+IHRvIHRoZSBwb29sLg0KPj4NCj4+IENyZWF0ZSBhIGZ1bmN0aW9uIHBvaW50ZXIgdG8gZmlsdGVy
+IE1DQSBlcnJvcnMgYW5kIHVzZSB0aGlzIHdoZW4gYWRkaW5nDQo+PiBhbiBlcnJvciB0byB0aGUg
+TUNFIGV2ZW50IHBvb2wuDQo+Pg0KPj4gSW5zdGFsbCBhIGRlZmF1bHQgZnVuY3Rpb24gdGhhdCBk
+b2VzIG5vdCBmaWx0ZXIgYW55IGVycm9ycy4NCj4+DQo+PiBDYzogPHN0YWJsZUB2Z2VyLmtlcm5l
+bC5vcmc+ICMgNC4xNC54DQo+PiBTaWduZWQtb2ZmLWJ5OiBZYXplbiBHaGFubmFtIDx5YXplbi5n
+aGFubmFtQGFtZC5jb20+DQo+PiAtLS0NCj4+IExpbms6DQo+PiBodHRwczovL2xrbWwua2VybmVs
+Lm9yZy9yLzIwMTkwMzA3MjEyNTUyLjg4NjUtMS1ZYXplbi5HaGFubmFtQGFtZC5jb20NCj4+DQo+
+PiB2MS0+djI6DQo+PiAqIFRoaXMgaXMgYSBuZXcgcGF0Y2ggcmVwbGFjaW5nIFYxIFBhdGNoIDEg
+d2hpY2ggaXMgbm8gbG9uZ2VyIG5lZWRlZC4NCj4+DQo+PiAgYXJjaC94ODYvaW5jbHVkZS9hc20v
+bWNlLmggICAgICAgIHwgMyArKysNCj4+ICBhcmNoL3g4Ni9rZXJuZWwvY3B1L21jZS9jb3JlLmMg
+ICAgfCA2ICsrKysrKw0KPj4gIGFyY2gveDg2L2tlcm5lbC9jcHUvbWNlL2dlbnBvb2wuYyB8IDMg
+KysrDQo+PiAgMyBmaWxlcyBjaGFuZ2VkLCAxMiBpbnNlcnRpb25zKCspDQo+Pg0KPj4gZGlmZiAt
+LWdpdCBhL2FyY2gveDg2L2luY2x1ZGUvYXNtL21jZS5oIGIvYXJjaC94ODYvaW5jbHVkZS9hc20v
+bWNlLmgNCj4+IGluZGV4IDIyZDA1ZTM4MzVmMC4uMGIwYjc5N2E5NTljIDEwMDY0NA0KPj4gLS0t
+IGEvYXJjaC94ODYvaW5jbHVkZS9hc20vbWNlLmgNCj4+ICsrKyBiL2FyY2gveDg2L2luY2x1ZGUv
+YXNtL21jZS5oDQo+PiBAQCAtMjUzLDYgKzI1Myw5IEBAIGV4dGVybiB2b2lkIG1jZV9kaXNhYmxl
+X2JhbmsoaW50IGJhbmspOw0KPj4gIGV4dGVybiB2b2lkICgqbWFjaGluZV9jaGVja192ZWN0b3Ip
+KHN0cnVjdCBwdF9yZWdzICosIGxvbmcgZXJyb3JfY29kZSk7DQo+PiAgdm9pZCBkb19tYWNoaW5l
+X2NoZWNrKHN0cnVjdCBwdF9yZWdzICosIGxvbmcpOw0KPj4gIA0KPj4gKy8qIEZpbHRlciBNQ0Vz
+IGZyb20gdGhlIGRlY29kZXIgY2hhaW4uICovDQo+IA0KPiBUaGF0IHNob3VsZCBiZSBzb21ldGhp
+bmcgbGlrZToNCj4gDQo+IC8qIERlY2lkZXMgd2hldGhlciB0byBhZGQgTUNFIHJlY29yZHMgdG8g
+dGhlIGRlY29kZXIgY2hhaW4gb3IgZmlsdGVyIHRoZW0gb3V0LiAqLw0KPiANCg0KT2theS4gSSds
+bCBtYWtlIGEgY2hhbmdlLg0KDQo+PiArZXh0ZXJuIGJvb2wgKCpmaWx0ZXJfbWNlKShzdHJ1Y3Qg
+bWNlICptKTsNCj4+ICsNCj4+ICAvKg0KPj4gICAqIFRocmVzaG9sZCBoYW5kbGVyDQo+PiAgICov
+DQo+PiBkaWZmIC0tZ2l0IGEvYXJjaC94ODYva2VybmVsL2NwdS9tY2UvY29yZS5jIGIvYXJjaC94
+ODYva2VybmVsL2NwdS9tY2UvY29yZS5jDQo+PiBpbmRleCBiN2ZiNTQxYTQ4NzMuLmVmZmI0MDU4
+MWYwOCAxMDA2NDQNCj4+IC0tLSBhL2FyY2gveDg2L2tlcm5lbC9jcHUvbWNlL2NvcmUuYw0KPj4g
+KysrIGIvYXJjaC94ODYva2VybmVsL2NwdS9tY2UvY29yZS5jDQo+PiBAQCAtMTc3MSw2ICsxNzcx
+LDEyIEBAIHN0YXRpYyB2b2lkIF9fbWNoZWNrX2NwdV9pbml0X3RpbWVyKHZvaWQpDQo+PiAgCW1j
+ZV9zdGFydF90aW1lcih0KTsNCj4+ICB9DQo+PiAgDQo+PiArLyoNCj4+ICsgKiBEb24ndCBmaWx0
+ZXIgTUNFcyBieSBkZWZhdWx0LiBJbnN0YWxsIGEgc3lzdGVtLXNwZWNpZmljIGZ1bmN0aW9uLCBp
+ZiBuZWVkZWQuDQo+PiArICovDQo+IA0KPiBUaGF0IGNvbW1lbnQgaXMga2luZGEgb2J2aW91cy4N
+Cj4gDQoNCk9rYXkuIEknbGwgZHJvcCBpdC4NCg0KVGhhbmtzLA0KWWF6ZW4NCg==
