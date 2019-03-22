@@ -2,97 +2,127 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7267C10F03
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:01:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8BFEC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:01:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78E0221917
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:01:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A40AD21873
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:01:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553259699;
+	bh=u0j0m1qopNaMTVdJL4BCA/GFMC7pzc5QmcXWd6ihvwM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=k5nijPup9qoXP52acevdqu/1XDZg6NIfz+auoGiZuGTvVu7/FwyisxQeRk5CR/WIH
+	 AMb0/kF9/aiokZ6fUcMG3qi0cZyhz/b0X0syvOu1cyzW3mYG2yhfNsFw0ctrsz59/x
+	 3kvtrmRtkfMf17FBPvLSlH2jLDltu8tJ9QrSK7kY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731843AbfCVNBb (ORCPT
+        id S1731951AbfCVNBi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 09:01:31 -0400
-Received: from mga18.intel.com ([134.134.136.126]:43881 "EHLO mga18.intel.com"
+        Fri, 22 Mar 2019 09:01:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45466 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731007AbfCVLm7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:42:59 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Mar 2019 04:42:58 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,256,1549958400"; 
-   d="scan'208";a="154749600"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
-  by fmsmga004.fm.intel.com with ESMTP; 22 Mar 2019 04:42:56 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1h7IZa-0001v2-Vx; Fri, 22 Mar 2019 13:42:54 +0200
-Date:   Fri, 22 Mar 2019 13:42:54 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Ian W MORRISON <ianwmorrison@gmail.com>
-Cc:     benjamin.tissoires@redhat.com, hdegoede@redhat.com,
-        mika.westerberg@linux.intel.com, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, linux-gpio@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] Skip deferred request irqs for devices known to fail
-Message-ID: <20190322114254.GT9224@smile.fi.intel.com>
-References: <20190322110515.21499-1-ianwmorrison@gmail.com>
+        id S1730389AbfCVLmx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:42:53 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD6502082C;
+        Fri, 22 Mar 2019 11:42:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553254973;
+        bh=u0j0m1qopNaMTVdJL4BCA/GFMC7pzc5QmcXWd6ihvwM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ZXLSjJedKv4jtuJ3NWqiwH7ze7xh96ngMTrWMI4pAeBBwXUPPzrDwN0Ur+btyQ76a
+         7IjasXR4wBGOvNE+BHfalLYxvLfO8YrhYMqDUwB9iHkf2CCl+QffNjJdeIgliud8rw
+         EY/QvWEflIE34hVCDMBXtjuEQUa5xiVJ688p0krY=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Felipe Franciosi <felipe@nutanix.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.9 060/118] scsi: virtio_scsi: dont send sc payload with tmfs
+Date:   Fri, 22 Mar 2019 12:15:32 +0100
+Message-Id: <20190322111220.788194139@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190322111215.873964544@linuxfoundation.org>
+References: <20190322111215.873964544@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190322110515.21499-1-ianwmorrison@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 22, 2019 at 10:05:15PM +1100, Ian W MORRISON wrote:
+4.9-stable review patch.  If anyone has any objections, please let me know.
 
-Thanks for the patch, my comments below.
+------------------
 
-> Patch ca876c7483b6 "gpiolib-acpi: make sure we trigger edge events at
-> least once on boot" causes the MINIX family of mini PCs to fail to boot
-> resulting in a "black screen". 
+From: Felipe Franciosi <felipe@nutanix.com>
 
-> This patch excludes MINIX devices from executing this trigger in order
-> to successfully boot.
+commit 3722e6a52174d7c3a00e6f5efd006ca093f346c1 upstream.
 
-Hmm... Feels like this is symptomatic healing.
-Hans, do you have anything in mind about this case?
+The virtio scsi spec defines struct virtio_scsi_ctrl_tmf as a set of
+device-readable records and a single device-writable response entry:
 
->  #include <linux/interrupt.h>
->  #include <linux/mutex.h>
->  #include <linux/pinctrl/pinctrl.h>
-> +#include <linux/dmi.h>
+    struct virtio_scsi_ctrl_tmf
+    {
+        // Device-readable part
+        le32 type;
+        le32 subtype;
+        u8 lun[8];
+        le64 id;
+        // Device-writable part
+        u8 response;
+    }
 
-This should be in order.
+The above should be organised as two descriptor entries (or potentially
+more if using VIRTIO_F_ANY_LAYOUT), but without any extra data after "le64
+id" or after "u8 response".
 
->  /* Run deferred acpi_gpiochip_request_irqs() */
-> +/* but exclude devices known to fail */
+The Linux driver doesn't respect that, with virtscsi_abort() and
+virtscsi_device_reset() setting cmd->sc before calling virtscsi_tmf().  It
+results in the original scsi command payload (or writable buffers) added to
+the tmf.
 
-/*
- * This should be done in the similar style
- * as for multi-line comments. Like this one.
- */
+This fixes the problem by leaving cmd->sc zeroed out, which makes
+virtscsi_kick_cmd() add the tmf to the control vq without any payload.
 
-> +	dmi_id = dmi_first_match(skip_deferred_request_irqs_table);
-> +
+Cc: stable@vger.kernel.org
+Signed-off-by: Felipe Franciosi <felipe@nutanix.com>
+Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Redundant blank line.
+---
+ drivers/scsi/virtio_scsi.c |    2 --
+ 1 file changed, 2 deletions(-)
 
-> +	if (! dmi_id) {
-
-No space here, however, better to write positive conditional.
-
--- 
-With Best Regards,
-Andy Shevchenko
+--- a/drivers/scsi/virtio_scsi.c
++++ b/drivers/scsi/virtio_scsi.c
+@@ -693,7 +693,6 @@ static int virtscsi_device_reset(struct
+ 		return FAILED;
+ 
+ 	memset(cmd, 0, sizeof(*cmd));
+-	cmd->sc = sc;
+ 	cmd->req.tmf = (struct virtio_scsi_ctrl_tmf_req){
+ 		.type = VIRTIO_SCSI_T_TMF,
+ 		.subtype = cpu_to_virtio32(vscsi->vdev,
+@@ -752,7 +751,6 @@ static int virtscsi_abort(struct scsi_cm
+ 		return FAILED;
+ 
+ 	memset(cmd, 0, sizeof(*cmd));
+-	cmd->sc = sc;
+ 	cmd->req.tmf = (struct virtio_scsi_ctrl_tmf_req){
+ 		.type = VIRTIO_SCSI_T_TMF,
+ 		.subtype = VIRTIO_SCSI_T_TMF_ABORT_TASK,
 
 
