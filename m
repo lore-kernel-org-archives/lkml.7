@@ -2,105 +2,121 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D80A9C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 17:27:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87801C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 17:30:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0C2820657
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 17:27:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57111218A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 17:30:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="Ssg9jzJR"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="LoexckY1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728486AbfCVR1P (ORCPT
+        id S1728311AbfCVRa6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 13:27:15 -0400
-Received: from mail-eopbgr690110.outbound.protection.outlook.com ([40.107.69.110]:22500
-        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727741AbfCVR1O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 13:27:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5hhqcsQB0rrX0DcG8RkkzffGiQY7ware5mtAA6pSQD8=;
- b=Ssg9jzJRu0Tv8VPUnxFWsIAI/iwCjJabee2Xks6cTAdW+FuIU52aaisqTimaY9OPJTItGB8KTpAWsJB5l49IRX8xfmj46taO3y5OJEuBZ0W0jNDxCUZ2O8nZ/2Sv2WbUOKu/Ayja8Du585eKD5E0GxAn5UAl8biw2R5BRxJoOKo=
-Received: from DM5PR21MB0747.namprd21.prod.outlook.com (10.173.172.13) by
- DM5PR21MB0153.namprd21.prod.outlook.com (10.173.173.16) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1750.5; Fri, 22 Mar 2019 17:27:12 +0000
-Received: from DM5PR21MB0747.namprd21.prod.outlook.com
- ([fe80::3d1e:56c2:2b7:cf91]) by DM5PR21MB0747.namprd21.prod.outlook.com
- ([fe80::3d1e:56c2:2b7:cf91%8]) with mapi id 15.20.1750.002; Fri, 22 Mar 2019
- 17:27:12 +0000
-From:   Prakhar Srivastava <prsriva@microsoft.com>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>
-Subject: Adding cmldine args measure to ima
-Thread-Topic: Adding cmldine args measure to ima
-Thread-Index: AdTg1Hsi+/BTuAz2T8ua6RTRa1/xhA==
-Date:   Fri, 22 Mar 2019 17:27:12 +0000
-Message-ID: <DM5PR21MB0747326E1CAA3F66CE61B149BC430@DM5PR21MB0747.namprd21.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=prsriva@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-03-22T17:27:10.5308305Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=0ccbfdb5-9bbd-4015-9640-694c5667768e;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-x-originating-ip: [2001:4898:80e8:7:6cee:5fa7:15d6:4d76]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 7bf1fa35-45a7-4bf7-c2c6-08d6aeeb9ecd
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DM5PR21MB0153;
-x-ms-traffictypediagnostic: DM5PR21MB0153:
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=prsriva@microsoft.com; 
-x-microsoft-antispam-prvs: <DM5PR21MB01535077A4AEF11E1FDFA65CBC430@DM5PR21MB0153.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 09840A4839
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(396003)(39860400002)(136003)(376002)(366004)(199004)(189003)(6436002)(10090500001)(71200400001)(2906002)(8676002)(305945005)(55016002)(74316002)(4744005)(102836004)(86362001)(106356001)(316002)(110136005)(8990500004)(486006)(186003)(81166006)(14454004)(476003)(71190400001)(81156014)(22452003)(5660300002)(9686003)(450100002)(2501003)(99286004)(52536014)(86612001)(105586002)(14444005)(97736004)(53936002)(25786009)(46003)(478600001)(68736007)(33656002)(6506007)(256004)(6116002)(7736002)(7696005)(10290500003)(8936002);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR21MB0153;H:DM5PR21MB0747.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: yJsMhKZ6dopBuuxUzzU2i22w/g4y8WjJYLDsLkBgzUkd9JmfDsTYaThDAr/6A+6CC7UUKltp41CZ/c7dQSI9i74raUI+cfGKh6pcwBm1FcsUMycy1aS+iA4PfaJA3ERCMe+7W3tylB6FppOX19QNkX3OGpryB6/POlhvgwHg7u9djpxBKbiNnyQ7cy1urZZc2YWsH9Tggxbcd0oJkJEYPasInzzluFu3cJgH+7LoD6kU3/hvwlE1XT4FIvihi6XFpAIsDfGfOHpT3eesQH4BMHbUo9IQ9qN5p558DdKno6xQ5QPnOhG/qa6MCZ5zy3wjiR5RsALzR1bOkPqynZGM8DU5fXqlHFE175Yg/e3Mi72Q/ixkWg7q9GHh89QgG73uTf/IwdueG/oPQ6Xeedjq6SEosN2t0gsS0qeX73Dh4v8=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 22 Mar 2019 13:30:58 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:34239 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728214AbfCVRa6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 13:30:58 -0400
+Received: by mail-wr1-f67.google.com with SMTP id p10so3260108wrq.1
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 10:30:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=n4+h1AwiYWbcvCo2SVfEpk4VI/pUxMw43QNPM3T3NW0=;
+        b=LoexckY1HPl6LUnZOzO7JF9845wgvNJsudAL0VUzOp2BQpHgi3RUA3UrI5RyQ0PCI5
+         pOBbLsyCX0RWHbXqshAbxggD4RRnf5D8LOeguN9cBEkBhwi1pAvAFslfk7OWzzSvfvzw
+         348Q7XsI1YSJi6bTMBt/XucjxoEqtjjOqpmpQJNUfTt1hBapSfhz/PlpmrgcUiWSvNxd
+         bnmKGJpJaJ7DHEpxgiIG2T9I6j4wkp4LlTcjPzhDbgAOsXBoeEROvaTKVytpcAvAwONR
+         /SN2VY6cqmaiQsoDmZ2J8HC+Be/uDtuJvFK6DNjVMYXJOwHdecALA3dAYN5FdPkbyOEz
+         gmNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=n4+h1AwiYWbcvCo2SVfEpk4VI/pUxMw43QNPM3T3NW0=;
+        b=AvQmddN0WhxmAzqJyWbzDhyQpF/ME7FQy5D1bezlu/BeLKECF/Dbb6aQrW5TrY/Yvr
+         PgZi5TvHsWN/RTOWPVxpJeUhzjsGZGCcV4ES9dwQaGsWqL3vHcuDFiNaKeBln+828eCS
+         2oqo/7OEjseEewDGSDwvDwqCbjTmTQ4rVN63m9FsTDV7KzTjsCnGNunIYlpCU3aoMuzY
+         c2rtyzvh06/eOUrtttGei5/MYDckQ2GiUkr8ZVGWBH71EN5LakJ+UQQfP5PKqG1LQWkt
+         eymBYcn4QBT4gKb8pTQKTaNmCmIhukzNVOh8iNAWuaBHRjV7luG4zSaKHfBOiHprHwbT
+         l9BA==
+X-Gm-Message-State: APjAAAVNiU2gLbpRqfW2Kdb54+iWIA7PQyV+034GeJxrtrycdpXwohpJ
+        RgXtrd0DkulHiPz7JtYk8YNANA==
+X-Google-Smtp-Source: APXvYqxtmP0JeLppB7oOEtW1q/AVNVbVYKTRYzHrmGsmpeZn/P8Sj8sCC5Bjv7PF3chiASN2azAz/w==
+X-Received: by 2002:adf:b741:: with SMTP id n1mr7046736wre.287.1553275856356;
+        Fri, 22 Mar 2019 10:30:56 -0700 (PDT)
+Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
+        by smtp.gmail.com with ESMTPSA id z14sm11941881wrv.78.2019.03.22.10.30.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 22 Mar 2019 10:30:55 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH] gpio: mockup: fix debugfs read
+Date:   Fri, 22 Mar 2019 18:30:52 +0100
+Message-Id: <20190322173052.23763-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7bf1fa35-45a7-4bf7-c2c6-08d6aeeb9ecd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Mar 2019 17:27:12.3225
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR21MB0153
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Currently Kexec (kexec_file_load) code path does not measure the cmdline=20
-arguments passed to the next kernel.The boot_aggregate won't change since=20
-the EFI loader hasn't been triggered. Attesting the same in K2 has no impac=
-t.
-Adding the cmdline measurement will add some attestable criteria.
+The debugfs read callback must advance ppos or users using read() on
+the file descriptor will never get the EOL. This wasn't spotted before
+as I was using busybox cat for testing which uses sendfile() internally
+and only noticed it now when switched to cat from coreutils.
 
-To account for the cmdline passed, we are looking at using IMA to measure a=
-nd=20
-pass the buffer so that it can be attested.
+Fixes: 2a9e27408e12 ("gpio: mockup: rework debugfs interface")
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+ drivers/gpio/gpio-mockup.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-Do you have any alternate solutions/concerns with this approach?
+diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
+index 154d959e8993..74ba8b1d71d8 100644
+--- a/drivers/gpio/gpio-mockup.c
++++ b/drivers/gpio/gpio-mockup.c
+@@ -204,8 +204,9 @@ static ssize_t gpio_mockup_debugfs_read(struct file *file,
+ 	struct gpio_mockup_chip *chip;
+ 	struct seq_file *sfile;
+ 	struct gpio_chip *gc;
++	int val, rv, cnt;
+ 	char buf[3];
+-	int val, rv;
++
+ 
+ 	if (*ppos != 0)
+ 		return 0;
+@@ -216,13 +217,14 @@ static ssize_t gpio_mockup_debugfs_read(struct file *file,
+ 	gc = &chip->gc;
+ 
+ 	val = gpio_mockup_get(gc, priv->offset);
+-	snprintf(buf, sizeof(buf), "%d\n", val);
++	cnt = snprintf(buf, sizeof(buf), "%d\n", val);
+ 
+-	rv = copy_to_user(usr_buf, buf, sizeof(buf));
++	rv = copy_to_user(usr_buf, buf, cnt);
+ 	if (rv)
+ 		return rv;
+ 
+-	return sizeof(buf) - 1;
++	*ppos += cnt;
++	return cnt;
+ }
+ 
+ static ssize_t gpio_mockup_debugfs_write(struct file *file,
+-- 
+2.20.1
 
-Thanks,
-Prakhar Srivastava
