@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB7FBC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:26:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90D8BC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:26:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 930F2218A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:26:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 602E020657
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:26:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254009;
-	bh=COHtvt5ZrcT74APEONreLYLf+qwDSSTE7+TApVZfll0=;
+	s=default; t=1553254012;
+	bh=IHjFbVGS/uo9iMqCymCWQY/UG08xlc+YdXwK2kHPVPM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tjvoDUfwKFoSTjKEoQan7iKQihwN+w9MQZj1xrncVTH0Y95N1m4jTrpLg9xP6e//+
-	 7SQzuL5qfSJn0fN6/2//C49J/HTaoaUwPHXj3Msg6OBUMq1/5G+viWqGT2eB2JypMp
-	 0WPQCjlCMGb53RLj4bCP7hs3NsWPgxND24blPumg=
+	b=hZ+FrtOgllCi7z1fq+SHLdPTh3gejAQYrSEYW0XpeX+jhND2Ns5Zz7I6g06GrkNO6
+	 oHOooxaceUc+1XrQNPWsBXj2INTv571XuMqrOhV0JYrFNULFJozsU/DORcw72yKM7r
+	 BTXKsE0H94dp56s2DrGxit9VGBx7nwJTi4krEP4o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729464AbfCVL0r (ORCPT
+        id S1729121AbfCVL0u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:26:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54478 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:26:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54532 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729454AbfCVL0o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:26:44 -0400
+        id S1729454AbfCVL0s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:26:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85721218B0;
-        Fri, 22 Mar 2019 11:26:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C6B320657;
+        Fri, 22 Mar 2019 11:26:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254004;
-        bh=COHtvt5ZrcT74APEONreLYLf+qwDSSTE7+TApVZfll0=;
+        s=default; t=1553254008;
+        bh=IHjFbVGS/uo9iMqCymCWQY/UG08xlc+YdXwK2kHPVPM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wyp6rdjooOH9UotkmTe11rRtEExufcjojMaCzCqTPsLnOnBXUjib3l+K4OgtAeQrJ
-         Ezyd19A3DIIn2CqyTw2w1e5/9xfj8XqhA3Aofada7JGyD30Zkcyh8Iah36DFEV50vr
-         VW74ObNq76y3mWZCk22nGbQ/LhCL2wkOczQ21dSU=
+        b=vqy3m02+ijR3oRN5R8VnBW+2L9W2p9G2EtHPwiktN148sPX3TYn06llptPbl6tppF
+         dY769T4UzbLNOY7vGRV3cTpKr8BEyF291Cx/PSf12Zi371nTmeBVO4ngtrFUxxixWn
+         U00djEJ9DuKeC1w4dyIGGttcI9VwMfvmTc9ubsMY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Felipe Franciosi <felipe@nutanix.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 3.18 112/134] scsi: virtio_scsi: dont send sc payload with tmfs
-Date:   Fri, 22 Mar 2019 12:15:25 +0100
-Message-Id: <20190322111218.424874403@linuxfoundation.org>
+        stable@vger.kernel.org, Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Yihao Wu <wuyihao@linux.alibaba.com>,
+        "J. Bruce Fields" <bfields@redhat.com>
+Subject: [PATCH 3.18 130/134] nfsd: fix wrong check in write_v4_end_grace()
+Date:   Fri, 22 Mar 2019 12:15:43 +0100
+Message-Id: <20190322111219.939225536@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111210.465931067@linuxfoundation.org>
 References: <20190322111210.465931067@linuxfoundation.org>
@@ -66,63 +65,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Felipe Franciosi <felipe@nutanix.com>
+From: Yihao Wu <wuyihao@linux.alibaba.com>
 
-commit 3722e6a52174d7c3a00e6f5efd006ca093f346c1 upstream.
+commit dd838821f0a29781b185cd8fb8e48d5c177bd838 upstream.
 
-The virtio scsi spec defines struct virtio_scsi_ctrl_tmf as a set of
-device-readable records and a single device-writable response entry:
+Commit 62a063b8e7d1 "nfsd4: fix crash on writing v4_end_grace before
+nfsd startup" is trying to fix a NULL dereference issue, but it
+mistakenly checks if the nfsd server is started. So fix it.
 
-    struct virtio_scsi_ctrl_tmf
-    {
-        // Device-readable part
-        le32 type;
-        le32 subtype;
-        u8 lun[8];
-        le64 id;
-        // Device-writable part
-        u8 response;
-    }
-
-The above should be organised as two descriptor entries (or potentially
-more if using VIRTIO_F_ANY_LAYOUT), but without any extra data after "le64
-id" or after "u8 response".
-
-The Linux driver doesn't respect that, with virtscsi_abort() and
-virtscsi_device_reset() setting cmd->sc before calling virtscsi_tmf().  It
-results in the original scsi command payload (or writable buffers) added to
-the tmf.
-
-This fixes the problem by leaving cmd->sc zeroed out, which makes
-virtscsi_kick_cmd() add the tmf to the control vq without any payload.
-
+Fixes: 62a063b8e7d1 "nfsd4: fix crash on writing v4_end_grace before nfsd startup"
 Cc: stable@vger.kernel.org
-Signed-off-by: Felipe Franciosi <felipe@nutanix.com>
-Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Signed-off-by: Yihao Wu <wuyihao@linux.alibaba.com>
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/virtio_scsi.c |    2 --
- 1 file changed, 2 deletions(-)
+ fs/nfsd/nfsctl.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/scsi/virtio_scsi.c
-+++ b/drivers/scsi/virtio_scsi.c
-@@ -653,7 +653,6 @@ static int virtscsi_device_reset(struct
- 		return FAILED;
- 
- 	memset(cmd, 0, sizeof(*cmd));
--	cmd->sc = sc;
- 	cmd->req.tmf = (struct virtio_scsi_ctrl_tmf_req){
- 		.type = VIRTIO_SCSI_T_TMF,
- 		.subtype = VIRTIO_SCSI_T_TMF_LOGICAL_UNIT_RESET,
-@@ -728,7 +727,6 @@ static int virtscsi_abort(struct scsi_cm
- 		return FAILED;
- 
- 	memset(cmd, 0, sizeof(*cmd));
--	cmd->sc = sc;
- 	cmd->req.tmf = (struct virtio_scsi_ctrl_tmf_req){
- 		.type = VIRTIO_SCSI_T_TMF,
- 		.subtype = VIRTIO_SCSI_T_TMF_ABORT_TASK,
+--- a/fs/nfsd/nfsctl.c
++++ b/fs/nfsd/nfsctl.c
+@@ -1110,7 +1110,7 @@ static ssize_t write_v4_end_grace(struct
+ 		case 'Y':
+ 		case 'y':
+ 		case '1':
+-			if (nn->nfsd_serv)
++			if (!nn->nfsd_serv)
+ 				return -EBUSY;
+ 			nfsd4_end_grace(nn);
+ 			break;
 
 
