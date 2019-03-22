@@ -2,86 +2,119 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7928EC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 02:46:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4C21C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 02:51:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 499FA21900
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 02:46:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D383218FE
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 02:51:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CyZOZBKP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727440AbfCVCqI (ORCPT
+        id S1727457AbfCVCvn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 22:46:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44992 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727222AbfCVCqH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 22:46:07 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A94E218FE;
-        Fri, 22 Mar 2019 02:46:05 +0000 (UTC)
-Date:   Thu, 21 Mar 2019 22:46:02 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org,
-        Andy Lutomirski <luto@amacapital.net>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Changbin Du <changbin.du@gmail.com>,
-        Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Nadav Amit <namit@vmware.com>,
-        Joel Fernandes <joel@joelfernandes.org>, yhs@fb.com
-Subject: Re: [RFC PATCH v6 1/6] x86/uaccess: Allow access_ok() in irq
- context if pagefault_disabled
-Message-ID: <20190321224602.1e31aded@oasis.local.home>
-In-Reply-To: <155289139725.7218.17265500814527931961.stgit@devnote2>
-References: <155289137555.7218.9282784065958321058.stgit@devnote2>
-        <155289139725.7218.17265500814527931961.stgit@devnote2>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Thu, 21 Mar 2019 22:51:43 -0400
+Received: from mail-ot1-f73.google.com ([209.85.210.73]:37962 "EHLO
+        mail-ot1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726460AbfCVCvm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 22:51:42 -0400
+Received: by mail-ot1-f73.google.com with SMTP id u18so498329otq.5
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 19:51:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc
+         :content-transfer-encoding;
+        bh=j6/zuEG9+UIoYtW3U8W38qtzXfAkrhIL3/LLIBR4owU=;
+        b=CyZOZBKPDThABvx4++PnjHBTyqsppM84QY45Tnfnue0M8+GlxUPCJ79DSuuZlIa24m
+         /B6buINPT9/NDdN1cKcXus11GaqkiGhLBR3dXaf944zkSxqThK6hizYJFd32dB/Ewl8K
+         Me97HW2Lf04EpNsbDyZPBga+X6bh5HRO2gG5T51eSn8Pwt0Fr24KEaMbv2+KKk92UfFB
+         rReKWpgzDflXq8k2q2kDDRqS4/gwBtMALyl0fdKsa8kFAg1OasszIkRnAUQmiN93yWpM
+         zMRHSczIX52FIX6SNRrqq+SegHURODWoSbSRhHPEOgFEPW3qjcJugYQUNf2he7tgnV1B
+         9Nfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc
+         :content-transfer-encoding;
+        bh=j6/zuEG9+UIoYtW3U8W38qtzXfAkrhIL3/LLIBR4owU=;
+        b=Bcrqq75EtqZwK9LdEbQjHrrqArrvMOYLBoVdO1PYnue3V00usblrBCCObkQ/yhVQvv
+         raPZ6xm3odIHEL71BG7QvxX72pGu82H1+0XsTVnRQcnIQBxRjIS7UmPs/7M8Hsh87D1y
+         fl/BZL+7txGiZmKiyrKC9CQ/F9lJdnEBSrozfdSgSslvba9gEZgKlZ32wWW1FRPRbS3W
+         MIBUjGBRWedsOXQsQHiLyyAWegJQlSiJ9MYCVz23rG0cu81f0wIwgUfKavo94NK1p/+a
+         uUvKgtWgVzKeLc1XKDkvAqWxhqZFQ5jyY2Z5xUYMQLaUcqloMjasEisENRKVxXaZ4WNw
+         zgIw==
+X-Gm-Message-State: APjAAAUtvRinxOHr2fRFe/+J+Po+if1ZItjs1AyKD6iWlAuOS5in5XCm
+        oq//iKk0xtqR/GQKtheHvo6VrJWIVCHDaqAWOUuvaZMVHK289CDz8S1JZ8LNoWf1OMI+Pe70nP9
+        L62mPs8fINZveNCpgdAtz0gO+JEVyFjADEkyBXjNihztcTAGaLqhn0emP+bUEPKJPaMk=
+X-Google-Smtp-Source: APXvYqw9AFAovTG2lUrSPz11W4tKtJy9FEWIHiePCdq8Y3/EOtzqPeSiAwwQRVBroISNRkeegVOmNdGhhg==
+X-Received: by 2002:aca:b683:: with SMTP id g125mr337075oif.17.1553223101756;
+ Thu, 21 Mar 2019 19:51:41 -0700 (PDT)
+Date:   Thu, 21 Mar 2019 19:51:32 -0700
+Message-Id: <20190322025135.118201-1-fengc@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.21.0.225.g810b269d1ac-goog
+Subject: [RFC v2 dma-buf 0/3] Improve the dma-buf tracking
+From:   Chenbo Feng <fengc@google.com>
+To:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-media@vger.kernel.org
+Cc:     kernel-team@android.com, Sumit Semwal <sumit.semwal@linaro.org>,
+        erickreyes@google.com, Daniel Vetter <daniel@ffwll.ch>,
+        Chenbo Feng <fengc@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 18 Mar 2019 15:43:17 +0900
-Masami Hiramatsu <mhiramat@kernel.org> wrote:
+Currently, all dma-bufs share the same anonymous inode. While we can count
+how many dma-buf fds or mappings a process has, we can't get the size of
+the backing buffers or tell if two entries point to the same dma-buf. And
+in debugfs, we can get a per-buffer breakdown of size and reference count,
+but can't tell which processes are actually holding the references to each
+buffer.
 
-> WARN_ON_IN_IRQ() assumes that the access_ok() and following
-> user memory access can sleep. But this assumption is not
-> always correct; when the pagefault is disabled, following
-> memory access will just returns -EFAULT and never sleep.
-> 
-> Add pagefault_disabled() check in WARN_ON_ONCE() so that
-> it can ignore the case we call it with disabling pagefault.
-> For this purpose, this modified pagefault_disabled() as
-> an inline function.
-> 
+To resolve the issue above and provide better method for userspace to track
+the dma-buf usage across different processes, the following changes are
+proposed in dma-buf kernel side. First of all, replace the singleton inode
+inside the dma-buf subsystem with a mini-filesystem, and assign each
+dma-buf a unique inode out of this filesystem.  With this change, calling
+stat(2) on each entry gives the caller a unique ID (st_ino), the buffer's
+size (st_size), and even the number of pages assigned to each dma-buffer.
+Secoundly, add the inode information to /sys/kernel/debug/dma_buf/bufinfo
+so in the case where a buffer is mmap()ed into a process=E2=80=99s address =
+space
+but all remaining fds have been closed, we can still get the dma-buf
+information and try to accociate it with the process by searching the
+proc/pid/maps and looking for the corresponding inode number exposed in
+dma-buf debug fs. Thirdly, created an ioctl to assign names to dma-bufs
+which lets userspace assign short names (e.g., "CAMERA") to buffers. This
+information can be extremely helpful for tracking and accounting shared
+buffers based on their usage and original purpose. Last but not least, add
+dma-buf information to /proc/pid/fdinfo by adding a show_fdinfo() handler
+to dma_buf_file_operations. The handler will print the file_count and name
+of each buffer.
 
-Actually, accessing user space from an interrupt doesn't really make
-sense. Now I'm differentiating a true interrupt (like a device handler)
-from an exception. The difference is that an exception is synchronous
-with the execution of the code, but an interrupt is something where you
-don't know what task is running. A uaccess in this type of interrupt
-will randomly grab some user space memory but have no idea what task is
-running.
+Change in v2:
+* Add a check to prevent changing dma-buf name when it is attached to
+  devices.
+* Fixed some compile warnings
 
-The one time this makes sense is if you are doing some kind of
-profiling, where the randomness is fine.
+Greg Hackmann (3):
+  dma-buf: give each buffer a full-fledged inode
+  dma-buf: add DMA_BUF_{GET,SET}_NAME ioctls
+  dma-buf: add show_fdinfo handler
 
-I'm curious, what interrupt handler are kprobes executing in that needs
-random user space addresses?
+ drivers/dma-buf/dma-buf.c    | 121 ++++++++++++++++++++++++++++++++---
+ include/linux/dma-buf.h      |   5 +-
+ include/uapi/linux/dma-buf.h |   4 ++
+ include/uapi/linux/magic.h   |   1 +
+ 4 files changed, 122 insertions(+), 9 deletions(-)
 
--- Steve
+--=20
+2.21.0.rc2.261.ga7da99ff1b-goog
+
