@@ -2,97 +2,158 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09651C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:15:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70CE1C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:15:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C277B2183E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:15:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QeXqNMZh"
+	by mail.kernel.org (Postfix) with ESMTP id 3F7452183E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:15:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553260533;
+	bh=7Aaitg+AhtNy5rprRWFEhQ4oyYzWZHLctRY+exstmAM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=MJ2ByJeGvcWvsbN3cNP4rYrmqYMvK+c6V0bPL9pQORAh4X9+XYAf39KlVoJ3Mu+wx
+	 cQiJkxfyfc5TsMhEd7wSFLC6pDxJss2/3RvaA2HnmlA419LJ3cv9tHcyka2TWkSVgl
+	 OLEDex50Kih3iUVOJgnFITsbmfuO8X3GDRdPVtaY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729920AbfCVNPE (ORCPT
+        id S1729834AbfCVNPb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 09:15:04 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:60492 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729753AbfCVNO5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 09:14:57 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2MDEiYd122726;
-        Fri, 22 Mar 2019 08:14:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1553260484;
-        bh=p186SIZOVCdmajVPM3qYi1henRAdn/qJaKsCmV3CVFQ=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=QeXqNMZhax2pxOW3BpOs2+wQno8BbG9SpNJtOz42Mj6CPSxxHg7kygiPJztW0Ioq0
-         6V/0mShDnQ7/I74uABjnCWz2gOKTljko1R2KtmRz64PrJYpo4doLBmtyUrC9Wc71sr
-         pY44Qx4EUo81EZBa0vq076H4xxsZV9I8IACAg5YI=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2MDEiuN104752
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 22 Mar 2019 08:14:44 -0500
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 22
- Mar 2019 08:14:43 -0500
-Received: from dflp32.itg.ti.com (10.64.6.15) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_0,
- cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5 via Frontend Transport;
- Fri, 22 Mar 2019 08:14:43 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by dflp32.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2MDEfZV021486;
-        Fri, 22 Mar 2019 08:14:42 -0500
-Subject: Re: [PATCH v2 08/15] drm/bridge: tc358767: Increase AUX transfer
- length limit
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        <dri-devel@lists.freedesktop.org>
-CC:     Archit Taneja <architt@codeaurora.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Andrey Gusakov <andrey.gusakov@cogentembedded.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        <linux-kernel@vger.kernel.org>
-References: <20190322032901.12045-1-andrew.smirnov@gmail.com>
- <20190322032901.12045-9-andrew.smirnov@gmail.com>
-From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
-Message-ID: <7dbccf61-29fb-a6df-7f54-fd7c29bba57f@ti.com>
-Date:   Fri, 22 Mar 2019 15:14:41 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Fri, 22 Mar 2019 09:15:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55802 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728408AbfCVL2E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:28:04 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79A0F218A2;
+        Fri, 22 Mar 2019 11:28:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553254084;
+        bh=7Aaitg+AhtNy5rprRWFEhQ4oyYzWZHLctRY+exstmAM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=FDUmbrePp8kXuKeiJGkc8DyfLd4yHo7x+fOaKw5+3Frn7LnLLhmSpXG3vZssVx5+f
+         9QiQK9Q01B4eMdTNId1Wctko6CERZJ3l8uvR8GFr1pHp9oeOGuidiQugTqVJgf00vQ
+         3PeNU0JORIw2DXmR1ATw6vNzoWmxpeiCEe6TbQ7Y=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Yonglong Liu <liuyonglong@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 011/230] net: hns: Fix use after free identified by SLUB debug
+Date:   Fri, 22 Mar 2019 12:12:29 +0100
+Message-Id: <20190322111237.534752387@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
+References: <20190322111236.796964179@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-In-Reply-To: <20190322032901.12045-9-andrew.smirnov@gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22/03/2019 05:28, Andrey Smirnov wrote:
-> According to the datasheet tc358767 can transfer up to 16 bytes via
-> its AUX channel, so the artificial limit of 8 apperas to be too
-> low. However only up to 15-bytes seem to be actually supported and
-> trying to use 16-byte transfers results in transfers failing
-> sporadically (with bogus status in case of I2C transfers), so limit it
-> to 15.
+4.4-stable review patch.  If anyone has any objections, please let me know.
 
-16 is the limit from the DP spec. I agree, 8 looks odd.
+------------------
 
-15 looks odd too, so I think it warrants a comment there in the code.
+[ Upstream commit bb989501abcafa0de5f18b0ec0ec459b5b817908 ]
 
-Does 15 byte transfers ever work? Or mostly works but sometimes fails?
+When enable SLUB debug, than remove hns_enet_drv module, SLUB debug will
+identify a use after free bug:
 
- Tomi
+[134.189505] Unable to handle kernel paging request at virtual address
+		006b6b6b6b6b6b6b
+[134.197553] Mem abort info:
+[134.200381]   ESR = 0x96000004
+[134.203487]   Exception class = DABT (current EL), IL = 32 bits
+[134.209497]   SET = 0, FnV = 0
+[134.212596]   EA = 0, S1PTW = 0
+[134.215777] Data abort info:
+[134.218701]   ISV = 0, ISS = 0x00000004
+[134.222596]   CM = 0, WnR = 0
+[134.225606] [006b6b6b6b6b6b6b] address between user and kernel address ranges
+[134.232851] Internal error: Oops: 96000004 [#1] SMP
+[134.237798] CPU: 21 PID: 27834 Comm: rmmod Kdump: loaded Tainted: G
+		OE     4.19.5-1.2.34.aarch64 #1
+[134.247856] Hardware name: Huawei TaiShan 2280 /BC11SPCD, BIOS 1.58 10/24/2018
+[134.255181] pstate: 20000005 (nzCv daif -PAN -UAO)
+[134.260044] pc : hns_ae_put_handle+0x38/0x60
+[134.264372] lr : hns_ae_put_handle+0x24/0x60
+[134.268700] sp : ffff00001be93c50
+[134.272054] x29: ffff00001be93c50 x28: ffff802faaec8040
+[134.277442] x27: 0000000000000000 x26: 0000000000000000
+[134.282830] x25: 0000000056000000 x24: 0000000000000015
+[134.288284] x23: ffff0000096fe098 x22: ffff000001050070
+[134.293671] x21: ffff801fb3c044a0 x20: ffff80afb75ec098
+[134.303287] x19: ffff80afb75ec098 x18: 0000000000000000
+[134.312945] x17: 0000000000000000 x16: 0000000000000000
+[134.322517] x15: 0000000000000002 x14: 0000000000000000
+[134.332030] x13: dead000000000100 x12: ffff7e02bea3c988
+[134.341487] x11: ffff80affbee9e68 x10: 0000000000000000
+[134.351033] x9 : 6fffff8000008101 x8 : 0000000000000000
+[134.360569] x7 : dead000000000100 x6 : ffff000009579748
+[134.370059] x5 : 0000000000210d00 x4 : 0000000000000000
+[134.379550] x3 : 0000000000000001 x2 : 0000000000000000
+[134.388813] x1 : 6b6b6b6b6b6b6b6b x0 : 0000000000000000
+[134.397993] Process rmmod (pid: 27834, stack limit = 0x00000000d474b7fd)
+[134.408498] Call trace:
+[134.414611]  hns_ae_put_handle+0x38/0x60
+[134.422208]  hnae_put_handle+0xd4/0x108
+[134.429563]  hns_nic_dev_remove+0x60/0xc0 [hns_enet_drv]
+[134.438342]  platform_drv_remove+0x2c/0x70
+[134.445958]  device_release_driver_internal+0x174/0x208
+[134.454810]  driver_detach+0x70/0xd8
+[134.461913]  bus_remove_driver+0x64/0xe8
+[134.469396]  driver_unregister+0x34/0x60
+[134.476822]  platform_driver_unregister+0x20/0x30
+[134.485130]  hns_nic_dev_driver_exit+0x14/0x6e4 [hns_enet_drv]
+[134.494634]  __arm64_sys_delete_module+0x238/0x290
 
+struct hnae_handle is a member of struct hnae_vf_cb, so when vf_cb is
+freed, than use hnae_handle will cause use after free panic.
+
+This patch frees vf_cb after hnae_handle used.
+
+Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/hisilicon/hns/hns_ae_adapt.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/net/ethernet/hisilicon/hns/hns_ae_adapt.c b/drivers/net/ethernet/hisilicon/hns/hns_ae_adapt.c
+index 1a16c0307b475..bd36fbe81ad2a 100644
+--- a/drivers/net/ethernet/hisilicon/hns/hns_ae_adapt.c
++++ b/drivers/net/ethernet/hisilicon/hns/hns_ae_adapt.c
+@@ -188,12 +188,10 @@ static void hns_ae_put_handle(struct hnae_handle *handle)
+ 	struct hnae_vf_cb *vf_cb = hns_ae_get_vf_cb(handle);
+ 	int i;
+ 
+-	vf_cb->mac_cb	 = NULL;
+-
+-	kfree(vf_cb);
+-
+ 	for (i = 0; i < handle->q_num; i++)
+ 		hns_ae_get_ring_pair(handle->qs[i])->used_by_vf = 0;
++
++	kfree(vf_cb);
+ }
+ 
+ static void hns_ae_ring_enable_all(struct hnae_handle *handle, int val)
 -- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+2.19.1
+
+
+
