@@ -2,95 +2,245 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 780D9C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 02:00:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72442C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 02:03:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44400218FE
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 02:00:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s1i+zhn5"
+	by mail.kernel.org (Postfix) with ESMTP id 393C8218FE
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 02:03:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727633AbfCVCAZ (ORCPT
+        id S1727426AbfCVCDD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 22:00:25 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:43217 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727535AbfCVCAY (ORCPT
+        Thu, 21 Mar 2019 22:03:03 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:34568 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726460AbfCVCDD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 22:00:24 -0400
-Received: by mail-lj1-f195.google.com with SMTP id f18so667599lja.10;
-        Thu, 21 Mar 2019 19:00:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=16iO+yaf28okeWToT2HKfRunhhzYTrhwD4shI1XL4To=;
-        b=s1i+zhn5R95thHpnOYE4uhJWxDzLi/rkEgEAzsPMnmwAkqxcmGK/kPxOSO02b85g3F
-         Kn+vGl2aVQkcpYPQ8MQK6kYCdRQVB0k7g1PEdVOPndOY3Fc9ykgM2N0UOixhpu6WoqGT
-         5QgHr7Ouw54knrjG7ByPXyiU+bhiXnChZ8HCTQQys1G0wbVSZ8VxHs9krtDWG7zoaxpH
-         U1bXCLmWnYhdwAuD73VQVhKu1fu04E8Pnehez38uP7xVsNh2P13w+SH4tnGJDPojNfBi
-         NHTbttVwc99Z0IbLwCF7EeH7P9HMvaa+ZZvd9Z+syTcp5rKqo/xrRmpsMqxc/91qhqCC
-         Nkiw==
+        Thu, 21 Mar 2019 22:03:03 -0400
+Received: by mail-it1-f193.google.com with SMTP id l4so3932254ite.1
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 19:03:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=16iO+yaf28okeWToT2HKfRunhhzYTrhwD4shI1XL4To=;
-        b=uG5xSE/JcTUrgQ5sgD2vObXjO4YmRz84byPQaW79YxbCAuYuQRDdhDNA5P1jNpgzKt
-         bED8VRjGfP21Tn7NALmzz2L8wXBP9otFu8wtma0qWL6+OgQuQT9YwBwOeBblzP8jX2g/
-         ETjZeM6SiVw7wCBUIdw6s2OSk5XRPPWmLWJn/i3wBEGvZHJ7TL1ypoLa0t9L6dEQAb7a
-         o38y2MQbZNVUoRptvBEmb+1DOU864ZAOy/EEvc9iSC4AIHNU9+kEiNV9JhOaTWSKs6KD
-         JIGBSUH+ZRXM47Ftt2Y2mOmqttE0xJCNNJf68SYL7ww/via47Czo2uQIyuMMFHa6830L
-         Halw==
-X-Gm-Message-State: APjAAAVbOg8pRz1rF5ovvNnQK1dRFlvlstVJDZSPZgh1U5P5Z4M1m4a+
-        R1dif87CffECys28aPgsEI7vyIpnnDPAVgFXrnY=
-X-Google-Smtp-Source: APXvYqwQxMLOMrvRSt0NFAgIBQ/+S+qY1eOD/98GvprQjcg0ZYkDungF9GLXSxztPk0KC4JLHgvlSPBpRsnJ/7YY19k=
-X-Received: by 2002:a2e:899a:: with SMTP id c26mr3682427lji.192.1553220021975;
- Thu, 21 Mar 2019 19:00:21 -0700 (PDT)
+        bh=KbWATDX+8hOsiQa4XIVJ4C1elQr9+5ttSB/cQbkzKoU=;
+        b=khb7BK5tyTa0DzMXB55n6p5NWxRlCMjGEW6Y2VZipQpyuYKEwmvk7LKxQOUIuWtUcN
+         sAJMYE7y2DPdytgSVI2xWmvGW7vgJN7ntz1u2bzVu1X0ivbrVHaiV0makcRJJ1+LOTPg
+         yC8+ioDL3DQtS9TsAw2D7dn4i27Rs+5SZthb5JkBcdmQKA35PhM/TpMAGIfwN199azFr
+         amIM3V1VKUwhBqmVQi95eWAO/syey5nJjLi6Gs1eJoM9cGuphB+vSOkt8t/TRHDlARDk
+         H0xlV0Oz2FK7jyI66iwWZi8WpiE8qozPV2RtKvF69BD8hecuLmJV3qFLSp8bWVB9gnbS
+         k6nQ==
+X-Gm-Message-State: APjAAAUKCR/bY7/dNuRhQGkmdMMFWCFzzrpBfIN3vZU+JwAW5xGYSg5q
+        mdowmdOHoXOZ5+TBmkErK6hBLL0scYLZUr2g/+RxbvMOzeA=
+X-Google-Smtp-Source: APXvYqxGnkka5Ef1AiDDzLMYJcSQ0dXpQPaIkSYk8EZrqic2dK6okn7nmq9SNub+LnO5cmGNz4uBItnsRb5Q5HhaQH0=
+X-Received: by 2002:a24:73c5:: with SMTP id y188mr1507948itb.147.1553220181665;
+ Thu, 21 Mar 2019 19:03:01 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190320120604.7D99B3FBE9@swsrvapps-01.diasemi.com>
- <CAOMZO5AHzQJzz3vd5MzYgSSxzPjU9xan1dFh9473BXeiRCOzzg@mail.gmail.com>
- <VI1PR10MB2352C3A55BE8FABAF3B02681FE410@VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM>
- <CAOMZO5By8=j7gZRAdf2-h-5ak-Qo34rqwDL4+HA_97cMXTAnEQ@mail.gmail.com>
- <20190321084240.fveqkhfrbtg7qr4q@fsr-ub1664-175> <CAOMZO5Cz0A19P9E61dy79BFF+V2WsAjobqQ1g9TeiJSCY2Nt4A@mail.gmail.com>
- <20190322011155.GO12513@dragon>
-In-Reply-To: <20190322011155.GO12513@dragon>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Thu, 21 Mar 2019 23:00:18 -0300
-Message-ID: <CAOMZO5CBjG_xZWjZof_VOKaLLOCxFz3g7Gz1uTVzD=D5GeQb4g@mail.gmail.com>
-Subject: Re: [PATCH] ARM: dts: imx6qdl-sabresd: change phy-mode to use rgmii-id
-To:     Shawn Guo <shawnguo@kernel.org>
-Cc:     Abel Vesa <abel.vesa@nxp.com>,
-        Steve Twiss <stwiss.opensource@diasemi.com>,
-        Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        DEVICETREE <devicetree@vger.kernel.org>,
-        LINUX-ARM-KERNEL <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Support Opensource <Support.Opensource@diasemi.com>
+References: <20190308030508.13548-1-kasong@redhat.com>
+In-Reply-To: <20190308030508.13548-1-kasong@redhat.com>
+From:   Kairui Song <kasong@redhat.com>
+Date:   Fri, 22 Mar 2019 10:02:50 +0800
+Message-ID: <CACPcB9c+L581C1r=V-kwEuFQUqpqkRuLra1QiEV9am1RPSQAXg@mail.gmail.com>
+Subject: Re: [PATCH v5] x86/gart/kcore: Exclude GART aperture from kcore
+To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Omar Sandoval <osandov@fb.com>, Jiri Bohac <jbohac@suse.cz>,
+        Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shawn,
-
-On Thu, Mar 21, 2019 at 10:12 PM Shawn Guo <shawnguo@kernel.org> wrote:
-
-> > So yes, we currently have lots of broken dtb's in mainline and I am
-> > wondering what is the proper fix here.
+On Fri, Mar 8, 2019 at 11:06 AM Kairui Song <kasong@redhat.com> wrote:
 >
-> So can we have a single patch fixing all broken i.MX DTBs?
+> On machines where the GART aperture is mapped over physical RAM,
+> /proc/kcore contains the GART aperture range and reading it may lead
+> to kernel panic.
+>
+> Vmcore used to have the same issue, until we fixed it in
+> commit 2a3e83c6f96c ("x86/gart: Exclude GART aperture from vmcore")',
+> leveraging existing hook infrastructure in vmcore to let /proc/vmcore
+> return zeroes when attempting to read the aperture region, and so it
+> won't read from the actual memory.
+>
+> We apply the same workaround for kcore. First implement the same hook
+> infrastructure for kcore, then reuse the hook functions introduced in
+> previous vmcore fix. Just with some minor adjustment, rename some
+> functions for more general usage, and simplify the hook infrastructure
+> a bit as there is no module usage yet.
+>
+> Suggested-by: Baoquan He <bhe@redhat.com>
+> Signed-off-by: Kairui Song <kasong@redhat.com>
+>
+> ---
+>
+> Update from V4:
+> - Remove the unregistering funtion and move functions never used after
+>   init to .init
+>
+> Update from V3:
+> - Reuse the approach in V2, as Jiri noticed V3 approach may fail
+>   some use case. It introduce overlapped region in kcore, and can't
+>   garenteen the read request will fall into the region we wanted.
+> - Improve some function naming suggested by Baoquan in V2.
+> - Simplify the hook registering and checking, we are not exporting the
+>   hook register function for now, no need to make it that complex.
+>
+> Update from V2:
+> Instead of repeating the same hook infrastructure for kcore, introduce
+> a new kcore area type to avoid reading from, and let kcore always bypass
+> this kind of area.
+>
+> Update from V1:
+> Fix a complie error when CONFIG_PROC_KCORE is not set
+>
+>  arch/x86/kernel/aperture_64.c | 20 +++++++++++++-------
+>  fs/proc/kcore.c               | 27 +++++++++++++++++++++++++++
+>  include/linux/kcore.h         |  2 ++
+>  3 files changed, 42 insertions(+), 7 deletions(-)
+>
+> diff --git a/arch/x86/kernel/aperture_64.c b/arch/x86/kernel/aperture_64.c
+> index 58176b56354e..294ed4392a0e 100644
+> --- a/arch/x86/kernel/aperture_64.c
+> +++ b/arch/x86/kernel/aperture_64.c
+> @@ -14,6 +14,7 @@
+>  #define pr_fmt(fmt) "AGP: " fmt
+>
+>  #include <linux/kernel.h>
+> +#include <linux/kcore.h>
+>  #include <linux/types.h>
+>  #include <linux/init.h>
+>  #include <linux/memblock.h>
+> @@ -57,7 +58,7 @@ int fallback_aper_force __initdata;
+>
+>  int fix_aperture __initdata = 1;
+>
+> -#ifdef CONFIG_PROC_VMCORE
+> +#if defined(CONFIG_PROC_VMCORE) || defined(CONFIG_PROC_KCORE)
+>  /*
+>   * If the first kernel maps the aperture over e820 RAM, the kdump kernel will
+>   * use the same range because it will remain configured in the northbridge.
+> @@ -66,20 +67,25 @@ int fix_aperture __initdata = 1;
+>   */
+>  static unsigned long aperture_pfn_start, aperture_page_count;
+>
+> -static int gart_oldmem_pfn_is_ram(unsigned long pfn)
+> +static int gart_mem_pfn_is_ram(unsigned long pfn)
+>  {
+>         return likely((pfn < aperture_pfn_start) ||
+>                       (pfn >= aperture_pfn_start + aperture_page_count));
+>  }
+>
+> -static void exclude_from_vmcore(u64 aper_base, u32 aper_order)
+> +static void __init exclude_from_core(u64 aper_base, u32 aper_order)
+>  {
+>         aperture_pfn_start = aper_base >> PAGE_SHIFT;
+>         aperture_page_count = (32 * 1024 * 1024) << aper_order >> PAGE_SHIFT;
+> -       WARN_ON(register_oldmem_pfn_is_ram(&gart_oldmem_pfn_is_ram));
+> +#ifdef CONFIG_PROC_VMCORE
+> +       WARN_ON(register_oldmem_pfn_is_ram(&gart_mem_pfn_is_ram));
+> +#endif
+> +#ifdef CONFIG_PROC_KCORE
+> +       WARN_ON(register_mem_pfn_is_ram(&gart_mem_pfn_is_ram));
+> +#endif
+>  }
+>  #else
+> -static void exclude_from_vmcore(u64 aper_base, u32 aper_order)
+> +static void exclude_from_core(u64 aper_base, u32 aper_order)
+>  {
+>  }
+>  #endif
+> @@ -474,7 +480,7 @@ int __init gart_iommu_hole_init(void)
+>                          * may have allocated the range over its e820 RAM
+>                          * and fixed up the northbridge
+>                          */
+> -                       exclude_from_vmcore(last_aper_base, last_aper_order);
+> +                       exclude_from_core(last_aper_base, last_aper_order);
+>
+>                         return 1;
+>                 }
+> @@ -520,7 +526,7 @@ int __init gart_iommu_hole_init(void)
+>          * overlap with the first kernel's memory. We can't access the
+>          * range through vmcore even though it should be part of the dump.
+>          */
+> -       exclude_from_vmcore(aper_alloc, aper_order);
+> +       exclude_from_core(aper_alloc, aper_order);
+>
+>         /* Fix up the north bridges */
+>         for (i = 0; i < amd_nb_bus_dev_ranges[i].dev_limit; i++) {
+> diff --git a/fs/proc/kcore.c b/fs/proc/kcore.c
+> index bbcc185062bb..d29d869abec1 100644
+> --- a/fs/proc/kcore.c
+> +++ b/fs/proc/kcore.c
+> @@ -54,6 +54,28 @@ static LIST_HEAD(kclist_head);
+>  static DECLARE_RWSEM(kclist_lock);
+>  static int kcore_need_update = 1;
+>
+> +/*
+> + * Returns > 0 for RAM pages, 0 for non-RAM pages, < 0 on error
+> + * Same as oldmem_pfn_is_ram in vmcore
+> + */
+> +static int (*mem_pfn_is_ram)(unsigned long pfn);
+> +
+> +int __init register_mem_pfn_is_ram(int (*fn)(unsigned long pfn))
+> +{
+> +       if (mem_pfn_is_ram)
+> +               return -EBUSY;
+> +       mem_pfn_is_ram = fn;
+> +       return 0;
+> +}
+> +
+> +static int pfn_is_ram(unsigned long pfn)
+> +{
+> +       if (mem_pfn_is_ram)
+> +               return mem_pfn_is_ram(pfn);
+> +       else
+> +               return 1;
+> +}
+> +
+>  /* This doesn't grab kclist_lock, so it should only be used at init time. */
+>  void __init kclist_add(struct kcore_list *new, void *addr, size_t size,
+>                        int type)
+> @@ -465,6 +487,11 @@ read_kcore(struct file *file, char __user *buffer, size_t buflen, loff_t *fpos)
+>                                 goto out;
+>                         }
+>                         m = NULL;       /* skip the list anchor */
+> +               } else if (!pfn_is_ram(__pa(start) >> PAGE_SHIFT)) {
+> +                       if (clear_user(buffer, tsz)) {
+> +                               ret = -EFAULT;
+> +                               goto out;
+> +                       }
+>                 } else if (m->type == KCORE_VMALLOC) {
+>                         vread(buf, (char *)start, tsz);
+>                         /* we have to zero-fill user buffer even if no read */
+> diff --git a/include/linux/kcore.h b/include/linux/kcore.h
+> index 8c3f8c14eeaa..c843f4a9c512 100644
+> --- a/include/linux/kcore.h
+> +++ b/include/linux/kcore.h
+> @@ -44,6 +44,8 @@ void kclist_add_remap(struct kcore_list *m, void *addr, void *vaddr, size_t sz)
+>         m->vaddr = (unsigned long)vaddr;
+>         kclist_add(m, addr, sz, KCORE_REMAP);
+>  }
+> +
+> +extern int __init register_mem_pfn_is_ram(int (*fn)(unsigned long pfn));
+>  #else
+>  static inline
+>  void kclist_add(struct kcore_list *new, void *addr, size_t size, int type)
+> --
+> 2.20.1
+>
 
-Unfortunately, just by looking at the dts files we do not know if a
-board uses an AR803x PHY or not, so I am afraid we can not do an
-automatic conversion.
+Ping? Can any one help to take this patch?
+
+--
+Best Regards,
+Kairui Song
