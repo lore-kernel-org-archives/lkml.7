@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8D75C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:01:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D09C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:01:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85F94204FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:01:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30945204FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:01:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256088;
-	bh=i5Tnf8GKc+T5DsogbNov/8sOh0Xgi8yse5m3alSW6wI=;
+	s=default; t=1553256094;
+	bh=Gkn/eUFoFGVQL9DFiC5Fh0FXzYrUuKNlZN3SgpcYppU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ONgC4SssC1Ob6ut+UDhnRYFxwNp9tsWaflkd5CI5OG0rwCBdloAWB3xPVRkbWOaT6
-	 Ut9vmbSRJNY9wn20Wb69tATgyqk26QRfQGP6UPhEbtP5I6lGJxe4a+YjPwoxAYI9Yf
-	 hM6X35b7C4kaPAxzMpszCydvMsNT3CquaU6TG6K4=
+	b=cjgn+xdptmObkNKJ2Qv2jgag7alUVmcepjSH8re8o9blVD6+zHWlwQEcfYQzyhRWx
+	 ukd4Yv62V4LVDLVKHHzdzx8CODDu8D3S4Gv1vxujmftyMn+/XuJmD/bC9h/fPkHLLA
+	 tZM2ioupfmxwn6P2KMNql0J7aRmRBCp7FNl1lVgs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388215AbfCVMB1 (ORCPT
+        id S2388226AbfCVMBc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:01:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38948 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:01:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730498AbfCVMBX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:01:23 -0400
+        id S2388206AbfCVMBZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:01:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3DCF204FD;
-        Fri, 22 Mar 2019 12:01:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A59AD204FD;
+        Fri, 22 Mar 2019 12:01:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256082;
-        bh=i5Tnf8GKc+T5DsogbNov/8sOh0Xgi8yse5m3alSW6wI=;
+        s=default; t=1553256085;
+        bh=Gkn/eUFoFGVQL9DFiC5Fh0FXzYrUuKNlZN3SgpcYppU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LUk9mw0t6K4fP+ZVWnuTLlTATV832q/5Iwdsq8Gz/rpjmRULstraXYXTrycYxriL2
-         HFpvJHnkX3WJ8nQkh66IqzCt1rG7t4bUg3a35dJPhBZFeJgFQyWhZQDa/CjVjO1+27
-         CwI6jfiR+YYoSfHfqlS55Izh9tLajvKa0nzgmilI=
+        b=UZqfzmml1eHhdcna0UDTrmHZrMHuzgF3jShcgU1SPOqnUFoPcDdrIaRmjPUljEoCC
+         184FUK5SQY/X+epgqBo8XfXjYjSXpgZelJj3BHp5mG/1SOcprvakFGN6eK1YXrtukN
+         aeZASUBCfAlovoO3eoVLYxw6Tjga3W9btXdt91FA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Michal Kalderon <michal.kalderon@marvell.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 087/280] qed: Fix iWARP buffer size provided for syn packet processing.
-Date:   Fri, 22 Mar 2019 12:14:00 +0100
-Message-Id: <20190322111311.325181153@linuxfoundation.org>
+Subject: [PATCH 4.19 088/280] qed: Fix iWARP syn packet mac address validation.
+Date:   Fri, 22 Mar 2019 12:14:01 +0100
+Message-Id: <20190322111311.400830022@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -67,88 +67,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 9addc92730df55e2c05e8d3f69267a89d65bcba8 ]
+[ Upstream commit 8be3dadf04050c2907760ec1955ca1c8fbc25585 ]
 
-The assumption that the maximum size of a syn packet is 128 bytes
-is wrong. Tunneling headers were not accounted for.
-Allocate buffers large enough for mtu.
+The ll2 forwards all syn packets to the driver without validating the mac
+address. Add validation check in the driver's iWARP listener flow and drop
+the packet if it isn't intended for the device.
 
 Signed-off-by: Ariel Elior <ariel.elior@marvell.com>
 Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qed/qed_iwarp.c | 12 ++++++------
- drivers/net/ethernet/qlogic/qed/qed_iwarp.h |  1 -
- 2 files changed, 6 insertions(+), 7 deletions(-)
+ drivers/net/ethernet/qlogic/qed/qed_iwarp.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
 diff --git a/drivers/net/ethernet/qlogic/qed/qed_iwarp.c b/drivers/net/ethernet/qlogic/qed/qed_iwarp.c
-index e860bdf0f752..3c932f79a02e 100644
+index 3c932f79a02e..b7471e48db7b 100644
 --- a/drivers/net/ethernet/qlogic/qed/qed_iwarp.c
 +++ b/drivers/net/ethernet/qlogic/qed/qed_iwarp.c
-@@ -2606,7 +2606,7 @@ qed_iwarp_ll2_start(struct qed_hwfn *p_hwfn,
- 	struct qed_iwarp_info *iwarp_info;
- 	struct qed_ll2_acquire_data data;
- 	struct qed_ll2_cbs cbs;
--	u32 mpa_buff_size;
-+	u32 buff_size;
- 	u16 n_ooo_bufs;
- 	int rc = 0;
- 	int i;
-@@ -2633,7 +2633,7 @@ qed_iwarp_ll2_start(struct qed_hwfn *p_hwfn,
+@@ -1689,6 +1689,15 @@ qed_iwarp_parse_rx_pkt(struct qed_hwfn *p_hwfn,
  
- 	memset(&data, 0, sizeof(data));
- 	data.input.conn_type = QED_LL2_TYPE_IWARP;
--	data.input.mtu = QED_IWARP_MAX_SYN_PKT_SIZE;
-+	data.input.mtu = params->max_mtu;
- 	data.input.rx_num_desc = QED_IWARP_LL2_SYN_RX_SIZE;
- 	data.input.tx_num_desc = QED_IWARP_LL2_SYN_TX_SIZE;
- 	data.input.tx_max_bds_per_packet = 1;	/* will never be fragmented */
-@@ -2655,9 +2655,10 @@ qed_iwarp_ll2_start(struct qed_hwfn *p_hwfn,
- 		goto err;
- 	}
+ 	eth_hlen = ETH_HLEN + (vlan_valid ? sizeof(u32) : 0);
  
-+	buff_size = QED_IWARP_MAX_BUF_SIZE(params->max_mtu);
- 	rc = qed_iwarp_ll2_alloc_buffers(p_hwfn,
- 					 QED_IWARP_LL2_SYN_RX_SIZE,
--					 QED_IWARP_MAX_SYN_PKT_SIZE,
-+					 buff_size,
- 					 iwarp_info->ll2_syn_handle);
- 	if (rc)
- 		goto err;
-@@ -2711,10 +2712,9 @@ qed_iwarp_ll2_start(struct qed_hwfn *p_hwfn,
- 	if (rc)
- 		goto err;
++	if (!ether_addr_equal(ethh->h_dest,
++			      p_hwfn->p_rdma_info->iwarp.mac_addr)) {
++		DP_VERBOSE(p_hwfn,
++			   QED_MSG_RDMA,
++			   "Got unexpected mac %pM instead of %pM\n",
++			   ethh->h_dest, p_hwfn->p_rdma_info->iwarp.mac_addr);
++		return -EINVAL;
++	}
++
+ 	ether_addr_copy(remote_mac_addr, ethh->h_source);
+ 	ether_addr_copy(local_mac_addr, ethh->h_dest);
  
--	mpa_buff_size = QED_IWARP_MAX_BUF_SIZE(params->max_mtu);
- 	rc = qed_iwarp_ll2_alloc_buffers(p_hwfn,
- 					 data.input.rx_num_desc,
--					 mpa_buff_size,
-+					 buff_size,
- 					 iwarp_info->ll2_mpa_handle);
- 	if (rc)
- 		goto err;
-@@ -2727,7 +2727,7 @@ qed_iwarp_ll2_start(struct qed_hwfn *p_hwfn,
- 
- 	iwarp_info->max_num_partial_fpdus = (u16)p_hwfn->p_rdma_info->num_qps;
- 
--	iwarp_info->mpa_intermediate_buf = kzalloc(mpa_buff_size, GFP_KERNEL);
-+	iwarp_info->mpa_intermediate_buf = kzalloc(buff_size, GFP_KERNEL);
- 	if (!iwarp_info->mpa_intermediate_buf)
- 		goto err;
- 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_iwarp.h b/drivers/net/ethernet/qlogic/qed/qed_iwarp.h
-index b8f612d00241..7ac959038324 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_iwarp.h
-+++ b/drivers/net/ethernet/qlogic/qed/qed_iwarp.h
-@@ -46,7 +46,6 @@ enum qed_iwarp_qp_state qed_roce2iwarp_state(enum qed_roce_qp_state state);
- 
- #define QED_IWARP_LL2_SYN_TX_SIZE       (128)
- #define QED_IWARP_LL2_SYN_RX_SIZE       (256)
--#define QED_IWARP_MAX_SYN_PKT_SIZE      (128)
- 
- #define QED_IWARP_LL2_OOO_DEF_TX_SIZE   (256)
- #define QED_IWARP_MAX_OOO		(16)
 -- 
 2.19.1
 
