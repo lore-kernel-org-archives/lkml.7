@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4371C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:09:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C90AC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:09:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B14E821873
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:09:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E46992183E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:09:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553260173;
-	bh=Punk/VK/NfaUSk5/2KYJXWhFUXjWj8MdW04cWKrbgY8=;
+	s=default; t=1553260195;
+	bh=p2AS3DPkjCcPFI/HPaCFjCUsf0/HROq7V4j+oHuDSqM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TFz16IsV8SYJhs+V9ms2I54TMnV565SU3Zrx5EKAu3whLxEoApjMY+MxPaQELZ6IY
-	 3MUzDB8P2wvhjnXOz45ha0P0dJAsahIyc8AaifMu4aiDyAxmnrYWVXoXFau2/apZ4y
-	 kFXZU9d226ToQ/mcC3Ic0UCTl5AhJ1ocsEGSjWFg=
+	b=ESpLU8RU5/gNRH+DQZM68NjuPFEXxBQ9Wupe+ORBEwV3wBM+EKp90QIzOqa8vGwnB
+	 6ySZYBu8EZ74qNVw+TjlmjKaZAyluJOwyn5x7jDF1Kz8lr/CCbKP72mwM3CAdaPVJE
+	 apyMb121S0RjGW9Gd8S7aRZ5LOXIMLJIG+pCGjfI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730497AbfCVLez (ORCPT
+        id S1730431AbfCVLed (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:34:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35584 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:34:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730491AbfCVLew (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:34:52 -0400
+        id S1730405AbfCVLeb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:34:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EAA7218B0;
-        Fri, 22 Mar 2019 11:34:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51D7521917;
+        Fri, 22 Mar 2019 11:34:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254490;
-        bh=Punk/VK/NfaUSk5/2KYJXWhFUXjWj8MdW04cWKrbgY8=;
+        s=default; t=1553254470;
+        bh=p2AS3DPkjCcPFI/HPaCFjCUsf0/HROq7V4j+oHuDSqM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zh6AGqdDYSkc9DAcKn/ovrTQXZ1YMhGc1bfBc3NnlN3f/vNAfHnBRBNaPep5Mycdy
-         DOa9ZUgC9+Bwl8NYIaOYzj2h7F7X6USQPkmopisF672YRdVREdAVhU2VOF90uC8gpA
-         oHYntDDnTNU7KV+zEdO7nfT5+yTOvM+wRA4v0t+0=
+        b=f3asozV23mhAO1KXz/5kcVlsx9zHUCwmtNYJI8cpwd9KNu662wu5y0jYx0Eun1jf1
+         wv/qWmVJ/JTZ7gn453mrh+dALFEb+R1HnL88CyY5Cbo0XfUj/zeBiva++iAYR9ddpw
+         V25kVYQK5tflhcgjdkeI/nGU8NBm/AlaGoRxEI/k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jack Morgenstein <jackm@dev.mellanox.co.il>,
-        Tariq Toukan <tariqt@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 134/230] net/mlx4_core: Fix reset flow when in command polling mode
-Date:   Fri, 22 Mar 2019 12:14:32 +0100
-Message-Id: <20190322111246.095649671@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.4 146/230] ALSA: bebob: use more identical mod_alias for Saffire Pro 10 I/O against Liquid Saffire 56
+Date:   Fri, 22 Mar 2019 12:14:44 +0100
+Message-Id: <20190322111246.885027190@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -67,85 +65,180 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jack Morgenstein <jackm@dev.mellanox.co.il>
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 
-[ Upstream commit e15ce4b8d11227007577e6dc1364d288b8874fbe ]
+commit 7dc661bd8d3261053b69e4e2d0050cd1ee540fc1 upstream.
 
-As part of unloading a device, the driver switches from
-FW command event mode to FW command polling mode.
+ALSA bebob driver has an entry for Focusrite Saffire Pro 10 I/O. The
+entry matches vendor_id in root directory and model_id in unit
+directory of configuration ROM for IEEE 1394 bus.
 
-Part of switching over to polling mode is freeing the command context array
-memory (unfortunately, currently, without NULLing the command context array
-pointer).
+On the other hand, configuration ROM of Focusrite Liquid Saffire 56
+has the same vendor_id and model_id. This device is an application of
+TCAT Dice (TCD2220 a.k.a Dice Jr.) however ALSA bebob driver can be
+bound to it randomly instead of ALSA dice driver. At present, drivers
+in ALSA firewire stack can not handle this situation appropriately.
 
-The reset flow calls "complete" to complete all outstanding fw commands
-(if we are in event mode). The check for event vs. polling mode here
-is to test if the command context array pointer is NULL.
+This commit uses more identical mod_alias for Focusrite Saffire Pro 10
+I/O in ALSA bebob driver.
 
-If the reset flow is activated after the switch to polling mode, it will
-attempt (incorrectly) to complete all the commands in the context array --
-because the pointer was not NULLed when the driver switched over to polling
-mode.
+$ python2 crpp < /sys/bus/firewire/devices/fw1/config_rom
+               ROM header and bus information block
+               -----------------------------------------------------------------
+400  042a829d  bus_info_length 4, crc_length 42, crc 33437
+404  31333934  bus_name "1394"
+408  f0649222  irmc 1, cmc 1, isc 1, bmc 1, pmc 0, cyc_clk_acc 100,
+               max_rec 9 (1024), max_rom 2, gen 2, spd 2 (S400)
+40c  00130e01  company_id 00130e     |
+410  000606e0  device_id 01000606e0  | EUI-64 00130e01000606e0
 
-As a result, we have a use-after-free situation, which results in a
-kernel crash.
+               root directory
+               -----------------------------------------------------------------
+414  0009d31c  directory_length 9, crc 54044
+418  04000014  hardware version
+41c  0c0083c0  node capabilities per IEEE 1394
+420  0300130e  vendor
+424  81000012  --> descriptor leaf at 46c
+428  17000006  model
+42c  81000016  --> descriptor leaf at 484
+430  130120c2  version
+434  d1000002  --> unit directory at 43c
+438  d4000006  --> dependent info directory at 450
 
-For example:
-BUG: unable to handle kernel NULL pointer dereference at           (null)
-IP: [<ffffffff876c4a8e>] __wake_up_common+0x2e/0x90
-PGD 0
-Oops: 0000 [#1] SMP
-Modules linked in: netconsole nfsv3 nfs_acl nfs lockd grace ...
-CPU: 2 PID: 940 Comm: kworker/2:3 Kdump: loaded Not tainted 3.10.0-862.el7.x86_64 #1
-Hardware name: Microsoft Corporation Virtual Machine/Virtual Machine, BIOS 090006  04/28/2016
-Workqueue: events hv_eject_device_work [pci_hyperv]
-task: ffff8d1734ca0fd0 ti: ffff8d17354bc000 task.ti: ffff8d17354bc000
-RIP: 0010:[<ffffffff876c4a8e>]  [<ffffffff876c4a8e>] __wake_up_common+0x2e/0x90
-RSP: 0018:ffff8d17354bfa38  EFLAGS: 00010082
-RAX: 0000000000000000 RBX: ffff8d17362d42c8 RCX: 0000000000000000
-RDX: 0000000000000001 RSI: 0000000000000003 RDI: ffff8d17362d42c8
-RBP: ffff8d17354bfa70 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000298 R11: ffff8d173610e000 R12: ffff8d17362d42d0
-R13: 0000000000000246 R14: 0000000000000000 R15: 0000000000000003
-FS:  0000000000000000(0000) GS:ffff8d1802680000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000000 CR3: 00000000f16d8000 CR4: 00000000001406e0
-Call Trace:
- [<ffffffff876c7adc>] complete+0x3c/0x50
- [<ffffffffc04242f0>] mlx4_cmd_wake_completions+0x70/0x90 [mlx4_core]
- [<ffffffffc041e7b1>] mlx4_enter_error_state+0xe1/0x380 [mlx4_core]
- [<ffffffffc041fa4b>] mlx4_comm_cmd+0x29b/0x360 [mlx4_core]
- [<ffffffffc041ff51>] __mlx4_cmd+0x441/0x920 [mlx4_core]
- [<ffffffff877f62b1>] ? __slab_free+0x81/0x2f0
- [<ffffffff87951384>] ? __radix_tree_lookup+0x84/0xf0
- [<ffffffffc043a8eb>] mlx4_free_mtt_range+0x5b/0xb0 [mlx4_core]
- [<ffffffffc043a957>] mlx4_mtt_cleanup+0x17/0x20 [mlx4_core]
- [<ffffffffc04272c7>] mlx4_free_eq+0xa7/0x1c0 [mlx4_core]
- [<ffffffffc042803e>] mlx4_cleanup_eq_table+0xde/0x130 [mlx4_core]
- [<ffffffffc0433e08>] mlx4_unload_one+0x118/0x300 [mlx4_core]
- [<ffffffffc0434191>] mlx4_remove_one+0x91/0x1f0 [mlx4_core]
+               unit directory at 43c
+               -----------------------------------------------------------------
+43c  0004707c  directory_length 4, crc 28796
+440  1200a02d  specifier id: 1394 TA
+444  13010001  version: AV/C
+448  17000006  model
+44c  81000013  --> descriptor leaf at 498
 
-The fix is to set the command context array pointer to NULL after freeing
-the array.
+               dependent info directory at 450
+               -----------------------------------------------------------------
+450  000637c7  directory_length 6, crc 14279
+454  120007f5  specifier id
+458  13000001  version
+45c  3affffc7  (immediate value)
+460  3b100000  (immediate value)
+464  3cffffc7  (immediate value)
+468  3d600000  (immediate value)
 
-Fixes: f5aef5aa3506 ("net/mlx4_core: Activate reset flow upon fatal command cases")
-Signed-off-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
-Signed-off-by: Tariq Toukan <tariqt@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+               descriptor leaf at 46c
+               -----------------------------------------------------------------
+46c  00056f3b  leaf_length 5, crc 28475
+470  00000000  textual descriptor
+474  00000000  minimal ASCII
+478  466f6375  "Focu"
+47c  73726974  "srit"
+480  65000000  "e"
+
+               descriptor leaf at 484
+               -----------------------------------------------------------------
+484  0004a165  leaf_length 4, crc 41317
+488  00000000  textual descriptor
+48c  00000000  minimal ASCII
+490  50726f31  "Pro1"
+494  30494f00  "0IO"
+
+               descriptor leaf at 498
+               -----------------------------------------------------------------
+498  0004a165  leaf_length 4, crc 41317
+49c  00000000  textual descriptor
+4a0  00000000  minimal ASCII
+4a4  50726f31  "Pro1"
+4a8  30494f00  "0IO"
+
+$ python2 crpp < /sys/bus/firewire/devices/fw1/config_rom
+               ROM header and bus information block
+               -----------------------------------------------------------------
+400  040442e4  bus_info_length 4, crc_length 4, crc 17124
+404  31333934  bus_name "1394"
+408  e0ff8112  irmc 1, cmc 1, isc 1, bmc 0, pmc 0, cyc_clk_acc 255,
+               max_rec 8 (512), max_rom 1, gen 1, spd 2 (S400)
+40c  00130e04  company_id 00130e     |
+410  018001e9  device_id 04018001e9  | EUI-64 00130e04018001e9
+
+               root directory
+               -----------------------------------------------------------------
+414  00065612  directory_length 6, crc 22034
+418  0300130e  vendor
+41c  8100000a  --> descriptor leaf at 444
+420  17000006  model
+424  8100000e  --> descriptor leaf at 45c
+428  0c0087c0  node capabilities per IEEE 1394
+42c  d1000001  --> unit directory at 430
+
+               unit directory at 430
+               -----------------------------------------------------------------
+430  000418a0  directory_length 4, crc 6304
+434  1200130e  specifier id
+438  13000001  version
+43c  17000006  model
+440  8100000f  --> descriptor leaf at 47c
+
+               descriptor leaf at 444
+               -----------------------------------------------------------------
+444  00056f3b  leaf_length 5, crc 28475
+448  00000000  textual descriptor
+44c  00000000  minimal ASCII
+450  466f6375  "Focu"
+454  73726974  "srit"
+458  65000000  "e"
+
+               descriptor leaf at 45c
+               -----------------------------------------------------------------
+45c  000762c6  leaf_length 7, crc 25286
+460  00000000  textual descriptor
+464  00000000  minimal ASCII
+468  4c495155  "LIQU"
+46c  49445f53  "ID_S"
+470  41464649  "AFFI"
+474  52455f35  "RE_5"
+478  36000000  "6"
+
+               descriptor leaf at 47c
+               -----------------------------------------------------------------
+47c  000762c6  leaf_length 7, crc 25286
+480  00000000  textual descriptor
+484  00000000  minimal ASCII
+488  4c495155  "LIQU"
+48c  49445f53  "ID_S"
+490  41464649  "AFFI"
+494  52455f35  "RE_5"
+498  36000000  "6"
+
+Cc: <stable@vger.kernel.org> # v3.16+
+Fixes: 25784ec2d034 ("ALSA: bebob: Add support for Focusrite Saffire/SaffirePro series")
+Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/mellanox/mlx4/cmd.c |    1 +
- 1 file changed, 1 insertion(+)
 
---- a/drivers/net/ethernet/mellanox/mlx4/cmd.c
-+++ b/drivers/net/ethernet/mellanox/mlx4/cmd.c
-@@ -2636,6 +2636,7 @@ void mlx4_cmd_use_polling(struct mlx4_de
- 		down(&priv->cmd.event_sem);
- 
- 	kfree(priv->cmd.context);
-+	priv->cmd.context = NULL;
- 
- 	up(&priv->cmd.poll_sem);
- }
+---
+ sound/firewire/bebob/bebob.c |   14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
+
+--- a/sound/firewire/bebob/bebob.c
++++ b/sound/firewire/bebob/bebob.c
+@@ -422,7 +422,19 @@ static const struct ieee1394_device_id b
+ 	/* Focusrite, SaffirePro 26 I/O */
+ 	SND_BEBOB_DEV_ENTRY(VEN_FOCUSRITE, 0x00000003, &saffirepro_26_spec),
+ 	/* Focusrite, SaffirePro 10 I/O */
+-	SND_BEBOB_DEV_ENTRY(VEN_FOCUSRITE, 0x00000006, &saffirepro_10_spec),
++	{
++		// The combination of vendor_id and model_id is the same as the
++		// same as the one of Liquid Saffire 56.
++		.match_flags	= IEEE1394_MATCH_VENDOR_ID |
++				  IEEE1394_MATCH_MODEL_ID |
++				  IEEE1394_MATCH_SPECIFIER_ID |
++				  IEEE1394_MATCH_VERSION,
++		.vendor_id	= VEN_FOCUSRITE,
++		.model_id	= 0x000006,
++		.specifier_id	= 0x00a02d,
++		.version	= 0x010001,
++		.driver_data	= (kernel_ulong_t)&saffirepro_10_spec,
++	},
+ 	/* Focusrite, Saffire(no label and LE) */
+ 	SND_BEBOB_DEV_ENTRY(VEN_FOCUSRITE, MODEL_FOCUSRITE_SAFFIRE_BOTH,
+ 			    &saffire_spec),
 
 
