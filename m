@@ -2,298 +2,106 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 122CCC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:29:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 879E0C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:31:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B78D42083D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:29:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DE812083D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:31:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bmpVEfZD"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="KCnYnxkr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728654AbfCVN3I (ORCPT
+        id S1728406AbfCVNbL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 09:29:08 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:39420 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728106AbfCVN3H (ORCPT
+        Fri, 22 Mar 2019 09:31:11 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:50955 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728162AbfCVNbK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 09:29:07 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2MDSlmV014621;
-        Fri, 22 Mar 2019 08:28:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1553261327;
-        bh=GrcFBQrF8nyGzz82sFxVM033AJc2K9Gg0fwLh6oCOu0=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=bmpVEfZDiBwcJ9yZGukaI+6IaHU/BZA6pTpBn9A3jpKseDCfyqPA509hy/XDF9JEm
-         LWZaIkzrsX4/KFBXiyxQiIg4ZB94er78Fzl0IIv619/lthAztxXOZKs7dXo5TKwmq8
-         MlyZhtBdVmSYvoSC/0TZcY231Vw0x2OSsQSGzplU=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2MDSlfm121662
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 22 Mar 2019 08:28:47 -0500
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 22
- Mar 2019 08:28:46 -0500
-Received: from dflp33.itg.ti.com (10.64.6.16) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_0,
- cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5 via Frontend Transport;
- Fri, 22 Mar 2019 08:28:47 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by dflp33.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2MDSkBj011297;
-        Fri, 22 Mar 2019 08:28:46 -0500
-Date:   Fri, 22 Mar 2019 08:28:46 -0500
-From:   Bin Liu <b-liu@ti.com>
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Paul Kocialkowski <contact@paulk.fr>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH] usb: musb: Support gadget mode when the port is set to
- dual role
-Message-ID: <20190322132846.GD25852@uda0271908>
-Mail-Followup-To: Bin Liu <b-liu@ti.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Paul Kocialkowski <contact@paulk.fr>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        Chen-Yu Tsai <wens@csie.org>
-References: <20180328215213.29538-1-contact@paulk.fr>
- <20180329092326.dayuccomq5zrywqo@flea>
- <1522324644.1746.19.camel@bootlin.com>
- <20180420142524.GB29011@uda0271908>
- <2db056d6f65ecbcdc4f31a37fe2e1b1ddfb93c87.camel@paulk.fr>
- <20180421143426.GA10632@LTA0271908.dhcp.ti.com>
- <20190321130133.zllt5pqbrhiecoch@flea>
- <20190321164138.GB11121@kroah.com>
- <20190322124622.GB25852@uda0271908>
- <20190322130953.kb4llrtz2nriyfbu@flea>
+        Fri, 22 Mar 2019 09:31:10 -0400
+Received: by mail-wm1-f65.google.com with SMTP id z11so2208051wmi.0
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 06:31:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=g8a/6QFF5xRiCzUNrWvuGv54lLv2MelL/M6fpnjm+mE=;
+        b=KCnYnxkrfcpVykllO6q84FRtzou33y2tRwrnRFbIxtoOOOuX//6GKsAYanPM8d5zDJ
+         z01PPVqQRnlwifBAep9cNAkrFtH+w1er3a9nY4y1zjk/9aWTQSE06TDoa2ZgcnIAZ+rj
+         KYa+tKO0J78IGCgHVFXF5LzOS9esg4t1YfUXIivxJB+U2m7Nej7JmJVlEbBBYebIN4sK
+         Poh6iqOUFbiFPWDrkr5W/eT26MuV0hlLxgLk4N1BpoSBifjSjpKpPjKWqinI1ZFkpD/M
+         EsXJrIAh35ltu4+ZVz7MjWCmWPQvOTJgMBQgwZOrq+61vWnwZd/IF+2/NSpvFNZZsXet
+         dKyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=g8a/6QFF5xRiCzUNrWvuGv54lLv2MelL/M6fpnjm+mE=;
+        b=GHagRumonbgZQ/LFmEX35rPO4HKi4L8q8duCwy8zXDWbIEn0qJ6G5Zk0BBVoHyLMtV
+         HebMysdfizD1BvRkOBR2w3RtaaTf+HH4KAnutLJdV7Ly5y2r2M4hvv3BQAoKdBKrJSLE
+         WyIJo9/ZVFaNOeHd9U4uCbsdVbdUYlpj+TX3HvyoUB8zTEdP+hXpqXF2j4tzcaiU9oNE
+         RWDYxYhRWkxdF6j2XehkUAfBal85KE6I4Z0jYcWz+2u1K1cuQr8WaC4lX0JLEKW8oZ/n
+         WKjeJcw4yGLGWRpXDS0ZsqvYsj0Ard7zIWTHlq0S1+rwZwIotG6Tc3ihaiM2w5zGA9eX
+         d+cw==
+X-Gm-Message-State: APjAAAUQjDqBCqh5VaAHg5uFMThTujbUyO1PBBTLPK5dPp9WUlpfZ+z5
+        5psz07DYRhqfErUgzXyG6qNoHg==
+X-Google-Smtp-Source: APXvYqy0yJqHy7SLu5l3UTNY9ieJ1AKo6BZohXk0a0d9iyKimrd7Ofl3DtX2hdT8JCXiEtaeTv/hTA==
+X-Received: by 2002:a1c:6341:: with SMTP id x62mr3087409wmb.11.1553261469218;
+        Fri, 22 Mar 2019 06:31:09 -0700 (PDT)
+Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
+        by smtp.gmail.com with ESMTPSA id o15sm4684345wrj.59.2019.03.22.06.31.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 22 Mar 2019 06:31:08 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        David Lechner <david@lechnology.com>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH v2 0/4] ARM: da850: enable cpufreq in DT mode
+Date:   Fri, 22 Mar 2019 14:31:01 +0100
+Message-Id: <20190322133105.5945-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190322130953.kb4llrtz2nriyfbu@flea>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 22, 2019 at 02:09:53PM +0100, Maxime Ripard wrote:
-> On Fri, Mar 22, 2019 at 07:46:22AM -0500, Bin Liu wrote:
-> > On Thu, Mar 21, 2019 at 05:41:38PM +0100, Greg Kroah-Hartman wrote:
-> > > On Thu, Mar 21, 2019 at 02:01:33PM +0100, Maxime Ripard wrote:
-> > > > Hi,
-> > > >
-> > > > I'm reviving this thread a bit, because I encountered this bug today.
-> > > >
-> > > > On Thu, Mar 21, 2019 at 11:02:10AM +0100, Bin Liu wrote:
-> > > > > On Sat, Apr 21, 2018 at 12:59:23PM +0200, Paul Kocialkowski wrote:
-> > > > > > Hi,
-> > > > > >
-> > > > > > Le vendredi 20 avril 2018 à 09:25 -0500, Bin Liu a écrit :
-> > > > > > > On Thu, Mar 29, 2018 at 01:57:24PM +0200, Paul Kocialkowski wrote:
-> > > > > > > > Hi,
-> > > > > > > >
-> > > > > > > > On Thu, 2018-03-29 at 11:23 +0200, Maxime Ripard wrote:
-> > > > > > > > > On Wed, Mar 28, 2018 at 11:52:13PM +0200, Paul Kocialkowski wrote:
-> > > > > > > > > > This allows dual-role ports to be reported as having gadget mode
-> > > > > > > > > > by
-> > > > > > > > > > the
-> > > > > > > > > > musb_has_gadget helper. This is required to enable MUSB at all
-> > > > > > > > > > with
-> > > > > > > > > > MUSB
-> > > > > > > > > > glue layers that set the port mode to MUSB_PORT_MODE_DUAL_ROLE
-> > > > > > > > > > at
-> > > > > > > > > > init.
-> > > > > > > > > >
-> > > > > > > > > > Most notably, this allows calling musb_start when needed in the
-> > > > > > > > > > virtual
-> > > > > > > > > > MUSB root HUB, regardless of whether the current mode should be
-> > > > > > > > > > gadget
-> > > > > > > > > > or host.
-> > > > > > > > > >
-> > > > > > > > > > This fixes USB OTG on Allwinner devices that I could test it
-> > > > > > > > > > with,
-> > > > > > > > > > mainly A20 devices.
-> > > > > > > > > >
-> > > > > > > > > > Signed-off-by: Paul Kocialkowski <contact@paulk.fr>
-> > > > > > > > >
-> > > > > > > > > Surely there's more to it than that. The gadget mode of A20 boards
-> > > > > > > > > have been working in the past, including when compiling with mUSB
-> > > > > > > > > setup as dual role.
-> > > > > > > > >
-> > > > > > > > > Is this a regression since a particular commit? Or is there
-> > > > > > > > > another,
-> > > > > > > > > deeper issue overlooked in the commit log?
-> > > > > > > >
-> > > > > > > > The root of the issue here is that musb_start is not called at any
-> > > > > > > > point
-> > > > > > > > without this patch. My understanding of the flow is the following:
-> > > > > > > > when
-> > > > > > > > the PHY detects that there was a VBUS/ID change, it will notify its
-> > > > > > > > listeners (mainly the musb sunxi glue layer). This will then
-> > > > > > > > schedule
-> > > > > > > > the driver's work (sunxi_musb_work), which does nothing since the
-> > > > > > > > SUNXI_MUSB_FL_ENABLED bit was never set. This bit is only set after
-> > > > > > > > calling sunxi_musb_enable, which is called from
-> > > > > > > > musb_platform_enable,
-> > > > > > > > that originates from musb_start.
-> > > > > > > >
-> > > > > > > > Currently I see two places where musb_start is called:
-> > > > > > > > * musb_virthub
-> > > > > > > > * musb_gadget
-> > > > > > > >
-> > > > > > > > In the latter case, it is in turn called from udc_start, which
-> > > > > > > > should
-> > > > > > > > probably (correct me if I'm wrong) happen later in the call chain
-> > > > > > > > than
-> > > > > > > > ID/VBUS change notification time.
-> > > > > > >
-> > > > > > > I don't think it is correct that udc_start() is triggered by ID/VBUS
-> > > > > > > events, but I don't have an Allwinner platform to verify the callflow.
-> > > > > >
-> > > > > > Yes you're right, I didn't make myself very clear here. I didn't
-> > > > > > investigate the udc_start call path much since it was apparently not the
-> > > > > > culprit.
-> > > > > >
-> > > > > > > Have you tried to load with a gadget driver? When a gadget function is
-> > > > > > > bound to UDC, udc_start() is triggered, which in turn calls
-> > > > > > > musb_start().
-> > > > > >
-> > > > > > It does work under that scenario, although my used case here is using
-> > > > > > musb with DUAL_ROLE but no gadget driver loaded. That it, I want the
-> > > > > > musb_start call to originate from the virtual hub, not from the gadget
-> > > > > > side.
-> > > > > >
-> > > > > > > > In the former case, musb_start is called in the root controller hub
-> > > > > > > > control, when setting the USB_PORT_FEAT_POWER feature. This looks
-> > > > > > > > perfectly legit and IMO this is where it should be initially calling
-> > > > > > > > musb_start in the dual role case. The kernel is indeed setting the
-> > > > > > >
-> > > > > > > No actually. A dual-role port should be in b_idle state by default, so
-> > > > > > > logically all actions should go to the gadget path until the port
-> > > > > > > switches to host mode.
-> > > > > >
-> > > > > > It makes sense that the port should be in b_idle state by default, but
-> > > > > > here it fails to switch to host mode when the ID pin detects that it
-> > > > > > should. Or does b_idle state entail that a gadget must be loaded (per
-> > > > > > the USB spec), and thus nothing should (ever) happen until that happens?
-> > > > > >
-> > > > > > I find it really odd to need a gadget device to trigger host mode.
-> > > > > > This patch does fix the issue, but I am puzzled as to why it is needed
-> > > > > > in the first place. The comment above it mentions that "In OTG mode we
-> > > > > > have to wait until we loaded a gadget. We don't really need a gadget if
-> > > > > > we operate as a host but we should not start a session as a device
-> > > > > > without a gadget or else we explode.", which is apparently compatible
-> > > > > > with my use case: a gadget is not really needed and I'm not trying to
-> > > > > > start a session as a device without a gadget loaded.
-> > > > > >
-> > > > > > What do you think?
-> > > > >
-> > > > > Okay, this came down to an argument that whether we should require
-> > > > > loading a gadget driver on a dual-role port to work in host mode,
-> > > > > which is currently required on musb since a long long time ago.
-> > > > >
-> > > > > I understand the requirement is kinda unnecessary, but since it already
-> > > > > exists on musb stack for a long time, I don't plan to change it. Because I
-> > > > > cannot think of a use case in real products that doesn't automatically
-> > > > > load a gadget function on the dual-role port.
-> > > > >
-> > > > > If you can explain a use case in real world (not a engineering lab) that
-> > > > > the gadget driver will not be loaded at linux booting up, but later
-> > > > > based on user's input, I will reconsider my decision. To remove this
-> > > > > requirement from musb stack, the work is more than this patch.
-> > > >
-> > > > I have one for you: we're working on a device that boots pretty fast,
-> > > > and therefore are pushing as much things as we can to modules. It
-> > > > includes gadgets, the musb driver and glue, etc. That doesn't sound
-> > > > way very different from what a generic distro would do as well.
-> > > >
-> > > > At boot, the various modules for the hardware are loaded
-> > > > automatically: the musb glue, the musb core, our USB PHY, etc. We end
-> > > > up in a situation where the musb driver is loaded and reported to work
-> > > > properly. The USB cable to the OTG port (in peripheral) might or might
-> > > > not be connected, it's kind of irrelevant.
-> > > >
-> > > > The gadgets, however, are not loaded automatically.
-> > > >
-> > > > Now comes a user that wants to use musb as a host, and connect a
-> > > > proper USB adapter, that wires the ID pin properly. In our case, the
-> > > > phy detects it, reports the mode change, and .... nothing.
-> > > >
-> > > > That doesn't really look like an engineering lab setup to me.
-> > >
-> > > I agree, that sounds like a valid setup.
-> > >
-> > > Also realize that Android is pushing to have all drivers as modules, so
-> > > you will start to see a whole lot more devices out there be modular
-> > > instead of statically built kernels.  So issues like this are good to
-> > > resolve :)
-> >
-> > This issue here is not related to building all drivers as modules. Today
-> > we already have all musb related drivers including gadget drivers in
-> > modules.
-> >
-> > The issue discussed here is that when musb is configured in dual-role
-> > mode (dr_mode = 'otg' in dts), a gadget driver has to be bound to the
-> > udc to make musb working in host mode.
-> >
-> > I never disagree it is not ideal, but I consider it is minor - since the
-> > port is configured to dual-role mode, it is intended to work in
-> > peripheral mode, then why not automatically load the gadget driver when
-> > linux boots up.
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Again, think about an embedded product, if dr_mode is 'otg' which
-indicates the peripheral mode will be used at some point, when and how
-to load the gadget driver if it is not loaded automatically when Linux
-boots up? the end user doesn't have access to the console.
+This series adds cpufreq-dt operating points for da850 boards supported
+with device tree (da850-lcdk, da850-lego-ev3, da850-evm) and also
+includes a fix for the da850-evm boardfile which checks an unset variable
+to determine the highest available frequency for cpufreq.
 
-> Because no other controller requires it and therefore it's not
-> standard and violates the principle of least surprise?
+Last patch enables CPUFREQ_DT in davinci_all_defconfig.
 
-I know no other controller does this, but this doesn't mean it is not
-standard.
+v1 -> v2:
+- use the VDCDC3_1.2V regulator as cpu-supply on da850-evm
 
-> And even without taking this into account, there's also the fact that
-> while the *hardware* can do dual role, the software might decide
-> otherwise. If I don't want to have support for any gadget (at all) in
-> the end system, then why should I be forced to compile and load
-> something I don't even want to use in the first place?
+Bartosz Golaszewski (2):
+  ARM: davinci: fix cpufreq registration on da850-evm
+  ARM: dts: da850-evm: enable cpufreq
 
-then dr_mode should be set to 'host' instead, you don't have to load a
-gadget if peripheral mode will never be used.
+David Lechner (2):
+  ARM: dts: da850: add cpu node and operating points to DT
+  ARM: davinci_all_defconfig: Enable CPUFREQ_DT
 
-> The same story goes with cold booting with a device plugged in, and
-> therefore acting as a host from the very beginning. It will never ever
-> be configured as a peripheral, even though you might have loaded a
-> module.
+ arch/arm/boot/dts/da850-evm.dts         | 12 ++++++
+ arch/arm/boot/dts/da850-lcdk.dts        | 31 ++++++++++++++
+ arch/arm/boot/dts/da850-lego-ev3.dts    | 30 +++++++++++++
+ arch/arm/boot/dts/da850.dtsi            | 56 +++++++++++++++++++++++++
+ arch/arm/configs/davinci_all_defconfig  |  1 +
+ arch/arm/mach-davinci/board-da850-evm.c | 12 +-----
+ 6 files changed, 131 insertions(+), 11 deletions(-)
 
-I don't understand the problem in this case - will the device ever be
-removed? will the port ever be used in peripheral mode? If so, the
-gadget driver will be needed. If not, dr_mode should be 'host' then a
-gadget driver is not needed.
+-- 
+2.20.1
 
-> > To summaries my comments on this again, since it is minor in my opinion,
-> > I won't spend time to solve it myself (in a near future), but I am more
-> > than happy to review and take any patch which solve it.
-> 
-> Paul provided a patch that started this discussion. You mentionned
-> that it's not enough and other parts should be missing. What are
-> those?
-
-The previous discussion has been a while ago, but I reviewd the thread
-again, at least I mentioned musb_start() will be called twice with this
-patch, first by this patch, then when a gadget driver is bound.
-
-Regards,
--Bin.
