@@ -2,157 +2,123 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D5ADC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 06:31:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DF48C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 06:32:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F717218FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 06:31:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BBD8218FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 06:32:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="vp397Vb/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727789AbfCVGba (ORCPT
+        id S1727827AbfCVGcC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 02:31:30 -0400
-Received: from orcrist.hmeau.com ([104.223.48.154]:44096 "EHLO
-        deadmen.hmeau.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726029AbfCVGb2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 02:31:28 -0400
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1h7DgU-0002YL-CL; Fri, 22 Mar 2019 14:29:42 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1h7DgU-0001Hl-4u; Fri, 22 Mar 2019 14:29:42 +0800
-Subject: [PATCH 5/17] zinc: Add x86 accelerated ChaCha20
-References: <20190322062740.nrwfx2rvmt7lzotj@gondor.apana.org.au>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        linux-fscrypt@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Paul Crowley <paulcrowley@google.com>,
-        Greg Kaiser <gkaiser@google.com>,
-        Samuel Neves <samuel.c.p.neves@gmail.com>,
-        Tomer Ashur <tomer.ashur@esat.kuleuven.be>,
-        Martin Willi <martin@strongswan.org>
-Message-Id: <E1h7DgU-0001Hl-4u@gondobar>
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-Date:   Fri, 22 Mar 2019 14:29:42 +0800
+        Fri, 22 Mar 2019 02:32:02 -0400
+Received: from mail-eopbgr140044.outbound.protection.outlook.com ([40.107.14.44]:5379
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727518AbfCVGcB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 02:32:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FdN07wChgTV2VUDg+CZztCwB7OX6L4SdVvnPV8MJcWI=;
+ b=vp397Vb/MXtJjapi//HqmbSgh1YU1Sp8sMYmYyarj+vTR+7Lev62tg9y2QM7UDuxT1Xjc8z5jM/JZthxuy6ApFg9x/ebgd91bWCtmHMxisNswlLuzhMZItSAhyF397/iTiAyclYDganiu80pcnECKdlMnQjGHzekRLU8brlBN2w=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3882.eurprd04.prod.outlook.com (52.134.72.33) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1709.14; Fri, 22 Mar 2019 06:31:57 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::f1b4:a1fb:cfd1:3f08]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::f1b4:a1fb:cfd1:3f08%7]) with mapi id 15.20.1730.013; Fri, 22 Mar 2019
+ 06:31:57 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: [PATCH] ARM: dts: imx7ulp: add ocotp support
+Thread-Topic: [PATCH] ARM: dts: imx7ulp: add ocotp support
+Thread-Index: AQHU4HjyY7OiCgqW6ka54y6RfIEkRw==
+Date:   Fri, 22 Mar 2019 06:31:56 +0000
+Message-ID: <1553236008-28407-1-git-send-email-Anson.Huang@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.7.4
+x-clientproxiedby: HK2PR0401CA0017.apcprd04.prod.outlook.com
+ (2603:1096:202:2::27) To DB3PR0402MB3916.eurprd04.prod.outlook.com
+ (2603:10a6:8:10::18)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.67]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a74c017a-e39f-4640-b9d8-08d6ae901490
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600127)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:DB3PR0402MB3882;
+x-ms-traffictypediagnostic: DB3PR0402MB3882:
+x-microsoft-antispam-prvs: <DB3PR0402MB38826E803C2B5E04BF685E89F5430@DB3PR0402MB3882.eurprd04.prod.outlook.com>
+x-forefront-prvs: 09840A4839
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(136003)(346002)(366004)(396003)(39860400002)(189003)(199004)(476003)(2906002)(106356001)(105586002)(2501003)(110136005)(25786009)(256004)(71190400001)(71200400001)(14454004)(4326008)(478600001)(97736004)(36756003)(316002)(6116002)(3846002)(6436002)(53936002)(81166006)(81156014)(8676002)(7736002)(6512007)(68736007)(2201001)(305945005)(86362001)(6486002)(66066001)(99286004)(4744005)(52116002)(5660300002)(26005)(8936002)(50226002)(386003)(102836004)(6506007)(186003)(486006)(2616005);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3882;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 1KvVUSlPSKlMlFCOzrDOiSKQLDKwdes69UE6mfuWS7DkPAnasMsI4ap+Z13TB+1Yj1tkpMQnRwPqqWFLnFRzIyqOhWmZ/5nBf4Er95uQt2QKPJdEqA8IFxdcuvSEgvoGAGZyCQ1x0/kGMXhiXsvotPrlj/81+D7hVFtgd+fA0YF0rnsipwamrgx4ZFSjQkN6WKN8+BwKjjbNPvqMZWQ+YnIUIdFpy9nSBTKaHXfDng0L1ElabkUmG9iwM9iCvwIXkfEOcqj1jUIki4rq0mNcdZLEA+zNzQBGDPus11dThyWMQs1IM+d6vkiMg371JQq8MoFKToLQyJJzNj7iou6UAOnv1Pj8zQVn1k2dA4Q4Zb77JX6YddR8peU5OfIR/AwZC6709WBPqZZCTQglfdVxo6NabMqNwA4cUTTCCtXRPx8=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a74c017a-e39f-4640-b9d8-08d6ae901490
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Mar 2019 06:31:56.9791
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3882
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch exposes the crypto API x86 chacha20 implementation through
-zinc.
+Add i.MX7ULP OCOTP support, its clock source is from
+M4 BUS clock which is NOT available in Linux clock tree,
+but M4 BUS clock is always ON when A7 (Linux) is alive,
+so just use dummy clock here.
 
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
+ arch/arm/boot/dts/imx7ulp.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
- lib/zinc/Kconfig                         |    1 
- lib/zinc/chacha20/chacha20-x86_64-glue.c |   55 +++++++++++++++++++++++++++++++
- lib/zinc/chacha20/chacha20.c             |    4 ++
- 3 files changed, 60 insertions(+)
+diff --git a/arch/arm/boot/dts/imx7ulp.dtsi b/arch/arm/boot/dts/imx7ulp.dts=
+i
+index eb349fd..d6b7110 100644
+--- a/arch/arm/boot/dts/imx7ulp.dtsi
++++ b/arch/arm/boot/dts/imx7ulp.dtsi
+@@ -365,5 +365,11 @@
+ 			compatible =3D "fsl,imx7ulp-sim", "syscon";
+ 			reg =3D <0x410a3000 0x1000>;
+ 		};
++
++		ocotp: ocotp-ctrl@410a6000 {
++			compatible =3D "fsl,imx7ulp-ocotp", "syscon";
++			reg =3D <0x410a6000 0x4000>;
++			clocks =3D <&scg1 IMX7ULP_CLK_DUMMY>;
++		};
+ 	};
+ };
+--=20
+2.7.4
 
-diff --git a/lib/zinc/Kconfig b/lib/zinc/Kconfig
-index 1fffd0a1a74c..010547fa6c9d 100644
---- a/lib/zinc/Kconfig
-+++ b/lib/zinc/Kconfig
-@@ -1,6 +1,7 @@
- config ZINC_CHACHA20
- 	tristate
- 	select CRYPTO_CHACHA20
-+	select CRYPTO_CHACHA20_X86_64 if ZINC_ARCH_X86_64
- 
- config ZINC_SELFTEST
- 	bool "Zinc cryptography library self-tests"
-diff --git a/lib/zinc/chacha20/chacha20-x86_64-glue.c b/lib/zinc/chacha20/chacha20-x86_64-glue.c
-new file mode 100644
-index 000000000000..e0b387b09c04
---- /dev/null
-+++ b/lib/zinc/chacha20/chacha20-x86_64-glue.c
-@@ -0,0 +1,55 @@
-+// SPDX-License-Identifier: GPL-2.0 OR MIT
-+/*
-+ * Copyright (C) 2015-2018 Jason A. Donenfeld <Jason@zx2c4.com>. All Rights Reserved.
-+ */
-+
-+#include <asm/fpu/api.h>
-+#include <asm/cpufeature.h>
-+#include <asm/processor.h>
-+#include <asm/intel-family.h>
-+#include <crypto/chacha.h>
-+
-+static bool chacha20_use_ssse3 __ro_after_init;
-+static bool *const chacha20_nobs[] __initconst = {
-+	&chacha20_use_ssse3 };
-+
-+static void __init chacha20_fpu_init(void)
-+{
-+	chacha20_use_ssse3 = boot_cpu_has(X86_FEATURE_SSSE3);
-+}
-+
-+static inline bool chacha20_arch(struct chacha20_ctx *ctx, u8 *dst,
-+				 const u8 *src, size_t len,
-+				 simd_context_t *simd_context)
-+{
-+	/* SIMD disables preemption, so relax after processing each page. */
-+	BUILD_BUG_ON(PAGE_SIZE < CHACHA20_BLOCK_SIZE ||
-+		     PAGE_SIZE % CHACHA20_BLOCK_SIZE);
-+
-+	if (!IS_ENABLED(CONFIG_AS_SSSE3) || !chacha20_use_ssse3 ||
-+	    len <= CHACHA20_BLOCK_SIZE || !simd_use(simd_context))
-+		return false;
-+
-+	for (;;) {
-+		const size_t bytes = min_t(size_t, len, PAGE_SIZE);
-+
-+		crypto_chacha_dosimd(ctx->state, dst, src, bytes, 20);
-+
-+		len -= bytes;
-+		if (!len)
-+			break;
-+		dst += bytes;
-+		src += bytes;
-+		simd_relax(simd_context);
-+	}
-+
-+	return true;
-+}
-+
-+static inline bool hchacha20_arch(u32 derived_key[CHACHA20_KEY_WORDS],
-+				  const u8 nonce[HCHACHA20_NONCE_SIZE],
-+				  const u8 key[HCHACHA20_KEY_SIZE],
-+				  simd_context_t *simd_context)
-+{
-+	return false;
-+}
-diff --git a/lib/zinc/chacha20/chacha20.c b/lib/zinc/chacha20/chacha20.c
-index cfbdaf4384dc..c84fe504623f 100644
---- a/lib/zinc/chacha20/chacha20.c
-+++ b/lib/zinc/chacha20/chacha20.c
-@@ -17,6 +17,9 @@
- #include <crypto/algapi.h> // For crypto_xor_cpy.
- #include <crypto/chacha.h>
- 
-+#if defined(CONFIG_ZINC_ARCH_X86_64)
-+#include "chacha20-x86_64-glue.c"
-+#else
- static bool *const chacha20_nobs[] __initconst = { };
- static void __init chacha20_fpu_init(void)
- {
-@@ -34,6 +37,7 @@ static inline bool hchacha20_arch(u32 derived_key[CHACHA20_KEY_WORDS],
- {
- 	return false;
- }
-+#endif
- 
- void chacha20(struct chacha20_ctx *ctx, u8 *dst, const u8 *src, u32 len,
- 	      simd_context_t *simd_context)
