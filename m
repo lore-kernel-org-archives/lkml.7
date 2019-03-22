@@ -2,54 +2,53 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55631C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:20:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B23DCC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:20:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 259C1218D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:20:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 827D221925
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:20:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553253648;
-	bh=DtmfFXYYkAq17Iy4vcjWWktpZw1yD0gCJggTf0hk7+s=;
+	s=default; t=1553253651;
+	bh=DOPzwMYxU8EIVFdE8Gl2qZibhWS1Nrx0t8aJIxodI8o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K4+plJwpjMqxrKozNE332+V9ME1wNW/1LfO/QTn5JY+N+yf0UDf3MmW5+kbLiNPxt
-	 8Nb7a5f8l85GVMRodL/VB+2c0l/X+H+1SPMNRbKNa1nwemZB/+zXaMrnS3ik47G+Hy
-	 xYUzbmBAP620bTbxwco7VGiTn4D/sd3OIxck3N/E=
+	b=w2y+OwVrkNtQugFTofve4heRdO8Kx2nF6sjzSjlBk+YMfu9dg/hJkJVkBarqXJTb1
+	 u3VsksF5ezkGYvYpIPPysEsg4pSPAiqZ2dQ2cpSgTvAK8FZQkag7iQaDX5bcg1MyEH
+	 vYrmhqMcgju/KA3F4DQRjYYq5U6JbNZHXg3lelcg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728447AbfCVLUq (ORCPT
+        id S1728462AbfCVLUu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:20:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47082 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:20:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47136 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728427AbfCVLUm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:20:42 -0400
+        id S1728435AbfCVLUp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:20:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 394E92196F;
-        Fri, 22 Mar 2019 11:20:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C9EC2192D;
+        Fri, 22 Mar 2019 11:20:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553253641;
-        bh=DtmfFXYYkAq17Iy4vcjWWktpZw1yD0gCJggTf0hk7+s=;
+        s=default; t=1553253644;
+        bh=DOPzwMYxU8EIVFdE8Gl2qZibhWS1Nrx0t8aJIxodI8o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X5Mhc90xBki9XPXgJgKy9E7wAbVK00FHeEjW3HoPIO44AbHS3U9dSRKkdMqp40pkt
-         DLfYQa63Jm9eFXiLqRxt1hliWD/b4ycEsPH/tN7hljCiEoQTyOcaXRiXJrSyLsCfaY
-         POu/Q2RwM8M1UltW/1fuwPTDKyv0zgbvWlj0jWEM=
+        b=LlcgaVzSmJG0xgFF4Q4EikyD5C6JMAWSdpIGbNHjCrDkbD9TUr1aqfY67WWa4M80H
+         bZKuBcb1P9fotA5+DiblE1XWOzjHX8o1rElgBCO6TebWHtHkIoum6M/HEd/W6qwM/d
+         OEUJ9gwlkwrYJEIfW8R/0IubMb1PDIWq+U5xSmuM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+ec24e95ea483de0a24da@syzkaller.appspotmail.com,
-        Eric Biggers <ebiggers@google.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <james.morris@microsoft.com>
-Subject: [PATCH 3.18 019/134] KEYS: always initialize keyring_index_key::desc_len
-Date:   Fri, 22 Mar 2019 12:13:52 +0100
-Message-Id: <20190322111211.314409481@linuxfoundation.org>
+        stable@vger.kernel.org, Rander Wang <rander.wang@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 3.18 028/134] ASoC: Intel: Haswell/Broadwell: fix setting for .dynamic field
+Date:   Fri, 22 Mar 2019 12:14:01 +0100
+Message-Id: <20190322111211.822040130@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111210.465931067@linuxfoundation.org>
 References: <20190322111210.465931067@linuxfoundation.org>
@@ -68,105 +67,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Eric Biggers <ebiggers@google.com>
+[ Upstream commit 906a9abc5de73c383af518f5a806f4be2993a0c7 ]
 
-commit ede0fa98a900e657d1fcd80b50920efc896c1a4c upstream.
+For some reason this field was set to zero when all other drivers use
+.dynamic = 1 for front-ends. This change was tested on Dell XPS13 and
+has no impact with the existing legacy driver. The SOF driver also works
+with this change which enables it to override the fixed topology.
 
-syzbot hit the 'BUG_ON(index_key->desc_len == 0);' in __key_link_begin()
-called from construct_alloc_key() during sys_request_key(), because the
-length of the key description was never calculated.
-
-The problem is that we rely on ->desc_len being initialized by
-search_process_keyrings(), specifically by search_nested_keyrings().
-But, if the process isn't subscribed to any keyrings that never happens.
-
-Fix it by always initializing keyring_index_key::desc_len as soon as the
-description is set, like we already do in some places.
-
-The following program reproduces the BUG_ON() when it's run as root and
-no session keyring has been installed.  If it doesn't work, try removing
-pam_keyinit.so from /etc/pam.d/login and rebooting.
-
-    #include <stdlib.h>
-    #include <unistd.h>
-    #include <keyutils.h>
-
-    int main(void)
-    {
-            int id = add_key("keyring", "syz", NULL, 0, KEY_SPEC_USER_KEYRING);
-
-            keyctl_setperm(id, KEY_OTH_WRITE);
-            setreuid(5000, 5000);
-            request_key("user", "desc", "", id);
-    }
-
-Reported-by: syzbot+ec24e95ea483de0a24da@syzkaller.appspotmail.com
-Fixes: b2a4df200d57 ("KEYS: Expand the capacity of a keyring")
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: James Morris <james.morris@microsoft.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Rander Wang <rander.wang@linux.intel.com>
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/keys/keyring.c          |    4 +---
- security/keys/proc.c             |    3 +--
- security/keys/request_key.c      |    1 +
- security/keys/request_key_auth.c |    2 +-
- 4 files changed, 4 insertions(+), 6 deletions(-)
+ sound/soc/intel/broadwell.c | 2 +-
+ sound/soc/intel/haswell.c   | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
---- a/security/keys/keyring.c
-+++ b/security/keys/keyring.c
-@@ -628,9 +628,6 @@ static bool search_nested_keyrings(struc
- 	BUG_ON((ctx->flags & STATE_CHECKS) == 0 ||
- 	       (ctx->flags & STATE_CHECKS) == STATE_CHECKS);
- 
--	if (ctx->index_key.description)
--		ctx->index_key.desc_len = strlen(ctx->index_key.description);
--
- 	/* Check to see if this top-level keyring is what we are looking for
- 	 * and whether it is valid or not.
- 	 */
-@@ -888,6 +885,7 @@ key_ref_t keyring_search(key_ref_t keyri
- 	struct keyring_search_context ctx = {
- 		.index_key.type		= type,
- 		.index_key.description	= description,
-+		.index_key.desc_len	= strlen(description),
- 		.cred			= current_cred(),
- 		.match_data.cmp		= key_default_cmp,
- 		.match_data.raw_data	= description,
---- a/security/keys/proc.c
-+++ b/security/keys/proc.c
-@@ -191,8 +191,7 @@ static int proc_keys_show(struct seq_fil
- 	int rc;
- 
- 	struct keyring_search_context ctx = {
--		.index_key.type		= key->type,
--		.index_key.description	= key->description,
-+		.index_key		= key->index_key,
- 		.cred			= current_cred(),
- 		.match_data.cmp		= lookup_user_key_possessed,
- 		.match_data.raw_data	= key,
---- a/security/keys/request_key.c
-+++ b/security/keys/request_key.c
-@@ -544,6 +544,7 @@ struct key *request_key_and_link(struct
- 	struct keyring_search_context ctx = {
- 		.index_key.type		= type,
- 		.index_key.description	= description,
-+		.index_key.desc_len	= strlen(description),
- 		.cred			= current_cred(),
- 		.match_data.cmp		= key_default_cmp,
- 		.match_data.raw_data	= description,
---- a/security/keys/request_key_auth.c
-+++ b/security/keys/request_key_auth.c
-@@ -254,7 +254,7 @@ struct key *key_get_instantiation_authke
- 	struct key *authkey;
- 	key_ref_t authkey_ref;
- 
--	sprintf(description, "%x", target_id);
-+	ctx.index_key.desc_len = sprintf(description, "%x", target_id);
- 
- 	authkey_ref = search_process_keyrings(&ctx);
- 
+diff --git a/sound/soc/intel/broadwell.c b/sound/soc/intel/broadwell.c
+index 0e550f14028f1..4aba2286a5aba 100644
+--- a/sound/soc/intel/broadwell.c
++++ b/sound/soc/intel/broadwell.c
+@@ -168,7 +168,7 @@ static struct snd_soc_dai_link broadwell_rt286_dais[] = {
+ 		.stream_name = "Loopback",
+ 		.cpu_dai_name = "Loopback Pin",
+ 		.platform_name = "haswell-pcm-audio",
+-		.dynamic = 0,
++		.dynamic = 1,
+ 		.codec_name = "snd-soc-dummy",
+ 		.codec_dai_name = "snd-soc-dummy-dai",
+ 		.trigger = {SND_SOC_DPCM_TRIGGER_POST, SND_SOC_DPCM_TRIGGER_POST},
+diff --git a/sound/soc/intel/haswell.c b/sound/soc/intel/haswell.c
+index 3981982674ac9..0efd574d37706 100644
+--- a/sound/soc/intel/haswell.c
++++ b/sound/soc/intel/haswell.c
+@@ -146,7 +146,7 @@ static struct snd_soc_dai_link haswell_rt5640_dais[] = {
+ 		.stream_name = "Loopback",
+ 		.cpu_dai_name = "Loopback Pin",
+ 		.platform_name = "haswell-pcm-audio",
+-		.dynamic = 0,
++		.dynamic = 1,
+ 		.codec_name = "snd-soc-dummy",
+ 		.codec_dai_name = "snd-soc-dummy-dai",
+ 		.trigger = {SND_SOC_DPCM_TRIGGER_POST, SND_SOC_DPCM_TRIGGER_POST},
+-- 
+2.19.1
+
 
 
