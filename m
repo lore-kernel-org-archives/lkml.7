@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B176BC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:31:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 291E1C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:31:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 809A021925
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:31:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECB0421917
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:31:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254301;
-	bh=hbTjLCI2mYtMwMdjNK5FKPOvsEzmNL2FGJAFw4d8oIU=;
+	s=default; t=1553254306;
+	bh=00m6Th+xVNpBz8NYUNvdaj9ZQqwQqsEJqnvonCEZ0/A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Dpsw5bLGURo2McW3IAz3LzandFRg9lkNh2PXuFnk3cbHqRG8jLG/3MywApbai7yUo
-	 Fqy1VYQFApRbnVti1+SCWZ1qBDEdwlVOXXmQsv1M1n45I5bkmzRhdqAhdWt35tMYGM
-	 x40XkmOoeM+BeZUGzdbPfdRoZGLIb9AMyISNV9f4=
+	b=0fdG8WSatS0ljjznaSf0+RfL6RkXaki9mZrZDww1nup0Ao3IrhaUZmZ1svP5EWbuB
+	 bleY2pzLLIx7zXlAcZmeDZQeAiIRY5VLYCdgbvFwhfz09TQ/LYnzTyQ1lZigNirnf+
+	 hQlqM2q/SzPM11kUmBArZHP7uoYTaQAeFhrfQwO8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730061AbfCVLbk (ORCPT
+        id S1729855AbfCVLbo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:31:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59790 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:31:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57628 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730047AbfCVLbf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:31:35 -0400
+        id S1729861AbfCVL3o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:29:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1DB10218B0;
-        Fri, 22 Mar 2019 11:31:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88B1C2183E;
+        Fri, 22 Mar 2019 11:29:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254294;
-        bh=hbTjLCI2mYtMwMdjNK5FKPOvsEzmNL2FGJAFw4d8oIU=;
+        s=default; t=1553254184;
+        bh=00m6Th+xVNpBz8NYUNvdaj9ZQqwQqsEJqnvonCEZ0/A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BzYatSAxhQm/Iy87JUf+fysApHhvd8w7HSqxz5vTOalSbxC4bo+PIVhIuiFD156u6
-         +UNSVlmwi4kmYGmAVPkde4ZRZuQWUSiO82DyNHnIgPxC5q5bfyExc/AeUBfHcxTraa
-         tkHn2lkuJ5s0x2UyARKGqAaI2hSLVfkPl6W6NeNM=
+        b=u2g2w6TZCp9EHSYWvlKC+hgNjc6OhrQZ5aB8caxWWriBpIdYLlcaclVCcl3binT0a
+         AdkpCfcG64zwUAGcDzfFko+0Uxi2lZyRIrrAfJk0s3tS7V5TmQeRECl7vhyklSGSjo
+         vV72YK1Khpa8HUrEj3dzluzS9jJ+iZ8dWzFfZ6Qo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yonglong Liu <liuyonglong@huawei.com>,
-        Peng Li <lipeng321@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        Tomonori Sakita <tomonori.sakita@sord.co.jp>,
+        Atsushi Nemoto <atsushi.nemoto@sord.co.jp>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 091/230] net: hns: Fix wrong read accesses via Clause 45 MDIO protocol
-Date:   Fri, 22 Mar 2019 12:13:49 +0100
-Message-Id: <20190322111243.004266025@linuxfoundation.org>
+Subject: [PATCH 4.4 042/230] serial: fsl_lpuart: fix maximum acceptable baud rate with over-sampling
+Date:   Fri, 22 Mar 2019 12:13:00 +0100
+Message-Id: <20190322111239.659370778@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -67,33 +67,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit cec8abba13e6a26729dfed41019720068eeeff2b ]
+[ Upstream commit 815d835b7ba46685c316b000013367dacb2b461b ]
 
-When reading phy registers via Clause 45 MDIO protocol, after write
-address operation, the driver use another write address operation, so
-can not read the right value of any phy registers. This patch fixes it.
+Using over-sampling ratio, lpuart can accept baud rate upto uartclk / 4.
 
-Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Tomonori Sakita <tomonori.sakita@sord.co.jp>
+Signed-off-by: Atsushi Nemoto <atsushi.nemoto@sord.co.jp>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns_mdio.c | 2 +-
+ drivers/tty/serial/fsl_lpuart.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns_mdio.c b/drivers/net/ethernet/hisilicon/hns_mdio.c
-index 37491c85bc42..6ff13c559e52 100644
---- a/drivers/net/ethernet/hisilicon/hns_mdio.c
-+++ b/drivers/net/ethernet/hisilicon/hns_mdio.c
-@@ -319,7 +319,7 @@ static int hns_mdio_read(struct mii_bus *bus, int phy_id, int regnum)
- 		}
- 
- 		hns_mdio_cmd_write(mdio_dev, is_c45,
--				   MDIO_C45_WRITE_ADDR, phy_id, devad);
-+				   MDIO_C45_READ, phy_id, devad);
+diff --git a/drivers/tty/serial/fsl_lpuart.c b/drivers/tty/serial/fsl_lpuart.c
+index 8b5ec9386f0f4..1544a7cc76ff8 100644
+--- a/drivers/tty/serial/fsl_lpuart.c
++++ b/drivers/tty/serial/fsl_lpuart.c
+@@ -1409,7 +1409,7 @@ lpuart32_set_termios(struct uart_port *port, struct ktermios *termios,
  	}
  
- 	/* Step 5: waitting for MDIO_COMMAND_REG 's mdio_start==0,*/
+ 	/* ask the core to calculate the divisor */
+-	baud = uart_get_baud_rate(port, termios, old, 50, port->uartclk / 16);
++	baud = uart_get_baud_rate(port, termios, old, 50, port->uartclk / 4);
+ 
+ 	spin_lock_irqsave(&sport->port.lock, flags);
+ 
 -- 
 2.19.1
 
