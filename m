@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4919CC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:25:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1A49C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:25:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AA3B2054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:25:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82495218A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:25:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553257542;
-	bh=+1PYINcUFQ56bOHgp+tVwe2tJ9XzuE/XqUX17EGUyL4=;
+	s=default; t=1553257544;
+	bh=BfWoab1GxUKbYRVoo6RMhS0zjKSq+2dF9hH500xPp9A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PMdjNP+2W1T7K7iXncMgxvb3M8a/f97Xyjx841C/LZaFmVS8PV/Jzf6sVmsfAZiG6
-	 94G12op2xNrJe+XXRrTI67ipzWaxDMVP6v9Dtg2tT6vsf3KuVSLI47pDMiOfhRTsZZ
-	 qJCcEwrsGAqtdfCuI/a8ewVRIePR/xvUfYh2ouc0=
+	b=rYz8EHsNnfLur2mJ3nc6ayTZqITt8HzMuHaaUrDPmapVhYwiP7Lml+DeXZO8FZnuP
+	 mc6c+y5bgXHeK04ze4uolwNWIys83SEG1051jQMeLx3QFPoCWcz6oQFFzM278nwXux
+	 4m+3bfex95RgxTFClnsVC+aFMaQOkeFwd/GV+pRQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391160AbfCVMXq (ORCPT
+        id S2390895AbfCVMZn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:23:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35206 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:25:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390655AbfCVMXj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:23:39 -0400
+        id S2391159AbfCVMXq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:23:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95479218A1;
-        Fri, 22 Mar 2019 12:23:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 399AE2054F;
+        Fri, 22 Mar 2019 12:23:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553257419;
-        bh=+1PYINcUFQ56bOHgp+tVwe2tJ9XzuE/XqUX17EGUyL4=;
+        s=default; t=1553257425;
+        bh=BfWoab1GxUKbYRVoo6RMhS0zjKSq+2dF9hH500xPp9A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Tq5O+YLj3ro8258MaOwQIPEZqcg2wRR5LzTI0p1+FV/bxHUAKOjUadQNA8IHkLb8Z
-         N59PDEyvv2+GogK3Zj90q5tPnphO1GlcuGKp2kc7YUbmFF6KSWCQsDoXEvnqM9KuWg
-         ZxO11FKMCmu2Pu40P5bUIa4dnDqlG5a2qY4JkcBk=
+        b=qHlLo9BE7s5JuvXWRB5QUZ7z5sEuEELKV3WwHhNIi81/PfXkvXteP+U14vS/Xa6wS
+         hwQdsspneAox8sNiV6huyIpTCbkCKX7l8sdytPRJ3OagBXbsCLzkxksoY5Rlsfj8Bn
+         DLhb3lk+g/AAv2Tz4kHX+Vj0iWqYBj7lSFNEEbcw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jim Mattson <jmattson@google.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.0 225/238] KVM: VMX: Compare only a single byte for VMCS "launched" in vCPU-run
-Date:   Fri, 22 Mar 2019 12:17:24 +0100
-Message-Id: <20190322111311.621105920@linuxfoundation.org>
+        stable@vger.kernel.org, Tang Junhui <tang.junhui.linux@gmail.com>,
+        Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.0 195/238] bcache: treat stale && dirty keys as bad keys
+Date:   Fri, 22 Mar 2019 12:16:54 +0100
+Message-Id: <20190322111309.699373791@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -67,53 +65,95 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Tang Junhui <tang.junhui.linux@gmail.com>
 
-commit 61c08aa9606d4e48a8a50639c956448a720174c3 upstream.
+commit 58ac323084ebf44f8470eeb8b82660f9d0ee3689 upstream.
 
-The vCPU-run asm blob does a manual comparison of a VMCS' launched
-status to execute the correct VM-Enter instruction, i.e. VMLAUNCH vs.
-VMRESUME.  The launched flag is a bool, which is a typedef of _Bool.
-C99 does not define an exact size for _Bool, stating only that is must
-be large enough to hold '0' and '1'.  Most, if not all, compilers use
-a single byte for _Bool, including gcc[1].
+Stale && dirty keys can be produced in the follow way:
+After writeback in write_dirty_finish(), dirty keys k1 will
+replace by clean keys k2
+==>ret = bch_btree_insert(dc->disk.c, &keys, NULL, &w->key);
+==>btree_insert_fn(struct btree_op *b_op, struct btree *b)
+==>static int bch_btree_insert_node(struct btree *b,
+       struct btree_op *op,
+       struct keylist *insert_keys,
+       atomic_t *journal_ref,
+Then two steps:
+A) update k1 to k2 in btree node memory;
+   bch_btree_insert_keys(b, op, insert_keys, replace_key)
+B) Write the bset(contains k2) to cache disk by a 30s delay work
+   bch_btree_leaf_dirty(b, journal_ref).
+But before the 30s delay work write the bset to cache device,
+these things happened:
+A) GC works, and reclaim the bucket k2 point to;
+B) Allocator works, and invalidate the bucket k2 point to,
+   and increase the gen of the bucket, and place it into free_inc
+   fifo;
+C) Until now, the 30s delay work still does not finish work,
+   so in the disk, the key still is k1, it is dirty and stale
+   (its gen is smaller than the gen of the bucket). and then the
+   machine power off suddenly happens;
+D) When the machine power on again, after the btree reconstruction,
+   the stale dirty key appear.
 
-Originally, 'launched' was of type 'int' and so the asm blob used 'cmpl'
-to check the launch status.  When 'launched' was moved to be stored on a
-per-VMCS basis, struct vcpu_vmx's "temporary" __launched flag was added
-in order to avoid having to pass the current VMCS into the asm blob.
-The new  '__launched' was defined as a 'bool' and not an 'int', but the
-'cmp' instruction was not updated.
+In bch_extent_bad(), when expensive_debug_checks is off, it would
+treat the dirty key as good even it is stale keys, and it would
+cause bellow probelms:
+A) In read_dirty() it would cause machine crash:
+   BUG_ON(ptr_stale(dc->disk.c, &w->key, 0));
+B) It could be worse when reads hits stale dirty keys, it would
+   read old incorrect data.
 
-This has not caused any known problems, likely due to compilers aligning
-variables to 4-byte or 8-byte boundaries and KVM zeroing out struct
-vcpu_vmx during allocation.  I.e. vCPU-run accesses "junk" data, it just
-happens to always be zero and so doesn't affect the result.
+This patch tolerate the existence of these stale && dirty keys,
+and treat them as bad key in bch_extent_bad().
 
-[1] https://gcc.gnu.org/ml/gcc-patches/2000-10/msg01127.html
+(Coly Li: fix indent which was modified by sender's email client)
 
-Fixes: d462b8192368 ("KVM: VMX: Keep list of loaded VMCSs, instead of vcpus")
-Cc: <stable@vger.kernel.org>
-Reviewed-by: Jim Mattson <jmattson@google.com>
-Reviewed-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Tang Junhui <tang.junhui.linux@gmail.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/vmx/vmx.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/md/bcache/extents.c |   13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -6399,7 +6399,7 @@ static void __vmx_vcpu_run(struct kvm_vc
- 		"mov %%" _ASM_AX", %%cr2 \n\t"
- 		"3: \n\t"
- 		/* Check if vmlaunch or vmresume is needed */
--		"cmpl $0, %c[launched](%%" _ASM_CX ") \n\t"
-+		"cmpb $0, %c[launched](%%" _ASM_CX ") \n\t"
- 		/* Load guest registers.  Don't clobber flags. */
- 		"mov %c[rax](%%" _ASM_CX "), %%" _ASM_AX " \n\t"
- 		"mov %c[rbx](%%" _ASM_CX "), %%" _ASM_BX " \n\t"
+--- a/drivers/md/bcache/extents.c
++++ b/drivers/md/bcache/extents.c
+@@ -538,6 +538,7 @@ static bool bch_extent_bad(struct btree_
+ {
+ 	struct btree *b = container_of(bk, struct btree, keys);
+ 	unsigned int i, stale;
++	char buf[80];
+ 
+ 	if (!KEY_PTRS(k) ||
+ 	    bch_extent_invalid(bk, k))
+@@ -547,19 +548,19 @@ static bool bch_extent_bad(struct btree_
+ 		if (!ptr_available(b->c, k, i))
+ 			return true;
+ 
+-	if (!expensive_debug_checks(b->c) && KEY_DIRTY(k))
+-		return false;
+-
+ 	for (i = 0; i < KEY_PTRS(k); i++) {
+ 		stale = ptr_stale(b->c, k, i);
+ 
++		if (stale && KEY_DIRTY(k)) {
++			bch_extent_to_text(buf, sizeof(buf), k);
++			pr_info("stale dirty pointer, stale %u, key: %s",
++				stale, buf);
++		}
++
+ 		btree_bug_on(stale > BUCKET_GC_GEN_MAX, b,
+ 			     "key too stale: %i, need_gc %u",
+ 			     stale, b->c->need_gc);
+ 
+-		btree_bug_on(stale && KEY_DIRTY(k) && KEY_SIZE(k),
+-			     b, "stale dirty pointer");
+-
+ 		if (stale)
+ 			return true;
+ 
 
 
