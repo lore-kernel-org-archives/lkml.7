@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFD83C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:54:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57A3BC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:54:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FB61218FE
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:54:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28A26218FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:54:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553259261;
-	bh=wYnfzGMCqjjh7zrpw0uWw8PskoMd051QuLKgxPPCl8Y=;
+	s=default; t=1553259271;
+	bh=WXLmifJiRhfuFN8FXmqsTfunqsEOECXfNNN2sjebvmY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZZH9f1Ctq/tbze1wUvrp7wrAEZ110dI3jNKGvfl2FJEiR+yNHwiNdzb6du7WVzOTd
-	 G4217DAaCfRc1yKRem3T4PduxTn8v5Vo7kNgM1odn9sYRL1wSD/iFI+u0KK+C3w2Sk
-	 bB2sudTBP3gGl3WpvN1lDpyH+Vhh1ILmT+wmvHn8=
+	b=ITicOG4nLJVLopiQ8NZDHq8W1OAggkzSYCGqBNgRrlwYLv73x4CRidPor/W03LVZv
+	 MQEznqNTBdJYho7BXnsLRTpyMmFU17YB/3rZM3zEEKRETDgV1X5jqAhyGygwcszvCF
+	 Hhv3zrtrN7bdSOyrnVDNiUt7LEPxG+SISd/2lFd0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732965AbfCVMyU (ORCPT
+        id S1732700AbfCVLuv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:54:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54934 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:50:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732324AbfCVLvD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:51:03 -0400
+        id S1732676AbfCVLuq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:50:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6415B20693;
-        Fri, 22 Mar 2019 11:51:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0FFD22082C;
+        Fri, 22 Mar 2019 11:50:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255462;
-        bh=wYnfzGMCqjjh7zrpw0uWw8PskoMd051QuLKgxPPCl8Y=;
+        s=default; t=1553255445;
+        bh=WXLmifJiRhfuFN8FXmqsTfunqsEOECXfNNN2sjebvmY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QgREu7fudUlSutAw2s7+Y657abhRi5zOl2zIadXubDKTvEjtj//JYuVU9eIWjjL6Z
-         /qhrNEHhLpcdFrqdmwsH3BnhfRqaDhLeN0tF+kBbzC4hfimteWVmcgLvTPZy6kEiXb
-         2QKPpNKISngO6Nnw4ZzbdVf1RrZzZRwyu7uuN+NY=
+        b=x5uIgH0eBG3iGC2yOJ5LK5FDaGqWuWSIYYSsDzLBr2THxG+H0YNntUx/vZ84VCkfe
+         LvHgm1nbaJddXmI5DD3daiTw0j6iMgoWc072GgnpRhq+HLrw47KnKBAD1nmept+htG
+         fuaEnJM4/SuZwxsgJ+BsvRBnLqN5Vb+wBRlPSVgM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Shilovsky <pshilov@microsoft.com>,
-        Steve French <stfrench@microsoft.com>,
-        Ronnie Sahlberg <lsahlber@redhat.com>
-Subject: [PATCH 4.14 080/183] CIFS: Fix read after write for files with read caching
-Date:   Fri, 22 Mar 2019 12:15:08 +0100
-Message-Id: <20190322111247.524556102@linuxfoundation.org>
+        stable@vger.kernel.org, Martin Schwidefsky <schwidefsky@de.ibm.com>
+Subject: [PATCH 4.14 093/183] s390/setup: fix early warning messages
+Date:   Fri, 22 Mar 2019 12:15:21 +0100
+Message-Id: <20190322111248.454011621@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111241.819468003@linuxfoundation.org>
 References: <20190322111241.819468003@linuxfoundation.org>
@@ -66,54 +64,107 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Pavel Shilovsky <piastryyy@gmail.com>
+From: Martin Schwidefsky <schwidefsky@de.ibm.com>
 
-commit 6dfbd84684700cb58b34e8602c01c12f3d2595c8 upstream.
+commit 8727638426b0aea59d7f904ad8ddf483f9234f88 upstream.
 
-When we have a READ lease for a file and have just issued a write
-operation to the server we need to purge the cache and set oplock/lease
-level to NONE to avoid reading stale data. Currently we do that
-only if a write operation succedeed thus not covering cases when
-a request was sent to the server but a negative error code was
-returned later for some other reasons (e.g. -EIOCBQUEUED or -EINTR).
-Fix this by turning off caching regardless of the error code being
-returned.
+The setup_lowcore() function creates a new prefix page for the boot CPU.
+The PSW mask for the system_call, external interrupt, i/o interrupt and
+the program check handler have the DAT bit set in this new prefix page.
 
-The patches fixes generic tests 075 and 112 from the xfs-tests.
+At the time setup_lowcore is called the system still runs without virtual
+address translation, the paging_init() function creates the kernel page
+table and loads the CR13 with the kernel ASCE.
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Any code between setup_lowcore() and the end of paging_init() that has
+a BUG or WARN statement will create a program check that can not be
+handled correctly as there is no kernel page table yet.
+
+To allow early WARN statements initially setup the lowcore with DAT off
+and set the DAT bit only after paging_init() has completed.
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/file.c |   12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ arch/s390/kernel/setup.c |   32 +++++++++++++++++++++++---------
+ 1 file changed, 23 insertions(+), 9 deletions(-)
 
---- a/fs/cifs/file.c
-+++ b/fs/cifs/file.c
-@@ -2889,14 +2889,16 @@ cifs_strict_writev(struct kiocb *iocb, s
- 	 * these pages but not on the region from pos to ppos+len-1.
+--- a/arch/s390/kernel/setup.c
++++ b/arch/s390/kernel/setup.c
+@@ -300,7 +300,7 @@ early_param("vmalloc", parse_vmalloc);
+ 
+ void *restart_stack __section(.data);
+ 
+-static void __init setup_lowcore(void)
++static void __init setup_lowcore_dat_off(void)
+ {
+ 	struct lowcore *lc;
+ 
+@@ -311,19 +311,16 @@ static void __init setup_lowcore(void)
+ 	lc = memblock_virt_alloc_low(sizeof(*lc), sizeof(*lc));
+ 	lc->restart_psw.mask = PSW_KERNEL_BITS;
+ 	lc->restart_psw.addr = (unsigned long) restart_int_handler;
+-	lc->external_new_psw.mask = PSW_KERNEL_BITS |
+-		PSW_MASK_DAT | PSW_MASK_MCHECK;
++	lc->external_new_psw.mask = PSW_KERNEL_BITS | PSW_MASK_MCHECK;
+ 	lc->external_new_psw.addr = (unsigned long) ext_int_handler;
+ 	lc->svc_new_psw.mask = PSW_KERNEL_BITS |
+-		PSW_MASK_DAT | PSW_MASK_IO | PSW_MASK_EXT | PSW_MASK_MCHECK;
++		PSW_MASK_IO | PSW_MASK_EXT | PSW_MASK_MCHECK;
+ 	lc->svc_new_psw.addr = (unsigned long) system_call;
+-	lc->program_new_psw.mask = PSW_KERNEL_BITS |
+-		PSW_MASK_DAT | PSW_MASK_MCHECK;
++	lc->program_new_psw.mask = PSW_KERNEL_BITS | PSW_MASK_MCHECK;
+ 	lc->program_new_psw.addr = (unsigned long) pgm_check_handler;
+ 	lc->mcck_new_psw.mask = PSW_KERNEL_BITS;
+ 	lc->mcck_new_psw.addr = (unsigned long) mcck_int_handler;
+-	lc->io_new_psw.mask = PSW_KERNEL_BITS |
+-		PSW_MASK_DAT | PSW_MASK_MCHECK;
++	lc->io_new_psw.mask = PSW_KERNEL_BITS | PSW_MASK_MCHECK;
+ 	lc->io_new_psw.addr = (unsigned long) io_int_handler;
+ 	lc->clock_comparator = clock_comparator_max;
+ 	lc->kernel_stack = ((unsigned long) &init_thread_union)
+@@ -391,6 +388,17 @@ static void __init setup_lowcore(void)
+ 	lowcore_ptr[0] = lc;
+ }
+ 
++static void __init setup_lowcore_dat_on(void)
++{
++	struct lowcore *lc;
++
++	lc = lowcore_ptr[0];
++	lc->external_new_psw.mask |= PSW_MASK_DAT;
++	lc->svc_new_psw.mask |= PSW_MASK_DAT;
++	lc->program_new_psw.mask |= PSW_MASK_DAT;
++	lc->io_new_psw.mask |= PSW_MASK_DAT;
++}
++
+ static struct resource code_resource = {
+ 	.name  = "Kernel code",
+ 	.flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM,
+@@ -948,7 +956,7 @@ void __init setup_arch(char **cmdline_p)
+ #endif
+ 
+ 	setup_resources();
+-	setup_lowcore();
++	setup_lowcore_dat_off();
+ 	smp_fill_possible_mask();
+ 	cpu_detect_mhz_feature();
+         cpu_init();
+@@ -961,6 +969,12 @@ void __init setup_arch(char **cmdline_p)
  	 */
- 	written = cifs_user_writev(iocb, from);
--	if (written > 0 && CIFS_CACHE_READ(cinode)) {
-+	if (CIFS_CACHE_READ(cinode)) {
- 		/*
--		 * Windows 7 server can delay breaking level2 oplock if a write
--		 * request comes - break it on the client to prevent reading
--		 * an old data.
-+		 * We have read level caching and we have just sent a write
-+		 * request to the server thus making data in the cache stale.
-+		 * Zap the cache and set oplock/lease level to NONE to avoid
-+		 * reading stale data from the cache. All subsequent read
-+		 * operations will read new data from the server.
- 		 */
- 		cifs_zap_mapping(inode);
--		cifs_dbg(FYI, "Set no oplock for inode=%p after a write operation\n",
-+		cifs_dbg(FYI, "Set Oplock/Lease to NONE for inode=%p after write\n",
- 			 inode);
- 		cinode->oplock = 0;
- 	}
+         paging_init();
+ 
++	/*
++	 * After paging_init created the kernel page table, the new PSWs
++	 * in lowcore can now run with DAT enabled.
++	 */
++	setup_lowcore_dat_on();
++
+         /* Setup default console */
+ 	conmode_default();
+ 	set_preferred_console();
 
 
