@@ -2,145 +2,493 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86BF2C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 23:44:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3D91C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 23:48:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4908F2175B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 23:44:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8886E2175B
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 23:48:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="EQiiCmOH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727267AbfCVXoX (ORCPT
+        id S1728045AbfCVXsY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 19:44:23 -0400
-Received: from mga04.intel.com ([192.55.52.120]:38251 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725999AbfCVXoX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 19:44:23 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Mar 2019 16:44:23 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,256,1549958400"; 
-   d="scan'208";a="154343226"
-Received: from schen9-desk.jf.intel.com (HELO [10.54.74.162]) ([10.54.74.162])
-  by fmsmga002.fm.intel.com with ESMTP; 22 Mar 2019 16:44:22 -0700
-Subject: Re: [RFC][PATCH 03/16] sched: Wrap rq::lock access
-From:   Tim Chen <tim.c.chen@linux.intel.com>
-To:     Subhra Mazumdar <subhra.mazumdar@oracle.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>, mingo@kernel.org,
-        tglx@linutronix.de, pjt@google.com, torvalds@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, fweisbec@gmail.com,
-        keescook@chromium.org, kerrnel@google.com,
-        Vineeth Pillai <vpillai@digitalocean.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Aubrey <aubrey.li@intel.com>
-References: <20190218173514.064516553@infradead.org>
- <1552923710-30933-1-git-send-email-jdesfossez@digitalocean.com>
- <15f3f7e6-5dce-6bbf-30af-7cffbd7bb0c3@oracle.com>
- <69e2eea0-51de-bdcd-cdda-ce5cd841786d@linux.intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=tim.c.chen@linux.intel.com; prefer-encrypt=mutual; keydata=
- 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
- l50q2K/r651xphs7CGEdKi1nU0YJVbQxJQ==
-Message-ID: <64164f69-8031-22b1-7924-28037d661fcd@linux.intel.com>
-Date:   Fri, 22 Mar 2019 16:44:22 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.1
+        Fri, 22 Mar 2019 19:48:24 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:41056 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726038AbfCVXsX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 19:48:23 -0400
+Received: by mail-pg1-f194.google.com with SMTP id k11so2518596pgb.8
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 16:48:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=vHvq6U/bu2QphuZFkVgKwByLM9T8nHXPrLHdpKD4+2c=;
+        b=EQiiCmOH1/xnATb91Zenve+zm3UeDL5ZLsok2b8cJ8FfbLnw3eLAc7y9TH/dV1qi6q
+         OvxFy4ZpMUiK4nl3Tm7+a42W3WnmqJjvsVfSHcoe/4dSBnka2jIQEv6Mb67by49kj1Du
+         OWp5HPvvGKmAhWlYGkPWvF3iVAt3W7gojVLCE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=vHvq6U/bu2QphuZFkVgKwByLM9T8nHXPrLHdpKD4+2c=;
+        b=oOfzWgoqXaqQiR3QFUUespiIXbPviWUwFo96nTkmJcDGcfe9C8E9TkKVKeId+Qt4FD
+         juPsN7GaGhfgPoiZ2c7qmn6FwLveS8NWtz90LQZiwJDBccdJFIrbZ86o8HjFPLAoO4ed
+         39E+6zrG8UwZjnX2ZTWt8a3WfcTj3+l+7F4t+PysQD6z3jNSg8JmAOPclkdLHJPPDkuw
+         NgfVpVTRsw3Hw4KJGe7FzvVUedVAbq3/k+YFcN9dkrhu4/mzaO3EubcqPhZXi1UqYvWn
+         lDUsiVvfa5A89BKMwtmmL2+lK1Vv8bLVXhSfx4+VOUAz1FEJoK4Reu1Ck/T/MkRlG6/A
+         W+4A==
+X-Gm-Message-State: APjAAAWaiboXoZoTnzfbWHqde8Ac27rj8RbwsMx9+TcAevY1SMHn1/5m
+        sWqjvpN9N0l1vuwX6UF/z6tg7A==
+X-Google-Smtp-Source: APXvYqy65OcSKc+8B8gy0SABTb+pZKxhBZidWMVfysaffuzQSUSP3pQdkc3fmbnUivE8wTFZ5UCt6A==
+X-Received: by 2002:a17:902:e40a:: with SMTP id ci10mr12309212plb.77.1553298502262;
+        Fri, 22 Mar 2019 16:48:22 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id j9sm14640657pfc.67.2019.03.22.16.48.20
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 22 Mar 2019 16:48:21 -0700 (PDT)
+Date:   Fri, 22 Mar 2019 19:48:19 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        linux-kernel@vger.kernel.org,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>, tglx@linutronix.de,
+        Mike Galbraith <efault@gmx.de>
+Subject: Re: [PATCH v3] rcu: Allow to eliminate softirq processing from
+ rcutree
+Message-ID: <20190322234819.GA99360@google.com>
+References: <20190320152146.GH4102@linux.ibm.com>
+ <20190320154440.GA16332@linux.ibm.com>
+ <20190320160547.s5lbeahr2y4jlzwt@linutronix.de>
+ <20190320161500.GK4102@linux.ibm.com>
+ <20190320163532.mr32oi53iaueuizw@linutronix.de>
+ <20190320173001.GM4102@linux.ibm.com>
+ <20190320175952.yh6yfy64vaiurszw@linutronix.de>
+ <20190320181210.GO4102@linux.ibm.com>
+ <20190320181435.x3qyutwqllmq5zbk@linutronix.de>
+ <20190320211333.eq7pwxnte7la67ph@linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <69e2eea0-51de-bdcd-cdda-ce5cd841786d@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190320211333.eq7pwxnte7la67ph@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/22/19 4:28 PM, Tim Chen wrote:
-> On 3/19/19 7:29 PM, Subhra Mazumdar wrote:
->>
->> On 3/18/19 8:41 AM, Julien Desfossez wrote:
->>> The case where we try to acquire the lock on 2 runqueues belonging to 2
->>> different cores requires the rq_lockp wrapper as well otherwise we
->>> frequently deadlock in there.
->>>
->>> This fixes the crash reported in
->>> 1552577311-8218-1-git-send-email-jdesfossez@digitalocean.com
->>>
->>> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
->>> index 76fee56..71bb71f 100644
->>> --- a/kernel/sched/sched.h
->>> +++ b/kernel/sched/sched.h
->>> @@ -2078,7 +2078,7 @@ static inline void double_rq_lock(struct rq *rq1, struct rq *rq2)
->>>           raw_spin_lock(rq_lockp(rq1));
->>>           __acquire(rq2->lock);    /* Fake it out ;) */
->>>       } else {
->>> -        if (rq1 < rq2) {
->>> +        if (rq_lockp(rq1) < rq_lockp(rq2)) {
->>>               raw_spin_lock(rq_lockp(rq1));
->>>               raw_spin_lock_nested(rq_lockp(rq2), SINGLE_DEPTH_NESTING);
->>>           } else {
+On Wed, Mar 20, 2019 at 10:13:33PM +0100, Sebastian Andrzej Siewior wrote:
+> Running RCU out of softirq is a problem for some workloads that would
+> like to manage RCU core processing independently of other softirq
+> work, for example, setting kthread priority.  This commit therefore
+> introduces the `rcunosoftirq' option which moves the RCU core work
+> from softirq to a per-CPU/per-flavor SCHED_OTHER kthread named rcuc.
+> The SCHED_OTHER approach avoids the scalability problems that appeared
+> with the earlier attempt to move RCU core processing to from softirq
+> to kthreads.  That said, kernels built with RCU_BOOST=y will run the
+> rcuc kthreads at the RCU-boosting priority.
+[snip]
+> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> index 0f31b79eb6761..05a1e42fdaf10 100644
+> --- a/kernel/rcu/tree.c
+> +++ b/kernel/rcu/tree.c
+> @@ -51,6 +51,12 @@
+>  #include <linux/tick.h>
+>  #include <linux/sysrq.h>
+>  #include <linux/kprobes.h>
+> +#include <linux/gfp.h>
+> +#include <linux/oom.h>
+> +#include <linux/smpboot.h>
+> +#include <linux/jiffies.h>
+> +#include <linux/sched/isolation.h>
+> +#include "../time/tick-internal.h"
+>  
+>  #include "tree.h"
+>  #include "rcu.h"
+> @@ -92,6 +98,9 @@ struct rcu_state rcu_state = {
+>  /* Dump rcu_node combining tree at boot to verify correct setup. */
+>  static bool dump_tree;
+>  module_param(dump_tree, bool, 0444);
+> +/* Move RCU_SOFTIRQ to rcuc kthreads. */
+> +static bool use_softirq = 1;
+> +module_param(use_softirq, bool, 0444);
+>  /* Control rcu_node-tree auto-balancing at boot time. */
+>  static bool rcu_fanout_exact;
+>  module_param(rcu_fanout_exact, bool, 0444);
+> @@ -2253,7 +2262,7 @@ void rcu_force_quiescent_state(void)
+>  EXPORT_SYMBOL_GPL(rcu_force_quiescent_state);
+>  
+>  /* Perform RCU core processing work for the current CPU.  */
+> -static __latent_entropy void rcu_core(struct softirq_action *unused)
+> +static __latent_entropy void rcu_core(void)
+>  {
+>  	unsigned long flags;
+>  	struct rcu_data *rdp = raw_cpu_ptr(&rcu_data);
+> @@ -2295,6 +2304,34 @@ static __latent_entropy void rcu_core(struct softirq_action *unused)
+>  	trace_rcu_utilization(TPS("End RCU core"));
+>  }
+>  
+> +static void rcu_core_si(struct softirq_action *h)
+> +{
+> +	rcu_core();
+> +}
+> +
+> +static void rcu_wake_cond(struct task_struct *t, int status)
+> +{
+> +	/*
+> +	 * If the thread is yielding, only wake it when this
+> +	 * is invoked from idle
+> +	 */
+> +	if (t && (status != RCU_KTHREAD_YIELDING || is_idle_task(current)))
+> +		wake_up_process(t);
+> +}
+> +
+> +static void invoke_rcu_core_kthread(void)
+> +{
+> +	struct task_struct *t;
+> +	unsigned long flags;
+> +
+> +	local_irq_save(flags);
+> +	__this_cpu_write(rcu_data.rcu_cpu_has_work, 1);
+> +	t = __this_cpu_read(rcu_data.rcu_cpu_kthread_task);
+> +	if (t != NULL && t != current)
+> +		rcu_wake_cond(t, __this_cpu_read(rcu_data.rcu_cpu_kthread_status));
+> +	local_irq_restore(flags);
+> +}
+> +
+>  /*
+>   * Schedule RCU callback invocation.  If the running implementation of RCU
+>   * does not support RCU priority boosting, just do a direct call, otherwise
+> @@ -2306,19 +2343,95 @@ static void invoke_rcu_callbacks(struct rcu_data *rdp)
+>  {
+>  	if (unlikely(!READ_ONCE(rcu_scheduler_fully_active)))
+>  		return;
+> -	if (likely(!rcu_state.boost)) {
+> -		rcu_do_batch(rdp);
+> -		return;
+> -	}
+> -	invoke_rcu_callbacks_kthread();
+> +	if (rcu_state.boost || !use_softirq)
+> +		invoke_rcu_core_kthread();
+> +	rcu_do_batch(rdp);
+
+Shouldn't there be an else before the rcu_do_batch? If we are waking up the
+rcuc thread, then that will do the rcu_do_batch when it runs right?
+
+Something like:
+	if (rcu_state.boost || !use_softirq)
+		invoke_rcu_core_kthread();
+	else
+		rcu_do_batch(rdp);
+
+Previous code similarly had a return; also.
+
+>  }
+>  
+> +/*
+> + * Wake up this CPU's rcuc kthread to do RCU core processing.
+> + */
+>  static void invoke_rcu_core(void)
+>  {
+> -	if (cpu_online(smp_processor_id()))
+> +	if (!cpu_online(smp_processor_id()))
+> +		return;
+> +	if (use_softirq)
+>  		raise_softirq(RCU_SOFTIRQ);
+> +	else
+> +		invoke_rcu_core_kthread();
+>  }
+>  
+> +static void rcu_cpu_kthread_park(unsigned int cpu)
+> +{
+> +	per_cpu(rcu_data.rcu_cpu_kthread_status, cpu) = RCU_KTHREAD_OFFCPU;
+> +}
+> +
+> +static int rcu_cpu_kthread_should_run(unsigned int cpu)
+> +{
+> +	return __this_cpu_read(rcu_data.rcu_cpu_has_work);
+> +}
+> +
+> +/*
+> + * Per-CPU kernel thread that invokes RCU callbacks.  This replaces
+> + * the RCU softirq used in configurations of RCU that do not support RCU
+> + * priority boosting.
+> + */
+> +static void rcu_cpu_kthread(unsigned int cpu)
+> +{
+> +	unsigned int *statusp = this_cpu_ptr(&rcu_data.rcu_cpu_kthread_status);
+> +	char work, *workp = this_cpu_ptr(&rcu_data.rcu_cpu_has_work);
+> +	int spincnt;
+> +
+> +	for (spincnt = 0; spincnt < 10; spincnt++) {
+> +		trace_rcu_utilization(TPS("Start CPU kthread@rcu_wait"));
+> +		local_bh_disable();
+> +		*statusp = RCU_KTHREAD_RUNNING;
+> +		local_irq_disable();
+> +		work = *workp;
+> +		*workp = 0;
+> +		local_irq_enable();
+> +		if (work)
+> +			rcu_core();
+> +		local_bh_enable();
+> +		if (*workp == 0) {
+> +			trace_rcu_utilization(TPS("End CPU kthread@rcu_wait"));
+> +			*statusp = RCU_KTHREAD_WAITING;
+> +			return;
+> +		}
+> +	}
+> +	*statusp = RCU_KTHREAD_YIELDING;
+> +	trace_rcu_utilization(TPS("Start CPU kthread@rcu_yield"));
+> +	schedule_timeout_interruptible(2);
+> +	trace_rcu_utilization(TPS("End CPU kthread@rcu_yield"));
+> +	*statusp = RCU_KTHREAD_WAITING;
+> +}
+> +
+[snip]
+> diff --git a/kernel/rcu/tree.h b/kernel/rcu/tree.h
+> index e253d11af3c49..a1a72a1ecb026 100644
+> --- a/kernel/rcu/tree.h
+> +++ b/kernel/rcu/tree.h
+> @@ -407,8 +407,8 @@ void call_rcu(struct rcu_head *head, rcu_callback_t func);
+>  static void dump_blkd_tasks(struct rcu_node *rnp, int ncheck);
+>  static void rcu_initiate_boost(struct rcu_node *rnp, unsigned long flags);
+>  static void rcu_preempt_boost_start_gp(struct rcu_node *rnp);
+> -static void invoke_rcu_callbacks_kthread(void);
+>  static bool rcu_is_callbacks_kthread(void);
+> +static void rcu_cpu_kthread_setup(unsigned int cpu);
+>  static void __init rcu_spawn_boost_kthreads(void);
+>  static void rcu_prepare_kthreads(int cpu);
+>  static void rcu_cleanup_after_idle(void);
+> diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+> index f46b4af96ab95..b807204ffd83f 100644
+> --- a/kernel/rcu/tree_plugin.h
+> +++ b/kernel/rcu/tree_plugin.h
+> @@ -11,29 +11,7 @@
+>   *	   Paul E. McKenney <paulmck@linux.ibm.com>
+>   */
+>  
+> -#include <linux/delay.h>
+> -#include <linux/gfp.h>
+> -#include <linux/oom.h>
+> -#include <linux/sched/debug.h>
+> -#include <linux/smpboot.h>
+> -#include <linux/sched/isolation.h>
+> -#include <uapi/linux/sched/types.h>
+> -#include "../time/tick-internal.h"
+> -
+> -#ifdef CONFIG_RCU_BOOST
+>  #include "../locking/rtmutex_common.h"
+> -#else /* #ifdef CONFIG_RCU_BOOST */
+> -
+> -/*
+> - * Some architectures do not define rt_mutexes, but if !CONFIG_RCU_BOOST,
+> - * all uses are in dead code.  Provide a definition to keep the compiler
+> - * happy, but add WARN_ON_ONCE() to complain if used in the wrong place.
+> - * This probably needs to be excluded from -rt builds.
+> - */
+> -#define rt_mutex_owner(a) ({ WARN_ON_ONCE(1); NULL; })
+> -#define rt_mutex_futex_unlock(x) WARN_ON_ONCE(1)
+> -
+> -#endif /* #else #ifdef CONFIG_RCU_BOOST */
+>  
+>  #ifdef CONFIG_RCU_NOCB_CPU
+>  static cpumask_var_t rcu_nocb_mask; /* CPUs to have callbacks offloaded. */
+> @@ -94,6 +72,8 @@ static void __init rcu_bootup_announce_oddness(void)
+>  		pr_info("\tRCU debug GP init slowdown %d jiffies.\n", gp_init_delay);
+>  	if (gp_cleanup_delay)
+>  		pr_info("\tRCU debug GP init slowdown %d jiffies.\n", gp_cleanup_delay);
+> +	if (!use_softirq)
+> +		pr_info("\tRCU_SOFTIRQ processing moved to rcuc kthreads.\n");
+>  	if (IS_ENABLED(CONFIG_RCU_EQS_DEBUG))
+>  		pr_info("\tRCU debug extended QS entry/exit.\n");
+>  	rcupdate_announce_bootup_oddness();
+> @@ -629,7 +609,10 @@ static void rcu_read_unlock_special(struct task_struct *t)
+>  		/* Need to defer quiescent state until everything is enabled. */
+>  		if (irqs_were_disabled) {
+>  			/* Enabling irqs does not reschedule, so... */
+> -			raise_softirq_irqoff(RCU_SOFTIRQ);
+> +			if (!use_softirq)
+> +				raise_softirq_irqoff(RCU_SOFTIRQ);
+
+I believe this exclamation has been corrected in Paul's tree so that's Ok.
+
+> +			else
+> +				invoke_rcu_core();
+
+But why not just directly call invoke_rcu_core() here? That will do the
+appropriate use_softirq check right?
+
+thanks,
+
+ - Joel
+
+
+>  		} else {
+>  			/* Enabling BH or preempt does reschedule, so... */
+>  			set_tsk_need_resched(current);
+> @@ -944,18 +927,21 @@ dump_blkd_tasks(struct rcu_node *rnp, int ncheck)
+>  
+>  #endif /* #else #ifdef CONFIG_PREEMPT_RCU */
+>  
+> -#ifdef CONFIG_RCU_BOOST
+> -
+> -static void rcu_wake_cond(struct task_struct *t, int status)
+> +/*
+> + * If boosting, set rcuc kthreads to realtime priority.
+> + */
+> +static void rcu_cpu_kthread_setup(unsigned int cpu)
+>  {
+> -	/*
+> -	 * If the thread is yielding, only wake it when this
+> -	 * is invoked from idle
+> -	 */
+> -	if (status != RCU_KTHREAD_YIELDING || is_idle_task(current))
+> -		wake_up_process(t);
+> +#ifdef CONFIG_RCU_BOOST
+> +	struct sched_param sp;
+> +
+> +	sp.sched_priority = kthread_prio;
+> +	sched_setscheduler_nocheck(current, SCHED_FIFO, &sp);
+> +#endif /* #ifdef CONFIG_RCU_BOOST */
+>  }
+>  
+> +#ifdef CONFIG_RCU_BOOST
+> +
+>  /*
+>   * Carry out RCU priority boosting on the task indicated by ->exp_tasks
+>   * or ->boost_tasks, advancing the pointer to the next task in the
+> @@ -1093,23 +1079,6 @@ static void rcu_initiate_boost(struct rcu_node *rnp, unsigned long flags)
+>  	}
+>  }
+>  
+> -/*
+> - * Wake up the per-CPU kthread to invoke RCU callbacks.
+> - */
+> -static void invoke_rcu_callbacks_kthread(void)
+> -{
+> -	unsigned long flags;
+> -
+> -	local_irq_save(flags);
+> -	__this_cpu_write(rcu_data.rcu_cpu_has_work, 1);
+> -	if (__this_cpu_read(rcu_data.rcu_cpu_kthread_task) != NULL &&
+> -	    current != __this_cpu_read(rcu_data.rcu_cpu_kthread_task)) {
+> -		rcu_wake_cond(__this_cpu_read(rcu_data.rcu_cpu_kthread_task),
+> -			      __this_cpu_read(rcu_data.rcu_cpu_kthread_status));
+> -	}
+> -	local_irq_restore(flags);
+> -}
+> -
+>  /*
+>   * Is the current CPU running the RCU-callbacks kthread?
+>   * Caller must have preemption disabled.
+> @@ -1163,59 +1132,6 @@ static int rcu_spawn_one_boost_kthread(struct rcu_node *rnp)
+>  	return 0;
+>  }
+>  
+> -static void rcu_cpu_kthread_setup(unsigned int cpu)
+> -{
+> -	struct sched_param sp;
+> -
+> -	sp.sched_priority = kthread_prio;
+> -	sched_setscheduler_nocheck(current, SCHED_FIFO, &sp);
+> -}
+> -
+> -static void rcu_cpu_kthread_park(unsigned int cpu)
+> -{
+> -	per_cpu(rcu_data.rcu_cpu_kthread_status, cpu) = RCU_KTHREAD_OFFCPU;
+> -}
+> -
+> -static int rcu_cpu_kthread_should_run(unsigned int cpu)
+> -{
+> -	return __this_cpu_read(rcu_data.rcu_cpu_has_work);
+> -}
+> -
+> -/*
+> - * Per-CPU kernel thread that invokes RCU callbacks.  This replaces
+> - * the RCU softirq used in configurations of RCU that do not support RCU
+> - * priority boosting.
+> - */
+> -static void rcu_cpu_kthread(unsigned int cpu)
+> -{
+> -	unsigned int *statusp = this_cpu_ptr(&rcu_data.rcu_cpu_kthread_status);
+> -	char work, *workp = this_cpu_ptr(&rcu_data.rcu_cpu_has_work);
+> -	int spincnt;
+> -
+> -	for (spincnt = 0; spincnt < 10; spincnt++) {
+> -		trace_rcu_utilization(TPS("Start CPU kthread@rcu_wait"));
+> -		local_bh_disable();
+> -		*statusp = RCU_KTHREAD_RUNNING;
+> -		local_irq_disable();
+> -		work = *workp;
+> -		*workp = 0;
+> -		local_irq_enable();
+> -		if (work)
+> -			rcu_do_batch(this_cpu_ptr(&rcu_data));
+> -		local_bh_enable();
+> -		if (*workp == 0) {
+> -			trace_rcu_utilization(TPS("End CPU kthread@rcu_wait"));
+> -			*statusp = RCU_KTHREAD_WAITING;
+> -			return;
+> -		}
+> -	}
+> -	*statusp = RCU_KTHREAD_YIELDING;
+> -	trace_rcu_utilization(TPS("Start CPU kthread@rcu_yield"));
+> -	schedule_timeout_interruptible(2);
+> -	trace_rcu_utilization(TPS("End CPU kthread@rcu_yield"));
+> -	*statusp = RCU_KTHREAD_WAITING;
+> -}
+> -
+>  /*
+>   * Set the per-rcu_node kthread's affinity to cover all CPUs that are
+>   * served by the rcu_node in question.  The CPU hotplug lock is still
+> @@ -1246,27 +1162,13 @@ static void rcu_boost_kthread_setaffinity(struct rcu_node *rnp, int outgoingcpu)
+>  	free_cpumask_var(cm);
+>  }
+>  
+> -static struct smp_hotplug_thread rcu_cpu_thread_spec = {
+> -	.store			= &rcu_data.rcu_cpu_kthread_task,
+> -	.thread_should_run	= rcu_cpu_kthread_should_run,
+> -	.thread_fn		= rcu_cpu_kthread,
+> -	.thread_comm		= "rcuc/%u",
+> -	.setup			= rcu_cpu_kthread_setup,
+> -	.park			= rcu_cpu_kthread_park,
+> -};
+> -
+>  /*
+>   * Spawn boost kthreads -- called as soon as the scheduler is running.
+>   */
+>  static void __init rcu_spawn_boost_kthreads(void)
+>  {
+>  	struct rcu_node *rnp;
+> -	int cpu;
+>  
+> -	for_each_possible_cpu(cpu)
+> -		per_cpu(rcu_data.rcu_cpu_has_work, cpu) = 0;
+> -	if (WARN_ONCE(smpboot_register_percpu_thread(&rcu_cpu_thread_spec), "%s: Could not start rcub kthread, OOM is now expected behavior\n", __func__))
+> -		return;
+>  	rcu_for_each_leaf_node(rnp)
+>  		(void)rcu_spawn_one_boost_kthread(rnp);
+>  }
+> @@ -1289,11 +1191,6 @@ static void rcu_initiate_boost(struct rcu_node *rnp, unsigned long flags)
+>  	raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
+>  }
+>  
+> -static void invoke_rcu_callbacks_kthread(void)
+> -{
+> -	WARN_ON_ONCE(1);
+> -}
+> -
+>  static bool rcu_is_callbacks_kthread(void)
+>  {
+>  	return false;
+> -- 
+> 2.20.1
 > 
-> 
-> Pawan was seeing occasional crashes and lock up that's avoided by doing the following.
-> We're trying to dig a little more tracing to see why pick_next_entity is returning
-> NULL.
-> 
-
-We found the root cause was a missing chunk when we port Subhra's fix of pick_next_entity
-
-         * Someone really wants this to run. If it's not unfair, run it.
-*/
--       if (cfs_rq->next && wakeup_preempt_entity(cfs_rq->next, left) < 1)
-+       if (left && cfs_rq->next && wakeup_preempt_entity(cfs_rq->next, left)
-+           < 1) 
-
-That fixes the problem of pick_next_entity returning NULL.  sorry for the noise.
-
-Tim
