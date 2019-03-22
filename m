@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1323DC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:04:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B331C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:04:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6D902082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:04:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E709D2082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:04:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256243;
-	bh=6f1s58YCh8Di8LAvWkPXxeYPt6ZHo8Yu4y+cO28Mmmw=;
+	s=default; t=1553256248;
+	bh=MIeqIQ/oj/0+Va7Po6VtKCfkwk21IMwJkr844aU/CDI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kXgfuMOEejdwYz7AMXWTgYx9BNJGYAPFnkPVohxXIBcJLbCKtqxdSD0OSDA9OhD2P
-	 NQRVxzZUav88ZwqTFpx+GWHudQpj3s1KCCdn7FulIAMxWisqWLU5heMxS8djh2l0Ju
-	 3d3MV4mE+/Hqwg0uDJQ2MnaLGbMET9+zAZCCEtBQ=
+	b=GOaSMBuzh7uTc4nZkDBRYFiUb7SeGcamO4p3NufqWbS2H4PMERCpHOenpvldFixdt
+	 CYsvBHM0GhBXrKFRjDPdnuUNvDqcMDzNt+u28jiOCDajVCUhyLZ0Ftnx6FBB20NGHW
+	 MPzZKeY6il36jlJkjtwj1FJaVKnzYhaDidMyuSIw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388610AbfCVMEC (ORCPT
+        id S2388618AbfCVMEG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:04:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42328 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:04:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42428 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388257AbfCVMD4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:03:56 -0400
+        id S2388608AbfCVMEC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:04:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11F36204FD;
-        Fri, 22 Mar 2019 12:03:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C71B3204FD;
+        Fri, 22 Mar 2019 12:04:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256235;
-        bh=6f1s58YCh8Di8LAvWkPXxeYPt6ZHo8Yu4y+cO28Mmmw=;
+        s=default; t=1553256242;
+        bh=MIeqIQ/oj/0+Va7Po6VtKCfkwk21IMwJkr844aU/CDI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S2uTPTlg5BNSB3dWVk1fuic+7voPDGI0AmN9gi3IWn26j8ker55BDgoZgdIQlvNXY
-         47FdE29ulzOCc673OolILjZnOdL358pBUt9cqEaitaPIr22gcedzcYgAW68ORglaog
-         r//h/adVq583M0UIsmozQ3gO9l8XFKb+jMHswmDQ=
+        b=bUaGfXYAP5rgq4uI1VEt31ExiGgoHUiJr2cOFZzBI3PtfBs7g4TPVx/LhoUAIxYps
+         Ejxyc+lzbgpplGR5zLEmp+C8VshfrwynS1IcpVF26dx0dh7uK/zxXX6JcaX6kj1DkJ
+         XdpswjSjdeG38R8hp+08zQiNuGlZVnDlHPJHAxMY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 4.19 149/280] spi: pxa2xx: Setup maximum supported DMA transfer length
-Date:   Fri, 22 Mar 2019 12:15:02 +0100
-Message-Id: <20190322111320.132010930@linuxfoundation.org>
+        stable@vger.kernel.org, Jinyoung Park <jinyoungp@nvidia.com>,
+        Mark Zhang <markz@nvidia.com>, Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.19 151/280] regulator: max77620: Initialize values for DT properties
+Date:   Fri, 22 Mar 2019 12:15:04 +0100
+Message-Id: <20190322111320.470223520@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -66,43 +64,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Mark Zhang <markz@nvidia.com>
 
-commit ef070b4e4aa25bb5f8632ad196644026c11903bf upstream.
+commit 0ab66b3c326ef8f77dae9f528118966365757c0c upstream.
 
-When the commit b6ced294fb61
+If regulator DT node doesn't exist, its of_parse_cb callback
+function isn't called. Then all values for DT properties are
+filled with zero. This leads to wrong register update for
+FPS and POK settings.
 
-   ("spi: pxa2xx: Switch to SPI core DMA mapping functionality")
-
-switches to SPI core provided DMA helpers, it missed to setup maximum
-supported DMA transfer length for the controller and thus users
-mistakenly try to send more data than supported with the following
-warning:
-
-  ili9341 spi-PRP0001:01: DMA disabled for transfer length 153600 greater than 65536
-
-Setup maximum supported DMA transfer length in order to make users know
-the limit.
-
-Fixes: b6ced294fb61 ("spi: pxa2xx: Switch to SPI core DMA mapping functionality")
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Jinyoung Park <jinyoungp@nvidia.com>
+Signed-off-by: Mark Zhang <markz@nvidia.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/spi/spi-pxa2xx.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/regulator/max77620-regulator.c |   10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
---- a/drivers/spi/spi-pxa2xx.c
-+++ b/drivers/spi/spi-pxa2xx.c
-@@ -1612,6 +1612,7 @@ static int pxa2xx_spi_probe(struct platf
- 			platform_info->enable_dma = false;
- 		} else {
- 			master->can_dma = pxa2xx_spi_can_dma;
-+			master->max_dma_len = MAX_DMA_LEN;
- 		}
- 	}
+--- a/drivers/regulator/max77620-regulator.c
++++ b/drivers/regulator/max77620-regulator.c
+@@ -1,7 +1,7 @@
+ /*
+  * Maxim MAX77620 Regulator driver
+  *
+- * Copyright (c) 2016, NVIDIA CORPORATION.  All rights reserved.
++ * Copyright (c) 2016-2018, NVIDIA CORPORATION.  All rights reserved.
+  *
+  * Author: Mallikarjun Kasoju <mkasoju@nvidia.com>
+  *	Laxman Dewangan <ldewangan@nvidia.com>
+@@ -803,6 +803,14 @@ static int max77620_regulator_probe(stru
+ 		rdesc = &rinfo[id].desc;
+ 		pmic->rinfo[id] = &max77620_regs_info[id];
+ 		pmic->enable_power_mode[id] = MAX77620_POWER_MODE_NORMAL;
++		pmic->reg_pdata[id].active_fps_src = -1;
++		pmic->reg_pdata[id].active_fps_pd_slot = -1;
++		pmic->reg_pdata[id].active_fps_pu_slot = -1;
++		pmic->reg_pdata[id].suspend_fps_src = -1;
++		pmic->reg_pdata[id].suspend_fps_pd_slot = -1;
++		pmic->reg_pdata[id].suspend_fps_pu_slot = -1;
++		pmic->reg_pdata[id].power_ok = -1;
++		pmic->reg_pdata[id].ramp_rate_setting = -1;
  
+ 		ret = max77620_read_slew_rate(pmic, id);
+ 		if (ret < 0)
 
 
