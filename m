@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18474C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 04:15:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD431C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 04:16:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E699621900
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 04:15:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB8EC218FE
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 04:16:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727645AbfCVEP5 (ORCPT
+        id S1727674AbfCVEQF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 00:15:57 -0400
-Received: from vmicros1.altlinux.org ([194.107.17.57]:55168 "EHLO
+        Fri, 22 Mar 2019 00:16:05 -0400
+Received: from vmicros1.altlinux.org ([194.107.17.57]:55320 "EHLO
         vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725781AbfCVEP4 (ORCPT
+        with ESMTP id S1725781AbfCVEQE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 00:15:56 -0400
+        Fri, 22 Mar 2019 00:16:04 -0400
 Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
-        by vmicros1.altlinux.org (Postfix) with ESMTP id A07FD72CC8C;
-        Fri, 22 Mar 2019 07:15:54 +0300 (MSK)
+        by vmicros1.altlinux.org (Postfix) with ESMTP id AFF8F72CC53;
+        Fri, 22 Mar 2019 07:16:01 +0300 (MSK)
 Received: by mua.local.altlinux.org (Postfix, from userid 508)
-        id 95CA37CC74C; Fri, 22 Mar 2019 07:15:54 +0300 (MSK)
-Date:   Fri, 22 Mar 2019 07:15:54 +0300
+        id 9B62C7CCC18; Fri, 22 Mar 2019 07:16:01 +0300 (MSK)
+Date:   Fri, 22 Mar 2019 07:16:01 +0300
 From:   "Dmitry V. Levin" <ldv@altlinux.org>
-To:     linux-kernel@vger.kernel.org
+To:     Michael Ellerman <mpe@ellerman.id.au>
 Cc:     Elvira Khabirova <lineprinter@altlinux.org>,
         Eugene Syromyatnikov <esyr@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
         Oleg Nesterov <oleg@redhat.com>,
         Andy Lutomirski <luto@kernel.org>,
-        Helge Deller <deller@gmx.de>,
-        "James E.J. Bottomley" <jejb@parisc-linux.org>,
-        linux-parisc@vger.kernel.org
-Subject: [PATCH linux-next v8 4/7] parisc: define syscall_get_error()
-Message-ID: <20190322041554.GE27266@altlinux.org>
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH linux-next v8 5/7] powerpc: define syscall_get_error()
+Message-ID: <20190322041601.GF27266@altlinux.org>
 References: <20190322041409.GA27266@altlinux.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -47,48 +47,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syscall_get_error() is required to be implemented on all
-architectures in addition to already implemented syscall_get_nr(),
+syscall_get_error() is required to be implemented on this
+architecture in addition to already implemented syscall_get_nr(),
 syscall_get_arguments(), syscall_get_return_value(), and
 syscall_get_arch() functions in order to extend the generic
 ptrace API with PTRACE_GET_SYSCALL_INFO request.
 
-Acked-by: Helge Deller <deller@gmx.de> # parisc
-Cc: James E.J. Bottomley <jejb@parisc-linux.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
 Cc: Elvira Khabirova <lineprinter@altlinux.org>
 Cc: Eugene Syromyatnikov <esyr@redhat.com>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
 Cc: Oleg Nesterov <oleg@redhat.com>
 Cc: Andy Lutomirski <luto@kernel.org>
-Cc: linux-parisc@vger.kernel.org
+Cc: linuxppc-dev@lists.ozlabs.org
 Signed-off-by: Dmitry V. Levin <ldv@altlinux.org>
 ---
 
 Notes:
-    v8: added Acked-by
+    v8: unchanged
     v7: unchanged
     v6: unchanged
     v5: initial revision
+    
+    This change has been tested with
+    tools/testing/selftests/ptrace/get_syscall_info.c and strace,
+    so it's correct from PTRACE_GET_SYSCALL_INFO point of view.
+    
+    This cast doubts on commit v4.3-rc1~86^2~81 that changed
+    syscall_set_return_value() in a way that doesn't quite match
+    syscall_get_error(), but syscall_set_return_value() is out
+    of scope of this series, so I'll just let you know my concerns.
 
- arch/parisc/include/asm/syscall.h | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/powerpc/include/asm/syscall.h | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/arch/parisc/include/asm/syscall.h b/arch/parisc/include/asm/syscall.h
-index c04ffc6ac928..310016e1925d 100644
---- a/arch/parisc/include/asm/syscall.h
-+++ b/arch/parisc/include/asm/syscall.h
-@@ -43,6 +43,13 @@ static inline void syscall_get_arguments(struct task_struct *tsk,
- 	}
+diff --git a/arch/powerpc/include/asm/syscall.h b/arch/powerpc/include/asm/syscall.h
+index efb50429c9f4..7375808c566c 100644
+--- a/arch/powerpc/include/asm/syscall.h
++++ b/arch/powerpc/include/asm/syscall.h
+@@ -38,6 +38,16 @@ static inline void syscall_rollback(struct task_struct *task,
+ 	regs->gpr[3] = regs->orig_gpr3;
  }
  
 +static inline long syscall_get_error(struct task_struct *task,
 +				     struct pt_regs *regs)
 +{
-+	unsigned long error = regs->gr[28];
-+	return IS_ERR_VALUE(error) ? error : 0;
++	/*
++	 * If the system call failed,
++	 * regs->gpr[3] contains a positive ERRORCODE.
++	 */
++	return (regs->ccr & 0x10000000UL) ? -regs->gpr[3] : 0;
 +}
 +
  static inline long syscall_get_return_value(struct task_struct *task,
- 						struct pt_regs *regs)
+ 					    struct pt_regs *regs)
  {
 -- 
 ldv
