@@ -7,47 +7,53 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54A18C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:22:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E58B9C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:22:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E18E21917
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:22:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC0A021925
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:22:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553253729;
-	bh=nArcBDAObDWHljuvowDkWYuDGh0OPyCfYk/aXJvzITE=;
+	s=default; t=1553253732;
+	bh=0UP7fCFN9QuzhLy2SI7yfhU415sL94/Jvou3FGAQFRQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vGiVvcfhT/b58CwqkXjgiEnPezRfSr4ZtUO3+RrnCgKlCTnCyz5AxzS/FTKcwL9fl
-	 u6od1anjxucPGu/ytIDLsCZqx1UI0APMEBCy2VIwls4MirijiNs3lUX/iq02eyhkLp
-	 tTh6aQcYr8QqTc4NEksCMzhoHw6AtqbOTs2g+udE=
+	b=0i4OAfuJT1cvVaj7DrzpjlxNkufIUgZbmjExAVeWCpLmgzgYzwMx1zhVJPpIoJG5c
+	 WwZCDvtGr2g2gpH3x4Jb/Ti/m8sIyUTs2aDnolUh12hist/W3XbZ96BV7MuP5nZjBj
+	 jJ+FBTZY/PwDPj07so/AwzMVavgJi7lqhe4HnUaE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728738AbfCVLWI (ORCPT
+        id S1728240AbfCVLWL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:22:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48722 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:22:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728712AbfCVLWF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:22:05 -0400
+        id S1728712AbfCVLWJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:22:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE29D218D4;
-        Fri, 22 Mar 2019 11:22:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DCEA218D4;
+        Fri, 22 Mar 2019 11:22:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553253724;
-        bh=nArcBDAObDWHljuvowDkWYuDGh0OPyCfYk/aXJvzITE=;
+        s=default; t=1553253727;
+        bh=0UP7fCFN9QuzhLy2SI7yfhU415sL94/Jvou3FGAQFRQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1bS53EbN7WxmOEwG69WlWeOFfshxcEBKBM+pwGF07JKIH0vypLJAlJInmCmTdyVDG
-         Oq2RWSyltiQINMHmDRwjIPar0uKMW5i5WJnyopVmRHBebHxIm1TeVyec7sgP+FXr0e
-         G5pZJK7fVL8MXggqbHiyH6MmyDGNHoCOKQ14QpB0=
+        b=Uk6/ROttYUHqKUwmJGRfH0+ujWnD/LflNfY9ghJmC9pELhhgkEQdjJCD/0Pn/gnGs
+         XobzvMMNadbZpAasKxAFd2iWqV0R0E1r8xKXOw/nvT2R7BqrvXBhe+Z19CO8ZgYkEy
+         jMToS1vzisGWDH4/g0K9E4e6QESeOI/qp8+WSX8A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
-        Amit Cohen <amitc@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 3.18 052/134] ip6mr: Do not call __IP6_INC_STATS() from preemptible context
-Date:   Fri, 22 Mar 2019 12:14:25 +0100
-Message-Id: <20190322111213.717253039@linuxfoundation.org>
+        stable@vger.kernel.org, Mike Kravetz <mike.kravetz@oracle.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 3.18 053/134] hugetlbfs: fix races and page leaks during migration
+Date:   Fri, 22 Mar 2019 12:14:26 +0100
+Message-Id: <20190322111213.794733574@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111210.465931067@linuxfoundation.org>
 References: <20190322111210.465931067@linuxfoundation.org>
@@ -66,67 +72,201 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Ido Schimmel <idosch@mellanox.com>
+From: Mike Kravetz <mike.kravetz@oracle.com>
 
-[ Upstream commit 87c11f1ddbbad38ad8bad47af133a8208985fbdf ]
+commit cb6acd01e2e43fd8bad11155752b7699c3d0fb76 upstream.
 
-Similar to commit 44f49dd8b5a6 ("ipmr: fix possible race resulting from
-improper usage of IP_INC_STATS_BH() in preemptible context."), we cannot
-assume preemption is disabled when incrementing the counter and
-accessing a per-CPU variable.
+hugetlb pages should only be migrated if they are 'active'.  The
+routines set/clear_page_huge_active() modify the active state of hugetlb
+pages.
 
-Preemption can be enabled when we add a route in process context that
-corresponds to packets stored in the unresolved queue, which are then
-forwarded using this route [1].
+When a new hugetlb page is allocated at fault time, set_page_huge_active
+is called before the page is locked.  Therefore, another thread could
+race and migrate the page while it is being added to page table by the
+fault code.  This race is somewhat hard to trigger, but can be seen by
+strategically adding udelay to simulate worst case scheduling behavior.
+Depending on 'how' the code races, various BUG()s could be triggered.
 
-Fix this by using IP6_INC_STATS() which takes care of disabling
-preemption on architectures where it is needed.
+To address this issue, simply delay the set_page_huge_active call until
+after the page is successfully added to the page table.
 
-[1]
-[  157.451447] BUG: using __this_cpu_add() in preemptible [00000000] code: smcrouted/2314
-[  157.460409] caller is ip6mr_forward2+0x73e/0x10e0
-[  157.460434] CPU: 3 PID: 2314 Comm: smcrouted Not tainted 5.0.0-rc7-custom-03635-g22f2712113f1 #1336
-[  157.460449] Hardware name: Mellanox Technologies Ltd. MSN2100-CB2FO/SA001017, BIOS 5.6.5 06/07/2016
-[  157.460461] Call Trace:
-[  157.460486]  dump_stack+0xf9/0x1be
-[  157.460553]  check_preemption_disabled+0x1d6/0x200
-[  157.460576]  ip6mr_forward2+0x73e/0x10e0
-[  157.460705]  ip6_mr_forward+0x9a0/0x1510
-[  157.460771]  ip6mr_mfc_add+0x16b3/0x1e00
-[  157.461155]  ip6_mroute_setsockopt+0x3cb/0x13c0
-[  157.461384]  do_ipv6_setsockopt.isra.8+0x348/0x4060
-[  157.462013]  ipv6_setsockopt+0x90/0x110
-[  157.462036]  rawv6_setsockopt+0x4a/0x120
-[  157.462058]  __sys_setsockopt+0x16b/0x340
-[  157.462198]  __x64_sys_setsockopt+0xbf/0x160
-[  157.462220]  do_syscall_64+0x14d/0x610
-[  157.462349]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+Hugetlb pages can also be leaked at migration time if the pages are
+associated with a file in an explicitly mounted hugetlbfs filesystem.
+For example, consider a two node system with 4GB worth of huge pages
+available.  A program mmaps a 2G file in a hugetlbfs filesystem.  It
+then migrates the pages associated with the file from one node to
+another.  When the program exits, huge page counts are as follows:
 
-Fixes: 0912ea38de61 ("[IPV6] MROUTE: Add stats in multicast routing module method ip6_mr_forward().")
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Reported-by: Amit Cohen <amitc@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+  node0
+  1024    free_hugepages
+  1024    nr_hugepages
+
+  node1
+  0       free_hugepages
+  1024    nr_hugepages
+
+  Filesystem                         Size  Used Avail Use% Mounted on
+  nodev                              4.0G  2.0G  2.0G  50% /var/opt/hugepool
+
+That is as expected.  2G of huge pages are taken from the free_hugepages
+counts, and 2G is the size of the file in the explicitly mounted
+filesystem.  If the file is then removed, the counts become:
+
+  node0
+  1024    free_hugepages
+  1024    nr_hugepages
+
+  node1
+  1024    free_hugepages
+  1024    nr_hugepages
+
+  Filesystem                         Size  Used Avail Use% Mounted on
+  nodev                              4.0G  2.0G  2.0G  50% /var/opt/hugepool
+
+Note that the filesystem still shows 2G of pages used, while there
+actually are no huge pages in use.  The only way to 'fix' the filesystem
+accounting is to unmount the filesystem
+
+If a hugetlb page is associated with an explicitly mounted filesystem,
+this information in contained in the page_private field.  At migration
+time, this information is not preserved.  To fix, simply transfer
+page_private from old to new page at migration time if necessary.
+
+There is a related race with removing a huge page from a file and
+migration.  When a huge page is removed from the pagecache, the
+page_mapping() field is cleared, yet page_private remains set until the
+page is actually freed by free_huge_page().  A page could be migrated
+while in this state.  However, since page_mapping() is not set the
+hugetlbfs specific routine to transfer page_private is not called and we
+leak the page count in the filesystem.
+
+To fix that, check for this condition before migrating a huge page.  If
+the condition is detected, return EBUSY for the page.
+
+Link: http://lkml.kernel.org/r/74510272-7319-7372-9ea6-ec914734c179@oracle.com
+Link: http://lkml.kernel.org/r/20190212221400.3512-1-mike.kravetz@oracle.com
+Fixes: bcc54222309c ("mm: hugetlb: introduce page_huge_active")
+Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
+Reviewed-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Andrea Arcangeli <aarcange@redhat.com>
+Cc: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Mel Gorman <mgorman@techsingularity.net>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: <stable@vger.kernel.org>
+[mike.kravetz@oracle.com: v2]
+  Link: http://lkml.kernel.org/r/7534d322-d782-8ac6-1c8d-a8dc380eb3ab@oracle.com
+[mike.kravetz@oracle.com: update comment and changelog]
+  Link: http://lkml.kernel.org/r/420bcfd6-158b-38e4-98da-26d0cd85bd01@oracle.com
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/ipv6/ip6mr.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/net/ipv6/ip6mr.c
-+++ b/net/ipv6/ip6mr.c
-@@ -1987,10 +1987,10 @@ int ip6mr_compat_ioctl(struct sock *sk,
+
+---
+ fs/hugetlbfs/inode.c |   12 ++++++++++++
+ mm/hugetlb.c         |   14 ++++++++++++--
+ mm/migrate.c         |   11 +++++++++++
+ 3 files changed, 35 insertions(+), 2 deletions(-)
+
+--- a/fs/hugetlbfs/inode.c
++++ b/fs/hugetlbfs/inode.c
+@@ -609,6 +609,18 @@ static int hugetlbfs_migrate_page(struct
+ 	rc = migrate_huge_page_move_mapping(mapping, newpage, page);
+ 	if (rc != MIGRATEPAGE_SUCCESS)
+ 		return rc;
++
++	/*
++	 * page_private is subpool pointer in hugetlb pages.  Transfer to
++	 * new page.  PagePrivate is not associated with page_private for
++	 * hugetlb pages and can not be set here as only page_huge_active
++	 * pages can be migrated.
++	 */
++	if (page_private(page)) {
++		set_page_private(newpage, page_private(page));
++		set_page_private(page, 0);
++	}
++
+ 	migrate_page_copy(newpage, page);
  
- static inline int ip6mr_forward2_finish(struct sk_buff *skb)
- {
--	IP6_INC_STATS_BH(dev_net(skb_dst(skb)->dev), ip6_dst_idev(skb_dst(skb)),
--			 IPSTATS_MIB_OUTFORWDATAGRAMS);
--	IP6_ADD_STATS_BH(dev_net(skb_dst(skb)->dev), ip6_dst_idev(skb_dst(skb)),
--			 IPSTATS_MIB_OUTOCTETS, skb->len);
-+	IP6_INC_STATS(dev_net(skb_dst(skb)->dev), ip6_dst_idev(skb_dst(skb)),
-+		      IPSTATS_MIB_OUTFORWDATAGRAMS);
-+	IP6_ADD_STATS(dev_net(skb_dst(skb)->dev), ip6_dst_idev(skb_dst(skb)),
-+		      IPSTATS_MIB_OUTOCTETS, skb->len);
- 	return dst_output(skb);
- }
+ 	return MIGRATEPAGE_SUCCESS;
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -2938,7 +2938,6 @@ retry_avoidcopy:
+ 	copy_user_huge_page(new_page, old_page, address, vma,
+ 			    pages_per_huge_page(h));
+ 	__SetPageUptodate(new_page);
+-	set_page_huge_active(new_page);
  
+ 	mmun_start = address & huge_page_mask(h);
+ 	mmun_end = mmun_start + huge_page_size(h);
+@@ -2959,6 +2958,7 @@ retry_avoidcopy:
+ 				make_huge_pte(vma, new_page, 1));
+ 		page_remove_rmap(old_page);
+ 		hugepage_add_new_anon_rmap(new_page, vma, address);
++		set_page_huge_active(new_page);
+ 		/* Make the old page be freed below */
+ 		new_page = old_page;
+ 	}
+@@ -3017,6 +3017,7 @@ static int hugetlb_no_page(struct mm_str
+ 	struct page *page;
+ 	pte_t new_pte;
+ 	spinlock_t *ptl;
++	bool new_page = false;
+ 
+ 	/*
+ 	 * Currently, we are forced to kill the process in the event the
+@@ -3050,7 +3051,7 @@ retry:
+ 		}
+ 		clear_huge_page(page, address, pages_per_huge_page(h));
+ 		__SetPageUptodate(page);
+-		set_page_huge_active(page);
++		new_page = true;
+ 
+ 		if (vma->vm_flags & VM_MAYSHARE) {
+ 			int err;
+@@ -3126,6 +3127,15 @@ retry:
+ 	}
+ 
+ 	spin_unlock(ptl);
++
++	/*
++	 * Only make newly allocated pages active.  Existing pages found
++	 * in the pagecache could be !page_huge_active() if they have been
++	 * isolated for migration.
++	 */
++	if (new_page)
++		set_page_huge_active(page);
++
+ 	unlock_page(page);
+ out:
+ 	return ret;
+--- a/mm/migrate.c
++++ b/mm/migrate.c
+@@ -1050,6 +1050,16 @@ static int unmap_and_move_huge_page(new_
+ 		lock_page(hpage);
+ 	}
+ 
++	/*
++	 * Check for pages which are in the process of being freed.  Without
++	 * page_mapping() set, hugetlbfs specific move page routine will not
++	 * be called and we could leak usage counts for subpools.
++	 */
++	if (page_private(hpage) && !page_mapping(hpage)) {
++		rc = -EBUSY;
++		goto out_unlock;
++	}
++
+ 	if (PageAnon(hpage))
+ 		anon_vma = page_get_anon_vma(hpage);
+ 
+@@ -1067,6 +1077,7 @@ static int unmap_and_move_huge_page(new_
+ 	if (rc == MIGRATEPAGE_SUCCESS)
+ 		hugetlb_cgroup_migrate(hpage, new_hpage);
+ 
++out_unlock:
+ 	unlock_page(hpage);
+ out:
+ 	if (rc != -EAGAIN)
 
 
