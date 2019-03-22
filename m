@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 435B4C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:37:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B35FAC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:37:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0977C2070D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:37:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76F3E2070D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:37:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553258221;
-	bh=62/noK9bNF3XffbKIu+qsy1LCWd1oY/kqjuNqFFUcqo=;
+	s=default; t=1553258228;
+	bh=FJsvs7aavC4wzRkW1vkriA+hFnoHsDqg+tjBcNewryc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MtJL3mAba0SVfCeeYjnSAIxT73L7MvxhES2AkQ08aV+C6ku59v3DtltkfrOjoVwd9
-	 RNU9PtDyLXvyAEpzZKfDPlTC1EaCw6DqaKzIEQ0V+LCpxtBEuPJTgtK269SyMq/QCm
-	 Vj1zJGzHjxDfVOT78gQQEnOf5ZXzZIaCfxUgStdQ=
+	b=mgUdSf221r55ZjpcnayjKteMI+GdN8pvAMtfjTbXadppg/Ex9rSI4J62yPYAEdtPC
+	 WA/aeVGPlGEN7PSm+4pZXcv0la4WpkKHv0dJrv2TbBY0CDEqOcTFGt4GSFl66X9p18
+	 frmwHDQqZHUkWFpOaTskRb7UPLisqPI2O3vaJsLg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389257AbfCVMKd (ORCPT
+        id S2389343AbfCVMhH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:10:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48940 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:37:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732132AbfCVMKa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:10:30 -0400
+        id S2389420AbfCVMKY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:10:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E2602083D;
-        Fri, 22 Mar 2019 12:10:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 154CB20830;
+        Fri, 22 Mar 2019 12:10:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256629;
-        bh=62/noK9bNF3XffbKIu+qsy1LCWd1oY/kqjuNqFFUcqo=;
+        s=default; t=1553256623;
+        bh=FJsvs7aavC4wzRkW1vkriA+hFnoHsDqg+tjBcNewryc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XSgoIMhKTRD33IXK60mPjxrJt3dA9OIAq/fkX+AAvMHlX3FHZu+j1Q00ZfOcG2V/1
-         fEodOhf1fzKCMLaywfG0vm6lDBEfouwOQPE07M6iQeU7CsdcxTX8Qv5gfEZJ8tLwt9
-         1qRLLQNMUVhIR0/txo90dLuw9VWs8X/ZLX6o+ugw=
+        b=oPoxbczhWKaGZyfJDM+se9rPPhUK+r+msV9F9yIitTTALiT9Xg9FunDdnk/qL7OIp
+         sJQxEO/xkJArNfihswsGIgpbunpttjqbM2DjR/POpkEvKFeTJBya+SZxLRvEkRUFTA
+         Z6aQH118q/rfCVpzV5nb6xVbEbwQoiGUjVvnStW0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Evan Quan <evan.quan@amd.com>,
-        Feifei Xu <Feifei.Xu@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 4.19 271/280] drm/amd/powerplay: correct power reading on fiji
-Date:   Fri, 22 Mar 2019 12:17:04 +0100
-Message-Id: <20190322111346.140431167@linuxfoundation.org>
+        stable@vger.kernel.org, NuoHan Qiao <qiaonuohan@huawei.com>,
+        Corey Minyard <cminyard@mvista.com>,
+        Yang Yingliang <yangyingliang@huawei.com>
+Subject: [PATCH 4.19 235/280] ipmi_si: fix use-after-free of resource->name
+Date:   Fri, 22 Mar 2019 12:16:28 +0100
+Message-Id: <20190322111338.071352335@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -66,43 +66,152 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Evan Quan <evan.quan@amd.com>
+From: Yang Yingliang <yangyingliang@huawei.com>
 
-commit f5742ec36422a39b57f0256e4847f61b3c432f8c upstream.
+commit 401e7e88d4ef80188ffa07095ac00456f901b8c4 upstream.
 
-Set sampling period as 500ms to provide a smooth power
-reading output. Also, correct the register for power
-reading.
+When we excute the following commands, we got oops
+rmmod ipmi_si
+cat /proc/ioports
 
-Signed-off-by: Evan Quan <evan.quan@amd.com>
-Reviewed-by: Feifei Xu <Feifei.Xu@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+[ 1623.482380] Unable to handle kernel paging request at virtual address ffff00000901d478
+[ 1623.482382] Mem abort info:
+[ 1623.482383]   ESR = 0x96000007
+[ 1623.482385]   Exception class = DABT (current EL), IL = 32 bits
+[ 1623.482386]   SET = 0, FnV = 0
+[ 1623.482387]   EA = 0, S1PTW = 0
+[ 1623.482388] Data abort info:
+[ 1623.482389]   ISV = 0, ISS = 0x00000007
+[ 1623.482390]   CM = 0, WnR = 0
+[ 1623.482393] swapper pgtable: 4k pages, 48-bit VAs, pgdp = 00000000d7d94a66
+[ 1623.482395] [ffff00000901d478] pgd=000000dffbfff003, pud=000000dffbffe003, pmd=0000003f5d06e003, pte=0000000000000000
+[ 1623.482399] Internal error: Oops: 96000007 [#1] SMP
+[ 1623.487407] Modules linked in: ipmi_si(E) nls_utf8 isofs rpcrdma ib_iser ib_srpt target_core_mod ib_srp scsi_transport_srp ib_ipoib rdma_ucm ib_umad rdma_cm ib_cm dm_mirror dm_region_hash dm_log iw_cm dm_mod aes_ce_blk crypto_simd cryptd aes_ce_cipher ses ghash_ce sha2_ce enclosure sha256_arm64 sg sha1_ce hisi_sas_v2_hw hibmc_drm sbsa_gwdt hisi_sas_main ip_tables mlx5_ib ib_uverbs marvell ib_core mlx5_core ixgbe mdio hns_dsaf ipmi_devintf hns_enet_drv ipmi_msghandler hns_mdio [last unloaded: ipmi_si]
+[ 1623.532410] CPU: 30 PID: 11438 Comm: cat Kdump: loaded Tainted: G            E     5.0.0-rc3+ #168
+[ 1623.541498] Hardware name: Huawei TaiShan 2280 /BC11SPCD, BIOS 1.37 11/21/2017
+[ 1623.548822] pstate: a0000005 (NzCv daif -PAN -UAO)
+[ 1623.553684] pc : string+0x28/0x98
+[ 1623.557040] lr : vsnprintf+0x368/0x5e8
+[ 1623.560837] sp : ffff000013213a80
+[ 1623.564191] x29: ffff000013213a80 x28: ffff00001138abb5
+[ 1623.569577] x27: ffff000013213c18 x26: ffff805f67d06049
+[ 1623.574963] x25: 0000000000000000 x24: ffff00001138abb5
+[ 1623.580349] x23: 0000000000000fb7 x22: ffff0000117ed000
+[ 1623.585734] x21: ffff000011188fd8 x20: ffff805f67d07000
+[ 1623.591119] x19: ffff805f67d06061 x18: ffffffffffffffff
+[ 1623.596505] x17: 0000000000000200 x16: 0000000000000000
+[ 1623.601890] x15: ffff0000117ed748 x14: ffff805f67d07000
+[ 1623.607276] x13: ffff805f67d0605e x12: 0000000000000000
+[ 1623.612661] x11: 0000000000000000 x10: 0000000000000000
+[ 1623.618046] x9 : 0000000000000000 x8 : 000000000000000f
+[ 1623.623432] x7 : ffff805f67d06061 x6 : fffffffffffffffe
+[ 1623.628817] x5 : 0000000000000012 x4 : ffff00000901d478
+[ 1623.634203] x3 : ffff0a00ffffff04 x2 : ffff805f67d07000
+[ 1623.639588] x1 : ffff805f67d07000 x0 : ffffffffffffffff
+[ 1623.644974] Process cat (pid: 11438, stack limit = 0x000000008d4cbc10)
+[ 1623.651592] Call trace:
+[ 1623.654068]  string+0x28/0x98
+[ 1623.657071]  vsnprintf+0x368/0x5e8
+[ 1623.660517]  seq_vprintf+0x70/0x98
+[ 1623.668009]  seq_printf+0x7c/0xa0
+[ 1623.675530]  r_show+0xc8/0xf8
+[ 1623.682558]  seq_read+0x330/0x440
+[ 1623.689877]  proc_reg_read+0x78/0xd0
+[ 1623.697346]  __vfs_read+0x60/0x1a0
+[ 1623.704564]  vfs_read+0x94/0x150
+[ 1623.711339]  ksys_read+0x6c/0xd8
+[ 1623.717939]  __arm64_sys_read+0x24/0x30
+[ 1623.725077]  el0_svc_common+0x120/0x148
+[ 1623.732035]  el0_svc_handler+0x30/0x40
+[ 1623.738757]  el0_svc+0x8/0xc
+[ 1623.744520] Code: d1000406 aa0103e2 54000149 b4000080 (39400085)
+[ 1623.753441] ---[ end trace f91b6a4937de9835 ]---
+[ 1623.760871] Kernel panic - not syncing: Fatal exception
+[ 1623.768935] SMP: stopping secondary CPUs
+[ 1623.775718] Kernel Offset: disabled
+[ 1623.781998] CPU features: 0x002,21006008
+[ 1623.788777] Memory Limit: none
+[ 1623.798329] Starting crashdump kernel...
+[ 1623.805202] Bye!
+
+If io_setup is called successful in try_smi_init() but try_smi_init()
+goes out_err before calling ipmi_register_smi(), so ipmi_unregister_smi()
+will not be called while removing module. It leads to the resource that
+allocated in io_setup() can not be freed, but the name(DEVICE_NAME) of
+resource is freed while removing the module. It causes use-after-free
+when cat /proc/ioports.
+
+Fix this by calling io_cleanup() while try_smi_init() goes to out_err.
+and don't call io_cleanup() until io_setup() returns successful to avoid
+warning prints.
+
+Fixes: 93c303d2045b ("ipmi_si: Clean up shutdown a bit")
 Cc: stable@vger.kernel.org
+Reported-by: NuoHan Qiao <qiaonuohan@huawei.com>
+Suggested-by: Corey Minyard <cminyard@mvista.com>
+Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+Signed-off-by: Corey Minyard <cminyard@mvista.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/char/ipmi/ipmi_si_intf.c    |    5 +++++
+ drivers/char/ipmi/ipmi_si_mem_io.c  |    5 +++--
+ drivers/char/ipmi/ipmi_si_port_io.c |    5 +++--
+ 3 files changed, 11 insertions(+), 4 deletions(-)
 
---- a/drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c
-+++ b/drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c
-@@ -3487,14 +3487,14 @@ static int smu7_get_gpu_power(struct pp_
+--- a/drivers/char/ipmi/ipmi_si_intf.c
++++ b/drivers/char/ipmi/ipmi_si_intf.c
+@@ -2085,6 +2085,11 @@ static int try_smi_init(struct smi_info
+ 	WARN_ON(new_smi->io.dev->init_name != NULL);
  
- 	smum_send_msg_to_smc(hwmgr, PPSMC_MSG_PmStatusLogStart);
- 	cgs_write_ind_register(hwmgr->device, CGS_IND_REG__SMC,
--							ixSMU_PM_STATUS_94, 0);
-+							ixSMU_PM_STATUS_95, 0);
+  out_err:
++	if (rv && new_smi->io.io_cleanup) {
++		new_smi->io.io_cleanup(&new_smi->io);
++		new_smi->io.io_cleanup = NULL;
++	}
++
+ 	kfree(init_name);
+ 	return rv;
+ }
+--- a/drivers/char/ipmi/ipmi_si_mem_io.c
++++ b/drivers/char/ipmi/ipmi_si_mem_io.c
+@@ -81,8 +81,6 @@ int ipmi_si_mem_setup(struct si_sm_io *i
+ 	if (!addr)
+ 		return -ENODEV;
  
- 	for (i = 0; i < 10; i++) {
--		mdelay(1);
-+		mdelay(500);
- 		smum_send_msg_to_smc(hwmgr, PPSMC_MSG_PmStatusLogSample);
- 		tmp = cgs_read_ind_register(hwmgr->device,
- 						CGS_IND_REG__SMC,
--						ixSMU_PM_STATUS_94);
-+						ixSMU_PM_STATUS_95);
- 		if (tmp != 0)
- 			break;
+-	io->io_cleanup = mem_cleanup;
+-
+ 	/*
+ 	 * Figure out the actual readb/readw/readl/etc routine to use based
+ 	 * upon the register size.
+@@ -141,5 +139,8 @@ int ipmi_si_mem_setup(struct si_sm_io *i
+ 		mem_region_cleanup(io, io->io_size);
+ 		return -EIO;
  	}
++
++	io->io_cleanup = mem_cleanup;
++
+ 	return 0;
+ }
+--- a/drivers/char/ipmi/ipmi_si_port_io.c
++++ b/drivers/char/ipmi/ipmi_si_port_io.c
+@@ -68,8 +68,6 @@ int ipmi_si_port_setup(struct si_sm_io *
+ 	if (!addr)
+ 		return -ENODEV;
+ 
+-	io->io_cleanup = port_cleanup;
+-
+ 	/*
+ 	 * Figure out the actual inb/inw/inl/etc routine to use based
+ 	 * upon the register size.
+@@ -109,5 +107,8 @@ int ipmi_si_port_setup(struct si_sm_io *
+ 			return -EIO;
+ 		}
+ 	}
++
++	io->io_cleanup = port_cleanup;
++
+ 	return 0;
+ }
 
 
