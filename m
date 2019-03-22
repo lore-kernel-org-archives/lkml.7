@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4616EC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:38:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 847B4C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:38:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1662F2082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:38:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52D11218B0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:38:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254734;
-	bh=GhcJlD99YhD5Xl4BNE5G9tSKI6ArKkB1pt/7r/7rEyw=;
+	s=default; t=1553254738;
+	bh=DXoT2AOza4eLUNi7essRUblbdjdDiDYU4vqS5hul7RI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jyjjumeviyESsF017Ydf6VS3923h8K9Ibk2/sKShiF0RjH84jTAwuj0S1OL1G53/j
-	 BGdWdyNafhg1mlby3Vx0PlCk2yNv7X7p+S9GytR4J/o39kBI+LU/MGNdNEDM1TkYVt
-	 +prkn3wMDhD3rlaqHseiFqvUcVkLMcTv2ZJ5mAug=
+	b=DUQ2ZC5Vc2JHjCpC9e+e4sBidgrXCUW5N7keIfndvhtpKmR2ojtku/0VTocBg7y5r
+	 VJFVW3ch9sIitfJw9rNx945Q1JpZ3k2UzE5CH8YFl2TDaKHs/vOJEOghFJSdArfhjZ
+	 DlnZKuMTfPkq0SompqWMzxj5wJ9TomgtBc1IImdM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731040AbfCVLiw (ORCPT
+        id S1731048AbfCVLi4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:38:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40362 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:38:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731029AbfCVLiu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:38:50 -0400
+        id S1731035AbfCVLix (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:38:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA8322082C;
-        Fri, 22 Mar 2019 11:38:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BB112183E;
+        Fri, 22 Mar 2019 11:38:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254729;
-        bh=GhcJlD99YhD5Xl4BNE5G9tSKI6ArKkB1pt/7r/7rEyw=;
+        s=default; t=1553254731;
+        bh=DXoT2AOza4eLUNi7essRUblbdjdDiDYU4vqS5hul7RI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hTNdBuHIu9znghdPfGxO0hO4Sad1aIxFc4d+kXxnbznGsC/1kEeBesYB7howPr5gF
-         1mXqq6/98Dsft1f5VcUaWSOsBZn12+CjVvKetWoPwKpr/fVowZQxsHPJQetgMPtlG5
-         5AXmdWgxeOJupdvMPsI15qR5rufIKOuuzI6sZhUc=
+        b=07yWAicm4uyEdwFNjK+0hYXbvoVYPdD9Vnvyebc/ajxAdIF8wgxXjrMacokIBR4Or
+         4vGyi14t9OzfzzZY8tu6UtkRK1luKXxbp9vyseIh/aHPylFlGiJ1Qs3asdXCdxxiAp
+         DZlHNo1DSSo1ez9yF0VmTR0KcLVJ7UAgG9fS/S0M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, "zhangyi (F)" <yi.zhang@huawei.com>,
         Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.cz>
-Subject: [PATCH 4.4 207/230] jbd2: clear dirty flag when revoking a buffer from an older transaction
-Date:   Fri, 22 Mar 2019 12:15:45 +0100
-Message-Id: <20190322111251.408508459@linuxfoundation.org>
+Subject: [PATCH 4.4 208/230] jbd2: fix compile warning when using JBUFFER_TRACE
+Date:   Fri, 22 Mar 2019 12:15:46 +0100
+Message-Id: <20190322111251.486122442@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -67,78 +67,85 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: zhangyi (F) <yi.zhang@huawei.com>
 
-commit 904cdbd41d749a476863a0ca41f6f396774f26e4 upstream.
+commit 01215d3edb0f384ddeaa5e4a22c1ae5ff634149f upstream.
 
-Now, we capture a data corruption problem on ext4 while we're truncating
-an extent index block. Imaging that if we are revoking a buffer which
-has been journaled by the committing transaction, the buffer's jbddirty
-flag will not be cleared in jbd2_journal_forget(), so the commit code
-will set the buffer dirty flag again after refile the buffer.
+The jh pointer may be used uninitialized in the two cases below and the
+compiler complain about it when enabling JBUFFER_TRACE macro, fix them.
 
-fsx                               kjournald2
-                                  jbd2_journal_commit_transaction
-jbd2_journal_revoke                commit phase 1~5...
- jbd2_journal_forget
-   belongs to older transaction    commit phase 6
-   jbddirty not clear               __jbd2_journal_refile_buffer
-                                     __jbd2_journal_unfile_buffer
-                                      test_clear_buffer_jbddirty
-                                       mark_buffer_dirty
-
-Finally, if the freed extent index block was allocated again as data
-block by some other files, it may corrupt the file data after writing
-cached pages later, such as during unmount time. (In general,
-clean_bdev_aliases() related helpers should be invoked after
-re-allocation to prevent the above corruption, but unfortunately we
-missed it when zeroout the head of extra extent blocks in
-ext4_ext_handle_unwritten_extents()).
-
-This patch mark buffer as freed and set j_next_transaction to the new
-transaction when it already belongs to the committing transaction in
-jbd2_journal_forget(), so that commit code knows it should clear dirty
-bits when it is done with the buffer.
-
-This problem can be reproduced by xfstests generic/455 easily with
-seeds (3246 3247 3248 3249).
+In file included from fs/jbd2/transaction.c:19:0:
+fs/jbd2/transaction.c: In function ‘jbd2_journal_get_undo_access’:
+./include/linux/jbd2.h:1637:38: warning: ‘jh’ is used uninitialized in this function [-Wuninitialized]
+ #define JBUFFER_TRACE(jh, info) do { printk("%s: %d\n", __func__, jh->b_jcount);} while (0)
+                                      ^
+fs/jbd2/transaction.c:1219:23: note: ‘jh’ was declared here
+  struct journal_head *jh;
+                       ^
+In file included from fs/jbd2/transaction.c:19:0:
+fs/jbd2/transaction.c: In function ‘jbd2_journal_dirty_metadata’:
+./include/linux/jbd2.h:1637:38: warning: ‘jh’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+ #define JBUFFER_TRACE(jh, info) do { printk("%s: %d\n", __func__, jh->b_jcount);} while (0)
+                                      ^
+fs/jbd2/transaction.c:1332:23: note: ‘jh’ was declared here
+  struct journal_head *jh;
+                       ^
 
 Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
 Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Reviewed-by: Jan Kara <jack@suse.cz>
 Cc: stable@vger.kernel.org
+Reviewed-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/jbd2/transaction.c |   17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+ fs/jbd2/transaction.c |   16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
 --- a/fs/jbd2/transaction.c
 +++ b/fs/jbd2/transaction.c
-@@ -1578,14 +1578,21 @@ int jbd2_journal_forget (handle_t *handl
- 		/* However, if the buffer is still owned by a prior
- 		 * (committing) transaction, we can't drop it yet... */
- 		JBUFFER_TRACE(jh, "belongs to older transaction");
--		/* ... but we CAN drop it from the new transaction if we
--		 * have also modified it since the original commit. */
-+		/* ... but we CAN drop it from the new transaction through
-+		 * marking the buffer as freed and set j_next_transaction to
-+		 * the new transaction, so that not only the commit code
-+		 * knows it should clear dirty bits when it is done with the
-+		 * buffer, but also the buffer can be checkpointed only
-+		 * after the new transaction commits. */
+@@ -1215,11 +1215,12 @@ int jbd2_journal_get_undo_access(handle_
+ 	struct journal_head *jh;
+ 	char *committed_data = NULL;
  
--		if (jh->b_next_transaction) {
--			J_ASSERT(jh->b_next_transaction == transaction);
-+		set_buffer_freed(bh);
+-	JBUFFER_TRACE(jh, "entry");
+ 	if (jbd2_write_access_granted(handle, bh, true))
+ 		return 0;
+ 
+ 	jh = jbd2_journal_add_journal_head(bh);
++	JBUFFER_TRACE(jh, "entry");
 +
-+		if (!jh->b_next_transaction) {
- 			spin_lock(&journal->j_list_lock);
--			jh->b_next_transaction = NULL;
-+			jh->b_next_transaction = transaction;
- 			spin_unlock(&journal->j_list_lock);
-+		} else {
-+			J_ASSERT(jh->b_next_transaction == transaction);
+ 	/*
+ 	 * Do this first --- it can drop the journal lock, so we want to
+ 	 * make sure that obtaining the committed_data is done
+@@ -1336,15 +1337,17 @@ int jbd2_journal_dirty_metadata(handle_t
  
- 			/*
- 			 * only drop a reference if this transaction modified
+ 	if (is_handle_aborted(handle))
+ 		return -EROFS;
+-	if (!buffer_jbd(bh)) {
+-		ret = -EUCLEAN;
+-		goto out;
+-	}
++	if (!buffer_jbd(bh))
++		return -EUCLEAN;
++
+ 	/*
+ 	 * We don't grab jh reference here since the buffer must be part
+ 	 * of the running transaction.
+ 	 */
+ 	jh = bh2jh(bh);
++	jbd_debug(5, "journal_head %p\n", jh);
++	JBUFFER_TRACE(jh, "entry");
++
+ 	/*
+ 	 * This and the following assertions are unreliable since we may see jh
+ 	 * in inconsistent state unless we grab bh_state lock. But this is
+@@ -1378,9 +1381,6 @@ int jbd2_journal_dirty_metadata(handle_t
+ 	}
+ 
+ 	journal = transaction->t_journal;
+-	jbd_debug(5, "journal_head %p\n", jh);
+-	JBUFFER_TRACE(jh, "entry");
+-
+ 	jbd_lock_bh_state(bh);
+ 
+ 	if (jh->b_modified == 0) {
 
 
