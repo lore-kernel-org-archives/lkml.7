@@ -2,112 +2,147 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B26C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:52:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC78EC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:53:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7F0C218A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:52:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B3A1218A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:53:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lrtSK9Aw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="enaEQ19J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728398AbfCVQwt (ORCPT
+        id S1728427AbfCVQxM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 12:52:49 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:43976 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728291AbfCVQwt (ORCPT
+        Fri, 22 Mar 2019 12:53:12 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:37144 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727524AbfCVQxL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 12:52:49 -0400
-Received: by mail-pf1-f194.google.com with SMTP id c8so1911444pfd.10
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 09:52:48 -0700 (PDT)
+        Fri, 22 Mar 2019 12:53:11 -0400
+Received: by mail-lj1-f195.google.com with SMTP id v13so2639636ljk.4
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 09:53:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wY/T7bTulpPWrqCp7ceXPYlFk65OzAXhK7CekfQXmK8=;
-        b=lrtSK9Aw86HshxgPVg/YdXPdlbFutjnqD8UmcqLJEcvOatw8l9iHlBBsUWI3B8Z3q3
-         9MZgYcGklxrcgimrXnf5O02mcNnmRYwBZjlB8v4voljOj2SyrbtM3HJ7wagkVDpGGpeX
-         K1pSsA29lPxiAIzOItFckod0OfqOOEJ5vvZ/M=
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=XyBDQoTOXxQCDWDmwY1KbYgiZRQtfW/ijDyUEUHzSXI=;
+        b=enaEQ19JDicle811gc6J7mwQDxxg8Y306l2M6YcqzVAbrMzYtAVurFVL8ELx+Sxj5n
+         w7OVkW/3HicXdvIj26acGF+mXKbUfc5l7JViKwayxVdNYUaW165C725wW45pv6Ijycms
+         9pF22OOkuKVMzzbMKWyOMS7ZUmFr+3SUx5Rgh2/DTGQg1vSj1GuNPpIxiTenorA01Z4N
+         QT8KgklKhRm852MXGGaQNHVClAkVU4UJTFArG5n7JpxZpZ5hwtRP5o5SDwTJ1RXW26sW
+         uQEIwNHOjnM1RqlH1BUCJh0S7qJNAz01e6V5eC+ECZt1HOt2DySyN74EafKnJ4HIesyA
+         XzqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wY/T7bTulpPWrqCp7ceXPYlFk65OzAXhK7CekfQXmK8=;
-        b=e3HoEumO6xxlxVJd8HTVKYAU44Wh8EBZ9vNCauIOKPMDCUTF//oS6ony2x4jf6VGwj
-         7pww10WqJXX4brVv35uQ3k6A8o+3nwJr04Jcv6a+URsslLpqD00OJ6BS76oONVXHgaX3
-         LUmeV8/jXgqUDayx+LJB4Y0LN6PYEhn90IM4wq3ODPPCvffMX+5ZjVgrWteZ2Vv7C8He
-         07pZTiDfhkZiTzJfLdJHWV/yceFH2O8ixx4v5gfdLcsDwGFsmEGIJuKuTaF6uYqi2s9i
-         ZoTpNu/BaVFswL5h7TipYdw6OTigmPlwN3lgNOYr6U4JJy0d9yVcdJv9LfnYkvjkSliI
-         6NuA==
-X-Gm-Message-State: APjAAAUlWsL6gX46hj8g53D1ylZax0tdj3HhRf3FFwCO3zXbkXqrwykX
-        gth4EpLm3qZ7ASSTrp0gsi5kVQ==
-X-Google-Smtp-Source: APXvYqxcjsXz0hy+Yza36eaEa4CJdV2qKWk+8eMebC19TGRqGDH5ErFHGprCk5FCC12Fg8dnX20rAg==
-X-Received: by 2002:a63:1723:: with SMTP id x35mr9570272pgl.364.1553273567930;
-        Fri, 22 Mar 2019 09:52:47 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id p25sm3669481pfd.13.2019.03.22.09.52.47
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 22 Mar 2019 09:52:47 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Heiko Stuebner <heiko@sntech.de>
-Cc:     mka@chromium.org, ryandcase@chromium.org,
-        Douglas Anderson <dianders@chromium.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] ARM: dts: rockchip: Add dvs-gpios to rk3288-veyron-jerry
-Date:   Fri, 22 Mar 2019 09:52:09 -0700
-Message-Id: <20190322165209.196926-1-dianders@chromium.org>
-X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XyBDQoTOXxQCDWDmwY1KbYgiZRQtfW/ijDyUEUHzSXI=;
+        b=fl6Nx2CDyxAXLL8trMRKFrFIHX+YiNjJkDPRrj9Vqx0pdx21Lbox2Zai3CvR8dqwiD
+         qGIJAN8m3gDcMMixcNTGHJJfSLnOmlg+Rqvr70t8vqai9vQKJJntQiBck2QVHS4StRbC
+         9F5mHTNIqHHV3UFNu/SNeSEIqKbM8jhJ34PqAGV3TD3FGclLdKTzkM3Hv4fWbTTbL1oa
+         +WgyGe9DRvxIfc6inJtp+AK20/QymWvDxJJIBgU6jx8Wx+P+YEd1mDFxNJbRT2P/e8uY
+         X5xmetviwyiRoiC39oMYegor2HEtotG3eQ8oREifX00qq/p+V8hANhN2Q2R8BurqhPgT
+         yzyg==
+X-Gm-Message-State: APjAAAUiPLEJjEZVmYRqZXZaTJgwCPHuHdJuoIijigbBGLwE0dzb3VaA
+        tNCZRVDXIL/aZhwHF/DEMhw=
+X-Google-Smtp-Source: APXvYqysNmCALAhVcOSs1kkuBcI+Qk7HWnokHui3AM/LVQfdXORK6PFlkIEYPoPUiLC7w7yEQHlcwg==
+X-Received: by 2002:a2e:4715:: with SMTP id u21mr5779442lja.156.1553273589662;
+        Fri, 22 Mar 2019 09:53:09 -0700 (PDT)
+Received: from pc636 ([37.139.158.167])
+        by smtp.gmail.com with ESMTPSA id m10sm1356704lfp.10.2019.03.22.09.53.08
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 22 Mar 2019 09:53:08 -0700 (PDT)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Fri, 22 Mar 2019 17:52:59 +0100
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Garnier <thgarnie@google.com>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joelaf@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@elte.hu>, Tejun Heo <tj@kernel.org>
+Subject: Re: [RFC PATCH v2 0/1] improve vmap allocation
+Message-ID: <20190322165259.uorw6ymewjybxwwx@pc636>
+References: <20190321190327.11813-1-urezki@gmail.com>
+ <20190321150106.198f70e1e949e2cb8cc06f1c@linux-foundation.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190321150106.198f70e1e949e2cb8cc06f1c@linux-foundation.org>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When the rk3288-jerry device tree was first submitted we left out the
-dvs-gpios because I pointed out that the property "dvs-gpios" wasn't
-yet supported upstream [1].  Soon after that the property was added in
-commit bad47ad2eef3 ("regulator: rk808: fixed the overshoot when
-adjust voltage").  ...but we forgot to go back and add the property to
-the jerry device tree file.  Let's do so now.
+On Thu, Mar 21, 2019 at 03:01:06PM -0700, Andrew Morton wrote:
+> On Thu, 21 Mar 2019 20:03:26 +0100 "Uladzislau Rezki (Sony)" <urezki@gmail.com> wrote:
+> 
+> > Hello.
+> > 
+> > This is the v2 of the https://lkml.org/lkml/2018/10/19/786 rework. Instead of
+> > referring you to that link, i will go through it again describing the improved
+> > allocation method and provide changes between v1 and v2 in the end.
+> > 
+> > ...
+> >
+> 
+> > Performance analysis
+> > --------------------
+> 
+> Impressive numbers.  But this is presumably a worst-case microbenchmark.
+> 
+> Are you able to describe the benefits which are observed in some
+> real-world workload which someone cares about?
+> 
+We work with Android. Google uses its own tool called UiBench to measure
+performance of UI. It counts dropped or delayed frames, or as they call it,
+jank. Basically if we deliver 59(should be 60) frames per second then we
+get 1 junk/drop.
 
-NOTE: without this patch, jerry is likely still stable (thanks to the
-fallback of making many small jumps in the rk808 regulator code) but
-it'll take quite a bit longer to make voltage transitions.
+I see that on our devices avg-jank is lower. In our case Android graphics
+pipeline uses vmalloc allocations which can lead to delays of UI content
+to GPU. But such behavior depends on your platform, parts of the system
+which make use of it and if they are critical to time or not.
 
-[1] https://lore.kernel.org/linux-arm-kernel/CAD=FV=WwFgjzbk9xF5TU_ie6UnHQMyrZ176D4+jJTWWOoaKC2Q@mail.gmail.com/
+Second example is indirect impact. During analysis of audio glitches
+in high-resolution audio the source of drops were long alloc_vmap_area()
+allocations.
 
-Fixes: f3ee390e4ef2 ("ARM: dts: rockchip: add veyron-jerry board")
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
+# Explanation is here
+ftp://vps418301.ovh.net/incoming/analysis_audio_glitches.txt
 
- arch/arm/boot/dts/rk3288-veyron-jerry.dts | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+# Audio 10 seconds sample is here.
+# The drop occurs at 00:09.295 you can hear it
+ftp://vps418301.ovh.net/incoming/tst_440_HZ_tmp_1.wav
 
-diff --git a/arch/arm/boot/dts/rk3288-veyron-jerry.dts b/arch/arm/boot/dts/rk3288-veyron-jerry.dts
-index 2ba89895c33a..cc3019dc38e1 100644
---- a/arch/arm/boot/dts/rk3288-veyron-jerry.dts
-+++ b/arch/arm/boot/dts/rk3288-veyron-jerry.dts
-@@ -61,7 +61,9 @@
- 
- &rk808 {
- 	pinctrl-names = "default";
--	pinctrl-0 = <&pmic_int_l>;
-+	pinctrl-0 = <&pmic_int_l &dvs_1 &dvs_2>;
-+	dvs-gpios = <&gpio7 RK_PB4 GPIO_ACTIVE_HIGH>,
-+		    <&gpio7 RK_PB7 GPIO_ACTIVE_HIGH>;
- 
- 	regulators {
- 		mic_vcc: LDO_REG2 {
--- 
-2.21.0.392.gf8f6787159e-goog
+>
+> It's a lot of new code. I t looks decent and I'll toss it in there for
+> further testing.  Hopefully someone will be able to find the time for a
+> detailed review.
+> 
+Thank you :)
 
+> Trivial point: the code uses "inline" a lot.  Nowadays gcc cheerfully
+> ignores that and does its own thing.  You might want to look at the
+> effects of simply deleting all that.  Is the generated code better or
+> worse or the same?  If something really needs to be inlined then use
+> __always_inline, preferably with a comment explaining why it is there.
+> 
+When the main core functionalities are "inlined" i see the benefit. 
+At least, it is noticeable by the "test driver". But i agree that
+i should check one more time to see what can be excluded and used
+as a regular call. Thanks for the hint, it is worth to go with
+__always_inline instead.
+
+--
+Vlad Rezki
