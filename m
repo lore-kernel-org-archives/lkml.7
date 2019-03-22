@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0E83C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:49:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A84B4C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:49:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96D6B2192C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:49:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C54C21929
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:49:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255363;
-	bh=+WEDRVfrID4hFl7xHHfx+qcpb7JxppaIOCUx1Zf+T8k=;
+	s=default; t=1553255367;
+	bh=gBY69CarT0XJTcktrsa5wz2guiQJf+Eh/+IYpXO5fCQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=INJEpOP8H1ydDuyylAp1WJNWNIsfqsoLlXBRuOxsdsTVtI08bYOyarvu8RWilK1s5
-	 Ckk/9OMBzCBTuKanmb2hCIYP3SIQrL3JJxiJeqbDDLqZfB1xXMI7FDzMn/rzXLaUSx
-	 1ODFGs0+/GNdVfZ4QE7kKbsoVpe74vx0cOo0pCBQ=
+	b=K6DTOigF4xJZ67FCxyU+KQK7JtnuZt5BMmemH5ed1EbE8nXI11xyL7OapzPRzh3gc
+	 tIgRNVW5Uw9xitYroGNK/CEvwK759dG2u/WkXk230nyydwrCwbZUpVRdktdTc1KDMC
+	 T9ntzjFZzf+sFJqufgEukabPIiWQ07EPJ1JNtNwU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732149AbfCVLtW (ORCPT
+        id S1732468AbfCVLt0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:49:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52934 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:49:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732443AbfCVLtT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:49:19 -0400
+        id S1732443AbfCVLtX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:49:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 550E221929;
-        Fri, 22 Mar 2019 11:49:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22B212192C;
+        Fri, 22 Mar 2019 11:49:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255358;
-        bh=+WEDRVfrID4hFl7xHHfx+qcpb7JxppaIOCUx1Zf+T8k=;
+        s=default; t=1553255362;
+        bh=gBY69CarT0XJTcktrsa5wz2guiQJf+Eh/+IYpXO5fCQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j+RqiqnMG7sCpvBhOkPcuqvCePloZHQAANVe/PoprUWXxh1l596vHFqiIM50groIk
-         nSuQCXX79Oj9C5GrzH08uMpCYfGYJwsg053F2ydSu7G9HsBGLsm6QwMGvuXZTOO+S5
-         v99BqWhoxtPNDp9+upeJIVixvbBpKuvKtaV/gSoQ=
+        b=J6rl87hS89JV0KLn/uK5GJ/b5gSqNF47hXmGTJuztQzyM/AgrktkHa0GqAAxojSdh
+         pbT5Gqu/oj0rFJOEvRimiCcWueUsSPs8K+pL6oKfxs/vPF3zyR+8SaWbam/7H92WBS
+         mlwbh7+3LuJiyCcqK8CWCQjgJdM+gSudAPcZFMvY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Matthias Maennich <maennich@google.com>
-Subject: [PATCH 4.14 066/183] media: videobuf2-v4l2: drop WARN_ON in vb2_warn_zero_bytesused()
-Date:   Fri, 22 Mar 2019 12:14:54 +0100
-Message-Id: <20190322111246.493185843@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Subject: [PATCH 4.14 067/183] stm class: Prevent division by zero
+Date:   Fri, 22 Mar 2019 12:14:55 +0100
+Message-Id: <20190322111246.565668273@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111241.819468003@linuxfoundation.org>
 References: <20190322111241.819468003@linuxfoundation.org>
@@ -67,36 +65,48 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 
-commit 5e99456c20f712dcc13d9f6ca4278937d5367355 upstream.
+commit bf7cbaae0831252b416f375ca9b1027ecd4642dd upstream.
 
-Userspace shouldn't set bytesused to 0 for output buffers.
-vb2_warn_zero_bytesused() warns about this (only once!), but it also
-calls WARN_ON(1), which is confusing since it is not immediately clear
-that it warns about a 0 value for bytesused.
+Using STP_POLICY_ID_SET ioctl command with dummy_stm device, or any STM
+device that supplies zero mmio channel size, will trigger a division by
+zero bug in the kernel.
 
-Just drop the WARN_ON as it serves no purpose.
+Prevent this by disallowing channel widths other than 1 for such devices.
 
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Acked-by: Ezequiel Garcia <ezequiel@collabora.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc: Matthias Maennich <maennich@google.com>
+Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Fixes: 7bd1d4093c2f ("stm class: Introduce an abstraction for System Trace Module devices")
+CC: stable@vger.kernel.org # v4.4+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/v4l2-core/videobuf2-v4l2.c |    1 -
- 1 file changed, 1 deletion(-)
+ drivers/hwtracing/stm/core.c |    8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
---- a/drivers/media/v4l2-core/videobuf2-v4l2.c
-+++ b/drivers/media/v4l2-core/videobuf2-v4l2.c
-@@ -145,7 +145,6 @@ static void vb2_warn_zero_bytesused(stru
- 		return;
+--- a/drivers/hwtracing/stm/core.c
++++ b/drivers/hwtracing/stm/core.c
+@@ -561,7 +561,7 @@ static int stm_char_policy_set_ioctl(str
+ {
+ 	struct stm_device *stm = stmf->stm;
+ 	struct stp_policy_id *id;
+-	int ret = -EINVAL;
++	int ret = -EINVAL, wlimit = 1;
+ 	u32 size;
  
- 	check_once = true;
--	WARN_ON(1);
+ 	if (stmf->output.nr_chans)
+@@ -589,8 +589,10 @@ static int stm_char_policy_set_ioctl(str
+ 	if (id->__reserved_0 || id->__reserved_1)
+ 		goto err_free;
  
- 	pr_warn("use of bytesused == 0 is deprecated and will be removed in the future,\n");
- 	if (vb->vb2_queue->allow_zero_bytesused)
+-	if (id->width < 1 ||
+-	    id->width > PAGE_SIZE / stm->data->sw_mmiosz)
++	if (stm->data->sw_mmiosz)
++		wlimit = PAGE_SIZE / stm->data->sw_mmiosz;
++
++	if (id->width < 1 || id->width > wlimit)
+ 		goto err_free;
+ 
+ 	ret = stm_file_assign(stmf, id->id, id->width);
 
 
