@@ -6,50 +6,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E0DAC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:21:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62F2DC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:21:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52EB72190A
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:21:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31FEC218D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:21:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553253684;
-	bh=lRONi4mE+VcpqLNz8wGhUHi1FFbYYfH6NnKCp4WjAyA=;
+	s=default; t=1553253686;
+	bh=z3iwrOaU053s6NSTozFd7Da2hEqeZWuS1oZeG+QXA1I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VN0Y4lTx0NVDa1aPsvK03pb0rNt3iE4RTLI+VgzJ1v46I7QNlxEBjERnlS4HuuMqR
-	 GTp2dt0OwqLBT8Q3yt4QCzzNIRI7nerbysASVkEkjsjBdT7J76TvbB/w2rtpCVZG8a
-	 /Y6auHcsFFuh6mPUJuRJCwByToUfMQ/SmUxxDcEY=
+	b=V53Xp0VJB1xLTGKRq7yDvTnssuhu0wVIOo7BCBRixUX42o+rg5rqARdfPypB0Vw3H
+	 QFLL3seyBS0hNt5DAkz/kzwa9CZ1yz3Fu3Cp1swYGOD9DBdjIFrwTcSw0h/s00psCF
+	 5wAyDkcnfIWOmh8C9zlF7In75oIO9XkLjOi5W/X4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728197AbfCVLVW (ORCPT
+        id S1728212AbfCVLVZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:21:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47792 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:21:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47866 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728566AbfCVLVT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:21:19 -0400
+        id S1728577AbfCVLVW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:21:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DACD21929;
-        Fri, 22 Mar 2019 11:21:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53950218A2;
+        Fri, 22 Mar 2019 11:21:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553253677;
-        bh=lRONi4mE+VcpqLNz8wGhUHi1FFbYYfH6NnKCp4WjAyA=;
+        s=default; t=1553253681;
+        bh=z3iwrOaU053s6NSTozFd7Da2hEqeZWuS1oZeG+QXA1I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y7aR1fzZc7kg8fyjdSMtqHsfI5Bw59MpPIIi7Mb/Gb4jqxwrc3F01zZmIIQGCBJTW
-         fKyuj0vA6bHgT9XV7rv6Ct3LHIlKlXU/7hrYtmj9OeU0/EaSBUyykeVY7QJtDPV4pH
-         l1dmBZkPrm1PIajjLq9fFgqE2gEzaF9MzWclGdnY=
+        b=RPigH1pJdj9PkgRBLtPjTBNmhjGh0Tf/qczZm/BLwnsLvRc3CKNJq4dJ7fUbv8XU8
+         rboNSkm+YBy7kPM1TetEOlh5U0hss9poZFoBjdcqJ/0g1nf5TXXfPQFHobnbr2JV/N
+         t5TBQfZbMswOuEGLH7Og0+P8sa39YEgoR5wB8e4E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        Marek Lindner <mareklindner@neomailbox.ch>,
-        Simon Wunderlich <sw@simonwunderlich.de>,
-        Antonio Quartulli <a@unstable.cc>,
+        stable@vger.kernel.org, Kal Conley <kal.conley@dectris.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 3.18 020/134] batman-adv: fix uninit-value in batadv_interface_tx()
-Date:   Fri, 22 Mar 2019 12:13:53 +0100
-Message-Id: <20190322111211.357856070@linuxfoundation.org>
+Subject: [PATCH 3.18 021/134] net/packet: fix 4gb buffer limit due to overflow check
+Date:   Fri, 22 Mar 2019 12:13:54 +0100
+Message-Id: <20190322111211.399278611@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111210.465931067@linuxfoundation.org>
 References: <20190322111210.465931067@linuxfoundation.org>
@@ -68,99 +64,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Eric Dumazet <edumazet@google.com>
+From: Kal Conley <kal.conley@dectris.com>
 
-[ Upstream commit 4ffcbfac60642f63ae3d80891f573ba7e94a265c ]
+[ Upstream commit fc62814d690cf62189854464f4bd07457d5e9e50 ]
 
-KMSAN reported batadv_interface_tx() was possibly using a
-garbage value [1]
+When calculating rb->frames_per_block * req->tp_block_nr the result
+can overflow. Check it for overflow without limiting the total buffer
+size to UINT_MAX.
 
-batadv_get_vid() does have a pskb_may_pull() call
-but batadv_interface_tx() does not actually make sure
-this did not fail.
+This change fixes support for packet ring buffers >= UINT_MAX.
 
-[1]
-BUG: KMSAN: uninit-value in batadv_interface_tx+0x908/0x1e40 net/batman-adv/soft-interface.c:231
-CPU: 0 PID: 10006 Comm: syz-executor469 Not tainted 4.20.0-rc7+ #5
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x173/0x1d0 lib/dump_stack.c:113
- kmsan_report+0x12e/0x2a0 mm/kmsan/kmsan.c:613
- __msan_warning+0x82/0xf0 mm/kmsan/kmsan_instr.c:313
- batadv_interface_tx+0x908/0x1e40 net/batman-adv/soft-interface.c:231
- __netdev_start_xmit include/linux/netdevice.h:4356 [inline]
- netdev_start_xmit include/linux/netdevice.h:4365 [inline]
- xmit_one net/core/dev.c:3257 [inline]
- dev_hard_start_xmit+0x607/0xc40 net/core/dev.c:3273
- __dev_queue_xmit+0x2e42/0x3bc0 net/core/dev.c:3843
- dev_queue_xmit+0x4b/0x60 net/core/dev.c:3876
- packet_snd net/packet/af_packet.c:2928 [inline]
- packet_sendmsg+0x8306/0x8f30 net/packet/af_packet.c:2953
- sock_sendmsg_nosec net/socket.c:621 [inline]
- sock_sendmsg net/socket.c:631 [inline]
- __sys_sendto+0x8c4/0xac0 net/socket.c:1788
- __do_sys_sendto net/socket.c:1800 [inline]
- __se_sys_sendto+0x107/0x130 net/socket.c:1796
- __x64_sys_sendto+0x6e/0x90 net/socket.c:1796
- do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:291
- entry_SYSCALL_64_after_hwframe+0x63/0xe7
-RIP: 0033:0x441889
-Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 bb 10 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffdda6fd468 EFLAGS: 00000216 ORIG_RAX: 000000000000002c
-RAX: ffffffffffffffda RBX: 0000000000000002 RCX: 0000000000441889
-RDX: 000000000000000e RSI: 00000000200000c0 RDI: 0000000000000003
-RBP: 0000000000000003 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000216 R12: 00007ffdda6fd4c0
-R13: 00007ffdda6fd4b0 R14: 0000000000000000 R15: 0000000000000000
-
-Uninit was created at:
- kmsan_save_stack_with_flags mm/kmsan/kmsan.c:204 [inline]
- kmsan_internal_poison_shadow+0x92/0x150 mm/kmsan/kmsan.c:158
- kmsan_kmalloc+0xa6/0x130 mm/kmsan/kmsan_hooks.c:176
- kmsan_slab_alloc+0xe/0x10 mm/kmsan/kmsan_hooks.c:185
- slab_post_alloc_hook mm/slab.h:446 [inline]
- slab_alloc_node mm/slub.c:2759 [inline]
- __kmalloc_node_track_caller+0xe18/0x1030 mm/slub.c:4383
- __kmalloc_reserve net/core/skbuff.c:137 [inline]
- __alloc_skb+0x309/0xa20 net/core/skbuff.c:205
- alloc_skb include/linux/skbuff.h:998 [inline]
- alloc_skb_with_frags+0x1c7/0xac0 net/core/skbuff.c:5220
- sock_alloc_send_pskb+0xafd/0x10e0 net/core/sock.c:2083
- packet_alloc_skb net/packet/af_packet.c:2781 [inline]
- packet_snd net/packet/af_packet.c:2872 [inline]
- packet_sendmsg+0x661a/0x8f30 net/packet/af_packet.c:2953
- sock_sendmsg_nosec net/socket.c:621 [inline]
- sock_sendmsg net/socket.c:631 [inline]
- __sys_sendto+0x8c4/0xac0 net/socket.c:1788
- __do_sys_sendto net/socket.c:1800 [inline]
- __se_sys_sendto+0x107/0x130 net/socket.c:1796
- __x64_sys_sendto+0x6e/0x90 net/socket.c:1796
- do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:291
- entry_SYSCALL_64_after_hwframe+0x63/0xe7
-
-Fixes: c6c8fea29769 ("net: Add batman-adv meshing protocol")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Cc:	Marek Lindner <mareklindner@neomailbox.ch>
-Cc:	Simon Wunderlich <sw@simonwunderlich.de>
-Cc:	Antonio Quartulli <a@unstable.cc>
+Fixes: 8f8d28e4d6d8 ("net/packet: fix overflow in check for tp_frame_nr")
+Signed-off-by: Kal Conley <kal.conley@dectris.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/batman-adv/soft-interface.c |    2 ++
- 1 file changed, 2 insertions(+)
+ net/packet/af_packet.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/batman-adv/soft-interface.c
-+++ b/net/batman-adv/soft-interface.c
-@@ -186,6 +186,8 @@ static int batadv_interface_tx(struct sk
- 
- 	switch (ntohs(ethhdr->h_proto)) {
- 	case ETH_P_8021Q:
-+		if (!pskb_may_pull(skb, sizeof(*vhdr)))
-+			goto dropped;
- 		vhdr = vlan_eth_hdr(skb);
- 
- 		if (vhdr->h_vlan_encapsulated_proto != ethertype) {
+--- a/net/packet/af_packet.c
++++ b/net/packet/af_packet.c
+@@ -3894,7 +3894,7 @@ static int packet_set_ring(struct sock *
+ 		rb->frames_per_block = req->tp_block_size/req->tp_frame_size;
+ 		if (unlikely(rb->frames_per_block <= 0))
+ 			goto out;
+-		if (unlikely(req->tp_block_size > UINT_MAX / req->tp_block_nr))
++		if (unlikely(rb->frames_per_block > UINT_MAX / req->tp_block_nr))
+ 			goto out;
+ 		if (unlikely((rb->frames_per_block * req->tp_block_nr) !=
+ 					req->tp_frame_nr))
 
 
