@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DACFC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:09:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E3EAC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:09:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E12220830
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:09:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F7482192C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:09:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256550;
-	bh=WPBZUShpv/Qt1MsO26CfW2oZYcPGp1E4/CYdrzzSZrc=;
+	s=default; t=1553256553;
+	bh=4GdY35UyizSYrAWL9+E1FqQOUY9I+nTX80PT0Nc7ric=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cn/GH0QP540BgMkIqys5zk8GmyI/84i5j7odrAUnDdWo+G0+acXqW34EThvfyH57l
-	 5+F1HeDkBgai4On5B4eeSqIoLpdG9hBAVh0FM28OQKRUdRxgn1vdQfop6rsBy6zAp9
-	 MCko9bkBY7ACi8wkV1Be/ctmMifyPKeOy2JnvrrU=
+	b=r3s9r8S98hHMidwrnzUCT4UKjGwEE+1sojOewCPBb5OTcGthIKtFDRoNqGUgGK2c7
+	 WJFvOzvg5XvovrvYgEuWKBolISPrGsFU3zP7FfcBv5HKy2HgEt/wv+Vi6+fuuNvI/u
+	 /NANzLGPzkk2Qo970cp6j+gZMrChKFKDlkRNSblU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389263AbfCVMJJ (ORCPT
+        id S2389005AbfCVMJM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:09:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47522 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:09:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389252AbfCVMJG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:09:06 -0400
+        id S2389252AbfCVMJJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:09:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F369A20685;
-        Fri, 22 Mar 2019 12:09:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C007B20685;
+        Fri, 22 Mar 2019 12:09:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256545;
-        bh=WPBZUShpv/Qt1MsO26CfW2oZYcPGp1E4/CYdrzzSZrc=;
+        s=default; t=1553256549;
+        bh=4GdY35UyizSYrAWL9+E1FqQOUY9I+nTX80PT0Nc7ric=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DZ4gNirsPoU2E/JwlEC5V8WpIAr7G6hpxqGVNHXfw6Ohji2Nz/tU4Z/p3tlpEBeBe
-         Iykl4NA7tToaCSLjSEiPPaCSJn4n23kPsIn4lLs+h5yjo9QlXXFmAxN+FilM/wuCAk
-         6gTJ01uFoNa0Q2l0kkP8iNfxpYsb/YulE/NeAxmw=
+        b=BZKQZZdB2kD8WNoM0NFXXqBgZv7NQQr6Y1MZKGu7PoU/S6abzB3scaPsMLtoTKKIT
+         EJ64t1IDSzKoaqpy2IYGSsNt5rmBYlfXIVxAv0LIP5/su/tbxgixe02eVOVZEu6OV5
+         mY6zxbgvYeJR7wxGv/pAAqk6n98YHfKFC/9DcVVE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, NeilBrown <neil@brown.name>,
-        Mike Snitzer <snitzer@redhat.com>,
-        =?UTF-8?q?Guillaume=20Perr=C3=A9al?= <gperreal@free.fr>
-Subject: [PATCH 4.19 236/280] dm: fix to_sector() for 32bit
-Date:   Fri, 22 Mar 2019 12:16:29 +0100
-Message-Id: <20190322111338.301754730@linuxfoundation.org>
+        stable@vger.kernel.org, Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Yihao Wu <wuyihao@linux.alibaba.com>,
+        "J. Bruce Fields" <bfields@redhat.com>
+Subject: [PATCH 4.19 245/280] nfsd: fix wrong check in write_v4_end_grace()
+Date:   Fri, 22 Mar 2019 12:16:38 +0100
+Message-Id: <20190322111340.267107303@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -66,40 +66,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: NeilBrown <neil@brown.name>
+From: Yihao Wu <wuyihao@linux.alibaba.com>
 
-commit 0bdb50c531f7377a9da80d3ce2d61f389c84cb30 upstream.
+commit dd838821f0a29781b185cd8fb8e48d5c177bd838 upstream.
 
-A dm-raid array with devices larger than 4GB won't assemble on
-a 32 bit host since _check_data_dev_sectors() was added in 4.16.
-This is because to_sector() treats its argument as an "unsigned long"
-which is 32bits (4GB) on a 32bit host.  Using "unsigned long long"
-is more correct.
+Commit 62a063b8e7d1 "nfsd4: fix crash on writing v4_end_grace before
+nfsd startup" is trying to fix a NULL dereference issue, but it
+mistakenly checks if the nfsd server is started. So fix it.
 
-Kernels as early as 4.2 can have other problems due to to_sector()
-being used on the size of a device.
-
-Fixes: 0cf4503174c1 ("dm raid: add support for the MD RAID0 personality")
-cc: stable@vger.kernel.org (v4.2+)
-Reported-and-tested-by: Guillaume Perréal <gperreal@free.fr>
-Signed-off-by: NeilBrown <neil@brown.name>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Fixes: 62a063b8e7d1 "nfsd4: fix crash on writing v4_end_grace before nfsd startup"
+Cc: stable@vger.kernel.org
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Signed-off-by: Yihao Wu <wuyihao@linux.alibaba.com>
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/device-mapper.h |    2 +-
+ fs/nfsd/nfsctl.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/include/linux/device-mapper.h
-+++ b/include/linux/device-mapper.h
-@@ -601,7 +601,7 @@ do {									\
-  */
- #define dm_target_offset(ti, sector) ((sector) - (ti)->begin)
- 
--static inline sector_t to_sector(unsigned long n)
-+static inline sector_t to_sector(unsigned long long n)
- {
- 	return (n >> SECTOR_SHIFT);
- }
+--- a/fs/nfsd/nfsctl.c
++++ b/fs/nfsd/nfsctl.c
+@@ -1126,7 +1126,7 @@ static ssize_t write_v4_end_grace(struct
+ 		case 'Y':
+ 		case 'y':
+ 		case '1':
+-			if (nn->nfsd_serv)
++			if (!nn->nfsd_serv)
+ 				return -EBUSY;
+ 			nfsd4_end_grace(nn);
+ 			break;
 
 
