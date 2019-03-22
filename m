@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B6CAC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:31:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D87D4C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:31:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2ACC821917
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:31:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A93D22083D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:31:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="O7JyUlHV"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="tRcKxyEP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728791AbfCVNbS (ORCPT
+        id S1728584AbfCVNbO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 09:31:18 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:52093 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728636AbfCVNbR (ORCPT
+        Fri, 22 Mar 2019 09:31:14 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:37758 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728328AbfCVNbM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 09:31:17 -0400
-Received: by mail-wm1-f67.google.com with SMTP id 4so2182173wmf.1
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 06:31:15 -0700 (PDT)
+        Fri, 22 Mar 2019 09:31:12 -0400
+Received: by mail-wm1-f68.google.com with SMTP id v14so2199432wmf.2
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 06:31:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=DJCTKeU3jLYf3XASl//CRihnyc7HBAaFWnezC3bBpFc=;
-        b=O7JyUlHVTfzXhDVBzgceJS//GqrcMMJjiGbhASA8Z32TZqQeau1RnLsqOlh78Kqc4O
-         aSDf9hzj9GwrSAQg7VboNU9J8o0jBqH9591psheWNwrYI7kjvxx3BbIsTaEIOP5cZhU8
-         Mk8deZ7e/d/MzeeSnwGEzDdKfTQ3JDLIoYK8O3amDFNaw9CEwjqG3y62/FOPfEYuPpTM
-         gqTPXBvTYwtZ5vd3bleGl3lvkzQAPpwroK2iU8AEQ969yZPVNsvTHAAekzjH0NUI7qgK
-         pCATx1hNPcwq+iitGQMFRoh1j1lovJ+efWCrOoOoxd5H22HHL10yGKbVzSdqkNv6gC2p
-         29MQ==
+        bh=VX3opZVcmkM+En0hefdq8W/vBGhiheYA82Y7qB1etT8=;
+        b=tRcKxyEPgC7Yid5dHv4z/8D5OkvK/tWuasq0SLL7LtYel1NfOlvgDkSFno301pz2ZM
+         5QjmO0cLoXdCp6FKKPQsYmSjUS8dH6kGFs9zL0x6NoGOwiqfQQhl0Ym3Tt1F7vyN1hQY
+         CGolNXd/jWk18hZg+KweqZL5O642Ui2BE7BQCWrd5qt81Rg3zQYgb332jIsbuxGn0qaC
+         efL39/TtOWA9nrwG4f09XUB+SMR+bDxT3tQ0/AD+Fwvtb/HXJ6RNMgIL0pJNYwvJpl19
+         Gw01ZC0kML5W23sPeOnhF0D1tdl5ZogBhMX3J21pYDE7xwifRXRghs9/DxaxHUmxvzpA
+         6YSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=DJCTKeU3jLYf3XASl//CRihnyc7HBAaFWnezC3bBpFc=;
-        b=OIHP+NDOGByJ9qHgO9MC2oRDz0mjUDnA77flH3jbU1adj2KvXA4F4Myrlg3bkI9RJm
-         mW/BEUc8cbB37V0mzUCfhMbLQpF8a3qGWLyPT88zU3A1OMArwUv8HAXvxRtAmLMhWz6n
-         5d5oE+ZM3HppESLjX0O+3WnT4tgCo+G6GkFc7aPsgav5HiM89aJoebzsnrf4OTmtq7h3
-         kYT5BBk5SLYUer5h/kX43z5jWd6eN5WXkjM3M+cYKCk2enLcc2g1Bb8ZlDTZmbs5VMTK
-         4jZPNQ8i/aUbJBhIuHKZcoElxpO/J98V7FBZmf899Ypt2dRJFad7Dl6FGRuNIztWLDPb
-         VwaA==
-X-Gm-Message-State: APjAAAUd2bREXf+vgFB+Z6n3enemcfDMftLXKT20lDFIiiHFKrn2btKN
-        xTAn4pJkHv94BI3uayNgYzDXmA==
-X-Google-Smtp-Source: APXvYqxZ25G1Ovx5K+8TLlzx+9ucwjR8c0oCh+u28ns7kSnoeYs4RIvUHrcETMl1d4HTiehN2jDD/Q==
-X-Received: by 2002:a05:600c:210e:: with SMTP id u14mr3251607wml.50.1553261475318;
-        Fri, 22 Mar 2019 06:31:15 -0700 (PDT)
+        bh=VX3opZVcmkM+En0hefdq8W/vBGhiheYA82Y7qB1etT8=;
+        b=QDMcp93dN2kDnHr++3DdgWiSt/UMb4XlUJ/Sxmm9BTcusk5IRqTH2usXyq60QgF/XG
+         S57cwrQtlDdskRKBlbwwmDwSR0n3KslAshDJN2S1eC06HhDyHHuV+TxtX49O0sv6l7QB
+         p3WkScNQ0D9srEefSqPbvA8y33kedhKyDPsofHRb67eHNK60Ab60pDQldZJDN5ZgrqKv
+         i00dUUhsdelnHkYLhKShrjnvJygPkq3CrNKMFRl+lDk2jJybJ1BWAC7HfYCggaQ3sclz
+         4JDEL6A2v9OeJVF8/9hxtZx0CbiG84g2kxV5kIOOlAH+V8km7z2rzwDr6SuvPw+FCoPu
+         AYmw==
+X-Gm-Message-State: APjAAAUGmyqiBaU1TQWeo+JsLt34VSh6YroMGAINU2Sa5cgTjl8taASe
+        +Hc5sKZnxI/ELcPWnOW7ugsW5A==
+X-Google-Smtp-Source: APXvYqwkMum/YJ7a4mIiYv3wZuCKXSQ84Yc+NCU2xW7a3sF5mVC3G90c/BGgg6VCDrNrOnjL878rVw==
+X-Received: by 2002:a1c:66c2:: with SMTP id a185mr3055085wmc.139.1553261470538;
+        Fri, 22 Mar 2019 06:31:10 -0700 (PDT)
 Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
-        by smtp.gmail.com with ESMTPSA id o15sm4684345wrj.59.2019.03.22.06.31.13
+        by smtp.gmail.com with ESMTPSA id o15sm4684345wrj.59.2019.03.22.06.31.09
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 22 Mar 2019 06:31:14 -0700 (PDT)
+        Fri, 22 Mar 2019 06:31:09 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -64,9 +64,9 @@ To:     Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>,
 Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v2 4/4] ARM: davinci_all_defconfig: Enable CPUFREQ_DT
-Date:   Fri, 22 Mar 2019 14:31:05 +0100
-Message-Id: <20190322133105.5945-5-brgl@bgdev.pl>
+Subject: [PATCH v2 1/4] ARM: davinci: fix cpufreq registration on da850-evm
+Date:   Fri, 22 Mar 2019 14:31:02 +0100
+Message-Id: <20190322133105.5945-2-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190322133105.5945-1-brgl@bgdev.pl>
 References: <20190322133105.5945-1-brgl@bgdev.pl>
@@ -77,29 +77,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Lechner <david@lechnology.com>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-This sets CONFIG_CPUFREQ_DT=m in davinci_all_defconfig. This is used for
-frequency scaling on device tree boards.
+The system_rev variable is never set on davinci and is always 0, so
+we're using the default max operating point of 300MHz. The cvdd supply
+comes from the tps6507 pmic and the voltage can go all the way to 1.3V
+so the maximum supported rate should be 456MHz.
 
-Signed-off-by: David Lechner <david@lechnology.com>
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- arch/arm/configs/davinci_all_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/mach-davinci/board-da850-evm.c | 12 +-----------
+ 1 file changed, 1 insertion(+), 11 deletions(-)
 
-diff --git a/arch/arm/configs/davinci_all_defconfig b/arch/arm/configs/davinci_all_defconfig
-index 207962a656a2..c3502236132e 100644
---- a/arch/arm/configs/davinci_all_defconfig
-+++ b/arch/arm/configs/davinci_all_defconfig
-@@ -45,6 +45,7 @@ CONFIG_CPU_FREQ_DEFAULT_GOV_USERSPACE=y
- CONFIG_CPU_FREQ_GOV_PERFORMANCE=m
- CONFIG_CPU_FREQ_GOV_POWERSAVE=m
- CONFIG_CPU_FREQ_GOV_ONDEMAND=m
-+CONFIG_CPUFREQ_DT=m
- CONFIG_CPU_IDLE=y
- CONFIG_NET=y
- CONFIG_PACKET=y
+diff --git a/arch/arm/mach-davinci/board-da850-evm.c b/arch/arm/mach-davinci/board-da850-evm.c
+index 1fdc9283a8c5..58b2a485b527 100644
+--- a/arch/arm/mach-davinci/board-da850-evm.c
++++ b/arch/arm/mach-davinci/board-da850-evm.c
+@@ -1155,17 +1155,7 @@ static struct edma_rsv_info *da850_edma_rsv[2] = {
+ #ifdef CONFIG_CPU_FREQ
+ static __init int da850_evm_init_cpufreq(void)
+ {
+-	switch (system_rev & 0xF) {
+-	case 3:
+-		da850_max_speed = 456000;
+-		break;
+-	case 2:
+-		da850_max_speed = 408000;
+-		break;
+-	case 1:
+-		da850_max_speed = 372000;
+-		break;
+-	}
++	da850_max_speed = 456000;
+ 
+ 	return da850_register_cpufreq("pll0_sysclk3");
+ }
 -- 
 2.20.1
 
