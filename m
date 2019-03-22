@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACD42C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:10:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ABDEC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:10:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FCD621917
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:10:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A499218E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:10:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553260247;
-	bh=sBNtQa76qkf9lI6F+YZI/Pg3LISw8fDyhQyxtt/NkZg=;
+	s=default; t=1553260252;
+	bh=7j8QwugKGIarQNyTtLpwVKTFcHbA96FCszwu5HMp57U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i1pnr+IPD/yqdQ84ukG0vZO8ms757t1c8H1pMV9BEPWZZpgAaWMrxoh6zsjfkPVE4
-	 x2P3P26Y0WdP8rZ00SAzr226buxLPPYy9dJOw7bnw2rhifQeXUV2+Ya22GFaYm+ca4
-	 XshAYuIo4NKld9UM1H+F30jOB4zUaVTdZykp+MHA=
+	b=1lb/AkgBe5tCXO7gDVHo1xaM6jiX3U2jk4toEu6A7n6T3YSYnbBg8gDSqCjExKauk
+	 8EInprwMN9rE6grMcb4csOoBFVZf8c3/Gl8sasXTo5ySHAslY74sQ3YeZ12jKgvAgS
+	 yBPTPbItXiJS6D0Aaa/pcOyObQkqz1TvlgoH0s/8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729768AbfCVLdr (ORCPT
+        id S1730300AbfCVLdk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:33:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34262 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:33:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34084 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729312AbfCVLdo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:33:44 -0400
+        id S1729986AbfCVLdf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:33:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82B1F20449;
-        Fri, 22 Mar 2019 11:33:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D758218B0;
+        Fri, 22 Mar 2019 11:33:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254424;
-        bh=sBNtQa76qkf9lI6F+YZI/Pg3LISw8fDyhQyxtt/NkZg=;
+        s=default; t=1553254414;
+        bh=7j8QwugKGIarQNyTtLpwVKTFcHbA96FCszwu5HMp57U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cTfdevT31cE5EZQ2biYyNhuuWOyuMlpXq//rnEDrmCWV+m6oefSY1p3M3dhYMchJD
-         z+/DngKl8y1NSx6jsVXz7QpkOOx25UFJm9oxEIFZeVY2N7+TRaktl9Bgaudlm4fR0A
-         AP+Rq+2Nko/XS6+jDd0qSwf+UCGddYI1A7AlfslM=
+        b=C+jvpto/UAdxwPSDIqVPgFpLvZN0EkPD8eKkyWS6vRG4eFfbk6E8MQ8MBOvKeMhGU
+         kI/s/1xXdR5NTyXZ8G0ehh4FYzUdFIblcxK99HVRW3MtSA0/WTDQmCofxvS8x8Umyt
+         Ki+KpeGzW4zAjjJ+ZiLi+08GLmIKYUoXiJW1sAQE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 4.4 116/230] ARM: dts: exynos: Add minimal clkout parameters to Exynos3250 PMU
-Date:   Fri, 22 Mar 2019 12:14:14 +0100
-Message-Id: <20190322111244.793415230@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        andrew hendry <andrew.hendry@gmail.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 129/230] net/x25: reset state in x25_connect()
+Date:   Fri, 22 Mar 2019 12:14:27 +0100
+Message-Id: <20190322111245.738796187@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -66,36 +67,81 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Eric Dumazet <edumazet@google.com>
 
-commit a66352e005488ecb4b534ba1af58a9f671eba9b8 upstream.
+[ Upstream commit ee74d0bd4325efb41e38affe5955f920ed973f23 ]
 
-Add minimal parameters needed by the Exynos CLKOUT driver to Exynos3250
-PMU node. This fixes the following warning on boot:
+In case x25_connect() fails and frees the socket neighbour,
+we also need to undo the change done to x25->state.
 
-exynos_clkout_init: failed to register clkout clock
+Before my last bug fix, we had use-after-free so this
+patch fixes a latent bug.
 
-Fixes: d19bb397e19e ("ARM: dts: exynos: Update PMU node with CLKOUT related data")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+syzbot report :
+
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+CPU: 1 PID: 16137 Comm: syz-executor.1 Not tainted 5.0.0+ #117
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:x25_write_internal+0x1e8/0xdf0 net/x25/x25_subr.c:173
+Code: 00 40 88 b5 e0 fe ff ff 0f 85 01 0b 00 00 48 8b 8b 80 04 00 00 48 ba 00 00 00 00 00 fc ff df 48 8d 79 1c 48 89 fe 48 c1 ee 03 <0f> b6 34 16 48 89 fa 83 e2 07 83 c2 03 40 38 f2 7c 09 40 84 f6 0f
+RSP: 0018:ffff888076717a08 EFLAGS: 00010207
+RAX: ffff88805f2f2292 RBX: ffff8880a0ae6000 RCX: 0000000000000000
+kobject: 'loop5' (0000000018d0d0ee): kobject_uevent_env
+RDX: dffffc0000000000 RSI: 0000000000000003 RDI: 000000000000001c
+RBP: ffff888076717b40 R08: ffff8880950e0580 R09: ffffed100be5e46d
+R10: ffffed100be5e46c R11: ffff88805f2f2363 R12: ffff888065579840
+kobject: 'loop5' (0000000018d0d0ee): fill_kobj_path: path = '/devices/virtual/block/loop5'
+R13: 1ffff1100ece2f47 R14: 0000000000000013 R15: 0000000000000013
+FS:  00007fb88cf43700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f9a42a41028 CR3: 0000000087a67000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ x25_release+0xd0/0x340 net/x25/af_x25.c:658
+ __sock_release+0xd3/0x2b0 net/socket.c:579
+ sock_close+0x1b/0x30 net/socket.c:1162
+ __fput+0x2df/0x8d0 fs/file_table.c:278
+ ____fput+0x16/0x20 fs/file_table.c:309
+ task_work_run+0x14a/0x1c0 kernel/task_work.c:113
+ get_signal+0x1961/0x1d50 kernel/signal.c:2388
+ do_signal+0x87/0x1940 arch/x86/kernel/signal.c:816
+ exit_to_usermode_loop+0x244/0x2c0 arch/x86/entry/common.c:162
+ prepare_exit_to_usermode arch/x86/entry/common.c:197 [inline]
+ syscall_return_slowpath arch/x86/entry/common.c:268 [inline]
+ do_syscall_64+0x52d/0x610 arch/x86/entry/common.c:293
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x457f29
+Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fb88cf42c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002a
+RAX: fffffffffffffe00 RBX: 0000000000000003 RCX: 0000000000457f29
+RDX: 0000000000000012 RSI: 0000000020000080 RDI: 0000000000000004
+RBP: 000000000073bf00 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007fb88cf436d4
+R13: 00000000004be462 R14: 00000000004cec98 R15: 00000000ffffffff
+Modules linked in:
+
+Fixes: 95d6ebd53c79 ("net/x25: fix use-after-free in x25_device_event()")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: andrew hendry <andrew.hendry@gmail.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- arch/arm/boot/dts/exynos3250.dtsi |    3 +++
- 1 file changed, 3 insertions(+)
+ net/x25/af_x25.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/arch/arm/boot/dts/exynos3250.dtsi
-+++ b/arch/arm/boot/dts/exynos3250.dtsi
-@@ -150,6 +150,9 @@
- 			interrupt-controller;
- 			#interrupt-cells = <3>;
- 			interrupt-parent = <&gic>;
-+			clock-names = "clkout8";
-+			clocks = <&cmu CLK_FIN_PLL>;
-+			#clock-cells = <1>;
- 		};
- 
- 		mipi_phy: video-phy@10020710 {
+--- a/net/x25/af_x25.c
++++ b/net/x25/af_x25.c
+@@ -817,6 +817,7 @@ out_put_neigh:
+ 		x25_neigh_put(x25->neighbour);
+ 		x25->neighbour = NULL;
+ 		read_unlock_bh(&x25_list_lock);
++		x25->state = X25_STATE_0;
+ 	}
+ out_put_route:
+ 	x25_route_put(rt);
 
 
