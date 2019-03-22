@@ -2,108 +2,147 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_MUTT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E685C10F03
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 21:11:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9C52C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 21:16:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4D6721929
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 21:11:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B2102190A
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 21:16:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ocTqZMUE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727648AbfCVVLq (ORCPT
+        id S1727363AbfCVVP6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 17:11:46 -0400
-Received: from mga12.intel.com ([192.55.52.136]:26211 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726014AbfCVVLk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 17:11:40 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Mar 2019 14:11:39 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,256,1549958400"; 
-   d="scan'208";a="329837775"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.181])
-  by fmsmga006.fm.intel.com with ESMTP; 22 Mar 2019 14:11:38 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Jonathan Corbet <corbet@lwn.net>,
-        Andy Whitcroft <apw@canonical.com>,
-        Joe Perches <joe@perches.com>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Tobin C . Harding" <me@tobin.cc>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>
-Subject: [PATCH v5 2/2] checkpatch: Warn on improper usage of Co-developed-by
-Date:   Fri, 22 Mar 2019 14:11:37 -0700
-Message-Id: <20190322211137.18241-3-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190322211137.18241-1-sean.j.christopherson@intel.com>
-References: <20190322211137.18241-1-sean.j.christopherson@intel.com>
+        Fri, 22 Mar 2019 17:15:58 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:35518 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726014AbfCVVP6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 17:15:58 -0400
+Received: by mail-pg1-f193.google.com with SMTP id g8so2350401pgf.2
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 14:15:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=LMA/MzFIwpEF33/5TfoDAP0YF+uL80W5uBYdUOSevvo=;
+        b=ocTqZMUEbEIrzUiE91VDfBFds1wglc46t7ym/dzCFh9BvHPGXJQy5/lJydcgEutSAM
+         F8NHe29gfIk5fPYFVL7gzenrRKFgm8DRSkxOVSZJzwsJq9cd8WDPQiZF4XY7d2+FlsbS
+         lvj4KHe+PsJYv2cr4x7THYLinLqpDuWN4+m0+0Oz9oMuFSIeAW1nFhWaIbYpmHESA+oR
+         ZBO7nnMFVHhuvADZbVBKZ90Jg4LjVRLISTEZBPZUIX9kU8zW5CdADSmlbxw0zfyFS0Ch
+         ZwLvIkJHXRqzdr/y3ZA2K0VL/TfrB9v+JyFuH62Loq4MSY4auA6wgi3aN3tAaeFiAq9n
+         oh9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=LMA/MzFIwpEF33/5TfoDAP0YF+uL80W5uBYdUOSevvo=;
+        b=VYalX4P6h64ktPmJFOcFyyC+JiqUV6BSzEfjmmunarW3zqhqruuecOyfaGzGQrgGl2
+         hDnuAa09ZzF6XLSPgUVO6DY+eBfSzMRJNwJ6D22HIW2s4PgSMXqg3B7o+Vil6NOX0Rp1
+         IpaFQH6u96dmrYgbBoPwvdIkq0DaRNwKtgWyBA9iP1WKUeCnmsq2SiD9015cQnpUzh5k
+         ksqmDCxWBDWERr8ugNgHRSg1Zuf+gbSKgoiYk7buVKpz7woo8cf2DU9W3oaRnmU50DLA
+         8vmyCeXiMByqbrjk1yWrkM1GkS8qb2rbs76yDbXrl+SWniMtkBg3WT0BG267NHa3MTuS
+         C2mA==
+X-Gm-Message-State: APjAAAWAZ1syq1u9Xs6ueXxYcRi5Xd5d65VQiA+WGz5Sm4TM84Gid/ot
+        TVt5j1Ob77KHTX0cz10hOmsZ1A==
+X-Google-Smtp-Source: APXvYqzGr3ev/t2t2dAIn2O3m7/7+x9/VX8ZLlUnGbdXYyDBVzRNmRDN+hRJuBeCsE9PPSUGbLtwdg==
+X-Received: by 2002:aa7:9397:: with SMTP id t23mr11360600pfe.238.1553289357010;
+        Fri, 22 Mar 2019 14:15:57 -0700 (PDT)
+Received: from google.com ([2620:15c:202:201:bc61:d85d:eb16:9036])
+        by smtp.gmail.com with ESMTPSA id 20sm13123136pgr.80.2019.03.22.14.15.55
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 22 Mar 2019 14:15:56 -0700 (PDT)
+Date:   Fri, 22 Mar 2019 14:15:50 -0700
+From:   Benson Leung <bleung@google.com>
+To:     egranata@chromium.org
+Cc:     lee.jones@linaro.org, bleung@chromium.org,
+        enric.balletbo@collabora.com, groeck@chromium.org,
+        linux-kernel@vger.kernel.org, gwendal@google.com, amstan@google.com
+Subject: Re: [PATCH] mfd: cros_ec: Only register a positive IRQ number
+Message-ID: <20190322211550.GA139120@google.com>
+References: <20190321210347.34793-1-egranata@chromium.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="vkogqOf2sHV7VnPd"
+Content-Disposition: inline
+In-Reply-To: <20190321210347.34793-1-egranata@chromium.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The purpose of Co-developed-by: is to give attribution to authors who
-aren't already attributed by the From: tag, i.e. who aren't the nominal
-patch author.  Because Co-developed-by: is essentially a variation of
-From:, it must be accompanied by a Signed-off-by: of the associated
-co-author.  To ease the burden of determining whether or not co-authors
-have signed off, Co-developed-by and Signed-off-by: must be explicitly
-paired, i.e. on consecutive lines for a given co-author.
 
-Suggested-by: Joe Perches <joe@perches.com>
-Cc: Tobin C. Harding <me@tobin.cc>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Jani Nikula <jani.nikula@linux.intel.com>
-Cc: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Cc: Jonathan Cameron <jic23@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Niklas Cassel <niklas.cassel@linaro.org>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
- scripts/checkpatch.pl | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+--vkogqOf2sHV7VnPd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index 5b756278df13..bbe71f017f6d 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -2687,6 +2687,24 @@ sub process {
- 			} else {
- 				$signatures{$sig_nospace} = 1;
- 			}
-+
-+# Check Co-developed-by: immediately followed by Signed-off-by: with same name and email
-+			if ($sign_off =~ /^co-developed-by:$/i) {
-+				if ($email eq $author) {
-+					WARN("BAD_SIGN_OFF",
-+					      "Co-developed-by: should not be used to attribute nominal patch author '$author'\n" . "$here\n" . $rawline);
-+				}
-+				if (!defined $lines[$linenr]) {
-+					WARN("BAD_SIGN_OFF",
-+                                             "Co-developed-by: must be immediately followed by Signed-off-by:\n" . "$here\n" . $rawline);
-+				} elsif ($rawlines[$linenr] !~ /^\s*signed-off-by:\s*(.*)/i) {
-+					WARN("BAD_SIGN_OFF",
-+					     "Co-developed-by: must be immediately followed by Signed-off-by:\n" . "$here\n" . $rawline . "\n" .$rawlines[$linenr]);
-+				} elsif ($1 ne $email) {
-+					WARN("BAD_SIGN_OFF",
-+					     "Co-developed-by and Signed-off-by: name/email do not match \n" . "$here\n" . $rawline . "\n" .$rawlines[$linenr]);
-+				}
-+			}
- 		}
- 
- # Check email subject for common tools that don't need to be mentioned
--- 
-2.21.0
+Hi Enrico,
 
+On Thu, Mar 21, 2019 at 02:03:47PM -0700, egranata@chromium.org wrote:
+> From: Enrico Granata <egranata@chromium.org>
+>=20
+> Add a layer of sanity checking to cros_ec_register against attempting to
+> register IRQ values that are not strictly greater than 0.
+>=20
+> Signed-off-by: Enrico Granata <egranata@chromium.org>
+
+Acked-By: Benson Leung <bleung@chromium.org>
+
+> ---
+>  drivers/mfd/cros_ec.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/mfd/cros_ec.c b/drivers/mfd/cros_ec.c
+> index 6acfe036d5222..ff8984a2b8c21 100644
+> --- a/drivers/mfd/cros_ec.c
+> +++ b/drivers/mfd/cros_ec.c
+> @@ -118,7 +118,7 @@ int cros_ec_register(struct cros_ec_device *ec_dev)
+>  		return err;
+>  	}
+> =20
+> -	if (ec_dev->irq) {
+> +	if (ec_dev->irq > 0) {
+>  		err =3D devm_request_threaded_irq(dev, ec_dev->irq, NULL,
+>  				ec_irq_thread, IRQF_TRIGGER_LOW | IRQF_ONESHOT,
+>  				"chromeos-ec", ec_dev);
+> --=20
+> 2.21.0.225.g810b269d1ac-goog
+>=20
+
+--=20
+Benson Leung
+Staff Software Engineer
+Chrome OS Kernel
+Google Inc.
+bleung@google.com
+Chromium OS Project
+bleung@chromium.org
+
+--vkogqOf2sHV7VnPd
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE6gYDF28Li+nEiKLaHwn1ewov5lgFAlyVUIQACgkQHwn1ewov
+5ljRIQ//b2ehnCbWJ5gEGNwDk0oqOELUxVUoErK6AnQ3DGWfeUIB4OSHPa1e3mu3
+F3vFZyMBgjE1GSN0isadLt5KsR9ctwB7EOOPfpQgftV9sRRPGtDa/2LZyFQoCEUQ
+KlfJVF/7QehfSvB/zh5XBR9GeTnx9lnRlU/90rYg6n8lf2KoTX6HZN7c1nBDlOSL
+vyJMnfMQsPNUZGOShCqW2pQYtt80/edT5KHoCC/nCzVZMrdY2wlBdjEeYSvS0R7E
+rIMqRb06f5Vdqm/w0FSj0/dHopKW267VeCuSiWEldUyJ+hlIaDLrVsxDcqF+YC/P
+NlQ0G2M6geAZ+GPGGTEZiTLuKxVDfVrAO9v3bZ+V8TM/UpEZWCWdyydRT6v+q4Tm
+2+GUJ8h1l6snPcKisXH7ZfNOqEIspWO8X4ZGsa7gU+Qx6/mtdcuyDKayBfb6FbCx
+HS2OMzxJopLSOdAnVzlUVXMaz+mBjMPFx5Lw5fITzeljSfGckGBwmd1PbkjCS9QH
+tkB6bm7MSG2aXxZ55HMd+yxH++2MVC9wtOMZaRZLWtoNpxmchxWyxJufVcosMFY3
+pI/TAXzZ2AGruk/x5Qx/AYjWd4DXkhyD4TjKbApUJZDLdDvrCLrznOmmY9GSath5
+RDi3j+w5YcCIVIUQkc88cKIZetOhF2IGA8uRsjinxd3gTYmo0js=
+=8Xpd
+-----END PGP SIGNATURE-----
+
+--vkogqOf2sHV7VnPd--
