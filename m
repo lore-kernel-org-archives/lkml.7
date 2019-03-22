@@ -2,131 +2,173 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A00AEC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:38:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA338C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:38:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E1DF20850
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:38:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 911A420850
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:38:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QScICi4c"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="W2ohBsek"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727888AbfCVPiM (ORCPT
+        id S1727906AbfCVPiW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 11:38:12 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:46473 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727689AbfCVPiJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 11:38:09 -0400
-Received: by mail-lf1-f65.google.com with SMTP id r25so1674322lfn.13
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 08:38:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ldDWOmAj8jwPVsBwSQANvWclxD57ppweNrb50y+NB+8=;
-        b=QScICi4c4upBcagk1NBgGvf6uq3UGZeaKnIcn1rHH4yhT1EAMwtdU2uZuffRHUkQbX
-         5WBkXYBwAblCzKAGBVsAlAgsj/OmUJbmN6H2CNxMmAWLytcBMC4sKU6BqJPBxHAfuGAr
-         8SjTwagf3d2r/o+SUQ86t1H7mjJ9md4AjOXV4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ldDWOmAj8jwPVsBwSQANvWclxD57ppweNrb50y+NB+8=;
-        b=Nz8ehcoHjRtmqScyf7zrdUJkIuOuKETahJTchrbmpb7MFJ1NRQHM1iOdNo9hf40RPb
-         qsOUlveXhDbbwWKiQFSfYJ3WW3ZxJxspnjVKKV92HwN6h3XbQsjfX1jeA2BdoN851MQW
-         mgeiRwfZachzOiCojtUIOnJYmrmDvsPWvuFVwsPCcbs3Lc1CCsmHbUfZucY+5q15hcUS
-         B7EVq69Ff8b1o3fybyJgBk6vTZ2ltsBW4FbAy+rc0Qiz6+P8YMHuHLrMNboUwkJ61pI2
-         X9i8bS3FESlvlVfqtTelDgyYxJ55cfkuz/WXcULshyEuJL/rFefZsToSVrsrN1qLBYvP
-         Wj3g==
-X-Gm-Message-State: APjAAAVuvfmrjlEb4laTjquAIpGzYojtHb1lH+jNxiXAqTh1ITXlgN5Y
-        RTDoDQOk+m4KyOaf+k5PNXjUl1NUzhU=
-X-Google-Smtp-Source: APXvYqxPg1/BxG/DBxeCmu/sSeYGaIxaNW2DwU5tN0S0mZWcGefh6uquHAopNDWKigbiRTut7+MZwg==
-X-Received: by 2002:ac2:515b:: with SMTP id q27mr5518879lfd.110.1553269085541;
-        Fri, 22 Mar 2019 08:38:05 -0700 (PDT)
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com. [209.85.208.182])
-        by smtp.gmail.com with ESMTPSA id i190sm1750260lfi.43.2019.03.22.08.38.04
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 22 Mar 2019 08:38:04 -0700 (PDT)
-Received: by mail-lj1-f182.google.com with SMTP id f18so2410840lja.10
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 08:38:04 -0700 (PDT)
-X-Received: by 2002:a2e:2ce:: with SMTP id y75mr5591640lje.126.1553269084543;
- Fri, 22 Mar 2019 08:38:04 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190320212030.43682-1-evgreen@chromium.org> <20190320212030.43682-2-evgreen@chromium.org>
- <CAFqH_52vsfsxGRQNNzLGjLySHeTXVjdqjBn+1v4EaGMt5ipkbw@mail.gmail.com>
-In-Reply-To: <CAFqH_52vsfsxGRQNNzLGjLySHeTXVjdqjBn+1v4EaGMt5ipkbw@mail.gmail.com>
-From:   Evan Green <evgreen@chromium.org>
-Date:   Fri, 22 Mar 2019 08:37:27 -0700
-X-Gmail-Original-Message-ID: <CAE=gft7zievpC-Zzsat6mn_R9VRGeHGhL-gkn76Vr6_fEbQLjQ@mail.gmail.com>
-Message-ID: <CAE=gft7zievpC-Zzsat6mn_R9VRGeHGhL-gkn76Vr6_fEbQLjQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] mfd: cros_ec: Add host_sleep_event_v1 command
-To:     Enric Balletbo Serra <eballetbo@gmail.com>
-Cc:     Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Furquan Shaikh <furquan@chromium.org>,
-        Rajat Jain <rajatja@chromium.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Gwendal Grignou <gwendal@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 22 Mar 2019 11:38:22 -0400
+Received: from mail-eopbgr50074.outbound.protection.outlook.com ([40.107.5.74]:56385
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727651AbfCVPhR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 11:37:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lAAbScIIhBgg6XhslhvlfCd/geYV5i3HnPBBczZYy8w=;
+ b=W2ohBsekTLI5L0K6/gQ46c9PKV3d0PCBMQ5TIl72uLf/IB1O3bp5zraNt1/S//b64RSOzsJxL0ha+oJ1+NGUDF7fVzK8G/7LjronhgqgiK7CNjsv4CfUaQfOIo/JmfvWx7cKpdsipo06OsodFL/LADzudSHjo1qCuTA3iqqcw8A=
+Received: from AM0PR04MB5779.eurprd04.prod.outlook.com (20.178.202.151) by
+ AM0PR04MB5636.eurprd04.prod.outlook.com (20.178.202.86) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1709.15; Fri, 22 Mar 2019 15:37:07 +0000
+Received: from AM0PR04MB5779.eurprd04.prod.outlook.com
+ ([fe80::9579:32ab:898e:6769]) by AM0PR04MB5779.eurprd04.prod.outlook.com
+ ([fe80::9579:32ab:898e:6769%2]) with mapi id 15.20.1709.017; Fri, 22 Mar 2019
+ 15:37:07 +0000
+From:   Abel Vesa <abel.vesa@nxp.com>
+To:     Stephen Boyd <sboyd@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>
+CC:     "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Abel Vesa <abel.vesa@nxp.com>
+Subject: [RFC 07/19] clk: imx: clk-gate2: Switch to clk_hw based API
+Thread-Topic: [RFC 07/19] clk: imx: clk-gate2: Switch to clk_hw based API
+Thread-Index: AQHU4MUbtgRSWUCsYkC32rXux2vSYQ==
+Date:   Fri, 22 Mar 2019 15:37:07 +0000
+Message-ID: <1553269010-15591-8-git-send-email-abel.vesa@nxp.com>
+References: <1553269010-15591-1-git-send-email-abel.vesa@nxp.com>
+In-Reply-To: <1553269010-15591-1-git-send-email-abel.vesa@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: VI1PR08CA0170.eurprd08.prod.outlook.com
+ (2603:10a6:800:d1::24) To AM0PR04MB5779.eurprd04.prod.outlook.com
+ (2603:10a6:208:131::23)
+x-originating-ip: [212.146.100.6]
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=abel.vesa@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.7.4
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e87f5f76-5527-4ed0-3800-08d6aedc3dc3
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:AM0PR04MB5636;
+x-ms-traffictypediagnostic: AM0PR04MB5636:
+x-microsoft-antispam-prvs: <AM0PR04MB56362843B39A4C08FD866F71F6430@AM0PR04MB5636.eurprd04.prod.outlook.com>
+x-forefront-prvs: 09840A4839
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(366004)(39860400002)(376002)(396003)(136003)(199004)(189003)(106356001)(105586002)(54906003)(110136005)(316002)(52116002)(6512007)(81156014)(97736004)(53936002)(86362001)(81166006)(478600001)(8676002)(2906002)(14454004)(486006)(99286004)(36756003)(7736002)(71200400001)(44832011)(71190400001)(3846002)(5660300002)(386003)(4326008)(6116002)(6486002)(50226002)(14444005)(6506007)(66066001)(256004)(76176011)(446003)(186003)(25786009)(11346002)(68736007)(26005)(476003)(6436002)(2616005)(8936002)(102836004)(305945005);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5636;H:AM0PR04MB5779.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: rhNhOgzQ7TU67VlDSECf8+7ej9R8sZxspc1gaJIsLltM305S5F4M166n2vHHLO/pCPKOzX4E3dhoayLN7xzpi/EalsJ7x4sCumddomnpPG+UGqZ9fI2ZXueeof/5HsFn0TqfaEHkCvSRjvYkG8DOUJ6ERwgPllFebLX+04O3yRC31+gCfX0YBISFOXxHY7jTok75ILhYhr5fUBgJJKKt/ZyeRdaAZIEDbwxMoPJGDDuntioC5Mx9emDQ4jQoDwYNTfM8YkSqP+eKA2MaZcYy5Nigw1Q66kQQr98TaqxunxH3SYzAVP8mG0TXoju/lt+HlerzGVndj6sNlbj+B3Znr/tAH+eN8as8ealL/71O+N1iSWKdaO6xubqJMquuGOvHnXrsaj+6pJZ07akyc43XYmbYjb958flao82LoAk1ecc=
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e87f5f76-5527-4ed0-3800-08d6aedc3dc3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Mar 2019 15:37:07.3647
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5636
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 21, 2019 at 2:31 PM Enric Balletbo Serra
-<eballetbo@gmail.com> wrote:
->
-> Hi Evan,Thanks for sending this upstream, one comment below.
-> Missatge de Evan Green <evgreen@chromium.org> del dia dc., 20 de mar=C3=
-=A7
-> 2019 a les 22:24:
-> >
-> > Introduce the command and response structures for the second revision
-> > of the host sleep event. These structures are part of a new EC change
-> > that enables detection of failure to enter S0ix. The EC waits a
-> > kernel-specified timeout (or a default amount of time) for the S0_SLP
-> > pin to change, and wakes the system if that change does not occur in
-> > time.
-> >
-> > Signed-off-by: Evan Green <evgreen@chromium.org>
-> >
-> > ---
-> >
-> >  include/linux/mfd/cros_ec_commands.h | 59 ++++++++++++++++++++++++++++
->
-> We're trying to sync kernel cros_ec_commands.h with the EC protocol at
-> https://chromium.googlesource.com/chromiumos/platform/ec/+/master/include=
-/ec_commands.h
->
-> Gwendal send a first patch [1] and a second version will be sent soon.
-> I don't see these definitions in the mentioned patch neither the
-> master ec_commands.h from the EC firmware repository. Is this a
-> feature that didn't land in the EC firmware yet?
->
-> [1] https://lkml.org/lkml/2019/2/27/723
->
-> Thanks,
->  Enric
+Switch the clk_register_gate2 function to clk_hw based API,
+rename accordingly and add a macro for clk based legacy.
 
-Hi Enric,
-That's correct, this feature is hot off the presses. It's being
-reviewed here, I expect it to land soon:
-https://chromium-review.googlesource.com/c/chromiumos/platform/ec/+/1501512
+Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+---
+ drivers/clk/imx/clk-gate2.c | 14 +++++++++-----
+ drivers/clk/imx/clk.h       |  7 ++++++-
+ 2 files changed, 15 insertions(+), 6 deletions(-)
 
-It seems like it would be easier if I based this series on top of
-Gwendal's. I'll plan to do that for the next spin unless I hear
-otherwise.
--Evan
+diff --git a/drivers/clk/imx/clk-gate2.c b/drivers/clk/imx/clk-gate2.c
+index 60fc9d7..14551fd3 100644
+--- a/drivers/clk/imx/clk-gate2.c
++++ b/drivers/clk/imx/clk-gate2.c
+@@ -125,15 +125,16 @@ static const struct clk_ops clk_gate2_ops =3D {
+ 	.is_enabled =3D clk_gate2_is_enabled,
+ };
+=20
+-struct clk *clk_register_gate2(struct device *dev, const char *name,
++struct clk_hw *clk_hw_register_gate2(struct device *dev, const char *name,
+ 		const char *parent_name, unsigned long flags,
+ 		void __iomem *reg, u8 bit_idx, u8 cgr_val,
+ 		u8 clk_gate2_flags, spinlock_t *lock,
+ 		unsigned int *share_count)
+ {
+ 	struct clk_gate2 *gate;
+-	struct clk *clk;
++	struct clk_hw *hw;
+ 	struct clk_init_data init;
++	int ret;
+=20
+ 	gate =3D kzalloc(sizeof(struct clk_gate2), GFP_KERNEL);
+ 	if (!gate)
+@@ -154,10 +155,13 @@ struct clk *clk_register_gate2(struct device *dev, co=
+nst char *name,
+ 	init.num_parents =3D parent_name ? 1 : 0;
+=20
+ 	gate->hw.init =3D &init;
++	hw =3D &gate->hw;
+=20
+-	clk =3D clk_register(dev, &gate->hw);
+-	if (IS_ERR(clk))
++	ret =3D clk_hw_register(NULL, hw);
++	if (ret) {
+ 		kfree(gate);
++		return ERR_PTR(ret);
++	}
+=20
+-	return clk;
++	return hw;
+ }
+diff --git a/drivers/clk/imx/clk.h b/drivers/clk/imx/clk.h
+index a7f69ff..cd1a820 100644
+--- a/drivers/clk/imx/clk.h
++++ b/drivers/clk/imx/clk.h
+@@ -58,6 +58,11 @@ struct imx_pll14xx_clk {
+ #define imx_clk_cpu(name, parent_name, div, mux, pll, step) \
+ 	imx_clk_hw_cpu(name, parent_name, div, mux, pll, step)->clk
+=20
++#define clk_register_gate2(dev, name, parent_name, flags, reg, bit_idx, \
++				cgr_val, clk_gate_flags, lock, share_count) \
++	clk_hw_register_gate2(dev, name, parent_name, flags, reg, bit_idx, \
++				cgr_val, clk_gate_flags, lock, share_count)->clk
++
+ struct clk *imx_clk_pll14xx(const char *name, const char *parent_name,
+ 		 void __iomem *base, const struct imx_pll14xx_clk *pll_clk);
+=20
+@@ -95,7 +100,7 @@ struct clk *imx_clk_pllv3(enum imx_pllv3_type type, cons=
+t char *name,
+ struct clk_hw *imx_clk_pllv4(const char *name, const char *parent_name,
+ 			     void __iomem *base);
+=20
+-struct clk *clk_register_gate2(struct device *dev, const char *name,
++struct clk_hw *clk_hw_register_gate2(struct device *dev, const char *name,
+ 		const char *parent_name, unsigned long flags,
+ 		void __iomem *reg, u8 bit_idx, u8 cgr_val,
+ 		u8 clk_gate_flags, spinlock_t *lock,
+--=20
+2.7.4
 
-
--Evan
