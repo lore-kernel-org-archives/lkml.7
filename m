@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC32C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:50:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0966C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:51:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4214921873
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:50:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 816712082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:51:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553259055;
-	bh=AdJ0JuBDgJrIBFE7rbiutsSzQRRuTRtaGZRGQFzUqcM=;
+	s=default; t=1553259068;
+	bh=l22FuXsRRIZsRw2c4Wtrhi/O4BufEwrM6VkpG4ZvIu0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kPUFrUD8UnjX5TYduA7mRdZuqI5CyhnGXxvZcSoNIRDiOfmCYEFHaZ0eOj789xAXe
-	 NKuBiE6QK7HPfj/RJ6q2AMSX2vLE8UstZHIWLc/LYl/SCKFC6f5D0eyg93LumXHD4X
-	 daonT8HnUBMZOtLf8A9EouozSeL34lTxkIt/ZNu4=
+	b=ztcJXt4RcnNb3ZGfkfg4nDCIDjMg/msKgAT3q3A3xZl12oP6GDM6W/yq1YWEnHdOs
+	 8adXh5qeNqvMPxPo8rr1YqCaO2Hzn1rqab3wluSXAFq2xlWgRjCjsj2XPQdvcnshxe
+	 6HDAU7D9EaXXKOtXxSB9eR+X+XiIp6ygRksOqZN8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733275AbfCVLzN (ORCPT
+        id S1733173AbfCVMvH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:55:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59748 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:51:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59522 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733261AbfCVLzJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:55:09 -0400
+        id S1733215AbfCVLy6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:54:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4256521934;
-        Fri, 22 Mar 2019 11:55:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1AD492082C;
+        Fri, 22 Mar 2019 11:54:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255708;
-        bh=AdJ0JuBDgJrIBFE7rbiutsSzQRRuTRtaGZRGQFzUqcM=;
+        s=default; t=1553255697;
+        bh=l22FuXsRRIZsRw2c4Wtrhi/O4BufEwrM6VkpG4ZvIu0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cIIZfFBVpBFXqYDOMHJ8hZD4xH1GSfADVFcMH7YGCxO3wUqgOdjEQ3Wfm9xSXGpTA
-         hlzW00s2wJOEhUcG+zOmxNK5aA01uEWJblcsynDG2nwIP3vQ4um3Os66bV7xW/B3zt
-         /Atcc+Tt3yj9bWyvHQWioqPnRMZ0JKKCTpcGHAjY=
+        b=c1VLgJwcpeWOAs9qX5XdNfkGaln41IZtf1BXAwf3vR2ZatkjhNf84f/qkDGlU9c8b
+         I2Sp8rGV3r1O0cc9bLXjmUch3AL5VFk+zgJqdRJ3AGIKePfXr0W0HY5QuCTvVkWaY8
+         n+UcX9/hQQFNruId1KfKDiHwUTXVF2nUah0+thW0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>
-Subject: [PATCH 4.14 156/183] NFS: Dont recoalesce on error in nfs_pageio_complete_mirror()
-Date:   Fri, 22 Mar 2019 12:16:24 +0100
-Message-Id: <20190322111253.200291312@linuxfoundation.org>
+        =?UTF-8?q?Ga=C3=ABl=20PORTAY?= <gael.portay@collabora.com>,
+        Steve Longerbeam <slongerbeam@gmail.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: [PATCH 4.14 171/183] media: imx: prpencvf: Stop upstream before disabling IDMA channel
+Date:   Fri, 22 Mar 2019 12:16:39 +0100
+Message-Id: <20190322111254.289598788@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111241.819468003@linuxfoundation.org>
 References: <20190322111241.819468003@linuxfoundation.org>
@@ -65,32 +68,97 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Steve Longerbeam <slongerbeam@gmail.com>
 
-commit 8127d82705998568b52ac724e28e00941538083d upstream.
+commit a19c22677377b87e4354f7306f46ad99bc982a9f upstream.
 
-If the I/O completion failed with a fatal error, then we should just
-exit nfs_pageio_complete_mirror() rather than try to recoalesce.
+Upstream must be stopped immediately after receiving the last EOF and
+before disabling the IDMA channel. This can be accomplished by moving
+upstream stream off to just after receiving the last EOF completion in
+prp_stop(). For symmetry also move upstream stream on to end of
+prp_start().
 
-Fixes: a7d42ddb3099 ("nfs: add mirroring support to pgio layer")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Cc: stable@vger.kernel.org # v4.0+
+This fixes a complete system hard lockup on the SabreAuto when streaming
+from the ADV7180, by repeatedly sending a stream off immediately followed
+by stream on:
+
+while true; do v4l2-ctl  -d1 --stream-mmap --stream-count=3; done
+
+Eventually this either causes the system lockup or EOF timeouts at all
+subsequent stream on, until a system reset.
+
+The lockup occurs when disabling the IDMA channel at stream off. Stopping
+the video data stream entering the IDMA channel before disabling the
+channel itself appears to be a reliable fix for the hard lockup.
+
+Fixes: f0d9c8924e2c3 ("[media] media: imx: Add IC subdev drivers")
+
+Reported-by: Gaël PORTAY <gael.portay@collabora.com>
+Tested-by: Gaël PORTAY <gael.portay@collabora.com>
+Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
+Cc: stable@vger.kernel.org	# for 4.13 and up
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfs/pagelist.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/staging/media/imx/imx-ic-prpencvf.c |   26 +++++++++++++++++---------
+ 1 file changed, 17 insertions(+), 9 deletions(-)
 
---- a/fs/nfs/pagelist.c
-+++ b/fs/nfs/pagelist.c
-@@ -1213,7 +1213,7 @@ static void nfs_pageio_complete_mirror(s
- 		desc->pg_mirror_idx = mirror_idx;
- 	for (;;) {
- 		nfs_pageio_doio(desc);
--		if (!mirror->pg_recoalesce)
-+		if (desc->pg_error < 0 || !mirror->pg_recoalesce)
- 			break;
- 		if (!nfs_do_recoalesce(desc))
- 			break;
+--- a/drivers/staging/media/imx/imx-ic-prpencvf.c
++++ b/drivers/staging/media/imx/imx-ic-prpencvf.c
+@@ -676,12 +676,23 @@ static int prp_start(struct prp_priv *pr
+ 		goto out_free_nfb4eof_irq;
+ 	}
+ 
++	/* start upstream */
++	ret = v4l2_subdev_call(priv->src_sd, video, s_stream, 1);
++	ret = (ret && ret != -ENOIOCTLCMD) ? ret : 0;
++	if (ret) {
++		v4l2_err(&ic_priv->sd,
++			 "upstream stream on failed: %d\n", ret);
++		goto out_free_eof_irq;
++	}
++
+ 	/* start the EOF timeout timer */
+ 	mod_timer(&priv->eof_timeout_timer,
+ 		  jiffies + msecs_to_jiffies(IMX_MEDIA_EOF_TIMEOUT));
+ 
+ 	return 0;
+ 
++out_free_eof_irq:
++	devm_free_irq(ic_priv->dev, priv->eof_irq, priv);
+ out_free_nfb4eof_irq:
+ 	devm_free_irq(ic_priv->dev, priv->nfb4eof_irq, priv);
+ out_unsetup:
+@@ -713,6 +724,12 @@ static void prp_stop(struct prp_priv *pr
+ 	if (ret == 0)
+ 		v4l2_warn(&ic_priv->sd, "wait last EOF timeout\n");
+ 
++	/* stop upstream */
++	ret = v4l2_subdev_call(priv->src_sd, video, s_stream, 0);
++	if (ret && ret != -ENOIOCTLCMD)
++		v4l2_warn(&ic_priv->sd,
++			  "upstream stream off failed: %d\n", ret);
++
+ 	devm_free_irq(ic_priv->dev, priv->eof_irq, priv);
+ 	devm_free_irq(ic_priv->dev, priv->nfb4eof_irq, priv);
+ 
+@@ -1144,15 +1161,6 @@ static int prp_s_stream(struct v4l2_subd
+ 	if (ret)
+ 		goto out;
+ 
+-	/* start/stop upstream */
+-	ret = v4l2_subdev_call(priv->src_sd, video, s_stream, enable);
+-	ret = (ret && ret != -ENOIOCTLCMD) ? ret : 0;
+-	if (ret) {
+-		if (enable)
+-			prp_stop(priv);
+-		goto out;
+-	}
+-
+ update_count:
+ 	priv->stream_count += enable ? 1 : -1;
+ 	if (priv->stream_count < 0)
 
 
