@@ -2,96 +2,102 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE7DAC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:39:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE129C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:39:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C30420835
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:39:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD57320835
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:39:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728367AbfCVNji (ORCPT
+        id S1728004AbfCVNjq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 09:39:38 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:45090 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728119AbfCVNjh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 09:39:37 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 323F1982A746CDEA4EBA;
-        Fri, 22 Mar 2019 21:39:34 +0800 (CST)
-Received: from [127.0.0.1] (10.177.31.96) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.408.0; Fri, 22 Mar 2019
- 21:39:32 +0800
-Subject: Re: [PATCH] dccp: Fix memleak in __feat_register_sp
-To:     Mukesh Ojha <mojha@codeaurora.org>, <davem@davemloft.net>,
-        <gerrit@erg.abdn.ac.uk>
-References: <20190321141058.14580-1-yuehaibing@huawei.com>
- <21f94a25-949a-1a6a-2ba2-59c829edeb04@codeaurora.org>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <dccp@vger.kernel.org>
-From:   YueHaibing <yuehaibing@huawei.com>
-Message-ID: <a714b91a-fc8b-841b-6e9e-b4c18894fec7@huawei.com>
-Date:   Fri, 22 Mar 2019 21:39:31 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
-MIME-Version: 1.0
-In-Reply-To: <21f94a25-949a-1a6a-2ba2-59c829edeb04@codeaurora.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
+        Fri, 22 Mar 2019 09:39:46 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:42234 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728119AbfCVNjo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 09:39:44 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 908E220010A;
+        Fri, 22 Mar 2019 14:39:41 +0100 (CET)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 83BD8200081;
+        Fri, 22 Mar 2019 14:39:41 +0100 (CET)
+Received: from lorenz.ea.freescale.net (lorenz.ea.freescale.net [10.171.71.5])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 284B2205F3;
+        Fri, 22 Mar 2019 14:39:41 +0100 (CET)
+From:   Iuliana Prodan <iuliana.prodan@nxp.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Horia Geanta <horia.geanta@nxp.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-imx <linux-imx@nxp.com>
+Subject: [PATCH] crypto: caam - limit AXI pipeline to a depth of 1
+Date:   Fri, 22 Mar 2019 15:39:28 +0200
+Message-Id: <1553261968-5766-1-git-send-email-iuliana.prodan@nxp.com>
+X-Mailer: git-send-email 2.1.0
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/3/22 19:52, Mukesh Ojha wrote:
-> 
-> On 3/21/2019 7:40 PM, Yue Haibing wrote:
->> From: YueHaibing <yuehaibing@huawei.com>
->>
->> If dccp_feat_push_change fails, we forget free the mem
->> which is alloced by kmemdup in dccp_feat_clone_sp_val.
->>
->> Reported-by: Hulk Robot <hulkci@huawei.com>
->> Fixes: e8ef967a54f4 ("dccp: Registration routines for changing feature values")
->> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
->> ---
->>   net/dccp/feat.c | 7 ++++++-
->>   1 file changed, 6 insertions(+), 1 deletion(-)
->>
->> diff --git a/net/dccp/feat.c b/net/dccp/feat.c
->> index f227f00..083e012 100644
->> --- a/net/dccp/feat.c
->> +++ b/net/dccp/feat.c
->> @@ -738,7 +738,12 @@ static int __feat_register_sp(struct list_head *fn, u8 feat, u8 is_local,
->>       if (dccp_feat_clone_sp_val(&fval, sp_val, sp_len))
->>           return -ENOMEM;
->>   -    return dccp_feat_push_change(fn, feat, is_local, mandatory, &fval);
->> +    if (dccp_feat_push_change(fn, feat, is_local, mandatory, &fval)) {
->> +        kfree(val->sp.vec);
-> 
-> Please atleast check the compilation first, don't  just rush into sending patch.
-> 
-> s/val/fval
+Some i.MX6 devices (imx6D, imx6Q, imx6DL, imx6S, imx6DP and imx6DQ) have
+an issue wherein AXI bus transactions may not occur in the correct order.
+This isn't a problem running single descriptors, but can be if running
+multiple concurrent descriptors. Reworking the CAAM driver to throttle
+to single requests is impractical, so this patch limits the AXI pipeline
+to a depth of one (from a default of 4) to preclude this situation from
+occurring.
+This patch applies to known affected platforms.
 
-A copy-paste typo, will fix it. Thanks!
+Signed-off-by: Radu Solea <radu.solea@nxp.com>
+Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
+---
+ drivers/crypto/caam/ctrl.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-> 
-> 
-> Thanks,
-> Mukesh
-> 
->> +        return -ENOMEM;
->> +    }
->> +
->> +    return 0;
->>   }
->>     /**
-> 
-> .
-> 
+diff --git a/drivers/crypto/caam/ctrl.c b/drivers/crypto/caam/ctrl.c
+index 858bdc9..e2ba3d2 100644
+--- a/drivers/crypto/caam/ctrl.c
++++ b/drivers/crypto/caam/ctrl.c
+@@ -468,6 +468,24 @@ static int caam_get_era(struct caam_ctrl __iomem *ctrl)
+ 		return caam_get_era_from_hw(ctrl);
+ }
+ 
++/*
++ * ERRATA: imx6 devices (imx6D, imx6Q, imx6DL, imx6S, imx6DP and imx6DQ)
++ * have an issue wherein AXI bus transactions may not occur in the correct
++ * order. This isn't a problem running single descriptors, but can be if
++ * running multiple concurrent descriptors. Reworking the driver to throttle
++ * to single requests is impractical, thus the workaround is to limit the AXI
++ * pipeline to a depth of 1 (from it's default of 4) to preclude this situation
++ * from occurring.
++ */
++static void handle_imx6_err005766(u32 *mcr)
++{
++	if (of_machine_is_compatible("fsl,imx6q") ||
++	    of_machine_is_compatible("fsl,imx6dl") ||
++	    of_machine_is_compatible("fsl,imx6qp"))
++		clrsetbits_32(mcr, MCFGR_AXIPIPE_MASK,
++			      1 << MCFGR_AXIPIPE_SHIFT);
++}
++
+ static const struct of_device_id caam_match[] = {
+ 	{
+ 		.compatible = "fsl,sec-v4.0",
+@@ -640,6 +658,8 @@ static int caam_probe(struct platform_device *pdev)
+ 			      (sizeof(dma_addr_t) == sizeof(u64) ?
+ 			       MCFGR_LONG_PTR : 0));
+ 
++	handle_imx6_err005766(&ctrl->mcr);
++
+ 	/*
+ 	 *  Read the Compile Time paramters and SCFGR to determine
+ 	 * if Virtualization is enabled for this platform
+-- 
+2.1.0
 
