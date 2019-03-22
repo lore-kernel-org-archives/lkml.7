@@ -2,148 +2,130 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0273C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:46:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD262C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:49:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E7BB20883
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:46:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="dp9Vj9kb"
+	by mail.kernel.org (Postfix) with ESMTP id AF97A2083D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:49:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729260AbfCVOqm (ORCPT
+        id S1729188AbfCVOth (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 10:46:42 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:40226 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728893AbfCVOqm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 10:46:42 -0400
-Received: from zn.tnic (p200300EC2F098000329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:8000:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 676391EC00FF;
-        Fri, 22 Mar 2019 15:46:40 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1553266000;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=tmxLRF1Y9/DbOv0CBMVmJCNfE0FVRQ95SjbrO328xWE=;
-        b=dp9Vj9kb1oiRDMDHL9n9Ez0W+8xfN9TYjWLBQUig7xuqQJd/aDd8U7J05hyWX5LvwzZxHz
-        6G1j6MSppcxGMZ56kFCxrSIVU3zCVMemvW7E9yo4wkna2CjDUS+7a6t3PS0h5YeabZZzV+
-        veyDszSFIy6zslrRyXvYRLMAZgdEJ18=
-Date:   Fri, 22 Mar 2019 15:46:43 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Len Brown <len.brown@intel.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Laura Abbott <labbott@fedoraproject.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Simon Schricker <sschricker@suse.de>,
-        Hannes Reinecke <hare@suse.de>
-Subject: Re: [PATCH 2/2] PM / arch: x86: MSR_IA32_ENERGY_PERF_BIAS sysfs
- interface
-Message-ID: <20190322144629.GC12472@zn.tnic>
-References: <1637073.gl2OfxWTjI@aspire.rjw.lan>
- <1762575.ER2xjzr9E1@aspire.rjw.lan>
+        Fri, 22 Mar 2019 10:49:37 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:39766 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728733AbfCVOtg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 10:49:36 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2MEd6BZ114369
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 10:49:35 -0400
+Received: from e15.ny.us.ibm.com (e15.ny.us.ibm.com [129.33.205.205])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rd1961m9x-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 10:49:35 -0400
+Received: from localhost
+        by e15.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Fri, 22 Mar 2019 14:49:31 -0000
+Received: from b01cxnp23033.gho.pok.ibm.com (9.57.198.28)
+        by e15.ny.us.ibm.com (146.89.104.202) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 22 Mar 2019 14:49:28 -0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2MEnUqO17956900
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 22 Mar 2019 14:49:30 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9044BB2065;
+        Fri, 22 Mar 2019 14:49:30 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 73258B205F;
+        Fri, 22 Mar 2019 14:49:30 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri, 22 Mar 2019 14:49:30 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id B913E16C2A5D; Fri, 22 Mar 2019 07:50:22 -0700 (PDT)
+Date:   Fri, 22 Mar 2019 07:50:22 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Scott Wood <swood@redhat.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Juri Lelli <juri.lelli@redhat.com>
+Subject: Re: [PATCH RT 4.19] rcutorture: Fix oops when selecting non-default
+ torture_type
+Reply-To: paulmck@linux.ibm.com
+References: <20190322032121.23948-1-swood@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1762575.ER2xjzr9E1@aspire.rjw.lan>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190322032121.23948-1-swood@redhat.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19032214-0068-0000-0000-000003A9A5CD
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010795; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000282; SDB=6.01178063; UDB=6.00616320; IPR=6.00958761;
+ MB=3.00026111; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-22 14:49:30
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19032214-0069-0000-0000-000047E71D5E
+Message-Id: <20190322145022.GL4102@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-22_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=939 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903220108
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-First of all, thanks a lot for doing that!
-
-This is a good example for how we should convert all the /dev/msr
-accessing tools.
-
-Nitpicks below.
-
-On Thu, Mar 21, 2019 at 11:20:17PM +0100, Rafael J. Wysocki wrote:
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On Thu, Mar 21, 2019 at 10:21:21PM -0500, Scott Wood wrote:
+> rcu_bh is disabled on PREEMPT_RT via a stub ops that has no name.  Thus,
+> if a torture_type other than "rcu" is used, rcu_torture_init() will
+> pass NULL to strcmp() when iterating over torture_ops[], and oops.
 > 
-> The Performance and Energy Bias Hint (EPB) is expected to be set by
-> user space through the generic MSR interface, but that interface is
-> not particularly nice and there are security concerns regarding it,
-> so it is not always available.
-> 
-> For this reason, add a sysfs interface for reading and updating the
-> EPB, in the form of a new attribute, energy_perf_bias, located
-> under /sys/devices/system/cpu/cpu#/power/ for online CPUs that
-> support the EPB feature.
-> 
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> Signed-off-by: Scott Wood <swood@redhat.com>
+
+This rcu_bh torture type is gone completely in mainline, however,
+I just yesterday queued a patch to fix some problems when an invalid
+torture_type was specified.
+
+Mainline 4.19 does have the .name element of rcu_bh_ops specified,
+though.  Not sure what happened here, but you are absolutely
+correct that rcu_bh_ops does need a .name initializer.
+
+							Thanx, Paul
+
 > ---
->  Documentation/ABI/testing/sysfs-devices-system-cpu |   18 ++++
->  Documentation/admin-guide/pm/intel_epb.rst         |   27 ++++++
->  arch/x86/kernel/cpu/intel_epb.c                    |   93 ++++++++++++++++++++-
->  3 files changed, 134 insertions(+), 4 deletions(-)
+> With this applied to 4.19.25-rt16 and specifying torture_type=sched,
+> similar rcutorture failures are seen as with 5.0.3-rt1 (in which standard
+> torture_cype=rcu no longer has .extendables=0 and thus stresses similar
+> paths).
+> 
+>  kernel/rcu/rcutorture.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
+> index 7d2a615601e7..408d03048911 100644
+> --- a/kernel/rcu/rcutorture.c
+> +++ b/kernel/rcu/rcutorture.c
+> @@ -479,6 +479,7 @@ static struct rcu_torture_ops rcu_bh_ops = {
+>  #else
+>  static struct rcu_torture_ops rcu_bh_ops = {
+>  	.ttype		= INVALID_RCU_FLAVOR,
+> +	.name		= "rcu_bh"
+>  };
+>  #endif
+> 
+> -- 
+> 2.18.1
+> 
 
-...
-
-> +static ssize_t energy_perf_bias_show(struct device *dev,
-> +				     struct device_attribute *attr,
-> +				     char *buf)
-> +{
-> +	unsigned int cpu = dev->id;
-> +	u64 epb;
-> +	int ret;
-> +
-> +	ret = rdmsrl_on_cpu(cpu, MSR_IA32_ENERGY_PERF_BIAS, &epb);
-
-That's an IPI and an MSR read each time. You could dump saved_epb
-instead, no?
-
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return sprintf(buf, "%llu\n", epb);
-> +}
-> +
-> +static ssize_t energy_perf_bias_store(struct device *dev,
-> +				      struct device_attribute *attr,
-> +				      const char *buf, size_t count)
-> +{
-> +	unsigned int cpu = dev->id;
-> +	u64 epb, val;
-> +	int ret;
-> +
-> +	ret = __sysfs_match_string(energy_perf_strings,
-> +				   ARRAY_SIZE(energy_perf_strings), buf);
-> +	if (ret >= 0)
-> +		val = energ_perf_values[ret];
-> +	else if (kstrtou64(buf, 0, &val) || val > MAX_EPB)
-
-Range is 0 - 15 but u64? Maybe make it an u8? :)
-
-> +		return -EINVAL;
-> +
-> +	ret = rdmsrl_on_cpu(cpu, MSR_IA32_ENERGY_PERF_BIAS, &epb);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = wrmsrl_on_cpu(cpu, MSR_IA32_ENERGY_PERF_BIAS,
-> +			    (epb & ~EPB_MASK) | val);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return count;
-> +}
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
