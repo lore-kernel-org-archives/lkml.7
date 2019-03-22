@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5005C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:04:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FF29C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:04:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A541E2192D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:04:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1020821934
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:04:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256293;
-	bh=RgMJnDERoQkrmyDxnu9lN5+W5E0bHSSz56wUoDZ245k=;
+	s=default; t=1553256299;
+	bh=SVyvQgEaS2n3edZ7nZf9yc8X9rgzTjRrdjVgXqGD66k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VHX3+tzjgaoCXUZCESo4uov4aD/oeGsPfyTQko6a/L7Ilh02aSz4jil/p5/h37m7D
-	 63yenq3f9F0WDpZsjmDXGGctJ/5cXL0DtZiTOq0/gAdK3+YU9Vc2eYM5VwGi7/l9nK
-	 SjL4BSxFpqAe+dKZY2mDyrqrL742NHDTbxcq9HAE=
+	b=USMBruxNc80dmsDoFc6eJA2zAjXaagfuKkYKkWxjGU4xFwKQ+XlcH7Bb+lMH/rNAg
+	 1ZsVskFIqxVtI9ftHIgamszLYF6lSmeS5i8Ok+1bhni/Yt3eA9yCgtfaTBwLf0iyE0
+	 1rddt7WLGP5PtVfA6AN1UULJTcd7IJc5ZhgstUBE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388727AbfCVMEw (ORCPT
+        id S2388730AbfCVME4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:04:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43230 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:04:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43294 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733252AbfCVMEt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:04:49 -0400
+        id S2388723AbfCVMEw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:04:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86757206C0;
-        Fri, 22 Mar 2019 12:04:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A9812192D;
+        Fri, 22 Mar 2019 12:04:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256289;
-        bh=RgMJnDERoQkrmyDxnu9lN5+W5E0bHSSz56wUoDZ245k=;
+        s=default; t=1553256291;
+        bh=SVyvQgEaS2n3edZ7nZf9yc8X9rgzTjRrdjVgXqGD66k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k8NFNIWFyrWzAvUp29mQm+iCiEr4ZodO+1skpN86Qqs0T6u50QIxebbaLYGwXckQg
-         oE+FPHjaaE9AmteYLvbaAPWh6e8he9aZnQe/JDCnj72Z810mSXLzcdvk1MPMV7CcIZ
-         89FOv3A03Ev2NOk/gIZuz4Z9c7J/PsApJWapmPOU=
+        b=a7hienFyIY9jGnEjZJ1YNpGLrO1VmXnrkUh8y7u3lpzNTRBv+pS+1sL/NpZ8FFw2o
+         yGfgUSHp7TxrhDs/LnsIXoKbyV8n6ZR4+oqFxPKpwZfO7v31dUGl8YTSb2u4HWxpge
+         wZHzMQX4GELljPLgWhR+Jkiv26Vcg/4nWxVA90uk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Song Liu <songliubraving@fb.com>, Jann Horn <jannh@google.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 4.19 142/280] tracing/perf: Use strndup_user() instead of buggy open-coded version
-Date:   Fri, 22 Mar 2019 12:14:55 +0100
-Message-Id: <20190322111318.570881793@linuxfoundation.org>
+        stable@vger.kernel.org, Juergen Gross <jgross@suse.com>,
+        Jan Beulich <jbeulich@suse.com>
+Subject: [PATCH 4.19 143/280] xen: fix dom0 boot on huge systems
+Date:   Fri, 22 Mar 2019 12:14:56 +0100
+Message-Id: <20190322111318.730430506@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -66,54 +65,71 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jann Horn <jannh@google.com>
+From: Juergen Gross <jgross@suse.com>
 
-commit 83540fbc8812a580b6ad8f93f4c29e62e417687e upstream.
+commit 01bd2ac2f55a1916d81dace12fa8d7ae1c79b5ea upstream.
 
-The first version of this method was missing the check for
-`ret == PATH_MAX`; then such a check was added, but it didn't call kfree()
-on error, so there was still a small memory leak in the error case.
-Fix it by using strndup_user() instead of open-coding it.
+Commit f7c90c2aa40048 ("x86/xen: don't write ptes directly in 32-bit
+PV guests") introduced a regression for booting dom0 on huge systems
+with lots of RAM (in the TB range).
 
-Link: http://lkml.kernel.org/r/20190220165443.152385-1-jannh@google.com
+Reason is that on those hosts the p2m list needs to be moved early in
+the boot process and this requires temporary page tables to be created.
+Said commit modified xen_set_pte_init() to use a hypercall for writing
+a PTE, but this requires the page table being in the direct mapped
+area, which is not the case for the temporary page tables used in
+xen_relocate_p2m().
 
-Cc: Ingo Molnar <mingo@kernel.org>
+As the page tables are completely written before being linked to the
+actual address space instead of set_pte() a plain write to memory can
+be used in xen_relocate_p2m().
+
+Fixes: f7c90c2aa40048 ("x86/xen: don't write ptes directly in 32-bit PV guests")
 Cc: stable@vger.kernel.org
-Fixes: 0eadcc7a7bc0 ("perf/core: Fix perf_uprobe_init()")
-Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
-Acked-by: Song Liu <songliubraving@fb.com>
-Signed-off-by: Jann Horn <jannh@google.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Juergen Gross <jgross@suse.com>
+Reviewed-by: Jan Beulich <jbeulich@suse.com>
+Signed-off-by: Juergen Gross <jgross@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/trace/trace_event_perf.c |   16 +++++++---------
- 1 file changed, 7 insertions(+), 9 deletions(-)
+ arch/x86/xen/mmu_pv.c |   13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
---- a/kernel/trace/trace_event_perf.c
-+++ b/kernel/trace/trace_event_perf.c
-@@ -298,15 +298,13 @@ int perf_uprobe_init(struct perf_event *
- 
- 	if (!p_event->attr.uprobe_path)
- 		return -EINVAL;
--	path = kzalloc(PATH_MAX, GFP_KERNEL);
--	if (!path)
--		return -ENOMEM;
--	ret = strncpy_from_user(
--		path, u64_to_user_ptr(p_event->attr.uprobe_path), PATH_MAX);
--	if (ret == PATH_MAX)
--		return -E2BIG;
--	if (ret < 0)
--		goto out;
-+
-+	path = strndup_user(u64_to_user_ptr(p_event->attr.uprobe_path),
-+			    PATH_MAX);
-+	if (IS_ERR(path)) {
-+		ret = PTR_ERR(path);
-+		return (ret == -EINVAL) ? -E2BIG : ret;
-+	}
- 	if (path[0] == '\0') {
- 		ret = -EINVAL;
- 		goto out;
+--- a/arch/x86/xen/mmu_pv.c
++++ b/arch/x86/xen/mmu_pv.c
+@@ -2106,10 +2106,10 @@ void __init xen_relocate_p2m(void)
+ 				pt = early_memremap(pt_phys, PAGE_SIZE);
+ 				clear_page(pt);
+ 				for (idx_pte = 0;
+-						idx_pte < min(n_pte, PTRS_PER_PTE);
+-						idx_pte++) {
+-					set_pte(pt + idx_pte,
+-							pfn_pte(p2m_pfn, PAGE_KERNEL));
++				     idx_pte < min(n_pte, PTRS_PER_PTE);
++				     idx_pte++) {
++					pt[idx_pte] = pfn_pte(p2m_pfn,
++							      PAGE_KERNEL);
+ 					p2m_pfn++;
+ 				}
+ 				n_pte -= PTRS_PER_PTE;
+@@ -2117,8 +2117,7 @@ void __init xen_relocate_p2m(void)
+ 				make_lowmem_page_readonly(__va(pt_phys));
+ 				pin_pagetable_pfn(MMUEXT_PIN_L1_TABLE,
+ 						PFN_DOWN(pt_phys));
+-				set_pmd(pmd + idx_pt,
+-						__pmd(_PAGE_TABLE | pt_phys));
++				pmd[idx_pt] = __pmd(_PAGE_TABLE | pt_phys);
+ 				pt_phys += PAGE_SIZE;
+ 			}
+ 			n_pt -= PTRS_PER_PMD;
+@@ -2126,7 +2125,7 @@ void __init xen_relocate_p2m(void)
+ 			make_lowmem_page_readonly(__va(pmd_phys));
+ 			pin_pagetable_pfn(MMUEXT_PIN_L2_TABLE,
+ 					PFN_DOWN(pmd_phys));
+-			set_pud(pud + idx_pmd, __pud(_PAGE_TABLE | pmd_phys));
++			pud[idx_pmd] = __pud(_PAGE_TABLE | pmd_phys);
+ 			pmd_phys += PAGE_SIZE;
+ 		}
+ 		n_pmd -= PTRS_PER_PUD;
 
 
