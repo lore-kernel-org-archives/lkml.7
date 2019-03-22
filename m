@@ -2,151 +2,161 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A83C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 20:14:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8919AC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 20:15:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13739204FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 20:14:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57B1A218E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 20:15:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="To7dCAIl"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="M3cLj51x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727265AbfCVUOo (ORCPT
+        id S1727455AbfCVUPZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 16:14:44 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:34998 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726091AbfCVUOo (ORCPT
+        Fri, 22 Mar 2019 16:15:25 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:44189 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726091AbfCVUPY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 16:14:44 -0400
-Received: by mail-it1-f194.google.com with SMTP id w15so5351323itc.0
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 13:14:43 -0700 (PDT)
+        Fri, 22 Mar 2019 16:15:24 -0400
+Received: by mail-lf1-f65.google.com with SMTP id u9so2202796lfe.11
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 13:15:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :content-transfer-encoding:user-agent;
-        bh=lhbKbOmtHpV/pF1JUjV1D5/KDzGY4a07jsH4EYtOhaY=;
-        b=To7dCAIleFEZoS6UaisSRXnAS0gRXeUSYLWQY4tYwzzEDfnMqpen+mdTuUtRcTQwgO
-         23EkKPHUN+NjlRGQnLJ2TGFaSMlNJSGVE3DVCzeL4OKJ2LYt9lWPjQloqZR3Evvgo/Sl
-         bMm3KBfw6hDfu+LtHjwfuPPjvJgYEXntrT/FIjlVpZLiEEfcCkJJDG+FVKAejEwhho+n
-         X49IXGeJJE2Zf5Efj7O/dL8S1KPVZKs2+1CiUUTeimRhsy0myxpbtwyTf+jvIOAVLdj+
-         YJ7OTwvzjxvQlkUCOOoGuXEdtT/ZzPUvSn6mnGuBRScfIznV+O4u5I6atPojpd46VVdm
-         TSSw==
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7WpPq2hKy/eNksQA15j3lPcjWfiZXOzco+vJ7Dg1GgI=;
+        b=M3cLj51xYb38Z9IxbVnMJw6f+IGDTr7tSudkXvteN3W0vMx4oLv7TpZ6zesd4bFvcU
+         pr80WdfISolHhOSOxdiKWawaHtpzVldnWYH8uugiklp+hU/AA+Pm2L7zR/2hUTKYGNQo
+         cU2YWydAQuv+5+PVP/JUt4jx04lpgpejUm++nBTLFGCqRva0E6IhC8YOOc5vRBHD90Tz
+         g9a+TGn8aIkvfsAw7kWFEG46L1xLQpK6FjsFkd8xa61LMc6bO02br1cEuMkcmSvtiHJv
+         zQb4sek1F9VVZZJyS4428cR9wL1jPflK2DOct+HwDwGO+xMsYOM8NVPOgs4zxl0fmUSx
+         uKXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:content-transfer-encoding:user-agent;
-        bh=lhbKbOmtHpV/pF1JUjV1D5/KDzGY4a07jsH4EYtOhaY=;
-        b=KfBgYHWcHtzk9AQc6PNkKZVZpGv0KmTI43f1wheQpsYsicBSRpV+TuVDgTHJBIDUnl
-         0J9eZiBlhtpjxfEPGuWpHxyexU5tmeDSV1rpiDDQ01+cg1lKNqE0W43f/MnSdqS9/dkv
-         gGIVfiYkxB2rGMuv0kBmeFOAJNLMIIcRtXH/E1SP8egV7IqjMgXtDwQ1/p6ab4nCQ6hV
-         5k/mHMtgkTfqfN4DuZcWR2UM+aeygwX3ts1ILPZju9UkiiYZoKhA+ZzAUxxLa6MSnyxK
-         4hSc5aZASl3F1o8wGdDUpO4Hs39Ej+v25c33C7vsRLQGdmIXrsKP4tEQMK73Kdh3pwRT
-         oQXw==
-X-Gm-Message-State: APjAAAUjBElPFZR1l2BDCQZC0tUcznqHk47J7DBtbyyq0RRwn4bs8DvH
-        49MI7oPGwurVFZ7loXm+EM4=
-X-Google-Smtp-Source: APXvYqxFESPJ9aYBAWM2ZGsRNF1WnDFBARd22GWLOd6LpRHXnqTjJ6W79VVfU6t4nnYclEdSyhI7/A==
-X-Received: by 2002:a05:660c:50:: with SMTP id p16mr2743494itk.139.1553285683152;
-        Fri, 22 Mar 2019 13:14:43 -0700 (PDT)
-Received: from ubu-Virtual-Machine (66-188-57-61.dhcp.bycy.mi.charter.com. [66.188.57.61])
-        by smtp.gmail.com with ESMTPSA id v10sm2154563itv.8.2019.03.22.13.14.42
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 22 Mar 2019 13:14:42 -0700 (PDT)
-Date:   Fri, 22 Mar 2019 16:14:40 -0400
-From:   Kimberly Brown <kimbrownkd@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] kobject: Add support for default attribute groups to
- kobj_type
-Message-ID: <20190322201440.GA30814@ubu-Virtual-Machine>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7WpPq2hKy/eNksQA15j3lPcjWfiZXOzco+vJ7Dg1GgI=;
+        b=kEL4+SZ+o4FJuad/XrVTTKEbkRX8up8Os9ygT+s1TtHhyRZVMJZlzTccB1jEBLbHRh
+         e0AxSNTWM5CZPA4SPxboHDLmG6v6XNOTPc/PnaFjd0Lleo+hA5mGn5vou7Gw9xVpnz7L
+         DVm285KsXK4bo6573s8I03Q4/I6S6trJLkIxfQQxKouEMaTZruO0UAUBVYLOBNRkeXsy
+         Ge1IP9JL7W89GMAr+ZwUKCuo+g6Y6G80okbaxO4ozVbtmlvCl0sReuPndH6KNFrsgAjp
+         lZHLhBQHGKSam0VYnKpObIndLrBjHJFHphondDbPsHvOdzW9DL+dJK4HfYMftWZSR0/6
+         dBXw==
+X-Gm-Message-State: APjAAAWEH89n68T4a/GOUh1TNXbOhj++cdqKd9MFhNfMaf0GWFQ6JD6R
+        6xCF3T2XG+Ui4KnM/LjSgmmj5CX5YRxQi17sMJVQ
+X-Google-Smtp-Source: APXvYqytzpxVVW1e6sMr9FLNSXE5C0PLI06p/4Wnq6LU87q/XmFZQXamatFU2n6V19NW9ljYnIwYsNaNN6iI4mJpfm8=
+X-Received: by 2002:a19:ee11:: with SMTP id g17mr5929557lfb.117.1553285722058;
+ Fri, 22 Mar 2019 13:15:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190322141414.496017-1-arnd@arndb.de>
+In-Reply-To: <20190322141414.496017-1-arnd@arndb.de>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Fri, 22 Mar 2019 16:15:09 -0400
+Message-ID: <CAHC9VhQuSQr7+y1z3SmY=3s608zYo3JXhF3m_jUWXAo8i8swgw@mail.gmail.com>
+Subject: Re: [PATCH] selinux: avoid uninitialized variable warning
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
+        Eric Paris <eparis@parisplace.org>,
+        clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        selinux@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kobj_type currently uses a list of individual attributes to store
-default attributes. Attribute groups are more flexible than a list of
-attributes because groups provide support for attribute visibility. So,
-add support for default attribute groups to kobj_type.
+On Fri, Mar 22, 2019 at 10:14 AM Arnd Bergmann <arnd@arndb.de> wrote:
+> clang correctly points out a code path that would lead
+> to an uninitialized variable use:
+>
+> security/selinux/netlabel.c:310:6: error: variable 'addr' is used uninitialized whenever 'if' condition is false
+>       [-Werror,-Wsometimes-uninitialized]
+>         if (ip_hdr(skb)->version == 4) {
+>             ^~~~~~~~~~~~~~~~~~~~~~~~~
+> security/selinux/netlabel.c:322:40: note: uninitialized use occurs here
+>         rc = netlbl_conn_setattr(ep->base.sk, addr, &secattr);
+>                                               ^~~~
+> security/selinux/netlabel.c:310:2: note: remove the 'if' if its condition is always true
+>         if (ip_hdr(skb)->version == 4) {
+>         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> security/selinux/netlabel.c:291:23: note: initialize the variable 'addr' to silence this warning
+>         struct sockaddr *addr;
+>                              ^
+>                               = NULL
+> 1 error generated.
+>
+> This is probably harmless since we should not see ipv6 packets
+> of CONFIG_IPV6 is disabled, but it's better to rearrange the code
+> so this cannot happen.
+>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  security/selinux/netlabel.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
 
-In future patches, the existing uses of kobj_type’s attribute list will
-be converted to attribute groups. When that is complete, kobj_type’s
-attribute list, “default_attrs”, will be removed.
+Hi Arnd,
 
-Signed-off-by: Kimberly Brown <kimbrownkd@gmail.com>
----
- include/linux/kobject.h |  3 ++-
- lib/kobject.c           | 14 ++++++++++++++
- 2 files changed, 16 insertions(+), 1 deletion(-)
+Thanks for pointing this out and providing a fix.  I think you're
+right in that the should be pretty harmless, but I also agree that we
+should fix it; some thoughts on the patch below ...
 
-diff --git a/include/linux/kobject.h b/include/linux/kobject.h
-index 1ab0d624fb36..e2ca0a292e21 100644
---- a/include/linux/kobject.h
-+++ b/include/linux/kobject.h
-@@ -139,7 +139,8 @@ static inline bool kobject_has_children(struct kobject *kobj)
- struct kobj_type {
- 	void (*release)(struct kobject *kobj);
- 	const struct sysfs_ops *sysfs_ops;
--	struct attribute **default_attrs;
-+	struct attribute **default_attrs;	/* use default_groups instead */
-+	const struct attribute_group **default_groups;
- 	const struct kobj_ns_type_operations *(*child_ns_type)(struct kobject *kobj);
- 	const void *(*namespace)(struct kobject *kobj);
- 	void (*get_ownership)(struct kobject *kobj, kuid_t *uid, kgid_t *gid);
-diff --git a/lib/kobject.c b/lib/kobject.c
-index b72e00fd7d09..67789f34951d 100644
---- a/lib/kobject.c
-+++ b/lib/kobject.c
-@@ -82,6 +82,7 @@ static int populate_dir(struct kobject *kobj)
- 
- static int create_dir(struct kobject *kobj)
- {
-+	const struct kobj_type *ktype = get_ktype(kobj);
- 	const struct kobj_ns_type_operations *ops;
- 	int error;
- 
-@@ -95,6 +96,14 @@ static int create_dir(struct kobject *kobj)
- 		return error;
- 	}
- 
-+	if (ktype) {
-+		error = sysfs_create_groups(kobj, ktype->default_groups);
-+		if (error) {
-+			sysfs_remove_dir(kobj);
-+			return error;
-+		}
-+	}
-+
- 	/*
- 	 * @kobj->sd may be deleted by an ancestor going away.  Hold an
- 	 * extra reference so that it stays until @kobj is gone.
-@@ -584,11 +593,16 @@ EXPORT_SYMBOL_GPL(kobject_move);
- void kobject_del(struct kobject *kobj)
- {
- 	struct kernfs_node *sd;
-+	const struct kobj_type *ktype = get_ktype(kobj);
- 
- 	if (!kobj)
- 		return;
- 
- 	sd = kobj->sd;
-+
-+	if (ktype)
-+		sysfs_remove_groups(kobj, ktype->default_groups);
-+
- 	sysfs_remove_dir(kobj);
- 	sysfs_put(sd);
- 
+> diff --git a/security/selinux/netlabel.c b/security/selinux/netlabel.c
+> index 186e727b737b..d0e549d4f486 100644
+> --- a/security/selinux/netlabel.c
+> +++ b/security/selinux/netlabel.c
+> @@ -288,7 +288,6 @@ int selinux_netlbl_sctp_assoc_request(struct sctp_endpoint *ep,
+>         int rc;
+>         struct netlbl_lsm_secattr secattr;
+>         struct sk_security_struct *sksec = ep->base.sk->sk_security;
+> -       struct sockaddr *addr;
+>         struct sockaddr_in addr4;
+>  #if IS_ENABLED(CONFIG_IPV6)
+>         struct sockaddr_in6 addr6;
+> @@ -310,16 +309,15 @@ int selinux_netlbl_sctp_assoc_request(struct sctp_endpoint *ep,
+>         if (ip_hdr(skb)->version == 4) {
+>                 addr4.sin_family = AF_INET;
+>                 addr4.sin_addr.s_addr = ip_hdr(skb)->saddr;
+> -               addr = (struct sockaddr *)&addr4;
+> +               rc = netlbl_conn_setattr(ep->base.sk, (void*)&addr4, &secattr);
+>  #if IS_ENABLED(CONFIG_IPV6)
+>         } else {
+>                 addr6.sin6_family = AF_INET6;
+>                 addr6.sin6_addr = ipv6_hdr(skb)->saddr;
+> -               addr = (struct sockaddr *)&addr6;
+> +               rc = netlbl_conn_setattr(ep->base.sk, (void*)&addr6, &secattr);
+>  #endif
+
+While we are hardening the code a bit, I'm thinking we should probably
+refactor this if-else a bit, some pseudo code for example:
+
+    if (ip_hdr == 4) {
+      rc = netlbl_conn_setattr();
+  #if CONFIG_IPV6
+    } else if (ip_hdr == 6) {
+      rc = netlbl_conn_setattr();
+  #endif
+    } else {
+      rc = -EAFNOSUPPORT;
+    }
+
+Thoughts?
+
+>         }
+>
+> -       rc = netlbl_conn_setattr(ep->base.sk, addr, &secattr);
+>         if (rc == 0)
+>                 sksec->nlbl_state = NLBL_LABELED;
+>
+> --
+> 2.20.0
+>
+
 -- 
-2.17.1
-
+paul moore
+www.paul-moore.com
