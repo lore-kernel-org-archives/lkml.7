@@ -7,46 +7,51 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDBE8C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:29:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D502FC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:29:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC7382183E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:29:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4E9F2183E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:29:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254178;
-	bh=PVmpW9i6jti/y3Xb3lny3LJDIJmp56THpRSw24FQrvU=;
+	s=default; t=1553254180;
+	bh=ZvLZHWjDRa0Qi0OBrZAbLOYcTJ+amaJt3QQhhQLT8qw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wblrS/Cltpb/y/d6/9wtiV1/zM3DjCrXdp4o3WTiyGXvRrAcj+GiDGHuiOaHqipPx
-	 +N5k8FjZaqSnANqKM1frO7h2n2hFMNHKfgfITjKxedWpznjtEHP7nRADDR7ksFLtCy
-	 oCrnJCellU6FhDN1i+KCXGHUPqo2w5dVzR8sE9T4=
+	b=TLWnLW/DZd+3oGklKyzzNytTWcZ6WOTu7cPCRCKn/ALXEvRbUyqcnHDzZ7EygBiPg
+	 WauD5CTwO22ck/rB/G1gzBYb/nBkvZac+DwxW0NLwMEmj2f4sIUTwumQiloHRYI/f9
+	 5fYXRONmx8XuxhELRy3txzMMW/+RcyIPpULqXSXM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729821AbfCVL3h (ORCPT
+        id S1729524AbfCVL3j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:29:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57460 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:29:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729389AbfCVL3f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:29:35 -0400
+        id S1729543AbfCVL3b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:29:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 322DE21B18;
-        Fri, 22 Mar 2019 11:29:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31F71218B0;
+        Fri, 22 Mar 2019 11:29:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254174;
-        bh=PVmpW9i6jti/y3Xb3lny3LJDIJmp56THpRSw24FQrvU=;
+        s=default; t=1553254170;
+        bh=ZvLZHWjDRa0Qi0OBrZAbLOYcTJ+amaJt3QQhhQLT8qw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QLotks6MCXINJ62qvXIEnfMT1iafefiVyRn5WkUjv51rmrnL1dLpfmuGgXpyamlVE
-         z8q6OSWqu6cwtXHNVP6p+OJbe1bEauhTjQniEdWOzQSvGElm0ex07fAsYP30pXUwNq
-         Bl6h9e3xf+ZwZW6vXoXSKYRWQph3bFrSEL1DYZbA=
+        b=aQf3X0AWGDqyrjm0bqS01cS5MYMp3OFNWa3zQDWkJK4simAhZxy+RKDODBAA5zybB
+         K6hlCP4t0IwV6AKVJ+/JS/2zsaGxLcltcD99kM66uCDUtrlPmnK0v9P2mabGQfZGY3
+         9dgu7Icsi/5/ky8vf/6Pv1H/oh76xZYxL5zN49E8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniele Palmas <dnlplm@gmail.com>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.4 055/230] USB: serial: option: add Telit ME910 ECM composition
-Date:   Fri, 22 Mar 2019 12:13:13 +0100
-Message-Id: <20190322111240.554921748@linuxfoundation.org>
+        stable@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Brian Gerst <brgerst@gmail.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Denys Vlasenko <dvlasenk@redhat.com>
+Subject: [PATCH 4.4 054/230] x86/uaccess: Dont leak the AC flag into __put_user() value evaluation
+Date:   Fri, 22 Mar 2019 12:13:12 +0100
+Message-Id: <20190322111240.486449294@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -65,31 +70,62 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Daniele Palmas <dnlplm@gmail.com>
+From: Andy Lutomirski <luto@kernel.org>
 
-commit 6431866b6707d27151be381252d6eef13025cfce upstream.
+commit 2a418cf3f5f1caf911af288e978d61c9844b0695 upstream.
 
-This patch adds Telit ME910 family ECM composition 0x1102.
+When calling __put_user(foo(), ptr), the __put_user() macro would call
+foo() in between __uaccess_begin() and __uaccess_end().  If that code
+were buggy, then those bugs would be run without SMAP protection.
 
-Signed-off-by: Daniele Palmas <dnlplm@gmail.com>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Fortunately, there seem to be few instances of the problem in the
+kernel. Nevertheless, __put_user() should be fixed to avoid doing this.
+Therefore, evaluate __put_user()'s argument before setting AC.
+
+This issue was noticed when an objtool hack by Peter Zijlstra complained
+about genregs_get() and I compared the assembly output to the C source.
+
+ [ bp: Massage commit message and fixed up whitespace. ]
+
+Fixes: 11f1a4b9755f ("x86: reorganize SMAP handling in user space accesses")
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Brian Gerst <brgerst@gmail.com>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Denys Vlasenko <dvlasenk@redhat.com>
+Cc: stable@vger.kernel.org
+Link: http://lkml.kernel.org/r/20190225125231.845656645@infradead.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/option.c |    2 ++
- 1 file changed, 2 insertions(+)
+ arch/x86/include/asm/uaccess.h |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/drivers/usb/serial/option.c
-+++ b/drivers/usb/serial/option.c
-@@ -1147,6 +1147,8 @@ static const struct usb_device_id option
- 	  .driver_info = NCTRL(0) | RSVD(1) | RSVD(3) },
- 	{ USB_DEVICE(TELIT_VENDOR_ID, TELIT_PRODUCT_ME910_DUAL_MODEM),
- 	  .driver_info = NCTRL(0) | RSVD(3) },
-+	{ USB_DEVICE_INTERFACE_CLASS(TELIT_VENDOR_ID, 0x1102, 0xff),	/* Telit ME910 (ECM) */
-+	  .driver_info = NCTRL(0) },
- 	{ USB_DEVICE(TELIT_VENDOR_ID, TELIT_PRODUCT_LE910),
- 	  .driver_info = NCTRL(0) | RSVD(1) | RSVD(2) },
- 	{ USB_DEVICE(TELIT_VENDOR_ID, TELIT_PRODUCT_LE910_USBCFG4),
+--- a/arch/x86/include/asm/uaccess.h
++++ b/arch/x86/include/asm/uaccess.h
+@@ -314,8 +314,7 @@ do {									\
+ 		__put_user_asm(x, ptr, retval, "l", "k", "ir", errret);	\
+ 		break;							\
+ 	case 8:								\
+-		__put_user_asm_u64((__typeof__(*ptr))(x), ptr, retval,	\
+-				   errret);				\
++		__put_user_asm_u64(x, ptr, retval, errret);		\
+ 		break;							\
+ 	default:							\
+ 		__put_user_bad();					\
+@@ -426,8 +425,10 @@ do {									\
+ #define __put_user_nocheck(x, ptr, size)			\
+ ({								\
+ 	int __pu_err;						\
++	__typeof__(*(ptr)) __pu_val;				\
++	__pu_val = x;						\
+ 	__uaccess_begin();					\
+-	__put_user_size((x), (ptr), (size), __pu_err, -EFAULT);	\
++	__put_user_size(__pu_val, (ptr), (size), __pu_err, -EFAULT);\
+ 	__uaccess_end();					\
+ 	__builtin_expect(__pu_err, 0);				\
+ })
 
 
