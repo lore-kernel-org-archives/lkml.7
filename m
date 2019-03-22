@@ -6,51 +6,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 262BFC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:06:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFBCEC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:07:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E71CC21929
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:06:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AED021916
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:07:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256416;
-	bh=f+mK0DnmlOSjWm4ehSbcILLiamLvt1MyoPHeTPu9T3M=;
+	s=default; t=1553256420;
+	bh=sHvXRqc2XQ/23EYlH3W13invO/Lk4Ee4ep1CRQj43gc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oHyCoQYk53jFxy2twCLbB1WGXAOmy0bJJkqt1MAQlLJSh5pWMwnFFGc96th5DavJR
-	 5Vlpclvla6YSZwKqkh/NZPun2N+i3MzD7syXN2PzlE0HKiZvqf4vSGuk6bbY5Ehh+0
-	 LcFDInE6LAi4XU0QqLRajHEP61FjR9jIU8Zt+C6E=
+	b=GvRnDTTlkR/ZIKW6vVHqj02anZCey4iJhdZg6QRcdo1fv/tOpvDJKCdGdiZUaNkkR
+	 WBdFLo/KVpuLiibS1UqDtwj8QXK5YGyqCKAh0e3BVzhqKFYWXZE5CnfeilrXF0UKT6
+	 t6iVn63x0tYCLA0en9w0y5HjjYg/MB3PLenQTYs8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388973AbfCVMGz (ORCPT
+        id S2388980AbfCVMG7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:06:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45316 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:06:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730757AbfCVMGw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:06:52 -0400
+        id S1730757AbfCVMG4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:06:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58BAE206C0;
-        Fri, 22 Mar 2019 12:06:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24E6221916;
+        Fri, 22 Mar 2019 12:06:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256411;
-        bh=f+mK0DnmlOSjWm4ehSbcILLiamLvt1MyoPHeTPu9T3M=;
+        s=default; t=1553256415;
+        bh=sHvXRqc2XQ/23EYlH3W13invO/Lk4Ee4ep1CRQj43gc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GlZzXhER3gu3Tjmte5RywrcHGRdSz2Fnwcdqv352j4g7TwqLpAXk7pUKO8kl+26m1
-         y/hCo//Adxg7IC0ALGYNjaLMi0Da68Qprz+8T6H/HFWj9ialvMWMizr7/6lZtJiw77
-         4kgEKFSciRIFD1V7c3j+eMGJ173cV/j1DLizjQQs=
+        b=O3BuxOBDWD5KMu5GqYL7Ed0ADCfd7CVPLlfFVgr+ngJuSAF0/VwHre3HnQ5HmKAiI
+         zeDChs4eOB4ASusotdppSn7HdPXy26fAhm6j1fGze/+L6TQrhHVLE0YdhjyMum+2Sh
+         ESF8inGcJ61Q0OktE38CWGBZOToVUmV9l9+c01io=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zev Weiss <zev@bewilderbeest.net>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 203/280] kernel/sysctl.c: add missing range check in do_proc_dointvec_minmax_conv
-Date:   Fri, 22 Mar 2019 12:15:56 +0100
-Message-Id: <20190322111331.159172398@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 4.19 204/280] device property: Fix the length used in PROPERTY_ENTRY_STRING()
+Date:   Fri, 22 Mar 2019 12:15:57 +0100
+Message-Id: <20190322111331.380539594@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -69,52 +66,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Zev Weiss <zev@bewilderbeest.net>
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-commit 8cf7630b29701d364f8df4a50e4f1f5e752b2778 upstream.
+commit 2b6e492467c78183bb629bb0a100ea3509b615a5 upstream.
 
-This bug has apparently existed since the introduction of this function
-in the pre-git era (4500e91754d3 in Thomas Gleixner's history.git,
-"[NET]: Add proc_dointvec_userhz_jiffies, use it for proper handling of
-neighbour sysctls.").
+With string type property entries we need to use
+sizeof(const char *) instead of the number of characters as
+the length of the entry.
 
-As a minimal fix we can simply duplicate the corresponding check in
-do_proc_dointvec_conv().
+If the string was shorter then sizeof(const char *),
+attempts to read it would have failed with -EOVERFLOW. The
+problem has been hidden because all build-in string
+properties have had a string longer then 8 characters until
+now.
 
-Link: http://lkml.kernel.org/r/20190207123426.9202-3-zev@bewilderbeest.net
-Signed-off-by: Zev Weiss <zev@bewilderbeest.net>
-Cc: Brendan Higgins <brendanhiggins@google.com>
-Cc: Iurii Zaikin <yzaikin@google.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Luis Chamberlain <mcgrof@kernel.org>
-Cc: <stable@vger.kernel.org>	[2.6.2+]
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: a85f42047533 ("device property: helper macros for property entry creation")
+Cc: 4.5+ <stable@vger.kernel.org> # 4.5+
+Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/sysctl.c |   11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ include/linux/property.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -2552,7 +2552,16 @@ static int do_proc_dointvec_minmax_conv(
- {
- 	struct do_proc_dointvec_minmax_conv_param *param = data;
- 	if (write) {
--		int val = *negp ? -*lvalp : *lvalp;
-+		int val;
-+		if (*negp) {
-+			if (*lvalp > (unsigned long) INT_MAX + 1)
-+				return -EINVAL;
-+			val = -*lvalp;
-+		} else {
-+			if (*lvalp > (unsigned long) INT_MAX)
-+				return -EINVAL;
-+			val = *lvalp;
-+		}
- 		if ((param->min && *param->min > val) ||
- 		    (param->max && *param->max < val))
- 			return -EINVAL;
+--- a/include/linux/property.h
++++ b/include/linux/property.h
+@@ -258,7 +258,7 @@ struct property_entry {
+ #define PROPERTY_ENTRY_STRING(_name_, _val_)		\
+ (struct property_entry) {				\
+ 	.name = _name_,					\
+-	.length = sizeof(_val_),			\
++	.length = sizeof(const char *),			\
+ 	.type = DEV_PROP_STRING,			\
+ 	{ .value = { .str = _val_ } },			\
+ }
 
 
