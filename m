@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1044AC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:22:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98E05C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:22:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D22AE21900
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:22:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67F7C21900
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:22:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553257362;
-	bh=M1U3oxQ46/fm5YpX/Hz6OV8j3mzL0y+XTe05987gWLA=;
+	s=default; t=1553257364;
+	bh=SPGBBFlhDeXCvcNzV56+nEJeslCF3XtixKVPsQXxPqI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ON+tYrxj1mUL1o7iFOxDSv/vVw46WiHSF0mTeGOJ4J/SrZ7kzQKiNxF98fHV3nIqb
-	 dtNkl4pjEwksEgx0OAb2zwTxL1el7Vybi2SPO5LOgq7JC7UpNECvXIy6qWcKJ12dRq
-	 1+ToJvuXx8nh7vvVyy5RMDUMaAJxL1+GPiPblu5M=
+	b=01ZNSiXSNm5E16NMCN8hou58n6LhVXS2EEfYei7UtGe20X18zO5Hfz4GxP/BzSxQV
+	 UVY/4mWDGct60rwLFoB8APYm3zWfrb1JwCuQo3QOl52rGxhAb/5DFet2vFcb0U55HK
+	 qprLnsnuQdy4vo5dYCe4RaTighzLDNUGlzRkGXes=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391036AbfCVMWl (ORCPT
+        id S2391046AbfCVMWn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:22:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33874 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:22:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390662AbfCVMWk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:22:40 -0400
+        id S2390690AbfCVMWh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:22:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C32821900;
-        Fri, 22 Mar 2019 12:22:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CBFEB218A1;
+        Fri, 22 Mar 2019 12:22:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553257359;
-        bh=M1U3oxQ46/fm5YpX/Hz6OV8j3mzL0y+XTe05987gWLA=;
+        s=default; t=1553257356;
+        bh=SPGBBFlhDeXCvcNzV56+nEJeslCF3XtixKVPsQXxPqI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rP7ziGVRHPfHZyanPCDpQia5nSMYWy2wS7e/obdOmk+njbDtO2gj/J+nyAZXOQq8t
-         oWj/pydfeLKVYK1fdkfX5gl+TTy+9+1eVvg2CXieyKj5dOD/P8DgrAWZe4HE8DaTlA
-         7Y3abUzwUKzU6IF8GPTKJ4bA5li58owov5/pFiQg=
+        b=OUF+olZ10MKRJi6mGM4SD/DIheRJ2ir4w+tuQQYYeonXC51aBv/C2j+E+17DocytA
+         VZ8c9wutCL7V6+uGGnAsHVVh39wFlbL0L27K6rRsIByHp/gaKe2833Sd0SJsb1tDLC
+         MGLlSyhy6LfxQb+bpgsr8WTEReX3lX6Co2FKwl8c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, James Morris <jmorris@namei.org>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: [PATCH 5.0 209/238] tpm/tpm_crb: Avoid unaligned reads in crb_recv()
-Date:   Fri, 22 Mar 2019 12:17:08 +0100
-Message-Id: <20190322111310.578471713@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 5.0 208/238] x86/ftrace: Fix warning and considate ftrace_jmp_replace() and ftrace_call_replace()
+Date:   Fri, 22 Mar 2019 12:17:07 +0100
+Message-Id: <20190322111310.514952475@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -67,75 +65,122 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+From: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-commit 3d7a850fdc1a2e4d2adbc95cc0fc962974725e88 upstream.
+commit 745cfeaac09ce359130a5451d90cb0bd4094c290 upstream.
 
-The current approach to read first 6 bytes from the response and then tail
-of the response, can cause the 2nd memcpy_fromio() to do an unaligned read
-(e.g. read 32-bit word from address aligned to a 16-bits), depending on how
-memcpy_fromio() is implemented. If this happens, the read will fail and the
-memory controller will fill the read with 1's.
+Arnd reported the following compiler warning:
 
-This was triggered by 170d13ca3a2f, which should be probably refined to
-check and react to the address alignment. Before that commit, on x86
-memcpy_fromio() turned out to be memcpy(). By a luck GCC has done the right
-thing (from tpm_crb's perspective) for us so far, but we should not rely on
-that. Thus, it makes sense to fix this also in tpm_crb, not least because
-the fix can be then backported to stable kernels and make them more robust
-when compiled in differing environments.
+arch/x86/kernel/ftrace.c:669:23: error: 'ftrace_jmp_replace' defined but not used [-Werror=unused-function]
+
+The ftrace_jmp_replace() function now only has a single user and should be
+simply moved by that user. But looking at the code, it shows that
+ftrace_jmp_replace() is similar to ftrace_call_replace() except that instead
+of using the opcode of 0xe8 it uses 0xe9. It makes more sense to consolidate
+that function into one implementation that both ftrace_jmp_replace() and
+ftrace_call_replace() use by passing in the op code separate.
+
+The structure in ftrace_code_union is also modified to replace the "e8"
+field with the more appropriate name "op".
 
 Cc: stable@vger.kernel.org
-Cc: James Morris <jmorris@namei.org>
-Cc: Tomas Winkler <tomas.winkler@intel.com>
-Cc: Jerry Snitselaar <jsnitsel@redhat.com>
-Fixes: 30fc8d138e91 ("tpm: TPM 2.0 CRB Interface")
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
-Acked-by: Tomas Winkler <tomas.winkler@intel.com>
+Reported-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Arnd Bergmann <arnd@arndb.de>
+Link: http://lkml.kernel.org/r/20190304200748.1418790-1-arnd@arndb.de
+Fixes: d2a68c4effd8 ("x86/ftrace: Do not call function graph from dynamic trampolines")
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/char/tpm/tpm_crb.c |   22 ++++++++++++++++------
- 1 file changed, 16 insertions(+), 6 deletions(-)
+ arch/x86/kernel/ftrace.c |   42 +++++++++++++++++-------------------------
+ 1 file changed, 17 insertions(+), 25 deletions(-)
 
---- a/drivers/char/tpm/tpm_crb.c
-+++ b/drivers/char/tpm/tpm_crb.c
-@@ -287,19 +287,29 @@ static int crb_recv(struct tpm_chip *chi
- 	struct crb_priv *priv = dev_get_drvdata(&chip->dev);
- 	unsigned int expected;
- 
--	/* sanity check */
--	if (count < 6)
-+	/* A sanity check that the upper layer wants to get at least the header
-+	 * as that is the minimum size for any TPM response.
-+	 */
-+	if (count < TPM_HEADER_SIZE)
- 		return -EIO;
- 
-+	/* If this bit is set, according to the spec, the TPM is in
-+	 * unrecoverable condition.
-+	 */
- 	if (ioread32(&priv->regs_t->ctrl_sts) & CRB_CTRL_STS_ERROR)
- 		return -EIO;
- 
--	memcpy_fromio(buf, priv->rsp, 6);
--	expected = be32_to_cpup((__be32 *) &buf[2]);
--	if (expected > count || expected < 6)
-+	/* Read the first 8 bytes in order to get the length of the response.
-+	 * We read exactly a quad word in order to make sure that the remaining
-+	 * reads will be aligned.
-+	 */
-+	memcpy_fromio(buf, priv->rsp, 8);
-+
-+	expected = be32_to_cpup((__be32 *)&buf[2]);
-+	if (expected > count || expected < TPM_HEADER_SIZE)
- 		return -EIO;
- 
--	memcpy_fromio(&buf[6], &priv->rsp[6], expected - 6);
-+	memcpy_fromio(&buf[8], &priv->rsp[8], expected - 8);
- 
- 	return expected;
+--- a/arch/x86/kernel/ftrace.c
++++ b/arch/x86/kernel/ftrace.c
+@@ -49,7 +49,7 @@ int ftrace_arch_code_modify_post_process
+ union ftrace_code_union {
+ 	char code[MCOUNT_INSN_SIZE];
+ 	struct {
+-		unsigned char e8;
++		unsigned char op;
+ 		int offset;
+ 	} __attribute__((packed));
+ };
+@@ -59,20 +59,23 @@ static int ftrace_calc_offset(long ip, l
+ 	return (int)(addr - ip);
  }
+ 
+-static unsigned char *ftrace_call_replace(unsigned long ip, unsigned long addr)
++static unsigned char *
++ftrace_text_replace(unsigned char op, unsigned long ip, unsigned long addr)
+ {
+ 	static union ftrace_code_union calc;
+ 
+-	calc.e8		= 0xe8;
++	calc.op		= op;
+ 	calc.offset	= ftrace_calc_offset(ip + MCOUNT_INSN_SIZE, addr);
+ 
+-	/*
+-	 * No locking needed, this must be called via kstop_machine
+-	 * which in essence is like running on a uniprocessor machine.
+-	 */
+ 	return calc.code;
+ }
+ 
++static unsigned char *
++ftrace_call_replace(unsigned long ip, unsigned long addr)
++{
++	return ftrace_text_replace(0xe8, ip, addr);
++}
++
+ static inline int
+ within(unsigned long addr, unsigned long start, unsigned long end)
+ {
+@@ -664,22 +667,6 @@ int __init ftrace_dyn_arch_init(void)
+ 	return 0;
+ }
+ 
+-#if defined(CONFIG_X86_64) || defined(CONFIG_FUNCTION_GRAPH_TRACER)
+-static unsigned char *ftrace_jmp_replace(unsigned long ip, unsigned long addr)
+-{
+-	static union ftrace_code_union calc;
+-
+-	/* Jmp not a call (ignore the .e8) */
+-	calc.e8		= 0xe9;
+-	calc.offset	= ftrace_calc_offset(ip + MCOUNT_INSN_SIZE, addr);
+-
+-	/*
+-	 * ftrace external locks synchronize the access to the static variable.
+-	 */
+-	return calc.code;
+-}
+-#endif
+-
+ /* Currently only x86_64 supports dynamic trampolines */
+ #ifdef CONFIG_X86_64
+ 
+@@ -891,8 +878,8 @@ static void *addr_from_call(void *ptr)
+ 		return NULL;
+ 
+ 	/* Make sure this is a call */
+-	if (WARN_ON_ONCE(calc.e8 != 0xe8)) {
+-		pr_warn("Expected e8, got %x\n", calc.e8);
++	if (WARN_ON_ONCE(calc.op != 0xe8)) {
++		pr_warn("Expected e8, got %x\n", calc.op);
+ 		return NULL;
+ 	}
+ 
+@@ -963,6 +950,11 @@ void arch_ftrace_trampoline_free(struct
+ #ifdef CONFIG_DYNAMIC_FTRACE
+ extern void ftrace_graph_call(void);
+ 
++static unsigned char *ftrace_jmp_replace(unsigned long ip, unsigned long addr)
++{
++	return ftrace_text_replace(0xe9, ip, addr);
++}
++
+ static int ftrace_mod_jmp(unsigned long ip, void *func)
+ {
+ 	unsigned char *new;
 
 
