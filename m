@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30BC7C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:14:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B090C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:14:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F252120811
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:14:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CE712082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:14:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256848;
-	bh=uzScCFM6VYAjMqYPw3/Zmzfm9TVfe+pHc+K+lgtccQE=;
+	s=default; t=1553256854;
+	bh=g38C3bzuZGX03jano23jgwPZ/V5LvuyofLfR55Af9Mw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rCIFhHJFIDXD6xE87wzjfxPwCXrGRcH1c1C5rIK5MAYAhJtUGTudbURx9NC2VeIXg
-	 joezSJIY8raX4pTNSPyqkN1xSb5fs6oWfIpDQgJVPeio5wiskSasfwScTGQ287lEa4
-	 FaUY4+rr/3JEHOK3no24ooXdjef5BlDTur79ShG4=
+	b=UBZsXINDuGGataZFGYuG6ENASt2uWog9TNiP+s6dkk9ItB5FbXupSsZ/UBWTGLN0i
+	 eKOtU+twv/rqoJPNRa58vvPSt/GbKnwN2X1SVTOmvVbTIoRdcas38S73FtwhBa2jJ2
+	 GoI/w5SZ7BVNKf8PIuFoaVbehLVwBf2KCnac02Tc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389859AbfCVMOG (ORCPT
+        id S2389881AbfCVMON (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:14:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52310 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:14:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389843AbfCVMOD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:14:03 -0400
+        id S2389381AbfCVMOJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:14:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01BF720811;
-        Fri, 22 Mar 2019 12:14:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E7CD2082C;
+        Fri, 22 Mar 2019 12:14:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256842;
-        bh=uzScCFM6VYAjMqYPw3/Zmzfm9TVfe+pHc+K+lgtccQE=;
+        s=default; t=1553256849;
+        bh=g38C3bzuZGX03jano23jgwPZ/V5LvuyofLfR55Af9Mw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uqgMxrHKNZ7oOapsRD1HZkAcEqaGBZ2vQroLGH4IDEf90GEjgZnGKIbkOUcnEeujE
-         iFUPHCPPhh0BSXkzBMMILNNOgBQaeToXh2ax39oH1wgXcK+Z2CZWsCHPa7ApldvbeU
-         p+yyYgiGxquGgl1FAtOw6gWNKtkXOxzqTlpWXyXw=
+        b=lcIDP8nVxSInQl5ahGgsCYo1tDhK+iWU2RF5P/daS9k72fj/szSbkYGngkOB7Selv
+         9pgJFJIZPdVRv/7QOpee9KYytrcnu8l5tUSV9mjISXHYTcY4y/VNWT/NblFNVIsGtT
+         RH+RSgnVfUP3nird81x1JxOfz4ZNheBeqG5i9DXQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Shilovsky <pshilov@microsoft.com>,
-        Steve French <stfrench@microsoft.com>
-Subject: [PATCH 5.0 052/238] CIFS: Do not reset lease state to NONE on lease break
-Date:   Fri, 22 Mar 2019 12:14:31 +0100
-Message-Id: <20190322111301.509071326@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
+        Zhang Zhijie <zhangzj@rock-chips.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 5.0 023/238] crypto: rockchip - fix scatterlist nents error
+Date:   Fri, 22 Mar 2019 12:14:02 +0100
+Message-Id: <20190322111259.533172845@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -65,114 +66,83 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Pavel Shilovsky <piastryyy@gmail.com>
+From: Zhang Zhijie <zhangzj@rock-chips.com>
 
-commit 7b9b9edb49ad377b1e06abf14354c227e9ac4b06 upstream.
+commit 4359669a087633132203c52d67dd8c31e09e7b2e upstream.
 
-Currently on lease break the client sets a caching level twice:
-when oplock is detected and when oplock is processed. While the
-1st attempt sets the level to the value provided by the server,
-the 2nd one resets the level to None unconditionally.
-This happens because the oplock/lease processing code was changed
-to avoid races between page cache flushes and oplock breaks.
-The commit c11f1df5003d534 ("cifs: Wait for writebacks to complete
-before attempting write.") fixed the races for oplocks but didn't
-apply the same changes for leases resulting in overwriting the
-server granted value to None. Fix this by properly processing
-lease breaks.
+In some cases, the nents of src scatterlist is different from
+dst scatterlist. So two variables are used to handle the nents
+of src&dst scatterlist.
 
-Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-CC: Stable <stable@vger.kernel.org>
+Reported-by: Eric Biggers <ebiggers@google.com>
+Fixes: 433cd2c617bf ("crypto: rockchip - add crypto driver for rk3288")
+Cc: <stable@vger.kernel.org> # v4.5+
+Signed-off-by: Zhang Zhijie <zhangzj@rock-chips.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/smb2misc.c |   17 ++++++++++++++---
- fs/cifs/smb2ops.c  |   15 ++++++++++++---
- 2 files changed, 26 insertions(+), 6 deletions(-)
+ drivers/crypto/rockchip/rk3288_crypto.c            |    2 +-
+ drivers/crypto/rockchip/rk3288_crypto.h            |    3 ++-
+ drivers/crypto/rockchip/rk3288_crypto_ablkcipher.c |    5 +++--
+ drivers/crypto/rockchip/rk3288_crypto_ahash.c      |    2 +-
+ 4 files changed, 7 insertions(+), 5 deletions(-)
 
---- a/fs/cifs/smb2misc.c
-+++ b/fs/cifs/smb2misc.c
-@@ -517,7 +517,6 @@ smb2_tcon_has_lease(struct cifs_tcon *tc
- 	__u8 lease_state;
- 	struct list_head *tmp;
- 	struct cifsFileInfo *cfile;
--	struct TCP_Server_Info *server = tcon->ses->server;
- 	struct cifs_pending_open *open;
- 	struct cifsInodeInfo *cinode;
- 	int ack_req = le32_to_cpu(rsp->Flags &
-@@ -537,13 +536,25 @@ smb2_tcon_has_lease(struct cifs_tcon *tc
- 		cifs_dbg(FYI, "lease key match, lease break 0x%x\n",
- 			 le32_to_cpu(rsp->NewLeaseState));
+--- a/drivers/crypto/rockchip/rk3288_crypto.c
++++ b/drivers/crypto/rockchip/rk3288_crypto.c
+@@ -119,7 +119,7 @@ static int rk_load_data(struct rk_crypto
+ 		count = (dev->left_bytes > PAGE_SIZE) ?
+ 			PAGE_SIZE : dev->left_bytes;
  
--		server->ops->set_oplock_level(cinode, lease_state, 0, NULL);
--
- 		if (ack_req)
- 			cfile->oplock_break_cancelled = false;
- 		else
- 			cfile->oplock_break_cancelled = true;
+-		if (!sg_pcopy_to_buffer(dev->first, dev->nents,
++		if (!sg_pcopy_to_buffer(dev->first, dev->src_nents,
+ 					dev->addr_vir, count,
+ 					dev->total - dev->left_bytes)) {
+ 			dev_err(dev->dev, "[%s:%d] pcopy err\n",
+--- a/drivers/crypto/rockchip/rk3288_crypto.h
++++ b/drivers/crypto/rockchip/rk3288_crypto.h
+@@ -207,7 +207,8 @@ struct rk_crypto_info {
+ 	void				*addr_vir;
+ 	int				aligned;
+ 	int				align_size;
+-	size_t				nents;
++	size_t				src_nents;
++	size_t				dst_nents;
+ 	unsigned int			total;
+ 	unsigned int			count;
+ 	dma_addr_t			addr_in;
+--- a/drivers/crypto/rockchip/rk3288_crypto_ablkcipher.c
++++ b/drivers/crypto/rockchip/rk3288_crypto_ablkcipher.c
+@@ -260,8 +260,9 @@ static int rk_ablk_start(struct rk_crypt
+ 	dev->total = req->nbytes;
+ 	dev->sg_src = req->src;
+ 	dev->first = req->src;
+-	dev->nents = sg_nents(req->src);
++	dev->src_nents = sg_nents(req->src);
+ 	dev->sg_dst = req->dst;
++	dev->dst_nents = sg_nents(req->dst);
+ 	dev->aligned = 1;
  
-+		set_bit(CIFS_INODE_PENDING_OPLOCK_BREAK, &cinode->flags);
-+
-+		/*
-+		 * Set or clear flags depending on the lease state being READ.
-+		 * HANDLE caching flag should be added when the client starts
-+		 * to defer closing remote file handles with HANDLE leases.
-+		 */
-+		if (lease_state & SMB2_LEASE_READ_CACHING_HE)
-+			set_bit(CIFS_INODE_DOWNGRADE_OPLOCK_TO_L2,
-+				&cinode->flags);
-+		else
-+			clear_bit(CIFS_INODE_DOWNGRADE_OPLOCK_TO_L2,
-+				  &cinode->flags);
-+
- 		queue_work(cifsoplockd_wq, &cfile->oplock_break);
- 		kfree(lw);
- 		return true;
---- a/fs/cifs/smb2ops.c
-+++ b/fs/cifs/smb2ops.c
-@@ -2595,6 +2595,15 @@ smb2_downgrade_oplock(struct TCP_Server_
- }
+ 	spin_lock_irqsave(&dev->lock, flags);
+@@ -297,7 +298,7 @@ static int rk_ablk_rx(struct rk_crypto_i
  
- static void
-+smb21_downgrade_oplock(struct TCP_Server_Info *server,
-+		       struct cifsInodeInfo *cinode, bool set_level2)
-+{
-+	server->ops->set_oplock_level(cinode,
-+				      set_level2 ? SMB2_LEASE_READ_CACHING_HE :
-+				      0, 0, NULL);
-+}
-+
-+static void
- smb2_set_oplock_level(struct cifsInodeInfo *cinode, __u32 oplock,
- 		      unsigned int epoch, bool *purge_cache)
- {
-@@ -3646,7 +3655,7 @@ struct smb_version_operations smb21_oper
- 	.print_stats = smb2_print_stats,
- 	.is_oplock_break = smb2_is_valid_oplock_break,
- 	.handle_cancelled_mid = smb2_handle_cancelled_mid,
--	.downgrade_oplock = smb2_downgrade_oplock,
-+	.downgrade_oplock = smb21_downgrade_oplock,
- 	.need_neg = smb2_need_neg,
- 	.negotiate = smb2_negotiate,
- 	.negotiate_wsize = smb2_negotiate_wsize,
-@@ -3743,7 +3752,7 @@ struct smb_version_operations smb30_oper
- 	.dump_share_caps = smb2_dump_share_caps,
- 	.is_oplock_break = smb2_is_valid_oplock_break,
- 	.handle_cancelled_mid = smb2_handle_cancelled_mid,
--	.downgrade_oplock = smb2_downgrade_oplock,
-+	.downgrade_oplock = smb21_downgrade_oplock,
- 	.need_neg = smb2_need_neg,
- 	.negotiate = smb2_negotiate,
- 	.negotiate_wsize = smb3_negotiate_wsize,
-@@ -3848,7 +3857,7 @@ struct smb_version_operations smb311_ope
- 	.dump_share_caps = smb2_dump_share_caps,
- 	.is_oplock_break = smb2_is_valid_oplock_break,
- 	.handle_cancelled_mid = smb2_handle_cancelled_mid,
--	.downgrade_oplock = smb2_downgrade_oplock,
-+	.downgrade_oplock = smb21_downgrade_oplock,
- 	.need_neg = smb2_need_neg,
- 	.negotiate = smb2_negotiate,
- 	.negotiate_wsize = smb3_negotiate_wsize,
+ 	dev->unload_data(dev);
+ 	if (!dev->aligned) {
+-		if (!sg_pcopy_from_buffer(req->dst, dev->nents,
++		if (!sg_pcopy_from_buffer(req->dst, dev->dst_nents,
+ 					  dev->addr_vir, dev->count,
+ 					  dev->total - dev->left_bytes -
+ 					  dev->count)) {
+--- a/drivers/crypto/rockchip/rk3288_crypto_ahash.c
++++ b/drivers/crypto/rockchip/rk3288_crypto_ahash.c
+@@ -206,7 +206,7 @@ static int rk_ahash_start(struct rk_cryp
+ 	dev->sg_dst = NULL;
+ 	dev->sg_src = req->src;
+ 	dev->first = req->src;
+-	dev->nents = sg_nents(req->src);
++	dev->src_nents = sg_nents(req->src);
+ 	rctx = ahash_request_ctx(req);
+ 	rctx->mode = 0;
+ 
 
 
