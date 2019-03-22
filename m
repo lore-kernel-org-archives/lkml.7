@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 630ACC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:29:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 815ABC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:29:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31C8B20449
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:29:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5056F20449
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:29:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254160;
-	bh=je6lKdgxFF6M/u0La/NRvZ/ZGuzY4Ej0z2oo3s6G0Yk=;
+	s=default; t=1553254166;
+	bh=tEDAn5NCBhkAPbUQMsBp/76lYB5vwoCsVdmee3mRqts=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U1bOEOM88SDenuvH1yaxCl0Z7lLMHg5X2+H92pU/sy7fMUN7OZyAVXP6IyWfHYuuS
-	 RMprsV51CFBRo2/83rgkxayXWHyZkXYk7N3/2c/QcsGBI5KqzQtvGrXkS7RE+qTQOM
-	 PJ/K6Tauhju+JtiN0qHa/laYAsw1p4Sw/Gy6uakc=
+	b=e0emQNH83WYD3gToS/eTZq7821zkNCpM6lg/KaaFzD58bowpe/Nv6471Bc5lPdkQ1
+	 bWwp3u1Sn9ZxjiELK08iAJATN3gjtvBpJaFLqwUdLXP0OHDz+1bsU5P51aN68iauk2
+	 rTYKBAd/DaxrW4ZHKG2ERFT1OVmsQgMTBWjn441g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729514AbfCVL3T (ORCPT
+        id S1729802AbfCVL3Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:29:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57096 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:29:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729504AbfCVL3O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:29:14 -0400
+        id S1728829AbfCVL3X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:29:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 668F520449;
-        Fri, 22 Mar 2019 11:29:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB6DC20449;
+        Fri, 22 Mar 2019 11:29:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254153;
-        bh=je6lKdgxFF6M/u0La/NRvZ/ZGuzY4Ej0z2oo3s6G0Yk=;
+        s=default; t=1553254162;
+        bh=tEDAn5NCBhkAPbUQMsBp/76lYB5vwoCsVdmee3mRqts=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JbKxm1RUJ7nyb7d7nkJFKeIjWzlC7Lgpc2ghhW0O5g6PusiU9VEMo6BpECs/A2mmr
-         KVszL8JBa1J8wd21XZqLBLNe0rOV/OIbrayhiFmzhdci0+4a/9HftsGm2QlKt2NWO1
-         RS0wQsC3miAb6MfjX9u3rL0fzLPQT59SXTeZyyGY=
+        b=s2qZl5fU9PQ5aaiv+LBVVCDuJjj7GilTuaTiIccXb41c+fnyGWwnLqW+5UxPMKCVc
+         fOGca3Y4rWOfAqI5TArstoWchru9WXOxo1dTYDSAh2JtxrisPIFOMP1nzcSlZlhDKN
+         j3Kd4n8sL9CME2MDqA58VCFjHE8sDAeQE2TW3Nb8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+ec24e95ea483de0a24da@syzkaller.appspotmail.com,
-        Eric Biggers <ebiggers@google.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <james.morris@microsoft.com>
-Subject: [PATCH 4.4 022/230] KEYS: always initialize keyring_index_key::desc_len
-Date:   Fri, 22 Mar 2019 12:12:40 +0100
-Message-Id: <20190322111238.285513111@linuxfoundation.org>
+        stable@vger.kernel.org, Seth Forshee <seth.forshee@canonical.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "A. Wilcox" <awilfox@adelielinux.org>
+Subject: [PATCH 4.4 051/230] powerpc: Always initialize input array when calling epapr_hypercall()
+Date:   Fri, 22 Mar 2019 12:13:09 +0100
+Message-Id: <20190322111240.272958816@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -68,105 +66,86 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Eric Biggers <ebiggers@google.com>
+From: Seth Forshee <seth.forshee@canonical.com>
 
-commit ede0fa98a900e657d1fcd80b50920efc896c1a4c upstream.
+commit 186b8f1587c79c2fa04bfa392fdf084443e398c1 upstream.
 
-syzbot hit the 'BUG_ON(index_key->desc_len == 0);' in __key_link_begin()
-called from construct_alloc_key() during sys_request_key(), because the
-length of the key description was never calculated.
+Several callers to epapr_hypercall() pass an uninitialized stack
+allocated array for the input arguments, presumably because they
+have no input arguments. However this can produce errors like
+this one
 
-The problem is that we rely on ->desc_len being initialized by
-search_process_keyrings(), specifically by search_nested_keyrings().
-But, if the process isn't subscribed to any keyrings that never happens.
+ arch/powerpc/include/asm/epapr_hcalls.h:470:42: error: 'in' may be used uninitialized in this function [-Werror=maybe-uninitialized]
+  unsigned long register r3 asm("r3") = in[0];
+                                        ~~^~~
 
-Fix it by always initializing keyring_index_key::desc_len as soon as the
-description is set, like we already do in some places.
+Fix callers to this function to always zero-initialize the input
+arguments array to prevent this.
 
-The following program reproduces the BUG_ON() when it's run as root and
-no session keyring has been installed.  If it doesn't work, try removing
-pam_keyinit.so from /etc/pam.d/login and rebooting.
-
-    #include <stdlib.h>
-    #include <unistd.h>
-    #include <keyutils.h>
-
-    int main(void)
-    {
-            int id = add_key("keyring", "syz", NULL, 0, KEY_SPEC_USER_KEYRING);
-
-            keyctl_setperm(id, KEY_OTH_WRITE);
-            setreuid(5000, 5000);
-            request_key("user", "desc", "", id);
-    }
-
-Reported-by: syzbot+ec24e95ea483de0a24da@syzkaller.appspotmail.com
-Fixes: b2a4df200d57 ("KEYS: Expand the capacity of a keyring")
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: James Morris <james.morris@microsoft.com>
+Signed-off-by: Seth Forshee <seth.forshee@canonical.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Cc: "A. Wilcox" <awilfox@adelielinux.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- security/keys/keyring.c          |    4 +---
- security/keys/proc.c             |    3 +--
- security/keys/request_key.c      |    1 +
- security/keys/request_key_auth.c |    2 +-
- 4 files changed, 4 insertions(+), 6 deletions(-)
+ arch/powerpc/include/asm/epapr_hcalls.h |   12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
---- a/security/keys/keyring.c
-+++ b/security/keys/keyring.c
-@@ -628,9 +628,6 @@ static bool search_nested_keyrings(struc
- 	BUG_ON((ctx->flags & STATE_CHECKS) == 0 ||
- 	       (ctx->flags & STATE_CHECKS) == STATE_CHECKS);
+--- a/arch/powerpc/include/asm/epapr_hcalls.h
++++ b/arch/powerpc/include/asm/epapr_hcalls.h
+@@ -508,7 +508,7 @@ static unsigned long epapr_hypercall(uns
  
--	if (ctx->index_key.description)
--		ctx->index_key.desc_len = strlen(ctx->index_key.description);
--
- 	/* Check to see if this top-level keyring is what we are looking for
- 	 * and whether it is valid or not.
- 	 */
-@@ -888,6 +885,7 @@ key_ref_t keyring_search(key_ref_t keyri
- 	struct keyring_search_context ctx = {
- 		.index_key.type		= type,
- 		.index_key.description	= description,
-+		.index_key.desc_len	= strlen(description),
- 		.cred			= current_cred(),
- 		.match_data.cmp		= key_default_cmp,
- 		.match_data.raw_data	= description,
---- a/security/keys/proc.c
-+++ b/security/keys/proc.c
-@@ -186,8 +186,7 @@ static int proc_keys_show(struct seq_fil
- 	int rc;
+ static inline long epapr_hypercall0_1(unsigned int nr, unsigned long *r2)
+ {
+-	unsigned long in[8];
++	unsigned long in[8] = {0};
+ 	unsigned long out[8];
+ 	unsigned long r;
  
- 	struct keyring_search_context ctx = {
--		.index_key.type		= key->type,
--		.index_key.description	= key->description,
-+		.index_key		= key->index_key,
- 		.cred			= current_cred(),
- 		.match_data.cmp		= lookup_user_key_possessed,
- 		.match_data.raw_data	= key,
---- a/security/keys/request_key.c
-+++ b/security/keys/request_key.c
-@@ -544,6 +544,7 @@ struct key *request_key_and_link(struct
- 	struct keyring_search_context ctx = {
- 		.index_key.type		= type,
- 		.index_key.description	= description,
-+		.index_key.desc_len	= strlen(description),
- 		.cred			= current_cred(),
- 		.match_data.cmp		= key_default_cmp,
- 		.match_data.raw_data	= description,
---- a/security/keys/request_key_auth.c
-+++ b/security/keys/request_key_auth.c
-@@ -254,7 +254,7 @@ struct key *key_get_instantiation_authke
- 	struct key *authkey;
- 	key_ref_t authkey_ref;
+@@ -520,7 +520,7 @@ static inline long epapr_hypercall0_1(un
  
--	sprintf(description, "%x", target_id);
-+	ctx.index_key.desc_len = sprintf(description, "%x", target_id);
+ static inline long epapr_hypercall0(unsigned int nr)
+ {
+-	unsigned long in[8];
++	unsigned long in[8] = {0};
+ 	unsigned long out[8];
  
- 	authkey_ref = search_process_keyrings(&ctx);
+ 	return epapr_hypercall(in, out, nr);
+@@ -528,7 +528,7 @@ static inline long epapr_hypercall0(unsi
  
+ static inline long epapr_hypercall1(unsigned int nr, unsigned long p1)
+ {
+-	unsigned long in[8];
++	unsigned long in[8] = {0};
+ 	unsigned long out[8];
+ 
+ 	in[0] = p1;
+@@ -538,7 +538,7 @@ static inline long epapr_hypercall1(unsi
+ static inline long epapr_hypercall2(unsigned int nr, unsigned long p1,
+ 				    unsigned long p2)
+ {
+-	unsigned long in[8];
++	unsigned long in[8] = {0};
+ 	unsigned long out[8];
+ 
+ 	in[0] = p1;
+@@ -549,7 +549,7 @@ static inline long epapr_hypercall2(unsi
+ static inline long epapr_hypercall3(unsigned int nr, unsigned long p1,
+ 				    unsigned long p2, unsigned long p3)
+ {
+-	unsigned long in[8];
++	unsigned long in[8] = {0};
+ 	unsigned long out[8];
+ 
+ 	in[0] = p1;
+@@ -562,7 +562,7 @@ static inline long epapr_hypercall4(unsi
+ 				    unsigned long p2, unsigned long p3,
+ 				    unsigned long p4)
+ {
+-	unsigned long in[8];
++	unsigned long in[8] = {0};
+ 	unsigned long out[8];
+ 
+ 	in[0] = p1;
 
 
