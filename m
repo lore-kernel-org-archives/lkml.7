@@ -2,96 +2,86 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF20BC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:19:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6335AC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:20:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCEB221916
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:19:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553264395;
-	bh=Od4Q0EdlKiuaKntWgiKYJ+qxHG65baKr3t/YYOJ5D/0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=v4pBUqEn5J10xclyHPF356E/8jN4nqsK9NeSSQPE/FEg9A9BYy9yjAHs0J0QuoD44
-	 7HOeQrUn3sqCbtdL9p+aUk+Sy+LLpxEwrpYs9l0nlo1eXotaXNV5i3tDPA0SOXKrCp
-	 vH6Q6Ngg7Z3sj3BnKE6SzxSti8p4KeEMdB4rXxyw=
+	by mail.kernel.org (Postfix) with ESMTP id 33448218FE
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:20:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wIHxYFyQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728701AbfCVOTy (ORCPT
+        id S1728740AbfCVOT7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 10:19:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45724 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727964AbfCVOTx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 10:19:53 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 51930218FC;
-        Fri, 22 Mar 2019 14:19:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553264392;
-        bh=Od4Q0EdlKiuaKntWgiKYJ+qxHG65baKr3t/YYOJ5D/0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rIpJh4IFP0Dabi/CligCKES/9HrbVHSX1z8BmqLwR0s+2AGHxwA8LmbMmpvoZDlhF
-         DWRBbzCt79wtNiCIRO1pUQlLqiJWBAwmqfZJiKPD2ddXrUBsqzIx73A/LuxTnG8XWg
-         SnpM6ddxO2xk6FW/qamt5mMi6Fg6BLq2Rc9NkuUs=
-Date:   Fri, 22 Mar 2019 15:19:49 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     George Hilliard <thirtythreeforty@gmail.com>
-Cc:     linux-mips@linux-mips.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/3] staging: mt7621-mmc: Initialize completions a
- single time during probe
-Message-ID: <20190322141949.GA23722@kroah.com>
-References: <20190320224204.10243-1-thirtythreeforty@gmail.com>
- <20190320224204.10243-3-thirtythreeforty@gmail.com>
+        Fri, 22 Mar 2019 10:19:59 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:60980 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727964AbfCVOT6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 10:19:58 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2MEJmgp101820;
+        Fri, 22 Mar 2019 09:19:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1553264388;
+        bh=UiaBTGs4Q86cxaqJOhZJ2bjFLSbe/pXqA11QhKJr5Ac=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=wIHxYFyQ4AUC3UsNP/HWQUYRWvdDtLcI3rOFas79SxmO+e5h2GT1cw9/Iieov8w2c
+         3pFeQMDgtdZDf9Tg+4FJlTocArv8K+iCmYJ2NOS5vnfcD3VOw1NRm1pfFnCo2jQIFB
+         IDvX2sNZR9gg+FFrbXd16WW0hyE7mnBOWXNr6cBU=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2MEJm8f058180
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 22 Mar 2019 09:19:48 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 22
+ Mar 2019 09:19:48 -0500
+Received: from dflp32.itg.ti.com (10.64.6.15) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_0,
+ cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5 via Frontend Transport;
+ Fri, 22 Mar 2019 09:19:47 -0500
+Received: from [172.24.190.215] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by dflp32.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2MEJj5W016426;
+        Fri, 22 Mar 2019 09:19:46 -0500
+Subject: Re: [PATCH -next] mmc: sdhci-omap: Make sdhci_omap_reset static
+To:     Yue Haibing <yuehaibing@huawei.com>, <adrian.hunter@intel.com>,
+        <kishon@ti.com>, <ulf.hansson@linaro.org>
+CC:     <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>
+References: <20190322141138.19244-1-yuehaibing@huawei.com>
+From:   Faiz Abbas <faiz_abbas@ti.com>
+Message-ID: <95463a45-6069-a186-dca0-28a1ab3f8e35@ti.com>
+Date:   Fri, 22 Mar 2019 19:49:41 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190320224204.10243-3-thirtythreeforty@gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190322141138.19244-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 20, 2019 at 04:42:04PM -0600, George Hilliard wrote:
-> The module was initializing completions whenever it was going to wait on
-> them, and not when the completion was allocated.  This is incorrect
-> according to the completion docs:
-> 
->     Calling init_completion() on the same completion object twice is
->     most likely a bug [...]
-> 
-> Re-initialization is also unnecessary because the module never uses
-> complete_all().  Fix this by only ever initializing the completion a
-> single time, and log if the completions are not consumed as intended
-> (this is not a fatal problem, but should not go unnoticed).
-> 
-> Signed-off-by: George Hilliard <thirtythreeforty@gmail.com>
-> ---
-> v2: Rebased v1
-> v3: Removed BUG_ON() calls, and politely log; this failure won't kill us
-> 
->  drivers/staging/mt7621-mmc/sd.c | 15 +++++++++++----
->  1 file changed, 11 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/staging/mt7621-mmc/sd.c b/drivers/staging/mt7621-mmc/sd.c
-> index ff01872ab972..139533606863 100644
-> --- a/drivers/staging/mt7621-mmc/sd.c
-> +++ b/drivers/staging/mt7621-mmc/sd.c
-> @@ -466,7 +466,10 @@ static unsigned int msdc_command_start(struct msdc_host   *host,
->  	host->cmd     = cmd;
->  	host->cmd_rsp = resp;
->  
-> -	init_completion(&host->cmd_done);
-> +	// The completion should have been consumed by the previous command
-> +	// response handler, because the mmc requests should be serialized
-> +	if(completion_done(&host->cmd_done))
-> +		dev_err(mmc_dev(host->mmc), "previous command was not handled\n");
+Hi,
 
-Proper coding style please :(
+On 22/03/19 7:41 PM, Yue Haibing wrote:
+> From: YueHaibing <yuehaibing@huawei.com>
+> 
+> Fix sparse warning:
+> 
+> drivers/mmc/host/sdhci-omap.c:788:6: warning:
+>  symbol 'sdhci_omap_reset' was not declared. Should it be static?
+> 
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
+Reviewed-by: Faiz Abbas <faiz_abbas@ti.com>
+
+Thanks,
+Faiz
