@@ -2,149 +2,130 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AA65C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 01:47:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D2B3C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 01:48:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B179218E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 01:47:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20C8B218E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 01:48:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jed/ZBxo"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="urOuN2p1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727603AbfCVBrj (ORCPT
+        id S1727615AbfCVBsD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 21:47:39 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:36523 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727397AbfCVBrj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 21:47:39 -0400
-Received: by mail-pf1-f193.google.com with SMTP id p10so381745pff.3;
-        Thu, 21 Mar 2019 18:47:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=8Rdn/0bCCJC02mpdJgqbDeyik9/k0VweQXkLGqLKN8o=;
-        b=Jed/ZBxo0WgVo38E2ViocCFdUtZfyYZOpW7AYrnxcXPwOwvcJBfeCzacJifmi09A5h
-         5WrXcEW67FY0Uxfl2mX1qZWXPnqVplZhJi1xyEp9t2RC1HLPEH9pVDtnMeFjRTfxuFEA
-         GwzJ2PNYW0Swioa+WSEby0d7BIb+sYQ9cbvCOhpBxt5hH1K4kZ+oq8BFQ0s8yRRGW/ER
-         d9nftZ4ivV6a51uSskU6tCwDe8vBD4s8LRP+sFcj5TbO8ZyCp3LtfUCM1yyBrdYl7R5X
-         cO8klcg1G3BTdR6eVjU1fBzfS01tGcJy7aSbL5m9Y4gJRt4Nu8YuT/IWMTlguAQ+vLtJ
-         3YrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8Rdn/0bCCJC02mpdJgqbDeyik9/k0VweQXkLGqLKN8o=;
-        b=eLWUV9pNcooA0uZPVJF+W/LG+6XR9oOSHxNZKq91jMowr8HBfDWTlHomyZbOXC6H2B
-         dh0F+M+h0ItHAAzqHhYDjIBLuq3sai/dGkxZGP+QNnC4ghneYAXdZPfmRiTPWU2W0IsU
-         Gu0bIZ0d52xVuxmu57fm4qVkmLOJcjiUvaAfMlIYHLHhU/ZIkHPcmDgtu1tZ6wHZrVPg
-         ubSPVTVZcjCrPWl/u6vqW65buRpWEGtq94TB762bpApibuWMpyDyhm3+Yw24hlfbwoTw
-         DprYVqQZtMoIalIrO2s5OHE1rYSfIMQNQRRjX5L1YVWZkkGRot7PnrNmqPVgI51iq79M
-         RUZA==
-X-Gm-Message-State: APjAAAUy/e+zrBRRg71ALEzXSts9p+hp/njvFivoP+17swGFsusV9KCn
-        43jcue5eLBYVN4+ccASMebk=
-X-Google-Smtp-Source: APXvYqy/hGOta4IJ96Cr/4ODKRX76GkYY1raKvboZtGQYV65izD1dy/3ObjggWoFstkmRVyZd9gFSw==
-X-Received: by 2002:a17:902:284b:: with SMTP id e69mr6689994plb.11.1553219258560;
-        Thu, 21 Mar 2019 18:47:38 -0700 (PDT)
-Received: from [192.168.1.70] (c-24-6-192-50.hsd1.ca.comcast.net. [24.6.192.50])
-        by smtp.gmail.com with ESMTPSA id 71sm9969386pgc.23.2019.03.21.18.47.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 21 Mar 2019 18:47:37 -0700 (PDT)
-Subject: Re: [RFC v3 18/19] of: unittest: split out a couple of test cases
- from unittest
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@google.com>,
-        Luis Chamberlain <mcgrof@kernel.org>, shuah@kernel.org,
-        Joel Stanley <joel@jms.id.au>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Joe Perches <joe@perches.com>, brakmo@fb.com,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "Bird, Timothy" <Tim.Bird@sony.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jeff Dike <jdike@addtoit.com>,
-        Richard Weinberger <richard@nod.at>,
-        linux-um@lists.infradead.org, Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Rob Herring <robh@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Knut Omang <knut.omang@oracle.com>,
-        Frank Rowand <frowand.list@gmail.com>
-References: <20181128193636.254378-1-brendanhiggins@google.com>
- <20181128193636.254378-19-brendanhiggins@google.com>
- <990bfc7d-dc5e-d8d3-c151-9b321ff2ac10@gmail.com>
- <CAFd5g45tOGgf_sKGYRC=fpnTBKGaG=8frbQdgZ3ZTkQFyTfP5A@mail.gmail.com>
- <88fe0546-7850-5bb4-9673-b1aef2dccb3e@gmail.com>
- <CAFd5g444f-FBq4x3U7BL-EY+bFxP0rsJhJ14=mjOi89PhMkURg@mail.gmail.com>
- <0e311e88-c4d4-e98d-1720-53a04bd526fc@gmail.com>
- <CAFd5g44NTZoSAJPMvXP2xvJgn7m5QoV-KJu2AMrr67+eL+CKrQ@mail.gmail.com>
- <d9f7e000-4cac-a35a-3ff9-60130e12ebea@gmail.com>
- <72cd1c5b-6f68-73ad-c8fd-f3a3268a0529@gmail.com>
- <CAFd5g46UU9wk+F6A5wnKYYtYKmmtv__SaY8eg6v-T9xUjsoxhA@mail.gmail.com>
- <bb5bcd3d-a09a-cfbe-c7fa-16e5eb75b0e4@gmail.com>
- <CAFd5g448xQLOJwVYU5Zmu4+OPWuboiWZPhBvK6au8Pgm5B9haQ@mail.gmail.com>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <bf094685-3f2a-dc7b-7291-0340136b87f3@gmail.com>
-Date:   Thu, 21 Mar 2019 18:47:35 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <CAFd5g448xQLOJwVYU5Zmu4+OPWuboiWZPhBvK6au8Pgm5B9haQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+        Thu, 21 Mar 2019 21:48:03 -0400
+Received: from mail-eopbgr40055.outbound.protection.outlook.com ([40.107.4.55]:19736
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727397AbfCVBsD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 21:48:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=C7NuOFbv4k0GnnXgXV3Cm6a/4MFlvWZZgRlm9Ps4HRg=;
+ b=urOuN2p1lg/Z7dMaLGaHJYbwtuW0frp9Kf5X5yyh2NSm6cKnuEvBr/tNJ/u6IcfkpgJoG/dCtRq6oklgoEAS+6B+trkEBAwpXYs1crbTr0DRd3Jqw2KeO6xv/iiT9OJSmwZ4SD3tvIWUre8WHPbu6bogz1XNbwtjsLlS3jMJ2Ns=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3754.eurprd04.prod.outlook.com (52.134.67.26) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1730.15; Fri, 22 Mar 2019 01:48:00 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::f1b4:a1fb:cfd1:3f08]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::f1b4:a1fb:cfd1:3f08%7]) with mapi id 15.20.1730.013; Fri, 22 Mar 2019
+ 01:48:00 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "stefan@agner.ch" <stefan@agner.ch>,
+        "otavio@ossystems.com.br" <otavio@ossystems.com.br>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Robin Gong <yibin.gong@nxp.com>,
+        "jan.tuerk@emtrion.com" <jan.tuerk@emtrion.com>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: [PATCH V9 0/5] Add i.MX7ULP EVK PWM backlight support
+Thread-Topic: [PATCH V9 0/5] Add i.MX7ULP EVK PWM backlight support
+Thread-Index: AQHU4FFHhXvmmxsahEeSOh1Vim+Xhg==
+Date:   Fri, 22 Mar 2019 01:47:59 +0000
+Message-ID: <1553218974-20464-1-git-send-email-Anson.Huang@nxp.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.7.4
+x-clientproxiedby: HK2PR02CA0172.apcprd02.prod.outlook.com
+ (2603:1096:201:1f::32) To DB3PR0402MB3916.eurprd04.prod.outlook.com
+ (2603:10a6:8:10::18)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.67]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 7047e1b0-0218-4ff6-d071-08d6ae686993
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600127)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:DB3PR0402MB3754;
+x-ms-traffictypediagnostic: DB3PR0402MB3754:
+x-microsoft-antispam-prvs: <DB3PR0402MB3754A3B335C3C7FAEACEF078F5430@DB3PR0402MB3754.eurprd04.prod.outlook.com>
+x-forefront-prvs: 09840A4839
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(136003)(376002)(39860400002)(346002)(366004)(189003)(199004)(71190400001)(50226002)(99286004)(81156014)(71200400001)(6436002)(81166006)(476003)(2616005)(6486002)(486006)(8936002)(36756003)(66066001)(68736007)(86362001)(5660300002)(110136005)(2201001)(4744005)(14454004)(52116002)(2501003)(7416002)(186003)(26005)(316002)(106356001)(4326008)(2906002)(478600001)(105586002)(7736002)(3846002)(6116002)(53936002)(102836004)(305945005)(8676002)(256004)(97736004)(25786009)(6346003)(6512007)(6506007)(386003)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3754;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: GVSAKCyjhNHXX91hwHzmgCtsEleo+GIVQ+DlKHX4fR1AcBb33zMixCB7JrygXkzfHDFWANQVHFItfCXKnwxHPqxiU4t+HVuvyr9d0UXc4e6cN9Bb9AufDd+aVA/5dsECZWV5WFxgprqUAalSZ6Tf45ryshVUQqQ4YskSRuGNDngTJfCIxZVOTdfHPZWA/CLTuA7KAjgvkvV4VK5ZRqQjk+A85G26UFfk8msfBMXaiUnu0K1JAchYz/Yzu9DA2NSk21XE4PRVgMJ4/7eZ9k0sLOAIa78CKc7mFiNYG06RIcpJtaU/fCIKkW7b36e8/y22Y6lPdA3evM139PXiVuWdzdeCzdSnEVzDEGK6U+yeYaXDsSdr5dGjL1i8IE3xkhfk3TWhBZOfXfilll9o1AQYcIZo00gIT+uP/oqetydjqtw=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7047e1b0-0218-4ff6-d071-08d6ae686993
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Mar 2019 01:47:59.9807
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3754
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/21/19 6:30 PM, Brendan Higgins wrote:
-> On Thu, Mar 21, 2019 at 5:22 PM Frank Rowand <frowand.list@gmail.com> wrote:
->>
->> On 2/27/19 7:52 PM, Brendan Higgins wrote:
+i.MX7ULP EVK board has MIPI-DSI display, its backlight is supplied by
+TPM PWM module, this patch set enables i.MX7ULP TPM PWM driver support
+and also add backlight support for MIPI-DSI display.
 
-< snip >  but thanks for the comments in the snipped section.
+Changes since V8:
+	- ONLY change the pwm driver patch.
 
+Anson Huang (5):
+  dt-bindings: pwm: Add i.MX TPM PWM binding
+  pwm: Add i.MX TPM PWM driver support
+  ARM: imx_v6_v7_defconfig: Add TPM PWM support by default
+  ARM: dts: imx7ulp: Add pwm0 support
+  ARM: dts: imx7ulp-evk: Add backlight support
 
->>
->> Thanks for leaving 18/19 and 19/19 off in v4.
-> 
-> Sure, no problem. It was pretty clear that it was a waste of both of
-> our times to continue discussing those at this juncture. :-)
-> 
-> Do you still want me to try to convert the DT not-exactly-unittest to
-> KUnit? I would kind of prefer (I don't feel *super* strongly about the
-> matter) we don't call it that since I was intending for it to be the
-> flagship initial example, but I certainly don't mind trying to clean
-> this patch up to get it up to snuff. It's really just a question of
-> whether it is worth it to you.
+ .../devicetree/bindings/pwm/imx-tpm-pwm.txt        |  22 +
+ arch/arm/boot/dts/imx7ulp-evk.dts                  |  21 +
+ arch/arm/boot/dts/imx7ulp.dtsi                     |  10 +
+ arch/arm/configs/imx_v6_v7_defconfig               |   1 +
+ drivers/pwm/Kconfig                                |  11 +
+ drivers/pwm/Makefile                               |   1 +
+ drivers/pwm/pwm-imx-tpm.c                          | 518 +++++++++++++++++=
+++++
+ 7 files changed, 584 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/imx-tpm-pwm.txt
+ create mode 100644 drivers/pwm/pwm-imx-tpm.c
 
-In the long term, if KUnit is adopted by the kernel, then I think it
-probably makes sense for devicetree unittest to convert from using
-our own unittest() function to report an individual test pass/fail
-to instead use something like KUNIT_EXPECT_*() to provide more
-consistent test messages to test frameworks.  That is assuming
-KUNIT_EXPECT_*() provides comparable functionality.  I still have
-not looked into that question since the converted tests (patch 15/17
-in v4) still does not execute without throwing internal errors.
-
-If that conversion occurred, I would also avoid the ASSERTs.
-
-> 
-> < snip >
-> 
-> Cheers!
-> 
+--=20
+2.7.4
 
