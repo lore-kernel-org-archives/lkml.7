@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F205AC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:21:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9933EC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:21:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF50E218D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:21:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 660042190A
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:21:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553253689;
-	bh=3DWNh8B3dT9JMGBQwhA/Gyt+OsZArXQwo4yn6jEsgZs=;
+	s=default; t=1553253695;
+	bh=3Sgdnf3koeXeTMaPS3J74eXibG0SHxcWUNDSWmsQVkE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fQ6pDgOvomP7pWrEr+u/jPn0IzIze5fWTw7SwY0gs7ETVL4mYHkCdQOqWxosIyHYD
-	 JaqUyYkDmYumi5aBaM9DD3DMJQhqxE1We8YCvixw/cF/obpfUx+9BLC2lWm+OFs2hq
-	 eT7k2gFIJBTizCXh/9/DsEY3XT0M1HY/FwY082fE=
+	b=0gOP2GjtBOGBbLlphglghoTOJuA15S4vQVhOCnKGTJhuFsk0x4PMl68nppAPkshNF
+	 PK2fZ9CJRhbwHHUhWsBBmw543SkvUqgoGJwmc090QY88H1S2Ey7yyW0rYOm6/njYeE
+	 Sye0lJPl5PxxNPFnMmXBbqUI0XGlkB+u5ipAAQgM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728598AbfCVLV2 (ORCPT
+        id S1728623AbfCVLVe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:21:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47916 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:21:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48044 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728589AbfCVLVZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:21:25 -0400
+        id S1728605AbfCVLVc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:21:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17F5B218A2;
-        Fri, 22 Mar 2019 11:21:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C88F1218D4;
+        Fri, 22 Mar 2019 11:21:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553253684;
-        bh=3DWNh8B3dT9JMGBQwhA/Gyt+OsZArXQwo4yn6jEsgZs=;
+        s=default; t=1553253691;
+        bh=3Sgdnf3koeXeTMaPS3J74eXibG0SHxcWUNDSWmsQVkE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=igdmA8WQBBoKR+FI8z8U6IKnWEjKX5Ie20rxCVMfHBqYs8W2BlrSbvMMA7ngwbry2
-         B24nN8sd6hxSfjHdyFTdaSE+i9MhCXw86vdm9M5ztNLCaYD8lD6yUJDR03fFV/H/bB
-         gK8orez65lKwR9REVB+ajpzG44LD9FStgcUeOdv8=
+        b=Ki17kg3FxDhdL9rz3mg4q4CbtEXuySJ8XAybN1QduiReGTbCSyZq9v0W1kOqKF8HH
+         YnmQ2IWJHu9g9fM02g0/RnQdw+zsrcoPuKFcaBVSJSD+nBZrwHfZBa3f2WcQnGpDi4
+         sHPdaYH1NYs51yhZLacbUGxw15JG73uKDHuKOe7U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+4d4af685432dc0e56c91@syzkaller.appspotmail.com,
-        syzbot+68ee510075cf64260cc4@syzkaller.appspotmail.com,
-        Jiri Pirko <jiri@resnulli.us>, Paolo Abeni <pabeni@redhat.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 3.18 022/134] team: avoid complex list operations in team_nl_cmd_options_set()
-Date:   Fri, 22 Mar 2019 12:13:55 +0100
-Message-Id: <20190322111211.482576285@linuxfoundation.org>
+        stable@vger.kernel.org, Ronen Arad <ronen.arad@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Mark Salyzyn <salyzyn@android.com>
+Subject: [PATCH 3.18 024/134] netlink: Trim skb to alloc size to avoid MSG_TRUNC
+Date:   Fri, 22 Mar 2019 12:13:57 +0100
+Message-Id: <20190322111211.573883178@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111210.465931067@linuxfoundation.org>
 References: <20190322111210.465931067@linuxfoundation.org>
@@ -69,113 +66,108 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: Arad, Ronen <ronen.arad@intel.com>
 
-[ Upstream commit 2fdeee2549231b1f989f011bb18191f5660d3745 ]
+commit db65a3aaf29ecce2e34271d52e8d2336b97bd9fe upstream.
 
-The current opt_inst_list operations inside team_nl_cmd_options_set()
-is too complex to track:
+netlink_dump() allocates skb based on the calculated min_dump_alloc or
+a per socket max_recvmsg_len.
+min_alloc_size is maximum space required for any single netdev
+attributes as calculated by rtnl_calcit().
+max_recvmsg_len tracks the user provided buffer to netlink_recvmsg.
+It is capped at 16KiB.
+The intention is to avoid small allocations and to minimize the number
+of calls required to obtain dump information for all net devices.
 
-    LIST_HEAD(opt_inst_list);
-    nla_for_each_nested(...) {
-        list_for_each_entry(opt_inst, &team->option_inst_list, list) {
-            if (__team_option_inst_tmp_find(&opt_inst_list, opt_inst))
-                continue;
-            list_add(&opt_inst->tmp_list, &opt_inst_list);
-        }
-    }
-    team_nl_send_event_options_get(team, &opt_inst_list);
+netlink_dump packs as many small messages as could fit within an skb
+that was sized for the largest single netdev information. The actual
+space available within an skb is larger than what is requested. It could
+be much larger and up to near 2x with align to next power of 2 approach.
 
-as while we retrieve 'opt_inst' from team->option_inst_list, it could
-be added to the local 'opt_inst_list' for multiple times. The
-__team_option_inst_tmp_find() doesn't work, as the setter
-team_mode_option_set() still calls team->ops.exit() which uses
-->tmp_list too in __team_options_change_check().
+Allowing netlink_dump to use all the space available within the
+allocated skb increases the buffer size a user has to provide to avoid
+truncaion (i.e. MSG_TRUNG flag set).
 
-Simplify the list operations by moving the 'opt_inst_list' and
-team_nl_send_event_options_get() into the nla_for_each_nested() loop so
-that it can be guranteed that we won't insert a same list entry for
-multiple times. Therefore, __team_option_inst_tmp_find() can be removed
-too.
+It was observed that with many VLANs configured on at least one netdev,
+a larger buffer of near 64KiB was necessary to avoid "Message truncated"
+error in "ip link" or "bridge [-c[ompressvlans]] vlan show" when
+min_alloc_size was only little over 32KiB.
 
-Fixes: 4fb0534fb7bb ("team: avoid adding twice the same option to the event list")
-Fixes: 2fcdb2c9e659 ("team: allow to send multiple set events in one message")
-Reported-by: syzbot+4d4af685432dc0e56c91@syzkaller.appspotmail.com
-Reported-by: syzbot+68ee510075cf64260cc4@syzkaller.appspotmail.com
-Cc: Jiri Pirko <jiri@resnulli.us>
-Cc: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
-Acked-by: Jiri Pirko <jiri@mellanox.com>
-Reviewed-by: Paolo Abeni <pabeni@redhat.com>
+This patch trims skb to allocated size in order to allow the user to
+avoid truncation with more reasonable buffer size.
+
+Signed-off-by: Ronen Arad <ronen.arad@intel.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/team/team.c |   27 +++++----------------------
- 1 file changed, 5 insertions(+), 22 deletions(-)
+Signed-off-by: Mark Salyzyn <salyzyn@android.com>
 
---- a/drivers/net/team/team.c
-+++ b/drivers/net/team/team.c
-@@ -253,17 +253,6 @@ static void __team_option_inst_mark_remo
+---
+ net/netlink/af_netlink.c |   34 ++++++++++++++++++++++------------
+ 1 file changed, 22 insertions(+), 12 deletions(-)
+
+--- a/net/netlink/af_netlink.c
++++ b/net/netlink/af_netlink.c
+@@ -1977,6 +1977,7 @@ static int netlink_dump(struct sock *sk)
+ 	struct nlmsghdr *nlh;
+ 	struct module *module;
+ 	int err = -ENOBUFS;
++	int alloc_min_size;
+ 	int alloc_size;
+ 
+ 	mutex_lock(nlk->cb_mutex);
+@@ -1985,9 +1986,6 @@ static int netlink_dump(struct sock *sk)
+ 		goto errout_skb;
  	}
- }
  
--static bool __team_option_inst_tmp_find(const struct list_head *opts,
--					const struct team_option_inst *needle)
--{
--	struct team_option_inst *opt_inst;
+-	cb = &nlk->cb;
+-	alloc_size = max_t(int, cb->min_dump_alloc, NLMSG_GOODSIZE);
 -
--	list_for_each_entry(opt_inst, opts, tmp_list)
--		if (opt_inst == needle)
--			return true;
--	return false;
--}
--
- static int __team_options_register(struct team *team,
- 				   const struct team_option *option,
- 				   size_t option_count)
-@@ -2435,7 +2424,6 @@ static int team_nl_cmd_options_set(struc
- 	int err = 0;
- 	int i;
- 	struct nlattr *nl_option;
--	LIST_HEAD(opt_inst_list);
+ 	if (atomic_read(&sk->sk_rmem_alloc) >= sk->sk_rcvbuf)
+ 		goto errout_skb;
  
- 	team = team_nl_team_get(info);
- 	if (!team)
-@@ -2451,6 +2439,7 @@ static int team_nl_cmd_options_set(struc
- 		struct nlattr *opt_attrs[TEAM_ATTR_OPTION_MAX + 1];
- 		struct nlattr *attr;
- 		struct nlattr *attr_data;
-+		LIST_HEAD(opt_inst_list);
- 		enum team_option_type opt_type;
- 		int opt_port_ifindex = 0; /* != 0 for per-port options */
- 		u32 opt_array_index = 0;
-@@ -2554,23 +2543,17 @@ static int team_nl_cmd_options_set(struc
- 			if (err)
- 				goto team_put;
- 			opt_inst->changed = true;
--
--			/* dumb/evil user-space can send us duplicate opt,
--			 * keep only the last one
--			 */
--			if (__team_option_inst_tmp_find(&opt_inst_list,
--							opt_inst))
--				continue;
--
- 			list_add(&opt_inst->tmp_list, &opt_inst_list);
- 		}
- 		if (!opt_found) {
- 			err = -ENOENT;
- 			goto team_put;
- 		}
--	}
- 
--	err = team_nl_send_event_options_get(team, &opt_inst_list);
-+		err = team_nl_send_event_options_get(team, &opt_inst_list);
-+		if (err)
-+			break;
+@@ -1996,22 +1994,34 @@ static int netlink_dump(struct sock *sk)
+ 	 * to reduce number of system calls on dump operations, if user
+ 	 * ever provided a big enough buffer.
+ 	 */
+-	if (alloc_size < nlk->max_recvmsg_len) {
+-		skb = netlink_alloc_skb(sk,
+-					nlk->max_recvmsg_len,
+-					nlk->portid,
++	cb = &nlk->cb;
++	alloc_min_size = max_t(int, cb->min_dump_alloc, NLMSG_GOODSIZE);
++
++	if (alloc_min_size < nlk->max_recvmsg_len) {
++		alloc_size = nlk->max_recvmsg_len;
++		skb = netlink_alloc_skb(sk, alloc_size, nlk->portid,
+ 					(GFP_KERNEL & ~__GFP_WAIT) |
+ 					__GFP_NOWARN | __GFP_NORETRY);
+-		/* available room should be exact amount to avoid MSG_TRUNC */
+-		if (skb)
+-			skb_reserve(skb, skb_tailroom(skb) -
+-					 nlk->max_recvmsg_len);
+ 	}
+-	if (!skb)
++	if (!skb) {
++		alloc_size = alloc_min_size;
+ 		skb = netlink_alloc_skb(sk, alloc_size, nlk->portid,
+ 					(GFP_KERNEL & ~__GFP_WAIT));
 +	}
+ 	if (!skb)
+ 		goto errout_skb;
++
++	/* Trim skb to allocated size. User is expected to provide buffer as
++	 * large as max(min_dump_alloc, 16KiB (mac_recvmsg_len capped at
++	 * netlink_recvmsg())). dump will pack as many smaller messages as
++	 * could fit within the allocated skb. skb is typically allocated
++	 * with larger space than required (could be as much as near 2x the
++	 * requested size with align to next power of 2 approach). Allowing
++	 * dump to use the excess space makes it difficult for a user to have a
++	 * reasonable static buffer based on the expected largest dump of a
++	 * single netdev. The outcome is MSG_TRUNC error.
++	 */
++	skb_reserve(skb, skb_tailroom(skb) - alloc_size);
+ 	netlink_skb_set_owner_r(skb, sk);
  
- team_put:
- 	team_nl_team_put(team);
+ 	if (nlk->dump_done_errno > 0)
 
 
