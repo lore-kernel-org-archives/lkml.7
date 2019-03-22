@@ -7,48 +7,45 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A781AC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:15:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36D1EC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:15:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76C3621900
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:15:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 072F021900
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:15:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256902;
-	bh=mWEHBEuJRqYhDvpmxBgH8dTNeQ0Dr6jLlUxob32Yuak=;
+	s=default; t=1553256906;
+	bh=ZbDTmuXI+EN6LGi2WEDBYAqVe+dTVDPZhZ01P9jd7N4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AvKPvcTyYvrVkCBD3dVWXmZTE0GDVLxizVxOsQGV3v28fQ/6BOKc9ibcK3G8aKJio
-	 HtbirSkFYhCOHcDXShEZMS04jMM79lNTWa9bNdU9o90d4UZdxTJMLnYSups5ut1XV4
-	 fIyrO3xuzcwKEQD+Nye8PJm1eplBatP8LVmxVgMg=
+	b=aj5E8eGLaU5Lpdn/6cN109aBVOyp8TGyh6rV71VIsbnCy3nEbczpMzGeXW8ZthcPb
+	 c1RUgummUM/cLaGX357F6rmy0C5TQOjfodQcyOzPy8ncIJxlXEIcLhOz/XtZNt6BgO
+	 3oJP6SWuHNAHSOUtyt+TS0ENemyvAscu0XI/Kn50=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389999AbfCVMPB (ORCPT
+        id S2390007AbfCVMPE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:15:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53288 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:15:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389465AbfCVMO7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:14:59 -0400
+        id S2389465AbfCVMPD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:15:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 672462082C;
-        Fri, 22 Mar 2019 12:14:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 167842082C;
+        Fri, 22 Mar 2019 12:15:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256898;
-        bh=mWEHBEuJRqYhDvpmxBgH8dTNeQ0Dr6jLlUxob32Yuak=;
+        s=default; t=1553256902;
+        bh=ZbDTmuXI+EN6LGi2WEDBYAqVe+dTVDPZhZ01P9jd7N4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mAg6wxie1w0sqzOg6PGCYMXZoYUEDoZXbGVN5TS/9VLTcjF6bAMkC5xZCbaooLMIk
-         LNDoofkZXHPlT3pt2W4+OcGcygfM8lx3UfuYOMTWnJ6EW9MkEmdI31uD2OP/tA4URs
-         6V7t/dlqnQuGU53+OzIn9jppXrBN3dFrQI2XJXUw=
+        b=wm4SD4y3pXnQd8DzGbhyOuGVtZ3JuQW+GtYFJSykCTsC+4Io9vLn171GN4nqkZjvn
+         xGpb768aGOHQCx6KrPLT6as+/93vw30PVwgQd9/v4cRmyO9MGeajNQvlGN6lTwvH/5
+         7RhqFt/FgjXCzPJBvEpMug5sN6T8HmT3xForQHFg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Stuart Menefy <stuart.menefy@mathembedded.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.0 071/238] regulator: s2mpa01: Fix step values for some LDOs
-Date:   Fri, 22 Mar 2019 12:14:50 +0100
-Message-Id: <20190322111302.799071534@linuxfoundation.org>
+        stable@vger.kernel.org, Felix Fietkau <nbd@nbd.name>
+Subject: [PATCH 5.0 072/238] mt76: fix corrupted software generated tx CCMP PN
+Date:   Fri, 22 Mar 2019 12:14:51 +0100
+Message-Id: <20190322111302.852292843@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -67,56 +64,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Stuart Menefy <stuart.menefy@mathembedded.com>
+From: Felix Fietkau <nbd@nbd.name>
 
-commit 28c4f730d2a44f2591cb104091da29a38dac49fe upstream.
+commit 906d2d3f874a54183df5a609fda180adf0462428 upstream.
 
-The step values for some of the LDOs appears to be incorrect, resulting
-in incorrect voltages (or at least, ones which are different from the
-Samsung 3.4 vendor kernel).
+Since ccmp_pn is u8 *, the second half needs to start at array index 4
+instead of 0. Fixes a connection stall after a certain amount of traffic
 
-Signed-off-by: Stuart Menefy <stuart.menefy@mathembedded.com>
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 23405236460b9 ("mt76: fix transmission of encrypted management frames")
 Cc: stable@vger.kernel.org
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/regulator/s2mpa01.c |   10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/net/wireless/mediatek/mt76/mt76x02_mac.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/regulator/s2mpa01.c
-+++ b/drivers/regulator/s2mpa01.c
-@@ -298,13 +298,13 @@ static const struct regulator_desc regul
- 	regulator_desc_ldo(2, STEP_50_MV),
- 	regulator_desc_ldo(3, STEP_50_MV),
- 	regulator_desc_ldo(4, STEP_50_MV),
--	regulator_desc_ldo(5, STEP_50_MV),
-+	regulator_desc_ldo(5, STEP_25_MV),
- 	regulator_desc_ldo(6, STEP_25_MV),
- 	regulator_desc_ldo(7, STEP_50_MV),
- 	regulator_desc_ldo(8, STEP_50_MV),
- 	regulator_desc_ldo(9, STEP_50_MV),
- 	regulator_desc_ldo(10, STEP_50_MV),
--	regulator_desc_ldo(11, STEP_25_MV),
-+	regulator_desc_ldo(11, STEP_50_MV),
- 	regulator_desc_ldo(12, STEP_50_MV),
- 	regulator_desc_ldo(13, STEP_50_MV),
- 	regulator_desc_ldo(14, STEP_50_MV),
-@@ -315,11 +315,11 @@ static const struct regulator_desc regul
- 	regulator_desc_ldo(19, STEP_50_MV),
- 	regulator_desc_ldo(20, STEP_50_MV),
- 	regulator_desc_ldo(21, STEP_50_MV),
--	regulator_desc_ldo(22, STEP_25_MV),
--	regulator_desc_ldo(23, STEP_25_MV),
-+	regulator_desc_ldo(22, STEP_50_MV),
-+	regulator_desc_ldo(23, STEP_50_MV),
- 	regulator_desc_ldo(24, STEP_50_MV),
- 	regulator_desc_ldo(25, STEP_50_MV),
--	regulator_desc_ldo(26, STEP_50_MV),
-+	regulator_desc_ldo(26, STEP_25_MV),
- 	regulator_desc_buck1_4(1),
- 	regulator_desc_buck1_4(2),
- 	regulator_desc_buck1_4(3),
+--- a/drivers/net/wireless/mediatek/mt76/mt76x02_mac.c
++++ b/drivers/net/wireless/mediatek/mt76/mt76x02_mac.c
+@@ -309,7 +309,7 @@ void mt76x02_mac_write_txwi(struct mt76x
+ 		ccmp_pn[6] = pn >> 32;
+ 		ccmp_pn[7] = pn >> 40;
+ 		txwi->iv = *((__le32 *)&ccmp_pn[0]);
+-		txwi->eiv = *((__le32 *)&ccmp_pn[1]);
++		txwi->eiv = *((__le32 *)&ccmp_pn[4]);
+ 	}
+ 
+ 	spin_lock_bh(&dev->mt76.lock);
 
 
