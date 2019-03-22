@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 267C5C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:27:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A5DDC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:27:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB8FA218A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:27:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F086218A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:27:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254033;
-	bh=RTuBY2d7Uy+/xT78D2ezwmqG8XQJUYs8Wp7Kv4Wv8OA=;
+	s=default; t=1553254037;
+	bh=7dpBOJWmaz15lmyZiwQZoRdFBl6Au5dlebQDO0uCTe4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZAcPQq7D0mwWqhT9werzkMqY/QCKGpIrKn2YjfxD9L695XqYkQHaZrcce2uZUWogr
-	 f9lju7J81boyqfjZQR1huTKbxwPCLDocUFOnU6ozkdF8veLHwgTOc3is9y0gOmDqDg
-	 z4JyOibsARy6W+a7OueNRaXTkcHhJWu5QGhji83Q=
+	b=uu7q5i54MAqLjsHYS+8pdG7nzghUh8Hjuwmznh0Ll9AhUAIIBNT949jhgnppxV6mG
+	 k801r6xCkTVezWx+UTbPjdIrlhuUlFI14D7N6a9cgK9Ia0z81A8/nyhsynvAiJWJY8
+	 4AW/RzHRcPxe/wF7MQ8WNmXBHnLavjOumyXKIBSM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729517AbfCVL1L (ORCPT
+        id S1729522AbfCVL1P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:27:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54838 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:27:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729506AbfCVL1F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:27:05 -0400
+        id S1728857AbfCVL1L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:27:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7793620657;
-        Fri, 22 Mar 2019 11:27:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73DB92183E;
+        Fri, 22 Mar 2019 11:27:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254025;
-        bh=RTuBY2d7Uy+/xT78D2ezwmqG8XQJUYs8Wp7Kv4Wv8OA=;
+        s=default; t=1553254031;
+        bh=7dpBOJWmaz15lmyZiwQZoRdFBl6Au5dlebQDO0uCTe4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QxydTEIlLoVm6zh+PrKyYqrDoiuk8R0BIMJ/CWp4A7G3+Y0HgiTJVO387zIHIPCM/
-         huaVj3w8MeaatuwTTeyK4Jrxwy8vjjYAMY3/KrsNRuKMNF6ex30z/46Oc4U7TLtXKW
-         fhkmoa/XsbJDXr6YigcPBewuBxtoulZVkHyd2sgE=
+        b=B3TX7H53LJY8Og3aQnSbvRV61H3pKLxNT8B0cMclqn6SW31aZJCPbAHuYuzKPOoiB
+         SW0TO+TZ9LCWZ3D+VNqMliwnI/insDtXBTrTJ6SuWz33s24Yt4GRDjNcBNx69MjViu
+         Cyc3wtSEDJ6M9pXo5PMP7YryytF14iWf6+sBWB9w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Yan, Zheng" <zyan@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>
-Subject: [PATCH 4.4 001/230] ceph: avoid repeatedly adding inode to mdsc->snap_flush_list
-Date:   Fri, 22 Mar 2019 12:12:19 +0100
-Message-Id: <20190322111236.893022505@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <james.morris@microsoft.com>
+Subject: [PATCH 4.4 003/230] KEYS: allow reaching the keys quotas exactly
+Date:   Fri, 22 Mar 2019 12:12:21 +0100
+Message-Id: <20190322111237.022206898@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -65,33 +66,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Yan, Zheng <zyan@redhat.com>
+From: Eric Biggers <ebiggers@google.com>
 
-commit 04242ff3ac0abbaa4362f97781dac268e6c3541a upstream.
+commit a08bf91ce28ed3ae7b6fef35d843fef8dc8c2cd9 upstream.
 
-Otherwise, mdsc->snap_flush_list may get corrupted.
+If the sysctl 'kernel.keys.maxkeys' is set to some number n, then
+actually users can only add up to 'n - 1' keys.  Likewise for
+'kernel.keys.maxbytes' and the root_* versions of these sysctls.  But
+these sysctls are apparently supposed to be *maximums*, as per their
+names and all documentation I could find -- the keyrings(7) man page,
+Documentation/security/keys/core.rst, and all the mentions of EDQUOT
+meaning that the key quota was *exceeded* (as opposed to reached).
 
+Thus, fix the code to allow reaching the quotas exactly.
+
+Fixes: 0b77f5bfb45c ("keys: make the keyring quotas controllable through /proc/sys")
 Cc: stable@vger.kernel.org
-Signed-off-by: "Yan, Zheng" <zyan@redhat.com>
-Reviewed-by: Ilya Dryomov <idryomov@gmail.com>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: James Morris <james.morris@microsoft.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ceph/snap.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ security/keys/key.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/fs/ceph/snap.c
-+++ b/fs/ceph/snap.c
-@@ -611,7 +611,8 @@ int __ceph_finish_cap_snap(struct ceph_i
- 	     capsnap->size);
+--- a/security/keys/key.c
++++ b/security/keys/key.c
+@@ -260,8 +260,8 @@ struct key *key_alloc(struct key_type *t
  
- 	spin_lock(&mdsc->snap_flush_lock);
--	list_add_tail(&ci->i_snap_flush_item, &mdsc->snap_flush_list);
-+	if (list_empty(&ci->i_snap_flush_item))
-+		list_add_tail(&ci->i_snap_flush_item, &mdsc->snap_flush_list);
- 	spin_unlock(&mdsc->snap_flush_lock);
- 	return 1;  /* caller may want to ceph_flush_snaps */
- }
+ 		spin_lock(&user->lock);
+ 		if (!(flags & KEY_ALLOC_QUOTA_OVERRUN)) {
+-			if (user->qnkeys + 1 >= maxkeys ||
+-			    user->qnbytes + quotalen >= maxbytes ||
++			if (user->qnkeys + 1 > maxkeys ||
++			    user->qnbytes + quotalen > maxbytes ||
+ 			    user->qnbytes + quotalen < user->qnbytes)
+ 				goto no_quota;
+ 		}
 
 
