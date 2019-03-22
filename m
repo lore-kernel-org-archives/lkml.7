@@ -2,51 +2,53 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 282ADC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:58:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4C2BC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:58:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFD5520850
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:58:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 902C420850
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:58:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255904;
-	bh=z+3x67AksIOdyLYZeUuMsYtS240VKMuzhyn9T/XruRY=;
+	s=default; t=1553255907;
+	bh=1Jx/x4tn1+GYI0MoPBJ2lCkNCrFwvqIceudWPKZGTC8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Yh3ZOnGUM0dYVdINGQrXxQeVasWtVNgpKxjMZn/vsvTu5u2W7NCqGjRT8MuW9dQk2
-	 K0pbOBMweBqbmYPtN7vSlNeh0puT2dL/VcHdRu7fpA8Tycohdw8y02eau9VtJUydP3
-	 fW8b3gn5R7K4RsGmuio1vPdDPJudlV/NTKvxuxuE=
+	b=kaiRtNTWqFtHSkPTBcqu9xvimmuER3XY8Y17LaV6A/Zpr+HxHMbjCvDZ4Tn92QDP8
+	 J5YgjeEOO8MOicXjc5EO1MxCm5TUZ4R49gLVuhZOf+VPSb51WUhlRnGVtSaEaDi2n0
+	 0mve9XrITN7Nv+o5LsXF/1c24435MfBAY94vTYFg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387814AbfCVL6W (ORCPT
+        id S2387824AbfCVL60 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:58:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34944 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:58:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387801AbfCVL6T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:58:19 -0400
+        id S2387810AbfCVL6W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:58:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8267120850;
-        Fri, 22 Mar 2019 11:58:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 392EC2192C;
+        Fri, 22 Mar 2019 11:58:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255898;
-        bh=z+3x67AksIOdyLYZeUuMsYtS240VKMuzhyn9T/XruRY=;
+        s=default; t=1553255901;
+        bh=1Jx/x4tn1+GYI0MoPBJ2lCkNCrFwvqIceudWPKZGTC8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sO4i7yO41jkQMOd4g/akSK5VlaIvdpc8i9z+0HqEBjZIZFDgiGah3PkYnbNTwP2sx
-         zKkmhaUhq3m2ZBhhDDwR9xBh9zTskK4Dd1lyhqX0MH+qLvyQD8AgWdj0c1ymHo2L7C
-         /OVHlziEzl13R4F+f78OQSpGNgaZKX6zJ1fWuwqM=
+        b=QZoeyMpZ8hnCxh4Re8CjSki1XfvPkDS12mXCgI4Q3qV5siVfrh/G5dnr1VspahkaK
+         NgwUr4kRe8blUT+ey8O+AeBdY+PnH94f2T14iLb0SpjYXlnUTqHQClSj6KtfqF/JAR
+         mSkm+rK4DVIbmhZfMa0JoXoUYOlOhccwqBSh9v+M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.19 020/280] crypto: ahash - fix another early termination in hash walk
-Date:   Fri, 22 Mar 2019 12:12:53 +0100
-Message-Id: <20190322111307.436689311@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 041/280] KVM: arm/arm64: vgic: Always initialize the group of private IRQs
+Date:   Fri, 22 Mar 2019 12:13:14 +0100
+Message-Id: <20190322111308.626190365@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -65,63 +67,82 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Eric Biggers <ebiggers@google.com>
+[ Upstream commit ab2d5eb03dbb7b37a1c6356686fb48626ab0c93e ]
 
-commit 77568e535af7c4f97eaef1e555bf0af83772456c upstream.
+We currently initialize the group of private IRQs during
+kvm_vgic_vcpu_init, and the value of the group depends on the GIC model
+we are emulating.  However, CPUs created before creating (and
+initializing) the VGIC might end up with the wrong group if the VGIC
+is created as GICv3 later.
 
-Hash algorithms with an alignmask set, e.g. "xcbc(aes-aesni)" and
-"michael_mic", fail the improved hash tests because they sometimes
-produce the wrong digest.  The bug is that in the case where a
-scatterlist element crosses pages, not all the data is actually hashed
-because the scatterlist walk terminates too early.  This happens because
-the 'nbytes' variable in crypto_hash_walk_done() is assigned the number
-of bytes remaining in the page, then later interpreted as the number of
-bytes remaining in the scatterlist element.  Fix it.
+Since we have no enforced ordering of creating the VGIC and creating
+VCPUs, we can end up with part the VCPUs being properly intialized and
+the remaining incorrectly initialized.  That also means that we have no
+single place to do the per-cpu data structure initialization which
+depends on knowing the emulated GIC model (which is only the group
+field).
 
-Fixes: 900a081f6912 ("crypto: ahash - Fix early termination in hash walk")
-Cc: stable@vger.kernel.org
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This patch removes the incorrect comment from kvm_vgic_vcpu_init and
+initializes the group of all previously created VCPUs's private
+interrupts in vgic_init in addition to the existing initialization in
+kvm_vgic_vcpu_init.
 
+Signed-off-by: Christoffer Dall <christoffer.dall@arm.com>
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- crypto/ahash.c |   14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ virt/kvm/arm/vgic/vgic-init.c | 22 ++++++++++++++--------
+ 1 file changed, 14 insertions(+), 8 deletions(-)
 
---- a/crypto/ahash.c
-+++ b/crypto/ahash.c
-@@ -86,17 +86,17 @@ static int hash_walk_new_entry(struct cr
- int crypto_hash_walk_done(struct crypto_hash_walk *walk, int err)
- {
- 	unsigned int alignmask = walk->alignmask;
--	unsigned int nbytes = walk->entrylen;
- 
- 	walk->data -= walk->offset;
- 
--	if (nbytes && walk->offset & alignmask && !err) {
--		walk->offset = ALIGN(walk->offset, alignmask + 1);
--		nbytes = min(nbytes,
--			     ((unsigned int)(PAGE_SIZE)) - walk->offset);
--		walk->entrylen -= nbytes;
-+	if (walk->entrylen && (walk->offset & alignmask) && !err) {
-+		unsigned int nbytes;
- 
-+		walk->offset = ALIGN(walk->offset, alignmask + 1);
-+		nbytes = min(walk->entrylen,
-+			     (unsigned int)(PAGE_SIZE - walk->offset));
- 		if (nbytes) {
-+			walk->entrylen -= nbytes;
- 			walk->data += walk->offset;
- 			return nbytes;
+diff --git a/virt/kvm/arm/vgic/vgic-init.c b/virt/kvm/arm/vgic/vgic-init.c
+index 33e7ee814f7b..8196e4f8731f 100644
+--- a/virt/kvm/arm/vgic/vgic-init.c
++++ b/virt/kvm/arm/vgic/vgic-init.c
+@@ -231,13 +231,6 @@ int kvm_vgic_vcpu_init(struct kvm_vcpu *vcpu)
+ 			irq->config = VGIC_CONFIG_LEVEL;
  		}
-@@ -116,7 +116,7 @@ int crypto_hash_walk_done(struct crypto_
- 	if (err)
- 		return err;
  
--	if (nbytes) {
-+	if (walk->entrylen) {
- 		walk->offset = 0;
- 		walk->pg++;
- 		return hash_walk_next(walk);
+-		/*
+-		 * GICv3 can only be created via the KVM_DEVICE_CREATE API and
+-		 * so we always know the emulation type at this point as it's
+-		 * either explicitly configured as GICv3, or explicitly
+-		 * configured as GICv2, or not configured yet which also
+-		 * implies GICv2.
+-		 */
+ 		if (dist->vgic_model == KVM_DEV_TYPE_ARM_VGIC_V3)
+ 			irq->group = 1;
+ 		else
+@@ -281,7 +274,7 @@ int vgic_init(struct kvm *kvm)
+ {
+ 	struct vgic_dist *dist = &kvm->arch.vgic;
+ 	struct kvm_vcpu *vcpu;
+-	int ret = 0, i;
++	int ret = 0, i, idx;
+ 
+ 	if (vgic_initialized(kvm))
+ 		return 0;
+@@ -298,6 +291,19 @@ int vgic_init(struct kvm *kvm)
+ 	if (ret)
+ 		goto out;
+ 
++	/* Initialize groups on CPUs created before the VGIC type was known */
++	kvm_for_each_vcpu(idx, vcpu, kvm) {
++		struct vgic_cpu *vgic_cpu = &vcpu->arch.vgic_cpu;
++
++		for (i = 0; i < VGIC_NR_PRIVATE_IRQS; i++) {
++			struct vgic_irq *irq = &vgic_cpu->private_irqs[i];
++			if (dist->vgic_model == KVM_DEV_TYPE_ARM_VGIC_V3)
++				irq->group = 1;
++			else
++				irq->group = 0;
++		}
++	}
++
+ 	if (vgic_has_its(kvm)) {
+ 		ret = vgic_v4_init(kvm);
+ 		if (ret)
+-- 
+2.19.1
+
 
 
