@@ -2,81 +2,105 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA6ABC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 21:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4E31C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 21:28:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84E2C21900
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 21:28:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABF4621900
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 21:28:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727544AbfCVV2C (ORCPT
+        id S1727643AbfCVV2K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 17:28:02 -0400
-Received: from mail-it1-f197.google.com ([209.85.166.197]:34575 "EHLO
-        mail-it1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727140AbfCVV2C (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 17:28:02 -0400
-Received: by mail-it1-f197.google.com with SMTP id v11so2849781itb.1
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 14:28:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=INpl/ImInpVvjNg6VwEIcNPDm6BB2I+j6XhGbJu9JZM=;
-        b=FhJiFXbECSVshrMyPbQqUMtezlbYWhXXiVNsyVxoEszz4GKXfCD04Qcd8mYtcOzL9W
-         0U75VQwceuzqT0CyZD34NNj8w6XfRVWRQcPxF1CDaVKaSVFPjVWaBQMZlRuOMmpC9fsz
-         rbwrzchkhHua0At7CdrWGn7R02LQ/0puOAADjL6Fc21O6r4E/hNzCEngw1Zd2UFnWjEa
-         OQYN6I/7AodsL+vJ/c87xwbJ47eh78djT3G/KQGDvM8fFXf8KEt1oZ1Nm3ve0eDXsLgh
-         IybDTeOp6DFTJVMqzg0yNj8q0VBVaL24joDKxPpp8XNhrawwKmlcDDADgafsnTz0UtL4
-         LpbA==
-X-Gm-Message-State: APjAAAXGcCl5I+Mb8Zg4ZwWCkkQPW4djqspQCbYJzFP+hxGorNZhKCh8
-        L0x9b0QW4WuDT5++7m3pFI4JKU+MmnvOMf5AEjqWdLqtK22/
-X-Google-Smtp-Source: APXvYqwVb9A5zyH076xjfKH6jANX5aTwiLOj7SbypYsinLvTB/jSN5NNa+XCnr57mt6sD2F849iSWjBJOYF/V7SU/hZ7lYJPkAms
+        Fri, 22 Mar 2019 17:28:10 -0400
+Received: from anholt.net ([50.246.234.109]:52800 "EHLO anholt.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727140AbfCVV2I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 17:28:08 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by anholt.net (Postfix) with ESMTP id E5A1D10A2C47;
+        Fri, 22 Mar 2019 14:28:07 -0700 (PDT)
+X-Virus-Scanned: Debian amavisd-new at anholt.net
+Received: from anholt.net ([127.0.0.1])
+        by localhost (kingsolver.anholt.net [127.0.0.1]) (amavisd-new, port 10024)
+        with LMTP id MP_bbBtIY4Pf; Fri, 22 Mar 2019 14:28:06 -0700 (PDT)
+Received: from eliezer.anholt.net (localhost [127.0.0.1])
+        by anholt.net (Postfix) with ESMTP id E250C10A2F16;
+        Fri, 22 Mar 2019 14:28:05 -0700 (PDT)
+Received: by eliezer.anholt.net (Postfix, from userid 1000)
+        id 6559E2FE4653; Fri, 22 Mar 2019 14:28:05 -0700 (PDT)
+From:   Eric Anholt <eric@anholt.net>
+To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        dri-devel@lists.freedesktop.org
+Cc:     linux-kernel@vger.kernel.org,
+        Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH RESEND] drm/vc4: Make sure to emit a tile coordinates between two MSAA loads.
+In-Reply-To: <5c5ef4c7869f9294cfb7128a8b0ee00cf2012e40.camel@bootlin.com>
+References: <20190206232550.12012-1-eric@anholt.net> <5c5ef4c7869f9294cfb7128a8b0ee00cf2012e40.camel@bootlin.com>
+User-Agent: Notmuch/0.22.2+1~gb0bcfaa (http://notmuchmail.org) Emacs/25.2.2 (x86_64-pc-linux-gnu)
+Date:   Fri, 22 Mar 2019 14:28:04 -0700
+Message-ID: <87imwa38gr.fsf@anholt.net>
 MIME-Version: 1.0
-X-Received: by 2002:a02:f8b:: with SMTP id 11mr9069901jao.53.1553290081395;
- Fri, 22 Mar 2019 14:28:01 -0700 (PDT)
-Date:   Fri, 22 Mar 2019 14:28:01 -0700
-In-Reply-To: <000000000000cd1e2205785951c2@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000088ea3e0584b5872d@google.com>
-Subject: Re: possible deadlock in __generic_file_fsync
-From:   syzbot <syzbot+5cd33f0e6abe2bb3e397@syzkaller.appspotmail.com>
-To:     adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, torvalds@linux-foundation.org,
-        tytso@mit.edu, viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+--=-=-=
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-commit 9022ada8ab6f1f1a932a3c93815061042e6548a5
-Author: Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri Aug 24 20:16:36 2018 +0000
+Paul Kocialkowski <paul.kocialkowski@bootlin.com> writes:
 
-     Merge branch 'for-4.19' of  
-git://git.kernel.org/pub/scm/linux/kernel/git/tj/wq
+> Hi,
+>
+> Le mercredi 06 f=C3=A9vrier 2019 =C3=A0 15:25 -0800, Eric Anholt a =C3=A9=
+crit :
+>> The HW only executes a load once the tile coordinates packet happens,
+>> and only tracks one at a time, so by emitting our two MSAA loads back
+>> to back we would end up with an undefined color or Z buffer.
+>
+> This change deals with things that I'm not very familiar with, but here
+> is my take on what is happening here:
+>
+> - When we have to do more than a single load in the same render command
+> list, we need to send out tile coordinates and a dummy store in between
+> the two, because of internal architecture requirements of the GPU;
+> - We're dealing with the color buffer first and then the z-stencil
+> buffer;
+> - As a result, we need to issue that dummy store in the block handling
+> the z-stencil, if there was a previous color load in the rcl;
+> - We previously only did that for non-MSAA z-stencil buffers (without
+> the FULL_RES flag);
+> - The same thing actually needs to be done for the MSAA case too, as
+> the reason why we need that dummy store also applies to MSAA loads.
+>
+> If my understanding is correct, then consider this:
+> Reviewed-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15330437200000
-start commit:   270b77a0 Merge tag 'drm-fixes-2018-10-20-1' of git://anong..
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=17330437200000
-console output: https://syzkaller.appspot.com/x/log.txt?x=13330437200000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b3f55cb3dfcc6c33
-dashboard link: https://syzkaller.appspot.com/bug?extid=5cd33f0e6abe2bb3e397
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1436fc45400000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11058e2d400000
+This is all correct.  Thanks!
 
-Reported-by: syzbot+5cd33f0e6abe2bb3e397@syzkaller.appspotmail.com
-Fixes: 9022ada8ab6f ("Merge branch 'for-4.19' of  
-git://git.kernel.org/pub/scm/linux/kernel/git/tj/wq")
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlyVU2UACgkQtdYpNtH8
+nujq9A/9HbvDJ1hdn+1ZPs45CqL0EKn21SV067mXvQBjWWnH7bTk9R8Gi2Kf0W4Y
+52T7ZtFz/m056VSYu0LC5pkdHBFR0OVs5OyTsjft5hZKwcJlZpxrTqDO1zeUAURF
+HfVMpV2cyFEdXLUwV5F9bw/3VNjJ1VFHON3fZzb7Au8OB6EdpTLhNGfepoVsbnnq
+WFU0CWyg30yQLIz2yDgCVk0Vrx/b8GJQtWxaPpKpn2wC9nYQ0XT9Skn7Hku766Rx
+Zct4LU4K2CrSnN2UwLXPRnFxSjSOUZLYoCOdO82uKfOwYQJOQwmsrJkWuAo7XeQZ
+bUaaZcRItY+f4GzhELQakUV2JMrDlgYy8V3S9S5UwN4UIhXX8Y327+jm93ewURs7
+HbTw2xs3NHkaDfo0S8993AWSe12zifR2TjVGy9CbUbUz5fuIvIgf2tZCLG0zdszn
+lO836aJht2t2UXl6FNOrdDKlDzi5rAM6TMoT7uWCHzD0UY/UyYPkFciACHoM3pRm
+QcxkpnFu790NQlFHshkRgZjSVo7qpcHokjFhoJqfxsdNT/nsM2e6nOxClxjyNhAD
+q+xwg57R2XTev9Sqd4RrT70oFFEjPOD7AMy1nGjez9182te759XeBpiSzhZ89iHY
+J+tAhxDmJWIWHMDDVobqKpMCyuRQUhChhDXnZKRsO/oLpF/zOkA=
+=Kh8o
+-----END PGP SIGNATURE-----
+--=-=-=--
