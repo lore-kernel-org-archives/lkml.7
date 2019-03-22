@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B56A2C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:01:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F3F0C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:01:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77D532192D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:01:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32DC62192D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:01:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256073;
-	bh=rT1r8LfW3buq1qfmBIu93k11doxeuFIb102aWU4Xwr4=;
+	s=default; t=1553256076;
+	bh=MbB8UnBqJaX6DO88O8/ZyK8v2Lef1hTTVD7LBu4PgdM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1yv9jXbivXhFKqSSmItM/5y68I74s59MGz1C5N9zqYmE+JG/6dogjrGygXwdzJgXt
-	 ZFzGSp3Ys9/+nFVczEhdpwbaUvMMExulB9I54cmbT1D41QOLrWnduIN04xbZkd95bp
-	 3dS5iYVE4Fq6ov3QaGQyIqFbj/VxaDrfL3jM5hPg=
+	b=SVfrWSphN+Lzt/mK6Tf+71cOvTqyyb0D3BTDyBEjurEYFUY35kkeClE3Ga7B4kCX4
+	 /oQPTVdaMkUasUp3wbmA7x+YSkblYqAI7nC5eEDtiNaQHjEYeqnAtLz39MVVyvUbNq
+	 ThAb48lC1oEqZzgXIcB/IaBzbZ1bpT18hcf+J+Dw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388176AbfCVMBM (ORCPT
+        id S2388188AbfCVMBO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:01:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38618 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:01:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732861AbfCVMBK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:01:10 -0400
+        id S2388179AbfCVMBM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:01:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 757ED204FD;
-        Fri, 22 Mar 2019 12:01:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E247204FD;
+        Fri, 22 Mar 2019 12:01:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256069;
-        bh=rT1r8LfW3buq1qfmBIu93k11doxeuFIb102aWU4Xwr4=;
+        s=default; t=1553256071;
+        bh=MbB8UnBqJaX6DO88O8/ZyK8v2Lef1hTTVD7LBu4PgdM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UF6Q34MiuzRi9LQTAeP26jDDRCs2DT0kpMNcJdqAgNYsWi2jKg+gVOubq3GlyFY6t
-         A0WqNZjjS+0xj87WHPcrrTiAFXo75HPOx2eD6VYeS/q8HAYfU7mzxidNkYC86nTJ8b
-         999FOfL0ab7MDCombRFVKkNoR3gvSFJhmusNoHUw=
+        b=nSc9R5s6CFc+7MrQN2QLoD5EtFaMqZpkyX6hmLoZVCfs9sU3N9QxKS2Vv9zkxK/b9
+         vWwLsRO5yv5xnb6E2vy7ecrDi7Eol/E9qKGoWC9gXsDvJsLleyYpZSw59fL5ktyL32
+         ubiGUEVqH1gxMK1OBjzykTlaGupmfmZKdOO7M6gs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexey Khoroshilov <khoroshilov@ispras.ru>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Tobias Brunner <tobias@strongswan.org>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 083/280] net: mv643xx_eth: disable clk on error path in mv643xx_eth_shared_probe()
-Date:   Fri, 22 Mar 2019 12:13:56 +0100
-Message-Id: <20190322111311.054694642@linuxfoundation.org>
+Subject: [PATCH 4.19 084/280] xfrm: Fix inbound traffic via XFRM interfaces across network namespaces
+Date:   Fri, 22 Mar 2019 12:13:57 +0100
+Message-Id: <20190322111311.110135874@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -66,45 +66,62 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit e928b5d6b75e239feb9c6d5488974b6646a0ebc8 ]
+[ Upstream commit 660899ddf06ae8bb5bbbd0a19418b739375430c5 ]
 
-If mv643xx_eth_shared_of_probe() fails, mv643xx_eth_shared_probe()
-leaves clk enabled.
+After moving an XFRM interface to another namespace it stays associated
+with the original namespace (net in `struct xfrm_if` and the list keyed
+with `xfrmi_net_id`), allowing processes in the new namespace to use
+SAs/policies that were created in the original namespace.  For instance,
+this allows a keying daemon in one namespace to establish IPsec SAs for
+other namespaces without processes there having access to the keys or IKE
+credentials.
 
-Found by Linux Driver Verification project (linuxtesting.org).
+This worked fine for outbound traffic, however, for inbound traffic the
+lookup for the interfaces and the policies used the incorrect namespace
+(the one the XFRM interface was moved to).
 
-Signed-off-by: Alexey Khoroshilov <khoroshilov@ispras.ru>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: f203b76d7809 ("xfrm: Add virtual xfrm interfaces")
+Signed-off-by: Tobias Brunner <tobias@strongswan.org>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/marvell/mv643xx_eth.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ net/xfrm/xfrm_interface.c | 4 ++--
+ net/xfrm/xfrm_policy.c    | 4 +++-
+ 2 files changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/marvell/mv643xx_eth.c b/drivers/net/ethernet/marvell/mv643xx_eth.c
-index 62f204f32316..59007d6cd36d 100644
---- a/drivers/net/ethernet/marvell/mv643xx_eth.c
-+++ b/drivers/net/ethernet/marvell/mv643xx_eth.c
-@@ -2886,7 +2886,7 @@ static int mv643xx_eth_shared_probe(struct platform_device *pdev)
+diff --git a/net/xfrm/xfrm_interface.c b/net/xfrm/xfrm_interface.c
+index 6f05e831a73e..82723ef44db3 100644
+--- a/net/xfrm/xfrm_interface.c
++++ b/net/xfrm/xfrm_interface.c
+@@ -76,10 +76,10 @@ static struct xfrm_if *xfrmi_decode_session(struct sk_buff *skb)
+ 	int ifindex;
+ 	struct xfrm_if *xi;
  
- 	ret = mv643xx_eth_shared_of_probe(pdev);
- 	if (ret)
--		return ret;
-+		goto err_put_clk;
- 	pd = dev_get_platdata(&pdev->dev);
+-	if (!skb->dev)
++	if (!secpath_exists(skb) || !skb->dev)
+ 		return NULL;
  
- 	msp->tx_csum_limit = (pd != NULL && pd->tx_csum_limit) ?
-@@ -2894,6 +2894,11 @@ static int mv643xx_eth_shared_probe(struct platform_device *pdev)
- 	infer_hw_params(msp);
+-	xfrmn = net_generic(dev_net(skb->dev), xfrmi_net_id);
++	xfrmn = net_generic(xs_net(xfrm_input_state(skb)), xfrmi_net_id);
+ 	ifindex = skb->dev->ifindex;
  
- 	return 0;
-+
-+err_put_clk:
-+	if (!IS_ERR(msp->clk))
-+		clk_disable_unprepare(msp->clk);
-+	return ret;
- }
+ 	for_each_xfrmi_rcu(xfrmn->xfrmi[0], xi) {
+diff --git a/net/xfrm/xfrm_policy.c b/net/xfrm/xfrm_policy.c
+index 6ea8036fcdbe..bf5d59270f79 100644
+--- a/net/xfrm/xfrm_policy.c
++++ b/net/xfrm/xfrm_policy.c
+@@ -2340,8 +2340,10 @@ int __xfrm_policy_check(struct sock *sk, int dir, struct sk_buff *skb,
  
- static int mv643xx_eth_shared_remove(struct platform_device *pdev)
+ 	if (ifcb) {
+ 		xi = ifcb->decode_session(skb);
+-		if (xi)
++		if (xi) {
+ 			if_id = xi->p.if_id;
++			net = xi->net;
++		}
+ 	}
+ 	rcu_read_unlock();
+ 
 -- 
 2.19.1
 
