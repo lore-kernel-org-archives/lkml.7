@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99A8CC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:22:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6C2BC10F03
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:22:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D2D221900
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:22:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B4932054F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:22:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553257354;
-	bh=7r9/PIJRfTwcor3ZEeObDC50je3U/Wvjamj7+E2J0Ig=;
+	s=default; t=1553257358;
+	bh=DPznJgemzeVkxeeFLwwBKz7+zIos2vbJFKx9ohJjI4A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zC6Gn6HQHwy/2zEw0xOitO/y27H0bgOnqBRuf3bvJGKlZAms/28ceiH3rmhEQBN5H
-	 zjwQsI5rgXprO2iuG2LNDGu7UipinySgTDKyJLOH2ZmI6IUZOeomflqzZOsxrasvWf
-	 1dBAWTb2jw4/1+e9Ljl+FwGguoO8uKMpGnYkj4Nc=
+	b=pESrSj22KTyLXkTEbNTCSDdx97bH7RouMZtSw/A9hTvU2uaCKD1YsZtq+En3K1cSO
+	 y7DSazns4LpCNvsfkqj0SLa8gPs1W0VOge0ZPMl9OtBd/oP1PlTQXPOpBQWCgXrjQ3
+	 83eBmu1sBBKPmZYJ04VptFene2pSjjvOfpf+VCPs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391017AbfCVMWd (ORCPT
+        id S2391023AbfCVMWh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:22:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33626 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:22:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390679AbfCVMWa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:22:30 -0400
+        id S2390662AbfCVMWd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:22:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 351DF218A1;
-        Fri, 22 Mar 2019 12:22:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0252A218A1;
+        Fri, 22 Mar 2019 12:22:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553257349;
-        bh=7r9/PIJRfTwcor3ZEeObDC50je3U/Wvjamj7+E2J0Ig=;
+        s=default; t=1553257352;
+        bh=DPznJgemzeVkxeeFLwwBKz7+zIos2vbJFKx9ohJjI4A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nkxn1N4mRuQ6uAhQC7LPbVzfBr21ivdozg21Iq+SqF2Gc+S5h5k3klOVJaGcGHDCV
-         gh7Q0HaBHG0Ec8n8W3NMQ2mnBUgQbu/Mp9knELZ2Im3cG6JdQdN2t5DUxSp1ZUja80
-         fzXsi4f+4FtNm+A4Tkl7Qc2Fi2ts6ssf0ehF/Q9I=
+        b=pwShzJtcvJFwzAE2lAiUASFEG08vbydYfvOorNMAtAao1wtiaIOk8tiEGQsZot9qk
+         HfcLlHQNRUWky7CW/BV65QRchQxx9HtD6am0VS/VRAoVtfaghunGPFlIa3Hgh6nR9J
+         T8n7Y3JdQMhDAW0sk5mKqkzbROIMNm3YVWDN4WtA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guoqing Jiang <gqjiang@suse.com>,
-        Aditya Pakki <pakki001@umn.edu>,
-        Song Liu <songliubraving@fb.com>
-Subject: [PATCH 5.0 206/238] md: Fix failed allocation of md_register_thread
-Date:   Fri, 22 Mar 2019 12:17:05 +0100
-Message-Id: <20190322111310.387455796@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.0 207/238] x86/kvmclock: set offset for kvm unstable clock
+Date:   Fri, 22 Mar 2019 12:17:06 +0100
+Message-Id: <20190322111310.446706040@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -66,49 +67,51 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Aditya Pakki <pakki001@umn.edu>
+From: Pavel Tatashin <pasha.tatashin@soleen.com>
 
-commit e406f12dde1a8375d77ea02d91f313fb1a9c6aec upstream.
+commit b5179ec4187251a751832193693d6e474d3445ac upstream.
 
-mddev->sync_thread can be set to NULL on kzalloc failure downstream.
-The patch checks for such a scenario and frees allocated resources.
+VMs may show incorrect uptime and dmesg printk offsets on hypervisors with
+unstable clock. The problem is produced when VM is rebooted without exiting
+from qemu.
 
-Committer node:
+The fix is to calculate clock offset not only for stable clock but for
+unstable clock as well, and use kvm_sched_clock_read() which substracts
+the offset for both clocks.
 
-Added similar fix to raid5.c, as suggested by Guoqing.
+This is safe, because pvclock_clocksource_read() does the right thing and
+makes sure that clock always goes forward, so once offset is calculated
+with unstable clock, we won't get new reads that are smaller than offset,
+and thus won't get negative results.
 
-Cc: stable@vger.kernel.org # v3.16+
-Acked-by: Guoqing Jiang <gqjiang@suse.com>
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Signed-off-by: Song Liu <songliubraving@fb.com>
+Thank you Jon DeVree for helping to reproduce this issue.
+
+Fixes: 857baa87b642 ("sched/clock: Enable sched clock early")
+Cc: stable@vger.kernel.org
+Reported-by: Dominique Martinet <asmadeus@codewreck.org>
+Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/raid10.c |    2 ++
- drivers/md/raid5.c  |    2 ++
- 2 files changed, 4 insertions(+)
+ arch/x86/kernel/kvmclock.c |    6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
---- a/drivers/md/raid10.c
-+++ b/drivers/md/raid10.c
-@@ -3939,6 +3939,8 @@ static int raid10_run(struct mddev *mdde
- 		set_bit(MD_RECOVERY_RUNNING, &mddev->recovery);
- 		mddev->sync_thread = md_register_thread(md_do_sync, mddev,
- 							"reshape");
-+		if (!mddev->sync_thread)
-+			goto out_free_conf;
- 	}
+--- a/arch/x86/kernel/kvmclock.c
++++ b/arch/x86/kernel/kvmclock.c
+@@ -104,12 +104,8 @@ static u64 kvm_sched_clock_read(void)
  
- 	return 0;
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -7402,6 +7402,8 @@ static int raid5_run(struct mddev *mddev
- 		set_bit(MD_RECOVERY_RUNNING, &mddev->recovery);
- 		mddev->sync_thread = md_register_thread(md_do_sync, mddev,
- 							"reshape");
-+		if (!mddev->sync_thread)
-+			goto abort;
- 	}
+ static inline void kvm_sched_clock_init(bool stable)
+ {
+-	if (!stable) {
+-		pv_ops.time.sched_clock = kvm_clock_read;
++	if (!stable)
+ 		clear_sched_clock_stable();
+-		return;
+-	}
+-
+ 	kvm_sched_clock_offset = kvm_clock_read();
+ 	pv_ops.time.sched_clock = kvm_sched_clock_read;
  
- 	/* Ok, everything is just fine now */
 
 
