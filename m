@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF678C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:33:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62C65C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:33:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B02E320449
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:33:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3341F21925
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:33:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254392;
-	bh=dvxT1ZJo3SeR6+qNixqlYdeRORes1t2223B6b+Z4wrM=;
+	s=default; t=1553254398;
+	bh=ydJR2QSQYswNspJviBgru/Pu3N7UbMDdwpe9hqABbCA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b6Azqi9XsyMfz+z73JwPwEwBLfvkLIa3oPSNZWI/6S8eS65uFei4FiwD6S3kdM16j
-	 iX3xuANWzpyGrLg6vcazc3M3snSB8WCZPDGuw9+Sql/gEAOvv3gJZNI6uwH9XCWtBN
-	 kR5Yku3QQHDcksMlXD/U2mgp9sQfx5Gz6j88AxRo=
+	b=WGOx2Nqi0gvDlDaLjfJPa9lgu7DQ58fUF2BA2DMSUrsbAAe+fqx4qgkMqwzrk45wC
+	 s4SLFeV83V9iLtC8DF/ymqAbmAhRGuqUawcfkuimAJuuGp7d6pfe9IxjLQtbIPF8td
+	 r41g2qv4Lt/RtDZrkpEQn1WKnYwguqEvVO9m1Z74=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730243AbfCVLdL (ORCPT
+        id S1730248AbfCVLdQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:33:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33524 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:33:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730237AbfCVLdJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:33:09 -0400
+        id S1730241AbfCVLdL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:33:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E12B020449;
-        Fri, 22 Mar 2019 11:33:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A424F21916;
+        Fri, 22 Mar 2019 11:33:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254388;
-        bh=dvxT1ZJo3SeR6+qNixqlYdeRORes1t2223B6b+Z4wrM=;
+        s=default; t=1553254391;
+        bh=ydJR2QSQYswNspJviBgru/Pu3N7UbMDdwpe9hqABbCA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ueGxXKrswvHb5OJIooZn/Uw1pRS6H2pvMMmnXnmwASIXouj54cawnSo6OF1UGjecl
-         2I4TDO4lS5I57ADHlstPz7oN92BKamuFScJ0Xr+LWqgnFSWk5yfI1ldV/2zhEc17C+
-         6NzX/KIRhlVD1ZUNdbsEhQxuHf+t/D/vgVCwxvgg=
+        b=cEMub+qhfkTETT057OJHiKsMDPknk9aQ5JCK7Ka2IGu+kQeEYAIfpHhYwCs1AB2Cj
+         VRUXLxWVwrAd1dMdkaHCSMg6MjD+vXOPY87XiHLJEwE6zIf+BDEHt5BLkU6vQ+MSWO
+         v3ikP4bDTOhGP43ImFl8vO7HTfv2CFHw/X4GRNF0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>,
-        Pavel Machek <pavel@ucw.cz>,
-        Marc Zyngier <marc.zyngier@arm.com>,
+        stable@vger.kernel.org, Ronnie Sahlberg <lsahlber@redhat.com>,
+        Steve French <stfrench@microsoft.com>,
+        Pavel Shilovsky <pshilov@microsoft.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 106/230] irqchip/mmp: Only touch the PJ4 IRQ & FIQ bits on enable/disable
-Date:   Fri, 22 Mar 2019 12:14:04 +0100
-Message-Id: <20190322111244.032430406@linuxfoundation.org>
+Subject: [PATCH 4.4 097/230] cifs: fix computation for MAX_SMB2_HDR_SIZE
+Date:   Fri, 22 Mar 2019 12:13:55 +0100
+Message-Id: <20190322111243.425804742@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -67,53 +67,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 2380a22b60ce6f995eac806e69c66e397b59d045 ]
+[ Upstream commit 58d15ed1203f4d858c339ea4d7dafa94bd2a56d3 ]
 
-Resetting bit 4 disables the interrupt delivery to the "secure
-processor" core. This breaks the keyboard on a OLPC XO 1.75 laptop,
-where the firmware running on the "secure processor" bit-bangs the
-PS/2 protocol over the GPIO lines.
+The size of the fixed part of the create response is 88 bytes not 56.
 
-It is not clear what the rest of the bits are and Marvell was unhelpful
-when asked for documentation. Aside from the SP bit, there are probably
-priority bits.
-
-Leaving the unknown bits as the firmware set them up seems to be a wiser
-course of action compared to just turning them off.
-
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-Acked-by: Pavel Machek <pavel@ucw.cz>
-[maz: fixed-up subject and commit message]
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-mmp.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ fs/cifs/smb2pdu.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/irqchip/irq-mmp.c b/drivers/irqchip/irq-mmp.c
-index 013fc9659a84..2fe2bcb63a71 100644
---- a/drivers/irqchip/irq-mmp.c
-+++ b/drivers/irqchip/irq-mmp.c
-@@ -34,6 +34,9 @@
- #define SEL_INT_PENDING		(1 << 6)
- #define SEL_INT_NUM_MASK	0x3f
+diff --git a/fs/cifs/smb2pdu.h b/fs/cifs/smb2pdu.h
+index aacb15bd56fe..f087158c5555 100644
+--- a/fs/cifs/smb2pdu.h
++++ b/fs/cifs/smb2pdu.h
+@@ -82,8 +82,8 @@
  
-+#define MMP2_ICU_INT_ROUTE_PJ4_IRQ	(1 << 5)
-+#define MMP2_ICU_INT_ROUTE_PJ4_FIQ	(1 << 6)
-+
- struct icu_chip_data {
- 	int			nr_irqs;
- 	unsigned int		virq_base;
-@@ -190,7 +193,8 @@ static struct mmp_intc_conf mmp_conf = {
- static struct mmp_intc_conf mmp2_conf = {
- 	.conf_enable	= 0x20,
- 	.conf_disable	= 0x0,
--	.conf_mask	= 0x7f,
-+	.conf_mask	= MMP2_ICU_INT_ROUTE_PJ4_IRQ |
-+			  MMP2_ICU_INT_ROUTE_PJ4_FIQ,
- };
+ #define NUMBER_OF_SMB2_COMMANDS	0x0013
  
- static void __exception_irq_entry mmp_handle_irq(struct pt_regs *regs)
+-/* 4 len + 52 transform hdr + 64 hdr + 56 create rsp */
+-#define MAX_SMB2_HDR_SIZE 0x00b0
++/* 52 transform hdr + 64 hdr + 88 create rsp */
++#define MAX_SMB2_HDR_SIZE 204
+ 
+ #define SMB2_PROTO_NUMBER cpu_to_le32(0x424d53fe)
+ 
 -- 
 2.19.1
 
