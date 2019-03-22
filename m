@@ -2,242 +2,130 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5147FC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 18:24:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA27BC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 18:26:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B1A521917
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 18:24:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="kIdUtgqb"
+	by mail.kernel.org (Postfix) with ESMTP id 91BDD21917
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 18:26:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728563AbfCVSYd (ORCPT
+        id S1728648AbfCVS04 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 14:24:33 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:41615 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726897AbfCVSYd (ORCPT
+        Fri, 22 Mar 2019 14:26:56 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:59643 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726875AbfCVS04 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 14:24:33 -0400
-Received: by mail-qt1-f195.google.com with SMTP id w30so3586077qta.8
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 11:24:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version;
-        bh=OYK1Intb5otZe27B8iMGxGpx1ruYX7qXFBf7IvaCPR0=;
-        b=kIdUtgqbc90Z1Y5+v4eKhbF4xyK2qaEpSB7FuoLAHxRtM/BrXS/QnpX1KaE4dFWtai
-         8u+5iLnba32Zk+31h+/iiQQ2KBpr/Xyt8qSE1kgxet73syFfq4c1Zof8Ero135rQwe7O
-         yAVzfhVWkA+/9TIBQ/Mym2IVANvPBNEzIJvrRGHUuhxOm/AV6+kOiM0o1B3kEL4rscGQ
-         P1gSYYjg/ssY6p+Xdr3ZP082pWcgH7YmnESdgnTA5HnZAoWj0NFy7510GJBYHscI0D0y
-         QJ/OlzidNV7Hzr6mfaffxLVyg2bDk2jIFGji5TjXMA7pG+zHA5SeZ7ZsAyP2ZFqL7Rgn
-         w9qg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version;
-        bh=OYK1Intb5otZe27B8iMGxGpx1ruYX7qXFBf7IvaCPR0=;
-        b=rSPBSISoAUrb6qRgeO5Vk6KuH4ynXllniMv+OWq0WwvNgAuwTMoPdol0jO6CYV2ivR
-         OHx4ZXSYNjkrpm5+rzZOZDg44ilUkw88WAHaX8o+ifulx8aNK4IvdA9m5jFCv0FPvd1Y
-         StpJsSw+ooHto5e6W30hSSPGGGVPbujr6pcei636Lx+W/Sdt3wybgv4LArbBAnrUOAKv
-         oa2OhHjOtXhZQxjOQTjC6KoGfm96JrjDyb+MOAXpNuV0/y1QIlelheXlyMbCr6CzmVK1
-         z1cUJxufpC4FXUpTXyOJK1BjuttDj2IkVtOUoVnttwAXEYZ37p9p5D/iH/QEIRuU7YHl
-         IYdA==
-X-Gm-Message-State: APjAAAWCx4IPmT0rR8mswayqa2fSxP+X5+2xMnTIUmXFZk+s3OJzTDo4
-        NM4NRRc4QparS7ucC5k7Uw9Jyg==
-X-Google-Smtp-Source: APXvYqwnCJSY4qtZ7kymnYu1kgm3Uhuar+q6RGBXskfZIuUzafYfZ2/iUKFWx9ZMKj9AsQkvvGYPBA==
-X-Received: by 2002:a0c:d1a7:: with SMTP id e36mr9417888qvh.127.1553279072035;
-        Fri, 22 Mar 2019 11:24:32 -0700 (PDT)
-Received: from tpx230-nicolas.collaboramtl (modemcable154.55-37-24.static.videotron.ca. [24.37.55.154])
-        by smtp.gmail.com with ESMTPSA id a47sm6669995qtb.79.2019.03.22.11.24.30
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 22 Mar 2019 11:24:31 -0700 (PDT)
-Message-ID: <3e804c622fdc0ce43581982d81d2db67597508ec.camel@ndufresne.ca>
-Subject: Re: [RFC PATCH 18/20] lib: image-formats: Add v4l2 formats support
-From:   Nicolas Dufresne <nicolas@ndufresne.ca>
-To:     Ville =?ISO-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-Cc:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-media@vger.kernel.org, Daniel Stone <daniels@collabora.com>
-Date:   Fri, 22 Mar 2019 14:24:29 -0400
-In-Reply-To: <20190321214455.GL3888@intel.com>
-References: <20190320142739.GK3888@intel.com>
-         <a13f7fdeaf1a5e97f21a6048da765705b59d64c2.camel@ndufresne.ca>
-         <20190320160939.GR3888@intel.com>
-         <f3f8749e30aad81bc39ed9b60cd308ac5f3c6707.camel@ndufresne.ca>
-         <20190320164133.GT3888@intel.com>
-         <d46b30ca8962d3c31b1273cf010ca9fb7b145fe8.camel@ndufresne.ca>
-         <20190320183914.GV3888@intel.com>
-         <46df4fb13636b90c147839b0aa5ad1ac33030461.camel@bootlin.com>
-         <20190321163532.GG3888@intel.com>
-         <ac5329d77f83af2804c240ebe479ec323b60aec3.camel@ndufresne.ca>
-         <20190321214455.GL3888@intel.com>
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
-        boundary="=-DLJTG7WJUtgUvCkmt9/r"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Fri, 22 Mar 2019 14:26:56 -0400
+Received: from [192.168.1.110] ([95.115.33.167]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MA7b8-1hIuOI130c-00BZEf; Fri, 22 Mar 2019 19:26:48 +0100
+Subject: Re: [PATCH] Respond:add support for SUNIX Multi-I/O board
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Morris Ku <saumah@gmail.com>, gregkh <gregkh@linuxfoundation.org>,
+        morris_ku@sunix.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190315100614.25027-1-saumah@gmail.com>
+ <ef1abb26-4c88-1b11-da25-f6891bee0e21@metux.net>
+ <CAK8P3a1TkKtG3E3U0xxpJrf=qph0dkn27Apd99EaHMAPOfPtpw@mail.gmail.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <a2758c4b-ac49-e731-46b0-6990c3534da7@metux.net>
+Date:   Fri, 22 Mar 2019 19:26:46 +0100
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
+In-Reply-To: <CAK8P3a1TkKtG3E3U0xxpJrf=qph0dkn27Apd99EaHMAPOfPtpw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:bSe+Olam9USK9i2uYUIcf8hKg6LQRrsne84NaUsaxvdAPmTH7Vu
+ jxi81wIAfHi2SxTORg+ez2mHiaif6iujtitzIni8fIVIluwYRSsqdLiO1kmUDfD4ULjdaEn
+ HXAUA0Sc8WbboA+skoVt0A2IYBggn75ZefrRDa2ldFVE57l7bzvI3LRa+Lh0e+KLjjqc3c4
+ jFdpn9Y3i7Qz+xqNBQz4Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:fOXTrWO7Pzo=:NiLwjYy//DnkBhhDbobLwZ
+ 8NA0ee1rEB3H6+WDbIN3hPzq6iL+95K9bpvaDIy1rPfwfkMm1EDbLIstIEU3f6cgn4aozsrNA
+ l6PYiIkn5zxyQMEi7Q0KfLFXsxvBgPY9BqtKL4Wgd2Tqk9SRH2ljZJ34LvT37o6fHwtojfnPU
+ akn1J+TpsFal5ySNH+kB8vl1XsdNaqnsaHY2y/F79KQyybll591ji41C0hRjQ4AJcFu66TrXQ
+ +teJ3J3KrKpJ/sR///ztuJ8oeDZV7Mto+TfIhrifCB8UoVvg7DiQbxfNQL5TEj6T7bRFG8/8U
+ aTdTWSya1IMVUIgsgtcafdWz5gIeGt08DIr19wbUGMejSZJ3rDVqf2YLT9dAq3jTTObtQlFkA
+ 4bNXwHpFE7Y/e7625lUZk6VT7yi6PKHgOQyVIpVU9jV6LHzLaSUQdG6VhKSgmvV2gkecgd2Bq
+ qT2y+vpJoP7Ag9lm7uhkFw+nVCNUdxHDC3rb2HpIF92gy2GzdYqCZNMGo/K1IWk3/tTi8yB8z
+ ACjaUEhhvAgtCjSj8PUAgUuT82FxXlN2ZIqPN3dW7FbX+yW5HXCcCx4LmXlwKhzsLZa47F8FE
+ MeotpFARtX5vZb+baTyvasxQz1KzUXP7qIeT4jegN5cVd7jfsG3KVB1d1zZx3qLJQ8WGsEAzb
+ ZJV/mjkjrFT1CGsTYcSKMkzC8rOevGR6COuVppklXO/dl54rMzSIgRBhWZz+zqCNifquaLtHC
+ 21ZXzS2L7xHM3dsRulV9w8GiMYE9YuvqZkUCURwwXFld713IAYH0UsNTjxE=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 21.03.19 09:53, Arnd Bergmann wrote:
 
---=-DLJTG7WJUtgUvCkmt9/r
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+> I think serial port drivers typically have a limit on the number of
+> ports, so we likely need the same here. 
 
-Le jeudi 21 mars 2019 =C3=A0 23:44 +0200, Ville Syrj=C3=A4l=C3=A4 a =C3=A9c=
-rit :
-> On Thu, Mar 21, 2019 at 03:14:06PM -0400, Nicolas Dufresne wrote:
-> > Le jeudi 21 mars 2019 =C3=A0 18:35 +0200, Ville Syrj=C3=A4l=C3=A4 a =C3=
-=A9crit :
-> > > > I'm not sure what it's worth, but there is a "pixel format guide"
-> > > > project that is all about matching formats from one API to another:=
-=20
-> > > > https://afrantzis.com/pixel-format-guide/ (and it has an associated
-> > > > tool too).
-> > > >=20
-> > > > On the page about DRM, it seems that they got the word that DRM for=
-mats
-> > > > are the native pixel order in little-endian systems:
-> > > > https://afrantzis.com/pixel-format-guide/drm.html
-> > >=20
-> > > Looks consistent with the official word in drm_fourcc.h.
-> > >=20
-> > > $ python3 -m pfg find-compatible V4L2_PIX_FMT_XBGR32 drm
-> > > Format: V4L2_PIX_FMT_XBGR32
-> > > Is compatible on all systems with:
-> > >         DRM_FORMAT_XRGB8888
-> > > Is compatible on little-endian systems with:
-> > > Is compatible on big-endian systems with:
-> > >=20
-> > > $ python3 -m pfg find-compatible DRM_FORMAT_XRGB8888 v4l2
-> > > Format: DRM_FORMAT_XRGB8888
-> > > Is compatible on all systems with:
-> > >         V4L2_PIX_FMT_XBGR32
-> > > Is compatible on little-endian systems with:
-> > > Is compatible on big-endian systems with:
-> > >=20
-> > > Even works both ways :)
-> > >=20
-> > > > Perhaps some drivers have been abusing the format definitions, lead=
-ing
-> > > > to the inconsistencies that Nicolas could witness?
-> > >=20
-> > > That is quite possible, perhaps even likely. No one really
-> > > seems interested in making sure big endian systems actually
-> > > work properly. I believe the usual approach is to hack
-> > > around semi-rnadomly until the correct colors accidentally
-> > > appear on the screen.
-> >=20
-> > We did not hack around randomly. The code in GStreamer is exactly what
-> > the DRM and Wayland dev told us to do (they provided the initial
-> > patches to make it work). These are initially patches from Intel for
-> > what it's worth (see the wlvideoformat.c header [0]). Even though I
-> > just notice that in this file, it seems that we ended up with a
-> > different mapping order for WL and DRM format in 24bit RGB (no
-> > padding), clearly is a bug. That being said, there is no logical
-> > meaning for little endian 24bit RGB, you can't load a pixel on CPU in a
-> > single op.
->=20
-> To me little endian just means "little end comes first". So if
-> you think of things as just a stream of bytes CPU word size
-> etc. doesn't matter. And I guess if you really wanted to you
-> could even make a CPU with 24bit word size.=20
->=20
-> Anyways, to make things more clear drm_fourcc.h could probably
-> document things better by showing explicitly which bits go into
-> which byte.
->=20
-> I don't know who did what patches for whatever project, but
-> clearly something has been lost in translation at some point.
->=20
-> > Just saying since I would not know which one of the two
-> > mapping here is right. I would probably have to go testing what DRM
-> > drivers do, which may not mean anything. I would also ask and get
-> > contradictory answers.
-> >=20
-> > I have never myself tested these on big endian drivers though, as you
-> > say, nobody seems to care about graphics on those anymore. So the easy
-> > statement is to say they are little endian, like you just did, and
-> > ignore the legacy, but there is some catch. YUV formats has been added
-> > without applying this rules.
->=20
-> All drm formats follow the same rule (ignoring the recently added
-> non-byte aligned stuff which I guess don't really follow any rules).
->=20
-> > So V4L2 YUYV match YUYV in DRM format name
-> > instead of little endian UYVY. (at least 4 tested drivers implements it
-> > this way). Same for NV12, for which little endian CPU representation
-> > would swap the UV paid on a 16bit word.
->=20
-> DRM NV12 and YUYV (YUY2) match the NV12 and YUY2 defined here
-> https://docs.microsoft.com/en-us/windows/desktop/medfound/recommended-8-b=
-it-yuv-formats-for-video-rendering
+Except for earlycon (haven't had a closer look at it yet), I don't see
+any hard reason for that (maybe Greg could give us more insight here).
+I seriously doubt that these boards could be relevant for earlycon.
+(hard to find a machine that needs serial earlycon while not having some
+uart on-board ;-))
 
-Problem is that these are all expressed MSB first like (the way V4L2
-and GStreamer do appart for the padding X, which is usually first in
-V4L2). Let's say you have 2 pixels of YUYV in a 32bit buffer.
+> However the number of boards should not be limited in the mfd driver
+> that just exports the serial ports to the serial driver.
 
-   buf[0] =3D Y
-   buf[1] =3D U
-   buf[2] =3D Y
-   buf[3] =3D V
+Exactly. And there should be any global arrays for these boards, where
+every access runs through. Or even worse: looping through it, to find
+the right entry, within ISRs.
 
-While with LSB first (was this what you wanted to say ?), this format
-would be VYUY as:
+>>> +> +static int snx_ser_port_total_cnt;
+>>> +> +static int snx_par_port_total_cnt;
+>>> +> +
+>>> +> +int snx_board_count;
+>>> +> +
+>>> +> +static struct snx_ser_driver sunix_ser_reg = {
+>>> +> +     .dev_name = "ttySNX",
+>>> +> +     .major = 0,
+>>> +> +     .minor = 0,
+>>> +> +     .nr = (SNX_SER_TOTAL_MAX + 1),
+>>> +> +};
+>>> +
+>>> +can't this be const ?
+>>> +
+>>> i prefer keep it in current format.
+>>
+>> Why ? do you ever have to write into this struct ?
+> 
+> I think this will just go away after the rewrite into a proper
+> layered driver, so it doesn't matter.
 
-  buf[0] =3D V
-  buf[1] =3D Y
-  buf[2] =3D U
-  buf[3] =3D Y
+That's exactly the point, which I've been repeating over and over again.
 
-But I tested this format on i915, xlnx, msm and imx drm drivers, and
-they are all mapped as MSB. The LSB version of NV12 is called NV21 in
-MS pixel formats. It would be really confusing if the LSB rule was to
-be applied to these format in my opinion, because the names don't
-explicitly express the placement for the components.
+By the way, one more weird thing that slipped trough my previous
+reviews: he's redefining standard structs and typecasting them.
+Actually, he copy+paste'd large parts of the serial and parport
+subsystems.
 
-Anyway, to cut short, as per currently tested implementation of DRM
-driver, we can keep the RGB mapping static (reversed) for now, but for
-Maxime, who probably have no clue about all this, the YUYV mapping is
-correct in this patch (in as of currently tested drivers).
+> The best way I can think of to do this would be to have a nested
+> irqchip in the mfd driver that handles the per-board interrupt and
+> provides a unique irq number to the individual port drivers.
+> This makes a very simple irq handler in the port driver, and keeps
+> the multiplexing where it belongs.
 
->=20
-> > To me, all the YUV stuff is the right way, because this is what the
-> > rest of the world is doing, it's not ambiguous.
-> >=20
-> > [0] https://gitlab.freedesktop.org/gstreamer/gst-plugins-bad/blob/maste=
-r/ext/wayland/wlvideoformat.c#L86
-> >=20
-> >=20
-> >=20
-> > Nicolas
+Exactly. That's the way it works w/ lot's of other composite devices.
+(I recall some exotic daq cards that work similar way)
 
---=-DLJTG7WJUtgUvCkmt9/r
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+@Morris: please try to find a fitting generic, configurable irqchip
+driver first. If you don't find one, talk to us and give us a detailed
+explaination how that part of your cards actually works, so we could
+write some generic driver. I might have some customer specific devices
+that could also benefit from that.
 
------BEGIN PGP SIGNATURE-----
+--mtx
 
-iF0EABECAB0WIQSScpfJiL+hb5vvd45xUwItrAaoHAUCXJUoXQAKCRBxUwItrAao
-HNfwAJ0Q6/LrSfs51oL6YyfmAEMMAdtmdACgppnNFsYdP0FjeGR/AoJxNxPbmOE=
-=sAhk
------END PGP SIGNATURE-----
-
---=-DLJTG7WJUtgUvCkmt9/r--
-
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
