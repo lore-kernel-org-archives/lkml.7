@@ -2,122 +2,118 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F772C10F03
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:43:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A691C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:43:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5C98218B0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:43:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MyOtSiFp"
+	by mail.kernel.org (Postfix) with ESMTP id 1BD1B21925
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:43:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553255030;
+	bh=w+cepwSnOmi66ScD4nBO891002H5ueMKqz6jXNeTZUM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=PWSJorKCNKQsv0Tanvm13bkY4FfU9YBgIUh1pFmZxp2zN+NO01OY6rdDhCGsymS6/
+	 8JgkH3dHgJvzruPAiUBxvl1yXwP9Gr9vE2Mm5y5B7roTBIX99YTA8dG0beUGjEpO/G
+	 Rj9fU+5wPh8ehaA14BaIhxSk9ye3c+GyCcLJ3DKg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731720AbfCVLnp (ORCPT
+        id S1731731AbfCVLns (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:43:45 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:38509 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730287AbfCVLnn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:43:43 -0400
-Received: by mail-lj1-f195.google.com with SMTP id p14so795372ljg.5
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 04:43:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=WrrOAdIl29CqUMATgYYAV3iygiD0JbDr1tHUUwiRwT8=;
-        b=MyOtSiFpyiIbOfbTuuvF9mg25nst8need3cfrO5Qfj+HE+ZrttylWRjai3GnB/rXx3
-         1e3LhFbdyOIBb7ibIe49q2jw1wHwhuRXcMhzsEcE/QGngCscH8fXz2T3GHIXndVdLx4x
-         dPHp6oevHX0p7+uTnHSk3LnQvD/xjAQXN5sByW3wOPiM9io1kLiWu6XG1NlK1zHRCe8D
-         2RTFYa9SFLrR0djl0wbR8LtK6ch5Ssaq2cuL5C3duA0gh9BNap7g55tP98F5X7YVraZt
-         2SwgzR0BEXdAZ7rhawH8eNkuO2WhB/1UkCbqqysmcN8iGFSfc1rP3qPSi3ohifUv+c5N
-         XWqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=WrrOAdIl29CqUMATgYYAV3iygiD0JbDr1tHUUwiRwT8=;
-        b=Sry/Njn4ryHFykuVhNbFRA9yYU2rRDOb3fGUjZqhCtQzdFkTQTBoZO6/35X5ct5e3X
-         iivM08l/r/MReRCPOMXRGcQL8gERzEu1EjSvEE8GEsM6lC+Kuj4zcHCwdviYAUVUF441
-         TQ1rzWaiq2WZjrPDG6zGygNXzZWfVKV7Jp2vX7tQ6Ai/CTuwmfSRq7XT/hO1t2ZdgHy6
-         CCWBMhsv9lX/LJEkH9U+mKNwKhtyxvr0xMvo3RbUtZyUmVDnncCJ57OxK4rbG2k9U3iP
-         U4iZiPgBHDuLNDKDdWKfCGecsAYH9fgMjCwa2UQqhNS+rTRKLbgoOd5/pdSsQbk8UNaK
-         SzPA==
-X-Gm-Message-State: APjAAAW97JsMXqHtu40FwUZ2NbHAlhe8T+T3XazztnUA4efcHCY8/qrl
-        zkN5aB/rPF1tQ7oVCzPw7r3W4A==
-X-Google-Smtp-Source: APXvYqyssS6vRkAA/avsOWYA/D/4+0xMYne1kWwKAqdu2Lur77L6oDXzO3vJubJWJ3OsIjkSK/1jqA==
-X-Received: by 2002:a2e:9d04:: with SMTP id t4mr5174777lji.80.1553255020984;
-        Fri, 22 Mar 2019 04:43:40 -0700 (PDT)
-Received: from localhost.localdomain (h-158-174-22-210.NA.cust.bahnhof.se. [158.174.22.210])
-        by smtp.gmail.com with ESMTPSA id x3sm339841lfn.64.2019.03.22.04.43.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 22 Mar 2019 04:43:40 -0700 (PDT)
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-To:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>, Alex Dubov <oakad@yahoo.com>,
-        Alex Dubov <alex.dubov@gmail.com>,
-        Maxim Levitsky <maximlevitsky@gmail.com>
-Subject: [PATCH 1/2] MAINTAINERS: Collect TI FLASH MEDIA drivers into one section
-Date:   Fri, 22 Mar 2019 12:43:34 +0100
-Message-Id: <20190322114334.26482-1-ulf.hansson@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Fri, 22 Mar 2019 07:43:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46506 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731714AbfCVLno (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:43:44 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2650C218B0;
+        Fri, 22 Mar 2019 11:43:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553255023;
+        bh=w+cepwSnOmi66ScD4nBO891002H5ueMKqz6jXNeTZUM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=EsUiKyo2vpi49eIB2L4z8P1tx2euvFNNfcR+W+DM1SpIrm57l0+APjIERuMvd0ZDp
+         SFx4fWIb5BzC4wgrx9jI8m6HOFhgx76k5diZ71O+Bk+6htJeFfRppv8ldADiCHWQ+5
+         FapMyhwPhQ73+el3RUCgfJbbBff0VMHhHQ0ooVG4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Finn Thain <fthain@telegraphics.com.au>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: [PATCH 4.9 065/118] m68k: Add -ffreestanding to CFLAGS
+Date:   Fri, 22 Mar 2019 12:15:37 +0100
+Message-Id: <20190322111221.246643186@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190322111215.873964544@linuxfoundation.org>
+References: <20190322111215.873964544@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current SONY MEMORYSTICK CARD SUPPORT section is pointing to the TI
-flash media memorystick driver, which is a bit confusing. Let's make this
-more clear by moving this part into TI FLASH MEDIA INTERFACE DRIVER
-section, but rename the section to TI FLASH MEDIA MEMORYSTICK/MMC DRIVERS,
-as to make it more clear.
+4.9-stable review patch.  If anyone has any objections, please let me know.
 
-Finally, add Alex Dubov to the SONY MEMORYSTICK STANDARD SUPPORT, as I
-believe that has been the intention.
+------------------
 
-Cc: Alex Dubov <oakad@yahoo.com>
-Cc: Alex Dubov <alex.dubov@gmail.com>
-Cc: Maxim Levitsky <maximlevitsky@gmail.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+From: Finn Thain <fthain@telegraphics.com.au>
+
+commit 28713169d879b67be2ef2f84dcf54905de238294 upstream.
+
+This patch fixes a build failure when using GCC 8.1:
+
+/usr/bin/ld: block/partitions/ldm.o: in function `ldm_parse_tocblock':
+block/partitions/ldm.c:153: undefined reference to `strcmp'
+
+This is caused by a new optimization which effectively replaces a
+strncmp() call with a strcmp() call. This affects a number of strncmp()
+call sites in the kernel.
+
+The entire class of optimizations is avoided with -fno-builtin, which
+gets enabled by -ffreestanding. This may avoid possible future build
+failures in case new optimizations appear in future compilers.
+
+I haven't done any performance measurements with this patch but I did
+count the function calls in a defconfig build. For example, there are now
+23 more sprintf() calls and 39 fewer strcpy() calls. The effect on the
+other libc functions is smaller.
+
+If this harms performance we can tackle that regression by optimizing
+the call sites, ideally using semantic patches. That way, clang and ICC
+builds might benfit too.
+
+Cc: stable@vger.kernel.org
+Reference: https://marc.info/?l=linux-m68k&m=154514816222244&w=2
+Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- MAINTAINERS | 11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
+ arch/m68k/Makefile |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e17ebf70b548..61bdbade3daf 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14463,14 +14463,9 @@ T:	git git://linuxtv.org/media_tree.git
- S:	Maintained
- F:	drivers/media/i2c/imx355.c
+--- a/arch/m68k/Makefile
++++ b/arch/m68k/Makefile
+@@ -58,7 +58,10 @@ cpuflags-$(CONFIG_M5206e)	:= $(call cc-o
+ cpuflags-$(CONFIG_M5206)	:= $(call cc-option,-mcpu=5206,-m5200)
  
--SONY MEMORYSTICK CARD SUPPORT
--M:	Alex Dubov <oakad@yahoo.com>
--W:	http://tifmxx.berlios.de/
--S:	Maintained
--F:	drivers/memstick/host/tifm_ms.c
--
- SONY MEMORYSTICK STANDARD SUPPORT
- M:	Maxim Levitsky <maximlevitsky@gmail.com>
-+M:	Alex Dubov <oakad@yahoo.com>
- S:	Maintained
- F:	drivers/memstick/core/ms_block.*
- 
-@@ -15497,9 +15492,11 @@ S:	Maintained
- F:	drivers/net/ethernet/ti/cpsw*
- F:	drivers/net/ethernet/ti/davinci*
- 
--TI FLASH MEDIA INTERFACE DRIVER
-+TI FLASH MEDIA MEMORYSTICK/MMC DRIVERS
- M:	Alex Dubov <oakad@yahoo.com>
- S:	Maintained
-+W:	http://tifmxx.berlios.de/
-+F:	drivers/memstick/host/tifm_ms.c
- F:	drivers/misc/tifm*
- F:	drivers/mmc/host/tifm_sd.c
- F:	include/linux/tifm.h
--- 
-2.17.1
+ KBUILD_AFLAGS += $(cpuflags-y)
+-KBUILD_CFLAGS += $(cpuflags-y) -pipe
++KBUILD_CFLAGS += $(cpuflags-y)
++
++KBUILD_CFLAGS += -pipe -ffreestanding
++
+ ifdef CONFIG_MMU
+ # without -fno-strength-reduce the 53c7xx.c driver fails ;-(
+ KBUILD_CFLAGS += -fno-strength-reduce -ffixed-a2
+
 
