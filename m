@@ -2,145 +2,131 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40098C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:44:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7551FC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:44:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10AB7218FE
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:44:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4455C21900
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:44:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553258642;
-	bh=hzjXXs8xbRm9nyxnKzv9zVoVgPK+PlgRVrR9cFiHgxI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y4pY0q/JxQU8ClPECl7Qxa5OfK1Oidy92jkJwb0hPPQR3ftwWxZq90G55y8JyQpbq
-	 I/6EgGrBHqX0oGbjL6Wf1uWm+9zPt4fKx4s4nNjUqFMb8ZnhMBCi0z8yPWTVFpwK3n
-	 kwbhAVgidReo5DMuV3z4Qpm0h0odWfHc99gSdZAY=
+	s=default; t=1553258646;
+	bh=8kUI5uTiuueVp3cVVoGS+3+sacqpOELCdMke7xRFe80=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dt3+8MT5Pr/Q3r9H4XqtObRqXSdrmgzcqMVli90h8fc93BouxJF1HAvSZiLiQz3O5
+	 btOlSSgKpJu9gmmH1ii7CXn9rQrHiI84waR1TwCRNp1wbI2UwAd/yr/VrWA8oT7fxY
+	 hpbWTPWvSsa14LBKo4/hFNQABMB6RQHVoB4QDPCU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387771AbfCVMCY (ORCPT
+        id S2388635AbfCVMoE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:02:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40378 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732217AbfCVMCT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:02:19 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E9353204FD;
-        Fri, 22 Mar 2019 12:02:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256138;
-        bh=hzjXXs8xbRm9nyxnKzv9zVoVgPK+PlgRVrR9cFiHgxI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GF3Wy0MMBo389Nv1dT1bphSZX91oqV6iA/J3c7eW4PeM/Yze5NJj0kw++CBJ/3BqV
-         tBI+bwelG3iA2htfC7EmtYOb1h2tVZ466ficrAzuUYXsF5GIt28agiPyoC9JPHdInA
-         g0yzUcv/ursq8tE9PPqpzy86O8rmOSMV818J3aLI=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Craig Gallek <kraig@google.com>,
-        Alban Crequy <alban@kinvolk.io>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 102/280] bpf, lpm: fix lookup bug in map_delete_elem
-Date:   Fri, 22 Mar 2019 12:14:15 +0100
-Message-Id: <20190322111312.336070173@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
-References: <20190322111306.356185024@linuxfoundation.org>
-User-Agent: quilt/0.65
-X-stable: review
-X-Patchwork-Hint: ignore
+        Fri, 22 Mar 2019 08:44:04 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34726 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388354AbfCVMCX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:02:23 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 37D71AF49;
+        Fri, 22 Mar 2019 12:02:21 +0000 (UTC)
+Date:   Fri, 22 Mar 2019 13:02:19 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        logang@deltatee.com, osalvador@suse.de, hannes@cmpxchg.org,
+        akpm@linux-foundation.org, richard.weiyang@gmail.com,
+        rientjes@google.com, zi.yan@cs.rutgers.edu
+Subject: Re: [RFC] mm/hotplug: Make get_nid_for_pfn() work with
+ HAVE_ARCH_PFN_VALID
+Message-ID: <20190322120219.GI32418@dhcp22.suse.cz>
+References: <1553155700-3414-1-git-send-email-anshuman.khandual@arm.com>
+ <20190321083639.GJ8696@dhcp22.suse.cz>
+ <621cc94c-210d-6fd4-a2e1-b7cfce733cf3@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <621cc94c-210d-6fd4-a2e1-b7cfce733cf3@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.19-stable review patch.  If anyone has any objections, please let me know.
+On Fri 22-03-19 11:49:30, Anshuman Khandual wrote:
+> 
+> 
+> On 03/21/2019 02:06 PM, Michal Hocko wrote:
+> > On Thu 21-03-19 13:38:20, Anshuman Khandual wrote:
+> >> Memory hot remove uses get_nid_for_pfn() while tearing down linked sysfs
+> >> entries between memory block and node. It first checks pfn validity with
+> >> pfn_valid_within() before fetching nid. With CONFIG_HOLES_IN_ZONE config
+> >> (arm64 has this enabled) pfn_valid_within() calls pfn_valid().
+> >>
+> >> pfn_valid() is an arch implementation on arm64 (CONFIG_HAVE_ARCH_PFN_VALID)
+> >> which scans all mapped memblock regions with memblock_is_map_memory(). This
+> >> creates a problem in memory hot remove path which has already removed given
+> >> memory range from memory block with memblock_[remove|free] before arriving
+> >> at unregister_mem_sect_under_nodes().
+> > 
+> > Could you be more specific on what is the actual problem please? It
+> > would be also helpful to mention when is the memblock[remove|free]
+> > called actually.
+> 
+> The problem is in unregister_mem_sect_under_nodes() as it skips calling into both
+> instances of sysfs_remove_link() which removes node-memory block sysfs symlinks.
+> The node enumeration of the memory block still remains in sysfs even if the memory
+> block itself has been removed.
+> 
+> This happens because get_nid_for_pfn() returns -1 for a given pfn even if it has
+> a valid associated struct page to fetch the node ID from.
+> 
+> On arm64 (with CONFIG_HOLES_IN_ZONE)
+> 
+> get_nid_for_pfn() -> pfn_valid_within() -> pfn_valid -> memblock_is_map_memory()
+> 
+> At this point memblock for the range has been removed.
+> 
+> __remove_memory()
+> 	memblock_free()
+> 	memblock_remove()	--------> memblock has already been removed
+> 	arch_remove_memory()
+> 		__remove_pages()
+> 			__remove_section()
+> 				unregister_memory_section()
+>  					remove_memory_section()
+> 						unregister_mem_sect_under_nodes()
+> 
+> There is a dependency on memblock (after it has been removed) through pfn_valid().
 
-------------------
+Can we reorganize or rework the code that the memblock is removed later?
+I guess this is what Oscar was suggesting.
 
-[ Upstream commit 7c0cdf0b3940f63d9777c3fcf250a2f83859ca54 ]
+Or ...
 
-trie_delete_elem() was deleting an entry even though it was not matching
-if the prefixlen was correct. This patch adds a check on matchlen.
+> >> During runtime memory hot remove get_nid_for_pfn() needs to validate that
+> >> given pfn has a struct page mapping so that it can fetch required nid. This
+> >> can be achieved just by looking into it's section mapping information. This
+> >> adds a new helper pfn_section_valid() for this purpose. Its same as generic
+> >> pfn_valid().
+> > 
+> > I have to say I do not like this. Having pfn_section_valid != pfn_valid_within
+> > is just confusing as hell. pfn_valid_within should return true whenever
+> > a struct page exists and it is sensible (same like pfn_valid). So it
+> > seems that this is something to be solved on that arch specific side of
+> > pfn_valid.
+> 
+> At present arm64's pfn_valid() implementation validates the pfn inside sparse
+> memory section mapping as well memblock. The memblock search excludes memory
+> with MEMBLOCK_NOMAP attribute. But in this particular instance during hotplug
+> only section mapping validation for the pfn is good enough.
+> 
+> IIUC the current arm64 pfn_valid() already extends the definition beyond the
+> availability of a valid struct page to operate on.
 
-Reproducer:
-
-$ sudo bpftool map create /sys/fs/bpf/mylpm type lpm_trie key 8 value 1 entries 128 name mylpm flags 1
-$ sudo bpftool map update pinned /sys/fs/bpf/mylpm key hex 10 00 00 00 aa bb cc dd value hex 01
-$ sudo bpftool map dump pinned /sys/fs/bpf/mylpm
-key: 10 00 00 00 aa bb cc dd  value: 01
-Found 1 element
-$ sudo bpftool map delete pinned /sys/fs/bpf/mylpm key hex 10 00 00 00 ff ff ff ff
-$ echo $?
-0
-$ sudo bpftool map dump pinned /sys/fs/bpf/mylpm
-Found 0 elements
-
-A similar reproducer is added in the selftests.
-
-Without the patch:
-
-$ sudo ./tools/testing/selftests/bpf/test_lpm_map
-test_lpm_map: test_lpm_map.c:485: test_lpm_delete: Assertion `bpf_map_delete_elem(map_fd, key) == -1 && errno == ENOENT' failed.
-Aborted
-
-With the patch: test_lpm_map runs without errors.
-
-Fixes: e454cf595853 ("bpf: Implement map_delete_elem for BPF_MAP_TYPE_LPM_TRIE")
-Cc: Craig Gallek <kraig@google.com>
-Signed-off-by: Alban Crequy <alban@kinvolk.io>
-Acked-by: Craig Gallek <kraig@google.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- kernel/bpf/lpm_trie.c                      |  1 +
- tools/testing/selftests/bpf/test_lpm_map.c | 10 ++++++++++
- 2 files changed, 11 insertions(+)
-
-diff --git a/kernel/bpf/lpm_trie.c b/kernel/bpf/lpm_trie.c
-index 9058317ba9de..4f3138e6ecb2 100644
---- a/kernel/bpf/lpm_trie.c
-+++ b/kernel/bpf/lpm_trie.c
-@@ -432,6 +432,7 @@ static int trie_delete_elem(struct bpf_map *map, void *_key)
- 	}
- 
- 	if (!node || node->prefixlen != key->prefixlen ||
-+	    node->prefixlen != matchlen ||
- 	    (node->flags & LPM_TREE_NODE_FLAG_IM)) {
- 		ret = -ENOENT;
- 		goto out;
-diff --git a/tools/testing/selftests/bpf/test_lpm_map.c b/tools/testing/selftests/bpf/test_lpm_map.c
-index 147e34cfceb7..02d7c871862a 100644
---- a/tools/testing/selftests/bpf/test_lpm_map.c
-+++ b/tools/testing/selftests/bpf/test_lpm_map.c
-@@ -474,6 +474,16 @@ static void test_lpm_delete(void)
- 	assert(bpf_map_lookup_elem(map_fd, key, &value) == -1 &&
- 		errno == ENOENT);
- 
-+	key->prefixlen = 30; // unused prefix so far
-+	inet_pton(AF_INET, "192.255.0.0", key->data);
-+	assert(bpf_map_delete_elem(map_fd, key) == -1 &&
-+		errno == ENOENT);
-+
-+	key->prefixlen = 16; // same prefix as the root node
-+	inet_pton(AF_INET, "192.255.0.0", key->data);
-+	assert(bpf_map_delete_elem(map_fd, key) == -1 &&
-+		errno == ENOENT);
-+
- 	/* assert initial lookup */
- 	key->prefixlen = 32;
- 	inet_pton(AF_INET, "192.168.0.1", key->data);
+is there any way to record that nomap information into the section
+instead. It looks rather weird that this information is spread into two
+data structures and it makes pfn_valid more expensive at the same time.
 -- 
-2.19.1
-
-
-
+Michal Hocko
+SUSE Labs
