@@ -2,164 +2,105 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA0A4C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 17:25:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D80A9C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 17:27:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A8FC20850
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 17:25:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0C2820657
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 17:27:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dUVK5Sia"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="Ssg9jzJR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728931AbfCVRZh (ORCPT
+        id S1728486AbfCVR1P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 13:25:37 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:38086 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727741AbfCVRZg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 13:25:36 -0400
-Received: by mail-wm1-f68.google.com with SMTP id a188so2929136wmf.3
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 10:25:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=worEQNaoJLYeD7mblzWWmpJ8BvsIgSttCy+a9olDJxw=;
-        b=dUVK5SiaSMke7aU5k6wJk+NOLiodivaeMMsV8g1Z/3w2CKHg8WNtCrQ25fQnXEXHgd
-         kMAih97gsZbS+MXnMcEHFXeRkEfR9B88UBTRkPaIG+w8MQGYEFtu5oGr8F+WuYQFnihS
-         DyoC0weVf94LbQDU9Kr4mCWkiz7ekQxkq25A2jDOjGRAXUJASzm5gnhjuEAnA1wCPYKu
-         j8fHPwXkPco0WLzx0/3os854OLNoGvwrz7/skoz1srpXPwXEtfRz/TRkjinWqf3IKfXL
-         VKv0rH7akZvymgzKO15Z6FZIIllzGO8H96N8wN7NrWgLeplN3193hXhfF2atNPI9Pgr+
-         mkKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=worEQNaoJLYeD7mblzWWmpJ8BvsIgSttCy+a9olDJxw=;
-        b=E1GNurBjBvqukm2pttyrA3D74Ch/5Uqp39DkN5LZqGfQ9CNCdr8+jM21taw/DIEIwS
-         f5nKPJS4opPfV77yFlS0pk7dJ/lV7gfzbo0oicxEK+LJhpNE4FAbw8NrDEd99J9xbUgR
-         mFV8gJbQCrZnJZ3pVT9quXvpc/ve9zoq+IL6oyPzl/y7aFMzjLBIjLG8TEJghjxSdqIO
-         1stvAZ6j+i6VIChwmZ1Le1lPzNtZs0udYlKuMioSn14UgmjGf7+FT0zRYvJ3TUQpuqd0
-         CIORG14xaHh5l0UT++/hwQrq8CPN7MLPP8CnoV4aKurIxq78HEgDZmSt4JAARiO9f9iC
-         LgRA==
-X-Gm-Message-State: APjAAAWu7qRRN3KzUavhW2/8vh54wy6I827wVgvm36Gl9zUa2jjtFUpN
-        FB7BR6u1wPSNBjnJS5H1OI7JGq/DZ6s/YZM+tTM=
-X-Google-Smtp-Source: APXvYqyNCZha/ubxFy89tCu22AE619KcNJRZPj2DdwUfudMmRBJP5mtk8E29o6h6Hqccxf8RK0WsuGMYAM6/d+P30WE=
-X-Received: by 2002:a05:600c:218:: with SMTP id 24mr3838767wmi.144.1553275533864;
- Fri, 22 Mar 2019 10:25:33 -0700 (PDT)
+        Fri, 22 Mar 2019 13:27:15 -0400
+Received: from mail-eopbgr690110.outbound.protection.outlook.com ([40.107.69.110]:22500
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727741AbfCVR1O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 13:27:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5hhqcsQB0rrX0DcG8RkkzffGiQY7ware5mtAA6pSQD8=;
+ b=Ssg9jzJRu0Tv8VPUnxFWsIAI/iwCjJabee2Xks6cTAdW+FuIU52aaisqTimaY9OPJTItGB8KTpAWsJB5l49IRX8xfmj46taO3y5OJEuBZ0W0jNDxCUZ2O8nZ/2Sv2WbUOKu/Ayja8Du585eKD5E0GxAn5UAl8biw2R5BRxJoOKo=
+Received: from DM5PR21MB0747.namprd21.prod.outlook.com (10.173.172.13) by
+ DM5PR21MB0153.namprd21.prod.outlook.com (10.173.173.16) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1750.5; Fri, 22 Mar 2019 17:27:12 +0000
+Received: from DM5PR21MB0747.namprd21.prod.outlook.com
+ ([fe80::3d1e:56c2:2b7:cf91]) by DM5PR21MB0747.namprd21.prod.outlook.com
+ ([fe80::3d1e:56c2:2b7:cf91%8]) with mapi id 15.20.1750.002; Fri, 22 Mar 2019
+ 17:27:12 +0000
+From:   Prakhar Srivastava <prsriva@microsoft.com>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>
+Subject: Adding cmldine args measure to ima
+Thread-Topic: Adding cmldine args measure to ima
+Thread-Index: AdTg1Hsi+/BTuAz2T8ua6RTRa1/xhA==
+Date:   Fri, 22 Mar 2019 17:27:12 +0000
+Message-ID: <DM5PR21MB0747326E1CAA3F66CE61B149BC430@DM5PR21MB0747.namprd21.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=prsriva@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-03-22T17:27:10.5308305Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=0ccbfdb5-9bbd-4015-9640-694c5667768e;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+x-originating-ip: [2001:4898:80e8:7:6cee:5fa7:15d6:4d76]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 7bf1fa35-45a7-4bf7-c2c6-08d6aeeb9ecd
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DM5PR21MB0153;
+x-ms-traffictypediagnostic: DM5PR21MB0153:
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=prsriva@microsoft.com; 
+x-microsoft-antispam-prvs: <DM5PR21MB01535077A4AEF11E1FDFA65CBC430@DM5PR21MB0153.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 09840A4839
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(396003)(39860400002)(136003)(376002)(366004)(199004)(189003)(6436002)(10090500001)(71200400001)(2906002)(8676002)(305945005)(55016002)(74316002)(4744005)(102836004)(86362001)(106356001)(316002)(110136005)(8990500004)(486006)(186003)(81166006)(14454004)(476003)(71190400001)(81156014)(22452003)(5660300002)(9686003)(450100002)(2501003)(99286004)(52536014)(86612001)(105586002)(14444005)(97736004)(53936002)(25786009)(46003)(478600001)(68736007)(33656002)(6506007)(256004)(6116002)(7736002)(7696005)(10290500003)(8936002);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR21MB0153;H:DM5PR21MB0747.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: yJsMhKZ6dopBuuxUzzU2i22w/g4y8WjJYLDsLkBgzUkd9JmfDsTYaThDAr/6A+6CC7UUKltp41CZ/c7dQSI9i74raUI+cfGKh6pcwBm1FcsUMycy1aS+iA4PfaJA3ERCMe+7W3tylB6FppOX19QNkX3OGpryB6/POlhvgwHg7u9djpxBKbiNnyQ7cy1urZZc2YWsH9Tggxbcd0oJkJEYPasInzzluFu3cJgH+7LoD6kU3/hvwlE1XT4FIvihi6XFpAIsDfGfOHpT3eesQH4BMHbUo9IQ9qN5p558DdKno6xQ5QPnOhG/qa6MCZ5zy3wjiR5RsALzR1bOkPqynZGM8DU5fXqlHFE175Yg/e3Mi72Q/ixkWg7q9GHh89QgG73uTf/IwdueG/oPQ6Xeedjq6SEosN2t0gsS0qeX73Dh4v8=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190322032901.12045-1-andrew.smirnov@gmail.com>
- <20190322032901.12045-8-andrew.smirnov@gmail.com> <25d95ed0-4dba-09d5-87ec-57c5e763beb4@ti.com>
-In-Reply-To: <25d95ed0-4dba-09d5-87ec-57c5e763beb4@ti.com>
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-Date:   Fri, 22 Mar 2019 10:25:22 -0700
-Message-ID: <CAHQ1cqECy1CHxs0_dnMPqoQwwJMRWFVZ58Vf2J2tbEWmsU06dg@mail.gmail.com>
-Subject: Re: [PATCH v2 07/15] drm/bridge: tc358767: Simplify AUX data write
-To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc:     dri-devel@lists.freedesktop.org,
-        Archit Taneja <architt@codeaurora.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Andrey Gusakov <andrey.gusakov@cogentembedded.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7bf1fa35-45a7-4bf7-c2c6-08d6aeeb9ecd
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Mar 2019 17:27:12.3225
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR21MB0153
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 22, 2019 at 3:51 AM Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
->
-> On 22/03/2019 05:28, Andrey Smirnov wrote:
-> > Simplify AUX data write by dropping index arithmetic and shifting and
-> > replacing it with a call to a helper function that does three things:
-> >
-> >     1. Copies user-provided data into a write buffer
-> >     2. Optionally fixes the endianness of the write buffer (not needed
-> >        on LE hosts)
-> >     3. Transfers contenst of the write buffer to up to 4 32-bit
-> >        registers on the chip
-> >
-> > Note that separate data endianness fix:
-> >
-> >     tmp = (tmp << 8) | buf[i];
-> >
-> > that was reserved for DP_AUX_I2C_WRITE looks really strange, since it
-> > will place data differently depending on the passed user-data
-> > size. E.g. for a write of 1 byte, data transferred to the chip would
-> > look like:
-> >
-> > [byte0] [dummy1] [dummy2] [dummy3]
-> >
-> > whereas for a write of 4 bytes we'd get:
-> >
-> > [byte3] [byte2] [byte1] [byte0]
-> >
-> > Since there's no indication in the datasheet that I2C write buffer
-> > should be treated differently than AUX write buffer and no comment in
-> > the original code explaining why it was done this way, that special
-> > I2C write buffer transformation was dropped in this patch.
-> >
-> > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> > Cc: Archit Taneja <architt@codeaurora.org>
-> > Cc: Andrzej Hajda <a.hajda@samsung.com>
-> > Cc: Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-> > Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> > Cc: Andrey Gusakov <andrey.gusakov@cogentembedded.com>
-> > Cc: Philipp Zabel <p.zabel@pengutronix.de>
-> > Cc: Chris Healy <cphealy@gmail.com>
-> > Cc: Lucas Stach <l.stach@pengutronix.de>
-> > Cc: dri-devel@lists.freedesktop.org
-> > Cc: linux-kernel@vger.kernel.org
-> > ---
-> >  drivers/gpu/drm/bridge/tc358767.c | 58 +++++++++++++++++++------------
-> >  1 file changed, 36 insertions(+), 22 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/bridge/tc358767.c b/drivers/gpu/drm/bridge/tc358767.c
-> > index 81c10a5d8106..21374565585d 100644
-> > --- a/drivers/gpu/drm/bridge/tc358767.c
-> > +++ b/drivers/gpu/drm/bridge/tc358767.c
-> > @@ -307,6 +307,31 @@ static int tc_aux_get_status(struct tc_data *tc, u8 *reply)
-> >       return 0;
-> >  }
-> >
-> > +static int tc_aux_write_data(struct tc_data *tc, const void *data,
-> > +                          size_t size)
-> > +{
-> > +     u32 auxwdata[DP_AUX_MAX_PAYLOAD_BYTES / sizeof(u32)] = { 0 };
-> > +     int ret, i, count = DIV_ROUND_UP(size, 4);
->
-> Should 4 there be sizeof(u32)?
+Hi,
 
-Yup, will replace.
+Currently Kexec (kexec_file_load) code path does not measure the cmdline=20
+arguments passed to the next kernel.The boot_aggregate won't change since=20
+the EFI loader hasn't been triggered. Attesting the same in K2 has no impac=
+t.
+Adding the cmdline measurement will add some attestable criteria.
 
->
-> > +
-> > +     memcpy(auxwdata, data, size);
-> > +
-> > +     for (i = 0; i < count; i++) {
-> > +             ret = regmap_write(tc->regmap, DP0_AUXWDATA(i),
-> > +                                /*
-> > +                                 * Our regmap is configured as LE
-> > +                                 * for register data, so we need
-> > +                                 * undo any byte swapping that will
-> > +                                 * happened to preserve original
-> > +                                 * byte order.
-> > +                                 */
-> > +                                cpu_to_le32(auxwdata[i]));
->
-> Can regmap_bulk_write or regmap_raw_write be used here?
->
+To account for the cmdline passed, we are looking at using IMA to measure a=
+nd=20
+pass the buffer so that it can be attested.
 
-Not sure, will give it a try.
+Do you have any alternate solutions/concerns with this approach?
 
 Thanks,
-Andrey Smirnov
+Prakhar Srivastava
