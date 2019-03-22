@@ -2,117 +2,125 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB11DC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:58:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D341BC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:58:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C434921873
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:58:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E6EE21873
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:58:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553259504;
+	bh=EjuAWUyvynv0if+5A+TqtjuNuKuLELApTDMVnoEKqHw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=BZUOIHkut5OCnnnPk3lkHvR2c4vSY7QGvaXBGhP3e3B8PpqpZI+G/mqqvu+y0RfMz
+	 ZGSPLFEb6cgDhLDRqsuPsMq2CIvPnpYEN5TL0fU+MoC/UNEyzc2hEgtFPxWz/OImh4
+	 F0jT9SgwuEytCUSzBS6jAgWzXZcOqlAh/q6/9oMU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732401AbfCVM6S (ORCPT
+        id S1732350AbfCVM6S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Fri, 22 Mar 2019 08:58:18 -0400
-Received: from ozlabs.org ([203.11.71.1]:35659 "EHLO ozlabs.org"
+Received: from mail.kernel.org ([198.145.29.99]:49880 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728946AbfCVM6P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:58:15 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1731682AbfCVLqn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:46:43 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44QkGs1vRJz9sNq;
-        Fri, 22 Mar 2019 23:58:13 +1100 (AEDT)
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     ben@decadent.org.uk, christophe.leroy@c-s.fr,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        malat@debian.org, mark.cave-ayland@ilande.co.uk
-Subject: [GIT PULL] Please pull powerpc/linux.git powerpc-5.1-3 tag
-Date:   Fri, 22 Mar 2019 23:58:08 +1100
-Message-ID: <87h8bvcbhb.fsf@concordia.ellerman.id.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id C3C62218B0;
+        Fri, 22 Mar 2019 11:46:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553255203;
+        bh=EjuAWUyvynv0if+5A+TqtjuNuKuLELApTDMVnoEKqHw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=JgRM2Xr5TMVrQ0uXqxAznDAYfL03K6UQab5bmOjfKHvUGTkh67Kapr5wv8b7+8bPW
+         4KUoJWQNQo4A0adIyNaXM+DuwQmr0fMu0bjCYxeFpAwJlhWpKrKtqvx6mtVHLDGkJb
+         9ccKKVJOw6hwp8QGQlAI8+D9tk/+03d6e9Rzj2a4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.14 007/183] crypto: ahash - fix another early termination in hash walk
+Date:   Fri, 22 Mar 2019 12:13:55 +0100
+Message-Id: <20190322111242.318186951@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190322111241.819468003@linuxfoundation.org>
+References: <20190322111241.819468003@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
+4.14-stable review patch.  If anyone has any objections, please let me know.
 
-Hi Linus,
+------------------
 
-Please pull some powerpc fixes for 5.1:
+From: Eric Biggers <ebiggers@google.com>
 
-The following changes since commit 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b:
+commit 77568e535af7c4f97eaef1e555bf0af83772456c upstream.
 
-  Linux 5.1-rc1 (2019-03-17 14:22:26 -0700)
+Hash algorithms with an alignmask set, e.g. "xcbc(aes-aesni)" and
+"michael_mic", fail the improved hash tests because they sometimes
+produce the wrong digest.  The bug is that in the case where a
+scatterlist element crosses pages, not all the data is actually hashed
+because the scatterlist walk terminates too early.  This happens because
+the 'nbytes' variable in crypto_hash_walk_done() is assigned the number
+of bytes remaining in the page, then later interpreted as the number of
+bytes remaining in the scatterlist element.  Fix it.
 
-are available in the git repository at:
+Fixes: 900a081f6912 ("crypto: ahash - Fix early termination in hash walk")
+Cc: stable@vger.kernel.org
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git tags/powerpc-5.1-3
+---
+ crypto/ahash.c |   14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-for you to fetch changes up to 92edf8df0ff2ae86cc632eeca0e651fd8431d40d:
+--- a/crypto/ahash.c
++++ b/crypto/ahash.c
+@@ -86,17 +86,17 @@ static int hash_walk_new_entry(struct cr
+ int crypto_hash_walk_done(struct crypto_hash_walk *walk, int err)
+ {
+ 	unsigned int alignmask = walk->alignmask;
+-	unsigned int nbytes = walk->entrylen;
+ 
+ 	walk->data -= walk->offset;
+ 
+-	if (nbytes && walk->offset & alignmask && !err) {
+-		walk->offset = ALIGN(walk->offset, alignmask + 1);
+-		nbytes = min(nbytes,
+-			     ((unsigned int)(PAGE_SIZE)) - walk->offset);
+-		walk->entrylen -= nbytes;
++	if (walk->entrylen && (walk->offset & alignmask) && !err) {
++		unsigned int nbytes;
+ 
++		walk->offset = ALIGN(walk->offset, alignmask + 1);
++		nbytes = min(walk->entrylen,
++			     (unsigned int)(PAGE_SIZE - walk->offset));
+ 		if (nbytes) {
++			walk->entrylen -= nbytes;
+ 			walk->data += walk->offset;
+ 			return nbytes;
+ 		}
+@@ -116,7 +116,7 @@ int crypto_hash_walk_done(struct crypto_
+ 	if (err)
+ 		return err;
+ 
+-	if (nbytes) {
++	if (walk->entrylen) {
+ 		walk->offset = 0;
+ 		walk->pg++;
+ 		return hash_walk_next(walk);
 
-  powerpc/security: Fix spectre_v2 reporting (2019-03-21 21:09:03 +1100)
 
-- ------------------------------------------------------------------
-powerpc fixes for 5.1 #3
-
-One fix for a boot failure on 32-bit, introduced during the merge window.
-
-A fix for our handling of CLOCK_MONOTONIC in the 64-bit VDSO. Changing the wall
-clock across the Y2038 boundary could cause CLOCK_MONOTONIC to jump forward and
-backward.
-
-Our spectre_v2 reporting was a bit confusing due to a bug I introduced. On some
-systems it was reporting that the count cache was disabled and also that we were
-flushing the count cache on context switch. Only the former is true, and given
-that the count cache is disabled it doesn't make any sense to flush it. No one
-reported it, so presumably the presence of any mitigation is all people check
-for.
-
-Finally a small build fix for zsmalloc on 32-bit.
-
-Thanks to:
-  Ben Hutchings, Christophe Leroy, Diana Craciun, Guenter Roeck, Michael Neuling.
-
-- ------------------------------------------------------------------
-Ben Hutchings (1):
-      powerpc/mm: Only define MAX_PHYSMEM_BITS in SPARSEMEM configurations
-
-Christophe Leroy (1):
-      powerpc/6xx: fix setup and use of SPRN_SPRG_PGDIR for hash32
-
-Michael Ellerman (2):
-      powerpc/vdso64: Fix CLOCK_MONOTONIC inconsistencies across Y2038
-      powerpc/security: Fix spectre_v2 reporting
-
-
- arch/powerpc/include/asm/mmu.h            |  2 +-
- arch/powerpc/include/asm/vdso_datapage.h  |  8 ++++----
- arch/powerpc/kernel/cpu_setup_6xx.S       |  3 ---
- arch/powerpc/kernel/head_32.S             |  6 ++++++
- arch/powerpc/kernel/security.c            | 23 ++++++++---------------
- arch/powerpc/kernel/vdso64/gettimeofday.S |  4 ++--
- arch/powerpc/mm/hash_low_32.S             |  8 ++++----
- 7 files changed, 25 insertions(+), 29 deletions(-)
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJclNsLAAoJEFHr6jzI4aWAQlAQAKgQgvPoMIBKObYsjQ6KK6iN
-lgXCrU+WuI+7f6kMMeFWP8sOeT4nA+f7ejoXJDog96Z3oBG63sZuILTlifFetFbp
-0ptJA+AC0DS0k//yv2pMweZVWq2jR7Jfr213inZxwJW6NzvI9m54QK5eUXv++dkk
-Q0H/PhMxNTnP0HKBYRWKSkBSvhCZd6zex5hRZFkXVfDwe6fhpYSkObInGlt2rN4s
-u3NJIZLS1zqYOyx/VPwkUCsePmdqdR0/qFBYT191iFce3lmdrKociFt9/mJKkqj6
-DYVbJljxJtoZ0iIztHdStvHBpbC0kaaUHTNnKEjX2Q2xL7oitiOyOa5gT98Cs8Q1
-ZHfNPidZhyhdRRwIgpDKECIE7xldhG/4icTg0a7LnufjpVrbc8idUU8Hm2oaGuvu
-SlytOO0AAepPFqsTy/IeKo5cT1TNhjqcPe0twxx5nOHtaY0vhtZ9azn6B/2AFfIb
-y/hX6rFoIOzBDlmdRS63EdtQr9negUilUvonCWkY5luo2ypvGcNVnxdrTQww5yPA
-geahb+HRm+dJb22lVp6sONHXJZRfZijBi6jJPPhSRjAVmaibCUvxYiN9MvSFQT/U
-iwsMtS4dpvX8WISijEfCuiZNBEjGSoUQEIwPWqRtgaqZbHYfBFZkwrb6yGF/YjmP
-wVjdhrCcut+qz2NbbDlv
-=PXK6
------END PGP SIGNATURE-----
