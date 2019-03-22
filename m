@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9988C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:01:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A684C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:01:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0ABD21939
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:01:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1ADE4204FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:01:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256062;
-	bh=X6LrMqzVwTHZ1SQQh7aYrXRBBu6dFaXm/IdMnZZ9vk0=;
+	s=default; t=1553256067;
+	bh=yi8lVv/PAUpiwi6wlWFEZkSxeAoha08TQWApxA+g9UQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UfhyZG+aDeL9F2bZjKsGbz88YfsN9skfsG9Ld3b1VWE/T7fXLCEPuTbnIGp/FrjyE
-	 3fFGdmcJcUPXffooCoEt49rtZkzjNmpKTXUV3ip/j04sveSV4W4zu2bCgA5lj/wM6n
-	 GVJ8oUTzrqThnC716LT6VfxqQ7NzdCHxheUW+EwQ=
+	b=1XsUPcoySK9ZMhD1tBiiHDldwC/6HPfKvnP/HrkSKGnoPnYQQ3HtRSTY/kNgpB/88
+	 BmaREV80yuaigdEGtY85mmqwtmNrr8pyxV4uf4sJzmh9sCCWaCj+z4iJDmUEOQoUkV
+	 952r/AvNsGx4mnsqjkwsACTqbJitZK2DXmV3km6A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388149AbfCVMBB (ORCPT
+        id S2388157AbfCVMBF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:01:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38294 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:01:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388125AbfCVMA4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:00:56 -0400
+        id S2387792AbfCVMBC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:01:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 599DB21939;
-        Fri, 22 Mar 2019 12:00:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D219C21934;
+        Fri, 22 Mar 2019 12:01:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256055;
-        bh=X6LrMqzVwTHZ1SQQh7aYrXRBBu6dFaXm/IdMnZZ9vk0=;
+        s=default; t=1553256062;
+        bh=yi8lVv/PAUpiwi6wlWFEZkSxeAoha08TQWApxA+g9UQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BYcRtPxSvqqMBg0TP5a7sM645guAkMeUzSDFYIqph6epnCK0XpNN79PxcwVyuslOz
-         TTZYl+lWkB97hN32epPhXi/yAZxx0j+dvy6iEhv0f1cTvoeWYx8PwhHmUBMZBE5R0C
-         fap3LqTxqf75KvWJjDwFXpJlc+eT9GdTabdSNgaw=
+        b=SlyPAsaOWwQwxQjuHCEY/zjypk1y+GltNHuf9COA/rJGhRXN4Elhvn/NV1LBW7eGF
+         7twATuFPP4X95lySq+QlcOz40/BD4jbjZG3NlyQPsPe5Z86bM9CS87kEE5qQ7maPu1
+         m9DgtPdU3WNYE2KEEu/5mgm5knJW9DHZsnT74qV8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
+        stable@vger.kernel.org, Vineet Gupta <vgupta@synopsys.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 095/280] ixgbe: fix older devices that do not support IXGBE_MRQC_L3L4TXSWEN
-Date:   Fri, 22 Mar 2019 12:14:08 +0100
-Message-Id: <20190322111311.844932359@linuxfoundation.org>
+Subject: [PATCH 4.19 097/280] ARC: uacces: remove lp_start, lp_end from clobber list
+Date:   Fri, 22 Mar 2019 12:14:10 +0100
+Message-Id: <20190322111311.978494805@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -66,39 +65,57 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 156a67a9065e3339be85f811d1b13b920e50d73b ]
+[ Upstream commit d5e3c55e01d8b1774b37b4647c30fb22f1d39077 ]
 
-The enabling L3/L4 filtering for transmit switched packets for all
-devices caused unforeseen issue on older devices when trying to send UDP
-traffic in an ordered sequence.  This bit was originally intended for X550
-devices, which supported this feature, so limit the scope of this bit to
-only X550 devices.
+Newer ARC gcc handles lp_start, lp_end in a different way and doesn't
+like them in the clobber list.
 
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ arch/arc/include/asm/uaccess.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-index 6cdd58d9d461..410d5d3aa393 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-@@ -3924,8 +3924,11 @@ static void ixgbe_setup_mrqc(struct ixgbe_adapter *adapter)
- 			else
- 				mrqc = IXGBE_MRQC_VMDQRSS64EN;
+diff --git a/arch/arc/include/asm/uaccess.h b/arch/arc/include/asm/uaccess.h
+index c9173c02081c..eabc3efa6c6d 100644
+--- a/arch/arc/include/asm/uaccess.h
++++ b/arch/arc/include/asm/uaccess.h
+@@ -207,7 +207,7 @@ raw_copy_from_user(void *to, const void __user *from, unsigned long n)
+ 		*/
+ 		  "=&r" (tmp), "+r" (to), "+r" (from)
+ 		:
+-		: "lp_count", "lp_start", "lp_end", "memory");
++		: "lp_count", "memory");
  
--			/* Enable L3/L4 for Tx Switched packets */
--			mrqc |= IXGBE_MRQC_L3L4TXSWEN;
-+			/* Enable L3/L4 for Tx Switched packets only for X550,
-+			 * older devices do not support this feature
-+			 */
-+			if (hw->mac.type >= ixgbe_mac_X550)
-+				mrqc |= IXGBE_MRQC_L3L4TXSWEN;
- 		} else {
- 			if (tcs > 4)
- 				mrqc = IXGBE_MRQC_RTRSS8TCEN;
+ 		return n;
+ 	}
+@@ -433,7 +433,7 @@ raw_copy_to_user(void __user *to, const void *from, unsigned long n)
+ 		 */
+ 		  "=&r" (tmp), "+r" (to), "+r" (from)
+ 		:
+-		: "lp_count", "lp_start", "lp_end", "memory");
++		: "lp_count", "memory");
+ 
+ 		return n;
+ 	}
+@@ -653,7 +653,7 @@ static inline unsigned long __arc_clear_user(void __user *to, unsigned long n)
+ 	"	.previous			\n"
+ 	: "+r"(d_char), "+r"(res)
+ 	: "i"(0)
+-	: "lp_count", "lp_start", "lp_end", "memory");
++	: "lp_count", "memory");
+ 
+ 	return res;
+ }
+@@ -686,7 +686,7 @@ __arc_strncpy_from_user(char *dst, const char __user *src, long count)
+ 	"	.previous			\n"
+ 	: "+r"(res), "+r"(dst), "+r"(src), "=r"(val)
+ 	: "g"(-EFAULT), "r"(count)
+-	: "lp_count", "lp_start", "lp_end", "memory");
++	: "lp_count", "memory");
+ 
+ 	return res;
+ }
 -- 
 2.19.1
 
