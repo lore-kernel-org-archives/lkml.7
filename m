@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7DE9C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:43:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C693C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:43:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B05C21916
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:43:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CC6E21916
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:43:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255011;
-	bh=5f9SPUiSuYqARjV2rnA/JmguT00rwDiLyp5PXmjdpY4=;
+	s=default; t=1553255015;
+	bh=Ke1W6Yq8bPu84guyC6B27aWhWK98Z8mT8zdvqDm9L4I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zPOtziQpH3ypjPV6hn+XGvKE/+xPugnti78rodMHm+ZiZ7cAv60FodP2lIoumVrXx
-	 6sr3fCc0zfrWBBDQ3/dNNesSEVP49mIqBdF0+J/IxgcAm7fVVhVY5De32C8BMaR7I1
-	 7f5bveVuAoZP5lKHUcQYfptVtgrO8RhNlR+FC5mc=
+	b=LIU9WVigt0eB/cN3qD8PBcgwwkUVgMdPoaa0V7CBLOdI3b85VLa3Kv/08Nuh082mj
+	 SDF7lBMD7csXH1IKTydHv7Q8S6QymrdDFuxE3mLl0aRh5G9S3pxMc3qIRmogDrBCrK
+	 x4J+oBwQl8DqhHASLoabDaSu6f3GVr6ic53NSzx8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731679AbfCVLna (ORCPT
+        id S1731689AbfCVLne (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:43:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46122 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:43:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46240 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731299AbfCVLnY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:43:24 -0400
+        id S1731299AbfCVLnb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:43:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 352A6204FD;
-        Fri, 22 Mar 2019 11:43:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D850A218B0;
+        Fri, 22 Mar 2019 11:43:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255003;
-        bh=5f9SPUiSuYqARjV2rnA/JmguT00rwDiLyp5PXmjdpY4=;
+        s=default; t=1553255010;
+        bh=Ke1W6Yq8bPu84guyC6B27aWhWK98Z8mT8zdvqDm9L4I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d74LdV5lROUUnyjLrLuUU7mkom0fJICdVS0wd6hYvfRncZikSTJLfMQzAm+mQ9eWm
-         uDAQVGOFn8eqf2F9piS3jmteSc+z4hfXiEy+32XkzbQL9zeW6YNFPBSkqno+jOT2X3
-         qU28H26DPOw/WR9KAUyd27fBxswRsS14oUKmDBew=
+        b=ZMk9z4kQvMCQ0tpwHGt+xIk9oLiYU9i9ag4gvzR+jYxqoD+QofizEbTdNhgN6ul5m
+         6WsnMoEs2abIvu62RleAJqfDsEsfksDYCJIZS6D7AgTSbvRaButecBsz1R6Qi3jHGl
+         VRt5f6MF19D+zRp/tzOduPk0JuBLAmBtGxyXoxh4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: [PATCH 4.9 077/118] nfit: acpi_nfit_ctl(): Check out_obj->type in the right place
-Date:   Fri, 22 Mar 2019 12:15:49 +0100
-Message-Id: <20190322111222.029264202@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Christoph Anton Mitterer <calestyo@scientia.net>,
+        Christoph Hellwig <hch@lst.de>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.9 061/118] scsi: sd: Optimal I/O size should be a multiple of physical block size
+Date:   Fri, 22 Mar 2019 12:15:33 +0100
+Message-Id: <20190322111220.986801756@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111215.873964544@linuxfoundation.org>
 References: <20190322111215.873964544@linuxfoundation.org>
@@ -65,55 +67,106 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Dexuan Cui <decui@microsoft.com>
+From: Martin K. Petersen <martin.petersen@oracle.com>
 
-commit 43f89877f26671c6309cd87d7364b1a3e66e71cf upstream.
+commit a83da8a4509d3ebfe03bb7fffce022e4d5d4764f upstream.
 
-In the case of ND_CMD_CALL, we should also check out_obj->type.
+It was reported that some devices report an OPTIMAL TRANSFER LENGTH of
+0xFFFF blocks. That looks bogus, especially for a device with a
+4096-byte physical block size.
 
-The patch uses out_obj->type, which is a short alias to
-out_obj->package.type.
+Ignore OPTIMAL TRANSFER LENGTH if it is not a multiple of the device's
+reported physical block size.
 
-Fixes: 31eca76ba2fc ("nfit, libnvdimm: limited/whitelisted dimm command marshaling mechanism")
+To make the sanity checking conditionals more readable--and to
+facilitate printing warnings--relocate the checking to a helper
+function. No functional change aside from the printks.
+
 Cc: <stable@vger.kernel.org>
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=199759
+Reported-by: Christoph Anton Mitterer <calestyo@scientia.net>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-
 ---
- drivers/acpi/nfit/core.c |   14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ drivers/scsi/sd.c |   59 +++++++++++++++++++++++++++++++++++++++++++++---------
+ 1 file changed, 50 insertions(+), 9 deletions(-)
 
---- a/drivers/acpi/nfit/core.c
-+++ b/drivers/acpi/nfit/core.c
-@@ -307,6 +307,13 @@ int acpi_nfit_ctl(struct nvdimm_bus_desc
- 		return -EINVAL;
- 	}
+--- a/drivers/scsi/sd.c
++++ b/drivers/scsi/sd.c
+@@ -2834,6 +2834,55 @@ static void sd_read_write_same(struct sc
+ 		sdkp->ws10 = 1;
+ }
  
-+	if (out_obj->type != ACPI_TYPE_BUFFER) {
-+		dev_dbg(dev, "%s unexpected output object type cmd: %s type: %d\n",
-+				dimm_name, cmd_name, out_obj->type);
-+		rc = -EINVAL;
-+		goto out;
++/*
++ * Determine the device's preferred I/O size for reads and writes
++ * unless the reported value is unreasonably small, large, not a
++ * multiple of the physical block size, or simply garbage.
++ */
++static bool sd_validate_opt_xfer_size(struct scsi_disk *sdkp,
++				      unsigned int dev_max)
++{
++	struct scsi_device *sdp = sdkp->device;
++	unsigned int opt_xfer_bytes =
++		logical_to_bytes(sdp, sdkp->opt_xfer_blocks);
++
++	if (sdkp->opt_xfer_blocks > dev_max) {
++		sd_first_printk(KERN_WARNING, sdkp,
++				"Optimal transfer size %u logical blocks " \
++				"> dev_max (%u logical blocks)\n",
++				sdkp->opt_xfer_blocks, dev_max);
++		return false;
 +	}
 +
- 	if (call_pkg) {
- 		call_pkg->nd_fw_size = out_obj->buffer.length;
- 		memcpy(call_pkg->nd_payload + call_pkg->nd_size_in,
-@@ -325,13 +332,6 @@ int acpi_nfit_ctl(struct nvdimm_bus_desc
- 		return 0;
- 	}
++	if (sdkp->opt_xfer_blocks > SD_DEF_XFER_BLOCKS) {
++		sd_first_printk(KERN_WARNING, sdkp,
++				"Optimal transfer size %u logical blocks " \
++				"> sd driver limit (%u logical blocks)\n",
++				sdkp->opt_xfer_blocks, SD_DEF_XFER_BLOCKS);
++		return false;
++	}
++
++	if (opt_xfer_bytes < PAGE_SIZE) {
++		sd_first_printk(KERN_WARNING, sdkp,
++				"Optimal transfer size %u bytes < " \
++				"PAGE_SIZE (%u bytes)\n",
++				opt_xfer_bytes, (unsigned int)PAGE_SIZE);
++		return false;
++	}
++
++	if (opt_xfer_bytes & (sdkp->physical_block_size - 1)) {
++		sd_first_printk(KERN_WARNING, sdkp,
++				"Optimal transfer size %u bytes not a " \
++				"multiple of physical block size (%u bytes)\n",
++				opt_xfer_bytes, sdkp->physical_block_size);
++		return false;
++	}
++
++	sd_first_printk(KERN_INFO, sdkp, "Optimal transfer size %u bytes\n",
++			opt_xfer_bytes);
++	return true;
++}
++
+ /**
+  *	sd_revalidate_disk - called the first time a new disk is seen,
+  *	performs disk spin up, read_capacity, etc.
+@@ -2898,15 +2947,7 @@ static int sd_revalidate_disk(struct gen
+ 	dev_max = min_not_zero(dev_max, sdkp->max_xfer_blocks);
+ 	q->limits.max_dev_sectors = logical_to_sectors(sdp, dev_max);
  
--	if (out_obj->package.type != ACPI_TYPE_BUFFER) {
--		dev_dbg(dev, "%s:%s unexpected output object type cmd: %s type: %d\n",
--				__func__, dimm_name, cmd_name, out_obj->type);
--		rc = -EINVAL;
--		goto out;
--	}
--
- 	if (IS_ENABLED(CONFIG_ACPI_NFIT_DEBUG)) {
- 		dev_dbg(dev, "%s:%s cmd: %s output length: %d\n", __func__,
- 				dimm_name, cmd_name, out_obj->buffer.length);
+-	/*
+-	 * Determine the device's preferred I/O size for reads and writes
+-	 * unless the reported value is unreasonably small, large, or
+-	 * garbage.
+-	 */
+-	if (sdkp->opt_xfer_blocks &&
+-	    sdkp->opt_xfer_blocks <= dev_max &&
+-	    sdkp->opt_xfer_blocks <= SD_DEF_XFER_BLOCKS &&
+-	    logical_to_bytes(sdp, sdkp->opt_xfer_blocks) >= PAGE_SIZE) {
++	if (sd_validate_opt_xfer_size(sdkp, dev_max)) {
+ 		q->limits.io_opt = logical_to_bytes(sdp, sdkp->opt_xfer_blocks);
+ 		rw_max = logical_to_sectors(sdp, sdkp->opt_xfer_blocks);
+ 	} else
 
 
