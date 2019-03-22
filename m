@@ -2,136 +2,115 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6538AC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 17:21:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E99DCC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 17:22:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B29521917
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 17:21:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B947020850
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 17:22:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728420AbfCVRVT (ORCPT
+        id S1728504AbfCVRWv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 13:21:19 -0400
-Received: from mga11.intel.com ([192.55.52.93]:2220 "EHLO mga11.intel.com"
+        Fri, 22 Mar 2019 13:22:51 -0400
+Received: from mga04.intel.com ([192.55.52.120]:19997 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727058AbfCVRVS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 13:21:18 -0400
+        id S1727058AbfCVRWv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 13:22:51 -0400
 X-Amp-Result: UNKNOWN
 X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Mar 2019 10:21:18 -0700
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Mar 2019 10:22:50 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,256,1549958400"; 
-   d="scan'208";a="129307784"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
-  by orsmga006.jf.intel.com with ESMTP; 22 Mar 2019 10:21:16 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1h7Nr0-00053C-RB; Fri, 22 Mar 2019 19:21:14 +0200
-Date:   Fri, 22 Mar 2019 19:21:14 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
-        rafael@kernel.org, linux-acpi@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 5/5] lib/vsprintf: Add %pfw conversion specifier for
- printing fwnode names
-Message-ID: <20190322172114.GY9224@smile.fi.intel.com>
-References: <20190322152930.16642-1-sakari.ailus@linux.intel.com>
- <20190322152930.16642-6-sakari.ailus@linux.intel.com>
+   d="scan'208";a="136555324"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
+  by fmsmga007.fm.intel.com with ESMTP; 22 Mar 2019 10:22:50 -0700
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id 5604E300E46; Fri, 22 Mar 2019 10:22:50 -0700 (PDT)
+Date:   Fri, 22 Mar 2019 10:22:50 -0700
+From:   Andi Kleen <ak@linux.intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     kan.liang@linux.intel.com, acme@kernel.org, mingo@redhat.com,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de, jolsa@kernel.org,
+        eranian@google.com, alexander.shishkin@linux.intel.com
+Subject: Re: [PATCH V3 01/23] perf/x86: Support outputting XMM registers
+Message-ID: <20190322172250.GF24002@tassilo.jf.intel.com>
+References: <20190322163718.2191-1-kan.liang@linux.intel.com>
+ <20190322163718.2191-2-kan.liang@linux.intel.com>
+ <20190322170841.GJ7905@worktop.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190322152930.16642-6-sakari.ailus@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190322170841.GJ7905@worktop.programming.kicks-ass.net>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 22, 2019 at 05:29:30PM +0200, Sakari Ailus wrote:
-> Add support for %pfw conversion specifier (with "f" and "P" modifiers) to
-> support printing full path of the node, including its name ("f") and only
-> the node's name ("P") in the printk family of functions. The two flags
-> have equivalent functionality to existing %pOF with the same two modifiers
-> ("f" and "P") on OF based systems. The ability to do the same on ACPI
-> based systems is added by this patch.
-
-Do we encourage people to use it instead of %pOF cases where it is suitable?
-
-> On ACPI based systems the resulting strings look like
+> > diff --git a/arch/x86/include/uapi/asm/perf_regs.h b/arch/x86/include/uapi/asm/perf_regs.h
+> > index f3329cabce5c..b33995313d17 100644
+> > --- a/arch/x86/include/uapi/asm/perf_regs.h
+> > +++ b/arch/x86/include/uapi/asm/perf_regs.h
+> > @@ -28,7 +28,29 @@ enum perf_event_x86_regs {
+> >  	PERF_REG_X86_R14,
+> >  	PERF_REG_X86_R15,
+> >  
+> > -	PERF_REG_X86_32_MAX = PERF_REG_X86_GS + 1,
+> > -	PERF_REG_X86_64_MAX = PERF_REG_X86_R15 + 1,
 > 
-> 	\_SB.PCI0.CIO2.port@1.endpoint@0
+> So this changes UAPI visible symbols... did we think about that?
+
+Should be fine. Old programs won't use the new bits,
+and it just uses not yet used bits.
+
 > 
-> where the nodes are separated by a dot (".") and the first three are
-> ACPI device nodes and the latter two ACPI data nodes.
+> > +	/* These all need two bits set because they are 128bit */
+> > +	PERF_REG_X86_XMM0  = 32,
+> > +	PERF_REG_X86_XMM1  = 34,
+> > +	PERF_REG_X86_XMM2  = 36,
+> > +	PERF_REG_X86_XMM3  = 38,
+> > +	PERF_REG_X86_XMM4  = 40,
+> > +	PERF_REG_X86_XMM5  = 42,
+> > +	PERF_REG_X86_XMM6  = 44,
+> > +	PERF_REG_X86_XMM7  = 46,
+> > +	PERF_REG_X86_XMM8  = 48,
+> > +	PERF_REG_X86_XMM9  = 50,
+> > +	PERF_REG_X86_XMM10 = 52,
+> > +	PERF_REG_X86_XMM11 = 54,
+> > +	PERF_REG_X86_XMM12 = 56,
+> > +	PERF_REG_X86_XMM13 = 58,
+> > +	PERF_REG_X86_XMM14 = 60,
+> > +	PERF_REG_X86_XMM15 = 62,
+> > +
+> > +	/* This does not include the XMMX registers */
+> > +	PERF_REG_GPR_X86_32_MAX = PERF_REG_X86_GS + 1,
+> > +	PERF_REG_GPR_X86_64_MAX = PERF_REG_X86_R15 + 1,
+> > +
+> > +	/* All registers include the XMMX registers */
+> > +	PERF_REG_X86_MAX = PERF_REG_X86_XMM15 + 2,
+> >  };
+> >  #endif /* _ASM_X86_PERF_REGS_H */
+> 
+> Also, what happens if we run a 32bit kernel or 32bit compat task?
+> 
+> Then the register dump will report PERF_SAMPLE_REGS_ABI_32, should we
+> then still interpret the XMM registers as 2x64bit?
 
-Do we support swnode here?
+Yes XMM registers are 128bit in 32bit mode too.
 
-> +static noinline_for_stack
-> +char *fwnode_string(char *buf, char *end, struct fwnode_handle *fwnode,
-> +		    struct printf_spec spec, const char *fmt)
-> +{
-> +	const char * const modifiers = "fP";
-> +	struct printf_spec str_spec = spec;
-> +	char *buf_start = buf;
-> +	bool pass;
-> +
-> +	str_spec.field_width = -1;
-> +
+> 
+> Are they still at the same offset?
 
-> +	if ((unsigned long)fwnode < PAGE_SIZE)
-> +		return string(buf, end, "(null)", spec);
+Yes.
 
-Just put there a NULL pointer, we would not like to maintain duplicated strings
-over the kernel.
+> 
+> Do we need additional PERF_SAMPLE_REGS_ABI_* definitions for this?
 
-I remember Petr has a patch series related to address space check, though I
-don't remember the status of affairs.
+I don't think so.
 
-> +
-> +	/* simple case without anything any more format specifiers */
-> +	fmt++;
-> +	if (fmt[0] == '\0' || strcspn(fmt, modifiers) > 0)
-> +		fmt = "f";
-> +
-> +	for (pass = false; strspn(fmt, modifiers); fmt++, pass = true) {
-
-I don't see test cases.
-
-What would we get out of %pfwfffPPPfff?
-
-Hint: I'm expecting above to be equivalent to %pfwf
-
-> +		if (pass) {
-> +			if (buf < end)
-> +				*buf = ':';
-> +			buf++;
-> +		}
-> +
-> +		switch (*fmt) {
-> +		case 'f':	/* full_name */
-> +			buf = fwnode_gen_full_name(fwnode, buf, end);
-> +			break;
-> +		case 'P':	/* name */
-> +			buf = string(buf, end, fwnode_get_name(fwnode),
-> +				     str_spec);
-> +			break;
-> +		default:
-> +			break;
-> +		}
-> +	}
-> +
-> +	return widen_string(buf, buf - buf_start, end, spec);
-> +}
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+-Andi
