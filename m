@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 752D6C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:19:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84078C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:19:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 449A12054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:19:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49A5921900
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:19:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553257170;
-	bh=vPW+FZpCoTRcFu46HW0J29yrop3HiI73of4G2QaIPJk=;
+	s=default; t=1553257175;
+	bh=DA5NstBC0eiAaN4rojVdIbNNkS4vRrnNzSDgtDd8gv4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1j7IgRTo0U05q/dfSjPpwewnrey2F1vWr/jYdxaJO+wcHgxIxoDw9oAa9ow3jZ19l
-	 LBVpMGaxz62AlV67EJYn1CWu8PeCY/K2X1vJtnkfYcb6/xb5lXpMMW3zh36v50ctqL
-	 X9p8kqf6ZolOoqL2mRm2TNcV73e82jgK/7RgJQnA=
+	b=K0o0So6Jdi5993rb9zTbCiCtMtZGQViz0tSfA2Ct4pvp//6NXH6f+bTt9v/ywEv7y
+	 x5NblAT5R8P/Ai0GL3CpJHIqTxnBrVGFOpK153ZUQiN9WcEKGCDdKwihQdI7Ymi0Aj
+	 H3H1tL078PPepCG4h9gqKFvXyMr4Nd5o39Par2Fo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390454AbfCVMT2 (ORCPT
+        id S2390625AbfCVMTe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:19:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58354 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:19:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58416 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390199AbfCVMTY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:19:24 -0400
+        id S2390458AbfCVMT0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:19:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC89C2054F;
-        Fri, 22 Mar 2019 12:19:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB97D2054F;
+        Fri, 22 Mar 2019 12:19:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553257163;
-        bh=vPW+FZpCoTRcFu46HW0J29yrop3HiI73of4G2QaIPJk=;
+        s=default; t=1553257166;
+        bh=DA5NstBC0eiAaN4rojVdIbNNkS4vRrnNzSDgtDd8gv4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GXgw39n9+FrRRcq9rZUp3Ud/bUUu0XMQyRqinZgxivQesFWqGxq+6TgZ3RogcWave
-         IpsbgGQSucUqFNztmsnfZ9IM/7eEXTk8fpdoCSgCGNvaRPogM261zS6LjosOJAGukH
-         IbyM7W0Hi/Mwuniy/74C1hDyc/sHsEHZHOAxkn2E=
+        b=Wj2+xVZN940sxGE/oQp0Pv63v7o09/BO0ye9+Pnh5pWN7sIRbXqU/CqiqLCehqJ4C
+         zOBYg4m/Li2UwEMiPjGmzC/xEkHghamiV/+nhP+qT9wCoH6RxrvvDl8mnJ6EB+XKku
+         i/a8uzWuiXFVQWnq5mEkbw4B95QnD3oHoAEme0sg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jay Dolan <jay.dolan@accesio.com>
-Subject: [PATCH 5.0 151/238] serial: 8250_pci: Have ACCES cards that use the four port Pericom PI7C9X7954 chip use the pci_pericom_setup()
-Date:   Fri, 22 Mar 2019 12:16:10 +0100
-Message-Id: <20190322111307.265139607@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Christoph Hellwig <hch@lst.de>, Joerg Roedel <jroedel@suse.de>,
+        "Michael S. Tsirkin" <mst@redhat.com>
+Subject: [PATCH 5.0 125/238] swiotlb: Introduce swiotlb_max_mapping_size()
+Date:   Fri, 22 Mar 2019 12:15:44 +0100
+Message-Id: <20190322111305.886443361@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -64,135 +67,57 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jay Dolan <jay.dolan@accesio.com>
+From: Joerg Roedel <jroedel@suse.de>
 
-commit 78d3820b9bd39028727c6aab7297b63c093db343 upstream.
+commit abe420bfae528c92bd8cc5ecb62dc95672b1fd6f upstream.
 
-The four port Pericom chips have the fourth port at the wrong address.
-Make use of quirk to fix it.
+The function returns the maximum size that can be remapped
+by the SWIOTLB implementation. This function will be later
+exposed to users through the DMA-API.
 
-Fixes: c8d192428f52 ("serial: 8250: added acces i/o products quad and octal serial cards")
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Jay Dolan <jay.dolan@accesio.com>
+Cc: stable@vger.kernel.org
+Reviewed-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/8250/8250_pci.c |  105 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 105 insertions(+)
+ include/linux/swiotlb.h |    5 +++++
+ kernel/dma/swiotlb.c    |    5 +++++
+ 2 files changed, 10 insertions(+)
 
---- a/drivers/tty/serial/8250/8250_pci.c
-+++ b/drivers/tty/serial/8250/8250_pci.c
-@@ -2027,6 +2027,111 @@ static struct pci_serial_quirk pci_seria
- 		.setup		= pci_default_setup,
- 		.exit		= pci_plx9050_exit,
- 	},
-+	{
-+		.vendor     = PCI_VENDOR_ID_ACCESIO,
-+		.device     = PCI_DEVICE_ID_ACCESIO_PCIE_COM_4SDB,
-+		.subvendor  = PCI_ANY_ID,
-+		.subdevice  = PCI_ANY_ID,
-+		.setup      = pci_pericom_setup,
-+	},
-+	{
-+		.vendor     = PCI_VENDOR_ID_ACCESIO,
-+		.device     = PCI_DEVICE_ID_ACCESIO_MPCIE_COM_4S,
-+		.subvendor  = PCI_ANY_ID,
-+		.subdevice  = PCI_ANY_ID,
-+		.setup      = pci_pericom_setup,
-+	},
-+	{
-+		.vendor     = PCI_VENDOR_ID_ACCESIO,
-+		.device     = PCI_DEVICE_ID_ACCESIO_PCIE_COM232_4DB,
-+		.subvendor  = PCI_ANY_ID,
-+		.subdevice  = PCI_ANY_ID,
-+		.setup      = pci_pericom_setup,
-+	},
-+	{
-+		.vendor     = PCI_VENDOR_ID_ACCESIO,
-+		.device     = PCI_DEVICE_ID_ACCESIO_MPCIE_COM232_4,
-+		.subvendor  = PCI_ANY_ID,
-+		.subdevice  = PCI_ANY_ID,
-+		.setup      = pci_pericom_setup,
-+	},
-+	{
-+		.vendor     = PCI_VENDOR_ID_ACCESIO,
-+		.device     = PCI_DEVICE_ID_ACCESIO_PCIE_COM_4SMDB,
-+		.subvendor  = PCI_ANY_ID,
-+		.subdevice  = PCI_ANY_ID,
-+		.setup      = pci_pericom_setup,
-+	},
-+	{
-+		.vendor     = PCI_VENDOR_ID_ACCESIO,
-+		.device     = PCI_DEVICE_ID_ACCESIO_MPCIE_COM_4SM,
-+		.subvendor  = PCI_ANY_ID,
-+		.subdevice  = PCI_ANY_ID,
-+		.setup      = pci_pericom_setup,
-+	},
-+	{
-+		.vendor     = PCI_VENDOR_ID_ACCESIO,
-+		.device     = PCI_DEVICE_ID_ACCESIO_MPCIE_ICM422_4,
-+		.subvendor  = PCI_ANY_ID,
-+		.subdevice  = PCI_ANY_ID,
-+		.setup      = pci_pericom_setup,
-+	},
-+	{
-+		.vendor     = PCI_VENDOR_ID_ACCESIO,
-+		.device     = PCI_DEVICE_ID_ACCESIO_MPCIE_ICM485_4,
-+		.subvendor  = PCI_ANY_ID,
-+		.subdevice  = PCI_ANY_ID,
-+		.setup      = pci_pericom_setup,
-+	},
-+	{
-+		.vendor     = PCI_DEVICE_ID_ACCESIO_PCIE_ICM_4S,
-+		.device     = PCI_DEVICE_ID_ACCESIO_PCIE_ICM232_4,
-+		.subvendor  = PCI_ANY_ID,
-+		.subdevice  = PCI_ANY_ID,
-+		.setup      = pci_pericom_setup,
-+	},
-+	{
-+		.vendor     = PCI_VENDOR_ID_ACCESIO,
-+		.device     = PCI_DEVICE_ID_ACCESIO_MPCIE_ICM232_4,
-+		.subvendor  = PCI_ANY_ID,
-+		.subdevice  = PCI_ANY_ID,
-+		.setup      = pci_pericom_setup,
-+	},
-+	{
-+		.vendor     = PCI_VENDOR_ID_ACCESIO,
-+		.device     = PCI_DEVICE_ID_ACCESIO_PCIE_COM422_4,
-+		.subvendor  = PCI_ANY_ID,
-+		.subdevice  = PCI_ANY_ID,
-+		.setup      = pci_pericom_setup,
-+	},
-+	{
-+		.vendor     = PCI_VENDOR_ID_ACCESIO,
-+		.device     = PCI_DEVICE_ID_ACCESIO_PCIE_COM485_4,
-+		.subvendor  = PCI_ANY_ID,
-+		.subdevice  = PCI_ANY_ID,
-+		.setup      = pci_pericom_setup,
-+	},
-+	{
-+		.vendor     = PCI_VENDOR_ID_ACCESIO,
-+		.device     = PCI_DEVICE_ID_ACCESIO_PCIE_COM232_4,
-+		.subvendor  = PCI_ANY_ID,
-+		.subdevice  = PCI_ANY_ID,
-+		.setup      = pci_pericom_setup,
-+	},
-+	{
-+		.vendor     = PCI_VENDOR_ID_ACCESIO,
-+		.device     = PCI_DEVICE_ID_ACCESIO_PCIE_COM_4SM,
-+		.subvendor  = PCI_ANY_ID,
-+		.subdevice  = PCI_ANY_ID,
-+		.setup      = pci_pericom_setup,
-+	},
-+	{
-+		.vendor     = PCI_VENDOR_ID_ACCESIO,
-+		.device     = PCI_DEVICE_ID_ACCESIO_PCIE_ICM_4SM,
-+		.subvendor  = PCI_ANY_ID,
-+		.subdevice  = PCI_ANY_ID,
-+		.setup      = pci_pericom_setup,
-+	},
- 	/*
- 	 * SBS Technologies, Inc., PMC-OCTALPRO 232
- 	 */
+--- a/include/linux/swiotlb.h
++++ b/include/linux/swiotlb.h
+@@ -76,6 +76,7 @@ bool swiotlb_map(struct device *dev, phy
+ 		size_t size, enum dma_data_direction dir, unsigned long attrs);
+ void __init swiotlb_exit(void);
+ unsigned int swiotlb_max_segment(void);
++size_t swiotlb_max_mapping_size(struct device *dev);
+ #else
+ #define swiotlb_force SWIOTLB_NO_FORCE
+ static inline bool is_swiotlb_buffer(phys_addr_t paddr)
+@@ -95,6 +96,10 @@ static inline unsigned int swiotlb_max_s
+ {
+ 	return 0;
+ }
++static inline size_t swiotlb_max_mapping_size(struct device *dev)
++{
++	return SIZE_MAX;
++}
+ #endif /* CONFIG_SWIOTLB */
+ 
+ extern void swiotlb_print_info(void);
+--- a/kernel/dma/swiotlb.c
++++ b/kernel/dma/swiotlb.c
+@@ -662,3 +662,8 @@ swiotlb_dma_supported(struct device *hwd
+ {
+ 	return __phys_to_dma(hwdev, io_tlb_end - 1) <= mask;
+ }
++
++size_t swiotlb_max_mapping_size(struct device *dev)
++{
++	return ((size_t)1 << IO_TLB_SHIFT) * IO_TLB_SEGSIZE;
++}
 
 
