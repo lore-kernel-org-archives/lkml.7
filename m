@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFF83C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:22:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4F2FC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:22:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B9C7218B0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:22:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 943362054F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:22:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553257329;
-	bh=LT/DcDQzkjCPmppqdV+/I6JcClz6AsSBsPwIwiwFa5I=;
+	s=default; t=1553257331;
+	bh=zcFvwk4p1WpN8wUD9kOAOz9x642v6hAyabbyJ4p+Xuo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gRUhdeQa7RX8E5/SzfiWRUO9eCGsHel6wM6kaxrIKShuQkl9vN8X+rgLfr61wad1z
-	 /pbn0PRNNKzinUsL+A5opzx7u39W7ncMHaTLmjx9f5iRaejT5ovSonBWiW4pY9GvXk
-	 X6Je/kqJdr9+OjhzJ6LQ1J0OgiT3y5YkBR+TMVZQ=
+	b=h83Mtl11xzsd3gxFmO2v/suww7Pnt2B84P5+7Fy+oRFw0zDPW6T5fisYw9/3VKcZo
+	 SVcgmGkulaPwcmBhlhAZQ/VbdkNyTW00OdxW54NePU0Szew5Bp8ikpRXr0RCA34PQ0
+	 Ha9kvXK6X7TW78f+SS9lt6sf1gJNCiH37FP05Sok=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390960AbfCVMWI (ORCPT
+        id S2390970AbfCVMWK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:22:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33084 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:22:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390055AbfCVMWG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:22:06 -0400
+        id S2390942AbfCVMWD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:22:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46DC1218A1;
-        Fri, 22 Mar 2019 12:22:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E6D62054F;
+        Fri, 22 Mar 2019 12:22:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553257325;
-        bh=LT/DcDQzkjCPmppqdV+/I6JcClz6AsSBsPwIwiwFa5I=;
+        s=default; t=1553257323;
+        bh=zcFvwk4p1WpN8wUD9kOAOz9x642v6hAyabbyJ4p+Xuo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nsaPJqniNMuUMD7k8kZvt5Lwjp/vgUnPLb3BDVxS7c7YdIwIYKLYzziP+jInXdJqU
-         ksSKwdiiCCl0hyreEsTD8O1ZrE9/S99ubrmvlMqBroqSyZq3kW5V6UMOGOEFQG6oKM
-         Y5jfY6C3CxdXlLIcxMO+YVmDV2WbcB/RmmgBTgdg=
+        b=NvQnwB4tRaO8PMvnWOg1lDSegSGvzIKGkGhpwfL2NfMPiK9ubYn7o+0vFky87M43x
+         F6T6q9QCRY+siRMwNuvONe94bPui0ag32p5gPuxDtaiQ9BRCpFtDCdXlWwTeQ7NEBt
+         zWLDCEj4hfURkZXWdL7fHorzTtDw8z35Wp2Hc90A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        stable@vger.kernel.org,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
         Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.0 156/238] powerpc/32: Clear on-stack exception marker upon exception return
-Date:   Fri, 22 Mar 2019 12:16:15 +0100
-Message-Id: <20190322111307.521627267@linuxfoundation.org>
+Subject: [PATCH 5.0 165/238] powerpc/hugetlb: Dont do runtime allocation of 16G pages in LPAR configuration
+Date:   Fri, 22 Mar 2019 12:16:24 +0100
+Message-Id: <20190322111308.031179738@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -65,81 +66,71 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 
-commit 9580b71b5a7863c24a9bd18bcd2ad759b86b1eff upstream.
+commit 35f2806b481f5b9207f25e1886cba5d1c4d12cc7 upstream.
 
-Clear the on-stack STACK_FRAME_REGS_MARKER on exception exit in order
-to avoid confusing stacktrace like the one below.
+We added runtime allocation of 16G pages in commit 4ae279c2c96a
+("powerpc/mm/hugetlb: Allow runtime allocation of 16G.") That was done
+to enable 16G allocation on PowerNV and KVM config. In case of KVM
+config, we mostly would have the entire guest RAM backed by 16G
+hugetlb pages for this to work. PAPR do support partial backing of
+guest RAM with hugepages via ibm,expected#pages node of memory node in
+the device tree. This means rest of the guest RAM won't be backed by
+16G contiguous pages in the host and hence a hash page table insertion
+can fail in such case.
 
-  Call Trace:
-  [c0e9dca0] [c01c42a0] print_address_description+0x64/0x2bc (unreliable)
-  [c0e9dcd0] [c01c4684] kasan_report+0xfc/0x180
-  [c0e9dd10] [c0895130] memchr+0x24/0x74
-  [c0e9dd30] [c00a9e38] msg_print_text+0x124/0x574
-  [c0e9dde0] [c00ab710] console_unlock+0x114/0x4f8
-  [c0e9de40] [c00adc60] vprintk_emit+0x188/0x1c4
-  --- interrupt: c0e9df00 at 0x400f330
-      LR = init_stack+0x1f00/0x2000
-  [c0e9de80] [c00ae3c4] printk+0xa8/0xcc (unreliable)
-  [c0e9df20] [c0c27e44] early_irq_init+0x38/0x108
-  [c0e9df50] [c0c15434] start_kernel+0x310/0x488
-  [c0e9dff0] [00003484] 0x3484
+An example error message will look like
 
-With this patch the trace becomes:
+  hash-mmu: mm: Hashing failure ! EA=0x7efc00000000 access=0x8000000000000006 current=readback
+  hash-mmu:     trap=0x300 vsid=0x67af789 ssize=1 base psize=14 psize 14 pte=0xc000000400000386
+  readback[12260]: unhandled signal 7 at 00007efc00000000 nip 00000000100012d0 lr 000000001000127c code 2
 
-  Call Trace:
-  [c0e9dca0] [c01c42c0] print_address_description+0x64/0x2bc (unreliable)
-  [c0e9dcd0] [c01c46a4] kasan_report+0xfc/0x180
-  [c0e9dd10] [c0895150] memchr+0x24/0x74
-  [c0e9dd30] [c00a9e58] msg_print_text+0x124/0x574
-  [c0e9dde0] [c00ab730] console_unlock+0x114/0x4f8
-  [c0e9de40] [c00adc80] vprintk_emit+0x188/0x1c4
-  [c0e9de80] [c00ae3e4] printk+0xa8/0xcc
-  [c0e9df20] [c0c27e44] early_irq_init+0x38/0x108
-  [c0e9df50] [c0c15434] start_kernel+0x310/0x488
-  [c0e9dff0] [00003484] 0x3484
+This patch address that by preventing runtime allocation of 16G
+hugepages in LPAR config. To allocate 16G hugetlb one need to kernel
+command line hugepagesz=16G hugepages=<number of 16G pages>
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+With radix translation mode we don't run into this issue.
+
+This change will prevent runtime allocation of 16G hugetlb pages on
+kvm with hash translation mode. However, with the current upstream it
+was observed that 16G hugetlbfs backed guest doesn't boot at all.
+
+We observe boot failure with the below message:
+  [131354.647546] KVM: map_vrma at 0 failed, ret=-4
+
+That means this patch is not resulting in an observable regression.
+Once we fix the boot issue with 16G hugetlb backed memory, we need to
+use ibm,expected#pages memory node attribute to indicate 16G page
+reservation to the guest. This will also enable partial backing of
+guest RAM with 16G pages.
+
+Fixes: 4ae279c2c96a ("powerpc/mm/hugetlb: Allow runtime allocation of 16G.")
+Cc: stable@vger.kernel.org # v4.14+
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/kernel/entry_32.S |    9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/powerpc/include/asm/book3s/64/hugetlb.h |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/arch/powerpc/kernel/entry_32.S
-+++ b/arch/powerpc/kernel/entry_32.S
-@@ -745,6 +745,9 @@ fast_exception_return:
- 	mtcr	r10
- 	lwz	r10,_LINK(r11)
- 	mtlr	r10
-+	/* Clear the exception_marker on the stack to avoid confusing stacktrace */
-+	li	r10, 0
-+	stw	r10, 8(r11)
- 	REST_GPR(10, r11)
- #if defined(CONFIG_PPC_8xx) && defined(CONFIG_PERF_EVENTS)
- 	mtspr	SPRN_NRI, r0
-@@ -982,6 +985,9 @@ END_FTR_SECTION_IFSET(CPU_FTR_NEED_PAIRE
- 	mtcrf	0xFF,r10
- 	mtlr	r11
- 
-+	/* Clear the exception_marker on the stack to avoid confusing stacktrace */
-+	li	r10, 0
-+	stw	r10, 8(r1)
- 	/*
- 	 * Once we put values in SRR0 and SRR1, we are in a state
- 	 * where exceptions are not recoverable, since taking an
-@@ -1021,6 +1027,9 @@ exc_exit_restart_end:
- 	mtlr	r11
- 	lwz	r10,_CCR(r1)
- 	mtcrf	0xff,r10
-+	/* Clear the exception_marker on the stack to avoid confusing stacktrace */
-+	li	r10, 0
-+	stw	r10, 8(r1)
- 	REST_2GPRS(9, r1)
- 	.globl exc_exit_restart
- exc_exit_restart:
+--- a/arch/powerpc/include/asm/book3s/64/hugetlb.h
++++ b/arch/powerpc/include/asm/book3s/64/hugetlb.h
+@@ -35,6 +35,14 @@ static inline int hstate_get_psize(struc
+ #ifdef CONFIG_ARCH_HAS_GIGANTIC_PAGE
+ static inline bool gigantic_page_supported(void)
+ {
++	/*
++	 * We used gigantic page reservation with hypervisor assist in some case.
++	 * We cannot use runtime allocation of gigantic pages in those platforms
++	 * This is hash translation mode LPARs.
++	 */
++	if (firmware_has_feature(FW_FEATURE_LPAR) && !radix_enabled())
++		return false;
++
+ 	return true;
+ }
+ #endif
 
 
