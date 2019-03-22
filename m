@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFE3EC10F03
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:41:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5B12C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:41:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 714C1218E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:41:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4F43218E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:41:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553258504;
-	bh=SlmMQn8UKjqxEKFtDrGA2kG96/vOXNGq0ql6KTE4eVE=;
+	s=default; t=1553258512;
+	bh=fraNlDS94Ao2ZiqrhxUgY8CrkVyXX4xbQL1UwjEU58k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qlNHUd/eKG8oi0uEPLEvo5mnfPzHoSnsrstoK7ioIkAj/v9RzbTnN2+QcEqm5/uIX
-	 J0emqXQblOC7Jagz8YpuvHuU0blzCCtoUr6JE+UwOuZk+cEwVUcFydIVF2OZ5ye/J2
-	 MP0AU1mPVHlQPwa18YxwR9bve0G7fOnX1B/mucdY=
+	b=CRHtSnk9IifSqk7JDKZcFgMM1q9b1R/s8NH27c8KjVbLLwGu6jRyuo5xfCqOcV8QP
+	 nDkL1XSTdTBjm1T+JYjtiHc3VRng7YH0+woUQYkQpC+ZtyyuAxnDj1smLfSDCHs1T+
+	 umbaxHiOl94j0FkSzGMtFn3CW7BR1qEqqKYgVLJU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388785AbfCVMHY (ORCPT
+        id S2388933AbfCVMlv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:07:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45700 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:41:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389011AbfCVMHQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:07:16 -0400
+        id S2388227AbfCVMFD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:05:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 071FD2082C;
-        Fri, 22 Mar 2019 12:07:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9A6721934;
+        Fri, 22 Mar 2019 12:05:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256435;
-        bh=SlmMQn8UKjqxEKFtDrGA2kG96/vOXNGq0ql6KTE4eVE=;
+        s=default; t=1553256302;
+        bh=fraNlDS94Ao2ZiqrhxUgY8CrkVyXX4xbQL1UwjEU58k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WM3feymXiPpBMqbiB6bPDnPuBd9CzqxuG05VGFNplqQdU/CuiZb+dfhbkTqm4t/Bj
-         faUsRDRlAbHnA8uUyMgxDH/pBVjRFPOm2XYUiPQpsN9hWxBqFFd0tQ7y5nB/xIreO8
-         eEnVHu0C54REloR0DhVMuFEhY8TFP733s4/6P77g=
+        b=AEymDbX8vNodZNCVHnPVEv/3p0DRf+/J02MlovxQUDZ7QYx+kTtx2yeit5Czlb9sW
+         doADDSm88Kv5jR37pe6UBHMb08XRRs1yQznJPKNhB7onPd3FFe6rPvmK5506t+a7Jr
+         kWeedXJZ4rhGn5Yvfyfy2RMzuPJawalk5DawnqfU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mark Walton <mark.walton@serialtek.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 4.19 209/280] gpio: pca953x: Fix dereference of irq data in shutdown
-Date:   Fri, 22 Mar 2019 12:16:02 +0100
-Message-Id: <20190322111332.450517669@linuxfoundation.org>
+        stable@vger.kernel.org, Jiong Wu <Lohengrin1024@gmail.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 4.19 146/280] mmc:fix a bug when max_discard is 0
+Date:   Fri, 22 Mar 2019 12:14:59 +0100
+Message-Id: <20190322111319.371532427@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -66,46 +65,49 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Mark Walton <mark.walton@serialtek.com>
+From: Jiong Wu <lohengrin1024@gmail.com>
 
-commit c378b3aa015931a46c91d6ccc2fe04d97801d060 upstream.
+commit d4721339dcca7def04909a8e60da43c19a24d8bf upstream.
 
-If a PCA953x gpio was used as an interrupt and then released,
-the shutdown function was trying to extract the pca953x_chip
-pointer directly from the irq_data, but in reality was getting
-the gpio_chip structure.
+The original purpose of the code I fix is to replace max_discard with
+max_trim if max_trim is less than max_discard. When max_discard is 0
+we should replace max_discard with max_trim as well, because
+max_discard equals 0 happens only when the max_do_calc_max_discard
+process is overflowed, so if mmc_can_trim(card) is true, max_discard
+should be replaced by an available max_trim.
+However, in the original code, there are two lines of code interfere
+the right process.
+1) if (max_discard && mmc_can_trim(card))
+when max_discard is 0, it skips the process checking if max_discard
+needs to be replaced with max_trim.
+2) if (max_trim < max_discard)
+the condition is false when max_discard is 0. it also skips the process
+that replaces max_discard with max_trim, in fact, we should replace the
+0-valued max_discard with max_trim.
 
-The net effect was that the subsequent writes to the data
-structure corrupted data in the gpio_chip structure, which wasn't
-immediately obvious until attempting to use the GPIO again in the
-future, at which point the kernel panics.
-
-This fix correctly extracts the pca953x_chip structure via the
-gpio_chip structure, as is correctly done in the other irq
-functions.
-
-Fixes: 0a70fe00efea ("gpio: pca953x: Clear irq trigger type on irq shutdown")
-Cc: stable@vger.kernel.org
-Signed-off-by: Mark Walton <mark.walton@serialtek.com>
-Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Jiong Wu <Lohengrin1024@gmail.com>
+Fixes: b305882fbc87 (mmc: core: optimize mmc_calc_max_discard)
+Cc: stable@vger.kernel.org # v4.17+
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpio/gpio-pca953x.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/mmc/core/core.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/gpio/gpio-pca953x.c
-+++ b/drivers/gpio/gpio-pca953x.c
-@@ -543,7 +543,8 @@ static int pca953x_irq_set_type(struct i
+--- a/drivers/mmc/core/core.c
++++ b/drivers/mmc/core/core.c
+@@ -2378,9 +2378,9 @@ unsigned int mmc_calc_max_discard(struct
+ 		return card->pref_erase;
  
- static void pca953x_irq_shutdown(struct irq_data *d)
- {
--	struct pca953x_chip *chip = irq_data_get_irq_chip_data(d);
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+	struct pca953x_chip *chip = gpiochip_get_data(gc);
- 	u8 mask = 1 << (d->hwirq % BANK_SZ);
- 
- 	chip->irq_trig_raise[d->hwirq / BANK_SZ] &= ~mask;
+ 	max_discard = mmc_do_calc_max_discard(card, MMC_ERASE_ARG);
+-	if (max_discard && mmc_can_trim(card)) {
++	if (mmc_can_trim(card)) {
+ 		max_trim = mmc_do_calc_max_discard(card, MMC_TRIM_ARG);
+-		if (max_trim < max_discard)
++		if (max_trim < max_discard || max_discard == 0)
+ 			max_discard = max_trim;
+ 	} else if (max_discard < card->erase_size) {
+ 		max_discard = 0;
 
 
