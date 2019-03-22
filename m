@@ -2,51 +2,52 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF276C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:02:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69747C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:02:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8202B21873
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:02:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E5D52075E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:02:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553259736;
-	bh=CEaZF2iv8piRqa0vu1yAXOoL+TA57XXFkb7QCSFfg0Y=;
+	s=default; t=1553259755;
+	bh=ivGYO4Na8k3GFZT3xpdobiMgjYQB65gdvd5MwUIN16Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qkHoTPJhWLKrKoDk8DEQVYVzqAO2HnPI2gqAI0F8yGwCxbc0beTVTwbNRiu1yvfDS
-	 vuSD3OwmlxiHQ+VSKKD6Im8wzELKre8YEo2qIuv/rQg9Ctk3hiFnhrT4hdCAxSq3VN
-	 ATtAd+G1bW4L8t094N5Dvi7aHTnG1d9ldf6dHcy4=
+	b=PBNkB2O0rJTnoZX/K2VmpM+vXOVetpZ1pDOfP8sMqASjmrfsY94xgrdzgvpUXBXmf
+	 lJ/+5sBKaeSodKkQQ41R7Hqo+cnj891t2DgEPKHZGWk1OOrGttiUKeysHe7k2aKP9k
+	 8sExvGgB0SjkY+banb8QTnjyswP6wPl7sBgruveA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731737AbfCVNCP (ORCPT
+        id S1731432AbfCVLlk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 09:02:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44414 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:41:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731071AbfCVLmG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:42:06 -0400
+        id S1730790AbfCVLld (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:41:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 884E02082C;
-        Fri, 22 Mar 2019 11:42:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5084A21925;
+        Fri, 22 Mar 2019 11:41:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254926;
-        bh=CEaZF2iv8piRqa0vu1yAXOoL+TA57XXFkb7QCSFfg0Y=;
+        s=default; t=1553254892;
+        bh=ivGYO4Na8k3GFZT3xpdobiMgjYQB65gdvd5MwUIN16Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0DCFgJZkmCHLJnPBwZyGdj+Lnnsbg3F1pYO+ACQugQxd69RP7kzl1jh4OhIiD+euH
-         5wbpJyesdjjcUSb57qUyqKPoOi6KjsOCVq4imhpLmHuq8/xSRJ9TJAxcZiZW+FgKpK
-         sDUhMV7oM4uG4jnslEdTAsWvMdNvknbwj8HpxkHQ=
+        b=n8Mmx8y3BvfOzNIYCYDzy6kb7Aif3f9tTWxq1g+VLVaX47PshLTiKSFmJKa0MaQaf
+         lMcNOK2g+i8rNdNs584AoonNxX2neb380LOpeDZxJMn96eJ8kzRTsYo3iEquht+jJl
+         cWUHZK05qQJsXVrlA7KHsIjZJFE7DJyTr5hIPCP0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vignesh R <vigneshr@ti.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 4.9 053/118] spi: ti-qspi: Fix mmap read when more than one CS in use
-Date:   Fri, 22 Mar 2019 12:15:25 +0100
-Message-Id: <20190322111220.197108221@linuxfoundation.org>
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 025/118] net: systemport: Fix reception of BPDUs
+Date:   Fri, 22 Mar 2019 12:14:57 +0100
+Message-Id: <20190322111217.822485953@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111215.873964544@linuxfoundation.org>
 References: <20190322111215.873964544@linuxfoundation.org>
@@ -65,48 +66,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Vignesh R <vigneshr@ti.com>
+[ Upstream commit a40061ea2e39494104602b3048751341bda374a1 ]
 
-commit 673c865efbdc5fec3cc525c46d71844d42c60072 upstream.
+SYSTEMPORT has its RXCHK parser block that attempts to validate the
+packet structures, unfortunately setting the L2 header check bit will
+cause Bridge PDUs (BPDUs) to be incorrectly rejected because they look
+like LLC/SNAP packets with a non-IPv4 or non-IPv6 Ethernet Type.
 
-Commit 4dea6c9b0b64 ("spi: spi-ti-qspi: add mmap mode read support") has
-has got order of parameter wrong when calling regmap_update_bits() to
-select CS for mmap access. Mask and value arguments are interchanged.
-Code will work on a system with single slave, but fails when more than
-one CS is in use. Fix this by correcting the order of parameters when
-calling regmap_update_bits().
-
-Fixes: 4dea6c9b0b64 ("spi: spi-ti-qspi: add mmap mode read support")
-Cc: stable@vger.kernel.org
-Signed-off-by: Vignesh R <vigneshr@ti.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 4e8aedfe78c7 ("net: systemport: Turn on offloads by default")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-ti-qspi.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/broadcom/bcmsysport.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/spi/spi-ti-qspi.c
-+++ b/drivers/spi/spi-ti-qspi.c
-@@ -457,8 +457,8 @@ static void ti_qspi_enable_memory_map(st
- 	ti_qspi_write(qspi, MM_SWITCH, QSPI_SPI_SWITCH_REG);
- 	if (qspi->ctrl_base) {
- 		regmap_update_bits(qspi->ctrl_base, qspi->ctrl_reg,
--				   MEM_CS_EN(spi->chip_select),
--				   MEM_CS_MASK);
-+				   MEM_CS_MASK,
-+				   MEM_CS_EN(spi->chip_select));
- 	}
- 	qspi->mmap_enabled = true;
- }
-@@ -470,7 +470,7 @@ static void ti_qspi_disable_memory_map(s
- 	ti_qspi_write(qspi, 0, QSPI_SPI_SWITCH_REG);
- 	if (qspi->ctrl_base)
- 		regmap_update_bits(qspi->ctrl_base, qspi->ctrl_reg,
--				   0, MEM_CS_MASK);
-+				   MEM_CS_MASK, 0);
- 	qspi->mmap_enabled = false;
- }
+diff --git a/drivers/net/ethernet/broadcom/bcmsysport.c b/drivers/net/ethernet/broadcom/bcmsysport.c
+index 53a506b0d790..95874c10c23b 100644
+--- a/drivers/net/ethernet/broadcom/bcmsysport.c
++++ b/drivers/net/ethernet/broadcom/bcmsysport.c
+@@ -104,6 +104,10 @@ static int bcm_sysport_set_rx_csum(struct net_device *dev,
  
+ 	priv->rx_chk_en = !!(wanted & NETIF_F_RXCSUM);
+ 	reg = rxchk_readl(priv, RXCHK_CONTROL);
++	/* Clear L2 header checks, which would prevent BPDUs
++	 * from being received.
++	 */
++	reg &= ~RXCHK_L2_HDR_DIS;
+ 	if (priv->rx_chk_en)
+ 		reg |= RXCHK_EN;
+ 	else
+-- 
+2.19.1
+
 
 
