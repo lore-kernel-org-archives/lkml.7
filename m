@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95FE1C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:18:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E30E5C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:18:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66B61218A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:18:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8981218A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:18:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553257106;
-	bh=30jEuTb2sc8IKV4P93TVLhopECT0iNJy/gUutzjOHss=;
+	s=default; t=1553257109;
+	bh=Iq+Ny7L2wG7JaGUfjKW6jJoaC0LzPCvFIksQDEJGD34=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eUsunqRR2T/loPJv4olxBC0Ai23HwvUv6W/aiFWK73zCcaZcyL7eJ2aipQC4cnQWd
-	 kt8PUwsYk3iV2S/EmFFQgb9ZodJGS6Tgmgev/Tu0Tg3hVCqEUDMiY6wHRxlcbnP4Un
-	 l7cqs83muEEQ5DbKzbk5bsN/TkTc0QP98WsUz6Y8=
+	b=GMa1xhLQyBWZJe9oSkybUeu+juyOT6sKeOilH4ZieZjhUlCtReiLSxAXy7gJTOrM/
+	 5kJkVOPuNqenecPnLQZzrH5ZE/jXMNEgqaq/LvKDIrTlZXvUYjVX7oGcu/eJiw89eV
+	 OH0LkASAe1PfvrqmbieZmIrxaLToqkMwjT7mSjnQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390293AbfCVMSZ (ORCPT
+        id S2390510AbfCVMS2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:18:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57280 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:18:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390113AbfCVMSX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:18:23 -0400
+        id S2390297AbfCVMS1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:18:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B2E021900;
-        Fri, 22 Mar 2019 12:18:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 05CC42083D;
+        Fri, 22 Mar 2019 12:18:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553257102;
-        bh=30jEuTb2sc8IKV4P93TVLhopECT0iNJy/gUutzjOHss=;
+        s=default; t=1553257105;
+        bh=Iq+Ny7L2wG7JaGUfjKW6jJoaC0LzPCvFIksQDEJGD34=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v3NMeX2VOxR9BmpWmTBrp8HInEXaJ73k2lCaJzlMRO1qGuTsyPfUx8sUaXyUuJ5iO
-         RiN9dWMQpgz+wDpfnmhlWw5m5lKE8X6PkmKT1YAOASpwIxVTCEnfxLpccEpJRQRMW6
-         5Kf6r1p9M7MKsy1l2vRHGIxBvMPKuEYZ58L4Wmkc=
+        b=WDLTiIrDGmA3wjXdplR+4iai/Rec2nsCC8RsbrilFh3ffl0XV3TB3N+MQ7yYqEWgH
+         PbvnQlSwHniIOV9CFecjY7KiSFOIJGqYYcVT3WyCes3D8G2mIwY3nwZFWpckO44YaT
+         HT4FwUfmVem/jxiQJFTVtRlNfYRQFGJ5pGpot9fk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Lu=C3=ADs=20Mendes?= <luis.p.mendes@gmail.com>,
-        Leigh Brown <leigh@solinno.co.uk>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: [PATCH 5.0 133/238] PCI: pci-bridge-emul: Extend pci_bridge_emul_init() with flags
-Date:   Fri, 22 Mar 2019 12:15:52 +0100
-Message-Id: <20190322111306.317983647@linuxfoundation.org>
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 5.0 134/238] IB/hfi1: Close race condition on user context disable and close
+Date:   Fri, 22 Mar 2019 12:15:53 +0100
+Message-Id: <20190322111306.366752229@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -68,106 +68,142 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+From: Michael J. Ruhl <michael.j.ruhl@intel.com>
 
-commit 33776d059630e5045ea9ccf756c74de8f9cc86de upstream.
+commit bc5add09764c123f58942a37c8335247e683d234 upstream.
 
-Depending on the capabilities of the PCI controller/platform, the
-PCI-to-PCI bridge emulation behavior might need to be different. For
-example, on platforms that use the pci-mvebu code, we currently don't
-support prefetchable memory BARs, so the corresponding fields in the
-PCI-to-PCI bridge configuration space should be read-only.
+When disabling and removing a receive context, it is possible for an
+asynchronous event (i.e IRQ) to occur.  Because of this, there is a race
+between cleaning up the context, and the context being used by the
+asynchronous event.
 
-To implement this, extend pci_bridge_emul_init() to take a "flags"
-argument, with currently one flag supported:
+cpu 0  (context cleanup)
+    rc->ref_count-- (ref_count == 0)
+    hfi1_rcd_free()
+cpu 1  (IRQ (with rcd index))
+	rcd_get_by_index()
+	lock
+	ref_count+++     <-- reference count race (WARNING)
+	return rcd
+	unlock
+cpu 0
+    hfi1_free_ctxtdata() <-- incorrect free location
+    lock
+    remove rcd from array
+    unlock
+    free rcd
 
-PCI_BRIDGE_EMUL_NO_PREFETCHABLE_BAR
+This race will cause the following WARNING trace:
 
-that will make the prefetchable memory base and limit registers
-read-only.
+WARNING: CPU: 0 PID: 175027 at include/linux/kref.h:52 hfi1_rcd_get_by_index+0x84/0xa0 [hfi1]
+CPU: 0 PID: 175027 Comm: IMB-MPI1 Kdump: loaded Tainted: G OE ------------ 3.10.0-957.el7.x86_64 #1
+Hardware name: Intel Corporation S2600KP/S2600KP, BIOS SE5C610.86B.11.01.0076.C4.111920150602 11/19/2015
+Call Trace:
+  dump_stack+0x19/0x1b
+  __warn+0xd8/0x100
+  warn_slowpath_null+0x1d/0x20
+  hfi1_rcd_get_by_index+0x84/0xa0 [hfi1]
+  is_rcv_urgent_int+0x24/0x90 [hfi1]
+  general_interrupt+0x1b6/0x210 [hfi1]
+  __handle_irq_event_percpu+0x44/0x1c0
+  handle_irq_event_percpu+0x32/0x80
+  handle_irq_event+0x3c/0x60
+  handle_edge_irq+0x7f/0x150
+  handle_irq+0xe4/0x1a0
+  do_IRQ+0x4d/0xf0
+  common_interrupt+0x162/0x162
 
-The pci-mvebu and pci-aardvark drivers are updated accordingly.
+The race can also lead to a use after free which could be similar to:
 
-Fixes: 1f08673eef123 ("PCI: mvebu: Convert to PCI emulated bridge config space")
-Reported-by: Luís Mendes <luis.p.mendes@gmail.com>
-Reported-by: Leigh Brown <leigh@solinno.co.uk>
-Tested-by: Leigh Brown <leigh@solinno.co.uk>
-Tested-by: Luis Mendes <luis.p.mendes@gmail.com>
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: stable@vger.kernel.org
-Cc: Luís Mendes <luis.p.mendes@gmail.com>
-Cc: Leigh Brown <leigh@solinno.co.uk>
+general protection fault: 0000 1 SMP
+CPU: 71 PID: 177147 Comm: IMB-MPI1 Kdump: loaded Tainted: G W OE ------------ 3.10.0-957.el7.x86_64 #1
+Hardware name: Intel Corporation S2600KP/S2600KP, BIOS SE5C610.86B.11.01.0076.C4.111920150602 11/19/2015
+task: ffff9962a8098000 ti: ffff99717a508000 task.ti: ffff99717a508000 __kmalloc+0x94/0x230
+Call Trace:
+  ? hfi1_user_sdma_process_request+0x9c8/0x1250 [hfi1]
+  hfi1_user_sdma_process_request+0x9c8/0x1250 [hfi1]
+  hfi1_aio_write+0xba/0x110 [hfi1]
+  do_sync_readv_writev+0x7b/0xd0
+  do_readv_writev+0xce/0x260
+  ? handle_mm_fault+0x39d/0x9b0
+  ? pick_next_task_fair+0x5f/0x1b0
+  ? sched_clock_cpu+0x85/0xc0
+  ? __schedule+0x13a/0x890
+  vfs_writev+0x35/0x60
+  SyS_writev+0x7f/0x110
+  system_call_fastpath+0x22/0x27
+
+Use the appropriate kref API to verify access.
+
+Reorder context cleanup to ensure context removal before cleanup occurs
+correctly.
+
+Cc: stable@vger.kernel.org # v4.14.0+
+Fixes: f683c80ca68e ("IB/hfi1: Resolve kernel panics by reference counting receive contexts")
+Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/controller/pci-aardvark.c |    2 +-
- drivers/pci/controller/pci-mvebu.c    |    2 +-
- drivers/pci/pci-bridge-emul.c         |    8 +++++++-
- drivers/pci/pci-bridge-emul.h         |    7 ++++++-
- 4 files changed, 15 insertions(+), 4 deletions(-)
+ drivers/infiniband/hw/hfi1/hfi.h  |    2 +-
+ drivers/infiniband/hw/hfi1/init.c |   14 +++++++++-----
+ 2 files changed, 10 insertions(+), 6 deletions(-)
 
---- a/drivers/pci/controller/pci-aardvark.c
-+++ b/drivers/pci/controller/pci-aardvark.c
-@@ -499,7 +499,7 @@ static void advk_sw_pci_bridge_init(stru
- 	bridge->data = pcie;
- 	bridge->ops = &advk_pci_bridge_emul_ops;
+--- a/drivers/infiniband/hw/hfi1/hfi.h
++++ b/drivers/infiniband/hw/hfi1/hfi.h
+@@ -1435,7 +1435,7 @@ void hfi1_init_pportdata(struct pci_dev
+ 			 struct hfi1_devdata *dd, u8 hw_pidx, u8 port);
+ void hfi1_free_ctxtdata(struct hfi1_devdata *dd, struct hfi1_ctxtdata *rcd);
+ int hfi1_rcd_put(struct hfi1_ctxtdata *rcd);
+-void hfi1_rcd_get(struct hfi1_ctxtdata *rcd);
++int hfi1_rcd_get(struct hfi1_ctxtdata *rcd);
+ struct hfi1_ctxtdata *hfi1_rcd_get_by_index_safe(struct hfi1_devdata *dd,
+ 						 u16 ctxt);
+ struct hfi1_ctxtdata *hfi1_rcd_get_by_index(struct hfi1_devdata *dd, u16 ctxt);
+--- a/drivers/infiniband/hw/hfi1/init.c
++++ b/drivers/infiniband/hw/hfi1/init.c
+@@ -215,12 +215,12 @@ static void hfi1_rcd_free(struct kref *k
+ 	struct hfi1_ctxtdata *rcd =
+ 		container_of(kref, struct hfi1_ctxtdata, kref);
  
--	pci_bridge_emul_init(bridge);
-+	pci_bridge_emul_init(bridge, 0);
+-	hfi1_free_ctxtdata(rcd->dd, rcd);
+-
+ 	spin_lock_irqsave(&rcd->dd->uctxt_lock, flags);
+ 	rcd->dd->rcd[rcd->ctxt] = NULL;
+ 	spin_unlock_irqrestore(&rcd->dd->uctxt_lock, flags);
  
++	hfi1_free_ctxtdata(rcd->dd, rcd);
++
+ 	kfree(rcd);
  }
  
---- a/drivers/pci/controller/pci-mvebu.c
-+++ b/drivers/pci/controller/pci-mvebu.c
-@@ -583,7 +583,7 @@ static void mvebu_pci_bridge_emul_init(s
- 	bridge->data = port;
- 	bridge->ops = &mvebu_pci_bridge_emul_ops;
- 
--	pci_bridge_emul_init(bridge);
-+	pci_bridge_emul_init(bridge, PCI_BRIDGE_EMUL_NO_PREFETCHABLE_BAR);
- }
- 
- static inline struct mvebu_pcie *sys_to_pcie(struct pci_sys_data *sys)
---- a/drivers/pci/pci-bridge-emul.c
-+++ b/drivers/pci/pci-bridge-emul.c
-@@ -267,7 +267,8 @@ const static struct pci_bridge_reg_behav
-  * (typically at least vendor, device, revision), the ->ops pointer,
-  * and optionally ->data and ->has_pcie.
+@@ -243,10 +243,13 @@ int hfi1_rcd_put(struct hfi1_ctxtdata *r
+  * @rcd: pointer to an initialized rcd data structure
+  *
+  * Use this to get a reference after the init.
++ *
++ * Return : reflect kref_get_unless_zero(), which returns non-zero on
++ * increment, otherwise 0.
   */
--int pci_bridge_emul_init(struct pci_bridge_emul *bridge)
-+int pci_bridge_emul_init(struct pci_bridge_emul *bridge,
-+			 unsigned int flags)
+-void hfi1_rcd_get(struct hfi1_ctxtdata *rcd)
++int hfi1_rcd_get(struct hfi1_ctxtdata *rcd)
  {
- 	bridge->conf.class_revision |= PCI_CLASS_BRIDGE_PCI << 16;
- 	bridge->conf.header_type = PCI_HEADER_TYPE_BRIDGE;
-@@ -295,6 +296,11 @@ int pci_bridge_emul_init(struct pci_brid
- 		}
- 	}
- 
-+	if (flags & PCI_BRIDGE_EMUL_NO_PREFETCHABLE_BAR) {
-+		bridge->pci_regs_behavior[PCI_PREF_MEMORY_BASE / 4].ro = ~0;
-+		bridge->pci_regs_behavior[PCI_PREF_MEMORY_BASE / 4].rw = 0;
-+	}
-+
- 	return 0;
+-	kref_get(&rcd->kref);
++	return kref_get_unless_zero(&rcd->kref);
  }
  
---- a/drivers/pci/pci-bridge-emul.h
-+++ b/drivers/pci/pci-bridge-emul.h
-@@ -119,7 +119,12 @@ struct pci_bridge_emul {
- 	bool has_pcie;
- };
+ /**
+@@ -326,7 +329,8 @@ struct hfi1_ctxtdata *hfi1_rcd_get_by_in
+ 	spin_lock_irqsave(&dd->uctxt_lock, flags);
+ 	if (dd->rcd[ctxt]) {
+ 		rcd = dd->rcd[ctxt];
+-		hfi1_rcd_get(rcd);
++		if (!hfi1_rcd_get(rcd))
++			rcd = NULL;
+ 	}
+ 	spin_unlock_irqrestore(&dd->uctxt_lock, flags);
  
--int pci_bridge_emul_init(struct pci_bridge_emul *bridge);
-+enum {
-+	PCI_BRIDGE_EMUL_NO_PREFETCHABLE_BAR = BIT(0),
-+};
-+
-+int pci_bridge_emul_init(struct pci_bridge_emul *bridge,
-+			 unsigned int flags);
- void pci_bridge_emul_cleanup(struct pci_bridge_emul *bridge);
- 
- int pci_bridge_emul_conf_read(struct pci_bridge_emul *bridge, int where,
 
 
