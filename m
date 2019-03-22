@@ -2,91 +2,297 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BD06C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:40:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB075C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:40:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE96621900
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:40:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="H1iNrkrq"
+	by mail.kernel.org (Postfix) with ESMTP id 7EAA321900
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:40:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728880AbfCVQkQ (ORCPT
+        id S1728938AbfCVQkS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 12:40:16 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:50932 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726915AbfCVQkP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 12:40:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=9fj/qDq9IBKm7XJP3WHetNUk3xdI2f6m9PtXxsbQwPA=; b=H1iNrkrqoTj/9Qz5bdHXJ0Ub4
-        nHTaOEiYaBjTn7CLdRXEr3grlaX2L9oRTSJkWBRdEJFYBcl751TM7wQb3UBCUMHa/dcgEKsK7pg/4
-        1WiMx1n6a/I1ESsUiUJ6YMUGUGSYKtvnrefrww/NPJPslzNi8nR0l90AYMTzfa7NpQg9tZOsB03Vq
-        K0JzQdk+wl4LoZhDp+yi80cTfIZcZmLu7OH1L/mE4CwqHPla24729GZCkfY8H1fvO0SNY/9Abk6ah
-        NGKnKL0pDIvQYItubop/0VLT5BVUZhhRC0fp88IkAWJDxmS6wHWE4MgKakd2hvyLZUoTyLT6uBeKs
-        6BFqySZkg==;
-Received: from [31.161.229.66] (helo=worktop.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h7ND6-0003QH-Ew; Fri, 22 Mar 2019 16:40:00 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 19562984EEA; Fri, 22 Mar 2019 17:39:54 +0100 (CET)
-Date:   Fri, 22 Mar 2019 17:39:54 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Andi Kleen <andi@firstfloor.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH 01/17] kbuild: Disable -Waddress-of-packed-member for gcc
- 9
-Message-ID: <20190322163954.GG7905@worktop.programming.kicks-ass.net>
-References: <20190321220009.29334-1-andi@firstfloor.org>
- <20190321220009.29334-2-andi@firstfloor.org>
- <CAK8P3a31L6ddJ1JPpygHqeVspExv7eaKWsLQ5pb+T8LAF2Zjtw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a31L6ddJ1JPpygHqeVspExv7eaKWsLQ5pb+T8LAF2Zjtw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 22 Mar 2019 12:40:18 -0400
+Received: from mga18.intel.com ([134.134.136.126]:60745 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727556AbfCVQjt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 12:39:49 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Mar 2019 09:39:49 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,256,1549958400"; 
+   d="scan'208";a="144356664"
+Received: from otc-icl-cdi187.jf.intel.com ([10.54.55.103])
+  by orsmga002.jf.intel.com with ESMTP; 22 Mar 2019 09:39:49 -0700
+From:   kan.liang@linux.intel.com
+To:     peterz@infradead.org, acme@kernel.org, mingo@redhat.com,
+        linux-kernel@vger.kernel.org
+Cc:     tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
+        alexander.shishkin@linux.intel.com, ak@linux.intel.com,
+        Kan Liang <kan.liang@linux.intel.com>
+Subject: [PATCH 21/23] perf, tools, stat: Support new per thread TopDown metrics
+Date:   Fri, 22 Mar 2019 09:37:16 -0700
+Message-Id: <20190322163718.2191-22-kan.liang@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190322163718.2191-1-kan.liang@linux.intel.com>
+References: <20190322163718.2191-1-kan.liang@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 22, 2019 at 02:58:51PM +0100, Arnd Bergmann wrote:
-> On Thu, Mar 21, 2019 at 11:00 PM Andi Kleen <andi@firstfloor.org> wrote:
-> >
-> > From: Andi Kleen <ak@linux.intel.com>
-> >
-> > This warning is very noisy in a default build with gcc 9.
-> > Move it into W=2 only.
-> >
-> > Cc: arnd@arndb.de
-> > Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > Signed-off-by: Andi Kleen <ak@linux.intel.com>
-> 
-> I think W=2 is too aggressive. On many architectures, this finds
-> real bugs and the false positives tend to be trivial to fix
-> (by removing the bogus __packed annotation), which improves
-> the generated code in the process.
-> 
-> Moving it to W=1 for the moment is probably fine, but ideally
-> I think we should fix the kernel to behave according to the
-> C standard.
+From: Andi Kleen <ak@linux.intel.com>
 
-Lol... we're actively moving away from the C standard on many places.
+Icelake has support for reporting per thread TopDown metrics.
+These are reported differently than the previous TopDown support,
+each metric is standalone, but scaled to pipeline "slots".
+We don't need to do anything special for HyperThreading anymore.
+Teach perf stat --topdown to handle these new metrics and
+print them in the same way as the previous TopDown metrics.
+The restrictions of only being able to report information per core is
+gone.
 
-Why does the silly compiler think it is a problem to take the address of
-a member of a packed structure? That sounds like something that's
-perfectly fine and useful.
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+---
+
+No changes since V2.
+
+ tools/perf/Documentation/perf-stat.txt |  9 ++-
+ tools/perf/builtin-stat.c              | 24 +++++++
+ tools/perf/util/stat-shadow.c          | 89 ++++++++++++++++++++++++++
+ tools/perf/util/stat.c                 |  4 ++
+ tools/perf/util/stat.h                 |  8 +++
+ 5 files changed, 132 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
+index 4bc2085e5197..f4469751ef0a 100644
+--- a/tools/perf/Documentation/perf-stat.txt
++++ b/tools/perf/Documentation/perf-stat.txt
+@@ -266,8 +266,13 @@ if the workload is actually bound by the CPU and not by something else.
+ For best results it is usually a good idea to use it with interval
+ mode like -I 1000, as the bottleneck of workloads can change often.
+ 
+-The top down metrics are collected per core instead of per
+-CPU thread. Per core mode is automatically enabled
++This enables --metric-only, unless overridden with --no-metric-only.
++
++The following restrictions only apply to older Intel CPUs and Atom,
++on newer CPUs (IceLake and later) TopDown can be collected for any thread:
++
++The top down metrics are collected per core instead of per CPU thread.
++Per core mode is automatically enabled
+ and -a (global monitoring) is needed, requiring root rights or
+ perf.perf_event_paranoid=-1.
+ 
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 7b8f09b0b8bf..5068396c241b 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -123,6 +123,14 @@ static const char * topdown_attrs[] = {
+ 	NULL,
+ };
+ 
++static const char *topdown_metric_attrs[] = {
++	"topdown-retiring",
++	"topdown-bad-spec",
++	"topdown-fe-bound",
++	"topdown-be-bound",
++	NULL,
++};
++
+ static const char *smi_cost_attrs = {
+ 	"{"
+ 	"msr/aperf/,"
+@@ -1215,6 +1223,21 @@ static int add_default_attributes(void)
+ 		char *str = NULL;
+ 		bool warn = false;
+ 
++		if (topdown_filter_events(topdown_metric_attrs, &str, 1) < 0) {
++			pr_err("Out of memory\n");
++			return -1;
++		}
++		if (topdown_metric_attrs[0] && str) {
++			if (!stat_config.interval) {
++				fprintf(stat_config.output,
++					"Topdown accuracy may decreases when measuring long period.\n"
++					"Please print the result regularly, e.g. -I1000\n");
++			}
++			goto setup_metrics;
++		}
++
++		str = NULL;
++
+ 		if (stat_config.aggr_mode != AGGR_GLOBAL &&
+ 		    stat_config.aggr_mode != AGGR_CORE) {
+ 			pr_err("top down event configuration requires --per-core mode\n");
+@@ -1236,6 +1259,7 @@ static int add_default_attributes(void)
+ 		if (topdown_attrs[0] && str) {
+ 			if (warn)
+ 				arch_topdown_group_warn();
++setup_metrics:
+ 			err = parse_events(evsel_list, str, &errinfo);
+ 			if (err) {
+ 				fprintf(stderr,
+diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+index 83d8094be4fe..6b6ffd64a4c4 100644
+--- a/tools/perf/util/stat-shadow.c
++++ b/tools/perf/util/stat-shadow.c
+@@ -238,6 +238,18 @@ void perf_stat__update_shadow_stats(struct perf_evsel *counter, u64 count,
+ 	else if (perf_stat_evsel__is(counter, TOPDOWN_RECOVERY_BUBBLES))
+ 		update_runtime_stat(st, STAT_TOPDOWN_RECOVERY_BUBBLES,
+ 				    ctx, cpu, count);
++	else if (perf_stat_evsel__is(counter, TOPDOWN_RETIRING))
++		update_runtime_stat(st, STAT_TOPDOWN_RETIRING,
++				    ctx, cpu, count);
++	else if (perf_stat_evsel__is(counter, TOPDOWN_BAD_SPEC))
++		update_runtime_stat(st, STAT_TOPDOWN_BAD_SPEC,
++				    ctx, cpu, count);
++	else if (perf_stat_evsel__is(counter, TOPDOWN_FE_BOUND))
++		update_runtime_stat(st, STAT_TOPDOWN_FE_BOUND,
++				    ctx, cpu, count);
++	else if (perf_stat_evsel__is(counter, TOPDOWN_BE_BOUND))
++		update_runtime_stat(st, STAT_TOPDOWN_BE_BOUND,
++				    ctx, cpu, count);
+ 	else if (perf_evsel__match(counter, HARDWARE, HW_STALLED_CYCLES_FRONTEND))
+ 		update_runtime_stat(st, STAT_STALLED_CYCLES_FRONT,
+ 				    ctx, cpu, count);
+@@ -682,6 +694,47 @@ static double td_be_bound(int ctx, int cpu, struct runtime_stat *st)
+ 	return sanitize_val(1.0 - sum);
+ }
+ 
++/*
++ * Kernel reports metrics multiplied with slots. To get back
++ * the ratios we need to recreate the sum.
++ */
++
++static double td_metric_ratio(int ctx, int cpu,
++			      enum stat_type type,
++			      struct runtime_stat *stat)
++{
++	double sum = runtime_stat_avg(stat, STAT_TOPDOWN_RETIRING, ctx, cpu) +
++		runtime_stat_avg(stat, STAT_TOPDOWN_FE_BOUND, ctx, cpu) +
++		runtime_stat_avg(stat, STAT_TOPDOWN_BE_BOUND, ctx, cpu) +
++		runtime_stat_avg(stat, STAT_TOPDOWN_BAD_SPEC, ctx, cpu);
++	double d = runtime_stat_avg(stat, type, ctx, cpu);
++
++	if (sum)
++		return d / sum;
++	return 0;
++}
++
++/*
++ * ... but only if most of the values are actually available.
++ * We allow two missing.
++ */
++
++static bool full_td(int ctx, int cpu,
++		    struct runtime_stat *stat)
++{
++	int c = 0;
++
++	if (runtime_stat_avg(stat, STAT_TOPDOWN_RETIRING, ctx, cpu) > 0)
++		c++;
++	if (runtime_stat_avg(stat, STAT_TOPDOWN_BE_BOUND, ctx, cpu) > 0)
++		c++;
++	if (runtime_stat_avg(stat, STAT_TOPDOWN_FE_BOUND, ctx, cpu) > 0)
++		c++;
++	if (runtime_stat_avg(stat, STAT_TOPDOWN_BAD_SPEC, ctx, cpu) > 0)
++		c++;
++	return c >= 2;
++}
++
+ static void print_smi_cost(struct perf_stat_config *config,
+ 			   int cpu, struct perf_evsel *evsel,
+ 			   struct perf_stat_output_ctx *out,
+@@ -970,6 +1023,42 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+ 					be_bound * 100.);
+ 		else
+ 			print_metric(config, ctxp, NULL, NULL, name, 0);
++	} else if (perf_stat_evsel__is(evsel, TOPDOWN_RETIRING) &&
++			full_td(ctx, cpu, st)) {
++		double retiring = td_metric_ratio(ctx, cpu,
++						  STAT_TOPDOWN_RETIRING, st);
++
++		if (retiring > 0.7)
++			color = PERF_COLOR_GREEN;
++		print_metric(config, ctxp, color, "%8.1f%%", "retiring",
++				retiring * 100.);
++	} else if (perf_stat_evsel__is(evsel, TOPDOWN_FE_BOUND) &&
++			full_td(ctx, cpu, st)) {
++		double fe_bound = td_metric_ratio(ctx, cpu,
++						  STAT_TOPDOWN_FE_BOUND, st);
++
++		if (fe_bound > 0.2)
++			color = PERF_COLOR_RED;
++		print_metric(config, ctxp, color, "%8.1f%%", "frontend bound",
++				fe_bound * 100.);
++	} else if (perf_stat_evsel__is(evsel, TOPDOWN_BE_BOUND) &&
++			full_td(ctx, cpu, st)) {
++		double be_bound = td_metric_ratio(ctx, cpu,
++						  STAT_TOPDOWN_BE_BOUND, st);
++
++		if (be_bound > 0.2)
++			color = PERF_COLOR_RED;
++		print_metric(config, ctxp, color, "%8.1f%%", "backend bound",
++				be_bound * 100.);
++	} else if (perf_stat_evsel__is(evsel, TOPDOWN_BAD_SPEC) &&
++			full_td(ctx, cpu, st)) {
++		double bad_spec = td_metric_ratio(ctx, cpu,
++						  STAT_TOPDOWN_BAD_SPEC, st);
++
++		if (bad_spec > 0.1)
++			color = PERF_COLOR_RED;
++		print_metric(config, ctxp, color, "%8.1f%%", "bad speculation",
++				bad_spec * 100.);
+ 	} else if (evsel->metric_expr) {
+ 		generic_metric(config, evsel->metric_expr, evsel->metric_events, evsel->name,
+ 				evsel->metric_name, avg, cpu, out, st);
+diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
+index 4d40515307b8..56f86752a14e 100644
+--- a/tools/perf/util/stat.c
++++ b/tools/perf/util/stat.c
+@@ -87,6 +87,10 @@ static const char *id_str[PERF_STAT_EVSEL_ID__MAX] = {
+ 	ID(TOPDOWN_SLOTS_RETIRED, topdown-slots-retired),
+ 	ID(TOPDOWN_FETCH_BUBBLES, topdown-fetch-bubbles),
+ 	ID(TOPDOWN_RECOVERY_BUBBLES, topdown-recovery-bubbles),
++	ID(TOPDOWN_RETIRING, topdown-retiring),
++	ID(TOPDOWN_BAD_SPEC, topdown-bad-spec),
++	ID(TOPDOWN_FE_BOUND, topdown-fe-bound),
++	ID(TOPDOWN_BE_BOUND, topdown-be-bound),
+ 	ID(SMI_NUM, msr/smi/),
+ 	ID(APERF, msr/aperf/),
+ };
+diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
+index 2f9c9159a364..827c560ad19f 100644
+--- a/tools/perf/util/stat.h
++++ b/tools/perf/util/stat.h
+@@ -29,6 +29,10 @@ enum perf_stat_evsel_id {
+ 	PERF_STAT_EVSEL_ID__TOPDOWN_SLOTS_RETIRED,
+ 	PERF_STAT_EVSEL_ID__TOPDOWN_FETCH_BUBBLES,
+ 	PERF_STAT_EVSEL_ID__TOPDOWN_RECOVERY_BUBBLES,
++	PERF_STAT_EVSEL_ID__TOPDOWN_RETIRING,
++	PERF_STAT_EVSEL_ID__TOPDOWN_BAD_SPEC,
++	PERF_STAT_EVSEL_ID__TOPDOWN_FE_BOUND,
++	PERF_STAT_EVSEL_ID__TOPDOWN_BE_BOUND,
+ 	PERF_STAT_EVSEL_ID__SMI_NUM,
+ 	PERF_STAT_EVSEL_ID__APERF,
+ 	PERF_STAT_EVSEL_ID__MAX,
+@@ -81,6 +85,10 @@ enum stat_type {
+ 	STAT_TOPDOWN_SLOTS_RETIRED,
+ 	STAT_TOPDOWN_FETCH_BUBBLES,
+ 	STAT_TOPDOWN_RECOVERY_BUBBLES,
++	STAT_TOPDOWN_RETIRING,
++	STAT_TOPDOWN_BAD_SPEC,
++	STAT_TOPDOWN_FE_BOUND,
++	STAT_TOPDOWN_BE_BOUND,
+ 	STAT_SMI_NUM,
+ 	STAT_APERF,
+ 	STAT_MAX
+-- 
+2.17.1
+
