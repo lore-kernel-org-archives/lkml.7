@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36386C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:51:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B1DCC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:51:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 069552082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:51:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 388E321873
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:51:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553259087;
-	bh=q9vXDCMmk46qkDRsY0YXqTDO21XzZ3AHPZY0DzRadHs=;
+	s=default; t=1553259091;
+	bh=xxbZvv8wIJxugE45gZ2Thr1TPoHsmAwJC4pyRq2Fh3M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p2yAXKK+15L10Y4Qbq3oTckDpgmLzaR5NwlBbyX8THArPg0USapd48c8wccz8239V
-	 mcEhuZEg5kcBnlsxja9YYGrGv2uzCGyr6g9hyyviofa6X+KrBFsInd0VpYwnvMDI3x
-	 AHa5usM9AK/LysKygxfzRnnSA56mhXpEzJWx/Sv8=
+	b=awIk55dtBANQ20Fs1BpYZffe/KGN5x2A2ciwqG9/EMzJZvZx8C/vbAM/HbzyDHeqy
+	 yCjoxh/jdAZTKNlqFRF+0RYM9mXnkfzY9idUrUCK9nzSZJs2eGxzVeDgvYHKlrW7kJ
+	 SevHmDCIT8AE05H0Nn9vNOIJ00AMMx8xc02SQefg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733167AbfCVLyX (ORCPT
+        id S1733235AbfCVMva (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:54:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58764 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:51:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733141AbfCVLyT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:54:19 -0400
+        id S1732824AbfCVLyX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:54:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B47421916;
-        Fri, 22 Mar 2019 11:54:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4B0120643;
+        Fri, 22 Mar 2019 11:54:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255658;
-        bh=q9vXDCMmk46qkDRsY0YXqTDO21XzZ3AHPZY0DzRadHs=;
+        s=default; t=1553255662;
+        bh=xxbZvv8wIJxugE45gZ2Thr1TPoHsmAwJC4pyRq2Fh3M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kcO/KPY77Rz2MYFFGzHwzvrLG+RMdJhELOSGx1msB5ajaspls/f0Y2naqiAjW5cK/
-         /f4ynTr29mYU/oBmYjSerymsJxXFW/jZHd2BUSqOXu/YQUT+KbPVMAwhRdK7q6l9sp
-         35rFHVefL0WqzGQxRn5T10rOW8zgpxsvTjybYupk=
+        b=QzLltDZL/RavQryw5V7leTTfi/fluqDsYYSrrDWvYG6yerQTuj+fDBc0V/bTX+Spr
+         /2gLy9JNpeNADNx32DphRd/bLned+J+hp9MEOpAOWvd3hmbBJbWw8ryy0F5ByC5Aqq
+         PZadnwBGRxQNOMfb/1P7B3WMn3SR+LSHCsbdZ3Fw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        stable@vger.kernel.org,
+        Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk>,
         Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.14 141/183] powerpc/83xx: Also save/restore SPRG4-7 during suspend
-Date:   Fri, 22 Mar 2019 12:16:09 +0100
-Message-Id: <20190322111251.976316124@linuxfoundation.org>
+Subject: [PATCH 4.14 142/183] powerpc: Fix 32-bit KVM-PR lockup and host crash with MacOS guest
+Date:   Fri, 22 Mar 2019 12:16:10 +0100
+Message-Id: <20190322111252.059428427@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111241.819468003@linuxfoundation.org>
 References: <20190322111241.819468003@linuxfoundation.org>
@@ -65,79 +66,48 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk>
 
-commit 36da5ff0bea2dc67298150ead8d8471575c54c7d upstream.
+commit fe1ef6bcdb4fca33434256a802a3ed6aacf0bd2f upstream.
 
-The 83xx has 8 SPRG registers and uses at least SPRG4
-for DTLB handling LRU.
+Commit 8792468da5e1 "powerpc: Add the ability to save FPU without
+giving it up" unexpectedly removed the MSR_FE0 and MSR_FE1 bits from
+the bitmask used to update the MSR of the previous thread in
+__giveup_fpu() causing a KVM-PR MacOS guest to lockup and panic the
+host kernel.
 
-Fixes: 2319f1239592 ("powerpc/mm: e300c2/c3/c4 TLB errata workaround")
-Cc: stable@vger.kernel.org
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Leaving FE0/1 enabled means unrelated processes might receive FPEs
+when they're not expecting them and crash. In particular if this
+happens to init the host will then panic.
+
+eg (transcribed):
+  qemu-system-ppc[837]: unhandled signal 8 at 12cc9ce4 nip 12cc9ce4 lr 12cc9ca4 code 0
+  systemd[1]: unhandled signal 8 at 202f02e0 nip 202f02e0 lr 001003d4 code 0
+  Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b
+
+Reinstate these bits to the MSR bitmask to enable MacOS guests to run
+under 32-bit KVM-PR once again without issue.
+
+Fixes: 8792468da5e1 ("powerpc: Add the ability to save FPU without giving it up")
+Cc: stable@vger.kernel.org # v4.6+
+Signed-off-by: Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/platforms/83xx/suspend-asm.S |   34 +++++++++++++++++++++++-------
- 1 file changed, 27 insertions(+), 7 deletions(-)
+ arch/powerpc/kernel/process.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/powerpc/platforms/83xx/suspend-asm.S
-+++ b/arch/powerpc/platforms/83xx/suspend-asm.S
-@@ -26,13 +26,13 @@
- #define SS_MSR		0x74
- #define SS_SDR1		0x78
- #define SS_LR		0x7c
--#define SS_SPRG		0x80 /* 4 SPRGs */
--#define SS_DBAT		0x90 /* 8 DBATs */
--#define SS_IBAT		0xd0 /* 8 IBATs */
--#define SS_TB		0x110
--#define SS_CR		0x118
--#define SS_GPREG	0x11c /* r12-r31 */
--#define STATE_SAVE_SIZE 0x16c
-+#define SS_SPRG		0x80 /* 8 SPRGs */
-+#define SS_DBAT		0xa0 /* 8 DBATs */
-+#define SS_IBAT		0xe0 /* 8 IBATs */
-+#define SS_TB		0x120
-+#define SS_CR		0x128
-+#define SS_GPREG	0x12c /* r12-r31 */
-+#define STATE_SAVE_SIZE 0x17c
+--- a/arch/powerpc/kernel/process.c
++++ b/arch/powerpc/kernel/process.c
+@@ -156,7 +156,7 @@ void __giveup_fpu(struct task_struct *ts
  
- 	.section .data
- 	.align	5
-@@ -103,6 +103,16 @@ _GLOBAL(mpc83xx_enter_deep_sleep)
- 	stw	r7, SS_SPRG+12(r3)
- 	stw	r8, SS_SDR1(r3)
- 
-+	mfspr	r4, SPRN_SPRG4
-+	mfspr	r5, SPRN_SPRG5
-+	mfspr	r6, SPRN_SPRG6
-+	mfspr	r7, SPRN_SPRG7
-+
-+	stw	r4, SS_SPRG+16(r3)
-+	stw	r5, SS_SPRG+20(r3)
-+	stw	r6, SS_SPRG+24(r3)
-+	stw	r7, SS_SPRG+28(r3)
-+
- 	mfspr	r4, SPRN_DBAT0U
- 	mfspr	r5, SPRN_DBAT0L
- 	mfspr	r6, SPRN_DBAT1U
-@@ -493,6 +503,16 @@ mpc83xx_deep_resume:
- 	mtspr	SPRN_IBAT7U, r6
- 	mtspr	SPRN_IBAT7L, r7
- 
-+	lwz	r4, SS_SPRG+16(r3)
-+	lwz	r5, SS_SPRG+20(r3)
-+	lwz	r6, SS_SPRG+24(r3)
-+	lwz	r7, SS_SPRG+28(r3)
-+
-+	mtspr	SPRN_SPRG4, r4
-+	mtspr	SPRN_SPRG5, r5
-+	mtspr	SPRN_SPRG6, r6
-+	mtspr	SPRN_SPRG7, r7
-+
- 	lwz	r4, SS_SPRG+0(r3)
- 	lwz	r5, SS_SPRG+4(r3)
- 	lwz	r6, SS_SPRG+8(r3)
+ 	save_fpu(tsk);
+ 	msr = tsk->thread.regs->msr;
+-	msr &= ~MSR_FP;
++	msr &= ~(MSR_FP|MSR_FE0|MSR_FE1);
+ #ifdef CONFIG_VSX
+ 	if (cpu_has_feature(CPU_FTR_VSX))
+ 		msr &= ~MSR_VSX;
 
 
