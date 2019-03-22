@@ -2,341 +2,109 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB080C10F03
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:20:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45A12C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:20:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3DAF21900
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:20:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 114F12075E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:20:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553260859;
+	bh=J3HqjFZ72iKIw6xQL5DarYOww9fuRRyNMJsLEP5x3FM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=qXkgd3o0ZyQUswb1AwdLFcnbJACRCL9QpOQbPiwHBQU1qDE9BPt0iSmpTWxVXARKD
+	 fjsexkMraLJL2mD2/2kR+GCB5pIFOS4Q2H8IOBsxgMz7BvUCYjMmNDtWDcZOSm7GcI
+	 SpkIEHuwlhhSU0/qFdkWxxJMdakXlPRumyl1kjVg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728319AbfCVNUH (ORCPT
+        id S1728617AbfCVNU6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 09:20:07 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:40721 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728243AbfCVLWG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:22:06 -0400
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1h7IFI-0000dn-5U; Fri, 22 Mar 2019 12:21:56 +0100
-Date:   Fri, 22 Mar 2019 12:21:51 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
-cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, Samuel Neves <sneves@dei.uc.pt>,
-        Andy Lutomirski <luto@kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        linux-arch@vger.kernel.org
-Subject: Re: [PATCH net-next v9 01/19] asm: simd context helper API
-In-Reply-To: <20190322071122.6677-2-Jason@zx2c4.com>
-Message-ID: <alpine.DEB.2.21.1903221212310.1729@nanos.tec.linutronix.de>
-References: <20190322071122.6677-1-Jason@zx2c4.com> <20190322071122.6677-2-Jason@zx2c4.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Fri, 22 Mar 2019 09:20:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47214 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728451AbfCVLUt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:20:49 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F4FE21916;
+        Fri, 22 Mar 2019 11:20:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553253648;
+        bh=J3HqjFZ72iKIw6xQL5DarYOww9fuRRyNMJsLEP5x3FM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=EBnriZ1WvwtSfKN7p4H9mcc7bWH/B9ueoTn23Ksxn6AyVt/4IF1Tm+NFfDqvo+Chc
+         YSUhAmPnPdsD+wUnWXSwkzEzVXGa5JNHVfr4G33kDBXBJtx7t5mmT2yVCTAD43USiC
+         cHe1baOSM+8P8nQOkuvLi4I7YhzAd5OZDiQHsE24=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 3.18 029/134] ALSA: compress: prevent potential divide by zero bugs
+Date:   Fri, 22 Mar 2019 12:14:02 +0100
+Message-Id: <20190322111211.879359487@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190322111210.465931067@linuxfoundation.org>
+References: <20190322111210.465931067@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jason,
+3.18-stable review patch.  If anyone has any objections, please let me know.
 
-On Fri, 22 Mar 2019, Jason A. Donenfeld wrote:
-> index 000000000000..264ed84b41d8
-> --- /dev/null
-> +++ b/arch/arm/include/asm/simd.h
-> @@ -0,0 +1,63 @@
-> +/* SPDX-License-Identifier: GPL-2.0
+------------------
 
-The SPDX identifier has to be in a separate comment line.
+[ Upstream commit 678e2b44c8e3fec3afc7202f1996a4500a50be93 ]
 
-/* SPDX-License-Identifier: GPL-2.0 */
-/*
- * Copyright (C) 2015-2018 Jason....
- */
+The problem is seen in the q6asm_dai_compr_set_params() function:
 
-Yes, it looks odd, but it's defined that way.
+	ret = q6asm_map_memory_regions(dir, prtd->audio_client, prtd->phys,
+				       (prtd->pcm_size / prtd->periods),
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+				       prtd->periods);
 
-> +static __must_check inline bool simd_use(simd_context_t *ctx)
-> +{
-> +	if (!(*ctx & HAVE_FULL_SIMD))
-> +		return false;
-> +	if (*ctx & HAVE_SIMD_IN_USE)
-> +		return true;
-> +	kernel_neon_begin();
-> +	*ctx |= HAVE_SIMD_IN_USE;
-> +	return true;
-> +}
+In this code prtd->pcm_size is the buffer_size and prtd->periods comes
+from params->buffer.fragments.  If we allow the number of fragments to
+be zero then it results in a divide by zero bug.  One possible fix would
+be to use prtd->pcm_count directly instead of using the division to
+re-calculate it.  But I decided that it doesn't really make sense to
+allow zero fragments.
 
-> +static __must_check inline bool simd_use(simd_context_t *ctx)
-> +{
-> +	if (!(*ctx & HAVE_FULL_SIMD))
-> +		return false;
-> +	if (*ctx & HAVE_SIMD_IN_USE)
-> +		return true;
-> +	kernel_neon_begin();
-> +	*ctx |= HAVE_SIMD_IN_USE;
-> +	return true;
-> +}
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ sound/core/compress_offload.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-> +static __must_check inline bool simd_use(simd_context_t *ctx)
-> +{
-> +#if !defined(CONFIG_UML)
-> +	if (!(*ctx & HAVE_FULL_SIMD))
-> +		return false;
-> +	if (*ctx & HAVE_SIMD_IN_USE)
-> +		return true;
-> +	kernel_fpu_begin();
-> +	*ctx |= HAVE_SIMD_IN_USE;
-> +	return true;
-> +#else
-> +	return false;
-> +#endif
-> +}
-
-So now we have 3 almost identical copies of the same thing and x86/UM
-handling it differently than the ARM(64) ones.
-
-That can be completely avoided. Untested patch below.
-
-Thanks,
-
-	tglx
-
-8<-------------
---- /dev/null
-+++ b/arch/arm/include/asm/simd.h
-@@ -0,0 +1,30 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (C) 2015-2018 Jason A. Donenfeld <Jason@zx2c4.com>. All Rights Reserved.
-+ */
-+#ifndef _ASM_SIMD_H
-+#define _ASM_SIMD_H
-+
-+#ifdef CONFIG_KERNEL_MODE_NEON
-+#include <asm/neon.h>
-+
-+static __must_check inline bool may_use_simd(void)
-+{
-+	return !in_nmi() && !in_irq() && !in_serving_softirq();
-+}
-+
-+static inline void arch_simd_end(void)
-+{
-+	kernel_neon_end();
-+}
-+
-+static inline void arch_simd_begin(void)
-+{
-+	kernel_neon_begin();
-+}
-+
-+#else
-+#include <asm-generic/simd.h>
-+#endif
-+
-+#endif /* _ASM_SIMD_H */
---- a/arch/arm64/include/asm/simd.h
-+++ b/arch/arm64/include/asm/simd.h
-@@ -1,11 +1,10 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Copyright (C) 2017 Linaro Ltd. <ard.biesheuvel@linaro.org>
-- *
-- * This program is free software; you can redistribute it and/or modify it
-- * under the terms of the GNU General Public License version 2 as published
-- * by the Free Software Foundation.
-+ * Copyright (C) 2015-2018 Jason A. Donenfeld <Jason@zx2c4.com>. All Rights Reserved.
-  */
- 
-+#include <linux/simd.h>
- #ifndef __ASM_SIMD_H
- #define __ASM_SIMD_H
- 
-@@ -16,6 +15,8 @@
- #include <linux/types.h>
- 
- #ifdef CONFIG_KERNEL_MODE_NEON
-+#include <asm/neon.h>
-+#include <asm/simd.h>
- 
- DECLARE_PER_CPU(bool, kernel_neon_busy);
- 
-@@ -40,12 +41,18 @@ static __must_check inline bool may_use_
- 		!this_cpu_read(kernel_neon_busy);
- }
- 
--#else /* ! CONFIG_KERNEL_MODE_NEON */
-+static inline void arch_simd_end(void)
-+{
-+	kernel_neon_end();
-+}
- 
--static __must_check inline bool may_use_simd(void) {
--	return false;
-+static inline void arch_simd_begin(void)
-+{
-+	kernel_neon_begin();
- }
- 
--#endif /* ! CONFIG_KERNEL_MODE_NEON */
-+#else
-+#include <asm-generic/simd.h>
-+#endif
- 
- #endif
---- a/arch/x86/include/asm/simd.h
-+++ b/arch/x86/include/asm/simd.h
-@@ -1,4 +1,12 @@
- /* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (C) 2015-2018 Jason A. Donenfeld <Jason@zx2c4.com>. All Rights Reserved.
-+ */
-+
-+#ifndef _ASM_SIMD_H
-+#define _ASM_SIMD_H
-+
-+#ifndef CONFIG_UML
- 
- #include <asm/fpu/api.h>
- 
-@@ -10,3 +18,21 @@ static __must_check inline bool may_use_
+diff --git a/sound/core/compress_offload.c b/sound/core/compress_offload.c
+index 53cd5d69293e9..307344452b5c0 100644
+--- a/sound/core/compress_offload.c
++++ b/sound/core/compress_offload.c
+@@ -500,7 +500,8 @@ static int snd_compress_check_input(struct snd_compr_params *params)
  {
- 	return irq_fpu_usable();
- }
-+
-+static inline void arch_simd_begin(void)
-+{
-+	kernel_fpu_begin();
-+}
-+
-+static inline void arch_simd_end(void)
-+{
-+	kernel_fpu_end();
-+}
-+
-+#else
-+#include <asm-generic/simd.h>
-+#endif
-+
-+#include <linux/simd.h>
-+
-+#endif /* _ASM_SIMD_H */
---- a/include/asm-generic/simd.h
-+++ b/include/asm-generic/simd.h
-@@ -1,7 +1,12 @@
- /* SPDX-License-Identifier: GPL-2.0 */
+ 	/* first let's check the buffer parameter's */
+ 	if (params->buffer.fragment_size == 0 ||
+-	    params->buffer.fragments > INT_MAX / params->buffer.fragment_size)
++	    params->buffer.fragments > INT_MAX / params->buffer.fragment_size ||
++	    params->buffer.fragments == 0)
+ 		return -EINVAL;
  
-+#ifndef _ASM_SIMD_H
-+#define _ASM_SIMD_H
-+
- #include <linux/hardirq.h>
- 
-+#define SIMD_GENERIC	1
-+
- /*
-  * may_use_simd - whether it is allowable at this time to issue SIMD
-  *                instructions or access the SIMD register file
-@@ -13,3 +18,10 @@ static __must_check inline bool may_use_
- {
- 	return !in_interrupt();
- }
-+
-+static inline void arch_simd_begin(void) { }
-+static inline void arch_simd_end(void) { }
-+
-+#include <linux/simd.h>
-+
-+#endif /* _ASM_SIMD_H */
---- /dev/null
-+++ b/include/linux/simd.h
-@@ -0,0 +1,82 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (C) 2015-2018 Jason A. Donenfeld <Jason@zx2c4.com>. All Rights Reserved.
-+ */
-+
-+#ifndef _SIMD_H
-+#define _SIMD_H
-+
-+typedef enum {
-+	HAVE_NO_SIMD		= 1 << 0,
-+	HAVE_FULL_SIMD		= 1 << 1,
-+	HAVE_SIMD_IN_USE	= 1 << 31
-+} simd_context_t;
-+
-+#define DONT_USE_SIMD ((simd_context_t []){ HAVE_NO_SIMD })
-+
-+#include <asm/simd.h>
-+
-+#ifndef SIMD_GENERIC
-+
-+#include <linux/sched.h>
-+
-+static inline bool simd_relax(simd_context_t *ctx)
-+{
-+#ifdef CONFIG_PREEMPT
-+	if ((*ctx & HAVE_SIMD_IN_USE) && need_resched()) {
-+		simd_put(ctx);
-+		simd_get(ctx);
-+		return true;
-+	}
-+#endif
-+	return false;
-+}
-+
-+static inline void simd_get(simd_context_t *ctx)
-+{
-+	*ctx = may_use_simd() ? HAVE_FULL_SIMD : HAVE_NO_SIMD;
-+}
-+
-+static inline void simd_put(simd_context_t *ctx)
-+{
-+	if (*ctx & HAVE_SIMD_IN_USE)
-+		arch_simd_end();
-+
-+	*ctx = HAVE_NO_SIMD;
-+}
-+
-+static __must_check inline bool simd_use(simd_context_t *ctx)
-+{
-+	if (!(*ctx & HAVE_FULL_SIMD))
-+		return false;
-+	if (*ctx & HAVE_SIMD_IN_USE)
-+		return true;
-+	arch_simd_begin();
-+	*ctx |= HAVE_SIMD_IN_USE;
-+	return true;
-+}
-+
-+#else /* !SIMD_GENERIC */
-+
-+static inline bool simd_relax(simd_context_t *ctx)
-+{
-+	return false;
-+}
-+
-+static inline void simd_get(simd_context_t *ctx)
-+{
-+	*ctx = HAVE_NO_SIMD;
-+}
-+
-+static inline void simd_put(simd_context_t *ctx)
-+{
-+}
-+
-+static __must_check inline bool simd_use(simd_context_t *ctx)
-+{
-+	return false;
-+}
-+
-+#endif /* SIMD_GENERIC */
-+
-+#endif /* _SIMD_H */
+ 	/* now codec parameters */
+-- 
+2.19.1
+
+
+
