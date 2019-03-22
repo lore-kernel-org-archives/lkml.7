@@ -2,114 +2,151 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85B6DC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 00:48:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C57B9C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 00:56:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A92F21902
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 00:48:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C09021902
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 00:56:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727501AbfCVAsJ (ORCPT
+        id S1727404AbfCVA4H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 20:48:09 -0400
-Received: from ozlabs.org ([203.11.71.1]:42181 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726460AbfCVAsI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 20:48:08 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44QQ4N57fxz9sP2;
-        Fri, 22 Mar 2019 11:48:04 +1100 (AEDT)
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzkaller <syzkaller@googlegroups.com>
-Subject: Re: [PATCH] printk: Add caller information to printk() output.
-In-Reply-To: <20190321102013.yxs4v4pcrq44jktm@pathway.suse.cz>
-References: <20181204152724.ypk44mi4a56nrud4@pathway.suse.cz> <459018db-763b-9520-ead2-2c0d5975fbf3@i-love.sakura.ne.jp> <20181210130930.bas4fozjhe3dc5nu@pathway.suse.cz> <c5b5d660-d217-35f0-c4f1-7252367934d1@i-love.sakura.ne.jp> <e3f69846-ef08-c8f5-368f-4dada13c9970@i-love.sakura.ne.jp> <20181213121847.mwlr2vyv6qzclhk6@pathway.suse.cz> <20181213124255.GB3053@tigerII.localdomain> <20181217145452.3kev4rmo2l5lt2qy@pathway.suse.cz> <93f19e57-5051-c67d-9af4-b17624062d44@i-love.sakura.ne.jp> <871s312aqe.fsf@concordia.ellerman.id.au> <20190321102013.yxs4v4pcrq44jktm@pathway.suse.cz>
-Date:   Fri, 22 Mar 2019 11:48:04 +1100
-Message-ID: <877ecrka4b.fsf@concordia.ellerman.id.au>
+        Thu, 21 Mar 2019 20:56:07 -0400
+Received: from gateway30.websitewelcome.com ([192.185.150.24]:41369 "EHLO
+        gateway30.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727218AbfCVA4G (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 20:56:06 -0400
+Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
+        by gateway30.websitewelcome.com (Postfix) with ESMTP id 3670512D17
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 19:56:05 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 78Tdhft8a2qH778Tdh6cf5; Thu, 21 Mar 2019 19:56:05 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.137.161] (port=32814 helo=[192.168.1.76])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1h78Tc-0033V9-QO; Thu, 21 Mar 2019 19:56:04 -0500
+To:     Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        gregkh@linuxfoundation.org, jslaby@suse.com,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190322003827.GA30643@hari-Inspiron-1545>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Subject: Re: [PATCH] tty: serial_core: Spelling correction
+Message-ID: <eb1c40a0-8c71-99a8-e654-de2b62ca6c4b@embeddedor.com>
+Date:   Thu, 21 Mar 2019 19:56:02 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20190322003827.GA30643@hari-Inspiron-1545>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.137.161
+X-Source-L: No
+X-Exim-ID: 1h78Tc-0033V9-QO
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.1.76]) [189.250.137.161]:32814
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 5
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Petr Mladek <pmladek@suse.com> writes:
-> On Thu 2019-03-21 13:59:53, Michael Ellerman wrote:
->> Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp> writes:
->> ...
->> > From 91f85d2bd494df2f73c605d8b4747e8cc0a61ae2 Mon Sep 17 00:00:00 2001
->> > From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
->> > Date: Tue, 18 Dec 2018 05:53:04 +0900
->> > Subject: [PATCH] printk: Add caller information to printk() output.
->> >
->> > Sometimes we want to print a series of printk() messages to consoles
->> > without being disturbed by concurrent printk() from interrupts and/or
->> > other threads. But we can't enforce printk() callers to use their local
->> > buffers because we need to ask them to make too much changes. Also, even
->> > buffering up to one line inside printk() might cause failing to emit
->> > an important clue under critical situation.
->> >
->> > Therefore, instead of trying to help buffering, let's try to help
->> > reconstructing messages by saving caller information as of calling
->> > log_store() and adding it as "[T$thread_id]" or "[C$processor_id]"
->> > upon printing to consoles.
->> >
->> > Some examples for console output:
->> >
->> >   [    1.222773][    T1] x86: Booting SMP configuration:
->> >   [    2.779635][    T1] pci 0000:00:01.0: PCI bridge to [bus 01]
->> >   [    5.069193][  T268] Fusion MPT base driver 3.04.20
->> >   [    9.316504][    C2] random: fast init done
->> >   [   13.413336][ T3355] Initialized host personality
->> >
->> > Some examples for /dev/kmsg output:
->> >
->> >   6,496,1222773,-,caller=T1;x86: Booting SMP configuration:
->> >   6,968,2779635,-,caller=T1;pci 0000:00:01.0: PCI bridge to [bus 01]
->> >    SUBSYSTEM=pci
->> >    DEVICE=+pci:0000:00:01.0
->> >   6,1353,5069193,-,caller=T268;Fusion MPT base driver 3.04.20
->> >   5,1526,9316504,-,caller=C2;random: fast init done
->> >   6,1575,13413336,-,caller=T3355;Initialized host personality
->> >
->> > Note that this patch changes max length of messages which can be printed
->> > by printk() or written to /dev/kmsg interface from 992 bytes to 976 bytes,
->> > based on an assumption that userspace won't try to write messages hitting
->> > that border line to /dev/kmsg interface.
->> 
->> Do you have any plans to update dmesg or other userspace tools to show
->> the caller information?
->
-> dmesg already works via the syslog interface, try dmesg -S.
 
-Oh nice, thanks.
 
-> The current implementation does not pass the information into
-> the /dev/kmsg interface. It has the following format:
->
->     "<level>,<sequnum>,<timestamp>,<contflag>[,additional_values, ... ];<message text>\n"
->
-> It would be possible to add it as an additional value. To be hones
-> I am not sure how they are handled by userspace tools.
+On 3/21/19 7:38 PM, Hariprasad Kelam wrote:
+> fix warning reported by checkpatch tool
+> 
 
-OK, yeah I guess there's the potential for a backward compatibility can
-of worms there.
+It is much better if you explicitly mention what exactly you are fixing,
+e.g. fix spelling mistake "overriden" -> "overridden"
 
-I'm happy with dmesg -S :)
+It makes it easier for people to review your changes and give you
+feedback.
 
-cheers
+Cultivate this practice and people will appreciate it. :)
+
+Thanks
+--
+Gustavo
+
+> Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+> ---
+>  drivers/tty/serial/serial_core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
+> index 351843f..69f4871 100644
+> --- a/drivers/tty/serial/serial_core.c
+> +++ b/drivers/tty/serial/serial_core.c
+> @@ -1514,7 +1514,7 @@ static void uart_set_termios(struct tty_struct *tty,
+>  	}
+>  
+>  	uart_change_speed(tty, state, old_termios);
+> -	/* reload cflag from termios; port driver may have overriden flags */
+> +	/* reload cflag from termios; port driver may have overridden flags */
+>  	cflag = tty->termios.c_cflag;
+>  
+>  	/* Handle transition to B0 status */
+> 
