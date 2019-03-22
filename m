@@ -7,47 +7,58 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2BC6C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:45:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50E29C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:45:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 996B92070D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:45:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FA492070D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:45:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553258715;
-	bh=EgGGDnFrIMDvi2CHZcM+azdqhwirYFoJnxII5qNoCvM=;
+	s=default; t=1553258722;
+	bh=N3hUm2I4FqONBKT0iDRhSqLWIkEDH7qx1Eh/psaEOoc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0eEeN5V+NxRe1RVZtqEpXuw/BPOG5e9hIz3qPLKIbYH5wMXqbMYYCHQRc30ztIRRP
-	 M4CuDTmzv1IKCu/Ny4knwh/2mJWuAewyb5wrT1D24tlsTFBX/sXpQkY9GM3ooT2gel
-	 ugI9W3/kcv9Jyf5LUs3M6qwYL3OngYkrTRApmYik=
+	b=Pqp8aQHukHIIgnpAToHMcTDzYfazJVNB0uYhqJ6rOg1dEGpgsOfRz+kGwez1xq97X
+	 tw1H4QT944hcUZHQdK1GUP2/LvAn0XTtDl+y7L+SG/TyeH8fQgglRcclv+WuEOkEtw
+	 ZBlOEx/1n1vHseO9hwBNELZJXhOaxQYxbdITYa5M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388108AbfCVMpO (ORCPT
+        id S2388357AbfCVMpV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:45:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37986 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:45:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730518AbfCVMAn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:00:43 -0400
+        id S1732945AbfCVMAc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:00:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CBF7621934;
-        Fri, 22 Mar 2019 12:00:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58A40204FD;
+        Fri, 22 Mar 2019 12:00:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256042;
-        bh=EgGGDnFrIMDvi2CHZcM+azdqhwirYFoJnxII5qNoCvM=;
+        s=default; t=1553256031;
+        bh=N3hUm2I4FqONBKT0iDRhSqLWIkEDH7qx1Eh/psaEOoc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sCzyQckKEoCTgR0Xz4pef6FCdeksikBF84DywJWj77RlkPnjKuTe3tkFy0LT33PXE
-         v8eXExQ7/8rGjngYfc9cTQSD/7leQfP3SPSQoin+C8vQlKNA0yyplvm2CmfhiaijP3
-         UPmR+MGNVcOcD7SMMe/G17AfwOzuyJvOZr0C0MCY=
+        b=VKtA+TwAL1tjgIBfXsPSTR+xuD9U4QgcDXe/aWnXg9WlyZqNRCz9svYBO99KrPgMD
+         GBPrC3JLx+c/NAC+aGdWNUrHr6Cm3a69Y3bV4UUPhRHWUwkzisptPfzacVtUv1M2mc
+         gaMK8youQpxHUFvfiz/7M9cBqHoVxlDc7cRR0cr4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tristan Bastian <tristan-c.bastian@gmx.de>,
-        Thierry Reding <treding@nvidia.com>,
-        Arnd Bergmann <arnd@arndb.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 091/280] ARM: tegra: Restore DT ABI on Tegra124 Chromebooks
-Date:   Fri, 22 Mar 2019 12:14:04 +0100
-Message-Id: <20190322111311.595593858@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>,
+        Borislav Petkov <bp@suse.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "David E. Box" <david.e.box@intel.com>, dvhart@infradead.org,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        platform-driver-x86@vger.kernel.org,
+        Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 060/280] x86/CPU: Add Icelake model number
+Date:   Fri, 22 Mar 2019 12:13:33 +0100
+Message-Id: <20190322111309.636121466@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -66,65 +77,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 94d9b9337d09bdd27735005b3251d97ab29f7273 ]
+[ Upstream commit 8cd8f0ce0d6aafe661cb3d6781c8b82bc696c04d ]
 
-Commit 482997699ef0 ("ARM: tegra: Fix unit_address_vs_reg DTC warnings
-for /memory") inadventently broke device tree ABI by adding a unit-
-address to the "/memory" node because the device tree compiler flagged
-the missing unit-address as a warning.
+Add the CPUID model number of Icelake (ICL) mobile processors to the
+Intel family list. Icelake U/Y series uses model number 0x7E.
 
-Tegra124 Chromebooks (a.k.a. Nyan) use a bootloader that relies on the
-full name of the memory node in device tree being exactly "/memory". It
-can be argued whether this was a good decision or not, and some other
-bootloaders (such as U-Boot) do accept a unit-address in the name of the
-node, but the device tree is an ABI and we can't break existing setups
-just because the device tree compiler considers it bad practice to omit
-the unit-address nowadays.
-
-This partially reverts the offending commit and restores device tree ABI
-compatibility.
-
-Fixes: 482997699ef0 ("ARM: tegra: Fix unit_address_vs_reg DTC warnings for /memory")
-Reported-by: Tristan Bastian <tristan-c.bastian@gmx.de>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Tested-by: Tristan Bastian <tristan-c.bastian@gmx.de>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: "David E. Box" <david.e.box@intel.com>
+Cc: dvhart@infradead.org
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: platform-driver-x86@vger.kernel.org
+Cc: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20190214115712.19642-2-rajneesh.bhardwaj@linux.intel.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/tegra124-nyan.dtsi | 17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
+ arch/x86/include/asm/intel-family.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/tegra124-nyan.dtsi b/arch/arm/boot/dts/tegra124-nyan.dtsi
-index d5f11d6d987e..bc85b6a166c7 100644
---- a/arch/arm/boot/dts/tegra124-nyan.dtsi
-+++ b/arch/arm/boot/dts/tegra124-nyan.dtsi
-@@ -13,10 +13,25 @@
- 		stdout-path = "serial0:115200n8";
- 	};
+diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
+index 7ed08a7c3398..0ad25cc895ae 100644
+--- a/arch/x86/include/asm/intel-family.h
++++ b/arch/x86/include/asm/intel-family.h
+@@ -55,6 +55,8 @@
  
--	memory@80000000 {
-+	/*
-+	 * Note that recent version of the device tree compiler (starting with
-+	 * version 1.4.2) warn about this node containing a reg property, but
-+	 * missing a unit-address. However, the bootloader on these Chromebook
-+	 * devices relies on the full name of this node to be exactly /memory.
-+	 * Adding the unit-address causes the bootloader to create a /memory
-+	 * node and write the memory bank configuration to that node, which in
-+	 * turn leads the kernel to believe that the device has 2 GiB of
-+	 * memory instead of the amount detected by the bootloader.
-+	 *
-+	 * The name of this node is effectively ABI and must not be changed.
-+	 */
-+	memory {
-+		device_type = "memory";
- 		reg = <0x0 0x80000000 0x0 0x80000000>;
- 	};
+ #define INTEL_FAM6_CANNONLAKE_MOBILE	0x66
  
-+	/delete-node/ memory@80000000;
++#define INTEL_FAM6_ICELAKE_MOBILE	0x7E
 +
- 	host1x@50000000 {
- 		hdmi@54280000 {
- 			status = "okay";
+ /* "Small Core" Processors (Atom) */
+ 
+ #define INTEL_FAM6_ATOM_PINEVIEW	0x1C
 -- 
 2.19.1
 
