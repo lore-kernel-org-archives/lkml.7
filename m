@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 511A9C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:14:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5FACC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:14:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 216EF218A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:14:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7774E21B1A
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:14:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256864;
-	bh=EUTQYl1C+28xN5VV3/tEDJEvWiCe25V60rs5vj9EMYM=;
+	s=default; t=1553256867;
+	bh=bfuWdqeEb8aFJwwNtm6ZM9g06aLfUDMNwN9XoNxUYQM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PI4s3ykqJfe6nrOx1oRN57YzsOAkElaB9m5NX8Smd0yzc88RMzjL0qs89vJaprXWA
-	 OOXq88Vt9bpVRuZ4rdzCULZz/IOqbrn/zmuFJrp62Cp+JYPh+kf+TjxHFTpOhlh2fr
-	 S/wK2DJll4ifJQebyLa715zpBxmbOon9Z9WniGNE=
+	b=c6H9F5CVYYAZdZbJkppnQg4GafE8hrzKW+of9k1gsoOp0f7wcFW8fzI2Cs8trt0oy
+	 wu43sjSBVJPEJblkCH+SiOeelrXXJXF4WuNCBJI3wfx8rLGDdQvh1HwMsfztXXyMVP
+	 LkgjeuW5EQgtW9DSVplvNjLsXhQYUfHG2v7S86SY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389709AbfCVMOX (ORCPT
+        id S2389900AbfCVMOZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:14:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52526 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:14:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389275AbfCVMOR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:14:17 -0400
+        id S2389869AbfCVMOU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:14:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F67E2083D;
-        Fri, 22 Mar 2019 12:14:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 44937218A5;
+        Fri, 22 Mar 2019 12:14:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256856;
-        bh=EUTQYl1C+28xN5VV3/tEDJEvWiCe25V60rs5vj9EMYM=;
+        s=default; t=1553256858;
+        bh=bfuWdqeEb8aFJwwNtm6ZM9g06aLfUDMNwN9XoNxUYQM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UbAwpCgtZqhPN1UG22YIi2p+CO4f/82KjFIFw0IQQT2qgkxcWKyoAxP92F2qIw8LQ
-         DlgBEDJ++L0UI3ktyXqiIMleHS4AAM+iVsT2fa+5GrvGknNwpxCxnXLulETyMU/T9v
-         eCQLZ3xafm0Jc+9FhCgx0a8sctgkJP2c8U55s4M8=
+        b=zj7YxAkPR8qBiu1Wx6dGaQhcNbGV32E6tnsfFChqnOqGrqPY1BR29NOIuGoLjLaM5
+         0SI03iqIvK8kAEMtkNAkQiSYPO3yUkK/ZhnEGaN8P3hM/MDw5aFlouOQty0ZR+ZLOU
+         H8qnXbaw9Ipq1XiwV87AduCjzChApcv8ZtBCS2+w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Piotr Balcer <piotr.balcer@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jan Kara <jack@suse.cz>, Matthew Wilcox <willy@infradead.org>
-Subject: [PATCH 5.0 025/238] dax: Flush partial PMDs correctly
-Date:   Fri, 22 Mar 2019 12:14:04 +0100
-Message-Id: <20190322111259.667020813@linuxfoundation.org>
+        stable@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: [PATCH 5.0 026/238] nfit: Fix nfit_intel_shutdown_status() command submission
+Date:   Fri, 22 Mar 2019 12:14:05 +0100
+Message-Id: <20190322111259.740446487@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -66,76 +65,124 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Matthew Wilcox <willy@infradead.org>
+From: Dan Williams <dan.j.williams@intel.com>
 
-commit e4b3448bc346fedf36db64124a664a959995b085 upstream.
+commit f596c8844fe1d0022007ae6c7a377361fb653eff upstream.
 
-The radix tree would rewind the index in an iterator to the lowest index
-of a multi-slot entry.  The XArray iterators instead leave the index
-unchanged, but I overlooked that when converting DAX from the radix tree
-to the XArray.  Adjust the index that we use for flushing to the start
-of the PMD range.
+The implementation is broken in all the ways the unit test did not touch:
 
-Fixes: c1901cd33cf4 ("page cache: Convert find_get_entries_tag to XArray")
+1/ The local definition of in_buf and in_obj violated C99 initializer
+   expectations for zeroing. By only initializing 2 out of the three
+   struct members the compiler was free to zero-initialize the remaining
+   entry even though the aliased location in the union was initialized.
+
+2/ The implementation made assumptions about the state of the 'smart'
+   payload after command execution that are satisfied by
+   acpi_nfit_ctl(), but not acpi_evaluate_dsm().
+
+3/ populate_shutdown_status() is skipped on Intel NVDIMMs due to the early
+   return for skipping the common _LS{I,R,W} enabling.
+
+4/ The input length should be zero.
+
+This breakage was missed due to the unit test implementation only
+testing the case where nfit_intel_shutdown_status() returns a valid
+payload.
+
+Much of this complexity would be saved if acpi_nfit_ctl() could be used, but
+that currently requires a 'struct nvdimm *' argument and one is not created
+until later in the init process. The health result is needed before the device
+is created because the payload gates whether the nmemX/nfit/dirty_shutdown
+property is visible in sysfs.
+
 Cc: <stable@vger.kernel.org>
-Reported-by: Piotr Balcer <piotr.balcer@intel.com>
-Tested-by: Dan Williams <dan.j.williams@intel.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Matthew Wilcox <willy@infradead.org>
+Fixes: 0ead11181fe0 ("acpi, nfit: Collect shutdown status")
+Reported-by: Dexuan Cui <decui@microsoft.com>
+Reviewed-by: Dexuan Cui <decui@microsoft.com>
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/dax.c |   19 +++++++++----------
- 1 file changed, 9 insertions(+), 10 deletions(-)
+ drivers/acpi/nfit/core.c |   43 +++++++++++++++++++++++++------------------
+ 1 file changed, 25 insertions(+), 18 deletions(-)
 
---- a/fs/dax.c
-+++ b/fs/dax.c
-@@ -843,9 +843,8 @@ unlock_pte:
- static int dax_writeback_one(struct xa_state *xas, struct dax_device *dax_dev,
- 		struct address_space *mapping, void *entry)
+--- a/drivers/acpi/nfit/core.c
++++ b/drivers/acpi/nfit/core.c
+@@ -1759,14 +1759,14 @@ static bool acpi_nvdimm_has_method(struc
+ 
+ __weak void nfit_intel_shutdown_status(struct nfit_mem *nfit_mem)
  {
--	unsigned long pfn;
-+	unsigned long pfn, index, count;
- 	long ret = 0;
--	size_t size;
++	struct device *dev = &nfit_mem->adev->dev;
+ 	struct nd_intel_smart smart = { 0 };
+ 	union acpi_object in_buf = {
+-		.type = ACPI_TYPE_BUFFER,
+-		.buffer.pointer = (char *) &smart,
+-		.buffer.length = sizeof(smart),
++		.buffer.type = ACPI_TYPE_BUFFER,
++		.buffer.length = 0,
+ 	};
+ 	union acpi_object in_obj = {
+-		.type = ACPI_TYPE_PACKAGE,
++		.package.type = ACPI_TYPE_PACKAGE,
+ 		.package.count = 1,
+ 		.package.elements = &in_buf,
+ 	};
+@@ -1781,8 +1781,15 @@ __weak void nfit_intel_shutdown_status(s
+ 		return;
  
- 	/*
- 	 * A page got tagged dirty in DAX mapping? Something is seriously
-@@ -894,17 +893,18 @@ static int dax_writeback_one(struct xa_s
- 	xas_unlock_irq(xas);
+ 	out_obj = acpi_evaluate_dsm(handle, guid, revid, func, &in_obj);
+-	if (!out_obj)
++	if (!out_obj || out_obj->type != ACPI_TYPE_BUFFER
++			|| out_obj->buffer.length < sizeof(smart)) {
++		dev_dbg(dev->parent, "%s: failed to retrieve initial health\n",
++				dev_name(dev));
++		ACPI_FREE(out_obj);
+ 		return;
++	}
++	memcpy(&smart, out_obj->buffer.pointer, sizeof(smart));
++	ACPI_FREE(out_obj);
  
- 	/*
--	 * Even if dax_writeback_mapping_range() was given a wbc->range_start
--	 * in the middle of a PMD, the 'index' we are given will be aligned to
--	 * the start index of the PMD, as will the pfn we pull from 'entry'.
-+	 * If dax_writeback_mapping_range() was given a wbc->range_start
-+	 * in the middle of a PMD, the 'index' we use needs to be
-+	 * aligned to the start of the PMD.
- 	 * This allows us to flush for PMD_SIZE and not have to worry about
- 	 * partial PMD writebacks.
- 	 */
- 	pfn = dax_to_pfn(entry);
--	size = PAGE_SIZE << dax_entry_order(entry);
-+	count = 1UL << dax_entry_order(entry);
-+	index = xas->xa_index & ~(count - 1);
+ 	if (smart.flags & ND_INTEL_SMART_SHUTDOWN_VALID) {
+ 		if (smart.shutdown_state)
+@@ -1793,7 +1800,6 @@ __weak void nfit_intel_shutdown_status(s
+ 		set_bit(NFIT_MEM_DIRTY_COUNT, &nfit_mem->flags);
+ 		nfit_mem->dirty_shutdown = smart.shutdown_count;
+ 	}
+-	ACPI_FREE(out_obj);
+ }
  
--	dax_entry_mkclean(mapping, xas->xa_index, pfn);
--	dax_flush(dax_dev, page_address(pfn_to_page(pfn)), size);
-+	dax_entry_mkclean(mapping, index, pfn);
-+	dax_flush(dax_dev, page_address(pfn_to_page(pfn)), count * PAGE_SIZE);
- 	/*
- 	 * After we have flushed the cache, we can clear the dirty tag. There
- 	 * cannot be new dirty data in the pfn after the flush has completed as
-@@ -917,8 +917,7 @@ static int dax_writeback_one(struct xa_s
- 	xas_clear_mark(xas, PAGECACHE_TAG_DIRTY);
- 	dax_wake_entry(xas, entry, false);
+ static void populate_shutdown_status(struct nfit_mem *nfit_mem)
+@@ -1915,18 +1921,19 @@ static int acpi_nfit_add_dimm(struct acp
+ 		| 1 << ND_CMD_SET_CONFIG_DATA;
+ 	if (family == NVDIMM_FAMILY_INTEL
+ 			&& (dsm_mask & label_mask) == label_mask)
+-		return 0;
+-
+-	if (acpi_nvdimm_has_method(adev_dimm, "_LSI")
+-			&& acpi_nvdimm_has_method(adev_dimm, "_LSR")) {
+-		dev_dbg(dev, "%s: has _LSR\n", dev_name(&adev_dimm->dev));
+-		set_bit(NFIT_MEM_LSR, &nfit_mem->flags);
+-	}
+-
+-	if (test_bit(NFIT_MEM_LSR, &nfit_mem->flags)
+-			&& acpi_nvdimm_has_method(adev_dimm, "_LSW")) {
+-		dev_dbg(dev, "%s: has _LSW\n", dev_name(&adev_dimm->dev));
+-		set_bit(NFIT_MEM_LSW, &nfit_mem->flags);
++		/* skip _LS{I,R,W} enabling */;
++	else {
++		if (acpi_nvdimm_has_method(adev_dimm, "_LSI")
++				&& acpi_nvdimm_has_method(adev_dimm, "_LSR")) {
++			dev_dbg(dev, "%s: has _LSR\n", dev_name(&adev_dimm->dev));
++			set_bit(NFIT_MEM_LSR, &nfit_mem->flags);
++		}
++
++		if (test_bit(NFIT_MEM_LSR, &nfit_mem->flags)
++				&& acpi_nvdimm_has_method(adev_dimm, "_LSW")) {
++			dev_dbg(dev, "%s: has _LSW\n", dev_name(&adev_dimm->dev));
++			set_bit(NFIT_MEM_LSW, &nfit_mem->flags);
++		}
+ 	}
  
--	trace_dax_writeback_one(mapping->host, xas->xa_index,
--			size >> PAGE_SHIFT);
-+	trace_dax_writeback_one(mapping->host, index, count);
- 	return ret;
- 
-  put_unlocked:
+ 	populate_shutdown_status(nfit_mem);
 
 
