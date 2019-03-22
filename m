@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 783A4C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:22:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2B73C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:22:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F53B218A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:22:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FAE5218A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:22:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553253773;
-	bh=/AGrJ3CGZGLNpqMxBlYCc0WN30z+AN2SqmnEykwq3H4=;
+	s=default; t=1553253776;
+	bh=zmEg1I8HcG+p5HlgBPXh83MTtzguc8QtMeFWP5vbOZ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FckITfsZf0MkozgQX6lQnT7f2UJqLKOkzUjbQ3QUgpdR2gA4V4i5DWUNPevGCmqay
-	 uos4+q+rIG4o1wfQs4yri4E5l6wrZclbY+ud3SJtuQB+DLXhW+oJk935uS85JN3iO/
-	 zqtSZSpODMOnaObRyIggwv/w1FO0RNYiKwnEy+2M=
+	b=ym9PhSzwr3DkhBt4GP+p3SM8zT9G2E8O1OUYoKRZ+Z4oAHV2Q9npGO///5eQF+KMJ
+	 FyVNuUGuDTjml/Ih5lfGRhcKOgtyuM2fg632wAz7187H4TeF+7jWz1tScjpvHUNui0
+	 hDCWIQKD88/mLxzuPYrRx4unwZ+TelnulShwn5Co=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728875AbfCVLWw (ORCPT
+        id S1728884AbfCVLWy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:22:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49552 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:22:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728855AbfCVLWp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:22:45 -0400
+        id S1728401AbfCVLWt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:22:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41A14218D4;
-        Fri, 22 Mar 2019 11:22:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 409DA218A2;
+        Fri, 22 Mar 2019 11:22:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553253764;
-        bh=/AGrJ3CGZGLNpqMxBlYCc0WN30z+AN2SqmnEykwq3H4=;
+        s=default; t=1553253768;
+        bh=zmEg1I8HcG+p5HlgBPXh83MTtzguc8QtMeFWP5vbOZ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=St+VPKCf/4z3xXl54FSw5ONEXUDx69gZZ0R9dUweffLk+o6WywuYjfwVZ36Xcs/o5
-         QS/4LdS6sOXJXC7xp10S89EuYJqxeR7zN7HyVvx6pzPeTfRK8x489MuIUDaICTf2Su
-         bjIHrrwvIVlBYm/TWmzWM4ZeQdqgEvTa13xDQICs=
+        b=Dgxes5h79lRa+wYw1FyEiuXkR3fm/KwtqVdgF8MRRQgn8cdRElivS9Uxtk1jFX+6u
+         5dTNehlyw8ZIohpNVhHIYPRKXQ95bfMb51NRaHYjiKdiEXOSJoURgBmLpjVHR9X8ZY
+         mxFtDyeKw1tVCNoxlqJqk3minsyrFIlXz8VVhKYw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Balaji Pothunoori <bpothuno@codeaurora.org>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 3.18 038/134] mac80211: dont initiate TDLS connection if station is not associated to AP
-Date:   Fri, 22 Mar 2019 12:14:11 +0100
-Message-Id: <20190322111212.535031291@linuxfoundation.org>
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Brijesh Singh <brijesh.singh@amd.com>,
+        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 3.18 058/134] iommu/amd: Fix IOMMU page flush when detach device from a domain
+Date:   Fri, 22 Mar 2019 12:14:31 +0100
+Message-Id: <20190322111214.210520651@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111210.465931067@linuxfoundation.org>
 References: <20190322111210.465931067@linuxfoundation.org>
@@ -67,54 +69,76 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 7ed5285396c257fd4070b1e29e7b2341aae2a1ce ]
+[ Upstream commit 9825bd94e3a2baae1f4874767ae3a7d4c049720e ]
 
-Following call trace is observed while adding TDLS peer entry in driver
-during TDLS setup.
+When a VM is terminated, the VFIO driver detaches all pass-through
+devices from VFIO domain by clearing domain id and page table root
+pointer from each device table entry (DTE), and then invalidates
+the DTE. Then, the VFIO driver unmap pages and invalidate IOMMU pages.
 
-Call Trace:
-[<c1301476>] dump_stack+0x47/0x61
-[<c10537d2>] __warn+0xe2/0x100
-[<fa22415f>] ? sta_apply_parameters+0x49f/0x550 [mac80211]
-[<c1053895>] warn_slowpath_null+0x25/0x30
-[<fa22415f>] sta_apply_parameters+0x49f/0x550 [mac80211]
-[<fa20ad42>] ? sta_info_alloc+0x1c2/0x450 [mac80211]
-[<fa224623>] ieee80211_add_station+0xe3/0x160 [mac80211]
-[<c1876fe3>] nl80211_new_station+0x273/0x420
-[<c170f6d9>] genl_rcv_msg+0x219/0x3c0
-[<c170f4c0>] ? genl_rcv+0x30/0x30
-[<c170ee7e>] netlink_rcv_skb+0x8e/0xb0
-[<c170f4ac>] genl_rcv+0x1c/0x30
-[<c170e8aa>] netlink_unicast+0x13a/0x1d0
-[<c170ec18>] netlink_sendmsg+0x2d8/0x390
-[<c16c5acd>] sock_sendmsg+0x2d/0x40
-[<c16c6369>] ___sys_sendmsg+0x1d9/0x1e0
+Currently, the IOMMU driver keeps track of which IOMMU and how many
+devices are attached to the domain. When invalidate IOMMU pages,
+the driver checks if the IOMMU is still attached to the domain before
+issuing the invalidate page command.
 
-Fixing this by allowing TDLS setup request only when we have completed
-association.
+However, since VFIO has already detached all devices from the domain,
+the subsequent INVALIDATE_IOMMU_PAGES commands are being skipped as
+there is no IOMMU attached to the domain. This results in data
+corruption and could cause the PCI device to end up in indeterministic
+state.
 
-Signed-off-by: Balaji Pothunoori <bpothuno@codeaurora.org>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Fix this by invalidate IOMMU pages when detach a device, and
+before decrementing the per-domain device reference counts.
+
+Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Suggested-by: Joerg Roedel <joro@8bytes.org>
+Co-developed-by: Brijesh Singh <brijesh.singh@amd.com>
+Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
+Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Fixes: 6de8ad9b9ee0 ('x86/amd-iommu: Make iommu_flush_pages aware of multiple IOMMUs')
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/cfg.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/iommu/amd_iommu.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
-diff --git a/net/mac80211/cfg.c b/net/mac80211/cfg.c
-index 6ba5240dd61da..ffe319309d033 100644
---- a/net/mac80211/cfg.c
-+++ b/net/mac80211/cfg.c
-@@ -1194,6 +1194,10 @@ static int ieee80211_add_station(struct wiphy *wiphy, struct net_device *dev,
- 		sta->sta.tdls = true;
- 	}
+diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
+index 5cf388ad1555..48a73c48876b 100644
+--- a/drivers/iommu/amd_iommu.c
++++ b/drivers/iommu/amd_iommu.c
+@@ -2132,14 +2132,11 @@ static void do_attach(struct iommu_dev_data *dev_data,
  
-+	if (sta->sta.tdls && sdata->vif.type == NL80211_IFTYPE_STATION &&
-+	    !sdata->u.mgd.associated)
-+		return -EINVAL;
+ static void do_detach(struct iommu_dev_data *dev_data)
+ {
++	struct protection_domain *domain = dev_data->domain;
+ 	struct amd_iommu *iommu;
+ 
+ 	iommu = amd_iommu_rlookup_table[dev_data->devid];
+ 
+-	/* decrease reference counters */
+-	dev_data->domain->dev_iommu[iommu->index] -= 1;
+-	dev_data->domain->dev_cnt                 -= 1;
+-
+ 	/* Update data structures */
+ 	dev_data->domain = NULL;
+ 	list_del(&dev_data->list);
+@@ -2147,6 +2144,16 @@ static void do_detach(struct iommu_dev_data *dev_data)
+ 
+ 	/* Flush the DTE entry */
+ 	device_flush_dte(dev_data);
 +
- 	err = sta_apply_parameters(local, sta, params);
- 	if (err) {
- 		sta_info_free(local, sta);
++	/* Flush IOTLB */
++	domain_flush_tlb_pde(domain);
++
++	/* Wait for the flushes to finish */
++	domain_flush_complete(domain);
++
++	/* decrease reference counters - needs to happen after the flushes */
++	domain->dev_iommu[iommu->index] -= 1;
++	domain->dev_cnt                 -= 1;
+ }
+ 
+ /*
 -- 
 2.19.1
 
