@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 255BEC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:34:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DC87C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:34:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5AD6218B0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:34:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 715BC21929
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:34:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254489;
-	bh=Mwb/XwvywYRGeGF9dMhF4q9vBu+JDXrrw79QXXjvFkE=;
+	s=default; t=1553254492;
+	bh=yy/SXnu0dI8DdVTk7ylbJJV8NCtt+YVk9LyMmclMPAM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vKsTthLb2hWl+Ki9AQXXDeo2K+HAZBw+GO2sf8Qn0DX4pIAQGTUTIgUrtbXV5ulc4
-	 2NMS8YSKdyqijKoKJ/KfcwHDjm0Dz20/CtHNDP89XVBmpB0hPU4aIPG9/gUTVF3AK5
-	 bFBq6LTTDUzg6hfKCG3HFiHInHHEdFzQBKMHVhMw=
+	b=xAce7ewUllczqP1+rzd/R8A75VX7O0CajVZntQPqVjpQIul61LnprDAD/94x/8S3k
+	 9b6yAnpeerk/3iR+EUUW5TKy/GekzjfyZGRjUrLv1F5DUy6iY+eAqjpvTE+pif8PsJ
+	 Ik8Y2inkAOGOxpnxXdxZZAGh/xnHxGsfdHreQ9ps=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730486AbfCVLer (ORCPT
+        id S1730288AbfCVLev (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:34:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35460 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:34:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35516 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729871AbfCVLep (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:34:45 -0400
+        id S1729871AbfCVLes (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:34:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD14421917;
-        Fri, 22 Mar 2019 11:34:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CC212183E;
+        Fri, 22 Mar 2019 11:34:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254484;
-        bh=Mwb/XwvywYRGeGF9dMhF4q9vBu+JDXrrw79QXXjvFkE=;
+        s=default; t=1553254488;
+        bh=yy/SXnu0dI8DdVTk7ylbJJV8NCtt+YVk9LyMmclMPAM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AEaYWxh1qpVEufj1hotr9+mxvFhAUeH281JdaIKt4QOiKMZJsy6WbFz+mKG9c8Pgn
-         9ZIK0KgoUNaz0dt2p/nTl56Jg9nUKH7qDU0ZDuH5wJRkE4xKahA5ndPDBjEhCOoX/T
-         mZ+QnxHULxGu139CQv9tegPBfhl5xkTdJOQId4PM=
+        b=c66knJ4VlAEIsfQamTAsY9meOAftBj2/v/6rRKyETyARO7hwMC/Hmn5MNv0nLk7tu
+         X80FV4X8uugh3hdgdIb9NdgN7DMsIIhjXLipIVA74vvVWzQu3Smhkxbec7E6DuuaIy
+         5RhRQF2K5djavgyrm3iUkNYGDYK8W8up//gRJrZc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xing Gaopeng <xingaopeng@huawei.com>,
-        Hou Tao <houtao1@huawei.com>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        zhengbin <zhengbin13@huawei.com>,
         Dominique Martinet <dominique.martinet@cea.fr>
-Subject: [PATCH 4.4 150/230] 9p: use inode->i_lock to protect i_size_write() under 32-bit
-Date:   Fri, 22 Mar 2019 12:14:48 +0100
-Message-Id: <20190322111247.192057106@linuxfoundation.org>
+Subject: [PATCH 4.4 151/230] 9p/net: fix memory leak in p9_client_create
+Date:   Fri, 22 Mar 2019 12:14:49 +0100
+Message-Id: <20190322111247.264128871@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -66,318 +66,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Hou Tao <houtao1@huawei.com>
+From: zhengbin <zhengbin13@huawei.com>
 
-commit 5e3cc1ee1405a7eb3487ed24f786dec01b4cbe1f upstream.
+commit bb06c388fa20ae24cfe80c52488de718a7e3a53f upstream.
 
-Use inode->i_lock to protect i_size_write(), else i_size_read() in
-generic_fillattr() may loop infinitely in read_seqcount_begin() when
-multiple processes invoke v9fs_vfs_getattr() or v9fs_vfs_getattr_dotl()
-simultaneously under 32-bit SMP environment, and a soft lockup will be
-triggered as show below:
+If msize is less than 4096, we should close and put trans, destroy
+tagpool, not just free client. This patch fixes that.
 
-  watchdog: BUG: soft lockup - CPU#5 stuck for 22s! [stat:2217]
-  Modules linked in:
-  CPU: 5 PID: 2217 Comm: stat Not tainted 5.0.0-rc1-00005-g7f702faf5a9e #4
-  Hardware name: Generic DT based system
-  PC is at generic_fillattr+0x104/0x108
-  LR is at 0xec497f00
-  pc : [<802b8898>]    lr : [<ec497f00>]    psr: 200c0013
-  sp : ec497e20  ip : ed608030  fp : ec497e3c
-  r10: 00000000  r9 : ec497f00  r8 : ed608030
-  r7 : ec497ebc  r6 : ec497f00  r5 : ee5c1550  r4 : ee005780
-  r3 : 0000052d  r2 : 00000000  r1 : ec497f00  r0 : ed608030
-  Flags: nzCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
-  Control: 10c5387d  Table: ac48006a  DAC: 00000051
-  CPU: 5 PID: 2217 Comm: stat Not tainted 5.0.0-rc1-00005-g7f702faf5a9e #4
-  Hardware name: Generic DT based system
-  Backtrace:
-  [<8010d974>] (dump_backtrace) from [<8010dc88>] (show_stack+0x20/0x24)
-  [<8010dc68>] (show_stack) from [<80a1d194>] (dump_stack+0xb0/0xdc)
-  [<80a1d0e4>] (dump_stack) from [<80109f34>] (show_regs+0x1c/0x20)
-  [<80109f18>] (show_regs) from [<801d0a80>] (watchdog_timer_fn+0x280/0x2f8)
-  [<801d0800>] (watchdog_timer_fn) from [<80198658>] (__hrtimer_run_queues+0x18c/0x380)
-  [<801984cc>] (__hrtimer_run_queues) from [<80198e60>] (hrtimer_run_queues+0xb8/0xf0)
-  [<80198da8>] (hrtimer_run_queues) from [<801973e8>] (run_local_timers+0x28/0x64)
-  [<801973c0>] (run_local_timers) from [<80197460>] (update_process_times+0x3c/0x6c)
-  [<80197424>] (update_process_times) from [<801ab2b8>] (tick_nohz_handler+0xe0/0x1bc)
-  [<801ab1d8>] (tick_nohz_handler) from [<80843050>] (arch_timer_handler_virt+0x38/0x48)
-  [<80843018>] (arch_timer_handler_virt) from [<80180a64>] (handle_percpu_devid_irq+0x8c/0x240)
-  [<801809d8>] (handle_percpu_devid_irq) from [<8017ac20>] (generic_handle_irq+0x34/0x44)
-  [<8017abec>] (generic_handle_irq) from [<8017b344>] (__handle_domain_irq+0x6c/0xc4)
-  [<8017b2d8>] (__handle_domain_irq) from [<801022e0>] (gic_handle_irq+0x4c/0x88)
-  [<80102294>] (gic_handle_irq) from [<80101a30>] (__irq_svc+0x70/0x98)
-  [<802b8794>] (generic_fillattr) from [<8056b284>] (v9fs_vfs_getattr_dotl+0x74/0xa4)
-  [<8056b210>] (v9fs_vfs_getattr_dotl) from [<802b8904>] (vfs_getattr_nosec+0x68/0x7c)
-  [<802b889c>] (vfs_getattr_nosec) from [<802b895c>] (vfs_getattr+0x44/0x48)
-  [<802b8918>] (vfs_getattr) from [<802b8a74>] (vfs_statx+0x9c/0xec)
-  [<802b89d8>] (vfs_statx) from [<802b9428>] (sys_lstat64+0x48/0x78)
-  [<802b93e0>] (sys_lstat64) from [<80101000>] (ret_fast_syscall+0x0/0x28)
-
-[dominique.martinet@cea.fr: updated comment to not refer to a function
-in another subsystem]
-Link: http://lkml.kernel.org/r/20190124063514.8571-2-houtao1@huawei.com
+Link: http://lkml.kernel.org/m/1552464097-142659-1-git-send-email-zhengbin13@huawei.com
 Cc: stable@vger.kernel.org
-Fixes: 7549ae3e81cc ("9p: Use the i_size_[read, write]() macros instead of using inode->i_size directly.")
-Reported-by: Xing Gaopeng <xingaopeng@huawei.com>
-Signed-off-by: Hou Tao <houtao1@huawei.com>
+Fixes: 574d356b7a02 ("9p/net: put a lower bound on msize")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: zhengbin <zhengbin13@huawei.com>
 Signed-off-by: Dominique Martinet <dominique.martinet@cea.fr>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/9p/v9fs_vfs.h       |   23 +++++++++++++++++++++--
- fs/9p/vfs_file.c       |    6 +++++-
- fs/9p/vfs_inode.c      |   23 +++++++++++------------
- fs/9p/vfs_inode_dotl.c |   27 ++++++++++++++-------------
- fs/9p/vfs_super.c      |    4 ++--
- 5 files changed, 53 insertions(+), 30 deletions(-)
+ net/9p/client.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/9p/v9fs_vfs.h
-+++ b/fs/9p/v9fs_vfs.h
-@@ -40,6 +40,9 @@
-  */
- #define P9_LOCK_TIMEOUT (30*HZ)
- 
-+/* flags for v9fs_stat2inode() & v9fs_stat2inode_dotl() */
-+#define V9FS_STAT2INODE_KEEP_ISIZE 1
-+
- extern struct file_system_type v9fs_fs_type;
- extern const struct address_space_operations v9fs_addr_operations;
- extern const struct file_operations v9fs_file_operations;
-@@ -61,8 +64,10 @@ int v9fs_init_inode(struct v9fs_session_
- 		    struct inode *inode, umode_t mode, dev_t);
- void v9fs_evict_inode(struct inode *inode);
- ino_t v9fs_qid2ino(struct p9_qid *qid);
--void v9fs_stat2inode(struct p9_wstat *, struct inode *, struct super_block *);
--void v9fs_stat2inode_dotl(struct p9_stat_dotl *, struct inode *);
-+void v9fs_stat2inode(struct p9_wstat *stat, struct inode *inode,
-+		      struct super_block *sb, unsigned int flags);
-+void v9fs_stat2inode_dotl(struct p9_stat_dotl *stat, struct inode *inode,
-+			   unsigned int flags);
- int v9fs_dir_release(struct inode *inode, struct file *filp);
- int v9fs_file_open(struct inode *inode, struct file *file);
- void v9fs_inode2stat(struct inode *inode, struct p9_wstat *stat);
-@@ -83,4 +88,18 @@ static inline void v9fs_invalidate_inode
- }
- 
- int v9fs_open_to_dotl_flags(int flags);
-+
-+static inline void v9fs_i_size_write(struct inode *inode, loff_t i_size)
-+{
-+	/*
-+	 * 32-bit need the lock, concurrent updates could break the
-+	 * sequences and make i_size_read() loop forever.
-+	 * 64-bit updates are atomic and can skip the locking.
-+	 */
-+	if (sizeof(i_size) > sizeof(long))
-+		spin_lock(&inode->i_lock);
-+	i_size_write(inode, i_size);
-+	if (sizeof(i_size) > sizeof(long))
-+		spin_unlock(&inode->i_lock);
-+}
- #endif
---- a/fs/9p/vfs_file.c
-+++ b/fs/9p/vfs_file.c
-@@ -442,7 +442,11 @@ v9fs_file_write_iter(struct kiocb *iocb,
- 		i_size = i_size_read(inode);
- 		if (iocb->ki_pos > i_size) {
- 			inode_add_bytes(inode, iocb->ki_pos - i_size);
--			i_size_write(inode, iocb->ki_pos);
-+			/*
-+			 * Need to serialize against i_size_write() in
-+			 * v9fs_stat2inode()
-+			 */
-+			v9fs_i_size_write(inode, iocb->ki_pos);
- 		}
- 		return retval;
+--- a/net/9p/client.c
++++ b/net/9p/client.c
+@@ -1058,7 +1058,7 @@ struct p9_client *p9_client_create(const
+ 		p9_debug(P9_DEBUG_ERROR,
+ 			 "Please specify a msize of at least 4k\n");
+ 		err = -EINVAL;
+-		goto free_client;
++		goto close_trans;
  	}
---- a/fs/9p/vfs_inode.c
-+++ b/fs/9p/vfs_inode.c
-@@ -538,7 +538,7 @@ static struct inode *v9fs_qid_iget(struc
- 	if (retval)
- 		goto error;
  
--	v9fs_stat2inode(st, inode, sb);
-+	v9fs_stat2inode(st, inode, sb, 0);
- 	v9fs_cache_inode_get_cookie(inode);
- 	unlock_new_inode(inode);
- 	return inode;
-@@ -1074,7 +1074,7 @@ v9fs_vfs_getattr(struct vfsmount *mnt, s
- 	if (IS_ERR(st))
- 		return PTR_ERR(st);
- 
--	v9fs_stat2inode(st, d_inode(dentry), d_inode(dentry)->i_sb);
-+	v9fs_stat2inode(st, d_inode(dentry), d_inode(dentry)->i_sb, 0);
- 	generic_fillattr(d_inode(dentry), stat);
- 
- 	p9stat_free(st);
-@@ -1152,12 +1152,13 @@ static int v9fs_vfs_setattr(struct dentr
-  * @stat: Plan 9 metadata (mistat) structure
-  * @inode: inode to populate
-  * @sb: superblock of filesystem
-+ * @flags: control flags (e.g. V9FS_STAT2INODE_KEEP_ISIZE)
-  *
-  */
- 
- void
- v9fs_stat2inode(struct p9_wstat *stat, struct inode *inode,
--	struct super_block *sb)
-+		 struct super_block *sb, unsigned int flags)
- {
- 	umode_t mode;
- 	char ext[32];
-@@ -1198,10 +1199,11 @@ v9fs_stat2inode(struct p9_wstat *stat, s
- 	mode = p9mode2perm(v9ses, stat);
- 	mode |= inode->i_mode & ~S_IALLUGO;
- 	inode->i_mode = mode;
--	i_size_write(inode, stat->length);
- 
-+	if (!(flags & V9FS_STAT2INODE_KEEP_ISIZE))
-+		v9fs_i_size_write(inode, stat->length);
- 	/* not real number of blocks, but 512 byte ones ... */
--	inode->i_blocks = (i_size_read(inode) + 512 - 1) >> 9;
-+	inode->i_blocks = (stat->length + 512 - 1) >> 9;
- 	v9inode->cache_validity &= ~V9FS_INO_INVALID_ATTR;
- }
- 
-@@ -1389,9 +1391,9 @@ int v9fs_refresh_inode(struct p9_fid *fi
- {
- 	int umode;
- 	dev_t rdev;
--	loff_t i_size;
- 	struct p9_wstat *st;
- 	struct v9fs_session_info *v9ses;
-+	unsigned int flags;
- 
- 	v9ses = v9fs_inode2v9ses(inode);
- 	st = p9_client_stat(fid);
-@@ -1404,16 +1406,13 @@ int v9fs_refresh_inode(struct p9_fid *fi
- 	if ((inode->i_mode & S_IFMT) != (umode & S_IFMT))
- 		goto out;
- 
--	spin_lock(&inode->i_lock);
- 	/*
- 	 * We don't want to refresh inode->i_size,
- 	 * because we may have cached data
- 	 */
--	i_size = inode->i_size;
--	v9fs_stat2inode(st, inode, inode->i_sb);
--	if (v9ses->cache == CACHE_LOOSE || v9ses->cache == CACHE_FSCACHE)
--		inode->i_size = i_size;
--	spin_unlock(&inode->i_lock);
-+	flags = (v9ses->cache == CACHE_LOOSE || v9ses->cache == CACHE_FSCACHE) ?
-+		V9FS_STAT2INODE_KEEP_ISIZE : 0;
-+	v9fs_stat2inode(st, inode, inode->i_sb, flags);
- out:
- 	p9stat_free(st);
- 	kfree(st);
---- a/fs/9p/vfs_inode_dotl.c
-+++ b/fs/9p/vfs_inode_dotl.c
-@@ -143,7 +143,7 @@ static struct inode *v9fs_qid_iget_dotl(
- 	if (retval)
- 		goto error;
- 
--	v9fs_stat2inode_dotl(st, inode);
-+	v9fs_stat2inode_dotl(st, inode, 0);
- 	v9fs_cache_inode_get_cookie(inode);
- 	retval = v9fs_get_acl(inode, fid);
- 	if (retval)
-@@ -498,7 +498,7 @@ v9fs_vfs_getattr_dotl(struct vfsmount *m
- 	if (IS_ERR(st))
- 		return PTR_ERR(st);
- 
--	v9fs_stat2inode_dotl(st, d_inode(dentry));
-+	v9fs_stat2inode_dotl(st, d_inode(dentry), 0);
- 	generic_fillattr(d_inode(dentry), stat);
- 	/* Change block size to what the server returned */
- 	stat->blksize = st->st_blksize;
-@@ -609,11 +609,13 @@ int v9fs_vfs_setattr_dotl(struct dentry
-  * v9fs_stat2inode_dotl - populate an inode structure with stat info
-  * @stat: stat structure
-  * @inode: inode to populate
-+ * @flags: ctrl flags (e.g. V9FS_STAT2INODE_KEEP_ISIZE)
-  *
-  */
- 
- void
--v9fs_stat2inode_dotl(struct p9_stat_dotl *stat, struct inode *inode)
-+v9fs_stat2inode_dotl(struct p9_stat_dotl *stat, struct inode *inode,
-+		      unsigned int flags)
- {
- 	umode_t mode;
- 	struct v9fs_inode *v9inode = V9FS_I(inode);
-@@ -633,7 +635,8 @@ v9fs_stat2inode_dotl(struct p9_stat_dotl
- 		mode |= inode->i_mode & ~S_IALLUGO;
- 		inode->i_mode = mode;
- 
--		i_size_write(inode, stat->st_size);
-+		if (!(flags & V9FS_STAT2INODE_KEEP_ISIZE))
-+			v9fs_i_size_write(inode, stat->st_size);
- 		inode->i_blocks = stat->st_blocks;
- 	} else {
- 		if (stat->st_result_mask & P9_STATS_ATIME) {
-@@ -663,8 +666,9 @@ v9fs_stat2inode_dotl(struct p9_stat_dotl
- 		}
- 		if (stat->st_result_mask & P9_STATS_RDEV)
- 			inode->i_rdev = new_decode_dev(stat->st_rdev);
--		if (stat->st_result_mask & P9_STATS_SIZE)
--			i_size_write(inode, stat->st_size);
-+		if (!(flags & V9FS_STAT2INODE_KEEP_ISIZE) &&
-+		    stat->st_result_mask & P9_STATS_SIZE)
-+			v9fs_i_size_write(inode, stat->st_size);
- 		if (stat->st_result_mask & P9_STATS_BLOCKS)
- 			inode->i_blocks = stat->st_blocks;
- 	}
-@@ -926,9 +930,9 @@ v9fs_vfs_follow_link_dotl(struct dentry
- 
- int v9fs_refresh_inode_dotl(struct p9_fid *fid, struct inode *inode)
- {
--	loff_t i_size;
- 	struct p9_stat_dotl *st;
- 	struct v9fs_session_info *v9ses;
-+	unsigned int flags;
- 
- 	v9ses = v9fs_inode2v9ses(inode);
- 	st = p9_client_getattr_dotl(fid, P9_STATS_ALL);
-@@ -940,16 +944,13 @@ int v9fs_refresh_inode_dotl(struct p9_fi
- 	if ((inode->i_mode & S_IFMT) != (st->st_mode & S_IFMT))
- 		goto out;
- 
--	spin_lock(&inode->i_lock);
- 	/*
- 	 * We don't want to refresh inode->i_size,
- 	 * because we may have cached data
- 	 */
--	i_size = inode->i_size;
--	v9fs_stat2inode_dotl(st, inode);
--	if (v9ses->cache == CACHE_LOOSE || v9ses->cache == CACHE_FSCACHE)
--		inode->i_size = i_size;
--	spin_unlock(&inode->i_lock);
-+	flags = (v9ses->cache == CACHE_LOOSE || v9ses->cache == CACHE_FSCACHE) ?
-+		V9FS_STAT2INODE_KEEP_ISIZE : 0;
-+	v9fs_stat2inode_dotl(st, inode, flags);
- out:
- 	kfree(st);
- 	return 0;
---- a/fs/9p/vfs_super.c
-+++ b/fs/9p/vfs_super.c
-@@ -165,7 +165,7 @@ static struct dentry *v9fs_mount(struct
- 			goto release_sb;
- 		}
- 		d_inode(root)->i_ino = v9fs_qid2ino(&st->qid);
--		v9fs_stat2inode_dotl(st, d_inode(root));
-+		v9fs_stat2inode_dotl(st, d_inode(root), 0);
- 		kfree(st);
- 	} else {
- 		struct p9_wstat *st = NULL;
-@@ -176,7 +176,7 @@ static struct dentry *v9fs_mount(struct
- 		}
- 
- 		d_inode(root)->i_ino = v9fs_qid2ino(&st->qid);
--		v9fs_stat2inode(st, d_inode(root), sb);
-+		v9fs_stat2inode(st, d_inode(root), sb, 0);
- 
- 		p9stat_free(st);
- 		kfree(st);
+ 	err = p9_client_version(clnt);
 
 
