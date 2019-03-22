@@ -2,253 +2,181 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07B61C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 00:13:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FB1DC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 00:21:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF47221900
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 00:13:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF76621900
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 00:20:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="OUWf6Gw+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727375AbfCVAN3 (ORCPT
+        id S1727362AbfCVAU6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 20:13:29 -0400
-Received: from mga02.intel.com ([134.134.136.20]:30283 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726374AbfCVAN3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 20:13:29 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Mar 2019 17:13:28 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,254,1549958400"; 
-   d="scan'208";a="309303572"
-Received: from rdvivi-losangeles.jf.intel.com (HELO intel.com) ([10.7.196.65])
-  by orsmga005.jf.intel.com with ESMTP; 21 Mar 2019 17:13:26 -0700
-Date:   Thu, 21 Mar 2019 17:13:41 -0700
-From:   Rodrigo Vivi <rodrigo.vivi@intel.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        DRI <dri-devel@lists.freedesktop.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [Intel-gfx] linux-next: manual merge of the drm-intel tree with
- the drm-intel-fixes tree
-Message-ID: <20190322001341.GK28473@intel.com>
-References: <20190322105728.28622f5d@canb.auug.org.au>
+        Thu, 21 Mar 2019 20:20:58 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:13963 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725999AbfCVAU6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 20:20:58 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5c942a660000>; Thu, 21 Mar 2019 17:20:54 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Thu, 21 Mar 2019 17:20:55 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Thu, 21 Mar 2019 17:20:55 -0700
+Received: from [10.2.161.82] (172.20.13.39) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 22 Mar
+ 2019 00:20:55 +0000
+From:   Zi Yan <ziy@nvidia.com>
+To:     Yang Shi <shy828301@gmail.com>
+CC:     Keith Busch <keith.busch@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>, <linux-nvdimm@lists.01.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Michal Hocko <mhocko@suse.com>,
+        David Nellans <dnellans@nvidia.com>
+Subject: Re: [PATCH 0/5] Page demotion for memory reclaim
+Date:   Thu, 21 Mar 2019 17:20:54 -0700
+X-Mailer: MailMate (1.12.4r5614)
+Message-ID: <2137A80F-CC90-411B-A1AF-A56384ADE0B8@nvidia.com>
+In-Reply-To: <CAHbLzkrLyG-j8kRrrQ==4Y4LDDLubvXMF88muyzXWAQWKw1ZSw@mail.gmail.com>
+References: <20190321200157.29678-1-keith.busch@intel.com>
+ <5B5EFBC2-2979-4B9F-A43A-1A14F16ACCE1@nvidia.com>
+ <20190321223706.GA29817@localhost.localdomain>
+ <CAHbLzkrLyG-j8kRrrQ==4Y4LDDLubvXMF88muyzXWAQWKw1ZSw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190322105728.28622f5d@canb.auug.org.au>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL103.nvidia.com (172.20.187.11) To
+ HQMAIL101.nvidia.com (172.20.187.10)
+Content-Type: multipart/signed;
+        boundary="=_MailMate_9EF958FC-2C3D-4B16-B110-D853B6A94A0D_=";
+        micalg=pgp-sha1; protocol="application/pgp-signature"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1553214054; bh=Uz5tWnTog3rM6fg5Ngw8SgW9XsFI4Vq/7X9KTfiskDU=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:X-Mailer:Message-ID:
+         In-Reply-To:References:MIME-Version:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type;
+        b=OUWf6Gw+d25DOwwrZFr8B4l1S5/2+gmyz3HbCPNqAa4MSiYXlu8ARZSYctb5BL2t/
+         ot9UPDdEwhPokhvRnzRvkMZGTa/7rIX2HalP7qeLEq5UZ4q4V3MVF2V0otnN3j/Alz
+         1oo0GfW0NYhgstx5oShsn30j1gfd27IHxez8PRV8bjFX1O3RbnQNqVRqKBjWHrvEiQ
+         foMCb7gqfL4DGkzr6W3WEl8KBVGvyVWwsF4qn2OQsED+Fax7AAU7J5mPSNabRKbHPl
+         PM9A8+UfV/UIUSZRotgE92fXx/k+BakJbniNn5JxvVvKK8n6+4ddCuv6B8v6kbxCTj
+         ZnLIxEnIuIFSg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
+--=_MailMate_9EF958FC-2C3D-4B16-B110-D853B6A94A0D_=
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 22, 2019 at 10:57:28AM +1100, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Today's linux-next merge of the drm-intel tree got a conflict in:
-> 
->   drivers/gpu/drm/i915/gvt/mmio_context.c
-> 
-> between commit:
-> 
->   1e8b15a1988e ("drm/i915/gvt: Add in context mmio 0x20D8 to gen9 mmio list")
-> 
-> from the drm-intel-fixes tree and commit:
-> 
->   8a68d464366e ("drm/i915: Store the BIT(engine->id) as the engine's mask")
-> 
-> from the drm-intel tree.
-> 
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
+On 21 Mar 2019, at 16:02, Yang Shi wrote:
 
-I wonder how we could improve the situation here for drm-intel/drm-tip.
-Because this wasn't a matter of not mentioning to upstream maintainer because
-this was not sent up yet.
+> On Thu, Mar 21, 2019 at 3:36 PM Keith Busch <keith.busch@intel.com> wro=
+te:
+>>
+>> On Thu, Mar 21, 2019 at 02:20:51PM -0700, Zi Yan wrote:
+>>> 1. The name of =E2=80=9Cpage demotion=E2=80=9D seems confusing to me,=
+ since I thought it was about large pages
+>>> demote to small pages as opposite to promoting small pages to THPs. A=
+m I the only
+>>> one here?
+>>
+>> If you have a THP, we'll skip the page migration and fall through to
+>> split_huge_page_to_list(), then the smaller pages can be considered,
+>> migrated and reclaimed individually. Not that we couldn't try to migra=
+te
+>> a THP directly. It was just simpler implementation for this first atte=
+mpt.
+>>
+>>> 2. For the demotion path, a common case would be from high-performanc=
+e memory, like HBM
+>>> or Multi-Channel DRAM, to DRAM, then to PMEM, and finally to disks, r=
+ight? More general
+>>> case for demotion path would be derived from the memory performance d=
+escription from HMAT[1],
+>>> right? Do you have any algorithm to form such a path from HMAT?
+>>
+>> Yes, I have a PoC for the kernel setting up a demotion path based on
+>> HMAT properties here:
+>>
+>>   https://git.kernel.org/pub/scm/linux/kernel/git/kbusch/linux.git/com=
+mit/?h=3Dmm-migrate&id=3D4d007659e1dd1b0dad49514348be4441fbe7cadb
+>>
+>> The above is just from an experimental branch.
+>>
+>>> 3. Do you have a plan for promoting pages from lower-level memory to =
+higher-level memory,
+>>> like from PMEM to DRAM? Will this one-way demotion make all pages sin=
+k to PMEM and disk?
+>>
+>> Promoting previously demoted pages would require the application do
+>> something to make that happen if you turn demotion on with this series=
+=2E
+>> Kernel auto-promotion is still being investigated, and it's a little
+>> trickier than reclaim.
+>
+> Just FYI. I'm currently working on a patchset which tries to promotes
+> page from second tier memory (i.e. PMEM) to DRAM via NUMA balancing.
+> But, NUMA balancing can't deal with unmapped page cache, they have to
+> be promoted from different path, i.e. mark_page_accessed().
 
-So I got this conflict after pulling gvt fixes to drm-intel-fixes
-and conflict happened when reconstructing drm-intel. For us the
-solution was easy because it was a matter of deciding for the -next
-one.
+Got it. Another concern is that NUMA balancing marks pages inaccessible
+to obtain access information. It might add more overheads on top of page =
+migration
+overheads. Considering the benefit of migrating pages from PMEM to DRAM
+is not as large as =E2=80=9Cbring data from disk to DRAM=E2=80=9D, the ov=
+erheads might offset
+the benefit, meaning you might see performance degradation.
 
-And now it is recorded on our drm-rerere and nobody should face it again
-here.
+>
+> And, I do agree with Keith, promotion is definitely trickier than
+> reclaim since kernel can't recognize "hot" pages accurately. NUMA
+> balancing is still corse-grained and inaccurate, but it is simple. If
+> we would like to implement more sophisticated algorithm, in-kernel
+> implementation might be not a good idea.
 
-Maybe there is a way of reusing our drm-rerere somehow?
-
-Please let me know if you have any ideas or suggestions.
-
-Thanks,
-Rodrigo.
-
-
-> 
-> -- 
-> Cheers,
-> Stephen Rothwell
-> 
-> diff --cc drivers/gpu/drm/i915/gvt/mmio_context.c
-> index 7902fb162d09,a00a807a1d55..000000000000
-> --- a/drivers/gpu/drm/i915/gvt/mmio_context.c
-> +++ b/drivers/gpu/drm/i915/gvt/mmio_context.c
-> @@@ -73,71 -73,70 +73,71 @@@ static struct engine_mmio gen8_engine_m
->   };
->   
->   static struct engine_mmio gen9_engine_mmio_list[] __cacheline_aligned = {
-> - 	{RCS, GFX_MODE_GEN7, 0xffff, false}, /* 0x229c */
-> - 	{RCS, GEN9_CTX_PREEMPT_REG, 0x0, false}, /* 0x2248 */
-> - 	{RCS, HWSTAM, 0x0, false}, /* 0x2098 */
-> - 	{RCS, INSTPM, 0xffff, true}, /* 0x20c0 */
-> - 	{RCS, RING_FORCE_TO_NONPRIV(RENDER_RING_BASE, 0), 0, false}, /* 0x24d0 */
-> - 	{RCS, RING_FORCE_TO_NONPRIV(RENDER_RING_BASE, 1), 0, false}, /* 0x24d4 */
-> - 	{RCS, RING_FORCE_TO_NONPRIV(RENDER_RING_BASE, 2), 0, false}, /* 0x24d8 */
-> - 	{RCS, RING_FORCE_TO_NONPRIV(RENDER_RING_BASE, 3), 0, false}, /* 0x24dc */
-> - 	{RCS, RING_FORCE_TO_NONPRIV(RENDER_RING_BASE, 4), 0, false}, /* 0x24e0 */
-> - 	{RCS, RING_FORCE_TO_NONPRIV(RENDER_RING_BASE, 5), 0, false}, /* 0x24e4 */
-> - 	{RCS, RING_FORCE_TO_NONPRIV(RENDER_RING_BASE, 6), 0, false}, /* 0x24e8 */
-> - 	{RCS, RING_FORCE_TO_NONPRIV(RENDER_RING_BASE, 7), 0, false}, /* 0x24ec */
-> - 	{RCS, RING_FORCE_TO_NONPRIV(RENDER_RING_BASE, 8), 0, false}, /* 0x24f0 */
-> - 	{RCS, RING_FORCE_TO_NONPRIV(RENDER_RING_BASE, 9), 0, false}, /* 0x24f4 */
-> - 	{RCS, RING_FORCE_TO_NONPRIV(RENDER_RING_BASE, 10), 0, false}, /* 0x24f8 */
-> - 	{RCS, RING_FORCE_TO_NONPRIV(RENDER_RING_BASE, 11), 0, false}, /* 0x24fc */
-> - 	{RCS, CACHE_MODE_1, 0xffff, true}, /* 0x7004 */
-> - 	{RCS, GEN7_GT_MODE, 0xffff, true}, /* 0x7008 */
-> - 	{RCS, CACHE_MODE_0_GEN7, 0xffff, true}, /* 0x7000 */
-> - 	{RCS, GEN7_COMMON_SLICE_CHICKEN1, 0xffff, true}, /* 0x7010 */
-> - 	{RCS, HDC_CHICKEN0, 0xffff, true}, /* 0x7300 */
-> - 	{RCS, VF_GUARDBAND, 0xffff, true}, /* 0x83a4 */
-> - 
-> - 	{RCS, GEN8_PRIVATE_PAT_LO, 0, false}, /* 0x40e0 */
-> - 	{RCS, GEN8_PRIVATE_PAT_HI, 0, false}, /* 0x40e4 */
-> - 	{RCS, GEN8_CS_CHICKEN1, 0xffff, true}, /* 0x2580 */
-> - 	{RCS, COMMON_SLICE_CHICKEN2, 0xffff, true}, /* 0x7014 */
-> - 	{RCS, GEN9_CS_DEBUG_MODE1, 0xffff, false}, /* 0x20ec */
-> - 	{RCS, GEN8_L3SQCREG4, 0, false}, /* 0xb118 */
-> - 	{RCS, GEN7_HALF_SLICE_CHICKEN1, 0xffff, true}, /* 0xe100 */
-> - 	{RCS, HALF_SLICE_CHICKEN2, 0xffff, true}, /* 0xe180 */
-> - 	{RCS, HALF_SLICE_CHICKEN3, 0xffff, true}, /* 0xe184 */
-> - 	{RCS, GEN9_HALF_SLICE_CHICKEN5, 0xffff, true}, /* 0xe188 */
-> - 	{RCS, GEN9_HALF_SLICE_CHICKEN7, 0xffff, true}, /* 0xe194 */
-> - 	{RCS, GEN8_ROW_CHICKEN, 0xffff, true}, /* 0xe4f0 */
-> - 	{RCS, TRVATTL3PTRDW(0), 0, false}, /* 0x4de0 */
-> - 	{RCS, TRVATTL3PTRDW(1), 0, false}, /* 0x4de4 */
-> - 	{RCS, TRNULLDETCT, 0, false}, /* 0x4de8 */
-> - 	{RCS, TRINVTILEDETCT, 0, false}, /* 0x4dec */
-> - 	{RCS, TRVADR, 0, false}, /* 0x4df0 */
-> - 	{RCS, TRTTE, 0, false}, /* 0x4df4 */
-> - 
-> - 	{BCS, RING_GFX_MODE(BLT_RING_BASE), 0xffff, false}, /* 0x2229c */
-> - 	{BCS, RING_MI_MODE(BLT_RING_BASE), 0xffff, false}, /* 0x2209c */
-> - 	{BCS, RING_INSTPM(BLT_RING_BASE), 0xffff, false}, /* 0x220c0 */
-> - 	{BCS, RING_HWSTAM(BLT_RING_BASE), 0x0, false}, /* 0x22098 */
-> - 	{BCS, RING_EXCC(BLT_RING_BASE), 0x0, false}, /* 0x22028 */
-> - 
-> - 	{VCS2, RING_EXCC(GEN8_BSD2_RING_BASE), 0xffff, false}, /* 0x1c028 */
-> - 
-> - 	{VECS, RING_EXCC(VEBOX_RING_BASE), 0xffff, false}, /* 0x1a028 */
-> - 
-> - 	{RCS, GEN8_HDC_CHICKEN1, 0xffff, true}, /* 0x7304 */
-> - 	{RCS, GEN9_CTX_PREEMPT_REG, 0x0, false}, /* 0x2248 */
-> - 	{RCS, GEN7_UCGCTL4, 0x0, false}, /* 0x940c */
-> - 	{RCS, GAMT_CHKN_BIT_REG, 0x0, false}, /* 0x4ab8 */
-> - 
-> - 	{RCS, GEN9_GAMT_ECO_REG_RW_IA, 0x0, false}, /* 0x4ab0 */
-> - 	{RCS, GEN9_CSFE_CHICKEN1_RCS, 0xffff, false}, /* 0x20d4 */
-> - 	{RCS, _MMIO(0x20D8), 0xffff, true}, /* 0x20d8 */
-> - 
-> - 	{RCS, GEN8_GARBCNTL, 0x0, false}, /* 0xb004 */
-> - 	{RCS, GEN7_FF_THREAD_MODE, 0x0, false}, /* 0x20a0 */
-> - 	{RCS, FF_SLICE_CS_CHICKEN2, 0xffff, false}, /* 0x20e4 */
-> - 	{RCS, INVALID_MMIO_REG, 0, false } /* Terminated */
-> + 	{RCS0, GFX_MODE_GEN7, 0xffff, false}, /* 0x229c */
-> + 	{RCS0, GEN9_CTX_PREEMPT_REG, 0x0, false}, /* 0x2248 */
-> + 	{RCS0, HWSTAM, 0x0, false}, /* 0x2098 */
-> + 	{RCS0, INSTPM, 0xffff, true}, /* 0x20c0 */
-> + 	{RCS0, RING_FORCE_TO_NONPRIV(RENDER_RING_BASE, 0), 0, false}, /* 0x24d0 */
-> + 	{RCS0, RING_FORCE_TO_NONPRIV(RENDER_RING_BASE, 1), 0, false}, /* 0x24d4 */
-> + 	{RCS0, RING_FORCE_TO_NONPRIV(RENDER_RING_BASE, 2), 0, false}, /* 0x24d8 */
-> + 	{RCS0, RING_FORCE_TO_NONPRIV(RENDER_RING_BASE, 3), 0, false}, /* 0x24dc */
-> + 	{RCS0, RING_FORCE_TO_NONPRIV(RENDER_RING_BASE, 4), 0, false}, /* 0x24e0 */
-> + 	{RCS0, RING_FORCE_TO_NONPRIV(RENDER_RING_BASE, 5), 0, false}, /* 0x24e4 */
-> + 	{RCS0, RING_FORCE_TO_NONPRIV(RENDER_RING_BASE, 6), 0, false}, /* 0x24e8 */
-> + 	{RCS0, RING_FORCE_TO_NONPRIV(RENDER_RING_BASE, 7), 0, false}, /* 0x24ec */
-> + 	{RCS0, RING_FORCE_TO_NONPRIV(RENDER_RING_BASE, 8), 0, false}, /* 0x24f0 */
-> + 	{RCS0, RING_FORCE_TO_NONPRIV(RENDER_RING_BASE, 9), 0, false}, /* 0x24f4 */
-> + 	{RCS0, RING_FORCE_TO_NONPRIV(RENDER_RING_BASE, 10), 0, false}, /* 0x24f8 */
-> + 	{RCS0, RING_FORCE_TO_NONPRIV(RENDER_RING_BASE, 11), 0, false}, /* 0x24fc */
-> + 	{RCS0, CACHE_MODE_1, 0xffff, true}, /* 0x7004 */
-> + 	{RCS0, GEN7_GT_MODE, 0xffff, true}, /* 0x7008 */
-> + 	{RCS0, CACHE_MODE_0_GEN7, 0xffff, true}, /* 0x7000 */
-> + 	{RCS0, GEN7_COMMON_SLICE_CHICKEN1, 0xffff, true}, /* 0x7010 */
-> + 	{RCS0, HDC_CHICKEN0, 0xffff, true}, /* 0x7300 */
-> + 	{RCS0, VF_GUARDBAND, 0xffff, true}, /* 0x83a4 */
-> + 
-> + 	{RCS0, GEN8_PRIVATE_PAT_LO, 0, false}, /* 0x40e0 */
-> + 	{RCS0, GEN8_PRIVATE_PAT_HI, 0, false}, /* 0x40e4 */
-> + 	{RCS0, GEN8_CS_CHICKEN1, 0xffff, true}, /* 0x2580 */
-> + 	{RCS0, COMMON_SLICE_CHICKEN2, 0xffff, true}, /* 0x7014 */
-> + 	{RCS0, GEN9_CS_DEBUG_MODE1, 0xffff, false}, /* 0x20ec */
-> + 	{RCS0, GEN8_L3SQCREG4, 0, false}, /* 0xb118 */
-> + 	{RCS0, GEN7_HALF_SLICE_CHICKEN1, 0xffff, true}, /* 0xe100 */
-> + 	{RCS0, HALF_SLICE_CHICKEN2, 0xffff, true}, /* 0xe180 */
-> + 	{RCS0, HALF_SLICE_CHICKEN3, 0xffff, true}, /* 0xe184 */
-> + 	{RCS0, GEN9_HALF_SLICE_CHICKEN5, 0xffff, true}, /* 0xe188 */
-> + 	{RCS0, GEN9_HALF_SLICE_CHICKEN7, 0xffff, true}, /* 0xe194 */
-> + 	{RCS0, GEN8_ROW_CHICKEN, 0xffff, true}, /* 0xe4f0 */
-> + 	{RCS0, TRVATTL3PTRDW(0), 0, false}, /* 0x4de0 */
-> + 	{RCS0, TRVATTL3PTRDW(1), 0, false}, /* 0x4de4 */
-> + 	{RCS0, TRNULLDETCT, 0, false}, /* 0x4de8 */
-> + 	{RCS0, TRINVTILEDETCT, 0, false}, /* 0x4dec */
-> + 	{RCS0, TRVADR, 0, false}, /* 0x4df0 */
-> + 	{RCS0, TRTTE, 0, false}, /* 0x4df4 */
-> + 
-> + 	{BCS0, RING_GFX_MODE(BLT_RING_BASE), 0xffff, false}, /* 0x2229c */
-> + 	{BCS0, RING_MI_MODE(BLT_RING_BASE), 0xffff, false}, /* 0x2209c */
-> + 	{BCS0, RING_INSTPM(BLT_RING_BASE), 0xffff, false}, /* 0x220c0 */
-> + 	{BCS0, RING_HWSTAM(BLT_RING_BASE), 0x0, false}, /* 0x22098 */
-> + 	{BCS0, RING_EXCC(BLT_RING_BASE), 0x0, false}, /* 0x22028 */
-> + 
-> + 	{VCS1, RING_EXCC(GEN8_BSD2_RING_BASE), 0xffff, false}, /* 0x1c028 */
-> + 
-> + 	{VECS0, RING_EXCC(VEBOX_RING_BASE), 0xffff, false}, /* 0x1a028 */
-> + 
-> + 	{RCS0, GEN8_HDC_CHICKEN1, 0xffff, true}, /* 0x7304 */
-> + 	{RCS0, GEN9_CTX_PREEMPT_REG, 0x0, false}, /* 0x2248 */
-> + 	{RCS0, GEN7_UCGCTL4, 0x0, false}, /* 0x940c */
-> + 	{RCS0, GAMT_CHKN_BIT_REG, 0x0, false}, /* 0x4ab8 */
-> + 
-> + 	{RCS0, GEN9_GAMT_ECO_REG_RW_IA, 0x0, false}, /* 0x4ab0 */
-> + 	{RCS0, GEN9_CSFE_CHICKEN1_RCS, 0xffff, false}, /* 0x20d4 */
-> ++	{RCS0, _MMIO(0x20D8), 0xffff, true}, /* 0x20d8 */
-> + 
-> + 	{RCS0, GEN8_GARBCNTL, 0x0, false}, /* 0xb004 */
-> + 	{RCS0, GEN7_FF_THREAD_MODE, 0x0, false}, /* 0x20a0 */
-> + 	{RCS0, FF_SLICE_CS_CHICKEN2, 0xffff, false}, /* 0x20e4 */
-> + 	{RCS0, INVALID_MMIO_REG, 0, false } /* Terminated */
->   };
->   
->   static struct {
+I agree. Or hardware vendor, like Intel, could bring more information
+on page hotness, like multi-bit access bits or page-modification log
+provided by Intel for virtualization.
 
 
 
-> _______________________________________________
-> Intel-gfx mailing list
-> Intel-gfx@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/intel-gfx
+--
+Best Regards,
+Yan Zi
 
+--=_MailMate_9EF958FC-2C3D-4B16-B110-D853B6A94A0D_=
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQJDBAEBAgAtFiEEh7yFAW3gwjwQ4C9anbJR82th+ooFAlyUKmYPHHppeUBudmlk
+aWEuY29tAAoJEJ2yUfNrYfqKleMP/RceC2q7vQiOE19ilpxcSX4iAX7dUwtbkZg0
+YVrSR3WceWx6L62+6B9RYCGPZEnMYGm1UJFKG+wBAO7QsWv11lt1baBqtNn6ORSX
+tvgRMOVNW65YfCy/6vciv+nRuLkK/87aOF2nfie+RUIv6yt+KK0sWm1qN0x6vvHH
+AXNXNSz0yUpcJqOhktVOCyAdLcI16afxmLdYDReOpMinToKySZVUswpA/BMoX/qP
+zUH/96JflS5p8QGs07A8M1kGxG9shQldIEQIkbuOy3JuqAA4dr7q3mB9Kz3RKgwg
+iPKMpEFEZWmwSJfYFrr/frlwlua3HP+NHpfvlP3lZQJcFUyB2TAIkIbUtsZcDJ9R
+Z2Nb4CEE8MDusB3Fqg3KQE9cGJ++PFAA+QN2Y8UNBngi1Gcpjxxxd5JSdjI27R2c
+xRrYZQy6BYW3WgMg+jKq/Gjf2PHRal+KDV+ttuxTFp6pPMJpdt3MdylptI8it8jZ
+ro5yeu6yeV+fe9QkvlTrRKcvndSwANvx/H9ZWRdwKiHAnWWxChzq2fRaezOjNLzP
+VB+8/5uST6eg5+r/Z7TIkkwOT9mNjrxfgRqW6jRTMOe15JAJlzh1Za9REQgCQtLI
+HxvHdp0z0JkFBLwrtWCFkHeJsJ1vs7r6Red1h1ZjDYwHWH1OQ3X7qml6P1DzyFtY
+qFY2/Suf
+=+UmC
+-----END PGP SIGNATURE-----
+
+--=_MailMate_9EF958FC-2C3D-4B16-B110-D853B6A94A0D_=--
