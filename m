@@ -2,159 +2,141 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F3D1C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 07:31:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 697F4C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 07:32:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17DF2218B0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 07:31:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33F07218B0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 07:32:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Qt7Zbt0V";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="F/P0GG/H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727630AbfCVHbz (ORCPT
+        id S1727668AbfCVHcA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 03:31:55 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:56742 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726047AbfCVHbz (ORCPT
+        Fri, 22 Mar 2019 03:32:00 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:52582 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727606AbfCVHb4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 03:31:55 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2M7OF2M077434
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 03:31:53 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2rctuxsd5r-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 03:31:53 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <huntbag@linux.vnet.ibm.com>;
-        Fri, 22 Mar 2019 07:31:45 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 22 Mar 2019 07:31:43 -0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2M7VmKt39256268
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 22 Mar 2019 07:31:49 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D244311C05E;
-        Fri, 22 Mar 2019 07:31:48 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B5BE811C04A;
-        Fri, 22 Mar 2019 07:31:47 +0000 (GMT)
-Received: from boston16h.aus.stglabs.ibm.com (unknown [9.3.23.78])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 22 Mar 2019 07:31:47 +0000 (GMT)
-From:   Abhishek Goel <huntbag@linux.vnet.ibm.com>
-To:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-pm@vger.kernel.org
-Cc:     rjw@rjwysocki.net, daniel.lezcano@linaro.org, mpe@ellerman.id.au,
-        Abhishek Goel <huntbag@linux.vnet.ibm.com>
-Subject: [PATCH 2/2] cpuidle : Add auto-promotion flag to cpuidle flags
-Date:   Fri, 22 Mar 2019 02:29:42 -0500
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190322072942.8038-1-huntbag@linux.vnet.ibm.com>
-References: <20190322072942.8038-1-huntbag@linux.vnet.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19032207-0008-0000-0000-000002D03BE3
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19032207-0009-0000-0000-0000223C5AD7
-Message-Id: <20190322072942.8038-3-huntbag@linux.vnet.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-22_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=797 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903220057
+        Fri, 22 Mar 2019 03:31:56 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 3E22B60FEA; Fri, 22 Mar 2019 07:31:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553239915;
+        bh=flyEN9uqybGJqrospEgZQpSwcy66+azhMRtsSqfA2q0=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Qt7Zbt0VJuw3WItH6l3AXobSLq829dWUQL5U6nX28HduESKhyAKrDG3XupuqbMZKn
+         9CcnI92PE+LKwX55BDLzU2USvjjGhk8oPsy8COCWUkOORS0MJnuYeLkXYpoZ55C12J
+         DBIRDftWo+EX6HFlnhr32/EFfiF1zwjVznPRlxRA=
+Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mojha@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 22EB0606FC;
+        Fri, 22 Mar 2019 07:31:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553239912;
+        bh=flyEN9uqybGJqrospEgZQpSwcy66+azhMRtsSqfA2q0=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=F/P0GG/HNB6SLDfykU3gToH7A+Xq6Y4GBDtLcGv08M3cguHfcOEsaXz8IH/+3/dsW
+         jfXjoQL0JmcN2jJA6zjrucFETby4i8YazlfBU1MQoH+FkMSthte2jmmnKscdv7+cJR
+         mDKN6F5bVFlEnDG/m52XDCu97kkaTSzVldfgrDAU=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 22EB0606FC
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
+Subject: Re: [PATCH v2] thunderbolt: Fix to check return value of
+ ida_simple_get
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Aditya Pakki <pakki001@umn.edu>, kjlu@umn.edu,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        linux-kernel@vger.kernel.org
+References: <20190320162446.30500-1-pakki001@umn.edu>
+ <20190320162924.GA3622@lahna.fi.intel.com>
+ <78aa904a-6b98-9fb3-e2ca-b9994dc04869@codeaurora.org>
+ <20190321054933.GC3622@lahna.fi.intel.com>
+From:   Mukesh Ojha <mojha@codeaurora.org>
+Message-ID: <56b4f022-c235-8dbf-0bce-cf4c9372d1cd@codeaurora.org>
+Date:   Fri, 22 Mar 2019 13:01:44 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
+MIME-Version: 1.0
+In-Reply-To: <20190321054933.GC3622@lahna.fi.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch sets up flags for the state which needs to be auto-promoted.
-For powernv systems, lite states do not even lose user context. That
-information has been used to set the flag for lite states.
 
-Signed-off-by: Abhishek Goel <huntbag@linux.vnet.ibm.com>
----
- arch/powerpc/include/asm/opal-api.h |  1 +
- drivers/cpuidle/Kconfig             |  4 ++++
- drivers/cpuidle/cpuidle-powernv.c   | 13 +++++++++++--
- 3 files changed, 16 insertions(+), 2 deletions(-)
+On 3/21/2019 11:19 AM, Mika Westerberg wrote:
+> On Thu, Mar 21, 2019 at 02:09:41AM +0530, Mukesh Ojha wrote:
+>> On 3/20/2019 9:59 PM, Mika Westerberg wrote:
+>>> On Wed, Mar 20, 2019 at 11:24:45AM -0500, Aditya Pakki wrote:
+>>>> In enumerate_services, ida_simple_get on failure can return an error and
+>>>> leaks memory during device_register failure. The patch ensures that
+>>>> the dev_set_name is set on non failure cases, and releases memory in
+>>>> case of failure.
+>>>>
+>>>> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+>>>>
+>>>> ---
+>>>> v1: Missed cleanup of svc in case of allocation failure and
+>>>> device_register failure.
+>>>> ---
+>>>>    drivers/thunderbolt/xdomain.c | 9 ++++++++-
+>>>>    1 file changed, 8 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/thunderbolt/xdomain.c b/drivers/thunderbolt/xdomain.c
+>>>> index e27dd8beb94b..eb08275185bf 100644
+>>>> --- a/drivers/thunderbolt/xdomain.c
+>>>> +++ b/drivers/thunderbolt/xdomain.c
+>>>> @@ -740,6 +740,7 @@ static void enumerate_services(struct tb_xdomain *xd)
+>>>>    	struct tb_service *svc;
+>>>>    	struct tb_property *p;
+>>>>    	struct device *dev;
+>>>> +	int id;
+>>>>    	/*
+>>>>    	 * First remove all services that are not available anymore in
+>>>> @@ -768,7 +769,12 @@ static void enumerate_services(struct tb_xdomain *xd)
+>>>>    			break;
+>>>>    		}
+>>>> -		svc->id = ida_simple_get(&xd->service_ids, 0, 0, GFP_KERNEL);
+>>>> +		id = ida_simple_get(&xd->service_ids, 0, 0, GFP_KERNEL);
+>>>> +		if (id < 0) {
+>>>> +			kfree(svc);
+>>>> +			break;
+>>>> +		}
+>>>> +		svc->id = id;
+>>>>    		svc->dev.bus = &tb_bus_type;
+>>>>    		svc->dev.type = &tb_service_type;
+>>>>    		svc->dev.parent = &xd->dev;
+>>>> @@ -776,6 +782,7 @@ static void enumerate_services(struct tb_xdomain *xd)
+>>>>    		if (device_register(&svc->dev)) {
+>>>>    			put_device(&svc->dev);
+>>>> +			kfree(svc);
+>>> You can't do this after device_register() is called. The put_device()
+>>> above is sufficient.
+>>
+>> If  device_register fails, how would svc gets freed? we need  to kfree svc
+>> here as well.
+> Please read the comment on top of device_register(). It should explain.
+>
+> So no kfree here.
 
-diff --git a/arch/powerpc/include/asm/opal-api.h b/arch/powerpc/include/asm/opal-api.h
-index 870fb7b23..735dec731 100644
---- a/arch/powerpc/include/asm/opal-api.h
-+++ b/arch/powerpc/include/asm/opal-api.h
-@@ -226,6 +226,7 @@
-  */
- 
- #define OPAL_PM_TIMEBASE_STOP		0x00000002
-+#define OPAL_PM_LOSE_USER_CONTEXT	0x00001000
- #define OPAL_PM_LOSE_HYP_CONTEXT	0x00002000
- #define OPAL_PM_LOSE_FULL_CONTEXT	0x00004000
- #define OPAL_PM_NAP_ENABLED		0x00010000
-diff --git a/drivers/cpuidle/Kconfig b/drivers/cpuidle/Kconfig
-index 7e48eb5bf..0ece62684 100644
---- a/drivers/cpuidle/Kconfig
-+++ b/drivers/cpuidle/Kconfig
-@@ -26,6 +26,10 @@ config CPU_IDLE_GOV_MENU
- config DT_IDLE_STATES
- 	bool
- 
-+config CPU_IDLE_AUTO_PROMOTION
-+	bool
-+	default y if PPC_POWERNV
-+
- menu "ARM CPU Idle Drivers"
- depends on ARM || ARM64
- source "drivers/cpuidle/Kconfig.arm"
-diff --git a/drivers/cpuidle/cpuidle-powernv.c b/drivers/cpuidle/cpuidle-powernv.c
-index 84b1ebe21..e351f5f9c 100644
---- a/drivers/cpuidle/cpuidle-powernv.c
-+++ b/drivers/cpuidle/cpuidle-powernv.c
-@@ -299,6 +299,7 @@ static int powernv_add_idle_states(void)
- 	for (i = 0; i < dt_idle_states; i++) {
- 		unsigned int exit_latency, target_residency;
- 		bool stops_timebase = false;
-+		bool lose_user_context = false;
- 		struct pnv_idle_states_t *state = &pnv_idle_states[i];
- 
- 		/*
-@@ -324,6 +325,9 @@ static int powernv_add_idle_states(void)
- 		if (has_stop_states && !(state->valid))
- 				continue;
- 
-+		if (state->flags & OPAL_PM_LOSE_USER_CONTEXT)
-+			lose_user_context = true;
-+
- 		if (state->flags & OPAL_PM_TIMEBASE_STOP)
- 			stops_timebase = true;
- 
-@@ -332,12 +336,17 @@ static int powernv_add_idle_states(void)
- 			add_powernv_state(nr_idle_states, "Nap",
- 					  CPUIDLE_FLAG_NONE, nap_loop,
- 					  target_residency, exit_latency, 0, 0);
-+		} else if (has_stop_states & !lose_user_context) {
-+			add_powernv_state(nr_idle_states, state->name,
-+					  CPUIDLE_FLAG_AUTO_PROMOTION,
-+					  stop_loop, target_residency,
-+					  exit_latency, state->psscr_val,
-+					  state->psscr_mask);
- 		} else if (has_stop_states && !stops_timebase) {
- 			add_powernv_state(nr_idle_states, state->name,
- 					  CPUIDLE_FLAG_NONE, stop_loop,
- 					  target_residency, exit_latency,
--					  state->psscr_val,
--					  state->psscr_mask);
-+					  state->psscr_val, state->psscr_mask);
- 		}
- 
- 		/*
--- 
-2.17.1
+Thanks for pointer Mika.
+
+Overlooked the fact that dev is a data member of svc not a pointer, also 
+noticed there are many places in tree where , it is not
+followed.
+
+Thanks,
+Mukesh
 
