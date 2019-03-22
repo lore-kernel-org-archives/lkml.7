@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D38C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:08:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A135C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:08:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 215D12082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:08:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B5F421916
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:08:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256523;
-	bh=AQqpYqdxLMQw/vqH56cUslHi8pQ+V6BoMJLbFPlFIQQ=;
+	s=default; t=1553256526;
+	bh=tMSYnxgQ5VBSDuc5gFsQRA27e1L1yMOyeBSQb+519dE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OS4fkJ5vD5rDhp/AQKDAErSPa0BSqciST2MjqJuaYx9Egqt71HfK774BCSIgReyCD
-	 SejzirNHeiYGDC99vwtzsGeYg7/48rMHWwvG/Wj7y+B0i+sfI/y/dHyqr2wHOSi1el
-	 yk+qvFMqMRNQaST943UmtB8VM4EYhVSg/d4yyNTU=
+	b=eM7QYAaC8TLTGRvfEQ/TGxnOOVhYQg9zoWcumrg4XnQDSwGUiKRzg1YGnslbvhH4o
+	 DKnAmN5Dy/tDMjgEVyojatqCUnPsCtBhFAomeBzcTG6NWDPrllIpcxTcu2QtXf9cJW
+	 0YHRHI4cKkFjzU8a03Z4nZ5bWAtvTo8DDIiK5IGk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389195AbfCVMIl (ORCPT
+        id S2389202AbfCVMIo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:08:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47042 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:08:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388314AbfCVMIj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:08:39 -0400
+        id S2388380AbfCVMIn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:08:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E68821916;
-        Fri, 22 Mar 2019 12:08:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41589206C0;
+        Fri, 22 Mar 2019 12:08:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256518;
-        bh=AQqpYqdxLMQw/vqH56cUslHi8pQ+V6BoMJLbFPlFIQQ=;
+        s=default; t=1553256522;
+        bh=tMSYnxgQ5VBSDuc5gFsQRA27e1L1yMOyeBSQb+519dE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cBnJR4pHbPd7WNE/Maz0wWzBy8Xbo1ukgUEQRM4rtCMfMPmExbnA+nQHPRGHUz3Nt
-         8J/shouiyXiQMDrJC61Hr6/v58G2/vr2XESa+ridUeM5LTj3j9SB0MFmXt8aIQ72nZ
-         LkxQ7oCI+Qd4thplBsJSyctaa7VkuAxe8Jv6Ii+8=
+        b=1vW1GYGAIcPERnnH92RhefH0s1xcCN7GP9WrIWOblVkQJywvO1euvdw1ZnOF3XWfb
+         KUGyK6F/o5YhYN4GnYv9f5m8cVtAA/YrVtod5K1dze4oIljp1O9HE8CpPtvxeYYpZt
+         Ptzs5y/sbRz20nmv8hs/nnAQeXf33cDbk5oM0tkg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anssi Hannula <anssi.hannula@bitwise.fi>
-Subject: [PATCH 4.19 213/280] serial: uartps: Fix stuck ISR if RX disabled with non-empty FIFO
-Date:   Fri, 22 Mar 2019 12:16:06 +0100
-Message-Id: <20190322111333.329917441@linuxfoundation.org>
+        stable@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
+Subject: [PATCH 4.19 214/280] serial: 8250_of: assume reg-shift of 2 for mrvl,mmp-uart
+Date:   Fri, 22 Mar 2019 12:16:07 +0100
+Message-Id: <20190322111333.527558553@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -64,56 +64,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Anssi Hannula <anssi.hannula@bitwise.fi>
+From: Lubomir Rintel <lkundrak@v3.sk>
 
-commit 7abab1605139bc41442864c18f9573440f7ca105 upstream.
+commit f4817843e39ce78aace0195a57d4e8500a65a898 upstream.
 
-If RX is disabled while there are still unprocessed bytes in RX FIFO,
-cdns_uart_handle_rx() called from interrupt handler will get stuck in
-the receive loop as read bytes will not get removed from the RX FIFO
-and CDNS_UART_SR_RXEMPTY bit will never get set.
+There are two other drivers that bind to mrvl,mmp-uart and both of them
+assume register shift of 2 bits. There are device trees that lack the
+property and rely on that assumption.
 
-Avoid the stuck handler by checking first if RX is disabled. port->lock
-protects against race with RX-disabling functions.
+If this driver wins the race to bind to those devices, it should behave
+the same as the older deprecated driver.
 
-This HW behavior was mentioned by Nathan Rossi in 43e98facc4a3 ("tty:
-xuartps: Fix RX hang, and TX corruption in termios call") which fixed a
-similar issue in cdns_uart_set_termios().
-The behavior can also be easily verified by e.g. setting
-CDNS_UART_CR_RX_DIS at the beginning of cdns_uart_handle_rx() - the
-following loop will then get stuck.
-
-Resetting the FIFO using RXRST would not set RXEMPTY either so simply
-issuing a reset after RX-disable would not work.
-
-I observe this frequently on a ZynqMP board during heavy RX load at 1M
-baudrate when the reader process exits and thus RX gets disabled.
-
-Fixes: 61ec9016988f ("tty/serial: add support for Xilinx PS UART")
-Signed-off-by: Anssi Hannula <anssi.hannula@bitwise.fi>
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/xilinx_uartps.c |    8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/tty/serial/8250/8250_of.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/tty/serial/xilinx_uartps.c
-+++ b/drivers/tty/serial/xilinx_uartps.c
-@@ -362,7 +362,13 @@ static irqreturn_t cdns_uart_isr(int irq
- 		cdns_uart_handle_tx(dev_id);
- 		isrstatus &= ~CDNS_UART_IXR_TXEMPTY;
+--- a/drivers/tty/serial/8250/8250_of.c
++++ b/drivers/tty/serial/8250/8250_of.c
+@@ -130,6 +130,10 @@ static int of_platform_serial_setup(stru
+ 		port->flags |= UPF_IOREMAP;
  	}
--	if (isrstatus & CDNS_UART_IXR_RXMASK)
-+
-+	/*
-+	 * Skip RX processing if RX is disabled as RXEMPTY will never be set
-+	 * as read bytes will not be removed from the FIFO.
-+	 */
-+	if (isrstatus & CDNS_UART_IXR_RXMASK &&
-+	    !(readl(port->membase + CDNS_UART_CR) & CDNS_UART_CR_RX_DIS))
- 		cdns_uart_handle_rx(dev_id, isrstatus);
  
- 	spin_unlock(&port->lock);
++	/* Compatibility with the deprecated pxa driver and 8250_pxa drivers. */
++	if (of_device_is_compatible(np, "mrvl,mmp-uart"))
++		port->regshift = 2;
++
+ 	/* Check for registers offset within the devices address range */
+ 	if (of_property_read_u32(np, "reg-shift", &prop) == 0)
+ 		port->regshift = prop;
 
 
