@@ -4,50 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42471C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:37:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BEBAC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:37:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1248321916
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:37:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A7472082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:37:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254644;
-	bh=VCjzVkkQedvvF9a9APv5XXf/VthrJiMGGFcPf1lMLQc=;
+	s=default; t=1553254650;
+	bh=oGQkQgKNfa0+TWZ38rwaUGuK8lBxdY1agCk+k13jjNA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uJPVCXZwbWsB/+6gAM+HugeTLEPRqWho6rQLdDRRhliiKL9pd69TIRnfl/m4QYdk1
-	 M0XN3WKpFjm+UkChxFfmUIFDndeVJjzmi0aBUjXO4scfpgM7/troDrJGEvet9vEgpc
-	 gSXbmOl39LuZchoHdsRcIy81tlqHlvNKyL4cp1Mw=
+	b=weGc499u3IaWyj2JTReKnc9nat62rI6SRoTByZQzJ0qNdT7+IbOnMqtpq3a3mG4u0
+	 Y83cgL3l6seqvW8jVOElzR0IcXC1boQl6Nf0Fxd7foSYycI/E+oPyhONqvWGoNCO0I
+	 Ql7Cf8pMzEhe/KXssCRSWvVRVgs/m5AkqrEBVgeM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730827AbfCVLhW (ORCPT
+        id S1730846AbfCVLh2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:37:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38796 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:37:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38920 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730586AbfCVLhT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:37:19 -0400
+        id S1730415AbfCVLh0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:37:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 013572082C;
-        Fri, 22 Mar 2019 11:37:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9165C2082C;
+        Fri, 22 Mar 2019 11:37:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254638;
-        bh=VCjzVkkQedvvF9a9APv5XXf/VthrJiMGGFcPf1lMLQc=;
+        s=default; t=1553254645;
+        bh=oGQkQgKNfa0+TWZ38rwaUGuK8lBxdY1agCk+k13jjNA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nJMR4Awq3Gch+G5ClPcFz/v9jrg7RkY/XixEM52HdCsL+1fhe4xV6ik5mgyljPIXx
-         d8zT8FH6zkDzaAYzVmdLeZOamvJMiFrlnKasC2MHkhs2rNEN0Hy4NDNmygvvYosdxg
-         hQGG+Pu8jUfs0wbZZ0/TbtzF4iLnpKJzfMtyTEuc=
+        b=wnSH/cZCxyPetCfS/s2yMO6s0rA61DUv6vtrllChxqVzlLySH0qToUxbK6xTEg72R
+         e5gxQpDLbBf/Z8tm+ADP9/n/6/Pt0F1IXM77nCwEiig9Q21rhCPo4M5wRoZD3I9r6O
+         xhRgDuLDqRLppK1yGgMC+gSRvyGdDkcntzMLvSSQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
-        Maarten ter Huurne <maarten@treewalker.org>,
-        Stephen Boyd <sboyd@kernel.org>
-Subject: [PATCH 4.4 197/230] clk: ingenic: Fix round_rate misbehaving with non-integer dividers
-Date:   Fri, 22 Mar 2019 12:15:35 +0100
-Message-Id: <20190322111250.653480077@linuxfoundation.org>
+        stable@vger.kernel.org, Roman Penyaev <rpenyaev@suse.de>,
+        Michal Hocko <mhocko@suse.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Joe Perches <joe@perches.com>,
+        "Luis R. Rodriguez" <mcgrof@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.4 199/230] mm/vmalloc: fix size check for remap_vmalloc_range_partial()
+Date:   Fri, 22 Mar 2019 12:15:37 +0100
+Message-Id: <20190322111250.800331282@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -66,63 +70,86 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Paul Cercueil <paul@crapouillou.net>
+From: Roman Penyaev <rpenyaev@suse.de>
 
-commit bc5d922c93491878c44c9216e9d227c7eeb81d7f upstream.
+commit 401592d2e095947344e10ec0623adbcd58934dd4 upstream.
 
-Take a parent rate of 180 MHz, and a requested rate of 4.285715 MHz.
-This results in a theorical divider of 41.999993 which is then rounded
-up to 42. The .round_rate function would then return (180 MHz / 42) as
-the clock, rounded down, so 4.285714 MHz.
+When VM_NO_GUARD is not set area->size includes adjacent guard page,
+thus for correct size checking get_vm_area_size() should be used, but
+not area->size.
 
-Calling clk_set_rate on 4.285714 MHz would round the rate again, and
-give a theorical divider of 42,0000028, now rounded up to 43, and the
-rate returned would be (180 MHz / 43) which is 4.186046 MHz, aka. not
-what we requested.
+This fixes possible kernel oops when userspace tries to mmap an area on
+1 page bigger than was allocated by vmalloc_user() call: the size check
+inside remap_vmalloc_range_partial() accounts non-existing guard page
+also, so check successfully passes but vmalloc_to_page() returns NULL
+(guard page does not physically exist).
 
-Fix this by rounding up the divisions.
+The following code pattern example should trigger an oops:
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Tested-by: Maarten ter Huurne <maarten@treewalker.org>
+  static int oops_mmap(struct file *file, struct vm_area_struct *vma)
+  {
+        void *mem;
+
+        mem = vmalloc_user(4096);
+        BUG_ON(!mem);
+        /* Do not care about mem leak */
+
+        return remap_vmalloc_range(vma, mem, 0);
+  }
+
+And userspace simply mmaps size + PAGE_SIZE:
+
+  mmap(NULL, 8192, PROT_WRITE|PROT_READ, MAP_PRIVATE, fd, 0);
+
+Possible candidates for oops which do not have any explicit size
+checks:
+
+   *** drivers/media/usb/stkwebcam/stk-webcam.c:
+   v4l_stk_mmap[789]   ret = remap_vmalloc_range(vma, sbuf->buffer, 0);
+
+Or the following one:
+
+   *** drivers/video/fbdev/core/fbmem.c
+   static int
+   fb_mmap(struct file *file, struct vm_area_struct * vma)
+        ...
+        res = fb->fb_mmap(info, vma);
+
+Where fb_mmap callback calls remap_vmalloc_range() directly without any
+explicit checks:
+
+   *** drivers/video/fbdev/vfb.c
+   static int vfb_mmap(struct fb_info *info,
+             struct vm_area_struct *vma)
+   {
+       return remap_vmalloc_range(vma, (void *)info->fix.smem_start, vma->vm_pgoff);
+   }
+
+Link: http://lkml.kernel.org/r/20190103145954.16942-2-rpenyaev@suse.de
+Signed-off-by: Roman Penyaev <rpenyaev@suse.de>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Cc: Joe Perches <joe@perches.com>
+Cc: "Luis R. Rodriguez" <mcgrof@kernel.org>
 Cc: <stable@vger.kernel.org>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/clk/ingenic/cgu.c |   10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ mm/vmalloc.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/clk/ingenic/cgu.c
-+++ b/drivers/clk/ingenic/cgu.c
-@@ -355,16 +355,16 @@ ingenic_clk_round_rate(struct clk_hw *hw
- 	struct ingenic_clk *ingenic_clk = to_ingenic_clk(hw);
- 	struct ingenic_cgu *cgu = ingenic_clk->cgu;
- 	const struct ingenic_cgu_clk_info *clk_info;
--	long rate = *parent_rate;
-+	unsigned int div = 1;
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -2162,7 +2162,7 @@ int remap_vmalloc_range_partial(struct v
+ 	if (!(area->flags & VM_USERMAP))
+ 		return -EINVAL;
  
- 	clk_info = &cgu->clock_info[ingenic_clk->idx];
+-	if (kaddr + size > area->addr + area->size)
++	if (kaddr + size > area->addr + get_vm_area_size(area))
+ 		return -EINVAL;
  
- 	if (clk_info->type & CGU_CLK_DIV)
--		rate /= ingenic_clk_calc_div(clk_info, *parent_rate, req_rate);
-+		div = ingenic_clk_calc_div(clk_info, *parent_rate, req_rate);
- 	else if (clk_info->type & CGU_CLK_FIXDIV)
--		rate /= clk_info->fixdiv.div;
-+		div = clk_info->fixdiv.div;
- 
--	return rate;
-+	return DIV_ROUND_UP(*parent_rate, div);
- }
- 
- static int
-@@ -384,7 +384,7 @@ ingenic_clk_set_rate(struct clk_hw *hw,
- 
- 	if (clk_info->type & CGU_CLK_DIV) {
- 		div = ingenic_clk_calc_div(clk_info, parent_rate, req_rate);
--		rate = parent_rate / div;
-+		rate = DIV_ROUND_UP(parent_rate, div);
- 
- 		if (rate != req_rate)
- 			return -EINVAL;
+ 	do {
 
 
