@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8896C10F03
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:36:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC5C1C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:36:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76CEE218A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:36:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A8992070D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:36:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553258194;
-	bh=oA0WJM1I0IQaPmAjsJZgMNExtqMo/FS2woJGpcr3H9E=;
+	s=default; t=1553258200;
+	bh=lUBQ6gYomRJZewnYUvks34V6RI1Cq1Fa0Zk1YtAUSBk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MaN4z7OJnXNV5SyLzjfGWCGRDA84tM50EUbkxwvbuKXkaBSpxbgmjzkW5rbXosILE
-	 suDgEQiXv+zm+29IeL/qdgzQAxMn7uhrKg5pzPG2BSmG8AaJAZ1BPMNi9CrY9u9tMo
-	 XdYAzTWOv7JpnmD9JbSetes5ExH6VA6Yh5WWQTXw=
+	b=aAN/rH515WTIh2OPefgqv9kWApDV6DjV4lsu2HW6k4mrJ1oCd57wel9xryxibTXIT
+	 TNSG6E1+9QzPg5n2modXs2dqNnFhizzZuj8t09yqJNBhoWxNgI6iwfG74Wtw/Oq6gs
+	 axfsRDkvzbka7qkK1B71K2u/y6ap5Ldg2olfHfE0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389301AbfCVMLA (ORCPT
+        id S2389461AbfCVMKy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:11:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49318 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:10:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389473AbfCVMK6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:10:58 -0400
+        id S2388861AbfCVMKu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:10:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53A192082C;
-        Fri, 22 Mar 2019 12:10:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 768C82082C;
+        Fri, 22 Mar 2019 12:10:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256656;
-        bh=oA0WJM1I0IQaPmAjsJZgMNExtqMo/FS2woJGpcr3H9E=;
+        s=default; t=1553256650;
+        bh=lUBQ6gYomRJZewnYUvks34V6RI1Cq1Fa0Zk1YtAUSBk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lmWcr7uUVZYhFN6JqgQZupxc0MjGqws/JMXee1F1n0CDLHrrMjIL/2IFDJByoNtoR
-         lXpQkSMc8tHZki9d4bQj64u7PZFfZP/MEIeli2AA1nzJXu2JWC20nJp/KCNbsjKKjl
-         0CRijDdx1CL+4TsqM5YVdI063XJ2jkFGkSHEfrGc=
+        b=dQMcxF1t23uEY99ALZ6DzG9SZO0JFC5hQ6Wb29SFpRHxhcrry/nOIFo6/dNawxYBf
+         zj/Ese+xp538u9ubBAPniUXm++jAj2j69F+R+SEb7xUWIJwSUIYvgo0c7xoQFmT/gW
+         vE/kbIVYtCM5KnPtB3zqA0K5gL/mKuYvSwhe2ALQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nix <nix@esperi.org.uk>,
-        Coly Li <colyli@suse.de>, Andre Noll <maan@tuebingen.mpg.de>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 4.19 279/280] bcache: use (REQ_META|REQ_PRIO) to indicate bio for metadata
-Date:   Fri, 22 Mar 2019 12:17:12 +0100
-Message-Id: <20190322111347.937046833@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 4.19 277/280] KVM: nVMX: Apply addr size mask to effective address for VMX instructions
+Date:   Fri, 22 Mar 2019 12:17:10 +0100
+Message-Id: <20190322111347.530882091@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -66,73 +65,71 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Coly Li <colyli@suse.de>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit dc7292a5bcb4c878b076fca2ac3fc22f81b8f8df upstream.
+commit 8570f9e881e3fde98801bb3a47eef84dd934d405 upstream.
 
-In 'commit 752f66a75aba ("bcache: use REQ_PRIO to indicate bio for
-metadata")' REQ_META is replaced by REQ_PRIO to indicate metadata bio.
-This assumption is not always correct, e.g. XFS uses REQ_META to mark
-metadata bio other than REQ_PRIO. This is why Nix noticed that bcache
-does not cache metadata for XFS after the above commit.
+The address size of an instruction affects the effective address, not
+the virtual/linear address.  The final address may still be truncated,
+e.g. to 32-bits outside of long mode, but that happens irrespective of
+the address size, e.g. a 32-bit address size can yield a 64-bit virtual
+address when using FS/GS with a non-zero base.
 
-Thanks to Dave Chinner, he explains the difference between REQ_META and
-REQ_PRIO from view of file system developer. Here I quote part of his
-explanation from mailing list,
-   REQ_META is used for metadata. REQ_PRIO is used to communicate to
-   the lower layers that the submitter considers this IO to be more
-   important that non REQ_PRIO IO and so dispatch should be expedited.
-
-   IOWs, if the filesystem considers metadata IO to be more important
-   that user data IO, then it will use REQ_PRIO | REQ_META rather than
-   just REQ_META.
-
-Then it seems bios with REQ_META or REQ_PRIO should both be cached for
-performance optimation, because they are all probably low I/O latency
-demand by upper layer (e.g. file system).
-
-So in this patch, when we want to decide whether to bypass the cache,
-REQ_META and REQ_PRIO are both checked. Then both metadata and
-high priority I/O requests will be handled properly.
-
-Reported-by: Nix <nix@esperi.org.uk>
-Signed-off-by: Coly Li <colyli@suse.de>
-Reviewed-by: Andre Noll <maan@tuebingen.mpg.de>
-Tested-by: Nix <nix@esperi.org.uk>
+Fixes: 064aea774768 ("KVM: nVMX: Decoding memory operands of VMX instructions")
 Cc: stable@vger.kernel.org
-Cc: Dave Chinner <david@fromorbit.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/bcache/request.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ arch/x86/kvm/vmx.c |   25 +++++++++++++++++++++++--
+ 1 file changed, 23 insertions(+), 2 deletions(-)
 
---- a/drivers/md/bcache/request.c
-+++ b/drivers/md/bcache/request.c
-@@ -392,10 +392,11 @@ static bool check_should_bypass(struct c
+--- a/arch/x86/kvm/vmx.c
++++ b/arch/x86/kvm/vmx.c
+@@ -8193,20 +8193,41 @@ static int get_vmx_mem_address(struct kv
+ 	if (index_is_valid)
+ 		off += kvm_register_read(vcpu, index_reg)<<scaling;
+ 	vmx_get_segment(vcpu, &s, seg_reg);
+-	*ret = s.base + off;
  
- 	/*
- 	 * Flag for bypass if the IO is for read-ahead or background,
--	 * unless the read-ahead request is for metadata (eg, for gfs2).
-+	 * unless the read-ahead request is for metadata
-+	 * (eg, for gfs2 or xfs).
- 	 */
- 	if (bio->bi_opf & (REQ_RAHEAD|REQ_BACKGROUND) &&
--	    !(bio->bi_opf & REQ_META))
-+	    !(bio->bi_opf & (REQ_META|REQ_PRIO)))
- 		goto skip;
++	/*
++	 * The effective address, i.e. @off, of a memory operand is truncated
++	 * based on the address size of the instruction.  Note that this is
++	 * the *effective address*, i.e. the address prior to accounting for
++	 * the segment's base.
++	 */
+ 	if (addr_size == 1) /* 32 bit */
+-		*ret &= 0xffffffff;
++		off &= 0xffffffff;
++	else if (addr_size == 0) /* 16 bit */
++		off &= 0xffff;
  
- 	if (bio->bi_iter.bi_sector & (c->sb.block_size - 1) ||
-@@ -877,7 +878,7 @@ static int cached_dev_cache_miss(struct
- 	}
- 
- 	if (!(bio->bi_opf & REQ_RAHEAD) &&
--	    !(bio->bi_opf & REQ_META) &&
-+	    !(bio->bi_opf & (REQ_META|REQ_PRIO)) &&
- 	    s->iop.c->gc_stats.in_use < CUTOFF_CACHE_READA)
- 		reada = min_t(sector_t, dc->readahead >> 9,
- 			      get_capacity(bio->bi_disk) - bio_end_sector(bio));
+ 	/* Checks for #GP/#SS exceptions. */
+ 	exn = false;
+ 	if (is_long_mode(vcpu)) {
++		/*
++		 * The virtual/linear address is never truncated in 64-bit
++		 * mode, e.g. a 32-bit address size can yield a 64-bit virtual
++		 * address when using FS/GS with a non-zero base.
++		 */
++		*ret = s.base + off;
++
+ 		/* Long mode: #GP(0)/#SS(0) if the memory address is in a
+ 		 * non-canonical form. This is the only check on the memory
+ 		 * destination for long mode!
+ 		 */
+ 		exn = is_noncanonical_address(*ret, vcpu);
+ 	} else if (is_protmode(vcpu)) {
++		/*
++		 * When not in long mode, the virtual/linear address is
++		 * unconditionally truncated to 32 bits regardless of the
++		 * address size.
++		 */
++		*ret = (s.base + off) & 0xffffffff;
++
+ 		/* Protected mode: apply checks for segment validity in the
+ 		 * following order:
+ 		 * - segment type check (#GP(0) may be thrown)
 
 
