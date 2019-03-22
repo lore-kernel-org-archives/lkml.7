@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 098ADC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:16:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE7EEC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:16:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE86B21900
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:16:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F1F021A4A
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:16:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256963;
-	bh=69Cs4s2Lsv56m0LSHjmW+3qnr8OYVFj6fSEao0Q0Vi0=;
+	s=default; t=1553256967;
+	bh=bdv9IgJWQ/NGIYgxLd0DZ9x4UTMTYAq4koQJm1+isTg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Lo9NRIx8/d6OXy3fU2QBD31SUfVTUPL1mqkeAg9XfUjQvLysnVkgzN0qYK/zKFUG9
-	 5F0JUL0YsFEZgJjVf0PbXmm0YVvBVJxDmFeGu3Uw/jOn2fgft7c8eH4v4X1x92etwe
-	 upe7Y6CoFWcL71qgyf7EIlmb7H0z8ARaBWvMsO0g=
+	b=cBAnbCNKHmjYY1i3D0aHhJzXLc98YHyRfsp/k3XM0k8/yRexAsogcSRyDud4btYI7
+	 GdBRntAMPDwaF60eGK+PQBEEiUrwIzhwv/6tJCdp0IlcIMnMTLajxnOjBmTqUmsfpt
+	 a0msOAgHp/HIlJL7wZ2a/WMd3e3URq1yFcsOq8U4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390144AbfCVMQC (ORCPT
+        id S2390157AbfCVMQG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:16:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54590 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:16:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389602AbfCVMQA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:16:00 -0400
+        id S2389602AbfCVMQD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:16:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DDC072192C;
-        Fri, 22 Mar 2019 12:15:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AEEFA2082C;
+        Fri, 22 Mar 2019 12:16:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256959;
-        bh=69Cs4s2Lsv56m0LSHjmW+3qnr8OYVFj6fSEao0Q0Vi0=;
+        s=default; t=1553256963;
+        bh=bdv9IgJWQ/NGIYgxLd0DZ9x4UTMTYAq4koQJm1+isTg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c2IALBS/pGW3VZFyWpD7OAImNKk5FcX1pfn5FBJfzbtJHy7ilcLNp1Q4HgkIEjJ7/
-         APUSDtnMiBvtP9X8shufBakw+YRTGXKabKVAR46uUlY3jVDj4vj/pzNE0otP/tJFSf
-         2CYdZ5B+5Is4IE3EYVSEvtThB/vePKgrG4NPnF3Q=
+        b=QbFWDEz2HJRLFqp+sHQ2KG3Wup5LUQLffPHOM4jk6GI4qaSDh5g7xLeYU+2X2G9Gv
+         7kXmKCJCgXfsGnCiXxN+hF7GfQh6Cpw2Bk1cNFJLRKm5S+OxPO3NVZBwrzmZ1KMGsk
+         vpDQhG2nO0ZdKfxvZOgbAn8fsUG1oz58oI5fpEZE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Song Liu <songliubraving@fb.com>, Jann Horn <jannh@google.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 5.0 058/238] tracing/perf: Use strndup_user() instead of buggy open-coded version
-Date:   Fri, 22 Mar 2019 12:14:37 +0100
-Message-Id: <20190322111301.958429725@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Nadav Amit <namit@vmware.com>
+Subject: [PATCH 5.0 059/238] vmw_balloon: release lock on error in vmballoon_reset()
+Date:   Fri, 22 Mar 2019 12:14:38 +0100
+Message-Id: <20190322111302.024400994@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -67,54 +65,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jann Horn <jannh@google.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit 83540fbc8812a580b6ad8f93f4c29e62e417687e upstream.
+commit d04071a5d6413b65f17f7bd6e2bdb22e22e4ace7 upstream.
 
-The first version of this method was missing the check for
-`ret == PATH_MAX`; then such a check was added, but it didn't call kfree()
-on error, so there was still a small memory leak in the error case.
-Fix it by using strndup_user() instead of open-coding it.
+We added some locking to this function but forgot to drop the lock on
+these two error paths.  This bug would lead to an immediate deadlock.
 
-Link: http://lkml.kernel.org/r/20190220165443.152385-1-jannh@google.com
-
-Cc: Ingo Molnar <mingo@kernel.org>
+Fixes: c7b3690fb152 ("vmw_balloon: stats rework")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 Cc: stable@vger.kernel.org
-Fixes: 0eadcc7a7bc0 ("perf/core: Fix perf_uprobe_init()")
-Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
-Acked-by: Song Liu <songliubraving@fb.com>
-Signed-off-by: Jann Horn <jannh@google.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Reviewed-by: Nadav Amit <namit@vmware.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/trace/trace_event_perf.c |   16 +++++++---------
- 1 file changed, 7 insertions(+), 9 deletions(-)
+ drivers/misc/vmw_balloon.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/kernel/trace/trace_event_perf.c
-+++ b/kernel/trace/trace_event_perf.c
-@@ -299,15 +299,13 @@ int perf_uprobe_init(struct perf_event *
+--- a/drivers/misc/vmw_balloon.c
++++ b/drivers/misc/vmw_balloon.c
+@@ -1287,7 +1287,7 @@ static void vmballoon_reset(struct vmbal
+ 	vmballoon_pop(b);
  
- 	if (!p_event->attr.uprobe_path)
- 		return -EINVAL;
--	path = kzalloc(PATH_MAX, GFP_KERNEL);
--	if (!path)
--		return -ENOMEM;
--	ret = strncpy_from_user(
--		path, u64_to_user_ptr(p_event->attr.uprobe_path), PATH_MAX);
--	if (ret == PATH_MAX)
--		return -E2BIG;
--	if (ret < 0)
--		goto out;
-+
-+	path = strndup_user(u64_to_user_ptr(p_event->attr.uprobe_path),
-+			    PATH_MAX);
-+	if (IS_ERR(path)) {
-+		ret = PTR_ERR(path);
-+		return (ret == -EINVAL) ? -E2BIG : ret;
-+	}
- 	if (path[0] == '\0') {
- 		ret = -EINVAL;
- 		goto out;
+ 	if (vmballoon_send_start(b, VMW_BALLOON_CAPABILITIES))
+-		return;
++		goto unlock;
+ 
+ 	if ((b->capabilities & VMW_BALLOON_BATCHED_CMDS) != 0) {
+ 		if (vmballoon_init_batching(b)) {
+@@ -1298,7 +1298,7 @@ static void vmballoon_reset(struct vmbal
+ 			 * The guest will retry in one second.
+ 			 */
+ 			vmballoon_send_start(b, 0);
+-			return;
++			goto unlock;
+ 		}
+ 	} else if ((b->capabilities & VMW_BALLOON_BASIC_CMDS) != 0) {
+ 		vmballoon_deinit_batching(b);
+@@ -1314,6 +1314,7 @@ static void vmballoon_reset(struct vmbal
+ 	if (vmballoon_send_guest_id(b))
+ 		pr_err("failed to send guest ID to the host\n");
+ 
++unlock:
+ 	up_write(&b->conf_sem);
+ }
+ 
 
 
