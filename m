@@ -2,52 +2,52 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4C44C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:30:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69E96C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:30:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 963072183E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:30:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38DBE218B0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:30:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254208;
-	bh=hxWK3QOGWpeJKf3IAhs2Ls5EEYm2vvxa28UNLhq+Gbg=;
+	s=default; t=1553254212;
+	bh=3bGhywEGhiChXQyWHIibE+Wj8YlRtUwJa21gefGreGc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qgPzzAp7rGm/bSDijOMiDg9eHzKZB6qBCc+cKiOqCA5HpBaczH4l+ncaw4w7GfE8h
-	 iTnQCeiv1+ewWLanTDbrGYjQawxcR5bQvZsqTOxarYT9G2v8lEh9MjNLlZxuYNFPd0
-	 pP90OnS2l/caghsJ104omTCoqnOofLMuu6LsAVeg=
+	b=OEAOt9PJD80dLpU21zHlJV8VJppNN+b1cfgQlRLGJjdIBRYrth3LLgiGAww2tHVSS
+	 y+CqFd/okN8GKqB4pKojbCZ1Gj+G2EsjRzUwVWEMBMbCQwoLYF+9vfeSs/YtvwJRBx
+	 j6SdSyWIOqP5DzdxM/Gy2a9xhBEz40Y+0hPM/Y9Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729042AbfCVLaH (ORCPT
+        id S1729917AbfCVLaK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:30:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58026 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:30:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729888AbfCVLaE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:30:04 -0400
+        id S1729888AbfCVLaI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:30:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6FA020449;
-        Fri, 22 Mar 2019 11:30:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69EF520449;
+        Fri, 22 Mar 2019 11:30:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254204;
-        bh=hxWK3QOGWpeJKf3IAhs2Ls5EEYm2vvxa28UNLhq+Gbg=;
+        s=default; t=1553254207;
+        bh=3bGhywEGhiChXQyWHIibE+Wj8YlRtUwJa21gefGreGc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OXpbHMLKX8fq7tRELkWcHsxyTdA4+XVBcgqAAuXbKG3aJKu7Hut6Ek9gK2znulfjm
-         AUJ033x5qX5zV/fmEdVoi0bHIVra+UCC7DIODPojgwM/WxpWSZw3kgfLBKrQShLn5Q
-         24FpMjAwNBeNDS5SF/hSrwy71Lwm9K6qjlXvroHU=
+        b=ZaUfERBe8bsTwoomCv9GAetsBAr4GWykwVZSx93drUZexsvbFf5J4WtNWKWHqhF+j
+         lXONWg2zufmaOkK5COqA3KFa2bdisJJE7m2mzqcmlKNQr9cLaUa4XzF4OjVXsdJrRG
+         HCYDufeiRpWfStvHIt2M8acWlzV/ApzsQm1kPzJ8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 048/230] KVM: nSVM: clear events pending from svm_complete_interrupts() when exiting to L1
-Date:   Fri, 22 Mar 2019 12:13:06 +0100
-Message-Id: <20190322111240.083095115@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Christoffer Dall <christoffer.dall@linaro.org>,
+        Marc Zyngier <marc.zyngier@arm.com>
+Subject: [PATCH 4.4 049/230] arm/arm64: KVM: Feed initialized memory to MMIO accesses
+Date:   Fri, 22 Mar 2019 12:13:07 +0100
+Message-Id: <20190322111240.146468386@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -66,46 +66,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 619ad846fc3452adaf71ca246c5aa711e2055398 ]
+From: Marc Zyngier <marc.zyngier@arm.com>
 
-kvm-unit-tests' eventinj "NMI failing on IDT" test results in NMI being
-delivered to the host (L1) when it's running nested. The problem seems to
-be: svm_complete_interrupts() raises 'nmi_injected' flag but later we
-decide to reflect EXIT_NPF to L1. The flag remains pending and we do NMI
-injection upon entry so it got delivered to L1 instead of L2.
+commit 1d6a821277aaa0cdd666278aaff93298df313d41 upstream.
 
-It seems that VMX code solves the same issue in prepare_vmcs12(), this was
-introduced with code refactoring in commit 5f3d5799974b ("KVM: nVMX: Rework
-event injection and recovery").
+On an MMIO access, we always copy the on-stack buffer info
+the shared "run" structure, even if this is a read access.
+This ends up leaking up to 8 bytes of uninitialized memory
+into userspace, depending on the size of the access.
 
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+An obvious fix for this one is to only perform the copy if
+this is an actual write.
+
+Reviewed-by: Christoffer Dall <christoffer.dall@linaro.org>
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/x86/kvm/svm.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/arm/kvm/mmio.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-index 7ce1a19d9d8bf..acbde1249b6f3 100644
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -2388,6 +2388,14 @@ static int nested_svm_vmexit(struct vcpu_svm *svm)
- 	kvm_mmu_reset_context(&svm->vcpu);
- 	kvm_mmu_load(&svm->vcpu);
+--- a/arch/arm/kvm/mmio.c
++++ b/arch/arm/kvm/mmio.c
+@@ -207,7 +207,8 @@ int io_mem_abort(struct kvm_vcpu *vcpu,
+ 	run->mmio.is_write	= is_write;
+ 	run->mmio.phys_addr	= fault_ipa;
+ 	run->mmio.len		= len;
+-	memcpy(run->mmio.data, data_buf, len);
++	if (is_write)
++		memcpy(run->mmio.data, data_buf, len);
  
-+	/*
-+	 * Drop what we picked up for L2 via svm_complete_interrupts() so it
-+	 * doesn't end up in L1.
-+	 */
-+	svm->vcpu.arch.nmi_injected = false;
-+	kvm_clear_exception_queue(&svm->vcpu);
-+	kvm_clear_interrupt_queue(&svm->vcpu);
-+
- 	return 0;
- }
- 
--- 
-2.19.1
-
+ 	if (!ret) {
+ 		/* We handled the access successfully in the kernel. */
 
 
