@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4E40C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:15:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D8A1C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:15:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84C7A21900
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:15:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D04B321900
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:15:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256909;
-	bh=WyQyFD4eJ+F9OiI+IejAzZO9+cfB96uTc+iNiNIQVP0=;
+	s=default; t=1553256913;
+	bh=FbLcwHcw92qzDOyJCQfbjhvpodAGsRxZVGON/eDR/V0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=unQ7Sy0dvhVHp7u6wNn9L880u9swi9gaq8aghNuL4OoVVwGV2VjSpB6gUk5wkuvTF
-	 t3Zp2ZGN8TGDcgaJhkJwRAnz+zAsDroTx+qzLqmtJO0ZNRxJT5z6ci5VBFzp2gSUWk
-	 MphlIKMQg41vc7biUxHjDnkht0heupfj6+GkiEBA=
+	b=gOkjc+KLpGAP3IrXuB38tk3slW85CNJlrOS7ptz8y54rl3hGHIkrqzcxiH3VXCt+T
+	 d8t6NuNOsKZPXdrLWu3owKOhymjMlVwcexug870SKghtEtX0jCZkYtmB7zMGagJyHi
+	 5riJfX2EOKjZhFpn6NKwHUFVYFPnDizHS1fW5Kdc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390013AbfCVMPI (ORCPT
+        id S2390022AbfCVMPM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:15:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53458 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:15:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389003AbfCVMPG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:15:06 -0400
+        id S2389003AbfCVMPK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:15:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE70A2082C;
-        Fri, 22 Mar 2019 12:15:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3A592082C;
+        Fri, 22 Mar 2019 12:15:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256905;
-        bh=WyQyFD4eJ+F9OiI+IejAzZO9+cfB96uTc+iNiNIQVP0=;
+        s=default; t=1553256909;
+        bh=FbLcwHcw92qzDOyJCQfbjhvpodAGsRxZVGON/eDR/V0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f+NhNPEd39lCu7e/KX0zchyS93fwkPlHf9/bSOdvdkx2NL1tW0nlYikos4N+qH9ry
-         IuQsgmr7Kk3bJ9/MTbb7ittwrUK1DRL/A8PX8AFVJ/w/tvgBsdfRegRg/tiw+7okm1
-         yi0gHq+bL23o94d7UhA/im7gJUPU++2Q3P6X4/+A=
+        b=b5rMwdar/9W59e/Nw91quZtFJRtGcu0yuPuSgUJUJauF+DQxl7Mw37FaVq2kWMLfS
+         m+2GxyOfxlOHmYMSLYwwrXJeZpF8I+Dfdp7y1llQt1lWb3Aycgolpm7bB+p119/wDg
+         9jXpczrLOJ2tHdcmYF4Y137mKxUZQUApsNVvEn4Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Stuart Menefy <stuart.menefy@mathembedded.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: [PATCH 5.0 073/238] clocksource/drivers/exynos_mct: Move one-shot check from tick clear to ISR
-Date:   Fri, 22 Mar 2019 12:14:52 +0100
-Message-Id: <20190322111302.908705124@linuxfoundation.org>
+        stable@vger.kernel.org, Namhyung Kim <namhyung@kernel.org>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 5.0 056/238] tracing: Use strncpy instead of memcpy for string keys in hist triggers
+Date:   Fri, 22 Mar 2019 12:14:35 +0100
+Message-Id: <20190322111301.807489581@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -68,73 +66,74 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Stuart Menefy <stuart.menefy@mathembedded.com>
+From: Tom Zanussi <tom.zanussi@linux.intel.com>
 
-commit a5719a40aef956ba704f2aa1c7b977224d60fa96 upstream.
+commit 9f0bbf3115ca9f91f43b7c74e9ac7d79f47fc6c2 upstream.
 
-When a timer tick occurs and the clock is in one-shot mode, the timer
-needs to be stopped to prevent it triggering subsequent interrupts.
-Currently this code is in exynos4_mct_tick_clear(), but as it is
-only needed when an ISR occurs move it into exynos4_mct_tick_isr(),
-leaving exynos4_mct_tick_clear() just doing what its name suggests it
-should.
+Because there may be random garbage beyond a string's null terminator,
+it's not correct to copy the the complete character array for use as a
+hist trigger key.  This results in multiple histogram entries for the
+'same' string key.
 
-Signed-off-by: Stuart Menefy <stuart.menefy@mathembedded.com>
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: stable@vger.kernel.org # v4.3+
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+So, in the case of a string key, use strncpy instead of memcpy to
+avoid copying in the extra bytes.
+
+Before, using the gdbus entries in the following hist trigger as an
+example:
+
+  # echo 'hist:key=comm' > /sys/kernel/debug/tracing/events/sched/sched_waking/trigger
+  # cat /sys/kernel/debug/tracing/events/sched/sched_waking/hist
+
+  ...
+
+  { comm: ImgDecoder #4                      } hitcount:        203
+  { comm: gmain                              } hitcount:        213
+  { comm: gmain                              } hitcount:        216
+  { comm: StreamTrans #73                    } hitcount:        221
+  { comm: mozStorage #3                      } hitcount:        230
+  { comm: gdbus                              } hitcount:        233
+  { comm: StyleThread#5                      } hitcount:        253
+  { comm: gdbus                              } hitcount:        256
+  { comm: gdbus                              } hitcount:        260
+  { comm: StyleThread#4                      } hitcount:        271
+
+  ...
+
+  # cat /sys/kernel/debug/tracing/events/sched/sched_waking/hist | egrep gdbus | wc -l
+  51
+
+After:
+
+  # cat /sys/kernel/debug/tracing/events/sched/sched_waking/hist | egrep gdbus | wc -l
+  1
+
+Link: http://lkml.kernel.org/r/50c35ae1267d64eee975b8125e151e600071d4dc.1549309756.git.tom.zanussi@linux.intel.com
+
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: stable@vger.kernel.org
+Fixes: 79e577cbce4c4 ("tracing: Support string type key properly")
+Signed-off-by: Tom Zanussi <tom.zanussi@linux.intel.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/clocksource/exynos_mct.c |   22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+ kernel/trace/trace_events_hist.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/drivers/clocksource/exynos_mct.c
-+++ b/drivers/clocksource/exynos_mct.c
-@@ -388,6 +388,13 @@ static void exynos4_mct_tick_start(unsig
- 	exynos4_mct_write(tmp, mevt->base + MCT_L_TCON_OFFSET);
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -4695,9 +4695,10 @@ static inline void add_to_key(char *comp
+ 		/* ensure NULL-termination */
+ 		if (size > key_field->size - 1)
+ 			size = key_field->size - 1;
+-	}
+ 
+-	memcpy(compound_key + key_field->offset, key, size);
++		strncpy(compound_key + key_field->offset, (char *)key, size);
++	} else
++		memcpy(compound_key + key_field->offset, key, size);
  }
  
-+static void exynos4_mct_tick_clear(struct mct_clock_event_device *mevt)
-+{
-+	/* Clear the MCT tick interrupt */
-+	if (readl_relaxed(reg_base + mevt->base + MCT_L_INT_CSTAT_OFFSET) & 1)
-+		exynos4_mct_write(0x1, mevt->base + MCT_L_INT_CSTAT_OFFSET);
-+}
-+
- static int exynos4_tick_set_next_event(unsigned long cycles,
- 				       struct clock_event_device *evt)
- {
-@@ -420,8 +427,11 @@ static int set_state_periodic(struct clo
- 	return 0;
- }
- 
--static void exynos4_mct_tick_clear(struct mct_clock_event_device *mevt)
-+static irqreturn_t exynos4_mct_tick_isr(int irq, void *dev_id)
- {
-+	struct mct_clock_event_device *mevt = dev_id;
-+	struct clock_event_device *evt = &mevt->evt;
-+
- 	/*
- 	 * This is for supporting oneshot mode.
- 	 * Mct would generate interrupt periodically
-@@ -430,16 +440,6 @@ static void exynos4_mct_tick_clear(struc
- 	if (!clockevent_state_periodic(&mevt->evt))
- 		exynos4_mct_tick_stop(mevt);
- 
--	/* Clear the MCT tick interrupt */
--	if (readl_relaxed(reg_base + mevt->base + MCT_L_INT_CSTAT_OFFSET) & 1)
--		exynos4_mct_write(0x1, mevt->base + MCT_L_INT_CSTAT_OFFSET);
--}
--
--static irqreturn_t exynos4_mct_tick_isr(int irq, void *dev_id)
--{
--	struct mct_clock_event_device *mevt = dev_id;
--	struct clock_event_device *evt = &mevt->evt;
--
- 	exynos4_mct_tick_clear(mevt);
- 
- 	evt->event_handler(evt);
+ static void
 
 
