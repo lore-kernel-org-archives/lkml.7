@@ -2,83 +2,132 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E4B2C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:00:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46128C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:02:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2609218A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:00:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 153E0218D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:02:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728077AbfCVOAq (ORCPT
+        id S1727884AbfCVOC4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 10:00:46 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:44820 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727726AbfCVOAo (ORCPT
+        Fri, 22 Mar 2019 10:02:56 -0400
+Received: from mout.kundenserver.de ([212.227.126.130]:35007 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727487AbfCVOCz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 10:00:44 -0400
-Received: by mail-qt1-f193.google.com with SMTP id w5so2535535qtb.11;
-        Fri, 22 Mar 2019 07:00:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KfO3L/ZRyCn9FipqUds+R1OsptxtKrtvfQdAbL11VWk=;
-        b=DqwKVCZf2z1BTD+FiBpKdB2mGkEcklYVpfQyBMJQAaEWamEHtTJSMhE0aUtU9TCz4e
-         TW+uRGaj8ZP7OhAdxSWZCehO0hL2cck7t2rU2BlF1tyed/ieHIffwsVQ/g9fjnF3/RYm
-         d3VGyiZY/zSplHDbLI5CImsgzGt/5iiydVm+dX5ff14vgskiJeNRyqJhsILoLDjXcPmS
-         AFxPJdlsMnczlK/fMBqq2xTXLy7XstiJJajJ5Zwv3rWJPNAcsoa1I342z22GCqcau6nM
-         xRdWFH9qsJjPXGRQ7NtCr62rVfa9ZVuUhX7B6FJ2IyN7eNflSD6iKJ9qKN9qPV0QMWem
-         bsqQ==
-X-Gm-Message-State: APjAAAUpvi2qbpgz/IfpMbnHtxNZymy5NkSupce41go9LItOyrk7Vzma
-        fxEV3eDqduUVnEVB2ns4kMdYYMNjdvYVfsMbr7M=
-X-Google-Smtp-Source: APXvYqwk9CLw6lAoHxBBnLtDn35eu8/Vi7M4yWMlplDLpBgzgGG13CHDRuLrdwFRpNfF/NxLGiNSxmj+2cB7PG2lTOM=
-X-Received: by 2002:ac8:2692:: with SMTP id 18mr8147213qto.343.1553263243384;
- Fri, 22 Mar 2019 07:00:43 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAK8P3a3MV=0BbOpjwM+2q+7Oehc=4B+u0hka1YdBnJmikfqCig@mail.gmail.com>
- <20190313230137.GA12529@agluck-desk> <CAK8P3a0aDdEt323i=z4BGuh71ntPqm-L33U4q+FiQOdMUin6wg@mail.gmail.com>
- <20190314110413.GA32277@zn.tnic> <20190314215952.GA303@agluck-desk>
- <20190315094341.GA12523@zn.tnic> <20190315155718.GA17775@agluck-desk>
- <20190315173720.GC12523@zn.tnic> <20190315174956.GA20831@agluck-desk>
- <20190315180206.GD12523@zn.tnic> <20190315181108.GA21111@agluck-desk>
- <CAK8P3a2CFyF5wExbZPb20E56sJ=3DpsP+0m2Px6D5Sw_L3pKXA@mail.gmail.com> <3908561D78D1C84285E8C5FCA982C28F7D53BD42@ORSMSX110.amr.corp.intel.com>
-In-Reply-To: <3908561D78D1C84285E8C5FCA982C28F7D53BD42@ORSMSX110.amr.corp.intel.com>
+        Fri, 22 Mar 2019 10:02:55 -0400
+Received: from wuerfel.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1N0Fh1-1gksC41oTH-00xHb5; Fri, 22 Mar 2019 15:02:43 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 22 Mar 2019 15:00:25 +0100
-Message-ID: <CAK8P3a0WjUi+mBZ0nO2FFFCRvy5mA10frZMAaXisGWOs4pnPCA@mail.gmail.com>
-Subject: Re: [PATCH] EDAC, {skx|i10nm}_edac: Fix randconfig build error
-To:     "Luck, Tony" <tony.luck@intel.com>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+To:     Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, James Morse <james.morse@arm.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
+        Thor Thayer <thor.thayer@linux.intel.com>,
+        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] EDAC, {skx|i10nm}_edac: Fix randconfig build error
+Date:   Fri, 22 Mar 2019 15:02:26 +0100
+Message-Id: <20190322140241.4171530-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:Dp9ZRsPxecNlIjLmRl+hmaeVN/jA0KGkR6kC9RGmz1v9wug9RZf
+ u9liQou4XYpDcE0z6K3BmeW4rj6xnNOLav6GkQvv4APUbgOqnBeNAzLgA3bx1PCg0zLHL3C
+ BnTcR6bragtIyOX68CcnzKp+vXu+V96zRHmHFk2KMzBmtJrvrb4mx465qGyUbkmOXnxCIV3
+ P7w7apfDBDCKLoXJ/gNPw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:1ul4WU+k5uI=:a61oJR4ykm8GoOy8V086Kt
+ 7DdXUrxeCMRX8+03AX1S3nkg5xoYIMD5Q347tyPvpB7UxA2eZPQPCDlH1ipkTiWfbeBFDdYh2
+ d9v4qvtxF34ybp4uny4kSwAys6uAzOzuvKqh6Sm0kutaB8boq4y1f38GDR1WQr0qEeEmENxF2
+ Mh+fwJ5PwVNwncWSM10FlGAPcLmkqbieakxsrsUAJQFU9k9H3otn6B+gNjfMwL6YuxjXlD7gt
+ wa6h1uYLw8XZDzQ/xdxmjxxff0XiDKP0ObD6vTxyTB6YgJWDV+Tjuhad0AlckAQICLrg1h0TT
+ bl3guzn2Y0HtIdBhEE0Wayqis0GVEoGw6p8+q1Vid6fU5sdU9+a1wlEBw6Df9amESYAa+ln2+
+ hXrw8cmRUSjbTIkxrZyNtovCfTTXzoOb8asRVPSnKgCwhJ0Ik3IxG6VUy/MYERKlRGxPkDLXY
+ FYWjPsCa3KtrHzuteo4VF1GzifZw4dm04ei+a9V3Hd3gQOe67Rr+nK9wTJsgcLGg2fuFzlsDx
+ nbMQDyQzg22SHrUcn/lJp9ylrJJSep8iybzfq0/ClETdt0UyW9IVtxhU0joSH+BlLlynJgsEs
+ EFMlgTyh0IEBhh9J2DM0oVM7MXclBnQH2yUOb3ZnNovi/kXejnqJZDigF7vqbwjrdQCwngKOu
+ mfRiaaXQPF96fKqqHxvagr1QRNwkwtEkutEI4XWLQpxPjSttlckN4BunONhdTObgwvvhgXUVo
+ fCdPAsbo1bOG+JruF9eKvHMfQB+BzUEW9SBwiw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 15, 2019 at 10:28 PM Luck, Tony <tony.luck@intel.com> wrote:
->
-> > Basically I cheat Kconfig, so if one driver is built-in and
-> > the other is a loadable module, we compile both as built-in.
->
-> My mail client may have munged that path. Both "git am" and "patch -p1"
-> barf when I try to apply it.  Since it was small I tried to replicate manually,
-> but I must have messed up something because Kconfig still seems content
-> to let me have CONFIG_EDAC_SKX=y with CONFIG_EDAC_I10NM=m
->
-> :-(
+Configurations with CONFIG_EDAC_SKX and CONFIG_EDAC_I10NM
+both enabled, but only one of them built-in and the other
+being a loadable module fail to link because the common
+file is built the wrong way:
 
-Sorry, this was my mistake, my email was garbled. The patch was
-correct though: the idea here is not to change the Kconfig symbols
-but to change the Makefile to do the right thing even when Kconfig
-is set wrong.
+skx_common.c:672: undefined reference to `__this_module'
 
-      Arnd
+This overrides the way the modules are built, building
+both into the zImage file if that happens.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/edac/Kconfig  | 9 +++++++++
+ drivers/edac/Makefile | 8 ++++++--
+ 2 files changed, 15 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
+index 47eb4d13ed5f..70080926329f 100644
+--- a/drivers/edac/Kconfig
++++ b/drivers/edac/Kconfig
+@@ -235,6 +235,7 @@ config EDAC_SKX
+ 	depends on ACPI_NFIT || !ACPI_NFIT # if ACPI_NFIT=m, EDAC_SKX can't be y
+ 	select DMI
+ 	select ACPI_ADXL
++	select EDAC_SKX_COMMON
+ 	help
+ 	  Support for error detection and correction the Intel
+ 	  Skylake server Integrated Memory Controllers. If your
+@@ -247,12 +248,20 @@ config EDAC_I10NM
+ 	depends on ACPI_NFIT || !ACPI_NFIT # if ACPI_NFIT=m, EDAC_I10NM can't be y
+ 	select DMI
+ 	select ACPI_ADXL
++	select EDAC_SKX_COMMON
+ 	help
+ 	  Support for error detection and correction the Intel
+ 	  10nm server Integrated Memory Controllers. If your
+ 	  system has non-volatile DIMMs you should also manually
+ 	  select CONFIG_ACPI_NFIT.
+ 
++config EDAC_SKX_COMMON
++	tristate
++	help
++	  This is an internal helper symbol to ensure that all variants
++	  of the EDAC_SKX driver are either built-in or modular, as mixing
++	  the two causes link time problems.
++
+ config EDAC_PND2
+ 	tristate "Intel Pondicherry2"
+ 	depends on PCI && X86_64 && X86_MCE_INTEL
+diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
+index 89ad4a84a0f6..0f363309f662 100644
+--- a/drivers/edac/Makefile
++++ b/drivers/edac/Makefile
+@@ -58,10 +58,14 @@ layerscape_edac_mod-y			:= fsl_ddr_edac.o layerscape_edac.o
+ obj-$(CONFIG_EDAC_LAYERSCAPE)		+= layerscape_edac_mod.o
+ 
+ skx_edac-y				:= skx_common.o skx_base.o
+-obj-$(CONFIG_EDAC_SKX)			+= skx_edac.o
++ifdef CONFIG_EDAC_SKX
++obj-$(CONFIG_EDAC_SKX_COMMON)		+= skx_edac.o
++endif
+ 
+ i10nm_edac-y				:= skx_common.o i10nm_base.o
+-obj-$(CONFIG_EDAC_I10NM)		+= i10nm_edac.o
++ifdef CONFIG_EDAC_I10NM
++obj-$(CONFIG_EDAC_SKX_COMMON))		+= i10nm_edac.o
++endif
+ 
+ obj-$(CONFIG_EDAC_MV64X60)		+= mv64x60_edac.o
+ obj-$(CONFIG_EDAC_CELL)			+= cell_edac.o
+-- 
+2.20.0
+
