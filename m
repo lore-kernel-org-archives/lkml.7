@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C06DC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:03:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1323DC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:04:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D94321A4A
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:03:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6D902082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:04:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256238;
-	bh=xql/hhdeWiiailQT00lRiApZb+d/wh6bNuxkWQcqQAY=;
+	s=default; t=1553256243;
+	bh=6f1s58YCh8Di8LAvWkPXxeYPt6ZHo8Yu4y+cO28Mmmw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wkgudLItqjgwhDFmOkZ7VAH0+eMWdk6JheBi5ORIPNAqZnGhNaridV2DYt4d8ry42
-	 gsX0HJGOQicnpCMCPS/y7mtkvV+2BgSz4hqvM78jiFw0MnHjjSMUX5VUWmdf6ZbFpr
-	 pnzxxUe76i2v8WIQdJFXaEnzJsEhkO/WRYtUYDrw=
+	b=kXgfuMOEejdwYz7AMXWTgYx9BNJGYAPFnkPVohxXIBcJLbCKtqxdSD0OSDA9OhD2P
+	 NQRVxzZUav88ZwqTFpx+GWHudQpj3s1KCCdn7FulIAMxWisqWLU5heMxS8djh2l0Ju
+	 3d3MV4mE+/Hqwg0uDJQ2MnaLGbMET9+zAZCCEtBQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388587AbfCVMD5 (ORCPT
+        id S2388610AbfCVMEC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:03:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42280 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:04:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388250AbfCVMDw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:03:52 -0400
+        id S2388257AbfCVMD4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:03:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3339F204FD;
-        Fri, 22 Mar 2019 12:03:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 11F36204FD;
+        Fri, 22 Mar 2019 12:03:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256231;
-        bh=xql/hhdeWiiailQT00lRiApZb+d/wh6bNuxkWQcqQAY=;
+        s=default; t=1553256235;
+        bh=6f1s58YCh8Di8LAvWkPXxeYPt6ZHo8Yu4y+cO28Mmmw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YCMJ+AJCAlBGwtyXuVBcWyNSo/xJHGqRQymQgR6E0y5IfE5Q9xkAFIvSLlypSZ6kY
-         rGW4IOMU3JbrNEWz9qJHC/tume34gHPkJyYJqmcdp0hmB1o6SVEkZkKRh2leegD55T
-         NY3ppqdYPD0/54ojvdnX+MvKbj+c7Anb9UWr7/W0=
+        b=S2uTPTlg5BNSB3dWVk1fuic+7voPDGI0AmN9gi3IWn26j8ker55BDgoZgdIQlvNXY
+         47FdE29ulzOCc673OolILjZnOdL358pBUt9cqEaitaPIr22gcedzcYgAW68ORglaog
+         r//h/adVq583M0UIsmozQ3gO9l8XFKb+jMHswmDQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vignesh R <vigneshr@ti.com>,
+        stable@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Mark Brown <broonie@kernel.org>
-Subject: [PATCH 4.19 148/280] spi: ti-qspi: Fix mmap read when more than one CS in use
-Date:   Fri, 22 Mar 2019 12:15:01 +0100
-Message-Id: <20190322111319.893848266@linuxfoundation.org>
+Subject: [PATCH 4.19 149/280] spi: pxa2xx: Setup maximum supported DMA transfer length
+Date:   Fri, 22 Mar 2019 12:15:02 +0100
+Message-Id: <20190322111320.132010930@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -65,48 +66,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Vignesh R <vigneshr@ti.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-commit 673c865efbdc5fec3cc525c46d71844d42c60072 upstream.
+commit ef070b4e4aa25bb5f8632ad196644026c11903bf upstream.
 
-Commit 4dea6c9b0b64 ("spi: spi-ti-qspi: add mmap mode read support") has
-has got order of parameter wrong when calling regmap_update_bits() to
-select CS for mmap access. Mask and value arguments are interchanged.
-Code will work on a system with single slave, but fails when more than
-one CS is in use. Fix this by correcting the order of parameters when
-calling regmap_update_bits().
+When the commit b6ced294fb61
 
-Fixes: 4dea6c9b0b64 ("spi: spi-ti-qspi: add mmap mode read support")
-Cc: stable@vger.kernel.org
-Signed-off-by: Vignesh R <vigneshr@ti.com>
+   ("spi: pxa2xx: Switch to SPI core DMA mapping functionality")
+
+switches to SPI core provided DMA helpers, it missed to setup maximum
+supported DMA transfer length for the controller and thus users
+mistakenly try to send more data than supported with the following
+warning:
+
+  ili9341 spi-PRP0001:01: DMA disabled for transfer length 153600 greater than 65536
+
+Setup maximum supported DMA transfer length in order to make users know
+the limit.
+
+Fixes: b6ced294fb61 ("spi: pxa2xx: Switch to SPI core DMA mapping functionality")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/spi/spi-ti-qspi.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/spi/spi-pxa2xx.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/spi/spi-ti-qspi.c
-+++ b/drivers/spi/spi-ti-qspi.c
-@@ -490,8 +490,8 @@ static void ti_qspi_enable_memory_map(st
- 	ti_qspi_write(qspi, MM_SWITCH, QSPI_SPI_SWITCH_REG);
- 	if (qspi->ctrl_base) {
- 		regmap_update_bits(qspi->ctrl_base, qspi->ctrl_reg,
--				   MEM_CS_EN(spi->chip_select),
--				   MEM_CS_MASK);
-+				   MEM_CS_MASK,
-+				   MEM_CS_EN(spi->chip_select));
+--- a/drivers/spi/spi-pxa2xx.c
++++ b/drivers/spi/spi-pxa2xx.c
+@@ -1612,6 +1612,7 @@ static int pxa2xx_spi_probe(struct platf
+ 			platform_info->enable_dma = false;
+ 		} else {
+ 			master->can_dma = pxa2xx_spi_can_dma;
++			master->max_dma_len = MAX_DMA_LEN;
+ 		}
  	}
- 	qspi->mmap_enabled = true;
- }
-@@ -503,7 +503,7 @@ static void ti_qspi_disable_memory_map(s
- 	ti_qspi_write(qspi, 0, QSPI_SPI_SWITCH_REG);
- 	if (qspi->ctrl_base)
- 		regmap_update_bits(qspi->ctrl_base, qspi->ctrl_reg,
--				   0, MEM_CS_MASK);
-+				   MEM_CS_MASK, 0);
- 	qspi->mmap_enabled = false;
- }
  
 
 
