@@ -2,52 +2,54 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31479C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:03:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C1DDC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:04:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02CCF213F2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:03:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C6E920693
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:04:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553259825;
-	bh=qdr3ArbLepzJHngNyn+RSWQvYgp6dOsG/xmcB4MDL9o=;
+	s=default; t=1553259841;
+	bh=V9b/eDzEDd8PwNiEwm1IQxRz40I+oM0mqBW+iTz/E08=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D1A0aGQp58tyN43q6uyGAHbRBR7XbZJOS6IgooaRBsPmhfUDBjBXCHjgPmaYj1C5t
-	 qO75A1rim0wJyfsrHIYC5wpfx6RBw05wa6kY0uxjFWt5BlmXA5LD8gprkUqIQI02V3
-	 RWxAirRNU4vQZp1hPXbFpSWCS+NjyiNJt1wGt1+M=
+	b=MzddEPx9mIWh3ZWJ/d8yYvFMFJUJ2PAOyV0pIanYdueaB7xynWG57xSMdgrBmMVso
+	 Nv/Uf6vKp0VLarTqdu9tUoCEtgAEiqwXehHXgBksJtjbv+RdxiSdfFbiTJWNixwplR
+	 BgtbNrhWG68ULyG+dEQ9eTsJPU5K2OJVTsHxapo8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731591AbfCVNDn (ORCPT
+        id S1731460AbfCVNEA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 09:03:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42080 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 09:04:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730909AbfCVLkM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:40:12 -0400
+        id S1730977AbfCVLjx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:39:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8676218B0;
-        Fri, 22 Mar 2019 11:40:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3DEA2082C;
+        Fri, 22 Mar 2019 11:39:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254812;
-        bh=qdr3ArbLepzJHngNyn+RSWQvYgp6dOsG/xmcB4MDL9o=;
+        s=default; t=1553254792;
+        bh=V9b/eDzEDd8PwNiEwm1IQxRz40I+oM0mqBW+iTz/E08=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Rc0+tJ+TatH7WFSm1juB35CPRnKMRkJ3TPamI73F+vRpZo2WaV/fP1Xa0fqwSqBmv
-         sshmeN7Nv8VbyCHo4kp9IeRdk15MiRpRHr+qYpVNjTKdzlcSs/l5zFdmtqdMHyQr84
-         jdwjRkVlpmUMsihfkJ0awJzauWHVKnQDQ2ldHHPo=
+        b=SefGEKIKiWjvzIeY3DKyNPbKj8ubxO29wVl0zo9ZDrhLv7+6fvkkgpp0RBEEmL+k+
+         v8245b2tx6XhJwb7q+34Ygyh89TPkOfLGvuNpIbX8bOVAJ4/HW4EQmcVZlhvH6gLq/
+         3bYBDlmu6f1A1kZB1KC6wpzNt8B5csjaIPg0cJNc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        zhengbin <zhengbin13@huawei.com>,
-        Dominique Martinet <dominique.martinet@cea.fr>
-Subject: [PATCH 4.9 003/118] 9p/net: fix memory leak in p9_client_create
-Date:   Fri, 22 Mar 2019 12:14:35 +0100
-Message-Id: <20190322111216.159738486@linuxfoundation.org>
+        stable@vger.kernel.org, Sven Van Asbroeck <thesven73@gmail.com>,
+        Sven Van Asbroeck <TheSven73@googlemail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 013/118] Input: cap11xx - switch to using set_brightness_blocking()
+Date:   Fri, 22 Mar 2019 12:14:45 +0100
+Message-Id: <20190322111216.930360928@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111215.873964544@linuxfoundation.org>
 References: <20190322111215.873964544@linuxfoundation.org>
@@ -66,35 +68,101 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: zhengbin <zhengbin13@huawei.com>
+[ Upstream commit 628442880af8c201d307a45f3862a7a17df8a189 ]
 
-commit bb06c388fa20ae24cfe80c52488de718a7e3a53f upstream.
+Updating LED state requires access to regmap and therefore we may sleep,
+so we could not do that directly form set_brightness() method.
+Historically we used private work to adjust the brightness, but with the
+introduction of set_brightness_blocking() we no longer need it.
 
-If msize is less than 4096, we should close and put trans, destroy
-tagpool, not just free client. This patch fixes that.
+As a bonus, not having our own work item means we do not have
+use-after-free issue as we neglected to cancel outstanding work on
+driver unbind.
 
-Link: http://lkml.kernel.org/m/1552464097-142659-1-git-send-email-zhengbin13@huawei.com
-Cc: stable@vger.kernel.org
-Fixes: 574d356b7a02 ("9p/net: put a lower bound on msize")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: zhengbin <zhengbin13@huawei.com>
-Signed-off-by: Dominique Martinet <dominique.martinet@cea.fr>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Reported-by: Sven Van Asbroeck <thesven73@gmail.com>
+Reviewed-by: Sven Van Asbroeck <TheSven73@googlemail.com>
+Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/9p/client.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/input/keyboard/cap11xx.c | 35 ++++++++++----------------------
+ 1 file changed, 11 insertions(+), 24 deletions(-)
 
---- a/net/9p/client.c
-+++ b/net/9p/client.c
-@@ -1058,7 +1058,7 @@ struct p9_client *p9_client_create(const
- 		p9_debug(P9_DEBUG_ERROR,
- 			 "Please specify a msize of at least 4k\n");
- 		err = -EINVAL;
--		goto free_client;
-+		goto close_trans;
- 	}
+diff --git a/drivers/input/keyboard/cap11xx.c b/drivers/input/keyboard/cap11xx.c
+index 4401be225d64..3c53aa5d5c0c 100644
+--- a/drivers/input/keyboard/cap11xx.c
++++ b/drivers/input/keyboard/cap11xx.c
+@@ -75,9 +75,7 @@
+ struct cap11xx_led {
+ 	struct cap11xx_priv *priv;
+ 	struct led_classdev cdev;
+-	struct work_struct work;
+ 	u32 reg;
+-	enum led_brightness new_brightness;
+ };
+ #endif
  
- 	err = p9_client_version(clnt);
+@@ -233,30 +231,21 @@ static void cap11xx_input_close(struct input_dev *idev)
+ }
+ 
+ #ifdef CONFIG_LEDS_CLASS
+-static void cap11xx_led_work(struct work_struct *work)
++static int cap11xx_led_set(struct led_classdev *cdev,
++			    enum led_brightness value)
+ {
+-	struct cap11xx_led *led = container_of(work, struct cap11xx_led, work);
++	struct cap11xx_led *led = container_of(cdev, struct cap11xx_led, cdev);
+ 	struct cap11xx_priv *priv = led->priv;
+-	int value = led->new_brightness;
+ 
+ 	/*
+-	 * All LEDs share the same duty cycle as this is a HW limitation.
+-	 * Brightness levels per LED are either 0 (OFF) and 1 (ON).
++	 * All LEDs share the same duty cycle as this is a HW
++	 * limitation. Brightness levels per LED are either
++	 * 0 (OFF) and 1 (ON).
+ 	 */
+-	regmap_update_bits(priv->regmap, CAP11XX_REG_LED_OUTPUT_CONTROL,
+-				BIT(led->reg), value ? BIT(led->reg) : 0);
+-}
+-
+-static void cap11xx_led_set(struct led_classdev *cdev,
+-			   enum led_brightness value)
+-{
+-	struct cap11xx_led *led = container_of(cdev, struct cap11xx_led, cdev);
+-
+-	if (led->new_brightness == value)
+-		return;
+-
+-	led->new_brightness = value;
+-	schedule_work(&led->work);
++	return regmap_update_bits(priv->regmap,
++				  CAP11XX_REG_LED_OUTPUT_CONTROL,
++				  BIT(led->reg),
++				  value ? BIT(led->reg) : 0);
+ }
+ 
+ static int cap11xx_init_leds(struct device *dev,
+@@ -299,7 +288,7 @@ static int cap11xx_init_leds(struct device *dev,
+ 		led->cdev.default_trigger =
+ 			of_get_property(child, "linux,default-trigger", NULL);
+ 		led->cdev.flags = 0;
+-		led->cdev.brightness_set = cap11xx_led_set;
++		led->cdev.brightness_set_blocking = cap11xx_led_set;
+ 		led->cdev.max_brightness = 1;
+ 		led->cdev.brightness = LED_OFF;
+ 
+@@ -312,8 +301,6 @@ static int cap11xx_init_leds(struct device *dev,
+ 		led->reg = reg;
+ 		led->priv = priv;
+ 
+-		INIT_WORK(&led->work, cap11xx_led_work);
+-
+ 		error = devm_led_classdev_register(dev, &led->cdev);
+ 		if (error) {
+ 			of_node_put(child);
+-- 
+2.19.1
+
 
 
