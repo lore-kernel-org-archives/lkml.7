@@ -2,139 +2,226 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ADB5C10F03
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 07:56:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 409EAC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 07:58:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A454218FE
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 07:56:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ifmqZX1t"
+	by mail.kernel.org (Postfix) with ESMTP id 09FD120700
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 07:58:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727427AbfCVH4w (ORCPT
+        id S1727528AbfCVH6H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 03:56:52 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:46924 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725981AbfCVH4w (ORCPT
+        Fri, 22 Mar 2019 03:58:07 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:54794 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726029AbfCVH6H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 03:56:52 -0400
-Received: by mail-io1-f66.google.com with SMTP id b9so961706iot.13
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 00:56:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Kl1B+Ivc3PKE8hoZ+rXxR+ntuCueGNULslvt7Pmb2oI=;
-        b=ifmqZX1tPPiMNpFENczDCPjKuTYRRkca3MZnukeCdbmUMCdE6LvqM4ym9J3njeoqGu
-         7yxFPVfgu12Ik4ivsZ+lWJq7exygXLTBPijnHWugRQxLi+YjC9Z7vOODCUNNAOHnmZzv
-         0iVWqM1W4yZo4QHrhyvYIutLWGGabwIJFa9/tMbNEiSHdpknl9G6J9WcXKhOcY4aKUvN
-         Hc9OWVcCBVQDurmO++Qal0qA3tz0lRs2AUn3Wm+IMElEAzUcD0lBC93GeEz/+8cnPLTG
-         N6I8fvzMzrPCDWeYlvxVr3SdT1jT3tdgtAjvNvAktilipyyPqZT1RfVQ8tP0U3Y8MkUR
-         cktQ==
+        Fri, 22 Mar 2019 03:58:07 -0400
+Received: by mail-wm1-f68.google.com with SMTP id f3so1136321wmj.4
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 00:58:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Kl1B+Ivc3PKE8hoZ+rXxR+ntuCueGNULslvt7Pmb2oI=;
-        b=eJbJFl7/wRnz5cptqlTeS9YtNAW2bIh5YjL959BBPTgppoEZdh2wL+XR6N/KAdRSmB
-         RTnU3/AIAimFjJdLY0cXhbgSopZ3oHx476e1aVi2JGoq8bCkQAotVEKzNIhLC2u3ntNc
-         oha55H1GoqsoR+ZinqtlT9YsdY8Io7FOWXXMOqNz1DV33z9v6qaFhIedVEGf/Z3iAqVK
-         /SJA8KI/yShIlPkdKZoQ4qRQa4fqw9Ycqg+MAJlZC+6khY+q7/FeeYJpiPltF/3le4a/
-         ZYLtpyszWu9G+rY6P9aAHnv0kRVoHKHDfnHW9/ZIZLUQ13WHAgLjXd6VRqgDU961aS39
-         9w5g==
-X-Gm-Message-State: APjAAAUIf/nX751zBNeqRChauBMnYeVHe4xF7seZO3it+yHc8aOJbZuq
-        YX5/iRzB1ZIW++7p2KTEe1Xo0RT2uiu+nDoLNJziWg==
-X-Google-Smtp-Source: APXvYqwUme5xtdHv4AlR+suujBzCOLgYFRnxpvKNt4H0I10djQYsbBd1LrB4SPuHe+Dw6ZaDFDEmalMGQFVYAoziV2w=
-X-Received: by 2002:a5e:9b17:: with SMTP id j23mr6291159iok.60.1553241411186;
- Fri, 22 Mar 2019 00:56:51 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=8xbd8CXr9XHUZUqs4XQNjd69dgLQnFeXMfj39ibW2YU=;
+        b=LsNH5P28rKlAn85YB1vt7T7x2cwMwXxWErSiNv092ANi6mS7KGCkgMPtRFkB9CUNXJ
+         W6Rw/KJK/1GmvTLfRAD0Nqa9mMAb/m+u+zVyWcDe+CNs0z8BEqNrt51VK5tYustR26xr
+         f/KnpE+/Bo9xewUVFwf+zVWQacr9B1U5SmxQ2fEnT41Vzl5f3kVjCJFs+i+czxBTPUW9
+         xNw3xbXjlQEEZkhnxyyY+0ICwi4/HNOqS/gH502qPwKP5kdZG1XZlLM9JrNEZ98r6YnA
+         NYp/b15pt3DbFo6ydsIPNAcecugK3d2tixc2l3nwHOOj1xidgc6FQaZ7ifZxv1hCJelG
+         4+tg==
+X-Gm-Message-State: APjAAAU4Rw2lcYKWhHZJCejWvEIeje1Js6uSLuLse+A1OTKrssX7edwK
+        CWX/mH2tbzIYcYqT3TvgA8Indg==
+X-Google-Smtp-Source: APXvYqxueQnEChqmUzpNctyDssSa24HpcEB/BP0Eb9yt2jUYMgeNaIu/5gk/qPRXnlav9f/j6nFS+Q==
+X-Received: by 2002:a1c:f718:: with SMTP id v24mr2131179wmh.1.1553241484655;
+        Fri, 22 Mar 2019 00:58:04 -0700 (PDT)
+Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
+        by smtp.gmail.com with ESMTPSA id f11sm2605897wrm.30.2019.03.22.00.58.03
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Fri, 22 Mar 2019 00:58:03 -0700 (PDT)
+Subject: Re: [PATCH] virt: vbox: Implement passing requestor info to the host
+ for VirtualBox 6.0.x
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Michael Thayer <michael.thayer@oracle.com>,
+        "Knut St . Osmundsen" <knut.osmundsen@oracle.com>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20190320093519.26029-1-hdegoede@redhat.com>
+ <20190320182614.GB3907@kroah.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <f8226ea5-ac37-5fbb-e532-717a1a8320c9@redhat.com>
+Date:   Fri, 22 Mar 2019 08:58:02 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
 MIME-Version: 1.0
-References: <20190322062740.nrwfx2rvmt7lzotj@gondor.apana.org.au>
-In-Reply-To: <20190322062740.nrwfx2rvmt7lzotj@gondor.apana.org.au>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Fri, 22 Mar 2019 08:56:39 +0100
-Message-ID: <CAKv+Gu_mgyzqUCeb+wke--8Gn8YbjOb8jyrSgFr3-tcNP8ccEQ@mail.gmail.com>
-Subject: Re: [PATCH 0/17] Add zinc using existing algorithm implementations
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        linux-fscrypt@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Paul Crowley <paulcrowley@google.com>,
-        Greg Kaiser <gkaiser@google.com>,
-        Samuel Neves <samuel.c.p.neves@gmail.com>,
-        Tomer Ashur <tomer.ashur@esat.kuleuven.be>,
-        Martin Willi <martin@strongswan.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190320182614.GB3907@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 22 Mar 2019 at 07:28, Herbert Xu <herbert@gondor.apana.org.au> wrote:
->
-> Hi:
->
-> In the interest of moving forward with wireguard, this patch
-> series adds the zinc interface as submitted in
->
-> https://patchwork.kernel.org/project/linux-crypto/list/?series=32507&state=*
->
-> with the change that existing implementations of chacha20 and
-> poly1305 are used instead of the new ones.  The use of the existing
-> chacha20/poly1305 implementations does not involve any use of the
-> crypto API or indirect function calls.  Only direct function calls
-> are made into the underlying implementation.
->
-> This should allow the wireguard code itself to proceed.  At the
-> same time we can also move forward with replacing the existing
-> implementations of chacha20 and/or poly1305 where appropriate.
->
+Hi,
 
-Hi Herbert,
+On 20-03-19 19:26, Greg Kroah-Hartman wrote:
+> On Wed, Mar 20, 2019 at 10:35:19AM +0100, Hans de Goede wrote:
+>> diff --git a/drivers/virt/vboxguest/vboxguest_version.h b/drivers/virt/vboxguest/vboxguest_version.h
+>> index 77f0c8f8a231..84834dad38d5 100644
+>> --- a/drivers/virt/vboxguest/vboxguest_version.h
+>> +++ b/drivers/virt/vboxguest/vboxguest_version.h
+>> @@ -9,11 +9,10 @@
+>>   #ifndef __VBOX_VERSION_H__
+>>   #define __VBOX_VERSION_H__
+>>   
+>> -/* Last synced October 4th 2017 */
+> 
+> We don't care about the date sync anymore?
 
-Let me reiterate some of my concerns with Zinc, which aren't really
-addressed by your patches afaict.
+I did not sync with the latest version, I've picked
+the svn revision number from the 6.0.0 release
+(6.0.4 is out now) in case one of the 6.0.x releases
+have introduced something new which we do not implement
+yet.
 
-- The way WireGuard uses crypto in the kernel is essentially a
-layering violation - while we already have an asynchronous API that
-implements ChaCha20Poly1305 in a way that WireGuard /could/ benefit
-from, and while we even have support already for async accelerators
-that implement it, the reluctance of Jason to work with the community
-to fix the issues that he identified in the crypto API means that
-WireGuard will not be able to use these, and is restricted to
-synchronous software implementations. Saying accelerators will not
-matter is a bit like saying there are no American soldiers in Iraq.
-(Note that adding async interfaces to Zinc is not the right way to
-deal with this IMO)
-- I think it is fine to have a 'blessed' set of software crypto in the
-kernel that we standardize on for internal use cases but WireGuard is
-not one of them. Having two separate s/w crypto stacks is a problem,
-and I don't think it helps to have a cute name either.
-- I don't think Zinc changes should go through Greg's tree and have
-separate maintainers - in fact, I am a bit concerned about the fact
-that, after the last Zinc/WG submission in October, Jason has not
-really interacted with the linux-crypto community at all, while at lot
-of work was being done (especially by Eric) to address issues that he
-helped identify. So letting Jason (and Samuel, who has not chimed in
-at all, IIRC) maintain something that is relevant to crypto in the
-kernel, but without a community and without involvement of the
-linux-crypto maintainer is not acceptable to me. (In general, people
-tend to join a community before being volunteered to maintain its
-codebase)
+>> -#define VBG_VERSION_MAJOR 5
+>> -#define VBG_VERSION_MINOR 2
+>> +#define VBG_VERSION_MAJOR 6
+>> +#define VBG_VERSION_MINOR 0
+>>   #define VBG_VERSION_BUILD 0
+>> -#define VBG_SVN_REV 68940
+>> -#define VBG_VERSION_STRING "5.2.0"
+>> +#define VBG_SVN_REV 127566
+>> +#define VBG_VERSION_STRING "6.0.0"
+> 
+> Do we really need to keep track of this?
 
-I am among the people who really want to see WireGuard merged. But the
-whole Zinc thing is an unnecessary distraction from getting the
-existing crypto API fixed in places where it fails to support
-WireGuard's use case, and that is a loss for WireGuard users as well
-as the linux-crypto community.
+Unfortunately yes, last time I checked the host has
+some code checking the VBG_SVN_REV to determine whether
+or not to apply some bug workaround.
 
--- 
-Ard.
+>>   
+>>   #endif
+>> diff --git a/drivers/virt/vboxguest/vmmdev.h b/drivers/virt/vboxguest/vmmdev.h
+>> index 5e2ae978935d..6337b8d75d96 100644
+>> --- a/drivers/virt/vboxguest/vmmdev.h
+>> +++ b/drivers/virt/vboxguest/vmmdev.h
+>> @@ -98,8 +98,8 @@ struct vmmdev_request_header {
+>>   	s32 rc;
+>>   	/** Reserved field no.1. MBZ. */
+>>   	u32 reserved1;
+>> -	/** Reserved field no.2. MBZ. */
+>> -	u32 reserved2;
+>> +	/** IN: Requestor information (VMMDEV_REQUESTOR_*) */
+>> +	u32 requestor;
+> 
+> They didn't use the first reserved field?  Oh well :(
+
+There is another header for a hgcm-call which partly mirrors
+this one and there they are using reserved1, I think it has
+something to do with this.
+>> --- a/include/uapi/linux/vbox_vmmdev_types.h
+>> +++ b/include/uapi/linux/vbox_vmmdev_types.h
+>> @@ -102,6 +102,37 @@ enum vmmdev_request_type {
+>>   #define VMMDEVREQ_HGCM_CALL VMMDEVREQ_HGCM_CALL32
+>>   #endif
+>>   
+>> +/* vmmdev_request_header.requestor defines */
+>> +
+>> +/* Requestor user not given. */
+>> +#define VMMDEV_REQUESTOR_USR_NOT_GIVEN                      0x00000000
+>> +/* The kernel driver (VBoxGuest) is the requestor. */
+>> +#define VMMDEV_REQUESTOR_USR_DRV                            0x00000001
+>> +/* Some other kernel driver is the requestor. */
+>> +#define VMMDEV_REQUESTOR_USR_DRV_OTHER                      0x00000002
+>> +/* The root or a admin user is the requestor. */
+>> +#define VMMDEV_REQUESTOR_USR_ROOT                           0x00000003
+>> +/* Regular joe user is making the request. */
+>> +#define VMMDEV_REQUESTOR_USR_USER                           0x00000006
+>> +/* User classification mask. */
+>> +#define VMMDEV_REQUESTOR_USR_MASK                           0x00000007
+>> +/* Kernel mode request. */
+>> +#define VMMDEV_REQUESTOR_KERNEL                             0x00000000
+> 
+> Wait, isn't that the same as VMMDEV_REQUESTOR_USR_NOT_GIVEN?
+
+The call coming directly from the call, rather then through the
+/dev/vboxguest or /dev/vboxuser devices is indicated by the
+lack of the VMMDEV_REQUESTOR_USERMODE bit. I will add a
+
+#define VMMDEV_REQUESTOR_MODE_MASK				0x00000008
+
+To make this more clear for v2 and add blank lines to group the different
+items together per mask.
+
+
+>> +/* User mode request. */
+>> +#define VMMDEV_REQUESTOR_USERMODE                           0x00000008
+>> +/* Don't know the physical console association of the requestor. */
+>> +#define VMMDEV_REQUESTOR_CON_DONT_KNOW                      0x00000000
+> 
+> And here, why is this number recycled?
+
+VMMDEV_REQUESTOR_USR_NOT_GIVEN (the first 0x0000000 define) is part of the
+which user made this call mask: VMMDEV_REQUESTOR_USR_MASK, this is part
+of the is the user behind the physical console info mask:
+VMMDEV_REQUESTOR_CON_MASK
+
+I've omitted the other defines since we are not using them, I will add
+them to make this more clear.
+
+
+>> +/* Console classification mask. */
+>> +#define VMMDEV_REQUESTOR_CON_MASK                           0x00000040
+>> +/* Requestor is member of special VirtualBox user group. */
+>> +#define VMMDEV_REQUESTOR_GRP_VBOX                           0x00000080
+> 
+> Can you add a blank line here to make it more obvious it is "TRUST"
+> stuff here?
+
+Ack.
+
+
+>> +/* Requestor trust level: Unspecified */
+>> +#define VMMDEV_REQUESTOR_TRUST_NOT_GIVEN                    0x00000000
+>> +/* Requestor trust level mask */
+>> +#define VMMDEV_REQUESTOR_TRUST_MASK                         0x00007000
+> 
+> So those bits are the "trust" values?
+
+Right, again I did not add defines for values we do not use under Linux
+(this value comes from some Windows authentication mechanism, so under Linux
+it is always VMMDEV_REQUESTOR_TRUST_NOT_GIVEN)
+
+
+> that's odd, oh well, it's their api, not ours :(
+> 
+>> +/* Requestor is using the less trusted user device node (/dev/vboxuser) */
+>> +#define VMMDEV_REQUESTOR_USER_DEVICE                        0x00008000
+> 
+> Wait, what is this for?
+> 
+> So the dev node isn't as "trusted" as some other api?  Why not?
+
+There are 2 device nodes:
+
+/dev/vboxguest
+/dev/vboxuser
+
+With the latter being mode 0666, the vboxguest code already disallows
+some requests / IOCTLs when done on the /dev/vboxuser node.
+
+With this new requestor mechanism, the purpose of which is to allow host
+admins to write finer grained policies for which requests to accept from the
+guest AFAIK, we are now also forwarding the info that the request was done
+on the world accessible /dev/vboxuser node, rather then on the restricted
+/dev/vboxguest node to the host.
+
+Regards,
+
+Hans
