@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A739C10F11
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A601FC43381
 	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:20:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED94421971
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:20:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74B7821939
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:20:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1553253616;
-	bh=hi6mJt25cE86RVv4ESzBNUlLQDjnk49JNou5OvXAdJw=;
+	bh=1nyKJ0iNx/0QYhmKvE+tO4riQz98k5/A/nZZNhOychI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vWvPKWEykX7lqoZo04+uJur7MeTp0y/ULvacJRBw2/ZlwZxsdXz0G07eCBPFyiVQV
-	 7mZbM8jut8MfPu1sHokH31pysv7UK27GrLX6OWl8CGzBBKhCic2Jdmv3lXpzzTQ4u8
-	 RV62ZQvNDuu1qexVK046s8WHYFTSm1PBcC6x8mOo=
+	b=ZJgUrITPp4E9MZZnET1orIDHBKYLkCT8m997fgMq581dpiRDGp3fwbCoMnn0pZaUC
+	 TqQrSXNVjSBUX0rPeCK2Q+nKgDb4hdMQX/QQhqHByESz0IU8xnPjRZblHIJwS1broJ
+	 1c3nP31UADbTZlDC7VCgaLB1VBSW0BWnc/8xvl1o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728246AbfCVLTw (ORCPT
+        id S1728309AbfCVLUP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:19:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46296 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:20:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728219AbfCVLTt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:19:49 -0400
+        id S1728236AbfCVLTv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:19:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E096421929;
-        Fri, 22 Mar 2019 11:19:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A96F5218A2;
+        Fri, 22 Mar 2019 11:19:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553253588;
-        bh=hi6mJt25cE86RVv4ESzBNUlLQDjnk49JNou5OvXAdJw=;
+        s=default; t=1553253591;
+        bh=1nyKJ0iNx/0QYhmKvE+tO4riQz98k5/A/nZZNhOychI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C5oqlKKdgNrtTDxs+d05q1Hem8SIdcsxMp2DXoJL1kjJqp0/43/DpP2/jAQNB4k3b
-         2Cc5+WI5m/h0iRBB6y2T6mk0x2HA28wlIHq/tImdSw1lb1ZuqXRPjThn0KUuanvdxY
-         q2SViWzvVesQwIOIRsuJH35+WTHjhv8pzcWL2IQ8=
+        b=M2lxRQv0PV3MtW6snyW7MyPR5KFxxS4kWmVlCFo7hgLciC/TEiHtmMZHJOLB4/dlr
+         v/0eCvHQHPk8sxDGGl/gWli5aZZrF2UiA1G/HGK7sMyFDJ6cINKrtWKYhf+SYxf2D6
+         k2bmV5QJU5ojCTAcktkqT71mi6hdLsAxnOyMRkRA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 3.18 014/134] isdn: i4l: isdn_tty: Fix some concurrency double-free bugs
-Date:   Fri, 22 Mar 2019 12:13:47 +0100
-Message-Id: <20190322111211.099297951@linuxfoundation.org>
+Subject: [PATCH 3.18 015/134] atm: he: fix sign-extension overflow on large shift
+Date:   Fri, 22 Mar 2019 12:13:48 +0100
+Message-Id: <20190322111211.142913103@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111210.465931067@linuxfoundation.org>
 References: <20190322111210.465931067@linuxfoundation.org>
@@ -66,65 +66,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 2ff33d6637393fe9348357285931811b76e1402f ]
+[ Upstream commit cb12d72b27a6f41325ae23a11033cf5fedfa1b97 ]
 
-The functions isdn_tty_tiocmset() and isdn_tty_set_termios() may be
-concurrently executed.
+Shifting the 1 by exp by an int can lead to sign-extension overlow when
+exp is 31 since 1 is an signed int and sign-extending this result to an
+unsigned long long will set the upper 32 bits.  Fix this by shifting an
+unsigned long.
 
-isdn_tty_tiocmset
-  isdn_tty_modem_hup
-    line 719: kfree(info->dtmf_state);
-    line 721: kfree(info->silence_state);
-    line 723: kfree(info->adpcms);
-    line 725: kfree(info->adpcmr);
+Detected by cppcheck:
+(warning) Shifting signed 32-bit value by 31 bits is undefined behaviour
 
-isdn_tty_set_termios
-  isdn_tty_modem_hup
-    line 719: kfree(info->dtmf_state);
-    line 721: kfree(info->silence_state);
-    line 723: kfree(info->adpcms);
-    line 725: kfree(info->adpcmr);
-
-Thus, some concurrency double-free bugs may occur.
-
-These possible bugs are found by a static tool written by myself and
-my manual code review.
-
-To fix these possible bugs, the mutex lock "modem_info_mutex" used in
-isdn_tty_tiocmset() is added in isdn_tty_set_termios().
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/isdn/i4l/isdn_tty.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/atm/he.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/isdn/i4l/isdn_tty.c b/drivers/isdn/i4l/isdn_tty.c
-index bc912611fe097..b166354b80428 100644
---- a/drivers/isdn/i4l/isdn_tty.c
-+++ b/drivers/isdn/i4l/isdn_tty.c
-@@ -1459,15 +1459,19 @@ isdn_tty_set_termios(struct tty_struct *tty, struct ktermios *old_termios)
- {
- 	modem_info *info = (modem_info *) tty->driver_data;
+diff --git a/drivers/atm/he.c b/drivers/atm/he.c
+index c39702bc279d4..937f54ccbe6b5 100644
+--- a/drivers/atm/he.c
++++ b/drivers/atm/he.c
+@@ -717,7 +717,7 @@ static int he_init_cs_block_rcm(struct he_dev *he_dev)
+ 			instead of '/ 512', use '>> 9' to prevent a call
+ 			to divdu3 on x86 platforms
+ 		*/
+-		rate_cps = (unsigned long long) (1 << exp) * (man + 512) >> 9;
++		rate_cps = (unsigned long long) (1UL << exp) * (man + 512) >> 9;
  
-+	mutex_lock(&modem_info_mutex);
- 	if (!old_termios)
- 		isdn_tty_change_speed(info);
- 	else {
- 		if (tty->termios.c_cflag == old_termios->c_cflag &&
- 		    tty->termios.c_ispeed == old_termios->c_ispeed &&
--		    tty->termios.c_ospeed == old_termios->c_ospeed)
-+		    tty->termios.c_ospeed == old_termios->c_ospeed) {
-+			mutex_unlock(&modem_info_mutex);
- 			return;
-+		}
- 		isdn_tty_change_speed(info);
- 	}
-+	mutex_unlock(&modem_info_mutex);
- }
- 
- /*
+ 		if (rate_cps < 10)
+ 			rate_cps = 10;	/* 2.2.1 minimum payload rate is 10 cps */
 -- 
 2.19.1
 
