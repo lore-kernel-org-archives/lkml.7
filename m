@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4445C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:45:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82856C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:45:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 940882082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:45:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52D74218B0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:45:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255115;
-	bh=sM0NgIw2v9EHs41AbeK96Viv0Vv5pi6P6bVSzy6Z4yE=;
+	s=default; t=1553255119;
+	bh=FfYhh7AfQEM5Q+Mfb3OmIYdkXyCpLZWxkFSW4aZSsMU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=naKZHHtemx0UswikTRYEOMf7589WreuoiAu2QsVwI/FW+p+tUrVl7bxQJ25qkrwRZ
-	 t6qD3vqKx6vuiOhh+T/jWbk+7FFLN2Uv/xgpF0B/ZjceungOGPh/hhIxpgYqWXV0lx
-	 jlTq+4chb0e0ZZnjCyVPxM2fdGsh2YTskLPC3dUY=
+	b=OTE3yd3mRTzJUbqPvLmRI4sUUnqRMa9Z9r0L5mb6sswshqB8c0pJagFYFY4Z1Y9fY
+	 sAkl4N0EN9RjLpt6Oa0RlQwc39SNhtxzhCb1Yz3E4+Ki5rNKBUusjgCmfnqLUzjGzW
+	 bW69q5PMR/ZyiHABkd3hUHV1520rd8mZesbTeJ04=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731930AbfCVLpO (ORCPT
+        id S1731552AbfCVLpS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:45:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48268 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:45:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731010AbfCVLpK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:45:10 -0400
+        id S1731925AbfCVLpN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:45:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 63E3721934;
-        Fri, 22 Mar 2019 11:45:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 271BA2082C;
+        Fri, 22 Mar 2019 11:45:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255109;
-        bh=sM0NgIw2v9EHs41AbeK96Viv0Vv5pi6P6bVSzy6Z4yE=;
+        s=default; t=1553255112;
+        bh=FfYhh7AfQEM5Q+Mfb3OmIYdkXyCpLZWxkFSW4aZSsMU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lyD45Lq0mePpnIU12biAGAKONJaeJkIBCYbtDwTYmCGNWMlNLJo7LdJ5TLbuzplDA
-         B+qQRj2jX6QSidbP5ozMWgkVuhfaxGaJFCOJKnMwpIo1I76SfgxOKBMMZn1rvWCPTD
-         rllm+K8jQdXUuslzyT+BVw274u3GSuTPIF+bCmxQ=
+        b=xC9NdvAc78FvKK3eGv4P9wie3JvNUnvmu4IRamhrteNGGkcau/6sEeNvaW2HdlAcO
+         ldEH2R0zxExaDh5BBroNlwBXICmEHTjXv6FkmUS+OiNfznrB5tsRViMFmGAnKyZlnR
+         BEyvRLDCU23frgjFcgmyaMmDnlQpQGheF22xMETg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>
-Subject: [PATCH 4.9 101/118] NFS: Fix I/O request leakages
-Date:   Fri, 22 Mar 2019 12:16:13 +0100
-Message-Id: <20190322111223.506026668@linuxfoundation.org>
+        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 4.9 110/118] perf intel-pt: Fix overlap calculation for padding
+Date:   Fri, 22 Mar 2019 12:16:22 +0100
+Message-Id: <20190322111224.077787706@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111215.873964544@linuxfoundation.org>
 References: <20190322111215.873964544@linuxfoundation.org>
@@ -65,89 +66,90 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
 
-commit f57dcf4c72113c745d83f1c65f7291299f65c14f upstream.
+commit 5a99d99e3310a565b0cf63f785b347be9ee0da45 upstream.
 
-When we fail to add the request to the I/O queue, we currently leave it
-to the caller to free the failed request. However since some of the
-requests that fail are actually created by nfs_pageio_add_request()
-itself, and are not passed back the caller, this leads to a leakage
-issue, which can again cause page locks to leak.
+Auxtrace records might have up to 7 bytes of padding appended. Adjust
+the overlap accordingly.
 
-This commit addresses the leakage by freeing the created requests on
-error, using desc->pg_completion_ops->error_cleanup()
-
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Fixes: a7d42ddb30997 ("nfs: add mirroring support to pgio layer")
-Cc: stable@vger.kernel.org # v4.0: c18b96a1b862: nfs: clean up rest of reqs
-Cc: stable@vger.kernel.org # v4.0: d600ad1f2bdb: NFS41: pop some layoutget
-Cc: stable@vger.kernel.org # v4.0+
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: stable@vger.kernel.org
+Link: http://lkml.kernel.org/r/20190206103947.15750-3-adrian.hunter@intel.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfs/pagelist.c |   26 +++++++++++++++++++++-----
- 1 file changed, 21 insertions(+), 5 deletions(-)
+ tools/perf/util/intel-pt-decoder/intel-pt-decoder.c |   36 ++++++++++++++++++--
+ 1 file changed, 34 insertions(+), 2 deletions(-)
 
---- a/fs/nfs/pagelist.c
-+++ b/fs/nfs/pagelist.c
-@@ -975,6 +975,17 @@ static void nfs_pageio_doio(struct nfs_p
+--- a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
++++ b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
+@@ -26,6 +26,7 @@
+ 
+ #include "../cache.h"
+ #include "../util.h"
++#include "../auxtrace.h"
+ 
+ #include "intel-pt-insn-decoder.h"
+ #include "intel-pt-pkt-decoder.h"
+@@ -2350,6 +2351,34 @@ static int intel_pt_tsc_cmp(uint64_t tsc
  	}
  }
  
-+static void
-+nfs_pageio_cleanup_request(struct nfs_pageio_descriptor *desc,
-+		struct nfs_page *req)
-+{
-+	LIST_HEAD(head);
++#define MAX_PADDING (PERF_AUXTRACE_RECORD_ALIGNMENT - 1)
 +
-+	nfs_list_remove_request(req);
-+	nfs_list_add_request(req, &head);
-+	desc->pg_completion_ops->error_cleanup(&head);
++/**
++ * adj_for_padding - adjust overlap to account for padding.
++ * @buf_b: second buffer
++ * @buf_a: first buffer
++ * @len_a: size of first buffer
++ *
++ * @buf_a might have up to 7 bytes of padding appended. Adjust the overlap
++ * accordingly.
++ *
++ * Return: A pointer into @buf_b from where non-overlapped data starts
++ */
++static unsigned char *adj_for_padding(unsigned char *buf_b,
++				      unsigned char *buf_a, size_t len_a)
++{
++	unsigned char *p = buf_b - MAX_PADDING;
++	unsigned char *q = buf_a + len_a - MAX_PADDING;
++	int i;
++
++	for (i = MAX_PADDING; i; i--, p++, q++) {
++		if (*p != *q)
++			break;
++	}
++
++	return p;
 +}
 +
  /**
-  * nfs_pageio_add_request - Attempt to coalesce a request into a page list.
-  * @desc: destination io descriptor
-@@ -1012,10 +1023,8 @@ static int __nfs_pageio_add_request(stru
- 			nfs_page_group_unlock(req);
- 			desc->pg_moreio = 1;
- 			nfs_pageio_doio(desc);
--			if (desc->pg_error < 0)
--				return 0;
--			if (mirror->pg_recoalesce)
--				return 0;
-+			if (desc->pg_error < 0 || mirror->pg_recoalesce)
-+				goto out_cleanup_subreq;
- 			/* retry add_request for this subreq */
- 			nfs_page_group_lock(req, false);
- 			continue;
-@@ -1048,6 +1057,10 @@ err_ptr:
- 	desc->pg_error = PTR_ERR(subreq);
- 	nfs_page_group_unlock(req);
- 	return 0;
-+out_cleanup_subreq:
-+	if (req != subreq)
-+		nfs_pageio_cleanup_request(desc, subreq);
-+	return 0;
- }
+  * intel_pt_find_overlap_tsc - determine start of non-overlapped trace data
+  *                             using TSC.
+@@ -2400,8 +2429,11 @@ static unsigned char *intel_pt_find_over
  
- static int nfs_do_recoalesce(struct nfs_pageio_descriptor *desc)
-@@ -1141,11 +1154,14 @@ int nfs_pageio_add_request(struct nfs_pa
- 		if (nfs_pgio_has_mirroring(desc))
- 			desc->pg_mirror_idx = midx;
- 		if (!nfs_pageio_add_request_mirror(desc, dupreq))
--			goto out_failed;
-+			goto out_cleanup_subreq;
- 	}
+ 			/* Same TSC, so buffers are consecutive */
+ 			if (!cmp && rem_b >= rem_a) {
++				unsigned char *start;
++
+ 				*consecutive = true;
+-				return buf_b + len_b - (rem_b - rem_a);
++				start = buf_b + len_b - (rem_b - rem_a);
++				return adj_for_padding(start, buf_a, len_a);
+ 			}
+ 			if (cmp < 0)
+ 				return buf_b; /* tsc_a < tsc_b => no overlap */
+@@ -2464,7 +2496,7 @@ unsigned char *intel_pt_find_overlap(uns
+ 		found = memmem(buf_a, len_a, buf_b, len_a);
+ 		if (found) {
+ 			*consecutive = true;
+-			return buf_b + len_a;
++			return adj_for_padding(buf_b + len_a, buf_a, len_a);
+ 		}
  
- 	return 1;
- 
-+out_cleanup_subreq:
-+	if (req != dupreq)
-+		nfs_pageio_cleanup_request(desc, dupreq);
- out_failed:
- 	/*
- 	 * We might have failed before sending any reqs over wire.
+ 		/* Try again at next PSB in buffer 'a' */
 
 
