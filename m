@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 461D3C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:35:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03B14C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:35:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C23221917
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:35:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC10A218B0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:35:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254536;
-	bh=eGpUVXPUt1t6p6xUwqA9byRFoFpgbrwyEBYt+M/p1Uo=;
+	s=default; t=1553254539;
+	bh=pE0K/kGCxGnwprSUqya101EBdhxZvJKm28MFhS0Nw3k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EQDXtRyw6I0TL+fcgcWPwtZbiI0pebIcIBPoxVLYku3dZLVYOuHA64Cc5JpehexBg
-	 HjkfvZvqXPLiv83DUDNYGJETk1qkgxRvCdqP49FC8IzfX2r+qKvWuhZ5fXvAEu2KIt
-	 /ndS/GqoN2Q9ZfHpN8IwNuVH4g+nmwb7a/cSGE70=
+	b=u5keARdqDeidbp1rXT99BAeLnbkOoniJAg3xB8WCZlipf+SNCdlN1pwENrIk6ACFO
+	 DRokwelQ1UszKDfJ1mTV2fSDdnwAdeWCRy3qoIkBEoNZNT4CCwvSuapUG0GsH+yFLD
+	 1yfxuSnoyqY73esvd0rSMUjZXH1/4ceC1c6+zkrI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730573AbfCVLfe (ORCPT
+        id S1730581AbfCVLfi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:35:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36336 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:35:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36478 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729194AbfCVLf2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:35:28 -0400
+        id S1730054AbfCVLfe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:35:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 453E121916;
-        Fri, 22 Mar 2019 11:35:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3CDC021934;
+        Fri, 22 Mar 2019 11:35:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254527;
-        bh=eGpUVXPUt1t6p6xUwqA9byRFoFpgbrwyEBYt+M/p1Uo=;
+        s=default; t=1553254533;
+        bh=pE0K/kGCxGnwprSUqya101EBdhxZvJKm28MFhS0Nw3k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Mn0YeIOlSLncgaSDN71OrE4TaN5BEVj4VWNzI4NgQSuXQoOBLlsHcJTkjpiV7lEVF
-         n5N7EeaNO5nBKwP2KntFJymykDZ/zQDU+vPFTgjkGx0ZCW2QW6jOWvrR8860dAVah+
-         JASzUEQFkh+7H5bqHmpiJBu5Ch39M+a+ceLK+2dg=
+        b=gaxDI2rZfmlmCfzE3qU6j4eomvsduynUFFXG8uYvTtG8b9dnWMioWKEiQ+kTEHf/L
+         /Nm2aAGdfUyp3lVMhkrLVUN/UBUhmPmghT3cMXkBDSgltk+Sm9c4o5n/m7bwEkUkS4
+         De/yF5WX4+jsQMT/xOcnT2DuFDIXkeaavm1fBAAE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
+        stable@vger.kernel.org, Anoob Soman <anoob.soman@citrix.com>,
+        Bob Liu <bob.liu@oracle.com>, Lee Duncan <lduncan@suse.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 163/230] ARM: 8824/1: fix a migrating irq bug when hotplug cpu
-Date:   Fri, 22 Mar 2019 12:15:01 +0100
-Message-Id: <20190322111248.157653689@linuxfoundation.org>
+Subject: [PATCH 4.4 165/230] scsi: libiscsi: Fix race between iscsi_xmit_task and iscsi_complete_task
+Date:   Fri, 22 Mar 2019 12:15:03 +0100
+Message-Id: <20190322111248.302452956@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -68,154 +67,107 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 1b5ba350784242eb1f899bcffd95d2c7cff61e84 ]
+[ Upstream commit 79edd00dc6a96644d76b4a1cb97d94d49e026768 ]
 
-Arm TC2 fails cpu hotplug stress test.
+When a target sends Check Condition, whilst initiator is busy xmiting
+re-queued data, could lead to race between iscsi_complete_task() and
+iscsi_xmit_task() and eventually crashing with the following kernel
+backtrace.
 
-This issue was tracked down to a missing copy of the new affinity
-cpumask for the vexpress-spc interrupt into struct
-irq_common_data.affinity when the interrupt is migrated in
-migrate_one_irq().
+[3326150.987523] ALERT: BUG: unable to handle kernel NULL pointer dereference at 0000000000000078
+[3326150.987549] ALERT: IP: [<ffffffffa05ce70d>] iscsi_xmit_task+0x2d/0xc0 [libiscsi]
+[3326150.987571] WARN: PGD 569c8067 PUD 569c9067 PMD 0
+[3326150.987582] WARN: Oops: 0002 [#1] SMP
+[3326150.987593] WARN: Modules linked in: tun nfsv3 nfs fscache dm_round_robin
+[3326150.987762] WARN: CPU: 2 PID: 8399 Comm: kworker/u32:1 Tainted: G O 4.4.0+2 #1
+[3326150.987774] WARN: Hardware name: Dell Inc. PowerEdge R720/0W7JN5, BIOS 2.5.4 01/22/2016
+[3326150.987790] WARN: Workqueue: iscsi_q_13 iscsi_xmitworker [libiscsi]
+[3326150.987799] WARN: task: ffff8801d50f3800 ti: ffff8801f5458000 task.ti: ffff8801f5458000
+[3326150.987810] WARN: RIP: e030:[<ffffffffa05ce70d>] [<ffffffffa05ce70d>] iscsi_xmit_task+0x2d/0xc0 [libiscsi]
+[3326150.987825] WARN: RSP: e02b:ffff8801f545bdb0 EFLAGS: 00010246
+[3326150.987831] WARN: RAX: 00000000ffffffc3 RBX: ffff880282d2ab20 RCX: ffff88026b6ac480
+[3326150.987842] WARN: RDX: 0000000000000000 RSI: 00000000fffffe01 RDI: ffff880282d2ab20
+[3326150.987852] WARN: RBP: ffff8801f545bdc8 R08: 0000000000000000 R09: 0000000000000008
+[3326150.987862] WARN: R10: 0000000000000000 R11: 000000000000fe88 R12: 0000000000000000
+[3326150.987872] WARN: R13: ffff880282d2abe8 R14: ffff880282d2abd8 R15: ffff880282d2ac08
+[3326150.987890] WARN: FS: 00007f5a866b4840(0000) GS:ffff88028a640000(0000) knlGS:0000000000000000
+[3326150.987900] WARN: CS: e033 DS: 0000 ES: 0000 CR0: 0000000080050033
+[3326150.987907] WARN: CR2: 0000000000000078 CR3: 0000000070244000 CR4: 0000000000042660
+[3326150.987918] WARN: Stack:
+[3326150.987924] WARN: ffff880282d2ad58 ffff880282d2ab20 ffff880282d2abe8 ffff8801f545be18
+[3326150.987938] WARN: ffffffffa05cea90 ffff880282d2abf8 ffff88026b59cc80 ffff88026b59cc00
+[3326150.987951] WARN: ffff88022acf32c0 ffff880289491800 ffff880255a80800 0000000000000400
+[3326150.987964] WARN: Call Trace:
+[3326150.987975] WARN: [<ffffffffa05cea90>] iscsi_xmitworker+0x2f0/0x360 [libiscsi]
+[3326150.987988] WARN: [<ffffffff8108862c>] process_one_work+0x1fc/0x3b0
+[3326150.987997] WARN: [<ffffffff81088f95>] worker_thread+0x2a5/0x470
+[3326150.988006] WARN: [<ffffffff8159cad8>] ? __schedule+0x648/0x870
+[3326150.988015] WARN: [<ffffffff81088cf0>] ? rescuer_thread+0x300/0x300
+[3326150.988023] WARN: [<ffffffff8108ddf5>] kthread+0xd5/0xe0
+[3326150.988031] WARN: [<ffffffff8108dd20>] ? kthread_stop+0x110/0x110
+[3326150.988040] WARN: [<ffffffff815a0bcf>] ret_from_fork+0x3f/0x70
+[3326150.988048] WARN: [<ffffffff8108dd20>] ? kthread_stop+0x110/0x110
+[3326150.988127] ALERT: RIP [<ffffffffa05ce70d>] iscsi_xmit_task+0x2d/0xc0 [libiscsi]
+[3326150.988138] WARN: RSP <ffff8801f545bdb0>
+[3326150.988144] WARN: CR2: 0000000000000078
+[3326151.020366] WARN: ---[ end trace 1c60974d4678d81b ]---
 
-Fix it by replacing the arm specific hotplug cpu migration with the
-generic irq code.
+Commit 6f8830f5bbab ("scsi: libiscsi: add lock around task lists to fix
+list corruption regression") introduced "taskqueuelock" to fix list
+corruption during the race, but this wasn't enough.
 
-This is the counterpart implementation to commit 217d453d473c ("arm64:
-fix a migrating irq bug when hotplug cpu").
+Re-setting of conn->task to NULL, could race with iscsi_xmit_task().
+iscsi_complete_task()
+{
+    ....
+    if (conn->task == task)
+        conn->task = NULL;
+}
 
-Tested with cpu hotplug stress test on Arm TC2 (multi_v7_defconfig plus
-CONFIG_ARM_BIG_LITTLE_CPUFREQ=y and CONFIG_ARM_VEXPRESS_SPC_CPUFREQ=y).
-The vexpress-spc interrupt (irq=22) on this board is affine to CPU0.
-Its affinity cpumask now changes correctly e.g. from 0 to 1-4 when
-CPU0 is hotplugged out.
+conn->task in iscsi_xmit_task() could be NULL and so will be task.
+__iscsi_get_task(task) will crash (NullPtr de-ref), trying to access
+refcount.
 
-Suggested-by: Marc Zyngier <marc.zyngier@arm.com>
-Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Acked-by: Marc Zyngier <marc.zyngier@arm.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+iscsi_xmit_task()
+{
+    struct iscsi_task *task = conn->task;
+
+    __iscsi_get_task(task);
+}
+
+This commit will take extra conn->session->back_lock in iscsi_xmit_task()
+to ensure iscsi_xmit_task() waits for iscsi_complete_task(), if
+iscsi_complete_task() wins the race.  If iscsi_xmit_task() wins the race,
+iscsi_xmit_task() increments task->refcount
+(__iscsi_get_task) ensuring iscsi_complete_task() will not iscsi_free_task().
+
+Signed-off-by: Anoob Soman <anoob.soman@citrix.com>
+Signed-off-by: Bob Liu <bob.liu@oracle.com>
+Acked-by: Lee Duncan <lduncan@suse.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/Kconfig           |  1 +
- arch/arm/include/asm/irq.h |  1 -
- arch/arm/kernel/irq.c      | 62 --------------------------------------
- arch/arm/kernel/smp.c      |  2 +-
- 4 files changed, 2 insertions(+), 64 deletions(-)
+ drivers/scsi/libiscsi.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 34e1569a11ee..3a0277c6c060 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -1475,6 +1475,7 @@ config NR_CPUS
- config HOTPLUG_CPU
- 	bool "Support for hot-pluggable CPUs"
- 	depends on SMP
-+	select GENERIC_IRQ_MIGRATION
- 	help
- 	  Say Y here to experiment with turning CPUs off and on.  CPUs
- 	  can be controlled through /sys/devices/system/cpu.
-diff --git a/arch/arm/include/asm/irq.h b/arch/arm/include/asm/irq.h
-index 1bd9510de1b9..cae4df39f02e 100644
---- a/arch/arm/include/asm/irq.h
-+++ b/arch/arm/include/asm/irq.h
-@@ -24,7 +24,6 @@
- #ifndef __ASSEMBLY__
- struct irqaction;
- struct pt_regs;
--extern void migrate_irqs(void);
+diff --git a/drivers/scsi/libiscsi.c b/drivers/scsi/libiscsi.c
+index 009a2ef829d6..0fdc8c417035 100644
+--- a/drivers/scsi/libiscsi.c
++++ b/drivers/scsi/libiscsi.c
+@@ -1448,7 +1448,13 @@ static int iscsi_xmit_task(struct iscsi_conn *conn)
+ 	if (test_bit(ISCSI_SUSPEND_BIT, &conn->suspend_tx))
+ 		return -ENODATA;
  
- extern void asm_do_IRQ(unsigned int, struct pt_regs *);
- void handle_IRQ(unsigned int, struct pt_regs *);
-diff --git a/arch/arm/kernel/irq.c b/arch/arm/kernel/irq.c
-index 1d45320ee125..900c591913d5 100644
---- a/arch/arm/kernel/irq.c
-+++ b/arch/arm/kernel/irq.c
-@@ -31,7 +31,6 @@
- #include <linux/smp.h>
- #include <linux/init.h>
- #include <linux/seq_file.h>
--#include <linux/ratelimit.h>
- #include <linux/errno.h>
- #include <linux/list.h>
- #include <linux/kallsyms.h>
-@@ -119,64 +118,3 @@ int __init arch_probe_nr_irqs(void)
- 	return nr_irqs;
- }
- #endif
--
--#ifdef CONFIG_HOTPLUG_CPU
--static bool migrate_one_irq(struct irq_desc *desc)
--{
--	struct irq_data *d = irq_desc_get_irq_data(desc);
--	const struct cpumask *affinity = irq_data_get_affinity_mask(d);
--	struct irq_chip *c;
--	bool ret = false;
--
--	/*
--	 * If this is a per-CPU interrupt, or the affinity does not
--	 * include this CPU, then we have nothing to do.
--	 */
--	if (irqd_is_per_cpu(d) || !cpumask_test_cpu(smp_processor_id(), affinity))
--		return false;
--
--	if (cpumask_any_and(affinity, cpu_online_mask) >= nr_cpu_ids) {
--		affinity = cpu_online_mask;
--		ret = true;
--	}
--
--	c = irq_data_get_irq_chip(d);
--	if (!c->irq_set_affinity)
--		pr_debug("IRQ%u: unable to set affinity\n", d->irq);
--	else if (c->irq_set_affinity(d, affinity, false) == IRQ_SET_MASK_OK && ret)
--		cpumask_copy(irq_data_get_affinity_mask(d), affinity);
--
--	return ret;
--}
--
--/*
-- * The current CPU has been marked offline.  Migrate IRQs off this CPU.
-- * If the affinity settings do not allow other CPUs, force them onto any
-- * available CPU.
-- *
-- * Note: we must iterate over all IRQs, whether they have an attached
-- * action structure or not, as we need to get chained interrupts too.
-- */
--void migrate_irqs(void)
--{
--	unsigned int i;
--	struct irq_desc *desc;
--	unsigned long flags;
--
--	local_irq_save(flags);
--
--	for_each_irq_desc(i, desc) {
--		bool affinity_broken;
--
--		raw_spin_lock(&desc->lock);
--		affinity_broken = migrate_one_irq(desc);
--		raw_spin_unlock(&desc->lock);
--
--		if (affinity_broken)
--			pr_warn_ratelimited("IRQ%u no longer affine to CPU%u\n",
--				i, smp_processor_id());
--	}
--
--	local_irq_restore(flags);
--}
--#endif /* CONFIG_HOTPLUG_CPU */
-diff --git a/arch/arm/kernel/smp.c b/arch/arm/kernel/smp.c
-index e42be5800f37..08ce9e36dc5a 100644
---- a/arch/arm/kernel/smp.c
-+++ b/arch/arm/kernel/smp.c
-@@ -218,7 +218,7 @@ int __cpu_disable(void)
- 	/*
- 	 * OK - migrate IRQs away from this CPU
- 	 */
--	migrate_irqs();
-+	irq_migrate_all_off_this_cpu();
- 
- 	/*
- 	 * Flush user cache and TLB mappings, and then remove this CPU
++	spin_lock_bh(&conn->session->back_lock);
++	if (conn->task == NULL) {
++		spin_unlock_bh(&conn->session->back_lock);
++		return -ENODATA;
++	}
+ 	__iscsi_get_task(task);
++	spin_unlock_bh(&conn->session->back_lock);
+ 	spin_unlock_bh(&conn->session->frwd_lock);
+ 	rc = conn->session->tt->xmit_task(task);
+ 	spin_lock_bh(&conn->session->frwd_lock);
 -- 
 2.19.1
 
