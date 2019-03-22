@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1E23C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:49:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86149C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:49:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6FD320693
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:49:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55C5620850
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:49:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255340;
-	bh=IA7wZ7d2N9CCRdbgs0Fil5bdcSPhHWjCvZpkP/QHN+4=;
+	s=default; t=1553255344;
+	bh=ccU9d+BVL6rQI3/dwIfkfmnMH8wsIwP2AyeaMmVhhkw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TdBosCf7rqmnWAgZqPqDqXSXmSP0pPudOPiFkMf4kpia4PYs7FMjRjDlBQNITq9Hf
-	 v1aqvog7RrjhgGvPm2kEwbefm5UO2WPrrRDezps4JlAhuqjc/MjZi0GYgDK2iY2bnO
-	 7hZ9IGpdZBnqZauH+Qo84tDQKpBFcvm9gwWT+T38=
+	b=jKq/ubpeB9XXRXT+/l7Yuk9WnDyjVg80AfAdwQaTXVKOn7FDoFAJ5rpFTtf4pRnij
+	 WMGC2F+3odu2PsWgxtwQHaGtYtGkqiU+AQkoXShGW6+42zQJ6q6V8zLu6MRlWnOduU
+	 mWVqwt6EWiMXx+o226dI9a+lUbKeSu90jjexWUDY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732380AbfCVLs7 (ORCPT
+        id S1732390AbfCVLtD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:48:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52396 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:49:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731660AbfCVLs4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:48:56 -0400
+        id S1732034AbfCVLs7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:48:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 259752075E;
-        Fri, 22 Mar 2019 11:48:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8FF3218B0;
+        Fri, 22 Mar 2019 11:48:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255335;
-        bh=IA7wZ7d2N9CCRdbgs0Fil5bdcSPhHWjCvZpkP/QHN+4=;
+        s=default; t=1553255338;
+        bh=ccU9d+BVL6rQI3/dwIfkfmnMH8wsIwP2AyeaMmVhhkw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GaupSeUzXOy3uBrtvo9Q5+0anA2JD/mO06QjPQHZvvha0dI82d/lRPgdbJ15bo8qw
-         BwnbeW+dq/7pYrTYtU0rQFh3YKAEpA4M8iV28r3LJKYfrU2S9F3/7FDzm54KvwNmgY
-         7FKzeoMxNhSZ95Ik7IaV5yg4Hgo9mt9A1Cv+QW0Q=
+        b=Q1JHqIYEi3/NfYCdC1cV94fxdLWmQ6bPkirKYdzZkT5j6d3tNrUbSIN8jy9LddajB
+         OafYbIyugblke1/bIAaWwN/ZC+4MKT94XEAMSMGfRutyuH44w8G7KBedSucmPZSYj9
+         qc+p3tLMc4kg78Z7gWwJp8rjSOPC44oXahEIQTmw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
+        stable@vger.kernel.org, Eric Dumazet <eric.dumazet@gmail.com>,
+        Sean Tranchetti <stranche@codeaurora.org>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 040/183] ARM: 8824/1: fix a migrating irq bug when hotplug cpu
-Date:   Fri, 22 Mar 2019 12:14:28 +0100
-Message-Id: <20190322111244.626791208@linuxfoundation.org>
+Subject: [PATCH 4.14 041/183] af_key: unconditionally clone on broadcast
+Date:   Fri, 22 Mar 2019 12:14:29 +0100
+Message-Id: <20190322111244.708760499@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111241.819468003@linuxfoundation.org>
 References: <20190322111241.819468003@linuxfoundation.org>
@@ -68,154 +67,128 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 1b5ba350784242eb1f899bcffd95d2c7cff61e84 ]
+[ Upstream commit fc2d5cfdcfe2ab76b263d91429caa22451123085 ]
 
-Arm TC2 fails cpu hotplug stress test.
+Attempting to avoid cloning the skb when broadcasting by inflating
+the refcount with sock_hold/sock_put while under RCU lock is dangerous
+and violates RCU principles. It leads to subtle race conditions when
+attempting to free the SKB, as we may reference sockets that have
+already been freed by the stack.
 
-This issue was tracked down to a missing copy of the new affinity
-cpumask for the vexpress-spc interrupt into struct
-irq_common_data.affinity when the interrupt is migrated in
-migrate_one_irq().
+Unable to handle kernel paging request at virtual address 6b6b6b6b6b6c4b
+[006b6b6b6b6b6c4b] address between user and kernel address ranges
+Internal error: Oops: 96000004 [#1] PREEMPT SMP
+task: fffffff78f65b380 task.stack: ffffff8049a88000
+pc : sock_rfree+0x38/0x6c
+lr : skb_release_head_state+0x6c/0xcc
+Process repro (pid: 7117, stack limit = 0xffffff8049a88000)
+Call trace:
+	sock_rfree+0x38/0x6c
+	skb_release_head_state+0x6c/0xcc
+	skb_release_all+0x1c/0x38
+	__kfree_skb+0x1c/0x30
+	kfree_skb+0xd0/0xf4
+	pfkey_broadcast+0x14c/0x18c
+	pfkey_sendmsg+0x1d8/0x408
+	sock_sendmsg+0x44/0x60
+	___sys_sendmsg+0x1d0/0x2a8
+	__sys_sendmsg+0x64/0xb4
+	SyS_sendmsg+0x34/0x4c
+	el0_svc_naked+0x34/0x38
+Kernel panic - not syncing: Fatal exception
 
-Fix it by replacing the arm specific hotplug cpu migration with the
-generic irq code.
-
-This is the counterpart implementation to commit 217d453d473c ("arm64:
-fix a migrating irq bug when hotplug cpu").
-
-Tested with cpu hotplug stress test on Arm TC2 (multi_v7_defconfig plus
-CONFIG_ARM_BIG_LITTLE_CPUFREQ=y and CONFIG_ARM_VEXPRESS_SPC_CPUFREQ=y).
-The vexpress-spc interrupt (irq=22) on this board is affine to CPU0.
-Its affinity cpumask now changes correctly e.g. from 0 to 1-4 when
-CPU0 is hotplugged out.
-
-Suggested-by: Marc Zyngier <marc.zyngier@arm.com>
-Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Acked-by: Marc Zyngier <marc.zyngier@arm.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Suggested-by: Eric Dumazet <eric.dumazet@gmail.com>
+Signed-off-by: Sean Tranchetti <stranche@codeaurora.org>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/Kconfig           |  1 +
- arch/arm/include/asm/irq.h |  1 -
- arch/arm/kernel/irq.c      | 62 --------------------------------------
- arch/arm/kernel/smp.c      |  2 +-
- 4 files changed, 2 insertions(+), 64 deletions(-)
+ net/key/af_key.c | 40 +++++++++++++++-------------------------
+ 1 file changed, 15 insertions(+), 25 deletions(-)
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index d1346a160760..cf69aab648fb 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -1447,6 +1447,7 @@ config NR_CPUS
- config HOTPLUG_CPU
- 	bool "Support for hot-pluggable CPUs"
- 	depends on SMP
-+	select GENERIC_IRQ_MIGRATION
- 	help
- 	  Say Y here to experiment with turning CPUs off and on.  CPUs
- 	  can be controlled through /sys/devices/system/cpu.
-diff --git a/arch/arm/include/asm/irq.h b/arch/arm/include/asm/irq.h
-index b6f319606e30..2de321e89b94 100644
---- a/arch/arm/include/asm/irq.h
-+++ b/arch/arm/include/asm/irq.h
-@@ -25,7 +25,6 @@
- #ifndef __ASSEMBLY__
- struct irqaction;
- struct pt_regs;
--extern void migrate_irqs(void);
- 
- extern void asm_do_IRQ(unsigned int, struct pt_regs *);
- void handle_IRQ(unsigned int, struct pt_regs *);
-diff --git a/arch/arm/kernel/irq.c b/arch/arm/kernel/irq.c
-index ece04a457486..5b07c7a31c31 100644
---- a/arch/arm/kernel/irq.c
-+++ b/arch/arm/kernel/irq.c
-@@ -31,7 +31,6 @@
- #include <linux/smp.h>
- #include <linux/init.h>
- #include <linux/seq_file.h>
--#include <linux/ratelimit.h>
- #include <linux/errno.h>
- #include <linux/list.h>
- #include <linux/kallsyms.h>
-@@ -119,64 +118,3 @@ int __init arch_probe_nr_irqs(void)
- 	return nr_irqs;
+diff --git a/net/key/af_key.c b/net/key/af_key.c
+index 3b209cbfe1df..b095551a5773 100644
+--- a/net/key/af_key.c
++++ b/net/key/af_key.c
+@@ -196,30 +196,22 @@ static int pfkey_release(struct socket *sock)
+ 	return 0;
  }
- #endif
--
--#ifdef CONFIG_HOTPLUG_CPU
--static bool migrate_one_irq(struct irq_desc *desc)
--{
--	struct irq_data *d = irq_desc_get_irq_data(desc);
--	const struct cpumask *affinity = irq_data_get_affinity_mask(d);
--	struct irq_chip *c;
--	bool ret = false;
--
--	/*
--	 * If this is a per-CPU interrupt, or the affinity does not
--	 * include this CPU, then we have nothing to do.
--	 */
--	if (irqd_is_per_cpu(d) || !cpumask_test_cpu(smp_processor_id(), affinity))
--		return false;
--
--	if (cpumask_any_and(affinity, cpu_online_mask) >= nr_cpu_ids) {
--		affinity = cpu_online_mask;
--		ret = true;
--	}
--
--	c = irq_data_get_irq_chip(d);
--	if (!c->irq_set_affinity)
--		pr_debug("IRQ%u: unable to set affinity\n", d->irq);
--	else if (c->irq_set_affinity(d, affinity, false) == IRQ_SET_MASK_OK && ret)
--		cpumask_copy(irq_data_get_affinity_mask(d), affinity);
--
--	return ret;
--}
--
--/*
-- * The current CPU has been marked offline.  Migrate IRQs off this CPU.
-- * If the affinity settings do not allow other CPUs, force them onto any
-- * available CPU.
-- *
-- * Note: we must iterate over all IRQs, whether they have an attached
-- * action structure or not, as we need to get chained interrupts too.
-- */
--void migrate_irqs(void)
--{
--	unsigned int i;
--	struct irq_desc *desc;
--	unsigned long flags;
--
--	local_irq_save(flags);
--
--	for_each_irq_desc(i, desc) {
--		bool affinity_broken;
--
--		raw_spin_lock(&desc->lock);
--		affinity_broken = migrate_one_irq(desc);
--		raw_spin_unlock(&desc->lock);
--
--		if (affinity_broken)
--			pr_warn_ratelimited("IRQ%u no longer affine to CPU%u\n",
--				i, smp_processor_id());
--	}
--
--	local_irq_restore(flags);
--}
--#endif /* CONFIG_HOTPLUG_CPU */
-diff --git a/arch/arm/kernel/smp.c b/arch/arm/kernel/smp.c
-index f57333f46242..65f85737c6a2 100644
---- a/arch/arm/kernel/smp.c
-+++ b/arch/arm/kernel/smp.c
-@@ -254,7 +254,7 @@ int __cpu_disable(void)
- 	/*
- 	 * OK - migrate IRQs away from this CPU
- 	 */
--	migrate_irqs();
-+	irq_migrate_all_off_this_cpu();
  
- 	/*
- 	 * Flush user cache and TLB mappings, and then remove this CPU
+-static int pfkey_broadcast_one(struct sk_buff *skb, struct sk_buff **skb2,
+-			       gfp_t allocation, struct sock *sk)
++static int pfkey_broadcast_one(struct sk_buff *skb, gfp_t allocation,
++			       struct sock *sk)
+ {
+ 	int err = -ENOBUFS;
+ 
+-	sock_hold(sk);
+-	if (*skb2 == NULL) {
+-		if (refcount_read(&skb->users) != 1) {
+-			*skb2 = skb_clone(skb, allocation);
+-		} else {
+-			*skb2 = skb;
+-			refcount_inc(&skb->users);
+-		}
+-	}
+-	if (*skb2 != NULL) {
+-		if (atomic_read(&sk->sk_rmem_alloc) <= sk->sk_rcvbuf) {
+-			skb_set_owner_r(*skb2, sk);
+-			skb_queue_tail(&sk->sk_receive_queue, *skb2);
+-			sk->sk_data_ready(sk);
+-			*skb2 = NULL;
+-			err = 0;
+-		}
++	if (atomic_read(&sk->sk_rmem_alloc) > sk->sk_rcvbuf)
++		return err;
++
++	skb = skb_clone(skb, allocation);
++
++	if (skb) {
++		skb_set_owner_r(skb, sk);
++		skb_queue_tail(&sk->sk_receive_queue, skb);
++		sk->sk_data_ready(sk);
++		err = 0;
+ 	}
+-	sock_put(sk);
+ 	return err;
+ }
+ 
+@@ -234,7 +226,6 @@ static int pfkey_broadcast(struct sk_buff *skb, gfp_t allocation,
+ {
+ 	struct netns_pfkey *net_pfkey = net_generic(net, pfkey_net_id);
+ 	struct sock *sk;
+-	struct sk_buff *skb2 = NULL;
+ 	int err = -ESRCH;
+ 
+ 	/* XXX Do we need something like netlink_overrun?  I think
+@@ -253,7 +244,7 @@ static int pfkey_broadcast(struct sk_buff *skb, gfp_t allocation,
+ 		 * socket.
+ 		 */
+ 		if (pfk->promisc)
+-			pfkey_broadcast_one(skb, &skb2, GFP_ATOMIC, sk);
++			pfkey_broadcast_one(skb, GFP_ATOMIC, sk);
+ 
+ 		/* the exact target will be processed later */
+ 		if (sk == one_sk)
+@@ -268,7 +259,7 @@ static int pfkey_broadcast(struct sk_buff *skb, gfp_t allocation,
+ 				continue;
+ 		}
+ 
+-		err2 = pfkey_broadcast_one(skb, &skb2, GFP_ATOMIC, sk);
++		err2 = pfkey_broadcast_one(skb, GFP_ATOMIC, sk);
+ 
+ 		/* Error is cleared after successful sending to at least one
+ 		 * registered KM */
+@@ -278,9 +269,8 @@ static int pfkey_broadcast(struct sk_buff *skb, gfp_t allocation,
+ 	rcu_read_unlock();
+ 
+ 	if (one_sk != NULL)
+-		err = pfkey_broadcast_one(skb, &skb2, allocation, one_sk);
++		err = pfkey_broadcast_one(skb, allocation, one_sk);
+ 
+-	kfree_skb(skb2);
+ 	kfree_skb(skb);
+ 	return err;
+ }
 -- 
 2.19.1
 
