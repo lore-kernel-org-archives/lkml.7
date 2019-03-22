@@ -2,59 +2,51 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF29AC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:28:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A79C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:28:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD3FC21916
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:28:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1557821917
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:28:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254129;
-	bh=Yq5/v/AjEXa1snK/i0V9M8cN0JTjNYjpj96LlMekUYM=;
+	s=default; t=1553254134;
+	bh=mLIyTHY7Iym1vABhmU8TzzzvGRa9z4JTeZglslXV9Qs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cRhr1ucjU4pWquUfxZpsbeKhNXgMmD86ENDTZtn3Gx3Lxu4ioG/rUgwha8QoWC4ee
-	 H7Ap9ny5u3Vpz7EOhe9Qn7/f1HDJObHgdf04wCY4YryOwBqGiSXgzWCVmc/BDpUxLa
-	 7tjSd0m4ba5ca6hALDlIjm7uq12F/EjTfupqYz68=
+	b=xAldzUuER+Qf78wqcYFMFe75ANbBPfu8sNWcEDEsxLzCLu/DrCKgIRuAnonsTCMq9
+	 QbXvNyEShFar3n68qcl3CuCWw4Uzase76XXFr/wSbbBcTrRx8qEGpSA6Q9VnbgcMmv
+	 usbT353KSLXJf/gXWISDW+KP+zwEliB7scsoO7UA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729725AbfCVL2s (ORCPT
+        id S1729734AbfCVL2w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:28:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56552 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:28:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729716AbfCVL2p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:28:45 -0400
+        id S1729720AbfCVL2s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:28:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 486BF218B0;
-        Fri, 22 Mar 2019 11:28:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46AB121916;
+        Fri, 22 Mar 2019 11:28:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254123;
-        bh=Yq5/v/AjEXa1snK/i0V9M8cN0JTjNYjpj96LlMekUYM=;
+        s=default; t=1553254127;
+        bh=mLIyTHY7Iym1vABhmU8TzzzvGRa9z4JTeZglslXV9Qs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w45qACsfgQFKAMS+fAYCWIifwhZll67qNoLpzRj9siaEi9+PmDIw0orhBznbND9Xx
-         i6wsoX7Uw9tRN8S23bH8PPyKzpaj7Egz5ozmKzthXji7pbQHASSYenrwMhzd+Us4HY
-         hGa5l996tgSzmfgcMTso9mGAD3MyK13pMFRgCo28=
+        b=WfB5Be/hFaJFBAaxfcstBiEPmFOLb346hksVvCiLzMBCxu0Gi3PENJv5kISHxvwPZ
+         s8oHnRaPUAGE6CNBwIsp5KrqCDR+B44010muRUs1f1YCcp3AJP4p1yV/qKSPEvtz24
+         yX0qkYEEqFcNm6VxKA9er+41jlIPGxbL/fzexjIU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Silvio Cesare <silvio.cesare@gmail.com>,
-        Timur Tabi <timur@kernel.org>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Xiubo Li <Xiubo.Lee@gmail.com>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Kees Cook <keescook@chromium.org>,
-        Will Deacon <will.deacon@arm.com>, Greg KH <greg@kroah.com>,
-        Willy Tarreau <w@1wt.eu>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 039/230] ASoC: imx-audmux: change snprintf to scnprintf for possible overflow
-Date:   Fri, 22 Mar 2019 12:12:57 +0100
-Message-Id: <20190322111239.439877381@linuxfoundation.org>
+        stable@vger.kernel.org, Kal Conley <kal.conley@dectris.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 024/230] net/packet: fix 4gb buffer limit due to overflow check
+Date:   Fri, 22 Mar 2019 12:12:42 +0100
+Message-Id: <20190322111238.413706193@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -73,117 +65,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit c407cd008fd039320d147088b52d0fa34ed3ddcb ]
+From: Kal Conley <kal.conley@dectris.com>
 
-Change snprintf to scnprintf. There are generally two cases where using
-snprintf causes problems.
+[ Upstream commit fc62814d690cf62189854464f4bd07457d5e9e50 ]
 
-1) Uses of size += snprintf(buf, SIZE - size, fmt, ...)
-In this case, if snprintf would have written more characters than what the
-buffer size (SIZE) is, then size will end up larger than SIZE. In later
-uses of snprintf, SIZE - size will result in a negative number, leading
-to problems. Note that size might already be too large by using
-size = snprintf before the code reaches a case of size += snprintf.
+When calculating rb->frames_per_block * req->tp_block_nr the result
+can overflow. Check it for overflow without limiting the total buffer
+size to UINT_MAX.
 
-2) If size is ultimately used as a length parameter for a copy back to user
-space, then it will potentially allow for a buffer overflow and information
-disclosure when size is greater than SIZE. When the size is used to index
-the buffer directly, we can have memory corruption. This also means when
-size = snprintf... is used, it may also cause problems since size may become
-large.  Copying to userspace is mitigated by the HARDENED_USERCOPY kernel
-configuration.
+This change fixes support for packet ring buffers >= UINT_MAX.
 
-The solution to these issues is to use scnprintf which returns the number of
-characters actually written to the buffer, so the size variable will never
-exceed SIZE.
-
-Signed-off-by: Silvio Cesare <silvio.cesare@gmail.com>
-Cc: Timur Tabi <timur@kernel.org>
-Cc: Nicolin Chen <nicoleotsuka@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Xiubo Li <Xiubo.Lee@gmail.com>
-Cc: Fabio Estevam <fabio.estevam@nxp.com>
-Cc: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Greg KH <greg@kroah.com>
-Signed-off-by: Willy Tarreau <w@1wt.eu>
-Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 8f8d28e4d6d8 ("net/packet: fix overflow in check for tp_frame_nr")
+Signed-off-by: Kal Conley <kal.conley@dectris.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- sound/soc/fsl/imx-audmux.c | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+ net/packet/af_packet.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/fsl/imx-audmux.c b/sound/soc/fsl/imx-audmux.c
-index fc57da341d610..136df38c4536c 100644
---- a/sound/soc/fsl/imx-audmux.c
-+++ b/sound/soc/fsl/imx-audmux.c
-@@ -86,49 +86,49 @@ static ssize_t audmux_read_file(struct file *file, char __user *user_buf,
- 	if (!buf)
- 		return -ENOMEM;
- 
--	ret = snprintf(buf, PAGE_SIZE, "PDCR: %08x\nPTCR: %08x\n",
-+	ret = scnprintf(buf, PAGE_SIZE, "PDCR: %08x\nPTCR: %08x\n",
- 		       pdcr, ptcr);
- 
- 	if (ptcr & IMX_AUDMUX_V2_PTCR_TFSDIR)
--		ret += snprintf(buf + ret, PAGE_SIZE - ret,
-+		ret += scnprintf(buf + ret, PAGE_SIZE - ret,
- 				"TxFS output from %s, ",
- 				audmux_port_string((ptcr >> 27) & 0x7));
- 	else
--		ret += snprintf(buf + ret, PAGE_SIZE - ret,
-+		ret += scnprintf(buf + ret, PAGE_SIZE - ret,
- 				"TxFS input, ");
- 
- 	if (ptcr & IMX_AUDMUX_V2_PTCR_TCLKDIR)
--		ret += snprintf(buf + ret, PAGE_SIZE - ret,
-+		ret += scnprintf(buf + ret, PAGE_SIZE - ret,
- 				"TxClk output from %s",
- 				audmux_port_string((ptcr >> 22) & 0x7));
- 	else
--		ret += snprintf(buf + ret, PAGE_SIZE - ret,
-+		ret += scnprintf(buf + ret, PAGE_SIZE - ret,
- 				"TxClk input");
- 
--	ret += snprintf(buf + ret, PAGE_SIZE - ret, "\n");
-+	ret += scnprintf(buf + ret, PAGE_SIZE - ret, "\n");
- 
- 	if (ptcr & IMX_AUDMUX_V2_PTCR_SYN) {
--		ret += snprintf(buf + ret, PAGE_SIZE - ret,
-+		ret += scnprintf(buf + ret, PAGE_SIZE - ret,
- 				"Port is symmetric");
- 	} else {
- 		if (ptcr & IMX_AUDMUX_V2_PTCR_RFSDIR)
--			ret += snprintf(buf + ret, PAGE_SIZE - ret,
-+			ret += scnprintf(buf + ret, PAGE_SIZE - ret,
- 					"RxFS output from %s, ",
- 					audmux_port_string((ptcr >> 17) & 0x7));
- 		else
--			ret += snprintf(buf + ret, PAGE_SIZE - ret,
-+			ret += scnprintf(buf + ret, PAGE_SIZE - ret,
- 					"RxFS input, ");
- 
- 		if (ptcr & IMX_AUDMUX_V2_PTCR_RCLKDIR)
--			ret += snprintf(buf + ret, PAGE_SIZE - ret,
-+			ret += scnprintf(buf + ret, PAGE_SIZE - ret,
- 					"RxClk output from %s",
- 					audmux_port_string((ptcr >> 12) & 0x7));
- 		else
--			ret += snprintf(buf + ret, PAGE_SIZE - ret,
-+			ret += scnprintf(buf + ret, PAGE_SIZE - ret,
- 					"RxClk input");
- 	}
- 
--	ret += snprintf(buf + ret, PAGE_SIZE - ret,
-+	ret += scnprintf(buf + ret, PAGE_SIZE - ret,
- 			"\nData received from %s\n",
- 			audmux_port_string((pdcr >> 13) & 0x7));
- 
--- 
-2.19.1
-
+--- a/net/packet/af_packet.c
++++ b/net/packet/af_packet.c
+@@ -4217,7 +4217,7 @@ static int packet_set_ring(struct sock *
+ 		rb->frames_per_block = req->tp_block_size / req->tp_frame_size;
+ 		if (unlikely(rb->frames_per_block == 0))
+ 			goto out;
+-		if (unlikely(req->tp_block_size > UINT_MAX / req->tp_block_nr))
++		if (unlikely(rb->frames_per_block > UINT_MAX / req->tp_block_nr))
+ 			goto out;
+ 		if (unlikely((rb->frames_per_block * req->tp_block_nr) !=
+ 					req->tp_frame_nr))
 
 
