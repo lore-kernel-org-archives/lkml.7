@@ -2,84 +2,143 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B723FC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:00:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6643EC10F03
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:00:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71D6021900
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:00:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="RNxR82Pk"
+	by mail.kernel.org (Postfix) with ESMTP id 3F63221900
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:00:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728177AbfCVLAJ (ORCPT
+        id S1728188AbfCVLAQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:00:09 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:34712 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727786AbfCVLAJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:00:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=4k5KAupz7pwgpj6lNzwyP25KrQTmJSaJfQVrIUcDfEM=; b=RNxR82PkzZdnMvuUAEzOpikWIA
-        AuL/YISQf2KB2wpQIw2gJ9N2LWCnxvO9U7REEns9Ukh4BS3Ya3IyStEJ1QTNwdNEQUufuCgSJnHNn
-        b6txliNM8Z54n+dO9PbBN5wVbCM3bOqBhIEstD9Hqi1kAu3idfdk7NwY1TG56o0mMU8s=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1h7Hu3-0008Ja-DN; Fri, 22 Mar 2019 11:59:59 +0100
-Date:   Fri, 22 Mar 2019 11:59:59 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Steve Twiss <stwiss.opensource@diasemi.com>
-Cc:     Fabio Estevam <festevam@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        DEVICETREE <devicetree@vger.kernel.org>,
-        LINUX-ARM-KERNEL <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Support Opensource <Support.Opensource@diasemi.com>
-Subject: Re: [PATCH] ARM: dts: imx6qdl-sabresd: change phy-mode to use
- rgmii-id
-Message-ID: <20190322105959.GD24801@lunn.ch>
-References: <VI1PR10MB2352C3A55BE8FABAF3B02681FE410@VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM>
- <CAOMZO5By8=j7gZRAdf2-h-5ak-Qo34rqwDL4+HA_97cMXTAnEQ@mail.gmail.com>
- <20190321084240.fveqkhfrbtg7qr4q@fsr-ub1664-175>
- <CAOMZO5Cz0A19P9E61dy79BFF+V2WsAjobqQ1g9TeiJSCY2Nt4A@mail.gmail.com>
- <20190322011155.GO12513@dragon>
- <CAOMZO5CBjG_xZWjZof_VOKaLLOCxFz3g7Gz1uTVzD=D5GeQb4g@mail.gmail.com>
- <20190322021521.GY12513@dragon>
- <CAOMZO5CRRg9XD9VovcO5+fdM1DBp12P33T9xgW=cEvTES8yDPA@mail.gmail.com>
- <db0a3a96-d836-f7bd-4773-81fcb7984835@ysoft.com>
- <DB7PR10MB2348358D285E2560F5B5E699FE430@DB7PR10MB2348.EURPRD10.PROD.OUTLOOK.COM>
+        Fri, 22 Mar 2019 07:00:16 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:48369 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727786AbfCVLAQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:00:16 -0400
+X-Originating-IP: 90.88.33.153
+Received: from aptenodytes (aaubervilliers-681-1-92-153.w90-88.abo.wanadoo.fr [90.88.33.153])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 3A95E60011;
+        Fri, 22 Mar 2019 11:00:12 +0000 (UTC)
+Message-ID: <5c5ef4c7869f9294cfb7128a8b0ee00cf2012e40.camel@bootlin.com>
+Subject: Re: [PATCH RESEND] drm/vc4: Make sure to emit a tile coordinates
+ between two MSAA loads.
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     Eric Anholt <eric@anholt.net>, dri-devel@lists.freedesktop.org
+Cc:     linux-kernel@vger.kernel.org,
+        Maxime Ripard <maxime.ripard@bootlin.com>
+Date:   Fri, 22 Mar 2019 12:00:12 +0100
+In-Reply-To: <20190206232550.12012-1-eric@anholt.net>
+References: <20190206232550.12012-1-eric@anholt.net>
+Organization: Bootlin
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.0 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DB7PR10MB2348358D285E2560F5B5E699FE430@DB7PR10MB2348.EURPRD10.PROD.OUTLOOK.COM>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> There is a way of doing this to preserve backwards compatibility I think.
-> Maybe deprecating the previous DTS phy-mode and replacing it with a new one,
-> phy-mode-v2 instead?
+Hi,
 
-Hi Steve
+Le mercredi 06 février 2019 à 15:25 -0800, Eric Anholt a écrit :
+> The HW only executes a load once the tile coordinates packet happens,
+> and only tracks one at a time, so by emitting our two MSAA loads back
+> to back we would end up with an undefined color or Z buffer.
 
-It needs to be a vendor specific property, atheros,phy-mode, for
-example.
+This change deals with things that I'm not very familiar with, but here
+is my take on what is happening here:
 
-   Andrew
+- When we have to do more than a single load in the same render command
+list, we need to send out tile coordinates and a dummy store in between
+the two, because of internal architecture requirements of the GPU;
+- We're dealing with the color buffer first and then the z-stencil
+buffer;
+- As a result, we need to issue that dummy store in the block handling
+the z-stencil, if there was a previous color load in the rcl;
+- We previously only did that for non-MSAA z-stencil buffers (without
+the FULL_RES flag);
+- The same thing actually needs to be done for the MSAA case too, as
+the reason why we need that dummy store also applies to MSAA loads.
+
+If my understanding is correct, then consider this:
+Reviewed-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+
+Otherwise, I'd be happy to know what I misunderstood in the process!
+
+Cheers,
+
+Paul
+
+> Fixes dEQP-EGL.functional.render.multi_context.gles2.rgb888_window
+> 
+> Signed-off-by: Eric Anholt <eric@anholt.net>
+> Cc: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> Cc: Maxime Ripard <maxime.ripard@bootlin.com>
+> ---
+>  drivers/gpu/drm/vc4/vc4_render_cl.c | 23 +++++++++++------------
+>  1 file changed, 11 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/vc4/vc4_render_cl.c b/drivers/gpu/drm/vc4/vc4_render_cl.c
+> index 273984f71ae2..3c918eeaf56e 100644
+> --- a/drivers/gpu/drm/vc4/vc4_render_cl.c
+> +++ b/drivers/gpu/drm/vc4/vc4_render_cl.c
+> @@ -148,6 +148,12 @@ static void emit_tile(struct vc4_exec_info *exec,
+>  	}
+>  
+>  	if (setup->zs_read) {
+> +		if (setup->color_read) {
+> +			/* Exec previous load. */
+> +			vc4_tile_coordinates(setup, x, y);
+> +			vc4_store_before_load(setup);
+> +		}
+> +
+>  		if (args->zs_read.flags &
+>  		    VC4_SUBMIT_RCL_SURFACE_READ_IS_FULL_RES) {
+>  			rcl_u8(setup, VC4_PACKET_LOAD_FULL_RES_TILE_BUFFER);
+> @@ -156,12 +162,6 @@ static void emit_tile(struct vc4_exec_info *exec,
+>  						    &args->zs_read, x, y) |
+>  				VC4_LOADSTORE_FULL_RES_DISABLE_COLOR);
+>  		} else {
+> -			if (setup->color_read) {
+> -				/* Exec previous load. */
+> -				vc4_tile_coordinates(setup, x, y);
+> -				vc4_store_before_load(setup);
+> -			}
+> -
+>  			rcl_u8(setup, VC4_PACKET_LOAD_TILE_BUFFER_GENERAL);
+>  			rcl_u16(setup, args->zs_read.bits);
+>  			rcl_u32(setup, setup->zs_read->paddr +
+> @@ -291,16 +291,15 @@ static int vc4_create_rcl_bo(struct drm_device *dev, struct vc4_exec_info *exec,
+>  		}
+>  	}
+>  	if (setup->zs_read) {
+> +		if (setup->color_read) {
+> +			loop_body_size += VC4_PACKET_TILE_COORDINATES_SIZE;
+> +			loop_body_size += VC4_PACKET_STORE_TILE_BUFFER_GENERAL_SIZE;
+> +		}
+> +
+>  		if (args->zs_read.flags &
+>  		    VC4_SUBMIT_RCL_SURFACE_READ_IS_FULL_RES) {
+>  			loop_body_size += VC4_PACKET_LOAD_FULL_RES_TILE_BUFFER_SIZE;
+>  		} else {
+> -			if (setup->color_read &&
+> -			    !(args->color_read.flags &
+> -			      VC4_SUBMIT_RCL_SURFACE_READ_IS_FULL_RES)) {
+> -				loop_body_size += VC4_PACKET_TILE_COORDINATES_SIZE;
+> -				loop_body_size += VC4_PACKET_STORE_TILE_BUFFER_GENERAL_SIZE;
+> -			}
+>  			loop_body_size += VC4_PACKET_LOAD_TILE_BUFFER_GENERAL_SIZE;
+>  		}
+>  	}
+-- 
+Paul Kocialkowski, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
+
