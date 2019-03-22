@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 058F6C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:59:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A366C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:59:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF61221873
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:59:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE9AE2075E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:59:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553259585;
-	bh=ros8T3V3LXPUlHmN1SzqGOXxm0gbcwDCW6RiZ41HhS8=;
+	s=default; t=1553259593;
+	bh=O8LYsxVAevhjRTrw989FgHOP0DzI3VVu+Lff18CsJbQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oNaNIh4HMK8ObanSy8eRZPNjHNKQznHlmY5yGPkjubUi3/eibbdPjkgR21BtA4okK
-	 fRjmrt2Wn4KTi1J5b8+O5vzWDDM+nfOci4HqviZVwetfblO5km8pYH7Y/bJffLktRh
-	 +MzBhv63vuyqFIPNlYxE8RJKkSOD5NJNxdXRaDg0=
+	b=D3HGzuLKuYIg/WbotJZpeYcHWdalLVOgvvbSLAN8R9m1LcoekEo3kSHRgKdXUiUAO
+	 43HdBVM90WkxHYo8UAG0V1YYxikrHEJFw7G2T1wDnLbYTJxaT/53oKVesn/NFdNJcS
+	 2TzU2u54TRPGTBvHgZbl33cr9p5jE5mkKRQu/3Zk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732065AbfCVM7o (ORCPT
+        id S1731881AbfCVLoy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:59:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48028 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:44:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731874AbfCVLo7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:44:59 -0400
+        id S1731654AbfCVLou (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:44:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9FA121971;
-        Fri, 22 Mar 2019 11:44:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BB6E218B0;
+        Fri, 22 Mar 2019 11:44:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255099;
-        bh=ros8T3V3LXPUlHmN1SzqGOXxm0gbcwDCW6RiZ41HhS8=;
+        s=default; t=1553255089;
+        bh=O8LYsxVAevhjRTrw989FgHOP0DzI3VVu+Lff18CsJbQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q+ckEvv4sDf+R3SGgr+EKejDBvB0z4Vl+e7NF5XP/ayopFZBfHt1wcYAMfYTKQHgQ
-         cT32iWGDVXJoAAzBrq9lwYU/rzYukbGAMX5ziIeqEoxKXVcw/6FKi/ioXwWNCj33K0
-         UDZD8D4wTy58pA1gWg56pnf3aHDEigr78jwbdZgA=
+        b=iMlMSyiSl5ygsgjH16b4H4N7m/KFKqFi+jLvawyrr4QpILc4Zcx69E/gaREeZMll4
+         efgAqKPUZN+KuzhSJTjaR5gWnpXXUUPHqA4jRPQMHUFuwv+GwcdlJJnaoQbCZxLTaB
+         T5T6axeVQ65jiFBHMrgldPK/Fub5emQ/MScxx8/0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH 4.9 087/118] serial: 8250_of: assume reg-shift of 2 for mrvl,mmp-uart
-Date:   Fri, 22 Mar 2019 12:15:59 +0100
-Message-Id: <20190322111222.790372811@linuxfoundation.org>
+        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Wolfram Sang <wsa@the-dreams.de>
+Subject: [PATCH 4.9 084/118] i2c: tegra: fix maximum transfer size
+Date:   Fri, 22 Mar 2019 12:15:56 +0100
+Message-Id: <20190322111222.556188212@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111215.873964544@linuxfoundation.org>
 References: <20190322111215.873964544@linuxfoundation.org>
@@ -64,37 +66,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Lubomir Rintel <lkundrak@v3.sk>
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
 
-commit f4817843e39ce78aace0195a57d4e8500a65a898 upstream.
+commit f4e3f4ae1d9c9330de355f432b69952e8cef650c upstream.
 
-There are two other drivers that bind to mrvl,mmp-uart and both of them
-assume register shift of 2 bits. There are device trees that lack the
-property and rely on that assumption.
+Tegra186 and prior supports maximum 4K bytes per packet transfer
+including 12 bytes of packet header.
 
-If this driver wins the race to bind to those devices, it should behave
-the same as the older deprecated driver.
+This patch fixes max write length limit to account packet header
+size for transfers.
 
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-Cc: stable@vger.kernel.org
+Cc: stable@vger.kernel.org # 4.4+
+
+Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/8250/8250_of.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/i2c/busses/i2c-tegra.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/tty/serial/8250/8250_of.c
-+++ b/drivers/tty/serial/8250/8250_of.c
-@@ -97,6 +97,10 @@ static int of_platform_serial_setup(stru
- 	if (of_property_read_u32(np, "reg-offset", &prop) == 0)
- 		port->mapbase += prop;
+--- a/drivers/i2c/busses/i2c-tegra.c
++++ b/drivers/i2c/busses/i2c-tegra.c
+@@ -794,7 +794,7 @@ static const struct i2c_algorithm tegra_
+ /* payload size is only 12 bit */
+ static struct i2c_adapter_quirks tegra_i2c_quirks = {
+ 	.max_read_len = 4096,
+-	.max_write_len = 4096,
++	.max_write_len = 4096 - 12,
+ };
  
-+	/* Compatibility with the deprecated pxa driver and 8250_pxa drivers. */
-+	if (of_device_is_compatible(np, "mrvl,mmp-uart"))
-+		port->regshift = 2;
-+
- 	/* Check for registers offset within the devices address range */
- 	if (of_property_read_u32(np, "reg-shift", &prop) == 0)
- 		port->regshift = prop;
+ static const struct tegra_i2c_hw_feature tegra20_i2c_hw = {
 
 
