@@ -2,101 +2,88 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40EBDC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:49:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A3B9C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:49:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1218621841
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:49:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 035A921841
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:49:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728164AbfCVWt2 (ORCPT
+        id S1728269AbfCVWtd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 18:49:28 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:41675 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726205AbfCVWt1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 18:49:27 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x2MMn5RL758835
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Fri, 22 Mar 2019 15:49:05 -0700
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x2MMn4kD758832;
-        Fri, 22 Mar 2019 15:49:04 -0700
-Date:   Fri, 22 Mar 2019 15:49:04 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for YueHaibing <tipbot@zytor.com>
-Message-ID: <tip-d18a7408d7be0f34a120d99051ed5187d9727728@git.kernel.org>
-Cc:     yuehaibing@huawei.com, tglx@linutronix.de,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        daniel.lezcano@linaro.org, mingo@kernel.org, shc_work@mail.ru,
-        hpa@zytor.com
-Reply-To: tglx@linutronix.de, yuehaibing@huawei.com, hpa@zytor.com,
-          mingo@kernel.org, shc_work@mail.ru, daniel.lezcano@linaro.org,
-          linux-kernel@vger.kernel.org,
-          linux-arm-kernel@lists.infradead.org
-In-Reply-To: <20190322143708.12716-1-yuehaibing@huawei.com>
-References: <20190322143708.12716-1-yuehaibing@huawei.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:timers/urgent] clocksource/drivers/clps711x: Make
- clps711x_clksrc_init() static
-Git-Commit-ID: d18a7408d7be0f34a120d99051ed5187d9727728
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Fri, 22 Mar 2019 18:49:33 -0400
+Received: from mga01.intel.com ([192.55.52.88]:27013 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728175AbfCVWtc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 18:49:32 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Mar 2019 15:49:31 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,256,1549958400"; 
+   d="scan'208";a="285114414"
+Received: from fmsmsx104.amr.corp.intel.com ([10.18.124.202])
+  by orsmga004.jf.intel.com with ESMTP; 22 Mar 2019 15:49:31 -0700
+Received: from fmsmsx113.amr.corp.intel.com ([169.254.13.56]) by
+ fmsmsx104.amr.corp.intel.com ([169.254.3.38]) with mapi id 14.03.0415.000;
+ Fri, 22 Mar 2019 15:49:30 -0700
+From:   "Verma, Vishal L" <vishal.l.verma@intel.com>
+To:     "kjlu@umn.edu" <kjlu@umn.edu>
+CC:     "Williams, Dan J" <dan.j.williams@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        "pakki001@umn.edu" <pakki001@umn.edu>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        "zwisler@kernel.org" <zwisler@kernel.org>
+Subject: Re: [PATCH] nvdimm: btt_devs: fix a NULL pointer dereference and a
+ memory leak
+Thread-Topic: [PATCH] nvdimm: btt_devs: fix a NULL pointer dereference and a
+ memory leak
+Thread-Index: AQHU2KvP9fAOZmRsOECRxfaC1K1yNKYYxwKA
+Date:   Fri, 22 Mar 2019 22:49:29 +0000
+Message-ID: <eea1b50fe8c76d45fef0aaca1878c30fa8f2cbde.camel@intel.com>
+References: <20190312081529.4889-1-kjlu@umn.edu>
+In-Reply-To: <20190312081529.4889-1-kjlu@umn.edu>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+x-originating-ip: [10.232.112.185]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <B6878E8040DC78448B070CFD65C378F3@intel.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  d18a7408d7be0f34a120d99051ed5187d9727728
-Gitweb:     https://git.kernel.org/tip/d18a7408d7be0f34a120d99051ed5187d9727728
-Author:     YueHaibing <yuehaibing@huawei.com>
-AuthorDate: Fri, 22 Mar 2019 22:37:08 +0800
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Fri, 22 Mar 2019 22:59:32 +0100
-
-clocksource/drivers/clps711x: Make clps711x_clksrc_init() static
-
-Fix sparse warning:
-
-drivers/clocksource/clps711x-timer.c:96:13: warning:
- symbol 'clps711x_clksrc_init' was not declared. Should it be static?
-
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: <daniel.lezcano@linaro.org>
-Cc: <shc_work@mail.ru>
-Cc: <linux-arm-kernel@lists.infradead.org>
-Link: https://lkml.kernel.org/r/20190322143708.12716-1-yuehaibing@huawei.com
-
----
- drivers/clocksource/clps711x-timer.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/clocksource/clps711x-timer.c b/drivers/clocksource/clps711x-timer.c
-index a8dd80576c95..cdc251524f5e 100644
---- a/drivers/clocksource/clps711x-timer.c
-+++ b/drivers/clocksource/clps711x-timer.c
-@@ -93,8 +93,9 @@ static int __init _clps711x_clkevt_init(struct clk *clock, void __iomem *base,
- 			   "clps711x-timer", clkevt);
- }
- 
--void __init clps711x_clksrc_init(void __iomem *tc1_base, void __iomem *tc2_base,
--				 unsigned int irq)
-+static void __init clps711x_clksrc_init(void __iomem *tc1_base,
-+					void __iomem *tc2_base,
-+					unsigned int irq)
- {
- 	struct clk *tc1 = clk_get_sys("clps711x-timer.0", NULL);
- 	struct clk *tc2 = clk_get_sys("clps711x-timer.1", NULL);
+T24gVHVlLCAyMDE5LTAzLTEyIGF0IDAzOjE1IC0wNTAwLCBLYW5namllIEx1IHdyb3RlOg0KPiBJ
+biBjYXNlIGttZW1kdXAgZmFpbHMsIHRoZSBmaXggcmVsZWFzZXMgcmVzb3VyY2VzIGFuZCByZXR1
+cm5zIHRvDQo+IGF2b2lkIHRoZSBOVUxMIHBvaW50ZXIgZGVyZWZlcmVuY2UuDQo+IEFsc28sIHRo
+ZSBlcnJvciBwYXRocyBpbiB0aGUgZm9sbG93aW5nIGNvZGUgc2hvdWxkIHJlbGVhc2UNCj4gcmVz
+b3VyY2VzIHRvIGF2b2lkIG1lbW9yeSBsZWFrcy4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEthbmdq
+aWUgTHUgPGtqbHVAdW1uLmVkdT4NCj4gLS0tDQo+ICBkcml2ZXJzL252ZGltbS9idHRfZGV2cy5j
+IHwgOCArKysrKysrLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDcgaW5zZXJ0aW9ucygrKSwgMSBkZWxl
+dGlvbigtKQ0KPiANCg0KTG9va3MgZ29vZCwNClJldmlld2VkLWJ5OiBWaXNoYWwgVmVybWEgPHZp
+c2hhbC5sLnZlcm1hQGludGVsLmNvbT4NCg0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9udmRpbW0v
+YnR0X2RldnMuYyBiL2RyaXZlcnMvbnZkaW1tL2J0dF9kZXZzLmMNCj4gaW5kZXggNzk1YWQ0ZmYz
+NWNhLi41NjVlYTBiNmY3NjUgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvbnZkaW1tL2J0dF9kZXZz
+LmMNCj4gKysrIGIvZHJpdmVycy9udmRpbW0vYnR0X2RldnMuYw0KPiBAQCAtMTk2LDggKzE5Niwx
+MyBAQCBzdGF0aWMgc3RydWN0IGRldmljZSAqX19uZF9idHRfY3JlYXRlKHN0cnVjdA0KPiBuZF9y
+ZWdpb24gKm5kX3JlZ2lvbiwNCj4gIAl9DQo+ICANCj4gIAluZF9idHQtPmxiYXNpemUgPSBsYmFz
+aXplOw0KPiAtCWlmICh1dWlkKQ0KPiArCWlmICh1dWlkKSB7DQo+ICAJCXV1aWQgPSBrbWVtZHVw
+KHV1aWQsIDE2LCBHRlBfS0VSTkVMKTsNCj4gKwkJaWYgKCF1dWlkKSB7DQo+ICsJCQlrZnJlZShu
+ZF9idHQpOw0KPiArCQkJcmV0dXJuIE5VTEw7DQo+ICsJCX0NCj4gKwl9DQo+ICAJbmRfYnR0LT51
+dWlkID0gdXVpZDsNCj4gIAlkZXYgPSAmbmRfYnR0LT5kZXY7DQo+ICAJZGV2X3NldF9uYW1lKGRl
+diwgImJ0dCVkLiVkIiwgbmRfcmVnaW9uLT5pZCwgbmRfYnR0LT5pZCk7DQo+IEBAIC0yMDksNiAr
+MjE0LDcgQEAgc3RhdGljIHN0cnVjdCBkZXZpY2UgKl9fbmRfYnR0X2NyZWF0ZShzdHJ1Y3QNCj4g
+bmRfcmVnaW9uICpuZF9yZWdpb24sDQo+ICAJCWRldl9kYmcoJm5kbnMtPmRldiwgImZhaWxlZCwg
+YWxyZWFkeSBjbGFpbWVkIGJ5ICVzXG4iLA0KPiAgCQkJCWRldl9uYW1lKG5kbnMtPmNsYWltKSk7
+DQo+ICAJCXB1dF9kZXZpY2UoZGV2KTsNCj4gKwkJa2ZyZWUodXVpZCk7DQo+ICAJCXJldHVybiBO
+VUxMOw0KPiAgCX0NCj4gIAlyZXR1cm4gZGV2Ow0KDQo=
