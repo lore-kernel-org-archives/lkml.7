@@ -2,96 +2,95 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71C48C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 03:02:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE433C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 03:05:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38CA3213F2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 03:02:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o91PhKL1"
+	by mail.kernel.org (Postfix) with ESMTP id 85101218B0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 03:05:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727559AbfCVDCG (ORCPT
+        id S1727544AbfCVDFA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 23:02:06 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:36098 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727222AbfCVDCF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 23:02:05 -0400
-Received: by mail-pg1-f193.google.com with SMTP id r124so465942pgr.3;
-        Thu, 21 Mar 2019 20:02:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=NDVLMf7ewRfh6LnuprP26c7/SHCwSPciThVk173FrnI=;
-        b=o91PhKL17b3/9z9/Kyv1nZM/avF4BEwkn3+atQNF6r4MtlN8ZbiJrcWzmy6eQKNmyn
-         mQeF39yGhOk3tw4rqWG7zAF71gM44Ylvryemk6apr8/rph0AhInWffxMDp/YawCBDdY8
-         KLReJk/Em4paH/OxjPtntSyjw41kIjsEf5uMAcTQXOZwQEYthHzaANVSoao566WMkIUA
-         a4uUI2mK4WkN7nhRv65AEX3JThIqS8qdDlpGePbQusQ4uFtl+kbbzSdfCr82fjaAK69o
-         htrDcKYgWrYbJKAAlti6dBySv+0iU89qQi3fCtQv+YHzPh57kCdzV7VCNUWnVXCYaUXI
-         ulCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=NDVLMf7ewRfh6LnuprP26c7/SHCwSPciThVk173FrnI=;
-        b=gxzygZTH+00SvMxubWOR6Q5YI6p4rC0AvZCreIUmG8zOnDhADsPxEVUibzzSItNLAl
-         cLQr+xV7Mf+RPp+ZkmrUCnk1NDtOC7jqRpbUEVhumOJKFJN6PimGyHnb7pA3kQAfMQmX
-         5rRKiSlGOCDxhSbnutj26dr6EUt2U4vndlCx/wvhOty/v/WNUkQ909Dhhq2BQbTUW9ZN
-         qnx7iFQN7kZCLcBd/vJzP8Mz6hc+Dwn5X4ZskqD9HDTT3GZzyb2wRNWDzHLFvOz8zgL1
-         BVbTkl8N1wp+Ff3xhIDfg8r7ONzIfufg10IYoTSv2OpUnJ4aA2/cqG91Djg7VWsZcRiu
-         v4HA==
-X-Gm-Message-State: APjAAAVc0VZdnZ4TaQLbUIi5+2adROyUApZn7Rl7TcLUjQ0DizYmsw9H
-        eSmX8nZwaWrcI8bN/XG35FI=
-X-Google-Smtp-Source: APXvYqwldKtZZ1VRasVAueLICUObKnwXOKkWwDW/SsBdmSq4ZihALKEY4LPaNW66lZPDXcQu9VNbTA==
-X-Received: by 2002:a65:5281:: with SMTP id y1mr6777310pgp.59.1553223724402;
-        Thu, 21 Mar 2019 20:02:04 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.91.90])
-        by smtp.gmail.com with ESMTPSA id m3sm6850608pgp.85.2019.03.21.20.02.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 21 Mar 2019 20:02:03 -0700 (PDT)
-Date:   Fri, 22 Mar 2019 08:31:59 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     gregkh@linuxfoundation.org, jslaby@suse.com,
-        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] tty: serial_core: Spelling correction
-Message-ID: <20190322030159.GA6551@hari-Inspiron-1545>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Thu, 21 Mar 2019 23:05:00 -0400
+Received: from mxhk.zte.com.cn ([63.217.80.70]:35872 "EHLO mxhk.zte.com.cn"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727222AbfCVDFA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 23:05:00 -0400
+Received: from mse01.zte.com.cn (unknown [10.30.3.20])
+        by Forcepoint Email with ESMTPS id 4BB96B1EEEED4A8E878F;
+        Fri, 22 Mar 2019 11:04:57 +0800 (CST)
+Received: from notes_smtp.zte.com.cn ([10.30.1.239])
+        by mse01.zte.com.cn with ESMTP id x2M342FN071184;
+        Fri, 22 Mar 2019 11:04:02 +0800 (GMT-8)
+        (envelope-from wen.yang99@zte.com.cn)
+Received: from fox-host8.localdomain ([10.74.120.8])
+          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
+          with ESMTP id 2019032211043805-5922596 ;
+          Fri, 22 Mar 2019 11:04:38 +0800 
+From:   Wen Yang <wen.yang99@zte.com.cn>
+To:     linux-kernel@vger.kernel.org
+Cc:     wang.yi59@zte.com.cn, Wen Yang <wen.yang99@zte.com.cn>,
+        Anirudha Sarangi <anirudh@xilinx.com>,
+        John Linn <John.Linn@xilinx.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Michal Simek <michal.simek@xilinx.com>, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 1/3] net: xilinx: fix possible object reference leak
+Date:   Fri, 22 Mar 2019 11:04:07 +0800
+Message-Id: <1553223849-7143-1-git-send-email-wen.yang99@zte.com.cn>
+X-Mailer: git-send-email 1.8.3.1
+X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
+ 21, 2013) at 2019-03-22 11:04:38,
+        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
+ 2019-03-22 11:03:47,
+        Serialize complete at 2019-03-22 11:03:47
+X-MAIL: mse01.zte.com.cn x2M342FN071184
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-fix spelling mistake "overriden" -> "overridden"
-This fix resolves warning reported by checkpatch tool
+The call to of_parse_phandle returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
 
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+Detected by coccinelle with the following warnings:
+./drivers/net/ethernet/xilinx/xilinx_axienet_main.c:1624:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 1569, but without a corresponding object release within this function.
+
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: Anirudha Sarangi <anirudh@xilinx.com>
+Cc: John Linn <John.Linn@xilinx.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Michal Simek <michal.simek@xilinx.com>
+Cc: netdev@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
 ---
- drivers/tty/serial/serial_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/xilinx/xilinx_axienet_main.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
-index 351843f..69f4871 100644
---- a/drivers/tty/serial/serial_core.c
-+++ b/drivers/tty/serial/serial_core.c
-@@ -1514,7 +1514,7 @@ static void uart_set_termios(struct tty_struct *tty,
+diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+index ec7e7ec..4041c75 100644
+--- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
++++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+@@ -1575,12 +1575,14 @@ static int axienet_probe(struct platform_device *pdev)
+ 	ret = of_address_to_resource(np, 0, &dmares);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "unable to get DMA resource\n");
++		of_node_put(np);
+ 		goto free_netdev;
  	}
- 
- 	uart_change_speed(tty, state, old_termios);
--	/* reload cflag from termios; port driver may have overriden flags */
-+	/* reload cflag from termios; port driver may have overridden flags */
- 	cflag = tty->termios.c_cflag;
- 
- 	/* Handle transition to B0 status */
+ 	lp->dma_regs = devm_ioremap_resource(&pdev->dev, &dmares);
+ 	if (IS_ERR(lp->dma_regs)) {
+ 		dev_err(&pdev->dev, "could not map DMA regs\n");
+ 		ret = PTR_ERR(lp->dma_regs);
++		of_node_put(np);
+ 		goto free_netdev;
+ 	}
+ 	lp->rx_irq = irq_of_parse_and_map(np, 1);
 -- 
-2.7.4
+2.9.5
 
