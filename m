@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FBE1C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:57:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A10A8C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:57:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D40532196E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:57:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68B3D2192B
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:57:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255863;
-	bh=r5Z2oEO6ozkaHmF9GdTjIEvGwsDsNshwXVj9C9girrM=;
+	s=default; t=1553255868;
+	bh=EuZlJORB5spIrLpJK9kP9Rjnkq7cRgHRWWipHE5WYec=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D2PUJyeZsJW/ORtJZva0Nb0laPwr5KyMre8O/Stp9RwhgWkug+MzBLk82qPdaVnp5
-	 oJuukXqS4Svu3yRO+q21oj2zkiMCuCzzZmN4uhzBnBjWnDlRDWE2qjbTuic85QmiIi
-	 EvTzXqzx+3MGMlTvEft9WgkYan0CYRobL3tA0XiY=
+	b=lCi3JTL52Dfc+KALJMalgGY5993mk7nf03yqcmG9iB/EB4f45Xm3aR4T8cnvV1hDB
+	 Pqhlp+jlVuqxVBMKuI3EkdYELqvEmeNJpTU7EKmgMcZPoin09vyjNRiW+CJjd0GTSW
+	 v0DnVtQDkbePg+HtJQWuyHN2iQHqSS0uATRK37tw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387717AbfCVL5m (ORCPT
+        id S2387733AbfCVL5q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:57:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34126 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:57:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733240AbfCVL5f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:57:35 -0400
+        id S2387716AbfCVL5m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:57:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1C682192D;
-        Fri, 22 Mar 2019 11:57:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6AA5720850;
+        Fri, 22 Mar 2019 11:57:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255855;
-        bh=r5Z2oEO6ozkaHmF9GdTjIEvGwsDsNshwXVj9C9girrM=;
+        s=default; t=1553255861;
+        bh=EuZlJORB5spIrLpJK9kP9Rjnkq7cRgHRWWipHE5WYec=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GTqLby2uZImTWUQmDHWm2aQnAwdwXjaQOD5r7CIp8rnieqBVPUSicgJbfXJFuJ6uQ
-         UWeouUD12JmIkwXnoDvaKV6hd0vttp4xPPQ2JlTFVIV96Sy2SNvikM9DIUgvApZXRW
-         GZIpwA2CJh43bDMe7jjxAcjLL7p81SKyeG1rpTTM=
+        b=2PifGJZFqQ87qF/IdpjghfnBiKEiMQ5jNY1CC+92Db/tgMtBLzpJiU1Fvmm5RsCQu
+         2MHeSzQXgbJ9VmPkDvN4H5A0muZ/waXb06/2Af2JPnj7CnwP7GdM51UXhdqMM/ehiD
+         BnVHY1OoTxMWeTl3qgy9kUeCZY8Ti+Ap+2nnCrBY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yizhuo <yzhai003@ucr.edu>,
-        Tony Lindgren <tony@atomide.com>,
+        stable@vger.kernel.org, Yusuke Goda <yusuke.goda.sx@renesas.com>,
+        Valentine Barshak <valentine.barshak@cogentembedded.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 035/280] ARM: OMAP2+: Variable "reg" in function omap4_dsi_mux_pads() could be uninitialized
-Date:   Fri, 22 Mar 2019 12:13:08 +0100
-Message-Id: <20190322111308.288657403@linuxfoundation.org>
+Subject: [PATCH 4.19 037/280] ASoC: rsnd: fixup rsnd_ssi_master_clk_start() user count check
+Date:   Fri, 22 Mar 2019 12:13:10 +0100
+Message-Id: <20190322111308.401412954@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -66,45 +68,42 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit dc30e70391376ba3987aeb856ae6d9c0706534f1 ]
+[ Upstream commit d9111d36024de07784f2e1ba2ccf70b16035f378 ]
 
-In function omap4_dsi_mux_pads(), local variable "reg" could
-be uninitialized if function regmap_read() returns -EINVAL.
-However, it will be used directly in the later context, which
-is potentially unsafe.
+commit 4d230d1271064 ("ASoC: rsnd: fixup not to call clk_get/set
+under non-atomic") added new rsnd_ssi_prepare() and moved
+rsnd_ssi_master_clk_start() to .prepare.
+But, ssi user count (= ssi->usrcnt) is incremented at .init
+(= rsnd_ssi_init()).
+Because of these timing exchange, ssi->usrcnt check at
+rsnd_ssi_master_clk_start() should be adjusted.
+Otherwise, 2nd master clock setup will be no check.
+This patch fixup this issue.
 
-Signed-off-by: Yizhuo <yzhai003@ucr.edu>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Fixes: commit 4d230d1271064 ("ASoC: rsnd: fixup not to call clk_get/set under non-atomic")
+Reported-by: Yusuke Goda <yusuke.goda.sx@renesas.com>
+Reported-by: Valentine Barshak <valentine.barshak@cogentembedded.com>
+Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Tested-by: Yusuke Goda <yusuke.goda.sx@renesas.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-omap2/display.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ sound/soc/sh/rcar/ssi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/mach-omap2/display.c b/arch/arm/mach-omap2/display.c
-index 9500b6e27380..5d73f2c0b117 100644
---- a/arch/arm/mach-omap2/display.c
-+++ b/arch/arm/mach-omap2/display.c
-@@ -83,6 +83,7 @@ static int omap4_dsi_mux_pads(int dsi_id, unsigned lanes)
- 	u32 enable_mask, enable_shift;
- 	u32 pipd_mask, pipd_shift;
- 	u32 reg;
-+	int ret;
+diff --git a/sound/soc/sh/rcar/ssi.c b/sound/soc/sh/rcar/ssi.c
+index a566dae3ec8a..9410e0a9b14b 100644
+--- a/sound/soc/sh/rcar/ssi.c
++++ b/sound/soc/sh/rcar/ssi.c
+@@ -283,7 +283,7 @@ static int rsnd_ssi_master_clk_start(struct rsnd_mod *mod,
+ 	if (rsnd_ssi_is_multi_slave(mod, io))
+ 		return 0;
  
- 	if (dsi_id == 0) {
- 		enable_mask = OMAP4_DSI1_LANEENABLE_MASK;
-@@ -98,7 +99,11 @@ static int omap4_dsi_mux_pads(int dsi_id, unsigned lanes)
- 		return -ENODEV;
- 	}
- 
--	regmap_read(omap4_dsi_mux_syscon, OMAP4_DSIPHY_SYSCON_OFFSET, &reg);
-+	ret = regmap_read(omap4_dsi_mux_syscon,
-+					  OMAP4_DSIPHY_SYSCON_OFFSET,
-+					  &reg);
-+	if (ret)
-+		return ret;
- 
- 	reg &= ~enable_mask;
- 	reg &= ~pipd_mask;
+-	if (ssi->usrcnt > 1) {
++	if (ssi->usrcnt > 0) {
+ 		if (ssi->rate != rate) {
+ 			dev_err(dev, "SSI parent/child should use same rate\n");
+ 			return -EINVAL;
 -- 
 2.19.1
 
