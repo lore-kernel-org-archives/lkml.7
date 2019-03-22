@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 636F4C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:17:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74DDCC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:17:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32B7F2083D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:17:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40E912082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:17:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553257024;
-	bh=cDO9xhpK2tN8k8LIh0gndMuJjmAO93kUql2gZQCwyHo=;
+	s=default; t=1553257028;
+	bh=GZQu+Z2dnPTRpW/0oKNzO0GGhIthDukXIWnhsxZmIFs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qYGJUQXfk2t1NmXWBzB6fYCPqfGQDZoy5k9EsZVvNxohDNKCcJWpDCv3jxX/j6d4I
-	 1Ix9gIsjUjN5osz4F19J5cpwgbnyN/y4WAb8cZVn34QoI8zlLCywwx7iWUX+oE4y1M
-	 V6eMm05QmGbdF5l3rLjBrA4dyjRISAoBQKKSk3+0=
+	b=tOpJLnsqR7orVK3uTI94R0IgRLWYe60/z2grcde94LN+H1WStTXFIDxksHCKkct/o
+	 qaKEu0SmOSJ3JAyKKmYpcNUwE5UskfZY8oJ/uavuttVvTrdZLDBtxihsZGb9rogeCc
+	 MhwqYyuOxTFSIjSCW8WlRpggMxO/pwKhlM5+3J4o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390316AbfCVMRC (ORCPT
+        id S2390326AbfCVMRG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:17:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55830 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:17:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390309AbfCVMQ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:16:59 -0400
+        id S2390309AbfCVMRD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:17:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B36F2192C;
-        Fri, 22 Mar 2019 12:16:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2FF12082C;
+        Fri, 22 Mar 2019 12:17:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553257019;
-        bh=cDO9xhpK2tN8k8LIh0gndMuJjmAO93kUql2gZQCwyHo=;
+        s=default; t=1553257023;
+        bh=GZQu+Z2dnPTRpW/0oKNzO0GGhIthDukXIWnhsxZmIFs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ht9nEA1ejEpZ5OJitKRKwaybQfT09kfz3t5weBbEMq3eE684MECn80V5c+vRb+Ivd
-         0pC5gzbw38nAZ7UP1bOdElyHlH/Cu5TAeXO0r1LlfCa9DxsdNnTP6UvgNpdfQ394O0
-         Y7irF9QQadbSRagBQU5EJhwGJ5Ul8+XD6ylI1PcI=
+        b=DhNBrFgRcvcyRUaZQgKVArCk5Xbnj97kyg5aRY2Q7KKX8qdESE/935bfd7wglaBbB
+         2+p0eC4nQD73t8CWDZTFejDKkfj32O1WDY7cLmn3blhOBKQvhHPuJxqj3Ni2Fp6EAj
+         LuUU2mQd0iZW254gUg5st5SYRq/u3QimRpJ8gOjo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Finn Thain <fthain@telegraphics.com.au>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH 5.0 090/238] m68k: Add -ffreestanding to CFLAGS
-Date:   Fri, 22 Mar 2019 12:15:09 +0100
-Message-Id: <20190322111303.894843300@linuxfoundation.org>
+        stable@vger.kernel.org, yangerkun <yangerkun@huawei.com>,
+        Theodore Tso <tytso@mit.edu>, stable@kernel.org
+Subject: [PATCH 5.0 108/238] ext4: cleanup pagecache before swap i_data
+Date:   Fri, 22 Mar 2019 12:15:27 +0100
+Message-Id: <20190322111304.900240883@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -65,55 +65,71 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Finn Thain <fthain@telegraphics.com.au>
+From: yangerkun <yangerkun@huawei.com>
 
-commit 28713169d879b67be2ef2f84dcf54905de238294 upstream.
+commit a46c68a318b08f819047843abf349aeee5d10ac2 upstream.
 
-This patch fixes a build failure when using GCC 8.1:
+While do swap, we should make sure there has no new dirty page since we
+should swap i_data between two inode:
+1.We should lock i_mmap_sem with write to avoid new pagecache from mmap
+read/write;
+2.Change filemap_flush to filemap_write_and_wait and move them to the
+space protected by inode lock to avoid new pagecache from buffer read/write.
 
-/usr/bin/ld: block/partitions/ldm.o: in function `ldm_parse_tocblock':
-block/partitions/ldm.c:153: undefined reference to `strcmp'
-
-This is caused by a new optimization which effectively replaces a
-strncmp() call with a strcmp() call. This affects a number of strncmp()
-call sites in the kernel.
-
-The entire class of optimizations is avoided with -fno-builtin, which
-gets enabled by -ffreestanding. This may avoid possible future build
-failures in case new optimizations appear in future compilers.
-
-I haven't done any performance measurements with this patch but I did
-count the function calls in a defconfig build. For example, there are now
-23 more sprintf() calls and 39 fewer strcpy() calls. The effect on the
-other libc functions is smaller.
-
-If this harms performance we can tackle that regression by optimizing
-the call sites, ideally using semantic patches. That way, clang and ICC
-builds might benfit too.
-
-Cc: stable@vger.kernel.org
-Reference: https://marc.info/?l=linux-m68k&m=154514816222244&w=2
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: yangerkun <yangerkun@huawei.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Cc: stable@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/m68k/Makefile |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ fs/ext4/ioctl.c |   16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
 
---- a/arch/m68k/Makefile
-+++ b/arch/m68k/Makefile
-@@ -58,7 +58,10 @@ cpuflags-$(CONFIG_M5206e)	:= $(call cc-o
- cpuflags-$(CONFIG_M5206)	:= $(call cc-option,-mcpu=5206,-m5200)
+--- a/fs/ext4/ioctl.c
++++ b/fs/ext4/ioctl.c
+@@ -121,9 +121,6 @@ static long swap_inode_boot_loader(struc
+ 		return PTR_ERR(inode_bl);
+ 	ei_bl = EXT4_I(inode_bl);
  
- KBUILD_AFLAGS += $(cpuflags-y)
--KBUILD_CFLAGS += $(cpuflags-y) -pipe
-+KBUILD_CFLAGS += $(cpuflags-y)
+-	filemap_flush(inode->i_mapping);
+-	filemap_flush(inode_bl->i_mapping);
+-
+ 	/* Protect orig inodes against a truncate and make sure,
+ 	 * that only 1 swap_inode_boot_loader is running. */
+ 	lock_two_nondirectories(inode, inode_bl);
+@@ -141,6 +138,15 @@ static long swap_inode_boot_loader(struc
+ 		goto journal_err_out;
+ 	}
+ 
++	down_write(&EXT4_I(inode)->i_mmap_sem);
++	err = filemap_write_and_wait(inode->i_mapping);
++	if (err)
++		goto err_out;
 +
-+KBUILD_CFLAGS += -pipe -ffreestanding
++	err = filemap_write_and_wait(inode_bl->i_mapping);
++	if (err)
++		goto err_out;
 +
- ifdef CONFIG_MMU
- # without -fno-strength-reduce the 53c7xx.c driver fails ;-(
- KBUILD_CFLAGS += -fno-strength-reduce -ffixed-a2
+ 	/* Wait for all existing dio workers */
+ 	inode_dio_wait(inode);
+ 	inode_dio_wait(inode_bl);
+@@ -151,7 +157,7 @@ static long swap_inode_boot_loader(struc
+ 	handle = ext4_journal_start(inode_bl, EXT4_HT_MOVE_EXTENTS, 2);
+ 	if (IS_ERR(handle)) {
+ 		err = -EINVAL;
+-		goto journal_err_out;
++		goto err_out;
+ 	}
+ 
+ 	/* Protect extent tree against block allocations via delalloc */
+@@ -208,6 +214,8 @@ static long swap_inode_boot_loader(struc
+ 	ext4_journal_stop(handle);
+ 	ext4_double_up_write_data_sem(inode, inode_bl);
+ 
++err_out:
++	up_write(&EXT4_I(inode)->i_mmap_sem);
+ journal_err_out:
+ 	unlock_two_nondirectories(inode, inode_bl);
+ 	iput(inode_bl);
 
 
