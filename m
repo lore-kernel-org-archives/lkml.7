@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71237C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:22:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90500C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:22:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 392F5218B0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:22:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F1F9218B0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:22:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553257339;
-	bh=RQqaUBVyCftYainkLDlSHnuBLIJEeR2iHGg5RkciPmw=;
+	s=default; t=1553257347;
+	bh=wMciYhI6iKhC+7R3Amm6h1QP3rAqsf60HgVukOq7dOQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Mdvr0/VmC0iy4SIxMFxrkBB/DiwSH1gKPQ2wj51Mr3PbukPdQZB0WKNVQkMZdzBHF
-	 9LI7qyBOWxwhoSGek0lT2NWSUNQq2RBlCqmPDLn9Zbz5DRbTwnnai39NIiZdckJZp7
-	 vQfuuSJKQfGjhIFVwX5ZwdpDRbe32SoOqKjlH5LA=
+	b=hnxpg93WbOJvAgnWRExAoXGvNJDvDZQR60RT/9Tl8h+5YQhHTwlz5brYcRUgmWgb1
+	 pQZuuyJehz5j3E3enpNmVxHiv4zyjKFCMWYwARm5c8gMn1r6lMv0gfDxhzlPSIHwbP
+	 MMmzf2Bm2SGJyDiyDvf0/IfRkQ4LD3TtFimoJs6c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390979AbfCVMWN (ORCPT
+        id S2391000AbfCVMWZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:22:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33166 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:22:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390966AbfCVMWK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:22:10 -0400
+        id S1731302AbfCVMWU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:22:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 289A42054F;
-        Fri, 22 Mar 2019 12:22:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3B53218A1;
+        Fri, 22 Mar 2019 12:22:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553257329;
-        bh=RQqaUBVyCftYainkLDlSHnuBLIJEeR2iHGg5RkciPmw=;
+        s=default; t=1553257339;
+        bh=wMciYhI6iKhC+7R3Amm6h1QP3rAqsf60HgVukOq7dOQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sNfuodYwoPFq+5CLc47mOWz7Bh3b6ARmmvH/WXpw6WtEbhXlpC53aZdN4/6yZHD6l
-         w0z0mgCxCQuW4G5VrWs0H9q5y/6cgl+BAIF3JqvAHLdX/eSx683lSQbz4+72Y3yTUd
-         GI/Dh+AFqSAIzLH46HDoOoUePkJhs5CoO3W2uduw=
+        b=ZFTMfjKIgiEsD5I6BUPmnjKvQEONAoWISE1K4ppxzWesTiEmBK3Cux8ijsu1uF3ub
+         rf8ZK2jFhrKgIAx5fvbecEyxem1iDwjVvz6mYbFHuzzpFoDeKHuR1lLxpDk3owtfJ0
+         vROqbbthomowEH/dPqA27F520dHxBIja5BBoFcfg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 5.0 192/238] PM / wakeup: Rework wakeup source timer cancellation
-Date:   Fri, 22 Mar 2019 12:16:51 +0100
-Message-Id: <20190322111309.538633550@linuxfoundation.org>
+        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 5.0 203/238] perf intel-pt: Fix overlap calculation for padding
+Date:   Fri, 22 Mar 2019 12:17:02 +0100
+Message-Id: <20190322111310.186876686@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -65,55 +66,90 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Viresh Kumar <viresh.kumar@linaro.org>
+From: Adrian Hunter <adrian.hunter@intel.com>
 
-commit 1fad17fb1bbcd73159c2b992668a6957ecc5af8a upstream.
+commit 5a99d99e3310a565b0cf63f785b347be9ee0da45 upstream.
 
-If wakeup_source_add() is called right after wakeup_source_remove()
-for the same wakeup source, timer_setup() may be called for a
-potentially scheduled timer which is incorrect.
+Auxtrace records might have up to 7 bytes of padding appended. Adjust
+the overlap accordingly.
 
-To avoid that, move the wakeup source timer cancellation from
-wakeup_source_drop() to wakeup_source_remove().
-
-Moreover, make wakeup_source_remove() clear the timer function after
-canceling the timer to let wakeup_source_not_registered() treat
-unregistered wakeup sources in the same way as the ones that have
-never been registered.
-
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: 4.4+ <stable@vger.kernel.org> # 4.4+
-[ rjw: Subject, changelog, merged two patches together ]
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: stable@vger.kernel.org
+Link: http://lkml.kernel.org/r/20190206103947.15750-3-adrian.hunter@intel.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/base/power/wakeup.c |    8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ tools/perf/util/intel-pt-decoder/intel-pt-decoder.c |   36 ++++++++++++++++++--
+ 1 file changed, 34 insertions(+), 2 deletions(-)
 
---- a/drivers/base/power/wakeup.c
-+++ b/drivers/base/power/wakeup.c
-@@ -118,7 +118,6 @@ void wakeup_source_drop(struct wakeup_so
- 	if (!ws)
- 		return;
+--- a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
++++ b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
+@@ -26,6 +26,7 @@
  
--	del_timer_sync(&ws->timer);
- 	__pm_relax(ws);
+ #include "../cache.h"
+ #include "../util.h"
++#include "../auxtrace.h"
+ 
+ #include "intel-pt-insn-decoder.h"
+ #include "intel-pt-pkt-decoder.h"
+@@ -2574,6 +2575,34 @@ static int intel_pt_tsc_cmp(uint64_t tsc
+ 	}
  }
- EXPORT_SYMBOL_GPL(wakeup_source_drop);
-@@ -205,6 +204,13 @@ void wakeup_source_remove(struct wakeup_
- 	list_del_rcu(&ws->entry);
- 	raw_spin_unlock_irqrestore(&events_lock, flags);
- 	synchronize_srcu(&wakeup_srcu);
+ 
++#define MAX_PADDING (PERF_AUXTRACE_RECORD_ALIGNMENT - 1)
 +
-+	del_timer_sync(&ws->timer);
-+	/*
-+	 * Clear timer.function to make wakeup_source_not_registered() treat
-+	 * this wakeup source as not registered.
-+	 */
-+	ws->timer.function = NULL;
- }
- EXPORT_SYMBOL_GPL(wakeup_source_remove);
++/**
++ * adj_for_padding - adjust overlap to account for padding.
++ * @buf_b: second buffer
++ * @buf_a: first buffer
++ * @len_a: size of first buffer
++ *
++ * @buf_a might have up to 7 bytes of padding appended. Adjust the overlap
++ * accordingly.
++ *
++ * Return: A pointer into @buf_b from where non-overlapped data starts
++ */
++static unsigned char *adj_for_padding(unsigned char *buf_b,
++				      unsigned char *buf_a, size_t len_a)
++{
++	unsigned char *p = buf_b - MAX_PADDING;
++	unsigned char *q = buf_a + len_a - MAX_PADDING;
++	int i;
++
++	for (i = MAX_PADDING; i; i--, p++, q++) {
++		if (*p != *q)
++			break;
++	}
++
++	return p;
++}
++
+ /**
+  * intel_pt_find_overlap_tsc - determine start of non-overlapped trace data
+  *                             using TSC.
+@@ -2624,8 +2653,11 @@ static unsigned char *intel_pt_find_over
  
+ 			/* Same TSC, so buffers are consecutive */
+ 			if (!cmp && rem_b >= rem_a) {
++				unsigned char *start;
++
+ 				*consecutive = true;
+-				return buf_b + len_b - (rem_b - rem_a);
++				start = buf_b + len_b - (rem_b - rem_a);
++				return adj_for_padding(start, buf_a, len_a);
+ 			}
+ 			if (cmp < 0)
+ 				return buf_b; /* tsc_a < tsc_b => no overlap */
+@@ -2688,7 +2720,7 @@ unsigned char *intel_pt_find_overlap(uns
+ 		found = memmem(buf_a, len_a, buf_b, len_a);
+ 		if (found) {
+ 			*consecutive = true;
+-			return buf_b + len_a;
++			return adj_for_padding(buf_b + len_a, buf_a, len_a);
+ 		}
+ 
+ 		/* Try again at next PSB in buffer 'a' */
 
 
