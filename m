@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B16E3C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:40:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82666C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:40:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80AE121917
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:40:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4589A21917
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:40:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254822;
-	bh=4i/W0prbC+vpkqJUKU0eFzNmhhSX2MidP2bVo/o7Yg8=;
+	s=default; t=1553254826;
+	bh=IkIsnFnFyDxV8zICOYkA6yYLnLlmcJ4grHornt8nRKw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yWH1/LqMdanoW0Mp5aAmD8l9NDJYnePcVbsiJNZbbIMPakh7pSKMA264fuhvH35Tf
-	 d3JUz6IBXy2VIPcCb2sMJhfXZwVcNRvE05l10HiVBuUIgv+4ckU+r6EwCJH8nD0w65
-	 M95ENlYovvi2o35yRZIZAI3linR6PdhzJx7weGYk=
+	b=o8QmfECqb2kE8RAcNoiSsDCq9OcWh5CxCs8/4xdoLwTsIhxuKIqPZlASE7E0LcVzs
+	 sRpCzJCIIiODIaRWHD/ukY5VsiGIZhvgFv4mZwe655WmtgEfhAfjeS6/f6FnfRO/nI
+	 tnFDgPd6jQ2UmQM+FgInp1SGpPpqMtHzUiU5NUbA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728326AbfCVLkV (ORCPT
+        id S1730886AbfCVLkZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:40:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42182 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:40:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730867AbfCVLkR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:40:17 -0400
+        id S1728241AbfCVLkX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:40:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB36221929;
-        Fri, 22 Mar 2019 11:40:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A422821B68;
+        Fri, 22 Mar 2019 11:40:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254816;
-        bh=4i/W0prbC+vpkqJUKU0eFzNmhhSX2MidP2bVo/o7Yg8=;
+        s=default; t=1553254823;
+        bh=IkIsnFnFyDxV8zICOYkA6yYLnLlmcJ4grHornt8nRKw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Oarf6ZLFsUVj1uiObaPWnGkM304e2qbacPdpYalRJt0pCt8gDgrHZ72sE/6dRAITF
-         hAqJVMHc48sQRa/aGnC/UjLr8v6sqsFbw9d1FgcdEEsruvzHrW312KPAr9DGC6Ynbm
-         Unj7q1zpxHA9AKEjs4jFbqrLOVpQnK2SAXd74BRA=
+        b=e8U0pyJ+xAD5T6oYeC/coBn6uspBYqgbiSz6VDOoDOUnRHfNUBfcF5hnMP8UmtBpH
+         7CoOX05oCfqjHQLrU2LhTIlK+VzJ13enGn6FeGfo9osrV32v+2XxWj5w/rpp5nNhIZ
+         gNmRaTHIfrLWT55hZZuvlA6LP/OBz/vXyVfQSCjo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shengjiu Wang <shengjiu.wang@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Nicolin Chen <nicoleotsuka@gmail.com>
-Subject: [PATCH 4.9 004/118] ASoC: fsl_esai: fix register setting issue in RIGHT_J mode
-Date:   Fri, 22 Mar 2019 12:14:36 +0100
-Message-Id: <20190322111216.272053864@linuxfoundation.org>
+        stable@vger.kernel.org, Zhi Jin <zhi.jin@intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Subject: [PATCH 4.9 006/118] stm class: Fix an endless loop in channel allocation
+Date:   Fri, 22 Mar 2019 12:14:38 +0100
+Message-Id: <20190322111216.433455055@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111215.873964544@linuxfoundation.org>
 References: <20190322111215.873964544@linuxfoundation.org>
@@ -67,51 +65,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: S.j. Wang <shengjiu.wang@nxp.com>
+From: Zhi Jin <zhi.jin@intel.com>
 
-commit cc29ea007347f39f4c5a4d27b0b555955a0277f9 upstream.
+commit a1d75dad3a2c689e70a1c4e0214cca9de741d0aa upstream.
 
-The ESAI_xCR_xWA is xCR's bit, not the xCCR's bit, driver set it to
-wrong register, correct it.
+There is a bug in the channel allocation logic that leads to an endless
+loop when looking for a contiguous range of channels in a range with a
+mixture of free and occupied channels. For example, opening three
+consequtive channels, closing the first two and requesting 4 channels in
+a row will trigger this soft lockup. The bug is that the search loop
+forgets to skip over the range once it detects that one channel in that
+range is occupied.
 
-Fixes 43d24e76b698 ("ASoC: fsl_esai: Add ESAI CPU DAI driver")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
-Ackedy-by: Nicolin Chen <nicoleotsuka@gmail.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Restore the original intent to the logic by fixing the omission.
+
+Signed-off-by: Zhi Jin <zhi.jin@intel.com>
+Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Fixes: 7bd1d4093c2f ("stm class: Introduce an abstraction for System Trace Module devices")
+CC: stable@vger.kernel.org # v4.4+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/fsl/fsl_esai.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/hwtracing/stm/core.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/sound/soc/fsl/fsl_esai.c
-+++ b/sound/soc/fsl/fsl_esai.c
-@@ -396,7 +396,8 @@ static int fsl_esai_set_dai_fmt(struct s
- 		break;
- 	case SND_SOC_DAIFMT_RIGHT_J:
- 		/* Data on rising edge of bclk, frame high, right aligned */
--		xccr |= ESAI_xCCR_xCKP | ESAI_xCCR_xHCKP | ESAI_xCR_xWA;
-+		xccr |= ESAI_xCCR_xCKP | ESAI_xCCR_xHCKP;
-+		xcr  |= ESAI_xCR_xWA;
- 		break;
- 	case SND_SOC_DAIFMT_DSP_A:
- 		/* Data on rising edge of bclk, frame high, 1clk before data */
-@@ -453,12 +454,12 @@ static int fsl_esai_set_dai_fmt(struct s
- 		return -EINVAL;
+--- a/drivers/hwtracing/stm/core.c
++++ b/drivers/hwtracing/stm/core.c
+@@ -252,6 +252,9 @@ static int find_free_channels(unsigned l
+ 			;
+ 		if (i == width)
+ 			return pos;
++
++		/* step over [pos..pos+i) to continue search */
++		pos += i;
  	}
  
--	mask = ESAI_xCR_xFSL | ESAI_xCR_xFSR;
-+	mask = ESAI_xCR_xFSL | ESAI_xCR_xFSR | ESAI_xCR_xWA;
- 	regmap_update_bits(esai_priv->regmap, REG_ESAI_TCR, mask, xcr);
- 	regmap_update_bits(esai_priv->regmap, REG_ESAI_RCR, mask, xcr);
- 
- 	mask = ESAI_xCCR_xCKP | ESAI_xCCR_xHCKP | ESAI_xCCR_xFSP |
--		ESAI_xCCR_xFSD | ESAI_xCCR_xCKD | ESAI_xCR_xWA;
-+		ESAI_xCCR_xFSD | ESAI_xCCR_xCKD;
- 	regmap_update_bits(esai_priv->regmap, REG_ESAI_TCCR, mask, xccr);
- 	regmap_update_bits(esai_priv->regmap, REG_ESAI_RCCR, mask, xccr);
- 
+ 	return -1;
 
 
