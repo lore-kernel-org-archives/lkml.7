@@ -6,67 +6,117 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE96C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:13:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CB66C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:13:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E80AF218E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:13:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04EA4218E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:13:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728677AbfCVONR (ORCPT
+        id S1728680AbfCVONl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 10:13:17 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:50978 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727749AbfCVONP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 10:13:15 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 2D04CC982697FAF57854;
-        Fri, 22 Mar 2019 22:08:37 +0800 (CST)
-Received: from localhost (10.177.31.96) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.408.0; Fri, 22 Mar 2019
- 22:08:28 +0800
-From:   Yue Haibing <yuehaibing@huawei.com>
-To:     <p.paillet@st.com>, <lee.jones@linaro.org>
-CC:     <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] mfd: stpmic1: Make stpmic1_regmap_config static
-Date:   Fri, 22 Mar 2019 22:08:00 +0800
-Message-ID: <20190322140800.9916-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Fri, 22 Mar 2019 10:13:41 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:40703 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727725AbfCVONl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 10:13:41 -0400
+Received: from wuerfel.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MHGPA-1hBieT1KrI-00DCYI; Fri, 22 Mar 2019 15:13:25 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Johannes Berg <johannes.berg@intel.com>
+Cc:     clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sara Sharon <sara.sharon@intel.com>,
+        Avraham Stern <avraham.stern@intel.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] iwlwifi: work around clang -Wuninitialized warning
+Date:   Fri, 22 Mar 2019 15:13:08 +0100
+Message-Id: <20190322141322.463149-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:8LiqyZKY/9vFF7zcjDNigdSW/6DKivRTQP9iy6iNl7h0N+D52W+
+ WjHMm4zaTiE1i/Hhs7lC/UTGioE6VlzNpLMhlqy/MQjFaRTUYhlih1WWd9uMGcXbc1LbV9q
+ 0wlcwt/W2jWT94/o41XckfCaMfdNOAv7khoQgihWfyg0mK5E651LokoTA/s6wpulv4as0a9
+ MpaGM2VhVhbf9+uSoc1Pw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:OqB1nMQOBws=:d3vBzx/V0HessxOj110NiJ
+ gsTseOF2wW+VwFpYB3GPngpbR6OhRrcaNuSmuhGPF6BerpEiq0EGC+pcpFfM5BrhTIf9N1ktn
+ XTn7j9qS1FGM/sDuNPFg9TavkEC05JXveJk/ekvhsKo1IYH6+IS+gE6OCiZ+7mZhIhFKLw0eR
+ 3ry4DaDsTyDhdbV+5Qh6WGtAlj6xPybINn9wTaFzc4BbGqi7Pjn86E0WZDCHE2qJAJ4KqnRny
+ 31czUwJJ4K10OFi0W7Xb07ndDPjAl40PobE+mzUCGlSU60nqqjm0bEqHLWS+0ts0E3vSL7G+B
+ 92rsKrcfGzRy6j2CqN9GMHS/Fd6bjgWAaPvR/U1UzjleC74CScyyf6PzjkKuUmVny/2nMXy+g
+ 9gqNn8MsLUo9dccciwGFMxaAgckOPac84Yt99RZe2b7Bgvx3wHF6OZbP0N/uNAcKkIM6Qi/1K
+ r867fNdg8XuSM/cNwDvsxoi9uHLvtdYhYx8HR21DTzgaOEhR4A7VxlGtoUXC0DBnQ3FZ6D28e
+ NDEavP7mlrvWpAGjqvNWs3H5KgQPYjQ6Gc0rY0YD0FKPTTDFvnDiUGMzL8wzz12nwCcxRsFwg
+ p7SG+u2ambSelrts2pFF5PksAX7CFBxrDRAs7Ffq7iV1h6C2ZPusLQXCZtOvSaabZLKX6Do1V
+ FO0xLZeS0XZ/Ka/SZBBAuXIa6YMhh603fJ84q/FkqsqFH9FnLn3PV13EBrfe/ophuer+QHTx5
+ ABql4tF9YpEIFH94YRLPnumytCY0I6AEULzgWw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+Clang incorrectly warns about an uninitialized variable:
 
-Fix sparse warning:
+drivers/net/wireless/intel/iwlwifi/mvm/sta.c:2114:12: error: variable 'queue' is used uninitialized whenever 'if'
+      condition is false [-Werror,-Wsometimes-uninitialized]
+                else if (WARN(1, "Missing required TXQ for adding bcast STA\n"))
+                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+include/asm-generic/bug.h:130:36: note: expanded from macro 'WARN'
+ #define WARN(condition, format...) ({                                   \
+                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/net/wireless/intel/iwlwifi/mvm/sta.c:2119:33: note: uninitialized use occurs here
+                iwl_mvm_enable_txq(mvm, NULL, queue, 0, &cfg, wdg_timeout);
+                                              ^~~~~
+drivers/net/wireless/intel/iwlwifi/mvm/sta.c:2114:8: note: remove the 'if' if its condition is always true
+                else if (WARN(1, "Missing required TXQ for adding bcast STA\n"))
+                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/net/wireless/intel/iwlwifi/mvm/sta.c:2094:11: note: initialize the variable 'queue' to silence this warning
+        int queue;
+                 ^
+                  = 0
+1 error generated.
 
-drivers/mfd/stpmic1.c:62:28: warning:
- symbol 'stpmic1_regmap_config' was not declared. Should it be static?
+This cannot happen because the if/else if/else if block always
+has one code path that is entered. However, we can simply
+rearrange the code to let clang see this as well.
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/mfd/stpmic1.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/intel/iwlwifi/mvm/sta.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/mfd/stpmic1.c b/drivers/mfd/stpmic1.c
-index 7dfbe89..eb3da55 100644
---- a/drivers/mfd/stpmic1.c
-+++ b/drivers/mfd/stpmic1.c
-@@ -59,7 +59,7 @@ static const struct regmap_access_table stpmic1_volatile_table = {
- 	.n_yes_ranges = ARRAY_SIZE(stpmic1_volatile_ranges),
- };
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/sta.c b/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
+index 498c315291cf..91ce56d2ebb8 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
+@@ -2107,12 +2107,14 @@ int iwl_mvm_send_add_bcast_sta(struct iwl_mvm *mvm, struct ieee80211_vif *vif)
  
--const struct regmap_config stpmic1_regmap_config = {
-+static const struct regmap_config stpmic1_regmap_config = {
- 	.reg_bits = 8,
- 	.val_bits = 8,
- 	.cache_type = REGCACHE_RBTREE,
+ 	if (!iwl_mvm_has_new_tx_api(mvm)) {
+ 		if (vif->type == NL80211_IFTYPE_AP ||
+-		    vif->type == NL80211_IFTYPE_ADHOC)
++		    vif->type == NL80211_IFTYPE_ADHOC) {
+ 			queue = mvm->probe_queue;
+-		else if (vif->type == NL80211_IFTYPE_P2P_DEVICE)
++		} else if (vif->type == NL80211_IFTYPE_P2P_DEVICE) {
+ 			queue = mvm->p2p_dev_queue;
+-		else if (WARN(1, "Missing required TXQ for adding bcast STA\n"))
++		} else {
++			WARN(1, "Missing required TXQ for adding bcast STA\n");
+ 			return -EINVAL;
++		}
+ 
+ 		bsta->tfd_queue_msk |= BIT(queue);
+ 
 -- 
-2.7.0
-
+2.20.0
 
