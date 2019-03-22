@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3008CC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:51:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A607DC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:51:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8BC7218FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:51:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 745CF218FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:51:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553259113;
-	bh=4V6VNYuJw8MAPLpKtwwTLmBGr3vw6nL5a3WY3y3yi3g=;
+	s=default; t=1553259118;
+	bh=kwTdIg5YRjJgKUE7RHl6EmYrASBf7zczISOjhBIzy5o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tJNEIHKQlG57wF7FojOahLrHgdUJFaf/rg5OjR6Fr/QGgbOEYJe7SAh+HtkQKbO8K
-	 Kk6sg2TvquEjj0ZWt0Amou9TKEB/jSFjcDN3BG6+uYIPE274rL+WC0MYWIG6O8EbPl
-	 +/CKOSI2zQ9lJFToyUt77Hr00lMprMyy+qsPTcow=
+	b=xbD9WyXpUNRT7vIPwHnvPL+4KqtE3fdxCq6qkXbLaooFpQMdbHY4p1VYc8aQFjaO9
+	 QwKij5j4lMGKyU8q9tqmZH4XC9N9mRunec/7DoLg9XMsvu0Fzg2d6ochu79ow02qKD
+	 8G8Ls+0zvpSAFXyURKZOTqZMYP8+SSm8BcG6DzxM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387437AbfCVMvv (ORCPT
+        id S1727248AbfCVMv5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:51:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58498 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:51:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58426 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732779AbfCVLyI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:54:08 -0400
+        id S1733127AbfCVLyF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:54:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3FB372192C;
-        Fri, 22 Mar 2019 11:54:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2406721916;
+        Fri, 22 Mar 2019 11:54:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255647;
-        bh=4V6VNYuJw8MAPLpKtwwTLmBGr3vw6nL5a3WY3y3yi3g=;
+        s=default; t=1553255644;
+        bh=kwTdIg5YRjJgKUE7RHl6EmYrASBf7zczISOjhBIzy5o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X51iUNh6+6sGS3gXuIuIyoR/fqqIOtACZqa7mTTQU/F4mLctaB37Mb2flA/VE9f2I
-         d3tWsa/tlWsWZmNW/SCNESzubzgmeCxj+ef2o4dzohxSNgnUng3sREcHcr2nXlLT+Z
-         sWilccs4BbPoO4BXQ03OMHSm+4Uvn0xYXVVJ2FBI=
+        b=JRY/rxteOTnr1DMzRUUH/yFrZO4i/3y6SY3637rwEizPjBAsdbxmor4DBASBsfvE+
+         GKdAioIqzzVdEyVhDdHr1xwdeYbOC0gLC6CDLj33XHJ9fiUoKGsXDH+ediMUYuliCh
+         j84yuseOMlXnsrCDy5ZCgSp0z9DMFqZEjx2BbGI8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Scott Mayhew <smayhew@redhat.com>,
-        "J. Bruce Fields" <bfields@redhat.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Paul Moore <paul@paul-moore.com>
-Subject: [PATCH 4.14 137/183] security/selinux: fix SECURITY_LSM_NATIVE_LABELS on reused superblock
-Date:   Fri, 22 Mar 2019 12:16:05 +0100
-Message-Id: <20190322111251.684562973@linuxfoundation.org>
+        stable@vger.kernel.org, "zhangyi (F)" <yi.zhang@huawei.com>,
+        Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.cz>
+Subject: [PATCH 4.14 136/183] jbd2: fix compile warning when using JBUFFER_TRACE
+Date:   Fri, 22 Mar 2019 12:16:04 +0100
+Message-Id: <20190322111251.613794660@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111241.819468003@linuxfoundation.org>
 References: <20190322111241.819468003@linuxfoundation.org>
@@ -67,47 +65,87 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: J. Bruce Fields <bfields@redhat.com>
+From: zhangyi (F) <yi.zhang@huawei.com>
 
-commit 3815a245b50124f0865415dcb606a034e97494d4 upstream.
+commit 01215d3edb0f384ddeaa5e4a22c1ae5ff634149f upstream.
 
-In the case when we're reusing a superblock, selinux_sb_clone_mnt_opts()
-fails to set set_kern_flags, with the result that
-nfs_clone_sb_security() incorrectly clears NFS_CAP_SECURITY_LABEL.
+The jh pointer may be used uninitialized in the two cases below and the
+compiler complain about it when enabling JBUFFER_TRACE macro, fix them.
 
-The result is that if you mount the same NFS filesystem twice, NFS
-security labels are turned off, even if they would work fine if you
-mounted the filesystem only once.
+In file included from fs/jbd2/transaction.c:19:0:
+fs/jbd2/transaction.c: In function ‘jbd2_journal_get_undo_access’:
+./include/linux/jbd2.h:1637:38: warning: ‘jh’ is used uninitialized in this function [-Wuninitialized]
+ #define JBUFFER_TRACE(jh, info) do { printk("%s: %d\n", __func__, jh->b_jcount);} while (0)
+                                      ^
+fs/jbd2/transaction.c:1219:23: note: ‘jh’ was declared here
+  struct journal_head *jh;
+                       ^
+In file included from fs/jbd2/transaction.c:19:0:
+fs/jbd2/transaction.c: In function ‘jbd2_journal_dirty_metadata’:
+./include/linux/jbd2.h:1637:38: warning: ‘jh’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+ #define JBUFFER_TRACE(jh, info) do { printk("%s: %d\n", __func__, jh->b_jcount);} while (0)
+                                      ^
+fs/jbd2/transaction.c:1332:23: note: ‘jh’ was declared here
+  struct journal_head *jh;
+                       ^
 
-("fixes" may be not exactly the right tag, it may be more like
-"fixed-other-cases-but-missed-this-one".)
-
-Cc: Scott Mayhew <smayhew@redhat.com>
+Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Cc: stable@vger.kernel.org
-Fixes: 0b4d3452b8b4 "security/selinux: allow security_sb_clone_mnt_opts..."
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
-Acked-by: Stephen Smalley <sds@tycho.nsa.gov>
-Signed-off-by: Paul Moore <paul@paul-moore.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- security/selinux/hooks.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ fs/jbd2/transaction.c |   16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
---- a/security/selinux/hooks.c
-+++ b/security/selinux/hooks.c
-@@ -1000,8 +1000,11 @@ static int selinux_sb_clone_mnt_opts(con
- 	BUG_ON(!(oldsbsec->flags & SE_SBINITIALIZED));
+--- a/fs/jbd2/transaction.c
++++ b/fs/jbd2/transaction.c
+@@ -1224,11 +1224,12 @@ int jbd2_journal_get_undo_access(handle_
+ 	struct journal_head *jh;
+ 	char *committed_data = NULL;
  
- 	/* if fs is reusing a sb, make sure that the contexts match */
--	if (newsbsec->flags & SE_SBINITIALIZED)
-+	if (newsbsec->flags & SE_SBINITIALIZED) {
-+		if ((kern_flags & SECURITY_LSM_NATIVE_LABELS) && !set_context)
-+			*set_kern_flags |= SECURITY_LSM_NATIVE_LABELS;
- 		return selinux_cmp_sb_context(oldsb, newsb);
-+	}
+-	JBUFFER_TRACE(jh, "entry");
+ 	if (jbd2_write_access_granted(handle, bh, true))
+ 		return 0;
  
- 	mutex_lock(&newsbsec->lock);
+ 	jh = jbd2_journal_add_journal_head(bh);
++	JBUFFER_TRACE(jh, "entry");
++
+ 	/*
+ 	 * Do this first --- it can drop the journal lock, so we want to
+ 	 * make sure that obtaining the committed_data is done
+@@ -1339,15 +1340,17 @@ int jbd2_journal_dirty_metadata(handle_t
  
+ 	if (is_handle_aborted(handle))
+ 		return -EROFS;
+-	if (!buffer_jbd(bh)) {
+-		ret = -EUCLEAN;
+-		goto out;
+-	}
++	if (!buffer_jbd(bh))
++		return -EUCLEAN;
++
+ 	/*
+ 	 * We don't grab jh reference here since the buffer must be part
+ 	 * of the running transaction.
+ 	 */
+ 	jh = bh2jh(bh);
++	jbd_debug(5, "journal_head %p\n", jh);
++	JBUFFER_TRACE(jh, "entry");
++
+ 	/*
+ 	 * This and the following assertions are unreliable since we may see jh
+ 	 * in inconsistent state unless we grab bh_state lock. But this is
+@@ -1381,9 +1384,6 @@ int jbd2_journal_dirty_metadata(handle_t
+ 	}
+ 
+ 	journal = transaction->t_journal;
+-	jbd_debug(5, "journal_head %p\n", jh);
+-	JBUFFER_TRACE(jh, "entry");
+-
+ 	jbd_lock_bh_state(bh);
+ 
+ 	if (jh->b_modified == 0) {
 
 
