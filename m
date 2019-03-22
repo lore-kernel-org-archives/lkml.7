@@ -4,48 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7974DC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:45:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 561CBC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:45:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 404882196F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:45:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23ED021971
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:45:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255106;
-	bh=743B7Wqi1GpJdeUYvcOU9/K6xq7RMxworIr76ZzQu4w=;
+	s=default; t=1553255111;
+	bh=Vs9qvTtNOn6rNm0xHLk/zouYIELul+aUDrVXYcA+25U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s7063mPYwVZVLx2pFHPNn7Pazuzq28s3PgxS5UUNapRfYKGSz6Laykj46emfzEdWc
-	 gXUMrq49IVIkUSaoNRPC64ZhLlOm7zMb6uVVThRI5ThvR6w/i5uROCs0pei5dN93BC
-	 19DDxu0nL3wd/yNfEcc8dgiiPlGEF5uPcEvYi8+Q=
+	b=holucszGDEogprv5YMEs/FEggWRRedHiiZHgfMbmc3+kxFijErw4/uKkMx+5VGPeq
+	 NAyHD7PXhDELZCrtRE/M7wzn+NxZhys9sdbZERSaGu/iBpVA8MeOIgSbpq88MGy1m0
+	 zew9/j8jYiIdKPqKzbkMw0Laol5iqvaXd5BXCEfs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731916AbfCVLpF (ORCPT
+        id S1731923AbfCVLpJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:45:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48148 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:45:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48200 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731332AbfCVLpD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:45:03 -0400
+        id S1731332AbfCVLpG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:45:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D02D2195D;
-        Fri, 22 Mar 2019 11:45:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5AE012195D;
+        Fri, 22 Mar 2019 11:45:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255103;
-        bh=743B7Wqi1GpJdeUYvcOU9/K6xq7RMxworIr76ZzQu4w=;
+        s=default; t=1553255105;
+        bh=Vs9qvTtNOn6rNm0xHLk/zouYIELul+aUDrVXYcA+25U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I+GaRO1KtCHaFUG1DcIQQybUAqYeBhyMRGP/OPy6l8SmL84FoPSNLY9Nn7uhvMfIP
-         7tPapFfWdgQfU5HSgSaJwcyol+EoBKvnRkzDiBbOtu7CB/6+QANbPj2kQBr82AKH8q
-         wYLQLKFjrreG9Xy74Ea2+BHx+gK0d6f1aPlB7Vvk=
+        b=EIDAWfgr/woZB26it5B72OvEL5+XAiUHeYBvXOzDRfBX+SW8odshbyZpEWMXd4TB2
+         kL7EMiTgfxgqVv9s8IvtplKK267qYbR4MQg8Tb+ICMxe2DimhIfVwfjkuf+Sf7AjyO
+         5yE5YqMLUFHwOK97PqnuVc0bBdnhlvYIesIOk7h8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Angelo Butti <buttiangelo@gmail.com>
-Subject: [PATCH 4.9 088/118] 8250: FIX Fourth port offset of Pericom PI7C9X7954 boards
-Date:   Fri, 22 Mar 2019 12:16:00 +0100
-Message-Id: <20190322111222.841689365@linuxfoundation.org>
+        stable@vger.kernel.org, Roman Penyaev <rpenyaev@suse.de>,
+        Michal Hocko <mhocko@suse.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Joe Perches <joe@perches.com>,
+        "Luis R. Rodriguez" <mcgrof@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.9 079/118] mm/vmalloc: fix size check for remap_vmalloc_range_partial()
+Date:   Fri, 22 Mar 2019 12:15:51 +0100
+Message-Id: <20190322111222.157867874@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111215.873964544@linuxfoundation.org>
 References: <20190322111215.873964544@linuxfoundation.org>
@@ -64,86 +70,86 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Angelo Butti <buttiangelo@gmail.com>
+From: Roman Penyaev <rpenyaev@suse.de>
 
-commit 5c31ef91c06db7800ad573174bd92be4df34ecb2 upstream.
+commit 401592d2e095947344e10ec0623adbcd58934dd4 upstream.
 
-Hi,
-below patch to fix Fourth port offset of Percom PI7C9X7954 boards.
+When VM_NO_GUARD is not set area->size includes adjacent guard page,
+thus for correct size checking get_vm_area_size() should be used, but
+not area->size.
 
-I had a problem using Fourth port on a pci express serial board based on Pericom
-PI7C9X7954. Reading datasheet I notice a "special" offset assign to this port
-when used in I/O mode.
+This fixes possible kernel oops when userspace tries to mmap an area on
+1 page bigger than was allocated by vmalloc_user() call: the size check
+inside remap_vmalloc_range_partial() accounts non-existing guard page
+also, so check successfully passes but vmalloc_to_page() returns NULL
+(guard page does not physically exist).
 
-Offset 0x0 ->  UART 0
-Offset 0x8 ->  UART 1
-Offset 0x10 ->  UART 2
-Offset 0x38 ->  UART 3  <<---- This don't follow a logical sequence
+The following code pattern example should trigger an oops:
 
-This patch add a different init to last port, to have right offset.
+  static int oops_mmap(struct file *file, struct vm_area_struct *vma)
+  {
+        void *mem;
 
-I check also Pericom 7952 and 7958 but that devices follow logical sequence,
-so they are ok.
+        mem = vmalloc_user(4096);
+        BUG_ON(!mem);
+        /* Do not care about mem leak */
 
-Regards,
-Angelo
+        return remap_vmalloc_range(vma, mem, 0);
+  }
 
-Signed-off-by: Angelo Butti <buttiangelo@gmail.com>
+And userspace simply mmaps size + PAGE_SIZE:
+
+  mmap(NULL, 8192, PROT_WRITE|PROT_READ, MAP_PRIVATE, fd, 0);
+
+Possible candidates for oops which do not have any explicit size
+checks:
+
+   *** drivers/media/usb/stkwebcam/stk-webcam.c:
+   v4l_stk_mmap[789]   ret = remap_vmalloc_range(vma, sbuf->buffer, 0);
+
+Or the following one:
+
+   *** drivers/video/fbdev/core/fbmem.c
+   static int
+   fb_mmap(struct file *file, struct vm_area_struct * vma)
+        ...
+        res = fb->fb_mmap(info, vma);
+
+Where fb_mmap callback calls remap_vmalloc_range() directly without any
+explicit checks:
+
+   *** drivers/video/fbdev/vfb.c
+   static int vfb_mmap(struct fb_info *info,
+             struct vm_area_struct *vma)
+   {
+       return remap_vmalloc_range(vma, (void *)info->fix.smem_start, vma->vm_pgoff);
+   }
+
+Link: http://lkml.kernel.org/r/20190103145954.16942-2-rpenyaev@suse.de
+Signed-off-by: Roman Penyaev <rpenyaev@suse.de>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Cc: Joe Perches <joe@perches.com>
+Cc: "Luis R. Rodriguez" <mcgrof@kernel.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/8250/8250_pci.c |   34 ++++++++++++++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
+ mm/vmalloc.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/tty/serial/8250/8250_pci.c
-+++ b/drivers/tty/serial/8250/8250_pci.c
-@@ -1330,6 +1330,30 @@ static int pci_default_setup(struct seri
- 	return setup_port(priv, port, bar, offset, board->reg_shift);
- }
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -2191,7 +2191,7 @@ int remap_vmalloc_range_partial(struct v
+ 	if (!(area->flags & VM_USERMAP))
+ 		return -EINVAL;
  
-+static int pci_pericom_setup(struct serial_private *priv,
-+		  const struct pciserial_board *board,
-+		  struct uart_8250_port *port, int idx)
-+{
-+	unsigned int bar, offset = board->first_offset, maxnr;
-+
-+	bar = FL_GET_BASE(board->flags);
-+	if (board->flags & FL_BASE_BARS)
-+		bar += idx;
-+	else
-+		offset += idx * board->uart_offset;
-+
-+	if (idx==3)
-+		offset = 0x38;
-+
-+	maxnr = (pci_resource_len(priv->dev, bar) - board->first_offset) >>
-+		(board->reg_shift + 3);
-+
-+	if (board->flags & FL_REGION_SZ_CAP && idx >= maxnr)
-+		return 1;
-+
-+	return setup_port(priv, port, bar, offset, board->reg_shift);
-+}
-+
- static int
- ce4100_serial_setup(struct serial_private *priv,
- 		  const struct pciserial_board *board,
-@@ -2097,6 +2121,16 @@ static struct pci_serial_quirk pci_seria
- 		.exit		= pci_plx9050_exit,
- 	},
- 	/*
-+	 * Pericom (Only 7954 - It have a offset jump for port 4)
-+	 */
-+	{
-+		.vendor		= PCI_VENDOR_ID_PERICOM,
-+		.device		= PCI_DEVICE_ID_PERICOM_PI7C9X7954,
-+		.subvendor	= PCI_ANY_ID,
-+		.subdevice	= PCI_ANY_ID,
-+		.setup		= pci_pericom_setup,
-+	},
-+	/*
- 	 * PLX
- 	 */
- 	{
+-	if (kaddr + size > area->addr + area->size)
++	if (kaddr + size > area->addr + get_vm_area_size(area))
+ 		return -EINVAL;
+ 
+ 	do {
 
 
