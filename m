@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3450FC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 05:23:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A443C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 05:23:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E7DE218E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 05:23:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C78B218E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 05:23:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727840AbfCVFXc (ORCPT
+        id S1727817AbfCVFXa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 01:23:32 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:45662 "EHLO
+        Fri, 22 Mar 2019 01:23:30 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:45650 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727495AbfCVFXQ (ORCPT
+        by vger.kernel.org with ESMTP id S1727451AbfCVFXQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 22 Mar 2019 01:23:16 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1h7Ce9-00015z-Nm; Fri, 22 Mar 2019 05:23:13 +0000
+        id 1h7CeA-00016E-4T; Fri, 22 Mar 2019 05:23:14 +0000
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1h7Ce9-0001ol-J2; Fri, 22 Mar 2019 05:23:13 +0000
+        id 1h7Ce9-0001pQ-R9; Fri, 22 Mar 2019 05:23:13 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Jiri Kosina" <jkosina@suse.cz>, "Jiri Slaby" <jslaby@suse.cz>
+        "Paolo Bonzini" <pbonzini@redhat.com>,
+        "Felix Wilhelm" <fwilhelm@google.com>
 Date:   Fri, 22 Mar 2019 05:20:18 +0000
-Message-ID: <lsq.1553232018.587002036@decadent.org.uk>
+Message-ID: <lsq.1553232018.568574877@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 08/16] HID: debug: fix error handling in
- hid_debug_events_read()
+Subject: [PATCH 3.16 16/16] KVM: x86: work around leak of uninitialized
+ stack contents (CVE-2019-7222)
 In-Reply-To: <lsq.1553232017.771830163@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,34 +56,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jiri Kosina <jkosina@suse.cz>
+From: Paolo Bonzini <pbonzini@redhat.com>
 
-commit 8fec02a73e31407e14986fca67dab48d4f777f0e upstream.
+commit 353c0956a618a07ba4bbe7ad00ff29fe70e8412a upstream.
 
-In the unlikely case of hdev vanishing while hid_debug_events_read() was
-sleeping, we can't really break out of the case switch as with other cases,
-as on the way out we'll try to remove ourselves from the hdev waitqueue.
+Bugzilla: 1671930
 
-Fix this by taking a shortcut exit path and avoiding cleanup that doesn't
-make sense in case hdev doesn't exist any more anyway.
+Emulation of certain instructions (VMXON, VMCLEAR, VMPTRLD, VMWRITE with
+memory operand, INVEPT, INVVPID) can incorrectly inject a page fault
+when passed an operand that points to an MMIO address.  The page fault
+will use uninitialized kernel stack memory as the CR2 and error code.
 
-Reported-by: Jiri Slaby <jslaby@suse.cz>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+The right behavior would be to abort the VM with a KVM_EXIT_INTERNAL_ERROR
+exit to userspace; however, it is not an easy fix, so for now just
+ensure that the error code and CR2 are zero.
+
+Embargoed until Feb 7th 2019.
+
+Reported-by: Felix Wilhelm <fwilhelm@google.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/hid/hid-debug.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/x86/kvm/x86.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/drivers/hid/hid-debug.c
-+++ b/drivers/hid/hid-debug.c
-@@ -1127,7 +1127,8 @@ static ssize_t hid_debug_events_read(str
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -4208,6 +4208,13 @@ int kvm_read_guest_virt(struct kvm_vcpu
+ {
+ 	u32 access = (kvm_x86_ops->get_cpl(vcpu) == 3) ? PFERR_USER_MASK : 0;
  
- 				if (!list->hdev || !list->hdev->debug) {
- 					ret = -EIO;
--					break;
-+					set_current_state(TASK_RUNNING);
-+					goto out;
- 				}
- 
- 				/* allow O_NONBLOCK from other threads */
++	/*
++	 * FIXME: this should call handle_emulation_failure if X86EMUL_IO_NEEDED
++	 * is returned, but our callers are not ready for that and they blindly
++	 * call kvm_inject_page_fault.  Ensure that they at least do not leak
++	 * uninitialized kernel stack memory into cr2 and error code.
++	 */
++	memset(exception, 0, sizeof(*exception));
+ 	return kvm_read_guest_virt_helper(addr, val, bytes, vcpu, access,
+ 					  exception);
+ }
 
