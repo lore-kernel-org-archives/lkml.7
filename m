@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 437F6C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:49:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 978D2C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:49:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09E272082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:49:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E57F2082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:49:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255389;
-	bh=Wg+vfHT8iP47CZiH5R+uRGEtzazSaOCFThm+36j9Vls=;
+	s=default; t=1553255398;
+	bh=H3nIvzVuYnNV770xAbbTkC8qV/Ix1jYq8qjU77fRXco=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lYQXeXTD60XTJ5WQw26dRlfbw8+svM2QawT7rHJqWqbE7NHlae2f3Yg7fA5o4tLP8
-	 wZgLYbODuXd26xTAhHwD3SaLyUX/6/WLMWTgyF2kR5jREFSTTMnWqnWKQqpy3pn6BK
-	 QJwAhoHa6ixlGCL+LiyzgMPXfZW12XwdDksqXK5o=
+	b=Ck3mRJylfmR5r0AmtD960Qz6NaYl/wxtP0QjzKx5UrfTEc485UE5ifK7lymo7wKlC
+	 G/vgEMHmBmeyHioPVr/aulGm7/8mY3xvPVCRS5iGd36+VEWfAaV0QNFeVvWGIJoDvr
+	 YYrTUiV1E3HUjNx3rP3UbfMmIBS5Wor/hlUMzFNs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732533AbfCVLts (ORCPT
+        id S1732013AbfCVLt5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:49:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53410 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:49:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53622 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731919AbfCVLtl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:49:41 -0400
+        id S1732513AbfCVLtx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:49:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2409218B0;
-        Fri, 22 Mar 2019 11:49:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2FF120693;
+        Fri, 22 Mar 2019 11:49:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255380;
-        bh=Wg+vfHT8iP47CZiH5R+uRGEtzazSaOCFThm+36j9Vls=;
+        s=default; t=1553255392;
+        bh=H3nIvzVuYnNV770xAbbTkC8qV/Ix1jYq8qjU77fRXco=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2DwvrJeFAIVmZfA5akF5SRE52Rlol+1mvlVxebYDc5oy0pVyNHvagATdIhgsxZw+Y
-         GSUN5CJQIFLOyqzUCUuV+YBSM5o0v0soQD5o43NkK2/P1fBuz0GXpet6gq749pvTLj
-         88MlabqeEJ1qi7aSbytcuzjSUdxONiBw32ffjdT8=
+        b=mlYTfY/GrOwgPWNMX5SejWFAFtPxWQjwbQ7TZJxr95/JGsnbCKIFiIfrs/9rbT4zC
+         gIO5nlGmcxj+8Xut5vDle/j81Eopcv0Dp3c50C0mWH9qjgddWabb3Bl1aZBrW67yNj
+         IyivgIPn/M1xWzSfTYCMc7oC+k0x0RoGG81HIPU0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        =?UTF-8?q?R=C3=A9mi=20Denis-Courmont?= <remi@remlab.net>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 055/183] ixgbe: fix older devices that do not support IXGBE_MRQC_L3L4TXSWEN
-Date:   Fri, 22 Mar 2019 12:14:43 +0100
-Message-Id: <20190322111245.706321600@linuxfoundation.org>
+Subject: [PATCH 4.14 059/183] phonet: fix building with clang
+Date:   Fri, 22 Mar 2019 12:14:47 +0100
+Message-Id: <20190322111245.995926832@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111241.819468003@linuxfoundation.org>
 References: <20190322111241.819468003@linuxfoundation.org>
@@ -66,39 +67,179 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 156a67a9065e3339be85f811d1b13b920e50d73b ]
+[ Upstream commit 6321aa197547da397753757bd84c6ce64b3e3d89 ]
 
-The enabling L3/L4 filtering for transmit switched packets for all
-devices caused unforeseen issue on older devices when trying to send UDP
-traffic in an ordered sequence.  This bit was originally intended for X550
-devices, which supported this feature, so limit the scope of this bit to
-only X550 devices.
+clang warns about overflowing the data[] member in the struct pnpipehdr:
 
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+net/phonet/pep.c:295:8: warning: array index 4 is past the end of the array (which contains 1 element) [-Warray-bounds]
+                        if (hdr->data[4] == PEP_IND_READY)
+                            ^         ~
+include/net/phonet/pep.h:66:3: note: array 'data' declared here
+                u8              data[1];
+
+Using a flexible array member at the end of the struct avoids the
+warning, but since we cannot have a flexible array member inside
+of the union, each index now has to be moved back by one, which
+makes it a little uglier.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Rémi Denis-Courmont <remi@remlab.net>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ include/net/phonet/pep.h |  5 +++--
+ net/phonet/pep.c         | 32 ++++++++++++++++----------------
+ 2 files changed, 19 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-index 42183a8b649c..01c120d656c5 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-@@ -3827,8 +3827,11 @@ static void ixgbe_setup_mrqc(struct ixgbe_adapter *adapter)
- 			else
- 				mrqc = IXGBE_MRQC_VMDQRSS64EN;
+diff --git a/include/net/phonet/pep.h b/include/net/phonet/pep.h
+index b669fe6dbc3b..98f31c7ea23d 100644
+--- a/include/net/phonet/pep.h
++++ b/include/net/phonet/pep.h
+@@ -63,10 +63,11 @@ struct pnpipehdr {
+ 		u8		state_after_reset;	/* reset request */
+ 		u8		error_code;		/* any response */
+ 		u8		pep_type;		/* status indication */
+-		u8		data[1];
++		u8		data0;			/* anything else */
+ 	};
++	u8			data[];
+ };
+-#define other_pep_type		data[1]
++#define other_pep_type		data[0]
  
--			/* Enable L3/L4 for Tx Switched packets */
--			mrqc |= IXGBE_MRQC_L3L4TXSWEN;
-+			/* Enable L3/L4 for Tx Switched packets only for X550,
-+			 * older devices do not support this feature
-+			 */
-+			if (hw->mac.type >= ixgbe_mac_X550)
-+				mrqc |= IXGBE_MRQC_L3L4TXSWEN;
- 		} else {
- 			if (tcs > 4)
- 				mrqc = IXGBE_MRQC_RTRSS8TCEN;
+ static inline struct pnpipehdr *pnp_hdr(struct sk_buff *skb)
+ {
+diff --git a/net/phonet/pep.c b/net/phonet/pep.c
+index e81537991ddf..bffcef58ebf5 100644
+--- a/net/phonet/pep.c
++++ b/net/phonet/pep.c
+@@ -132,7 +132,7 @@ static int pep_indicate(struct sock *sk, u8 id, u8 code,
+ 	ph->utid = 0;
+ 	ph->message_id = id;
+ 	ph->pipe_handle = pn->pipe_handle;
+-	ph->data[0] = code;
++	ph->error_code = code;
+ 	return pn_skb_send(sk, skb, NULL);
+ }
+ 
+@@ -153,7 +153,7 @@ static int pipe_handler_request(struct sock *sk, u8 id, u8 code,
+ 	ph->utid = id; /* whatever */
+ 	ph->message_id = id;
+ 	ph->pipe_handle = pn->pipe_handle;
+-	ph->data[0] = code;
++	ph->error_code = code;
+ 	return pn_skb_send(sk, skb, NULL);
+ }
+ 
+@@ -208,7 +208,7 @@ static int pep_ctrlreq_error(struct sock *sk, struct sk_buff *oskb, u8 code,
+ 	struct pnpipehdr *ph;
+ 	struct sockaddr_pn dst;
+ 	u8 data[4] = {
+-		oph->data[0], /* PEP type */
++		oph->pep_type, /* PEP type */
+ 		code, /* error code, at an unusual offset */
+ 		PAD, PAD,
+ 	};
+@@ -221,7 +221,7 @@ static int pep_ctrlreq_error(struct sock *sk, struct sk_buff *oskb, u8 code,
+ 	ph->utid = oph->utid;
+ 	ph->message_id = PNS_PEP_CTRL_RESP;
+ 	ph->pipe_handle = oph->pipe_handle;
+-	ph->data[0] = oph->data[1]; /* CTRL id */
++	ph->data0 = oph->data[0]; /* CTRL id */
+ 
+ 	pn_skb_get_src_sockaddr(oskb, &dst);
+ 	return pn_skb_send(sk, skb, &dst);
+@@ -272,17 +272,17 @@ static int pipe_rcv_status(struct sock *sk, struct sk_buff *skb)
+ 		return -EINVAL;
+ 
+ 	hdr = pnp_hdr(skb);
+-	if (hdr->data[0] != PN_PEP_TYPE_COMMON) {
++	if (hdr->pep_type != PN_PEP_TYPE_COMMON) {
+ 		net_dbg_ratelimited("Phonet unknown PEP type: %u\n",
+-				    (unsigned int)hdr->data[0]);
++				    (unsigned int)hdr->pep_type);
+ 		return -EOPNOTSUPP;
+ 	}
+ 
+-	switch (hdr->data[1]) {
++	switch (hdr->data[0]) {
+ 	case PN_PEP_IND_FLOW_CONTROL:
+ 		switch (pn->tx_fc) {
+ 		case PN_LEGACY_FLOW_CONTROL:
+-			switch (hdr->data[4]) {
++			switch (hdr->data[3]) {
+ 			case PEP_IND_BUSY:
+ 				atomic_set(&pn->tx_credits, 0);
+ 				break;
+@@ -292,7 +292,7 @@ static int pipe_rcv_status(struct sock *sk, struct sk_buff *skb)
+ 			}
+ 			break;
+ 		case PN_ONE_CREDIT_FLOW_CONTROL:
+-			if (hdr->data[4] == PEP_IND_READY)
++			if (hdr->data[3] == PEP_IND_READY)
+ 				atomic_set(&pn->tx_credits, wake = 1);
+ 			break;
+ 		}
+@@ -301,12 +301,12 @@ static int pipe_rcv_status(struct sock *sk, struct sk_buff *skb)
+ 	case PN_PEP_IND_ID_MCFC_GRANT_CREDITS:
+ 		if (pn->tx_fc != PN_MULTI_CREDIT_FLOW_CONTROL)
+ 			break;
+-		atomic_add(wake = hdr->data[4], &pn->tx_credits);
++		atomic_add(wake = hdr->data[3], &pn->tx_credits);
+ 		break;
+ 
+ 	default:
+ 		net_dbg_ratelimited("Phonet unknown PEP indication: %u\n",
+-				    (unsigned int)hdr->data[1]);
++				    (unsigned int)hdr->data[0]);
+ 		return -EOPNOTSUPP;
+ 	}
+ 	if (wake)
+@@ -318,7 +318,7 @@ static int pipe_rcv_created(struct sock *sk, struct sk_buff *skb)
+ {
+ 	struct pep_sock *pn = pep_sk(sk);
+ 	struct pnpipehdr *hdr = pnp_hdr(skb);
+-	u8 n_sb = hdr->data[0];
++	u8 n_sb = hdr->data0;
+ 
+ 	pn->rx_fc = pn->tx_fc = PN_LEGACY_FLOW_CONTROL;
+ 	__skb_pull(skb, sizeof(*hdr));
+@@ -506,7 +506,7 @@ static int pep_connresp_rcv(struct sock *sk, struct sk_buff *skb)
+ 		return -ECONNREFUSED;
+ 
+ 	/* Parse sub-blocks */
+-	n_sb = hdr->data[4];
++	n_sb = hdr->data[3];
+ 	while (n_sb > 0) {
+ 		u8 type, buf[6], len = sizeof(buf);
+ 		const u8 *data = pep_get_sb(skb, &type, &len, buf);
+@@ -739,7 +739,7 @@ static int pipe_do_remove(struct sock *sk)
+ 	ph->utid = 0;
+ 	ph->message_id = PNS_PIPE_REMOVE_REQ;
+ 	ph->pipe_handle = pn->pipe_handle;
+-	ph->data[0] = PAD;
++	ph->data0 = PAD;
+ 	return pn_skb_send(sk, skb, NULL);
+ }
+ 
+@@ -817,7 +817,7 @@ static struct sock *pep_sock_accept(struct sock *sk, int flags, int *errp,
+ 	peer_type = hdr->other_pep_type << 8;
+ 
+ 	/* Parse sub-blocks (options) */
+-	n_sb = hdr->data[4];
++	n_sb = hdr->data[3];
+ 	while (n_sb > 0) {
+ 		u8 type, buf[1], len = sizeof(buf);
+ 		const u8 *data = pep_get_sb(skb, &type, &len, buf);
+@@ -1109,7 +1109,7 @@ static int pipe_skb_send(struct sock *sk, struct sk_buff *skb)
+ 	ph->utid = 0;
+ 	if (pn->aligned) {
+ 		ph->message_id = PNS_PIPE_ALIGNED_DATA;
+-		ph->data[0] = 0; /* padding */
++		ph->data0 = 0; /* padding */
+ 	} else
+ 		ph->message_id = PNS_PIPE_DATA;
+ 	ph->pipe_handle = pn->pipe_handle;
 -- 
 2.19.1
 
