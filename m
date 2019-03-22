@@ -2,138 +2,217 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7512C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:01:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7DA7C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:02:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6BE8218B0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:01:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAF2C218B0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:02:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sK/qJza7"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FZTzkvsF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729451AbfCVPBZ (ORCPT
+        id S1729545AbfCVPCQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 11:01:25 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:36744 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727843AbfCVPBY (ORCPT
+        Fri, 22 Mar 2019 11:02:16 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:39299 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727843AbfCVPCP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 11:01:24 -0400
-Received: by mail-ed1-f67.google.com with SMTP id e4so1952152edi.3;
-        Fri, 22 Mar 2019 08:01:23 -0700 (PDT)
+        Fri, 22 Mar 2019 11:02:15 -0400
+Received: by mail-wr1-f67.google.com with SMTP id j9so2714032wrn.6
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 08:02:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1MZnwuiYr/O/l2ezZ36HbghQz2Q+UPDohnQHgFEoCGk=;
-        b=sK/qJza7VkhRKGXD+TCdKYb2OTFU3uqMBNyh1uCOgJPo0CEBQ9kh3xTR/6/YaIfZDf
-         QJGwj6A0uPEvn93vp/39I0HVeYQEo8UVwTl+ToYuP+6yN6iGvY1SY3SExfT+xn4PhXsZ
-         AipWKPJljDmJpCC4P9FABenVsFOz+I3/c7CfkS9othgIoWYXKEEOCA/IblTgwKRuS0F+
-         1QT3ST/3LMp2idBVAW9m5P9W6LBMzcfIpYaLdyTytmJNUFRY/WjwQLC+ye+D6QhEOxPq
-         9NCfkHuCyiQgNZJ4Qk/rJTf1u8TqqNXdOarrbL07Rg9ygazK8Th3fGjVTe0yPMF9UiE+
-         0eew==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=xeAUiIqCYOepNFdRtDuazjxzmQb+lpjUi54+jQJz2XY=;
+        b=FZTzkvsFQGo3sADjSLqdniSiAur0x7cjcxnXMh/o+KIFTYMcL0CDO+CLx5z4dS2cre
+         jWbLdnhqNLnJMEs3+ECatqIbVm2viZUzNd6lcSYwJZBD3CSbL6WGzCAfaA2xS7jeA76x
+         uVHK380XG7Bow9met0QTW7tXyqzncHdOChyy0EVQmCWd54BNrW1lFZFXU6iFZgqIHg8K
+         +HeuldrsUmgENRJliLnsngYsXJgHoQeSOb61C1KQXmwGER4w+kdMqi6pcs55aW7UKLuD
+         tyogMnhqGnpE+UaZSnt8Mhc/xbiQ0W5T7XSiarCYqoJmv7p2rB0LzJ+7kHxohZdLHyQY
+         7LfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1MZnwuiYr/O/l2ezZ36HbghQz2Q+UPDohnQHgFEoCGk=;
-        b=fd+NH+370iVgld0akV9kcgdfkvKMncxmC1jjK7/LLizFmLb+bk7Y1O1Vp4TAIKVZeF
-         5KBHpMluFP3X3QIy9AfLuGrR4EXtbFFWkcCchXrl3mk0nU5bQTATkAjU5tbbJ2DnuFDY
-         jTwQDkL8xfP3Jsm05hNBYlTTjr5v1ubIwsqTgAAZXiTrkImHBiNfdwLh7RSAH654tjnv
-         nf9ZbYjdC1TZ7dgmC2P1qhUH0OYJ2VCfy/yefn8o+3OsMrUpPpFkzE7Ti/zvEyGaix0f
-         XkhWchWqVMFVeqTxclFTxeY9QMWrmDCp5zaQ/S/ltVBcpMYkfUO8rw6zPK/IDej0oYc9
-         fsHQ==
-X-Gm-Message-State: APjAAAVXNuJPZC7dmQVCb2eoMTyx5b7lEjKCtBJaGBRC5E6SXKUFwmrh
-        L3uPaejA4Kq55LsXRVSaN8g=
-X-Google-Smtp-Source: APXvYqzHdosSErdF6rB0Vgth1GLsiA8Yov5OWoaZaXmNhHOqXW2qAEA4DVqkcRtJxJo/5B6TYVAOhQ==
-X-Received: by 2002:a17:906:bce9:: with SMTP id op9mr5894384ejb.65.1553266882406;
-        Fri, 22 Mar 2019 08:01:22 -0700 (PDT)
-Received: from archlinux-ryzen ([2a01:4f9:2a:1fae::2])
-        by smtp.gmail.com with ESMTPSA id d91sm2521282edc.75.2019.03.22.08.01.20
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 22 Mar 2019 08:01:21 -0700 (PDT)
-Date:   Fri, 22 Mar 2019 08:01:19 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        clang-built-linux@googlegroups.com,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iio: ssp_sensors: avoid uninitialized variable usage
-Message-ID: <20190322150119.GC6521@archlinux-ryzen>
-References: <20190322140937.341976-1-arnd@arndb.de>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=xeAUiIqCYOepNFdRtDuazjxzmQb+lpjUi54+jQJz2XY=;
+        b=qy1CwLIaS1Z9/wbKvxAZ4ZqLBeOasUx+pu16qOAP93PxUhqAWLMtG5KYLwi0cvKMc0
+         7w9gbIMJdOCBTsF/jJfO/RsMd6ENXSDGkXRMER1fpg3cnELgxrMuyNR1n05gGHp50W4q
+         7SOsiNC5EUyHlz3+XRRp+EtIN4pnXoxBqNYMY4MxNhqQblvtE9BV9lxwMqcUlZ7+JLTb
+         BLegd1lG4imqWTSji4NBpCGuyCG+0b6bRET29jkWDg4PCfPQO9/IlaLAKK3M0gdgXYmv
+         MgvvQQDZ2wVYwVN25W25zRkTPMy/fUYuAyYriFoWN/QQiLCtucRi2VG33ibG5iE2GOkT
+         HcUQ==
+X-Gm-Message-State: APjAAAVF5TM90C5oYSaMoH0iD9li2RPa6C8H/dvb18epjXhgPO+FZVWT
+        +Y850A+TZbXEq4UTv5+8FfWzmXnKdgQ=
+X-Google-Smtp-Source: APXvYqyvO8tCX9yZCisY7D5e2bP0yqdktUb2V+Ap4SNd2ZJfYgSWldaaxim/1CQCF3NWzrybfs8Qhg==
+X-Received: by 2002:adf:e541:: with SMTP id z1mr6847137wrm.95.1553266933470;
+        Fri, 22 Mar 2019 08:02:13 -0700 (PDT)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id j11sm10600414wrw.85.2019.03.22.08.02.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 22 Mar 2019 08:02:12 -0700 (PDT)
+Subject: Re: [PATCH v2] nvmem: core: Set no-read-write provider to avoid
+ userspace read/write
+To:     Gaurav Kohli <gkohli@codeaurora.org>, linux-kernel@vger.kernel.org
+Cc:     linux-arm-msm@vger.kernel.org
+References: <1552831940-7327-1-git-send-email-gkohli@codeaurora.org>
+ <48a71861-c60b-7fe7-d4af-5269cd7c20eb@linaro.org>
+ <5f11070f-bf9b-c313-9a78-e412a2fb2908@codeaurora.org>
+ <865519b5-62c9-3eb3-3855-eebf98bded85@linaro.org>
+ <68755fdb-b2c6-ac25-a786-7593a692a173@codeaurora.org>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <cfa22512-2abe-f0db-0576-e6d0cd1eee9c@linaro.org>
+Date:   Fri, 22 Mar 2019 15:02:11 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190322140937.341976-1-arnd@arndb.de>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <68755fdb-b2c6-ac25-a786-7593a692a173@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 22, 2019 at 03:09:22PM +0100, Arnd Bergmann wrote:
-> clang points out that 'calculated_time' is only sometimes
-> initialized here, which leads to incorrect data being
-> passed into another function:
+
+
+On 20/03/2019 17:50, Gaurav Kohli wrote:
 > 
-> drivers/iio/common/ssp_sensors/ssp_iio.c:95:6: error: variable 'calculated_time' is used uninitialized whenever 'if' condition is false [-Werror,-Wsometimes-uninitialized]
->         if (indio_dev->scan_timestamp) {
->             ^~~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/iio/common/ssp_sensors/ssp_iio.c:102:9: note: uninitialized use occurs here
->                                                   calculated_time);
->                                                   ^~~~~~~~~~~~~~~
-> drivers/iio/common/ssp_sensors/ssp_iio.c:95:2: note: remove the 'if' if its condition is always true
->         if (indio_dev->scan_timestamp) {
->         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/iio/common/ssp_sensors/ssp_iio.c:84:25: note: initialize the variable 'calculated_time' to silence this warning
->         int64_t calculated_time;
->                                ^
-> The data is subsequently ignored by iio_push_to_buffers_with_timestamp(),
-> but the warning still feels legitimate and to work around it, we can
-> initialize the time in the other case.
+>> Is root only option not helping you in this case?
+> Yes we want to protect at root level as well, i mean it is better if we 
+> can avoid exposing to userspace at all.
+Can you try below patch!
+
+>>
+>> We could go down the route of adding new config option something like 
+>> CONFIG_NVMEM_NO_SYSFS_ENTRY to prevent adding nvmem entry in userspace.
+>>
+>> Let me know if you are happy to create a patch for this change?
 > 
-> Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=18501
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/iio/common/ssp_sensors/ssp_iio.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/iio/common/ssp_sensors/ssp_iio.c b/drivers/iio/common/ssp_sensors/ssp_iio.c
-> index 645f2e3975db..81e8f4844c90 100644
-> --- a/drivers/iio/common/ssp_sensors/ssp_iio.c
-> +++ b/drivers/iio/common/ssp_sensors/ssp_iio.c
-> @@ -96,6 +96,8 @@ int ssp_common_process_data(struct iio_dev *indio_dev, void *buf,
->  		memcpy(&time, &((char *)buf)[len], SSP_TIME_SIZE);
->  		calculated_time =
->  			timestamp + (int64_t)le32_to_cpu(time) * 1000000;
-> +	} else {
-> +		calculated_time = 0;
->  	}
->  
->  	return iio_push_to_buffers_with_timestamp(indio_dev, spd->buffer,
-> -- 
-> 2.20.0
-> 
+> I am happy with either way config option or dt binding(seems easy), 
+> please let me know we will post new patch for the same.
+DT way is totally NAK.
 
-I sent a similar change, which is sitting in Jonathan's testing branch:
 
-https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git/commit/?id=0643039b4fee4aa54a233ead15dc0b2286f059d7
+--------------------------->cut<-----------------------------------
 
-You made a good point previously that initializing the variable at the
-beginning of a function may not always be the best choice. I don't have
-a personal preference for which patch stays around so:
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Date: Wed, 20 Mar 2019 16:15:21 +0000
+Subject: [PATCH] nvmem: core: add support to NVMEM_NO_SYSFS_ENTRY
 
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Some users might not want to expose nvmem entry to sysfs and
+only intend to use kernel interface so add such provision.
 
-Just in case.
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+---
+  Documentation/ABI/stable/sysfs-bus-nvmem |  2 ++
+  drivers/nvmem/Kconfig                    |  5 +++++
+  drivers/nvmem/core.c                     | 11 ++++++-----
+  3 files changed, 13 insertions(+), 5 deletions(-)
 
-Nathan
+diff --git a/Documentation/ABI/stable/sysfs-bus-nvmem 
+b/Documentation/ABI/stable/sysfs-bus-nvmem
+index 5923ab4620c5..12aab0a85fea 100644
+--- a/Documentation/ABI/stable/sysfs-bus-nvmem
++++ b/Documentation/ABI/stable/sysfs-bus-nvmem
+@@ -6,6 +6,8 @@ Description:
+  		This file allows user to read/write the raw NVMEM contents.
+  		Permissions for write to this file depends on the nvmem
+  		provider configuration.
++		Note: This file is not present if CONFIG_NVMEM_NO_SYSFS_ENTRY
++		is enabled
+
+  		ex:
+  		hexdump /sys/bus/nvmem/devices/qfprom0/nvmem
+diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
+index 0a7a470ee859..6ab3276d287c 100644
+--- a/drivers/nvmem/Kconfig
++++ b/drivers/nvmem/Kconfig
+@@ -192,4 +192,9 @@ config SC27XX_EFUSE
+  	  This driver can also be built as a module. If so, the module
+  	  will be called nvmem-sc27xx-efuse.
+
++config NVMEM_NO_SYSFS_ENTRY
++	bool "No nvmem sysfs entry"
++
++	help
++		Say Yes if you do not want to add nvmem entry to sysfs.
+  endif
+diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+index b9a0270883a0..c70f183fe379 100644
+--- a/drivers/nvmem/core.c
++++ b/drivers/nvmem/core.c
+@@ -216,7 +216,7 @@ static const struct attribute_group 
+nvmem_bin_rw_group = {
+  	.attrs		= nvmem_attrs,
+  };
+
+-static const struct attribute_group *nvmem_rw_dev_groups[] = {
++static const __maybe_unused struct attribute_group 
+*nvmem_rw_dev_groups[] = {
+  	&nvmem_bin_rw_group,
+  	NULL,
+  };
+@@ -240,7 +240,7 @@ static const struct attribute_group 
+nvmem_bin_ro_group = {
+  	.attrs		= nvmem_attrs,
+  };
+
+-static const struct attribute_group *nvmem_ro_dev_groups[] = {
++static const __maybe_unused struct attribute_group 
+*nvmem_ro_dev_groups[] = {
+  	&nvmem_bin_ro_group,
+  	NULL,
+  };
+@@ -265,7 +265,7 @@ static const struct attribute_group 
+nvmem_bin_rw_root_group = {
+  	.attrs		= nvmem_attrs,
+  };
+
+-static const struct attribute_group *nvmem_rw_root_dev_groups[] = {
++static const __maybe_unused struct attribute_group 
+*nvmem_rw_root_dev_groups[] = {
+  	&nvmem_bin_rw_root_group,
+  	NULL,
+  };
+@@ -289,7 +289,7 @@ static const struct attribute_group 
+nvmem_bin_ro_root_group = {
+  	.attrs		= nvmem_attrs,
+  };
+
+-static const struct attribute_group *nvmem_ro_root_dev_groups[] = {
++static const __maybe_unused struct attribute_group 
+*nvmem_ro_root_dev_groups[] = {
+  	&nvmem_bin_ro_root_group,
+  	NULL,
+  };
+@@ -688,6 +688,7 @@ struct nvmem_device *nvmem_register(const struct 
+nvmem_config *config)
+  	nvmem->read_only = device_property_present(config->dev, "read-only") |
+  			   config->read_only;
+
++#if !defined(CONFIG_NVMEM_NO_SYSFS_ENTRY)
+  	if (config->root_only)
+  		nvmem->dev.groups = nvmem->read_only ?
+  			nvmem_ro_root_dev_groups :
+@@ -696,7 +697,7 @@ struct nvmem_device *nvmem_register(const struct 
+nvmem_config *config)
+  		nvmem->dev.groups = nvmem->read_only ?
+  			nvmem_ro_dev_groups :
+  			nvmem_rw_dev_groups;
+-
++#endif
+  	device_initialize(&nvmem->dev);
+
+  	dev_dbg(&nvmem->dev, "Registering nvmem device %s\n", config->name);
+-- 
+2.21.0
+
+--------------------------->cut<-----------------------------------
