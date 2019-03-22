@@ -2,52 +2,53 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12CDFC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:22:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 783A4C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:22:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3EBD218A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:22:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F53B218A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:22:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553253767;
-	bh=o+z50p7OHz/TN+hDCWUmTqdr1Xs4u4ctXKstL4nnDVE=;
+	s=default; t=1553253773;
+	bh=/AGrJ3CGZGLNpqMxBlYCc0WN30z+AN2SqmnEykwq3H4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QjVLGOEHLpbW6eAyUdwVRZ5LfLR9VSsLH5fDEMgqNJRVj2Y/Zc2FB7cUOV7fvVFch
-	 ERIt8/5EO3J/0aJmacyehWbZCpNR86LVDuHlOeS9jw/lQYLx2eOfXil58fAfnbhNbf
-	 QUSqa08EW2fXewrncxYjPf7apeluwkTfITQX/yeY=
+	b=FckITfsZf0MkozgQX6lQnT7f2UJqLKOkzUjbQ3QUgpdR2gA4V4i5DWUNPevGCmqay
+	 uos4+q+rIG4o1wfQs4yri4E5l6wrZclbY+ud3SJtuQB+DLXhW+oJk935uS85JN3iO/
+	 zqtSZSpODMOnaObRyIggwv/w1FO0RNYiKwnEy+2M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728862AbfCVLWq (ORCPT
+        id S1728875AbfCVLWw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:22:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49470 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:22:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728849AbfCVLWn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:22:43 -0400
+        id S1728855AbfCVLWp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:22:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 754D5218A2;
-        Fri, 22 Mar 2019 11:22:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41A14218D4;
+        Fri, 22 Mar 2019 11:22:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553253762;
-        bh=o+z50p7OHz/TN+hDCWUmTqdr1Xs4u4ctXKstL4nnDVE=;
+        s=default; t=1553253764;
+        bh=/AGrJ3CGZGLNpqMxBlYCc0WN30z+AN2SqmnEykwq3H4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Azg2oqfAevWDwIEdrGtyxrjYC01gg8MtxVnVLaL75sA8wwDk54JPssP6TjuK6iJQD
-         FZ0X3pON+UsXQgykPCHm3X1gKS5UXAB/depJH1mfg+Rd4XWbvlldaM+NWabmKQ7REG
-         8E/+FGr04EOxtDBVycj20r/3xgLrnb40nKuJjUF4=
+        b=St+VPKCf/4z3xXl54FSw5ONEXUDx69gZZ0R9dUweffLk+o6WywuYjfwVZ36Xcs/o5
+         QS/4LdS6sOXJXC7xp10S89EuYJqxeR7zN7HyVvx6pzPeTfRK8x489MuIUDaICTf2Su
+         bjIHrrwvIVlBYm/TWmzWM4ZeQdqgEvTa13xDQICs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 3.18 047/134] net: nfc: Fix NULL dereference on nfc_llcp_build_tlv fails
-Date:   Fri, 22 Mar 2019 12:14:20 +0100
-Message-Id: <20190322111213.317315622@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Balaji Pothunoori <bpothuno@codeaurora.org>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 3.18 038/134] mac80211: dont initiate TDLS connection if station is not associated to AP
+Date:   Fri, 22 Mar 2019 12:14:11 +0100
+Message-Id: <20190322111212.535031291@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111210.465931067@linuxfoundation.org>
 References: <20190322111210.465931067@linuxfoundation.org>
@@ -66,156 +67,56 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: YueHaibing <yuehaibing@huawei.com>
+[ Upstream commit 7ed5285396c257fd4070b1e29e7b2341aae2a1ce ]
 
-[ Upstream commit 58bdd544e2933a21a51eecf17c3f5f94038261b5 ]
+Following call trace is observed while adding TDLS peer entry in driver
+during TDLS setup.
 
-KASAN report this:
-
-BUG: KASAN: null-ptr-deref in nfc_llcp_build_gb+0x37f/0x540 [nfc]
-Read of size 3 at addr 0000000000000000 by task syz-executor.0/5401
-
-CPU: 0 PID: 5401 Comm: syz-executor.0 Not tainted 5.0.0-rc7+ #45
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
 Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xfa/0x1ce lib/dump_stack.c:113
- kasan_report+0x171/0x18d mm/kasan/report.c:321
- memcpy+0x1f/0x50 mm/kasan/common.c:130
- nfc_llcp_build_gb+0x37f/0x540 [nfc]
- nfc_llcp_register_device+0x6eb/0xb50 [nfc]
- nfc_register_device+0x50/0x1d0 [nfc]
- nfcsim_device_new+0x394/0x67d [nfcsim]
- ? 0xffffffffc1080000
- nfcsim_init+0x6b/0x1000 [nfcsim]
- do_one_initcall+0xfa/0x5ca init/main.c:887
- do_init_module+0x204/0x5f6 kernel/module.c:3460
- load_module+0x66b2/0x8570 kernel/module.c:3808
- __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
- do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x462e99
-Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f9cb79dcc58 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
-RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
-RDX: 0000000000000000 RSI: 0000000020000280 RDI: 0000000000000003
-RBP: 00007f9cb79dcc70 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f9cb79dd6bc
-R13: 00000000004bcefb R14: 00000000006f7030 R15: 0000000000000004
+[<c1301476>] dump_stack+0x47/0x61
+[<c10537d2>] __warn+0xe2/0x100
+[<fa22415f>] ? sta_apply_parameters+0x49f/0x550 [mac80211]
+[<c1053895>] warn_slowpath_null+0x25/0x30
+[<fa22415f>] sta_apply_parameters+0x49f/0x550 [mac80211]
+[<fa20ad42>] ? sta_info_alloc+0x1c2/0x450 [mac80211]
+[<fa224623>] ieee80211_add_station+0xe3/0x160 [mac80211]
+[<c1876fe3>] nl80211_new_station+0x273/0x420
+[<c170f6d9>] genl_rcv_msg+0x219/0x3c0
+[<c170f4c0>] ? genl_rcv+0x30/0x30
+[<c170ee7e>] netlink_rcv_skb+0x8e/0xb0
+[<c170f4ac>] genl_rcv+0x1c/0x30
+[<c170e8aa>] netlink_unicast+0x13a/0x1d0
+[<c170ec18>] netlink_sendmsg+0x2d8/0x390
+[<c16c5acd>] sock_sendmsg+0x2d/0x40
+[<c16c6369>] ___sys_sendmsg+0x1d9/0x1e0
 
-nfc_llcp_build_tlv will return NULL on fails, caller should check it,
-otherwise will trigger a NULL dereference.
+Fixing this by allowing TDLS setup request only when we have completed
+association.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: eda21f16a5ed ("NFC: Set MIU and RW values from CONNECT and CC LLCP frames")
-Fixes: d646960f7986 ("NFC: Initial LLCP support")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Balaji Pothunoori <bpothuno@codeaurora.org>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/nfc/llcp_commands.c |   20 ++++++++++++++++++++
- net/nfc/llcp_core.c     |   24 ++++++++++++++++++++----
- 2 files changed, 40 insertions(+), 4 deletions(-)
+ net/mac80211/cfg.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/net/nfc/llcp_commands.c
-+++ b/net/nfc/llcp_commands.c
-@@ -418,6 +418,10 @@ int nfc_llcp_send_connect(struct nfc_llc
- 						      sock->service_name,
- 						      sock->service_name_len,
- 						      &service_name_tlv_length);
-+		if (!service_name_tlv) {
-+			err = -ENOMEM;
-+			goto error_tlv;
-+		}
- 		size += service_name_tlv_length;
+diff --git a/net/mac80211/cfg.c b/net/mac80211/cfg.c
+index 6ba5240dd61da..ffe319309d033 100644
+--- a/net/mac80211/cfg.c
++++ b/net/mac80211/cfg.c
+@@ -1194,6 +1194,10 @@ static int ieee80211_add_station(struct wiphy *wiphy, struct net_device *dev,
+ 		sta->sta.tdls = true;
  	}
  
-@@ -428,9 +432,17 @@ int nfc_llcp_send_connect(struct nfc_llc
- 
- 	miux_tlv = nfc_llcp_build_tlv(LLCP_TLV_MIUX, (u8 *)&miux, 0,
- 				      &miux_tlv_length);
-+	if (!miux_tlv) {
-+		err = -ENOMEM;
-+		goto error_tlv;
-+	}
- 	size += miux_tlv_length;
- 
- 	rw_tlv = nfc_llcp_build_tlv(LLCP_TLV_RW, &rw, 0, &rw_tlv_length);
-+	if (!rw_tlv) {
-+		err = -ENOMEM;
-+		goto error_tlv;
-+	}
- 	size += rw_tlv_length;
- 
- 	pr_debug("SKB size %d SN length %zu\n", size, sock->service_name_len);
-@@ -484,9 +496,17 @@ int nfc_llcp_send_cc(struct nfc_llcp_soc
- 
- 	miux_tlv = nfc_llcp_build_tlv(LLCP_TLV_MIUX, (u8 *)&miux, 0,
- 				      &miux_tlv_length);
-+	if (!miux_tlv) {
-+		err = -ENOMEM;
-+		goto error_tlv;
-+	}
- 	size += miux_tlv_length;
- 
- 	rw_tlv = nfc_llcp_build_tlv(LLCP_TLV_RW, &rw, 0, &rw_tlv_length);
-+	if (!rw_tlv) {
-+		err = -ENOMEM;
-+		goto error_tlv;
-+	}
- 	size += rw_tlv_length;
- 
- 	skb = llcp_allocate_pdu(sock, LLCP_PDU_CC, size);
---- a/net/nfc/llcp_core.c
-+++ b/net/nfc/llcp_core.c
-@@ -531,10 +531,10 @@ static u8 nfc_llcp_reserve_sdp_ssap(stru
- 
- static int nfc_llcp_build_gb(struct nfc_llcp_local *local)
- {
--	u8 *gb_cur, *version_tlv, version, version_length;
--	u8 *lto_tlv, lto_length;
--	u8 *wks_tlv, wks_length;
--	u8 *miux_tlv, miux_length;
-+	u8 *gb_cur, version, version_length;
-+	u8 lto_length, wks_length, miux_length;
-+	u8 *version_tlv = NULL, *lto_tlv = NULL,
-+	   *wks_tlv = NULL, *miux_tlv = NULL;
- 	__be16 wks = cpu_to_be16(local->local_wks);
- 	u8 gb_len = 0;
- 	int ret = 0;
-@@ -542,17 +542,33 @@ static int nfc_llcp_build_gb(struct nfc_
- 	version = LLCP_VERSION_11;
- 	version_tlv = nfc_llcp_build_tlv(LLCP_TLV_VERSION, &version,
- 					 1, &version_length);
-+	if (!version_tlv) {
-+		ret = -ENOMEM;
-+		goto out;
-+	}
- 	gb_len += version_length;
- 
- 	lto_tlv = nfc_llcp_build_tlv(LLCP_TLV_LTO, &local->lto, 1, &lto_length);
-+	if (!lto_tlv) {
-+		ret = -ENOMEM;
-+		goto out;
-+	}
- 	gb_len += lto_length;
- 
- 	pr_debug("Local wks 0x%lx\n", local->local_wks);
- 	wks_tlv = nfc_llcp_build_tlv(LLCP_TLV_WKS, (u8 *)&wks, 2, &wks_length);
-+	if (!wks_tlv) {
-+		ret = -ENOMEM;
-+		goto out;
-+	}
- 	gb_len += wks_length;
- 
- 	miux_tlv = nfc_llcp_build_tlv(LLCP_TLV_MIUX, (u8 *)&local->miux, 0,
- 				      &miux_length);
-+	if (!miux_tlv) {
-+		ret = -ENOMEM;
-+		goto out;
-+	}
- 	gb_len += miux_length;
- 
- 	gb_len += ARRAY_SIZE(llcp_magic);
++	if (sta->sta.tdls && sdata->vif.type == NL80211_IFTYPE_STATION &&
++	    !sdata->u.mgd.associated)
++		return -EINVAL;
++
+ 	err = sta_apply_parameters(local, sta, params);
+ 	if (err) {
+ 		sta_info_free(local, sta);
+-- 
+2.19.1
+
 
 
