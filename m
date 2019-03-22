@@ -2,51 +2,52 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46915C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:40:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22674C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:40:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15E872082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:40:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6BAA21929
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:40:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254836;
-	bh=n5atnbhxX2Gv4BA7Dbfsi3Qi8Tl+u7lt5tW0xh21nqQ=;
+	s=default; t=1553254841;
+	bh=ac9ZY6n4hozy9D6dXwgyXkQEDC99bktLQMw0kuBMr/o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GIX2W/vAHa7pRX0zm96GC6eSKsj7Mtx1JG6q0wCb7Gd1DkhIgDLe/LThhRBtSmdJS
-	 1c7/GQKPJ9d/Dq9cGiJtuT0idXnRjoGBe82G3KUDdIv37zJm8+9TKbIPPL1DxejNxi
-	 MWnUFLmk5m3oKucUzVN+ILSK9XIoFXjk9X7kY+Js=
+	b=ultAgYwlgdxmZzA7/jtey49tvSOqIRRs50uSIzgI5CtCXOTIKPiKNQ7KrgRbBLeB5
+	 XOzSTV8ATyN/vyuqd4wRbVvxV4kCQJotzVeQwfagRq5rPRHGjak2xnj9/fDTletsNA
+	 Dv11QvTEd5GKves3K3gtX9V9E/SO+Ktn5b3dh21A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731091AbfCVLke (ORCPT
+        id S1731281AbfCVLki (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:40:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42448 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:40:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42508 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731264AbfCVLka (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:40:30 -0400
+        id S1731055AbfCVLkd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:40:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60FBE21916;
-        Fri, 22 Mar 2019 11:40:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28AC521917;
+        Fri, 22 Mar 2019 11:40:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254829;
-        bh=n5atnbhxX2Gv4BA7Dbfsi3Qi8Tl+u7lt5tW0xh21nqQ=;
+        s=default; t=1553254832;
+        bh=ac9ZY6n4hozy9D6dXwgyXkQEDC99bktLQMw0kuBMr/o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u+xd9EiIaTANtu2lWY/tyHB7fn20mbjXwAYMNuZfRhmRUnyqikBni5F8aXvakEflz
-         3CizGak2mleMNRE2VhZpYQw9FfLwBX3TGj0MpspaY90b1IWUNC9fWzz2dL+IDI5qj+
-         l5XNq60vHBQY0f+sJ/dZp6vhAaFfTvoLDmOGNW5c=
+        b=cTdpywDQoEINgvx+KR1W6p80/hl0vRbmL9Iqx87dTqmSoaTgBQEs/YlbvzFCH3vNh
+         xFwiNOndfs0nReEZ+eZWQb9IInZqS8e+HCjNsMP72WtZc+G8AW/Nn37j912E2+TXtL
+         1PlPm89S0pRIG8qA4pQvVFSa9ZagCSlPJ3dWhKfI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.9 008/118] crypto: ahash - fix another early termination in hash walk
-Date:   Fri, 22 Mar 2019 12:14:40 +0100
-Message-Id: <20190322111216.573765472@linuxfoundation.org>
+        stable@vger.kernel.org, Alexander Shiyan <shc_work@mail.ru>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 009/118] gpu: ipu-v3: Fix i.MX51 CSI control registers offset
+Date:   Fri, 22 Mar 2019 12:14:41 +0100
+Message-Id: <20190322111216.647014803@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111215.873964544@linuxfoundation.org>
 References: <20190322111215.873964544@linuxfoundation.org>
@@ -65,63 +66,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Eric Biggers <ebiggers@google.com>
+[ Upstream commit 2c0408dd0d8906b26fe8023889af7adf5e68b2c2 ]
 
-commit 77568e535af7c4f97eaef1e555bf0af83772456c upstream.
+The CSI0/CSI1 registers offset is at +0xe030000/+0xe038000 relative
+to the control module registers on IPUv3EX.
+This patch fixes wrong values for i.MX51 CSI0/CSI1.
 
-Hash algorithms with an alignmask set, e.g. "xcbc(aes-aesni)" and
-"michael_mic", fail the improved hash tests because they sometimes
-produce the wrong digest.  The bug is that in the case where a
-scatterlist element crosses pages, not all the data is actually hashed
-because the scatterlist walk terminates too early.  This happens because
-the 'nbytes' variable in crypto_hash_walk_done() is assigned the number
-of bytes remaining in the page, then later interpreted as the number of
-bytes remaining in the scatterlist element.  Fix it.
+Fixes: 2ffd48f2e7 ("gpu: ipu-v3: Add Camera Sensor Interface unit")
 
-Fixes: 900a081f6912 ("crypto: ahash - Fix early termination in hash walk")
-Cc: stable@vger.kernel.org
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- crypto/ahash.c |   14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ drivers/gpu/ipu-v3/ipu-common.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/crypto/ahash.c
-+++ b/crypto/ahash.c
-@@ -85,17 +85,17 @@ static int hash_walk_new_entry(struct cr
- int crypto_hash_walk_done(struct crypto_hash_walk *walk, int err)
- {
- 	unsigned int alignmask = walk->alignmask;
--	unsigned int nbytes = walk->entrylen;
- 
- 	walk->data -= walk->offset;
- 
--	if (nbytes && walk->offset & alignmask && !err) {
--		walk->offset = ALIGN(walk->offset, alignmask + 1);
--		nbytes = min(nbytes,
--			     ((unsigned int)(PAGE_SIZE)) - walk->offset);
--		walk->entrylen -= nbytes;
-+	if (walk->entrylen && (walk->offset & alignmask) && !err) {
-+		unsigned int nbytes;
- 
-+		walk->offset = ALIGN(walk->offset, alignmask + 1);
-+		nbytes = min(walk->entrylen,
-+			     (unsigned int)(PAGE_SIZE - walk->offset));
- 		if (nbytes) {
-+			walk->entrylen -= nbytes;
- 			walk->data += walk->offset;
- 			return nbytes;
- 		}
-@@ -115,7 +115,7 @@ int crypto_hash_walk_done(struct crypto_
- 	if (err)
- 		return err;
- 
--	if (nbytes) {
-+	if (walk->entrylen) {
- 		walk->offset = 0;
- 		walk->pg++;
- 		return hash_walk_next(walk);
+diff --git a/drivers/gpu/ipu-v3/ipu-common.c b/drivers/gpu/ipu-v3/ipu-common.c
+index 99c813a4ec1f..d41983f3ad3e 100644
+--- a/drivers/gpu/ipu-v3/ipu-common.c
++++ b/drivers/gpu/ipu-v3/ipu-common.c
+@@ -884,8 +884,8 @@ static struct ipu_devtype ipu_type_imx51 = {
+ 	.cpmem_ofs = 0x1f000000,
+ 	.srm_ofs = 0x1f040000,
+ 	.tpm_ofs = 0x1f060000,
+-	.csi0_ofs = 0x1f030000,
+-	.csi1_ofs = 0x1f038000,
++	.csi0_ofs = 0x1e030000,
++	.csi1_ofs = 0x1e038000,
+ 	.ic_ofs = 0x1e020000,
+ 	.disp0_ofs = 0x1e040000,
+ 	.disp1_ofs = 0x1e048000,
+-- 
+2.19.1
+
 
 
