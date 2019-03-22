@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28F17C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:14:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 780DBC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:15:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE7E22195D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:14:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46D192082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:15:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256896;
-	bh=XvD/lSkEBaCLADVV4LwQmGA5QLCQRlmLj8F7sauXDFc=;
+	s=default; t=1553256900;
+	bh=QDs6iBFx1f8uSVYrX9TDbLZvZ8sbz4mi1c3O3bFtZt8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fd+qR/Ad5/8ymH91Bww0qjnhLjyur254odgpCSr9I2uPd1aN8bhV6muI8XxxTIlxo
-	 U/9PwE7vzMqOZhszqGEAhr322Q0bz+TwGQRuxzXEvUBux3RZG2feXmSdMVsGY77neG
-	 3VWTRIFWXtojtqRrLszKinfu8hn8EWloomM7SmI8=
+	b=SejCQ7Z52svVlXi4756cGXbISzZisO4ozV4kj+fo+LeeWVIyGQi8adM04TshYTfRQ
+	 vnCJsd9bIto/VFsPSuqlqxEQt+Wf0SWMHKi7xvNW9sh0fqecoRvihKSbj9WMOExP16
+	 SNzwxot4/DVH+n48iQTusExh2UJu8kRVJWnz/Xf0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389958AbfCVMOz (ORCPT
+        id S2389988AbfCVMO6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:14:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53160 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:14:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389465AbfCVMOw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:14:52 -0400
+        id S2389465AbfCVMO4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:14:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 957F021929;
-        Fri, 22 Mar 2019 12:14:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7226218A1;
+        Fri, 22 Mar 2019 12:14:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256892;
-        bh=XvD/lSkEBaCLADVV4LwQmGA5QLCQRlmLj8F7sauXDFc=;
+        s=default; t=1553256896;
+        bh=QDs6iBFx1f8uSVYrX9TDbLZvZ8sbz4mi1c3O3bFtZt8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dMQLkSGs3vE4oMyQlkOVnLNmyfjmTCg30WmBkOsJHJ9KaB8HKx6HUmYmCwVIsUXzi
-         auwacR/Jm+5DTrodVkQsMLrO3rNb0pEYcJNkQIlKjwIsvV8lB1XOMHEe49a1ANId29
-         Zswk94+kyyj/NNFXWCcrz6Uxzm1Y+5v/ROsV0kzQ=
+        b=ZRNHxSLrOmbvS4EfGzjB3ZDF8Nv7PGy6CfQ4O4dqhoK41GfNK/H0pJf4NK04LQSEV
+         6iiTWLTwVt2TqU7qIzHGWTjOqB5nj9F3ebmBoUPOdBYCnfRsy1fMKssonMy5ZjghWE
+         xAwlTlpy38NvW8QT4Fj6m6t9jQiNGFi7CEM0kiK8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.0 069/238] regulator: s2mps11: Fix steps for buck7, buck8 and LDO35
-Date:   Fri, 22 Mar 2019 12:14:48 +0100
-Message-Id: <20190322111302.693253239@linuxfoundation.org>
+        stable@vger.kernel.org, Jinyoung Park <jinyoungp@nvidia.com>,
+        Mark Zhang <markz@nvidia.com>, Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.0 070/238] regulator: max77620: Initialize values for DT properties
+Date:   Fri, 22 Mar 2019 12:14:49 +0100
+Message-Id: <20190322111302.744232817@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -65,46 +65,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Krzysztof Kozlowski <krzk@kernel.org>
+From: Mark Zhang <markz@nvidia.com>
 
-commit 56b5d4ea778c1b0989c5cdb5406d4a488144c416 upstream.
+commit 0ab66b3c326ef8f77dae9f528118966365757c0c upstream.
 
-LDO35 uses 25 mV step, not 50 mV.  Bucks 7 and 8 use 12.5 mV step
-instead of 6.25 mV.  Wrong step caused over-voltage (LDO35) or
-under-voltage (buck7 and 8) if regulators were used (e.g. on Exynos5420
-Arndale Octa board).
+If regulator DT node doesn't exist, its of_parse_cb callback
+function isn't called. Then all values for DT properties are
+filled with zero. This leads to wrong register update for
+FPS and POK settings.
 
-Cc: <stable@vger.kernel.org>
-Fixes: cb74685ecb39 ("regulator: s2mps11: Add samsung s2mps11 regulator driver")
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Jinyoung Park <jinyoungp@nvidia.com>
+Signed-off-by: Mark Zhang <markz@nvidia.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/regulator/s2mps11.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/regulator/max77620-regulator.c |   10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
---- a/drivers/regulator/s2mps11.c
-+++ b/drivers/regulator/s2mps11.c
-@@ -362,7 +362,7 @@ static const struct regulator_desc s2mps
- 	regulator_desc_s2mps11_ldo(32, STEP_50_MV),
- 	regulator_desc_s2mps11_ldo(33, STEP_50_MV),
- 	regulator_desc_s2mps11_ldo(34, STEP_50_MV),
--	regulator_desc_s2mps11_ldo(35, STEP_50_MV),
-+	regulator_desc_s2mps11_ldo(35, STEP_25_MV),
- 	regulator_desc_s2mps11_ldo(36, STEP_50_MV),
- 	regulator_desc_s2mps11_ldo(37, STEP_50_MV),
- 	regulator_desc_s2mps11_ldo(38, STEP_50_MV),
-@@ -372,8 +372,8 @@ static const struct regulator_desc s2mps
- 	regulator_desc_s2mps11_buck1_4(4),
- 	regulator_desc_s2mps11_buck5,
- 	regulator_desc_s2mps11_buck67810(6, MIN_600_MV, STEP_6_25_MV),
--	regulator_desc_s2mps11_buck67810(7, MIN_600_MV, STEP_6_25_MV),
--	regulator_desc_s2mps11_buck67810(8, MIN_600_MV, STEP_6_25_MV),
-+	regulator_desc_s2mps11_buck67810(7, MIN_600_MV, STEP_12_5_MV),
-+	regulator_desc_s2mps11_buck67810(8, MIN_600_MV, STEP_12_5_MV),
- 	regulator_desc_s2mps11_buck9,
- 	regulator_desc_s2mps11_buck67810(10, MIN_750_MV, STEP_12_5_MV),
- };
+--- a/drivers/regulator/max77620-regulator.c
++++ b/drivers/regulator/max77620-regulator.c
+@@ -1,7 +1,7 @@
+ /*
+  * Maxim MAX77620 Regulator driver
+  *
+- * Copyright (c) 2016, NVIDIA CORPORATION.  All rights reserved.
++ * Copyright (c) 2016-2018, NVIDIA CORPORATION.  All rights reserved.
+  *
+  * Author: Mallikarjun Kasoju <mkasoju@nvidia.com>
+  *	Laxman Dewangan <ldewangan@nvidia.com>
+@@ -803,6 +803,14 @@ static int max77620_regulator_probe(stru
+ 		rdesc = &rinfo[id].desc;
+ 		pmic->rinfo[id] = &max77620_regs_info[id];
+ 		pmic->enable_power_mode[id] = MAX77620_POWER_MODE_NORMAL;
++		pmic->reg_pdata[id].active_fps_src = -1;
++		pmic->reg_pdata[id].active_fps_pd_slot = -1;
++		pmic->reg_pdata[id].active_fps_pu_slot = -1;
++		pmic->reg_pdata[id].suspend_fps_src = -1;
++		pmic->reg_pdata[id].suspend_fps_pd_slot = -1;
++		pmic->reg_pdata[id].suspend_fps_pu_slot = -1;
++		pmic->reg_pdata[id].power_ok = -1;
++		pmic->reg_pdata[id].ramp_rate_setting = -1;
+ 
+ 		ret = max77620_read_slew_rate(pmic, id);
+ 		if (ret < 0)
 
 
