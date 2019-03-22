@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70CE1C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:15:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0C1EC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:15:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F7452183E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:15:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B7572183E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:15:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553260533;
-	bh=7Aaitg+AhtNy5rprRWFEhQ4oyYzWZHLctRY+exstmAM=;
+	s=default; t=1553260543;
+	bh=qEAqvr0SQNvC6fO1rGm94tbT/YdfP85kJGoyb1JbFaE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MJ2ByJeGvcWvsbN3cNP4rYrmqYMvK+c6V0bPL9pQORAh4X9+XYAf39KlVoJ3Mu+wx
-	 cQiJkxfyfc5TsMhEd7wSFLC6pDxJss2/3RvaA2HnmlA419LJ3cv9tHcyka2TWkSVgl
-	 OLEDex50Kih3iUVOJgnFITsbmfuO8X3GDRdPVtaY=
+	b=i+4kWRuCFTZUaW/ATI48RyYlwhE6AsxvuomRnaXQlzCMsSch8f0yl33YZmvf6bh9i
+	 cKk1trCpYxqUFRyws9fNQUsFWeg6OFUu9syF4J5U2jH3Q2vfFZ0BOrFH78YYR6mbnl
+	 ppfKVOVbJKnvY0GUrAe6O+x62/6yDUgTuL4WNxHI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729834AbfCVNPb (ORCPT
+        id S1729596AbfCVL1w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 09:15:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55802 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:27:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55514 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728408AbfCVL2E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:28:04 -0400
+        id S1729013AbfCVL1s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:27:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79A0F218A2;
-        Fri, 22 Mar 2019 11:28:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EFAB2183E;
+        Fri, 22 Mar 2019 11:27:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254084;
-        bh=7Aaitg+AhtNy5rprRWFEhQ4oyYzWZHLctRY+exstmAM=;
+        s=default; t=1553254067;
+        bh=qEAqvr0SQNvC6fO1rGm94tbT/YdfP85kJGoyb1JbFaE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FDUmbrePp8kXuKeiJGkc8DyfLd4yHo7x+fOaKw5+3Frn7LnLLhmSpXG3vZssVx5+f
-         9QiQK9Q01B4eMdTNId1Wctko6CERZJ3l8uvR8GFr1pHp9oeOGuidiQugTqVJgf00vQ
-         3PeNU0JORIw2DXmR1ATw6vNzoWmxpeiCEe6TbQ7Y=
+        b=SnxKo1mpRGwBsdBNPjT/r3SBazciYZDh3ACdhjIsVD0fH+2S2+CK66Ro/BzuTvsUd
+         BfsXyw3dK1WlD+jUIlypT7+C2lf2v2JfZGTGyH39r3SnNXzrRDEZR5fRjEGptdNotD
+         pqxnykwlhxNK71dfizRjUOJuNhvGo/aARE4+YosI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yonglong Liu <liuyonglong@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 011/230] net: hns: Fix use after free identified by SLUB debug
-Date:   Fri, 22 Mar 2019 12:12:29 +0100
-Message-Id: <20190322111237.534752387@linuxfoundation.org>
+Subject: [PATCH 4.4 006/230] mfd: db8500-prcmu: Fix some section annotations
+Date:   Fri, 22 Mar 2019 12:12:24 +0100
+Message-Id: <20190322111237.207297606@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -67,91 +67,59 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit bb989501abcafa0de5f18b0ec0ec459b5b817908 ]
+[ Upstream commit a3888f62fe66429fad3be7f2ba962e1e08c26fd6 ]
 
-When enable SLUB debug, than remove hns_enet_drv module, SLUB debug will
-identify a use after free bug:
+When building the kernel with Clang, the following section mismatch
+warnings appear:
 
-[134.189505] Unable to handle kernel paging request at virtual address
-		006b6b6b6b6b6b6b
-[134.197553] Mem abort info:
-[134.200381]   ESR = 0x96000004
-[134.203487]   Exception class = DABT (current EL), IL = 32 bits
-[134.209497]   SET = 0, FnV = 0
-[134.212596]   EA = 0, S1PTW = 0
-[134.215777] Data abort info:
-[134.218701]   ISV = 0, ISS = 0x00000004
-[134.222596]   CM = 0, WnR = 0
-[134.225606] [006b6b6b6b6b6b6b] address between user and kernel address ranges
-[134.232851] Internal error: Oops: 96000004 [#1] SMP
-[134.237798] CPU: 21 PID: 27834 Comm: rmmod Kdump: loaded Tainted: G
-		OE     4.19.5-1.2.34.aarch64 #1
-[134.247856] Hardware name: Huawei TaiShan 2280 /BC11SPCD, BIOS 1.58 10/24/2018
-[134.255181] pstate: 20000005 (nzCv daif -PAN -UAO)
-[134.260044] pc : hns_ae_put_handle+0x38/0x60
-[134.264372] lr : hns_ae_put_handle+0x24/0x60
-[134.268700] sp : ffff00001be93c50
-[134.272054] x29: ffff00001be93c50 x28: ffff802faaec8040
-[134.277442] x27: 0000000000000000 x26: 0000000000000000
-[134.282830] x25: 0000000056000000 x24: 0000000000000015
-[134.288284] x23: ffff0000096fe098 x22: ffff000001050070
-[134.293671] x21: ffff801fb3c044a0 x20: ffff80afb75ec098
-[134.303287] x19: ffff80afb75ec098 x18: 0000000000000000
-[134.312945] x17: 0000000000000000 x16: 0000000000000000
-[134.322517] x15: 0000000000000002 x14: 0000000000000000
-[134.332030] x13: dead000000000100 x12: ffff7e02bea3c988
-[134.341487] x11: ffff80affbee9e68 x10: 0000000000000000
-[134.351033] x9 : 6fffff8000008101 x8 : 0000000000000000
-[134.360569] x7 : dead000000000100 x6 : ffff000009579748
-[134.370059] x5 : 0000000000210d00 x4 : 0000000000000000
-[134.379550] x3 : 0000000000000001 x2 : 0000000000000000
-[134.388813] x1 : 6b6b6b6b6b6b6b6b x0 : 0000000000000000
-[134.397993] Process rmmod (pid: 27834, stack limit = 0x00000000d474b7fd)
-[134.408498] Call trace:
-[134.414611]  hns_ae_put_handle+0x38/0x60
-[134.422208]  hnae_put_handle+0xd4/0x108
-[134.429563]  hns_nic_dev_remove+0x60/0xc0 [hns_enet_drv]
-[134.438342]  platform_drv_remove+0x2c/0x70
-[134.445958]  device_release_driver_internal+0x174/0x208
-[134.454810]  driver_detach+0x70/0xd8
-[134.461913]  bus_remove_driver+0x64/0xe8
-[134.469396]  driver_unregister+0x34/0x60
-[134.476822]  platform_driver_unregister+0x20/0x30
-[134.485130]  hns_nic_dev_driver_exit+0x14/0x6e4 [hns_enet_drv]
-[134.494634]  __arm64_sys_delete_module+0x238/0x290
+WARNING: vmlinux.o(.text+0x7239cc): Section mismatch in reference from
+the function db8500_prcmu_probe() to the function
+.init.text:init_prcm_registers()
+The function db8500_prcmu_probe() references
+the function __init init_prcm_registers().
+This is often because db8500_prcmu_probe lacks a __init
+annotation or the annotation of init_prcm_registers is wrong.
 
-struct hnae_handle is a member of struct hnae_vf_cb, so when vf_cb is
-freed, than use hnae_handle will cause use after free panic.
+WARNING: vmlinux.o(.text+0x723e28): Section mismatch in reference from
+the function db8500_prcmu_probe() to the function
+.init.text:fw_project_name()
+The function db8500_prcmu_probe() references
+the function __init fw_project_name().
+This is often because db8500_prcmu_probe lacks a __init
+annotation or the annotation of fw_project_name is wrong.
 
-This patch frees vf_cb after hnae_handle used.
+db8500_prcmu_probe should not be marked as __init so remove the __init
+annotation from fw_project_name and init_prcm_registers.
 
-Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns/hns_ae_adapt.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/mfd/db8500-prcmu.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns/hns_ae_adapt.c b/drivers/net/ethernet/hisilicon/hns/hns_ae_adapt.c
-index 1a16c0307b475..bd36fbe81ad2a 100644
---- a/drivers/net/ethernet/hisilicon/hns/hns_ae_adapt.c
-+++ b/drivers/net/ethernet/hisilicon/hns/hns_ae_adapt.c
-@@ -188,12 +188,10 @@ static void hns_ae_put_handle(struct hnae_handle *handle)
- 	struct hnae_vf_cb *vf_cb = hns_ae_get_vf_cb(handle);
- 	int i;
+diff --git a/drivers/mfd/db8500-prcmu.c b/drivers/mfd/db8500-prcmu.c
+index 12099b09a9a71..e71b9f23379d0 100644
+--- a/drivers/mfd/db8500-prcmu.c
++++ b/drivers/mfd/db8500-prcmu.c
+@@ -2610,7 +2610,7 @@ static struct irq_chip prcmu_irq_chip = {
+ 	.irq_unmask	= prcmu_irq_unmask,
+ };
  
--	vf_cb->mac_cb	 = NULL;
--
--	kfree(vf_cb);
--
- 	for (i = 0; i < handle->q_num; i++)
- 		hns_ae_get_ring_pair(handle->qs[i])->used_by_vf = 0;
-+
-+	kfree(vf_cb);
+-static __init char *fw_project_name(u32 project)
++static char *fw_project_name(u32 project)
+ {
+ 	switch (project) {
+ 	case PRCMU_FW_PROJECT_U8500:
+@@ -2758,7 +2758,7 @@ void __init db8500_prcmu_early_init(u32 phy_base, u32 size)
+ 	INIT_WORK(&mb0_transfer.mask_work, prcmu_mask_work);
  }
  
- static void hns_ae_ring_enable_all(struct hnae_handle *handle, int val)
+-static void __init init_prcm_registers(void)
++static void init_prcm_registers(void)
+ {
+ 	u32 val;
+ 
 -- 
 2.19.1
 
