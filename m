@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86106C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:42:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 418BBC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:42:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5693B21925
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:42:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FE6A21934
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:42:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254924;
-	bh=ocNa1ajrqR1e1/aVVDZrR/ZkzXNk0sRFgEMJ0eVO0wQ=;
+	s=default; t=1553254930;
+	bh=BS879CRbtLJWzcwUlITnKJm4dhh5E7gsYrFewpF6Ok8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pwDiCLcsGOwj+6qKxwr1xaRuJaOVULBPxWvvI2p90E3HQvm6psRC+EjkPfqcgbRZR
-	 mp3bxi+Pjfcothr7H5ByM7NJ1zozOGlYglKIZB85LrbkpGyBnzTGYLJEE4jZQ36stG
-	 lVEUWcVBontcq6+ekHzmQPHVZVP0HqjtGJbIhwdQ=
+	b=U4x/ya5WtaizNHbZPS65HIqsNVm+QL/9vCcNWnh0RTNJqvY+D5eBbx7UZHHDHcq28
+	 t5uPwXM6Pawk4/em9TDtuoizS6nfokl+YD/B2wwPMEZVjI8Ei9TPfPw/+enbe8HIK0
+	 EEochma90eM/+84e0KE9Gl2BkI694AnHxaogV+Xg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731487AbfCVLmC (ORCPT
+        id S1731493AbfCVLmI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:42:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44284 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:42:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731475AbfCVLmA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:42:00 -0400
+        id S1731475AbfCVLmE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:42:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02EAA204FD;
-        Fri, 22 Mar 2019 11:41:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD89321917;
+        Fri, 22 Mar 2019 11:42:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254919;
-        bh=ocNa1ajrqR1e1/aVVDZrR/ZkzXNk0sRFgEMJ0eVO0wQ=;
+        s=default; t=1553254923;
+        bh=BS879CRbtLJWzcwUlITnKJm4dhh5E7gsYrFewpF6Ok8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A29Y/B9iA40pai6ttj0BZm11lqmaZQS/xVp8pmEA4KK16NjRi3Ca5ArhN2nAcIwPn
-         RwWUB46hR+bMJO7f2tC5HGmOEToAEpcXbA7+2YgJy/ME24b36+0lbe+hHjLCfmLrB+
-         BsojVMWhl7MPd7xcEvJVe76hzJCh1KBtclQtSnA8=
+        b=UE7Smgcu+wH76ujA+KYRi4FqnQZCep5sXu+C8X8YjCBhdw7QxTMupJ3xKaTIsz+7r
+         xWQwhKc+JApsi1w2xGATcoGgLKGFLb9aacekWrzc3zA+gt+A1wb5TFyxr0U4Sk/Obl
+         vMKNllGLB2tLy00krYYFKrOL5VNLK5W5Jbr1Na90=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "zhangyi (F)" <yi.zhang@huawei.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 4.9 051/118] tracing: Do not free iter->trace in fail path of tracing_open_pipe()
-Date:   Fri, 22 Mar 2019 12:15:23 +0100
-Message-Id: <20190322111220.036770318@linuxfoundation.org>
+        stable@vger.kernel.org, Ferry Toth <fntoth@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 4.9 052/118] ACPI / device_sysfs: Avoid OF modalias creation for removed device
+Date:   Fri, 22 Mar 2019 12:15:24 +0100
+Message-Id: <20190322111220.117106323@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111215.873964544@linuxfoundation.org>
 References: <20190322111215.873964544@linuxfoundation.org>
@@ -65,39 +67,75 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: zhangyi (F) <yi.zhang@huawei.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-commit e7f0c424d0806b05d6f47be9f202b037eb701707 upstream.
+commit f16eb8a4b096514ac06fb25bf599dcc792899b3d upstream.
 
-Commit d716ff71dd12 ("tracing: Remove taking of trace_types_lock in
-pipe files") use the current tracer instead of the copy in
-tracing_open_pipe(), but it forget to remove the freeing sentence in
-the error path.
+If SSDT overlay is loaded via ConfigFS and then unloaded the device,
+we would like to have OF modalias for, already gone. Thus, acpi_get_name()
+returns no allocated buffer for such case and kernel crashes afterwards:
 
-There's an error path that can call kfree(iter->trace) after the iter->trace
-was assigned to tr->current_trace, which would be bad to free.
+ ACPI: Host-directed Dynamic ACPI Table Unload
+ ads7950 spi-PRP0001:00: Dropping the link to regulator.0
+ BUG: unable to handle kernel NULL pointer dereference at 0000000000000000
+ #PF error: [normal kernel read fault]
+ PGD 80000000070d6067 P4D 80000000070d6067 PUD 70d0067 PMD 0
+ Oops: 0000 [#1] SMP PTI
+ CPU: 0 PID: 40 Comm: kworker/u4:2 Not tainted 5.0.0+ #96
+ Hardware name: Intel Corporation Merrifield/BODEGA BAY, BIOS 542 2015.01.21:18.19.48
+ Workqueue: kacpi_hotplug acpi_device_del_work_fn
+ RIP: 0010:create_of_modalias.isra.1+0x4c/0x150
+ Code: 00 00 48 89 44 24 18 31 c0 48 8d 54 24 08 48 c7 44 24 10 00 00 00 00 48 c7 44 24 08 ff ff ff ff e8 7a b0 03 00 48 8b 4c 24 10 <0f> b6 01 84 c0 74 27 48 c7 c7 00 09 f4 a5 0f b6 f0 8d 50 20 f6 04
+ RSP: 0000:ffffa51040297c10 EFLAGS: 00010246
+ RAX: 0000000000001001 RBX: 0000000000000785 RCX: 0000000000000000
+ RDX: 0000000000001001 RSI: 0000000000000286 RDI: ffffa2163dc042e0
+ RBP: ffffa216062b1196 R08: 0000000000001001 R09: ffffa21639873000
+ R10: ffffffffa606761d R11: 0000000000000001 R12: ffffa21639873218
+ R13: ffffa2163deb5060 R14: ffffa216063d1010 R15: 0000000000000000
+ FS:  0000000000000000(0000) GS:ffffa2163e000000(0000) knlGS:0000000000000000
+ CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ CR2: 0000000000000000 CR3: 0000000007114000 CR4: 00000000001006f0
+ Call Trace:
+  __acpi_device_uevent_modalias+0xb0/0x100
+  spi_uevent+0xd/0x40
 
-Link: http://lkml.kernel.org/r/1550060946-45984-1-git-send-email-yi.zhang@huawei.com
+ ...
 
-Cc: stable@vger.kernel.org
-Fixes: d716ff71dd12 ("tracing: Remove taking of trace_types_lock in pipe files")
-Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+In order to fix above let create_of_modalias() check the status returned
+by acpi_get_name() and bail out in case of failure.
+
+Fixes: 8765c5ba1949 ("ACPI / scan: Rework modalias creation when "compatible" is present")
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=201381
+Reported-by: Ferry Toth <fntoth@gmail.com>
+Tested-by: Ferry Toth<fntoth@gmail.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: 4.1+ <stable@vger.kernel.org> # 4.1+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/trace/trace.c |    1 -
- 1 file changed, 1 deletion(-)
+ drivers/acpi/device_sysfs.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -5057,7 +5057,6 @@ out:
- 	return ret;
+--- a/drivers/acpi/device_sysfs.c
++++ b/drivers/acpi/device_sysfs.c
+@@ -202,11 +202,15 @@ static int create_of_modalias(struct acp
+ {
+ 	struct acpi_buffer buf = { ACPI_ALLOCATE_BUFFER };
+ 	const union acpi_object *of_compatible, *obj;
++	acpi_status status;
+ 	int len, count;
+ 	int i, nval;
+ 	char *c;
  
- fail:
--	kfree(iter->trace);
- 	kfree(iter);
- 	__trace_array_put(tr);
- 	mutex_unlock(&trace_types_lock);
+-	acpi_get_name(acpi_dev->handle, ACPI_SINGLE_NAME, &buf);
++	status = acpi_get_name(acpi_dev->handle, ACPI_SINGLE_NAME, &buf);
++	if (ACPI_FAILURE(status))
++		return -ENODEV;
++
+ 	/* DT strings are all in lower case */
+ 	for (c = buf.pointer; *c != '\0'; c++)
+ 		*c = tolower(*c);
 
 
