@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 663ABC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:54:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92F6CC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:54:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29DC72082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:54:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 604B121873
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:54:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553259242;
-	bh=bTra26YYqtWRHazsgSPPBqhN2gEfQHJapYGNheFuoC4=;
+	s=default; t=1553259251;
+	bh=iWVf22wQmN1z4W9YP674a75y71Y+iDCtuiNAxheLAzE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PtuzQ5z82jTwS+4dGsSmA1nX7GvvKOVc66bLcLaZ1R/WlEl9BySkhFI5FVu6wLpeX
-	 vFO6MC3UVhPzLJSuIpsOQXJOwyEunRlMw7K7BGbtbpSUI2czOOgNRja1uSda8sA95p
-	 vLhd4e9uzSIzsxviB3UvTgkeBWrbaOeJcvZSXEAo=
+	b=hGXYU22E+uI5XpcFG05/9nglhaTwmjVf1gEdu0C+A7JbCN+umS2aKMeUVDUa2eB/v
+	 YNOaHsQXmgzuuqydRiHvJGRj+k89QSAGUuUIUjIe+Am03x2BTApj+UEV7yF40i+tp3
+	 g/WeLP2lkvlA7Hv2Z4U9Jb3Rid1r9aaM2KYNTh5w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732566AbfCVLvb (ORCPT
+        id S1732883AbfCVMyJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:51:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55326 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:54:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55218 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732293AbfCVLvZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:51:25 -0400
+        id S1732449AbfCVLvT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:51:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CFBF120850;
-        Fri, 22 Mar 2019 11:51:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5561A20850;
+        Fri, 22 Mar 2019 11:51:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255485;
-        bh=bTra26YYqtWRHazsgSPPBqhN2gEfQHJapYGNheFuoC4=;
+        s=default; t=1553255478;
+        bh=iWVf22wQmN1z4W9YP674a75y71Y+iDCtuiNAxheLAzE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UDMesj8K1XBKq9dL6515SuEMv6Ohuz7Jev6YyNDfRsywQHFilRJfDaXxhzUpbvSJu
-         +DWN4+D1KhA40sP1FP/LnYqjZo/J7j40gBz4JdZnu94J8OStmiUgGUfsOFAmWWzA7s
-         HSuqS/DcOytHz/NPBYcwX9ZfGY2qkLTrZVxCeBd8=
+        b=mNolocOFHibx1XBbeFrtR2zhbY4tcm3JbsSleajwFiIjVT5Dpz6jnh41/xZQEjHqQ
+         oe5/ABoFFsvVc96iYuCCW7UZU3/UY/W4YUiS5mvQpAESioRd/wnGKP8nqbR1kVW1nM
+         fOy/P8OLUW4sjeQLKKo6mro8CgIENVJ3Hs8U31eg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>,
-        Steve deRosier <derosier@cal-sierra.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 4.14 106/183] libertas_tf: dont set URB_ZERO_PACKET on IN USB transfer
-Date:   Fri, 22 Mar 2019 12:15:34 +0100
-Message-Id: <20190322111249.376554164@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Zygo Blaxell <ce3g8jdj@umail.furryterror.org>,
+        Filipe Manana <fdmanana@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.14 104/183] Btrfs: fix corruption reading shared and compressed extents after hole punching
+Date:   Fri, 22 Mar 2019 12:15:32 +0100
+Message-Id: <20190322111249.228879243@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111241.819468003@linuxfoundation.org>
 References: <20190322111241.819468003@linuxfoundation.org>
@@ -66,36 +67,118 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Lubomir Rintel <lkundrak@v3.sk>
+From: Filipe Manana <fdmanana@suse.com>
 
-commit 607076a904c435f2677fadaadd4af546279db68b upstream.
+commit 8e928218780e2f1cf2f5891c7575e8f0b284fcce upstream.
 
-It doesn't make sense and the USB core warns on each submit of such
-URB, easily flooding the message buffer with tracebacks.
+In the past we had data corruption when reading compressed extents that
+are shared within the same file and they are consecutive, this got fixed
+by commit 005efedf2c7d0 ("Btrfs: fix read corruption of compressed and
+shared extents") and by commit 808f80b46790f ("Btrfs: update fix for read
+corruption of compressed and shared extents"). However there was a case
+that was missing in those fixes, which is when the shared and compressed
+extents are referenced with a non-zero offset. The following shell script
+creates a reproducer for this issue:
 
-Analogous issue was fixed in regular libertas driver in commit 6528d8804780
-("libertas: don't set URB_ZERO_PACKET on IN USB transfer").
+  #!/bin/bash
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-Reviewed-by: Steve deRosier <derosier@cal-sierra.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+  mkfs.btrfs -f /dev/sdc &> /dev/null
+  mount -o compress /dev/sdc /mnt/sdc
+
+  # Create a file with 3 consecutive compressed extents, each has an
+  # uncompressed size of 128Kb and a compressed size of 4Kb.
+  for ((i = 1; i <= 3; i++)); do
+      head -c 4096 /dev/zero
+      for ((j = 1; j <= 31; j++)); do
+          head -c 4096 /dev/zero | tr '\0' "\377"
+      done
+  done > /mnt/sdc/foobar
+  sync
+
+  echo "Digest after file creation:   $(md5sum /mnt/sdc/foobar)"
+
+  # Clone the first extent into offsets 128K and 256K.
+  xfs_io -c "reflink /mnt/sdc/foobar 0 128K 128K" /mnt/sdc/foobar
+  xfs_io -c "reflink /mnt/sdc/foobar 0 256K 128K" /mnt/sdc/foobar
+  sync
+
+  echo "Digest after cloning:         $(md5sum /mnt/sdc/foobar)"
+
+  # Punch holes into the regions that are already full of zeroes.
+  xfs_io -c "fpunch 0 4K" /mnt/sdc/foobar
+  xfs_io -c "fpunch 128K 4K" /mnt/sdc/foobar
+  xfs_io -c "fpunch 256K 4K" /mnt/sdc/foobar
+  sync
+
+  echo "Digest after hole punching:   $(md5sum /mnt/sdc/foobar)"
+
+  echo "Dropping page cache..."
+  sysctl -q vm.drop_caches=1
+  echo "Digest after hole punching:   $(md5sum /mnt/sdc/foobar)"
+
+  umount /dev/sdc
+
+When running the script we get the following output:
+
+  Digest after file creation:   5a0888d80d7ab1fd31c229f83a3bbcc8  /mnt/sdc/foobar
+  linked 131072/131072 bytes at offset 131072
+  128 KiB, 1 ops; 0.0033 sec (36.960 MiB/sec and 295.6830 ops/sec)
+  linked 131072/131072 bytes at offset 262144
+  128 KiB, 1 ops; 0.0015 sec (78.567 MiB/sec and 628.5355 ops/sec)
+  Digest after cloning:         5a0888d80d7ab1fd31c229f83a3bbcc8  /mnt/sdc/foobar
+  Digest after hole punching:   5a0888d80d7ab1fd31c229f83a3bbcc8  /mnt/sdc/foobar
+  Dropping page cache...
+  Digest after hole punching:   fba694ae8664ed0c2e9ff8937e7f1484  /mnt/sdc/foobar
+
+This happens because after reading all the pages of the extent in the
+range from 128K to 256K for example, we read the hole at offset 256K
+and then when reading the page at offset 260K we don't submit the
+existing bio, which is responsible for filling all the page in the
+range 128K to 256K only, therefore adding the pages from range 260K
+to 384K to the existing bio and submitting it after iterating over the
+entire range. Once the bio completes, the uncompressed data fills only
+the pages in the range 128K to 256K because there's no more data read
+from disk, leaving the pages in the range 260K to 384K unfilled. It is
+just a slightly different variant of what was solved by commit
+005efedf2c7d0 ("Btrfs: fix read corruption of compressed and shared
+extents").
+
+Fix this by forcing a bio submit, during readpages(), whenever we find a
+compressed extent map for a page that is different from the extent map
+for the previous page or has a different starting offset (in case it's
+the same compressed extent), instead of the extent map's original start
+offset.
+
+A test case for fstests follows soon.
+
+Reported-by: Zygo Blaxell <ce3g8jdj@umail.furryterror.org>
+Fixes: 808f80b46790f ("Btrfs: update fix for read corruption of compressed and shared extents")
+Fixes: 005efedf2c7d0 ("Btrfs: fix read corruption of compressed and shared extents")
+Cc: stable@vger.kernel.org # 4.3+
+Tested-by: Zygo Blaxell <ce3g8jdj@umail.furryterror.org>
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/marvell/libertas_tf/if_usb.c |    2 --
- 1 file changed, 2 deletions(-)
+ fs/btrfs/extent_io.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/net/wireless/marvell/libertas_tf/if_usb.c
-+++ b/drivers/net/wireless/marvell/libertas_tf/if_usb.c
-@@ -433,8 +433,6 @@ static int __if_usb_submit_rx_urb(struct
- 			  skb_tail_pointer(skb),
- 			  MRVDRV_ETH_RX_PACKET_BUFFER_SIZE, callbackfn, cardp);
+--- a/fs/btrfs/extent_io.c
++++ b/fs/btrfs/extent_io.c
+@@ -3014,11 +3014,11 @@ static int __do_readpage(struct extent_i
+ 		 */
+ 		if (test_bit(EXTENT_FLAG_COMPRESSED, &em->flags) &&
+ 		    prev_em_start && *prev_em_start != (u64)-1 &&
+-		    *prev_em_start != em->orig_start)
++		    *prev_em_start != em->start)
+ 			force_bio_submit = true;
  
--	cardp->rx_urb->transfer_flags |= URB_ZERO_PACKET;
--
- 	lbtf_deb_usb2(&cardp->udev->dev, "Pointer for rx_urb %p\n",
- 		cardp->rx_urb);
- 	ret = usb_submit_urb(cardp->rx_urb, GFP_ATOMIC);
+ 		if (prev_em_start)
+-			*prev_em_start = em->orig_start;
++			*prev_em_start = em->start;
+ 
+ 		free_extent_map(em);
+ 		em = NULL;
 
 
