@@ -2,152 +2,191 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BB3FC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 17:24:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 347F7C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 17:24:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE2D120850
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 17:24:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="W14/PrvV"
+	by mail.kernel.org (Postfix) with ESMTP id 0460F20850
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 17:24:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728619AbfCVRYA (ORCPT
+        id S1728782AbfCVRYJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 13:24:00 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:37548 "EHLO mail.skyhub.de"
+        Fri, 22 Mar 2019 13:24:09 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:36284 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728203AbfCVRX7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 13:23:59 -0400
-Received: from zn.tnic (p200300EC2F098000329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:8000:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728699AbfCVRYH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 13:24:07 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 22F7B1EC045C;
-        Fri, 22 Mar 2019 18:23:58 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1553275438;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=GTDWcmNacIy9rS8aSJs54hTINOUYh53N9C4gaIJJ0dM=;
-        b=W14/PrvVQVWcwGi8lRVHtUH5CZcwjaibauwTJSOrjfY2CycHVVjHEe8Hlkmd83IP8/zENk
-        89caSqoQyjalMW07Ud1BgzZoq9dmyN+t34OC8WheCy8f+pq/PN/iGdiXEgK0Fpt9kySUlU
-        9bK3wQAMriqchOWVng8qXxKNfZz8+oE=
-Date:   Fri, 22 Mar 2019 18:24:05 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
-Cc:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "rafal@milecki.pl" <rafal@milecki.pl>,
-        "clemej@gmail.com" <clemej@gmail.com>
-Subject: Re: [PATCH v2 1/2] x86/MCE: Add function to allow filtering of MCA
- errors
-Message-ID: <20190322172405.GJ12472@zn.tnic>
-References: <20190321202505.5553-1-Yazen.Ghannam@amd.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id 832A885363;
+        Fri, 22 Mar 2019 17:24:06 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-47.bos.redhat.com [10.18.17.47])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7D26460BE0;
+        Fri, 22 Mar 2019 17:23:56 +0000 (UTC)
+Subject: Re: [PATCH v5 1/3] locking/rwsem: Remove arch specific rwsem files
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        "linux-alpha@vger.kernel.org" <linux-alpha@vger.kernel.org>,
+        "linux-alpha@vger.kernel.org" <linux-arm-kernel@lists.infradead.org>,
+        linux-c6x-dev@linux-c6x.org, uclinux-h8-devel@lists.sourceforge.jp,
+        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        linux-mips@vger.kernel.org, nios2-dev@lists.rocketboards.org,
+        openrisc@lists.librecores.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
+        linux-xtensa@linux-xtensa.org,
+        linux-arch <linux-arch@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>
+References: <20190322143008.21313-1-longman@redhat.com>
+ <20190322143008.21313-2-longman@redhat.com>
+ <CAHk-=wikkO-1f1=FEOEzkSnaDg3yJLP=4Vd59UCuLBztFd0KOw@mail.gmail.com>
+From:   Waiman Long <longman@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=longman@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ weim8xU=
+Organization: Red Hat
+Message-ID: <15530d24-51fd-579d-2b1a-2ca98487f63f@redhat.com>
+Date:   Fri, 22 Mar 2019 13:23:55 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
+In-Reply-To: <CAHk-=wikkO-1f1=FEOEzkSnaDg3yJLP=4Vd59UCuLBztFd0KOw@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190321202505.5553-1-Yazen.Ghannam@amd.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Fri, 22 Mar 2019 17:24:07 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 21, 2019 at 08:25:17PM +0000, Ghannam, Yazen wrote:
-> From: Yazen Ghannam <yazen.ghannam@amd.com>
-> 
-> Some systems may report spurious MCA errors. In general, spurious MCA
-> errors may be disabled by clearing a particular bit in MCA_CTL. However,
-> clearing a bit in MCA_CTL may not be recommended for some errors, so the
-> only option is to ignore them.
-> 
-> An MCA error is printed and handled after it has been added to the MCE
-> event pool. So an MCA error can be ignored by not adding it to the pool.
-> 
-> Create a function pointer to filter MCA errors and use this when adding
-> an error to the MCE event pool.
-> 
-> Install a default function that does not filter any errors.
-> 
-> Cc: <stable@vger.kernel.org> # 4.14.x
-> Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
-> ---
-> Link:
-> https://lkml.kernel.org/r/20190307212552.8865-1-Yazen.Ghannam@amd.com
-> 
-> v1->v2:
-> * This is a new patch replacing V1 Patch 1 which is no longer needed.
-> 
->  arch/x86/include/asm/mce.h        | 3 +++
->  arch/x86/kernel/cpu/mce/core.c    | 6 ++++++
->  arch/x86/kernel/cpu/mce/genpool.c | 3 +++
->  3 files changed, 12 insertions(+)
-> 
-> diff --git a/arch/x86/include/asm/mce.h b/arch/x86/include/asm/mce.h
-> index 22d05e3835f0..0b0b797a959c 100644
-> --- a/arch/x86/include/asm/mce.h
-> +++ b/arch/x86/include/asm/mce.h
-> @@ -253,6 +253,9 @@ extern void mce_disable_bank(int bank);
->  extern void (*machine_check_vector)(struct pt_regs *, long error_code);
->  void do_machine_check(struct pt_regs *, long);
->  
-> +/* Filter MCEs from the decoder chain. */
+On 03/22/2019 01:01 PM, Linus Torvalds wrote:
+> On Fri, Mar 22, 2019 at 7:30 AM Waiman Long <longman@redhat.com> wrote:
+>>  19 files changed, 133 insertions(+), 930 deletions(-)
+> Lovely. And it all looks sane to me.
+>
+> So ack.
+>
+> The only comment I have is about __down_read_trylock(), which probably
+> isn't critical enough to actually care about, but:
+>
+>> +static inline int __down_read_trylock(struct rw_semaphore *sem)
+>> +{
+>> +       long tmp;
+>> +
+>> +       while ((tmp = atomic_long_read(&sem->count)) >= 0) {
+>> +               if (tmp == atomic_long_cmpxchg_acquire(&sem->count, tmp,
+>> +                                  tmp + RWSEM_ACTIVE_READ_BIAS)) {
+>> +                       return 1;
+>> +               }
+>> +       }
+>> +       return 0;
+>> +}
+> So this seems to
+>
+>  (a) read the line early (the whole cacheline in shared state issue)
+>
+>  (b) read the line again unnecessarily in the while loop
+>
+> Now, (a) might be explained by "well, maybe we do trylock even with
+> existing readers", although I continue to think that the case we
+> should optimize for is simply the uncontended one, where we don't even
+> have multiple readers.
+>
+> But (b) just seems silly.
+>
+> So I wonder if it shouldn't just be
+>
+>         long tmp = 0;
+>
+>         do {
+>                 long new = atomic_long_cmpxchg_acquire(&sem->count, tmp,
+>                         tmp + RWSEM_ACTIVE_READ_BIAS);
+>                 if (likely(new == tmp))
+>                         return 1;
+>                tmp = new;
+>         } while (tmp >= 0);
+>         return 0;
+>
+> which would seem simpler and solve both issues. Hmm?
+>
+> But honestly, I didn't check what our uses of down_read_trylock() look
+> like. We have more of them than I expected, and I _think_ the normal
+> case is the "nobody else holds the lock", but that's just a gut
+> feeling.
+>
+> Some of them _might_ be performance-critical. There's the one on
+> mmap_sem in the fault handling path, for example. And yes, I'd expect
+> the normal case to very much be "no other readers or writers" for that
+> one.
+>
+> NOTE! The above code snippet is absolutely untested, and might be
+> completely wrong. Take it as a "something like this" rather than
+> anything else.
+>
+>                    Linus
 
-That should be something like:
+As you have noticed already, this patch is just for moving code around
+without changing it. I optimize __down_read_trylock() in patch 3.
 
-/* Decides whether to add MCE records to the decoder chain or filter them out. */
+Cheers,
+Longman
 
-> +extern bool (*filter_mce)(struct mce *m);
-> +
->  /*
->   * Threshold handler
->   */
-> diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
-> index b7fb541a4873..effb40581f08 100644
-> --- a/arch/x86/kernel/cpu/mce/core.c
-> +++ b/arch/x86/kernel/cpu/mce/core.c
-> @@ -1771,6 +1771,12 @@ static void __mcheck_cpu_init_timer(void)
->  	mce_start_timer(t);
->  }
->  
-> +/*
-> + * Don't filter MCEs by default. Install a system-specific function, if needed.
-> + */
-
-That comment is kinda obvious.
-
-> +static bool default_filter_mce(struct mce *m) { return false; }
-> +bool (*filter_mce)(struct mce *) = default_filter_mce;
-> +
->  /* Handle unconfigured int18 (should never happen) */
->  static void unexpected_machine_check(struct pt_regs *regs, long error_code)
->  {
-> diff --git a/arch/x86/kernel/cpu/mce/genpool.c b/arch/x86/kernel/cpu/mce/genpool.c
-> index 3395549c51d3..64d1d5a00f39 100644
-> --- a/arch/x86/kernel/cpu/mce/genpool.c
-> +++ b/arch/x86/kernel/cpu/mce/genpool.c
-> @@ -99,6 +99,9 @@ int mce_gen_pool_add(struct mce *mce)
->  {
->  	struct mce_evt_llist *node;
->  
-> +	if (filter_mce(mce))
-> +		return -EINVAL;
-> +
->  	if (!mce_evt_pool)
->  		return -EINVAL;
->  
-> -- 
-> 2.17.1
-> 
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
