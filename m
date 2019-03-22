@@ -3,96 +3,97 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1177C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:55:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E90EC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:57:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A71321925
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:55:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6BD02190A
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:57:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728402AbfCVQzc (ORCPT
+        id S1728888AbfCVQ52 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 12:55:32 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:44834 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728175AbfCVQz3 (ORCPT
+        Fri, 22 Mar 2019 12:57:28 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:45753 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727410AbfCVQ52 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 12:55:29 -0400
-Received: by mail-qk1-f195.google.com with SMTP id y5so1600765qkc.11;
-        Fri, 22 Mar 2019 09:55:28 -0700 (PDT)
+        Fri, 22 Mar 2019 12:57:28 -0400
+Received: by mail-qt1-f195.google.com with SMTP id v20so3224930qtv.12
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 09:57:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=9tD5n0asYDCO8USwL0aVBFkOPvKyu6yg8H1zkOYw+VU=;
-        b=L5HhXIxrNitDaYAe+4bc+ADBXfP1SH1yUEk/HqIQcHq+HWQKWQ7NHJIho4DgINYJoF
-         OcCdFhMUZKqQ8+2xLN+qJW8NzWY9rAgbbcTWyhcPTGAVN4SU1EWGsU0yKaiZcG+SXtWr
-         YpTeU2TZLGNdRSSDxuZFZc6mn1HxZA1P1A3MfarPDC+WtmrWQ0961icxkWpibyYB752V
-         i/81qecbTZGeOmXiF7jgy+5TAINgKAioaRHbiLFc51eZuOR9/8RLntY2uVGpy9D6YAtk
-         9/qo1xrew1KUVwvTg3yU4Lkh/EknRWsnEZPiU7IeuKZDn5gKfYOk2WkKlOB43tl0/kxu
-         W7Vg==
-X-Gm-Message-State: APjAAAXy+UZ25KDQMCpJlQyMuSkXK6b4Kt2kANv7VXAifjQi688c1q3t
-        wOmuDlzRiSSgRX9+cQchQTpBfuHFQmkhU96SDf8=
-X-Google-Smtp-Source: APXvYqzUHlLilq8ufgw9Oo1yfm8qitDHgXC3S2l6qINFMZdeNe9pB0yyfAog2ZA34poznJq8FC4R2TDnx50ZhLAEqtw=
-X-Received: by 2002:a37:b386:: with SMTP id c128mr8060721qkf.330.1553273727904;
- Fri, 22 Mar 2019 09:55:27 -0700 (PDT)
+        bh=jV/VlmiWT5ICHGENGi1uLztsqw5jkI8SLkdbegt9HLs=;
+        b=eo8oglaBa7sE50Tqz2dDMFVuGHshg1z8dLe/sA13xA8kDP6FIWFDV9VVjU1YsoFBC8
+         xYYbsIdxGSGa+8ZeFta/nB1/3XNyI3iLI4ur5DrzqUSKcKL7HkFrA2osEX0vvGSb7Fkr
+         GuACPo++D7inT/8aaW4EzF5Tq+0zBRfaYXY6DVyTotEPtuLWIx3OLBR50dGtG5RF19/w
+         QylUXtntmx9X7pyYlRA3vi6OWOX/kkXaevbvH5iFCXNjxIrJzsnfl84XuqR6FhpCrEcp
+         l+Hy8Ut/hmirQsRWdoqQWMPGq6/80/AhUTSA0wM4iKrD3vZfjAKdUN0UpnkIwkAtMCO6
+         gTwA==
+X-Gm-Message-State: APjAAAUAvGogyME5W0uKHgELiRibrBsGmu/g5FApgJYtH7RJkHZ+mgK8
+        IO6TN+XhIq9NSyAS63CcoLu2fVHYFL/H9tZgckA=
+X-Google-Smtp-Source: APXvYqzByAOanotG+eNryBmdjsucTuAcIlh39uv0w/vRR9jdRsG2QIsy2R67Fx5Vwvp8T70vfK75pE+dCcMDG/ccwRI=
+X-Received: by 2002:ac8:276b:: with SMTP id h40mr8998796qth.319.1553273847171;
+ Fri, 22 Mar 2019 09:57:27 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190322143643.1317312-1-arnd@arndb.de> <CAOi1vP9scH+DECa1udToEvtYMRTZ1-VMuVajAh8uwpxzuMq0RA@mail.gmail.com>
-In-Reply-To: <CAOi1vP9scH+DECa1udToEvtYMRTZ1-VMuVajAh8uwpxzuMq0RA@mail.gmail.com>
+References: <20190321220009.29334-1-andi@firstfloor.org> <20190321220009.29334-2-andi@firstfloor.org>
+ <CAK8P3a31L6ddJ1JPpygHqeVspExv7eaKWsLQ5pb+T8LAF2Zjtw@mail.gmail.com> <20190322163954.GG7905@worktop.programming.kicks-ass.net>
+In-Reply-To: <20190322163954.GG7905@worktop.programming.kicks-ass.net>
 From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 22 Mar 2019 17:55:11 +0100
-Message-ID: <CAK8P3a2mZ-zyAMrR2zesAUoLO0BiDcmr6VnJzuJb=PFSHj4PWg@mail.gmail.com>
-Subject: Re: [PATCH] rbd: avoid clang -Wuninitialized warning
-To:     Ilya Dryomov <idryomov@gmail.com>
-Cc:     Sage Weil <sage@redhat.com>, Alex Elder <elder@kernel.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        clang-built-linux@googlegroups.com,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Jason Dillaman <dillaman@redhat.com>,
-        Ceph Development <ceph-devel@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+Date:   Fri, 22 Mar 2019 17:57:09 +0100
+Message-ID: <CAK8P3a3Zpkz+TNYE_PtY0dS=jxi1G1VtXWAmiABAS7nRMUkGgA@mail.gmail.com>
+Subject: Re: [PATCH 01/17] kbuild: Disable -Waddress-of-packed-member for gcc 9
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Andi Kleen <andi@firstfloor.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 22, 2019 at 5:33 PM Ilya Dryomov <idryomov@gmail.com> wrote:
+On Fri, Mar 22, 2019 at 5:40 PM Peter Zijlstra <peterz@infradead.org> wrote:
 >
-> On Fri, Mar 22, 2019 at 3:36 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> On Fri, Mar 22, 2019 at 02:58:51PM +0100, Arnd Bergmann wrote:
+> > On Thu, Mar 21, 2019 at 11:00 PM Andi Kleen <andi@firstfloor.org> wrote:
+> > >
+> > > From: Andi Kleen <ak@linux.intel.com>
+> > >
+> > > This warning is very noisy in a default build with gcc 9.
+> > > Move it into W=2 only.
+> > >
+> > > Cc: arnd@arndb.de
+> > > Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > > Signed-off-by: Andi Kleen <ak@linux.intel.com>
 > >
-> > diff --git a/drivers/block/rbd.c b/drivers/block/rbd.c
-> > index 4ba967d65cf9..cbcc3baf3807 100644
-> > --- a/drivers/block/rbd.c
-> > +++ b/drivers/block/rbd.c
-> > @@ -2399,7 +2399,7 @@ static int rbd_obj_read_from_parent(struct rbd_obj_request *obj_req)
-> >                                                       &obj_req->bvec_pos);
-> >                         break;
-> >                 default:
-> > -                       rbd_assert(0);
-> > +                       BUG();
-> >                 }
-> >         } else {
-> >                 ret = rbd_img_fill_from_bvecs(child_img_req,
+> > I think W=2 is too aggressive. On many architectures, this finds
+> > real bugs and the false positives tend to be trivial to fix
+> > (by removing the bogus __packed annotation), which improves
+> > the generated code in the process.
+> >
+> > Moving it to W=1 for the moment is probably fine, but ideally
+> > I think we should fix the kernel to behave according to the
+> > C standard.
 >
-> Hi Arnd,
+> Lol... we're actively moving away from the C standard on many places.
 >
-> You did a couple of these last year in commit c6244b3b2377 ("rbd: avoid
-> Wreturn-type warnings").
+> Why does the silly compiler think it is a problem to take the address of
+> a member of a packed structure? That sounds like something that's
+> perfectly fine and useful.
 
-Ah, I had completely forgotten about that. Different bug and different
-compiler, but same solution ;-)
+The problem is casting a pointer of an unaligned variable to one
+of higher alignment and passing that to a function that does not
+expect unaligned data.
 
->  Let's change all of those default cases to BUG
-> in one go.  Do you want to do that or should I?
+On CPUs that don't have unaligned load/store instructions, this
+causes an alignment fault, which will have to be fixed up in
+software by doing a bytewise access or crash the system.
 
-I've prepared another patch now and sent it out, please
-apply it on top. I'd like this one-line patch to stay separate though
-since it captures the warning message and may need to
-be backported to stable kernels later.
-
-      Arnd
+        Arnd
