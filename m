@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE94C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:44:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26699C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:44:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C8AC218B0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:44:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA551218B0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:44:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255079;
-	bh=4vhGvjomiRtmGHXYbOSOXDnwKsP36gYaoaYoAvxZdVk=;
+	s=default; t=1553255085;
+	bh=IDhXuNHHtMWNL7duP0Bmwecayz+wm44k+qIbqLL1r0M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YKf6sPqALodvqfU9qlZjEQhcR/nj1PGMO8h4xufaXtOqcuLBxy3nfr/exz5aJ+8cN
-	 MNIxGx1Fsyf1ZH4xumh03GF/+RVQEjss8RmlnTBE1Mz+ToCztSEZW2MWQN50n2o0ZD
-	 MKI9ve2Qj9LySkBUwZgSW5FtJHaLCzOZjb3vQY3Y=
+	b=xhD5wVyLb8S/AemL5DdXfleU7QkjSkFQ3iKK9JR7sBslAAgiUnuHhSDA/TA04qI7l
+	 4efxnhDeQS03ZXJQnTL8D7J+DYGG3NyAQoa+waUR+2kLOkQxraT3UoPRHutreJQ/Eb
+	 QlOLZviSpyAr2qDmFpMuztd41GW0E0VseCuwsy50=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731439AbfCVLoi (ORCPT
+        id S1731852AbfCVLon (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:44:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47544 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:44:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731352AbfCVLoe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:44:34 -0400
+        id S1731836AbfCVLok (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:44:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E483218B0;
-        Fri, 22 Mar 2019 11:44:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E77D62082C;
+        Fri, 22 Mar 2019 11:44:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255072;
-        bh=4vhGvjomiRtmGHXYbOSOXDnwKsP36gYaoaYoAvxZdVk=;
+        s=default; t=1553255079;
+        bh=IDhXuNHHtMWNL7duP0Bmwecayz+wm44k+qIbqLL1r0M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uI8iIOK5kh3YAL6XOoMCA9k/Pc5fj1Zvr54MJVrC5sL/Xw0TfzlcrlwFHVmB7tsZf
-         GZKjthleTp44+lOrH8QjcuoCgmBFOC59ucb6TimnBPrWNdo9Z0Zqo44dZqFlvnHybM
-         tDQUcVt6NzcTh9ElmuVqIioMU7n5bevkFlQrrjl4=
+        b=Cwm/AW/YH8oc6uw7nXJcs4xLJhnMbxVwzHPjnSWGGproaECURoKfe4Tx4mrxTcIps
+         xZ+ApN0fMgigD8jQsJKOVyBq94ry+chfT+3KFbq+6dbhyiETfpCv2xOTTEiZd7QYi4
+         PW5C8Fgnm3DOb8TZTontIlGMCdsQkvG15prMk5T4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Meelis Roos <mroos@linux.ee>,
-        Mathieu Malaterre <malat@debian.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.9 098/118] powerpc/ptrace: Simplify vr_get/set() to avoid GCC warning
-Date:   Fri, 22 Mar 2019 12:16:10 +0100
-Message-Id: <20190322111223.354110625@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 4.9 099/118] ARM: s3c24xx: Fix boolean expressions in osiris_dvs_notify
+Date:   Fri, 22 Mar 2019 12:16:11 +0100
+Message-Id: <20190322111223.401213152@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111215.873964544@linuxfoundation.org>
 References: <20190322111215.873964544@linuxfoundation.org>
@@ -66,113 +66,48 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-commit ca6d5149d2ad0a8d2f9c28cbe379802260a0a5e0 upstream.
+commit e2477233145f2156434afb799583bccd878f3e9f upstream.
 
-GCC 8 warns about the logic in vr_get/set(), which with -Werror breaks
-the build:
+Fix boolean expressions by using logical AND operator '&&' instead of
+bitwise operator '&'.
 
-  In function ‘user_regset_copyin’,
-      inlined from ‘vr_set’ at arch/powerpc/kernel/ptrace.c:628:9:
-  include/linux/regset.h:295:4: error: ‘memcpy’ offset [-527, -529] is
-  out of the bounds [0, 16] of object ‘vrsave’ with type ‘union
-  <anonymous>’ [-Werror=array-bounds]
-  arch/powerpc/kernel/ptrace.c: In function ‘vr_set’:
-  arch/powerpc/kernel/ptrace.c:623:5: note: ‘vrsave’ declared here
-     } vrsave;
+This issue was detected with the help of Coccinelle.
 
-This has been identified as a regression in GCC, see GCC bug 88273.
-
-However we can avoid the warning and also simplify the logic and make
-it more robust.
-
-Currently we pass -1 as end_pos to user_regset_copyout(). This says
-"copy up to the end of the regset".
-
-The definition of the regset is:
-	[REGSET_VMX] = {
-		.core_note_type = NT_PPC_VMX, .n = 34,
-		.size = sizeof(vector128), .align = sizeof(vector128),
-		.active = vr_active, .get = vr_get, .set = vr_set
-	},
-
-The end is calculated as (n * size), ie. 34 * sizeof(vector128).
-
-In vr_get/set() we pass start_pos as 33 * sizeof(vector128), meaning
-we can copy up to sizeof(vector128) into/out-of vrsave.
-
-The on-stack vrsave is defined as:
-  union {
-	  elf_vrreg_t reg;
-	  u32 word;
-  } vrsave;
-
-And elf_vrreg_t is:
-  typedef __vector128 elf_vrreg_t;
-
-So there is no bug, but we rely on all those sizes lining up,
-otherwise we would have a kernel stack exposure/overwrite on our
-hands.
-
-Rather than relying on that we can pass an explict end_pos based on
-the sizeof(vrsave). The result should be exactly the same but it's
-more obviously not over-reading/writing the stack and it avoids the
-compiler warning.
-
-Reported-by: Meelis Roos <mroos@linux.ee>
-Reported-by: Mathieu Malaterre <malat@debian.org>
+Fixes: 4fa084af28ca ("ARM: OSIRIS: DVS (Dynamic Voltage Scaling) supoort.")
 Cc: stable@vger.kernel.org
-Tested-by: Mathieu Malaterre <malat@debian.org>
-Tested-by: Meelis Roos <mroos@linux.ee>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+[krzk: Fix -Wparentheses warning]
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/kernel/ptrace.c |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ arch/arm/mach-s3c24xx/mach-osiris-dvs.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/arch/powerpc/kernel/ptrace.c
-+++ b/arch/powerpc/kernel/ptrace.c
-@@ -547,6 +547,7 @@ static int vr_get(struct task_struct *ta
- 		/*
- 		 * Copy out only the low-order word of vrsave.
- 		 */
-+		int start, end;
- 		union {
- 			elf_vrreg_t reg;
- 			u32 word;
-@@ -555,8 +556,10 @@ static int vr_get(struct task_struct *ta
+--- a/arch/arm/mach-s3c24xx/mach-osiris-dvs.c
++++ b/arch/arm/mach-s3c24xx/mach-osiris-dvs.c
+@@ -70,16 +70,16 @@ static int osiris_dvs_notify(struct noti
  
- 		vrsave.word = target->thread.vrsave;
- 
-+		start = 33 * sizeof(vector128);
-+		end = start + sizeof(vrsave);
- 		ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf, &vrsave,
--					  33 * sizeof(vector128), -1);
-+					  start, end);
- 	}
- 
- 	return ret;
-@@ -594,6 +597,7 @@ static int vr_set(struct task_struct *ta
- 		/*
- 		 * We use only the first word of vrsave.
- 		 */
-+		int start, end;
- 		union {
- 			elf_vrreg_t reg;
- 			u32 word;
-@@ -602,8 +606,10 @@ static int vr_set(struct task_struct *ta
- 
- 		vrsave.word = target->thread.vrsave;
- 
-+		start = 33 * sizeof(vector128);
-+		end = start + sizeof(vrsave);
- 		ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf, &vrsave,
--					 33 * sizeof(vector128), -1);
-+					 start, end);
- 		if (!ret)
- 			target->thread.vrsave = vrsave.word;
- 	}
+ 	switch (val) {
+ 	case CPUFREQ_PRECHANGE:
+-		if (old_dvs & !new_dvs ||
+-		    cur_dvs & !new_dvs) {
++		if ((old_dvs && !new_dvs) ||
++		    (cur_dvs && !new_dvs)) {
+ 			pr_debug("%s: exiting dvs\n", __func__);
+ 			cur_dvs = false;
+ 			gpio_set_value(OSIRIS_GPIO_DVS, 1);
+ 		}
+ 		break;
+ 	case CPUFREQ_POSTCHANGE:
+-		if (!old_dvs & new_dvs ||
+-		    !cur_dvs & new_dvs) {
++		if ((!old_dvs && new_dvs) ||
++		    (!cur_dvs && new_dvs)) {
+ 			pr_debug("entering dvs\n");
+ 			cur_dvs = true;
+ 			gpio_set_value(OSIRIS_GPIO_DVS, 0);
 
 
