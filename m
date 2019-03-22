@@ -6,60 +6,59 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 293C7C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 01:45:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71FBEC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 01:46:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E463B21902
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 01:45:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E18A218E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 01:46:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LG4eB5a2"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="T7TjPlkJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727559AbfCVBpU (ORCPT
+        id S1727584AbfCVBqJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 21:45:20 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:35445 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725999AbfCVBpU (ORCPT
+        Thu, 21 Mar 2019 21:46:09 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:39754 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725999AbfCVBqJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 21:45:20 -0400
-Received: by mail-oi1-f193.google.com with SMTP id j132so581865oib.2
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 18:45:19 -0700 (PDT)
+        Thu, 21 Mar 2019 21:46:09 -0400
+Received: by mail-ot1-f65.google.com with SMTP id f10so595363otb.6
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 18:46:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=IzGH74VeWCDe45fBYXJn30SskmUE19w007KfbQWB29U=;
-        b=LG4eB5a2Y+wQywfGoFIzNiOvDAbSXWcPmw7pjjIjcd0nJmWcVkuqvn5FuAYB/Qjjdm
-         DVEnR3fXHvDceXyGRvI0d0U5j7W5lL1qMGEzDf5HgWNw40PYlsabjjA2mnH/AmzXJJ/J
-         ltzNXp2Z6pKzoDTKeKzTfP2l28W2K2jCopqx/wQtkhJPcCRr61vmiK/aO+Fp/D2JtwZe
-         bD2Y1SDvS2BmuCs2YsboWMtj0UxRriCia7EZgyEcPrzbI19611DrHHo4djYibGNs0G+M
-         8y2g3dKN4UeuGYLkheR+NmfzX/68M7a+0lmdoOZiIyJ+sb/a9yZ4yJ2E0jCZrnXrHhEl
-         ArWA==
+        bh=x5Low4SuSzWr6ujbDyxHrARXjGVys0Q5FQRetssJ/yY=;
+        b=T7TjPlkJIXF7J9SZ+bV1+gtfPYv4ahYUwC0C7UfS+kQHoq0koldlw5i82ZgzJzKmih
+         76beQhdFRHnJE5OWJWYyP0kiR5MzzW8sDkKL06X/b9iy2DNLPF5gY8izh3FQY/oiBP/V
+         HhVSlZQF+z3K5McQKdSAvvb5eQdWR1VuqrapcS5h1nvNa/Retg50SMYxY3UlwfmI1rTH
+         LRN+K0+gshCBFW/bYaCFwZFNjU8WStUIdpU1nF1vQN2Mq6+G0EP+TasUXYko1gTcz27F
+         r9v70by+4ETaDxNNU6B5nVPr7YtkItNXAnBpTYrTMTV2QXcBUxeuJIzJq/eN4JHkTHXX
+         WiSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=IzGH74VeWCDe45fBYXJn30SskmUE19w007KfbQWB29U=;
-        b=S8iiSP/QuXiO7UmHS/qgukmk+RGCYv04c06O48uS1zVxlesDNiZMy9c/PRbk4JdkvC
-         dV0fWftvRO9sQbwkmaTZjzq2oy+zFKh9yxDis0/2shWqH8b+NZ7x+DF3Je3kPOsJ8aPR
-         EVdRHoTV58Q5WSoIg7hTMLPtp0mK18jE3HDTkdfCfGEGUqzlfOPqR/bCSQDwH80Mp8y+
-         PcSDNuTR0aiPU9tf2jY+cDDZxc95ALRyMpn9kUvDGLdIHtSZb5/CJ4JEraLi54p32HzO
-         j+B/Ok9R8wGXDzcO2RIv8cU1PuI6WU5wEQEgqDMhmDl9X5DH1A88KYJZRFXfZpVoUw/O
-         NHzg==
-X-Gm-Message-State: APjAAAVNUJdkC5rOyyJG1NLOWZ4tL4c8xTfxXVSXkjiEfFRFgesAbSBA
-        PUYqWffBPLxdteIeEtSq9ENt4FztBhdBZYqsi/ohcQ==
-X-Google-Smtp-Source: APXvYqx0T1a0XCzgdvDAJpl9vzYiOujWa77j1S+0TdseXoK0Oikz8KQpo5c1Jr8472pSSSosDAOg4a5y4Jd2KzREIUM=
-X-Received: by 2002:aca:f594:: with SMTP id t142mr227338oih.100.1553219119345;
- Thu, 21 Mar 2019 18:45:19 -0700 (PDT)
+        bh=x5Low4SuSzWr6ujbDyxHrARXjGVys0Q5FQRetssJ/yY=;
+        b=rHC/mBg76yS43iSBrA2LZHdTSzwmbamHQ/jmzM9hM7bsZ9Fz62MWq7LWcW1hCLVDN9
+         dYWJ6m5EhQfyNvOnhKfuIEh0hPAIdwn2IyZ5w8Ki3tFwthKhnoGSkrO2ExaWA3fQgns0
+         sM3Ou+kRrIkEWfmyE9oZj2kWlMcZxVCOALHAge+xGsSXO/E5HAC7eef0LPzFowEgH1JJ
+         Zi202Ymp7/zyxJh3Zp9cDeBcPoWa+NCTY7SlT3ityN01+XQDIElmcI1bo5PDI62PBOqh
+         nor+2i7DpWwoZumUENz4f9maN57YhTT+WF+h1POioMdpx1hbI8W18yrkkXfXJGTU8ut7
+         Q0Hg==
+X-Gm-Message-State: APjAAAVRlMI/Qjlb/lyuqDlPg4UmPbJ1F+sszpvyJmz8ih1FHCYbFFNH
+        JRyTsYCA15xsAxywDBQxiocGBGBaT6FlMh7V0xjDNw==
+X-Google-Smtp-Source: APXvYqy/8dG61BYN/fnVjVtu8UVSnJ5MzUoCEbyHB5UgFgPA66o4CcZ22P7g4ceO4cAryYGdlGcIT448OTQSNXOJlqI=
+X-Received: by 2002:a9d:d66:: with SMTP id 93mr4885898oti.25.1553219167991;
+ Thu, 21 Mar 2019 18:46:07 -0700 (PDT)
 MIME-Version: 1.0
 References: <20190214213729.21702-1-brendanhiggins@google.com>
- <20190214213729.21702-17-brendanhiggins@google.com> <dd0c4033-183b-9e77-1dee-7c88f62771fa@gmail.com>
-In-Reply-To: <dd0c4033-183b-9e77-1dee-7c88f62771fa@gmail.com>
+ <20190214213729.21702-18-brendanhiggins@google.com> <09b06e6d-fd36-707e-cb7a-e935bd930510@gmail.com>
+In-Reply-To: <09b06e6d-fd36-707e-cb7a-e935bd930510@gmail.com>
 From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Thu, 21 Mar 2019 18:45:08 -0700
-Message-ID: <CAFd5g45QnvgyoAGcSQe0E3P1U=qsrRe4uCqXTNCroobmbUH0ng@mail.gmail.com>
-Subject: Re: [RFC v4 16/17] of: unittest: split out a couple of test cases
- from unittest
+Date:   Thu, 21 Mar 2019 18:45:56 -0700
+Message-ID: <CAFd5g47wgUT-+NJEaZYROKGQ1YuroSv0v4Yj6=Ji6h6VANp0dg@mail.gmail.com>
+Subject: Re: [RFC v4 17/17] of: unittest: split up some super large test cases
 To:     Frank Rowand <frowand.list@gmail.com>
 Cc:     Kees Cook <keescook@google.com>,
         Luis Chamberlain <mcgrof@kernel.org>, shuah@kernel.org,
@@ -93,15 +92,12 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 21, 2019 at 6:15 PM Frank Rowand <frowand.list@gmail.com> wrote:
+On Thu, Mar 21, 2019 at 6:16 PM Frank Rowand <frowand.list@gmail.com> wrote:
 >
 > On 2/14/19 1:37 PM, Brendan Higgins wrote:
-> > Split out a couple of test cases that these features in base.c from the
-> > unittest.c monolith. The intention is that we will eventually split out
-> > all test cases and group them together based on what portion of device
-> > tree they test.
+> > Split up the super large test cases of_unittest_find_node_by_name and
+> > of_unittest_dynamic into properly sized and defined test cases.
 >
-> I still object to this patch.  I do not want this code scattered into
-> additional files.
+> I also still object to this patch.
 
-Sure, no problem. I will remove this from future revisions.
+I figured. Will drop.
