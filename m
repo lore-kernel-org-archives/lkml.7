@@ -2,91 +2,116 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA1B4C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 10:28:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2984FC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 10:29:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7931C21874
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 10:28:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553250501;
-	bh=iKr4d+9CDxuKto9/gsDbiCrLXdxCEHxm2JAjxw4sM3Y=;
-	h=From:Date:Subject:To:Cc:List-ID:From;
-	b=GttbVIa645U3FUrs5rcPntxmWhAugRmxQnpqaHrKfHJfvmgGztUzbyu0Cr43UAz0I
-	 VhyLdx5ZqeK7yfenEMg1RonZRyCBcyvAB2SvbGnGtbxUpglcwFrGzOLt0AgM3463Bw
-	 0LQxfxvFx2hcAsEImyIvW625JpFK+QMDEj8fZKkw=
+	by mail.kernel.org (Postfix) with ESMTP id E657521874
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 10:29:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="a0RnkQvg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728063AbfCVK2U (ORCPT
+        id S1728024AbfCVK3U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 06:28:20 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:38643 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727739AbfCVK2T (ORCPT
+        Fri, 22 Mar 2019 06:29:20 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:60280 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727739AbfCVK3U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 06:28:19 -0400
-Received: by mail-ot1-f67.google.com with SMTP id e80so1475469ote.5;
-        Fri, 22 Mar 2019 03:28:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=elHykPYN2bpDNdYbHd7n+k6DCnnNEnK+sfeC+gWZLts=;
-        b=qss36nuwpIiYm2MEkOnnk8+P4ZTDEu2XyM4jQPKXYKCfT1u4i3IiWtfBn+PsqFo35y
-         dR3NW3mVcFVuLVJvfCqPMibY84beFG29/bkg+9iOyIM6yV/yNd1+8NqcedY/14mchcAz
-         gklDe/ctZMSufmV9eg91Csy9jTxofH1qTy8MaV51bNlf9iDoNysQag6SiUqPyRsOZhr+
-         kDS7xIDMe5AmbuS4TH+hgFS7GbJvQ2hL5eygwD45O+vbRqLL93CpwxNNh+hCUck6E767
-         NutA+4O225sYXQRdph9WFy1gYWcvnI7Gzizj+BJtkBz+J+Md/yxoTuUn2T1QckXXxax5
-         i/NA==
-X-Gm-Message-State: APjAAAVTSQc+lha1T0v32ktwZasNo8TAPK3ocmaaEMwTwI0VlKYJP3Hf
-        XMREROoHdHUOI5cWEdoyAb0sBO2EqX9x1lpGmGUAbbGK
-X-Google-Smtp-Source: APXvYqxtFNukVNHkQun1344roAerIMWFt3A4NByASfcOF7QmBn+ZS7YPg2X0xhlB0cDtgDjeNNsmipAnZsQ6IwgGtFc=
-X-Received: by 2002:a9d:36a:: with SMTP id 97mr5798160otv.124.1553250499236;
- Fri, 22 Mar 2019 03:28:19 -0700 (PDT)
+        Fri, 22 Mar 2019 06:29:20 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2MAT7B4013509;
+        Fri, 22 Mar 2019 05:29:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1553250547;
+        bh=0O1zkDSF0obwwtT/py6J6dtl46lTqaWeKMz+a7C4wtw=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=a0RnkQvgZx58JZhU1Go8ypJ4vatoR1dXdhWaMLGCeFNXwNfgEqFVf6gJ5NWkayzII
+         3s1KZH3Eg6N2a37FaxhJzjxGUsL/JQioCh4Kf+krzNbcHC8DzjBJvQN8lPCcEnzG/4
+         zFW2HLfv/au45IQTWqJ/mIxh/LYSdeUsW0fQ+iV0=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2MAT6NS058320
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 22 Mar 2019 05:29:07 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 22
+ Mar 2019 05:29:06 -0500
+Received: from dflp33.itg.ti.com (10.64.6.16) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_0,
+ cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5 via Frontend Transport;
+ Fri, 22 Mar 2019 05:29:06 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by dflp33.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2MAT3gu006787;
+        Fri, 22 Mar 2019 05:29:03 -0500
+Subject: Re: [PATCH v2 05/15] drm/bridge: tc358767: Drop custom
+ tc_write()/tc_read() accessors
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        <dri-devel@lists.freedesktop.org>
+CC:     Archit Taneja <architt@codeaurora.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Andrey Gusakov <andrey.gusakov@cogentembedded.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        <linux-kernel@vger.kernel.org>
+References: <20190322032901.12045-1-andrew.smirnov@gmail.com>
+ <20190322032901.12045-6-andrew.smirnov@gmail.com>
+From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
+Message-ID: <19eddb76-38f7-e7cb-9a9f-5b435e67c63e@ti.com>
+Date:   Fri, 22 Mar 2019 12:29:02 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 22 Mar 2019 11:28:08 +0100
-Message-ID: <CAJZ5v0i5Jy9sAXLQX-Wap5qW6_sw+CW9JOx4t8E=hazK39_xHw@mail.gmail.com>
-Subject: [GIT PULL] Device properties framework fix for v5.1-rc2
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190322032901.12045-6-andrew.smirnov@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On 22/03/2019 05:28, Andrey Smirnov wrote:
+> A very unfortunate aspect of tc_write()/tc_read() macro helpers is
+> that they capture quite a bit of context around them and thus require
+> the caller to have magic variables 'ret' and 'tc' as well as label
+> 'err'. That makes a number of code paths rather counterintuitive and
+> somewhat clunky, for example tc_stream_clock_calc() ends up being like
+> this:
+> 
+> 	int ret;
+> 
+> 	tc_write(DP0_VIDMNGEN1, 32768);
+> 
+> 	return 0;
+> err:
+> 	return ret;
+> 
+> which is rather surprising when you read the code for the first
+> time. Since those helpers arguably aren't really saving that much code
+> and there's no way of fixing them without making them too verbose to
+> be worth it change the driver code to not use them at all.
 
-Please pull from the tag
+I fully agree with this patch and thought about the same thing during my
+work.
 
- git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
- devprop-5.1-rc2
+However, the timing of this patch is not too good, as this one will
+totally conflict with any other patch for tc358767, and my series is
+still evolving.
 
-with top-most commit 0e3edd94448001a33ed7f8af2179cd4a280348a2
+We need to figure out how to combine this series and mine, but I think
+either this patch should be dropped for now, and reapplied after the
+other patches have stabilized, or I think preferably, this one could be
+rebased on top of 5.1-rc1, and used as a base for all other tc358767 work.
 
- drivers: base: swnode: Make two functions static
+ Tomi
 
-on top of commit 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b
-
- Linux 5.1-rc1
-
-to receive a device properties framework fix for 5.1-rc2.
-
-This adds missing "static" in two places (YueHaibing).
-
-Thanks!
-
-
----------------
-
-YueHaibing (1):
-      drivers: base: swnode: Make two functions static
-
----------------
-
- drivers/base/swnode.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
