@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAE7BC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:15:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD5B8C10F03
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:15:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7ACE321900
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:15:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 848B9218A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:15:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256947;
-	bh=OwRoT83iUpasr6TlbY0lZmz0Ln4WK5v+vPsW4hR/82o=;
+	s=default; t=1553256951;
+	bh=ZoFHuo80kcKVcIfG03GBxqnJ6ed5B66r/sOGzlpG2iM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wZrLYyQPDVeXI5I8mk93bPZ6kDnrYtzeD7u2Z0nN+DhbsrTsrL0Q2V5XzRrhAng4c
-	 qRCh4ie5pz6bnsHTXebfsxDLMbVlVOF0S8ym7ydijOdTYDZRr2jDDw8MfDVMn0IsJU
-	 vhxgczGymNSqYo1EAhMs6zXeP+fN226l9PPbp2r8=
+	b=d3cap3uXSoEUBQJWN8KSN+MI5VGLrfdvWXLY289Ay+I8nsfdITfl1U/siDV0T1NHz
+	 Qau9oAhNaSeoDgb3HfMiR75S1bLoF5UcywQC/teZPgeadCktkiIHhjW0hmNG4UBsWV
+	 HSDy7DdSK9TcjiWk6GgsLkPR2KDH1A9hsvpg/4S8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390119AbfCVMPq (ORCPT
+        id S2389965AbfCVMPu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:15:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54234 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:15:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54284 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390100AbfCVMPm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:15:42 -0400
+        id S2390111AbfCVMPo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:15:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A9D62083D;
-        Fri, 22 Mar 2019 12:15:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADAD12082C;
+        Fri, 22 Mar 2019 12:15:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256941;
-        bh=OwRoT83iUpasr6TlbY0lZmz0Ln4WK5v+vPsW4hR/82o=;
+        s=default; t=1553256944;
+        bh=ZoFHuo80kcKVcIfG03GBxqnJ6ed5B66r/sOGzlpG2iM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m0JhayUnx7kf/vHvHB4BIxQjkVv6ZMUD+hQMKHqltCdnWXGlsP9PrBgcXZuGd8zoK
-         KN7J/o+Q14NcvkjGwfK+l/uxA2b7cZBczQqc3sRXLRq4HXQ9qliVhrsoxEdf6/AH2c
-         69rGePEbejMcZ1s2pJirx7U9ZZGCwyCKr2PY4W+k=
+        b=ZPQpn42VkNYESwThFQW7X22YbVn1bUSBdsN/9e/mMDNvxAQA5uNOJXLrSG3GCRvQX
+         tot/OoaieDUy0xPbX78gdti3dfFBCRkRyGEmllRIh/quw3aCmXtabV2UNSVG6kZinR
+         67CxY4SmeZS98k9LcbUWnWSGQEkd/3iPZwdUzC/o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Himanshu Madhani <hmadhani@marvell.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 5.0 083/238] scsi: qla2xxx: Fix LUN discovery if loop id is not assigned yet by firmware
-Date:   Fri, 22 Mar 2019 12:15:02 +0100
-Message-Id: <20190322111303.489351779@linuxfoundation.org>
+        stable@vger.kernel.org, "zhangyi (F)" <yi.zhang@huawei.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 5.0 057/238] tracing: Do not free iter->trace in fail path of tracing_open_pipe()
+Date:   Fri, 22 Mar 2019 12:14:36 +0100
+Message-Id: <20190322111301.888128581@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -65,45 +65,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Himanshu Madhani <hmadhani@marvell.com>
+From: zhangyi (F) <yi.zhang@huawei.com>
 
-commit ec322937a7f152d68755dc8316523bf6f831b48f upstream.
+commit e7f0c424d0806b05d6f47be9f202b037eb701707 upstream.
 
-This patch fixes LUN discovery when loop ID is not yet assigned by the
-firmware during driver load/sg_reset operations. Driver will now search for
-new loop id before retrying login.
+Commit d716ff71dd12 ("tracing: Remove taking of trace_types_lock in
+pipe files") use the current tracer instead of the copy in
+tracing_open_pipe(), but it forget to remove the freeing sentence in
+the error path.
 
-Fixes: 48acad099074 ("scsi: qla2xxx: Fix N2N link re-connect")
-Cc: stable@vger.kernel.org #4.19
-Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+There's an error path that can call kfree(iter->trace) after the iter->trace
+was assigned to tr->current_trace, which would be bad to free.
+
+Link: http://lkml.kernel.org/r/1550060946-45984-1-git-send-email-yi.zhang@huawei.com
+
+Cc: stable@vger.kernel.org
+Fixes: d716ff71dd12 ("tracing: Remove taking of trace_types_lock in pipe files")
+Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/qla2xxx/qla_init.c |   13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ kernel/trace/trace.c |    1 -
+ 1 file changed, 1 deletion(-)
 
---- a/drivers/scsi/qla2xxx/qla_init.c
-+++ b/drivers/scsi/qla2xxx/qla_init.c
-@@ -644,11 +644,14 @@ static void qla24xx_handle_gnl_done_even
- 				break;
- 			case DSC_LS_PORT_UNAVAIL:
- 			default:
--				if (fcport->loop_id != FC_NO_LOOP_ID)
--					qla2x00_clear_loop_id(fcport);
--
--				fcport->loop_id = loop_id;
--				fcport->fw_login_state = DSC_LS_PORT_UNAVAIL;
-+				if (fcport->loop_id == FC_NO_LOOP_ID) {
-+					qla2x00_find_new_loop_id(vha, fcport);
-+					fcport->fw_login_state =
-+					    DSC_LS_PORT_UNAVAIL;
-+				}
-+				ql_dbg(ql_dbg_disc, vha, 0x20e5,
-+				    "%s %d %8phC\n", __func__, __LINE__,
-+				    fcport->port_name);
- 				qla24xx_fcport_handle_login(vha, fcport);
- 				break;
- 			}
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -5626,7 +5626,6 @@ out:
+ 	return ret;
+ 
+ fail:
+-	kfree(iter->trace);
+ 	kfree(iter);
+ 	__trace_array_put(tr);
+ 	mutex_unlock(&trace_types_lock);
 
 
