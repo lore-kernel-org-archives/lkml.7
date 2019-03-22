@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F362C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:55:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06714C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:55:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E8A22192B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:55:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6E2720850
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:55:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255742;
-	bh=GbyxsD6Prpl7jUlODWfD8hwjY9wjzQlLcbRE1J40ycA=;
+	s=default; t=1553255749;
+	bh=vj1wCnMSOybzqJLJKVlOm1pIA2oYyFOA71CevztUk24=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KeLdOqa2ral35E3NzvBsj8S+GDPkneaDA/JZp0CW3+vvE2JWrEdjxrmxS+iW3X7DR
-	 e3Pz5HP4eX3HaVBkXzUHXJRh45NIBb9/K756ZA8ya2YsAorFRNPS+ITpiH4q7ccpHf
-	 O/ylndgXi8eXheaP6Nzfc8KD3PTSZ/3WccprFy70=
+	b=HGFOcxxVFrSUN1DVq+rXYaFEQE5wrGDehj2m7Hy7SByTvI3e8QSjElDESOBkMTweY
+	 HZNkJBfXcftqjCoN0stkLaAs3QqX4eqTbDnkMbimjtYcCfM6x4U20/ph7TsG7XMAW0
+	 kZfaZfowKaaAR5ASOQPbbwOduRSa3An5rBgiLXqI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387440AbfCVLzk (ORCPT
+        id S1733247AbfCVLzs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:55:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60268 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:55:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387427AbfCVLzi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:55:38 -0400
+        id S2387443AbfCVLzp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:55:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C45621916;
-        Fri, 22 Mar 2019 11:55:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E95820850;
+        Fri, 22 Mar 2019 11:55:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255738;
-        bh=GbyxsD6Prpl7jUlODWfD8hwjY9wjzQlLcbRE1J40ycA=;
+        s=default; t=1553255744;
+        bh=vj1wCnMSOybzqJLJKVlOm1pIA2oYyFOA71CevztUk24=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QdwK6B1wfGKDubfe+J3O9mqXCEkhGkyfJjb5BC4FlIa0Is6M1DWP7I6682Shrr1Nx
-         AZq6fGdoU6+zi+gz5/ZK88hKj3WBPS4KqKDmKMcGQEQ/Qee/XvmSfHo3Uzf2yR65hP
-         nKpABqVc8wJL3ox8wnJUG1xqtxdjuZt9o7JLWrxI=
+        b=WgBbIPZxtZPqe2/plf6oagyAzeVNIEjUDTQ/jTW/m6Zyb6+XBbrOz70XtHrzCvATG
+         3ytZTdmoebiqrDYXwE/cAzFHv/dt4bqb1z7umsipYWU2Q1ZloACeLYZCGyX+M0Q87o
+         ipOrZbnSrzMayR68cIjneFGn4+kHh/XjYI+JBw7E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 4.14 176/183] drm/radeon/evergreen_cs: fix missing break in switch statement
-Date:   Fri, 22 Mar 2019 12:16:44 +0100
-Message-Id: <20190322111254.644870809@linuxfoundation.org>
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 4.14 178/183] KVM: x86/mmu: Detect MMIO generation wrap in any address space
+Date:   Fri, 22 Mar 2019 12:16:46 +0100
+Message-Id: <20190322111254.793624697@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111241.819468003@linuxfoundation.org>
 References: <20190322111241.819468003@linuxfoundation.org>
@@ -66,35 +66,60 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Gustavo A. R. Silva <gustavo@embeddedor.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit cc5034a5d293dd620484d1d836aa16c6764a1c8c upstream.
+commit e1359e2beb8b0a1188abc997273acbaedc8ee791 upstream.
 
-Add missing break statement in order to prevent the code from falling
-through to case CB_TARGET_MASK.
+The check to detect a wrap of the MMIO generation explicitly looks for a
+generation number of zero.  Now that unique memslots generation numbers
+are assigned to each address space, only address space 0 will get a
+generation number of exactly zero when wrapping.  E.g. when address
+space 1 goes from 0x7fffe to 0x80002, the MMIO generation number will
+wrap to 0x2.  Adjust the MMIO generation to strip the address space
+modifier prior to checking for a wrap.
 
-This bug was found thanks to the ongoing efforts to enable
--Wimplicit-fallthrough.
-
-Fixes: dd220a00e8bd ("drm/radeon/kms: add support for streamout v7")
-Cc: stable@vger.kernel.org
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fixes: 4bd518f1598d ("KVM: use separate generations for each address space")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/radeon/evergreen_cs.c |    1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/kvm/mmu.c |   21 +++++++++++++++++++--
+ 1 file changed, 19 insertions(+), 2 deletions(-)
 
---- a/drivers/gpu/drm/radeon/evergreen_cs.c
-+++ b/drivers/gpu/drm/radeon/evergreen_cs.c
-@@ -1299,6 +1299,7 @@ static int evergreen_cs_handle_reg(struc
- 			return -EINVAL;
- 		}
- 		ib[idx] += (u32)((reloc->gpu_offset >> 8) & 0xffffffff);
-+		break;
- 	case CB_TARGET_MASK:
- 		track->cb_target_mask = radeon_get_ib_value(p, idx);
- 		track->cb_dirty = true;
+--- a/arch/x86/kvm/mmu.c
++++ b/arch/x86/kvm/mmu.c
+@@ -5420,11 +5420,28 @@ static bool kvm_has_zapped_obsolete_page
+ 
+ void kvm_mmu_invalidate_mmio_sptes(struct kvm *kvm, u64 gen)
+ {
++	gen &= MMIO_GEN_MASK;
++
++	/*
++	 * Shift to eliminate the "update in-progress" flag, which isn't
++	 * included in the spte's generation number.
++	 */
++	gen >>= 1;
++
++	/*
++	 * Generation numbers are incremented in multiples of the number of
++	 * address spaces in order to provide unique generations across all
++	 * address spaces.  Strip what is effectively the address space
++	 * modifier prior to checking for a wrap of the MMIO generation so
++	 * that a wrap in any address space is detected.
++	 */
++	gen &= ~((u64)KVM_ADDRESS_SPACE_NUM - 1);
++
+ 	/*
+-	 * The very rare case: if the generation-number is round,
++	 * The very rare case: if the MMIO generation number has wrapped,
+ 	 * zap all shadow pages.
+ 	 */
+-	if (unlikely((gen & MMIO_GEN_MASK) == 0)) {
++	if (unlikely(gen == 0)) {
+ 		kvm_debug_ratelimited("kvm: zapping shadow pages for mmio generation wraparound\n");
+ 		kvm_mmu_invalidate_zap_all_pages(kvm);
+ 	}
 
 
