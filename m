@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE725C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:34:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D75FC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:34:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF3EC21929
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:34:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2D6E21916
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:34:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254459;
-	bh=JXSHeJ9YY4t8zr67PU0dgb4Ny2AIW3b5mPYbX2RaiTc=;
+	s=default; t=1553254462;
+	bh=tnfkSFnsp86RzNwpFSEIkXFXM0jGj+UGUnA+5PcFYsU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ykxdS5jiKqK//zB1HLgqYTnjlEcbTklc0i1eOVwMCmF5MIkK7P5ZNk+8l/T4O6aja
-	 wjV1q3Y8mR/W4UZ7Ds1cJxPSvW+kIsbEqk88Y13Wo3fR5x5o58A2XPVmgEwnooqWPi
-	 lRD3YbeUCO74lSVNmq5RxhZ4H2vtwi6jlaGFK96g=
+	b=rlBWWUxfIDS9rreOw65O1gpIK/s/sejbF/E2xARVO6b/peo0LICUVPSae7urOGUOK
+	 RuG3g/XZ9qwa5e7oEUkmn2J/iEXPy6N6Qmb5rMa5Zyfqe94If9NKitwTlU0fz+YXLX
+	 PwUlxDLkDMeZf+YxoF18TCFH2Q+6iu1oCBNMkcCA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730397AbfCVLeS (ORCPT
+        id S1729618AbfCVLeV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:34:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34884 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:34:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729680AbfCVLeP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:34:15 -0400
+        id S1730199AbfCVLeS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:34:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 396422192C;
-        Fri, 22 Mar 2019 11:34:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09CC22183E;
+        Fri, 22 Mar 2019 11:34:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254454;
-        bh=JXSHeJ9YY4t8zr67PU0dgb4Ny2AIW3b5mPYbX2RaiTc=;
+        s=default; t=1553254457;
+        bh=tnfkSFnsp86RzNwpFSEIkXFXM0jGj+UGUnA+5PcFYsU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wp0FoZloqTbzWJfVp20+HAg33oLscBim758C2nK01jgHl1bELKFS1UIZ8R5Kao/xg
-         yuFU5XS2uil58WKbnz8rESUDHOLWQldagy7QCjvHU+UeRdI7u0Psqiu8vtsCd1wXYN
-         b0py+3fofP+cIViPDf1GxuK1A5ndE9Jpk/cM341M=
+        b=is8QIlifF41iDfXt+kUCunlB8dOloUZcAZqfTZs1DzdGCPf7AAXNLdIiHLAhD3C+X
+         FH4dLMnkUXrkHf0MBTRSlMzn6HNU5sC8iq/ONHdsig8TeCPIKYrqMrEGOf3fiTUJix
+         LqSz6CPAQBPBm4aSMYeEG40MNUUSvXmhfRK0xstE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guillaume Nault <gnault@redhat.com>,
+        stable@vger.kernel.org, Jianlin Shi <jishi@redhat.com>,
+        Stefano Brivio <sbrivio@redhat.com>,
+        Sabrina Dubroca <sd@queasysnail.net>,
         Eric Dumazet <edumazet@google.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 133/230] tcp: handle inet_csk_reqsk_queue_add() failures
-Date:   Fri, 22 Mar 2019 12:14:31 +0100
-Message-Id: <20190322111246.021116010@linuxfoundation.org>
+Subject: [PATCH 4.4 142/230] vxlan: Fix GRO cells race condition between receive and link delete
+Date:   Fri, 22 Mar 2019 12:14:40 +0100
+Message-Id: <20190322111246.614628121@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -66,66 +68,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Guillaume Nault <gnault@redhat.com>
+From: Stefano Brivio <sbrivio@redhat.com>
 
-[  Upstream commit 9d3e1368bb45893a75a5dfb7cd21fdebfa6b47af ]
+[ Upstream commit ad6c9986bcb627c7c22b8f9e9a934becc27df87c ]
 
-Commit 7716682cc58e ("tcp/dccp: fix another race at listener
-dismantle") let inet_csk_reqsk_queue_add() fail, and adjusted
-{tcp,dccp}_check_req() accordingly. However, TFO and syncookies
-weren't modified, thus leaking allocated resources on error.
+If we receive a packet while deleting a VXLAN device, there's a chance
+vxlan_rcv() is called at the same time as vxlan_dellink(). This is fine,
+except that vxlan_dellink() should never ever touch stuff that's still in
+use, such as the GRO cells list.
 
-Contrary to tcp_check_req(), in both syncookies and TFO cases,
-we need to drop the request socket. Also, since the child socket is
-created with inet_csk_clone_lock(), we have to unlock it and drop an
-extra reference (->sk_refcount is initially set to 2 and
-inet_csk_reqsk_queue_add() drops only one ref).
+Otherwise, vxlan_rcv() crashes while queueing packets via
+gro_cells_receive().
 
-For TFO, we also need to revert the work done by tcp_try_fastopen()
-(with reqsk_fastopen_remove()).
+Move the gro_cells_destroy() to vxlan_uninit(), which runs after the RCU
+grace period is elapsed and nothing needs the gro_cells anymore.
 
-Fixes: 7716682cc58e ("tcp/dccp: fix another race at listener dismantle")
-Signed-off-by: Guillaume Nault <gnault@redhat.com>
-Signed-off-by: Eric Dumazet <edumazet@google.com>
+This is now done in the same way as commit 8e816df87997 ("geneve: Use GRO
+cells infrastructure.") originally implemented for GENEVE.
+
+Reported-by: Jianlin Shi <jishi@redhat.com>
+Fixes: 58ce31cca1ff ("vxlan: GRO support at tunnel layer")
+Signed-off-by: Stefano Brivio <sbrivio@redhat.com>
+Reviewed-by: Sabrina Dubroca <sd@queasysnail.net>
+Reviewed-by: Eric Dumazet <edumazet@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/syncookies.c |    7 ++++++-
- net/ipv4/tcp_input.c  |    8 +++++++-
- 2 files changed, 13 insertions(+), 2 deletions(-)
+ drivers/net/vxlan.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/net/ipv4/syncookies.c
-+++ b/net/ipv4/syncookies.c
-@@ -228,7 +228,12 @@ struct sock *tcp_get_cookie_sock(struct
- 	if (child) {
- 		atomic_set(&req->rsk_refcnt, 1);
- 		sock_rps_save_rxhash(child, skb);
--		inet_csk_reqsk_queue_add(sk, req, child);
-+		if (!inet_csk_reqsk_queue_add(sk, req, child)) {
-+			bh_unlock_sock(child);
-+			sock_put(child);
-+			child = NULL;
-+			reqsk_put(req);
-+		}
- 	} else {
- 		reqsk_free(req);
- 	}
---- a/net/ipv4/tcp_input.c
-+++ b/net/ipv4/tcp_input.c
-@@ -6409,7 +6409,13 @@ int tcp_conn_request(struct request_sock
- 		af_ops->send_synack(fastopen_sk, dst, &fl, req,
- 				    &foc, false);
- 		/* Add the child socket directly into the accept queue */
--		inet_csk_reqsk_queue_add(sk, req, fastopen_sk);
-+		if (!inet_csk_reqsk_queue_add(sk, req, fastopen_sk)) {
-+			reqsk_fastopen_remove(fastopen_sk, req, false);
-+			bh_unlock_sock(fastopen_sk);
-+			sock_put(fastopen_sk);
-+			reqsk_put(req);
-+			goto drop;
-+		}
- 		sk->sk_data_ready(sk);
- 		bh_unlock_sock(fastopen_sk);
- 		sock_put(fastopen_sk);
+--- a/drivers/net/vxlan.c
++++ b/drivers/net/vxlan.c
+@@ -2322,6 +2322,8 @@ static void vxlan_uninit(struct net_devi
+ {
+ 	struct vxlan_dev *vxlan = netdev_priv(dev);
+ 
++	gro_cells_destroy(&vxlan->gro_cells);
++
+ 	vxlan_fdb_delete_default(vxlan);
+ 
+ 	free_percpu(dev->tstats);
+@@ -3066,7 +3068,6 @@ static void vxlan_dellink(struct net_dev
+ {
+ 	struct vxlan_dev *vxlan = netdev_priv(dev);
+ 
+-	gro_cells_destroy(&vxlan->gro_cells);
+ 	list_del(&vxlan->next);
+ 	unregister_netdevice_queue(dev, head);
+ }
 
 
