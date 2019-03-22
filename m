@@ -2,661 +2,354 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E831C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 07:12:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB6A1C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 07:12:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AB8421902
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 07:12:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93B45218FE
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 07:12:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="Azs4g0WG"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="hOYmcfJq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727729AbfCVHMH (ORCPT
+        id S1727691AbfCVHMG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 03:12:07 -0400
-Received: from frisell.zx2c4.com ([192.95.5.64]:58951 "EHLO frisell.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725981AbfCVHME (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 03:12:04 -0400
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id c9eed3dc;
-        Fri, 22 Mar 2019 06:50:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=from:to:cc
-        :subject:date:message-id:in-reply-to:references:mime-version
-        :content-transfer-encoding; s=mail; bh=72mBQ/S425jZzcsLYhGiH4Ob/
-        Gg=; b=Azs4g0WGFcoSq+bYuwDdIG496lrzqvkQfrBChVC/OdiLKX74oHLDQZ6hS
-        ijGw7gYBHB98fPQ3kd8iQWXRii42Z8BwAlsj8Ge32hVWrFJwtf67568MgovmAdJs
-        xsISNJFud02UaoFnXSFmYHVQos9yA61ktZ1E/QtpygmtP8kJtIhUdvO0Z4Q3gEFE
-        DbofMHBneDd+8iWb9E/IPlUJQTmZkiNY7kUNkoLyfy9HZUjw/vEpd5Woka7HPcQT
-        FBAmW+kbcRVD+avGA47f3mIvMT0vlE1T24N6CWmjxOKOFERkCt0fem7mBG2wNMTO
-        Umrlp97f8ke9MALof2kzI3rr4NMSA==
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 7c0f30fa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
-        Fri, 22 Mar 2019 06:50:17 +0000 (UTC)
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-To:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Samuel Neves <sneves@dei.uc.pt>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        Fri, 22 Mar 2019 03:12:06 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:54340 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727073AbfCVHMD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 03:12:03 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2M78m2x162362;
+        Fri, 22 Mar 2019 07:10:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : subject
+ : from : to : cc : date : in-reply-to : references : content-type :
+ mime-version : content-transfer-encoding; s=corp-2018-07-02;
+ bh=mwcqbV02aYReKinG84MAk/hPkvYe53ItRy4c05kTL28=;
+ b=hOYmcfJqi20DtG0FSKulJ8HosDiua8Z/iBILGwl6HIfQcAbNZyuCpKpKrOcLgt564KJN
+ YMa2/IrtupVtmN76clr22xEhur49mvcT7RXITkkR3v0OGhwx5z/qTTHdlitz7P9sht2q
+ U85wQouUD1Bwp6iAssSTc4aP5kOI14j4i05UgaljfW4wCgz4iwQqJYY8nCdhEkT8tK0U
+ jiWzuoS5NjrgAIXePNSwT5ZUPuTAil95zos4sR0HhyDsAqahe8OBmMStUhpYqrh9Hl0d
+ XhHzhGIsU4efvtC93n3ex75a+rGgKVf4WwWWQKyKSTmbDbYbzWtz6Gu20vAUWpvz1fLN oQ== 
+Received: from aserv0022.oracle.com (aserv0022.oracle.com [141.146.126.234])
+        by userp2120.oracle.com with ESMTP id 2r8ssrv6s7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 22 Mar 2019 07:10:44 +0000
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x2M7AZLg012515
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 22 Mar 2019 07:10:35 GMT
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x2M7ATPD025467;
+        Fri, 22 Mar 2019 07:10:29 GMT
+Received: from ovo (/213.188.19.88)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 22 Mar 2019 00:10:28 -0700
+Message-ID: <e29d487f5ca0a5caf4723bc5d96b8a523a53a318.camel@oracle.com>
+Subject: Re: [RFC v4 08/17] kunit: test: add support for test abort
+From:   Knut Omang <knut.omang@oracle.com>
+To:     Brendan Higgins <brendanhiggins@google.com>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     Kees Cook <keescook@google.com>,
+        Luis Chamberlain <mcgrof@kernel.org>, shuah@kernel.org,
+        Rob Herring <robh@kernel.org>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
         Greg KH <gregkh@linuxfoundation.org>,
-        linux-arch@vger.kernel.org
-Subject: [PATCH net-next v9 01/19] asm: simd context helper API
-Date:   Fri, 22 Mar 2019 01:11:04 -0600
-Message-Id: <20190322071122.6677-2-Jason@zx2c4.com>
-In-Reply-To: <20190322071122.6677-1-Jason@zx2c4.com>
-References: <20190322071122.6677-1-Jason@zx2c4.com>
+        Joel Stanley <joel@jms.id.au>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Joe Perches <joe@perches.com>, brakmo@fb.com,
+        Steven Rostedt <rostedt@goodmis.org>,
+        "Bird, Timothy" <Tim.Bird@sony.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jeff Dike <jdike@addtoit.com>,
+        Richard Weinberger <richard@nod.at>,
+        linux-um@lists.infradead.org, Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>, wfg@linux.intel.com
+Date:   Fri, 22 Mar 2019 08:10:18 +0100
+In-Reply-To: <CAFd5g46AP9yZQ+z+60HGaZuqhJQmfSBw9+r62w4k=cGiMEkqLA@mail.gmail.com>
+References: <20190214213729.21702-1-brendanhiggins@google.com>
+         <20190214213729.21702-9-brendanhiggins@google.com>
+         <da1995fa-a362-dfe6-8184-7fcdf2b923e8@gmail.com>
+         <CAFd5g467OV8wTB7zEshgZw8g8=zoq0dLVfwx3wDH-8UA+9GWFA@mail.gmail.com>
+         <0124ed28-466c-e954-ddde-495419630a9f@gmail.com>
+         <CAFd5g47EDmsBWKNiW0jpHW2VG_GWCfe8UO+=ofgM2_ru+_UBQA@mail.gmail.com>
+         <118d89b7-d468-6d68-a48d-4d6d9cefd106@gmail.com>
+         <CAFd5g46AP9yZQ+z+60HGaZuqhJQmfSBw9+r62w4k=cGiMEkqLA@mail.gmail.com>
+Organization: Oracle Inc
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9202 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903220054
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sometimes it's useful to amortize calls to XSAVE/XRSTOR and the related
-FPU/SIMD functions over a number of calls, because FPU restoration is
-quite expensive. This adds a simple header for carrying out this pattern:
+On Thu, 2019-03-21 at 18:41 -0700, Brendan Higgins wrote:
+> On Thu, Mar 21, 2019 at 6:10 PM Frank Rowand <frowand.list@gmail.com> wrote:
+> > On 2/27/19 11:42 PM, Brendan Higgins wrote:
+> > > On Tue, Feb 19, 2019 at 10:44 PM Frank Rowand <frowand.list@gmail.com>
+> > > wrote:
+> > > > On 2/19/19 7:39 PM, Brendan Higgins wrote:
+> > > > > On Mon, Feb 18, 2019 at 11:52 AM Frank Rowand <frowand.list@gmail.com>
+> > > > > wrote:
+> > > > > > On 2/14/19 1:37 PM, Brendan Higgins wrote:
+> > > > > > > Add support for aborting/bailing out of test cases. Needed for
+> > > > > > > implementing assertions.
+> > > > > > > 
+> > > > > > > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> > > > > > > ---
+> > > > > > > Changes Since Last Version
+> > > > > > >  - This patch is new introducing a new cross-architecture way to
+> > > > > > > abort
+> > > > > > >    out of a test case (needed for KUNIT_ASSERT_*, see next patch
+> > > > > > > for
+> > > > > > >    details).
+> > > > > > >  - On a side note, this is not a complete replacement for the UML
+> > > > > > > abort
+> > > > > > >    mechanism, but covers the majority of necessary functionality.
+> > > > > > > UML
+> > > > > > >    architecture specific featurs have been dropped from the
+> > > > > > > initial
+> > > > > > >    patchset.
+> > > > > > > ---
+> > > > > > >  include/kunit/test.h |  24 +++++
+> > > > > > >  kunit/Makefile       |   3 +-
+> > > > > > >  kunit/test-test.c    | 127 ++++++++++++++++++++++++++
+> > > > > > >  kunit/test.c         | 208
+> > > > > > > +++++++++++++++++++++++++++++++++++++++++--
+> > > > > > >  4 files changed, 353 insertions(+), 9 deletions(-)
+> > > > > > >  create mode 100644 kunit/test-test.c
+> > > > > > 
+> > > > > > < snip >
+> > > > > > 
+> > > > > > > diff --git a/kunit/test.c b/kunit/test.c
+> > > > > > > index d18c50d5ed671..6e5244642ab07 100644
+> > > > > > > --- a/kunit/test.c
+> > > > > > > +++ b/kunit/test.c
+> > > > > > > @@ -6,9 +6,9 @@
+> > > > > > >   * Author: Brendan Higgins <brendanhiggins@google.com>
+> > > > > > >   */
+> > > > > > > 
+> > > > > > > -#include <linux/sched.h>
+> > > > > > >  #include <linux/sched/debug.h>
+> > > > > > > -#include <os.h>
+> > > > > > > +#include <linux/completion.h>
+> > > > > > > +#include <linux/kthread.h>
+> > > > > > >  #include <kunit/test.h>
+> > > > > > > 
+> > > > > > >  static bool kunit_get_success(struct kunit *test)
+> > > > > > > @@ -32,6 +32,27 @@ static void kunit_set_success(struct kunit
+> > > > > > > *test, bool success)
+> > > > > > >       spin_unlock_irqrestore(&test->lock, flags);
+> > > > > > >  }
+> > > > > > > 
+> > > > > > > +static bool kunit_get_death_test(struct kunit *test)
+> > > > > > > +{
+> > > > > > > +     unsigned long flags;
+> > > > > > > +     bool death_test;
+> > > > > > > +
+> > > > > > > +     spin_lock_irqsave(&test->lock, flags);
+> > > > > > > +     death_test = test->death_test;
+> > > > > > > +     spin_unlock_irqrestore(&test->lock, flags);
+> > > > > > > +
+> > > > > > > +     return death_test;
+> > > > > > > +}
+> > > > > > > +
+> > > > > > > +static void kunit_set_death_test(struct kunit *test, bool
+> > > > > > > death_test)
+> > > > > > > +{
+> > > > > > > +     unsigned long flags;
+> > > > > > > +
+> > > > > > > +     spin_lock_irqsave(&test->lock, flags);
+> > > > > > > +     test->death_test = death_test;
+> > > > > > > +     spin_unlock_irqrestore(&test->lock, flags);
+> > > > > > > +}
+> > > > > > > +
+> > > > > > >  static int kunit_vprintk_emit(const struct kunit *test,
+> > > > > > >                             int level,
+> > > > > > >                             const char *fmt,
+> > > > > > > @@ -70,13 +91,29 @@ static void kunit_fail(struct kunit *test,
+> > > > > > > struct kunit_stream *stream)
+> > > > > > >       stream->commit(stream);
+> > > > > > >  }
+> > > > > > > 
+> > > > > > > +static void __noreturn kunit_abort(struct kunit *test)
+> > > > > > > +{
+> > > > > > > +     kunit_set_death_test(test, true);
+> > > > > > > +
+> > > > > > > +     test->try_catch.throw(&test->try_catch);
+> > > > > > > +
+> > > > > > > +     /*
+> > > > > > > +      * Throw could not abort from test.
+> > > > > > > +      */
+> > > > > > > +     kunit_err(test, "Throw could not abort from test!");
+> > > > > > > +     show_stack(NULL, NULL);
+> > > > > > > +     BUG();
+> > > > > > 
+> > > > > > kunit_abort() is what will be call as the result of an assert
+> > > > > > failure.
+> > > > > 
+> > > > > Yep. Does that need clarified somewhere.
+> > > > > > BUG(), which is a panic, which is crashing the system is not
+> > > > > > acceptable
+> > > > > > in the Linux kernel.  You will just annoy Linus if you submit this.
+> > > > > 
+> > > > > Sorry, I thought this was an acceptable use case since, a) this should
+> > > > > never be compiled in a production kernel, b) we are in a pretty bad,
+> > > > > unpredictable state if we get here and keep going. I think you might
+> > > > > have said elsewhere that you think "a" is not valid? In any case, I
+> > > > > can replace this with a WARN, would that be acceptable?
+> > > > 
+> > > > A WARN may or may not make sense, depending on the context.  It may
+> > > > be sufficient to simply report a test failure (as in the old version
+> > > > of case (2) below.
+> > > > 
+> > > > Answers to "a)" and "b)":
+> > > > 
+> > > > a) it might be in a production kernel
+> > > 
+> > > Sorry for a possibly stupid question, how might it be so? Why would
+> > > someone intentionally build unit tests into a production kernel?
+> > 
+> > People do things.  Just expect it.
+> 
+> Huh, alright. I will take your word for it then.
 
-    simd_context_t simd_context;
+I have a better explanation: Production kernels have bugs, unfortunately.
+And sometimes those need to be investigated on systems than cannot be 
+brought down or affected more than absolutely necessary, maybe via a third party
+doing the execution. A light weight, precise test (well tested ahead :) ) might
+be a way of proving or disproving assumptions that can lead to the development
+and application of a fix. 
 
-    simd_get(&simd_context);
-    while ((item = get_item_from_queue()) != NULL) {
-        encrypt_item(item, &simd_context);
-        simd_relax(&simd_context);
-    }
-    simd_put(&simd_context);
+IMHO you're confusing "building into" with temporary applying, then removing
+again - like the difference between running a local user space program vs
+installing it under /usr and have it in everyone's PATH.
 
-The relaxation step ensures that we don't trample over preemption, and
-the get/put API should be a familiar paradigm in the kernel.
+> > > > a') it is not acceptable in my development kernel either
 
-On the other end, code that actually wants to use SIMD instructions can
-accept this as a parameter and check it via:
+I think one of the fundamental properties of a good test framework is that it
+should not require changes to the code under test by itself.
 
-   void encrypt_item(struct item *item, simd_context_t *simd_context)
-   {
-       if (item->len > LARGE_FOR_SIMD && simd_use(simd_context))
-           wild_simd_code(item);
-       else
-           boring_scalar_code(item);
-   }
+Knut
 
-The actual XSAVE happens during simd_use (and only on the first time),
-so that if the context is never actually used, no performance penalty is
-hit.
-
-Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
-Cc: Samuel Neves <sneves@dei.uc.pt>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Greg KH <gregkh@linuxfoundation.org>
-Cc: linux-arch@vger.kernel.org
----
- arch/alpha/include/asm/Kbuild      |  1 +
- arch/arc/include/asm/Kbuild        |  1 +
- arch/arm/include/asm/Kbuild        |  1 -
- arch/arm/include/asm/simd.h        | 63 ++++++++++++++++++++++++++++++
- arch/arm64/include/asm/simd.h      | 51 +++++++++++++++++++++---
- arch/c6x/include/asm/Kbuild        |  1 +
- arch/h8300/include/asm/Kbuild      |  1 +
- arch/hexagon/include/asm/Kbuild    |  1 +
- arch/ia64/include/asm/Kbuild       |  1 +
- arch/m68k/include/asm/Kbuild       |  1 +
- arch/microblaze/include/asm/Kbuild |  1 +
- arch/mips/include/asm/Kbuild       |  1 +
- arch/nds32/include/asm/Kbuild      |  1 +
- arch/nios2/include/asm/Kbuild      |  1 +
- arch/openrisc/include/asm/Kbuild   |  1 +
- arch/parisc/include/asm/Kbuild     |  1 +
- arch/powerpc/include/asm/Kbuild    |  1 +
- arch/riscv/include/asm/Kbuild      |  1 +
- arch/s390/include/asm/Kbuild       |  1 +
- arch/sh/include/asm/Kbuild         |  1 +
- arch/sparc/include/asm/Kbuild      |  1 +
- arch/um/include/asm/Kbuild         |  1 +
- arch/unicore32/include/asm/Kbuild  |  1 +
- arch/x86/include/asm/simd.h        | 44 ++++++++++++++++++++-
- arch/xtensa/include/asm/Kbuild     |  1 +
- include/asm-generic/simd.h         | 20 ++++++++++
- include/linux/simd.h               | 32 +++++++++++++++
- 27 files changed, 224 insertions(+), 8 deletions(-)
- create mode 100644 arch/arm/include/asm/simd.h
- create mode 100644 include/linux/simd.h
-
-diff --git a/arch/alpha/include/asm/Kbuild b/arch/alpha/include/asm/Kbuild
-index dc0ab28baca1..b385c2036290 100644
---- a/arch/alpha/include/asm/Kbuild
-+++ b/arch/alpha/include/asm/Kbuild
-@@ -13,3 +13,4 @@ generic-y += sections.h
- generic-y += trace_clock.h
- generic-y += current.h
- generic-y += kprobes.h
-+generic-y += simd.h
-diff --git a/arch/arc/include/asm/Kbuild b/arch/arc/include/asm/Kbuild
-index b41f8881ecc8..3028a2246ab4 100644
---- a/arch/arc/include/asm/Kbuild
-+++ b/arch/arc/include/asm/Kbuild
-@@ -19,6 +19,7 @@ generic-y += msi.h
- generic-y += parport.h
- generic-y += percpu.h
- generic-y += preempt.h
-+generic-y += simd.h
- generic-y += topology.h
- generic-y += trace_clock.h
- generic-y += user.h
-diff --git a/arch/arm/include/asm/Kbuild b/arch/arm/include/asm/Kbuild
-index 1d66db9c9db5..ebdc9eeb8d39 100644
---- a/arch/arm/include/asm/Kbuild
-+++ b/arch/arm/include/asm/Kbuild
-@@ -16,7 +16,6 @@ generic-y += rwsem.h
- generic-y += seccomp.h
- generic-y += segment.h
- generic-y += serial.h
--generic-y += simd.h
- generic-y += sizes.h
- generic-y += timex.h
- generic-y += trace_clock.h
-diff --git a/arch/arm/include/asm/simd.h b/arch/arm/include/asm/simd.h
-new file mode 100644
-index 000000000000..264ed84b41d8
---- /dev/null
-+++ b/arch/arm/include/asm/simd.h
-@@ -0,0 +1,63 @@
-+/* SPDX-License-Identifier: GPL-2.0
-+ *
-+ * Copyright (C) 2015-2018 Jason A. Donenfeld <Jason@zx2c4.com>. All Rights Reserved.
-+ */
-+
-+#include <linux/simd.h>
-+#ifndef _ASM_SIMD_H
-+#define _ASM_SIMD_H
-+
-+#ifdef CONFIG_KERNEL_MODE_NEON
-+#include <asm/neon.h>
-+
-+static __must_check inline bool may_use_simd(void)
-+{
-+	return !in_nmi() && !in_irq() && !in_serving_softirq();
-+}
-+
-+static inline void simd_get(simd_context_t *ctx)
-+{
-+	*ctx = may_use_simd() ? HAVE_FULL_SIMD : HAVE_NO_SIMD;
-+}
-+
-+static inline void simd_put(simd_context_t *ctx)
-+{
-+	if (*ctx & HAVE_SIMD_IN_USE)
-+		kernel_neon_end();
-+	*ctx = HAVE_NO_SIMD;
-+}
-+
-+static __must_check inline bool simd_use(simd_context_t *ctx)
-+{
-+	if (!(*ctx & HAVE_FULL_SIMD))
-+		return false;
-+	if (*ctx & HAVE_SIMD_IN_USE)
-+		return true;
-+	kernel_neon_begin();
-+	*ctx |= HAVE_SIMD_IN_USE;
-+	return true;
-+}
-+
-+#else
-+
-+static __must_check inline bool may_use_simd(void)
-+{
-+	return false;
-+}
-+
-+static inline void simd_get(simd_context_t *ctx)
-+{
-+	*ctx = HAVE_NO_SIMD;
-+}
-+
-+static inline void simd_put(simd_context_t *ctx)
-+{
-+}
-+
-+static __must_check inline bool simd_use(simd_context_t *ctx)
-+{
-+	return false;
-+}
-+#endif
-+
-+#endif /* _ASM_SIMD_H */
-diff --git a/arch/arm64/include/asm/simd.h b/arch/arm64/include/asm/simd.h
-index 6495cc51246f..a45ff1600040 100644
---- a/arch/arm64/include/asm/simd.h
-+++ b/arch/arm64/include/asm/simd.h
-@@ -1,11 +1,10 @@
--/*
-- * Copyright (C) 2017 Linaro Ltd. <ard.biesheuvel@linaro.org>
-+/* SPDX-License-Identifier: GPL-2.0
-  *
-- * This program is free software; you can redistribute it and/or modify it
-- * under the terms of the GNU General Public License version 2 as published
-- * by the Free Software Foundation.
-+ * Copyright (C) 2017 Linaro Ltd. <ard.biesheuvel@linaro.org>
-+ * Copyright (C) 2015-2018 Jason A. Donenfeld <Jason@zx2c4.com>. All Rights Reserved.
-  */
- 
-+#include <linux/simd.h>
- #ifndef __ASM_SIMD_H
- #define __ASM_SIMD_H
- 
-@@ -16,6 +15,8 @@
- #include <linux/types.h>
- 
- #ifdef CONFIG_KERNEL_MODE_NEON
-+#include <asm/neon.h>
-+#include <asm/simd.h>
- 
- DECLARE_PER_CPU(bool, kernel_neon_busy);
- 
-@@ -40,9 +41,47 @@ static __must_check inline bool may_use_simd(void)
- 		!this_cpu_read(kernel_neon_busy);
- }
- 
-+static inline void simd_get(simd_context_t *ctx)
-+{
-+	*ctx = may_use_simd() ? HAVE_FULL_SIMD : HAVE_NO_SIMD;
-+}
-+
-+static inline void simd_put(simd_context_t *ctx)
-+{
-+	if (*ctx & HAVE_SIMD_IN_USE)
-+		kernel_neon_end();
-+	*ctx = HAVE_NO_SIMD;
-+}
-+
-+static __must_check inline bool simd_use(simd_context_t *ctx)
-+{
-+	if (!(*ctx & HAVE_FULL_SIMD))
-+		return false;
-+	if (*ctx & HAVE_SIMD_IN_USE)
-+		return true;
-+	kernel_neon_begin();
-+	*ctx |= HAVE_SIMD_IN_USE;
-+	return true;
-+}
-+
- #else /* ! CONFIG_KERNEL_MODE_NEON */
- 
--static __must_check inline bool may_use_simd(void) {
-+static __must_check inline bool may_use_simd(void)
-+{
-+	return false;
-+}
-+
-+static inline void simd_get(simd_context_t *ctx)
-+{
-+	*ctx = HAVE_NO_SIMD;
-+}
-+
-+static inline void simd_put(simd_context_t *ctx)
-+{
-+}
-+
-+static __must_check inline bool simd_use(simd_context_t *ctx)
-+{
- 	return false;
- }
- 
-diff --git a/arch/c6x/include/asm/Kbuild b/arch/c6x/include/asm/Kbuild
-index 63b4a1705182..b0aa9d783d2b 100644
---- a/arch/c6x/include/asm/Kbuild
-+++ b/arch/c6x/include/asm/Kbuild
-@@ -31,6 +31,7 @@ generic-y += preempt.h
- generic-y += segment.h
- generic-y += serial.h
- generic-y += shmparam.h
-+generic-y += simd.h
- generic-y += tlbflush.h
- generic-y += topology.h
- generic-y += trace_clock.h
-diff --git a/arch/h8300/include/asm/Kbuild b/arch/h8300/include/asm/Kbuild
-index 961c1dc064e1..3de740b33f6e 100644
---- a/arch/h8300/include/asm/Kbuild
-+++ b/arch/h8300/include/asm/Kbuild
-@@ -41,6 +41,7 @@ generic-y += scatterlist.h
- generic-y += sections.h
- generic-y += serial.h
- generic-y += shmparam.h
-+generic-y += simd.h
- generic-y += sizes.h
- generic-y += spinlock.h
- generic-y += timex.h
-diff --git a/arch/hexagon/include/asm/Kbuild b/arch/hexagon/include/asm/Kbuild
-index b25fd42aa0f4..843ae8d5c4d9 100644
---- a/arch/hexagon/include/asm/Kbuild
-+++ b/arch/hexagon/include/asm/Kbuild
-@@ -31,6 +31,7 @@ generic-y += sections.h
- generic-y += segment.h
- generic-y += serial.h
- generic-y += shmparam.h
-+generic-y += simd.h
- generic-y += sizes.h
- generic-y += topology.h
- generic-y += trace_clock.h
-diff --git a/arch/ia64/include/asm/Kbuild b/arch/ia64/include/asm/Kbuild
-index 43e21fe3499c..4f4a969c4611 100644
---- a/arch/ia64/include/asm/Kbuild
-+++ b/arch/ia64/include/asm/Kbuild
-@@ -5,6 +5,7 @@ generic-y += irq_work.h
- generic-y += mcs_spinlock.h
- generic-y += mm-arch-hooks.h
- generic-y += preempt.h
-+generic-y += simd.h
- generic-y += trace_clock.h
- generic-y += vtime.h
- generic-y += word-at-a-time.h
-diff --git a/arch/m68k/include/asm/Kbuild b/arch/m68k/include/asm/Kbuild
-index 95f8f631c4df..d60a481e6f73 100644
---- a/arch/m68k/include/asm/Kbuild
-+++ b/arch/m68k/include/asm/Kbuild
-@@ -21,6 +21,7 @@ generic-y += percpu.h
- generic-y += preempt.h
- generic-y += sections.h
- generic-y += shmparam.h
-+generic-y += simd.h
- generic-y += spinlock.h
- generic-y += topology.h
- generic-y += trace_clock.h
-diff --git a/arch/microblaze/include/asm/Kbuild b/arch/microblaze/include/asm/Kbuild
-index 791cc8d54d0a..103ed3592214 100644
---- a/arch/microblaze/include/asm/Kbuild
-+++ b/arch/microblaze/include/asm/Kbuild
-@@ -27,6 +27,7 @@ generic-y += percpu.h
- generic-y += preempt.h
- generic-y += serial.h
- generic-y += shmparam.h
-+generic-y += simd.h
- generic-y += syscalls.h
- generic-y += topology.h
- generic-y += trace_clock.h
-diff --git a/arch/mips/include/asm/Kbuild b/arch/mips/include/asm/Kbuild
-index 87b86cdf126a..fb3345c870c6 100644
---- a/arch/mips/include/asm/Kbuild
-+++ b/arch/mips/include/asm/Kbuild
-@@ -20,6 +20,7 @@ generic-y += qrwlock.h
- generic-y += qspinlock.h
- generic-y += sections.h
- generic-y += segment.h
-+generic-y += simd.h
- generic-y += trace_clock.h
- generic-y += unaligned.h
- generic-y += user.h
-diff --git a/arch/nds32/include/asm/Kbuild b/arch/nds32/include/asm/Kbuild
-index 64ceff7ab99b..887923fdbb65 100644
---- a/arch/nds32/include/asm/Kbuild
-+++ b/arch/nds32/include/asm/Kbuild
-@@ -38,6 +38,7 @@ generic-y += preempt.h
- generic-y += sections.h
- generic-y += segment.h
- generic-y += serial.h
-+generic-y += simd.h
- generic-y += sizes.h
- generic-y += switch_to.h
- generic-y += timex.h
-diff --git a/arch/nios2/include/asm/Kbuild b/arch/nios2/include/asm/Kbuild
-index 8fde4fa2c34f..571a9d9ad107 100644
---- a/arch/nios2/include/asm/Kbuild
-+++ b/arch/nios2/include/asm/Kbuild
-@@ -33,6 +33,7 @@ generic-y += preempt.h
- generic-y += sections.h
- generic-y += segment.h
- generic-y += serial.h
-+generic-y += simd.h
- generic-y += spinlock.h
- generic-y += topology.h
- generic-y += trace_clock.h
-diff --git a/arch/openrisc/include/asm/Kbuild b/arch/openrisc/include/asm/Kbuild
-index 1f04844b6b82..82c06dd1519d 100644
---- a/arch/openrisc/include/asm/Kbuild
-+++ b/arch/openrisc/include/asm/Kbuild
-@@ -35,6 +35,7 @@ generic-y += qrwlock.h
- generic-y += sections.h
- generic-y += segment.h
- generic-y += shmparam.h
-+generic-y += simd.h
- generic-y += string.h
- generic-y += switch_to.h
- generic-y += topology.h
-diff --git a/arch/parisc/include/asm/Kbuild b/arch/parisc/include/asm/Kbuild
-index 0b1e354c8c24..087fb8b05e5e 100644
---- a/arch/parisc/include/asm/Kbuild
-+++ b/arch/parisc/include/asm/Kbuild
-@@ -20,6 +20,7 @@ generic-y += percpu.h
- generic-y += preempt.h
- generic-y += seccomp.h
- generic-y += segment.h
-+generic-y += simd.h
- generic-y += topology.h
- generic-y += trace_clock.h
- generic-y += user.h
-diff --git a/arch/powerpc/include/asm/Kbuild b/arch/powerpc/include/asm/Kbuild
-index 77ff7fb24823..96269741bfb9 100644
---- a/arch/powerpc/include/asm/Kbuild
-+++ b/arch/powerpc/include/asm/Kbuild
-@@ -12,3 +12,4 @@ generic-y += preempt.h
- generic-y += rwsem.h
- generic-y += vtime.h
- generic-y += msi.h
-+generic-y += simd.h
-diff --git a/arch/riscv/include/asm/Kbuild b/arch/riscv/include/asm/Kbuild
-index cccd12cf27d4..525bd8707c7d 100644
---- a/arch/riscv/include/asm/Kbuild
-+++ b/arch/riscv/include/asm/Kbuild
-@@ -28,6 +28,7 @@ generic-y += scatterlist.h
- generic-y += sections.h
- generic-y += serial.h
- generic-y += shmparam.h
-+generic-y += simd.h
- generic-y += topology.h
- generic-y += trace_clock.h
- generic-y += unaligned.h
-diff --git a/arch/s390/include/asm/Kbuild b/arch/s390/include/asm/Kbuild
-index e3239772887a..3744c4c61fb5 100644
---- a/arch/s390/include/asm/Kbuild
-+++ b/arch/s390/include/asm/Kbuild
-@@ -22,6 +22,7 @@ generic-y += mcs_spinlock.h
- generic-y += mm-arch-hooks.h
- generic-y += preempt.h
- generic-y += rwsem.h
-+generic-y += simd.h
- generic-y += trace_clock.h
- generic-y += unaligned.h
- generic-y += word-at-a-time.h
-diff --git a/arch/sh/include/asm/Kbuild b/arch/sh/include/asm/Kbuild
-index a6ef3fee5f85..74b7bb3ba96a 100644
---- a/arch/sh/include/asm/Kbuild
-+++ b/arch/sh/include/asm/Kbuild
-@@ -18,6 +18,7 @@ generic-y += percpu.h
- generic-y += preempt.h
- generic-y += rwsem.h
- generic-y += serial.h
-+generic-y += simd.h
- generic-y += sizes.h
- generic-y += trace_clock.h
- generic-y += xor.h
-diff --git a/arch/sparc/include/asm/Kbuild b/arch/sparc/include/asm/Kbuild
-index b82f64e28f55..d053d5bad630 100644
---- a/arch/sparc/include/asm/Kbuild
-+++ b/arch/sparc/include/asm/Kbuild
-@@ -19,5 +19,6 @@ generic-y += msi.h
- generic-y += preempt.h
- generic-y += rwsem.h
- generic-y += serial.h
-+generic-y += simd.h
- generic-y += trace_clock.h
- generic-y += word-at-a-time.h
-diff --git a/arch/um/include/asm/Kbuild b/arch/um/include/asm/Kbuild
-index 00bcbe2326d9..a4dfffb2c22b 100644
---- a/arch/um/include/asm/Kbuild
-+++ b/arch/um/include/asm/Kbuild
-@@ -20,6 +20,7 @@ generic-y += param.h
- generic-y += pci.h
- generic-y += percpu.h
- generic-y += preempt.h
-+generic-y += simd.h
- generic-y += switch_to.h
- generic-y += topology.h
- generic-y += trace_clock.h
-diff --git a/arch/unicore32/include/asm/Kbuild b/arch/unicore32/include/asm/Kbuild
-index 1d1544b6ca74..c428158a3a19 100644
---- a/arch/unicore32/include/asm/Kbuild
-+++ b/arch/unicore32/include/asm/Kbuild
-@@ -29,6 +29,7 @@ generic-y += sections.h
- generic-y += segment.h
- generic-y += serial.h
- generic-y += shmparam.h
-+generic-y += simd.h
- generic-y += sizes.h
- generic-y += syscalls.h
- generic-y += topology.h
-diff --git a/arch/x86/include/asm/simd.h b/arch/x86/include/asm/simd.h
-index a341c878e977..4aad7f158dcb 100644
---- a/arch/x86/include/asm/simd.h
-+++ b/arch/x86/include/asm/simd.h
-@@ -1,4 +1,11 @@
--/* SPDX-License-Identifier: GPL-2.0 */
-+/* SPDX-License-Identifier: GPL-2.0
-+ *
-+ * Copyright (C) 2015-2018 Jason A. Donenfeld <Jason@zx2c4.com>. All Rights Reserved.
-+ */
-+
-+#include <linux/simd.h>
-+#ifndef _ASM_SIMD_H
-+#define _ASM_SIMD_H
- 
- #include <asm/fpu/api.h>
- 
-@@ -10,3 +17,38 @@ static __must_check inline bool may_use_simd(void)
- {
- 	return irq_fpu_usable();
- }
-+
-+static inline void simd_get(simd_context_t *ctx)
-+{
-+#if !defined(CONFIG_UML)
-+	*ctx = may_use_simd() ? HAVE_FULL_SIMD : HAVE_NO_SIMD;
-+#else
-+	*ctx = HAVE_NO_SIMD;
-+#endif
-+}
-+
-+static inline void simd_put(simd_context_t *ctx)
-+{
-+#if !defined(CONFIG_UML)
-+	if (*ctx & HAVE_SIMD_IN_USE)
-+		kernel_fpu_end();
-+#endif
-+	*ctx = HAVE_NO_SIMD;
-+}
-+
-+static __must_check inline bool simd_use(simd_context_t *ctx)
-+{
-+#if !defined(CONFIG_UML)
-+	if (!(*ctx & HAVE_FULL_SIMD))
-+		return false;
-+	if (*ctx & HAVE_SIMD_IN_USE)
-+		return true;
-+	kernel_fpu_begin();
-+	*ctx |= HAVE_SIMD_IN_USE;
-+	return true;
-+#else
-+	return false;
-+#endif
-+}
-+
-+#endif /* _ASM_SIMD_H */
-diff --git a/arch/xtensa/include/asm/Kbuild b/arch/xtensa/include/asm/Kbuild
-index d939e13e8d84..dce09e76b71e 100644
---- a/arch/xtensa/include/asm/Kbuild
-+++ b/arch/xtensa/include/asm/Kbuild
-@@ -27,6 +27,7 @@ generic-y += qrwlock.h
- generic-y += qspinlock.h
- generic-y += rwsem.h
- generic-y += sections.h
-+generic-y += simd.h
- generic-y += socket.h
- generic-y += topology.h
- generic-y += trace_clock.h
-diff --git a/include/asm-generic/simd.h b/include/asm-generic/simd.h
-index d0343d58a74a..b3dd61ac010e 100644
---- a/include/asm-generic/simd.h
-+++ b/include/asm-generic/simd.h
-@@ -1,5 +1,9 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- 
-+#include <linux/simd.h>
-+#ifndef _ASM_SIMD_H
-+#define _ASM_SIMD_H
-+
- #include <linux/hardirq.h>
- 
- /*
-@@ -13,3 +17,19 @@ static __must_check inline bool may_use_simd(void)
- {
- 	return !in_interrupt();
- }
-+
-+static inline void simd_get(simd_context_t *ctx)
-+{
-+	*ctx = HAVE_NO_SIMD;
-+}
-+
-+static inline void simd_put(simd_context_t *ctx)
-+{
-+}
-+
-+static __must_check inline bool simd_use(simd_context_t *ctx)
-+{
-+	return false;
-+}
-+
-+#endif /* _ASM_SIMD_H */
-diff --git a/include/linux/simd.h b/include/linux/simd.h
-new file mode 100644
-index 000000000000..4e0b8a9bdc14
---- /dev/null
-+++ b/include/linux/simd.h
-@@ -0,0 +1,32 @@
-+/* SPDX-License-Identifier: GPL-2.0
-+ *
-+ * Copyright (C) 2015-2018 Jason A. Donenfeld <Jason@zx2c4.com>. All Rights Reserved.
-+ */
-+
-+#ifndef _SIMD_H
-+#define _SIMD_H
-+
-+typedef enum {
-+	HAVE_NO_SIMD = 1 << 0,
-+	HAVE_FULL_SIMD = 1 << 1,
-+	HAVE_SIMD_IN_USE = 1 << 31
-+} simd_context_t;
-+
-+#define DONT_USE_SIMD ((simd_context_t []){ HAVE_NO_SIMD })
-+
-+#include <linux/sched.h>
-+#include <asm/simd.h>
-+
-+static inline bool simd_relax(simd_context_t *ctx)
-+{
-+#ifdef CONFIG_PREEMPT
-+	if ((*ctx & HAVE_SIMD_IN_USE) && need_resched()) {
-+		simd_put(ctx);
-+		simd_get(ctx);
-+		return true;
-+	}
-+#endif
-+	return false;
-+}
-+
-+#endif /* _SIMD_H */
--- 
-2.21.0
+> > > Fair enough.
+> > > 
+> > > > b) No.  You don't crash a developer's kernel either unless it is
+> > > > required to avoid data corruption.
+> > > Alright, I thought that was one of those cases, but I am not going to
+> > > push the point. Also, in case it wasn't clear, the path where BUG()
+> > > gets called only happens if there is a bug in KUnit itself, not just
+> > > because a test case fails catastrophically.
+> > 
+> > Still not out of the woods.  Still facing Lions and Tigers and Bears,
+> > Oh my!
+> 
+> Nope, I guess not :-)
+> 
+> > So kunit_abort() is normally called as the result of an assert
+> > failure (as written many lines further above).
+> > 
+> > kunit_abort()
+> >    test->try_catch.throw(&test->try_catch)
+> >    // this is really kunit_generic_throw(), yes?
+> >       complete_and_exit()
+> >          if (comp)
+> >             // comp is test_case_completion?
+> >             complete(comp)
+> >          do_exit()
+> >             // void __noreturn do_exit(long code)
+> >             // depending on the task, either panic
+> >             // or the task dies
+> 
+> You are right up until after it calls do_exit().
+> 
+> KUnit actually spawns a thread for the test case to run in so that
+> when exit is called, only the test case thread dies. The thread that
+> started KUnit is never affected.
+> 
+> > I did not read through enough of the code to understand what is going
+> > on here.  Is each kunit_module executed in a newly created thread?
+> > And if kunit_abort() is called then that thread dies?  Or something
+> > else?
+> 
+> Mostly right, each kunit_case (not kunit_module) gets executed in its
+> own newly created thread. If kunit_abort() is called in that thread,
+> the kunit_case thread dies. The parent thread keeps going, and other
+> test cases are executed.
+> 
+> > 
+> > > > b') And you can not do replacements like:
+> > > > 
+> > > > (1) in of_unittest_check_tree_linkage()
+> > > > 
+> > > > -----  old  -----
+> > > > 
+> > > >         if (!of_root)
+> > > >                 return;
+> > > > 
+> > > > -----  new  -----
+> > > > 
+> > > >         KUNIT_ASSERT_NOT_ERR_OR_NULL(test, of_root);
+> > > > 
+> > > > (2) in of_unittest_property_string()
+> > > > 
+> > > > -----  old  -----
+> > > > 
+> > > >         /* of_property_read_string_index() tests */
+> > > >         rc = of_property_read_string_index(np, "string-property", 0,
+> > > > strings);
+> > > >         unittest(rc == 0 && !strcmp(strings[0], "foobar"),
+> > > > "of_property_read_string_index() failure; rc=%i\n", rc);
+> > > > 
+> > > > -----  new  -----
+> > > > 
+> > > >         /* of_property_read_string_index() tests */
+> > > >         rc = of_property_read_string_index(np, "string-property", 0,
+> > > > strings);
+> > > >         KUNIT_ASSERT_EQ(test, rc, 0);
+> > > >         KUNIT_EXPECT_STREQ(test, strings[0], "foobar");
+> > > > 
+> > > > 
+> > > > If a test fails, that is no reason to abort testing.  The remainder of
+> > > > the unit
+> > > > tests can still run.  There may be cascading failures, but that is ok.
+> > > 
+> > > Sure, that's what I am trying to do. I don't see how (1) changes
+> > > anything, a failed KUNIT_ASSERT_* only bails on the current test case,
+> > > it does not quit the entire test suite let alone crash the kernel.
+> > 
+> > This may be another case of whether a kunit_module is approximately a
+> > single KUNIT_EXPECT_*() or a larger number of them.
+> > 
+> > I still want, for example, of_unittest_property_string() to include a large
+> > number of KUNIT_EXPECT_*() instances.  In that case I still want the rest of
+> > the tests in the kunit_module to be executed even after a KUNIT_ASSERT_*()
+> > fails.  The existing test code has that property.
+> 
+> Sure, in the context of the reply you just sent me on the DT unittest
+> thread, that makes sense. I can pull out all but the ones that would
+> have terminated the collection of test cases (where you return early),
+> if that makes it better.
 
