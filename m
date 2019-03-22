@@ -2,53 +2,52 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D59DC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:39:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93D98C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:39:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B8A52070D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:39:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55CEC2070D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:39:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553258341;
-	bh=yAfiYDjR2ddQY8tQpHwSJHtznzRFCjryNCHfQF0rifc=;
+	s=default; t=1553258351;
+	bh=qxmX2cCo+GewIkzsTks2+9hhRg1k7efP/sFhuiZ01H4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yLsXP6Cmhw/z+5PILIVlEti3/kEPMqz/6xyFJRnZYj6cM0QXGZfljrAVdPnQJDAQd
-	 8tIYrI9s7BcjVkat5t09z1MEJ0G4ckMkObGxn6N61BJwjGoFg+ZuyscYAN1l7rH1lZ
-	 zquu4Ru9p6LKAhlttqFsBBdu8nlMs27p3/qiHwF8=
+	b=GkOJ6kHsaDEGNaEw/EANTuVjujXdqxYrFUW7mRPJPUTKXhneO+eLKoQPSq1UfDvsW
+	 JC9MgB+XehplMjx46lb0mww+42YaGYOoUFkgtw4LNwmSdPP/Uk6RmUd4kBL7cb3FV+
+	 GiwMh71yWPgT3a8+1VjQ17tsyD/1GYTf5wW+kcQs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732980AbfCVMi7 (ORCPT
+        id S2388781AbfCVMII (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:38:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46664 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:08:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388090AbfCVMIT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:08:19 -0400
+        id S2388675AbfCVMIF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:08:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB15E2082C;
-        Fri, 22 Mar 2019 12:08:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94F3721916;
+        Fri, 22 Mar 2019 12:08:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256498;
-        bh=yAfiYDjR2ddQY8tQpHwSJHtznzRFCjryNCHfQF0rifc=;
+        s=default; t=1553256485;
+        bh=qxmX2cCo+GewIkzsTks2+9hhRg1k7efP/sFhuiZ01H4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d87cfwGBbD/9pNLeT8A/bGNikQw/zfrPoa+HbSnboikLZ0HlzwPlXJB53sUrTbpck
-         K7SSMtxtDIyU7V5KM23v4AWfhBsX2mv99WOsgp8JittqJui7QEQaqAuD8Rvx3YN8iI
-         yuaitmRxrdvtTXI2CM+0LUJna5nHWCeZ8Mr2bvhA=
+        b=cmsyC8YV0ZpCOqEAThhNAfreTZyHWkS7UmbtOhxlR4MV7fdIvrVrOkmORjJMvMrpi
+         7ZKcIz+Aikx153L883rjw/gcFYB+A1lZdOyA1CZCJwXbk4v+blXkwZ+UyqPIEoBMea
+         wTylyj5Ac4mzdTwDxeEraJHundIMRGWydZxlTndE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Willem de Bruijn <willemb@google.com>,
-        Yonghong Song <yhs@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 212/280] bpf: only test gso type on gso packets
-Date:   Fri, 22 Mar 2019 12:16:05 +0100
-Message-Id: <20190322111333.030538897@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 4.19 226/280] powerpc: Fix 32-bit KVM-PR lockup and host crash with MacOS guest
+Date:   Fri, 22 Mar 2019 12:16:19 +0100
+Message-Id: <20190322111336.100033761@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -67,81 +66,48 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 4c3024debf62de4c6ac6d3cb4c0063be21d4f652 ]
+From: Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk>
 
-BPF can adjust gso only for tcp bytestreams. Fail on other gso types.
+commit fe1ef6bcdb4fca33434256a802a3ed6aacf0bd2f upstream.
 
-But only on gso packets. It does not touch this field if !gso_size.
+Commit 8792468da5e1 "powerpc: Add the ability to save FPU without
+giving it up" unexpectedly removed the MSR_FE0 and MSR_FE1 bits from
+the bitmask used to update the MSR of the previous thread in
+__giveup_fpu() causing a KVM-PR MacOS guest to lockup and panic the
+host kernel.
 
-Fixes: b90efd225874 ("bpf: only adjust gso_size on bytestream protocols")
-Signed-off-by: Willem de Bruijn <willemb@google.com>
-Acked-by: Yonghong Song <yhs@fb.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Leaving FE0/1 enabled means unrelated processes might receive FPEs
+when they're not expecting them and crash. In particular if this
+happens to init the host will then panic.
+
+eg (transcribed):
+  qemu-system-ppc[837]: unhandled signal 8 at 12cc9ce4 nip 12cc9ce4 lr 12cc9ca4 code 0
+  systemd[1]: unhandled signal 8 at 202f02e0 nip 202f02e0 lr 001003d4 code 0
+  Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b
+
+Reinstate these bits to the MSR bitmask to enable MacOS guests to run
+under 32-bit KVM-PR once again without issue.
+
+Fixes: 8792468da5e1 ("powerpc: Add the ability to save FPU without giving it up")
+Cc: stable@vger.kernel.org # v4.6+
+Signed-off-by: Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- include/linux/skbuff.h | 4 ++--
- net/core/filter.c      | 8 ++++----
- 2 files changed, 6 insertions(+), 6 deletions(-)
+ arch/powerpc/kernel/process.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
-index 3b0a25bb7c6f..820903ceac4f 100644
---- a/include/linux/skbuff.h
-+++ b/include/linux/skbuff.h
-@@ -4086,10 +4086,10 @@ static inline bool skb_is_gso_sctp(const struct sk_buff *skb)
- 	return skb_shinfo(skb)->gso_type & SKB_GSO_SCTP;
- }
+--- a/arch/powerpc/kernel/process.c
++++ b/arch/powerpc/kernel/process.c
+@@ -180,7 +180,7 @@ static void __giveup_fpu(struct task_str
  
-+/* Note: Should be called only if skb_is_gso(skb) is true */
- static inline bool skb_is_gso_tcp(const struct sk_buff *skb)
- {
--	return skb_is_gso(skb) &&
--	       skb_shinfo(skb)->gso_type & (SKB_GSO_TCPV4 | SKB_GSO_TCPV6);
-+	return skb_shinfo(skb)->gso_type & (SKB_GSO_TCPV4 | SKB_GSO_TCPV6);
- }
- 
- static inline void skb_gso_reset(struct sk_buff *skb)
-diff --git a/net/core/filter.c b/net/core/filter.c
-index b1369edce113..eb81e9db4093 100644
---- a/net/core/filter.c
-+++ b/net/core/filter.c
-@@ -2614,7 +2614,7 @@ static int bpf_skb_proto_4_to_6(struct sk_buff *skb)
- 	u32 off = skb_mac_header_len(skb);
- 	int ret;
- 
--	if (!skb_is_gso_tcp(skb))
-+	if (skb_is_gso(skb) && !skb_is_gso_tcp(skb))
- 		return -ENOTSUPP;
- 
- 	ret = skb_cow(skb, len_diff);
-@@ -2655,7 +2655,7 @@ static int bpf_skb_proto_6_to_4(struct sk_buff *skb)
- 	u32 off = skb_mac_header_len(skb);
- 	int ret;
- 
--	if (!skb_is_gso_tcp(skb))
-+	if (skb_is_gso(skb) && !skb_is_gso_tcp(skb))
- 		return -ENOTSUPP;
- 
- 	ret = skb_unclone(skb, GFP_ATOMIC);
-@@ -2780,7 +2780,7 @@ static int bpf_skb_net_grow(struct sk_buff *skb, u32 len_diff)
- 	u32 off = skb_mac_header_len(skb) + bpf_skb_net_base_len(skb);
- 	int ret;
- 
--	if (!skb_is_gso_tcp(skb))
-+	if (skb_is_gso(skb) && !skb_is_gso_tcp(skb))
- 		return -ENOTSUPP;
- 
- 	ret = skb_cow(skb, len_diff);
-@@ -2809,7 +2809,7 @@ static int bpf_skb_net_shrink(struct sk_buff *skb, u32 len_diff)
- 	u32 off = skb_mac_header_len(skb) + bpf_skb_net_base_len(skb);
- 	int ret;
- 
--	if (!skb_is_gso_tcp(skb))
-+	if (skb_is_gso(skb) && !skb_is_gso_tcp(skb))
- 		return -ENOTSUPP;
- 
- 	ret = skb_unclone(skb, GFP_ATOMIC);
--- 
-2.19.1
-
+ 	save_fpu(tsk);
+ 	msr = tsk->thread.regs->msr;
+-	msr &= ~MSR_FP;
++	msr &= ~(MSR_FP|MSR_FE0|MSR_FE1);
+ #ifdef CONFIG_VSX
+ 	if (cpu_has_feature(CPU_FTR_VSX))
+ 		msr &= ~MSR_VSX;
 
 
