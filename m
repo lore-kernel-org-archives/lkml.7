@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CC97C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:22:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71237C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:22:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 313A8218A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:22:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 392F5218B0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:22:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553257336;
-	bh=6cYwg8mR2fztbGTMoM69A8M8l+sHwNYiE+EhfntxaDI=;
+	s=default; t=1553257339;
+	bh=RQqaUBVyCftYainkLDlSHnuBLIJEeR2iHGg5RkciPmw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w1Bvgjg/Gwk8bRUDom/PnlVMvrz1roy3K3klG2520yxFzpgkY3vOzsOFLU5WQsth7
-	 pwLZg81LH16nXqdVxOUL5Vhecg0eg3UN4lZAHbzPGPXICLH6dBnFmWdGLNxrDFK0YD
-	 ZdYIXYoP0FrpaQVMMcrY1itUrX40g8a029EiUBXE=
+	b=Mdvr0/VmC0iy4SIxMFxrkBB/DiwSH1gKPQ2wj51Mr3PbukPdQZB0WKNVQkMZdzBHF
+	 9LI7qyBOWxwhoSGek0lT2NWSUNQq2RBlCqmPDLn9Zbz5DRbTwnnai39NIiZdckJZp7
+	 vQfuuSJKQfGjhIFVwX5ZwdpDRbe32SoOqKjlH5LA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390988AbfCVMWO (ORCPT
+        id S2390979AbfCVMWN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:22:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33266 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390975AbfCVMWN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 22 Mar 2019 08:22:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33166 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390966AbfCVMWK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:22:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3AD321917;
-        Fri, 22 Mar 2019 12:22:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 289A42054F;
+        Fri, 22 Mar 2019 12:22:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553257332;
-        bh=6cYwg8mR2fztbGTMoM69A8M8l+sHwNYiE+EhfntxaDI=;
+        s=default; t=1553257329;
+        bh=RQqaUBVyCftYainkLDlSHnuBLIJEeR2iHGg5RkciPmw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jREPnZrhddTSr8KeDVVA2csBzrSgk3xh/5QueH1EDC53TeP3QhXI2jkFFxGxwkqSb
-         so7+lwXK3LSXcMah4cQpKaXQ11UFrBy204iA8obyJoonBcBnpuI+kGI5Pme91lUSvC
-         7PMBRo9pnrHVr5KfriMSth/3fxXs26Q2QINBhw8o=
+        b=sNfuodYwoPFq+5CLc47mOWz7Bh3b6ARmmvH/WXpw6WtEbhXlpC53aZdN4/6yZHD6l
+         w0z0mgCxCQuW4G5VrWs0H9q5y/6cgl+BAIF3JqvAHLdX/eSx683lSQbz4+72Y3yTUd
+         GI/Dh+AFqSAIzLH46HDoOoUePkJhs5CoO3W2uduw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 5.0 201/238] perf tools: Fix split_kallsyms_for_kcore() for trampoline symbols
-Date:   Fri, 22 Mar 2019 12:17:00 +0100
-Message-Id: <20190322111310.060917161@linuxfoundation.org>
+        stable@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 5.0 192/238] PM / wakeup: Rework wakeup source timer cancellation
+Date:   Fri, 22 Mar 2019 12:16:51 +0100
+Message-Id: <20190322111309.538633550@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -66,45 +65,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
 
-commit d6d457451eb94fa747dc202765592eb8885a7352 upstream.
+commit 1fad17fb1bbcd73159c2b992668a6957ecc5af8a upstream.
 
-Kallsyms symbols do not have a size, so the size becomes the distance to
-the next symbol.
+If wakeup_source_add() is called right after wakeup_source_remove()
+for the same wakeup source, timer_setup() may be called for a
+potentially scheduled timer which is incorrect.
 
-Consequently the recently added trampoline symbols end up with large
-sizes because the trampolines are some distance from one another and the
-main kernel map.
+To avoid that, move the wakeup source timer cancellation from
+wakeup_source_drop() to wakeup_source_remove().
 
-However, symbols that end outside their map can disrupt the symbol tree
-because, after mapping, it can appear incorrectly that they overlap
-other symbols.
+Moreover, make wakeup_source_remove() clear the timer function after
+canceling the timer to let wakeup_source_not_registered() treat
+unregistered wakeup sources in the same way as the ones that have
+never been registered.
 
-Add logic to truncate symbol size to the end of the corresponding map.
-
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: stable@vger.kernel.org
-Fixes: d83212d5dd67 ("kallsyms, x86: Export addresses of PTI entry trampolines")
-Link: http://lkml.kernel.org/r/20190109091835.5570-2-adrian.hunter@intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: 4.4+ <stable@vger.kernel.org> # 4.4+
+[ rjw: Subject, changelog, merged two patches together ]
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/perf/util/symbol.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/base/power/wakeup.c |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -710,6 +710,8 @@ static int map_groups__split_kallsyms_fo
- 		}
+--- a/drivers/base/power/wakeup.c
++++ b/drivers/base/power/wakeup.c
+@@ -118,7 +118,6 @@ void wakeup_source_drop(struct wakeup_so
+ 	if (!ws)
+ 		return;
  
- 		pos->start -= curr_map->start - curr_map->pgoff;
-+		if (pos->end > curr_map->end)
-+			pos->end = curr_map->end;
- 		if (pos->end)
- 			pos->end -= curr_map->start - curr_map->pgoff;
- 		symbols__insert(&curr_map->dso->symbols, pos);
+-	del_timer_sync(&ws->timer);
+ 	__pm_relax(ws);
+ }
+ EXPORT_SYMBOL_GPL(wakeup_source_drop);
+@@ -205,6 +204,13 @@ void wakeup_source_remove(struct wakeup_
+ 	list_del_rcu(&ws->entry);
+ 	raw_spin_unlock_irqrestore(&events_lock, flags);
+ 	synchronize_srcu(&wakeup_srcu);
++
++	del_timer_sync(&ws->timer);
++	/*
++	 * Clear timer.function to make wakeup_source_not_registered() treat
++	 * this wakeup source as not registered.
++	 */
++	ws->timer.function = NULL;
+ }
+ EXPORT_SYMBOL_GPL(wakeup_source_remove);
+ 
 
 
