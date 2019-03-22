@@ -2,106 +2,98 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E89C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 020DEC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:35:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88CE820850
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:35:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553268912;
-	bh=gMKhnL4aWWxWcVOJDcUS68XZUpr0F7OT31KkhUVdgok=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-	 References:List-ID:From;
-	b=CeubU0Es8T3PIGciWAKeY2XOMdG0M6NCUVGD+wiokr/s4J/t4Xvk6wgcHEaqaL0+T
-	 9dfXe3Be1yoIMwqrH7OwBk5n/GZ0Q5scduQa7PgXKhSCjx2kSTkscGsniSze5OgF2f
-	 QcJZlZKWVi/emsZaVek22IaRJvOK3czp5C1CZBKE=
+	by mail.kernel.org (Postfix) with ESMTP id C45CD20850
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:35:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="V7OvuMib"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727576AbfCVPfL (ORCPT
+        id S1727595AbfCVPfP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 11:35:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53740 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727513AbfCVPfC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 11:35:02 -0400
-Received: from localhost.localdomain (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 824182196F;
-        Fri, 22 Mar 2019 15:35:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553268902;
-        bh=gMKhnL4aWWxWcVOJDcUS68XZUpr0F7OT31KkhUVdgok=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=U/kqQwws7XXZWcGbjzfyt33aS0rhbVTjjqWveiSKTTnSTJ+prQjSKk0r8niA1vCpB
-         Vcyxk6BCyIfuynPAobtPec9Jg9MjAOPNF1FVqjLUtI8/gFD5eUAD+vTJM8eTIMVTwJ
-         StjFg84pnQ4wQHcNQNyJax1pJ9zUki2JQP51Z48I=
-From:   Tom Zanussi <zanussi@kernel.org>
-To:     rostedt@goodmis.org
-Cc:     tglx@linutronix.de, mhiramat@kernel.org, namhyung@kernel.org,
-        bigeasy@linutronix.de, joel@joelfernandes.org,
-        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
-Subject: [PATCH v4 11/11] selftests/ftrace: Change stderr redirection for probe error_log testcase
-Date:   Fri, 22 Mar 2019 10:34:37 -0500
-Message-Id: <ce51abd8585b775fd98e31e5feb1b1505483312f.1553268041.git.tom.zanussi@linux.intel.com>
-X-Mailer: git-send-email 2.14.1
-In-Reply-To: <cover.1553268040.git.tom.zanussi@linux.intel.com>
-References: <cover.1553268040.git.tom.zanussi@linux.intel.com>
-In-Reply-To: <cover.1553268040.git.tom.zanussi@linux.intel.com>
-References: <cover.1553268040.git.tom.zanussi@linux.intel.com>
+        Fri, 22 Mar 2019 11:35:15 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:33988 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727584AbfCVPfO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 11:35:14 -0400
+Received: by mail-lj1-f196.google.com with SMTP id j89so2437998ljb.1
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 08:35:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jnCsfw+9gHeo3z0Jh3UX77Kv5ns0QiRJD8uemSV68zs=;
+        b=V7OvuMibaiLgiunqKKGWvfIZbYQ+pY2ugtU7bHsNdgcb3+ZdPzW1hja1eqOK90j2lb
+         TBKkRIEQk/OXHZqnS3Sn2IG/C2SA2AENTp/tpWx6N2NOVeSwvb/1ma62sks5oPCWe9k6
+         EVsUxz0iHW3BmXn1R+whSPnr5dUUTmPKtyu5U=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jnCsfw+9gHeo3z0Jh3UX77Kv5ns0QiRJD8uemSV68zs=;
+        b=mkcq90jalR+yf7N899mJwOpUCXFggfPHwzlWnnpVsaFvLoRVDARHrCRtYLbif3UUrF
+         kJ6g/GPzQhMfLdObTlIIt+tmt5b8aboaduOgJMAQwxYiH7Ksx2nxi/0p3rb/43cRM/hh
+         5jifJEdL6+G6KxFQhQ2V47q+RmvtEcDVzu+z5E+f6k5E48v02e50kPVuHafsWAikXQ7I
+         zbjfOAby2OG/SYVmCyt2TBmAIGK0sM2GMJFMXb4R18e9gJ1DOijK11m/torclA5R5CSF
+         ifoZSkhtWf4gQq1ApXJ7GiiKZGZcfDUuuPbUNUDWLqYfT04TDY8qLHsKChUHDAE2FkPu
+         lvoQ==
+X-Gm-Message-State: APjAAAVpToJ36UaNZ1XORYAud94vma4nP0sAsPdr6SmECBKkVdhQVQVT
+        SlSNTkkHeu6kC1y3OT0bcYp0PM8LTi4=
+X-Google-Smtp-Source: APXvYqzEKNwbvRIqEbffACubTE0P940iVuB4lXkvvT219Bpl3W8lxKN9Ytwjf2uUJhaQU1DUBEi5SQ==
+X-Received: by 2002:a2e:82c5:: with SMTP id n5mr3610101ljh.91.1553268912210;
+        Fri, 22 Mar 2019 08:35:12 -0700 (PDT)
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com. [209.85.167.45])
+        by smtp.gmail.com with ESMTPSA id e3sm1759572lfn.80.2019.03.22.08.35.10
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 22 Mar 2019 08:35:11 -0700 (PDT)
+Received: by mail-lf1-f45.google.com with SMTP id p1so1676813lfk.9
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 08:35:10 -0700 (PDT)
+X-Received: by 2002:ac2:4563:: with SMTP id k3mr5399948lfm.101.1553268910090;
+ Fri, 22 Mar 2019 08:35:10 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190226065919.22218-1-bjorn.andersson@linaro.org>
+In-Reply-To: <20190226065919.22218-1-bjorn.andersson@linaro.org>
+From:   Evan Green <evgreen@chromium.org>
+Date:   Fri, 22 Mar 2019 08:34:33 -0700
+X-Gmail-Original-Message-ID: <CAE=gft5ZUHKQqYVL72_kojPr7vEUMY301gmGviCUVpBYdAoBDw@mail.gmail.com>
+Message-ID: <CAE=gft5ZUHKQqYVL72_kojPr7vEUMY301gmGviCUVpBYdAoBDw@mail.gmail.com>
+Subject: Re: [PATCH] phy: qcom: qmp: Add SDM845 PCIe QMP PHY support
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Can Guo <cang@codeaurora.org>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Zanussi <tom.zanussi@linux.intel.com>
+On Mon, Feb 25, 2019 at 10:58 PM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+>
+> qcom_qmp_phy_init() is extended to support the additional register
+> writes needed in PCS MISC and the appropriate sequences and resources
+> are defined for SDM845.
+>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
 
-On my system, /bin/sh is symlinked to dash, which doesn't understand
-the >& syntax, so the kprobe and uprobe error cases fail, with this in
-the log:
+How badly does this conflict with my refactoring series at [1]? I
+believe that series should be just about ready to go, do you want to
+base your change on top of it?
+-Evan
 
-./ftracetest: 26: tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc:
-Syntax error: Bad fd number
-
-Changing >& to 2> does work though, and should work in any shell.
-
-Signed-off-by: Tom Zanussi <tom.zanussi@linux.intel.com>
----
- tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc | 2 +-
- tools/testing/selftests/ftrace/test.d/kprobe/uprobe_syntax_errors.tc | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
-index 281665b1348c..7eb577b1d222 100644
---- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
-+++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
-@@ -11,7 +11,7 @@ pos=$(echo -n "${1%^*}" | wc -c) # error position
- command=$(echo "$1" | tr -d ^)
- echo "Test command: $command"
- echo > error_log
--(! echo "$command" > kprobe_events ) >& /dev/null
-+(! echo "$command" > kprobe_events ) 2> /dev/null
- grep "trace_kprobe: error:" -A 3 error_log
- N=$(tail -n 1 error_log | wc -c)
- # "  Command: " and "^\n" => 13
-diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/uprobe_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/kprobe/uprobe_syntax_errors.tc
-index 957011300bb7..ec7389b7934b 100644
---- a/tools/testing/selftests/ftrace/test.d/kprobe/uprobe_syntax_errors.tc
-+++ b/tools/testing/selftests/ftrace/test.d/kprobe/uprobe_syntax_errors.tc
-@@ -11,7 +11,7 @@ pos=$(echo -n "${1%^*}" | wc -c) # error position
- command=$(echo "$1" | tr -d ^)
- echo "Test command: $command"
- echo > error_log
--(! echo "$command" > uprobe_events ) >& /dev/null
-+(! echo "$command" > uprobe_events ) 2> /dev/null
- grep "trace_uprobe: error:" -A 3 error_log
- N=$(tail -n 1 error_log | wc -c)
- # "  Command: " and "^\n" => 13
--- 
-2.14.1
-
+[1] https://lore.kernel.org/lkml/20190321171800.104681-1-evgreen@chromium.org/
