@@ -4,52 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1087EC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:29:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10621C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:29:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3B1D2070D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:29:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAC0F2070D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:29:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553257763;
-	bh=9aeln6Ool/Ll6KWF7ShclDeaLBUuQmPB7EEuAjJlmuo=;
+	s=default; t=1553257765;
+	bh=84ty1k1Ynjf8wCQXegVIxbMr0dyfCAbv8DmUynwRX88=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gdJvWT/OCte0u0w4k/lnnMNd46VUCMITS4pM/qc+4WsRCeo9lBlHJvtykHe0EBu7z
-	 YtwgzFdzwiKg4/2wJibYzt5BO8MNahIX0gok2LvnA/mvquaCVO7ABEduvpURSSJ0DR
-	 VIOa4h4sVj88QsALh0RmYsfs6RO8vJjAV8TpJ0+k=
+	b=a/LHeqqQqRqFALnJgr0bAc071MLX7pDK55Nd80omLewJb5xcu3fnvLRkwpXvxDLIA
+	 VNXFy30lD7DZf94RKF1vCRZkwliIJcnjX+s6yx0X588HFkwk3OmhOEWJtl0+Mv1/WK
+	 gzC/rDP3ONM/ouft8uYiUXZMaKy/aVWtECCZuLx0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390227AbfCVMTU (ORCPT
+        id S2390845AbfCVM3Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:19:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58152 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:29:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58318 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390402AbfCVMTK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:19:10 -0400
+        id S2390607AbfCVMTU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:19:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69A322054F;
-        Fri, 22 Mar 2019 12:19:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09E912054F;
+        Fri, 22 Mar 2019 12:19:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553257149;
-        bh=9aeln6Ool/Ll6KWF7ShclDeaLBUuQmPB7EEuAjJlmuo=;
+        s=default; t=1553257159;
+        bh=84ty1k1Ynjf8wCQXegVIxbMr0dyfCAbv8DmUynwRX88=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o5fUwSTbuzXtYaWzn/tZMOeaaCo5vrceCobMIfMyHO/VrckJZ/bibeQavhEKGetcj
-         1UdUb1ELbmfc+E5kNZmmiiCZnlx4tV1iVN6icqKs64ULfg/pXa2sj/zVpHcyFw4vqU
-         6haR0XXu+MPkjMdh6lI1P2+bw8dTvc4PC/fV9OLM=
+        b=tRZu+C1+BuHunzjsG2SdoByrezFzW49CfU/LFiJXO0KApPkoa1CNafbuNnig9k5Eo
+         8qNlSUNI5REqUXjz/ur5/HS0p2pbVP4QH3mfRxp3JoOxDpWD3SNKIhI0vZr5B0+z0K
+         ubszDoeHV9LxRilhzo4OQ6Oi/bXf0sC6o1hQg4Qk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Phuong Nguyen <phuong.nguyen.xw@renesas.com>,
-        Hiroyuki Yokoyama <hiroyuki.yokoyama.vx@renesas.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH 5.0 147/238] dmaengine: usb-dmac: Make DMAC system sleep callbacks explicit
-Date:   Fri, 22 Mar 2019 12:16:06 +0100
-Message-Id: <20190322111307.041335199@linuxfoundation.org>
+        stable@vger.kernel.org, Jay Dolan <jay.dolan@accesio.com>
+Subject: [PATCH 5.0 150/238] serial: 8250_pci: Fix number of ports for ACCES serial cards
+Date:   Fri, 22 Mar 2019 12:16:09 +0100
+Message-Id: <20190322111307.211408543@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -68,60 +63,139 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Phuong Nguyen <phuong.nguyen.xw@renesas.com>
+From: Jay Dolan <jay.dolan@accesio.com>
 
-commit d9140a0da4a230a03426d175145989667758aa6a upstream.
+commit b896b03bc7fce43a07012cc6bf5e2ab2fddf3364 upstream.
 
-This commit fixes the issue that USB-DMAC hangs silently after system
-resumes on R-Car Gen3 hence renesas_usbhs will not work correctly
-when using USB-DMAC for bulk transfer e.g. ethernet or serial
-gadgets.
+Have the correct number of ports created for ACCES serial cards. Two port
+cards show up as four ports, and four port cards show up as eight.
 
-The issue can be reproduced by these steps:
- 1. modprobe g_serial
- 2. Suspend and resume system.
- 3. connect a usb cable to host side
- 4. Transfer data from Host to Target
- 5. cat /dev/ttyGS0 (Target side)
- 6. echo "test" > /dev/ttyACM0 (Host side)
-
-The 'cat' will not result anything. However, system still can work
-normally.
-
-Currently, USB-DMAC driver does not have system sleep callbacks hence
-this driver relies on the PM core to force runtime suspend/resume to
-suspend and reinitialize USB-DMAC during system resume. After
-the commit 17218e0092f8 ("PM / genpd: Stop/start devices without
-pm_runtime_force_suspend/resume()"), PM core will not force
-runtime suspend/resume anymore so this issue happens.
-
-To solve this, make system suspend resume explicit by using
-pm_runtime_force_{suspend,resume}() as the system sleep callbacks.
-SET_NOIRQ_SYSTEM_SLEEP_PM_OPS() is used to make sure USB-DMAC
-suspended after and initialized before renesas_usbhs."
-
-Signed-off-by: Phuong Nguyen <phuong.nguyen.xw@renesas.com>
-Signed-off-by: Hiroyuki Yokoyama <hiroyuki.yokoyama.vx@renesas.com>
-Cc: <stable@vger.kernel.org> # v4.16+
-[shimoda: revise the commit log and add Cc tag]
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Fixes: c8d192428f52 ("serial: 8250: added acces i/o products quad and octal serial cards")
+Signed-off-by: Jay Dolan <jay.dolan@accesio.com>
+Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/dma/sh/usb-dmac.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/tty/serial/8250/8250_pci.c |   36 ++++++++++++++++++------------------
+ 1 file changed, 18 insertions(+), 18 deletions(-)
 
---- a/drivers/dma/sh/usb-dmac.c
-+++ b/drivers/dma/sh/usb-dmac.c
-@@ -694,6 +694,8 @@ static int usb_dmac_runtime_resume(struc
- #endif /* CONFIG_PM */
- 
- static const struct dev_pm_ops usb_dmac_pm = {
-+	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-+				      pm_runtime_force_resume)
- 	SET_RUNTIME_PM_OPS(usb_dmac_runtime_suspend, usb_dmac_runtime_resume,
- 			   NULL)
- };
+--- a/drivers/tty/serial/8250/8250_pci.c
++++ b/drivers/tty/serial/8250/8250_pci.c
+@@ -4575,10 +4575,10 @@ static const struct pci_device_id serial
+ 	 */
+ 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_COM_2SDB,
+ 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7954 },
++		pbn_pericom_PI7C9X7952 },
+ 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_MPCIE_COM_2S,
+ 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7954 },
++		pbn_pericom_PI7C9X7952 },
+ 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_COM_4SDB,
+ 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+ 		pbn_pericom_PI7C9X7954 },
+@@ -4587,10 +4587,10 @@ static const struct pci_device_id serial
+ 		pbn_pericom_PI7C9X7954 },
+ 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_COM232_2DB,
+ 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7954 },
++		pbn_pericom_PI7C9X7952 },
+ 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_MPCIE_COM232_2,
+ 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7954 },
++		pbn_pericom_PI7C9X7952 },
+ 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_COM232_4DB,
+ 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+ 		pbn_pericom_PI7C9X7954 },
+@@ -4599,10 +4599,10 @@ static const struct pci_device_id serial
+ 		pbn_pericom_PI7C9X7954 },
+ 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_COM_2SMDB,
+ 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7954 },
++		pbn_pericom_PI7C9X7952 },
+ 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_MPCIE_COM_2SM,
+ 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7954 },
++		pbn_pericom_PI7C9X7952 },
+ 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_COM_4SMDB,
+ 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+ 		pbn_pericom_PI7C9X7954 },
+@@ -4611,13 +4611,13 @@ static const struct pci_device_id serial
+ 		pbn_pericom_PI7C9X7954 },
+ 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_MPCIE_ICM485_1,
+ 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7954 },
++		pbn_pericom_PI7C9X7951 },
+ 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_MPCIE_ICM422_2,
+ 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7954 },
++		pbn_pericom_PI7C9X7952 },
+ 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_MPCIE_ICM485_2,
+ 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7954 },
++		pbn_pericom_PI7C9X7952 },
+ 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_MPCIE_ICM422_4,
+ 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+ 		pbn_pericom_PI7C9X7954 },
+@@ -4626,16 +4626,16 @@ static const struct pci_device_id serial
+ 		pbn_pericom_PI7C9X7954 },
+ 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_ICM_2S,
+ 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7954 },
++		pbn_pericom_PI7C9X7952 },
+ 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_ICM_4S,
+ 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+ 		pbn_pericom_PI7C9X7954 },
+ 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_ICM232_2,
+ 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7954 },
++		pbn_pericom_PI7C9X7952 },
+ 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_MPCIE_ICM232_2,
+ 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7954 },
++		pbn_pericom_PI7C9X7952 },
+ 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_ICM232_4,
+ 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+ 		pbn_pericom_PI7C9X7954 },
+@@ -4644,13 +4644,13 @@ static const struct pci_device_id serial
+ 		pbn_pericom_PI7C9X7954 },
+ 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_ICM_2SM,
+ 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7954 },
++		pbn_pericom_PI7C9X7952 },
+ 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_COM422_4,
+ 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7958 },
++		pbn_pericom_PI7C9X7954 },
+ 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_COM485_4,
+ 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7958 },
++		pbn_pericom_PI7C9X7954 },
+ 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_COM422_8,
+ 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+ 		pbn_pericom_PI7C9X7958 },
+@@ -4659,19 +4659,19 @@ static const struct pci_device_id serial
+ 		pbn_pericom_PI7C9X7958 },
+ 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_COM232_4,
+ 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7958 },
++		pbn_pericom_PI7C9X7954 },
+ 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_COM232_8,
+ 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+ 		pbn_pericom_PI7C9X7958 },
+ 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_COM_4SM,
+ 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7958 },
++		pbn_pericom_PI7C9X7954 },
+ 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_COM_8SM,
+ 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+ 		pbn_pericom_PI7C9X7958 },
+ 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_ICM_4SM,
+ 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7958 },
++		pbn_pericom_PI7C9X7954 },
+ 	/*
+ 	 * Topic TP560 Data/Fax/Voice 56k modem (reported by Evan Clarke)
+ 	 */
 
 
