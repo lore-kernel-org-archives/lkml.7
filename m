@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEF89C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:46:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D9F7C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:46:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E96A218B0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:46:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D1C42082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:46:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255211;
-	bh=SgyA/WqVdREM8jNKAVbjfsMVCSn3uyGuy+4vENzdylU=;
+	s=default; t=1553255216;
+	bh=/i1xEidyewxRmRu+A0/lCjMBHQGQ9Atzv1u2GkzZrLU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=082BpdkvzYuJ4dUsggck+fOw6q4PZRR9jhQTV5K8lDrCBHxIT7BjrSo2/v8JKtlco
-	 q3mRNvIttE1ln2ducs3DKsxj3YKN0WCoE89t1E0VHKGXxhSZUzg9IotxhNGzlhu2yY
-	 CzY0qy26n7VsdamuBliqyJxHA7124FqH7fTE/fsc=
+	b=WqDPbT+GpLGuArU0zbeq9udahOzVJmcEjvy6VklXouEblVGCgRsNBzviIGGPocIFs
+	 vQf69Gf687wGZaE5hapIfdb6bzqRipRV3bOnLLuwGcb6QhR4MkLOSkx3GfkfOJB0Vw
+	 hOjOGDteJCSGayCnsMqaBjx4tMELEAUvB0aW3RJ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732092AbfCVLqt (ORCPT
+        id S1731743AbfCVLqy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:46:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49906 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:46:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731766AbfCVLqr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:46:47 -0400
+        id S1731766AbfCVLqv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:46:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91D052075E;
-        Fri, 22 Mar 2019 11:46:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61BC02082C;
+        Fri, 22 Mar 2019 11:46:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255206;
-        bh=SgyA/WqVdREM8jNKAVbjfsMVCSn3uyGuy+4vENzdylU=;
+        s=default; t=1553255209;
+        bh=/i1xEidyewxRmRu+A0/lCjMBHQGQ9Atzv1u2GkzZrLU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p22s5nSyXR1+8TqyzXKmVC3TKlXmeJY1DUlXCQz/2ZMR2AI0QVhR6MiumX9QmRkXO
-         7PZNgaVTILQ4dPNanGp4x+h673iV8DpK13MuOJX+9Doyc0dPiKuqTu5PtDIxFgYUEm
-         gZNTs5Hxm0AyBB2udpL6vbYYpjkLSION/JPjiItM=
+        b=gI1VUjJ+xmhjPgWSP5moNkhyBCqYa6fVpm5pf0cMqa4WXJ/E30anFSroweUtOXAim
+         HkLzVdrsHr6bE0tGq+pxBzwbQ0VwM8VKv9IChDYCheIfie3Fi404wt3FdpkNaEOkoL
+         PGcoylX3EA1+MN+mHOXdngQz7EaUB4MJWKdWneCo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
         Zhang Zhijie <zhangzj@rock-chips.com>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.14 008/183] crypto: rockchip - fix scatterlist nents error
-Date:   Fri, 22 Mar 2019 12:13:56 +0100
-Message-Id: <20190322111242.383421791@linuxfoundation.org>
+Subject: [PATCH 4.14 009/183] crypto: rockchip - update new iv to device in multiple operations
+Date:   Fri, 22 Mar 2019 12:13:57 +0100
+Message-Id: <20190322111242.458694191@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111241.819468003@linuxfoundation.org>
 References: <20190322111241.819468003@linuxfoundation.org>
@@ -68,11 +68,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Zhang Zhijie <zhangzj@rock-chips.com>
 
-commit 4359669a087633132203c52d67dd8c31e09e7b2e upstream.
+commit c1c214adcb56d36433480c8fedf772498e7e539c upstream.
 
-In some cases, the nents of src scatterlist is different from
-dst scatterlist. So two variables are used to handle the nents
-of src&dst scatterlist.
+For chain mode in cipher(eg. AES-CBC/DES-CBC), the iv is continuously
+updated in the operation. The new iv value should be written to device
+register by software.
 
 Reported-by: Eric Biggers <ebiggers@google.com>
 Fixes: 433cd2c617bf ("crypto: rockchip - add crypto driver for rk3288")
@@ -82,67 +82,76 @@ Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/rockchip/rk3288_crypto.c            |    2 +-
- drivers/crypto/rockchip/rk3288_crypto.h            |    3 ++-
- drivers/crypto/rockchip/rk3288_crypto_ablkcipher.c |    5 +++--
- drivers/crypto/rockchip/rk3288_crypto_ahash.c      |    2 +-
- 4 files changed, 7 insertions(+), 5 deletions(-)
+ drivers/crypto/rockchip/rk3288_crypto.h            |    1 
+ drivers/crypto/rockchip/rk3288_crypto_ablkcipher.c |   34 +++++++++++++++++++++
+ 2 files changed, 35 insertions(+)
 
---- a/drivers/crypto/rockchip/rk3288_crypto.c
-+++ b/drivers/crypto/rockchip/rk3288_crypto.c
-@@ -119,7 +119,7 @@ static int rk_load_data(struct rk_crypto
- 		count = (dev->left_bytes > PAGE_SIZE) ?
- 			PAGE_SIZE : dev->left_bytes;
- 
--		if (!sg_pcopy_to_buffer(dev->first, dev->nents,
-+		if (!sg_pcopy_to_buffer(dev->first, dev->src_nents,
- 					dev->addr_vir, count,
- 					dev->total - dev->left_bytes)) {
- 			dev_err(dev->dev, "[%s:%d] pcopy err\n",
 --- a/drivers/crypto/rockchip/rk3288_crypto.h
 +++ b/drivers/crypto/rockchip/rk3288_crypto.h
-@@ -207,7 +207,8 @@ struct rk_crypto_info {
- 	void				*addr_vir;
- 	int				aligned;
- 	int				align_size;
--	size_t				nents;
-+	size_t				src_nents;
-+	size_t				dst_nents;
- 	unsigned int			total;
- 	unsigned int			count;
- 	dma_addr_t			addr_in;
+@@ -245,6 +245,7 @@ struct rk_cipher_ctx {
+ 	struct rk_crypto_info		*dev;
+ 	unsigned int			keylen;
+ 	u32				mode;
++	u8				iv[AES_BLOCK_SIZE];
+ };
+ 
+ enum alg_type {
 --- a/drivers/crypto/rockchip/rk3288_crypto_ablkcipher.c
 +++ b/drivers/crypto/rockchip/rk3288_crypto_ablkcipher.c
-@@ -260,8 +260,9 @@ static int rk_ablk_start(struct rk_crypt
- 	dev->total = req->nbytes;
- 	dev->sg_src = req->src;
- 	dev->first = req->src;
--	dev->nents = sg_nents(req->src);
-+	dev->src_nents = sg_nents(req->src);
- 	dev->sg_dst = req->dst;
-+	dev->dst_nents = sg_nents(req->dst);
- 	dev->aligned = 1;
+@@ -242,6 +242,17 @@ static void crypto_dma_start(struct rk_c
+ static int rk_set_data_start(struct rk_crypto_info *dev)
+ {
+ 	int err;
++	struct ablkcipher_request *req =
++		ablkcipher_request_cast(dev->async_req);
++	struct crypto_ablkcipher *tfm = crypto_ablkcipher_reqtfm(req);
++	struct rk_cipher_ctx *ctx = crypto_ablkcipher_ctx(tfm);
++	u32 ivsize = crypto_ablkcipher_ivsize(tfm);
++	u8 *src_last_blk = page_address(sg_page(dev->sg_src)) +
++		dev->sg_src->offset + dev->sg_src->length - ivsize;
++
++	/* store the iv that need to be updated in chain mode */
++	if (ctx->mode & RK_CRYPTO_DEC)
++		memcpy(ctx->iv, src_last_blk, ivsize);
  
- 	spin_lock_irqsave(&dev->lock, flags);
-@@ -297,7 +298,7 @@ static int rk_ablk_rx(struct rk_crypto_i
+ 	err = dev->load_data(dev, dev->sg_src, dev->sg_dst);
+ 	if (!err)
+@@ -286,6 +297,28 @@ static void rk_iv_copyback(struct rk_cry
+ 		memcpy_fromio(req->info, dev->reg + RK_CRYPTO_AES_IV_0, ivsize);
+ }
  
- 	dev->unload_data(dev);
- 	if (!dev->aligned) {
--		if (!sg_pcopy_from_buffer(req->dst, dev->nents,
-+		if (!sg_pcopy_from_buffer(req->dst, dev->dst_nents,
- 					  dev->addr_vir, dev->count,
- 					  dev->total - dev->left_bytes -
- 					  dev->count)) {
---- a/drivers/crypto/rockchip/rk3288_crypto_ahash.c
-+++ b/drivers/crypto/rockchip/rk3288_crypto_ahash.c
-@@ -206,7 +206,7 @@ static int rk_ahash_start(struct rk_cryp
- 	dev->sg_dst = NULL;
- 	dev->sg_src = req->src;
- 	dev->first = req->src;
--	dev->nents = sg_nents(req->src);
-+	dev->src_nents = sg_nents(req->src);
- 	rctx = ahash_request_ctx(req);
- 	rctx->mode = 0;
- 
++static void rk_update_iv(struct rk_crypto_info *dev)
++{
++	struct ablkcipher_request *req =
++		ablkcipher_request_cast(dev->async_req);
++	struct crypto_ablkcipher *tfm = crypto_ablkcipher_reqtfm(req);
++	struct rk_cipher_ctx *ctx = crypto_ablkcipher_ctx(tfm);
++	u32 ivsize = crypto_ablkcipher_ivsize(tfm);
++	u8 *new_iv = NULL;
++
++	if (ctx->mode & RK_CRYPTO_DEC) {
++		new_iv = ctx->iv;
++	} else {
++		new_iv = page_address(sg_page(dev->sg_dst)) +
++			 dev->sg_dst->offset + dev->sg_dst->length - ivsize;
++	}
++
++	if (ivsize == DES_BLOCK_SIZE)
++		memcpy_toio(dev->reg + RK_CRYPTO_TDES_IV_0, new_iv, ivsize);
++	else if (ivsize == AES_BLOCK_SIZE)
++		memcpy_toio(dev->reg + RK_CRYPTO_AES_IV_0, new_iv, ivsize);
++}
++
+ /* return:
+  *	true	some err was occurred
+  *	fault	no err, continue
+@@ -307,6 +340,7 @@ static int rk_ablk_rx(struct rk_crypto_i
+ 		}
+ 	}
+ 	if (dev->left_bytes) {
++		rk_update_iv(dev);
+ 		if (dev->aligned) {
+ 			if (sg_is_last(dev->sg_src)) {
+ 				dev_err(dev->dev, "[%s:%d] Lack of data\n",
 
 
