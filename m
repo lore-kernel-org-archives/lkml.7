@@ -7,53 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 112E8C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:58:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED9DDC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:58:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1F822192D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:58:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B969520850
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:58:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255932;
-	bh=cpOOE8+ctAfVCGpx4KTQauuKUXK3gmGizv8TwzSMb1s=;
+	s=default; t=1553255936;
+	bh=0aOZ4VlaHQcdtX1Hsb28Q4fN0uDst76Z4m5xp2AWuhE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=COeq5IJVJwKhcuQq+HoJywvlmahKP0/LPwtVXiID3kmyQwyIOWKdnFzoBZboLzrk1
-	 Iz5VnH1F+oUI+XYhIRbeXme8RSgLVzG1N8grJ47g9PieWEO84yUvWKQ3CqfAKhLJwx
-	 gQaDaU6I6m3SPciNCAAw+xkX2NkX1NwgpsM0X83I=
+	b=AJNb8wQYc1nmdqI7bfSICtRox7wlAs+4JbYK4p/IGlX5i1/ea8KL/Qma2PH9Z55cO
+	 T2WYyyqlpvJGjEiAU7NwtyRsh597lqMQ6MoX90GqpW+kFkRWs08H6JJ7rUSYx13mwi
+	 5Zu0sa68FsmQkcsgbJ7+qo6JPa3QzS72EB3bC2qA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387894AbfCVL6v (ORCPT
+        id S2387901AbfCVL6y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:58:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35634 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:58:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387864AbfCVL6s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:58:48 -0400
+        id S2387681AbfCVL6v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:58:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B1782192D;
-        Fri, 22 Mar 2019 11:58:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A2462195D;
+        Fri, 22 Mar 2019 11:58:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255927;
-        bh=cpOOE8+ctAfVCGpx4KTQauuKUXK3gmGizv8TwzSMb1s=;
+        s=default; t=1553255930;
+        bh=0aOZ4VlaHQcdtX1Hsb28Q4fN0uDst76Z4m5xp2AWuhE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HvClub6wQkEz/PfHQEaOBqLy+sEHi76It5GbbRErEBUlPc5cUvXEhTbrMDhNHW6VE
-         7vVMmuWC7sERlGTKO159lkAn9p24fSFEegJROXWDqlPbl7qhJ2c0Egi4E9HdhY6c0Z
-         QMSKAxxQxRZPFoOkj53C/SoX4H2sIloINPaENTYM=
+        b=XZrx90znNjjb9jh1bb9Xb29MPIUh7G/Ok4KlXtrL+wrm5iC7m3W2/TGEM9UyGulru
+         m5tBw3mBga4xoXOqCspAMtuxUBweHjZsqG+5tUOsUnyjyXIaXiWDRJ2li/VAF9Zv1n
+         lgjn+Gl1Eqh+qaZWdNroHlsYuS0vo/mHA5jhkxGc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Michal Hocko <mhocko@kernel.org>,
-        Pasha Tatashin <Pavel.Tatashin@microsoft.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Yang Shi <yang.shi@linaro.org>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Bill Kuzeja <william.kuzeja@stratus.com>,
+        Giridhar Malavali <gmalavali@marvell.com>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 057/280] Revert "mm: use early_pfn_to_nid in page_ext_init"
-Date:   Fri, 22 Mar 2019 12:13:30 +0100
-Message-Id: <20190322111309.483456856@linuxfoundation.org>
+Subject: [PATCH 4.19 058/280] scsi: qla2xxx: Fix panic from use after free in qla2x00_async_tm_cmd
+Date:   Fri, 22 Mar 2019 12:13:31 +0100
+Message-Id: <20190322111309.531693685@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -72,113 +68,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 2f1ee0913ce58efe7f18fbd518bd54c598559b89 ]
+[ Upstream commit 388a49959ee4e4e99f160241d9599efa62cd4299 ]
 
-This reverts commit fe53ca54270a ("mm: use early_pfn_to_nid in
-page_ext_init").
+In qla2x00_async_tm_cmd, we reference off sp after it has been freed.  This
+caused a panic on a system running a slub debug kernel. Since fcport is
+passed in anyways, just use that instead.
 
-When booting a system with "page_owner=on",
-
-start_kernel
-  page_ext_init
-    invoke_init_callbacks
-      init_section_page_ext
-        init_page_owner
-          init_early_allocated_pages
-            init_zones_in_node
-              init_pages_in_zone
-                lookup_page_ext
-                  page_to_nid
-
-The issue here is that page_to_nid() will not work since some page flags
-have no node information until later in page_alloc_init_late() due to
-DEFERRED_STRUCT_PAGE_INIT.  Hence, it could trigger an out-of-bounds
-access with an invalid nid.
-
-  UBSAN: Undefined behaviour in ./include/linux/mm.h:1104:50
-  index 7 is out of range for type 'zone [5]'
-
-Also, kernel will panic since flags were poisoned earlier with,
-
-CONFIG_DEBUG_VM_PGFLAGS=y
-CONFIG_NODE_NOT_IN_PAGE_FLAGS=n
-
-start_kernel
-  setup_arch
-    pagetable_init
-      paging_init
-        sparse_init
-          sparse_init_nid
-            memblock_alloc_try_nid_raw
-
-It did not handle it well in init_pages_in_zone() which ends up calling
-page_to_nid().
-
-  page:ffffea0004200000 is uninitialized and poisoned
-  raw: ffffffffffffffff ffffffffffffffff ffffffffffffffff ffffffffffffffff
-  raw: ffffffffffffffff ffffffffffffffff ffffffffffffffff ffffffffffffffff
-  page dumped because: VM_BUG_ON_PAGE(PagePoisoned(p))
-  page_owner info is not active (free page?)
-  kernel BUG at include/linux/mm.h:990!
-  RIP: 0010:init_page_owner+0x486/0x520
-
-This means that assumptions behind commit fe53ca54270a ("mm: use
-early_pfn_to_nid in page_ext_init") are incomplete.  Therefore, revert
-the commit for now.  A proper way to move the page_owner initialization
-to sooner is to hook into memmap initialization.
-
-Link: http://lkml.kernel.org/r/20190115202812.75820-1-cai@lca.pw
-Signed-off-by: Qian Cai <cai@lca.pw>
-Acked-by: Michal Hocko <mhocko@kernel.org>
-Cc: Pasha Tatashin <Pavel.Tatashin@microsoft.com>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Cc: Yang Shi <yang.shi@linaro.org>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Bill Kuzeja <william.kuzeja@stratus.com>
+Acked-by: Giridhar Malavali <gmalavali@marvell.com>
+Acked-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- init/main.c   | 3 ++-
- mm/page_ext.c | 4 +---
- 2 files changed, 3 insertions(+), 4 deletions(-)
+ drivers/scsi/qla2xxx/qla_init.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/init/main.c b/init/main.c
-index 18f8f0140fa0..e083fac08aed 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -689,7 +689,6 @@ asmlinkage __visible void __init start_kernel(void)
- 		initrd_start = 0;
+diff --git a/drivers/scsi/qla2xxx/qla_init.c b/drivers/scsi/qla2xxx/qla_init.c
+index 5352c9bbcaf7..2271a2cd29d2 100644
+--- a/drivers/scsi/qla2xxx/qla_init.c
++++ b/drivers/scsi/qla2xxx/qla_init.c
+@@ -1719,13 +1719,13 @@ qla2x00_async_tm_cmd(fc_port_t *fcport, uint32_t flags, uint32_t lun,
+ 
+ 		/* Issue Marker IOCB */
+ 		qla2x00_marker(vha, vha->hw->req_q_map[0],
+-		    vha->hw->rsp_q_map[0], sp->fcport->loop_id, lun,
++		    vha->hw->rsp_q_map[0], fcport->loop_id, lun,
+ 		    flags == TCF_LUN_RESET ? MK_SYNC_ID_LUN : MK_SYNC_ID);
  	}
- #endif
--	page_ext_init();
- 	kmemleak_init();
- 	debug_objects_mem_init();
- 	setup_per_cpu_pageset();
-@@ -1140,6 +1139,8 @@ static noinline void __init kernel_init_freeable(void)
- 	sched_init_smp();
  
- 	page_alloc_init_late();
-+	/* Initialize page ext after all struct pages are initialized. */
-+	page_ext_init();
- 
- 	do_basic_setup();
- 
-diff --git a/mm/page_ext.c b/mm/page_ext.c
-index a9826da84ccb..4961f13b6ec1 100644
---- a/mm/page_ext.c
-+++ b/mm/page_ext.c
-@@ -398,10 +398,8 @@ void __init page_ext_init(void)
- 			 * We know some arch can have a nodes layout such as
- 			 * -------------pfn-------------->
- 			 * N0 | N1 | N2 | N0 | N1 | N2|....
--			 *
--			 * Take into account DEFERRED_STRUCT_PAGE_INIT.
- 			 */
--			if (early_pfn_to_nid(pfn) != nid)
-+			if (pfn_to_nid(pfn) != nid)
- 				continue;
- 			if (init_section_page_ext(pfn, nid))
- 				goto oom;
+ done_free_sp:
+ 	sp->free(sp);
+-	sp->fcport->flags &= ~FCF_ASYNC_SENT;
++	fcport->flags &= ~FCF_ASYNC_SENT;
+ done:
+ 	return rval;
+ }
 -- 
 2.19.1
 
