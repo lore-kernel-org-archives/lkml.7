@@ -2,268 +2,121 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F11DCC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 06:22:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A93C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 06:26:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7804218E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 06:22:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77A51218E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 06:26:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727548AbfCVGWu (ORCPT
+        id S1727571AbfCVG0J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 02:22:50 -0400
-Received: from foss.arm.com ([217.140.101.70]:38876 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726029AbfCVGWt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 02:22:49 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3C1CD15BE;
-        Thu, 21 Mar 2019 23:22:49 -0700 (PDT)
-Received: from mail-it1-f181.google.com (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 238173F7F3;
-        Thu, 21 Mar 2019 23:22:49 -0700 (PDT)
-Received: by mail-it1-f181.google.com with SMTP id m18so1904459ita.3;
-        Thu, 21 Mar 2019 23:22:49 -0700 (PDT)
-X-Gm-Message-State: APjAAAX57onLFxYWJ+z/w/qGgpiyx8DohYCjQsd9YPJdaZ8rPJtK8oOu
-        AnAOPUh6PlSWgYacAOILjOxbOuV3KvTrnFLJLkQ=
-X-Google-Smtp-Source: APXvYqx17vJkXgNLk1nwkLtg0pLwM6CJmZt3Y88GJ/ed1CPX/VX2QDTndGAwF9Sm+7co0cfjLo6Z/7McOEIBc7TPEu8=
-X-Received: by 2002:a24:5c47:: with SMTP id q68mr125583itb.81.1553235768373;
- Thu, 21 Mar 2019 23:22:48 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1552679409.git.andreyknvl@google.com> <20190318163533.26838-1-vincenzo.frascino@arm.com>
- <20190318163533.26838-3-vincenzo.frascino@arm.com>
-In-Reply-To: <20190318163533.26838-3-vincenzo.frascino@arm.com>
-From:   Amit Daniel Kachhap <amit.kachhap@arm.com>
-Date:   Fri, 22 Mar 2019 11:52:37 +0530
-X-Gmail-Original-Message-ID: <CADGdYn7HYcj4vxw2bCS6McdNRmWu7o13=VAQra5A1Z18JNPMXQ@mail.gmail.com>
-Message-ID: <CADGdYn7HYcj4vxw2bCS6McdNRmWu7o13=VAQra5A1Z18JNPMXQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/4] arm64: Define Documentation/arm64/elf_at_flags.txt
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc:     LAK <linux-arm-kernel@lists.infradead.org>,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kostya Serebryany <kcc@google.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Chintan Pandya <cpandya@codeaurora.org>,
-        Shuah Khan <shuah@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Graeme Barnes <Graeme.Barnes@arm.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Branislav Rankov <Branislav.Rankov@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 22 Mar 2019 02:26:09 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:56172 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726096AbfCVG0I (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 02:26:08 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2M6J6Hu079824
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 02:26:07 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rct68rkah-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 02:26:07 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <huntbag@linux.vnet.ibm.com>;
+        Fri, 22 Mar 2019 06:25:56 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 22 Mar 2019 06:25:53 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2M6Q1Nq62652420
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 22 Mar 2019 06:26:01 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 132ECAE053;
+        Fri, 22 Mar 2019 06:26:01 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E1C15AE045;
+        Fri, 22 Mar 2019 06:25:59 +0000 (GMT)
+Received: from boston16h.aus.stglabs.ibm.com (unknown [9.3.23.78])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 22 Mar 2019 06:25:59 +0000 (GMT)
+From:   Abhishek Goel <huntbag@linux.vnet.ibm.com>
+To:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-pm@vger.kernel.org
+Cc:     rjw@rjwysocki.net, daniel.lezcano@linaro.org, mpe@ellerman.id.au,
+        Abhishek Goel <huntbag@linux.vnet.ibm.com>
+Subject: [PATCH 0/2] Auto-promotion logic for cpuidle states
+Date:   Fri, 22 Mar 2019 01:25:28 -0500
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+x-cbid: 19032206-0016-0000-0000-00000265CFBC
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19032206-0017-0000-0000-000032C0F2E9
+Message-Id: <20190322062530.7586-1-huntbag@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-22_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=528 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903220048
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vincenzo,
+Currently, the cpuidle governors (menu/ladder) determine what idle state a
+idling CPU should enter into based on heuristics that depend on the idle
+history on that CPU. Given that no predictive heuristic is perfect, there
+are cases where the governor predicts a shallow idle state, hoping that
+the CPU will be busy soon. However, if no new workload is scheduled on
+that CPU in the near future, the CPU will end up in the shallow state.
 
-On Mon, Mar 18, 2019 at 10:06 PM Vincenzo Frascino
-<vincenzo.frascino@arm.com> wrote:
->
-> On arm64 the TCR_EL1.TBI0 bit has been always enabled hence
-> the userspace (EL0) is allowed to set a non-zero value in the
-> top byte but the resulting pointers are not allowed at the
-> user-kernel syscall ABI boundary.
->
-> With the relaxed ABI proposed through this document, it is now possible
-> to pass tagged pointers to the syscalls, when these pointers are in
-> memory ranges obtained by an anonymous (MAP_ANONYMOUS) mmap() or brk().
->
-> This change in the ABI requires a mechanism to inform the userspace
-> that such an option is available.
->
-> Specify and document the way in which AT_FLAGS can be used to advertise
-> this feature to the userspace.
->
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will.deacon@arm.com>
-> CC: Andrey Konovalov <andreyknvl@google.com>
-> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
->
-> Squash with "arm64: Define Documentation/arm64/elf_at_flags.txt"
-> ---
->  Documentation/arm64/elf_at_flags.txt | 133 +++++++++++++++++++++++++++
->  1 file changed, 133 insertions(+)
->  create mode 100644 Documentation/arm64/elf_at_flags.txt
->
-> diff --git a/Documentation/arm64/elf_at_flags.txt b/Documentation/arm64/elf_at_flags.txt
-> new file mode 100644
-> index 000000000000..9b3494207c14
-> --- /dev/null
-> +++ b/Documentation/arm64/elf_at_flags.txt
-> @@ -0,0 +1,133 @@
-> +ARM64 ELF AT_FLAGS
-> +==================
-> +
-> +This document describes the usage and semantics of AT_FLAGS on arm64.
-> +
-> +1. Introduction
-> +---------------
-> +
-> +AT_FLAGS is part of the Auxiliary Vector, contains the flags and it
-> +is set to zero by the kernel on arm64 unless one or more of the
-> +features detailed in paragraph 2 are present.
-> +
-> +The auxiliary vector can be accessed by the userspace using the
-> +getauxval() API provided by the C library.
-> +getauxval() returns an unsigned long and when a flag is present in
-> +the AT_FLAGS, the corresponding bit in the returned value is set to 1.
-> +
-> +The AT_FLAGS with a "defined semantics" on arm64 are exposed to the
-> +userspace via user API (uapi/asm/atflags.h).
-> +The AT_FLAGS bits with "undefined semantics" are set to zero by default.
-> +This means that the AT_FLAGS bits to which this document does not assign
-> +an explicit meaning are to be intended reserved for future use.
-> +The kernel will populate all such bits with zero until meanings are
-> +assigned to them. If and when meanings are assigned, it is guaranteed
-> +that they will not impact the functional operation of existing userspace
-> +software. Userspace software should ignore any AT_FLAGS bit whose meaning
-> +is not defined when the software is written.
-> +
-> +The userspace software can test for features by acquiring the AT_FLAGS
-> +entry of the auxiliary vector, and testing whether a relevant flag
-> +is set.
-> +
-> +Example of a userspace test function:
-> +
-> +bool feature_x_is_present(void)
-> +{
-> +       unsigned long at_flags = getauxval(AT_FLAGS);
-> +       if (at_flags & FEATURE_X)
-> +               return true;
-> +
-> +       return false;
-> +}
-> +
-> +Where the software relies on a feature advertised by AT_FLAGS, it
-> +must check that the feature is present before attempting to
-> +use it.
-> +
-> +2. Features exposed via AT_FLAGS
-> +--------------------------------
-> +
-> +bit[0]: ARM64_AT_FLAGS_SYSCALL_TBI
-> +
-> +    On arm64 the TCR_EL1.TBI0 bit has been always enabled on the arm64
-> +    kernel, hence the userspace (EL0) is allowed to set a non-zero value
-> +    in the top byte but the resulting pointers are not allowed at the
-> +    user-kernel syscall ABI boundary.
-> +    When bit[0] is set to 1 the kernel is advertising to the userspace
-> +    that a relaxed ABI is supported hence this type of pointers are now
-> +    allowed to be passed to the syscalls, when these pointers are in
-> +    memory ranges privately owned by a process and obtained by the
-> +    process in accordance with the definition of "valid tagged pointer"
-> +    in paragraph 3.
-> +    In these cases the tag is preserved as the pointer goes through the
-> +    kernel. Only when the kernel needs to check if a pointer is coming
-> +    from userspace an untag operation is required.
-> +
-> +3. ARM64_AT_FLAGS_SYSCALL_TBI
-> +-----------------------------
-> +
-> +From the kernel syscall interface prospective, we define, for the purposes
-> +of this document, a "valid tagged pointer" as a pointer that either it has
-> +a zero value set in the top byte or it has a non-zero value, it is in memory
-> +ranges privately owned by a userspace process and it is obtained in one of
-> +the following ways:
-> +  - mmap() done by the process itself, where either:
-> +    * flags = MAP_PRIVATE | MAP_ANONYMOUS
-> +    * flags = MAP_PRIVATE and the file descriptor refers to a regular
-> +      file or "/dev/zero"
-> +  - a mapping below sbrk(0) done by the process itself
-> +  - any memory mapped by the kernel in the process's address space during
-> +    creation and following the restrictions presented above (i.e. data, bss,
-> +    stack).
-> +
-> +When the ARM64_AT_FLAGS_SYSCALL_TBI flag is set by the kernel, the following
-> +behaviours are guaranteed by the ABI:
-> +
-> +  - Every current or newly introduced syscall can accept any valid tagged
-> +    pointers.
-> +
-> +  - If a non valid tagged pointer is passed to a syscall then the behaviour
-> +    is undefined.
-> +
-> +  - Every valid tagged pointer is expected to work as an untagged one.
-> +
-> +  - The kernel preserves any valid tagged pointers and returns them to the
-> +    userspace unchanged in all the cases except the ones documented in the
-> +    "Preserving tags" paragraph of tagged-pointers.txt.
-> +
-> +A definition of the meaning of tagged pointers on arm64 can be found in:
-> +Documentation/arm64/tagged-pointers.txt.
-> +
-> +Example of correct usage (pseudo-code) for a userspace application:
-> +
-> +bool arm64_syscall_tbi_is_present(void)
-> +{
-> +       unsigned long at_flags = getauxval(AT_FLAGS);
-> +       if (at_flags & ARM64_AT_FLAGS_SYSCALL_TBI)
-> +                       return true;
-> +
-> +       return false;
-> +}
-> +
-> +void main(void)
-> +{
-> +       char *addr = mmap(NULL, PAGE_SIZE, PROT_READ | PROT_WRITE,
-> +                         MAP_ANONYMOUS, -1, 0);
-> +
-> +       int fd = open("test.txt", O_WRONLY);
-> +
-> +       /* Check if the relaxed ABI is supported */
-> +       if (arm64_syscall_tbi_is_present()) {
-> +               /* Add a tag to the pointer */
-> +               addr = tag_pointer(addr);
-> +       }
-> +
-> +       strcpy("Hello World\n", addr);
-Nit: s/strcpy("Hello World\n", addr)/strcpy(addr, "Hello World\n")
+Motivation
+----------
+In case of POWER, this is problematic, when the predicted state in the
+aforementioned scenario is a lite stop state, as such lite states will
+inhibit SMT folding, thereby depriving the other threads in the core from
+using the core resources.
 
-Thanks,
-Amit D
-> +
-> +       /* Write to a file */
-> +       write(fd, addr, sizeof(addr));
-> +
-> +       close(fd);
-> +}
-> +
-> --
-> 2.21.0
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+To address this, such lite states need to be autopromoted. The cpuidle-core
+can queue timer to correspond with the residency value of the next
+available state. Thus leading to auto-promotion to a deeper idle state as
+soon as possible.
+
+Experiment
+----------
+Without this patch -
+It was seen that for a idle system, a cpu may remain in stop0_lite for few
+seconds and then directly goes to a deeper state such as stop2.
+
+With this patch -
+A cpu will not remain in stop0_lite for more than the residency of next
+available state, and thus it will go to a deeper state in conservative
+fashion. Using this, we may spent even less than 20 milliseconds if
+susbsequent stop states are enabled. In the worst case, we may end up
+spending more than a second, as was the case without this patch. The
+worst case will occur in the scenario when no other shallow states are
+enbaled, and only deep states are available for auto-promotion.
+
+Abhishek Goel (2):
+  cpuidle : auto-promotion for cpuidle states
+  cpuidle : Add auto-promotion flag to cpuidle flags
+
+ arch/powerpc/include/asm/opal-api.h |  1 +
+ drivers/cpuidle/Kconfig             |  4 ++++
+ drivers/cpuidle/cpuidle-powernv.c   | 13 +++++++++++--
+ drivers/cpuidle/cpuidle.c           |  3 ---
+ 4 files changed, 16 insertions(+), 5 deletions(-)
+
+-- 
+2.17.1
+
