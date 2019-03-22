@@ -2,124 +2,162 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 680DEC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 19:36:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BDFBC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 19:37:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44A3C20883
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 19:36:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E997E2148D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 19:37:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727844AbfCVTgm (ORCPT
+        id S1727879AbfCVThf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 15:36:42 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:45936 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727425AbfCVTgk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 15:36:40 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2MJYdqw035778
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 15:36:39 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rd3s4emnm-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 15:36:38 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Fri, 22 Mar 2019 19:36:35 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 22 Mar 2019 19:36:32 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2MJaW1X41484366
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 22 Mar 2019 19:36:32 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 58AFC42041;
-        Fri, 22 Mar 2019 19:36:32 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 732AD4204B;
-        Fri, 22 Mar 2019 19:36:31 +0000 (GMT)
-Received: from dhcp-9-31-103-153.watson.ibm.com (unknown [9.31.103.153])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 22 Mar 2019 19:36:31 +0000 (GMT)
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     linux-integrity@vger.kernel.org
-Cc:     linux-kselftest@vger.kernel.org, kexec@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Petr Vorel <pvorel@suse.cz>,
-        Dave Young <dyoung@redhat.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Mimi Zohar <zohar@linux.ibm.com>
-Subject: [PATCH v4a 2/2] selftests/kexec: testing CONFIG_KEXEC_BZIMAGE_VERIFY_SIG is not enough
-Date:   Fri, 22 Mar 2019 15:35:51 -0400
-X-Mailer: git-send-email 2.7.5
-In-Reply-To: <1553283351-6310-1-git-send-email-zohar@linux.ibm.com>
-References: <1553283351-6310-1-git-send-email-zohar@linux.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19032219-0028-0000-0000-0000035733F1
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19032219-0029-0000-0000-00002415E05A
-Message-Id: <1553283351-6310-2-git-send-email-zohar@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-22_11:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=6 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=731 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903220139
+        Fri, 22 Mar 2019 15:37:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47158 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725999AbfCVThf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 15:37:35 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6283920883;
+        Fri, 22 Mar 2019 19:37:33 +0000 (UTC)
+Date:   Fri, 22 Mar 2019 15:37:31 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Ingo Molnar <mingo@redhat.com>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>, peterz@infradead.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Andrea Righi <righi.andrea@gmail.com>, stable@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH -tip v3 0/3] kprobes: Fix kretprobe issues
+Message-ID: <20190322153731.27065002@gandalf.local.home>
+In-Reply-To: <155094056180.6137.4208463927265038015.stgit@devbox>
+References: <155094056180.6137.4208463927265038015.stgit@devbox>
+X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for CONFIG_KEXEC_VERIFY_SIG being enabled, but not
-CONFIG_KEXEC_BZIMAGE_VERIFY_SIG.
 
-Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
----
- tools/testing/selftests/kexec/test_kexec_file_load.sh | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+Hi Ingo,
 
-diff --git a/tools/testing/selftests/kexec/test_kexec_file_load.sh b/tools/testing/selftests/kexec/test_kexec_file_load.sh
-index 57b636792086..fa7c24e8eefb 100755
---- a/tools/testing/selftests/kexec/test_kexec_file_load.sh
-+++ b/tools/testing/selftests/kexec/test_kexec_file_load.sh
-@@ -102,7 +102,8 @@ kexec_file_load_test()
- 			log_fail "$succeed_msg (missing sig)"
- 		fi
- 
--		if [ $pe_sig_required -eq 1 ] && [ $pe_signed -eq 0 ]; then
-+		if [ $kexec_sig_required -eq 1 -o $pe_sig_required -eq 1 ] \
-+		     && [ $pe_signed -eq 0 ]; then
- 			log_fail "$succeed_msg (missing PE sig)"
- 		fi
- 
-@@ -137,7 +138,8 @@ kexec_file_load_test()
- 		fi
- 	fi
- 
--	if [ $pe_sig_required -eq 1 ] && [ $pe_signed -eq 0 ]; then
-+	if [ $kexec_sig_required -eq 1 -o $pe_sig_required -eq 1 ] \
-+	     && [ $pe_signed -eq 0 ]; then
- 		log_pass "$failed_msg (missing PE sig)"
- 	fi
- 
-@@ -181,6 +183,10 @@ platform_keyring=$?
- kconfig_enabled "CONFIG_IMA_READ_POLICY=y" "reading IMA policy permitted"
- ima_read_policy=$?
- 
-+kconfig_enabled "CONFIG_KEXEC_SIG_FORCE=y" \
-+	"kexec signed kernel image required"
-+kexec_sig_required=$?
-+
- kconfig_enabled "CONFIG_KEXEC_BZIMAGE_VERIFY_SIG=y" \
- 	"PE signed kernel image required"
- pe_sig_required=$?
--- 
-2.7.5
+I was looking through at urgent patches that need to go upstream (as
+I'm working on a couple of patches now), and saw this series. It
+doesn't look like it was applied yet.
+
+Do you want to take this, or would you want me to? It touches arch/x86,
+so I'll take it if one of the x86 maintainers acks it. Or you can take
+it as I already acked the generic patch.
+
+-- Steve
+
+
+On Sun, 24 Feb 2019 01:49:22 +0900
+Masami Hiramatsu <mhiramat@kernel.org> wrote:
+
+> Hi Ingo,
+> 
+> Here is v3 series of fixing kretprobe incorrect stacking order patches.
+> 
+> I found that this series did not merged yet, so I just ported it
+> on the tip tree.
+> 
+> In this version, I just added Steve's Ack and sort tags.
+> Please push it as an urgent fix.
+> 
+> (1) kprobe incorrct stacking order problem
+> 
+> On recent talk with Andrea, I started more precise investigation on
+> the kernel panic with kretprobes on notrace functions, which Francis
+> had been reported last year ( https://lkml.org/lkml/2017/7/14/466 ).
+> 
+> See the investigation details in 
+> https://lkml.kernel.org/r/154686789378.15479.2886543882215785247.stgit@devbox
+> 
+> When we put a kretprobe on ftrace_ops_assist_func() and put another
+> kretprobe on probed-function, below happens
+> 
+> <caller>
+>  -><probed-function>
+>    ->fentry
+>     ->ftrace_ops_assist_func()
+>      ->int3
+>       ->kprobe_int3_handler()  
+>       ...->pre_handler_kretprobe()
+>            push the return address (*fentry*) of ftrace_ops_assist_func() to
+>            top of the kretprobe list and replace it with kretprobe_trampoline.
+>       <-kprobe_int3_handler()
+>      <-(int3)
+>      ->kprobe_ftrace_handler()  
+>       ...->pre_handler_kretprobe()
+>            push the return address (caller) of probed-function to top of the
+>            kretprobe list and replace it with kretprobe_trampoline.
+>      <-(kprobe_ftrace_handler())
+>     <-(ftrace_ops_assist_func())
+>     [kretprobe_trampoline]
+>      ->tampoline_handler()  
+>        pop the return address (caller) from top of the kretprobe list
+>      <-(trampoline_handler())
+>     <caller>
+>     [run caller with incorrect stack information]
+>    <-(<caller>)
+>   !!KERNEL PANIC!!
+> 
+> Therefore, this kernel panic happens only when we put 2 k*ret*probes on
+> ftrace_ops_assist_func() and other functions. If we put kprobes, it
+> doesn't cause any issue, since it doesn't change the return address.
+> 
+> To fix (or just avoid) this issue, we can introduce a frame pointer
+> verification to skip wrong order entries. And I also would like to
+> blacklist those functions because those are part of ftrace-based 
+> kprobe handling routine.
+> 
+> (2) kretprobe trampoline recursion problem
+> 
+> This was found by Andrea in the previous thread
+> https://lkml.kernel.org/r/20190107183444.GA5966@xps-13
+> 
+> ----
+>  echo "r:event_1 __fdget" >> kprobe_events
+>  echo "r:event_2 _raw_spin_lock_irqsave" >> kprobe_events
+>  echo 1 > events/kprobes/enable
+>  [DEADLOCK]
+> ----
+> 
+> Because kretprobe trampoline_handler uses spinlock for protecting
+> hash table, if we probe the spinlock itself, it causes deadlock.
+> Thank you Andrea and Steve for discovering this root cause!!
+> 
+> This bug has been introduced with the asm-coded trampoline
+> code, since previously it used another kprobe for hooking
+> the function return placeholder (which only has a nop) and
+> trampoline handler was called from that kprobe.
+> 
+> To fix this bug, I introduced a dummy kprobe and set it in
+> current_kprobe as we did in old days.
+> 
+> Thank you,
+> 
+> ---
+> 
+> Masami Hiramatsu (3):
+>       x86/kprobes: Verify stack frame on kretprobe
+>       kprobes: Mark ftrace mcount handler functions nokprobe
+>       x86/kprobes: Fix to avoid kretprobe recursion
+> 
+> 
+>  arch/x86/kernel/kprobes/core.c |   48 ++++++++++++++++++++++++++++++++++++++--
+>  include/linux/kprobes.h        |    1 +
+>  kernel/trace/ftrace.c          |    6 ++++-
+>  3 files changed, 52 insertions(+), 3 deletions(-)
+> 
+> --
+> Masami Hiramatsu (Linaro) <mhiramat@kernel.org>
 
