@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D753FC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:22:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7008C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:22:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5BD7218D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:22:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AF6A21916
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:22:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553253740;
-	bh=eJoTbw4jydd4/DME+CUaXafVk6kPfNmgrp9JLGgJNI8=;
+	s=default; t=1553253744;
+	bh=RRGU1OKsRaCuLlfGrNq9hYcraCQuRu4681MFZ9onvH8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fSCcS6UsYUfNTknCKmPNhBR9KNRfJsel49XGW+qLZoURnol912NxMnbwaiyletRtM
-	 hMgy2OvqACSbZjlmQDnsqrOaIj4OqeAFsfK+qc/YF2TmWZ6IDRCzgYCTwms6c7WUMi
-	 CqpdTX1lyCMxg4yQWFHy5/njB1/hxDYHhqLWCFuA=
+	b=e8Ro8VyuXVmghvUQ9ch6zxmJf8oLHxHEi0bwVDk1UdIu466fO3WglidePu41uZKur
+	 U5/FzT6tBKs2El59CJfQ0ePdFUhF3SVmS3Di2Q3LiH95v4a8LAPd6by6/Afh7bxVN6
+	 3ljheh2GaB6lcr40lRAqsacPhkO0BLa//vEYWLec=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728767AbfCVLWT (ORCPT
+        id S1728779AbfCVLWX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:22:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48938 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:22:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728750AbfCVLWP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:22:15 -0400
+        id S1728750AbfCVLWU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:22:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73B1421925;
-        Fri, 22 Mar 2019 11:22:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0EDE6218D4;
+        Fri, 22 Mar 2019 11:22:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553253734;
-        bh=eJoTbw4jydd4/DME+CUaXafVk6kPfNmgrp9JLGgJNI8=;
+        s=default; t=1553253739;
+        bh=RRGU1OKsRaCuLlfGrNq9hYcraCQuRu4681MFZ9onvH8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r4a39b4lWD7X5L057F58KfDoPmcs02qDXbSyqt/mlyOG/NoatxSNpoBzQodwY56gD
-         ngjMC8f/JY65AvPxE5xLbaQRxmgiDAECyKvXRXhh7SqdUVkeNWkN73pIffozecAZh8
-         ODj+dPyiNO9Vb3iUQXF51wgJbNes3mYfoRovVwTM=
+        b=ZlYMh7UnBJtSb0Ove02qjXyKZFTVKcEkyGnolpy6a5WhCm/cwqEpD6qNWj5JuXygP
+         eNqpwAa7lek0jOpSEsOXHJHD8c4tfp5eyG9RkZ8FO7r0vLmPBnPsyq2DVlHArKhYXm
+         hmB0ivvhvrxo+OAn5VaZ3t36zD1giQp39IMbgvRs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Su Yanjun <suyj.fnst@cn.fujitsu.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
+        stable@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 3.18 055/134] vti4: Fix a ipip packet processing bug in IPCOMP virtual tunnel
-Date:   Fri, 22 Mar 2019 12:14:28 +0100
-Message-Id: <20190322111213.949687070@linuxfoundation.org>
+Subject: [PATCH 3.18 040/134] KVM: nSVM: clear events pending from svm_complete_interrupts() when exiting to L1
+Date:   Fri, 22 Mar 2019 12:14:13 +0100
+Message-Id: <20190322111212.769955206@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111210.465931067@linuxfoundation.org>
 References: <20190322111210.465931067@linuxfoundation.org>
@@ -66,117 +66,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit dd9ee3444014e8f28c0eefc9fffc9ac9c5248c12 ]
+[ Upstream commit 619ad846fc3452adaf71ca246c5aa711e2055398 ]
 
-Recently we run a network test over ipcomp virtual tunnel.We find that
-if a ipv4 packet needs fragment, then the peer can't receive
-it.
+kvm-unit-tests' eventinj "NMI failing on IDT" test results in NMI being
+delivered to the host (L1) when it's running nested. The problem seems to
+be: svm_complete_interrupts() raises 'nmi_injected' flag but later we
+decide to reflect EXIT_NPF to L1. The flag remains pending and we do NMI
+injection upon entry so it got delivered to L1 instead of L2.
 
-We deep into the code and find that when packet need fragment the smaller
-fragment will be encapsulated by ipip not ipcomp. So when the ipip packet
-goes into xfrm, it's skb->dev is not properly set. The ipv4 reassembly code
-always set skb'dev to the last fragment's dev. After ipv4 defrag processing,
-when the kernel rp_filter parameter is set, the skb will be drop by -EXDEV
-error.
+It seems that VMX code solves the same issue in prepare_vmcs12(), this was
+introduced with code refactoring in commit 5f3d5799974b ("KVM: nVMX: Rework
+event injection and recovery").
 
-This patch adds compatible support for the ipip process in ipcomp virtual tunnel.
-
-Signed-off-by: Su Yanjun <suyj.fnst@cn.fujitsu.com>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/ip_vti.c | 50 +++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 50 insertions(+)
+ arch/x86/kvm/svm.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/net/ipv4/ip_vti.c b/net/ipv4/ip_vti.c
-index c35e0aa57e66..e224ca2ea1c0 100644
---- a/net/ipv4/ip_vti.c
-+++ b/net/ipv4/ip_vti.c
-@@ -75,6 +75,33 @@ static int vti_input(struct sk_buff *skb, int nexthdr, __be32 spi,
+diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+index 2e0c64a08549c..a29d59e205d39 100644
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -2431,6 +2431,14 @@ static int nested_svm_vmexit(struct vcpu_svm *svm)
+ 	kvm_mmu_reset_context(&svm->vcpu);
+ 	kvm_mmu_load(&svm->vcpu);
+ 
++	/*
++	 * Drop what we picked up for L2 via svm_complete_interrupts() so it
++	 * doesn't end up in L1.
++	 */
++	svm->vcpu.arch.nmi_injected = false;
++	kvm_clear_exception_queue(&svm->vcpu);
++	kvm_clear_interrupt_queue(&svm->vcpu);
++
  	return 0;
  }
  
-+static int vti_input_ipip(struct sk_buff *skb, int nexthdr, __be32 spi,
-+		     int encap_type)
-+{
-+	struct ip_tunnel *tunnel;
-+	const struct iphdr *iph = ip_hdr(skb);
-+	struct net *net = dev_net(skb->dev);
-+	struct ip_tunnel_net *itn = net_generic(net, vti_net_id);
-+
-+	tunnel = ip_tunnel_lookup(itn, skb->dev->ifindex, TUNNEL_NO_KEY,
-+				  iph->saddr, iph->daddr, 0);
-+	if (tunnel) {
-+		if (!xfrm4_policy_check(NULL, XFRM_POLICY_IN, skb))
-+			goto drop;
-+
-+		XFRM_TUNNEL_SKB_CB(skb)->tunnel.ip4 = tunnel;
-+
-+		skb->dev = tunnel->dev;
-+
-+		return xfrm_input(skb, nexthdr, spi, encap_type);
-+	}
-+
-+	return -EINVAL;
-+drop:
-+	kfree_skb(skb);
-+	return 0;
-+}
-+
- static int vti_rcv(struct sk_buff *skb)
- {
- 	XFRM_SPI_SKB_CB(skb)->family = AF_INET;
-@@ -83,6 +110,14 @@ static int vti_rcv(struct sk_buff *skb)
- 	return vti_input(skb, ip_hdr(skb)->protocol, 0, 0);
- }
- 
-+static int vti_rcv_ipip(struct sk_buff *skb)
-+{
-+	XFRM_SPI_SKB_CB(skb)->family = AF_INET;
-+	XFRM_SPI_SKB_CB(skb)->daddroff = offsetof(struct iphdr, daddr);
-+
-+	return vti_input_ipip(skb, ip_hdr(skb)->protocol, ip_hdr(skb)->saddr, 0);
-+}
-+
- static int vti_rcv_cb(struct sk_buff *skb, int err)
- {
- 	unsigned short family;
-@@ -409,6 +444,12 @@ static struct xfrm4_protocol vti_ipcomp4_protocol __read_mostly = {
- 	.priority	=	100,
- };
- 
-+static struct xfrm_tunnel ipip_handler __read_mostly = {
-+	.handler	=	vti_rcv_ipip,
-+	.err_handler	=	vti4_err,
-+	.priority	=	0,
-+};
-+
- static int __net_init vti_init_net(struct net *net)
- {
- 	int err;
-@@ -562,6 +603,13 @@ static int __init vti_init(void)
- 	if (err < 0)
- 		goto xfrm_proto_comp_failed;
- 
-+	msg = "ipip tunnel";
-+	err = xfrm4_tunnel_register(&ipip_handler, AF_INET);
-+	if (err < 0) {
-+		pr_info("%s: cant't register tunnel\n",__func__);
-+		goto xfrm_tunnel_failed;
-+	}
-+
- 	msg = "netlink interface";
- 	err = rtnl_link_register(&vti_link_ops);
- 	if (err < 0)
-@@ -571,6 +619,8 @@ static int __init vti_init(void)
- 
- rtnl_link_failed:
- 	xfrm4_protocol_deregister(&vti_ipcomp4_protocol, IPPROTO_COMP);
-+xfrm_tunnel_failed:
-+	xfrm4_tunnel_deregister(&ipip_handler, AF_INET);
- xfrm_proto_comp_failed:
- 	xfrm4_protocol_deregister(&vti_ah4_protocol, IPPROTO_AH);
- xfrm_proto_ah_failed:
 -- 
 2.19.1
 
