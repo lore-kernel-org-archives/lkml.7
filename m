@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE687C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:16:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 098ADC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:16:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC5AB2082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:16:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE86B21900
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:16:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256960;
-	bh=ck0s48WWpNJuMaqHusj7OMnBfbwlAbjsguma2bKhq8M=;
+	s=default; t=1553256963;
+	bh=69Cs4s2Lsv56m0LSHjmW+3qnr8OYVFj6fSEao0Q0Vi0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vIPceZLrfVPzvGdq+1z6ohv6FB748qip8Q4wWKYRVQ6lD0+ay/vXBY7u21nIIsP6m
-	 HVxEI1yHLat0MUN7AZk3UvVyrLiBm1CEB/4VNJo+F2+kxuDqg0tb82MmYW/DyISvsC
-	 KXjjxD+lJjga4i4KfZp92cIhu5yiv1Tzb9DEbqSA=
+	b=Lo9NRIx8/d6OXy3fU2QBD31SUfVTUPL1mqkeAg9XfUjQvLysnVkgzN0qYK/zKFUG9
+	 5F0JUL0YsFEZgJjVf0PbXmm0YVvBVJxDmFeGu3Uw/jOn2fgft7c8eH4v4X1x92etwe
+	 upe7Y6CoFWcL71qgyf7EIlmb7H0z8ARaBWvMsO0g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390135AbfCVMP7 (ORCPT
+        id S2390144AbfCVMQC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:15:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54528 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:16:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389602AbfCVMP5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:15:57 -0400
+        id S2389602AbfCVMQA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:16:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F21C21900;
-        Fri, 22 Mar 2019 12:15:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DDC072192C;
+        Fri, 22 Mar 2019 12:15:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256956;
-        bh=ck0s48WWpNJuMaqHusj7OMnBfbwlAbjsguma2bKhq8M=;
+        s=default; t=1553256959;
+        bh=69Cs4s2Lsv56m0LSHjmW+3qnr8OYVFj6fSEao0Q0Vi0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uwqy52/daKPou4bjM/BW6ghYTGmvjtkkBTz4uQm6PIXJTwbA8Q5N5hNGXSKkOQFyv
-         fpV2uUMxIwIpLNKtuaMbkb0wqnOkubER1bAxNeXPK61q5AC3bgw8faQ5l9B1Rrc6i9
-         DDq30vTyqzHnWocIAforXWFp7aYfrf3XiXGDy5mo=
+        b=c2IALBS/pGW3VZFyWpD7OAImNKk5FcX1pfn5FBJfzbtJHy7ilcLNp1Q4HgkIEjJ7/
+         APUSDtnMiBvtP9X8shufBakw+YRTGXKabKVAR46uUlY3jVDj4vj/pzNE0otP/tJFSf
+         2CYdZ5B+5Is4IE3EYVSEvtThB/vePKgrG4NPnF3Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Jann Horn <jannh@google.com>
-Subject: [PATCH 5.0 087/238] splice: dont merge into linked buffers
-Date:   Fri, 22 Mar 2019 12:15:06 +0100
-Message-Id: <20190322111303.720523576@linuxfoundation.org>
+        stable@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Song Liu <songliubraving@fb.com>, Jann Horn <jannh@google.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 5.0 058/238] tracing/perf: Use strndup_user() instead of buggy open-coded version
+Date:   Fri, 22 Mar 2019 12:14:37 +0100
+Message-Id: <20190322111301.958429725@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -67,111 +69,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jann Horn <jannh@google.com>
 
-commit a0ce2f0aa6ad97c3d4927bf2ca54bcebdf062d55 upstream.
+commit 83540fbc8812a580b6ad8f93f4c29e62e417687e upstream.
 
-Before this patch, it was possible for two pipes to affect each other after
-data had been transferred between them with tee():
+The first version of this method was missing the check for
+`ret == PATH_MAX`; then such a check was added, but it didn't call kfree()
+on error, so there was still a small memory leak in the error case.
+Fix it by using strndup_user() instead of open-coding it.
 
-============
-$ cat tee_test.c
+Link: http://lkml.kernel.org/r/20190220165443.152385-1-jannh@google.com
 
-int main(void) {
-  int pipe_a[2];
-  if (pipe(pipe_a)) err(1, "pipe");
-  int pipe_b[2];
-  if (pipe(pipe_b)) err(1, "pipe");
-  if (write(pipe_a[1], "abcd", 4) != 4) err(1, "write");
-  if (tee(pipe_a[0], pipe_b[1], 2, 0) != 2) err(1, "tee");
-  if (write(pipe_b[1], "xx", 2) != 2) err(1, "write");
-
-  char buf[5];
-  if (read(pipe_a[0], buf, 4) != 4) err(1, "read");
-  buf[4] = 0;
-  printf("got back: '%s'\n", buf);
-}
-$ gcc -o tee_test tee_test.c
-$ ./tee_test
-got back: 'abxx'
-$
-============
-
-As suggested by Al Viro, fix it by creating a separate type for
-non-mergeable pipe buffers, then changing the types of buffers in
-splice_pipe_to_pipe() and link_pipe().
-
-Cc: <stable@vger.kernel.org>
-Fixes: 7c77f0b3f920 ("splice: implement pipe to pipe splicing")
-Fixes: 70524490ee2e ("[PATCH] splice: add support for sys_tee()")
-Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: stable@vger.kernel.org
+Fixes: 0eadcc7a7bc0 ("perf/core: Fix perf_uprobe_init()")
+Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
+Acked-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Jann Horn <jannh@google.com>
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/pipe.c                 |   14 ++++++++++++++
- fs/splice.c               |    4 ++++
- include/linux/pipe_fs_i.h |    1 +
- 3 files changed, 19 insertions(+)
+ kernel/trace/trace_event_perf.c |   16 +++++++---------
+ 1 file changed, 7 insertions(+), 9 deletions(-)
 
---- a/fs/pipe.c
-+++ b/fs/pipe.c
-@@ -234,6 +234,14 @@ static const struct pipe_buf_operations
- 	.get = generic_pipe_buf_get,
- };
+--- a/kernel/trace/trace_event_perf.c
++++ b/kernel/trace/trace_event_perf.c
+@@ -299,15 +299,13 @@ int perf_uprobe_init(struct perf_event *
  
-+static const struct pipe_buf_operations anon_pipe_buf_nomerge_ops = {
-+	.can_merge = 0,
-+	.confirm = generic_pipe_buf_confirm,
-+	.release = anon_pipe_buf_release,
-+	.steal = anon_pipe_buf_steal,
-+	.get = generic_pipe_buf_get,
-+};
+ 	if (!p_event->attr.uprobe_path)
+ 		return -EINVAL;
+-	path = kzalloc(PATH_MAX, GFP_KERNEL);
+-	if (!path)
+-		return -ENOMEM;
+-	ret = strncpy_from_user(
+-		path, u64_to_user_ptr(p_event->attr.uprobe_path), PATH_MAX);
+-	if (ret == PATH_MAX)
+-		return -E2BIG;
+-	if (ret < 0)
+-		goto out;
 +
- static const struct pipe_buf_operations packet_pipe_buf_ops = {
- 	.can_merge = 0,
- 	.confirm = generic_pipe_buf_confirm,
-@@ -242,6 +250,12 @@ static const struct pipe_buf_operations
- 	.get = generic_pipe_buf_get,
- };
- 
-+void pipe_buf_mark_unmergeable(struct pipe_buffer *buf)
-+{
-+	if (buf->ops == &anon_pipe_buf_ops)
-+		buf->ops = &anon_pipe_buf_nomerge_ops;
-+}
-+
- static ssize_t
- pipe_read(struct kiocb *iocb, struct iov_iter *to)
- {
---- a/fs/splice.c
-+++ b/fs/splice.c
-@@ -1597,6 +1597,8 @@ retry:
- 			 */
- 			obuf->flags &= ~PIPE_BUF_FLAG_GIFT;
- 
-+			pipe_buf_mark_unmergeable(obuf);
-+
- 			obuf->len = len;
- 			opipe->nrbufs++;
- 			ibuf->offset += obuf->len;
-@@ -1671,6 +1673,8 @@ static int link_pipe(struct pipe_inode_i
- 		 */
- 		obuf->flags &= ~PIPE_BUF_FLAG_GIFT;
- 
-+		pipe_buf_mark_unmergeable(obuf);
-+
- 		if (obuf->len > len)
- 			obuf->len = len;
- 
---- a/include/linux/pipe_fs_i.h
-+++ b/include/linux/pipe_fs_i.h
-@@ -182,6 +182,7 @@ void generic_pipe_buf_get(struct pipe_in
- int generic_pipe_buf_confirm(struct pipe_inode_info *, struct pipe_buffer *);
- int generic_pipe_buf_steal(struct pipe_inode_info *, struct pipe_buffer *);
- void generic_pipe_buf_release(struct pipe_inode_info *, struct pipe_buffer *);
-+void pipe_buf_mark_unmergeable(struct pipe_buffer *buf);
- 
- extern const struct pipe_buf_operations nosteal_pipe_buf_ops;
- 
++	path = strndup_user(u64_to_user_ptr(p_event->attr.uprobe_path),
++			    PATH_MAX);
++	if (IS_ERR(path)) {
++		ret = PTR_ERR(path);
++		return (ret == -EINVAL) ? -E2BIG : ret;
++	}
+ 	if (path[0] == '\0') {
+ 		ret = -EINVAL;
+ 		goto out;
 
 
