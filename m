@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39C79C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:40:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CD54C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:40:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07A4D218B0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:40:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D28B21916
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:40:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254850;
-	bh=Y8ekJcTW0lp9Zkbb3KKvUQ1/M2GyrKZSOT1to9yNkpE=;
+	s=default; t=1553254857;
+	bh=aFwyE6zYs3MjTSvV82IWx/OfdMXCThBxW4g1JUkOF1M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ReOeYI+OgagfnVSiW6lNkYJx1/uyhbkvuFqDsHbELkZ9+h2oxa99O7tCNaSM/+4Q2
-	 IyRL0WjIYrI8GpgIZa3In6iRtZ9h0yONI6tBjFCUTsXBur6Sqs7kwXfpVj6Vk3dxfb
-	 jrp3HWixLHdzdtM+eeMVhyJx59MKRvqYSTdYerD0=
+	b=w5qOes2pLnNi4x475z4o+kwothLv65mL0P4JFXXgNqxWd3aO2VXY5v4v93i2t5j6K
+	 SkgHzakadL6WKDGOKhc3uLxwss63Co/hsIB8GeXAwAG66qVDMp9+8aGjyNdfd/vw4D
+	 W81HQdYl13ArZGft0c+YS148/PyAvg2nII2IYMnM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731306AbfCVLkt (ORCPT
+        id S1731338AbfCVLk4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:40:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42746 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:40:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730924AbfCVLko (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:40:44 -0400
+        id S1731310AbfCVLkx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:40:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0B252082C;
-        Fri, 22 Mar 2019 11:40:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3FD48218B0;
+        Fri, 22 Mar 2019 11:40:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254843;
-        bh=Y8ekJcTW0lp9Zkbb3KKvUQ1/M2GyrKZSOT1to9yNkpE=;
+        s=default; t=1553254852;
+        bh=aFwyE6zYs3MjTSvV82IWx/OfdMXCThBxW4g1JUkOF1M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=klE2ruOvJ2OAyM72ZeaYIOO0ET7GQ5b7OY9OeZgl2SFE+BKWvCf9qxOFhCDddceym
-         ROmVAWJNYu0Jw8vPP1rkBXtkywviwPlTOWrbaB1AvPFsJdC/jva3QYaCJS0gI6nWTv
-         fnPAIFCYcNPtw5Q3LWj+zmK5vI/GpEXOjEUxvMmM=
+        b=uHnixVWhGaaxZl66QxHGT0bvzaqgxyQbUFnHu90gqHDdE+EVIKBLL+hKlDuUZ7TWe
+         dk1wZ/GhIAPNgTYkxuAAHhn7gBvEGPgUj2MBJEgfXpMXuyEsp0jovms/K350EkWGJ4
+         QfavVne5MULyQuJ3B84cWJRLoILDTgVvPjZcxtqA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexey Khoroshilov <khoroshilov@ispras.ru>,
+        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 028/118] net: mv643xx_eth: disable clk on error path in mv643xx_eth_shared_probe()
-Date:   Fri, 22 Mar 2019 12:15:00 +0100
-Message-Id: <20190322111218.145649264@linuxfoundation.org>
+Subject: [PATCH 4.9 031/118] net: marvell: mvneta: fix DMA debug warning
+Date:   Fri, 22 Mar 2019 12:15:03 +0100
+Message-Id: <20190322111218.357409513@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111215.873964544@linuxfoundation.org>
 References: <20190322111215.873964544@linuxfoundation.org>
@@ -66,45 +66,56 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit e928b5d6b75e239feb9c6d5488974b6646a0ebc8 ]
+[ Upstream commit a8fef9ba58c9966ddb1fec916d8d8137c9d8bc89 ]
 
-If mv643xx_eth_shared_of_probe() fails, mv643xx_eth_shared_probe()
-leaves clk enabled.
+Booting 4.20 on SolidRun Clearfog issues this warning with DMA API
+debug enabled:
 
-Found by Linux Driver Verification project (linuxtesting.org).
+WARNING: CPU: 0 PID: 555 at kernel/dma/debug.c:1230 check_sync+0x514/0x5bc
+mvneta f1070000.ethernet: DMA-API: device driver tries to sync DMA memory it has not allocated [device address=0x000000002dd7dc00] [size=240 bytes]
+Modules linked in: ahci mv88e6xxx dsa_core xhci_plat_hcd xhci_hcd devlink armada_thermal marvell_cesa des_generic ehci_orion phy_armada38x_comphy mcp3021 spi_orion evbug sfp mdio_i2c ip_tables x_tables
+CPU: 0 PID: 555 Comm: bridge-network- Not tainted 4.20.0+ #291
+Hardware name: Marvell Armada 380/385 (Device Tree)
+[<c0019638>] (unwind_backtrace) from [<c0014888>] (show_stack+0x10/0x14)
+[<c0014888>] (show_stack) from [<c07f54e0>] (dump_stack+0x9c/0xd4)
+[<c07f54e0>] (dump_stack) from [<c00312bc>] (__warn+0xf8/0x124)
+[<c00312bc>] (__warn) from [<c00313b0>] (warn_slowpath_fmt+0x38/0x48)
+[<c00313b0>] (warn_slowpath_fmt) from [<c00b0370>] (check_sync+0x514/0x5bc)
+[<c00b0370>] (check_sync) from [<c00b04f8>] (debug_dma_sync_single_range_for_cpu+0x6c/0x74)
+[<c00b04f8>] (debug_dma_sync_single_range_for_cpu) from [<c051bd14>] (mvneta_poll+0x298/0xf58)
+[<c051bd14>] (mvneta_poll) from [<c0656194>] (net_rx_action+0x128/0x424)
+[<c0656194>] (net_rx_action) from [<c000a230>] (__do_softirq+0xf0/0x540)
+[<c000a230>] (__do_softirq) from [<c00386e0>] (irq_exit+0x124/0x144)
+[<c00386e0>] (irq_exit) from [<c009b5e0>] (__handle_domain_irq+0x58/0xb0)
+[<c009b5e0>] (__handle_domain_irq) from [<c03a63c4>] (gic_handle_irq+0x48/0x98)
+[<c03a63c4>] (gic_handle_irq) from [<c0009a10>] (__irq_svc+0x70/0x98)
+...
 
-Signed-off-by: Alexey Khoroshilov <khoroshilov@ispras.ru>
+This appears to be caused by mvneta_rx_hwbm() calling
+dma_sync_single_range_for_cpu() with the wrong struct device pointer,
+as the buffer manager device pointer is used to map and unmap the
+buffer.  Fix this.
+
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/marvell/mv643xx_eth.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/marvell/mvneta.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/marvell/mv643xx_eth.c b/drivers/net/ethernet/marvell/mv643xx_eth.c
-index 5b12022adf1f..526d07e02bbc 100644
---- a/drivers/net/ethernet/marvell/mv643xx_eth.c
-+++ b/drivers/net/ethernet/marvell/mv643xx_eth.c
-@@ -2886,7 +2886,7 @@ static int mv643xx_eth_shared_probe(struct platform_device *pdev)
+diff --git a/drivers/net/ethernet/marvell/mvneta.c b/drivers/net/ethernet/marvell/mvneta.c
+index c92ffdf91065..d98b874a7238 100644
+--- a/drivers/net/ethernet/marvell/mvneta.c
++++ b/drivers/net/ethernet/marvell/mvneta.c
+@@ -2050,7 +2050,7 @@ err_drop_frame:
+ 			if (unlikely(!skb))
+ 				goto err_drop_frame_ret_pool;
  
- 	ret = mv643xx_eth_shared_of_probe(pdev);
- 	if (ret)
--		return ret;
-+		goto err_put_clk;
- 	pd = dev_get_platdata(&pdev->dev);
- 
- 	msp->tx_csum_limit = (pd != NULL && pd->tx_csum_limit) ?
-@@ -2894,6 +2894,11 @@ static int mv643xx_eth_shared_probe(struct platform_device *pdev)
- 	infer_hw_params(msp);
- 
- 	return 0;
-+
-+err_put_clk:
-+	if (!IS_ERR(msp->clk))
-+		clk_disable_unprepare(msp->clk);
-+	return ret;
- }
- 
- static int mv643xx_eth_shared_remove(struct platform_device *pdev)
+-			dma_sync_single_range_for_cpu(dev->dev.parent,
++			dma_sync_single_range_for_cpu(&pp->bm_priv->pdev->dev,
+ 			                              rx_desc->buf_phys_addr,
+ 			                              MVNETA_MH_SIZE + NET_SKB_PAD,
+ 			                              rx_bytes,
 -- 
 2.19.1
 
