@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1BC0C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:13:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3372FC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:13:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F0B520830
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:13:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04DB12082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:13:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256811;
-	bh=yrDc0+aDK/A9feax3ChG0Rwe48iA+C3zaYEfuB+VXu4=;
+	s=default; t=1553256815;
+	bh=IJy58t24/yf55gLR7LtAlKbX7PZlFxDbZzFxMjG2uJY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IIX7KqDNvAtMtW+u9rXtxDEL0Nusxbk0svVxxA8WNyF3934WJIUMxAyfW/LZ5EFkj
-	 +K+MV1vrTDAcn7gPWaTqSPJqDpZUO3qQ4M+7N8IV4s9mmU49jChWySTBpeBHLpp1Gc
-	 tcgXicUu6antMnO42SKz/QcNGkbG+V8djSRql538=
+	b=xqU1DSSiuJff6itTgD72JnRrnu8R4DrAOFTbA67NT4q8ecmYdE0xuue2XBbKZLGKe
+	 /xOFMcK5rdE5GMn3KthrnB99IjK1lh6ubTub+fcUwT3E7J5ZYO1c18o3aG6jBV5kH3
+	 57VSKBcm0+9fGZs/fnnP9qtQQKgpEzVPh8bKP4gA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389764AbfCVMNa (ORCPT
+        id S2389774AbfCVMNd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:13:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51698 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:13:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51760 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389753AbfCVMN0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:13:26 -0400
+        id S2389317AbfCVMNa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:13:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AF932082C;
-        Fri, 22 Mar 2019 12:13:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBAB42082C;
+        Fri, 22 Mar 2019 12:13:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256805;
-        bh=yrDc0+aDK/A9feax3ChG0Rwe48iA+C3zaYEfuB+VXu4=;
+        s=default; t=1553256809;
+        bh=IJy58t24/yf55gLR7LtAlKbX7PZlFxDbZzFxMjG2uJY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d1g0HPkCUcS9Iy7n0l7db2B4bAAi8C0BshYwrTLm8qthLqSKKEngpSlkl88HOYD9n
-         uGao5zGnHPddH1Nz4bfIh+jcutE1SelJe8WzBRRCn34X3gHsVe4vUDTnTSp+vqNyZD
-         eiffmlp2kdastInDNq3Y6bbKziIBdSawLckeCtEg=
+        b=ZFzOSLBc7hcm8nRzFzLlF1JARCfRW+wF50QaTOJYtVtiU+l3dpqTl1J//EPMhEu8i
+         Bp0XLumaMPeeFZeuDTcT2ytmAbG2ogo7fn3ppfcupQUeIm4T7StsuDtgXMZqkO38Kn
+         jcs1y0VFc63lIhAjPDwTE6DUMB13Duhaf58i5sQA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ondrej Mosnacek <omosnace@redhat.com>,
+        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
         Eric Biggers <ebiggers@google.com>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.0 042/238] crypto: morus - fix handling chunked inputs
-Date:   Fri, 22 Mar 2019 12:14:21 +0100
-Message-Id: <20190322111300.883451700@linuxfoundation.org>
+Subject: [PATCH 5.0 043/238] crypto: pcbc - remove bogus memcpy()s with src == dest
+Date:   Fri, 22 Mar 2019 12:14:22 +0100
+Message-Id: <20190322111300.949119440@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -68,81 +68,90 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Eric Biggers <ebiggers@google.com>
 
-commit d644f1c8746ed24f81075480f9e9cb3777ae8d65 upstream.
+commit 251b7aea34ba3c4d4fdfa9447695642eb8b8b098 upstream.
 
-The generic MORUS implementations all fail the improved AEAD tests
-because they produce the wrong result with some data layouts.  The issue
-is that they assume that if the skcipher_walk API gives 'nbytes' not
-aligned to the walksize (a.k.a. walk.stride), then it is the end of the
-data.  In fact, this can happen before the end.  Fix them.
+The memcpy()s in the PCBC implementation use walk->iv as both the source
+and destination, which has undefined behavior.  These memcpy()'s are
+actually unneeded, because walk->iv is already used to hold the previous
+plaintext block XOR'd with the previous ciphertext block.  Thus,
+walk->iv is already updated to its final value.
 
-Fixes: 396be41f16fd ("crypto: morus - Add generic MORUS AEAD implementations")
-Cc: <stable@vger.kernel.org> # v4.18+
-Cc: Ondrej Mosnacek <omosnace@redhat.com>
+So remove the broken and unnecessary memcpy()s.
+
+Fixes: 91652be5d1b9 ("[CRYPTO] pcbc: Add Propagated CBC template")
+Cc: <stable@vger.kernel.org> # v2.6.21+
+Cc: David Howells <dhowells@redhat.com>
 Signed-off-by: Eric Biggers <ebiggers@google.com>
-Reviewed-by: Ondrej Mosnacek <omosnace@redhat.com>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- crypto/morus1280.c |   13 +++++++------
- crypto/morus640.c  |   13 +++++++------
- 2 files changed, 14 insertions(+), 12 deletions(-)
+ crypto/pcbc.c |   14 ++++----------
+ 1 file changed, 4 insertions(+), 10 deletions(-)
 
---- a/crypto/morus1280.c
-+++ b/crypto/morus1280.c
-@@ -366,18 +366,19 @@ static void crypto_morus1280_process_cry
- 					   const struct morus1280_ops *ops)
- {
- 	struct skcipher_walk walk;
--	u8 *dst;
--	const u8 *src;
+--- a/crypto/pcbc.c
++++ b/crypto/pcbc.c
+@@ -51,7 +51,7 @@ static int crypto_pcbc_encrypt_segment(s
+ 	unsigned int nbytes = walk->nbytes;
+ 	u8 *src = walk->src.virt.addr;
+ 	u8 *dst = walk->dst.virt.addr;
+-	u8 *iv = walk->iv;
++	u8 * const iv = walk->iv;
  
- 	ops->skcipher_walk_init(&walk, req, false);
+ 	do {
+ 		crypto_xor(iv, src, bsize);
+@@ -72,7 +72,7 @@ static int crypto_pcbc_encrypt_inplace(s
+ 	int bsize = crypto_cipher_blocksize(tfm);
+ 	unsigned int nbytes = walk->nbytes;
+ 	u8 *src = walk->src.virt.addr;
+-	u8 *iv = walk->iv;
++	u8 * const iv = walk->iv;
+ 	u8 tmpbuf[MAX_CIPHER_BLOCKSIZE];
  
- 	while (walk.nbytes) {
--		src = walk.src.virt.addr;
--		dst = walk.dst.virt.addr;
-+		unsigned int nbytes = walk.nbytes;
+ 	do {
+@@ -84,8 +84,6 @@ static int crypto_pcbc_encrypt_inplace(s
+ 		src += bsize;
+ 	} while ((nbytes -= bsize) >= bsize);
  
--		ops->crypt_chunk(state, dst, src, walk.nbytes);
-+		if (nbytes < walk.total)
-+			nbytes = round_down(nbytes, walk.stride);
- 
--		skcipher_walk_done(&walk, 0);
-+		ops->crypt_chunk(state, walk.dst.virt.addr, walk.src.virt.addr,
-+				 nbytes);
-+
-+		skcipher_walk_done(&walk, walk.nbytes - nbytes);
- 	}
+-	memcpy(walk->iv, iv, bsize);
+-
+ 	return nbytes;
  }
  
---- a/crypto/morus640.c
-+++ b/crypto/morus640.c
-@@ -365,18 +365,19 @@ static void crypto_morus640_process_cryp
- 					  const struct morus640_ops *ops)
- {
- 	struct skcipher_walk walk;
--	u8 *dst;
--	const u8 *src;
+@@ -121,7 +119,7 @@ static int crypto_pcbc_decrypt_segment(s
+ 	unsigned int nbytes = walk->nbytes;
+ 	u8 *src = walk->src.virt.addr;
+ 	u8 *dst = walk->dst.virt.addr;
+-	u8 *iv = walk->iv;
++	u8 * const iv = walk->iv;
  
- 	ops->skcipher_walk_init(&walk, req, false);
+ 	do {
+ 		crypto_cipher_decrypt_one(tfm, dst, src);
+@@ -132,8 +130,6 @@ static int crypto_pcbc_decrypt_segment(s
+ 		dst += bsize;
+ 	} while ((nbytes -= bsize) >= bsize);
  
- 	while (walk.nbytes) {
--		src = walk.src.virt.addr;
--		dst = walk.dst.virt.addr;
-+		unsigned int nbytes = walk.nbytes;
+-	memcpy(walk->iv, iv, bsize);
+-
+ 	return nbytes;
+ }
  
--		ops->crypt_chunk(state, dst, src, walk.nbytes);
-+		if (nbytes < walk.total)
-+			nbytes = round_down(nbytes, walk.stride);
+@@ -144,7 +140,7 @@ static int crypto_pcbc_decrypt_inplace(s
+ 	int bsize = crypto_cipher_blocksize(tfm);
+ 	unsigned int nbytes = walk->nbytes;
+ 	u8 *src = walk->src.virt.addr;
+-	u8 *iv = walk->iv;
++	u8 * const iv = walk->iv;
+ 	u8 tmpbuf[MAX_CIPHER_BLOCKSIZE] __aligned(__alignof__(u32));
  
--		skcipher_walk_done(&walk, 0);
-+		ops->crypt_chunk(state, walk.dst.virt.addr, walk.src.virt.addr,
-+				 nbytes);
-+
-+		skcipher_walk_done(&walk, walk.nbytes - nbytes);
- 	}
+ 	do {
+@@ -156,8 +152,6 @@ static int crypto_pcbc_decrypt_inplace(s
+ 		src += bsize;
+ 	} while ((nbytes -= bsize) >= bsize);
+ 
+-	memcpy(walk->iv, iv, bsize);
+-
+ 	return nbytes;
  }
  
 
