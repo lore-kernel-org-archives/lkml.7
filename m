@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96543C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:56:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ADAFC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:56:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6506820850
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:56:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BBF520850
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:56:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255795;
-	bh=ckGJvbRgphEyTN7z4J5i8sZV3Qyk0Ow+B1mojxpwnlo=;
+	s=default; t=1553255800;
+	bh=IUW7NIFVZH3CQppYTMheeZvG1PijOeIbQBCVPCDfGqA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WxQj3Qk4injgV9A48Y5fFiWE8mAaktMBn1DGjIweZybpmNbiQIBmVCL8uNFRfMykz
-	 KmPQNRkCFjaXSCozsRb9yrGioOKwvRzG5tfqtLs5ZoJEV7EAhCgUCy/CFfKF/ojZBc
-	 ue+4gGzDRXvWsgtASM0PFqXbliu7hXgUDy3pAAvQ=
+	b=PugOvqGSZ8tUYJXvPUS1Iz1LP+jy3nStxRtIVjbB7fPYHE1ZbFcEr3/0HxBcqTlHK
+	 Fqd/ZvwGOBXL2x5qoiwxPIFJsKcV9oBA1BDsbyIITYrUdooJ7q3ZR5d+qkykWY+X1M
+	 6JTsvflQ+8B7FiB34aGqT8iN0rW2JmOj0J7Phz1g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733273AbfCVL4e (ORCPT
+        id S2387547AbfCVL4i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:56:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32974 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:56:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387531AbfCVL4b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:56:31 -0400
+        id S1732921AbfCVL4f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:56:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF8F321916;
-        Fri, 22 Mar 2019 11:56:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 935A42082C;
+        Fri, 22 Mar 2019 11:56:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255791;
-        bh=ckGJvbRgphEyTN7z4J5i8sZV3Qyk0Ow+B1mojxpwnlo=;
+        s=default; t=1553255795;
+        bh=IUW7NIFVZH3CQppYTMheeZvG1PijOeIbQBCVPCDfGqA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DtgORCXkoNVxd6C4OaRQlfrqB4gIKc1SrkN/KrHYobdBttR0hB4FOhzY2yzhd2ais
-         I9//rwwekjf5miHgc4AsK7NrVnsqdMhTalglY1a2ePeA37R1nkMm9GxPhE7GwI4KYX
-         J+rsu8i58If0NxIigG2+QMOitagV2C5Mqg0dMq0s=
+        b=RwJmLpMuhKsipr9TWDBKgTnJvNPvCN6W8DBDdRgrxdlhOsV2Tme5IW/mqyxkvOJHR
+         doPVYkAFGSCn9aP/kyp3BlyOJ4WAp/3997h/DER3HT80ipoDGZ9y/5WTFFv/aSspi/
+         l5TSOjjb0MG2G6fP0kATMnSU5wwlxZhXV4slMkHQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Gilad Ben-Yossef <gilad@benyossef.com>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.19 016/280] crypto: ccree - unmap buffer before copying IV
-Date:   Fri, 22 Mar 2019 12:12:49 +0100
-Message-Id: <20190322111307.218267113@linuxfoundation.org>
+Subject: [PATCH 4.19 017/280] crypto: ccree - dont copy zero size ciphertext
+Date:   Fri, 22 Mar 2019 12:12:50 +0100
+Message-Id: <20190322111307.273080814@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -66,18 +67,17 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Gilad Ben-Yossef <gilad@benyossef.com>
 
-commit c139c72e2beb3e3db5148910b3962b7322e24374 upstream.
+commit 2b5ac17463dcb2411fed506edcf259a89bb538ba upstream.
 
-We were copying the last ciphertext block into the IV field
-for CBC before removing the DMA mapping of the output buffer
-with the result of the buffer sometime being out-of-sync cache
-wise and were getting intermittent cases of bad output IV.
+For decryption in CBC mode we need to save the last ciphertext block
+for use as the next IV. However, we were trying to do this also with
+zero sized ciphertext resulting in a panic.
 
-Fix it by moving the DMA buffer unmapping before the copy.
+Fix this by only doing the copy if the ciphertext length is at least
+of IV size.
 
 Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
-Fixes: 00904aa0cd59 ("crypto: ccree - fix iv handling")
-Cc: <stable@vger.kernel.org>
+Cc: stable@vger.kernel.org
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
@@ -87,22 +87,15 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 --- a/drivers/crypto/ccree/cc_cipher.c
 +++ b/drivers/crypto/ccree/cc_cipher.c
-@@ -635,6 +635,8 @@ static void cc_cipher_complete(struct de
- 	unsigned int ivsize = crypto_skcipher_ivsize(sk_tfm);
- 	unsigned int len;
+@@ -783,7 +783,8 @@ static int cc_cipher_decrypt(struct skci
  
-+	cc_unmap_cipher_request(dev, req_ctx, ivsize, src, dst);
-+
- 	switch (ctx_p->cipher_mode) {
- 	case DRV_CIPHER_CBC:
- 		/*
-@@ -664,7 +666,6 @@ static void cc_cipher_complete(struct de
- 		break;
- 	}
+ 	memset(req_ctx, 0, sizeof(*req_ctx));
  
--	cc_unmap_cipher_request(dev, req_ctx, ivsize, src, dst);
- 	kzfree(req_ctx->iv);
+-	if (ctx_p->cipher_mode == DRV_CIPHER_CBC) {
++	if ((ctx_p->cipher_mode == DRV_CIPHER_CBC) &&
++	    (req->cryptlen >= ivsize)) {
  
- 	skcipher_request_complete(req, err);
+ 		/* Allocate and save the last IV sized bytes of the source,
+ 		 * which will be lost in case of in-place decryption.
 
 
