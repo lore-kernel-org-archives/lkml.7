@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 577EAC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:12:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E923C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:13:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2731C2083D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:12:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D1BC2082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:13:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256779;
-	bh=EpWq1IPHiHJo5VYTo3GlcVfD6vobbBMa9NzEoynefxc=;
+	s=default; t=1553256782;
+	bh=WSVnmX+Jf945h4ecCPz5Kivr/SUdz3JbZGyKB8tydq8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pjCpU/uFDfnDt+bNbYSEQSR4VRqHiAGu40KDp9OiYc8ms9EN+21wYNuhnGewmEhCA
-	 89epwEguq1WIHn8SzP/25TBxYaRfwuHLtLfGnDZLlgGnqtOm5encfN0YKxsxLVZcM6
-	 DqFL1Zl5i/9A3n+o6dLzgjMSwSwKI0Rs8DMrYPcQ=
+	b=hEHy+1zsDe6B2iztf2jIJMbHMVQIIt/SIemJzbeJZcUbi1v16yZQq1oG+oqsmcMHe
+	 GSZMkzCYoSn+Tq2dL1LzSEVQ/M/xYjjsQMQyG2tA8RNu5H6q9KMFnElQbkvVFyZWe8
+	 I0ZnvpF+5NpIh7XpTwwXgf9Pgp1dlZxNdzItdunY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389541AbfCVMM5 (ORCPT
+        id S2389707AbfCVMNA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:12:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51092 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:13:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51136 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389651AbfCVMMx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:12:53 -0400
+        id S2389699AbfCVMM5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:12:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC9FD20830;
-        Fri, 22 Mar 2019 12:12:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D265D2082C;
+        Fri, 22 Mar 2019 12:12:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256772;
-        bh=EpWq1IPHiHJo5VYTo3GlcVfD6vobbBMa9NzEoynefxc=;
+        s=default; t=1553256776;
+        bh=WSVnmX+Jf945h4ecCPz5Kivr/SUdz3JbZGyKB8tydq8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h8twdrv4hH4Lq+qrRVKIC5mQlXSf3YVCEz8TIbNKrCIQCFmxDrP2jvaRVhjczXYGU
-         6lO436tp1mmfQEIC3Pn8FDfhliVWIcLoFhZuapivDKTvVYwU21axG++ZUsPLfljGlC
-         NLGxyqw8RDbyPRhA5fIVxKg3nIzTDU8OmFvQLZm8=
+        b=P11E1T5zzxKXzKuEPUcCxQYw9xtR7SWOa7NmM6mDJOdlRx1LFsMYsJiAsMISbpAcO
+         x6M9n5bZl5XkmE7jMVT5EYHlqTh1ITRfCUhoueM5mqdvvWnyoeg5cxqib3kcZjOkXA
+         rvLninhb8XdLCDxLGa93Hs8qQJ4ZEDF3cpt6e4m8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>
-Subject: [PATCH 5.0 033/238] libnvdimm/pmem: Honor force_raw for legacy pmem regions
-Date:   Fri, 22 Mar 2019 12:14:12 +0100
-Message-Id: <20190322111300.267748010@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
+        Oliver OHalloran <oohall@gmail.com>,
+        Vishal Verma <vishal.l.verma@intel.com>
+Subject: [PATCH 5.0 034/238] libnvdimm: Fix altmap reservation size calculation
+Date:   Fri, 22 Mar 2019 12:14:13 +0100
+Message-Id: <20190322111300.336238268@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -64,46 +66,59 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Dan Williams <dan.j.williams@intel.com>
+From: Oliver O'Halloran <oohall@gmail.com>
 
-commit fa7d2e639cd90442d868dfc6ca1d4cc9d8bf206e upstream.
+commit 07464e88365e9236febaca9ed1a2e2006d8bc952 upstream.
 
-For recovery, where non-dax access is needed to a given physical address
-range, and testing, allow the 'force_raw' attribute to override the
-default establishment of a dev_pagemap.
+Libnvdimm reserves the first 8K of pfn and devicedax namespaces to
+store a superblock describing the namespace. This 8K reservation
+is contained within the altmap area which the kernel uses for the
+vmemmap backing for the pages within the namespace. The altmap
+allows for some pages at the start of the altmap area to be reserved
+and that mechanism is used to protect the superblock from being
+re-used as vmemmap backing.
 
-Otherwise without this capability it is possible to end up with a
-namespace that can not be activated due to corrupted info-block, and one
-that can not be repaired due to a section collision.
+The number of PFNs to reserve is calculated using:
 
-Cc: <stable@vger.kernel.org>
-Fixes: 004f1afbe199 ("libnvdimm, pmem: direct map legacy pmem by default")
+	PHYS_PFN(SZ_8K)
+
+Which is implemented as:
+
+ #define PHYS_PFN(x) ((unsigned long)((x) >> PAGE_SHIFT))
+
+So on systems where PAGE_SIZE is greater than 8K the reservation
+size is truncated to zero and the superblock area is re-used as
+vmemmap backing. As a result all the namespace information stored
+in the superblock (i.e. if it's a PFN or DAX namespace) is lost
+and the namespace needs to be re-created to get access to the
+contents.
+
+This patch fixes this by using PFN_UP() rather than PHYS_PFN() to ensure
+that at least one page is reserved. On systems with a 4K pages size this
+patch should have no effect.
+
+Cc: stable@vger.kernel.org
+Cc: Dan Williams <dan.j.williams@intel.com>
+Fixes: ac515c084be9 ("libnvdimm, pmem, pfn: move pfn setup to the core")
+Signed-off-by: Oliver O'Halloran <oohall@gmail.com>
+Reviewed-by: Vishal Verma <vishal.l.verma@intel.com>
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/nvdimm/namespace_devs.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/nvdimm/pfn_devs.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/nvdimm/namespace_devs.c
-+++ b/drivers/nvdimm/namespace_devs.c
-@@ -138,6 +138,7 @@ bool nd_is_uuid_unique(struct device *de
- bool pmem_should_map_pages(struct device *dev)
+--- a/drivers/nvdimm/pfn_devs.c
++++ b/drivers/nvdimm/pfn_devs.c
+@@ -593,7 +593,7 @@ static unsigned long init_altmap_base(re
+ 
+ static unsigned long init_altmap_reserve(resource_size_t base)
  {
- 	struct nd_region *nd_region = to_nd_region(dev->parent);
-+	struct nd_namespace_common *ndns = to_ndns(dev);
- 	struct nd_namespace_io *nsio;
+-	unsigned long reserve = PHYS_PFN(SZ_8K);
++	unsigned long reserve = PFN_UP(SZ_8K);
+ 	unsigned long base_pfn = PHYS_PFN(base);
  
- 	if (!IS_ENABLED(CONFIG_ZONE_DEVICE))
-@@ -149,6 +150,9 @@ bool pmem_should_map_pages(struct device
- 	if (is_nd_pfn(dev) || is_nd_btt(dev))
- 		return false;
- 
-+	if (ndns->force_raw)
-+		return false;
-+
- 	nsio = to_nd_namespace_io(dev);
- 	if (region_intersects(nsio->res.start, resource_size(&nsio->res),
- 				IORESOURCE_SYSTEM_RAM,
+ 	reserve += base_pfn - PFN_SECTION_ALIGN_DOWN(base_pfn);
 
 
