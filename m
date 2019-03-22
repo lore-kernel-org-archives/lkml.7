@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05020C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:14:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30BC7C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:14:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C76732082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:14:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F252120811
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:14:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256845;
-	bh=5UBgb3ucyPTecMIazajYjVh/VbUOtV54elSjJEHVjjs=;
+	s=default; t=1553256848;
+	bh=uzScCFM6VYAjMqYPw3/Zmzfm9TVfe+pHc+K+lgtccQE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qrlJCNxJuo34TtYezLi8qisnA7TOlKha6hxG+ucIFqTOUcKh6Au63L7ilaVfzGvs1
-	 ehw4jgB+H41eB0ekxtBGzXbav07Otf4bMOxxquenpjJVm5f22DvRbGUhxfeROMhKi3
-	 5TLvnq4/eM7+B/UZseWkOsUiwpRRomwdESAkhvdE=
+	b=rCIFhHJFIDXD6xE87wzjfxPwCXrGRcH1c1C5rIK5MAYAhJtUGTudbURx9NC2VeIXg
+	 joezSJIY8raX4pTNSPyqkN1xSb5fs6oWfIpDQgJVPeio5wiskSasfwScTGQ287lEa4
+	 FaUY4+rr/3JEHOK3no24ooXdjef5BlDTur79ShG4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389848AbfCVMOE (ORCPT
+        id S2389859AbfCVMOG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:14:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52228 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:14:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52310 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389637AbfCVMN7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:13:59 -0400
+        id S2389843AbfCVMOD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:14:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1BF6820830;
-        Fri, 22 Mar 2019 12:13:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01BF720811;
+        Fri, 22 Mar 2019 12:14:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256838;
-        bh=5UBgb3ucyPTecMIazajYjVh/VbUOtV54elSjJEHVjjs=;
+        s=default; t=1553256842;
+        bh=uzScCFM6VYAjMqYPw3/Zmzfm9TVfe+pHc+K+lgtccQE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s7qBTbsK1dHLxHaHYc3h7rcKrdomJvO4XEBEkMmB9NLnIvadOZc3ENkKG0marA3ZX
-         bgnCkBQBLn3HZ+8ua3vPE17lNqnro0Y4QIgPwiwuHcGbw3ZpKfLWYW/6pgg9ukp8Qe
-         4k0KaNZC1VNx143+WL2vBcOEpbGBM3yNCtgbDvkg=
+        b=uqgMxrHKNZ7oOapsRD1HZkAcEqaGBZ2vQroLGH4IDEf90GEjgZnGKIbkOUcnEeujE
+         iFUPHCPPhh0BSXkzBMMILNNOgBQaeToXh2ax39oH1wgXcK+Z2CZWsCHPa7ApldvbeU
+         p+yyYgiGxquGgl1FAtOw6gWNKtkXOxzqTlpWXyXw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Pavel Shilovsky <pshilov@microsoft.com>,
         Steve French <stfrench@microsoft.com>
-Subject: [PATCH 5.0 051/238] CIFS: Fix leaking locked VFS cache pages in writeback retry
-Date:   Fri, 22 Mar 2019 12:14:30 +0100
-Message-Id: <20190322111301.438582621@linuxfoundation.org>
+Subject: [PATCH 5.0 052/238] CIFS: Do not reset lease state to NONE on lease break
+Date:   Fri, 22 Mar 2019 12:14:31 +0100
+Message-Id: <20190322111301.509071326@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -64,65 +65,114 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Pavel Shilovsky <pshilov@microsoft.com>
+From: Pavel Shilovsky <piastryyy@gmail.com>
 
-commit 165df9a080b6863ae286fa01780c13d87cd81076 upstream.
+commit 7b9b9edb49ad377b1e06abf14354c227e9ac4b06 upstream.
 
-If we don't find a writable file handle when retrying writepages
-we break of the loop and do not unlock and put pages neither from
-wdata2 nor from the original wdata. Fix this by walking through
-all the remaining pages and cleanup them properly.
+Currently on lease break the client sets a caching level twice:
+when oplock is detected and when oplock is processed. While the
+1st attempt sets the level to the value provided by the server,
+the 2nd one resets the level to None unconditionally.
+This happens because the oplock/lease processing code was changed
+to avoid races between page cache flushes and oplock breaks.
+The commit c11f1df5003d534 ("cifs: Wait for writebacks to complete
+before attempting write.") fixed the races for oplocks but didn't
+apply the same changes for leases resulting in overwriting the
+server granted value to None. Fix this by properly processing
+lease breaks.
 
-Cc: <stable@vger.kernel.org>
 Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
 Signed-off-by: Steve French <stfrench@microsoft.com>
+CC: Stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/cifssmb.c |   17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+ fs/cifs/smb2misc.c |   17 ++++++++++++++---
+ fs/cifs/smb2ops.c  |   15 ++++++++++++---
+ 2 files changed, 26 insertions(+), 6 deletions(-)
 
---- a/fs/cifs/cifssmb.c
-+++ b/fs/cifs/cifssmb.c
-@@ -2125,12 +2125,13 @@ cifs_writev_requeue(struct cifs_writedat
+--- a/fs/cifs/smb2misc.c
++++ b/fs/cifs/smb2misc.c
+@@ -517,7 +517,6 @@ smb2_tcon_has_lease(struct cifs_tcon *tc
+ 	__u8 lease_state;
+ 	struct list_head *tmp;
+ 	struct cifsFileInfo *cfile;
+-	struct TCP_Server_Info *server = tcon->ses->server;
+ 	struct cifs_pending_open *open;
+ 	struct cifsInodeInfo *cinode;
+ 	int ack_req = le32_to_cpu(rsp->Flags &
+@@ -537,13 +536,25 @@ smb2_tcon_has_lease(struct cifs_tcon *tc
+ 		cifs_dbg(FYI, "lease key match, lease break 0x%x\n",
+ 			 le32_to_cpu(rsp->NewLeaseState));
  
- 		wdata2->cfile = find_writable_file(CIFS_I(inode), false);
- 		if (!wdata2->cfile) {
--			cifs_dbg(VFS, "No writable handles for inode\n");
-+			cifs_dbg(VFS, "No writable handle to retry writepages\n");
- 			rc = -EBADF;
--			break;
-+		} else {
-+			wdata2->pid = wdata2->cfile->pid;
-+			rc = server->ops->async_writev(wdata2,
-+						       cifs_writedata_release);
- 		}
--		wdata2->pid = wdata2->cfile->pid;
--		rc = server->ops->async_writev(wdata2, cifs_writedata_release);
+-		server->ops->set_oplock_level(cinode, lease_state, 0, NULL);
+-
+ 		if (ack_req)
+ 			cfile->oplock_break_cancelled = false;
+ 		else
+ 			cfile->oplock_break_cancelled = true;
  
- 		for (j = 0; j < nr_pages; j++) {
- 			unlock_page(wdata2->pages[j]);
-@@ -2145,6 +2146,7 @@ cifs_writev_requeue(struct cifs_writedat
- 			kref_put(&wdata2->refcount, cifs_writedata_release);
- 			if (is_retryable_error(rc))
- 				continue;
-+			i += nr_pages;
- 			break;
- 		}
- 
-@@ -2152,6 +2154,13 @@ cifs_writev_requeue(struct cifs_writedat
- 		i += nr_pages;
- 	} while (i < wdata->nr_pages);
- 
-+	/* cleanup remaining pages from the original wdata */
-+	for (; i < wdata->nr_pages; i++) {
-+		SetPageError(wdata->pages[i]);
-+		end_page_writeback(wdata->pages[i]);
-+		put_page(wdata->pages[i]);
-+	}
++		set_bit(CIFS_INODE_PENDING_OPLOCK_BREAK, &cinode->flags);
 +
- 	if (rc != 0 && !is_retryable_error(rc))
- 		mapping_set_error(inode->i_mapping, rc);
- 	kref_put(&wdata->refcount, cifs_writedata_release);
++		/*
++		 * Set or clear flags depending on the lease state being READ.
++		 * HANDLE caching flag should be added when the client starts
++		 * to defer closing remote file handles with HANDLE leases.
++		 */
++		if (lease_state & SMB2_LEASE_READ_CACHING_HE)
++			set_bit(CIFS_INODE_DOWNGRADE_OPLOCK_TO_L2,
++				&cinode->flags);
++		else
++			clear_bit(CIFS_INODE_DOWNGRADE_OPLOCK_TO_L2,
++				  &cinode->flags);
++
+ 		queue_work(cifsoplockd_wq, &cfile->oplock_break);
+ 		kfree(lw);
+ 		return true;
+--- a/fs/cifs/smb2ops.c
++++ b/fs/cifs/smb2ops.c
+@@ -2595,6 +2595,15 @@ smb2_downgrade_oplock(struct TCP_Server_
+ }
+ 
+ static void
++smb21_downgrade_oplock(struct TCP_Server_Info *server,
++		       struct cifsInodeInfo *cinode, bool set_level2)
++{
++	server->ops->set_oplock_level(cinode,
++				      set_level2 ? SMB2_LEASE_READ_CACHING_HE :
++				      0, 0, NULL);
++}
++
++static void
+ smb2_set_oplock_level(struct cifsInodeInfo *cinode, __u32 oplock,
+ 		      unsigned int epoch, bool *purge_cache)
+ {
+@@ -3646,7 +3655,7 @@ struct smb_version_operations smb21_oper
+ 	.print_stats = smb2_print_stats,
+ 	.is_oplock_break = smb2_is_valid_oplock_break,
+ 	.handle_cancelled_mid = smb2_handle_cancelled_mid,
+-	.downgrade_oplock = smb2_downgrade_oplock,
++	.downgrade_oplock = smb21_downgrade_oplock,
+ 	.need_neg = smb2_need_neg,
+ 	.negotiate = smb2_negotiate,
+ 	.negotiate_wsize = smb2_negotiate_wsize,
+@@ -3743,7 +3752,7 @@ struct smb_version_operations smb30_oper
+ 	.dump_share_caps = smb2_dump_share_caps,
+ 	.is_oplock_break = smb2_is_valid_oplock_break,
+ 	.handle_cancelled_mid = smb2_handle_cancelled_mid,
+-	.downgrade_oplock = smb2_downgrade_oplock,
++	.downgrade_oplock = smb21_downgrade_oplock,
+ 	.need_neg = smb2_need_neg,
+ 	.negotiate = smb2_negotiate,
+ 	.negotiate_wsize = smb3_negotiate_wsize,
+@@ -3848,7 +3857,7 @@ struct smb_version_operations smb311_ope
+ 	.dump_share_caps = smb2_dump_share_caps,
+ 	.is_oplock_break = smb2_is_valid_oplock_break,
+ 	.handle_cancelled_mid = smb2_handle_cancelled_mid,
+-	.downgrade_oplock = smb2_downgrade_oplock,
++	.downgrade_oplock = smb21_downgrade_oplock,
+ 	.need_neg = smb2_need_neg,
+ 	.negotiate = smb2_negotiate,
+ 	.negotiate_wsize = smb3_negotiate_wsize,
 
 
