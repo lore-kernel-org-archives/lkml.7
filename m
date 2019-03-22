@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E34ACC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 05:23:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E85EFC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 05:23:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B56022075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 05:23:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B32A22075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 05:23:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727726AbfCVFXU (ORCPT
+        id S1727701AbfCVFXS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 01:23:20 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:45658 "EHLO
+        Fri, 22 Mar 2019 01:23:18 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:45654 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726047AbfCVFXQ (ORCPT
+        by vger.kernel.org with ESMTP id S1726041AbfCVFXQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 22 Mar 2019 01:23:16 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1h7Ce9-000164-Sk; Fri, 22 Mar 2019 05:23:13 +0000
+        id 1h7Ce9-000162-RW; Fri, 22 Mar 2019 05:23:13 +0000
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1h7Ce9-0001p6-Nd; Fri, 22 Mar 2019 05:23:13 +0000
+        id 1h7Ce9-0001ow-Lb; Fri, 22 Mar 2019 05:23:13 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,16 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Christoffer Dall" <christoffer.dall@linaro.org>,
-        "Christian Borntraeger" <borntraeger@de.ibm.com>,
-        "Paolo Bonzini" <pbonzini@redhat.com>,
-        "Radim =?UTF-8?Q?Kr=C4=8Dm=C3=A1=C5=99?=" <rkrcmar@redhat.com>
+        "Oleg Nesterov" <oleg@redhat.com>,
+        "Benjamin Tissoires" <benjamin.tissoires@redhat.com>,
+        "Vladis Dronov" <vdronov@redhat.com>
 Date:   Fri, 22 Mar 2019 05:20:18 +0000
-Message-ID: <lsq.1553232018.764753734@decadent.org.uk>
+Message-ID: <lsq.1553232018.289608661@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 12/16] KVM: Protect device ops->create and list_add
- with kvm->lock
+Subject: [PATCH 3.16 10/16] HID: debug: fix the ring buffer implementation
 In-Reply-To: <lsq.1553232017.771830163@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,150 +56,255 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Christoffer Dall <christoffer.dall@linaro.org>
+From: Vladis Dronov <vdronov@redhat.com>
 
-commit a28ebea2adc4a2bef5989a5a181ec238f59fbcad upstream.
+commit 13054abbaa4f1fd4e6f3b4b63439ec033b4c8035 upstream.
 
-KVM devices were manipulating list data structures without any form of
-synchronization, and some implementations of the create operations also
-suffered from a lack of synchronization.
+Ring buffer implementation in hid_debug_event() and hid_debug_events_read()
+is strange allowing lost or corrupted data. After commit 717adfdaf147
+("HID: debug: check length before copy_to_user()") it is possible to enter
+an infinite loop in hid_debug_events_read() by providing 0 as count, this
+locks up a system. Fix this by rewriting the ring buffer implementation
+with kfifo and simplify the code.
 
-Now when we've split the xics create operation into create and init, we
-can hold the kvm->lock mutex while calling the create operation and when
-manipulating the devices list.
+This fixes CVE-2019-3819.
 
-The error path in the generic code gets slightly ugly because we have to
-take the mutex again and delete the device from the list, but holding
-the mutex during anon_inode_getfd or releasing/locking the mutex in the
-common non-error path seemed wrong.
+v2: fix an execution logic and add a comment
+v3: use __set_current_state() instead of set_current_state()
 
-Signed-off-by: Christoffer Dall <christoffer.dall@linaro.org>
-Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
-Acked-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Signed-off-by: Radim Krčmář <rkrcmar@redhat.com>
-[bwh: Backported to 3.16:
- - Drop change to a failure path that doesn't exist in kvm_vgic_create() 
- - Adjust filename, context]
+Link: https://bugzilla.redhat.com/show_bug.cgi?id=1669187
+Fixes: cd667ce24796 ("HID: use debugfs for events/reports dumping")
+Fixes: 717adfdaf147 ("HID: debug: check length before copy_to_user()")
+Signed-off-by: Vladis Dronov <vdronov@redhat.com>
+Reviewed-by: Oleg Nesterov <oleg@redhat.com>
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
---- a/arch/arm/kvm/arm.c
-+++ b/arch/arm/kvm/arm.c
-@@ -799,10 +799,13 @@ long kvm_arch_vm_ioctl(struct file *filp
+ drivers/hid/hid-debug.c   | 120 +++++++++++++++-----------------------
+ include/linux/hid-debug.h |   9 ++-
+ 2 files changed, 51 insertions(+), 78 deletions(-)
+
+--- a/drivers/hid/hid-debug.c
++++ b/drivers/hid/hid-debug.c
+@@ -30,6 +30,7 @@
  
- 	switch (ioctl) {
- 	case KVM_CREATE_IRQCHIP: {
--		if (vgic_present)
--			return kvm_vgic_create(kvm);
--		else
-+		int ret;
-+		if (!vgic_present)
- 			return -ENXIO;
-+		mutex_lock(&kvm->lock);
-+		ret = kvm_vgic_create(kvm);
-+		mutex_unlock(&kvm->lock);
-+		return ret;
- 	}
- 	case KVM_ARM_SET_DEVICE_ADDR: {
- 		struct kvm_arm_device_addr dev_addr;
---- a/arch/powerpc/kvm/book3s_xics.c
-+++ b/arch/powerpc/kvm/book3s_xics.c
-@@ -1239,12 +1239,10 @@ static int kvmppc_xics_create(struct kvm
- 	xics->kvm = kvm;
- 
- 	/* Already there ? */
--	mutex_lock(&kvm->lock);
- 	if (kvm->arch.xics)
- 		ret = -EEXIST;
- 	else
- 		kvm->arch.xics = xics;
--	mutex_unlock(&kvm->lock);
- 
- 	if (ret) {
- 		kfree(xics);
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -1059,6 +1059,12 @@ struct kvm_device {
- /* create, destroy, and name are mandatory */
- struct kvm_device_ops {
- 	const char *name;
-+
-+	/*
-+	 * create is called holding kvm->lock and any operations not suitable
-+	 * to do while holding the lock should be deferred to init (see
-+	 * below).
-+	 */
- 	int (*create)(struct kvm_device *dev, u32 type);
- 
- 	/*
---- a/virt/kvm/arm/vgic.c
-+++ b/virt/kvm/arm/vgic.c
-@@ -1624,12 +1624,8 @@ int kvm_vgic_create(struct kvm *kvm)
- 	int i, vcpu_lock_idx = -1, ret;
- 	struct kvm_vcpu *vcpu;
- 
--	mutex_lock(&kvm->lock);
--
--	if (kvm->arch.vgic.vctrl_base) {
--		ret = -EEXIST;
--		goto out;
--	}
-+	if (kvm->arch.vgic.vctrl_base)
-+		return -EEXIST;
- 
- 	/*
- 	 * Any time a vcpu is run, vcpu_load is called which tries to grab the
-@@ -1659,9 +1655,6 @@ out_unlock:
- 		vcpu = kvm_get_vcpu(kvm, vcpu_lock_idx);
- 		mutex_unlock(&vcpu->mutex);
- 	}
--
--out:
--	mutex_unlock(&kvm->lock);
- 	return ret;
- }
- 
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -587,6 +587,11 @@ static void kvm_destroy_devices(struct k
+ #include <linux/debugfs.h>
+ #include <linux/seq_file.h>
++#include <linux/kfifo.h>
+ #include <linux/sched.h>
+ #include <linux/export.h>
+ #include <linux/slab.h>
+@@ -658,17 +659,12 @@ EXPORT_SYMBOL_GPL(hid_dump_device);
+ /* enqueue string to 'events' ring buffer */
+ void hid_debug_event(struct hid_device *hdev, char *buf)
  {
- 	struct list_head *node, *tmp;
+-	unsigned i;
+ 	struct hid_debug_list *list;
+ 	unsigned long flags;
  
-+	/*
-+	 * We do not need to take the kvm->lock here, because nobody else
-+	 * has a reference to the struct kvm at this point and therefore
-+	 * cannot access the devices list anyhow.
+ 	spin_lock_irqsave(&hdev->debug_list_lock, flags);
+-	list_for_each_entry(list, &hdev->debug_list, node) {
+-		for (i = 0; buf[i]; i++)
+-			list->hid_debug_buf[(list->tail + i) % HID_DEBUG_BUFSIZE] =
+-				buf[i];
+-		list->tail = (list->tail + i) % HID_DEBUG_BUFSIZE;
+-        }
++	list_for_each_entry(list, &hdev->debug_list, node)
++		kfifo_in(&list->hid_debug_fifo, buf, strlen(buf));
+ 	spin_unlock_irqrestore(&hdev->debug_list_lock, flags);
+ 
+ 	wake_up_interruptible(&hdev->debug_wait);
+@@ -719,8 +715,7 @@ void hid_dump_input(struct hid_device *h
+ 	hid_debug_event(hdev, buf);
+ 
+ 	kfree(buf);
+-        wake_up_interruptible(&hdev->debug_wait);
+-
++	wake_up_interruptible(&hdev->debug_wait);
+ }
+ EXPORT_SYMBOL_GPL(hid_dump_input);
+ 
+@@ -1085,8 +1080,8 @@ static int hid_debug_events_open(struct
+ 		goto out;
+ 	}
+ 
+-	if (!(list->hid_debug_buf = kzalloc(sizeof(char) * HID_DEBUG_BUFSIZE, GFP_KERNEL))) {
+-		err = -ENOMEM;
++	err = kfifo_alloc(&list->hid_debug_fifo, HID_DEBUG_FIFOSIZE, GFP_KERNEL);
++	if (err) {
+ 		kfree(list);
+ 		goto out;
+ 	}
+@@ -1106,77 +1101,57 @@ static ssize_t hid_debug_events_read(str
+ 		size_t count, loff_t *ppos)
+ {
+ 	struct hid_debug_list *list = file->private_data;
+-	int ret = 0, len;
++	int ret = 0, copied;
+ 	DECLARE_WAITQUEUE(wait, current);
+ 
+ 	mutex_lock(&list->read_mutex);
+-	while (ret == 0) {
+-		if (list->head == list->tail) {
+-			add_wait_queue(&list->hdev->debug_wait, &wait);
+-			set_current_state(TASK_INTERRUPTIBLE);
+-
+-			while (list->head == list->tail) {
+-				if (file->f_flags & O_NONBLOCK) {
+-					ret = -EAGAIN;
+-					break;
+-				}
+-				if (signal_pending(current)) {
+-					ret = -ERESTARTSYS;
+-					break;
+-				}
+-
+-				if (!list->hdev || !list->hdev->debug) {
+-					ret = -EIO;
+-					set_current_state(TASK_RUNNING);
+-					goto out;
+-				}
+-
+-				/* allow O_NONBLOCK from other threads */
+-				mutex_unlock(&list->read_mutex);
+-				schedule();
+-				mutex_lock(&list->read_mutex);
+-				set_current_state(TASK_INTERRUPTIBLE);
++	if (kfifo_is_empty(&list->hid_debug_fifo)) {
++		add_wait_queue(&list->hdev->debug_wait, &wait);
++		set_current_state(TASK_INTERRUPTIBLE);
++
++		while (kfifo_is_empty(&list->hid_debug_fifo)) {
++			if (file->f_flags & O_NONBLOCK) {
++				ret = -EAGAIN;
++				break;
+ 			}
+ 
+-			set_current_state(TASK_RUNNING);
+-			remove_wait_queue(&list->hdev->debug_wait, &wait);
+-		}
+-
+-		if (ret)
+-			goto out;
+-
+-		/* pass the ringbuffer contents to userspace */
+-copy_rest:
+-		if (list->tail == list->head)
+-			goto out;
+-		if (list->tail > list->head) {
+-			len = list->tail - list->head;
+-			if (len > count)
+-				len = count;
+-
+-			if (copy_to_user(buffer + ret, &list->hid_debug_buf[list->head], len)) {
+-				ret = -EFAULT;
+-				goto out;
++			if (signal_pending(current)) {
++				ret = -ERESTARTSYS;
++				break;
+ 			}
+-			ret += len;
+-			list->head += len;
+-		} else {
+-			len = HID_DEBUG_BUFSIZE - list->head;
+-			if (len > count)
+-				len = count;
+ 
+-			if (copy_to_user(buffer, &list->hid_debug_buf[list->head], len)) {
+-				ret = -EFAULT;
++			/* if list->hdev is NULL we cannot remove_wait_queue().
++			 * if list->hdev->debug is 0 then hid_debug_unregister()
++			 * was already called and list->hdev is being destroyed.
++			 * if we add remove_wait_queue() here we can hit a race.
++			 */
++			if (!list->hdev || !list->hdev->debug) {
++				ret = -EIO;
++				set_current_state(TASK_RUNNING);
+ 				goto out;
+ 			}
+-			list->head = 0;
+-			ret += len;
+-			count -= len;
+-			if (count > 0)
+-				goto copy_rest;
++
++			/* allow O_NONBLOCK from other threads */
++			mutex_unlock(&list->read_mutex);
++			schedule();
++			mutex_lock(&list->read_mutex);
++			set_current_state(TASK_INTERRUPTIBLE);
+ 		}
+ 
++		__set_current_state(TASK_RUNNING);
++		remove_wait_queue(&list->hdev->debug_wait, &wait);
++
++		if (ret)
++			goto out;
+ 	}
++
++	/* pass the fifo content to userspace, locking is not needed with only
++	 * one concurrent reader and one concurrent writer
 +	 */
- 	list_for_each_safe(node, tmp, &kvm->devices) {
- 		struct kvm_device *dev =
- 			list_entry(node, struct kvm_device, vm_node);
-@@ -2322,11 +2327,15 @@ static int kvm_ioctl_create_device(struc
- 	dev->ops = ops;
- 	dev->kvm = kvm;
++	ret = kfifo_to_user(&list->hid_debug_fifo, buffer, count, &copied);
++	if (ret)
++		goto out;
++	ret = copied;
+ out:
+ 	mutex_unlock(&list->read_mutex);
+ 	return ret;
+@@ -1187,7 +1162,7 @@ static unsigned int hid_debug_events_pol
+ 	struct hid_debug_list *list = file->private_data;
  
-+	mutex_lock(&kvm->lock);
- 	ret = ops->create(dev, cd->type);
- 	if (ret < 0) {
-+		mutex_unlock(&kvm->lock);
- 		kfree(dev);
- 		return ret;
- 	}
-+	list_add(&dev->vm_node, &kvm->devices);
-+	mutex_unlock(&kvm->lock);
+ 	poll_wait(file, &list->hdev->debug_wait, wait);
+-	if (list->head != list->tail)
++	if (!kfifo_is_empty(&list->hid_debug_fifo))
+ 		return POLLIN | POLLRDNORM;
+ 	if (!list->hdev->debug)
+ 		return POLLERR | POLLHUP;
+@@ -1202,7 +1177,7 @@ static int hid_debug_events_release(stru
+ 	spin_lock_irqsave(&list->hdev->debug_list_lock, flags);
+ 	list_del(&list->node);
+ 	spin_unlock_irqrestore(&list->hdev->debug_list_lock, flags);
+-	kfree(list->hid_debug_buf);
++	kfifo_free(&list->hid_debug_fifo);
+ 	kfree(list);
  
- 	if (ops->init)
- 		ops->init(dev);
-@@ -2334,10 +2343,12 @@ static int kvm_ioctl_create_device(struc
- 	ret = anon_inode_getfd(ops->name, &kvm_device_fops, dev, O_RDWR | O_CLOEXEC);
- 	if (ret < 0) {
- 		ops->destroy(dev);
-+		mutex_lock(&kvm->lock);
-+		list_del(&dev->vm_node);
-+		mutex_unlock(&kvm->lock);
- 		return ret;
- 	}
- 
--	list_add(&dev->vm_node, &kvm->devices);
- 	kvm_get_kvm(kvm);
- 	cd->fd = ret;
  	return 0;
+@@ -1253,4 +1228,3 @@ void hid_debug_exit(void)
+ {
+ 	debugfs_remove_recursive(hid_debug_root);
+ }
+-
+--- a/include/linux/hid-debug.h
++++ b/include/linux/hid-debug.h
+@@ -24,7 +24,10 @@
+ 
+ #ifdef CONFIG_DEBUG_FS
+ 
++#include <linux/kfifo.h>
++
+ #define HID_DEBUG_BUFSIZE 512
++#define HID_DEBUG_FIFOSIZE 512
+ 
+ void hid_dump_input(struct hid_device *, struct hid_usage *, __s32);
+ void hid_dump_report(struct hid_device *, int , u8 *, int);
+@@ -37,11 +40,8 @@ void hid_debug_init(void);
+ void hid_debug_exit(void);
+ void hid_debug_event(struct hid_device *, char *);
+ 
+-
+ struct hid_debug_list {
+-	char *hid_debug_buf;
+-	int head;
+-	int tail;
++	DECLARE_KFIFO_PTR(hid_debug_fifo, char);
+ 	struct fasync_struct *fasync;
+ 	struct hid_device *hdev;
+ 	struct list_head node;
+@@ -64,4 +64,3 @@ struct hid_debug_list {
+ #endif
+ 
+ #endif
+-
 
