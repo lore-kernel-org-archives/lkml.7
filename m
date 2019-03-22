@@ -2,101 +2,84 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FC0DC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 18:49:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C1A0C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 18:52:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DFE521900
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 18:49:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="N5//jGST"
+	by mail.kernel.org (Postfix) with ESMTP id 1388E218A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 18:52:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727818AbfCVStj (ORCPT
+        id S1727743AbfCVSww (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 14:49:39 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:41697 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727000AbfCVStj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 14:49:39 -0400
-Received: by mail-oi1-f193.google.com with SMTP id v7so2488287oie.8
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 11:49:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bI3YQ2UGTKs+MAcoBFqJxdwZKPIFUOvygyRC2OsSzCA=;
-        b=N5//jGST86vYO340eYtI3EkCEzKT7yaEuHzY5+Kh5B7VJhGKQZ4aKXs1HDfK/9Ix5h
-         ItPRUvuvEz9BWfASgO0emxKL4zXSy8oxYLRmVa5XPCr3WDgrEwo4c4J1tBIxQzudJMjt
-         Degur5vzEwCS+T5z4mcKAcgf0BbI4d1JDWTB5LfIt8BFes3E7B4Z9pktgeJO6GE2vhx7
-         5ygVZpcDN5oSJS8dQFNnzQQ5bfLhI8aCTcf83/iahdkt1fCs5ligA2mRZCaUugpP/SjO
-         mGIo60JluCwEQxloMNcpZHIe2/8Dk4nDlxzJSPCKkkPdJgVzrOIcvW69mByO9FNLXpR2
-         09IA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bI3YQ2UGTKs+MAcoBFqJxdwZKPIFUOvygyRC2OsSzCA=;
-        b=NjyRXLDiNjZsDNk3Y92HLcJKx0u69G6rJpNoUtb5zaPfWiI10dtxGFGQOttE4aRFEX
-         DpAGas5vDLspvwr6xFUfa9qILApHK+pHpisyXZQ27fAtdiGyTAJewoy30NdMD6jS+Kou
-         7LGkM9edoeBS+eC4Kv+C737iU0tlIs2IwlFRbnG25drt0plDEFLC0I9d9qxCnVbFck9C
-         ixWPQIRFF/84W+dXzQlCNVAmWjce2mMWNX8mnyIYNpHDCft/tp6NC4vvKc6Vs+IPt8zB
-         CucClfVf29eRX7pjEU55J8zm0hHr0A5k3w/Ss5lqkAwsZ/8dk0HoDKrYKKKa7AuJNDuk
-         hi+g==
-X-Gm-Message-State: APjAAAVubfTYMCZAeZ58a+Jvk71JaUJn0fZT4u5mR/IiYG49XeVoVx8+
-        YbbGAwQRHypMZ6xMjJdkSyXRZAgV+oebXo/vNcQ0gg==
-X-Google-Smtp-Source: APXvYqy4BJvYNZA7/ljIt/taH8vx1sPjx2JqEJOnCU54OBPk4JrQc65yT3qysc8ckBPzxLC48dIT/rgTYmGOgtvH+l8=
-X-Received: by 2002:aca:aa57:: with SMTP id t84mr2975823oie.149.1553280578611;
- Fri, 22 Mar 2019 11:49:38 -0700 (PDT)
+        Fri, 22 Mar 2019 14:52:52 -0400
+Received: from foss.arm.com ([217.140.101.70]:50800 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725999AbfCVSww (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 14:52:52 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7516015AB;
+        Fri, 22 Mar 2019 11:52:51 -0700 (PDT)
+Received: from [10.1.196.50] (e108454-lin.cambridge.arm.com [10.1.196.50])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3E1DC3F71A;
+        Fri, 22 Mar 2019 11:52:50 -0700 (PDT)
+Subject: Re: [ANNOUNCE] v5.0.3-rt1
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        john.ogness@linutronix.de, Dave P Martin <Dave.Martin@arm.com>
+References: <20190320171511.icjhdlulgal2yeho@linutronix.de>
+From:   Julien Grall <julien.grall@arm.com>
+Message-ID: <791056c4-3575-0bd8-031e-44d0e3b21e54@arm.com>
+Date:   Fri, 22 Mar 2019 18:52:48 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <20190322180139.18856-1-roberto.sassu@huawei.com>
-In-Reply-To: <20190322180139.18856-1-roberto.sassu@huawei.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 22 Mar 2019 11:49:27 -0700
-Message-ID: <CAPcyv4jU-TCyfJ5gxrEaZt1GDJ+b_FtYi9O8H=cqLbqOAaskuw@mail.gmail.com>
-Subject: Re: [PATCH] KEYS: trusted: defer execution of TPM-specific code until
- key instantiate
-To:     Roberto Sassu <roberto.sassu@huawei.com>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        David Howells <dhowells@redhat.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>, david.safford@ge.com,
-        James Bottomley <jejb@linux.ibm.com>,
-        Silviu Vlasceanu <silviu.vlasceanu@huawei.com>,
-        stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190320171511.icjhdlulgal2yeho@linutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 22, 2019 at 11:04 AM Roberto Sassu <roberto.sassu@huawei.com> wrote:
->
-> Commit 240730437deb ("KEYS: trusted: explicitly use tpm_chip structure from
-> tpm_default_chip()") changed the tpm_chip argument of every TPM function
-> from NULL to a pointer that is retrieved at module initialization time.
->
-> Unlike before this patch, the trusted module cannot be loaded if no TPM is
-> available. Unfortunately, this causes a dependency problem because the
-> encrypted key type requires the 'key_type_trusted' symbol when
-> CONFIG_TRUSTED_KEYS is defined.
->
-> This patch fixes the issue by deferring the execution of TPM-specific code
-> until a new trusted key is instantiated: init_tpm(), to obtain a tpm_chip
-> pointer; init_digests(), introduced by commit 0b6cf6b97b7e ("tpm: pass an
-> array of tpm_extend_digest structures to tpm_pcr_extend()"), to get random
-> bytes from the TPM to lock a PCR.
->
-> Cc: stable@vger.kernel.org
-> Fixes: 240730437deb ("KEYS: trusted: explicitly use tpm_chip structure from tpm_default_chip()")
-> Reported-by: Dan Williams <dan.j.williams@intel.com>
+Hi,
 
-Tested-by: Dan Williams <dan.j.williams@intel.com>
+Apologies for a possible stupid question.
 
-Thanks Robert!
+On 20/03/2019 17:15, Sebastian Andrzej Siewior wrote:
+>    - Applied John Ogness' prinkt rework. One visible change is the
+>      output during boot. Under the hood and for RT: By default, output
+>      that is created at KERN_WARN[0] or higher is printed immediately if the
+>      console supports "atomic" print (currently the 8250 driver does).
+>      This output is printed immediately (and visible) even from IRQ-off
+>      or preempt-disabled regions which wasn't the case earlier. This will
+>      raise the latency at run-time *but* there should be no WARNING,
+>      ERROR or PANIC messages at run-time on a fully working system.
+>      Messages with lower severity are printed "later" by a kthread.
+
+Using 5.0.3-rt1, I get some warning message completely mangled with the rest of 
+the output (e.g systemd message) but also between them. Some excerpt of a 500 
+lines lockdep warning (AFAICT the printk is not related to the printk code):
+
+[   52.294547] 005: ... which became HARDIRQ-irq-unsafe at:
+[   52.294553] 005: ...
+[   52.294554] 005:   lock_acquire+0xf8/0x318
+[  OK  ] Reached target
+t_spin_lock+0x48/0x70  lock_acquire+0xf8/0x318
+[0;1;39mRemote File Systems.[   52.294570] 005:   iommu_dma_map_msi_msg+0x5c/0x1
+
+[   52.296824] 005: CPU: 5 PID: 2108 Comm: ip Not tainted 5.0.3-rt1-00007-g42ede
+9a0fed6 #4312] 005:  __sys_sendmsg+0x68/0xb8
+
+I understand the new series add support for "atomic" print. So I am wondering 
+whether this issue is related to it? Is there any advice to prevent the mangling?
+
+Cheers,
+
+-- 
+Julien Grall
