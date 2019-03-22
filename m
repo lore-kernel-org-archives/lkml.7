@@ -2,115 +2,119 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F320C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:22:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 481F4C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:22:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68F0D2190A
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:22:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14ACA218D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:22:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553253758;
+	bh=lHP5V2AX/du/Qwilwc+t3bOPrAJFhuRg0pISt1gb4ks=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=XS9svdMB4THgwN+NPb9rTYKfHYbj2kzpuCtA0PEQQ0ewUaL+XrN5uoBnxnEACplmJ
+	 OvKiMoEFwOo/iXoM8Wkt2Mqw/GhYEO5NSPrb/LRwiLfWJcKPeYT9WuBwXfrUPZfnx9
+	 cXOoh6QIytHin7jfZ2u3mr25oQBYfZLEA7DPKr1s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728819AbfCVLWd (ORCPT
+        id S1728841AbfCVLWg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:22:33 -0400
-Received: from 8bytes.org ([81.169.241.247]:58632 "EHLO theia.8bytes.org"
+        Fri, 22 Mar 2019 07:22:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728789AbfCVLWb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728808AbfCVLWb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 22 Mar 2019 07:22:31 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 4D293259; Fri, 22 Mar 2019 12:22:30 +0100 (CET)
-Date:   Fri, 22 Mar 2019 12:22:29 +0100
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
-Subject: [git pull] IOMMU Fixes for Linux v5.1-rc1
-Message-ID: <20190322112224.GA22496@8bytes.org>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5C9F218D4;
+        Fri, 22 Mar 2019 11:22:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553253751;
+        bh=lHP5V2AX/du/Qwilwc+t3bOPrAJFhuRg0pISt1gb4ks=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=F09pd14uh1KWwhb24mf5Fdeg5b3Guj/cCZeqrP6cSpeTcbom7U5ZIuaOBZcyUeihZ
+         0REbrfKk6XrdnprtxsuvER33db2V5xc5kzkKfdxb5NSj9hrpennk/o5xtB86G+ZDkX
+         uAQoRmDLwKDikKbCcy5h1Ls3lYuidlAporhJcR0E=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 3.18 044/134] net-sysfs: Fix mem leak in netdev_register_kobject
+Date:   Fri, 22 Mar 2019 12:14:17 +0100
+Message-Id: <20190322111213.084688100@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190322111210.465931067@linuxfoundation.org>
+References: <20190322111210.465931067@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="jRHKVT23PllUwdXP"
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+3.18-stable review patch.  If anyone has any objections, please let me know.
 
---jRHKVT23PllUwdXP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+------------------
 
-Hi Linus,
+From: YueHaibing <yuehaibing@huawei.com>
 
-The following changes since commit 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b:
+[ Upstream commit 895a5e96dbd6386c8e78e5b78e067dcc67b7f0ab ]
 
-  Linux 5.1-rc1 (2019-03-17 14:22:26 -0700)
+syzkaller report this:
+BUG: memory leak
+unreferenced object 0xffff88837a71a500 (size 256):
+  comm "syz-executor.2", pid 9770, jiffies 4297825125 (age 17.843s)
+  hex dump (first 32 bytes):
+    00 00 00 00 ad 4e ad de ff ff ff ff 00 00 00 00  .....N..........
+    ff ff ff ff ff ff ff ff 20 c0 ef 86 ff ff ff ff  ........ .......
+  backtrace:
+    [<00000000db12624b>] netdev_register_kobject+0x124/0x2e0 net/core/net-sysfs.c:1751
+    [<00000000dc49a994>] register_netdevice+0xcc1/0x1270 net/core/dev.c:8516
+    [<00000000e5f3fea0>] tun_set_iff drivers/net/tun.c:2649 [inline]
+    [<00000000e5f3fea0>] __tun_chr_ioctl+0x2218/0x3d20 drivers/net/tun.c:2883
+    [<000000001b8ac127>] vfs_ioctl fs/ioctl.c:46 [inline]
+    [<000000001b8ac127>] do_vfs_ioctl+0x1a5/0x10e0 fs/ioctl.c:690
+    [<0000000079b269f8>] ksys_ioctl+0x89/0xa0 fs/ioctl.c:705
+    [<00000000de649beb>] __do_sys_ioctl fs/ioctl.c:712 [inline]
+    [<00000000de649beb>] __se_sys_ioctl fs/ioctl.c:710 [inline]
+    [<00000000de649beb>] __x64_sys_ioctl+0x74/0xb0 fs/ioctl.c:710
+    [<000000007ebded1e>] do_syscall_64+0xc8/0x580 arch/x86/entry/common.c:290
+    [<00000000db315d36>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
+    [<00000000115be9bb>] 0xffffffffffffffff
 
-are available in the Git repository at:
+It should call kset_unregister to free 'dev->queues_kset'
+in error path of register_queue_kobjects, otherwise will cause a mem leak.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git tags/iommu-fixes-v5.1-rc2
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: 1d24eb4815d1 ("xps: Transmit Packet Steering")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ net/core/net-sysfs.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
-for you to fetch changes up to 84c11e4df5aa4955acaa441f0cf1cb2e50daf64b:
+--- a/net/core/net-sysfs.c
++++ b/net/core/net-sysfs.c
+@@ -1241,6 +1241,9 @@ static int register_queue_kobjects(struc
+ error:
+ 	netdev_queue_update_kobjects(dev, txq, 0);
+ 	net_rx_queue_update_kobjects(dev, rxq, 0);
++#ifdef CONFIG_SYSFS
++	kset_unregister(dev->queues_kset);
++#endif
+ 	return error;
+ }
+ 
 
-  iommu/vt-d: Save the right domain ID used by hardware (2019-03-22 12:02:27 +0100)
 
-----------------------------------------------------------------
-IOMMU Fixes for Linux v5.1-rc2
-
-Including:
-
-	- AMD IOMMU fix for sg-mapping with sg->offset > PAGE_SIZE
-
-	- Fix for IOVA code to trigger the slow-path less often
-
-	- Two fixes for Intel VT-d to avoid writing to read-onl registers and
-	  to flush the right domain id for the default domains in scalable
-	  mode
-
-----------------------------------------------------------------
-Lu Baolu (2):
-      iommu/vt-d: Check capability before disabling protected memory
-      iommu/vt-d: Save the right domain ID used by hardware
-
-Robert Richter (1):
-      iommu/iova: Fix tracking of recently failed iova address
-
-Stanislaw Gruszka (1):
-      iommu/amd: fix sg->dma_address for sg->offset bigger than PAGE_SIZE
-
- drivers/iommu/amd_iommu.c   | 7 ++++++-
- drivers/iommu/intel-iommu.c | 5 ++++-
- drivers/iommu/iova.c        | 5 +++--
- 3 files changed, 13 insertions(+), 4 deletions(-)
-
-Please pull.
-
-Thanks,
-
-	Joerg
-
---jRHKVT23PllUwdXP
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEr9jSbILcajRFYWYyK/BELZcBGuMFAlyUxXAACgkQK/BELZcB
-GuOOXA//flT1sZ7JMkiPtVO3sH67adhWnge3n++mWn7SEjSw4s4HJ+Bvu7VztrrG
-yq/EifBsUncZbd/LsCDypNBSVRNinnro+NJbrlpn7Bxg+Rgyw6Y5y2fqh+C/5NA9
-xLVxwETJYuv9koK1QqbfV2I2maZ2Xn8WwBNK8XvvsqCrtnahX/xuybQZDqqCZwJh
-swEqBPzqOmIQocUAQf66XYQBGFjz/Rv5iTvJHY/XMVIS9TCwidtxvnrtesm9unCx
-+i45CGJ9J55f2iEVPyPQlpkP9eCd+TR3WIc42No56copsBA/o7upSAji8V2acoSC
-uLv9bUEy7S7s9rjnD4usRxIixTP876ehOw8Agq3n3XsMobZBYXOpewJAB0TTaxmK
-6cMYV73cErOzRNylCVeAI9Z6i1ztniXITM+KapgAc97DlpDwYyvDIJj4pGvum1P1
-ZXT56EparVhPBWeBP6gHlBYun5bJJ99Q3VPDvG+TzET3v9Uov2v+K8/LP7Fi7IYP
-pz9JtEtlV4Dnbc9Gzn09PkmbAzposcfj7UTgaJ5ZRASbQ1VFR23SJ751EE3C0qM3
-u0oEX0CV/uhlDa7/45FNwHe+bKAVyHPEYGAj8u2OMnxJSqFVTDmmVrt6Iw+h6XED
-SI94psVbwBh5uxnx82wChlC2pIecf3Y5cCj45/kDzel6D2zqmqw=
-=ZgKz
------END PGP SIGNATURE-----
-
---jRHKVT23PllUwdXP--
