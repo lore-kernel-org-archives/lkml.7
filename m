@@ -4,58 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E3DDC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:05:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66B07C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:05:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DC512082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:05:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 390D42192D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:05:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256332;
-	bh=UCea0k/P3+ho5gJTRm7680R94NEB879XT11g8ZtgIk0=;
+	s=default; t=1553256336;
+	bh=zIMtOKQXzEaA28TgCzk7eKjYIzVwgy+vwAl7uA8Kpc8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FAqCZNrqsB2J3sAFVD9sfqqk0pyXOPlQekWMFzKLBhjG2Dn8oe3lUGaY81ne2nHin
-	 zPzoOXGy2mPIKDUyqk8rKZVotrPlXVqWemZ+e6DY5Lhc/uOoGzZBRV+TmZrW5PXL9h
-	 5rhgTwJhZkOKuDFzFYH9fDlDrzmhrBMpm2XzMAxA=
+	b=nM2Fj9/aEr8vtUYzrXtb/EWKuphvF4PC1SFVDnu1+9lPoUncUW41LFlOeIDBQ7W1t
+	 xIEwJGomanwj0LAbI+MVGNPGeRU6rx05DvvAGDgCGv7ZBbeDE6DBGvjcGzXezsUXwi
+	 azCemUgQDiIq4ta5g+BM2fA23MUxgdUqqEqT3V/8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388827AbfCVMFa (ORCPT
+        id S2388521AbfCVMFe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:05:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43922 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:05:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44050 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388813AbfCVMFZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:05:25 -0400
+        id S2388077AbfCVMFb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:05:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29600206C0;
-        Fri, 22 Mar 2019 12:05:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BDD6A2082C;
+        Fri, 22 Mar 2019 12:05:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256324;
-        bh=UCea0k/P3+ho5gJTRm7680R94NEB879XT11g8ZtgIk0=;
+        s=default; t=1553256331;
+        bh=zIMtOKQXzEaA28TgCzk7eKjYIzVwgy+vwAl7uA8Kpc8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OAAnOTAK/MF1ssTm63caNkHEhwRWHgyFxj3L5t70YqYDzd2O/JpCGEPbwBB8HK/Hb
-         L7+6Snc8tT/d45rKMedNibVMR1a7yt5rCNgbpQB8OVa/kURqLOJ6PaUDeYyulYFAd3
-         jZqAbdCIhrEdx08UJHuqA5iwzLxnDsB7Moed+/t0=
+        b=yU9qV27Chv3hxci2EsCpUruOFpliJwy+nlaOPGAk4gXnMK/RSvE1I94yoKXvXAFbd
+         RPFV6WBES+CJRjT4fEdc64fKf1O+rjYzq/RORn6RbcM0EPrxlO83eINYtlLfk5l6fA
+         r1oJsvx2uwlwdjVsM2ZSiWJqG+fo8P442goe28/4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andrea Righi <righi.andrea@gmail.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 4.19 176/280] x86/kprobes: Prohibit probing on optprobe template code
-Date:   Fri, 22 Mar 2019 12:15:29 +0100
-Message-Id: <20190322111325.658451873@linuxfoundation.org>
+        stable@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+Subject: [PATCH 4.19 178/280] cpufreq: tegra124: add missing of_node_put()
+Date:   Fri, 22 Mar 2019 12:15:31 +0100
+Message-Id: <20190322111326.106846563@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -74,47 +66,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Yangtao Li <tiny.windzz@gmail.com>
 
-commit 0192e6535ebe9af68614198ced4fd6d37b778ebf upstream.
+commit 446fae2bb5395f3028d8e3aae1508737e5a72ea1 upstream.
 
-Prohibit probing on optprobe template code, since it is not
-a code but a template instruction sequence. If we modify
-this template, copied template must be broken.
+of_cpu_device_node_get() will increase the refcount of device_node,
+it is necessary to call of_node_put() at the end to release the
+refcount.
 
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andrea Righi <righi.andrea@gmail.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
-Fixes: 9326638cbee2 ("kprobes, x86: Use NOKPROBE_SYMBOL() instead of __kprobes annotation")
-Link: http://lkml.kernel.org/r/154998787911.31052.15274376330136234452.stgit@devbox
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Fixes: 9eb15dbbfa1a2 ("cpufreq: Add cpufreq driver for Tegra124")
+Cc: <stable@vger.kernel.org> # 4.4+
+Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/kprobes/opt.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/cpufreq/tegra124-cpufreq.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/arch/x86/kernel/kprobes/opt.c
-+++ b/arch/x86/kernel/kprobes/opt.c
-@@ -141,6 +141,11 @@ asm (
+--- a/drivers/cpufreq/tegra124-cpufreq.c
++++ b/drivers/cpufreq/tegra124-cpufreq.c
+@@ -134,6 +134,8 @@ static int tegra124_cpufreq_probe(struct
  
- void optprobe_template_func(void);
- STACK_FRAME_NON_STANDARD(optprobe_template_func);
-+NOKPROBE_SYMBOL(optprobe_template_func);
-+NOKPROBE_SYMBOL(optprobe_template_entry);
-+NOKPROBE_SYMBOL(optprobe_template_val);
-+NOKPROBE_SYMBOL(optprobe_template_call);
-+NOKPROBE_SYMBOL(optprobe_template_end);
+ 	platform_set_drvdata(pdev, priv);
  
- #define TMPL_MOVE_IDX \
- 	((long)optprobe_template_val - (long)optprobe_template_entry)
++	of_node_put(np);
++
+ 	return 0;
+ 
+ out_switch_to_pllx:
 
 
