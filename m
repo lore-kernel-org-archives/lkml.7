@@ -2,53 +2,51 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BIGNUM_EMAILS,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5DE6C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:49:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF797C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:49:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 941B92183E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:49:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C2452183E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:49:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553258950;
-	bh=XCfKLnA1x536d2uzidHK0/rKnURTLUF4vBB5pVsxeH0=;
+	s=default; t=1553258960;
+	bh=K7c05FUVLw+FD/iJ3FxIRlqbpO/TKoWL1v8vpYyPlhU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p1qFIA86YPDOljBPmR3ffpKyYvKgrQyRLcPU1C8xMNo8TfaqvCyjzU3e+byQB/uMv
-	 eim1FA4X8QMpUwl/IvIvVrTyCVEec2sRfc49HhFd59AXzZF8jD3j5tLJIHuxL5lk49
-	 Wd2mLRKwRA8aVIUFY5CchVn/qAAmpSVmkdvWiUuo=
+	b=gX/8wZ5F7xc26aD88V64WkdoJAF2/mm+dThgKqf+jwha5iIqhXeXI88SN5Q+rWVi+
+	 09OQtE+huQrKFbF8EVwn8gUfbCyg9vbpsLXL3OivOBY+z9bSx3Wq4Y7TVwAulNT6Zi
+	 icwqsXdwGEkfJ7zGTJgCWNpu3HRcMCiq0iduBWe8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387669AbfCVMtJ (ORCPT
+        id S2387619AbfCVL5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:49:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33860 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:57:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33522 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387641AbfCVL5X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:57:23 -0400
+        id S1732339AbfCVL5C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:57:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8341D2192B;
-        Fri, 22 Mar 2019 11:57:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2CDE720850;
+        Fri, 22 Mar 2019 11:57:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255842;
-        bh=XCfKLnA1x536d2uzidHK0/rKnURTLUF4vBB5pVsxeH0=;
+        s=default; t=1553255821;
+        bh=K7c05FUVLw+FD/iJ3FxIRlqbpO/TKoWL1v8vpYyPlhU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Addp0Oy5VD9C+ZMMAiEl+vm78GgpdIZ7LWneFwyexi0iVbx5hFOx02KtgJ+6/jvYa
-         zxD04tPjBn2BQMNUmhnrMaPhnazoiDRhfLptu3Oa/8McB6YiB57BhH7nP3eWqJMO/r
-         NGToHqbs+ECsOCFVO0kqPB9zl6XvFs/xxlyx+7wk=
+        b=hBgRVW55PyGljRaejaCHYMtR4A9CEJiByLbXTUV6fTBNKy5uZFIykuRbpYO+BOdfV
+         BdHC03X7weQDanygWSvcmybWyQXKbvRnmTW3ymXACTi4/g4smbfro5nA5MfSXVcqjg
+         +wd08FeJTPFnmSBczaNSEL6TrduReeKdY7Rg/bhw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Stefan Haberland <sth@linux.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 031/280] s390/dasd: fix using offset into zero size array error
-Date:   Fri, 22 Mar 2019 12:13:04 +0100
-Message-Id: <20190322111308.051569595@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alexander Usyskin <alexander.usyskin@intel.com>,
+        Tomas Winkler <tomas.winkler@intel.com>
+Subject: [PATCH 4.19 008/280] mei: hbm: clean the feature flags on link reset
+Date:   Fri, 22 Mar 2019 12:12:41 +0100
+Message-Id: <20190322111306.792957265@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -67,96 +65,61 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 4a8ef6999bce998fa5813023a9a6b56eea329dba ]
+From: Alexander Usyskin <alexander.usyskin@intel.com>
 
-Dan Carpenter reported the following:
+commit 37fd0b623023484ef6df79ed46f21f06ecc611ff upstream.
 
-The patch 52898025cf7d: "[S390] dasd: security and PSF update patch
-for EMC CKD ioctl" from Mar 8, 2010, leads to the following static
-checker warning:
+The list of supported functions can be altered upon link reset,
+clean the flags to allow correct selections of supported
+features.
 
-	drivers/s390/block/dasd_eckd.c:4486 dasd_symm_io()
-	error: using offset into zero size array 'psf_data[]'
+Cc: <stable@vger.kernel.org> v4.19+
+Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
+Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-drivers/s390/block/dasd_eckd.c
-  4458          /* Copy parms from caller */
-  4459          rc = -EFAULT;
-  4460          if (copy_from_user(&usrparm, argp, sizeof(usrparm)))
-                                    ^^^^^^^
-The user can specify any "usrparm.psf_data_len".  They choose zero by
-mistake.
-
-  4461                  goto out;
-  4462          if (is_compat_task()) {
-  4463                  /* Make sure pointers are sane even on 31 bit. */
-  4464                  rc = -EINVAL;
-  4465                  if ((usrparm.psf_data >> 32) != 0)
-  4466                          goto out;
-  4467                  if ((usrparm.rssd_result >> 32) != 0)
-  4468                          goto out;
-  4469                  usrparm.psf_data &= 0x7fffffffULL;
-  4470                  usrparm.rssd_result &= 0x7fffffffULL;
-  4471          }
-  4472          /* alloc I/O data area */
-  4473          psf_data = kzalloc(usrparm.psf_data_len, GFP_KERNEL
-  			   				 | GFP_DMA);
-  4474          rssd_result = kzalloc(usrparm.rssd_result_len, GFP_KERNEL
-							       | GFP_DMA);
-  4475          if (!psf_data || !rssd_result) {
-
-kzalloc() returns a ZERO_SIZE_PTR (0x16).
-
-  4476                  rc = -ENOMEM;
-  4477                  goto out_free;
-  4478          }
-  4479
-  4480          /* get syscall header from user space */
-  4481          rc = -EFAULT;
-  4482          if (copy_from_user(psf_data,
-  4483                             (void __user *)(unsigned long)
-  				   	 		 usrparm.psf_data,
-  4484                             usrparm.psf_data_len))
-
-That all works great.
-
-  4485                  goto out_free;
-  4486          psf0 = psf_data[0];
-  4487          psf1 = psf_data[1];
-
-But now we're assuming that "->psf_data_len" was at least 2 bytes.
-
-Fix this by checking the user specified length psf_data_len.
-
-Fixes: 52898025cf7d ("[S390] dasd: security and PSF update patch for EMC CKD ioctl")
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Stefan Haberland <sth@linux.ibm.com>
-Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/block/dasd_eckd.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/misc/mei/hbm.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/s390/block/dasd_eckd.c b/drivers/s390/block/dasd_eckd.c
-index 4e7b55a14b1a..6e294b4d3635 100644
---- a/drivers/s390/block/dasd_eckd.c
-+++ b/drivers/s390/block/dasd_eckd.c
-@@ -4469,6 +4469,14 @@ static int dasd_symm_io(struct dasd_device *device, void __user *argp)
- 		usrparm.psf_data &= 0x7fffffffULL;
- 		usrparm.rssd_result &= 0x7fffffffULL;
- 	}
-+	/* at least 2 bytes are accessed and should be allocated */
-+	if (usrparm.psf_data_len < 2) {
-+		DBF_DEV_EVENT(DBF_WARNING, device,
-+			      "Symmetrix ioctl invalid data length %d",
-+			      usrparm.psf_data_len);
-+		rc = -EINVAL;
-+		goto out;
-+	}
- 	/* alloc I/O data area */
- 	psf_data = kzalloc(usrparm.psf_data_len, GFP_KERNEL | GFP_DMA);
- 	rssd_result = kzalloc(usrparm.rssd_result_len, GFP_KERNEL | GFP_DMA);
--- 
-2.19.1
-
+--- a/drivers/misc/mei/hbm.c
++++ b/drivers/misc/mei/hbm.c
+@@ -986,29 +986,36 @@ static void mei_hbm_config_features(stru
+ 	    dev->version.minor_version >= HBM_MINOR_VERSION_PGI)
+ 		dev->hbm_f_pg_supported = 1;
+ 
++	dev->hbm_f_dc_supported = 0;
+ 	if (dev->version.major_version >= HBM_MAJOR_VERSION_DC)
+ 		dev->hbm_f_dc_supported = 1;
+ 
++	dev->hbm_f_ie_supported = 0;
+ 	if (dev->version.major_version >= HBM_MAJOR_VERSION_IE)
+ 		dev->hbm_f_ie_supported = 1;
+ 
+ 	/* disconnect on connect timeout instead of link reset */
++	dev->hbm_f_dot_supported = 0;
+ 	if (dev->version.major_version >= HBM_MAJOR_VERSION_DOT)
+ 		dev->hbm_f_dot_supported = 1;
+ 
+ 	/* Notification Event Support */
++	dev->hbm_f_ev_supported = 0;
+ 	if (dev->version.major_version >= HBM_MAJOR_VERSION_EV)
+ 		dev->hbm_f_ev_supported = 1;
+ 
+ 	/* Fixed Address Client Support */
++	dev->hbm_f_fa_supported = 0;
+ 	if (dev->version.major_version >= HBM_MAJOR_VERSION_FA)
+ 		dev->hbm_f_fa_supported = 1;
+ 
+ 	/* OS ver message Support */
++	dev->hbm_f_os_supported = 0;
+ 	if (dev->version.major_version >= HBM_MAJOR_VERSION_OS)
+ 		dev->hbm_f_os_supported = 1;
+ 
+ 	/* DMA Ring Support */
++	dev->hbm_f_dr_supported = 0;
+ 	if (dev->version.major_version > HBM_MAJOR_VERSION_DR ||
+ 	    (dev->version.major_version == HBM_MAJOR_VERSION_DR &&
+ 	     dev->version.minor_version >= HBM_MINOR_VERSION_DR))
 
 
