@@ -2,33 +2,38 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67D70C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 10:57:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABAD4C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 10:58:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B09021900
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 10:57:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C5F021900
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 10:58:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728108AbfCVK5a (ORCPT
+        id S1728123AbfCVK6y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 06:57:30 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43974 "EHLO mx1.suse.de"
+        Fri, 22 Mar 2019 06:58:54 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44170 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726667AbfCVK5a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 06:57:30 -0400
+        id S1727915AbfCVK6x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 06:58:53 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 3B0ABAD0C;
-        Fri, 22 Mar 2019 10:57:28 +0000 (UTC)
-Date:   Fri, 22 Mar 2019 11:57:28 +0100
-Message-ID: <s5h7ecrb2hz.wl-tiwai@suse.de>
+        by mx1.suse.de (Postfix) with ESMTP id B0D6BAC89;
+        Fri, 22 Mar 2019 10:58:52 +0000 (UTC)
+Date:   Fri, 22 Mar 2019 11:58:52 +0100
+Message-ID: <s5h5zsbb2fn.wl-tiwai@suse.de>
 From:   Takashi Iwai <tiwai@suse.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] sound fixes for 5.1-rc2
+To:     "Jian-Hong Pan" <jian-hong@endlessm.com>
+Cc:     <alsa-devel@alsa-project.org>, "Chris Chiu" <chiu@endlessm.com>,
+        "Daniel Drake" <drake@endlessm.com>, <linux@endlessm.com>,
+        "Kailang Yang" <kailang@realtek.com>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/3] ALSA: hda/realtek: Enable ASUS X441MB and X705FD headset MIC with ALC256
+In-Reply-To: <20190322033719.10793-1-jian-hong@endlessm.com>
+References: <20190322033719.10793-1-jian-hong@endlessm.com>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
  FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
  (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
@@ -39,294 +44,17 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+On Fri, 22 Mar 2019 04:37:18 +0100,
+Jian-Hong Pan wrote:
+> 
+> The ASUS laptop X441MB and X705FD with ALC256 cannot detect the headset
+> MIC until ALC256_FIXUP_ASUS_MIC_NO_PRESENCE quirk applied.
+> 
+> Signed-off-by: Chris Chiu <chiu@endlessm.com>
+> Signed-off-by: Daniel Drake <drake@endlessm.com>
+> Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
 
-please pull sound fixes for v5.1-rc2 from:
+Applied, thanks.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git tags/sound-5.1-rc2
 
-The topmost commit is 667a8f73753908c4d0171e52b71774f9be5d6713
-
-----------------------------------------------------------------
-
-sound fixes for 5.1-rc2
-
-The only significant change is the regression fixes for the jack
-detection at resume on HD-audio, while others are all small or
-trivial fixes like the coverage of missing error code or usual
-HD-audio quirk.
-
-----------------------------------------------------------------
-
-Colin Ian King (1):
-      ALSA: opl3: fix mismatch between snd_opl3_drum_switch definition and declaration
-
-Hui Wang (2):
-      ALSA: hda - Don't trigger jackpoll_work in azx_resume
-      ALSA: hda - Enforces runtime_resume after S3 and S4 for each codec
-
-Jaroslav Kysela (1):
-      ALSA: hda - add Lenovo IdeaCentre B550 to the power_save_blacklist
-
-Jian-Hong Pan (1):
-      ALSA: hda/realtek: Enable headset MIC of Acer AIO with ALC286
-
-Kangjie Lu (2):
-      ALSA: echoaudio: add a check for ioremap_nocache
-      ALSA: sb8: add a check for request_region
-
-Takashi Sakamoto (1):
-      ALSA: firewire-motu: use 'version' field of unit directory to identify model
-
----
- sound/drivers/opl3/opl3_voice.h |  2 +-
- sound/firewire/motu/motu.c      | 20 ++++++++++----------
- sound/isa/sb/sb8.c              |  4 ++++
- sound/pci/echoaudio/echoaudio.c |  5 +++++
- sound/pci/hda/hda_codec.c       | 20 +++++++++++++++++---
- sound/pci/hda/hda_intel.c       | 14 ++++++++------
- sound/pci/hda/patch_realtek.c   | 17 ++++++++++++++---
- 7 files changed, 59 insertions(+), 23 deletions(-)
-
-diff --git a/sound/drivers/opl3/opl3_voice.h b/sound/drivers/opl3/opl3_voice.h
-index 5b02bd49fde4..4e4ecc21760b 100644
---- a/sound/drivers/opl3/opl3_voice.h
-+++ b/sound/drivers/opl3/opl3_voice.h
-@@ -41,7 +41,7 @@ void snd_opl3_timer_func(struct timer_list *t);
- 
- /* Prototypes for opl3_drums.c */
- void snd_opl3_load_drums(struct snd_opl3 *opl3);
--void snd_opl3_drum_switch(struct snd_opl3 *opl3, int note, int on_off, int vel, struct snd_midi_channel *chan);
-+void snd_opl3_drum_switch(struct snd_opl3 *opl3, int note, int vel, int on_off, struct snd_midi_channel *chan);
- 
- /* Prototypes for opl3_oss.c */
- #if IS_ENABLED(CONFIG_SND_SEQUENCER_OSS)
-diff --git a/sound/firewire/motu/motu.c b/sound/firewire/motu/motu.c
-index 220e61926ea4..513291ba0ab0 100644
---- a/sound/firewire/motu/motu.c
-+++ b/sound/firewire/motu/motu.c
-@@ -36,7 +36,7 @@ static void name_card(struct snd_motu *motu)
- 	fw_csr_iterator_init(&it, motu->unit->directory);
- 	while (fw_csr_iterator_next(&it, &key, &val)) {
- 		switch (key) {
--		case CSR_VERSION:
-+		case CSR_MODEL:
- 			version = val;
- 			break;
- 		}
-@@ -46,7 +46,7 @@ static void name_card(struct snd_motu *motu)
- 	strcpy(motu->card->shortname, motu->spec->name);
- 	strcpy(motu->card->mixername, motu->spec->name);
- 	snprintf(motu->card->longname, sizeof(motu->card->longname),
--		 "MOTU %s (version:%d), GUID %08x%08x at %s, S%d",
-+		 "MOTU %s (version:%06x), GUID %08x%08x at %s, S%d",
- 		 motu->spec->name, version,
- 		 fw_dev->config_rom[3], fw_dev->config_rom[4],
- 		 dev_name(&motu->unit->device), 100 << fw_dev->max_speed);
-@@ -237,20 +237,20 @@ static const struct snd_motu_spec motu_audio_express = {
- #define SND_MOTU_DEV_ENTRY(model, data)			\
- {							\
- 	.match_flags	= IEEE1394_MATCH_VENDOR_ID |	\
--			  IEEE1394_MATCH_MODEL_ID |	\
--			  IEEE1394_MATCH_SPECIFIER_ID,	\
-+			  IEEE1394_MATCH_SPECIFIER_ID |	\
-+			  IEEE1394_MATCH_VERSION,	\
- 	.vendor_id	= OUI_MOTU,			\
--	.model_id	= model,			\
- 	.specifier_id	= OUI_MOTU,			\
-+	.version	= model,			\
- 	.driver_data	= (kernel_ulong_t)data,		\
- }
- 
- static const struct ieee1394_device_id motu_id_table[] = {
--	SND_MOTU_DEV_ENTRY(0x101800, &motu_828mk2),
--	SND_MOTU_DEV_ENTRY(0x107800, &snd_motu_spec_traveler),
--	SND_MOTU_DEV_ENTRY(0x106800, &motu_828mk3),	/* FireWire only. */
--	SND_MOTU_DEV_ENTRY(0x100800, &motu_828mk3),	/* Hybrid. */
--	SND_MOTU_DEV_ENTRY(0x104800, &motu_audio_express),
-+	SND_MOTU_DEV_ENTRY(0x000003, &motu_828mk2),
-+	SND_MOTU_DEV_ENTRY(0x000009, &snd_motu_spec_traveler),
-+	SND_MOTU_DEV_ENTRY(0x000015, &motu_828mk3),	/* FireWire only. */
-+	SND_MOTU_DEV_ENTRY(0x000035, &motu_828mk3),	/* Hybrid. */
-+	SND_MOTU_DEV_ENTRY(0x000033, &motu_audio_express),
- 	{ }
- };
- MODULE_DEVICE_TABLE(ieee1394, motu_id_table);
-diff --git a/sound/isa/sb/sb8.c b/sound/isa/sb/sb8.c
-index aa2a83eb81a9..dc27a480c2d9 100644
---- a/sound/isa/sb/sb8.c
-+++ b/sound/isa/sb/sb8.c
-@@ -111,6 +111,10 @@ static int snd_sb8_probe(struct device *pdev, unsigned int dev)
- 
- 	/* block the 0x388 port to avoid PnP conflicts */
- 	acard->fm_res = request_region(0x388, 4, "SoundBlaster FM");
-+	if (!acard->fm_res) {
-+		err = -EBUSY;
-+		goto _err;
-+	}
- 
- 	if (port[dev] != SNDRV_AUTO_PORT) {
- 		if ((err = snd_sbdsp_create(card, port[dev], irq[dev],
-diff --git a/sound/pci/echoaudio/echoaudio.c b/sound/pci/echoaudio/echoaudio.c
-index ea876b0b02b9..dc0084dc8550 100644
---- a/sound/pci/echoaudio/echoaudio.c
-+++ b/sound/pci/echoaudio/echoaudio.c
-@@ -1952,6 +1952,11 @@ static int snd_echo_create(struct snd_card *card,
- 	}
- 	chip->dsp_registers = (volatile u32 __iomem *)
- 		ioremap_nocache(chip->dsp_registers_phys, sz);
-+	if (!chip->dsp_registers) {
-+		dev_err(chip->card->dev, "ioremap failed\n");
-+		snd_echo_free(chip);
-+		return -ENOMEM;
-+	}
- 
- 	if (request_irq(pci->irq, snd_echo_interrupt, IRQF_SHARED,
- 			KBUILD_MODNAME, chip)) {
-diff --git a/sound/pci/hda/hda_codec.c b/sound/pci/hda/hda_codec.c
-index 5f2005098a60..ec0b8595eb4d 100644
---- a/sound/pci/hda/hda_codec.c
-+++ b/sound/pci/hda/hda_codec.c
-@@ -2939,6 +2939,20 @@ static int hda_codec_runtime_resume(struct device *dev)
- #endif /* CONFIG_PM */
- 
- #ifdef CONFIG_PM_SLEEP
-+static int hda_codec_force_resume(struct device *dev)
-+{
-+	int ret;
-+
-+	/* The get/put pair below enforces the runtime resume even if the
-+	 * device hasn't been used at suspend time.  This trick is needed to
-+	 * update the jack state change during the sleep.
-+	 */
-+	pm_runtime_get_noresume(dev);
-+	ret = pm_runtime_force_resume(dev);
-+	pm_runtime_put(dev);
-+	return ret;
-+}
-+
- static int hda_codec_pm_suspend(struct device *dev)
- {
- 	dev->power.power_state = PMSG_SUSPEND;
-@@ -2948,7 +2962,7 @@ static int hda_codec_pm_suspend(struct device *dev)
- static int hda_codec_pm_resume(struct device *dev)
- {
- 	dev->power.power_state = PMSG_RESUME;
--	return pm_runtime_force_resume(dev);
-+	return hda_codec_force_resume(dev);
- }
- 
- static int hda_codec_pm_freeze(struct device *dev)
-@@ -2960,13 +2974,13 @@ static int hda_codec_pm_freeze(struct device *dev)
- static int hda_codec_pm_thaw(struct device *dev)
- {
- 	dev->power.power_state = PMSG_THAW;
--	return pm_runtime_force_resume(dev);
-+	return hda_codec_force_resume(dev);
- }
- 
- static int hda_codec_pm_restore(struct device *dev)
- {
- 	dev->power.power_state = PMSG_RESTORE;
--	return pm_runtime_force_resume(dev);
-+	return hda_codec_force_resume(dev);
- }
- #endif /* CONFIG_PM_SLEEP */
- 
-diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
-index e5c49003e75f..ece256a3b48f 100644
---- a/sound/pci/hda/hda_intel.c
-+++ b/sound/pci/hda/hda_intel.c
-@@ -947,7 +947,7 @@ static void __azx_runtime_suspend(struct azx *chip)
- 	display_power(chip, false);
- }
- 
--static void __azx_runtime_resume(struct azx *chip)
-+static void __azx_runtime_resume(struct azx *chip, bool from_rt)
- {
- 	struct hda_intel *hda = container_of(chip, struct hda_intel, chip);
- 	struct hdac_bus *bus = azx_bus(chip);
-@@ -964,7 +964,7 @@ static void __azx_runtime_resume(struct azx *chip)
- 	azx_init_pci(chip);
- 	hda_intel_init_chip(chip, true);
- 
--	if (status) {
-+	if (status && from_rt) {
- 		list_for_each_codec(codec, &chip->bus)
- 			if (status & (1 << codec->addr))
- 				schedule_delayed_work(&codec->jackpoll_work,
-@@ -1016,7 +1016,7 @@ static int azx_resume(struct device *dev)
- 			chip->msi = 0;
- 	if (azx_acquire_irq(chip, 1) < 0)
- 		return -EIO;
--	__azx_runtime_resume(chip);
-+	__azx_runtime_resume(chip, false);
- 	snd_power_change_state(card, SNDRV_CTL_POWER_D0);
- 
- 	trace_azx_resume(chip);
-@@ -1081,7 +1081,7 @@ static int azx_runtime_resume(struct device *dev)
- 	chip = card->private_data;
- 	if (!azx_has_pm_runtime(chip))
- 		return 0;
--	__azx_runtime_resume(chip);
-+	__azx_runtime_resume(chip, true);
- 
- 	/* disable controller Wake Up event*/
- 	azx_writew(chip, WAKEEN, azx_readw(chip, WAKEEN) &
-@@ -2144,10 +2144,12 @@ static struct snd_pci_quirk power_save_blacklist[] = {
- 	SND_PCI_QUIRK(0x8086, 0x2057, "Intel NUC5i7RYB", 0),
- 	/* https://bugzilla.redhat.com/show_bug.cgi?id=1520902 */
- 	SND_PCI_QUIRK(0x8086, 0x2068, "Intel NUC7i3BNB", 0),
--	/* https://bugzilla.redhat.com/show_bug.cgi?id=1572975 */
--	SND_PCI_QUIRK(0x17aa, 0x36a7, "Lenovo C50 All in one", 0),
- 	/* https://bugzilla.kernel.org/show_bug.cgi?id=198611 */
- 	SND_PCI_QUIRK(0x17aa, 0x2227, "Lenovo X1 Carbon 3rd Gen", 0),
-+	/* https://bugzilla.redhat.com/show_bug.cgi?id=1689623 */
-+	SND_PCI_QUIRK(0x17aa, 0x367b, "Lenovo IdeaCentre B550", 0),
-+	/* https://bugzilla.redhat.com/show_bug.cgi?id=1572975 */
-+	SND_PCI_QUIRK(0x17aa, 0x36a7, "Lenovo C50 All in one", 0),
- 	{}
- };
- #endif /* CONFIG_PM */
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index 384719d5c44e..191830d4fa40 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -5687,6 +5687,7 @@ enum {
- 	ALC225_FIXUP_DELL_WYSE_AIO_MIC_NO_PRESENCE,
- 	ALC225_FIXUP_WYSE_AUTO_MUTE,
- 	ALC225_FIXUP_WYSE_DISABLE_MIC_VREF,
-+	ALC286_FIXUP_ACER_AIO_HEADSET_MIC,
- };
- 
- static const struct hda_fixup alc269_fixups[] = {
-@@ -6685,6 +6686,16 @@ static const struct hda_fixup alc269_fixups[] = {
- 		.chained = true,
- 		.chain_id = ALC269_FIXUP_HEADSET_MODE_NO_HP_MIC
- 	},
-+	[ALC286_FIXUP_ACER_AIO_HEADSET_MIC] = {
-+		.type = HDA_FIXUP_VERBS,
-+		.v.verbs = (const struct hda_verb[]) {
-+			{ 0x20, AC_VERB_SET_COEF_INDEX, 0x4f },
-+			{ 0x20, AC_VERB_SET_PROC_COEF, 0x5029 },
-+			{ }
-+		},
-+		.chained = true,
-+		.chain_id = ALC286_FIXUP_ACER_AIO_MIC_NO_PRESENCE
-+	},
- };
- 
- static const struct snd_pci_quirk alc269_fixup_tbl[] = {
-@@ -6701,9 +6712,9 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x1025, 0x079b, "Acer Aspire V5-573G", ALC282_FIXUP_ASPIRE_V5_PINS),
- 	SND_PCI_QUIRK(0x1025, 0x102b, "Acer Aspire C24-860", ALC286_FIXUP_ACER_AIO_MIC_NO_PRESENCE),
- 	SND_PCI_QUIRK(0x1025, 0x106d, "Acer Cloudbook 14", ALC283_FIXUP_CHROME_BOOK),
--	SND_PCI_QUIRK(0x1025, 0x128f, "Acer Veriton Z6860G", ALC286_FIXUP_ACER_AIO_MIC_NO_PRESENCE),
--	SND_PCI_QUIRK(0x1025, 0x1290, "Acer Veriton Z4860G", ALC286_FIXUP_ACER_AIO_MIC_NO_PRESENCE),
--	SND_PCI_QUIRK(0x1025, 0x1291, "Acer Veriton Z4660G", ALC286_FIXUP_ACER_AIO_MIC_NO_PRESENCE),
-+	SND_PCI_QUIRK(0x1025, 0x128f, "Acer Veriton Z6860G", ALC286_FIXUP_ACER_AIO_HEADSET_MIC),
-+	SND_PCI_QUIRK(0x1025, 0x1290, "Acer Veriton Z4860G", ALC286_FIXUP_ACER_AIO_HEADSET_MIC),
-+	SND_PCI_QUIRK(0x1025, 0x1291, "Acer Veriton Z4660G", ALC286_FIXUP_ACER_AIO_HEADSET_MIC),
- 	SND_PCI_QUIRK(0x1025, 0x1330, "Acer TravelMate X514-51T", ALC255_FIXUP_ACER_HEADSET_MIC),
- 	SND_PCI_QUIRK(0x1028, 0x0470, "Dell M101z", ALC269_FIXUP_DELL_M101Z),
- 	SND_PCI_QUIRK(0x1028, 0x054b, "Dell XPS one 2710", ALC275_FIXUP_DELL_XPS),
+Takashi
