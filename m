@@ -2,107 +2,117 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B57EAC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 08:09:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6373DC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 08:10:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FA292083D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 08:09:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C2922075E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 08:10:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="tAJMX/1t"
+	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="Jw4IxBQ9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727780AbfCVIJK (ORCPT
+        id S1727503AbfCVIKb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 04:09:10 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:9710 "EHLO pegase1.c-s.fr"
+        Fri, 22 Mar 2019 04:10:31 -0400
+Received: from frisell.zx2c4.com ([192.95.5.64]:47281 "EHLO frisell.zx2c4.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726350AbfCVIIm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 04:08:42 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 44Qbrm1B3pz9v9vL;
-        Fri, 22 Mar 2019 09:08:40 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=tAJMX/1t; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id J_EDFwehDTbV; Fri, 22 Mar 2019 09:08:40 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 44Qbrm04Vpz9v9vG;
-        Fri, 22 Mar 2019 09:08:40 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1553242120; bh=vuX9mjDqG9V5hTI4EOw+h7yoI6fzAlRXWPPWa05ZC2M=;
-        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=tAJMX/1tKKfQOh0G5X9lWosgLupVLMJzOtgOkPwZxmwuCLhF2+rOW8ZkLNfjEuaM9
-         sesuovY46BGvXn1BeLCMKR5daYyLQWkf03l+uUMRUyG5/xPH+ZAy8JvCNX4Nb6waBa
-         DcmNzSzixpqidmIUau/85NFpi9wKgfpqJyQCZyMY=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id EDF5B8B845;
-        Fri, 22 Mar 2019 09:08:40 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 2r5_HJ1yyVDQ; Fri, 22 Mar 2019 09:08:40 +0100 (CET)
-Received: from po16846vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.231.2])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id D3A958B844;
-        Fri, 22 Mar 2019 09:08:40 +0100 (CET)
-Received: by po16846vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id C99C46CD85; Fri, 22 Mar 2019 08:08:40 +0000 (UTC)
-Message-Id: <2d9fe7eac16d51000747648b5f84a58ef258633e.1553242059.git.christophe.leroy@c-s.fr>
-In-Reply-To: <a2ac33258063682558fe0cac8eedcbd28aa4a141.1553242059.git.christophe.leroy@c-s.fr>
-References: <a2ac33258063682558fe0cac8eedcbd28aa4a141.1553242059.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH 2/7] powerpc/mm: define an empty mm_iommu_init()
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Fri, 22 Mar 2019 08:08:40 +0000 (UTC)
+        id S1726350AbfCVIKb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 04:10:31 -0400
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id eeaa3cac;
+        Fri, 22 Mar 2019 07:48:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
+        :references:in-reply-to:from:date:message-id:subject:to:cc
+        :content-type; s=mail; bh=KP723Abz1m33mPHiMSHCHIDYsfM=; b=Jw4IxB
+        Q9dd3oEsjnHdFqGeMhgTyZs910egFa0EuOm3fNbeAce/m6EUpcyGvUe7KiX9dYYy
+        Q80N5SqshnX4+GOHulAcOOP6GyR2s/V2Q/XBon1azv8Iwz4Hv1c6aCTj7WNLOn0d
+        SDYe2qwcNcb+ho8FxjNzTO/QT1ojJYDV+SYTlaVN2acyDy2SSy9rJJ2qP2xrTI/G
+        7QVQ4qRUFvpmGllXkxKzOpUCU5GnEB9DHkjiqhG+cEzAhITit6nryhHzBjETZzAj
+        0DL/15s830k88O7x/JDUVGEn8D5XVQDtGj2dLsElnR+IGyI8yNeEsA2fYWzAPoN7
+        LfcxiwwKhQzYvJpw==
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 2c9b8263 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
+        Fri, 22 Mar 2019 07:48:44 +0000 (UTC)
+Received: by mail-ot1-f41.google.com with SMTP id m10so1204952otp.2;
+        Fri, 22 Mar 2019 01:10:27 -0700 (PDT)
+X-Gm-Message-State: APjAAAV6mVjJzhyiK8wLJ0i/I5MA037urXw/nmzKOrukrFAwe5GDhrsq
+        xQYJcq7cPRSW8MW6HFZc4FTvIpFHPEMNnA7hmp4=
+X-Google-Smtp-Source: APXvYqwHZMEh/0Ssq1v3l9grxyESzJUlqf/Xw3FwcrcuEzrgpKEelSS2MVzde+uXozf7CUF6UDkepkgmsyGhcpuP5z8=
+X-Received: by 2002:a9d:62c8:: with SMTP id z8mr5706217otk.144.1553242226947;
+ Fri, 22 Mar 2019 01:10:26 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190322062740.nrwfx2rvmt7lzotj@gondor.apana.org.au> <CAKv+Gu_mgyzqUCeb+wke--8Gn8YbjOb8jyrSgFr3-tcNP8ccEQ@mail.gmail.com>
+In-Reply-To: <CAKv+Gu_mgyzqUCeb+wke--8Gn8YbjOb8jyrSgFr3-tcNP8ccEQ@mail.gmail.com>
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date:   Fri, 22 Mar 2019 02:10:15 -0600
+X-Gmail-Original-Message-ID: <CAHmME9rWpTzxTCjG3ynyNwgxndW3DP5+r9NmLX2AMfp1s9vB-g@mail.gmail.com>
+Message-ID: <CAHmME9rWpTzxTCjG3ynyNwgxndW3DP5+r9NmLX2AMfp1s9vB-g@mail.gmail.com>
+Subject: Re: [PATCH 0/17] Add zinc using existing algorithm implementations
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        linux-fscrypt@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Paul Crowley <paulcrowley@google.com>,
+        Greg Kaiser <gkaiser@google.com>,
+        Samuel Neves <samuel.c.p.neves@gmail.com>,
+        Tomer Ashur <tomer.ashur@esat.kuleuven.be>,
+        Martin Willi <martin@strongswan.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To avoid ifdefs, define a empty static inline mm_iommu_init() function
-when CONFIG_SPAPR_TCE_IOMMU is not selected.
+On Fri, Mar 22, 2019 at 1:56 AM Ard Biesheuvel
+<ard.biesheuvel@linaro.org> wrote:
+> that implement it, the reluctance of Jason to work with the community
+> to fix the issues that he identified in the crypto API means that
+> WireGuard will not be able to use these, and is restricted to
+> synchronous software implementations.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
----
- arch/powerpc/include/asm/mmu_context.h | 1 +
- arch/powerpc/kernel/setup-common.c     | 2 --
- 2 files changed, 1 insertion(+), 2 deletions(-)
+There's no reluctance to work with the community. I'm pretty deeply
+committed to this, as evidenced by the multitudes of patch
+submissions, discussions, and popping around from conference to
+conference discussing with folks face to face.
 
-diff --git a/arch/powerpc/include/asm/mmu_context.h b/arch/powerpc/include/asm/mmu_context.h
-index 6ee8195a2ffb..95b93ce428b7 100644
---- a/arch/powerpc/include/asm/mmu_context.h
-+++ b/arch/powerpc/include/asm/mmu_context.h
-@@ -52,6 +52,7 @@ static inline bool mm_iommu_is_devmem(struct mm_struct *mm, unsigned long hpa,
- {
- 	return false;
- }
-+static inline void mm_iommu_init(struct mm_struct *mm) { }
- #endif
- extern void switch_slb(struct task_struct *tsk, struct mm_struct *mm);
- extern void set_context(unsigned long id, pgd_t *pgd);
-diff --git a/arch/powerpc/kernel/setup-common.c b/arch/powerpc/kernel/setup-common.c
-index 971f50d99d87..a90e8367ccde 100644
---- a/arch/powerpc/kernel/setup-common.c
-+++ b/arch/powerpc/kernel/setup-common.c
-@@ -956,9 +956,7 @@ void __init setup_arch(char **cmdline_p)
- #endif
- #endif
- 
--#ifdef CONFIG_SPAPR_TCE_IOMMU
- 	mm_iommu_init(&init_mm);
--#endif
- 	irqstack_early_init();
- 	exc_lvl_early_init();
- 	emergency_stack_init();
--- 
-2.13.3
+> - The way WireGuard uses crypto in the kernel is essentially a
+> layering violation - while we already have an asynchronous API that
+> implements ChaCha20Poly1305 in a way that WireGuard /could/ benefit
+> from, and while we even have support already for async accelerators
+> Saying accelerators will not
+> matter is a bit like saying there are no American soldiers in Iraq.
+> (Note that adding async interfaces to Zinc is not the right way to
+> deal with this IMO)
 
+Geopolitics aside, as explained over and over, the point of Zinc is to
+just get down simple software function calls, for instances where
+async accelerators aren't available. I consider smushing it all
+together to be the "layering violation".
+
+> - I don't think Zinc changes should go through Greg's tree and have
+> separate maintainers
+
+As I've mentioned before, I'm fine with merges going whichever route
+is best for merges. If Herbert thinks it'd be useful to send things in
+that direction and would reduce clashes and such, then that's fine
+with me.
+
+>  in fact, I am a bit concerned about the fact
+> that, after the last Zinc/WG submission in October, Jason has not
+> really interacted
+
+Such as... https://www.youtube.com/watch?v=CejbCQ5wS7Q ? November is
+after October.
+
+Anyway, I thought it good advice to not post v9 too swiftly after
+plumbers, letting things calm a bit and focusing on other improvements
+in Zinc in the meanwhile. I've certainly been around.
+
+Looks like Herbert posting this might erupt another contentious thread
+of bikeshedding and argument, what a bummer.
