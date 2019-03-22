@@ -2,101 +2,109 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44181C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 05:37:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A16CFC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 05:54:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05D08218FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 05:37:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553233068;
-	bh=vEj6MDvfvi5+o7E9dbvy4Ex3YdChPz9jwzNJi/OEplo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qG8OnIe93eoDxR9gkdLdcIlROfliVOMIGNJqw6exn6FgKwT+f6Mqf7R3tIIKVbN4d
-	 AC7FSb95+uXec1mVAickd6OU+lC2qt+BQFuZHLCEgiEnPzy8I6n35ZuJOQmIGNdK7T
-	 Kfu98AYY7Xgqv9K+VrXXM61vJ0kKlQGR/8HJh60s=
+	by mail.kernel.org (Postfix) with ESMTP id 799532082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 05:54:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727745AbfCVFhq (ORCPT
+        id S1727681AbfCVFyd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 01:37:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46248 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726162AbfCVFhq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 01:37:46 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EEC1A218B0;
-        Fri, 22 Mar 2019 05:37:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553233065;
-        bh=vEj6MDvfvi5+o7E9dbvy4Ex3YdChPz9jwzNJi/OEplo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=B2qgywxH3J5axp3waQgKMyBU7NKwGKLtN24aR0dYqoKZfqYfE7JaeAwJukAtc3IgD
-         ttiuWr7TeNsmNqiTdkDhB0SyI2TAwCZ1D9oxzNtluh7q9J7WY0GYwpGLcrNw0BGWQ2
-         Tc+1uUmTdfg1SiuI84lnQg4DHgwSsrMdYvY8YOHI=
-Date:   Fri, 22 Mar 2019 06:37:42 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jochen Sprickerhof <git@jochen.sprickerhof.de>
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Roger Quadros <rogerq@ti.com>, Felipe Balbi <balbi@kernel.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH] usb: dwc3: Softdep for GBit Ethernet on Odroid XU4
-Message-ID: <20190322053742.GB31708@kroah.com>
-References: <20190321202303.GA1399@vis>
+        Fri, 22 Mar 2019 01:54:33 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59226 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727582AbfCVFyc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 01:54:32 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 5DFF9ABCF;
+        Fri, 22 Mar 2019 05:54:30 +0000 (UTC)
+Subject: Re: [RFC][PATCH] tracing/x86: Save CR2 before tracing irqsoff on
+ error_entry
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Andy Lutomirski <luto@amacapital.net>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        He Zhe <zhe.he@windriver.com>
+References: <20190320221534.165ab87b@oasis.local.home>
+ <20190321083317.GL6058@hirez.programming.kicks-ass.net>
+ <20190321090241.GL6521@hirez.programming.kicks-ass.net>
+ <20190321104517.GM6521@hirez.programming.kicks-ass.net>
+ <20190321093242.4a948198@gandalf.local.home>
+ <20190321172203.GS5996@hirez.programming.kicks-ass.net>
+ <CALCETrXqmjJt7azNoEtxs2eBkDd-vjUAYvrjNh_RD30DAvksBw@mail.gmail.com>
+ <CAHk-=whSeiDXVvhie_bBPqDw99JNJMdTuX8ef82BhNanyo7zRw@mail.gmail.com>
+From:   Juergen Gross <jgross@suse.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jgross@suse.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <176dee6b-983b-c5ca-b212-7cba216f0879@suse.com>
+Date:   Fri, 22 Mar 2019 06:54:27 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190321202303.GA1399@vis>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <CAHk-=whSeiDXVvhie_bBPqDw99JNJMdTuX8ef82BhNanyo7zRw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 21, 2019 at 09:23:03PM +0100, Jochen Sprickerhof wrote:
-> This adds a soft dependency to the dwc3 module to load it after
-> xhci-plat as proposed in:
+On 21/03/2019 19:18, Linus Torvalds wrote:
+> On Thu, Mar 21, 2019 at 11:05 AM Andy Lutomirski <luto@amacapital.net> wrote:
+>>
+>> In the long run, I think the right solution is to rewrite even more of
+>> this mess in C.  We really ought to be able to put the IRQ flag
+>> tracing and the context tracking into C code.
 > 
-> https://marc.info/?l=linux-usb&m=155230272022603&w=2
-> 
-> Old behaviour:
-> 
-> $ lsusb -t
-> /:  Bus 06.Port 1: Dev 1, Class=root_hub, Driver=xhci-hcd/1p, 5000M
-> /:  Bus 05.Port 1: Dev 1, Class=root_hub, Driver=xhci-hcd/1p, 480M
->   |__ Port 1: Dev 2, If 0, Class=Vendor Specific Class, Driver=r8152, 480M
-> 
-> New behaviour:
-> 
-> $ lsusb -t
-> /:  Bus 06.Port 1: Dev 1, Class=root_hub, Driver=xhci-hcd/1p, 5000M
->   |__ Port 1: Dev 2, If 0, Class=Vendor Specific Class, Driver=r8152, 5000M
-> 
-> Tested on Debian unstable using Linux 4.19.29.
-> 
-> Note, this needs a hard reset when coming from an unpatched kernel.
-> 
-> Signed-off-by: Jochen Sprickerhof <git@jochen.sprickerhof.de>
-> ---
-> drivers/usb/dwc3/core.c | 1 +
-> 1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-> index 103807587dc6..9017e4ed9d99 100644
-> --- a/drivers/usb/dwc3/core.c
-> +++ b/drivers/usb/dwc3/core.c
-> @@ -1746,3 +1746,4 @@ MODULE_ALIAS("platform:dwc3");
-> MODULE_AUTHOR("Felipe Balbi <balbi@ti.com>");
-> MODULE_LICENSE("GPL v2");
-> MODULE_DESCRIPTION("DesignWare USB3 DRD Controller Driver");
-> +MODULE_SOFTDEP("pre: xhci_plat_hcd");
+> Tangentially about this long run thing - can we start discussing just
+> dropping PV mode entirely in the long run? Or even not-so-long run?
+
+As Andrew already said: the work is ongoing, but hard.
+
+What I'm planning to do, however, is dropping 32-bit PV code from the
+kernel not too far in the future. This is only a small step, but it is
+a move in the right direction.
 
 
-Your patch is corrupted and can not be applied :(
-
+Juergen
