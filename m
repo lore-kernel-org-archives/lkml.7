@@ -4,109 +4,115 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EACFBC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 08:08:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D5A7C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 08:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA03D204FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 08:08:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A274204FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 08:08:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="whjER/+6"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="SxxSXPj8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727709AbfCVIIs (ORCPT
+        id S1727734AbfCVIIv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 04:08:48 -0400
+        Fri, 22 Mar 2019 04:08:51 -0400
 Received: from pegase1.c-s.fr ([93.17.236.30]:12244 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727681AbfCVIIp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 04:08:45 -0400
+        id S1726066AbfCVIIq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 04:08:46 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 44Qbrq2NVtz9v9vV;
-        Fri, 22 Mar 2019 09:08:43 +0100 (CET)
+        by localhost (Postfix) with ESMTP id 44Qbrr3Rf9z9vCWG;
+        Fri, 22 Mar 2019 09:08:44 +0100 (CET)
 Authentication-Results: localhost; dkim=pass
         reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=whjER/+6; dkim-adsp=pass;
+        header.d=c-s.fr header.i=@c-s.fr header.b=SxxSXPj8; dkim-adsp=pass;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id eaWPTpchCSG5; Fri, 22 Mar 2019 09:08:43 +0100 (CET)
+        with ESMTP id 9Z9pn60CMHs0; Fri, 22 Mar 2019 09:08:44 +0100 (CET)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 44Qbrq1CwNz9v9vG;
-        Fri, 22 Mar 2019 09:08:43 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1553242123; bh=qbdxgb1HYWPobWcLuIAD+ZD4jJ/zVC4av8h4SDf/6DM=;
-        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=whjER/+637OTJ22ms0B1Wx5Q9DLdpSLa2G5GoDFUFRVo3sSJil5yf699PTwJIE4CX
-         BkUMLiE6Sj2sMoBq4KiE2ToV/A38oBwGXw4x8w5XEqYJS7uzvXcJZg9Crv6Vjiemb6
-         hi2ufc8tFtHMtNqbhUXNGhQSb3mfkjKVpXGFfZZE=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 1C7658B845;
+        by pegase1.c-s.fr (Postfix) with ESMTP id 44Qbrr2Dyzz9v9vG;
         Fri, 22 Mar 2019 09:08:44 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1553242124; bh=clISJmG2l3/ZkCVole2S2gui9mKGtnTXA7Zm6ytBbNw=;
+        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
+        b=SxxSXPj8CWxsFCGtaGYHQ5u8Hax2Ec5WM6xFZd5i5YgZTgT2MrbV+XjQaLjyXkxfN
+         ZRYsvt0M3e+DcSXXMT/g9nqYZ32n9kCqx4iOJvaWKMuSuTarC31h9hVDcwFXqg4FNh
+         DjF+M/GcznQ5LCFOHSFREhZulkJhO2o8D7dfktJY=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 2BD0D8B845;
+        Fri, 22 Mar 2019 09:08:45 +0100 (CET)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id fA2g55RPylpa; Fri, 22 Mar 2019 09:08:44 +0100 (CET)
+        with ESMTP id BIK7wei4BPRL; Fri, 22 Mar 2019 09:08:45 +0100 (CET)
 Received: from po16846vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.231.2])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id F16188B844;
-        Fri, 22 Mar 2019 09:08:43 +0100 (CET)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 12CC08B844;
+        Fri, 22 Mar 2019 09:08:45 +0100 (CET)
 Received: by po16846vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id DD35D6CD85; Fri, 22 Mar 2019 08:08:43 +0000 (UTC)
-Message-Id: <b5e5ca3f472ba46a29d121da21fd381ca8c5be87.1553242059.git.christophe.leroy@c-s.fr>
+        id EE1086CD85; Fri, 22 Mar 2019 08:08:44 +0000 (UTC)
+Message-Id: <eaa134f9523f3cec1fcb9ab22c447111b36a9277.1553242059.git.christophe.leroy@c-s.fr>
 In-Reply-To: <a2ac33258063682558fe0cac8eedcbd28aa4a141.1553242059.git.christophe.leroy@c-s.fr>
 References: <a2ac33258063682558fe0cac8eedcbd28aa4a141.1553242059.git.christophe.leroy@c-s.fr>
 From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH 5/7] powerpc/setup: cleanup ifdef mess in
- check_cache_coherency()
+Subject: [PATCH 6/7] powerpc/setup: cleanup the #ifdef CONFIG_TAU block
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Fri, 22 Mar 2019 08:08:43 +0000 (UTC)
+Date:   Fri, 22 Mar 2019 08:08:44 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use IS_ENABLED() instead of #ifdefs
+Use cpu_has_feature() instead of opencoding
+
+Use IS_ENABLED() instead of #ifdef for CONFIG_TAU_AVERAGE
 
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- arch/powerpc/kernel/setup-common.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+ arch/powerpc/kernel/setup-common.c | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
 diff --git a/arch/powerpc/kernel/setup-common.c b/arch/powerpc/kernel/setup-common.c
-index fa90585760c0..95d545e94c28 100644
+index 95d545e94c28..b6c86287085a 100644
 --- a/arch/powerpc/kernel/setup-common.c
 +++ b/arch/powerpc/kernel/setup-common.c
-@@ -734,23 +734,19 @@ void __init setup_panic(void)
-  * BUG() in that case.
-  */
+@@ -254,18 +254,18 @@ static int show_cpuinfo(struct seq_file *m, void *v)
+ 	seq_printf(m, "\n");
  
--#ifdef CONFIG_NOT_COHERENT_CACHE
--#define KERNEL_COHERENCY	0
+ #ifdef CONFIG_TAU
+-	if (cur_cpu_spec->cpu_features & CPU_FTR_TAU) {
+-#ifdef CONFIG_TAU_AVERAGE
+-		/* more straightforward, but potentially misleading */
+-		seq_printf(m,  "temperature \t: %u C (uncalibrated)\n",
+-			   cpu_temp(cpu_id));
 -#else
--#define KERNEL_COHERENCY	1
+-		/* show the actual temp sensor range */
+-		u32 temp;
+-		temp = cpu_temp_both(cpu_id);
+-		seq_printf(m, "temperature \t: %u-%u C (uncalibrated)\n",
+-			   temp & 0xff, temp >> 16);
 -#endif
-+#define KERNEL_COHERENCY	(!IS_ENABLED(CONFIG_NOT_COHERENT_CACHE))
++	if (cpu_has_feature(CPU_FTR_TAU)) {
++		if (IS_ENABLED(CONFIG_TAU_AVERAGE)) {
++			/* more straightforward, but potentially misleading */
++			seq_printf(m,  "temperature \t: %u C (uncalibrated)\n",
++				   cpu_temp(cpu_id));
++		} else {
++			/* show the actual temp sensor range */
++			u32 temp;
++			temp = cpu_temp_both(cpu_id);
++			seq_printf(m, "temperature \t: %u-%u C (uncalibrated)\n",
++				   temp & 0xff, temp >> 16);
++		}
+ 	}
+ #endif /* CONFIG_TAU */
  
- static int __init check_cache_coherency(void)
- {
- 	struct device_node *np;
- 	const void *prop;
--	int devtree_coherency;
-+	bool devtree_coherency;
- 
- 	np = of_find_node_by_path("/");
- 	prop = of_get_property(np, "coherency-off", NULL);
- 	of_node_put(np);
- 
--	devtree_coherency = prop ? 0 : 1;
-+	devtree_coherency = prop ? false : true;
- 
- 	if (devtree_coherency != KERNEL_COHERENCY) {
- 		printk(KERN_ERR
 -- 
 2.13.3
 
