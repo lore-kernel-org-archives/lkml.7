@@ -7,52 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B266AC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:49:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00067C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:49:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82EAE20850
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:49:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C50A82082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:49:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255351;
-	bh=c3xVFY/ptbpShKRftobiukfgaRTmEYMRV238NpSGGew=;
+	s=default; t=1553255354;
+	bh=bLTgprw7XxkCeCGfZSMM1Ri67rYK3+u4ryvesb7xiXs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tX6Vuaars45bj2+WUd6iC4xoXNwYuwrQAz/RrOVmLd9cqKuXFXBzVPJrdjBfeHV1I
-	 dV9fpSbPaoiGRdbNrEszQVSbi/Hvks5sIWaB51PubobLPUkxmXyJ/rVvlrvRk3WJnw
-	 Q55WgJWuN/5TzpB+rSF4UB1j8RmfVjgtGH3l95QA=
+	b=n70nayycagaSWrfOZAME5r0tknXF9XFkH46bmZiq+gBd7TCO/0n7KtKrj4QqXVsq3
+	 5M1172oLECp0rtbaUR1owAw60nTA9pWAXTDFrknzHD6CtASMSPMdRLGdltgSP/dv8z
+	 2LMfqlRPlcEKOq8j/OltAxgwilI/HfzEDLZk+14I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732420AbfCVLtK (ORCPT
+        id S1732429AbfCVLtN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:49:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52702 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:49:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52760 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732038AbfCVLtI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:49:08 -0400
+        id S1732038AbfCVLtL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:49:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DA522082C;
-        Fri, 22 Mar 2019 11:49:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68E4E20693;
+        Fri, 22 Mar 2019 11:49:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255347;
-        bh=c3xVFY/ptbpShKRftobiukfgaRTmEYMRV238NpSGGew=;
+        s=default; t=1553255349;
+        bh=bLTgprw7XxkCeCGfZSMM1Ri67rYK3+u4ryvesb7xiXs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bOggZClA1luh/YQKlMRlAXDvGTjSX5Fb3RnmRocrpGkywXu040ZiSd15Kojz6/6+S
-         ahSwl80O327d2l/EfvPeWndL3Jqoj/kO4uIYFpRBslKMOn8Q2K7mfqxbZqFBm6pJfS
-         cKyAnhdhDYYQA41p8gj764sr1Yj8Zr7zoFajER2E=
+        b=R+gFEx9rbnqy5FOSpiMPC8AL1y3zP9QJtDxkeuc2uQovW/ECMiDg4bkC4ulylv9cQ
+         s2euGjU8oo65iegNkkn5CHcK25202zY0f5qL1qr5W+XW2p0NT4vW+oNgdU3hZTghuL
+         SyeWl6ZAtrzK+hBaPi1z+JslHhyi0muklaUh/V5c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Hugh Dickins <hughd@google.com>,
-        Matej Kupljen <matej.kupljen@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jiong Wang <jiong.wang@netronome.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 054/183] tmpfs: fix link accounting when a tmpfile is linked in
-Date:   Fri, 22 Mar 2019 12:14:42 +0100
-Message-Id: <20190322111245.626348662@linuxfoundation.org>
+Subject: [PATCH 4.14 063/183] nfp: bpf: fix ALU32 high bits clearance bug
+Date:   Fri, 22 Mar 2019 12:14:51 +0100
+Message-Id: <20190322111246.274415130@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111241.819468003@linuxfoundation.org>
 References: <20190322111241.819468003@linuxfoundation.org>
@@ -71,60 +68,94 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 1062af920c07f5b54cf5060fde3339da6df0cf6b ]
+[ Upstream commit f036ebd9bfbe1e91a3d855e85e05fc5ff156b641 ]
 
-tmpfs has a peculiarity of accounting hard links as if they were
-separate inodes: so that when the number of inodes is limited, as it is
-by default, a user cannot soak up an unlimited amount of unreclaimable
-dcache memory just by repeatedly linking a file.
+NFP BPF JIT compiler is doing a couple of small optimizations when jitting
+ALU imm instructions, some of these optimizations could save code-gen, for
+example:
 
-But when v3.11 added O_TMPFILE, and the ability to use linkat() on the
-fd, we missed accommodating this new case in tmpfs: "df -i" shows that
-an extra "inode" remains accounted after the file is unlinked and the fd
-closed and the actual inode evicted.  If a user repeatedly links
-tmpfiles into a tmpfs, the limit will be hit (ENOSPC) even after they
-are deleted.
+  A & -1 =  A
+  A |  0 =  A
+  A ^  0 =  A
 
-Just skip the extra reservation from shmem_link() in this case: there's
-a sense in which this first link of a tmpfile is then cheaper than a
-hard link of another file, but the accounting works out, and there's
-still good limiting, so no need to do anything more complicated.
+However, for ALU32, high 32-bit of the 64-bit register should still be
+cleared according to ISA semantics.
 
-Link: http://lkml.kernel.org/r/alpine.LSU.2.11.1902182134370.7035@eggly.anvils
-Fixes: f4e0c30c191 ("allow the temp files created by open() to be linked to")
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Hugh Dickins <hughd@google.com>
-Reported-by: Matej Kupljen <matej.kupljen@gmail.com>
-Acked-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: cd7df56ed3e6 ("nfp: add BPF to NFP code translator")
+Reviewed-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Signed-off-by: Jiong Wang <jiong.wang@netronome.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/shmem.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/netronome/nfp/bpf/jit.c | 17 ++++++-----------
+ 1 file changed, 6 insertions(+), 11 deletions(-)
 
-diff --git a/mm/shmem.c b/mm/shmem.c
-index 6c10f1d92251..9b78c04f532b 100644
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -3102,10 +3102,14 @@ static int shmem_link(struct dentry *old_dentry, struct inode *dir, struct dentr
- 	 * No ordinary (disk based) filesystem counts links as inodes;
- 	 * but each new link needs a new dentry, pinning lowmem, and
- 	 * tmpfs dentries cannot be pruned until they are unlinked.
-+	 * But if an O_TMPFILE file is linked into the tmpfs, the
-+	 * first link must skip that, to get the accounting right.
- 	 */
--	ret = shmem_reserve_inode(inode->i_sb);
--	if (ret)
--		goto out;
-+	if (inode->i_nlink) {
-+		ret = shmem_reserve_inode(inode->i_sb);
-+		if (ret)
-+			goto out;
-+	}
+diff --git a/drivers/net/ethernet/netronome/nfp/bpf/jit.c b/drivers/net/ethernet/netronome/nfp/bpf/jit.c
+index 3105ee5bbf8e..c1ffec85817a 100644
+--- a/drivers/net/ethernet/netronome/nfp/bpf/jit.c
++++ b/drivers/net/ethernet/netronome/nfp/bpf/jit.c
+@@ -756,15 +756,10 @@ wrp_alu64_reg(struct nfp_prog *nfp_prog, struct nfp_insn_meta *meta,
  
- 	dir->i_size += BOGO_DIRENT_SIZE;
- 	inode->i_ctime = dir->i_ctime = dir->i_mtime = current_time(inode);
+ static int
+ wrp_alu32_imm(struct nfp_prog *nfp_prog, struct nfp_insn_meta *meta,
+-	      enum alu_op alu_op, bool skip)
++	      enum alu_op alu_op)
+ {
+ 	const struct bpf_insn *insn = &meta->insn;
+ 
+-	if (skip) {
+-		meta->skip = true;
+-		return 0;
+-	}
+-
+ 	wrp_alu_imm(nfp_prog, insn->dst_reg * 2, alu_op, insn->imm);
+ 	wrp_immed(nfp_prog, reg_both(insn->dst_reg * 2 + 1), 0);
+ 
+@@ -1017,7 +1012,7 @@ static int xor_reg(struct nfp_prog *nfp_prog, struct nfp_insn_meta *meta)
+ 
+ static int xor_imm(struct nfp_prog *nfp_prog, struct nfp_insn_meta *meta)
+ {
+-	return wrp_alu32_imm(nfp_prog, meta, ALU_OP_XOR, !meta->insn.imm);
++	return wrp_alu32_imm(nfp_prog, meta, ALU_OP_XOR);
+ }
+ 
+ static int and_reg(struct nfp_prog *nfp_prog, struct nfp_insn_meta *meta)
+@@ -1027,7 +1022,7 @@ static int and_reg(struct nfp_prog *nfp_prog, struct nfp_insn_meta *meta)
+ 
+ static int and_imm(struct nfp_prog *nfp_prog, struct nfp_insn_meta *meta)
+ {
+-	return wrp_alu32_imm(nfp_prog, meta, ALU_OP_AND, !~meta->insn.imm);
++	return wrp_alu32_imm(nfp_prog, meta, ALU_OP_AND);
+ }
+ 
+ static int or_reg(struct nfp_prog *nfp_prog, struct nfp_insn_meta *meta)
+@@ -1037,7 +1032,7 @@ static int or_reg(struct nfp_prog *nfp_prog, struct nfp_insn_meta *meta)
+ 
+ static int or_imm(struct nfp_prog *nfp_prog, struct nfp_insn_meta *meta)
+ {
+-	return wrp_alu32_imm(nfp_prog, meta, ALU_OP_OR, !meta->insn.imm);
++	return wrp_alu32_imm(nfp_prog, meta, ALU_OP_OR);
+ }
+ 
+ static int add_reg(struct nfp_prog *nfp_prog, struct nfp_insn_meta *meta)
+@@ -1047,7 +1042,7 @@ static int add_reg(struct nfp_prog *nfp_prog, struct nfp_insn_meta *meta)
+ 
+ static int add_imm(struct nfp_prog *nfp_prog, struct nfp_insn_meta *meta)
+ {
+-	return wrp_alu32_imm(nfp_prog, meta, ALU_OP_ADD, !meta->insn.imm);
++	return wrp_alu32_imm(nfp_prog, meta, ALU_OP_ADD);
+ }
+ 
+ static int sub_reg(struct nfp_prog *nfp_prog, struct nfp_insn_meta *meta)
+@@ -1057,7 +1052,7 @@ static int sub_reg(struct nfp_prog *nfp_prog, struct nfp_insn_meta *meta)
+ 
+ static int sub_imm(struct nfp_prog *nfp_prog, struct nfp_insn_meta *meta)
+ {
+-	return wrp_alu32_imm(nfp_prog, meta, ALU_OP_SUB, !meta->insn.imm);
++	return wrp_alu32_imm(nfp_prog, meta, ALU_OP_SUB);
+ }
+ 
+ static int shl_imm(struct nfp_prog *nfp_prog, struct nfp_insn_meta *meta)
 -- 
 2.19.1
 
