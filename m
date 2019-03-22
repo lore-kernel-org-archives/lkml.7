@@ -3,75 +3,163 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB907C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 03:21:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50C54C10F03
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 03:26:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77445218FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 03:21:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2944F218FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 03:26:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727584AbfCVDVZ (ORCPT
+        id S1727549AbfCVD0E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 23:21:25 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34046 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727495AbfCVDVZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 23:21:25 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6591B4E938;
-        Fri, 22 Mar 2019 03:21:25 +0000 (UTC)
-Received: from t460p.redhat.com (ovpn-118-18.phx2.redhat.com [10.3.118.18])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1B7EA19C5A;
-        Fri, 22 Mar 2019 03:21:21 +0000 (UTC)
-From:   Scott Wood <swood@redhat.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Scott Wood <swood@redhat.com>
-Subject: [PATCH RT 4.19] rcutorture: Fix oops when selecting non-default torture_type
-Date:   Thu, 21 Mar 2019 22:21:21 -0500
-Message-Id: <20190322032121.23948-1-swood@redhat.com>
+        Thu, 21 Mar 2019 23:26:04 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:50338 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727406AbfCVD0E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 23:26:04 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 533A4AED19FE037BC5B1;
+        Fri, 22 Mar 2019 11:26:02 +0800 (CST)
+Received: from [10.151.23.176] (10.151.23.176) by smtp.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server (TLS) id 14.3.408.0; Fri, 22 Mar
+ 2019 11:25:56 +0800
+Subject: Re: [PATCH 1/3] staging: erofs: fix error handling when failed to
+ read compresssed data
+To:     Chao Yu <yuchao0@huawei.com>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <devel@driverdev.osuosl.org>, LKML <linux-kernel@vger.kernel.org>,
+        <linux-erofs@lists.ozlabs.org>, Chao Yu <chao@kernel.org>,
+        Miao Xie <miaoxie@huawei.com>, <weidu.du@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>, <stable@vger.kernel.org>
+References: <20190319135501.28712-1-gaoxiang25@huawei.com>
+From:   Gao Xiang <gaoxiang25@huawei.com>
+Message-ID: <8966fa2c-5357-c472-ebb7-a3f3abcf60e8@huawei.com>
+Date:   Fri, 22 Mar 2019 11:25:31 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.3.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Fri, 22 Mar 2019 03:21:25 +0000 (UTC)
+In-Reply-To: <20190319135501.28712-1-gaoxiang25@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.151.23.176]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-rcu_bh is disabled on PREEMPT_RT via a stub ops that has no name.  Thus,
-if a torture_type other than "rcu" is used, rcu_torture_init() will
-pass NULL to strcmp() when iterating over torture_ops[], and oops.
+ping?
 
-Signed-off-by: Scott Wood <swood@redhat.com>
----
-With this applied to 4.19.25-rt16 and specifying torture_type=sched,
-similar rcutorture failures are seen as with 5.0.3-rt1 (in which standard
-torture_cype=rcu no longer has .extendables=0 and thus stresses similar
-paths).
+Hi Chao,
+could you take some time looking into this series?
 
- kernel/rcu/rcutorture.c | 1 +
- 1 file changed, 1 insertion(+)
+Thanks,
+Gao Xiang
 
-diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
-index 7d2a615601e7..408d03048911 100644
---- a/kernel/rcu/rcutorture.c
-+++ b/kernel/rcu/rcutorture.c
-@@ -479,6 +479,7 @@ static struct rcu_torture_ops rcu_bh_ops = {
- #else
- static struct rcu_torture_ops rcu_bh_ops = {
- 	.ttype		= INVALID_RCU_FLAVOR,
-+	.name		= "rcu_bh"
- };
- #endif
- 
--- 
-2.18.1
-
+On 2019/3/19 21:54, Gao Xiang wrote:
+> Complete read error handling paths for all three kinds of
+> compressed pages:
+> 
+>  1) For cache-managed pages, PG_uptodate will be checked since
+>     read_endio will unlock and SetPageUptodate for these pages;
+> 
+>  2) For inplaced pages, read_endio cannot SetPageUptodate directly
+>     since it should be used to mark the final decompressed data,
+>     PG_error will be set with page locked for IO error instead;
+> 
+>  3) For staging pages, PG_error is used, which is similar to
+>     what we do for inplaced pages.
+> 
+> Fixes: 3883a79abd02 ("staging: erofs: introduce VLE decompression support")
+> Cc: <stable@vger.kernel.org> # 4.19+
+> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+> ---
+> 
+> This series focus on fixing error handling when failed to read
+> compresssed data due to previous incomplete paths.
+> 
+> In addition, the last 2 patches add IO error fault injection
+> for reading paths, which I have used to test the first patch as well.
+> 
+> Thanks,
+> Gao Xiang
+> 
+>  drivers/staging/erofs/unzip_vle.c | 41 ++++++++++++++++++++++++++-------------
+>  1 file changed, 28 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/staging/erofs/unzip_vle.c b/drivers/staging/erofs/unzip_vle.c
+> index 8715bc50e09c..3416d3f10324 100644
+> --- a/drivers/staging/erofs/unzip_vle.c
+> +++ b/drivers/staging/erofs/unzip_vle.c
+> @@ -972,6 +972,7 @@ static int z_erofs_vle_unzip(struct super_block *sb,
+>  	overlapped = false;
+>  	compressed_pages = grp->compressed_pages;
+>  
+> +	err = 0;
+>  	for (i = 0; i < clusterpages; ++i) {
+>  		unsigned int pagenr;
+>  
+> @@ -981,26 +982,39 @@ static int z_erofs_vle_unzip(struct super_block *sb,
+>  		DBG_BUGON(!page);
+>  		DBG_BUGON(!page->mapping);
+>  
+> -		if (z_erofs_is_stagingpage(page))
+> -			continue;
+> +		if (!z_erofs_is_stagingpage(page)) {
+>  #ifdef EROFS_FS_HAS_MANAGED_CACHE
+> -		if (page->mapping == MNGD_MAPPING(sbi)) {
+> -			DBG_BUGON(!PageUptodate(page));
+> -			continue;
+> -		}
+> +			if (page->mapping == MNGD_MAPPING(sbi)) {
+> +				if (unlikely(!PageUptodate(page)))
+> +					err = -EIO;
+> +				continue;
+> +			}
+>  #endif
+>  
+> -		/* only non-head page could be reused as a compressed page */
+> -		pagenr = z_erofs_onlinepage_index(page);
+> +			/*
+> +			 * only if non-head page can be selected
+> +			 * for inplace decompression
+> +			 */
+> +			pagenr = z_erofs_onlinepage_index(page);
+>  
+> -		DBG_BUGON(pagenr >= nr_pages);
+> -		DBG_BUGON(pages[pagenr]);
+> -		++sparsemem_pages;
+> -		pages[pagenr] = page;
+> +			DBG_BUGON(pagenr >= nr_pages);
+> +			DBG_BUGON(pages[pagenr]);
+> +			++sparsemem_pages;
+> +			pages[pagenr] = page;
+> +
+> +			overlapped = true;
+> +		}
+>  
+> -		overlapped = true;
+> +		/* PG_error needs checking for inplaced and staging pages */
+> +		if (unlikely(PageError(page))) {
+> +			DBG_BUGON(PageUptodate(page));
+> +			err = -EIO;
+> +		}
+>  	}
+>  
+> +	if (unlikely(err))
+> +		goto out;
+> +
+>  	llen = (nr_pages << PAGE_SHIFT) - work->pageofs;
+>  
+>  	if (z_erofs_vle_workgrp_fmt(grp) == Z_EROFS_VLE_WORKGRP_FMT_PLAIN) {
+> @@ -1194,6 +1208,7 @@ pickup_page_for_submission(struct z_erofs_vle_workgroup *grp,
+>  	if (page->mapping == mc) {
+>  		WRITE_ONCE(grp->compressed_pages[nr], page);
+>  
+> +		ClearPageError(page);
+>  		if (!PagePrivate(page)) {
+>  			/*
+>  			 * impossible to be !PagePrivate(page) for
+> 
