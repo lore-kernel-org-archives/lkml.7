@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26449C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:56:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18F7BC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:56:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4D2D2082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:56:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE1D621916
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:56:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255781;
-	bh=TX/JhzUaqfI52Xi/VU2Os8h232dL2nIr8lJ/OYPIyKY=;
+	s=default; t=1553255785;
+	bh=Ylw65E9Zkeo0xSHVmxbaMSl6jX6ae9ure4QyrUfn1w4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=niRIu3hkQEQDVvKAAwuEDkmhjVJD/POomju+zyLL9S2RomcsEICwLJEZdfpixaNaT
-	 lgjN+BfF/Z3ukeP5rcd3TTtCDYQN6D+nqpCcxyR6UQQtJWkEOU1sJftir/Vb/+KmKO
-	 3VJS4Mwhr9YYlaKP56guADoLITmz5Pa6uIDrRZxs=
+	b=EBwvVVen21m3iubFf63ZxMOh8tlnZyd8znJZvJou3bG4JlPLyw5HMtWgak7pioEdb
+	 nC/ild3ufRj/bShhYh0ifzQ2evRoBB0y9jQyZ4lzMGLQLMo1aIzMryvXsDDTBcQMFz
+	 Z/oGP7uD80j8SezuckOrPqOXLka2ZsiOkh0eaZdM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387516AbfCVL4T (ORCPT
+        id S2387518AbfCVL4Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:56:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60966 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:56:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387493AbfCVL4Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:56:16 -0400
+        id S1732975AbfCVL4W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:56:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B5342195D;
-        Fri, 22 Mar 2019 11:56:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 539E621916;
+        Fri, 22 Mar 2019 11:56:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255774;
-        bh=TX/JhzUaqfI52Xi/VU2Os8h232dL2nIr8lJ/OYPIyKY=;
+        s=default; t=1553255781;
+        bh=Ylw65E9Zkeo0xSHVmxbaMSl6jX6ae9ure4QyrUfn1w4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Dlpg+EAw5dQJfc89ll4QIaHbJi2vENGdVjXx7oY+f3vFyJ2tw7yyn0gDKD4rYefs+
-         L7obhagK9E1J20R0yRSSoOq1Hh25Kln5ObLEC5VrwQ9d2DKL03CurC/AzpX/GuICSn
-         uqNjaUA8mwLA55sWK3rE2J5AqkjqhxL/P54WQTb0=
+        b=yMjMCOnO61y4MVskMXr1nv63Me9Jj+pCI6M8rcc/0WEDie9KnE1ZEB0D8YJSkEaz8
+         BHgrdtX9mxlSFx1G0iZdUgbru9uZH8zYyOvKC6pZ3XZYHImmhLSkCWywz/xnKo6l+F
+         gaDigpR4ybFF71zRqhxuxNEMP5Yi/96yLLey0qIY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Franck LENORMAND <franck.lenormand@nxp.com>,
-        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
+        stable@vger.kernel.org, Pankaj Gupta <pankaj.gupta@nxp.com>,
+        Arun Pathak <arun.pathak@nxp.com>,
+        Horia Geanta <horia.geanta@nxp.com>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.19 011/280] crypto: caam - fix hash context DMA unmap size
-Date:   Fri, 22 Mar 2019 12:12:44 +0100
-Message-Id: <20190322111306.938271272@linuxfoundation.org>
+Subject: [PATCH 4.19 013/280] crypto: caam - fixed handling of sg list
+Date:   Fri, 22 Mar 2019 12:12:46 +0100
+Message-Id: <20190322111307.054641503@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -67,72 +67,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Franck LENORMAND <franck.lenormand@nxp.com>
+From: Pankaj Gupta <pankaj.gupta@nxp.com>
 
-commit 65055e2108847af5e577cc7ce6bde45ea136d29a upstream.
+commit 42e95d1f10dcf8b18b1d7f52f7068985b3dc5b79 upstream.
 
-When driver started using state->caam_ctxt for storing both running hash
-and final hash, it was not updated to handle different DMA unmap
-lengths.
+when the source sg contains more than 1 fragment and
+destination sg contains 1 fragment, the caam driver
+mishandle the buffers to be sent to caam.
 
-Cc: <stable@vger.kernel.org> # v4.19+
-Fixes: c19650d6ea99 ("crypto: caam - fix DMA mapping of stack memory")
-Signed-off-by: Franck LENORMAND <franck.lenormand@nxp.com>
-Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
+Fixes: f2147b88b2b1 ("crypto: caam - Convert GCM to new AEAD interface")
+Cc: <stable@vger.kernel.org> # 4.2+
+Signed-off-by: Pankaj Gupta <pankaj.gupta@nxp.com>
+Signed-off-by: Arun Pathak <arun.pathak@nxp.com>
+Reviewed-by: Horia Geanta <horia.geanta@nxp.com>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/caam/caamhash.c |    8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/crypto/caam/caamalg.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/crypto/caam/caamhash.c
-+++ b/drivers/crypto/caam/caamhash.c
-@@ -118,6 +118,7 @@ struct caam_hash_ctx {
- struct caam_hash_state {
- 	dma_addr_t buf_dma;
- 	dma_addr_t ctx_dma;
-+	int ctx_dma_len;
- 	u8 buf_0[CAAM_MAX_HASH_BLOCK_SIZE] ____cacheline_aligned;
- 	int buflen_0;
- 	u8 buf_1[CAAM_MAX_HASH_BLOCK_SIZE] ____cacheline_aligned;
-@@ -170,6 +171,7 @@ static inline int map_seq_out_ptr_ctx(u3
- 				      struct caam_hash_state *state,
- 				      int ctx_len)
- {
-+	state->ctx_dma_len = ctx_len;
- 	state->ctx_dma = dma_map_single(jrdev, state->caam_ctx,
- 					ctx_len, DMA_FROM_DEVICE);
- 	if (dma_mapping_error(jrdev, state->ctx_dma)) {
-@@ -223,6 +225,7 @@ static inline int ctx_map_to_sec4_sg(str
- 				     struct caam_hash_state *state, int ctx_len,
- 				     struct sec4_sg_entry *sec4_sg, u32 flag)
- {
-+	state->ctx_dma_len = ctx_len;
- 	state->ctx_dma = dma_map_single(jrdev, state->caam_ctx, ctx_len, flag);
- 	if (dma_mapping_error(jrdev, state->ctx_dma)) {
- 		dev_err(jrdev, "unable to map ctx\n");
-@@ -527,12 +530,10 @@ static inline void ahash_unmap_ctx(struc
- 			struct ahash_edesc *edesc,
- 			struct ahash_request *req, int dst_len, u32 flag)
- {
--	struct crypto_ahash *ahash = crypto_ahash_reqtfm(req);
--	struct caam_hash_ctx *ctx = crypto_ahash_ctx(ahash);
- 	struct caam_hash_state *state = ahash_request_ctx(req);
- 
- 	if (state->ctx_dma) {
--		dma_unmap_single(dev, state->ctx_dma, ctx->ctx_len, flag);
-+		dma_unmap_single(dev, state->ctx_dma, state->ctx_dma_len, flag);
- 		state->ctx_dma = 0;
- 	}
- 	ahash_unmap(dev, edesc, req, dst_len);
-@@ -1505,6 +1506,7 @@ static int ahash_init(struct ahash_reque
- 	state->final = ahash_final_no_ctx;
- 
- 	state->ctx_dma = 0;
-+	state->ctx_dma_len = 0;
- 	state->current_buf = 0;
- 	state->buf_dma = 0;
- 	state->buflen_0 = 0;
+--- a/drivers/crypto/caam/caamalg.c
++++ b/drivers/crypto/caam/caamalg.c
+@@ -1005,6 +1005,7 @@ static void init_aead_job(struct aead_re
+ 	if (unlikely(req->src != req->dst)) {
+ 		if (edesc->dst_nents == 1) {
+ 			dst_dma = sg_dma_address(req->dst);
++			out_options = 0;
+ 		} else {
+ 			dst_dma = edesc->sec4_sg_dma +
+ 				  sec4_sg_index *
 
 
