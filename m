@@ -6,109 +6,116 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C62DC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:18:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35CE2C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:19:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 732DD218FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:18:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F5E6218FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:19:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728416AbfCVOSv (ORCPT
+        id S1728604AbfCVOTO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 10:18:51 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:53973 "EHLO
+        Fri, 22 Mar 2019 10:19:14 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:36893 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728139AbfCVOSu (ORCPT
+        with ESMTP id S1727944AbfCVOTO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 10:18:50 -0400
+        Fri, 22 Mar 2019 10:19:14 -0400
 Received: from wuerfel.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1M2Nm2-1h8yMD23P4-003uZd; Fri, 22 Mar 2019 15:18:23 +0100
+ (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MHG4c-1hBiji3hVQ-00DHSO; Fri, 22 Mar 2019 15:18:50 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     Jon Maloy <jon.maloy@ericsson.com>,
-        Ying Xue <ying.xue@windriver.com>,
+To:     David Howells <dhowells@redhat.com>,
         "David S. Miller" <davem@davemloft.net>
 Cc:     clang-built-linux@googlegroups.com,
         Nick Desaulniers <ndesaulniers@google.com>,
         Nathan Chancellor <natechancellor@gmail.com>,
         Arnd Bergmann <arnd@arndb.de>,
-        Tuong Lien <tuong.t.lien@dektech.com.au>,
-        LUU Duc Canh <canh.d.luu@dektech.com.au>,
-        Tung Nguyen <tung.q.nguyen@dektech.com.au>,
-        GhantaKrishnamurthy MohanKrishna 
-        <mohan.krishna.ghanta.krishnamurthy@ericsson.com>,
-        netdev@vger.kernel.org, tipc-discussion@lists.sourceforge.net,
+        YueHaibing <yuehaibing@huawei.com>,
+        linux-afs@lists.infradead.org, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] tipc: avoid a clang -Wuninitialized warning
-Date:   Fri, 22 Mar 2019 15:18:13 +0100
-Message-Id: <20190322141819.641588-1-arnd@arndb.de>
+Subject: [PATCH] rxrpc: avoid clang -Wuninitialized warning
+Date:   Fri, 22 Mar 2019 15:18:43 +0100
+Message-Id: <20190322141848.659387-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:isPCzBhvBx3WDuN6GcMetSXY3KKMQE5Qy8ClvkDoQMtqCW2QSCS
- zJbJGzhns+yFA8NDcWzL5ef9mNt+odyqtu+FbC8CJamiuVm/w7ldWVZaXiop7SSTZaVOL0q
- g8hmgHk+efsJDBwy8q1nK8e+5JjGzO0DWJcB93LLQ8KNYd1CuNOYXdrdz2WPJwH9+oD7jJZ
- bRQ3QepvGxgKxEhLCYZRA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:UJWe9zz0h2g=:+i9wq1l6kMcEl2JqILUoLU
- //5nDcNHN4DOU3RGyaz3NaI4TpNtOV5XEe5DCEfUv1xbSyy3rabT6IvQjV2RLI4MnKeA3M7IB
- cdry58oT0zf7L8Ag0xXLmgMJABZ1fokBU6fK3aLYbpgJHoQQqladmd8OBChYDW6LS0R8su7c2
- b0C9Ag38ZMIfm+4vfOKSU5Sjqu4Wn3YzOJ+sxc9OfRo54JOjRwgwNzF3i18MecgXq2VdPS+57
- +/rWPh7e4Xs2CYw3c3fq9bn8hWbUITjuL8hwy0T6Ni1NuxtU7MQx+hq0KrmAJkOgc5mCWEUFk
- ubHnWmA8ZC/EBktK5U8HpSHPWgRjs8zVZ6ly2phKU0z9tPeoxrA2K/GeN7DJ9wkeRaOTagDFl
- /VWIwlBtjitxTxPPs99cB9MSElhLX6GtORi4MQPjpi8MAtX7aaRlaAfFtXRenQL1PVCWXBVBj
- vly/kVIJVfHhtzC38twY3bb6FcFAX+zHWTmIWntUcISTQ6iktansdBgCRp1Pa5KNmblPhHvKK
- bMma2oGtOKsB8aJBSWaxySV6E/FGUY15FfRL55O6DvO1AnKnaFDrhqNUP7v4169ffDSXdKtZ2
- lHHNFMUeNxu7yU1ZyI088ruYRDnFkJxmhCwzdeUfYIs3iCasTWUjPlHsueDVPwV7k4ODg8nYi
- V6k6psiif8TWsd3ShyM1zRkUfU+xr24wGHa+ADhUREzxL+Nq68jBU2MZRRYFIRfJifUvF+cQN
- KgUJ1Dl42h/bA9ttf5Jfc6yJuB1cO63PN3ovPw==
+X-Provags-ID: V03:K1:TZm7rVj2j+bbMs9vH9SaW+4juFRIu0geiZSgLKt1E6Ol8L9GsR0
+ QODIlSgsI+mR8neza+DikcX0Q5FTXQIlW6c/WkMa06/PJ+U0McvNlLwXTimWzYh89Aq0EHR
+ FBlGseNHtOIekDVYhGUScRFegfkIMgcSvsFanQsrz9HiMbiuBXinw0F2Nb+pYH8pyDDosSp
+ 9mcdV8jBQ3tcQBhSA73DA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ijt0N/z4PRk=:KkW9g1FXHbkjrAvfG+QEuu
+ rMMDwFXoK2jklbzXZaRGEZzQEwYUFVCvffXBQdMCWITGdVhxdLnKjrALKUwG/dhJJn5trVQjq
+ LHuoIaeVNO/+mnif5ON+Tw0BkgNoMGNgaZhfQIUVxEpHEMSeZmNfUasQQfVB1q5CadUpvvlCC
+ QBaBJWxTquWvO0KFMQUDSCj4YqqL2pQQNhCUcYveGX3FkB4S4bMErPYNFspfP1hZmK1H04zDc
+ cqWIerVos4o1XupTRZ2obmtozCbZorXnQcpppCx34pGLoxyXEQ8q6u4G+phl29D7TkHH0luK+
+ SYkxYr6tAE1eJf526X4q4W+T+WnE/mBO6AK6brPhGAjTKk1mrOoL6ao/aUt7WshecsN1PeUW7
+ ThHKQykEv/Gsq7wRF3xbqz3jp0jOeO+slg3WqbVaP1dPp0JACc8Jwnt/ZVqRRjywc8NevQqUK
+ lMYF2UKOgt3LtXO/amFX4ZxQ7HYIGxfHT6rqdeApxPB2iBUQVlI5q+86I2Xz4MASwuqtGL1QO
+ Im6y/REskZgdlDqHjGOyPnd/fo8ljA1J/CCVUJrJ780I3L+9gy6zBCym2SPmoicboO3TdPoPi
+ Cz1tds6XIInK8hWtFBntIoBuj6pyMbxALh3FQFQAWwEWLX8ziP/HkrxJES3zON4eHzTYDimJA
+ JiQc1wrHitYM0sCUVkFBX8qzRKoMkqZjEpfZ3ZYDFArRlHDeYsX/Z/Fcmm35WRrD8voBiVx8E
+ XldoraWyNx/7F0VnerpzSE7BI1MLQu0X+lz5Jg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-clang notices that we pass 'maddr' into the tipc_bearer_xmit() function
-without having initialized it first:
+clang produces a false-positive warning as it fails to notice
+that "lost = true" implies that "ret" is initialized:
 
-net/tipc/node.c:831:6: error: variable 'maddr' is used uninitialized whenever 'if' condition is false
-      [-Werror,-Wsometimes-uninitialized]
-        if (!tipc_link_is_establishing(l)) {
-            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-net/tipc/node.c:847:46: note: uninitialized use occurs here
-        tipc_bearer_xmit(n->net, bearer_id, &xmitq, maddr);
-                                                    ^~~~~
-net/tipc/node.c:831:2: note: remove the 'if' if its condition is always true
-        if (!tipc_link_is_establishing(l)) {
-        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-net/tipc/node.c:821:31: note: initialize the variable 'maddr' to silence this warning
-        struct tipc_media_addr *maddr;
-                                     ^
-                                      = NULL
+net/rxrpc/output.c:402:6: error: variable 'ret' is used uninitialized whenever 'if' condition is true [-Werror,-Wsometimes-uninitialized]
+        if (lost)
+            ^~~~
+net/rxrpc/output.c:437:6: note: uninitialized use occurs here
+        if (ret >= 0) {
+            ^~~
+net/rxrpc/output.c:402:2: note: remove the 'if' if its condition is always false
+        if (lost)
+        ^~~~~~~~~
+net/rxrpc/output.c:339:9: note: initialize the variable 'ret' to silence this warning
+        int ret, opt;
+               ^
+                = 0
 
-This is harmless because it won't use 'maddr' if the
-queue is empty, but it's better to make that explicit
-and not even call the function in that case.
-
-As clang is able to inline the check, it then notices that
-the code is safe.
+Rearrange the code to make that more obvious and avoid the warning.
 
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- net/tipc/node.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/rxrpc/output.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/net/tipc/node.c b/net/tipc/node.c
-index 2dc4919ab23c..ca4cafd00a38 100644
---- a/net/tipc/node.c
-+++ b/net/tipc/node.c
-@@ -844,7 +844,8 @@ static void tipc_node_link_down(struct tipc_node *n, int bearer_id, bool delete)
- 	tipc_node_write_unlock(n);
- 	if (delete)
- 		tipc_mon_remove_peer(n->net, n->addr, old_bearer_id);
--	tipc_bearer_xmit(n->net, bearer_id, &xmitq, maddr);
-+	if (!skb_queue_empty(&xmitq))
-+		tipc_bearer_xmit(n->net, bearer_id, &xmitq, maddr);
- 	tipc_sk_rcv(n->net, &le->inputq);
- }
+diff --git a/net/rxrpc/output.c b/net/rxrpc/output.c
+index 736aa9281100..004c762c2e8d 100644
+--- a/net/rxrpc/output.c
++++ b/net/rxrpc/output.c
+@@ -335,7 +335,6 @@ int rxrpc_send_data_packet(struct rxrpc_call *call, struct sk_buff *skb,
+ 	struct kvec iov[2];
+ 	rxrpc_serial_t serial;
+ 	size_t len;
+-	bool lost = false;
+ 	int ret, opt;
  
+ 	_enter(",{%d}", skb->len);
+@@ -393,14 +392,14 @@ int rxrpc_send_data_packet(struct rxrpc_call *call, struct sk_buff *skb,
+ 		static int lose;
+ 		if ((lose++ & 7) == 7) {
+ 			ret = 0;
+-			lost = true;
++			trace_rxrpc_tx_data(call, sp->hdr.seq, serial,
++					    whdr.flags, retrans, true);
++			goto done;
+ 		}
+ 	}
+ 
+-	trace_rxrpc_tx_data(call, sp->hdr.seq, serial, whdr.flags,
+-			    retrans, lost);
+-	if (lost)
+-		goto done;
++	trace_rxrpc_tx_data(call, sp->hdr.seq, serial, whdr.flags, retrans,
++			    false);
+ 
+ 	/* send the packet with the don't fragment bit set if we currently
+ 	 * think it's small enough */
 -- 
 2.20.0
 
