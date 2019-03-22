@@ -2,54 +2,53 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A93BBC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:36:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F416BC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:36:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7649F2082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:36:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2DCC2183E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:36:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254572;
-	bh=xQ7TsXjnD1ROOeZJXOc6a7j8lgkU/rs2lLNhXRKWjbg=;
+	s=default; t=1553254575;
+	bh=KU2DaMtQSA3Tr4VMa0/WnZyRZYgXiE1eSM8VMujiefg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SBHnuvX2quwxnBWhZd5vVWBbM5zK29ZtIuA/5xcWGf8TLA7nT3tqQrJzVrxxAdTP9
-	 96TrdwzET+oJ6lMA1OeW8pKWiHaU7X0ZK4Ahra5ebI9fQa1Vr5vpRoEK/ItHndUaM4
-	 HC+irArWBIVULeYo//myRFiAKtzR6lZDui0MDoik=
+	b=ZfwBI+PYvWBKO0CMfmAJAfgwdnE6ezc/nRp4BG1Mju36312hSuRk2MusM/A4SlwX8
+	 dnV6E7G9zSso+9iDVHUIPZDNh9mwWl//wp+TeiiKn5fPu3lG3uyK6imGPb0NfXmrBl
+	 BpEGj+Zgw7VO1uRt64x5DeDgrlO5A/Klpf6Z0r3w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730665AbfCVLgL (ORCPT
+        id S1730673AbfCVLgO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:36:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37378 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:36:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37444 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730451AbfCVLgJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:36:09 -0400
+        id S1730451AbfCVLgM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:36:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E9B272082C;
-        Fri, 22 Mar 2019 11:36:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9D5421934;
+        Fri, 22 Mar 2019 11:36:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254568;
-        bh=xQ7TsXjnD1ROOeZJXOc6a7j8lgkU/rs2lLNhXRKWjbg=;
+        s=default; t=1553254571;
+        bh=KU2DaMtQSA3Tr4VMa0/WnZyRZYgXiE1eSM8VMujiefg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0xoiGII6CV0DtKZ3wcEqsDgeIUmwb7F0K5KvEH2z2LIQIFMa+ksHaW1vfn8O24JtW
-         5+xR5lwcoxA1z3rhzfzNsMukJF7Xz7FTIeKC8TL+3dmNLDOWwJO7h/Iln2E2cPVnDr
-         02vBuT6SBeJpOUquxph1BR794Fnx3lNgJeoYSSMU=
+        b=nbdc+X+pL925k5xnJBbVaZV8pxJwQimRkgzbN95ra+Hu2z7R55ram0fwWBDvWUauT
+         rKCEl90/cm4Za1MPS8iMpcg/nPRaS/9OWzFUvUsVYuTwkvmA3mwTJpAKAxRKWaN80z
+         vzIiiQWaVZYFxnUv6J5JbTF6pZwuS7bIj43rOSLE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kyle Roeschley <kyle.roeschley@ni.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 161/230] i2c: cadence: Fix the hold bit setting
-Date:   Fri, 22 Mar 2019 12:14:59 +0100
-Message-Id: <20190322111248.027198170@linuxfoundation.org>
+        stable@vger.kernel.org, Shengjiu Wang <shengjiu.wang@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Nicolin Chen <nicoleotsuka@gmail.com>
+Subject: [PATCH 4.4 152/230] ASoC: fsl_esai: fix register setting issue in RIGHT_J mode
+Date:   Fri, 22 Mar 2019 12:14:50 +0100
+Message-Id: <20190322111247.337704339@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -68,56 +67,51 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit d358def706880defa4c9e87381c5bf086a97d5f9 ]
+From: S.j. Wang <shengjiu.wang@nxp.com>
 
-In case the hold bit is not needed we are carrying the old values.
-Fix the same by resetting the bit when not needed.
+commit cc29ea007347f39f4c5a4d27b0b555955a0277f9 upstream.
 
-Fixes the sporadic i2c bus lockups on National Instruments
-Zynq-based devices.
+The ESAI_xCR_xWA is xCR's bit, not the xCCR's bit, driver set it to
+wrong register, correct it.
 
-Fixes: df8eb5691c48 ("i2c: Add driver for Cadence I2C controller")
-Reported-by: Kyle Roeschley <kyle.roeschley@ni.com>
-Acked-by: Michal Simek <michal.simek@xilinx.com>
-Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-Tested-by: Kyle Roeschley <kyle.roeschley@ni.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes 43d24e76b698 ("ASoC: fsl_esai: Add ESAI CPU DAI driver")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Ackedy-by: Nicolin Chen <nicoleotsuka@gmail.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/i2c/busses/i2c-cadence.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ sound/soc/fsl/fsl_esai.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-cadence.c b/drivers/i2c/busses/i2c-cadence.c
-index 84deed6571bd..6d32e6da3110 100644
---- a/drivers/i2c/busses/i2c-cadence.c
-+++ b/drivers/i2c/busses/i2c-cadence.c
-@@ -378,8 +378,10 @@ static void cdns_i2c_mrecv(struct cdns_i2c *id)
- 	 * Check for the message size against FIFO depth and set the
- 	 * 'hold bus' bit if it is greater than FIFO depth.
- 	 */
--	if (id->recv_count > CDNS_I2C_FIFO_DEPTH)
-+	if ((id->recv_count > CDNS_I2C_FIFO_DEPTH)  || id->bus_hold_flag)
- 		ctrl_reg |= CDNS_I2C_CR_HOLD;
-+	else
-+		ctrl_reg = ctrl_reg & ~CDNS_I2C_CR_HOLD;
+--- a/sound/soc/fsl/fsl_esai.c
++++ b/sound/soc/fsl/fsl_esai.c
+@@ -394,7 +394,8 @@ static int fsl_esai_set_dai_fmt(struct s
+ 		break;
+ 	case SND_SOC_DAIFMT_RIGHT_J:
+ 		/* Data on rising edge of bclk, frame high, right aligned */
+-		xccr |= ESAI_xCCR_xCKP | ESAI_xCCR_xHCKP | ESAI_xCR_xWA;
++		xccr |= ESAI_xCCR_xCKP | ESAI_xCCR_xHCKP;
++		xcr  |= ESAI_xCR_xWA;
+ 		break;
+ 	case SND_SOC_DAIFMT_DSP_A:
+ 		/* Data on rising edge of bclk, frame high, 1clk before data */
+@@ -451,12 +452,12 @@ static int fsl_esai_set_dai_fmt(struct s
+ 		return -EINVAL;
+ 	}
  
- 	cdns_i2c_writereg(ctrl_reg, CDNS_I2C_CR_OFFSET);
+-	mask = ESAI_xCR_xFSL | ESAI_xCR_xFSR;
++	mask = ESAI_xCR_xFSL | ESAI_xCR_xFSR | ESAI_xCR_xWA;
+ 	regmap_update_bits(esai_priv->regmap, REG_ESAI_TCR, mask, xcr);
+ 	regmap_update_bits(esai_priv->regmap, REG_ESAI_RCR, mask, xcr);
  
-@@ -436,8 +438,11 @@ static void cdns_i2c_msend(struct cdns_i2c *id)
- 	 * Check for the message size against FIFO depth and set the
- 	 * 'hold bus' bit if it is greater than FIFO depth.
- 	 */
--	if (id->send_count > CDNS_I2C_FIFO_DEPTH)
-+	if ((id->send_count > CDNS_I2C_FIFO_DEPTH) || id->bus_hold_flag)
- 		ctrl_reg |= CDNS_I2C_CR_HOLD;
-+	else
-+		ctrl_reg = ctrl_reg & ~CDNS_I2C_CR_HOLD;
-+
- 	cdns_i2c_writereg(ctrl_reg, CDNS_I2C_CR_OFFSET);
+ 	mask = ESAI_xCCR_xCKP | ESAI_xCCR_xHCKP | ESAI_xCCR_xFSP |
+-		ESAI_xCCR_xFSD | ESAI_xCCR_xCKD | ESAI_xCR_xWA;
++		ESAI_xCCR_xFSD | ESAI_xCCR_xCKD;
+ 	regmap_update_bits(esai_priv->regmap, REG_ESAI_TCCR, mask, xccr);
+ 	regmap_update_bits(esai_priv->regmap, REG_ESAI_RCCR, mask, xccr);
  
- 	/* Clear the interrupts in interrupt status register. */
--- 
-2.19.1
-
 
 
