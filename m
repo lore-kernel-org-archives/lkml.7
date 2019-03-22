@@ -2,332 +2,108 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1111C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 08:00:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 833B1C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 08:01:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76524204FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 08:00:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45BCA204FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 08:01:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OlsRK8Hf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727545AbfCVIAi (ORCPT
+        id S1727657AbfCVIBF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 04:00:38 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40636 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725938AbfCVIAh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 04:00:37 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B27F481DF5;
-        Fri, 22 Mar 2019 08:00:36 +0000 (UTC)
-Received: from [10.36.116.167] (ovpn-116-167.ams2.redhat.com [10.36.116.167])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E08175D9C5;
-        Fri, 22 Mar 2019 08:00:28 +0000 (UTC)
-Subject: Re: [PATCH v6 02/22] iommu: introduce device fault data
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc:     eric.auger.pro@gmail.com, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        kvmarm@lists.cs.columbia.edu, joro@8bytes.org,
-        alex.williamson@redhat.com, yi.l.liu@linux.intel.com,
-        jean-philippe.brucker@arm.com, will.deacon@arm.com,
-        robin.murphy@arm.com, kevin.tian@intel.com, ashok.raj@intel.com,
-        marc.zyngier@arm.com, christoffer.dall@arm.com,
-        peter.maydell@linaro.org, vincent.stehle@arm.com
-References: <20190317172232.1068-1-eric.auger@redhat.com>
- <20190317172232.1068-3-eric.auger@redhat.com>
- <20190321150439.5aac2c01@jacob-builder>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <ccd64817-be47-0dcd-8293-4971a435892b@redhat.com>
-Date:   Fri, 22 Mar 2019 09:00:27 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Fri, 22 Mar 2019 04:01:05 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:43809 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727487AbfCVIBB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 04:01:01 -0400
+Received: by mail-io1-f67.google.com with SMTP id x3so983747iol.10
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 01:01:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9TrL7zc7AhFuZ4YHkL8qTuh2OarW08S6ZFrL3mlzc0Q=;
+        b=OlsRK8Hf0Z7QzLhwsVqCPQrXDu9O57JKBuqBO9LiBHWf13fvUkF5EjLN2vj+Wz0Qst
+         siU5+tVso0/6EplNcf6QEhN/vjGnuiat3AX5t32i4MdaILE0cY7bKavd9egsh1SF7Kpt
+         VxNEEetdIW4E4biQc2H83JIcveu2cI7AdI0f5ZqnZy5oSHh7LfLSJxL6YaOB7vPnDNFd
+         j+mrzsMuGFZ5q5Fw3c0zK/KEvNpU5Ox+T7sbugjxLnZfjuIYCtdCAliBiWZ7FVjSEn1C
+         tx/c2cD52uUdvJRIo45DXQEbQPcxWvPYjX9E7Rt/JzbzkrIgW+lYNviXtrXnUrG2kVlN
+         K84A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9TrL7zc7AhFuZ4YHkL8qTuh2OarW08S6ZFrL3mlzc0Q=;
+        b=miW2kB+7E0z1LT7vHWAenS8bRT7O0L2guFpgxD1liYifKClLAO7ApW39klPQduwFU5
+         9lF1BkIlAMLIceh+jzZqHY5BOcXlz03tdAj6VB3iPpvIE2vr8QcQod57Qm/nz4mbSKYA
+         wjbQ8r7OwSln1ZNC+hGqEwTWjuRDe/A6CKGZxOfUK/+9ifte+je0keTLTY0lyFIdLxJk
+         FMG13bX4+xveLU7vUUcmX5CkjDqiR1hKwMLpkOoObpoGvrrbKRwg3mEkRBUCNJzn/nrS
+         edT/6syMYMMbpUxpnTZWWn3cOwohIr0I5vsDmCbWGgtcPKj5O1BMAVbDFEdfa0xJL3vJ
+         oS4A==
+X-Gm-Message-State: APjAAAV2nzUnZsQUhjqhKL0z/tVHMrvkZMSPcGUyz306kG8RyKVizcww
+        6OtneG9EceXsAIuLpgNAe4vFD5tam++IWq+OnP1Uog==
+X-Google-Smtp-Source: APXvYqzRr5JBJcGhbyB+evQP9iT94CpLx3iI4L1dcQqgehjWAGFv+GBmVc8hhGikJuBqIeYWynluJCOfxtiP1Jf2zy4=
+X-Received: by 2002:a6b:3709:: with SMTP id e9mr5079808ioa.282.1553241659838;
+ Fri, 22 Mar 2019 01:00:59 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190321150439.5aac2c01@jacob-builder>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Fri, 22 Mar 2019 08:00:37 +0000 (UTC)
+References: <00000000000080601805795ada2e@google.com> <000000000000e626290584a983c0@google.com>
+In-Reply-To: <000000000000e626290584a983c0@google.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Fri, 22 Mar 2019 09:00:48 +0100
+Message-ID: <CACT4Y+YVNA6aYe-Ai-ZnU+EhNSNAFhjvXPT0oA+i4rCFpQThcg@mail.gmail.com>
+Subject: Re: INFO: task hung in vivid_stop_generating_vid_cap
+To:     syzbot <syzbot+06283a66a648cd073885@syzkaller.appspotmail.com>,
+        linux-can@vger.kernel.org
+Cc:     andy@greyhouse.net, David Miller <davem@davemloft.net>,
+        Hans Verkuil <hverkuil@xs4all.nl>, j.vosburgh@gmail.com,
+        LKML <linux-kernel@vger.kernel.org>, linux-media@vger.kernel.org,
+        Mahesh Bandewar <maheshb@google.com>, mchehab@kernel.org,
+        netdev <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        vfalico@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacob,
+On Fri, Mar 22, 2019 at 8:08 AM syzbot
+<syzbot+06283a66a648cd073885@syzkaller.appspotmail.com> wrote:
+>
+> syzbot has bisected this bug to:
+>
+> commit 4493b81bea24269df898339dee638d7c5cb2b2df
+> Author: Mahesh Bandewar <maheshb@google.com>
+> Date:   Wed Mar 8 18:55:54 2017 +0000
+>
+>      bonding: initialize work-queues during creation of bond
 
-On 3/21/19 11:04 PM, Jacob Pan wrote:
-> On Sun, 17 Mar 2019 18:22:12 +0100
-> Eric Auger <eric.auger@redhat.com> wrote:
-> 
->> From: Jacob Pan <jacob.jun.pan@linux.intel.com>
->>
->> Device faults detected by IOMMU can be reported outside the IOMMU
->> subsystem for further processing. This patch introduces
->> a generic device fault data structure.
->>
->> The fault can be either an unrecoverable fault or a page request,
->> also referred to as a recoverable fault.
->>
->> We only care about non internal faults that are likely to be reported
->> to an external subsystem.
->>
->> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
->> Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
->> Signed-off-by: Liu, Yi L <yi.l.liu@linux.intel.com>
->> Signed-off-by: Ashok Raj <ashok.raj@intel.com>
->> Signed-off-by: Eric Auger <eric.auger@redhat.com>
->>
->> ---
->> v4 -> v5:
->> - simplified struct iommu_fault_event comment
->> - Moved IOMMU_FAULT_PERM outside of the struct
->> - Removed IOMMU_FAULT_PERM_INST
->> - s/IOMMU_FAULT_PAGE_REQUEST_PASID_PRESENT/
->>   IOMMU_FAULT_PAGE_REQUEST_PASID_VALID
->>
->> v3 -> v4:
->> - use a union containing aither an unrecoverable fault or a page
->>   request message. Move the device private data in the page request
->>   structure. Reshuffle the fields and use flags.
->> - move fault perm attributes to the uapi
->> - remove a bunch of iommu_fault_reason enum values that were related
->>   to internal errors
->> ---
->>  include/linux/iommu.h      |  44 ++++++++++++++
->>  include/uapi/linux/iommu.h | 115
->> +++++++++++++++++++++++++++++++++++++ 2 files changed, 159
->> insertions(+) create mode 100644 include/uapi/linux/iommu.h
->>
->> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
->> index ffbbc7e39cee..c6f398f7e6e0 100644
->> --- a/include/linux/iommu.h
->> +++ b/include/linux/iommu.h
->> @@ -25,6 +25,7 @@
->>  #include <linux/errno.h>
->>  #include <linux/err.h>
->>  #include <linux/of.h>
->> +#include <uapi/linux/iommu.h>
->>  
->>  #define IOMMU_READ	(1 << 0)
->>  #define IOMMU_WRITE	(1 << 1)
->> @@ -48,6 +49,7 @@ struct bus_type;
->>  struct device;
->>  struct iommu_domain;
->>  struct notifier_block;
->> +struct iommu_fault_event;
->>  
->>  /* iommu fault flags */
->>  #define IOMMU_FAULT_READ	0x0
->> @@ -55,6 +57,7 @@ struct notifier_block;
->>  
->>  typedef int (*iommu_fault_handler_t)(struct iommu_domain *,
->>  			struct device *, unsigned long, int, void *);
->> +typedef int (*iommu_dev_fault_handler_t)(struct iommu_fault_event *,
->> void *); 
->>  struct iommu_domain_geometry {
->>  	dma_addr_t aperture_start; /* First address that can be
->> mapped    */ @@ -247,6 +250,46 @@ struct iommu_device {
->>  	struct device *dev;
->>  };
->>  
->> +/**
->> + * struct iommu_fault_event - Generic fault event
->> + *
->> + * Can represent recoverable faults such as a page requests or
->> + * unrecoverable faults such as DMA or IRQ remapping faults.
->> + *
->> + * @fault: fault descriptor
->> + * @iommu_private: used by the IOMMU driver for storing
->> fault-specific
->> + *                 data. Users should not modify this field before
->> + *                 sending the fault response.
->> + */
->> +struct iommu_fault_event {
->> +	struct iommu_fault fault;
->> +	u64 iommu_private;
->> +};
->> +
->> +/**
->> + * struct iommu_fault_param - per-device IOMMU fault data
->> + * @dev_fault_handler: Callback function to handle IOMMU faults at
->> device level
->> + * @data: handler private data
->> + *
->> + */
->> +struct iommu_fault_param {
->> +	iommu_dev_fault_handler_t handler;
->> +	void *data;
->> +};
->> +
->> +/**
->> + * struct iommu_param - collection of per-device IOMMU data
->> + *
->> + * @fault_param: IOMMU detected device fault reporting data
->> + *
->> + * TODO: migrate other per device data pointers under
->> iommu_dev_data, e.g.
->> + *	struct iommu_group	*iommu_group;
->> + *	struct iommu_fwspec	*iommu_fwspec;
->> + */
->> +struct iommu_param {
->> +	struct iommu_fault_param *fault_param;
->> +};
->> +
->>  int  iommu_device_register(struct iommu_device *iommu);
->>  void iommu_device_unregister(struct iommu_device *iommu);
->>  int  iommu_device_sysfs_add(struct iommu_device *iommu,
->> @@ -422,6 +465,7 @@ struct iommu_ops {};
->>  struct iommu_group {};
->>  struct iommu_fwspec {};
->>  struct iommu_device {};
->> +struct iommu_fault_param {};
->>  
->>  static inline bool iommu_present(struct bus_type *bus)
->>  {
->> diff --git a/include/uapi/linux/iommu.h b/include/uapi/linux/iommu.h
->> new file mode 100644
->> index 000000000000..edcc0dda7993
->> --- /dev/null
->> +++ b/include/uapi/linux/iommu.h
->> @@ -0,0 +1,115 @@
->> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
->> +/*
->> + * IOMMU user API definitions
->> + */
->> +
->> +#ifndef _UAPI_IOMMU_H
->> +#define _UAPI_IOMMU_H
->> +
->> +#include <linux/types.h>
->> +
->> +#define IOMMU_FAULT_PERM_WRITE	(1 << 0) /* write */
->> +#define IOMMU_FAULT_PERM_EXEC	(1 << 1) /* exec */
->> +#define IOMMU_FAULT_PERM_PRIV	(1 << 2) /* privileged */
->> +
->> +/*  Generic fault types, can be expanded IRQ remapping fault */
->> +enum iommu_fault_type {
->> +	IOMMU_FAULT_DMA_UNRECOV = 1,	/* unrecoverable fault */
->> +	IOMMU_FAULT_PAGE_REQ,		/* page request fault */
->> +};
->> +
->> +enum iommu_fault_reason {
->> +	IOMMU_FAULT_REASON_UNKNOWN = 0,
->> +
->> +	/* Could not access the PASID table (fetch caused external
->> abort) */
->> +	IOMMU_FAULT_REASON_PASID_FETCH,
->> +
->> +	/* pasid entry is invalid or has configuration errors */
->> +	IOMMU_FAULT_REASON_BAD_PASID_ENTRY,
->> +
->> +	/*
->> +	 * PASID is out of range (e.g. exceeds the maximum PASID
->> +	 * supported by the IOMMU) or disabled.
->> +	 */
->> +	IOMMU_FAULT_REASON_PASID_INVALID,
->> +
->> +	/*
->> +	 * An external abort occurred fetching (or updating) a
->> translation
->> +	 * table descriptor
->> +	 */
->> +	IOMMU_FAULT_REASON_WALK_EABT,
->> +
->> +	/*
->> +	 * Could not access the page table entry (Bad address),
->> +	 * actual translation fault
->> +	 */
->> +	IOMMU_FAULT_REASON_PTE_FETCH,
->> +
->> +	/* Protection flag check failed */
->> +	IOMMU_FAULT_REASON_PERMISSION,
->> +
->> +	/* access flag check failed */
->> +	IOMMU_FAULT_REASON_ACCESS,
->> +
->> +	/* Output address of a translation stage caused Address Size
->> fault */
->> +	IOMMU_FAULT_REASON_OOR_ADDRESS,
->> +};
->> +
-> For VT-d scalable mode, fault reason can be further split into first
-> level faults and second level faults. But since we pin the second level
-> today and guest owns the first level, we only need to inject faults of
-> the FL to vIOMMU. So I think this is fine today, I think this enum can
-> be extended w/o a new version of the structure.
++linux-can
 
-I think that's the same actually for SMMUv3. Here we only kept stage1
-related fault reasons as stage2 should rather be kept internal to the
-driver.
+I think I will disable CONFIG_CAN before v4.12. It causes too many
+false results for v4.12..v4.11 range. It always leads to a wrong
+decision for first 3 steps, then no chances of correct bisection
+anymore.
 
-Thanks
-
-Eric
-> 
->> +/**
->> + * Unrecoverable fault data
->> + * @reason: reason of the fault
->> + * @addr: offending page address
->> + * @fetch_addr: address that caused a fetch abort, if any
->> + * @pasid: contains process address space ID, used in shared virtual
->> memory
->> + * @perm: Requested permission access using by the incoming
->> transaction
->> + * (IOMMU_FAULT_PERM_* values)
->> + */
->> +struct iommu_fault_unrecoverable {
->> +	__u32	reason; /* enum iommu_fault_reason */
->> +#define IOMMU_FAULT_UNRECOV_PASID_VALID		(1 << 0)
->> +#define IOMMU_FAULT_UNRECOV_PERM_VALID		(1 << 1)
->> +#define IOMMU_FAULT_UNRECOV_ADDR_VALID		(1 << 2)
->> +#define IOMMU_FAULT_UNRECOV_FETCH_ADDR_VALID	(1 << 3)
->> +	__u32	flags;
->> +	__u32	pasid;
->> +	__u32	perm;
->> +	__u64	addr;
->> +	__u64	fetch_addr;
->> +};
->> +
->> +/*
->> + * Page Request data (aka. recoverable fault data)
->> + * @flags : encodes whether the pasid is valid and whether this
->> + * is the last page in group
->> + * @pasid: pasid
->> + * @grpid: page request group index
->> + * @perm: requested page permissions (IOMMU_FAULT_PERM_* values)
->> + * @addr: page address
->> + */
->> +struct iommu_fault_page_request {
->> +#define IOMMU_FAULT_PAGE_REQUEST_PASID_VALID	(1 << 0)
->> +#define IOMMU_FAULT_PAGE_REQUEST_LAST_PAGE	(1 << 1)
->> +#define IOMMU_FAULT_PAGE_REQUEST_PRIV_DATA	(1 << 2)
->> +	__u32   flags;
->> +	__u32	pasid;
->> +	__u32	grpid;
->> +	__u32	perm;
->> +	__u64	addr;
->> +	__u64	private_data[2];
->> +};
->> +
->> +/**
->> + * struct iommu_fault - Generic fault data
->> + *
->> + * @type contains fault type
->> + */
->> +
->> +struct iommu_fault {
->> +	__u32	type;   /* enum iommu_fault_type */
->> +	__u32	reserved;
->> +	union {
->> +		struct iommu_fault_unrecoverable event;
->> +		struct iommu_fault_page_request prm;
->> +	};
->> +};
->> +#endif /* _UAPI_IOMMU_H */
-> 
-> [Jacob Pan]
-> 
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=176d1617200000
+> start commit:   4493b81b bonding: initialize work-queues during creation o..
+> git tree:       upstream
+> final crash:    https://syzkaller.appspot.com/x/report.txt?x=14ed1617200000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=10ed1617200000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=62118286bb772a24
+> dashboard link: https://syzkaller.appspot.com/bug?extid=06283a66a648cd073885
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15701a33400000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=154c8e4d400000
+>
+> Reported-by: syzbot+06283a66a648cd073885@syzkaller.appspotmail.com
+> Fixes: 4493b81bea24 ("bonding: initialize work-queues during creation of
+> bond")
+>
+> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
