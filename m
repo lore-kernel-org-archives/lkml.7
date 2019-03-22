@@ -2,131 +2,220 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6FCFC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:14:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90B58C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:15:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6D6B2190A
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:14:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="gXnr/LKc"
+	by mail.kernel.org (Postfix) with ESMTP id 690102190A
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:15:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728151AbfCVWOl (ORCPT
+        id S1728182AbfCVWPC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 18:14:41 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:54380 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727940AbfCVWOi (ORCPT
+        Fri, 22 Mar 2019 18:15:02 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:56425 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727940AbfCVWPB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 18:14:38 -0400
-Received: by mail-it1-f193.google.com with SMTP id w18so5879802itj.4;
-        Fri, 22 Mar 2019 15:14:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wm2+IDsr0NmRaIQ9GIimbnBiutoAYhXqklaChAdkC0E=;
-        b=gXnr/LKcmO3n/AkDnk5tuJJz0sD52kdAC51zKOFpz9IFbfbYifTLF6ymlYbHKb1Fzf
-         5IK9kzfgRjlOjG8rPf/pLCcCoxWGCDHkfS90S+LKj3jcXm5xQYa13eJcPAUZ+hXohZjm
-         IBPo+8GJ+Rq8y+Q+kI7lVQj+zb+PR7I30rOlJksrdJy/Wp2dqUTjZA9F3vGG+ezwSQtN
-         Rd0g5Hf0LyHnnPkTMRnIAwxLFm25gMxn56/wKPSlCPteP5nwXO0eAhs4klJ0MxT6YP2e
-         dxwI2R6VEa8rmJFaL4xGk5paDuSdBggXv21lLkD4qtLHBeTsgNPI61yo109FsRi4r0QQ
-         8DwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wm2+IDsr0NmRaIQ9GIimbnBiutoAYhXqklaChAdkC0E=;
-        b=ItXnI17q/8HYNVYKAk23Ry8uJ6eJUxTrVV/aCpyymPtrQbysZjJ2onR64HdCj05rnC
-         pHKT/vgzaN53WGlWX2vfc3nUmvlm55rPp3a/I93Hmbh7qY1IVdyGEOsx90mKojx+8Xbg
-         Dfholtef69cKrK7KzW2JgkrLX6RkEfeCwXXFpwz4/CFwoi/5ZG9MUmhxCjRzjqHawUX5
-         dowUiFcTo4Be8IOK1tctByaS3agcaQQrSV+XEG588UG/A35E+ofkgChAnMwIueMEiWwg
-         Ly1v/Ib2N3RmGhV+iaxe0pWXPGJ3tVSr+dNyQO7+gshCheeGVeEOJfYJeSiEb25CxfHj
-         xbWQ==
-X-Gm-Message-State: APjAAAVJ9jdxgwr4XN3HSsNPdunKhHNlhJmmZ68hDRGbYyMpsZyjyPRi
-        BHWXW9pzdht1adYOIcgJxI9r0O/+COLSfsr+TEk=
-X-Google-Smtp-Source: APXvYqwIoaHTQX3ElVQKOchmDlJSSWqTKG84OsYpQvQY0PG83rmTkoixgVtLY+vkXQxXTMX8UIfgiVFJTO08ZCVWvdY=
-X-Received: by 2002:a24:411f:: with SMTP id x31mr3120456ita.169.1553292877426;
- Fri, 22 Mar 2019 15:14:37 -0700 (PDT)
+        Fri, 22 Mar 2019 18:15:01 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x2MMDp79749071
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Fri, 22 Mar 2019 15:13:51 -0700
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x2MMDoBl749068;
+        Fri, 22 Mar 2019 15:13:50 -0700
+Date:   Fri, 22 Mar 2019 15:13:50 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Andi Kleen <tipbot@zytor.com>
+Message-ID: <tip-1d6c49df74b0706af13a7d707638f0db374eaf88@git.kernel.org>
+Cc:     tglx@linutronix.de, jolsa@kernel.org, linux-kernel@vger.kernel.org,
+        acme@redhat.com, mingo@kernel.org, hpa@zytor.com,
+        ak@linux.intel.com
+Reply-To: mingo@kernel.org, hpa@zytor.com, ak@linux.intel.com,
+          tglx@linutronix.de, jolsa@kernel.org, acme@redhat.com,
+          linux-kernel@vger.kernel.org
+In-Reply-To: <20190311144502.15423-6-andi@firstfloor.org>
+References: <20190311144502.15423-6-andi@firstfloor.org>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:perf/urgent] perf report: Support running scripts for current
+ time range
+Git-Commit-ID: 1d6c49df74b0706af13a7d707638f0db374eaf88
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-References: <20190317183438.2057-1-ira.weiny@intel.com> <20190317183438.2057-6-ira.weiny@intel.com>
-In-Reply-To: <20190317183438.2057-6-ira.weiny@intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 22 Mar 2019 15:14:26 -0700
-Message-ID: <CAA9_cmdQjMekSFU09gLc87-PVx2iHeeh2jC6KeFY1UeadpPh4A@mail.gmail.com>
-Subject: Re: [RESEND 5/7] IB/hfi1: Use the new FOLL_LONGTERM flag to get_user_pages_fast()
-To:     ira.weiny@intel.com
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Michal Hocko <mhocko@suse.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Rich Felker <dalias@libc.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>, linux-mm <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-mips@vger.kernel.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Linux-sh <linux-sh@vger.kernel.org>, sparclinux@vger.kernel.org,
-        linux-rdma@vger.kernel.org,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 17, 2019 at 7:36 PM <ira.weiny@intel.com> wrote:
->
-> From: Ira Weiny <ira.weiny@intel.com>
->
-> Use the new FOLL_LONGTERM to get_user_pages_fast() to protect against
-> FS DAX pages being mapped.
->
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> ---
->  drivers/infiniband/hw/hfi1/user_pages.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/infiniband/hw/hfi1/user_pages.c b/drivers/infiniband/hw/hfi1/user_pages.c
-> index 78ccacaf97d0..6a7f9cd5a94e 100644
-> --- a/drivers/infiniband/hw/hfi1/user_pages.c
-> +++ b/drivers/infiniband/hw/hfi1/user_pages.c
-> @@ -104,9 +104,11 @@ int hfi1_acquire_user_pages(struct mm_struct *mm, unsigned long vaddr, size_t np
->                             bool writable, struct page **pages)
->  {
->         int ret;
-> +       unsigned int gup_flags = writable ? FOLL_WRITE : 0;
+Commit-ID:  1d6c49df74b0706af13a7d707638f0db374eaf88
+Gitweb:     https://git.kernel.org/tip/1d6c49df74b0706af13a7d707638f0db374eaf88
+Author:     Andi Kleen <ak@linux.intel.com>
+AuthorDate: Mon, 11 Mar 2019 07:44:56 -0700
+Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitDate: Mon, 11 Mar 2019 16:33:19 -0300
 
-Maybe:
+perf report: Support running scripts for current time range
 
-    unsigned int gup_flags = FOLL_LONGTERM | (writable ? FOLL_WRITE : 0);
+When using the time sort key, add new context menus to run scripts for
+only the currently selected time range. Compute the correct range for
+the selection add pass it as the --time option to perf script.
 
-?
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Link: http://lkml.kernel.org/r/20190311144502.15423-6-andi@firstfloor.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/ui/browsers/hists.c | 83 ++++++++++++++++++++++++++++++++++++------
+ 1 file changed, 72 insertions(+), 11 deletions(-)
 
->
-> -       ret = get_user_pages_fast(vaddr, npages, writable ? FOLL_WRITE : 0,
-> -                                 pages);
-> +       gup_flags |= FOLL_LONGTERM;
-> +
-> +       ret = get_user_pages_fast(vaddr, npages, gup_flags, pages);
->         if (ret < 0)
->                 return ret;
->
-> --
-> 2.20.1
->
+diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
+index aef800d97ea1..f98aeac607dd 100644
+--- a/tools/perf/ui/browsers/hists.c
++++ b/tools/perf/ui/browsers/hists.c
+@@ -7,6 +7,7 @@
+ #include <string.h>
+ #include <linux/rbtree.h>
+ #include <sys/ttydefaults.h>
++#include <linux/time64.h>
+ 
+ #include "../../util/callchain.h"
+ #include "../../util/evsel.h"
+@@ -30,6 +31,7 @@
+ #include "srcline.h"
+ #include "string2.h"
+ #include "units.h"
++#include "time-utils.h"
+ 
+ #include "sane_ctype.h"
+ 
+@@ -2338,6 +2340,7 @@ close_file_and_continue:
+ }
+ 
+ struct popup_action {
++	unsigned long		time;
+ 	struct thread 		*thread;
+ 	struct map_symbol 	ms;
+ 	int			socket;
+@@ -2527,36 +2530,64 @@ static int
+ do_run_script(struct hist_browser *browser __maybe_unused,
+ 	      struct popup_action *act)
+ {
+-	char script_opt[64];
+-	memset(script_opt, 0, sizeof(script_opt));
++	char *script_opt;
++	int len;
++	int n = 0;
++
++	len = 100;
++	if (act->thread)
++		len += strlen(thread__comm_str(act->thread));
++	else if (act->ms.sym)
++		len += strlen(act->ms.sym->name);
++	script_opt = malloc(len);
++	if (!script_opt)
++		return -1;
+ 
++	script_opt[0] = 0;
+ 	if (act->thread) {
+-		scnprintf(script_opt, sizeof(script_opt), " -c %s ",
++		n = scnprintf(script_opt, len, " -c %s ",
+ 			  thread__comm_str(act->thread));
+ 	} else if (act->ms.sym) {
+-		scnprintf(script_opt, sizeof(script_opt), " -S %s ",
++		n = scnprintf(script_opt, len, " -S %s ",
+ 			  act->ms.sym->name);
+ 	}
+ 
++	if (act->time) {
++		char start[32], end[32];
++		unsigned long starttime = act->time;
++		unsigned long endtime = act->time + symbol_conf.time_quantum;
++
++		if (starttime == endtime) { /* Display 1ms as fallback */
++			starttime -= 1*NSEC_PER_MSEC;
++			endtime += 1*NSEC_PER_MSEC;
++		}
++		timestamp__scnprintf_usec(starttime, start, sizeof start);
++		timestamp__scnprintf_usec(endtime, end, sizeof end);
++		n += snprintf(script_opt + n, len - n, " --time %s,%s", start, end);
++	}
++
+ 	script_browse(script_opt);
++	free(script_opt);
+ 	return 0;
+ }
+ 
+ static int
+-add_script_opt(struct hist_browser *browser __maybe_unused,
++add_script_opt_2(struct hist_browser *browser __maybe_unused,
+ 	       struct popup_action *act, char **optstr,
+-	       struct thread *thread, struct symbol *sym)
++	       struct thread *thread, struct symbol *sym,
++	       const char *tstr)
+ {
++
+ 	if (thread) {
+-		if (asprintf(optstr, "Run scripts for samples of thread [%s]",
+-			     thread__comm_str(thread)) < 0)
++		if (asprintf(optstr, "Run scripts for samples of thread [%s]%s",
++			     thread__comm_str(thread), tstr) < 0)
+ 			return 0;
+ 	} else if (sym) {
+-		if (asprintf(optstr, "Run scripts for samples of symbol [%s]",
+-			     sym->name) < 0)
++		if (asprintf(optstr, "Run scripts for samples of symbol [%s]%s",
++			     sym->name, tstr) < 0)
+ 			return 0;
+ 	} else {
+-		if (asprintf(optstr, "Run scripts for all samples") < 0)
++		if (asprintf(optstr, "Run scripts for all samples%s", tstr) < 0)
+ 			return 0;
+ 	}
+ 
+@@ -2566,6 +2597,36 @@ add_script_opt(struct hist_browser *browser __maybe_unused,
+ 	return 1;
+ }
+ 
++static int
++add_script_opt(struct hist_browser *browser,
++	       struct popup_action *act, char **optstr,
++	       struct thread *thread, struct symbol *sym)
++{
++	int n, j;
++	struct hist_entry *he;
++
++	n = add_script_opt_2(browser, act, optstr, thread, sym, "");
++
++	he = hist_browser__selected_entry(browser);
++	if (sort_order && strstr(sort_order, "time")) {
++		char tstr[128];
++
++		optstr++;
++		act++;
++		j = sprintf(tstr, " in ");
++		j += timestamp__scnprintf_usec(he->time, tstr + j,
++					       sizeof tstr - j);
++		j += sprintf(tstr + j, "-");
++		timestamp__scnprintf_usec(he->time + symbol_conf.time_quantum,
++				          tstr + j,
++				          sizeof tstr - j);
++		n += add_script_opt_2(browser, act, optstr, thread, sym,
++					  tstr);
++		act->time = he->time;
++	}
++	return n;
++}
++
+ static int
+ do_switch_data(struct hist_browser *browser __maybe_unused,
+ 	       struct popup_action *act __maybe_unused)
