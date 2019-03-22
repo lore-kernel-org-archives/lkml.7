@@ -2,56 +2,35 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10D68C10F03
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 06:41:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FF50C10F03
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 06:42:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD896218FE
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 06:41:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="Sth9rGRd"
+	by mail.kernel.org (Postfix) with ESMTP id 2A109213F2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 06:42:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727796AbfCVGlz (ORCPT
+        id S1727818AbfCVGmY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 02:41:55 -0400
-Received: from frisell.zx2c4.com ([192.95.5.64]:53947 "EHLO frisell.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727429AbfCVGlz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 02:41:55 -0400
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id fdece72c;
-        Fri, 22 Mar 2019 06:20:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type; s=mail; bh=azs2OUP40jtKNVU9vC1hvkHXt6A=; b=Sth9rG
-        RdsrXINSsQl6qaXe/kzn9F+HDQYW1TIQfNnnQGSuzwcCykSUpYbm2ki3ssXTOtWc
-        X1fgrf8N11mIw0mzwLgEWG6iN+0LhH+pBfu7PGfbdxZF7E6IXTAfPw0I4HLMoKvX
-        5BVq88rEI7i0dbI9SPu9KuRnZGf/L0IGox3dg+i4SKRf2I5vxE5u6iuF2GI11SiW
-        TcrQze+H50a5hBm2qVTPs925nrdiJ5xYXYV5HH4NKXsoQ0Vu73LmQPtMDLe8AYzB
-        SzfM2Pjr3jaUOM7+z8XQO1k9qPDB6jTXteuFFHeCSiS2DKF3TyiXPsstXTAzzQKF
-        liCtzpJo79Buw3yQ==
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 5de66ee3 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
-        Fri, 22 Mar 2019 06:20:03 +0000 (UTC)
-Received: by mail-ot1-f47.google.com with SMTP id c18so987819otl.13;
-        Thu, 21 Mar 2019 23:41:46 -0700 (PDT)
-X-Gm-Message-State: APjAAAXe2/tVZyvwsOcHTF8PGo651X5eeLMtn7VXY7lvyS5s60tHd/0M
-        a8e/OMAtJG8KNTZOeXTu2DnVO1rp5iMICP4NFZY=
-X-Google-Smtp-Source: APXvYqxnzhpysOmmG3+N9H6q6guC/JMj4SI/UKjCvMhjYykkR/+H1ziKA1NcHiTiEN4FEpXRYhVwCUUJbBIOrF5iJhs=
-X-Received: by 2002:a9d:5501:: with SMTP id l1mr5528653oth.143.1553236905497;
- Thu, 21 Mar 2019 23:41:45 -0700 (PDT)
-MIME-Version: 1.0
+        Fri, 22 Mar 2019 02:42:24 -0400
+Received: from orcrist.hmeau.com ([104.223.48.154]:44474 "EHLO
+        deadmen.hmeau.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727607AbfCVGmX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 02:42:23 -0400
+Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
+        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1h7Dgj-0002Yu-1A; Fri, 22 Mar 2019 14:30:01 +0800
+Received: from herbert by gondobar with local (Exim 4.89)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1h7DgZ-0001IW-E8; Fri, 22 Mar 2019 14:29:47 +0800
+Subject: [PATCH 9/17] zinc: Add x86 accelerated poly1305
 References: <20190322062740.nrwfx2rvmt7lzotj@gondor.apana.org.au>
-In-Reply-To: <20190322062740.nrwfx2rvmt7lzotj@gondor.apana.org.au>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Fri, 22 Mar 2019 00:41:34 -0600
-X-Gmail-Original-Message-ID: <CAHmME9qSNp+T3NcL0a7xCZGn9pronRquyu=MYDN4cjd2ELFB7w@mail.gmail.com>
-Message-ID: <CAHmME9qSNp+T3NcL0a7xCZGn9pronRquyu=MYDN4cjd2ELFB7w@mail.gmail.com>
-Subject: Re: [PATCH 0/17] Add zinc using existing algorithm implementations
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
         "David S. Miller" <davem@davemloft.net>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
         Eric Biggers <ebiggers@kernel.org>,
         Ard Biesheuvel <ard.biesheuvel@linaro.org>,
         Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
@@ -63,22 +42,130 @@ Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
         Samuel Neves <samuel.c.p.neves@gmail.com>,
         Tomer Ashur <tomer.ashur@esat.kuleuven.be>,
         Martin Willi <martin@strongswan.org>
-Content-Type: text/plain; charset="UTF-8"
+Message-Id: <E1h7DgZ-0001IW-E8@gondobar>
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+Date:   Fri, 22 Mar 2019 14:29:47 +0800
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Herbert,
+This patch exposes the crypto API x86 poly1305 implementation through
+zinc.
+   
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+---
 
-On Fri, Mar 22, 2019 at 12:34 AM Herbert Xu <herbert@gondor.apana.org.au> wrote:
-> This should allow the wireguard code itself to proceed.  At the
-> same time we can also move forward with replacing the existing
-> implementations of chacha20 and/or poly1305 where appropriate.
+ lib/zinc/Kconfig                         |    1 
+ lib/zinc/poly1305/poly1305-x86_64-glue.c |   68 +++++++++++++++++++++++++++++++
+ lib/zinc/poly1305/poly1305.c             |    4 +
+ 3 files changed, 73 insertions(+)
 
-I'll have a long flight tomorrow to review this, but also, I should
-have v9 of the patchset submitted soon, which will address a lot of
-the good issues people brought up several months ago for v8. So please
-sit tight while I prepare that.
-
-Jason
+diff --git a/lib/zinc/Kconfig b/lib/zinc/Kconfig
+index 70d45b3288d2..34fa49beb37f 100644
+--- a/lib/zinc/Kconfig
++++ b/lib/zinc/Kconfig
+@@ -8,6 +8,7 @@ config ZINC_CHACHA20
+ config ZINC_POLY1305
+ 	tristate
+ 	select CRYPTO_POLY1305
++	select CRYPTO_POLY1305_X86_64 if ZINC_ARCH_X86_64
+ 
+ config ZINC_SELFTEST
+ 	bool "Zinc cryptography library self-tests"
+diff --git a/lib/zinc/poly1305/poly1305-x86_64-glue.c b/lib/zinc/poly1305/poly1305-x86_64-glue.c
+new file mode 100644
+index 000000000000..9e6dbd40911d
+--- /dev/null
++++ b/lib/zinc/poly1305/poly1305-x86_64-glue.c
+@@ -0,0 +1,68 @@
++// SPDX-License-Identifier: GPL-2.0 OR MIT
++/*
++ * Copyright (C) 2015-2018 Jason A. Donenfeld <Jason@zx2c4.com>. All Rights Reserved.
++ */
++
++#include <asm/cpufeature.h>
++#include <asm/processor.h>
++#include <asm/intel-family.h>
++
++static bool poly1305_use_sse2 __ro_after_init;
++static bool *const poly1305_nobs[] __initconst = {
++	&poly1305_use_sse2 };
++
++static void __init poly1305_fpu_init(void)
++{
++	poly1305_use_sse2 = boot_cpu_has(X86_FEATURE_XMM2);
++}
++
++struct poly1305_arch_internal {
++	struct poly1305_internal base;
++	struct poly1305_simd_xtra x;
++};
++
++static inline bool poly1305_init_arch(void *ctx,
++				      const u8 key[POLY1305_KEY_SIZE])
++{
++	struct poly1305_arch_internal *state = ctx;
++
++	poly1305_simd_init(&state->x);
++	poly1305_core_setkey(&state->base.r, key);
++	return true;
++}
++
++static inline bool poly1305_blocks_arch(void *ctx, const u8 *inp,
++					size_t len, const u32 padbit,
++					simd_context_t *simd_context)
++{
++	struct poly1305_arch_internal *state = ctx;
++
++	/* SIMD disables preemption, so relax after processing each page. */
++	BUILD_BUG_ON(PAGE_SIZE < POLY1305_BLOCK_SIZE ||
++		     PAGE_SIZE % POLY1305_BLOCK_SIZE);
++
++	if (!poly1305_use_sse2 || !simd_use(simd_context) || padbit)
++		return false;
++
++	for (;;) {
++		const size_t bytes = min_t(size_t, len, PAGE_SIZE);
++
++		poly1305_simd_blocks(&state->base.h, &state->base.r,
++				     &state->x, inp, bytes);
++
++		len -= bytes;
++		if (!len)
++			break;
++		inp += bytes;
++		simd_relax(simd_context);
++	}
++
++	return true;
++}
++
++static inline bool poly1305_emit_arch(void *ctx, u8 mac[POLY1305_MAC_SIZE],
++				      const u32 nonce[4],
++				      simd_context_t *simd_context)
++{
++	return false;
++}
+diff --git a/lib/zinc/poly1305/poly1305.c b/lib/zinc/poly1305/poly1305.c
+index 1546f5ac6d1c..c6a88136abb7 100644
+--- a/lib/zinc/poly1305/poly1305.c
++++ b/lib/zinc/poly1305/poly1305.c
+@@ -22,6 +22,9 @@ struct poly1305_internal {
+ 	struct poly1305_state h;
+ };
+ 
++#if defined(CONFIG_ZINC_ARCH_X86_64)
++#include "poly1305-x86_64-glue.c"
++#else
+ static inline bool poly1305_init_arch(void *ctx,
+ 				      const u8 key[POLY1305_KEY_SIZE])
+ {
+@@ -43,6 +46,7 @@ static bool *const poly1305_nobs[] __initconst = { };
+ static void __init poly1305_fpu_init(void)
+ {
+ }
++#endif
+ 
+ static void poly1305_init_generic(void *ctx, const u8 key[16])
+ {
