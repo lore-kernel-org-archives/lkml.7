@@ -2,141 +2,132 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D854BC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:24:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5DD0C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:25:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B8D6206BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:24:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 873C42083D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:25:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="bMVg2xzk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sya9Ren5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727283AbfCVPYO (ORCPT
+        id S1727358AbfCVPZK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 11:24:14 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:45406 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726440AbfCVPYN (ORCPT
+        Fri, 22 Mar 2019 11:25:10 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:36005 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726440AbfCVPZJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 11:24:13 -0400
-Received: by mail-oi1-f193.google.com with SMTP id y84so1969463oia.12
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 08:24:13 -0700 (PDT)
+        Fri, 22 Mar 2019 11:25:09 -0400
+Received: by mail-ed1-f66.google.com with SMTP id e4so2018427edi.3;
+        Fri, 22 Mar 2019 08:25:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SiUB6GjdRDUvfPlt5GeWB4/3VlUtKceTbjUSCfKanHs=;
-        b=bMVg2xzknwWrsKHdURPAH4td/i+DnG34a8+YryPxxGHzVICC8nfrl7CYBl3D4eUc6d
-         rgWQJeMadfip2iVs+y1R3ObEqQqcHIJ4iWVQBbLWOhKi941FO3c2Xl1q2mqy5GSe43Ns
-         lsM3YT+S54h//AvmGLFQihQaypGCzRknjC07PoGuChcNiI7YlGxC7FrnV5QfCLBasiOQ
-         C+ubvIiCL1fA2Dwu/MrVXl7O6rG+FYaoARlfyWjjwdktX86RvrFp73axcgOuPma0VE9g
-         nF5AVun+Zh0Wdx6/jCwP4uTeX5lpsYvhHCJSetr/Xzizn+5CF4IgdXmJKO+92Z/lFach
-         LATA==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=nAZbCRBsttGYt0IyRTrNeLBRUrUFUGOU9JHaNLTD4Pw=;
+        b=Sya9Ren5v5le1ppuKQ70ppCAcHLY6hgh5RpdNStWMO3AgAQS9kI93EVlCd1qlU5Tbp
+         TzutdtGPulfxyeeSh28TTVisHqfL6KQUVCiz/jB7mDy8uR1s79yXML+GBLoXwZlFAo2H
+         GHsZbF6DgDc/to8f1FoYBY7Z3wmvaDl/yZW9dt8TAejkFM0Sq2RVgGHu9bKB9+1qBA8Q
+         05YQxqFWpJ5Abm5hIfcFw9M3DdfE5bUvfPLeH/z6gxPbBrzimKbGfksEsMXJfOytSMRM
+         6UQOeVFMKRvkyeT+8H1p5afYXVx9Q3tcK8YM+DfPjCLMenNWuZV4cbm2uE5xgHNFQKQQ
+         NZdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SiUB6GjdRDUvfPlt5GeWB4/3VlUtKceTbjUSCfKanHs=;
-        b=t5qYzUTxehDriYocV7M5LMErQR6mzDKLkRBLdBf8/BejYcfwCxQY64ZIOH46lEHHRl
-         qLFn1Z+wsfK9JkQN5aDzMETdQaNNU30ZzmfJT16ENR26BMulCLs6bB0S3ekfeWqCRmMb
-         lUn+NKOOgFkZYZUTvOCnEEzxfVBSPGBGW/oSdcnz6XURNDoUxUdglKEiufvNFnr3IXJI
-         3H7uwP9YaSSeF9wqkJEAookzmDZjMJfzjzebtQsxMiZkg5C8tx5CD7hingxk20JbjuHa
-         EUV5cEyO8OBPHjSq5twFyNmO0dGJcz2EpNK+g8QdkQ96RTQpYmZiSOFkoAL//aK3/Mqa
-         kI5g==
-X-Gm-Message-State: APjAAAU6IxHvY3+3QGLgLGBhojuQ406v5vhBc6dlby9EQz4EOAN1tUkG
-        fZrnNLi3xckDiu8TBJzd9oBRAHSACRwBifhmg5JypQ==
-X-Google-Smtp-Source: APXvYqxvsdgrXSTwlEwbN3qSidxJAdAhRPrGdh+vb5iMw7DxT3s00r4H3fjVoGOrj8J6cap1YSmtX94ncF4RtLRxOCU=
-X-Received: by 2002:aca:df57:: with SMTP id w84mr2303809oig.105.1553268252709;
- Fri, 22 Mar 2019 08:24:12 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=nAZbCRBsttGYt0IyRTrNeLBRUrUFUGOU9JHaNLTD4Pw=;
+        b=C1CEmYcNEsN/VgURjI9RFUWN5v7z80kLZB8W++5IIzpXiokpjV4ptoT561ukOOYa1d
+         7WMIm6ETrgQlLEhcXBtHMfg+ttsLgT7mYN72Xb2DHRILbppixQCXLynNfmMCxD2sgEHQ
+         D5JkUmv1jZpU1DOxVh9LNMlEZmKchch8mvmK18AoXp7uRfWFWrK6VVdK+ymTJXkFCWr3
+         GgmFof0uZW5b8Wk8fw4Wu3Y3VBnCkk8xXxYe61Q39RdKlcpcETrvAhd4N3p1zXEiV3W4
+         S6nj62HmsZhqxaG77b7/7i8fOiG2tWDjQL7dTDXWJIMpNCMo5b8mvTVYmnaYJlp3pOWX
+         C40A==
+X-Gm-Message-State: APjAAAVtqBLV3acmyrzMJ6KqWb1QLGsnaecRbMsKBRSVNI1OTi7KsUiA
+        OGEpsxk+4vfpitj1TyzviYc=
+X-Google-Smtp-Source: APXvYqyxA5tAtinDswRrueJLCotsRTfTNLiDoyWm7VLvqMdl3XQpO4uvB2jp6RQmPmJqF3ndC+z+sA==
+X-Received: by 2002:a17:906:28c9:: with SMTP id p9mr5819478ejd.43.1553268307559;
+        Fri, 22 Mar 2019 08:25:07 -0700 (PDT)
+Received: from archlinux-ryzen ([2a01:4f9:2a:1fae::2])
+        by smtp.gmail.com with ESMTPSA id i2sm1752872ejc.1.2019.03.22.08.25.06
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 22 Mar 2019 08:25:06 -0700 (PDT)
+Date:   Fri, 22 Mar 2019 08:25:04 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     QLogic-Storage-Upstream@qlogic.com,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Manish Rangankar <mrangankar@marvell.com>,
+        Chengguang Xu <cgxu519@gmx.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] scsi: qla4xxx: avoid freeing unallocated dma memory
+Message-ID: <20190322152504.GA21978@archlinux-ryzen>
+References: <20190322142530.904080-1-arnd@arndb.de>
 MIME-Version: 1.0
-References: <155295271345.1945351.6465460744078693578.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20190321135451.GD4603@linux.intel.com> <809e827b-fdbe-fbb8-8acf-2878ae9f7777@huawei.com>
- <CAPcyv4gc_KWedC12bTcX24KwjKiBCF=yvouRNzCbJKaLrgJdDg@mail.gmail.com>
- <d0434a90-4010-8c76-c02e-bb1a6ec831ef@huawei.com> <20190322101227.GB3122@linux.intel.com>
-In-Reply-To: <20190322101227.GB3122@linux.intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 22 Mar 2019 08:24:01 -0700
-Message-ID: <CAPcyv4g=W9Fc=nfYjXG9-mpzn2cfiYEz4J7ksP3ziFUc_5k1OQ@mail.gmail.com>
-Subject: Re: [PATCH] security/keys/trusted: Allow operation without hardware TPM
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Roberto Sassu <roberto.sassu@huawei.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        David Howells <dhowells@redhat.com>, keyrings@vger.kernel.org,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190322142530.904080-1-arnd@arndb.de>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 22, 2019 at 3:12 AM Jarkko Sakkinen
-<jarkko.sakkinen@linux.intel.com> wrote:
->
-> On Thu, Mar 21, 2019 at 06:45:47PM +0100, Roberto Sassu wrote:
-> > On 3/21/2019 5:30 PM, Dan Williams wrote:
-> > > On Thu, Mar 21, 2019 at 7:27 AM Roberto Sassu <roberto.sassu@huawei.com> wrote:
-> > > >
-> > > > On 3/21/2019 2:54 PM, Jarkko Sakkinen wrote:
-> > > > > On Mon, Mar 18, 2019 at 04:45:13PM -0700, Dan Williams wrote:
-> > > > > > Rather than fail initialization of the trusted.ko module, arrange for
-> > > > > > the module to load, but rely on trusted_instantiate() to fail
-> > > > > > trusted-key operations.
-> > > > > >
-> > > > > > Fixes: 240730437deb ("KEYS: trusted: explicitly use tpm_chip structure...")
-> > > > > > Cc: Roberto Sassu <roberto.sassu@huawei.com>
-> > > > > > Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > > > > > Cc: James Bottomley <jejb@linux.ibm.com>
-> > > > > > Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > > > > > Cc: Mimi Zohar <zohar@linux.ibm.com>
-> > > > > > Cc: David Howells <dhowells@redhat.com>
-> > > > > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> > > > >
-> > > > > It should check for chip in each function that uses TPM now that
-> > > > > the code does not rely on default chip. Otherwise, the semantics
-> > > > > are kind of inconsistent.
-> > > >
-> > > > If no other TPM function can be used before a successful key
-> > > > instantiate, checking for a chip only in trusted_instantiate() seems
-> > > > sufficient. Then, the same chip will be used by all TPM functions until
-> > > > module unloading, since we incremented the reference count.
-> > > >
-> > > > I would suggest to move the tpm_default_chip() and init_digests() calls
-> > > > to trusted_instantiate() to restore the old behavior of init_trusted().
-> > > >
-> > > > trusted_instantiate() should look like:
-> > > > ---
-> > > > if (!chip) {
-> > > >          chip = tpm_default_chip();
-> > > >          if (!chip)
-> > > >                  return -ENODEV;
-> > > > }
-> > > >
-> > > > if (!digests) {
-> > > >          ret = init_digests();
-> > > >          if (ret < 0)
-> > > >                  return ret;
-> > > > }
-> > >
-> > > This patch already achieves that because tpm_find_get_ops() will fail
-> > > and cause tpm_is_tpm2() to return NULL.
-> >
-> > In addition, the changes I proposed would allow users to create trusted
-> > keys if a TPM is added later. CONFIG_TRUSTED_KEYS=y and
-> > CONFIG_TCG_TPM=m is a valid configuration.
-> >
-> > Jarkko, Dan's patch seems sufficient to fix the issue. He could include
-> > the changes I proposed in his patch. What is your opinion?
->
-> Agreed.
+On Fri, Mar 22, 2019 at 03:25:03PM +0100, Arnd Bergmann wrote:
+> Clang -Wuninitialized notices that on is_qla40XX we never allocate
+> any DMA memory in get_fw_boot_info() but attempt to free it anyway:
+> 
+> drivers/scsi/qla4xxx/ql4_os.c:5915:7: error: variable 'buf_dma' is used uninitialized whenever 'if' condition is false
+>       [-Werror,-Wsometimes-uninitialized]
+>                 if (!(val & 0x07)) {
+>                     ^~~~~~~~~~~~~
+> drivers/scsi/qla4xxx/ql4_os.c:5985:47: note: uninitialized use occurs here
+>         dma_free_coherent(&ha->pdev->dev, size, buf, buf_dma);
+>                                                      ^~~~~~~
+> drivers/scsi/qla4xxx/ql4_os.c:5915:3: note: remove the 'if' if its condition is always true
+>                 if (!(val & 0x07)) {
+>                 ^~~~~~~~~~~~~~~~~~~
+> drivers/scsi/qla4xxx/ql4_os.c:5885:20: note: initialize the variable 'buf_dma' to silence this warning
+>         dma_addr_t buf_dma;
+>                           ^
+>                            = 0
+> 
+> Skip the call to dma_free_coherent() here.
+> 
+> Fixes: 2a991c215978 ("[SCSI] qla4xxx: Boot from SAN support for open-iscsi")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-What changes?
+This is what I initially had but I guess I cared too much about that
+debug print firing properly :) I like this better personally.
 
-Robert, please feel free to re-author the proposed patch however you
-see fit, I just want whatever will get libnvdimm operational again in
-the shortest amount of time.
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+
+> ---
+>  drivers/scsi/qla4xxx/ql4_os.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/scsi/qla4xxx/ql4_os.c b/drivers/scsi/qla4xxx/ql4_os.c
+> index 16a18d5d856f..daa884fa43f4 100644
+> --- a/drivers/scsi/qla4xxx/ql4_os.c
+> +++ b/drivers/scsi/qla4xxx/ql4_os.c
+> @@ -5928,7 +5928,7 @@ static int get_fw_boot_info(struct scsi_qla_host *ha, uint16_t ddb_index[])
+>  		val = rd_nvram_byte(ha, sec_addr);
+>  		if (val & BIT_7)
+>  			ddb_index[1] = (val & 0x7f);
+> -
+> +		goto exit_boot_info;
+>  	} else if (is_qla80XX(ha)) {
+>  		buf = dma_alloc_coherent(&ha->pdev->dev, size,
+>  					 &buf_dma, GFP_KERNEL);
+> -- 
+> 2.20.0
+> 
