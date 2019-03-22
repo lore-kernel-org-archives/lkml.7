@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80F88C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:03:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C19CC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:03:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51ADB2196E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:03:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29EF421B18
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:03:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256230;
-	bh=ONq/1aIIF9nFaMGbFLCcFbhx+z4PYd9bAyHZyNYSHBw=;
+	s=default; t=1553256235;
+	bh=elFe8A4KLWRXsj0lLmL+wyS1fuQD7a4WM9PmRNeDU1w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TmuJ47lkMnikSx3UFyBeNAVVpN6ARNXjwDVxDT6DPY8ZjAMPz0HLGo6yggMwhEKi1
-	 l95CQw2ADBemZGDk4GtWT35JaJwwbVqXL/EQuCUykqk8Cb5sT5mTmzg3oBeSLb8m8n
-	 B6UInchDdzgsTROWe0kNfSPRC4iYsZ1vWUm8R+7Q=
+	b=AphrrgMTJn0NjJnn03ZQrcISD4BeiriOso+7c75N1kxF2r2uU9Ysim8LQ+AIPRbF2
+	 mgukjLbOqokkex6XECG9WBDUd1IVj6+oQlDJQdRGt1IlWdh2XSwuZ82KhqDZxw6+g+
+	 InbFF4Y+xy2JDk4Hgryh0rQ2I3x80riQf/xTxjIE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388575AbfCVMDs (ORCPT
+        id S2388579AbfCVMDy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:03:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42160 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:03:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388559AbfCVMDp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:03:45 -0400
+        id S2388576AbfCVMDt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:03:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5627E2196E;
-        Fri, 22 Mar 2019 12:03:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 779C8204FD;
+        Fri, 22 Mar 2019 12:03:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256224;
-        bh=ONq/1aIIF9nFaMGbFLCcFbhx+z4PYd9bAyHZyNYSHBw=;
+        s=default; t=1553256229;
+        bh=elFe8A4KLWRXsj0lLmL+wyS1fuQD7a4WM9PmRNeDU1w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MLAynQNSuHGkra1NAwD+o+jlQfZWsEN/tdH0RkdyOm8+ATiuJDxB7x715eqKy6XpN
-         ouAoJz4qeSBEtjSqro9JbGhVL9Gu8D7AdYEM/9h+ar1w2UxE857/lwEkV1KjFCxXAN
-         unpy6DTnI51ZSJJsBXXnas7UQ3sGZX8WirEVW1ao=
+        b=Ds8hz87hC9XaC2ccd+7/3q7py+u3fQzsbg1TwpOnGyy63boNuxFN21vvRZcSMMNSt
+         2TFs2mD13b6zxMqq9u9V4ZgwEOBXJf4NtfMHdlzD3hImdNaUb3fokyDd/jqmYY9/eB
+         KRZMHytAF0JlnfaSkf2elTTM+FtOgH6dVIaL93nM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wei Yang <richardw.yang@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: [PATCH 4.19 118/280] libnvdimm, pfn: Fix over-trim in trim_pfn_device()
-Date:   Fri, 22 Mar 2019 12:14:31 +0100
-Message-Id: <20190322111314.673999207@linuxfoundation.org>
+        stable@vger.kernel.org, Pavel Shilovsky <pshilov@microsoft.com>,
+        Steve French <stfrench@microsoft.com>,
+        Ronnie Sahlberg <lsahlber@redhat.com>
+Subject: [PATCH 4.19 139/280] CIFS: Fix read after write for files with read caching
+Date:   Fri, 22 Mar 2019 12:14:52 +0100
+Message-Id: <20190322111318.017883204@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -65,37 +66,54 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Wei Yang <richardw.yang@linux.intel.com>
+From: Pavel Shilovsky <piastryyy@gmail.com>
 
-commit f101ada7da6551127d192c2f1742c1e9e0f62799 upstream.
+commit 6dfbd84684700cb58b34e8602c01c12f3d2595c8 upstream.
 
-When trying to see whether current nd_region intersects with others,
-trim_pfn_device() has already calculated the *size* to be expanded to
-SECTION size.
+When we have a READ lease for a file and have just issued a write
+operation to the server we need to purge the cache and set oplock/lease
+level to NONE to avoid reading stale data. Currently we do that
+only if a write operation succedeed thus not covering cases when
+a request was sent to the server but a negative error code was
+returned later for some other reasons (e.g. -EIOCBQUEUED or -EINTR).
+Fix this by turning off caching regardless of the error code being
+returned.
 
-Do not double append 'adjust' to 'size' when calculating whether the end
-of a region collides with the next pmem region.
+The patches fixes generic tests 075 and 112 from the xfs-tests.
 
-Fixes: ae86cbfef381 "libnvdimm, pfn: Pad pfn namespaces relative to other regions"
 Cc: <stable@vger.kernel.org>
-Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/nvdimm/pfn_devs.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/cifs/file.c |   12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
---- a/drivers/nvdimm/pfn_devs.c
-+++ b/drivers/nvdimm/pfn_devs.c
-@@ -619,7 +619,7 @@ static void trim_pfn_device(struct nd_pf
- 	if (region_intersects(start, size, IORESOURCE_SYSTEM_RAM,
- 				IORES_DESC_NONE) == REGION_MIXED
- 			|| !IS_ALIGNED(end, nd_pfn->align)
--			|| nd_region_conflict(nd_region, start, size + adjust))
-+			|| nd_region_conflict(nd_region, start, size))
- 		*end_trunc = end - phys_pmem_align_down(nd_pfn, end);
- }
- 
+--- a/fs/cifs/file.c
++++ b/fs/cifs/file.c
+@@ -2871,14 +2871,16 @@ cifs_strict_writev(struct kiocb *iocb, s
+ 	 * these pages but not on the region from pos to ppos+len-1.
+ 	 */
+ 	written = cifs_user_writev(iocb, from);
+-	if (written > 0 && CIFS_CACHE_READ(cinode)) {
++	if (CIFS_CACHE_READ(cinode)) {
+ 		/*
+-		 * Windows 7 server can delay breaking level2 oplock if a write
+-		 * request comes - break it on the client to prevent reading
+-		 * an old data.
++		 * We have read level caching and we have just sent a write
++		 * request to the server thus making data in the cache stale.
++		 * Zap the cache and set oplock/lease level to NONE to avoid
++		 * reading stale data from the cache. All subsequent read
++		 * operations will read new data from the server.
+ 		 */
+ 		cifs_zap_mapping(inode);
+-		cifs_dbg(FYI, "Set no oplock for inode=%p after a write operation\n",
++		cifs_dbg(FYI, "Set Oplock/Lease to NONE for inode=%p after write\n",
+ 			 inode);
+ 		cinode->oplock = 0;
+ 	}
 
 
