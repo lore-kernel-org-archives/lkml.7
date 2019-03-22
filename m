@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B15AC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:46:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81C7EC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:46:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC8D72075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:46:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5043E2082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:46:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255195;
-	bh=X/+e4QUYdyJx2t5KISyYuIOA4kNFQUVGeiV2QOdjhus=;
+	s=default; t=1553255199;
+	bh=e5jevcRlaxNyy0WYLXMdd8nkxUEGEkoPw0+R1SsDyz4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xIDPn6umdpVDj7ZPGrQ6ZnY940/rPQLJO7lS/zIcgw5lW1bqXpXHl2pVe4e8rB/L5
-	 28HvdUy2i/jH7kQMoSLJWuOYBGp6oR41c2W5snKoSi0AtoiIm8ogzBk2i0F9wWlZss
-	 hzGt9AxQvrN0ROBmHo7XAdyFQceMInGVnD1F8mew=
+	b=s0kXfvy+rkuDlnw/pywyY5XlzucYyrWufunbiXrZUaxmBYrj/GX7HGIUUCT9m2eIo
+	 4Q1EYIZmpARifjOyrJiRQtzos62Cy1FGVpBclU0yt9tKNK7U7+e5BXQGm0vELY2Sx7
+	 5ZZkotFZZ/FdII5VsCwJEY972qEJ6YDNOLarOLqc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732063AbfCVLqe (ORCPT
+        id S1732073AbfCVLqg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:46:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49632 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:46:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49688 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731828AbfCVLqa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:46:30 -0400
+        id S1731682AbfCVLqd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:46:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8BFE62075E;
-        Fri, 22 Mar 2019 11:46:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54E7B2195D;
+        Fri, 22 Mar 2019 11:46:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255190;
-        bh=X/+e4QUYdyJx2t5KISyYuIOA4kNFQUVGeiV2QOdjhus=;
+        s=default; t=1553255192;
+        bh=e5jevcRlaxNyy0WYLXMdd8nkxUEGEkoPw0+R1SsDyz4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fh8Q/vFVBS+trHeQAhrL6lqBh6zzpGV8siNBKltBhPawJlyBPDLO3mDTEQxQ9xexS
-         Mp4OiAHXshGQW+6N02umTS1zzHuxyKQFzbfD6fp9/EFxPGqfXl6wKc0y1L7qpO0tdx
-         rIsxFD+elxDZcY0K8Cj7oXbKbWOddala4vZ3xFBA=
+        b=VIrpSEeIMXgIaYuB66hJV70Vq4gPqtiSV1ZJWDMhY3qAmtTAHgsHm9F/6nk0IRIDo
+         7ViApnTTT6ALc+vdOfQTP3inTvdu3dG6fTgfjzn1nlpXbobnssNu2+vcSWg4oSUBTv
+         7+wZfsHVGjafRp7hESSDZw52w53mlLjkv9uzQfMg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shengjiu Wang <shengjiu.wang@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Nicolin Chen <nicoleotsuka@gmail.com>
-Subject: [PATCH 4.14 003/183] ASoC: fsl_esai: fix register setting issue in RIGHT_J mode
-Date:   Fri, 22 Mar 2019 12:13:51 +0100
-Message-Id: <20190322111242.058346720@linuxfoundation.org>
+        stable@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 4.14 004/183] iio: adc: exynos-adc: Fix NULL pointer exception on unbind
+Date:   Fri, 22 Mar 2019 12:13:52 +0100
+Message-Id: <20190322111242.135084734@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111241.819468003@linuxfoundation.org>
 References: <20190322111241.819468003@linuxfoundation.org>
@@ -67,51 +65,48 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: S.j. Wang <shengjiu.wang@nxp.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 
-commit cc29ea007347f39f4c5a4d27b0b555955a0277f9 upstream.
+commit 2ea8bab4dd2a9014e723b28091831fa850b82d83 upstream.
 
-The ESAI_xCR_xWA is xCR's bit, not the xCCR's bit, driver set it to
-wrong register, correct it.
+Fix NULL pointer exception on device unbind when device tree does not
+contain "has-touchscreen" property.  In such case the input device is
+not registered so it should not be unregistered.
 
-Fixes 43d24e76b698 ("ASoC: fsl_esai: Add ESAI CPU DAI driver")
+    $ echo "12d10000.adc" > /sys/bus/platform/drivers/exynos-adc/unbind
+
+    Unable to handle kernel NULL pointer dereference at virtual address 00000474
+    ...
+    (input_unregister_device) from [<c0772060>] (exynos_adc_remove+0x20/0x80)
+    (exynos_adc_remove) from [<c0587d5c>] (platform_drv_remove+0x20/0x40)
+    (platform_drv_remove) from [<c05860f0>] (device_release_driver_internal+0xdc/0x1ac)
+    (device_release_driver_internal) from [<c0583ecc>] (unbind_store+0x60/0xd4)
+    (unbind_store) from [<c031b89c>] (kernfs_fop_write+0x100/0x1e0)
+    (kernfs_fop_write) from [<c029709c>] (__vfs_write+0x2c/0x17c)
+    (__vfs_write) from [<c0297374>] (vfs_write+0xa4/0x184)
+    (vfs_write) from [<c0297594>] (ksys_write+0x4c/0xac)
+    (ksys_write) from [<c0101000>] (ret_fast_syscall+0x0/0x28)
+
+Fixes: 2bb8ad9b44c5 ("iio: exynos-adc: add experimental touchscreen support")
 Cc: <stable@vger.kernel.org>
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
-Ackedy-by: Nicolin Chen <nicoleotsuka@gmail.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/fsl/fsl_esai.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/iio/adc/exynos_adc.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/soc/fsl/fsl_esai.c
-+++ b/sound/soc/fsl/fsl_esai.c
-@@ -395,7 +395,8 @@ static int fsl_esai_set_dai_fmt(struct s
- 		break;
- 	case SND_SOC_DAIFMT_RIGHT_J:
- 		/* Data on rising edge of bclk, frame high, right aligned */
--		xccr |= ESAI_xCCR_xCKP | ESAI_xCCR_xHCKP | ESAI_xCR_xWA;
-+		xccr |= ESAI_xCCR_xCKP | ESAI_xCCR_xHCKP;
-+		xcr  |= ESAI_xCR_xWA;
- 		break;
- 	case SND_SOC_DAIFMT_DSP_A:
- 		/* Data on rising edge of bclk, frame high, 1clk before data */
-@@ -452,12 +453,12 @@ static int fsl_esai_set_dai_fmt(struct s
- 		return -EINVAL;
+--- a/drivers/iio/adc/exynos_adc.c
++++ b/drivers/iio/adc/exynos_adc.c
+@@ -916,7 +916,7 @@ static int exynos_adc_remove(struct plat
+ 	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
+ 	struct exynos_adc *info = iio_priv(indio_dev);
+ 
+-	if (IS_REACHABLE(CONFIG_INPUT)) {
++	if (IS_REACHABLE(CONFIG_INPUT) && info->input) {
+ 		free_irq(info->tsirq, info);
+ 		input_unregister_device(info->input);
  	}
- 
--	mask = ESAI_xCR_xFSL | ESAI_xCR_xFSR;
-+	mask = ESAI_xCR_xFSL | ESAI_xCR_xFSR | ESAI_xCR_xWA;
- 	regmap_update_bits(esai_priv->regmap, REG_ESAI_TCR, mask, xcr);
- 	regmap_update_bits(esai_priv->regmap, REG_ESAI_RCR, mask, xcr);
- 
- 	mask = ESAI_xCCR_xCKP | ESAI_xCCR_xHCKP | ESAI_xCCR_xFSP |
--		ESAI_xCCR_xFSD | ESAI_xCCR_xCKD | ESAI_xCR_xWA;
-+		ESAI_xCCR_xFSD | ESAI_xCCR_xCKD;
- 	regmap_update_bits(esai_priv->regmap, REG_ESAI_TCCR, mask, xccr);
- 	regmap_update_bits(esai_priv->regmap, REG_ESAI_RCCR, mask, xccr);
- 
 
 
