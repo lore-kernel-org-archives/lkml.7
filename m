@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ADAFC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:56:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8DB3C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:56:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BBF520850
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:56:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A13421916
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:56:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255800;
-	bh=IUW7NIFVZH3CQppYTMheeZvG1PijOeIbQBCVPCDfGqA=;
+	s=default; t=1553255803;
+	bh=esY3zVDN87paZVPuyLOPpUL98jXsk6O59DcHSxEQzqo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PugOvqGSZ8tUYJXvPUS1Iz1LP+jy3nStxRtIVjbB7fPYHE1ZbFcEr3/0HxBcqTlHK
-	 Fqd/ZvwGOBXL2x5qoiwxPIFJsKcV9oBA1BDsbyIITYrUdooJ7q3ZR5d+qkykWY+X1M
-	 6JTsvflQ+8B7FiB34aGqT8iN0rW2JmOj0J7Phz1g=
+	b=sbFeFKPe+A8/jjW42I6OJo/ji483zfqGuSRZUrO7CnHZ0sgT5XG7VIQki0DdA3yqF
+	 fC+3RWqOFyBkQ2x2x+FPruiqdoJLGlW4akQbn4Qr6vyY73F5f34iryUvpML+og/jIa
+	 sm5++qzj+750lduGub6IrFSDIlS2aDAW/nH308o8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387547AbfCVL4i (ORCPT
+        id S2387557AbfCVL4l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:56:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33036 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:56:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732921AbfCVL4f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:56:35 -0400
+        id S1733132AbfCVL4i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:56:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 935A42082C;
-        Fri, 22 Mar 2019 11:56:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54F1321916;
+        Fri, 22 Mar 2019 11:56:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255795;
-        bh=IUW7NIFVZH3CQppYTMheeZvG1PijOeIbQBCVPCDfGqA=;
+        s=default; t=1553255797;
+        bh=esY3zVDN87paZVPuyLOPpUL98jXsk6O59DcHSxEQzqo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RwJmLpMuhKsipr9TWDBKgTnJvNPvCN6W8DBDdRgrxdlhOsV2Tme5IW/mqyxkvOJHR
-         doPVYkAFGSCn9aP/kyp3BlyOJ4WAp/3997h/DER3HT80ipoDGZ9y/5WTFFv/aSspi/
-         l5TSOjjb0MG2G6fP0kATMnSU5wwlxZhXV4slMkHQ=
+        b=gBul75a0PhEFSodsKOCknVPQL4n37BocqskCx/8m+5hqnJlCfjlLBg7fZ8WcDOnCN
+         009gXxvW6ZsMEXj5PlP7ucgzS4iFLZUHFl7o4G7N7WZ9EF+69sP1Kh8ZkAW74bpJar
+         4l6Mcc1JPSpqiQIutsMoIRX3Z7VnaxI1lvH002mE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gilad Ben-Yossef <gilad@benyossef.com>,
+        stable@vger.kernel.org,
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Eric Biggers <ebiggers@google.com>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.19 017/280] crypto: ccree - dont copy zero size ciphertext
-Date:   Fri, 22 Mar 2019 12:12:50 +0100
-Message-Id: <20190322111307.273080814@linuxfoundation.org>
+Subject: [PATCH 4.19 018/280] crypto: cfb - add missing chunksize property
+Date:   Fri, 22 Mar 2019 12:12:51 +0100
+Message-Id: <20190322111307.333223891@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -65,37 +67,81 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Gilad Ben-Yossef <gilad@benyossef.com>
+From: Eric Biggers <ebiggers@google.com>
 
-commit 2b5ac17463dcb2411fed506edcf259a89bb538ba upstream.
+commit 394a9e044702e6a8958a5e89d2a291605a587a2a upstream.
 
-For decryption in CBC mode we need to save the last ciphertext block
-for use as the next IV. However, we were trying to do this also with
-zero sized ciphertext resulting in a panic.
+Like some other block cipher mode implementations, the CFB
+implementation assumes that while walking through the scatterlist, a
+partial block does not occur until the end.  But the walk is incorrectly
+being done with a blocksize of 1, as 'cra_blocksize' is set to 1 (since
+CFB is a stream cipher) but no 'chunksize' is set.  This bug causes
+incorrect encryption/decryption for some scatterlist layouts.
 
-Fix this by only doing the copy if the ciphertext length is at least
-of IV size.
+Fix it by setting the 'chunksize'.  Also extend the CFB test vectors to
+cover this bug as well as cases where the message length is not a
+multiple of the block size.
 
-Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
-Cc: stable@vger.kernel.org
+Fixes: a7d85e06ed80 ("crypto: cfb - add support for Cipher FeedBack mode")
+Cc: <stable@vger.kernel.org> # v4.17+
+Cc: James Bottomley <James.Bottomley@HansenPartnership.com>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/ccree/cc_cipher.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ crypto/cfb.c     |    6 ++++++
+ crypto/testmgr.h |   25 +++++++++++++++++++++++++
+ 2 files changed, 31 insertions(+)
 
---- a/drivers/crypto/ccree/cc_cipher.c
-+++ b/drivers/crypto/ccree/cc_cipher.c
-@@ -783,7 +783,8 @@ static int cc_cipher_decrypt(struct skci
+--- a/crypto/cfb.c
++++ b/crypto/cfb.c
+@@ -298,6 +298,12 @@ static int crypto_cfb_create(struct cryp
+ 	inst->alg.base.cra_blocksize = 1;
+ 	inst->alg.base.cra_alignmask = alg->cra_alignmask;
  
- 	memset(req_ctx, 0, sizeof(*req_ctx));
++	/*
++	 * To simplify the implementation, configure the skcipher walk to only
++	 * give a partial block at the very end, never earlier.
++	 */
++	inst->alg.chunksize = alg->cra_blocksize;
++
+ 	inst->alg.ivsize = alg->cra_blocksize;
+ 	inst->alg.min_keysize = alg->cra_cipher.cia_min_keysize;
+ 	inst->alg.max_keysize = alg->cra_cipher.cia_max_keysize;
+--- a/crypto/testmgr.h
++++ b/crypto/testmgr.h
+@@ -11416,6 +11416,31 @@ static const struct cipher_testvec aes_c
+ 			  "\x75\xa3\x85\x74\x1a\xb9\xce\xf8"
+ 			  "\x20\x31\x62\x3d\x55\xb1\xe4\x71",
+ 		.len	= 64,
++		.also_non_np = 1,
++		.np	= 2,
++		.tap	= { 31, 33 },
++	}, { /* > 16 bytes, not a multiple of 16 bytes */
++		.key	= "\x2b\x7e\x15\x16\x28\xae\xd2\xa6"
++			  "\xab\xf7\x15\x88\x09\xcf\x4f\x3c",
++		.klen	= 16,
++		.iv	= "\x00\x01\x02\x03\x04\x05\x06\x07"
++			  "\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f",
++		.ptext	= "\x6b\xc1\xbe\xe2\x2e\x40\x9f\x96"
++			  "\xe9\x3d\x7e\x11\x73\x93\x17\x2a"
++			  "\xae",
++		.ctext	= "\x3b\x3f\xd9\x2e\xb7\x2d\xad\x20"
++			  "\x33\x34\x49\xf8\xe8\x3c\xfb\x4a"
++			  "\xc8",
++		.len	= 17,
++	}, { /* < 16 bytes */
++		.key	= "\x2b\x7e\x15\x16\x28\xae\xd2\xa6"
++			  "\xab\xf7\x15\x88\x09\xcf\x4f\x3c",
++		.klen	= 16,
++		.iv	= "\x00\x01\x02\x03\x04\x05\x06\x07"
++			  "\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f",
++		.ptext	= "\x6b\xc1\xbe\xe2\x2e\x40\x9f",
++		.ctext	= "\x3b\x3f\xd9\x2e\xb7\x2d\xad",
++		.len	= 7,
+ 	},
+ };
  
--	if (ctx_p->cipher_mode == DRV_CIPHER_CBC) {
-+	if ((ctx_p->cipher_mode == DRV_CIPHER_CBC) &&
-+	    (req->cryptlen >= ivsize)) {
- 
- 		/* Allocate and save the last IV sized bytes of the source,
- 		 * which will be lost in case of in-place decryption.
 
 
