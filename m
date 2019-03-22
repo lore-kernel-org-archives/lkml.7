@@ -2,149 +2,184 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72400C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 01:48:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DF8DC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 01:48:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 345E0218E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 01:48:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F42921900
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 01:48:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="wmXjmqOM"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="BIEd30VU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727632AbfCVBsK (ORCPT
+        id S1727655AbfCVBsQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 21:48:10 -0400
-Received: from mail-eopbgr150084.outbound.protection.outlook.com ([40.107.15.84]:34467
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727397AbfCVBsJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 21:48:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5q8zNBUNNnA2yFpYEt2VbAB/5DnROX4Vfj48OF3UY24=;
- b=wmXjmqOMMjUQtwfJs9BhVyThMgjJrEGq4qYfKZ8Kw4/qY6SJAD51cg4O4j05YHAv3lQedl/zt1sGHl5m7sW3Ez3gXQZ4bh/SL/W/hTWkKDvitBIJ5HwcvdXthuRyrkS03mxKAP+BDwDVp3hNPKyMRsSrvOQV1/MxmkHyJCagaXA=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3754.eurprd04.prod.outlook.com (52.134.67.26) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1730.15; Fri, 22 Mar 2019 01:48:06 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::f1b4:a1fb:cfd1:3f08]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::f1b4:a1fb:cfd1:3f08%7]) with mapi id 15.20.1730.013; Fri, 22 Mar 2019
- 01:48:06 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "stefan@agner.ch" <stefan@agner.ch>,
-        "otavio@ossystems.com.br" <otavio@ossystems.com.br>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Robin Gong <yibin.gong@nxp.com>,
-        "jan.tuerk@emtrion.com" <jan.tuerk@emtrion.com>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: [PATCH V9 1/5] dt-bindings: pwm: Add i.MX TPM PWM binding
-Thread-Topic: [PATCH V9 1/5] dt-bindings: pwm: Add i.MX TPM PWM binding
-Thread-Index: AQHU4FFLawhysUr2ckuOKuIEIybWsQ==
-Date:   Fri, 22 Mar 2019 01:48:05 +0000
-Message-ID: <1553218974-20464-2-git-send-email-Anson.Huang@nxp.com>
-References: <1553218974-20464-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1553218974-20464-1-git-send-email-Anson.Huang@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.7.4
-x-clientproxiedby: HK2PR02CA0172.apcprd02.prod.outlook.com
- (2603:1096:201:1f::32) To DB3PR0402MB3916.eurprd04.prod.outlook.com
- (2603:10a6:8:10::18)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [119.31.174.67]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: cdd297c1-dc8d-4e44-1b4f-08d6ae686d75
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600127)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:DB3PR0402MB3754;
-x-ms-traffictypediagnostic: DB3PR0402MB3754:
-x-microsoft-antispam-prvs: <DB3PR0402MB375427B24AA59825E61760D6F5430@DB3PR0402MB3754.eurprd04.prod.outlook.com>
-x-forefront-prvs: 09840A4839
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(136003)(376002)(39860400002)(346002)(366004)(189003)(199004)(71190400001)(50226002)(99286004)(81156014)(71200400001)(6436002)(81166006)(476003)(2616005)(6486002)(486006)(8936002)(36756003)(66066001)(68736007)(86362001)(5660300002)(11346002)(110136005)(2201001)(14454004)(52116002)(446003)(2501003)(7416002)(186003)(26005)(316002)(106356001)(4326008)(2906002)(76176011)(478600001)(105586002)(7736002)(3846002)(6116002)(53936002)(102836004)(305945005)(8676002)(256004)(97736004)(25786009)(6346003)(6512007)(6506007)(386003)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3754;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 3JLaihsnHemwspV4238yz4TnYCcM836NfJP5sNnPdso0lfixGiIG0g/170578z434540lI6GDvljTWqjAMLo0shpxJsVxOH5PHg914vdhu0oBd/8xnyzChaMR/B//dNOt0oQzCu2pPIdpIaM1Fp+pQx9LUttL9DlDU1G2nfaq3pojjMgUrRVMX2+jvcaHjtUdGEsPFDhUH6aVoWd1f1/X2gch1b2824i/9ox/ZI37ugOdFtnhwiKY+5W8ybxezgj4vB0QlPavH5Z8tr5nVRcL3Q10CkdpbI+aDpK0aqN2CrrvnktUPndO6DYGwnPwcDFBMN5kCHtuKFvmR7ryeViZ/vGND+OhNjAW7NH/+mMQo/ppsURbByPKq2giVOzIQRqM7AO9CY//qkzfzBV6tYuAr33o1+bopaV15F7ffe7wIg=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 21 Mar 2019 21:48:16 -0400
+Received: from mout.gmx.net ([212.227.17.21]:49607 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727397AbfCVBsP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 21:48:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1553219281;
+        bh=/MMzAhlmcJWn/Kdv4gvfA5Jp0HNucrPLSNN+zs+GZnI=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=BIEd30VUJOHJBq5aTIFlIEVxYRfQgGPksvr2YDHiD8kBmpIGM2ss5ww23r+WsGO02
+         H78SsNP63TNVw0YEH5rrOl6ocA1nnHJ6jCWCZKvMjCZ4IobssWTRCLL7ND3iD82vfK
+         6SewMT806mV/pnEgK++QkXMeLJwS3dOy/44MH1hM=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [10.2.0.3] ([217.250.41.73]) by mail.gmx.com (mrgmx103
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 0LeeNW-1ge4TP0lGY-00qTeu; Fri, 22
+ Mar 2019 02:48:01 +0100
+Subject: Re: [PATCH] ath9k: Check for errors when reading SREV register
+To:     Kalle Valo <kvalo@codeaurora.org>
+Cc:     QCA ath9k Development <ath9k-devel@qca.qualcomm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190318190557.21599-1-timschumi@gmx.de>
+ <87va0cpmt4.fsf@codeaurora.org>
+From:   Tim Schumacher <timschumi@gmx.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=timschumi@gmx.de; keydata=
+ mQINBFcuQFEBEADFdq6ifgHlI42LHxPoK3pxL85GeV6TEww5LMnXVMvmi22Q+olTrnqETIvH
+ LYYqIAj5YPpCs9S9ROFi7YqgCneqnyABx7r3MAjfM9Pnvb7LzIZIlAhDcZ799HSJgRmnEoaF
+ 8og/QJmVKnEvSep+gLk97/DPxj/E1KFWgxysTRfuhyivf/ZFl6/oEnyVfZMY5IEx5bNN60tr
+ uA6fjbXitqM1GRep1jG17Q6YrtADuu/DIawjMujqnIYwlZRsyEfvP1ezJCxSYZpm6ox+mEwx
+ wrUPyhs76LyEoiLXCAJko57mBB/OvqCMNuVy8BVPB3UDOI9TiUAkzWUiqayPRrM9khGXQtYn
+ 8gOz3Y4GiBI94iHD/EweSF34Uttm3ELl1cxJtfWTCxjn7shN/xdCJCMWdbHzpjZ7O4wFacs7
+ 1dvb5n0dnIdWCIQGneT8Rfq4tF7wbkHKM26TwijMiRFoxXv+ud4oM7qecsfZfwy4+DAsVghV
+ Sy6jCIkduBPyP2DoNhiT9ZeavLYjdAIaxewqjGhKi8N7Uvd8xMxJeVkkgZQqA3/Aewm52j1n
+ pFiStR3C6394iumBBykc5BH5akcYkA90BjXP7IaRvfrG92abty2zJPQ6LF01/oxbBggMjd/f
+ 9oVhC4eAMoTdIjPQkIj6Elvn9l4fRcVk4Y3KQcgjMVY1lAjZkQARAQABtCFUaW0gU2NodW1h
+ Y2hlciA8dGltc2NodW1pQGdteC5kZT6JAlcEEwEKAEECGwMFCwkIBwMFFQoJCAsFFgIDAQAC
+ HgECF4AFCQcHnSwWIQTMtsAhgfa2/uTeYPwmIHQiLhnCvQUCXFSuzgIZAQAKCRAmIHQiLhnC
+ vbnCD/94ae11DAfgfOpKXfqkAU1mr+/J01773tcX0D1y7VjZ8Y26OJoixndLvU2hSMmAx3lA
+ lmmt+3XR2g1zNiqk7jxEoLqJ79Jt87CxnvVUbZy+fzyq+C+bodAoeFEr3sv4xdabcHR+finr
+ aZLfLFpC7eDrYCQvER18IiD/uUeO9zIX/Ff1wfUfCRHhmmN8+Qmt4CjPSfJoCsZb1Kch6Khr
+ 8zPEbrHxxE6qwRtDDevyz3Y9f+kREHr914hnXyRrwekCc7ckFmYGfDT29rjqVsgx4k19cagA
+ epxqEUONI3s6bIRhhzLXwCAB4Y6G6HNFoK3hBgna3OhIZvoiuUJ5SlWrtyJXb2BPsXcjUHO2
+ NEaaV/iySqx1B6/FKiX8/zJMZmf4doip6abLbTQKLiEwAoAy3Z0gduWO5J6rtjoy42RgsPXv
+ j/cLsrHivOaqZiTVlxE5aeoHdnzQlw/wN979MXEglo9OE0d9LQ2hHFiL5jmZoF1Ahnats9RE
+ CR+XHG4DKrOUI3zvs8a6lwOWAL9kgflPnGx6nMrEp82qIJhkagEaPCyreE32JiD0oz2UyOhU
+ ATvZiwVQ2jBytvOgA6qMqWGdsNQ0O57U7UJJbETJmu5u3McXxunc0IB1tjm7QMdm/lhbYjyi
+ b66OPCuzb/Fp22cMPK+ObDblNk6UpE4aqkKRNGv/rbkCDQRXLkBRARAAoFqgxu6yPL2rp3qo
+ BquCvvkACYD5GZDkAXng2ghhSFgifsmEbSo0UXrxP2FkCP0S9jZ+C4X1j6FYEa1iGeH8TFc5
+ M3o7jsvrUhKcsoF6CzjAQ3KCqD6u0wN+pCmOfQdJEZmuYTwvZPe952mHJzJJ8BSsT26WDY04
+ MOF5jbC5Naao8tO+PUCSZ+djoU+rGfKecH/8ua/rcv6LGcc/1k5R9umBmNmy1pJCcDrGZzg5
+ AXi92Zu4mFGv0XkaReGze6zfxwmSi79j52xcTIi5lV7SVJDkFFWCMqUR6rUFPLZc3YFTUDa+
+ cBNalT90rwqYlq50BFFkGE4Vw34/WyYGcWn7iSy+CFNB0wvQGMclVJSXtPzpv7BzHAK6qnOa
+ 74pkr5QpYXNEgojHjBGGACp/3Tf0c5f4FptbWzzQOCqAV1+XdnfUV3BeGIYfYy+xX0MQQMm6
+ d9nRtvPfO3oOfgts1+H6hGAavw92m84hTdlpZOWaXm+7322ULI5tR4kcov6sMJ4lp6+ZzKId
+ PmdvyBBkLjG6C1TxUjkc3FR4QkVkrDMzNp+GlYFW0LCshF1zuc6cquTOM395oXDtzxM5FQji
+ EAXV1WOlqDYJ+fUkGTHfIkXKuex9zgtB3aqg2kxmlyBoEWOq+5Wo8ltW0xMXbkAT9Env6Xjt
+ qG7Ks8/AwczayJ+aitkAEQEAAYkCPAQYAQoAJgIbDBYhBMy2wCGB9rb+5N5g/CYgdCIuGcK9
+ BQJcVKouBQkHB51dAAoJECYgdCIuGcK9vtkP/2kD6crT3YBVifbbEaOSYDU3UjBsJTHPpIIB
+ gRrffhav/g1CIfqwHM2zertIFPSjFEbg4br3aGKUwM7mUsuzKgj2xrixrkrALOUXbjSTr07o
+ XAgliLLzXL/PHCWfFv53GZPptBblVtGxrd76DX9KeEZYk9fdy6+DHLufsB59h7dnaOswv9Un
+ faMrCd8jhTIfhWXocJCe8a2epZz82cFlx1rd38pkBs2/DDNpGNBeD4qcYZVMhbzpBPDT8RhZ
+ YiTi4Ge485am8r8sNk93M3ewsVfHIA6P3ChQIDJsuEgjiE4jjzJskcjnU/m5qIYy/m5eeJ9P
+ zLHiQaBZIHcZrqSBhEUR7n9QSJJ0oERoZOYfBmCTYtbnGOHHyrhy/STBs/RhUOLBHEXzahSq
+ hSq96S3lliFUgq0D5ADMVbNd5h/WHur//8y4n04aO8CpXgUeE/OJ/0ShS4OzltSRpJrtTXdk
+ iJGcvmZ2wplkVM25rT0i88hU58R4SqXEDGxOB92gH5dr5FMWBXvKzXtksX+x5ktlShdFye2X
+ Z+NRWzsKyM0lEu7YUiWIHn4oidqn43FTrc9I4EqUw5EtDr9aeEmgNYFxGCQUg9yL85uykgZo
+ yZgTz2jxUNaSz0i7LOeOc6G8JMM7GtChNxrDGxvvvOEBXBQZ0WIjPfC4ngYAl3bUV5B/eL1X
+Message-ID: <95ca6443-a3ad-1eda-db6a-c684cc358fc9@gmx.de>
+Date:   Fri, 22 Mar 2019 02:47:59 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cdd297c1-dc8d-4e44-1b4f-08d6ae686d75
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Mar 2019 01:48:05.8959
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3754
+In-Reply-To: <87va0cpmt4.fsf@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US-large
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:EjVaiXIcww1PynL1C8ZJIGUAwcIh0+HXctuDci2ICj0jaxQllBx
+ mFphi8brz1O0qra0Hv5wBNZDK2R75Ls0uBSH6FDoj6dRi26PpPSQ0REYOq4yFuUyUy1zvLn
+ rek+bF8OHdlU/tL9AZLLXwoSPIXNVDtfWNNtUP3e6OY+nJveocCo2yQYisCPq6vwTQEwIo1
+ UcBaRjEz+iTaZZS9I4F0g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:et4wDSwIfeE=:vLwjYNaoClKblmtplRxqqF
+ KzYV0yf64J+QK/Z9mY4pjR2nwBsjcR9Re+uDc9c9HzqzuokmIO7u1YgFCta40IgjExr+B1UUW
+ cUPVsajV754VRKAY3X7Z3FbEjNIQdbdv6JQvf1gQwjiaCpiD51kMSuQ+1nihSlFiN48Z5f9iN
+ egFJmCmkOPabaZfkcqM+BLiLbgrk5FPXcXG0gbxy+UjRAUfoFcXo+amCQcH7+vAA86L1HhSwh
+ MZgCW600tjnNhJHD0L+tmIzkwatC2lNUdlFxTLU+b54b6wx/r1f7cFiuYEwWhUiwGaOZ+Nf1u
+ DHPcRdzC4Yhu1CsD1QamICaPhUBwCLcMbJ+hON7awSgpDidF5+kno9SngQzTWlxG+1UPAQK2s
+ AqcTFErYH+ORK0No9lzb7Bz9YXBfUYZrJGGlsVI25KwusDfE4Yr+LU4E9Ys8LZvwOKmZSVYLB
+ FG28OZhNjovO7ZgJyLcxQbWdQdAvBlmc61fpe8PB8xXJsucT+fPoFRCnIuRZaiJZi72QpG4T1
+ 1Vn+7UZifwNCAAKpJx1NT/bJBATls0DXmYWh8tYuiea5w/eIj2s44eCtZavHMsiUnJCq1WXng
+ d71AGiME+/44/4hlnIAyeSQdG5YSLAKR5kKKxIvUL5L2hQz1J1dxUZMR8Jpka1VtKiHLVPZ3Z
+ 2/ZyosR8VaWRM6CsFM71cnLbTq/g9HY1SbdQHTrOROamorL1n7aYKXcaXbno0xdau74rVCWX6
+ xpuQE904uypmARAz3H9YoX7ITiyfXxxPhtjCtM2v9JCUuHT+iCXx+Bz09xjEmdJrQl2Q8wwhm
+ SQomYS0FhK/iAuXDYcHCvk15pdVTfUByjFRFhzUVy5A4z5Mz1MfZOCfk2jUoESB8pFe41rnS2
+ N75UiUKUJ4eQHYTdltlQ26+1q7/KcgOgv7i9l03rOC3ACRr7GZuwyGYpQxo6Iks18g3BiWhJ/
+ bJJ4aeZsIbQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add i.MX TPM(Low Power Timer/Pulse Width Modulation Module) PWM binding.
+On 21.03.19 11:02, Kalle Valo wrote:
+> Tim Schumacher <timschumi@gmx.de> writes:
+>
+>> Right now, if an error is encountered during the SREV register
+>> read (i.e. an EIO in ath9k_regread()), that error code gets
+>> passed all the way to __ath9k_hw_init(), where it is visible
+>> during the "Chip rev not supported" message.
+>>
+>>     ath9k_htc 1-1.4:1.0: ath9k_htc: HTC initialized with 33 credits
+>>     ath: phy2: Mac Chip Rev 0x0f.3 is not supported by this driver
+>>     ath: phy2: Unable to initialize hardware; initialization status: -9=
+5
+>>     ath: phy2: Unable to initialize hardware; initialization status: -9=
+5
+>>     ath9k_htc: Failed to initialize the device
+>>
+>> Check for -EIO explicitly in ath9k_hw_read_revisions() and return
+>> a boolean based on the success of the operation. Check for that in
+>> __ath9k_hw_init() and abort with a more debugging-friendly message
+>> if reading the revisions wasn't successful.
+>>
+>>     ath9k_htc 1-1.4:1.0: ath9k_htc: HTC initialized with 33 credits
+>>     ath: phy2: Failed to read SREV register
+>>     ath: phy2: Could not read hardware revision
+>>     ath: phy2: Unable to initialize hardware; initialization status: -9=
+5
+>>     ath: phy2: Unable to initialize hardware; initialization status: -9=
+5
+>>     ath9k_htc: Failed to initialize the device
+>>
+>> This helps when debugging by directly showing the first point of
+>> failure and it could prevent possible errors if a 0x0f.3 revision
+>> is ever supported.
+>>
+>> Signed-off-by: Tim Schumacher <timschumi@gmx.de>
+>
+> [...]
+>
+>> -	val =3D REG_READ(ah, AR_SREV) & AR_SREV_ID;
+>> +	srev =3D REG_READ(ah, AR_SREV);
+>> +
+>> +	if (srev =3D=3D -EIO) {
+>> +		ath_err(ath9k_hw_common(ah),
+>> +			"Failed to read SREV register");
+>> +		return false;
+>> +	}
+>
+> I really don't like how the error handling is implemented in REG_READ().
+> If the register has value 0xfffffffb (=3D -EIO =3D=3D-5) won't this inte=
+rpret
+> that as an error?
+>
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-No changes.
----
- .../devicetree/bindings/pwm/imx-tpm-pwm.txt        | 22 ++++++++++++++++++=
-++++
- 1 file changed, 22 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pwm/imx-tpm-pwm.txt
+If the register had that value, it would indeed report an error. However
+(at least if I read the current code and the data sheet correctly), to mak=
+e
+use of the higher 24 bits of the register, the "small"/old version of the
+SREV_ID (i.e. the rightmost 8 bit) need to be set to 0xFF. Therefore, a
+register read of 0xfffffffb should never happen in this register.
 
-diff --git a/Documentation/devicetree/bindings/pwm/imx-tpm-pwm.txt b/Docume=
-ntation/devicetree/bindings/pwm/imx-tpm-pwm.txt
-new file mode 100644
-index 0000000..94f1ad5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/imx-tpm-pwm.txt
-@@ -0,0 +1,22 @@
-+Freescale i.MX TPM PWM controller
-+
-+Required properties:
-+- compatible : Should be "fsl,imx-tpm".
-+- reg: Physical base address and length of the controller's registers.
-+- #pwm-cells: Should be 3. See pwm.txt in this directory for a description=
- of the cells format.
-+- clocks : The clock provided by the SoC to drive the PWM.
-+- interrupts: The interrupt for the PWM controller.
-+
-+Note: The TPM counter and period counter are shared between multiple chann=
-els, so all channels
-+should use same period setting.
-+
-+Example:
-+
-+pwm0: tpm@40250000 {
-+	compatible =3D "fsl,imx-tpm";
-+	reg =3D <0x40250000 0x1000>;
-+	assigned-clocks =3D <&clks IMX7ULP_CLK_LPTPM4>;
-+	assigned-clock-parents =3D <&clks IMX7ULP_CLK_SOSC_BUS_CLK>;
-+	clocks =3D <&clks IMX7ULP_CLK_LPTPM4>;
-+	#pwm-cells =3D <3>;
-+};
---=20
-2.7.4
-
+But the error handling is indeed a bit weird. Making the return value a pu=
+re
+status indicator and saving the value from the register by passing a
+reference would probably be the best solution to fixing this up.
