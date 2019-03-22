@@ -2,280 +2,680 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49CCEC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 19:25:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFAADC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 19:25:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7EED218FE
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 19:25:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DE40218FE
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 19:25:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="KzPjDGdz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f7NGHUgE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728099AbfCVTZq (ORCPT
+        id S1728164AbfCVTZv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 15:25:46 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:36509 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726055AbfCVTZq (ORCPT
+        Fri, 22 Mar 2019 15:25:51 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:33437 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726055AbfCVTZv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 15:25:46 -0400
-Received: by mail-qt1-f194.google.com with SMTP id y36so3839431qtb.3
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 12:25:45 -0700 (PDT)
+        Fri, 22 Mar 2019 15:25:51 -0400
+Received: by mail-pg1-f195.google.com with SMTP id b12so2189374pgk.0;
+        Fri, 22 Mar 2019 12:25:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version;
-        bh=+Leg0fPwQhiPcef+vSiWxkfMAa0gG8+929/qEKKbAuY=;
-        b=KzPjDGdzIl1h21t4VMOImKTaB39dnyvO6Qa41wPU6/+fNw9Wbbqg2nPiagJF+m/Zpj
-         WDUqe8iL8UBcBCrKaYDC82mx/JXkxUhCWy5eQLUTOYDA7NBxWna1I/kK1jYRY5UwVS2S
-         Cq0LWODkNseJlAYdL22BkxWOZdI0JSoVAlt+ywH+55KmYoSVMTadti3VKSXQg3AyWzfj
-         Jg2uLzMK32nxi1Ouon/T5memWODJxWFmNDjRhhgV0aG3aLFiwh2bP2vsJvOPl740lcdT
-         0iA43HkH4bt8MeJicsSsP67+rxDqc8HxtRscSy/8fsz/zpgh8OLoQx5FWvPPJ8dwjKjW
-         pN8w==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jZeWTWYPiZMTZLMkrN9/vGnpl2CTY4UCVUgL3uBYiqw=;
+        b=f7NGHUgEyKXXROlCr3uerJWoICcVrVwrXKGp3rAIzjTGeGP/PJVlRmJ+VkbIKvnpnp
+         7ZmX8KdnlEp+K2izM7+vN1uQoG4z78rpwq9qYjsVuKXV62AxgF4/qdJdNkYaCvjhVQJ5
+         GKTBwtFiD3Xkz4qrcN5fHJWkF9+SF0/yLovZaRTXkaayPQElJW42l3yNlT7X+mDSYY5Q
+         y3Ub0auB+8SW22ZKJsMY8NtL0NXcoToPD2cmkHj1o2nytm8ovHF/E+G/yTumlGlGBG0f
+         YgWUZcSIoGtVEY8j+ZDQa5LsNVujXUGME/cPMOa1PIbXa4Qbnf1gGA3ODuGu8gnj/faz
+         X8Cg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version;
-        bh=+Leg0fPwQhiPcef+vSiWxkfMAa0gG8+929/qEKKbAuY=;
-        b=Ik6xUiTgJPD851ZaImWbCyylhbeaVaISJxwKok3K5yecbP6n7JJPgG6U/QzjarXOYU
-         cwXnieO8IhHX0U0ONAm0lsPVoGnPqQlgsBaml7XWBWTzDKw6IVj1RX0sA2XgFQOAhU0a
-         f/YWfF0JfnbSQAO3J4LSS/7OeBqtjYrRj0WHwhULWIcmydvVB0APCL1uHSgCLUxziEjm
-         mBM+7cWekzb6IcKnCnQcPE6CsDJHCP3fvh3fBCFaRpJpfNL/82JzmCe6eBBeR29RXnUp
-         Oej/plso9l3mLZoFq7WnMEg2RYSrL+8e93k3S8gS4jBLyR4MzM6iDiB5rBVhFWHu339A
-         UkiA==
-X-Gm-Message-State: APjAAAXshDWoCg+P4Lbul2WuX9smgledApNQHM6uqm0C4nRlWQfDw2Nq
-        V7+d7Xe4bBmFK4XQXFU7Sm9CZQ==
-X-Google-Smtp-Source: APXvYqysuvFoIhWDDDQfNUhgEwcU/01os7gWeKG7zf0xMPU2kOT5WHTk6FqDKG5u37sLOE7YpkPhjA==
-X-Received: by 2002:aed:2232:: with SMTP id n47mr9978483qtc.63.1553282745117;
-        Fri, 22 Mar 2019 12:25:45 -0700 (PDT)
-Received: from tpx230-nicolas.collaboramtl (modemcable154.55-37-24.static.videotron.ca. [24.37.55.154])
-        by smtp.gmail.com with ESMTPSA id i68sm4432773qkc.63.2019.03.22.12.25.43
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 22 Mar 2019 12:25:44 -0700 (PDT)
-Message-ID: <f268aa5b83fe6527303005ab5c820e5d78e299f9.camel@ndufresne.ca>
-Subject: Re: [RFC PATCH 18/20] lib: image-formats: Add v4l2 formats support
-From:   Nicolas Dufresne <nicolas@ndufresne.ca>
-To:     Ville =?ISO-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-Cc:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-media@vger.kernel.org, Daniel Stone <daniels@collabora.com>
-Date:   Fri, 22 Mar 2019 15:25:42 -0400
-In-Reply-To: <20190322184435.GJ3888@intel.com>
-References: <20190320160939.GR3888@intel.com>
-         <f3f8749e30aad81bc39ed9b60cd308ac5f3c6707.camel@ndufresne.ca>
-         <20190320164133.GT3888@intel.com>
-         <d46b30ca8962d3c31b1273cf010ca9fb7b145fe8.camel@ndufresne.ca>
-         <20190320183914.GV3888@intel.com>
-         <46df4fb13636b90c147839b0aa5ad1ac33030461.camel@bootlin.com>
-         <20190321163532.GG3888@intel.com>
-         <ac5329d77f83af2804c240ebe479ec323b60aec3.camel@ndufresne.ca>
-         <20190321214455.GL3888@intel.com>
-         <3e804c622fdc0ce43581982d81d2db67597508ec.camel@ndufresne.ca>
-         <20190322184435.GJ3888@intel.com>
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
-        boundary="=-sqaul58o/kExff4ut0zE"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jZeWTWYPiZMTZLMkrN9/vGnpl2CTY4UCVUgL3uBYiqw=;
+        b=g6yZRwh5bh3g5RDblO4ri0xd0tz+J4HxThIMm+Kx88tAWXc0aL6TBMz2J/oV4nkPeI
+         ljyBMOKIubzn3ETiHJuTbKigjO0VaEOz1w4Zt3WqKvPbhTZwN6l/sfz5ih6tu3iUDlKp
+         VHekzVA8un5hjQFjcHyr6MQ/+S3SYGxnhSOw7s/zPppvPmFi2y4yLZJrMVWMZuu3M/7c
+         KNWzX+oEn8XXpKArC+AzwX10cpmtVu99S7YGdaC2fnrQItMg4WectlniVRi0K22ej10+
+         w04xSoJchIAoDqXK4YLmRZNT2iwdRk5EJZQq00YlIW90VTod0h6NAYTH7cctllmwDH/M
+         4w6Q==
+X-Gm-Message-State: APjAAAWX/uybMQr3kBg/v46VxMc2HGcuVWXzFKjHXaHLx196n1h3WhgQ
+        +U7wT9PxcIwe00rDfHHBBjtyfRTsnzih2bqjnaw=
+X-Google-Smtp-Source: APXvYqyuJwBzh10qyd1n9iUr7w8pXXbyIxCmsvMo6WOvOmDJ2QNYctBF1LD2nTryf0teYfyIHE9DQb/4ob1nA4nqcRA=
+X-Received: by 2002:a17:902:8a8b:: with SMTP id p11mr3811614plo.227.1553282749218;
+ Fri, 22 Mar 2019 12:25:49 -0700 (PDT)
 MIME-Version: 1.0
+References: <20170324164902.15226.48358.stgit@localhost.localdomain>
+ <20170324170812.15226.97497.stgit@localhost.localdomain> <CALMXkpb3MfLbNoBgLJc0rgMDbPg9yOevKOiq9N8pzVw-aeNb3g@mail.gmail.com>
+ <e532fdb97e142eca2484e5abbeca4c30d11fbad6.camel@redhat.com>
+ <CAKgT0Uc68jsuPHKbxxFpeMCQAo2M69DhzA_XGw7Kvou4H3eHPg@mail.gmail.com>
+ <CALMXkpZ_eB+aRx3+aKM5Bs4RwDfzPNX+XneESo2-yuMPjHV5-Q@mail.gmail.com> <0eb092b7ca67942f52e36c672d20f130f1d54e1e.camel@redhat.com>
+In-Reply-To: <0eb092b7ca67942f52e36c672d20f130f1d54e1e.camel@redhat.com>
+From:   Christoph Paasch <christoph.paasch@gmail.com>
+Date:   Fri, 22 Mar 2019 15:25:37 -0400
+Message-ID: <CALMXkpYk=VB4Npyk-fmr8=KT6V-XXyqEUQNwRUOtXyZFxQm2fg@mail.gmail.com>
+Subject: Re: [net-next PATCH v3 4/8] net: Change return type of sk_busy_loop
+ from bool to void
+To:     Paolo Abeni <pabeni@redhat.com>
+Cc:     Alexander Duyck <alexander.duyck@gmail.com>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Samudrala, Sridhar" <sridhar.samudrala@intel.com>,
+        Eric Dumazet <edumazet@google.com>,
+        David Miller <davem@davemloft.net>,
+        Linux API <linux-api@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Paolo,
 
---=-sqaul58o/kExff4ut0zE
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On Fri, Mar 22, 2019 at 6:33 AM Paolo Abeni <pabeni@redhat.com> wrote:
+> On Thu, 2019-03-21 at 23:05 -0400, Christoph Paasch wrote:
+> > On Thu, Mar 21, 2019 at 12:43 PM Alexander Duyck
+> > <alexander.duyck@gmail.com> wrote:
+> > > On Thu, Mar 21, 2019 at 2:45 AM Paolo Abeni <pabeni@redhat.com> wrote:
+> > > > The following - completely untested - should avoid the unbounded loop,
+> > > > but it's not a complete fix, I *think* we should also change
+> > > > sk_busy_loop_end() in a similar way, but that is a little more complex
+> > > > due to the additional indirections.
+> > >
+> > > As far as sk_busy_loop_end we could look at just forking sk_busy_loop
+> > > and writing a separate implementation for datagram sockets that uses a
+> > > different loop_end function. It shouldn't take much to change since
+> > > all we would need to do is pass a structure containing the sk and last
+> > > pointers instead of just passing the sk directly as the loop_end
+> > > argument.
+> > >
+> > > > Could you please test it?
+> > > >
+> > > > Any feedback welcome!
+> > >
+> > > The change below looks good to me.
+> >
+> > I just tried it out. Worked for me!
+> >
+> > You can add my Tested-by if you do a formal patch-submission:
+> >
+> > Tested-by: Christoph Paasch <cpaasch@apple.com>
+>
+> Thanks for testing!
+>
+> I'm trying to reproduce the issue locally, but I'm unable. I think that
+> the current UDP implementation is not affected, as we always ensure
+> sk_receive_queue is empty before busy polling. Unix sockets should not
+> be affected, too, as busy polling should not have any effect there
+> (sk_napi_id should be never >= MIN_NAPI_ID). Can you reproduce the
+> issue on an unpatched, recent, upstream kernel?
 
-Le vendredi 22 mars 2019 =C3=A0 20:44 +0200, Ville Syrj=C3=A4l=C3=A4 a =C3=
-=A9crit :
-> On Fri, Mar 22, 2019 at 02:24:29PM -0400, Nicolas Dufresne wrote:
-> > Le jeudi 21 mars 2019 =C3=A0 23:44 +0200, Ville Syrj=C3=A4l=C3=A4 a =C3=
-=A9crit :
-> > > On Thu, Mar 21, 2019 at 03:14:06PM -0400, Nicolas Dufresne wrote:
-> > > > Le jeudi 21 mars 2019 =C3=A0 18:35 +0200, Ville Syrj=C3=A4l=C3=A4 a=
- =C3=A9crit :
-> > > > > > I'm not sure what it's worth, but there is a "pixel format guid=
-e"
-> > > > > > project that is all about matching formats from one API to anot=
-her:=20
-> > > > > > https://afrantzis.com/pixel-format-guide/ (and it has an associ=
-ated
-> > > > > > tool too).
-> > > > > >=20
-> > > > > > On the page about DRM, it seems that they got the word that DRM=
- formats
-> > > > > > are the native pixel order in little-endian systems:
-> > > > > > https://afrantzis.com/pixel-format-guide/drm.html
-> > > > >=20
-> > > > > Looks consistent with the official word in drm_fourcc.h.
-> > > > >=20
-> > > > > $ python3 -m pfg find-compatible V4L2_PIX_FMT_XBGR32 drm
-> > > > > Format: V4L2_PIX_FMT_XBGR32
-> > > > > Is compatible on all systems with:
-> > > > >         DRM_FORMAT_XRGB8888
-> > > > > Is compatible on little-endian systems with:
-> > > > > Is compatible on big-endian systems with:
-> > > > >=20
-> > > > > $ python3 -m pfg find-compatible DRM_FORMAT_XRGB8888 v4l2
-> > > > > Format: DRM_FORMAT_XRGB8888
-> > > > > Is compatible on all systems with:
-> > > > >         V4L2_PIX_FMT_XBGR32
-> > > > > Is compatible on little-endian systems with:
-> > > > > Is compatible on big-endian systems with:
-> > > > >=20
-> > > > > Even works both ways :)
-> > > > >=20
-> > > > > > Perhaps some drivers have been abusing the format definitions, =
-leading
-> > > > > > to the inconsistencies that Nicolas could witness?
-> > > > >=20
-> > > > > That is quite possible, perhaps even likely. No one really
-> > > > > seems interested in making sure big endian systems actually
-> > > > > work properly. I believe the usual approach is to hack
-> > > > > around semi-rnadomly until the correct colors accidentally
-> > > > > appear on the screen.
-> > > >=20
-> > > > We did not hack around randomly. The code in GStreamer is exactly w=
-hat
-> > > > the DRM and Wayland dev told us to do (they provided the initial
-> > > > patches to make it work). These are initially patches from Intel fo=
-r
-> > > > what it's worth (see the wlvideoformat.c header [0]). Even though I
-> > > > just notice that in this file, it seems that we ended up with a
-> > > > different mapping order for WL and DRM format in 24bit RGB (no
-> > > > padding), clearly is a bug. That being said, there is no logical
-> > > > meaning for little endian 24bit RGB, you can't load a pixel on CPU =
-in a
-> > > > single op.
-> > >=20
-> > > To me little endian just means "little end comes first". So if
-> > > you think of things as just a stream of bytes CPU word size
-> > > etc. doesn't matter. And I guess if you really wanted to you
-> > > could even make a CPU with 24bit word size.=20
-> > >=20
-> > > Anyways, to make things more clear drm_fourcc.h could probably
-> > > document things better by showing explicitly which bits go into
-> > > which byte.
-> > >=20
-> > > I don't know who did what patches for whatever project, but
-> > > clearly something has been lost in translation at some point.
-> > >=20
-> > > > Just saying since I would not know which one of the two
-> > > > mapping here is right. I would probably have to go testing what DRM
-> > > > drivers do, which may not mean anything. I would also ask and get
-> > > > contradictory answers.
-> > > >=20
-> > > > I have never myself tested these on big endian drivers though, as y=
-ou
-> > > > say, nobody seems to care about graphics on those anymore. So the e=
-asy
-> > > > statement is to say they are little endian, like you just did, and
-> > > > ignore the legacy, but there is some catch. YUV formats has been ad=
-ded
-> > > > without applying this rules.
-> > >=20
-> > > All drm formats follow the same rule (ignoring the recently added
-> > > non-byte aligned stuff which I guess don't really follow any rules).
-> > >=20
-> > > > So V4L2 YUYV match YUYV in DRM format name
-> > > > instead of little endian UYVY. (at least 4 tested drivers implement=
-s it
-> > > > this way). Same for NV12, for which little endian CPU representatio=
-n
-> > > > would swap the UV paid on a 16bit word.
-> > >=20
-> > > DRM NV12 and YUYV (YUY2) match the NV12 and YUY2 defined here
-> > > https://docs.microsoft.com/en-us/windows/desktop/medfound/recommended=
--8-bit-yuv-formats-for-video-rendering
-> >=20
-> > Problem is that these are all expressed MSB first like (the way V4L2
-> > and GStreamer do appart for the padding X, which is usually first in
-> > V4L2). Let's say you have 2 pixels of YUYV in a 32bit buffer.
-> >=20
-> >    buf[0] =3D Y
-> >    buf[1] =3D U
-> >    buf[2] =3D Y
-> >    buf[3] =3D V
->=20
-> This is drm YUYV (aka. YUY2). Well, assuming buf[] is made up of bytes.
->=20
-> > While with LSB first (was this what you wanted to say ?), this format
-> > would be VYUY as:
-> >=20
-> >   buf[0] =3D V
-> >   buf[1] =3D Y
-> >   buf[2] =3D U
-> >   buf[3] =3D Y
->=20
-> This is VYUY as far as drm is concerned.
->=20
-> > But I tested this format on i915, xlnx, msm and imx drm drivers, and
-> > they are all mapped as MSB. The LSB version of NV12 is called NV21 in
-> > MS pixel formats. It would be really confusing if the LSB rule was to
-> > be applied to these format in my opinion, because the names don't
-> > explicitly express the placement for the components.
->=20
-> The names don't really mean anything. Don't try to give any any special
-> meaning. They're just that, names. The fact that we used fourccs for
-> them was a mistake IMO. IIRC I objected but ended up going with them
-> to get the bikeshed painted at all.
+yes, I can repro it with the C-reproducer reliably on the latest
+net-branch, v4.14.105 and then also bisected it down to the commit.
 
-I can only agree with you. Note, it was not obvious to me that when you
-said the format are little endian you refered to the description next
-to the format name inside drm_fourcc.h.
+> Can you please provide the syzkaller repro?
 
->=20
-> And yes, the fact that we used a different naming scheme for packed YUV
-> vs. RGB was probably a mistake by me. But it was done long ago and we
-> have to live with it. Fortunately the mess has gotten much worse since
-> then and we are even more inconsistent now. We now YUV formats where
-> the A vs. X variants use totally different naming schemes.
+Sure, here is the full report:
 
-Ok, so now that we are set, I'll retake this patch and simply comment
-next to each badly mapped format.
+Syzkaller hit 'INFO: rcu detected stall in unix_seqpacket_recvmsg' bug.
 
->=20
-> > Anyway, to cut short, as per currently tested implementation of DRM
-> > driver, we can keep the RGB mapping static (reversed) for now, but for
-> > Maxime, who probably have no clue about all this, the YUYV mapping is
-> > correct in this patch (in as of currently tested drivers).
-> >=20
-> > > > To me, all the YUV stuff is the right way, because this is what the
-> > > > rest of the world is doing, it's not ambiguous.
-> > > >=20
-> > > > [0] https://gitlab.freedesktop.org/gstreamer/gst-plugins-bad/blob/m=
-aster/ext/wayland/wlvideoformat.c#L86
-> > > >=20
-> > > >=20
-> > > >=20
-> > > > Nicolas
->=20
->=20
+INFO: rcu_sched self-detected stall on CPU
+1-...: (19373 ticks this GP) idle=ac6/140000000000001/0 softirq=4477/4477 fqs=4
+(t=21000 jiffies g=1853 c=1852 q=16)
+rcu_sched kthread starved for 20984 jiffies! g1853 c1852 f0x0
+RCU_GP_WAIT_FQS(3) ->state=0x0 ->cpu=0
+rcu_sched       R  running task    21040     8      2 0x80000000
+Call Trace:
+ schedule+0xee/0x3a0 kernel/sched/core.c:3427
+ schedule_timeout+0x158/0x260 kernel/time/timer.c:1744
+ rcu_gp_kthread+0x12fc/0x3580 kernel/rcu/tree.c:2247
+ kthread+0x355/0x430 kernel/kthread.c:232
+ ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:402
+NMI backtrace for cpu 1
+CPU: 1 PID: 1956 Comm: syz-executor808 Not tainted 4.14.105 #6
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.5.1 01/01/2011
+Call Trace:
+ <IRQ>
+ __dump_stack lib/dump_stack.c:17 [inline]
+ dump_stack+0x10a/0x1d1 lib/dump_stack.c:53
+ nmi_cpu_backtrace+0xf2/0x110 lib/nmi_backtrace.c:101
+ nmi_trigger_cpumask_backtrace+0x116/0x170 lib/nmi_backtrace.c:62
+ trigger_single_cpu_backtrace include/linux/nmi.h:158 [inline]
+ rcu_dump_cpu_stacks+0x180/0x1dd kernel/rcu/tree.c:1396
+ print_cpu_stall kernel/rcu/tree.c:1542 [inline]
+ check_cpu_stall.isra.69+0x9f1/0x1080 kernel/rcu/tree.c:1610
+ __rcu_pending kernel/rcu/tree.c:3382 [inline]
+ rcu_pending kernel/rcu/tree.c:3444 [inline]
+ rcu_check_callbacks+0x380/0xc90 kernel/rcu/tree.c:2784
+ update_process_times+0x28/0x60 kernel/time/timer.c:1588
+ tick_sched_handle+0x7d/0x150 kernel/time/tick-sched.c:161
+ tick_sched_timer+0x3d/0x110 kernel/time/tick-sched.c:1219
+ __run_hrtimer kernel/time/hrtimer.c:1220 [inline]
+ __hrtimer_run_queues+0x3d8/0xb80 kernel/time/hrtimer.c:1284
+ hrtimer_interrupt+0x1b0/0x590 kernel/time/hrtimer.c:1318
+ local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1037 [inline]
+ smp_apic_timer_interrupt+0x1d5/0x5b0 arch/x86/kernel/apic/apic.c:1062
+ apic_timer_interrupt+0x87/0x90 arch/x86/entry/entry_64.S:787
+ </IRQ>
+RIP: 0010:arch_local_irq_restore arch/x86/include/asm/paravirt.h:778 [inline]
+RIP: 0010:__raw_spin_unlock_irqrestore
+include/linux/spinlock_api_smp.h:160 [inline]
+RIP: 0010:_raw_spin_unlock_irqrestore+0x32/0x60 kernel/locking/spinlock.c:192
+RSP: 0018:ffff888065b273b0 EFLAGS: 00000297 ORIG_RAX: ffffffffffffff10
+RAX: 0000000000000007 RBX: 0000000000000297 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000297
+RBP: ffff88806a2447a0 R08: 1ffff1100cb64e57 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: ffff888065b27450
+R13: ffffed100cb64e92 R14: 0000000000000000 R15: ffff88806a244788
+ spin_unlock_irqrestore include/linux/spinlock.h:372 [inline]
+ __skb_try_recv_datagram+0x299/0x4b0 net/core/datagram.c:274
+ unix_dgram_recvmsg+0x294/0x1840 net/unix/af_unix.c:2107
+ unix_seqpacket_recvmsg+0x82/0xb0 net/unix/af_unix.c:2073
+ sock_recvmsg_nosec net/socket.c:818 [inline]
+ sock_recvmsg+0xc4/0x110 net/socket.c:825
+ ___sys_recvmsg+0x2a7/0x620 net/socket.c:2220
+ __sys_recvmsg+0xc6/0x200 net/socket.c:2265
+ SYSC_recvmsg net/socket.c:2277 [inline]
+ SyS_recvmsg+0x27/0x40 net/socket.c:2272
+ do_syscall_64+0x23f/0x6d0 arch/x86/entry/common.c:289
+ entry_SYSCALL_64_after_hwframe+0x42/0xb7
+RIP: 0033:0x7f4a53385469
+RSP: 002b:00007f4a53a76f28 EFLAGS: 00000246 ORIG_RAX: 000000000000002f
+RAX: ffffffffffffffda RBX: 0000000000603168 RCX: 00007f4a53385469
+RDX: 0000000040000002 RSI: 0000000020001680 RDI: 0000000000000003
+RBP: 0000000000603160 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 000000000060316c
+R13: 0800000000008923 R14: 00007f4a53a57000 R15: 0000000000000003
 
---=-sqaul58o/kExff4ut0zE
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
 
------BEGIN PGP SIGNATURE-----
+Syzkaller reproducer:
+# {Threaded:true Collide:false Repeat:true RepeatTimes:0 Procs:8
+Sandbox:none Fault:false FaultCall:-1 FaultNth:0 EnableTun:false
+UseTmpDir:false EnableCgroups:false EnableNetdev:false ResetNet:false
+HandleSegv:false Repro:false Trace:false}
+socketpair$unix(0x1, 0x1000000000005, 0x0,
+&(0x7f0000000340)={<r0=>0xffffffffffffffff, <r1=>0xffffffffffffffff})
+setsockopt$sock_int(r0, 0x1, 0x2a, &(0x7f00000000c0)=0x9, 0x4)
+recvmsg(r0, &(0x7f0000001680)={0x0, 0x0, 0x0}, 0x40000002)
+setsockopt$sock_int(r0, 0x1, 0x2e, &(0x7f00000003c0)=0x9, 0x4)
+sendmsg(r1, &(0x7f0000000680)={0x0, 0x0, 0x0}, 0x0)
+connect$inet6(0xffffffffffffffff, 0x0, 0x0)
+socketpair(0xa, 0x800, 0x4, 0x0)
+fcntl$getflags(0xffffffffffffffff, 0x40b)
+sendto$inet6(0xffffffffffffffff, 0x0, 0x0, 0x24000855, 0x0, 0x0)
+getsockopt$inet_IP_XFRM_POLICY(0xffffffffffffff9c, 0x0, 0x11, 0x0, 0x0)
+socket$nl_xfrm(0x10, 0x3, 0x6)
+setsockopt$netlink_NETLINK_BROADCAST_ERROR(0xffffffffffffffff, 0x10e,
+0x4, 0x0, 0x0)
+socket$unix(0x1, 0x3, 0x0)
+getsockopt$sock_int(0xffffffffffffffff, 0x1, 0x1e, 0x0, 0x0)
+ioctl$sock_SIOCGSKNS(0xffffffffffffffff, 0x894c, 0x0)
+ioctl$sock_inet_udp_SIOCOUTQ(0xffffffffffffffff, 0x5411, 0x0)
+setsockopt$IP_VS_SO_SET_EDIT(0xffffffffffffffff, 0x0, 0x483, 0x0, 0x0)
+setsockopt$inet6_IPV6_XFRM_POLICY(0xffffffffffffffff, 0x29, 0x23, 0x0, 0x0)
+ioctl$sock_ifreq(0xffffffffffffffff, 0x800000000008923, 0x0)
+bind(0xffffffffffffffff, 0x0, 0x0)
+socket(0xa, 0x3, 0x3)
 
-iF0EABECAB0WIQSScpfJiL+hb5vvd45xUwItrAaoHAUCXJU2tgAKCRBxUwItrAao
-HJzYAJoDN5ZqBx+QSf8KSmSjMEZ6B1/fiwCdG7VDqbtB5sSQS6ZJv85i9ImGQ/g=
-=FZyR
------END PGP SIGNATURE-----
 
---=-sqaul58o/kExff4ut0zE--
+C reproducer:
+// autogenerated by syzkaller (https://github.com/google/syzkaller)
 
+#define _GNU_SOURCE
+
+#include <dirent.h>
+#include <endian.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <pthread.h>
+#include <sched.h>
+#include <signal.h>
+#include <stdarg.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/mount.h>
+#include <sys/prctl.h>
+#include <sys/resource.h>
+#include <sys/stat.h>
+#include <sys/syscall.h>
+#include <sys/time.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <time.h>
+#include <unistd.h>
+
+#include <linux/futex.h>
+
+unsigned long long procid;
+
+static void sleep_ms(uint64_t ms)
+{
+usleep(ms * 1000);
+}
+
+static uint64_t current_time_ms(void)
+{
+struct timespec ts;
+if (clock_gettime(CLOCK_MONOTONIC, &ts))
+exit(1);
+return (uint64_t)ts.tv_sec * 1000 + (uint64_t)ts.tv_nsec / 1000000;
+}
+
+static void thread_start(void* (*fn)(void*), void* arg)
+{
+pthread_t th;
+pthread_attr_t attr;
+pthread_attr_init(&attr);
+pthread_attr_setstacksize(&attr, 128 << 10);
+int i;
+for (i = 0; i < 100; i++) {
+if (pthread_create(&th, &attr, fn, arg) == 0) {
+pthread_attr_destroy(&attr);
+return;
+}
+if (errno == EAGAIN) {
+usleep(50);
+continue;
+}
+break;
+}
+exit(1);
+}
+
+typedef struct {
+int state;
+} event_t;
+
+static void event_init(event_t* ev)
+{
+ev->state = 0;
+}
+
+static void event_reset(event_t* ev)
+{
+ev->state = 0;
+}
+
+static void event_set(event_t* ev)
+{
+if (ev->state)
+exit(1);
+__atomic_store_n(&ev->state, 1, __ATOMIC_RELEASE);
+syscall(SYS_futex, &ev->state, FUTEX_WAKE | FUTEX_PRIVATE_FLAG);
+}
+
+static void event_wait(event_t* ev)
+{
+while (!__atomic_load_n(&ev->state, __ATOMIC_ACQUIRE))
+syscall(SYS_futex, &ev->state, FUTEX_WAIT | FUTEX_PRIVATE_FLAG, 0, 0);
+}
+
+static int event_isset(event_t* ev)
+{
+return __atomic_load_n(&ev->state, __ATOMIC_ACQUIRE);
+}
+
+static int event_timedwait(event_t* ev, uint64_t timeout)
+{
+uint64_t start = current_time_ms();
+uint64_t now = start;
+for (;;) {
+uint64_t remain = timeout - (now - start);
+struct timespec ts;
+ts.tv_sec = remain / 1000;
+ts.tv_nsec = (remain % 1000) * 1000 * 1000;
+syscall(SYS_futex, &ev->state, FUTEX_WAIT | FUTEX_PRIVATE_FLAG, 0, &ts);
+if (__atomic_load_n(&ev->state, __ATOMIC_RELAXED))
+return 1;
+now = current_time_ms();
+if (now - start > timeout)
+return 0;
+}
+}
+
+static bool write_file(const char* file, const char* what, ...)
+{
+char buf[1024];
+va_list args;
+va_start(args, what);
+vsnprintf(buf, sizeof(buf), what, args);
+va_end(args);
+buf[sizeof(buf) - 1] = 0;
+int len = strlen(buf);
+int fd = open(file, O_WRONLY | O_CLOEXEC);
+if (fd == -1)
+return false;
+if (write(fd, buf, len) != len) {
+int err = errno;
+close(fd);
+errno = err;
+return false;
+}
+close(fd);
+return true;
+}
+
+static void setup_common()
+{
+if (mount(0, "/sys/fs/fuse/connections", "fusectl", 0, 0)) {
+}
+}
+
+static void loop();
+
+static void sandbox_common()
+{
+prctl(PR_SET_PDEATHSIG, SIGKILL, 0, 0, 0);
+setpgrp();
+setsid();
+struct rlimit rlim;
+rlim.rlim_cur = rlim.rlim_max = (200 << 20);
+setrlimit(RLIMIT_AS, &rlim);
+rlim.rlim_cur = rlim.rlim_max = 32 << 20;
+setrlimit(RLIMIT_MEMLOCK, &rlim);
+rlim.rlim_cur = rlim.rlim_max = 136 << 20;
+setrlimit(RLIMIT_FSIZE, &rlim);
+rlim.rlim_cur = rlim.rlim_max = 1 << 20;
+setrlimit(RLIMIT_STACK, &rlim);
+rlim.rlim_cur = rlim.rlim_max = 0;
+setrlimit(RLIMIT_CORE, &rlim);
+rlim.rlim_cur = rlim.rlim_max = 256;
+setrlimit(RLIMIT_NOFILE, &rlim);
+if (unshare(CLONE_NEWNS)) {
+}
+if (unshare(CLONE_NEWIPC)) {
+}
+if (unshare(0x02000000)) {
+}
+if (unshare(CLONE_NEWUTS)) {
+}
+if (unshare(CLONE_SYSVSEM)) {
+}
+typedef struct {
+const char* name;
+const char* value;
+} sysctl_t;
+static const sysctl_t sysctls[] = {
+   {"/proc/sys/kernel/shmmax", "16777216"},
+   {"/proc/sys/kernel/shmall", "536870912"},
+   {"/proc/sys/kernel/shmmni", "1024"},
+   {"/proc/sys/kernel/msgmax", "8192"},
+   {"/proc/sys/kernel/msgmni", "1024"},
+   {"/proc/sys/kernel/msgmnb", "1024"},
+   {"/proc/sys/kernel/sem", "1024 1048576 500 1024"},
+};
+unsigned i;
+for (i = 0; i < sizeof(sysctls) / sizeof(sysctls[0]); i++)
+write_file(sysctls[i].name, sysctls[i].value);
+}
+
+int wait_for_loop(int pid)
+{
+if (pid < 0)
+exit(1);
+int status = 0;
+while (waitpid(-1, &status, __WALL) != pid) {
+}
+return WEXITSTATUS(status);
+}
+
+static int do_sandbox_none(void)
+{
+if (unshare(CLONE_NEWPID)) {
+}
+int pid = fork();
+if (pid != 0)
+return wait_for_loop(pid);
+setup_common();
+sandbox_common();
+if (unshare(CLONE_NEWNET)) {
+}
+loop();
+exit(1);
+}
+
+static void kill_and_wait(int pid, int* status)
+{
+kill(-pid, SIGKILL);
+kill(pid, SIGKILL);
+int i;
+for (i = 0; i < 100; i++) {
+if (waitpid(-1, status, WNOHANG | __WALL) == pid)
+return;
+usleep(1000);
+}
+DIR* dir = opendir("/sys/fs/fuse/connections");
+if (dir) {
+for (;;) {
+struct dirent* ent = readdir(dir);
+if (!ent)
+break;
+if (strcmp(ent->d_name, ".") == 0 || strcmp(ent->d_name, "..") == 0)
+continue;
+char abort[300];
+snprintf(abort, sizeof(abort), "/sys/fs/fuse/connections/%s/abort",
+ent->d_name);
+int fd = open(abort, O_WRONLY);
+if (fd == -1) {
+continue;
+}
+if (write(fd, abort, 1) < 0) {
+}
+close(fd);
+}
+closedir(dir);
+} else {
+}
+while (waitpid(-1, status, __WALL) != pid) {
+}
+}
+
+#define SYZ_HAVE_SETUP_TEST 1
+static void setup_test()
+{
+prctl(PR_SET_PDEATHSIG, SIGKILL, 0, 0, 0);
+setpgrp();
+}
+
+#define SYZ_HAVE_RESET_TEST 1
+static void reset_test()
+{
+int fd;
+for (fd = 3; fd < 30; fd++)
+close(fd);
+}
+
+struct thread_t {
+int created, call;
+event_t ready, done;
+};
+
+static struct thread_t threads[16];
+static void execute_call(int call);
+static int running;
+
+static void* thr(void* arg)
+{
+struct thread_t* th = (struct thread_t*)arg;
+for (;;) {
+event_wait(&th->ready);
+event_reset(&th->ready);
+execute_call(th->call);
+__atomic_fetch_sub(&running, 1, __ATOMIC_RELAXED);
+event_set(&th->done);
+}
+return 0;
+}
+
+static void execute_one(void)
+{
+int i, call, thread;
+for (call = 0; call < 21; call++) {
+for (thread = 0; thread < (int)(sizeof(threads) / sizeof(threads[0]));
+thread++) {
+struct thread_t* th = &threads[thread];
+if (!th->created) {
+th->created = 1;
+event_init(&th->ready);
+event_init(&th->done);
+event_set(&th->done);
+thread_start(thr, th);
+}
+if (!event_isset(&th->done))
+continue;
+event_reset(&th->done);
+th->call = call;
+__atomic_fetch_add(&running, 1, __ATOMIC_RELAXED);
+event_set(&th->ready);
+event_timedwait(&th->done, 45);
+break;
+}
+}
+for (i = 0; i < 100 && __atomic_load_n(&running, __ATOMIC_RELAXED); i++)
+sleep_ms(1);
+}
+
+static void execute_one(void);
+
+#define WAIT_FLAGS __WALL
+
+static void loop(void)
+{
+int iter;
+for (iter = 0;; iter++) {
+int pid = fork();
+if (pid < 0)
+exit(1);
+if (pid == 0) {
+setup_test();
+execute_one();
+reset_test();
+exit(0);
+}
+int status = 0;
+uint64_t start = current_time_ms();
+for (;;) {
+if (waitpid(-1, &status, WNOHANG | WAIT_FLAGS) == pid)
+break;
+sleep_ms(1);
+if (current_time_ms() - start < 5 * 1000)
+continue;
+kill_and_wait(pid, &status);
+break;
+}
+}
+}
+
+uint64_t r[2] = {0xffffffffffffffff, 0xffffffffffffffff};
+
+void execute_call(int call)
+{
+long res; switch (call) {
+case 0:
+res = syscall(__NR_socketpair, 1, 0x1000000000005, 0, 0x20000340);
+if (res != -1) {
+r[0] = *(uint32_t*)0x20000340;
+r[1] = *(uint32_t*)0x20000344;
+}
+break;
+case 1:
+*(uint32_t*)0x200000c0 = 9;
+syscall(__NR_setsockopt, r[0], 1, 0x2a, 0x200000c0, 4);
+break;
+case 2:
+*(uint64_t*)0x20001680 = 0;
+*(uint32_t*)0x20001688 = 0;
+*(uint64_t*)0x20001690 = 0;
+*(uint64_t*)0x20001698 = 0;
+*(uint64_t*)0x200016a0 = 0;
+*(uint64_t*)0x200016a8 = 0;
+*(uint32_t*)0x200016b0 = 0;
+syscall(__NR_recvmsg, r[0], 0x20001680, 0x40000002);
+break;
+case 3:
+*(uint32_t*)0x200003c0 = 9;
+syscall(__NR_setsockopt, r[0], 1, 0x2e, 0x200003c0, 4);
+break;
+case 4:
+*(uint64_t*)0x20000680 = 0;
+*(uint32_t*)0x20000688 = 0;
+*(uint64_t*)0x20000690 = 0;
+*(uint64_t*)0x20000698 = 0;
+*(uint64_t*)0x200006a0 = 0;
+*(uint64_t*)0x200006a8 = 0;
+*(uint32_t*)0x200006b0 = 0;
+syscall(__NR_sendmsg, r[1], 0x20000680, 0);
+break;
+case 5:
+syscall(__NR_connect, -1, 0, 0);
+break;
+case 6:
+syscall(__NR_socketpair, 0xa, 0x800, 4, 0);
+break;
+case 7:
+syscall(__NR_fcntl, -1, 0x40b, 0);
+break;
+case 8:
+syscall(__NR_sendto, -1, 0, 0, 0x24000855, 0, 0);
+break;
+case 9:
+syscall(__NR_getsockopt, 0xffffff9c, 0, 0x11, 0, 0);
+break;
+case 10:
+syscall(__NR_socket, 0x10, 3, 6);
+break;
+case 11:
+syscall(__NR_setsockopt, -1, 0x10e, 4, 0, 0);
+break;
+case 12:
+syscall(__NR_socket, 1, 3, 0);
+break;
+case 13:
+syscall(__NR_getsockopt, -1, 1, 0x1e, 0, 0);
+break;
+case 14:
+syscall(__NR_ioctl, -1, 0x894c, 0);
+break;
+case 15:
+syscall(__NR_ioctl, -1, 0x5411, 0);
+break;
+case 16:
+syscall(__NR_setsockopt, -1, 0, 0x483, 0, 0);
+break;
+case 17:
+syscall(__NR_setsockopt, -1, 0x29, 0x23, 0, 0);
+break;
+case 18:
+syscall(__NR_ioctl, -1, 0x800000000008923, 0);
+break;
+case 19:
+syscall(__NR_bind, -1, 0, 0);
+break;
+case 20:
+syscall(__NR_socket, 0xa, 3, 3);
+break;
+}
+
+}
+int main(void)
+{
+syscall(__NR_mmap, 0x20000000, 0x1000000, 3, 0x32, -1, 0);
+for (procid = 0; procid < 8; procid++) {
+if (fork() == 0) {
+do_sandbox_none();
+}
+}
+sleep(1000000);
+return 0;
+}
