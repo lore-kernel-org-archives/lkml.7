@@ -4,47 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10621C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:29:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AF3EC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:29:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAC0F2070D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:29:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CDAE2054F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:29:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553257765;
-	bh=84ty1k1Ynjf8wCQXegVIxbMr0dyfCAbv8DmUynwRX88=;
+	s=default; t=1553257778;
+	bh=TkkzbFF0Trrq+Vazt0h22jWF1kJEioLDHN9eFcZuf2k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a/LHeqqQqRqFALnJgr0bAc071MLX7pDK55Nd80omLewJb5xcu3fnvLRkwpXvxDLIA
-	 VNXFy30lD7DZf94RKF1vCRZkwliIJcnjX+s6yx0X588HFkwk3OmhOEWJtl0+Mv1/WK
-	 gzC/rDP3ONM/ouft8uYiUXZMaKy/aVWtECCZuLx0=
+	b=xphKoKj2pvt4SbDYe+5gVx89ke9VhErNVb0dOecWcNgZAOfRnXyThJ4CBIqn55Sqs
+	 f+LeRaMY4nKug1ioS4TdUQB65WLPiMaGzC08OXe+OsBKGRGcd/KFGKctbWo5JCQW6h
+	 nC1g944zG+Zaqx6bW5y8RYK2W+jKyss38WzIL1Gc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390845AbfCVM3Y (ORCPT
+        id S2390798AbfCVM3h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:29:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58318 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:29:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390607AbfCVMTU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:19:20 -0400
+        id S2390197AbfCVMTD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:19:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09E912054F;
-        Fri, 22 Mar 2019 12:19:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 62F802054F;
+        Fri, 22 Mar 2019 12:19:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553257159;
-        bh=84ty1k1Ynjf8wCQXegVIxbMr0dyfCAbv8DmUynwRX88=;
+        s=default; t=1553257142;
+        bh=TkkzbFF0Trrq+Vazt0h22jWF1kJEioLDHN9eFcZuf2k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tRZu+C1+BuHunzjsG2SdoByrezFzW49CfU/LFiJXO0KApPkoa1CNafbuNnig9k5Eo
-         8qNlSUNI5REqUXjz/ur5/HS0p2pbVP4QH3mfRxp3JoOxDpWD3SNKIhI0vZr5B0+z0K
-         ubszDoeHV9LxRilhzo4OQ6Oi/bXf0sC6o1hQg4Qk=
+        b=Iv6RiGurx5gZzGMJysex8/kWzDEJGjjizzGstBVqsYsBWpBNcR9XAYGkvBW1GBC1v
+         MB0sicjgTFsdG4ggASdgFyGzzyS0RbxW8Wx1yxL+jh8BuGN3tAzvYQCtAYKd9/ktw+
+         zWFO+KrAfZdr/vETHemsOkFwZLRl1lKKGhsH23Vw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jay Dolan <jay.dolan@accesio.com>
-Subject: [PATCH 5.0 150/238] serial: 8250_pci: Fix number of ports for ACCES serial cards
-Date:   Fri, 22 Mar 2019 12:16:09 +0100
-Message-Id: <20190322111307.211408543@linuxfoundation.org>
+        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        Peter Chen <peter.chen@nxp.com>
+Subject: [PATCH 5.0 145/238] usb: chipidea: tegra: Fix missed ci_hdrc_remove_device()
+Date:   Fri, 22 Mar 2019 12:16:04 +0100
+Message-Id: <20190322111306.932578484@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -63,139 +65,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jay Dolan <jay.dolan@accesio.com>
+From: Dmitry Osipenko <digetx@gmail.com>
 
-commit b896b03bc7fce43a07012cc6bf5e2ab2fddf3364 upstream.
+commit 563b9372f7ec57e44e8f9a8600c5107d7ffdd166 upstream.
 
-Have the correct number of ports created for ACCES serial cards. Two port
-cards show up as four ports, and four port cards show up as eight.
+The ChipIdea's platform device need to be unregistered on Tegra's driver
+module removal.
 
-Fixes: c8d192428f52 ("serial: 8250: added acces i/o products quad and octal serial cards")
-Signed-off-by: Jay Dolan <jay.dolan@accesio.com>
+Fixes: dfebb5f43a78827a ("usb: chipidea: Add support for Tegra20/30/114/124")
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Acked-by: Peter Chen <peter.chen@nxp.com>
 Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/8250/8250_pci.c |   36 ++++++++++++++++++------------------
- 1 file changed, 18 insertions(+), 18 deletions(-)
+ drivers/usb/chipidea/ci_hdrc_tegra.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/tty/serial/8250/8250_pci.c
-+++ b/drivers/tty/serial/8250/8250_pci.c
-@@ -4575,10 +4575,10 @@ static const struct pci_device_id serial
- 	 */
- 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_COM_2SDB,
- 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
--		pbn_pericom_PI7C9X7954 },
-+		pbn_pericom_PI7C9X7952 },
- 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_MPCIE_COM_2S,
- 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
--		pbn_pericom_PI7C9X7954 },
-+		pbn_pericom_PI7C9X7952 },
- 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_COM_4SDB,
- 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
- 		pbn_pericom_PI7C9X7954 },
-@@ -4587,10 +4587,10 @@ static const struct pci_device_id serial
- 		pbn_pericom_PI7C9X7954 },
- 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_COM232_2DB,
- 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
--		pbn_pericom_PI7C9X7954 },
-+		pbn_pericom_PI7C9X7952 },
- 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_MPCIE_COM232_2,
- 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
--		pbn_pericom_PI7C9X7954 },
-+		pbn_pericom_PI7C9X7952 },
- 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_COM232_4DB,
- 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
- 		pbn_pericom_PI7C9X7954 },
-@@ -4599,10 +4599,10 @@ static const struct pci_device_id serial
- 		pbn_pericom_PI7C9X7954 },
- 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_COM_2SMDB,
- 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
--		pbn_pericom_PI7C9X7954 },
-+		pbn_pericom_PI7C9X7952 },
- 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_MPCIE_COM_2SM,
- 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
--		pbn_pericom_PI7C9X7954 },
-+		pbn_pericom_PI7C9X7952 },
- 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_COM_4SMDB,
- 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
- 		pbn_pericom_PI7C9X7954 },
-@@ -4611,13 +4611,13 @@ static const struct pci_device_id serial
- 		pbn_pericom_PI7C9X7954 },
- 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_MPCIE_ICM485_1,
- 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
--		pbn_pericom_PI7C9X7954 },
-+		pbn_pericom_PI7C9X7951 },
- 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_MPCIE_ICM422_2,
- 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
--		pbn_pericom_PI7C9X7954 },
-+		pbn_pericom_PI7C9X7952 },
- 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_MPCIE_ICM485_2,
- 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
--		pbn_pericom_PI7C9X7954 },
-+		pbn_pericom_PI7C9X7952 },
- 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_MPCIE_ICM422_4,
- 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
- 		pbn_pericom_PI7C9X7954 },
-@@ -4626,16 +4626,16 @@ static const struct pci_device_id serial
- 		pbn_pericom_PI7C9X7954 },
- 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_ICM_2S,
- 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
--		pbn_pericom_PI7C9X7954 },
-+		pbn_pericom_PI7C9X7952 },
- 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_ICM_4S,
- 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
- 		pbn_pericom_PI7C9X7954 },
- 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_ICM232_2,
- 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
--		pbn_pericom_PI7C9X7954 },
-+		pbn_pericom_PI7C9X7952 },
- 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_MPCIE_ICM232_2,
- 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
--		pbn_pericom_PI7C9X7954 },
-+		pbn_pericom_PI7C9X7952 },
- 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_ICM232_4,
- 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
- 		pbn_pericom_PI7C9X7954 },
-@@ -4644,13 +4644,13 @@ static const struct pci_device_id serial
- 		pbn_pericom_PI7C9X7954 },
- 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_ICM_2SM,
- 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
--		pbn_pericom_PI7C9X7954 },
-+		pbn_pericom_PI7C9X7952 },
- 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_COM422_4,
- 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
--		pbn_pericom_PI7C9X7958 },
-+		pbn_pericom_PI7C9X7954 },
- 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_COM485_4,
- 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
--		pbn_pericom_PI7C9X7958 },
-+		pbn_pericom_PI7C9X7954 },
- 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_COM422_8,
- 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
- 		pbn_pericom_PI7C9X7958 },
-@@ -4659,19 +4659,19 @@ static const struct pci_device_id serial
- 		pbn_pericom_PI7C9X7958 },
- 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_COM232_4,
- 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
--		pbn_pericom_PI7C9X7958 },
-+		pbn_pericom_PI7C9X7954 },
- 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_COM232_8,
- 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
- 		pbn_pericom_PI7C9X7958 },
- 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_COM_4SM,
- 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
--		pbn_pericom_PI7C9X7958 },
-+		pbn_pericom_PI7C9X7954 },
- 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_COM_8SM,
- 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
- 		pbn_pericom_PI7C9X7958 },
- 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_ICM_4SM,
- 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
--		pbn_pericom_PI7C9X7958 },
-+		pbn_pericom_PI7C9X7954 },
- 	/*
- 	 * Topic TP560 Data/Fax/Voice 56k modem (reported by Evan Clarke)
- 	 */
+--- a/drivers/usb/chipidea/ci_hdrc_tegra.c
++++ b/drivers/usb/chipidea/ci_hdrc_tegra.c
+@@ -130,6 +130,7 @@ static int tegra_udc_remove(struct platf
+ {
+ 	struct tegra_udc *udc = platform_get_drvdata(pdev);
+ 
++	ci_hdrc_remove_device(udc->dev);
+ 	usb_phy_set_suspend(udc->phy, 1);
+ 	clk_disable_unprepare(udc->clk);
+ 
 
 
