@@ -7,46 +7,51 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BBFCC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:23:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A163C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:23:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEB572190A
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:23:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D897921916
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:23:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553253815;
-	bh=yQLn4NMO4SBFMSiJsR0U1rV5cMOsy1McmNY/Vi3B9PA=;
+	s=default; t=1553253819;
+	bh=XDhqWP88MH6PuPJ8I5ZEfcn+Fwpi7muDGJeSRyzdXQQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fJqCmD0YEyERpmInPMakjY6hLDk5NTZ88rT2shDPa9MaRQj3HS7ZKl2+fV+/E5WWa
-	 PHIOkPHCVvZiUplCZt1AUJTaHSLk4b0wBp2zQnfsdHdNaJvkbmpWBP14bihaufd4Wh
-	 8ICLcRw3qEX1WqFRUCEPuVtKJeZl11GLMMxtp0IM=
+	b=1xF0aE0j15+tQYgJyLaIIwoxHX6D/KP7IEfvavFJ7PVkylKBZYqpZFCCB0+kq2MTj
+	 /bWJvNQbxMryrE9j2CtyGBBwID5zzz2OdJENPahDpmDItGDCZmGgtRr9rYyhQ5EwYE
+	 BOfE6k+56G+NDbXoH2dB5Fo2VfLOeembrzQiClbU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728990AbfCVLXd (ORCPT
+        id S1728998AbfCVLXi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:23:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50478 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:23:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50584 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728979AbfCVLXb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:23:31 -0400
+        id S1728375AbfCVLXf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:23:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD2E0218A2;
-        Fri, 22 Mar 2019 11:23:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4F4F218A2;
+        Fri, 22 Mar 2019 11:23:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553253811;
-        bh=yQLn4NMO4SBFMSiJsR0U1rV5cMOsy1McmNY/Vi3B9PA=;
+        s=default; t=1553253815;
+        bh=XDhqWP88MH6PuPJ8I5ZEfcn+Fwpi7muDGJeSRyzdXQQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uVUXmVUJ+f0/3G15mpbqlF2v7F+tCBBcPueG01sAO8KdXgiu9dOIV9rF6Zx8oIk0x
-         CUMTWsNg1NdwIznzLEHIGD2Xzw5YxwE4zMgdk5wkzkUmmgzzZxZINu1tKIt7tYIlL+
-         m2OFZlyuUJg6lyWR73u2P0qbfAmtnigSSvaIa1Jo=
+        b=MG5HdaOqXQe3hseXPbMzgoZWEABs1tIHI5Ijnp6DhlPAd17XRJW9PhJPrYrteN8Uo
+         J9axneSsZoXJjCwqAs+8X42n8WvdNjT65x1n88AcWUneWyT8IEFr2hQOpxTqCPVAnN
+         e0tB3adlVspvZ+H0q/NIKMY2Etj6+e+MxnvBMQ1U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>,
+        stable@vger.kernel.org,
+        Tomonori Sakita <tomonori.sakita@sord.co.jp>,
+        Atsushi Nemoto <atsushi.nemoto@sord.co.jp>,
+        Dalon L Westergreen <dalon.westergreen@linux.intel.com>,
+        Thor Thayer <thor.thayer@linux.intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 3.18 062/134] xtensa: SMP: limit number of possible CPUs by NR_CPUS
-Date:   Fri, 22 Mar 2019 12:14:35 +0100
-Message-Id: <20190322111214.519863338@linuxfoundation.org>
+Subject: [PATCH 3.18 063/134] net: altera_tse: fix msgdma_tx_completion on non-zero fill_level case
+Date:   Fri, 22 Mar 2019 12:14:36 +0100
+Message-Id: <20190322111214.596798602@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111210.465931067@linuxfoundation.org>
 References: <20190322111210.465931067@linuxfoundation.org>
@@ -65,47 +70,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 25384ce5f9530def39421597b1457d9462df6455 ]
+[ Upstream commit 6571ebce112a21ec9be68ef2f53b96fcd41fd81b ]
 
-This fixes the following warning at boot when the kernel is booted on a
-board with more CPU cores than was configured in NR_CPUS:
+If fill_level was not zero and status was not BUSY,
+result of "tx_prod - tx_cons - inuse" might be zero.
+Subtracting 1 unconditionally results invalid negative return value
+on this case.
+Make sure not to return an negative value.
 
-  smp_init_cpus: Core Count = 8
-  smp_init_cpus: Core Id = 0
-  ------------[ cut here ]------------
-  WARNING: CPU: 0 PID: 0 at include/linux/cpumask.h:121 smp_init_cpus+0x54/0x74
-  Modules linked in:
-  CPU: 0 PID: 0 Comm: swapper Not tainted 5.0.0-rc3-00015-g1459333f88a0 #124
-  Call Trace:
-    __warn$part$3+0x6a/0x7c
-    warn_slowpath_null+0x35/0x3c
-    smp_init_cpus+0x54/0x74
-    setup_arch+0x1c0/0x1d0
-    start_kernel+0x44/0x310
-    _startup+0x107/0x107
-
-Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
+Signed-off-by: Tomonori Sakita <tomonori.sakita@sord.co.jp>
+Signed-off-by: Atsushi Nemoto <atsushi.nemoto@sord.co.jp>
+Reviewed-by: Dalon L Westergreen <dalon.westergreen@linux.intel.com>
+Acked-by: Thor Thayer <thor.thayer@linux.intel.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/xtensa/kernel/smp.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/net/ethernet/altera/altera_msgdma.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/xtensa/kernel/smp.c b/arch/xtensa/kernel/smp.c
-index 0e34c1ed4aa8..54bb8e0473a0 100644
---- a/arch/xtensa/kernel/smp.c
-+++ b/arch/xtensa/kernel/smp.c
-@@ -93,6 +93,11 @@ void __init smp_init_cpus(void)
- 	pr_info("%s: Core Count = %d\n", __func__, ncpus);
- 	pr_info("%s: Core Id = %d\n", __func__, core_id);
+diff --git a/drivers/net/ethernet/altera/altera_msgdma.c b/drivers/net/ethernet/altera/altera_msgdma.c
+index 0fb986ba3290..0ae723f75341 100644
+--- a/drivers/net/ethernet/altera/altera_msgdma.c
++++ b/drivers/net/ethernet/altera/altera_msgdma.c
+@@ -145,7 +145,8 @@ u32 msgdma_tx_completions(struct altera_tse_private *priv)
+ 			& 0xffff;
  
-+	if (ncpus > NR_CPUS) {
-+		ncpus = NR_CPUS;
-+		pr_info("%s: limiting core count by %d\n", __func__, ncpus);
-+	}
-+
- 	for (i = 0; i < ncpus; ++i)
- 		set_cpu_possible(i, true);
- }
+ 	if (inuse) { /* Tx FIFO is not empty */
+-		ready = priv->tx_prod - priv->tx_cons - inuse - 1;
++		ready = max_t(int,
++			      priv->tx_prod - priv->tx_cons - inuse - 1, 0);
+ 	} else {
+ 		/* Check for buffered last packet */
+ 		status = csrrd32(priv->tx_dma_csr, msgdma_csroffs(status));
 -- 
 2.19.1
 
