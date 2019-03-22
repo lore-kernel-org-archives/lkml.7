@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CCB2C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:53:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51BF8C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:54:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16F3520643
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:53:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2203F2082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:54:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255639;
-	bh=nyu1f/A5DekGZBX0faLLMv+ZNx5YW6D6V8LKgGuzj08=;
+	s=default; t=1553255642;
+	bh=UXBXo+aXL+PaB08/zTjaEQrr55ba4YpJ9cEm2ewRWRE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y/yBI4EnUfHX0SK9o0f3EmMMiLmvId9cqIg7y/aAagvcxf3sBfxxgatz89jWOnYXZ
-	 IinAnZnfGUl8oLtlej+cXE0bNUb1I+5QsqQrC5SwJ7y5WLwOOZsUcnK6JA3hPMkcnY
-	 6+enux9jWB5i+T+t7YjexJLn9JdYwwxn/jhv0ODo=
+	b=tF4CEWDS+aQZxtLmEON9g/xl/+RXNNXqtPfLykIyW9IBjfj+siRJSYK9EyPG/oagV
+	 XAhenUM5plb4xlsGibALz1M0zkjFBOMDbB9W8wFozelHKUNYBMZGZxNTc805P/g+Hu
+	 LX+UU/5c+/EFSsUn64e6MwIZ12ASI6Vsak4KlOAI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732726AbfCVLx6 (ORCPT
+        id S1732942AbfCVLyB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:53:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58152 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:54:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58238 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732337AbfCVLxw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:53:52 -0400
+        id S1733108AbfCVLx4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:53:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1773C20693;
-        Fri, 22 Mar 2019 11:53:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D289220693;
+        Fri, 22 Mar 2019 11:53:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255631;
-        bh=nyu1f/A5DekGZBX0faLLMv+ZNx5YW6D6V8LKgGuzj08=;
+        s=default; t=1553255635;
+        bh=UXBXo+aXL+PaB08/zTjaEQrr55ba4YpJ9cEm2ewRWRE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FMW4tbgJoFGofKIEiflLat9InhsWd+h3lb9mLteM0Gq6KrV5K0Ud9e9Rrpw6EGjs8
-         LNYkCOb65rC74a+0oZIaPFc4c9jLwJF0Ed/4psAEHlzFQfbwK0+fBM5WipGXmgAT6S
-         ZI2cYP94fUaFAxd8Eix6ugqUgI3qx3jom8+rNbTI=
+        b=wkGHYZMGxrMgkTKeE/cL3WJjzeFKn7wHqWHoya+ZHEq1tHQQDh6cRWtJFx5m5PdO3
+         1uwfZGrKwxnOz6pxOL16DgnhdRTdbqVU5SgH5hbkibKb+uDtR67f/1Qr3Mve/XtvwX
+         AO0b5Kw3ynOZOmJ9QPoB0+LzghDcI6rj4a6toIIo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Marc Zyngier <marc.zyngier@arm.com>
-Subject: [PATCH 4.14 150/183] arm64: KVM: Fix architecturally invalid reset value for FPEXC32_EL2
-Date:   Fri, 22 Mar 2019 12:16:18 +0100
-Message-Id: <20190322111252.723909675@linuxfoundation.org>
+        stable@vger.kernel.org, NeilBrown <neil@brown.name>,
+        Mike Snitzer <snitzer@redhat.com>,
+        =?UTF-8?q?Guillaume=20Perr=C3=A9al?= <gperreal@free.fr>
+Subject: [PATCH 4.14 151/183] dm: fix to_sector() for 32bit
+Date:   Fri, 22 Mar 2019 12:16:19 +0100
+Message-Id: <20190322111252.829784017@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111241.819468003@linuxfoundation.org>
 References: <20190322111241.819468003@linuxfoundation.org>
@@ -67,44 +66,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Dave Martin <Dave.Martin@arm.com>
+From: NeilBrown <neil@brown.name>
 
-commit c88b093693ccbe41991ef2e9b1d251945e6e54ed upstream.
+commit 0bdb50c531f7377a9da80d3ce2d61f389c84cb30 upstream.
 
-Due to what looks like a typo dating back to the original addition
-of FPEXC32_EL2 handling, KVM currently initialises this register to
-an architecturally invalid value.
+A dm-raid array with devices larger than 4GB won't assemble on
+a 32 bit host since _check_data_dev_sectors() was added in 4.16.
+This is because to_sector() treats its argument as an "unsigned long"
+which is 32bits (4GB) on a 32bit host.  Using "unsigned long long"
+is more correct.
 
-As a result, the VECITR field (RES1) in bits [10:8] is initialised
-with 0, and the two reserved (RES0) bits [6:5] are initialised with
-1.  (In the Common VFP Subarchitecture as specified by ARMv7-A,
-these two bits were IMP DEF.  ARMv8-A removes them.)
+Kernels as early as 4.2 can have other problems due to to_sector()
+being used on the size of a device.
 
-This patch changes the reset value from 0x70 to 0x700, which
-reflects the architectural constraints and is presumably what was
-originally intended.
-
-Cc: <stable@vger.kernel.org> # 4.12.x-
-Cc: Christoffer Dall <christoffer.dall@arm.com>
-Fixes: 62a89c44954f ("arm64: KVM: 32bit handling of coprocessor traps")
-Signed-off-by: Dave Martin <Dave.Martin@arm.com>
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+Fixes: 0cf4503174c1 ("dm raid: add support for the MD RAID0 personality")
+cc: stable@vger.kernel.org (v4.2+)
+Reported-and-tested-by: Guillaume Perréal <gperreal@free.fr>
+Signed-off-by: NeilBrown <neil@brown.name>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/kvm/sys_regs.c |    2 +-
+ include/linux/device-mapper.h |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/arm64/kvm/sys_regs.c
-+++ b/arch/arm64/kvm/sys_regs.c
-@@ -1079,7 +1079,7 @@ static const struct sys_reg_desc sys_reg
+--- a/include/linux/device-mapper.h
++++ b/include/linux/device-mapper.h
+@@ -630,7 +630,7 @@ do {									\
+  */
+ #define dm_target_offset(ti, sector) ((sector) - (ti)->begin)
  
- 	{ SYS_DESC(SYS_DACR32_EL2), NULL, reset_unknown, DACR32_EL2 },
- 	{ SYS_DESC(SYS_IFSR32_EL2), NULL, reset_unknown, IFSR32_EL2 },
--	{ SYS_DESC(SYS_FPEXC32_EL2), NULL, reset_val, FPEXC32_EL2, 0x70 },
-+	{ SYS_DESC(SYS_FPEXC32_EL2), NULL, reset_val, FPEXC32_EL2, 0x700 },
- };
- 
- static bool trap_dbgidr(struct kvm_vcpu *vcpu,
+-static inline sector_t to_sector(unsigned long n)
++static inline sector_t to_sector(unsigned long long n)
+ {
+ 	return (n >> SECTOR_SHIFT);
+ }
 
 
