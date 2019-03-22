@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECEC9C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:50:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95064C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:50:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB56920693
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:50:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63A7C2082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:50:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255437;
-	bh=jS6uO/wXEFlYMsnnuobzz6X7+4R5r5eNZmla6JPPjhE=;
+	s=default; t=1553255442;
+	bh=E5ZoJfHy95HqpoNPucWlJQdGMWieeQNlMuZDIP2PXIE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y3yjodNHb/uCNjNOmDqy0JNP84TiwHDB7pqv+QdMnlQD84nfL68E3LznyGpcPwBF/
-	 W/olAmm3id7WVBcSgNHO0OYWc27R8Dai9fAKTBv8VgofLg8WEJxkeLR12rUO95Ovhv
-	 6iVHgYUoZkL+vu2MrJB7TuQlhebHqCYQVjuh4xlU=
+	b=REU8n2orW647o3vUNjI+P0eZsGcnAwQPlIb4aQUZqVEWAQzgxuinfjjPBj009mMPY
+	 xhedDWcXZu2qETIfcjc7wsEI1KwiS4aE7+iALpbaIkKIUuclwRJAZkYGFmSZPbXMQG
+	 PZZ4SwjxLWV3aPd1vg9x7FYcALt2iaJVIuugpSR0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732664AbfCVLuf (ORCPT
+        id S1732674AbfCVLuk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:50:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54298 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:50:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732052AbfCVLua (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:50:30 -0400
+        id S1732665AbfCVLug (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:50:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0726B20850;
-        Fri, 22 Mar 2019 11:50:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A1012082C;
+        Fri, 22 Mar 2019 11:50:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255429;
-        bh=jS6uO/wXEFlYMsnnuobzz6X7+4R5r5eNZmla6JPPjhE=;
+        s=default; t=1553255436;
+        bh=E5ZoJfHy95HqpoNPucWlJQdGMWieeQNlMuZDIP2PXIE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=smdaHZtuv8w8E8v/NNAId7lpO5B8LPOcEBqnGzuEGe3eu7dY7eHyiYDU6s+4ivJo0
-         3+oiLdWAEgMOGAxK7RbXBBpVJnrcGZ6LsHec8FGv7hbA61y50WzBSvNzD7TG8srCSe
-         6mmwdIJ01Nvg8ccyBHJWc1HMsu88gX0lwtsmFdvM=
+        b=jEzTakc7/7LJEYqKRHuvsImkA0h1AnB95F6iG8k1FRnxM4yavi1f8E+q9MmdRYMwk
+         nU07c5q/c8N7JsPN8tJj4JEWWOOpoYFkBbO7TORsZ7bTBcia6DHyEaDT5hz9PQje41
+         x3jYRfShvE1CCG3TnhGp80cCNVPQqe48Hpz8TleE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jinyoung Park <jinyoungp@nvidia.com>,
-        Mark Zhang <markz@nvidia.com>, Mark Brown <broonie@kernel.org>
-Subject: [PATCH 4.14 089/183] regulator: max77620: Initialize values for DT properties
-Date:   Fri, 22 Mar 2019 12:15:17 +0100
-Message-Id: <20190322111248.180853473@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Stuart Menefy <stuart.menefy@mathembedded.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: [PATCH 4.14 091/183] clocksource/drivers/exynos_mct: Move one-shot check from tick clear to ISR
+Date:   Fri, 22 Mar 2019 12:15:19 +0100
+Message-Id: <20190322111248.311307552@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111241.819468003@linuxfoundation.org>
 References: <20190322111241.819468003@linuxfoundation.org>
@@ -65,50 +68,73 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Mark Zhang <markz@nvidia.com>
+From: Stuart Menefy <stuart.menefy@mathembedded.com>
 
-commit 0ab66b3c326ef8f77dae9f528118966365757c0c upstream.
+commit a5719a40aef956ba704f2aa1c7b977224d60fa96 upstream.
 
-If regulator DT node doesn't exist, its of_parse_cb callback
-function isn't called. Then all values for DT properties are
-filled with zero. This leads to wrong register update for
-FPS and POK settings.
+When a timer tick occurs and the clock is in one-shot mode, the timer
+needs to be stopped to prevent it triggering subsequent interrupts.
+Currently this code is in exynos4_mct_tick_clear(), but as it is
+only needed when an ISR occurs move it into exynos4_mct_tick_isr(),
+leaving exynos4_mct_tick_clear() just doing what its name suggests it
+should.
 
-Signed-off-by: Jinyoung Park <jinyoungp@nvidia.com>
-Signed-off-by: Mark Zhang <markz@nvidia.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Cc: stable@vger.kernel.org
+Signed-off-by: Stuart Menefy <stuart.menefy@mathembedded.com>
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: stable@vger.kernel.org # v4.3+
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/regulator/max77620-regulator.c |   10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ drivers/clocksource/exynos_mct.c |   22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
---- a/drivers/regulator/max77620-regulator.c
-+++ b/drivers/regulator/max77620-regulator.c
-@@ -1,7 +1,7 @@
- /*
-  * Maxim MAX77620 Regulator driver
-  *
-- * Copyright (c) 2016, NVIDIA CORPORATION.  All rights reserved.
-+ * Copyright (c) 2016-2018, NVIDIA CORPORATION.  All rights reserved.
-  *
-  * Author: Mallikarjun Kasoju <mkasoju@nvidia.com>
-  *	Laxman Dewangan <ldewangan@nvidia.com>
-@@ -803,6 +803,14 @@ static int max77620_regulator_probe(stru
- 		rdesc = &rinfo[id].desc;
- 		pmic->rinfo[id] = &max77620_regs_info[id];
- 		pmic->enable_power_mode[id] = MAX77620_POWER_MODE_NORMAL;
-+		pmic->reg_pdata[id].active_fps_src = -1;
-+		pmic->reg_pdata[id].active_fps_pd_slot = -1;
-+		pmic->reg_pdata[id].active_fps_pu_slot = -1;
-+		pmic->reg_pdata[id].suspend_fps_src = -1;
-+		pmic->reg_pdata[id].suspend_fps_pd_slot = -1;
-+		pmic->reg_pdata[id].suspend_fps_pu_slot = -1;
-+		pmic->reg_pdata[id].power_ok = -1;
-+		pmic->reg_pdata[id].ramp_rate_setting = -1;
+--- a/drivers/clocksource/exynos_mct.c
++++ b/drivers/clocksource/exynos_mct.c
+@@ -388,6 +388,13 @@ static void exynos4_mct_tick_start(unsig
+ 	exynos4_mct_write(tmp, mevt->base + MCT_L_TCON_OFFSET);
+ }
  
- 		ret = max77620_read_slew_rate(pmic, id);
- 		if (ret < 0)
++static void exynos4_mct_tick_clear(struct mct_clock_event_device *mevt)
++{
++	/* Clear the MCT tick interrupt */
++	if (readl_relaxed(reg_base + mevt->base + MCT_L_INT_CSTAT_OFFSET) & 1)
++		exynos4_mct_write(0x1, mevt->base + MCT_L_INT_CSTAT_OFFSET);
++}
++
+ static int exynos4_tick_set_next_event(unsigned long cycles,
+ 				       struct clock_event_device *evt)
+ {
+@@ -420,8 +427,11 @@ static int set_state_periodic(struct clo
+ 	return 0;
+ }
+ 
+-static void exynos4_mct_tick_clear(struct mct_clock_event_device *mevt)
++static irqreturn_t exynos4_mct_tick_isr(int irq, void *dev_id)
+ {
++	struct mct_clock_event_device *mevt = dev_id;
++	struct clock_event_device *evt = &mevt->evt;
++
+ 	/*
+ 	 * This is for supporting oneshot mode.
+ 	 * Mct would generate interrupt periodically
+@@ -430,16 +440,6 @@ static void exynos4_mct_tick_clear(struc
+ 	if (!clockevent_state_periodic(&mevt->evt))
+ 		exynos4_mct_tick_stop(mevt);
+ 
+-	/* Clear the MCT tick interrupt */
+-	if (readl_relaxed(reg_base + mevt->base + MCT_L_INT_CSTAT_OFFSET) & 1)
+-		exynos4_mct_write(0x1, mevt->base + MCT_L_INT_CSTAT_OFFSET);
+-}
+-
+-static irqreturn_t exynos4_mct_tick_isr(int irq, void *dev_id)
+-{
+-	struct mct_clock_event_device *mevt = dev_id;
+-	struct clock_event_device *evt = &mevt->evt;
+-
+ 	exynos4_mct_tick_clear(mevt);
+ 
+ 	evt->event_handler(evt);
 
 
