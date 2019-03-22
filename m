@@ -7,44 +7,46 @@ X-Spam-Status: No, score=-12.0 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BD48C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:41:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FFEFC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:42:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E57D0218D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:41:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCFF721925
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:42:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728360AbfCVWli (ORCPT
+        id S1728260AbfCVWm2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 18:41:38 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:53477 "EHLO
+        Fri, 22 Mar 2019 18:42:28 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:41757 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728164AbfCVWli (ORCPT
+        with ESMTP id S1727852AbfCVWm1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 18:41:38 -0400
+        Fri, 22 Mar 2019 18:42:27 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x2MMfCvc755433
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x2MMfpDd755509
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Fri, 22 Mar 2019 15:41:12 -0700
+        Fri, 22 Mar 2019 15:41:51 -0700
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x2MMfBk3755430;
-        Fri, 22 Mar 2019 15:41:11 -0700
-Date:   Fri, 22 Mar 2019 15:41:11 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x2MMfpa5755506;
+        Fri, 22 Mar 2019 15:41:51 -0700
+Date:   Fri, 22 Mar 2019 15:41:51 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Song Liu <tipbot@zytor.com>
-Message-ID: <tip-ee7a112fbcc8edb4cf2f84ce5fcc2da7818fd4b8@git.kernel.org>
-Cc:     songliubraving@fb.com, jolsa@kernel.org, tglx@linutronix.de,
-        hpa@zytor.com, peterz@infradead.org, namhyung@kernel.org,
-        mingo@kernel.org, ast@kernel.org, sdf@google.com,
-        linux-kernel@vger.kernel.org, daniel@iogearbox.net, acme@redhat.com
-Reply-To: daniel@iogearbox.net, acme@redhat.com, namhyung@kernel.org,
-          mingo@kernel.org, ast@kernel.org, hpa@zytor.com, sdf@google.com,
-          tglx@linutronix.de, linux-kernel@vger.kernel.org,
-          peterz@infradead.org, songliubraving@fb.com, jolsa@kernel.org
-In-Reply-To: <20190312053051.2690567-11-songliubraving@fb.com>
-References: <20190312053051.2690567-11-songliubraving@fb.com>
+Message-ID: <tip-31be9478ed7f43d6351e0d5a2257ca76609c83d3@git.kernel.org>
+Cc:     ast@kernel.org, daniel@iogearbox.net, songliubraving@fb.com,
+        peterz@infradead.org, tglx@linutronix.de, namhyung@kernel.org,
+        linux-kernel@vger.kernel.org, sdf@google.com, hpa@zytor.com,
+        acme@redhat.com, jolsa@kernel.org, mingo@kernel.org
+Reply-To: namhyung@kernel.org, tglx@linutronix.de, ast@kernel.org,
+          peterz@infradead.org, daniel@iogearbox.net, mingo@kernel.org,
+          jolsa@kernel.org, acme@redhat.com, hpa@zytor.com,
+          songliubraving@fb.com, sdf@google.com,
+          linux-kernel@vger.kernel.org
+In-Reply-To: <20190312053051.2690567-12-songliubraving@fb.com>
+References: <20190312053051.2690567-12-songliubraving@fb.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/urgent] perf top: Add option --no-bpf-event
-Git-Commit-ID: ee7a112fbcc8edb4cf2f84ce5fcc2da7818fd4b8
+Subject: [tip:perf/urgent] perf feature detection: Add -lopcodes to
+ feature-libbfd
+Git-Commit-ID: 31be9478ed7f43d6351e0d5a2257ca76609c83d3
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -58,73 +60,23 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  ee7a112fbcc8edb4cf2f84ce5fcc2da7818fd4b8
-Gitweb:     https://git.kernel.org/tip/ee7a112fbcc8edb4cf2f84ce5fcc2da7818fd4b8
+Commit-ID:  31be9478ed7f43d6351e0d5a2257ca76609c83d3
+Gitweb:     https://git.kernel.org/tip/31be9478ed7f43d6351e0d5a2257ca76609c83d3
 Author:     Song Liu <songliubraving@fb.com>
-AuthorDate: Mon, 11 Mar 2019 22:30:46 -0700
+AuthorDate: Mon, 11 Mar 2019 22:30:47 -0700
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitDate: Tue, 19 Mar 2019 16:52:07 -0300
 
-perf top: Add option --no-bpf-event
+perf feature detection: Add -lopcodes to feature-libbfd
 
-This patch adds option --no-bpf-event to 'perf top', which is the same
-as the option of 'perf record'.
+Both libbfd and libopcodes are distributed with binutil-dev/devel. When
+libbfd is present, it is OK to assume that libopcodes also present. This
+has been a safe assumption for bpftool.
 
-The following patches will use this option.
-
-Committer testing:
-
-  # perf top -vv 2> /tmp/perf_event_attr.out
-  # cat  /tmp/perf_event_attr.out
-  ------------------------------------------------------------
-  perf_event_attr:
-    size                             112
-    { sample_period, sample_freq }   4000
-    sample_type                      IP|TID|TIME|CPU|PERIOD
-    read_format                      ID
-    disabled                         1
-    inherit                          1
-    mmap                             1
-    comm                             1
-    freq                             1
-    task                             1
-    precise_ip                       3
-    sample_id_all                    1
-    exclude_guest                    1
-    mmap2                            1
-    comm_exec                        1
-    ksymbol                          1
-    bpf_event                        1
-  ------------------------------------------------------------
-  #
-
-After this patch:
-
-  # perf top --no-bpf-event -vv 2> /tmp/perf_event_attr.out
-  # cat  /tmp/perf_event_attr.out
-  ------------------------------------------------------------
-  perf_event_attr:
-    size                             112
-    { sample_period, sample_freq }   4000
-    sample_type                      IP|TID|TIME|CPU|PERIOD
-    read_format                      ID
-    disabled                         1
-    inherit                          1
-    mmap                             1
-    comm                             1
-    freq                             1
-    task                             1
-    precise_ip                       3
-    sample_id_all                    1
-    exclude_guest                    1
-    mmap2                            1
-    comm_exec                        1
-    ksymbol                          1
-  ------------------------------------------------------------
-  #
+This patch adds -lopcodes to perf/Makefile.config. libopcodes will be
+used in the next commit for BPF annotation.
 
 Signed-off-by: Song Liu <songliubraving@fb.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Reviewed-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexei Starovoitov <ast@kernel.org>
 Cc: Daniel Borkmann <daniel@iogearbox.net>
@@ -132,21 +84,35 @@ Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Stanislav Fomichev <sdf@google.com>
 Cc: kernel-team@fb.com
-Link: http://lkml.kernel.org/r/20190312053051.2690567-11-songliubraving@fb.com
+Link: http://lkml.kernel.org/r/20190312053051.2690567-12-songliubraving@fb.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-top.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/Makefile.config | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index 77e6190211d2..c2ea22c4ea67 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -1469,6 +1469,7 @@ int cmd_top(int argc, const char **argv)
- 		    "Display raw encoding of assembly instructions (default)"),
- 	OPT_BOOLEAN(0, "demangle-kernel", &symbol_conf.demangle_kernel,
- 		    "Enable kernel symbol demangling"),
-+	OPT_BOOLEAN(0, "no-bpf-event", &top.record_opts.no_bpf_event, "do not record bpf events"),
- 	OPT_STRING(0, "objdump", &top.annotation_opts.objdump_path, "path",
- 		    "objdump binary to use for disassembly and annotations"),
- 	OPT_STRING('M', "disassembler-style", &top.annotation_opts.disassembler_style, "disassembler style",
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index 0f11d5891301..df4ad45599ca 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -713,7 +713,7 @@ else
+ endif
+ 
+ ifeq ($(feature-libbfd), 1)
+-  EXTLIBS += -lbfd
++  EXTLIBS += -lbfd -lopcodes
+ else
+   # we are on a system that requires -liberty and (maybe) -lz
+   # to link against -lbfd; test each case individually here
+@@ -724,10 +724,10 @@ else
+   $(call feature_check,libbfd-liberty-z)
+ 
+   ifeq ($(feature-libbfd-liberty), 1)
+-    EXTLIBS += -lbfd -liberty
++    EXTLIBS += -lbfd -lopcodes -liberty
+   else
+     ifeq ($(feature-libbfd-liberty-z), 1)
+-      EXTLIBS += -lbfd -liberty -lz
++      EXTLIBS += -lbfd -lopcodes -liberty -lz
+     endif
+   endif
+ endif
