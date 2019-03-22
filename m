@@ -2,74 +2,115 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD20CC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 10:16:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9505C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 10:17:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F5AA21900
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 10:16:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B638218FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 10:17:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eHZqkMXu"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="5G1J9IhX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728058AbfCVKQB (ORCPT
+        id S1727984AbfCVKRq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 06:16:01 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:48150 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727860AbfCVKQA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 06:16:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=nBJewWCbdaJ5X4iQT6hRh0j0tFDuXREWOR4IbUJXZrw=; b=eHZqkMXuJaUupBq5agtV44k7F
-        rlUiJ5cff+KL4dk+vjyMIFhLoq4JYR0WhK1ryKV7Nym63LnjGzMxBoF7HODFZyQuc1Zbb2hlBIlFH
-        77oZYullmVvDUschGOvwJxz1lqJf73QZPU364tHP/Wo7XGZICNCGIETJO/443iPrcSIWCock3qWYB
-        9nDvjnTkEZr6RyExdNRDyrQGRTu1GNBu4BevbyT/ZPs9HTctSQpu2/n+OiuQ19rVZT2sBOg2K/2B1
-        VVl/vIvTNpogP3pjWIta6k4fqBzVTHxeU0lc9vuMrv+O1eq+CzFe1WDPpeNaHB1W3Ep9RfU4VoXd/
-        KUnsSV5IA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h7HD6-0003yd-1c; Fri, 22 Mar 2019 10:15:36 +0000
-Date:   Fri, 22 Mar 2019 03:15:35 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        selinux@vger.kernel.org, Paul Moore <paul@paul-moore.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Eric Paris <eparis@parisplace.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Oleg Nesterov <oleg@redhat.com>
-Subject: Re: [PATCH 0/4] Signal: Fix hard lockup problem in flush_sigqueue()
-Message-ID: <20190322101535.GA10344@bombadil.infradead.org>
-References: <20190321214512.11524-1-longman@redhat.com>
+        Fri, 22 Mar 2019 06:17:46 -0400
+Received: from mail-eopbgr710051.outbound.protection.outlook.com ([40.107.71.51]:33504
+        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727845AbfCVKRq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 06:17:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector1-amd-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=if7AsSPRakVBsiU5qnU6WYdEH1pIyrXaXDOy4g/7xJE=;
+ b=5G1J9IhXj7uHim7qXy/tC19bi3KyVmHsN7uy0+KCvB971zcRTcwsHCf7s7qDx/5XD0cXWL6wKwLjWVqdLgUgFbA6QBpvssPjHI4eCKRT7SUNhRuDy48eV/oEZQIA4k+C5QB0ADwJw1Ca0XWIAwHjRd/wDjVyh5KR77EC0d6Mld4=
+Received: from DM6PR12MB2844.namprd12.prod.outlook.com (20.176.117.96) by
+ DM6PR12MB3244.namprd12.prod.outlook.com (20.179.105.156) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1730.15; Fri, 22 Mar 2019 10:17:43 +0000
+Received: from DM6PR12MB2844.namprd12.prod.outlook.com
+ ([fe80::3589:a066:e1d:b1f0]) by DM6PR12MB2844.namprd12.prod.outlook.com
+ ([fe80::3589:a066:e1d:b1f0%5]) with mapi id 15.20.1709.015; Fri, 22 Mar 2019
+ 10:17:43 +0000
+From:   "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+CC:     "joro@8bytes.org" <joro@8bytes.org>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>
+Subject: [PATCH] svm/avic: Fix invalidate logical APIC id entry
+Thread-Topic: [PATCH] svm/avic: Fix invalidate logical APIC id entry
+Thread-Index: AQHU4Jh8MXOh/YIDZE+Tvx4LHPVDEQ==
+Date:   Fri, 22 Mar 2019 10:17:43 +0000
+Message-ID: <20190322101706.9377-1-suravee.suthikulpanit@amd.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [124.121.138.205]
+x-clientproxiedby: SG2PR06CA0198.apcprd06.prod.outlook.com (2603:1096:4:1::30)
+ To DM6PR12MB2844.namprd12.prod.outlook.com (2603:10b6:5:45::32)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Suravee.Suthikulpanit@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5710d561-80b4-4d2f-bde8-08d6aeaf9ebd
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:DM6PR12MB3244;
+x-ms-traffictypediagnostic: DM6PR12MB3244:
+x-microsoft-antispam-prvs: <DM6PR12MB324476EB6D0D03AFB16CFB9EF3430@DM6PR12MB3244.namprd12.prod.outlook.com>
+x-forefront-prvs: 09840A4839
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(366004)(136003)(376002)(396003)(39860400002)(199004)(189003)(386003)(256004)(6506007)(110136005)(14444005)(25786009)(52116002)(7736002)(50226002)(68736007)(99286004)(106356001)(305945005)(71190400001)(71200400001)(5660300002)(72206003)(102836004)(86362001)(54906003)(2501003)(14454004)(2906002)(316002)(3846002)(6116002)(186003)(97736004)(4326008)(26005)(478600001)(8676002)(81156014)(81166006)(486006)(1076003)(2616005)(476003)(4744005)(6436002)(6486002)(8936002)(53936002)(36756003)(66066001)(105586002)(6512007);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3244;H:DM6PR12MB2844.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 9+us0N+F/rjB+AXL5I31oQZUjZMCpj4GIFM6nwgCWzcwuVd0duV0avc2Dhbv0qhSgsTqRSppyowJEzEPNDWb89HnPw6c8eAx2eZMJ5eaYpwC3Tu1XgEW4YVtIzL9jVQKrsdsBNNEPt4HSdlu6ga6e616f/mVd/1Wq1cc/ETP5zBJpD//PP2Rn1Tq6gf9H67MXhzQATUStdx7PgFiAcDYAyJA4mxKavi/VuuIqoGQJ5plF0SG0fOmh51bT1n/bibqyV3qtqTKV3ssFt3zdzVVU7MqoyminKmXdwn3IcRn2/umzXVEVy3f4hKy2ZE4wxhTwJ9Gy/f42gceziVwZa/r9m7/y2T5uvCbt7ml/83uoxOv4KDs36df+o9CL855jkOtj0Y2AKbqmgTyxkCHh1d4I3rjo4VOqzxUGmpB3YhmLa0=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190321214512.11524-1-longman@redhat.com>
-User-Agent: Mutt/1.9.2 (2017-12-15)
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5710d561-80b4-4d2f-bde8-08d6aeaf9ebd
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Mar 2019 10:17:43.5226
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3244
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 21, 2019 at 05:45:08PM -0400, Waiman Long wrote:
-> It was found that if a process has accumulated sufficient number of
-> pending signals, the exiting of that process may cause its parent to
-> have hard lockup when running on a debug kernel with a slow memory
-> freeing path (like with KASAN enabled).
+Only clear the valid bit when invalidate logical APIC id entry.
+The current logic clear the valid bit, but also set the rest of
+the bits (including reserved bits) to 1.
 
-I appreciate these are "reliable" signals, but why do we accumulate so
-many signals to a task which will never receive them?  Can we detect at
-signal delivery time that the task is going to die and avoid queueing
-them in the first place?
+Fixes: 98d90582be2e ('svm: Fix AVIC DFR and LDR handling')
+Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+---
+ arch/x86/kvm/svm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+index 7a4ce1a22ca0..f4fb766e474c 100644
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -4640,7 +4640,7 @@ static void avic_invalidate_logical_id_entry(struct k=
+vm_vcpu *vcpu)
+ 	u32 *entry =3D avic_get_logical_id_entry(vcpu, svm->ldr_reg, flat);
+=20
+ 	if (entry)
+-		WRITE_ONCE(*entry, (u32) ~AVIC_LOGICAL_ID_ENTRY_VALID_MASK);
++		WRITE_ONCE(*entry, (u32)(*entry & ~AVIC_LOGICAL_ID_ENTRY_VALID_MASK));
+ }
+=20
+ static int avic_handle_ldr_update(struct kvm_vcpu *vcpu)
+--=20
+2.17.1
+
