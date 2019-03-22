@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84842C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:11:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD469C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:11:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A39F2083D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:11:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EC972192C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:11:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256702;
-	bh=GE+rT6jHSZb0de2GnitHZJ2pXHeNmZnFcTtBmvzwoQs=;
+	s=default; t=1553256706;
+	bh=Qf7Q+U5xP8mBMOz21P5OQHoSdfUR1PxpTumPdNtpcEU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q5PLmHd3iFNNgwwgnSannbpleroKVf45Rkj+I5qxKoUYTGnyZW57I2B2dwXLQUtxe
-	 iorj9yjN3MQtiUZb8w3htWk1GBNX20fQv75mYb3vx4T50nIxfEJHEDMZ98usCoJEKL
-	 EGVAfxdW7g+s5C92jCEAiIjakh9ARU+4CWmoh/pc=
+	b=UDFP87xLgdRhaaRpBFq06Macbiaak0mePjvNKZn8oEHRPgjIFv7vJ74eeyKlnj5Cp
+	 FV3iC6MGP4jnMyHO5snegIZPP2ZuP1nhZ2c4jvagCDo1AFjmYlcXdlOFLTQgsEKKgm
+	 E0hrMQJR6Ku5aOGARS+QirtDkqH2wFakGbFIvW9k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389544AbfCVMLk (ORCPT
+        id S2389550AbfCVMLo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:11:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49882 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:11:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49928 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389528AbfCVMLh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:11:37 -0400
+        id S2389538AbfCVMLk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:11:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2BE0F21929;
-        Fri, 22 Mar 2019 12:11:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF5ED2082C;
+        Fri, 22 Mar 2019 12:11:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256696;
-        bh=GE+rT6jHSZb0de2GnitHZJ2pXHeNmZnFcTtBmvzwoQs=;
+        s=default; t=1553256699;
+        bh=Qf7Q+U5xP8mBMOz21P5OQHoSdfUR1PxpTumPdNtpcEU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N3ZpHqFyyjt+GxJtDahoHGmXhaAY3u+ISIsmgEtfAaYshp96cHzFeuN5Fio/TlFkl
-         +ftwFbFnTrnMPN4OOQ5Z5nOrsTVk0qGIxdwrCnZ5ugUfWjFG32y1L0mJ+KkxxNoxpW
-         LpR1RD57GaMvmwAgEPjufiuu/l4GF7O9BSCPVlXo=
+        b=yrB/CCe4q7T3sBdPiqCwMwy179u5I46+b53LQ+LfbdeI20sp1MsOjz5y2srukQoe8
+         6QjMyla8jBeRRAQW61DSjG+9PVehtkkhF4sPwzzweUD/vqUfrchb8kXWi2mZbWWcZF
+         0/sRHtCkl90qiSdhYtiQgTPyNOoWSx6h8igcPQbs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
+        stable@vger.kernel.org, Zhi Jin <zhi.jin@intel.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Subject: [PATCH 5.0 010/238] stm class: Prevent division by zero
-Date:   Fri, 22 Mar 2019 12:13:49 +0100
-Message-Id: <20190322111258.860646003@linuxfoundation.org>
+Subject: [PATCH 5.0 011/238] stm class: Fix an endless loop in channel allocation
+Date:   Fri, 22 Mar 2019 12:13:50 +0100
+Message-Id: <20190322111258.919787477@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -65,48 +65,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+From: Zhi Jin <zhi.jin@intel.com>
 
-commit bf7cbaae0831252b416f375ca9b1027ecd4642dd upstream.
+commit a1d75dad3a2c689e70a1c4e0214cca9de741d0aa upstream.
 
-Using STP_POLICY_ID_SET ioctl command with dummy_stm device, or any STM
-device that supplies zero mmio channel size, will trigger a division by
-zero bug in the kernel.
+There is a bug in the channel allocation logic that leads to an endless
+loop when looking for a contiguous range of channels in a range with a
+mixture of free and occupied channels. For example, opening three
+consequtive channels, closing the first two and requesting 4 channels in
+a row will trigger this soft lockup. The bug is that the search loop
+forgets to skip over the range once it detects that one channel in that
+range is occupied.
 
-Prevent this by disallowing channel widths other than 1 for such devices.
+Restore the original intent to the logic by fixing the omission.
 
+Signed-off-by: Zhi Jin <zhi.jin@intel.com>
 Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Fixes: 7bd1d4093c2f ("stm class: Introduce an abstraction for System Trace Module devices")
 CC: stable@vger.kernel.org # v4.4+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hwtracing/stm/core.c |    8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/hwtracing/stm/core.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
 --- a/drivers/hwtracing/stm/core.c
 +++ b/drivers/hwtracing/stm/core.c
-@@ -732,7 +732,7 @@ static int stm_char_policy_set_ioctl(str
- 	struct stm_device *stm = stmf->stm;
- 	struct stp_policy_id *id;
- 	char *ids[] = { NULL, NULL };
--	int ret = -EINVAL;
-+	int ret = -EINVAL, wlimit = 1;
- 	u32 size;
- 
- 	if (stmf->output.nr_chans)
-@@ -760,8 +760,10 @@ static int stm_char_policy_set_ioctl(str
- 	if (id->__reserved_0 || id->__reserved_1)
- 		goto err_free;
- 
--	if (id->width < 1 ||
--	    id->width > PAGE_SIZE / stm->data->sw_mmiosz)
-+	if (stm->data->sw_mmiosz)
-+		wlimit = PAGE_SIZE / stm->data->sw_mmiosz;
+@@ -244,6 +244,9 @@ static int find_free_channels(unsigned l
+ 			;
+ 		if (i == width)
+ 			return pos;
 +
-+	if (id->width < 1 || id->width > wlimit)
- 		goto err_free;
++		/* step over [pos..pos+i) to continue search */
++		pos += i;
+ 	}
  
- 	ids[0] = id->id;
+ 	return -1;
 
 
