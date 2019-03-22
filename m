@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41FE3C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:29:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1087EC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:29:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12F202070D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:29:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3B1D2070D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:29:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553257756;
-	bh=4wFGEqJ6d6OFOkcdpMbWXp9jMZNlTnG6IefVATmLhnk=;
+	s=default; t=1553257763;
+	bh=9aeln6Ool/Ll6KWF7ShclDeaLBUuQmPB7EEuAjJlmuo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=imOBrVO8F70+wED9KV/nU5JdcqR3TeCengfMAyMoRhwDPUUEXm/dLarVdNBbWjNAj
-	 dHhwi9WrOLXha1c93AsQtO3F8KFEXckzgQRXfTVLqxq3Fuq9n2PD1VntnzPgEaUdlQ
-	 RLOpwZm1RT2oZ13UgtkZr7Ik2qrYjE7fLTtFDOwI=
+	b=gdJvWT/OCte0u0w4k/lnnMNd46VUCMITS4pM/qc+4WsRCeo9lBlHJvtykHe0EBu7z
+	 YtwgzFdzwiKg4/2wJibYzt5BO8MNahIX0gok2LvnA/mvquaCVO7ABEduvpURSSJ0DR
+	 VIOa4h4sVj88QsALh0RmYsfs6RO8vJjAV8TpJ0+k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390844AbfCVM3P (ORCPT
+        id S2390227AbfCVMTU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:29:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58528 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:19:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390620AbfCVMTe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:19:34 -0400
+        id S2390402AbfCVMTK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:19:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D96C2054F;
-        Fri, 22 Mar 2019 12:19:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69A322054F;
+        Fri, 22 Mar 2019 12:19:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553257172;
-        bh=4wFGEqJ6d6OFOkcdpMbWXp9jMZNlTnG6IefVATmLhnk=;
+        s=default; t=1553257149;
+        bh=9aeln6Ool/Ll6KWF7ShclDeaLBUuQmPB7EEuAjJlmuo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uIaH86LBMs2RDfehSAqEiSzhAkAAThL5Brri/ZLe36hxt1bZrO2WCyHyOEdOLC7yh
-         24Pb2qbDeVGdW1GDiwNrGkMB5fauojhDSqJe1oCcL1uGye3xHLjozovCCSuh3sToNL
-         OpzHYuWwiSrulqsQYkHcipbPeTNkDtV9RaNlDJ/E=
+        b=o5fUwSTbuzXtYaWzn/tZMOeaaCo5vrceCobMIfMyHO/VrckJZ/bibeQavhEKGetcj
+         1UdUb1ELbmfc+E5kNZmmiiCZnlx4tV1iVN6icqKs64ULfg/pXa2sj/zVpHcyFw4vqU
+         6haR0XXu+MPkjMdh6lI1P2+bw8dTvc4PC/fV9OLM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "zhangyi (F)" <yi.zhang@huawei.com>,
-        Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.cz>
-Subject: [PATCH 5.0 153/238] jbd2: fix compile warning when using JBUFFER_TRACE
-Date:   Fri, 22 Mar 2019 12:16:12 +0100
-Message-Id: <20190322111307.369951651@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Phuong Nguyen <phuong.nguyen.xw@renesas.com>,
+        Hiroyuki Yokoyama <hiroyuki.yokoyama.vx@renesas.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH 5.0 147/238] dmaengine: usb-dmac: Make DMAC system sleep callbacks explicit
+Date:   Fri, 22 Mar 2019 12:16:06 +0100
+Message-Id: <20190322111307.041335199@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -65,87 +68,60 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: zhangyi (F) <yi.zhang@huawei.com>
+From: Phuong Nguyen <phuong.nguyen.xw@renesas.com>
 
-commit 01215d3edb0f384ddeaa5e4a22c1ae5ff634149f upstream.
+commit d9140a0da4a230a03426d175145989667758aa6a upstream.
 
-The jh pointer may be used uninitialized in the two cases below and the
-compiler complain about it when enabling JBUFFER_TRACE macro, fix them.
+This commit fixes the issue that USB-DMAC hangs silently after system
+resumes on R-Car Gen3 hence renesas_usbhs will not work correctly
+when using USB-DMAC for bulk transfer e.g. ethernet or serial
+gadgets.
 
-In file included from fs/jbd2/transaction.c:19:0:
-fs/jbd2/transaction.c: In function ‘jbd2_journal_get_undo_access’:
-./include/linux/jbd2.h:1637:38: warning: ‘jh’ is used uninitialized in this function [-Wuninitialized]
- #define JBUFFER_TRACE(jh, info) do { printk("%s: %d\n", __func__, jh->b_jcount);} while (0)
-                                      ^
-fs/jbd2/transaction.c:1219:23: note: ‘jh’ was declared here
-  struct journal_head *jh;
-                       ^
-In file included from fs/jbd2/transaction.c:19:0:
-fs/jbd2/transaction.c: In function ‘jbd2_journal_dirty_metadata’:
-./include/linux/jbd2.h:1637:38: warning: ‘jh’ may be used uninitialized in this function [-Wmaybe-uninitialized]
- #define JBUFFER_TRACE(jh, info) do { printk("%s: %d\n", __func__, jh->b_jcount);} while (0)
-                                      ^
-fs/jbd2/transaction.c:1332:23: note: ‘jh’ was declared here
-  struct journal_head *jh;
-                       ^
+The issue can be reproduced by these steps:
+ 1. modprobe g_serial
+ 2. Suspend and resume system.
+ 3. connect a usb cable to host side
+ 4. Transfer data from Host to Target
+ 5. cat /dev/ttyGS0 (Target side)
+ 6. echo "test" > /dev/ttyACM0 (Host side)
 
-Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Cc: stable@vger.kernel.org
-Reviewed-by: Jan Kara <jack@suse.cz>
+The 'cat' will not result anything. However, system still can work
+normally.
+
+Currently, USB-DMAC driver does not have system sleep callbacks hence
+this driver relies on the PM core to force runtime suspend/resume to
+suspend and reinitialize USB-DMAC during system resume. After
+the commit 17218e0092f8 ("PM / genpd: Stop/start devices without
+pm_runtime_force_suspend/resume()"), PM core will not force
+runtime suspend/resume anymore so this issue happens.
+
+To solve this, make system suspend resume explicit by using
+pm_runtime_force_{suspend,resume}() as the system sleep callbacks.
+SET_NOIRQ_SYSTEM_SLEEP_PM_OPS() is used to make sure USB-DMAC
+suspended after and initialized before renesas_usbhs."
+
+Signed-off-by: Phuong Nguyen <phuong.nguyen.xw@renesas.com>
+Signed-off-by: Hiroyuki Yokoyama <hiroyuki.yokoyama.vx@renesas.com>
+Cc: <stable@vger.kernel.org> # v4.16+
+[shimoda: revise the commit log and add Cc tag]
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/jbd2/transaction.c |   16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ drivers/dma/sh/usb-dmac.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/fs/jbd2/transaction.c
-+++ b/fs/jbd2/transaction.c
-@@ -1252,11 +1252,12 @@ int jbd2_journal_get_undo_access(handle_
- 	struct journal_head *jh;
- 	char *committed_data = NULL;
+--- a/drivers/dma/sh/usb-dmac.c
++++ b/drivers/dma/sh/usb-dmac.c
+@@ -694,6 +694,8 @@ static int usb_dmac_runtime_resume(struc
+ #endif /* CONFIG_PM */
  
--	JBUFFER_TRACE(jh, "entry");
- 	if (jbd2_write_access_granted(handle, bh, true))
- 		return 0;
- 
- 	jh = jbd2_journal_add_journal_head(bh);
-+	JBUFFER_TRACE(jh, "entry");
-+
- 	/*
- 	 * Do this first --- it can drop the journal lock, so we want to
- 	 * make sure that obtaining the committed_data is done
-@@ -1367,15 +1368,17 @@ int jbd2_journal_dirty_metadata(handle_t
- 
- 	if (is_handle_aborted(handle))
- 		return -EROFS;
--	if (!buffer_jbd(bh)) {
--		ret = -EUCLEAN;
--		goto out;
--	}
-+	if (!buffer_jbd(bh))
-+		return -EUCLEAN;
-+
- 	/*
- 	 * We don't grab jh reference here since the buffer must be part
- 	 * of the running transaction.
- 	 */
- 	jh = bh2jh(bh);
-+	jbd_debug(5, "journal_head %p\n", jh);
-+	JBUFFER_TRACE(jh, "entry");
-+
- 	/*
- 	 * This and the following assertions are unreliable since we may see jh
- 	 * in inconsistent state unless we grab bh_state lock. But this is
-@@ -1409,9 +1412,6 @@ int jbd2_journal_dirty_metadata(handle_t
- 	}
- 
- 	journal = transaction->t_journal;
--	jbd_debug(5, "journal_head %p\n", jh);
--	JBUFFER_TRACE(jh, "entry");
--
- 	jbd_lock_bh_state(bh);
- 
- 	if (jh->b_modified == 0) {
+ static const struct dev_pm_ops usb_dmac_pm = {
++	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
++				      pm_runtime_force_resume)
+ 	SET_RUNTIME_PM_OPS(usb_dmac_runtime_suspend, usb_dmac_runtime_resume,
+ 			   NULL)
+ };
 
 
