@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11799C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:38:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94519C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:38:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D43F221917
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:38:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63AC62082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:38:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254717;
-	bh=C9vv+NLUI8ZkKL+QuZAOlcj+m4Yt6AylQU4dzxNLF3o=;
+	s=default; t=1553254720;
+	bh=4L5dq1uD9iaN0XB/fWf/AgQLv56NgpwTyKXmpsSi0W8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ko69ZxlYwXdILIn7bBT7ZaGL6TyJXf0a+eEqSb2+7yFfnrsOTAMruK51D5FytLt0c
-	 Ng5cXKvm2H1fUAkBfiJcuXWUvQv4k/PJIVsj1KWjL3aFTW9gzPD288U715IpziYmNx
-	 1rpe3xToH8+3e5XEJcFXlJdqBSEwQTgLzUT1JpAM=
+	b=R+pgjo9+oiYk5/Iy81XKq6xpp6/2dW4Zyj8uYW43JBO8voAsToyVv6K4rWL63+iBU
+	 1qeG9CFUubiYHupjwOHpm9EeAFDc+tEUFB266bfWv2pdig9sWYcFXWe04oH7XaKCqV
+	 5mFcB1L9yXERH86xJJ++XELFUgtfMbrkjh71E4S8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730994AbfCVLig (ORCPT
+        id S1731004AbfCVLij (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:38:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40082 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:38:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730988AbfCVLid (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:38:33 -0400
+        id S1730993AbfCVLig (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:38:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D2E92082C;
-        Fri, 22 Mar 2019 11:38:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B7D2218B0;
+        Fri, 22 Mar 2019 11:38:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254712;
-        bh=C9vv+NLUI8ZkKL+QuZAOlcj+m4Yt6AylQU4dzxNLF3o=;
+        s=default; t=1553254715;
+        bh=4L5dq1uD9iaN0XB/fWf/AgQLv56NgpwTyKXmpsSi0W8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GF/oaQrTSUhzx3xspt9NWwmoBbEF0rv1HNMDEt8bx/UdrvPsYyLYMectLFIwrRyii
-         OstNzcZr+8ojyczMX31URZL/m4IJ9cDrQjVZ+/PMecy+l27MqyXeksVyISzwv1N2lB
-         TLAygOJ9GD/zgD3uEefER9Wesg2VJPq/lV2ri8p8=
+        b=ZM1b2ohgB/xe/BRh2ed8F51eNFZhISXM8cuhDsvXEugAiMMaQtSUJ3AjbGldgsK8F
+         r5T6e1rpq49XrrPQjISHpNGUB2ak3N/pvAA97+P53nbrzsVjZSo7MIG198b6tPes/6
+         EiepL+ECHwcOKBR+tfMoNEPG9CApDGhKnHqXyfAo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guoqing Jiang <gqjiang@suse.com>,
-        Aditya Pakki <pakki001@umn.edu>,
-        Song Liu <songliubraving@fb.com>
-Subject: [PATCH 4.4 219/230] md: Fix failed allocation of md_register_thread
-Date:   Fri, 22 Mar 2019 12:15:57 +0100
-Message-Id: <20190322111252.266096746@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>
+Subject: [PATCH 4.4 220/230] NFS: Fix an I/O request leakage in nfs_do_recoalesce
+Date:   Fri, 22 Mar 2019 12:15:58 +0100
+Message-Id: <20190322111252.339230786@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -65,49 +65,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Aditya Pakki <pakki001@umn.edu>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-commit e406f12dde1a8375d77ea02d91f313fb1a9c6aec upstream.
+commit 4d91969ed4dbcefd0e78f77494f0cb8fada9048a upstream.
 
-mddev->sync_thread can be set to NULL on kzalloc failure downstream.
-The patch checks for such a scenario and frees allocated resources.
+Whether we need to exit early, or just reprocess the list, we
+must not lost track of the request which failed to get recoalesced.
 
-Committer node:
-
-Added similar fix to raid5.c, as suggested by Guoqing.
-
-Cc: stable@vger.kernel.org # v3.16+
-Acked-by: Guoqing Jiang <gqjiang@suse.com>
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Signed-off-by: Song Liu <songliubraving@fb.com>
+Fixes: 03d5eb65b538 ("NFS: Fix a memory leak in nfs_do_recoalesce")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Cc: stable@vger.kernel.org # v4.0+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/raid10.c |    2 ++
- drivers/md/raid5.c  |    2 ++
- 2 files changed, 4 insertions(+)
+ fs/nfs/pagelist.c |    1 -
+ 1 file changed, 1 deletion(-)
 
---- a/drivers/md/raid10.c
-+++ b/drivers/md/raid10.c
-@@ -3755,6 +3755,8 @@ static int run(struct mddev *mddev)
- 		set_bit(MD_RECOVERY_RUNNING, &mddev->recovery);
- 		mddev->sync_thread = md_register_thread(md_do_sync, mddev,
- 							"reshape");
-+		if (!mddev->sync_thread)
-+			goto out_free_conf;
- 	}
+--- a/fs/nfs/pagelist.c
++++ b/fs/nfs/pagelist.c
+@@ -1107,7 +1107,6 @@ static int nfs_do_recoalesce(struct nfs_
+ 			struct nfs_page *req;
  
- 	return 0;
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -6973,6 +6973,8 @@ static int run(struct mddev *mddev)
- 		set_bit(MD_RECOVERY_RUNNING, &mddev->recovery);
- 		mddev->sync_thread = md_register_thread(md_do_sync, mddev,
- 							"reshape");
-+		if (!mddev->sync_thread)
-+			goto abort;
- 	}
- 
- 	/* Ok, everything is just fine now */
+ 			req = list_first_entry(&head, struct nfs_page, wb_list);
+-			nfs_list_remove_request(req);
+ 			if (__nfs_pageio_add_request(desc, req))
+ 				continue;
+ 			if (desc->pg_error < 0) {
 
 
