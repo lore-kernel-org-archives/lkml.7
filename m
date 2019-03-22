@@ -2,71 +2,130 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61E8DC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:04:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAF7FC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:04:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EFDE20693
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:04:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 936E020693
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:04:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731444AbfCVNEi (ORCPT
+        id S1731123AbfCVLjX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 09:04:38 -0400
-Received: from orcrist.hmeau.com ([104.223.48.154]:49502 "EHLO
-        deadmen.hmeau.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730587AbfCVNEg (ORCPT
+        Fri, 22 Mar 2019 07:39:23 -0400
+Received: from vegas.theobroma-systems.com ([144.76.126.164]:38486 "EHLO
+        mail.theobroma-systems.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730830AbfCVLjU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 09:04:36 -0400
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1h7JqM-0006GC-LZ; Fri, 22 Mar 2019 21:04:18 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1h7JqK-0005eV-88; Fri, 22 Mar 2019 21:04:16 +0800
-Date:   Fri, 22 Mar 2019 21:04:16 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Gilad Ben-Yossef <gilad@benyossef.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Biggers <ebiggers@google.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] crypto: ccree - reduce kernel stack usage with clang
-Message-ID: <20190322130416.qxpznh6d3z6yhppx@gondor.apana.org.au>
-References: <20190314090951.840339-1-arnd@arndb.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190314090951.840339-1-arnd@arndb.de>
-User-Agent: NeoMutt/20170113 (1.7.2)
+        Fri, 22 Mar 2019 07:39:20 -0400
+Received: from ip092042140082.rev.nessus.at ([92.42.140.82]:55278 helo=purcell.lan)
+        by mail.theobroma-systems.com with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA1:256)
+        (Exim 4.80)
+        (envelope-from <christoph.muellner@theobroma-systems.com>)
+        id 1h7IVo-0006yM-Oe; Fri, 22 Mar 2019 12:39:00 +0100
+From:   Christoph Muellner <christoph.muellner@theobroma-systems.com>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, heiko@sntech.de,
+        shawn.lin@rock-chips.com, ulf.hansson@linaro.org,
+        adrian.hunter@intel.com
+Cc:     Christoph Muellner <christoph.muellner@theobroma-systems.com>,
+        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Jeffy Chen <jeffy.chen@rock-chips.com>,
+        Lin Huang <hl@rock-chips.com>, Randy Li <ayaka@soulik.info>,
+        Tony Xie <tony.xie@rock-chips.com>,
+        Vicente Bergas <vicencb@gmail.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Klaus Goger <klaus.goger@theobroma-systems.com>,
+        linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+Subject: [PATCH v3 3/3] arm64: dts: rockchip: Disable DCMDs on RK3399's eMMC controller.
+Date:   Fri, 22 Mar 2019 12:38:06 +0100
+Message-Id: <20190322113808.16858-3-christoph.muellner@theobroma-systems.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20190322113808.16858-1-christoph.muellner@theobroma-systems.com>
+References: <20190322113808.16858-1-christoph.muellner@theobroma-systems.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 14, 2019 at 10:09:44AM +0100, Arnd Bergmann wrote:
-> Building with clang for a 32-bit architecture runs over the stack
-> frame limit in the setkey function:
-> 
-> drivers/crypto/ccree/cc_cipher.c:318:12: error: stack frame size of 1152 bytes in function 'cc_cipher_setkey' [-Werror,-Wframe-larger-than=]
-> 
-> The problem is that there are two large variables: the temporary
-> 'tmp' array and the SHASH_DESC_ON_STACK() declaration. Moving
-> the first into the block in which it is used reduces the
-> total frame size to 768 bytes, which seems more reasonable
-> and is under the warning limit.
-> 
-> Fixes: 63ee04c8b491 ("crypto: ccree - add skcipher support")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/crypto/ccree/cc_cipher.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+When using direct commands (DCMDs) on an RK3399, we get spurious
+CQE completion interrupts for the DCMD transaction slot (#31):
 
-Patch applied.  Thanks.
+[  931.196520] ------------[ cut here ]------------
+[  931.201702] mmc1: cqhci: spurious TCN for tag 31
+[  931.206906] WARNING: CPU: 0 PID: 1433 at /usr/src/kernel/drivers/mmc/host/cqhci.c:725 cqhci_irq+0x2e4/0x490
+[  931.206909] Modules linked in:
+[  931.206918] CPU: 0 PID: 1433 Comm: irq/29-mmc1 Not tainted 4.19.8-rt6-funkadelic #1
+[  931.206920] Hardware name: Theobroma Systems RK3399-Q7 SoM (DT)
+[  931.206924] pstate: 40000005 (nZcv daif -PAN -UAO)
+[  931.206927] pc : cqhci_irq+0x2e4/0x490
+[  931.206931] lr : cqhci_irq+0x2e4/0x490
+[  931.206933] sp : ffff00000e54bc80
+[  931.206934] x29: ffff00000e54bc80 x28: 0000000000000000
+[  931.206939] x27: 0000000000000001 x26: ffff000008f217e8
+[  931.206944] x25: ffff8000f02ef030 x24: ffff0000091417b0
+[  931.206948] x23: ffff0000090aa000 x22: ffff8000f008b000
+[  931.206953] x21: 0000000000000002 x20: 000000000000001f
+[  931.206957] x19: ffff8000f02ef018 x18: ffffffffffffffff
+[  931.206961] x17: 0000000000000000 x16: 0000000000000000
+[  931.206966] x15: ffff0000090aa6c8 x14: 0720072007200720
+[  931.206970] x13: 0720072007200720 x12: 0720072007200720
+[  931.206975] x11: 0720072007200720 x10: 0720072007200720
+[  931.206980] x9 : 0720072007200720 x8 : 0720072007200720
+[  931.206984] x7 : 0720073107330720 x6 : 00000000000005a0
+[  931.206988] x5 : ffff00000860d4b0 x4 : 0000000000000000
+[  931.206993] x3 : 0000000000000001 x2 : 0000000000000001
+[  931.206997] x1 : 1bde3a91b0d4d900 x0 : 0000000000000000
+[  931.207001] Call trace:
+[  931.207005]  cqhci_irq+0x2e4/0x490
+[  931.207009]  sdhci_arasan_cqhci_irq+0x5c/0x90
+[  931.207013]  sdhci_irq+0x98/0x930
+[  931.207019]  irq_forced_thread_fn+0x2c/0xa0
+[  931.207023]  irq_thread+0x114/0x1c0
+[  931.207027]  kthread+0x128/0x130
+[  931.207032]  ret_from_fork+0x10/0x20
+[  931.207035] ---[ end trace 0000000000000002 ]---
+
+The driver shows this message only for the first spurious interrupt
+by using WARN_ONCE(). Changing this to WARN() shows, that this is
+happening quite frequently (up to once a second).
+
+Since the eMMC 5.1 specification, where CQE and CQHCI are specified,
+does not mention that spurious TCN interrupts for DCMDs can be simply
+ignored, we must assume that using this feature is not working reliably.
+
+The current implementation uses DCMD for REQ_OP_FLUSH only, and
+I could not see any performance/power impact when disabling
+this optional feature for RK3399.
+
+Therefore this patch disables DCMDs for RK3399.
+
+Signed-off-by: Christoph Muellner <christoph.muellner@theobroma-systems.com>
+Signed-off-by: Philipp Tomsich <philipp.tomsich@theobroma-systems.com>
+---
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+index db9d948c0b03..1a16d6ce3ea8 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+@@ -333,6 +333,7 @@
+ 		phys = <&emmc_phy>;
+ 		phy-names = "phy_arasan";
+ 		power-domains = <&power RK3399_PD_EMMC>;
++		disable-cqe-dcmd;
+ 		status = "disabled";
+ 	};
+ 
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+2.11.0
+
