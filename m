@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 172D2C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:16:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C735C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:16:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA93C218A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:16:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7DB121929
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:16:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256982;
-	bh=GUoyvyreUkniVtkVtswuAzRLWm/FT2zvhYM5bSKlCtg=;
+	s=default; t=1553256988;
+	bh=nRN7msvPRumzUtlYoTxcA0swhrDLXW9TL+f7MqYJtEE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ibRaIkGBsUqhet8FB4WhleEXbq1NZckKJVt9dBua/e2Elv/XskH5DzLaU+ZtWgTQo
-	 jEjbklAYS1DI3nmfuz3JiRZJ3xsp0eb5ULkZ6YqgExIkgGmMpNMFHMtnpaRkmMpEsW
-	 pTz6yOZh8EoQZOI4z0SjRqFd9JRD1qrfvDWkmPF4=
+	b=QeotjDBzSNvwUxKfGRy6TDS+XrIMU79/71Rk8VBI6hcnsA83Um8qtukaBehUSmDRO
+	 UubP8WtNdwgJeQgt3iZHMv8VdHHKxyvJxP+vS0YVm/iWFOjnrRjijvObWGdL8icHlE
+	 BMpVwY4fuFesPrgMebZDJ9vSe+53NYurBJmMUCYI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390204AbfCVMQV (ORCPT
+        id S2390210AbfCVMQ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:16:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54992 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:16:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390194AbfCVMQT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:16:19 -0400
+        id S2389830AbfCVMQY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:16:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2DFE218A1;
-        Fri, 22 Mar 2019 12:16:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE8392083D;
+        Fri, 22 Mar 2019 12:16:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256979;
-        bh=GUoyvyreUkniVtkVtswuAzRLWm/FT2zvhYM5bSKlCtg=;
+        s=default; t=1553256983;
+        bh=nRN7msvPRumzUtlYoTxcA0swhrDLXW9TL+f7MqYJtEE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mDGAPu0cGvd/bOkN4Nw4oZSVSVCrZPSY6Zd2xoai8lL36tXec5g5UE41uYJI7A2y0
-         tRybUfKphpWdgkFmfJzxdGlhgIVApHZbbegPf1KGUmwsqXtL55Z8nv8PxXn3VhSsiO
-         4omYCjmh/mgYR6OoD5fCZAWnXbE2K8QN4VMfBCOo=
+        b=knZ92X5xnfMfCABjQndBmMiBbiojNVh2V4Njp2JgUlz4EB4STCPS/FmH4hg4eIhEM
+         5CwJ2s5JGrXMcike7PqLxmN7iSLaie+AImZzzy++0+EAhnKMI7IS2CxvXFDEtnNN0W
+         OWbkOgqrg/967FcnYQrxoppu6/TI/dYwZmti8W+I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Shilovsky <pshilov@microsoft.com>,
-        Steve French <stfrench@microsoft.com>,
-        Ronnie Sahlberg <lsahlber@redhat.com>
-Subject: [PATCH 5.0 054/238] CIFS: Fix read after write for files with read caching
-Date:   Fri, 22 Mar 2019 12:14:33 +0100
-Message-Id: <20190322111301.636372988@linuxfoundation.org>
+        stable@vger.kernel.org, Vivek Goyal <vgoyal@redhat.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Miklos Szeredi <mszeredi@redhat.com>
+Subject: [PATCH 5.0 089/238] ovl: Do not lose security.capability xattr over metadata file copy-up
+Date:   Fri, 22 Mar 2019 12:15:08 +0100
+Message-Id: <20190322111303.838057408@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -66,54 +66,175 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Pavel Shilovsky <piastryyy@gmail.com>
+From: Vivek Goyal <vgoyal@redhat.com>
 
-commit 6dfbd84684700cb58b34e8602c01c12f3d2595c8 upstream.
+commit 993a0b2aec52754f0897b1dab4c453be8217cae5 upstream.
 
-When we have a READ lease for a file and have just issued a write
-operation to the server we need to purge the cache and set oplock/lease
-level to NONE to avoid reading stale data. Currently we do that
-only if a write operation succedeed thus not covering cases when
-a request was sent to the server but a negative error code was
-returned later for some other reasons (e.g. -EIOCBQUEUED or -EINTR).
-Fix this by turning off caching regardless of the error code being
-returned.
+If a file has been copied up metadata only, and later data is copied up,
+upper loses any security.capability xattr it has (underlying filesystem
+clears it as upon file write).
 
-The patches fixes generic tests 075 and 112 from the xfs-tests.
+>From a user's point of view, this is just a file copy-up and that should
+not result in losing security.capability xattr.  Hence, before data copy
+up, save security.capability xattr (if any) and restore it on upper after
+data copy up is complete.
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+Reviewed-by: Amir Goldstein <amir73il@gmail.com>
+Fixes: 0c2888749363 ("ovl: A new xattr OVL_XATTR_METACOPY for file on upper")
+Cc: <stable@vger.kernel.org> # v4.19+
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/file.c |   12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ fs/overlayfs/copy_up.c   |   28 ++++++++++++++++++++++-
+ fs/overlayfs/overlayfs.h |    2 +
+ fs/overlayfs/util.c      |   55 +++++++++++++++++++++++++++++------------------
+ 3 files changed, 63 insertions(+), 22 deletions(-)
 
---- a/fs/cifs/file.c
-+++ b/fs/cifs/file.c
-@@ -3028,14 +3028,16 @@ cifs_strict_writev(struct kiocb *iocb, s
- 	 * these pages but not on the region from pos to ppos+len-1.
- 	 */
- 	written = cifs_user_writev(iocb, from);
--	if (written > 0 && CIFS_CACHE_READ(cinode)) {
-+	if (CIFS_CACHE_READ(cinode)) {
- 		/*
--		 * Windows 7 server can delay breaking level2 oplock if a write
--		 * request comes - break it on the client to prevent reading
--		 * an old data.
-+		 * We have read level caching and we have just sent a write
-+		 * request to the server thus making data in the cache stale.
-+		 * Zap the cache and set oplock/lease level to NONE to avoid
-+		 * reading stale data from the cache. All subsequent read
-+		 * operations will read new data from the server.
- 		 */
- 		cifs_zap_mapping(inode);
--		cifs_dbg(FYI, "Set no oplock for inode=%p after a write operation\n",
-+		cifs_dbg(FYI, "Set Oplock/Lease to NONE for inode=%p after write\n",
- 			 inode);
- 		cinode->oplock = 0;
+--- a/fs/overlayfs/copy_up.c
++++ b/fs/overlayfs/copy_up.c
+@@ -742,6 +742,8 @@ static int ovl_copy_up_meta_inode_data(s
+ {
+ 	struct path upperpath, datapath;
+ 	int err;
++	char *capability = NULL;
++	ssize_t uninitialized_var(cap_size);
+ 
+ 	ovl_path_upper(c->dentry, &upperpath);
+ 	if (WARN_ON(upperpath.dentry == NULL))
+@@ -751,15 +753,37 @@ static int ovl_copy_up_meta_inode_data(s
+ 	if (WARN_ON(datapath.dentry == NULL))
+ 		return -EIO;
+ 
++	if (c->stat.size) {
++		err = cap_size = ovl_getxattr(upperpath.dentry, XATTR_NAME_CAPS,
++					      &capability, 0);
++		if (err < 0 && err != -ENODATA)
++			goto out;
++	}
++
+ 	err = ovl_copy_up_data(&datapath, &upperpath, c->stat.size);
+ 	if (err)
+-		return err;
++		goto out_free;
++
++	/*
++	 * Writing to upper file will clear security.capability xattr. We
++	 * don't want that to happen for normal copy-up operation.
++	 */
++	if (capability) {
++		err = ovl_do_setxattr(upperpath.dentry, XATTR_NAME_CAPS,
++				      capability, cap_size, 0);
++		if (err)
++			goto out_free;
++	}
++
+ 
+ 	err = vfs_removexattr(upperpath.dentry, OVL_XATTR_METACOPY);
+ 	if (err)
+-		return err;
++		goto out_free;
+ 
+ 	ovl_set_upperdata(d_inode(c->dentry));
++out_free:
++	kfree(capability);
++out:
+ 	return err;
+ }
+ 
+--- a/fs/overlayfs/overlayfs.h
++++ b/fs/overlayfs/overlayfs.h
+@@ -277,6 +277,8 @@ int ovl_lock_rename_workdir(struct dentr
+ int ovl_check_metacopy_xattr(struct dentry *dentry);
+ bool ovl_is_metacopy_dentry(struct dentry *dentry);
+ char *ovl_get_redirect_xattr(struct dentry *dentry, int padding);
++ssize_t ovl_getxattr(struct dentry *dentry, char *name, char **value,
++		     size_t padding);
+ 
+ static inline bool ovl_is_impuredir(struct dentry *dentry)
+ {
+--- a/fs/overlayfs/util.c
++++ b/fs/overlayfs/util.c
+@@ -863,28 +863,49 @@ bool ovl_is_metacopy_dentry(struct dentr
+ 	return (oe->numlower > 1);
+ }
+ 
+-char *ovl_get_redirect_xattr(struct dentry *dentry, int padding)
++ssize_t ovl_getxattr(struct dentry *dentry, char *name, char **value,
++		     size_t padding)
+ {
+-	int res;
+-	char *s, *next, *buf = NULL;
++	ssize_t res;
++	char *buf = NULL;
+ 
+-	res = vfs_getxattr(dentry, OVL_XATTR_REDIRECT, NULL, 0);
++	res = vfs_getxattr(dentry, name, NULL, 0);
+ 	if (res < 0) {
+ 		if (res == -ENODATA || res == -EOPNOTSUPP)
+-			return NULL;
++			return -ENODATA;
+ 		goto fail;
  	}
+ 
+-	buf = kzalloc(res + padding + 1, GFP_KERNEL);
+-	if (!buf)
+-		return ERR_PTR(-ENOMEM);
++	if (res != 0) {
++		buf = kzalloc(res + padding, GFP_KERNEL);
++		if (!buf)
++			return -ENOMEM;
++
++		res = vfs_getxattr(dentry, name, buf, res);
++		if (res < 0)
++			goto fail;
++	}
++	*value = buf;
+ 
+-	if (res == 0)
+-		goto invalid;
++	return res;
++
++fail:
++	pr_warn_ratelimited("overlayfs: failed to get xattr %s: err=%zi)\n",
++			    name, res);
++	kfree(buf);
++	return res;
++}
++
++char *ovl_get_redirect_xattr(struct dentry *dentry, int padding)
++{
++	int res;
++	char *s, *next, *buf = NULL;
+ 
+-	res = vfs_getxattr(dentry, OVL_XATTR_REDIRECT, buf, res);
++	res = ovl_getxattr(dentry, OVL_XATTR_REDIRECT, &buf, padding + 1);
++	if (res == -ENODATA)
++		return NULL;
+ 	if (res < 0)
+-		goto fail;
++		return ERR_PTR(res);
+ 	if (res == 0)
+ 		goto invalid;
+ 
+@@ -900,15 +921,9 @@ char *ovl_get_redirect_xattr(struct dent
+ 	}
+ 
+ 	return buf;
+-
+-err_free:
+-	kfree(buf);
+-	return ERR_PTR(res);
+-fail:
+-	pr_warn_ratelimited("overlayfs: failed to get redirect (%i)\n", res);
+-	goto err_free;
+ invalid:
+ 	pr_warn_ratelimited("overlayfs: invalid redirect (%s)\n", buf);
+ 	res = -EINVAL;
+-	goto err_free;
++	kfree(buf);
++	return ERR_PTR(res);
+ }
 
 
