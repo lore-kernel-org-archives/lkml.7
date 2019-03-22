@@ -2,87 +2,79 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40EEFC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 08:51:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8A93C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 08:54:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 111B7218D3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 08:51:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553244687;
-	bh=tuivY8FVXe+dDskDzGEI/mSiKa6zdBLHLrYDQLGYPtE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s9/4AuL6nPIMZkQJQoq0VyFdPEPqDHXS4kfE6f9abhiy7TNb6eoy6m1UdtQmF5biw
-	 yZs5bqgaGBCHOcmt19Gh5FodAg9BJsdf03I69U+CfZecuAA3IPuui7g2PygbviMtTa
-	 e5GhJeBtx1VcQN+jsSVAEBhuQAC+j/MUKjFHZmQM=
+	by mail.kernel.org (Postfix) with ESMTP id B29C4218E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 08:54:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727797AbfCVIvT (ORCPT
+        id S1727744AbfCVIyI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 04:51:19 -0400
-Received: from mirror2.csie.ntu.edu.tw ([140.112.30.76]:41772 "EHLO
-        wens.csie.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727538AbfCVIvS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 04:51:18 -0400
-Received: by wens.csie.org (Postfix, from userid 1000)
-        id C59C25F899; Fri, 22 Mar 2019 16:51:15 +0800 (CST)
-From:   Chen-Yu Tsai <wens@kernel.org>
-To:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] phy: sun4i-usb: Support set_mode to USB_HOST for non-OTG PHYs
-Date:   Fri, 22 Mar 2019 16:51:07 +0800
-Message-Id: <20190322085108.18693-2-wens@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190322085108.18693-1-wens@kernel.org>
-References: <20190322085108.18693-1-wens@kernel.org>
+        Fri, 22 Mar 2019 04:54:08 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:34946 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727573AbfCVIyI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 04:54:08 -0400
+Received: by mail-ed1-f67.google.com with SMTP id d6so1014330eds.2
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 01:54:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2Ga7qFmOSSfck85VxLyZbYduGoYdimv/MHPY3tgcfX8=;
+        b=chHa4jv0nM01BvlfuriKS98nuODxkAebAI8Ck55ibbive4D7nzTzNzCOjKBCHZcHpc
+         TSjelGL8zXvabKZKGcS/Kavjutpmp7tTUOFSUFFoOvibwTJfj40tNCgG9pTFzyjv5nPU
+         /72bUhq+6kYjl64hRAowsbp2JuoeBxeKo/HiWQcPpzyQKVcQ9RTflV6IdJ3VD8oR5QB8
+         wV6QfFn5cCK02Id1/J0796iTUibhqw7ypmgTYWT/ZOZqk4NjlYARv4190vp3O9UWNqdK
+         JN3wuP/kRPd88Esy2UMH+OqFCzPcrNqFwJvgc4QMCCrPEPi6VdlGUsyMRBDmq/1V3Vv6
+         s41g==
+X-Gm-Message-State: APjAAAUkeQj+Z32k/bFB7UXN3iXB2XHncR476hgM82SIwlzvGtfZU2QN
+        ZkYmiNqdhrJZ1X0vDztbU3zPsqv0N04=
+X-Google-Smtp-Source: APXvYqxn5+Zl5U7tcGTGB9h/mawjzRuaM9frgqgXlfHVMWRhLlzh8dEL8+rjJrdYoSBwjIQ52aVzeQ==
+X-Received: by 2002:aa7:db04:: with SMTP id t4mr5420591eds.173.1553244846051;
+        Fri, 22 Mar 2019 01:54:06 -0700 (PDT)
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com. [209.85.128.45])
+        by smtp.gmail.com with ESMTPSA id s49sm2570330edm.34.2019.03.22.01.54.05
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 22 Mar 2019 01:54:05 -0700 (PDT)
+Received: by mail-wm1-f45.google.com with SMTP id 4so1303716wmf.1
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 01:54:05 -0700 (PDT)
+X-Received: by 2002:a1c:2394:: with SMTP id j142mr2155161wmj.111.1553244845126;
+ Fri, 22 Mar 2019 01:54:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190318125548.24851-1-maxime.ripard@bootlin.com>
+In-Reply-To: <20190318125548.24851-1-maxime.ripard@bootlin.com>
+From:   Chen-Yu Tsai <wens@csie.org>
+Date:   Fri, 22 Mar 2019 16:53:53 +0800
+X-Gmail-Original-Message-ID: <CAGb2v64q5LEPdtk098c-urwUfPfDSoYwZK=WX4x_+CBd6Y2kPQ@mail.gmail.com>
+Message-ID: <CAGb2v64q5LEPdtk098c-urwUfPfDSoYwZK=WX4x_+CBd6Y2kPQ@mail.gmail.com>
+Subject: Re: [PATCH] mfd: axp20x: Allow the AXP223 to be probed by i2c
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
+On Mon, Mar 18, 2019 at 8:55 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+>
+> The AXP223 can be used both using the RSB proprietary bus, or a more
+> traditional I2C bus. The RSB is a faster bus and provides more features
+> (like some integrity checks on the messages), so it's usually preferrable
+> to use it, but since it's proprietary, when we want to use the PMIC in a
+> multi-master setup, the i2c might make sense as well.
+>
+> Let's add that possibility.
+>
+> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 
-While only the first PHY supports mode switching, the remaining PHYs
-work in USB host mode. They should support set_mode with mode=USB_HOST
-instead of failing. This is especially needed now that the USB core does
-set_mode for all USB ports, which was added in commit b97a31348379 ("usb:
-core: comply to PHY framework").
-
-Make set_mode with mode=USB_HOST a no-op instead of failing for the
-non-OTG USB PHYs.
-
-Fixes: 6ba43c291961 ("phy-sun4i-usb: Add support for phy_set_mode")
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
----
- drivers/phy/allwinner/phy-sun4i-usb.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/phy/allwinner/phy-sun4i-usb.c b/drivers/phy/allwinner/phy-sun4i-usb.c
-index 5163097b43df..4bbd9ede38c8 100644
---- a/drivers/phy/allwinner/phy-sun4i-usb.c
-+++ b/drivers/phy/allwinner/phy-sun4i-usb.c
-@@ -485,8 +485,11 @@ static int sun4i_usb_phy_set_mode(struct phy *_phy,
- 	struct sun4i_usb_phy_data *data = to_sun4i_usb_phy_data(phy);
- 	int new_mode;
- 
--	if (phy->index != 0)
-+	if (phy->index != 0) {
-+		if (mode == PHY_MODE_USB_HOST)
-+			return 0;
- 		return -EINVAL;
-+	}
- 
- 	switch (mode) {
- 	case PHY_MODE_USB_HOST:
--- 
-2.20.1
-
+Acked-by: Chen-Yu Tsai <wens@csie.org>
