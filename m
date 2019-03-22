@@ -7,43 +7,45 @@ X-Spam-Status: No, score=-12.0 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA939C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:17:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDF8EC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:19:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E78A21900
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:17:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 928AE20883
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:19:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728231AbfCVWRz (ORCPT
+        id S1727754AbfCVWTE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 18:17:55 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:45445 "EHLO
+        Fri, 22 Mar 2019 18:19:04 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:34937 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726205AbfCVWRy (ORCPT
+        with ESMTP id S1726205AbfCVWTD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 18:17:54 -0400
+        Fri, 22 Mar 2019 18:19:03 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x2MMHkC7749728
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x2MMIQdv750012
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Fri, 22 Mar 2019 15:17:46 -0700
+        Fri, 22 Mar 2019 15:18:26 -0700
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x2MMHkWG749725;
-        Fri, 22 Mar 2019 15:17:46 -0700
-Date:   Fri, 22 Mar 2019 15:17:46 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x2MMIPoQ750009;
+        Fri, 22 Mar 2019 15:18:25 -0700
+Date:   Fri, 22 Mar 2019 15:18:25 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Andi Kleen <tipbot@zytor.com>
-Message-ID: <tip-e3b74de50a5f8bbfacbd772874c8b5d9220ebcdb@git.kernel.org>
-Cc:     acme@redhat.com, mingo@kernel.org, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, jolsa@kernel.org, hpa@zytor.com,
-        ak@linux.intel.com
-Reply-To: hpa@zytor.com, ak@linux.intel.com, tglx@linutronix.de,
-          jolsa@kernel.org, mingo@kernel.org, linux-kernel@vger.kernel.org,
-          acme@redhat.com
-In-Reply-To: <20190311144502.15423-10-andi@firstfloor.org>
-References: <20190311144502.15423-10-andi@firstfloor.org>
+From:   tip-bot for Arnaldo Carvalho de Melo <tipbot@zytor.com>
+Message-ID: <tip-5270n2quu2gqz22o7itfdx00@git.kernel.org>
+Cc:     daniel@iogearbox.net, quentin.monnet@netronome.com,
+        jakub.kicinski@netronome.com, ast@kernel.org,
+        linux-kernel@vger.kernel.org, acme@redhat.com, yhs@fb.com,
+        jolsa@kernel.org, mingo@kernel.org, sdf@google.com,
+        tglx@linutronix.de, hpa@zytor.com, namhyung@kernel.org
+Reply-To: linux-kernel@vger.kernel.org, ast@kernel.org,
+          jakub.kicinski@netronome.com, quentin.monnet@netronome.com,
+          daniel@iogearbox.net, yhs@fb.com, acme@redhat.com,
+          jolsa@kernel.org, sdf@google.com, namhyung@kernel.org,
+          hpa@zytor.com, tglx@linutronix.de, mingo@kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/urgent] perf tools report: Add custom scripts to script
- menu
-Git-Commit-ID: e3b74de50a5f8bbfacbd772874c8b5d9220ebcdb
+Subject: [tip:perf/urgent] tools lib bpf: Fix the build by adding a missing
+ stdarg.h include
+Git-Commit-ID: dfcbc2f2994b8a3af3605a26dc29c07ad7378bf4
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -57,89 +59,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  e3b74de50a5f8bbfacbd772874c8b5d9220ebcdb
-Gitweb:     https://git.kernel.org/tip/e3b74de50a5f8bbfacbd772874c8b5d9220ebcdb
-Author:     Andi Kleen <ak@linux.intel.com>
-AuthorDate: Mon, 11 Mar 2019 07:45:00 -0700
+Commit-ID:  dfcbc2f2994b8a3af3605a26dc29c07ad7378bf4
+Gitweb:     https://git.kernel.org/tip/dfcbc2f2994b8a3af3605a26dc29c07ad7378bf4
+Author:     Arnaldo Carvalho de Melo <acme@redhat.com>
+AuthorDate: Mon, 11 Mar 2019 17:07:52 -0300
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Mon, 11 Mar 2019 16:33:20 -0300
+CommitDate: Mon, 11 Mar 2019 17:14:31 -0300
 
-perf tools report: Add custom scripts to script menu
+tools lib bpf: Fix the build by adding a missing stdarg.h include
 
-Add a way to define custom scripts through ~/.perfconfig, which are then
-added to the scripts menu. The scripts get the same arguments as 'perf
-script', in particular -i, --cpu, --tid.
+The libbpf_print_fn_t typedef uses va_list without including the header
+where that type is defined, stdarg.h, breaking in places where we're
+unlucky for that type not to be already defined by some previously
+included header.
 
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Link: http://lkml.kernel.org/r/20190311144502.15423-10-andi@firstfloor.org
+Noticed while building on fedora 24 cross building tools/perf to the ARC
+architecture using the uClibc C library:
+
+  28 fedora:24-x-ARC-uClibc   : FAIL arc-linux-gcc (ARCompact ISA Linux uClibc toolchain 2017.09-rc2) 7.1.1 20170710
+
+    CC       /tmp/build/perf/tests/llvm.o
+  In file included from tests/llvm.c:3:0:
+  /git/linux/tools/lib/bpf/libbpf.h:57:20: error: unknown type name 'va_list'
+        const char *, va_list ap);
+                      ^~~~~~~
+  /git/linux/tools/lib/bpf/libbpf.h:59:34: error: unknown type name 'libbpf_print_fn_t'
+   LIBBPF_API void libbpf_set_print(libbpf_print_fn_t fn);
+                                    ^~~~~~~~~~~~~~~~~
+  mv: cannot stat '/tmp/build/perf/tests/.llvm.o.tmp': No such file or directory
+
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Jakub Kicinski <jakub.kicinski@netronome.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Quentin Monnet <quentin.monnet@netronome.com>
+Cc: Stanislav Fomichev <sdf@google.com>
+Cc: Yonghong Song <yhs@fb.com>
+Fixes: a8a1f7d09cfc ("libbpf: fix libbpf_print")
+Link: https://lkml.kernel.org/n/tip-5270n2quu2gqz22o7itfdx00@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-config.txt |  8 ++++++++
- tools/perf/ui/browsers/scripts.c         | 20 ++++++++++++++++++++
- 2 files changed, 28 insertions(+)
+ tools/lib/bpf/libbpf.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/perf/Documentation/perf-config.txt b/tools/perf/Documentation/perf-config.txt
-index 2d0fb7613134..95054a8176a2 100644
---- a/tools/perf/Documentation/perf-config.txt
-+++ b/tools/perf/Documentation/perf-config.txt
-@@ -590,6 +590,14 @@ samples.*::
- 		Define how many ns worth of time to show
- 		around samples in perf report sample context browser.
+diff --git a/tools/lib/bpf/libbpf.h b/tools/lib/bpf/libbpf.h
+index b4652aa1a58a..aa1521a51687 100644
+--- a/tools/lib/bpf/libbpf.h
++++ b/tools/lib/bpf/libbpf.h
+@@ -10,6 +10,7 @@
+ #ifndef __LIBBPF_LIBBPF_H
+ #define __LIBBPF_LIBBPF_H
  
-+scripts.*::
-+
-+	Any option defines a script that is added to the scripts menu
-+	in the interactive perf browser and whose output is displayed.
-+	The name of the option is the name, the value is a script command line.
-+	The script gets the same options passed as a full perf script,
-+	in particular -i perfdata file, --cpu, --tid
-+
- SEE ALSO
- --------
- linkperf:perf[1]
-diff --git a/tools/perf/ui/browsers/scripts.c b/tools/perf/ui/browsers/scripts.c
-index 96e5cd3b0eee..27cf3ab88d13 100644
---- a/tools/perf/ui/browsers/scripts.c
-+++ b/tools/perf/ui/browsers/scripts.c
-@@ -6,6 +6,7 @@
- #include "../../util/symbol.h"
- #include "../browser.h"
- #include "../libslang.h"
-+#include "config.h"
- 
- #define SCRIPT_NAMELEN	128
- #define SCRIPT_MAX_NO	64
-@@ -53,6 +54,24 @@ static int add_script_option(const char *name, const char *opt,
- 	return 0;
- }
- 
-+static int scripts_config(const char *var, const char *value, void *data)
-+{
-+	struct script_config *c = data;
-+
-+	if (!strstarts(var, "scripts."))
-+		return -1;
-+	if (c->index >= SCRIPT_MAX_NO)
-+		return -1;
-+	c->names[c->index] = strdup(var + 7);
-+	if (!c->names[c->index])
-+		return -1;
-+	if (asprintf(&c->paths[c->index], "%s %s", value,
-+		     c->extra_format) < 0)
-+		return -1;
-+	c->index++;
-+	return 0;
-+}
-+
- /*
-  * When success, will copy the full path of the selected script
-  * into  the buffer pointed by script_name, and return 0.
-@@ -87,6 +106,7 @@ static int list_scripts(char *script_name, bool *custom,
- 			  &scriptc);
- 	add_script_option("Show individual samples with source", "-F +srcline,+srccode",
- 			  &scriptc);
-+	perf_config(scripts_config, &scriptc);
- 	custom_perf = scriptc.index;
- 	add_script_option("Show samples with custom perf script arguments", "", &scriptc);
- 	i = scriptc.index;
++#include <stdarg.h>
+ #include <stdio.h>
+ #include <stdint.h>
+ #include <stdbool.h>
