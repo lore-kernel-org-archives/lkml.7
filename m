@@ -2,108 +2,141 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 057CBC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:23:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D854BC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:24:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6D6E218FE
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:23:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B8D6206BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:24:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lJ5Zn4X4"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="bMVg2xzk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727247AbfCVPXw (ORCPT
+        id S1727283AbfCVPYO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 11:23:52 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:53217 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726440AbfCVPXv (ORCPT
+        Fri, 22 Mar 2019 11:24:14 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:45406 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726440AbfCVPYN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 11:23:51 -0400
-Received: by mail-wm1-f65.google.com with SMTP id a184so2560411wma.2
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 08:23:50 -0700 (PDT)
+        Fri, 22 Mar 2019 11:24:13 -0400
+Received: by mail-oi1-f193.google.com with SMTP id y84so1969463oia.12
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 08:24:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Ah6RWtYHx5cmQbIMfgjIWiIcsDUwnQPWHwEiuQhJMao=;
-        b=lJ5Zn4X4UX6yNRHd2ku1OQ8Pa/SrRm6HBJ/ktaLPTLtV0EelN4CD/c1qm3VLZsRrm7
-         FQohf7TI6/hTdQINq3lTLT3C3CqDwSiAvHuf88K4guxDOv3Q/UVVBUKHg8CpboMVo0qI
-         FiYx4utnLHCaMGJv22vIKZpXarqSLf9gHxLnh29cgLOnJ9nm77Ove+pdxJFnEcg3UeEZ
-         RPnxCLzJyfgrMPu79Lg/pywVsmKE7CyiXOO+kFLz1Zs4XROpjpG24ClN+am4jEXmhD+u
-         +6KPxvGUIl9n5sC8EYNWoG9aqgvmZLzzm423aoDJxqUnRAD9c3u//dkVZe7VlOWdltUc
-         hWTA==
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SiUB6GjdRDUvfPlt5GeWB4/3VlUtKceTbjUSCfKanHs=;
+        b=bMVg2xzknwWrsKHdURPAH4td/i+DnG34a8+YryPxxGHzVICC8nfrl7CYBl3D4eUc6d
+         rgWQJeMadfip2iVs+y1R3ObEqQqcHIJ4iWVQBbLWOhKi941FO3c2Xl1q2mqy5GSe43Ns
+         lsM3YT+S54h//AvmGLFQihQaypGCzRknjC07PoGuChcNiI7YlGxC7FrnV5QfCLBasiOQ
+         C+ubvIiCL1fA2Dwu/MrVXl7O6rG+FYaoARlfyWjjwdktX86RvrFp73axcgOuPma0VE9g
+         nF5AVun+Zh0Wdx6/jCwP4uTeX5lpsYvhHCJSetr/Xzizn+5CF4IgdXmJKO+92Z/lFach
+         LATA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Ah6RWtYHx5cmQbIMfgjIWiIcsDUwnQPWHwEiuQhJMao=;
-        b=Tj6TxO6LJIlGhukyXfSBlm7s2qSBf1huRb2LzBBcnNqsX1572g0yMgRpkiY0qxAR10
-         z6yFAtd1coxNVNEpmHO03sAOO4MT12SLnX7xLYdtvB26GjXwnp/tRZ1s26+SUwk7i/AI
-         fYa/9soNp206aEt3Vx1ywbL9pmCZifZELVMfqUwJ1F5ZwV2gFsqTyZTsqKpNLClZ4BxJ
-         /plxAioa8TWhBAdo1Os5CY72zzLAlLH5qlzK7mJzOncIgE9IxPIaSjlZA44CM2s0DWnT
-         JotJRYJZidNpD8wKUr1Gnf3siECPvF/9p2+I53ODGZIzAWSwGBaVchtqZOuOqKBk99aE
-         5SmQ==
-X-Gm-Message-State: APjAAAXm5FiIvx9LLz7tr6qNSOtP8hfUFf9MGqqaEagGDmb62HBOnaNP
-        gZ8sZiphvY7qtECwOraLg1jBK2q8MIg=
-X-Google-Smtp-Source: APXvYqyMJj+iL1nNa/bhojIDpnKaGwfzmR2Wkfe8gmZrGWZA36YEQbDdn0urTA/BuBwn6A7PvMkkVw==
-X-Received: by 2002:a1c:7918:: with SMTP id l24mr3103150wme.29.1553268229872;
-        Fri, 22 Mar 2019 08:23:49 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id 24sm12816111wmf.23.2019.03.22.08.23.48
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 22 Mar 2019 08:23:49 -0700 (PDT)
-Subject: Re: [PATCH v0] nvmem: core: Export nvmem cell info to userspace
-To:     Gaurav Kohli <gkohli@codeaurora.org>, linux-kernel@vger.kernel.org
-Cc:     linux-arm-msm@vger.kernel.org,
-        Shiraz Hashim <shashim@codeaurora.org>
-References: <1553061201-28894-1-git-send-email-gkohli@codeaurora.org>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <b356f99c-15ff-06ce-e40b-4bb8b664b6c9@linaro.org>
-Date:   Fri, 22 Mar 2019 15:23:48 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SiUB6GjdRDUvfPlt5GeWB4/3VlUtKceTbjUSCfKanHs=;
+        b=t5qYzUTxehDriYocV7M5LMErQR6mzDKLkRBLdBf8/BejYcfwCxQY64ZIOH46lEHHRl
+         qLFn1Z+wsfK9JkQN5aDzMETdQaNNU30ZzmfJT16ENR26BMulCLs6bB0S3ekfeWqCRmMb
+         lUn+NKOOgFkZYZUTvOCnEEzxfVBSPGBGW/oSdcnz6XURNDoUxUdglKEiufvNFnr3IXJI
+         3H7uwP9YaSSeF9wqkJEAookzmDZjMJfzjzebtQsxMiZkg5C8tx5CD7hingxk20JbjuHa
+         EUV5cEyO8OBPHjSq5twFyNmO0dGJcz2EpNK+g8QdkQ96RTQpYmZiSOFkoAL//aK3/Mqa
+         kI5g==
+X-Gm-Message-State: APjAAAU6IxHvY3+3QGLgLGBhojuQ406v5vhBc6dlby9EQz4EOAN1tUkG
+        fZrnNLi3xckDiu8TBJzd9oBRAHSACRwBifhmg5JypQ==
+X-Google-Smtp-Source: APXvYqxvsdgrXSTwlEwbN3qSidxJAdAhRPrGdh+vb5iMw7DxT3s00r4H3fjVoGOrj8J6cap1YSmtX94ncF4RtLRxOCU=
+X-Received: by 2002:aca:df57:: with SMTP id w84mr2303809oig.105.1553268252709;
+ Fri, 22 Mar 2019 08:24:12 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1553061201-28894-1-git-send-email-gkohli@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <155295271345.1945351.6465460744078693578.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20190321135451.GD4603@linux.intel.com> <809e827b-fdbe-fbb8-8acf-2878ae9f7777@huawei.com>
+ <CAPcyv4gc_KWedC12bTcX24KwjKiBCF=yvouRNzCbJKaLrgJdDg@mail.gmail.com>
+ <d0434a90-4010-8c76-c02e-bb1a6ec831ef@huawei.com> <20190322101227.GB3122@linux.intel.com>
+In-Reply-To: <20190322101227.GB3122@linux.intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 22 Mar 2019 08:24:01 -0700
+Message-ID: <CAPcyv4g=W9Fc=nfYjXG9-mpzn2cfiYEz4J7ksP3ziFUc_5k1OQ@mail.gmail.com>
+Subject: Re: [PATCH] security/keys/trusted: Allow operation without hardware TPM
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Roberto Sassu <roberto.sassu@huawei.com>,
+        James Bottomley <jejb@linux.ibm.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        David Howells <dhowells@redhat.com>, keyrings@vger.kernel.org,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Mar 22, 2019 at 3:12 AM Jarkko Sakkinen
+<jarkko.sakkinen@linux.intel.com> wrote:
+>
+> On Thu, Mar 21, 2019 at 06:45:47PM +0100, Roberto Sassu wrote:
+> > On 3/21/2019 5:30 PM, Dan Williams wrote:
+> > > On Thu, Mar 21, 2019 at 7:27 AM Roberto Sassu <roberto.sassu@huawei.com> wrote:
+> > > >
+> > > > On 3/21/2019 2:54 PM, Jarkko Sakkinen wrote:
+> > > > > On Mon, Mar 18, 2019 at 04:45:13PM -0700, Dan Williams wrote:
+> > > > > > Rather than fail initialization of the trusted.ko module, arrange for
+> > > > > > the module to load, but rely on trusted_instantiate() to fail
+> > > > > > trusted-key operations.
+> > > > > >
+> > > > > > Fixes: 240730437deb ("KEYS: trusted: explicitly use tpm_chip structure...")
+> > > > > > Cc: Roberto Sassu <roberto.sassu@huawei.com>
+> > > > > > Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > > > > > Cc: James Bottomley <jejb@linux.ibm.com>
+> > > > > > Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > > > > > Cc: Mimi Zohar <zohar@linux.ibm.com>
+> > > > > > Cc: David Howells <dhowells@redhat.com>
+> > > > > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> > > > >
+> > > > > It should check for chip in each function that uses TPM now that
+> > > > > the code does not rely on default chip. Otherwise, the semantics
+> > > > > are kind of inconsistent.
+> > > >
+> > > > If no other TPM function can be used before a successful key
+> > > > instantiate, checking for a chip only in trusted_instantiate() seems
+> > > > sufficient. Then, the same chip will be used by all TPM functions until
+> > > > module unloading, since we incremented the reference count.
+> > > >
+> > > > I would suggest to move the tpm_default_chip() and init_digests() calls
+> > > > to trusted_instantiate() to restore the old behavior of init_trusted().
+> > > >
+> > > > trusted_instantiate() should look like:
+> > > > ---
+> > > > if (!chip) {
+> > > >          chip = tpm_default_chip();
+> > > >          if (!chip)
+> > > >                  return -ENODEV;
+> > > > }
+> > > >
+> > > > if (!digests) {
+> > > >          ret = init_digests();
+> > > >          if (ret < 0)
+> > > >                  return ret;
+> > > > }
+> > >
+> > > This patch already achieves that because tpm_find_get_ops() will fail
+> > > and cause tpm_is_tpm2() to return NULL.
+> >
+> > In addition, the changes I proposed would allow users to create trusted
+> > keys if a TPM is added later. CONFIG_TRUSTED_KEYS=y and
+> > CONFIG_TCG_TPM=m is a valid configuration.
+> >
+> > Jarkko, Dan's patch seems sufficient to fix the issue. He could include
+> > the changes I proposed in his patch. What is your opinion?
+>
+> Agreed.
 
+What changes?
 
-On 20/03/2019 05:53, Gaurav Kohli wrote:
-> From: Shiraz Hashim <shashim@codeaurora.org>
-> 
-> Existing nvmem framework export full register space
-> as nvmem binary, but not exporting child node of nvmem
-> which is nvmem cell. Kernel can read the specific cell
-> by using nvmem_cell_read but userspace don't have such
-> provision.
-> 
-> Add framework to export nvmem cell as well, So
-> userspace can use it directly.
-> 
-> Signed-off-by: Shiraz Hashim <shashim@codeaurora.org>
-> Signed-off-by: Gaurav Kohli <gkohli@codeaurora.org>
-> Co-developed-by: Gaurav Kohli <gkohli@codeaurora.org>
-> 
-> diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-
-Thankyou for the patch.
-
-Why do you need such provision when the userspace can just get the cell 
-values using correct offset and size.
-This will also bring over head of managing entries dynamically + 
-confusing userspace abi.
-
-Unless you have a valid reason or usecase I don't see the need for this.
-
-thanks,
-srini
+Robert, please feel free to re-author the proposed patch however you
+see fit, I just want whatever will get libnvdimm operational again in
+the shortest amount of time.
