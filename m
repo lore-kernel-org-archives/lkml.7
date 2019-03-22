@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D0F3C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:10:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CC11C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:10:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0AC62082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:10:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CA2F2082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:10:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256643;
-	bh=5zRtdsUc4eeaPJ5CUlv2+7gg+6Lj0GxOpr4aiTMzrtQ=;
+	s=default; t=1553256651;
+	bh=Q/W3NwF/0aElKhhHgr8UGWy4QjWoaut0ayzvMIi7xI0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cUcFHqFoYGOC60KbM9qJZwKVda2GP5nFUFPuls5Xf51ZbEFvoPPsQtysOigp3sVdp
-	 PSteN3381WBCBLfpLfTjo5zyvCyE42cOE6SihxTUnXeNgTJsouxbW6Tt5YnkM4nNxO
-	 CLQ56wu6/yywwsvlY48Scc9V6Vv/gvannxEI+Uvk=
+	b=VM5Uy77XXfDeItm7J5aLdOwmOZDK5urLUgEtPqy20Sdyn0imrArJPyFk0fVrWji/P
+	 7YRtQK59pwz7kf3wrxyn7vCUk/a9ZOuVapKDwNE9Cka+6g/oA8QdEceFF5o9mwzfH9
+	 vf14k1jlsdJQDZ6Q0+wlv95E6n8quUBgvJ8Hm30k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389040AbfCVMKm (ORCPT
+        id S2389457AbfCVMKt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:10:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49058 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:10:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49136 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389260AbfCVMKk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:10:40 -0400
+        id S2388861AbfCVMKn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:10:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D39C720830;
-        Fri, 22 Mar 2019 12:10:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD2B220830;
+        Fri, 22 Mar 2019 12:10:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256639;
-        bh=5zRtdsUc4eeaPJ5CUlv2+7gg+6Lj0GxOpr4aiTMzrtQ=;
+        s=default; t=1553256643;
+        bh=Q/W3NwF/0aElKhhHgr8UGWy4QjWoaut0ayzvMIi7xI0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gEk+pILyIp0LXCyTmHtKLsB5dWLdh7Ypks1DzSrqtPbQlSheubJLPXIB5DIJkVhJg
-         tfGpa09ipwXsuG0mZa+PPA+FfzWVEdZ+bui8U8A5x02Vp1scCOIj04i6yMlmo2Awb/
-         jSxXEoRpaGEDVhBFdsgRsjsb1nbZULaF4IFm0S18=
+        b=gS/tt+jOWvqZnm9l1mNB295pQ/LOi/ZLnl3lt+59I83I4NTjz6qxmZ1Xw2cM1cJxh
+         tsJ1FNbdIIiPKTDcqhaExcZxylPlokNaWuBwsanKtcRNLJSluza2B174bYyTD9JgUl
+         Gaxn+vudFP4Oflha0emU1PlhY/rTbB4h6TbdqXX0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         Sean Christopherson <sean.j.christopherson@intel.com>,
         Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.19 274/280] KVM: x86/mmu: Detect MMIO generation wrap in any address space
-Date:   Fri, 22 Mar 2019 12:17:07 +0100
-Message-Id: <20190322111346.826879751@linuxfoundation.org>
+Subject: [PATCH 4.19 275/280] KVM: x86/mmu: Do not cache MMIO accesses while memslots are in flux
+Date:   Fri, 22 Mar 2019 12:17:08 +0100
+Message-Id: <20190322111347.016510644@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -68,58 +68,62 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit e1359e2beb8b0a1188abc997273acbaedc8ee791 upstream.
+commit ddfd1730fd829743e41213e32ccc8b4aa6dc8325 upstream.
 
-The check to detect a wrap of the MMIO generation explicitly looks for a
-generation number of zero.  Now that unique memslots generation numbers
-are assigned to each address space, only address space 0 will get a
-generation number of exactly zero when wrapping.  E.g. when address
-space 1 goes from 0x7fffe to 0x80002, the MMIO generation number will
-wrap to 0x2.  Adjust the MMIO generation to strip the address space
-modifier prior to checking for a wrap.
+When installing new memslots, KVM sets bit 0 of the generation number to
+indicate that an update is in-progress.  Until the update is complete,
+there are no guarantees as to whether a vCPU will see the old or the new
+memslots.  Explicity prevent caching MMIO accesses so as to avoid using
+an access cached from the old memslots after the new memslots have been
+installed.
 
-Fixes: 4bd518f1598d ("KVM: use separate generations for each address space")
+Note that it is unclear whether or not disabling caching during the
+update window is strictly necessary as there is no definitive
+documentation as to what ordering guarantees KVM provides with respect
+to updating memslots.  That being said, the MMIO spte code does not
+allow reusing sptes created while an update is in-progress, and the
+associated documentation explicitly states:
+
+    We do not want to use an MMIO sptes created with an odd generation
+    number, ...  If KVM is unlucky and creates an MMIO spte while the
+    low bit is 1, the next access to the spte will always be a cache miss.
+
+At the very least, disabling the per-vCPU MMIO cache during updates will
+make its behavior consistent with the MMIO spte behavior and
+documentation.
+
+Fixes: 56f17dd3fbc4 ("kvm: x86: fix stale mmio cache bug")
 Cc: <stable@vger.kernel.org>
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/mmu.c |   21 +++++++++++++++++++--
- 1 file changed, 19 insertions(+), 2 deletions(-)
+ arch/x86/kvm/x86.h |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
---- a/arch/x86/kvm/mmu.c
-+++ b/arch/x86/kvm/mmu.c
-@@ -5776,11 +5776,28 @@ static bool kvm_has_zapped_obsolete_page
- 
- void kvm_mmu_invalidate_mmio_sptes(struct kvm *kvm, u64 gen)
+--- a/arch/x86/kvm/x86.h
++++ b/arch/x86/kvm/x86.h
+@@ -181,6 +181,11 @@ static inline bool emul_is_noncanonical_
+ static inline void vcpu_cache_mmio_info(struct kvm_vcpu *vcpu,
+ 					gva_t gva, gfn_t gfn, unsigned access)
  {
-+	gen &= MMIO_GEN_MASK;
++	u64 gen = kvm_memslots(vcpu->kvm)->generation;
 +
-+	/*
-+	 * Shift to eliminate the "update in-progress" flag, which isn't
-+	 * included in the spte's generation number.
-+	 */
-+	gen >>= 1;
-+
-+	/*
-+	 * Generation numbers are incremented in multiples of the number of
-+	 * address spaces in order to provide unique generations across all
-+	 * address spaces.  Strip what is effectively the address space
-+	 * modifier prior to checking for a wrap of the MMIO generation so
-+	 * that a wrap in any address space is detected.
-+	 */
-+	gen &= ~((u64)KVM_ADDRESS_SPACE_NUM - 1);
++	if (unlikely(gen & 1))
++		return;
 +
  	/*
--	 * The very rare case: if the generation-number is round,
-+	 * The very rare case: if the MMIO generation number has wrapped,
- 	 * zap all shadow pages.
- 	 */
--	if (unlikely((gen & MMIO_GEN_MASK) == 0)) {
-+	if (unlikely(gen == 0)) {
- 		kvm_debug_ratelimited("kvm: zapping shadow pages for mmio generation wraparound\n");
- 		kvm_mmu_invalidate_zap_all_pages(kvm);
- 	}
+ 	 * If this is a shadow nested page table, the "GVA" is
+ 	 * actually a nGPA.
+@@ -188,7 +193,7 @@ static inline void vcpu_cache_mmio_info(
+ 	vcpu->arch.mmio_gva = mmu_is_nested(vcpu) ? 0 : gva & PAGE_MASK;
+ 	vcpu->arch.access = access;
+ 	vcpu->arch.mmio_gfn = gfn;
+-	vcpu->arch.mmio_gen = kvm_memslots(vcpu->kvm)->generation;
++	vcpu->arch.mmio_gen = gen;
+ }
+ 
+ static inline bool vcpu_match_mmio_gen(struct kvm_vcpu *vcpu)
 
 
