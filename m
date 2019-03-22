@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3630FC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:00:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BC9FC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:00:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD243204FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:00:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 666DB204FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:00:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256002;
-	bh=oUnON49EIi0waKeHdQrObQkTVPSvbqGk2mCkrUinTyk=;
+	s=default; t=1553256008;
+	bh=r3OmJKEruieEwLDcDICfTpRqmYrWcDvTiJ2e25LRW4M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ceL5QOdMfamr0IEfsnWAjxEMukdYM0OZm2/3Qt2JtYbFE4eEdHPfEPHUwZMAXih5f
-	 MF4aIQa/IQLDwaob3Eq8OuNo20CAfZ1qXby3UDxp3i1tE+aYO6cmumOLigVtnF0zW/
-	 2dhRNfhUNld5K/QckhECH68Ph+sl9bTkB5fRqtyc=
+	b=kFbRFYqppY6OmXpNQy+TfZh8YCiPi+svdN91RRPt4rTO9EeSy1z+wkrLcV4Fml3dr
+	 eA/+y9yQ5gRbgs8WWVAr26jTbG9Uh2dtuotD035ej7gsIEc1roBVO9CuQh3JmRWH6N
+	 11wEjzBaZSTKFclYQsr+GyS7mGjxWZkvopJcfynY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387690AbfCVMAA (ORCPT
+        id S2388052AbfCVMAH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:00:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36982 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:00:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388003AbfCVL74 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:59:56 -0400
+        id S2388034AbfCVMAF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:00:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 130C82192D;
-        Fri, 22 Mar 2019 11:59:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3CA02192D;
+        Fri, 22 Mar 2019 12:00:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255995;
-        bh=oUnON49EIi0waKeHdQrObQkTVPSvbqGk2mCkrUinTyk=;
+        s=default; t=1553256005;
+        bh=r3OmJKEruieEwLDcDICfTpRqmYrWcDvTiJ2e25LRW4M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zrJVyWQ/UcKviKbgeQ2oMnkmDE3zhZmhV+jGvPar3ukUKgQfCxwE3GlXxWiJ9d09F
-         IKurfaybsNBBaIUyMyoro5ksyAo9HlofSWVfAphFwccmiQF4NPzzCkevmFoOvxIR7c
-         L74zU18KSNLuGpQB01DD9eq3mulUjjqXu6j1WfRk=
+        b=fcUKobNT0zwyO1VYVbmbVHDKejo229h/E6eV5cTIzeBT97y4ugArj7oAWKZEKCYxj
+         iKo+Ega/1wb9GYn2HUF86hcHFgvukiARO/S1P2TAPx/HyYt3AzueJAQGr1stPzQzXA
+         aivniQe3ZU/lp6dFKQR5IKtyvdlYz6uetbHsLElM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
-        James Morris <james.morris@microsoft.com>,
+        stable@vger.kernel.org, Huang Zijiang <huang.zijiang@zte.com.cn>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 077/280] keys: Fix dependency loop between construction record and auth key
-Date:   Fri, 22 Mar 2019 12:13:50 +0100
-Message-Id: <20190322111310.689798794@linuxfoundation.org>
+Subject: [PATCH 4.19 062/280] net: hns: Fix object reference leaks in hns_dsaf_roce_reset()
+Date:   Fri, 22 Mar 2019 12:13:35 +0100
+Message-Id: <20190322111309.758574321@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -66,529 +66,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 822ad64d7e46a8e2c8b8a796738d7b657cbb146d ]
+[ Upstream commit c969c6e7ab8cb42b5c787c567615474fdbad9d6a ]
 
-In the request_key() upcall mechanism there's a dependency loop by which if
-a key type driver overrides the ->request_key hook and the userspace side
-manages to lose the authorisation key, the auth key and the internal
-construction record (struct key_construction) can keep each other pinned.
+The of_find_device_by_node() takes a reference to the underlying device
+structure, we should release that reference.
 
-Fix this by the following changes:
-
- (1) Killing off the construction record and using the auth key instead.
-
- (2) Including the operation name in the auth key payload and making the
-     payload available outside of security/keys/.
-
- (3) The ->request_key hook is given the authkey instead of the cons
-     record and operation name.
-
-Changes (2) and (3) allow the auth key to naturally be cleaned up if the
-keyring it is in is destroyed or cleared or the auth key is unlinked.
-
-Fixes: 7ee02a316600 ("keys: Fix dependency loop between construction record and auth key")
-Signed-off-by: David Howells <dhowells@redhat.com>
-Signed-off-by: James Morris <james.morris@microsoft.com>
+Signed-off-by: Huang Zijiang <huang.zijiang@zte.com.cn>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfs4idmap.c                   | 31 ++++++------
- include/keys/request_key_auth-type.h | 36 ++++++++++++++
- include/linux/key-type.h             | 22 +++------
- security/keys/internal.h             | 13 +----
- security/keys/keyctl.c               |  1 +
- security/keys/process_keys.c         |  1 +
- security/keys/request_key.c          | 72 +++++++++++-----------------
- security/keys/request_key_auth.c     | 16 ++++---
- 8 files changed, 100 insertions(+), 92 deletions(-)
- create mode 100644 include/keys/request_key_auth-type.h
+ drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/fs/nfs/nfs4idmap.c b/fs/nfs/nfs4idmap.c
-index 3f23b6840547..bf34ddaa2ad7 100644
---- a/fs/nfs/nfs4idmap.c
-+++ b/fs/nfs/nfs4idmap.c
-@@ -44,6 +44,7 @@
- #include <linux/keyctl.h>
- #include <linux/key-type.h>
- #include <keys/user-type.h>
-+#include <keys/request_key_auth-type.h>
- #include <linux/module.h>
- 
- #include "internal.h"
-@@ -59,7 +60,7 @@ static struct key_type key_type_id_resolver_legacy;
- struct idmap_legacy_upcalldata {
- 	struct rpc_pipe_msg pipe_msg;
- 	struct idmap_msg idmap_msg;
--	struct key_construction	*key_cons;
-+	struct key	*authkey;
- 	struct idmap *idmap;
- };
- 
-@@ -384,7 +385,7 @@ static const match_table_t nfs_idmap_tokens = {
- 	{ Opt_find_err, NULL }
- };
- 
--static int nfs_idmap_legacy_upcall(struct key_construction *, const char *, void *);
-+static int nfs_idmap_legacy_upcall(struct key *, void *);
- static ssize_t idmap_pipe_downcall(struct file *, const char __user *,
- 				   size_t);
- static void idmap_release_pipe(struct inode *);
-@@ -549,11 +550,12 @@ nfs_idmap_prepare_pipe_upcall(struct idmap *idmap,
- static void
- nfs_idmap_complete_pipe_upcall_locked(struct idmap *idmap, int ret)
- {
--	struct key_construction *cons = idmap->idmap_upcall_data->key_cons;
-+	struct key *authkey = idmap->idmap_upcall_data->authkey;
- 
- 	kfree(idmap->idmap_upcall_data);
- 	idmap->idmap_upcall_data = NULL;
--	complete_request_key(cons, ret);
-+	complete_request_key(authkey, ret);
-+	key_put(authkey);
- }
- 
- static void
-@@ -563,15 +565,14 @@ nfs_idmap_abort_pipe_upcall(struct idmap *idmap, int ret)
- 		nfs_idmap_complete_pipe_upcall_locked(idmap, ret);
- }
- 
--static int nfs_idmap_legacy_upcall(struct key_construction *cons,
--				   const char *op,
--				   void *aux)
-+static int nfs_idmap_legacy_upcall(struct key *authkey, void *aux)
- {
- 	struct idmap_legacy_upcalldata *data;
-+	struct request_key_auth *rka = get_request_key_auth(authkey);
- 	struct rpc_pipe_msg *msg;
- 	struct idmap_msg *im;
- 	struct idmap *idmap = (struct idmap *)aux;
--	struct key *key = cons->key;
-+	struct key *key = rka->target_key;
- 	int ret = -ENOKEY;
- 
- 	if (!aux)
-@@ -586,7 +587,7 @@ static int nfs_idmap_legacy_upcall(struct key_construction *cons,
- 	msg = &data->pipe_msg;
- 	im = &data->idmap_msg;
- 	data->idmap = idmap;
--	data->key_cons = cons;
-+	data->authkey = key_get(authkey);
- 
- 	ret = nfs_idmap_prepare_message(key->description, idmap, im, msg);
- 	if (ret < 0)
-@@ -604,7 +605,7 @@ static int nfs_idmap_legacy_upcall(struct key_construction *cons,
- out2:
- 	kfree(data);
- out1:
--	complete_request_key(cons, ret);
-+	complete_request_key(authkey, ret);
- 	return ret;
- }
- 
-@@ -651,9 +652,10 @@ out:
- static ssize_t
- idmap_pipe_downcall(struct file *filp, const char __user *src, size_t mlen)
- {
-+	struct request_key_auth *rka;
- 	struct rpc_inode *rpci = RPC_I(file_inode(filp));
- 	struct idmap *idmap = (struct idmap *)rpci->private;
--	struct key_construction *cons;
-+	struct key *authkey;
- 	struct idmap_msg im;
- 	size_t namelen_in;
- 	int ret = -ENOKEY;
-@@ -665,7 +667,8 @@ idmap_pipe_downcall(struct file *filp, const char __user *src, size_t mlen)
- 	if (idmap->idmap_upcall_data == NULL)
- 		goto out_noupcall;
- 
--	cons = idmap->idmap_upcall_data->key_cons;
-+	authkey = idmap->idmap_upcall_data->authkey;
-+	rka = get_request_key_auth(authkey);
- 
- 	if (mlen != sizeof(im)) {
- 		ret = -ENOSPC;
-@@ -690,9 +693,9 @@ idmap_pipe_downcall(struct file *filp, const char __user *src, size_t mlen)
- 
- 	ret = nfs_idmap_read_and_verify_message(&im,
- 			&idmap->idmap_upcall_data->idmap_msg,
--			cons->key, cons->authkey);
-+			rka->target_key, authkey);
- 	if (ret >= 0) {
--		key_set_timeout(cons->key, nfs_idmap_cache_timeout);
-+		key_set_timeout(rka->target_key, nfs_idmap_cache_timeout);
- 		ret = mlen;
+diff --git a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c
+index 3b9e74be5fbd..b8155f5e71b4 100644
+--- a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c
++++ b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c
+@@ -3081,6 +3081,7 @@ int hns_dsaf_roce_reset(struct fwnode_handle *dsaf_fwnode, bool dereset)
+ 	dsaf_dev = dev_get_drvdata(&pdev->dev);
+ 	if (!dsaf_dev) {
+ 		dev_err(&pdev->dev, "dsaf_dev is NULL\n");
++		put_device(&pdev->dev);
+ 		return -ENODEV;
  	}
  
-diff --git a/include/keys/request_key_auth-type.h b/include/keys/request_key_auth-type.h
-new file mode 100644
-index 000000000000..a726dd3f1dc6
---- /dev/null
-+++ b/include/keys/request_key_auth-type.h
-@@ -0,0 +1,36 @@
-+/* request_key authorisation token key type
-+ *
-+ * Copyright (C) 2005 Red Hat, Inc. All Rights Reserved.
-+ * Written by David Howells (dhowells@redhat.com)
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public Licence
-+ * as published by the Free Software Foundation; either version
-+ * 2 of the Licence, or (at your option) any later version.
-+ */
-+
-+#ifndef _KEYS_REQUEST_KEY_AUTH_TYPE_H
-+#define _KEYS_REQUEST_KEY_AUTH_TYPE_H
-+
-+#include <linux/key.h>
-+
-+/*
-+ * Authorisation record for request_key().
-+ */
-+struct request_key_auth {
-+	struct key		*target_key;
-+	struct key		*dest_keyring;
-+	const struct cred	*cred;
-+	void			*callout_info;
-+	size_t			callout_len;
-+	pid_t			pid;
-+	char			op[8];
-+} __randomize_layout;
-+
-+static inline struct request_key_auth *get_request_key_auth(const struct key *key)
-+{
-+	return key->payload.data[0];
-+}
-+
-+
-+#endif /* _KEYS_REQUEST_KEY_AUTH_TYPE_H */
-diff --git a/include/linux/key-type.h b/include/linux/key-type.h
-index 05d8fb5a06c4..d3c5ae8ad498 100644
---- a/include/linux/key-type.h
-+++ b/include/linux/key-type.h
-@@ -17,15 +17,6 @@
+@@ -3088,6 +3089,7 @@ int hns_dsaf_roce_reset(struct fwnode_handle *dsaf_fwnode, bool dereset)
+ 	if (AE_IS_VER1(dsaf_dev->dsaf_ver)) {
+ 		dev_err(dsaf_dev->dev, "%s v1 chip doesn't support RoCE!\n",
+ 			dsaf_dev->ae_dev.name);
++		put_device(&pdev->dev);
+ 		return -ENODEV;
+ 	}
  
- #ifdef CONFIG_KEYS
- 
--/*
-- * key under-construction record
-- * - passed to the request_key actor if supplied
-- */
--struct key_construction {
--	struct key	*key;	/* key being constructed */
--	struct key	*authkey;/* authorisation for key being constructed */
--};
--
- /*
-  * Pre-parsed payload, used by key add, update and instantiate.
-  *
-@@ -47,8 +38,7 @@ struct key_preparsed_payload {
- 	time64_t	expiry;		/* Expiry time of key */
- } __randomize_layout;
- 
--typedef int (*request_key_actor_t)(struct key_construction *key,
--				   const char *op, void *aux);
-+typedef int (*request_key_actor_t)(struct key *auth_key, void *aux);
- 
- /*
-  * Preparsed matching criterion.
-@@ -170,20 +160,20 @@ extern int key_instantiate_and_link(struct key *key,
- 				    const void *data,
- 				    size_t datalen,
- 				    struct key *keyring,
--				    struct key *instkey);
-+				    struct key *authkey);
- extern int key_reject_and_link(struct key *key,
- 			       unsigned timeout,
- 			       unsigned error,
- 			       struct key *keyring,
--			       struct key *instkey);
--extern void complete_request_key(struct key_construction *cons, int error);
-+			       struct key *authkey);
-+extern void complete_request_key(struct key *authkey, int error);
- 
- static inline int key_negate_and_link(struct key *key,
- 				      unsigned timeout,
- 				      struct key *keyring,
--				      struct key *instkey)
-+				      struct key *authkey)
- {
--	return key_reject_and_link(key, timeout, ENOKEY, keyring, instkey);
-+	return key_reject_and_link(key, timeout, ENOKEY, keyring, authkey);
- }
- 
- extern int generic_key_instantiate(struct key *key, struct key_preparsed_payload *prep);
-diff --git a/security/keys/internal.h b/security/keys/internal.h
-index 9f8208dc0e55..a02742621c8d 100644
---- a/security/keys/internal.h
-+++ b/security/keys/internal.h
-@@ -188,20 +188,9 @@ static inline int key_permission(const key_ref_t key_ref, unsigned perm)
- 	return key_task_permission(key_ref, current_cred(), perm);
- }
- 
--/*
-- * Authorisation record for request_key().
-- */
--struct request_key_auth {
--	struct key		*target_key;
--	struct key		*dest_keyring;
--	const struct cred	*cred;
--	void			*callout_info;
--	size_t			callout_len;
--	pid_t			pid;
--} __randomize_layout;
--
- extern struct key_type key_type_request_key_auth;
- extern struct key *request_key_auth_new(struct key *target,
-+					const char *op,
- 					const void *callout_info,
- 					size_t callout_len,
- 					struct key *dest_keyring);
-diff --git a/security/keys/keyctl.c b/security/keys/keyctl.c
-index 1ffe60bb2845..ca31af186abd 100644
---- a/security/keys/keyctl.c
-+++ b/security/keys/keyctl.c
-@@ -26,6 +26,7 @@
- #include <linux/security.h>
- #include <linux/uio.h>
- #include <linux/uaccess.h>
-+#include <keys/request_key_auth-type.h>
- #include "internal.h"
- 
- #define KEY_MAX_DESC_SIZE 4096
-diff --git a/security/keys/process_keys.c b/security/keys/process_keys.c
-index d5b25e535d3a..d776d2114651 100644
---- a/security/keys/process_keys.c
-+++ b/security/keys/process_keys.c
-@@ -20,6 +20,7 @@
- #include <linux/security.h>
- #include <linux/user_namespace.h>
- #include <linux/uaccess.h>
-+#include <keys/request_key_auth-type.h>
- #include "internal.h"
- 
- /* Session keyring create vs join semaphore */
-diff --git a/security/keys/request_key.c b/security/keys/request_key.c
-index 738553698649..1a547cec8385 100644
---- a/security/keys/request_key.c
-+++ b/security/keys/request_key.c
-@@ -18,31 +18,30 @@
- #include <linux/keyctl.h>
- #include <linux/slab.h>
- #include "internal.h"
-+#include <keys/request_key_auth-type.h>
- 
- #define key_negative_timeout	60	/* default timeout on a negative key's existence */
- 
- /**
-  * complete_request_key - Complete the construction of a key.
-- * @cons: The key construction record.
-+ * @auth_key: The authorisation key.
-  * @error: The success or failute of the construction.
-  *
-  * Complete the attempt to construct a key.  The key will be negated
-  * if an error is indicated.  The authorisation key will be revoked
-  * unconditionally.
-  */
--void complete_request_key(struct key_construction *cons, int error)
-+void complete_request_key(struct key *authkey, int error)
- {
--	kenter("{%d,%d},%d", cons->key->serial, cons->authkey->serial, error);
-+	struct request_key_auth *rka = get_request_key_auth(authkey);
-+	struct key *key = rka->target_key;
-+
-+	kenter("%d{%d},%d", authkey->serial, key->serial, error);
- 
- 	if (error < 0)
--		key_negate_and_link(cons->key, key_negative_timeout, NULL,
--				    cons->authkey);
-+		key_negate_and_link(key, key_negative_timeout, NULL, authkey);
- 	else
--		key_revoke(cons->authkey);
--
--	key_put(cons->key);
--	key_put(cons->authkey);
--	kfree(cons);
-+		key_revoke(authkey);
- }
- EXPORT_SYMBOL(complete_request_key);
- 
-@@ -91,21 +90,19 @@ static int call_usermodehelper_keys(const char *path, char **argv, char **envp,
-  * Request userspace finish the construction of a key
-  * - execute "/sbin/request-key <op> <key> <uid> <gid> <keyring> <keyring> <keyring>"
-  */
--static int call_sbin_request_key(struct key_construction *cons,
--				 const char *op,
--				 void *aux)
-+static int call_sbin_request_key(struct key *authkey, void *aux)
- {
- 	static char const request_key[] = "/sbin/request-key";
-+	struct request_key_auth *rka = get_request_key_auth(authkey);
- 	const struct cred *cred = current_cred();
- 	key_serial_t prkey, sskey;
--	struct key *key = cons->key, *authkey = cons->authkey, *keyring,
--		*session;
-+	struct key *key = rka->target_key, *keyring, *session;
- 	char *argv[9], *envp[3], uid_str[12], gid_str[12];
- 	char key_str[12], keyring_str[3][12];
- 	char desc[20];
- 	int ret, i;
- 
--	kenter("{%d},{%d},%s", key->serial, authkey->serial, op);
-+	kenter("{%d},{%d},%s", key->serial, authkey->serial, rka->op);
- 
- 	ret = install_user_keyrings();
- 	if (ret < 0)
-@@ -163,7 +160,7 @@ static int call_sbin_request_key(struct key_construction *cons,
- 	/* set up the argument list */
- 	i = 0;
- 	argv[i++] = (char *)request_key;
--	argv[i++] = (char *) op;
-+	argv[i++] = (char *)rka->op;
- 	argv[i++] = key_str;
- 	argv[i++] = uid_str;
- 	argv[i++] = gid_str;
-@@ -191,7 +188,7 @@ error_link:
- 	key_put(keyring);
- 
- error_alloc:
--	complete_request_key(cons, ret);
-+	complete_request_key(authkey, ret);
- 	kleave(" = %d", ret);
- 	return ret;
- }
-@@ -205,42 +202,31 @@ static int construct_key(struct key *key, const void *callout_info,
- 			 size_t callout_len, void *aux,
- 			 struct key *dest_keyring)
- {
--	struct key_construction *cons;
- 	request_key_actor_t actor;
- 	struct key *authkey;
- 	int ret;
- 
- 	kenter("%d,%p,%zu,%p", key->serial, callout_info, callout_len, aux);
- 
--	cons = kmalloc(sizeof(*cons), GFP_KERNEL);
--	if (!cons)
--		return -ENOMEM;
--
- 	/* allocate an authorisation key */
--	authkey = request_key_auth_new(key, callout_info, callout_len,
-+	authkey = request_key_auth_new(key, "create", callout_info, callout_len,
- 				       dest_keyring);
--	if (IS_ERR(authkey)) {
--		kfree(cons);
--		ret = PTR_ERR(authkey);
--		authkey = NULL;
--	} else {
--		cons->authkey = key_get(authkey);
--		cons->key = key_get(key);
-+	if (IS_ERR(authkey))
-+		return PTR_ERR(authkey);
- 
--		/* make the call */
--		actor = call_sbin_request_key;
--		if (key->type->request_key)
--			actor = key->type->request_key;
-+	/* Make the call */
-+	actor = call_sbin_request_key;
-+	if (key->type->request_key)
-+		actor = key->type->request_key;
- 
--		ret = actor(cons, "create", aux);
-+	ret = actor(authkey, aux);
- 
--		/* check that the actor called complete_request_key() prior to
--		 * returning an error */
--		WARN_ON(ret < 0 &&
--			!test_bit(KEY_FLAG_REVOKED, &authkey->flags));
--		key_put(authkey);
--	}
-+	/* check that the actor called complete_request_key() prior to
-+	 * returning an error */
-+	WARN_ON(ret < 0 &&
-+		!test_bit(KEY_FLAG_REVOKED, &authkey->flags));
- 
-+	key_put(authkey);
- 	kleave(" = %d", ret);
- 	return ret;
- }
-@@ -275,7 +261,7 @@ static int construct_get_dest_keyring(struct key **_dest_keyring)
- 			if (cred->request_key_auth) {
- 				authkey = cred->request_key_auth;
- 				down_read(&authkey->sem);
--				rka = authkey->payload.data[0];
-+				rka = get_request_key_auth(authkey);
- 				if (!test_bit(KEY_FLAG_REVOKED,
- 					      &authkey->flags))
- 					dest_keyring =
-diff --git a/security/keys/request_key_auth.c b/security/keys/request_key_auth.c
-index 6797843154f0..5e515791ccd1 100644
---- a/security/keys/request_key_auth.c
-+++ b/security/keys/request_key_auth.c
-@@ -18,7 +18,7 @@
- #include <linux/slab.h>
- #include <linux/uaccess.h>
- #include "internal.h"
--#include <keys/user-type.h>
-+#include <keys/request_key_auth-type.h>
- 
- static int request_key_auth_preparse(struct key_preparsed_payload *);
- static void request_key_auth_free_preparse(struct key_preparsed_payload *);
-@@ -69,7 +69,7 @@ static int request_key_auth_instantiate(struct key *key,
- static void request_key_auth_describe(const struct key *key,
- 				      struct seq_file *m)
- {
--	struct request_key_auth *rka = key->payload.data[0];
-+	struct request_key_auth *rka = get_request_key_auth(key);
- 
- 	seq_puts(m, "key:");
- 	seq_puts(m, key->description);
-@@ -84,7 +84,7 @@ static void request_key_auth_describe(const struct key *key,
- static long request_key_auth_read(const struct key *key,
- 				  char __user *buffer, size_t buflen)
- {
--	struct request_key_auth *rka = key->payload.data[0];
-+	struct request_key_auth *rka = get_request_key_auth(key);
- 	size_t datalen;
- 	long ret;
- 
-@@ -110,7 +110,7 @@ static long request_key_auth_read(const struct key *key,
-  */
- static void request_key_auth_revoke(struct key *key)
- {
--	struct request_key_auth *rka = key->payload.data[0];
-+	struct request_key_auth *rka = get_request_key_auth(key);
- 
- 	kenter("{%d}", key->serial);
- 
-@@ -137,7 +137,7 @@ static void free_request_key_auth(struct request_key_auth *rka)
-  */
- static void request_key_auth_destroy(struct key *key)
- {
--	struct request_key_auth *rka = key->payload.data[0];
-+	struct request_key_auth *rka = get_request_key_auth(key);
- 
- 	kenter("{%d}", key->serial);
- 
-@@ -148,8 +148,9 @@ static void request_key_auth_destroy(struct key *key)
-  * Create an authorisation token for /sbin/request-key or whoever to gain
-  * access to the caller's security data.
-  */
--struct key *request_key_auth_new(struct key *target, const void *callout_info,
--				 size_t callout_len, struct key *dest_keyring)
-+struct key *request_key_auth_new(struct key *target, const char *op,
-+				 const void *callout_info, size_t callout_len,
-+				 struct key *dest_keyring)
- {
- 	struct request_key_auth *rka, *irka;
- 	const struct cred *cred = current->cred;
-@@ -167,6 +168,7 @@ struct key *request_key_auth_new(struct key *target, const void *callout_info,
- 	if (!rka->callout_info)
- 		goto error_free_rka;
- 	rka->callout_len = callout_len;
-+	strlcpy(rka->op, op, sizeof(rka->op));
- 
- 	/* see if the calling process is already servicing the key request of
- 	 * another process */
 -- 
 2.19.1
 
