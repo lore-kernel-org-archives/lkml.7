@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FD1EC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:48:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74986C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:48:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FE972082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:48:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 443CF2082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:48:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255284;
-	bh=/2fcsllkEJYQslElpzpI46P/bKnKyjHTkDKUVATSd9o=;
+	s=default; t=1553255288;
+	bh=Cc8Jg0yI+r2GN1CAE4J/9sqpUUjxn43Lnogz77g8Ie4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Dz5ZbojHWYZ0Bjrz9/3Bp5dkAac3y4+woEHp94cIN+1/ZRhyriZ31+5znb9oB49oT
-	 6trXuudZQDo+7+jcSY5a0KjprqUE3xBwIdGhP2cWXLmNSCW0ZMHSxNnvARsfMLR3yu
-	 pJr9uuiMs6FSLGm7sxmKugC0rrVYHrBb/CyT/nBA=
+	b=RUfVr2+v12zjhK72CCJY0KXxFOZFi1nPJV9hCY+w3Z4hpSnI/3pyRIQ+OhulVThkt
+	 ELpHoo+xSlnSH3uc9KpvGSZERSNa9JsjyBmLNz0u1Kj5NkJRREHEyFVnxXD76sWWh4
+	 Wo+AlHwECiWOvMfW4Q6iKi6ckqaztTZSyUN/DEtw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731780AbfCVLsC (ORCPT
+        id S1732266AbfCVLsG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:48:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51302 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:48:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731322AbfCVLr7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:47:59 -0400
+        id S1731322AbfCVLsD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:48:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3DAB2075E;
-        Fri, 22 Mar 2019 11:47:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 926B52075E;
+        Fri, 22 Mar 2019 11:48:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255279;
-        bh=/2fcsllkEJYQslElpzpI46P/bKnKyjHTkDKUVATSd9o=;
+        s=default; t=1553255283;
+        bh=Cc8Jg0yI+r2GN1CAE4J/9sqpUUjxn43Lnogz77g8Ie4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tIy5Th3o/C3e0cZ468RcRVDi4vsRfWjMqpJ52GpOZYqTPSBsbt61w9f7O2cu5uutj
-         medZiHjJaDVUElSDwlDRkhZgVIeyHXfuJ4xd7nqzgQUhk5soiWtIdSgOgwqDHyQpMU
-         xPhRuP3AurOjNf4rICA4iYNZ9wXSV8kTgAHL8E5I=
+        b=OvK/uqa6zz+aObNMcQFAWjq7bO63Umaot0VfzLsdI7de9/GkNAbRaNrU3b/MU471V
+         CzdNWJOWH+rGYztH7Eb6zDzTAciGV7WfK4aY8FhCiqac5Ddrsc1yuUUqWwjRYdq6kX
+         iYLy+JS5SfYnXNfPowCDRLiPbdN6nNXyjfRKj+Oo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steve Longerbeam <slongerbeam@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
+        stable@vger.kernel.org,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 013/183] gpu: ipu-v3: Fix CSI offsets for imx53
-Date:   Fri, 22 Mar 2019 12:14:01 +0100
-Message-Id: <20190322111242.747736031@linuxfoundation.org>
+Subject: [PATCH 4.14 034/183] i2c: bcm2835: Clear current buffer pointers and counts after a transfer
+Date:   Fri, 22 Mar 2019 12:14:22 +0100
+Message-Id: <20190322111244.193677852@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111241.819468003@linuxfoundation.org>
 References: <20190322111241.819468003@linuxfoundation.org>
@@ -66,35 +68,67 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit bb867d219fda7fbaabea3314702474c4eac2b91d ]
+[ Upstream commit f275a4659484716259cc46268d9043424e51cf0f ]
 
-The CSI offsets are wrong for both CSI0 and CSI1. They are at
-physical address 0x1e030000 and 0x1e038000 respectively.
+The driver's interrupt handler checks whether a message is currently
+being handled with the curr_msg pointer. When it is NULL, the interrupt
+is considered to be unexpected. Similarly, the i2c_start_transfer
+routine checks for the remaining number of messages to handle in
+num_msgs.
 
-Fixes: 2ffd48f2e7 ("gpu: ipu-v3: Add Camera Sensor Interface unit")
+However, these values are never cleared and always keep the message and
+number relevant to the latest transfer (which might be done already and
+the underlying message memory might have been freed).
 
-Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+When an unexpected interrupt hits with the DONE bit set, the isr will
+then try to access the flags field of the curr_msg structure, leading
+to a fatal page fault.
+
+The msg_buf and msg_buf_remaining fields are also never cleared at the
+end of the transfer, which can lead to similar pitfalls.
+
+Fix these issues by introducing a cleanup function and always calling
+it after a transfer is finished.
+
+Fixes: e2474541032d ("i2c: bcm2835: Fix hang for writing messages larger than 16 bytes")
+Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/ipu-v3/ipu-common.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/i2c/busses/i2c-bcm2835.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/gpu/ipu-v3/ipu-common.c b/drivers/gpu/ipu-v3/ipu-common.c
-index 5f8b31f879ca..f3a57c0500f3 100644
---- a/drivers/gpu/ipu-v3/ipu-common.c
-+++ b/drivers/gpu/ipu-v3/ipu-common.c
-@@ -910,8 +910,8 @@ static struct ipu_devtype ipu_type_imx53 = {
- 	.cpmem_ofs = 0x07000000,
- 	.srm_ofs = 0x07040000,
- 	.tpm_ofs = 0x07060000,
--	.csi0_ofs = 0x07030000,
--	.csi1_ofs = 0x07038000,
-+	.csi0_ofs = 0x06030000,
-+	.csi1_ofs = 0x06038000,
- 	.ic_ofs = 0x06020000,
- 	.disp0_ofs = 0x06040000,
- 	.disp1_ofs = 0x06048000,
+diff --git a/drivers/i2c/busses/i2c-bcm2835.c b/drivers/i2c/busses/i2c-bcm2835.c
+index 44deae78913e..4d19254f78c8 100644
+--- a/drivers/i2c/busses/i2c-bcm2835.c
++++ b/drivers/i2c/busses/i2c-bcm2835.c
+@@ -191,6 +191,15 @@ static void bcm2835_i2c_start_transfer(struct bcm2835_i2c_dev *i2c_dev)
+ 	bcm2835_i2c_writel(i2c_dev, BCM2835_I2C_C, c);
+ }
+ 
++static void bcm2835_i2c_finish_transfer(struct bcm2835_i2c_dev *i2c_dev)
++{
++	i2c_dev->curr_msg = NULL;
++	i2c_dev->num_msgs = 0;
++
++	i2c_dev->msg_buf = NULL;
++	i2c_dev->msg_buf_remaining = 0;
++}
++
+ /*
+  * Note about I2C_C_CLEAR on error:
+  * The I2C_C_CLEAR on errors will take some time to resolve -- if you were in
+@@ -291,6 +300,9 @@ static int bcm2835_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg msgs[],
+ 
+ 	time_left = wait_for_completion_timeout(&i2c_dev->completion,
+ 						adap->timeout);
++
++	bcm2835_i2c_finish_transfer(i2c_dev);
++
+ 	if (!time_left) {
+ 		bcm2835_i2c_writel(i2c_dev, BCM2835_I2C_C,
+ 				   BCM2835_I2C_C_CLEAR);
 -- 
 2.19.1
 
