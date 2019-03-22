@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD0AC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:19:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 752D6C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:19:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E7B421900
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:19:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 449A12054F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:19:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553257164;
-	bh=jNh2Da1PunbtHfUjULwmtW8Iaf3d894aaI7lyZdfSDs=;
+	s=default; t=1553257170;
+	bh=vPW+FZpCoTRcFu46HW0J29yrop3HiI73of4G2QaIPJk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SiWFsHLrjc0hv7xG6bqMeFYtWgdL2/Fveeb9VepzLudtYhUUsSYRJf2t5sUAuhkmr
-	 oMPMeY4xZw+Azrutr7G8KriFMn5w9Vodwaa0fauuiS4QTBZnPOZs1Z2sCfpxTo+zCT
-	 8o868Zu+7vh9VTjp/wQS4uPwuOvhY/rPWA55Vlq8=
+	b=1j7IgRTo0U05q/dfSjPpwewnrey2F1vWr/jYdxaJO+wcHgxIxoDw9oAa9ow3jZ19l
+	 LBVpMGaxz62AlV67EJYn1CWu8PeCY/K2X1vJtnkfYcb6/xb5lXpMMW3zh36v50ctqL
+	 X9p8kqf6ZolOoqL2mRm2TNcV73e82jgK/7RgJQnA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390615AbfCVMTW (ORCPT
+        id S2390454AbfCVMT2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:19:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58262 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:19:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390601AbfCVMTR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:19:17 -0400
+        id S2390199AbfCVMTY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:19:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 416542054F;
-        Fri, 22 Mar 2019 12:19:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC89C2054F;
+        Fri, 22 Mar 2019 12:19:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553257156;
-        bh=jNh2Da1PunbtHfUjULwmtW8Iaf3d894aaI7lyZdfSDs=;
+        s=default; t=1553257163;
+        bh=vPW+FZpCoTRcFu46HW0J29yrop3HiI73of4G2QaIPJk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VIGPOHgtR9MIB6sYmOJkET9J83eVztJHJK/c8XIAiGJ6BLuuwjsU7qDkL0duSXzmC
-         TfTDP64LDCTp2DGW1AoXKPSGk/pjeT+l/DMATo0mXKPhher+GBIcauW7r6siLTmXzI
-         9vlA0fD7uGw0m9IG3BpN1BL501sAJXD/UO/NcB3A=
+        b=GXgw39n9+FrRRcq9rZUp3Ud/bUUu0XMQyRqinZgxivQesFWqGxq+6TgZ3RogcWave
+         IpsbgGQSucUqFNztmsnfZ9IM/7eEXTk8fpdoCSgCGNvaRPogM261zS6LjosOJAGukH
+         IbyM7W0Hi/Mwuniy/74C1hDyc/sHsEHZHOAxkn2E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH 5.0 149/238] serial: 8250_of: assume reg-shift of 2 for mrvl,mmp-uart
-Date:   Fri, 22 Mar 2019 12:16:08 +0100
-Message-Id: <20190322111307.154464851@linuxfoundation.org>
+        stable@vger.kernel.org, Jay Dolan <jay.dolan@accesio.com>
+Subject: [PATCH 5.0 151/238] serial: 8250_pci: Have ACCES cards that use the four port Pericom PI7C9X7954 chip use the pci_pericom_setup()
+Date:   Fri, 22 Mar 2019 12:16:10 +0100
+Message-Id: <20190322111307.265139607@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -64,37 +64,135 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Lubomir Rintel <lkundrak@v3.sk>
+From: Jay Dolan <jay.dolan@accesio.com>
 
-commit f4817843e39ce78aace0195a57d4e8500a65a898 upstream.
+commit 78d3820b9bd39028727c6aab7297b63c093db343 upstream.
 
-There are two other drivers that bind to mrvl,mmp-uart and both of them
-assume register shift of 2 bits. There are device trees that lack the
-property and rely on that assumption.
+The four port Pericom chips have the fourth port at the wrong address.
+Make use of quirk to fix it.
 
-If this driver wins the race to bind to those devices, it should behave
-the same as the older deprecated driver.
-
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-Cc: stable@vger.kernel.org
+Fixes: c8d192428f52 ("serial: 8250: added acces i/o products quad and octal serial cards")
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Jay Dolan <jay.dolan@accesio.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/8250/8250_of.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/tty/serial/8250/8250_pci.c |  105 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 105 insertions(+)
 
---- a/drivers/tty/serial/8250/8250_of.c
-+++ b/drivers/tty/serial/8250/8250_of.c
-@@ -130,6 +130,10 @@ static int of_platform_serial_setup(stru
- 		port->flags |= UPF_IOREMAP;
- 	}
- 
-+	/* Compatibility with the deprecated pxa driver and 8250_pxa drivers. */
-+	if (of_device_is_compatible(np, "mrvl,mmp-uart"))
-+		port->regshift = 2;
-+
- 	/* Check for registers offset within the devices address range */
- 	if (of_property_read_u32(np, "reg-shift", &prop) == 0)
- 		port->regshift = prop;
+--- a/drivers/tty/serial/8250/8250_pci.c
++++ b/drivers/tty/serial/8250/8250_pci.c
+@@ -2027,6 +2027,111 @@ static struct pci_serial_quirk pci_seria
+ 		.setup		= pci_default_setup,
+ 		.exit		= pci_plx9050_exit,
+ 	},
++	{
++		.vendor     = PCI_VENDOR_ID_ACCESIO,
++		.device     = PCI_DEVICE_ID_ACCESIO_PCIE_COM_4SDB,
++		.subvendor  = PCI_ANY_ID,
++		.subdevice  = PCI_ANY_ID,
++		.setup      = pci_pericom_setup,
++	},
++	{
++		.vendor     = PCI_VENDOR_ID_ACCESIO,
++		.device     = PCI_DEVICE_ID_ACCESIO_MPCIE_COM_4S,
++		.subvendor  = PCI_ANY_ID,
++		.subdevice  = PCI_ANY_ID,
++		.setup      = pci_pericom_setup,
++	},
++	{
++		.vendor     = PCI_VENDOR_ID_ACCESIO,
++		.device     = PCI_DEVICE_ID_ACCESIO_PCIE_COM232_4DB,
++		.subvendor  = PCI_ANY_ID,
++		.subdevice  = PCI_ANY_ID,
++		.setup      = pci_pericom_setup,
++	},
++	{
++		.vendor     = PCI_VENDOR_ID_ACCESIO,
++		.device     = PCI_DEVICE_ID_ACCESIO_MPCIE_COM232_4,
++		.subvendor  = PCI_ANY_ID,
++		.subdevice  = PCI_ANY_ID,
++		.setup      = pci_pericom_setup,
++	},
++	{
++		.vendor     = PCI_VENDOR_ID_ACCESIO,
++		.device     = PCI_DEVICE_ID_ACCESIO_PCIE_COM_4SMDB,
++		.subvendor  = PCI_ANY_ID,
++		.subdevice  = PCI_ANY_ID,
++		.setup      = pci_pericom_setup,
++	},
++	{
++		.vendor     = PCI_VENDOR_ID_ACCESIO,
++		.device     = PCI_DEVICE_ID_ACCESIO_MPCIE_COM_4SM,
++		.subvendor  = PCI_ANY_ID,
++		.subdevice  = PCI_ANY_ID,
++		.setup      = pci_pericom_setup,
++	},
++	{
++		.vendor     = PCI_VENDOR_ID_ACCESIO,
++		.device     = PCI_DEVICE_ID_ACCESIO_MPCIE_ICM422_4,
++		.subvendor  = PCI_ANY_ID,
++		.subdevice  = PCI_ANY_ID,
++		.setup      = pci_pericom_setup,
++	},
++	{
++		.vendor     = PCI_VENDOR_ID_ACCESIO,
++		.device     = PCI_DEVICE_ID_ACCESIO_MPCIE_ICM485_4,
++		.subvendor  = PCI_ANY_ID,
++		.subdevice  = PCI_ANY_ID,
++		.setup      = pci_pericom_setup,
++	},
++	{
++		.vendor     = PCI_DEVICE_ID_ACCESIO_PCIE_ICM_4S,
++		.device     = PCI_DEVICE_ID_ACCESIO_PCIE_ICM232_4,
++		.subvendor  = PCI_ANY_ID,
++		.subdevice  = PCI_ANY_ID,
++		.setup      = pci_pericom_setup,
++	},
++	{
++		.vendor     = PCI_VENDOR_ID_ACCESIO,
++		.device     = PCI_DEVICE_ID_ACCESIO_MPCIE_ICM232_4,
++		.subvendor  = PCI_ANY_ID,
++		.subdevice  = PCI_ANY_ID,
++		.setup      = pci_pericom_setup,
++	},
++	{
++		.vendor     = PCI_VENDOR_ID_ACCESIO,
++		.device     = PCI_DEVICE_ID_ACCESIO_PCIE_COM422_4,
++		.subvendor  = PCI_ANY_ID,
++		.subdevice  = PCI_ANY_ID,
++		.setup      = pci_pericom_setup,
++	},
++	{
++		.vendor     = PCI_VENDOR_ID_ACCESIO,
++		.device     = PCI_DEVICE_ID_ACCESIO_PCIE_COM485_4,
++		.subvendor  = PCI_ANY_ID,
++		.subdevice  = PCI_ANY_ID,
++		.setup      = pci_pericom_setup,
++	},
++	{
++		.vendor     = PCI_VENDOR_ID_ACCESIO,
++		.device     = PCI_DEVICE_ID_ACCESIO_PCIE_COM232_4,
++		.subvendor  = PCI_ANY_ID,
++		.subdevice  = PCI_ANY_ID,
++		.setup      = pci_pericom_setup,
++	},
++	{
++		.vendor     = PCI_VENDOR_ID_ACCESIO,
++		.device     = PCI_DEVICE_ID_ACCESIO_PCIE_COM_4SM,
++		.subvendor  = PCI_ANY_ID,
++		.subdevice  = PCI_ANY_ID,
++		.setup      = pci_pericom_setup,
++	},
++	{
++		.vendor     = PCI_VENDOR_ID_ACCESIO,
++		.device     = PCI_DEVICE_ID_ACCESIO_PCIE_ICM_4SM,
++		.subvendor  = PCI_ANY_ID,
++		.subdevice  = PCI_ANY_ID,
++		.setup      = pci_pericom_setup,
++	},
+ 	/*
+ 	 * SBS Technologies, Inc., PMC-OCTALPRO 232
+ 	 */
 
 
