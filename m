@@ -7,47 +7,55 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3F41C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:05:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E3DDC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:05:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BC0621916
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:05:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DC512082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:05:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256327;
-	bh=AX8C5EWBgznx8T2SolHXsGRoOKJV0cpm9FRgi22h1UI=;
+	s=default; t=1553256332;
+	bh=UCea0k/P3+ho5gJTRm7680R94NEB879XT11g8ZtgIk0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CeytQ/Rn2e6aYFuVEfHJCzx4oLHioTqhIxH+geheHbWu1/kz8nVTiP0svwWAgTHBH
-	 TeiwTeXVjg8Sia8LM0CP2FKycElGrxq0sP/koOA01557my1bekogoprI3U+N9H9kqi
-	 1r22e2ipWegWhGzcKvk4/hDMwH7Faduv65muUJmI=
+	b=FAqCZNrqsB2J3sAFVD9sfqqk0pyXOPlQekWMFzKLBhjG2Dn8oe3lUGaY81ne2nHin
+	 zPzoOXGy2mPIKDUyqk8rKZVotrPlXVqWemZ+e6DY5Lhc/uOoGzZBRV+TmZrW5PXL9h
+	 5rhgTwJhZkOKuDFzFYH9fDlDrzmhrBMpm2XzMAxA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388819AbfCVMF0 (ORCPT
+        id S2388827AbfCVMFa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:05:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43854 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:05:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388014AbfCVMFW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:05:22 -0400
+        id S2388813AbfCVMFZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:05:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 751E821916;
-        Fri, 22 Mar 2019 12:05:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29600206C0;
+        Fri, 22 Mar 2019 12:05:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256322;
-        bh=AX8C5EWBgznx8T2SolHXsGRoOKJV0cpm9FRgi22h1UI=;
+        s=default; t=1553256324;
+        bh=UCea0k/P3+ho5gJTRm7680R94NEB879XT11g8ZtgIk0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fg8MR+R6N2vjUBVdrruLEd34DyA9/HZPWpxiq+AS2ruzNFlBcTQVdpPwRt+NI54d1
-         a77cRadxUl+7pMfAkeLjiWZVT5yUgLx0fLaPhs3S+PaIB/4EEa2Lj8yGxA6G9Tz+bu
-         Coe0NFjlaumaozJKHg56JdCeUKyz198B7BVBQe8U=
+        b=OAAnOTAK/MF1ssTm63caNkHEhwRWHgyFxj3L5t70YqYDzd2O/JpCGEPbwBB8HK/Hb
+         L7+6Snc8tT/d45rKMedNibVMR1a7yt5rCNgbpQB8OVa/kURqLOJ6PaUDeYyulYFAd3
+         jZqAbdCIhrEdx08UJHuqA5iwzLxnDsB7Moed+/t0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Doug Berger <opendmb@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Marc Zyngier <marc.zyngier@arm.com>
-Subject: [PATCH 4.19 175/280] irqchip/brcmstb-l2: Use _irqsave locking variants in non-interrupt code
-Date:   Fri, 22 Mar 2019 12:15:28 +0100
-Message-Id: <20190322111325.438497383@linuxfoundation.org>
+        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andrea Righi <righi.andrea@gmail.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 4.19 176/280] x86/kprobes: Prohibit probing on optprobe template code
+Date:   Fri, 22 Mar 2019 12:15:29 +0100
+Message-Id: <20190322111325.658451873@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -66,68 +74,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Doug Berger <opendmb@gmail.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-commit 33517881ede742107f416533b8c3e4abc56763da upstream.
+commit 0192e6535ebe9af68614198ced4fd6d37b778ebf upstream.
 
-Using the irq_gc_lock/irq_gc_unlock functions in the suspend and
-resume functions creates the opportunity for a deadlock during
-suspend, resume, and shutdown. Using the irq_gc_lock_irqsave/
-irq_gc_unlock_irqrestore variants prevents this possible deadlock.
+Prohibit probing on optprobe template code, since it is not
+a code but a template instruction sequence. If we modify
+this template, copied template must be broken.
 
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andrea Righi <righi.andrea@gmail.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: stable@vger.kernel.org
-Fixes: 7f646e92766e2 ("irqchip: brcmstb-l2: Add Broadcom Set Top Box Level-2 interrupt controller")
-Signed-off-by: Doug Berger <opendmb@gmail.com>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-[maz: tidied up $SUBJECT]
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+Fixes: 9326638cbee2 ("kprobes, x86: Use NOKPROBE_SYMBOL() instead of __kprobes annotation")
+Link: http://lkml.kernel.org/r/154998787911.31052.15274376330136234452.stgit@devbox
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/irqchip/irq-brcmstb-l2.c |   10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ arch/x86/kernel/kprobes/opt.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/drivers/irqchip/irq-brcmstb-l2.c
-+++ b/drivers/irqchip/irq-brcmstb-l2.c
-@@ -129,8 +129,9 @@ static void brcmstb_l2_intc_suspend(stru
- 	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
- 	struct irq_chip_type *ct = irq_data_get_chip_type(d);
- 	struct brcmstb_l2_intc_data *b = gc->private;
-+	unsigned long flags;
+--- a/arch/x86/kernel/kprobes/opt.c
++++ b/arch/x86/kernel/kprobes/opt.c
+@@ -141,6 +141,11 @@ asm (
  
--	irq_gc_lock(gc);
-+	irq_gc_lock_irqsave(gc, flags);
- 	/* Save the current mask */
- 	b->saved_mask = irq_reg_readl(gc, ct->regs.mask);
+ void optprobe_template_func(void);
+ STACK_FRAME_NON_STANDARD(optprobe_template_func);
++NOKPROBE_SYMBOL(optprobe_template_func);
++NOKPROBE_SYMBOL(optprobe_template_entry);
++NOKPROBE_SYMBOL(optprobe_template_val);
++NOKPROBE_SYMBOL(optprobe_template_call);
++NOKPROBE_SYMBOL(optprobe_template_end);
  
-@@ -139,7 +140,7 @@ static void brcmstb_l2_intc_suspend(stru
- 		irq_reg_writel(gc, ~gc->wake_active, ct->regs.disable);
- 		irq_reg_writel(gc, gc->wake_active, ct->regs.enable);
- 	}
--	irq_gc_unlock(gc);
-+	irq_gc_unlock_irqrestore(gc, flags);
- }
- 
- static void brcmstb_l2_intc_resume(struct irq_data *d)
-@@ -147,8 +148,9 @@ static void brcmstb_l2_intc_resume(struc
- 	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
- 	struct irq_chip_type *ct = irq_data_get_chip_type(d);
- 	struct brcmstb_l2_intc_data *b = gc->private;
-+	unsigned long flags;
- 
--	irq_gc_lock(gc);
-+	irq_gc_lock_irqsave(gc, flags);
- 	if (ct->chip.irq_ack) {
- 		/* Clear unmasked non-wakeup interrupts */
- 		irq_reg_writel(gc, ~b->saved_mask & ~gc->wake_active,
-@@ -158,7 +160,7 @@ static void brcmstb_l2_intc_resume(struc
- 	/* Restore the saved mask */
- 	irq_reg_writel(gc, b->saved_mask, ct->regs.disable);
- 	irq_reg_writel(gc, ~b->saved_mask, ct->regs.enable);
--	irq_gc_unlock(gc);
-+	irq_gc_unlock_irqrestore(gc, flags);
- }
- 
- static int __init brcmstb_l2_intc_of_init(struct device_node *np,
+ #define TMPL_MOVE_IDX \
+ 	((long)optprobe_template_val - (long)optprobe_template_entry)
 
 
