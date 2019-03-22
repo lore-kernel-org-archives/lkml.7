@@ -2,171 +2,128 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A06A3C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 08:58:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B77C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 09:00:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 707B021873
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 08:58:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wkKVUjVB"
+	by mail.kernel.org (Postfix) with ESMTP id 69811218FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 09:00:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727875AbfCVI6V (ORCPT
+        id S1727780AbfCVJAn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 04:58:21 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:36470 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726029AbfCVI6S (ORCPT
+        Fri, 22 Mar 2019 05:00:43 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:55445 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727440AbfCVJAm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 04:58:18 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2M8wHGo041587
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 03:58:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1553245097;
-        bh=BN1y5tO/T5qwrbeB/Wmll4SJ1P6DeeeoG+PEijbfj1o=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=wkKVUjVBquAvr7RwQ1IM+NOIKblYPgezjyf+KlsZR6kMExpqsjlk/iTlGkPs3orme
-         881u//n5qDYTToOr/J0PXJoGBh3DdSwSOUi3fys/PUZJSQP4dW/wELGzdr9weDDqmG
-         myHlWOi8oRc40fBsS40/3n+j2EJXBTmoCZ1WA08o=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2M8wHT4065709
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL)
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 03:58:17 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 22
- Mar 2019 03:58:16 -0500
-Received: from dflp32.itg.ti.com (10.64.6.15) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_0,
- cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5 via Frontend Transport;
- Fri, 22 Mar 2019 03:58:16 -0500
-Received: from lta0400828d.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by dflp32.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2M8w9b9016866;
-        Fri, 22 Mar 2019 03:58:15 -0500
-From:   Roger Quadros <rogerq@ti.com>
-To:     <kishon@ti.com>
-CC:     <nsekhar@ti.com>, <vigneshr@ti.com>,
-        <linux-kernel@vger.kernel.org>, Roger Quadros <rogerq@ti.com>
-Subject: [PATCH 3/4] phy: ti-pipe3: Fix SATA & USB PHY power up sequence
-Date:   Fri, 22 Mar 2019 10:58:06 +0200
-Message-ID: <20190322085807.30216-4-rogerq@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190322085807.30216-1-rogerq@ti.com>
-References: <20190322085807.30216-1-rogerq@ti.com>
+        Fri, 22 Mar 2019 05:00:42 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 6B248804EB; Fri, 22 Mar 2019 10:00:31 +0100 (CET)
+Date:   Fri, 22 Mar 2019 10:00:38 +0100
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-pm@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [RESEND PATCH v6 02/11] dt-bindings: power: supply: add DT
+ bindings for max77650
+Message-ID: <20190322090038.GE27015@amd>
+References: <20190318174040.17899-1-brgl@bgdev.pl>
+ <20190318174040.17899-3-brgl@bgdev.pl>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="3O1VwFp74L81IIeR"
+Content-Disposition: inline
+In-Reply-To: <20190318174040.17899-3-brgl@bgdev.pl>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As per "Table 26-7. SATA PHY Subsystem Low-Level Programming Sequence"
-in TRM [1] we need to turn on SATA_PHY_TX before SATA_PHY_RX.
 
-[1] DRA75x, DRA74x TRM - http://www.ti.com/lit/ug/sprui30f/sprui30f.pdf
+--3O1VwFp74L81IIeR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Roger Quadros <rogerq@ti.com>
----
- drivers/phy/ti/phy-ti-pipe3.c | 44 ++++++++++++++++++++++++-----------
- 1 file changed, 30 insertions(+), 14 deletions(-)
+On Mon 2019-03-18 18:40:31, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>=20
+> Add the DT binding document for the battery charger module of max77650.
+>=20
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
+>  .../power/supply/max77650-charger.txt         | 27 +++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/supply/max776=
+50-charger.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/power/supply/max77650-char=
+ger.txt b/Documentation/devicetree/bindings/power/supply/max77650-charger.t=
+xt
+> new file mode 100644
+> index 000000000000..d25c95369616
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/supply/max77650-charger.txt
+> @@ -0,0 +1,27 @@
+> +Battery charger driver for MAX77650 PMIC from Maxim Integrated.
+> +
+> +This module is part of the MAX77650 MFD device. For more details
+> +see Documentation/devicetree/bindings/mfd/max77650.txt.
+> +
+> +The charger is represented as a sub-node of the PMIC node on the device =
+tree.
+> +
+> +Required properties:
+> +--------------------
+> +- compatible:		Must be "maxim,max77650-charger"
+> +
+> +Optional properties:
+> +--------------------
+> +- min-microvolt:	Minimum CHGIN regulation voltage (in microvolts). Must =
+be
+> +			one of: 4000000, 4100000, 4200000, 4300000, 4400000,
+> +			4500000, 4600000, 4700000.
 
-diff --git a/drivers/phy/ti/phy-ti-pipe3.c b/drivers/phy/ti/phy-ti-pipe3.c
-index cdc994f153b2..71a7634c026d 100644
---- a/drivers/phy/ti/phy-ti-pipe3.c
-+++ b/drivers/phy/ti/phy-ti-pipe3.c
-@@ -56,14 +56,14 @@
- 
- #define SATA_PLL_SOFT_RESET	BIT(18)
- 
--#define PIPE3_PHY_PWRCTL_CLK_CMD_MASK	0x003FC000
-+#define PIPE3_PHY_PWRCTL_CLK_CMD_MASK	GENMASK(21, 14)
- #define PIPE3_PHY_PWRCTL_CLK_CMD_SHIFT	14
- 
--#define PIPE3_PHY_PWRCTL_CLK_FREQ_MASK	0xFFC00000
-+#define PIPE3_PHY_PWRCTL_CLK_FREQ_MASK	GENMASK(31, 22)
- #define PIPE3_PHY_PWRCTL_CLK_FREQ_SHIFT	22
- 
--#define PIPE3_PHY_TX_RX_POWERON		0x3
--#define PIPE3_PHY_TX_RX_POWEROFF	0x0
-+#define PIPE3_PHY_RX_POWERON       (0x1 << PIPE3_PHY_PWRCTL_CLK_CMD_SHIFT)
-+#define PIPE3_PHY_TX_POWERON       (0x2 << PIPE3_PHY_PWRCTL_CLK_CMD_SHIFT)
- 
- #define PCIE_PCS_MASK			0xFF0000
- #define PCIE_PCS_DELAY_COUNT_SHIFT	0x10
-@@ -328,7 +328,6 @@ static void ti_pipe3_disable_clocks(struct ti_pipe3 *phy);
- 
- static int ti_pipe3_power_off(struct phy *x)
- {
--	u32 val;
- 	int ret;
- 	struct ti_pipe3 *phy = phy_get_drvdata(x);
- 
-@@ -337,10 +336,8 @@ static int ti_pipe3_power_off(struct phy *x)
- 		return 0;
- 	}
- 
--	val = PIPE3_PHY_TX_RX_POWEROFF << PIPE3_PHY_PWRCTL_CLK_CMD_SHIFT;
--
- 	ret = regmap_update_bits(phy->phy_power_syscon, phy->power_reg,
--				 PIPE3_PHY_PWRCTL_CLK_CMD_MASK, val);
-+				 PIPE3_PHY_PWRCTL_CLK_CMD_MASK, 0);
- 	return ret;
- }
- 
-@@ -351,6 +348,7 @@ static int ti_pipe3_power_on(struct phy *x)
- 	int ret;
- 	unsigned long rate;
- 	struct ti_pipe3 *phy = phy_get_drvdata(x);
-+	bool rx_pending = false;
- 
- 	if (!phy->phy_power_syscon) {
- 		omap_control_phy_power(phy->control_dev, 1);
-@@ -363,14 +361,32 @@ static int ti_pipe3_power_on(struct phy *x)
- 		return -EINVAL;
- 	}
- 	rate = rate / 1000000;
--	mask = OMAP_CTRL_PIPE3_PHY_PWRCTL_CLK_CMD_MASK |
--		  OMAP_CTRL_PIPE3_PHY_PWRCTL_CLK_FREQ_MASK;
--	val = PIPE3_PHY_TX_RX_POWERON << PIPE3_PHY_PWRCTL_CLK_CMD_SHIFT;
--	val |= rate << OMAP_CTRL_PIPE3_PHY_PWRCTL_CLK_FREQ_SHIFT;
--
-+	mask = OMAP_CTRL_PIPE3_PHY_PWRCTL_CLK_FREQ_MASK;
-+	val = rate << OMAP_CTRL_PIPE3_PHY_PWRCTL_CLK_FREQ_SHIFT;
- 	ret = regmap_update_bits(phy->phy_power_syscon, phy->power_reg,
- 				 mask, val);
--	return ret;
-+	/*
-+	 * For PCIe, TX and RX must be powered on simultaneously.
-+	 * For USB and SATA, TX must be powered on before RX
-+	 */
-+	mask = OMAP_CTRL_PIPE3_PHY_PWRCTL_CLK_CMD_MASK;
-+	if (phy->mode == PIPE3_MODE_SATA || phy->mode == PIPE3_MODE_USBSS) {
-+		val = PIPE3_PHY_TX_POWERON;
-+		rx_pending = true;
-+	} else {
-+		val = PIPE3_PHY_TX_POWERON | PIPE3_PHY_RX_POWERON;
-+	}
-+
-+	regmap_update_bits(phy->phy_power_syscon, phy->power_reg,
-+			   mask, val);
-+
-+	if (rx_pending) {
-+		val = PIPE3_PHY_TX_POWERON | PIPE3_PHY_RX_POWERON;
-+		regmap_update_bits(phy->phy_power_syscon, phy->power_reg,
-+				   mask, val);
-+	}
-+
-+	return 0;
- }
- 
- static int ti_pipe3_dpll_wait_lock(struct ti_pipe3 *phy)
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Probably needs "max," prefix. And .. what does this mean? Will charger
+shutdown if input is less than this?
 
+> +- curr-lim-microamp:	CHGIN input current limit (in microamps). Must be o=
+ne of:
+> +			95000, 190000, 285000, 380000, 475000.
+
+"current-limit-microamp", I guess. And probably "max,current-limit-microamp=
+".
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--3O1VwFp74L81IIeR
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlyUpDYACgkQMOfwapXb+vIY0QCfbYMaCaIRAIPQST9ZtnsrBIG3
+cCQAmwRQDdMkMze5VjKunCXayPVw/2Zx
+=6G1s
+-----END PGP SIGNATURE-----
+
+--3O1VwFp74L81IIeR--
