@@ -4,53 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA086C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:10:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C25E5C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:10:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 956DA2183E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:10:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 840D22183E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:10:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553260234;
-	bh=mbRQdXsdkCaFliX0FG6KRvpfNBcoPVWX20HdIk4peD0=;
+	s=default; t=1553260238;
+	bh=wNG4OR0wEqkw1OhZm2xLYG6BEXk46yf6Dsskb5a6Ins=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yk6pKUvZKZZ7ImSPd2MBuVaX5Ioe8xTicYzIfpxUR8I5/ZxYfn8NMt+Y1mT/rfBUM
-	 tYTKCKMQ+Tr0ERCT6RzlGy7AbDuftgbsvqOH0fg7zDg9rtSF2mjLzY5prVshO5Bpld
-	 UPnpvqFEVUz60C8jUcR8lKIQbnleodx13H2LRAxQ=
+	b=kZ/Z8BAd1Q1GBVwbyjfLo8bphiFOFHLEMpGXa0DssnhxU241LbJBUrV+0NpWvxUXd
+	 iZhbAV+bt15ZadjnCeubkelb/bont35drBwLCGrOgBbocrfHBUyPbYb4YQxwq/dWMx
+	 Upa/Diqor/GI+G0gF+G2jAPipbSzj04oc1NPFwuo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730348AbfCVLd7 (ORCPT
+        id S1730338AbfCVLd5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:33:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34430 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:33:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729745AbfCVLdz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:33:55 -0400
+        id S1729953AbfCVLdw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:33:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F17532183E;
-        Fri, 22 Mar 2019 11:33:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3223E20449;
+        Fri, 22 Mar 2019 11:33:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254434;
-        bh=mbRQdXsdkCaFliX0FG6KRvpfNBcoPVWX20HdIk4peD0=;
+        s=default; t=1553254430;
+        bh=wNG4OR0wEqkw1OhZm2xLYG6BEXk46yf6Dsskb5a6Ins=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q9vcwYnnuG24/lBx/skSzRR+wDshIJrNEEQdBnuhZufUpeEoesCeAxspZmEdjKuRh
-         YZMInQpOUNt7VO9Aer+gneYsoDN6uzktjUddjNwZTY081KYEDRwnQXJGUiOf6EpZKc
-         3FRUdKbeOcZv0eBP+HRm3QQTyoHjJeRLQ/5vNMcI=
+        b=VjN/vkDpta90/UOBA1FgjQjaQ8pzbVia0StMUZ1EbOxdUOpnq35BTk5We5+4rGAzh
+         Of7TuTwzBNKXzeEVUDF1FIgsw9AAFujVs/9Nv5rZO0vb7TyFplT9MChNM65WiTPl1s
+         iylQWxpd+MpPEhugob4hmg2Urz3pfQApFJbGux1Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Benjamin LaHaise <bcrl@kvack.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Zubin Mithra <zsm@chromium.org>
-Subject: [PATCH 4.4 119/230] udplite: call proper backlog handlers
-Date:   Fri, 22 Mar 2019 12:14:17 +0100
-Message-Id: <20190322111245.019934032@linuxfoundation.org>
+        stable@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Javier Martinez Canillas <javier@osg.samsung.com>,
+        Anand Moon <linux.amoon@gmail.com>
+Subject: [PATCH 4.4 118/230] ARM: dts: exynos: Do not ignore real-world fuse values for thermal zone 0 on Exynos5420
+Date:   Fri, 22 Mar 2019 12:14:16 +0100
+Message-Id: <20190322111244.935498203@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -69,109 +68,125 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Eric Dumazet <edumazet@google.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 
-commit 30c7be26fd3587abcb69587f781098e3ca2d565b upstream.
+commit 28928a3ce142b2e4e5a7a0f067cefb41a3d2c3f9 upstream.
 
-In commits 93821778def10 ("udp: Fix rcv socket locking") and
-f7ad74fef3af ("net/ipv6/udp: UDP encapsulation: break backlog_rcv into
-__udpv6_queue_rcv_skb") UDP backlog handlers were renamed, but UDPlite
-was forgotten.
+In Odroid XU3 Lite board, the temperature levels reported for thermal
+zone 0 were weird. In warm room:
+	/sys/class/thermal/thermal_zone0/temp:32000
+	/sys/class/thermal/thermal_zone1/temp:51000
+	/sys/class/thermal/thermal_zone2/temp:55000
+	/sys/class/thermal/thermal_zone3/temp:54000
+	/sys/class/thermal/thermal_zone4/temp:51000
 
-This leads to crashes if UDPlite header is pulled twice, which happens
-starting from commit e6afc8ace6dd ("udp: remove headers from UDP packets
-before queueing")
+Sometimes after booting the value was even equal to ambient temperature
+which is highly unlikely to be a real temperature of sensor in SoC.
 
-Bug found by syzkaller team, thanks a lot guys !
+The thermal sensor's calibration (trimming) is based on fused values.
+In case of the board above, the fused values are: 35, 52, 43, 58 and 43
+(corresponding to each TMU device).  However driver defined a minimum value
+for fused data as 40 and for smaller values it was using a hard-coded 55
+instead.  This lead to mapping data from sensor to wrong temperatures
+for thermal zone 0.
 
-Note that backlog use in UDP/UDPlite is scheduled to be removed starting
-from linux-4.10, so this patch is only needed up to linux-4.9
+Various vendor 3.10 trees (Hardkernel's based on Samsung LSI, Artik 10)
+do not impose any limits on fused values.  Since we do not have any
+knowledge about these limits, use 0 as a minimum accepted fused value.
+This should essentially allow accepting any reasonable fused value thus
+behaving like vendor driver.
 
-Fixes: 93821778def1 ("udp: Fix rcv socket locking")
-Fixes: f7ad74fef3af ("net/ipv6/udp: UDP encapsulation: break backlog_rcv into __udpv6_queue_rcv_skb")
-Fixes: e6afc8ace6dd ("udp: remove headers from UDP packets before queueing")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: Andrey Konovalov <andreyknvl@google.com>
-Cc: Benjamin LaHaise <bcrl@kvack.org>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Cc: Zubin Mithra <zsm@chromium.org>
+The exynos5420-tmu-sensor-conf.dtsi is copied directly from existing
+exynos4412 with one change - the samsung,tmu_min_efuse_value.
+
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Acked-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Acked-by: Eduardo Valentin <edubezval@gmail.com>
+Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
+Tested-by: Javier Martinez Canillas <javier@osg.samsung.com>
+Reviewed-by: Anand Moon <linux.amoon@gmail.com>
+Tested-by: Anand Moon <linux.amoon@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/ipv4/udp.c      |    2 +-
- net/ipv4/udp_impl.h |    2 +-
- net/ipv4/udplite.c  |    2 +-
- net/ipv6/udp.c      |    2 +-
- net/ipv6/udp_impl.h |    2 +-
- net/ipv6/udplite.c  |    2 +-
- 6 files changed, 6 insertions(+), 6 deletions(-)
+ arch/arm/boot/dts/exynos5420-tmu-sensor-conf.dtsi |   25 ++++++++++++++++++++++
+ arch/arm/boot/dts/exynos5420.dtsi                 |   10 ++++----
+ 2 files changed, 30 insertions(+), 5 deletions(-)
 
---- a/net/ipv4/udp.c
-+++ b/net/ipv4/udp.c
-@@ -1463,7 +1463,7 @@ static void udp_v4_rehash(struct sock *s
- 	udp_lib_rehash(sk, new_hash);
- }
+--- /dev/null
++++ b/arch/arm/boot/dts/exynos5420-tmu-sensor-conf.dtsi
+@@ -0,0 +1,25 @@
++/*
++ * Device tree sources for Exynos5420 TMU sensor configuration
++ *
++ * Copyright (c) 2014 Lukasz Majewski <l.majewski@samsung.com>
++ * Copyright (c) 2017 Krzysztof Kozlowski <krzk@kernel.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ */
++
++#include <dt-bindings/thermal/thermal_exynos.h>
++
++#thermal-sensor-cells = <0>;
++samsung,tmu_gain = <8>;
++samsung,tmu_reference_voltage = <16>;
++samsung,tmu_noise_cancel_mode = <4>;
++samsung,tmu_efuse_value = <55>;
++samsung,tmu_min_efuse_value = <0>;
++samsung,tmu_max_efuse_value = <100>;
++samsung,tmu_first_point_trim = <25>;
++samsung,tmu_second_point_trim = <85>;
++samsung,tmu_default_temp_offset = <50>;
++samsung,tmu_cal_type = <TYPE_ONE_POINT_TRIMMING>;
+--- a/arch/arm/boot/dts/exynos5420.dtsi
++++ b/arch/arm/boot/dts/exynos5420.dtsi
+@@ -777,7 +777,7 @@
+ 		interrupts = <0 65 0>;
+ 		clocks = <&clock CLK_TMU>;
+ 		clock-names = "tmu_apbif";
+-		#include "exynos4412-tmu-sensor-conf.dtsi"
++		#include "exynos5420-tmu-sensor-conf.dtsi"
+ 	};
  
--static int __udp_queue_rcv_skb(struct sock *sk, struct sk_buff *skb)
-+int __udp_queue_rcv_skb(struct sock *sk, struct sk_buff *skb)
- {
- 	int rc;
+ 	tmu_cpu1: tmu@10064000 {
+@@ -786,7 +786,7 @@
+ 		interrupts = <0 183 0>;
+ 		clocks = <&clock CLK_TMU>;
+ 		clock-names = "tmu_apbif";
+-		#include "exynos4412-tmu-sensor-conf.dtsi"
++		#include "exynos5420-tmu-sensor-conf.dtsi"
+ 	};
  
---- a/net/ipv4/udp_impl.h
-+++ b/net/ipv4/udp_impl.h
-@@ -25,7 +25,7 @@ int udp_recvmsg(struct sock *sk, struct
- 		int flags, int *addr_len);
- int udp_sendpage(struct sock *sk, struct page *page, int offset, size_t size,
- 		 int flags);
--int udp_queue_rcv_skb(struct sock *sk, struct sk_buff *skb);
-+int __udp_queue_rcv_skb(struct sock *sk, struct sk_buff *skb);
- void udp_destroy_sock(struct sock *sk);
+ 	tmu_cpu2: tmu@10068000 {
+@@ -795,7 +795,7 @@
+ 		interrupts = <0 184 0>;
+ 		clocks = <&clock CLK_TMU>, <&clock CLK_TMU>;
+ 		clock-names = "tmu_apbif", "tmu_triminfo_apbif";
+-		#include "exynos4412-tmu-sensor-conf.dtsi"
++		#include "exynos5420-tmu-sensor-conf.dtsi"
+ 	};
  
- #ifdef CONFIG_PROC_FS
---- a/net/ipv4/udplite.c
-+++ b/net/ipv4/udplite.c
-@@ -50,7 +50,7 @@ struct proto 	udplite_prot = {
- 	.sendmsg	   = udp_sendmsg,
- 	.recvmsg	   = udp_recvmsg,
- 	.sendpage	   = udp_sendpage,
--	.backlog_rcv	   = udp_queue_rcv_skb,
-+	.backlog_rcv	   = __udp_queue_rcv_skb,
- 	.hash		   = udp_lib_hash,
- 	.unhash		   = udp_lib_unhash,
- 	.get_port	   = udp_v4_get_port,
---- a/net/ipv6/udp.c
-+++ b/net/ipv6/udp.c
-@@ -585,7 +585,7 @@ out:
- 	sock_put(sk);
- }
+ 	tmu_cpu3: tmu@1006c000 {
+@@ -804,7 +804,7 @@
+ 		interrupts = <0 185 0>;
+ 		clocks = <&clock CLK_TMU>, <&clock CLK_TMU_GPU>;
+ 		clock-names = "tmu_apbif", "tmu_triminfo_apbif";
+-		#include "exynos4412-tmu-sensor-conf.dtsi"
++		#include "exynos5420-tmu-sensor-conf.dtsi"
+ 	};
  
--static int __udpv6_queue_rcv_skb(struct sock *sk, struct sk_buff *skb)
-+int __udpv6_queue_rcv_skb(struct sock *sk, struct sk_buff *skb)
- {
- 	int rc;
+ 	tmu_gpu: tmu@100a0000 {
+@@ -813,7 +813,7 @@
+ 		interrupts = <0 215 0>;
+ 		clocks = <&clock CLK_TMU_GPU>, <&clock CLK_TMU>;
+ 		clock-names = "tmu_apbif", "tmu_triminfo_apbif";
+-		#include "exynos4412-tmu-sensor-conf.dtsi"
++		#include "exynos5420-tmu-sensor-conf.dtsi"
+ 	};
  
---- a/net/ipv6/udp_impl.h
-+++ b/net/ipv6/udp_impl.h
-@@ -26,7 +26,7 @@ int compat_udpv6_getsockopt(struct sock
- int udpv6_sendmsg(struct sock *sk, struct msghdr *msg, size_t len);
- int udpv6_recvmsg(struct sock *sk, struct msghdr *msg, size_t len, int noblock,
- 		  int flags, int *addr_len);
--int udpv6_queue_rcv_skb(struct sock *sk, struct sk_buff *skb);
-+int __udpv6_queue_rcv_skb(struct sock *sk, struct sk_buff *skb);
- void udpv6_destroy_sock(struct sock *sk);
- 
- void udp_v6_clear_sk(struct sock *sk, int size);
---- a/net/ipv6/udplite.c
-+++ b/net/ipv6/udplite.c
-@@ -45,7 +45,7 @@ struct proto udplitev6_prot = {
- 	.getsockopt	   = udpv6_getsockopt,
- 	.sendmsg	   = udpv6_sendmsg,
- 	.recvmsg	   = udpv6_recvmsg,
--	.backlog_rcv	   = udpv6_queue_rcv_skb,
-+	.backlog_rcv	   = __udpv6_queue_rcv_skb,
- 	.hash		   = udp_lib_hash,
- 	.unhash		   = udp_lib_unhash,
- 	.get_port	   = udp_v6_get_port,
+ 	thermal-zones {
 
 
