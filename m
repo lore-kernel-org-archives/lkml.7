@@ -2,84 +2,150 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB08C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:28:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41FE3C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:29:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94BF920685
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:28:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12F202070D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:29:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553257756;
+	bh=4wFGEqJ6d6OFOkcdpMbWXp9jMZNlTnG6IefVATmLhnk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=imOBrVO8F70+wED9KV/nU5JdcqR3TeCengfMAyMoRhwDPUUEXm/dLarVdNBbWjNAj
+	 dHhwi9WrOLXha1c93AsQtO3F8KFEXckzgQRXfTVLqxq3Fuq9n2PD1VntnzPgEaUdlQ
+	 RLOpwZm1RT2oZ13UgtkZr7Ik2qrYjE7fLTtFDOwI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390908AbfCVM26 (ORCPT
+        id S2390844AbfCVM3P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:28:58 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:43406 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389942AbfCVM2z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:28:55 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6A90B374;
-        Fri, 22 Mar 2019 05:28:55 -0700 (PDT)
-Received: from [10.37.13.63] (unknown [10.37.13.63])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 244153F614;
-        Fri, 22 Mar 2019 05:28:53 -0700 (PDT)
-Subject: Re: [PATCH -next] coresight: catu: Make catu_helper_ops and catu_ops
- static
-To:     yuehaibing@huawei.com, mathieu.poirier@linaro.org,
-        alexander.shishkin@linux.intel.com
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20190321151852.10216-1-yuehaibing@huawei.com>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-Message-ID: <607f4a17-34ca-86ae-e0c4-c5bfb9fc11c2@arm.com>
-Date:   Fri, 22 Mar 2019 12:31:07 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.7.0
+        Fri, 22 Mar 2019 08:29:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58528 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390620AbfCVMTe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:19:34 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D96C2054F;
+        Fri, 22 Mar 2019 12:19:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553257172;
+        bh=4wFGEqJ6d6OFOkcdpMbWXp9jMZNlTnG6IefVATmLhnk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=uIaH86LBMs2RDfehSAqEiSzhAkAAThL5Brri/ZLe36hxt1bZrO2WCyHyOEdOLC7yh
+         24Pb2qbDeVGdW1GDiwNrGkMB5fauojhDSqJe1oCcL1uGye3xHLjozovCCSuh3sToNL
+         OpzHYuWwiSrulqsQYkHcipbPeTNkDtV9RaNlDJ/E=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, "zhangyi (F)" <yi.zhang@huawei.com>,
+        Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.cz>
+Subject: [PATCH 5.0 153/238] jbd2: fix compile warning when using JBUFFER_TRACE
+Date:   Fri, 22 Mar 2019 12:16:12 +0100
+Message-Id: <20190322111307.369951651@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
+References: <20190322111258.383569278@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-In-Reply-To: <20190321151852.10216-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/21/2019 03:18 PM, Yue Haibing wrote:
-> From: YueHaibing <yuehaibing@huawei.com>
-> 
-> Fix sparse warnings:
-> 
-> drivers/hwtracing/coresight/coresight-catu.c:488:35: warning:
->   symbol 'catu_helper_ops' was not declared. Should it be static?
-> drivers/hwtracing/coresight/coresight-catu.c:493:28: warning:
->   symbol 'catu_ops' was not declared. Should it be static?
-> 
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->   drivers/hwtracing/coresight/coresight-catu.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/hwtracing/coresight/coresight-catu.c b/drivers/hwtracing/coresight/coresight-catu.c
-> index 170fbb6..057627a 100644
-> --- a/drivers/hwtracing/coresight/coresight-catu.c
-> +++ b/drivers/hwtracing/coresight/coresight-catu.c
-> @@ -485,12 +485,12 @@ static int catu_disable(struct coresight_device *csdev, void *__unused)
->   	return rc;
->   }
->   
-> -const struct coresight_ops_helper catu_helper_ops = {
-> +static const struct coresight_ops_helper catu_helper_ops = {
->   	.enable = catu_enable,
->   	.disable = catu_disable,
->   };
->   
-> -const struct coresight_ops catu_ops = {
-> +static const struct coresight_ops catu_ops = {
->   	.helper_ops = &catu_helper_ops,
->   };
->   
-> 
+5.0-stable review patch.  If anyone has any objections, please let me know.
 
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+------------------
+
+From: zhangyi (F) <yi.zhang@huawei.com>
+
+commit 01215d3edb0f384ddeaa5e4a22c1ae5ff634149f upstream.
+
+The jh pointer may be used uninitialized in the two cases below and the
+compiler complain about it when enabling JBUFFER_TRACE macro, fix them.
+
+In file included from fs/jbd2/transaction.c:19:0:
+fs/jbd2/transaction.c: In function ‘jbd2_journal_get_undo_access’:
+./include/linux/jbd2.h:1637:38: warning: ‘jh’ is used uninitialized in this function [-Wuninitialized]
+ #define JBUFFER_TRACE(jh, info) do { printk("%s: %d\n", __func__, jh->b_jcount);} while (0)
+                                      ^
+fs/jbd2/transaction.c:1219:23: note: ‘jh’ was declared here
+  struct journal_head *jh;
+                       ^
+In file included from fs/jbd2/transaction.c:19:0:
+fs/jbd2/transaction.c: In function ‘jbd2_journal_dirty_metadata’:
+./include/linux/jbd2.h:1637:38: warning: ‘jh’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+ #define JBUFFER_TRACE(jh, info) do { printk("%s: %d\n", __func__, jh->b_jcount);} while (0)
+                                      ^
+fs/jbd2/transaction.c:1332:23: note: ‘jh’ was declared here
+  struct journal_head *jh;
+                       ^
+
+Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Cc: stable@vger.kernel.org
+Reviewed-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ fs/jbd2/transaction.c |   16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+--- a/fs/jbd2/transaction.c
++++ b/fs/jbd2/transaction.c
+@@ -1252,11 +1252,12 @@ int jbd2_journal_get_undo_access(handle_
+ 	struct journal_head *jh;
+ 	char *committed_data = NULL;
+ 
+-	JBUFFER_TRACE(jh, "entry");
+ 	if (jbd2_write_access_granted(handle, bh, true))
+ 		return 0;
+ 
+ 	jh = jbd2_journal_add_journal_head(bh);
++	JBUFFER_TRACE(jh, "entry");
++
+ 	/*
+ 	 * Do this first --- it can drop the journal lock, so we want to
+ 	 * make sure that obtaining the committed_data is done
+@@ -1367,15 +1368,17 @@ int jbd2_journal_dirty_metadata(handle_t
+ 
+ 	if (is_handle_aborted(handle))
+ 		return -EROFS;
+-	if (!buffer_jbd(bh)) {
+-		ret = -EUCLEAN;
+-		goto out;
+-	}
++	if (!buffer_jbd(bh))
++		return -EUCLEAN;
++
+ 	/*
+ 	 * We don't grab jh reference here since the buffer must be part
+ 	 * of the running transaction.
+ 	 */
+ 	jh = bh2jh(bh);
++	jbd_debug(5, "journal_head %p\n", jh);
++	JBUFFER_TRACE(jh, "entry");
++
+ 	/*
+ 	 * This and the following assertions are unreliable since we may see jh
+ 	 * in inconsistent state unless we grab bh_state lock. But this is
+@@ -1409,9 +1412,6 @@ int jbd2_journal_dirty_metadata(handle_t
+ 	}
+ 
+ 	journal = transaction->t_journal;
+-	jbd_debug(5, "journal_head %p\n", jh);
+-	JBUFFER_TRACE(jh, "entry");
+-
+ 	jbd_lock_bh_state(bh);
+ 
+ 	if (jh->b_modified == 0) {
+
+
