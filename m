@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21DCBC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:52:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D67B6C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:52:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6FC62082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:52:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2A8D2082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:52:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553259127;
-	bh=qD6Ad7WrzaDWjJaJaqP4V/VFCSLpm62H6o0p/XpYuYA=;
+	s=default; t=1553259144;
+	bh=lwxJepbfjhZ9cN0ewxbJHfURHWPd+arRGY2DE3Gh02w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wcwjEwRbF/XOh1Xcpjo/vkZrhImFPigI61kjiKiEYPrEw5U/iB/aapnZaxt5L2HfJ
-	 uwUhaUmafRqNSIxo1mYavv8oWJ2hM/NMdchM2NBkyjiqI06jpAAI1sxiqaXvZXq5FW
-	 N/NRnPbD2kjVgwwrpMkZhn235CNXb0sITnMCrt3A=
+	b=ab0/G4pEtVXQI21sqBTrC4LgJyYcxRzGVcTfReHNP3c6RBM75KvCcibUOmEjENu9r
+	 ug9aY6h+cyyykmGsA2zPCcP0za+F7D7+wWmbdi9edbG8DBX+/B8DMoykILzHdGEtMN
+	 qSiIpJO87wU3ijcJrowzq14ga35avHSqJtkvAO5k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733104AbfCVLxz (ORCPT
+        id S1732920AbfCVMwX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:53:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58110 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:52:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732910AbfCVLxt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:53:49 -0400
+        id S1733030AbfCVLxZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:53:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7068D20850;
-        Fri, 22 Mar 2019 11:53:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48D542082C;
+        Fri, 22 Mar 2019 11:53:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255628;
-        bh=qD6Ad7WrzaDWjJaJaqP4V/VFCSLpm62H6o0p/XpYuYA=;
+        s=default; t=1553255604;
+        bh=lwxJepbfjhZ9cN0ewxbJHfURHWPd+arRGY2DE3Gh02w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JceM8qRK6mkwn31qOzhTWbMCNB3F1SMckhURMF6gavSrdCDmrQi1jZKHeNTuEHCww
-         pVhxIxPUQs+b/Or/+nD03uDPXxP5TTaM4AzUrG8EyG/esI2j1B9zIM2IgQ7uX5uKe1
-         pyEDwknCO0N2s6+txXSJnXxQyWlDG/Hf5sh4Un8g=
+        b=cwcBERKBWzD4UUP7qG/kpkmjlFpeeJ6LmQrFomDlzbyKOCDAdgYTdlmzODrFHVojn
+         DMTvexo70J5adsHWSchmq2eMT9Stq45tT13ML284NHCJafszu78/KuTTX2iFv/XIjX
+         XVi0Cqt6odXHj9+QIkPig2GGT3zcATFQgvQXr+Os=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: [PATCH 4.14 149/183] arm64: debug: Ensure debug handlers check triggering exception level
-Date:   Fri, 22 Mar 2019 12:16:17 +0100
-Message-Id: <20190322111252.631003777@linuxfoundation.org>
+        stable@vger.kernel.org, Jay Dolan <jay.dolan@accesio.com>
+Subject: [PATCH 4.14 134/183] serial: 8250_pci: Have ACCES cards that use the four port Pericom PI7C9X7954 chip use the pci_pericom_setup()
+Date:   Fri, 22 Mar 2019 12:16:02 +0100
+Message-Id: <20190322111251.457729630@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111241.819468003@linuxfoundation.org>
 References: <20190322111241.819468003@linuxfoundation.org>
@@ -66,93 +64,135 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Will Deacon <will.deacon@arm.com>
+From: Jay Dolan <jay.dolan@accesio.com>
 
-commit 6bd288569b50bc89fa5513031086746968f585cb upstream.
+commit 78d3820b9bd39028727c6aab7297b63c093db343 upstream.
 
-Debug exception handlers may be called for exceptions generated both by
-user and kernel code. In many cases, this is checked explicitly, but
-in other cases things either happen to work by happy accident or they
-go slightly wrong. For example, executing 'brk #4' from userspace will
-enter the kprobes code and be ignored, but the instruction will be
-retried forever in userspace instead of delivering a SIGTRAP.
+The four port Pericom chips have the fourth port at the wrong address.
+Make use of quirk to fix it.
 
-Fix this issue in the most stable-friendly fashion by simply adding
-explicit checks of the triggering exception level to all of our debug
-exception handlers.
-
-Cc: <stable@vger.kernel.org>
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Fixes: c8d192428f52 ("serial: 8250: added acces i/o products quad and octal serial cards")
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Jay Dolan <jay.dolan@accesio.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/kernel/kgdb.c           |   14 ++++++++++----
- arch/arm64/kernel/probes/kprobes.c |    6 ++++++
- 2 files changed, 16 insertions(+), 4 deletions(-)
+ drivers/tty/serial/8250/8250_pci.c |  105 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 105 insertions(+)
 
---- a/arch/arm64/kernel/kgdb.c
-+++ b/arch/arm64/kernel/kgdb.c
-@@ -233,27 +233,33 @@ int kgdb_arch_handle_exception(int excep
- 
- static int kgdb_brk_fn(struct pt_regs *regs, unsigned int esr)
- {
-+	if (user_mode(regs))
-+		return DBG_HOOK_ERROR;
-+
- 	kgdb_handle_exception(1, SIGTRAP, 0, regs);
--	return 0;
-+	return DBG_HOOK_HANDLED;
- }
- NOKPROBE_SYMBOL(kgdb_brk_fn)
- 
- static int kgdb_compiled_brk_fn(struct pt_regs *regs, unsigned int esr)
- {
-+	if (user_mode(regs))
-+		return DBG_HOOK_ERROR;
-+
- 	compiled_break = 1;
- 	kgdb_handle_exception(1, SIGTRAP, 0, regs);
- 
--	return 0;
-+	return DBG_HOOK_HANDLED;
- }
- NOKPROBE_SYMBOL(kgdb_compiled_brk_fn);
- 
- static int kgdb_step_brk_fn(struct pt_regs *regs, unsigned int esr)
- {
--	if (!kgdb_single_step)
-+	if (user_mode(regs) || !kgdb_single_step)
- 		return DBG_HOOK_ERROR;
- 
- 	kgdb_handle_exception(1, SIGTRAP, 0, regs);
--	return 0;
-+	return DBG_HOOK_HANDLED;
- }
- NOKPROBE_SYMBOL(kgdb_step_brk_fn);
- 
---- a/arch/arm64/kernel/probes/kprobes.c
-+++ b/arch/arm64/kernel/probes/kprobes.c
-@@ -458,6 +458,9 @@ kprobe_single_step_handler(struct pt_reg
- 	struct kprobe_ctlblk *kcb = get_kprobe_ctlblk();
- 	int retval;
- 
-+	if (user_mode(regs))
-+		return DBG_HOOK_ERROR;
-+
- 	/* return error if this is not our step */
- 	retval = kprobe_ss_hit(kcb, instruction_pointer(regs));
- 
-@@ -474,6 +477,9 @@ kprobe_single_step_handler(struct pt_reg
- int __kprobes
- kprobe_breakpoint_handler(struct pt_regs *regs, unsigned int esr)
- {
-+	if (user_mode(regs))
-+		return DBG_HOOK_ERROR;
-+
- 	kprobe_handler(regs);
- 	return DBG_HOOK_HANDLED;
- }
+--- a/drivers/tty/serial/8250/8250_pci.c
++++ b/drivers/tty/serial/8250/8250_pci.c
+@@ -2033,6 +2033,111 @@ static struct pci_serial_quirk pci_seria
+ 		.setup		= pci_default_setup,
+ 		.exit		= pci_plx9050_exit,
+ 	},
++	{
++		.vendor     = PCI_VENDOR_ID_ACCESIO,
++		.device     = PCI_DEVICE_ID_ACCESIO_PCIE_COM_4SDB,
++		.subvendor  = PCI_ANY_ID,
++		.subdevice  = PCI_ANY_ID,
++		.setup      = pci_pericom_setup,
++	},
++	{
++		.vendor     = PCI_VENDOR_ID_ACCESIO,
++		.device     = PCI_DEVICE_ID_ACCESIO_MPCIE_COM_4S,
++		.subvendor  = PCI_ANY_ID,
++		.subdevice  = PCI_ANY_ID,
++		.setup      = pci_pericom_setup,
++	},
++	{
++		.vendor     = PCI_VENDOR_ID_ACCESIO,
++		.device     = PCI_DEVICE_ID_ACCESIO_PCIE_COM232_4DB,
++		.subvendor  = PCI_ANY_ID,
++		.subdevice  = PCI_ANY_ID,
++		.setup      = pci_pericom_setup,
++	},
++	{
++		.vendor     = PCI_VENDOR_ID_ACCESIO,
++		.device     = PCI_DEVICE_ID_ACCESIO_MPCIE_COM232_4,
++		.subvendor  = PCI_ANY_ID,
++		.subdevice  = PCI_ANY_ID,
++		.setup      = pci_pericom_setup,
++	},
++	{
++		.vendor     = PCI_VENDOR_ID_ACCESIO,
++		.device     = PCI_DEVICE_ID_ACCESIO_PCIE_COM_4SMDB,
++		.subvendor  = PCI_ANY_ID,
++		.subdevice  = PCI_ANY_ID,
++		.setup      = pci_pericom_setup,
++	},
++	{
++		.vendor     = PCI_VENDOR_ID_ACCESIO,
++		.device     = PCI_DEVICE_ID_ACCESIO_MPCIE_COM_4SM,
++		.subvendor  = PCI_ANY_ID,
++		.subdevice  = PCI_ANY_ID,
++		.setup      = pci_pericom_setup,
++	},
++	{
++		.vendor     = PCI_VENDOR_ID_ACCESIO,
++		.device     = PCI_DEVICE_ID_ACCESIO_MPCIE_ICM422_4,
++		.subvendor  = PCI_ANY_ID,
++		.subdevice  = PCI_ANY_ID,
++		.setup      = pci_pericom_setup,
++	},
++	{
++		.vendor     = PCI_VENDOR_ID_ACCESIO,
++		.device     = PCI_DEVICE_ID_ACCESIO_MPCIE_ICM485_4,
++		.subvendor  = PCI_ANY_ID,
++		.subdevice  = PCI_ANY_ID,
++		.setup      = pci_pericom_setup,
++	},
++	{
++		.vendor     = PCI_DEVICE_ID_ACCESIO_PCIE_ICM_4S,
++		.device     = PCI_DEVICE_ID_ACCESIO_PCIE_ICM232_4,
++		.subvendor  = PCI_ANY_ID,
++		.subdevice  = PCI_ANY_ID,
++		.setup      = pci_pericom_setup,
++	},
++	{
++		.vendor     = PCI_VENDOR_ID_ACCESIO,
++		.device     = PCI_DEVICE_ID_ACCESIO_MPCIE_ICM232_4,
++		.subvendor  = PCI_ANY_ID,
++		.subdevice  = PCI_ANY_ID,
++		.setup      = pci_pericom_setup,
++	},
++	{
++		.vendor     = PCI_VENDOR_ID_ACCESIO,
++		.device     = PCI_DEVICE_ID_ACCESIO_PCIE_COM422_4,
++		.subvendor  = PCI_ANY_ID,
++		.subdevice  = PCI_ANY_ID,
++		.setup      = pci_pericom_setup,
++	},
++	{
++		.vendor     = PCI_VENDOR_ID_ACCESIO,
++		.device     = PCI_DEVICE_ID_ACCESIO_PCIE_COM485_4,
++		.subvendor  = PCI_ANY_ID,
++		.subdevice  = PCI_ANY_ID,
++		.setup      = pci_pericom_setup,
++	},
++	{
++		.vendor     = PCI_VENDOR_ID_ACCESIO,
++		.device     = PCI_DEVICE_ID_ACCESIO_PCIE_COM232_4,
++		.subvendor  = PCI_ANY_ID,
++		.subdevice  = PCI_ANY_ID,
++		.setup      = pci_pericom_setup,
++	},
++	{
++		.vendor     = PCI_VENDOR_ID_ACCESIO,
++		.device     = PCI_DEVICE_ID_ACCESIO_PCIE_COM_4SM,
++		.subvendor  = PCI_ANY_ID,
++		.subdevice  = PCI_ANY_ID,
++		.setup      = pci_pericom_setup,
++	},
++	{
++		.vendor     = PCI_VENDOR_ID_ACCESIO,
++		.device     = PCI_DEVICE_ID_ACCESIO_PCIE_ICM_4SM,
++		.subvendor  = PCI_ANY_ID,
++		.subdevice  = PCI_ANY_ID,
++		.setup      = pci_pericom_setup,
++	},
+ 	/*
+ 	 * SBS Technologies, Inc., PMC-OCTALPRO 232
+ 	 */
 
 
