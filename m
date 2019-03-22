@@ -2,115 +2,73 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB40BC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:45:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CDCFC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:45:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A34B2075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:45:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mDVknPG/"
+	by mail.kernel.org (Postfix) with ESMTP id 4FF042075E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:45:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728409AbfCVWpW (ORCPT
+        id S1728467AbfCVWpa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 18:45:22 -0400
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:40880 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728093AbfCVWpT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 18:45:19 -0400
-Received: by mail-ua1-f68.google.com with SMTP id b8so1278382uaq.7
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 15:45:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XIWF5r+FeAyzFbB/tkDZ1Cwr2CHIZ4gIs+pbAdf62jk=;
-        b=mDVknPG/ZmQ9thZGsga0cOASQO6ss/HgUzvEnM228t8RAHZw3hWN8WerQSRw/M9Afm
-         roKYwxtmePMDQjQOFiG9eDPcbxc5qIXQ7j3PQuRoY0gRF/zV6uqJU5O6ZmaTOayzTu0v
-         AMvnzZz7mA8KuTsxqEOUEc743wS0ObEQ1FXDI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XIWF5r+FeAyzFbB/tkDZ1Cwr2CHIZ4gIs+pbAdf62jk=;
-        b=i5ziWIwiPrzIRVl7Ce5ImtMxD0VRBANT0WP+Ar+DS1EMMXJIpcZKnl/JtPyZ+d180Z
-         DecZ7EnICCshltCZpuo7fPy8td/D0L3ajbx4o5q+6/a4fw0WlNRG3UTuAtav0csadgPC
-         Y9PxVKbJB+0eFpg5DLZxNp96LMFPv5CrYFXBIaOwUVaIt8SUCUQgRiPol/ecEcYdcsMb
-         q8XS6x+uiRKvHcdeiICm9RfR4mBfg14CyA1TQhwrLUAV4dbEcg7Ok83aV69EeAY551dO
-         3fl+mpzaF3rvjhxe+lApYNyrVcENDZsMAm6tId3LmnZOTg5R0XM0v5HgVYYNPTPu/dJ6
-         8WgQ==
-X-Gm-Message-State: APjAAAUIXhB8XH0hec4JJ/JhxLXwwDsh88fOMzvopJ5c/ysH16sGbLyp
-        3vch0yy6LYcPiQDOl+PpytlLb2sxz3I=
-X-Google-Smtp-Source: APXvYqykXBU6Iq3ksz8wC45IGHzPmgstVdTNRFIzhQ6/nRcKA8EfThcUESIxgKklBdxbZ9tgz50YDA==
-X-Received: by 2002:ab0:4841:: with SMTP id c1mr5678017uad.137.1553294717867;
-        Fri, 22 Mar 2019 15:45:17 -0700 (PDT)
-Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com. [209.85.221.171])
-        by smtp.gmail.com with ESMTPSA id t4sm4203963uaq.0.2019.03.22.15.45.16
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 22 Mar 2019 15:45:16 -0700 (PDT)
-Received: by mail-vk1-f171.google.com with SMTP id o187so824363vkg.4
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 15:45:16 -0700 (PDT)
-X-Received: by 2002:a1f:a4d:: with SMTP id 74mr3298849vkk.13.1553294715883;
- Fri, 22 Mar 2019 15:45:15 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190315110555.0807d015@cakuba.netronome.com> <20190315120105.5541ad46@cakuba.netronome.com>
- <20190315165440.53b9db3c@cakuba.netronome.com> <CAGXu5jKHRPuaALQcPXvpDeuVgZR+EeRqo9Qj4j3kYatb3HUSSA@mail.gmail.com>
- <CAGXu5jL-e7bDEXfpUuT-HyFarR-8T0djXChR0cuzTwFQPQ0tOw@mail.gmail.com>
- <f23d0fad-dc72-0e53-cac6-31abfd12a050@I-love.SAKURA.ne.jp>
- <bee1a774-461a-2535-a640-bbe65291e909@schaufler-ca.com> <2bf23acd-22c4-a260-7648-845887a409d5@i-love.sakura.ne.jp>
- <CAGXu5jKj-Pq4krHmKd__4MoXBe1FK399cDZnSxdPigZo78tPfA@mail.gmail.com> <e20bf21e-77b0-6403-51b6-3f174d45529e@i-love.sakura.ne.jp>
-In-Reply-To: <e20bf21e-77b0-6403-51b6-3f174d45529e@i-love.sakura.ne.jp>
-From:   Kees Cook <keescook@chromium.org>
-Date:   Fri, 22 Mar 2019 15:45:04 -0700
-X-Gmail-Original-Message-ID: <CAGXu5jKVQ=-mdMWsefuNDagwF3pQEiosb4niRx-gBKCmRK_h-g@mail.gmail.com>
-Message-ID: <CAGXu5jKVQ=-mdMWsefuNDagwF3pQEiosb4niRx-gBKCmRK_h-g@mail.gmail.com>
-Subject: Re: mount.nfs: Protocol error after upgrade to linux/master
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     Casey Schaufler <casey@schaufler-ca.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 22 Mar 2019 18:45:30 -0400
+Received: from mga18.intel.com ([134.134.136.126]:15693 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728423AbfCVWp2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 18:45:28 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Mar 2019 15:45:27 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,256,1549958400"; 
+   d="scan'208";a="309622827"
+Received: from spandruv-mobl.amr.corp.intel.com ([10.254.53.177])
+  by orsmga005.jf.intel.com with ESMTP; 22 Mar 2019 15:45:25 -0700
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     rjw@rjwysocki.net, lenb@kernel.org, viresh.kumar@linaro.org
+Cc:     linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, pprakash@codeaurora.org,
+        wangxiongfeng2@huawei.com,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH 0/2] Correct the processing for base_frequency
+Date:   Fri, 22 Mar 2019 15:45:18 -0700
+Message-Id: <20190322224520.6740-1-srinivas.pandruvada@linux.intel.com>
+X-Mailer: git-send-email 2.17.2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 21, 2019 at 2:10 PM Tetsuo Handa
-<penguin-kernel@i-love.sakura.ne.jp> wrote:
->
-> On 2019/03/22 1:38, Kees Cook wrote:
-> > This is mostly good. I'd like to keep the other LSMs listed though
-> > (similar to what I had originally) so that if a legacy-major doesn't
-> > initialize, later ones will be. I want to remove the concept of
-> > "major" LSMs. The only thing that should matter is init order...
->
-> Excuse me? Are you saying that
->
->   if a legacy-major (which is defined as the "Default security module")
->   doesn't initialize, later ones (any of selinux,smack,tomoyo,apparmor
->   except the one which is defined as "Default security module") will be
->   initialized
->
-> ? That sounds strange to me. Any of selinux,smack,tomoyo,apparmor can be
-> initialized when specified by lsm= kernel command line option (or security=
-> kernel command line option if lsm= kernel command line option is not
-> specified), won't it?
+The base_frequency display in cpufreq sysfs for intel_pstate gets the
+guaranteed ratio by reading CPPC guaranteed performance register as a
+first preference before falling back to x86 MSR for Hardware P-state
+Capabilities. The current code in cppc_acpi.c assumed that "guaranteed
+performance register" can be an integer field, which is invalid as per
+ACPI spec. So this change explicitly check for INTEGER values for
+invalid BIOS/firmware and ignore. 
+Also guaranteed performance register field is optional and when not
+present, nominal performance can be used as the guaranteed performance.
+But spec calls that this is true only in non-autonomous mode. So
+no change is made in cppc_acpi.c to make nominal as guaranteed in this
+case to avoid dependency on autonomous and non-autonomous mode. Instead
+a change is added to intel_pstate driver, which is specific to x86 to
+make nominal as guaranteed when guaranteed performance field is absent
+or has invalid value.
+Also we are working to clarify this non-autonomous mode requirement
+through ACPI standard body. 
 
-It breaks the backward-compat for the "security=" line. If a system is
-booted with CONFIG_LSM="minors...,apparmor" and "security=selinux",
-neither apparmor nor selinux will be initialized. The logic on
-"security=..." depends on the other LSMs being present in the list.
+Srinivas Pandruvada (2):
+  ACPI / CPPC: Fix processing for guaranteed performance
+  cpufreq: intel_pstate: Also use cppc nominal_perf for base_frequency
 
--Kees
+ drivers/acpi/cppc_acpi.c       | 10 ++++++++--
+ drivers/cpufreq/intel_pstate.c |  3 +++
+ 2 files changed, 11 insertions(+), 2 deletions(-)
 
 -- 
-Kees Cook
+2.17.2
+
