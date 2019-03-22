@@ -2,53 +2,54 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BIGNUM_EMAILS,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6434FC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:47:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6FEBC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:47:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3329F21929
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:47:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77A6A21929
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:47:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255220;
-	bh=IGPrcJR8c1E4Z0PIDgaNZD55pX6/8cx/2nEyVslIN1U=;
+	s=default; t=1553255223;
+	bh=eSI5Y3rZxvIRd0WF/euWnnMY3i3QGkeWLsC7ep3KVgA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RtXuLdoyCT9kfdrFoPOyGwBhYASmg87mOx+CHjqpVPGRaP33uWUCyi4hmqftJxywl
-	 jV6MGzZN1f+j6X9o8IpSi2HJVjjwZnOI6gmGoH5gvgKJVd+DWu3F/PMpm8JNkI+Al2
-	 T7PjhSkmN2T0NFagdgwAluWfkElVv19ZeO38XTGE=
+	b=nYwbvleFb6rsz8loxxdeNImazX7myQ+rJzb5nl7e/6wRlaoNrr1hmMqGjw7zwIapT
+	 t4H6Hg3tipPodxErc0BDOqpx1BUJjJboZ9cEPyoCQydlt4e7KU9nTByuEw7wr9vuMf
+	 ZKPDi92v0Lo6M5UljOeiNkSc+mytNCWHLLTZEZKg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732113AbfCVLq7 (ORCPT
+        id S1732124AbfCVLrB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:46:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50088 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:47:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728373AbfCVLq5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:46:57 -0400
+        id S1728373AbfCVLq7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:46:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 040432075E;
-        Fri, 22 Mar 2019 11:46:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CEBAD2082C;
+        Fri, 22 Mar 2019 11:46:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255216;
-        bh=IGPrcJR8c1E4Z0PIDgaNZD55pX6/8cx/2nEyVslIN1U=;
+        s=default; t=1553255219;
+        bh=eSI5Y3rZxvIRd0WF/euWnnMY3i3QGkeWLsC7ep3KVgA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zr6t1y6JtFwYXLhmBG5wo7Op5MgxVdkVd2AD9o2K0M1JNcM9wVInR0gpmuWrgzNAS
-         6LocBwocUodOymS0kz/QxrdUQQSpTwnvshOKUND84QkQL1Jh1c7i30Xgb55Xw6mfvA
-         e1U00p2bhdj/C+1c3UnPv4rDU+QZ2fACC5sw/sJ4=
+        b=2CReIw0ZmuYPf9CuC7E++hBHIkqgRYciRrirQ7vRxwHp2a6XP4oRPTwCymeLQUUR+
+         WQ23LLiFumP0ne3qp11cQB7T/SpfwY/SpaMbzjyNDiS/SMmbpjW2MU0uGReRSJAWVM
+         twrFJsrkAXfPLcNbr8qvXYZ4QKM+ZKeH6MYVOgtY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Stefan Haberland <sth@linux.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        stable@vger.kernel.org, Sven Van Asbroeck <thesven73@gmail.com>,
+        Danilo Krummrich <danilokrummrich@dk-develop.de>,
+        Sven Van Asbroeck <TheSven73@gmail.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 014/183] s390/dasd: fix using offset into zero size array error
-Date:   Fri, 22 Mar 2019 12:14:02 +0100
-Message-Id: <20190322111242.820889032@linuxfoundation.org>
+Subject: [PATCH 4.14 023/183] Input: ps2-gpio - flush TX work when closing port
+Date:   Fri, 22 Mar 2019 12:14:11 +0100
+Message-Id: <20190322111243.435755148@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111241.819468003@linuxfoundation.org>
 References: <20190322111241.819468003@linuxfoundation.org>
@@ -67,94 +68,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 4a8ef6999bce998fa5813023a9a6b56eea329dba ]
+[ Upstream commit 33a841ce5cef4ca6c18ad333248b6d273f54c839 ]
 
-Dan Carpenter reported the following:
+To ensure that TX work is not running after serio port has been torn down,
+let's flush it when closing the port.
 
-The patch 52898025cf7d: "[S390] dasd: security and PSF update patch
-for EMC CKD ioctl" from Mar 8, 2010, leads to the following static
-checker warning:
-
-	drivers/s390/block/dasd_eckd.c:4486 dasd_symm_io()
-	error: using offset into zero size array 'psf_data[]'
-
-drivers/s390/block/dasd_eckd.c
-  4458          /* Copy parms from caller */
-  4459          rc = -EFAULT;
-  4460          if (copy_from_user(&usrparm, argp, sizeof(usrparm)))
-                                    ^^^^^^^
-The user can specify any "usrparm.psf_data_len".  They choose zero by
-mistake.
-
-  4461                  goto out;
-  4462          if (is_compat_task()) {
-  4463                  /* Make sure pointers are sane even on 31 bit. */
-  4464                  rc = -EINVAL;
-  4465                  if ((usrparm.psf_data >> 32) != 0)
-  4466                          goto out;
-  4467                  if ((usrparm.rssd_result >> 32) != 0)
-  4468                          goto out;
-  4469                  usrparm.psf_data &= 0x7fffffffULL;
-  4470                  usrparm.rssd_result &= 0x7fffffffULL;
-  4471          }
-  4472          /* alloc I/O data area */
-  4473          psf_data = kzalloc(usrparm.psf_data_len, GFP_KERNEL
-  			   				 | GFP_DMA);
-  4474          rssd_result = kzalloc(usrparm.rssd_result_len, GFP_KERNEL
-							       | GFP_DMA);
-  4475          if (!psf_data || !rssd_result) {
-
-kzalloc() returns a ZERO_SIZE_PTR (0x16).
-
-  4476                  rc = -ENOMEM;
-  4477                  goto out_free;
-  4478          }
-  4479
-  4480          /* get syscall header from user space */
-  4481          rc = -EFAULT;
-  4482          if (copy_from_user(psf_data,
-  4483                             (void __user *)(unsigned long)
-  				   	 		 usrparm.psf_data,
-  4484                             usrparm.psf_data_len))
-
-That all works great.
-
-  4485                  goto out_free;
-  4486          psf0 = psf_data[0];
-  4487          psf1 = psf_data[1];
-
-But now we're assuming that "->psf_data_len" was at least 2 bytes.
-
-Fix this by checking the user specified length psf_data_len.
-
-Fixes: 52898025cf7d ("[S390] dasd: security and PSF update patch for EMC CKD ioctl")
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Stefan Haberland <sth@linux.ibm.com>
-Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Reported-by: Sven Van Asbroeck <thesven73@gmail.com>
+Acked-by: Danilo Krummrich <danilokrummrich@dk-develop.de>
+Reviewed-by: Sven Van Asbroeck <TheSven73@gmail.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/block/dasd_eckd.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/input/serio/ps2-gpio.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/s390/block/dasd_eckd.c b/drivers/s390/block/dasd_eckd.c
-index 4c7c8455da96..0a1e7f9b5239 100644
---- a/drivers/s390/block/dasd_eckd.c
-+++ b/drivers/s390/block/dasd_eckd.c
-@@ -4463,6 +4463,14 @@ static int dasd_symm_io(struct dasd_device *device, void __user *argp)
- 		usrparm.psf_data &= 0x7fffffffULL;
- 		usrparm.rssd_result &= 0x7fffffffULL;
- 	}
-+	/* at least 2 bytes are accessed and should be allocated */
-+	if (usrparm.psf_data_len < 2) {
-+		DBF_DEV_EVENT(DBF_WARNING, device,
-+			      "Symmetrix ioctl invalid data length %d",
-+			      usrparm.psf_data_len);
-+		rc = -EINVAL;
-+		goto out;
-+	}
- 	/* alloc I/O data area */
- 	psf_data = kzalloc(usrparm.psf_data_len, GFP_KERNEL | GFP_DMA);
- 	rssd_result = kzalloc(usrparm.rssd_result_len, GFP_KERNEL | GFP_DMA);
+diff --git a/drivers/input/serio/ps2-gpio.c b/drivers/input/serio/ps2-gpio.c
+index b50e3817f3c4..4a64ab30589c 100644
+--- a/drivers/input/serio/ps2-gpio.c
++++ b/drivers/input/serio/ps2-gpio.c
+@@ -76,6 +76,7 @@ static void ps2_gpio_close(struct serio *serio)
+ {
+ 	struct ps2_gpio_data *drvdata = serio->port_data;
+ 
++	flush_delayed_work(&drvdata->tx_work);
+ 	disable_irq(drvdata->irq);
+ }
+ 
 -- 
 2.19.1
 
