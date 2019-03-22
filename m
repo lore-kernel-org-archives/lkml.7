@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68CAFC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:41:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49480C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:41:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F4962190A
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:41:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1876821916
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:41:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729162AbfCVQlX (ORCPT
+        id S1727781AbfCVQje (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 12:41:23 -0400
+        Fri, 22 Mar 2019 12:39:34 -0400
 Received: from mga18.intel.com ([134.134.136.126]:60735 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727831AbfCVQjf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 12:39:35 -0400
+        id S1727028AbfCVQjb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 12:39:31 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Mar 2019 09:39:35 -0700
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Mar 2019 09:39:30 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,256,1549958400"; 
-   d="scan'208";a="144356615"
+   d="scan'208";a="144356581"
 Received: from otc-icl-cdi187.jf.intel.com ([10.54.55.103])
-  by orsmga002.jf.intel.com with ESMTP; 22 Mar 2019 09:39:35 -0700
+  by orsmga002.jf.intel.com with ESMTP; 22 Mar 2019 09:39:30 -0700
 From:   kan.liang@linux.intel.com
 To:     peterz@infradead.org, acme@kernel.org, mingo@redhat.com,
         linux-kernel@vger.kernel.org
 Cc:     tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
         alexander.shishkin@linux.intel.com, ak@linux.intel.com,
         Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V3 07/23] perf/x86/intel: Add Icelake support
-Date:   Fri, 22 Mar 2019 09:37:02 -0700
-Message-Id: <20190322163718.2191-8-kan.liang@linux.intel.com>
+Subject: [PATCH V3 01/23] perf/x86: Support outputting XMM registers
+Date:   Fri, 22 Mar 2019 09:36:56 -0700
+Message-Id: <20190322163718.2191-2-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190322163718.2191-1-kan.liang@linux.intel.com>
 References: <20190322163718.2191-1-kan.liang@linux.intel.com>
@@ -47,280 +47,174 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-Add Icelake core PMU perf code, including constraint tables and the main
-enable code.
+Starting from Icelake, XMM registers can be collected in PEBS record.
+But current code only output the pt_regs.
 
-Icelake expanded the generic counters to always 8 even with HT on, but a
-range of events cannot be scheduled on the extra 4 counters.
-Add new constraint ranges to describe this to the scheduler.
-The number of constraints that need to be checked is larger now than
-with earlier CPUs.
-At some point we may need a new data structure to look them up more
-efficiently than with linear search. So far it still seems to be
-acceptable however.
+Add a new struct x86_perf_regs for both pt_regs and xmm_regs.
+XMM registers are 128 bit. To simplify the code, they are handled like
+two different registers, which means setting two bits in the register
+bitmap. This also allows only sampling the lower 64bit bits in XMM.
+The index of XMM registers starts from 32. There are 16 XMM registers.
+So all reserved space for regs are used.
+PERF_REG_X86_MAX stands for the max number of all x86 regs include XMM.
+PERF_REG_GPR_X86_MAX stands for the max number of all x86 general
+purpose registers, which not include XMM.
+PERF_REG_GPR_X86_32_MAX and PERF_REG_GPR_X86_64_MAX are introduced to
+replace PERF_REG_X86_32_MAX and PERF_REG_X86_64_MAX for x86 general
+purpose registers.
 
-Icelake added a new fixed counter SLOTS. Full support for it is added
-later in the patch series.
-
-The cache events table is identical to Skylake.
-
-Compare to PEBS instruction event on generic counter, fixed counter 0
-has less skid. Force instruction:ppp always in fixed counter 0.
+The REG_RESERVED is also updated to allow the XMM registers.
+XMM is not supported on all platforms. Adding has_xmm_regs to indicate
+the specific platform. Also add checks in x86_pmu_hw_config() to reject
+invalid config of regs_user and regs_intr.
 
 Originally-by: Andi Kleen <ak@linux.intel.com>
+Suggested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 ---
 
 No changes since V2.
 
- arch/x86/events/intel/core.c      | 112 ++++++++++++++++++++++++++++++
- arch/x86/events/intel/ds.c        |  26 ++++++-
- arch/x86/events/perf_event.h      |   2 +
- arch/x86/include/asm/intel_ds.h   |   2 +-
- arch/x86/include/asm/perf_event.h |   2 +-
- 5 files changed, 140 insertions(+), 4 deletions(-)
+ arch/x86/events/core.c                | 10 ++++++++++
+ arch/x86/events/perf_event.h          |  2 ++
+ arch/x86/include/asm/perf_event.h     |  5 +++++
+ arch/x86/include/uapi/asm/perf_regs.h | 26 ++++++++++++++++++++++++--
+ arch/x86/kernel/perf_regs.c           | 18 ++++++++++++++----
+ 5 files changed, 55 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index d5d796e114a1..ef95d73ef4f0 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -239,6 +239,35 @@ static struct extra_reg intel_skl_extra_regs[] __read_mostly = {
- 	EVENT_EXTRA_END
- };
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index e2b1447192a8..9378c6b2128f 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -560,6 +560,16 @@ int x86_pmu_hw_config(struct perf_event *event)
+ 			return -EINVAL;
+ 	}
  
-+static struct event_constraint intel_icl_event_constraints[] = {
-+	FIXED_EVENT_CONSTRAINT(0x00c0, 0),	/* INST_RETIRED.ANY */
-+	INTEL_UEVENT_CONSTRAINT(0x1c0, 0),	/* INST_RETIRED.PREC_DIST */
-+	FIXED_EVENT_CONSTRAINT(0x003c, 1),	/* CPU_CLK_UNHALTED.CORE */
-+	FIXED_EVENT_CONSTRAINT(0x0300, 2),	/* CPU_CLK_UNHALTED.REF */
-+	FIXED_EVENT_CONSTRAINT(0x0400, 3),	/* SLOTS */
-+	INTEL_EVENT_CONSTRAINT_RANGE(0x03, 0x0a, 0xf),
-+	INTEL_EVENT_CONSTRAINT_RANGE(0x1f, 0x28, 0xf),
-+	INTEL_EVENT_CONSTRAINT(0x32, 0xf),	/* SW_PREFETCH_ACCESS.* */
-+	INTEL_EVENT_CONSTRAINT_RANGE(0x48, 0x54, 0xf),
-+	INTEL_EVENT_CONSTRAINT_RANGE(0x60, 0x8b, 0xf),
-+	INTEL_UEVENT_CONSTRAINT(0x04a3, 0xff),  /* CYCLE_ACTIVITY.STALLS_TOTAL */
-+	INTEL_UEVENT_CONSTRAINT(0x10a3, 0xff),  /* CYCLE_ACTIVITY.STALLS_MEM_ANY */
-+	INTEL_EVENT_CONSTRAINT(0xa3, 0xf),      /* CYCLE_ACTIVITY.* */
-+	INTEL_EVENT_CONSTRAINT_RANGE(0xa8, 0xb0, 0xf),
-+	INTEL_EVENT_CONSTRAINT_RANGE(0xb7, 0xbd, 0xf),
-+	INTEL_EVENT_CONSTRAINT_RANGE(0xd0, 0xe6, 0xf),
-+	INTEL_EVENT_CONSTRAINT_RANGE(0xf0, 0xf4, 0xf),
-+	EVENT_CONSTRAINT_END
-+};
++	if (event->attr.sample_regs_user & ~PEBS_REGS)
++		return -EINVAL;
++	/*
++	 * Besides the general purpose registers, XMM registers may
++	 * be collected in PEBS on some platforms, e.g. Icelake
++	 */
++	if ((event->attr.sample_regs_intr & ~PEBS_REGS) &&
++	    (!x86_pmu.has_xmm_regs || !event->attr.precise_ip))
++		return -EINVAL;
 +
-+static struct extra_reg intel_icl_extra_regs[] __read_mostly = {
-+	INTEL_UEVENT_EXTRA_REG(0x01b7, MSR_OFFCORE_RSP_0, 0x3fffff9fffull, RSP_0),
-+	INTEL_UEVENT_EXTRA_REG(0x01bb, MSR_OFFCORE_RSP_1, 0x3fffff9fffull, RSP_1),
-+	INTEL_UEVENT_PEBS_LDLAT_EXTRA_REG(0x01cd),
-+	INTEL_UEVENT_EXTRA_REG(0x01c6, MSR_PEBS_FRONTEND, 0x7fff17, FE),
-+	EVENT_EXTRA_END
-+};
-+
- EVENT_ATTR_STR(mem-loads,	mem_ld_nhm,	"event=0x0b,umask=0x10,ldlat=3");
- EVENT_ATTR_STR(mem-loads,	mem_ld_snb,	"event=0xcd,umask=0x1,ldlat=3");
- EVENT_ATTR_STR(mem-stores,	mem_st_snb,	"event=0xcd,umask=0x2");
-@@ -3366,6 +3395,9 @@ static struct event_constraint counter0_constraint =
- static struct event_constraint counter2_constraint =
- 			EVENT_CONSTRAINT(0, 0x4, 0);
- 
-+static struct event_constraint fixed_counter0_constraint =
-+			FIXED_EVENT_CONSTRAINT(0x00c0, 0);
-+
- static struct event_constraint *
- hsw_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
- 			  struct perf_event *event)
-@@ -3384,6 +3416,21 @@ hsw_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
- 	return c;
+ 	return x86_setup_perfctr(event);
  }
  
-+static struct event_constraint *
-+icl_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
-+			  struct perf_event *event)
-+{
-+	/*
-+	 * Fixed counter 0 has less skid.
-+	 * Force instruction:ppp in Fixed counter 0
-+	 */
-+	if ((event->attr.precise_ip == 3) &&
-+	    ((event->hw.config & X86_RAW_EVENT_MASK) == 0x00c0))
-+		return &fixed_counter0_constraint;
-+
-+	return hsw_get_event_constraints(cpuc, idx, event);
-+}
-+
- static struct event_constraint *
- glp_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
- 			  struct perf_event *event)
-@@ -4110,6 +4157,42 @@ static struct attribute *hsw_tsx_events_attrs[] = {
- 	NULL
- };
- 
-+EVENT_ATTR_STR(tx-capacity-read,  tx_capacity_read,  "event=0x54,umask=0x80");
-+EVENT_ATTR_STR(tx-capacity-write, tx_capacity_write, "event=0x54,umask=0x2");
-+EVENT_ATTR_STR(el-capacity-read,  el_capacity_read,  "event=0x54,umask=0x80");
-+EVENT_ATTR_STR(el-capacity-write, el_capacity_write, "event=0x54,umask=0x2");
-+
-+static struct attribute *icl_events_attrs[] = {
-+	EVENT_PTR(mem_ld_hsw),
-+	EVENT_PTR(mem_st_hsw),
-+	NULL,
-+};
-+
-+static struct attribute *icl_tsx_events_attrs[] = {
-+	EVENT_PTR(tx_start),
-+	EVENT_PTR(tx_abort),
-+	EVENT_PTR(tx_commit),
-+	EVENT_PTR(tx_capacity_read),
-+	EVENT_PTR(tx_capacity_write),
-+	EVENT_PTR(tx_conflict),
-+	EVENT_PTR(el_start),
-+	EVENT_PTR(el_abort),
-+	EVENT_PTR(el_commit),
-+	EVENT_PTR(el_capacity_read),
-+	EVENT_PTR(el_capacity_write),
-+	EVENT_PTR(el_conflict),
-+	EVENT_PTR(cycles_t),
-+	EVENT_PTR(cycles_ct),
-+	NULL,
-+};
-+
-+static __init struct attribute **get_icl_events_attrs(void)
-+{
-+	return boot_cpu_has(X86_FEATURE_RTM) ?
-+		merge_attr(icl_events_attrs, icl_tsx_events_attrs) :
-+		icl_events_attrs;
-+}
-+
- static ssize_t freeze_on_smi_show(struct device *cdev,
- 				  struct device_attribute *attr,
- 				  char *buf)
-@@ -4697,6 +4780,35 @@ __init int intel_pmu_init(void)
- 		name = "skylake";
- 		break;
- 
-+	case INTEL_FAM6_ICELAKE_MOBILE:
-+		x86_pmu.late_ack = true;
-+		memcpy(hw_cache_event_ids, skl_hw_cache_event_ids, sizeof(hw_cache_event_ids));
-+		memcpy(hw_cache_extra_regs, skl_hw_cache_extra_regs, sizeof(hw_cache_extra_regs));
-+		hw_cache_event_ids[C(ITLB)][C(OP_READ)][C(RESULT_ACCESS)] = -1;
-+		intel_pmu_lbr_init_skl();
-+
-+		x86_pmu.event_constraints = intel_icl_event_constraints;
-+		x86_pmu.pebs_constraints = intel_icl_pebs_event_constraints;
-+		x86_pmu.extra_regs = intel_icl_extra_regs;
-+		x86_pmu.pebs_aliases = NULL;
-+		x86_pmu.pebs_prec_dist = true;
-+		x86_pmu.flags |= PMU_FL_HAS_RSP_1;
-+		x86_pmu.flags |= PMU_FL_NO_HT_SHARING;
-+
-+		x86_pmu.hw_config = hsw_hw_config;
-+		x86_pmu.get_event_constraints = icl_get_event_constraints;
-+		extra_attr = boot_cpu_has(X86_FEATURE_RTM) ?
-+			hsw_format_attr : nhm_format_attr;
-+		extra_attr = merge_attr(extra_attr, skl_format_attr);
-+		x86_pmu.cpu_events = get_icl_events_attrs();
-+		x86_pmu.force_gpr_event = 0x2ca;
-+		x86_pmu.lbr_pt_coexist = true;
-+		x86_pmu.has_xmm_regs = true;
-+		intel_pmu_pebs_data_source_skl(false);
-+		pr_cont("Icelake events, ");
-+		name = "icelake";
-+		break;
-+
- 	default:
- 		switch (x86_pmu.version) {
- 		case 1:
-diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-index 3ee1a0198c13..a72394965e89 100644
---- a/arch/x86/events/intel/ds.c
-+++ b/arch/x86/events/intel/ds.c
-@@ -849,6 +849,26 @@ struct event_constraint intel_skl_pebs_event_constraints[] = {
- 	EVENT_CONSTRAINT_END
- };
- 
-+struct event_constraint intel_icl_pebs_event_constraints[] = {
-+	INTEL_FLAGS_UEVENT_CONSTRAINT(0x1c0, 0x100000000ULL),	/* INST_RETIRED.PREC_DIST */
-+	INTEL_FLAGS_UEVENT_CONSTRAINT(0x0400, 0x400000000ULL),	/* SLOTS */
-+
-+	INTEL_PLD_CONSTRAINT(0x1cd, 0xff),		/* MEM_TRANS_RETIRED.LOAD_LATENCY */
-+	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_LD(0x1d0, 0xf),  /* MEM_INST_RETIRED.LOAD */
-+	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_ST(0x2d0, 0xf),  /* MEM_INST_RETIRED.STORE */
-+
-+	INTEL_FLAGS_EVENT_CONSTRAINT_DATALA_LD_RANGE(0xd1, 0xd4, 0xf), /* MEM_LOAD_*_RETIRED.* */
-+
-+	INTEL_FLAGS_EVENT_CONSTRAINT(0xd0, 0xf), 	     /* MEM_INST_RETIRED.* */
-+
-+	/*
-+	 * Everything else is handled by PMU_FL_PEBS_ALL, because we
-+	 * need the full constraints from the main table.
-+	 */
-+
-+	EVENT_CONSTRAINT_END
-+};
-+
- struct event_constraint *intel_pebs_constraints(struct perf_event *event)
- {
- 	struct event_constraint *c;
-@@ -1056,7 +1076,8 @@ void intel_pmu_pebs_enable(struct perf_event *event)
- 
- 	cpuc->pebs_enabled |= 1ULL << hwc->idx;
- 
--	if (event->hw.flags & PERF_X86_EVENT_PEBS_LDLAT)
-+	if ((event->hw.flags & PERF_X86_EVENT_PEBS_LDLAT) &&
-+	    (x86_pmu.version < 5))
- 		cpuc->pebs_enabled |= 1ULL << (hwc->idx + 32);
- 	else if (event->hw.flags & PERF_X86_EVENT_PEBS_ST)
- 		cpuc->pebs_enabled |= 1ULL << 63;
-@@ -1108,7 +1129,8 @@ void intel_pmu_pebs_disable(struct perf_event *event)
- 
- 	cpuc->pebs_enabled &= ~(1ULL << hwc->idx);
- 
--	if (event->hw.flags & PERF_X86_EVENT_PEBS_LDLAT)
-+	if ((event->hw.flags & PERF_X86_EVENT_PEBS_LDLAT) &&
-+	    (x86_pmu.version < 5))
- 		cpuc->pebs_enabled &= ~(1ULL << (hwc->idx + 32));
- 	else if (event->hw.flags & PERF_X86_EVENT_PEBS_ST)
- 		cpuc->pebs_enabled &= ~(1ULL << 63);
 diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index a502e9bb02bb..e4503e6a6b97 100644
+index a75955741c50..6428941a5073 100644
 --- a/arch/x86/events/perf_event.h
 +++ b/arch/x86/events/perf_event.h
-@@ -981,6 +981,8 @@ extern struct event_constraint intel_bdw_pebs_event_constraints[];
- 
- extern struct event_constraint intel_skl_pebs_event_constraints[];
- 
-+extern struct event_constraint intel_icl_pebs_event_constraints[];
+@@ -657,6 +657,8 @@ struct x86_pmu {
+ 	 * Check period value for PERF_EVENT_IOC_PERIOD ioctl.
+ 	 */
+ 	int (*check_period) (struct perf_event *event, u64 period);
 +
- struct event_constraint *intel_pebs_constraints(struct perf_event *event);
++	unsigned int	has_xmm_regs : 1; /* support XMM regs */
+ };
  
- void intel_pmu_pebs_add(struct perf_event *event);
-diff --git a/arch/x86/include/asm/intel_ds.h b/arch/x86/include/asm/intel_ds.h
-index ae26df1c2789..8380c3ddd4b2 100644
---- a/arch/x86/include/asm/intel_ds.h
-+++ b/arch/x86/include/asm/intel_ds.h
-@@ -8,7 +8,7 @@
- 
- /* The maximal number of PEBS events: */
- #define MAX_PEBS_EVENTS		8
--#define MAX_FIXED_PEBS_EVENTS	3
-+#define MAX_FIXED_PEBS_EVENTS	4
- 
- /*
-  * A debug store configuration.
+ struct x86_perf_task_context {
 diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
-index fd0ec2699213..dcb8bac6fddb 100644
+index 8bdf74902293..d9f5bbe44b3c 100644
 --- a/arch/x86/include/asm/perf_event.h
 +++ b/arch/x86/include/asm/perf_event.h
-@@ -7,7 +7,7 @@
-  */
+@@ -248,6 +248,11 @@ extern void perf_events_lapic_init(void);
+ #define PERF_EFLAGS_VM		(1UL << 5)
  
- #define INTEL_PMC_MAX_GENERIC				       32
--#define INTEL_PMC_MAX_FIXED					3
-+#define INTEL_PMC_MAX_FIXED					4
- #define INTEL_PMC_IDX_FIXED				       32
+ struct pt_regs;
++struct x86_perf_regs {
++	struct pt_regs	regs;
++	u64		*xmm_regs;
++};
++
+ extern unsigned long perf_instruction_pointer(struct pt_regs *regs);
+ extern unsigned long perf_misc_flags(struct pt_regs *regs);
+ #define perf_misc_flags(regs)	perf_misc_flags(regs)
+diff --git a/arch/x86/include/uapi/asm/perf_regs.h b/arch/x86/include/uapi/asm/perf_regs.h
+index f3329cabce5c..b33995313d17 100644
+--- a/arch/x86/include/uapi/asm/perf_regs.h
++++ b/arch/x86/include/uapi/asm/perf_regs.h
+@@ -28,7 +28,29 @@ enum perf_event_x86_regs {
+ 	PERF_REG_X86_R14,
+ 	PERF_REG_X86_R15,
  
- #define X86_PMC_IDX_MAX					       64
+-	PERF_REG_X86_32_MAX = PERF_REG_X86_GS + 1,
+-	PERF_REG_X86_64_MAX = PERF_REG_X86_R15 + 1,
++	/* These all need two bits set because they are 128bit */
++	PERF_REG_X86_XMM0  = 32,
++	PERF_REG_X86_XMM1  = 34,
++	PERF_REG_X86_XMM2  = 36,
++	PERF_REG_X86_XMM3  = 38,
++	PERF_REG_X86_XMM4  = 40,
++	PERF_REG_X86_XMM5  = 42,
++	PERF_REG_X86_XMM6  = 44,
++	PERF_REG_X86_XMM7  = 46,
++	PERF_REG_X86_XMM8  = 48,
++	PERF_REG_X86_XMM9  = 50,
++	PERF_REG_X86_XMM10 = 52,
++	PERF_REG_X86_XMM11 = 54,
++	PERF_REG_X86_XMM12 = 56,
++	PERF_REG_X86_XMM13 = 58,
++	PERF_REG_X86_XMM14 = 60,
++	PERF_REG_X86_XMM15 = 62,
++
++	/* This does not include the XMMX registers */
++	PERF_REG_GPR_X86_32_MAX = PERF_REG_X86_GS + 1,
++	PERF_REG_GPR_X86_64_MAX = PERF_REG_X86_R15 + 1,
++
++	/* All registers include the XMMX registers */
++	PERF_REG_X86_MAX = PERF_REG_X86_XMM15 + 2,
+ };
+ #endif /* _ASM_X86_PERF_REGS_H */
+diff --git a/arch/x86/kernel/perf_regs.c b/arch/x86/kernel/perf_regs.c
+index c06c4c16c6b6..421d76895565 100644
+--- a/arch/x86/kernel/perf_regs.c
++++ b/arch/x86/kernel/perf_regs.c
+@@ -10,14 +10,14 @@
+ #include <asm/ptrace.h>
+ 
+ #ifdef CONFIG_X86_32
+-#define PERF_REG_X86_MAX PERF_REG_X86_32_MAX
++#define PERF_REG_GPR_X86_MAX PERF_REG_GPR_X86_32_MAX
+ #else
+-#define PERF_REG_X86_MAX PERF_REG_X86_64_MAX
++#define PERF_REG_GPR_X86_MAX PERF_REG_GPR_X86_64_MAX
+ #endif
+ 
+ #define PT_REGS_OFFSET(id, r) [id] = offsetof(struct pt_regs, r)
+ 
+-static unsigned int pt_regs_offset[PERF_REG_X86_MAX] = {
++static unsigned int pt_regs_offset[PERF_REG_GPR_X86_MAX] = {
+ 	PT_REGS_OFFSET(PERF_REG_X86_AX, ax),
+ 	PT_REGS_OFFSET(PERF_REG_X86_BX, bx),
+ 	PT_REGS_OFFSET(PERF_REG_X86_CX, cx),
+@@ -59,13 +59,23 @@ static unsigned int pt_regs_offset[PERF_REG_X86_MAX] = {
+ 
+ u64 perf_reg_value(struct pt_regs *regs, int idx)
+ {
++	struct x86_perf_regs *perf_regs;
++
++	if (idx >= PERF_REG_X86_XMM0 && idx < PERF_REG_X86_MAX) {
++		perf_regs = container_of(regs, struct x86_perf_regs, regs);
++		if (!perf_regs->xmm_regs)
++			return 0;
++		return perf_regs->xmm_regs[idx - PERF_REG_X86_XMM0];
++	}
++
+ 	if (WARN_ON_ONCE(idx >= ARRAY_SIZE(pt_regs_offset)))
+ 		return 0;
+ 
+ 	return regs_get_register(regs, pt_regs_offset[idx]);
+ }
+ 
+-#define REG_RESERVED (~((1ULL << PERF_REG_X86_MAX) - 1ULL))
++#define REG_RESERVED \
++	(PERF_REG_X86_MAX == 64 ? 0 : ~((1ULL << PERF_REG_X86_MAX)) - 1ULL)
+ 
+ #ifdef CONFIG_X86_32
+ int perf_reg_validate(u64 mask)
 -- 
 2.17.1
 
