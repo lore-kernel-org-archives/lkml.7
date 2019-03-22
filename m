@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA442C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:29:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6CE7C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:29:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7D2B21917
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:29:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 851AE20449
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:29:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254148;
-	bh=Tuh43H7lY/8v9UFO6LIA+0i0DxTd/pkKVNmkxOsvEzc=;
+	s=default; t=1553254152;
+	bh=LGv3JJfC0TcFrg+A2ptb05w1srFNBBpWsRkW389NPY4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IS5zqGZeQoVBBxC8cjrMl2AXOZrFt6ZLvaWKYd5Wy0ylj62Y5Yf8ZrbCr8LxTwApP
-	 yMvzUH2n6muaY+Dlhp9ey3HpQ322YhBk1R65E5qqCNmXx4gHOvkBlOrWIF4M2lGwwC
-	 AssauS7QSll4WzfvXHScXrH47v75SaYFeZAcp6k8=
+	b=s4J1XSsow+HMAQfmZC+4d6izaa95vugyr2dEXeRux38q0+Jw1LGgL+WnTF/38VqNK
+	 SduAjmWuVIqRFavNvkmp5qtxTuZK0tI48o7SgX+jHlU8sNALAsuPuhBiL5loeuDgqR
+	 rLr0nG892VsBjd4FZ/xmuiyOIxrMHrjWH4GZPT1Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729765AbfCVL3H (ORCPT
+        id S1729773AbfCVL3L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:29:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56788 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:29:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728509AbfCVL26 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:28:58 -0400
+        id S1728509AbfCVL3I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:29:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8CDC21917;
-        Fri, 22 Mar 2019 11:28:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31CD1218B0;
+        Fri, 22 Mar 2019 11:29:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254137;
-        bh=Tuh43H7lY/8v9UFO6LIA+0i0DxTd/pkKVNmkxOsvEzc=;
+        s=default; t=1553254147;
+        bh=LGv3JJfC0TcFrg+A2ptb05w1srFNBBpWsRkW389NPY4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fgngpEJ6tcb6oqnD/e0m9yE6MAJuC1FMBuFs2G+rkp78/f3pBDAtR803LrT+ds6Uz
-         k70JMPVfcaWejsN8ZVZFWcajJWBtB0m5fobi3qBPLi6KCldNVVu2KrSKNSUdr6Lh4t
-         9VhSBHgJFcg7KBwyjPT1w7dfFSoVSWmr7nWhWR60=
+        b=RG40ZgtkJ0KG18HM/nB5RZMYvh0F7UWy4Fjgk4LHv8/wg4NArzOtiUewHOqCKPoQX
+         peNuDSZ6AdZJ6DROzr53pe8z9d0EqG0QLCW+J9qmPGSXBt+Y61XVPA/AenUEZONma6
+         jygH4E+AwefdxWH3nG8RmlHZSs/DJv4dAGq5R+f4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Tariq Toukan <tariqt@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 027/230] net/mlx4_en: Force CHECKSUM_NONE for short ethernet frames
-Date:   Fri, 22 Mar 2019 12:12:45 +0100
-Message-Id: <20190322111238.593288935@linuxfoundation.org>
+        stable@vger.kernel.org, Ilya Dryomov <idryomov@gmail.com>,
+        Sage Weil <sage@redhat.com>
+Subject: [PATCH 4.4 030/230] libceph: handle an empty authorize reply
+Date:   Fri, 22 Mar 2019 12:12:48 +0100
+Message-Id: <20190322111238.802813041@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -67,80 +65,63 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Saeed Mahameed <saeedm@mellanox.com>
+From: Ilya Dryomov <idryomov@gmail.com>
 
-[ Upstream commit 29dded89e80e3fff61efb34f07a8a3fba3ea146d ]
+commit 0fd3fd0a9bb0b02b6435bb7070e9f7b82a23f068 upstream.
 
-When an ethernet frame is padded to meet the minimum ethernet frame
-size, the padding octets are not covered by the hardware checksum.
-Fortunately the padding octets are usually zero's, which don't affect
-checksum. However, it is not guaranteed. For example, switches might
-choose to make other use of these octets.
-This repeatedly causes kernel hardware checksum fault.
+The authorize reply can be empty, for example when the ticket used to
+build the authorizer is too old and TAG_BADAUTHORIZER is returned from
+the service.  Calling ->verify_authorizer_reply() results in an attempt
+to decrypt and validate (somewhat) random data in au->buf (most likely
+the signature block from calc_signature()), which fails and ends up in
+con_fault_finish() with !con->auth_retry.  The ticket isn't invalidated
+and the connection is retried again and again until a new ticket is
+obtained from the monitor:
 
-Prior to the cited commit below, skb checksum was forced to be
-CHECKSUM_NONE when padding is detected. After it, we need to keep
-skb->csum updated. However, fixing up CHECKSUM_COMPLETE requires to
-verify and parse IP headers, it does not worth the effort as the packets
-are so small that CHECKSUM_COMPLETE has no significant advantage.
+  libceph: osd2 192.168.122.1:6809 bad authorize reply
+  libceph: osd2 192.168.122.1:6809 bad authorize reply
+  libceph: osd2 192.168.122.1:6809 bad authorize reply
+  libceph: osd2 192.168.122.1:6809 bad authorize reply
 
-Future work: when reporting checksum complete is not an option for
-IP non-TCP/UDP packets, we can actually fallback to report checksum
-unnecessary, by looking at cqe IPOK bit.
+Let TAG_BADAUTHORIZER handler kick in and increment con->auth_retry.
 
-Fixes: 88078d98d1bb ("net: pskb_trim_rcsum() and CHECKSUM_COMPLETE are friends")
-Cc: Eric Dumazet <edumazet@google.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
-Signed-off-by: Tariq Toukan <tariqt@mellanox.com>
-Reviewed-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: stable@vger.kernel.org
+Fixes: 5c056fdc5b47 ("libceph: verify authorize reply on connect")
+Link: https://tracker.ceph.com/issues/20164
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Reviewed-by: Sage Weil <sage@redhat.com>
+[idryomov@gmail.com: backport to 4.4: extra arg, no CEPHX_V2]
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/mellanox/mlx4/en_rx.c |   21 ++++++++++++++++++++-
- 1 file changed, 20 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/mellanox/mlx4/en_rx.c
-+++ b/drivers/net/ethernet/mellanox/mlx4/en_rx.c
-@@ -725,13 +725,27 @@ static int get_fixed_ipv6_csum(__wsum hw
- 	return 0;
- }
- #endif
+---
+ net/ceph/messenger.c |   12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
+
+--- a/net/ceph/messenger.c
++++ b/net/ceph/messenger.c
+@@ -2049,15 +2049,19 @@ static int process_connect(struct ceph_c
+ 	dout("process_connect on %p tag %d\n", con, (int)con->in_tag);
+ 
+ 	if (con->auth_reply_buf) {
++		int len = le32_to_cpu(con->in_reply.authorizer_len);
 +
-+#define short_frame(size) ((size) <= ETH_ZLEN + ETH_FCS_LEN)
-+
- static int check_csum(struct mlx4_cqe *cqe, struct sk_buff *skb, void *va,
- 		      netdev_features_t dev_features)
- {
- 	__wsum hw_checksum = 0;
-+	void *hdr;
+ 		/*
+ 		 * Any connection that defines ->get_authorizer()
+ 		 * should also define ->verify_authorizer_reply().
+ 		 * See get_connect_authorizer().
+ 		 */
+-		ret = con->ops->verify_authorizer_reply(con, 0);
+-		if (ret < 0) {
+-			con->error_msg = "bad authorize reply";
+-			return ret;
++		if (len) {
++			ret = con->ops->verify_authorizer_reply(con, 0);
++			if (ret < 0) {
++				con->error_msg = "bad authorize reply";
++				return ret;
++			}
+ 		}
+ 	}
  
--	void *hdr = (u8 *)va + sizeof(struct ethhdr);
-+	/* CQE csum doesn't cover padding octets in short ethernet
-+	 * frames. And the pad field is appended prior to calculating
-+	 * and appending the FCS field.
-+	 *
-+	 * Detecting these padded frames requires to verify and parse
-+	 * IP headers, so we simply force all those small frames to skip
-+	 * checksum complete.
-+	 */
-+	if (short_frame(skb->len))
-+		return -EINVAL;
- 
-+	hdr = (u8 *)va + sizeof(struct ethhdr);
- 	hw_checksum = csum_unfold((__force __sum16)cqe->checksum);
- 
- 	if (cqe->vlan_my_qpn & cpu_to_be32(MLX4_CQE_CVLAN_PRESENT_MASK) &&
-@@ -851,6 +865,11 @@ int mlx4_en_process_rx_cq(struct net_dev
- 			(cqe->vlan_my_qpn & cpu_to_be32(MLX4_CQE_L2_TUNNEL));
- 
- 		if (likely(dev->features & NETIF_F_RXCSUM)) {
-+			/* TODO: For IP non TCP/UDP packets when csum complete is
-+			 * not an option (not supported or any other reason) we can
-+			 * actually check cqe IPOK status bit and report
-+			 * CHECKSUM_UNNECESSARY rather than CHECKSUM_NONE
-+			 */
- 			if (cqe->status & cpu_to_be16(MLX4_CQE_STATUS_TCP |
- 						      MLX4_CQE_STATUS_UDP)) {
- 				if ((cqe->status & cpu_to_be16(MLX4_CQE_STATUS_IPOK)) &&
 
 
