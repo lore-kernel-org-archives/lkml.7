@@ -2,198 +2,156 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 241C9C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 18:29:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50A34C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 18:30:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5E472175B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 18:29:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E7DE2175B
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 18:30:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h6yky17a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729009AbfCVS3e (ORCPT
+        id S1729083AbfCVSah (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 14:29:34 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:48322 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727050AbfCVS3e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 14:29:34 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 79D2D89C37;
-        Fri, 22 Mar 2019 18:29:32 +0000 (UTC)
-Received: from [10.18.17.208] (dhcp-17-208.bos.redhat.com [10.18.17.208])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A4DE15D70A;
-        Fri, 22 Mar 2019 18:29:30 +0000 (UTC)
-Subject: Re: [PATCH v2 5/8] modpost: Integrate klp-convert
-To:     Joao Moreira <jmoreira@suse.de>
-Cc:     live-patching@vger.kernel.org, mbenes@suse.cz, pmladek@suse.cz,
-        jikos@suse.cz, nstange@suse.de, jpoimboe@redhat.com,
-        khlebnikov@yandex-team.ru, jeyu@kernel.org, matz@suse.de,
-        linux-kernel@vger.kernel.org, yamada.masahiro@socionext.com,
-        linux-kbuild@vger.kernel.org, michal.lkml@markovi.net,
-        live-patching-owner@vger.kernel.org
-References: <20190301141313.15057-1-jmoreira@suse.de>
- <20190301141313.15057-6-jmoreira@suse.de> <20190322145404.GA31248@redhat.com>
- <48deaa61c7bd81e40df445ba80825ad7@suse.de>
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-Message-ID: <548c547a-d56c-40e9-6747-016c9eba7bf4@redhat.com>
-Date:   Fri, 22 Mar 2019 14:29:29 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <48deaa61c7bd81e40df445ba80825ad7@suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Fri, 22 Mar 2019 18:29:33 +0000 (UTC)
+        Fri, 22 Mar 2019 14:30:37 -0400
+Received: from mail-vk1-f194.google.com ([209.85.221.194]:38060 "EHLO
+        mail-vk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727050AbfCVSah (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 14:30:37 -0400
+Received: by mail-vk1-f194.google.com with SMTP id h71so684097vkf.5
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 11:30:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=QHKLfg/vBhdXYRO4deWi+CYS6pkbDYiyKauNVBCvb4U=;
+        b=h6yky17abN6hu/Ml+pfHNv0cEniO7kK55g7UrvUiKMfqE4AyQJOyWuGG9NUozW/bu9
+         W4pOhJXuKOrzQM3VKZK50p1WMl8XOr5lOSHykUMXkvOGsmXUpTm77dP8/Cv4pfVHSzIz
+         E/iO947QDWzRG1rt6zXzCR9J6YuAfYFhSiyxRq13+om+VkRy8ItdTxgzV/r+cQPD167f
+         aSVw28zEdoVmsQM8Eo8LyDAWZ7pzOwqEQGbwuvK+dFjBsobjwpi0bu7KWOleLtQqR85K
+         S4LL8cIEdmmRrqza5E+DNSDhmGxtN0EdtACjs6Mzc9FDYgYsM0UYAjDdyDVMSf5CGNSo
+         SloQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=QHKLfg/vBhdXYRO4deWi+CYS6pkbDYiyKauNVBCvb4U=;
+        b=Ka7Yr+48WBGiieV8/F+owQmrePibLHEFGX63zKNp9KunBGmPS1PGj/0O2q7xkR1hZx
+         fT8LoFv1Km1NzZNzMJLSm/Cr/P0HWMt+5xsmrLGot7j3qdz3Cp0jRM8gEN7qQY+9q35T
+         mCFjcXySDk2l+IY2lZOnQTYFcXy8GQ4nRrP/0/oUtq9xxJqGXc6StnSqm+jCtQWMP885
+         2vm4OwTXCiIrqc+ObKIZCS9haAFWPV3FaBDRytJHEtq0aPhzzsDHZuCXup2eX3mpzgrw
+         QOl3I32llGNh98NTOw/jkyDo1F1bzlIuPsr3tGzguDyJXrHQW2VbuiPfQ5JhFFkN1Qe+
+         k2kQ==
+X-Gm-Message-State: APjAAAWqy1UcGOxsjCTuJ+RFuaGD1VavxwZl8nTvmnQI4lQLJWM08S3v
+        R2aF39+0XAbhzpuvxELe5Hs=
+X-Google-Smtp-Source: APXvYqzgey0cMVktXG7uQUh/M3P9IIJLfhBfDGMCim8jsFsVMUSWX1UjqJJOxGv6y0Y9o1NXg3J2ww==
+X-Received: by 2002:a1f:2acb:: with SMTP id q194mr6691777vkq.92.1553279436098;
+        Fri, 22 Mar 2019 11:30:36 -0700 (PDT)
+Received: from centos-dev.localdomain (pool-173-66-89-81.washdc.fios.verizon.net. [173.66.89.81])
+        by smtp.gmail.com with ESMTPSA id r185sm2768649vsr.29.2019.03.22.11.30.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 22 Mar 2019 11:30:35 -0700 (PDT)
+From:   thibodux@gmail.com
+X-Google-Original-From: ryan.thibodeaux@starlab.io
+To:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
+Cc:     boris.ostrovsky@oracle.com, oleksandr_andrushchenko@epam.com,
+        tglx@linutronix.de, jgross@suse.com, thibodux@gmail.com,
+        ryan.thibodeaux@starlab.io
+Subject: [PATCH] x86/xen: Add "xen_timer_slop" command line option
+Date:   Fri, 22 Mar 2019 14:29:57 -0400
+Message-Id: <1553279397-130201-1-git-send-email-ryan.thibodeaux@starlab.io>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/22/19 12:37 PM, Joao Moreira wrote:
-> On 2019-03-22 11:54, Joe Lawrence wrote:
->> On Fri, Mar 01, 2019 at 11:13:10AM -0300, Joao Moreira wrote:
->>> From: Josh Poimboeuf <jpoimboe@redhat.com>
->>>
->>> Create cmd_klp_convert and hook it into scripts/Makefile.modpost.
->>> cmd_klp_convert invokes klp-convert with the right arguments for the
->>> conversion of unresolved symbols inside a livepatch.
->>>
->>> [khlebnikov:
->>> * save cmd_ld_ko_o into .module.cmd, if_changed_rule doesn't do that
->>> * fix bashisms for debian where /bin/sh is a symlink to /bin/dash
->>> * rename rule_link_module to rule_ld_ko_o, otherwise arg-check inside
->>>    if_changed_rule compares cmd_link_module and cmd_ld_ko_o
->>> * check modinfo -F livepatch only if CONFIG_LIVEPATCH is true
->>> ]
->>>
->>> [mbenes:
->>> * remove modinfo call. LIVEPATCH_ in Makefiled
->>> ]
->>>
->>> [jmoreira:
->>> * split up: move the .livepatch file-based scheme for identifying
->>> livepatches to a previous patch, as it was required for correctly
->>> building Symbols.list there.
->>> ]
->>>
->>> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
->>> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
->>> Signed-off-by: Miroslav Benes <mbenes@suse.cz>
->>> Signed-off-by: Joao Moreira <jmoreira@suse.de>
->>> ---
->>>   scripts/Kbuild.include   |  4 +++-
->>>   scripts/Makefile.modpost | 16 +++++++++++++++-
->>>   scripts/mod/modpost.c    |  6 +++++-
->>>   scripts/mod/modpost.h    |  1 +
->>>   4 files changed, 24 insertions(+), 3 deletions(-)
->>>
->>>
->>> [ ... snip ... ]
->>>
->>> diff --git a/scripts/Makefile.modpost b/scripts/Makefile.modpost
->>> index 7d4af0d0accb..da779a185218 100644
->>> --- a/scripts/Makefile.modpost
->>> +++ b/scripts/Makefile.modpost
->>> @@ -125,8 +125,22 @@ quiet_cmd_ld_ko_o = LD [M]  $@
->>>                    -o $@ $(filter-out FORCE,$^) ;
->>>    \
->>>   	$(if $(ARCH_POSTLINK), $(MAKE) -f $(ARCH_POSTLINK) $@, true)
->>>
->>> +SLIST = $(objtree)/Symbols.list
->>> +KLP_CONVERT = scripts/livepatch/klp-convert
->>> +quiet_cmd_klp_convert = KLP $@
->>> +      cmd_klp_convert = mv $@ $(@:.ko=.klp.o);				\
->>> +			$(KLP_CONVERT) $(SLIST) $(@:.ko=.klp.o) $@
->>> +
->>> +define rule_ld_ko_o
->>> +	$(call cmd,ld_ko_o) $(cmd_ld_ko_o) ;				\
->>                             ^
->> Should there be a ';' semicolon here (and maybe a line-break) between
->> $(call cmd,ld_ko_o) and $(cmd_ld_ko_o)?
->>
->> I didn't see this in my x86_64 VM, but on a ppc64le box, I kept getting
->> really strange build errors that I traced to this line.  Without a
->> semicolon, the build was trying to run a make command with a linker
->> command smashed onto the end of it:
->>
->>    make -f ./arch/powerpc/Makefile.postlink crypto/xts.ko ld -r  -EL -m
->> elf64lppc -T ./scripts/module-common.lds -T
->> ./arch/powerpc/kernel/module.lds --save-restore-funcs  --build-id  -o
->> crypto/xts.ko crypto/xts.o crypto/xts.mod.o
->>
->>
->> Now, klp-convert looks like will need some ppc64le work as well, as
->> it's
->> confused about .TOC. symbols:
->>
->>      CC      samples/livepatch/livepatch-annotated-sample.mod.o
->>      CC      samples/livepatch/livepatch-callbacks-busymod.mod.o
->>      CC      samples/livepatch/livepatch-callbacks-demo.mod.o
->>      CC      samples/livepatch/livepatch-callbacks-mod.mod.o
->>      CC      samples/livepatch/livepatch-sample.mod.o
->>      CC      samples/livepatch/livepatch-shadow-fix1.mod.o
->>      CC      samples/livepatch/livepatch-shadow-fix2.mod.o
->>      CC      samples/livepatch/livepatch-shadow-mod.mod.o
->>      LD [M]  samples/livepatch/livepatch-annotated-sample.ko
->>      LD [M]  samples/livepatch/livepatch-callbacks-demo.ko
->>      KLP     samples/livepatch/livepatch-annotated-sample.ko
->>      LD [M]  samples/livepatch/livepatch-callbacks-mod.ko
->>      KLP     samples/livepatch/livepatch-callbacks-demo.ko
->>      LD [M]  samples/livepatch/livepatch-sample.ko
->>      LD [M]  samples/livepatch/livepatch-shadow-fix1.ko
->>    klp-convert: Define KLP_SYMPOS for the symbol: .TOC.
->>    Valid KLP_SYMPOS for symbol .TOC.:
->>
->>    [ ... snip listing of all .TOC's across the kernel ... ]
->>
->> but we can save that for another day.
->>
-> 
-> Hi Joe, first of all, thank you for you in-depth review. I did not have
-> the time to go through everything yet, and I'll reply properly to the
-> other comments soon. Yet, I would like to add a quick note here, since
-> you are testing ppc64le. ppc64le is exactly one of the things I have
-> been dealing with in the last two days, specifically the .TOC. symbols
-> (there is also another bug related to converting relocations of symbols
-> with index 0, but this one is architecture agnostic).
-> 
-> If you would like to take a look, the fix is in the latest commit here:
-> - https://github.com/SUSE/klp-convert/tree/fixppc64le
-> 
-> I would be very glad if you have any comment or input on that, and I
-> guess that if the fix is that simple, I can manage to squash it into v3.
+From: Ryan Thibodeaux <ryan.thibodeaux@starlab.io>
 
-Hi João,
+Add a new command-line option "xen_timer_slop=<INT>" that sets the
+minimum delta of virtual Xen timers. This commit does not change the
+default timer slop value for virtual Xen timers.
 
-I added https://github.com/SUSE/klp-convert/commit/69b89ef5c366 on top 
-of my 
-https://github.com/joe-lawrence/linux/tree/klp-convert-v2-rebase-review 
-branch with positive results:
+Lowering the timer slop value should improve the accuracy of virtual
+timers (e.g., better process dispatch latency), but it will likely
+increase the number of virtual timer interrupts (relative to the
+original slop setting).
 
-(No build klp-convert build complaints)
+The original timer slop value has not changed since the introduction
+of the Xen-aware Linux kernel code. This commit provides users an
+opportunity to tune timer performance given the refinements to
+hardware and the Xen event channel processing. It also mirrors
+a feature in the Xen hypervisor - the "timer_slop" Xen command line
+option.
 
-   % uname -r
-   Linux ibm-p9z-21-lp26.mpc.lab.eng.bos.redhat.com 5.1.0-rc1+ #6 SMP 
-Thu Mar 21 11:40:24 EDT 2019 ppc64le ppc64le ppc64le GNU/Linux
+Signed-off-by: Ryan Thibodeaux <ryan.thibodeaux@starlab.io>
+---
+ Documentation/admin-guide/kernel-parameters.txt |  7 +++++++
+ arch/x86/xen/time.c                             | 18 ++++++++++++++++--
+ 2 files changed, 23 insertions(+), 2 deletions(-)
 
-   % insmod samples/livepatch/livepatch-annotated-sample.ko
-   % grep -o 'livepatch.*' /proc/cmdline
-   livepatch=1
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 858b6c0..fb58c84 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -5129,6 +5129,13 @@
+ 			with /sys/devices/system/xen_memory/xen_memory0/scrub_pages.
+ 			Default value controlled with CONFIG_XEN_SCRUB_PAGES_DEFAULT.
+ 
++	xen_timer_slop=	[X86-64,XEN]
++			Set the timer slop (in nanoseconds) for the virtual Xen
++			timers (default is 100000). This adjusts the minimum
++			delta of virtualized Xen timers, where lower values
++			improve timer resolution at the expense of processing
++			more timer interrupts.
++
+ 	xirc2ps_cs=	[NET,PCMCIA]
+ 			Format:
+ 			<irq>,<irq_mask>,<io>,<full_duplex>,<do_sound>,<lockup_hack>[,<irq2>[,<irq3>[,<irq4>]]]
+diff --git a/arch/x86/xen/time.c b/arch/x86/xen/time.c
+index 6e29794..0393968 100644
+--- a/arch/x86/xen/time.c
++++ b/arch/x86/xen/time.c
+@@ -212,7 +212,7 @@ static int xen_timerop_set_next_event(unsigned long delta,
+ 	return 0;
+ }
+ 
+-static const struct clock_event_device xen_timerop_clockevent = {
++static struct clock_event_device xen_timerop_clockevent __ro_after_init = {
+ 	.name			= "xen",
+ 	.features		= CLOCK_EVT_FEAT_ONESHOT,
+ 
+@@ -273,7 +273,7 @@ static int xen_vcpuop_set_next_event(unsigned long delta,
+ 	return ret;
+ }
+ 
+-static const struct clock_event_device xen_vcpuop_clockevent = {
++static struct clock_event_device xen_vcpuop_clockevent __ro_after_init = {
+ 	.name = "xen",
+ 	.features = CLOCK_EVT_FEAT_ONESHOT,
+ 
+@@ -570,3 +570,17 @@ void __init xen_hvm_init_time_ops(void)
+ 	x86_platform.set_wallclock = xen_set_wallclock;
+ }
+ #endif
++
++/* Kernel parameter to specify Xen timer slop */
++static int __init parse_xen_timer_slop(char *ptr)
++{
++	unsigned long slop = memparse(ptr, NULL);
++
++	xen_timerop_clockevent.min_delta_ns = slop;
++	xen_timerop_clockevent.min_delta_ticks = slop;
++	xen_vcpuop_clockevent.min_delta_ns = slop;
++	xen_vcpuop_clockevent.min_delta_ticks = slop;
++
++	return 0;
++}
++early_param("xen_timer_slop", parse_xen_timer_slop);
+-- 
+1.8.3.1
 
-   % ./tools/testing/selftests/livepatch/test-livepatch.sh
-   TEST: basic function patching ... ok
-   TEST: multiple livepatches ... ok
-   TEST: atomic replace livepatch ... ok
-   TEST: klp-convert symbols ... ok
-
-There may be more ppc64le specifics lurking, but if we could get samples 
-and self-tests working, I think we'd be in good shape for v3.
-
--- Joe
