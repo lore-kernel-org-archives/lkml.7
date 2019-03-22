@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 194C9C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:41:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99FB7C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:41:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD7702195D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:41:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6094621925
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:41:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254881;
-	bh=sc7TD6ZkCiJPjO9MvyuvYt+yigPCFv2LoQWSUhM6/yg=;
+	s=default; t=1553254888;
+	bh=chMWQi/yrivsfRyOXR1HT/Wiy7SnpFw/3YD748tKFdY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QMdopLlfiY8ZSHzdQh6QmWLfOvX8HBBG9cE6bs+lXnkX7/4UgNpRBaPDmh/40dB65
-	 1vRdz7XFTKLt/6nYqpnH1jungzcHmDEzmGAH/9uxsOFjEaPQ5hYlQ2j1WP85ua3OQo
-	 cZcrEp7G8rqhNykkfzNe6jj567JjWCivXa0dPaEc=
+	b=WUv2ZoQzcw0opkt6dnNrRJATGmNC62hqtrmEQ2eweLgw5x2n51wA471qL/0qfe+QT
+	 78akysazXZtoFIs7mdmxtBax1feg053xRtvfPUkFmGAKMIP+VTwOsU+HCRWg4Y+QDN
+	 K4hkuKxBWRrlRLyszCh7AE2kji5Sg38rzzjoKcCI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731397AbfCVLlU (ORCPT
+        id S1731411AbfCVLl1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:41:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43378 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:41:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43520 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731381AbfCVLlR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:41:17 -0400
+        id S1731043AbfCVLlZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:41:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 530932082C;
-        Fri, 22 Mar 2019 11:41:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC2A321925;
+        Fri, 22 Mar 2019 11:41:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254876;
-        bh=sc7TD6ZkCiJPjO9MvyuvYt+yigPCFv2LoQWSUhM6/yg=;
+        s=default; t=1553254883;
+        bh=chMWQi/yrivsfRyOXR1HT/Wiy7SnpFw/3YD748tKFdY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W/W/j1XG+oPuSwAxbrJdb0li6gNfncz+1ODHQk4hF55jgX18OfPhlDf8asurpX2lJ
-         Z8C1gL5rU4zaAWTYD+iAreRMjoCG0E12ZYXKx13N5wqNjsuz15b4us2DEm9iU1KfUC
-         d9QruEug82/EdBRZfDHoMKe79TSbRwYOzis1/tUY=
+        b=qqYO1cADTnr0sVY6piUFqSAdjNwC7FUe9FSBVTEGdOh44B0d08OCUZiAU/gk0mQo6
+         1wWnbEFOYzmkaXRX8KUz+8oQKUFbhaPMmpPCe99am/gfddvHLr1Safn0ZT6gpjmTHX
+         1EAkpcgfvRWGesyN68vuLaI9XA3bQav11hyMPo0c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Gabriel Fernandez <gabriel.fernandez@st.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        stable@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 020/118] Input: st-keyscan - fix potential zalloc NULL dereference
-Date:   Fri, 22 Mar 2019 12:14:52 +0100
-Message-Id: <20190322111217.428447075@linuxfoundation.org>
+Subject: [PATCH 4.9 022/118] ARM: 8824/1: fix a migrating irq bug when hotplug cpu
+Date:   Fri, 22 Mar 2019 12:14:54 +0100
+Message-Id: <20190322111217.583584635@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111215.873964544@linuxfoundation.org>
 References: <20190322111215.873964544@linuxfoundation.org>
@@ -67,43 +68,154 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 2439d37e1bf8a34d437573c086572abe0f3f1b15 ]
+[ Upstream commit 1b5ba350784242eb1f899bcffd95d2c7cff61e84 ]
 
-This patch fixes the following static checker warning:
+Arm TC2 fails cpu hotplug stress test.
 
-drivers/input/keyboard/st-keyscan.c:156 keyscan_probe()
-error: potential zalloc NULL dereference: 'keypad_data->input_dev'
+This issue was tracked down to a missing copy of the new affinity
+cpumask for the vexpress-spc interrupt into struct
+irq_common_data.affinity when the interrupt is migrated in
+migrate_one_irq().
 
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Fix it by replacing the arm specific hotplug cpu migration with the
+generic irq code.
+
+This is the counterpart implementation to commit 217d453d473c ("arm64:
+fix a migrating irq bug when hotplug cpu").
+
+Tested with cpu hotplug stress test on Arm TC2 (multi_v7_defconfig plus
+CONFIG_ARM_BIG_LITTLE_CPUFREQ=y and CONFIG_ARM_VEXPRESS_SPC_CPUFREQ=y).
+The vexpress-spc interrupt (irq=22) on this board is affine to CPU0.
+Its affinity cpumask now changes correctly e.g. from 0 to 1-4 when
+CPU0 is hotplugged out.
+
+Suggested-by: Marc Zyngier <marc.zyngier@arm.com>
+Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Acked-by: Marc Zyngier <marc.zyngier@arm.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/keyboard/st-keyscan.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/Kconfig           |  1 +
+ arch/arm/include/asm/irq.h |  1 -
+ arch/arm/kernel/irq.c      | 62 --------------------------------------
+ arch/arm/kernel/smp.c      |  2 +-
+ 4 files changed, 2 insertions(+), 64 deletions(-)
 
-diff --git a/drivers/input/keyboard/st-keyscan.c b/drivers/input/keyboard/st-keyscan.c
-index de7be4f03d91..ebf9f643d910 100644
---- a/drivers/input/keyboard/st-keyscan.c
-+++ b/drivers/input/keyboard/st-keyscan.c
-@@ -153,6 +153,8 @@ static int keyscan_probe(struct platform_device *pdev)
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index b5d529fdffab..74a70f91b01a 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -1457,6 +1457,7 @@ config NR_CPUS
+ config HOTPLUG_CPU
+ 	bool "Support for hot-pluggable CPUs"
+ 	depends on SMP
++	select GENERIC_IRQ_MIGRATION
+ 	help
+ 	  Say Y here to experiment with turning CPUs off and on.  CPUs
+ 	  can be controlled through /sys/devices/system/cpu.
+diff --git a/arch/arm/include/asm/irq.h b/arch/arm/include/asm/irq.h
+index e53638c8ed8a..61e1d089ce1a 100644
+--- a/arch/arm/include/asm/irq.h
++++ b/arch/arm/include/asm/irq.h
+@@ -24,7 +24,6 @@
+ #ifndef __ASSEMBLY__
+ struct irqaction;
+ struct pt_regs;
+-extern void migrate_irqs(void);
  
- 	input_dev->id.bustype = BUS_HOST;
- 
-+	keypad_data->input_dev = input_dev;
-+
- 	error = keypad_matrix_key_parse_dt(keypad_data);
- 	if (error)
- 		return error;
-@@ -168,8 +170,6 @@ static int keyscan_probe(struct platform_device *pdev)
- 
- 	input_set_drvdata(input_dev, keypad_data);
- 
--	keypad_data->input_dev = input_dev;
+ extern void asm_do_IRQ(unsigned int, struct pt_regs *);
+ void handle_IRQ(unsigned int, struct pt_regs *);
+diff --git a/arch/arm/kernel/irq.c b/arch/arm/kernel/irq.c
+index ece04a457486..5b07c7a31c31 100644
+--- a/arch/arm/kernel/irq.c
++++ b/arch/arm/kernel/irq.c
+@@ -31,7 +31,6 @@
+ #include <linux/smp.h>
+ #include <linux/init.h>
+ #include <linux/seq_file.h>
+-#include <linux/ratelimit.h>
+ #include <linux/errno.h>
+ #include <linux/list.h>
+ #include <linux/kallsyms.h>
+@@ -119,64 +118,3 @@ int __init arch_probe_nr_irqs(void)
+ 	return nr_irqs;
+ }
+ #endif
 -
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	keypad_data->base = devm_ioremap_resource(&pdev->dev, res);
- 	if (IS_ERR(keypad_data->base))
+-#ifdef CONFIG_HOTPLUG_CPU
+-static bool migrate_one_irq(struct irq_desc *desc)
+-{
+-	struct irq_data *d = irq_desc_get_irq_data(desc);
+-	const struct cpumask *affinity = irq_data_get_affinity_mask(d);
+-	struct irq_chip *c;
+-	bool ret = false;
+-
+-	/*
+-	 * If this is a per-CPU interrupt, or the affinity does not
+-	 * include this CPU, then we have nothing to do.
+-	 */
+-	if (irqd_is_per_cpu(d) || !cpumask_test_cpu(smp_processor_id(), affinity))
+-		return false;
+-
+-	if (cpumask_any_and(affinity, cpu_online_mask) >= nr_cpu_ids) {
+-		affinity = cpu_online_mask;
+-		ret = true;
+-	}
+-
+-	c = irq_data_get_irq_chip(d);
+-	if (!c->irq_set_affinity)
+-		pr_debug("IRQ%u: unable to set affinity\n", d->irq);
+-	else if (c->irq_set_affinity(d, affinity, false) == IRQ_SET_MASK_OK && ret)
+-		cpumask_copy(irq_data_get_affinity_mask(d), affinity);
+-
+-	return ret;
+-}
+-
+-/*
+- * The current CPU has been marked offline.  Migrate IRQs off this CPU.
+- * If the affinity settings do not allow other CPUs, force them onto any
+- * available CPU.
+- *
+- * Note: we must iterate over all IRQs, whether they have an attached
+- * action structure or not, as we need to get chained interrupts too.
+- */
+-void migrate_irqs(void)
+-{
+-	unsigned int i;
+-	struct irq_desc *desc;
+-	unsigned long flags;
+-
+-	local_irq_save(flags);
+-
+-	for_each_irq_desc(i, desc) {
+-		bool affinity_broken;
+-
+-		raw_spin_lock(&desc->lock);
+-		affinity_broken = migrate_one_irq(desc);
+-		raw_spin_unlock(&desc->lock);
+-
+-		if (affinity_broken)
+-			pr_warn_ratelimited("IRQ%u no longer affine to CPU%u\n",
+-				i, smp_processor_id());
+-	}
+-
+-	local_irq_restore(flags);
+-}
+-#endif /* CONFIG_HOTPLUG_CPU */
+diff --git a/arch/arm/kernel/smp.c b/arch/arm/kernel/smp.c
+index 8faf869e9fb2..bc83ec7ed53f 100644
+--- a/arch/arm/kernel/smp.c
++++ b/arch/arm/kernel/smp.c
+@@ -253,7 +253,7 @@ int __cpu_disable(void)
+ 	/*
+ 	 * OK - migrate IRQs away from this CPU
+ 	 */
+-	migrate_irqs();
++	irq_migrate_all_off_this_cpu();
+ 
+ 	/*
+ 	 * Flush user cache and TLB mappings, and then remove this CPU
 -- 
 2.19.1
 
