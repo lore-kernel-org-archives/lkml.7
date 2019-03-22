@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C521FC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:11:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F98C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:11:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 910BD2195D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:11:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 303E12083D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:11:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256713;
-	bh=S47NSWzpzWBygLdfIQbBL5muhP+weMDCZtgmVTXy71U=;
+	s=default; t=1553256717;
+	bh=z3QDDQzInWLDWwcNLmN0u87Lqq2L5e3wyxIA6keD/y4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YRuM1eoNBugmLNvR3MsscTaeGp/NdqtpalfWNEsPKNDz0KShj5cMIx8x5RJz2tfPz
-	 dIIVW8MiUZB96zWf4T8LzRUD/5MaGNN8oAsqEzNE7zpfQIxCrmZmzvKZFrmvERYc3R
-	 Ea9gtHVXp1z/ee5MOC3ajfM1iiFFSeGpL06OTqzQ=
+	b=n/p4c2csJ6uDwEEo6HApkePde/YT7aCN18Sdq3URFPfFbHAb8QLFMC2fl2TVWQgVb
+	 TUEl4pbCRSRghO9xa0DtFYO1BIMEU5enkVIpFAOclcWq5vH5x67znJH30r5gLRp1g4
+	 P1CyKMbtHFXvv8pEURjeAw00eg5AbjV7NiaOo6yU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389419AbfCVMLw (ORCPT
+        id S2389558AbfCVMLz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:11:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50004 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:11:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389553AbfCVMLq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:11:46 -0400
+        id S2389424AbfCVMLx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:11:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ACD9A2083D;
-        Fri, 22 Mar 2019 12:11:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3828021929;
+        Fri, 22 Mar 2019 12:11:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256706;
-        bh=S47NSWzpzWBygLdfIQbBL5muhP+weMDCZtgmVTXy71U=;
+        s=default; t=1553256712;
+        bh=z3QDDQzInWLDWwcNLmN0u87Lqq2L5e3wyxIA6keD/y4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ip3/eKccI9/2L7o9OmTsKyuq69kBe9dIMvYko2IVeJ+4ksyXgO122aTEEjDBX/PKO
-         UuWphRlRpo3DXDhU10rCYpgETpILFZAxKFTxeKmpr/rkVupX2ABdrSX268+qFydHlE
-         dNd7Mu1BG7l4rB1bLqk4djsNx981+Vg6uzJaFZ9Y=
+        b=O/uUvacOsG/7ySs8MJPKfqEdRA912yV4/DAQM0EBbv19CyCDQz9tHK5c31LBBWTr+
+         V0WqyvK4i8bYxn02cWmDqLFV2EdqUWwkVylGVzrCsa7GnCLxh8c/g/MYbrg5Xn/aWF
+         i2aDtj8A8vFy5IH1mvql5T7UQzkl/E9X6py8gQwg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        stable@vger.kernel.org, Roland Hieber <rhi@pengutronix.de>,
+        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.0 013/238] crypto: ccree - fix missing break in switch statement
-Date:   Fri, 22 Mar 2019 12:13:52 +0100
-Message-Id: <20190322111259.012590292@linuxfoundation.org>
+Subject: [PATCH 5.0 015/238] crypto: caam - fix DMA mapping of stack memory
+Date:   Fri, 22 Mar 2019 12:13:54 +0100
+Message-Id: <20190322111259.104084584@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -66,35 +66,316 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Gustavo A. R. Silva <gustavo@embeddedor.com>
+From: Horia Geantă <horia.geanta@nxp.com>
 
-commit b5be853181a8d4a6e20f2073ccd273d6280cad88 upstream.
+commit c19650d6ea99bcd903d3e55dd61860026c701339 upstream.
 
-Add missing break statement in order to prevent the code from falling
-through to case S_DIN_to_DES.
+Roland reports the following issue and provides a root cause analysis:
 
-This bug was found thanks to the ongoing efforts to enable
--Wimplicit-fallthrough.
+"On a v4.19 i.MX6 system with IMA and CONFIG_DMA_API_DEBUG enabled, a
+warning is generated when accessing files on a filesystem for which IMA
+measurement is enabled:
 
-Fixes: 63ee04c8b491 ("crypto: ccree - add skcipher support")
-Cc: stable@vger.kernel.org
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+    ------------[ cut here ]------------
+    WARNING: CPU: 0 PID: 1 at kernel/dma/debug.c:1181 check_for_stack.part.9+0xd0/0x120
+    caam_jr 2101000.jr0: DMA-API: device driver maps memory from stack [addr=b668049e]
+    Modules linked in:
+    CPU: 0 PID: 1 Comm: switch_root Not tainted 4.19.0-20181214-1 #2
+    Hardware name: Freescale i.MX6 Quad/DualLite (Device Tree)
+    Backtrace:
+    [<c010efb8>] (dump_backtrace) from [<c010f2d0>] (show_stack+0x20/0x24)
+    [<c010f2b0>] (show_stack) from [<c08b04f4>] (dump_stack+0xa0/0xcc)
+    [<c08b0454>] (dump_stack) from [<c012b610>] (__warn+0xf0/0x108)
+    [<c012b520>] (__warn) from [<c012b680>] (warn_slowpath_fmt+0x58/0x74)
+    [<c012b62c>] (warn_slowpath_fmt) from [<c0199acc>] (check_for_stack.part.9+0xd0/0x120)
+    [<c01999fc>] (check_for_stack.part.9) from [<c019a040>] (debug_dma_map_page+0x144/0x174)
+    [<c0199efc>] (debug_dma_map_page) from [<c065f7f4>] (ahash_final_ctx+0x5b4/0xcf0)
+    [<c065f240>] (ahash_final_ctx) from [<c065b3c4>] (ahash_final+0x1c/0x20)
+    [<c065b3a8>] (ahash_final) from [<c03fe278>] (crypto_ahash_op+0x38/0x80)
+    [<c03fe240>] (crypto_ahash_op) from [<c03fe2e0>] (crypto_ahash_final+0x20/0x24)
+    [<c03fe2c0>] (crypto_ahash_final) from [<c03f19a8>] (ima_calc_file_hash+0x29c/0xa40)
+    [<c03f170c>] (ima_calc_file_hash) from [<c03f2b24>] (ima_collect_measurement+0x1dc/0x240)
+    [<c03f2948>] (ima_collect_measurement) from [<c03f0a60>] (process_measurement+0x4c4/0x6b8)
+    [<c03f059c>] (process_measurement) from [<c03f0cdc>] (ima_file_check+0x88/0xa4)
+    [<c03f0c54>] (ima_file_check) from [<c02d8adc>] (path_openat+0x5d8/0x1364)
+    [<c02d8504>] (path_openat) from [<c02dad24>] (do_filp_open+0x84/0xf0)
+    [<c02daca0>] (do_filp_open) from [<c02cf50c>] (do_open_execat+0x84/0x1b0)
+    [<c02cf488>] (do_open_execat) from [<c02d1058>] (__do_execve_file+0x43c/0x890)
+    [<c02d0c1c>] (__do_execve_file) from [<c02d1770>] (sys_execve+0x44/0x4c)
+    [<c02d172c>] (sys_execve) from [<c0101000>] (ret_fast_syscall+0x0/0x28)
+    ---[ end trace 3455789a10e3aefd ]---
+
+The cause is that the struct ahash_request *req is created as a
+stack-local variable up in the stack (presumably somewhere in the IMA
+implementation), then passed down into the CAAM driver, which tries to
+dma_single_map the req->result (indirectly via map_seq_out_ptr_result)
+in order to make that buffer available for the CAAM to store the result
+of the following hash operation.
+
+The calling code doesn't know how req will be used by the CAAM driver,
+and there could be other such occurrences where stack memory is passed
+down to the CAAM driver. Therefore we should rather fix this issue in
+the CAAM driver where the requirements are known."
+
+Fix this problem by:
+-instructing the crypto engine to write the final hash in state->caam_ctx
+-subsequently memcpy-ing the final hash into req->result
+
+Cc: <stable@vger.kernel.org> # v4.19+
+Reported-by: Roland Hieber <rhi@pengutronix.de>
+Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
+Tested-by: Roland Hieber <rhi@pengutronix.de>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/ccree/cc_cipher.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/crypto/caam/caamhash.c |   85 ++++++++++-------------------------------
+ 1 file changed, 21 insertions(+), 64 deletions(-)
 
---- a/drivers/crypto/ccree/cc_cipher.c
-+++ b/drivers/crypto/ccree/cc_cipher.c
-@@ -80,6 +80,7 @@ static int validate_keys_sizes(struct cc
- 		default:
- 			break;
- 		}
-+		break;
- 	case S_DIN_to_DES:
- 		if (size == DES3_EDE_KEY_SIZE || size == DES_KEY_SIZE)
- 			return 0;
+--- a/drivers/crypto/caam/caamhash.c
++++ b/drivers/crypto/caam/caamhash.c
+@@ -180,18 +180,6 @@ static inline int map_seq_out_ptr_ctx(u3
+ 	return 0;
+ }
+ 
+-/* Map req->result, and append seq_out_ptr command that points to it */
+-static inline dma_addr_t map_seq_out_ptr_result(u32 *desc, struct device *jrdev,
+-						u8 *result, int digestsize)
+-{
+-	dma_addr_t dst_dma;
+-
+-	dst_dma = dma_map_single(jrdev, result, digestsize, DMA_FROM_DEVICE);
+-	append_seq_out_ptr(desc, dst_dma, digestsize, 0);
+-
+-	return dst_dma;
+-}
+-
+ /* Map current buffer in state (if length > 0) and put it in link table */
+ static inline int buf_map_to_sec4_sg(struct device *jrdev,
+ 				     struct sec4_sg_entry *sec4_sg,
+@@ -429,7 +417,6 @@ static int ahash_setkey(struct crypto_ah
+ 
+ /*
+  * ahash_edesc - s/w-extended ahash descriptor
+- * @dst_dma: physical mapped address of req->result
+  * @sec4_sg_dma: physical mapped address of h/w link table
+  * @src_nents: number of segments in input scatterlist
+  * @sec4_sg_bytes: length of dma mapped sec4_sg space
+@@ -437,7 +424,6 @@ static int ahash_setkey(struct crypto_ah
+  * @sec4_sg: h/w link table
+  */
+ struct ahash_edesc {
+-	dma_addr_t dst_dma;
+ 	dma_addr_t sec4_sg_dma;
+ 	int src_nents;
+ 	int sec4_sg_bytes;
+@@ -453,8 +439,6 @@ static inline void ahash_unmap(struct de
+ 
+ 	if (edesc->src_nents)
+ 		dma_unmap_sg(dev, req->src, edesc->src_nents, DMA_TO_DEVICE);
+-	if (edesc->dst_dma)
+-		dma_unmap_single(dev, edesc->dst_dma, dst_len, DMA_FROM_DEVICE);
+ 
+ 	if (edesc->sec4_sg_bytes)
+ 		dma_unmap_single(dev, edesc->sec4_sg_dma,
+@@ -487,9 +471,9 @@ static void ahash_done(struct device *jr
+ 	struct ahash_edesc *edesc;
+ 	struct crypto_ahash *ahash = crypto_ahash_reqtfm(req);
+ 	int digestsize = crypto_ahash_digestsize(ahash);
++	struct caam_hash_state *state = ahash_request_ctx(req);
+ #ifdef DEBUG
+ 	struct caam_hash_ctx *ctx = crypto_ahash_ctx(ahash);
+-	struct caam_hash_state *state = ahash_request_ctx(req);
+ 
+ 	dev_err(jrdev, "%s %d: err 0x%x\n", __func__, __LINE__, err);
+ #endif
+@@ -498,17 +482,14 @@ static void ahash_done(struct device *jr
+ 	if (err)
+ 		caam_jr_strstatus(jrdev, err);
+ 
+-	ahash_unmap(jrdev, edesc, req, digestsize);
++	ahash_unmap_ctx(jrdev, edesc, req, digestsize, DMA_FROM_DEVICE);
++	memcpy(req->result, state->caam_ctx, digestsize);
+ 	kfree(edesc);
+ 
+ #ifdef DEBUG
+ 	print_hex_dump(KERN_ERR, "ctx@"__stringify(__LINE__)": ",
+ 		       DUMP_PREFIX_ADDRESS, 16, 4, state->caam_ctx,
+ 		       ctx->ctx_len, 1);
+-	if (req->result)
+-		print_hex_dump(KERN_ERR, "result@"__stringify(__LINE__)": ",
+-			       DUMP_PREFIX_ADDRESS, 16, 4, req->result,
+-			       digestsize, 1);
+ #endif
+ 
+ 	req->base.complete(&req->base, err);
+@@ -556,9 +537,9 @@ static void ahash_done_ctx_src(struct de
+ 	struct ahash_edesc *edesc;
+ 	struct crypto_ahash *ahash = crypto_ahash_reqtfm(req);
+ 	int digestsize = crypto_ahash_digestsize(ahash);
++	struct caam_hash_state *state = ahash_request_ctx(req);
+ #ifdef DEBUG
+ 	struct caam_hash_ctx *ctx = crypto_ahash_ctx(ahash);
+-	struct caam_hash_state *state = ahash_request_ctx(req);
+ 
+ 	dev_err(jrdev, "%s %d: err 0x%x\n", __func__, __LINE__, err);
+ #endif
+@@ -567,17 +548,14 @@ static void ahash_done_ctx_src(struct de
+ 	if (err)
+ 		caam_jr_strstatus(jrdev, err);
+ 
+-	ahash_unmap_ctx(jrdev, edesc, req, digestsize, DMA_TO_DEVICE);
++	ahash_unmap_ctx(jrdev, edesc, req, digestsize, DMA_BIDIRECTIONAL);
++	memcpy(req->result, state->caam_ctx, digestsize);
+ 	kfree(edesc);
+ 
+ #ifdef DEBUG
+ 	print_hex_dump(KERN_ERR, "ctx@"__stringify(__LINE__)": ",
+ 		       DUMP_PREFIX_ADDRESS, 16, 4, state->caam_ctx,
+ 		       ctx->ctx_len, 1);
+-	if (req->result)
+-		print_hex_dump(KERN_ERR, "result@"__stringify(__LINE__)": ",
+-			       DUMP_PREFIX_ADDRESS, 16, 4, req->result,
+-			       digestsize, 1);
+ #endif
+ 
+ 	req->base.complete(&req->base, err);
+@@ -838,7 +816,7 @@ static int ahash_final_ctx(struct ahash_
+ 	edesc->sec4_sg_bytes = sec4_sg_bytes;
+ 
+ 	ret = ctx_map_to_sec4_sg(jrdev, state, ctx->ctx_len,
+-				 edesc->sec4_sg, DMA_TO_DEVICE);
++				 edesc->sec4_sg, DMA_BIDIRECTIONAL);
+ 	if (ret)
+ 		goto unmap_ctx;
+ 
+@@ -858,14 +836,7 @@ static int ahash_final_ctx(struct ahash_
+ 
+ 	append_seq_in_ptr(desc, edesc->sec4_sg_dma, ctx->ctx_len + buflen,
+ 			  LDST_SGF);
+-
+-	edesc->dst_dma = map_seq_out_ptr_result(desc, jrdev, req->result,
+-						digestsize);
+-	if (dma_mapping_error(jrdev, edesc->dst_dma)) {
+-		dev_err(jrdev, "unable to map dst\n");
+-		ret = -ENOMEM;
+-		goto unmap_ctx;
+-	}
++	append_seq_out_ptr(desc, state->ctx_dma, digestsize, 0);
+ 
+ #ifdef DEBUG
+ 	print_hex_dump(KERN_ERR, "jobdesc@"__stringify(__LINE__)": ",
+@@ -878,7 +849,7 @@ static int ahash_final_ctx(struct ahash_
+ 
+ 	return -EINPROGRESS;
+  unmap_ctx:
+-	ahash_unmap_ctx(jrdev, edesc, req, digestsize, DMA_FROM_DEVICE);
++	ahash_unmap_ctx(jrdev, edesc, req, digestsize, DMA_BIDIRECTIONAL);
+ 	kfree(edesc);
+ 	return ret;
+ }
+@@ -932,7 +903,7 @@ static int ahash_finup_ctx(struct ahash_
+ 	edesc->src_nents = src_nents;
+ 
+ 	ret = ctx_map_to_sec4_sg(jrdev, state, ctx->ctx_len,
+-				 edesc->sec4_sg, DMA_TO_DEVICE);
++				 edesc->sec4_sg, DMA_BIDIRECTIONAL);
+ 	if (ret)
+ 		goto unmap_ctx;
+ 
+@@ -946,13 +917,7 @@ static int ahash_finup_ctx(struct ahash_
+ 	if (ret)
+ 		goto unmap_ctx;
+ 
+-	edesc->dst_dma = map_seq_out_ptr_result(desc, jrdev, req->result,
+-						digestsize);
+-	if (dma_mapping_error(jrdev, edesc->dst_dma)) {
+-		dev_err(jrdev, "unable to map dst\n");
+-		ret = -ENOMEM;
+-		goto unmap_ctx;
+-	}
++	append_seq_out_ptr(desc, state->ctx_dma, digestsize, 0);
+ 
+ #ifdef DEBUG
+ 	print_hex_dump(KERN_ERR, "jobdesc@"__stringify(__LINE__)": ",
+@@ -965,7 +930,7 @@ static int ahash_finup_ctx(struct ahash_
+ 
+ 	return -EINPROGRESS;
+  unmap_ctx:
+-	ahash_unmap_ctx(jrdev, edesc, req, digestsize, DMA_FROM_DEVICE);
++	ahash_unmap_ctx(jrdev, edesc, req, digestsize, DMA_BIDIRECTIONAL);
+ 	kfree(edesc);
+ 	return ret;
+ }
+@@ -1024,10 +989,8 @@ static int ahash_digest(struct ahash_req
+ 
+ 	desc = edesc->hw_desc;
+ 
+-	edesc->dst_dma = map_seq_out_ptr_result(desc, jrdev, req->result,
+-						digestsize);
+-	if (dma_mapping_error(jrdev, edesc->dst_dma)) {
+-		dev_err(jrdev, "unable to map dst\n");
++	ret = map_seq_out_ptr_ctx(desc, jrdev, state, digestsize);
++	if (ret) {
+ 		ahash_unmap(jrdev, edesc, req, digestsize);
+ 		kfree(edesc);
+ 		return -ENOMEM;
+@@ -1042,7 +1005,7 @@ static int ahash_digest(struct ahash_req
+ 	if (!ret) {
+ 		ret = -EINPROGRESS;
+ 	} else {
+-		ahash_unmap(jrdev, edesc, req, digestsize);
++		ahash_unmap_ctx(jrdev, edesc, req, digestsize, DMA_FROM_DEVICE);
+ 		kfree(edesc);
+ 	}
+ 
+@@ -1084,12 +1047,9 @@ static int ahash_final_no_ctx(struct aha
+ 		append_seq_in_ptr(desc, state->buf_dma, buflen, 0);
+ 	}
+ 
+-	edesc->dst_dma = map_seq_out_ptr_result(desc, jrdev, req->result,
+-						digestsize);
+-	if (dma_mapping_error(jrdev, edesc->dst_dma)) {
+-		dev_err(jrdev, "unable to map dst\n");
++	ret = map_seq_out_ptr_ctx(desc, jrdev, state, digestsize);
++	if (ret)
+ 		goto unmap;
+-	}
+ 
+ #ifdef DEBUG
+ 	print_hex_dump(KERN_ERR, "jobdesc@"__stringify(__LINE__)": ",
+@@ -1100,7 +1060,7 @@ static int ahash_final_no_ctx(struct aha
+ 	if (!ret) {
+ 		ret = -EINPROGRESS;
+ 	} else {
+-		ahash_unmap(jrdev, edesc, req, digestsize);
++		ahash_unmap_ctx(jrdev, edesc, req, digestsize, DMA_FROM_DEVICE);
+ 		kfree(edesc);
+ 	}
+ 
+@@ -1299,12 +1259,9 @@ static int ahash_finup_no_ctx(struct aha
+ 		goto unmap;
+ 	}
+ 
+-	edesc->dst_dma = map_seq_out_ptr_result(desc, jrdev, req->result,
+-						digestsize);
+-	if (dma_mapping_error(jrdev, edesc->dst_dma)) {
+-		dev_err(jrdev, "unable to map dst\n");
++	ret = map_seq_out_ptr_ctx(desc, jrdev, state, digestsize);
++	if (ret)
+ 		goto unmap;
+-	}
+ 
+ #ifdef DEBUG
+ 	print_hex_dump(KERN_ERR, "jobdesc@"__stringify(__LINE__)": ",
+@@ -1315,7 +1272,7 @@ static int ahash_finup_no_ctx(struct aha
+ 	if (!ret) {
+ 		ret = -EINPROGRESS;
+ 	} else {
+-		ahash_unmap(jrdev, edesc, req, digestsize);
++		ahash_unmap_ctx(jrdev, edesc, req, digestsize, DMA_FROM_DEVICE);
+ 		kfree(edesc);
+ 	}
+ 
 
 
