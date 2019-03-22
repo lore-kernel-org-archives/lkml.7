@@ -2,59 +2,60 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 879E0C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:31:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48BAAC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:31:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DE812083D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:31:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 180272083D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:31:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="KCnYnxkr"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="QugRlEE/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728406AbfCVNbL (ORCPT
+        id S1728723AbfCVNbP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 09:31:11 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:50955 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728162AbfCVNbK (ORCPT
+        Fri, 22 Mar 2019 09:31:15 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38857 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728162AbfCVNbO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 09:31:10 -0400
-Received: by mail-wm1-f65.google.com with SMTP id z11so2208051wmi.0
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 06:31:09 -0700 (PDT)
+        Fri, 22 Mar 2019 09:31:14 -0400
+Received: by mail-wr1-f68.google.com with SMTP id g12so2366392wrm.5
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 06:31:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=g8a/6QFF5xRiCzUNrWvuGv54lLv2MelL/M6fpnjm+mE=;
-        b=KCnYnxkrfcpVykllO6q84FRtzou33y2tRwrnRFbIxtoOOOuX//6GKsAYanPM8d5zDJ
-         z01PPVqQRnlwifBAep9cNAkrFtH+w1er3a9nY4y1zjk/9aWTQSE06TDoa2ZgcnIAZ+rj
-         KYa+tKO0J78IGCgHVFXF5LzOS9esg4t1YfUXIivxJB+U2m7Nej7JmJVlEbBBYebIN4sK
-         Poh6iqOUFbiFPWDrkr5W/eT26MuV0hlLxgLk4N1BpoSBifjSjpKpPjKWqinI1ZFkpD/M
-         EsXJrIAh35ltu4+ZVz7MjWCmWPQvOTJgMBQgwZOrq+61vWnwZd/IF+2/NSpvFNZZsXet
-         dKyw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=jfIovEfHpCgqOEUBk/fq2zpws17rw5wQZ1jxN4cAsMA=;
+        b=QugRlEE//kMhL72IXnfJGGv/Wr7S7/VXNDSEUB/8jXK1n02IGjO59LEOjt2fYt57mz
+         uj9gBB0m19brSCMbJRs/mtVLOi5SplAzV7oITYsImYIBBfZlajHOzMLG2vbTkaX2Pz6A
+         z0eM2T7ZpJ0lI4iv7rBFwZ47pigAuilB6/WVlBuHKARjS+PxpUi/jure+l3qnWlhjzpw
+         bQoIOXy9iB+Qezp3nMUo2AhJKOOzSOD9YH837m7z/gucfiodNXUSb2J/6CIg3EtvrhN8
+         nMnymdhjOwBoGxA8GMtZV3m4oEVcP2oAHiMrVVgeamszceqbUwtTr8gKvgx5A8zhcLey
+         CclQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=g8a/6QFF5xRiCzUNrWvuGv54lLv2MelL/M6fpnjm+mE=;
-        b=GHagRumonbgZQ/LFmEX35rPO4HKi4L8q8duCwy8zXDWbIEn0qJ6G5Zk0BBVoHyLMtV
-         HebMysdfizD1BvRkOBR2w3RtaaTf+HH4KAnutLJdV7Ly5y2r2M4hvv3BQAoKdBKrJSLE
-         WyIJo9/ZVFaNOeHd9U4uCbsdVbdUYlpj+TX3HvyoUB8zTEdP+hXpqXF2j4tzcaiU9oNE
-         RWDYxYhRWkxdF6j2XehkUAfBal85KE6I4Z0jYcWz+2u1K1cuQr8WaC4lX0JLEKW8oZ/n
-         WKjeJcw4yGLGWRpXDS0ZsqvYsj0Ard7zIWTHlq0S1+rwZwIotG6Tc3ihaiM2w5zGA9eX
-         d+cw==
-X-Gm-Message-State: APjAAAUQjDqBCqh5VaAHg5uFMThTujbUyO1PBBTLPK5dPp9WUlpfZ+z5
-        5psz07DYRhqfErUgzXyG6qNoHg==
-X-Google-Smtp-Source: APXvYqy0yJqHy7SLu5l3UTNY9ieJ1AKo6BZohXk0a0d9iyKimrd7Ofl3DtX2hdT8JCXiEtaeTv/hTA==
-X-Received: by 2002:a1c:6341:: with SMTP id x62mr3087409wmb.11.1553261469218;
-        Fri, 22 Mar 2019 06:31:09 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=jfIovEfHpCgqOEUBk/fq2zpws17rw5wQZ1jxN4cAsMA=;
+        b=ufS8bZxxac5+5xpPlLaSSaOsUG9kHhYErVmyoTFUOuNs7LFJ/J4SO+NPmEiuFm/4aj
+         1QIe11r83JfgUJTo9W8CCJDHPo/+WPoNnQ+T34mdI7wm2kKeMm0uNZ0A8mhOjy3cxbs1
+         2La1AhnSpSgSmq5awA8A3hv4qK+pWycZB7sEPngqG2Ar6xxhUfln9tsp1nDfooqq6zkL
+         d0wzS1w3lj563qv9AfMHJt8Y3nsxlzsIQeLdNfsSj5QbqZMllP7aar0k/7E3GNivJlFm
+         Je7KakQY/lu51+5Mg9a5Jd8jIfgQnb8pnqmIEJoygxjzOh4kJrr1mUXPJHwpdpjkPd09
+         zYSQ==
+X-Gm-Message-State: APjAAAUvyK8To5j0+5YbStcjeJv2bG+SA2fbNUzZfCS7vQ3uqnP3Sd8v
+        31Wn8aceovovqSwi/MRB8BWTvQ==
+X-Google-Smtp-Source: APXvYqxY/3qLIBFz783Tddg8txhgtuhzK0gsifLBV/EJYDgmYeaV8/AR2IxiA0hdJRBloiAttm/33Q==
+X-Received: by 2002:adf:e591:: with SMTP id l17mr5773548wrm.238.1553261471784;
+        Fri, 22 Mar 2019 06:31:11 -0700 (PDT)
 Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
-        by smtp.gmail.com with ESMTPSA id o15sm4684345wrj.59.2019.03.22.06.31.08
+        by smtp.gmail.com with ESMTPSA id o15sm4684345wrj.59.2019.03.22.06.31.10
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 22 Mar 2019 06:31:08 -0700 (PDT)
+        Fri, 22 Mar 2019 06:31:11 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -63,10 +64,12 @@ To:     Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>,
 Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v2 0/4] ARM: da850: enable cpufreq in DT mode
-Date:   Fri, 22 Mar 2019 14:31:01 +0100
-Message-Id: <20190322133105.5945-1-brgl@bgdev.pl>
+Subject: [PATCH v2 2/4] ARM: dts: da850: add cpu node and operating points to DT
+Date:   Fri, 22 Mar 2019 14:31:03 +0100
+Message-Id: <20190322133105.5945-3-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190322133105.5945-1-brgl@bgdev.pl>
+References: <20190322133105.5945-1-brgl@bgdev.pl>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -74,34 +77,186 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+From: David Lechner <david@lechnology.com>
 
-This series adds cpufreq-dt operating points for da850 boards supported
-with device tree (da850-lcdk, da850-lego-ev3, da850-evm) and also
-includes a fix for the da850-evm boardfile which checks an unset variable
-to determine the highest available frequency for cpufreq.
+This adds a cpu node and operating points to the common da850.dtsi file.
 
-Last patch enables CPUFREQ_DT in davinci_all_defconfig.
+Additionally, a regulator is added to the LEGO EV3 board along with
+some board-specific CPU configuration.
 
-v1 -> v2:
-- use the VDCDC3_1.2V regulator as cpu-supply on da850-evm
+Regulators need to be hooked up on other boards to get them working.
 
-Bartosz Golaszewski (2):
-  ARM: davinci: fix cpufreq registration on da850-evm
-  ARM: dts: da850-evm: enable cpufreq
+Signed-off-by: David Lechner <david@lechnology.com>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+ arch/arm/boot/dts/da850-lcdk.dts     | 31 +++++++++++++++
+ arch/arm/boot/dts/da850-lego-ev3.dts | 30 +++++++++++++++
+ arch/arm/boot/dts/da850.dtsi         | 56 ++++++++++++++++++++++++++++
+ 3 files changed, 117 insertions(+)
 
-David Lechner (2):
-  ARM: dts: da850: add cpu node and operating points to DT
-  ARM: davinci_all_defconfig: Enable CPUFREQ_DT
-
- arch/arm/boot/dts/da850-evm.dts         | 12 ++++++
- arch/arm/boot/dts/da850-lcdk.dts        | 31 ++++++++++++++
- arch/arm/boot/dts/da850-lego-ev3.dts    | 30 +++++++++++++
- arch/arm/boot/dts/da850.dtsi            | 56 +++++++++++++++++++++++++
- arch/arm/configs/davinci_all_defconfig  |  1 +
- arch/arm/mach-davinci/board-da850-evm.c | 12 +-----
- 6 files changed, 131 insertions(+), 11 deletions(-)
-
+diff --git a/arch/arm/boot/dts/da850-lcdk.dts b/arch/arm/boot/dts/da850-lcdk.dts
+index 26f453dc8370..f29ed9010812 100644
+--- a/arch/arm/boot/dts/da850-lcdk.dts
++++ b/arch/arm/boot/dts/da850-lcdk.dts
+@@ -155,12 +155,43 @@
+ 			};
+ 		};
+ 	};
++
++	cvdd: regulator0 {
++		compatible = "regulator-fixed";
++		regulator-name = "cvdd";
++		regulator-min-microvolt = <1300000>;
++		regulator-max-microvolt = <1300000>;
++		regulator-always-on;
++		regulator-boot-on;
++	};
+ };
+ 
+ &ref_clk {
+ 	clock-frequency = <24000000>;
+ };
+ 
++&cpu {
++	cpu-supply = <&cvdd>;
++};
++
++/* LCDK has a fixed CVDD of 1.3V, so only op points >= 300MHz are valid */
++
++&opp_100 {
++	status = "disabled";
++};
++
++&opp_200 {
++	status = "disabled";
++};
++
++&opp_375 {
++	status = "okay";
++};
++
++&opp_456 {
++	status = "okay";
++};
++
+ &pmx_core {
+ 	status = "okay";
+ 
+diff --git a/arch/arm/boot/dts/da850-lego-ev3.dts b/arch/arm/boot/dts/da850-lego-ev3.dts
+index 66fcadf0ba91..553717f84483 100644
+--- a/arch/arm/boot/dts/da850-lego-ev3.dts
++++ b/arch/arm/boot/dts/da850-lego-ev3.dts
+@@ -125,6 +125,15 @@
+ 		amp-supply = <&amp>;
+ 	};
+ 
++	cvdd: regulator0 {
++		compatible = "regulator-fixed";
++		regulator-name = "cvdd";
++		regulator-min-microvolt = <1200000>;
++		regulator-max-microvolt = <1200000>;
++		regulator-always-on;
++		regulator-boot-on;
++	};
++
+ 	/*
+ 	 * This is a 5V current limiting regulator that is shared by USB,
+ 	 * the sensor (input) ports, the motor (output) ports and the A/DC.
+@@ -204,6 +213,27 @@
+ 	clock-frequency = <24000000>;
+ };
+ 
++&cpu {
++	cpu-supply = <&cvdd>;
++};
++
++/* since we have a fixed regulator, we can't run at these points */
++&opp_100 {
++	status = "disabled";
++};
++
++&opp_200 {
++	status = "disabled";
++};
++
++/*
++ * The SoC is actually the 456MHz version, but because of the fixed regulator
++ * This is the fastest we can go.
++ */
++&opp_375 {
++	status = "okay";
++};
++
+ &pmx_core {
+ 	status = "okay";
+ 
+diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
+index 559659b399d0..ee61d1253b58 100644
+--- a/arch/arm/boot/dts/da850.dtsi
++++ b/arch/arm/boot/dts/da850.dtsi
+@@ -20,6 +20,62 @@
+ 		reg = <0xc0000000 0x0>;
+ 	};
+ 
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu: cpu@0 {
++			compatible = "arm,arm926ej-s";
++			device_type = "cpu";
++			reg = <0>;
++			clocks = <&psc0 14>;
++			operating-points-v2 = <&opp_table>;
++		};
++	};
++
++	opp_table: opp-table {
++		compatible = "operating-points-v2";
++
++		opp_100: opp100-100000000 {
++			opp-hz = /bits/ 64 <100000000>;
++			opp-microvolt = <1000000 950000 1050000>;
++		};
++
++		opp_200: opp110-200000000 {
++			opp-hz = /bits/ 64 <200000000>;
++			opp-microvolt = <1100000 1050000 1160000>;
++		};
++
++		opp_300: opp120-300000000 {
++			opp-hz = /bits/ 64 <300000000>;
++			opp-microvolt = <1200000 1140000 1320000>;
++		};
++
++		/*
++		 * Original silicon was 300MHz max, so higher frequencies
++		 * need to be enabled on a per-board basis if the chip is
++		 * capable.
++		 */
++
++		opp_375: opp120-375000000 {
++			status = "disabled";
++			opp-hz = /bits/ 64 <375000000>;
++			opp-microvolt = <1200000 1140000 1320000>;
++		};
++
++		opp_415: opp130-415000000 {
++			status = "disabled";
++			opp-hz = /bits/ 64 <415000000>;
++			opp-microvolt = <1300000 1250000 1350000>;
++		};
++
++		opp_456: opp130-456000000 {
++			status = "disabled";
++			opp-hz = /bits/ 64 <456000000>;
++			opp-microvolt = <1300000 1250000 1350000>;
++		};
++	};
++
+ 	arm {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
 -- 
 2.20.1
 
