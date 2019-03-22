@@ -2,74 +2,76 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03AD3C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 03:14:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB907C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 03:21:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB25A218FE
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 03:14:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77445218FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 03:21:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727609AbfCVDOq (ORCPT
+        id S1727584AbfCVDVZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 23:14:46 -0400
-Received: from smtprelay0032.hostedemail.com ([216.40.44.32]:36208 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727528AbfCVDOp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 23:14:45 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 665B4181D341A;
-        Fri, 22 Mar 2019 03:14:44 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: brush66_4633d45d08111
-X-Filterd-Recvd-Size: 1787
-Received: from XPS-9350.home (unknown [47.151.153.53])
-        (Authenticated sender: joe@perches.com)
-        by omf03.hostedemail.com (Postfix) with ESMTPA;
-        Fri, 22 Mar 2019 03:14:42 +0000 (UTC)
-Message-ID: <742758434301d3329b336fd9c683dc753fbdc552.camel@perches.com>
-Subject: Re: [PATCH] drm/amd/display: Fix boolean expression in
- get_surf_rq_param
-From:   Joe Perches <joe@perches.com>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        "Wentland, Harry" <Harry.Wentland@amd.com>,
-        "Laktyushkin, Dmytro" <Dmytro.Laktyushkin@amd.com>,
-        "Li, Sun peng (Leo)" <Sunpeng.Li@amd.com>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>,
-        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        stable@vger.kernel.org
-Date:   Thu, 21 Mar 2019 20:14:41 -0700
-In-Reply-To: <456595ea-6f20-76d7-2ff3-773724123967@embeddedor.com>
-References: <20190103194845.GA26175@embeddedor>
-         <8169baae-434e-2d08-d63f-a285d1c3457e@amd.com>
-         <456595ea-6f20-76d7-2ff3-773724123967@embeddedor.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.1-1build1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Thu, 21 Mar 2019 23:21:25 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34046 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727495AbfCVDVZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 23:21:25 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 6591B4E938;
+        Fri, 22 Mar 2019 03:21:25 +0000 (UTC)
+Received: from t460p.redhat.com (ovpn-118-18.phx2.redhat.com [10.3.118.18])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1B7EA19C5A;
+        Fri, 22 Mar 2019 03:21:21 +0000 (UTC)
+From:   Scott Wood <swood@redhat.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Scott Wood <swood@redhat.com>
+Subject: [PATCH RT 4.19] rcutorture: Fix oops when selecting non-default torture_type
+Date:   Thu, 21 Mar 2019 22:21:21 -0500
+Message-Id: <20190322032121.23948-1-swood@redhat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Fri, 22 Mar 2019 03:21:25 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-03-21 at 22:10 -0500, Gustavo A. R. Silva wrote:
-> Hi Harry,
-> 
-> I noticed this patch is already in mainline, but the stable tag
-> was removed.  What is the reason for that if this bug is present
-> in stable?
+rcu_bh is disabled on PREEMPT_RT via a stub ops that has no name.  Thus,
+if a torture_type other than "rcu" is used, rcu_torture_init() will
+pass NULL to strcmp() when iterating over torture_ops[], and oops.
 
-It's not a bug, it's just a style issue and
-the && use in some compilers it may be slower.
+Signed-off-by: Scott Wood <swood@redhat.com>
+---
+With this applied to 4.19.25-rt16 and specifying torture_type=sched,
+similar rcutorture failures are seen as with 5.0.3-rt1 (in which standard
+torture_cype=rcu no longer has .extendables=0 and thus stresses similar
+paths).
 
-bool when set is 1.
+ kernel/rcu/rcutorture.c | 1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
+index 7d2a615601e7..408d03048911 100644
+--- a/kernel/rcu/rcutorture.c
++++ b/kernel/rcu/rcutorture.c
+@@ -479,6 +479,7 @@ static struct rcu_torture_ops rcu_bh_ops = {
+ #else
+ static struct rcu_torture_ops rcu_bh_ops = {
+ 	.ttype		= INVALID_RCU_FLAVOR,
++	.name		= "rcu_bh"
+ };
+ #endif
+ 
+-- 
+2.18.1
 
