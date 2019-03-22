@@ -2,52 +2,52 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE3E8C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:18:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4FD9C10F03
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:18:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D7F021873
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:18:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D02321873
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:18:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553260690;
-	bh=7qn1BgPArp80FkyveB1hRhDQZK+dVzQGaU9AJO0H6uQ=;
+	s=default; t=1553260702;
+	bh=/ZT+H/HjNOUUKjEy/+RlDZ/QuNraiGdh4/dDGOlgeO4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rHHPfFw4jKpQYh1adtU18AS+YJOPjnE3ah8tjnu/BYMdDAMrvJsrVyPGNeRxA6gz6
-	 BJr5lYZSsa20U6SOTKq9VuyASB2bAPBWy5dHcr4lzV+tb80cM36S4Aelv0S8UwEWMP
-	 BCMtzjiZNMrTJiozTqkhof3o2Pv5KJz73n9wlmco=
+	b=C5M5dmcweC9mIdH4fpIz1dELOnPbpWc9IgBWrbZW9aPH+nDp5FCaMazJpj4Cu6vPN
+	 gSovS1BB7qJPvuw5ZG1FWvUDNltO+aPd5GbcHWyIyGZ6qR/sq9Mg74VQjAgrc+Yz4g
+	 hNPoGWvaf1U5WDingBPMpNYxFOSFbZID/whTtwkY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728549AbfCVLYS (ORCPT
+        id S1728513AbfCVLYJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:24:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51318 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:24:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51126 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728731AbfCVLYQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:24:16 -0400
+        id S1728136AbfCVLYG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:24:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D61F218A2;
-        Fri, 22 Mar 2019 11:24:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00BC7218A2;
+        Fri, 22 Mar 2019 11:24:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553253855;
-        bh=7qn1BgPArp80FkyveB1hRhDQZK+dVzQGaU9AJO0H6uQ=;
+        s=default; t=1553253844;
+        bh=/ZT+H/HjNOUUKjEy/+RlDZ/QuNraiGdh4/dDGOlgeO4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TVIk1dSvJ6UtDKXBk/lJ7tz76uaNZCLkqDRGyol9R9tsp5+qiPKkzUbh8B7xlPjHb
-         X+yw7wlxvVfSe6kT2cE5N7uLkoYKK0GNZN7jBj7pxfFLKDPsPFmIJ5Bn5dszAWEKvr
-         kOALyu8yLjYzHjSka228oGefy3iuQBr2X9pX3xDw=
+        b=E26OgH2aGi0sd2uO5AM+ZA4R/g2Csou45iPVYZiqgedWhA1NFi39jKFqXa0U52zcV
+         lTpXpA5P5SUDifmSMa+U0469bPcduZdwtoshQL/8OSO42qqKucm+nCVa3BlUVkD/Nv
+         T+ANE7kyWFlt7jC4IkL9vSbdYI1U1Xu/Fr/MwRkk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 3.18 092/134] gro_cells: make sure device is up in gro_cells_receive()
-Date:   Fri, 22 Mar 2019 12:15:05 +0100
-Message-Id: <20190322111216.809328937@linuxfoundation.org>
+        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>
+Subject: [PATCH 3.18 089/134] missing barriers in some of unix_sock ->addr and ->path accesses
+Date:   Fri, 22 Mar 2019 12:15:02 +0100
+Message-Id: <20190322111216.568536816@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111210.465931067@linuxfoundation.org>
 References: <20190322111210.465931067@linuxfoundation.org>
@@ -66,125 +66,213 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Eric Dumazet <edumazet@google.com>
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-[ Upstream commit 2a5ff07a0eb945f291e361aa6f6becca8340ba46 ]
+[ Upstream commit ae3b564179bfd06f32d051b9e5d72ce4b2a07c37 ]
 
-We keep receiving syzbot reports [1] that show that tunnels do not play
-the rcu/IFF_UP rules properly.
+Several u->addr and u->path users are not holding any locks in
+common with unix_bind().  unix_state_lock() is useless for those
+purposes.
 
-At device dismantle phase, gro_cells_destroy() will be called
-only after a full rcu grace period is observed after IFF_UP
-has been cleared.
+u->addr is assign-once and *(u->addr) is fully set up by the time
+we set u->addr (all under unix_table_lock).  u->path is also
+set in the same critical area, also before setting u->addr, and
+any unix_sock with ->path filled will have non-NULL ->addr.
 
-This means that IFF_UP needs to be tested before queueing packets
-into netif_rx() or gro_cells.
+So setting ->addr with smp_store_release() is all we need for those
+"lockless" users - just have them fetch ->addr with smp_load_acquire()
+and don't even bother looking at ->path if they see NULL ->addr.
 
-This patch implements the test in gro_cells_receive() because
-too many callers do not seem to bother enough.
+Users of ->addr and ->path fall into several classes now:
+    1) ones that do smp_load_acquire(u->addr) and access *(u->addr)
+and u->path only if smp_load_acquire() has returned non-NULL.
+    2) places holding unix_table_lock.  These are guaranteed that
+*(u->addr) is seen fully initialized.  If unix_sock is in one of the
+"bound" chains, so's ->path.
+    3) unix_sock_destructor() using ->addr is safe.  All places
+that set u->addr are guaranteed to have seen all stores *(u->addr)
+while holding a reference to u and unix_sock_destructor() is called
+when (atomic) refcount hits zero.
+    4) unix_release_sock() using ->path is safe.  unix_bind()
+is serialized wrt unix_release() (normally - by struct file
+refcount), and for the instances that had ->path set by unix_bind()
+unix_release_sock() comes from unix_release(), so they are fine.
+Instances that had it set in unix_stream_connect() either end up
+attached to a socket (in unix_accept()), in which case the call
+chain to unix_release_sock() and serialization are the same as in
+the previous case, or they never get accept'ed and unix_release_sock()
+is called when the listener is shut down and its queue gets purged.
+In that case the listener's queue lock provides the barriers needed -
+unix_stream_connect() shoves our unix_sock into listener's queue
+under that lock right after having set ->path and eventual
+unix_release_sock() caller picks them from that queue under the
+same lock right before calling unix_release_sock().
+    5) unix_find_other() use of ->path is pointless, but safe -
+it happens with successful lookup by (abstract) name, so ->path.dentry
+is guaranteed to be NULL there.
 
-[1]
-BUG: unable to handle kernel paging request at fffff4ca0b9ffffe
-PGD 0 P4D 0
-Oops: 0000 [#1] PREEMPT SMP KASAN
-CPU: 0 PID: 21 Comm: kworker/u4:1 Not tainted 5.0.0+ #97
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: netns cleanup_net
-RIP: 0010:__skb_unlink include/linux/skbuff.h:1929 [inline]
-RIP: 0010:__skb_dequeue include/linux/skbuff.h:1945 [inline]
-RIP: 0010:__skb_queue_purge include/linux/skbuff.h:2656 [inline]
-RIP: 0010:gro_cells_destroy net/core/gro_cells.c:89 [inline]
-RIP: 0010:gro_cells_destroy+0x19d/0x360 net/core/gro_cells.c:78
-Code: 03 42 80 3c 20 00 0f 85 53 01 00 00 48 8d 7a 08 49 8b 47 08 49 c7 07 00 00 00 00 48 89 f9 49 c7 47 08 00 00 00 00 48 c1 e9 03 <42> 80 3c 21 00 0f 85 10 01 00 00 48 89 c1 48 89 42 08 48 c1 e9 03
-RSP: 0018:ffff8880aa3f79a8 EFLAGS: 00010a02
-RAX: 00ffffffffffffe8 RBX: ffffe8ffffc64b70 RCX: 1ffff8ca0b9ffffe
-RDX: ffffc6505cffffe8 RSI: ffffffff858410ca RDI: ffffc6505cfffff0
-RBP: ffff8880aa3f7a08 R08: ffff8880aa3e8580 R09: fffffbfff1263645
-R10: fffffbfff1263644 R11: ffffffff8931b223 R12: dffffc0000000000
-R13: 0000000000000000 R14: ffffe8ffffc64b80 R15: ffffe8ffffc64b75
-kobject: 'loop2' (000000004bd7d84a): kobject_uevent_env
-FS:  0000000000000000(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: fffff4ca0b9ffffe CR3: 0000000094941000 CR4: 00000000001406f0
-Call Trace:
-kobject: 'loop2' (000000004bd7d84a): fill_kobj_path: path = '/devices/virtual/block/loop2'
- ip_tunnel_dev_free+0x19/0x60 net/ipv4/ip_tunnel.c:1010
- netdev_run_todo+0x51c/0x7d0 net/core/dev.c:8970
- rtnl_unlock+0xe/0x10 net/core/rtnetlink.c:116
- ip_tunnel_delete_nets+0x423/0x5f0 net/ipv4/ip_tunnel.c:1124
- vti_exit_batch_net+0x23/0x30 net/ipv4/ip_vti.c:495
- ops_exit_list.isra.0+0x105/0x160 net/core/net_namespace.c:156
- cleanup_net+0x3fb/0x960 net/core/net_namespace.c:551
- process_one_work+0x98e/0x1790 kernel/workqueue.c:2173
- worker_thread+0x98/0xe40 kernel/workqueue.c:2319
- kthread+0x357/0x430 kernel/kthread.c:246
- ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
-Modules linked in:
-CR2: fffff4ca0b9ffffe
-   [ end trace 513fc9c1338d1cb3 ]
-RIP: 0010:__skb_unlink include/linux/skbuff.h:1929 [inline]
-RIP: 0010:__skb_dequeue include/linux/skbuff.h:1945 [inline]
-RIP: 0010:__skb_queue_purge include/linux/skbuff.h:2656 [inline]
-RIP: 0010:gro_cells_destroy net/core/gro_cells.c:89 [inline]
-RIP: 0010:gro_cells_destroy+0x19d/0x360 net/core/gro_cells.c:78
-Code: 03 42 80 3c 20 00 0f 85 53 01 00 00 48 8d 7a 08 49 8b 47 08 49 c7 07 00 00 00 00 48 89 f9 49 c7 47 08 00 00 00 00 48 c1 e9 03 <42> 80 3c 21 00 0f 85 10 01 00 00 48 89 c1 48 89 42 08 48 c1 e9 03
-RSP: 0018:ffff8880aa3f79a8 EFLAGS: 00010a02
-RAX: 00ffffffffffffe8 RBX: ffffe8ffffc64b70 RCX: 1ffff8ca0b9ffffe
-RDX: ffffc6505cffffe8 RSI: ffffffff858410ca RDI: ffffc6505cfffff0
-RBP: ffff8880aa3f7a08 R08: ffff8880aa3e8580 R09: fffffbfff1263645
-R10: fffffbfff1263644 R11: ffffffff8931b223 R12: dffffc0000000000
-kobject: 'loop3' (00000000e4ee57a6): kobject_uevent_env
-R13: 0000000000000000 R14: ffffe8ffffc64b80 R15: ffffe8ffffc64b75
-FS:  0000000000000000(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: fffff4ca0b9ffffe CR3: 0000000094941000 CR4: 00000000001406f0
-
-Fixes: c9e6bc644e55 ("net: add gro_cells infrastructure")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
+earlier-variant-reviewed-by: "Paul E. McKenney" <paulmck@linux.ibm.com>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/net/gro_cells.h |   12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ net/unix/af_unix.c   |   48 +++++++++++++++++++++++++++++-------------------
+ net/unix/diag.c      |    3 ++-
+ security/lsm_audit.c |   10 ++++++----
+ 3 files changed, 37 insertions(+), 24 deletions(-)
 
---- a/include/net/gro_cells.h
-+++ b/include/net/gro_cells.h
-@@ -20,18 +20,23 @@ static inline void gro_cells_receive(str
- 	struct gro_cell *cell = gcells->cells;
- 	struct net_device *dev = skb->dev;
+--- a/net/unix/af_unix.c
++++ b/net/unix/af_unix.c
+@@ -876,7 +876,7 @@ retry:
+ 	addr->hash ^= sk->sk_type;
  
-+	rcu_read_lock();
-+	if (unlikely(!(dev->flags & IFF_UP)))
-+		goto drop;
-+
- 	if (!cell || skb_cloned(skb) || !(dev->features & NETIF_F_GRO)) {
- 		netif_rx(skb);
--		return;
-+		goto unlock;
+ 	__unix_remove_socket(sk);
+-	u->addr = addr;
++	smp_store_release(&u->addr, addr);
+ 	__unix_insert_socket(&unix_socket_table[addr->hash], sk);
+ 	spin_unlock(&unix_table_lock);
+ 	err = 0;
+@@ -1045,7 +1045,7 @@ static int unix_bind(struct socket *sock
+ 
+ 	err = 0;
+ 	__unix_remove_socket(sk);
+-	u->addr = addr;
++	smp_store_release(&u->addr, addr);
+ 	__unix_insert_socket(list, sk);
+ 
+ out_unlock:
+@@ -1312,15 +1312,29 @@ restart:
+ 	RCU_INIT_POINTER(newsk->sk_wq, &newu->peer_wq);
+ 	otheru = unix_sk(other);
+ 
+-	/* copy address information from listening to new sock*/
+-	if (otheru->addr) {
+-		atomic_inc(&otheru->addr->refcnt);
+-		newu->addr = otheru->addr;
+-	}
++	/* copy address information from listening to new sock
++	 *
++	 * The contents of *(otheru->addr) and otheru->path
++	 * are seen fully set up here, since we have found
++	 * otheru in hash under unix_table_lock.  Insertion
++	 * into the hash chain we'd found it in had been done
++	 * in an earlier critical area protected by unix_table_lock,
++	 * the same one where we'd set *(otheru->addr) contents,
++	 * as well as otheru->path and otheru->addr itself.
++	 *
++	 * Using smp_store_release() here to set newu->addr
++	 * is enough to make those stores, as well as stores
++	 * to newu->path visible to anyone who gets newu->addr
++	 * by smp_load_acquire().  IOW, the same warranties
++	 * as for unix_sock instances bound in unix_bind() or
++	 * in unix_autobind().
++	 */
+ 	if (otheru->path.dentry) {
+ 		path_get(&otheru->path);
+ 		newu->path = otheru->path;
+ 	}
++	atomic_inc(&otheru->addr->refcnt);
++	smp_store_release(&newu->addr, otheru->addr);
+ 
+ 	/* Set credentials */
+ 	copy_peercred(sk, other);
+@@ -1433,7 +1447,7 @@ out:
+ static int unix_getname(struct socket *sock, struct sockaddr *uaddr, int *uaddr_len, int peer)
+ {
+ 	struct sock *sk = sock->sk;
+-	struct unix_sock *u;
++	struct unix_address *addr;
+ 	DECLARE_SOCKADDR(struct sockaddr_un *, sunaddr, uaddr);
+ 	int err = 0;
+ 
+@@ -1448,19 +1462,15 @@ static int unix_getname(struct socket *s
+ 		sock_hold(sk);
  	}
  
- 	if (skb_rx_queue_recorded(skb))
- 		cell += skb_get_rx_queue(skb) & gcells->gro_cells_mask;
- 
- 	if (skb_queue_len(&cell->napi_skbs) > netdev_max_backlog) {
-+drop:
- 		atomic_long_inc(&dev->rx_dropped);
- 		kfree_skb(skb);
--		return;
-+		goto unlock;
+-	u = unix_sk(sk);
+-	unix_state_lock(sk);
+-	if (!u->addr) {
++	addr = smp_load_acquire(&unix_sk(sk)->addr);
++	if (!addr) {
+ 		sunaddr->sun_family = AF_UNIX;
+ 		sunaddr->sun_path[0] = 0;
+ 		*uaddr_len = sizeof(short);
+ 	} else {
+-		struct unix_address *addr = u->addr;
+-
+ 		*uaddr_len = addr->len;
+ 		memcpy(sunaddr, addr->name, *uaddr_len);
  	}
+-	unix_state_unlock(sk);
+ 	sock_put(sk);
+ out:
+ 	return err;
+@@ -1936,11 +1946,11 @@ static int unix_seqpacket_recvmsg(struct
  
- 	/* We run in BH context */
-@@ -42,6 +47,9 @@ static inline void gro_cells_receive(str
- 		napi_schedule(&cell->napi);
+ static void unix_copy_addr(struct msghdr *msg, struct sock *sk)
+ {
+-	struct unix_sock *u = unix_sk(sk);
++	struct unix_address *addr = smp_load_acquire(&unix_sk(sk)->addr);
  
- 	spin_unlock(&cell->napi_skbs.lock);
-+
-+unlock:
-+	rcu_read_unlock();
+-	if (u->addr) {
+-		msg->msg_namelen = u->addr->len;
+-		memcpy(msg->msg_name, u->addr->name, u->addr->len);
++	if (addr) {
++		msg->msg_namelen = addr->len;
++		memcpy(msg->msg_name, addr->name, addr->len);
+ 	}
  }
  
- /* called unser BH context */
+@@ -2551,7 +2561,7 @@ static int unix_seq_show(struct seq_file
+ 			(s->sk_state == TCP_ESTABLISHED ? SS_CONNECTING : SS_DISCONNECTING),
+ 			sock_i_ino(s));
+ 
+-		if (u->addr) {
++		if (u->addr) {	// under unix_table_lock here
+ 			int i, len;
+ 			seq_putc(seq, ' ');
+ 
+--- a/net/unix/diag.c
++++ b/net/unix/diag.c
+@@ -10,7 +10,8 @@
+ 
+ static int sk_diag_dump_name(struct sock *sk, struct sk_buff *nlskb)
+ {
+-	struct unix_address *addr = unix_sk(sk)->addr;
++	/* might or might not have unix_table_lock */
++	struct unix_address *addr = smp_load_acquire(&unix_sk(sk)->addr);
+ 
+ 	if (!addr)
+ 		return 0;
+--- a/security/lsm_audit.c
++++ b/security/lsm_audit.c
+@@ -290,6 +290,7 @@ static void dump_common_audit_data(struc
+ 		if (a->u.net->sk) {
+ 			struct sock *sk = a->u.net->sk;
+ 			struct unix_sock *u;
++			struct unix_address *addr;
+ 			int len = 0;
+ 			char *p = NULL;
+ 
+@@ -320,14 +321,15 @@ static void dump_common_audit_data(struc
+ #endif
+ 			case AF_UNIX:
+ 				u = unix_sk(sk);
++				addr = smp_load_acquire(&u->addr);
++				if (!addr)
++					break;
+ 				if (u->path.dentry) {
+ 					audit_log_d_path(ab, " path=", &u->path);
+ 					break;
+ 				}
+-				if (!u->addr)
+-					break;
+-				len = u->addr->len-sizeof(short);
+-				p = &u->addr->name->sun_path[0];
++				len = addr->len-sizeof(short);
++				p = &addr->name->sun_path[0];
+ 				audit_log_format(ab, " path=");
+ 				if (*p)
+ 					audit_log_untrustedstring(ab, p);
 
 
