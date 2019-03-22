@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FAB6C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:06:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E53DC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:06:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EB0221929
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:06:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0527C2192D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:06:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256380;
-	bh=fznSz5aLs4fAVZcoc5bRf7X6MNggfOX3dLcgjGl8szk=;
+	s=default; t=1553256386;
+	bh=AYnYIdJ/pe6BIXccmpHF6D4zp2o0+rZAZ/ld/TCCvSA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YZhMkgX7wbqmY5v8yPglubnkZdYyNxdBtl1dhpk8iZbBrqsTJCghqR5C7DqlnH2qV
-	 FIDHs08/z6GcH8BIKWW7qw1cJaQ2hM13sCpSbfM1bNyIyDK9ZiYB2e42h81B0IxeG8
-	 Lf18fKrDzJC7+RKP0bvmyKJ7EhPo7A9mJgX6Mtaw=
+	b=vxkIY7yKQHPYNc87YYca78vMSUetRnYJwd1shHd2/P+C9p7pP/YuA19FmsZB6XIQG
+	 p8aaw6IrUcCINZujIHhn/xenwY0MohjjGD7SrNSqQ8OiJ5x7po9XSU9fMwHFC5O6+t
+	 IByQDWRsVOsCs3sD6XkXTaMGmbzqGjwZ7e6HJbjs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388916AbfCVMGT (ORCPT
+        id S2388333AbfCVMGY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:06:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44736 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:06:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388306AbfCVMGQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:06:16 -0400
+        id S2388915AbfCVMGU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:06:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34FF0206C0;
-        Fri, 22 Mar 2019 12:06:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BBA3206C0;
+        Fri, 22 Mar 2019 12:06:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256375;
-        bh=fznSz5aLs4fAVZcoc5bRf7X6MNggfOX3dLcgjGl8szk=;
+        s=default; t=1553256378;
+        bh=AYnYIdJ/pe6BIXccmpHF6D4zp2o0+rZAZ/ld/TCCvSA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CIIKAKkNXk35NqV6BR/SURyLV+Sg3Z0fHIv7herFYGuQGMgk69303CiHSNlRRrCxk
-         byj0EJE/KSb1Lg/iKqG6GqOr3JyOLC38U41xwZM7NFy2KCyv8x97CxTW1ZbU7PZPAV
-         DcctKUzrcrbmZ4rEq+Ib4HobXPCIP0Gs1j4yeslA=
+        b=0Us7Il9sYN+4va/tq9lrwnpPFtSJpD1gb/uFE/yfSySd5rwK/XMyOLAgi34YNwxPA
+         4/jHKgTxZ4G5fhW4sJjj+SVBtDJuV1J9AUK34I5hGWZ3mumODMn7Vjb6zPt65HqkEY
+         iGLsvnBVM0a8rC7TVNVeVEtKkNO7Xy8syj1iGCzU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qu Wenruo <wqu@suse.com>,
-        Nikolay Borisov <nborisov@suse.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
+        stable@vger.kernel.org,
+        Zygo Blaxell <ce3g8jdj@umail.furryterror.org>,
+        Filipe Manana <fdmanana@suse.com>,
         David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.19 170/280] btrfs: ensure that a DUP or RAID1 block group has exactly two stripes
-Date:   Fri, 22 Mar 2019 12:15:23 +0100
-Message-Id: <20190322111324.343415514@linuxfoundation.org>
+Subject: [PATCH 4.19 171/280] Btrfs: fix corruption reading shared and compressed extents after hole punching
+Date:   Fri, 22 Mar 2019 12:15:24 +0100
+Message-Id: <20190322111324.562935765@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -67,55 +67,118 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Johannes Thumshirn <jthumshirn@suse.de>
+From: Filipe Manana <fdmanana@suse.com>
 
-commit 349ae63f40638a28c6fce52e8447c2d14b84cc0c upstream.
+commit 8e928218780e2f1cf2f5891c7575e8f0b284fcce upstream.
 
-We recently had a customer issue with a corrupted filesystem. When
-trying to mount this image btrfs panicked with a division by zero in
-calc_stripe_length().
+In the past we had data corruption when reading compressed extents that
+are shared within the same file and they are consecutive, this got fixed
+by commit 005efedf2c7d0 ("Btrfs: fix read corruption of compressed and
+shared extents") and by commit 808f80b46790f ("Btrfs: update fix for read
+corruption of compressed and shared extents"). However there was a case
+that was missing in those fixes, which is when the shared and compressed
+extents are referenced with a non-zero offset. The following shell script
+creates a reproducer for this issue:
 
-The corrupt chunk had a 'num_stripes' value of 1. calc_stripe_length()
-takes this value and divides it by the number of copies the RAID profile
-is expected to have to calculate the amount of data stripes. As a DUP
-profile is expected to have 2 copies this division resulted in 1/2 = 0.
-Later then the 'data_stripes' variable is used as a divisor in the
-stripe length calculation which results in a division by 0 and thus a
-kernel panic.
+  #!/bin/bash
 
-When encountering a filesystem with a DUP block group and a
-'num_stripes' value unequal to 2, refuse mounting as the image is
-corrupted and will lead to unexpected behaviour.
+  mkfs.btrfs -f /dev/sdc &> /dev/null
+  mount -o compress /dev/sdc /mnt/sdc
 
-Code inspection showed a RAID1 block group has the same issues.
+  # Create a file with 3 consecutive compressed extents, each has an
+  # uncompressed size of 128Kb and a compressed size of 4Kb.
+  for ((i = 1; i <= 3; i++)); do
+      head -c 4096 /dev/zero
+      for ((j = 1; j <= 31; j++)); do
+          head -c 4096 /dev/zero | tr '\0' "\377"
+      done
+  done > /mnt/sdc/foobar
+  sync
 
-Fixes: e06cd3dd7cea ("Btrfs: add validadtion checks for chunk loading")
-CC: stable@vger.kernel.org # 4.4+
-Reviewed-by: Qu Wenruo <wqu@suse.com>
-Reviewed-by: Nikolay Borisov <nborisov@suse.com>
-Signed-off-by: Johannes Thumshirn <jthumshirn@suse.de>
-Reviewed-by: David Sterba <dsterba@suse.com>
+  echo "Digest after file creation:   $(md5sum /mnt/sdc/foobar)"
+
+  # Clone the first extent into offsets 128K and 256K.
+  xfs_io -c "reflink /mnt/sdc/foobar 0 128K 128K" /mnt/sdc/foobar
+  xfs_io -c "reflink /mnt/sdc/foobar 0 256K 128K" /mnt/sdc/foobar
+  sync
+
+  echo "Digest after cloning:         $(md5sum /mnt/sdc/foobar)"
+
+  # Punch holes into the regions that are already full of zeroes.
+  xfs_io -c "fpunch 0 4K" /mnt/sdc/foobar
+  xfs_io -c "fpunch 128K 4K" /mnt/sdc/foobar
+  xfs_io -c "fpunch 256K 4K" /mnt/sdc/foobar
+  sync
+
+  echo "Digest after hole punching:   $(md5sum /mnt/sdc/foobar)"
+
+  echo "Dropping page cache..."
+  sysctl -q vm.drop_caches=1
+  echo "Digest after hole punching:   $(md5sum /mnt/sdc/foobar)"
+
+  umount /dev/sdc
+
+When running the script we get the following output:
+
+  Digest after file creation:   5a0888d80d7ab1fd31c229f83a3bbcc8  /mnt/sdc/foobar
+  linked 131072/131072 bytes at offset 131072
+  128 KiB, 1 ops; 0.0033 sec (36.960 MiB/sec and 295.6830 ops/sec)
+  linked 131072/131072 bytes at offset 262144
+  128 KiB, 1 ops; 0.0015 sec (78.567 MiB/sec and 628.5355 ops/sec)
+  Digest after cloning:         5a0888d80d7ab1fd31c229f83a3bbcc8  /mnt/sdc/foobar
+  Digest after hole punching:   5a0888d80d7ab1fd31c229f83a3bbcc8  /mnt/sdc/foobar
+  Dropping page cache...
+  Digest after hole punching:   fba694ae8664ed0c2e9ff8937e7f1484  /mnt/sdc/foobar
+
+This happens because after reading all the pages of the extent in the
+range from 128K to 256K for example, we read the hole at offset 256K
+and then when reading the page at offset 260K we don't submit the
+existing bio, which is responsible for filling all the page in the
+range 128K to 256K only, therefore adding the pages from range 260K
+to 384K to the existing bio and submitting it after iterating over the
+entire range. Once the bio completes, the uncompressed data fills only
+the pages in the range 128K to 256K because there's no more data read
+from disk, leaving the pages in the range 260K to 384K unfilled. It is
+just a slightly different variant of what was solved by commit
+005efedf2c7d0 ("Btrfs: fix read corruption of compressed and shared
+extents").
+
+Fix this by forcing a bio submit, during readpages(), whenever we find a
+compressed extent map for a page that is different from the extent map
+for the previous page or has a different starting offset (in case it's
+the same compressed extent), instead of the extent map's original start
+offset.
+
+A test case for fstests follows soon.
+
+Reported-by: Zygo Blaxell <ce3g8jdj@umail.furryterror.org>
+Fixes: 808f80b46790f ("Btrfs: update fix for read corruption of compressed and shared extents")
+Fixes: 005efedf2c7d0 ("Btrfs: fix read corruption of compressed and shared extents")
+Cc: stable@vger.kernel.org # 4.3+
+Tested-by: Zygo Blaxell <ce3g8jdj@umail.furryterror.org>
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
 Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/volumes.c |    4 ++--
+ fs/btrfs/extent_io.c |    4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/fs/btrfs/volumes.c
-+++ b/fs/btrfs/volumes.c
-@@ -6425,10 +6425,10 @@ static int btrfs_check_chunk_valid(struc
- 	}
+--- a/fs/btrfs/extent_io.c
++++ b/fs/btrfs/extent_io.c
+@@ -3002,11 +3002,11 @@ static int __do_readpage(struct extent_i
+ 		 */
+ 		if (test_bit(EXTENT_FLAG_COMPRESSED, &em->flags) &&
+ 		    prev_em_start && *prev_em_start != (u64)-1 &&
+-		    *prev_em_start != em->orig_start)
++		    *prev_em_start != em->start)
+ 			force_bio_submit = true;
  
- 	if ((type & BTRFS_BLOCK_GROUP_RAID10 && sub_stripes != 2) ||
--	    (type & BTRFS_BLOCK_GROUP_RAID1 && num_stripes < 1) ||
-+	    (type & BTRFS_BLOCK_GROUP_RAID1 && num_stripes != 2) ||
- 	    (type & BTRFS_BLOCK_GROUP_RAID5 && num_stripes < 2) ||
- 	    (type & BTRFS_BLOCK_GROUP_RAID6 && num_stripes < 3) ||
--	    (type & BTRFS_BLOCK_GROUP_DUP && num_stripes > 2) ||
-+	    (type & BTRFS_BLOCK_GROUP_DUP && num_stripes != 2) ||
- 	    ((type & BTRFS_BLOCK_GROUP_PROFILE_MASK) == 0 &&
- 	     num_stripes != 1)) {
- 		btrfs_err(fs_info,
+ 		if (prev_em_start)
+-			*prev_em_start = em->orig_start;
++			*prev_em_start = em->start;
+ 
+ 		free_extent_map(em);
+ 		em = NULL;
 
 
