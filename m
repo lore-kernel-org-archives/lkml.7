@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3B07C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:42:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75CCCC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:42:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A61B8218E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:42:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 479CF2070D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:42:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553258531;
-	bh=RQAGB/8MhC3bHe3/PtOmoP0L8zj6WuHJB9B/QfKDGsI=;
+	s=default; t=1553258541;
+	bh=QULrliwbLcaP44XjajcqCWrPtCx0sW6j4MiKZvZgbOI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fEvTqaH/RnVF/j5co4heuncIJtwiwsYy3hZL97N1/IzL2SFHkIARNhgJ15mDhHSAM
-	 0dicX805t922VndILuGZrS/Z1R4PhGdyGDIWG4aOraLXSLhX7B24/dM4F3mjcZjkEd
-	 ORcHwqF0de0sY5dt/h+I0L/BZtB69Ng77s3mQ25A=
+	b=O4HINJtmKa1onK53Sb3VMYJDEwS96cga+00a9NT6K/enMIeUadqoc/EjpP1iSXOjR
+	 /R9cIrz6DdxD1YWQwVrVmqhkIQXffylyxYDLRcJlVuALyl20fnTIty2b3kdZyDoyPf
+	 5rY7O1B+QiJtoo2MT/2W4SkHsG3UjXzISrzfYR6Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388690AbfCVMEg (ORCPT
+        id S2388227AbfCVMmU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:04:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42960 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:42:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388180AbfCVMEc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:04:32 -0400
+        id S2388161AbfCVMEZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:04:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BAFA92195D;
-        Fri, 22 Mar 2019 12:04:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F7B221934;
+        Fri, 22 Mar 2019 12:04:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256271;
-        bh=RQAGB/8MhC3bHe3/PtOmoP0L8zj6WuHJB9B/QfKDGsI=;
+        s=default; t=1553256264;
+        bh=QULrliwbLcaP44XjajcqCWrPtCx0sW6j4MiKZvZgbOI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LcOyV3JTQuI54KzcIVIu8RLT4Yfik7Wmkm/ckcPq7zE3zBoGDqhwaaUXjXrMSULBK
-         g1dA3+c8/Ll5RFxmZNtBsIw+PQINSbOL9QNYikG4fPsBZfCuG743eU7qCydBc3/ss6
-         NfffY9inrK6n8ZbS2g0B7hL3A3Nb9tnCJXKB3X3o=
+        b=N8en2bx3EJPl0mrUTXuIIvP6BdBYMcQTBlHKWml1Lz+F/gPPNkHaHXBEXRWBTtiZM
+         6BYEb5DxsbV0rFQl9KwFlDUlqV9jAm1Zbn5qmueuDMerceSkV5TTILcx11JRSOqmaJ
+         nZx5w8ESYij/nZZ3iNSo4apUj/PU5RpHIOH2vKrI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sagar Biradar <Sagar.Biradar@microchip.com>,
-        Dave Carroll <david.carroll@microsemi.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.19 159/280] scsi: aacraid: Fix performance issue on logical drives
-Date:   Fri, 22 Mar 2019 12:15:12 +0100
-Message-Id: <20190322111322.064415871@linuxfoundation.org>
+        stable@vger.kernel.org, Namhyung Kim <namhyung@kernel.org>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 4.19 140/280] tracing: Use strncpy instead of memcpy for string keys in hist triggers
+Date:   Fri, 22 Mar 2019 12:14:53 +0100
+Message-Id: <20190322111318.207161246@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -67,47 +66,74 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Sagar Biradar <sagar.biradar@microchip.com>
+From: Tom Zanussi <tom.zanussi@linux.intel.com>
 
-commit 0015437cc046e5ec2b57b00ff8312b8d432eac7c upstream.
+commit 9f0bbf3115ca9f91f43b7c74e9ac7d79f47fc6c2 upstream.
 
-Fix performance issue where the queue depth for SmartIOC logical volumes is
-set to 1, and allow the usual logical volume code to be executed
+Because there may be random garbage beyond a string's null terminator,
+it's not correct to copy the the complete character array for use as a
+hist trigger key.  This results in multiple histogram entries for the
+'same' string key.
 
-Fixes: a052865fe287 (aacraid: Set correct Queue Depth for HBA1000 RAW disks)
+So, in the case of a string key, use strncpy instead of memcpy to
+avoid copying in the extra bytes.
+
+Before, using the gdbus entries in the following hist trigger as an
+example:
+
+  # echo 'hist:key=comm' > /sys/kernel/debug/tracing/events/sched/sched_waking/trigger
+  # cat /sys/kernel/debug/tracing/events/sched/sched_waking/hist
+
+  ...
+
+  { comm: ImgDecoder #4                      } hitcount:        203
+  { comm: gmain                              } hitcount:        213
+  { comm: gmain                              } hitcount:        216
+  { comm: StreamTrans #73                    } hitcount:        221
+  { comm: mozStorage #3                      } hitcount:        230
+  { comm: gdbus                              } hitcount:        233
+  { comm: StyleThread#5                      } hitcount:        253
+  { comm: gdbus                              } hitcount:        256
+  { comm: gdbus                              } hitcount:        260
+  { comm: StyleThread#4                      } hitcount:        271
+
+  ...
+
+  # cat /sys/kernel/debug/tracing/events/sched/sched_waking/hist | egrep gdbus | wc -l
+  51
+
+After:
+
+  # cat /sys/kernel/debug/tracing/events/sched/sched_waking/hist | egrep gdbus | wc -l
+  1
+
+Link: http://lkml.kernel.org/r/50c35ae1267d64eee975b8125e151e600071d4dc.1549309756.git.tom.zanussi@linux.intel.com
+
+Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: stable@vger.kernel.org
-Signed-off-by: Sagar Biradar <Sagar.Biradar@microchip.com>
-Reviewed-by: Dave Carroll <david.carroll@microsemi.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 79e577cbce4c4 ("tracing: Support string type key properly")
+Signed-off-by: Tom Zanussi <tom.zanussi@linux.intel.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/aacraid/linit.c |   13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ kernel/trace/trace_events_hist.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/drivers/scsi/aacraid/linit.c
-+++ b/drivers/scsi/aacraid/linit.c
-@@ -413,13 +413,16 @@ static int aac_slave_configure(struct sc
- 	if (chn < AAC_MAX_BUSES && tid < AAC_MAX_TARGETS && aac->sa_firmware) {
- 		devtype = aac->hba_map[chn][tid].devtype;
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -4621,9 +4621,10 @@ static inline void add_to_key(char *comp
+ 		/* ensure NULL-termination */
+ 		if (size > key_field->size - 1)
+ 			size = key_field->size - 1;
+-	}
  
--		if (devtype == AAC_DEVTYPE_NATIVE_RAW)
-+		if (devtype == AAC_DEVTYPE_NATIVE_RAW) {
- 			depth = aac->hba_map[chn][tid].qd_limit;
--		else if (devtype == AAC_DEVTYPE_ARC_RAW)
-+			set_timeout = 1;
-+			goto common_config;
-+		}
-+		if (devtype == AAC_DEVTYPE_ARC_RAW) {
- 			set_qd_dev_type = true;
--
--		set_timeout = 1;
--		goto common_config;
-+			set_timeout = 1;
-+			goto common_config;
-+		}
- 	}
+-	memcpy(compound_key + key_field->offset, key, size);
++		strncpy(compound_key + key_field->offset, (char *)key, size);
++	} else
++		memcpy(compound_key + key_field->offset, key, size);
+ }
  
- 	if (aac->jbod && (sdev->type == TYPE_DISK))
+ static void
 
 
