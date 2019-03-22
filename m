@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04AA0C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:25:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78BFEC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:25:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3BFE21916
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:25:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CC7D20657
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:25:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553253914;
-	bh=jF1VomsOOJ5r90xfa1HfFFyyMujpQdBt0zSvSMWWtk8=;
+	s=default; t=1553253919;
+	bh=U1fdrxPnLu9B19eWOlMRYOrVmaxa4kOcoLaQmg2FdoA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PPDPC6RiDTGNaBPrV6mxvOLMedYZTFFQqg8KmD3TycWh37SVF/4GFVekrLNOP6AB5
-	 bw/+lt0Y0e+8h7SHYiKbL5zSXYIlM/ze4Pe0WvE5AvR7p93c3dwe8SKAZid5niWoWa
-	 bYodfAjJM/Yh8FXgZzUppOM1DvOCkCfWX1pbxeGs=
+	b=fbQa0Z2HbSXaYtHI7VQr84NqHy9FQneUH4/D52JNYylbw7Tq69KNocqtTD/J2ua1u
+	 ZkAoJOZiEg5ePml0JoAkd1YTskGX9argd/ylrfiV0yWjbqHCDjv/UjMzTTQRJYYiPq
+	 jm+fShbIlowkFn6WKZavKHZCrEEA/GZDcQdFtDso=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729253AbfCVLZN (ORCPT
+        id S1729260AbfCVLZR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:25:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52458 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:25:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728215AbfCVLZL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:25:11 -0400
+        id S1728215AbfCVLZP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:25:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 65E7D218A2;
-        Fri, 22 Mar 2019 11:25:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1268420657;
+        Fri, 22 Mar 2019 11:25:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553253910;
-        bh=jF1VomsOOJ5r90xfa1HfFFyyMujpQdBt0zSvSMWWtk8=;
+        s=default; t=1553253914;
+        bh=U1fdrxPnLu9B19eWOlMRYOrVmaxa4kOcoLaQmg2FdoA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hVEQM09cLI8dlLlvV+QDl1aKNHwg9q4E22lks3cShAu7pW18nNGcJEULx1vZfzfLf
-         C9fQBRRC4noKO7eoYF3+wFDfMjBI4zkTadk5nbqYQPEJCX51qeUTfZjdDDCd0D30M0
-         R6YEQo2+QW8Ab8agkr31/w+4JMbON+xVfPz4rtbE=
+        b=rs5pC3i9KOBsT/LD+LVbJV+84wO33V4EzB6riDvWJRJZQoPahSznwyajRXSSkRcP3
+         3WIWlAc18KnjV8JGZu4sAEMFlNAAxBJifMPjclCBy1pzg7Y4y/Np17e4SCzkmZHxVx
+         vmMvO56FvTyiuXjSdkZAYh4U1ZG3AeXe8uZZOdZA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Shilovsky <pshilov@microsoft.com>,
-        Steve French <stfrench@microsoft.com>,
-        Ronnie Sahlberg <lsahlber@redhat.com>
-Subject: [PATCH 3.18 109/134] CIFS: Fix read after write for files with read caching
-Date:   Fri, 22 Mar 2019 12:15:22 +0100
-Message-Id: <20190322111218.211259548@linuxfoundation.org>
+        stable@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 3.18 110/134] regulator: s2mps11: Fix steps for buck7, buck8 and LDO35
+Date:   Fri, 22 Mar 2019 12:15:23 +0100
+Message-Id: <20190322111218.283454322@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111210.465931067@linuxfoundation.org>
 References: <20190322111210.465931067@linuxfoundation.org>
@@ -66,54 +65,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Pavel Shilovsky <piastryyy@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 
-commit 6dfbd84684700cb58b34e8602c01c12f3d2595c8 upstream.
+commit 56b5d4ea778c1b0989c5cdb5406d4a488144c416 upstream.
 
-When we have a READ lease for a file and have just issued a write
-operation to the server we need to purge the cache and set oplock/lease
-level to NONE to avoid reading stale data. Currently we do that
-only if a write operation succedeed thus not covering cases when
-a request was sent to the server but a negative error code was
-returned later for some other reasons (e.g. -EIOCBQUEUED or -EINTR).
-Fix this by turning off caching regardless of the error code being
-returned.
-
-The patches fixes generic tests 075 and 112 from the xfs-tests.
+LDO35 uses 25 mV step, not 50 mV.  Bucks 7 and 8 use 12.5 mV step
+instead of 6.25 mV.  Wrong step caused over-voltage (LDO35) or
+under-voltage (buck7 and 8) if regulators were used (e.g. on Exynos5420
+Arndale Octa board).
 
 Cc: <stable@vger.kernel.org>
-Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Fixes: cb74685ecb39 ("regulator: s2mps11: Add samsung s2mps11 regulator driver")
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/file.c |   12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ drivers/regulator/s2mps11.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/fs/cifs/file.c
-+++ b/fs/cifs/file.c
-@@ -2772,14 +2772,16 @@ cifs_strict_writev(struct kiocb *iocb, s
- 	 * these pages but not on the region from pos to ppos+len-1.
- 	 */
- 	written = cifs_user_writev(iocb, from);
--	if (written > 0 && CIFS_CACHE_READ(cinode)) {
-+	if (CIFS_CACHE_READ(cinode)) {
- 		/*
--		 * Windows 7 server can delay breaking level2 oplock if a write
--		 * request comes - break it on the client to prevent reading
--		 * an old data.
-+		 * We have read level caching and we have just sent a write
-+		 * request to the server thus making data in the cache stale.
-+		 * Zap the cache and set oplock/lease level to NONE to avoid
-+		 * reading stale data from the cache. All subsequent read
-+		 * operations will read new data from the server.
- 		 */
- 		cifs_zap_mapping(inode);
--		cifs_dbg(FYI, "Set no oplock for inode=%p after a write operation\n",
-+		cifs_dbg(FYI, "Set Oplock/Lease to NONE for inode=%p after write\n",
- 			 inode);
- 		cinode->oplock = 0;
- 	}
+--- a/drivers/regulator/s2mps11.c
++++ b/drivers/regulator/s2mps11.c
+@@ -369,7 +369,7 @@ static const struct regulator_desc s2mps
+ 	regulator_desc_s2mps11_ldo(32, STEP_50_MV),
+ 	regulator_desc_s2mps11_ldo(33, STEP_50_MV),
+ 	regulator_desc_s2mps11_ldo(34, STEP_50_MV),
+-	regulator_desc_s2mps11_ldo(35, STEP_50_MV),
++	regulator_desc_s2mps11_ldo(35, STEP_25_MV),
+ 	regulator_desc_s2mps11_ldo(36, STEP_50_MV),
+ 	regulator_desc_s2mps11_ldo(37, STEP_50_MV),
+ 	regulator_desc_s2mps11_ldo(38, STEP_50_MV),
+@@ -379,8 +379,8 @@ static const struct regulator_desc s2mps
+ 	regulator_desc_s2mps11_buck1_4(4),
+ 	regulator_desc_s2mps11_buck5,
+ 	regulator_desc_s2mps11_buck67810(6, MIN_600_MV, STEP_6_25_MV),
+-	regulator_desc_s2mps11_buck67810(7, MIN_600_MV, STEP_6_25_MV),
+-	regulator_desc_s2mps11_buck67810(8, MIN_600_MV, STEP_6_25_MV),
++	regulator_desc_s2mps11_buck67810(7, MIN_600_MV, STEP_12_5_MV),
++	regulator_desc_s2mps11_buck67810(8, MIN_600_MV, STEP_12_5_MV),
+ 	regulator_desc_s2mps11_buck9,
+ 	regulator_desc_s2mps11_buck67810(10, MIN_750_MV, STEP_12_5_MV),
+ };
 
 
