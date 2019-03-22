@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1809C10F03
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:56:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C594C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:56:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81F1B218FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:56:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4478F21873
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:56:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553259393;
-	bh=aecyRGejPgGoCAlIowy/PguJIovSPvoSM3nvBT7csKs=;
+	s=default; t=1553259403;
+	bh=A4I4m9koCuXfB6FpWU/fob3Gb6j4XE5dFR9qnJdjaPw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Eou5XZz22x0HaTOAYi8pF05ilFqwSGZO81RAf4duLvfiLu7ZQDrBlCV1y//O8mtp6
-	 fS6b55ibNQ46jBeDE3ofnJRXPQwGszaQvXGOL0AiVuztyjJ6jMPYNbVHuUoqx102Ox
-	 Ur57+6PU1aZ4rs+smHfKJCVmkPBketmPh/CIpKtE=
+	b=eqObyfQPE/26zgMlEGT4R8hynAkaegigvlGJfUIPSIB9439qHUH8uyOz3x0jcSbQs
+	 DBV2/Fu29ODWjaG1p2Kigws5P0MtilNdb/nlr7QeR6uBq8F6EoAZkgI5zlBSETvBoN
+	 Zb2P9i+ErQFLWKHgVv0aMELx0d/8tI/UWuiCtQ8g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732411AbfCVLtJ (ORCPT
+        id S1732370AbfCVLs5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:49:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52602 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:48:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732397AbfCVLtF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:49:05 -0400
+        id S1732356AbfCVLsw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:48:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9C8220693;
-        Fri, 22 Mar 2019 11:49:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B2E1218B0;
+        Fri, 22 Mar 2019 11:48:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255344;
-        bh=aecyRGejPgGoCAlIowy/PguJIovSPvoSM3nvBT7csKs=;
+        s=default; t=1553255331;
+        bh=A4I4m9koCuXfB6FpWU/fob3Gb6j4XE5dFR9qnJdjaPw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rf/5fwDy5Ql55j4+iNLEn94BDrrX4jlNCxHHdZJgdBoYZQjbGT8vm8Gr4yD5ol0di
-         ut6sv5HQqRaI0IQb2BRhDEyoZfe+RrGGGPiiASq23Ad/vE6Zw2Fk3p0Fa58ffAqn4V
-         UgP64HjC4PP2P39xeKSdqTwtXooPUEnJDNXe7w3s=
+        b=aa5ZIv2h8yAIQBXMJDSpFRvYifRAS30/JjrKKuD2SVqmoRboWu75Ziqd+1qkUVQk7
+         tDwOSalXlhKFxTpV0ZNJqG1EtXnEHXdPp0lLrgk42bxjjJSdochCzkT7qC3kgLbQwF
+         o4ZbM6l2VwVWQcFs6M119ECQ0l584ln1oSWxHPas=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kyle Roeschley <kyle.roeschley@ni.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
+        stable@vger.kernel.org, Martin Willi <martin@strongswan.org>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 033/183] i2c: cadence: Fix the hold bit setting
-Date:   Fri, 22 Mar 2019 12:14:21 +0100
-Message-Id: <20190322111244.130775203@linuxfoundation.org>
+Subject: [PATCH 4.14 039/183] esp: Skip TX bytes accounting when sending from a request socket
+Date:   Fri, 22 Mar 2019 12:14:27 +0100
+Message-Id: <20190322111244.555727953@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111241.819468003@linuxfoundation.org>
 References: <20190322111241.819468003@linuxfoundation.org>
@@ -68,54 +66,73 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit d358def706880defa4c9e87381c5bf086a97d5f9 ]
+[ Upstream commit 09db51241118aeb06e1c8cd393b45879ce099b36 ]
 
-In case the hold bit is not needed we are carrying the old values.
-Fix the same by resetting the bit when not needed.
+On ESP output, sk_wmem_alloc is incremented for the added padding if a
+socket is associated to the skb. When replying with TCP SYNACKs over
+IPsec, the associated sk is a casted request socket, only. Increasing
+sk_wmem_alloc on a request socket results in a write at an arbitrary
+struct offset. In the best case, this produces the following WARNING:
 
-Fixes the sporadic i2c bus lockups on National Instruments
-Zynq-based devices.
+WARNING: CPU: 1 PID: 0 at lib/refcount.c:102 esp_output_head+0x2e4/0x308 [esp4]
+refcount_t: addition on 0; use-after-free.
+CPU: 1 PID: 0 Comm: swapper/1 Not tainted 5.0.0-rc3 #2
+Hardware name: Marvell Armada 380/385 (Device Tree)
+[...]
+[<bf0ff354>] (esp_output_head [esp4]) from [<bf1006a4>] (esp_output+0xb8/0x180 [esp4])
+[<bf1006a4>] (esp_output [esp4]) from [<c05dee64>] (xfrm_output_resume+0x558/0x664)
+[<c05dee64>] (xfrm_output_resume) from [<c05d07b0>] (xfrm4_output+0x44/0xc4)
+[<c05d07b0>] (xfrm4_output) from [<c05956bc>] (tcp_v4_send_synack+0xa8/0xe8)
+[<c05956bc>] (tcp_v4_send_synack) from [<c0586ad8>] (tcp_conn_request+0x7f4/0x948)
+[<c0586ad8>] (tcp_conn_request) from [<c058c404>] (tcp_rcv_state_process+0x2a0/0xe64)
+[<c058c404>] (tcp_rcv_state_process) from [<c05958ac>] (tcp_v4_do_rcv+0xf0/0x1f4)
+[<c05958ac>] (tcp_v4_do_rcv) from [<c0598a4c>] (tcp_v4_rcv+0xdb8/0xe20)
+[<c0598a4c>] (tcp_v4_rcv) from [<c056eb74>] (ip_protocol_deliver_rcu+0x2c/0x2dc)
+[<c056eb74>] (ip_protocol_deliver_rcu) from [<c056ee6c>] (ip_local_deliver_finish+0x48/0x54)
+[<c056ee6c>] (ip_local_deliver_finish) from [<c056eecc>] (ip_local_deliver+0x54/0xec)
+[<c056eecc>] (ip_local_deliver) from [<c056efac>] (ip_rcv+0x48/0xb8)
+[<c056efac>] (ip_rcv) from [<c0519c2c>] (__netif_receive_skb_one_core+0x50/0x6c)
+[...]
 
-Fixes: df8eb5691c48 ("i2c: Add driver for Cadence I2C controller")
-Reported-by: Kyle Roeschley <kyle.roeschley@ni.com>
-Acked-by: Michal Simek <michal.simek@xilinx.com>
-Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-Tested-by: Kyle Roeschley <kyle.roeschley@ni.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+The issue triggers only when not using TCP syncookies, as for syncookies
+no socket is associated.
+
+Fixes: cac2661c53f3 ("esp4: Avoid skb_cow_data whenever possible")
+Fixes: 03e2a30f6a27 ("esp6: Avoid skb_cow_data whenever possible")
+Signed-off-by: Martin Willi <martin@strongswan.org>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-cadence.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ net/ipv4/esp4.c | 2 +-
+ net/ipv6/esp6.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-cadence.c b/drivers/i2c/busses/i2c-cadence.c
-index b13605718291..d917cefc5a19 100644
---- a/drivers/i2c/busses/i2c-cadence.c
-+++ b/drivers/i2c/busses/i2c-cadence.c
-@@ -382,8 +382,10 @@ static void cdns_i2c_mrecv(struct cdns_i2c *id)
- 	 * Check for the message size against FIFO depth and set the
- 	 * 'hold bus' bit if it is greater than FIFO depth.
- 	 */
--	if (id->recv_count > CDNS_I2C_FIFO_DEPTH)
-+	if ((id->recv_count > CDNS_I2C_FIFO_DEPTH)  || id->bus_hold_flag)
- 		ctrl_reg |= CDNS_I2C_CR_HOLD;
-+	else
-+		ctrl_reg = ctrl_reg & ~CDNS_I2C_CR_HOLD;
+diff --git a/net/ipv4/esp4.c b/net/ipv4/esp4.c
+index b00e4a43b4dc..d30285c5d52d 100644
+--- a/net/ipv4/esp4.c
++++ b/net/ipv4/esp4.c
+@@ -307,7 +307,7 @@ int esp_output_head(struct xfrm_state *x, struct sk_buff *skb, struct esp_info *
+ 			skb->len += tailen;
+ 			skb->data_len += tailen;
+ 			skb->truesize += tailen;
+-			if (sk)
++			if (sk && sk_fullsock(sk))
+ 				refcount_add(tailen, &sk->sk_wmem_alloc);
  
- 	cdns_i2c_writereg(ctrl_reg, CDNS_I2C_CR_OFFSET);
+ 			goto out;
+diff --git a/net/ipv6/esp6.c b/net/ipv6/esp6.c
+index f112fef79216..ef7822fad0fd 100644
+--- a/net/ipv6/esp6.c
++++ b/net/ipv6/esp6.c
+@@ -275,7 +275,7 @@ int esp6_output_head(struct xfrm_state *x, struct sk_buff *skb, struct esp_info
+ 			skb->len += tailen;
+ 			skb->data_len += tailen;
+ 			skb->truesize += tailen;
+-			if (sk)
++			if (sk && sk_fullsock(sk))
+ 				refcount_add(tailen, &sk->sk_wmem_alloc);
  
-@@ -440,8 +442,11 @@ static void cdns_i2c_msend(struct cdns_i2c *id)
- 	 * Check for the message size against FIFO depth and set the
- 	 * 'hold bus' bit if it is greater than FIFO depth.
- 	 */
--	if (id->send_count > CDNS_I2C_FIFO_DEPTH)
-+	if ((id->send_count > CDNS_I2C_FIFO_DEPTH) || id->bus_hold_flag)
- 		ctrl_reg |= CDNS_I2C_CR_HOLD;
-+	else
-+		ctrl_reg = ctrl_reg & ~CDNS_I2C_CR_HOLD;
-+
- 	cdns_i2c_writereg(ctrl_reg, CDNS_I2C_CR_OFFSET);
- 
- 	/* Clear the interrupts in interrupt status register. */
+ 			goto out;
 -- 
 2.19.1
 
