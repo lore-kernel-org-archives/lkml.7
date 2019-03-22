@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 011AEC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:12:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23A18C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:12:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C627721929
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:12:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7AF32083D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:12:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256729;
-	bh=jIImtb19x6wdiJJzDnn77niy0v4N6aOnTJ29y0YOIWY=;
+	s=default; t=1553256736;
+	bh=YO7FLkhrr1GOg5XRlNjlw/cDzgBkOn9jA1FYikRHPLY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eoAODitVLPVCgUC5/6JRVER1Q94gBwHD3ZfCsKkKedA7NYgr+xqoaxpS3LM/HSumI
-	 wb0BARHlZESSnbeTLoXNIP/d8tHzbCmtGWP1OteBwBeZ4Ccc35n7WVxtQ/Nz9TUPm2
-	 husUDMS2aO0AUD/xHQxPuqlA5GIRlQU8G1MEBzF8=
+	b=MV9UXKgQEvpLcpoHfv7f7/sht6EPCveaknqJIoxrC1wUdx/7bPojFP7BquggoPaPL
+	 6z6Dn9yQoe6XPLGw0nmxSwdD+4qDjjiFdeUyQUGQvCY3aDcCcxhxCSTiDdfzvmyQr9
+	 2os4D3EqS8d34PuXY3jhI4LkDzxBThnFEd7acbK0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389579AbfCVMMH (ORCPT
+        id S2389601AbfCVMMO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:12:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50270 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:12:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388968AbfCVMMD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:12:03 -0400
+        id S2389449AbfCVMMG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:12:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE74220830;
-        Fri, 22 Mar 2019 12:12:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76E1A2083D;
+        Fri, 22 Mar 2019 12:12:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256723;
-        bh=jIImtb19x6wdiJJzDnn77niy0v4N6aOnTJ29y0YOIWY=;
+        s=default; t=1553256726;
+        bh=YO7FLkhrr1GOg5XRlNjlw/cDzgBkOn9jA1FYikRHPLY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qh3QGcoCG6Q3HpIImrhxeOHVKkIB2HNkzcU2wOA8Rfd70L+/Lqh46WTMmr9gCLlQu
-         diiDlyKS5XLl6b+ZVC8eXPzOIoyiBvk79jBc9t+fAUoMc5Ex7xeIy6u+w92FR3l9O/
-         ob8Sdiy6xH2aoMM0hOpGxEtbfhz1p3w8phuq581Y=
+        b=P9Ev146fX5MHtP6YlZ011Kldie1t51KeoQCFyvIJAFWhNUh7dNLF2HTJOL5TMAU89
+         bDGwQjWX7+AUsqR5E0iN9YMtWnDxrGD0OzrLtvwr4UI+8sSnXxTLElP0lzjLv0P7cL
+         FVusSmhcjU5xj9f/ipPaK+quP3u645SLqSgUODV0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gilad Ben-Yossef <gilad@benyossef.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.0 018/238] crypto: ccree - dont copy zero size ciphertext
-Date:   Fri, 22 Mar 2019 12:13:57 +0100
-Message-Id: <20190322111259.245385243@linuxfoundation.org>
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        zhengbin <zhengbin13@huawei.com>,
+        Dominique Martinet <dominique.martinet@cea.fr>
+Subject: [PATCH 5.0 002/238] 9p/net: fix memory leak in p9_client_create
+Date:   Fri, 22 Mar 2019 12:13:41 +0100
+Message-Id: <20190322111258.504058704@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -65,37 +66,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Gilad Ben-Yossef <gilad@benyossef.com>
+From: zhengbin <zhengbin13@huawei.com>
 
-commit 2b5ac17463dcb2411fed506edcf259a89bb538ba upstream.
+commit bb06c388fa20ae24cfe80c52488de718a7e3a53f upstream.
 
-For decryption in CBC mode we need to save the last ciphertext block
-for use as the next IV. However, we were trying to do this also with
-zero sized ciphertext resulting in a panic.
+If msize is less than 4096, we should close and put trans, destroy
+tagpool, not just free client. This patch fixes that.
 
-Fix this by only doing the copy if the ciphertext length is at least
-of IV size.
-
-Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
+Link: http://lkml.kernel.org/m/1552464097-142659-1-git-send-email-zhengbin13@huawei.com
 Cc: stable@vger.kernel.org
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: 574d356b7a02 ("9p/net: put a lower bound on msize")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: zhengbin <zhengbin13@huawei.com>
+Signed-off-by: Dominique Martinet <dominique.martinet@cea.fr>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/ccree/cc_cipher.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/9p/client.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/crypto/ccree/cc_cipher.c
-+++ b/drivers/crypto/ccree/cc_cipher.c
-@@ -801,7 +801,8 @@ static int cc_cipher_decrypt(struct skci
+--- a/net/9p/client.c
++++ b/net/9p/client.c
+@@ -1061,7 +1061,7 @@ struct p9_client *p9_client_create(const
+ 		p9_debug(P9_DEBUG_ERROR,
+ 			 "Please specify a msize of at least 4k\n");
+ 		err = -EINVAL;
+-		goto free_client;
++		goto close_trans;
+ 	}
  
- 	memset(req_ctx, 0, sizeof(*req_ctx));
- 
--	if (ctx_p->cipher_mode == DRV_CIPHER_CBC) {
-+	if ((ctx_p->cipher_mode == DRV_CIPHER_CBC) &&
-+	    (req->cryptlen >= ivsize)) {
- 
- 		/* Allocate and save the last IV sized bytes of the source,
- 		 * which will be lost in case of in-place decryption.
+ 	err = p9_client_version(clnt);
 
 
