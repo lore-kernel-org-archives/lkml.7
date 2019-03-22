@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A75C10F03
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:18:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E680AC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:18:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F5B32082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:18:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B61912083D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:18:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553257121;
-	bh=bKMN5h3x5hxCn+EKU+Ue47el9XU/tRSWV+P/+cILpKg=;
+	s=default; t=1553257129;
+	bh=TXEe3ECC7OI1wSiWFopDr8iszUzZUmOdE/PMWC2/GgI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iWqUqjTt41wDbCThLpAiSUrKWpoxGG13HYLxGYwamd4E+iToZtuLPjgs9WrsLTBSJ
-	 QDzmVwRXaxb5url3mR3I1++lN21WBEvDGQkafPGezhwOQRe7O1tmRhTVzCJGsA5O2r
-	 Sfn2nu06G2zNsZH0/JfHYag0XuoxQ7HOLJZxx5pg=
+	b=A2l98sk5ZWa4omOAoIcC6H754E00mB7fNNyCcSudUq0RllMrpMLCZVrsN5Ot8vBmP
+	 k7zQoE6+QtS5GmN/9JdekCdOqJtp/46ABkre8EyOhEbI3NgDQOfU72Y7nuQE/k9JBa
+	 AAhKXrdwArfbU5h9kX4937SX3SSE82z3jfpWBPlU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390533AbfCVMSk (ORCPT
+        id S2390552AbfCVMSs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:18:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57504 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:18:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57696 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390206AbfCVMSf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:18:35 -0400
+        id S2390536AbfCVMSn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:18:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C595B2082C;
-        Fri, 22 Mar 2019 12:18:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B75DD2083D;
+        Fri, 22 Mar 2019 12:18:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553257114;
-        bh=bKMN5h3x5hxCn+EKU+Ue47el9XU/tRSWV+P/+cILpKg=;
+        s=default; t=1553257123;
+        bh=TXEe3ECC7OI1wSiWFopDr8iszUzZUmOdE/PMWC2/GgI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x25I6oSXBdRKNvAw4NhqOEk/Brdla3uYzgErZCFyuZpsUalHSS9szJCyF5U6GL9B9
-         RvGZtH4VjzSGIT4AYfk8NpPO8dOw1+EH/4eamfuZM319blNfugCD/IZEhmmQAP2PbT
-         p8nKECfgTXDxHGV8YrZN3S27qmaH8YsC2MQaTW+s=
+        b=q8OUcWxgpxwBJISnBtxGfJ0+pCcAylatspP7YOx/m1vvef08zkQLOOmqDrKC8eeGI
+         y7VFMUyP3vTkjXnP7fd3KzAS/KfpShzfvVVh8oXmOxqqDS2x1ZMIFgmKYiS7m2J90e
+         g9Wl6we064Oz/bDzLMWJwZ6+/ZLn7gOAuEgUfT1M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Christophe Lombard <clombard@linux.vnet.ibm.com>,
-        Vaibhav Jain <vaibhav@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.0 137/238] cxl: Wrap iterations over afu slices inside afu_list_lock
-Date:   Fri, 22 Mar 2019 12:15:56 +0100
-Message-Id: <20190322111306.527536937@linuxfoundation.org>
+        stable@vger.kernel.org, Misael Lopez Cruz <misael.lopez@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Subject: [PATCH 5.0 140/238] clk: clk-twl6040: Fix imprecise external abort for pdmclk
+Date:   Fri, 22 Mar 2019 12:15:59 +0100
+Message-Id: <20190322111306.683185488@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -69,191 +67,117 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Vaibhav Jain <vaibhav@linux.ibm.com>
+From: Tony Lindgren <tony@atomide.com>
 
-commit edeb304f659792fb5bab90d7d6f3408b4c7301fb upstream.
+commit 5ae51d67aec95f6f9386aa8dd5db424964895575 upstream.
 
-Within cxl module, iteration over array 'adapter->afu' may be racy
-at few points as it might be simultaneously read during an EEH and its
-contents being set to NULL while driver is being unloaded or unbound
-from the adapter. This might result in a NULL pointer to 'struct afu'
-being de-referenced during an EEH thereby causing a kernel oops.
+I noticed that modprobe clk-twl6040 can fail after a cold boot with:
+abe_cm:clk:0010:0: failed to enable
+...
+Unhandled fault: imprecise external abort (0x1406) at 0xbe896b20
 
-This patch fixes this by making sure that all access to the array
-'adapter->afu' is wrapped within the context of spin-lock
-'adapter->afu_list_lock'.
+WARNING: CPU: 1 PID: 29 at drivers/clk/clk.c:828 clk_core_disable_lock+0x18/0x24
+...
+(clk_core_disable_lock) from [<c0123534>] (_disable_clocks+0x18/0x90)
+(_disable_clocks) from [<c0124040>] (_idle+0x17c/0x244)
+(_idle) from [<c0125ad4>] (omap_hwmod_idle+0x24/0x44)
+(omap_hwmod_idle) from [<c053a038>] (sysc_runtime_suspend+0x48/0x108)
+(sysc_runtime_suspend) from [<c06084c4>] (__rpm_callback+0x144/0x1d8)
+(__rpm_callback) from [<c0608578>] (rpm_callback+0x20/0x80)
+(rpm_callback) from [<c0607034>] (rpm_suspend+0x120/0x694)
+(rpm_suspend) from [<c0607a78>] (__pm_runtime_idle+0x60/0x84)
+(__pm_runtime_idle) from [<c053aaf0>] (sysc_probe+0x874/0xf2c)
+(sysc_probe) from [<c05fecd4>] (platform_drv_probe+0x48/0x98)
 
-Fixes: 9e8df8a21963 ("cxl: EEH support")
-Cc: stable@vger.kernel.org # v4.3+
-Acked-by: Andrew Donnellan <andrew.donnellan@au1.ibm.com>
-Acked-by: Frederic Barrat <fbarrat@linux.ibm.com>
-Acked-by: Christophe Lombard <clombard@linux.vnet.ibm.com>
-Signed-off-by: Vaibhav Jain <vaibhav@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+After searching around for a similar issue, I came across an earlier fix
+that never got merged upstream in the Android tree for glass-omap-xrr02.
+There is patch "MFD: twl6040-codec: Implement PDMCLK cold temp errata"
+by Misael Lopez Cruz <misael.lopez@ti.com>.
+
+Based on my observations, this fix is also needed when cold booting
+devices, and not just for deeper idle modes. Since we now have a clock
+driver for pdmclk, let's fix the issue in twl6040_pdmclk_prepare().
+
+Cc: Misael Lopez Cruz <misael.lopez@ti.com>
+Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/misc/cxl/guest.c |    2 ++
- drivers/misc/cxl/pci.c   |   39 ++++++++++++++++++++++++++++++---------
- 2 files changed, 32 insertions(+), 9 deletions(-)
+ drivers/clk/clk-twl6040.c |   53 ++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 51 insertions(+), 2 deletions(-)
 
---- a/drivers/misc/cxl/guest.c
-+++ b/drivers/misc/cxl/guest.c
-@@ -267,6 +267,7 @@ static int guest_reset(struct cxl *adapt
- 	int i, rc;
- 
- 	pr_devel("Adapter reset request\n");
-+	spin_lock(&adapter->afu_list_lock);
- 	for (i = 0; i < adapter->slices; i++) {
- 		if ((afu = adapter->afu[i])) {
- 			pci_error_handlers(afu, CXL_ERROR_DETECTED_EVENT,
-@@ -283,6 +284,7 @@ static int guest_reset(struct cxl *adapt
- 			pci_error_handlers(afu, CXL_RESUME_EVENT, 0);
- 		}
- 	}
-+	spin_unlock(&adapter->afu_list_lock);
- 	return rc;
+--- a/drivers/clk/clk-twl6040.c
++++ b/drivers/clk/clk-twl6040.c
+@@ -41,6 +41,43 @@ static int twl6040_pdmclk_is_prepared(st
+ 	return pdmclk->enabled;
  }
  
---- a/drivers/misc/cxl/pci.c
-+++ b/drivers/misc/cxl/pci.c
-@@ -1805,7 +1805,7 @@ static pci_ers_result_t cxl_vphb_error_d
- 	/* There should only be one entry, but go through the list
- 	 * anyway
- 	 */
--	if (afu->phb == NULL)
-+	if (afu == NULL || afu->phb == NULL)
- 		return result;
- 
- 	list_for_each_entry(afu_dev, &afu->phb->bus->devices, bus_list) {
-@@ -1832,7 +1832,8 @@ static pci_ers_result_t cxl_pci_error_de
++static int twl6040_pdmclk_reset_one_clock(struct twl6040_pdmclk *pdmclk,
++					  unsigned int reg)
++{
++	const u8 reset_mask = TWL6040_HPLLRST;	/* Same for HPPLL and LPPLL */
++	int ret;
++
++	ret = twl6040_set_bits(pdmclk->twl6040, reg, reset_mask);
++	if (ret < 0)
++		return ret;
++
++	ret = twl6040_clear_bits(pdmclk->twl6040, reg, reset_mask);
++	if (ret < 0)
++		return ret;
++
++	return 0;
++}
++
++/*
++ * TWL6040A2 Phoenix Audio IC erratum #6: "PDM Clock Generation Issue At
++ * Cold Temperature". This affects cold boot and deeper idle states it
++ * seems. The workaround consists of resetting HPPLL and LPPLL.
++ */
++static int twl6040_pdmclk_quirk_reset_clocks(struct twl6040_pdmclk *pdmclk)
++{
++	int ret;
++
++	ret = twl6040_pdmclk_reset_one_clock(pdmclk, TWL6040_REG_HPPLLCTL);
++	if (ret)
++		return ret;
++
++	ret = twl6040_pdmclk_reset_one_clock(pdmclk, TWL6040_REG_LPPLLCTL);
++	if (ret)
++		return ret;
++
++	return 0;
++}
++
+ static int twl6040_pdmclk_prepare(struct clk_hw *hw)
  {
- 	struct cxl *adapter = pci_get_drvdata(pdev);
- 	struct cxl_afu *afu;
--	pci_ers_result_t result = PCI_ERS_RESULT_NEED_RESET, afu_result;
-+	pci_ers_result_t result = PCI_ERS_RESULT_NEED_RESET;
-+	pci_ers_result_t afu_result = PCI_ERS_RESULT_NEED_RESET;
- 	int i;
+ 	struct twl6040_pdmclk *pdmclk = container_of(hw, struct twl6040_pdmclk,
+@@ -48,8 +85,20 @@ static int twl6040_pdmclk_prepare(struct
+ 	int ret;
  
- 	/* At this point, we could still have an interrupt pending.
-@@ -1843,6 +1844,7 @@ static pci_ers_result_t cxl_pci_error_de
- 
- 	/* If we're permanently dead, give up. */
- 	if (state == pci_channel_io_perm_failure) {
-+		spin_lock(&adapter->afu_list_lock);
- 		for (i = 0; i < adapter->slices; i++) {
- 			afu = adapter->afu[i];
- 			/*
-@@ -1851,6 +1853,7 @@ static pci_ers_result_t cxl_pci_error_de
- 			 */
- 			cxl_vphb_error_detected(afu, state);
- 		}
-+		spin_unlock(&adapter->afu_list_lock);
- 		return PCI_ERS_RESULT_DISCONNECT;
- 	}
- 
-@@ -1932,11 +1935,17 @@ static pci_ers_result_t cxl_pci_error_de
- 	 *     * In slot_reset, free the old resources and allocate new ones.
- 	 *     * In resume, clear the flag to allow things to start.
- 	 */
+ 	ret = twl6040_power(pdmclk->twl6040, 1);
+-	if (!ret)
+-		pdmclk->enabled = 1;
++	if (ret)
++		return ret;
 +
-+	/* Make sure no one else changes the afu list */
-+	spin_lock(&adapter->afu_list_lock);
++	ret = twl6040_pdmclk_quirk_reset_clocks(pdmclk);
++	if (ret)
++		goto out_err;
 +
- 	for (i = 0; i < adapter->slices; i++) {
- 		afu = adapter->afu[i];
- 
--		afu_result = cxl_vphb_error_detected(afu, state);
-+		if (afu == NULL)
-+			continue;
- 
-+		afu_result = cxl_vphb_error_detected(afu, state);
- 		cxl_context_detach_all(afu);
- 		cxl_ops->afu_deactivate_mode(afu, afu->current_mode);
- 		pci_deconfigure_afu(afu);
-@@ -1948,6 +1957,7 @@ static pci_ers_result_t cxl_pci_error_de
- 			 (result == PCI_ERS_RESULT_NEED_RESET))
- 			result = PCI_ERS_RESULT_NONE;
- 	}
-+	spin_unlock(&adapter->afu_list_lock);
- 
- 	/* should take the context lock here */
- 	if (cxl_adapter_context_lock(adapter) != 0)
-@@ -1980,14 +1990,18 @@ static pci_ers_result_t cxl_pci_slot_res
- 	 */
- 	cxl_adapter_context_unlock(adapter);
- 
-+	spin_lock(&adapter->afu_list_lock);
- 	for (i = 0; i < adapter->slices; i++) {
- 		afu = adapter->afu[i];
- 
-+		if (afu == NULL)
-+			continue;
++	pdmclk->enabled = 1;
 +
- 		if (pci_configure_afu(afu, adapter, pdev))
--			goto err;
-+			goto err_unlock;
- 
- 		if (cxl_afu_select_best_mode(afu))
--			goto err;
-+			goto err_unlock;
- 
- 		if (afu->phb == NULL)
- 			continue;
-@@ -1999,16 +2013,16 @@ static pci_ers_result_t cxl_pci_slot_res
- 			ctx = cxl_get_context(afu_dev);
- 
- 			if (ctx && cxl_release_context(ctx))
--				goto err;
-+				goto err_unlock;
- 
- 			ctx = cxl_dev_context_init(afu_dev);
- 			if (IS_ERR(ctx))
--				goto err;
-+				goto err_unlock;
- 
- 			afu_dev->dev.archdata.cxl_ctx = ctx;
- 
- 			if (cxl_ops->afu_check_and_enable(afu))
--				goto err;
-+				goto err_unlock;
- 
- 			afu_dev->error_state = pci_channel_io_normal;
- 
-@@ -2029,8 +2043,13 @@ static pci_ers_result_t cxl_pci_slot_res
- 				result = PCI_ERS_RESULT_DISCONNECT;
- 		}
- 	}
++	return 0;
 +
-+	spin_unlock(&adapter->afu_list_lock);
- 	return result;
++out_err:
++	dev_err(pdmclk->dev, "%s: error %i\n", __func__, ret);
++	twl6040_power(pdmclk->twl6040, 0);
  
-+err_unlock:
-+	spin_unlock(&adapter->afu_list_lock);
-+
- err:
- 	/* All the bits that happen in both error_detected and cxl_remove
- 	 * should be idempotent, so we don't need to worry about leaving a mix
-@@ -2051,10 +2070,11 @@ static void cxl_pci_resume(struct pci_de
- 	 * This is not the place to be checking if everything came back up
- 	 * properly, because there's no return value: do that in slot_reset.
- 	 */
-+	spin_lock(&adapter->afu_list_lock);
- 	for (i = 0; i < adapter->slices; i++) {
- 		afu = adapter->afu[i];
- 
--		if (afu->phb == NULL)
-+		if (afu == NULL || afu->phb == NULL)
- 			continue;
- 
- 		list_for_each_entry(afu_dev, &afu->phb->bus->devices, bus_list) {
-@@ -2063,6 +2083,7 @@ static void cxl_pci_resume(struct pci_de
- 				afu_dev->driver->err_handler->resume(afu_dev);
- 		}
- 	}
-+	spin_unlock(&adapter->afu_list_lock);
+ 	return ret;
  }
- 
- static const struct pci_error_handlers cxl_err_handler = {
 
 
