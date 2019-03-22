@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73FBBC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:12:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F2FC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:12:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E22221929
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:12:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFA5021929
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:12:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256764;
-	bh=0V0c+/1w+jRKUyNBBFtpMgr5s6ZlfKq8NnweGIyQW04=;
+	s=default; t=1553256768;
+	bh=qxFAZj5Uw8gYZnM/EK0ZgoHYzY2CHJQowmlq0b9NuQU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Oz3UVqKCAS5gMIbNdXzGAaBMV6U0owMLY83tPOku7UbBxHyWTj+HzXCqCOW/kSSOl
-	 kBJSQ3KEOnvrP2AGADMxe7JJUJa+tn6w+G54IeX0Kaeqf53IXjR6wHmrm/IV9mBCTe
-	 YQ1kw739uZn/YjUukfFGFwDWEal9yIVLOpMXQLCE=
+	b=N4DwQwq1vxGqeVNrWHcW+E7svgWYHXq4lXALlUCTjrnul9kT/NxTeOhwctUBJHCzC
+	 8oOK9XiQOEzy/Y8QiIGPD9wutsvx3nXIZyAWg3+Yn5BcnCkTzHYETY9dmhnX7WX7AL
+	 iuAkVI9d7DCJtaZ8DeZdq3IiPOhgP9sbCA/82ZOI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389645AbfCVMMm (ORCPT
+        id S2389654AbfCVMMq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:12:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50796 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:12:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50912 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389635AbfCVMMg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:12:36 -0400
+        id S2389646AbfCVMMn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:12:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA4922082C;
-        Fri, 22 Mar 2019 12:12:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D9202082C;
+        Fri, 22 Mar 2019 12:12:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256756;
-        bh=0V0c+/1w+jRKUyNBBFtpMgr5s6ZlfKq8NnweGIyQW04=;
+        s=default; t=1553256763;
+        bh=qxFAZj5Uw8gYZnM/EK0ZgoHYzY2CHJQowmlq0b9NuQU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z7g9yY0AEEhHPVrbYjQ0QKmgQ7MZHKmy3Nykly39Y9Q+YKhbEtumqhDvhr9HVIbd4
-         UYzgn7XG+qs+eIa7mlGZHHkKwh8BzgtrVHwjAiDlbK+oyvesCMT6DEVqQ/SA4kWJ+E
-         RaJXuh193RaYdAXt3bkbwkkATL2lMxd0YwkYJG3c=
+        b=dM3JPOQxyA3C+iHHcVaMZVFYKVO/uu5RIbANjuifwI97cLv+K/ejVdmKg6wS8XAMZ
+         LwrlHR8v6JVa47fuj3frkv9xXRTh8agi2xYuQvXj2bPUUrobI9rznwYAWqwOCa9CA7
+         E8RqqnbBspAzsTHAfTXF6jdLmk+PQrVLFE1KbDss=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Eric Biggers <ebiggers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.0 020/238] crypto: cfb - remove bogus memcpy() with src == dest
-Date:   Fri, 22 Mar 2019 12:13:59 +0100
-Message-Id: <20190322111259.357936764@linuxfoundation.org>
+        stable@vger.kernel.org, Erwin Tsaur <erwin.tsaur@oracle.com>,
+        Toshi Kani <toshi.kani@hpe.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: [PATCH 5.0 030/238] nfit/ars: Attempt short-ARS even in the no_init_ars case
+Date:   Fri, 22 Mar 2019 12:14:09 +0100
+Message-Id: <20190322111300.030389561@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -67,68 +66,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Eric Biggers <ebiggers@google.com>
+From: Dan Williams <dan.j.williams@intel.com>
 
-commit 6c2e322b3621dc8be72e5c86d4fdb587434ba625 upstream.
+commit fa3ed4d981b1fc19acdd07fcb152a4bd3706892b upstream.
 
-The memcpy() in crypto_cfb_decrypt_inplace() uses walk->iv as both the
-source and destination, which has undefined behavior.  It is unneeded
-because walk->iv is already used to hold the previous ciphertext block;
-thus, walk->iv is already updated to its final value.  So, remove it.
+The no_init_ars option is meant to prevent long-ARS, but short-ARS
+should be allowed to grab any immediate results.
 
-Also, note that in-place decryption is the only case where the previous
-ciphertext block is not directly available.  Therefore, as a related
-cleanup I also updated crypto_cfb_encrypt_segment() to directly use the
-previous ciphertext block rather than save it into walk->iv.  This makes
-it consistent with in-place encryption and out-of-place decryption; now
-only in-place decryption is different, because it has to be.
-
-Fixes: a7d85e06ed80 ("crypto: cfb - add support for Cipher FeedBack mode")
-Cc: <stable@vger.kernel.org> # v4.17+
-Cc: James Bottomley <James.Bottomley@HansenPartnership.com>
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: bc6ba8085842 ("nfit, address-range-scrub: rework and simplify ARS...")
+Cc: <stable@vger.kernel.org>
+Reported-by: Erwin Tsaur <erwin.tsaur@oracle.com>
+Reviewed-by: Toshi Kani <toshi.kani@hpe.com>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- crypto/cfb.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/acpi/nfit/core.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/crypto/cfb.c
-+++ b/crypto/cfb.c
-@@ -77,12 +77,14 @@ static int crypto_cfb_encrypt_segment(st
- 	do {
- 		crypto_cfb_encrypt_one(tfm, iv, dst);
- 		crypto_xor(dst, src, bsize);
--		memcpy(iv, dst, bsize);
-+		iv = dst;
+--- a/drivers/acpi/nfit/core.c
++++ b/drivers/acpi/nfit/core.c
+@@ -3013,11 +3013,12 @@ static int ars_register(struct acpi_nfit
+ {
+ 	int rc;
  
- 		src += bsize;
- 		dst += bsize;
- 	} while ((nbytes -= bsize) >= bsize);
+-	if (no_init_ars || test_bit(ARS_FAILED, &nfit_spa->ars_state))
++	if (test_bit(ARS_FAILED, &nfit_spa->ars_state))
+ 		return acpi_nfit_register_region(acpi_desc, nfit_spa);
  
-+	memcpy(walk->iv, iv, bsize);
-+
- 	return nbytes;
- }
+ 	set_bit(ARS_REQ_SHORT, &nfit_spa->ars_state);
+-	set_bit(ARS_REQ_LONG, &nfit_spa->ars_state);
++	if (!no_init_ars)
++		set_bit(ARS_REQ_LONG, &nfit_spa->ars_state);
  
-@@ -162,7 +164,7 @@ static int crypto_cfb_decrypt_inplace(st
- 	const unsigned int bsize = crypto_cfb_bsize(tfm);
- 	unsigned int nbytes = walk->nbytes;
- 	u8 *src = walk->src.virt.addr;
--	u8 *iv = walk->iv;
-+	u8 * const iv = walk->iv;
- 	u8 tmp[MAX_CIPHER_BLOCKSIZE];
- 
- 	do {
-@@ -172,8 +174,6 @@ static int crypto_cfb_decrypt_inplace(st
- 		src += bsize;
- 	} while ((nbytes -= bsize) >= bsize);
- 
--	memcpy(walk->iv, iv, bsize);
--
- 	return nbytes;
- }
- 
+ 	switch (acpi_nfit_query_poison(acpi_desc)) {
+ 	case 0:
 
 
