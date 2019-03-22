@@ -4,55 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F7A4C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:16:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 172D2C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:16:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC4FC2083D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:16:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA93C218A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:16:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256980;
-	bh=fcZl3fKBQoVlxAFlmvZRIW+fWoEIR2Fgbh9kbs/JBRA=;
+	s=default; t=1553256982;
+	bh=GUoyvyreUkniVtkVtswuAzRLWm/FT2zvhYM5bSKlCtg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NmsQ+DNzVbYsi5YqQr+4kNwmdJqtdY1GNN+WA29vSq/I8cMGqQE6tENqSy7UJCfLn
-	 xHY1qcImmoLPa0vjDxsZu+wnrC+FEsDntW7H4qc/8CVUMRiU4E1nMBnyyEU+trauWr
-	 IEOh9yzJzzjHTCLG2Tt4nBSbZYvrTxG7GsdCe6F8=
+	b=ibRaIkGBsUqhet8FB4WhleEXbq1NZckKJVt9dBua/e2Elv/XskH5DzLaU+ZtWgTQo
+	 jEjbklAYS1DI3nmfuz3JiRZJ3xsp0eb5ULkZ6YqgExIkgGmMpNMFHMtnpaRkmMpEsW
+	 pTz6yOZh8EoQZOI4z0SjRqFd9JRD1qrfvDWkmPF4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390196AbfCVMQT (ORCPT
+        id S2390204AbfCVMQV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:16:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54910 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:16:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389935AbfCVMQR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:16:17 -0400
+        id S2390194AbfCVMQT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:16:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06BF92083D;
-        Fri, 22 Mar 2019 12:16:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2DFE218A1;
+        Fri, 22 Mar 2019 12:16:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256976;
-        bh=fcZl3fKBQoVlxAFlmvZRIW+fWoEIR2Fgbh9kbs/JBRA=;
+        s=default; t=1553256979;
+        bh=GUoyvyreUkniVtkVtswuAzRLWm/FT2zvhYM5bSKlCtg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gyDIXwEUhfdOIEclQJpL9TSr9Yj2/yyeljvPaupqzBo7WIiEfiPL1/2QNTHF2LfMm
-         NRCsiMff412qP7HeNhBnG3PpGRil8NYO2h2JKKLeA5s9EvTygksFhwc4f5SMdzEOiC
-         /lnaCRHCOTbc3pUT0GHw8BGrlutVIcxYSTHRXE1E=
+        b=mDGAPu0cGvd/bOkN4Nw4oZSVSVCrZPSY6Zd2xoai8lL36tXec5g5UE41uYJI7A2y0
+         tRybUfKphpWdgkFmfJzxdGlhgIVApHZbbegPf1KGUmwsqXtL55Z8nv8PxXn3VhSsiO
+         4omYCjmh/mgYR6OoD5fCZAWnXbE2K8QN4VMfBCOo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Takeshi Saito <takeshi.saito.xv@renesas.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 5.0 063/238] mmc: renesas_sdhi: Fix card initialization failure in high speed mode
-Date:   Fri, 22 Mar 2019 12:14:42 +0100
-Message-Id: <20190322111302.294363058@linuxfoundation.org>
+        stable@vger.kernel.org, Pavel Shilovsky <pshilov@microsoft.com>,
+        Steve French <stfrench@microsoft.com>,
+        Ronnie Sahlberg <lsahlber@redhat.com>
+Subject: [PATCH 5.0 054/238] CIFS: Fix read after write for files with read caching
+Date:   Fri, 22 Mar 2019 12:14:33 +0100
+Message-Id: <20190322111301.636372988@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -71,79 +66,54 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Takeshi Saito <takeshi.saito.xv@renesas.com>
+From: Pavel Shilovsky <piastryyy@gmail.com>
 
-commit d30ae056adb81e1d2b8b953efa74735a020b8e3b upstream.
+commit 6dfbd84684700cb58b34e8602c01c12f3d2595c8 upstream.
 
-This fixes card initialization failure in high speed mode.
+When we have a READ lease for a file and have just issued a write
+operation to the server we need to purge the cache and set oplock/lease
+level to NONE to avoid reading stale data. Currently we do that
+only if a write operation succedeed thus not covering cases when
+a request was sent to the server but a negative error code was
+returned later for some other reasons (e.g. -EIOCBQUEUED or -EINTR).
+Fix this by turning off caching regardless of the error code being
+returned.
 
-If U-Boot uses SDR or HS200/400 mode before starting Linux and Linux
-DT does not enable SDR/HS200/HS400 mode, card initialization fails in
-high speed mode.
+The patches fixes generic tests 075 and 112 from the xfs-tests.
 
-It is necessary to initialize SCC registers during card initialization
-phase. HW reset function is registered only for a port with either of
-SDR/HS200/HS400 properties in device tree. If SDR/HS200/HS400 properties
-are not present in device tree, SCC registers will not be reset. In SoC
-that support SCC registers, HW reset function should be registered
-regardless of the configuration of device tree.
-
-Reproduction procedure:
-- Use U-Boot that support MMC HS200/400 mode.
-- Delete HS200/HS400 properties in device tree.
-  (Delete mmc-hs200-1_8v and mmc-hs400-1_8v)
-- MMC port works high speed mode and all commands fail.
-
-Signed-off-by: Takeshi Saito <takeshi.saito.xv@renesas.com>
-Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
-Cc: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-Cc: Simon Horman <horms+renesas@verge.net.au>
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/host/renesas_sdhi_core.c |   11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ fs/cifs/file.c |   12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
---- a/drivers/mmc/host/renesas_sdhi_core.c
-+++ b/drivers/mmc/host/renesas_sdhi_core.c
-@@ -723,6 +723,13 @@ int renesas_sdhi_probe(struct platform_d
- 		host->ops.start_signal_voltage_switch =
- 			renesas_sdhi_start_signal_voltage_switch;
- 		host->sdcard_irq_setbit_mask = TMIO_STAT_ALWAYS_SET_27;
-+
-+		/* SDR and HS200/400 registers requires HW reset */
-+		if (of_data && of_data->scc_offset) {
-+			priv->scc_ctl = host->ctl + of_data->scc_offset;
-+			host->mmc->caps |= MMC_CAP_HW_RESET;
-+			host->hw_reset = renesas_sdhi_hw_reset;
-+		}
+--- a/fs/cifs/file.c
++++ b/fs/cifs/file.c
+@@ -3028,14 +3028,16 @@ cifs_strict_writev(struct kiocb *iocb, s
+ 	 * these pages but not on the region from pos to ppos+len-1.
+ 	 */
+ 	written = cifs_user_writev(iocb, from);
+-	if (written > 0 && CIFS_CACHE_READ(cinode)) {
++	if (CIFS_CACHE_READ(cinode)) {
+ 		/*
+-		 * Windows 7 server can delay breaking level2 oplock if a write
+-		 * request comes - break it on the client to prevent reading
+-		 * an old data.
++		 * We have read level caching and we have just sent a write
++		 * request to the server thus making data in the cache stale.
++		 * Zap the cache and set oplock/lease level to NONE to avoid
++		 * reading stale data from the cache. All subsequent read
++		 * operations will read new data from the server.
+ 		 */
+ 		cifs_zap_mapping(inode);
+-		cifs_dbg(FYI, "Set no oplock for inode=%p after a write operation\n",
++		cifs_dbg(FYI, "Set Oplock/Lease to NONE for inode=%p after write\n",
+ 			 inode);
+ 		cinode->oplock = 0;
  	}
- 
- 	/* Orginally registers were 16 bit apart, could be 32 or 64 nowadays */
-@@ -775,8 +782,6 @@ int renesas_sdhi_probe(struct platform_d
- 		const struct renesas_sdhi_scc *taps = of_data->taps;
- 		bool hit = false;
- 
--		host->mmc->caps |= MMC_CAP_HW_RESET;
--
- 		for (i = 0; i < of_data->taps_num; i++) {
- 			if (taps[i].clk_rate == 0 ||
- 			    taps[i].clk_rate == host->mmc->f_max) {
-@@ -789,12 +794,10 @@ int renesas_sdhi_probe(struct platform_d
- 		if (!hit)
- 			dev_warn(&host->pdev->dev, "Unknown clock rate for SDR104\n");
- 
--		priv->scc_ctl = host->ctl + of_data->scc_offset;
- 		host->init_tuning = renesas_sdhi_init_tuning;
- 		host->prepare_tuning = renesas_sdhi_prepare_tuning;
- 		host->select_tuning = renesas_sdhi_select_tuning;
- 		host->check_scc_error = renesas_sdhi_check_scc_error;
--		host->hw_reset = renesas_sdhi_hw_reset;
- 		host->prepare_hs400_tuning =
- 			renesas_sdhi_prepare_hs400_tuning;
- 		host->hs400_downgrade = renesas_sdhi_disable_scc;
 
 
