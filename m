@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51417C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:00:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F392C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:00:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BDA02075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:00:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 545182075E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:00:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553259603;
-	bh=+sGqdEw3oGkz9V0MJWTkdtS4px7e2ZqiLsGWVhAp8tA=;
+	s=default; t=1553259608;
+	bh=Szxuzex5R7/85zCo2PhYJx3v+wVbGvWR+EyPZ9zaPeM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z0uPurKKd6M0RHkeUYOM+V56m4mv9cvdNE2AawfhWQ7MV9PHTc77KOlBPsRODf4B2
-	 gBF71vfeDkuAvmLRLs8yGJKtn43aHWid6z7+8UFTV7Z+XaQsaxoZalQeBVB6uXNsiQ
-	 zIcPikRg/YX7+3UxyGUr/EP3b9DRLRYrmJIQb58k=
+	b=mSAefk4zNaJQ+3tb++4lVbcBjR/1oA2zl1Xswls2efC3hZEICzhRYaT50iDptH8ZX
+	 uJcRo7w554qb0PcNv8+ZKP5ydknM5r/hNz3RpILqB+0nVqQfAc6xHnDj6Jn4bsIFfl
+	 2Rvp7LeU0n5rM1b9EPt2lixwd7RoLvSMy+2xLFc0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731886AbfCVLor (ORCPT
+        id S1731662AbfCVLol (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:44:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47748 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:44:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47622 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731860AbfCVLoo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:44:44 -0400
+        id S1731829AbfCVLoh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:44:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C77B3218B0;
-        Fri, 22 Mar 2019 11:44:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31A272082C;
+        Fri, 22 Mar 2019 11:44:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255083;
-        bh=+sGqdEw3oGkz9V0MJWTkdtS4px7e2ZqiLsGWVhAp8tA=;
+        s=default; t=1553255076;
+        bh=Szxuzex5R7/85zCo2PhYJx3v+wVbGvWR+EyPZ9zaPeM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VGDOj1JWxWgtBGOz0Se9G85PBiWXOTs1iafl5hXNgy3hBGKpsWW4S+14ncaefh4Zw
-         MgwE2UyCcJZpFS1pSlTOZIhfrOne9nhzB5d8bJVTE/j7AzqfxHTT89ngevyuCaG5u2
-         eV9VHldP3NORNN1y6N6Uu2Nq57ewktA/eQVu0e7c=
+        b=p4cGle3Jo1SH97ocXY/Ek4S/Mg/kK6NSZSl7FdaTyGt5hukrdD5wZ917RvgXpNoJR
+         mBRsasqt6sGx4JDxF5YL78UP4zD+cEB8Q85ae4tbM89AGl62CGaDRRiDZAF3fx95Xl
+         MKI/PvMR4/Sn32iH25D9y/5WR2Dj7H9g7qQ7QHO8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ammy Yi <ammy.yi@intel.com>
-Subject: [PATCH 4.9 082/118] intel_th: Dont reference unassigned outputs
-Date:   Fri, 22 Mar 2019 12:15:54 +0100
-Message-Id: <20190322111222.460180956@linuxfoundation.org>
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 4.9 081/118] device property: Fix the length used in PROPERTY_ENTRY_STRING()
+Date:   Fri, 22 Mar 2019 12:15:53 +0100
+Message-Id: <20190322111222.416662920@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111215.873964544@linuxfoundation.org>
 References: <20190322111215.873964544@linuxfoundation.org>
@@ -66,58 +67,42 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-commit 9ed3f22223c33347ed963e7c7019cf2956dd4e37 upstream.
+commit 2b6e492467c78183bb629bb0a100ea3509b615a5 upstream.
 
-When an output port driver is removed, also remove references to it from
-any masters. Failing to do this causes a NULL ptr dereference when
-configuring another output port:
+With string type property entries we need to use
+sizeof(const char *) instead of the number of characters as
+the length of the entry.
 
-> BUG: unable to handle kernel NULL pointer dereference at 000000000000000d
-> RIP: 0010:master_attr_store+0x9d/0x160 [intel_th_gth]
-> Call Trace:
-> dev_attr_store+0x1b/0x30
-> sysfs_kf_write+0x3c/0x50
-> kernfs_fop_write+0x125/0x1a0
-> __vfs_write+0x3a/0x190
-> ? __vfs_write+0x5/0x190
-> ? _cond_resched+0x1a/0x50
-> ? rcu_all_qs+0x5/0xb0
-> ? __vfs_write+0x5/0x190
-> vfs_write+0xb8/0x1b0
-> ksys_write+0x55/0xc0
-> __x64_sys_write+0x1a/0x20
-> do_syscall_64+0x5a/0x140
-> entry_SYSCALL_64_after_hwframe+0x44/0xa9
+If the string was shorter then sizeof(const char *),
+attempts to read it would have failed with -EOVERFLOW. The
+problem has been hidden because all build-in string
+properties have had a string longer then 8 characters until
+now.
 
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Fixes: b27a6a3f97b9 ("intel_th: Add Global Trace Hub driver")
-CC: stable@vger.kernel.org # v4.4+
-Reported-by: Ammy Yi <ammy.yi@intel.com>
+Fixes: a85f42047533 ("device property: helper macros for property entry creation")
+Cc: 4.5+ <stable@vger.kernel.org> # 4.5+
+Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
----
- drivers/hwtracing/intel_th/gth.c |    4 ++++
- 1 file changed, 4 insertions(+)
 
---- a/drivers/hwtracing/intel_th/gth.c
-+++ b/drivers/hwtracing/intel_th/gth.c
-@@ -599,11 +599,15 @@ static void intel_th_gth_unassign(struct
- {
- 	struct gth_device *gth = dev_get_drvdata(&thdev->dev);
- 	int port = othdev->output.port;
-+	int master;
- 
- 	spin_lock(&gth->gth_lock);
- 	othdev->output.port = -1;
- 	othdev->output.active = false;
- 	gth->output[port].output = NULL;
-+	for (master = 0; master < TH_CONFIGURABLE_MASTERS; master++)
-+		if (gth->master[master] == port)
-+			gth->master[master] = -1;
- 	spin_unlock(&gth->gth_lock);
+---
+ include/linux/property.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/include/linux/property.h
++++ b/include/linux/property.h
+@@ -233,7 +233,7 @@ struct property_entry {
+ #define PROPERTY_ENTRY_STRING(_name_, _val_)		\
+ (struct property_entry) {				\
+ 	.name = _name_,					\
+-	.length = sizeof(_val_),			\
++	.length = sizeof(const char *),			\
+ 	.is_string = true,				\
+ 	{ .value = { .str = _val_ } },			\
  }
- 
 
 
