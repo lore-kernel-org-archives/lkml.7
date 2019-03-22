@@ -2,107 +2,134 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E81BC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 10:33:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4C5EC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 10:34:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D816121874
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 10:33:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FA0620850
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 10:34:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ElTP5n1w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728087AbfCVKdf (ORCPT
+        id S1728059AbfCVKeB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 06:33:35 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60372 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727754AbfCVKdf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 06:33:35 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1C91388ABE;
-        Fri, 22 Mar 2019 10:33:35 +0000 (UTC)
-Received: from localhost.localdomain (unknown [10.32.181.117])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 73F706014E;
-        Fri, 22 Mar 2019 10:33:33 +0000 (UTC)
-Message-ID: <0eb092b7ca67942f52e36c672d20f130f1d54e1e.camel@redhat.com>
-Subject: Re: [net-next PATCH v3 4/8] net: Change return type of sk_busy_loop
- from bool to void
-From:   Paolo Abeni <pabeni@redhat.com>
-To:     Christoph Paasch <christoph.paasch@gmail.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Samudrala, Sridhar" <sridhar.samudrala@intel.com>,
-        Eric Dumazet <edumazet@google.com>,
-        David Miller <davem@davemloft.net>,
-        Linux API <linux-api@vger.kernel.org>
-Date:   Fri, 22 Mar 2019 11:33:32 +0100
-In-Reply-To: <CALMXkpZ_eB+aRx3+aKM5Bs4RwDfzPNX+XneESo2-yuMPjHV5-Q@mail.gmail.com>
-References: <20170324164902.15226.48358.stgit@localhost.localdomain>
-         <20170324170812.15226.97497.stgit@localhost.localdomain>
-         <CALMXkpb3MfLbNoBgLJc0rgMDbPg9yOevKOiq9N8pzVw-aeNb3g@mail.gmail.com>
-         <e532fdb97e142eca2484e5abbeca4c30d11fbad6.camel@redhat.com>
-         <CAKgT0Uc68jsuPHKbxxFpeMCQAo2M69DhzA_XGw7Kvou4H3eHPg@mail.gmail.com>
-         <CALMXkpZ_eB+aRx3+aKM5Bs4RwDfzPNX+XneESo2-yuMPjHV5-Q@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Fri, 22 Mar 2019 10:33:35 +0000 (UTC)
+        Fri, 22 Mar 2019 06:34:01 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:44085 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727739AbfCVKeB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 06:34:01 -0400
+Received: by mail-pg1-f195.google.com with SMTP id i2so1223444pgj.11;
+        Fri, 22 Mar 2019 03:34:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=dZhxDdC/Qe4tqiAOQJ+sInBhscxUK5dRSwY91CjQlSQ=;
+        b=ElTP5n1wpgt0y5iAgi21gAuo0spGZDqhq68weaFLRtb/NTJpNuS/SmTJuodnaovfNb
+         s8QfcHzkt0JFGkh3dWrXzyp9fvNSOvsFNBO6AU6KMU4iBwBZzBWvSVKZfdy5rlGa7w7y
+         B+8iLCF5LgWAHKQ1K4RHmOMR+KONTWv9YpQbD94sWrs51PHlZS0PR1MSLxqEIWYUzfFS
+         yk5losiWqVwmIfSEXhE8oh0ZOD2LbyZwSLsu3BteUR15Rcr416lbZYBELexaKKn0Ci1i
+         Q0aKFXMWirJXl2YZp6qXEphFJuwkrWiVuUrFdPidx82fg2q8sUeaY98BvmB0vpb7Un8v
+         OFFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=dZhxDdC/Qe4tqiAOQJ+sInBhscxUK5dRSwY91CjQlSQ=;
+        b=py4q7EGWJ2ZWWx+ckg1So/9l6rSIL9tE+yaHHIrdpuFJdOU4xaHW6r/5ax2VIPi+hp
+         34E9XTh0jCTJHhokWMZaJwyOONg0VbAl6VaeITZ+Tz2wbwyFOvI2OYse7umB6qDLgp1c
+         57aduKqX8qeY6sZCS6uD07FMhA58/an1cPEv5HTyfUjPNdkz4efejxjnoMUfG2z1NcxU
+         4t5wHn2aJFGczZLS6drl1nGiYjKF/rGwlmWCsmUe2dKHfWyDoCk1J7RQt4q9ex2uS9lm
+         KQFAFBokJNubDhaL6BH2/x9Cw5UazZo8YgHprKipS3+caX37FSrCLqVbrXkj+iEvXdGu
+         mNRw==
+X-Gm-Message-State: APjAAAVh0ULpej+4RRtZm7S4zcXA2H7mKFDc59eNBOPdtSz2Mo3b9hyX
+        w/+5ztu5iLcjXvnLEjjNYoA=
+X-Google-Smtp-Source: APXvYqzFJDtBWBT3GBBFqyLcyjpgdZ0DyM2Oh+tkI21b/hNCJ5Z10Wo4bnls5DBP/C+epVuShVOwvw==
+X-Received: by 2002:aa7:8b93:: with SMTP id r19mr8223640pfd.163.1553250840143;
+        Fri, 22 Mar 2019 03:34:00 -0700 (PDT)
+Received: from linux-l9pv.suse ([202.47.205.198])
+        by smtp.gmail.com with ESMTPSA id l7sm22276889pfj.162.2019.03.22.03.33.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 22 Mar 2019 03:33:59 -0700 (PDT)
+From:   "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
+X-Google-Original-From: "Lee, Chun-Yi" <jlee@suse.com>
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        David Howells <dhowells@redhat.com>,
+        Josh Boyer <jwboyer@fedoraproject.org>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Mimi Zohar <zohar@linux.ibm.com>
+Cc:     linux-efi@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, "Lee, Chun-Yi" <jlee@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>
+Subject: [PATCH 1/2] efi: add a function for transferring status to string
+Date:   Fri, 22 Mar 2019 18:33:49 +0800
+Message-Id: <20190322103350.27764-1-jlee@suse.com>
+X-Mailer: git-send-email 2.12.3
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+This function can be used to transfer EFI status code to string
+for printing out debug message. Using this function can improve
+the readability of log.
 
-On Thu, 2019-03-21 at 23:05 -0400, Christoph Paasch wrote:
-> On Thu, Mar 21, 2019 at 12:43 PM Alexander Duyck
-> <alexander.duyck@gmail.com> wrote:
-> > On Thu, Mar 21, 2019 at 2:45 AM Paolo Abeni <pabeni@redhat.com> wrote:
-> > > The following - completely untested - should avoid the unbounded loop,
-> > > but it's not a complete fix, I *think* we should also change
-> > > sk_busy_loop_end() in a similar way, but that is a little more complex
-> > > due to the additional indirections.
-> > 
-> > As far as sk_busy_loop_end we could look at just forking sk_busy_loop
-> > and writing a separate implementation for datagram sockets that uses a
-> > different loop_end function. It shouldn't take much to change since
-> > all we would need to do is pass a structure containing the sk and last
-> > pointers instead of just passing the sk directly as the loop_end
-> > argument.
-> > 
-> > > Could you please test it?
-> > > 
-> > > Any feedback welcome!
-> > 
-> > The change below looks good to me.
-> 
-> I just tried it out. Worked for me!
-> 
-> You can add my Tested-by if you do a formal patch-submission:
-> 
-> Tested-by: Christoph Paasch <cpaasch@apple.com>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Anton Vorontsov <anton@enomsg.org>
+Cc: Colin Cross <ccross@android.com>
+Cc: Tony Luck <tony.luck@intel.com>
+Signed-off-by: "Lee, Chun-Yi" <jlee@suse.com>
+---
+ include/linux/efi.h | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-Thanks for testing!
-
-I'm trying to reproduce the issue locally, but I'm unable. I think that
-the current UDP implementation is not affected, as we always ensure
-sk_receive_queue is empty before busy polling. Unix sockets should not
-be affected, too, as busy polling should not have any effect there
-(sk_napi_id should be never >= MIN_NAPI_ID). Can you reproduce the
-issue on an unpatched, recent, upstream kernel?
-
-Can you please provide the syzkaller repro?
-
-Thanks,
-
-Paolo
-
-
-
-
+diff --git a/include/linux/efi.h b/include/linux/efi.h
+index 54357a258b35..a43cb0dc37af 100644
+--- a/include/linux/efi.h
++++ b/include/linux/efi.h
+@@ -1768,4 +1768,32 @@ struct linux_efi_memreserve {
+ #define EFI_MEMRESERVE_COUNT(size) (((size) - sizeof(struct linux_efi_memreserve)) \
+ 	/ sizeof(((struct linux_efi_memreserve *)0)->entry[0]))
+ 
++#define EFI_STATUS_STR(_status) \
++case EFI_##_status: \
++	return "EFI_" __stringify(_status);
++
++static inline char *
++efi_status_to_str(efi_status_t status)
++{
++	switch (status) {
++	EFI_STATUS_STR(SUCCESS)
++	EFI_STATUS_STR(LOAD_ERROR)
++	EFI_STATUS_STR(INVALID_PARAMETER)
++	EFI_STATUS_STR(UNSUPPORTED)
++	EFI_STATUS_STR(BAD_BUFFER_SIZE)
++	EFI_STATUS_STR(BUFFER_TOO_SMALL)
++	EFI_STATUS_STR(NOT_READY)
++	EFI_STATUS_STR(DEVICE_ERROR)
++	EFI_STATUS_STR(WRITE_PROTECTED)
++	EFI_STATUS_STR(OUT_OF_RESOURCES)
++	EFI_STATUS_STR(NOT_FOUND)
++	EFI_STATUS_STR(ABORTED)
++	EFI_STATUS_STR(SECURITY_VIOLATION)
++	default:
++		pr_warn("Unknown efi status: 0x%lx", status);
++	}
++
++	return "Unknown efi status";
++}
++
+ #endif /* _LINUX_EFI_H */
+-- 
+2.16.4
 
