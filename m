@@ -4,118 +4,111 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F3BC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:46:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD9D5C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:46:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7151E2183E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:46:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5FEA2183E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:46:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727764AbfCVPql (ORCPT
+        id S1727789AbfCVPqy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 11:46:41 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:45691 "EHLO
+        Fri, 22 Mar 2019 11:46:54 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:57135 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727251AbfCVPqk (ORCPT
+        with ESMTP id S1727251AbfCVPqx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 11:46:40 -0400
+        Fri, 22 Mar 2019 11:46:53 -0400
 Received: from wuerfel.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MnpwC-1gfVXC0zBS-00pKgq; Fri, 22 Mar 2019 16:45:08 +0100
+ 1Ml6du-1giFMn2xJs-00lUfW; Fri, 22 Mar 2019 16:46:21 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     stable@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Cc:     Ravindra Lokhande <rlokhande@nvidia.com>,
-        Vinod Koul <vinod.koul@intel.com>,
-        Takashi Iwai <tiwai@suse.de>, Arnd Bergmann <arnd@arndb.de>,
-        Mark Brown <broonie@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Joe Perches <joe@perches.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: [BACKPORT 4.4.y 02/25] ALSA: compress: add support for 32bit calls in a 64bit kernel
-Date:   Fri, 22 Mar 2019 16:43:53 +0100
-Message-Id: <20190322154425.3852517-3-arnd@arndb.de>
+To:     stable@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>,
+        Avri Altman <avri.altman@wdc.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Martin Hicks <mort@bork.org>,
+        =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Ritesh Harjani <riteshh@codeaurora.org>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        hongjiefang <hongjiefang@asrmicro.com>,
+        Yinbo Zhu <yinbo.zhu@nxp.com>,
+        Kyle Roeschley <kyle.roeschley@ni.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Jiong Wu <lohengrin1024@gmail.com>,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [BACKPORT 4.4.y 07/25] mmc: sanitize 'bus width' in debug output
+Date:   Fri, 22 Mar 2019 16:43:58 +0100
+Message-Id: <20190322154425.3852517-8-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20190322154425.3852517-1-arnd@arndb.de>
 References: <20190322154425.3852517-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:qdmoVgn5qRBXiX0rd6Jjr6hDFLSAzZ7K8GEgzOoBTJ7z24e4UWD
- RjKLEBCA6OW0mDWPPMZuNQ0nofk8g9w/lw97NF0CYfqxbdatuEs1E/WFUeMImyuAmTRweg8
- VS7I91GhVWgKkiLqm740IaYAOQU3cFPKM+JkraWNkzIt5H0WbCXp6os0vwagWMGQNljHAdb
- p/Z2CFCmOWedlw7LF25tQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Ctb8eMkV2xI=:Q7CpqNFjF8sfLZetR/lwPI
- dIAMil0TxiU1g3D27dOwhRGZ6fHDZRML4J32+m4sRNxFGQWtIQMf96SsXVxx0VuqrGdV3RVBu
- 3FXGN2+HmJDkSOx/YaAP5tjLVSj1ZWO0YSgFDg/McX61rwyn9XA7YBMv7NVNvLh+ev26NKoff
- DdLXd6WiT7F2pcs4JPkg/sQNfYM9ej71b7TH26P7CpiR7RSpm6wXDVXmmgYOeb8otUosJOcAF
- 9TJlnQLIvmBQETigdnHcOePeKKtccrkDWE4qXryEezqE51gFnTZ0WGqPF3xVqK+RtD6FXMOPD
- QIABs0JOPdNubjvuzSwl46x/VumGHJa8NN35aAHS/lnNAOgTi4fAQ+e0JHRqxnPKQ6p/wqh1V
- tkAVJOaiMKq0GMr8ZnCfQXqY3vyjqTO8bn/6JhL2qZw47NmgNxf0OMUyigubdBZLQKSTKf4zT
- UK4wulxOvRCttye8f8O5fNUR8h1Tbb1gVwA+xnwL2PgnYtnRjHY845QAJVYEjn/nleEG7zAHw
- EKiURZvOJj4GwFYKj3cyCJTW3nFg35TNwelxaT+yueAgbKScTBcIoZEsCeyUahqhat5hhWIge
- HLcQo7dkK/gZ38Z1uMD04o2z5OHO9++iBEkvWWeutqCoS3CcxGyrHHLRTCDTXw/a/OHTUZvN4
- kleH6Yae12LIR7P0/9S7h4df+Fu30EioWPAYnN86hglLv5wXh/d8ZeFZRd5+IOYoQeYcKIqam
- SuC83ORPZKj5YF7OBWsWcMmR2EHnq+EBpwlZPw==
+X-Provags-ID: V03:K1:G768/5n7N+5yTCnRzLr3RNwvzu/HYJiMFqxjs0wDv/J34Szl14D
+ ox4n6suF/EFsAqlzN5tGJcDQeBomC44kIT1Opy/9ltW98MuFx8iQOTAdh6V4Y4E8/Q04Vq8
+ zKSNVc3eiLey+XUBSjqgbkYVmQG8JrIq4aPEOmdNxWtaewmVNV6EnbbB2XDXz7HSHF+M7zI
+ fr9ElsuIRW32OqLNzcnLA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:7T/GpsWXrRI=:gv5/lMUz3Skxdq2x4iCNw+
+ sU6OSLFoZYnZpQt1+S9bwibN8jBoon6VFG1qC2ImbUemPsECYLxT9ZbeHcnAjQZdkVEhLAmuF
+ yl46ggRrpiFXEXk6uSO4gq5OUGeQ1nFglHQ38RK90n4tM3NAsnfEeFhT1Lujfm4OkcihFY8/v
+ rxKppeDax2KUhokn2BvHVHYJQpTrh4/1mHiMY40D1xYJCbJL8fbwuE6Eqj4gdsnhF8NGCB/qR
+ SG9Q4yYlCCWQ9WeY7DrxIf7NCm1RKKVjjMWckSuBFAXmj50m2tqem0nz4feDAt1Ymnh0sfbQ9
+ fM6X5f83+xxb5+8rpctpxiQqkIr26l4cFuX75SjGXKJ65WwiLomgjrx4LNABekiTAkKWS9ovr
+ Ql5EUUAXC7eg9Ed8I9KHRPDWQiVDrjXbx94uxmrfRFENYG9r07lP97FfIP/yY4hZtYAGn0zPc
+ 0n5aUm4jRlvdjwcGK0unpI07ivx+bdwpva4c2z5oBMxmTcaTSD3epFj1sgS94HIJGfr8mZpz3
+ ROwJRE+OqtgyL0rystPgFaybsfXd7Qnxp2JqQiTemf3C2btIakaa5188Ze44Bt7S+6uugRv6+
+ tWqxYxLQ2CBPxKIF5UhKlWlZ1XwZTUmo2uoq/1J+jypGgaV1YNHXyprhh/ozWzeveqkC9pwmA
+ CvUw2pAabo/BSaXurlWmOUr3f5Yp66f0tarxnxo+W4cYj/karKv8VoSg3JVYFDKB2g52CUpWT
+ IqJIqwl7naZsgWNi/FJgQ1vTRKxiz9OirC7rwA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ravindra Lokhande <rlokhande@nvidia.com>
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-Compress offload does not support ioctl calls from a 32bit userspace
-in a 64 bit kernel. This patch adds support for ioctls from a 32bit
-userspace in a 64bit kernel
+The bus width is sometimes the actual bus width, and sometimes indices
+to different arrays encoding the bus width. In my debugging case "2"
+could mean 8-bit as well as 4-bit, which was extremly confusing. Let's
+use the human-readable actual bus width in all places.
 
-Signed-off-by: Ravindra Lokhande <rlokhande@nvidia.com>
-Acked-by: Vinod Koul <vinod.koul@intel.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-(cherry picked from commit c10368897e104c008c610915a218f0fe5fa4ec96)
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+(cherry picked from commit ed9feec72fc1fa194ebfdb79e14561b35decce63)
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- sound/core/compress_offload.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ drivers/mmc/core/core.c | 2 +-
+ drivers/mmc/core/mmc.c  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/sound/core/compress_offload.c b/sound/core/compress_offload.c
-index 6163bf3e8177..33d40d6fa3f1 100644
---- a/sound/core/compress_offload.c
-+++ b/sound/core/compress_offload.c
-@@ -38,6 +38,7 @@
- #include <linux/uio.h>
- #include <linux/uaccess.h>
- #include <linux/module.h>
-+#include <linux/compat.h>
- #include <sound/core.h>
- #include <sound/initval.h>
- #include <sound/compress_params.h>
-@@ -858,6 +859,15 @@ static long snd_compr_ioctl(struct file *f, unsigned int cmd, unsigned long arg)
- 	return retval;
- }
+diff --git a/drivers/mmc/core/core.c b/drivers/mmc/core/core.c
+index 299a83f1ad38..e2e927d1f7e4 100644
+--- a/drivers/mmc/core/core.c
++++ b/drivers/mmc/core/core.c
+@@ -1039,7 +1039,7 @@ static inline void mmc_set_ios(struct mmc_host *host)
+ 		"width %u timing %u\n",
+ 		 mmc_hostname(host), ios->clock, ios->bus_mode,
+ 		 ios->power_mode, ios->chip_select, ios->vdd,
+-		 ios->bus_width, ios->timing);
++		 1 << ios->bus_width, ios->timing);
  
-+/* support of 32bit userspace on 64bit platforms */
-+#ifdef CONFIG_COMPAT
-+static long snd_compr_ioctl_compat(struct file *file, unsigned int cmd,
-+						unsigned long arg)
-+{
-+	return snd_compr_ioctl(file, cmd, (unsigned long)compat_ptr(arg));
-+}
-+#endif
-+
- static const struct file_operations snd_compr_file_ops = {
- 		.owner =	THIS_MODULE,
- 		.open =		snd_compr_open,
-@@ -865,6 +875,9 @@ static const struct file_operations snd_compr_file_ops = {
- 		.write =	snd_compr_write,
- 		.read =		snd_compr_read,
- 		.unlocked_ioctl = snd_compr_ioctl,
-+#ifdef CONFIG_COMPAT
-+		.compat_ioctl = snd_compr_ioctl_compat,
-+#endif
- 		.mmap =		snd_compr_mmap,
- 		.poll =		snd_compr_poll,
- };
+ 	host->ops->set_ios(host, ios);
+ }
+diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
+index adc3291e9d6a..7286d0d324e1 100644
+--- a/drivers/mmc/core/mmc.c
++++ b/drivers/mmc/core/mmc.c
+@@ -952,7 +952,7 @@ static int mmc_select_bus_width(struct mmc_card *card)
+ 			break;
+ 		} else {
+ 			pr_warn("%s: switch to bus width %d failed\n",
+-				mmc_hostname(host), ext_csd_bits[idx]);
++				mmc_hostname(host), 1 << bus_width);
+ 		}
+ 	}
+ 
 -- 
 2.20.0
 
