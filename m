@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2DBDC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:28:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23278C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:28:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98FC82054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:28:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E70722054F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:28:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553257706;
-	bh=GpsUx+ZQEoPrjn4rstYJuVzOfeDhx9uZLINIlYND+I0=;
+	s=default; t=1553257713;
+	bh=jDTgY1LixftRKM8LNEmKEQkXfy8X5GwDQLrdwivhmdg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=undFJXpme5bvvC/nZ6jspoZThL9WNCSNyByBEWoLUSDYNWsi7kd42V03J8ZQbtOlZ
-	 n958Fj1Gz8kjH3vhTB4UXengNmeF5eodEIyvUoT7VyxmKD4W+OZ6dzn/qkTGhoP8C6
-	 weXlnHWhDtQOjtPuK8SkjWkVfi4L+iXMZaetbyok=
+	b=rdxqq62l9GqNqq4fDh/SNK+bwWegqk9M5v6wEA2n716xFBRDHEk41tGXQxUQKBj4q
+	 86yl7ceqgSSSmXhWvbRJ8dQVjio4gLjMP5mXAzfKwYAfluIDvJmX3eiS0S5RqMJhDa
+	 xycYV7tTKs4TqxI/H2nrfYAfiDSd5IigipNLEna4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390714AbfCVM2Z (ORCPT
+        id S2390744AbfCVMUf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:28:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59724 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:20:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59508 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390262AbfCVMUn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:20:43 -0400
+        id S2390736AbfCVMUa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:20:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E97F218A1;
-        Fri, 22 Mar 2019 12:20:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5544E218A1;
+        Fri, 22 Mar 2019 12:20:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553257242;
-        bh=GpsUx+ZQEoPrjn4rstYJuVzOfeDhx9uZLINIlYND+I0=;
+        s=default; t=1553257229;
+        bh=jDTgY1LixftRKM8LNEmKEQkXfy8X5GwDQLrdwivhmdg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sFp/PRpqfUAXeH+HLtjx3qU6+EGekV33K3UxTc0aio5fTr7lOsuHV+8mO0YNapnU1
-         B/mjPopnI4lHefSXcQU80ANSNpwFgsGCVpwP0gM+Px+BaAYwLEfChUQ8RMQSUQLboO
-         6xQnlPx1hl9f2L5/9uxUfzPxS2TpYyUusk1Mc3yI=
+        b=W/DWPfcUmK/5uZll21q++Tg53ZiG54TKXVHuTZoR+7IbRG/BdAXsonom5SgIKs9yf
+         xOxwjiY6tM51P/ukgpkGf3t+Waj9ae38RAfoNyCP6idgt7N2l7ahfIlnLujG9XnH5D
+         KDDW34bX2vbvBVJ93gxT+8Q6dOInqi59jYPy6RI4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Marc Zyngier <marc.zyngier@arm.com>
-Subject: [PATCH 5.0 174/238] arm64: KVM: Fix architecturally invalid reset value for FPEXC32_EL2
-Date:   Fri, 22 Mar 2019 12:16:33 +0100
-Message-Id: <20190322111308.547007032@linuxfoundation.org>
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 5.0 170/238] ARM: s3c24xx: Fix boolean expressions in osiris_dvs_notify
+Date:   Fri, 22 Mar 2019 12:16:29 +0100
+Message-Id: <20190322111308.324841403@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -67,44 +66,48 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Dave Martin <Dave.Martin@arm.com>
+From: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-commit c88b093693ccbe41991ef2e9b1d251945e6e54ed upstream.
+commit e2477233145f2156434afb799583bccd878f3e9f upstream.
 
-Due to what looks like a typo dating back to the original addition
-of FPEXC32_EL2 handling, KVM currently initialises this register to
-an architecturally invalid value.
+Fix boolean expressions by using logical AND operator '&&' instead of
+bitwise operator '&'.
 
-As a result, the VECITR field (RES1) in bits [10:8] is initialised
-with 0, and the two reserved (RES0) bits [6:5] are initialised with
-1.  (In the Common VFP Subarchitecture as specified by ARMv7-A,
-these two bits were IMP DEF.  ARMv8-A removes them.)
+This issue was detected with the help of Coccinelle.
 
-This patch changes the reset value from 0x70 to 0x700, which
-reflects the architectural constraints and is presumably what was
-originally intended.
-
-Cc: <stable@vger.kernel.org> # 4.12.x-
-Cc: Christoffer Dall <christoffer.dall@arm.com>
-Fixes: 62a89c44954f ("arm64: KVM: 32bit handling of coprocessor traps")
-Signed-off-by: Dave Martin <Dave.Martin@arm.com>
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+Fixes: 4fa084af28ca ("ARM: OSIRIS: DVS (Dynamic Voltage Scaling) supoort.")
+Cc: stable@vger.kernel.org
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+[krzk: Fix -Wparentheses warning]
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/kvm/sys_regs.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/mach-s3c24xx/mach-osiris-dvs.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/arch/arm64/kvm/sys_regs.c
-+++ b/arch/arm64/kvm/sys_regs.c
-@@ -1476,7 +1476,7 @@ static const struct sys_reg_desc sys_reg
+--- a/arch/arm/mach-s3c24xx/mach-osiris-dvs.c
++++ b/arch/arm/mach-s3c24xx/mach-osiris-dvs.c
+@@ -65,16 +65,16 @@ static int osiris_dvs_notify(struct noti
  
- 	{ SYS_DESC(SYS_DACR32_EL2), NULL, reset_unknown, DACR32_EL2 },
- 	{ SYS_DESC(SYS_IFSR32_EL2), NULL, reset_unknown, IFSR32_EL2 },
--	{ SYS_DESC(SYS_FPEXC32_EL2), NULL, reset_val, FPEXC32_EL2, 0x70 },
-+	{ SYS_DESC(SYS_FPEXC32_EL2), NULL, reset_val, FPEXC32_EL2, 0x700 },
- };
- 
- static bool trap_dbgidr(struct kvm_vcpu *vcpu,
+ 	switch (val) {
+ 	case CPUFREQ_PRECHANGE:
+-		if (old_dvs & !new_dvs ||
+-		    cur_dvs & !new_dvs) {
++		if ((old_dvs && !new_dvs) ||
++		    (cur_dvs && !new_dvs)) {
+ 			pr_debug("%s: exiting dvs\n", __func__);
+ 			cur_dvs = false;
+ 			gpio_set_value(OSIRIS_GPIO_DVS, 1);
+ 		}
+ 		break;
+ 	case CPUFREQ_POSTCHANGE:
+-		if (!old_dvs & new_dvs ||
+-		    !cur_dvs & new_dvs) {
++		if ((!old_dvs && new_dvs) ||
++		    (!cur_dvs && new_dvs)) {
+ 			pr_debug("entering dvs\n");
+ 			cur_dvs = true;
+ 			gpio_set_value(OSIRIS_GPIO_DVS, 0);
 
 
