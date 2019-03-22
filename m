@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A64C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:08:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47931C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:08:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFB7D206C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:08:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D29821916
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:08:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256487;
-	bh=o9WAll4+osdl44ZW/+kSV3JxAtjD5oxDPnrZJ1AZZo4=;
+	s=default; t=1553256492;
+	bh=m7bxAp2r3ggGnxIiqb9+D68Fb1011zBDg43L2s/NLAQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t/BhEWfhuT/lKW3AeCrokcgQvJDM6a7rddCkj1KWF3F2YCGS0/aZBVLZ7J3WnnEdI
-	 gwRO9hj8jVqxg+kLkySsx86KcjrV8WcdiTNHEfqUPwQpCw48nHWgMM5Klfyz82IDMt
-	 QtKusLRPL47H80FGjz0lHMjrxZisRYdUAHkqyoLo=
+	b=adBHwYs0W64n7jHDU7yk1Gxcyf+aRgCKb2euVoEdQrryYjz4sG/Evy5xd/of+LI6E
+	 25JFEMwI3s0DimD7Bu8YwDb75j3lyMlXcOW4BG6lcnhyyO3j3Y1I/BcQe5dJr6awjk
+	 M+4dDoEbwo4X8dP1SoGrUMKDTnrNRItBHMBZf9C0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389109AbfCVMIF (ORCPT
+        id S2388911AbfCVMIJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:08:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46324 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:08:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388675AbfCVMH7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:07:59 -0400
+        id S2388676AbfCVMID (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:08:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8D3A2082C;
-        Fri, 22 Mar 2019 12:07:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC619206C0;
+        Fri, 22 Mar 2019 12:08:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256478;
-        bh=o9WAll4+osdl44ZW/+kSV3JxAtjD5oxDPnrZJ1AZZo4=;
+        s=default; t=1553256482;
+        bh=m7bxAp2r3ggGnxIiqb9+D68Fb1011zBDg43L2s/NLAQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=azL26t09/o5JAwgdG7XSoMMTUyL0Np+Z7ebJIGenfPgWZUUMSAc+8oP574z4oAD/R
-         IdBMDg79WoU18UIJTDkn+oQZfCKDREW16KVqi4y8LZ6ajgWEgVXJC0DP0zxv+uuTyk
-         hvmzhrZKrBbXh5vPPWytHVgrqQYxFzpYwRgZwldc=
+        b=QhrIpAt+oGjpABFOEmaia5QSaF8bfdbPQZz0AIEGIsnubH/YCL2OL3tGiA3Cey/KZ
+         yWEXWwe7MMRSB7iJMxe8DAonFpyBIo4n+PjmogE58KunyUsPPEq6mamOF2zfc6JghJ
+         mSwGTXU9XMaszPntnE+LddxtDX5EGZkJpOl9qZA8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        stable@vger.kernel.org, Paul Mackerras <paulus@ozlabs.org>,
         Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.19 224/280] powerpc/83xx: Also save/restore SPRG4-7 during suspend
-Date:   Fri, 22 Mar 2019 12:16:17 +0100
-Message-Id: <20190322111335.613812840@linuxfoundation.org>
+Subject: [PATCH 4.19 225/280] powerpc/powernv: Dont reprogram SLW image on every KVM guest entry/exit
+Date:   Fri, 22 Mar 2019 12:16:18 +0100
+Message-Id: <20190322111335.854711331@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -65,79 +65,157 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Paul Mackerras <paulus@ozlabs.org>
 
-commit 36da5ff0bea2dc67298150ead8d8471575c54c7d upstream.
+commit 19f8a5b5be2898573a5e1dc1db93e8d40117606a upstream.
 
-The 83xx has 8 SPRG registers and uses at least SPRG4
-for DTLB handling LRU.
+Commit 24be85a23d1f ("powerpc/powernv: Clear PECE1 in LPCR via stop-api
+only on Hotplug", 2017-07-21) added two calls to opal_slw_set_reg()
+inside pnv_cpu_offline(), with the aim of changing the LPCR value in
+the SLW image to disable wakeups from the decrementer while a CPU is
+offline.  However, pnv_cpu_offline() gets called each time a secondary
+CPU thread is woken up to participate in running a KVM guest, that is,
+not just when a CPU is offlined.
 
-Fixes: 2319f1239592 ("powerpc/mm: e300c2/c3/c4 TLB errata workaround")
-Cc: stable@vger.kernel.org
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Since opal_slw_set_reg() is a very slow operation (with observed
+execution times around 20 milliseconds), this means that an offline
+secondary CPU can often be busy doing the opal_slw_set_reg() call
+when the primary CPU wants to grab all the secondary threads so that
+it can run a KVM guest.  This leads to messages like "KVM: couldn't
+grab CPU n" being printed and guest execution failing.
+
+There is no need to reprogram the SLW image on every KVM guest entry
+and exit.  So that we do it only when a CPU is really transitioning
+between online and offline, this moves the calls to
+pnv_program_cpu_hotplug_lpcr() into pnv_smp_cpu_kill_self().
+
+Fixes: 24be85a23d1f ("powerpc/powernv: Clear PECE1 in LPCR via stop-api only on Hotplug")
+Cc: stable@vger.kernel.org # v4.14+
+Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/platforms/83xx/suspend-asm.S |   34 +++++++++++++++++++++++-------
- 1 file changed, 27 insertions(+), 7 deletions(-)
+ arch/powerpc/include/asm/powernv.h    |    2 ++
+ arch/powerpc/platforms/powernv/idle.c |   27 ++-------------------------
+ arch/powerpc/platforms/powernv/smp.c  |   25 +++++++++++++++++++++++++
+ 3 files changed, 29 insertions(+), 25 deletions(-)
 
---- a/arch/powerpc/platforms/83xx/suspend-asm.S
-+++ b/arch/powerpc/platforms/83xx/suspend-asm.S
-@@ -26,13 +26,13 @@
- #define SS_MSR		0x74
- #define SS_SDR1		0x78
- #define SS_LR		0x7c
--#define SS_SPRG		0x80 /* 4 SPRGs */
--#define SS_DBAT		0x90 /* 8 DBATs */
--#define SS_IBAT		0xd0 /* 8 IBATs */
--#define SS_TB		0x110
--#define SS_CR		0x118
--#define SS_GPREG	0x11c /* r12-r31 */
--#define STATE_SAVE_SIZE 0x16c
-+#define SS_SPRG		0x80 /* 8 SPRGs */
-+#define SS_DBAT		0xa0 /* 8 DBATs */
-+#define SS_IBAT		0xe0 /* 8 IBATs */
-+#define SS_TB		0x120
-+#define SS_CR		0x128
-+#define SS_GPREG	0x12c /* r12-r31 */
-+#define STATE_SAVE_SIZE 0x17c
+--- a/arch/powerpc/include/asm/powernv.h
++++ b/arch/powerpc/include/asm/powernv.h
+@@ -23,6 +23,8 @@ extern int pnv_npu2_handle_fault(struct
+ 				unsigned long *flags, unsigned long *status,
+ 				int count);
  
- 	.section .data
- 	.align	5
-@@ -103,6 +103,16 @@ _GLOBAL(mpc83xx_enter_deep_sleep)
- 	stw	r7, SS_SPRG+12(r3)
- 	stw	r8, SS_SDR1(r3)
++void pnv_program_cpu_hotplug_lpcr(unsigned int cpu, u64 lpcr_val);
++
+ void pnv_tm_init(void);
+ #else
+ static inline void powernv_set_nmmu_ptcr(unsigned long ptcr) { }
+--- a/arch/powerpc/platforms/powernv/idle.c
++++ b/arch/powerpc/platforms/powernv/idle.c
+@@ -458,7 +458,8 @@ EXPORT_SYMBOL_GPL(pnv_power9_force_smt4_
+ #endif /* CONFIG_KVM_BOOK3S_HV_POSSIBLE */
  
-+	mfspr	r4, SPRN_SPRG4
-+	mfspr	r5, SPRN_SPRG5
-+	mfspr	r6, SPRN_SPRG6
-+	mfspr	r7, SPRN_SPRG7
+ #ifdef CONFIG_HOTPLUG_CPU
+-static void pnv_program_cpu_hotplug_lpcr(unsigned int cpu, u64 lpcr_val)
 +
-+	stw	r4, SS_SPRG+16(r3)
-+	stw	r5, SS_SPRG+20(r3)
-+	stw	r6, SS_SPRG+24(r3)
-+	stw	r7, SS_SPRG+28(r3)
-+
- 	mfspr	r4, SPRN_DBAT0U
- 	mfspr	r5, SPRN_DBAT0L
- 	mfspr	r6, SPRN_DBAT1U
-@@ -493,6 +503,16 @@ mpc83xx_deep_resume:
- 	mtspr	SPRN_IBAT7U, r6
- 	mtspr	SPRN_IBAT7L, r7
++void pnv_program_cpu_hotplug_lpcr(unsigned int cpu, u64 lpcr_val)
+ {
+ 	u64 pir = get_hard_smp_processor_id(cpu);
  
-+	lwz	r4, SS_SPRG+16(r3)
-+	lwz	r5, SS_SPRG+20(r3)
-+	lwz	r6, SS_SPRG+24(r3)
-+	lwz	r7, SS_SPRG+28(r3)
+@@ -481,20 +482,6 @@ unsigned long pnv_cpu_offline(unsigned i
+ {
+ 	unsigned long srr1;
+ 	u32 idle_states = pnv_get_supported_cpuidle_states();
+-	u64 lpcr_val;
+-
+-	/*
+-	 * We don't want to take decrementer interrupts while we are
+-	 * offline, so clear LPCR:PECE1. We keep PECE2 (and
+-	 * LPCR_PECE_HVEE on P9) enabled as to let IPIs in.
+-	 *
+-	 * If the CPU gets woken up by a special wakeup, ensure that
+-	 * the SLW engine sets LPCR with decrementer bit cleared, else
+-	 * the CPU will come back to the kernel due to a spurious
+-	 * wakeup.
+-	 */
+-	lpcr_val = mfspr(SPRN_LPCR) & ~(u64)LPCR_PECE1;
+-	pnv_program_cpu_hotplug_lpcr(cpu, lpcr_val);
+ 
+ 	__ppc64_runlatch_off();
+ 
+@@ -526,16 +513,6 @@ unsigned long pnv_cpu_offline(unsigned i
+ 
+ 	__ppc64_runlatch_on();
+ 
+-	/*
+-	 * Re-enable decrementer interrupts in LPCR.
+-	 *
+-	 * Further, we want stop states to be woken up by decrementer
+-	 * for non-hotplug cases. So program the LPCR via stop api as
+-	 * well.
+-	 */
+-	lpcr_val = mfspr(SPRN_LPCR) | (u64)LPCR_PECE1;
+-	pnv_program_cpu_hotplug_lpcr(cpu, lpcr_val);
+-
+ 	return srr1;
+ }
+ #endif
+--- a/arch/powerpc/platforms/powernv/smp.c
++++ b/arch/powerpc/platforms/powernv/smp.c
+@@ -39,6 +39,7 @@
+ #include <asm/cpuidle.h>
+ #include <asm/kexec.h>
+ #include <asm/reg.h>
++#include <asm/powernv.h>
+ 
+ #include "powernv.h"
+ 
+@@ -153,6 +154,7 @@ static void pnv_smp_cpu_kill_self(void)
+ {
+ 	unsigned int cpu;
+ 	unsigned long srr1, wmask;
++	u64 lpcr_val;
+ 
+ 	/* Standard hot unplug procedure */
+ 	/*
+@@ -174,6 +176,19 @@ static void pnv_smp_cpu_kill_self(void)
+ 	if (cpu_has_feature(CPU_FTR_ARCH_207S))
+ 		wmask = SRR1_WAKEMASK_P8;
+ 
++	/*
++	 * We don't want to take decrementer interrupts while we are
++	 * offline, so clear LPCR:PECE1. We keep PECE2 (and
++	 * LPCR_PECE_HVEE on P9) enabled so as to let IPIs in.
++	 *
++	 * If the CPU gets woken up by a special wakeup, ensure that
++	 * the SLW engine sets LPCR with decrementer bit cleared, else
++	 * the CPU will come back to the kernel due to a spurious
++	 * wakeup.
++	 */
++	lpcr_val = mfspr(SPRN_LPCR) & ~(u64)LPCR_PECE1;
++	pnv_program_cpu_hotplug_lpcr(cpu, lpcr_val);
 +
-+	mtspr	SPRN_SPRG4, r4
-+	mtspr	SPRN_SPRG5, r5
-+	mtspr	SPRN_SPRG6, r6
-+	mtspr	SPRN_SPRG7, r7
+ 	while (!generic_check_cpu_restart(cpu)) {
+ 		/*
+ 		 * Clear IPI flag, since we don't handle IPIs while
+@@ -246,6 +261,16 @@ static void pnv_smp_cpu_kill_self(void)
+ 
+ 	}
+ 
++	/*
++	 * Re-enable decrementer interrupts in LPCR.
++	 *
++	 * Further, we want stop states to be woken up by decrementer
++	 * for non-hotplug cases. So program the LPCR via stop api as
++	 * well.
++	 */
++	lpcr_val = mfspr(SPRN_LPCR) | (u64)LPCR_PECE1;
++	pnv_program_cpu_hotplug_lpcr(cpu, lpcr_val);
 +
- 	lwz	r4, SS_SPRG+0(r3)
- 	lwz	r5, SS_SPRG+4(r3)
- 	lwz	r6, SS_SPRG+8(r3)
+ 	DBG("CPU%d coming online...\n", cpu);
+ }
+ 
 
 
