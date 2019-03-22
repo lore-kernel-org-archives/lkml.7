@@ -2,143 +2,109 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2866EC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:21:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84794C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:21:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E76ED2190A
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:21:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yXeM6mBW"
+	by mail.kernel.org (Postfix) with ESMTP id 51F20218A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:21:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727236AbfCVQVW (ORCPT
+        id S1727455AbfCVQVs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 12:21:22 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:43568 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726801AbfCVQVW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 12:21:22 -0400
-Received: by mail-io1-f67.google.com with SMTP id x3so2157365iol.10
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 09:21:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FinR+IjhZDJgPonC4fG9bQ8oToE745baJij2yjHIuSw=;
-        b=yXeM6mBWjCkKz0G3Jx7TkTFp6qEugUDgoTTzWcZqjmmQo1guYtvaNro3m8PQ5yIyV6
-         j8GRm3pcaDDCTlo+j1rMgWFzm7D36KGzN+8UkRhvRHwnDyVgSCgO+ar33pCFtlWg9FZz
-         N+uL2cVTBLgpFhI43ozMWZX+wA9xS1NzY/7kWC3HaBc2UDCIoPQZKq8uwTcipJ7+yqEh
-         08mTJ8v5+2uSRzDgF3p2P0rydcmFtRuW5khFfHuhScc1QMKEas+NcBaxzAlhnrryGt/3
-         eaQjuJR+qHOXDq5jZUc0pNfTukYC9YumD4eAkENBwNJayqZT8ynPYWUF4RcqVroniE+U
-         JkMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FinR+IjhZDJgPonC4fG9bQ8oToE745baJij2yjHIuSw=;
-        b=UKZ4aB//teqRoXe7NYla4LX/dFenn2/hk1L899v5XZrdzr2wwghlL1yrWnVC3T/jWR
-         qBOsT4yfD6cXdIVqVhIMvuwVj6i+qC3kEmGYiaIcjkqPyjKGZfHZnZd7Huti1gzqPPCb
-         h5sXbICJhfQTQKJAOkjMQUTe6TJEs9Ps7xsit3mhbhsAbni/U7OIu7COj8Y1wcgVa1re
-         H0M6yHLW+cll1WCZHuQuE9viSWJYesAl4Wh7WC9Bg+NUc22VQoelOfViQjAj56mlSVFj
-         0w0WBydvoNrapqtQS2QindqroPxN0N/VMD/8Hrcb1v30s58bLCwlNE3rktdOfQaztVGl
-         T1xg==
-X-Gm-Message-State: APjAAAWxwqxKAXr1aq/B8sOYZdKTMbCg6roRh8YoFcd1SriyWwN9oZJu
-        vFyRmiIYBjc0jS7fV4tzvOBuOpXSN8XXMfl0ABPsXw==
-X-Google-Smtp-Source: APXvYqyYvUNkkH7/kVxFEBmTPdnSzEM26yKlFgHZNF9RUgA357LvIA2jIyluI9ZY/Z8xlnqX1yMfavwoKVA7Vxf1Fk0=
-X-Received: by 2002:a5d:8b41:: with SMTP id c1mr7546985iot.173.1553271681269;
- Fri, 22 Mar 2019 09:21:21 -0700 (PDT)
+        Fri, 22 Mar 2019 12:21:48 -0400
+Received: from [110.188.70.11] ([110.188.70.11]:5237 "EHLO spam1.hygon.cn"
+        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727246AbfCVQVs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 12:21:48 -0400
+Received: from MK-FE.hygon.cn ([172.23.18.61])
+        by spam1.hygon.cn with ESMTP id x2MGJ5JE005624;
+        Sat, 23 Mar 2019 00:19:06 +0800 (GMT-8)
+        (envelope-from puwen@hygon.cn)
+Received: from cncheex01.Hygon.cn ([172.23.18.10])
+        by MK-FE.hygon.cn with ESMTP id x2MGJ0Pv072954;
+        Sat, 23 Mar 2019 00:19:00 +0800 (GMT-8)
+        (envelope-from puwen@hygon.cn)
+Received: from [192.168.1.193] (172.23.18.44) by cncheex01.Hygon.cn
+ (172.23.18.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1466.3; Sat, 23 Mar
+ 2019 00:19:00 +0800
+Subject: Re: [RFC PATCH] x86/cpu/hygon: Fix phys_proc_id calculation logic for
+ multi-die processor
+To:     Borislav Petkov <bp@alien8.de>
+CC:     "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "hpa@zytor.com" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <1553251380-7015-1-git-send-email-puwen@hygon.cn>
+ <20190322155449.GE12472@zn.tnic>
+From:   Pu Wen <puwen@hygon.cn>
+Message-ID: <639a5bc6-f821-ee9d-1594-d02701321192@hygon.cn>
+Date:   Sat, 23 Mar 2019 00:19:01 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.0
 MIME-Version: 1.0
-References: <5ef0cab4dee128058a43f43c723c13924662e80d.camel@perches.com>
- <20190322124331.s5iu4ontsakv7he5@gondor.apana.org.au> <CAKv+Gu_SBkhV8SVXpOBDoPRBJYhFdmF3jJdZ5OPm3SrPBTSarQ@mail.gmail.com>
- <f8cb10b3dcce0703a652f2f544161abd41bc67f3.camel@perches.com>
-In-Reply-To: <f8cb10b3dcce0703a652f2f544161abd41bc67f3.camel@perches.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Fri, 22 Mar 2019 17:21:10 +0100
-Message-ID: <CAKv+Gu8nds6WgE5UWj8iy=fr7AOmCsaQsrE4Dcj0oiNOXkkt6g@mail.gmail.com>
-Subject: Re: [possible PATCH] crypto: sahara - Use #ifdef DEBUG not IS_ENABLED(DEBUG)
-To:     Joe Perches <joe@perches.com>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190322155449.GE12472@zn.tnic>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [172.23.18.44]
+X-ClientProxiedBy: cncheex01.Hygon.cn (172.23.18.10) To cncheex01.Hygon.cn
+ (172.23.18.10)
+X-MAIL: spam1.hygon.cn x2MGJ5JE005624
+X-DNSRBL: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 22 Mar 2019 at 16:07, Joe Perches <joe@perches.com> wrote:
->
-> On Fri, 2019-03-22 at 15:29 +0100, Ard Biesheuvel wrote:
-> > On Fri, 22 Mar 2019 at 13:43, Herbert Xu <herbert@gondor.apana.org.au> wrote:
-> > > On Thu, Mar 07, 2019 at 04:15:55PM -0800, Joe Perches wrote:
-> > > > Normal use of IS_ENABLED is with a CONFIG_<SYMBOL> and
-> > > > there is no -DDEBUG in the Makefile here.
-> > > >
-> > > > Replace the IS_ENABLED(DEBUG) with #ifdef DEBUG/#endif
-> > > > blocks.
-> > > >
-> > > > Miscellanea:
-> > > >
-> > > > o Move the sahara_state array into the function that uses it.
-> > > >
-> > > > Signed-off-by: Joe Perches <joe@perches.com>
-> > > > ---
-> > > >  drivers/crypto/sahara.c | 20 +++++++++-----------
-> > > >  1 file changed, 9 insertions(+), 11 deletions(-)
-> > >
-> > > Even if this is correct this is way too ugly.  The original code
-> > > at least compiled everything regardless of macros.  Your new code
-> > > won't detect compile errors in debugging code unless debugging is
-> > > enabled.
-> > >
-> >
-> > What's wrong with IS_ENABLED(DEBUG) anyway? It may not be 'normal use'
-> > but it works fine.
->
-> drivers/crypto/sahara.c is the only user in the kernel tree.
-> So only it's abnormal use.  I rather like the concept actually.
->
-> IS_ENABLED is almost exclusively used with CONFIG_<FOO> symbols
-> and it could be useful to require it to be used with CONFIG_<FOO>
-> symbols and use some other similar mechanism for DEBUG use.
->
-> Maybe just adding a global #define in kernel.h like
->
-> #define IS_DEBUG_ENABLED        IS_ENABLED(DEBUG)
->
+On 2019/3/22 23:55, Borislav Petkov wrote:
+> On Fri, Mar 22, 2019 at 06:43:00PM +0800, Pu Wen wrote:
+>> Current codes direct use "phys_proc_id = initial_apicid >> bits", which
+> 
+> Use proper english please - there's no "codes"
+> 
+>> calc phys_proc_id from initial_apicid by shifting *bits*, will get
+> 
+> ... or "calc"
 
-__is_defined(DEBUG) seems to be the most appropriate here. I don't
-feel strongly about whether we or not should wrap it in another macro.
+Okay, will correct the spelling.
 
+>> For Hygon family 18h CPU the socket ID should be obtained from ApicId[6].
+>> To fix the problem and match ApicID field definition, adjust the shift
+>> bits to 6 for all Hygon family 18h multi-die CPUs.
+> 
+> Sounds to me like you're programming the initial APIC ID not
+> the same way as AMD do...
 
+In the same way.
 
-> to isolate this in one place might be better.
->
-> A good thing about using IS_ENABLED or the suggested IS_DEBUG_ENABLED
-> would be that least gcc 5+ seems to automatically elide the uses of any
-> unreferenced static const char * arrays like the sahara_state uses here.
->
+>> Reference:
+>> [1] https://www.amd.com/system/files/TechDocs/54945_PPR_Family_17h_Models_00h-0Fh.pdf
+>>
+>> Signed-off-by: Pu Wen <puwen@hygon.cn>
+>> ---
+>>   arch/x86/kernel/cpu/hygon.c | 3 +++
+>>   1 file changed, 3 insertions(+)
+>>
+>> diff --git a/arch/x86/kernel/cpu/hygon.c b/arch/x86/kernel/cpu/hygon.c
+>> index cf25405..2df6dd9 100644
+>> --- a/arch/x86/kernel/cpu/hygon.c
+>> +++ b/arch/x86/kernel/cpu/hygon.c
+>> @@ -87,6 +87,9 @@ static void hygon_get_topology(struct cpuinfo_x86 *c)
+>>   		if (!err)
+>>   			c->x86_coreid_bits = get_count_order(c->x86_max_cores);
+>>   
+>> +		/* Socket ID is ApicId[6] for these processors. */
+>> +		c->phys_proc_id = c->apicid >> 6;
+> 
+> That 6 is a magic number, I assume?
 
-Yes, that is kind of the point. If you use #ifdef, the compiler will
-complain about unused static variables in this case.
+That 6 is not a magic number. It indicate bit 6 of ApicId. This calculation
+is the same as the LLC ID calculation in cacheinfo_hygon_init_llc_id().
 
-> (I don't have gcc4 anymore so I couldn't check that version)
->
-> So using 'if (IS_DEBUG_ENABLED)' could simplify some existing code like
-> the many uses of
->
-> #ifdef DEBUG
->         ...
-> #endif
->
-> or equivalent
->
->
-
-My vote would be to use __is_defined(DEBUG) in place, but if others
-prefer wrapping it in a macro, that is also fine with me.
+-- 
+Regards,
+Pu Wen
