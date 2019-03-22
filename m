@@ -2,186 +2,103 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A175FC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:54:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADFABC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:55:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F07221873
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:54:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="hIo3wzfE"
+	by mail.kernel.org (Postfix) with ESMTP id 7295921873
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:55:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553259305;
+	bh=on+R2nQIaxF54KIDWNxTwaZZip1dT92o7ZwXkemC/Gk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=PBHRibXPnxtgU+JRTd7v5/EB656N9pBu7gRXcr61Hd1a92YwJtPWvOaprqH1SiBpW
+	 vMk/kgXxG2YQJ1xmYSlmj+E3rjxZmTrMp6l/ueiJxelSTbAn0ZZOUUMJ7gU1z9YM+G
+	 NGK4Atm2kGkxEItwTLXdlgIPbmTLjosbLgpW/L+8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733220AbfCVMyz (ORCPT
+        id S1732629AbfCVLuX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:54:55 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:7606 "EHLO pegase1.c-s.fr"
+        Fri, 22 Mar 2019 07:50:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733022AbfCVMyv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:54:51 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 44QkBv5BVpz9txf3;
-        Fri, 22 Mar 2019 13:54:47 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=hIo3wzfE; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id lWKAbOdjKAKz; Fri, 22 Mar 2019 13:54:47 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 44QkBv3sgKz9txf2;
-        Fri, 22 Mar 2019 13:54:47 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1553259287; bh=26ZK7/CAEBxnxUnQkCvPSL1aG1SlmXekNJcGWX1XQnU=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=hIo3wzfE91ko+U3qR0ixhhHth22RQw+b7mbKkcrQ0ObXpo8kZCVf1UBqpplWr4VDY
-         +bjgQIGXurFaK199LIC7MuXgF/4t2groe0tU9AiYnI5Cnp5e9it/3ClMFCXNdzV8V4
-         VrEp0c+AASEMBBY5svqLDw4MYgVpccscduynR+1w=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id D46098BB11;
-        Fri, 22 Mar 2019 13:54:48 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 0KrXzgU9phTN; Fri, 22 Mar 2019 13:54:48 +0100 (CET)
-Received: from PO15451 (po15451.idsi0.si.c-s.fr [172.25.231.2])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id A8C428B848;
-        Fri, 22 Mar 2019 13:54:48 +0100 (CET)
-Subject: Re: [possible PATCH] crypto: sahara - Use #ifdef DEBUG not
- IS_ENABLED(DEBUG)
-To:     Joe Perches <joe@perches.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-References: <5ef0cab4dee128058a43f43c723c13924662e80d.camel@perches.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <4ea24643-5832-981f-3d39-9a84692be6e7@c-s.fr>
-Date:   Fri, 22 Mar 2019 13:54:47 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.0
+        id S1732611AbfCVLuS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:50:18 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F9ED2082C;
+        Fri, 22 Mar 2019 11:50:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553255417;
+        bh=on+R2nQIaxF54KIDWNxTwaZZip1dT92o7ZwXkemC/Gk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=rlJOmsv2Uxmg/V5BMgVZ1JjFee+ZWZzwFVCNn2fUAmloZJjlNCk7Ue8D14TjMtUsF
+         oVTqERQeOl6HDq4psQ355ABilwZ9PZgakWBnaNLWH9QMXK2WShpO6oAOCETDvGJsga
+         GXaQaE3yhBV8mqrD5XOML0ILZ6pTfvgwwit/sLcg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Haibo Chen <haibo.chen@nxp.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 4.14 085/183] mmc: sdhci-esdhc-imx: fix HS400 timing issue
+Date:   Fri, 22 Mar 2019 12:15:13 +0100
+Message-Id: <20190322111247.891275050@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190322111241.819468003@linuxfoundation.org>
+References: <20190322111241.819468003@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-In-Reply-To: <5ef0cab4dee128058a43f43c723c13924662e80d.camel@perches.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+4.14-stable review patch.  If anyone has any objections, please let me know.
+
+------------------
+
+From: BOUGH CHEN <haibo.chen@nxp.com>
+
+commit de0a0decf2edfc5b0c782915f4120cf990a9bd13 upstream.
+
+Now tuning reset will be done when the timing is MMC_TIMING_LEGACY/
+MMC_TIMING_MMC_HS/MMC_TIMING_SD_HS. But for timing MMC_TIMING_MMC_HS,
+we can not do tuning reset, otherwise HS400 timing is not right.
+
+Here is the process of init HS400, first finish tuning in HS200 mode,
+then switch to HS mode and 8 bit DDR mode, finally switch to HS400
+mode. If we do tuning reset in HS mode, this will cause HS400 mode
+lost the tuning setting, which will cause CRC error.
+
+Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
+Cc: stable@vger.kernel.org # v4.12+
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Fixes: d9370424c948 ("mmc: sdhci-esdhc-imx: reset tuning circuit when power on mmc card")
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/mmc/host/sdhci-esdhc-imx.c |    1 +
+ 1 file changed, 1 insertion(+)
+
+--- a/drivers/mmc/host/sdhci-esdhc-imx.c
++++ b/drivers/mmc/host/sdhci-esdhc-imx.c
+@@ -961,6 +961,7 @@ static void esdhc_set_uhs_signaling(stru
+ 	case MMC_TIMING_UHS_SDR25:
+ 	case MMC_TIMING_UHS_SDR50:
+ 	case MMC_TIMING_UHS_SDR104:
++	case MMC_TIMING_MMC_HS:
+ 	case MMC_TIMING_MMC_HS200:
+ 		writel(m, host->ioaddr + ESDHC_MIX_CTRL);
+ 		break;
 
 
-Le 08/03/2019 à 01:15, Joe Perches a écrit :
-> Normal use of IS_ENABLED is with a CONFIG_<SYMBOL> and
-> there is no -DDEBUG in the Makefile here.
-> 
-> Replace the IS_ENABLED(DEBUG) with #ifdef DEBUG/#endif
-> blocks.
-
-By doing this you hide a big part of the code which cannot be verified 
-unless DEBUG is defined.
-
-I suggest to add the following helper:
-
-static bool is_debug_enabled(void)
-{
-#ifdef DEBUG
-	return true;
-#else
-	return false;
-#endif
-}
-
-then replace
-
-if (IS_ENABLED(DEBUG))
-
-by
-
-if (is_debug_enabled())
-
-Christophe
-
-> 
-> Miscellanea:
-> 
-> o Move the sahara_state array into the function that uses it.
-> 
-> Signed-off-by: Joe Perches <joe@perches.com>
-> ---
->   drivers/crypto/sahara.c | 20 +++++++++-----------
->   1 file changed, 9 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/crypto/sahara.c b/drivers/crypto/sahara.c
-> index 8c32a3059b4a..d2b4bd483507 100644
-> --- a/drivers/crypto/sahara.c
-> +++ b/drivers/crypto/sahara.c
-> @@ -348,14 +348,13 @@ static void sahara_decode_error(struct sahara_dev *dev, unsigned int error)
->   	dev_err(dev->device, "\n");
->   }
->   
-> -static const char *sahara_state[4] = { "Idle", "Busy", "Error", "HW Fault" };
-> -
->   static void sahara_decode_status(struct sahara_dev *dev, unsigned int status)
->   {
-> +#ifdef DEBUG
->   	u8 state;
-> -
-> -	if (!IS_ENABLED(DEBUG))
-> -		return;
-> +	static const char *sahara_state[4] = {
-> +		"Idle", "Busy", "Error", "HW Fault"
-> +	};
->   
->   	state = SAHARA_STATUS_GET_STATE(status);
->   
-> @@ -400,15 +399,14 @@ static void sahara_decode_status(struct sahara_dev *dev, unsigned int status)
->   		sahara_read(dev, SAHARA_REG_CDAR));
->   	dev_dbg(dev->device, "Initial DAR: 0x%08x\n\n",
->   		sahara_read(dev, SAHARA_REG_IDAR));
-> +#endif
->   }
->   
->   static void sahara_dump_descriptors(struct sahara_dev *dev)
->   {
-> +#ifdef DEBUG
->   	int i;
->   
-> -	if (!IS_ENABLED(DEBUG))
-> -		return;
-> -
->   	for (i = 0; i < SAHARA_MAX_HW_DESC; i++) {
->   		dev_dbg(dev->device, "Descriptor (%d) (%pad):\n",
->   			i, &dev->hw_phys_desc[i]);
-> @@ -421,15 +419,14 @@ static void sahara_dump_descriptors(struct sahara_dev *dev)
->   			dev->hw_desc[i]->next);
->   	}
->   	dev_dbg(dev->device, "\n");
-> +#endif
->   }
->   
->   static void sahara_dump_links(struct sahara_dev *dev)
->   {
-> +#ifdef DEBUG
->   	int i;
->   
-> -	if (!IS_ENABLED(DEBUG))
-> -		return;
-> -
->   	for (i = 0; i < SAHARA_MAX_HW_LINK; i++) {
->   		dev_dbg(dev->device, "Link (%d) (%pad):\n",
->   			i, &dev->hw_phys_link[i]);
-> @@ -439,6 +436,7 @@ static void sahara_dump_links(struct sahara_dev *dev)
->   			dev->hw_link[i]->next);
->   	}
->   	dev_dbg(dev->device, "\n");
-> +#endif
->   }
->   
->   static int sahara_hw_descriptor_create(struct sahara_dev *dev)
-> 
