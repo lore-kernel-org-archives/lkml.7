@@ -2,98 +2,93 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 020DEC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:35:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A49C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:35:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C45CD20850
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:35:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C60720850
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:35:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="V7OvuMib"
+	dkim=pass (2048-bit key) header.d=kudzu-us.20150623.gappssmtp.com header.i=@kudzu-us.20150623.gappssmtp.com header.b="TDmukoFh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727595AbfCVPfP (ORCPT
+        id S1727564AbfCVPfK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 11:35:15 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:33988 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727584AbfCVPfO (ORCPT
+        Fri, 22 Mar 2019 11:35:10 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:33529 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727544AbfCVPfI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 11:35:14 -0400
-Received: by mail-lj1-f196.google.com with SMTP id j89so2437998ljb.1
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 08:35:13 -0700 (PDT)
+        Fri, 22 Mar 2019 11:35:08 -0400
+Received: by mail-io1-f67.google.com with SMTP id b6so2069831iog.0
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 08:35:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=jnCsfw+9gHeo3z0Jh3UX77Kv5ns0QiRJD8uemSV68zs=;
-        b=V7OvuMibaiLgiunqKKGWvfIZbYQ+pY2ugtU7bHsNdgcb3+ZdPzW1hja1eqOK90j2lb
-         TBKkRIEQk/OXHZqnS3Sn2IG/C2SA2AENTp/tpWx6N2NOVeSwvb/1ma62sks5oPCWe9k6
-         EVsUxz0iHW3BmXn1R+whSPnr5dUUTmPKtyu5U=
+        bh=dBlRwOtT+B6SwA8/0ZaIie4/T5RCnzzJQUJD3sIwcfE=;
+        b=TDmukoFhAME8d7N/+HKcKr4Qk3wDRPiLmGzVc0kgBxKjDSMONYTM0rNKhWsWUzfsg8
+         FMoIOXg+kENmSsrxq1QxkRsuVdxbQ50d054MWx0Vi5zIhKqor6tp83xZsTALmV/Ujh9P
+         46ZoMi/7RReIwaOVVPpDGNHbXSPq1ohmIoM1QrEWifZpxNmdYaK7IsHwOqbOq8rd5f78
+         bdiiaZtJ4U7z9T7naciH/6uNpBvdnr9upj4AzVyOAyF9j6o78fCvWv7QS2yqAqVPQoXe
+         AyhZR4s0/6ujY6ew3imEMCMeduEApd4EETWV9Twbp5Z8xCThXaIaCKYoFAnpfhb2DfMB
+         BChg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=jnCsfw+9gHeo3z0Jh3UX77Kv5ns0QiRJD8uemSV68zs=;
-        b=mkcq90jalR+yf7N899mJwOpUCXFggfPHwzlWnnpVsaFvLoRVDARHrCRtYLbif3UUrF
-         kJ6g/GPzQhMfLdObTlIIt+tmt5b8aboaduOgJMAQwxYiH7Ksx2nxi/0p3rb/43cRM/hh
-         5jifJEdL6+G6KxFQhQ2V47q+RmvtEcDVzu+z5E+f6k5E48v02e50kPVuHafsWAikXQ7I
-         zbjfOAby2OG/SYVmCyt2TBmAIGK0sM2GMJFMXb4R18e9gJ1DOijK11m/torclA5R5CSF
-         ifoZSkhtWf4gQq1ApXJ7GiiKZGZcfDUuuPbUNUDWLqYfT04TDY8qLHsKChUHDAE2FkPu
-         lvoQ==
-X-Gm-Message-State: APjAAAVpToJ36UaNZ1XORYAud94vma4nP0sAsPdr6SmECBKkVdhQVQVT
-        SlSNTkkHeu6kC1y3OT0bcYp0PM8LTi4=
-X-Google-Smtp-Source: APXvYqzEKNwbvRIqEbffACubTE0P940iVuB4lXkvvT219Bpl3W8lxKN9Ytwjf2uUJhaQU1DUBEi5SQ==
-X-Received: by 2002:a2e:82c5:: with SMTP id n5mr3610101ljh.91.1553268912210;
-        Fri, 22 Mar 2019 08:35:12 -0700 (PDT)
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com. [209.85.167.45])
-        by smtp.gmail.com with ESMTPSA id e3sm1759572lfn.80.2019.03.22.08.35.10
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 22 Mar 2019 08:35:11 -0700 (PDT)
-Received: by mail-lf1-f45.google.com with SMTP id p1so1676813lfk.9
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 08:35:10 -0700 (PDT)
-X-Received: by 2002:ac2:4563:: with SMTP id k3mr5399948lfm.101.1553268910090;
- Fri, 22 Mar 2019 08:35:10 -0700 (PDT)
+        bh=dBlRwOtT+B6SwA8/0ZaIie4/T5RCnzzJQUJD3sIwcfE=;
+        b=e9CNetYmBu2CARX6jFaK1YoeQwJI2ktuz9M6Cy09Z9Pdn7/5b78RqrnD2bqUelPLWX
+         52IYMuUZ33+tF1OvVV8CV9Pv1mFgEEpIUdOIsUWXaKWly+GyaytqF1040fJ7YLndHsB8
+         ZcUYadx8stG18I9ykzSbxUOMujisMN6+S84nGFKU6rg7BmiZ9Oa900crd8IGX7RunI19
+         we2gu9Ey+D/Px/4jnBm4UO9IG5G9vcCX7lmyQ6YOrZkPSIr0n2ALnFkDjtMAz5O8EXKB
+         7Tuvv3QmPSrk05uYQxay4NhK/SSRRLS/dggK5Oug5j87nFPUowdKPnIx6LqTn8UeZVup
+         r+Ww==
+X-Gm-Message-State: APjAAAVsEztZsOBh24z9d/ztE/n59+19s3MMfKBYeP6FlmZGDijLiv7Z
+        6D+sIu/ysbiamdMq31sS72CROFsiNfdZRSc1+kUXLA==
+X-Google-Smtp-Source: APXvYqw2EI0rgOKrlVJIfQ1gyciawoYaoREpRrDm7kkE3Bg5qUSqsCz5i9wohRwYS807Em74D2F+NdkC6nmmgE8KOWI=
+X-Received: by 2002:a6b:b505:: with SMTP id e5mr6558483iof.277.1553268907528;
+ Fri, 22 Mar 2019 08:35:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190226065919.22218-1-bjorn.andersson@linaro.org>
-In-Reply-To: <20190226065919.22218-1-bjorn.andersson@linaro.org>
-From:   Evan Green <evgreen@chromium.org>
-Date:   Fri, 22 Mar 2019 08:34:33 -0700
-X-Gmail-Original-Message-ID: <CAE=gft5ZUHKQqYVL72_kojPr7vEUMY301gmGviCUVpBYdAoBDw@mail.gmail.com>
-Message-ID: <CAE=gft5ZUHKQqYVL72_kojPr7vEUMY301gmGviCUVpBYdAoBDw@mail.gmail.com>
-Subject: Re: [PATCH] phy: qcom: qmp: Add SDM845 PCIe QMP PHY support
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Can Guo <cang@codeaurora.org>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>
+References: <20190321075818.24f9703a@canb.auug.org.au> <8a8ce003-c151-d04b-3ac9-8823a6c8ff7b@deltatee.com>
+ <CAPoiz9x9aWMzV3K-UhBz52AXdVpDbCQnLTeM7=nt5tAFL2RPBQ@mail.gmail.com> <20190322072829.77e6c245@canb.auug.org.au>
+In-Reply-To: <20190322072829.77e6c245@canb.auug.org.au>
+From:   Jon Mason <jdmason@kudzu.us>
+Date:   Fri, 22 Mar 2019 11:34:56 -0400
+Message-ID: <CAPoiz9zyT8GYo+DrGgCNP8PhHn-oTyRyd6+V4cydGgkGyF3Bww@mail.gmail.com>
+Subject: Re: linux-next: Fixes tag needs some work in the ntb tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Logan Gunthorpe <logang@deltatee.com>,
+        NTB Mailing List <linux-ntb@googlegroups.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 25, 2019 at 10:58 PM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
+On Thu, Mar 21, 2019 at 4:28 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
 >
-> qcom_qmp_phy_init() is extended to support the additional register
-> writes needed in PCS MISC and the appropriate sequences and resources
-> are defined for SDM845.
+> Hi Jon,
 >
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
+> On Thu, 21 Mar 2019 15:53:47 -0400 Jon Mason <jdmason@kudzu.us> wrote:
+> >
+> > Is there an existing set of tools/scripts I should run to prevent
+> > things like this from happening?
+>
+> I have attached the script I run over all new commits submitted for
+> linux-next.
 
-How badly does this conflict with my refactoring series at [1]? I
-believe that series should be just about ready to go, do you want to
-base your change on top of it?
--Evan
+Fantastic!  I'll add a variation of this to my git tree and hopefully
+prevent any future issues.
 
-[1] https://lore.kernel.org/lkml/20190321171800.104681-1-evgreen@chromium.org/
+Thanks,
+Jon
+
+>
+> --
+> Cheers,
+> Stephen Rothwell
