@@ -6,47 +6,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27737C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:38:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11799C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:38:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5B84218B0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:38:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D43F221917
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:38:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254714;
-	bh=44nlyRHTOdR6CrP1qgxq1qzsP1j2Zg2ZNyQzwpr1414=;
+	s=default; t=1553254717;
+	bh=C9vv+NLUI8ZkKL+QuZAOlcj+m4Yt6AylQU4dzxNLF3o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CaUiOCbNN8nDKXuyfH9pCRU62RYTDGMjMQgymCtJIHd4KCdLm1FLyfDRKOp9ukMZv
-	 a1jEhNaiMC4S47NLtnLS6inDdLDLhis7WsYiKfMWectzsXPHnHCsj0kDAZs6cXZ8aQ
-	 oe3NrvMuLUg1nVd8SSEl+0V2vYPZF3+a9bJdeYuQ=
+	b=ko69ZxlYwXdILIn7bBT7ZaGL6TyJXf0a+eEqSb2+7yFfnrsOTAMruK51D5FytLt0c
+	 Ng5cXKvm2H1fUAkBfiJcuXWUvQv4k/PJIVsj1KWjL3aFTW9gzPD288U715IpziYmNx
+	 1rpe3xToH8+3e5XEJcFXlJdqBSEwQTgLzUT1JpAM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730984AbfCVLic (ORCPT
+        id S1730994AbfCVLig (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:38:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40026 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:38:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730223AbfCVLia (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:38:30 -0400
+        id S1730988AbfCVLid (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:38:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6A812082C;
-        Fri, 22 Mar 2019 11:38:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D2E92082C;
+        Fri, 22 Mar 2019 11:38:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254709;
-        bh=44nlyRHTOdR6CrP1qgxq1qzsP1j2Zg2ZNyQzwpr1414=;
+        s=default; t=1553254712;
+        bh=C9vv+NLUI8ZkKL+QuZAOlcj+m4Yt6AylQU4dzxNLF3o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=14a+/pEJbW/4OECLtT081U5rlmYC1jx7DRqmW+N27BR60crj2qVcMu0jvmzLlWv9Y
-         Dp89mteYWSjDVnTUVPv+PFatrD1Z2G0915CNMxfT9FIdSpnB+ciRGmogl/NGrbvD/F
-         qI2xSHkI+GR719mKY7MU/uZzQLCdOnOtxjcxdpGI=
+        b=GF/oaQrTSUhzx3xspt9NWwmoBbEF0rv1HNMDEt8bx/UdrvPsYyLYMectLFIwrRyii
+         OstNzcZr+8ojyczMX31URZL/m4IJ9cDrQjVZ+/PMecy+l27MqyXeksVyISzwv1N2lB
+         TLAygOJ9GD/zgD3uEefER9Wesg2VJPq/lV2ri8p8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 4.4 218/230] perf intel-pt: Fix overlap calculation for padding
-Date:   Fri, 22 Mar 2019 12:15:56 +0100
-Message-Id: <20190322111252.185432994@linuxfoundation.org>
+        stable@vger.kernel.org, Guoqing Jiang <gqjiang@suse.com>,
+        Aditya Pakki <pakki001@umn.edu>,
+        Song Liu <songliubraving@fb.com>
+Subject: [PATCH 4.4 219/230] md: Fix failed allocation of md_register_thread
+Date:   Fri, 22 Mar 2019 12:15:57 +0100
+Message-Id: <20190322111252.266096746@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -65,90 +65,49 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+From: Aditya Pakki <pakki001@umn.edu>
 
-commit 5a99d99e3310a565b0cf63f785b347be9ee0da45 upstream.
+commit e406f12dde1a8375d77ea02d91f313fb1a9c6aec upstream.
 
-Auxtrace records might have up to 7 bytes of padding appended. Adjust
-the overlap accordingly.
+mddev->sync_thread can be set to NULL on kzalloc failure downstream.
+The patch checks for such a scenario and frees allocated resources.
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: stable@vger.kernel.org
-Link: http://lkml.kernel.org/r/20190206103947.15750-3-adrian.hunter@intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Committer node:
+
+Added similar fix to raid5.c, as suggested by Guoqing.
+
+Cc: stable@vger.kernel.org # v3.16+
+Acked-by: Guoqing Jiang <gqjiang@suse.com>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/perf/util/intel-pt-decoder/intel-pt-decoder.c |   36 ++++++++++++++++++--
- 1 file changed, 34 insertions(+), 2 deletions(-)
+ drivers/md/raid10.c |    2 ++
+ drivers/md/raid5.c  |    2 ++
+ 2 files changed, 4 insertions(+)
 
---- a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
-+++ b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
-@@ -26,6 +26,7 @@
- 
- #include "../cache.h"
- #include "../util.h"
-+#include "../auxtrace.h"
- 
- #include "intel-pt-insn-decoder.h"
- #include "intel-pt-pkt-decoder.h"
-@@ -2320,6 +2321,34 @@ static int intel_pt_tsc_cmp(uint64_t tsc
+--- a/drivers/md/raid10.c
++++ b/drivers/md/raid10.c
+@@ -3755,6 +3755,8 @@ static int run(struct mddev *mddev)
+ 		set_bit(MD_RECOVERY_RUNNING, &mddev->recovery);
+ 		mddev->sync_thread = md_register_thread(md_do_sync, mddev,
+ 							"reshape");
++		if (!mddev->sync_thread)
++			goto out_free_conf;
  	}
- }
  
-+#define MAX_PADDING (PERF_AUXTRACE_RECORD_ALIGNMENT - 1)
-+
-+/**
-+ * adj_for_padding - adjust overlap to account for padding.
-+ * @buf_b: second buffer
-+ * @buf_a: first buffer
-+ * @len_a: size of first buffer
-+ *
-+ * @buf_a might have up to 7 bytes of padding appended. Adjust the overlap
-+ * accordingly.
-+ *
-+ * Return: A pointer into @buf_b from where non-overlapped data starts
-+ */
-+static unsigned char *adj_for_padding(unsigned char *buf_b,
-+				      unsigned char *buf_a, size_t len_a)
-+{
-+	unsigned char *p = buf_b - MAX_PADDING;
-+	unsigned char *q = buf_a + len_a - MAX_PADDING;
-+	int i;
-+
-+	for (i = MAX_PADDING; i; i--, p++, q++) {
-+		if (*p != *q)
-+			break;
-+	}
-+
-+	return p;
-+}
-+
- /**
-  * intel_pt_find_overlap_tsc - determine start of non-overlapped trace data
-  *                             using TSC.
-@@ -2370,8 +2399,11 @@ static unsigned char *intel_pt_find_over
+ 	return 0;
+--- a/drivers/md/raid5.c
++++ b/drivers/md/raid5.c
+@@ -6973,6 +6973,8 @@ static int run(struct mddev *mddev)
+ 		set_bit(MD_RECOVERY_RUNNING, &mddev->recovery);
+ 		mddev->sync_thread = md_register_thread(md_do_sync, mddev,
+ 							"reshape");
++		if (!mddev->sync_thread)
++			goto abort;
+ 	}
  
- 			/* Same TSC, so buffers are consecutive */
- 			if (!cmp && rem_b >= rem_a) {
-+				unsigned char *start;
-+
- 				*consecutive = true;
--				return buf_b + len_b - (rem_b - rem_a);
-+				start = buf_b + len_b - (rem_b - rem_a);
-+				return adj_for_padding(start, buf_a, len_a);
- 			}
- 			if (cmp < 0)
- 				return buf_b; /* tsc_a < tsc_b => no overlap */
-@@ -2434,7 +2466,7 @@ unsigned char *intel_pt_find_overlap(uns
- 		found = memmem(buf_a, len_a, buf_b, len_a);
- 		if (found) {
- 			*consecutive = true;
--			return buf_b + len_a;
-+			return adj_for_padding(buf_b + len_a, buf_a, len_a);
- 		}
- 
- 		/* Try again at next PSB in buffer 'a' */
+ 	/* Ok, everything is just fine now */
 
 
