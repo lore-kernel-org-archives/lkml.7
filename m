@@ -2,53 +2,52 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEE88C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:17:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE3E8C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:18:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F48721873
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:17:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D7F021873
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:18:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553260677;
-	bh=H2AOTMPf/HnoSRteEZV0HOHssymFj8s+4RDKmET2D1g=;
+	s=default; t=1553260690;
+	bh=7qn1BgPArp80FkyveB1hRhDQZK+dVzQGaU9AJO0H6uQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vTKgFBKWm1n0Fp+WiPzucKJP8HFMVjhB481/9aL2kk5z50TTmECxpv3nwj2ugI2dl
-	 fRvw0/WqASCeqxQlibK1O+vOmyX1eStrX/02K05wlux6SMc9nnqSq7lL+hu68WXe5/
-	 TrkmF32AiEQ25jdzey0rVkpgwX8l0SzBKALEhhJA=
+	b=rHHPfFw4jKpQYh1adtU18AS+YJOPjnE3ah8tjnu/BYMdDAMrvJsrVyPGNeRxA6gz6
+	 BJr5lYZSsa20U6SOTKq9VuyASB2bAPBWy5dHcr4lzV+tb80cM36S4Aelv0S8UwEWMP
+	 BCMtzjiZNMrTJiozTqkhof3o2Pv5KJz73n9wlmco=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729155AbfCVLYi (ORCPT
+        id S1728549AbfCVLYS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:24:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51652 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:24:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51318 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729143AbfCVLYf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:24:35 -0400
+        id S1728731AbfCVLYQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:24:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59C1F20657;
-        Fri, 22 Mar 2019 11:24:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D61F218A2;
+        Fri, 22 Mar 2019 11:24:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553253874;
-        bh=H2AOTMPf/HnoSRteEZV0HOHssymFj8s+4RDKmET2D1g=;
+        s=default; t=1553253855;
+        bh=7qn1BgPArp80FkyveB1hRhDQZK+dVzQGaU9AJO0H6uQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mAdc7rnBRg1AL3F8D/nFPama2wRqN0sM6QOSdNAXk2rT6a7Z/ut3Fu29SNbQlhxLk
-         fzyIWgu2m2R4QEhoLH2EST70GRt1RGzJWhH71oET6/xgDzPT9bEKEMSYPHDTkjIrhp
-         V73o29Q7ypYaEmEQcGkmv70KNA+O6GY9E9NNWwiQ=
+        b=TVIk1dSvJ6UtDKXBk/lJ7tz76uaNZCLkqDRGyol9R9tsp5+qiPKkzUbh8B7xlPjHb
+         X+yw7wlxvVfSe6kT2cE5N7uLkoYKK0GNZN7jBj7pxfFLKDPsPFmIJ5Bn5dszAWEKvr
+         kOALyu8yLjYzHjSka228oGefy3iuQBr2X9pX3xDw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        andrew hendry <andrew.hendry@gmail.com>,
         syzbot <syzkaller@googlegroups.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 3.18 083/134] net/x25: reset state in x25_connect()
-Date:   Fri, 22 Mar 2019 12:14:56 +0100
-Message-Id: <20190322111216.122284532@linuxfoundation.org>
+Subject: [PATCH 3.18 092/134] gro_cells: make sure device is up in gro_cells_receive()
+Date:   Fri, 22 Mar 2019 12:15:05 +0100
+Message-Id: <20190322111216.809328937@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111210.465931067@linuxfoundation.org>
 References: <20190322111210.465931067@linuxfoundation.org>
@@ -69,79 +68,123 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit ee74d0bd4325efb41e38affe5955f920ed973f23 ]
+[ Upstream commit 2a5ff07a0eb945f291e361aa6f6becca8340ba46 ]
 
-In case x25_connect() fails and frees the socket neighbour,
-we also need to undo the change done to x25->state.
+We keep receiving syzbot reports [1] that show that tunnels do not play
+the rcu/IFF_UP rules properly.
 
-Before my last bug fix, we had use-after-free so this
-patch fixes a latent bug.
+At device dismantle phase, gro_cells_destroy() will be called
+only after a full rcu grace period is observed after IFF_UP
+has been cleared.
 
-syzbot report :
+This means that IFF_UP needs to be tested before queueing packets
+into netif_rx() or gro_cells.
 
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-CPU: 1 PID: 16137 Comm: syz-executor.1 Not tainted 5.0.0+ #117
+This patch implements the test in gro_cells_receive() because
+too many callers do not seem to bother enough.
+
+[1]
+BUG: unable to handle kernel paging request at fffff4ca0b9ffffe
+PGD 0 P4D 0
+Oops: 0000 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 21 Comm: kworker/u4:1 Not tainted 5.0.0+ #97
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:x25_write_internal+0x1e8/0xdf0 net/x25/x25_subr.c:173
-Code: 00 40 88 b5 e0 fe ff ff 0f 85 01 0b 00 00 48 8b 8b 80 04 00 00 48 ba 00 00 00 00 00 fc ff df 48 8d 79 1c 48 89 fe 48 c1 ee 03 <0f> b6 34 16 48 89 fa 83 e2 07 83 c2 03 40 38 f2 7c 09 40 84 f6 0f
-RSP: 0018:ffff888076717a08 EFLAGS: 00010207
-RAX: ffff88805f2f2292 RBX: ffff8880a0ae6000 RCX: 0000000000000000
-kobject: 'loop5' (0000000018d0d0ee): kobject_uevent_env
-RDX: dffffc0000000000 RSI: 0000000000000003 RDI: 000000000000001c
-RBP: ffff888076717b40 R08: ffff8880950e0580 R09: ffffed100be5e46d
-R10: ffffed100be5e46c R11: ffff88805f2f2363 R12: ffff888065579840
-kobject: 'loop5' (0000000018d0d0ee): fill_kobj_path: path = '/devices/virtual/block/loop5'
-R13: 1ffff1100ece2f47 R14: 0000000000000013 R15: 0000000000000013
-FS:  00007fb88cf43700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+Workqueue: netns cleanup_net
+RIP: 0010:__skb_unlink include/linux/skbuff.h:1929 [inline]
+RIP: 0010:__skb_dequeue include/linux/skbuff.h:1945 [inline]
+RIP: 0010:__skb_queue_purge include/linux/skbuff.h:2656 [inline]
+RIP: 0010:gro_cells_destroy net/core/gro_cells.c:89 [inline]
+RIP: 0010:gro_cells_destroy+0x19d/0x360 net/core/gro_cells.c:78
+Code: 03 42 80 3c 20 00 0f 85 53 01 00 00 48 8d 7a 08 49 8b 47 08 49 c7 07 00 00 00 00 48 89 f9 49 c7 47 08 00 00 00 00 48 c1 e9 03 <42> 80 3c 21 00 0f 85 10 01 00 00 48 89 c1 48 89 42 08 48 c1 e9 03
+RSP: 0018:ffff8880aa3f79a8 EFLAGS: 00010a02
+RAX: 00ffffffffffffe8 RBX: ffffe8ffffc64b70 RCX: 1ffff8ca0b9ffffe
+RDX: ffffc6505cffffe8 RSI: ffffffff858410ca RDI: ffffc6505cfffff0
+RBP: ffff8880aa3f7a08 R08: ffff8880aa3e8580 R09: fffffbfff1263645
+R10: fffffbfff1263644 R11: ffffffff8931b223 R12: dffffc0000000000
+R13: 0000000000000000 R14: ffffe8ffffc64b80 R15: ffffe8ffffc64b75
+kobject: 'loop2' (000000004bd7d84a): kobject_uevent_env
+FS:  0000000000000000(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
 CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f9a42a41028 CR3: 0000000087a67000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+CR2: fffff4ca0b9ffffe CR3: 0000000094941000 CR4: 00000000001406f0
 Call Trace:
- x25_release+0xd0/0x340 net/x25/af_x25.c:658
- __sock_release+0xd3/0x2b0 net/socket.c:579
- sock_close+0x1b/0x30 net/socket.c:1162
- __fput+0x2df/0x8d0 fs/file_table.c:278
- ____fput+0x16/0x20 fs/file_table.c:309
- task_work_run+0x14a/0x1c0 kernel/task_work.c:113
- get_signal+0x1961/0x1d50 kernel/signal.c:2388
- do_signal+0x87/0x1940 arch/x86/kernel/signal.c:816
- exit_to_usermode_loop+0x244/0x2c0 arch/x86/entry/common.c:162
- prepare_exit_to_usermode arch/x86/entry/common.c:197 [inline]
- syscall_return_slowpath arch/x86/entry/common.c:268 [inline]
- do_syscall_64+0x52d/0x610 arch/x86/entry/common.c:293
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x457f29
-Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fb88cf42c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002a
-RAX: fffffffffffffe00 RBX: 0000000000000003 RCX: 0000000000457f29
-RDX: 0000000000000012 RSI: 0000000020000080 RDI: 0000000000000004
-RBP: 000000000073bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007fb88cf436d4
-R13: 00000000004be462 R14: 00000000004cec98 R15: 00000000ffffffff
+kobject: 'loop2' (000000004bd7d84a): fill_kobj_path: path = '/devices/virtual/block/loop2'
+ ip_tunnel_dev_free+0x19/0x60 net/ipv4/ip_tunnel.c:1010
+ netdev_run_todo+0x51c/0x7d0 net/core/dev.c:8970
+ rtnl_unlock+0xe/0x10 net/core/rtnetlink.c:116
+ ip_tunnel_delete_nets+0x423/0x5f0 net/ipv4/ip_tunnel.c:1124
+ vti_exit_batch_net+0x23/0x30 net/ipv4/ip_vti.c:495
+ ops_exit_list.isra.0+0x105/0x160 net/core/net_namespace.c:156
+ cleanup_net+0x3fb/0x960 net/core/net_namespace.c:551
+ process_one_work+0x98e/0x1790 kernel/workqueue.c:2173
+ worker_thread+0x98/0xe40 kernel/workqueue.c:2319
+ kthread+0x357/0x430 kernel/kthread.c:246
+ ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
 Modules linked in:
+CR2: fffff4ca0b9ffffe
+   [ end trace 513fc9c1338d1cb3 ]
+RIP: 0010:__skb_unlink include/linux/skbuff.h:1929 [inline]
+RIP: 0010:__skb_dequeue include/linux/skbuff.h:1945 [inline]
+RIP: 0010:__skb_queue_purge include/linux/skbuff.h:2656 [inline]
+RIP: 0010:gro_cells_destroy net/core/gro_cells.c:89 [inline]
+RIP: 0010:gro_cells_destroy+0x19d/0x360 net/core/gro_cells.c:78
+Code: 03 42 80 3c 20 00 0f 85 53 01 00 00 48 8d 7a 08 49 8b 47 08 49 c7 07 00 00 00 00 48 89 f9 49 c7 47 08 00 00 00 00 48 c1 e9 03 <42> 80 3c 21 00 0f 85 10 01 00 00 48 89 c1 48 89 42 08 48 c1 e9 03
+RSP: 0018:ffff8880aa3f79a8 EFLAGS: 00010a02
+RAX: 00ffffffffffffe8 RBX: ffffe8ffffc64b70 RCX: 1ffff8ca0b9ffffe
+RDX: ffffc6505cffffe8 RSI: ffffffff858410ca RDI: ffffc6505cfffff0
+RBP: ffff8880aa3f7a08 R08: ffff8880aa3e8580 R09: fffffbfff1263645
+R10: fffffbfff1263644 R11: ffffffff8931b223 R12: dffffc0000000000
+kobject: 'loop3' (00000000e4ee57a6): kobject_uevent_env
+R13: 0000000000000000 R14: ffffe8ffffc64b80 R15: ffffe8ffffc64b75
+FS:  0000000000000000(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: fffff4ca0b9ffffe CR3: 0000000094941000 CR4: 00000000001406f0
 
-Fixes: 95d6ebd53c79 ("net/x25: fix use-after-free in x25_device_event()")
+Fixes: c9e6bc644e55 ("net: add gro_cells infrastructure")
 Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: andrew hendry <andrew.hendry@gmail.com>
 Reported-by: syzbot <syzkaller@googlegroups.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/x25/af_x25.c |    1 +
- 1 file changed, 1 insertion(+)
+ include/net/gro_cells.h |   12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
---- a/net/x25/af_x25.c
-+++ b/net/x25/af_x25.c
-@@ -817,6 +817,7 @@ out_put_neigh:
- 		x25_neigh_put(x25->neighbour);
- 		x25->neighbour = NULL;
- 		read_unlock_bh(&x25_list_lock);
-+		x25->state = X25_STATE_0;
+--- a/include/net/gro_cells.h
++++ b/include/net/gro_cells.h
+@@ -20,18 +20,23 @@ static inline void gro_cells_receive(str
+ 	struct gro_cell *cell = gcells->cells;
+ 	struct net_device *dev = skb->dev;
+ 
++	rcu_read_lock();
++	if (unlikely(!(dev->flags & IFF_UP)))
++		goto drop;
++
+ 	if (!cell || skb_cloned(skb) || !(dev->features & NETIF_F_GRO)) {
+ 		netif_rx(skb);
+-		return;
++		goto unlock;
  	}
- out_put_route:
- 	x25_route_put(rt);
+ 
+ 	if (skb_rx_queue_recorded(skb))
+ 		cell += skb_get_rx_queue(skb) & gcells->gro_cells_mask;
+ 
+ 	if (skb_queue_len(&cell->napi_skbs) > netdev_max_backlog) {
++drop:
+ 		atomic_long_inc(&dev->rx_dropped);
+ 		kfree_skb(skb);
+-		return;
++		goto unlock;
+ 	}
+ 
+ 	/* We run in BH context */
+@@ -42,6 +47,9 @@ static inline void gro_cells_receive(str
+ 		napi_schedule(&cell->napi);
+ 
+ 	spin_unlock(&cell->napi_skbs.lock);
++
++unlock:
++	rcu_read_unlock();
+ }
+ 
+ /* called unser BH context */
 
 
