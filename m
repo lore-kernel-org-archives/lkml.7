@@ -2,157 +2,130 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0642BC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 03:29:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63C16C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 03:29:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC88C2082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 03:29:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1838A21900
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 03:29:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XSmVXBVs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727535AbfCVD3D (ORCPT
+        id S1727594AbfCVD3P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 23:29:03 -0400
-Received: from gateway24.websitewelcome.com ([192.185.51.172]:23544 "EHLO
-        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727222AbfCVD3C (ORCPT
+        Thu, 21 Mar 2019 23:29:15 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:43984 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727222AbfCVD3P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 23:29:02 -0400
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway24.websitewelcome.com (Postfix) with ESMTP id 32ACE5C30
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 22:29:01 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 7ArdhNw9I4FKp7ArdhbGhE; Thu, 21 Mar 2019 22:29:01 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.137.161] (port=40588 helo=[192.168.1.76])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1h7Arc-000H2f-RJ; Thu, 21 Mar 2019 22:29:00 -0500
-To:     Hariprasad Kelam <hariprasad.kelam@gmail.com>,
-        gregkh@linuxfoundation.org, jslaby@suse.com,
-        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190322030159.GA6551@hari-Inspiron-1545>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- mQINBFssHAwBEADIy3ZoPq3z5UpsUknd2v+IQud4TMJnJLTeXgTf4biSDSrXn73JQgsISBwG
- 2Pm4wnOyEgYUyJd5tRWcIbsURAgei918mck3tugT7AQiTUN3/5aAzqe/4ApDUC+uWNkpNnSV
- tjOx1hBpla0ifywy4bvFobwSh5/I3qohxDx+c1obd8Bp/B/iaOtnq0inli/8rlvKO9hp6Z4e
- DXL3PlD0QsLSc27AkwzLEc/D3ZaqBq7ItvT9Pyg0z3Q+2dtLF00f9+663HVC2EUgP25J3xDd
- 496SIeYDTkEgbJ7WYR0HYm9uirSET3lDqOVh1xPqoy+U9zTtuA9NQHVGk+hPcoazSqEtLGBk
- YE2mm2wzX5q2uoyptseSNceJ+HE9L+z1KlWW63HhddgtRGhbP8pj42bKaUSrrfDUsicfeJf6
- m1iJRu0SXYVlMruGUB1PvZQ3O7TsVfAGCv85pFipdgk8KQnlRFkYhUjLft0u7CL1rDGZWDDr
- NaNj54q2CX9zuSxBn9XDXvGKyzKEZ4NY1Jfw+TAMPCp4buawuOsjONi2X0DfivFY+ZsjAIcx
- qQMglPtKk/wBs7q2lvJ+pHpgvLhLZyGqzAvKM1sVtRJ5j+ARKA0w4pYs5a5ufqcfT7dN6TBk
- LXZeD9xlVic93Ju08JSUx2ozlcfxq+BVNyA+dtv7elXUZ2DrYwARAQABtCxHdXN0YXZvIEEu
- IFIuIFNpbHZhIDxndXN0YXZvQGVtYmVkZGVkb3IuY29tPokCPQQTAQgAJwUCWywcDAIbIwUJ
- CWYBgAULCQgHAgYVCAkKCwIEFgIDAQIeAQIXgAAKCRBHBbTLRwbbMZ6tEACk0hmmZ2FWL1Xi
- l/bPqDGFhzzexrdkXSfTTZjBV3a+4hIOe+jl6Rci/CvRicNW4H9yJHKBrqwwWm9fvKqOBAg9
- obq753jydVmLwlXO7xjcfyfcMWyx9QdYLERTeQfDAfRqxir3xMeOiZwgQ6dzX3JjOXs6jHBP
- cgry90aWbaMpQRRhaAKeAS14EEe9TSIly5JepaHoVdASuxklvOC0VB0OwNblVSR2S5i5hSsh
- ewbOJtwSlonsYEj4EW1noQNSxnN/vKuvUNegMe+LTtnbbocFQ7dGMsT3kbYNIyIsp42B5eCu
- JXnyKLih7rSGBtPgJ540CjoPBkw2mCfhj2p5fElRJn1tcX2McsjzLFY5jK9RYFDavez5w3lx
- JFgFkla6sQHcrxH62gTkb9sUtNfXKucAfjjCMJ0iuQIHRbMYCa9v2YEymc0k0RvYr43GkA3N
- PJYd/vf9vU7VtZXaY4a/dz1d9dwIpyQARFQpSyvt++R74S78eY/+lX8wEznQdmRQ27kq7BJS
- R20KI/8knhUNUJR3epJu2YFT/JwHbRYC4BoIqWl+uNvDf+lUlI/D1wP+lCBSGr2LTkQRoU8U
- 64iK28BmjJh2K3WHmInC1hbUucWT7Swz/+6+FCuHzap/cjuzRN04Z3Fdj084oeUNpP6+b9yW
- e5YnLxF8ctRAp7K4yVlvA7kCDQRbLBwMARAAsHCE31Ffrm6uig1BQplxMV8WnRBiZqbbsVJB
- H1AAh8tq2ULl7udfQo1bsPLGGQboJSVN9rckQQNahvHAIK8ZGfU4Qj8+CER+fYPp/MDZj+t0
- DbnWSOrG7z9HIZo6PR9z4JZza3Hn/35jFggaqBtuydHwwBANZ7A6DVY+W0COEU4of7CAahQo
- 5NwYiwS0lGisLTqks5R0Vh+QpvDVfuaF6I8LUgQR/cSgLkR//V1uCEQYzhsoiJ3zc1HSRyOP
- otJTApqGBq80X0aCVj1LOiOF4rrdvQnj6iIlXQssdb+WhSYHeuJj1wD0ZlC7ds5zovXh+FfF
- l5qH5RFY/qVn3mNIVxeO987WSF0jh+T5ZlvUNdhedGndRmwFTxq2Li6GNMaolgnpO/CPcFpD
- jKxY/HBUSmaE9rNdAa1fCd4RsKLlhXda+IWpJZMHlmIKY8dlUybP+2qDzP2lY7kdFgPZRU+e
- zS/pzC/YTzAvCWM3tDgwoSl17vnZCr8wn2/1rKkcLvTDgiJLPCevqpTb6KFtZosQ02EGMuHQ
- I6Zk91jbx96nrdsSdBLGH3hbvLvjZm3C+fNlVb9uvWbdznObqcJxSH3SGOZ7kCHuVmXUcqoz
- ol6ioMHMb+InrHPP16aVDTBTPEGwgxXI38f7SUEn+NpbizWdLNz2hc907DvoPm6HEGCanpcA
- EQEAAYkCJQQYAQgADwUCWywcDAIbDAUJCWYBgAAKCRBHBbTLRwbbMdsZEACUjmsJx2CAY+QS
- UMebQRFjKavwXB/xE7fTt2ahuhHT8qQ/lWuRQedg4baInw9nhoPE+VenOzhGeGlsJ0Ys52sd
- XvUjUocKgUQq6ekOHbcw919nO5L9J2ejMf/VC/quN3r3xijgRtmuuwZjmmi8ct24TpGeoBK4
- WrZGh/1hAYw4ieARvKvgjXRstcEqM5thUNkOOIheud/VpY+48QcccPKbngy//zNJWKbRbeVn
- imua0OpqRXhCrEVm/xomeOvl1WK1BVO7z8DjSdEBGzbV76sPDJb/fw+y+VWrkEiddD/9CSfg
- fBNOb1p1jVnT2mFgGneIWbU0zdDGhleI9UoQTr0e0b/7TU+Jo6TqwosP9nbk5hXw6uR5k5PF
- 8ieyHVq3qatJ9K1jPkBr8YWtI5uNwJJjTKIA1jHlj8McROroxMdI6qZ/wZ1ImuylpJuJwCDC
- ORYf5kW61fcrHEDlIvGc371OOvw6ejF8ksX5+L2zwh43l/pKkSVGFpxtMV6d6J3eqwTafL86
- YJWH93PN+ZUh6i6Rd2U/i8jH5WvzR57UeWxE4P8bQc0hNGrUsHQH6bpHV2lbuhDdqo+cM9eh
- GZEO3+gCDFmKrjspZjkJbB5Gadzvts5fcWGOXEvuT8uQSvl+vEL0g6vczsyPBtqoBLa9SNrS
- VtSixD1uOgytAP7RWS474w==
-Subject: Re: [PATCH] tty: serial_core: Spelling correction
-Message-ID: <918f4d7f-e066-b926-b73b-331843a3a388@embeddedor.com>
-Date:   Thu, 21 Mar 2019 22:28:59 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Thu, 21 Mar 2019 23:29:15 -0400
+Received: by mail-pf1-f196.google.com with SMTP id c8so520783pfd.10
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 20:29:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tvwMadT9Guc44W9HPQvKgVqVpo2kPt/43WK6NKQJPxI=;
+        b=XSmVXBVsm721phYyKIHxSA8/GjgWDGofBo56UOPWoLYj8ouQX/R7obaKjMYZF7b2cj
+         fBHsFW/JTzaiDxC2AS0kJWYMAZD3CYEFAHN2ppqeHnoQYB7tPJlyzpdFoJm/7uPtdoZ/
+         Wi/0Ep471+bgOgnQNUc/dfSWBLzUEnfZg7TChYOuBVngzu8WbSsFacvaBhXSYTwiN68A
+         ujWHaWOkkdTKka/viC9d+25A+8a1ifVPO8tVLg/oX3JRJmi1XkMd072WxWCm3jwIVqSK
+         fsyJXVY9WaHETLGj+UGLlsx6etCWlJ+GfKJNv773LsbC0GR0swKV/R07FXjs1aqwUwzE
+         Q57w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tvwMadT9Guc44W9HPQvKgVqVpo2kPt/43WK6NKQJPxI=;
+        b=gmq99ISkESkZ1uMXhQMr4nCL5mYd11ooC1cagwWjsPolGbRFm1zi+eTQh+wkxckN+x
+         JboEpkAYj9YeC5d/xjgKB3bVkg7wbNfDAgS2EIi5XLte9PASZ6CYqpBLJa4hWmnLF3QB
+         Y8ag7eJ0gyKtfksheRP3kA/bS7/MbOUKL4MoH/vys8kAhtRcgFyEwzJPWhhLTDMoCCaG
+         zMWT58uD+6Mz/ggG3qgTA+qwmQvuntFwckPwwMiDkI4UqoSlFniaZwtzhpFSGQsKB9jv
+         7v5QXSPWQxJfKjHzomG3DVO5FrsAW5gwR+o7l74pz3UiNpQAebw/YjyToILwGtvGp6iz
+         jbpw==
+X-Gm-Message-State: APjAAAUe4rUwyyKwSEuKFqHanLU1psn6ZguS6yTG1HseCNn7As1GG54n
+        PDnj5aHAr00l2QiKx3NF79I=
+X-Google-Smtp-Source: APXvYqxkYMxK6WMA+I3UVbzcmF3jDxVZJ75x86H1lB2pHu68dPUA5RiDH0mbD4PZDbf+24hi23vdbg==
+X-Received: by 2002:a63:e14e:: with SMTP id h14mr6593815pgk.184.1553225354086;
+        Thu, 21 Mar 2019 20:29:14 -0700 (PDT)
+Received: from squirtle.lan (c-24-22-235-96.hsd1.wa.comcast.net. [24.22.235.96])
+        by smtp.gmail.com with ESMTPSA id o76sm16154476pfa.156.2019.03.21.20.29.12
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 21 Mar 2019 20:29:13 -0700 (PDT)
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Archit Taneja <architt@codeaurora.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Andrey Gusakov <andrey.gusakov@cogentembedded.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 00/15] tc358767 driver improvements
+Date:   Thu, 21 Mar 2019 20:28:46 -0700
+Message-Id: <20190322032901.12045-1-andrew.smirnov@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190322030159.GA6551@hari-Inspiron-1545>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.137.161
-X-Source-L: No
-X-Exim-ID: 1h7Arc-000H2f-RJ
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.1.76]) [189.250.137.161]:40588
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 17
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Everyone:
 
+This series contains various improvements (at least in my mind) and
+fixes that I made to tc358767 while working with the code of the
+driver. Hopefuly each patch is self explanatory.
 
-On 3/21/19 10:01 PM, Hariprasad Kelam wrote:
-> fix spelling mistake "overriden" -> "overridden"
-> This fix resolves warning reported by checkpatch tool
-> 
+Feedback is welcome!
 
-Whenever you receive feedback on a patch, you need to version
-the patches that you re-send. Also, you should mention what has
-changed, so people know what to review.
+Thanks,
+Andrey Smirnov
 
-I encourage you take a look at this:
+Changes since [v1]:
 
-https://kernelnewbies.org/Outreachyfirstpatch
+    - Patchset rebased on top of
+      https://patchwork.freedesktop.org/series/58176/
+      
+    - Patches to remove both tc_write() and tc_read() helpers added
 
-Thanks
---
-Gustavo
+    - Patches to rework AUX transfer code added
 
-"If you receive feedback on a patch, and were asked to update the patch,
-you need to version the patches that you re-send. A new version number
-lets reviewers know you made changes to the patch, and they should review
-it again."
+    - Both "drm/bridge: tc358767: Simplify polling in
+      tc_main_link_setup()" and "drm/bridge: tc358767: Simplify
+      polling in tc_link_training()" changed to use tc_poll_timeout()
+      instead of regmap_read_poll_timeout()
 
-> Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
-> ---
->  drivers/tty/serial/serial_core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
-> index 351843f..69f4871 100644
-> --- a/drivers/tty/serial/serial_core.c
-> +++ b/drivers/tty/serial/serial_core.c
-> @@ -1514,7 +1514,7 @@ static void uart_set_termios(struct tty_struct *tty,
->  	}
->  
->  	uart_change_speed(tty, state, old_termios);
-> -	/* reload cflag from termios; port driver may have overriden flags */
-> +	/* reload cflag from termios; port driver may have overridden flags */
->  	cflag = tty->termios.c_cflag;
->  
->  	/* Handle transition to B0 status */
-> 
+[v1] lkml.kernel.org/r/20190226193609.9862-1-andrew.smirnov@gmail.com
+
+Andrey Smirnov (15):
+  drm/bridge: tc358767: Simplify tc_poll_timeout()
+  drm/bridge: tc358767: Simplify polling in tc_main_link_setup()
+  drm/bridge: tc358767: Simplify polling in tc_link_training()
+  drm/bridge: tc358767: Simplify tc_set_video_mode()
+  drm/bridge: tc358767: Drop custom tc_write()/tc_read() accessors
+  drm/bridge: tc358767: Simplify AUX data read
+  drm/bridge: tc358767: Simplify AUX data write
+  drm/bridge: tc358767: Increase AUX transfer length limit
+  drm/bridge: tc358767: Use reported AUX transfer size
+  drm/bridge: tc358767: Add support for address-only I2C transfers
+  drm/bridge: tc358767: Introduce tc_set_syspllparam()
+  drm/bridge: tc358767: Introduce tc_pllupdate_pllen()
+  drm/bridge: tc358767: Simplify tc_aux_wait_busy()
+  drm/bridge: tc358767: Drop unnecessary 8 byte buffer
+  drm/bridge: tc358767: Replace magic number in tc_main_link_enable()
+
+ drivers/gpu/drm/bridge/tc358767.c | 648 ++++++++++++++++--------------
+ 1 file changed, 349 insertions(+), 299 deletions(-)
+
+-- 
+2.20.1
+
