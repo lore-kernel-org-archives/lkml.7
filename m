@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BADF7C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:11:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E2BAC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:12:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EABF2183E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:11:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C8532183E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:12:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553260311;
-	bh=scU4OgR9GIWiJf4zE44lO7KMoovVz12Tq270KDvNfX8=;
+	s=default; t=1553260334;
+	bh=Zjw7mmu6xT9vTeHYWUK4aD8C0gy2qMfhMrCXgVfbfME=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OIklh39SIukHv9aNs+tQsPHYN3mYilYcsrcMTCnvv4kW8XnDP9jlNcBOvGpE+hSP0
-	 quDmP8Pd8w/7B9Dj6KhcEcgJ1rxIXC7zbp+3TolOgbKjOScWBctYkwn/UnWsRlEvJ0
-	 3M4Q6ZuMS/TQ3ig3t7RB9HDsRu/hdvF+Yqy5173k=
+	b=WRQiCmSYuq0RppwfiVayfgMhuJ2gjEhoG3itexuGr9SNJXiG+OUvYf3xb4B6n1WU4
+	 UwKngnkeG479iIUuvFxV8G+UvIZNVMJkeLflzXyZEl3O/OLXNBJ+A4cIp08HIYIxDx
+	 Xoka71DRWCHlluQ1e7xRpRHjZhXSJ6hkgff/KUkU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730528AbfCVNLu (ORCPT
+        id S1730296AbfCVNMM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 09:11:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60972 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 09:12:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730149AbfCVLcb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:32:31 -0400
+        id S1729913AbfCVLb5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:31:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9617F20449;
-        Fri, 22 Mar 2019 11:32:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2D7520449;
+        Fri, 22 Mar 2019 11:31:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254350;
-        bh=scU4OgR9GIWiJf4zE44lO7KMoovVz12Tq270KDvNfX8=;
+        s=default; t=1553254317;
+        bh=Zjw7mmu6xT9vTeHYWUK4aD8C0gy2qMfhMrCXgVfbfME=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J/vlUnzE3G8UUorH/yFKAZ+/VTrH03lk+CroKRmDFxtUFUR4Y2u2D0QTZg+9tBxYl
-         SM3mrvePkTcSTfCphWBLL81kINKcLnLxt6MDOa6ve1vMv+8fj7eNgSgGST4yicKHPL
-         iv77Hcjwhc8RuXzQVQJxYdB95SCZfuP28QrzvWY8=
+        b=mZEOENyGlhfithUV+yPYvP2gzsFUR61yvX/mR0uZl9ez9PupIYbk/65MxoVmDCZWl
+         6+yNZ2lYfgxMUHhAlDl9KKpEnAdtG0mir+GNP8low3AaOc6atR2YBC4FVsfIW3XIlL
+         +ViVx4tkdjQq/ThS8FraMFX8poxOkaYx3XPZupkc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 108/230] dmaengine: dmatest: Abort test in case of mapping error
-Date:   Fri, 22 Mar 2019 12:14:06 +0100
-Message-Id: <20190322111244.191942877@linuxfoundation.org>
+        stable@vger.kernel.org, Stephane Eranian <eranian@google.com>,
+        Jiri Olsa <jolsa@kernel.org>, Andi Kleen <ak@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 081/230] perf tools: Handle TOPOLOGY headers with no CPU
+Date:   Fri, 22 Mar 2019 12:13:39 +0100
+Message-Id: <20190322111242.322481828@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -66,119 +69,65 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 6454368a804c4955ccd116236037536f81e5b1f1 ]
+[ Upstream commit 1497e804d1a6e2bd9107ddf64b0310449f4673eb ]
 
-In case of mapping error the DMA addresses are invalid and continuing
-will screw system memory or potentially something else.
+This patch fixes an issue in cpumap.c when used with the TOPOLOGY
+header. In some configurations, some NUMA nodes may have no CPU (empty
+cpulist). Yet a cpumap map must be created otherwise perf abort with an
+error. This patch handles this case by creating a dummy map.
 
-[  222.480310] dmatest: dma0chan7-copy0: summary 1 tests, 3 failures 6 iops 349 KB/s (0)
-...
-[  240.912725] check: Corrupted low memory at 00000000c7c75ac9 (2940 phys) = 5656000000000000
-[  240.921998] check: Corrupted low memory at 000000005715a1cd (2948 phys) = 279f2aca5595ab2b
-[  240.931280] check: Corrupted low memory at 000000002f4024c0 (2950 phys) = 5e5624f349e793cf
-...
+  Before:
 
-Abort any test if mapping failed.
+  $ perf record -o - -e cycles noploop 2 | perf script -i -
+  0x6e8 [0x6c]: failed to process type: 80
 
-Fixes: 4076e755dbec ("dmatest: convert to dmaengine_unmap_data")
-Cc: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+  After:
+
+  $ perf record -o - -e cycles noploop 2 | perf script -i -
+  noploop for 2 seconds
+
+Signed-off-by: Stephane Eranian <eranian@google.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/1547885559-1657-1-git-send-email-eranian@google.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/dmatest.c | 28 ++++++++++++----------------
- 1 file changed, 12 insertions(+), 16 deletions(-)
+ tools/perf/util/cpumap.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/dma/dmatest.c b/drivers/dma/dmatest.c
-index 6796eb1a8a4c..884aecebb249 100644
---- a/drivers/dma/dmatest.c
-+++ b/drivers/dma/dmatest.c
-@@ -563,11 +563,9 @@ static int dmatest_func(void *data)
- 			srcs[i] = um->addr[i] + src_off;
- 			ret = dma_mapping_error(dev->dev, um->addr[i]);
- 			if (ret) {
--				dmaengine_unmap_put(um);
- 				result("src mapping error", total_tests,
- 				       src_off, dst_off, len, ret);
--				failed_tests++;
--				continue;
-+				goto error_unmap_continue;
- 			}
- 			um->to_cnt++;
- 		}
-@@ -582,11 +580,9 @@ static int dmatest_func(void *data)
- 					       DMA_BIDIRECTIONAL);
- 			ret = dma_mapping_error(dev->dev, dsts[i]);
- 			if (ret) {
--				dmaengine_unmap_put(um);
- 				result("dst mapping error", total_tests,
- 				       src_off, dst_off, len, ret);
--				failed_tests++;
--				continue;
-+				goto error_unmap_continue;
- 			}
- 			um->bidi_cnt++;
- 		}
-@@ -611,12 +607,10 @@ static int dmatest_func(void *data)
- 		}
+diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
+index 10af1e7524fb..f1aae86f7f6c 100644
+--- a/tools/perf/util/cpumap.c
++++ b/tools/perf/util/cpumap.c
+@@ -124,7 +124,12 @@ struct cpu_map *cpu_map__new(const char *cpu_list)
+ 	if (!cpu_list)
+ 		return cpu_map__read_all_cpu_map();
  
- 		if (!tx) {
--			dmaengine_unmap_put(um);
- 			result("prep error", total_tests, src_off,
- 			       dst_off, len, ret);
- 			msleep(100);
--			failed_tests++;
--			continue;
-+			goto error_unmap_continue;
- 		}
+-	if (!isdigit(*cpu_list))
++	/*
++	 * must handle the case of empty cpumap to cover
++	 * TOPOLOGY header for NUMA nodes with no CPU
++	 * ( e.g., because of CPU hotplug)
++	 */
++	if (!isdigit(*cpu_list) && *cpu_list != '\0')
+ 		goto out;
  
- 		done->done = false;
-@@ -625,12 +619,10 @@ static int dmatest_func(void *data)
- 		cookie = tx->tx_submit(tx);
+ 	while (isdigit(*cpu_list)) {
+@@ -171,8 +176,10 @@ struct cpu_map *cpu_map__new(const char *cpu_list)
  
- 		if (dma_submit_error(cookie)) {
--			dmaengine_unmap_put(um);
- 			result("submit error", total_tests, src_off,
- 			       dst_off, len, ret);
- 			msleep(100);
--			failed_tests++;
--			continue;
-+			goto error_unmap_continue;
- 		}
- 		dma_async_issue_pending(chan);
- 
-@@ -643,16 +635,14 @@ static int dmatest_func(void *data)
- 			dmaengine_unmap_put(um);
- 			result("test timed out", total_tests, src_off, dst_off,
- 			       len, 0);
--			failed_tests++;
--			continue;
-+			goto error_unmap_continue;
- 		} else if (status != DMA_COMPLETE) {
- 			dmaengine_unmap_put(um);
- 			result(status == DMA_ERROR ?
- 			       "completion error status" :
- 			       "completion busy status", total_tests, src_off,
- 			       dst_off, len, ret);
--			failed_tests++;
--			continue;
-+			goto error_unmap_continue;
- 		}
- 
- 		dmaengine_unmap_put(um);
-@@ -691,6 +681,12 @@ static int dmatest_func(void *data)
- 			verbose_result("test passed", total_tests, src_off,
- 				       dst_off, len, 0);
- 		}
-+
-+		continue;
-+
-+error_unmap_continue:
-+		dmaengine_unmap_put(um);
-+		failed_tests++;
- 	}
- 	runtime = ktime_us_delta(ktime_get(), ktime);
- 
+ 	if (nr_cpus > 0)
+ 		cpus = cpu_map__trim_new(nr_cpus, tmp_cpus);
+-	else
++	else if (*cpu_list != '\0')
+ 		cpus = cpu_map__default_new();
++	else
++		cpus = cpu_map__dummy_new();
+ invalid:
+ 	free(tmp_cpus);
+ out:
 -- 
 2.19.1
 
