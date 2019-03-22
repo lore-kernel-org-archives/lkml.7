@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CAA1C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:22:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12CDFC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:22:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F01CC218D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:22:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3EBD218A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:22:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553253764;
-	bh=xYAgpWuhEuPMuRRw9l0jnGZQh/OXyZAEHAfzLG9nCnU=;
+	s=default; t=1553253767;
+	bh=o+z50p7OHz/TN+hDCWUmTqdr1Xs4u4ctXKstL4nnDVE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EdnlQqCB/7zKO1yIR3JAApTr5DZPuU/tziNJqaWmJqqA7CXF23RusWuId/+a5pZJv
-	 OoCjslFIfomHw795o4x9fnSuobYn5yZpcc/2WOPtkvc0hIONXfTmTLlscxolbQr3pD
-	 78zoh7su3g6Q0rVI8Tc6f/ryLskFAeWzQ2gJ/lYI=
+	b=QjVLGOEHLpbW6eAyUdwVRZ5LfLR9VSsLH5fDEMgqNJRVj2Y/Zc2FB7cUOV7fvVFch
+	 ERIt8/5EO3J/0aJmacyehWbZCpNR86LVDuHlOeS9jw/lQYLx2eOfXil58fAfnbhNbf
+	 QUSqa08EW2fXewrncxYjPf7apeluwkTfITQX/yeY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728458AbfCVLWm (ORCPT
+        id S1728862AbfCVLWq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:22:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49412 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:22:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728433AbfCVLWj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:22:39 -0400
+        id S1728849AbfCVLWn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:22:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94343218A2;
-        Fri, 22 Mar 2019 11:22:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 754D5218A2;
+        Fri, 22 Mar 2019 11:22:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553253758;
-        bh=xYAgpWuhEuPMuRRw9l0jnGZQh/OXyZAEHAfzLG9nCnU=;
+        s=default; t=1553253762;
+        bh=o+z50p7OHz/TN+hDCWUmTqdr1Xs4u4ctXKstL4nnDVE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X/zNJ0wykq5t/jxw6wZyuKLVB5UTMNreOz3z/UM+jcq+aJ86t6tcnRIs0hEdOshJn
-         AvrvfVNDaF/GpFcnmdzEP42l7PJFboDattvV5HEdyNlF6u6rIWHnF2e3i96dFp1VZL
-         cuM2OC+m/PXMngPuXMvoKyYojNjVQeGZBXY7cw0E=
+        b=Azg2oqfAevWDwIEdrGtyxrjYC01gg8MtxVnVLaL75sA8wwDk54JPssP6TjuK6iJQD
+         FZ0X3pON+UsXQgykPCHm3X1gKS5UXAB/depJH1mfg+Rd4XWbvlldaM+NWabmKQ7REG
+         8E/+FGr04EOxtDBVycj20r/3xgLrnb40nKuJjUF4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
-        Amit Cohen <amitc@mellanox.com>,
-        Jiri Pirko <jiri@mellanox.com>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 3.18 046/134] team: Free BPF filter when unregistering netdev
-Date:   Fri, 22 Mar 2019 12:14:19 +0100
-Message-Id: <20190322111213.236043976@linuxfoundation.org>
+Subject: [PATCH 3.18 047/134] net: nfc: Fix NULL dereference on nfc_llcp_build_tlv fails
+Date:   Fri, 22 Mar 2019 12:14:20 +0100
+Message-Id: <20190322111213.317315622@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111210.465931067@linuxfoundation.org>
 References: <20190322111210.465931067@linuxfoundation.org>
@@ -67,99 +66,156 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Ido Schimmel <idosch@mellanox.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 692c31bd4054212312396b1d303bffab2c5b93a7 ]
+[ Upstream commit 58bdd544e2933a21a51eecf17c3f5f94038261b5 ]
 
-When team is used in loadbalance mode a BPF filter can be used to
-provide a hash which will determine the Tx port.
+KASAN report this:
 
-When the netdev is later unregistered the filter is not freed which
-results in memory leaks [1].
+BUG: KASAN: null-ptr-deref in nfc_llcp_build_gb+0x37f/0x540 [nfc]
+Read of size 3 at addr 0000000000000000 by task syz-executor.0/5401
 
-Fix by freeing the program and the corresponding filter when
-unregistering the netdev.
+CPU: 0 PID: 5401 Comm: syz-executor.0 Not tainted 5.0.0-rc7+ #45
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xfa/0x1ce lib/dump_stack.c:113
+ kasan_report+0x171/0x18d mm/kasan/report.c:321
+ memcpy+0x1f/0x50 mm/kasan/common.c:130
+ nfc_llcp_build_gb+0x37f/0x540 [nfc]
+ nfc_llcp_register_device+0x6eb/0xb50 [nfc]
+ nfc_register_device+0x50/0x1d0 [nfc]
+ nfcsim_device_new+0x394/0x67d [nfcsim]
+ ? 0xffffffffc1080000
+ nfcsim_init+0x6b/0x1000 [nfcsim]
+ do_one_initcall+0xfa/0x5ca init/main.c:887
+ do_init_module+0x204/0x5f6 kernel/module.c:3460
+ load_module+0x66b2/0x8570 kernel/module.c:3808
+ __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
+ do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x462e99
+Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f9cb79dcc58 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
+RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
+RDX: 0000000000000000 RSI: 0000000020000280 RDI: 0000000000000003
+RBP: 00007f9cb79dcc70 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f9cb79dd6bc
+R13: 00000000004bcefb R14: 00000000006f7030 R15: 0000000000000004
 
-[1]
-unreferenced object 0xffff8881dbc47cc8 (size 16):
-  comm "teamd", pid 3068, jiffies 4294997779 (age 438.247s)
-  hex dump (first 16 bytes):
-    a3 00 6b 6b 6b 6b 6b 6b 88 a5 82 e1 81 88 ff ff  ..kkkkkk........
-  backtrace:
-    [<000000008a3b47e3>] team_nl_cmd_options_set+0x88f/0x11b0
-    [<00000000c4f4f27e>] genl_family_rcv_msg+0x78f/0x1080
-    [<00000000610ef838>] genl_rcv_msg+0xca/0x170
-    [<00000000a281df93>] netlink_rcv_skb+0x132/0x380
-    [<000000004d9448a2>] genl_rcv+0x29/0x40
-    [<000000000321b2f4>] netlink_unicast+0x4c0/0x690
-    [<000000008c25dffb>] netlink_sendmsg+0x929/0xe10
-    [<00000000068298c5>] sock_sendmsg+0xc8/0x110
-    [<0000000082a61ff0>] ___sys_sendmsg+0x77a/0x8f0
-    [<00000000663ae29d>] __sys_sendmsg+0xf7/0x250
-    [<0000000027c5f11a>] do_syscall_64+0x14d/0x610
-    [<000000006cfbc8d3>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
-    [<00000000e23197e2>] 0xffffffffffffffff
-unreferenced object 0xffff8881e182a588 (size 2048):
-  comm "teamd", pid 3068, jiffies 4294997780 (age 438.247s)
-  hex dump (first 32 bytes):
-    20 00 00 00 02 00 00 00 30 00 00 00 28 f0 ff ff   .......0...(...
-    07 00 00 00 00 00 00 00 28 00 00 00 00 00 00 00  ........(.......
-  backtrace:
-    [<000000002daf01fb>] lb_bpf_func_set+0x45c/0x6d0
-    [<000000008a3b47e3>] team_nl_cmd_options_set+0x88f/0x11b0
-    [<00000000c4f4f27e>] genl_family_rcv_msg+0x78f/0x1080
-    [<00000000610ef838>] genl_rcv_msg+0xca/0x170
-    [<00000000a281df93>] netlink_rcv_skb+0x132/0x380
-    [<000000004d9448a2>] genl_rcv+0x29/0x40
-    [<000000000321b2f4>] netlink_unicast+0x4c0/0x690
-    [<000000008c25dffb>] netlink_sendmsg+0x929/0xe10
-    [<00000000068298c5>] sock_sendmsg+0xc8/0x110
-    [<0000000082a61ff0>] ___sys_sendmsg+0x77a/0x8f0
-    [<00000000663ae29d>] __sys_sendmsg+0xf7/0x250
-    [<0000000027c5f11a>] do_syscall_64+0x14d/0x610
-    [<000000006cfbc8d3>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
-    [<00000000e23197e2>] 0xffffffffffffffff
+nfc_llcp_build_tlv will return NULL on fails, caller should check it,
+otherwise will trigger a NULL dereference.
 
-Fixes: 01d7f30a9f96 ("team: add loadbalance mode")
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Reported-by: Amit Cohen <amitc@mellanox.com>
-Acked-by: Jiri Pirko <jiri@mellanox.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: eda21f16a5ed ("NFC: Set MIU and RW values from CONNECT and CC LLCP frames")
+Fixes: d646960f7986 ("NFC: Initial LLCP support")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/team/team_mode_loadbalance.c |   15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ net/nfc/llcp_commands.c |   20 ++++++++++++++++++++
+ net/nfc/llcp_core.c     |   24 ++++++++++++++++++++----
+ 2 files changed, 40 insertions(+), 4 deletions(-)
 
---- a/drivers/net/team/team_mode_loadbalance.c
-+++ b/drivers/net/team/team_mode_loadbalance.c
-@@ -305,6 +305,20 @@ static int lb_bpf_func_set(struct team *
- 	return 0;
- }
+--- a/net/nfc/llcp_commands.c
++++ b/net/nfc/llcp_commands.c
+@@ -418,6 +418,10 @@ int nfc_llcp_send_connect(struct nfc_llc
+ 						      sock->service_name,
+ 						      sock->service_name_len,
+ 						      &service_name_tlv_length);
++		if (!service_name_tlv) {
++			err = -ENOMEM;
++			goto error_tlv;
++		}
+ 		size += service_name_tlv_length;
+ 	}
  
-+static void lb_bpf_func_free(struct team *team)
-+{
-+	struct lb_priv *lb_priv = get_lb_priv(team);
-+	struct bpf_prog *fp;
-+
-+	if (!lb_priv->ex->orig_fprog)
-+		return;
-+
-+	__fprog_destroy(lb_priv->ex->orig_fprog);
-+	fp = rcu_dereference_protected(lb_priv->fp,
-+				       lockdep_is_held(&team->lock));
-+	bpf_prog_destroy(fp);
-+}
-+
- static int lb_tx_method_get(struct team *team, struct team_gsetter_ctx *ctx)
+@@ -428,9 +432,17 @@ int nfc_llcp_send_connect(struct nfc_llc
+ 
+ 	miux_tlv = nfc_llcp_build_tlv(LLCP_TLV_MIUX, (u8 *)&miux, 0,
+ 				      &miux_tlv_length);
++	if (!miux_tlv) {
++		err = -ENOMEM;
++		goto error_tlv;
++	}
+ 	size += miux_tlv_length;
+ 
+ 	rw_tlv = nfc_llcp_build_tlv(LLCP_TLV_RW, &rw, 0, &rw_tlv_length);
++	if (!rw_tlv) {
++		err = -ENOMEM;
++		goto error_tlv;
++	}
+ 	size += rw_tlv_length;
+ 
+ 	pr_debug("SKB size %d SN length %zu\n", size, sock->service_name_len);
+@@ -484,9 +496,17 @@ int nfc_llcp_send_cc(struct nfc_llcp_soc
+ 
+ 	miux_tlv = nfc_llcp_build_tlv(LLCP_TLV_MIUX, (u8 *)&miux, 0,
+ 				      &miux_tlv_length);
++	if (!miux_tlv) {
++		err = -ENOMEM;
++		goto error_tlv;
++	}
+ 	size += miux_tlv_length;
+ 
+ 	rw_tlv = nfc_llcp_build_tlv(LLCP_TLV_RW, &rw, 0, &rw_tlv_length);
++	if (!rw_tlv) {
++		err = -ENOMEM;
++		goto error_tlv;
++	}
+ 	size += rw_tlv_length;
+ 
+ 	skb = llcp_allocate_pdu(sock, LLCP_PDU_CC, size);
+--- a/net/nfc/llcp_core.c
++++ b/net/nfc/llcp_core.c
+@@ -531,10 +531,10 @@ static u8 nfc_llcp_reserve_sdp_ssap(stru
+ 
+ static int nfc_llcp_build_gb(struct nfc_llcp_local *local)
  {
- 	struct lb_priv *lb_priv = get_lb_priv(team);
-@@ -619,6 +633,7 @@ static void lb_exit(struct team *team)
+-	u8 *gb_cur, *version_tlv, version, version_length;
+-	u8 *lto_tlv, lto_length;
+-	u8 *wks_tlv, wks_length;
+-	u8 *miux_tlv, miux_length;
++	u8 *gb_cur, version, version_length;
++	u8 lto_length, wks_length, miux_length;
++	u8 *version_tlv = NULL, *lto_tlv = NULL,
++	   *wks_tlv = NULL, *miux_tlv = NULL;
+ 	__be16 wks = cpu_to_be16(local->local_wks);
+ 	u8 gb_len = 0;
+ 	int ret = 0;
+@@ -542,17 +542,33 @@ static int nfc_llcp_build_gb(struct nfc_
+ 	version = LLCP_VERSION_11;
+ 	version_tlv = nfc_llcp_build_tlv(LLCP_TLV_VERSION, &version,
+ 					 1, &version_length);
++	if (!version_tlv) {
++		ret = -ENOMEM;
++		goto out;
++	}
+ 	gb_len += version_length;
  
- 	team_options_unregister(team, lb_options,
- 				ARRAY_SIZE(lb_options));
-+	lb_bpf_func_free(team);
- 	cancel_delayed_work_sync(&lb_priv->ex->stats.refresh_dw);
- 	free_percpu(lb_priv->pcpu_stats);
- 	kfree(lb_priv->ex);
+ 	lto_tlv = nfc_llcp_build_tlv(LLCP_TLV_LTO, &local->lto, 1, &lto_length);
++	if (!lto_tlv) {
++		ret = -ENOMEM;
++		goto out;
++	}
+ 	gb_len += lto_length;
+ 
+ 	pr_debug("Local wks 0x%lx\n", local->local_wks);
+ 	wks_tlv = nfc_llcp_build_tlv(LLCP_TLV_WKS, (u8 *)&wks, 2, &wks_length);
++	if (!wks_tlv) {
++		ret = -ENOMEM;
++		goto out;
++	}
+ 	gb_len += wks_length;
+ 
+ 	miux_tlv = nfc_llcp_build_tlv(LLCP_TLV_MIUX, (u8 *)&local->miux, 0,
+ 				      &miux_length);
++	if (!miux_tlv) {
++		ret = -ENOMEM;
++		goto out;
++	}
+ 	gb_len += miux_length;
+ 
+ 	gb_len += ARRAY_SIZE(llcp_magic);
 
 
