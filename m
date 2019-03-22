@@ -2,112 +2,120 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0B4EC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:43:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81032C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:44:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B30D72082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:43:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CXDY6sqQ"
+	by mail.kernel.org (Postfix) with ESMTP id 4E0992082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:44:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553255041;
+	bh=kDNoqnQFtY8p2PIY6c0Pb668liJpU7t3w1cQj1/SnaI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=wKQMI8tQvB6P06FEC+iL8KAZR1mQXscRCv/qriFE4z6QG3rzjxBwXStL+iQATuppI
+	 z69Tc6SeSkvYh3IPjORMQU1SprQsxJIrVLq3XRBFprNTr3u51GN2CaCMAS2UZAHqtG
+	 kj4TukOy6dqcUBvG14y3MbEo7iC8tu7nMReVzYok=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731508AbfCVLn4 (ORCPT
+        id S1731757AbfCVLoA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:43:56 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:42174 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728006AbfCVLnv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:43:51 -0400
-Received: by mail-lj1-f194.google.com with SMTP id v22so1744002lje.9
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 04:43:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=XlbZNwo48GDl8y2bTtq9+IFF2msXuiIlT62vhrOeZBw=;
-        b=CXDY6sqQh6KwApY+SQ9njZa+ZRLGK5a6Pet3IchbpMatt21+Pg+zDdjwkkcIDTxrVQ
-         H/yMWtOKphzH9tS/oWivtHxb5BYuZjbPyYPTbvRBeCjT7JMg0qOq31TjQSLOigWR0DV4
-         BxW0CaM3olUDf0n32DNbPndNsfvfobr98owLUHos4knoGG7y6pG7L8Q47jJTGJrFVGzJ
-         LPVBQS9iwP3WyKd2zWPjQKvsmd9HYIU0Leqza96R8/RN7h2LSQaoYjF2lqgwQCDFm77x
-         6T/dzT7Cc2R6CBgcDIQ8XQZbFqG5CMP0hWlDrycGBYt1E6i20T+7qGtUgAerlf+D2QM3
-         YW1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=XlbZNwo48GDl8y2bTtq9+IFF2msXuiIlT62vhrOeZBw=;
-        b=M0U39girkVgb6Tzj5LeGrF+RASiQK87t0Ua9epKi4sir4k5xSCGZzQK/8kZl0f9xvD
-         P6FZOmcfllitYIsKO2nMhOcdVU3sgSLiJtTjgZm7NnJEV2GIZS6TiD27cd+5hMSpbUGl
-         ioUPrT7WHyn9RfAe5+HQt1Gr0CjaxiMzjFPUb5CchqLcf5jBD78hBoLEo0pCz4Zf5PQN
-         0K9ZzlwM48RxF/RVfTy3rUS2H842hUqjn/BR92PqnLm026Qyd1nthH53cBudOfwIeemr
-         C9MMTBSuFljzZkBvg5B4U2v1rmpH/R68Y0cAbmDHWl1AXZ95gTAh8PhLc1E0ixZSHJ43
-         2Ahw==
-X-Gm-Message-State: APjAAAVfVyvbVbP9jwsth+m06BSXD4wAutVLtRAC2SHjoN+nddI/cj25
-        sBEMGMDeEgVHuHn3C1igufjSvw==
-X-Google-Smtp-Source: APXvYqzJVq19Ys/DS0h9U528gw0Ga+03jwg3HSgwRVZHTFdvhfry7ZldqMo7t7mNt6UjAaTYopHleA==
-X-Received: by 2002:a2e:8719:: with SMTP id m25mr5199259lji.50.1553255029470;
-        Fri, 22 Mar 2019 04:43:49 -0700 (PDT)
-Received: from localhost.localdomain (h-158-174-22-210.NA.cust.bahnhof.se. [158.174.22.210])
-        by smtp.gmail.com with ESMTPSA id u142sm1596399lff.14.2019.03.22.04.43.48
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 22 Mar 2019 04:43:48 -0700 (PDT)
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-To:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>, Alex Dubov <oakad@yahoo.com>,
-        Alex Dubov <alex.dubov@gmail.com>,
-        Maxim Levitsky <maximlevitsky@gmail.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Rui Feng <rui_feng@realsil.com.cn>
-Subject: [PATCH 2/2] MAINTAINERS: Add Ulf Hansson to the MEMORYSTICK section
-Date:   Fri, 22 Mar 2019 12:43:45 +0100
-Message-Id: <20190322114345.26532-1-ulf.hansson@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Fri, 22 Mar 2019 07:44:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46552 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731721AbfCVLnr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:43:47 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E932121925;
+        Fri, 22 Mar 2019 11:43:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553255026;
+        bh=kDNoqnQFtY8p2PIY6c0Pb668liJpU7t3w1cQj1/SnaI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=AniQpjyfIQMlz6eOnES/BfNCi5hXRJ94MEzpgR1h3qt+VHHD23cZgpsOKimI0BPGQ
+         oaq01qQpA0p05GpRwSAD8wv612EtKMEAE7eDj2nmg/3PZzL1ALg+uVXtOh/kvEm2YI
+         GsE4/sU7ljuetvQ8jgZSMtFjzIySbGgrppxdYPYs=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Qu Wenruo <wqu@suse.com>,
+        Nikolay Borisov <nborisov@suse.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.9 066/118] btrfs: ensure that a DUP or RAID1 block group has exactly two stripes
+Date:   Fri, 22 Mar 2019 12:15:38 +0100
+Message-Id: <20190322111221.308421562@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190322111215.873964544@linuxfoundation.org>
+References: <20190322111215.873964544@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The amount of changes to the memorystick subsystem are limited as of today.
-However, I have a couple of times been funneling changes through my MMC
-tree and it have turned out fine. So, I am here by volunteering to continue
-doing this, by adding myself and the link to the MMC tree to the MEMSTICK
-section.
+4.9-stable review patch.  If anyone has any objections, please let me know.
 
-Cc: Alex Dubov <oakad@yahoo.com>
-Cc: Alex Dubov <alex.dubov@gmail.com>
-Cc: Maxim Levitsky <maximlevitsky@gmail.com>
-Cc: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc: Rui Feng <rui_feng@realsil.com.cn>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+------------------
+
+From: Johannes Thumshirn <jthumshirn@suse.de>
+
+commit 349ae63f40638a28c6fce52e8447c2d14b84cc0c upstream.
+
+We recently had a customer issue with a corrupted filesystem. When
+trying to mount this image btrfs panicked with a division by zero in
+calc_stripe_length().
+
+The corrupt chunk had a 'num_stripes' value of 1. calc_stripe_length()
+takes this value and divides it by the number of copies the RAID profile
+is expected to have to calculate the amount of data stripes. As a DUP
+profile is expected to have 2 copies this division resulted in 1/2 = 0.
+Later then the 'data_stripes' variable is used as a divisor in the
+stripe length calculation which results in a division by 0 and thus a
+kernel panic.
+
+When encountering a filesystem with a DUP block group and a
+'num_stripes' value unequal to 2, refuse mounting as the image is
+corrupted and will lead to unexpected behaviour.
+
+Code inspection showed a RAID1 block group has the same issues.
+
+Fixes: e06cd3dd7cea ("Btrfs: add validadtion checks for chunk loading")
+CC: stable@vger.kernel.org # 4.4+
+Reviewed-by: Qu Wenruo <wqu@suse.com>
+Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+Signed-off-by: Johannes Thumshirn <jthumshirn@suse.de>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- MAINTAINERS | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ fs/btrfs/volumes.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 61bdbade3daf..8434d6ffa243 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14463,11 +14463,15 @@ T:	git git://linuxtv.org/media_tree.git
- S:	Maintained
- F:	drivers/media/i2c/imx355.c
+--- a/fs/btrfs/volumes.c
++++ b/fs/btrfs/volumes.c
+@@ -6439,10 +6439,10 @@ static int btrfs_check_chunk_valid(struc
+ 	}
  
--SONY MEMORYSTICK STANDARD SUPPORT
-+SONY MEMORYSTICK SUBSYSTEM
- M:	Maxim Levitsky <maximlevitsky@gmail.com>
- M:	Alex Dubov <oakad@yahoo.com>
-+M:	Ulf Hansson <ulf.hansson@linaro.org>
-+L:	linux-mmc@vger.kernel.org
-+T:	git git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git
- S:	Maintained
--F:	drivers/memstick/core/ms_block.*
-+F:	drivers/memstick/
-+F:	include/linux/memstick.h
- 
- SONY VAIO CONTROL DEVICE DRIVER
- M:	Mattia Dongili <malattia@linux.it>
--- 
-2.17.1
+ 	if ((type & BTRFS_BLOCK_GROUP_RAID10 && sub_stripes != 2) ||
+-	    (type & BTRFS_BLOCK_GROUP_RAID1 && num_stripes < 1) ||
++	    (type & BTRFS_BLOCK_GROUP_RAID1 && num_stripes != 2) ||
+ 	    (type & BTRFS_BLOCK_GROUP_RAID5 && num_stripes < 2) ||
+ 	    (type & BTRFS_BLOCK_GROUP_RAID6 && num_stripes < 3) ||
+-	    (type & BTRFS_BLOCK_GROUP_DUP && num_stripes > 2) ||
++	    (type & BTRFS_BLOCK_GROUP_DUP && num_stripes != 2) ||
+ 	    ((type & BTRFS_BLOCK_GROUP_PROFILE_MASK) == 0 &&
+ 	     num_stripes != 1)) {
+ 		btrfs_err(root->fs_info,
+
 
