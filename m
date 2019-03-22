@@ -2,198 +2,268 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 634CBC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 06:20:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F11DCC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 06:22:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3253B218E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 06:20:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KdhKeuyg"
+	by mail.kernel.org (Postfix) with ESMTP id B7804218E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 06:22:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727576AbfCVGUE (ORCPT
+        id S1727548AbfCVGWu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 02:20:04 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:43020 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727518AbfCVGUD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 02:20:03 -0400
-Received: by mail-pg1-f194.google.com with SMTP id l11so764584pgq.10
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 23:20:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=tqzJ4hKyYja5rZPcdKV8LhXCi5TD5kJ4UpCIR+4S3rU=;
-        b=KdhKeuyg4pXR0sQiQ+TXNNvny23N7PStIK+quzE8JfghjnZqcohw4psFNBy/5AJYEG
-         RFGOc1TID1tWMNG+hEnCSVQqVhQn0z7ZixjJ1+IOqg4PpaOoIdZD9HbZ1ConLUYuevMt
-         pbUFQREGKK42pagIC1h0CUDJKl+4FzuENpL8CgpjCx2lMRwhZCQGl0HOZo+pB+c5zhde
-         bPNr2nFQcGRz5n1D28hIJix74Fed86eDNGd/fOABxS0QZFRENV9ZhkKFacDtKatg1HQ3
-         zwlJopv0Da2a1kHImQWNZvgrqaPp4Hr2tcp05xrmBAI3tJTO/vBKqsFIkbLSzQXpkxK8
-         AduQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=tqzJ4hKyYja5rZPcdKV8LhXCi5TD5kJ4UpCIR+4S3rU=;
-        b=dyCC1Ivm4MIKqjN1tj04HFtt+g72OHNXmw0tf1XSLoIMS7XJdXozfUQQsrrWH50qrf
-         3UkCR0j1P7J0IX8RHbt45dP5On2Mn32QNLDVIqTkYyl0x7ZXBYcWCCw157x5FQitlGEZ
-         Ubah7XEhv3KWsOuy4FeVk2TYvV1yxEPzEmfsTBGdPm9v++Ij+ExmTizi4qsYp1TZPNuZ
-         kZVtpJYpwwissqvlNFwIj+0GVoOo5lJA9raY2xNE6tX2Kp7ndZxS97tEKK5HfTU02XYv
-         xKku8RJSjLh75TX1Bi/RM07/F2HvMgZJlujbbXLSJiLRFcQ31nZxQ677GT79Yz/lqE+G
-         l/4w==
-X-Gm-Message-State: APjAAAXdwaUpxgBAXQ3sdTKQr2HFRoNm7eCMlkO04tIVV+/gzFLkqBIX
-        Hebdz9Ae3oSr3c8Q633IB0zHbQ==
-X-Google-Smtp-Source: APXvYqzG+S+lCBgGgbU5nbjHQOsZMlVPsdwWIQgyW+YVaboBSecLC47wlQxrOTr0Te2zR5ZAbU/zPg==
-X-Received: by 2002:a63:e051:: with SMTP id n17mr7186974pgj.19.1553235601770;
-        Thu, 21 Mar 2019 23:20:01 -0700 (PDT)
-Received: from localhost ([122.166.134.37])
-        by smtp.gmail.com with ESMTPSA id w67sm11556056pfw.173.2019.03.21.23.19.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 21 Mar 2019 23:19:59 -0700 (PDT)
-Date:   Fri, 22 Mar 2019 11:49:57 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Rafael Wysocki <rjw@rjwysocki.net>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        sparclinux@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH V3] cpufreq: Call transition notifier only once for each
- policy
-Message-ID: <20190322061957.hzhnlbmnkpuqviiv@vireshk-i7>
-References: <1eb27e3bbcbb2c67e6eadc0893c9b41e5d76894b.1553057341.git.viresh.kumar@linaro.org>
- <20190321114535.GM6058@hirez.programming.kicks-ass.net>
+        Fri, 22 Mar 2019 02:22:50 -0400
+Received: from foss.arm.com ([217.140.101.70]:38876 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726029AbfCVGWt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 02:22:49 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3C1CD15BE;
+        Thu, 21 Mar 2019 23:22:49 -0700 (PDT)
+Received: from mail-it1-f181.google.com (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 238173F7F3;
+        Thu, 21 Mar 2019 23:22:49 -0700 (PDT)
+Received: by mail-it1-f181.google.com with SMTP id m18so1904459ita.3;
+        Thu, 21 Mar 2019 23:22:49 -0700 (PDT)
+X-Gm-Message-State: APjAAAX57onLFxYWJ+z/w/qGgpiyx8DohYCjQsd9YPJdaZ8rPJtK8oOu
+        AnAOPUh6PlSWgYacAOILjOxbOuV3KvTrnFLJLkQ=
+X-Google-Smtp-Source: APXvYqx17vJkXgNLk1nwkLtg0pLwM6CJmZt3Y88GJ/ed1CPX/VX2QDTndGAwF9Sm+7co0cfjLo6Z/7McOEIBc7TPEu8=
+X-Received: by 2002:a24:5c47:: with SMTP id q68mr125583itb.81.1553235768373;
+ Thu, 21 Mar 2019 23:22:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190321114535.GM6058@hirez.programming.kicks-ass.net>
-User-Agent: NeoMutt/20180323-120-3dd1ac
+References: <cover.1552679409.git.andreyknvl@google.com> <20190318163533.26838-1-vincenzo.frascino@arm.com>
+ <20190318163533.26838-3-vincenzo.frascino@arm.com>
+In-Reply-To: <20190318163533.26838-3-vincenzo.frascino@arm.com>
+From:   Amit Daniel Kachhap <amit.kachhap@arm.com>
+Date:   Fri, 22 Mar 2019 11:52:37 +0530
+X-Gmail-Original-Message-ID: <CADGdYn7HYcj4vxw2bCS6McdNRmWu7o13=VAQra5A1Z18JNPMXQ@mail.gmail.com>
+Message-ID: <CADGdYn7HYcj4vxw2bCS6McdNRmWu7o13=VAQra5A1Z18JNPMXQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/4] arm64: Define Documentation/arm64/elf_at_flags.txt
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc:     LAK <linux-arm-kernel@lists.infradead.org>,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Kostya Serebryany <kcc@google.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Chintan Pandya <cpandya@codeaurora.org>,
+        Shuah Khan <shuah@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Graeme Barnes <Graeme.Barnes@arm.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Branislav Rankov <Branislav.Rankov@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21-03-19, 12:45, Peter Zijlstra wrote:
-> On Wed, Mar 20, 2019 at 10:22:23AM +0530, Viresh Kumar wrote:
-> > diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
-> > index 3fae23834069..b2fe665878f7 100644
-> > --- a/arch/x86/kernel/tsc.c
-> > +++ b/arch/x86/kernel/tsc.c
-> > @@ -958,10 +958,15 @@ static int time_cpufreq_notifier(struct notifier_block *nb, unsigned long val,
-> >  	struct cpufreq_freqs *freq = data;
-> >  	unsigned long *lpj;
-> >  
-> > +	if (WARN_ON_ONCE(cpumask_weight(freq->policy->related_cpus) != 1)) {
-> > +		mark_tsc_unstable("cpufreq changes: related CPUs affected");
-> 
-> I suspect this is a big fat nop, but it won't hurt.
-> 
-> > +		return 0;
-> > +	}
-> > +
-> >  	lpj = &boot_cpu_data.loops_per_jiffy;
-> >  #ifdef CONFIG_SMP
-> >  	if (!(freq->flags & CPUFREQ_CONST_LOOPS))
-> > -		lpj = &cpu_data(freq->cpu).loops_per_jiffy;
-> > +		lpj = &cpu_data(freq->policy->cpu).loops_per_jiffy;
-> >  #endif
-> >  
-> >  	if (!ref_freq) {
-> > @@ -977,7 +982,7 @@ static int time_cpufreq_notifier(struct notifier_block *nb, unsigned long val,
-> >  		if (!(freq->flags & CPUFREQ_CONST_LOOPS))
-> >  			mark_tsc_unstable("cpufreq changes");
-> >  
-> > -		set_cyc2ns_scale(tsc_khz, freq->cpu, rdtsc());
-> > +		set_cyc2ns_scale(tsc_khz, freq->policy->cpu, rdtsc());
-> >  	}
-> >  
-> >  	return 0;
-> 
-> Just wondering, since we say x86 cpufreq handlers will only have a
-> single CPU here,
-> 
-> > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> > index 65e4559eef2f..1ac8c710cccc 100644
-> > --- a/arch/x86/kvm/x86.c
-> > +++ b/arch/x86/kvm/x86.c
-> > @@ -6649,10 +6649,8 @@ static void kvm_hyperv_tsc_notifier(void)
-> >  }
-> >  #endif
-> >  
-> > -static int kvmclock_cpufreq_notifier(struct notifier_block *nb, unsigned long val,
-> > -				     void *data)
-> > +static void __kvmclock_cpufreq_notifier(struct cpufreq_freqs *freq, int cpu)
-> >  {
-> > -	struct cpufreq_freqs *freq = data;
-> >  	struct kvm *kvm;
-> >  	struct kvm_vcpu *vcpu;
-> >  	int i, send_ipi = 0;
-> > @@ -6696,17 +6694,12 @@ static int kvmclock_cpufreq_notifier(struct notifier_block *nb, unsigned long va
-> >  	 *
-> >  	 */
-> >  
-> > -	if (val == CPUFREQ_PRECHANGE && freq->old > freq->new)
-> > -		return 0;
-> > -	if (val == CPUFREQ_POSTCHANGE && freq->old < freq->new)
-> > -		return 0;
-> > -
-> > -	smp_call_function_single(freq->cpu, tsc_khz_changed, freq, 1);
-> > +	smp_call_function_single(cpu, tsc_khz_changed, freq, 1);
-> >  
-> >  	spin_lock(&kvm_lock);
-> >  	list_for_each_entry(kvm, &vm_list, vm_list) {
-> >  		kvm_for_each_vcpu(i, vcpu, kvm) {
-> > -			if (vcpu->cpu != freq->cpu)
-> > +			if (vcpu->cpu != cpu)
-> >  				continue;
-> >  			kvm_make_request(KVM_REQ_CLOCK_UPDATE, vcpu);
-> >  			if (vcpu->cpu != smp_processor_id())
-> > @@ -6728,8 +6721,24 @@ static int kvmclock_cpufreq_notifier(struct notifier_block *nb, unsigned long va
-> >  		 * guest context is entered kvmclock will be updated,
-> >  		 * so the guest will not see stale values.
-> >  		 */
-> > -		smp_call_function_single(freq->cpu, tsc_khz_changed, freq, 1);
-> > +		smp_call_function_single(cpu, tsc_khz_changed, freq, 1);
-> >  	}
-> > +}
-> > +
-> > +static int kvmclock_cpufreq_notifier(struct notifier_block *nb, unsigned long val,
-> > +				     void *data)
-> > +{
-> > +	struct cpufreq_freqs *freq = data;
-> > +	int cpu;
-> > +
-> > +	if (val == CPUFREQ_PRECHANGE && freq->old > freq->new)
-> > +		return 0;
-> > +	if (val == CPUFREQ_POSTCHANGE && freq->old < freq->new)
-> > +		return 0;
-> > +
-> > +	for_each_cpu(cpu, freq->policy->cpus)
-> > +		__kvmclock_cpufreq_notifier(freq, cpu);
-> > +
-> >  	return 0;
-> >  }
-> >  
-> 
-> Then why to we pretend otherwise here?
+Hi Vincenzo,
 
-My intention was to not add any bug here because of lack of my
-knowledge of the architecture in question and so I tried to be safe.
+On Mon, Mar 18, 2019 at 10:06 PM Vincenzo Frascino
+<vincenzo.frascino@arm.com> wrote:
+>
+> On arm64 the TCR_EL1.TBI0 bit has been always enabled hence
+> the userspace (EL0) is allowed to set a non-zero value in the
+> top byte but the resulting pointers are not allowed at the
+> user-kernel syscall ABI boundary.
+>
+> With the relaxed ABI proposed through this document, it is now possible
+> to pass tagged pointers to the syscalls, when these pointers are in
+> memory ranges obtained by an anonymous (MAP_ANONYMOUS) mmap() or brk().
+>
+> This change in the ABI requires a mechanism to inform the userspace
+> that such an option is available.
+>
+> Specify and document the way in which AT_FLAGS can be used to advertise
+> this feature to the userspace.
+>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will.deacon@arm.com>
+> CC: Andrey Konovalov <andreyknvl@google.com>
+> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+>
+> Squash with "arm64: Define Documentation/arm64/elf_at_flags.txt"
+> ---
+>  Documentation/arm64/elf_at_flags.txt | 133 +++++++++++++++++++++++++++
+>  1 file changed, 133 insertions(+)
+>  create mode 100644 Documentation/arm64/elf_at_flags.txt
+>
+> diff --git a/Documentation/arm64/elf_at_flags.txt b/Documentation/arm64/elf_at_flags.txt
+> new file mode 100644
+> index 000000000000..9b3494207c14
+> --- /dev/null
+> +++ b/Documentation/arm64/elf_at_flags.txt
+> @@ -0,0 +1,133 @@
+> +ARM64 ELF AT_FLAGS
+> +==================
+> +
+> +This document describes the usage and semantics of AT_FLAGS on arm64.
+> +
+> +1. Introduction
+> +---------------
+> +
+> +AT_FLAGS is part of the Auxiliary Vector, contains the flags and it
+> +is set to zero by the kernel on arm64 unless one or more of the
+> +features detailed in paragraph 2 are present.
+> +
+> +The auxiliary vector can be accessed by the userspace using the
+> +getauxval() API provided by the C library.
+> +getauxval() returns an unsigned long and when a flag is present in
+> +the AT_FLAGS, the corresponding bit in the returned value is set to 1.
+> +
+> +The AT_FLAGS with a "defined semantics" on arm64 are exposed to the
+> +userspace via user API (uapi/asm/atflags.h).
+> +The AT_FLAGS bits with "undefined semantics" are set to zero by default.
+> +This means that the AT_FLAGS bits to which this document does not assign
+> +an explicit meaning are to be intended reserved for future use.
+> +The kernel will populate all such bits with zero until meanings are
+> +assigned to them. If and when meanings are assigned, it is guaranteed
+> +that they will not impact the functional operation of existing userspace
+> +software. Userspace software should ignore any AT_FLAGS bit whose meaning
+> +is not defined when the software is written.
+> +
+> +The userspace software can test for features by acquiring the AT_FLAGS
+> +entry of the auxiliary vector, and testing whether a relevant flag
+> +is set.
+> +
+> +Example of a userspace test function:
+> +
+> +bool feature_x_is_present(void)
+> +{
+> +       unsigned long at_flags = getauxval(AT_FLAGS);
+> +       if (at_flags & FEATURE_X)
+> +               return true;
+> +
+> +       return false;
+> +}
+> +
+> +Where the software relies on a feature advertised by AT_FLAGS, it
+> +must check that the feature is present before attempting to
+> +use it.
+> +
+> +2. Features exposed via AT_FLAGS
+> +--------------------------------
+> +
+> +bit[0]: ARM64_AT_FLAGS_SYSCALL_TBI
+> +
+> +    On arm64 the TCR_EL1.TBI0 bit has been always enabled on the arm64
+> +    kernel, hence the userspace (EL0) is allowed to set a non-zero value
+> +    in the top byte but the resulting pointers are not allowed at the
+> +    user-kernel syscall ABI boundary.
+> +    When bit[0] is set to 1 the kernel is advertising to the userspace
+> +    that a relaxed ABI is supported hence this type of pointers are now
+> +    allowed to be passed to the syscalls, when these pointers are in
+> +    memory ranges privately owned by a process and obtained by the
+> +    process in accordance with the definition of "valid tagged pointer"
+> +    in paragraph 3.
+> +    In these cases the tag is preserved as the pointer goes through the
+> +    kernel. Only when the kernel needs to check if a pointer is coming
+> +    from userspace an untag operation is required.
+> +
+> +3. ARM64_AT_FLAGS_SYSCALL_TBI
+> +-----------------------------
+> +
+> +From the kernel syscall interface prospective, we define, for the purposes
+> +of this document, a "valid tagged pointer" as a pointer that either it has
+> +a zero value set in the top byte or it has a non-zero value, it is in memory
+> +ranges privately owned by a userspace process and it is obtained in one of
+> +the following ways:
+> +  - mmap() done by the process itself, where either:
+> +    * flags = MAP_PRIVATE | MAP_ANONYMOUS
+> +    * flags = MAP_PRIVATE and the file descriptor refers to a regular
+> +      file or "/dev/zero"
+> +  - a mapping below sbrk(0) done by the process itself
+> +  - any memory mapped by the kernel in the process's address space during
+> +    creation and following the restrictions presented above (i.e. data, bss,
+> +    stack).
+> +
+> +When the ARM64_AT_FLAGS_SYSCALL_TBI flag is set by the kernel, the following
+> +behaviours are guaranteed by the ABI:
+> +
+> +  - Every current or newly introduced syscall can accept any valid tagged
+> +    pointers.
+> +
+> +  - If a non valid tagged pointer is passed to a syscall then the behaviour
+> +    is undefined.
+> +
+> +  - Every valid tagged pointer is expected to work as an untagged one.
+> +
+> +  - The kernel preserves any valid tagged pointers and returns them to the
+> +    userspace unchanged in all the cases except the ones documented in the
+> +    "Preserving tags" paragraph of tagged-pointers.txt.
+> +
+> +A definition of the meaning of tagged pointers on arm64 can be found in:
+> +Documentation/arm64/tagged-pointers.txt.
+> +
+> +Example of correct usage (pseudo-code) for a userspace application:
+> +
+> +bool arm64_syscall_tbi_is_present(void)
+> +{
+> +       unsigned long at_flags = getauxval(AT_FLAGS);
+> +       if (at_flags & ARM64_AT_FLAGS_SYSCALL_TBI)
+> +                       return true;
+> +
+> +       return false;
+> +}
+> +
+> +void main(void)
+> +{
+> +       char *addr = mmap(NULL, PAGE_SIZE, PROT_READ | PROT_WRITE,
+> +                         MAP_ANONYMOUS, -1, 0);
+> +
+> +       int fd = open("test.txt", O_WRONLY);
+> +
+> +       /* Check if the relaxed ABI is supported */
+> +       if (arm64_syscall_tbi_is_present()) {
+> +               /* Add a tag to the pointer */
+> +               addr = tag_pointer(addr);
+> +       }
+> +
+> +       strcpy("Hello World\n", addr);
+Nit: s/strcpy("Hello World\n", addr)/strcpy(addr, "Hello World\n")
 
-If you guys think the behavior should be same here as of the tsc, then
-we can add similar checks here.
-
--- 
-viresh
+Thanks,
+Amit D
+> +
+> +       /* Write to a file */
+> +       write(fd, addr, sizeof(addr));
+> +
+> +       close(fd);
+> +}
+> +
+> --
+> 2.21.0
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
