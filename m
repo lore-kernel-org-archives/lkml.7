@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3407C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:29:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 630ACC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:29:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63C9A21916
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:29:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31C8B20449
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:29:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254157;
-	bh=ve1CPQXxMolq+3dhYLCIFSrl5uGb5cXVgOJvhWsZBxU=;
+	s=default; t=1553254160;
+	bh=je6lKdgxFF6M/u0La/NRvZ/ZGuzY4Ej0z2oo3s6G0Yk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cYRiFdI3vE3qxnLWv7saGb18la0K904laqHgqGZThleitpLfIkv0DhOKqUvyWSiA+
-	 VK12COrxCpFc+96NVlxrAPuMusZTlMjRFZrGUa86ql2K9xB6yvZEFQMlY/IZwPP48j
-	 ys+opnRUyxna9sWnXGbaP6pNLz/1AdylXXzioSfY=
+	b=U1bOEOM88SDenuvH1yaxCl0Z7lLMHg5X2+H92pU/sy7fMUN7OZyAVXP6IyWfHYuuS
+	 RMprsV51CFBRo2/83rgkxayXWHyZkXYk7N3/2c/QcsGBI5KqzQtvGrXkS7RE+qTQOM
+	 PJ/K6Tauhju+JtiN0qHa/laYAsw1p4Sw/Gy6uakc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729772AbfCVL3P (ORCPT
+        id S1729514AbfCVL3T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:29:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57032 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:29:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57096 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729771AbfCVL3L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:29:11 -0400
+        id S1729504AbfCVL3O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:29:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2CE9218B0;
-        Fri, 22 Mar 2019 11:29:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 668F520449;
+        Fri, 22 Mar 2019 11:29:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254150;
-        bh=ve1CPQXxMolq+3dhYLCIFSrl5uGb5cXVgOJvhWsZBxU=;
+        s=default; t=1553254153;
+        bh=je6lKdgxFF6M/u0La/NRvZ/ZGuzY4Ej0z2oo3s6G0Yk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=neURsAQ9BXcseFWPznVvB4P6bb8ruRHDvQisPU7tf2qeYvl7bQiUGiOwR8lh9jvJR
-         e25sDXR7qdfodkVpHoG/k1oIRWXrWsL131m1QuYFC1MUTRsGYaTbDvBXh4C8a0ZX6M
-         SH8hoTczIbCCWh/Q49fqo41TK6VP/yIc0uQkmjPY=
+        b=JbKxm1RUJ7nyb7d7nkJFKeIjWzlC7Lgpc2ghhW0O5g6PusiU9VEMo6BpECs/A2mmr
+         KVszL8JBa1J8wd21XZqLBLNe0rOV/OIbrayhiFmzhdci0+4a/9HftsGm2QlKt2NWO1
+         RS0wQsC3miAb6MfjX9u3rL0fzLPQT59SXTeZyyGY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, dann frazier <dann.frazier@canonical.com>,
-        John Garry <john.garry@huawei.com>,
-        Jason Yan <yanaijie@huawei.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.4 031/230] scsi: libsas: Fix rphy phy_identifier for PHYs with end devices attached
-Date:   Fri, 22 Mar 2019 12:12:49 +0100
-Message-Id: <20190322111238.882936562@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+ec24e95ea483de0a24da@syzkaller.appspotmail.com,
+        Eric Biggers <ebiggers@google.com>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <james.morris@microsoft.com>
+Subject: [PATCH 4.4 022/230] KEYS: always initialize keyring_index_key::desc_len
+Date:   Fri, 22 Mar 2019 12:12:40 +0100
+Message-Id: <20190322111238.285513111@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -67,85 +68,105 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: John Garry <john.garry@huawei.com>
+From: Eric Biggers <ebiggers@google.com>
 
-commit ffeafdd2bf0b280d67ec1a47ea6287910d271f3f upstream.
+commit ede0fa98a900e657d1fcd80b50920efc896c1a4c upstream.
 
-The sysfs phy_identifier attribute for a sas_end_device comes from the rphy
-phy_identifier value.
+syzbot hit the 'BUG_ON(index_key->desc_len == 0);' in __key_link_begin()
+called from construct_alloc_key() during sys_request_key(), because the
+length of the key description was never calculated.
 
-Currently this is not being set for rphys with an end device attached, so
-we see incorrect symlinks from systemd disk/by-path:
+The problem is that we rely on ->desc_len being initialized by
+search_process_keyrings(), specifically by search_nested_keyrings().
+But, if the process isn't subscribed to any keyrings that never happens.
 
-root@localhost:~# ls -l /dev/disk/by-path/
-total 0
-lrwxrwxrwx 1 root root  9 Feb 13 12:26 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy0-lun-0 -> ../../sdb
-lrwxrwxrwx 1 root root 10 Feb 13 12:26 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy0-lun-0-part1 -> ../../sdb1
-lrwxrwxrwx 1 root root 10 Feb 13 12:26 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy0-lun-0-part2 -> ../../sdb2
-lrwxrwxrwx 1 root root 10 Feb 13 12:26 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy0-lun-0-part3 -> ../../sdc3
+Fix it by always initializing keyring_index_key::desc_len as soon as the
+description is set, like we already do in some places.
 
-Indeed, each sas_end_device phy_identifier value is 0:
+The following program reproduces the BUG_ON() when it's run as root and
+no session keyring has been installed.  If it doesn't work, try removing
+pam_keyinit.so from /etc/pam.d/login and rebooting.
 
-root@localhost:/# more sys/class/sas_device/end_device-0\:0\:2/phy_identifier
-0
-root@localhost:/# more sys/class/sas_device/end_device-0\:0\:10/phy_identifier
-0
+    #include <stdlib.h>
+    #include <unistd.h>
+    #include <keyutils.h>
 
-This patch fixes the discovery code to set the phy_identifier.  With this,
-we now get proper symlinks:
+    int main(void)
+    {
+            int id = add_key("keyring", "syz", NULL, 0, KEY_SPEC_USER_KEYRING);
 
-root@localhost:~# ls -l /dev/disk/by-path/
-total 0
-lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy10-lun-0 -> ../../sdg
-lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy11-lun-0 -> ../../sdh
-lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy2-lun-0 -> ../../sda
-lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy2-lun-0-part1 -> ../../sda1
-lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy3-lun-0 -> ../../sdb
-lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy3-lun-0-part1 -> ../../sdb1
-lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy3-lun-0-part2 -> ../../sdb2
-lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy4-lun-0 -> ../../sdc
-lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy4-lun-0-part1 -> ../../sdc1
-lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy4-lun-0-part2 -> ../../sdc2
-lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy4-lun-0-part3 -> ../../sdc3
-lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy5-lun-0 -> ../../sdd
-lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy7-lun-0 -> ../../sde
-lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy7-lun-0-part1 -> ../../sde1
-lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy7-lun-0-part2 -> ../../sde2
-lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy7-lun-0-part3 -> ../../sde3
-lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy8-lun-0 -> ../../sdf
-lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy8-lun-0-part1 -> ../../sdf1
-lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy8-lun-0-part2 -> ../../sdf2
-lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy8-lun-0-part3 -> ../../sdf3
+            keyctl_setperm(id, KEY_OTH_WRITE);
+            setreuid(5000, 5000);
+            request_key("user", "desc", "", id);
+    }
 
-Fixes: 2908d778ab3e ("[SCSI] aic94xx: new driver")
-Reported-by: dann frazier <dann.frazier@canonical.com>
-Signed-off-by: John Garry <john.garry@huawei.com>
-Reviewed-by: Jason Yan <yanaijie@huawei.com>
-Tested-by: dann frazier <dann.frazier@canonical.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Reported-by: syzbot+ec24e95ea483de0a24da@syzkaller.appspotmail.com
+Fixes: b2a4df200d57 ("KEYS: Expand the capacity of a keyring")
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: James Morris <james.morris@microsoft.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/libsas/sas_expander.c |    2 ++
- 1 file changed, 2 insertions(+)
+ security/keys/keyring.c          |    4 +---
+ security/keys/proc.c             |    3 +--
+ security/keys/request_key.c      |    1 +
+ security/keys/request_key_auth.c |    2 +-
+ 4 files changed, 4 insertions(+), 6 deletions(-)
 
---- a/drivers/scsi/libsas/sas_expander.c
-+++ b/drivers/scsi/libsas/sas_expander.c
-@@ -818,6 +818,7 @@ static struct domain_device *sas_ex_disc
- 		rphy = sas_end_device_alloc(phy->port);
- 		if (!rphy)
- 			goto out_free;
-+		rphy->identify.phy_identifier = phy_id;
+--- a/security/keys/keyring.c
++++ b/security/keys/keyring.c
+@@ -628,9 +628,6 @@ static bool search_nested_keyrings(struc
+ 	BUG_ON((ctx->flags & STATE_CHECKS) == 0 ||
+ 	       (ctx->flags & STATE_CHECKS) == STATE_CHECKS);
  
- 		child->rphy = rphy;
- 		get_device(&rphy->dev);
-@@ -845,6 +846,7 @@ static struct domain_device *sas_ex_disc
+-	if (ctx->index_key.description)
+-		ctx->index_key.desc_len = strlen(ctx->index_key.description);
+-
+ 	/* Check to see if this top-level keyring is what we are looking for
+ 	 * and whether it is valid or not.
+ 	 */
+@@ -888,6 +885,7 @@ key_ref_t keyring_search(key_ref_t keyri
+ 	struct keyring_search_context ctx = {
+ 		.index_key.type		= type,
+ 		.index_key.description	= description,
++		.index_key.desc_len	= strlen(description),
+ 		.cred			= current_cred(),
+ 		.match_data.cmp		= key_default_cmp,
+ 		.match_data.raw_data	= description,
+--- a/security/keys/proc.c
++++ b/security/keys/proc.c
+@@ -186,8 +186,7 @@ static int proc_keys_show(struct seq_fil
+ 	int rc;
  
- 		child->rphy = rphy;
- 		get_device(&rphy->dev);
-+		rphy->identify.phy_identifier = phy_id;
- 		sas_fill_in_rphy(child, rphy);
+ 	struct keyring_search_context ctx = {
+-		.index_key.type		= key->type,
+-		.index_key.description	= key->description,
++		.index_key		= key->index_key,
+ 		.cred			= current_cred(),
+ 		.match_data.cmp		= lookup_user_key_possessed,
+ 		.match_data.raw_data	= key,
+--- a/security/keys/request_key.c
++++ b/security/keys/request_key.c
+@@ -544,6 +544,7 @@ struct key *request_key_and_link(struct
+ 	struct keyring_search_context ctx = {
+ 		.index_key.type		= type,
+ 		.index_key.description	= description,
++		.index_key.desc_len	= strlen(description),
+ 		.cred			= current_cred(),
+ 		.match_data.cmp		= key_default_cmp,
+ 		.match_data.raw_data	= description,
+--- a/security/keys/request_key_auth.c
++++ b/security/keys/request_key_auth.c
+@@ -254,7 +254,7 @@ struct key *key_get_instantiation_authke
+ 	struct key *authkey;
+ 	key_ref_t authkey_ref;
  
- 		list_add_tail(&child->disco_list_node, &parent->port->disco_list);
+-	sprintf(description, "%x", target_id);
++	ctx.index_key.desc_len = sprintf(description, "%x", target_id);
+ 
+ 	authkey_ref = search_process_keyrings(&ctx);
+ 
 
 
