@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4BE4C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:56:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24054C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:56:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8FC12192C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:56:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E53442192C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:56:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255765;
-	bh=bafSySKIeZ0MG55QPH9nykG6BwHoZCV7FJScvMOVTIg=;
+	s=default; t=1553255767;
+	bh=kgI9TsUw57pvrSLM/LtQTbUgP5jRV5QNx967GbcwMtA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=05gN+XXIh8+UH9Aflmw3rbYscfmcWC5aAToLwoTAJB2JIKEAz6UgKaxrxAiuxyFOh
-	 r1PYYbhrAHoFdxqdlzLUV0oDQ9B3d0blpRLE/AUFPr7Eevz1Fwx4+rl1Ohm+XD2/X5
-	 lyobq+475xNXhTg7x6XlVa7Qr+H4hb6bDDfKFew8=
+	b=kc7ColSltVv3mxJp0VivSNgXTKyClfN8By2vbpd+nFGm+VKA5xvQ/N+cAyNlVIwHh
+	 FWc2ajLzqM/yrHrEa8u1DgMKsIUPJwNH8pd9ysUIntiZq8fDMfjhFSvD7jJYnbX85T
+	 Vf/554v8k/Z50beE2erZsybbTUHWKZhVI6xhJlu0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387476AbfCVL4E (ORCPT
+        id S2387487AbfCVL4F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:56:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60690 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:56:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732770AbfCVL4C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:56:02 -0400
+        id S1732549AbfCVLz6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:55:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49BAD21916;
-        Fri, 22 Mar 2019 11:56:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 503F920850;
+        Fri, 22 Mar 2019 11:55:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255761;
-        bh=bafSySKIeZ0MG55QPH9nykG6BwHoZCV7FJScvMOVTIg=;
+        s=default; t=1553255757;
+        bh=kgI9TsUw57pvrSLM/LtQTbUgP5jRV5QNx967GbcwMtA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=epUhN2cCcsQIB+MKeJJh22R+tBxVyEDeSPEDbxe5AlvqH57h9UtBa/VSPgLLcjKPj
-         yq1M+jvaEVWJpJz6Gb9vnBVgkkE236IeB288Sq5za75q4yMGD/DeHqiTVD9/CWq6rh
-         vtkTFUw6VCh2yQWGkT1pbw9b0X0O0To6GVsVSHYE=
+        b=gk0EXD+4MzDVIQcH2J++1bX3jpYSu4qabSqAa9AbetlCsKX9eOCqbxLhhpKkeoPDU
+         IUQB0lcxvFpx5pK6nPyKOY/BZbvgPOzplFp10/ZV0/Li2xtEq8MA+ea6SVhdY6NJmf
+         Kgd7VQsSMZ4LRA3IvYK87TeX1erSyptc8ZqSs4ug=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>
-Subject: [PATCH 4.14 183/183] s390/setup: fix boot crash for machine without EDAT-1
-Date:   Fri, 22 Mar 2019 12:16:51 +0100
-Message-Id: <20190322111255.136991986@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 4.14 182/183] KVM: nVMX: Ignore limit checks on VMX instructions using flat segments
+Date:   Fri, 22 Mar 2019 12:16:50 +0100
+Message-Id: <20190322111255.066141222@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111241.819468003@linuxfoundation.org>
 References: <20190322111241.819468003@linuxfoundation.org>
@@ -66,50 +66,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Martin Schwidefsky <schwidefsky@de.ibm.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit 86a86804e4f18fc3880541b3d5a07f4df0fe29cb upstream.
+commit 34333cc6c2cb021662fd32e24e618d1b86de95bf upstream.
 
-The fix to make WARN work in the early boot code created a problem
-on older machines without EDAT-1. The setup_lowcore_dat_on function
-uses the pointer from lowcore_ptr[0] to set the DAT bit in the new
-PSWs. That does not work if the kernel page table is set up with
-4K pages as the prefix address maps to absolute zero.
+Regarding segments with a limit==0xffffffff, the SDM officially states:
 
-To make this work the PSWs need to be changed with via address 0 in
-form of the S390_lowcore definition.
+    When the effective limit is FFFFFFFFH (4 GBytes), these accesses may
+    or may not cause the indicated exceptions.  Behavior is
+    implementation-specific and may vary from one execution to another.
 
-Reported-by: Guenter Roeck <linux@roeck-us.net>
-Tested-by: Cornelia Huck <cohuck@redhat.com>
-Fixes: 94f85ed3e2f8 ("s390/setup: fix early warning messages")
-Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+In practice, all CPUs that support VMX ignore limit checks for "flat
+segments", i.e. an expand-up data or code segment with base=0 and
+limit=0xffffffff.  This is subtly different than wrapping the effective
+address calculation based on the address size, as the flat segment
+behavior also applies to accesses that would wrap the 4g boundary, e.g.
+a 4-byte access starting at 0xffffffff will access linear addresses
+0xffffffff, 0x0, 0x1 and 0x2.
+
+Fixes: f9eb4af67c9d ("KVM: nVMX: VMX instructions: add checks for #GP/#SS exceptions")
+Cc: stable@vger.kernel.org
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/s390/kernel/setup.c |   13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+ arch/x86/kvm/vmx.c |   12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
---- a/arch/s390/kernel/setup.c
-+++ b/arch/s390/kernel/setup.c
-@@ -390,13 +390,12 @@ static void __init setup_lowcore_dat_off
- 
- static void __init setup_lowcore_dat_on(void)
- {
--	struct lowcore *lc;
--
--	lc = lowcore_ptr[0];
--	lc->external_new_psw.mask |= PSW_MASK_DAT;
--	lc->svc_new_psw.mask |= PSW_MASK_DAT;
--	lc->program_new_psw.mask |= PSW_MASK_DAT;
--	lc->io_new_psw.mask |= PSW_MASK_DAT;
-+	__ctl_clear_bit(0, 28);
-+	S390_lowcore.external_new_psw.mask |= PSW_MASK_DAT;
-+	S390_lowcore.svc_new_psw.mask |= PSW_MASK_DAT;
-+	S390_lowcore.program_new_psw.mask |= PSW_MASK_DAT;
-+	S390_lowcore.io_new_psw.mask |= PSW_MASK_DAT;
-+	__ctl_set_bit(0, 28);
- }
- 
- static struct resource code_resource = {
+--- a/arch/x86/kvm/vmx.c
++++ b/arch/x86/kvm/vmx.c
+@@ -7513,10 +7513,16 @@ static int get_vmx_mem_address(struct kv
+ 		/* Protected mode: #GP(0)/#SS(0) if the segment is unusable.
+ 		 */
+ 		exn = (s.unusable != 0);
+-		/* Protected mode: #GP(0)/#SS(0) if the memory
+-		 * operand is outside the segment limit.
++
++		/*
++		 * Protected mode: #GP(0)/#SS(0) if the memory operand is
++		 * outside the segment limit.  All CPUs that support VMX ignore
++		 * limit checks for flat segments, i.e. segments with base==0,
++		 * limit==0xffffffff and of type expand-up data or code.
+ 		 */
+-		exn = exn || (off + sizeof(u64) > s.limit);
++		if (!(s.base == 0 && s.limit == 0xffffffff &&
++		     ((s.type & 8) || !(s.type & 4))))
++			exn = exn || (off + sizeof(u64) > s.limit);
+ 	}
+ 	if (exn) {
+ 		kvm_queue_exception_e(vcpu,
 
 
