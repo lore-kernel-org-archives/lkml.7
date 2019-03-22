@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26699C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:44:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F604C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:44:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA551218B0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:44:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D6A82082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:44:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255085;
-	bh=IDhXuNHHtMWNL7duP0Bmwecayz+wm44k+qIbqLL1r0M=;
+	s=default; t=1553255090;
+	bh=zxjaSCvdHWYbMC3EMDCInJ6tzIGqztMxGN1jJyuSQac=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xhD5wVyLb8S/AemL5DdXfleU7QkjSkFQ3iKK9JR7sBslAAgiUnuHhSDA/TA04qI7l
-	 4efxnhDeQS03ZXJQnTL8D7J+DYGG3NyAQoa+waUR+2kLOkQxraT3UoPRHutreJQ/Eb
-	 QlOLZviSpyAr2qDmFpMuztd41GW0E0VseCuwsy50=
+	b=CNrLYAGC5hhZV2LTfQ8QmHrfx8u0Ck0CVYhJzWpUnPc4XbwdQO1YA2kpPJSAu9HSN
+	 b8Tk0O6VBA0g+ch3qYA+dqOX9lhBVLjRoP82ndvxCbEWSKYcXyVCKkr08C/vT9WJDM
+	 CALPqU49iKwN6+ZZB3PRry/68n3ljlxby98LQQpg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731852AbfCVLon (ORCPT
+        id S1731847AbfCVLos (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:44:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47670 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:44:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47806 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731836AbfCVLok (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:44:40 -0400
+        id S1731881AbfCVLor (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:44:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E77D62082C;
-        Fri, 22 Mar 2019 11:44:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E2922075E;
+        Fri, 22 Mar 2019 11:44:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255079;
-        bh=IDhXuNHHtMWNL7duP0Bmwecayz+wm44k+qIbqLL1r0M=;
+        s=default; t=1553255086;
+        bh=zxjaSCvdHWYbMC3EMDCInJ6tzIGqztMxGN1jJyuSQac=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Cwm/AW/YH8oc6uw7nXJcs4xLJhnMbxVwzHPjnSWGGproaECURoKfe4Tx4mrxTcIps
-         xZ+ApN0fMgigD8jQsJKOVyBq94ry+chfT+3KFbq+6dbhyiETfpCv2xOTTEiZd7QYi4
-         PW5C8Fgnm3DOb8TZTontIlGMCdsQkvG15prMk5T4=
+        b=Ll3gqN4L0bGz32RDDE4xAUNc8wiX/lfMEJGz7ljp7R0QSW4V0zFJPi7k4SM4wpaKJ
+         Y2xWmYdjb6FvwwwhvxHAdEb9ewE/HFOv1Eq3Uhk4zouiO1TzLVvMMiKH73lz0ciPfY
+         59aoYYN3Jp93qjMrjhjWJhqCqYD7/LRbYYBmT8SI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 4.9 099/118] ARM: s3c24xx: Fix boolean expressions in osiris_dvs_notify
-Date:   Fri, 22 Mar 2019 12:16:11 +0100
-Message-Id: <20190322111223.401213152@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Cox <alan@linux.intel.com>,
+        QiaoChong <qiaochong@loongson.cn>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Subject: [PATCH 4.9 083/118] parport_pc: fix find_superio io compare code, should use equal test.
+Date:   Fri, 22 Mar 2019 12:15:55 +0100
+Message-Id: <20190322111222.509290006@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111215.873964544@linuxfoundation.org>
 References: <20190322111215.873964544@linuxfoundation.org>
@@ -66,48 +66,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Gustavo A. R. Silva <gustavo@embeddedor.com>
+From: QiaoChong <qiaochong@loongson.cn>
 
-commit e2477233145f2156434afb799583bccd878f3e9f upstream.
+commit 21698fd57984cd28207d841dbdaa026d6061bceb upstream.
 
-Fix boolean expressions by using logical AND operator '&&' instead of
-bitwise operator '&'.
+In the original code before 181bf1e815a2 the loop was continuing until
+it finds the first matching superios[i].io and p->base.
+But after 181bf1e815a2 the logic changed and the loop now returns the
+pointer to the first mismatched array element which is then used in
+get_superio_dma() and get_superio_irq() and thus returning the wrong
+value.
+Fix the condition so that it now returns the correct pointer.
 
-This issue was detected with the help of Coccinelle.
-
-Fixes: 4fa084af28ca ("ARM: OSIRIS: DVS (Dynamic Voltage Scaling) supoort.")
+Fixes: 181bf1e815a2 ("parport_pc: clean up the modified while loops using for")
+Cc: Alan Cox <alan@linux.intel.com>
 Cc: stable@vger.kernel.org
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-[krzk: Fix -Wparentheses warning]
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: QiaoChong <qiaochong@loongson.cn>
+[rewrite the commit message]
+Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/mach-s3c24xx/mach-osiris-dvs.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/parport/parport_pc.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/arm/mach-s3c24xx/mach-osiris-dvs.c
-+++ b/arch/arm/mach-s3c24xx/mach-osiris-dvs.c
-@@ -70,16 +70,16 @@ static int osiris_dvs_notify(struct noti
- 
- 	switch (val) {
- 	case CPUFREQ_PRECHANGE:
--		if (old_dvs & !new_dvs ||
--		    cur_dvs & !new_dvs) {
-+		if ((old_dvs && !new_dvs) ||
-+		    (cur_dvs && !new_dvs)) {
- 			pr_debug("%s: exiting dvs\n", __func__);
- 			cur_dvs = false;
- 			gpio_set_value(OSIRIS_GPIO_DVS, 1);
- 		}
- 		break;
- 	case CPUFREQ_POSTCHANGE:
--		if (!old_dvs & new_dvs ||
--		    !cur_dvs & new_dvs) {
-+		if ((!old_dvs && new_dvs) ||
-+		    (!cur_dvs && new_dvs)) {
- 			pr_debug("entering dvs\n");
- 			cur_dvs = true;
- 			gpio_set_value(OSIRIS_GPIO_DVS, 0);
+--- a/drivers/parport/parport_pc.c
++++ b/drivers/parport/parport_pc.c
+@@ -1377,7 +1377,7 @@ static struct superio_struct *find_super
+ {
+ 	int i;
+ 	for (i = 0; i < NR_SUPERIOS; i++)
+-		if (superios[i].io != p->base)
++		if (superios[i].io == p->base)
+ 			return &superios[i];
+ 	return NULL;
+ }
 
 
