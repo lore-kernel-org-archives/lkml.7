@@ -2,88 +2,87 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97FB2C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 20:51:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78A2AC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 20:55:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64AE721900
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 20:51:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3041721900
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 20:55:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Ee1zMbWG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727940AbfCVUvD (ORCPT
+        id S1727411AbfCVUzB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 16:51:03 -0400
-Received: from emh03.mail.saunalahti.fi ([62.142.5.109]:48646 "EHLO
-        emh03.mail.saunalahti.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726014AbfCVUvC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 16:51:02 -0400
-Received: from darkstar.musicnaut.iki.fi (85-76-115-194-nat.elisa-mobile.fi [85.76.115.194])
-        by emh03.mail.saunalahti.fi (Postfix) with ESMTP id E38D94004B;
-        Fri, 22 Mar 2019 22:50:59 +0200 (EET)
-Date:   Fri, 22 Mar 2019 22:50:59 +0200
-From:   Aaro Koskinen <aaro.koskinen@iki.fi>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [BISECTED, REGRESSION] Broken networking on MIPS/OCTEON
- EdgeRouter Lite
-Message-ID: <20190322205059.GA29013@darkstar.musicnaut.iki.fi>
-References: <20190322002125.GD7872@darkstar.musicnaut.iki.fi>
- <20190322064506.GB5348@vkoul-mobl>
+        Fri, 22 Mar 2019 16:55:01 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:40578 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726529AbfCVUzA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 16:55:00 -0400
+Received: from zn.tnic (p200300EC2F098000329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:8000:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 2F4E21EC00FF;
+        Fri, 22 Mar 2019 21:54:59 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1553288099;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=y38eK4RT/O/1H9PIjuKB36OAgVJizs2CWDaa5tbgAQI=;
+        b=Ee1zMbWGt4kCH+pX9GSZTK/iNOjRJ0KDCYzwTKoGJlruOWgRAfvitwPFbdbdGjTpSf/zky
+        Ll+Kh96APKwLM6GgHykGlf/rzxHCBSEMLoOzvLo95z0KOqTw2dsueqNtvr4owOb22Mvvdi
+        8M7ocrdBdla84g1giAGwRqXTBDbHEc0=
+Date:   Fri, 22 Mar 2019 21:55:00 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
+Cc:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "rafal@milecki.pl" <rafal@milecki.pl>,
+        "clemej@gmail.com" <clemej@gmail.com>
+Subject: Re: [PATCH v3 2/3] x86/MCE/AMD: Don't report L1 BTB MCA errors on
+ some Family 17h models
+Message-ID: <20190322205500.GP12472@zn.tnic>
+References: <20190322202848.20749-1-Yazen.Ghannam@amd.com>
+ <20190322202848.20749-2-Yazen.Ghannam@amd.com>
+ <bbcce693-496e-0ab9-f01e-66bc67347715@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190322064506.GB5348@vkoul-mobl>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <bbcce693-496e-0ab9-f01e-66bc67347715@amd.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Fri, Mar 22, 2019 at 08:37:08PM +0000, Ghannam, Yazen wrote:
+> Sorry, I forgot to mention this. I went with "filter_mce_amd" because
+> amd_filter_mce() is already defined in edac/mce_amd.c and there was
+> a conflict when building. Is there another way to avoid these naming
+> conflicts?
 
-On Fri, Mar 22, 2019 at 12:15:06PM +0530, Vinod Koul wrote:
-> On 22-03-19, 02:21, Aaro Koskinen wrote:
-> > When booting v5.1-rc1 on EdgeRouter Lite (MIPS/OCTEON), with at803x phy
-> > driver enabled, networking no longer works - I even need to go physically
-> > power cycle the board before getting networking to work again (otherwise
-> > bootloader cannot tftp an older working image).
-> > 
-> > Bisected to:
-> > 
-> > 	commit 6d4cd041f0af5b4c8fc742b4a68eac22e420e28c
-> > 	Author: Vinod Koul <vkoul@kernel.org>
-> > 	Date:   Thu Feb 21 15:53:15 2019 +0530
-> > 
-> > 	    net: phy: at803x: disable delay only for RGMII mode
-> 
-> Hello,
-> 
-> So with cd28d1d6e52e ("net: phy: at803x: Disable phy delay for RGMII
-> mode") it works for you but not 6d4cd041f0af ("net: phy: at803x: disable
-> delay only for RGMII mode"). That is bit more weird case :)
+Yuck, we're clearly filtering too much. :)
 
-Yes, I guess it's the new "disable by default" behaviour that breaks it.
+So let's rename that amd_filter_mce() to something else since it is
+static and only used in that file. Maybe something like
 
-> So does the ethernet expect RGMII mode or RGMII_ID mode here, looks like
-> disable delay is expected as well?
+        if (ignore_mce(m))
+                return NOTIFY_STOP;
 
-The OCTEON HW code knows only about RGMII. And looking at
-octeon ethernet staging driver it does phy connect always with
-PHY_INTERFACE_MODE_GMII. I did some experimentation, and it seems that
-with PHY_INTERFACE_MODE_RGMII_RXID it starts to work.. In the DT we have
-for ethernet for this board:
+so that we can keep the "filter" notion all reserved to the core MCA
+code and there's no confusion.
 
-	rx-delay = <0>;
-	tx-delay = <0x10>;
+And then amd_filter_mce() is free to be used in the core code.
 
-which I guess matches, or does this make any sense?
+Thx.
 
-> Can you point me to the DT node as well..
+-- 
+Regards/Gruss,
+    Boris.
 
-arch/mips/boot/dts/cavium-octeon/ubnt_e100.dts
-
-A.
+Good mailing practices for 400: avoid top-posting and trim the reply.
