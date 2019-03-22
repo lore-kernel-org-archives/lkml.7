@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFFA1C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:30:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB3CC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:30:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EA1C218B0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:30:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED19D20449
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:30:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254233;
-	bh=LDqmSADztmthWpA9ec2cubVmB/5fucOjbTUOJuY/ftw=;
+	s=default; t=1553254241;
+	bh=cc5J9kK6D/jldqlf6YVjjK2tjW211MhNvw27Yqin7Lk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zw32vmJMxE924i38CkumjfRVcs8HXy9WagBpRHJjqY8ZQF0fObVQMvehJQTRxCVfZ
-	 aXYYNdoiafQb98729OH1j6OX71spqYJw+saRm2Ys98GlwTGXjbP3pug1uxW6OzjgxN
-	 vBbFb5RnGHxoAS++gNKiqRdqvAxRboamWmqf4tX0=
+	b=fSLOy8uRy/NitafKA424ivL8adXY2u7HBkRL+1y/pIQKMXruABagVQMmrw1496r0X
+	 s0RIOsHLaqx1G92MeBFA2Mcn+uImd3iRGcSi3vRXUjPD6CtgMq/OVi13AzIFjrddEI
+	 +xeJXJmT8sQc1+mVVG52nCx8I4ZrbjUpfvC0VyzY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729957AbfCVLac (ORCPT
+        id S1729967AbfCVLaj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:30:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58440 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:30:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58598 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729944AbfCVLaZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:30:25 -0400
+        id S1729672AbfCVLag (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:30:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34F0F2183E;
-        Fri, 22 Mar 2019 11:30:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9197E21916;
+        Fri, 22 Mar 2019 11:30:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254224;
-        bh=LDqmSADztmthWpA9ec2cubVmB/5fucOjbTUOJuY/ftw=;
+        s=default; t=1553254235;
+        bh=cc5J9kK6D/jldqlf6YVjjK2tjW211MhNvw27Yqin7Lk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d9/VfbARJ2qKvAaUvWOXrG05xZtmK9+MJQyyuxAP20RnMZxFy+zLX/TxQUO2s8W9o
-         nqmT49B51xk8+Kxv6zL25/yYzfUI9AzI0bUBfes0IzIeyt8F/wFG15XjeLDFo4Gy7Q
-         +E0jNjuGo7QUWRnbTKxGJejMjYyXRgPBbHbARDJk=
+        b=Ab/VLpyQ45p0sLc1DPlMTPm2rsXH310XenQUNj2a2tR5q1eltuzXhvRr28cwt8k5B
+         umG7mhnnbenJgQpq6D2CiJG/uxvf4DaDWY3bYYvCX2LbrtEcBRezvL9dYO1K7Olf/8
+         qw4Q2OaJVsKDp2Qdd88FzwOyV8CUDFB5xCNnZjhc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sergey Nazarov <s-nazarov@yandex.ru>,
-        Paul Moore <paul@paul-moore.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 070/230] net: avoid use IPCB in cipso_v4_error
-Date:   Fri, 22 Mar 2019 12:13:28 +0100
-Message-Id: <20190322111241.591763555@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH 4.4 073/230] applicom: Fix potential Spectre v1 vulnerabilities
+Date:   Fri, 22 Mar 2019 12:13:31 +0100
+Message-Id: <20190322111241.792717389@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -66,103 +64,104 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Nazarov Sergey <s-nazarov@yandex.ru>
+From: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-[ Upstream commit 3da1ed7ac398f34fff1694017a07054d69c5f5c5 ]
+commit d7ac3c6ef5d8ce14b6381d52eb7adafdd6c8bb3c upstream.
 
-Extract IP options in cipso_v4_error and use __icmp_send.
+IndexCard is indirectly controlled by user-space, hence leading to
+a potential exploitation of the Spectre variant 1 vulnerability.
 
-Signed-off-by: Sergey Nazarov <s-nazarov@yandex.ru>
-Acked-by: Paul Moore <paul@paul-moore.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This issue was detected with the help of Smatch:
+
+drivers/char/applicom.c:418 ac_write() warn: potential spectre issue 'apbs' [r]
+drivers/char/applicom.c:728 ac_ioctl() warn: potential spectre issue 'apbs' [r] (local cap)
+
+Fix this by sanitizing IndexCard before using it to index apbs.
+
+Notice that given that speculation windows are large, the policy is
+to kill the speculation on the first load and not worry if it can be
+completed with a dependent load/store [1].
+
+[1] https://lore.kernel.org/lkml/20180423164740.GY17484@dhcp22.suse.cz/
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- include/net/ip.h      |    2 ++
- net/ipv4/cipso_ipv4.c |   17 +++++++++++++++--
- net/ipv4/ip_options.c |   22 +++++++++++++++++-----
- 3 files changed, 34 insertions(+), 7 deletions(-)
 
---- a/include/net/ip.h
-+++ b/include/net/ip.h
-@@ -546,6 +546,8 @@ static inline int ip_options_echo(struct
- }
+---
+ drivers/char/applicom.c |   35 ++++++++++++++++++++++++-----------
+ 1 file changed, 24 insertions(+), 11 deletions(-)
+
+--- a/drivers/char/applicom.c
++++ b/drivers/char/applicom.c
+@@ -32,6 +32,7 @@
+ #include <linux/wait.h>
+ #include <linux/init.h>
+ #include <linux/fs.h>
++#include <linux/nospec.h>
  
- void ip_options_fragment(struct sk_buff *skb);
-+int __ip_options_compile(struct net *net, struct ip_options *opt,
-+			 struct sk_buff *skb, __be32 *info);
- int ip_options_compile(struct net *net, struct ip_options *opt,
- 		       struct sk_buff *skb);
- int ip_options_get(struct net *net, struct ip_options_rcu **optp,
---- a/net/ipv4/cipso_ipv4.c
-+++ b/net/ipv4/cipso_ipv4.c
-@@ -1805,13 +1805,26 @@ validate_return:
-  */
- void cipso_v4_error(struct sk_buff *skb, int error, u32 gateway)
- {
-+	unsigned char optbuf[sizeof(struct ip_options) + 40];
-+	struct ip_options *opt = (struct ip_options *)optbuf;
+ #include <asm/io.h>
+ #include <asm/uaccess.h>
+@@ -386,7 +387,11 @@ static ssize_t ac_write(struct file *fil
+ 	TicCard = st_loc.tic_des_from_pc;	/* tic number to send            */
+ 	IndexCard = NumCard - 1;
+ 
+-	if((NumCard < 1) || (NumCard > MAX_BOARD) || !apbs[IndexCard].RamIO)
++	if (IndexCard >= MAX_BOARD)
++		return -EINVAL;
++	IndexCard = array_index_nospec(IndexCard, MAX_BOARD);
 +
- 	if (ip_hdr(skb)->protocol == IPPROTO_ICMP || error != -EACCES)
- 		return;
++	if (!apbs[IndexCard].RamIO)
+ 		return -EINVAL;
  
-+	/*
-+	 * We might be called above the IP layer,
-+	 * so we can not use icmp_send and IPCB here.
-+	 */
-+
-+	memset(opt, 0, sizeof(struct ip_options));
-+	opt->optlen = ip_hdr(skb)->ihl*4 - sizeof(struct iphdr);
-+	if (__ip_options_compile(dev_net(skb->dev), opt, skb, NULL))
-+		return;
-+
- 	if (gateway)
--		icmp_send(skb, ICMP_DEST_UNREACH, ICMP_NET_ANO, 0);
-+		__icmp_send(skb, ICMP_DEST_UNREACH, ICMP_NET_ANO, 0, opt);
- 	else
--		icmp_send(skb, ICMP_DEST_UNREACH, ICMP_HOST_ANO, 0);
-+		__icmp_send(skb, ICMP_DEST_UNREACH, ICMP_HOST_ANO, 0, opt);
- }
- 
- /**
---- a/net/ipv4/ip_options.c
-+++ b/net/ipv4/ip_options.c
-@@ -254,8 +254,9 @@ static void spec_dst_fill(__be32 *spec_d
-  * If opt == NULL, then skb->data should point to IP header.
-  */
- 
--int ip_options_compile(struct net *net,
--		       struct ip_options *opt, struct sk_buff *skb)
-+int __ip_options_compile(struct net *net,
-+			 struct ip_options *opt, struct sk_buff *skb,
-+			 __be32 *info)
- {
- 	__be32 spec_dst = htonl(INADDR_ANY);
- 	unsigned char *pp_ptr = NULL;
-@@ -472,11 +473,22 @@ eol:
- 		return 0;
- 
- error:
--	if (skb) {
--		icmp_send(skb, ICMP_PARAMETERPROB, 0, htonl((pp_ptr-iph)<<24));
+ #ifdef DEBUG
+@@ -697,6 +702,7 @@ static long ac_ioctl(struct file *file,
+ 	unsigned char IndexCard;
+ 	void __iomem *pmem;
+ 	int ret = 0;
++	static int warncount = 10;
+ 	volatile unsigned char byte_reset_it;
+ 	struct st_ram_io *adgl;
+ 	void __user *argp = (void __user *)arg;
+@@ -711,16 +717,12 @@ static long ac_ioctl(struct file *file,
+ 	mutex_lock(&ac_mutex);	
+ 	IndexCard = adgl->num_card-1;
+ 	 
+-	if(cmd != 6 && ((IndexCard >= MAX_BOARD) || !apbs[IndexCard].RamIO)) {
+-		static int warncount = 10;
+-		if (warncount) {
+-			printk( KERN_WARNING "APPLICOM driver IOCTL, bad board number %d\n",(int)IndexCard+1);
+-			warncount--;
+-		}
+-		kfree(adgl);
+-		mutex_unlock(&ac_mutex);
+-		return -EINVAL;
 -	}
-+	if (info)
-+		*info = htonl((pp_ptr-iph)<<24);
- 	return -EINVAL;
- }
++	if (cmd != 6 && IndexCard >= MAX_BOARD)
++		goto err;
++	IndexCard = array_index_nospec(IndexCard, MAX_BOARD);
 +
-+int ip_options_compile(struct net *net,
-+		       struct ip_options *opt, struct sk_buff *skb)
-+{
-+	int ret;
-+	__be32 info;
-+
-+	ret = __ip_options_compile(net, opt, skb, &info);
-+	if (ret != 0 && skb)
-+		icmp_send(skb, ICMP_PARAMETERPROB, 0, info);
-+	return ret;
-+}
- EXPORT_SYMBOL(ip_options_compile);
++	if (cmd != 6 && !apbs[IndexCard].RamIO)
++		goto err;
  
- /*
+ 	switch (cmd) {
+ 		
+@@ -838,5 +840,16 @@ static long ac_ioctl(struct file *file,
+ 	kfree(adgl);
+ 	mutex_unlock(&ac_mutex);
+ 	return 0;
++
++err:
++	if (warncount) {
++		pr_warn("APPLICOM driver IOCTL, bad board number %d\n",
++			(int)IndexCard + 1);
++		warncount--;
++	}
++	kfree(adgl);
++	mutex_unlock(&ac_mutex);
++	return -EINVAL;
++
+ }
+ 
 
 
