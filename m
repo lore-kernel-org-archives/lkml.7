@@ -2,70 +2,75 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06B8FC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:44:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E78D3C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:44:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA85021900
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:44:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="p2Qz0s5/"
+	by mail.kernel.org (Postfix) with ESMTP id BFDA921900
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:44:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727770AbfCVQoj (ORCPT
+        id S1727942AbfCVQow (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 12:44:39 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:59364 "EHLO mail.skyhub.de"
+        Fri, 22 Mar 2019 12:44:52 -0400
+Received: from foss.arm.com ([217.140.101.70]:49338 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726667AbfCVQoj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 12:44:39 -0400
-Received: from zn.tnic (p200300EC2F098000329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:8000:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id EDC501EC09F1;
-        Fri, 22 Mar 2019 17:44:37 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1553273078;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=ZmQpzNFcqBpAXeW0vjr7E+LBfluLIyrtjVPh6+Uat+c=;
-        b=p2Qz0s5/fcBA5gMX4R7bUkoeQLYr4unZGDCoj/qTfNPRmd51e9Bl3g0kInIdvJTDh2eFmb
-        J17Vs9BCBrcRodiRiplPJ+vy8NKQSD6zhpvDmxajKetnTsj2VZyqA52LzLZfmLgKwO+jzo
-        xdo7kRkgOrqx08P9cnq60721gv9pCyM=
-Date:   Fri, 22 Mar 2019 17:44:45 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Pu Wen <puwen@hygon.cn>
-Cc:     "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "hpa@zytor.com" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH] x86/cpu/hygon: Fix phys_proc_id calculation logic
- for multi-die processor
-Message-ID: <20190322164445.GG12472@zn.tnic>
-References: <1553251380-7015-1-git-send-email-puwen@hygon.cn>
- <20190322155449.GE12472@zn.tnic>
- <639a5bc6-f821-ee9d-1594-d02701321192@hygon.cn>
+        id S1726603AbfCVQov (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 12:44:51 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5F85BA78;
+        Fri, 22 Mar 2019 09:44:51 -0700 (PDT)
+Received: from [10.1.196.69] (e112269-lin.cambridge.arm.com [10.1.196.69])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7204A3F59C;
+        Fri, 22 Mar 2019 09:44:50 -0700 (PDT)
+Subject: Re: [PATCH] firmware: arm_scmi: Fix to check return value of
+ of_match_device
+To:     Aditya Pakki <pakki001@umn.edu>
+Cc:     kjlu@umn.edu, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Sudeep Holla <sudeep.holla@arm.com>
+References: <20190318230430.8273-1-pakki001@umn.edu>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <6053ea18-f092-bb4a-fe0a-a40eda1abfdd@arm.com>
+Date:   Fri, 22 Mar 2019 16:44:49 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
+In-Reply-To: <20190318230430.8273-1-pakki001@umn.edu>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <639a5bc6-f821-ee9d-1594-d02701321192@hygon.cn>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 23, 2019 at 12:19:01AM +0800, Pu Wen wrote:
-> That 6 is not a magic number.
+On 18/03/2019 23:04, Aditya Pakki wrote:
+> of_match_device can return NULL if no matching device is found. This patch
+> checks and returns -ENODEV in such a scenario.
+> 
+> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+> ---
+>  drivers/firmware/arm_scmi/driver.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
+> index 8f952f2f1a29..0e0330b44b7b 100644
+> --- a/drivers/firmware/arm_scmi/driver.c
+> +++ b/drivers/firmware/arm_scmi/driver.c
+> @@ -799,6 +799,8 @@ static int scmi_probe(struct platform_device *pdev)
+>  	}
+>  
+>  	desc = of_match_device(scmi_of_match, dev)->data;
+> +	if (!desc)
+> +		return -ENODEV;
 
-Well, if I see a naked 6, then it is only magic to me. Now if it were a
-proper define with a descriptive name...
+If of_match_device() returns NULL, we've already dereferenced it due to
+the "->data" access.
 
--- 
-Regards/Gruss,
-    Boris.
+This would be better changed to be a call to of_device_get_match_data()
+which handles the NULL return gracefully.
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
+Steve
