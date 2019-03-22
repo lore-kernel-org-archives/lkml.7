@@ -2,51 +2,53 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DBF6C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:47:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A891C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:48:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 256502070D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:47:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 685F62070D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:48:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553258872;
-	bh=i1pblu8DiG3TVh9UAicxNnzeJYoVipUxCpIl/KLYDUU=;
+	s=default; t=1553258889;
+	bh=Vt8O4dy7jkwslh7TmHFOclzp+qAhH3dTKYLNCFzuwLI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CxYcL9RA7HH4x7Wq+OZmED/Q2MSenxaf0xzUEzXbV4cBDXxLzoQpEy9Cr7bbURhvy
-	 M0lH5z4lSD9rF4Kin9gaspUxxD9GXgBrt3m2BbC0PkaBwpl3O5D1HTj7J8+ZtNWPip
-	 KbvJuttnUIQPtv9UQt/87t+8ny07mD++bNUSNss8=
+	b=LzpPpXpmtoNO8dnZ+jTkEBnS8j2qoR7MGcnO3ywGmWPuFQzd+fsXn975fliZ8NhiV
+	 zxF4LeOagDQqAvoFnU3QxAU/jdMfnk5FAFiTootdUvuSnqIJvCV6nYtSUMPkoGMJ3b
+	 SkmIkyZoRjUV9/W4vGq/tx81BDwxU8Iid/LkJeLQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387759AbfCVMru (ORCPT
+        id S2387919AbfCVMsI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:47:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34412 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:48:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34286 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387727AbfCVL5w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:57:52 -0400
+        id S2387721AbfCVL5p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:57:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE8B22192D;
-        Fri, 22 Mar 2019 11:57:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 416F420850;
+        Fri, 22 Mar 2019 11:57:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255871;
-        bh=i1pblu8DiG3TVh9UAicxNnzeJYoVipUxCpIl/KLYDUU=;
+        s=default; t=1553255864;
+        bh=Vt8O4dy7jkwslh7TmHFOclzp+qAhH3dTKYLNCFzuwLI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v6rbNTcncoxovrG7QfJsYNsImxOvTx8XeUdkNxieCYTJjwh0ukH7RI2Nr0GH+kkqi
-         Q3Z+wcA4kOxhny1/byACMqGVXG1wSX+qyTJkP/EBvD6B3cElkuJ8kQTzZNr6tCv7Nu
-         HXsd4jYl6zBCM1QB7SHbjoz0b4BTOet7ucIfDBFg=
+        b=Y9aWrWVFnz6zxEbxPBNHsH5Qj82AuN2H1sPqTebuPaKpqlxLJdUexizq4BrbgWn2a
+         vmjJh1t20nT8cNcw9VZeXg05399cqH7Giu3muMGDeGDdEyTX34ItuVswGqG0PcQtzp
+         mTs1Rd9DBTY2kZzA1hAACSRUtR4a2b2LWsIgPR7o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
-        Zhang Zhijie <zhangzj@rock-chips.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.19 022/280] crypto: rockchip - update new iv to device in multiple operations
-Date:   Fri, 22 Mar 2019 12:12:55 +0100
-Message-Id: <20190322111307.544337979@linuxfoundation.org>
+        stable@vger.kernel.org, Andrew Jones <drjones@redhat.com>,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 038/280] KVM: arm/arm64: Reset the VCPU without preemption and vcpu state loaded
+Date:   Fri, 22 Mar 2019 12:13:11 +0100
+Message-Id: <20190322111308.458170930@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -65,92 +67,86 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Zhang Zhijie <zhangzj@rock-chips.com>
+[ Upstream commit e761a927bc9a7ee6ceb7c4f63d5922dbced87f0d ]
 
-commit c1c214adcb56d36433480c8fedf772498e7e539c upstream.
+We have two ways to reset a vcpu:
+- either through VCPU_INIT
+- or through a PSCI_ON call
 
-For chain mode in cipher(eg. AES-CBC/DES-CBC), the iv is continuously
-updated in the operation. The new iv value should be written to device
-register by software.
+The first one is easy to reason about. The second one is implemented
+in a more bizarre way, as it is the vcpu that handles PSCI_ON that
+resets the vcpu that is being powered-on. As we need to turn the logic
+around and have the target vcpu to reset itself, we must take some
+preliminary steps.
 
-Reported-by: Eric Biggers <ebiggers@google.com>
-Fixes: 433cd2c617bf ("crypto: rockchip - add crypto driver for rk3288")
-Cc: <stable@vger.kernel.org> # v4.5+
-Signed-off-by: Zhang Zhijie <zhangzj@rock-chips.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Resetting the VCPU state modifies the system register state in memory,
+but this may interact with vcpu_load/vcpu_put if running with preemption
+disabled, which in turn may lead to corrupted system register state.
 
+Address this by disabling preemption and doing put/load if required
+around the reset logic.
+
+Reviewed-by: Andrew Jones <drjones@redhat.com>
+Signed-off-by: Christoffer Dall <christoffer.dall@arm.com>
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/rockchip/rk3288_crypto.h            |    1 
- drivers/crypto/rockchip/rk3288_crypto_ablkcipher.c |   34 +++++++++++++++++++++
- 2 files changed, 35 insertions(+)
+ arch/arm64/kvm/reset.c | 26 ++++++++++++++++++++++++--
+ 1 file changed, 24 insertions(+), 2 deletions(-)
 
---- a/drivers/crypto/rockchip/rk3288_crypto.h
-+++ b/drivers/crypto/rockchip/rk3288_crypto.h
-@@ -245,6 +245,7 @@ struct rk_cipher_ctx {
- 	struct rk_crypto_info		*dev;
- 	unsigned int			keylen;
- 	u32				mode;
-+	u8				iv[AES_BLOCK_SIZE];
- };
- 
- enum alg_type {
---- a/drivers/crypto/rockchip/rk3288_crypto_ablkcipher.c
-+++ b/drivers/crypto/rockchip/rk3288_crypto_ablkcipher.c
-@@ -242,6 +242,17 @@ static void crypto_dma_start(struct rk_c
- static int rk_set_data_start(struct rk_crypto_info *dev)
+diff --git a/arch/arm64/kvm/reset.c b/arch/arm64/kvm/reset.c
+index e37c78bbe1ca..644dd0050766 100644
+--- a/arch/arm64/kvm/reset.c
++++ b/arch/arm64/kvm/reset.c
+@@ -99,16 +99,33 @@ int kvm_arch_dev_ioctl_check_extension(struct kvm *kvm, long ext)
+  * This function finds the right table above and sets the registers on
+  * the virtual CPU struct to their architecturally defined reset
+  * values.
++ *
++ * Note: This function can be called from two paths: The KVM_ARM_VCPU_INIT
++ * ioctl or as part of handling a request issued by another VCPU in the PSCI
++ * handling code.  In the first case, the VCPU will not be loaded, and in the
++ * second case the VCPU will be loaded.  Because this function operates purely
++ * on the memory-backed valus of system registers, we want to do a full put if
++ * we were loaded (handling a request) and load the values back at the end of
++ * the function.  Otherwise we leave the state alone.  In both cases, we
++ * disable preemption around the vcpu reset as we would otherwise race with
++ * preempt notifiers which also call put/load.
+  */
+ int kvm_reset_vcpu(struct kvm_vcpu *vcpu)
  {
- 	int err;
-+	struct ablkcipher_request *req =
-+		ablkcipher_request_cast(dev->async_req);
-+	struct crypto_ablkcipher *tfm = crypto_ablkcipher_reqtfm(req);
-+	struct rk_cipher_ctx *ctx = crypto_ablkcipher_ctx(tfm);
-+	u32 ivsize = crypto_ablkcipher_ivsize(tfm);
-+	u8 *src_last_blk = page_address(sg_page(dev->sg_src)) +
-+		dev->sg_src->offset + dev->sg_src->length - ivsize;
+ 	const struct kvm_regs *cpu_reset;
++	int ret = -EINVAL;
++	bool loaded;
 +
-+	/* store the iv that need to be updated in chain mode */
-+	if (ctx->mode & RK_CRYPTO_DEC)
-+		memcpy(ctx->iv, src_last_blk, ivsize);
++	preempt_disable();
++	loaded = (vcpu->cpu != -1);
++	if (loaded)
++		kvm_arch_vcpu_put(vcpu);
  
- 	err = dev->load_data(dev, dev->sg_src, dev->sg_dst);
- 	if (!err)
-@@ -286,6 +297,28 @@ static void rk_iv_copyback(struct rk_cry
- 		memcpy_fromio(req->info, dev->reg + RK_CRYPTO_AES_IV_0, ivsize);
+ 	switch (vcpu->arch.target) {
+ 	default:
+ 		if (test_bit(KVM_ARM_VCPU_EL1_32BIT, vcpu->arch.features)) {
+ 			if (!cpu_has_32bit_el1())
+-				return -EINVAL;
++				goto out;
+ 			cpu_reset = &default_regs_reset32;
+ 		} else {
+ 			cpu_reset = &default_regs_reset;
+@@ -131,5 +148,10 @@ int kvm_reset_vcpu(struct kvm_vcpu *vcpu)
+ 		vcpu->arch.workaround_flags |= VCPU_WORKAROUND_2_FLAG;
+ 
+ 	/* Reset timer */
+-	return kvm_timer_vcpu_reset(vcpu);
++	ret = kvm_timer_vcpu_reset(vcpu);
++out:
++	if (loaded)
++		kvm_arch_vcpu_load(vcpu, smp_processor_id());
++	preempt_enable();
++	return ret;
  }
- 
-+static void rk_update_iv(struct rk_crypto_info *dev)
-+{
-+	struct ablkcipher_request *req =
-+		ablkcipher_request_cast(dev->async_req);
-+	struct crypto_ablkcipher *tfm = crypto_ablkcipher_reqtfm(req);
-+	struct rk_cipher_ctx *ctx = crypto_ablkcipher_ctx(tfm);
-+	u32 ivsize = crypto_ablkcipher_ivsize(tfm);
-+	u8 *new_iv = NULL;
-+
-+	if (ctx->mode & RK_CRYPTO_DEC) {
-+		new_iv = ctx->iv;
-+	} else {
-+		new_iv = page_address(sg_page(dev->sg_dst)) +
-+			 dev->sg_dst->offset + dev->sg_dst->length - ivsize;
-+	}
-+
-+	if (ivsize == DES_BLOCK_SIZE)
-+		memcpy_toio(dev->reg + RK_CRYPTO_TDES_IV_0, new_iv, ivsize);
-+	else if (ivsize == AES_BLOCK_SIZE)
-+		memcpy_toio(dev->reg + RK_CRYPTO_AES_IV_0, new_iv, ivsize);
-+}
-+
- /* return:
-  *	true	some err was occurred
-  *	fault	no err, continue
-@@ -307,6 +340,7 @@ static int rk_ablk_rx(struct rk_crypto_i
- 		}
- 	}
- 	if (dev->left_bytes) {
-+		rk_update_iv(dev);
- 		if (dev->aligned) {
- 			if (sg_is_last(dev->sg_src)) {
- 				dev_err(dev->dev, "[%s:%d] Lack of data\n",
+-- 
+2.19.1
+
 
 
