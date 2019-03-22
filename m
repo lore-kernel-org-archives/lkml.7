@@ -2,224 +2,242 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F888C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 05:28:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EA46C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 05:35:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEC35218FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 05:28:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F865218FE
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 05:35:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=protonmail.ch header.i=@protonmail.ch header.b="f4AZX8mb"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="ocgrHda6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727607AbfCVF2x (ORCPT
+        id S1727695AbfCVFfH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 01:28:53 -0400
-Received: from mail2.protonmail.ch ([185.70.40.22]:43268 "EHLO
-        mail2.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726056AbfCVF2x (ORCPT
+        Fri, 22 Mar 2019 01:35:07 -0400
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:54605 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726079AbfCVFfG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 01:28:53 -0400
-Date:   Fri, 22 Mar 2019 05:28:47 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.ch;
-        s=default; t=1553232529;
-        bh=NjhC7nEplMDnGa/sH2KIWG3FL8yXUd+OqTgLzK48IXM=;
-        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:
-         Feedback-ID:From;
-        b=f4AZX8mb5BHsB9Rq6tU3x+VlbCDpky5pNj/LoT1RiGgOs+wRI4agmOB92G/itLAKg
-         0Ma5rnGm/IVczXZRQNXQWorHrAowL3jSx9Liwx9VRMYM7ORIx/PiQ08DmunUOmAA7/
-         qIq9X2g9dtGKhzXxTW4iYdliO3GvvkSt/6dJ5I2c=
-To:     Leo Yan <leo.yan@linaro.org>
-From:   Solomon Tan <solomonbstoner@protonmail.ch>
-Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Reply-To: Solomon Tan <solomonbstoner@protonmail.ch>
-Subject: Re: [PATCH v4] perf tools: Add missing case value
-Message-ID: <d4UkZ-_LsO_rhF_RN_bTZGisCyClzXcpQMjpLqQmvPc0EIsEdEomTDtGqt4Wg0zIVeC-xYTo6LBl8wXHItLINiJILKJtWVgfynMzF7BeUyk=@protonmail.ch>
-In-Reply-To: <20190322015935.GA29608@leoy-ThinkPad-X240s>
-References: <iXDQnAbT-yValKlLnwDyoyBCwymrdxjykuMsgI4Cxau_e2ib9QYVroNDbJgZz3kuxTTaPJnyzRWmEY0TpEZDVQBSdElz9K9R0tAz79Qkp2s=@protonmail.ch>
- <20190321162702.GA24451@xps15>
- <vZ4GE7nXgr7nfrMHj_pp8qu6onE8B7YfoczBpbm9RA8spzbqAoEmAIT_YJXkGFXgK8tJqLdVBW_1D9D4jQ2Um51V7SWi1ZgIjrMaYxEYzqg=@protonmail.ch>
- <20190322015935.GA29608@leoy-ThinkPad-X240s>
-Feedback-ID: idpJ9Qep05LI5f2mQoaoGmmCIit-QceKL6uqbHgV_NOtNjcF0QNi56ai_biFv0uPMue2gAtmoKKy4wfiVgSKGg==:Ext:ProtonMail
+        Fri, 22 Mar 2019 01:35:06 -0400
+X-Greylist: delayed 160771 seconds by postgrey-1.27 at vger.kernel.org; Fri, 22 Mar 2019 01:35:04 EDT
+Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id x2M5Ymik020594;
+        Fri, 22 Mar 2019 14:34:49 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x2M5Ymik020594
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1553232889;
+        bh=3G+F+GkHXom1y9/RdMCamoGKcIrGh7/m05WrpcTgTk4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ocgrHda6QRh8sGsVIVTEHORMWv/7O/A4dtXw8MD9me830qEujWxb3EkGRiwCkLQhc
+         8ryxurCtjm2W08TAVwYwgkeH7MV+/Pz7MZN87+t7MMS/ZoXe35hEhgzvsSu0bcynNP
+         w7DZsJdAxG0lM7YqNmCR1+MQHGu04/Qg8msOItsj4xO/THrLNdJX9ztP3ASKTix6bL
+         k+CNV3dk5/6UT8CDkl7bxsa3t96/uzHjsD0ANpfIu2mZf8r70Zn4maVDiLitM9ZahC
+         xtzh6VzqbcwxLSPIXpoh9OUjPPqrwM5eWzox/dyBSOCxju2xxXpcNa600Yt7onirRt
+         +tDrD4WITRQ+w==
+X-Nifty-SrcIP: [209.85.217.52]
+Received: by mail-vs1-f52.google.com with SMTP id z6so719400vsc.0;
+        Thu, 21 Mar 2019 22:34:49 -0700 (PDT)
+X-Gm-Message-State: APjAAAWrJgw6Sz0XFNcyRi4hTvT35w2PW2E3YyEXoSWIur05j978ov9B
+        pTEMigmM6Bx0OCpwOKpJUaBEWeZTulaDYseQFOQ=
+X-Google-Smtp-Source: APXvYqx8I79lEVO+jw3DjawOBT7goLq61FD6qkY8IBZ0YFnaB9i4e1O1fltLjjPznqQTyB2+RvcN+a6ZS8AJmj27WP8=
+X-Received: by 2002:a67:7c04:: with SMTP id x4mr4802586vsc.155.1553232888139;
+ Thu, 21 Mar 2019 22:34:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; protocol="application/pgp-signature"; micalg=pgp-sha256; boundary="---------------------1fef5da3813a03b44951eb72aff0db07"; charset=UTF-8
+References: <20190315101013.GN8455@Legion-PC.fortress>
+In-Reply-To: <20190315101013.GN8455@Legion-PC.fortress>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Fri, 22 Mar 2019 14:34:12 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATsm23e_CuyfFw7_CR8xZQ3HnwNHCXhEm_zQZU2PUGK5A@mail.gmail.com>
+Message-ID: <CAK7LNATsm23e_CuyfFw7_CR8xZQ3HnwNHCXhEm_zQZU2PUGK5A@mail.gmail.com>
+Subject: Re: [RESEND PATCH v1] moduleparam: Save information about built-in
+ modules in separate file
+To:     Alexey Gladkov <gladkov.alexey@gmail.com>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        linux-api@vger.kernel.org,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Gleb Fotengauer-Malinovskiy <glebfm@altlinux.org>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rusty Russell <rusty@rustcorp.com.au>,
+        Jessica Yu <jeyu@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
------------------------1fef5da3813a03b44951eb72aff0db07
-Content-Type: multipart/mixed;boundary=---------------------dfdd195a29d63efb4c8652d4baf1a67b
+Hi.
 
------------------------dfdd195a29d63efb4c8652d4baf1a67b
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain;charset=utf-8
-
-Hi Liu Yan,
-
-On Friday, March 22, 2019 9:59 AM, Leo Yan <leo.yan@linaro.org> wrote:
-
-> Hi Solomon,
-> =
+(added some people to CC)
 
 
-> On Fri, Mar 22, 2019 at 12:47:11AM +0000, Solomon Tan wrote:
-> =
+On Fri, Mar 15, 2019 at 7:10 PM Alexey Gladkov <gladkov.alexey@gmail.com> wrote:
+>
+> Problem:
+>
+> When a kernel module is compiled as a separate module, some important
+> information about the kernel module is available via .modinfo section of
+> the module.  In contrast, when the kernel module is compiled into the
+> kernel, that information is not available.
 
 
-> [...]
-> =
+I might be missing something, but
+vmlinux provides info of builtin modules
+in /sys/module/.
+
+(Looks like currently only module_param and MODULE_VERSION)
+
+This patch is not exactly the same, but I see a kind of overwrap.
+I'd like to be sure if we want this new scheme.
 
 
-> > > On my side this patch is no different from V3, i.e it doesn't pass c=
-heckpatch
-> > > and it doesn't apply on my next tree.
-> > > Mathieu
-> > > =
+> Information about built-in modules is necessary in the following cases:
+>
+> 1. When it is necessary to find out what additional parameters can be
+> passed to the kernel at boot time.
 
 
-> > > > =
+Actually, /sys/module/<module>/parameters/
+exposes this information.
 
-
-> > > =
-
-
-> > > pub RSA 2048/C88289A6 2018-05-09solomonbstoner@protonmail.ch solomon=
-bstoner@protonmail.ch
-> > > =
-
-
-> > > > sub RSA 2048/7C5E8D6D 2018-05-09
-> > =
-
-
-> > I created a new branch from `next` for the patch mentioned above. Shou=
-ld I
-> > have made the patch directly on the `next` branch instead?
-> > I ran the following 2 commands to test the files I edited:
-> > =
-
-
-> >     perl scripts/checkpatch.pl -f tools/build/feature/test-libopencsd.=
-c
-> >     perl scripts/checkpatch.pl -f tools/perf/util/cs-etm-decoder/cs-et=
-m-decoder.c
-> >     =
-
-
-> > =
-
-
-> > The commands reported that the files "has no obvious style problems an=
-d is ready
-> > for submission." For your kind advice please. Thank you.
-> =
-
-
-> Suggest you to use below flow for sending patch:
-> =
-
-
-> -   git format HEAD~1: generate patch
-> -   ./scripts/checkpatch.pl xxxx.patch: check patch format
-> -   git send-email xxxx.patch: use git to send patch so avoid any
->     unexpected characters in the mail
-
-Thank you for your kind guidance. I realised that Mr Poirier
-had trouble with my patch because I copied-and-pasted it
-into a GUI web client. I was not aware previously that patch
-corruptions can happen that way.
-
-I have amended the patch and tested it with both `checkpatch`
-and `git am` before sending it out. =
+Doesn't it work for your purpose?
 
 
 
->     =
-
-
->     P.s. Marc has a good presentation [1] for upstreaming patches, you
->     could check page 16 for how to use the git tool.
->     =
-
-
->     [1] https://elinux.org/images/2/26/Getting-Your-Patches-in-Mainline-=
-Linux-What-Not-To-Do-and-a-Few-Things-You-Could-Try-Instead-Marc-Zyngier-A=
-RM.pdf
->     =
-
-
->     Thanks,
->     Leo Yan
+> 2. When you need to know which module names and their aliases are in
+> the kernel. This is very useful for creating an initrd image.
+>
+> Proposal:
+>
+> The proposed patch does not remove .modinfo section with module
+> information from the vmlinux at the build time and saves it into a
+> separate file after kernel linking. So, the kernel does not increase in
+> size and no additional information remains in it. Information is stored
+> in the same format as in the separate modules (null-terminated string
+> array). Because the .modinfo section is already exported with a separate
+> modules, we are not creating a new API.
+>
+> It can be easily read in the userspace:
+>
+> $ tr '\0' '\n' < kernel.builtin.modinfo
+> ext4.softdep=pre: crc32c
+> ext4.license=GPL
+> ext4.description=Fourth Extended Filesystem
+> ext4.author=Remy Card, Stephen Tweedie, Andrew Morton, Andreas Dilger, Theodore Ts'o and others
+> ext4.alias=fs-ext4
+> ext4.alias=ext3
+> ext4.alias=fs-ext3
+> ext4.alias=ext2
+> ext4.alias=fs-ext2
+> md_mod.alias=block-major-9-*
+> md_mod.alias=md
+> md_mod.description=MD RAID framework
+> md_mod.license=GPL
+> md_mod.parmtype=create_on_open:bool
+> md_mod.parmtype=start_dirty_degraded:int
+> ...
+>
+> Co-Developed-by: Gleb Fotengauer-Malinovskiy <glebfm@altlinux.org>
+> Signed-off-by: Gleb Fotengauer-Malinovskiy <glebfm@altlinux.org>
+> Signed-off-by: Alexey Gladkov <gladkov.alexey@gmail.com>
+> ---
+>  Makefile                    |  1 +
+>  include/linux/moduleparam.h | 12 +++++-------
+>  scripts/link-vmlinux.sh     |  8 ++++++++
+>  3 files changed, 14 insertions(+), 7 deletions(-)
+>
+> diff --git a/Makefile b/Makefile
+> index d5713e7b1e50..971102194c92 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -1288,6 +1288,7 @@ _modinst_:
+>         fi
+>         @cp -f $(objtree)/modules.order $(MODLIB)/
+>         @cp -f $(objtree)/modules.builtin $(MODLIB)/
+> +       @cp -f $(objtree)/kernel.builtin.modinfo $(MODLIB)/
+>         $(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modinst
+>
+>  # This depmod is only for convenience to give the initial
+> diff --git a/include/linux/moduleparam.h b/include/linux/moduleparam.h
+> index ba36506db4fb..5ba250d9172a 100644
+> --- a/include/linux/moduleparam.h
+> +++ b/include/linux/moduleparam.h
+> @@ -10,23 +10,21 @@
+>     module name. */
+>  #ifdef MODULE
+>  #define MODULE_PARAM_PREFIX /* empty */
+> +#define __MODULE_INFO_PREFIX /* empty */
+>  #else
+>  #define MODULE_PARAM_PREFIX KBUILD_MODNAME "."
+> +/* We cannot use MODULE_PARAM_PREFIX because some modules override it. */
+> +#define __MODULE_INFO_PREFIX KBUILD_MODNAME "."
+>  #endif
+>
+>  /* Chosen so that structs with an unsigned long line up. */
+>  #define MAX_PARAM_PREFIX_LEN (64 - sizeof(unsigned long))
+>
+> -#ifdef MODULE
+>  #define __MODULE_INFO(tag, name, info)                                   \
+>  static const char __UNIQUE_ID(name)[]                                    \
+>    __used __attribute__((section(".modinfo"), unused, aligned(1)))        \
+> -  = __stringify(tag) "=" info
+> -#else  /* !MODULE */
+> -/* This struct is here for syntactic coherency, it is not used */
+> -#define __MODULE_INFO(tag, name, info)                                   \
+> -  struct __UNIQUE_ID(name) {}
+> -#endif
+> +  = __MODULE_INFO_PREFIX __stringify(tag) "=" info
+> +
+>  #define __MODULE_PARM_TYPE(name, _type)                                          \
+>    __MODULE_INFO(parmtype, name##type, #name ":" _type)
+>
+> diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
+> index c8cf45362bd6..399d7e4d11ec 100755
+> --- a/scripts/link-vmlinux.sh
+> +++ b/scripts/link-vmlinux.sh
+> @@ -258,10 +258,12 @@ if [ -n "${CONFIG_KALLSYMS}" ]; then
+>
+>         # step 1
+>         vmlinux_link "" .tmp_vmlinux1
+> +       "${OBJCOPY}" -R .modinfo .tmp_vmlinux1
+>         kallsyms .tmp_vmlinux1 .tmp_kallsyms1.o
+>
+>         # step 2
+>         vmlinux_link .tmp_kallsyms1.o .tmp_vmlinux2
+> +       "${OBJCOPY}" -R .modinfo .tmp_vmlinux2
+>         kallsyms .tmp_vmlinux2 .tmp_kallsyms2.o
+>
+>         # step 3
+> @@ -273,6 +275,7 @@ if [ -n "${CONFIG_KALLSYMS}" ]; then
+>                 kallsyms_vmlinux=.tmp_vmlinux3
+>
+>                 vmlinux_link .tmp_kallsyms2.o .tmp_vmlinux3
+> +               "${OBJCOPY}" -R .modinfo .tmp_vmlinux3
+>
+>                 kallsyms .tmp_vmlinux3 .tmp_kallsyms3.o
+>         fi
+> @@ -281,6 +284,11 @@ fi
+>  info LD vmlinux
+>  vmlinux_link "${kallsymso}" vmlinux
+>
+> +info MODINFO kernel.builtin.modinfo
+> +"${OBJCOPY}" -j .modinfo -O binary vmlinux kernel.builtin.modinfo
+> +chmod 444 kernel.builtin.modinfo
+> +"${OBJCOPY}" -R .modinfo vmlinux
+> +
+>  if [ -n "${CONFIG_BUILDTIME_EXTABLE_SORT}" ]; then
+>         info SORTEX vmlinux
+>         sortextable vmlinux
+> --
+> 2.19.2
 >
 
 
------------------------dfdd195a29d63efb4c8652d4baf1a67b
-Content-Type: application/pgp-keys; filename="publickey - solomonbstoner@protonmail.ch - 0xA77658B9.asc"; name="publickey - solomonbstoner@protonmail.ch - 0xA77658B9.asc"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="publickey - solomonbstoner@protonmail.ch - 0xA77658B9.asc"; name="publickey - solomonbstoner@protonmail.ch - 0xA77658B9.asc"
-
-LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tDQpWZXJzaW9uOiBPcGVuUEdQLmpz
-IHY0LjQuMTANCkNvbW1lbnQ6IGh0dHBzOi8vb3BlbnBncGpzLm9yZw0KDQp4c0JOQkZyeTVGWUJD
-QUNWZG9oN1pvYnFaMTI2RUFPVDNjaktZalVIMURtQkxHeWEvWmxQV0xaVVBmMjkNCk5aMUduSHcx
-K0ZnYXZPODRPY3ZPK0RORm51eVllUG9ZM3NsaVVwNWpPT0xRNHhoQmVIL0U3ZWgybDhUVg0KdW9t
-ZFZLK1hsQ0NzcGFXZU9BR3ovSkt0dDgrV0RtbytsOUsrQTNHcXdnZHZPTjI3dTA0L3VYd1MyeE5W
-DQpHQWhBY0RVVGZBL3NMNTdUbWV0NU5KNXdoZ0dXM3d5alNPOSs0Zkw4aWtXaDlBMGJvL3BxVFo5
-L3NFTVcNCjdTOGllYXUxbklKUER5ZXBzeTU4TnE0ZFRnMTBIVll5WkMyZTdER0x4MXR4YzVPeE81
-V3hJcTgwazJXdQ0KeFhqRFU5aVhPT2I1ZElDeDJZSExTTGZmdTQ1VGw0bXBVam9tY3F2WFVZdmpM
-NEZYRGszTWtTVFhBQkVCDQpBQUhOTzNOdmJHOXRiMjVpYzNSdmJtVnlRSEJ5YjNSdmJtMWhhV3d1
-WTJnZ1BITnZiRzl0YjI1aWMzUnYNCmJtVnlRSEJ5YjNSdmJtMWhhV3d1WTJnK3dzQi9CQkFCQ0FB
-cEJRSmE4dVJXQmdzSkJ3Z0RBZ2tRNzdSbg0Kck1pQ2lhWUVGUWdLQWdNV0FnRUNHUUVDR3dNQ0hn
-RUFDZ2tRNzdSbnJNaUNpYWIweXdnQWxBemthWVZSDQpDMHFvL0lhY000NXRVVGJyTnlVYmVLeUds
-Mi9tTU9ma3JOTDcvcTBWemtxcmJxY2NTWjRzUVVta25IYU0NCk1Cdm1STnJiMXR4elNkTlZuS1ZQ
-VlJRSGE4eDlDcDVUQnhBTFV3NDdHOW81SnYrYVNueHRwWEFMSldldA0KbUt1WWlSaHRzUWxBazlF
-RlZJYzY3ajkvK2s5bkpTUkRtWnRLeU9jOGhXZkxjcFlGV0s2UXFLSWt1NG9xDQp3d0xFRzE0T0Nl
-c3VqV2E4Sm9iVy8rb1Irelh3QmJCOE55dWRGSm13b0FYLzdud2NTSlZ0bGRZeUdYbWoNCkt1VFFp
-eFJpWFh1TjhsNHBSdGRRdUdGdVhERjM4WVRrMDlNYyt1SmdjaVRZYmNSL3pmMGRhUktVbDB0aA0K
-RzBOVE85YzErZG02M0FHWjdMSkJIOFB1N0NrMi9hT3d4czdBVFFSYTh1UldBUWdBNVZWdCtKVGRa
-VXhwDQpuZSs2dzljSE0zTzY1Q1ZzcWFMNkI4VCtBcVF6a0VJbGJhQkI4RlV5citGa1BZZGRiNGVw
-SjlQVHNJLzYNCk1jeThTRTdWUUVuU2NuYVQvREtkbk1OUXJibngrRWgyM2NWNFNJVncveWVBT0hP
-Z1BvT0dHekZmVk0ySw0KZkVhQjJvTDk4eThNcUlRLzNEak9CYUpwZFdhQS9mQldEcVJ6aENqQzhX
-MkhndDIvRElQY2JWalpISUFtDQptZXBGSWo4R2JLZDhOVjhYVU1QcUtjWEVNTVZIdW1ndHNSVVBX
-eE9DN29wZjI3WmFLcjRteVd2NFdCVDANClo5RzAzT2VLUmEvU3ZoVUlYcjVMZzRyaWpkbTZWMVFL
-aFpvS3R4Wi9RR0RqdDg3dUtQb0M1ZTNwa2tQYg0KOXlvbHNFQVQ2U0xRcDd2TEVwWjRlUjFmd1Ju
-eDV3QVJBUUFCd3NCcEJCZ0JDQUFUQlFKYTh1UlhDUkR2DQp0R2VzeUlLSnBnSWJEQUFLQ1JEdnRH
-ZXN5SUtKcGk5N0IvOXhYU3VMRjc2QUd6ZWtwdFdiTVo2eXVYeWQNCmZza2IwL0NjL0xjR2tMV21V
-Y1hkbGRLWVdTLzg3ZXZTalZXZTFTbUhCQzVrZWhvVXp1bEpCZmx0SGpqMQ0KcVZCTWY0eHB6ckVz
-aGFCWUNxbllhTnpCa2NINlFINGNRT3cvMUw1WTZ5QjRPQVZGQjJ2d3UzN2dSNUJ4DQpEQWN2NHFD
-b1lvT1ZDRklDRFprV3lQWkFReFNLb3hHd3BXK2ZNOTdXOXBwV0Q4WEw5b2RlU29UVmN6a0INCnJK
-WTFrakltUnhONU5wMkg5UVRKY0EyMHNQNDJ0VnNQVzRuaC9HYkQ4cmc2Tkl3TFg3RWJVWkh2VjJE
-Mg0KRDJxRThSM1ZNTGNob3BSbGFIQjVHU1AzNWxpTkVuY2tKMmV0dTRUWVY4SXB6NkNseW16TnZy
-RjR1MkhkDQowZktFU0hRM2U3SEVWMGpQDQo9TTRBNA0KLS0tLS1FTkQgUEdQIFBVQkxJQyBLRVkg
-QkxPQ0stLS0tLQ0K
------------------------dfdd195a29d63efb4c8652d4baf1a67b--
-
------------------------1fef5da3813a03b44951eb72aff0db07
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: ProtonMail
-Comment: https://protonmail.com
-
-wsBcBAEBCAAGBQJclHKNAAoJEO+0Z6zIgommx+EH/jvvHnsS+F2JRDoNXKrE
-6u8KmunLz87T2bKXJBBR4CCFq5otmDaMgXlDZIWZHy4v6z1IgGPb14KZ1yon
-yR+UUhq1mttRK+TaO86AqwwzV5cUpeTSP+8K3UN8BHltcuymZTkg/uAeQWpw
-6iWK64kruSGKHyjxBwOF4HiIqBScZmOGEyhJuFmTx/WncapPbDrXuRZ6MsKf
-8oZ8L+Nt7WB/ZMc539Vze6TcY9PV1xb2XqcvMC2/aKDDR7+x3zquhbHGlEnX
-bO3p0fw+/IrqXCrn5ba1lQ9EN8yZRGrm+SADUvdBdMkvC7oONf9sGKZ4S5Xa
-e3ZwTyvj+bM0oND4+QjLuWw=
-=cgXf
------END PGP SIGNATURE-----
-
-
------------------------1fef5da3813a03b44951eb72aff0db07--
-
+-- 
+Best Regards
+Masahiro Yamada
