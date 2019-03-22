@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-12.0 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 050CBC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:30:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF4A4C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:30:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBD5D21925
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:30:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82D8621925
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:30:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728161AbfCVWaJ (ORCPT
+        id S1728021AbfCVWa6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 18:30:09 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:46541 "EHLO
+        Fri, 22 Mar 2019 18:30:58 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:49247 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727606AbfCVWaI (ORCPT
+        with ESMTP id S1726205AbfCVWa5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 18:30:08 -0400
+        Fri, 22 Mar 2019 18:30:57 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x2MMTI4H753278
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x2MMTxWC753328
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Fri, 22 Mar 2019 15:29:18 -0700
+        Fri, 22 Mar 2019 15:29:59 -0700
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x2MMTIbP753275;
-        Fri, 22 Mar 2019 15:29:18 -0700
-Date:   Fri, 22 Mar 2019 15:29:18 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x2MMTwiV753325;
+        Fri, 22 Mar 2019 15:29:58 -0700
+Date:   Fri, 22 Mar 2019 15:29:58 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Changbin Du <tipbot@zytor.com>
-Message-ID: <tip-70c819e4bf1c5f492768b399d898d458ccdad2b6@git.kernel.org>
-Cc:     ast@kernel.org, changbin.du@gmail.com,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de,
-        peterz@infradead.org, mingo@kernel.org, hpa@zytor.com,
-        acme@redhat.com, rostedt@goodmis.org, jolsa@kernel.org,
-        namhyung@kernel.org, daniel@iogearbox.net
-Reply-To: ast@kernel.org, linux-kernel@vger.kernel.org,
-          peterz@infradead.org, tglx@linutronix.de, changbin.du@gmail.com,
-          rostedt@goodmis.org, acme@redhat.com, hpa@zytor.com,
-          mingo@kernel.org, namhyung@kernel.org, daniel@iogearbox.net,
-          jolsa@kernel.org
-In-Reply-To: <20190316080556.3075-9-changbin.du@gmail.com>
-References: <20190316080556.3075-9-changbin.du@gmail.com>
+Message-ID: <tip-cb6186aeffda4d27e56066c79e9579e7831541d3@git.kernel.org>
+Cc:     namhyung@kernel.org, linux-kernel@vger.kernel.org,
+        mingo@kernel.org, jolsa@kernel.org, changbin.du@gmail.com,
+        peterz@infradead.org, rostedt@goodmis.org, daniel@iogearbox.net,
+        ast@kernel.org, kjlx@templeofstupid.com, hpa@zytor.com,
+        tglx@linutronix.de, acme@redhat.com
+Reply-To: tglx@linutronix.de, hpa@zytor.com, acme@redhat.com,
+          rostedt@goodmis.org, daniel@iogearbox.net, ast@kernel.org,
+          kjlx@templeofstupid.com, changbin.du@gmail.com, jolsa@kernel.org,
+          peterz@infradead.org, namhyung@kernel.org, mingo@kernel.org,
+          linux-kernel@vger.kernel.org
+In-Reply-To: <20190316080556.3075-10-changbin.du@gmail.com>
+References: <20190316080556.3075-10-changbin.du@gmail.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/urgent] perf top: Fix error handling in cmd_top()
-Git-Commit-ID: 70c819e4bf1c5f492768b399d898d458ccdad2b6
+Subject: [tip:perf/urgent] perf hist: Add missing map__put() in error case
+Git-Commit-ID: cb6186aeffda4d27e56066c79e9579e7831541d3
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -60,44 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  70c819e4bf1c5f492768b399d898d458ccdad2b6
-Gitweb:     https://git.kernel.org/tip/70c819e4bf1c5f492768b399d898d458ccdad2b6
+Commit-ID:  cb6186aeffda4d27e56066c79e9579e7831541d3
+Gitweb:     https://git.kernel.org/tip/cb6186aeffda4d27e56066c79e9579e7831541d3
 Author:     Changbin Du <changbin.du@gmail.com>
-AuthorDate: Sat, 16 Mar 2019 16:05:48 +0800
+AuthorDate: Sat, 16 Mar 2019 16:05:49 +0800
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitDate: Tue, 19 Mar 2019 16:52:04 -0300
 
-perf top: Fix error handling in cmd_top()
+perf hist: Add missing map__put() in error case
 
-We should go to the cleanup path, to avoid leaks, detected using gcc's
-ASan.
+We need to map__put() before returning from failure of
+sample__resolve_callchain().
+
+Detected with gcc's ASan.
 
 Signed-off-by: Changbin Du <changbin.du@gmail.com>
 Reviewed-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexei Starovoitov <ast@kernel.org>
 Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Krister Johansen <kjlx@templeofstupid.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Link: http://lkml.kernel.org/r/20190316080556.3075-9-changbin.du@gmail.com
+Fixes: 9c68ae98c6f7 ("perf callchain: Reference count maps")
+Link: http://lkml.kernel.org/r/20190316080556.3075-10-changbin.du@gmail.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-top.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ tools/perf/util/hist.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index 614f278235fa..2508a7a552fa 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -1617,8 +1617,9 @@ int cmd_top(int argc, const char **argv)
- 	annotation_config__init();
+diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+index 1f230285d78a..7ace7a10054d 100644
+--- a/tools/perf/util/hist.c
++++ b/tools/perf/util/hist.c
+@@ -1111,8 +1111,10 @@ int hist_entry_iter__add(struct hist_entry_iter *iter, struct addr_location *al,
  
- 	symbol_conf.try_vmlinux_path = (symbol_conf.vmlinux_name == NULL);
--	if (symbol__init(NULL) < 0)
--		return -1;
-+	status = symbol__init(NULL);
-+	if (status < 0)
-+		goto out_delete_evlist;
+ 	err = sample__resolve_callchain(iter->sample, &callchain_cursor, &iter->parent,
+ 					iter->evsel, al, max_stack_depth);
+-	if (err)
++	if (err) {
++		map__put(alm);
+ 		return err;
++	}
  
- 	sort__setup_elide(stdout);
- 
+ 	err = iter->ops->prepare_entry(iter, al);
+ 	if (err)
