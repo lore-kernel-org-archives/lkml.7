@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3450FC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:07:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57A49C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:07:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF32D2082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:07:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 280702195D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:07:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256439;
-	bh=wxfVRUHsFJC1DTkPOn88Ku5TqVNeGEgePxf3MzRojOg=;
+	s=default; t=1553256448;
+	bh=F+mrB5/CUDw7iMxEJltX4OongfZpWWeeW6meGmgDRL8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vB4ocD/DTiKgnvS8FqUadsz9YBgz8005bEIUotVr1J/siIyId2X1QTe/zDBGAOGSW
-	 ghubrSfujwB86jsO9XXHq/uwpiroot87JQxf3CSFHR7vO80QZ37xIeok4UNy+H9zt2
-	 FaR/5000pAxXFJMMqmIHxSJFNHbsCNn9v/Zn0yf8=
+	b=q3/cHI5KrbLFDZpPBXBQc2TznQdG9AwQbK++9E2gistn5YjGpUzNneV1HQ6dSEREf
+	 YjW/2jID50zMGdMmj95I8LgyIfB/JLdp7rvraEZO9zvAvuwKCkzjt8xnI+YHQndJGT
+	 ePveCw4VyZSCBzdRx9CCGqlHPiCS9kbc8GCJGWkg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388815AbfCVMHR (ORCPT
+        id S2389037AbfCVMH0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:07:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45604 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:07:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388775AbfCVMHJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:07:09 -0400
+        id S2389022AbfCVMHW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:07:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58CCE21934;
-        Fri, 22 Mar 2019 12:07:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 828F121934;
+        Fri, 22 Mar 2019 12:07:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256428;
-        bh=wxfVRUHsFJC1DTkPOn88Ku5TqVNeGEgePxf3MzRojOg=;
+        s=default; t=1553256442;
+        bh=F+mrB5/CUDw7iMxEJltX4OongfZpWWeeW6meGmgDRL8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GKHvCkKu+eNv2IsdPp0wUHTY/iZGhxOLFPPZdbI0YGqZsaoH22LvpfOo+SnLA0Cxj
-         s7/fHYm+KegCiydrgXnERB+188y6I6Urxh5tHj/Rr6taYUxStLGxMlpiO2ugeAz2RI
-         Hd4K2jWaJ54au6kcvZQl/4SwpFI7NsdAuzfRCROM=
+        b=x2C9Q4c1aD74nH/4rJ8qia27NXp7WsrG0ZT1wj5nOFuR7jAckth9tjns3LKFa+dyP
+         3l9OtIjVY6ERxRppOv288YVp67ZdPeX8Anl/t7YUJdieUSIPHT6WI0/Ir2Ex4Jy0J9
+         v4Txg8b3wnx8B077R/yJ1sbwH3+/AVc/vtURIRHk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Wolfram Sang <wsa@the-dreams.de>
-Subject: [PATCH 4.19 207/280] i2c: tegra: fix maximum transfer size
-Date:   Fri, 22 Mar 2019 12:16:00 +0100
-Message-Id: <20190322111331.984408844@linuxfoundation.org>
+        stable@vger.kernel.org, linux-stable@vger.kernel.org,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Subject: [PATCH 4.19 191/280] clk: uniphier: Fix update register for CPU-gear
+Date:   Fri, 22 Mar 2019 12:15:44 +0100
+Message-Id: <20190322111328.719482868@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -66,37 +67,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
+From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 
-commit f4e3f4ae1d9c9330de355f432b69952e8cef650c upstream.
+commit 521282237b9d78b9bff423ec818becd4c95841c2 upstream.
 
-Tegra186 and prior supports maximum 4K bytes per packet transfer
-including 12 bytes of packet header.
+Need to set the update bit in UNIPHIER_CLK_CPUGEAR_UPD to update
+the CPU-gear value.
 
-This patch fixes max write length limit to account packet header
-size for transfers.
-
-Cc: stable@vger.kernel.org # 4.4+
-
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Fixes: d08f1f0d596c ("clk: uniphier: add CPU-gear change (cpufreq) support")
+Cc: linux-stable@vger.kernel.org
+Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Acked-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/i2c/busses/i2c-tegra.c |    2 +-
+ drivers/clk/uniphier/clk-uniphier-cpugear.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/i2c/busses/i2c-tegra.c
-+++ b/drivers/i2c/busses/i2c-tegra.c
-@@ -832,7 +832,7 @@ static const struct i2c_algorithm tegra_
- /* payload size is only 12 bit */
- static const struct i2c_adapter_quirks tegra_i2c_quirks = {
- 	.max_read_len = 4096,
--	.max_write_len = 4096,
-+	.max_write_len = 4096 - 12,
- };
+--- a/drivers/clk/uniphier/clk-uniphier-cpugear.c
++++ b/drivers/clk/uniphier/clk-uniphier-cpugear.c
+@@ -47,7 +47,7 @@ static int uniphier_clk_cpugear_set_pare
+ 		return ret;
  
- static const struct tegra_i2c_hw_feature tegra20_i2c_hw = {
+ 	ret = regmap_write_bits(gear->regmap,
+-				gear->regbase + UNIPHIER_CLK_CPUGEAR_SET,
++				gear->regbase + UNIPHIER_CLK_CPUGEAR_UPD,
+ 				UNIPHIER_CLK_CPUGEAR_UPD_BIT,
+ 				UNIPHIER_CLK_CPUGEAR_UPD_BIT);
+ 	if (ret)
 
 
