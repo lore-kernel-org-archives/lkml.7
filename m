@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D40CC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 05:23:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEE76C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 05:23:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 304992075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 05:23:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EDD52075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 05:23:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727783AbfCVFX0 (ORCPT
+        id S1727768AbfCVFX0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Fri, 22 Mar 2019 01:23:26 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:45682 "EHLO
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:45684 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727538AbfCVFXQ (ORCPT
+        by vger.kernel.org with ESMTP id S1727545AbfCVFXQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 22 Mar 2019 01:23:16 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1h7Ce9-00015y-Np; Fri, 22 Mar 2019 05:23:13 +0000
+        id 1h7Ce9-00015x-Mp; Fri, 22 Mar 2019 05:23:13 +0000
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1h7Ce9-0001oX-H4; Fri, 22 Mar 2019 05:23:13 +0000
+        id 1h7Ce9-0001ob-He; Fri, 22 Mar 2019 05:23:13 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -36,16 +36,13 @@ From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
         "David S. Miller" <davem@davemloft.net>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Hui Peng" <benquike@gmail.com>,
-        "Mathias Payer" <mathias.payer@nebelwelt.net>,
-        "Sebastian Andrzej Siewior" <bigeasy@linutronix.de>
+        "Willy Tarreau" <w@1wt.eu>, "Jann Horn" <jannh@google.com>
 Date:   Fri, 22 Mar 2019 05:20:18 +0000
-Message-ID: <lsq.1553232018.475737595@decadent.org.uk>
+Message-ID: <lsq.1553232018.988169987@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 05/16] USB: hso: Fix OOB memory access in
- hso_probe/hso_get_config_data
+Subject: [PATCH 3.16 06/16] net/appletalk: fix minor pointer leak to
+ userspace in SIOCFINDIPDDPRT
 In-Reply-To: <lsq.1553232017.771830163@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -59,65 +56,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Hui Peng <benquike@gmail.com>
+From: Willy Tarreau <w@1wt.eu>
 
-commit 5146f95df782b0ac61abde36567e718692725c89 upstream.
+commit 9824dfae5741275473a23a7ed5756c7b6efacc9d upstream.
 
-The function hso_probe reads if_num from the USB device (as an u8) and uses
-it without a length check to index an array, resulting in an OOB memory read
-in hso_probe or hso_get_config_data.
+Fields ->dev and ->next of struct ipddp_route may be copied to
+userspace on the SIOCFINDIPDDPRT ioctl. This is only accessible
+to CAP_NET_ADMIN though. Let's manually copy the relevant fields
+instead of using memcpy().
 
-Add a length check for both locations and updated hso_probe to bail on
-error.
-
-This issue has been assigned CVE-2018-19985.
-
-Reported-by: Hui Peng <benquike@gmail.com>
-Reported-by: Mathias Payer <mathias.payer@nebelwelt.net>
-Signed-off-by: Hui Peng <benquike@gmail.com>
-Signed-off-by: Mathias Payer <mathias.payer@nebelwelt.net>
-Reviewed-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+BugLink: http://blog.infosectcbr.com.au/2018/09/linux-kernel-infoleaks.html
+Cc: Jann Horn <jannh@google.com>
+Signed-off-by: Willy Tarreau <w@1wt.eu>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/net/usb/hso.c | 18 ++++++++++++++++--
- 1 file changed, 16 insertions(+), 2 deletions(-)
+ drivers/net/appletalk/ipddp.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
---- a/drivers/net/usb/hso.c
-+++ b/drivers/net/usb/hso.c
-@@ -2812,6 +2812,12 @@ static int hso_get_config_data(struct us
- 		return -EIO;
- 	}
+--- a/drivers/net/appletalk/ipddp.c
++++ b/drivers/net/appletalk/ipddp.c
+@@ -284,8 +284,12 @@ static int ipddp_ioctl(struct net_device
+                 case SIOCFINDIPDDPRT:
+ 			spin_lock_bh(&ipddp_route_lock);
+ 			rp = __ipddp_find_route(&rcp);
+-			if (rp)
+-				memcpy(&rcp2, rp, sizeof(rcp2));
++			if (rp) {
++				memset(&rcp2, 0, sizeof(rcp2));
++				rcp2.ip    = rp->ip;
++				rcp2.at    = rp->at;
++				rcp2.flags = rp->flags;
++			}
+ 			spin_unlock_bh(&ipddp_route_lock);
  
-+	/* check if we have a valid interface */
-+	if (if_num > 16) {
-+		kfree(config_data);
-+		return -EINVAL;
-+	}
-+
- 	switch (config_data[if_num]) {
- 	case 0x0:
- 		result = 0;
-@@ -2882,10 +2888,18 @@ static int hso_probe(struct usb_interfac
- 
- 	/* Get the interface/port specification from either driver_info or from
- 	 * the device itself */
--	if (id->driver_info)
-+	if (id->driver_info) {
-+		/* if_num is controlled by the device, driver_info is a 0 terminated
-+		 * array. Make sure, the access is in bounds! */
-+		for (i = 0; i <= if_num; ++i)
-+			if (((u32 *)(id->driver_info))[i] == 0)
-+				goto exit;
- 		port_spec = ((u32 *)(id->driver_info))[if_num];
--	else
-+	} else {
- 		port_spec = hso_get_config_data(interface);
-+		if (port_spec < 0)
-+			goto exit;
-+	}
- 
- 	/* Check if we need to switch to alt interfaces prior to port
- 	 * configuration */
+ 			if (rp) {
 
