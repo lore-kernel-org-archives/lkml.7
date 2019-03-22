@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59A3AC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:46:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62840C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:46:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C66F2075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:46:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2ACA22075E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:46:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255182;
-	bh=31V7gweOq9EA8pHJlAKqYOD26MZUKcYwkg77+PTl7/0=;
+	s=default; t=1553255188;
+	bh=rbL8NuB46sBcfxqUCQzlMoedAXk/RqnEImWSHQ3gw2E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XqbjaxUYUfDgBlpAddzpY8YROilFa/gurxSjEqyRbuatFzxMYknjkRM+kMm6x3/Sm
-	 0nWdVWHPPbj3QxF/PVADs4J4yzy8WhGr/VDobq3R6QUnsG/BMfYGs2Wcup3vvupSmW
-	 2589oM50TVCy7nln7tllGAg1BIMX2i9K/8EUO1K8=
+	b=l9BIYiKk6O5gfHDhhwmPSer7ZIk3ihe6sX6SRXjjEM7s5GtqgyamYwWbFlY1udy+L
+	 0d3QNsVg1R1udgl0hp/88fsQX6KxCK6KVLlcPspeYMaXsGzI4mFfkYOL1FQ6vP6pBe
+	 gX8wWGK2gilz2zEGak7NhIVQPLRnL4yh7ancmkGo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731652AbfCVLqU (ORCPT
+        id S1731880AbfCVLq0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:46:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49412 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:46:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731604AbfCVLqR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:46:17 -0400
+        id S1732039AbfCVLqT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:46:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 208C32075E;
-        Fri, 22 Mar 2019 11:46:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9E2921916;
+        Fri, 22 Mar 2019 11:46:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255176;
-        bh=31V7gweOq9EA8pHJlAKqYOD26MZUKcYwkg77+PTl7/0=;
+        s=default; t=1553255179;
+        bh=rbL8NuB46sBcfxqUCQzlMoedAXk/RqnEImWSHQ3gw2E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FeAhVZWbF6MnCS4r3tJRhSmkxJtADWFdz5T9JPN4rgZYGFj+Qj8t5cIjTDOncLSl5
-         b0u05T/QR8r9QhYNIwRMDdJjdH3acfMoepfIgSebFR1Swtxg38z4x6SAJ6c/NdZbnL
-         955WdcH+xdx8K9KR0g5anMHaticWajAye1UMk6uM=
+        b=j69jridUyiTcJ8RTuyzpLXhff4vXXn3nIJNuvxNmDWj2DdAC+EOXhd00VzzaQXId8
+         9s/0ZzU7R6si9SWY8o2Ptxt+USVFWfrqcC9plXbcluR0iU0O6wypviLiD5FWmb2/yL
+         6QmZeN261qyhaEBsbjnVzdUIBx+DYkfLTiiUo+is=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>,
+        stable@vger.kernel.org, Alexander Shiyan <shc_work@mail.ru>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 010/183] drm/imx: ignore plane updates on disabled crtcs
-Date:   Fri, 22 Mar 2019 12:13:58 +0100
-Message-Id: <20190322111242.538900266@linuxfoundation.org>
+Subject: [PATCH 4.14 011/183] gpu: ipu-v3: Fix i.MX51 CSI control registers offset
+Date:   Fri, 22 Mar 2019 12:13:59 +0100
+Message-Id: <20190322111242.604922304@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111241.819468003@linuxfoundation.org>
 References: <20190322111241.819468003@linuxfoundation.org>
@@ -65,39 +66,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 4fb873c9648e383206e0a91cef9b03aa54066aca ]
+[ Upstream commit 2c0408dd0d8906b26fe8023889af7adf5e68b2c2 ]
 
-This patch fixes backtraces like the following when sending SIGKILL to a
-process with a currently pending plane update:
+The CSI0/CSI1 registers offset is at +0xe030000/+0xe038000 relative
+to the control module registers on IPUv3EX.
+This patch fixes wrong values for i.MX51 CSI0/CSI1.
 
-    [drm:ipu_plane_atomic_check] CRTC should be enabled
-    [drm:drm_framebuffer_remove] *ERROR* failed to commit
-    ------------[ cut here ]------------
-    WARNING: CPU: 3 PID: 63 at drivers/gpu/drm/drm_framebuffer.c:926 drm_framebuffer_remove+0x47c/0x498
-    atomic remove_fb failed with -22
+Fixes: 2ffd48f2e7 ("gpu: ipu-v3: Add Camera Sensor Interface unit")
 
+Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
 Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/imx/ipuv3-plane.c | 4 ++--
+ drivers/gpu/ipu-v3/ipu-common.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/imx/ipuv3-plane.c b/drivers/gpu/drm/imx/ipuv3-plane.c
-index cf98596c7ce1..d0d7f6adbc89 100644
---- a/drivers/gpu/drm/imx/ipuv3-plane.c
-+++ b/drivers/gpu/drm/imx/ipuv3-plane.c
-@@ -348,9 +348,9 @@ static int ipu_plane_atomic_check(struct drm_plane *plane,
- 	if (ret)
- 		return ret;
- 
--	/* CRTC should be enabled */
-+	/* nothing to check when disabling or disabled */
- 	if (!crtc_state->enable)
--		return -EINVAL;
-+		return 0;
- 
- 	switch (plane->type) {
- 	case DRM_PLANE_TYPE_PRIMARY:
+diff --git a/drivers/gpu/ipu-v3/ipu-common.c b/drivers/gpu/ipu-v3/ipu-common.c
+index 2c8411b8d050..5f8b31f879ca 100644
+--- a/drivers/gpu/ipu-v3/ipu-common.c
++++ b/drivers/gpu/ipu-v3/ipu-common.c
+@@ -894,8 +894,8 @@ static struct ipu_devtype ipu_type_imx51 = {
+ 	.cpmem_ofs = 0x1f000000,
+ 	.srm_ofs = 0x1f040000,
+ 	.tpm_ofs = 0x1f060000,
+-	.csi0_ofs = 0x1f030000,
+-	.csi1_ofs = 0x1f038000,
++	.csi0_ofs = 0x1e030000,
++	.csi1_ofs = 0x1e038000,
+ 	.ic_ofs = 0x1e020000,
+ 	.disp0_ofs = 0x1e040000,
+ 	.disp1_ofs = 0x1e048000,
 -- 
 2.19.1
 
