@@ -2,115 +2,211 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CF6DC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:10:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96B13C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:11:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 631D62190A
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:10:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55D3021925
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:11:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="cNDWaOM3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728117AbfCVWKl (ORCPT
+        id S1728123AbfCVWK6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 18:10:41 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:52015 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727839AbfCVWKk (ORCPT
+        Fri, 22 Mar 2019 18:10:58 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:41882 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727327AbfCVWK6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 18:10:40 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x2MMATLO748465
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Fri, 22 Mar 2019 15:10:29 -0700
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x2MMAS8Y748462;
-        Fri, 22 Mar 2019 15:10:28 -0700
-Date:   Fri, 22 Mar 2019 15:10:28 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Arnaldo Carvalho de Melo <tipbot@zytor.com>
-Message-ID: <tip-mqpvshayeqidlulx5qpioa59@git.kernel.org>
-Cc:     namhyung@kernel.org, mingo@kernel.org, tglx@linutronix.de,
-        hpa@zytor.com, adrian.hunter@intel.com, jolsa@kernel.org,
-        linux-kernel@vger.kernel.org, acme@redhat.com, arnd@arndb.de
-Reply-To: mingo@kernel.org, namhyung@kernel.org, hpa@zytor.com,
-          tglx@linutronix.de, adrian.hunter@intel.com, acme@redhat.com,
-          linux-kernel@vger.kernel.org, jolsa@kernel.org, arnd@arndb.de
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/urgent] perf tools: Update x86's syscall_64.tbl, no
- change in tools/perf behaviour
-Git-Commit-ID: df94bb44b518b1d0c9f4b2e5127441cec13ab75c
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Fri, 22 Mar 2019 18:10:58 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2MM9GF5144076;
+        Fri, 22 Mar 2019 22:10:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=AwNqgEgP2iOpOKElmz6wxxwrf2J2BtaY5FrpMmGH8Yw=;
+ b=cNDWaOM3B9P79mYrsSg5CtkdYvMq7uO2xJosfHZtOB9iaqt9C0qorSzzXzFaUj8gGq7C
+ Ui5MYVNip/M7VswANYLRHpSKZ4MUZ4U24pG8KPyKkRKLmLj3C3OSkanZjwh59zxEaam6
+ Qvh8jz6A+yYWpycrQz++KIEg7bZ1zYGJRknnH+zRm0go6W/O8o8RrbPVcvmi08eemwIa
+ vix1YGntapkauYvX2plnuy/1+cBeBAAFrDenOn07QOPxvHL4qlfM/e1LCJEyf6K+M5lT
+ UwVJ9AEOsHjVWiyspMpGOJnex6raoiK/7/a2N9CrdqQt1sA1rsINRzdULrSNEsbN8LhP GQ== 
+Received: from aserv0022.oracle.com (aserv0022.oracle.com [141.146.126.234])
+        by aserp2130.oracle.com with ESMTP id 2r8pnf8hxv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 22 Mar 2019 22:10:32 +0000
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x2MMAVOT021335
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 22 Mar 2019 22:10:32 GMT
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x2MMAVao027854;
+        Fri, 22 Mar 2019 22:10:31 GMT
+Received: from dhcp-burlington7-2nd-B-east-10-152-55-162.usdhcp.oraclecorp.com (/10.152.32.65)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 22 Mar 2019 15:10:31 -0700
+Subject: Re: [PATCH] x86/xen: Add "xen_timer_slop" command line option
+To:     thibodux@gmail.com, xen-devel@lists.xenproject.org,
+        linux-kernel@vger.kernel.org
+Cc:     oleksandr_andrushchenko@epam.com, tglx@linutronix.de,
+        jgross@suse.com, ryan.thibodeaux@starlab.io
+References: <1553279397-130201-1-git-send-email-ryan.thibodeaux@starlab.io>
+From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=boris.ostrovsky@oracle.com; prefer-encrypt=mutual; keydata=
+ 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
+ Jg6OxFYd01z+a+oL
+Message-ID: <abf65a68-9463-0f0e-1f51-6eefd3cacc88@oracle.com>
+Date:   Fri, 22 Mar 2019 18:10:16 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+In-Reply-To: <1553279397-130201-1-git-send-email-ryan.thibodeaux@starlab.io>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9203 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903220157
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  df94bb44b518b1d0c9f4b2e5127441cec13ab75c
-Gitweb:     https://git.kernel.org/tip/df94bb44b518b1d0c9f4b2e5127441cec13ab75c
-Author:     Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate: Mon, 11 Mar 2019 13:20:25 -0300
-Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Mon, 11 Mar 2019 16:13:04 -0300
+On 3/22/19 2:29 PM, thibodux@gmail.com wrote:
+> From: Ryan Thibodeaux <ryan.thibodeaux@starlab.io>
+>
+> Add a new command-line option "xen_timer_slop=<INT>" that sets the
+> minimum delta of virtual Xen timers. This commit does not change the
+> default timer slop value for virtual Xen timers.
+>
+> Lowering the timer slop value should improve the accuracy of virtual
+> timers (e.g., better process dispatch latency), but it will likely
+> increase the number of virtual timer interrupts (relative to the
+> original slop setting).
+>
+> The original timer slop value has not changed since the introduction
+> of the Xen-aware Linux kernel code. This commit provides users an
+> opportunity to tune timer performance given the refinements to
+> hardware and the Xen event channel processing. It also mirrors
+> a feature in the Xen hypervisor - the "timer_slop" Xen command line
+> option.
 
-perf tools: Update x86's syscall_64.tbl, no change in tools/perf behaviour
+Is there any data that shows effects of using this new parameter?
 
-To pick the changes in 7948450d4556 ("x86/x32: use time64 versions of
-sigtimedwait and recvmmsg"), that doesn't cause any change in behaviour
-in tools/perf/ as it deals just with the x32 entries.
+-boris
 
-This silences this tools/perf build warning:
 
-  Warning: Kernel ABI header at 'tools/perf/arch/x86/entry/syscalls/syscall_64.tbl' differs from latest version at 'arch/x86/entry/syscalls/syscall_64.tbl'
-  diff -u tools/perf/arch/x86/entry/syscalls/syscall_64.tbl arch/x86/entry/syscalls/syscall_64.tbl
+>
+> Signed-off-by: Ryan Thibodeaux <ryan.thibodeaux@starlab.io>
+> ---
+>  Documentation/admin-guide/kernel-parameters.txt |  7 +++++++
+>  arch/x86/xen/time.c                             | 18 ++++++++++++++++--
+>  2 files changed, 23 insertions(+), 2 deletions(-)
+>
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index 858b6c0..fb58c84 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -5129,6 +5129,13 @@
+>  			with /sys/devices/system/xen_memory/xen_memory0/scrub_pages.
+>  			Default value controlled with CONFIG_XEN_SCRUB_PAGES_DEFAULT.
+>  
+> +	xen_timer_slop=	[X86-64,XEN]
+> +			Set the timer slop (in nanoseconds) for the virtual Xen
+> +			timers (default is 100000). This adjusts the minimum
+> +			delta of virtualized Xen timers, where lower values
+> +			improve timer resolution at the expense of processing
+> +			more timer interrupts.
+> +
+>  	xirc2ps_cs=	[NET,PCMCIA]
+>  			Format:
+>  			<irq>,<irq_mask>,<io>,<full_duplex>,<do_sound>,<lockup_hack>[,<irq2>[,<irq3>[,<irq4>]]]
+> diff --git a/arch/x86/xen/time.c b/arch/x86/xen/time.c
+> index 6e29794..0393968 100644
+> --- a/arch/x86/xen/time.c
+> +++ b/arch/x86/xen/time.c
+> @@ -212,7 +212,7 @@ static int xen_timerop_set_next_event(unsigned long delta,
+>  	return 0;
+>  }
+>  
+> -static const struct clock_event_device xen_timerop_clockevent = {
+> +static struct clock_event_device xen_timerop_clockevent __ro_after_init = {
+>  	.name			= "xen",
+>  	.features		= CLOCK_EVT_FEAT_ONESHOT,
+>  
+> @@ -273,7 +273,7 @@ static int xen_vcpuop_set_next_event(unsigned long delta,
+>  	return ret;
+>  }
+>  
+> -static const struct clock_event_device xen_vcpuop_clockevent = {
+> +static struct clock_event_device xen_vcpuop_clockevent __ro_after_init = {
+>  	.name = "xen",
+>  	.features = CLOCK_EVT_FEAT_ONESHOT,
+>  
+> @@ -570,3 +570,17 @@ void __init xen_hvm_init_time_ops(void)
+>  	x86_platform.set_wallclock = xen_set_wallclock;
+>  }
+>  #endif
+> +
+> +/* Kernel parameter to specify Xen timer slop */
+> +static int __init parse_xen_timer_slop(char *ptr)
+> +{
+> +	unsigned long slop = memparse(ptr, NULL);
+> +
+> +	xen_timerop_clockevent.min_delta_ns = slop;
+> +	xen_timerop_clockevent.min_delta_ticks = slop;
+> +	xen_vcpuop_clockevent.min_delta_ns = slop;
+> +	xen_vcpuop_clockevent.min_delta_ticks = slop;
+> +
+> +	return 0;
+> +}
+> +early_param("xen_timer_slop", parse_xen_timer_slop);
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-mqpvshayeqidlulx5qpioa59@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/arch/x86/entry/syscalls/syscall_64.tbl | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl b/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl
-index f0b1709a5ffb..2ae92fddb6d5 100644
---- a/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl
-+++ b/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl
-@@ -343,6 +343,8 @@
- 332	common	statx			__x64_sys_statx
- 333	common	io_pgetevents		__x64_sys_io_pgetevents
- 334	common	rseq			__x64_sys_rseq
-+# don't use numbers 387 through 423, add new calls after the last
-+# 'common' entry
- 
- #
- # x32-specific system call numbers start at 512 to avoid cache impact
-@@ -361,7 +363,7 @@
- 520	x32	execve			__x32_compat_sys_execve/ptregs
- 521	x32	ptrace			__x32_compat_sys_ptrace
- 522	x32	rt_sigpending		__x32_compat_sys_rt_sigpending
--523	x32	rt_sigtimedwait		__x32_compat_sys_rt_sigtimedwait
-+523	x32	rt_sigtimedwait		__x32_compat_sys_rt_sigtimedwait_time64
- 524	x32	rt_sigqueueinfo		__x32_compat_sys_rt_sigqueueinfo
- 525	x32	sigaltstack		__x32_compat_sys_sigaltstack
- 526	x32	timer_create		__x32_compat_sys_timer_create
-@@ -375,7 +377,7 @@
- 534	x32	preadv			__x32_compat_sys_preadv64
- 535	x32	pwritev			__x32_compat_sys_pwritev64
- 536	x32	rt_tgsigqueueinfo	__x32_compat_sys_rt_tgsigqueueinfo
--537	x32	recvmmsg		__x32_compat_sys_recvmmsg
-+537	x32	recvmmsg		__x32_compat_sys_recvmmsg_time64
- 538	x32	sendmmsg		__x32_compat_sys_sendmmsg
- 539	x32	process_vm_readv	__x32_compat_sys_process_vm_readv
- 540	x32	process_vm_writev	__x32_compat_sys_process_vm_writev
