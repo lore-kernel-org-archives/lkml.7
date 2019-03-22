@@ -4,33 +4,33 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B341C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 07:13:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69C23C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 07:13:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F1E4218FE
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 07:13:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 420BE2190A
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 07:13:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728052AbfCVHNo (ORCPT
+        id S1728068AbfCVHNr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 03:13:44 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:35073 "EHLO
+        Fri, 22 Mar 2019 03:13:47 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:50135 "EHLO
         relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727716AbfCVHNl (ORCPT
+        with ESMTP id S1728043AbfCVHNn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 03:13:41 -0400
+        Fri, 22 Mar 2019 03:13:43 -0400
 Received: from localhost (unknown [182.72.246.220])
         (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 26748200003;
-        Fri, 22 Mar 2019 07:13:37 +0000 (UTC)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 5CDC5200003;
+        Fri, 22 Mar 2019 07:13:41 +0000 (UTC)
 From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
 To:     linux-rtc@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org,
         Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 2/4] rtc: wm831x: remove unnecessary goto
-Date:   Fri, 22 Mar 2019 08:13:26 +0100
-Message-Id: <20190322071328.16123-2-alexandre.belloni@bootlin.com>
+Subject: [PATCH 3/4] rtc: wm831x: switch to rtc_time64_to_tm/rtc_tm_to_time64
+Date:   Fri, 22 Mar 2019 08:13:27 +0100
+Message-Id: <20190322071328.16123-3-alexandre.belloni@bootlin.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190322071328.16123-1-alexandre.belloni@bootlin.com>
 References: <20190322071328.16123-1-alexandre.belloni@bootlin.com>
@@ -41,37 +41,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no specific handling in the error path of wm831x_rtc_probe, remove
-the unnecessary goto and label.
+Call the 64bit versions of rtc_tm time conversion now that the range is
+enforced by the core.
 
 Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
- drivers/rtc/rtc-wm831x.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ drivers/rtc/rtc-wm831x.c | 16 ++++------------
+ 1 file changed, 4 insertions(+), 12 deletions(-)
 
 diff --git a/drivers/rtc/rtc-wm831x.c b/drivers/rtc/rtc-wm831x.c
-index deaffe0eaf2f..1b0c3b3f63e8 100644
+index 1b0c3b3f63e8..d286dd1dfcf9 100644
 --- a/drivers/rtc/rtc-wm831x.c
 +++ b/drivers/rtc/rtc-wm831x.c
-@@ -429,7 +429,7 @@ static int wm831x_rtc_probe(struct platform_device *pdev)
- 	ret = wm831x_reg_read(wm831x, WM831X_RTC_CONTROL);
+@@ -155,7 +155,7 @@ static int wm831x_rtc_readtime(struct device *dev, struct rtc_time *tm)
+ 		if (memcmp(time1, time2, sizeof(time1)) == 0) {
+ 			u32 time = (time1[0] << 16) | time1[1];
+ 
+-			rtc_time_to_tm(time, tm);
++			rtc_time64_to_tm(time, tm);
+ 			return 0;
+ 		}
+ 
+@@ -215,11 +215,7 @@ static int wm831x_rtc_set_mmss(struct device *dev, unsigned long time)
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	ret = rtc_tm_to_time(&new_tm, &new_time);
+-	if (ret < 0) {
+-		dev_err(dev, "Failed to convert time: %d\n", ret);
+-		return ret;
+-	}
++	new_time = rtc_tm_to_time64(&new_tm);
+ 
+ 	/* Allow a second of change in case of tick */
+ 	if (new_time - time > 1) {
+@@ -249,7 +245,7 @@ static int wm831x_rtc_readalarm(struct device *dev, struct rtc_wkalrm *alrm)
+ 
+ 	time = (data[0] << 16) | data[1];
+ 
+-	rtc_time_to_tm(time, &alrm->time);
++	rtc_time64_to_tm(time, &alrm->time);
+ 
+ 	ret = wm831x_reg_read(wm831x_rtc->wm831x, WM831X_RTC_CONTROL);
  	if (ret < 0) {
- 		dev_err(&pdev->dev, "Failed to read RTC control: %d\n", ret);
--		goto err;
-+		return ret;
- 	}
- 	if (ret & WM831X_RTC_ALM_ENA)
- 		wm831x_rtc->alarm_enabled = 1;
-@@ -459,9 +459,6 @@ static int wm831x_rtc_probe(struct platform_device *pdev)
- 	wm831x_rtc_add_randomness(wm831x);
+@@ -288,11 +284,7 @@ static int wm831x_rtc_setalarm(struct device *dev, struct rtc_wkalrm *alrm)
+ 	int ret;
+ 	unsigned long time;
  
- 	return 0;
--
--err:
--	return ret;
- }
+-	ret = rtc_tm_to_time(&alrm->time, &time);
+-	if (ret < 0) {
+-		dev_err(dev, "Failed to convert time: %d\n", ret);
+-		return ret;
+-	}
++	time = rtc_tm_to_time64(&alrm->time);
  
- static const struct dev_pm_ops wm831x_rtc_pm_ops = {
+ 	ret = wm831x_rtc_stop_alarm(wm831x_rtc);
+ 	if (ret < 0) {
 -- 
 2.20.1
 
