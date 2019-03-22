@@ -2,53 +2,51 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26B1CC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:31:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF944C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:31:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE5B1218B0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:31:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DFC5218B0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:31:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254289;
-	bh=8WHKnWoMAAaxfyPLc/1PPlymjyM1+psQ9v8BkwhKR/4=;
+	s=default; t=1553254293;
+	bh=AoRVO3Hkj7uWrZ6QZMaTkwBCSaacD1U+Ao8903tsCGM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0QrKQfhqx8+7Zlf9bFDf09duA74A9X3vjeBPtGspBt1/QvZN9G7O2k9RabzwEEv10
-	 8I8Q/mGzwteVTtZAwjyZ4eJ0pPxMLpG9wrSGn8taImpJqtLP6mGRJ+cMZ5mA1fRa/j
-	 PZzCkoI6ExucLlWQkwmNqQZd0POgoldN6Z3fOtn0=
+	b=aBHiJSswYMXItQ7lDdJ8Pxy/y/K8AU4kRnnXotQj9w6YZoWOIILS9ObVq4TPaRttX
+	 NrNGDQ8dy5yYFTN1ldL5Ys9HCWeUwh6ra5CTgMD7iQ8OykE6A90+LPJweIbdfEIWsc
+	 4ZaLbNLxB3o4vds4HCy/s8xiUVsQo5sEg8hxvvfc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730035AbfCVLb1 (ORCPT
+        id S1729796AbfCVLbc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:31:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59496 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:31:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730028AbfCVLbW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:31:22 -0400
+        id S1730028AbfCVLb2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:31:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF72020449;
-        Fri, 22 Mar 2019 11:31:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 763A4218B0;
+        Fri, 22 Mar 2019 11:31:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254281;
-        bh=8WHKnWoMAAaxfyPLc/1PPlymjyM1+psQ9v8BkwhKR/4=;
+        s=default; t=1553254288;
+        bh=AoRVO3Hkj7uWrZ6QZMaTkwBCSaacD1U+Ao8903tsCGM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ha0MUINSDUq1AZPAr2n3vOLIkskQ666WdK9N5Y8rY+BUA1HpYyXF3V8Ekltwb7suP
-         Yy5RBCIgDgK2X5LzFHyJRr4Hfc1JO9dxypYwEyF1Ygu/xlP5O/wQCZptEIcns6J2g8
-         EsylkCFePHvIGxeqEB+i4Nk6+MsYMY4jv3ZGbnAo=
+        b=z5IT6VoBsiMHNvY9l7kPdAc9MTObina8JaJgzeD1AA7bsDRGOBhB2mJhQPZGGUvEo
+         rRnzX/cGoeEppnX9pb7FAlJVO5gLVGmvh+xBGybvitYsIYqO8491GcXDI8MpjA1ECY
+         z3FVJqldZokD22DmwOxg1C/BSxn2S4eoir9NVVHI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, syzbot <syzkaller@googlegroups.com>,
-        Alistair Strachan <astrachan@google.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 4.4 079/230] media: uvcvideo: Fix type check leading to overflow
-Date:   Fri, 22 Mar 2019 12:13:37 +0100
-Message-Id: <20190322111242.193419193@linuxfoundation.org>
+        stable@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 089/230] xtensa: SMP: limit number of possible CPUs by NR_CPUS
+Date:   Fri, 22 Mar 2019 12:13:47 +0100
+Message-Id: <20190322111242.860156254@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -67,62 +65,49 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Alistair Strachan <astrachan@google.com>
+[ Upstream commit 25384ce5f9530def39421597b1457d9462df6455 ]
 
-commit 47bb117911b051bbc90764a8bff96543cbd2005f upstream.
+This fixes the following warning at boot when the kernel is booted on a
+board with more CPU cores than was configured in NR_CPUS:
 
-When initially testing the Camera Terminal Descriptor wTerminalType
-field (buffer[4]), no mask is used. Later in the function, the MSB is
-overloaded to store the descriptor subtype, and so a mask of 0x7fff
-is used to check the type.
+  smp_init_cpus: Core Count = 8
+  smp_init_cpus: Core Id = 0
+  ------------[ cut here ]------------
+  WARNING: CPU: 0 PID: 0 at include/linux/cpumask.h:121 smp_init_cpus+0x54/0x74
+  Modules linked in:
+  CPU: 0 PID: 0 Comm: swapper Not tainted 5.0.0-rc3-00015-g1459333f88a0 #124
+  Call Trace:
+    __warn$part$3+0x6a/0x7c
+    warn_slowpath_null+0x35/0x3c
+    smp_init_cpus+0x54/0x74
+    setup_arch+0x1c0/0x1d0
+    start_kernel+0x44/0x310
+    _startup+0x107/0x107
 
-If a descriptor is specially crafted to set this overloaded bit in the
-original wTerminalType field, the initial type check will fail (falling
-through, without adjusting the buffer size), but the later type checks
-will pass, assuming the buffer has been made suitably large, causing an
-overflow.
-
-Avoid this problem by checking for the MSB in the wTerminalType field.
-If the bit is set, assume the descriptor is bad, and abort parsing it.
-
-Originally reported here:
-https://groups.google.com/forum/#!topic/syzkaller/Ot1fOE6v1d8
-A similar (non-compiling) patch was provided at that time.
-
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: Alistair Strachan <astrachan@google.com>
-Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/uvc/uvc_driver.c |   14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ arch/xtensa/kernel/smp.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/drivers/media/usb/uvc/uvc_driver.c
-+++ b/drivers/media/usb/uvc/uvc_driver.c
-@@ -1019,11 +1019,19 @@ static int uvc_parse_standard_control(st
- 			return -EINVAL;
- 		}
+diff --git a/arch/xtensa/kernel/smp.c b/arch/xtensa/kernel/smp.c
+index 0e34c1ed4aa8..54bb8e0473a0 100644
+--- a/arch/xtensa/kernel/smp.c
++++ b/arch/xtensa/kernel/smp.c
+@@ -93,6 +93,11 @@ void __init smp_init_cpus(void)
+ 	pr_info("%s: Core Count = %d\n", __func__, ncpus);
+ 	pr_info("%s: Core Id = %d\n", __func__, core_id);
  
--		/* Make sure the terminal type MSB is not null, otherwise it
--		 * could be confused with a unit.
-+		/*
-+		 * Reject invalid terminal types that would cause issues:
-+		 *
-+		 * - The high byte must be non-zero, otherwise it would be
-+		 *   confused with a unit.
-+		 *
-+		 * - Bit 15 must be 0, as we use it internally as a terminal
-+		 *   direction flag.
-+		 *
-+		 * Other unknown types are accepted.
- 		 */
- 		type = get_unaligned_le16(&buffer[4]);
--		if ((type & 0xff00) == 0) {
-+		if ((type & 0x7f00) == 0 || (type & 0x8000) != 0) {
- 			uvc_trace(UVC_TRACE_DESCR, "device %d videocontrol "
- 				"interface %d INPUT_TERMINAL %d has invalid "
- 				"type 0x%04x, skipping\n", udev->devnum,
++	if (ncpus > NR_CPUS) {
++		ncpus = NR_CPUS;
++		pr_info("%s: limiting core count by %d\n", __func__, ncpus);
++	}
++
+ 	for (i = 0; i < ncpus; ++i)
+ 		set_cpu_possible(i, true);
+ }
+-- 
+2.19.1
+
 
 
