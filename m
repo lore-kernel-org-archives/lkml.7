@@ -2,112 +2,107 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98BCBC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 08:35:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCF92C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 08:37:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6779E218D3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 08:35:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A51602083D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 08:37:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="XfO7jSOk";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="FyrTb3sV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727992AbfCVIfw (ORCPT
+        id S1727818AbfCVIhc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 04:35:52 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:52830 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727665AbfCVIfv (ORCPT
+        Fri, 22 Mar 2019 04:37:32 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:44654 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727440AbfCVIhc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 04:35:51 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id B7546805A9; Fri, 22 Mar 2019 09:35:41 +0100 (CET)
-Date:   Fri, 22 Mar 2019 09:35:48 +0100
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc:     linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, robh@kernel.org,
-        Baolin Wang <baolin.wang@linaro.org>,
-        Daniel Mack <daniel@zonque.org>, Dan Murphy <dmurphy@ti.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Oleh Kravchenko <oleg@kaa.org.ua>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Simon Shields <simon@lineageos.org>
-Subject: Re: [PATCH 04/25] dt-bindings: leds: Add LED_COLOR_NAME definitions
-Message-ID: <20190322083548.GC27015@amd>
-References: <20190310182836.20841-1-jacek.anaszewski@gmail.com>
- <20190310182836.20841-5-jacek.anaszewski@gmail.com>
+        Fri, 22 Mar 2019 04:37:32 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 125BE6034E; Fri, 22 Mar 2019 08:37:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553243851;
+        bh=y2xsBAj3ssw6qZmHiiEKKJS/XUeAvjnmMutM2M9O6gQ=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=XfO7jSOkk3PurSyddk6kagpXD7+YIkPE3kN5soXEkB+SPDYxiIJw6iifzVNRZgf0M
+         zFOelB4z1SBMgHoGp5mcyPMGkVNI3rcGek7NZhYsH+u5Koz9GJMqojwR3ksrqPqJn0
+         h2R0buRNj9ZskBduIIwAK0rEDF4/2XbMOJ1JY2lw=
+Received: from x230.qca.qualcomm.com (unknown [195.39.71.253])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0E5B96034E;
+        Fri, 22 Mar 2019 08:37:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553243850;
+        bh=y2xsBAj3ssw6qZmHiiEKKJS/XUeAvjnmMutM2M9O6gQ=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=FyrTb3sVZOkHCUEaXIyMqNsJ4jV2aL4xGQX9NdYVdwluMZBQI/ojJRm+VEySISIV+
+         DtuSBVaKTHLhH7B6mvnVJXo0xBDirWEO0Mw7aSNuhRDd3tJro3PTeiNxI2+bRhQOY6
+         xcqbhdhjOkYks3d/ohnD1vYLYeiT3BA6JXlA/l44=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0E5B96034E
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Tim Schumacher <timschumi@gmx.de>
+Cc:     QCA ath9k Development <ath9k-devel@qca.qualcomm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ath9k: Check for errors when reading SREV register
+References: <20190318190557.21599-1-timschumi@gmx.de>
+        <87va0cpmt4.fsf@codeaurora.org>
+        <95ca6443-a3ad-1eda-db6a-c684cc358fc9@gmx.de>
+Date:   Fri, 22 Mar 2019 10:37:27 +0200
+In-Reply-To: <95ca6443-a3ad-1eda-db6a-c684cc358fc9@gmx.de> (Tim Schumacher's
+        message of "Fri, 22 Mar 2019 02:47:59 +0100")
+Message-ID: <87d0mjnw3c.fsf@codeaurora.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="pAwQNkOnpTn9IO2O"
-Content-Disposition: inline
-In-Reply-To: <20190310182836.20841-5-jacek.anaszewski@gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Tim Schumacher <timschumi@gmx.de> writes:
 
---pAwQNkOnpTn9IO2O
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On 21.03.19 11:02, Kalle Valo wrote:
+>> Tim Schumacher <timschumi@gmx.de> writes:
+>>
+>>> -	val = REG_READ(ah, AR_SREV) & AR_SREV_ID;
+>>> +	srev = REG_READ(ah, AR_SREV);
+>>> +
+>>> +	if (srev == -EIO) {
+>>> +		ath_err(ath9k_hw_common(ah),
+>>> +			"Failed to read SREV register");
+>>> +		return false;
+>>> +	}
+>>
+>> I really don't like how the error handling is implemented in REG_READ().
+>> If the register has value 0xfffffffb (= -EIO ==-5) won't this interpret
+>> that as an error?
+>>
+>
+> If the register had that value, it would indeed report an error. However
+> (at least if I read the current code and the data sheet correctly), to make
+> use of the higher 24 bits of the register, the "small"/old version of the
+> SREV_ID (i.e. the rightmost 8 bit) need to be set to 0xFF. Therefore, a
+> register read of 0xfffffffb should never happen in this register.
 
-On Sun 2019-03-10 19:28:15, Jacek Anaszewski wrote:
-> Add common LED color name definitions for use in Device Tree.
+Good, thanks for checking.
 
-Could we do "LED_COLOR_NAME_" =3D> "LED_COLOR_"?
+> But the error handling is indeed a bit weird. Making the return value a pure
+> status indicator and saving the value from the register by passing a
+> reference would probably be the best solution to fixing this up.
 
-								Pavel
+Yeah, that would be so much better. But that can fixed in another patch,
+no need to do that here.
 
-> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> Cc: Baolin Wang <baolin.wang@linaro.org>
-> Cc: Daniel Mack <daniel@zonque.org>
-> Cc: Dan Murphy <dmurphy@ti.com>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Oleh Kravchenko <oleg@kaa.org.ua>
-> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
-> Cc: Simon Shields <simon@lineageos.org>
-> ---
->  include/dt-bindings/leds/common.h | 9 +++++++++
->  1 file changed, 9 insertions(+)
->=20
-> diff --git a/include/dt-bindings/leds/common.h b/include/dt-bindings/leds=
-/common.h
-> index ffcd46317307..0e986bb59391 100644
-> --- a/include/dt-bindings/leds/common.h
-> +++ b/include/dt-bindings/leds/common.h
-> @@ -57,4 +57,13 @@
->  #define LED_FUNCTION_WLAN "wlan"
->  #define LED_FUNCTION_WPS "wps"
-> =20
-> +/* Standard LED colors */
-> +#define LED_COLOR_NAME_WHITE    "white"
-> +#define LED_COLOR_NAME_RED      "red"
-> +#define LED_COLOR_NAME_GREEN    "green"
-> +#define LED_COLOR_NAME_BLUE     "blue"
-> +#define LED_COLOR_NAME_AMBER    "amber"
-> +#define LED_COLOR_NAME_VIOLET   "violet"
-> +#define LED_COLOR_NAME_YELLOW   "yellow"
-> +
->  #endif /* __DT_BINDINGS_LEDS_H */
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---pAwQNkOnpTn9IO2O
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlyUnmQACgkQMOfwapXb+vJxMgCdHOxOKhMea4/n7TNUWsezfMib
-zB4AoIaGGGyboAeThjrhCWBHftooD4qE
-=D0EN
------END PGP SIGNATURE-----
-
---pAwQNkOnpTn9IO2O--
+-- 
+Kalle Valo
