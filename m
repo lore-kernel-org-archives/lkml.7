@@ -2,103 +2,83 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E5A4C10F03
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:10:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFED2C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:11:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46585218E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:10:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94CE5218E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:11:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728673AbfCVOKI (ORCPT
+        id S1728676AbfCVOLY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 10:10:08 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:37309 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727487AbfCVOKH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 10:10:07 -0400
-Received: from wuerfel.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MVdYY-1hWWi820tY-00RXj6; Fri, 22 Mar 2019 15:09:40 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     clang-built-linux@googlegroups.com,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] iio: ssp_sensors: avoid uninitialized variable usage
-Date:   Fri, 22 Mar 2019 15:09:22 +0100
-Message-Id: <20190322140937.341976-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Fri, 22 Mar 2019 10:11:24 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5172 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727746AbfCVOLY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 10:11:24 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id D0961248CE40E3374C06;
+        Fri, 22 Mar 2019 22:11:20 +0800 (CST)
+Received: from [127.0.0.1] (10.184.189.20) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.408.0; Fri, 22 Mar 2019
+ 22:11:11 +0800
+From:   linmiaohe <linmiaohe@huawei.com>
+Subject: [PATCH net] net: vrf: remove redundant vrf neigh entry
+To:     David Ahern <dsa@cumulusnetworks.com>,
+        Shrijeet Mukherjee <shrijeet@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Mingfangsen <mingfangsen@huawei.com>
+Message-ID: <a0fb851b-f9a2-1424-f7f0-2800bb3b469c@huawei.com>
+Date:   Fri, 22 Mar 2019 22:10:35 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:QnhDsqh0KFlM5KhzUi7mwUL/YxGqNJt2E7AsUWOjxw8veKn2kNV
- GVKj1SnggcVRNfOWjpqszRpv6aG7YhNIJKMdSSj/pb0uGa61sLQZGXHnJiDTIBj22tljuPx
- 5Pilkt2DjVO2OJ99kLk44aQ5o5meReVb2ATUEL3otYpGfyTEpEYTqQ7M4MyUZHZwel6jaCF
- fsoq8/QyCbrPeWOFH1aWA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:NqvslkTHWSA=:5YLorGwbZnoLpmp35glNcR
- a0wm+HstR6VbmrvopVmYSxi31OJiUDThx841ncqQZ/vy5S//QjxLS41yaK0mEjYnXGSQj8gkQ
- xm/HCuwuoSEFYJYqFp3TILDvYSf5A0ZUPQeauRZGvkwACGitKj43maayK7pGG0yp0i0D+hKyF
- mYIg+tTdSp7uerR4bm7i1Lrh4SC4vI9z3Eo0/8j1j2ofc7P0Ok0Ccc9dpDk+8jUdh71antlFl
- 0QSofRrau8A53+9pdS5MST+DBp2/UhG/9QRz0fWh8vkK+I1hGH8vespqeTiClIjgeEYsJBHan
- +Yu5/YehILkU213dipTv/wFgP7ju49sliEvcUTb29a7O4f35Q8Yy2o0fewyLKuqULL6Jedrnw
- fBC4HO6taoPnetwyv5UkGIEXp0Bd4DKPIAK0jwYZOGRb4E3MBwFe+g6bShd7u5aED5K/h7TiE
- flGE/5bkcaHQWfnFGhb4YWvPfAFi3o98fM9264lf/VgT2EW26jOIvtI0gj5HYEKZ5kD9OxK/A
- Za8rwM4gs0s1detjYq1CRFZ5xMAN0OcwOxC6Hs5TUO4VtAQ+75dzpmsy7N9lHKyIpmDmPc2bH
- QkEg/ZgkkEWOnF5RwoCELVMNzbeE8u1TP5LnjtldbPXu1Y4vTfO32oT2BjMxPQXBsyIy5h24a
- 4se/ewvyC4XzhJc9Z6vtCRd6XDs3HIQmGR7etjVCOrYATMlUyNNio2h+HzNEzH58K9ixLUNda
- 1h5h3ox2cXMkg/eu/Ejo6E1ntXXyaNqut8Kebw==
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.184.189.20]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-clang points out that 'calculated_time' is only sometimes
-initialized here, which leads to incorrect data being
-passed into another function:
+From: Miaohe Lin <linmiaohe@huawei.com>
 
-drivers/iio/common/ssp_sensors/ssp_iio.c:95:6: error: variable 'calculated_time' is used uninitialized whenever 'if' condition is false [-Werror,-Wsometimes-uninitialized]
-        if (indio_dev->scan_timestamp) {
-            ^~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/iio/common/ssp_sensors/ssp_iio.c:102:9: note: uninitialized use occurs here
-                                                  calculated_time);
-                                                  ^~~~~~~~~~~~~~~
-drivers/iio/common/ssp_sensors/ssp_iio.c:95:2: note: remove the 'if' if its condition is always true
-        if (indio_dev->scan_timestamp) {
-        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/iio/common/ssp_sensors/ssp_iio.c:84:25: note: initialize the variable 'calculated_time' to silence this warning
-        int64_t calculated_time;
-                               ^
-The data is subsequently ignored by iio_push_to_buffers_with_timestamp(),
-but the warning still feels legitimate and to work around it, we can
-initialize the time in the other case.
+When vrf->rth is created, it wouldn't change in his lifetime.And in
+func vrf_finish_output, we always create a neigh with ip_hdr(skb)->daddr
+as key because rth->rt_gateway is equal to 0. But I think we only need
+one vrf neigh entry because we strip the ethernet header and reset the
+dst_entry in vrf_process_v4_outbound.
+So I set rth->rt_gateway to loopback addr(It's ok to set any other
+valid ip address, just choose one.). And we would only create one vrf
+neigh entry. This helps saving some memory and improving the hitting
+rate of neigh lookup.
+If there is something I misunderstand, it's very nice of you to
+let me know. Thanks a lot.
 
-Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=18501
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: linmiaohe <linmiaohe@huawei.com>
 ---
- drivers/iio/common/ssp_sensors/ssp_iio.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/vrf.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/iio/common/ssp_sensors/ssp_iio.c b/drivers/iio/common/ssp_sensors/ssp_iio.c
-index 645f2e3975db..81e8f4844c90 100644
---- a/drivers/iio/common/ssp_sensors/ssp_iio.c
-+++ b/drivers/iio/common/ssp_sensors/ssp_iio.c
-@@ -96,6 +96,8 @@ int ssp_common_process_data(struct iio_dev *indio_dev, void *buf,
- 		memcpy(&time, &((char *)buf)[len], SSP_TIME_SIZE);
- 		calculated_time =
- 			timestamp + (int64_t)le32_to_cpu(time) * 1000000;
-+	} else {
-+		calculated_time = 0;
- 	}
- 
- 	return iio_push_to_buffers_with_timestamp(indio_dev, spd->buffer,
+diff --git a/drivers/net/vrf.c b/drivers/net/vrf.c
+index 7c1430ed0244..2b0227fb8f53 100644
+--- a/drivers/net/vrf.c
++++ b/drivers/net/vrf.c
+@@ -738,6 +738,7 @@ static int vrf_rtable_create(struct net_device *dev)
+ 		return -ENOMEM;
+
+ 	rth->dst.output	= vrf_output;
++	rth->rt_gateway = htonl(INADDR_LOOPBACK);
+
+ 	rcu_assign_pointer(vrf->rth, rth);
+
 -- 
-2.20.0
+2.16.2
+
 
