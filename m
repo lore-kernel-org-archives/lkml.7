@@ -2,88 +2,90 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBF8EC10F03
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 20:00:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98CD1C10F03
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 20:02:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FBAE21874
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 20:00:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6669A21874
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 20:02:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="C8EnG3Nn"
+	dkim=pass (2048-bit key) header.d=mbuki-mvuki-org.20150623.gappssmtp.com header.i=@mbuki-mvuki-org.20150623.gappssmtp.com header.b="P3w7P9NB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727823AbfCVUAF (ORCPT
+        id S1727012AbfCVUCZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 16:00:05 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:36316 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726589AbfCVUAE (ORCPT
+        Fri, 22 Mar 2019 16:02:25 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:43411 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725999AbfCVUCY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 16:00:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=g9JaNDMvFMAM62vwNPQ5/TuvcMvCk3Ftabzyp8bNxns=; b=C8EnG3NnF9HDBrR9KjLd3Cgs3
-        qelf1PoSRZODZcqvXFU818UL1qu/MYwjZRO2SG4YJpU4Lt3au0J6lIFX7Vhnumuf7tjgGwc+2uPmj
-        5USHOk+FWSovAuXjVECU1KCiieD4ku3KdPJDWUrOYoKg+3qxyTgopM0zVfhHCG2lQ7jyOiutHW37+
-        39n82yFF7h6rwyL+wVlFuxdoCZaP3gyMWSE3iCAhgFgnQ49l3yBEQTh3ph2lpPlQq16tMd6CCLAt7
-        63lQ+jeXbpsQJUtXJkfoNGmIAHWd9FfkWNWR35DARY48p9lrbjyD8zjCRJV1c9t0LTa+QEjZYUr+3
-        Kik8ykoSQ==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h7QK6-0003HC-Uc; Fri, 22 Mar 2019 19:59:26 +0000
-Date:   Fri, 22 Mar 2019 12:59:26 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Christopher Lameter <cl@linux.com>
-Cc:     Waiman Long <longman@redhat.com>, Oleg Nesterov <oleg@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        selinux@vger.kernel.org, Paul Moore <paul@paul-moore.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Eric Paris <eparis@parisplace.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: Re: [PATCH 2/4] signal: Make flush_sigqueue() use free_q to release
- memory
-Message-ID: <20190322195926.GB10344@bombadil.infradead.org>
-References: <20190321214512.11524-1-longman@redhat.com>
- <20190321214512.11524-3-longman@redhat.com>
- <20190322015208.GD19508@bombadil.infradead.org>
- <20190322111642.GA28876@redhat.com>
- <d9e02cc4-3162-57b0-7924-9642aecb8f49@redhat.com>
- <01000169a686689d-bc18fecd-95e1-4b3e-8cd5-dad1b1c570cc-000000@email.amazonses.com>
- <93523469-48b0-07c8-54fd-300678af3163@redhat.com>
- <01000169a6ea5e46-f845b8db-730b-436e-980c-3e4273ad2e34-000000@email.amazonses.com>
+        Fri, 22 Mar 2019 16:02:24 -0400
+Received: by mail-wr1-f65.google.com with SMTP id d17so3616854wre.10
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 13:02:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=mbuki-mvuki-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ap5o+tpn9OtFrN8fvD2s704ORsBw+ecBVyZ08vMFyXc=;
+        b=P3w7P9NBzwxqvpiAgCWiiWVf5FPKSLkD8sq1m+sMhA28iRqGhFlMCQ5d/9v24QJJF8
+         bS+iEg22otoDjF3waHdWyvHpMSV9f1GCieQQs6J43ifTZ+/KtUj8qK0EFbA8Ae6dSkLp
+         dpc3cv4bJcTCvrishP2nWXTLBiw8LUkQeSWOlsB6Q0t8UL7r7G8DS65ZIGbmAh4gTyNb
+         7lr630bxk+srk/WDp7xzX9EEjxkpDAaR9gHpx1jTh7CtW+h/FYeyfQs17oC6Jzw7wpcr
+         WDxSb3qgGD7sOO05sQC8f6twHmoJonys2Yhr2k0xQXSElIvV5zA0HL9HBe96k4W9Nl/s
+         syzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ap5o+tpn9OtFrN8fvD2s704ORsBw+ecBVyZ08vMFyXc=;
+        b=c3KaG3l1qNnYXKY/rcFhqJpDLKVTvkBdwXLCeeD3UW6B25B5heW9v5wYE3CM2Vwbj8
+         vtqrNGx1nVVg6j9VSZOwDUsIfk5nNOUXpxRZn0+ldyrnyz2qYSNcBjVjq4lbxmJyhc/H
+         0tC2zb+0fFz7t0TU8zXgLHmytjEQSWr4JXI5T4CTlXjuXhopFfKWjySwE86NikVT9P9h
+         odinKhsn9pby6o9O3Yx7W+g2yzSorZbLf2rmej/cxf1hHKhF49lrA9Dd5IwNQwDe4iM5
+         tpKhTExse/3E+VqjeUSS98NeFESNQ+H5s3xObPkHHdo7F5gSsAhbu12sQUt/8aE8oa9G
+         4ikQ==
+X-Gm-Message-State: APjAAAXIPpcBJB87x+TSF7CfEPUPFZUSk/2czz7OUbDtn9lK4ADOSQZy
+        wMMBpLPQVJMGizNPVY+CsW6a0XpwJLO3AS0kCLk6/g==
+X-Google-Smtp-Source: APXvYqwdZHSyLgAhMoA7chBDfM5toGHV0VUiq62d4vN12G3QYWWYNlprnAUylg0F96eGO38gghyNLTmmJ65hDjZKujs=
+X-Received: by 2002:a5d:5108:: with SMTP id s8mr7015877wrt.99.1553284942891;
+ Fri, 22 Mar 2019 13:02:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <01000169a6ea5e46-f845b8db-730b-436e-980c-3e4273ad2e34-000000@email.amazonses.com>
-User-Agent: Mutt/1.9.2 (2017-12-15)
+References: <CANSNSoWiKd98Dt1N2sSjP9Af8zk1NPV-=3P4VLtFs_cSQG4RUg@mail.gmail.com>
+ <20190313232112.GC210027@google.com> <CANSNSoXPFDu9RQAUA6dUCUrSCAj68q-Nj2W7ECz3fKpFtSNU+Q@mail.gmail.com>
+ <20190321232310.GL251185@google.com>
+In-Reply-To: <20190321232310.GL251185@google.com>
+From:   Jesse Hathaway <jesse@mbuki-mvuki.org>
+Date:   Fri, 22 Mar 2019 15:02:11 -0500
+Message-ID: <CANSNSoXhiYP4Ad3hO1v03aMOX1VtUao2yCLgj_J0z9fCNwWo5w@mail.gmail.com>
+Subject: Re: Regression causes a hang on boot with a Comtrol PCI card
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 22, 2019 at 07:39:31PM +0000, Christopher Lameter wrote:
-> On Fri, 22 Mar 2019, Waiman Long wrote:
-> 
-> > >
-> > >> I am looking forward to it.
-> > > There is also alrady rcu being used in these paths. kfree_rcu() would not
-> > > be enough? It is an estalished mechanism that is mature and well
-> > > understood.
-> > >
-> > In this case, the memory objects are from kmem caches, so they can't
-> > freed using kfree_rcu().
-> 
-> Oh they can. kfree() can free memory from any slab cache.
+> So apparently the hang happens while we're running the "final" PCI
+> fixups.  This happens after all the rest of PCI is initialized.
+>
+> Can you boot v5.0 vanilla with "initcall_debug"?  Maybe we can narrow
+> it down to a specific quirk.
 
-Only for SLAB and SLUB.  SLOB requires that you pass a pointer to the
-slab cache; it has no way to look up the slab cache from the object.
+yup, added the "initcall_debug" output to the ticket:
+https://bugzilla.kernel.org/show_bug.cgi?id=202927, here is the tail end
 
+[   14.896337] NET: Registered protocol family 1
+[   14.901314] initcall af_unix_init+0x0/0x4e returned 0 after 4866 usecs
+[   14.908694] calling  ipv6_offload_init+0x0/0x7f @ 1
+[   14.914238] initcall ipv6_offload_init+0x0/0x7f returned 0 after 1 usecs
+[   14.921821] calling  vlan_offload_init+0x0/0x20 @ 1
+[   14.927365] initcall vlan_offload_init+0x0/0x20 returned 0 after 0 usecs
+[   14.934948] calling  pci_apply_final_quirks+0x0/0x126 @ 1
+[   14.941106] pci 0000:00:1a.0: calling  quirk_usb_early_handoff+0x0/0x6a0 @ 1
+
+thanks, Jesse Hathaway
