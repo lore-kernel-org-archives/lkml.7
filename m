@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3E33C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:12:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F1D2C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:12:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 854912083D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:12:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30CE721929
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:12:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256750;
-	bh=cCRWRuYpG/BljB2Kg0M3vZX9ifg7f8xhSe4tEdmpTGs=;
+	s=default; t=1553256756;
+	bh=akxBTI8izapSTkpWCq9huMqYxzELSIDhDdZd/iC03X8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UH6Lx5YMLt4GbQG9F/DWUML9dX6qfCK0ShAiTzk3Un43vk+Qd8jbHzpiVsVMB5PdA
-	 igEQswCSU56snbgJGTX1QjcSu1tjHwzmTkXYtdz+JHAk66WWzMXMSJAGyCfzj7RJXS
-	 ufnmoDSg65jcR8+4MkskT+cnI4ooZiUeZqqFTVWY=
+	b=f6qne6ULOUeOGCNxKKO5EtGg6rLH9NL2cM8xUPMvC7sey9IinlzVvFz9+Sb0cggBN
+	 l4GbUB2iJ2ev2k4x9btvsxAJeOu66teqRmJhUHx7cD1b24C06F3dyBuEClfIQ7hbYC
+	 ExJeRRf0BDK5ak5GxtfzkqLrg7c0vZuxy3JXADFw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389628AbfCVMM3 (ORCPT
+        id S2389632AbfCVMMe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:12:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50624 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:12:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50680 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389625AbfCVMM0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:12:26 -0400
+        id S2389625AbfCVMMa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:12:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 559B02083D;
-        Fri, 22 Mar 2019 12:12:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31C092082C;
+        Fri, 22 Mar 2019 12:12:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256745;
-        bh=cCRWRuYpG/BljB2Kg0M3vZX9ifg7f8xhSe4tEdmpTGs=;
+        s=default; t=1553256749;
+        bh=akxBTI8izapSTkpWCq9huMqYxzELSIDhDdZd/iC03X8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gQOo7E3hGV6BS2t8CTQ3EmHIdSNUGA6mYfM4DDAffT7E/5WvgWSslQspwY+b+AyAr
-         qyfc2P/JGrlmlq2nQPpdrI02WxDLI7EQEwQ/9hjz2IDpFFB1GFXmmu+sqa1JzUudbz
-         cyXRF447nrnTHr9/T0YFt2iIbRy/FDEeQcEopezE=
+        b=NX2/AuBy98MMzi1uzlCULeanvi0SSip/abucJN7c5S6MG5jnSyBDusgpixIXXvL1t
+         MiSANZGhFrtKjVzueV70rSAVBXQZWCNeDG4nO5T/+8PsfV8Z0RYj3IBvWmWbxD3g/E
+         lL5cgDYtVMg7TryTYlcRnhnqyxb18CmabrL3plOM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         Alexander Usyskin <alexander.usyskin@intel.com>,
         Tomas Winkler <tomas.winkler@intel.com>
-Subject: [PATCH 5.0 008/238] mei: hbm: clean the feature flags on link reset
-Date:   Fri, 22 Mar 2019 12:13:47 +0100
-Message-Id: <20190322111258.773969846@linuxfoundation.org>
+Subject: [PATCH 5.0 009/238] mei: bus: move hw module get/put to probe/release
+Date:   Fri, 22 Mar 2019 12:13:48 +0100
+Message-Id: <20190322111258.815866293@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -68,59 +68,80 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Alexander Usyskin <alexander.usyskin@intel.com>
 
-commit 37fd0b623023484ef6df79ed46f21f06ecc611ff upstream.
+commit b5958faa34e2f99f3475ad89c52d98dfea079d33 upstream.
 
-The list of supported functions can be altered upon link reset,
-clean the flags to allow correct selections of supported
-features.
+Fix unbalanced module reference counting during internal reset, which
+prevents the drivers unloading.
+Tracking mei_me/txe modules on mei client bus via
+mei_cldev_enable/disable is error prone due to possible internal
+reset flow, where clients are disconnected underneath.
+Moving reference counting to probe and release of mei bus client
+driver solves this issue in simplest way, as each client provides only
+a single connection to a client bus driver.
 
-Cc: <stable@vger.kernel.org> v4.19+
+Cc: <stable@vger.kernel.org>
 Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
 Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/misc/mei/hbm.c |    7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/misc/mei/bus.c |   21 ++++++++++-----------
+ 1 file changed, 10 insertions(+), 11 deletions(-)
 
---- a/drivers/misc/mei/hbm.c
-+++ b/drivers/misc/mei/hbm.c
-@@ -1029,29 +1029,36 @@ static void mei_hbm_config_features(stru
- 	    dev->version.minor_version >= HBM_MINOR_VERSION_PGI)
- 		dev->hbm_f_pg_supported = 1;
+--- a/drivers/misc/mei/bus.c
++++ b/drivers/misc/mei/bus.c
+@@ -541,17 +541,9 @@ int mei_cldev_enable(struct mei_cl_devic
+ 		goto out;
+ 	}
  
-+	dev->hbm_f_dc_supported = 0;
- 	if (dev->version.major_version >= HBM_MAJOR_VERSION_DC)
- 		dev->hbm_f_dc_supported = 1;
+-	if (!mei_cl_bus_module_get(cldev)) {
+-		dev_err(&cldev->dev, "get hw module failed");
+-		ret = -ENODEV;
+-		goto out;
+-	}
+-
+ 	ret = mei_cl_connect(cl, cldev->me_cl, NULL);
+-	if (ret < 0) {
++	if (ret < 0)
+ 		dev_err(&cldev->dev, "cannot connect\n");
+-		mei_cl_bus_module_put(cldev);
+-	}
  
-+	dev->hbm_f_ie_supported = 0;
- 	if (dev->version.major_version >= HBM_MAJOR_VERSION_IE)
- 		dev->hbm_f_ie_supported = 1;
+ out:
+ 	mutex_unlock(&bus->device_lock);
+@@ -614,7 +606,6 @@ int mei_cldev_disable(struct mei_cl_devi
+ 	if (err < 0)
+ 		dev_err(bus->dev, "Could not disconnect from the ME client\n");
  
- 	/* disconnect on connect timeout instead of link reset */
-+	dev->hbm_f_dot_supported = 0;
- 	if (dev->version.major_version >= HBM_MAJOR_VERSION_DOT)
- 		dev->hbm_f_dot_supported = 1;
+-	mei_cl_bus_module_put(cldev);
+ out:
+ 	/* Flush queues and remove any pending read */
+ 	mei_cl_flush_queues(cl, NULL);
+@@ -725,9 +716,16 @@ static int mei_cl_device_probe(struct de
+ 	if (!id)
+ 		return -ENODEV;
  
- 	/* Notification Event Support */
-+	dev->hbm_f_ev_supported = 0;
- 	if (dev->version.major_version >= HBM_MAJOR_VERSION_EV)
- 		dev->hbm_f_ev_supported = 1;
++	if (!mei_cl_bus_module_get(cldev)) {
++		dev_err(&cldev->dev, "get hw module failed");
++		return -ENODEV;
++	}
++
+ 	ret = cldrv->probe(cldev, id);
+-	if (ret)
++	if (ret) {
++		mei_cl_bus_module_put(cldev);
+ 		return ret;
++	}
  
- 	/* Fixed Address Client Support */
-+	dev->hbm_f_fa_supported = 0;
- 	if (dev->version.major_version >= HBM_MAJOR_VERSION_FA)
- 		dev->hbm_f_fa_supported = 1;
+ 	__module_get(THIS_MODULE);
+ 	return 0;
+@@ -755,6 +753,7 @@ static int mei_cl_device_remove(struct d
  
- 	/* OS ver message Support */
-+	dev->hbm_f_os_supported = 0;
- 	if (dev->version.major_version >= HBM_MAJOR_VERSION_OS)
- 		dev->hbm_f_os_supported = 1;
+ 	mei_cldev_unregister_callbacks(cldev);
  
- 	/* DMA Ring Support */
-+	dev->hbm_f_dr_supported = 0;
- 	if (dev->version.major_version > HBM_MAJOR_VERSION_DR ||
- 	    (dev->version.major_version == HBM_MAJOR_VERSION_DR &&
- 	     dev->version.minor_version >= HBM_MINOR_VERSION_DR))
++	mei_cl_bus_module_put(cldev);
+ 	module_put(THIS_MODULE);
+ 	dev->driver = NULL;
+ 	return ret;
 
 
