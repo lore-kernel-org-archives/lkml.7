@@ -2,127 +2,162 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E9D2C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 01:34:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCF7BC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 01:36:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A51A20850
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 01:34:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0C9920850
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 01:36:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KWwbDMl9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TPLS491r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727564AbfCVBeZ (ORCPT
+        id S1727545AbfCVBgi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 21:34:25 -0400
-Received: from mail-pg1-f176.google.com ([209.85.215.176]:40682 "EHLO
-        mail-pg1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727451AbfCVBeZ (ORCPT
+        Thu, 21 Mar 2019 21:36:38 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:45050 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727397AbfCVBgh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 21:34:25 -0400
-Received: by mail-pg1-f176.google.com with SMTP id u9so310956pgo.7;
-        Thu, 21 Mar 2019 18:34:24 -0700 (PDT)
+        Thu, 21 Mar 2019 21:36:37 -0400
+Received: by mail-wr1-f65.google.com with SMTP id w2so559363wrt.11;
+        Thu, 21 Mar 2019 18:36:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=8aqHsW8JcapCofl+YH/dCzbvTqp7scjhme0ZJfomfWU=;
-        b=KWwbDMl9Qe+BPtbJbX8KxquzN0eCieYViNZemNQw1CJvLGys81uUIuaX+pexvstUju
-         344us/BEQUaKlgY4slS6CYAvWXjwrH4ilyMOUMvujcO2Hzo2a9rgjnjUS1VAeHT+AP1X
-         dfoCDk2F4/QWKbyNE9dR9FUoju7gWuZKUFekjIO7NuCQy4+la/NLJ6HloY05ZIt8QJMi
-         Dg/wdh5z25HJACEaIrwwg8UAJJpt6qll/gKEkIJlbEI9X5Xo7lXBXIu9rvPcb6aRVns6
-         Y0Y/rk4KeOAbDw6w9p+FjVMyRkkmUy+JP9P+lviveZx6I81xrkXOY/aRmUHN3QwbBaZE
-         nldg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=1/3BLBs+NZoUy1C7+Hlzcf7aTKxLJB//TToq25uSSrI=;
+        b=TPLS491r+kr4rAFn2l6VF3CVX7AWSPHVqqJu54RBhlfGPe55+H3wsuYPUZkanZpT6V
+         Nk40VE4rzhflA2Zu7xuvMVEt4lvyQ2bhuErboeRA7YXMkNKJFOjm5GvJ7mxnLvMBZu/x
+         co/8chhshn2mA+TGXJjNr7haIwyUhfSHwasDtypTIWwClrl+FleZlETLcRv9R1RPSmKx
+         qnE0g0KlnaWPhJGF5JBQPnQARH67oUB8YYvV2kAvEzQzZ0ZDIJzvrV1Z2TmL9AZ0e4Fn
+         kQexGONcbqcKYmuVff0wVx8gFnk5kAsLYCOcCEHEqUyfbxkAOH7I0tkVy/kqnAsqaWEw
+         T1bg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8aqHsW8JcapCofl+YH/dCzbvTqp7scjhme0ZJfomfWU=;
-        b=iDqjVkGD7x32Znlp2k2aUIAQnVmX3GEbWLNIN6gYTYCw4PZnWjIw/pXnEiBSoti+fK
-         jGhE5wR3T/AaePhBwpjpEZQ8KGVG0tw+4dab+pFCsJphCyGM7lAf7qRYnKKx7Dy6GfBF
-         YrmWLnBwH4Iy/8Zkuet3hfSG78VX9RC3HLixxDbQg7tmCnMsDlmnsmfya6d8F931a1GK
-         M1Tnlanq2D7UBDORXsrsrwarRwGWgySkX5X1ry1yKzKJCuVq1pMPwGDOBIpnjrk8ZAIe
-         gYCEhCqPYaa8Qpwo9t5VJ9DDeyLYBSBoXQ8HEF0WvWAJ1mOTyhOe+lX/BqR4bUqYpBfP
-         tl3w==
-X-Gm-Message-State: APjAAAUd36GkN4FvBnoVVSVbh1DSIZiQnnky0kf21sAAYG/M5stgMx+I
-        XeYel0YGXn01MJkZgDosyEM=
-X-Google-Smtp-Source: APXvYqw7chzlfzrE4CPh7ZUlr4HOfmFJgsZ0XPQxSeMpRfMeW6COrLrwoGJrEwZ+O0IiR43xvv/Rdg==
-X-Received: by 2002:a63:2bd5:: with SMTP id r204mr6447768pgr.48.1553218463898;
-        Thu, 21 Mar 2019 18:34:23 -0700 (PDT)
-Received: from [192.168.1.70] (c-24-6-192-50.hsd1.ca.comcast.net. [24.6.192.50])
-        by smtp.gmail.com with ESMTPSA id w67sm10634754pfw.173.2019.03.21.18.34.21
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 21 Mar 2019 18:34:23 -0700 (PDT)
-Subject: Re: [RFC v3 18/19] of: unittest: split out a couple of test cases
- from unittest
-From:   Frank Rowand <frowand.list@gmail.com>
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@google.com>,
-        Luis Chamberlain <mcgrof@kernel.org>, shuah@kernel.org,
-        Joel Stanley <joel@jms.id.au>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Joe Perches <joe@perches.com>, brakmo@fb.com,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "Bird, Timothy" <Tim.Bird@sony.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jeff Dike <jdike@addtoit.com>,
-        Richard Weinberger <richard@nod.at>,
-        linux-um@lists.infradead.org, Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Rob Herring <robh@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Knut Omang <knut.omang@oracle.com>
-References: <20181128193636.254378-1-brendanhiggins@google.com>
- <20181128193636.254378-19-brendanhiggins@google.com>
- <990bfc7d-dc5e-d8d3-c151-9b321ff2ac10@gmail.com>
- <CAFd5g45tOGgf_sKGYRC=fpnTBKGaG=8frbQdgZ3ZTkQFyTfP5A@mail.gmail.com>
- <88fe0546-7850-5bb4-9673-b1aef2dccb3e@gmail.com>
- <CAFd5g444f-FBq4x3U7BL-EY+bFxP0rsJhJ14=mjOi89PhMkURg@mail.gmail.com>
- <0e311e88-c4d4-e98d-1720-53a04bd526fc@gmail.com>
- <CAFd5g44NTZoSAJPMvXP2xvJgn7m5QoV-KJu2AMrr67+eL+CKrQ@mail.gmail.com>
- <d9f7e000-4cac-a35a-3ff9-60130e12ebea@gmail.com>
- <72cd1c5b-6f68-73ad-c8fd-f3a3268a0529@gmail.com>
- <CAFd5g46UU9wk+F6A5wnKYYtYKmmtv__SaY8eg6v-T9xUjsoxhA@mail.gmail.com>
- <bb5bcd3d-a09a-cfbe-c7fa-16e5eb75b0e4@gmail.com>
-Message-ID: <767d14bf-3429-58b7-dcbf-c8ef86133265@gmail.com>
-Date:   Thu, 21 Mar 2019 18:34:21 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=1/3BLBs+NZoUy1C7+Hlzcf7aTKxLJB//TToq25uSSrI=;
+        b=fMD3pFmOwm4nddmxxcOUwHHaUh2M40M/0wBlCVzTmanDRgqKk/6nt+rIxlacmGH38Q
+         kxnhzI7v75Ytrh/K9qEIzx9AglF8eWOh7fANG1UHz56kuxv9Axgsrl6vtQBV0fHACV3l
+         /IHc0aPoahgZqFJulimIK75kVNWL8VQ6Oyn9OJXnFX32oZpkuu6sVOpXA5/u03jMg7Tg
+         3uRlGbKlUQpyWnP6laXIsb2C+26EKvago9B0CwGG9b+eW6m0WnxJSNW2J8UnVlrHESvK
+         +Ui8dr7eRWwoMYBDCB9nUmm3dDnmNgFCo5Jn9MszmM/oK/rGm/Z6tyj1DZoa8ygR+3GU
+         soxg==
+X-Gm-Message-State: APjAAAXe2AV106tY6EhMThfsc0bIPlLKkeh0ZwqWNy8MLtFvSCqNLpvV
+        +tgvqWhhSy8IVXjkLy+Xej6vwxlx5uzjv67+W1U=
+X-Google-Smtp-Source: APXvYqzphUDAn+nltH8+hByeuWLmgxpCMIo898MfnzFzVdUJpmV/r1vz3+Ml77fi9eLEzS1rlvpMSxq9zn4JQjarAJQ=
+X-Received: by 2002:adf:b60a:: with SMTP id f10mr4349048wre.116.1553218595527;
+ Thu, 21 Mar 2019 18:36:35 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <bb5bcd3d-a09a-cfbe-c7fa-16e5eb75b0e4@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190316020905.14962-1-yanaijie@huawei.com> <1553193542.65329.119.camel@acm.org>
+In-Reply-To: <1553193542.65329.119.camel@acm.org>
+From:   Ming Lei <tom.leiming@gmail.com>
+Date:   Fri, 22 Mar 2019 09:36:23 +0800
+Message-ID: <CACVXFVOeh_H9R8G0W=WHT9aaOm2K60HhEPbg9Okd58dhQ4Pm8Q@mail.gmail.com>
+Subject: Re: [RFC PATCH v2] scsi: fix oops in scsi_uninit_cmd()
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     Jason Yan <yanaijie@huawei.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        James Bottomley <jejb@linux.vnet.ibm.com>,
+        Linux SCSI List <linux-scsi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Hannes Reinecke <hare@suse.com>, Christoph Hellwig <hch@lst.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/21/19 5:22 PM, Frank Rowand wrote:
-> On 2/27/19 7:52 PM, Brendan Higgins wrote:
+On Fri, Mar 22, 2019 at 2:39 AM Bart Van Assche <bvanassche@acm.org> wrote:
+>
+> On Sat, 2019-03-16 at 10:09 +0800, Jason Yan wrote:
+> > If we remove the scsi disk when running io with fio, oops occured with
+> > the following condition.
+> >
+> > [scsi_eh_0]                              [fio]
+> > scsi_end_request
+> >   ->blk_update_request
+> >     ->end_bio(io returned to userspace)
+> >                                          close
+> >                                            ->sd_release
+> >                                               ->scsi_disk_put
+> >                                                  ->scsi_disk_release
+> >                                                      ->disk->private_da=
+ta =3D NULL;
+> >
+> >   ->scsi_mq_uninit_cmd
+> >     ->scsi_uninit_cmd
+> >       ->scsi_cmd_to_driver
+> >     ->drv is NULL, Oops
+> >
+> > There is a small window between blk_update_request() and
+> > scsi_mq_uninit_cmd() that scsi disk may have been released. This will
+> > cause a oops like below:
+> >
+> > Unable to handle kernel NULL pointer dereference at virtual address
+> > 0000000000000000
+> > s/sync.c:67, func=3Dxfer, error=3DIn[11347.116050] Mem abort info:
+> > put/output error
+> > [11347.121598]   ESR =3D 0x96000006
+> > [11347.126200]   Exception class =3D DABT (current EL), IL =3D 32 bits
+> > [11347.132117]   SET =3D 0, FnV =3D 0
+> > [11347.135170]   EA =3D 0, S1PTW =3D 0
+> > [11347.138308] Data abort info:
+> > [11347.141186]   ISV =3D 0, ISS =3D 0x00000006
+> > [11347.145019]   CM =3D 0, WnR =3D 0
+> > [11347.147977] user pgtable: 4k pages, 48-bit VAs, pgdp =3D
+> > 00000000a67aece2
+> > [11347.154591] [0000000000000000] pgd=3D0000002f90774003,
+> > pud=3D0000002fab098003, pmd=3D0000000000000000
+> > [11347.163304] Internal error: Oops: 96000006 [#1] PREEMPT SMP
+> > [11347.168870] Modules linked in: hisi_sas_v3_hw hisi_sas_main libsas
+> > [11347.175044] CPU: 56 PID: 4294 Comm: scsi_eh_2 Not tainted
+> > 4.19.0-g8052059-dirty #2
+> > [11347.182600] Hardware name: Huawei D06/D06, BIOS Hisilicon D06 UEFI
+> > RC0 - B601 (V6.01) 11/08/2018
+> > [11347.191370] pstate: a0c00009 (NzCv daif =E3=B0=83=E7=B9=90=CE=B5=ED=
+=9D=BE=E3=AF=97
+>
+> Please verify whether the following patch is a valid alternative for your=
+ patch:
+>
+> diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
+> index ed34bfbc3844..745ffdda1bc1 100644
+> --- a/drivers/scsi/sd.c
+> +++ b/drivers/scsi/sd.c
+> @@ -1408,6 +1408,7 @@ static void sd_release(struct gendisk *disk, fmode_=
+t mode)
+>  {
+>         struct scsi_disk *sdkp =3D scsi_disk(disk);
+>         struct scsi_device *sdev =3D sdkp->device;
+> +       struct request_queue *q =3D sdkp->disk->queue;
+>
+>         SCSI_LOG_HLQUEUE(3, sd_printk(KERN_INFO, sdkp, "sd_release\n"));
+>
+> @@ -1417,9 +1418,12 @@ static void sd_release(struct gendisk *disk, fmode=
+_t mode)
+>         }
+>
+>         /*
+> -        * XXX and what if there are packets in flight and this close()
+> -        * XXX is followed by a "rmmod sd_mod"?
+> +        * Wait until any requests that are in progress have completed.
+> +        * This is necessary to avoid that e.g. scsi_end_request() crashe=
+s
+> +        * due to scsi_disk_relase() clearing the disk->private_data poin=
+ter.
+>          */
+> +       blk_mq_freeze_queue(q);
+> +       blk_mq_unfreeze_queue(q);
 
-< snip >
+It is over-kill to drain any requests here, what we want is to just
+drain any in-flight
+IO requests.
 
->> Now I know that, hermeticity especially, but other features as well
->> (test suite summary, error on unused test case function, etc) are not
->> actually in KUnit as it is under consideration here. Maybe it would be
->> best to save these last two patches (18/19, and 19/19) until I have
->> these other features checked in and reconsider them then?
-> 
-> Thanks for leaving 18/19 and 19/19 off in v4.
-
-Oops, they got into v4 but as 16/17 and 17/17, I think.  But it sounds
-like you are planning to leave them out of v5.
-
-> 
-> -Frank
+Thanks,
+Ming Lei
