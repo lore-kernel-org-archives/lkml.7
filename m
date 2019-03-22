@@ -2,79 +2,154 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C875C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:00:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E4B5C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:00:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 127D8218B0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:00:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="0FE4OOn2"
+	by mail.kernel.org (Postfix) with ESMTP id 2A2D7218B0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:00:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729484AbfCVPAW (ORCPT
+        id S1729518AbfCVPAY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 11:00:22 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:48746 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729129AbfCVPAW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 11:00:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=dYjCVcv6V5v51cbzYdQl2UO0Sx67KxhRWRVbVYjb8Wc=; b=0FE4OOn29jCGsibK0eOvjADdg
-        V7+Yom5ubyTxHfy2Dcf2fUCVB57MT9GnPxv8DCvR4+jLz/c66LO1G2KsiJeSvp2n6O/6A0qwX7lUt
-        hOnlCaVRhLTFV5o2NMYwOv0xKrapTpzSMvkCg2YmTWWme1gQP8YuPHWH2hNw2oRmz0dQngNLRVt8h
-        BZSa7n1sB0/cgrF8rkrc0xBMxGVFYX89BOOsBI62kQtxWQuH9grMu3Up6UzYejV5sNuZ5jKdUY5H4
-        k1RKEHQle4cgznGwq6/I7WBKrILD9sio1sqpCbPTuKk16gqebqWct98l52gOJiWYAvZBaZx4Qcjuv
-        uMfK6fHhw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h7LeU-0002Ou-W8; Fri, 22 Mar 2019 15:00:11 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 72E99287233CD; Fri, 22 Mar 2019 16:00:09 +0100 (CET)
-Date:   Fri, 22 Mar 2019 16:00:09 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Len Brown <len.brown@intel.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Laura Abbott <labbott@fedoraproject.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Simon Schricker <sschricker@suse.de>,
-        Borislav Petkov <bp@suse.de>, Hannes Reinecke <hare@suse.de>
-Subject: Re: [PATCH 2/2] PM / arch: x86: MSR_IA32_ENERGY_PERF_BIAS sysfs
- interface
-Message-ID: <20190322150009.GY6058@hirez.programming.kicks-ass.net>
-References: <1637073.gl2OfxWTjI@aspire.rjw.lan>
- <1762575.ER2xjzr9E1@aspire.rjw.lan>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1762575.ER2xjzr9E1@aspire.rjw.lan>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 22 Mar 2019 11:00:24 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55014 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728024AbfCVPAX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 11:00:23 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id D5068B11D;
+        Fri, 22 Mar 2019 15:00:20 +0000 (UTC)
+Date:   Fri, 22 Mar 2019 16:00:19 +0100
+Message-ID: <s5hr2az9cos.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     "Arnd Bergmann" <arnd@arndb.de>
+Cc:     "Connor McAdams" <conmanx360@gmail.com>,
+        "Takashi Sakamoto" <o-takashi@sakamocchi.jp>,
+        <alsa-devel@alsa-project.org>,
+        "Alastair Bridgewater" <alastair.bridgewater@gmail.com>,
+        "Nathan Chancellor" <natechancellor@gmail.com>,
+        "Nick Desaulniers" <ndesaulniers@google.com>,
+        <clang-built-linux@googlegroups.com>,
+        "Jaroslav Kysela" <perex@perex.cz>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ALSA: hda/ca0132: work around clang -Wuninitialized warning
+In-Reply-To: <20190322140649.197027-1-arnd@arndb.de>
+References: <20190322140649.197027-1-arnd@arndb.de>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 21, 2019 at 11:20:17PM +0100, Rafael J. Wysocki wrote:
-> +	ret = rdmsrl_on_cpu(cpu, MSR_IA32_ENERGY_PERF_BIAS, &epb);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = wrmsrl_on_cpu(cpu, MSR_IA32_ENERGY_PERF_BIAS,
-> +			    (epb & ~EPB_MASK) | val);
+On Fri, 22 Mar 2019 15:06:28 +0100,
+Arnd Bergmann wrote:
+> 
+> When CONFIG_PCI is disabled, clang gets confused about the
+> control flow of the switch() statement always ending up
+> in the default case, and warns:
+> 
+> sound/pci/hda/patch_ca0132.c:7558:6: error: variable 'fw_entry' is used uninitialized whenever 'if' condition is false
+>       [-Werror,-Wsometimes-uninitialized]
+>         if (!spec->alt_firmware_present) {
+>             ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+> sound/pci/hda/patch_ca0132.c:7565:42: note: uninitialized use occurs here
+>         dsp_os_image = (struct dsp_image_seg *)(fw_entry->data);
+>                                                 ^~~~~~~~
+> sound/pci/hda/patch_ca0132.c:7558:2: note: remove the 'if' if its condition is always true
+>         if (!spec->alt_firmware_present) {
+>         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> sound/pci/hda/patch_ca0132.c:7521:33: note: initialize the variable 'fw_entry' to silence this warning
+>         const struct firmware *fw_entry;
+>                                        ^
+>                                         = NULL
+> 
+> Adding an explicit check for CONFIG_PCI avoids the issue.
+> Unfortunately this is not very intuitive here.
+> 
+> Link: https://bugs.llvm.org/show_bug.cgi?id=41197#c1
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+> Any suggestions for other workarounds appreciated. If you can think
+> of a better fix, please treat this as a reported-by:
 
-That's two back-to-back IPIs and a giant waste.
+Can it be addressed by the code simplification like below, instead?
 
-If you'd use a proper msr shadow variable, you'd not have to do the
-rdmsr_on_cpu :-)
+
+thanks,
+
+Takashi
+
+---
+ sound/pci/hda/patch_ca0132.c | 20 ++++++--------------
+ 1 file changed, 6 insertions(+), 14 deletions(-)
+
+diff --git a/sound/pci/hda/patch_ca0132.c b/sound/pci/hda/patch_ca0132.c
+index 29882bda7632..e1ebc6d5f382 100644
+--- a/sound/pci/hda/patch_ca0132.c
++++ b/sound/pci/hda/patch_ca0132.c
+@@ -1005,7 +1005,6 @@ struct ca0132_spec {
+ 	unsigned int scp_resp_header;
+ 	unsigned int scp_resp_data[4];
+ 	unsigned int scp_resp_count;
+-	bool alt_firmware_present;
+ 	bool startup_check_entered;
+ 	bool dsp_reload;
+ 
+@@ -7518,7 +7517,7 @@ static bool ca0132_download_dsp_images(struct hda_codec *codec)
+ 	bool dsp_loaded = false;
+ 	struct ca0132_spec *spec = codec->spec;
+ 	const struct dsp_image_seg *dsp_os_image;
+-	const struct firmware *fw_entry;
++	const struct firmware *fw_entry = NULL;
+ 	/*
+ 	 * Alternate firmwares for different variants. The Recon3Di apparently
+ 	 * can use the default firmware, but I'll leave the option in case
+@@ -7529,33 +7528,26 @@ static bool ca0132_download_dsp_images(struct hda_codec *codec)
+ 	case QUIRK_R3D:
+ 	case QUIRK_AE5:
+ 		if (request_firmware(&fw_entry, DESKTOP_EFX_FILE,
+-					codec->card->dev) != 0) {
++					codec->card->dev) != 0)
+ 			codec_dbg(codec, "Desktop firmware not found.");
+-			spec->alt_firmware_present = false;
+-		} else {
++		else
+ 			codec_dbg(codec, "Desktop firmware selected.");
+-			spec->alt_firmware_present = true;
+-		}
+ 		break;
+ 	case QUIRK_R3DI:
+ 		if (request_firmware(&fw_entry, R3DI_EFX_FILE,
+-					codec->card->dev) != 0) {
++					codec->card->dev) != 0)
+ 			codec_dbg(codec, "Recon3Di alt firmware not detected.");
+-			spec->alt_firmware_present = false;
+-		} else {
++		else
+ 			codec_dbg(codec, "Recon3Di firmware selected.");
+-			spec->alt_firmware_present = true;
+-		}
+ 		break;
+ 	default:
+-		spec->alt_firmware_present = false;
+ 		break;
+ 	}
+ 	/*
+ 	 * Use default ctefx.bin if no alt firmware is detected, or if none
+ 	 * exists for your particular codec.
+ 	 */
+-	if (!spec->alt_firmware_present) {
++	if (!fw_entry) {
+ 		codec_dbg(codec, "Default firmware selected.");
+ 		if (request_firmware(&fw_entry, EFX_FILE,
+ 					codec->card->dev) != 0)
+-- 
+2.16.4
+
