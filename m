@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E3EAC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:09:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1701C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:09:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F7482192C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:09:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B15D321929
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:09:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256553;
-	bh=4GdY35UyizSYrAWL9+E1FqQOUY9I+nTX80PT0Nc7ric=;
+	s=default; t=1553256555;
+	bh=C/vPCcl2ghLPX9S86RsnPk5ROzHKWQcsivekk6WalVQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r3s9r8S98hHMidwrnzUCT4UKjGwEE+1sojOewCPBb5OTcGthIKtFDRoNqGUgGK2c7
-	 WJFvOzvg5XvovrvYgEuWKBolISPrGsFU3zP7FfcBv5HKy2HgEt/wv+Vi6+fuuNvI/u
-	 /NANzLGPzkk2Qo970cp6j+gZMrChKFKDlkRNSblU=
+	b=r4QK5t3d3dhB5QGCyaBeYXQBC4g9BiDtqIIUXVciHiV4Sy0weQowgCQbIpYQC3m1C
+	 Fudi2k+nhhQosL+NXBWgfXq4W0VfDNzbO2Lu734xoUH9DlMBhUqzp/aS6bDEez2vZm
+	 NiLKHBoFzGT5nh759/SoDDgad/4pNbMud3aVXM3Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389005AbfCVMJM (ORCPT
+        id S2389278AbfCVMJO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:09:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47580 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:09:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389252AbfCVMJJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:09:09 -0400
+        id S2389269AbfCVMJM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:09:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C007B20685;
-        Fri, 22 Mar 2019 12:09:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 858D220830;
+        Fri, 22 Mar 2019 12:09:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256549;
-        bh=4GdY35UyizSYrAWL9+E1FqQOUY9I+nTX80PT0Nc7ric=;
+        s=default; t=1553256552;
+        bh=C/vPCcl2ghLPX9S86RsnPk5ROzHKWQcsivekk6WalVQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BZKQZZdB2kD8WNoM0NFXXqBgZv7NQQr6Y1MZKGu7PoU/S6abzB3scaPsMLtoTKKIT
-         EJ64t1IDSzKoaqpy2IYGSsNt5rmBYlfXIVxAv0LIP5/su/tbxgixe02eVOVZEu6OV5
-         mY6zxbgvYeJR7wxGv/pAAqk6n98YHfKFC/9DcVVE=
+        b=w7IL4eFIFxDwm+5XHHsARzQI+Sy6D0mqq7YfGbeEoGL5ux/EOecVWzfqL5AJ19JY4
+         81e7lHd7NG2ePBRQ1H1bS3XkmnJ5zTrmrn3cnfwsk0iAcNtp+xyeQxnUNtGToo9wNY
+         +BI5CP6v4ECX8x1uhi0xK4PsviXLCOVOg0CWS1GY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Yihao Wu <wuyihao@linux.alibaba.com>,
-        "J. Bruce Fields" <bfields@redhat.com>
-Subject: [PATCH 4.19 245/280] nfsd: fix wrong check in write_v4_end_grace()
-Date:   Fri, 22 Mar 2019 12:16:38 +0100
-Message-Id: <20190322111340.267107303@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>
+Subject: [PATCH 4.19 246/280] NFSv4.1: Reinitialise sequence results before retransmitting a request
+Date:   Fri, 22 Mar 2019 12:16:39 +0100
+Message-Id: <20190322111340.500051486@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -66,35 +65,56 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Yihao Wu <wuyihao@linux.alibaba.com>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-commit dd838821f0a29781b185cd8fb8e48d5c177bd838 upstream.
+commit c1dffe0bf7f9c3d57d9f237a7cb2a81e62babd2b upstream.
 
-Commit 62a063b8e7d1 "nfsd4: fix crash on writing v4_end_grace before
-nfsd startup" is trying to fix a NULL dereference issue, but it
-mistakenly checks if the nfsd server is started. So fix it.
+If we have to retransmit a request, we should ensure that we reinitialise
+the sequence results structure, since in the event of a signal
+we need to treat the request as if it had not been sent.
 
-Fixes: 62a063b8e7d1 "nfsd4: fix crash on writing v4_end_grace before nfsd startup"
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Cc: stable@vger.kernel.org
-Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-Signed-off-by: Yihao Wu <wuyihao@linux.alibaba.com>
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfsd/nfsctl.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfs/nfs4proc.c |   12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
---- a/fs/nfsd/nfsctl.c
-+++ b/fs/nfsd/nfsctl.c
-@@ -1126,7 +1126,7 @@ static ssize_t write_v4_end_grace(struct
- 		case 'Y':
- 		case 'y':
- 		case '1':
--			if (nn->nfsd_serv)
-+			if (!nn->nfsd_serv)
- 				return -EBUSY;
- 			nfsd4_end_grace(nn);
- 			break;
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -947,6 +947,13 @@ nfs4_sequence_process_interrupted(struct
+ 
+ #endif	/* !CONFIG_NFS_V4_1 */
+ 
++static void nfs41_sequence_res_init(struct nfs4_sequence_res *res)
++{
++	res->sr_timestamp = jiffies;
++	res->sr_status_flags = 0;
++	res->sr_status = 1;
++}
++
+ static
+ void nfs4_sequence_attach_slot(struct nfs4_sequence_args *args,
+ 		struct nfs4_sequence_res *res,
+@@ -958,10 +965,6 @@ void nfs4_sequence_attach_slot(struct nf
+ 	args->sa_slot = slot;
+ 
+ 	res->sr_slot = slot;
+-	res->sr_timestamp = jiffies;
+-	res->sr_status_flags = 0;
+-	res->sr_status = 1;
+-
+ }
+ 
+ int nfs4_setup_sequence(struct nfs_client *client,
+@@ -1007,6 +1010,7 @@ int nfs4_setup_sequence(struct nfs_clien
+ 
+ 	trace_nfs4_setup_sequence(session, args);
+ out_start:
++	nfs41_sequence_res_init(res);
+ 	rpc_call_start(task);
+ 	return 0;
+ 
 
 
