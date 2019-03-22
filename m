@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7733C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:43:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7C2AC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:43:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88803204FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:43:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92A742082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:43:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254993;
-	bh=IdoQC2Ipy/CQOOVGVdEaPgdqbEpTXQ8MIxa1BCYlCRM=;
+	s=default; t=1553254997;
+	bh=ujHrULrwiUWD2jBL/6dOMBRjBI7vYWaKxBeW+CgRJZE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZL+35O7B1lbudtSJbce3jJEAoNOBJVdVMapZOmCzI3FRLCEtahnvLxOnrlrkJDO58
-	 eosqhpGyFl57X/fEbAXLy/uSSdj+FeNTl034NCuwKg/iAjQYPHcD9vhZUgQ/A6SyQ/
-	 sf7GW3fX6WOrOvYAKw+rwZL4WextZHou2gH01nRI=
+	b=cGeylFcovg6VWRtdEts4E9Qd4SznDCpMSy5VfPNNXwlycjsFSZrnTxl099gjjOkkJ
+	 OUct8v0g59OzQYhxT3T5xHJGPDr5lskEYvyBgeHdXuR9NhggEB6qcuD2Yhk0CjniBn
+	 IdCsN2AmgvkdP3UVxGcdNLmZZos0iRDvbm2JudYg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730862AbfCVLnM (ORCPT
+        id S1731648AbfCVLnQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:43:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45836 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:43:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729257AbfCVLnL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:43:11 -0400
+        id S1727954AbfCVLnO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:43:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE18C204FD;
-        Fri, 22 Mar 2019 11:43:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A01562082C;
+        Fri, 22 Mar 2019 11:43:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254990;
-        bh=IdoQC2Ipy/CQOOVGVdEaPgdqbEpTXQ8MIxa1BCYlCRM=;
+        s=default; t=1553254993;
+        bh=ujHrULrwiUWD2jBL/6dOMBRjBI7vYWaKxBeW+CgRJZE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a21DhqzEQsqkwBnjlPa5mmqlaaAYXi91Z74wktIhGBG4Dzcb9nqxixkGcJIKMp6xH
-         ys+1baBDYxubQcuntCKUYEjSZ0QCAypSnGrwH3WbFf9OzW/hUWRN/zlCRcP2bO4K0n
-         Hr++T77IVytWUPE2+cTzsiEABdPsRSurTPDtDt08=
+        b=tyw1ga2j8f68kRIBHP0k+MfluR5cut5LsOoV40MTS/QcUyLhNHnRHmH6kNauoLSAF
+         nWd6VQRKN/+EKWAOczEaYzdXoSlxb0DngTqGFOhqyXjyJgkuJKL2adK6L89bLhd+K8
+         9zd4icTjlDLA78nCV0i7165iIfiWuVkZ+V9WzZu4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, yangerkun <yangerkun@huawei.com>,
-        Jan Kara <jack@suse.cz>
-Subject: [PATCH 4.9 073/118] ext2: Fix underflow in ext2_max_size()
-Date:   Fri, 22 Mar 2019 12:15:45 +0100
-Message-Id: <20190322111221.802003683@linuxfoundation.org>
+        stable@vger.kernel.org, Misael Lopez Cruz <misael.lopez@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Subject: [PATCH 4.9 074/118] clk: clk-twl6040: Fix imprecise external abort for pdmclk
+Date:   Fri, 22 Mar 2019 12:15:46 +0100
+Message-Id: <20190322111221.855885341@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111215.873964544@linuxfoundation.org>
 References: <20190322111215.873964544@linuxfoundation.org>
@@ -65,98 +66,117 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jan Kara <jack@suse.cz>
+From: Tony Lindgren <tony@atomide.com>
 
-commit 1c2d14212b15a60300a2d4f6364753e87394c521 upstream.
+commit 5ae51d67aec95f6f9386aa8dd5db424964895575 upstream.
 
-When ext2 filesystem is created with 64k block size, ext2_max_size()
-will return value less than 0. Also, we cannot write any file in this fs
-since the sb->maxbytes is less than 0. The core of the problem is that
-the size of block index tree for such large block size is more than
-i_blocks can carry. So fix the computation to count with this
-possibility.
+I noticed that modprobe clk-twl6040 can fail after a cold boot with:
+abe_cm:clk:0010:0: failed to enable
+...
+Unhandled fault: imprecise external abort (0x1406) at 0xbe896b20
 
-File size limits computed with the new function for the full range of
-possible block sizes look like:
+WARNING: CPU: 1 PID: 29 at drivers/clk/clk.c:828 clk_core_disable_lock+0x18/0x24
+...
+(clk_core_disable_lock) from [<c0123534>] (_disable_clocks+0x18/0x90)
+(_disable_clocks) from [<c0124040>] (_idle+0x17c/0x244)
+(_idle) from [<c0125ad4>] (omap_hwmod_idle+0x24/0x44)
+(omap_hwmod_idle) from [<c053a038>] (sysc_runtime_suspend+0x48/0x108)
+(sysc_runtime_suspend) from [<c06084c4>] (__rpm_callback+0x144/0x1d8)
+(__rpm_callback) from [<c0608578>] (rpm_callback+0x20/0x80)
+(rpm_callback) from [<c0607034>] (rpm_suspend+0x120/0x694)
+(rpm_suspend) from [<c0607a78>] (__pm_runtime_idle+0x60/0x84)
+(__pm_runtime_idle) from [<c053aaf0>] (sysc_probe+0x874/0xf2c)
+(sysc_probe) from [<c05fecd4>] (platform_drv_probe+0x48/0x98)
 
-bits file_size
-10     17247252480
-11    275415851008
-12   2196873666560
-13   2197948973056
-14   2198486220800
-15   2198754754560
-16   2198888906752
+After searching around for a similar issue, I came across an earlier fix
+that never got merged upstream in the Android tree for glass-omap-xrr02.
+There is patch "MFD: twl6040-codec: Implement PDMCLK cold temp errata"
+by Misael Lopez Cruz <misael.lopez@ti.com>.
 
-CC: stable@vger.kernel.org
-Reported-by: yangerkun <yangerkun@huawei.com>
-Signed-off-by: Jan Kara <jack@suse.cz>
+Based on my observations, this fix is also needed when cold booting
+devices, and not just for deeper idle modes. Since we now have a clock
+driver for pdmclk, let's fix the issue in twl6040_pdmclk_prepare().
+
+Cc: Misael Lopez Cruz <misael.lopez@ti.com>
+Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext2/super.c |   41 ++++++++++++++++++++++++++---------------
- 1 file changed, 26 insertions(+), 15 deletions(-)
+ drivers/clk/clk-twl6040.c |   53 ++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 51 insertions(+), 2 deletions(-)
 
---- a/fs/ext2/super.c
-+++ b/fs/ext2/super.c
-@@ -724,7 +724,8 @@ static loff_t ext2_max_size(int bits)
- {
- 	loff_t res = EXT2_NDIR_BLOCKS;
- 	int meta_blocks;
--	loff_t upper_limit;
-+	unsigned int upper_limit;
-+	unsigned int ppb = 1 << (bits-2);
+--- a/drivers/clk/clk-twl6040.c
++++ b/drivers/clk/clk-twl6040.c
+@@ -41,6 +41,43 @@ static int twl6040_pdmclk_is_prepared(st
+ 	return pdmclk->enabled;
+ }
  
- 	/* This is calculated to be the largest file size for a
- 	 * dense, file such that the total number of
-@@ -738,24 +739,34 @@ static loff_t ext2_max_size(int bits)
- 	/* total blocks in file system block size */
- 	upper_limit >>= (bits - 9);
- 
--
--	/* indirect blocks */
--	meta_blocks = 1;
--	/* double indirect blocks */
--	meta_blocks += 1 + (1LL << (bits-2));
--	/* tripple indirect blocks */
--	meta_blocks += 1 + (1LL << (bits-2)) + (1LL << (2*(bits-2)));
--
--	upper_limit -= meta_blocks;
--	upper_limit <<= bits;
--
-+	/* Compute how many blocks we can address by block tree */
- 	res += 1LL << (bits-2);
- 	res += 1LL << (2*(bits-2));
- 	res += 1LL << (3*(bits-2));
-+	/* Does block tree limit file size? */
-+	if (res < upper_limit)
-+		goto check_lfs;
++static int twl6040_pdmclk_reset_one_clock(struct twl6040_pdmclk *pdmclk,
++					  unsigned int reg)
++{
++	const u8 reset_mask = TWL6040_HPLLRST;	/* Same for HPPLL and LPPLL */
++	int ret;
 +
-+	res = upper_limit;
-+	/* How many metadata blocks are needed for addressing upper_limit? */
-+	upper_limit -= EXT2_NDIR_BLOCKS;
-+	/* indirect blocks */
-+	meta_blocks = 1;
-+	upper_limit -= ppb;
-+	/* double indirect blocks */
-+	if (upper_limit < ppb * ppb) {
-+		meta_blocks += 1 + DIV_ROUND_UP(upper_limit, ppb);
-+		res -= meta_blocks;
-+		goto check_lfs;
-+	}
-+	meta_blocks += 1 + ppb;
-+	upper_limit -= ppb * ppb;
-+	/* tripple indirect blocks for the rest */
-+	meta_blocks += 1 + DIV_ROUND_UP(upper_limit, ppb) +
-+		DIV_ROUND_UP(upper_limit, ppb*ppb);
-+	res -= meta_blocks;
-+check_lfs:
- 	res <<= bits;
--	if (res > upper_limit)
--		res = upper_limit;
--
- 	if (res > MAX_LFS_FILESIZE)
- 		res = MAX_LFS_FILESIZE;
++	ret = twl6040_set_bits(pdmclk->twl6040, reg, reset_mask);
++	if (ret < 0)
++		return ret;
++
++	ret = twl6040_clear_bits(pdmclk->twl6040, reg, reset_mask);
++	if (ret < 0)
++		return ret;
++
++	return 0;
++}
++
++/*
++ * TWL6040A2 Phoenix Audio IC erratum #6: "PDM Clock Generation Issue At
++ * Cold Temperature". This affects cold boot and deeper idle states it
++ * seems. The workaround consists of resetting HPPLL and LPPLL.
++ */
++static int twl6040_pdmclk_quirk_reset_clocks(struct twl6040_pdmclk *pdmclk)
++{
++	int ret;
++
++	ret = twl6040_pdmclk_reset_one_clock(pdmclk, TWL6040_REG_HPPLLCTL);
++	if (ret)
++		return ret;
++
++	ret = twl6040_pdmclk_reset_one_clock(pdmclk, TWL6040_REG_LPPLLCTL);
++	if (ret)
++		return ret;
++
++	return 0;
++}
++
+ static int twl6040_pdmclk_prepare(struct clk_hw *hw)
+ {
+ 	struct twl6040_pdmclk *pdmclk = container_of(hw, struct twl6040_pdmclk,
+@@ -48,8 +85,20 @@ static int twl6040_pdmclk_prepare(struct
+ 	int ret;
  
+ 	ret = twl6040_power(pdmclk->twl6040, 1);
+-	if (!ret)
+-		pdmclk->enabled = 1;
++	if (ret)
++		return ret;
++
++	ret = twl6040_pdmclk_quirk_reset_clocks(pdmclk);
++	if (ret)
++		goto out_err;
++
++	pdmclk->enabled = 1;
++
++	return 0;
++
++out_err:
++	dev_err(pdmclk->dev, "%s: error %i\n", __func__, ret);
++	twl6040_power(pdmclk->twl6040, 0);
+ 
+ 	return ret;
+ }
 
 
