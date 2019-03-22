@@ -2,86 +2,68 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAF25C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 17:49:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E624C10F03
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 17:50:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9731D2083D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 17:49:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BDD721929
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 17:50:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="bOC62TCM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729023AbfCVRtQ convert rfc822-to-8bit (ORCPT
+        id S1729027AbfCVRuW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 13:49:16 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:54161 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727806AbfCVRtP (ORCPT
+        Fri, 22 Mar 2019 13:50:22 -0400
+Received: from a9-30.smtp-out.amazonses.com ([54.240.9.30]:55620 "EHLO
+        a9-30.smtp-out.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727801AbfCVRuV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 13:49:15 -0400
-Received: from oxbaltgw59.schlund.de ([172.19.246.146]) by
- mrelayeu.kundenserver.de (mreue009 [213.165.67.97]) with ESMTPSA (Nemesis) id
- 1Mr9OA-1gcAcC0ULe-00oJeN; Fri, 22 Mar 2019 18:49:02 +0100
-Date:   Fri, 22 Mar 2019 18:49:01 +0100 (CET)
-From:   Stefan Wahren <stefan.wahren@i2se.com>
-To:     Jeremy Linton <jeremy.linton@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     mlangsdo@redhat.com, suzuki.poulose@arm.com, marc.zyngier@arm.com,
-        catalin.marinas@arm.com, julien.thierry@arm.com,
-        will.deacon@arm.com, linux-kernel@vger.kernel.org,
-        Andre Przywara <andre.przywara@arm.com>,
-        Mian Yousaf Kaukab <ykaukab@suse.de>, Dave.Martin@arm.com,
-        shankerd@codeaurora.org
-Message-ID: <1847942978.52169.1553276941024@email.ionos.de>
-In-Reply-To: <20190321230557.45107-11-jeremy.linton@arm.com>
-References: <20190321230557.45107-1-jeremy.linton@arm.com>
- <20190321230557.45107-11-jeremy.linton@arm.com>
-Subject: Re: [PATCH v6 10/10] arm64: enable generic CPU vulnerabilites
- support
+        Fri, 22 Mar 2019 13:50:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=6gbrjpgwjskckoa6a5zn6fwqkn67xbtw; d=amazonses.com; t=1553277020;
+        h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type:Feedback-ID;
+        bh=iIgmAU/fmwNi3T/2GQAeg5SnVOfELTKSk9Yud2RNxkA=;
+        b=bOC62TCM7G6uxAcMzaA+xU+tnbuSdATCmTtXQo6j8wnQxuRyiSrmNIhyUKo9JFTY
+        SlFgTxD26wFebqplJoWTJBWgdn7/NN/ihuQsM3VsuSdOiZK3UA2D2b75/n0QWbExOut
+        IbCYs+QHKy29Mvnk1COekXG0qSFVOAJCSoPueu6w=
+Date:   Fri, 22 Mar 2019 17:50:20 +0000
+From:   Christopher Lameter <cl@linux.com>
+X-X-Sender: cl@nuc-kabylake
+To:     Waiman Long <longman@redhat.com>
+cc:     Oleg Nesterov <oleg@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        selinux@vger.kernel.org, Paul Moore <paul@paul-moore.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Eric Paris <eparis@parisplace.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Subject: Re: [PATCH 2/4] signal: Make flush_sigqueue() use free_q to release
+ memory
+In-Reply-To: <d9e02cc4-3162-57b0-7924-9642aecb8f49@redhat.com>
+Message-ID: <01000169a686689d-bc18fecd-95e1-4b3e-8cd5-dad1b1c570cc-000000@email.amazonses.com>
+References: <20190321214512.11524-1-longman@redhat.com> <20190321214512.11524-3-longman@redhat.com> <20190322015208.GD19508@bombadil.infradead.org> <20190322111642.GA28876@redhat.com> <d9e02cc4-3162-57b0-7924-9642aecb8f49@redhat.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-X-Priority: 3
-Importance: Medium
-X-Mailer: Open-Xchange Mailer v7.8.4-Rev54
-X-Originating-Client: open-xchange-appsuite
-X-Provags-ID: V03:K1:V9cXfcWT1zNbuMEvzO7wb90rzVHqkQNr46sa64SrlQSp28+oVI7
- FKSrOF4odhmM3S0sW0NM3doirsncd1mptb2JXkppRxA2r3aODGSTcIJYsEPYtogQYV3QnRu
- K5OCzOu1dvVPSGm/ff4qS6QwJ0crVqVRXxL2b11RJgaESpcOCj5MSlFPoelOi2A+MD3fL+j
- EdMSKIfCv8/UEHr3X9cbQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:bPXS3IwlMoQ=:GLDCH8IAPxDJvRYtbF8tX7
- 7O+acKQICUUpZxALE6qcZnRVyqBfhrXaZea9652yaycimrzrchCsBkqVvJPBR22h67pNLh9/t
- fV6+uoBeC5mJT8ENkXEpk+7dONRuNh1sz38qX4XtpAW15tOR8NU13mX5xgYrUMONCO5RDsQ8n
- I2xq7fmksmMzlL5kaQbw5AQ+NIisGxto4L1fk5LOmUpGgGLu0lk3GtvIrDiMSF5ivzx6YENMF
- q022gwY9MJJ9JQHULqEHiiyPnUo16Hfl5S9/JoATr96w77GTT6g5CgFScx9eOVh2iQ30icJ33
- N6Luw7wYo2Bj0tT1gKS6n8nF//wQYqRVssUM85bjsdIoa8HTzqfVjhzd9p0tDZg7JMp0LIMhK
- 0/SLWd0qwGNzaDOQE2qHhsLG5xVmjPzzE/lOgAyjgPHOYc917gDB0jJ4BUNOqU7UuwpAYvH7x
- fRRNxCRW0tzckbbXVvSXclyqGcUOEonX69Q0Vl2yUVgpFozHHDYpzIS+v8wD28GmTRtMBwNVO
- pnTg1jqyQl13XyybsKnTubPBnVs3CQUWbO2FGK6s9awgYbZB7s+szyVvmXQcEi+XKKW9rl58N
- aAWVwrsbTszYiSj6zCG5iMT4YmACbObkDE75rQn58mwhH8KS3UvOcHuWt68+sXT8N78bF0s+s
- gV6iPQ0JTmf3q7OjcmySIVjtb2+2Pd5OI+VhkckC23f9Vj/IVYydEbtwi0KNzyyhOEQBxdK8/
- 5gBO7w7QBkE+a5DFrhOkehva/VqMg6SkNWRW2MnZT9iG5g4vYAx6/f2G4zo=
+Content-Type: text/plain; charset=US-ASCII
+X-SES-Outgoing: 2019.03.22-54.240.9.30
+Feedback-ID: 1.us-east-1.fQZZZ0Xtj2+TD7V5apTT/NrT6QKuPgzCT/IC7XYgDKI=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jeremy,
+On Fri, 22 Mar 2019, Waiman Long wrote:
 
-> Jeremy Linton <jeremy.linton@arm.com> hat am 22. März 2019 um 00:05 geschrieben:
-> 
-> 
-> From: Mian Yousaf Kaukab <ykaukab@suse.de>
-> 
-> Enable CPU vulnerabilty show functions for spectre_v1, spectre_v2,
-> meltdown and store-bypass.
-> 
-> Signed-off-by: Mian Yousaf Kaukab <ykaukab@suse.de>
-> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
-> Reviewed-by: Andre Przywara <andre.przywara@arm.com>
-> Tested-by: Stefan Wahren <stefan.wahren@i2se.com>
+> I am looking forward to it.
 
-FWIW i tested the series on top of today's linux-next with RPi 3B+ and it's still fine.
+There is also alrady rcu being used in these paths. kfree_rcu() would not
+be enough? It is an estalished mechanism that is mature and well
+understood.
 
-Stefan
