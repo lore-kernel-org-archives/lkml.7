@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61FBEC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:39:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68768C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:39:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30E6F21925
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:39:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39596218B0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:39:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254772;
-	bh=bh4tAfGsC5yThr9yI/zeOBJdM7LD3thaoENDL0y01hs=;
+	s=default; t=1553254776;
+	bh=NXupcm8szwvCIG4via/px6ciif+qpQZbQ28WeFeQrjQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G4CmjUCKlF4807geMKomUtLPghY+5NZvfR3FO8OrvwNp/oJMxWTEnUKGUFCfH3HPI
-	 +km4ps/rxzUGXL4R+mTqgTLxCeN7gVcX/E3YhQ7/cCPAiSQ1DR5YLIopdVgBuDtTl5
-	 nQGi6W/8kM7jdSATKGdWm5H6PMBeJ2nLPo1dNfAA=
+	b=oOboS+nJFXXKE+QCJrvzqfqLR9o63195ue2umq/FelxGB+elay32CTF6jQgO36JAZ
+	 jHSmhVQ6apMh58spbjuwO3AdnKB0w1+wGIWWV2hAAfcntuuSggslwYk6zw8AOWyA33
+	 /l66f2c5SX5Yx+Mm3Rih6JSRu1y3VkrLBEvz2Fko=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731157AbfCVLja (ORCPT
+        id S1731165AbfCVLje (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:39:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41096 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:39:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730504AbfCVLj1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:39:27 -0400
+        id S1731155AbfCVLja (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:39:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A7F1218B0;
-        Fri, 22 Mar 2019 11:39:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 344F4218B0;
+        Fri, 22 Mar 2019 11:39:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254766;
-        bh=bh4tAfGsC5yThr9yI/zeOBJdM7LD3thaoENDL0y01hs=;
+        s=default; t=1553254769;
+        bh=NXupcm8szwvCIG4via/px6ciif+qpQZbQ28WeFeQrjQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i8m9IjHtTkrCTUNFUe7CZBwTH/CxYBPPx5Td5ov2UcvZfAPLJDOp3hjrv1VRJgShj
-         Ao0GI3xKg0f2QNEXq2HabeNKVZ7khRaSGSwVi3VfnSN+AVqSfXQz/tl/HiU3MzFge2
-         kxbY4i5M/B4OKQIzRBXnH2hogvrzcxhp19kfIadA=
+        b=sIFy2ep24XKQHLXOaiEU5BIQmoCDAHAg8LtIq43j8D+88TZyZf87/mt8+nG8HME8P
+         ByMHYFf7lmRO4WPefsQQynBWyBig2kvRBQHyo655897AoYmu4X18BWsK0DcM0dO9Nt
+         UsHjnHfzfXIW7LY1H5Ccs9YJqwHtuasCaAmHtxLA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         Sean Christopherson <sean.j.christopherson@intel.com>,
         Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.4 228/230] KVM: nVMX: Sign extend displacements of VMX instrs mem operands
-Date:   Fri, 22 Mar 2019 12:16:06 +0100
-Message-Id: <20190322111252.961950207@linuxfoundation.org>
+Subject: [PATCH 4.4 229/230] KVM: nVMX: Ignore limit checks on VMX instructions using flat segments
+Date:   Fri, 22 Mar 2019 12:16:07 +0100
+Message-Id: <20190322111253.042474968@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -68,43 +68,21 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit 946c522b603f281195af1df91837a1d4d1eb3bc9 upstream.
+commit 34333cc6c2cb021662fd32e24e618d1b86de95bf upstream.
 
-The VMCS.EXIT_QUALIFCATION field reports the displacements of memory
-operands for various instructions, including VMX instructions, as a
-naturally sized unsigned value, but masks the value by the addr size,
-e.g. given a ModRM encoded as -0x28(%ebp), the -0x28 displacement is
-reported as 0xffffffd8 for a 32-bit address size.  Despite some weird
-wording regarding sign extension, the SDM explicitly states that bits
-beyond the instructions address size are undefined:
+Regarding segments with a limit==0xffffffff, the SDM officially states:
 
-    In all cases, bits of this field beyond the instructionâ€™s address
-    size are undefined.
+    When the effective limit is FFFFFFFFH (4 GBytes), these accesses may
+    or may not cause the indicated exceptions.  Behavior is
+    implementation-specific and may vary from one execution to another.
 
-Failure to sign extend the displacement results in KVM incorrectly
-treating a negative displacement as a large positive displacement when
-the address size of the VMX instruction is smaller than KVM's native
-size, e.g. a 32-bit address size on a 64-bit KVM.
-
-The very original decoding, added by commit 064aea774768 ("KVM: nVMX:
-Decoding memory operands of VMX instructions"), sort of modeled sign
-extension by truncating the final virtual/linear address for a 32-bit
-address size.  I.e. it messed up the effective address but made it work
-by adjusting the final address.
-
-When segmentation checks were added, the truncation logic was kept
-as-is and no sign extension logic was introduced.  In other words, it
-kept calculating the wrong effective address while mostly generating
-the correct virtual/linear address.  As the effective address is what's
-used in the segment limit checks, this results in KVM incorreclty
-injecting #GP/#SS faults due to non-existent segment violations when
-a nested VMM uses negative displacements with an address size smaller
-than KVM's native address size.
-
-Using the -0x28(%ebp) example, an EBP value of 0x1000 will result in
-KVM using 0x100000fd8 as the effective address when checking for a
-segment limit violation.  This causes a 100% failure rate when running
-a 32-bit KVM build as L1 on top of a 64-bit KVM L0.
+In practice, all CPUs that support VMX ignore limit checks for "flat
+segments", i.e. an expand-up data or code segment with base=0 and
+limit=0xffffffff.  This is subtly different than wrapping the effective
+address calculation based on the address size, as the flat segment
+behavior also applies to accesses that would wrap the 4g boundary, e.g.
+a 4-byte access starting at 0xffffffff will access linear addresses
+0xffffffff, 0x0, 0x1 and 0x2.
 
 Fixes: f9eb4af67c9d ("KVM: nVMX: VMX instructions: add checks for #GP/#SS exceptions")
 Cc: stable@vger.kernel.org
@@ -113,21 +91,30 @@ Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/vmx.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ arch/x86/kvm/vmx.c |   12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
 --- a/arch/x86/kvm/vmx.c
 +++ b/arch/x86/kvm/vmx.c
-@@ -6656,6 +6656,10 @@ static int get_vmx_mem_address(struct kv
- 	/* Addr = segment_base + offset */
- 	/* offset = base + [index * scale] + displacement */
- 	off = exit_qualification; /* holds the displacement */
-+	if (addr_size == 1)
-+		off = (gva_t)sign_extend64(off, 31);
-+	else if (addr_size == 0)
-+		off = (gva_t)sign_extend64(off, 15);
- 	if (base_is_valid)
- 		off += kvm_register_read(vcpu, base_reg);
- 	if (index_is_valid)
+@@ -6702,10 +6702,16 @@ static int get_vmx_mem_address(struct kv
+ 		/* Protected mode: #GP(0)/#SS(0) if the segment is unusable.
+ 		 */
+ 		exn = (s.unusable != 0);
+-		/* Protected mode: #GP(0)/#SS(0) if the memory
+-		 * operand is outside the segment limit.
++
++		/*
++		 * Protected mode: #GP(0)/#SS(0) if the memory operand is
++		 * outside the segment limit.  All CPUs that support VMX ignore
++		 * limit checks for flat segments, i.e. segments with base==0,
++		 * limit==0xffffffff and of type expand-up data or code.
+ 		 */
+-		exn = exn || (off + sizeof(u64) > s.limit);
++		if (!(s.base == 0 && s.limit == 0xffffffff &&
++		     ((s.type & 8) || !(s.type & 4))))
++			exn = exn || (off + sizeof(u64) > s.limit);
+ 	}
+ 	if (exn) {
+ 		kvm_queue_exception_e(vcpu,
 
 
