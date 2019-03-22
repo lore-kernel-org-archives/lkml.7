@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58336C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:17:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 636F4C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:17:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24DC22082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:17:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32B7F2083D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:17:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553257021;
-	bh=UxWqVrYrAXL9s7wNK+dMSb1EqqrPIikSSNc9ShT1EK0=;
+	s=default; t=1553257024;
+	bh=cDO9xhpK2tN8k8LIh0gndMuJjmAO93kUql2gZQCwyHo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u1HKP54e1YjGfv/Hq+yK9VhM3L9teU4p31bwAcme5O0FH7duccHF/WIObxLYCBLvR
-	 R1xCXs1ZiVH0p0RU9xhmpkBtM9NF9iLZK9SyIAAQxdDTmHHGNDy5RPL7VCVtNd0p1b
-	 AZy6lT1THgEOOTTDONss919pByjT7Jb0NSYY16k8=
+	b=qYGJUQXfk2t1NmXWBzB6fYCPqfGQDZoy5k9EsZVvNxohDNKCcJWpDCv3jxX/j6d4I
+	 1Ix9gIsjUjN5osz4F19J5cpwgbnyN/y4WAb8cZVn34QoI8zlLCywwx7iWUX+oE4y1M
+	 V6eMm05QmGbdF5l3rLjBrA4dyjRISAoBQKKSk3+0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390086AbfCVMQ7 (ORCPT
+        id S2390316AbfCVMRC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:16:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55750 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:17:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390285AbfCVMQ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:16:57 -0400
+        id S2390309AbfCVMQ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:16:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A719E2083D;
-        Fri, 22 Mar 2019 12:16:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B36F2192C;
+        Fri, 22 Mar 2019 12:16:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553257016;
-        bh=UxWqVrYrAXL9s7wNK+dMSb1EqqrPIikSSNc9ShT1EK0=;
+        s=default; t=1553257019;
+        bh=cDO9xhpK2tN8k8LIh0gndMuJjmAO93kUql2gZQCwyHo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vt6t8djB2IiSbqNROFNtahAdZbJ19IfPoNJLmGV0w2rIk8tapBGCfD4fXCGxfzM1K
-         kVFMxXXODq4DV/H11l00XCH259UmskX560IuxhEnPmuShuc27aW6JNAxtwHw7T2Zck
-         ttfpa49s0mIf8XLRNWZU8hT/tqyqh9yOEUQOlf68=
+        b=ht9nEA1ejEpZ5OJitKRKwaybQfT09kfz3t5weBbEMq3eE684MECn80V5c+vRb+Ivd
+         0pC5gzbw38nAZ7UP1bOdElyHlH/Cu5TAeXO0r1LlfCa9DxsdNnTP6UvgNpdfQ394O0
+         Y7irF9QQadbSRagBQU5EJhwGJ5Ul8+XD6ylI1PcI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, yangerkun <yangerkun@huawei.com>,
-        Theodore Tso <tytso@mit.edu>, stable@kernel.org
-Subject: [PATCH 5.0 107/238] ext4: fix check of inode in swap_inode_boot_loader
-Date:   Fri, 22 Mar 2019 12:15:26 +0100
-Message-Id: <20190322111304.846691564@linuxfoundation.org>
+        stable@vger.kernel.org, Finn Thain <fthain@telegraphics.com.au>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: [PATCH 5.0 090/238] m68k: Add -ffreestanding to CFLAGS
+Date:   Fri, 22 Mar 2019 12:15:09 +0100
+Message-Id: <20190322111303.894843300@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -65,63 +65,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: yangerkun <yangerkun@huawei.com>
+From: Finn Thain <fthain@telegraphics.com.au>
 
-commit 67a11611e1a5211f6569044fbf8150875764d1d0 upstream.
+commit 28713169d879b67be2ef2f84dcf54905de238294 upstream.
 
-Before really do swap between inode and boot inode, something need to
-check to avoid invalid or not permitted operation, like does this inode
-has inline data. But the condition check should be protected by inode
-lock to avoid change while swapping. Also some other condition will not
-change between swapping, but there has no problem to do this under inode
-lock.
+This patch fixes a build failure when using GCC 8.1:
 
-Signed-off-by: yangerkun <yangerkun@huawei.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Cc: stable@kernel.org
+/usr/bin/ld: block/partitions/ldm.o: in function `ldm_parse_tocblock':
+block/partitions/ldm.c:153: undefined reference to `strcmp'
+
+This is caused by a new optimization which effectively replaces a
+strncmp() call with a strcmp() call. This affects a number of strncmp()
+call sites in the kernel.
+
+The entire class of optimizations is avoided with -fno-builtin, which
+gets enabled by -ffreestanding. This may avoid possible future build
+failures in case new optimizations appear in future compilers.
+
+I haven't done any performance measurements with this patch but I did
+count the function calls in a defconfig build. For example, there are now
+23 more sprintf() calls and 39 fewer strcpy() calls. The effect on the
+other libc functions is smaller.
+
+If this harms performance we can tackle that regression by optimizing
+the call sites, ideally using semantic patches. That way, clang and ICC
+builds might benfit too.
+
+Cc: stable@vger.kernel.org
+Reference: https://marc.info/?l=linux-m68k&m=154514816222244&w=2
+Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/ioctl.c |   22 +++++++++++++---------
- 1 file changed, 13 insertions(+), 9 deletions(-)
+ arch/m68k/Makefile |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/fs/ext4/ioctl.c
-+++ b/fs/ext4/ioctl.c
-@@ -116,15 +116,6 @@ static long swap_inode_boot_loader(struc
- 	struct inode *inode_bl;
- 	struct ext4_inode_info *ei_bl;
+--- a/arch/m68k/Makefile
++++ b/arch/m68k/Makefile
+@@ -58,7 +58,10 @@ cpuflags-$(CONFIG_M5206e)	:= $(call cc-o
+ cpuflags-$(CONFIG_M5206)	:= $(call cc-option,-mcpu=5206,-m5200)
  
--	if (inode->i_nlink != 1 || !S_ISREG(inode->i_mode) ||
--	    IS_SWAPFILE(inode) || IS_ENCRYPTED(inode) ||
--	    ext4_has_inline_data(inode))
--		return -EINVAL;
--
--	if (IS_RDONLY(inode) || IS_APPEND(inode) || IS_IMMUTABLE(inode) ||
--	    !inode_owner_or_capable(inode) || !capable(CAP_SYS_ADMIN))
--		return -EPERM;
--
- 	inode_bl = ext4_iget(sb, EXT4_BOOT_LOADER_INO, EXT4_IGET_SPECIAL);
- 	if (IS_ERR(inode_bl))
- 		return PTR_ERR(inode_bl);
-@@ -137,6 +128,19 @@ static long swap_inode_boot_loader(struc
- 	 * that only 1 swap_inode_boot_loader is running. */
- 	lock_two_nondirectories(inode, inode_bl);
- 
-+	if (inode->i_nlink != 1 || !S_ISREG(inode->i_mode) ||
-+	    IS_SWAPFILE(inode) || IS_ENCRYPTED(inode) ||
-+	    ext4_has_inline_data(inode)) {
-+		err = -EINVAL;
-+		goto journal_err_out;
-+	}
+ KBUILD_AFLAGS += $(cpuflags-y)
+-KBUILD_CFLAGS += $(cpuflags-y) -pipe
++KBUILD_CFLAGS += $(cpuflags-y)
 +
-+	if (IS_RDONLY(inode) || IS_APPEND(inode) || IS_IMMUTABLE(inode) ||
-+	    !inode_owner_or_capable(inode) || !capable(CAP_SYS_ADMIN)) {
-+		err = -EPERM;
-+		goto journal_err_out;
-+	}
++KBUILD_CFLAGS += -pipe -ffreestanding
 +
- 	/* Wait for all existing dio workers */
- 	inode_dio_wait(inode);
- 	inode_dio_wait(inode_bl);
+ ifdef CONFIG_MMU
+ # without -fno-strength-reduce the 53c7xx.c driver fails ;-(
+ KBUILD_CFLAGS += -fno-strength-reduce -ffixed-a2
 
 
