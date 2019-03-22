@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AA53C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:13:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED79EC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:13:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEA5520830
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:13:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFA502082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:13:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256788;
-	bh=M+OVEUrq9CB1U2xL2vIN+D6/+EtY2e3RZqbZ7xGVidQ=;
+	s=default; t=1553256795;
+	bh=WkSrkFnZmnaRoZJtz06nvfqMn2or/9N2Wn3Va18JkDE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fg13gTw6tfpZXN28V/9cTu4qAJtSxhYiJ7vFrT1btiqv3ppeQFOY2JDUT1Ec2XPPr
-	 QcRSUJ//g3cfSbx6B57v632GemWkzjRcyG056l1CAL1DjenLEgmDnGr1gk/4Yb5Q9k
-	 xRSSTmmVHxrFd6KyaBA6BkOT0ttc4gXK7wDQH2WE=
+	b=XQXQ91l6ck/+cZ04oXdIiSMILoV32YJAkQl3zaWPngGhsFebyUxsk9nQiutWX1VDO
+	 OGXZ3c3gCTUGvbY3K+qeKIf8gsG0gq3eIqDy+QbcpIhegdLSsrFbHwpjp8t9s2tsdy
+	 Rtql8zDhUtPWkYNGzfIxcLlqOd/3cvg5RNjbMgMI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389719AbfCVMNH (ORCPT
+        id S2389735AbfCVMNO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:13:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51290 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:13:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51444 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389708AbfCVMND (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:13:03 -0400
+        id S2389025AbfCVMNK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:13:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6EAD22083D;
-        Fri, 22 Mar 2019 12:13:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F171E2083D;
+        Fri, 22 Mar 2019 12:13:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256782;
-        bh=M+OVEUrq9CB1U2xL2vIN+D6/+EtY2e3RZqbZ7xGVidQ=;
+        s=default; t=1553256789;
+        bh=WkSrkFnZmnaRoZJtz06nvfqMn2or/9N2Wn3Va18JkDE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HcJ4Th2Tz7FHB9zTQ2qrH82luY0LWb2QFwbKUMGzXiTbiYbpnZCS7gHMQynCiDWuY
-         KOeoG6UUqvzCAG33myPqrqYR3XRpwmj8lWERxab+Vdt/WpqMwsXHK/1i20DpxelUDU
-         FokzSqTI54/xFQyvpX4wSDTNiQuzuEcQXlVFsz2Y=
+        b=n70qWJEwRPUSkVA/tyLTcKlnkcFy+ADV8MewRi3cENMkbu46h/+kCXQgxrMinLEbF
+         8abaeKvual8stCL2cK2ppMkkqciN17jS8Oxac8b6NSW/1SUiB25RYg1vfqoXqJAmsU
+         HEVpsqxNBRDA2weYZlzyn36H9J5vtbTTMynb9UkI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
+        stable@vger.kernel.org, Eric Biggers <ebiggers@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.0 036/238] crypto: aead - set CRYPTO_TFM_NEED_KEY if ->setkey() fails
-Date:   Fri, 22 Mar 2019 12:14:15 +0100
-Message-Id: <20190322111300.486912066@linuxfoundation.org>
+Subject: [PATCH 5.0 038/238] crypto: arm/crct10dif - revert to C code for short inputs
+Date:   Fri, 22 Mar 2019 12:14:17 +0100
+Message-Id: <20190322111300.618507370@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -65,52 +66,115 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Eric Biggers <ebiggers@google.com>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
-commit 6ebc97006b196aafa9df0497fdfa866cf26f259b upstream.
+commit 62fecf295e3c48be1b5f17c440b93875b9adb4d6 upstream.
 
-Some algorithms have a ->setkey() method that is not atomic, in the
-sense that setting a key can fail after changes were already made to the
-tfm context.  In this case, if a key was already set the tfm can end up
-in a state that corresponds to neither the old key nor the new key.
+The SIMD routine ported from x86 used to have a special code path
+for inputs < 16 bytes, which got lost somewhere along the way.
+Instead, the current glue code aligns the input pointer to permit
+the NEON routine to use special versions of the vld1 instructions
+that assume 16 byte alignment, but this could result in inputs of
+less than 16 bytes to be passed in. This not only fails the new
+extended tests that Eric has implemented, it also results in the
+code reading past the end of the input, which could potentially
+result in crashes when dealing with less than 16 bytes of input
+at the end of a page which is followed by an unmapped page.
 
-For example, in gcm.c, if the kzalloc() fails due to lack of memory,
-then the CTR part of GCM will have the new key but GHASH will not.
+So update the glue code to only invoke the NEON routine if the
+input is at least 16 bytes.
 
-It's not feasible to make all ->setkey() methods atomic, especially ones
-that have to key multiple sub-tfms.  Therefore, make the crypto API set
-CRYPTO_TFM_NEED_KEY if ->setkey() fails, to prevent the tfm from being
-used until a new key is set.
-
-[Cc stable mainly because when introducing the NEED_KEY flag I changed
- AF_ALG to rely on it; and unlike in-kernel crypto API users, AF_ALG
- previously didn't have this problem.  So these "incompletely keyed"
- states became theoretically accessible via AF_ALG -- though, the
- opportunities for causing real mischief seem pretty limited.]
-
-Fixes: dc26c17f743a ("crypto: aead - prevent using AEADs without setting key")
-Cc: <stable@vger.kernel.org> # v4.16+
-Signed-off-by: Eric Biggers <ebiggers@google.com>
+Reported-by: Eric Biggers <ebiggers@kernel.org>
+Reviewed-by: Eric Biggers <ebiggers@kernel.org>
+Fixes: 1d481f1cd892 ("crypto: arm/crct10dif - port x86 SSE implementation to ARM")
+Cc: <stable@vger.kernel.org> # v4.10+
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- crypto/aead.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/arm/crypto/crct10dif-ce-core.S |   14 +++++++-------
+ arch/arm/crypto/crct10dif-ce-glue.c |   23 ++++++-----------------
+ 2 files changed, 13 insertions(+), 24 deletions(-)
 
---- a/crypto/aead.c
-+++ b/crypto/aead.c
-@@ -61,8 +61,10 @@ int crypto_aead_setkey(struct crypto_aea
- 	else
- 		err = crypto_aead_alg(tfm)->setkey(tfm, key, keylen);
+--- a/arch/arm/crypto/crct10dif-ce-core.S
++++ b/arch/arm/crypto/crct10dif-ce-core.S
+@@ -124,10 +124,10 @@ ENTRY(crc_t10dif_pmull)
+ 	vext.8		q10, qzr, q0, #4
  
--	if (err)
-+	if (unlikely(err)) {
-+		crypto_aead_set_flags(tfm, CRYPTO_TFM_NEED_KEY);
- 		return err;
-+	}
+ 	// receive the initial 64B data, xor the initial crc value
+-	vld1.64		{q0-q1}, [arg2, :128]!
+-	vld1.64		{q2-q3}, [arg2, :128]!
+-	vld1.64		{q4-q5}, [arg2, :128]!
+-	vld1.64		{q6-q7}, [arg2, :128]!
++	vld1.64		{q0-q1}, [arg2]!
++	vld1.64		{q2-q3}, [arg2]!
++	vld1.64		{q4-q5}, [arg2]!
++	vld1.64		{q6-q7}, [arg2]!
+ CPU_LE(	vrev64.8	q0, q0			)
+ CPU_LE(	vrev64.8	q1, q1			)
+ CPU_LE(	vrev64.8	q2, q2			)
+@@ -167,7 +167,7 @@ CPU_LE(	vrev64.8	q7, q7			)
+ _fold_64_B_loop:
  
- 	crypto_aead_clear_flags(tfm, CRYPTO_TFM_NEED_KEY);
+ 	.macro		fold64, reg1, reg2
+-	vld1.64		{q11-q12}, [arg2, :128]!
++	vld1.64		{q11-q12}, [arg2]!
+ 
+ 	vmull.p64	q8, \reg1\()h, d21
+ 	vmull.p64	\reg1, \reg1\()l, d20
+@@ -238,7 +238,7 @@ _16B_reduction_loop:
+ 	vmull.p64	q7, d15, d21
+ 	veor.8		q7, q7, q8
+ 
+-	vld1.64		{q0}, [arg2, :128]!
++	vld1.64		{q0}, [arg2]!
+ CPU_LE(	vrev64.8	q0, q0		)
+ 	vswp		d0, d1
+ 	veor.8		q7, q7, q0
+@@ -335,7 +335,7 @@ _less_than_128:
+ 	vmov.i8		q0, #0
+ 	vmov		s3, arg1_low32		// get the initial crc value
+ 
+-	vld1.64		{q7}, [arg2, :128]!
++	vld1.64		{q7}, [arg2]!
+ CPU_LE(	vrev64.8	q7, q7		)
+ 	vswp		d14, d15
+ 	veor.8		q7, q7, q0
+--- a/arch/arm/crypto/crct10dif-ce-glue.c
++++ b/arch/arm/crypto/crct10dif-ce-glue.c
+@@ -35,26 +35,15 @@ static int crct10dif_update(struct shash
+ 			    unsigned int length)
+ {
+ 	u16 *crc = shash_desc_ctx(desc);
+-	unsigned int l;
+ 
+-	if (!may_use_simd()) {
+-		*crc = crc_t10dif_generic(*crc, data, length);
++	if (length >= CRC_T10DIF_PMULL_CHUNK_SIZE && may_use_simd()) {
++		kernel_neon_begin();
++		*crc = crc_t10dif_pmull(*crc, data, length);
++		kernel_neon_end();
+ 	} else {
+-		if (unlikely((u32)data % CRC_T10DIF_PMULL_CHUNK_SIZE)) {
+-			l = min_t(u32, length, CRC_T10DIF_PMULL_CHUNK_SIZE -
+-				  ((u32)data % CRC_T10DIF_PMULL_CHUNK_SIZE));
+-
+-			*crc = crc_t10dif_generic(*crc, data, l);
+-
+-			length -= l;
+-			data += l;
+-		}
+-		if (length > 0) {
+-			kernel_neon_begin();
+-			*crc = crc_t10dif_pmull(*crc, data, length);
+-			kernel_neon_end();
+-		}
++		*crc = crc_t10dif_generic(*crc, data, length);
+ 	}
++
  	return 0;
+ }
+ 
 
 
