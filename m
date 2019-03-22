@@ -2,78 +2,179 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46B29C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:42:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94FEFC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:43:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 211E82070D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:42:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60E2B2070D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:43:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553258589;
+	bh=j6tBECERNB6RfUhgxRO40S/K0XCxTPrVJPURPOfccQY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=XcyxN/dHwvDloGhnlTue9O3MWOQchiNC+DTFO9HTSYbwOzccbnNPw+DnckeN/dMwz
+	 Ga2tMIEgn+PFVFCl03zBqwkLyxKhBzL2GrsJJNDInK1pPRkSTcPXkbTt96Zp41R9Xc
+	 +Gfgw2W+U9EN6LLNzl2XhxwC/I0QKVYtGiDnUxtw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388359AbfCVMmn (ORCPT
+        id S2388550AbfCVMnI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:42:43 -0400
-Received: from mail-it1-f199.google.com ([209.85.166.199]:41767 "EHLO
-        mail-it1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388593AbfCVMEB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:04:01 -0400
-Received: by mail-it1-f199.google.com with SMTP id q184so1840309itd.6
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 05:04:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=HhIwQpOIDaInjq9W5iO17MElgr9ywvkfiRcKDy0TYVI=;
-        b=hPhO5D4tJKjKxUOC8VEN+3TmIJwD3XnZ1AMqBE2sVCk+6oxy32dB5QFjBoURuApy1F
-         EeAazjvG/LvSfodFvqKTTn8H8ZNGrma6/ojKqCAfoaxusvZXqBmjUgoXTrJKeI1Vng33
-         6pZh30PdLlrQtvAYUXtjBMY2piXReSs6D+3N6Ik5fmlD0I1O04tEqUNEsWNq/o446BCb
-         1WpRhT1B8Y/InoSaf7D7kiUIknaHZSoaBpSoBmLpwrbMF87Ck6EghAwJ+4JPsEluBdYb
-         aVWoXOS/dEODXuCdstrvZURzWJuWUdayPGqgi9Zfpj3Jf9hXFCzlk4RkZGnLIiqTNR7G
-         M4ng==
-X-Gm-Message-State: APjAAAVfooJNCRdUgTxiXoQ3Uty8fOwFrGuERbpoZp59KdtZnU80WoRC
-        NSDn8AaOAP3typeC8rCKtLhyUPX8xi+TQpHSvAw7qxZYeq10
-X-Google-Smtp-Source: APXvYqxewmxUvJeJivsYNJAYw4A+YPrEl2q2KRPzLI60pjm8+ODiNw4nJOk2T7nrekpcEU7Qv9+AjT+/tYP3d76JWNrQF2zGwv08
+        Fri, 22 Mar 2019 08:43:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41858 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388054AbfCVMD3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:03:29 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 651CC21934;
+        Fri, 22 Mar 2019 12:03:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553256208;
+        bh=j6tBECERNB6RfUhgxRO40S/K0XCxTPrVJPURPOfccQY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=0SOUkAID0/mZLyIY0gT74LtFEFj4FH5KklDTFwRp8lIMX0BE4Ouy9wA7NucYRYVMY
+         DQyP6oZtnS3A6eoQq0lXbFee0WaZrqxnlkygNp4LOUeccSVTUzVLsQHe7dlvCCHRiw
+         AZ7ka0svBEjS4cVmEPykTr+XnJJ3wPjrVOgVhsWY=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Ondrej Mosnacek <omosnace@redhat.com>,
+        Eric Biggers <ebiggers@google.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.19 123/280] crypto: aegis - fix handling chunked inputs
+Date:   Fri, 22 Mar 2019 12:14:36 +0100
+Message-Id: <20190322111315.390022890@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
+References: <20190322111306.356185024@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-X-Received: by 2002:a02:9f08:: with SMTP id z8mr7082292jal.6.1553256240713;
- Fri, 22 Mar 2019 05:04:00 -0700 (PDT)
-Date:   Fri, 22 Mar 2019 05:04:00 -0700
-In-Reply-To: <0000000000003692760578e651dd@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000007917ff0584ada6e7@google.com>
-Subject: Re: KASAN: use-after-free Write in hci_sock_release
-From:   syzbot <syzbot+b364ed862aa07c74bc62@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, johan.hedberg@gmail.com,
-        linux-bluetooth@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, marcel@holtmann.org, mmarek@suse.com,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        torvalds@linux-foundation.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+4.19-stable review patch.  If anyone has any objections, please let me know.
 
-commit c470abd4fde40ea6a0846a2beab642a578c0b8cd
-Author: Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun Feb 19 22:34:00 2017 +0000
+------------------
 
-     Linux 4.10
+From: Eric Biggers <ebiggers@google.com>
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1664c6df200000
-start commit:   c470abd4 Linux 4.10
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=7308e68273924137
-dashboard link: https://syzkaller.appspot.com/bug?extid=b364ed862aa07c74bc62
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=152532bb400000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13f73320c00000
+commit 0f533e67d26f228ea5dfdacc8a4bdeb487af5208 upstream.
 
-Reported-by: syzbot+b364ed862aa07c74bc62@syzkaller.appspotmail.com
-Fixes: c470abd4fde4 ("Linux 4.10")
+The generic AEGIS implementations all fail the improved AEAD tests
+because they produce the wrong result with some data layouts.  The issue
+is that they assume that if the skcipher_walk API gives 'nbytes' not
+aligned to the walksize (a.k.a. walk.stride), then it is the end of the
+data.  In fact, this can happen before the end.  Fix them.
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+Fixes: f606a88e5823 ("crypto: aegis - Add generic AEGIS AEAD implementations")
+Cc: <stable@vger.kernel.org> # v4.18+
+Cc: Ondrej Mosnacek <omosnace@redhat.com>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Reviewed-by: Ondrej Mosnacek <omosnace@redhat.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ crypto/aegis128.c  |   14 +++++++-------
+ crypto/aegis128l.c |   14 +++++++-------
+ crypto/aegis256.c  |   14 +++++++-------
+ 3 files changed, 21 insertions(+), 21 deletions(-)
+
+--- a/crypto/aegis128.c
++++ b/crypto/aegis128.c
+@@ -290,19 +290,19 @@ static void crypto_aegis128_process_cryp
+ 					  const struct aegis128_ops *ops)
+ {
+ 	struct skcipher_walk walk;
+-	u8 *src, *dst;
+-	unsigned int chunksize;
+ 
+ 	ops->skcipher_walk_init(&walk, req, false);
+ 
+ 	while (walk.nbytes) {
+-		src = walk.src.virt.addr;
+-		dst = walk.dst.virt.addr;
+-		chunksize = walk.nbytes;
++		unsigned int nbytes = walk.nbytes;
+ 
+-		ops->crypt_chunk(state, dst, src, chunksize);
++		if (nbytes < walk.total)
++			nbytes = round_down(nbytes, walk.stride);
+ 
+-		skcipher_walk_done(&walk, 0);
++		ops->crypt_chunk(state, walk.dst.virt.addr, walk.src.virt.addr,
++				 nbytes);
++
++		skcipher_walk_done(&walk, walk.nbytes - nbytes);
+ 	}
+ }
+ 
+--- a/crypto/aegis128l.c
++++ b/crypto/aegis128l.c
+@@ -353,19 +353,19 @@ static void crypto_aegis128l_process_cry
+ 					   const struct aegis128l_ops *ops)
+ {
+ 	struct skcipher_walk walk;
+-	u8 *src, *dst;
+-	unsigned int chunksize;
+ 
+ 	ops->skcipher_walk_init(&walk, req, false);
+ 
+ 	while (walk.nbytes) {
+-		src = walk.src.virt.addr;
+-		dst = walk.dst.virt.addr;
+-		chunksize = walk.nbytes;
++		unsigned int nbytes = walk.nbytes;
+ 
+-		ops->crypt_chunk(state, dst, src, chunksize);
++		if (nbytes < walk.total)
++			nbytes = round_down(nbytes, walk.stride);
+ 
+-		skcipher_walk_done(&walk, 0);
++		ops->crypt_chunk(state, walk.dst.virt.addr, walk.src.virt.addr,
++				 nbytes);
++
++		skcipher_walk_done(&walk, walk.nbytes - nbytes);
+ 	}
+ }
+ 
+--- a/crypto/aegis256.c
++++ b/crypto/aegis256.c
+@@ -303,19 +303,19 @@ static void crypto_aegis256_process_cryp
+ 					  const struct aegis256_ops *ops)
+ {
+ 	struct skcipher_walk walk;
+-	u8 *src, *dst;
+-	unsigned int chunksize;
+ 
+ 	ops->skcipher_walk_init(&walk, req, false);
+ 
+ 	while (walk.nbytes) {
+-		src = walk.src.virt.addr;
+-		dst = walk.dst.virt.addr;
+-		chunksize = walk.nbytes;
++		unsigned int nbytes = walk.nbytes;
+ 
+-		ops->crypt_chunk(state, dst, src, chunksize);
++		if (nbytes < walk.total)
++			nbytes = round_down(nbytes, walk.stride);
+ 
+-		skcipher_walk_done(&walk, 0);
++		ops->crypt_chunk(state, walk.dst.virt.addr, walk.src.virt.addr,
++				 nbytes);
++
++		skcipher_walk_done(&walk, walk.nbytes - nbytes);
+ 	}
+ }
+ 
+
+
