@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34C9FC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:51:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1651BC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:51:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 055F121939
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:51:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D91B921934
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:51:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255466;
-	bh=KCQ6nCeht4Gfefhx4JVGZnX0bBQjjpjTRk/qfUNTccA=;
+	s=default; t=1553255469;
+	bh=HQKyW2eIYQh0NvF7v6EwMBTf+rJuwF6syhvgd8vy6mM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KMI58Sxy/38YTZ3Z/yE6YvfnsgpuS3J0839t6cBY9i3SapQ/kJqtd3BqG0J4w68Iu
-	 qs4yF+17Fyo+20z/MBBFa6jcfAah9NQP4novB+xV7/6mNumxisq35YG1NKF2LJuHAW
-	 IIjZ4RWwxwnUaZ5e9aVudVMrFCMkHYzIw/IeVr6w=
+	b=aMgo7ek0IVsOKXNgDWsHH+R10hFCGZyBCfOAhlUZ+CnGE6wukYrGNDXFfUzpHSoyV
+	 KMC7rKEpKMRTsG2IZsq6JxUQgJQMRxkiHVlYKzrDW8/YTcLybPXS3/jDTaVs7s7MUO
+	 ygeBVn5vfpxWLk0dP5HeAXf6KD6MIhkz+wAZ0i8M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732737AbfCVLvE (ORCPT
+        id S1732746AbfCVLvI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:51:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54838 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:51:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732485AbfCVLvA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:51:00 -0400
+        id S1732485AbfCVLvG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:51:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B4FA2082C;
-        Fri, 22 Mar 2019 11:50:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2DDC520693;
+        Fri, 22 Mar 2019 11:51:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255459;
-        bh=KCQ6nCeht4Gfefhx4JVGZnX0bBQjjpjTRk/qfUNTccA=;
+        s=default; t=1553255465;
+        bh=HQKyW2eIYQh0NvF7v6EwMBTf+rJuwF6syhvgd8vy6mM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FIqH4i2CFvhjmV+LPzbFM6fkcqXugsx6DvpNlbhTcuUI5PtmqjVNgTkChRXXOF5c4
-         X06qWYdBRznBnRUfnaBuadoN9zgRyLiPDv0Jta5xH2lhS4m+EEbfvaO030R7lENlz+
-         8z2w+8bGzuZtRvxRTKU2zYh6RG+No6XL+TgBfbOA=
+        b=qbTfiWMRB94MoAgr1aSxj4H6aB+QK/8cs1ra+oVs1OE6Ue8wMwqWfYi1U6V5zsXW0
+         5FaDjHGND1ezfwPTrkziHNAxqrpZG7LV8ErDcCazfvt8OpCildaW7EWSsgeuweK9Fp
+         wy1QFgo55pxhQ8RS9Mxw//sqtkFVjc6M+JMpt/v4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Shilovsky <pshilov@microsoft.com>,
-        Steve French <stfrench@microsoft.com>
-Subject: [PATCH 4.14 079/183] CIFS: Do not reset lease state to NONE on lease break
-Date:   Fri, 22 Mar 2019 12:15:07 +0100
-Message-Id: <20190322111247.453291129@linuxfoundation.org>
+        stable@vger.kernel.org, Namhyung Kim <namhyung@kernel.org>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 4.14 081/183] tracing: Use strncpy instead of memcpy for string keys in hist triggers
+Date:   Fri, 22 Mar 2019 12:15:09 +0100
+Message-Id: <20190322111247.595790719@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111241.819468003@linuxfoundation.org>
 References: <20190322111241.819468003@linuxfoundation.org>
@@ -65,114 +66,74 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Pavel Shilovsky <piastryyy@gmail.com>
+From: Tom Zanussi <tom.zanussi@linux.intel.com>
 
-commit 7b9b9edb49ad377b1e06abf14354c227e9ac4b06 upstream.
+commit 9f0bbf3115ca9f91f43b7c74e9ac7d79f47fc6c2 upstream.
 
-Currently on lease break the client sets a caching level twice:
-when oplock is detected and when oplock is processed. While the
-1st attempt sets the level to the value provided by the server,
-the 2nd one resets the level to None unconditionally.
-This happens because the oplock/lease processing code was changed
-to avoid races between page cache flushes and oplock breaks.
-The commit c11f1df5003d534 ("cifs: Wait for writebacks to complete
-before attempting write.") fixed the races for oplocks but didn't
-apply the same changes for leases resulting in overwriting the
-server granted value to None. Fix this by properly processing
-lease breaks.
+Because there may be random garbage beyond a string's null terminator,
+it's not correct to copy the the complete character array for use as a
+hist trigger key.  This results in multiple histogram entries for the
+'same' string key.
 
-Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-CC: Stable <stable@vger.kernel.org>
+So, in the case of a string key, use strncpy instead of memcpy to
+avoid copying in the extra bytes.
+
+Before, using the gdbus entries in the following hist trigger as an
+example:
+
+  # echo 'hist:key=comm' > /sys/kernel/debug/tracing/events/sched/sched_waking/trigger
+  # cat /sys/kernel/debug/tracing/events/sched/sched_waking/hist
+
+  ...
+
+  { comm: ImgDecoder #4                      } hitcount:        203
+  { comm: gmain                              } hitcount:        213
+  { comm: gmain                              } hitcount:        216
+  { comm: StreamTrans #73                    } hitcount:        221
+  { comm: mozStorage #3                      } hitcount:        230
+  { comm: gdbus                              } hitcount:        233
+  { comm: StyleThread#5                      } hitcount:        253
+  { comm: gdbus                              } hitcount:        256
+  { comm: gdbus                              } hitcount:        260
+  { comm: StyleThread#4                      } hitcount:        271
+
+  ...
+
+  # cat /sys/kernel/debug/tracing/events/sched/sched_waking/hist | egrep gdbus | wc -l
+  51
+
+After:
+
+  # cat /sys/kernel/debug/tracing/events/sched/sched_waking/hist | egrep gdbus | wc -l
+  1
+
+Link: http://lkml.kernel.org/r/50c35ae1267d64eee975b8125e151e600071d4dc.1549309756.git.tom.zanussi@linux.intel.com
+
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: stable@vger.kernel.org
+Fixes: 79e577cbce4c4 ("tracing: Support string type key properly")
+Signed-off-by: Tom Zanussi <tom.zanussi@linux.intel.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/smb2misc.c |   17 ++++++++++++++---
- fs/cifs/smb2ops.c  |   15 ++++++++++++---
- 2 files changed, 26 insertions(+), 6 deletions(-)
+ kernel/trace/trace_events_hist.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/fs/cifs/smb2misc.c
-+++ b/fs/cifs/smb2misc.c
-@@ -479,7 +479,6 @@ smb2_tcon_has_lease(struct cifs_tcon *tc
- 	__u8 lease_state;
- 	struct list_head *tmp;
- 	struct cifsFileInfo *cfile;
--	struct TCP_Server_Info *server = tcon->ses->server;
- 	struct cifs_pending_open *open;
- 	struct cifsInodeInfo *cinode;
- 	int ack_req = le32_to_cpu(rsp->Flags &
-@@ -499,13 +498,25 @@ smb2_tcon_has_lease(struct cifs_tcon *tc
- 		cifs_dbg(FYI, "lease key match, lease break 0x%x\n",
- 			 le32_to_cpu(rsp->NewLeaseState));
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -872,9 +872,10 @@ static inline void add_to_key(char *comp
+ 		/* ensure NULL-termination */
+ 		if (size > key_field->size - 1)
+ 			size = key_field->size - 1;
+-	}
  
--		server->ops->set_oplock_level(cinode, lease_state, 0, NULL);
--
- 		if (ack_req)
- 			cfile->oplock_break_cancelled = false;
- 		else
- 			cfile->oplock_break_cancelled = true;
- 
-+		set_bit(CIFS_INODE_PENDING_OPLOCK_BREAK, &cinode->flags);
-+
-+		/*
-+		 * Set or clear flags depending on the lease state being READ.
-+		 * HANDLE caching flag should be added when the client starts
-+		 * to defer closing remote file handles with HANDLE leases.
-+		 */
-+		if (lease_state & SMB2_LEASE_READ_CACHING_HE)
-+			set_bit(CIFS_INODE_DOWNGRADE_OPLOCK_TO_L2,
-+				&cinode->flags);
-+		else
-+			clear_bit(CIFS_INODE_DOWNGRADE_OPLOCK_TO_L2,
-+				  &cinode->flags);
-+
- 		queue_work(cifsoplockd_wq, &cfile->oplock_break);
- 		kfree(lw);
- 		return true;
---- a/fs/cifs/smb2ops.c
-+++ b/fs/cifs/smb2ops.c
-@@ -1933,6 +1933,15 @@ smb2_downgrade_oplock(struct TCP_Server_
+-	memcpy(compound_key + key_field->offset, key, size);
++		strncpy(compound_key + key_field->offset, (char *)key, size);
++	} else
++		memcpy(compound_key + key_field->offset, key, size);
  }
  
- static void
-+smb21_downgrade_oplock(struct TCP_Server_Info *server,
-+		       struct cifsInodeInfo *cinode, bool set_level2)
-+{
-+	server->ops->set_oplock_level(cinode,
-+				      set_level2 ? SMB2_LEASE_READ_CACHING_HE :
-+				      0, 0, NULL);
-+}
-+
-+static void
- smb2_set_oplock_level(struct cifsInodeInfo *cinode, __u32 oplock,
- 		      unsigned int epoch, bool *purge_cache)
- {
-@@ -2917,7 +2926,7 @@ struct smb_version_operations smb21_oper
- 	.print_stats = smb2_print_stats,
- 	.is_oplock_break = smb2_is_valid_oplock_break,
- 	.handle_cancelled_mid = smb2_handle_cancelled_mid,
--	.downgrade_oplock = smb2_downgrade_oplock,
-+	.downgrade_oplock = smb21_downgrade_oplock,
- 	.need_neg = smb2_need_neg,
- 	.negotiate = smb2_negotiate,
- 	.negotiate_wsize = smb2_negotiate_wsize,
-@@ -3012,7 +3021,7 @@ struct smb_version_operations smb30_oper
- 	.dump_share_caps = smb2_dump_share_caps,
- 	.is_oplock_break = smb2_is_valid_oplock_break,
- 	.handle_cancelled_mid = smb2_handle_cancelled_mid,
--	.downgrade_oplock = smb2_downgrade_oplock,
-+	.downgrade_oplock = smb21_downgrade_oplock,
- 	.need_neg = smb2_need_neg,
- 	.negotiate = smb2_negotiate,
- 	.negotiate_wsize = smb2_negotiate_wsize,
-@@ -3117,7 +3126,7 @@ struct smb_version_operations smb311_ope
- 	.dump_share_caps = smb2_dump_share_caps,
- 	.is_oplock_break = smb2_is_valid_oplock_break,
- 	.handle_cancelled_mid = smb2_handle_cancelled_mid,
--	.downgrade_oplock = smb2_downgrade_oplock,
-+	.downgrade_oplock = smb21_downgrade_oplock,
- 	.need_neg = smb2_need_neg,
- 	.negotiate = smb2_negotiate,
- 	.negotiate_wsize = smb2_negotiate_wsize,
+ static void event_hist_trigger(struct event_trigger_data *data, void *rec)
 
 
