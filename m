@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7A89C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:22:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFF83C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:22:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A81252054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:22:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B9C7218B0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:22:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553257326;
-	bh=rLlyClE3k+8KDwmLyzc/9MOSbKiCr/NZy72U3v9eJNM=;
+	s=default; t=1553257329;
+	bh=LT/DcDQzkjCPmppqdV+/I6JcClz6AsSBsPwIwiwFa5I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xv+mulWciUq37c63iW3SeBvNZwy0Z+WYDnf7dc+Q+u/g2rMdlgwPkQeCs7bKyRsez
-	 DIwbCmGEAK4MATBG5fg6yx3miJSNT1FFITh5kuxYyH1mmF1OfRkQ2soKp+bvF+gfNT
-	 k9OnVT4ZMWReGaPynKN6O2JVO0K0IBA65/JZAY00=
+	b=gRUhdeQa7RX8E5/SzfiWRUO9eCGsHel6wM6kaxrIKShuQkl9vN8X+rgLfr61wad1z
+	 /pbn0PRNNKzinUsL+A5opzx7u39W7ncMHaTLmjx9f5iRaejT5ovSonBWiW4pY9GvXk
+	 X6Je/kqJdr9+OjhzJ6LQ1J0OgiT3y5YkBR+TMVZQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390951AbfCVMWF (ORCPT
+        id S2390960AbfCVMWI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:22:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32940 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:22:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33084 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390457AbfCVMWA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:22:00 -0400
+        id S2390055AbfCVMWG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:22:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F7AA218A1;
-        Fri, 22 Mar 2019 12:21:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46DC1218A1;
+        Fri, 22 Mar 2019 12:22:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553257319;
-        bh=rLlyClE3k+8KDwmLyzc/9MOSbKiCr/NZy72U3v9eJNM=;
+        s=default; t=1553257325;
+        bh=LT/DcDQzkjCPmppqdV+/I6JcClz6AsSBsPwIwiwFa5I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KDHMsMz8AIt9v2xYsZsz7wgWsqUxZxfHC8It3Fr3ezts4iknWqRf/LBOs8kj0tt1u
-         lA153VDSEw39Oet3iifW/a/ifhKMg5fme73nkOuOJ77d93r/PQrZE7+Ns2m8JOelw3
-         xOdtbh4jbhEG4FaJrabDC84oepbelK/LAb57YKdE=
+        b=nsaPJqniNMuUMD7k8kZvt5Lwjp/vgUnPLb3BDVxS7c7YdIwIYKLYzziP+jInXdJqU
+         ksSKwdiiCCl0hyreEsTD8O1ZrE9/S99ubrmvlMqBroqSyZq3kW5V6UMOGOEFQG6oKM
+         Y5jfY6C3CxdXlLIcxMO+YVmDV2WbcB/RmmgBTgdg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Meelis Roos <mroos@linux.ee>,
-        Mathieu Malaterre <malat@debian.org>,
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
         Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.0 164/238] powerpc/ptrace: Simplify vr_get/set() to avoid GCC warning
-Date:   Fri, 22 Mar 2019 12:16:23 +0100
-Message-Id: <20190322111307.977949313@linuxfoundation.org>
+Subject: [PATCH 5.0 156/238] powerpc/32: Clear on-stack exception marker upon exception return
+Date:   Fri, 22 Mar 2019 12:16:15 +0100
+Message-Id: <20190322111307.521627267@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -66,113 +65,81 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-commit ca6d5149d2ad0a8d2f9c28cbe379802260a0a5e0 upstream.
+commit 9580b71b5a7863c24a9bd18bcd2ad759b86b1eff upstream.
 
-GCC 8 warns about the logic in vr_get/set(), which with -Werror breaks
-the build:
+Clear the on-stack STACK_FRAME_REGS_MARKER on exception exit in order
+to avoid confusing stacktrace like the one below.
 
-  In function ‘user_regset_copyin’,
-      inlined from ‘vr_set’ at arch/powerpc/kernel/ptrace.c:628:9:
-  include/linux/regset.h:295:4: error: ‘memcpy’ offset [-527, -529] is
-  out of the bounds [0, 16] of object ‘vrsave’ with type ‘union
-  <anonymous>’ [-Werror=array-bounds]
-  arch/powerpc/kernel/ptrace.c: In function ‘vr_set’:
-  arch/powerpc/kernel/ptrace.c:623:5: note: ‘vrsave’ declared here
-     } vrsave;
+  Call Trace:
+  [c0e9dca0] [c01c42a0] print_address_description+0x64/0x2bc (unreliable)
+  [c0e9dcd0] [c01c4684] kasan_report+0xfc/0x180
+  [c0e9dd10] [c0895130] memchr+0x24/0x74
+  [c0e9dd30] [c00a9e38] msg_print_text+0x124/0x574
+  [c0e9dde0] [c00ab710] console_unlock+0x114/0x4f8
+  [c0e9de40] [c00adc60] vprintk_emit+0x188/0x1c4
+  --- interrupt: c0e9df00 at 0x400f330
+      LR = init_stack+0x1f00/0x2000
+  [c0e9de80] [c00ae3c4] printk+0xa8/0xcc (unreliable)
+  [c0e9df20] [c0c27e44] early_irq_init+0x38/0x108
+  [c0e9df50] [c0c15434] start_kernel+0x310/0x488
+  [c0e9dff0] [00003484] 0x3484
 
-This has been identified as a regression in GCC, see GCC bug 88273.
+With this patch the trace becomes:
 
-However we can avoid the warning and also simplify the logic and make
-it more robust.
+  Call Trace:
+  [c0e9dca0] [c01c42c0] print_address_description+0x64/0x2bc (unreliable)
+  [c0e9dcd0] [c01c46a4] kasan_report+0xfc/0x180
+  [c0e9dd10] [c0895150] memchr+0x24/0x74
+  [c0e9dd30] [c00a9e58] msg_print_text+0x124/0x574
+  [c0e9dde0] [c00ab730] console_unlock+0x114/0x4f8
+  [c0e9de40] [c00adc80] vprintk_emit+0x188/0x1c4
+  [c0e9de80] [c00ae3e4] printk+0xa8/0xcc
+  [c0e9df20] [c0c27e44] early_irq_init+0x38/0x108
+  [c0e9df50] [c0c15434] start_kernel+0x310/0x488
+  [c0e9dff0] [00003484] 0x3484
 
-Currently we pass -1 as end_pos to user_regset_copyout(). This says
-"copy up to the end of the regset".
-
-The definition of the regset is:
-	[REGSET_VMX] = {
-		.core_note_type = NT_PPC_VMX, .n = 34,
-		.size = sizeof(vector128), .align = sizeof(vector128),
-		.active = vr_active, .get = vr_get, .set = vr_set
-	},
-
-The end is calculated as (n * size), ie. 34 * sizeof(vector128).
-
-In vr_get/set() we pass start_pos as 33 * sizeof(vector128), meaning
-we can copy up to sizeof(vector128) into/out-of vrsave.
-
-The on-stack vrsave is defined as:
-  union {
-	  elf_vrreg_t reg;
-	  u32 word;
-  } vrsave;
-
-And elf_vrreg_t is:
-  typedef __vector128 elf_vrreg_t;
-
-So there is no bug, but we rely on all those sizes lining up,
-otherwise we would have a kernel stack exposure/overwrite on our
-hands.
-
-Rather than relying on that we can pass an explict end_pos based on
-the sizeof(vrsave). The result should be exactly the same but it's
-more obviously not over-reading/writing the stack and it avoids the
-compiler warning.
-
-Reported-by: Meelis Roos <mroos@linux.ee>
-Reported-by: Mathieu Malaterre <malat@debian.org>
 Cc: stable@vger.kernel.org
-Tested-by: Mathieu Malaterre <malat@debian.org>
-Tested-by: Meelis Roos <mroos@linux.ee>
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/kernel/ptrace.c |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ arch/powerpc/kernel/entry_32.S |    9 +++++++++
+ 1 file changed, 9 insertions(+)
 
---- a/arch/powerpc/kernel/ptrace.c
-+++ b/arch/powerpc/kernel/ptrace.c
-@@ -561,6 +561,7 @@ static int vr_get(struct task_struct *ta
- 		/*
- 		 * Copy out only the low-order word of vrsave.
- 		 */
-+		int start, end;
- 		union {
- 			elf_vrreg_t reg;
- 			u32 word;
-@@ -569,8 +570,10 @@ static int vr_get(struct task_struct *ta
+--- a/arch/powerpc/kernel/entry_32.S
++++ b/arch/powerpc/kernel/entry_32.S
+@@ -745,6 +745,9 @@ fast_exception_return:
+ 	mtcr	r10
+ 	lwz	r10,_LINK(r11)
+ 	mtlr	r10
++	/* Clear the exception_marker on the stack to avoid confusing stacktrace */
++	li	r10, 0
++	stw	r10, 8(r11)
+ 	REST_GPR(10, r11)
+ #if defined(CONFIG_PPC_8xx) && defined(CONFIG_PERF_EVENTS)
+ 	mtspr	SPRN_NRI, r0
+@@ -982,6 +985,9 @@ END_FTR_SECTION_IFSET(CPU_FTR_NEED_PAIRE
+ 	mtcrf	0xFF,r10
+ 	mtlr	r11
  
- 		vrsave.word = target->thread.vrsave;
- 
-+		start = 33 * sizeof(vector128);
-+		end = start + sizeof(vrsave);
- 		ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf, &vrsave,
--					  33 * sizeof(vector128), -1);
-+					  start, end);
- 	}
- 
- 	return ret;
-@@ -608,6 +611,7 @@ static int vr_set(struct task_struct *ta
- 		/*
- 		 * We use only the first word of vrsave.
- 		 */
-+		int start, end;
- 		union {
- 			elf_vrreg_t reg;
- 			u32 word;
-@@ -616,8 +620,10 @@ static int vr_set(struct task_struct *ta
- 
- 		vrsave.word = target->thread.vrsave;
- 
-+		start = 33 * sizeof(vector128);
-+		end = start + sizeof(vrsave);
- 		ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf, &vrsave,
--					 33 * sizeof(vector128), -1);
-+					 start, end);
- 		if (!ret)
- 			target->thread.vrsave = vrsave.word;
- 	}
++	/* Clear the exception_marker on the stack to avoid confusing stacktrace */
++	li	r10, 0
++	stw	r10, 8(r1)
+ 	/*
+ 	 * Once we put values in SRR0 and SRR1, we are in a state
+ 	 * where exceptions are not recoverable, since taking an
+@@ -1021,6 +1027,9 @@ exc_exit_restart_end:
+ 	mtlr	r11
+ 	lwz	r10,_CCR(r1)
+ 	mtcrf	0xff,r10
++	/* Clear the exception_marker on the stack to avoid confusing stacktrace */
++	li	r10, 0
++	stw	r10, 8(r1)
+ 	REST_2GPRS(9, r1)
+ 	.globl exc_exit_restart
+ exc_exit_restart:
 
 
