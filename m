@@ -2,82 +2,102 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63324C10F03
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:26:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C331DC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:27:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 350EE218FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:26:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 919E0218FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:27:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727099AbfCVQ0d (ORCPT
+        id S1727330AbfCVQ1q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 12:26:33 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:49028 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726034AbfCVQ0c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 12:26:32 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 00D5EA78;
-        Fri, 22 Mar 2019 09:26:32 -0700 (PDT)
-Received: from [10.1.196.69] (e112269-lin.cambridge.arm.com [10.1.196.69])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9A1603F59C;
-        Fri, 22 Mar 2019 09:26:30 -0700 (PDT)
-Subject: Re: [PATCH] pci: pcie-xilinx: fix a missing-check bug for
- __get_free_pages
-To:     Kangjie Lu <kjlu@umn.edu>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-pci@vger.kernel.org, Michal Simek <michal.simek@xilinx.com>,
-        linux-kernel@vger.kernel.org, pakki001@umn.edu,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-arm-kernel@lists.infradead.org
-References: <20190314055851.6884-1-kjlu@umn.edu>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <d0aa29e9-54c6-bc8b-4827-0562b277265f@arm.com>
-Date:   Fri, 22 Mar 2019 16:26:29 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Fri, 22 Mar 2019 12:27:46 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39300 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726692AbfCVQ1q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 12:27:46 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 97AD5AD49;
+        Fri, 22 Mar 2019 16:27:44 +0000 (UTC)
+From:   Thomas Renninger <trenn@suse.de>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Len Brown <len.brown@intel.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Laura Abbott <labbott@fedoraproject.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Simon Schricker <sschricker@suse.de>,
+        Borislav Petkov <bp@suse.de>, Hannes Reinecke <hare@suse.de>
+Subject: Re: [PATCH 1/2] PM / arch: x86: Rework the MSR_IA32_ENERGY_PERF_BIAS handling
+Date:   Fri, 22 Mar 2019 17:27:43 +0100
+Message-ID: <2431307.7efAn4P022@house>
+In-Reply-To: <1605148.8jT99SsvVP@aspire.rjw.lan>
+References: <1637073.gl2OfxWTjI@aspire.rjw.lan> <1605148.8jT99SsvVP@aspire.rjw.lan>
 MIME-Version: 1.0
-In-Reply-To: <20190314055851.6884-1-kjlu@umn.edu>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/03/2019 05:58, Kangjie Lu wrote:
-> In case __get_free_pages fail, the fix returns to avoid NULL
-> pointer dereference.
-> 
-> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-> ---
->  drivers/pci/controller/pcie-xilinx.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/pcie-xilinx.c b/drivers/pci/controller/pcie-xilinx.c
-> index 9bd1a35cd5d8..b7083e995c45 100644
-> --- a/drivers/pci/controller/pcie-xilinx.c
-> +++ b/drivers/pci/controller/pcie-xilinx.c
-> @@ -341,6 +341,9 @@ static void xilinx_pcie_enable_msi(struct xilinx_pcie_port *port)
->  	phys_addr_t msg_addr;
->  
->  	port->msi_pages = __get_free_pages(GFP_KERNEL, 0);
-> +	if (unlikely(!port->msi_pages))
-> +		return;
+Thanks Rafael for your quick look at and all the time you spend for this!
 
-Shouldn't the function return an error code for the calling function to
-see? With this change the caller (xilinx_pcie_init_irq_domain) will
-think that MSIs were enabled, but actually they weren't.
+A /sys userspace knob will certainly not be enough for us.
+You'll need a tool installed fixing this.
+powertop on laptops or tuned on servers or a well hidden bootup quirk or 
+whatsoever.
 
-Steve
+The patch I sent with this part:
 
-> +
->  	msg_addr = virt_to_phys((void *)port->msi_pages);
->  	pcie_write(port, 0x0, XILINX_PCIE_REG_MSIBASE1);
->  	pcie_write(port, msg_addr, XILINX_PCIE_REG_MSIBASE2);
-> 
++       if (acpi_gbl_FADT.preferred_profile == PM_PERFORMANCE_SERVER ||
++           acpi_gbl_FADT.preferred_profile == PM_ENTERPRISE_SERVER)
++               return;
 
+and not touching the EBP value then should at least match most of
+our users and OEMs who want a "performance" setting out of the box and
+set this on purpose.
+
+Even nicer would be compile option to not touch this at all.
+
+On Thursday, March 21, 2019 11:18:01 PM CET Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+ 
+...
+
+> + *
+> + * Second, on many systems the initial EPB value coming from the platform
+> + * firmware is 0 ('performance') and at least on some of them that is
+> because + * the platform firmware does not initialize EPB
+
+Why does the CPU not initialize this value to 6?
+That would allow OEMs/BIOS to also suggest an init value for the system.
+We should try to get microcode people or whoever is in charge to initialize
+this value "properly" if Intel thinks 6 is the correct init value.
+
+> at all with the
+> assumption that + * the OS will do that anyway.  That sometimes is
+> problematic, as it may cause + * the system battery to drain too fast, for
+> example, so it is better to adjust + * it on CPU bring-up and if the
+> initial EPB value for a given CPU is 0, the + * kernel changes it to 6
+> ('normal').
+
+I have an idea to let the kernel more decide about such policies.
+It's a nice example that it makes sense to let the kernel set default values.
+But not unconditionally, according to what the system is intended to do.
+
+I wanted to do this for quite some time.., I hopefully find the time and
+motivation now.
+
+Thanks Rafael.
+Sorry for the somewhat rude sounding previous mail, that was not on purpose.
+You helped me quite a lot in the past and you obviously still do.
+
+         Thomas
