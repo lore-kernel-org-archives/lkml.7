@@ -2,778 +2,203 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FC76C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:41:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DA21C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:42:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B87AE21900
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:41:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4150321900
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:42:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A6vGpS2D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729219AbfCVQlh (ORCPT
+        id S1728736AbfCVQmI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 12:41:37 -0400
-Received: from mga18.intel.com ([134.134.136.126]:60735 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727689AbfCVQjd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 12:39:33 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Mar 2019 09:39:32 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,256,1549958400"; 
-   d="scan'208";a="144356593"
-Received: from otc-icl-cdi187.jf.intel.com ([10.54.55.103])
-  by orsmga002.jf.intel.com with ESMTP; 22 Mar 2019 09:39:32 -0700
-From:   kan.liang@linux.intel.com
-To:     peterz@infradead.org, acme@kernel.org, mingo@redhat.com,
-        linux-kernel@vger.kernel.org
-Cc:     tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
-        alexander.shishkin@linux.intel.com, ak@linux.intel.com,
-        Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V3 04/23] perf/x86/intel: Support adaptive PEBSv4
-Date:   Fri, 22 Mar 2019 09:36:59 -0700
-Message-Id: <20190322163718.2191-5-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190322163718.2191-1-kan.liang@linux.intel.com>
-References: <20190322163718.2191-1-kan.liang@linux.intel.com>
+        Fri, 22 Mar 2019 12:42:08 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:34416 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727689AbfCVQmH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 12:42:07 -0400
+Received: by mail-pf1-f193.google.com with SMTP id b3so527234pfd.1;
+        Fri, 22 Mar 2019 09:42:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=W3SNPYMhd5efjvfE1knENTnx0NSU3d1AwgqH80LgZz4=;
+        b=A6vGpS2D2Up1hYiE0jHmb7hdCCCIz/DeUS1qnMkekl4GCICU1Q1OvujheFxfM3XqsH
+         d3zehgLPcxaKyRL3cHushQ3O44R9UNl147UCoa2gJmDt9y6TVHxat6WQIs0E7YFRp8jm
+         VumcVw6akeMq6tCQOvD5Fcf63FQAD7WPlnNIcESooSIgnS3Jq4tJUjGuwFmc/xdFD1yE
+         zIEnGr7iwNfJnZp45yWLMdzeID0u2hKqq17tLij1g3jCqXJHHPyQLcnEhxMN6pAsZx+k
+         sgKKTp4S5HkxwoR3k7VS5hcMaj8Zi6NDcRRqxTt1e2GNsadaIaonybKbVMkfqJ2Pmqq1
+         JV4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=W3SNPYMhd5efjvfE1knENTnx0NSU3d1AwgqH80LgZz4=;
+        b=aRRncrEgTAd8ESL0LbzbayjmkyviFkh1rRqHK0W50L1kFLoNX8EAQzfNBRM5meWEl0
+         0JDLaAAC2ABR0pmLzVAwtPdi8cjQAxxqa0469UcP316CU6EaeMTeBK4QotBe7oDvwbT9
+         K1n9KGgFrKC7cQoJ+46YxhggySfLxO33Tvf22d+qG2UevFpOjwSmO+lJoWFz7uWnV5+K
+         +b+AP1OzYtrRpk0FL6STWBmELRw+VSckplWYlb/vqPUaMpnoaZk53TZq8bZVxduqjWtS
+         hQnBAwlCYqBTXmchg8CJ/BKPtBcox9ndAViv6gevzJtUjuFbrT41xEAPWBCb6/pl/LFt
+         HSXg==
+X-Gm-Message-State: APjAAAX3wu6FPUx+ml2rSoDoeRCFnutaemJXH20OxrodOHUpRvH7Bja6
+        kvDdVXEf0iT6TR7ns40tnjCoLA6W
+X-Google-Smtp-Source: APXvYqzFUfTce0kUM1CI+6PYixQHACPQaHfamVWuyTOYSbmH4/sTw3JGGTrgQ1UELXqHcTFnjnKULw==
+X-Received: by 2002:a17:902:2e03:: with SMTP id q3mr10337586plb.166.1553272926090;
+        Fri, 22 Mar 2019 09:42:06 -0700 (PDT)
+Received: from [10.67.48.231] ([192.19.223.250])
+        by smtp.googlemail.com with ESMTPSA id l187sm9982262pgl.75.2019.03.22.09.42.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 22 Mar 2019 09:42:04 -0700 (PDT)
+Subject: Re: [PATCH v6 0/3] Stingray USB PHY driver support
+To:     Scott Branden <scott.branden@broadcom.com>,
+        Srinath Mannam <srinath.mannam@broadcom.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Tejun Heo <tj@kernel.org>,
+        Jayachandran C <jnair@caviumnetworks.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org
+References: <1552986944-3398-1-git-send-email-srinath.mannam@broadcom.com>
+ <7490f894-3c0b-c7cd-5ff0-4eea6ea2c199@broadcom.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
+Message-ID: <1f910861-7d3b-63ad-da79-9515eae2b230@gmail.com>
+Date:   Fri, 22 Mar 2019 09:42:03 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
+MIME-Version: 1.0
+In-Reply-To: <7490f894-3c0b-c7cd-5ff0-4eea6ea2c199@broadcom.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+On 3/19/19 11:38 AM, Scott Branden wrote:
+> Thanks Srinath and Rob - patch series looks good now.
+> 
+> patch series,
+> 
+> Acked-by: Scott Branden <scott.branden@broadcom.com>
+> 
 
-Adaptive PEBS is a new way to report PEBS sampling information. Instead
-of a fixed size record for all PEBS events it allows to configure the
-PEBS record to only include the information needed. Events can then opt
-in to use such an extended record, or stay with a basic record which
-only contains the IP.
+Kishon, can you let me know when you apply patches 1 and 2 so I can
+queue up patch 3 for inclusion the 5.2 ARM SoC pull request? Thanks!
 
-The major new feature is to support LBRs in PEBS record.
-Besides normal LBR, this allows (much faster) large PEBS, while still
-supporting callstacks through callstack LBR. So essentially a lot of
-profiling can now be done without frequent interrupts, dropping the
-overhead significantly.
+> 
+> On 2019-03-19 2:15 a.m., Srinath Mannam wrote:
+>> These patches add Stingray USB PHY driver and its corresponding
+>> DT nodes with documentation.
+>>
+>> This patch set is based on Linux-5.0-rc2.
+>>
+>> Changes from v5:
+>>    - Removed redundant address and size cells in DT nodes.
+>>
+>> Changes from v4:
+>>    - Addressed Rob Herring review comments
+>>       - Removed child nodes and added #phy-cells 1
+>>       - Added xlate function to get phy using phandle argument.
+>>
+>> Changes from v3:
+>>    - Addressed Rob Herring review comments
+>>       - Changed compatible strings.
+>>       - updated driver based on new compatible strings.
+>>
+>> Changes from v2:
+>>    - Addressed Kishon review comments
+>>    - Updated patchset to Linux-5.0-rc2
+>>
+>> Changes from v1:
+>>    - Addressed Kishon review comments
+>>    - phy init call return value handle
+>>    Srinath Mannam (3):
+>>    dt-bindings: phy: Add Stingray USB PHY binding document
+>>    phy: sr-usb: Add Stingray USB PHY driver
+>>    arm64: dts: Add USB DT nodes for Stingray SoC
+>>
+>>   .../bindings/phy/brcm,stingray-usb-phy.txt         |  32 ++
+>>   .../boot/dts/broadcom/stingray/stingray-usb.dtsi   |  72 ++++
+>>   .../arm64/boot/dts/broadcom/stingray/stingray.dtsi |   1 +
+>>   drivers/phy/broadcom/Kconfig                       |  11 +
+>>   drivers/phy/broadcom/Makefile                      |   1 +
+>>   drivers/phy/broadcom/phy-bcm-sr-usb.c              | 393
+>> +++++++++++++++++++++
+>>   6 files changed, 510 insertions(+)
+>>   create mode 100644
+>> Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt
+>>   create mode 100644
+>> arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi
+>>   create mode 100644 drivers/phy/broadcom/phy-bcm-sr-usb.c
+>>
 
-The main requirement still is to use a period, and not use frequency
-mode, because frequency mode requires reevaluating the frequency on each
-overflow.
 
-The floating point state (XMM) is also supported, which allows efficient
-profiling of FP function arguments.
-
-Introduce specific drain function to handle variable length records.
-Use a new callback to parse the new record format, and also handle the
-STATUS field now being at a different offset.
-
-Add code to set up the configuration register. Since there is only a
-single register, all events either get the full super set of all events,
-or only the basic record.
-
-Originally-by: Andi Kleen <ak@linux.intel.com>
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
----
-
-Changes since V2:
-- Make the setup_pebs_sample_data() a function pointer argument
-- Use cpuc->pebs_record_size unconditionally
-
- arch/x86/events/intel/core.c      |   2 +
- arch/x86/events/intel/ds.c        | 373 ++++++++++++++++++++++++++++--
- arch/x86/events/intel/lbr.c       |  22 ++
- arch/x86/events/perf_event.h      |   9 +
- arch/x86/include/asm/msr-index.h  |   1 +
- arch/x86/include/asm/perf_event.h |  42 ++++
- 6 files changed, 429 insertions(+), 20 deletions(-)
-
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 8baa441d8000..620beae035a0 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -3507,6 +3507,8 @@ static struct intel_excl_cntrs *allocate_excl_cntrs(int cpu)
- 
- int intel_cpuc_prepare(struct cpu_hw_events *cpuc, int cpu)
- {
-+	cpuc->pebs_record_size = x86_pmu.pebs_record_size;
-+
- 	if (x86_pmu.extra_regs || x86_pmu.lbr_sel_map) {
- 		cpuc->shared_regs = allocate_shared_regs(cpu);
- 		if (!cpuc->shared_regs)
-diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-index efc054aee3c1..1a076beb5fb1 100644
---- a/arch/x86/events/intel/ds.c
-+++ b/arch/x86/events/intel/ds.c
-@@ -906,17 +906,85 @@ static inline void pebs_update_threshold(struct cpu_hw_events *cpuc)
- 
- 	if (cpuc->n_pebs == cpuc->n_large_pebs) {
- 		threshold = ds->pebs_absolute_maximum -
--			reserved * x86_pmu.pebs_record_size;
-+			reserved * cpuc->pebs_record_size;
- 	} else {
--		threshold = ds->pebs_buffer_base + x86_pmu.pebs_record_size;
-+		threshold = ds->pebs_buffer_base + cpuc->pebs_record_size;
- 	}
- 
- 	ds->pebs_interrupt_threshold = threshold;
- }
- 
-+static void adaptive_pebs_record_size_update(void)
-+{
-+	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-+	u64 pebs_data_cfg = cpuc->pebs_data_cfg;
-+	int sz = sizeof(struct pebs_basic);
-+
-+	if (pebs_data_cfg & PEBS_DATACFG_MEMINFO)
-+		sz += sizeof(struct pebs_meminfo);
-+	if (pebs_data_cfg & PEBS_DATACFG_GPRS)
-+		sz += sizeof(struct pebs_gprs);
-+	if (pebs_data_cfg & PEBS_DATACFG_XMMS)
-+		sz += sizeof(struct pebs_xmm);
-+	if (pebs_data_cfg & PEBS_DATACFG_LBRS)
-+		sz += x86_pmu.lbr_nr * sizeof(struct pebs_lbr_entry);
-+
-+	cpuc->pebs_record_size = sz;
-+}
-+
-+#define PERF_PEBS_MEMINFO_TYPE	(PERF_SAMPLE_ADDR | PERF_SAMPLE_DATA_SRC |   \
-+				PERF_SAMPLE_PHYS_ADDR | PERF_SAMPLE_WEIGHT | \
-+				PERF_SAMPLE_TRANSACTION)
-+
-+static u64 pebs_update_adaptive_cfg(struct perf_event *event)
-+{
-+	struct perf_event_attr *attr = &event->attr;
-+	u64 sample_type = attr->sample_type;
-+	u64 pebs_data_cfg = 0;
-+	bool gprs, tsx_weight;
-+
-+	if ((sample_type & ~(PERF_SAMPLE_IP|PERF_SAMPLE_TIME)) ||
-+	    attr->precise_ip < 2) {
-+
-+		if (sample_type & PERF_PEBS_MEMINFO_TYPE)
-+			pebs_data_cfg |= PEBS_DATACFG_MEMINFO;
-+
-+		/*
-+		 * Cases we need the registers:
-+		 * + user requested registers
-+		 * + precise_ip < 2 for the non event IP
-+		 * + For RTM TSX weight we need GPRs too for the abort
-+		 * code. But we don't want to force GPRs for all other
-+		 * weights.  So add it only collectfor the RTM abort event.
-+		 */
-+		gprs = (sample_type & PERF_SAMPLE_REGS_INTR) &&
-+			      (attr->sample_regs_intr & 0xffffffff);
-+		tsx_weight = (sample_type & PERF_SAMPLE_WEIGHT) &&
-+			     ((attr->config & 0xffff) == x86_pmu.force_gpr_event);
-+		if (gprs || (attr->precise_ip < 2) || tsx_weight)
-+			pebs_data_cfg |= PEBS_DATACFG_GPRS;
-+
-+		if ((sample_type & PERF_SAMPLE_REGS_INTR) &&
-+		    (attr->sample_regs_intr >> 32))
-+			pebs_data_cfg |= PEBS_DATACFG_XMMS;
-+
-+		if (sample_type & PERF_SAMPLE_BRANCH_STACK) {
-+			/*
-+			 * For now always log all LBRs. Could configure this
-+			 * later.
-+			 */
-+			pebs_data_cfg |= PEBS_DATACFG_LBRS |
-+				((x86_pmu.lbr_nr-1) << PEBS_DATACFG_LBR_SHIFT);
-+		}
-+	}
-+	return pebs_data_cfg;
-+}
-+
- static void
--pebs_update_state(bool needed_cb, struct cpu_hw_events *cpuc, struct pmu *pmu)
-+pebs_update_state(bool needed_cb, struct cpu_hw_events *cpuc,
-+		  struct perf_event *event, bool add)
- {
-+	struct pmu *pmu = event->ctx->pmu;
- 	/*
- 	 * Make sure we get updated with the first PEBS
- 	 * event. It will trigger also during removal, but
-@@ -933,6 +1001,34 @@ pebs_update_state(bool needed_cb, struct cpu_hw_events *cpuc, struct pmu *pmu)
- 		update = true;
- 	}
- 
-+	/*
-+	 * The PEBS record doesn't shrink on the del. Because to get
-+	 * an accurate config needs to go through all the existing pebs events.
-+	 * It's not necessary.
-+	 * There is no harmful for a bigger PEBS record, except little
-+	 * performance impacts.
-+	 * Also, for most cases, the same pebs config is applied for all
-+	 * pebs events.
-+	 */
-+	if (x86_pmu.intel_cap.pebs_baseline && add) {
-+		u64 pebs_data_cfg;
-+
-+		/* Clear pebs_data_cfg and pebs_record_size for first PEBS. */
-+		if (cpuc->n_pebs == 1) {
-+			cpuc->pebs_data_cfg = 0;
-+			cpuc->pebs_record_size = sizeof(struct pebs_basic);
-+		}
-+
-+		pebs_data_cfg = pebs_update_adaptive_cfg(event);
-+
-+		/* Update pebs_record_size if new event requires more data. */
-+		if (pebs_data_cfg & ~cpuc->pebs_data_cfg) {
-+			cpuc->pebs_data_cfg |= pebs_data_cfg;
-+			adaptive_pebs_record_size_update();
-+			update = true;
-+		}
-+	}
-+
- 	if (update)
- 		pebs_update_threshold(cpuc);
- }
-@@ -947,7 +1043,7 @@ void intel_pmu_pebs_add(struct perf_event *event)
- 	if (hwc->flags & PERF_X86_EVENT_LARGE_PEBS)
- 		cpuc->n_large_pebs++;
- 
--	pebs_update_state(needed_cb, cpuc, event->ctx->pmu);
-+	pebs_update_state(needed_cb, cpuc, event, true);
- }
- 
- void intel_pmu_pebs_enable(struct perf_event *event)
-@@ -965,6 +1061,14 @@ void intel_pmu_pebs_enable(struct perf_event *event)
- 	else if (event->hw.flags & PERF_X86_EVENT_PEBS_ST)
- 		cpuc->pebs_enabled |= 1ULL << 63;
- 
-+	if (x86_pmu.intel_cap.pebs_baseline) {
-+		hwc->config |= ICL_EVENTSEL_ADAPTIVE;
-+		if (cpuc->pebs_data_cfg != cpuc->active_pebs_data_cfg) {
-+			wrmsrl(MSR_PEBS_DATA_CFG, cpuc->pebs_data_cfg);
-+			cpuc->active_pebs_data_cfg = cpuc->pebs_data_cfg;
-+		}
-+	}
-+
- 	/*
- 	 * Use auto-reload if possible to save a MSR write in the PMI.
- 	 * This must be done in pmu::start(), because PERF_EVENT_IOC_PERIOD.
-@@ -991,7 +1095,7 @@ void intel_pmu_pebs_del(struct perf_event *event)
- 	if (hwc->flags & PERF_X86_EVENT_LARGE_PEBS)
- 		cpuc->n_large_pebs--;
- 
--	pebs_update_state(needed_cb, cpuc, event->ctx->pmu);
-+	pebs_update_state(needed_cb, cpuc, event, false);
- }
- 
- void intel_pmu_pebs_disable(struct perf_event *event)
-@@ -1144,6 +1248,13 @@ static inline u64 intel_get_tsx_transaction(u64 tsx_tuning, u64 ax)
- 	return txn;
- }
- 
-+static inline u64 get_pebs_status(void *n)
-+{
-+	if (x86_pmu.intel_cap.pebs_format < 4)
-+		return ((struct pebs_record_nhm *)n)->status;
-+	return ((struct pebs_basic *)n)->applicable_counters;
-+}
-+
- #define PERF_X86_EVENT_PEBS_HSW_PREC \
- 		(PERF_X86_EVENT_PEBS_ST_HSW | \
- 		 PERF_X86_EVENT_PEBS_LD_HSW | \
-@@ -1164,7 +1275,7 @@ static u64 get_data_src(struct perf_event *event, u64 aux)
- 	return val;
- }
- 
--static void setup_pebs_sample_data(struct perf_event *event,
-+static void setup_pebs_fixed_sample_data(struct perf_event *event,
- 				   struct pt_regs *iregs, void *__pebs,
- 				   struct perf_sample_data *data,
- 				   struct pt_regs *regs)
-@@ -1306,6 +1417,140 @@ static void setup_pebs_sample_data(struct perf_event *event,
- 		data->br_stack = &cpuc->lbr_stack;
- }
- 
-+static void adaptive_pebs_save_regs(struct pt_regs *regs,
-+				    struct pebs_gprs *gprs)
-+{
-+	regs->ax = gprs->ax;
-+	regs->bx = gprs->bx;
-+	regs->cx = gprs->cx;
-+	regs->dx = gprs->dx;
-+	regs->si = gprs->si;
-+	regs->di = gprs->di;
-+	regs->bp = gprs->bp;
-+	regs->sp = gprs->sp;
-+#ifndef CONFIG_X86_32
-+	regs->r8 = gprs->r8;
-+	regs->r9 = gprs->r9;
-+	regs->r10 = gprs->r10;
-+	regs->r11 = gprs->r11;
-+	regs->r12 = gprs->r12;
-+	regs->r13 = gprs->r13;
-+	regs->r14 = gprs->r14;
-+	regs->r15 = gprs->r15;
-+#endif
-+}
-+
-+/*
-+ * With adaptive PEBS the layout depends on what fields are configured.
-+ */
-+
-+static void setup_pebs_adaptive_sample_data(struct perf_event *event,
-+					    struct pt_regs *iregs, void *__pebs,
-+					    struct perf_sample_data *data,
-+					    struct pt_regs *regs)
-+{
-+	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-+	struct pebs_basic *basic = __pebs;
-+	void *next_record = basic + 1;
-+	u64 sample_type;
-+	u64 format_size;
-+	struct pebs_meminfo *meminfo = NULL;
-+	struct pebs_gprs *gprs = NULL;
-+	struct x86_perf_regs *perf_regs;
-+
-+	if (basic == NULL)
-+		return;
-+
-+	perf_regs = container_of(regs, struct x86_perf_regs, regs);
-+	perf_regs->xmm_regs = NULL;
-+
-+	sample_type = event->attr.sample_type;
-+	format_size = basic->format_size;
-+	perf_sample_data_init(data, 0, event->hw.last_period);
-+	data->period = event->hw.last_period;
-+
-+	if (event->attr.use_clockid == 0)
-+		data->time = native_sched_clock_from_tsc(basic->tsc);
-+
-+	/*
-+	 * We must however always use iregs for the unwinder to stay sane; the
-+	 * record BP,SP,IP can point into thin air when the record is from a
-+	 * previous PMI context or an (I)RET happened between the record and
-+	 * PMI.
-+	 */
-+	if (sample_type & PERF_SAMPLE_CALLCHAIN)
-+		data->callchain = perf_callchain(event, iregs);
-+
-+	*regs = *iregs;
-+	/* The ip in basic is EventingIP */
-+	set_linear_ip(regs, basic->ip);
-+	regs->flags = PERF_EFLAGS_EXACT;
-+
-+	/*
-+	 * The record for MEMINFO is in front of GPRS
-+	 * But PERF_SAMPLE_TRANSACTION needs gprs->ax.
-+	 * Save the pointer here but process later.
-+	 */
-+	if (format_size & PEBS_DATACFG_MEMINFO) {
-+		meminfo = next_record;
-+		next_record = meminfo + 1;
-+	}
-+
-+	if (format_size & PEBS_DATACFG_GPRS) {
-+		gprs = next_record;
-+		next_record = gprs + 1;
-+
-+		if (event->attr.precise_ip < 2) {
-+			set_linear_ip(regs, gprs->ip);
-+			regs->flags &= ~PERF_EFLAGS_EXACT;
-+		}
-+
-+		if (sample_type & PERF_SAMPLE_REGS_INTR)
-+			adaptive_pebs_save_regs(regs, gprs);
-+	}
-+
-+	if (format_size & PEBS_DATACFG_MEMINFO) {
-+		if (sample_type & PERF_SAMPLE_WEIGHT)
-+			data->weight = meminfo->latency ?:
-+				intel_get_tsx_weight(meminfo->tsx_tuning);
-+
-+		if (sample_type & PERF_SAMPLE_DATA_SRC)
-+			data->data_src.val = get_data_src(event, meminfo->aux);
-+
-+		if (sample_type & (PERF_SAMPLE_ADDR | PERF_SAMPLE_PHYS_ADDR))
-+			data->addr = meminfo->address;
-+
-+		if (sample_type & PERF_SAMPLE_TRANSACTION)
-+			data->txn = intel_get_tsx_transaction(meminfo->tsx_tuning,
-+							  gprs ? gprs->ax : 0);
-+	}
-+
-+	if (format_size & PEBS_DATACFG_XMMS) {
-+		struct pebs_xmm *xmm = next_record;
-+
-+		next_record = xmm + 1;
-+		perf_regs->xmm_regs = xmm->xmm;
-+	}
-+
-+	if (format_size & PEBS_DATACFG_LBRS) {
-+		struct pebs_lbr *lbr = next_record;
-+		int num_lbr = ((format_size >> PEBS_DATACFG_LBR_SHIFT)
-+					& 0xff) + 1;
-+		next_record = next_record + num_lbr*sizeof(struct pebs_lbr_entry);
-+
-+		if (has_branch_stack(event)) {
-+			intel_pmu_store_pebs_lbrs(lbr);
-+			data->br_stack = &cpuc->lbr_stack;
-+		}
-+	}
-+
-+	WARN_ONCE(next_record != __pebs + (format_size >> 48),
-+			"PEBS record size %llu, expected %llu, config %llx\n",
-+			format_size >> 48,
-+			(u64)(next_record - __pebs),
-+			basic->format_size);
-+}
-+
- static inline void *
- get_next_pebs_record_by_bit(void *base, void *top, int bit)
- {
-@@ -1323,19 +1568,19 @@ get_next_pebs_record_by_bit(void *base, void *top, int bit)
- 	if (base == NULL)
- 		return NULL;
- 
--	for (at = base; at < top; at += x86_pmu.pebs_record_size) {
--		struct pebs_record_nhm *p = at;
-+	for (at = base; at < top; at += cpuc->pebs_record_size) {
-+		unsigned long status = get_pebs_status(at);
- 
--		if (test_bit(bit, (unsigned long *)&p->status)) {
-+		if (test_bit(bit, (unsigned long *)&status)) {
- 			/* PEBS v3 has accurate status bits */
- 			if (x86_pmu.intel_cap.pebs_format >= 3)
- 				return at;
- 
--			if (p->status == (1 << bit))
-+			if (status == (1 << bit))
- 				return at;
- 
- 			/* clear non-PEBS bit and re-check */
--			pebs_status = p->status & cpuc->pebs_enabled;
-+			pebs_status = status & cpuc->pebs_enabled;
- 			pebs_status &= PEBS_COUNTER_MASK;
- 			if (pebs_status == (1 << bit))
- 				return at;
-@@ -1415,11 +1660,18 @@ intel_pmu_save_and_restart_reload(struct perf_event *event, int count)
- static void __intel_pmu_pebs_event(struct perf_event *event,
- 				   struct pt_regs *iregs,
- 				   void *base, void *top,
--				   int bit, int count)
-+				   int bit, int count,
-+				   void (*setup_sample)(struct perf_event *,
-+						struct pt_regs *,
-+						void *,
-+						struct perf_sample_data *,
-+						struct pt_regs *))
- {
-+	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
- 	struct hw_perf_event *hwc = &event->hw;
- 	struct perf_sample_data data;
--	struct pt_regs regs;
-+	struct x86_perf_regs perf_regs;
-+	struct pt_regs *regs = &perf_regs.regs;
- 	void *at = get_next_pebs_record_by_bit(base, top, bit);
- 
- 	if (hwc->flags & PERF_X86_EVENT_AUTO_RELOAD) {
-@@ -1434,20 +1686,20 @@ static void __intel_pmu_pebs_event(struct perf_event *event,
- 		return;
- 
- 	while (count > 1) {
--		setup_pebs_sample_data(event, iregs, at, &data, &regs);
--		perf_event_output(event, &data, &regs);
--		at += x86_pmu.pebs_record_size;
-+		setup_sample(event, iregs, at, &data, regs);
-+		perf_event_output(event, &data, regs);
-+		at += cpuc->pebs_record_size;
- 		at = get_next_pebs_record_by_bit(at, top, bit);
- 		count--;
- 	}
- 
--	setup_pebs_sample_data(event, iregs, at, &data, &regs);
-+	setup_sample(event, iregs, at, &data, regs);
- 
- 	/*
- 	 * All but the last records are processed.
- 	 * The last one is left to be able to call the overflow handler.
- 	 */
--	if (perf_event_overflow(event, &data, &regs)) {
-+	if (perf_event_overflow(event, &data, regs)) {
- 		x86_pmu_stop(event, 0);
- 		return;
- 	}
-@@ -1488,7 +1740,8 @@ static void intel_pmu_drain_pebs_core(struct pt_regs *iregs)
- 		return;
- 	}
- 
--	__intel_pmu_pebs_event(event, iregs, at, top, 0, n);
-+	__intel_pmu_pebs_event(event, iregs, at, top, 0, n,
-+			       setup_pebs_fixed_sample_data);
- }
- 
- static void intel_pmu_pebs_event_update_no_drain(struct cpu_hw_events *cpuc,
-@@ -1621,11 +1874,66 @@ static void intel_pmu_drain_pebs_nhm(struct pt_regs *iregs)
- 
- 		if (counts[bit]) {
- 			__intel_pmu_pebs_event(event, iregs, base,
--					       top, bit, counts[bit]);
-+					       top, bit, counts[bit],
-+					       setup_pebs_fixed_sample_data);
- 		}
- 	}
- }
- 
-+static void intel_pmu_drain_pebs_icl(struct pt_regs *iregs)
-+{
-+	short counts[INTEL_PMC_IDX_FIXED + MAX_FIXED_PEBS_EVENTS] = {};
-+	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-+	struct debug_store *ds = cpuc->ds;
-+	struct perf_event *event;
-+	void *base, *at, *top;
-+	int bit, size;
-+	u64 mask;
-+
-+	if (!x86_pmu.pebs_active)
-+		return;
-+
-+	base = (struct pebs_basic *)(unsigned long)ds->pebs_buffer_base;
-+	top = (struct pebs_basic *)(unsigned long)ds->pebs_index;
-+
-+	ds->pebs_index = ds->pebs_buffer_base;
-+
-+	mask = ((1ULL << x86_pmu.max_pebs_events) - 1) |
-+	       (((1ULL << x86_pmu.num_counters_fixed) - 1) << INTEL_PMC_IDX_FIXED);
-+	size = INTEL_PMC_IDX_FIXED + x86_pmu.num_counters_fixed;
-+
-+	if (unlikely(base >= top)) {
-+		intel_pmu_pebs_event_update_no_drain(cpuc, size);
-+		return;
-+	}
-+
-+	for (at = base; at < top; at += cpuc->pebs_record_size) {
-+		u64 pebs_status;
-+
-+		pebs_status = get_pebs_status(at) & cpuc->pebs_enabled;
-+		pebs_status &= mask;
-+
-+		for_each_set_bit(bit, (unsigned long *)&pebs_status, size)
-+			counts[bit]++;
-+	}
-+
-+	for (bit = 0; bit < size; bit++) {
-+		if (counts[bit] == 0)
-+			continue;
-+
-+		event = cpuc->events[bit];
-+		if (WARN_ON_ONCE(!event))
-+			continue;
-+
-+		if (WARN_ON_ONCE(!event->attr.precise_ip))
-+			continue;
-+
-+		__intel_pmu_pebs_event(event, iregs, base,
-+				       top, bit, counts[bit],
-+				       setup_pebs_adaptive_sample_data);
-+	}
-+}
-+
- /*
-  * BTS, PEBS probe and setup
-  */
-@@ -1645,6 +1953,7 @@ void __init intel_ds_init(void)
- 		x86_pmu.pebs_no_isolation = 1;
- 	if (x86_pmu.pebs) {
- 		char pebs_type = x86_pmu.intel_cap.pebs_trap ?  '+' : '-';
-+		char *pebs_qual = "";
- 		int format = x86_pmu.intel_cap.pebs_format;
- 
- 		switch (format) {
-@@ -1682,10 +1991,34 @@ void __init intel_ds_init(void)
- 			x86_pmu.large_pebs_flags |= PERF_SAMPLE_TIME;
- 			break;
- 
-+		case 4:
-+			x86_pmu.drain_pebs = intel_pmu_drain_pebs_icl;
-+			x86_pmu.pebs_record_size = sizeof(struct pebs_basic);
-+			if (x86_pmu.intel_cap.pebs_baseline) {
-+				x86_pmu.large_pebs_flags |=
-+					PERF_SAMPLE_BRANCH_STACK |
-+					PERF_SAMPLE_TIME;
-+				x86_pmu.flags |= PMU_FL_PEBS_ALL;
-+				pebs_qual = "-baseline";
-+			} else {
-+				/* Only basic record supported */
-+				x86_pmu.large_pebs_flags &=
-+					~(PERF_SAMPLE_ADDR |
-+					  PERF_SAMPLE_TIME |
-+					  PERF_SAMPLE_DATA_SRC |
-+					  PERF_SAMPLE_TRANSACTION |
-+					  PERF_SAMPLE_REGS_USER |
-+					  PERF_SAMPLE_REGS_INTR);
-+			}
-+			pr_cont("PEBS fmt4%c%s, ", pebs_type, pebs_qual);
-+			break;
-+
- 		default:
- 			pr_cont("no PEBS fmt%d%c, ", format, pebs_type);
- 			x86_pmu.pebs = 0;
- 		}
-+		if (format != 4)
-+			x86_pmu.intel_cap.pebs_baseline = 0;
- 	}
- }
- 
-diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
-index 580c1b91c454..07b7175fc378 100644
---- a/arch/x86/events/intel/lbr.c
-+++ b/arch/x86/events/intel/lbr.c
-@@ -1080,6 +1080,28 @@ intel_pmu_lbr_filter(struct cpu_hw_events *cpuc)
- 	}
- }
- 
-+void intel_pmu_store_pebs_lbrs(struct pebs_lbr *lbr)
-+{
-+	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-+	int i;
-+
-+	cpuc->lbr_stack.nr = x86_pmu.lbr_nr;
-+	for (i = 0; i < x86_pmu.lbr_nr; i++) {
-+		u64 info = lbr->lbr[i].info;
-+		struct perf_branch_entry *e = &cpuc->lbr_entries[i];
-+
-+		e->from		= lbr->lbr[i].from;
-+		e->to		= lbr->lbr[i].to;
-+		e->mispred	= !!(info & LBR_INFO_MISPRED);
-+		e->predicted	= !(info & LBR_INFO_MISPRED);
-+		e->in_tx	= !!(info & LBR_INFO_IN_TX);
-+		e->abort	= !!(info & LBR_INFO_ABORT);
-+		e->cycles	= info & LBR_INFO_CYCLES;
-+		e->reserved	= 0;
-+	}
-+	intel_pmu_lbr_filter(cpuc);
-+}
-+
- /*
-  * Map interface branch filters onto LBR filters
-  */
-diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index 6428941a5073..4ca20078ca92 100644
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -207,6 +207,11 @@ struct cpu_hw_events {
- 	int			n_pebs;
- 	int			n_large_pebs;
- 
-+	/* Current super set of events hardware configuration */
-+	u64			pebs_data_cfg;
-+	u64			active_pebs_data_cfg;
-+	int			pebs_record_size;
-+
- 	/*
- 	 * Intel LBR bits
- 	 */
-@@ -473,6 +478,7 @@ union perf_capabilities {
- 		 * values > 32bit.
- 		 */
- 		u64	full_width_write:1;
-+		u64     pebs_baseline:1;
- 	};
- 	u64	capabilities;
- };
-@@ -621,6 +627,7 @@ struct x86_pmu {
- 	void		(*pebs_aliases)(struct perf_event *event);
- 	int 		max_pebs_events;
- 	unsigned long	large_pebs_flags;
-+	u64		force_gpr_event;
- 
- 	/*
- 	 * Intel LBR
-@@ -961,6 +968,8 @@ void intel_pmu_pebs_sched_task(struct perf_event_context *ctx, bool sched_in);
- 
- void intel_pmu_auto_reload_read(struct perf_event *event);
- 
-+void intel_pmu_store_pebs_lbrs(struct pebs_lbr *lbr);
-+
- void intel_ds_init(void);
- 
- void intel_pmu_lbr_sched_task(struct perf_event_context *ctx, bool sched_in);
-diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-index ca5bc0eacb95..1378518cf63f 100644
---- a/arch/x86/include/asm/msr-index.h
-+++ b/arch/x86/include/asm/msr-index.h
-@@ -116,6 +116,7 @@
- #define LBR_INFO_CYCLES			0xffff
- 
- #define MSR_IA32_PEBS_ENABLE		0x000003f1
-+#define MSR_PEBS_DATA_CFG		0x000003f2
- #define MSR_IA32_DS_AREA		0x00000600
- #define MSR_IA32_PERF_CAPABILITIES	0x00000345
- #define MSR_PEBS_LD_LAT_THRESHOLD	0x000003f6
-diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
-index d9f5bbe44b3c..fd0ec2699213 100644
---- a/arch/x86/include/asm/perf_event.h
-+++ b/arch/x86/include/asm/perf_event.h
-@@ -32,6 +32,7 @@
- 
- #define HSW_IN_TX					(1ULL << 32)
- #define HSW_IN_TX_CHECKPOINTED				(1ULL << 33)
-+#define ICL_EVENTSEL_ADAPTIVE				(1ULL << 34)
- 
- #define AMD64_EVENTSEL_INT_CORE_ENABLE			(1ULL << 36)
- #define AMD64_EVENTSEL_GUESTONLY			(1ULL << 40)
-@@ -87,6 +88,12 @@
- #define ARCH_PERFMON_BRANCH_MISSES_RETIRED		6
- #define ARCH_PERFMON_EVENTS_COUNT			7
- 
-+#define PEBS_DATACFG_MEMINFO	BIT_ULL(0)
-+#define PEBS_DATACFG_GPRS	BIT_ULL(1)
-+#define PEBS_DATACFG_XMMS	BIT_ULL(2)
-+#define PEBS_DATACFG_LBRS	BIT_ULL(3)
-+#define PEBS_DATACFG_LBR_SHIFT	24
-+
- /*
-  * Intel "Architectural Performance Monitoring" CPUID
-  * detection/enumeration details:
-@@ -176,6 +183,41 @@ struct x86_pmu_capability {
- #define GLOBAL_STATUS_LBRS_FROZEN			BIT_ULL(58)
- #define GLOBAL_STATUS_TRACE_TOPAPMI			BIT_ULL(55)
- 
-+/*
-+ * Adaptive PEBS v4
-+ */
-+
-+struct pebs_basic {
-+	u64 format_size;
-+	u64 ip;
-+	u64 applicable_counters;
-+	u64 tsc;
-+};
-+
-+struct pebs_meminfo {
-+	u64 address;
-+	u64 aux;
-+	u64 latency;
-+	u64 tsx_tuning;
-+};
-+
-+struct pebs_gprs {
-+	u64 flags, ip, ax, cx, dx, bx, sp, bp, si, di;
-+	u64 r8, r9, r10, r11, r12, r13, r14, r15;
-+};
-+
-+struct pebs_xmm {
-+	u64 xmm[16*2];	/* two entries for each register */
-+};
-+
-+struct pebs_lbr_entry {
-+	u64 from, to, info;
-+};
-+
-+struct pebs_lbr {
-+	struct pebs_lbr_entry lbr[0]; /* Variable length */
-+};
-+
- /*
-  * IBS cpuid feature detection
-  */
 -- 
-2.17.1
-
+Florian
