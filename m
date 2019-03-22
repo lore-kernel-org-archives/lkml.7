@@ -7,55 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33D6FC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:16:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 877C2C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:16:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0512721939
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:16:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5301621900
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:16:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553257007;
-	bh=kFgImT/uRNeTgqaQiPqPI8/kOiGLu/6EWoCcJokvKWw=;
+	s=default; t=1553257010;
+	bh=WAmzuokJwkt5+rIJ2jTP5MowtRP91CZu7sLwgjLociY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y1r8b052Fw9Zm/xuDikLGXitOvmUINQbNHLaTwXVDvyxTtXSJWzNjdBNNnRG4AykF
-	 aiEKlvZhBnQGPR1mpNaO0TGadTvXJeRYh+MYN14nV3pJRsEXlNtqoKh+Y/gDvUfFJH
-	 ZrCCUZQtg2XMIQ3TAORBzV8R2456NPe0N9zwgV/U=
+	b=p/j+zjZkf8H2Opv7Nb5qzp4lc9jfHTe1O84VoKsMhwcXFhn35a6SUdsqJkug3VmI/
+	 r8CwKuc5VtxTjJfiBUYfcsDVXPKFESxMBurywr1HUUQcmxkJBMl5xszr4NNe9SaLkK
+	 d7IX/0PiddyM4w8V/V02PPIwNN38J5GSUxDgvdB4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390037AbfCVMQp (ORCPT
+        id S2390277AbfCVMQs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:16:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55458 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:16:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390027AbfCVMQn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:16:43 -0400
+        id S2390027AbfCVMQr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:16:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 646BE2082C;
-        Fri, 22 Mar 2019 12:16:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35E8A2083D;
+        Fri, 22 Mar 2019 12:16:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553257002;
-        bh=kFgImT/uRNeTgqaQiPqPI8/kOiGLu/6EWoCcJokvKWw=;
+        s=default; t=1553257005;
+        bh=WAmzuokJwkt5+rIJ2jTP5MowtRP91CZu7sLwgjLociY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UWpr5zMtyx4lkmxnDpYArNPsBfbCneMtLMdNZn08emn3EqEYp5wqW0EJdfV/2Msrp
-         6iLt6HbCiC9BZOPsS1gJ1/S2ef/LrbIcj/6jTml1e2EoiPZafLR7O5Kv/aMsQbCBkk
-         Bqr5IidFhQt4vkE/HEws7gZFe3VaVdwd3xnpdB1k=
+        b=G5wqVLf4MNBZ9+r96H3R8zonIOq4rne5HNZfCUzFfUJcp9CCt3sS8uII8p4qCIc5g
+         dsCfy9E5F0ntTFQUUobjyd45ckURsfbNq1oerQnqutEned5yTI1nlFuT7H+7UazhpV
+         XfB3zcAbYjZnDUb7WsnOSjHktL3Mg09bJIvw7AFo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andrea Righi <righi.andrea@gmail.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 5.0 103/238] x86/kprobes: Prohibit probing on optprobe template code
-Date:   Fri, 22 Mar 2019 12:15:22 +0100
-Message-Id: <20190322111304.618039750@linuxfoundation.org>
+        stable@vger.kernel.org, Georgi Djakov <georgi.djakov@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+Subject: [PATCH 5.0 104/238] cpufreq: kryo: Release OPP tables on module removal
+Date:   Fri, 22 Mar 2019 12:15:23 +0100
+Message-Id: <20190322111304.671705139@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -74,47 +65,90 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Viresh Kumar <viresh.kumar@linaro.org>
 
-commit 0192e6535ebe9af68614198ced4fd6d37b778ebf upstream.
+commit 0334906c06967142c8805fbe88acf787f65d3d26 upstream.
 
-Prohibit probing on optprobe template code, since it is not
-a code but a template instruction sequence. If we modify
-this template, copied template must be broken.
+Commit 5ad7346b4ae2 ("cpufreq: kryo: Add module remove and exit") made
+it possible to build the kryo cpufreq driver as a module, but it failed
+to release all the resources, i.e. OPP tables, when the module is
+unloaded.
 
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andrea Righi <righi.andrea@gmail.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
-Fixes: 9326638cbee2 ("kprobes, x86: Use NOKPROBE_SYMBOL() instead of __kprobes annotation")
-Link: http://lkml.kernel.org/r/154998787911.31052.15274376330136234452.stgit@devbox
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+This patch fixes it by releasing the OPP tables, by calling
+dev_pm_opp_put_supported_hw() for them, from the
+qcom_cpufreq_kryo_remove() routine. The array of pointers to the OPP
+tables is also allocated dynamically now in qcom_cpufreq_kryo_probe(),
+as the pointers will be required while releasing the resources.
+
+Compile tested only.
+
+Cc: 4.18+ <stable@vger.kernel.org> # v4.18+
+Fixes: 5ad7346b4ae2 ("cpufreq: kryo: Add module remove and exit")
+Reviewed-by: Georgi Djakov <georgi.djakov@linaro.org>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/kprobes/opt.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/cpufreq/qcom-cpufreq-kryo.c |   20 ++++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
 
---- a/arch/x86/kernel/kprobes/opt.c
-+++ b/arch/x86/kernel/kprobes/opt.c
-@@ -141,6 +141,11 @@ asm (
+--- a/drivers/cpufreq/qcom-cpufreq-kryo.c
++++ b/drivers/cpufreq/qcom-cpufreq-kryo.c
+@@ -75,7 +75,7 @@ static enum _msm8996_version qcom_cpufre
  
- void optprobe_template_func(void);
- STACK_FRAME_NON_STANDARD(optprobe_template_func);
-+NOKPROBE_SYMBOL(optprobe_template_func);
-+NOKPROBE_SYMBOL(optprobe_template_entry);
-+NOKPROBE_SYMBOL(optprobe_template_val);
-+NOKPROBE_SYMBOL(optprobe_template_call);
-+NOKPROBE_SYMBOL(optprobe_template_end);
+ static int qcom_cpufreq_kryo_probe(struct platform_device *pdev)
+ {
+-	struct opp_table *opp_tables[NR_CPUS] = {0};
++	struct opp_table **opp_tables;
+ 	enum _msm8996_version msm8996_version;
+ 	struct nvmem_cell *speedbin_nvmem;
+ 	struct device_node *np;
+@@ -133,6 +133,10 @@ static int qcom_cpufreq_kryo_probe(struc
+ 	}
+ 	kfree(speedbin);
  
- #define TMPL_MOVE_IDX \
- 	((long)optprobe_template_val - (long)optprobe_template_entry)
++	opp_tables = kcalloc(num_possible_cpus(), sizeof(*opp_tables), GFP_KERNEL);
++	if (!opp_tables)
++		return -ENOMEM;
++
+ 	for_each_possible_cpu(cpu) {
+ 		cpu_dev = get_cpu_device(cpu);
+ 		if (NULL == cpu_dev) {
+@@ -151,8 +155,10 @@ static int qcom_cpufreq_kryo_probe(struc
+ 
+ 	cpufreq_dt_pdev = platform_device_register_simple("cpufreq-dt", -1,
+ 							  NULL, 0);
+-	if (!IS_ERR(cpufreq_dt_pdev))
++	if (!IS_ERR(cpufreq_dt_pdev)) {
++		platform_set_drvdata(pdev, opp_tables);
+ 		return 0;
++	}
+ 
+ 	ret = PTR_ERR(cpufreq_dt_pdev);
+ 	dev_err(cpu_dev, "Failed to register platform device\n");
+@@ -163,13 +169,23 @@ free_opp:
+ 			break;
+ 		dev_pm_opp_put_supported_hw(opp_tables[cpu]);
+ 	}
++	kfree(opp_tables);
+ 
+ 	return ret;
+ }
+ 
+ static int qcom_cpufreq_kryo_remove(struct platform_device *pdev)
+ {
++	struct opp_table **opp_tables = platform_get_drvdata(pdev);
++	unsigned int cpu;
++
+ 	platform_device_unregister(cpufreq_dt_pdev);
++
++	for_each_possible_cpu(cpu)
++		dev_pm_opp_put_supported_hw(opp_tables[cpu]);
++
++	kfree(opp_tables);
++
+ 	return 0;
+ }
+ 
 
 
