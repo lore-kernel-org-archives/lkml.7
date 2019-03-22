@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61D74C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:36:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E612C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:36:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26D8E2082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:36:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C80B218B0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:36:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254594;
-	bh=UC2clZ2RdXb/ZoBIpZgkVuG48CfvTq68m2rRX+ur+O8=;
+	s=default; t=1553254598;
+	bh=/yVd1tonW2MDl8Dv84mf2MERudNO76yPbrjt6Bkm90c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n3I0OQUBHPKfn6/Bgc0y/7T7YN4YIgar2fGUyFeQbC1ExNwCqR6sl0X75uq37tPF0
-	 GRT/NHlRduVyp3BwwXme7TH/4gA+huua7q4bkKd4QnHf3ZEpJpM+cBtc2EZOpxL5Pc
-	 jj0ipIDeXMRuGkc2EXEi1PgRHmYf/Id8UC0jeLRc=
+	b=OTmiDeAxXERrZLZEOM/sK4vYGy6K2vxRaEwlswUxHxHRkv+VLIR2LXgDThlyGAHd7
+	 t315Njx8k4BPXbTCdrWnuSUvM0JD/Cs1OhSKXLKgvkbL2n83gOdIaZOfsn6m10dw5T
+	 QW21WhXQ3t8CzXi2Bf+X+5I50/MTfUdk6G9aErOk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730285AbfCVLgc (ORCPT
+        id S1730726AbfCVLgh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:36:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37872 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:36:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730711AbfCVLg3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:36:29 -0400
+        id S1730510AbfCVLgb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:36:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9A5B2082C;
-        Fri, 22 Mar 2019 11:36:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 778112082C;
+        Fri, 22 Mar 2019 11:36:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254588;
-        bh=UC2clZ2RdXb/ZoBIpZgkVuG48CfvTq68m2rRX+ur+O8=;
+        s=default; t=1553254591;
+        bh=/yVd1tonW2MDl8Dv84mf2MERudNO76yPbrjt6Bkm90c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0xKnIglE/cRVbW25ar9SATJ9nLz3vjB30Eiu9ylMZnJnsJyApSSczzjtg9fWbB8e6
-         iOKvzyi02lv4iSiTh5/ZdLbwyE3CK40cOp6Q2N/1Nrh40JitHIgNPlkahplluQbWVw
-         5wRC1OGrvzQRcvSH703mFM/UVg7j8ervXya95BYo=
+        b=2tbbxsWL3B+AN1i1mct4ISKH9ilJKr+1nmEeLp1jc3dr3wIBSBXVTE+SpDjTejFpS
+         2JkXn4oFcWJzwWzflTQ+bDiUtEKFtHerJ5XYekGNUjQYiw9S54Lg9k4PLvweWxcAx+
+         9pToJ72tvF6ukspqFkvJPJiYrQF5uKGS+1SEW15s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
+        stable@vger.kernel.org,
+        Stuart Menefy <stuart.menefy@mathembedded.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
         Mark Brown <broonie@kernel.org>
-Subject: [PATCH 4.4 182/230] regulator: s2mps11: Fix steps for buck7, buck8 and LDO35
-Date:   Fri, 22 Mar 2019 12:15:20 +0100
-Message-Id: <20190322111249.549584536@linuxfoundation.org>
+Subject: [PATCH 4.4 183/230] regulator: s2mpa01: Fix step values for some LDOs
+Date:   Fri, 22 Mar 2019 12:15:21 +0100
+Message-Id: <20190322111249.625536815@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -65,46 +67,56 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Krzysztof Kozlowski <krzk@kernel.org>
+From: Stuart Menefy <stuart.menefy@mathembedded.com>
 
-commit 56b5d4ea778c1b0989c5cdb5406d4a488144c416 upstream.
+commit 28c4f730d2a44f2591cb104091da29a38dac49fe upstream.
 
-LDO35 uses 25 mV step, not 50 mV.  Bucks 7 and 8 use 12.5 mV step
-instead of 6.25 mV.  Wrong step caused over-voltage (LDO35) or
-under-voltage (buck7 and 8) if regulators were used (e.g. on Exynos5420
-Arndale Octa board).
+The step values for some of the LDOs appears to be incorrect, resulting
+in incorrect voltages (or at least, ones which are different from the
+Samsung 3.4 vendor kernel).
 
-Cc: <stable@vger.kernel.org>
-Fixes: cb74685ecb39 ("regulator: s2mps11: Add samsung s2mps11 regulator driver")
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Stuart Menefy <stuart.menefy@mathembedded.com>
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Mark Brown <broonie@kernel.org>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/regulator/s2mps11.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/regulator/s2mpa01.c |   10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
---- a/drivers/regulator/s2mps11.c
-+++ b/drivers/regulator/s2mps11.c
-@@ -372,7 +372,7 @@ static const struct regulator_desc s2mps
- 	regulator_desc_s2mps11_ldo(32, STEP_50_MV),
- 	regulator_desc_s2mps11_ldo(33, STEP_50_MV),
- 	regulator_desc_s2mps11_ldo(34, STEP_50_MV),
--	regulator_desc_s2mps11_ldo(35, STEP_50_MV),
-+	regulator_desc_s2mps11_ldo(35, STEP_25_MV),
- 	regulator_desc_s2mps11_ldo(36, STEP_50_MV),
- 	regulator_desc_s2mps11_ldo(37, STEP_50_MV),
- 	regulator_desc_s2mps11_ldo(38, STEP_50_MV),
-@@ -382,8 +382,8 @@ static const struct regulator_desc s2mps
- 	regulator_desc_s2mps11_buck1_4(4),
- 	regulator_desc_s2mps11_buck5,
- 	regulator_desc_s2mps11_buck67810(6, MIN_600_MV, STEP_6_25_MV),
--	regulator_desc_s2mps11_buck67810(7, MIN_600_MV, STEP_6_25_MV),
--	regulator_desc_s2mps11_buck67810(8, MIN_600_MV, STEP_6_25_MV),
-+	regulator_desc_s2mps11_buck67810(7, MIN_600_MV, STEP_12_5_MV),
-+	regulator_desc_s2mps11_buck67810(8, MIN_600_MV, STEP_12_5_MV),
- 	regulator_desc_s2mps11_buck9,
- 	regulator_desc_s2mps11_buck67810(10, MIN_750_MV, STEP_12_5_MV),
- };
+--- a/drivers/regulator/s2mpa01.c
++++ b/drivers/regulator/s2mpa01.c
+@@ -303,13 +303,13 @@ static const struct regulator_desc regul
+ 	regulator_desc_ldo(2, STEP_50_MV),
+ 	regulator_desc_ldo(3, STEP_50_MV),
+ 	regulator_desc_ldo(4, STEP_50_MV),
+-	regulator_desc_ldo(5, STEP_50_MV),
++	regulator_desc_ldo(5, STEP_25_MV),
+ 	regulator_desc_ldo(6, STEP_25_MV),
+ 	regulator_desc_ldo(7, STEP_50_MV),
+ 	regulator_desc_ldo(8, STEP_50_MV),
+ 	regulator_desc_ldo(9, STEP_50_MV),
+ 	regulator_desc_ldo(10, STEP_50_MV),
+-	regulator_desc_ldo(11, STEP_25_MV),
++	regulator_desc_ldo(11, STEP_50_MV),
+ 	regulator_desc_ldo(12, STEP_50_MV),
+ 	regulator_desc_ldo(13, STEP_50_MV),
+ 	regulator_desc_ldo(14, STEP_50_MV),
+@@ -320,11 +320,11 @@ static const struct regulator_desc regul
+ 	regulator_desc_ldo(19, STEP_50_MV),
+ 	regulator_desc_ldo(20, STEP_50_MV),
+ 	regulator_desc_ldo(21, STEP_50_MV),
+-	regulator_desc_ldo(22, STEP_25_MV),
+-	regulator_desc_ldo(23, STEP_25_MV),
++	regulator_desc_ldo(22, STEP_50_MV),
++	regulator_desc_ldo(23, STEP_50_MV),
+ 	regulator_desc_ldo(24, STEP_50_MV),
+ 	regulator_desc_ldo(25, STEP_50_MV),
+-	regulator_desc_ldo(26, STEP_50_MV),
++	regulator_desc_ldo(26, STEP_25_MV),
+ 	regulator_desc_buck1_4(1),
+ 	regulator_desc_buck1_4(2),
+ 	regulator_desc_buck1_4(3),
 
 
