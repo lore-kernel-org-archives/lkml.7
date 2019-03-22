@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31045C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:24:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FF7EC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:24:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3D3A2192C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:24:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71A4E21917
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:24:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553253861;
-	bh=pnBHd4x5gX3yWnr24gNiR3cV6grV2bx4EBgFrbjyim8=;
+	s=default; t=1553253864;
+	bh=XdINCM/xnpHmOSvAO0QBVjNGPtn+C5kWzeqr3tPYn7g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rgxh72ELjn8MHmzB7NiL1RFR5Ys6pky4L0alviML5EfP0/j/sIRhNrTk14EUToeyA
-	 nZrB3EsBwh46p45asS3bz/m4D7bdN6mTd+3MfVoiT4l039QpSHq1qzToD6kkgKI/kj
-	 O4lYSOTg8k8uZ5XJm97DEgiOzrGcUtBmqq9Ulwk8=
+	b=sgEy/ODiPaFh9Y7ODZPX9cUusDfKjY3UkchCwd6sq3tCfBeXg9tBX5lzVojQ+uf4f
+	 Hczi9SIum4GsmH72VPJaX36wfjaZGoHBBlxZgXZ0n3bVhy1hkfLQpPqmXx+mxCi9V1
+	 JLiaKUdAqH9o3CbGx14ZZuITdKvDt+l3m5+1AYNw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729105AbfCVLYT (ORCPT
+        id S1729116AbfCVLYX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:24:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51378 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:24:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51440 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729091AbfCVLYS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:24:18 -0400
+        id S1728560AbfCVLYW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:24:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 341442190A;
-        Fri, 22 Mar 2019 11:24:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F273221917;
+        Fri, 22 Mar 2019 11:24:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553253857;
-        bh=pnBHd4x5gX3yWnr24gNiR3cV6grV2bx4EBgFrbjyim8=;
+        s=default; t=1553253861;
+        bh=XdINCM/xnpHmOSvAO0QBVjNGPtn+C5kWzeqr3tPYn7g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VsfcZQReW2Cwy6Ltmm7h1ThLt7WwlB/WzvQ7qzka+c/cu3FSd3lxr+Gh2kUqvYMR4
-         qvyKo/RwM+/iquTi3sZJ8uTqX8wiHuS/JSYY0m0qUX65EeL2yStCwPQKa/0wD+kU8H
-         STQBvPb0AJQMx75pAhDOG1VeWtvcvcr7MmBy40JI=
+        b=z79NGlRZ2XLeBDLb2TPE9y7J/b59rApMyR5mIbnPbd4jCmoiouf9Sf1PUMb3xhi/k
+         gbynf21eGCqSGH9W2qMNCnMuZ4eWs+RPr2zw1xydtyhjoovWIuuvi3Aa/rTap5HtIQ
+         eJVNjYK5oOzN48fjp/FmQDkiDtCuJtLTJt8WxpBw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Subject: [PATCH 3.18 078/134] iscsi_ibft: Fix missing break in switch statement
-Date:   Fri, 22 Mar 2019 12:14:51 +0100
-Message-Id: <20190322111215.747552622@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 3.18 079/134] l2tp: fix infoleak in l2tp_ip6_recvmsg()
+Date:   Fri, 22 Mar 2019 12:14:52 +0100
+Message-Id: <20190322111215.827020776@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111210.465931067@linuxfoundation.org>
 References: <20190322111210.465931067@linuxfoundation.org>
@@ -66,35 +66,83 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Gustavo A. R. Silva <gustavo@embeddedor.com>
+From: Eric Dumazet <edumazet@google.com>
 
-commit df997abeebadaa4824271009e2d2b526a70a11cb upstream.
+[ Upstream commit 163d1c3d6f17556ed3c340d3789ea93be95d6c28 ]
 
-Add missing break statement in order to prevent the code from falling
-through to case ISCSI_BOOT_TGT_NAME, which is unnecessary.
+Back in 2013 Hannes took care of most of such leaks in commit
+bceaa90240b6 ("inet: prevent leakage of uninitialized memory to user in recv syscalls")
 
-This bug was found thanks to the ongoing efforts to enable
--Wimplicit-fallthrough.
+But the bug in l2tp_ip6_recvmsg() has not been fixed.
 
-Fixes: b33a84a38477 ("ibft: convert iscsi_ibft module to iscsi boot lib")
-Cc: stable@vger.kernel.org
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Signed-off-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+syzbot report :
+
+BUG: KMSAN: kernel-infoleak in _copy_to_user+0x16b/0x1f0 lib/usercopy.c:32
+CPU: 1 PID: 10996 Comm: syz-executor362 Not tainted 5.0.0+ #11
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x173/0x1d0 lib/dump_stack.c:113
+ kmsan_report+0x12e/0x2a0 mm/kmsan/kmsan.c:600
+ kmsan_internal_check_memory+0x9f4/0xb10 mm/kmsan/kmsan.c:694
+ kmsan_copy_to_user+0xab/0xc0 mm/kmsan/kmsan_hooks.c:601
+ _copy_to_user+0x16b/0x1f0 lib/usercopy.c:32
+ copy_to_user include/linux/uaccess.h:174 [inline]
+ move_addr_to_user+0x311/0x570 net/socket.c:227
+ ___sys_recvmsg+0xb65/0x1310 net/socket.c:2283
+ do_recvmmsg+0x646/0x10c0 net/socket.c:2390
+ __sys_recvmmsg net/socket.c:2469 [inline]
+ __do_sys_recvmmsg net/socket.c:2492 [inline]
+ __se_sys_recvmmsg+0x1d1/0x350 net/socket.c:2485
+ __x64_sys_recvmmsg+0x62/0x80 net/socket.c:2485
+ do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:291
+ entry_SYSCALL_64_after_hwframe+0x63/0xe7
+RIP: 0033:0x445819
+Code: e8 6c b6 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 2b 12 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f64453eddb8 EFLAGS: 00000246 ORIG_RAX: 000000000000012b
+RAX: ffffffffffffffda RBX: 00000000006dac28 RCX: 0000000000445819
+RDX: 0000000000000005 RSI: 0000000020002f80 RDI: 0000000000000003
+RBP: 00000000006dac20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dac2c
+R13: 00007ffeba8f87af R14: 00007f64453ee9c0 R15: 20c49ba5e353f7cf
+
+Local variable description: ----addr@___sys_recvmsg
+Variable was created at:
+ ___sys_recvmsg+0xf6/0x1310 net/socket.c:2244
+ do_recvmmsg+0x646/0x10c0 net/socket.c:2390
+
+Bytes 0-31 of 32 are uninitialized
+Memory access of size 32 starts at ffff8880ae62fbb0
+Data copied to user address 0000000020000000
+
+Fixes: a32e0eec7042 ("l2tp: introduce L2TPv3 IP encapsulation support for IPv6")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/firmware/iscsi_ibft.c |    1 +
- 1 file changed, 1 insertion(+)
+ net/l2tp/l2tp_ip6.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
---- a/drivers/firmware/iscsi_ibft.c
-+++ b/drivers/firmware/iscsi_ibft.c
-@@ -503,6 +503,7 @@ static umode_t __init ibft_check_tgt_for
- 	case ISCSI_BOOT_TGT_NIC_ASSOC:
- 	case ISCSI_BOOT_TGT_CHAP_TYPE:
- 		rc = S_IRUGO;
-+		break;
- 	case ISCSI_BOOT_TGT_NAME:
- 		if (tgt->tgt_name_len)
- 			rc = S_IRUGO;
+--- a/net/l2tp/l2tp_ip6.c
++++ b/net/l2tp/l2tp_ip6.c
+@@ -666,9 +666,6 @@ static int l2tp_ip6_recvmsg(struct kiocb
+ 	if (flags & MSG_OOB)
+ 		goto out;
+ 
+-	if (addr_len)
+-		*addr_len = sizeof(*lsa);
+-
+ 	if (flags & MSG_ERRQUEUE)
+ 		return ipv6_recv_error(sk, msg, len, addr_len);
+ 
+@@ -698,6 +695,7 @@ static int l2tp_ip6_recvmsg(struct kiocb
+ 		lsa->l2tp_conn_id = 0;
+ 		if (ipv6_addr_type(&lsa->l2tp_addr) & IPV6_ADDR_LINKLOCAL)
+ 			lsa->l2tp_scope_id = inet6_iif(skb);
++		*addr_len = sizeof(*lsa);
+ 	}
+ 
+ 	if (np->rxopt.all)
 
 
