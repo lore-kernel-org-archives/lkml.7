@@ -2,120 +2,99 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FFBCC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:34:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCF74C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:35:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CDC92070D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:34:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553258079;
-	bh=zPYD99z93EwdlKO/Dp5menfrQKWc6lMz+R1YQBC9gBY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pr9irmHQkbrdjXVOZgOv7VQ1nTtl7qBnT4ZZUMO3N6JT5CKF+1VaU4GC3sU4UtfNZ
-	 8SzEzyfSzNSlTqkUofFSWQefz564L8qb4liKyN0Lws0PM7gISvZBxz2GUiGAky6WjK
-	 avHGkJ9F7uvbbEHeabYTq+gPIQaQoltuEN7MQ7eg=
+	by mail.kernel.org (Postfix) with ESMTP id 9CB892070D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:35:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389867AbfCVMei (ORCPT
+        id S2389676AbfCVMMy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:34:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51532 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:12:54 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:44100 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389206AbfCVMNR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:13:17 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A76F720830;
-        Fri, 22 Mar 2019 12:13:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256796;
-        bh=zPYD99z93EwdlKO/Dp5menfrQKWc6lMz+R1YQBC9gBY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yfYyKd2mHHGNfGml+bsMkTOHyjXfmFKWhv3kmc7KINWmKh4Tfclqx784sHryOQHS3
-         IiPuAeEviHVocZTO0qj5QAuXAMFi6gWaotLct7MJZGjs/k3Ye98W2+f0Qq58C8hW1O
-         BFyPQedZ/2jxCHjv46wZZXtHGHHUAo7r8K2EWSI4=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Eric Biggers <ebiggers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.0 039/238] crypto: arm64/aes-neonbs - fix returning final keystream block
-Date:   Fri, 22 Mar 2019 12:14:18 +0100
-Message-Id: <20190322111300.687588385@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
-References: <20190322111258.383569278@linuxfoundation.org>
-User-Agent: quilt/0.65
-X-stable: review
-X-Patchwork-Hint: ignore
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        id S2389660AbfCVMMs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:12:48 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 5A838200104;
+        Fri, 22 Mar 2019 13:12:47 +0100 (CET)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 4E2B420000C;
+        Fri, 22 Mar 2019 13:12:47 +0100 (CET)
+Received: from lorenz.ea.freescale.net (lorenz.ea.freescale.net [10.171.71.5])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id EF73A205F3;
+        Fri, 22 Mar 2019 13:12:46 +0100 (CET)
+From:   Iuliana Prodan <iuliana.prodan@nxp.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Horia Geanta <horia.geanta@nxp.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-imx <linux-imx@nxp.com>
+Subject: [PATCH] crypto: caam - fix copy of next buffer for xcbc and cmac
+Date:   Fri, 22 Mar 2019 14:12:30 +0200
+Message-Id: <1553256750-1125-1-git-send-email-iuliana.prodan@nxp.com>
+X-Mailer: git-send-email 2.1.0
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-5.0-stable review patch.  If anyone has any objections, please let me know.
+Fix a side effect of adding xcbc support, when the next_buffer is not
+copied.
+The issue occurs, when there is stored from previous state a blocksize
+buffer and received, a less than blocksize, from user. In this case, the
+nents for req->src is 0, and the next_buffer is not copied.
+An example is:
+{
+	.tap	= { 17, 15, 8 },
+	.psize	= 40,
+	.np	= 3,
+	.ksize	= 16,
+}
 
-------------------
-
-From: Eric Biggers <ebiggers@google.com>
-
-commit 12455e320e19e9cc7ad97f4ab89c280fe297387c upstream.
-
-The arm64 NEON bit-sliced implementation of AES-CTR fails the improved
-skcipher tests because it sometimes produces the wrong ciphertext.  The
-bug is that the final keystream block isn't returned from the assembly
-code when the number of non-final blocks is zero.  This can happen if
-the input data ends a few bytes after a page boundary.  In this case the
-last bytes get "encrypted" by XOR'ing them with uninitialized memory.
-
-Fix the assembly code to return the final keystream block when needed.
-
-Fixes: 88a3f582bea9 ("crypto: arm64/aes - don't use IV buffer to return final keystream block")
-Cc: <stable@vger.kernel.org> # v4.11+
-Reviewed-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Cc: <stable@vger.kernel.org>
+Fixes: 12b8567f6fa4 ("crypto: caam - add support for xcbc(aes)")
+Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
 ---
- arch/arm64/crypto/aes-neonbs-core.S |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/crypto/caam/caamhash.c | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
---- a/arch/arm64/crypto/aes-neonbs-core.S
-+++ b/arch/arm64/crypto/aes-neonbs-core.S
-@@ -971,18 +971,22 @@ CPU_LE(	rev		x8, x8		)
+diff --git a/drivers/crypto/caam/caamhash.c b/drivers/crypto/caam/caamhash.c
+index d7483e4..cd03767 100644
+--- a/drivers/crypto/caam/caamhash.c
++++ b/drivers/crypto/caam/caamhash.c
+@@ -865,19 +865,18 @@ static int ahash_update_ctx(struct ahash_request *req)
+ 		if (ret)
+ 			goto unmap_ctx;
  
- 8:	next_ctr	v0
- 	st1		{v0.16b}, [x24]
--	cbz		x23, 0f
-+	cbz		x23, .Lctr_done
+-		if (mapped_nents) {
++		if (mapped_nents)
+ 			sg_to_sec4_sg_last(req->src, mapped_nents,
+ 					   edesc->sec4_sg + sec4_sg_src_index,
+ 					   0);
+-			if (*next_buflen)
+-				scatterwalk_map_and_copy(next_buf, req->src,
+-							 to_hash - *buflen,
+-							 *next_buflen, 0);
+-		} else {
++		else
+ 			sg_to_sec4_set_last(edesc->sec4_sg + sec4_sg_src_index -
+ 					    1);
+-		}
  
- 	cond_yield_neon	98b
- 	b		99b
++		if (*next_buflen)
++			scatterwalk_map_and_copy(next_buf, req->src,
++						 to_hash - *buflen,
++						 *next_buflen, 0);
+ 		desc = edesc->hw_desc;
  
--0:	frame_pop
-+.Lctr_done:
-+	frame_pop
- 	ret
- 
- 	/*
- 	 * If we are handling the tail of the input (x6 != NULL), return the
- 	 * final keystream block back to the caller.
- 	 */
-+0:	cbz		x25, 8b
-+	st1		{v0.16b}, [x25]
-+	b		8b
- 1:	cbz		x25, 8b
- 	st1		{v1.16b}, [x25]
- 	b		8b
-
+ 		edesc->sec4_sg_dma = dma_map_single(jrdev, edesc->sec4_sg,
+-- 
+2.1.0
 
