@@ -2,112 +2,83 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 160FBC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:59:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E4B2C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:00:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB80C218E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:59:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2609218A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:00:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727802AbfCVN7K (ORCPT
+        id S1728077AbfCVOAq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 09:59:10 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:44123 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727487AbfCVN7K (ORCPT
+        Fri, 22 Mar 2019 10:00:46 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:44820 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727726AbfCVOAo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 09:59:10 -0400
-Received: by mail-qk1-f195.google.com with SMTP id y5so1229030qkc.11
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 06:59:09 -0700 (PDT)
+        Fri, 22 Mar 2019 10:00:44 -0400
+Received: by mail-qt1-f193.google.com with SMTP id w5so2535535qtb.11;
+        Fri, 22 Mar 2019 07:00:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=YJDxHNaqkaKZ9MORW/0o5+vv/jLbHGCobfTlqfu+2pM=;
-        b=UCJgC/5LLFnQsi5gknY3LhazPCQpaYfQJfgKHPYZ63RLV2tDKccZILaiy9TXdp5COk
-         1jELeciXMnUP7ECEa0lLR+NNtusuJwTjOQXAWUnoufHePYJiytNGBVfb/3glBDKLxQwb
-         +WYF+On6QtJE8kvtxATvOOkpzNADE/CsZXeNfQVsaxEWCHlSxspiu4PxpZTYihDRn/OB
-         zPP+We3GiyC/F+pdYHcBPMimqxUHRs3fzR8vuaTkv+ad4eMCAo/4JjVK4o5yq0Lp7nrr
-         SghTSjUwObk7UozDUB8LJTKV/mttS2oG1jwQzxpTomHj99lzH8yJLKBHcr1Fw/GjgaVG
-         ae5g==
-X-Gm-Message-State: APjAAAVkgxN5faVQeo0o+NGn4CMrHDTXk/zHwR7coRvzW1MySraWAjCM
-        S+I5Z4y6LiwiP8KVGwTgcwzXbrWE2+d9pvkz+mk=
-X-Google-Smtp-Source: APXvYqwl4R/1EXf6esmN2Pj77u1U+Y3gF9A9Xrg0V96xBISoEl6CtSyHauYmr9wmaJBA3Dqveuuu7X+dLPBMzEhOIho=
-X-Received: by 2002:ae9:dec2:: with SMTP id s185mr7341041qkf.107.1553263149203;
- Fri, 22 Mar 2019 06:59:09 -0700 (PDT)
+        bh=KfO3L/ZRyCn9FipqUds+R1OsptxtKrtvfQdAbL11VWk=;
+        b=DqwKVCZf2z1BTD+FiBpKdB2mGkEcklYVpfQyBMJQAaEWamEHtTJSMhE0aUtU9TCz4e
+         TW+uRGaj8ZP7OhAdxSWZCehO0hL2cck7t2rU2BlF1tyed/ieHIffwsVQ/g9fjnF3/RYm
+         d3VGyiZY/zSplHDbLI5CImsgzGt/5iiydVm+dX5ff14vgskiJeNRyqJhsILoLDjXcPmS
+         AFxPJdlsMnczlK/fMBqq2xTXLy7XstiJJajJ5Zwv3rWJPNAcsoa1I342z22GCqcau6nM
+         xRdWFH9qsJjPXGRQ7NtCr62rVfa9ZVuUhX7B6FJ2IyN7eNflSD6iKJ9qKN9qPV0QMWem
+         bsqQ==
+X-Gm-Message-State: APjAAAUpvi2qbpgz/IfpMbnHtxNZymy5NkSupce41go9LItOyrk7Vzma
+        fxEV3eDqduUVnEVB2ns4kMdYYMNjdvYVfsMbr7M=
+X-Google-Smtp-Source: APXvYqwk9CLw6lAoHxBBnLtDn35eu8/Vi7M4yWMlplDLpBgzgGG13CHDRuLrdwFRpNfF/NxLGiNSxmj+2cB7PG2lTOM=
+X-Received: by 2002:ac8:2692:: with SMTP id 18mr8147213qto.343.1553263243384;
+ Fri, 22 Mar 2019 07:00:43 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190321220009.29334-1-andi@firstfloor.org> <20190321220009.29334-2-andi@firstfloor.org>
-In-Reply-To: <20190321220009.29334-2-andi@firstfloor.org>
+References: <CAK8P3a3MV=0BbOpjwM+2q+7Oehc=4B+u0hka1YdBnJmikfqCig@mail.gmail.com>
+ <20190313230137.GA12529@agluck-desk> <CAK8P3a0aDdEt323i=z4BGuh71ntPqm-L33U4q+FiQOdMUin6wg@mail.gmail.com>
+ <20190314110413.GA32277@zn.tnic> <20190314215952.GA303@agluck-desk>
+ <20190315094341.GA12523@zn.tnic> <20190315155718.GA17775@agluck-desk>
+ <20190315173720.GC12523@zn.tnic> <20190315174956.GA20831@agluck-desk>
+ <20190315180206.GD12523@zn.tnic> <20190315181108.GA21111@agluck-desk>
+ <CAK8P3a2CFyF5wExbZPb20E56sJ=3DpsP+0m2Px6D5Sw_L3pKXA@mail.gmail.com> <3908561D78D1C84285E8C5FCA982C28F7D53BD42@ORSMSX110.amr.corp.intel.com>
+In-Reply-To: <3908561D78D1C84285E8C5FCA982C28F7D53BD42@ORSMSX110.amr.corp.intel.com>
 From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 22 Mar 2019 14:58:51 +0100
-Message-ID: <CAK8P3a31L6ddJ1JPpygHqeVspExv7eaKWsLQ5pb+T8LAF2Zjtw@mail.gmail.com>
-Subject: Re: [PATCH 01/17] kbuild: Disable -Waddress-of-packed-member for gcc 9
-To:     Andi Kleen <andi@firstfloor.org>
-Cc:     "the arch/x86 maintainers" <x86@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Fri, 22 Mar 2019 15:00:25 +0100
+Message-ID: <CAK8P3a0WjUi+mBZ0nO2FFFCRvy5mA10frZMAaXisGWOs4pnPCA@mail.gmail.com>
+Subject: Re: [PATCH] EDAC, {skx|i10nm}_edac: Fix randconfig build error
+To:     "Luck, Tony" <tony.luck@intel.com>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 21, 2019 at 11:00 PM Andi Kleen <andi@firstfloor.org> wrote:
+On Fri, Mar 15, 2019 at 10:28 PM Luck, Tony <tony.luck@intel.com> wrote:
 >
-> From: Andi Kleen <ak@linux.intel.com>
+> > Basically I cheat Kconfig, so if one driver is built-in and
+> > the other is a loadable module, we compile both as built-in.
 >
-> This warning is very noisy in a default build with gcc 9.
-> Move it into W=2 only.
+> My mail client may have munged that path. Both "git am" and "patch -p1"
+> barf when I try to apply it.  Since it was small I tried to replicate manually,
+> but I must have messed up something because Kconfig still seems content
+> to let me have CONFIG_EDAC_SKX=y with CONFIG_EDAC_I10NM=m
 >
-> Cc: arnd@arndb.de
-> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Signed-off-by: Andi Kleen <ak@linux.intel.com>
+> :-(
 
-I think W=2 is too aggressive. On many architectures, this finds
-real bugs and the false positives tend to be trivial to fix
-(by removing the bogus __packed annotation), which improves
-the generated code in the process.
-
-Moving it to W=1 for the moment is probably fine, but ideally
-I think we should fix the kernel to behave according to the
-C standard.
+Sorry, this was my mistake, my email was garbled. The patch was
+correct though: the idea here is not to change the Kconfig symbols
+but to change the Makefile to do the right thing even when Kconfig
+is set wrong.
 
       Arnd
-
-> ---
->  Makefile                   | 1 +
->  scripts/Makefile.extrawarn | 1 +
->  2 files changed, 2 insertions(+)
->
-> diff --git a/Makefile b/Makefile
-> index 71c2c482e2a2..78efbb172991 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -676,6 +676,7 @@ KBUILD_CFLAGS       += $(call cc-disable-warning,frame-address,)
->  KBUILD_CFLAGS  += $(call cc-disable-warning, format-truncation)
->  KBUILD_CFLAGS  += $(call cc-disable-warning, format-overflow)
->  KBUILD_CFLAGS  += $(call cc-disable-warning, int-in-bool-context)
-> +KBUILD_CFLAGS  += $(call cc-disable-warning, address-of-packed-member)
->
->  ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
->  KBUILD_CFLAGS  += $(call cc-option,-Oz,-Os)
-> diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
-> index 768306add591..ed974a0f4a47 100644
-> --- a/scripts/Makefile.extrawarn
-> +++ b/scripts/Makefile.extrawarn
-> @@ -43,6 +43,7 @@ warning-2 += $(call cc-option, -Wmissing-field-initializers)
->  warning-2 += $(call cc-option, -Wsign-compare)
->  warning-2 += $(call cc-option, -Wmaybe-uninitialized)
->  warning-2 += $(call cc-option, -Wunused-macros)
-> +warning-2 += $(call cc-option, -Waddress-of-packed-member)
->
->  warning-3 := -Wbad-function-cast
->  warning-3 += -Wcast-qual
-> --
-> 2.20.1
->
