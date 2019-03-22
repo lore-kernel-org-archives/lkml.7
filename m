@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03ACAC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:25:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86418C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:25:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C45C520657
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:25:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DD6120657
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:25:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553253940;
-	bh=5IYmoyrM6EjWltPR3ddgbMfzajV/ZHvXTNXHdxdqJvg=;
+	s=default; t=1553253946;
+	bh=/WdgL0K6RLWu9lh35MhPit1NBdlmFMc6TuF38/aDf+c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L1fis+FxTbXFSyyUfZZZLMGjwzoDOTrcigqZHMhM1bFcVjkZF3KUgJrvvi3jOm2Nl
-	 AxZt3xYIhYDLaDMBSB+3fEhSwexAvPGrVTrqFh5jiBGhcJZa4wVvoLgDGpzbGK3/zP
-	 8N1ayWgrR3Yedg3+XN8RZPVBlNKi2EA8BlpYP4S8=
+	b=EKFZq5V1sV9Rr3j/xToFK1/e0oY3NR6SSR/mEkovchj3bVt1ZEQjRqa5XsXW3sd4B
+	 hvtflrtrhgi9OCpbYjDOH/QEcrHr1gJKR15b4Det0rrlA+nnbFsroyYZxf9CB06ang
+	 MqTjhkPfinnQqiQ9al8bsfhjd62AJCgFA/ao7wg4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729326AbfCVLZi (ORCPT
+        id S1729332AbfCVLZp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:25:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53072 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:25:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728957AbfCVLZh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:25:37 -0400
+        id S1728241AbfCVLZm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:25:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4AC120657;
-        Fri, 22 Mar 2019 11:25:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF75A21B1A;
+        Fri, 22 Mar 2019 11:25:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553253937;
-        bh=5IYmoyrM6EjWltPR3ddgbMfzajV/ZHvXTNXHdxdqJvg=;
+        s=default; t=1553253941;
+        bh=/WdgL0K6RLWu9lh35MhPit1NBdlmFMc6TuF38/aDf+c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R6VLXGVVxuRD5/QREcF4beQp1kgGZdeNkJt72bNYNdXn7qe26qupZGqsoO4kr3rsd
-         9JWx75DyrNcTFVAgAauHH33cAnw0YJraga8NcHZ4ObGE4fdgmYPL8jgePba9FKGygc
-         06QvvTD7nErTNUCEgoSp9NYFjMxrDNhdlDgvL9m8=
+        b=BPGLdxpihXuD5ZYpfyT+G3s7VLlVOfHFe5MBMOGEYAv0lzkdPX5DxIuOQrZU7J4vX
+         JvJ8znApvmfmcutiOa4SahsuB4sHCl1qwTFVQ9Mm/YW7gZAoUkVrRSXtCXLkA40FYQ
+         C9TR/naaw2+SACcYGn+99noAbmz3XiciM83m65pI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kyle Roeschley <kyle.roeschley@ni.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Gabriel Fernandez <gabriel.fernandez@st.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 3.18 100/134] i2c: cadence: Fix the hold bit setting
-Date:   Fri, 22 Mar 2019 12:15:13 +0100
-Message-Id: <20190322111217.392704080@linuxfoundation.org>
+Subject: [PATCH 3.18 101/134] Input: st-keyscan - fix potential zalloc NULL dereference
+Date:   Fri, 22 Mar 2019 12:15:14 +0100
+Message-Id: <20190322111217.468219660@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111210.465931067@linuxfoundation.org>
 References: <20190322111210.465931067@linuxfoundation.org>
@@ -68,54 +67,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit d358def706880defa4c9e87381c5bf086a97d5f9 ]
+[ Upstream commit 2439d37e1bf8a34d437573c086572abe0f3f1b15 ]
 
-In case the hold bit is not needed we are carrying the old values.
-Fix the same by resetting the bit when not needed.
+This patch fixes the following static checker warning:
 
-Fixes the sporadic i2c bus lockups on National Instruments
-Zynq-based devices.
+drivers/input/keyboard/st-keyscan.c:156 keyscan_probe()
+error: potential zalloc NULL dereference: 'keypad_data->input_dev'
 
-Fixes: df8eb5691c48 ("i2c: Add driver for Cadence I2C controller")
-Reported-by: Kyle Roeschley <kyle.roeschley@ni.com>
-Acked-by: Michal Simek <michal.simek@xilinx.com>
-Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-Tested-by: Kyle Roeschley <kyle.roeschley@ni.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-cadence.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/input/keyboard/st-keyscan.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-cadence.c b/drivers/i2c/busses/i2c-cadence.c
-index c604f4c3ac0d..c50a015018fe 100644
---- a/drivers/i2c/busses/i2c-cadence.c
-+++ b/drivers/i2c/busses/i2c-cadence.c
-@@ -320,8 +320,10 @@ static void cdns_i2c_mrecv(struct cdns_i2c *id)
- 	 * Check for the message size against FIFO depth and set the
- 	 * 'hold bus' bit if it is greater than FIFO depth.
- 	 */
--	if (id->recv_count > CDNS_I2C_FIFO_DEPTH)
-+	if ((id->recv_count > CDNS_I2C_FIFO_DEPTH)  || id->bus_hold_flag)
- 		ctrl_reg |= CDNS_I2C_CR_HOLD;
-+	else
-+		ctrl_reg = ctrl_reg & ~CDNS_I2C_CR_HOLD;
+diff --git a/drivers/input/keyboard/st-keyscan.c b/drivers/input/keyboard/st-keyscan.c
+index de7be4f03d91..ebf9f643d910 100644
+--- a/drivers/input/keyboard/st-keyscan.c
++++ b/drivers/input/keyboard/st-keyscan.c
+@@ -153,6 +153,8 @@ static int keyscan_probe(struct platform_device *pdev)
  
- 	cdns_i2c_writereg(ctrl_reg, CDNS_I2C_CR_OFFSET);
+ 	input_dev->id.bustype = BUS_HOST;
  
-@@ -375,8 +377,11 @@ static void cdns_i2c_msend(struct cdns_i2c *id)
- 	 * Check for the message size against FIFO depth and set the
- 	 * 'hold bus' bit if it is greater than FIFO depth.
- 	 */
--	if (id->send_count > CDNS_I2C_FIFO_DEPTH)
-+	if ((id->send_count > CDNS_I2C_FIFO_DEPTH) || id->bus_hold_flag)
- 		ctrl_reg |= CDNS_I2C_CR_HOLD;
-+	else
-+		ctrl_reg = ctrl_reg & ~CDNS_I2C_CR_HOLD;
++	keypad_data->input_dev = input_dev;
 +
- 	cdns_i2c_writereg(ctrl_reg, CDNS_I2C_CR_OFFSET);
+ 	error = keypad_matrix_key_parse_dt(keypad_data);
+ 	if (error)
+ 		return error;
+@@ -168,8 +170,6 @@ static int keyscan_probe(struct platform_device *pdev)
  
- 	/* Clear the interrupts in interrupt status register. */
+ 	input_set_drvdata(input_dev, keypad_data);
+ 
+-	keypad_data->input_dev = input_dev;
+-
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	keypad_data->base = devm_ioremap_resource(&pdev->dev, res);
+ 	if (IS_ERR(keypad_data->base))
 -- 
 2.19.1
 
