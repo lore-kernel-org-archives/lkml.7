@@ -2,179 +2,384 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8472DC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:39:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E35C5C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:39:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53454218D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:39:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YrC1viUJ"
+	by mail.kernel.org (Postfix) with ESMTP id A4163218D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:39:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728300AbfCVWjx (ORCPT
+        id S1728319AbfCVWj6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 18:39:53 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:39396 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727906AbfCVWjw (ORCPT
+        Fri, 22 Mar 2019 18:39:58 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:42921 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727955AbfCVWjx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 18:39:52 -0400
-Received: by mail-pg1-f196.google.com with SMTP id h8so2447173pgp.6;
-        Fri, 22 Mar 2019 15:39:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=hAaDioJVElxriQvyXR4d21nin/P34BOyOiM5ij86xoA=;
-        b=YrC1viUJe8tIgMqpNiW171i98lfW9z+alIiGdTQiE8QrdOsAvUi7TeffNqLZS5Mrzk
-         MT0+SSZ7wfwYESsjcKNnr4IHZjiah2V1G0KSwkYHRJSN7JbiVKLaxojvfIcdhwMqxNcm
-         a1DO1JhqZnKSwshJe2r1vw/5WklfgOM0QoQOUfhGaBxKxI41JxlH00BmIJPoAXOsXUtD
-         wCcTOjy7h+42OrlFPnI9QKF/+IaYCFNoMMLONYcGHv5aM35+J35Pjk6ECNs5eNbR1eOA
-         lDAC5tJR/yGly1I6mB5dtIHVALpEBPOsKn5tzOH3Qho+/7BK71m1ngpsUz3QhaQ3aUmf
-         0Ktw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=hAaDioJVElxriQvyXR4d21nin/P34BOyOiM5ij86xoA=;
-        b=OHokzIbwBx4vFwHLoMpgCsRQhIBf7KHS0rYHDPV3Lr/xHJomTbbzBFXFvTAr+/61xv
-         4nQ6be85y2OI8ljtzOG16B6zbCrB8IkqhOn74yMSvXhLkRCVrxnK/Sy4Mg8OSO9r8Nj0
-         Yu3SfuEmngzkvtWjGYTujj4rPtRQoGbi7t7Bko7S7OlwRT6upEVnfiIoQBWBVBT72YrZ
-         uTwJw1GRI9IddvqQygINstIKdTPiD7W9kWxfblRJUo5nLt5Q3k7bxrIqCHr1BRJ3/AFy
-         pzUI3uZGfuELwLYx7SwnS0AhDcNSEy3jmXMNNLgWYftdc7bGQgAlZzQTO4hztMMDmrOm
-         qdmA==
-X-Gm-Message-State: APjAAAUYb1ZiTRdz9ivGEwFzhbWe6Hoe84LSc/7ssT/oU0MoBgIz3lri
-        BlSd3Zi44YJDhiCs2BcLGiA=
-X-Google-Smtp-Source: APXvYqzDJk5jCvjngPbhF72GLqhjd2V3v8n5MOXcGfPPc8xMNi0Dt2K8W5UBsrFyT2X/bHSQt9Julg==
-X-Received: by 2002:a63:195f:: with SMTP id 31mr524443pgz.116.1553294391900;
-        Fri, 22 Mar 2019 15:39:51 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id r10sm10548060pfn.188.2019.03.22.15.39.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 22 Mar 2019 15:39:50 -0700 (PDT)
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-        stable@vger.kernel.org,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Curtis Malainey <cujomalainey@chromium.org>
-Subject: [PATCH] ASoC: intel: Fix crash at suspend/resume after failed codec registration
-Date:   Fri, 22 Mar 2019 15:39:48 -0700
-Message-Id: <1553294388-25293-1-git-send-email-linux@roeck-us.net>
-X-Mailer: git-send-email 2.7.4
+        Fri, 22 Mar 2019 18:39:53 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x2MMdFQg755194
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Fri, 22 Mar 2019 15:39:16 -0700
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x2MMdF9p755189;
+        Fri, 22 Mar 2019 15:39:15 -0700
+Date:   Fri, 22 Mar 2019 15:39:15 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Song Liu <tipbot@zytor.com>
+Message-ID: <tip-606f972b1361f477cbd4e6e8ac00742fde4b39db@git.kernel.org>
+Cc:     sdf@google.com, mingo@kernel.org, jolsa@kernel.org,
+        peterz@infradead.org, tglx@linutronix.de, songliubraving@fb.com,
+        daniel@iogearbox.net, ast@kernel.org, namhyung@kernel.org,
+        acme@redhat.com, linux-kernel@vger.kernel.org, hpa@zytor.com
+Reply-To: mingo@kernel.org, sdf@google.com, linux-kernel@vger.kernel.org,
+          hpa@zytor.com, acme@redhat.com, namhyung@kernel.org,
+          ast@kernel.org, daniel@iogearbox.net, songliubraving@fb.com,
+          peterz@infradead.org, tglx@linutronix.de, jolsa@kernel.org
+In-Reply-To: <20190312053051.2690567-8-songliubraving@fb.com>
+References: <20190312053051.2690567-8-songliubraving@fb.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:perf/urgent] perf bpf: Save bpf_prog_info information as
+ headers to perf.data
+Git-Commit-ID: 606f972b1361f477cbd4e6e8ac00742fde4b39db
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If codec registration fails after the ASoC Intel SST driver has been probed,
-the kernel will Oops and crash at suspend/resume.
+Commit-ID:  606f972b1361f477cbd4e6e8ac00742fde4b39db
+Gitweb:     https://git.kernel.org/tip/606f972b1361f477cbd4e6e8ac00742fde4b39db
+Author:     Song Liu <songliubraving@fb.com>
+AuthorDate: Mon, 11 Mar 2019 22:30:43 -0700
+Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitDate: Tue, 19 Mar 2019 16:52:06 -0300
 
-general protection fault: 0000 [#1] PREEMPT SMP KASAN PTI
-CPU: 1 PID: 2811 Comm: cat Tainted: G        W         4.19.30 #15
-Hardware name: GOOGLE Clapper, BIOS Google_Clapper.5216.199.7 08/22/2014
-RIP: 0010:snd_soc_suspend+0x5a/0xd21
-Code: 03 80 3c 10 00 49 89 d7 74 0b 48 89 df e8 71 72 c4 fe 4c 89
-fa 48 8b 03 48 89 45 d0 48 8d 98 a0 01 00 00 48 89 d8 48 c1 e8 03
-<8a> 04 10 84 c0 0f 85 85 0c 00 00 80 3b 00 0f 84 6b 0c 00 00 48 8b
-RSP: 0018:ffff888035407750 EFLAGS: 00010202
-RAX: 0000000000000034 RBX: 00000000000001a0 RCX: 0000000000000000
-RDX: dffffc0000000000 RSI: 0000000000000008 RDI: ffff88805c417098
-RBP: ffff8880354077b0 R08: dffffc0000000000 R09: ffffed100b975718
-R10: 0000000000000001 R11: ffffffff949ea4a3 R12: 1ffff1100b975746
-R13: dffffc0000000000 R14: ffff88805cba4588 R15: dffffc0000000000
-FS:  0000794a78e91b80(0000) GS:ffff888068d00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007bd5283ccf58 CR3: 000000004b7aa000 CR4: 00000000001006e0
-Call Trace:
-? dpm_complete+0x67b/0x67b
-? i915_gem_suspend+0x14d/0x1ad
-sst_soc_prepare+0x91/0x1dd
-? sst_be_hw_params+0x7e/0x7e
-dpm_prepare+0x39a/0x88b
-dpm_suspend_start+0x13/0x9d
-suspend_devices_and_enter+0x18f/0xbd7
-? arch_suspend_enable_irqs+0x11/0x11
-? printk+0xd9/0x12d
-? lock_release+0x95f/0x95f
-? log_buf_vmcoreinfo_setup+0x131/0x131
-? rcu_read_lock_sched_held+0x140/0x22a
-? __bpf_trace_rcu_utilization+0xa/0xa
-? __pm_pr_dbg+0x186/0x190
-? pm_notifier_call_chain+0x39/0x39
-? suspend_test+0x9d/0x9d
-pm_suspend+0x2f4/0x728
-? trace_suspend_resume+0x3da/0x3da
-? lock_release+0x95f/0x95f
-? kernfs_fop_write+0x19f/0x32d
-state_store+0xd8/0x147
-? sysfs_kf_read+0x155/0x155
-kernfs_fop_write+0x23e/0x32d
-__vfs_write+0x108/0x608
-? vfs_read+0x2e9/0x2e9
-? rcu_read_lock_sched_held+0x140/0x22a
-? __bpf_trace_rcu_utilization+0xa/0xa
-? debug_smp_processor_id+0x10/0x10
-? selinux_file_permission+0x1c5/0x3c8
-? rcu_sync_lockdep_assert+0x6a/0xad
-? __sb_start_write+0x129/0x2ac
-vfs_write+0x1aa/0x434
-ksys_write+0xfe/0x1be
-? __ia32_sys_read+0x82/0x82
-do_syscall_64+0xcd/0x120
-entry_SYSCALL_64_after_hwframe+0x49/0xbe
+perf bpf: Save bpf_prog_info information as headers to perf.data
 
-In the observed situation, the problem is seen because the codec driver
-failed to probe due to a hardware problem.
+This patch enables perf-record to save bpf_prog_info information as
+headers to perf.data. A new header type HEADER_BPF_PROG_INFO is
+introduced for this data.
 
-max98090 i2c-193C9890:00: Failed to read device revision: -1
-max98090 i2c-193C9890:00: ASoC: failed to probe component -1
-cht-bsw-max98090 cht-bsw-max98090: ASoC: failed to instantiate card -1
-cht-bsw-max98090 cht-bsw-max98090: snd_soc_register_card failed -1
-cht-bsw-max98090: probe of cht-bsw-max98090 failed with error -1
+Committer testing:
 
-The problem is similar to the problem solved with commit 2fc995a87f2e
-("ASoC: intel: Fix crash at suspend/resume without card registration"),
-but codec registration fails at a later point. At that time, the pointer
-checked with the above mentioned commit is already set, but it is not
-cleared if the device is subsequently removed. Adding a remove function
-to clear the pointer fixes the problem.
+As root, being on the kernel sources top level directory, run:
 
-Cc: stable@vger.kernel.org
-Cc: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Cc: Curtis Malainey <cujomalainey@chromium.org>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+  # perf trace -e tools/perf/examples/bpf/augmented_raw_syscalls.c -e *msg
+
+Just to compile and load a BPF program that attaches to the
+raw_syscalls:sys_{enter,exit} tracepoints to trace the syscalls ending
+in "msg" (recvmsg, sendmsg, recvmmsg, sendmmsg, etc).
+
+Then do a systemwide perf record session for a few seconds:
+
+  # perf record -a sleep 2s
+
+Then look at:
+
+  # perf report --header-only | grep -i bpf
+  # bpf_prog_info of id 13
+  # bpf_prog_info of id 14
+  # bpf_prog_info of id 15
+  # bpf_prog_info of id 16
+  # bpf_prog_info of id 17
+  # bpf_prog_info of id 18
+  # bpf_prog_info of id 21
+  # bpf_prog_info of id 22
+  # bpf_prog_info of id 208
+  # bpf_prog_info of id 209
+  #
+
+We need to show more info about these programs, like bpftool does for
+the ones running on the system, i.e. 'perf record/perf report' become a
+way of saving the BPF state in a machine to then analyse on another,
+together with all the other information that is already saved in the
+perf.data header:
+
+  # perf report --header-only
+  # ========
+  # captured on    : Tue Mar 12 11:42:13 2019
+  # header version : 1
+  # data offset    : 296
+  # data size      : 16294184
+  # feat offset    : 16294480
+  # hostname : quaco
+  # os release : 5.0.0+
+  # perf version : 5.0.gd783c8
+  # arch : x86_64
+  # nrcpus online : 8
+  # nrcpus avail : 8
+  # cpudesc : Intel(R) Core(TM) i7-8650U CPU @ 1.90GHz
+  # cpuid : GenuineIntel,6,142,10
+  # total memory : 24555720 kB
+  # cmdline : /home/acme/bin/perf (deleted) record -a
+  # event : name = cycles:ppp, , id = { 3190123, 3190124, 3190125, 3190126, 3190127, 3190128, 3190129, 3190130 }, size = 112, { sample_period, sample_freq } = 4000, sample_type = IP|TID|TIME|CPU|PERIOD, read_format = ID, disabled = 1, inherit = 1, mmap = 1, comm = 1, freq = 1, task = 1, precise_ip = 3, sample_id_all = 1, exclude_guest = 1, mmap2 = 1, comm_exec = 1
+  # CPU_TOPOLOGY info available, use -I to display
+  # NUMA_TOPOLOGY info available, use -I to display
+  # pmu mappings: intel_pt = 8, software = 1, power = 11, uprobe = 7, uncore_imc = 12, cpu = 4, cstate_core = 18, uncore_cbox_2 = 15, breakpoint = 5, uncore_cbox_0 = 13, tracepoint = 2, cstate_pkg = 19, uncore_arb = 17, kprobe = 6, i915 = 10, msr = 9, uncore_cbox_3 = 16, uncore_cbox_1 = 14
+  # CACHE info available, use -I to display
+  # time of first sample : 116392.441701
+  # time of last sample : 116400.932584
+  # sample duration :   8490.883 ms
+  # MEM_TOPOLOGY info available, use -I to display
+  # bpf_prog_info of id 13
+  # bpf_prog_info of id 14
+  # bpf_prog_info of id 15
+  # bpf_prog_info of id 16
+  # bpf_prog_info of id 17
+  # bpf_prog_info of id 18
+  # bpf_prog_info of id 21
+  # bpf_prog_info of id 22
+  # bpf_prog_info of id 208
+  # bpf_prog_info of id 209
+  # missing features: TRACING_DATA BRANCH_STACK GROUP_DESC AUXTRACE STAT CLOCKID DIR_FORMAT
+  # ========
+  #
+
+Committer notes:
+
+We can't use the libbpf unconditionally, as the build may have been with
+NO_LIBBPF, when we end up with linking errors, so provide dummy
+{process,write}_bpf_prog_info() wrapped by HAVE_LIBBPF_SUPPORT for that
+case.
+
+Printing are not affected by this, so can continue as is.
+
+Signed-off-by: Song Liu <songliubraving@fb.com>
+Reviewed-by: Jiri Olsa <jolsa@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stanislav Fomichev <sdf@google.com>
+Cc: kernel-team@fb.com
+Link: http://lkml.kernel.org/r/20190312053051.2690567-8-songliubraving@fb.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- sound/soc/intel/atom/sst-mfld-platform-pcm.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ tools/perf/util/header.c | 153 ++++++++++++++++++++++++++++++++++++++++++++++-
+ tools/perf/util/header.h |   1 +
+ 2 files changed, 153 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/intel/atom/sst-mfld-platform-pcm.c b/sound/soc/intel/atom/sst-mfld-platform-pcm.c
-index 08cea5b5cda9..0e8b1c5eec88 100644
---- a/sound/soc/intel/atom/sst-mfld-platform-pcm.c
-+++ b/sound/soc/intel/atom/sst-mfld-platform-pcm.c
-@@ -706,9 +706,17 @@ static int sst_soc_probe(struct snd_soc_component *component)
- 	return sst_dsp_init_v2_dpcm(component);
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index b0683bf4d9f3..e6a81af516f6 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -18,6 +18,7 @@
+ #include <sys/utsname.h>
+ #include <linux/time64.h>
+ #include <dirent.h>
++#include <bpf/libbpf.h>
+ 
+ #include "evlist.h"
+ #include "evsel.h"
+@@ -40,6 +41,7 @@
+ #include "time-utils.h"
+ #include "units.h"
+ #include "cputopo.h"
++#include "bpf-event.h"
+ 
+ #include "sane_ctype.h"
+ 
+@@ -876,6 +878,56 @@ static int write_dir_format(struct feat_fd *ff,
+ 	return do_write(ff, &data->dir.version, sizeof(data->dir.version));
  }
  
-+static void sst_soc_remove(struct snd_soc_component *component)
++#ifdef HAVE_LIBBPF_SUPPORT
++static int write_bpf_prog_info(struct feat_fd *ff,
++			       struct perf_evlist *evlist __maybe_unused)
 +{
-+	struct sst_data *drv = dev_get_drvdata(component->dev);
++	struct perf_env *env = &ff->ph->env;
++	struct rb_root *root;
++	struct rb_node *next;
++	int ret;
 +
-+	drv->soc_card = NULL;
++	down_read(&env->bpf_progs.lock);
++
++	ret = do_write(ff, &env->bpf_progs.infos_cnt,
++		       sizeof(env->bpf_progs.infos_cnt));
++	if (ret < 0)
++		goto out;
++
++	root = &env->bpf_progs.infos;
++	next = rb_first(root);
++	while (next) {
++		struct bpf_prog_info_node *node;
++		size_t len;
++
++		node = rb_entry(next, struct bpf_prog_info_node, rb_node);
++		next = rb_next(&node->rb_node);
++		len = sizeof(struct bpf_prog_info_linear) +
++			node->info_linear->data_len;
++
++		/* before writing to file, translate address to offset */
++		bpf_program__bpil_addr_to_offs(node->info_linear);
++		ret = do_write(ff, node->info_linear, len);
++		/*
++		 * translate back to address even when do_write() fails,
++		 * so that this function never changes the data.
++		 */
++		bpf_program__bpil_offs_to_addr(node->info_linear);
++		if (ret < 0)
++			goto out;
++	}
++out:
++	up_read(&env->bpf_progs.lock);
++	return ret;
++}
++#else // HAVE_LIBBPF_SUPPORT
++static int write_bpf_prog_info(struct feat_fd *ff __maybe_unused,
++			       struct perf_evlist *evlist __maybe_unused)
++{
++	return 0;
++}
++#endif // HAVE_LIBBPF_SUPPORT
++
+ static int cpu_cache_level__sort(const void *a, const void *b)
+ {
+ 	struct cpu_cache_level *cache_a = (struct cpu_cache_level *)a;
+@@ -1367,6 +1419,29 @@ static void print_dir_format(struct feat_fd *ff, FILE *fp)
+ 	fprintf(fp, "# directory data version : %"PRIu64"\n", data->dir.version);
+ }
+ 
++static void print_bpf_prog_info(struct feat_fd *ff, FILE *fp)
++{
++	struct perf_env *env = &ff->ph->env;
++	struct rb_root *root;
++	struct rb_node *next;
++
++	down_read(&env->bpf_progs.lock);
++
++	root = &env->bpf_progs.infos;
++	next = rb_first(root);
++
++	while (next) {
++		struct bpf_prog_info_node *node;
++
++		node = rb_entry(next, struct bpf_prog_info_node, rb_node);
++		next = rb_next(&node->rb_node);
++		fprintf(fp, "# bpf_prog_info of id %u\n",
++			node->info_linear->info.id);
++	}
++
++	up_read(&env->bpf_progs.lock);
 +}
 +
- static const struct snd_soc_component_driver sst_soc_platform_drv  = {
- 	.name		= DRV_NAME,
- 	.probe		= sst_soc_probe,
-+	.remove		= sst_soc_remove,
- 	.ops		= &sst_platform_ops,
- 	.compr_ops	= &sst_platform_compr_ops,
- 	.pcm_new	= sst_pcm_new,
--- 
-2.7.4
-
+ static void free_event_desc(struct perf_evsel *events)
+ {
+ 	struct perf_evsel *evsel;
+@@ -2414,6 +2489,81 @@ static int process_dir_format(struct feat_fd *ff,
+ 	return do_read_u64(ff, &data->dir.version);
+ }
+ 
++#ifdef HAVE_LIBBPF_SUPPORT
++static int process_bpf_prog_info(struct feat_fd *ff, void *data __maybe_unused)
++{
++	struct bpf_prog_info_linear *info_linear;
++	struct bpf_prog_info_node *info_node;
++	struct perf_env *env = &ff->ph->env;
++	u32 count, i;
++	int err = -1;
++
++	if (ff->ph->needs_swap) {
++		pr_warning("interpreting bpf_prog_info from systems with endianity is not yet supported\n");
++		return 0;
++	}
++
++	if (do_read_u32(ff, &count))
++		return -1;
++
++	down_write(&env->bpf_progs.lock);
++
++	for (i = 0; i < count; ++i) {
++		u32 info_len, data_len;
++
++		info_linear = NULL;
++		info_node = NULL;
++		if (do_read_u32(ff, &info_len))
++			goto out;
++		if (do_read_u32(ff, &data_len))
++			goto out;
++
++		if (info_len > sizeof(struct bpf_prog_info)) {
++			pr_warning("detected invalid bpf_prog_info\n");
++			goto out;
++		}
++
++		info_linear = malloc(sizeof(struct bpf_prog_info_linear) +
++				     data_len);
++		if (!info_linear)
++			goto out;
++		info_linear->info_len = sizeof(struct bpf_prog_info);
++		info_linear->data_len = data_len;
++		if (do_read_u64(ff, (u64 *)(&info_linear->arrays)))
++			goto out;
++		if (__do_read(ff, &info_linear->info, info_len))
++			goto out;
++		if (info_len < sizeof(struct bpf_prog_info))
++			memset(((void *)(&info_linear->info)) + info_len, 0,
++			       sizeof(struct bpf_prog_info) - info_len);
++
++		if (__do_read(ff, info_linear->data, data_len))
++			goto out;
++
++		info_node = malloc(sizeof(struct bpf_prog_info_node));
++		if (!info_node)
++			goto out;
++
++		/* after reading from file, translate offset to address */
++		bpf_program__bpil_offs_to_addr(info_linear);
++		info_node->info_linear = info_linear;
++		perf_env__insert_bpf_prog_info(env, info_node);
++	}
++
++	return 0;
++out:
++	free(info_linear);
++	free(info_node);
++	up_write(&env->bpf_progs.lock);
++	return err;
++}
++#else // HAVE_LIBBPF_SUPPORT
++static int process_bpf_prog_info(struct feat_fd *ff __maybe_unused, void *data __maybe_unused)
++{
++	return 0;
++}
++#endif // HAVE_LIBBPF_SUPPORT
++
+ struct feature_ops {
+ 	int (*write)(struct feat_fd *ff, struct perf_evlist *evlist);
+ 	void (*print)(struct feat_fd *ff, FILE *fp);
+@@ -2474,7 +2624,8 @@ static const struct feature_ops feat_ops[HEADER_LAST_FEATURE] = {
+ 	FEAT_OPR(SAMPLE_TIME,	sample_time,	false),
+ 	FEAT_OPR(MEM_TOPOLOGY,	mem_topology,	true),
+ 	FEAT_OPR(CLOCKID,	clockid,	false),
+-	FEAT_OPN(DIR_FORMAT,	dir_format,	false)
++	FEAT_OPN(DIR_FORMAT,	dir_format,	false),
++	FEAT_OPR(BPF_PROG_INFO, bpf_prog_info,  false)
+ };
+ 
+ struct header_print_data {
+diff --git a/tools/perf/util/header.h b/tools/perf/util/header.h
+index 6a231340238d..1dc85f0f895d 100644
+--- a/tools/perf/util/header.h
++++ b/tools/perf/util/header.h
+@@ -40,6 +40,7 @@ enum {
+ 	HEADER_MEM_TOPOLOGY,
+ 	HEADER_CLOCKID,
+ 	HEADER_DIR_FORMAT,
++	HEADER_BPF_PROG_INFO,
+ 	HEADER_LAST_FEATURE,
+ 	HEADER_FEAT_BITS	= 256,
+ };
