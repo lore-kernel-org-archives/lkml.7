@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B762C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:39:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61FBEC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:39:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF69B21929
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:39:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30E6F21925
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:39:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254767;
-	bh=y7orHly8pY4hOrfuf0vM8Bm1e8V3a83myHjWFa0wJLw=;
+	s=default; t=1553254772;
+	bh=bh4tAfGsC5yThr9yI/zeOBJdM7LD3thaoENDL0y01hs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eALGTqI2aia3L7jPY5p1vSaTin+jcMb3povezUaLNn6tXB+LSeJvats8IjVv5BdUU
-	 goC44KvYYqjX1vioSkahSy0SxKdYXV8fuV2iv4EGN5CQrYG5pFoSeINynltDLheAcj
-	 z3Y70FHj/kZxA9QbDWKNmuLUSXr+siAJekBIRLrg=
+	b=G4CmjUCKlF4807geMKomUtLPghY+5NZvfR3FO8OrvwNp/oJMxWTEnUKGUFCfH3HPI
+	 +km4ps/rxzUGXL4R+mTqgTLxCeN7gVcX/E3YhQ7/cCPAiSQ1DR5YLIopdVgBuDtTl5
+	 nQGi6W/8kM7jdSATKGdWm5H6PMBeJ2nLPo1dNfAA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731137AbfCVLjZ (ORCPT
+        id S1731157AbfCVLja (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:39:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41022 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:39:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41096 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731108AbfCVLjV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:39:21 -0400
+        id S1730504AbfCVLj1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:39:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA59A2082C;
-        Fri, 22 Mar 2019 11:39:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A7F1218B0;
+        Fri, 22 Mar 2019 11:39:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254761;
-        bh=y7orHly8pY4hOrfuf0vM8Bm1e8V3a83myHjWFa0wJLw=;
+        s=default; t=1553254766;
+        bh=bh4tAfGsC5yThr9yI/zeOBJdM7LD3thaoENDL0y01hs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u0IaTy1aGiE11wX4OGMmFbOYhDs7l0sc7IIPh4ETyg4QyEdzfquKHRDAWXeB6eLaF
-         v7JnByFHohfT85JhrLgnzINEVlrGU3iQpZoNCMlQuk8y3kr6AuJOOYpV2th4+96FPC
-         GOKswoSzwouX54LqJ2xlpyEq5ZTcsi8k4KhuIuIg=
+        b=i8m9IjHtTkrCTUNFUe7CZBwTH/CxYBPPx5Td5ov2UcvZfAPLJDOp3hjrv1VRJgShj
+         Ao0GI3xKg0f2QNEXq2HabeNKVZ7khRaSGSwVi3VfnSN+AVqSfXQz/tl/HiU3MzFge2
+         kxbY4i5M/B4OKQIzRBXnH2hogvrzcxhp19kfIadA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 4.4 226/230] media: uvcvideo: Avoid NULL pointer dereference at the end of streaming
-Date:   Fri, 22 Mar 2019 12:16:04 +0100
-Message-Id: <20190322111252.811811099@linuxfoundation.org>
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 4.4 228/230] KVM: nVMX: Sign extend displacements of VMX instrs mem operands
+Date:   Fri, 22 Mar 2019 12:16:06 +0100
+Message-Id: <20190322111252.961950207@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -68,58 +66,68 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit 9dd0627d8d62a7ddb001a75f63942d92b5336561 upstream.
+commit 946c522b603f281195af1df91837a1d4d1eb3bc9 upstream.
 
-The UVC video driver converts the timestamp from hardware specific unit
-to one known by the kernel at the time when the buffer is dequeued. This
-is fine in general, but the streamoff operation consists of the
-following steps (among other things):
+The VMCS.EXIT_QUALIFCATION field reports the displacements of memory
+operands for various instructions, including VMX instructions, as a
+naturally sized unsigned value, but masks the value by the addr size,
+e.g. given a ModRM encoded as -0x28(%ebp), the -0x28 displacement is
+reported as 0xffffffd8 for a 32-bit address size.  Despite some weird
+wording regarding sign extension, the SDM explicitly states that bits
+beyond the instructions address size are undefined:
 
-1. uvc_video_clock_cleanup --- the hardware clock sample array is
-   released and the pointer to the array is set to NULL,
+    In all cases, bits of this field beyond the instructionâ€™s address
+    size are undefined.
 
-2. buffers in active state are returned to the user and
+Failure to sign extend the displacement results in KVM incorrectly
+treating a negative displacement as a large positive displacement when
+the address size of the VMX instruction is smaller than KVM's native
+size, e.g. a 32-bit address size on a 64-bit KVM.
 
-3. buf_finish callback is called on buffers that are prepared.
-   buf_finish includes calling uvc_video_clock_update that accesses the
-   hardware clock sample array.
+The very original decoding, added by commit 064aea774768 ("KVM: nVMX:
+Decoding memory operands of VMX instructions"), sort of modeled sign
+extension by truncating the final virtual/linear address for a 32-bit
+address size.  I.e. it messed up the effective address but made it work
+by adjusting the final address.
 
-The above is serialised by a queue specific mutex. Address the problem
-by skipping the clock conversion if the hardware clock sample array is
-already released.
+When segmentation checks were added, the truncation logic was kept
+as-is and no sign extension logic was introduced.  In other words, it
+kept calculating the wrong effective address while mostly generating
+the correct virtual/linear address.  As the effective address is what's
+used in the segment limit checks, this results in KVM incorreclty
+injecting #GP/#SS faults due to non-existent segment violations when
+a nested VMM uses negative displacements with an address size smaller
+than KVM's native address size.
 
-Fixes: 9c0863b1cc48 ("[media] vb2: call buf_finish from __queue_cancel")
+Using the -0x28(%ebp) example, an EBP value of 0x1000 will result in
+KVM using 0x100000fd8 as the effective address when checking for a
+segment limit violation.  This causes a 100% failure rate when running
+a 32-bit KVM build as L1 on top of a 64-bit KVM L0.
 
-Reported-by: Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>
-Tested-by: Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Fixes: f9eb4af67c9d ("KVM: nVMX: VMX instructions: add checks for #GP/#SS exceptions")
 Cc: stable@vger.kernel.org
-Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/usb/uvc/uvc_video.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/x86/kvm/vmx.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/media/usb/uvc/uvc_video.c
-+++ b/drivers/media/usb/uvc/uvc_video.c
-@@ -638,6 +638,14 @@ void uvc_video_clock_update(struct uvc_s
- 	if (!uvc_hw_timestamps_param)
- 		return;
- 
-+	/*
-+	 * We will get called from __vb2_queue_cancel() if there are buffers
-+	 * done but not dequeued by the user, but the sample array has already
-+	 * been released at that time. Just bail out in that case.
-+	 */
-+	if (!clock->samples)
-+		return;
-+
- 	spin_lock_irqsave(&clock->lock, flags);
- 
- 	if (clock->count < clock->size)
+--- a/arch/x86/kvm/vmx.c
++++ b/arch/x86/kvm/vmx.c
+@@ -6656,6 +6656,10 @@ static int get_vmx_mem_address(struct kv
+ 	/* Addr = segment_base + offset */
+ 	/* offset = base + [index * scale] + displacement */
+ 	off = exit_qualification; /* holds the displacement */
++	if (addr_size == 1)
++		off = (gva_t)sign_extend64(off, 31);
++	else if (addr_size == 0)
++		off = (gva_t)sign_extend64(off, 15);
+ 	if (base_is_valid)
+ 		off += kvm_register_read(vcpu, base_reg);
+ 	if (index_is_valid)
 
 
