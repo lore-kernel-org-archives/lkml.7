@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82474C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:40:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76A9BC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:40:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FFFB21929
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:40:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45BF02070D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:40:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553258424;
-	bh=6KfBVJ3m5R21fDxFjxoQkNsL8x1SKclXLwAXu2VGBG4=;
+	s=default; t=1553258435;
+	bh=G8x3nrhxVcqhNAdY7UbUCnyC+hULVW5gZvVJhBiRjqk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yQxWtD0zr8e+wslWnvcdn3/Jla/V5kRFV0QsqwEgRT4X1QLsiBSjt7r6TDnhHAOUg
-	 r3bVkCqnKvyC08VdvsPzNdN5mZYHkmEY28XzvLg4v4Ie1awogNq5+ZkDyq44J7b/SJ
-	 tGU6DdhfGShpxiVljHJ3Mh3lXBtVAYuJPP19OnhI=
+	b=ZTqRMsSIvf3alZ3QSG8GN0yHRpyJB+gbVyqTtKOQJ3LDiwNsAx3BNqds3pxOLS8ft
+	 bLt97L+RILck3ITdKSsHiJYRwBed3PBOPLzeMGbRiQZ3jny6a4MMZsOkAivltTxCVa
+	 QTpJWkOpwfAEAoGNtzalKrGHtQGNKPPVBFFiAick=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389150AbfCVMkW (ORCPT
+        id S2389120AbfCVMkd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:40:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45204 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:40:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45048 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388228AbfCVMGp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:06:45 -0400
+        id S2388086AbfCVMGg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:06:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D997206C0;
-        Fri, 22 Mar 2019 12:06:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 067D52192D;
+        Fri, 22 Mar 2019 12:06:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256405;
-        bh=6KfBVJ3m5R21fDxFjxoQkNsL8x1SKclXLwAXu2VGBG4=;
+        s=default; t=1553256395;
+        bh=G8x3nrhxVcqhNAdY7UbUCnyC+hULVW5gZvVJhBiRjqk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IACnXoVll7qIwbf348E691pmZGuFHNfZolL4HMwR/amnsr+j+qQ9Tn5IBmyVTRrBA
-         vQ30cN+ZIED8ulOdqvUjV9zhOKq2T8MYV3bt+7rg/TKK1vZMrCda+buv0Y+ILewwvK
-         n4/Vh0WFSMHRhDkc1DCiLiVWjmvBpYeUAegx9QDY=
+        b=y02vKlL5fXNZZwq8hAWQFrSHQrwN5d8ZgV2PXtZPYq0Nt2PElpFzp41km6WtHeqT2
+         rtPf6omqIWsQ9h1hF9B4+qOcPDlp7mO28loDUaXIf+xGFFh2GTHeJY7VLZ8I3pGdcm
+         srSsPmMV7e+FnarV4wLyYVf2MYasmIYEucDSo0Qo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Roman Penyaev <rpenyaev@suse.de>,
-        Michal Hocko <mhocko@suse.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Joe Perches <joe@perches.com>,
-        "Luis R. Rodriguez" <mcgrof@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 201/280] mm/vmalloc: fix size check for remap_vmalloc_range_partial()
-Date:   Fri, 22 Mar 2019 12:15:54 +0100
-Message-Id: <20190322111330.764404978@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: [PATCH 4.19 198/280] usb: typec: tps6598x: handle block writes separately with plain-I2C adapters
+Date:   Fri, 22 Mar 2019 12:15:51 +0100
+Message-Id: <20190322111330.151334518@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -70,86 +67,91 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Roman Penyaev <rpenyaev@suse.de>
+From: Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
 
-commit 401592d2e095947344e10ec0623adbcd58934dd4 upstream.
+commit 8a863a608d47fa5d9dd15cf841817f73f804cf91 upstream.
 
-When VM_NO_GUARD is not set area->size includes adjacent guard page,
-thus for correct size checking get_vm_area_size() should be used, but
-not area->size.
+Commit 1a2f474d328f handles block _reads_ separately with plain-I2C
+adapters, but the problem described with regmap-i2c not handling
+SMBus block transfers (i.e. read and writes) correctly also exists
+with writes.
 
-This fixes possible kernel oops when userspace tries to mmap an area on
-1 page bigger than was allocated by vmalloc_user() call: the size check
-inside remap_vmalloc_range_partial() accounts non-existing guard page
-also, so check successfully passes but vmalloc_to_page() returns NULL
-(guard page does not physically exist).
+As workaround, this patch adds a block write function the same way
+1a2f474d328f adds a block read function.
 
-The following code pattern example should trigger an oops:
-
-  static int oops_mmap(struct file *file, struct vm_area_struct *vma)
-  {
-        void *mem;
-
-        mem = vmalloc_user(4096);
-        BUG_ON(!mem);
-        /* Do not care about mem leak */
-
-        return remap_vmalloc_range(vma, mem, 0);
-  }
-
-And userspace simply mmaps size + PAGE_SIZE:
-
-  mmap(NULL, 8192, PROT_WRITE|PROT_READ, MAP_PRIVATE, fd, 0);
-
-Possible candidates for oops which do not have any explicit size
-checks:
-
-   *** drivers/media/usb/stkwebcam/stk-webcam.c:
-   v4l_stk_mmap[789]   ret = remap_vmalloc_range(vma, sbuf->buffer, 0);
-
-Or the following one:
-
-   *** drivers/video/fbdev/core/fbmem.c
-   static int
-   fb_mmap(struct file *file, struct vm_area_struct * vma)
-        ...
-        res = fb->fb_mmap(info, vma);
-
-Where fb_mmap callback calls remap_vmalloc_range() directly without any
-explicit checks:
-
-   *** drivers/video/fbdev/vfb.c
-   static int vfb_mmap(struct fb_info *info,
-             struct vm_area_struct *vma)
-   {
-       return remap_vmalloc_range(vma, (void *)info->fix.smem_start, vma->vm_pgoff);
-   }
-
-Link: http://lkml.kernel.org/r/20190103145954.16942-2-rpenyaev@suse.de
-Signed-off-by: Roman Penyaev <rpenyaev@suse.de>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: Joe Perches <joe@perches.com>
-Cc: "Luis R. Rodriguez" <mcgrof@kernel.org>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 1a2f474d328f ("usb: typec: tps6598x: handle block reads separately with plain-I2C adapters")
+Fixes: 0a4c005bd171 ("usb: typec: driver for TI TPS6598x USB Power Delivery controllers")
+Signed-off-by: Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
+Cc: stable <stable@vger.kernel.org>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Acked-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/vmalloc.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/typec/tps6598x.c |   26 ++++++++++++++++++++------
+ 1 file changed, 20 insertions(+), 6 deletions(-)
 
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -2244,7 +2244,7 @@ int remap_vmalloc_range_partial(struct v
- 	if (!(area->flags & VM_USERMAP))
- 		return -EINVAL;
+--- a/drivers/usb/typec/tps6598x.c
++++ b/drivers/usb/typec/tps6598x.c
+@@ -110,6 +110,20 @@ tps6598x_block_read(struct tps6598x *tps
+ 	return 0;
+ }
  
--	if (kaddr + size > area->addr + area->size)
-+	if (kaddr + size > area->addr + get_vm_area_size(area))
- 		return -EINVAL;
++static int tps6598x_block_write(struct tps6598x *tps, u8 reg,
++				void *val, size_t len)
++{
++	u8 data[TPS_MAX_LEN + 1];
++
++	if (!tps->i2c_protocol)
++		return regmap_raw_write(tps->regmap, reg, val, len);
++
++	data[0] = len;
++	memcpy(&data[1], val, len);
++
++	return regmap_raw_write(tps->regmap, reg, data, sizeof(data));
++}
++
+ static inline int tps6598x_read16(struct tps6598x *tps, u8 reg, u16 *val)
+ {
+ 	return tps6598x_block_read(tps, reg, val, sizeof(u16));
+@@ -127,23 +141,23 @@ static inline int tps6598x_read64(struct
  
- 	do {
+ static inline int tps6598x_write16(struct tps6598x *tps, u8 reg, u16 val)
+ {
+-	return regmap_raw_write(tps->regmap, reg, &val, sizeof(u16));
++	return tps6598x_block_write(tps, reg, &val, sizeof(u16));
+ }
+ 
+ static inline int tps6598x_write32(struct tps6598x *tps, u8 reg, u32 val)
+ {
+-	return regmap_raw_write(tps->regmap, reg, &val, sizeof(u32));
++	return tps6598x_block_write(tps, reg, &val, sizeof(u32));
+ }
+ 
+ static inline int tps6598x_write64(struct tps6598x *tps, u8 reg, u64 val)
+ {
+-	return regmap_raw_write(tps->regmap, reg, &val, sizeof(u64));
++	return tps6598x_block_write(tps, reg, &val, sizeof(u64));
+ }
+ 
+ static inline int
+ tps6598x_write_4cc(struct tps6598x *tps, u8 reg, const char *val)
+ {
+-	return regmap_raw_write(tps->regmap, reg, &val, sizeof(u32));
++	return tps6598x_block_write(tps, reg, &val, sizeof(u32));
+ }
+ 
+ static int tps6598x_read_partner_identity(struct tps6598x *tps)
+@@ -229,8 +243,8 @@ static int tps6598x_exec_cmd(struct tps6
+ 		return -EBUSY;
+ 
+ 	if (in_len) {
+-		ret = regmap_raw_write(tps->regmap, TPS_REG_DATA1,
+-				       in_data, in_len);
++		ret = tps6598x_block_write(tps, TPS_REG_DATA1,
++					   in_data, in_len);
+ 		if (ret)
+ 			return ret;
+ 	}
 
 
