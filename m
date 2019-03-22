@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C331C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:56:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B54E6C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:56:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 692F32192B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:56:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85D3421916
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:56:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255810;
-	bh=meL+o9qIAo+c9A9g17GP9sM/Si1tOR6xf6RLCSU67ds=;
+	s=default; t=1553255813;
+	bh=leu3yA4nUrfFcq4yY0BfrlNiyxjX7LKliCqTAq6ixGE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DXKUIeIx4yZX2zBkBbD0S6XZMs0JG/1lBe0K479esa5tkN2zo/NCnGf8wd2exeryw
-	 IlufeuyJahrRqelul87sxY/ur06OOw28rn0ixeFBTuzTG7/qDoC9AL8FqoAMxmQV/+
-	 6So97sKvD8E8sBmbau7IhvPpP9pw9ZCfZpunb5OM=
+	b=hmu/0qiYxSEzjv+xIggJsXmsEPMmGEr7rOvmTm+SCrOhIHZxaq704LMBk63Aizgb3
+	 X1VqDYaL3vwJKLJ6gPnAAIBrillL3ZFxAAZjR+GW+zvAOJrxr3AouOEMRh9niif4lp
+	 L3qczwyvIx+WZZ2Ejeh4TZnW9fJjaDOndfPcuEJ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387576AbfCVL4t (ORCPT
+        id S2387584AbfCVL4w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:56:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33218 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:56:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33296 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387561AbfCVL4p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:56:45 -0400
+        id S1732748AbfCVL4t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:56:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1130420850;
-        Fri, 22 Mar 2019 11:56:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D65512082C;
+        Fri, 22 Mar 2019 11:56:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255804;
-        bh=meL+o9qIAo+c9A9g17GP9sM/Si1tOR6xf6RLCSU67ds=;
+        s=default; t=1553255808;
+        bh=leu3yA4nUrfFcq4yY0BfrlNiyxjX7LKliCqTAq6ixGE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uH2ggY+7xwwtQqov4tD8V2YDWxDCVccfhr76s8ZY9WjrvIWbykWfCwX2OUchVqi0V
-         4OsqkUQOUrq/7BkOehNsw76NvvvyKuYqWw1HfZcgVHww4z06tNa4psbiSF1SOU6pLU
-         L6cFpPQnTzfbn5rFuo8qAMcrz4hxG7bBu4BEBBFI=
+        b=VuWmEVbqQiWeNMXdzGZJbI82wT7j6OPBR8K/6KRd4WrhOKHTVmtjCKJUBINX7NMI8
+         sfEpLzqRErKqFCdP6J2P/3u1Ug2cB5DtwHye1axgCb8yfPkLGNs4HFQ+3M4rLibJok
+         SSmszpUR3R3eqEgwHMNXBlsNuQcYcw2v8kFJYDDg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        zhengbin <zhengbin13@huawei.com>,
-        Dominique Martinet <dominique.martinet@cea.fr>
-Subject: [PATCH 4.19 003/280] 9p/net: fix memory leak in p9_client_create
-Date:   Fri, 22 Mar 2019 12:12:36 +0100
-Message-Id: <20190322111306.538856676@linuxfoundation.org>
+        stable@vger.kernel.org, Shengjiu Wang <shengjiu.wang@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Nicolin Chen <nicoleotsuka@gmail.com>
+Subject: [PATCH 4.19 004/280] ASoC: fsl_esai: fix register setting issue in RIGHT_J mode
+Date:   Fri, 22 Mar 2019 12:12:37 +0100
+Message-Id: <20190322111306.592810695@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -66,35 +67,51 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: zhengbin <zhengbin13@huawei.com>
+From: S.j. Wang <shengjiu.wang@nxp.com>
 
-commit bb06c388fa20ae24cfe80c52488de718a7e3a53f upstream.
+commit cc29ea007347f39f4c5a4d27b0b555955a0277f9 upstream.
 
-If msize is less than 4096, we should close and put trans, destroy
-tagpool, not just free client. This patch fixes that.
+The ESAI_xCR_xWA is xCR's bit, not the xCCR's bit, driver set it to
+wrong register, correct it.
 
-Link: http://lkml.kernel.org/m/1552464097-142659-1-git-send-email-zhengbin13@huawei.com
-Cc: stable@vger.kernel.org
-Fixes: 574d356b7a02 ("9p/net: put a lower bound on msize")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: zhengbin <zhengbin13@huawei.com>
-Signed-off-by: Dominique Martinet <dominique.martinet@cea.fr>
+Fixes 43d24e76b698 ("ASoC: fsl_esai: Add ESAI CPU DAI driver")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Ackedy-by: Nicolin Chen <nicoleotsuka@gmail.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/9p/client.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/fsl/fsl_esai.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/net/9p/client.c
-+++ b/net/9p/client.c
-@@ -1073,7 +1073,7 @@ struct p9_client *p9_client_create(const
- 		p9_debug(P9_DEBUG_ERROR,
- 			 "Please specify a msize of at least 4k\n");
- 		err = -EINVAL;
--		goto free_client;
-+		goto close_trans;
+--- a/sound/soc/fsl/fsl_esai.c
++++ b/sound/soc/fsl/fsl_esai.c
+@@ -398,7 +398,8 @@ static int fsl_esai_set_dai_fmt(struct s
+ 		break;
+ 	case SND_SOC_DAIFMT_RIGHT_J:
+ 		/* Data on rising edge of bclk, frame high, right aligned */
+-		xccr |= ESAI_xCCR_xCKP | ESAI_xCCR_xHCKP | ESAI_xCR_xWA;
++		xccr |= ESAI_xCCR_xCKP | ESAI_xCCR_xHCKP;
++		xcr  |= ESAI_xCR_xWA;
+ 		break;
+ 	case SND_SOC_DAIFMT_DSP_A:
+ 		/* Data on rising edge of bclk, frame high, 1clk before data */
+@@ -455,12 +456,12 @@ static int fsl_esai_set_dai_fmt(struct s
+ 		return -EINVAL;
  	}
  
- 	err = p9_client_version(clnt);
+-	mask = ESAI_xCR_xFSL | ESAI_xCR_xFSR;
++	mask = ESAI_xCR_xFSL | ESAI_xCR_xFSR | ESAI_xCR_xWA;
+ 	regmap_update_bits(esai_priv->regmap, REG_ESAI_TCR, mask, xcr);
+ 	regmap_update_bits(esai_priv->regmap, REG_ESAI_RCR, mask, xcr);
+ 
+ 	mask = ESAI_xCCR_xCKP | ESAI_xCCR_xHCKP | ESAI_xCCR_xFSP |
+-		ESAI_xCCR_xFSD | ESAI_xCCR_xCKD | ESAI_xCR_xWA;
++		ESAI_xCCR_xFSD | ESAI_xCCR_xCKD;
+ 	regmap_update_bits(esai_priv->regmap, REG_ESAI_TCCR, mask, xccr);
+ 	regmap_update_bits(esai_priv->regmap, REG_ESAI_RCCR, mask, xccr);
+ 
 
 
