@@ -2,60 +2,92 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56EE0C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:34:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FB46C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:34:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26ED4218A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:34:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ws1dkE8F"
+	by mail.kernel.org (Postfix) with ESMTP id 3A83D21874
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:34:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728814AbfCVNeE (ORCPT
+        id S1728844AbfCVNep (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 09:34:04 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:39074 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728162AbfCVNeD (ORCPT
+        Fri, 22 Mar 2019 09:34:45 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:34749 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728140AbfCVNeo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 09:34:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=l2WBiCb5duYJRA9nKpihqrJOH1Qjg6utSrFiu8qAdtc=; b=Ws1dkE8FD+qEw9UjGuqWAvXM7
-        RcFs0F1IaCLrQm7G1S6kTE0E3v3bpmCmQJH4TDqps3U6FGT5V2480ACuDl1tPlrIETz2kt+JOIxn+
-        Gt1Nbv6ezebTDlWSpCF4yJYDNCtwpGzA+6H8bz1NSy+WhzD6/kX+t6y284ZblZaKXH7WRNUWJb1vA
-        danGHHAn+7qAflokMQEIamp7JHHHlCTpAQqbNVLRdlBQM/z5jw6yJvaOKX+XWHhH2zXWNlTsr2bIW
-        hVr42jpgjV6ZLVny0cEQHwTOg48frDoFQXbRzzZekqdIm5+IFnOEEHmF31/LrDzzQijKgzALZzIF3
-        rJ8Bqj0/w==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h7KJ8-0002uD-Rk; Fri, 22 Mar 2019 13:34:02 +0000
-Date:   Fri, 22 Mar 2019 06:34:02 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Alan Kao <alankao@andestech.com>
-Cc:     linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        palmer@sifive.com, Vincent Chen <deanbo422@gmail.com>,
-        Greentime Hu <greentime@andestech.com>
-Subject: Re: [PATCH] riscv: fix accessing 8-byte variable from RV32
-Message-ID: <20190322133402.GC32464@infradead.org>
-References: <1553236624-31275-1-git-send-email-alankao@andestech.com>
+        Fri, 22 Mar 2019 09:34:44 -0400
+X-Originating-IP: 90.88.33.153
+Received: from aptenodytes (aaubervilliers-681-1-92-153.w90-88.abo.wanadoo.fr [90.88.33.153])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id AEAF760015;
+        Fri, 22 Mar 2019 13:34:41 +0000 (UTC)
+Message-ID: <bf2e01b54009e074140aedd0159503f14fdeb450.camel@bootlin.com>
+Subject: Re: [PATCH] usb: musb: Support gadget mode when the port is set to
+ dual role
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     Bin Liu <b-liu@ti.com>, Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        Chen-Yu Tsai <wens@csie.org>
+Date:   Fri, 22 Mar 2019 14:34:41 +0100
+In-Reply-To: <20190322132846.GD25852@uda0271908>
+References: <20180328215213.29538-1-contact@paulk.fr>
+         <20180329092326.dayuccomq5zrywqo@flea>
+         <1522324644.1746.19.camel@bootlin.com> <20180420142524.GB29011@uda0271908>
+         <2db056d6f65ecbcdc4f31a37fe2e1b1ddfb93c87.camel@paulk.fr>
+         <20180421143426.GA10632@LTA0271908.dhcp.ti.com>
+         <20190321130133.zllt5pqbrhiecoch@flea> <20190321164138.GB11121@kroah.com>
+         <20190322124622.GB25852@uda0271908> <20190322130953.kb4llrtz2nriyfbu@flea>
+         <20190322132846.GD25852@uda0271908>
+Organization: Bootlin
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.0 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1553236624-31275-1-git-send-email-alankao@andestech.com>
-User-Agent: Mutt/1.9.2 (2017-12-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks good,
+Le vendredi 22 mars 2019 à 08:28 -0500, Bin Liu a écrit :
+> Again, think about an embedded product, if dr_mode is 'otg' which
+> indicates the peripheral mode will be used at some point, when and how
+> to load the gadget driver if it is not loaded automatically when Linux
+> boots up? the end user doesn't have access to the console.
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+Why should we think of an embedded product where the end user doesn't
+have access to the console? Unless I'm mistaken, the Linux kernel
+doesn't target commercial products where users are powerless in
+particular, and leaves out all other use cases (which may or may not be
+commercial).
+
+I don't think this assumption makes any sense in Linux as a project (or
+that it's sane in any context of software development for that matter,
+but that's beside the point).
+
+> > Because no other controller requires it and therefore it's not
+> > standard and violates the principle of least surprise?
+> 
+> I know no other controller does this, but this doesn't mean it is not
+> standard.
+> 
+> > And even without taking this into account, there's also the fact that
+> > while the *hardware* can do dual role, the software might decide
+> > otherwise. If I don't want to have support for any gadget (at all) in
+> > the end system, then why should I be forced to compile and load
+> > something I don't even want to use in the first place?
+> 
+> then dr_mode should be set to 'host' instead, you don't have to load a
+> gadget if peripheral mode will never be used.
+
+I disagree: dr_mode describes the hardware capabilities, not what the
+software does with it.
+
+-- 
+Paul Kocialkowski, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
+
