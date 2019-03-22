@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84DC6C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:53:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA26AC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:53:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 553CE2195D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:53:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B45021939
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:53:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255613;
-	bh=pN/A+MOnhI3ujxG9a6UmmFozemMJhARZgwYxSjjQcTQ=;
+	s=default; t=1553255616;
+	bh=fbr/VLvl0bOhO7APOPaWOuqFggCN/Q9LcDmy3Riq/uY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wtqxgUHR5KwHOb1Zun2WvT6o6u48XvmtTwTd4oOMefrhiTcO5WRoIH2hm8kKCugqR
-	 ZT3zYIZZKdQHNjUHPV8F2060b9l6RQ1IjJhQuB1V2iqDYrQTHuthqs2M/FvpzrYhRc
-	 TfSWhJhuRLD/1PwSFTMknKZQ4XSqifsJ1Esa+bcQ=
+	b=XE/LS5deynES+gabKzoUhFB3drOwfCioQ6mDWn89uOtD83hU1YABJNxehCOjVaigU
+	 MHImrFD9h4go33+Ypfeh+AnTEnM+SEl48eTsU6R4Rj2fe5Io5y6WKARPcef6I8giLB
+	 lxrG7tkjNx7Q6vVUeFiZl95RvaMe7jguGiCSOtrY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733054AbfCVLxc (ORCPT
+        id S1733062AbfCVLxf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:53:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57692 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:53:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732221AbfCVLxa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:53:30 -0400
+        id S1733052AbfCVLxd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:53:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A1B020850;
-        Fri, 22 Mar 2019 11:53:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BA7B21939;
+        Fri, 22 Mar 2019 11:53:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255609;
-        bh=pN/A+MOnhI3ujxG9a6UmmFozemMJhARZgwYxSjjQcTQ=;
+        s=default; t=1553255611;
+        bh=fbr/VLvl0bOhO7APOPaWOuqFggCN/Q9LcDmy3Riq/uY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ntKJ01qWzgg4Po10fHHLNP9REW7VqNdmfC52fJ/aArBAvVgaekAz0hhI37jvDDWk4
-         kCr3oP/zZJFy27wpNQzetc3Z2JgVmLGZuIAzCCgJews34AFCGyaboY/rgVHMgKy/c0
-         AawHpabV5I+LuO8iMpzX9hCMO4HG3Qjwdj6LwtGM=
+        b=LCvwTwbgm6HbdbSP4p1RMzwtnM8MHJDhyiXciRSjA0pBjumNYrzH+z0i1m7jCrLUW
+         bgvUrMJvyuvMNGwB4LV+q6Bap9UEpim0Hgh1wkflNiHGqDDwzwR+mppHa+Wy78O0i9
+         PXoWiUJDzlaOAxG4uaJhPPqOhieAdqty9nJlKxJY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Meelis Roos <mroos@linux.ee>,
-        Mathieu Malaterre <malat@debian.org>,
+        stable@vger.kernel.org,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
         Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.14 143/183] powerpc/ptrace: Simplify vr_get/set() to avoid GCC warning
-Date:   Fri, 22 Mar 2019 12:16:11 +0100
-Message-Id: <20190322111252.136172126@linuxfoundation.org>
+Subject: [PATCH 4.14 144/183] powerpc/hugetlb: Dont do runtime allocation of 16G pages in LPAR configuration
+Date:   Fri, 22 Mar 2019 12:16:12 +0100
+Message-Id: <20190322111252.220017507@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111241.819468003@linuxfoundation.org>
 References: <20190322111241.819468003@linuxfoundation.org>
@@ -66,113 +66,71 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 
-commit ca6d5149d2ad0a8d2f9c28cbe379802260a0a5e0 upstream.
+commit 35f2806b481f5b9207f25e1886cba5d1c4d12cc7 upstream.
 
-GCC 8 warns about the logic in vr_get/set(), which with -Werror breaks
-the build:
+We added runtime allocation of 16G pages in commit 4ae279c2c96a
+("powerpc/mm/hugetlb: Allow runtime allocation of 16G.") That was done
+to enable 16G allocation on PowerNV and KVM config. In case of KVM
+config, we mostly would have the entire guest RAM backed by 16G
+hugetlb pages for this to work. PAPR do support partial backing of
+guest RAM with hugepages via ibm,expected#pages node of memory node in
+the device tree. This means rest of the guest RAM won't be backed by
+16G contiguous pages in the host and hence a hash page table insertion
+can fail in such case.
 
-  In function ‘user_regset_copyin’,
-      inlined from ‘vr_set’ at arch/powerpc/kernel/ptrace.c:628:9:
-  include/linux/regset.h:295:4: error: ‘memcpy’ offset [-527, -529] is
-  out of the bounds [0, 16] of object ‘vrsave’ with type ‘union
-  <anonymous>’ [-Werror=array-bounds]
-  arch/powerpc/kernel/ptrace.c: In function ‘vr_set’:
-  arch/powerpc/kernel/ptrace.c:623:5: note: ‘vrsave’ declared here
-     } vrsave;
+An example error message will look like
 
-This has been identified as a regression in GCC, see GCC bug 88273.
+  hash-mmu: mm: Hashing failure ! EA=0x7efc00000000 access=0x8000000000000006 current=readback
+  hash-mmu:     trap=0x300 vsid=0x67af789 ssize=1 base psize=14 psize 14 pte=0xc000000400000386
+  readback[12260]: unhandled signal 7 at 00007efc00000000 nip 00000000100012d0 lr 000000001000127c code 2
 
-However we can avoid the warning and also simplify the logic and make
-it more robust.
+This patch address that by preventing runtime allocation of 16G
+hugepages in LPAR config. To allocate 16G hugetlb one need to kernel
+command line hugepagesz=16G hugepages=<number of 16G pages>
 
-Currently we pass -1 as end_pos to user_regset_copyout(). This says
-"copy up to the end of the regset".
+With radix translation mode we don't run into this issue.
 
-The definition of the regset is:
-	[REGSET_VMX] = {
-		.core_note_type = NT_PPC_VMX, .n = 34,
-		.size = sizeof(vector128), .align = sizeof(vector128),
-		.active = vr_active, .get = vr_get, .set = vr_set
-	},
+This change will prevent runtime allocation of 16G hugetlb pages on
+kvm with hash translation mode. However, with the current upstream it
+was observed that 16G hugetlbfs backed guest doesn't boot at all.
 
-The end is calculated as (n * size), ie. 34 * sizeof(vector128).
+We observe boot failure with the below message:
+  [131354.647546] KVM: map_vrma at 0 failed, ret=-4
 
-In vr_get/set() we pass start_pos as 33 * sizeof(vector128), meaning
-we can copy up to sizeof(vector128) into/out-of vrsave.
+That means this patch is not resulting in an observable regression.
+Once we fix the boot issue with 16G hugetlb backed memory, we need to
+use ibm,expected#pages memory node attribute to indicate 16G page
+reservation to the guest. This will also enable partial backing of
+guest RAM with 16G pages.
 
-The on-stack vrsave is defined as:
-  union {
-	  elf_vrreg_t reg;
-	  u32 word;
-  } vrsave;
-
-And elf_vrreg_t is:
-  typedef __vector128 elf_vrreg_t;
-
-So there is no bug, but we rely on all those sizes lining up,
-otherwise we would have a kernel stack exposure/overwrite on our
-hands.
-
-Rather than relying on that we can pass an explict end_pos based on
-the sizeof(vrsave). The result should be exactly the same but it's
-more obviously not over-reading/writing the stack and it avoids the
-compiler warning.
-
-Reported-by: Meelis Roos <mroos@linux.ee>
-Reported-by: Mathieu Malaterre <malat@debian.org>
-Cc: stable@vger.kernel.org
-Tested-by: Mathieu Malaterre <malat@debian.org>
-Tested-by: Meelis Roos <mroos@linux.ee>
+Fixes: 4ae279c2c96a ("powerpc/mm/hugetlb: Allow runtime allocation of 16G.")
+Cc: stable@vger.kernel.org # v4.14+
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/kernel/ptrace.c |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ arch/powerpc/include/asm/book3s/64/hugetlb.h |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/arch/powerpc/kernel/ptrace.c
-+++ b/arch/powerpc/kernel/ptrace.c
-@@ -547,6 +547,7 @@ static int vr_get(struct task_struct *ta
- 		/*
- 		 * Copy out only the low-order word of vrsave.
- 		 */
-+		int start, end;
- 		union {
- 			elf_vrreg_t reg;
- 			u32 word;
-@@ -555,8 +556,10 @@ static int vr_get(struct task_struct *ta
- 
- 		vrsave.word = target->thread.vrsave;
- 
-+		start = 33 * sizeof(vector128);
-+		end = start + sizeof(vrsave);
- 		ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf, &vrsave,
--					  33 * sizeof(vector128), -1);
-+					  start, end);
- 	}
- 
- 	return ret;
-@@ -594,6 +597,7 @@ static int vr_set(struct task_struct *ta
- 		/*
- 		 * We use only the first word of vrsave.
- 		 */
-+		int start, end;
- 		union {
- 			elf_vrreg_t reg;
- 			u32 word;
-@@ -602,8 +606,10 @@ static int vr_set(struct task_struct *ta
- 
- 		vrsave.word = target->thread.vrsave;
- 
-+		start = 33 * sizeof(vector128);
-+		end = start + sizeof(vrsave);
- 		ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf, &vrsave,
--					 33 * sizeof(vector128), -1);
-+					 start, end);
- 		if (!ret)
- 			target->thread.vrsave = vrsave.word;
- 	}
+--- a/arch/powerpc/include/asm/book3s/64/hugetlb.h
++++ b/arch/powerpc/include/asm/book3s/64/hugetlb.h
+@@ -55,6 +55,14 @@ static inline pte_t arch_make_huge_pte(p
+ #ifdef CONFIG_ARCH_HAS_GIGANTIC_PAGE
+ static inline bool gigantic_page_supported(void)
+ {
++	/*
++	 * We used gigantic page reservation with hypervisor assist in some case.
++	 * We cannot use runtime allocation of gigantic pages in those platforms
++	 * This is hash translation mode LPARs.
++	 */
++	if (firmware_has_feature(FW_FEATURE_LPAR) && !radix_enabled())
++		return false;
++
+ 	return true;
+ }
+ #endif
 
 
