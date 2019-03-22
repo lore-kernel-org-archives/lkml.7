@@ -2,127 +2,101 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76612C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 05:36:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44181C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 05:37:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FACF218B0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 05:36:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05D08218FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 05:37:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553232969;
-	bh=mX++0dd0hjObisk5SEXrUW7udMc7ZLafaRpSFFqF/FE=;
+	s=default; t=1553233068;
+	bh=vEj6MDvfvi5+o7E9dbvy4Ex3YdChPz9jwzNJi/OEplo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IF4fRXuwZK6/3EEPwdBFXXDbMUASzIx4F1N8RWHdE6s3wqpSQ++w5FWa8KOVwuhNI
-	 mauoiG8+/vR/IM6DABVOzBisQGT4IIs5W7+5yvUUs4XF/m6Lo34g0tg83GLS7Kq09u
-	 rpjEcylBagJK2ywSR/2B5cRW9NuMj433eVEmqdTU=
+	b=qG8OnIe93eoDxR9gkdLdcIlROfliVOMIGNJqw6exn6FgKwT+f6Mqf7R3tIIKVbN4d
+	 AC7FSb95+uXec1mVAickd6OU+lC2qt+BQFuZHLCEgiEnPzy8I6n35ZuJOQmIGNdK7T
+	 Kfu98AYY7Xgqv9K+VrXXM61vJ0kKlQGR/8HJh60s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727717AbfCVFgH (ORCPT
+        id S1727745AbfCVFhq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 01:36:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45366 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 01:37:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726162AbfCVFgH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 01:36:07 -0400
+        id S1726162AbfCVFhq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 01:37:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60580218B0;
-        Fri, 22 Mar 2019 05:36:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EEC1A218B0;
+        Fri, 22 Mar 2019 05:37:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553232965;
-        bh=mX++0dd0hjObisk5SEXrUW7udMc7ZLafaRpSFFqF/FE=;
+        s=default; t=1553233065;
+        bh=vEj6MDvfvi5+o7E9dbvy4Ex3YdChPz9jwzNJi/OEplo=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=u7ihKpvycdNKRXBe9HgslhWBlq4OmYVUF7bsXw9uARp3JPivf9LWNI3S48FLQy433
-         +L2pDe+dD1TaGFH9bGVt2njlzDm5FLFgqRDyXW/sIi0sTsGUg1ZRGJFxtBs6Q3WMZV
-         52tPfnPl6S0I3zSQgW3yZOlk53RRkzpDPKBJWGuA=
-Date:   Fri, 22 Mar 2019 06:36:02 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     fei.yang@intel.com
-Cc:     balbi@kernel.org, andrzej.p@collabora.com, plr.vincent@gmail.com,
-        jingx.shen@intel.com, john.stultz@linaro.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] usb: gadget: f_fs: don't free buffer prematurely
-Message-ID: <20190322053602.GA31708@kroah.com>
-References: <1553203874-130203-1-git-send-email-fei.yang@intel.com>
+        b=B2qgywxH3J5axp3waQgKMyBU7NKwGKLtN24aR0dYqoKZfqYfE7JaeAwJukAtc3IgD
+         ttiuWr7TeNsmNqiTdkDhB0SyI2TAwCZ1D9oxzNtluh7q9J7WY0GYwpGLcrNw0BGWQ2
+         Tc+1uUmTdfg1SiuI84lnQg4DHgwSsrMdYvY8YOHI=
+Date:   Fri, 22 Mar 2019 06:37:42 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jochen Sprickerhof <git@jochen.sprickerhof.de>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Roger Quadros <rogerq@ti.com>, Felipe Balbi <balbi@kernel.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH] usb: dwc3: Softdep for GBit Ethernet on Odroid XU4
+Message-ID: <20190322053742.GB31708@kroah.com>
+References: <20190321202303.GA1399@vis>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1553203874-130203-1-git-send-email-fei.yang@intel.com>
+In-Reply-To: <20190321202303.GA1399@vis>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 21, 2019 at 02:31:14PM -0700, fei.yang@intel.com wrote:
-> From: Fei Yang <fei.yang@intel.com>
+On Thu, Mar 21, 2019 at 09:23:03PM +0100, Jochen Sprickerhof wrote:
+> This adds a soft dependency to the dwc3 module to load it after
+> xhci-plat as proposed in:
 > 
-> The following kernel panic happens due to the io_data buffer gets deallocated
-> before the async io is completed. Add a check for the case where io_data buffer
-> should be deallocated by ffs_user_copy_worker.
+> https://marc.info/?l=linux-usb&m=155230272022603&w=2
 > 
-> [   41.663334] BUG: unable to handle kernel NULL pointer dereference at 0000000000000048
-> [   41.672099] #PF error: [normal kernel read fault]
-> [   41.677356] PGD 20c974067 P4D 20c974067 PUD 20c973067 PMD 0
-> [   41.683687] Oops: 0000 [#1] PREEMPT SMP
-> [   41.687976] CPU: 1 PID: 7 Comm: kworker/u8:0 Tainted: G     U            5.0.0-quilt-2e5dc0ac-00790-gd8c79f2-dirty #2
-> [   41.705309] Workqueue: adb ffs_user_copy_worker
-> [   41.705316] RIP: 0010:__vunmap+0x2a/0xc0
-> [   41.705318] Code: 0f 1f 44 00 00 48 85 ff 0f 84 87 00 00 00 55 f7 c7 ff 0f 00 00 48 89 e5 41 55 41 89 f5 41 54 53 48 89 fb 75 71 e8 56 d7 ff ff <4c> 8b 60 48 4d 85 e4 74 76 48 89 df e8 25 ff ff ff 45 85 ed 74 46
-> [   41.705320] RSP: 0018:ffffbc3a40053df0 EFLAGS: 00010286
-> [   41.705322] RAX: 0000000000000000 RBX: ffffbc3a406f1000 RCX: 0000000000000000
-> [   41.705323] RDX: 0000000000000001 RSI: 0000000000000001 RDI: 00000000ffffffff
-> [   41.705324] RBP: ffffbc3a40053e08 R08: 000000000001fb79 R09: 0000000000000037
-> [   41.705325] R10: ffffbc3a40053b68 R11: ffffbc3a40053cad R12: fffffffffffffff2
-> [   41.705326] R13: 0000000000000001 R14: 0000000000000000 R15: ffffffffffffffff
-> [   41.705328] FS:  0000000000000000(0000) GS:ffff9e2977a80000(0000) knlGS:0000000000000000
-> [   41.705329] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [   41.705330] CR2: 0000000000000048 CR3: 000000020c994000 CR4: 00000000003406e0
-> [   41.705331] Call Trace:
-> [   41.705338]  vfree+0x50/0xb0
-> [   41.705341]  ffs_user_copy_worker+0xe9/0x1c0
-> [   41.705344]  process_one_work+0x19f/0x3e0
-> [   41.705348]  worker_thread+0x3f/0x3b0
-> [   41.829766]  kthread+0x12b/0x150
-> [   41.833371]  ? process_one_work+0x3e0/0x3e0
-> [   41.838045]  ? kthread_create_worker_on_cpu+0x70/0x70
-> [   41.843695]  ret_from_fork+0x3a/0x50
-> [   41.847689] Modules linked in: hci_uart bluetooth ecdh_generic rfkill_gpio dwc3_pci dwc3 snd_usb_audio mei_me tpm_crb snd_usbmidi_lib xhci_pci xhci_hcd mei tpm snd_hwdep cfg80211 snd_soc_skl snd_soc_skl_ipc snd_soc_sst_ipc snd_soc_sst_dsp snd_hda_ext_core snd_hda_core videobuf2_dma_sg crlmodule
-> [   41.876880] CR2: 0000000000000048
-> [   41.880584] ---[ end trace 2bc4addff0f2e673 ]---
-> [   41.891346] RIP: 0010:__vunmap+0x2a/0xc0
-> [   41.895734] Code: 0f 1f 44 00 00 48 85 ff 0f 84 87 00 00 00 55 f7 c7 ff 0f 00 00 48 89 e5 41 55 41 89 f5 41 54 53 48 89 fb 75 71 e8 56 d7 ff ff <4c> 8b 60 48 4d 85 e4 74 76 48 89 df e8 25 ff ff ff 45 85 ed 74 46
-> [   41.916740] RSP: 0018:ffffbc3a40053df0 EFLAGS: 00010286
-> [   41.922583] RAX: 0000000000000000 RBX: ffffbc3a406f1000 RCX: 0000000000000000
-> [   41.930563] RDX: 0000000000000001 RSI: 0000000000000001 RDI: 00000000ffffffff
-> [   41.938540] RBP: ffffbc3a40053e08 R08: 000000000001fb79 R09: 0000000000000037
-> [   41.946520] R10: ffffbc3a40053b68 R11: ffffbc3a40053cad R12: fffffffffffffff2
-> [   41.954502] R13: 0000000000000001 R14: 0000000000000000 R15: ffffffffffffffff
-> [   41.962482] FS:  0000000000000000(0000) GS:ffff9e2977a80000(0000) knlGS:0000000000000000
-> [   41.971536] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [   41.977960] CR2: 0000000000000048 CR3: 000000020c994000 CR4: 00000000003406e0
-> [   41.985930] Kernel panic - not syncing: Fatal exception
-> [   41.991817] Kernel Offset: 0x16000000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
-> [   42.009525] Rebooting in 10 seconds..
-> [   52.014376] ACPI MEMORY or I/O RESET_REG.
+> Old behaviour:
 > 
-> Fixes: 772a7a724f6 ("usb: gadget: f_fs: Allow scatter-gather buffers")
-> Signed-off-by: Fei Yang <fei.yang@intel.com>
-> Reviewed-by: Manu Gautam <mgautam@codeaurora.org>
-> Tested-by: John Stultz <john.stultz@linaro.org>
+> $ lsusb -t
+> /:  Bus 06.Port 1: Dev 1, Class=root_hub, Driver=xhci-hcd/1p, 5000M
+> /:  Bus 05.Port 1: Dev 1, Class=root_hub, Driver=xhci-hcd/1p, 480M
+>   |__ Port 1: Dev 2, If 0, Class=Vendor Specific Class, Driver=r8152, 480M
+> 
+> New behaviour:
+> 
+> $ lsusb -t
+> /:  Bus 06.Port 1: Dev 1, Class=root_hub, Driver=xhci-hcd/1p, 5000M
+>   |__ Port 1: Dev 2, If 0, Class=Vendor Specific Class, Driver=r8152, 5000M
+> 
+> Tested on Debian unstable using Linux 4.19.29.
+> 
+> Note, this needs a hard reset when coming from an unpatched kernel.
+> 
+> Signed-off-by: Jochen Sprickerhof <git@jochen.sprickerhof.de>
 > ---
-> v2: add tag: "Fixes: 772a7a724f6 ......", Reviewed-by and Tested-by.
-> v3: check data for NULL instead of "ret == -EIOCBQUEUED", which would be safer
->     and keep the original logic intact.
+> drivers/usb/dwc3/core.c | 1 +
+> 1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+> index 103807587dc6..9017e4ed9d99 100644
+> --- a/drivers/usb/dwc3/core.c
+> +++ b/drivers/usb/dwc3/core.c
+> @@ -1746,3 +1746,4 @@ MODULE_ALIAS("platform:dwc3");
+> MODULE_AUTHOR("Felipe Balbi <balbi@ti.com>");
+> MODULE_LICENSE("GPL v2");
+> MODULE_DESCRIPTION("DesignWare USB3 DRD Controller Driver");
+> +MODULE_SOFTDEP("pre: xhci_plat_hcd");
 
-If it "fixes" a problem in 5.0, we should add a:
-	Cc: stable <stable@vger.kernel.org>
-to it as well.
 
-thanks,
+Your patch is corrupted and can not be applied :(
 
-greg k-h
