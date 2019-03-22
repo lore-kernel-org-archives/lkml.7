@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36894C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 05:24:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DADAC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 05:24:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EC6E213F2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 05:24:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27361213F2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 05:24:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727897AbfCVFYQ (ORCPT
+        id S1727955AbfCVFYl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 01:24:16 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:45630 "EHLO
+        Fri, 22 Mar 2019 01:24:41 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:45634 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727487AbfCVFXQ (ORCPT
+        by vger.kernel.org with ESMTP id S1726909AbfCVFXQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 22 Mar 2019 01:23:16 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1h7CeA-000167-0a; Fri, 22 Mar 2019 05:23:14 +0000
+        id 1h7Ce9-000165-Tt; Fri, 22 Mar 2019 05:23:13 +0000
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1h7Ce9-0001pL-Ps; Fri, 22 Mar 2019 05:23:13 +0000
+        id 1h7Ce9-0001pB-OR; Fri, 22 Mar 2019 05:23:13 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,16 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Jim Mattson" <jmattson@google.com>,
-        "Peter Shier" <pshier@google.com>,
-        "Felix Wilhelm" <fwilhelm@google.com>,
-        "Paolo Bonzini" <pbonzini@redhat.com>
+        "Radim =?UTF-8?Q?Kr=C4=8Dm=C3=A1=C5=99?=" <rkrcmar@redhat.com>,
+        "David Hildenbrand" <david@redhat.com>,
+        "Dan Carpenter" <dan.carpenter@oracle.com>
 Date:   Fri, 22 Mar 2019 05:20:18 +0000
-Message-ID: <lsq.1553232018.430895167@decadent.org.uk>
+Message-ID: <lsq.1553232018.334881140@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 15/16] KVM: nVMX: unconditionally cancel preemption
- timer in free_nested (CVE-2019-7221)
+Subject: [PATCH 3.16 13/16] KVM: use after free in kvm_ioctl_create_device()
 In-Reply-To: <lsq.1553232017.771830163@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,39 +56,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Peter Shier <pshier@google.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit ecec76885bcfe3294685dc363fd1273df0d5d65f upstream.
+commit a0f1d21c1ccb1da66629627a74059dd7f5ac9c61 upstream.
 
-Bugzilla: 1671904
+We should move the ops->destroy(dev) after the list_del(&dev->vm_node)
+so that we don't use "dev" after freeing it.
 
-There are multiple code paths where an hrtimer may have been started to
-emulate an L1 VMX preemption timer that can result in a call to free_nested
-without an intervening L2 exit where the hrtimer is normally
-cancelled. Unconditionally cancel in free_nested to cover all cases.
-
-Embargoed until Feb 7th 2019.
-
-Signed-off-by: Peter Shier <pshier@google.com>
-Reported-by: Jim Mattson <jmattson@google.com>
-Reviewed-by: Jim Mattson <jmattson@google.com>
-Reported-by: Felix Wilhelm <fwilhelm@google.com>
-Message-Id: <20181011184646.154065-1-pshier@google.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-[bwh: Backported to 3.16: adjust filename, context]
+Fixes: a28ebea2adc4 ("KVM: Protect device ops->create and list_add with kvm->lock")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: David Hildenbrand <david@redhat.com>
+Signed-off-by: Radim Krčmář <rkrcmar@redhat.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/x86/kvm/vmx.c | 1 +
- 1 file changed, 1 insertion(+)
+ virt/kvm/kvm_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/kvm/vmx.c
-+++ b/arch/x86/kvm/vmx.c
-@@ -6169,6 +6169,7 @@ static void free_nested(struct vcpu_vmx
- {
- 	if (!vmx->nested.vmxon)
- 		return;
-+	hrtimer_cancel(&vmx->nested.preemption_timer);
- 	vmx->nested.vmxon = false;
- 	if (vmx->nested.current_vmptr != -1ull) {
- 		nested_release_vmcs12(vmx);
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -2342,10 +2342,10 @@ static int kvm_ioctl_create_device(struc
+ 
+ 	ret = anon_inode_getfd(ops->name, &kvm_device_fops, dev, O_RDWR | O_CLOEXEC);
+ 	if (ret < 0) {
+-		ops->destroy(dev);
+ 		mutex_lock(&kvm->lock);
+ 		list_del(&dev->vm_node);
+ 		mutex_unlock(&kvm->lock);
++		ops->destroy(dev);
+ 		return ret;
+ 	}
+ 
 
