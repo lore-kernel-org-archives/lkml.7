@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DCC5C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:23:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEABFC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:23:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13FC9218D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:23:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCE4D2190A
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:23:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553253794;
-	bh=IF4sgJzuwdlljJvOKguTm/CDhsXCb/ArhmaEd23J4fo=;
+	s=default; t=1553253797;
+	bh=OEiwyTvqnTK0AeyqlWbMq6xF5zutPimMEibCG/D4JII=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uWPn4dKgzk5YVJNmK1cV+ssmkDnfchvsJoU1k3Lu94RIlmQOno8sNQAI7rEZ/sXwR
-	 fPFtugu6gW0c7ia0sHYk8Bl0gbR+xy07Yrcx46X4L/+hSkjB2QWZKnKgDdAbvGR7JE
-	 SZ0FrIvmoNgCsJy3aHWpWZg8w3u8fWh8BTNB6CDs=
+	b=lFdstYCKlXPJhVG7hxF7JdpeNSo8wY9YkNaT8rZL++k05qs5kuT/ZzsVSfC5F9LcR
+	 R4ekVZtt0Oh2JZKFYERpPGf52Dls4Vl0t9sIlydSSZ8mnbQ5HKXVxJwQGmkhtZiuSZ
+	 +IxHQWcsoowWHyA7vsFj4HnLIZSbkvtw2fcDj74g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728934AbfCVLXN (ORCPT
+        id S1728943AbfCVLXQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:23:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50032 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:23:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728478AbfCVLXI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:23:08 -0400
+        id S1728926AbfCVLXL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:23:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04F3A21916;
-        Fri, 22 Mar 2019 11:23:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2C842190A;
+        Fri, 22 Mar 2019 11:23:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553253788;
-        bh=IF4sgJzuwdlljJvOKguTm/CDhsXCb/ArhmaEd23J4fo=;
+        s=default; t=1553253791;
+        bh=OEiwyTvqnTK0AeyqlWbMq6xF5zutPimMEibCG/D4JII=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sTCsBbrlUWb3FQi2l5dgEOnRIzRMvAHPGorzKTB4l+MMY8rutwRf+i/oFjWnQeuVe
-         4j058SxkGfvEyfN3ru6KqGUJc2c/VgdDSTR/C27OdRnPHx/yuWprjBVXhaT9jkdKI7
-         4DGzabak3hv99JfwzxlV72kwMQM7PlNpKog+24o8=
+        b=Kl4rsVJdSl811wS3TCriI/Oee9wQQue8nGC3e/jrbefDINIJY1I/OZQgT77x8SL1q
+         NfMHYEIMpFo8m7Kc73u8+jC3d73eaLZc0jnAqdM/hrPCRn8w5EFJKag3+NfAuXejf/
+         N4Ynjz95Pei4tfRVItk/qdIyDZt+leME0Wa2VFf8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peng Hao <peng.hao2@zte.com.cn>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
+        stable@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>,
+        Pavel Machek <pavel@ucw.cz>,
+        Marc Zyngier <marc.zyngier@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 3.18 072/134] ARM: pxa: ssp: unneeded to free devm_ allocated data
-Date:   Fri, 22 Mar 2019 12:14:45 +0100
-Message-Id: <20190322111215.289681834@linuxfoundation.org>
+Subject: [PATCH 3.18 073/134] irqchip/mmp: Only touch the PJ4 IRQ & FIQ bits on enable/disable
+Date:   Fri, 22 Mar 2019 12:14:46 +0100
+Message-Id: <20190322111215.362827687@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111210.465931067@linuxfoundation.org>
 References: <20190322111210.465931067@linuxfoundation.org>
@@ -66,41 +67,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit ba16adeb346387eb2d1ada69003588be96f098fa ]
+[ Upstream commit 2380a22b60ce6f995eac806e69c66e397b59d045 ]
 
-devm_ allocated data will be automatically freed. The free
-of devm_ allocated data is invalid.
+Resetting bit 4 disables the interrupt delivery to the "secure
+processor" core. This breaks the keyboard on a OLPC XO 1.75 laptop,
+where the firmware running on the "secure processor" bit-bangs the
+PS/2 protocol over the GPIO lines.
 
-Fixes: 1c459de1e645 ("ARM: pxa: ssp: use devm_ functions")
-Signed-off-by: Peng Hao <peng.hao2@zte.com.cn>
-[title's prefix changed]
-Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
+It is not clear what the rest of the bits are and Marvell was unhelpful
+when asked for documentation. Aside from the SP bit, there are probably
+priority bits.
+
+Leaving the unknown bits as the firmware set them up seems to be a wiser
+course of action compared to just turning them off.
+
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+[maz: fixed-up subject and commit message]
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/plat-pxa/ssp.c | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/irqchip/irq-mmp.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/plat-pxa/ssp.c b/arch/arm/plat-pxa/ssp.c
-index 1f5ee17a10e8..50c051bb9f90 100644
---- a/arch/arm/plat-pxa/ssp.c
-+++ b/arch/arm/plat-pxa/ssp.c
-@@ -239,8 +239,6 @@ static int pxa_ssp_remove(struct platform_device *pdev)
- 	if (ssp == NULL)
- 		return -ENODEV;
+diff --git a/drivers/irqchip/irq-mmp.c b/drivers/irqchip/irq-mmp.c
+index c0da57bdb89d..7924d21c86ec 100644
+--- a/drivers/irqchip/irq-mmp.c
++++ b/drivers/irqchip/irq-mmp.c
+@@ -35,6 +35,9 @@
+ #define SEL_INT_PENDING		(1 << 6)
+ #define SEL_INT_NUM_MASK	0x3f
  
--	iounmap(ssp->mmio_base);
--
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	release_mem_region(res->start, resource_size(res));
++#define MMP2_ICU_INT_ROUTE_PJ4_IRQ	(1 << 5)
++#define MMP2_ICU_INT_ROUTE_PJ4_FIQ	(1 << 6)
++
+ struct icu_chip_data {
+ 	int			nr_irqs;
+ 	unsigned int		virq_base;
+@@ -191,7 +194,8 @@ static struct mmp_intc_conf mmp_conf = {
+ static struct mmp_intc_conf mmp2_conf = {
+ 	.conf_enable	= 0x20,
+ 	.conf_disable	= 0x0,
+-	.conf_mask	= 0x7f,
++	.conf_mask	= MMP2_ICU_INT_ROUTE_PJ4_IRQ |
++			  MMP2_ICU_INT_ROUTE_PJ4_FIQ,
+ };
  
-@@ -250,7 +248,6 @@ static int pxa_ssp_remove(struct platform_device *pdev)
- 	list_del(&ssp->node);
- 	mutex_unlock(&ssp_lock);
- 
--	kfree(ssp);
- 	return 0;
- }
- 
+ static void __exception_irq_entry mmp_handle_irq(struct pt_regs *regs)
 -- 
 2.19.1
 
