@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A43B8C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:23:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DCC5C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:23:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7581421925
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:23:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13FC9218D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:23:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553253788;
-	bh=9FffrXrr5zwvEVgB1Y+UhtcAW3CBLM6bazHnolYnt44=;
+	s=default; t=1553253794;
+	bh=IF4sgJzuwdlljJvOKguTm/CDhsXCb/ArhmaEd23J4fo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BNnDcacVM64BKRSHnm/O2yJ8S6ftyazNoaVWks5f+oZskF6cpBuP/OBdMbXUJru6E
-	 /ZOK2gskeiHxxLqjBpT04QwCrybzkCHCyMVgiKGkhas4lnL6bcVP1Fe+VtKOQj5ZRg
-	 8vLnDlvFNMP2HtelBoRGK5Ok2xekzh6HNK2EmWgI=
+	b=uWPn4dKgzk5YVJNmK1cV+ssmkDnfchvsJoU1k3Lu94RIlmQOno8sNQAI7rEZ/sXwR
+	 fPFtugu6gW0c7ia0sHYk8Bl0gbR+xy07Yrcx46X4L/+hSkjB2QWZKnKgDdAbvGR7JE
+	 SZ0FrIvmoNgCsJy3aHWpWZg8w3u8fWh8BTNB6CDs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728539AbfCVLXH (ORCPT
+        id S1728934AbfCVLXN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:23:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49970 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:23:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50032 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728478AbfCVLXE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:23:04 -0400
+        id S1728478AbfCVLXI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:23:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2057D21916;
-        Fri, 22 Mar 2019 11:23:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 04F3A21916;
+        Fri, 22 Mar 2019 11:23:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553253784;
-        bh=9FffrXrr5zwvEVgB1Y+UhtcAW3CBLM6bazHnolYnt44=;
+        s=default; t=1553253788;
+        bh=IF4sgJzuwdlljJvOKguTm/CDhsXCb/ArhmaEd23J4fo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d4JKgYq0FlUh295Sr5Ix/TOh9UPkXuvZQPAM6mSmf2ZSJZtgyXexmG+mmEloQ3YHI
-         Wr3qQ2NCoqXAshwz/uNaaw6sGYGL0fL5u9fGRFdkYkpo6zSsqM6ej/DXPVTvgcIWMS
-         T4C4T0AptpyTAqwIsnXVT5DXwxKoiURIkwTGFUDM=
+        b=sTCsBbrlUWb3FQi2l5dgEOnRIzRMvAHPGorzKTB4l+MMY8rutwRf+i/oFjWnQeuVe
+         4j058SxkGfvEyfN3ru6KqGUJc2c/VgdDSTR/C27OdRnPHx/yuWprjBVXhaT9jkdKI7
+         4DGzabak3hv99JfwzxlV72kwMQM7PlNpKog+24o8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ian Kent <raven@themaw.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Peng Hao <peng.hao2@zte.com.cn>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 3.18 071/134] autofs: fix error return in autofs_fill_super()
-Date:   Fri, 22 Mar 2019 12:14:44 +0100
-Message-Id: <20190322111215.219451094@linuxfoundation.org>
+Subject: [PATCH 3.18 072/134] ARM: pxa: ssp: unneeded to free devm_ allocated data
+Date:   Fri, 22 Mar 2019 12:14:45 +0100
+Message-Id: <20190322111215.289681834@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111210.465931067@linuxfoundation.org>
 References: <20190322111210.465931067@linuxfoundation.org>
@@ -67,37 +66,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit f585b283e3f025754c45bbe7533fc6e5c4643700 ]
+[ Upstream commit ba16adeb346387eb2d1ada69003588be96f098fa ]
 
-In autofs_fill_super() on error of get inode/make root dentry the return
-should be ENOMEM as this is the only failure case of the called
-functions.
+devm_ allocated data will be automatically freed. The free
+of devm_ allocated data is invalid.
 
-Link: http://lkml.kernel.org/r/154725123240.11260.796773942606871359.stgit@pluto-themaw-net
-Signed-off-by: Ian Kent <raven@themaw.net>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 1c459de1e645 ("ARM: pxa: ssp: use devm_ functions")
+Signed-off-by: Peng Hao <peng.hao2@zte.com.cn>
+[title's prefix changed]
+Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/autofs4/inode.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/arm/plat-pxa/ssp.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/fs/autofs4/inode.c b/fs/autofs4/inode.c
-index 1c55388ae633..512f70fade24 100644
---- a/fs/autofs4/inode.c
-+++ b/fs/autofs4/inode.c
-@@ -256,8 +256,10 @@ int autofs4_fill_super(struct super_block *s, void *data, int silent)
- 	}
- 	root_inode = autofs4_get_inode(s, S_IFDIR | 0755);
- 	root = d_make_root(root_inode);
--	if (!root)
-+	if (!root) {
-+		ret = -ENOMEM;
- 		goto fail_ino;
-+	}
- 	pipe = NULL;
+diff --git a/arch/arm/plat-pxa/ssp.c b/arch/arm/plat-pxa/ssp.c
+index 1f5ee17a10e8..50c051bb9f90 100644
+--- a/arch/arm/plat-pxa/ssp.c
++++ b/arch/arm/plat-pxa/ssp.c
+@@ -239,8 +239,6 @@ static int pxa_ssp_remove(struct platform_device *pdev)
+ 	if (ssp == NULL)
+ 		return -ENODEV;
  
- 	root->d_fsdata = ino;
+-	iounmap(ssp->mmio_base);
+-
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	release_mem_region(res->start, resource_size(res));
+ 
+@@ -250,7 +248,6 @@ static int pxa_ssp_remove(struct platform_device *pdev)
+ 	list_del(&ssp->node);
+ 	mutex_unlock(&ssp_lock);
+ 
+-	kfree(ssp);
+ 	return 0;
+ }
+ 
 -- 
 2.19.1
 
