@@ -2,170 +2,186 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7CD8C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:39:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F3FC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:39:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ADBF2190A
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:39:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7930021900
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:39:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727640AbfCVQj3 (ORCPT
+        id S1727846AbfCVQjf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 12:39:29 -0400
+        Fri, 22 Mar 2019 12:39:35 -0400
 Received: from mga18.intel.com ([134.134.136.126]:60735 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727028AbfCVQj2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 12:39:28 -0400
+        id S1727646AbfCVQjb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 12:39:31 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Mar 2019 09:39:27 -0700
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Mar 2019 09:39:31 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,256,1549958400"; 
-   d="scan'208";a="144356573"
+   d="scan'208";a="144356586"
 Received: from otc-icl-cdi187.jf.intel.com ([10.54.55.103])
-  by orsmga002.jf.intel.com with ESMTP; 22 Mar 2019 09:39:27 -0700
+  by orsmga002.jf.intel.com with ESMTP; 22 Mar 2019 09:39:31 -0700
 From:   kan.liang@linux.intel.com
 To:     peterz@infradead.org, acme@kernel.org, mingo@redhat.com,
         linux-kernel@vger.kernel.org
 Cc:     tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
         alexander.shishkin@linux.intel.com, ak@linux.intel.com,
         Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V3 00/23] perf: Add Icelake support
-Date:   Fri, 22 Mar 2019 09:36:55 -0700
-Message-Id: <20190322163718.2191-1-kan.liang@linux.intel.com>
+Subject: [PATCH V3 02/23] perf/x86/intel: Extract memory code PEBS parser for reuse
+Date:   Fri, 22 Mar 2019 09:36:57 -0700
+Message-Id: <20190322163718.2191-3-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190322163718.2191-1-kan.liang@linux.intel.com>
+References: <20190322163718.2191-1-kan.liang@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+From: Andi Kleen <ak@linux.intel.com>
 
-The patch series intends to add Icelake support for Linux perf.
+Extract some code related to memory profiling from the PEBS record
+parser into separate functions. It can be reused by the upcoming
+adaptive PEBS parser. No functional changes.
+Rename intel_hsw_weight to intel_get_tsx_weight, and
+intel_hsw_transaction to intel_get_tsx_transaction. Because the input is
+not the hsw pebs format anymore.
 
-PATCH 1-18: Kernel patches to support Icelake.
- - 1-5: Support adaptive PEBS feature
- - 6-7: Enable core support with some new features, e.g. 8 generic
-   counters, new event constraints, a new fixed counter.
- - 8-11: Enable cstate, rapl, msr and uncore support on Icelake
- - 12-18: Support hardware Metrics counters and SLOT fixed counter for
-   Topdown events.
- - 19: Support CPUID 10.ECX to disable fixed counters
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+---
 
-PATCH 20-23: Perf tool patches to support XMM, Topdown and event list.
+No changes since V2.
 
-Changes since V2:
-- Make the setup_pebs_sample_data() a function pointer argument
-- Use cpuc->pebs_record_size unconditionally
-- Add comments for EVENT_CONSTRAINT_RANGE
-- Correct the Author of "perf/x86: Support constraint ranges"
+ arch/x86/events/intel/ds.c | 63 ++++++++++++++++++++------------------
+ 1 file changed, 34 insertions(+), 29 deletions(-)
 
-Changes since V1:
-- Avoid the interface changes for perf_reg_value() and
-  perf_output_sample_regs().
-- Remove the extra_regs in struct perf_sample_data.
-- Add struct x86_perf_regs
-- Add has_xmm_regs to indicate the specific platform which support XMM
-  registers collection.
-- Add check in x86_pmu_hw_config() to reject invalid config of regs_user
-  and regs_intr.
-- Rename intel_hsw_weight and intel_hsw_transaction
-- Add missed inline for intel_get_tsx_transaction()
-- Add new patch to extract code of event update in short period
-- Code rebase on top of c634dc6bdede
-- Rename @d to pebs_data_cfg
-- Make pebs_update_adaptive_cfg readable
-- Clear pebs_data_cfg and pebs_record_size for first PEBS in add
-- Don't clear ICL_EVENTSEL_ADAPTIVE. Rely on MSR_PEBS_CFG settings
-- Change PEBS record parsing order (bug fix)
-- Support struct x86_perf_regs
-- make get_pebs_status generic
-- specific intel_pmu_drain_pebs_icl()
-- Use cpuc->pebs_record_size to replace format_size
-- Use 'size' to replace 'range_end' for constraint ranges
-- Add x86_pmu.has_xmm_regs = true;
-- Add more explanation in change log of REMOVE transaction
-- Make perf_regs.h consistent between kernel and user space
-
-Andi Kleen (11):
-  perf/x86/intel: Extract memory code PEBS parser for reuse
-  perf/x86/lbr: Avoid reading the LBRs when adaptive PEBS handles them
-  perf/core: Support a REMOVE transaction
-  perf/x86/intel: Basic support for metrics counters
-  perf/x86/intel: Support overflows on SLOTS
-  perf/x86/intel: Set correct weight for topdown subevent counters
-  perf/x86/intel: Export new top down events for Icelake
-  perf/x86/intel: Support CPUID 10.ECX to disable fixed counters
-  perf, tools: Add support for recording and printing XMM registers
-  perf, tools, stat: Support new per thread TopDown metrics
-  perf, tools: Add documentation for topdown metrics
-
-Kan Liang (11):
-  perf/x86: Support outputting XMM registers
-  perf/x86/intel/ds: Extract code of event update in short period
-  perf/x86/intel: Support adaptive PEBSv4
-  perf/x86/intel: Add Icelake support
-  perf/x86/intel/cstate: Add Icelake support
-  perf/x86/intel/rapl: Add Icelake support
-  perf/x86/msr: Add Icelake support
-  perf/x86/intel/uncore: Add Intel Icelake uncore support
-  perf/x86/intel: Support hardware TopDown metrics
-  perf/x86/intel: Disable sampling read slots and topdown
-  perf vendor events intel: Add JSON files for Icelake
-
-Peter Zijlstra (1):
-  perf/x86: Support constraint ranges
-
- arch/x86/events/core.c                        |  81 +-
- arch/x86/events/intel/core.c                  | 422 ++++++++-
- arch/x86/events/intel/cstate.c                |   2 +
- arch/x86/events/intel/ds.c                    | 496 ++++++++--
- arch/x86/events/intel/lbr.c                   |  35 +-
- arch/x86/events/intel/rapl.c                  |   2 +
- arch/x86/events/intel/uncore.c                |   6 +
- arch/x86/events/intel/uncore.h                |   1 +
- arch/x86/events/intel/uncore_snb.c            |  91 ++
- arch/x86/events/msr.c                         |   1 +
- arch/x86/events/perf_event.h                  |  93 +-
- arch/x86/include/asm/intel_ds.h               |   2 +-
- arch/x86/include/asm/msr-index.h              |   4 +
- arch/x86/include/asm/perf_event.h             |  79 +-
- arch/x86/include/uapi/asm/perf_regs.h         |  26 +-
- arch/x86/kernel/perf_regs.c                   |  18 +-
- include/linux/perf_event.h                    |   7 +
- kernel/events/core.c                          |   5 +
- tools/arch/x86/include/uapi/asm/perf_regs.h   |  26 +-
- tools/perf/Documentation/perf-stat.txt        |   9 +-
- tools/perf/Documentation/topdown.txt          | 223 +++++
- tools/perf/arch/x86/include/perf_regs.h       |  29 +-
- tools/perf/arch/x86/util/perf_regs.c          |  16 +
- tools/perf/builtin-stat.c                     |  24 +
- .../pmu-events/arch/x86/icelake/cache.json    | 552 +++++++++++
- .../arch/x86/icelake/floating-point.json      |  90 ++
- .../pmu-events/arch/x86/icelake/frontend.json | 424 +++++++++
- .../pmu-events/arch/x86/icelake/memory.json   | 410 ++++++++
- .../pmu-events/arch/x86/icelake/other.json    | 133 +++
- .../pmu-events/arch/x86/icelake/pipeline.json | 892 ++++++++++++++++++
- .../arch/x86/icelake/virtual-memory.json      | 236 +++++
- tools/perf/pmu-events/arch/x86/mapfile.csv    |   1 +
- tools/perf/util/perf_regs.h                   |   1 +
- tools/perf/util/stat-shadow.c                 |  89 ++
- tools/perf/util/stat.c                        |   4 +
- tools/perf/util/stat.h                        |   8 +
- 36 files changed, 4418 insertions(+), 120 deletions(-)
- create mode 100644 tools/perf/Documentation/topdown.txt
- create mode 100644 tools/perf/pmu-events/arch/x86/icelake/cache.json
- create mode 100644 tools/perf/pmu-events/arch/x86/icelake/floating-point.json
- create mode 100644 tools/perf/pmu-events/arch/x86/icelake/frontend.json
- create mode 100644 tools/perf/pmu-events/arch/x86/icelake/memory.json
- create mode 100644 tools/perf/pmu-events/arch/x86/icelake/other.json
- create mode 100644 tools/perf/pmu-events/arch/x86/icelake/pipeline.json
- create mode 100644 tools/perf/pmu-events/arch/x86/icelake/virtual-memory.json
-
+diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+index 10c99ce1fead..c02cd19fe640 100644
+--- a/arch/x86/events/intel/ds.c
++++ b/arch/x86/events/intel/ds.c
+@@ -1125,34 +1125,50 @@ static int intel_pmu_pebs_fixup_ip(struct pt_regs *regs)
+ 	return 0;
+ }
+ 
+-static inline u64 intel_hsw_weight(struct pebs_record_skl *pebs)
++static inline u64 intel_get_tsx_weight(u64 tsx_tuning)
+ {
+-	if (pebs->tsx_tuning) {
+-		union hsw_tsx_tuning tsx = { .value = pebs->tsx_tuning };
++	if (tsx_tuning) {
++		union hsw_tsx_tuning tsx = { .value = tsx_tuning };
+ 		return tsx.cycles_last_block;
+ 	}
+ 	return 0;
+ }
+ 
+-static inline u64 intel_hsw_transaction(struct pebs_record_skl *pebs)
++static inline u64 intel_get_tsx_transaction(u64 tsx_tuning, u64 ax)
+ {
+-	u64 txn = (pebs->tsx_tuning & PEBS_HSW_TSX_FLAGS) >> 32;
++	u64 txn = (tsx_tuning & PEBS_HSW_TSX_FLAGS) >> 32;
+ 
+ 	/* For RTM XABORTs also log the abort code from AX */
+-	if ((txn & PERF_TXN_TRANSACTION) && (pebs->ax & 1))
+-		txn |= ((pebs->ax >> 24) & 0xff) << PERF_TXN_ABORT_SHIFT;
++	if ((txn & PERF_TXN_TRANSACTION) && (ax & 1))
++		txn |= ((ax >> 24) & 0xff) << PERF_TXN_ABORT_SHIFT;
+ 	return txn;
+ }
+ 
++#define PERF_X86_EVENT_PEBS_HSW_PREC \
++		(PERF_X86_EVENT_PEBS_ST_HSW | \
++		 PERF_X86_EVENT_PEBS_LD_HSW | \
++		 PERF_X86_EVENT_PEBS_NA_HSW)
++
++static u64 get_data_src(struct perf_event *event, u64 aux)
++{
++	u64 val = PERF_MEM_NA;
++	int fl = event->hw.flags;
++	bool fst = fl & (PERF_X86_EVENT_PEBS_ST | PERF_X86_EVENT_PEBS_HSW_PREC);
++
++	if (fl & PERF_X86_EVENT_PEBS_LDLAT)
++		val = load_latency_data(aux);
++	else if (fst && (fl & PERF_X86_EVENT_PEBS_HSW_PREC))
++		val = precise_datala_hsw(event, aux);
++	else if (fst)
++		val = precise_store_data(aux);
++	return val;
++}
++
+ static void setup_pebs_sample_data(struct perf_event *event,
+ 				   struct pt_regs *iregs, void *__pebs,
+ 				   struct perf_sample_data *data,
+ 				   struct pt_regs *regs)
+ {
+-#define PERF_X86_EVENT_PEBS_HSW_PREC \
+-		(PERF_X86_EVENT_PEBS_ST_HSW | \
+-		 PERF_X86_EVENT_PEBS_LD_HSW | \
+-		 PERF_X86_EVENT_PEBS_NA_HSW)
+ 	/*
+ 	 * We cast to the biggest pebs_record but are careful not to
+ 	 * unconditionally access the 'extra' entries.
+@@ -1160,17 +1176,13 @@ static void setup_pebs_sample_data(struct perf_event *event,
+ 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+ 	struct pebs_record_skl *pebs = __pebs;
+ 	u64 sample_type;
+-	int fll, fst, dsrc;
+-	int fl = event->hw.flags;
++	int fll;
+ 
+ 	if (pebs == NULL)
+ 		return;
+ 
+ 	sample_type = event->attr.sample_type;
+-	dsrc = sample_type & PERF_SAMPLE_DATA_SRC;
+-
+-	fll = fl & PERF_X86_EVENT_PEBS_LDLAT;
+-	fst = fl & (PERF_X86_EVENT_PEBS_ST | PERF_X86_EVENT_PEBS_HSW_PREC);
++	fll = event->hw.flags & PERF_X86_EVENT_PEBS_LDLAT;
+ 
+ 	perf_sample_data_init(data, 0, event->hw.last_period);
+ 
+@@ -1185,16 +1197,8 @@ static void setup_pebs_sample_data(struct perf_event *event,
+ 	/*
+ 	 * data.data_src encodes the data source
+ 	 */
+-	if (dsrc) {
+-		u64 val = PERF_MEM_NA;
+-		if (fll)
+-			val = load_latency_data(pebs->dse);
+-		else if (fst && (fl & PERF_X86_EVENT_PEBS_HSW_PREC))
+-			val = precise_datala_hsw(event, pebs->dse);
+-		else if (fst)
+-			val = precise_store_data(pebs->dse);
+-		data->data_src.val = val;
+-	}
++	if (sample_type & PERF_SAMPLE_DATA_SRC)
++		data->data_src.val = get_data_src(event, pebs->dse);
+ 
+ 	/*
+ 	 * We must however always use iregs for the unwinder to stay sane; the
+@@ -1281,10 +1285,11 @@ static void setup_pebs_sample_data(struct perf_event *event,
+ 	if (x86_pmu.intel_cap.pebs_format >= 2) {
+ 		/* Only set the TSX weight when no memory weight. */
+ 		if ((sample_type & PERF_SAMPLE_WEIGHT) && !fll)
+-			data->weight = intel_hsw_weight(pebs);
++			data->weight = intel_get_tsx_weight(pebs->tsx_tuning);
+ 
+ 		if (sample_type & PERF_SAMPLE_TRANSACTION)
+-			data->txn = intel_hsw_transaction(pebs);
++			data->txn = intel_get_tsx_transaction(pebs->tsx_tuning,
++							      pebs->ax);
+ 	}
+ 
+ 	/*
 -- 
 2.17.1
 
