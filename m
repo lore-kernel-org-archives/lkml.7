@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92F6CC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:54:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFD83C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:54:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 604B121873
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:54:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FB61218FE
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:54:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553259251;
-	bh=iWVf22wQmN1z4W9YP674a75y71Y+iDCtuiNAxheLAzE=;
+	s=default; t=1553259261;
+	bh=wYnfzGMCqjjh7zrpw0uWw8PskoMd051QuLKgxPPCl8Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hGXYU22E+uI5XpcFG05/9nglhaTwmjVf1gEdu0C+A7JbCN+umS2aKMeUVDUa2eB/v
-	 YNOaHsQXmgzuuqydRiHvJGRj+k89QSAGUuUIUjIe+Am03x2BTApj+UEV7yF40i+tp3
-	 g/WeLP2lkvlA7Hv2Z4U9Jb3Rid1r9aaM2KYNTh5w=
+	b=ZZH9f1Ctq/tbze1wUvrp7wrAEZ110dI3jNKGvfl2FJEiR+yNHwiNdzb6du7WVzOTd
+	 G4217DAaCfRc1yKRem3T4PduxTn8v5Vo7kNgM1odn9sYRL1wSD/iFI+u0KK+C3w2Sk
+	 bB2sudTBP3gGl3WpvN1lDpyH+Vhh1ILmT+wmvHn8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732883AbfCVMyJ (ORCPT
+        id S1732965AbfCVMyU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:54:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55218 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:54:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732449AbfCVLvT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:51:19 -0400
+        id S1732324AbfCVLvD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:51:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5561A20850;
-        Fri, 22 Mar 2019 11:51:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6415B20693;
+        Fri, 22 Mar 2019 11:51:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255478;
-        bh=iWVf22wQmN1z4W9YP674a75y71Y+iDCtuiNAxheLAzE=;
+        s=default; t=1553255462;
+        bh=wYnfzGMCqjjh7zrpw0uWw8PskoMd051QuLKgxPPCl8Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mNolocOFHibx1XBbeFrtR2zhbY4tcm3JbsSleajwFiIjVT5Dpz6jnh41/xZQEjHqQ
-         oe5/ABoFFsvVc96iYuCCW7UZU3/UY/W4YUiS5mvQpAESioRd/wnGKP8nqbR1kVW1nM
-         fOy/P8OLUW4sjeQLKKo6mro8CgIENVJ3Hs8U31eg=
+        b=QgREu7fudUlSutAw2s7+Y657abhRi5zOl2zIadXubDKTvEjtj//JYuVU9eIWjjL6Z
+         /qhrNEHhLpcdFrqdmwsH3BnhfRqaDhLeN0tF+kBbzC4hfimteWVmcgLvTPZy6kEiXb
+         2QKPpNKISngO6Nnw4ZzbdVf1RrZzZRwyu7uuN+NY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Zygo Blaxell <ce3g8jdj@umail.furryterror.org>,
-        Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.14 104/183] Btrfs: fix corruption reading shared and compressed extents after hole punching
-Date:   Fri, 22 Mar 2019 12:15:32 +0100
-Message-Id: <20190322111249.228879243@linuxfoundation.org>
+        stable@vger.kernel.org, Pavel Shilovsky <pshilov@microsoft.com>,
+        Steve French <stfrench@microsoft.com>,
+        Ronnie Sahlberg <lsahlber@redhat.com>
+Subject: [PATCH 4.14 080/183] CIFS: Fix read after write for files with read caching
+Date:   Fri, 22 Mar 2019 12:15:08 +0100
+Message-Id: <20190322111247.524556102@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111241.819468003@linuxfoundation.org>
 References: <20190322111241.819468003@linuxfoundation.org>
@@ -67,118 +66,54 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Pavel Shilovsky <piastryyy@gmail.com>
 
-commit 8e928218780e2f1cf2f5891c7575e8f0b284fcce upstream.
+commit 6dfbd84684700cb58b34e8602c01c12f3d2595c8 upstream.
 
-In the past we had data corruption when reading compressed extents that
-are shared within the same file and they are consecutive, this got fixed
-by commit 005efedf2c7d0 ("Btrfs: fix read corruption of compressed and
-shared extents") and by commit 808f80b46790f ("Btrfs: update fix for read
-corruption of compressed and shared extents"). However there was a case
-that was missing in those fixes, which is when the shared and compressed
-extents are referenced with a non-zero offset. The following shell script
-creates a reproducer for this issue:
+When we have a READ lease for a file and have just issued a write
+operation to the server we need to purge the cache and set oplock/lease
+level to NONE to avoid reading stale data. Currently we do that
+only if a write operation succedeed thus not covering cases when
+a request was sent to the server but a negative error code was
+returned later for some other reasons (e.g. -EIOCBQUEUED or -EINTR).
+Fix this by turning off caching regardless of the error code being
+returned.
 
-  #!/bin/bash
+The patches fixes generic tests 075 and 112 from the xfs-tests.
 
-  mkfs.btrfs -f /dev/sdc &> /dev/null
-  mount -o compress /dev/sdc /mnt/sdc
-
-  # Create a file with 3 consecutive compressed extents, each has an
-  # uncompressed size of 128Kb and a compressed size of 4Kb.
-  for ((i = 1; i <= 3; i++)); do
-      head -c 4096 /dev/zero
-      for ((j = 1; j <= 31; j++)); do
-          head -c 4096 /dev/zero | tr '\0' "\377"
-      done
-  done > /mnt/sdc/foobar
-  sync
-
-  echo "Digest after file creation:   $(md5sum /mnt/sdc/foobar)"
-
-  # Clone the first extent into offsets 128K and 256K.
-  xfs_io -c "reflink /mnt/sdc/foobar 0 128K 128K" /mnt/sdc/foobar
-  xfs_io -c "reflink /mnt/sdc/foobar 0 256K 128K" /mnt/sdc/foobar
-  sync
-
-  echo "Digest after cloning:         $(md5sum /mnt/sdc/foobar)"
-
-  # Punch holes into the regions that are already full of zeroes.
-  xfs_io -c "fpunch 0 4K" /mnt/sdc/foobar
-  xfs_io -c "fpunch 128K 4K" /mnt/sdc/foobar
-  xfs_io -c "fpunch 256K 4K" /mnt/sdc/foobar
-  sync
-
-  echo "Digest after hole punching:   $(md5sum /mnt/sdc/foobar)"
-
-  echo "Dropping page cache..."
-  sysctl -q vm.drop_caches=1
-  echo "Digest after hole punching:   $(md5sum /mnt/sdc/foobar)"
-
-  umount /dev/sdc
-
-When running the script we get the following output:
-
-  Digest after file creation:   5a0888d80d7ab1fd31c229f83a3bbcc8  /mnt/sdc/foobar
-  linked 131072/131072 bytes at offset 131072
-  128 KiB, 1 ops; 0.0033 sec (36.960 MiB/sec and 295.6830 ops/sec)
-  linked 131072/131072 bytes at offset 262144
-  128 KiB, 1 ops; 0.0015 sec (78.567 MiB/sec and 628.5355 ops/sec)
-  Digest after cloning:         5a0888d80d7ab1fd31c229f83a3bbcc8  /mnt/sdc/foobar
-  Digest after hole punching:   5a0888d80d7ab1fd31c229f83a3bbcc8  /mnt/sdc/foobar
-  Dropping page cache...
-  Digest after hole punching:   fba694ae8664ed0c2e9ff8937e7f1484  /mnt/sdc/foobar
-
-This happens because after reading all the pages of the extent in the
-range from 128K to 256K for example, we read the hole at offset 256K
-and then when reading the page at offset 260K we don't submit the
-existing bio, which is responsible for filling all the page in the
-range 128K to 256K only, therefore adding the pages from range 260K
-to 384K to the existing bio and submitting it after iterating over the
-entire range. Once the bio completes, the uncompressed data fills only
-the pages in the range 128K to 256K because there's no more data read
-from disk, leaving the pages in the range 260K to 384K unfilled. It is
-just a slightly different variant of what was solved by commit
-005efedf2c7d0 ("Btrfs: fix read corruption of compressed and shared
-extents").
-
-Fix this by forcing a bio submit, during readpages(), whenever we find a
-compressed extent map for a page that is different from the extent map
-for the previous page or has a different starting offset (in case it's
-the same compressed extent), instead of the extent map's original start
-offset.
-
-A test case for fstests follows soon.
-
-Reported-by: Zygo Blaxell <ce3g8jdj@umail.furryterror.org>
-Fixes: 808f80b46790f ("Btrfs: update fix for read corruption of compressed and shared extents")
-Fixes: 005efedf2c7d0 ("Btrfs: fix read corruption of compressed and shared extents")
-Cc: stable@vger.kernel.org # 4.3+
-Tested-by: Zygo Blaxell <ce3g8jdj@umail.furryterror.org>
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/extent_io.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/cifs/file.c |   12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
---- a/fs/btrfs/extent_io.c
-+++ b/fs/btrfs/extent_io.c
-@@ -3014,11 +3014,11 @@ static int __do_readpage(struct extent_i
+--- a/fs/cifs/file.c
++++ b/fs/cifs/file.c
+@@ -2889,14 +2889,16 @@ cifs_strict_writev(struct kiocb *iocb, s
+ 	 * these pages but not on the region from pos to ppos+len-1.
+ 	 */
+ 	written = cifs_user_writev(iocb, from);
+-	if (written > 0 && CIFS_CACHE_READ(cinode)) {
++	if (CIFS_CACHE_READ(cinode)) {
+ 		/*
+-		 * Windows 7 server can delay breaking level2 oplock if a write
+-		 * request comes - break it on the client to prevent reading
+-		 * an old data.
++		 * We have read level caching and we have just sent a write
++		 * request to the server thus making data in the cache stale.
++		 * Zap the cache and set oplock/lease level to NONE to avoid
++		 * reading stale data from the cache. All subsequent read
++		 * operations will read new data from the server.
  		 */
- 		if (test_bit(EXTENT_FLAG_COMPRESSED, &em->flags) &&
- 		    prev_em_start && *prev_em_start != (u64)-1 &&
--		    *prev_em_start != em->orig_start)
-+		    *prev_em_start != em->start)
- 			force_bio_submit = true;
- 
- 		if (prev_em_start)
--			*prev_em_start = em->orig_start;
-+			*prev_em_start = em->start;
- 
- 		free_extent_map(em);
- 		em = NULL;
+ 		cifs_zap_mapping(inode);
+-		cifs_dbg(FYI, "Set no oplock for inode=%p after a write operation\n",
++		cifs_dbg(FYI, "Set Oplock/Lease to NONE for inode=%p after write\n",
+ 			 inode);
+ 		cinode->oplock = 0;
+ 	}
 
 
