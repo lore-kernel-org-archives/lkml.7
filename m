@@ -2,58 +2,51 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C84DC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:24:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7022C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:24:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DEDD218B0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:24:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98C31218B0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:24:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553253888;
-	bh=3xB2Z9AfFXgKOqhZvIimgcMAAW1qVIES+0TUX9U1exM=;
+	s=default; t=1553253891;
+	bh=wJsqrR+Fnf/guWQC9P1hCKCSmHUzyMa7RY5iNzqk+RE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1M1MuBnjpzhB3LFIWxRRx0d0wIa0DLnzIN6BQWUZ4yQe2HvZQYr2MJ0u14umWlnuN
-	 TwY2FMSVYPZSXCkmj8uD3IWPhnguepNjv9V8X8vB1DWvTkm1azLJoUPYCts4vuRluH
-	 3HDOanQvAClffXof81nF8b8dptEF+LqlQGP5x1sM=
+	b=xZghiAL2kyC5rp40NkTIZ4Ax1yHohSTe2jIqhyCD1fHgHL287Aw1Bx39jB2BSgXSg
+	 cK2u7HX0XNJ9/IrulsRmwBLiiW4e8yfdwXHbBrkIfU/p+de+CDBoS0uloFnKvG4n/L
+	 0f0Qvaw87B+1EFSsTAsAn6HGO+WlrBZytv69igxQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729180AbfCVLYr (ORCPT
+        id S1729181AbfCVLYu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:24:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51820 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:24:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51912 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728398AbfCVLYp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:24:45 -0400
+        id S1728398AbfCVLYs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:24:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91CC6218B0;
-        Fri, 22 Mar 2019 11:24:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A716820657;
+        Fri, 22 Mar 2019 11:24:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553253884;
-        bh=3xB2Z9AfFXgKOqhZvIimgcMAAW1qVIES+0TUX9U1exM=;
+        s=default; t=1553253888;
+        bh=wJsqrR+Fnf/guWQC9P1hCKCSmHUzyMa7RY5iNzqk+RE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hVfMy07NlYJ95E2Mp7j/ITAcM1IN3ljauquDYK/62CfRCsx+ugIhwZhE54Pf1GV69
-         HTzVzb3iMlzs+HpPlSA4wXdN99NOFH8NwMgPxkmt2w/0Rwrl9+eP2qKwJ5JcLzrQ+z
-         BqfGMaeHLeIbP7XB8jsLBdBFCW9kKsL0iu7RKXK0=
+        b=pkLku4MQSZ6pvmVtoobELiog6+7xlSsghnrA76jDPNb7Iad2EVqP6tv55/DBPjFUP
+         S813DFXanwS0DVTttg8wO8jXGENr3gmyp6yu/jNzw1R5ea6kRHE5AOQfxV2H/6lYaW
+         Zi6ioLMjGZ/u8McopdyabZIaxe6NfQxetr4619v0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Nick Clifton <nickc@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 3.18 076/134] perf symbols: Filter out hidden symbols from labels
-Date:   Fri, 22 Mar 2019 12:14:49 +0100
-Message-Id: <20190322111215.588725264@linuxfoundation.org>
+        stable@vger.kernel.org, Xiao Ni <xni@redhat.com>,
+        Song Liu <songliubraving@fb.com>
+Subject: [PATCH 3.18 094/134] Its wrong to add len to sector_nr in raid10 reshape twice
+Date:   Fri, 22 Mar 2019 12:15:07 +0100
+Message-Id: <20190322111216.957712563@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111210.465931067@linuxfoundation.org>
 References: <20190322111210.465931067@linuxfoundation.org>
@@ -72,94 +65,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 59a17706915fe5ea6f711e1f92d4fb706bce07fe ]
+From: Xiao Ni <xni@redhat.com>
 
-When perf is built with the annobin plugin (RHEL8 build) extra symbols
-are added to its binary:
+commit b761dcf1217760a42f7897c31dcb649f59b2333e upstream.
 
-  # nm perf | grep annobin | head -10
-  0000000000241100 t .annobin_annotate.c
-  0000000000326490 t .annobin_annotate.c
-  0000000000249255 t .annobin_annotate.c_end
-  00000000003283a8 t .annobin_annotate.c_end
-  00000000001bce18 t .annobin_annotate.c_end.hot
-  00000000001bce18 t .annobin_annotate.c_end.hot
-  00000000001bc3e2 t .annobin_annotate.c_end.unlikely
-  00000000001bc400 t .annobin_annotate.c_end.unlikely
-  00000000001bce18 t .annobin_annotate.c.hot
-  00000000001bce18 t .annobin_annotate.c.hot
-  ...
+In reshape_request it already adds len to sector_nr already. It's wrong to add len to
+sector_nr again after adding pages to bio. If there is bad block it can't copy one chunk
+at a time, it needs to goto read_more. Now the sector_nr is wrong. It can cause data
+corruption.
 
-Those symbols have no use for report or annotation and should be
-skipped.  Moreover they interfere with the DWARF unwind test on the PPC
-arch, where they are mixed with checked symbols and then the test fails:
+Cc: stable@vger.kernel.org # v3.16+
+Signed-off-by: Xiao Ni <xni@redhat.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-  # perf test dwarf -v
-  59: Test dwarf unwind                                     :
-  --- start ---
-  test child forked, pid 8515
-  unwind: .annobin_dwarf_unwind.c:ip = 0x10dba40dc (0x2740dc)
-  ...
-  got: .annobin_dwarf_unwind.c 0x10dba40dc, expecting test__arch_unwind_sample
-  unwind: failed with 'no error'
-
-The annobin symbols are defined as NOTYPE/LOCAL/HIDDEN:
-
-  # readelf -s ./perf | grep annobin | head -1
-    40: 00000000001bce4f     0 NOTYPE  LOCAL  HIDDEN    13 .annobin_init.c
-
-They can still pass the check for the label symbol. Adding check for
-HIDDEN and INTERNAL (as suggested by Nick below) visibility and filter
-out such symbols.
-
->   Just to be awkward, if you are going to ignore STV_HIDDEN
->   symbols then you should probably also ignore STV_INTERNAL ones
->   as well...  Annobin does not generate them, but you never know,
->   one day some other tool might create some.
-
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Michael Petlan <mpetlan@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Nick Clifton <nickc@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190128133526.GD15461@krava
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/symbol-elf.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/md/raid10.c |    1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-index 194300a08197..04100626ca51 100644
---- a/tools/perf/util/symbol-elf.c
-+++ b/tools/perf/util/symbol-elf.c
-@@ -48,6 +48,11 @@ static inline uint8_t elf_sym__type(const GElf_Sym *sym)
- 	return GELF_ST_TYPE(sym->st_info);
- }
- 
-+static inline uint8_t elf_sym__visibility(const GElf_Sym *sym)
-+{
-+	return GELF_ST_VISIBILITY(sym->st_other);
-+}
-+
- #ifndef STT_GNU_IFUNC
- #define STT_GNU_IFUNC 10
- #endif
-@@ -72,7 +77,9 @@ static inline int elf_sym__is_label(const GElf_Sym *sym)
- 	return elf_sym__type(sym) == STT_NOTYPE &&
- 		sym->st_name != 0 &&
- 		sym->st_shndx != SHN_UNDEF &&
--		sym->st_shndx != SHN_ABS;
-+		sym->st_shndx != SHN_ABS &&
-+		elf_sym__visibility(sym) != STV_HIDDEN &&
-+		elf_sym__visibility(sym) != STV_INTERNAL;
- }
- 
- static bool elf_sym__is_a(GElf_Sym *sym, enum map_type type)
--- 
-2.19.1
-
+--- a/drivers/md/raid10.c
++++ b/drivers/md/raid10.c
+@@ -4528,7 +4528,6 @@ bio_full:
+ 	atomic_inc(&r10_bio->remaining);
+ 	read_bio->bi_next = NULL;
+ 	generic_make_request(read_bio);
+-	sector_nr += nr_sectors;
+ 	sectors_done += nr_sectors;
+ 	if (sector_nr <= last)
+ 		goto read_more;
 
 
