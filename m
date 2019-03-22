@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD469C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:11:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1897DC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:11:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EC972192C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:11:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBCEE21934
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:11:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256706;
-	bh=Qf7Q+U5xP8mBMOz21P5OQHoSdfUR1PxpTumPdNtpcEU=;
+	s=default; t=1553256709;
+	bh=tBP8j01uVvnOhVTgUdPCk2CQMkIxHOC6NbK0/v30Yu8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UDFP87xLgdRhaaRpBFq06Macbiaak0mePjvNKZn8oEHRPgjIFv7vJ74eeyKlnj5Cp
-	 FV3iC6MGP4jnMyHO5snegIZPP2ZuP1nhZ2c4jvagCDo1AFjmYlcXdlOFLTQgsEKKgm
-	 E0hrMQJR6Ku5aOGARS+QirtDkqH2wFakGbFIvW9k=
+	b=LMadQIQ2sITbTyysynqKqrDlgiXxcDycSpGtwu0n71PO9BCpU+sEdEQTIuR6P1E9D
+	 rxYcpNpFm7zxEwmvKGVmTNq1sZE8MNM9PcHyuXZhwtSQN1jiwN5pOYORJKl1cqCg9o
+	 EwTN3yAQgRA7W0PPd26oCz8dSLQzSTmEkE6oYTj0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389550AbfCVMLo (ORCPT
+        id S2389355AbfCVMLs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:11:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49928 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:11:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49984 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389538AbfCVMLk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:11:40 -0400
+        id S2389003AbfCVMLo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:11:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF5ED2082C;
-        Fri, 22 Mar 2019 12:11:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D501E21929;
+        Fri, 22 Mar 2019 12:11:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256699;
-        bh=Qf7Q+U5xP8mBMOz21P5OQHoSdfUR1PxpTumPdNtpcEU=;
+        s=default; t=1553256703;
+        bh=tBP8j01uVvnOhVTgUdPCk2CQMkIxHOC6NbK0/v30Yu8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yrB/CCe4q7T3sBdPiqCwMwy179u5I46+b53LQ+LfbdeI20sp1MsOjz5y2srukQoe8
-         6QjMyla8jBeRRAQW61DSjG+9PVehtkkhF4sPwzzweUD/vqUfrchb8kXWi2mZbWWcZF
-         0/sRHtCkl90qiSdhYtiQgTPyNOoWSx6h8igcPQbs=
+        b=FzkgEawEe77U62I5cdLqfLApOtNoCdVq/kz5Zu3uKYx2Cy9QSCD2+prWqYiHQgHwH
+         HaWm9ftBgQdLyuFrsKjRXbzKyBngKumqzKQYsiqC2/tN8K4rAZL3k5c+z5Rf8Fgy59
+         dP5nMZVOnbMhDJ433HbU9LfDV4YTaW7LEStc8Z9E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhi Jin <zhi.jin@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Subject: [PATCH 5.0 011/238] stm class: Fix an endless loop in channel allocation
-Date:   Fri, 22 Mar 2019 12:13:50 +0100
-Message-Id: <20190322111258.919787477@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Franck LENORMAND <franck.lenormand@nxp.com>,
+        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 5.0 012/238] crypto: caam - fix hash context DMA unmap size
+Date:   Fri, 22 Mar 2019 12:13:51 +0100
+Message-Id: <20190322111258.963703538@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -65,41 +67,72 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Zhi Jin <zhi.jin@intel.com>
+From: Franck LENORMAND <franck.lenormand@nxp.com>
 
-commit a1d75dad3a2c689e70a1c4e0214cca9de741d0aa upstream.
+commit 65055e2108847af5e577cc7ce6bde45ea136d29a upstream.
 
-There is a bug in the channel allocation logic that leads to an endless
-loop when looking for a contiguous range of channels in a range with a
-mixture of free and occupied channels. For example, opening three
-consequtive channels, closing the first two and requesting 4 channels in
-a row will trigger this soft lockup. The bug is that the search loop
-forgets to skip over the range once it detects that one channel in that
-range is occupied.
+When driver started using state->caam_ctxt for storing both running hash
+and final hash, it was not updated to handle different DMA unmap
+lengths.
 
-Restore the original intent to the logic by fixing the omission.
-
-Signed-off-by: Zhi Jin <zhi.jin@intel.com>
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Fixes: 7bd1d4093c2f ("stm class: Introduce an abstraction for System Trace Module devices")
-CC: stable@vger.kernel.org # v4.4+
+Cc: <stable@vger.kernel.org> # v4.19+
+Fixes: c19650d6ea99 ("crypto: caam - fix DMA mapping of stack memory")
+Signed-off-by: Franck LENORMAND <franck.lenormand@nxp.com>
+Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hwtracing/stm/core.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/crypto/caam/caamhash.c |    8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
---- a/drivers/hwtracing/stm/core.c
-+++ b/drivers/hwtracing/stm/core.c
-@@ -244,6 +244,9 @@ static int find_free_channels(unsigned l
- 			;
- 		if (i == width)
- 			return pos;
-+
-+		/* step over [pos..pos+i) to continue search */
-+		pos += i;
- 	}
+--- a/drivers/crypto/caam/caamhash.c
++++ b/drivers/crypto/caam/caamhash.c
+@@ -113,6 +113,7 @@ struct caam_hash_ctx {
+ struct caam_hash_state {
+ 	dma_addr_t buf_dma;
+ 	dma_addr_t ctx_dma;
++	int ctx_dma_len;
+ 	u8 buf_0[CAAM_MAX_HASH_BLOCK_SIZE] ____cacheline_aligned;
+ 	int buflen_0;
+ 	u8 buf_1[CAAM_MAX_HASH_BLOCK_SIZE] ____cacheline_aligned;
+@@ -165,6 +166,7 @@ static inline int map_seq_out_ptr_ctx(u3
+ 				      struct caam_hash_state *state,
+ 				      int ctx_len)
+ {
++	state->ctx_dma_len = ctx_len;
+ 	state->ctx_dma = dma_map_single(jrdev, state->caam_ctx,
+ 					ctx_len, DMA_FROM_DEVICE);
+ 	if (dma_mapping_error(jrdev, state->ctx_dma)) {
+@@ -218,6 +220,7 @@ static inline int ctx_map_to_sec4_sg(str
+ 				     struct caam_hash_state *state, int ctx_len,
+ 				     struct sec4_sg_entry *sec4_sg, u32 flag)
+ {
++	state->ctx_dma_len = ctx_len;
+ 	state->ctx_dma = dma_map_single(jrdev, state->caam_ctx, ctx_len, flag);
+ 	if (dma_mapping_error(jrdev, state->ctx_dma)) {
+ 		dev_err(jrdev, "unable to map ctx\n");
+@@ -468,12 +471,10 @@ static inline void ahash_unmap_ctx(struc
+ 			struct ahash_edesc *edesc,
+ 			struct ahash_request *req, int dst_len, u32 flag)
+ {
+-	struct crypto_ahash *ahash = crypto_ahash_reqtfm(req);
+-	struct caam_hash_ctx *ctx = crypto_ahash_ctx(ahash);
+ 	struct caam_hash_state *state = ahash_request_ctx(req);
  
- 	return -1;
+ 	if (state->ctx_dma) {
+-		dma_unmap_single(dev, state->ctx_dma, ctx->ctx_len, flag);
++		dma_unmap_single(dev, state->ctx_dma, state->ctx_dma_len, flag);
+ 		state->ctx_dma = 0;
+ 	}
+ 	ahash_unmap(dev, edesc, req, dst_len);
+@@ -1446,6 +1447,7 @@ static int ahash_init(struct ahash_reque
+ 	state->final = ahash_final_no_ctx;
+ 
+ 	state->ctx_dma = 0;
++	state->ctx_dma_len = 0;
+ 	state->current_buf = 0;
+ 	state->buf_dma = 0;
+ 	state->buflen_0 = 0;
 
 
