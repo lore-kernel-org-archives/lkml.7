@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D225C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:00:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F8EAC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:00:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D3E62192D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:00:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50E0D21939
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:00:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256013;
-	bh=9OzScS+1kFomAvKpYJYrhhJGsxpiDwty0Yf17AYa/B0=;
+	s=default; t=1553256019;
+	bh=+HXhKoqRjS8+ljtvoWOpEi/D9MCs2d2oSkYVsrEnXDM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GcfCL9SoTn/W2hZqk22stYjcbg9Q8USqhh+1Ul3JKqh1Ntj84DE7K68ErN0S64tYc
-	 l3e7XAaE7ojbz6USJm78Q6nAtN4TUN47SUjUlXnhLxI7aTRFfQ00JzTvg9OfOkdQjA
-	 Nrccu5J/XZHB/YBQKyMDw7hLVh2eu7uG3lcDbxwU=
+	b=gdRzdzfvQBZtttMeVhpNB7/wF1NeEciWAyCOYv548SSav9A1TzW3df5UYNsQMhdHu
+	 WNzve3AcBJX5Eg5+Mc/dWDUCKQOZTFdrKqVyBBB+por/x5SmevKIPZkJqRxOIc8fih
+	 TZu8kf1q7HrgIj5Rt3DXhN70QgRomkF2aWdo2ZFI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388060AbfCVMAM (ORCPT
+        id S2388065AbfCVMAS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:00:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37276 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:00:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37310 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732561AbfCVMAK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:00:10 -0400
+        id S1732561AbfCVMAM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:00:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7C33204FD;
-        Fri, 22 Mar 2019 12:00:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AEF1B204FD;
+        Fri, 22 Mar 2019 12:00:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256009;
-        bh=9OzScS+1kFomAvKpYJYrhhJGsxpiDwty0Yf17AYa/B0=;
+        s=default; t=1553256012;
+        bh=+HXhKoqRjS8+ljtvoWOpEi/D9MCs2d2oSkYVsrEnXDM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XrppdkgBsI0ZMMeVNxNC5yicnHzZXDhN0airFnbn5bZ3YKOspXTusUuB8L/SlSXYB
-         9VGPrKi/86EdYRSmjTGe74F3qHnuZ998uFeHT+XEl20u2VeXW1Suxr+wGr2jVkBrzN
-         UKnOPVchnKSf6oCL1uLZ1tvr8t2Ui3nrLzRi/jkQ=
+        b=GV3ankkVIdjOkPKzp/Jj0aaeFzdxOGiwjTcDd2M9buKN/YX6UsQERCnjsSR9lHRUn
+         wx/Gja/SqcgGBmL/rkTE7d1qNxEe48h4WUER9VJVkKmDZqEjRwTgzsebihwR/leyYU
+         AugKLXy32KsB9rPE82LZlkKhqXmYMSrvBtPaTtsU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kyle Roeschley <kyle.roeschley@ni.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
+        stable@vger.kernel.org,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
         Wolfram Sang <wsa@the-dreams.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 063/280] i2c: cadence: Fix the hold bit setting
-Date:   Fri, 22 Mar 2019 12:13:36 +0100
-Message-Id: <20190322111309.817759000@linuxfoundation.org>
+Subject: [PATCH 4.19 064/280] i2c: bcm2835: Clear current buffer pointers and counts after a transfer
+Date:   Fri, 22 Mar 2019 12:13:37 +0100
+Message-Id: <20190322111309.872066289@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -68,54 +68,67 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit d358def706880defa4c9e87381c5bf086a97d5f9 ]
+[ Upstream commit f275a4659484716259cc46268d9043424e51cf0f ]
 
-In case the hold bit is not needed we are carrying the old values.
-Fix the same by resetting the bit when not needed.
+The driver's interrupt handler checks whether a message is currently
+being handled with the curr_msg pointer. When it is NULL, the interrupt
+is considered to be unexpected. Similarly, the i2c_start_transfer
+routine checks for the remaining number of messages to handle in
+num_msgs.
 
-Fixes the sporadic i2c bus lockups on National Instruments
-Zynq-based devices.
+However, these values are never cleared and always keep the message and
+number relevant to the latest transfer (which might be done already and
+the underlying message memory might have been freed).
 
-Fixes: df8eb5691c48 ("i2c: Add driver for Cadence I2C controller")
-Reported-by: Kyle Roeschley <kyle.roeschley@ni.com>
-Acked-by: Michal Simek <michal.simek@xilinx.com>
-Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-Tested-by: Kyle Roeschley <kyle.roeschley@ni.com>
+When an unexpected interrupt hits with the DONE bit set, the isr will
+then try to access the flags field of the curr_msg structure, leading
+to a fatal page fault.
+
+The msg_buf and msg_buf_remaining fields are also never cleared at the
+end of the transfer, which can lead to similar pitfalls.
+
+Fix these issues by introducing a cleanup function and always calling
+it after a transfer is finished.
+
+Fixes: e2474541032d ("i2c: bcm2835: Fix hang for writing messages larger than 16 bytes")
+Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
 Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-cadence.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/i2c/busses/i2c-bcm2835.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/i2c/busses/i2c-cadence.c b/drivers/i2c/busses/i2c-cadence.c
-index b13605718291..d917cefc5a19 100644
---- a/drivers/i2c/busses/i2c-cadence.c
-+++ b/drivers/i2c/busses/i2c-cadence.c
-@@ -382,8 +382,10 @@ static void cdns_i2c_mrecv(struct cdns_i2c *id)
- 	 * Check for the message size against FIFO depth and set the
- 	 * 'hold bus' bit if it is greater than FIFO depth.
- 	 */
--	if (id->recv_count > CDNS_I2C_FIFO_DEPTH)
-+	if ((id->recv_count > CDNS_I2C_FIFO_DEPTH)  || id->bus_hold_flag)
- 		ctrl_reg |= CDNS_I2C_CR_HOLD;
-+	else
-+		ctrl_reg = ctrl_reg & ~CDNS_I2C_CR_HOLD;
+diff --git a/drivers/i2c/busses/i2c-bcm2835.c b/drivers/i2c/busses/i2c-bcm2835.c
+index 44deae78913e..4d19254f78c8 100644
+--- a/drivers/i2c/busses/i2c-bcm2835.c
++++ b/drivers/i2c/busses/i2c-bcm2835.c
+@@ -191,6 +191,15 @@ static void bcm2835_i2c_start_transfer(struct bcm2835_i2c_dev *i2c_dev)
+ 	bcm2835_i2c_writel(i2c_dev, BCM2835_I2C_C, c);
+ }
  
- 	cdns_i2c_writereg(ctrl_reg, CDNS_I2C_CR_OFFSET);
- 
-@@ -440,8 +442,11 @@ static void cdns_i2c_msend(struct cdns_i2c *id)
- 	 * Check for the message size against FIFO depth and set the
- 	 * 'hold bus' bit if it is greater than FIFO depth.
- 	 */
--	if (id->send_count > CDNS_I2C_FIFO_DEPTH)
-+	if ((id->send_count > CDNS_I2C_FIFO_DEPTH) || id->bus_hold_flag)
- 		ctrl_reg |= CDNS_I2C_CR_HOLD;
-+	else
-+		ctrl_reg = ctrl_reg & ~CDNS_I2C_CR_HOLD;
++static void bcm2835_i2c_finish_transfer(struct bcm2835_i2c_dev *i2c_dev)
++{
++	i2c_dev->curr_msg = NULL;
++	i2c_dev->num_msgs = 0;
 +
- 	cdns_i2c_writereg(ctrl_reg, CDNS_I2C_CR_OFFSET);
++	i2c_dev->msg_buf = NULL;
++	i2c_dev->msg_buf_remaining = 0;
++}
++
+ /*
+  * Note about I2C_C_CLEAR on error:
+  * The I2C_C_CLEAR on errors will take some time to resolve -- if you were in
+@@ -291,6 +300,9 @@ static int bcm2835_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg msgs[],
  
- 	/* Clear the interrupts in interrupt status register. */
+ 	time_left = wait_for_completion_timeout(&i2c_dev->completion,
+ 						adap->timeout);
++
++	bcm2835_i2c_finish_transfer(i2c_dev);
++
+ 	if (!time_left) {
+ 		bcm2835_i2c_writel(i2c_dev, BCM2835_I2C_C,
+ 				   BCM2835_I2C_C_CLEAR);
 -- 
 2.19.1
 
