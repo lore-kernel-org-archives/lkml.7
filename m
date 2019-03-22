@@ -2,53 +2,51 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9DCCC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:09:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 787D1C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:09:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B22920830
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:09:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47BA120830
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:09:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256543;
-	bh=HvvEhrvnZvwc9lt9y9aA5IFXJV0GQigyguAdWWyv5SY=;
+	s=default; t=1553256547;
+	bh=lJ5LkpYE8X2Qwr8okiMGZ21UWuRHA05EZmnhIRisKog=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cwjOnbDbkpVXpj/sIYl6Hb1+6c49kxYVR1cuCnS+QqitKDpQzOLj9OgwdnBwUuFl6
-	 NKMnaXecsHOZmRRArfMie+npNF/aHgvnZMH0PdOPRfMfKmcOKkST0g8uOuculRADWv
-	 UgTrCVfHcEeBO6kWY9Ue1vTkCSF3sclmpUlrPLfA=
+	b=onZgE5cYmxxVuIAXBQb1Fgi9AmxQvwM5vmfFnEI8yPs9kE5VkVjHhXpC007e1Ifca
+	 FQrohy8JAvh5qb5MzVdRkPrrVbj5/9CVchoWd/jycCHTXRgy7rhLDJSCr9qdzq1LZw
+	 O15k8oaX2qedkH2GPcwe5SNk5Lw1wgEGTzqgmVjE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389016AbfCVMJC (ORCPT
+        id S2389255AbfCVMJF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:09:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47392 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:09:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733201AbfCVMI7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:08:59 -0400
+        id S1733201AbfCVMJD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:09:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67888206C0;
-        Fri, 22 Mar 2019 12:08:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A99520685;
+        Fri, 22 Mar 2019 12:09:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256538;
-        bh=HvvEhrvnZvwc9lt9y9aA5IFXJV0GQigyguAdWWyv5SY=;
+        s=default; t=1553256542;
+        bh=lJ5LkpYE8X2Qwr8okiMGZ21UWuRHA05EZmnhIRisKog=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sinSHuVNkY1kRYBzbbIHwulO5wWEeZWsIYHKinJSQVvBOO6/NbGYM5ie9hxHZSiK4
-         89vGx12SHziLMWqMmJjfAtxbhZjlPDSdjGqm3AMiGo1XmzamL7iJ6rHpigcxdN1o6Q
-         XJCHqopKwHvoSV2LspmqQP13BCVa2DIEJr6PDaUM=
+        b=xPe2hfK5Vpuoz11TLHbgyIAQ/O9UdXPKsRGHEFUNEpdDdrUsDhoFzvgr/UB3ls/m7
+         PM+rAJ8tFiRUcGX7wtsrytZaobRQq6kfoYa4g3tI5x++6AIS7m0kxBDwJSD5tS9eAo
+         Cqvf0hk7umEr42/fqjYh3xxQRwan32zKU+YztP7w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chunyu Hu <chuhu@redhat.com>,
-        Xin Long <lucien.xin@gmail.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        Paul Moore <paul@paul-moore.com>
-Subject: [PATCH 4.19 219/280] selinux: add the missing walk_size + len check in selinux_sctp_bind_connect
-Date:   Fri, 22 Mar 2019 12:16:12 +0100
-Message-Id: <20190322111334.573696241@linuxfoundation.org>
+        stable@vger.kernel.org, Marc Kleine-Budde <mkl@pengutronix.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 210/280] can: flexcan: FLEXCAN_IFLAG_MB: add () around macro argument
+Date:   Fri, 22 Mar 2019 12:16:03 +0100
+Message-Id: <20190322111332.628555222@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -67,51 +65,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Xin Long <lucien.xin@gmail.com>
+[ Upstream commit 22233f7bf2c99ef52ec19d30876a12d2f725972e ]
 
-commit 292c997a1970f8d1e1dfa354ed770a22f7b5a434 upstream.
+This patch fixes the following checkpatch warning:
 
-As does in __sctp_connect(), when checking addrs in a while loop, after
-get the addr len according to sa_family, it's necessary to do the check
-walk_size + af->sockaddr_len > addrs_size to make sure it won't access
-an out-of-bounds addr.
+| Macro argument 'x' may be better as '(x)' to avoid precedence issues
 
-The same thing is needed in selinux_sctp_bind_connect(), otherwise an
-out-of-bounds issue can be triggered:
-
-  [14548.772313] BUG: KASAN: slab-out-of-bounds in selinux_sctp_bind_connect+0x1aa/0x1f0
-  [14548.927083] Call Trace:
-  [14548.938072]  dump_stack+0x9a/0xe9
-  [14548.953015]  print_address_description+0x65/0x22e
-  [14548.996524]  kasan_report.cold.6+0x92/0x1a6
-  [14549.015335]  selinux_sctp_bind_connect+0x1aa/0x1f0
-  [14549.036947]  security_sctp_bind_connect+0x58/0x90
-  [14549.058142]  __sctp_setsockopt_connectx+0x5a/0x150 [sctp]
-  [14549.081650]  sctp_setsockopt.part.24+0x1322/0x3ce0 [sctp]
-
-Cc: stable@vger.kernel.org
-Fixes: d452930fd3b9 ("selinux: Add SCTP support")
-Reported-by: Chunyu Hu <chuhu@redhat.com>
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Reviewed-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-Signed-off-by: Paul Moore <paul@paul-moore.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: cbffaf7aa09e ("can: flexcan: Always use last mailbox for TX")
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/selinux/hooks.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/can/flexcan.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/security/selinux/hooks.c
-+++ b/security/selinux/hooks.c
-@@ -5334,6 +5334,9 @@ static int selinux_sctp_bind_connect(str
- 			return -EINVAL;
- 		}
- 
-+		if (walk_size + len > addrlen)
-+			return -EINVAL;
-+
- 		err = -EINVAL;
- 		switch (optname) {
- 		/* Bind checks */
+diff --git a/drivers/net/can/flexcan.c b/drivers/net/can/flexcan.c
+index ae219b8a7754..2646faffd36e 100644
+--- a/drivers/net/can/flexcan.c
++++ b/drivers/net/can/flexcan.c
+@@ -140,7 +140,7 @@
+ #define FLEXCAN_TX_MB				63
+ #define FLEXCAN_RX_MB_OFF_TIMESTAMP_FIRST	(FLEXCAN_TX_MB_RESERVED_OFF_TIMESTAMP + 1)
+ #define FLEXCAN_RX_MB_OFF_TIMESTAMP_LAST	(FLEXCAN_TX_MB - 1)
+-#define FLEXCAN_IFLAG_MB(x)		BIT(x & 0x1f)
++#define FLEXCAN_IFLAG_MB(x)		BIT((x) & 0x1f)
+ #define FLEXCAN_IFLAG_RX_FIFO_OVERFLOW	BIT(7)
+ #define FLEXCAN_IFLAG_RX_FIFO_WARN	BIT(6)
+ #define FLEXCAN_IFLAG_RX_FIFO_AVAILABLE	BIT(5)
+-- 
+2.19.1
+
 
 
