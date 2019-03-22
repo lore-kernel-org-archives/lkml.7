@@ -2,55 +2,54 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AD27C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:16:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F6CFC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:16:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29D05218E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:16:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 096BD2183E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:16:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553260569;
-	bh=F5LEsaE/XG+3NABslFLqGL8E3ZsVP9Ax/wq7kRnx+RI=;
+	s=default; t=1553260579;
+	bh=Fb3Z68+YjKMKFGJpa/1U/zl2eaeSDC2tq/pfJp68x14=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WEGuSBBpTToUw0+9hQNf//JiiZT34vTWQ36/aYtOuodUZU4OVzPbs0XX/cWBcALHt
-	 Wke2rdWLjM3zm8u0rTwKAT3YA42Nj618zFU3KRiqpPkCcwQtHNE/UkN/iK+SJpJ5F+
-	 t3xReTgwX8zryeNiYYsGvrbaf1HMcNsqkdy/VyrY=
+	b=EZJR3nZeVJ9pR4kHozdn8j9PK+q2QnnUu0zbmTEhHHw08qiXhSmzXHGQ5+ErUTpbv
+	 X6uD1Us5gjZ7Vd0hDKtR/4pSDjDiXs4A+XhwWvDFJ2HCGu3wbXTZ4GdaSY6Y/V1ADE
+	 Y08vVlSk04CU0IHNMBZqOF+Czb0tGGrJAzHG69xU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729789AbfCVNQH (ORCPT
+        id S1729794AbfCVNQR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 09:16:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55144 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 09:16:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728892AbfCVL1Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:27:25 -0400
+        id S1729162AbfCVL1I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:27:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 678DA21917;
-        Fri, 22 Mar 2019 11:27:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D3CC20657;
+        Fri, 22 Mar 2019 11:27:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254043;
-        bh=F5LEsaE/XG+3NABslFLqGL8E3ZsVP9Ax/wq7kRnx+RI=;
+        s=default; t=1553254028;
+        bh=Fb3Z68+YjKMKFGJpa/1U/zl2eaeSDC2tq/pfJp68x14=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NhWLbLLFva5SK/gSxNPCEwyAJHw0Gd3/M78c+wfEJCKKiqR2TBQwLWtDWvj+WhAvA
-         TgR4xnhn6tYCqJbLBkX2QMJUz3syUoUCqSYyhY231m7WlkVM4ZhOemKZ/Waoap8KPO
-         EUe/umUvbEYfM1n2WDVYaTaD9bhn82mx0/Ho2TnU=
+        b=xE7FUiowfJds+EQkAH/Yfrk3GS2vvh2xA4AAmPiIEnyXpjHeLT0CXw6cPo7/XAWY+
+         ij3iTpFPLk2pykx3UB3UUA6i9AfFFPJHW+ZVVRTJ89XSQNw0BKXryYMe8dXancoyIy
+         OzrElBO5WkqsfYuAAoU0osrQrqiNH6fFeB+MYHj0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 015/230] MIPS: jazz: fix 64bit build
-Date:   Fri, 22 Mar 2019 12:12:33 +0100
-Message-Id: <20190322111237.799493734@linuxfoundation.org>
+        stable@vger.kernel.org, Ralph Campbell <rcampbell@nvidia.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        Waiman Long <longman@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.4 002/230] numa: change get_mempolicy() to use nr_node_ids instead of MAX_NUMNODES
+Date:   Fri, 22 Mar 2019 12:12:20 +0100
+Message-Id: <20190322111236.953659180@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -69,75 +68,71 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 41af167fbc0032f9d7562854f58114eaa9270336 ]
+From: Ralph Campbell <rcampbell@nvidia.com>
 
-64bit JAZZ builds failed with
+commit 050c17f239fd53adb55aa768d4f41bc76c0fe045 upstream.
 
-  linux-next/arch/mips/jazz/jazzdma.c: In function `vdma_init`:
-  /linux-next/arch/mips/jazz/jazzdma.c:77:30: error: implicit declaration
-    of function `KSEG1ADDR`; did you mean `CKSEG1ADDR`?
-    [-Werror=implicit-function-declaration]
-    pgtbl = (VDMA_PGTBL_ENTRY *)KSEG1ADDR(pgtbl);
-                                ^~~~~~~~~
-                                CKSEG1ADDR
-  /linux-next/arch/mips/jazz/jazzdma.c:77:10: error: cast to pointer from
-    integer of different size [-Werror=int-to-pointer-cast]
-    pgtbl = (VDMA_PGTBL_ENTRY *)KSEG1ADDR(pgtbl);
-            ^
-  In file included from /linux-next/arch/mips/include/asm/barrier.h:11:0,
-                   from /linux-next/include/linux/compiler.h:248,
-                   from /linux-next/include/linux/kernel.h:10,
-                   from /linux-next/arch/mips/jazz/jazzdma.c:11:
-  /linux-next/arch/mips/include/asm/addrspace.h:41:29: error: cast from
-    pointer to integer of different size [-Werror=pointer-to-int-cast]
-   #define _ACAST32_  (_ATYPE_)(_ATYPE32_) /* widen if necessary */
-                               ^
-  /linux-next/arch/mips/include/asm/addrspace.h:53:25: note: in
-    expansion of macro `_ACAST32_`
-   #define CPHYSADDR(a)  ((_ACAST32_(a)) & 0x1fffffff)
-                           ^~~~~~~~~
-  /linux-next/arch/mips/jazz/jazzdma.c:84:44: note: in expansion of
-    macro `CPHYSADDR`
-    r4030_write_reg32(JAZZ_R4030_TRSTBL_BASE, CPHYSADDR(pgtbl));
+The system call, get_mempolicy() [1], passes an unsigned long *nodemask
+pointer and an unsigned long maxnode argument which specifies the length
+of the user's nodemask array in bits (which is rounded up).  The manual
+page says that if the maxnode value is too small, get_mempolicy will
+return EINVAL but there is no system call to return this minimum value.
+To determine this value, some programs search /proc/<pid>/status for a
+line starting with "Mems_allowed:" and use the number of digits in the
+mask to determine the minimum value.  A recent change to the way this line
+is formatted [2] causes these programs to compute a value less than
+MAX_NUMNODES so get_mempolicy() returns EINVAL.
 
-Using correct casts and CKSEG1ADDR when dealing with the pgtbl setup
-fixes this.
+Change get_mempolicy(), the older compat version of get_mempolicy(), and
+the copy_nodes_to_user() function to use nr_node_ids instead of
+MAX_NUMNODES, thus preserving the defacto method of computing the minimum
+size for the nodemask array and the maxnode argument.
 
-Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: linux-mips@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+[1] http://man7.org/linux/man-pages/man2/get_mempolicy.2.html
+[2] https://lore.kernel.org/lkml/1545405631-6808-1-git-send-email-longman@redhat.com
+
+Link: http://lkml.kernel.org/r/20190211180245.22295-1-rcampbell@nvidia.com
+Fixes: 4fb8e5b89bcbbbb ("include/linux/nodemask.h: use nr_node_ids (not MAX_NUMNODES) in __nodemask_pr_numnodes()")
+Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+Suggested-by: Alexander Duyck <alexander.duyck@gmail.com>
+Cc: Waiman Long <longman@redhat.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/mips/jazz/jazzdma.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ mm/mempolicy.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/mips/jazz/jazzdma.c b/arch/mips/jazz/jazzdma.c
-index db6f5afff4ff1..ea897912bc712 100644
---- a/arch/mips/jazz/jazzdma.c
-+++ b/arch/mips/jazz/jazzdma.c
-@@ -71,14 +71,15 @@ static int __init vdma_init(void)
- 						    get_order(VDMA_PGTBL_SIZE));
- 	BUG_ON(!pgtbl);
- 	dma_cache_wback_inv((unsigned long)pgtbl, VDMA_PGTBL_SIZE);
--	pgtbl = (VDMA_PGTBL_ENTRY *)KSEG1ADDR(pgtbl);
-+	pgtbl = (VDMA_PGTBL_ENTRY *)CKSEG1ADDR((unsigned long)pgtbl);
+--- a/mm/mempolicy.c
++++ b/mm/mempolicy.c
+@@ -1295,7 +1295,7 @@ static int copy_nodes_to_user(unsigned l
+ 			      nodemask_t *nodes)
+ {
+ 	unsigned long copy = ALIGN(maxnode-1, 64) / 8;
+-	const int nbytes = BITS_TO_LONGS(MAX_NUMNODES) * sizeof(long);
++	unsigned int nbytes = BITS_TO_LONGS(nr_node_ids) * sizeof(long);
  
- 	/*
- 	 * Clear the R4030 translation table
- 	 */
- 	vdma_pgtbl_init();
+ 	if (copy > nbytes) {
+ 		if (copy > PAGE_SIZE)
+@@ -1456,7 +1456,7 @@ SYSCALL_DEFINE5(get_mempolicy, int __use
+ 	int uninitialized_var(pval);
+ 	nodemask_t nodes;
  
--	r4030_write_reg32(JAZZ_R4030_TRSTBL_BASE, CPHYSADDR(pgtbl));
-+	r4030_write_reg32(JAZZ_R4030_TRSTBL_BASE,
-+			  CPHYSADDR((unsigned long)pgtbl));
- 	r4030_write_reg32(JAZZ_R4030_TRSTBL_LIM, VDMA_PGTBL_SIZE);
- 	r4030_write_reg32(JAZZ_R4030_TRSTBL_INV, 0);
+-	if (nmask != NULL && maxnode < MAX_NUMNODES)
++	if (nmask != NULL && maxnode < nr_node_ids)
+ 		return -EINVAL;
  
--- 
-2.19.1
-
+ 	err = do_get_mempolicy(&pval, &nodes, addr, flags);
+@@ -1485,7 +1485,7 @@ COMPAT_SYSCALL_DEFINE5(get_mempolicy, in
+ 	unsigned long nr_bits, alloc_size;
+ 	DECLARE_BITMAP(bm, MAX_NUMNODES);
+ 
+-	nr_bits = min_t(unsigned long, maxnode-1, MAX_NUMNODES);
++	nr_bits = min_t(unsigned long, maxnode-1, nr_node_ids);
+ 	alloc_size = ALIGN(nr_bits, BITS_PER_LONG) / 8;
+ 
+ 	if (nmask)
 
 
