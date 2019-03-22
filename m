@@ -2,126 +2,93 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F19BC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 06:07:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE562C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 06:12:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7D24213F2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 06:07:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0ECC218E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 06:12:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727780AbfCVGHf (ORCPT
+        id S1727743AbfCVGMN convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 02:07:35 -0400
-Received: from mga07.intel.com ([134.134.136.100]:53496 "EHLO mga07.intel.com"
+        Fri, 22 Mar 2019 02:12:13 -0400
+Received: from mga17.intel.com ([192.55.52.151]:45966 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727734AbfCVGHf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 02:07:35 -0400
+        id S1727565AbfCVGMN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 02:12:13 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Mar 2019 23:07:34 -0700
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Mar 2019 23:12:12 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,255,1549958400"; 
-   d="scan'208";a="127615550"
-Received: from fei-dev-host.jf.intel.com ([10.7.198.158])
-  by orsmga008.jf.intel.com with ESMTP; 21 Mar 2019 23:07:34 -0700
-From:   fei.yang@intel.com
-To:     balbi@kernel.org, gregkh@linuxfoundation.org,
-        andrzej.p@collabora.com, plr.vincent@gmail.com, fei.yang@intel.com,
-        jingx.shen@intel.com, john.stultz@linaro.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: [PATCH v4] usb: gadget: f_fs: don't free buffer prematurely
-Date:   Thu, 21 Mar 2019 23:07:14 -0700
-Message-Id: <1553234834-69720-1-git-send-email-fei.yang@intel.com>
-X-Mailer: git-send-email 2.7.4
+   d="scan'208";a="144207660"
+Received: from orsmsx103.amr.corp.intel.com ([10.22.225.130])
+  by orsmga002.jf.intel.com with ESMTP; 21 Mar 2019 23:12:12 -0700
+Received: from orsmsx113.amr.corp.intel.com (10.22.240.9) by
+ ORSMSX103.amr.corp.intel.com (10.22.225.130) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Thu, 21 Mar 2019 23:12:12 -0700
+Received: from orsmsx102.amr.corp.intel.com ([169.254.3.192]) by
+ ORSMSX113.amr.corp.intel.com ([169.254.9.249]) with mapi id 14.03.0415.000;
+ Thu, 21 Mar 2019 23:12:11 -0700
+From:   "Yang, Fei" <fei.yang@intel.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+CC:     "balbi@kernel.org" <balbi@kernel.org>,
+        "andrzej.p@collabora.com" <andrzej.p@collabora.com>,
+        "plr.vincent@gmail.com" <plr.vincent@gmail.com>,
+        "Shen, JingX" <jingx.shen@intel.com>,
+        "john.stultz@linaro.org" <john.stultz@linaro.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v3] usb: gadget: f_fs: don't free buffer prematurely
+Thread-Topic: [PATCH v3] usb: gadget: f_fs: don't free buffer prematurely
+Thread-Index: AQHU4C1+gBTRGRZXck6FOc9ySCJUE6YXl0MA//+UF+A=
+Date:   Fri, 22 Mar 2019 06:12:11 +0000
+Message-ID: <02E7334B1630744CBDC55DA8586225837F7FC660@ORSMSX102.amr.corp.intel.com>
+References: <1553203874-130203-1-git-send-email-fei.yang@intel.com>
+ <20190322053602.GA31708@kroah.com>
+In-Reply-To: <20190322053602.GA31708@kroah.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ctpclassification: CTP_NT
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiYTEwZGE3MDctNWM1ZC00OTJhLTg5MWQtZTdhZWZmM2Y5MjhjIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoicGlic210U1A5Qnl6b3hEYlNFMHdabXJrdFhITVErejZDTyt5dUxINjFcL3FEd1dWOHhVVWFqMGk0VVhvWXJ2disifQ==
+dlp-product: dlpe-windows
+dlp-version: 11.0.400.15
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.138]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fei Yang <fei.yang@intel.com>
+>> The following kernel panic happens due to the io_data buffer gets 
+>> deallocated before the async io is completed. Add a check for the case 
+>> where io_data buffer should be deallocated by ffs_user_copy_worker.
+>> 
+>> [   41.663334] BUG: unable to handle kernel NULL pointer dereference at 0000000000000048
+>> 
+>> Fixes: 772a7a724f6 ("usb: gadget: f_fs: Allow scatter-gather buffers")
+>> Signed-off-by: Fei Yang <fei.yang@intel.com>
+>> Reviewed-by: Manu Gautam <mgautam@codeaurora.org>
+>> Tested-by: John Stultz <john.stultz@linaro.org>
+>> ---
+>> v2: add tag: "Fixes: 772a7a724f6 ......", Reviewed-by and Tested-by.
+>> v3: check data for NULL instead of "ret == -EIOCBQUEUED", which would be safer
+>>     and keep the original logic intact.
+> 
+> If it "fixes" a problem in 5.0, we should add a:
+> 	Cc: stable <stable@vger.kernel.org>
+> to it as well.
+Sent [PATCH v4] with Cc: stable
 
-The following kernel panic happens due to the io_data buffer gets deallocated
-before the async io is completed. Add a check for the case where io_data buffer
-should be deallocated by ffs_user_copy_worker.
-
-[   41.663334] BUG: unable to handle kernel NULL pointer dereference at 0000000000000048
-[   41.672099] #PF error: [normal kernel read fault]
-[   41.677356] PGD 20c974067 P4D 20c974067 PUD 20c973067 PMD 0
-[   41.683687] Oops: 0000 [#1] PREEMPT SMP
-[   41.687976] CPU: 1 PID: 7 Comm: kworker/u8:0 Tainted: G     U            5.0.0-quilt-2e5dc0ac-00790-gd8c79f2-dirty #2
-[   41.705309] Workqueue: adb ffs_user_copy_worker
-[   41.705316] RIP: 0010:__vunmap+0x2a/0xc0
-[   41.705318] Code: 0f 1f 44 00 00 48 85 ff 0f 84 87 00 00 00 55 f7 c7 ff 0f 00 00 48 89 e5 41 55 41 89 f5 41 54 53 48 89 fb 75 71 e8 56 d7 ff ff <4c> 8b 60 48 4d 85 e4 74 76 48 89 df e8 25 ff ff ff 45 85 ed 74 46
-[   41.705320] RSP: 0018:ffffbc3a40053df0 EFLAGS: 00010286
-[   41.705322] RAX: 0000000000000000 RBX: ffffbc3a406f1000 RCX: 0000000000000000
-[   41.705323] RDX: 0000000000000001 RSI: 0000000000000001 RDI: 00000000ffffffff
-[   41.705324] RBP: ffffbc3a40053e08 R08: 000000000001fb79 R09: 0000000000000037
-[   41.705325] R10: ffffbc3a40053b68 R11: ffffbc3a40053cad R12: fffffffffffffff2
-[   41.705326] R13: 0000000000000001 R14: 0000000000000000 R15: ffffffffffffffff
-[   41.705328] FS:  0000000000000000(0000) GS:ffff9e2977a80000(0000) knlGS:0000000000000000
-[   41.705329] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   41.705330] CR2: 0000000000000048 CR3: 000000020c994000 CR4: 00000000003406e0
-[   41.705331] Call Trace:
-[   41.705338]  vfree+0x50/0xb0
-[   41.705341]  ffs_user_copy_worker+0xe9/0x1c0
-[   41.705344]  process_one_work+0x19f/0x3e0
-[   41.705348]  worker_thread+0x3f/0x3b0
-[   41.829766]  kthread+0x12b/0x150
-[   41.833371]  ? process_one_work+0x3e0/0x3e0
-[   41.838045]  ? kthread_create_worker_on_cpu+0x70/0x70
-[   41.843695]  ret_from_fork+0x3a/0x50
-[   41.847689] Modules linked in: hci_uart bluetooth ecdh_generic rfkill_gpio dwc3_pci dwc3 snd_usb_audio mei_me tpm_crb snd_usbmidi_lib xhci_pci xhci_hcd mei tpm snd_hwdep cfg80211 snd_soc_skl snd_soc_skl_ipc snd_soc_sst_ipc snd_soc_sst_dsp snd_hda_ext_core snd_hda_core videobuf2_dma_sg crlmodule
-[   41.876880] CR2: 0000000000000048
-[   41.880584] ---[ end trace 2bc4addff0f2e673 ]---
-[   41.891346] RIP: 0010:__vunmap+0x2a/0xc0
-[   41.895734] Code: 0f 1f 44 00 00 48 85 ff 0f 84 87 00 00 00 55 f7 c7 ff 0f 00 00 48 89 e5 41 55 41 89 f5 41 54 53 48 89 fb 75 71 e8 56 d7 ff ff <4c> 8b 60 48 4d 85 e4 74 76 48 89 df e8 25 ff ff ff 45 85 ed 74 46
-[   41.916740] RSP: 0018:ffffbc3a40053df0 EFLAGS: 00010286
-[   41.922583] RAX: 0000000000000000 RBX: ffffbc3a406f1000 RCX: 0000000000000000
-[   41.930563] RDX: 0000000000000001 RSI: 0000000000000001 RDI: 00000000ffffffff
-[   41.938540] RBP: ffffbc3a40053e08 R08: 000000000001fb79 R09: 0000000000000037
-[   41.946520] R10: ffffbc3a40053b68 R11: ffffbc3a40053cad R12: fffffffffffffff2
-[   41.954502] R13: 0000000000000001 R14: 0000000000000000 R15: ffffffffffffffff
-[   41.962482] FS:  0000000000000000(0000) GS:ffff9e2977a80000(0000) knlGS:0000000000000000
-[   41.971536] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   41.977960] CR2: 0000000000000048 CR3: 000000020c994000 CR4: 00000000003406e0
-[   41.985930] Kernel panic - not syncing: Fatal exception
-[   41.991817] Kernel Offset: 0x16000000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
-[   42.009525] Rebooting in 10 seconds..
-[   52.014376] ACPI MEMORY or I/O RESET_REG.
-
-Fixes: 772a7a724f6 ("usb: gadget: f_fs: Allow scatter-gather buffers")
-Signed-off-by: Fei Yang <fei.yang@intel.com>
-Reviewed-by: Manu Gautam <mgautam@codeaurora.org>
-Tested-by: John Stultz <john.stultz@linaro.org>
-Cc: stable <stable@vger.kernel.org>
----
-v2: add tag: "Fixes: 772a7a724f6 ......", Reviewed-by and Tested-by.
-v3: check data for NULL instead of "ret == -EIOCBQUEUED", which would be safer
-    and keep the original logic intact.
-v4: Cc stable as the patch fixes a problem in 5.0
----
- drivers/usb/gadget/function/f_fs.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/usb/gadget/function/f_fs.c b/drivers/usb/gadget/function/f_fs.c
-index 20413c2..0bce731 100644
---- a/drivers/usb/gadget/function/f_fs.c
-+++ b/drivers/usb/gadget/function/f_fs.c
-@@ -1133,7 +1133,8 @@ static ssize_t ffs_epfile_io(struct file *file, struct ffs_io_data *io_data)
- error_mutex:
- 	mutex_unlock(&epfile->mutex);
- error:
--	ffs_free_buffer(io_data);
-+	if (data) /* don't free if there is iocb queued */
-+		ffs_free_buffer(io_data);
- 	return ret;
- }
- 
--- 
-2.7.4
-
+> thanks,
+> 
+> greg k-h
