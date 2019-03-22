@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51D6AC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:10:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCCFBC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:10:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 210DA21929
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:10:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FD7E2082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:10:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256611;
-	bh=5WWqjiJKXtuyWsMBdJ4wOWzPdTFUmozNWhPIasFC9T0=;
+	s=default; t=1553256617;
+	bh=h2+t/1/JcXNw+Oc+PopxsgZhwQaeiWr5i5HGMBK4tAI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0UQGZF/u9xNOeHB3mp/MXKOByowQwDbYse99omF/P8+6zaXuj6ZXa20ru+IbwOfrI
-	 yzsoKA5PLLYEKiRtGPEA8NiLoomg+Nj3IJuwJ2Fv6TIbZefNU7ccxr2YrAcWfDCD3u
-	 NVG3+vqrn9CUSnfbdMFmf7+atIWi4MMCTJRgHghs=
+	b=KRQiY6VzdFdh93OPhOqDwRmfx7WoR3dQ6t8v3RkkrGudeFcPOaPBGYDV8RhRHrrO9
+	 3cXmundMzcYVancSg+776nqdCWt2KdL/fd0NrQASP3kvo3w2lwJxcQZBiSzkYqzEfW
+	 YGcpPxLd0NGL58gQ/IcmYUMVG65krf4IMLsIjcII=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389394AbfCVMKJ (ORCPT
+        id S2389402AbfCVMKQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:10:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48574 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:10:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48612 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388044AbfCVMKH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:10:07 -0400
+        id S2388044AbfCVMKK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:10:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BEBBE21929;
-        Fri, 22 Mar 2019 12:10:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CFCE220830;
+        Fri, 22 Mar 2019 12:10:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256606;
-        bh=5WWqjiJKXtuyWsMBdJ4wOWzPdTFUmozNWhPIasFC9T0=;
+        s=default; t=1553256610;
+        bh=h2+t/1/JcXNw+Oc+PopxsgZhwQaeiWr5i5HGMBK4tAI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0x/YtRdSYnDPTFh280BdPNHz1kwaF9OYtLKqyePYjwcRrPgtnFx3fTGti3+BWjFtK
-         Jorb4bM6TW9tjJ40yNaR/rpZG9vwevh51uvro8Qq6Q6XywuYjjDboPEAlare8B5wbS
-         UA+Zv+vufPwm2+p/SI0wSgONWi8NHvX/AydM3kkU=
+        b=qpdygp2DJ+nI5kwvjUv7F1r68hrza0AbsYIu6CsxCmBbjBV+8Qm23ZDw/ZYJ0pysJ
+         O+aVvJ4tePi24+/K3jjFZ2NUiQO7AcpuyYYXoB61KIGDEwsJ1XDJj1g0Ih43veh3y8
+         MeltweeztVpReK0j7PlDczYXCLpMH6WqeLIWdP1M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         Trond Myklebust <trond.myklebust@hammerspace.com>
-Subject: [PATCH 4.19 240/280] NFS: Fix I/O request leakages
-Date:   Fri, 22 Mar 2019 12:16:33 +0100
-Message-Id: <20190322111339.254405600@linuxfoundation.org>
+Subject: [PATCH 4.19 241/280] NFS: Fix an I/O request leakage in nfs_do_recoalesce
+Date:   Fri, 22 Mar 2019 12:16:34 +0100
+Message-Id: <20190322111339.454217698@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -66,87 +66,29 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-commit f57dcf4c72113c745d83f1c65f7291299f65c14f upstream.
+commit 4d91969ed4dbcefd0e78f77494f0cb8fada9048a upstream.
 
-When we fail to add the request to the I/O queue, we currently leave it
-to the caller to free the failed request. However since some of the
-requests that fail are actually created by nfs_pageio_add_request()
-itself, and are not passed back the caller, this leads to a leakage
-issue, which can again cause page locks to leak.
+Whether we need to exit early, or just reprocess the list, we
+must not lost track of the request which failed to get recoalesced.
 
-This commit addresses the leakage by freeing the created requests on
-error, using desc->pg_completion_ops->error_cleanup()
-
+Fixes: 03d5eb65b538 ("NFS: Fix a memory leak in nfs_do_recoalesce")
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Fixes: a7d42ddb30997 ("nfs: add mirroring support to pgio layer")
-Cc: stable@vger.kernel.org # v4.0: c18b96a1b862: nfs: clean up rest of reqs
-Cc: stable@vger.kernel.org # v4.0: d600ad1f2bdb: NFS41: pop some layoutget
 Cc: stable@vger.kernel.org # v4.0+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfs/pagelist.c |   26 +++++++++++++++++++++-----
- 1 file changed, 21 insertions(+), 5 deletions(-)
+ fs/nfs/pagelist.c |    1 -
+ 1 file changed, 1 deletion(-)
 
 --- a/fs/nfs/pagelist.c
 +++ b/fs/nfs/pagelist.c
-@@ -989,6 +989,17 @@ static void nfs_pageio_doio(struct nfs_p
- 	}
- }
+@@ -1093,7 +1093,6 @@ static int nfs_do_recoalesce(struct nfs_
+ 			struct nfs_page *req;
  
-+static void
-+nfs_pageio_cleanup_request(struct nfs_pageio_descriptor *desc,
-+		struct nfs_page *req)
-+{
-+	LIST_HEAD(head);
-+
-+	nfs_list_remove_request(req);
-+	nfs_list_add_request(req, &head);
-+	desc->pg_completion_ops->error_cleanup(&head);
-+}
-+
- /**
-  * nfs_pageio_add_request - Attempt to coalesce a request into a page list.
-  * @desc: destination io descriptor
-@@ -1026,10 +1037,8 @@ static int __nfs_pageio_add_request(stru
- 			nfs_page_group_unlock(req);
- 			desc->pg_moreio = 1;
- 			nfs_pageio_doio(desc);
--			if (desc->pg_error < 0)
--				return 0;
--			if (mirror->pg_recoalesce)
--				return 0;
-+			if (desc->pg_error < 0 || mirror->pg_recoalesce)
-+				goto out_cleanup_subreq;
- 			/* retry add_request for this subreq */
- 			nfs_page_group_lock(req);
- 			continue;
-@@ -1062,6 +1071,10 @@ err_ptr:
- 	desc->pg_error = PTR_ERR(subreq);
- 	nfs_page_group_unlock(req);
- 	return 0;
-+out_cleanup_subreq:
-+	if (req != subreq)
-+		nfs_pageio_cleanup_request(desc, subreq);
-+	return 0;
- }
- 
- static int nfs_do_recoalesce(struct nfs_pageio_descriptor *desc)
-@@ -1169,11 +1182,14 @@ int nfs_pageio_add_request(struct nfs_pa
- 		if (nfs_pgio_has_mirroring(desc))
- 			desc->pg_mirror_idx = midx;
- 		if (!nfs_pageio_add_request_mirror(desc, dupreq))
--			goto out_failed;
-+			goto out_cleanup_subreq;
- 	}
- 
- 	return 1;
- 
-+out_cleanup_subreq:
-+	if (req != dupreq)
-+		nfs_pageio_cleanup_request(desc, dupreq);
- out_failed:
- 	/* remember fatal errors */
- 	if (nfs_error_is_fatal(desc->pg_error))
+ 			req = list_first_entry(&head, struct nfs_page, wb_list);
+-			nfs_list_remove_request(req);
+ 			if (__nfs_pageio_add_request(desc, req))
+ 				continue;
+ 			if (desc->pg_error < 0) {
 
 
