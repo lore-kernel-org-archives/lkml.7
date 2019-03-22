@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39734C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:29:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE108C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:29:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06F7F218E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:29:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71E522183E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:29:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254141;
-	bh=SlG/z3BEnV6VrO2KRAgQiva44bi4mVlzaL3uuAVhsM8=;
+	s=default; t=1553254145;
+	bh=5CEdWi3+IJoVbesMIIZBD0SNwxHswr6V8G83JVlygqw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sM0/ooHykGFtn1ANVJ2iHsToDGMiV97NGWZ5KvGaOtv4Z7xA8DpKvVKYnZQZa/glb
-	 9v23RI81VfABvW2ywxFItNbSibU2vwGaYwXNVAgdAVRXtUHnh8twGSGvmvBT+s9vs1
-	 ObfTA3yhbdJNPWF3bw5cKkUzXWDNyLc3ka+hk1Oo=
+	b=P0QmynkLO4/Dps2dSgHUo9nq3WPWRtLNLJPNXkbUAcYewlXu/Hcv8VaC43YqWJaVh
+	 v3bpuCa52SH934xtr7FTuFD5wuYNdqm03pDNxIXlCe+4zMYxvrRoxPA3ugHN/vD2Vn
+	 zZ8wQnrCrh0SSnuPc77u7oHbKWwvMXlNNCa0P5lA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729748AbfCVL27 (ORCPT
+        id S1729757AbfCVL3E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:28:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56738 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:29:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728859AbfCVL2z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:28:55 -0400
+        id S1728859AbfCVL3B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:29:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC34E21916;
-        Fri, 22 Mar 2019 11:28:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 806E720449;
+        Fri, 22 Mar 2019 11:29:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254134;
-        bh=SlG/z3BEnV6VrO2KRAgQiva44bi4mVlzaL3uuAVhsM8=;
+        s=default; t=1553254141;
+        bh=5CEdWi3+IJoVbesMIIZBD0SNwxHswr6V8G83JVlygqw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1F41TJBSiE7WGkZJrIMgb9WduslM6cBo1qaO2hrGwAFlbXOTOs3auyfCq3WKRqT2P
-         hXCtCFffaQOhOZrKrN50mI6IzwiirtkS07eLRZXz4Re0gIT8GhfIRA3CHXhl6Xzx3h
-         lPYAT75TBDIHyzCrtpgvVwb4ksGxX333ybrVXx5M=
+        b=VDn7b2eiYrzGney0UjFPX+JWjxEN3/1Ds6Fluuzwuy9O4kFA6PmME5C84OPNgJL9V
+         KCh38vCTtjO5Hjf3i1uLmTbnbo1/5j1GYLUIRHUVwQl7tfqVr/2R56buuKD+lNrP3D
+         6EpiSfkfj1tgO1NBqw8FAC6hJWIDdY/DyTO2ql9Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jianlin Shi <jishi@redhat.com>,
-        Oussama Ghorbel <ghorbel@pivasoftware.com>,
-        Hangbin Liu <liuhangbin@gmail.com>,
-        Stefano Brivio <sbrivio@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 026/230] sit: check if IPv6 enabled before calling ip6_err_gen_icmpv6_unreach()
-Date:   Fri, 22 Mar 2019 12:12:44 +0100
-Message-Id: <20190322111238.535953958@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        Vineet Gupta <vgupta@synopsys.com>
+Subject: [PATCH 4.4 028/230] ARCv2: Enable unaligned access in early ASM code
+Date:   Fri, 22 Mar 2019 12:12:46 +0100
+Message-Id: <20190322111238.661190525@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -67,45 +66,49 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Hangbin Liu <liuhangbin@gmail.com>
+From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 
-[ Upstream commit 173656accaf583698bac3f9e269884ba60d51ef4 ]
+commit 252f6e8eae909bc075a1b1e3b9efb095ae4c0b56 upstream.
 
-If we disabled IPv6 from the kernel command line (ipv6.disable=1), we should
-not call ip6_err_gen_icmpv6_unreach(). This:
+It is currently done in arc_init_IRQ() which might be too late
+considering gcc 7.3.1 onwards (GNU 2018.03) generates unaligned
+memory accesses by default
 
-  ip link add sit1 type sit local 192.0.2.1 remote 192.0.2.2 ttl 1
-  ip link set sit1 up
-  ip addr add 198.51.100.1/24 dev sit1
-  ping 198.51.100.2
-
-if IPv6 is disabled at boot time, will crash the kernel.
-
-v2: there's no need to use in6_dev_get(), use __in6_dev_get() instead,
-    as we only need to check that idev exists and we are under
-    rcu_read_lock() (from netif_receive_skb_internal()).
-
-Reported-by: Jianlin Shi <jishi@redhat.com>
-Fixes: ca15a078bd90 ("sit: generate icmpv6 error when receiving icmpv4 error")
-Cc: Oussama Ghorbel <ghorbel@pivasoftware.com>
-Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
-Reviewed-by: Stefano Brivio <sbrivio@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: stable@vger.kernel.org #4.4+
+Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+[vgupta: rewrote changelog]
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/ipv6/sit.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/ipv6/sit.c
-+++ b/net/ipv6/sit.c
-@@ -577,7 +577,7 @@ static int ipip6_err(struct sk_buff *skb
- 		goto out;
+---
+ arch/arc/kernel/head.S |   10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+--- a/arch/arc/kernel/head.S
++++ b/arch/arc/kernel/head.S
+@@ -17,6 +17,7 @@
+ #include <asm/entry.h>
+ #include <asm/arcregs.h>
+ #include <asm/cache.h>
++#include <asm/irqflags.h>
  
- 	err = 0;
--	if (!ipip6_err_gen_icmpv6_unreach(skb))
-+	if (__in6_dev_get(skb->dev) && !ipip6_err_gen_icmpv6_unreach(skb))
- 		goto out;
+ .macro CPU_EARLY_SETUP
  
- 	if (t->parms.iph.ttl == 0 && type == ICMP_TIME_EXCEEDED)
+@@ -47,6 +48,15 @@
+ 	sr	r5, [ARC_REG_DC_CTRL]
+ 
+ 1:
++
++#ifdef CONFIG_ISA_ARCV2
++	; Unaligned access is disabled at reset, so re-enable early as
++	; gcc 7.3.1 (ARC GNU 2018.03) onwards generates unaligned access
++	; by default
++	lr	r5, [status32]
++	bset	r5, r5, STATUS_AD_BIT
++	kflag	r5
++#endif
+ .endm
+ 
+ 	.section .init.text, "ax",@progbits
 
 
