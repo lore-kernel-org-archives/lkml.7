@@ -2,116 +2,166 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE9DCC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 00:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5892DC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 00:06:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4B5A21902
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 00:05:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3048B21902
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 00:06:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727418AbfCVAFt (ORCPT
+        id S1727511AbfCVAG5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 20:05:49 -0400
-Received: from smtprelay04.ispgateway.de ([80.67.29.8]:35908 "EHLO
-        smtprelay04.ispgateway.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726611AbfCVAFs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 20:05:48 -0400
-X-Greylist: delayed 4865 seconds by postgrey-1.27 at vger.kernel.org; Thu, 21 Mar 2019 20:05:47 EDT
-Received: from [95.33.77.149] (helo=localhost)
-        by smtprelay04.ispgateway.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <git@jochen.sprickerhof.de>)
-        id 1h74DR-0006Sy-Ua; Thu, 21 Mar 2019 21:23:06 +0100
-Date:   Thu, 21 Mar 2019 21:23:03 +0100
-From:   Jochen Sprickerhof <git@jochen.sprickerhof.de>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Roger Quadros <rogerq@ti.com>, Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH] usb: dwc3: Softdep for GBit Ethernet on Odroid XU4
-Message-ID: <20190321202303.GA1399@vis>
+        Thu, 21 Mar 2019 20:06:57 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:54904 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727439AbfCVAGy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 20:06:54 -0400
+Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
+        by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1h77hx-0002XF-Rh; Thu, 21 Mar 2019 18:06:52 -0600
+Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.89)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1h77hw-00044X-1v; Thu, 21 Mar 2019 18:06:48 -0600
+From:   Logan Gunthorpe <logang@deltatee.com>
+To:     linux-kernel@vger.kernel.org, linux-ntb@googlegroups.com,
+        linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org,
+        linux-kselftest@vger.kernel.org, Jon Mason <jdmason@kudzu.us>,
+        Joerg Roedel <joro@8bytes.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Allen Hubbe <allenbh@gmail.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Eric Pilmore <epilmore@gigaio.com>,
+        Logan Gunthorpe <logang@deltatee.com>
+Date:   Thu, 21 Mar 2019 18:06:43 -0600
+Message-Id: <20190322000645.15580-9-logang@deltatee.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190322000645.15580-1-logang@deltatee.com>
+References: <20190322000645.15580-1-logang@deltatee.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="8t9RHnE3ZwKMSgU+"
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Df-Sender: NTc3MDAz
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 172.16.1.31
+X-SA-Exim-Rcpt-To: linux-ntb@googlegroups.com, iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-kselftest@vger.kernel.org, jdmason@kudzu.us, joro@8bytes.org, bhelgaas@google.com, dave.jiang@intel.com, allenbh@gmail.com, fancer.lancer@gmail.com, epilmore@gigaio.com, logang@deltatee.com
+X-SA-Exim-Mail-From: gunthorp@deltatee.com
+Subject: [PATCH v3 08/10] NTB: Add ntb_msi_test support to ntb_test
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+When the ntb_msi_test module is available, the test code will trigger
+each of the interrupts and ensure the corresponding occurrences files
+gets incremented.
 
---8t9RHnE3ZwKMSgU+
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-This adds a soft dependency to the dwc3 module to load it after
-xhci-plat as proposed in:
-
-https://marc.info/?l=3Dlinux-usb&m=3D155230272022603&w=3D2
-
-Old behaviour:
-
-$ lsusb -t
-/:  Bus 06.Port 1: Dev 1, Class=3Droot_hub, Driver=3Dxhci-hcd/1p, 5000M
-/:  Bus 05.Port 1: Dev 1, Class=3Droot_hub, Driver=3Dxhci-hcd/1p, 480M
-   |__ Port 1: Dev 2, If 0, Class=3DVendor Specific Class, Driver=3Dr8152, =
-480M
-
-New behaviour:
-
-$ lsusb -t
-/:  Bus 06.Port 1: Dev 1, Class=3Droot_hub, Driver=3Dxhci-hcd/1p, 5000M
-   |__ Port 1: Dev 2, If 0, Class=3DVendor Specific Class, Driver=3Dr8152, =
-5000M
-
-Tested on Debian unstable using Linux 4.19.29.
-
-Note, this needs a hard reset when coming from an unpatched kernel.
-
-Signed-off-by: Jochen Sprickerhof <git@jochen.sprickerhof.de>
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Cc: Jon Mason <jdmason@kudzu.us>
+Cc: Dave Jiang <dave.jiang@intel.com>
+Cc: Allen Hubbe <allenbh@gmail.com>
 ---
- drivers/usb/dwc3/core.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/testing/selftests/ntb/ntb_test.sh | 54 ++++++++++++++++++++++++-
+ 1 file changed, 52 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-index 103807587dc6..9017e4ed9d99 100644
---- a/drivers/usb/dwc3/core.c
-+++ b/drivers/usb/dwc3/core.c
-@@ -1746,3 +1746,4 @@ MODULE_ALIAS("platform:dwc3");
- MODULE_AUTHOR("Felipe Balbi <balbi@ti.com>");
- MODULE_LICENSE("GPL v2");
- MODULE_DESCRIPTION("DesignWare USB3 DRD Controller Driver");
-+MODULE_SOFTDEP("pre: xhci_plat_hcd");
---=20
-2.11.0
+diff --git a/tools/testing/selftests/ntb/ntb_test.sh b/tools/testing/selftests/ntb/ntb_test.sh
+index 17ca36403d04..1a10b8f67727 100755
+--- a/tools/testing/selftests/ntb/ntb_test.sh
++++ b/tools/testing/selftests/ntb/ntb_test.sh
+@@ -87,10 +87,10 @@ set -e
+ 
+ function _modprobe()
+ {
+-	modprobe "$@"
++	modprobe "$@" || return 1
+ 
+ 	if [[ "$REMOTE_HOST" != "" ]]; then
+-		ssh "$REMOTE_HOST" modprobe "$@"
++		ssh "$REMOTE_HOST" modprobe "$@" || return 1
+ 	fi
+ }
+ 
+@@ -451,6 +451,30 @@ function pingpong_test()
+ 	echo "  Passed"
+ }
+ 
++function msi_test()
++{
++	LOC=$1
++	REM=$2
++
++	write_file 1 $LOC/ready
++
++	echo "Running MSI interrupt tests on: $(subdirname $LOC) / $(subdirname $REM)"
++
++	CNT=$(read_file "$LOC/count")
++	for ((i = 0; i < $CNT; i++)); do
++		START=$(read_file $REM/../irq${i}_occurrences)
++		write_file $i $LOC/trigger
++		END=$(read_file $REM/../irq${i}_occurrences)
++
++		if [[ $(($END - $START)) != 1 ]]; then
++			echo "MSI did not trigger the interrupt on the remote side!" >&2
++			exit 1
++		fi
++	done
++
++	echo "  Passed"
++}
++
+ function perf_test()
+ {
+ 	USE_DMA=$1
+@@ -529,6 +553,29 @@ function ntb_pingpong_tests()
+ 	_modprobe -r ntb_pingpong
+ }
+ 
++function ntb_msi_tests()
++{
++	LOCAL_MSI="$DEBUGFS/ntb_msi_test/$LOCAL_DEV"
++	REMOTE_MSI="$REMOTE_HOST:$DEBUGFS/ntb_msi_test/$REMOTE_DEV"
++
++	echo "Starting ntb_msi_test tests..."
++
++	if ! _modprobe ntb_msi_test 2> /dev/null; then
++		echo "  Not doing MSI tests seeing the module is not available."
++		return
++	fi
++
++	port_test $LOCAL_MSI $REMOTE_MSI
++
++	LOCAL_PEER="$LOCAL_MSI/peer$LOCAL_PIDX"
++	REMOTE_PEER="$REMOTE_MSI/peer$REMOTE_PIDX"
++
++	msi_test $LOCAL_PEER $REMOTE_PEER
++	msi_test $REMOTE_PEER $LOCAL_PEER
++
++	_modprobe -r ntb_msi_test
++}
++
+ function ntb_perf_tests()
+ {
+ 	LOCAL_PERF="$DEBUGFS/ntb_perf/$LOCAL_DEV"
+@@ -550,6 +597,7 @@ function cleanup()
+ 	_modprobe -r ntb_perf 2> /dev/null
+ 	_modprobe -r ntb_pingpong 2> /dev/null
+ 	_modprobe -r ntb_transport 2> /dev/null
++	_modprobe -r ntb_msi_test 2> /dev/null
+ 	set -e
+ }
+ 
+@@ -586,5 +634,7 @@ ntb_tool_tests
+ echo
+ ntb_pingpong_tests
+ echo
++ntb_msi_tests
++echo
+ ntb_perf_tests
+ echo
+-- 
+2.20.1
 
-
---8t9RHnE3ZwKMSgU+
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEc7KZy9TurdzAF+h6W//cwljmlDMFAlyT8qQACgkQW//cwljm
-lDM4sw/+PEfruRK0G/l82TiAYEWuL/Cq9U6r99sWkfvz9eSVZXFsK72/DvgvwoID
-7WbSDRVMSq6pNe8yWW62T28DTPiNMFjU6rBMsiTWUI1LDMArdc0cadY5EgufTE4K
-08eEGrHqxLo8uWhD+qrD847354flPE8f1DsuyB2Un6jODYiu9uQPISfwqekxq5Qm
-s9rVnzjWZyYEH28vWNf5ycHav5fopfeeQwpsysjfv00ZGh6912PuE0R9HKuLz3n4
-wmBO88X8soLVoC+wlGorCLzFS1HkrXHuvqvuLA2DD9F36PnMugmckp8K9hEd6oD+
-aq/4dj9o8nBnmWVvD8sYCN8oiLcLkHqybWZ9NPcRelPTHItIg2vW3jACzCFbQbf3
-3Hn1oqCSvSWLwFj19NJvJbXH6GN9CW320LIqb2OUgFQmN767vmB5Gblb8rYIcDze
-PNxn1cqcT1UYtjukb+fCE3BsrLpjND3nvOYF1TmiPk0XspN/H5BwIElbKSrX6sXq
-cJ8mEZkU0FCYFxC3Q5lDFcL1xGE39sEq6ZBXrpk2XVplRl3E7o3NOSCdG0T5JVc1
-3aKLX5BWRzPps9hMBPtmjot7v68TB3xaMIEiuAE+GL3mKAiCKgJwmEFLGZ+ciTZt
-84JoLiR1jpIOfTX80NdliYLMthAmuuT3xJgr7dG3Tjl/xUJFNCw=
-=wug8
------END PGP SIGNATURE-----
-
---8t9RHnE3ZwKMSgU+--
