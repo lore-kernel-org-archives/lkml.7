@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E3BAC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:48:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A61AC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:48:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B345218B0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:48:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1889A21916
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:48:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255319;
-	bh=7YqlFI1puUMBOsJ58rVcZMfMHzU6Y0defXicXwLOL5k=;
+	s=default; t=1553255324;
+	bh=pEzhlSD0hK3tHdBwNLzvGMvq5r35kcrtrJ7rmG4NA5Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FmeA0DSgIM0fVKC7JC7DB66l35QVqK6vZTQK+amhJW5WoMDTQ6YPM4B0/dCPEiI6z
-	 cnhHfv/kA7vKMEsuwY1hhdnVBYtQ2qItlGn+ccWt//zgkmMTNPc9G6QtYB4MN27Xee
-	 byTSv9W9dgz4sW710wWY3FSO3eQ9IBwT+jbGaV+A=
+	b=CIb41OarbJVixMkuXhDCZ34npOHHqQmqlGJF+FQd+reG2YKljGWhIAiBRcib2n00O
+	 VLEEt5GPL6cVF7OmkaockdmJQfR4BKOj0uaJC5D3levs6C0gc69PBYEBH1uGFnZB2f
+	 Yzjv5oy+zkLwSls+/uO1EudhIOovsIZKxXdmt4hM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732332AbfCVLsh (ORCPT
+        id S1732333AbfCVLsm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:48:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51908 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:48:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51990 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732065AbfCVLsc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:48:32 -0400
+        id S1731629AbfCVLsj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:48:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C27A4218B0;
-        Fri, 22 Mar 2019 11:48:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C67A21916;
+        Fri, 22 Mar 2019 11:48:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255312;
-        bh=7YqlFI1puUMBOsJ58rVcZMfMHzU6Y0defXicXwLOL5k=;
+        s=default; t=1553255318;
+        bh=pEzhlSD0hK3tHdBwNLzvGMvq5r35kcrtrJ7rmG4NA5Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EI+ntQqHjFXbrVolDelQ4s4l/ccvKyOpJm/skgpG4EDlP4Vr1Is4bZh7uSRE4+Hmi
-         mc/HI9R2U+mLVbvvYGP3ftX6NrQ7QVSY/gtZmcgUIm5Kk24Q8v5PZOZCEynommQ8cA
-         jA3E/9ssLcDoMFi2pCG22nCDewJmjEl1huUEjQmo=
+        b=Q6quZIl9tsM+zDcQzwwitO4nMoektY4XK4s5XeclNuKYQGv6qyPRTbZh30sOMNAxR
+         cjyFiC8qDKsdUIN1asVVdldRgmM6ioDK8CwwODCA6ZHpNb0MXH1UNfowm6QcA+sqAd
+         QAVRwoRac2DOiZRKnN5dtkZYOLPvWNzA4BBmqA/E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ariel Elior <ariel.elior@marvell.com>,
-        Michal Kalderon <michal.kalderon@marvell.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Sven Van Asbroeck <thesven73@gmail.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sven Van Asbroeck <TheSven73@gmail.com>,
+        Robin van der Gracht <robin@protonic.nl>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 051/183] qed: Fix iWARP syn packet mac address validation.
-Date:   Fri, 22 Mar 2019 12:14:39 +0100
-Message-Id: <20190322111245.400008604@linuxfoundation.org>
+Subject: [PATCH 4.14 035/183] auxdisplay: ht16k33: fix potential user-after-free on module unload
+Date:   Fri, 22 Mar 2019 12:14:23 +0100
+Message-Id: <20190322111244.271735719@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111241.819468003@linuxfoundation.org>
 References: <20190322111241.819468003@linuxfoundation.org>
@@ -67,40 +69,42 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 8be3dadf04050c2907760ec1955ca1c8fbc25585 ]
+[ Upstream commit 69ef9bc54715fb1cb7786ada15774e469e822209 ]
 
-The ll2 forwards all syn packets to the driver without validating the mac
-address. Add validation check in the driver's iWARP listener flow and drop
-the packet if it isn't intended for the device.
+On module unload/remove, we need to ensure that work does not run
+after we have freed resources. Concretely, cancel_delayed_work()
+may return while the callback function is still running.
 
-Signed-off-by: Ariel Elior <ariel.elior@marvell.com>
-Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+>From kernel/workqueue.c:
+
+    The work callback function may still be running on return,
+    unless it returns true and the work doesn't re-arm itself.
+    Explicitly flush or use cancel_delayed_work_sync() to wait on it.
+
+Link: https://lore.kernel.org/lkml/20190204220952.30761-1-TheSven73@googlemail.com/
+Reported-by: Sven Van Asbroeck <thesven73@gmail.com>
+Reviewed-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Reviewed-by: Sven Van Asbroeck <TheSven73@gmail.com>
+Acked-by: Robin van der Gracht <robin@protonic.nl>
+Signed-off-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qed/qed_iwarp.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/auxdisplay/ht16k33.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_iwarp.c b/drivers/net/ethernet/qlogic/qed/qed_iwarp.c
-index eb666877d1aa..bb09f5a9846f 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_iwarp.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_iwarp.c
-@@ -1651,6 +1651,15 @@ qed_iwarp_parse_rx_pkt(struct qed_hwfn *p_hwfn,
+diff --git a/drivers/auxdisplay/ht16k33.c b/drivers/auxdisplay/ht16k33.c
+index fbfa5b4cc567..a93ded300740 100644
+--- a/drivers/auxdisplay/ht16k33.c
++++ b/drivers/auxdisplay/ht16k33.c
+@@ -517,7 +517,7 @@ static int ht16k33_remove(struct i2c_client *client)
+ 	struct ht16k33_priv *priv = i2c_get_clientdata(client);
+ 	struct ht16k33_fbdev *fbdev = &priv->fbdev;
  
- 	eth_hlen = ETH_HLEN + (vlan_valid ? sizeof(u32) : 0);
- 
-+	if (!ether_addr_equal(ethh->h_dest,
-+			      p_hwfn->p_rdma_info->iwarp.mac_addr)) {
-+		DP_VERBOSE(p_hwfn,
-+			   QED_MSG_RDMA,
-+			   "Got unexpected mac %pM instead of %pM\n",
-+			   ethh->h_dest, p_hwfn->p_rdma_info->iwarp.mac_addr);
-+		return -EINVAL;
-+	}
-+
- 	ether_addr_copy(remote_mac_addr, ethh->h_source);
- 	ether_addr_copy(local_mac_addr, ethh->h_dest);
- 
+-	cancel_delayed_work(&fbdev->work);
++	cancel_delayed_work_sync(&fbdev->work);
+ 	unregister_framebuffer(fbdev->info);
+ 	framebuffer_release(fbdev->info);
+ 	free_page((unsigned long) fbdev->buffer);
 -- 
 2.19.1
 
