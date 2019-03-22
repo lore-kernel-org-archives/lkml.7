@@ -2,94 +2,170 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6608EC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 20:10:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2415AC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 20:14:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3434E2148D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 20:10:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553285420;
-	bh=N7Fug2Kkrybrh64/pBn/iW68IVpE9phE3sgG7bUXX04=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=mWAekHJ4QUt/nH0T2P1bymTrfxRy15kMiBXnLgtxcKDEb3cRnt9p+cmZEf4vkcHUl
-	 XUJ6Zovw/HhF30UglCIR177zhGkSMs+4RDZaDDUqFt6GEWzr8Dhamv8lLATknsYCaS
-	 TVofDeY/0X6tdOHTNjc7dk/90+zqEEFLNacOoIJ8=
+	by mail.kernel.org (Postfix) with ESMTP id EBA28204FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 20:14:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727615AbfCVUKS (ORCPT
+        id S1727075AbfCVUN7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 16:10:18 -0400
-Received: from mail.linuxfoundation.org ([140.211.169.12]:46734 "EHLO
-        mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726589AbfCVUKS (ORCPT
+        Fri, 22 Mar 2019 16:13:59 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:35342 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726093AbfCVUN6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 16:10:18 -0400
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
-        by mail.linuxfoundation.org (Postfix) with ESMTPSA id 9E62D1BC1;
-        Fri, 22 Mar 2019 20:10:16 +0000 (UTC)
-Date:   Fri, 22 Mar 2019 13:10:15 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Chris Down <chris@chrisdown.name>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>, Tejun Heo <tj@kernel.org>,
-        Roman Gushchin <guro@fb.com>, Dennis Zhou <dennis@kernel.org>,
-        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-        linux-mm@kvack.org, kernel-team@fb.com
-Subject: Re: [PATCH REBASED] mm, memcg: Make scan aggression always exclude
- protection
-Message-Id: <20190322131015.05edf9fac014f4cacf10dd2a@linux-foundation.org>
-In-Reply-To: <20190322160307.GA3316@chrisdown.name>
-References: <20190228213050.GA28211@chrisdown.name>
-        <20190322160307.GA3316@chrisdown.name>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Fri, 22 Mar 2019 16:13:58 -0400
+Received: by mail-qk1-f194.google.com with SMTP id z13so2004382qki.2
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 13:13:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=3GVlQtUkOBzM0wtGS5EMCR1UzhxBjccrlpb4vEqZEkU=;
+        b=m5HBWVT1I+8uCJp8o8inPJRaFAxT5N9XejSgHG5ZZoGtfESbUsip4lE3dGbk5cUr0u
+         ZlzaWXmBqmzHhuYU1ZDLtBNbvKx1qlW+1L69L+DzGQjAIxo9LnBvTcdz9Ucc/mRyxdPE
+         +iPy2q1OUus+HbrgKZOExIG3drQ4dWWVNRdzUCNXr4C69cMFidvRZObrzRHJhnWrtzBN
+         Xfr/QZFhdlVae95A/g7AkRdl9YubD9hi+F8LYI2WPJfdX2wjAIikGRcHBKV5r5XnBntW
+         d7a+WFAUhhLNzNHQRb0sRqY1cKcXDLZEHsZV0viV2dH/yMBJOyAEcJFFHeN5vVWAvQ3Z
+         tcEg==
+X-Gm-Message-State: APjAAAXC78ue6r18Q9zjaJCkzUcnx11rLBpfbe01vn81r5sfT2U3u1qC
+        NHRMejB7L9r6GwFj3zmcmqcJmA==
+X-Google-Smtp-Source: APXvYqwzUac+SDBZB/olBS2PKp60a32yDr0hpyBUOdAVetzLxH59C389evgLDbw/IpbGp6I71tHhCA==
+X-Received: by 2002:ae9:f509:: with SMTP id o9mr9198639qkg.133.1553285637702;
+        Fri, 22 Mar 2019 13:13:57 -0700 (PDT)
+Received: from [10.150.73.190] (178.sub-174-227-146.myvzw.com. [174.227.146.178])
+        by smtp.gmail.com with ESMTPSA id 92sm5508111qtc.97.2019.03.22.13.13.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 22 Mar 2019 13:13:57 -0700 (PDT)
+Subject: Re: [PATCH 2/4] glibc: sched_getcpu(): use rseq cpu_id TLS on Linux
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Carlos O'Donell <carlos@redhat.com>
+Cc:     Florian Weimer <fweimer@redhat.com>,
+        Joseph Myers <joseph@codesourcery.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        libc-alpha@sourceware.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ben Maurer <bmaurer@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org
+References: <20190212194253.1951-1-mathieu.desnoyers@efficios.com>
+ <20190212194253.1951-3-mathieu.desnoyers@efficios.com>
+From:   Carlos O'Donell <codonell@redhat.com>
+Message-ID: <fc431a95-789a-6c02-13d0-d0d01916ee99@redhat.com>
+Date:   Fri, 22 Mar 2019 16:13:52 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
+MIME-Version: 1.0
+In-Reply-To: <20190212194253.1951-3-mathieu.desnoyers@efficios.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 22 Mar 2019 16:03:07 +0000 Chris Down <chris@chrisdown.name> wrote:
-
-> This patch is an incremental improvement on the existing
-> memory.{low,min} relative reclaim work to base its scan pressure
-> calculations on how much protection is available compared to the current
-> usage, rather than how much the current usage is over some protection
-> threshold.
+On 2/12/19 2:42 PM, Mathieu Desnoyers wrote:
+> When available, use the cpu_id field from __rseq_abi on Linux to
+> implement sched_getcpu(). Fall-back on the vgetcpu vDSO if unavailable.
 > 
-> Previously the way that memory.low protection works is that if you are
-> 50% over a certain baseline, you get 50% of your normal scan pressure.
-> This is certainly better than the previous cliff-edge behaviour, but it
-> can be improved even further by always considering memory under the
-> currently enforced protection threshold to be out of bounds. This means
-> that we can set relatively low memory.low thresholds for variable or
-> bursty workloads while still getting a reasonable level of protection,
-> whereas with the previous version we may still trivially hit the 100%
-> clamp. The previous 100% clamp is also somewhat arbitrary, whereas this
-> one is more concretely based on the currently enforced protection
-> threshold, which is likely easier to reason about.
+> Benchmarks:
 > 
-> There is also a subtle issue with the way that proportional reclaim
-> worked previously -- it promotes having no memory.low, since it makes
-> pressure higher during low reclaim. This happens because we base our
-> scan pressure modulation on how far memory.current is between memory.min
-> and memory.low, but if memory.low is unset, we only use the overage
-> method. In most cromulent configurations, this then means that we end up
-> with *more* pressure than with no memory.low at all when we're in low
-> reclaim, which is not really very usable or expected.
+> x86-64: Intel E5-2630 v3@2.40GHz, 16-core, hyperthreading
+
+This patch looks good to me for master, but is blocked on patch 1/4
+being reworked.
+
+Reviewed-by: Carlos O'Donell <carlos@redhat.com>
+
+> glibc sched_getcpu():                     13.7 ns (baseline)
+> glibc sched_getcpu() using rseq:           2.5 ns (speedup:  5.5x)
+> inline load cpuid from __rseq_abi TLS:     0.8 ns (speedup: 17.1x)
 > 
-> With this patch, memory.low and memory.min affect reclaim pressure in a
-> more understandable and composable way. For example, from a user
-> standpoint, "protected" memory now remains untouchable from a reclaim
-> aggression standpoint, and users can also have more confidence that
-> bursty workloads will still receive some amount of guaranteed
-> protection.
+> Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> CC: Carlos O'Donell <carlos@redhat.com>
+> CC: Florian Weimer <fweimer@redhat.com>
+> CC: Joseph Myers <joseph@codesourcery.com>
+> CC: Szabolcs Nagy <szabolcs.nagy@arm.com>
+> CC: Thomas Gleixner <tglx@linutronix.de>
+> CC: Ben Maurer <bmaurer@fb.com>
+> CC: Peter Zijlstra <peterz@infradead.org>
+> CC: "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>
+> CC: Boqun Feng <boqun.feng@gmail.com>
+> CC: Will Deacon <will.deacon@arm.com>
+> CC: Dave Watson <davejwatson@fb.com>
+> CC: Paul Turner <pjt@google.com>
+> CC: libc-alpha@sourceware.org
+> CC: linux-kernel@vger.kernel.org
+> CC: linux-api@vger.kernel.org
+> ---
+>   sysdeps/unix/sysv/linux/sched_getcpu.c | 25 +++++++++++++++++++++++--
+>   1 file changed, 23 insertions(+), 2 deletions(-)
+> 
+> diff --git a/sysdeps/unix/sysv/linux/sched_getcpu.c b/sysdeps/unix/sysv/linux/sched_getcpu.c
+> index fb0d317f83..8bfb03778b 100644
+> --- a/sysdeps/unix/sysv/linux/sched_getcpu.c
+> +++ b/sysdeps/unix/sysv/linux/sched_getcpu.c
+> @@ -24,8 +24,8 @@
+>   #endif
+>   #include <sysdep-vdso.h>
+>   
+> -int
+> -sched_getcpu (void)
+> +static int
+> +vsyscall_sched_getcpu (void)
 
-Could you please provide more description of the effect this has upon
-userspace?  Preferably in real-world cases.  What problems were being
-observed and how does this improve things?
+OK.
 
+>   {
+>   #ifdef __NR_getcpu
+>     unsigned int cpu;
+> @@ -37,3 +37,24 @@ sched_getcpu (void)
+>     return -1;
+>   #endif
+>   }
+> +
+> +#ifdef __NR_rseq
+> +#include <linux/rseq.h>
+> +
+> +extern __attribute__ ((tls_model ("initial-exec")))
+> +__thread volatile struct rseq __rseq_abi;
+
+OK.
+
+> +
+> +int
+> +sched_getcpu (void)
+> +{
+> +  int cpu_id = __rseq_abi.cpu_id;
+> +
+> +  return cpu_id >= 0 ? cpu_id : vsyscall_sched_getcpu ();
+
+OK. Impressive :-)
+
+> +}
+> +#else
+> +int
+> +sched_getcpu (void)
+> +{
+> +  return vsyscall_sched_getcpu ();
+
+OK.
+
+> +}
+> +#endif
+> 
+
+
+-- 
+Cheers,
+Carlos.
