@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A84C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:34:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FFBCC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:34:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 003D0205F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:34:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CDC92070D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:34:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553258052;
-	bh=ZSwrl96Xr1v4YYwi0F0JgY/WI1NJ4Qc+BK4q12KfaXQ=;
+	s=default; t=1553258079;
+	bh=zPYD99z93EwdlKO/Dp5menfrQKWc6lMz+R1YQBC9gBY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mdiDx5BmzNL4sOXeMJjWIvFXM/T2m1pM+oa8zT9MfQxiK0lv9hpp4exIOM4KO/QCS
-	 IAtMu4y0UTxPCzGSQuZymuw7ktEzfRDukMJNHxyVaH2nfi8WTjhTSb9dQmkjw/YzXc
-	 j2+p2DoJU++csULrFqwNl3ztFt82jMJPizGib9Fw=
+	b=pr9irmHQkbrdjXVOZgOv7VQ1nTtl7qBnT4ZZUMO3N6JT5CKF+1VaU4GC3sU4UtfNZ
+	 8SzEzyfSzNSlTqkUofFSWQefz564L8qb4liKyN0Lws0PM7gISvZBxz2GUiGAky6WjK
+	 avHGkJ9F7uvbbEHeabYTq+gPIQaQoltuEN7MQ7eg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388401AbfCVMeK (ORCPT
+        id S2389867AbfCVMei (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:34:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52168 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:34:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51532 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389491AbfCVMN4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:13:56 -0400
+        id S2389206AbfCVMNR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:13:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BC0E2082C;
-        Fri, 22 Mar 2019 12:13:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A76F720830;
+        Fri, 22 Mar 2019 12:13:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256835;
-        bh=ZSwrl96Xr1v4YYwi0F0JgY/WI1NJ4Qc+BK4q12KfaXQ=;
+        s=default; t=1553256796;
+        bh=zPYD99z93EwdlKO/Dp5menfrQKWc6lMz+R1YQBC9gBY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nXImdiKIXh76zS3gGCzQLQdkubQATnZ5oHS+qrN7h/BdzAtiOT2/VvssiXCWG1LRh
-         Khs+67o4SJ7/TkBb+CDcZLKy+qbC2zhjABEIqHXLEhkQ1J1OPiJoKZYo0wFPdWDzZ6
-         /4aVOOhs4rfP0Fvzwrie8flX+n8rPocsE5niYqYA=
+        b=yfYyKd2mHHGNfGml+bsMkTOHyjXfmFKWhv3kmc7KINWmKh4Tfclqx784sHryOQHS3
+         IiPuAeEviHVocZTO0qj5QAuXAMFi6gWaotLct7MJZGjs/k3Ye98W2+f0Qq58C8hW1O
+         BFyPQedZ/2jxCHjv46wZZXtHGHHUAo7r8K2EWSI4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        stable@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Eric Biggers <ebiggers@google.com>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.0 050/238] crypto: arm64/aes-ccm - fix bugs in non-NEON fallback routine
-Date:   Fri, 22 Mar 2019 12:14:29 +0100
-Message-Id: <20190322111301.369581443@linuxfoundation.org>
+Subject: [PATCH 5.0 039/238] crypto: arm64/aes-neonbs - fix returning final keystream block
+Date:   Fri, 22 Mar 2019 12:14:18 +0100
+Message-Id: <20190322111300.687588385@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -66,48 +66,56 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+From: Eric Biggers <ebiggers@google.com>
 
-commit 969e2f59d589c15f6aaf306e590dde16f12ea4b3 upstream.
+commit 12455e320e19e9cc7ad97f4ab89c280fe297387c upstream.
 
-Commit 5092fcf34908 ("crypto: arm64/aes-ce-ccm: add non-SIMD generic
-fallback") introduced C fallback code to replace the NEON routines
-when invoked from a context where the NEON is not available (i.e.,
-from the context of a softirq taken while the NEON is already being
-used in kernel process context)
+The arm64 NEON bit-sliced implementation of AES-CTR fails the improved
+skcipher tests because it sometimes produces the wrong ciphertext.  The
+bug is that the final keystream block isn't returned from the assembly
+code when the number of non-final blocks is zero.  This can happen if
+the input data ends a few bytes after a page boundary.  In this case the
+last bytes get "encrypted" by XOR'ing them with uninitialized memory.
 
-Fix two logical flaws in the MAC calculation of the associated data.
+Fix the assembly code to return the final keystream block when needed.
 
-Reported-by: Eric Biggers <ebiggers@kernel.org>
-Fixes: 5092fcf34908 ("crypto: arm64/aes-ce-ccm: add non-SIMD generic fallback")
-Cc: stable@vger.kernel.org
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Fixes: 88a3f582bea9 ("crypto: arm64/aes - don't use IV buffer to return final keystream block")
+Cc: <stable@vger.kernel.org> # v4.11+
+Reviewed-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/crypto/aes-ce-ccm-glue.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ arch/arm64/crypto/aes-neonbs-core.S |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
---- a/arch/arm64/crypto/aes-ce-ccm-glue.c
-+++ b/arch/arm64/crypto/aes-ce-ccm-glue.c
-@@ -125,7 +125,7 @@ static void ccm_update_mac(struct crypto
- 			abytes -= added;
- 		}
+--- a/arch/arm64/crypto/aes-neonbs-core.S
++++ b/arch/arm64/crypto/aes-neonbs-core.S
+@@ -971,18 +971,22 @@ CPU_LE(	rev		x8, x8		)
  
--		while (abytes > AES_BLOCK_SIZE) {
-+		while (abytes >= AES_BLOCK_SIZE) {
- 			__aes_arm64_encrypt(key->key_enc, mac, mac,
- 					    num_rounds(key));
- 			crypto_xor(mac, in, AES_BLOCK_SIZE);
-@@ -139,8 +139,6 @@ static void ccm_update_mac(struct crypto
- 					    num_rounds(key));
- 			crypto_xor(mac, in, abytes);
- 			*macp = abytes;
--		} else {
--			*macp = 0;
- 		}
- 	}
- }
+ 8:	next_ctr	v0
+ 	st1		{v0.16b}, [x24]
+-	cbz		x23, 0f
++	cbz		x23, .Lctr_done
+ 
+ 	cond_yield_neon	98b
+ 	b		99b
+ 
+-0:	frame_pop
++.Lctr_done:
++	frame_pop
+ 	ret
+ 
+ 	/*
+ 	 * If we are handling the tail of the input (x6 != NULL), return the
+ 	 * final keystream block back to the caller.
+ 	 */
++0:	cbz		x25, 8b
++	st1		{v0.16b}, [x25]
++	b		8b
+ 1:	cbz		x25, 8b
+ 	st1		{v1.16b}, [x25]
+ 	b		8b
 
 
