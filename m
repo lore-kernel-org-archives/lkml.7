@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D09C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:01:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78E10C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:01:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30945204FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:01:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47B992192D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:01:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256094;
-	bh=Gkn/eUFoFGVQL9DFiC5Fh0FXzYrUuKNlZN3SgpcYppU=;
+	s=default; t=1553256097;
+	bh=t4EKE5cAqwZ3xyucemYWwdZP3mIKRs8eI140+TXwXe4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cjgn+xdptmObkNKJ2Qv2jgag7alUVmcepjSH8re8o9blVD6+zHWlwQEcfYQzyhRWx
-	 ukd4Yv62V4LVDLVKHHzdzx8CODDu8D3S4Gv1vxujmftyMn+/XuJmD/bC9h/fPkHLLA
-	 tZM2ioupfmxwn6P2KMNql0J7aRmRBCp7FNl1lVgs=
+	b=mV71+h4Wh0GW4UrghzIgFq7V+mwZwMgxTUV8pti2VxwdTbgwtUaVVS6xT7uzFCk8l
+	 US5YledMBiuXNkoY9VckHKbkcUdY03jKGldsOBEN+kBHnLYhojtbdlvDmx0XmP/tZr
+	 lpQV3QuM5uRqm2c6e3sqWcMR+/ph9gLrtb0d6B0Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388226AbfCVMBc (ORCPT
+        id S2388232AbfCVMBg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:01:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39030 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:01:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39186 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388206AbfCVMBZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:01:25 -0400
+        id S2388224AbfCVMBc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:01:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A59AD204FD;
-        Fri, 22 Mar 2019 12:01:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BBD1204FD;
+        Fri, 22 Mar 2019 12:01:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256085;
-        bh=Gkn/eUFoFGVQL9DFiC5Fh0FXzYrUuKNlZN3SgpcYppU=;
+        s=default; t=1553256091;
+        bh=t4EKE5cAqwZ3xyucemYWwdZP3mIKRs8eI140+TXwXe4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UZqfzmml1eHhdcna0UDTrmHZrMHuzgF3jShcgU1SPOqnUFoPcDdrIaRmjPUljEoCC
-         184FUK5SQY/X+epgqBo8XfXjYjSXpgZelJj3BHp5mG/1SOcprvakFGN6eK1YXrtukN
-         aeZASUBCfAlovoO3eoVLYxw6Tjga3W9btXdt91FA=
+        b=coLEDsmmZv4Wz/fsLiPU6ZghSXW2My/8wWdH7IAu8fZewCJyJuZnBU4vF2FOeTgkD
+         RAp6A/9sz3196bNKXKZ3anzqcgXTDxk4lnvINsYpAM+ZGK3pCCAxbIp3sSnw9KMWNR
+         SKoGDezhJbABBcqT9sZA842xfBJItA9JtQq4jlLk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ariel Elior <ariel.elior@marvell.com>,
-        Michal Kalderon <michal.kalderon@marvell.com>,
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 088/280] qed: Fix iWARP syn packet mac address validation.
-Date:   Fri, 22 Mar 2019 12:14:01 +0100
-Message-Id: <20190322111311.400830022@linuxfoundation.org>
+Subject: [PATCH 4.19 080/280] net: dsa: bcm_sf2: Do not assume DSA master supports WoL
+Date:   Fri, 22 Mar 2019 12:13:53 +0100
+Message-Id: <20190322111310.866332380@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -67,39 +66,51 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 8be3dadf04050c2907760ec1955ca1c8fbc25585 ]
+[ Upstream commit c3152ec4c0691e351f35a2f63347a464b5f35151 ]
 
-The ll2 forwards all syn packets to the driver without validating the mac
-address. Add validation check in the driver's iWARP listener flow and drop
-the packet if it isn't intended for the device.
+We assume in the bcm_sf2 driver that the DSA master network device
+supports ethtool_ops::{get,set}_wol operations, which is not a given.
+Avoid de-referencing potentially non-existent function pointers and
+check them as we should.
 
-Signed-off-by: Ariel Elior <ariel.elior@marvell.com>
-Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
+Fixes: 96e65d7f3f88 ("net: dsa: bcm_sf2: add support for Wake-on-LAN")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qed/qed_iwarp.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/net/dsa/bcm_sf2.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_iwarp.c b/drivers/net/ethernet/qlogic/qed/qed_iwarp.c
-index 3c932f79a02e..b7471e48db7b 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_iwarp.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_iwarp.c
-@@ -1689,6 +1689,15 @@ qed_iwarp_parse_rx_pkt(struct qed_hwfn *p_hwfn,
+diff --git a/drivers/net/dsa/bcm_sf2.c b/drivers/net/dsa/bcm_sf2.c
+index bb26a193361e..2fa2caf7a746 100644
+--- a/drivers/net/dsa/bcm_sf2.c
++++ b/drivers/net/dsa/bcm_sf2.c
+@@ -724,10 +724,11 @@ static void bcm_sf2_sw_get_wol(struct dsa_switch *ds, int port,
+ {
+ 	struct net_device *p = ds->ports[port].cpu_dp->master;
+ 	struct bcm_sf2_priv *priv = bcm_sf2_to_priv(ds);
+-	struct ethtool_wolinfo pwol;
++	struct ethtool_wolinfo pwol = { };
  
- 	eth_hlen = ETH_HLEN + (vlan_valid ? sizeof(u32) : 0);
+ 	/* Get the parent device WoL settings */
+-	p->ethtool_ops->get_wol(p, &pwol);
++	if (p->ethtool_ops->get_wol)
++		p->ethtool_ops->get_wol(p, &pwol);
  
-+	if (!ether_addr_equal(ethh->h_dest,
-+			      p_hwfn->p_rdma_info->iwarp.mac_addr)) {
-+		DP_VERBOSE(p_hwfn,
-+			   QED_MSG_RDMA,
-+			   "Got unexpected mac %pM instead of %pM\n",
-+			   ethh->h_dest, p_hwfn->p_rdma_info->iwarp.mac_addr);
-+		return -EINVAL;
-+	}
-+
- 	ether_addr_copy(remote_mac_addr, ethh->h_source);
- 	ether_addr_copy(local_mac_addr, ethh->h_dest);
+ 	/* Advertise the parent device supported settings */
+ 	wol->supported = pwol.supported;
+@@ -748,9 +749,10 @@ static int bcm_sf2_sw_set_wol(struct dsa_switch *ds, int port,
+ 	struct net_device *p = ds->ports[port].cpu_dp->master;
+ 	struct bcm_sf2_priv *priv = bcm_sf2_to_priv(ds);
+ 	s8 cpu_port = ds->ports[port].cpu_dp->index;
+-	struct ethtool_wolinfo pwol;
++	struct ethtool_wolinfo pwol =  { };
+ 
+-	p->ethtool_ops->get_wol(p, &pwol);
++	if (p->ethtool_ops->get_wol)
++		p->ethtool_ops->get_wol(p, &pwol);
+ 	if (wol->wolopts & ~pwol.supported)
+ 		return -EINVAL;
  
 -- 
 2.19.1
