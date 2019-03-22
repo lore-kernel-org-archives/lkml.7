@@ -4,94 +4,105 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 416D3C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 08:09:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B57EAC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 08:09:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EEC320700
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 08:09:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FA292083D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 08:09:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="YRDmE6im"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="tAJMX/1t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727762AbfCVIJC (ORCPT
+        id S1727780AbfCVIJK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 04:09:02 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:56762 "EHLO pegase1.c-s.fr"
+        Fri, 22 Mar 2019 04:09:10 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:9710 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727668AbfCVIIp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 04:08:45 -0400
+        id S1726350AbfCVIIm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 04:08:42 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 44Qbrp1zCnz9v9vQ;
-        Fri, 22 Mar 2019 09:08:42 +0100 (CET)
+        by localhost (Postfix) with ESMTP id 44Qbrm1B3pz9v9vL;
+        Fri, 22 Mar 2019 09:08:40 +0100 (CET)
 Authentication-Results: localhost; dkim=pass
         reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=YRDmE6im; dkim-adsp=pass;
+        header.d=c-s.fr header.i=@c-s.fr header.b=tAJMX/1t; dkim-adsp=pass;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id xaqMbFp22Bi0; Fri, 22 Mar 2019 09:08:42 +0100 (CET)
+        with ESMTP id J_EDFwehDTbV; Fri, 22 Mar 2019 09:08:40 +0100 (CET)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 44Qbrp0p8Jz9v9vG;
-        Fri, 22 Mar 2019 09:08:42 +0100 (CET)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 44Qbrm04Vpz9v9vG;
+        Fri, 22 Mar 2019 09:08:40 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1553242122; bh=NlZk3dLdQ7uK/0CFab2/pH5R0GUZIcXhpgeYN8gf+0I=;
+        t=1553242120; bh=vuX9mjDqG9V5hTI4EOw+h7yoI6fzAlRXWPPWa05ZC2M=;
         h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=YRDmE6imCmSiaWGzq7HX5fUH4UdpTlNgAT8OyUc8DavICo4Zryg4wZ7ls6Us8XmdP
-         +BH4u+HP6l4c5dItFZXT5uvyPDhr/0kk5x9FsfYWcRxui1CxajtlD90Hhpn8zQyVxv
-         j0+ZE1V5cnJUoZqcVOv8pboT3ETKr3o8GalopgyQ=
+        b=tAJMX/1tKKfQOh0G5X9lWosgLupVLMJzOtgOkPwZxmwuCLhF2+rOW8ZkLNfjEuaM9
+         sesuovY46BGvXn1BeLCMKR5daYyLQWkf03l+uUMRUyG5/xPH+ZAy8JvCNX4Nb6waBa
+         DcmNzSzixpqidmIUau/85NFpi9wKgfpqJyQCZyMY=
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 0BB4D8B845;
-        Fri, 22 Mar 2019 09:08:43 +0100 (CET)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id EDF5B8B845;
+        Fri, 22 Mar 2019 09:08:40 +0100 (CET)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id TohO5wbziRZo; Fri, 22 Mar 2019 09:08:42 +0100 (CET)
+        with ESMTP id 2r5_HJ1yyVDQ; Fri, 22 Mar 2019 09:08:40 +0100 (CET)
 Received: from po16846vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.231.2])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id E4A778B844;
-        Fri, 22 Mar 2019 09:08:42 +0100 (CET)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id D3A958B844;
+        Fri, 22 Mar 2019 09:08:40 +0100 (CET)
 Received: by po16846vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id D7BCC6CD85; Fri, 22 Mar 2019 08:08:42 +0000 (UTC)
-Message-Id: <6204a4de51d9c83c22b32e519337b1e9d837a19a.1553242059.git.christophe.leroy@c-s.fr>
+        id C99C46CD85; Fri, 22 Mar 2019 08:08:40 +0000 (UTC)
+Message-Id: <2d9fe7eac16d51000747648b5f84a58ef258633e.1553242059.git.christophe.leroy@c-s.fr>
 In-Reply-To: <a2ac33258063682558fe0cac8eedcbd28aa4a141.1553242059.git.christophe.leroy@c-s.fr>
 References: <a2ac33258063682558fe0cac8eedcbd28aa4a141.1553242059.git.christophe.leroy@c-s.fr>
 From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH 4/7] powerpc/setup: Remove unnecessary #ifdef CONFIG_ALTIVEC
+Subject: [PATCH 2/7] powerpc/mm: define an empty mm_iommu_init()
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Fri, 22 Mar 2019 08:08:42 +0000 (UTC)
+Date:   Fri, 22 Mar 2019 08:08:40 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CPU_FTR_ALTIVEC is only set when CONFIG_ALTIVEC is selected, so
-the ifdef is unnecessary.
+To avoid ifdefs, define a empty static inline mm_iommu_init() function
+when CONFIG_SPAPR_TCE_IOMMU is not selected.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- arch/powerpc/kernel/setup-common.c | 2 --
- 1 file changed, 2 deletions(-)
+ arch/powerpc/include/asm/mmu_context.h | 1 +
+ arch/powerpc/kernel/setup-common.c     | 2 --
+ 2 files changed, 1 insertion(+), 2 deletions(-)
 
+diff --git a/arch/powerpc/include/asm/mmu_context.h b/arch/powerpc/include/asm/mmu_context.h
+index 6ee8195a2ffb..95b93ce428b7 100644
+--- a/arch/powerpc/include/asm/mmu_context.h
++++ b/arch/powerpc/include/asm/mmu_context.h
+@@ -52,6 +52,7 @@ static inline bool mm_iommu_is_devmem(struct mm_struct *mm, unsigned long hpa,
+ {
+ 	return false;
+ }
++static inline void mm_iommu_init(struct mm_struct *mm) { }
+ #endif
+ extern void switch_slb(struct task_struct *tsk, struct mm_struct *mm);
+ extern void set_context(unsigned long id, pgd_t *pgd);
 diff --git a/arch/powerpc/kernel/setup-common.c b/arch/powerpc/kernel/setup-common.c
-index a4ed9301e815..fa90585760c0 100644
+index 971f50d99d87..a90e8367ccde 100644
 --- a/arch/powerpc/kernel/setup-common.c
 +++ b/arch/powerpc/kernel/setup-common.c
-@@ -248,10 +248,8 @@ static int show_cpuinfo(struct seq_file *m, void *v)
- 	else
- 		seq_printf(m, "unknown (%08x)", pvr);
+@@ -956,9 +956,7 @@ void __init setup_arch(char **cmdline_p)
+ #endif
+ #endif
  
--#ifdef CONFIG_ALTIVEC
- 	if (cpu_has_feature(CPU_FTR_ALTIVEC))
- 		seq_printf(m, ", altivec supported");
--#endif /* CONFIG_ALTIVEC */
- 
- 	seq_printf(m, "\n");
- 
+-#ifdef CONFIG_SPAPR_TCE_IOMMU
+ 	mm_iommu_init(&init_mm);
+-#endif
+ 	irqstack_early_init();
+ 	exc_lvl_early_init();
+ 	emergency_stack_init();
 -- 
 2.13.3
 
