@@ -3,101 +3,74 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C331DC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:27:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E38EAC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:29:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 919E0218FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:27:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAA63218FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:29:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727330AbfCVQ1q (ORCPT
+        id S1727482AbfCVQ3a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 12:27:46 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39300 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726692AbfCVQ1q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 12:27:46 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 97AD5AD49;
-        Fri, 22 Mar 2019 16:27:44 +0000 (UTC)
-From:   Thomas Renninger <trenn@suse.de>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Len Brown <len.brown@intel.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Laura Abbott <labbott@fedoraproject.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Simon Schricker <sschricker@suse.de>,
-        Borislav Petkov <bp@suse.de>, Hannes Reinecke <hare@suse.de>
-Subject: Re: [PATCH 1/2] PM / arch: x86: Rework the MSR_IA32_ENERGY_PERF_BIAS handling
-Date:   Fri, 22 Mar 2019 17:27:43 +0100
-Message-ID: <2431307.7efAn4P022@house>
-In-Reply-To: <1605148.8jT99SsvVP@aspire.rjw.lan>
-References: <1637073.gl2OfxWTjI@aspire.rjw.lan> <1605148.8jT99SsvVP@aspire.rjw.lan>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+        Fri, 22 Mar 2019 12:29:30 -0400
+Received: from smtprelay0198.hostedemail.com ([216.40.44.198]:39660 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726061AbfCVQ32 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 12:29:28 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 46CB3100E86C7;
+        Fri, 22 Mar 2019 16:29:27 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: wish39_182d8e060ce3f
+X-Filterd-Recvd-Size: 2071
+Received: from XPS-9350.home (unknown [47.151.153.53])
+        (Authenticated sender: joe@perches.com)
+        by omf02.hostedemail.com (Postfix) with ESMTPA;
+        Fri, 22 Mar 2019 16:29:26 +0000 (UTC)
+Message-ID: <d5afa96440c81888aeedc66bedd1d45c7b8f58c3.camel@perches.com>
+Subject: Re: [possible PATCH] crypto: sahara - Use #ifdef DEBUG not
+ IS_ENABLED(DEBUG)
+From:   Joe Perches <joe@perches.com>
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Date:   Fri, 22 Mar 2019 09:29:24 -0700
+In-Reply-To: <CAKv+Gu8nds6WgE5UWj8iy=fr7AOmCsaQsrE4Dcj0oiNOXkkt6g@mail.gmail.com>
+References: <5ef0cab4dee128058a43f43c723c13924662e80d.camel@perches.com>
+         <20190322124331.s5iu4ontsakv7he5@gondor.apana.org.au>
+         <CAKv+Gu_SBkhV8SVXpOBDoPRBJYhFdmF3jJdZ5OPm3SrPBTSarQ@mail.gmail.com>
+         <f8cb10b3dcce0703a652f2f544161abd41bc67f3.camel@perches.com>
+         <CAKv+Gu8nds6WgE5UWj8iy=fr7AOmCsaQsrE4Dcj0oiNOXkkt6g@mail.gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.1-1build1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks Rafael for your quick look at and all the time you spend for this!
+On Fri, 2019-03-22 at 17:21 +0100, Ard Biesheuvel wrote:
+> On Fri, 22 Mar 2019 at 16:07, Joe Perches <joe@perches.com> wrote:
+> > Maybe just adding a global #define in kernel.h like
+> > #define IS_DEBUG_ENABLED        IS_ENABLED(DEBUG)
+[]
+> __is_defined(DEBUG) seems to be the most appropriate here. I don't
+> feel strongly about whether we or not should wrap it in another macro.
+[]
+> > A good thing about using IS_ENABLED or the suggested IS_DEBUG_ENABLED
+> > would be that least gcc 5+ seems to automatically elide the uses of any
+> > unreferenced static const char * arrays like the sahara_state uses here.
+[]
+> My vote would be to use __is_defined(DEBUG) in place, but if others
+> prefer wrapping it in a macro, that is also fine with me.
 
-A /sys userspace knob will certainly not be enough for us.
-You'll need a tool installed fixing this.
-powertop on laptops or tuned on servers or a well hidden bootup quirk or 
-whatsoever.
+I think __is_defined is fine too.
+Either works for me.
 
-The patch I sent with this part:
 
-+       if (acpi_gbl_FADT.preferred_profile == PM_PERFORMANCE_SERVER ||
-+           acpi_gbl_FADT.preferred_profile == PM_ENTERPRISE_SERVER)
-+               return;
-
-and not touching the EBP value then should at least match most of
-our users and OEMs who want a "performance" setting out of the box and
-set this on purpose.
-
-Even nicer would be compile option to not touch this at all.
-
-On Thursday, March 21, 2019 11:18:01 PM CET Rafael J. Wysocki wrote:
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
- 
-...
-
-> + *
-> + * Second, on many systems the initial EPB value coming from the platform
-> + * firmware is 0 ('performance') and at least on some of them that is
-> because + * the platform firmware does not initialize EPB
-
-Why does the CPU not initialize this value to 6?
-That would allow OEMs/BIOS to also suggest an init value for the system.
-We should try to get microcode people or whoever is in charge to initialize
-this value "properly" if Intel thinks 6 is the correct init value.
-
-> at all with the
-> assumption that + * the OS will do that anyway.  That sometimes is
-> problematic, as it may cause + * the system battery to drain too fast, for
-> example, so it is better to adjust + * it on CPU bring-up and if the
-> initial EPB value for a given CPU is 0, the + * kernel changes it to 6
-> ('normal').
-
-I have an idea to let the kernel more decide about such policies.
-It's a nice example that it makes sense to let the kernel set default values.
-But not unconditionally, according to what the system is intended to do.
-
-I wanted to do this for quite some time.., I hopefully find the time and
-motivation now.
-
-Thanks Rafael.
-Sorry for the somewhat rude sounding previous mail, that was not on purpose.
-You helped me quite a lot in the past and you obviously still do.
-
-         Thomas
