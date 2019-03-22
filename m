@@ -6,103 +6,101 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83303C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:46:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93C17C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:47:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D4082183E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:46:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BEE32183E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:47:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727839AbfCVPq5 (ORCPT
+        id S1727899AbfCVPrG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 11:46:57 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:52233 "EHLO
+        Fri, 22 Mar 2019 11:47:06 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:36445 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727363AbfCVPqy (ORCPT
+        with ESMTP id S1727244AbfCVPrE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 11:46:54 -0400
+        Fri, 22 Mar 2019 11:47:04 -0400
 Received: from wuerfel.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1N1whr-1h0jYs2B7R-012LGN; Fri, 22 Mar 2019 16:46:39 +0100
+ 1N2E5Q-1h0ShS0wrm-013iJA; Fri, 22 Mar 2019 16:46:48 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     stable@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>,
-        Avri Altman <avri.altman@wdc.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>
-Cc:     Russell King <rmk+kernel@arm.linux.org.uk>,
+To:     stable@vger.kernel.org, Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Roger Quadros <rogerq@ti.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
         Arnd Bergmann <arnd@arndb.de>,
-        Ritesh Harjani <riteshh@codeaurora.org>,
-        =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>,
-        Jiong Wu <lohengrin1024@gmail.com>,
-        Martin Hicks <mort@bork.org>, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [BACKPORT 4.4.y 08/25] mmc: core: shut up "voltage-ranges unspecified" pr_info()
-Date:   Fri, 22 Mar 2019 16:43:59 +0100
-Message-Id: <20190322154425.3852517-9-arnd@arndb.de>
+        Thinh Nguyen <thinh.nguyen@synopsys.com>,
+        Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [BACKPORT 4.4.y 09/25] usb: dwc3: gadget: Fix suspend/resume during device mode
+Date:   Fri, 22 Mar 2019 16:44:00 +0100
+Message-Id: <20190322154425.3852517-10-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20190322154425.3852517-1-arnd@arndb.de>
 References: <20190322154425.3852517-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:xKzkjcZ9sdwnDMJpHCbZubw9iVQy1Q+3iwt6jMNhxhxj57MfM1U
- KRwERkSOzuQyLrMuc4JjyBHg6PY1SETZcdz+006q7Dc70RQE1RiwoOtEQGGXuDaAfz7mky2
- mZeRU+KuQZel2C+oRNwwEdzxN/C5X0WLsn63h3lX6tvI+A43BgcHGqEoaPimxWyspzoS/x9
- jYrL+tBnVbxtFEYisI4Xg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:8UOTv7lvoss=:sYhAnRI77z0j8XUghrTEtS
- LJz3BkBZP4wJHmpsn4c0dIw7NeC4IKcR/UzN86DL9VkqWHu+seWOfst8bslpwRsD23LcWx3f/
- NBZATyxs9JP9mdJp8G3dGa98HbopsnUlz6cjpEHarLKpyPJLWwMxv6NStlTkSdm/N9pnqwiSL
- oTVGmbfHgKTNWZvTRgIKSriRrMSBMLtH07NllhK/3lFXermaL+5E7gGp/Iexc4YDVeJaLSqnC
- bG+qztu94rEqhtDdVfnCxaPmozC77OHkOBlWKPYKdnLyRThlSz2zdBPPdRkJ9JwRDSvCNhtqP
- w38LeYAQHiX/fvztDnwA6GV9Q9d7apT4py6dURXQuX6AIX+8/MGSSgNjUO9UzS5TiRlS59yEt
- i/u4/L1vmQXKxeXwNy3VH9ANbMdrvMAQygA5NZHr1lh3OHgIqyQli6oWQbEnPLcC0gVmw0MvI
- VgTZ1AAcYbg+/uwFmChajj5evzLDVfNHRhz6t9V+Gc6D/WOwQglH2RGpRj5hDNBBffKA869gb
- JbYKJ6XS3nMyqgyEdyBos66HAdBPCiQ7EGq3lQNw5b811FRHpqmcfSk0W/knzaEXyPs3exvbi
- 8XmnaDq5vlfHK4gmJDJr3OLfmfYQoz/LI4QrF7Za6el4Hz2Ta/j3lZZAlZpRRc80iIpIvvg6u
- 8Ds6gcbpemgYDltBjj2U07LAZVD9LArwXGgqdspyUvTWn8quxi6Rkk5llHqGgchDwVZzWfN2v
- 1NibpG3Z0TF80gjUSH8itOi0UFeloxhliU3k/Q==
+X-Provags-ID: V03:K1:Wa0NxvaJKz9beWWyK1EmT1GXc1pQUSQRbNYzwZGpDAvrUmOYVYT
+ q3CqinTh9aDABHa0qxK1R/HCGB1KbBMcCZ4Fe1UqQp5zRwBy19SpIOItH5dEX2pbxKvSgFF
+ 2bis02UUdwIjepEi2xBbwSpJ2hFx4+nLB5QVIycTDOHVWwD2Kh6XJ9KNymAD3uVFz0ZGpZ2
+ Ce7OEFixLoPZbyvrHwDIA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:CS48oms4k5w=:vp39lAbh7N7UOKpIVgtHb2
+ 5g3ykR086ja1JLlNtCrAgvl2QwLdKiCbRBfYNF21ciOKlMv17WPa/537erZMitBhSNwPXm99A
+ 2gTX0rvmrp/+4haUYR7bUKtb6c0Uo70r28JLpE4DHPmV64B/o7b1E/6WV5raNX+Pi4vq7pFHJ
+ 2ueU8xm7rlF4d4Wyw/BzvJEuoAh3jzFCEUHRcJ4YJTGaGNFFqUMtwfOVDFvFU6lezU4drF54V
+ Xnljq9Cz4tk2xij/jD+c+J5K8Ie3CrVilqDi4RL1DWWg0gUSpmvSkLTPZhr+sraqXTkEwAcKi
+ hfoYCuQAsBA+lWOit8/PvhWaNiFgE5LBVMa/zvUmc5zBakF+JBnzTljv4B3WRpiGOJt9QacLk
+ bt00+6NwA7CqNo/mRJiL4ST4bx1PdxmcwSzHhWmheyqkA8zwOJlh+NiWZyhPKFcvmfJ27F4JT
+ vcyWAh86VImTYLsdCt/l7sqRIqryRFcic6vmAEYX/4g/iPtx8IexKcdLC2yNLUlTdE9gL4mXd
+ OYvIjDi2wZYhMXFGgc63x4qofteLKsVRCwe8K6EvHCxCfuGrkkc4AqfN6XDBWMDFQaH3cdKzr
+ gyn+hwdDyFlcKsQBNyvEi4vMZMmFVLlLGHQX2HP1A3vpC+FaMz+mKIhcccq2oUnRuLSIN1aHR
+ TE3uxZc/aobrU7F67dA3cElJF1c8fyZbTf1LUHmdli6Up4I65GBtpbWHKO7fDozQBN0O2qpOF
+ 7CvpTRWDpELhDEzviXhKRn7v5bnqcPqhnVYrNg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@arm.linux.org.uk>
+From: Roger Quadros <rogerq@ti.com>
 
-Each time a driver such as sdhci-esdhc-imx is probed, we get a info
-printk complaining that the DT voltage-ranges property has not been
-specified.
+Gadget controller might not be always active during system
+suspend/resume as gadget driver might not have yet been loaded or
+might have been unloaded prior to system suspend.
 
-However, the DT binding specifically says that the voltage-ranges
-property is optional.  That means we should not be complaining that
-DT hasn't specified this property: by indicating that it's optional,
-it is valid not to have the property in DT.
+Check if we're active and only then perform
+necessary actions during suspend/resume.
 
-Silence the warning if the property is missing.
-
-Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-(cherry picked from commit 10a16a01d8f72e80f4780e40cf3122f4caffa411)
+Signed-off-by: Roger Quadros <rogerq@ti.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+(cherry picked from commit 9772b47a4c2916d645c551228b6085ea24acbe5d)
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/mmc/core/core.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/usb/dwc3/gadget.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/mmc/core/core.c b/drivers/mmc/core/core.c
-index e2e927d1f7e4..df074f8c7cb7 100644
---- a/drivers/mmc/core/core.c
-+++ b/drivers/mmc/core/core.c
-@@ -1220,8 +1220,12 @@ int mmc_of_parse_voltage(struct device_node *np, u32 *mask)
+diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+index b6037a0ae829..58e67c228971 100644
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -2893,6 +2893,9 @@ void dwc3_gadget_exit(struct dwc3 *dwc)
  
- 	voltage_ranges = of_get_property(np, "voltage-ranges", &num_ranges);
- 	num_ranges = num_ranges / sizeof(*voltage_ranges) / 2;
--	if (!voltage_ranges || !num_ranges) {
--		pr_info("%s: voltage-ranges unspecified\n", np->full_name);
-+	if (!voltage_ranges) {
-+		pr_debug("%s: voltage-ranges unspecified\n", np->full_name);
-+		return -EINVAL;
-+	}
-+	if (!num_ranges) {
-+		pr_err("%s: voltage-ranges empty\n", np->full_name);
- 		return -EINVAL;
- 	}
+ int dwc3_gadget_suspend(struct dwc3 *dwc)
+ {
++	if (!dwc->gadget_driver)
++		return 0;
++
+ 	if (dwc->pullups_connected) {
+ 		dwc3_gadget_disable_irq(dwc);
+ 		dwc3_gadget_run_stop(dwc, true, true);
+@@ -2911,6 +2914,9 @@ int dwc3_gadget_resume(struct dwc3 *dwc)
+ 	struct dwc3_ep		*dep;
+ 	int			ret;
+ 
++	if (!dwc->gadget_driver)
++		return 0;
++
+ 	/* Start with SuperSpeed Default */
+ 	dwc3_gadget_ep0_desc.wMaxPacketSize = cpu_to_le16(512);
  
 -- 
 2.20.0
