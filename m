@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F003C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:40:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AA24C10F03
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:40:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 021D32070D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:40:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 613522070D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:40:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553258448;
-	bh=UVwpdG331tIdfKF8FsJScqU04M8ae2jkndZsuWZa3FM=;
+	s=default; t=1553258459;
+	bh=Xw31HTKdhQBLqftOnQ4nCY13LlCJ6g2upiMTVP4RlDo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KsT6IUi6g5OqDsrSNs592SCMVVzckIA90Jk6BQDgq1XHxIMbbt5FtkbXqKYxZgvb/
-	 Iv6reW2QtmQKPS7CyFDHQubELQK4HKSgjc5fui2wDO5QqJx2EUr+5baRWnKbnm2lCF
-	 1RLvKaYgOieObEw7enWjikV8AVt4/FiC4FEy8pxQ=
+	b=cVsVbHaH0xpkDfWox3fLByY33xxZ4/rTVKz0DDKaPHAjHgIVnH2aFD2k7jiwk5UvC
+	 UVdhCP9strUDSw75D3cGDmkMn5/mwMrs527B3zj6Y+mJ+mz/xVX7GR2PyRrn58Fhzb
+	 qA8/zwvUXVjmqqzumNDgsZtBB319NeMDzV2DvNNQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388285AbfCVMGR (ORCPT
+        id S2388381AbfCVMF7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:06:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44680 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:05:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44380 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388277AbfCVMGM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:06:12 -0400
+        id S2388859AbfCVMFx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:05:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57E7C206C0;
-        Fri, 22 Mar 2019 12:06:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DD542082C;
+        Fri, 22 Mar 2019 12:05:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256371;
-        bh=UVwpdG331tIdfKF8FsJScqU04M8ae2jkndZsuWZa3FM=;
+        s=default; t=1553256352;
+        bh=Xw31HTKdhQBLqftOnQ4nCY13LlCJ6g2upiMTVP4RlDo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YOkkHWafjp8Ngzru4MUxD9AWsqAc6jh55mi014JWIMJ/7OmPd3PgTQizNBu/HDcQD
-         4HwQXnyqb9T4EOknaTUcfvQy11hX4m9llnbISJoOamfa774Fuwf7hlLyko6OigD3qj
-         ZZZQBQp/1Y8PedoVIJ93nNon+looDjII+4erBGZ4=
+        b=Psd1M1ywWggdQkL9T45j7AWZy13quL6J7Bd/4f/VzKmZD9q/WUxbHfbVYuPXYYaXS
+         0t+m/HAkggv3fNLL2hfQChCBfFIPAsngxf57ttqzXzf+uhHYlXd78NjS2Q3to2nmDk
+         ca/b49PFIDHBxw6xAUProV7MXQlyjjWaWqaQ8h7I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
-        Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.19 169/280] Btrfs: setup a nofs context for memory allocation at __btrfs_set_acl
-Date:   Fri, 22 Mar 2019 12:15:22 +0100
-Message-Id: <20190322111324.135782195@linuxfoundation.org>
+        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        Theodore Tso <tytso@mit.edu>
+Subject: [PATCH 4.19 184/280] ext4: fix crash during online resizing
+Date:   Fri, 22 Mar 2019 12:15:37 +0100
+Message-Id: <20190322111327.354330790@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -66,52 +65,48 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Jan Kara <jack@suse.cz>
 
-commit a0873490660246db587849a9e172f2b7b21fa88a upstream.
+commit f96c3ac8dfc24b4e38fc4c2eba5fea2107b929d1 upstream.
 
-We are holding a transaction handle when setting an acl, therefore we can
-not allocate the xattr value buffer using GFP_KERNEL, as we could deadlock
-if reclaim is triggered by the allocation, therefore setup a nofs context.
+When computing maximum size of filesystem possible with given number of
+group descriptor blocks, we forget to include s_first_data_block into
+the number of blocks. Thus for filesystems with non-zero
+s_first_data_block it can happen that computed maximum filesystem size
+is actually lower than current filesystem size which confuses the code
+and eventually leads to a BUG_ON in ext4_alloc_group_tables() hitting on
+flex_gd->count == 0. The problem can be reproduced like:
 
-Fixes: 39a27ec1004e8 ("btrfs: use GFP_KERNEL for xattr and acl allocations")
-CC: stable@vger.kernel.org # 4.9+
-Reviewed-by: Nikolay Borisov <nborisov@suse.com>
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+truncate -s 100g /tmp/image
+mkfs.ext4 -b 1024 -E resize=262144 /tmp/image 32768
+mount -t ext4 -o loop /tmp/image /mnt
+resize2fs /dev/loop0 262145
+resize2fs /dev/loop0 300000
+
+Fix the problem by properly including s_first_data_block into the
+computed number of filesystem blocks.
+
+Fixes: 1c6bd7173d66 "ext4: convert file system to meta_bg if needed..."
+Signed-off-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/acl.c |    9 +++++++++
- 1 file changed, 9 insertions(+)
+ fs/ext4/resize.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/fs/btrfs/acl.c
-+++ b/fs/btrfs/acl.c
-@@ -9,6 +9,7 @@
- #include <linux/posix_acl_xattr.h>
- #include <linux/posix_acl.h>
- #include <linux/sched.h>
-+#include <linux/sched/mm.h>
- #include <linux/slab.h>
+--- a/fs/ext4/resize.c
++++ b/fs/ext4/resize.c
+@@ -1960,7 +1960,8 @@ retry:
+ 				le16_to_cpu(es->s_reserved_gdt_blocks);
+ 			n_group = n_desc_blocks * EXT4_DESC_PER_BLOCK(sb);
+ 			n_blocks_count = (ext4_fsblk_t)n_group *
+-				EXT4_BLOCKS_PER_GROUP(sb);
++				EXT4_BLOCKS_PER_GROUP(sb) +
++				le32_to_cpu(es->s_first_data_block);
+ 			n_group--; /* set to last group number */
+ 		}
  
- #include "ctree.h"
-@@ -72,8 +73,16 @@ static int __btrfs_set_acl(struct btrfs_
- 	}
- 
- 	if (acl) {
-+		unsigned int nofs_flag;
-+
- 		size = posix_acl_xattr_size(acl->a_count);
-+		/*
-+		 * We're holding a transaction handle, so use a NOFS memory
-+		 * allocation context to avoid deadlock if reclaim happens.
-+		 */
-+		nofs_flag = memalloc_nofs_save();
- 		value = kmalloc(size, GFP_KERNEL);
-+		memalloc_nofs_restore(nofs_flag);
- 		if (!value) {
- 			ret = -ENOMEM;
- 			goto out;
 
 
