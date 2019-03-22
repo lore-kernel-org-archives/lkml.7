@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D5CCC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:41:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 194C9C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:41:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BCC52195D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:41:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD7702195D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:41:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254879;
-	bh=y1OaM9y4uCx1HFLRPq13lTtzlnFggHqAIM0zM50fMf8=;
+	s=default; t=1553254881;
+	bh=sc7TD6ZkCiJPjO9MvyuvYt+yigPCFv2LoQWSUhM6/yg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aUtjZY+652N4PT6QyFMloCj0YAI14WePWqSiNjEGzUP1H4AKMKgDgdWG8iJMElhDr
-	 dHvzbXWPSRon+d0HMPsT0HLgxhCUI/3Co+mxd8lr+te1hGbOHbt/BDmJCfwa5QrB8o
-	 xMS2+MZV640Dkw+j2wBxKHLo0QCzahuD2TjhnBsA=
+	b=QMdopLlfiY8ZSHzdQh6QmWLfOvX8HBBG9cE6bs+lXnkX7/4UgNpRBaPDmh/40dB65
+	 1vRdz7XFTKLt/6nYqpnH1jungzcHmDEzmGAH/9uxsOFjEaPQ5hYlQ2j1WP85ua3OQo
+	 cZcrEp7G8rqhNykkfzNe6jj567JjWCivXa0dPaEc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731389AbfCVLlR (ORCPT
+        id S1731397AbfCVLlU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:41:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43304 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:41:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731381AbfCVLlN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:41:13 -0400
+        id S1731381AbfCVLlR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:41:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40A65218B0;
-        Fri, 22 Mar 2019 11:41:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 530932082C;
+        Fri, 22 Mar 2019 11:41:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254872;
-        bh=y1OaM9y4uCx1HFLRPq13lTtzlnFggHqAIM0zM50fMf8=;
+        s=default; t=1553254876;
+        bh=sc7TD6ZkCiJPjO9MvyuvYt+yigPCFv2LoQWSUhM6/yg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SzDQLLVNm46yb7bT7VTAtvXsQF8XIr/Y7Gq1n7Ht0IDrHWfLK+m9HxT107j2Xnk8h
-         dB42BV9V9r4a6i867GymWMs5iO7WKa1Ocjc56Iastg0UbOrBW8TV+YcCqoGA+ayjML
-         n2pFCDnhvPvSgjqL9fgyacHKdQrpbC2F4dFcT4Us=
+        b=W/W/j1XG+oPuSwAxbrJdb0li6gNfncz+1ODHQk4hF55jgX18OfPhlDf8asurpX2lJ
+         Z8C1gL5rU4zaAWTYD+iAreRMjoCG0E12ZYXKx13N5wqNjsuz15b4us2DEm9iU1KfUC
+         d9QruEug82/EdBRZfDHoMKe79TSbRwYOzis1/tUY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vadim Lomovtsev <vlomovtsev@marvell.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Gabriel Fernandez <gabriel.fernandez@st.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 037/118] net: thunderx: make CFG_DONE message to run through generic send-ack sequence
-Date:   Fri, 22 Mar 2019 12:15:09 +0100
-Message-Id: <20190322111218.807952128@linuxfoundation.org>
+Subject: [PATCH 4.9 020/118] Input: st-keyscan - fix potential zalloc NULL dereference
+Date:   Fri, 22 Mar 2019 12:14:52 +0100
+Message-Id: <20190322111217.428447075@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111215.873964544@linuxfoundation.org>
 References: <20190322111215.873964544@linuxfoundation.org>
@@ -66,75 +67,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 0dd563b9a62c4cbabf5d4fd6596440c2491e72b1 ]
+[ Upstream commit 2439d37e1bf8a34d437573c086572abe0f3f1b15 ]
 
-At the end of NIC VF initialization VF sends CFG_DONE message to PF without
-using nicvf_msg_send_to_pf routine. This potentially could re-write data in
-mailbox. This commit is to implement common way of sending CFG_DONE message
-by the same way with other configuration messages by using
-nicvf_send_msg_to_pf() routine.
+This patch fixes the following static checker warning:
 
-Signed-off-by: Vadim Lomovtsev <vlomovtsev@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+drivers/input/keyboard/st-keyscan.c:156 keyscan_probe()
+error: potential zalloc NULL dereference: 'keypad_data->input_dev'
+
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/cavium/thunder/nic_main.c   |  2 +-
- drivers/net/ethernet/cavium/thunder/nicvf_main.c | 15 ++++++++++++---
- 2 files changed, 13 insertions(+), 4 deletions(-)
+ drivers/input/keyboard/st-keyscan.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/cavium/thunder/nic_main.c b/drivers/net/ethernet/cavium/thunder/nic_main.c
-index da142f6bd0c3..18ddd243dfa1 100644
---- a/drivers/net/ethernet/cavium/thunder/nic_main.c
-+++ b/drivers/net/ethernet/cavium/thunder/nic_main.c
-@@ -999,7 +999,7 @@ static void nic_handle_mbx_intr(struct nicpf *nic, int vf)
- 	case NIC_MBOX_MSG_CFG_DONE:
- 		/* Last message of VF config msg sequence */
- 		nic_enable_vf(nic, vf, true);
--		goto unlock;
-+		break;
- 	case NIC_MBOX_MSG_SHUTDOWN:
- 		/* First msg in VF teardown sequence */
- 		if (vf >= nic->num_vf_en)
-diff --git a/drivers/net/ethernet/cavium/thunder/nicvf_main.c b/drivers/net/ethernet/cavium/thunder/nicvf_main.c
-index c75d4ea9342b..71f228cece03 100644
---- a/drivers/net/ethernet/cavium/thunder/nicvf_main.c
-+++ b/drivers/net/ethernet/cavium/thunder/nicvf_main.c
-@@ -162,6 +162,17 @@ static int nicvf_check_pf_ready(struct nicvf *nic)
- 	return 1;
- }
+diff --git a/drivers/input/keyboard/st-keyscan.c b/drivers/input/keyboard/st-keyscan.c
+index de7be4f03d91..ebf9f643d910 100644
+--- a/drivers/input/keyboard/st-keyscan.c
++++ b/drivers/input/keyboard/st-keyscan.c
+@@ -153,6 +153,8 @@ static int keyscan_probe(struct platform_device *pdev)
  
-+static void nicvf_send_cfg_done(struct nicvf *nic)
-+{
-+	union nic_mbx mbx = {};
+ 	input_dev->id.bustype = BUS_HOST;
+ 
++	keypad_data->input_dev = input_dev;
 +
-+	mbx.msg.msg = NIC_MBOX_MSG_CFG_DONE;
-+	if (nicvf_send_msg_to_pf(nic, &mbx)) {
-+		netdev_err(nic->netdev,
-+			   "PF didn't respond to CFG DONE msg\n");
-+	}
-+}
-+
- static void nicvf_read_bgx_stats(struct nicvf *nic, struct bgx_stats_msg *bgx)
- {
- 	if (bgx->rx)
-@@ -1178,7 +1189,6 @@ int nicvf_open(struct net_device *netdev)
- 	struct nicvf *nic = netdev_priv(netdev);
- 	struct queue_set *qs = nic->qs;
- 	struct nicvf_cq_poll *cq_poll = NULL;
--	union nic_mbx mbx = {};
+ 	error = keypad_matrix_key_parse_dt(keypad_data);
+ 	if (error)
+ 		return error;
+@@ -168,8 +170,6 @@ static int keyscan_probe(struct platform_device *pdev)
  
- 	netif_carrier_off(netdev);
+ 	input_set_drvdata(input_dev, keypad_data);
  
-@@ -1267,8 +1277,7 @@ int nicvf_open(struct net_device *netdev)
- 		nicvf_enable_intr(nic, NICVF_INTR_RBDR, qidx);
- 
- 	/* Send VF config done msg to PF */
--	mbx.msg.msg = NIC_MBOX_MSG_CFG_DONE;
--	nicvf_write_to_mbx(nic, &mbx);
-+	nicvf_send_cfg_done(nic);
- 
- 	return 0;
- cleanup:
+-	keypad_data->input_dev = input_dev;
+-
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	keypad_data->base = devm_ioremap_resource(&pdev->dev, res);
+ 	if (IS_ERR(keypad_data->base))
 -- 
 2.19.1
 
