@@ -2,79 +2,108 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF65C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 21:41:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F6EFC10F03
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 21:42:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB95E21900
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 21:41:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51E05218E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 21:42:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="GhcthsIR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727653AbfCVVlZ (ORCPT
+        id S1727670AbfCVVmz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 17:41:25 -0400
-Received: from emh07.mail.saunalahti.fi ([62.142.5.117]:48956 "EHLO
-        emh07.mail.saunalahti.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726014AbfCVVlY (ORCPT
+        Fri, 22 Mar 2019 17:42:55 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:44713 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726014AbfCVVmy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 17:41:24 -0400
-Received: from darkstar.musicnaut.iki.fi (85-76-115-194-nat.elisa-mobile.fi [85.76.115.194])
-        by emh07.mail.saunalahti.fi (Postfix) with ESMTP id 213A6B0049;
-        Fri, 22 Mar 2019 23:41:20 +0200 (EET)
-Date:   Fri, 22 Mar 2019 23:41:20 +0200
-From:   Aaro Koskinen <aaro.koskinen@iki.fi>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [BISECTED, REGRESSION] Broken networking on MIPS/OCTEON
- EdgeRouter Lite
-Message-ID: <20190322214120.GB29013@darkstar.musicnaut.iki.fi>
-References: <20190322002125.GD7872@darkstar.musicnaut.iki.fi>
- <20190322064506.GB5348@vkoul-mobl>
- <20190322205059.GA29013@darkstar.musicnaut.iki.fi>
- <20190322212557.GF16623@lunn.ch>
+        Fri, 22 Mar 2019 17:42:54 -0400
+Received: by mail-wr1-f65.google.com with SMTP id w2so3834690wrt.11
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 14:42:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:to:from:cc;
+        bh=qt6YwDWafSWqqrp6VhotGv5EkViY02TvN4wQuiGS6zI=;
+        b=GhcthsIROUq196GT9L+g7mssyESjnvXwxg5qjAUhecEPB4hmJpr0doHlh5pStYnOY+
+         Vow5GoLgG7wZfUao6IDq5K5pFZM/XTVuBAUHnt00IlmiMN4BiyYunZWZfhIg94eEglbr
+         WYCs3/NjyvDdwD6eRmTJAFlvTZWZQVH2u71dxHLt+22dM7GPrVfkuP1G3Rtz3S1Olymp
+         CEcSbSScZiN1lGRgo0M41T0KXNPVE3RHYVhEvy7CeQfeAYUfA8ckIa+pWwrfoznZn9aG
+         Qh0xWOLpMV5xdIh6G9XwhdylcxQa4GdF0XsoGkeATHix/Hzt1/XkeAWIIXxubhW/Efpu
+         5SgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
+        bh=qt6YwDWafSWqqrp6VhotGv5EkViY02TvN4wQuiGS6zI=;
+        b=tuJ3V7V6xgPgfrGfVG0+Maz/ivR5gj0XEFK4jj0kcFGJf6a5YxQt2lPrpHPCYu+Fow
+         lgScG8ALw9SJ0qm95pe9xJDE0U7Ra9/BR7gskbvFvERI9+AdPxvD8J8zyi0Xg8WNw6C5
+         OoJfV320gmT0fdZaYnRvkNZlqDtuxdji7EQv3t4aV2yBgeBL2yn+dieZsAntih8Ip9tQ
+         vIYlPQ9ppRqHuWtgqvlBMiIkfgqOnHqTlxrSowEpANlBLrfGeACv7GrCFhCWFeEQnvG8
+         HD7KEyyh4BdACDU9CcxznlP631rSjkDbJ9CESdK1U6zuCD3yjtRVWnc7HEgaVE3e0Da2
+         if9Q==
+X-Gm-Message-State: APjAAAVawHABJeF0ChxJSe5DovMAHef1U8dk743USoAFIcZrgQ2p3RYh
+        n3iHLtr9vzK8oyczD3xz9xCjKbqXN1hp+g==
+X-Google-Smtp-Source: APXvYqxp2QDAhtvJGk67TnGhWMrEdss/5ZwdG2Q/0sWHZ6NnOog2d10EeHdSvpTB6DnQBqLlfvueNQ==
+X-Received: by 2002:a5d:4f07:: with SMTP id c7mr7422465wru.104.1553290972886;
+        Fri, 22 Mar 2019 14:42:52 -0700 (PDT)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id u19sm11071394wmc.7.2019.03.22.14.42.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 22 Mar 2019 14:42:52 -0700 (PDT)
+Message-ID: <5c9556dc.1c69fb81.c10d8.5cba@mx.google.com>
+Date:   Fri, 22 Mar 2019 14:42:52 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190322212557.GF16623@lunn.ch>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Kernel: v5.0.3-239-g6a3b25ca9720
+X-Kernelci-Report-Type: boot
+X-Kernelci-Tree: stable-rc
+X-Kernelci-Branch: linux-5.0.y
+In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
+References: <20190322111258.383569278@linuxfoundation.org>
+Subject: Re: [PATCH 5.0 000/238] 5.0.4-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+From:   "kernelci.org bot" <bot@kernelci.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+stable-rc/linux-5.0.y boot: 55 boots: 1 failed, 54 passed (v5.0.3-239-g6a3b=
+25ca9720)
 
-On Fri, Mar 22, 2019 at 10:25:57PM +0100, Andrew Lunn wrote:
-> > The OCTEON HW code knows only about RGMII. And looking at
-> > octeon ethernet staging driver it does phy connect always with
-> > PHY_INTERFACE_MODE_GMII. I did some experimentation, and it seems that
-> > with PHY_INTERFACE_MODE_RGMII_RXID it starts to work.. In the DT we have
-> > for ethernet for this board:
-> > 
-> > 	rx-delay = <0>;
-> > 	tx-delay = <0x10>;
-> 
-> These are not PHY properties. 
-> 
-> Looking at the code, it looks like these control delays the MAC
-> inserts. I don't see a binding document for these properties, so i've
-> no idea what 0x10 means. Before this driver moves out of staging,
-> these values should be changed to be in ns.
+Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
+-5.0.y/kernel/v5.0.3-239-g6a3b25ca9720/
+Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-5.0.y=
+/kernel/v5.0.3-239-g6a3b25ca9720/
 
-Documentation/devicetree/bindings/net/cavium-pip.txt
+Tree: stable-rc
+Branch: linux-5.0.y
+Git Describe: v5.0.3-239-g6a3b25ca9720
+Git Commit: 6a3b25ca97204a3891527d88b6691b362fee82c8
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
+e-rc.git
+Tested: 32 unique boards, 16 SoC families, 10 builds out of 208
 
-Not sure how I could figure out the ns values?
+Boot Failure Detected:
 
-> However, PHY_INTERFACE_MODE_RGMII_RXID would make sense if 0x10 is
-> sufficient to add the TX delay.
-> 
-> What the driver should however do is call of_of_get_phy_mode() to get
-> the phy-mode from the DT blob and pass that to of_phy_connect().
+arm64:
 
-OK, thanks, I'll try to work on this.
+    defconfig:
+        gcc-7:
+            meson-gxbb-p200: 1 failed lab
 
-A.
+---
+For more info write to <info@kernelci.org>
