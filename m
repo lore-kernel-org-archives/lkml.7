@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F2C2C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:15:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85366C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:15:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E4152082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:15:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 498B72083D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:15:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256927;
-	bh=5KsjDBw4pFj88ficVFtwdfiYmDYAQ5j09/yBFxIbCus=;
+	s=default; t=1553256930;
+	bh=gHGntNJt/stXc4iHKNLnLM8N0sWEFi1C81vGv30TzVc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EfluXz+hzzbZJ17/wPb/K5q0u1mUdK8UIkOQ83B1Q8t9uyLvEwLgtjggWlOJYsFzY
-	 N5W4BPzVAjtB9o/rAzllU3WFomoVGloNA7Wc5YtoImHBBK04vUzM1Q5oVvlbJQtGj3
-	 oEa3jNu+pWbKHEDm2g+9LJj3VJbUalq16qIQUfkU=
+	b=z+K5Ass8Jh+gm35t7az+jTJCe+3tUXpWoCLYBTif2IlBw6h2uo5ol9O3lgF6uhFK6
+	 ayR7uksij86s337R1L8NbaEDl0I7hLO8BPwDB/QQwHetY8ylrNKDHdDVUE/XlkSAvx
+	 exgl1Q1zpqN+PI61KRvCNPYmpDUZ+ERIBHv2wPJQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390062AbfCVMP0 (ORCPT
+        id S2390071AbfCVMP2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:15:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53822 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:15:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390052AbfCVMPX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:15:23 -0400
+        id S2390061AbfCVMP0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:15:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 926CA21900;
-        Fri, 22 Mar 2019 12:15:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C43D2082C;
+        Fri, 22 Mar 2019 12:15:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256923;
-        bh=5KsjDBw4pFj88ficVFtwdfiYmDYAQ5j09/yBFxIbCus=;
+        s=default; t=1553256925;
+        bh=gHGntNJt/stXc4iHKNLnLM8N0sWEFi1C81vGv30TzVc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YgiYAwVJlpK8pt91zvJbXBrXfVufwh/vlN0D4scXVJ4EwHwdfXcmrLP8rlaiqxHZ7
-         hzp+EP/MeynDhSJCYnng4gm7tyDeFe0dBCbILvUoHmSGf1krWk1LYdQFg0cTt3rk+q
-         Nteovneyfly8W/kW2wFEuvEZaDDleaAYDjharlI8=
+        b=hpBwJDPuzl80qjBkN9pj6JJ+/ZDM+1MDzHB5b5JeGrYGqWkJ/ezdT3BivvVmCzm8s
+         2WcrNg+tBAEFRFN1KnypX+qnF66OhmXkrSgNwk7ffl79xh3gWDP9am3Tnxt6fdqGSK
+         8KKzRAXgCKvhliMM+4pZS/H6JrqElb+7cY9kANSU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martin Schwidefsky <schwidefsky@de.ibm.com>
-Subject: [PATCH 5.0 077/238] s390/setup: fix early warning messages
-Date:   Fri, 22 Mar 2019 12:14:56 +0100
-Message-Id: <20190322111303.154582631@linuxfoundation.org>
+        stable@vger.kernel.org, Halil Pasic <pasic@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>
+Subject: [PATCH 5.0 078/238] s390/virtio: handle find on invalid queue gracefully
+Date:   Fri, 22 Mar 2019 12:14:57 +0100
+Message-Id: <20190322111303.204758711@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -64,107 +66,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Martin Schwidefsky <schwidefsky@de.ibm.com>
+From: Halil Pasic <pasic@linux.ibm.com>
 
-commit 8727638426b0aea59d7f904ad8ddf483f9234f88 upstream.
+commit 3438b2c039b4bf26881786a1f3450f016d66ad11 upstream.
 
-The setup_lowcore() function creates a new prefix page for the boot CPU.
-The PSW mask for the system_call, external interrupt, i/o interrupt and
-the program check handler have the DAT bit set in this new prefix page.
-
-At the time setup_lowcore is called the system still runs without virtual
-address translation, the paging_init() function creates the kernel page
-table and loads the CR13 with the kernel ASCE.
-
-Any code between setup_lowcore() and the end of paging_init() that has
-a BUG or WARN statement will create a program check that can not be
-handled correctly as there is no kernel page table yet.
-
-To allow early WARN statements initially setup the lowcore with DAT off
-and set the DAT bit only after paging_init() has completed.
+A queue with a capacity of zero is clearly not a valid virtio queue.
+Some emulators report zero queue size if queried with an invalid queue
+index. Instead of crashing in this case let us just return -ENOENT. To
+make that work properly, let us fix the notifier cleanup logic as well.
 
 Cc: stable@vger.kernel.org
-Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
+Signed-off-by: Cornelia Huck <cohuck@redhat.com>
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/s390/kernel/setup.c |   32 +++++++++++++++++++++++---------
- 1 file changed, 23 insertions(+), 9 deletions(-)
+ drivers/s390/virtio/virtio_ccw.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/arch/s390/kernel/setup.c
-+++ b/arch/s390/kernel/setup.c
-@@ -369,7 +369,7 @@ void __init arch_call_rest_init(void)
- 		: : [_frame] "a" (frame));
- }
- 
--static void __init setup_lowcore(void)
-+static void __init setup_lowcore_dat_off(void)
+--- a/drivers/s390/virtio/virtio_ccw.c
++++ b/drivers/s390/virtio/virtio_ccw.c
+@@ -272,6 +272,8 @@ static void virtio_ccw_drop_indicators(s
  {
- 	struct lowcore *lc;
+ 	struct virtio_ccw_vq_info *info;
  
-@@ -380,19 +380,16 @@ static void __init setup_lowcore(void)
- 	lc = memblock_alloc_low(sizeof(*lc), sizeof(*lc));
- 	lc->restart_psw.mask = PSW_KERNEL_BITS;
- 	lc->restart_psw.addr = (unsigned long) restart_int_handler;
--	lc->external_new_psw.mask = PSW_KERNEL_BITS |
--		PSW_MASK_DAT | PSW_MASK_MCHECK;
-+	lc->external_new_psw.mask = PSW_KERNEL_BITS | PSW_MASK_MCHECK;
- 	lc->external_new_psw.addr = (unsigned long) ext_int_handler;
- 	lc->svc_new_psw.mask = PSW_KERNEL_BITS |
--		PSW_MASK_DAT | PSW_MASK_IO | PSW_MASK_EXT | PSW_MASK_MCHECK;
-+		PSW_MASK_IO | PSW_MASK_EXT | PSW_MASK_MCHECK;
- 	lc->svc_new_psw.addr = (unsigned long) system_call;
--	lc->program_new_psw.mask = PSW_KERNEL_BITS |
--		PSW_MASK_DAT | PSW_MASK_MCHECK;
-+	lc->program_new_psw.mask = PSW_KERNEL_BITS | PSW_MASK_MCHECK;
- 	lc->program_new_psw.addr = (unsigned long) pgm_check_handler;
- 	lc->mcck_new_psw.mask = PSW_KERNEL_BITS;
- 	lc->mcck_new_psw.addr = (unsigned long) mcck_int_handler;
--	lc->io_new_psw.mask = PSW_KERNEL_BITS |
--		PSW_MASK_DAT | PSW_MASK_MCHECK;
-+	lc->io_new_psw.mask = PSW_KERNEL_BITS | PSW_MASK_MCHECK;
- 	lc->io_new_psw.addr = (unsigned long) io_int_handler;
- 	lc->clock_comparator = clock_comparator_max;
- 	lc->nodat_stack = ((unsigned long) &init_thread_union)
-@@ -452,6 +449,17 @@ static void __init setup_lowcore(void)
- 	lowcore_ptr[0] = lc;
++	if (!vcdev->airq_info)
++		return;
+ 	list_for_each_entry(info, &vcdev->virtqueues, node)
+ 		drop_airq_indicator(info->vq, vcdev->airq_info);
+ }
+@@ -413,7 +415,7 @@ static int virtio_ccw_read_vq_conf(struc
+ 	ret = ccw_io_helper(vcdev, ccw, VIRTIO_CCW_DOING_READ_VQ_CONF);
+ 	if (ret)
+ 		return ret;
+-	return vcdev->config_block->num;
++	return vcdev->config_block->num ?: -ENOENT;
  }
  
-+static void __init setup_lowcore_dat_on(void)
-+{
-+	struct lowcore *lc;
-+
-+	lc = lowcore_ptr[0];
-+	lc->external_new_psw.mask |= PSW_MASK_DAT;
-+	lc->svc_new_psw.mask |= PSW_MASK_DAT;
-+	lc->program_new_psw.mask |= PSW_MASK_DAT;
-+	lc->io_new_psw.mask |= PSW_MASK_DAT;
-+}
-+
- static struct resource code_resource = {
- 	.name  = "Kernel code",
- 	.flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM,
-@@ -1072,7 +1080,7 @@ void __init setup_arch(char **cmdline_p)
- #endif
- 
- 	setup_resources();
--	setup_lowcore();
-+	setup_lowcore_dat_off();
- 	smp_fill_possible_mask();
- 	cpu_detect_mhz_feature();
-         cpu_init();
-@@ -1085,6 +1093,12 @@ void __init setup_arch(char **cmdline_p)
- 	 */
-         paging_init();
- 
-+	/*
-+	 * After paging_init created the kernel page table, the new PSWs
-+	 * in lowcore can now run with DAT enabled.
-+	 */
-+	setup_lowcore_dat_on();
-+
-         /* Setup default console */
- 	conmode_default();
- 	set_preferred_console();
+ static void virtio_ccw_del_vq(struct virtqueue *vq, struct ccw1 *ccw)
 
 
