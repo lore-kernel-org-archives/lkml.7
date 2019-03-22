@@ -2,63 +2,50 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8938BC10F03
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:19:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E090CC10F03
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:19:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A0F3218E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:19:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6001218E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:19:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553260749;
-	bh=3qBO9WZKuncfGYf8kaV0C4vwlFSS6x3S7pgFlWyUuwU=;
+	s=default; t=1553260763;
+	bh=mODgvfRSt6Q56m6gVQ1AYHFWqnuEA/+JvEcvs1KNf1w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WsWWoSLUn/CT+FkzA7G4AF2aphVQ1MquuVKU/weGdZr1ZT7FOazLR1rGQtK4vjacg
-	 PPHhHMBZoG1s4dn4y3vK9PD2/ukcBL8Y+8BdgK+GM3iZeo2RCIVPrrlqgSm1sepZVw
-	 6tCcoDF+OH+WCK7kQnNA2eX3TsKaplzdqWLajmOI=
+	b=OV0LEB41DGhHr4DTDW2GWOUnP6cRCi3Zqw0E0sq/LAUQgDjV9tOqaAM3Iw6sMUoy+
+	 ETkmNQogkQhy+X0opgtH9Z+kEP/SWNUH1ijbMXfk0jEmbKpzcel3/FjQouNyebGc7H
+	 05ydlyCqk2Jc4zXpxhurDatXxGb3pQdzqoM3BSJw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728906AbfCVLXB (ORCPT
+        id S1728429AbfCVLWf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:23:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49742 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:22:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728885AbfCVLW4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:22:56 -0400
+        id S1728801AbfCVLW3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:22:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C74B3218D4;
-        Fri, 22 Mar 2019 11:22:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03A75218D4;
+        Fri, 22 Mar 2019 11:22:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553253775;
-        bh=3qBO9WZKuncfGYf8kaV0C4vwlFSS6x3S7pgFlWyUuwU=;
+        s=default; t=1553253748;
+        bh=mODgvfRSt6Q56m6gVQ1AYHFWqnuEA/+JvEcvs1KNf1w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p3DRl5y2WDnY+L6AEd5+n4kXg+W0oRVuhXwNdGZuQajX8I9SklDo9KUZVVf7T3WfX
-         57cU1VIHq/eeUAJHqyKSMKSuSBwyCzFgm830zWuMG7cqxzJsQ51j3Wfjl0/ktDDVX6
-         DFNBO3mBNKzwn3Zgh/H1VN7pjHFLhncUvQ4DptSk=
+        b=p641B6vhSydM15jJ59xJPqhCeNyi7cSP8UXTaZkBEGuJiWEgBTiJL+DwawSQUbwo8
+         eI6tsIcqiUjPOp7nv40ILSkX70DgMEXMC0zyG8WXh6Yepd7BRbr70R+uxBq+Oty5i4
+         0SyAuGEDcORD+ZFOj/I7fd88lbIpPBJU1bjAZZP4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dave Young <dyoung@redhat.com>,
-        Kairui Song <kasong@redhat.com>, Borislav Petkov <bp@suse.de>,
-        AKASHI Takahiro <takahiro.akashi@linaro.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>, bhe@redhat.com,
-        David Howells <dhowells@redhat.com>, erik.schmauss@intel.com,
-        fanc.fnst@cn.fujitsu.com, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@redhat.com>, kexec@lists.infradead.org,
-        lenb@kernel.org, linux-acpi@vger.kernel.org,
-        Philipp Rudo <prudo@linux.vnet.ibm.com>,
-        rafael.j.wysocki@intel.com, robert.moore@intel.com,
-        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
-        Yannik Sembritzki <yannik@sembritzki.me>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 3.18 068/134] x86/kexec: Dont setup EFI info if EFI runtime is not enabled
-Date:   Fri, 22 Mar 2019 12:14:41 +0100
-Message-Id: <20190322111214.990612455@linuxfoundation.org>
+        stable@vger.kernel.org, Ivan Mironov <mironov.ivan@gmail.com>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 3.18 043/134] USB: serial: cp210x: add ID for Ingenico 3070
+Date:   Fri, 22 Mar 2019 12:14:16 +0100
+Message-Id: <20190322111213.007705279@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111210.465931067@linuxfoundation.org>
 References: <20190322111210.465931067@linuxfoundation.org>
@@ -77,70 +64,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 2aa958c99c7fd3162b089a1a56a34a0cdb778de1 ]
+From: Ivan Mironov <mironov.ivan@gmail.com>
 
-Kexec-ing a kernel with "efi=noruntime" on the first kernel's command
-line causes the following null pointer dereference:
+commit dd9d3d86b08d6a106830364879c42c78db85389c upstream.
 
-  BUG: unable to handle kernel NULL pointer dereference at 0000000000000000
-  #PF error: [normal kernel read fault]
-  Call Trace:
-   efi_runtime_map_copy+0x28/0x30
-   bzImage64_load+0x688/0x872
-   arch_kexec_kernel_image_load+0x6d/0x70
-   kimage_file_alloc_init+0x13e/0x220
-   __x64_sys_kexec_file_load+0x144/0x290
-   do_syscall_64+0x55/0x1a0
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Here is how this device appears in kernel log:
 
-Just skip the EFI info setup if EFI runtime services are not enabled.
+	usb 3-1: new full-speed USB device number 18 using xhci_hcd
+	usb 3-1: New USB device found, idVendor=0b00, idProduct=3070
+	usb 3-1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+	usb 3-1: Product: Ingenico 3070
+	usb 3-1: Manufacturer: Silicon Labs
+	usb 3-1: SerialNumber: 0001
 
- [ bp: Massage commit message. ]
+Apparently this is a POS terminal with embedded USB-to-Serial converter.
 
-Suggested-by: Dave Young <dyoung@redhat.com>
-Signed-off-by: Kairui Song <kasong@redhat.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Dave Young <dyoung@redhat.com>
-Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: bhe@redhat.com
-Cc: David Howells <dhowells@redhat.com>
-Cc: erik.schmauss@intel.com
-Cc: fanc.fnst@cn.fujitsu.com
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: kexec@lists.infradead.org
-Cc: lenb@kernel.org
-Cc: linux-acpi@vger.kernel.org
-Cc: Philipp Rudo <prudo@linux.vnet.ibm.com>
-Cc: rafael.j.wysocki@intel.com
-Cc: robert.moore@intel.com
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Cc: Yannik Sembritzki <yannik@sembritzki.me>
-Link: https://lkml.kernel.org/r/20190118111310.29589-2-kasong@redhat.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Ivan Mironov <mironov.ivan@gmail.com>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/x86/kernel/kexec-bzimage64.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/usb/serial/cp210x.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
-index ca05f86481aa..3e22751382c3 100644
---- a/arch/x86/kernel/kexec-bzimage64.c
-+++ b/arch/x86/kernel/kexec-bzimage64.c
-@@ -167,6 +167,9 @@ setup_efi_state(struct boot_params *params, unsigned long params_load_addr,
- 	struct efi_info *current_ei = &boot_params.efi_info;
- 	struct efi_info *ei = &params->efi_info;
- 
-+	if (!efi_enabled(EFI_RUNTIME_SERVICES))
-+		return 0;
-+
- 	if (!current_ei->efi_memmap_size)
- 		return 0;
- 
--- 
-2.19.1
-
+--- a/drivers/usb/serial/cp210x.c
++++ b/drivers/usb/serial/cp210x.c
+@@ -57,6 +57,7 @@ static const struct usb_device_id id_tab
+ 	{ USB_DEVICE(0x08e6, 0x5501) }, /* Gemalto Prox-PU/CU contactless smartcard reader */
+ 	{ USB_DEVICE(0x08FD, 0x000A) }, /* Digianswer A/S , ZigBee/802.15.4 MAC Device */
+ 	{ USB_DEVICE(0x0908, 0x01FF) }, /* Siemens RUGGEDCOM USB Serial Console */
++	{ USB_DEVICE(0x0B00, 0x3070) }, /* Ingenico 3070 */
+ 	{ USB_DEVICE(0x0BED, 0x1100) }, /* MEI (TM) Cashflow-SC Bill/Voucher Acceptor */
+ 	{ USB_DEVICE(0x0BED, 0x1101) }, /* MEI series 2000 Combo Acceptor */
+ 	{ USB_DEVICE(0x0FCF, 0x1003) }, /* Dynastream ANT development board */
 
 
