@@ -2,69 +2,84 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFBC2C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 19:15:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E51D9C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 19:20:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3CD321917
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 19:15:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553282127;
-	bh=iy1Zwb9bZbfJQSj6Y+cfaEW1ZAbq8SfATwqP5SVnBr4=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=HLjU+ieiV4Z+XnqW2JGsR2uIlU+z6BguUfr5NtxuhWZsO1pUzBekB6ahZBipxPPv2
-	 82/9EC0radxAFVMSvf/An1mXAV4UtPRAzdVnv7eh5IN77Oakb3KDlUPda2AyJUNDEJ
-	 5RGDY55G7coCfFFjJQdY11XEMxTrMcl6gZjivMfs=
+	by mail.kernel.org (Postfix) with ESMTP id BB92F2183E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 19:20:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728293AbfCVTP0 (ORCPT
+        id S1727827AbfCVTUD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 15:15:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40186 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 15:20:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40854 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727949AbfCVTPM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 15:15:12 -0400
-Subject: Re: [GIT PULL] ACPI fix for v5.1-rc2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553282111;
-        bh=iy1Zwb9bZbfJQSj6Y+cfaEW1ZAbq8SfATwqP5SVnBr4=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=Wg/7mWai01QEB6NLthLc/Mz1DdemPl5BitQV2YZS0kEJgfVBdgBuAIM6Dwccq7wf1
-         F6+/zORQJXVY68DOlxWU1O7Kor6e5Xyz//6Ip3wv+Sp+ocJkxXary1AGk8F4hy4yT8
-         ji5IR26kyLiGnRvjOEn2ibqowGfdTJRauxW/zgsY=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CAJZ5v0g3_wWoN4Bp1+EKLuNxi3XDp2LrMq21cXCm8FFPoo6FOg@mail.gmail.com>
-References: <CAJZ5v0g3_wWoN4Bp1+EKLuNxi3XDp2LrMq21cXCm8FFPoo6FOg@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAJZ5v0g3_wWoN4Bp1+EKLuNxi3XDp2LrMq21cXCm8FFPoo6FOg@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git
- acpi-5.1-rc2
-X-PR-Tracked-Commit-Id: 54e3aca84e571559915998aa6cc05e5ac37c043b
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 2c1ada4f052d6d5e5c0bf7901617479b2146139e
-Message-Id: <155328211146.18163.13971639196758585789.pr-tracker-bot@kernel.org>
-Date:   Fri, 22 Mar 2019 19:15:11 +0000
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        id S1727385AbfCVTUD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 15:20:03 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1990B2183E;
+        Fri, 22 Mar 2019 19:20:02 +0000 (UTC)
+Date:   Fri, 22 Mar 2019 15:20:00 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     frowand.list@gmail.com
+Cc:     linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
+Subject: Re: [PATCH v2] tracing: initialize variable in create_dyn_event()
+Message-ID: <20190322152000.0a357bb1@gandalf.local.home>
+In-Reply-To: <1553237900-8555-1-git-send-email-frowand.list@gmail.com>
+References: <1553237900-8555-1-git-send-email-frowand.list@gmail.com>
+X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 22 Mar 2019 11:26:55 +0100:
+On Thu, 21 Mar 2019 23:58:20 -0700
+frowand.list@gmail.com wrote:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git acpi-5.1-rc2
+> From: Frank Rowand <frank.rowand@sony.com>
+> 
+> Fix compile warning in create_dyn_event(): 'ret' may be used uninitialized
+> in this function [-Wuninitialized].
+> 
+> Fixes: 5448d44c3855 ("tracing: Add unified dynamic event framework")
+> 
+> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/2c1ada4f052d6d5e5c0bf7901617479b2146139e
+Applied. Thanks Frank!
 
-Thank you!
+-- Steve
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+> ---
+> 
+> changes since v1:
+>   - initialize to -ENODEV instead of 0, as suggested by Steve
+> 
+>  kernel/trace/trace_dynevent.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/trace/trace_dynevent.c b/kernel/trace/trace_dynevent.c
+> index dd1f43588d70..fa100ed3b4de 100644
+> --- a/kernel/trace/trace_dynevent.c
+> +++ b/kernel/trace/trace_dynevent.c
+> @@ -74,7 +74,7 @@ int dyn_event_release(int argc, char **argv, struct dyn_event_operations *type)
+>  static int create_dyn_event(int argc, char **argv)
+>  {
+>  	struct dyn_event_operations *ops;
+> -	int ret;
+> +	int ret = -ENODEV;
+>  
+>  	if (argv[0][0] == '-' || argv[0][0] == '!')
+>  		return dyn_event_release(argc, argv, NULL);
+
