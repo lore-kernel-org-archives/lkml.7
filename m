@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 675EDC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:54:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64F61C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:54:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37F7B21934
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:54:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35CA721934
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:54:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255649;
-	bh=8LGng8JoEwSKKVfwxObuRAxu4+nxnnJsMZdtopSiuec=;
+	s=default; t=1553255653;
+	bh=UlP1H+u+UWVOtT1krFbs7idNT08YIAoJkuPD4TvVkVk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qNTgDvU+SumyV8fp06KeGFn46UD/9CCtx2BFte8Df7HFoE+dcycqd0mUtWBR2TzdH
-	 9bmlluHykjwDhsGM2hMOIWwvOSD2drZrwVU08+7G60SgY+ngGfmVm1Ki5msoLEaWvK
-	 Vcprtt1exrzhSGqBZL4Oq/DOQwv6KsHCUVMmWVP8=
+	b=uElo1hvrnaHryNAUheB7c0QZs9Zv5LAz/31DTTGME6xOrzrUTA0UiNv+tCfnTQnCx
+	 30a0WFbjiwWY+fWpLjj2E8uynYtqzt0Z9hyxZBNwdt5VPDiH+nCgJD4hek7Hr52I3U
+	 m2Hs9RK1G10tZR+Dtydwu8vvenlAtXyIc293rXRI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733128AbfCVLyI (ORCPT
+        id S1733138AbfCVLyL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:54:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58350 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:54:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732922AbfCVLyC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:54:02 -0400
+        id S1732470AbfCVLx6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:53:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C18820643;
-        Fri, 22 Mar 2019 11:54:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 959A421916;
+        Fri, 22 Mar 2019 11:53:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255641;
-        bh=8LGng8JoEwSKKVfwxObuRAxu4+nxnnJsMZdtopSiuec=;
+        s=default; t=1553255638;
+        bh=UlP1H+u+UWVOtT1krFbs7idNT08YIAoJkuPD4TvVkVk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DkYSfWLRDlSgpZE423rOf1wEJ2K6ROZH3EOIATbL7MugaiEpWUn9zGZipov9o+csE
-         Ws8Aq0rYDQJVfM/54XE0k+TgqIFPcy0wr/bihmNDaZcwW+pQ4bjYobNfBLn7MV7aoH
-         iXOj1rinX2T9s+P8izyFv0EMq41kCkC6RF7Nr1Lw=
+        b=ulbpEu/FNZ5S9cmJCa6DU5DfcSYxcYWX1LvqK1Gi9cCwFs4l6OZtzLYBb8Vs1dT/m
+         P+fndAMP7FglR6/G39rVfIjgvVhrmUbhk91d4b3v/CNpxaK/LSbhoVOLbiwwH6vQE9
+         +P9pNgEqwX4XIuixRWHtEA1rvtLj64wBv+D8A7eU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "zhangyi (F)" <yi.zhang@huawei.com>,
-        Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.cz>
-Subject: [PATCH 4.14 135/183] jbd2: clear dirty flag when revoking a buffer from an older transaction
-Date:   Fri, 22 Mar 2019 12:16:03 +0100
-Message-Id: <20190322111251.535096764@linuxfoundation.org>
+        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 4.14 152/183] dm integrity: limit the rate of error messages
+Date:   Fri, 22 Mar 2019 12:16:20 +0100
+Message-Id: <20190322111252.898595061@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111241.819468003@linuxfoundation.org>
 References: <20190322111241.819468003@linuxfoundation.org>
@@ -65,80 +65,51 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: zhangyi (F) <yi.zhang@huawei.com>
+From: Mikulas Patocka <mpatocka@redhat.com>
 
-commit 904cdbd41d749a476863a0ca41f6f396774f26e4 upstream.
+commit 225557446856448039a9e495da37b72c20071ef2 upstream.
 
-Now, we capture a data corruption problem on ext4 while we're truncating
-an extent index block. Imaging that if we are revoking a buffer which
-has been journaled by the committing transaction, the buffer's jbddirty
-flag will not be cleared in jbd2_journal_forget(), so the commit code
-will set the buffer dirty flag again after refile the buffer.
+When using dm-integrity underneath md-raid, some tests with raid
+auto-correction trigger large amounts of integrity failures - and all
+these failures print an error message. These messages can bring the
+system to a halt if the system is using serial console.
 
-fsx                               kjournald2
-                                  jbd2_journal_commit_transaction
-jbd2_journal_revoke                commit phase 1~5...
- jbd2_journal_forget
-   belongs to older transaction    commit phase 6
-   jbddirty not clear               __jbd2_journal_refile_buffer
-                                     __jbd2_journal_unfile_buffer
-                                      test_clear_buffer_jbddirty
-                                       mark_buffer_dirty
+Fix this by limiting the rate of error messages - it improves the speed
+of raid recovery and avoids the hang.
 
-Finally, if the freed extent index block was allocated again as data
-block by some other files, it may corrupt the file data after writing
-cached pages later, such as during unmount time. (In general,
-clean_bdev_aliases() related helpers should be invoked after
-re-allocation to prevent the above corruption, but unfortunately we
-missed it when zeroout the head of extra extent blocks in
-ext4_ext_handle_unwritten_extents()).
-
-This patch mark buffer as freed and set j_next_transaction to the new
-transaction when it already belongs to the committing transaction in
-jbd2_journal_forget(), so that commit code knows it should clear dirty
-bits when it is done with the buffer.
-
-This problem can be reproduced by xfstests generic/455 easily with
-seeds (3246 3247 3248 3249).
-
-Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Cc: stable@vger.kernel.org
+Fixes: 7eada909bfd7a ("dm: add integrity target")
+Cc: stable@vger.kernel.org # v4.12+
+Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/jbd2/transaction.c |   17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+ drivers/md/dm-integrity.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/fs/jbd2/transaction.c
-+++ b/fs/jbd2/transaction.c
-@@ -1581,14 +1581,21 @@ int jbd2_journal_forget (handle_t *handl
- 		/* However, if the buffer is still owned by a prior
- 		 * (committing) transaction, we can't drop it yet... */
- 		JBUFFER_TRACE(jh, "belongs to older transaction");
--		/* ... but we CAN drop it from the new transaction if we
--		 * have also modified it since the original commit. */
-+		/* ... but we CAN drop it from the new transaction through
-+		 * marking the buffer as freed and set j_next_transaction to
-+		 * the new transaction, so that not only the commit code
-+		 * knows it should clear dirty bits when it is done with the
-+		 * buffer, but also the buffer can be checkpointed only
-+		 * after the new transaction commits. */
+--- a/drivers/md/dm-integrity.c
++++ b/drivers/md/dm-integrity.c
+@@ -1276,8 +1276,8 @@ again:
+ 						checksums_ptr - checksums, !dio->write ? TAG_CMP : TAG_WRITE);
+ 			if (unlikely(r)) {
+ 				if (r > 0) {
+-					DMERR("Checksum failed at sector 0x%llx",
+-					      (unsigned long long)(sector - ((r + ic->tag_size - 1) / ic->tag_size)));
++					DMERR_LIMIT("Checksum failed at sector 0x%llx",
++						    (unsigned long long)(sector - ((r + ic->tag_size - 1) / ic->tag_size)));
+ 					r = -EILSEQ;
+ 					atomic64_inc(&ic->number_of_mismatches);
+ 				}
+@@ -1469,8 +1469,8 @@ retry_kmap:
  
--		if (jh->b_next_transaction) {
--			J_ASSERT(jh->b_next_transaction == transaction);
-+		set_buffer_freed(bh);
-+
-+		if (!jh->b_next_transaction) {
- 			spin_lock(&journal->j_list_lock);
--			jh->b_next_transaction = NULL;
-+			jh->b_next_transaction = transaction;
- 			spin_unlock(&journal->j_list_lock);
-+		} else {
-+			J_ASSERT(jh->b_next_transaction == transaction);
- 
- 			/*
- 			 * only drop a reference if this transaction modified
+ 					integrity_sector_checksum(ic, logical_sector, mem + bv.bv_offset, checksums_onstack);
+ 					if (unlikely(memcmp(checksums_onstack, journal_entry_tag(ic, je), ic->tag_size))) {
+-						DMERR("Checksum failed when reading from journal, at sector 0x%llx",
+-						      (unsigned long long)logical_sector);
++						DMERR_LIMIT("Checksum failed when reading from journal, at sector 0x%llx",
++							    (unsigned long long)logical_sector);
+ 					}
+ 				}
+ #endif
 
 
