@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4726C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:46:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 786E4C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:46:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92A53218B0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:46:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 494542075E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:46:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255170;
-	bh=UA1YX0AB4q+eF1DUePsK1ISk4auoedkiGjU2q4xQz1Y=;
+	s=default; t=1553255173;
+	bh=UCAmDSmoYYaSZWUlQnm+7p6wt8/kDbC/s16U4AKcilQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GR7HxytDBPLfoXoeCBukG0AIxRj6j+oOpLBYAaIvucfPi/ogXe/LLCSMvJRA9VeKC
-	 pEmpMziMyrp2J66CpNJkRMPCAeALQxNwLArIjnYkHX9tB1WXLt11KrFtoio27w/iij
-	 43s4ersTKsJ72M6TfzW+rHXBWGNsGJBwM58qn/Zk=
+	b=RuBUjv7N35gWUAEIIBijgpw+zKX4mF0m7Gu0QcnX/hK5d97zdB+LMj2d5vyFIBvhw
+	 0Ca8oNLW5XVYNDN4FakKzn6MI/NLz6begFcKVCoBYRgJth3/W5EKCfNj9otCGMw9Gv
+	 PVn4Sl4WrVMk/GUiLeiK0uAMeQ0ll2g0KDU/wZUE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732018AbfCVLqJ (ORCPT
+        id S1732030AbfCVLqM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:46:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49216 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:46:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731604AbfCVLqH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:46:07 -0400
+        id S1731604AbfCVLqK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:46:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A05462075E;
-        Fri, 22 Mar 2019 11:46:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79E412075E;
+        Fri, 22 Mar 2019 11:46:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255166;
-        bh=UA1YX0AB4q+eF1DUePsK1ISk4auoedkiGjU2q4xQz1Y=;
+        s=default; t=1553255170;
+        bh=UCAmDSmoYYaSZWUlQnm+7p6wt8/kDbC/s16U4AKcilQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TmgcFC2j9Gd3Z/N3gBtsO8V83hTZT1QXvyyIt0Vzun6fXG2FZyhCeFolLddiMtiBJ
-         qjgJPGqwZRVDx39igmwjJMRODQO8PDD/hTr/bWfpRTsSDhv3k799BhjSHegkZ04EaZ
-         2tC/vSTURJAG6u/Uu5naUAPjC6FvU388MbBy0U3U=
+        b=faVwQtRSeY66+KIXPXRbdq59vEi5+8NFMazNM6keEA5yxPHReiSv/sYmRy3FpVysM
+         DkMRaKFFdJZ6qW0v72AX0Aw0JV2eIVWlv/l+SfuynRiHELPdO+kFklwkozYVvyEV/3
+         8ybd7sHRMRIUrTHUbTnnnaaNz3eLjebixotQG62w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 4.9 109/118] perf auxtrace: Define auxtrace record alignment
-Date:   Fri, 22 Mar 2019 12:16:21 +0100
-Message-Id: <20190322111224.024435951@linuxfoundation.org>
+        stable@vger.kernel.org, NeilBrown <neil@brown.name>,
+        Mike Snitzer <snitzer@redhat.com>,
+        =?UTF-8?q?Guillaume=20Perr=C3=A9al?= <gperreal@free.fr>
+Subject: [PATCH 4.9 100/118] dm: fix to_sector() for 32bit
+Date:   Fri, 22 Mar 2019 12:16:12 +0100
+Message-Id: <20190322111223.448545636@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111215.873964544@linuxfoundation.org>
 References: <20190322111215.873964544@linuxfoundation.org>
@@ -66,52 +66,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+From: NeilBrown <neil@brown.name>
 
-commit c3fcadf0bb765faf45d6d562246e1d08885466df upstream.
+commit 0bdb50c531f7377a9da80d3ce2d61f389c84cb30 upstream.
 
-Define auxtrace record alignment so that it can be referenced elsewhere.
+A dm-raid array with devices larger than 4GB won't assemble on
+a 32 bit host since _check_data_dev_sectors() was added in 4.16.
+This is because to_sector() treats its argument as an "unsigned long"
+which is 32bits (4GB) on a 32bit host.  Using "unsigned long long"
+is more correct.
 
-Note this is preparation for patch "perf intel-pt: Fix overlap calculation
-for padding"
+Kernels as early as 4.2 can have other problems due to to_sector()
+being used on the size of a device.
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: stable@vger.kernel.org
-Link: http://lkml.kernel.org/r/20190206103947.15750-2-adrian.hunter@intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: 0cf4503174c1 ("dm raid: add support for the MD RAID0 personality")
+cc: stable@vger.kernel.org (v4.2+)
+Reported-and-tested-by: Guillaume Perréal <gperreal@free.fr>
+Signed-off-by: NeilBrown <neil@brown.name>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/perf/util/auxtrace.c |    4 ++--
- tools/perf/util/auxtrace.h |    3 +++
- 2 files changed, 5 insertions(+), 2 deletions(-)
+ include/linux/device-mapper.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/tools/perf/util/auxtrace.c
-+++ b/tools/perf/util/auxtrace.c
-@@ -1244,9 +1244,9 @@ static int __auxtrace_mmap__read(struct
- 	}
+--- a/include/linux/device-mapper.h
++++ b/include/linux/device-mapper.h
+@@ -627,7 +627,7 @@ extern struct ratelimit_state dm_ratelim
+  */
+ #define dm_target_offset(ti, sector) ((sector) - (ti)->begin)
  
- 	/* padding must be written by fn() e.g. record__process_auxtrace() */
--	padding = size & 7;
-+	padding = size & (PERF_AUXTRACE_RECORD_ALIGNMENT - 1);
- 	if (padding)
--		padding = 8 - padding;
-+		padding = PERF_AUXTRACE_RECORD_ALIGNMENT - padding;
- 
- 	memset(&ev, 0, sizeof(ev));
- 	ev.auxtrace.header.type = PERF_RECORD_AUXTRACE;
---- a/tools/perf/util/auxtrace.h
-+++ b/tools/perf/util/auxtrace.h
-@@ -37,6 +37,9 @@ struct record_opts;
- struct auxtrace_info_event;
- struct events_stats;
- 
-+/* Auxtrace records must have the same alignment as perf event records */
-+#define PERF_AUXTRACE_RECORD_ALIGNMENT 8
-+
- enum auxtrace_type {
- 	PERF_AUXTRACE_UNKNOWN,
- 	PERF_AUXTRACE_INTEL_PT,
+-static inline sector_t to_sector(unsigned long n)
++static inline sector_t to_sector(unsigned long long n)
+ {
+ 	return (n >> SECTOR_SHIFT);
+ }
 
 
