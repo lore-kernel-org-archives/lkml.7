@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23278C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:28:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF73FC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:28:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E70722054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:28:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E7CE2054F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:28:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553257713;
-	bh=jDTgY1LixftRKM8LNEmKEQkXfy8X5GwDQLrdwivhmdg=;
+	s=default; t=1553257720;
+	bh=8iRjdkPoULPbbnqHkLjnfjzYLmrTlF1EWn3ugggg6Hg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rdxqq62l9GqNqq4fDh/SNK+bwWegqk9M5v6wEA2n716xFBRDHEk41tGXQxUQKBj4q
-	 86yl7ceqgSSSmXhWvbRJ8dQVjio4gLjMP5mXAzfKwYAfluIDvJmX3eiS0S5RqMJhDa
-	 xycYV7tTKs4TqxI/H2nrfYAfiDSd5IigipNLEna4=
+	b=B0L1Um6808KeJxsKKxhWmatgn1w6vmhRNKNEkK8iDXyQRv9qO0pvnQ14beNBVW3C9
+	 qwAquVeWKwwZ0gSWPzRC98DX5U5pfJRigYosclcpBylO07knNJZ/jVDEPZ3R2iA94M
+	 YxCvki2tVqEkAHK1bAtvd6ysgeifYMA8IuPtp0po=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390744AbfCVMUf (ORCPT
+        id S2390835AbfCVM2j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:20:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59508 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:28:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390736AbfCVMUa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:20:30 -0400
+        id S2390579AbfCVMU0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:20:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5544E218A1;
-        Fri, 22 Mar 2019 12:20:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77D46218A1;
+        Fri, 22 Mar 2019 12:20:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553257229;
-        bh=jDTgY1LixftRKM8LNEmKEQkXfy8X5GwDQLrdwivhmdg=;
+        s=default; t=1553257226;
+        bh=8iRjdkPoULPbbnqHkLjnfjzYLmrTlF1EWn3ugggg6Hg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W/DWPfcUmK/5uZll21q++Tg53ZiG54TKXVHuTZoR+7IbRG/BdAXsonom5SgIKs9yf
-         xOxwjiY6tM51P/ukgpkGf3t+Waj9ae38RAfoNyCP6idgt7N2l7ahfIlnLujG9XnH5D
-         KDDW34bX2vbvBVJ93gxT+8Q6dOInqi59jYPy6RI4=
+        b=2DIVKbbr0vdNXgUWbbuXEZubCLjHMiQzhNom8vKuBf5IJ7gVsrpajgKwpcpgK6F0+
+         RtH8wNC3cLw6DBO60MfRvy4jouXVhPytIg9nn7nfatA5vPi7PaWQdvNQdf0ESVCqiw
+         JwJQkkmJWmHLdR9nFPI8defknjDpLB/8DNWxns84=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 5.0 170/238] ARM: s3c24xx: Fix boolean expressions in osiris_dvs_notify
-Date:   Fri, 22 Mar 2019 12:16:29 +0100
-Message-Id: <20190322111308.324841403@linuxfoundation.org>
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.0 169/238] powerpc/traps: Fix the message printed when stack overflows
+Date:   Fri, 22 Mar 2019 12:16:28 +0100
+Message-Id: <20190322111308.261467624@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -66,48 +65,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Gustavo A. R. Silva <gustavo@embeddedor.com>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-commit e2477233145f2156434afb799583bccd878f3e9f upstream.
+commit 9bf3d3c4e4fd82c7174f4856df372ab2a71005b9 upstream.
 
-Fix boolean expressions by using logical AND operator '&&' instead of
-bitwise operator '&'.
+Today's message is useless:
 
-This issue was detected with the help of Coccinelle.
+  [   42.253267] Kernel stack overflow in process (ptrval), r1=c65500b0
 
-Fixes: 4fa084af28ca ("ARM: OSIRIS: DVS (Dynamic Voltage Scaling) supoort.")
-Cc: stable@vger.kernel.org
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-[krzk: Fix -Wparentheses warning]
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+This patch fixes it:
+
+  [   66.905235] Kernel stack overflow in process sh[356], r1=c65560b0
+
+Fixes: ad67b74d2469 ("printk: hash addresses printed with %p")
+Cc: stable@vger.kernel.org # v4.15+
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+[mpe: Use task_pid_nr()]
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/mach-s3c24xx/mach-osiris-dvs.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/powerpc/kernel/traps.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/arm/mach-s3c24xx/mach-osiris-dvs.c
-+++ b/arch/arm/mach-s3c24xx/mach-osiris-dvs.c
-@@ -65,16 +65,16 @@ static int osiris_dvs_notify(struct noti
+--- a/arch/powerpc/kernel/traps.c
++++ b/arch/powerpc/kernel/traps.c
+@@ -1542,8 +1542,8 @@ bail:
  
- 	switch (val) {
- 	case CPUFREQ_PRECHANGE:
--		if (old_dvs & !new_dvs ||
--		    cur_dvs & !new_dvs) {
-+		if ((old_dvs && !new_dvs) ||
-+		    (cur_dvs && !new_dvs)) {
- 			pr_debug("%s: exiting dvs\n", __func__);
- 			cur_dvs = false;
- 			gpio_set_value(OSIRIS_GPIO_DVS, 1);
- 		}
- 		break;
- 	case CPUFREQ_POSTCHANGE:
--		if (!old_dvs & new_dvs ||
--		    !cur_dvs & new_dvs) {
-+		if ((!old_dvs && new_dvs) ||
-+		    (!cur_dvs && new_dvs)) {
- 			pr_debug("entering dvs\n");
- 			cur_dvs = true;
- 			gpio_set_value(OSIRIS_GPIO_DVS, 0);
+ void StackOverflow(struct pt_regs *regs)
+ {
+-	printk(KERN_CRIT "Kernel stack overflow in process %p, r1=%lx\n",
+-	       current, regs->gpr[1]);
++	pr_crit("Kernel stack overflow in process %s[%d], r1=%lx\n",
++		current->comm, task_pid_nr(current), regs->gpr[1]);
+ 	debugger(regs);
+ 	show_regs(regs);
+ 	panic("kernel stack overflow");
 
 
