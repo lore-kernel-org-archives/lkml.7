@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23A18C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:12:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC990C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:12:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7AF32083D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:12:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC40B20830
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:12:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256736;
-	bh=YO7FLkhrr1GOg5XRlNjlw/cDzgBkOn9jA1FYikRHPLY=;
+	s=default; t=1553256738;
+	bh=SnVD/eR8xg31yLvxM6GYWPhra0WTpc0/RI95NEO40us=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MV9UXKgQEvpLcpoHfv7f7/sht6EPCveaknqJIoxrC1wUdx/7bPojFP7BquggoPaPL
-	 6z6Dn9yQoe6XPLGw0nmxSwdD+4qDjjiFdeUyQUGQvCY3aDcCcxhxCSTiDdfzvmyQr9
-	 2os4D3EqS8d34PuXY3jhI4LkDzxBThnFEd7acbK0=
+	b=c52oR0CTMeKOCqfva30/mnMkVM+53rqc4Gck7dM4qty8bf/HjBfh+VvK5eDkV9ELd
+	 hJTBVgPukfvhIRcKPjMnU+bCqSmhL9PfIArkj8x4gnMVER+YpJxeh12NfwWnLtWVR1
+	 0hqyhmS1jNrl+63wv1YltclKzSQC0RSgMVcWe7+Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389601AbfCVMMO (ORCPT
+        id S2389318AbfCVMMR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:12:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50322 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:12:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50404 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389449AbfCVMMG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:12:06 -0400
+        id S2389128AbfCVMMN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:12:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76E1A2083D;
-        Fri, 22 Mar 2019 12:12:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 153D721929;
+        Fri, 22 Mar 2019 12:12:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256726;
-        bh=YO7FLkhrr1GOg5XRlNjlw/cDzgBkOn9jA1FYikRHPLY=;
+        s=default; t=1553256732;
+        bh=SnVD/eR8xg31yLvxM6GYWPhra0WTpc0/RI95NEO40us=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P9Ev146fX5MHtP6YlZ011Kldie1t51KeoQCFyvIJAFWhNUh7dNLF2HTJOL5TMAU89
-         bDGwQjWX7+AUsqR5E0iN9YMtWnDxrGD0OzrLtvwr4UI+8sSnXxTLElP0lzjLv0P7cL
-         FVusSmhcjU5xj9f/ipPaK+quP3u645SLqSgUODV0=
+        b=bv8X1Kj79LUXW3SIxMyJt3zjcSgf8672e2yVTQN9T/th6I8CQUrUr+0yXTNnGlEN3
+         UYgEJaYAn+K/HhTYLfiO1pNAL90uWZyKrOWA0Q2Wed+k/fILMLL66hbSlubUS/NbYD
+         e7OvoYTvpsjb/qJH/UjO9ky9A1sztpBc5PYkVRvQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        zhengbin <zhengbin13@huawei.com>,
-        Dominique Martinet <dominique.martinet@cea.fr>
-Subject: [PATCH 5.0 002/238] 9p/net: fix memory leak in p9_client_create
-Date:   Fri, 22 Mar 2019 12:13:41 +0100
-Message-Id: <20190322111258.504058704@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
+        "Andrew F. Davis" <afd@ti.com>, Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.0 004/238] ASoC: codecs: pcm186x: fix wrong usage of DECLARE_TLV_DB_SCALE()
+Date:   Fri, 22 Mar 2019 12:13:43 +0100
+Message-Id: <20190322111258.597234748@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -66,35 +66,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: zhengbin <zhengbin13@huawei.com>
+From: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
 
-commit bb06c388fa20ae24cfe80c52488de718a7e3a53f upstream.
+commit fcf4daabf08079e6d09958a2992e7446ef8d0438 upstream.
 
-If msize is less than 4096, we should close and put trans, destroy
-tagpool, not just free client. This patch fixes that.
+According to DS, the gain is between -12 dB and 40 dB, with a 0.5 dB step.
+Tested on pcm1863.
 
-Link: http://lkml.kernel.org/m/1552464097-142659-1-git-send-email-zhengbin13@huawei.com
+Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Acked-by: Andrew F. Davis <afd@ti.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Cc: stable@vger.kernel.org
-Fixes: 574d356b7a02 ("9p/net: put a lower bound on msize")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: zhengbin <zhengbin13@huawei.com>
-Signed-off-by: Dominique Martinet <dominique.martinet@cea.fr>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/9p/client.c |    2 +-
+ sound/soc/codecs/pcm186x.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/9p/client.c
-+++ b/net/9p/client.c
-@@ -1061,7 +1061,7 @@ struct p9_client *p9_client_create(const
- 		p9_debug(P9_DEBUG_ERROR,
- 			 "Please specify a msize of at least 4k\n");
- 		err = -EINVAL;
--		goto free_client;
-+		goto close_trans;
- 	}
+--- a/sound/soc/codecs/pcm186x.c
++++ b/sound/soc/codecs/pcm186x.c
+@@ -42,7 +42,7 @@ struct pcm186x_priv {
+ 	bool is_master_mode;
+ };
  
- 	err = p9_client_version(clnt);
+-static const DECLARE_TLV_DB_SCALE(pcm186x_pga_tlv, -1200, 4000, 50);
++static const DECLARE_TLV_DB_SCALE(pcm186x_pga_tlv, -1200, 50, 0);
+ 
+ static const struct snd_kcontrol_new pcm1863_snd_controls[] = {
+ 	SOC_DOUBLE_R_S_TLV("ADC Capture Volume", PCM186X_PGA_VAL_CH1_L,
 
 
