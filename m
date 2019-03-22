@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 390A8C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:01:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A60C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:01:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F147421934
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:01:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 020B021A4A
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:01:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256106;
-	bh=ncLaRMFvOnvVUW/n0d+lNRDuFYEkWdIgSln00mtGu44=;
+	s=default; t=1553256110;
+	bh=ETm5/AIDsD1XlGz2xtT0seS9TcpXkNef7X4JNaNXhZY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bfX465Jy+IgkTPIm/yq02gF5MmSZxbar6g9vHWjCfjN4o1a3TihTmHT1cVXJsAg/b
-	 TekwArfLCTpnW7CzNVIQq6OsrYigGuUSDiHP7AtSCRWDluUL/4l8/yhkXwE+Q3FF8N
-	 Abw1zaoEUkQxDM8cPDpMEjP9mypEzG+Su6NmWhE8=
+	b=EtK+/qsO2QHLZDUCU+NlQTTailj9cjTrkGigQBu4eLO50DchCQut47UWvQ1kEUaQn
+	 Z6PY7cLIDsbeoMILfOMLiOvTE/PklJ2ua+6xOyNobd4ffeJt0qvOuptSUYBa6CZYxi
+	 sWVsL9m4xf1auumiXCSIZSEBIWQRIphXUy9oRXcY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388254AbfCVMBo (ORCPT
+        id S2388262AbfCVMBs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:01:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39446 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:01:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39540 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387921AbfCVMBn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:01:43 -0400
+        id S2388255AbfCVMBp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:01:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 08020204FD;
-        Fri, 22 Mar 2019 12:01:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CCA102192D;
+        Fri, 22 Mar 2019 12:01:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256102;
-        bh=ncLaRMFvOnvVUW/n0d+lNRDuFYEkWdIgSln00mtGu44=;
+        s=default; t=1553256105;
+        bh=ETm5/AIDsD1XlGz2xtT0seS9TcpXkNef7X4JNaNXhZY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zu56+3nTZVc2x2A4rKfKe1AxsJOk2wx0q8XYyLdzxagU2FlEre1703aa5yGxc/y69
-         R8nyr/cM8zebCxRXJWyk8AIKWMJxqDSzqSkCcXQBgThsA1GeC+RLriA1H1Qod08Kza
-         9/HV3OSTExeBEaXILZykHl7GWCa87zE2QqtoRdMQ=
+        b=BzylWYAKtyYcg16xM3RW/JyoBIbqhEay8IG+JQFp1/7mB/8O81qvVkDA3QvSAtvFk
+         UFQi2qYvIF7RxiU/CczPBRXmO7IE6yKucNa9hLhxq0kOgQ+AJtA9/qiQ6ufcx/viZ1
+         xJLf9BgKQ0BS2h4cMY9feetdPu4AQfrxJC+p9RHc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mao Wenan <maowenan@huawei.com>,
+        stable@vger.kernel.org, David Ahern <dsahern@gmail.com>,
+        Thadeu Lima de Souza Cascardo <cascardo@canonical.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 109/280] net: set static variable an initial value in atl2_probe()
-Date:   Fri, 22 Mar 2019 12:14:22 +0100
-Message-Id: <20190322111313.240419430@linuxfoundation.org>
+Subject: [PATCH 4.19 110/280] selftests: fib_tests: sleep after changing carrier. again.
+Date:   Fri, 22 Mar 2019 12:14:23 +0100
+Message-Id: <20190322111313.394820760@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -66,38 +67,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 4593403fa516a5a4cffe6883c5062d60932cbfbe ]
+[ Upstream commit af548a27b158d548d41e56255e6eaca1658cc3be ]
 
-cards_found is a static variable, but when it enters atl2_probe(),
-cards_found is set to zero, the value is not consistent with last probe,
-so next behavior is not our expect.
+Just like commit e2ba732a1681 ("selftests: fib_tests: sleep after
+changing carrier"), wait one second to allow linkwatch to propagate the
+carrier change to the stack.
 
-Signed-off-by: Mao Wenan <maowenan@huawei.com>
+There are two sets of carrier tests. The first slept after the carrier
+was set to off, and when the second set ran, it was likely that the
+linkwatch would be able to run again without much delay, reducing the
+likelihood of a race. However, if you run 'fib_tests.sh -t carrier' on a
+loop, you will quickly notice the failures.
+
+Sleeping on the second set of tests make the failures go away.
+
+Cc: David Ahern <dsahern@gmail.com>
+Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
+Reviewed-by: David Ahern <dsahern@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/atheros/atlx/atl2.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ tools/testing/selftests/net/fib_tests.sh | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/atheros/atlx/atl2.c b/drivers/net/ethernet/atheros/atlx/atl2.c
-index bb41becb6609..31ff1e0d1baa 100644
---- a/drivers/net/ethernet/atheros/atlx/atl2.c
-+++ b/drivers/net/ethernet/atheros/atlx/atl2.c
-@@ -1335,13 +1335,11 @@ static int atl2_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- {
- 	struct net_device *netdev;
- 	struct atl2_adapter *adapter;
--	static int cards_found;
-+	static int cards_found = 0;
- 	unsigned long mmio_start;
- 	int mmio_len;
- 	int err;
+diff --git a/tools/testing/selftests/net/fib_tests.sh b/tools/testing/selftests/net/fib_tests.sh
+index 0f45633bd634..a4ccde0e473b 100755
+--- a/tools/testing/selftests/net/fib_tests.sh
++++ b/tools/testing/selftests/net/fib_tests.sh
+@@ -385,6 +385,7 @@ fib_carrier_unicast_test()
  
--	cards_found = 0;
--
- 	err = pci_enable_device(pdev);
- 	if (err)
- 		return err;
+ 	set -e
+ 	$IP link set dev dummy0 carrier off
++	sleep 1
+ 	set +e
+ 
+ 	echo "    Carrier down"
 -- 
 2.19.1
 
