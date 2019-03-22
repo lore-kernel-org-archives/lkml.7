@@ -2,134 +2,369 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7183BC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 07:43:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C049BC10F03
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 07:43:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46A79218FE
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 07:43:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C3E8218FE
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 07:43:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727548AbfCVHnA (ORCPT
+        id S1727619AbfCVHnl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 03:43:00 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:60446 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726029AbfCVHm7 (ORCPT
+        Fri, 22 Mar 2019 03:43:41 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:46277 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726029AbfCVHnl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 03:42:59 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2M7fDdJ145257
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 03:42:58 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rcu6egueq-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 03:42:58 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <fbarrat@linux.ibm.com>;
-        Fri, 22 Mar 2019 07:42:47 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 22 Mar 2019 07:42:45 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2M7gqe758654926
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 22 Mar 2019 07:42:52 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3DA28A4051;
-        Fri, 22 Mar 2019 07:42:52 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E3B7FA404D;
-        Fri, 22 Mar 2019 07:42:51 +0000 (GMT)
-Received: from [9.145.3.179] (unknown [9.145.3.179])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 22 Mar 2019 07:42:51 +0000 (GMT)
-Subject: Re: [PATCH 13/38] vfs: Convert cxl to fs_context
-To:     David Howells <dhowells@redhat.com>, viro@zeniv.linux.org.uk
-Cc:     Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <155257972443.13720.11743171471060355965.stgit@warthog.procyon.org.uk>
- <155257984031.13720.1656009200478611751.stgit@warthog.procyon.org.uk>
-From:   Frederic Barrat <fbarrat@linux.ibm.com>
-Date:   Fri, 22 Mar 2019 08:42:51 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Fri, 22 Mar 2019 03:43:41 -0400
+Received: from alex.numericable.fr (127.19.86.79.rev.sfr.net [79.86.19.127])
+        (Authenticated sender: alex@ghiti.fr)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id D314820000B;
+        Fri, 22 Mar 2019 07:43:32 +0000 (UTC)
+From:   Alexandre Ghiti <alex@ghiti.fr>
+To:     Christoph Hellwig <hch@infradead.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
+Cc:     Alexandre Ghiti <alex@ghiti.fr>
+Subject: [PATCH 1/4] arm64, mm: Move generic mmap layout functions to mm
+Date:   Fri, 22 Mar 2019 03:42:22 -0400
+Message-Id: <20190322074225.22282-2-alex@ghiti.fr>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190322074225.22282-1-alex@ghiti.fr>
+References: <20190322074225.22282-1-alex@ghiti.fr>
 MIME-Version: 1.0
-In-Reply-To: <155257984031.13720.1656009200478611751.stgit@warthog.procyon.org.uk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19032207-4275-0000-0000-0000031DF369
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19032207-4276-0000-0000-0000382C7DFC
-Message-Id: <33d93ba3-166f-abe0-253d-a3e81e697563@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-22_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903220059
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+arm64 handles top-down mmap layout in a way that can be easily reused
+by other architectures, so make it available in mm.
 
+This commit also takes the opportunity to:
+- make use of is_compat_task instead of specific arm64 test
+  test_thread_flag(TIF_32BIT), which allows more genericity and is
+  equivalent.
+- fix the case where stack randomization should not be taken into
+  account.
 
-Le 14/03/2019 à 17:10, David Howells a écrit :
-> Signed-off-by: David Howells <dhowells@redhat.com>
-> cc: Frederic Barrat <fbarrat@linux.ibm.com>
-> cc: Andrew Donnellan <andrew.donnellan@au1.ibm.com>
-> cc: linuxppc-dev@lists.ozlabs.org
-> ---
+It then introduces a new define ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT
+that can be defined by other architectures to benefit from those functions.
 
-Acked-by: Frederic Barrat <fbarrat@linux.ibm.com>
+Suggested-by: Christoph Hellwig <hch@infradead.org>
+Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
+---
+ arch/arm64/include/asm/processor.h |  2 +-
+ arch/arm64/mm/mmap.c               | 72 ----------------------
+ fs/binfmt_elf.c                    | 20 ------
+ include/linux/mm.h                 |  2 +
+ kernel/sysctl.c                    |  6 +-
+ mm/util.c                          | 99 +++++++++++++++++++++++++++++-
+ 6 files changed, 105 insertions(+), 96 deletions(-)
 
-
-> 
->   drivers/misc/cxl/api.c |   10 +++++-----
->   1 file changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/misc/cxl/api.c b/drivers/misc/cxl/api.c
-> index 750470ef2049..395e9a88e6ba 100644
-> --- a/drivers/misc/cxl/api.c
-> +++ b/drivers/misc/cxl/api.c
-> @@ -13,6 +13,7 @@
->   #include <misc/cxl.h>
->   #include <linux/module.h>
->   #include <linux/mount.h>
-> +#include <linux/fs_context.h>
->   #include <linux/sched/mm.h>
->   #include <linux/mmu_context.h>
->   
-> @@ -41,17 +42,16 @@ static const struct dentry_operations cxl_fs_dops = {
->   	.d_dname	= simple_dname,
->   };
->   
-> -static struct dentry *cxl_fs_mount(struct file_system_type *fs_type, int flags,
-> -				const char *dev_name, void *data)
-> +static int cxl_fs_init_fs_context(struct fs_context *fc)
->   {
-> -	return mount_pseudo(fs_type, "cxl:", NULL, &cxl_fs_dops,
-> -			CXL_PSEUDO_FS_MAGIC);
-> +	return vfs_init_pseudo_fs_context(fc, "cxl:", NULL, NULL,
-> +					  &cxl_fs_dops, CXL_PSEUDO_FS_MAGIC);
->   }
->   
->   static struct file_system_type cxl_fs_type = {
->   	.name		= "cxl",
->   	.owner		= THIS_MODULE,
-> -	.mount		= cxl_fs_mount,
-> +	.init_fs_context = cxl_fs_init_fs_context,
->   	.kill_sb	= kill_anon_super,
->   };
->   
-> 
+diff --git a/arch/arm64/include/asm/processor.h b/arch/arm64/include/asm/processor.h
+index 5d9ce62bdebd..2358707c31ff 100644
+--- a/arch/arm64/include/asm/processor.h
++++ b/arch/arm64/include/asm/processor.h
+@@ -274,7 +274,7 @@ static inline void spin_lock_prefetch(const void *ptr)
+ 		     "nop") : : "p" (ptr));
+ }
+ 
+-#define HAVE_ARCH_PICK_MMAP_LAYOUT
++#define ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT
+ 
+ #endif
+ 
+diff --git a/arch/arm64/mm/mmap.c b/arch/arm64/mm/mmap.c
+index 842c8a5fcd53..c74224421216 100644
+--- a/arch/arm64/mm/mmap.c
++++ b/arch/arm64/mm/mmap.c
+@@ -31,78 +31,6 @@
+ 
+ #include <asm/cputype.h>
+ 
+-/*
+- * Leave enough space between the mmap area and the stack to honour ulimit in
+- * the face of randomisation.
+- */
+-#define MIN_GAP (SZ_128M)
+-#define MAX_GAP	(STACK_TOP/6*5)
+-
+-static int mmap_is_legacy(struct rlimit *rlim_stack)
+-{
+-	if (current->personality & ADDR_COMPAT_LAYOUT)
+-		return 1;
+-
+-	if (rlim_stack->rlim_cur == RLIM_INFINITY)
+-		return 1;
+-
+-	return sysctl_legacy_va_layout;
+-}
+-
+-unsigned long arch_mmap_rnd(void)
+-{
+-	unsigned long rnd;
+-
+-#ifdef CONFIG_COMPAT
+-	if (test_thread_flag(TIF_32BIT))
+-		rnd = get_random_long() & ((1UL << mmap_rnd_compat_bits) - 1);
+-	else
+-#endif
+-		rnd = get_random_long() & ((1UL << mmap_rnd_bits) - 1);
+-	return rnd << PAGE_SHIFT;
+-}
+-
+-static unsigned long mmap_base(unsigned long rnd, struct rlimit *rlim_stack)
+-{
+-	unsigned long gap = rlim_stack->rlim_cur;
+-	unsigned long pad = (STACK_RND_MASK << PAGE_SHIFT) + stack_guard_gap;
+-
+-	/* Values close to RLIM_INFINITY can overflow. */
+-	if (gap + pad > gap)
+-		gap += pad;
+-
+-	if (gap < MIN_GAP)
+-		gap = MIN_GAP;
+-	else if (gap > MAX_GAP)
+-		gap = MAX_GAP;
+-
+-	return PAGE_ALIGN(STACK_TOP - gap - rnd);
+-}
+-
+-/*
+- * This function, called very early during the creation of a new process VM
+- * image, sets up which VM layout function to use:
+- */
+-void arch_pick_mmap_layout(struct mm_struct *mm, struct rlimit *rlim_stack)
+-{
+-	unsigned long random_factor = 0UL;
+-
+-	if (current->flags & PF_RANDOMIZE)
+-		random_factor = arch_mmap_rnd();
+-
+-	/*
+-	 * Fall back to the standard layout if the personality bit is set, or
+-	 * if the expected stack growth is unlimited:
+-	 */
+-	if (mmap_is_legacy(rlim_stack)) {
+-		mm->mmap_base = TASK_UNMAPPED_BASE + random_factor;
+-		mm->get_unmapped_area = arch_get_unmapped_area;
+-	} else {
+-		mm->mmap_base = mmap_base(random_factor, rlim_stack);
+-		mm->get_unmapped_area = arch_get_unmapped_area_topdown;
+-	}
+-}
+-
+ /*
+  * You really shouldn't be using read() or write() on /dev/mem.  This might go
+  * away in the future.
+diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
+index 7d09d125f148..045f3b29d264 100644
+--- a/fs/binfmt_elf.c
++++ b/fs/binfmt_elf.c
+@@ -662,26 +662,6 @@ static unsigned long load_elf_interp(struct elfhdr *interp_elf_ex,
+  * libraries.  There is no binary dependent code anywhere else.
+  */
+ 
+-#ifndef STACK_RND_MASK
+-#define STACK_RND_MASK (0x7ff >> (PAGE_SHIFT - 12))	/* 8MB of VA */
+-#endif
+-
+-static unsigned long randomize_stack_top(unsigned long stack_top)
+-{
+-	unsigned long random_variable = 0;
+-
+-	if (current->flags & PF_RANDOMIZE) {
+-		random_variable = get_random_long();
+-		random_variable &= STACK_RND_MASK;
+-		random_variable <<= PAGE_SHIFT;
+-	}
+-#ifdef CONFIG_STACK_GROWSUP
+-	return PAGE_ALIGN(stack_top) + random_variable;
+-#else
+-	return PAGE_ALIGN(stack_top) - random_variable;
+-#endif
+-}
+-
+ static int load_elf_binary(struct linux_binprm *bprm)
+ {
+ 	struct file *interpreter = NULL; /* to shut gcc up */
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 76769749b5a5..087824a5059f 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -2312,6 +2312,8 @@ extern int install_special_mapping(struct mm_struct *mm,
+ 				   unsigned long addr, unsigned long len,
+ 				   unsigned long flags, struct page **pages);
+ 
++unsigned long randomize_stack_top(unsigned long stack_top);
++
+ extern unsigned long get_unmapped_area(struct file *, unsigned long, unsigned long, unsigned long, unsigned long);
+ 
+ extern unsigned long mmap_region(struct file *file, unsigned long addr,
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index e5da394d1ca3..ac388f8ccbe4 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -269,7 +269,8 @@ extern struct ctl_table epoll_table[];
+ extern struct ctl_table firmware_config_table[];
+ #endif
+ 
+-#ifdef HAVE_ARCH_PICK_MMAP_LAYOUT
++#if defined(HAVE_ARCH_PICK_MMAP_LAYOUT) || \
++	defined(ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT)
+ int sysctl_legacy_va_layout;
+ #endif
+ 
+@@ -1564,7 +1565,8 @@ static struct ctl_table vm_table[] = {
+ 		.proc_handler	= proc_dointvec,
+ 		.extra1		= &zero,
+ 	},
+-#ifdef HAVE_ARCH_PICK_MMAP_LAYOUT
++#if defined(HAVE_ARCH_PICK_MMAP_LAYOUT) || \
++	defined(ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT)
+ 	{
+ 		.procname	= "legacy_va_layout",
+ 		.data		= &sysctl_legacy_va_layout,
+diff --git a/mm/util.c b/mm/util.c
+index d559bde497a9..5a0d4b1e17d9 100644
+--- a/mm/util.c
++++ b/mm/util.c
+@@ -14,6 +14,13 @@
+ #include <linux/hugetlb.h>
+ #include <linux/vmalloc.h>
+ #include <linux/userfaultfd_k.h>
++#include <linux/elf.h>
++#include <linux/elf-randomize.h>
++#include <linux/personality.h>
++#include <linux/random.h>
++#include <linux/processor.h>
++#include <linux/sizes.h>
++#include <linux/compat.h>
+ 
+ #include <linux/uaccess.h>
+ 
+@@ -291,13 +298,103 @@ int vma_is_stack_for_current(struct vm_area_struct *vma)
+ 	return (vma->vm_start <= KSTK_ESP(t) && vma->vm_end >= KSTK_ESP(t));
+ }
+ 
+-#if defined(CONFIG_MMU) && !defined(HAVE_ARCH_PICK_MMAP_LAYOUT)
++#ifndef STACK_RND_MASK
++#define STACK_RND_MASK (0x7ff >> (PAGE_SHIFT - 12))     /* 8MB of VA */
++#endif
++
++unsigned long randomize_stack_top(unsigned long stack_top)
++{
++	unsigned long random_variable = 0;
++
++	if (current->flags & PF_RANDOMIZE) {
++		random_variable = get_random_long();
++		random_variable &= STACK_RND_MASK;
++		random_variable <<= PAGE_SHIFT;
++	}
++#ifdef CONFIG_STACK_GROWSUP
++	return PAGE_ALIGN(stack_top) + random_variable;
++#else
++	return PAGE_ALIGN(stack_top) - random_variable;
++#endif
++}
++
++#ifdef CONFIG_MMU
++#ifdef ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT
++
++#ifdef CONFIG_ARCH_HAS_ELF_RANDOMIZE
++unsigned long arch_mmap_rnd(void)
++{
++	unsigned long rnd;
++
++#ifdef CONFIG_COMPAT
++	if (is_compat_task())
++		rnd = get_random_long() & ((1UL << mmap_rnd_compat_bits) - 1);
++	else
++#endif
++		rnd = get_random_long() & ((1UL << mmap_rnd_bits) - 1);
++
++	return rnd << PAGE_SHIFT;
++}
++#endif
++
++static int mmap_is_legacy(struct rlimit *rlim_stack)
++{
++	if (current->personality & ADDR_COMPAT_LAYOUT)
++		return 1;
++
++	if (rlim_stack->rlim_cur == RLIM_INFINITY)
++		return 1;
++
++	return sysctl_legacy_va_layout;
++}
++
++#define MIN_GAP		(SZ_128M)
++#define MAX_GAP		(STACK_TOP / 6 * 5)
++
++static unsigned long mmap_base(unsigned long rnd, struct rlimit *rlim_stack)
++{
++	unsigned long gap = rlim_stack->rlim_cur;
++	unsigned long pad = stack_guard_gap;
++
++	/* Account for stack randomization if necessary */
++	if (current->flags & PF_RANDOMIZE)
++		pad += (STACK_RND_MASK << PAGE_SHIFT);
++
++	/* Values close to RLIM_INFINITY can overflow. */
++	if (gap + pad > gap)
++		gap += pad;
++
++	if (gap < MIN_GAP)
++		gap = MIN_GAP;
++	else if (gap > MAX_GAP)
++		gap = MAX_GAP;
++
++	return PAGE_ALIGN(STACK_TOP - gap - rnd);
++}
++
++void arch_pick_mmap_layout(struct mm_struct *mm, struct rlimit *rlim_stack)
++{
++	unsigned long random_factor = 0UL;
++
++	if (current->flags & PF_RANDOMIZE)
++		random_factor = arch_mmap_rnd();
++
++	if (mmap_is_legacy(rlim_stack)) {
++		mm->mmap_base = TASK_UNMAPPED_BASE + random_factor;
++		mm->get_unmapped_area = arch_get_unmapped_area;
++	} else {
++		mm->mmap_base = mmap_base(random_factor, rlim_stack);
++		mm->get_unmapped_area = arch_get_unmapped_area_topdown;
++	}
++}
++#elif !defined(HAVE_ARCH_PICK_MMAP_LAYOUT)
+ void arch_pick_mmap_layout(struct mm_struct *mm, struct rlimit *rlim_stack)
+ {
+ 	mm->mmap_base = TASK_UNMAPPED_BASE;
+ 	mm->get_unmapped_area = arch_get_unmapped_area;
+ }
+ #endif
++#endif /* CONFIG_MMU */
+ 
+ /*
+  * Like get_user_pages_fast() except its IRQ-safe in that it won't fall
+-- 
+2.20.1
 
