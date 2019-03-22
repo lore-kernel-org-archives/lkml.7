@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CE1BC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:06:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FAB6C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:06:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C9A12082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:06:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EB0221929
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:06:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256373;
-	bh=2lNWOdiUFCHN0LFSYgH4Yldz4nscNDxzyHxtwBn1dRk=;
+	s=default; t=1553256380;
+	bh=fznSz5aLs4fAVZcoc5bRf7X6MNggfOX3dLcgjGl8szk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WUnp1/ODQmSCOP/fQ3LEp0uWCzRO9hd8Zj5DEBfWTR+/V45TSnlIS9aDk7JxXghpQ
-	 fykFkrzQ+FGoDDPCUwN+nZIXUZVrGk2djgSPr8U0LTgSYaANO4yiMobPCf3zYQcMlG
-	 IqZoqCzXyKOPH5Khs/4L64IQHoI02skMdo4y1PvM=
+	b=YZhMkgX7wbqmY5v8yPglubnkZdYyNxdBtl1dhpk8iZbBrqsTJCghqR5C7DqlnH2qV
+	 FIDHs08/z6GcH8BIKWW7qw1cJaQ2hM13sCpSbfM1bNyIyDK9ZiYB2e42h81B0IxeG8
+	 Lf18fKrDzJC7+RKP0bvmyKJ7EhPo7A9mJgX6Mtaw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388905AbfCVMGL (ORCPT
+        id S2388916AbfCVMGT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:06:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44620 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:06:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388888AbfCVMGJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:06:09 -0400
+        id S2388306AbfCVMGQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:06:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 903BB206C0;
-        Fri, 22 Mar 2019 12:06:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34FF0206C0;
+        Fri, 22 Mar 2019 12:06:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256369;
-        bh=2lNWOdiUFCHN0LFSYgH4Yldz4nscNDxzyHxtwBn1dRk=;
+        s=default; t=1553256375;
+        bh=fznSz5aLs4fAVZcoc5bRf7X6MNggfOX3dLcgjGl8szk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MmjRRX7IStZ4+pvC6UmRMV5hHTdt1xNKMUqQtQYG+lu1H7juTQLBcX9lmQMQr1pTv
-         aTAHWX3CDLpi+3paQTtyC+ypjKXo5t91nOrgO3GX2sdNDIFQPMonb9baaOoOhVC2Tv
-         o8V0Q8cY36oHyZzPiq188I+X4J5i1DOT8T8L2BNE=
+        b=CIIKAKkNXk35NqV6BR/SURyLV+Sg3Z0fHIv7herFYGuQGMgk69303CiHSNlRRrCxk
+         byj0EJE/KSb1Lg/iKqG6GqOr3JyOLC38U41xwZM7NFy2KCyv8x97CxTW1ZbU7PZPAV
+         DcctKUzrcrbmZ4rEq+Ib4HobXPCIP0Gs1j4yeslA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
-        Filipe Manana <fdmanana@suse.com>,
+        stable@vger.kernel.org, Qu Wenruo <wqu@suse.com>,
+        Nikolay Borisov <nborisov@suse.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
         David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.19 168/280] Btrfs: setup a nofs context for memory allocation at btrfs_create_tree()
-Date:   Fri, 22 Mar 2019 12:15:21 +0100
-Message-Id: <20190322111323.923063772@linuxfoundation.org>
+Subject: [PATCH 4.19 170/280] btrfs: ensure that a DUP or RAID1 block group has exactly two stripes
+Date:   Fri, 22 Mar 2019 12:15:23 +0100
+Message-Id: <20190322111324.343415514@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -66,53 +67,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Johannes Thumshirn <jthumshirn@suse.de>
 
-commit b89f6d1fcb30a8cbdc18ce00c7d93792076af453 upstream.
+commit 349ae63f40638a28c6fce52e8447c2d14b84cc0c upstream.
 
-We are holding a transaction handle when creating a tree, therefore we can
-not allocate the root using GFP_KERNEL, as we could deadlock if reclaim is
-triggered by the allocation, therefore setup a nofs context.
+We recently had a customer issue with a corrupted filesystem. When
+trying to mount this image btrfs panicked with a division by zero in
+calc_stripe_length().
 
-Fixes: 74e4d82757f74 ("btrfs: let callers of btrfs_alloc_root pass gfp flags")
-CC: stable@vger.kernel.org # 4.9+
+The corrupt chunk had a 'num_stripes' value of 1. calc_stripe_length()
+takes this value and divides it by the number of copies the RAID profile
+is expected to have to calculate the amount of data stripes. As a DUP
+profile is expected to have 2 copies this division resulted in 1/2 = 0.
+Later then the 'data_stripes' variable is used as a divisor in the
+stripe length calculation which results in a division by 0 and thus a
+kernel panic.
+
+When encountering a filesystem with a DUP block group and a
+'num_stripes' value unequal to 2, refuse mounting as the image is
+corrupted and will lead to unexpected behaviour.
+
+Code inspection showed a RAID1 block group has the same issues.
+
+Fixes: e06cd3dd7cea ("Btrfs: add validadtion checks for chunk loading")
+CC: stable@vger.kernel.org # 4.4+
+Reviewed-by: Qu Wenruo <wqu@suse.com>
 Reviewed-by: Nikolay Borisov <nborisov@suse.com>
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: Johannes Thumshirn <jthumshirn@suse.de>
 Reviewed-by: David Sterba <dsterba@suse.com>
 Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/disk-io.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ fs/btrfs/volumes.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/fs/btrfs/disk-io.c
-+++ b/fs/btrfs/disk-io.c
-@@ -17,6 +17,7 @@
- #include <linux/semaphore.h>
- #include <linux/error-injection.h>
- #include <linux/crc32c.h>
-+#include <linux/sched/mm.h>
- #include <asm/unaligned.h>
- #include "ctree.h"
- #include "disk-io.h"
-@@ -1236,10 +1237,17 @@ struct btrfs_root *btrfs_create_tree(str
- 	struct btrfs_root *tree_root = fs_info->tree_root;
- 	struct btrfs_root *root;
- 	struct btrfs_key key;
-+	unsigned int nofs_flag;
- 	int ret = 0;
- 	uuid_le uuid = NULL_UUID_LE;
+--- a/fs/btrfs/volumes.c
++++ b/fs/btrfs/volumes.c
+@@ -6425,10 +6425,10 @@ static int btrfs_check_chunk_valid(struc
+ 	}
  
-+	/*
-+	 * We're holding a transaction handle, so use a NOFS memory allocation
-+	 * context to avoid deadlock if reclaim happens.
-+	 */
-+	nofs_flag = memalloc_nofs_save();
- 	root = btrfs_alloc_root(fs_info, GFP_KERNEL);
-+	memalloc_nofs_restore(nofs_flag);
- 	if (!root)
- 		return ERR_PTR(-ENOMEM);
- 
+ 	if ((type & BTRFS_BLOCK_GROUP_RAID10 && sub_stripes != 2) ||
+-	    (type & BTRFS_BLOCK_GROUP_RAID1 && num_stripes < 1) ||
++	    (type & BTRFS_BLOCK_GROUP_RAID1 && num_stripes != 2) ||
+ 	    (type & BTRFS_BLOCK_GROUP_RAID5 && num_stripes < 2) ||
+ 	    (type & BTRFS_BLOCK_GROUP_RAID6 && num_stripes < 3) ||
+-	    (type & BTRFS_BLOCK_GROUP_DUP && num_stripes > 2) ||
++	    (type & BTRFS_BLOCK_GROUP_DUP && num_stripes != 2) ||
+ 	    ((type & BTRFS_BLOCK_GROUP_PROFILE_MASK) == 0 &&
+ 	     num_stripes != 1)) {
+ 		btrfs_err(fs_info,
 
 
