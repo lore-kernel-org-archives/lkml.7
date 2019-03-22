@@ -2,152 +2,112 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E153EC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:18:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EE41C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:18:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA42C2190A
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:18:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E59E42190A
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:18:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729692AbfCVQSg (ORCPT
+        id S1729714AbfCVQSl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 12:18:36 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:42409 "EHLO
+        Fri, 22 Mar 2019 12:18:41 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:39111 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728878AbfCVQSe (ORCPT
+        with ESMTP id S1728017AbfCVQSk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 12:18:34 -0400
+        Fri, 22 Mar 2019 12:18:40 -0400
 Received: from wuerfel.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1Ml6du-1giEin3Zc4-00lUSs; Fri, 22 Mar 2019 17:17:34 +0100
+ 1Mw9Hm-1gosZt2rSu-00s8H8; Fri, 22 Mar 2019 17:18:05 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>, Jingoo Han <jingoohan1@gmail.com>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@free-electrons.com>,
-        Vinayak Holikatti <vinholikatti@gmail.com>,
-        "James E.J. Bottomley" <jejb@linux.vnet.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-fbdev@vger.kernel.org
-Subject: [BACKPORT 4.14.y 0/8] candidates from spreadtrum 4.14 product kernel
-Date:   Fri, 22 Mar 2019 17:17:15 +0100
-Message-Id: <20190322161727.1153278-1-arnd@arndb.de>
+To:     stable@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Jules Maselbas <jules.maselbas@arm.com>,
+        Chris Redpath <chris.redpath@arm.com>,
+        Dietmar Eggermann <dietmar.eggemann@arm.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mike Galbraith <efault@gmx.de>,
+        Patrick Bellasi <patrick.bellasi@arm.com>,
+        Stephen Kyle <stephen.kyle@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, nd@arm.com,
+        Ingo Molnar <mingo@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [BACKPORT 4.14.y 6/8] sched/cpufreq/schedutil: Fix error path mutex unlock
+Date:   Fri, 22 Mar 2019 17:17:21 +0100
+Message-Id: <20190322161727.1153278-7-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20190322161727.1153278-1-arnd@arndb.de>
+References: <20190322161727.1153278-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:6vAaVJbqlIwQBNpuDE68PRSmIoV/qORKtjo7MHYPHVEgEs0oB84
- KExJJKI1WtCO337J1DaMAQcxmDfxiANPnwcriBx8AmTEWexv+nZJmzag1XIWbzEbDBzsqBH
- X5PfxXpBmvLuuRPq2UaXdImoyJ7a+FFKjhZOwn7m4aRO/kHtj2c/orUHTcE3DXLpfYZAyAg
- d9pzyh6KAuG1uShb40rlQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:iQVWtFWcL1k=:GXC6xumF8zx4A25fP7K+D9
- M1tZAfum0zz7BJuE+MvBF65D+n/vSzaHcNuYC7Mu6K2+Xbg8UXtqbqYHBH13WqNaTUu0nL7wO
- rquLbvspkrsPzm5E8gdrTgwZBFBoyLfOYf21A3ycMXMNg8pcIOwn+X5aKpD8U++4PgzXZz+de
- UpujpZQDgy22ZBeuWkrLOO8vkYA4Iix2KYFDRWoxSwmKh76i3Kfbg+9zlblHwKiMKdbbczWG9
- 8xBy7Rag6Zs6TpAOvr8ERZM+qtsQwGtgxyU2f7PGJVSVFojaEeGK6uxOVB6Ou2h+mJYbhUu3l
- XAyTmDQXDQpQsKVDr75EUNHRI++cXO6h3RqneCjZ0SlARpNdOqMSKC5r+y2VFNA5rY83siojW
- +KSc0kFE51AUNdn6MEN+TcjUttGfXEGsdYPMTShzYSxKBaa1jbrq+me3mp+ZRXgH6iGi6yEXd
- 3yaEaYEgeERTZJLjWnuWUAW5im5HT+3TU/PiWhNf/etLbpn8udlVQydYCkJGKBsK/vcpr7qOU
- unfMTcAHSaJN4GyKDkjfc3W170emh/FjJzmee+E/Dvz2K0ckD1k+vRCWBHLQE5c/ym7bUYRMD
- xelEWdhvcVAeYxg4r/A+IFl3FiaN/zYbfBDY/Qm0gurvVOrqVXktY7nLWc0PkN/1EYrCdUYUe
- KUNfN3Oue5vOIfPhmaQJ9g1Z29KDZYKz3YngGn7z7RuZH4+5eg3Wkw0uOymbVleyzgFsv+Bx2
- GMdvfHhmksLRtvmEeCh2cA6VAgdZQWbv6J+EBA==
+X-Provags-ID: V03:K1:MXmycvD1CtaPZk6JuDv4SojVbiweK06JIhz6y2x882YX36mi0DM
+ jbWkydyoobkg+9z0Zc9Gy3DjX9YKXIHqqoPZh5mg508pXHXhGfsnl3ltLgbRic/ddfYZX6T
+ LCEQSKTRZKaiZfLjsDhFWC59O0Xt5EFTZ0cjXan43UPZsQ2whGuvO/Z49yQCqoMeNcP4EfV
+ CveReTpzT4oshyzdGPZmw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:4Lwf+QVPKuE=:4vgzKyqxEq7hRMJ9UyPWm5
+ UCq/pC1jputQqbYgzbaDOa9ZBx7vDAH2eakVJcA2UdyqqRWV1gjVWtH8eK/HlNWXs/TW1cfjH
+ xdvbN2nnTjTSbsWebK+Vy5BCLdARp5Z9G6nnz2wmt7r6dGTu/OXfHyXj7XxLbzskOAhd+34X3
+ DdA/oIQKiIVZdZv/Ak0I1xT6p0xmto5j3uxxffY/PA5gsy3elESlSRV0T6fzJsdUIHQQoa8zl
+ +X5O2K5nvfSgVd+49idZug+2ymzi+5G1UVi8Q8bWCiwpuExhxwQph41LaHzMEMv/NZ3+usVHJ
+ 4du+7RbuwxwhZlaGH94I+ZYD+Eyph0kxGGyJeX+wcaIMfcSptbnRjHHnTrtzhCa73wZKswjS4
+ CvchHpxk5xoldgSY8LRO81x8iS3kg63YliIH9WXDQhAaiPVUHz0oYR3toID5UKLFfm/eAG8EC
+ /oFFux0WZENd+i/rM3xOV2JZ26lHZ51sHr9RZCogRrV+ZI4kYKb56pIYEUQ5pS+sbcBrb/nTV
+ yY3FW4VV+/NWSA/srg/+vCEyRBUyicSmfMn8G1vO6GgNRlNDZYyNuWFXX70stvDG4w6Jib8b0
+ 5S4Wn6AzS8BMsloz5idKtSXTROc9A4KGgUXonqF1w/t3lwMFs0HSUhAgNByUv5Rh8I2up2X2+
+ 1xQ15PnASE92P7DbJEwNj7bg/bgwFDzcjXhJfeMkYGVf15ks4BeihBhyjheuTeqB0219oETBi
+ rpTb9t1YE8OsRkk41JGR8TPWBB4X1jbnmBs9ew==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I took a scripted approach to look at some product kernels for patches
-backported into vendor kernels. This is a set of (mostly) bugfixes I found
-in Spreadtrum's linux-4.14 kernel that are missing in v4.14.107:
+From: Jules Maselbas <jules.maselbas@arm.com>
 
-83dc7e3dea76 scsi: ufs: fix wrong command type of UTRD for UFSHCI v2.1
-099a95f3591a PCI: designware-ep: dw_pcie_ep_set_msi() should only set MMC bits
-1cab826b30c6 PCI: designware-ep: Read-only registers need DBI_RO_WR_EN to be writable
-b330104fa76d PCI: endpoint: Use EPC's device in dma_alloc_coherent()/dma_free_coherent()
-36d46cdb43ef rtc: Fix overflow when converting time64_t to rtc_time
-1b5d43cfb697 sched/cpufreq/schedutil: Fix error path mutex unlock
-5fb5caee92ba pwm-backlight: Enable/disable the PWM before/after LCD enable toggle.
-f25a646fbe20 power: supply: charger-manager: Fix incorrect return value
+This patch prevents the 'global_tunables_lock' mutex from being
+unlocked before being locked.  This mutex is not locked if the
+sugov_kthread_create() function fails.
 
-Only a small number of patches here, the vendor tree is fairly close to
-mainline. All commits apply cleanly through git-cherry-pick.
-
-Baolin Wang (2):
-  rtc: Fix overflow when converting time64_t to rtc_time
-  power: supply: charger-manager: Fix incorrect return value
-
-Enric Balletbo i Serra (1):
-  pwm-backlight: Enable/disable the PWM before/after LCD enable toggle.
-
-Jules Maselbas (1):
-  sched/cpufreq/schedutil: Fix error path mutex unlock
-
-Kishon Vijay Abraham I (1):
-  PCI: endpoint: Use EPC's device in
-    dma_alloc_coherent()/dma_free_coherent()
-
-Niklas Cassel (2):
-  PCI: designware-ep: dw_pcie_ep_set_msi() should only set MMC bits
-  PCI: designware-ep: Read-only registers need DBI_RO_WR_EN to be
-    writable
-
-kehuanlin (1):
-  scsi: ufs: fix wrong command type of UTRD for UFSHCI v2.1
-
- drivers/pci/dwc/pcie-designware-ep.c   | 12 +++++++++++-
- drivers/pci/dwc/pcie-designware.h      |  1 +
- drivers/pci/endpoint/pci-epc-core.c    | 10 ----------
- drivers/pci/endpoint/pci-epf-core.c    |  4 ++--
- drivers/power/supply/charger-manager.c |  3 +--
- drivers/rtc/rtc-lib.c                  |  6 ++----
- drivers/scsi/ufs/ufshcd.c              | 14 ++++++++------
- drivers/video/backlight/pwm_bl.c       |  9 +++++----
- kernel/sched/cpufreq_schedutil.c       |  3 +--
- 9 files changed, 31 insertions(+), 31 deletions(-)
-
-
-Cc: Jingoo Han <jingoohan1@gmail.com>
-Cc: Joao Pinto <Joao.Pinto@synopsys.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Sebastian Reichel <sre@kernel.org>
-Cc: Alessandro Zummo <a.zummo@towertech.it>
-Cc: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Cc: Vinayak Holikatti <vinholikatti@gmail.com>
-Cc: "James E.J. Bottomley" <jejb@linux.vnet.ibm.com>
-Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>
-Cc: Lee Jones <lee.jones@linaro.org>
-Cc: Daniel Thompson <daniel.thompson@linaro.org>
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: linux-pci@vger.kernel.org
+Signed-off-by: Jules Maselbas <jules.maselbas@arm.com>
+Acked-by: Peter Zijlstra <peterz@infradead.org>
+Cc: Chris Redpath <chris.redpath@arm.com>
+Cc: Dietmar Eggermann <dietmar.eggemann@arm.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Mike Galbraith <efault@gmx.de>
+Cc: Patrick Bellasi <patrick.bellasi@arm.com>
+Cc: Stephen Kyle <stephen.kyle@arm.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: linux-kernel@vger.kernel.org
-Cc: linux-pm@vger.kernel.org
-Cc: linux-rtc@vger.kernel.org
-Cc: linux-scsi@vger.kernel.org
-Cc: linux-pwm@vger.kernel.org
-Cc: linux-fbdev@vger.kernel.org
+Cc: nd@arm.com
+Link: http://lkml.kernel.org/r/20180329144301.38419-1-jules.maselbas@arm.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+(cherry picked from commit 1b5d43cfb69759d8ef8d30469cea31d0c037aed5)
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ kernel/sched/cpufreq_schedutil.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
+diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
+index 81eb7899c7c8..b314c9eaa71d 100644
+--- a/kernel/sched/cpufreq_schedutil.c
++++ b/kernel/sched/cpufreq_schedutil.c
+@@ -605,10 +605,9 @@ static int sugov_init(struct cpufreq_policy *policy)
+ 
+ stop_kthread:
+ 	sugov_kthread_stop(sg_policy);
+-
+-free_sg_policy:
+ 	mutex_unlock(&global_tunables_lock);
+ 
++free_sg_policy:
+ 	sugov_policy_free(sg_policy);
+ 
+ disable_fast_switch:
 -- 
 2.20.0
 
