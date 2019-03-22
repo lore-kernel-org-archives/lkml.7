@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C690EC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:09:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CD21C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:09:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9491B2082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:09:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF9D221929
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:09:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256577;
-	bh=+6pL2mci+WZBRm7pQDorhNLTQuC1gmAQAsAo/gHV4SI=;
+	s=default; t=1553256585;
+	bh=Gcs4qELA6xcjb/ROqdjhugbWb1/+ElbF9/ceCzE0DPk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ScwU2B7KQF+bED+HjX4RZRjW7IUo1qzkp1/RgK6asicZfPn2O5j1v+hLhrMPfn5Zd
-	 e2Ace3NFlsSxovYh3cYLA1lTFB8xTkR2vFkKbfQZ5pXCf4pXfYTa1YYV0Nd5FyZ1Ya
-	 K4+JTJp614vTSFRWM4kwihyNY6m1dF/30opsoReg=
+	b=dZhSS9asv4PeWhPWfIFlrVjk2aAFxPy23ZKoRC5Ym/t+3GpUpcbAgeeCRSCsAmUz3
+	 FSPQv8dKYDPEWg85eTAW7QhJqkcGtXUoZ2u3Brvei4sOPLQl06/OV0UmtLuvx9+THx
+	 Wdbo4lAB/kYN8kQBAb64RFZH5jJXuiABz4SzTKKU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389335AbfCVMJg (ORCPT
+        id S1733210AbfCVMJm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:09:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48024 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:09:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388867AbfCVMJd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:09:33 -0400
+        id S2389028AbfCVMJj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:09:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42C732083D;
-        Fri, 22 Mar 2019 12:09:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69CAA2082C;
+        Fri, 22 Mar 2019 12:09:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256572;
-        bh=+6pL2mci+WZBRm7pQDorhNLTQuC1gmAQAsAo/gHV4SI=;
+        s=default; t=1553256578;
+        bh=Gcs4qELA6xcjb/ROqdjhugbWb1/+ElbF9/ceCzE0DPk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X2is2pPpopWMAyp9neNVtBAhYa1lbFKjhrFkEg63Pco136esXabMZ+OYzlqVqcZWJ
-         L7/W4wT3GxZLRI6nX7tKzSKDB9zQ6F/X6xi2HmRA/MIIagp/XxUBUDxFqKtXW3ZDRk
-         FhRSxDjGSwie3Sj9qQCfk07e+1M43G5+Miui30OM=
+        b=tLtBj9n+HF44Z8A6Y5dezIoYXZAQ3Cw1NlmxBJKhlMVeLTJDp+ol4oAEp6sXQU0ad
+         hWbhMJf07G/+PEGSRikGtmt4dYJJZcU046Pjr0veYXWAw3LJDR2zd3k/Wz3kzsjeyA
+         lxvO3ZX14rQAqcEl9IwZJ7hQ7r3NpNDy4pXrJlCQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 4.19 253/280] perf intel-pt: Fix CYC timestamp calculation after OVF
-Date:   Fri, 22 Mar 2019 12:16:46 +0100
-Message-Id: <20190322111342.173729808@linuxfoundation.org>
+        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 4.19 237/280] dm integrity: limit the rate of error messages
+Date:   Fri, 22 Mar 2019 12:16:30 +0100
+Message-Id: <20190322111338.557871471@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -66,36 +65,51 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+From: Mikulas Patocka <mpatocka@redhat.com>
 
-commit 03997612904866abe7cdcc992784ef65cb3a4b81 upstream.
+commit 225557446856448039a9e495da37b72c20071ef2 upstream.
 
-CYC packet timestamp calculation depends upon CBR which was being
-cleared upon overflow (OVF). That can cause errors due to failing to
-synchronize with sideband events. Even if a CBR change has been lost,
-the old CBR is still a better estimate than zero. So remove the clearing
-of CBR.
+When using dm-integrity underneath md-raid, some tests with raid
+auto-correction trigger large amounts of integrity failures - and all
+these failures print an error message. These messages can bring the
+system to a halt if the system is using serial console.
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: stable@vger.kernel.org
-Link: http://lkml.kernel.org/r/20190206103947.15750-4-adrian.hunter@intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fix this by limiting the rate of error messages - it improves the speed
+of raid recovery and avoids the hang.
+
+Fixes: 7eada909bfd7a ("dm: add integrity target")
+Cc: stable@vger.kernel.org # v4.12+
+Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/perf/util/intel-pt-decoder/intel-pt-decoder.c |    1 -
- 1 file changed, 1 deletion(-)
+ drivers/md/dm-integrity.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
-+++ b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
-@@ -1389,7 +1389,6 @@ static int intel_pt_overflow(struct inte
- {
- 	intel_pt_log("ERROR: Buffer overflow\n");
- 	intel_pt_clear_tx_flags(decoder);
--	decoder->cbr = 0;
- 	decoder->timestamp_insn_cnt = 0;
- 	decoder->pkt_state = INTEL_PT_STATE_ERR_RESYNC;
- 	decoder->overflow = true;
+--- a/drivers/md/dm-integrity.c
++++ b/drivers/md/dm-integrity.c
+@@ -1357,8 +1357,8 @@ again:
+ 						checksums_ptr - checksums, !dio->write ? TAG_CMP : TAG_WRITE);
+ 			if (unlikely(r)) {
+ 				if (r > 0) {
+-					DMERR("Checksum failed at sector 0x%llx",
+-					      (unsigned long long)(sector - ((r + ic->tag_size - 1) / ic->tag_size)));
++					DMERR_LIMIT("Checksum failed at sector 0x%llx",
++						    (unsigned long long)(sector - ((r + ic->tag_size - 1) / ic->tag_size)));
+ 					r = -EILSEQ;
+ 					atomic64_inc(&ic->number_of_mismatches);
+ 				}
+@@ -1550,8 +1550,8 @@ retry_kmap:
+ 
+ 					integrity_sector_checksum(ic, logical_sector, mem + bv.bv_offset, checksums_onstack);
+ 					if (unlikely(memcmp(checksums_onstack, journal_entry_tag(ic, je), ic->tag_size))) {
+-						DMERR("Checksum failed when reading from journal, at sector 0x%llx",
+-						      (unsigned long long)logical_sector);
++						DMERR_LIMIT("Checksum failed when reading from journal, at sector 0x%llx",
++							    (unsigned long long)logical_sector);
+ 					}
+ 				}
+ #endif
 
 
