@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91FBAC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:48:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E3BAC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:48:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DE8D218B0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:48:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B345218B0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:48:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255314;
-	bh=peIsyq0CbtMuwaaYVMce0ZMVI/H328ZMrM4lCMMSC2Y=;
+	s=default; t=1553255319;
+	bh=7YqlFI1puUMBOsJ58rVcZMfMHzU6Y0defXicXwLOL5k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=utlYxZqUKXmI6YdhZY814c7IVioBcs7wqDfRXYA4ZJCJ4RsC5o4EOyUEOJAJkdRBR
-	 YMr/1evN9jPTFj9e94P76R1xRMCTWrDSVGP345uZLtyxpL4nTVwPe6mC3TCm3odN+Z
-	 adxv1HUAOy7RUJmgQMttJPaQ449hyop+00HDm1Xs=
+	b=FmeA0DSgIM0fVKC7JC7DB66l35QVqK6vZTQK+amhJW5WoMDTQ6YPM4B0/dCPEiI6z
+	 cnhHfv/kA7vKMEsuwY1hhdnVBYtQ2qItlGn+ccWt//zgkmMTNPc9G6QtYB4MN27Xee
+	 byTSv9W9dgz4sW710wWY3FSO3eQ9IBwT+jbGaV+A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732327AbfCVLsd (ORCPT
+        id S1732332AbfCVLsh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:48:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51852 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:48:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730828AbfCVLsa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:48:30 -0400
+        id S1732065AbfCVLsc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:48:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7D802082C;
-        Fri, 22 Mar 2019 11:48:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C27A4218B0;
+        Fri, 22 Mar 2019 11:48:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255309;
-        bh=peIsyq0CbtMuwaaYVMce0ZMVI/H328ZMrM4lCMMSC2Y=;
+        s=default; t=1553255312;
+        bh=7YqlFI1puUMBOsJ58rVcZMfMHzU6Y0defXicXwLOL5k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rBC6CqgiwK8Y9hcjA4skqtT1njQkEpF+XEUmz/KKU+Z4lTAhD60v9nMxfIrp2Namh
-         i2Vbo2XswaZsRZeFwWi+kmgncqlD4eSpgeVqaNDtCVDjhjO4nP1aVytVo3oaaj+/Uu
-         UDbmcLKhAIRRlSq0ZerFXB/UobhUN/N+64Dq8tYg=
+        b=EI+ntQqHjFXbrVolDelQ4s4l/ccvKyOpJm/skgpG4EDlP4Vr1Is4bZh7uSRE4+Hmi
+         mc/HI9R2U+mLVbvvYGP3ftX6NrQ7QVSY/gtZmcgUIm5Kk24Q8v5PZOZCEynommQ8cA
+         jA3E/9ssLcDoMFi2pCG22nCDewJmjEl1huUEjQmo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Ariel Elior <ariel.elior@marvell.com>,
+        Michal Kalderon <michal.kalderon@marvell.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 050/183] ASoC: topology: free created components in tplg load error
-Date:   Fri, 22 Mar 2019 12:14:38 +0100
-Message-Id: <20190322111245.334828947@linuxfoundation.org>
+Subject: [PATCH 4.14 051/183] qed: Fix iWARP syn packet mac address validation.
+Date:   Fri, 22 Mar 2019 12:14:39 +0100
+Message-Id: <20190322111245.400008604@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111241.819468003@linuxfoundation.org>
 References: <20190322111241.819468003@linuxfoundation.org>
@@ -67,42 +67,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 304017d31df36fb61eb2ed3ebf65fb6870b3c731 ]
+[ Upstream commit 8be3dadf04050c2907760ec1955ca1c8fbc25585 ]
 
-Topology resources are no longer needed if any element failed to load.
+The ll2 forwards all syn packets to the driver without validating the mac
+address. Add validation check in the driver's iWARP listener flow and drop
+the packet if it isn't intended for the device.
 
-Signed-off-by: Bard liao <yung-chuan.liao@linux.intel.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Ariel Elior <ariel.elior@marvell.com>
+Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/soc-topology.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/qlogic/qed/qed_iwarp.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/sound/soc/soc-topology.c b/sound/soc/soc-topology.c
-index c1619860a5de..2d5cf263515b 100644
---- a/sound/soc/soc-topology.c
-+++ b/sound/soc/soc-topology.c
-@@ -2513,6 +2513,7 @@ int snd_soc_tplg_component_load(struct snd_soc_component *comp,
- 	struct snd_soc_tplg_ops *ops, const struct firmware *fw, u32 id)
- {
- 	struct soc_tplg tplg;
-+	int ret;
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_iwarp.c b/drivers/net/ethernet/qlogic/qed/qed_iwarp.c
+index eb666877d1aa..bb09f5a9846f 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_iwarp.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_iwarp.c
+@@ -1651,6 +1651,15 @@ qed_iwarp_parse_rx_pkt(struct qed_hwfn *p_hwfn,
  
- 	/* setup parsing context */
- 	memset(&tplg, 0, sizeof(tplg));
-@@ -2526,7 +2527,12 @@ int snd_soc_tplg_component_load(struct snd_soc_component *comp,
- 	tplg.bytes_ext_ops = ops->bytes_ext_ops;
- 	tplg.bytes_ext_ops_count = ops->bytes_ext_ops_count;
+ 	eth_hlen = ETH_HLEN + (vlan_valid ? sizeof(u32) : 0);
  
--	return soc_tplg_load(&tplg);
-+	ret = soc_tplg_load(&tplg);
-+	/* free the created components if fail to load topology */
-+	if (ret)
-+		snd_soc_tplg_component_remove(comp, SND_SOC_TPLG_INDEX_ALL);
++	if (!ether_addr_equal(ethh->h_dest,
++			      p_hwfn->p_rdma_info->iwarp.mac_addr)) {
++		DP_VERBOSE(p_hwfn,
++			   QED_MSG_RDMA,
++			   "Got unexpected mac %pM instead of %pM\n",
++			   ethh->h_dest, p_hwfn->p_rdma_info->iwarp.mac_addr);
++		return -EINVAL;
++	}
 +
-+	return ret;
- }
- EXPORT_SYMBOL_GPL(snd_soc_tplg_component_load);
+ 	ether_addr_copy(remote_mac_addr, ethh->h_source);
+ 	ether_addr_copy(local_mac_addr, ethh->h_dest);
  
 -- 
 2.19.1
