@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E18D6C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:28:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E20A9C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:28:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B134521916
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:28:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1179218B0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:28:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254104;
-	bh=TfUB40QBfHuOnn+S8o6PMWV9V7qSV31t9fY+x//oI7g=;
+	s=default; t=1553254109;
+	bh=vWEEViAC2KjSsJ6RTZNj0a+txfGycbnUhjfcksk4Ozg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fMy3QXEONQ6RwKYrleEz2qZkxQJeICPaP0kmpBtAuEYJNm0rbOPou6GaT91n2726d
-	 JPGzlSaliIuoBZ2nRAY65CF9dMdI7tj0BnDu6CRdRjc8c9SGd0ERIVcJgJKsDp3tSk
-	 Oqm2JqM3ecm7xzg9qYtXQ+zwKnymPhChPnJwQrtw=
+	b=gqcnjMIgXlTB55e+Lb3SQd9KrYTahLYZFgt9Ny5BpWq9J6Cg8LdrOb4VHkCaHBFG7
+	 dCwTrUzNOIP6U14P0BrVs2W+rV16iDmwzte+VfRC6frqfaUdy1Tjz2n7UQCJS0EsXA
+	 LsdrFaGeGKuMVQIc8z3+eFmkYvNfdP+A//b6/fns=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728754AbfCVL2X (ORCPT
+        id S1729676AbfCVL22 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:28:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56088 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:28:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729287AbfCVL2V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:28:21 -0400
+        id S1729199AbfCVL2Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:28:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88E45218A2;
-        Fri, 22 Mar 2019 11:28:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5191E218A2;
+        Fri, 22 Mar 2019 11:28:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254101;
-        bh=TfUB40QBfHuOnn+S8o6PMWV9V7qSV31t9fY+x//oI7g=;
+        s=default; t=1553254103;
+        bh=vWEEViAC2KjSsJ6RTZNj0a+txfGycbnUhjfcksk4Ozg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AW71Geclsm/xo7vSTB9XrPjgQMofyrghuaF0iyCV2ZtJB30sEFLTCM1aHarrIA26w
-         ztHbezpTnu5W/4dsAO8EmVDGiMlUh47vX5oYavBeVxXLsBsw5BYQJ12squLcVpUBkt
-         EInE6LxMNqokSpdZRR2oGk1WwIxuJdLWk2Bynt90=
+        b=vWxh8O1vuiRLO/DjYPUYA1ONGr8tDhjfffMo+YnJ3W8Y5/GUf84WEfLG5ASIUqeJa
+         aNnp5xbf9CJz7ohLKHnVnrW5On47eyKS9LBRdSRYWKjeQhFiOmpIaJ6wXHluFKXwH2
+         tCh0NMffc5dLYszCsZjDg+/ORTcjQNUCY2RizXUk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
-        Rob Clark <robdclark@gmail.com>,
+        stable@vger.kernel.org, Rander Wang <rander.wang@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 032/230] drm/msm: Unblock writer if reader closes file
-Date:   Fri, 22 Mar 2019 12:12:50 +0100
-Message-Id: <20190322111238.952831126@linuxfoundation.org>
+Subject: [PATCH 4.4 033/230] ASoC: Intel: Haswell/Broadwell: fix setting for .dynamic field
+Date:   Fri, 22 Mar 2019 12:12:51 +0100
+Message-Id: <20190322111239.021163125@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -67,43 +67,48 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 99c66bc051e7407fe0bf0607b142ec0be1a1d1dd ]
+[ Upstream commit 906a9abc5de73c383af518f5a806f4be2993a0c7 ]
 
-Prevents deadlock when fifo is full and reader closes file.
+For some reason this field was set to zero when all other drivers use
+.dynamic = 1 for front-ends. This change was tested on Dell XPS13 and
+has no impact with the existing legacy driver. The SOF driver also works
+with this change which enables it to override the fixed topology.
 
-Signed-off-by: Kristian H. Kristensen <hoegsberg@chromium.org>
-Signed-off-by: Rob Clark <robdclark@gmail.com>
+Signed-off-by: Rander Wang <rander.wang@linux.intel.com>
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/msm_rd.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ sound/soc/intel/boards/broadwell.c | 2 +-
+ sound/soc/intel/boards/haswell.c   | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/msm_rd.c b/drivers/gpu/drm/msm/msm_rd.c
-index 9a78c48817c6a..909a52b21ebe7 100644
---- a/drivers/gpu/drm/msm/msm_rd.c
-+++ b/drivers/gpu/drm/msm/msm_rd.c
-@@ -103,7 +103,9 @@ static void rd_write(struct msm_rd_state *rd, const void *buf, int sz)
- 		char *fptr = &fifo->buf[fifo->head];
- 		int n;
- 
--		wait_event(rd->fifo_event, circ_space(&rd->fifo) > 0);
-+		wait_event(rd->fifo_event, circ_space(&rd->fifo) > 0 || !rd->open);
-+		if (!rd->open)
-+			return;
- 
- 		n = min(sz, circ_space_to_end(&rd->fifo));
- 		memcpy(fptr, ptr, n);
-@@ -192,7 +194,10 @@ static int rd_open(struct inode *inode, struct file *file)
- static int rd_release(struct inode *inode, struct file *file)
- {
- 	struct msm_rd_state *rd = inode->i_private;
-+
- 	rd->open = false;
-+	wake_up_all(&rd->fifo_event);
-+
- 	return 0;
- }
- 
+diff --git a/sound/soc/intel/boards/broadwell.c b/sound/soc/intel/boards/broadwell.c
+index 3f8a1e10bed02..e5ca41ffa8908 100644
+--- a/sound/soc/intel/boards/broadwell.c
++++ b/sound/soc/intel/boards/broadwell.c
+@@ -191,7 +191,7 @@ static struct snd_soc_dai_link broadwell_rt286_dais[] = {
+ 		.stream_name = "Loopback",
+ 		.cpu_dai_name = "Loopback Pin",
+ 		.platform_name = "haswell-pcm-audio",
+-		.dynamic = 0,
++		.dynamic = 1,
+ 		.codec_name = "snd-soc-dummy",
+ 		.codec_dai_name = "snd-soc-dummy-dai",
+ 		.trigger = {SND_SOC_DPCM_TRIGGER_POST, SND_SOC_DPCM_TRIGGER_POST},
+diff --git a/sound/soc/intel/boards/haswell.c b/sound/soc/intel/boards/haswell.c
+index 22558572cb9ca..de955c2e8c4e3 100644
+--- a/sound/soc/intel/boards/haswell.c
++++ b/sound/soc/intel/boards/haswell.c
+@@ -145,7 +145,7 @@ static struct snd_soc_dai_link haswell_rt5640_dais[] = {
+ 		.stream_name = "Loopback",
+ 		.cpu_dai_name = "Loopback Pin",
+ 		.platform_name = "haswell-pcm-audio",
+-		.dynamic = 0,
++		.dynamic = 1,
+ 		.codec_name = "snd-soc-dummy",
+ 		.codec_dai_name = "snd-soc-dummy-dai",
+ 		.trigger = {SND_SOC_DPCM_TRIGGER_POST, SND_SOC_DPCM_TRIGGER_POST},
 -- 
 2.19.1
 
