@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81C7EC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:46:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08B61C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:46:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5043E2082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:46:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDD252082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:46:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255199;
-	bh=e5jevcRlaxNyy0WYLXMdd8nkxUEGEkoPw0+R1SsDyz4=;
+	s=default; t=1553255202;
+	bh=7RK1mMNrkgYObUonrXQXb+eCbTYoflGEXN5HBzDz/as=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s0kXfvy+rkuDlnw/pywyY5XlzucYyrWufunbiXrZUaxmBYrj/GX7HGIUUCT9m2eIo
-	 4Q1EYIZmpARifjOyrJiRQtzos62Cy1FGVpBclU0yt9tKNK7U7+e5BXQGm0vELY2Sx7
-	 5ZZkotFZZ/FdII5VsCwJEY972qEJ6YDNOLarOLqc=
+	b=hDcMTzypVHRQ8LsBFQmfV22Uikvd3CHFIVA0knHuXTIJ3XkZ7L/D/9jCvMI0uPyQq
+	 SO0+fg6OedwpkksPtpZmfhV6qyQuPSvzAKprP4XcmJnEfG6cuLXHVEhw6epzWLkdQh
+	 FMwR2HlJSwO8wwBlOeqUtO/mF8BGQyYNihmiDC7I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732073AbfCVLqg (ORCPT
+        id S1732078AbfCVLql (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:46:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49688 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:46:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49742 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731682AbfCVLqd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:46:33 -0400
+        id S1731682AbfCVLqh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:46:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54E7B2195D;
-        Fri, 22 Mar 2019 11:46:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 357012075E;
+        Fri, 22 Mar 2019 11:46:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255192;
-        bh=e5jevcRlaxNyy0WYLXMdd8nkxUEGEkoPw0+R1SsDyz4=;
+        s=default; t=1553255196;
+        bh=7RK1mMNrkgYObUonrXQXb+eCbTYoflGEXN5HBzDz/as=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VIrpSEeIMXgIaYuB66hJV70Vq4gPqtiSV1ZJWDMhY3qAmtTAHgsHm9F/6nk0IRIDo
-         7ViApnTTT6ALc+vdOfQTP3inTvdu3dG6fTgfjzn1nlpXbobnssNu2+vcSWg4oSUBTv
-         7+wZfsHVGjafRp7hESSDZw52w53mlLjkv9uzQfMg=
+        b=b87aqKl7J86tOvFvozZt+nXdrADr0w2MvQ1sSzOzvnyzToYHezQ+FLSgiIbb9eZHo
+         g5pYQ+wqSKiEP5TGeYvDuBLgQZLrxZSmlD5ebbkbS+zgd0oqE25fASkkpYLuxpDIT9
+         kLkzx5Y895cx/7TLnhAmA+/3Uvj8ra1gphk2rfL8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 4.14 004/183] iio: adc: exynos-adc: Fix NULL pointer exception on unbind
-Date:   Fri, 22 Mar 2019 12:13:52 +0100
-Message-Id: <20190322111242.135084734@linuxfoundation.org>
+        stable@vger.kernel.org, Zhi Jin <zhi.jin@intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Subject: [PATCH 4.14 005/183] stm class: Fix an endless loop in channel allocation
+Date:   Fri, 22 Mar 2019 12:13:53 +0100
+Message-Id: <20190322111242.193188596@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111241.819468003@linuxfoundation.org>
 References: <20190322111241.819468003@linuxfoundation.org>
@@ -65,48 +65,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Krzysztof Kozlowski <krzk@kernel.org>
+From: Zhi Jin <zhi.jin@intel.com>
 
-commit 2ea8bab4dd2a9014e723b28091831fa850b82d83 upstream.
+commit a1d75dad3a2c689e70a1c4e0214cca9de741d0aa upstream.
 
-Fix NULL pointer exception on device unbind when device tree does not
-contain "has-touchscreen" property.  In such case the input device is
-not registered so it should not be unregistered.
+There is a bug in the channel allocation logic that leads to an endless
+loop when looking for a contiguous range of channels in a range with a
+mixture of free and occupied channels. For example, opening three
+consequtive channels, closing the first two and requesting 4 channels in
+a row will trigger this soft lockup. The bug is that the search loop
+forgets to skip over the range once it detects that one channel in that
+range is occupied.
 
-    $ echo "12d10000.adc" > /sys/bus/platform/drivers/exynos-adc/unbind
+Restore the original intent to the logic by fixing the omission.
 
-    Unable to handle kernel NULL pointer dereference at virtual address 00000474
-    ...
-    (input_unregister_device) from [<c0772060>] (exynos_adc_remove+0x20/0x80)
-    (exynos_adc_remove) from [<c0587d5c>] (platform_drv_remove+0x20/0x40)
-    (platform_drv_remove) from [<c05860f0>] (device_release_driver_internal+0xdc/0x1ac)
-    (device_release_driver_internal) from [<c0583ecc>] (unbind_store+0x60/0xd4)
-    (unbind_store) from [<c031b89c>] (kernfs_fop_write+0x100/0x1e0)
-    (kernfs_fop_write) from [<c029709c>] (__vfs_write+0x2c/0x17c)
-    (__vfs_write) from [<c0297374>] (vfs_write+0xa4/0x184)
-    (vfs_write) from [<c0297594>] (ksys_write+0x4c/0xac)
-    (ksys_write) from [<c0101000>] (ret_fast_syscall+0x0/0x28)
-
-Fixes: 2bb8ad9b44c5 ("iio: exynos-adc: add experimental touchscreen support")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Zhi Jin <zhi.jin@intel.com>
+Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Fixes: 7bd1d4093c2f ("stm class: Introduce an abstraction for System Trace Module devices")
+CC: stable@vger.kernel.org # v4.4+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/adc/exynos_adc.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hwtracing/stm/core.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/iio/adc/exynos_adc.c
-+++ b/drivers/iio/adc/exynos_adc.c
-@@ -916,7 +916,7 @@ static int exynos_adc_remove(struct plat
- 	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
- 	struct exynos_adc *info = iio_priv(indio_dev);
- 
--	if (IS_REACHABLE(CONFIG_INPUT)) {
-+	if (IS_REACHABLE(CONFIG_INPUT) && info->input) {
- 		free_irq(info->tsirq, info);
- 		input_unregister_device(info->input);
+--- a/drivers/hwtracing/stm/core.c
++++ b/drivers/hwtracing/stm/core.c
+@@ -252,6 +252,9 @@ static int find_free_channels(unsigned l
+ 			;
+ 		if (i == width)
+ 			return pos;
++
++		/* step over [pos..pos+i) to continue search */
++		pos += i;
  	}
+ 
+ 	return -1;
 
 
