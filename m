@@ -2,80 +2,62 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93FCEC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 08:33:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17D64C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 08:34:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6895E2083D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 08:33:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E021B218E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 08:34:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727797AbfCVIda (ORCPT
+        id S1727810AbfCVIeL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 04:33:30 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:52583 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726090AbfCVIda (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 04:33:30 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 88D01807B3; Fri, 22 Mar 2019 09:33:20 +0100 (CET)
-Date:   Fri, 22 Mar 2019 09:33:27 +0100
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc:     linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, robh@kernel.org,
-        Simon Shields <simon@lineageos.org>
-Subject: Re: [PATCH 24/25] dt-bindings: an30259a: Add function and color
- properties
-Message-ID: <20190322083327.GB27015@amd>
-References: <20190310182836.20841-1-jacek.anaszewski@gmail.com>
- <20190310182836.20841-25-jacek.anaszewski@gmail.com>
+        Fri, 22 Mar 2019 04:34:11 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:32926 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727440AbfCVIeK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 04:34:10 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9FA6731688FD;
+        Fri, 22 Mar 2019 08:34:10 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-121-98.rdu2.redhat.com [10.10.121.98])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1A0DB60123;
+        Fri, 22 Mar 2019 08:34:08 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20190321220009.29334-13-andi@firstfloor.org>
+References: <20190321220009.29334-13-andi@firstfloor.org> <20190321220009.29334-1-andi@firstfloor.org>
+To:     Andi Kleen <andi@firstfloor.org>
+Cc:     dhowells@redhat.com, x86@kernel.org, akpm@linux-foundation.org,
+        linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
+        viro@zeniv.linux.org.uk
+Subject: Re: [PATCH 12/17] afs: Avoid section confusion in CM_NAME
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="RASg3xLB4tUQ4RcS"
-Content-Disposition: inline
-In-Reply-To: <20190310182836.20841-25-jacek.anaszewski@gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <14980.1553243648.1@warthog.procyon.org.uk>
+Date:   Fri, 22 Mar 2019 08:34:08 +0000
+Message-ID: <14981.1553243648@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Fri, 22 Mar 2019 08:34:10 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Andi Kleen <andi@firstfloor.org> wrote:
 
---RASg3xLB4tUQ4RcS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> __tracepoint_str cannot be const because the tracepoint_str
+> section is not read-only. Remove the stray const.
+> 
+> Cc: dhowells@redhat.com
+> Cc: viro@zeniv.linux.org.uk
+> Signed-off-by: Andi Kleen <ak@linux.intel.com>
 
-On Sun 2019-03-10 19:28:35, Jacek Anaszewski wrote:
-> Refer to new "function" and "color" properties and mark "label"
-> as deprecated.
->=20
-> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> Cc: Simon Shields <simon@lineageos.org>
-
-Patches 6,8,10,14,16,18,20,22:
-
-Acked-by: Pavel Machek <pavel@ucw.cz>
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---RASg3xLB4tUQ4RcS
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlyUndcACgkQMOfwapXb+vIwtQCggh9SOWd09m6SKmnyQxrjctBZ
-igYAn0/VmnKV3KqI3g+1AOxhv6op71Ce
-=lb4i
------END PGP SIGNATURE-----
-
---RASg3xLB4tUQ4RcS--
+Acked-by: David Howells <dhowells@redhat.com>
