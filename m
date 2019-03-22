@@ -4,120 +4,103 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1537C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:49:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D0B8C10F03
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:50:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A94D821841
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:49:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5747821841
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:50:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727907AbfCVPt4 (ORCPT
+        id S1727979AbfCVPuE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 11:49:56 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:59885 "EHLO
+        Fri, 22 Mar 2019 11:50:04 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:47715 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725981AbfCVPtz (ORCPT
+        with ESMTP id S1725981AbfCVPuE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 11:49:55 -0400
+        Fri, 22 Mar 2019 11:50:04 -0400
 Received: from wuerfel.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MUXh8-1hXrXA13M8-00QWTC; Fri, 22 Mar 2019 16:49:24 +0100
+ 1Mhl8Y-1gTv0W3b4S-00djqU; Fri, 22 Mar 2019 16:49:32 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     stable@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Andrey Konovalov <andreyknvl@google.com>
-Cc:     Qiao Zhou <qiaozhou@asrmicro.com>, Arnd Bergmann <arnd@arndb.de>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [BACKPORT 4.4.y 21/25] arm64: traps: disable irq in die()
-Date:   Fri, 22 Mar 2019 16:44:12 +0100
-Message-Id: <20190322154425.3852517-22-arnd@arndb.de>
+To:     stable@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kees Cook <keescook@chromium.org>
+Cc:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [BACKPORT 4.4.y 22/25] usb: renesas_usbhs: gadget: fix unused-but-set-variable warning
+Date:   Fri, 22 Mar 2019 16:44:13 +0100
+Message-Id: <20190322154425.3852517-23-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20190322154425.3852517-1-arnd@arndb.de>
 References: <20190322154425.3852517-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:3h0I8WSBNcOUW2oBof6q4Zhu/MkBQ6JfTTEKDc7C3t0ARWbsWDW
- LpKGcnzl45jHUFU9EP6rpjw/bhSVoXTjFVkix+HREzEV0D6h29XjIBciuqjvbl5ioglPyhZ
- o09rVRymoVQv97+wPo7JbUcvIqc+YXMps+5gOFwSUMbgnrjZ60/CJxMhUelO3jFDPtnRZnA
- qwT+QalE3JUyoRCgW6ApA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:OyNCwkcqWVk=:fnMCXM6qGiqalwHEgD8Iu2
- pdyteGzjvepTLU+a3gAQMbqAZA+7QMp2r6Duc6ZGbHyBsvLRqjmRyEa8RPuMCpy4zJg8nSt2q
- 9NZRKRPGRykTQCCVwky0x4qJZ6zhOJXjP+z9dlHqcxrywdgoAcMOPrGibkrMEQhxCNC+/Xwvl
- S1TJ3gfoefECcdTdnEtUg8CUVdGEPTa5eaaOiUlneggP0hVD6RYYE/fPg9OVCpBICv0YqxfRb
- TshicGNuaCMyxlndntEGftdpt/cQCLNbKzlyNxSnwIXGST2AxFEn2+e4Koi+zrLAgx3yq8tEK
- AXigKZZr7JElicNSnXOAAq9uDVWMk9EV6l0wN5zZmOMqYPkDAbBZ+LscXN4B8UGUQRrNOHsjZ
- ZAt+2niyO+5EWFq4Zs+Ui5zONBpbxw4MiDOchKYerKvLuyr6RPMOIt+vyPbxzA9JNCr28IZrC
- S7b82gW4MQE359l+cI5RidYzYbMaDt4GteSbccTGYgIW5xa5PLYMY98/4thvelGEzNYBjbnRy
- VxQ0q1+sN/sRtpHEfx9YEte8Fjhs5Vx8cL1ThvWJf7PxnmXWqin//WwhlYAscLw+ZT1OQ5SIF
- FmC0A1Fxrzjdbofrt1Bo74vw8VdKyD7g4xMjxXlMPjjB5cHJoqAyI2uxcZzbjth40ZfxtY08X
- HVNXqZ3TNYDPmIFPcUo81haz7hCLWZR3/DWLQinW4+VRyS9nWS0sb7mK9yZ2ntWlrLZjByeCf
- GYKkMLUnW8IRzldjnvyioNNCGZVG2KYUfaCl3w==
+X-Provags-ID: V03:K1:1zbLgMJ6UdcfbbLrnAhs0F7V3us4vKTcxOwFmyGU0N/10ybZgRE
+ ED53FIXpRAfBiH0ccO5Eu4NWKKW1FG1fcV7qbnsKjkz3rEKK8To833eGkRCIDJ8il+83nKz
+ WeOJIqYfc2n8dB+r24eOPo5mRlXJYKm28MkAL7vF2nI8+H0pFsvuirU5DGCXnsxPoFHlAuD
+ 6xYM7LU5e5oap8/2dt7rg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Yla2KSO6I3c=:Kh9bpEPu/6xf11vu+oSgdr
+ n+vvitCcc4b1sUH8dDiQNX70t3EzOwA/0QK0qvzdK6Y+qZbPSq/rLUnFnqgKNrUzXokYEjgmV
+ gPBv+yliIQq8ds2TePkdEl9Pmz5eOOiq8N93FUuEvlQbsRn9Y79Z23krIrervGjHBHyv0Lukb
+ cqQ8zQiE1ojm7ev7Jr4jd8AndKEcBAmsBGrBR35byduKUlVVXoU2/iWCIasUuwuSsIA5Xtx6+
+ kvb5RbfbPE8WJYwBjbmmNmk7Rrwqr+ynGFVbLX9nwW0hw6N5AkwBahu1FUbJ/M0oZ4pnPn2rM
+ 1EjETdjtSiBMFaguUF8WxAuX1U76TfNfzvIbjT06eqKS2hLBlUxsYP4zuPRTCNUjyt9FjucXO
+ mXwWr/bp5SIhM101OdP3j5fpR2snI0fNGYBK+CY8mteaun0QZ6V+R/1skH5woPFVNR4IgGh9I
+ qQHfPzP8iPdXxy0Li8ympIWfbspwedhNmpo0uM7pshOCQk1yxrLgl3HPmHPSdSuISJxZjWsZ2
+ Xe5guXDv+k4u4ENNqKMLqrM+LpoB0q9/nTdskdsBY5cvTDDzDs9rejocQirvUl/IV+HMrGW6r
+ 6DMe+zTngq+JVRIv9r19wzJ/LeLt54Vx2W82WpX+soJ28BgDrrxFcs86zGJyZ2Eth7SjGrqBP
+ 0gcJTC5hatKT6F88rL5ECfoKoOGMIy9erdCKFuKRiFB+8o7HXBUZQPvO3mu4Tjobc/28pHp65
+ JvgamV00R9JFwb3XR3ntwc8cithK/9ZLLFjKsw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiao Zhou <qiaozhou@asrmicro.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-In current die(), the irq is disabled for __die() handle, not
-including the possible panic() handling. Since the log in __die()
-can take several hundreds ms, new irq might come and interrupt
-current die().
+The commit b8b9c974afee ("usb: renesas_usbhs: gadget: disable all eps
+when the driver stops") causes the unused-but-set-variable warning.
+But, if the usbhsg_ep_disable() will return non-zero value, udc/core.c
+doesn't clear the ep->enabled flag. So, this driver should not return
+non-zero value, if the pipe is zero because this means the pipe is
+already disabled. Otherwise, the ep->enabled flag is never cleared
+when the usbhsg_ep_disable() is called by the renesas_usbhs driver first.
 
-If the process calling die() holds some critical resource, and some
-other process scheduled later also needs it, then it would deadlock.
-The first panic will not be executed.
-
-So here disable irq for the whole flow of die().
-
-Signed-off-by: Qiao Zhou <qiaozhou@asrmicro.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
-(cherry picked from commit 6f44a0bacb79a03972c83759711832b382b1b8ac)
+Fixes: b8b9c974afee ("usb: renesas_usbhs: gadget: disable all eps when the driver stops")
+Fixes: 11432050f070 ("usb: renesas_usbhs: gadget: fix NULL pointer dereference in ep_disable()")
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+(cherry picked from commit b7d44c36a6f6d956e1539e0dd42f98b26e5a4684)
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- arch/arm64/kernel/traps.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/usb/renesas_usbhs/mod_gadget.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
-index 5d270ca76aec..6b4579e07aa2 100644
---- a/arch/arm64/kernel/traps.c
-+++ b/arch/arm64/kernel/traps.c
-@@ -239,10 +239,12 @@ void die(const char *str, struct pt_regs *regs, int err)
- {
- 	struct thread_info *thread = current_thread_info();
- 	int ret;
-+	unsigned long flags;
-+
-+	raw_spin_lock_irqsave(&die_lock, flags);
+diff --git a/drivers/usb/renesas_usbhs/mod_gadget.c b/drivers/usb/renesas_usbhs/mod_gadget.c
+index 8647d2c2a8c4..c5553028e616 100644
+--- a/drivers/usb/renesas_usbhs/mod_gadget.c
++++ b/drivers/usb/renesas_usbhs/mod_gadget.c
+@@ -641,14 +641,11 @@ static int usbhsg_ep_disable(struct usb_ep *ep)
+ 	struct usbhsg_uep *uep = usbhsg_ep_to_uep(ep);
+ 	struct usbhs_pipe *pipe;
+ 	unsigned long flags;
+-	int ret = 0;
  
- 	oops_enter();
+ 	spin_lock_irqsave(&uep->lock, flags);
+ 	pipe = usbhsg_uep_to_pipe(uep);
+-	if (!pipe) {
+-		ret = -EINVAL;
++	if (!pipe)
+ 		goto out;
+-	}
  
--	raw_spin_lock_irq(&die_lock);
- 	console_verbose();
- 	bust_spinlocks(1);
- 	ret = __die(str, err, thread, regs);
-@@ -252,13 +254,15 @@ void die(const char *str, struct pt_regs *regs, int err)
- 
- 	bust_spinlocks(0);
- 	add_taint(TAINT_DIE, LOCKDEP_NOW_UNRELIABLE);
--	raw_spin_unlock_irq(&die_lock);
- 	oops_exit();
- 
- 	if (in_interrupt())
- 		panic("Fatal exception in interrupt");
- 	if (panic_on_oops)
- 		panic("Fatal exception");
-+
-+	raw_spin_unlock_irqrestore(&die_lock, flags);
-+
- 	if (ret != NOTIFY_STOP)
- 		do_exit(SIGSEGV);
- }
+ 	usbhsg_pipe_disable(uep);
+ 	usbhs_pipe_free(pipe);
 -- 
 2.20.0
 
