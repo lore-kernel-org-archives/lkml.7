@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BDDAC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:20:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44BD7C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:20:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2095218A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:20:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12DE821916
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:20:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553253626;
-	bh=5VVM8unCWTPrtRypCSjj3sKg+IQgzocYLje1x2F4LaY=;
+	s=default; t=1553253630;
+	bh=0L/MIrHmsm9DVUlfdYIfFtgfr+bh045Bdpz75wsbGC0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IB0jgXlYO3dDBa7IaSHYvQzB5+K9XE4KR9FYcoFlZT5/5rsf5wAOvnvc9rvLf6j7Y
-	 3ok3qwGPCcOrJuqGfqNo/vEq1T0IDxocSmlZuJRJASKYelQDK2vUObqgQqBWsduua/
-	 DS1eTsIZDHtbuO1yDilfJJtCoP+8KtvuqyFWQDoM=
+	b=eIKT9d1m1G4vPpV7/18kExZLoTOmsjOI5Ie81zjRFuLAv59sPrytYK+qifO5zl8ue
+	 JL8G1bf2AqXHNTfg5rI0vYwUjGhGAmgb6EtzfoiGcUnHWKlZYmqYldM9No2y8vdSWt
+	 NnsZbZSab1D6uxSeRdq65k2JMWrWmYxx/iamFjD0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728358AbfCVLUZ (ORCPT
+        id S1728372AbfCVLU3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:20:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46656 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:20:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46758 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728310AbfCVLUS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:20:18 -0400
+        id S1728346AbfCVLUY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:20:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F7712190A;
-        Fri, 22 Mar 2019 11:20:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4A67218A2;
+        Fri, 22 Mar 2019 11:20:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553253617;
-        bh=5VVM8unCWTPrtRypCSjj3sKg+IQgzocYLje1x2F4LaY=;
+        s=default; t=1553253624;
+        bh=0L/MIrHmsm9DVUlfdYIfFtgfr+bh045Bdpz75wsbGC0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IyXBQ/oFZ7IC6zIWFKFXGnSE+7yWDNs83ZNHOiSbLjO+XK3Apwhiltw0KtJGmw7cw
-         pj3Gai+ULIPE/jjaxfoqjH+LpIQTyPKNOezUcjxs6BNXsXsUg/7lrUz0b//8AzP9/r
-         nVmNbyIh1LsBNNTyC0h+c3JiWBu89648cYU75vDI=
+        b=HoAghg11I/w0QFpAB2qkfRVFMrZ8h5okFSt27fF+yei5/8M5l4oFCVmNjuGpntXwo
+         jm+hEoD1zQWyFkrXv5FJgyYUetGRGpfSsOyBg1ht8+728XxHYTXaj3VkV/XGeVsDXg
+         ekKkOXwnR3bYGNu/H2vtW1N9i9/S6+BRjQELuTgk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vignesh R <vigneshr@ti.com>,
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
         Lee Jones <lee.jones@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 3.18 004/134] mfd: ti_am335x_tscadc: Use PLATFORM_DEVID_AUTO while registering mfd cells
-Date:   Fri, 22 Mar 2019 12:13:37 +0100
-Message-Id: <20190322111210.633376419@linuxfoundation.org>
+Subject: [PATCH 3.18 006/134] mfd: db8500-prcmu: Fix some section annotations
+Date:   Fri, 22 Mar 2019 12:13:39 +0100
+Message-Id: <20190322111210.711335764@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111210.465931067@linuxfoundation.org>
 References: <20190322111210.465931067@linuxfoundation.org>
@@ -66,34 +67,58 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit b40ee006fe6a8a25093434e5d394128c356a48f3 ]
+[ Upstream commit a3888f62fe66429fad3be7f2ba962e1e08c26fd6 ]
 
-Use PLATFORM_DEVID_AUTO to number mfd cells while registering, so that
-different instances are uniquely identified. This is required in order
-to support registering of multiple instances of same ti_am335x_tscadc IP.
+When building the kernel with Clang, the following section mismatch
+warnings appear:
 
-Signed-off-by: Vignesh R <vigneshr@ti.com>
+WARNING: vmlinux.o(.text+0x7239cc): Section mismatch in reference from
+the function db8500_prcmu_probe() to the function
+.init.text:init_prcm_registers()
+The function db8500_prcmu_probe() references
+the function __init init_prcm_registers().
+This is often because db8500_prcmu_probe lacks a __init
+annotation or the annotation of init_prcm_registers is wrong.
+
+WARNING: vmlinux.o(.text+0x723e28): Section mismatch in reference from
+the function db8500_prcmu_probe() to the function
+.init.text:fw_project_name()
+The function db8500_prcmu_probe() references
+the function __init fw_project_name().
+This is often because db8500_prcmu_probe lacks a __init
+annotation or the annotation of fw_project_name is wrong.
+
+db8500_prcmu_probe should not be marked as __init so remove the __init
+annotation from fw_project_name and init_prcm_registers.
+
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/ti_am335x_tscadc.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/mfd/db8500-prcmu.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/mfd/ti_am335x_tscadc.c b/drivers/mfd/ti_am335x_tscadc.c
-index 5726bf4e6c61f..e8d5d171ab048 100644
---- a/drivers/mfd/ti_am335x_tscadc.c
-+++ b/drivers/mfd/ti_am335x_tscadc.c
-@@ -282,8 +282,9 @@ static	int ti_tscadc_probe(struct platform_device *pdev)
- 		cell->pdata_size = sizeof(tscadc);
- 	}
+diff --git a/drivers/mfd/db8500-prcmu.c b/drivers/mfd/db8500-prcmu.c
+index 193cf168ba84d..40a70e0c4d872 100644
+--- a/drivers/mfd/db8500-prcmu.c
++++ b/drivers/mfd/db8500-prcmu.c
+@@ -2616,7 +2616,7 @@ static struct irq_chip prcmu_irq_chip = {
+ 	.irq_unmask	= prcmu_irq_unmask,
+ };
  
--	err = mfd_add_devices(&pdev->dev, pdev->id, tscadc->cells,
--			tscadc->used_cells, NULL, 0, NULL);
-+	err = mfd_add_devices(&pdev->dev, PLATFORM_DEVID_AUTO,
-+			      tscadc->cells, tscadc->used_cells, NULL,
-+			      0, NULL);
- 	if (err < 0)
- 		goto err_disable_clk;
+-static __init char *fw_project_name(u32 project)
++static char *fw_project_name(u32 project)
+ {
+ 	switch (project) {
+ 	case PRCMU_FW_PROJECT_U8500:
+@@ -2765,7 +2765,7 @@ void __init db8500_prcmu_early_init(u32 phy_base, u32 size)
+ 	INIT_WORK(&mb0_transfer.mask_work, prcmu_mask_work);
+ }
+ 
+-static void __init init_prcm_registers(void)
++static void init_prcm_registers(void)
+ {
+ 	u32 val;
  
 -- 
 2.19.1
