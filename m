@@ -2,124 +2,162 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 774D8C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:40:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 538DAC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:41:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 436242190A
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:40:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EE2521904
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:41:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aQW2MlE2"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="SLzfnumF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729237AbfCVOk0 (ORCPT
+        id S1728995AbfCVOln (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 10:40:26 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:52196 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727719AbfCVOkZ (ORCPT
+        Fri, 22 Mar 2019 10:41:43 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:57138 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727719AbfCVOln (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 10:40:25 -0400
-Received: by mail-it1-f196.google.com with SMTP id e24so4036542itl.1;
-        Fri, 22 Mar 2019 07:40:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=48yk/kKv2vk8VliMqaCYm5My0bn+/54+xGQYxR6rmnI=;
-        b=aQW2MlE2Wm6jo80cpNkG/VkisdxgPHVKZDxwsKWcg24wgegP+5U7ditICQyEexAUE/
-         shrVsHpZ0pt1pPA7OqEdpHBRIee9tkIyUnDzAABCgzG/BcBezdEr+1rJVbO6RwyeJ1rd
-         jVF3G20Qlivv4XzC+99+O0YjJ77yRJ0P2PMybXyfgYnyiy/UANtoBFNgrgoKj1hr4b5V
-         hOCs6nuamQvTRtFBvZd25nhucoNbTEJWSZWEHwD83Pxn/u9Yc+sg0JYw/ehCzZ3gh0Uj
-         JhAGziXg+wDZQRmRB9j/61mUFsRuJWtBJmzCYy8if7iZADMsbwarIGCeo6tJtQaEwimj
-         kD8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=48yk/kKv2vk8VliMqaCYm5My0bn+/54+xGQYxR6rmnI=;
-        b=DmoV9Yk43YewByp0lMCma+/27h4cD/Hf0XJ9QlaeHoNtI3A3yY12oq7DsVs3IbgTKB
-         /uSj+4VdzUf5wJ4uw795O8OAVe83W2EeeVHLD21PE/tkZ0cWa2F2lwPxC3/ZRRyz7dh4
-         hWJFQPO160KgaL45nAyMnWHRO/+G13xEQf0CAm8jmyJhe3E3SABQVnOfVmNd3a+f9Vhd
-         RieVnyMvLCpfR8KPZqqiyMUtFkwGFg9wLp4kqBjCdM2M7tI4txnTMppJKn3txj6LN/hV
-         JFVUHSa4mr7KHwewRo0lsPgGLKeWzKeyBEodYGaEh+MokFCwS8wwTrXiogjvrSxiURpH
-         g+AA==
-X-Gm-Message-State: APjAAAUgYPx7XLX/JM/BMiJ9M+kNPQOy5wftO+22DqUTjrhaFXxlcj5D
-        BLl2n3qAattYnZjKBXTBKfJ3M25zmh5FJWOCACw=
-X-Google-Smtp-Source: APXvYqz41D5YtjfPQR7XJ58873YvIXDHGFXe6HhFpddYQkrDXClYr6GstTnNOnpwLY10U896hG7jeZbvbWCFvgtII1I=
-X-Received: by 2002:a24:b649:: with SMTP id d9mr1414851itj.18.1553265624273;
- Fri, 22 Mar 2019 07:40:24 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190322140819.300740-1-arnd@arndb.de>
-In-Reply-To: <20190322140819.300740-1-arnd@arndb.de>
-From:   Ilya Dryomov <idryomov@gmail.com>
-Date:   Fri, 22 Mar 2019 15:41:39 +0100
-Message-ID: <CAOi1vP_=5gBUFLCofhaCNbMkfdwYNSkJ06Rmw-bJkLXNC4v8fA@mail.gmail.com>
-Subject: Re: [PATCH] ceph: fix clang warning for CEPH_DEFINE_OID_ONSTACK
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     "Yan, Zheng" <zyan@redhat.com>, Sage Weil <sage@redhat.com>,
-        clang-built-linux@googlegroups.com,
+        Fri, 22 Mar 2019 10:41:43 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2MEd0Bx147264;
+        Fri, 22 Mar 2019 14:41:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=SAZthBdcBsSCeNrj9qHL/j2MkHrbr4dN4Wqy55oWWY4=;
+ b=SLzfnumFJqsM3jfiwm5S8GSrOTfbcIlJBjP1XWB9FcIUd/os7uHNXHcK9INsYVQ8joZz
+ zNtk36MpHHL2Fnm3VJFG87XLOS91t4ZBiCkHr24leIPwUIfowaCRgpaTt7CrBD5oI7VO
+ 2S7TXLhW9vz4JZ7F6WuXcAH1CO2EUXn8bzVuchaikUvfLcsnNs83B2LFr+SvRV8mmG+a
+ VrR2ZCStTkUkqxbkWubIlCmwRS13W5AqrBsKeEteA7pLXFDxmYfFgyJWMKhMzpJN5nKL
+ UZJrqDjgAsTIv85YbMfp5XgI+UKRkpyvVyHa/R0XBLn7v0DA9d6yjCCJu7DU0BYckZP2 HQ== 
+Received: from aserv0022.oracle.com (aserv0022.oracle.com [141.146.126.234])
+        by userp2120.oracle.com with ESMTP id 2r8ssrxacw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 22 Mar 2019 14:41:23 +0000
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x2MEfM9k011243
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 22 Mar 2019 14:41:22 GMT
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x2MEfMgG006321;
+        Fri, 22 Mar 2019 14:41:22 GMT
+Received: from [192.168.1.93] (/99.156.91.244)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 22 Mar 2019 07:41:22 -0700
+Subject: Re: [PATCH] jfs: fix bogus variable self-initialization
+To:     Arnd Bergmann <arnd@arndb.de>, Dave Kleikamp <shaggy@kernel.org>
+Cc:     clang-built-linux@googlegroups.com,
         Nick Desaulniers <ndesaulniers@google.com>,
         Nathan Chancellor <natechancellor@gmail.com>,
-        Alex Elder <elder@linaro.org>,
-        Ceph Development <ceph-devel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        jfs-discussion@lists.sourceforge.net, linux-kernel@vger.kernel.org
+References: <20190322141922.691391-1-arnd@arndb.de>
+From:   Dave Kleikamp <dave.kleikamp@oracle.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.kleikamp@oracle.com; prefer-encrypt=mutual; keydata=
+ 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
+ rnNNL3zBkwD3nWcTxFnX
+Message-ID: <85746d06-fdf9-6438-17f6-06d65608e2ac@oracle.com>
+Date:   Fri, 22 Mar 2019 09:41:21 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
+MIME-Version: 1.0
+In-Reply-To: <20190322141922.691391-1-arnd@arndb.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9202 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903220108
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 22, 2019 at 3:08 PM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> clang complains about assigning a variable to itself during the
-> declaration:
->
-> fs/ceph/ioctl.c:187:26: error: variable 'oid' is uninitialized when used within its own initialization [-Werror,-Wuninitialized]
->         CEPH_DEFINE_OID_ONSTACK(oid);
->                                 ^~~
-> include/linux/ceph/osdmap.h:122:52: note: expanded from macro 'CEPH_DEFINE_OID_ONSTACK'
->         struct ceph_object_id oid = CEPH_OID_INIT_ONSTACK(oid)
->                               ~~~                         ^~~
-> include/linux/ceph/osdmap.h:120:29: note: expanded from macro 'CEPH_OID_INIT_ONSTACK'
->     ({ ceph_oid_init(&oid); oid; })
->                             ^~~
->
-> We use this trick in other places, but it is completely unnecessary
-> here, as we can just use a regular struct initializer.
->
+On 3/22/19 9:19 AM, Arnd Bergmann wrote:
+> A statement was originally added in 2006 to shut up a gcc warning,
+> now but now clang warns about it:
+> 
+> fs/jfs/jfs_txnmgr.c:1932:15: error: variable 'pxd' is uninitialized when used within its own initialization
+>       [-Werror,-Wuninitialized]
+>                 pxd_t pxd = pxd;        /* truncated extent of xad */
+>                       ~~~   ^~~
+> 
+> Modern versions of gcc are fine without the silly assignment, so just
+> drop it. Tested with gcc-4.6 (released 2011), 4.7, 4.8, and 4.9.
+
+Thanks Arnd. Will push it upstream.
+
+Shaggy
+
+> 
+> Fixes: c9e3ad6021e5 ("JFS: Get rid of "may be used uninitialized" warnings")
 > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Dave Kleikamp <dave.kleikamp@oracle.com>
+
 > ---
->  include/linux/ceph/osdmap.h | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
->
-> diff --git a/include/linux/ceph/osdmap.h b/include/linux/ceph/osdmap.h
-> index 5675b1f09bc5..82f957a7a0d6 100644
-> --- a/include/linux/ceph/osdmap.h
-> +++ b/include/linux/ceph/osdmap.h
-> @@ -116,10 +116,8 @@ static inline void ceph_oid_init(struct ceph_object_id *oid)
->         oid->name_len = 0;
->  }
->
-> -#define CEPH_OID_INIT_ONSTACK(oid)                                     \
-> -    ({ ceph_oid_init(&oid); oid; })
->  #define CEPH_DEFINE_OID_ONSTACK(oid)                                   \
-> -       struct ceph_object_id oid = CEPH_OID_INIT_ONSTACK(oid)
-> +       struct ceph_object_id oid = { .name = oid.inline_name }
->
->  static inline bool ceph_oid_empty(const struct ceph_object_id *oid)
->  {
-
-Hi Arnd,
-
-I don't like this because the initialization is no longer contained to
-ceph_oid_init().  Now there are two things to patch instead of one.
-
-How is this going to be fixed in other places?
-
-Thanks,
-
-                Ilya
+>  fs/jfs/jfs_txnmgr.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/fs/jfs/jfs_txnmgr.c b/fs/jfs/jfs_txnmgr.c
+> index a5663cb621d8..78789c5ed36b 100644
+> --- a/fs/jfs/jfs_txnmgr.c
+> +++ b/fs/jfs/jfs_txnmgr.c
+> @@ -1928,8 +1928,7 @@ static void xtLog(struct jfs_log * log, struct tblock * tblk, struct lrd * lrd,
+>  	 * header ?
+>  	 */
+>  	if (tlck->type & tlckTRUNCATE) {
+> -		/* This odd declaration suppresses a bogus gcc warning */
+> -		pxd_t pxd = pxd;	/* truncated extent of xad */
+> +		pxd_t pxd;	/* truncated extent of xad */
+>  		int twm;
+>  
+>  		/*
+> 
