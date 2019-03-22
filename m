@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA4C8C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:50:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC32C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:50:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF67D21873
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:50:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4214921873
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:50:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553259044;
-	bh=Lo81r03Rr0dU3hK/7txLIXKiaZRIUs95pajM8lDByb4=;
+	s=default; t=1553259055;
+	bh=AdJ0JuBDgJrIBFE7rbiutsSzQRRuTRtaGZRGQFzUqcM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0ojFMqVhLXjG88brhJevyUbvID5tpnUHzykvFHk61C2MU/Mctm7X2x/Yy8ZToruwE
-	 JsCvlF3465b8EI/G/gPqtSh8UD3L5OA/T63ew4R55GuUXhDI7Kgm2xYsua2TXYSco0
-	 Qx2e9zcEGtXTdpxuoC12XLgjLoIokoZYEdSXfWbs=
+	b=kPUFrUD8UnjX5TYduA7mRdZuqI5CyhnGXxvZcSoNIRDiOfmCYEFHaZ0eOj789xAXe
+	 NKuBiE6QK7HPfj/RJ6q2AMSX2vLE8UstZHIWLc/LYl/SCKFC6f5D0eyg93LumXHD4X
+	 daonT8HnUBMZOtLf8A9EouozSeL34lTxkIt/ZNu4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387393AbfCVLzZ (ORCPT
+        id S1733275AbfCVLzN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:55:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59972 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:55:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732970AbfCVLzW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:55:22 -0400
+        id S1733261AbfCVLzJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:55:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 837762082C;
-        Fri, 22 Mar 2019 11:55:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4256521934;
+        Fri, 22 Mar 2019 11:55:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255722;
-        bh=Lo81r03Rr0dU3hK/7txLIXKiaZRIUs95pajM8lDByb4=;
+        s=default; t=1553255708;
+        bh=AdJ0JuBDgJrIBFE7rbiutsSzQRRuTRtaGZRGQFzUqcM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m548LELFiCUsACJG1GNVo257vwowFkdW0OApTGZ/mnRiQMk1p8QqEHt/vx+0RCDq9
-         5df54jzXtXqdsszTB9zUW/E1+elfR2lNOV+YePyLqDCsbqATtf4BIpahaVsFEoqgBe
-         SOxHSWwW5E2G904SxMpkphTK3PUiB+IGkP4/t3jw=
+        b=cIIZfFBVpBFXqYDOMHJ8hZD4xH1GSfADVFcMH7YGCxO3wUqgOdjEQ3Wfm9xSXGpTA
+         hlzW00s2wJOEhUcG+zOmxNK5aA01uEWJblcsynDG2nwIP3vQ4um3Os66bV7xW/B3zt
+         /Atcc+Tt3yj9bWyvHQWioqPnRMZ0JKKCTpcGHAjY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 4.14 160/183] PM / wakeup: Rework wakeup source timer cancellation
-Date:   Fri, 22 Mar 2019 12:16:28 +0100
-Message-Id: <20190322111253.491219323@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>
+Subject: [PATCH 4.14 156/183] NFS: Dont recoalesce on error in nfs_pageio_complete_mirror()
+Date:   Fri, 22 Mar 2019 12:16:24 +0100
+Message-Id: <20190322111253.200291312@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111241.819468003@linuxfoundation.org>
 References: <20190322111241.819468003@linuxfoundation.org>
@@ -65,55 +65,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Viresh Kumar <viresh.kumar@linaro.org>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-commit 1fad17fb1bbcd73159c2b992668a6957ecc5af8a upstream.
+commit 8127d82705998568b52ac724e28e00941538083d upstream.
 
-If wakeup_source_add() is called right after wakeup_source_remove()
-for the same wakeup source, timer_setup() may be called for a
-potentially scheduled timer which is incorrect.
+If the I/O completion failed with a fatal error, then we should just
+exit nfs_pageio_complete_mirror() rather than try to recoalesce.
 
-To avoid that, move the wakeup source timer cancellation from
-wakeup_source_drop() to wakeup_source_remove().
-
-Moreover, make wakeup_source_remove() clear the timer function after
-canceling the timer to let wakeup_source_not_registered() treat
-unregistered wakeup sources in the same way as the ones that have
-never been registered.
-
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: 4.4+ <stable@vger.kernel.org> # 4.4+
-[ rjw: Subject, changelog, merged two patches together ]
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Fixes: a7d42ddb3099 ("nfs: add mirroring support to pgio layer")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Cc: stable@vger.kernel.org # v4.0+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/base/power/wakeup.c |    8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ fs/nfs/pagelist.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/base/power/wakeup.c
-+++ b/drivers/base/power/wakeup.c
-@@ -113,7 +113,6 @@ void wakeup_source_drop(struct wakeup_so
- 	if (!ws)
- 		return;
- 
--	del_timer_sync(&ws->timer);
- 	__pm_relax(ws);
- }
- EXPORT_SYMBOL_GPL(wakeup_source_drop);
-@@ -201,6 +200,13 @@ void wakeup_source_remove(struct wakeup_
- 	list_del_rcu(&ws->entry);
- 	spin_unlock_irqrestore(&events_lock, flags);
- 	synchronize_srcu(&wakeup_srcu);
-+
-+	del_timer_sync(&ws->timer);
-+	/*
-+	 * Clear timer.function to make wakeup_source_not_registered() treat
-+	 * this wakeup source as not registered.
-+	 */
-+	ws->timer.function = NULL;
- }
- EXPORT_SYMBOL_GPL(wakeup_source_remove);
- 
+--- a/fs/nfs/pagelist.c
++++ b/fs/nfs/pagelist.c
+@@ -1213,7 +1213,7 @@ static void nfs_pageio_complete_mirror(s
+ 		desc->pg_mirror_idx = mirror_idx;
+ 	for (;;) {
+ 		nfs_pageio_doio(desc);
+-		if (!mirror->pg_recoalesce)
++		if (desc->pg_error < 0 || !mirror->pg_recoalesce)
+ 			break;
+ 		if (!nfs_do_recoalesce(desc))
+ 			break;
 
 
