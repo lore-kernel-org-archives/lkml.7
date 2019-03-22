@@ -2,54 +2,54 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAC6AC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:15:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7809AC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:15:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBE87218A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:15:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31B6C21A80
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:15:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256915;
-	bh=/mI1hZB8dggCdfAyUvzfxeBrf/KznwcdfxHj44ngPlA=;
+	s=default; t=1553256920;
+	bh=PGmhW0MJO+lkF2/RYoVFLyP1QqG0JhOm3Kxix698Isg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tVT7xUH7TabSFAGqtJSCZxoWmnyFS+vv0Kb4JOMk1rvgdg6qLuAJTOuwepu6UUzvC
-	 DCFqQeAoQiX3XiLKRMhZp+8yINsFsXLtIztRAZ3bJrC4LDrbrxmrAWHb4x+2ZIP8Tn
-	 vs37Z3cQvI/8oRZwieRjBsVv8utLhek82UeZQLZI=
+	b=yAML+QOSdiNVxz+QZRhuhaawy2hrKSv5JNCtU+h7fktcuRFWg9dIfcSZTL1KD/cFS
+	 L0e5vLt8gFbA3WEXCaYBim/LOoncIsAiFFFyn71ole2PBvIHIRTcFf7SWVIUE/o76H
+	 NRk05Rip3yZqjAdvGPXBmvj4pqkytsRdysYjB0ZU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390032AbfCVMPO (ORCPT
+        id S2390043AbfCVMPT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:15:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53600 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:15:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390023AbfCVMPM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:15:12 -0400
+        id S2390023AbfCVMPR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:15:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88676218A1;
-        Fri, 22 Mar 2019 12:15:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4A8A21900;
+        Fri, 22 Mar 2019 12:15:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256912;
-        bh=/mI1hZB8dggCdfAyUvzfxeBrf/KznwcdfxHj44ngPlA=;
+        s=default; t=1553256916;
+        bh=PGmhW0MJO+lkF2/RYoVFLyP1QqG0JhOm3Kxix698Isg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p9BbABYEv2VjP8xjN9kQNezLHrxvVauihxBVAOZmvC57R7U1VpSzkRrbPbYOyjOTO
-         OhjNtiAUYqOT/QKVI89k9SOgUmoVUp10WKEnf1NUyS3RxFPDiO97yb8zp2UK9w1DuH
-         LpBoyfgZKVdOmkdHMGY2bI6cTLN+RL3uvWffZ2aA=
+        b=O5jcINdP1KH14FL893Uxq+d7XwI9aMPKSL4WbrjroBplIcRjhGieK9dA2c+J5DqWz
+         wXEx6fEqSih0aGDiVgxgHFd8ip+KFwMLWa62ghvyfcznuggwW9xODzoAzPm2VjqiS3
+         4THNuOhyoSw7aa6pz/RNei4x/6xScB0ZBNC5ltB8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Stuart Menefy <stuart.menefy@mathembedded.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
+        stable@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Andre Przywara <andre.przywara@arm.com>,
+        Samuel Holland <samuel@sholland.org>,
         Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: [PATCH 5.0 074/238] clocksource/drivers/exynos_mct: Clear timer interrupt when shutdown
-Date:   Fri, 22 Mar 2019 12:14:53 +0100
-Message-Id: <20190322111302.963995817@linuxfoundation.org>
+Subject: [PATCH 5.0 075/238] clocksource/drivers/arch_timer: Workaround for Allwinner A64 timer instability
+Date:   Fri, 22 Mar 2019 12:14:54 +0100
+Message-Id: <20190322111303.029300288@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -68,36 +68,246 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Stuart Menefy <stuart.menefy@mathembedded.com>
+From: Samuel Holland <samuel@sholland.org>
 
-commit d2f276c8d3c224d5b493c42b6cf006ae4e64fb1c upstream.
+commit c950ca8c35eeb32224a63adc47e12f9e226da241 upstream.
 
-When shutting down the timer, ensure that after we have stopped the
-timer any pending interrupts are cleared. This fixes a problem when
-suspending, as interrupts are disabled before the timer is stopped,
-so the timer interrupt may still be asserted, preventing the system
-entering a low power state when the wfi is executed.
+The Allwinner A64 SoC is known[1] to have an unstable architectural
+timer, which manifests itself most obviously in the time jumping forward
+a multiple of 95 years[2][3]. This coincides with 2^56 cycles at a
+timer frequency of 24 MHz, implying that the time went slightly backward
+(and this was interpreted by the kernel as it jumping forward and
+wrapping around past the epoch).
 
-Signed-off-by: Stuart Menefy <stuart.menefy@mathembedded.com>
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: <stable@vger.kernel.org> # v4.3+
+Investigation revealed instability in the low bits of CNTVCT at the
+point a high bit rolls over. This leads to power-of-two cycle forward
+and backward jumps. (Testing shows that forward jumps are about twice as
+likely as backward jumps.) Since the counter value returns to normal
+after an indeterminate read, each "jump" really consists of both a
+forward and backward jump from the software perspective.
+
+Unless the kernel is trapping CNTVCT reads, a userspace program is able
+to read the register in a loop faster than it changes. A test program
+running on all 4 CPU cores that reported jumps larger than 100 ms was
+run for 13.6 hours and reported the following:
+
+ Count | Event
+-------+---------------------------
+  9940 | jumped backward      699ms
+   268 | jumped backward     1398ms
+     1 | jumped backward     2097ms
+ 16020 | jumped forward       175ms
+  6443 | jumped forward       699ms
+  2976 | jumped forward      1398ms
+     9 | jumped forward    356516ms
+     9 | jumped forward    357215ms
+     4 | jumped forward    714430ms
+     1 | jumped forward   3578440ms
+
+This works out to a jump larger than 100 ms about every 5.5 seconds on
+each CPU core.
+
+The largest jump (almost an hour!) was the following sequence of reads:
+    0x0000007fffffffff → 0x00000093feffffff → 0x0000008000000000
+
+Note that the middle bits don't necessarily all read as all zeroes or
+all ones during the anomalous behavior; however the low 10 bits checked
+by the function in this patch have never been observed with any other
+value.
+
+Also note that smaller jumps are much more common, with backward jumps
+of 2048 (2^11) cycles observed over 400 times per second on each core.
+(Of course, this is partially explained by lower bits rolling over more
+frequently.) Any one of these could have caused the 95 year time skip.
+
+Similar anomalies were observed while reading CNTPCT (after patching the
+kernel to allow reads from userspace). However, the CNTPCT jumps are
+much less frequent, and only small jumps were observed. The same program
+as before (except now reading CNTPCT) observed after 72 hours:
+
+ Count | Event
+-------+---------------------------
+    17 | jumped backward      699ms
+    52 | jumped forward       175ms
+  2831 | jumped forward       699ms
+     5 | jumped forward      1398ms
+
+Further investigation showed that the instability in CNTPCT/CNTVCT also
+affected the respective timer's TVAL register. The following values were
+observed immediately after writing CNVT_TVAL to 0x10000000:
+
+ CNTVCT             | CNTV_TVAL  | CNTV_CVAL          | CNTV_TVAL Error
+--------------------+------------+--------------------+-----------------
+ 0x000000d4a2d8bfff | 0x10003fff | 0x000000d4b2d8bfff | +0x00004000
+ 0x000000d4a2d94000 | 0x0fffffff | 0x000000d4b2d97fff | -0x00004000
+ 0x000000d4a2d97fff | 0x10003fff | 0x000000d4b2d97fff | +0x00004000
+ 0x000000d4a2d9c000 | 0x0fffffff | 0x000000d4b2d9ffff | -0x00004000
+
+The pattern of errors in CNTV_TVAL seemed to depend on exactly which
+value was written to it. For example, after writing 0x10101010:
+
+ CNTVCT             | CNTV_TVAL  | CNTV_CVAL          | CNTV_TVAL Error
+--------------------+------------+--------------------+-----------------
+ 0x000001ac3effffff | 0x1110100f | 0x000001ac4f10100f | +0x1000000
+ 0x000001ac40000000 | 0x1010100f | 0x000001ac5110100f | -0x1000000
+ 0x000001ac58ffffff | 0x1110100f | 0x000001ac6910100f | +0x1000000
+ 0x000001ac66000000 | 0x1010100f | 0x000001ac7710100f | -0x1000000
+ 0x000001ac6affffff | 0x1110100f | 0x000001ac7b10100f | +0x1000000
+ 0x000001ac6e000000 | 0x1010100f | 0x000001ac7f10100f | -0x1000000
+
+I was also twice able to reproduce the issue covered by Allwinner's
+workaround[4], that writing to TVAL sometimes fails, and both CVAL and
+TVAL are left with entirely bogus values. One was the following values:
+
+ CNTVCT             | CNTV_TVAL  | CNTV_CVAL
+--------------------+------------+--------------------------------------
+ 0x000000d4a2d6014c | 0x8fbd5721 | 0x000000d132935fff (615s in the past)
+Reviewed-by: Marc Zyngier <marc.zyngier@arm.com>
+
+========================================================================
+
+Because the CPU can read the CNTPCT/CNTVCT registers faster than they
+change, performing two reads of the register and comparing the high bits
+(like other workarounds) is not a workable solution. And because the
+timer can jump both forward and backward, no pair of reads can
+distinguish a good value from a bad one. The only way to guarantee a
+good value from consecutive reads would be to read _three_ times, and
+take the middle value only if the three values are 1) each unique and
+2) increasing. This takes at minimum 3 counter cycles (125 ns), or more
+if an anomaly is detected.
+
+However, since there is a distinct pattern to the bad values, we can
+optimize the common case (1022/1024 of the time) to a single read by
+simply ignoring values that match the error pattern. This still takes no
+more than 3 cycles in the worst case, and requires much less code. As an
+additional safety check, we still limit the loop iteration to the number
+of max-frequency (1.2 GHz) CPU cycles in three 24 MHz counter periods.
+
+For the TVAL registers, the simple solution is to not use them. Instead,
+read or write the CVAL and calculate the TVAL value in software.
+
+Although the manufacturer is aware of at least part of the erratum[4],
+there is no official name for it. For now, use the kernel-internal name
+"UNKNOWN1".
+
+[1]: https://github.com/armbian/build/commit/a08cd6fe7ae9
+[2]: https://forum.armbian.com/topic/3458-a64-datetime-clock-issue/
+[3]: https://irclog.whitequark.org/linux-sunxi/2018-01-26
+[4]: https://github.com/Allwinner-Homlet/H6-BSP4.9-linux/blob/master/drivers/clocksource/arm_arch_timer.c#L272
+
+Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Tested-by: Andre Przywara <andre.przywara@arm.com>
+Signed-off-by: Samuel Holland <samuel@sholland.org>
+Cc: stable@vger.kernel.org
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/clocksource/exynos_mct.c |    1 +
- 1 file changed, 1 insertion(+)
+ Documentation/arm64/silicon-errata.txt |    2 +
+ drivers/clocksource/Kconfig            |   10 ++++++
+ drivers/clocksource/arm_arch_timer.c   |   55 +++++++++++++++++++++++++++++++++
+ 3 files changed, 67 insertions(+)
 
---- a/drivers/clocksource/exynos_mct.c
-+++ b/drivers/clocksource/exynos_mct.c
-@@ -411,6 +411,7 @@ static int set_state_shutdown(struct clo
+--- a/Documentation/arm64/silicon-errata.txt
++++ b/Documentation/arm64/silicon-errata.txt
+@@ -44,6 +44,8 @@ stable kernels.
  
- 	mevt = container_of(evt, struct mct_clock_event_device, evt);
- 	exynos4_mct_tick_stop(mevt);
-+	exynos4_mct_tick_clear(mevt);
- 	return 0;
+ | Implementor    | Component       | Erratum ID      | Kconfig                     |
+ +----------------+-----------------+-----------------+-----------------------------+
++| Allwinner      | A64/R18         | UNKNOWN1        | SUN50I_ERRATUM_UNKNOWN1     |
++|                |                 |                 |                             |
+ | ARM            | Cortex-A53      | #826319         | ARM64_ERRATUM_826319        |
+ | ARM            | Cortex-A53      | #827319         | ARM64_ERRATUM_827319        |
+ | ARM            | Cortex-A53      | #824069         | ARM64_ERRATUM_824069        |
+--- a/drivers/clocksource/Kconfig
++++ b/drivers/clocksource/Kconfig
+@@ -360,6 +360,16 @@ config ARM64_ERRATUM_858921
+ 	  The workaround will be dynamically enabled when an affected
+ 	  core is detected.
+ 
++config SUN50I_ERRATUM_UNKNOWN1
++	bool "Workaround for Allwinner A64 erratum UNKNOWN1"
++	default y
++	depends on ARM_ARCH_TIMER && ARM64 && ARCH_SUNXI
++	select ARM_ARCH_TIMER_OOL_WORKAROUND
++	help
++	  This option enables a workaround for instability in the timer on
++	  the Allwinner A64 SoC. The workaround will only be active if the
++	  allwinner,erratum-unknown1 property is found in the timer node.
++
+ config ARM_GLOBAL_TIMER
+ 	bool "Support for the ARM global timer" if COMPILE_TEST
+ 	select TIMER_OF if OF
+--- a/drivers/clocksource/arm_arch_timer.c
++++ b/drivers/clocksource/arm_arch_timer.c
+@@ -326,6 +326,48 @@ static u64 notrace arm64_1188873_read_cn
  }
+ #endif
  
++#ifdef CONFIG_SUN50I_ERRATUM_UNKNOWN1
++/*
++ * The low bits of the counter registers are indeterminate while bit 10 or
++ * greater is rolling over. Since the counter value can jump both backward
++ * (7ff -> 000 -> 800) and forward (7ff -> fff -> 800), ignore register values
++ * with all ones or all zeros in the low bits. Bound the loop by the maximum
++ * number of CPU cycles in 3 consecutive 24 MHz counter periods.
++ */
++#define __sun50i_a64_read_reg(reg) ({					\
++	u64 _val;							\
++	int _retries = 150;						\
++									\
++	do {								\
++		_val = read_sysreg(reg);				\
++		_retries--;						\
++	} while (((_val + 1) & GENMASK(9, 0)) <= 1 && _retries);	\
++									\
++	WARN_ON_ONCE(!_retries);					\
++	_val;								\
++})
++
++static u64 notrace sun50i_a64_read_cntpct_el0(void)
++{
++	return __sun50i_a64_read_reg(cntpct_el0);
++}
++
++static u64 notrace sun50i_a64_read_cntvct_el0(void)
++{
++	return __sun50i_a64_read_reg(cntvct_el0);
++}
++
++static u32 notrace sun50i_a64_read_cntp_tval_el0(void)
++{
++	return read_sysreg(cntp_cval_el0) - sun50i_a64_read_cntpct_el0();
++}
++
++static u32 notrace sun50i_a64_read_cntv_tval_el0(void)
++{
++	return read_sysreg(cntv_cval_el0) - sun50i_a64_read_cntvct_el0();
++}
++#endif
++
+ #ifdef CONFIG_ARM_ARCH_TIMER_OOL_WORKAROUND
+ DEFINE_PER_CPU(const struct arch_timer_erratum_workaround *, timer_unstable_counter_workaround);
+ EXPORT_SYMBOL_GPL(timer_unstable_counter_workaround);
+@@ -423,6 +465,19 @@ static const struct arch_timer_erratum_w
+ 		.read_cntvct_el0 = arm64_1188873_read_cntvct_el0,
+ 	},
+ #endif
++#ifdef CONFIG_SUN50I_ERRATUM_UNKNOWN1
++	{
++		.match_type = ate_match_dt,
++		.id = "allwinner,erratum-unknown1",
++		.desc = "Allwinner erratum UNKNOWN1",
++		.read_cntp_tval_el0 = sun50i_a64_read_cntp_tval_el0,
++		.read_cntv_tval_el0 = sun50i_a64_read_cntv_tval_el0,
++		.read_cntpct_el0 = sun50i_a64_read_cntpct_el0,
++		.read_cntvct_el0 = sun50i_a64_read_cntvct_el0,
++		.set_next_event_phys = erratum_set_next_event_tval_phys,
++		.set_next_event_virt = erratum_set_next_event_tval_virt,
++	},
++#endif
+ };
+ 
+ typedef bool (*ate_match_fn_t)(const struct arch_timer_erratum_workaround *,
 
 
