@@ -6,31 +6,32 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9CDEC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 07:23:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BFDFC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 07:23:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A27A1206C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 07:23:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F6B9218FE
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 07:23:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727714AbfCVHXI (ORCPT
+        id S1727772AbfCVHXM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 03:23:08 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:39199 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726054AbfCVHXH (ORCPT
+        Fri, 22 Mar 2019 03:23:12 -0400
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:40447 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726054AbfCVHXL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 03:23:07 -0400
+        Fri, 22 Mar 2019 03:23:11 -0400
+X-Originating-IP: 182.72.246.220
 Received: from localhost (unknown [182.72.246.220])
         (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id DF388100009;
-        Fri, 22 Mar 2019 07:23:04 +0000 (UTC)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 46C8540003;
+        Fri, 22 Mar 2019 07:23:07 +0000 (UTC)
 From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
 To:     linux-rtc@vger.kernel.org, "David S . Miller" <davem@davemloft.net>
 Cc:     linux-kernel@vger.kernel.org,
         Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 2/3] rtc: sun4v: set range
-Date:   Fri, 22 Mar 2019 08:22:55 +0100
-Message-Id: <20190322072256.17108-2-alexandre.belloni@bootlin.com>
+Subject: [PATCH 3/3] rtc: sun4v: switch to SPDX identifier
+Date:   Fri, 22 Mar 2019 08:22:56 +0100
+Message-Id: <20190322072256.17108-3-alexandre.belloni@bootlin.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190322072256.17108-1-alexandre.belloni@bootlin.com>
 References: <20190322072256.17108-1-alexandre.belloni@bootlin.com>
@@ -41,39 +42,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Sun4v Hypervisor Core API Specification states:
-Time is described by a single unsigned 64-bit word equivalent to a time_t
-for the POSIX time(2) system call. The word contains the time since the
-Epoch (00:00:00 UTC, January 1, 1970), measured in seconds.
+Use SPDX-License-Identifier to be clearer on the license. Choose the v2
+only as this is the default Linux license.
 
 Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
- drivers/rtc/rtc-sun4v.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/rtc/rtc-sun4v.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/rtc/rtc-sun4v.c b/drivers/rtc/rtc-sun4v.c
-index 378081fffa91..82fb51f79c6e 100644
+index 82fb51f79c6e..036463dfa103 100644
 --- a/drivers/rtc/rtc-sun4v.c
 +++ b/drivers/rtc/rtc-sun4v.c
-@@ -78,13 +78,15 @@ static int __init sun4v_rtc_probe(struct platform_device *pdev)
- {
- 	struct rtc_device *rtc;
- 
--	rtc = devm_rtc_device_register(&pdev->dev, "sun4v",
--				&sun4v_rtc_ops, THIS_MODULE);
-+	rtc = devm_rtc_allocate_device(&pdev->dev);
- 	if (IS_ERR(rtc))
- 		return PTR_ERR(rtc);
- 
-+	rtc->ops = &sun4v_rtc_ops;
-+	rtc->range_max = U64_MAX;
- 	platform_set_drvdata(pdev, rtc);
--	return 0;
-+
-+	return rtc_register_device(rtc);
- }
- 
- static struct platform_driver sun4v_rtc_driver = {
+@@ -1,7 +1,7 @@
++// SPDX-License-Identifier: GPL-2.0
+ /* rtc-sun4v.c: Hypervisor based RTC for SUN4V systems.
+  *
+  * Author: David S. Miller
+- * License: GPL
+  *
+  * Copyright (C) 2008 David S. Miller <davem@davemloft.net>
+  */
 -- 
 2.20.1
 
