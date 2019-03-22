@@ -2,177 +2,114 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F076EC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 00:47:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85B6DC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 00:48:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C61C821917
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 00:47:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A92F21902
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 00:48:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727456AbfCVAr4 (ORCPT
+        id S1727501AbfCVAsJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 20:47:56 -0400
-Received: from emh03.mail.saunalahti.fi ([62.142.5.109]:37728 "EHLO
-        emh03.mail.saunalahti.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726460AbfCVAr4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 20:47:56 -0400
-Received: from localhost.localdomain (85-76-115-194-nat.elisa-mobile.fi [85.76.115.194])
-        by emh03.mail.saunalahti.fi (Postfix) with ESMTP id AEFB74006C;
-        Fri, 22 Mar 2019 02:47:50 +0200 (EET)
-From:   Aaro Koskinen <aaro.koskinen@iki.fi>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org,
-        Aaro Koskinen <aaro.koskinen@nokia.com>
-Subject: [PATCH v4] panic/reboot: allow specifying reboot_mode for panic only
-Date:   Fri, 22 Mar 2019 02:47:35 +0200
-Message-Id: <20190322004735.27702-1-aaro.koskinen@iki.fi>
-X-Mailer: git-send-email 2.17.0
+        Thu, 21 Mar 2019 20:48:09 -0400
+Received: from ozlabs.org ([203.11.71.1]:42181 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726460AbfCVAsI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 20:48:08 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44QQ4N57fxz9sP2;
+        Fri, 22 Mar 2019 11:48:04 +1100 (AEDT)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzkaller <syzkaller@googlegroups.com>
+Subject: Re: [PATCH] printk: Add caller information to printk() output.
+In-Reply-To: <20190321102013.yxs4v4pcrq44jktm@pathway.suse.cz>
+References: <20181204152724.ypk44mi4a56nrud4@pathway.suse.cz> <459018db-763b-9520-ead2-2c0d5975fbf3@i-love.sakura.ne.jp> <20181210130930.bas4fozjhe3dc5nu@pathway.suse.cz> <c5b5d660-d217-35f0-c4f1-7252367934d1@i-love.sakura.ne.jp> <e3f69846-ef08-c8f5-368f-4dada13c9970@i-love.sakura.ne.jp> <20181213121847.mwlr2vyv6qzclhk6@pathway.suse.cz> <20181213124255.GB3053@tigerII.localdomain> <20181217145452.3kev4rmo2l5lt2qy@pathway.suse.cz> <93f19e57-5051-c67d-9af4-b17624062d44@i-love.sakura.ne.jp> <871s312aqe.fsf@concordia.ellerman.id.au> <20190321102013.yxs4v4pcrq44jktm@pathway.suse.cz>
+Date:   Fri, 22 Mar 2019 11:48:04 +1100
+Message-ID: <877ecrka4b.fsf@concordia.ellerman.id.au>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aaro Koskinen <aaro.koskinen@nokia.com>
+Petr Mladek <pmladek@suse.com> writes:
+> On Thu 2019-03-21 13:59:53, Michael Ellerman wrote:
+>> Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp> writes:
+>> ...
+>> > From 91f85d2bd494df2f73c605d8b4747e8cc0a61ae2 Mon Sep 17 00:00:00 2001
+>> > From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+>> > Date: Tue, 18 Dec 2018 05:53:04 +0900
+>> > Subject: [PATCH] printk: Add caller information to printk() output.
+>> >
+>> > Sometimes we want to print a series of printk() messages to consoles
+>> > without being disturbed by concurrent printk() from interrupts and/or
+>> > other threads. But we can't enforce printk() callers to use their local
+>> > buffers because we need to ask them to make too much changes. Also, even
+>> > buffering up to one line inside printk() might cause failing to emit
+>> > an important clue under critical situation.
+>> >
+>> > Therefore, instead of trying to help buffering, let's try to help
+>> > reconstructing messages by saving caller information as of calling
+>> > log_store() and adding it as "[T$thread_id]" or "[C$processor_id]"
+>> > upon printing to consoles.
+>> >
+>> > Some examples for console output:
+>> >
+>> >   [    1.222773][    T1] x86: Booting SMP configuration:
+>> >   [    2.779635][    T1] pci 0000:00:01.0: PCI bridge to [bus 01]
+>> >   [    5.069193][  T268] Fusion MPT base driver 3.04.20
+>> >   [    9.316504][    C2] random: fast init done
+>> >   [   13.413336][ T3355] Initialized host personality
+>> >
+>> > Some examples for /dev/kmsg output:
+>> >
+>> >   6,496,1222773,-,caller=T1;x86: Booting SMP configuration:
+>> >   6,968,2779635,-,caller=T1;pci 0000:00:01.0: PCI bridge to [bus 01]
+>> >    SUBSYSTEM=pci
+>> >    DEVICE=+pci:0000:00:01.0
+>> >   6,1353,5069193,-,caller=T268;Fusion MPT base driver 3.04.20
+>> >   5,1526,9316504,-,caller=C2;random: fast init done
+>> >   6,1575,13413336,-,caller=T3355;Initialized host personality
+>> >
+>> > Note that this patch changes max length of messages which can be printed
+>> > by printk() or written to /dev/kmsg interface from 992 bytes to 976 bytes,
+>> > based on an assumption that userspace won't try to write messages hitting
+>> > that border line to /dev/kmsg interface.
+>> 
+>> Do you have any plans to update dmesg or other userspace tools to show
+>> the caller information?
+>
+> dmesg already works via the syslog interface, try dmesg -S.
 
-Allow specifying reboot_mode for panic only. This is needed on systems
-where ramoops is used to store panic logs, and user wants to use warm
-reset to preserve those, while still having cold reset on normal reboots.
+Oh nice, thanks.
 
-Signed-off-by: Aaro Koskinen <aaro.koskinen@nokia.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
----
+> The current implementation does not pass the information into
+> the /dev/kmsg interface. It has the following format:
+>
+>     "<level>,<sequnum>,<timestamp>,<contflag>[,additional_values, ... ];<message text>\n"
+>
+> It would be possible to add it as an additional value. To be hones
+> I am not sure how they are handled by userspace tools.
 
-	v4: Add Reviewed-by tag.
+OK, yeah I guess there's the potential for a backward compatibility can
+of worms there.
 
-	v3: https://marc.info/?t=155079054500003&r=1&w=2
-	    Move REBOOT_UNDEFINED before REBOOT_COLD.                         
+I'm happy with dmesg -S :)
 
-	v2: https://marc.info/?t=155078129700004&r=1&w=2                      
-	    Use REBOOT_UNDEFINED instead of -1                                
-
-	v1: https://marc.info/?t=154957416600005&r=1&w=2                      
-
- .../admin-guide/kernel-parameters.txt         |  4 +++-
- include/linux/reboot.h                        |  2 ++
- kernel/panic.c                                |  2 ++
- kernel/reboot.c                               | 20 ++++++++++++++-----
- 4 files changed, 22 insertions(+), 6 deletions(-)
-
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 2b8ee90bb644..b470f44ee02a 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -3986,7 +3986,9 @@
- 				[[,]s[mp]#### \
- 				[[,]b[ios] | a[cpi] | k[bd] | t[riple] | e[fi] | p[ci]] \
- 				[[,]f[orce]
--			Where reboot_mode is one of warm (soft) or cold (hard) or gpio,
-+			Where reboot_mode is one of warm (soft) or cold (hard) or gpio
-+					(prefix with 'panic_' to set mode for panic
-+					reboot only),
- 			      reboot_type is one of bios, acpi, kbd, triple, efi, or pci,
- 			      reboot_force is either force or not specified,
- 			      reboot_cpu is s[mp]#### with #### being the processor
-diff --git a/include/linux/reboot.h b/include/linux/reboot.h
-index e63799a6e895..3734cd8f38a8 100644
---- a/include/linux/reboot.h
-+++ b/include/linux/reboot.h
-@@ -14,6 +14,7 @@ struct device;
- #define SYS_POWER_OFF	0x0003	/* Notify of system power off */
- 
- enum reboot_mode {
-+	REBOOT_UNDEFINED = -1,
- 	REBOOT_COLD = 0,
- 	REBOOT_WARM,
- 	REBOOT_HARD,
-@@ -21,6 +22,7 @@ enum reboot_mode {
- 	REBOOT_GPIO,
- };
- extern enum reboot_mode reboot_mode;
-+extern enum reboot_mode panic_reboot_mode;
- 
- enum reboot_type {
- 	BOOT_TRIPLE	= 't',
-diff --git a/kernel/panic.c b/kernel/panic.c
-index 0ae0d7332f12..aad890082f13 100644
---- a/kernel/panic.c
-+++ b/kernel/panic.c
-@@ -306,6 +306,8 @@ void panic(const char *fmt, ...)
- 		 * shutting down.  But if there is a chance of
- 		 * rebooting the system it will be rebooted.
- 		 */
-+		if (panic_reboot_mode != REBOOT_UNDEFINED)
-+			reboot_mode = panic_reboot_mode;
- 		emergency_restart();
- 	}
- #ifdef __sparc__
-diff --git a/kernel/reboot.c b/kernel/reboot.c
-index e1b79b6a2735..b9e79e8c7226 100644
---- a/kernel/reboot.c
-+++ b/kernel/reboot.c
-@@ -31,6 +31,7 @@ EXPORT_SYMBOL(cad_pid);
- #define DEFAULT_REBOOT_MODE
- #endif
- enum reboot_mode reboot_mode DEFAULT_REBOOT_MODE;
-+enum reboot_mode panic_reboot_mode = REBOOT_UNDEFINED;
- 
- /*
-  * This variable is used privately to keep track of whether or not
-@@ -519,6 +520,8 @@ EXPORT_SYMBOL_GPL(orderly_reboot);
- static int __init reboot_setup(char *str)
- {
- 	for (;;) {
-+		enum reboot_mode *mode;
-+
- 		/*
- 		 * Having anything passed on the command line via
- 		 * reboot= will cause us to disable DMI checking
-@@ -526,17 +529,24 @@ static int __init reboot_setup(char *str)
- 		 */
- 		reboot_default = 0;
- 
-+		if (!strncmp(str, "panic_", 6)) {
-+			mode = &panic_reboot_mode;
-+			str += 6;
-+		} else {
-+			mode = &reboot_mode;
-+		}
-+
- 		switch (*str) {
- 		case 'w':
--			reboot_mode = REBOOT_WARM;
-+			*mode = REBOOT_WARM;
- 			break;
- 
- 		case 'c':
--			reboot_mode = REBOOT_COLD;
-+			*mode = REBOOT_COLD;
- 			break;
- 
- 		case 'h':
--			reboot_mode = REBOOT_HARD;
-+			*mode = REBOOT_HARD;
- 			break;
- 
- 		case 's':
-@@ -553,11 +563,11 @@ static int __init reboot_setup(char *str)
- 				if (rc)
- 					return rc;
- 			} else
--				reboot_mode = REBOOT_SOFT;
-+				*mode = REBOOT_SOFT;
- 			break;
- 		}
- 		case 'g':
--			reboot_mode = REBOOT_GPIO;
-+			*mode = REBOOT_GPIO;
- 			break;
- 
- 		case 'b':
--- 
-2.17.0
-
+cheers
