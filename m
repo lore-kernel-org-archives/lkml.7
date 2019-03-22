@@ -2,271 +2,541 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60818C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:12:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 395E0C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:12:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22792218A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:12:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFF17218A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:12:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729465AbfCVQMf (ORCPT
+        id S1729515AbfCVQMk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 12:12:35 -0400
-Received: from ns.iliad.fr ([212.27.33.1]:55852 "EHLO ns.iliad.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727169AbfCVQMd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 12:12:33 -0400
-Received: from ns.iliad.fr (localhost [127.0.0.1])
-        by ns.iliad.fr (Postfix) with ESMTP id 0F804202D9;
-        Fri, 22 Mar 2019 17:12:31 +0100 (CET)
-Received: from [192.168.108.8] (freebox.vlq16.iliad.fr [213.36.7.13])
-        by ns.iliad.fr (Postfix) with ESMTP id E8F43201BB;
-        Fri, 22 Mar 2019 17:12:30 +0100 (CET)
-To:     Kishon Vijay Abraham <kishon@ti.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <andy.gross@linaro.org>
-Cc:     Jeffrey Hugo <jhugo@codeaurora.org>,
-        Evan Green <evgreen@chromium.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-Subject: [PATCH v1] phy: qcom-qmp: Add msm8998 PCIe QMP PHY support
-Message-ID: <a897277d-23b3-9746-81dc-28f8925a9992@free.fr>
-Date:   Fri, 22 Mar 2019 17:12:30 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Fri, 22 Mar 2019 12:12:40 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:57943 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727169AbfCVQMj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 12:12:39 -0400
+Received: from [192.168.1.110] ([95.115.33.167]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1N79q8-1gvWM604Wi-017U44; Fri, 22 Mar 2019 17:12:30 +0100
+Subject: Re: [PATCH 2/4] Add support for SUNIX Multi-I/O board
+To:     Morris Ku <saumah@gmail.com>, lee.jones@linaro.org
+Cc:     linux-kernel@vger.kernel.org, morris_ku@sunix.com
+References: <20190319120756.3740-1-saumah@gmail.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <10ffdaf1-26a8-3605-b562-28886850af0f@metux.net>
+Date:   Fri, 22 Mar 2019 17:12:28 +0100
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
+In-Reply-To: <20190319120756.3740-1-saumah@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Fri Mar 22 17:12:31 2019 +0100 (CET)
+X-Provags-ID: V03:K1:5XRiLkfqSDedaqbN5s6uT5/Qbxzl0iV45u3DKGpW1nlxW4Iw2oR
+ CJr+awdOEgEeJQSsRL3M9+WXYnsefJK/C6+EFoi0waJrkiddErGkTLSkMvLDYB8ohlIuoZX
+ NVwI1U8CG9ddQ7MUQ0ITkXN0F9POrNCZH3FVlfihFYGhJrSZm8LqCGt2jTiUXi5d5WtLVtK
+ UIP4i3ehSeKd59HKxIdxQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:mC+00f73C08=:w2HWJB7h/dmX6VpPlkTjej
+ NjlBHt51MJQ35/Jphk/+N9GelGxsFBuAhEHHF8Q+1nkYMrm6WvJs/GzbzAsqvlionoHVTwP71
+ j7bERyuypp1Lu5K9yQw5wCUCdxyKXB8zxF7w/xirWpI3ieYgmEiB0MsdtGCjRFzelN3//hBV1
+ NrSgzVWeVF2fB8AhaydZv9DyNvLLtx790EmYNUl8+xiACiloFYLsrHA4r7vhSJmJu/+8PYGrC
+ m9PxUu1W0Ceou0jq1WueJZ1L5snqJMiTct3r3Bewuo4rd66E2nE9EaBpSyxKq42G4daff2buZ
+ B7h7F2BIMjRDQwtv38/EOGr7nCIzDJ2eVV7Vj027PAR3XmOdIMs/XroDPO6mal+nGXl/5ogWf
+ qLCpKqTsr9RqFjV6OQdFM4szOc2cuXhJR0IV1sec2iq9pgrmWQaA1B2Zz1qgIMUYe2PxkbKdR
+ 5CuNJ+ylZH24QaL1CVAjQXR6dcB3dXCC8YusKItyO/HtuannTgyasOweVLxzXZ9X4s7DDDQhE
+ oljDAiopwf5VohZqQLO5HvTrsIwwo7l3OACRNXeoyINkIn3CGaTzLBjeAkttMnMVXqicZh1FT
+ 5kSpl7C9PZ3uCwJkiTKlWE2UvOAuENqjpxfATHuIL4n/W4mBgfQRezfdNzFfSZxSm13YV/uzG
+ QroXjDk8P5nrVK5ql5T2XESamAmo26dqKprMIrD3XRnwXb1XF9eHRwxkDQTIBbF0oOmt7k5gx
+ z2Nw81aT/G+Hr7ts2hTFejtdDkZjBHQthkJQraHErRnpRp9WU98q3kyskK8=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Copy init sequence from downstream:
-https://source.codeaurora.org/quic/la/kernel/msm-4.4/tree/arch/arm/boot/dts/qcom/msm8998-v2.dtsi?h=LE.UM.1.3.r3.25#n372
+On 19.03.19 13:07, Morris Ku wrote:
+> Driver for SUNIX Multi-I/O card.
+> Based on driver/char/serial.c by Linus Torvalds, Theodore Ts'o.
+> 
+> SUNIX serial card designed with SUNIX UART controller and
+> compatible with 16C950 UART specification.
+> 
+<snip>
 
-Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
----
- .../devicetree/bindings/phy/qcom-qmp-phy.txt  |   5 +
- drivers/phy/qualcomm/phy-qcom-qmp.c           | 110 ++++++++++++++++++
- drivers/phy/qualcomm/phy-qcom-qmp.h           |  12 ++
- 3 files changed, 127 insertions(+)
+> +static const char snx_ser_ic_table[SNX_SER_PORT_MAX_UART][10] = {
 
-diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-index 5d181fc3cc18..6000ae34b12b 100644
---- a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-+++ b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-@@ -11,6 +11,7 @@ Required properties:
- 	       "qcom,msm8996-qmp-usb3-phy" for 14nm USB3 phy on msm8996,
- 	       "qcom,msm8998-qmp-usb3-phy" for USB3 QMP V3 phy on msm8998,
- 	       "qcom,msm8998-qmp-ufs-phy" for UFS QMP phy on msm8998,
-+	       "qcom,msm8998-qmp-pcie-phy" for PCIe QMP phy on msm8998,
- 	       "qcom,sdm845-qmp-usb3-phy" for USB3 QMP V3 phy on sdm845,
- 	       "qcom,sdm845-qmp-usb3-uni-phy" for USB3 QMP V3 UNI phy on sdm845,
- 	       "qcom,sdm845-qmp-ufs-phy" for UFS QMP phy on sdm845.
-@@ -48,6 +49,8 @@ Required properties:
- 			"aux", "cfg_ahb", "ref".
- 		For "qcom,msm8998-qmp-ufs-phy" must contain:
- 			"ref", "ref_aux".
-+		For "qcom,msm8998-qmp-pcie-phy" must contain:
-+			"aux", "cfg_ahb", "ref".
- 		For "qcom,sdm845-qmp-usb3-phy" must contain:
- 			"aux", "cfg_ahb", "ref", "com_aux".
- 		For "qcom,sdm845-qmp-usb3-uni-phy" must contain:
-@@ -70,6 +73,8 @@ Required properties:
- 		For "qcom,msm8998-qmp-usb3-phy" must contain
- 			"phy", "common".
- 		For "qcom,msm8998-qmp-ufs-phy": no resets are listed.
-+		For "qcom,msm8998-qmp-pcie-phy" must contain:
-+			"phy", "common", "cfg".
- 		For "qcom,sdm845-qmp-usb3-phy" must contain:
- 			"phy", "common".
- 		For "qcom,sdm845-qmp-usb3-uni-phy" must contain:
-diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
-index 08d6f6f7f039..2f32561bdd6c 100644
---- a/drivers/phy/qualcomm/phy-qcom-qmp.c
-+++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
-@@ -242,6 +242,88 @@ static const struct qmp_phy_init_tbl msm8996_pcie_pcs_tbl[] = {
- 	QMP_PHY_INIT_CFG(QPHY_TXDEEMPH_M3P5DB_V0, 0x0e),
- };
- 
-+static const struct qmp_phy_init_tbl msm8998_pcie_serdes_tbl[] = {
-+	QMP_PHY_INIT_CFG(QSERDES_V3_COM_BIAS_EN_CLKBUFLR_EN, 0x14),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CLK_SELECT, 0x30),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_COM_PLL_IVCO, 0x0f),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CMN_CONFIG, 0x06),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_COM_LOCK_CMP_EN, 0x01),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_COM_RESETSM_CNTRL, 0x20),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_COM_VCO_TUNE_MAP, 0x00),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_COM_VCO_TUNE2_MODE0, 0x01),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_COM_VCO_TUNE1_MODE0, 0xc9),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_COM_VCO_TUNE_TIMER1, 0xff),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_COM_VCO_TUNE_TIMER2, 0x3f),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_COM_SVS_MODE_CLK_SEL, 0x01),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CORE_CLK_EN, 0x00),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CORECLK_DIV_MODE0, 0x0a),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CLK_EP_DIV, 0x19),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CLK_ENABLE1, 0x90),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_COM_DEC_START_MODE0, 0x82),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_COM_DIV_FRAC_START3_MODE0, 0x03),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_COM_DIV_FRAC_START2_MODE0, 0x55),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_COM_DIV_FRAC_START1_MODE0, 0x55),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_COM_LOCK_CMP3_MODE0, 0x00),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_COM_LOCK_CMP2_MODE0, 0x0d),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_COM_LOCK_CMP1_MODE0, 0x04),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_COM_HSCLK_SEL, 0x00),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CP_CTRL_MODE0, 0x08),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_COM_PLL_RCTRL_MODE0, 0x16),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_COM_PLL_CCTRL_MODE0, 0x34),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CMN_CONFIG, 0x06),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CLK_SELECT, 0x33),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_COM_SYS_CLK_CTRL, 0x02),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_COM_SYSCLK_BUF_ENABLE, 0x07),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_COM_SYSCLK_EN_SEL, 0x04),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_COM_INTEGLOOP_GAIN1_MODE0, 0x00),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_COM_INTEGLOOP_GAIN0_MODE0, 0x3f),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_COM_BG_TIMER, 0x09),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_COM_SSC_EN_CENTER, 0x01),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_COM_SSC_PER1, 0x40),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_COM_SSC_PER2, 0x01),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_COM_SSC_ADJ_PER1, 0x02),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_COM_SSC_ADJ_PER2, 0x00),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_COM_SSC_STEP_SIZE1, 0x7e),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_COM_SSC_STEP_SIZE2, 0x15),
-+};
-+
-+static const struct qmp_phy_init_tbl msm8998_pcie_tx_tbl[] = {
-+	QMP_PHY_INIT_CFG(QSERDES_V3_TX_RES_CODE_LANE_OFFSET_TX, 0x02),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_TX_RCV_DETECT_LVL_2, 0x12),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_TX_HIGHZ_DRVR_EN, 0x10),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_TX_LANE_MODE_1, 0x06),
-+};
-+
-+static const struct qmp_phy_init_tbl msm8998_pcie_rx_tbl[] = {
-+	QMP_PHY_INIT_CFG(QSERDES_V3_RX_SIGDET_CNTRL, 0x03),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_RX_SIGDET_ENABLES, 0x1c),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_RX_SIGDET_DEGLITCH_CNTRL, 0x14),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_RX_RX_EQU_ADAPTOR_CNTRL2, 0x0a),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_RX_RX_EQU_ADAPTOR_CNTRL3, 0x04),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_RX_RX_EQU_ADAPTOR_CNTRL4, 0x1a),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_RX_UCDR_SO_SATURATION_AND_ENABLE, 0x4b),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_RX_UCDR_SO_GAIN, 0x04),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_RX_UCDR_SO_GAIN_HALF, 0x04),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_RX_RX_EQ_OFFSET_ADAPTOR_CNTRL1, 0x00),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_RX_RX_OFFSET_ADAPTOR_CNTRL2, 0x80),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_RX_RX_INTERFACE_MODE, 0x40),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_RX_UCDR_PI_CONTROLS, 0x71),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_RX_UCDR_FASTLOCK_COUNT_LOW, 0x40),
-+};
-+
-+static const struct qmp_phy_init_tbl msm8998_pcie_pcs_tbl[] = {
-+	QMP_PHY_INIT_CFG(QPHY_V3_PCS_ENDPOINT_REFCLK_DRIVE, 0x04),
-+	QMP_PHY_INIT_CFG(QPHY_V3_PCS_OSC_DTCT_ACTIONS, 0x00),
-+	QMP_PHY_INIT_CFG(QPHY_V3_PCS_PWRUP_RESET_DLY_TIME_AUXCLK, 0x01),
-+	QMP_PHY_INIT_CFG(QPHY_V3_PCS_L1SS_WAKEUP_DLY_TIME_AUXCLK_MSB, 0x00),
-+	QMP_PHY_INIT_CFG(QPHY_V3_PCS_L1SS_WAKEUP_DLY_TIME_AUXCLK_LSB, 0x20),
-+	QMP_PHY_INIT_CFG(QPHY_V3_PCS_LP_WAKEUP_DLY_TIME_AUXCLK_MSB, 0x00),
-+	QMP_PHY_INIT_CFG(QPHY_V3_PCS_LP_WAKEUP_DLY_TIME_AUXCLK, 0x01),
-+	QMP_PHY_INIT_CFG(QPHY_V3_PCS_PLL_LOCK_CHK_DLY_TIME, 0x73),
-+	QMP_PHY_INIT_CFG(QPHY_V3_PCS_RX_SIGDET_LVL, 0x99),
-+	QMP_PHY_INIT_CFG(QPHY_V3_PCS_SIGDET_CNTRL, 0x03),
-+};
-+
- static const struct qmp_phy_init_tbl msm8996_usb3_serdes_tbl[] = {
- 	QMP_PHY_INIT_CFG(QSERDES_COM_SYSCLK_EN_SEL, 0x14),
- 	QMP_PHY_INIT_CFG(QSERDES_COM_BIAS_EN_CLKBUFLR_EN, 0x08),
-@@ -1146,6 +1228,31 @@ static const struct qmp_phy_cfg sdm845_ufsphy_cfg = {
- 	.no_pcs_sw_reset	= true,
- };
- 
-+static const struct qmp_phy_cfg msm8998_pciephy_cfg = {
-+	.type			= PHY_TYPE_PCIE,
-+	.nlanes			= 1,
-+
-+	.serdes_tbl		= msm8998_pcie_serdes_tbl,
-+	.serdes_tbl_num		= ARRAY_SIZE(msm8998_pcie_serdes_tbl),
-+	.tx_tbl			= msm8998_pcie_tx_tbl,
-+	.tx_tbl_num		= ARRAY_SIZE(msm8998_pcie_tx_tbl),
-+	.rx_tbl			= msm8998_pcie_rx_tbl,
-+	.rx_tbl_num		= ARRAY_SIZE(msm8998_pcie_rx_tbl),
-+	.pcs_tbl		= msm8998_pcie_pcs_tbl,
-+	.pcs_tbl_num		= ARRAY_SIZE(msm8998_pcie_pcs_tbl),
-+	.clk_list		= msm8996_phy_clk_l,
-+	.num_clks		= ARRAY_SIZE(msm8996_phy_clk_l),
-+	.reset_list		= msm8996_pciephy_reset_l,
-+	.num_resets		= ARRAY_SIZE(msm8996_pciephy_reset_l),
-+	.vreg_list		= qmp_phy_vreg_l,
-+	.num_vregs		= ARRAY_SIZE(qmp_phy_vreg_l),
-+	.regs			= pciephy_regs_layout,
-+
-+	.start_ctrl             = SERDES_START | PCS_START,
-+	.pwrdn_ctrl		= SW_PWRDN | REFCLK_DRV_DSBL,
-+	.mask_com_pcs_ready	= PCS_READY,
-+};
-+
- static const struct qmp_phy_cfg msm8998_usb3phy_cfg = {
- 	.type                   = PHY_TYPE_USB3,
- 	.nlanes                 = 1,
-@@ -1872,6 +1979,9 @@ static const struct of_device_id qcom_qmp_phy_of_match_table[] = {
- 	}, {
- 		.compatible = "qcom,msm8996-qmp-usb3-phy",
- 		.data = &msm8996_usb3phy_cfg,
-+	}, {
-+		.compatible = "qcom,msm8998-qmp-pcie-phy",
-+		.data = &msm8998_pciephy_cfg,
- 	}, {
- 		.compatible = "qcom,msm8998-qmp-ufs-phy",
- 		.data = &sdm845_ufsphy_cfg,
-diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.h b/drivers/phy/qualcomm/phy-qcom-qmp.h
-index a1b6cdee9a08..335ea5d7ef40 100644
---- a/drivers/phy/qualcomm/phy-qcom-qmp.h
-+++ b/drivers/phy/qualcomm/phy-qcom-qmp.h
-@@ -241,6 +241,7 @@
- #define QSERDES_V3_RX_RX_BAND				0x110
- #define QSERDES_V3_RX_RX_INTERFACE_MODE			0x11c
- #define QSERDES_V3_RX_RX_MODE_00			0x164
-+#define QSERDES_V3_RX_RX_MODE_01			0x168
- 
- /* Only for QMP V3 PHY - PCS registers */
- #define QPHY_V3_PCS_POWER_DOWN_CONTROL			0x004
-@@ -280,6 +281,7 @@
- #define QPHY_V3_PCS_TSYNC_RSYNC_TIME			0x08c
- #define QPHY_V3_PCS_PWRUP_RESET_DLY_TIME_AUXCLK		0x0a0
- #define QPHY_V3_PCS_LP_WAKEUP_DLY_TIME_AUXCLK		0x0a4
-+#define QPHY_V3_PCS_PLL_LOCK_CHK_DLY_TIME		0x0a8
- #define QPHY_V3_PCS_LFPS_TX_ECSTART_EQTLOCK		0x0b0
- #define QPHY_V3_PCS_RXEQTRAINING_WAIT_TIME		0x0b8
- #define QPHY_V3_PCS_RXEQTRAINING_RUN_TIME		0x0bc
-@@ -292,13 +294,23 @@
- #define QPHY_V3_PCS_RX_MIN_HIBERN8_TIME			0x138
- #define QPHY_V3_PCS_RX_SIGDET_CTRL1			0x13c
- #define QPHY_V3_PCS_RX_SIGDET_CTRL2			0x140
-+#define QPHY_V3_PCS_LP_WAKEUP_DLY_TIME_AUXCLK_MSB	0x1a8
-+#define QPHY_V3_PCS_OSC_DTCT_ACTIONS			0x1ac
-+#define QPHY_V3_PCS_SIGDET_CNTRL			0x1b0
- #define QPHY_V3_PCS_TX_MID_TERM_CTRL1			0x1bc
- #define QPHY_V3_PCS_MULTI_LANE_CTRL1			0x1c4
- #define QPHY_V3_PCS_RX_SIGDET_LVL			0x1d8
-+#define QPHY_V3_PCS_L1SS_WAKEUP_DLY_TIME_AUXCLK_LSB	0x1dc
-+#define QPHY_V3_PCS_L1SS_WAKEUP_DLY_TIME_AUXCLK_MSB	0x1e0
- #define QPHY_V3_PCS_REFGEN_REQ_CONFIG1			0x20c
- #define QPHY_V3_PCS_REFGEN_REQ_CONFIG2			0x210
- 
- /* Only for QMP V3 PHY - PCS_MISC registers */
- #define QPHY_V3_PCS_MISC_CLAMP_ENABLE			0x0c
-+#define QPHY_V3_PCS_MISC_OSC_DTCT_CONFIG2		0x2c
-+#define QPHY_V3_PCS_MISC_PCIE_INT_AUX_CLK_CONFIG1	0x44
-+#define QPHY_V3_PCS_MISC_OSC_DTCT_MODE2_CONFIG2		0x54
-+#define QPHY_V3_PCS_MISC_OSC_DTCT_MODE2_CONFIG4		0x5c
-+#define QPHY_V3_PCS_MISC_OSC_DTCT_MODE2_CONFIG5		0x60
- 
- #endif
+Doesn't seem to be used anywhere.
+
+> +	{"UNKNOWN"},
+> +	{"SUN1889"},
+> +	{"SUN1699"},
+> +	{"SUNMATX"},
+> +	{"SUN1999"}
+> +};
+> +
+> +static const char snx_par_ic_table[SNX_PAR_PORT_MAX_UART][10] = {
+
+Doesn't seem to be used anywhere.
+
+> +	{"UNKNOWN"},
+> +	{"SUN1888"},
+> +	{"SUN1689"},
+> +	{"SUNMATX"},
+> +	{"SUN1999"}
+> +};
+
+> +
+> +static const char snx_port_remap[2][10] = {
+
+Doesn't seem to be used anywhere.
+
+> +	{"NON-REMAP"},
+> +	{"REMAP"}
+> +};
+
+<snip>
+
+> +struct sunix_board			sunix_board_table[SNX_BOARDS_MAX];
+> +struct sunix_ser_port	    sunix_ser_table[SNX_SER_TOTAL_MAX + 1];
+> +struct sunix_par_port	    sunix_par_table[SNX_PAR_TOTAL_MAX];
+
+Allocate these per-device (per card) in sunix_pci_board_probe() and let
+the device's private_data point to it.
+
+And better do static zero initialization instead of memset().
+
+<snip>
+
+> +static struct snx_ser_driver	sunix_ser_reg = {
+> +	.dev_name = "ttySNX",
+> +	.major = 0,
+> +	.minor = 0,
+> +	.nr = (SNX_SER_TOTAL_MAX + 1),
+> +};
+
+Why this struct for something that exists only once and still allocating
+more (struct snx_ser_state) in sunix_ser_register_driver() ?
+Why not just putting everything into one struct ?
+
+> +static irqreturn_t sunix_interrupt(int irq, void *dev_id)
+> +{
+> +	struct sunix_ser_port *sp = NULL;
+> +	struct sunix_par_port *pp = NULL;
+> +	struct sunix_board *sb = NULL;
+> +	int i;
+> +	int status = 0;
+> +
+> +	int handled = IRQ_NONE;
+> +
+> +	for (i = 0; i < SNX_BOARDS_MAX; i++) {
+> +
+> +		if (dev_id == &(sunix_board_table[i])) {
+
+Don't do unncessary loops in time sensitive functions. Instead pass the
+pointer to the corresponding struct sunix_board via dev_id - it's the
+second parameter of request_irq(). Would make the code much simpler and
+smaller.
+
+> +static int snx_set_port_termios(struct snx_ser_state *state)
+> +{
+> +	struct tty_struct *tty = state->info->tty;
+> +	struct SNXTERMIOS *termios;
+> +
+> +	int retval = 0;
+> +
+> +	termios = &tty->termios;
+> +
+> +	retval = snx_ser_startup(state, 0);
+> +
+> +	if (retval == 0)
+> +		snx_ser_update_termios(state);
+> +
+> +	return 0;
+> +}
+
+Don't duplicate already existing functionality - use the serial
+subsystem. See: drivers/tty/serial/
+
+> +static int sunix_pci_board_probe(void)
+> +{
+> +	struct sunix_board *sb;
+> +	struct pci_dev *pdev = NULL;
+> +	struct pci_dev *pdev_array[4] = {NULL, NULL, NULL, NULL};
+> +
+> +	int sunix_pci_board_id_cnt;
+> +	int tablecnt;
+> +	int boardcnt;
+> +	int i;
+> +	unsigned short int sub_device_id;
+> +	unsigned short int device_part_number;
+> +	unsigned int bar3_base_add;
+> +
+> +	int status;
+> +	unsigned int bar3_Byte5;
+> +	unsigned int bar3_Byte6;
+> +	unsigned int bar3_Byte7;
+> +	unsigned int oem_id;
+> +	unsigned char uart_type;
+> +	unsigned char gpio_type;
+> +	unsigned char gpio_card_type;
+> +	int gpio_ch_cnt;
+> +
+> +	// clear and init some variable
+> +	memset(sunix_board_table, 0, SNX_BOARDS_MAX *
+> +	sizeof(struct sunix_board));
+
+
+> +
+> +	for (i = 0; i < SNX_BOARDS_MAX; i++) {
+> +		sunix_board_table[i].board_enum = -1;
+> +		sunix_board_table[i].board_number = -1;
+> +	}
+> +
+> +	sunix_pci_board_id_cnt =
+> +	(sizeof(sunix_pci_board_id) / sizeof(sunix_pci_board_id[0])) - 1;
+
+use ARRAY_SIZE() here.
+
+> +
+> +	// search matrix serial board
+> +	pdev = NULL;
+> +	tablecnt = 0;
+> +	boardcnt = 0;
+> +	sub_device_id = 0;
+> +	status = 0;
+
+Do the initialization at declaration.
+
+> +	while (tablecnt < sunix_pci_board_id_cnt) {
+> +
+> +		pdev = pci_get_device(VENID_MATRIX, DEVID_M_SERIAL, pdev);
+
+Use separate per-board driver instances instead of one instance for all.
+Using multiple cards won't work this way - probe() is called per card.
+
+> +	// search sun1999 muti I/O board
+> +	pdev = NULL;
+> +	tablecnt = 0;
+> +	sub_device_id = 0;
+> +	status = 0;
+> +	device_part_number = 0;
+> +	bar3_base_add = 0;
+> +	bar3_Byte5 = 0;
+> +	bar3_Byte6 = 0;
+> +	bar3_Byte7 = 0;
+> +	oem_id = 0;
+> +	uart_type = 0;
+> +	gpio_type = 0;
+> +	gpio_card_type = 0;
+> +	gpio_ch_cnt = 0;
+
+Use separate driver instances for that.
+
+> +	while (tablecnt < sunix_pci_board_id_cnt) {
+> +
+> +		pdev = pci_get_device(VENID_SUN1999, DEVID_S_SERIAL, pdev);
+
+again: multiple cards won't work that way. you'll overwrite the
+structures of the previous cards.
+
+> +	// search SUN1999 parallel board
+> +	pdev = NULL;
+> +	tablecnt = 0;
+> +	sub_device_id = 0;
+> +	status = 0;
+
+use a separate driver for that.
+
+> +static int sunix_assign_resource(void)
+> +{
+> +	struct sunix_board *sb = NULL;
+> +	struct sunix_ser_port *sp = NULL;
+> +	struct sunix_par_port *pp = NULL;
+> +
+> +	int status = 0;
+> +	int i;
+> +	int j;
+> +	int k;
+> +	int ser_n;
+> +	int ser_port_index = 0;
+> +
+> +	memset(sunix_ser_table, 0, (SNX_SER_TOTAL_MAX + 1) *
+> +	sizeof(struct sunix_ser_port));
+> +
+> +	memset(sunix_par_table, 0, (SNX_PAR_TOTAL_MAX) *
+> +	sizeof(struct sunix_par_port));
+
+See above: use static zero initialization.
+
+> +		for (j = 0; j < sb->ser_port; j++, n++, sp++) {
+> +			if (j < 4) {
+> +				AHDC_State = inb(sb->bar_addr[3]+2) & 0x0F &
+> +						(0x01 << (((j+1)-1) % 4));
+> +				RS422_State = inb(sb->bar_addr[3]+3) &
+> +				0xF0 & (0x10 << (((j+1)-1) % 4));
+> +			} else if (j < 8) {
+> +				AHDC_State = inb(sb->bar_addr[1] + 0x32) &
+> +				0x0F & (0x01 << (((j+1)-1) % 4));
+> +				RS422_State = inb(sb->bar_addr[1] + 0x33) &
+> +				0xF0 & (0x10 << (((j+1)-1) % 4));
+> +			}
+
+can't the register space be memory-mapped ?
+
+> +int sunix_register_irq(void)
+> +{
+> +	struct sunix_board *sb = NULL;
+> +	int status = 0;
+> +	int i;
+> +
+> +	for (i = 0; i < SNX_BOARDS_MAX; i++) {
+
+use separate per-board device instances.
+
+> +void sunix_release_irq(void)
+> +{
+> +	struct sunix_board *sb = NULL;
+> +	int i;
+> +
+> +	for (i = 0; i < SNX_BOARDS_MAX; i++) {
+> +		sb = &sunix_board_table[i];
+
+use separate per-board device instances.
+otherwise hotplug won't work.
+
+> +static int __init snx_init(void)
+> +{
+> +	int status = 0;
+> +
+> +	snx_ser_port_total_cnt = snx_par_port_total_cnt = 0;
+> +
+> +	status = sunix_pci_board_probe();
+> +	if (status != 0)
+> +		goto step1_fail;
+> +
+
+register the drivers first. the pci subsystem will then probe
+automatically. (and call the driver's probe() function per board).
+
+> +	if (!capable(CAP_SYS_ADMIN)) {
+> +		retval = -EPERM;
+> +			if (change_irq ||
+> +				change_port ||
+> +				(new_serial.baud_base != port->uartclk / 16) ||
+> +				(close_delay != state->close_delay) ||
+> +				(closing_wait != state->closing_wait) ||
+> +				(new_serial.xmit_fifo_size != port->fifosize) ||
+> +				(((new_flags ^ old_flags)
+> +				& ~SNX_UPF_USR_MASK) != 0)) {
+> +				goto exit;
+> +			}
+
+As already said: changing things like irqs or io areaas from userland
+shouldn't be possible at all by such weird ways. Let the corresponding
+bus subsystems (in that case: pci) handle it in generic ways, and care
+for probing and hotplug. (anyways, it seems that this doesn't change the
+irq the device is  raising, just the one the driver expects - that's
+even more wrong)
+
+> +			if (port->flags & SNX_UPF_SPD_MASK) {
+> +				pr_info("SNX Info : %s sets custom speed ",
+> +					current->comm);
+> +				pr_info("on ttySNX%d. This is deprecated.\n",
+> +					port->line);
+
+Why do you newly introduce things that are already deprecated ?
+
+> +static int snx_ser_ioctl(struct tty_struct *tty,
+> +unsigned int cmd, unsigned long arg)
+> +{
+> +	struct snx_ser_state *state = NULL;
+> +	int ret = -ENOIOCTLCMD;
+> +	int line = SNX_SER_DEVNUM(tty);
+> +
+> +	if (line < SNX_SER_TOTAL_MAX)
+> +		state = tty->driver_data;
+> +
+> +
+> +	switch (cmd) {
+> +	case TIOCGSERIAL:
+> +	{
+> +		if (line < SNX_SER_TOTAL_MAX)
+> +			ret = snx_ser_get_info(state,
+> +				(struct serial_struct *)arg);
+> +
+> +		break;
+> +	}
+
+Dont reimplement existing standard functionality in your own special
+way. Use the serial subsystem instead.
+
+> +	case SNX_SER_DUMP_PORT_INFO:
+> +	{
+> +		int i;
+> +		struct snx_ser_port_info snx_port_info[SNX_SER_TOTAL_MAX];
+> +		struct snx_ser_port *sdn = NULL;
+> +
+> +		memset(snx_port_info, 0,
+> +			(sizeof(struct snx_ser_port_info) *
+> +				SNX_SER_TOTAL_MAX));
+> +
+> +		if (line == 0) {
+> +			for (i = 0; i < SNX_SER_TOTAL_MAX; i++) {
+> +				sdn = (struct snx_ser_port *)
+> +					&sunix_ser_table[i];
+> +
+> +				memcpy(&snx_port_info[i].board_name_info[0],
+> +					&sdn->pb_info.board_name[0],
+> +					SNX_BOARDNAME_LENGTH);
+> +
+> +				snx_port_info[i].bus_number_info =
+> +					sdn->bus_number;
+> +				snx_port_info[i].dev_number_info =
+> +					sdn->dev_number;
+> +				snx_port_info[i].port_info       = sdn->line;
+> +				snx_port_info[i].base_info       = sdn->iobase;
+> +				snx_port_info[i].irq_info        = sdn->irq;
+> +			}
+> +
+> +			if (copy_to_user((void *)arg, snx_port_info,
+> +			SNX_SER_TOTAL_MAX * sizeof(struct snx_ser_port_info)))
+> +				ret = -EFAULT;
+> +			else
+> +				ret = 0;
+> +
+> +		} else {
+> +			ret = 0;
+> +		}
+> +
+> +		ret = 0;
+> +		break;
+> +	}
+
+This doesn't belong here. Don't invent your own private ioctl's for such
+things. Use sysfs or debugfs.
+
+> +
+> +	case SNX_SER_DUMP_DRIVER_VER:
+> +	{
+
+Same here.
+
+> +	case SNX_COMM_GET_BOARD_CNT:
+> +	{
+
+No, This information can already be retrieved just by the number of
+serial/tty devices. Anyways this is just metadata for the admin, nothing
+that client applications should have to care about.
+
+> +	case SNX_COMM_GET_BOARD_INFO:
+> +	{
+
+See above: use debugfs or sysfs if you have to publish extra metadata.
+
+> +	case SNX_UART_GET_TYPE:
+> +	{
+
+Don't reimplement existing standard functionality.
+
+> +	case SNX_UART_SET_TYPE: {
+> +		struct sunix_board	*sb = NULL;
+> +		struct sunix_ser_port *sp = NULL;
+> +
+
+what things exactly can be set here, that aren't already
+handled by the standard serial subsystem ?
+
+> +		GPIOstate = inb(targetConfigAddress + 0x0C);
+> +		GPIOcontrol = inb(targetConfigAddress + 0x0D);
+
+GPIOs don't belong here. We have a separate GPIO subsystem.
+
+> +	case SNX_UART_GET_ACS:
+> +	{
+> +		SNX_DRVR_UART_GET_ACS gb;
+> +		struct sunix_board	*sb = NULL;
+> +		int	ACSstate = 0;
+
+What kind of states are these exactly that aren't already
+handled by the standard serial subsystem ?
+
+> +extern void snx_ser_update_termios(struct snx_ser_state *state)
+
+Why do you need "extern" here?
+
+> +static const struct tty_operations sunix_tty_ops = {
+> +	.open               = snx_ser_open,
+> +	.close              = snx_ser_close,
+> +	.write              = snx_ser_write,
+> +	.put_char           = snx_ser_put_char,
+> +	.flush_chars        = snx_ser_flush_chars,
+> +	.write_room         = snx_ser_write_room,
+> +	.chars_in_buffer    = snx_ser_chars_in_buffer,
+> +	.flush_buffer       = snx_ser_flush_buffer,
+> +	.ioctl              = snx_ser_ioctl,
+> +	.throttle           = snx_ser_throttle,
+> +	.unthrottle         = snx_ser_unthrottle,
+> +	.send_xchar         = snx_ser_send_xchar,
+> +	.set_termios        = snx_ser_set_termios,
+> +	.stop               = snx_ser_stop,
+> +	.start              = snx_ser_start,
+> +	.hangup             = snx_ser_hangup,
+> +	.break_ctl          = snx_ser_break_ctl,
+> +	.wait_until_sent    = snx_ser_wait_until_sent,
+> +	.tiocmget           = snx_ser_tiocmget,
+> +	.tiocmset           = snx_ser_tiocmset,
+> +};
+
+Don't reimplement existing functionality - use the serial subsystem.
+
+> +static int sunix_ser_add_one_port(struct snx_ser_driver *drv,
+> +struct snx_ser_port *port)
+> +{
+> +	struct snx_ser_state *state = NULL;
+> +	struct tty_port *tport;
+> +	struct device *tty_dev;
+> +
+> +	int ret = 0;
+> +
+> +	if (port->line >= drv->nr)
+> +		return -EINVAL;
+> +
+> +	state = drv->state + port->line;
+> +
+> +	tport = &state->tport;
+> +
+> +	down(&ser_port_sem);
+> +
+> +	if (state->port) {
+> +		ret = -EINVAL;
+> +		goto out;
+> +	}
+> +
+> +	state->port = port;
+> +
+> +	port->info = state->info;
+> +
+> +	sunix_ser_configure_port(drv, state, port);
+> +
+> +	tty_dev = tty_port_register_device(
+> +		tport, snx_driver, port->line, port->dev);
+
+Dont reimplement existing functionality - use the serial subsystem.
+
+
+Your driver is at least 10 times bigger as it needs to be, reimplements
+lots of standard functionality in own private ways and bypasses the
+corresponding subsystems. I could never ack that.
+
+
+--mtx
+
 -- 
-2.17.1
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
