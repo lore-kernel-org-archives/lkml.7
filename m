@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 313DFC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:17:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5F3CC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:17:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F30B821939
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:17:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A72DC2195D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:17:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553257062;
-	bh=/Y8+6BJoF4i6jbTVWQRKSNBBsn5ti+nwZAQW/9zlU4w=;
+	s=default; t=1553257066;
+	bh=HoqGQOJWBt6B47jftNG21+LLDhF0KD4fhrLVy2AQIts=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C4AfVh/C7h/f+Kg/fDetLuYL5yNRLbZHX72a4clxPmXRg3ieKDG3vdIyC+u3uODYt
-	 2FSkvWFu/zoPHmtC+I7wE6/7xmKXluxTlDaiwXzNASt7QuZXhZQ+RADc5408oLj3LT
-	 yA6yK3CFj5+cSURU4QDtaiBIodtMLGpXB7ttV1BU=
+	b=OiR1+yeP5x4xpeBhuRwRsH1eqqyuKtNFB3PKfdaOuKiDOhrDo+1JCS42CMFlxZA+q
+	 qolEaMxKP1PEJCIvFrA1qYTeF47+ujn6nDo7TDteYWRXzXnv168ySq/giCqL5YtI6r
+	 l+H9yPaqNmqEiYzEaB3NeJYc+KjiAUITHEQmMj0c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390398AbfCVMRk (ORCPT
+        id S2390410AbfCVMRp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:17:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56534 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:17:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390362AbfCVMRh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:17:37 -0400
+        id S2389940AbfCVMRn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:17:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E9C5921900;
-        Fri, 22 Mar 2019 12:17:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF98321900;
+        Fri, 22 Mar 2019 12:17:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553257056;
-        bh=/Y8+6BJoF4i6jbTVWQRKSNBBsn5ti+nwZAQW/9zlU4w=;
+        s=default; t=1553257063;
+        bh=HoqGQOJWBt6B47jftNG21+LLDhF0KD4fhrLVy2AQIts=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QrnfMl4JmhMZev+TX3tmdz7IfpLVGvJbQfJy6ifoxcF94hkjFCLveB5En+ztwzcWm
-         UuhXENzChusy3JrsesPutuVElCH8ORHE4BQSyMj2Ryg1cWRxXr7MnlAtE7L0f93utn
-         UBn63AnIDHzYV3Thq60zsgfXHfnllEyM0+5QG60Q=
+        b=SvvMJUzgH41ieIcBSf1tcIOkJZ8PuRePmgC+fgwflRaYXZym5urOZfiyc8HCe8KwP
+         mtjtqU9IDH7cGQBHsZ9BcMKXS6WVhFq2O/KD6Bhb1lxMjpFulgNHgPU4Is5ouVIN6g
+         7iSq2wZPXuXtLMQwIOLvnstBcks2SuWTyyZgdzdo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
-        Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.0 091/238] Btrfs: setup a nofs context for memory allocation at btrfs_create_tree()
-Date:   Fri, 22 Mar 2019 12:15:10 +0100
-Message-Id: <20190322111303.949671429@linuxfoundation.org>
+        stable@vger.kernel.org, Loic Poulain <loic.poulain@linaro.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Adam Ford <aford173@gmail.com>
+Subject: [PATCH 5.0 119/238] media: i2c: ov5640: Fix post-reset delay
+Date:   Fri, 22 Mar 2019 12:15:38 +0100
+Message-Id: <20190322111305.545785620@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -66,53 +67,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Loic Poulain <loic.poulain@linaro.org>
 
-commit b89f6d1fcb30a8cbdc18ce00c7d93792076af453 upstream.
+commit 1d4c41f3d887bcd66e82cb2fda124533dad8808a upstream.
 
-We are holding a transaction handle when creating a tree, therefore we can
-not allocate the root using GFP_KERNEL, as we could deadlock if reclaim is
-triggered by the allocation, therefore setup a nofs context.
+According to the ov5640 specification (2.7 power up sequence), host can
+access the sensor's registers 20ms after reset. Trying to access them
+before leads to undefined behavior and result in sporadic initialization
+errors.
 
-Fixes: 74e4d82757f74 ("btrfs: let callers of btrfs_alloc_root pass gfp flags")
-CC: stable@vger.kernel.org # 4.9+
-Reviewed-by: Nikolay Borisov <nborisov@suse.com>
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc: Adam Ford <aford173@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/disk-io.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/media/i2c/ov5640.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/btrfs/disk-io.c
-+++ b/fs/btrfs/disk-io.c
-@@ -17,6 +17,7 @@
- #include <linux/semaphore.h>
- #include <linux/error-injection.h>
- #include <linux/crc32c.h>
-+#include <linux/sched/mm.h>
- #include <asm/unaligned.h>
- #include "ctree.h"
- #include "disk-io.h"
-@@ -1258,10 +1259,17 @@ struct btrfs_root *btrfs_create_tree(str
- 	struct btrfs_root *tree_root = fs_info->tree_root;
- 	struct btrfs_root *root;
- 	struct btrfs_key key;
-+	unsigned int nofs_flag;
- 	int ret = 0;
- 	uuid_le uuid = NULL_UUID_LE;
+--- a/drivers/media/i2c/ov5640.c
++++ b/drivers/media/i2c/ov5640.c
+@@ -1893,7 +1893,7 @@ static void ov5640_reset(struct ov5640_d
+ 	usleep_range(1000, 2000);
  
-+	/*
-+	 * We're holding a transaction handle, so use a NOFS memory allocation
-+	 * context to avoid deadlock if reclaim happens.
-+	 */
-+	nofs_flag = memalloc_nofs_save();
- 	root = btrfs_alloc_root(fs_info, GFP_KERNEL);
-+	memalloc_nofs_restore(nofs_flag);
- 	if (!root)
- 		return ERR_PTR(-ENOMEM);
+ 	gpiod_set_value_cansleep(sensor->reset_gpio, 0);
+-	usleep_range(5000, 10000);
++	usleep_range(20000, 25000);
+ }
  
+ static int ov5640_set_power_on(struct ov5640_dev *sensor)
 
 
