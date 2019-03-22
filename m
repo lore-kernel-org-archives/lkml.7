@@ -3,107 +3,113 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2BFCC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 06:13:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF2F5C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 06:19:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A516B218FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 06:13:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86ECC218E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 06:19:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727461AbfCVGNY (ORCPT
+        id S1727497AbfCVGTi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 02:13:24 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60802 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726029AbfCVGNX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 02:13:23 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id B7FFBAE5A;
-        Fri, 22 Mar 2019 06:13:22 +0000 (UTC)
-From:   Michal Kubecek <mkubecek@suse.cz>
-To:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: regression (bisected): "modprobe parport_pc" hangs in current mainline
-Date:   Fri, 22 Mar 2019 07:13:23 +0100
-Message-ID: <1572645.oXzt2vILsi@alaris>
-Organization: SuSE
-In-Reply-To: <CADVatmNVM3a=L6McdCsr5xzCwZnW6N4r9Cf55gjQZjsGGosBDg@mail.gmail.com>
-References: <20190313064557.GA14531@unicorn.suse.cz> <20190320211813.GE29968@unicorn.suse.cz> <CADVatmNVM3a=L6McdCsr5xzCwZnW6N4r9Cf55gjQZjsGGosBDg@mail.gmail.com>
+        Fri, 22 Mar 2019 02:19:38 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:38792 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726029AbfCVGTh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 02:19:37 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 40000374;
+        Thu, 21 Mar 2019 23:19:37 -0700 (PDT)
+Received: from [10.162.42.161] (p8cg001049571a15.blr.arm.com [10.162.42.161])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B01F93F59C;
+        Thu, 21 Mar 2019 23:19:33 -0700 (PDT)
+Subject: Re: [RFC] mm/hotplug: Make get_nid_for_pfn() work with
+ HAVE_ARCH_PFN_VALID
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        logang@deltatee.com, osalvador@suse.de, hannes@cmpxchg.org,
+        akpm@linux-foundation.org, richard.weiyang@gmail.com,
+        rientjes@google.com, zi.yan@cs.rutgers.edu
+References: <1553155700-3414-1-git-send-email-anshuman.khandual@arm.com>
+ <20190321083639.GJ8696@dhcp22.suse.cz>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <621cc94c-210d-6fd4-a2e1-b7cfce733cf3@arm.com>
+Date:   Fri, 22 Mar 2019 11:49:30 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <20190321083639.GJ8696@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday, 21 March 2019 23:43 Sudip Mukherjee wrote:
-> HI Michal,
+
+
+On 03/21/2019 02:06 PM, Michal Hocko wrote:
+> On Thu 21-03-19 13:38:20, Anshuman Khandual wrote:
+>> Memory hot remove uses get_nid_for_pfn() while tearing down linked sysfs
+>> entries between memory block and node. It first checks pfn validity with
+>> pfn_valid_within() before fetching nid. With CONFIG_HOLES_IN_ZONE config
+>> (arm64 has this enabled) pfn_valid_within() calls pfn_valid().
+>>
+>> pfn_valid() is an arch implementation on arm64 (CONFIG_HAVE_ARCH_PFN_VALID)
+>> which scans all mapped memblock regions with memblock_is_map_memory(). This
+>> creates a problem in memory hot remove path which has already removed given
+>> memory range from memory block with memblock_[remove|free] before arriving
+>> at unregister_mem_sect_under_nodes().
 > 
-> On Wed, Mar 20, 2019 at 9:18 PM Michal Kubecek <mkubecek@suse.cz> wrote:
-> > On Wed, Mar 20, 2019 at 09:30:59AM +0000, Sudip Mukherjee wrote:
-> > > Sorry, I didn't get the chance to look at it yet and have kept it
-> > > pending for this weekend. But just had a quick look and I was
-> > > wondering if the machine on which you are trying the modprobe has
-> > > an
-> > > actual parallel port or the machine is not having any parallel
-> > > port.
-> > > And also will you be able to send me a dmesg please.
-> > 
-> > Attaching dmesg output from a virtual machine which doesn't seem to
-> > have a (virtual) parallel port. This part:
-> > 
-> > [   63.962283] parport_pc 00:05: reported by Plug and Play ACPI
-> > [   63.962469] parport0: PC-style at 0x378, irq 7 [PCSPP,TRISTATE]
-> > [   64.061723] ppdev: user-space parallel port driver
-> > 
-> > was after I manually killed "/sbin/modprobe -q -- parport_lowlevel"
-> > which was started during boot.
+> Could you be more specific on what is the actual problem please? It
+> would be also helpful to mention when is the memblock[remove|free]
+> called actually.
+
+The problem is in unregister_mem_sect_under_nodes() as it skips calling into both
+instances of sysfs_remove_link() which removes node-memory block sysfs symlinks.
+The node enumeration of the memory block still remains in sysfs even if the memory
+block itself has been removed.
+
+This happens because get_nid_for_pfn() returns -1 for a given pfn even if it has
+a valid associated struct page to fetch the node ID from.
+
+On arm64 (with CONFIG_HOLES_IN_ZONE)
+
+get_nid_for_pfn() -> pfn_valid_within() -> pfn_valid -> memblock_is_map_memory()
+
+At this point memblock for the range has been removed.
+
+__remove_memory()
+	memblock_free()
+	memblock_remove()	--------> memblock has already been removed
+	arch_remove_memory()
+		__remove_pages()
+			__remove_section()
+				unregister_memory_section()
+ 					remove_memory_section()
+						unregister_mem_sect_under_nodes()
+
+There is a dependency on memblock (after it has been removed) through pfn_valid().
+  			
 > 
-> Thanks for testing. I am unable to reproduce the problem in VM or in
-> machine, with or without parallel port. But from your logs it looks
-> like you have an alias set for "parport_lowlevel". When parport module
-> is being loaded if it does not find any port in its list, it will try
-> to load "parport_lowlevel" and that is where you are getting the
-> deadlock. "parport_lowlevel" is not a real module, but instead should
-> be an alias pointing to some real module. I tried by setting an alias
-> of parport_lowlevel" as parport_pc but still could not get the
-> problem.
-> Can you please check in your VM or machine what do you have the alias
-> as? It should be either in "/etc/modprobe.conf" or some conf file in
-> "/etc/modprobe.d" folder.
+>> During runtime memory hot remove get_nid_for_pfn() needs to validate that
+>> given pfn has a struct page mapping so that it can fetch required nid. This
+>> can be achieved just by looking into it's section mapping information. This
+>> adds a new helper pfn_section_valid() for this purpose. Its same as generic
+>> pfn_valid().
+> 
+> I have to say I do not like this. Having pfn_section_valid != pfn_valid_within
+> is just confusing as hell. pfn_valid_within should return true whenever
+> a struct page exists and it is sensible (same like pfn_valid). So it
+> seems that this is something to be solved on that arch specific side of
+> pfn_valid.
 
-You are right, this is in /etc/modprobe.d/00-system which is part of
-suse-module-tools package:
+At present arm64's pfn_valid() implementation validates the pfn inside sparse
+memory section mapping as well memblock. The memblock search excludes memory
+with MEMBLOCK_NOMAP attribute. But in this particular instance during hotplug
+only section mapping validation for the pfn is good enough.
 
------------------------------------------------------------------------
-alias parport_lowlevel    parport_pc
-# disable DMA for parallel port (bnc#180390)
-# Please note, the dma= and irq= options require that the io= option also be
-# specified.
-options parport_pc dma=none
-# options parport_pc io=0x378 irq=none
-# If you have multiple parallel ports, specify them this way:
-# options parport_pc io=0x378,0x278  irq=none,none
------------------------------------------------------------------------
-
-"bnc#180390" means https://bugzilla.suse.com/show_bug.cgi?id=180390
-
-There is a git repository for suse-module-tools package on github but
-unfortunately it starts in 2017 and as comment 98 in the bug above
-shows that the alias line was already in place in 2008, the reason
-won't be found in OBS history either.
-
-Anyway, when I comment out the alias line, "modprobe parport_pc"
-succeeds immediately and loads parport, parport_pc and ppdev.
-
-> And also, will you be able to test a debug patch on your VM?
-
-Yes, definitely.
-
-Michal
-
-
+IIUC the current arm64 pfn_valid() already extends the definition beyond the
+availability of a valid struct page to operate on.
