@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73F28C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:54:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60A92C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:54:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41D6F2082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:54:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2372520850
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:54:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255677;
-	bh=7LHtZuqu85NpoF/nHGoyPux7KbkpbXfDds2LHEOX5pA=;
+	s=default; t=1553255686;
+	bh=WdqLbqJkFHVwc1azsUfHBZQoBOBNhlRhtPNBrvhR8MU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BinO6Nu3oWzxNZcKb2i+B8R3PvnJCHnBXVfSUWEDnMqfH0Qs2zwMi99prcxcDd8Wf
-	 Uy2aN5Pt/7wc9Jhwv3lyIAJ83kvVY+ZCWCSenZl/Y2IhyDbOKJuzc57fowr1bhjPuO
-	 RBRtyIRTGKa8AwLria8yRN7XJ6euztlu4VgAchyM=
+	b=kfCx202Fu8/cRgMVy4PENdC7tqFe8IJduSvOGa74KesK2OfXNRgTVfLQu+HfHFLzr
+	 XhSgGpsZTwZ+z1PxQsCGSk/vCy6KElZ4VHzTxXGXD86APBix76nmMXXlQ8pyLATyUd
+	 Zli8d40RsrZZBKKdlr0zoOqrqEB4XvCnEQQsI08U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733016AbfCVLyf (ORCPT
+        id S1733216AbfCVLyn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:54:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59070 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:54:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733189AbfCVLyc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:54:32 -0400
+        id S1732577AbfCVLyj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:54:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46A1120850;
-        Fri, 22 Mar 2019 11:54:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C106F2082C;
+        Fri, 22 Mar 2019 11:54:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255671;
-        bh=7LHtZuqu85NpoF/nHGoyPux7KbkpbXfDds2LHEOX5pA=;
+        s=default; t=1553255678;
+        bh=WdqLbqJkFHVwc1azsUfHBZQoBOBNhlRhtPNBrvhR8MU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CMh/INki5P4nsGpVR4m5D8OGV/5zojzD7sixARzAhWcWzvRiEoF1owGncre6hk+hl
-         K38LM3XN/+e+IIkTMZmpcGX8DrjZQoSL4n1iEh4ncmVyhw2yOxi2hmpeLJ9QUM4tAY
-         /uOXfrtvekmGKjbI1w0Z4G4RP/Q3qh8UIXls0X7o=
+        b=U2HKGvXml/ZBNLwFdqHav8/Zh3QwFwgALJwpXcFmW4avjYV+gxX7Ac4Y5g5+lr2Ov
+         deZMQ05WnbDGgmaccHvbY+q8wtlT39UXvPP8zRZoHf/VPstDtYSPSxVfsT+tE+q4NF
+         vSKL3aA8XwJpq8KYH2G+F/3OnwWwn9uYjDq6wobM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 4.14 163/183] perf intel-pt: Fix CYC timestamp calculation after OVF
-Date:   Fri, 22 Mar 2019 12:16:31 +0100
-Message-Id: <20190322111253.719142364@linuxfoundation.org>
+Subject: [PATCH 4.14 165/183] perf intel-pt: Fix overlap calculation for padding
+Date:   Fri, 22 Mar 2019 12:16:33 +0100
+Message-Id: <20190322111253.860239461@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111241.819468003@linuxfoundation.org>
 References: <20190322111241.819468003@linuxfoundation.org>
@@ -67,34 +68,88 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Adrian Hunter <adrian.hunter@intel.com>
 
-commit 03997612904866abe7cdcc992784ef65cb3a4b81 upstream.
+commit 5a99d99e3310a565b0cf63f785b347be9ee0da45 upstream.
 
-CYC packet timestamp calculation depends upon CBR which was being
-cleared upon overflow (OVF). That can cause errors due to failing to
-synchronize with sideband events. Even if a CBR change has been lost,
-the old CBR is still a better estimate than zero. So remove the clearing
-of CBR.
+Auxtrace records might have up to 7 bytes of padding appended. Adjust
+the overlap accordingly.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: stable@vger.kernel.org
-Link: http://lkml.kernel.org/r/20190206103947.15750-4-adrian.hunter@intel.com
+Link: http://lkml.kernel.org/r/20190206103947.15750-3-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/perf/util/intel-pt-decoder/intel-pt-decoder.c |    1 -
- 1 file changed, 1 deletion(-)
+ tools/perf/util/intel-pt-decoder/intel-pt-decoder.c |   36 ++++++++++++++++++--
+ 1 file changed, 34 insertions(+), 2 deletions(-)
 
 --- a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
 +++ b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
-@@ -1389,7 +1389,6 @@ static int intel_pt_overflow(struct inte
- {
- 	intel_pt_log("ERROR: Buffer overflow\n");
- 	intel_pt_clear_tx_flags(decoder);
--	decoder->cbr = 0;
- 	decoder->timestamp_insn_cnt = 0;
- 	decoder->pkt_state = INTEL_PT_STATE_ERR_RESYNC;
- 	decoder->overflow = true;
+@@ -26,6 +26,7 @@
+ 
+ #include "../cache.h"
+ #include "../util.h"
++#include "../auxtrace.h"
+ 
+ #include "intel-pt-insn-decoder.h"
+ #include "intel-pt-pkt-decoder.h"
+@@ -2558,6 +2559,34 @@ static int intel_pt_tsc_cmp(uint64_t tsc
+ 	}
+ }
+ 
++#define MAX_PADDING (PERF_AUXTRACE_RECORD_ALIGNMENT - 1)
++
++/**
++ * adj_for_padding - adjust overlap to account for padding.
++ * @buf_b: second buffer
++ * @buf_a: first buffer
++ * @len_a: size of first buffer
++ *
++ * @buf_a might have up to 7 bytes of padding appended. Adjust the overlap
++ * accordingly.
++ *
++ * Return: A pointer into @buf_b from where non-overlapped data starts
++ */
++static unsigned char *adj_for_padding(unsigned char *buf_b,
++				      unsigned char *buf_a, size_t len_a)
++{
++	unsigned char *p = buf_b - MAX_PADDING;
++	unsigned char *q = buf_a + len_a - MAX_PADDING;
++	int i;
++
++	for (i = MAX_PADDING; i; i--, p++, q++) {
++		if (*p != *q)
++			break;
++	}
++
++	return p;
++}
++
+ /**
+  * intel_pt_find_overlap_tsc - determine start of non-overlapped trace data
+  *                             using TSC.
+@@ -2608,8 +2637,11 @@ static unsigned char *intel_pt_find_over
+ 
+ 			/* Same TSC, so buffers are consecutive */
+ 			if (!cmp && rem_b >= rem_a) {
++				unsigned char *start;
++
+ 				*consecutive = true;
+-				return buf_b + len_b - (rem_b - rem_a);
++				start = buf_b + len_b - (rem_b - rem_a);
++				return adj_for_padding(start, buf_a, len_a);
+ 			}
+ 			if (cmp < 0)
+ 				return buf_b; /* tsc_a < tsc_b => no overlap */
+@@ -2672,7 +2704,7 @@ unsigned char *intel_pt_find_overlap(uns
+ 		found = memmem(buf_a, len_a, buf_b, len_a);
+ 		if (found) {
+ 			*consecutive = true;
+-			return buf_b + len_a;
++			return adj_for_padding(buf_b + len_a, buf_a, len_a);
+ 		}
+ 
+ 		/* Try again at next PSB in buffer 'a' */
 
 
