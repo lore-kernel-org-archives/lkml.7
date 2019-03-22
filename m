@@ -2,104 +2,96 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3468CC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:37:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE7DAC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:39:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BF3020693
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:37:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C30420835
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:39:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728690AbfCVNhd (ORCPT
+        id S1728367AbfCVNji (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 09:37:33 -0400
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:37544 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728140AbfCVNhc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 09:37:32 -0400
-Received: by mail-ua1-f65.google.com with SMTP id x1so744187uaj.4;
-        Fri, 22 Mar 2019 06:37:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XzQ9NHyI634XKb+UUobZCMcWq8m8E9RK1f4ELxnBy2E=;
-        b=V1v/AnSzmYyzfgtTGbdWoSkqLVLaYuJoNGCkUfnE6xPn6rGBm6rwYo4QDADjnaY0wQ
-         BXqC7l+6BAE4eOrjar1GbFHv99ONn1xR7HIIMPq/QETAWXHN3w8MpCzQ+YXBFBrn/0qC
-         YqwIleqEs/o+6Pq+43Ir43txZgWSA+hkXMzoD/PZe/NAfih+blQRtEU/Q4gZTS/yvM+6
-         cl+4x6aLPjvKnVrygfhOmnvIVSRbheBHCCA6UHhVFLTYLe81saehixXRov1vaX1iYhz/
-         FH2J7suVfmwqRnHb1xJEoWOzK0zMFKnDurbsmn9GQTIx2BPiTzi3wtsgrHoSTlg5DccL
-         tY9A==
-X-Gm-Message-State: APjAAAWiIQu/M1n/5ZHrazupQk8BYqApPh9h1Y+Sv1a3dKS81hknWLOt
-        jLiXOv/5Gd2C05GMTW2sxVsR0stTpF7O2IqI+OrgIw==
-X-Google-Smtp-Source: APXvYqy4ogpwjpSonoiPfh2lc9ghBw42usNLeIrbxmtszFsz2NZOsJfJk0zpTsb127+lhrr709ywFNgm7FrLQ8o0S0U=
-X-Received: by 2002:ab0:6419:: with SMTP id x25mr938049uao.86.1553261850477;
- Fri, 22 Mar 2019 06:37:30 -0700 (PDT)
+        Fri, 22 Mar 2019 09:39:38 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:45090 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728119AbfCVNjh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 09:39:37 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 323F1982A746CDEA4EBA;
+        Fri, 22 Mar 2019 21:39:34 +0800 (CST)
+Received: from [127.0.0.1] (10.177.31.96) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.408.0; Fri, 22 Mar 2019
+ 21:39:32 +0800
+Subject: Re: [PATCH] dccp: Fix memleak in __feat_register_sp
+To:     Mukesh Ojha <mojha@codeaurora.org>, <davem@davemloft.net>,
+        <gerrit@erg.abdn.ac.uk>
+References: <20190321141058.14580-1-yuehaibing@huawei.com>
+ <21f94a25-949a-1a6a-2ba2-59c829edeb04@codeaurora.org>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <dccp@vger.kernel.org>
+From:   YueHaibing <yuehaibing@huawei.com>
+Message-ID: <a714b91a-fc8b-841b-6e9e-b4c18894fec7@huawei.com>
+Date:   Fri, 22 Mar 2019 21:39:31 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-References: <20190322132108.25501-1-sakari.ailus@linux.intel.com>
-In-Reply-To: <20190322132108.25501-1-sakari.ailus@linux.intel.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 22 Mar 2019 14:37:18 +0100
-Message-ID: <CAMuHMdVmqqjVx7As9AAywYxYXG=grijF5rF77OBn6TUjM9+xKw@mail.gmail.com>
-Subject: Re: [PATCH 0/2] Remove support for deprecated %pf and %pF in vsprintf
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        scsi <linux-scsi@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Linux MMC List <linux-mmc@vger.kernel.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        linux-um@lists.infradead.org,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-block@vger.kernel.org,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        linux-btrfs <linux-btrfs@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        sparclinux <sparclinux@vger.kernel.org>,
-        xen-devel@lists.xenproject.org,
-        ceph-devel <ceph-devel@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Lars Ellenberg <drbd-dev@lists.linbit.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <21f94a25-949a-1a6a-2ba2-59c829edeb04@codeaurora.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sakari,
+On 2019/3/22 19:52, Mukesh Ojha wrote:
+> 
+> On 3/21/2019 7:40 PM, Yue Haibing wrote:
+>> From: YueHaibing <yuehaibing@huawei.com>
+>>
+>> If dccp_feat_push_change fails, we forget free the mem
+>> which is alloced by kmemdup in dccp_feat_clone_sp_val.
+>>
+>> Reported-by: Hulk Robot <hulkci@huawei.com>
+>> Fixes: e8ef967a54f4 ("dccp: Registration routines for changing feature values")
+>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>> ---
+>>   net/dccp/feat.c | 7 ++++++-
+>>   1 file changed, 6 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/net/dccp/feat.c b/net/dccp/feat.c
+>> index f227f00..083e012 100644
+>> --- a/net/dccp/feat.c
+>> +++ b/net/dccp/feat.c
+>> @@ -738,7 +738,12 @@ static int __feat_register_sp(struct list_head *fn, u8 feat, u8 is_local,
+>>       if (dccp_feat_clone_sp_val(&fval, sp_val, sp_len))
+>>           return -ENOMEM;
+>>   -    return dccp_feat_push_change(fn, feat, is_local, mandatory, &fval);
+>> +    if (dccp_feat_push_change(fn, feat, is_local, mandatory, &fval)) {
+>> +        kfree(val->sp.vec);
+> 
+> Please atleast check the compilation first, don't  just rush into sending patch.
+> 
+> s/val/fval
 
-On Fri, Mar 22, 2019 at 2:25 PM Sakari Ailus
-<sakari.ailus@linux.intel.com> wrote:
-> The printk family of functions supports %ps and %pS conversion specifiers
-> to print function names. Yet the deprecated %pf and %pF conversion
-> specifiers with equivalent functionality remain supported. A number of
-> users of %pf and %pF remain.
->
-> This patchsets converts the existing users of %pf and %pF to %ps and %pS,
-> respectively, and removes support for the deprecated %pf and %pF.
->
-> The patches apply cleanly both on 5.1-rc1 as well as on Linux-next. No new
-> %pf or %pF users have been added in the meantime so the patch is
-> sufficient as itself on linux-next, too.
+A copy-paste typo, will fix it. Thanks!
 
-Do you know in which commit they became deprecated, so the backporters
-know how far this can be backported safely?
+> 
+> 
+> Thanks,
+> Mukesh
+> 
+>> +        return -ENOMEM;
+>> +    }
+>> +
+>> +    return 0;
+>>   }
+>>     /**
+> 
+> .
+> 
 
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
