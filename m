@@ -4,54 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02FC4C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:31:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B176BC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:31:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD2342183E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:31:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 809A021925
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:31:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254297;
-	bh=f4ZWiC0o4qRdEzRujVWlPQ+TKYoMWs7tlmPdTN0OGy8=;
+	s=default; t=1553254301;
+	bh=hbTjLCI2mYtMwMdjNK5FKPOvsEzmNL2FGJAFw4d8oIU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dUdhUodKsDNVksE77gVgcGjvyU/kfnSWzdpsA9O4VpOtbmasI0E1HoSh6nm71JR09
-	 eVeosSwViyOfk49rjcuN0FmeSMFWYA980xEtYyOaOmBjZYcg3Pvwmd4KEInejUTfqW
-	 q/n3vFutMMUOdTMYedBiJdDyknGkNlOnmh8T9tfQ=
+	b=Dpsw5bLGURo2McW3IAz3LzandFRg9lkNh2PXuFnk3cbHqRG8jLG/3MywApbai7yUo
+	 Fqy1VYQFApRbnVti1+SCWZ1qBDEdwlVOXXmQsv1M1n45I5bkmzRhdqAhdWt35tMYGM
+	 x40XkmOoeM+BeZUGzdbPfdRoZGLIb9AMyISNV9f4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730053AbfCVLbg (ORCPT
+        id S1730061AbfCVLbk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:31:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59696 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:31:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730042AbfCVLbb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:31:31 -0400
+        id S1730047AbfCVLbf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:31:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 48E0B21916;
-        Fri, 22 Mar 2019 11:31:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DB10218B0;
+        Fri, 22 Mar 2019 11:31:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254290;
-        bh=f4ZWiC0o4qRdEzRujVWlPQ+TKYoMWs7tlmPdTN0OGy8=;
+        s=default; t=1553254294;
+        bh=hbTjLCI2mYtMwMdjNK5FKPOvsEzmNL2FGJAFw4d8oIU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xie6sGJdpSQpg8eCvfcb0z4QnVVTPQH7CLJnKElvo8YJ0Z9AnfhV0oBY+JGDBO5gG
-         lSwsmRfbeHrjvTJSGwiAkokTCpuQKHeIGCJr9zQC9Eox9E3glDqJvs3MAFJuhPHVq1
-         tuEF8d/9tfRc+hEdeOpq1NtkbvXOxbo4jaev6oDI=
+        b=BzYatSAxhQm/Iy87JUf+fysApHhvd8w7HSqxz5vTOalSbxC4bo+PIVhIuiFD156u6
+         +UNSVlmwi4kmYGmAVPkde4ZRZuQWUSiO82DyNHnIgPxC5q5bfyExc/AeUBfHcxTraa
+         tkHn2lkuJ5s0x2UyARKGqAaI2hSLVfkPl6W6NeNM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Tomonori Sakita <tomonori.sakita@sord.co.jp>,
-        Atsushi Nemoto <atsushi.nemoto@sord.co.jp>,
-        Dalon L Westergreen <dalon.westergreen@linux.intel.com>,
-        Thor Thayer <thor.thayer@linux.intel.com>,
+        stable@vger.kernel.org, Yonglong Liu <liuyonglong@huawei.com>,
+        Peng Li <lipeng321@huawei.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 090/230] net: altera_tse: fix msgdma_tx_completion on non-zero fill_level case
-Date:   Fri, 22 Mar 2019 12:13:48 +0100
-Message-Id: <20190322111242.932183990@linuxfoundation.org>
+Subject: [PATCH 4.4 091/230] net: hns: Fix wrong read accesses via Clause 45 MDIO protocol
+Date:   Fri, 22 Mar 2019 12:13:49 +0100
+Message-Id: <20190322111243.004266025@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -70,38 +67,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 6571ebce112a21ec9be68ef2f53b96fcd41fd81b ]
+[ Upstream commit cec8abba13e6a26729dfed41019720068eeeff2b ]
 
-If fill_level was not zero and status was not BUSY,
-result of "tx_prod - tx_cons - inuse" might be zero.
-Subtracting 1 unconditionally results invalid negative return value
-on this case.
-Make sure not to return an negative value.
+When reading phy registers via Clause 45 MDIO protocol, after write
+address operation, the driver use another write address operation, so
+can not read the right value of any phy registers. This patch fixes it.
 
-Signed-off-by: Tomonori Sakita <tomonori.sakita@sord.co.jp>
-Signed-off-by: Atsushi Nemoto <atsushi.nemoto@sord.co.jp>
-Reviewed-by: Dalon L Westergreen <dalon.westergreen@linux.intel.com>
-Acked-by: Thor Thayer <thor.thayer@linux.intel.com>
+Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/altera/altera_msgdma.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/hisilicon/hns_mdio.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/altera/altera_msgdma.c b/drivers/net/ethernet/altera/altera_msgdma.c
-index 0fb986ba3290..0ae723f75341 100644
---- a/drivers/net/ethernet/altera/altera_msgdma.c
-+++ b/drivers/net/ethernet/altera/altera_msgdma.c
-@@ -145,7 +145,8 @@ u32 msgdma_tx_completions(struct altera_tse_private *priv)
- 			& 0xffff;
+diff --git a/drivers/net/ethernet/hisilicon/hns_mdio.c b/drivers/net/ethernet/hisilicon/hns_mdio.c
+index 37491c85bc42..6ff13c559e52 100644
+--- a/drivers/net/ethernet/hisilicon/hns_mdio.c
++++ b/drivers/net/ethernet/hisilicon/hns_mdio.c
+@@ -319,7 +319,7 @@ static int hns_mdio_read(struct mii_bus *bus, int phy_id, int regnum)
+ 		}
  
- 	if (inuse) { /* Tx FIFO is not empty */
--		ready = priv->tx_prod - priv->tx_cons - inuse - 1;
-+		ready = max_t(int,
-+			      priv->tx_prod - priv->tx_cons - inuse - 1, 0);
- 	} else {
- 		/* Check for buffered last packet */
- 		status = csrrd32(priv->tx_dma_csr, msgdma_csroffs(status));
+ 		hns_mdio_cmd_write(mdio_dev, is_c45,
+-				   MDIO_C45_WRITE_ADDR, phy_id, devad);
++				   MDIO_C45_READ, phy_id, devad);
+ 	}
+ 
+ 	/* Step 5: waitting for MDIO_COMMAND_REG 's mdio_start==0,*/
 -- 
 2.19.1
 
