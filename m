@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3372FC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:13:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E5B8C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:13:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04DB12082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:13:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C50E20830
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:13:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256815;
-	bh=IJy58t24/yf55gLR7LtAlKbX7PZlFxDbZzFxMjG2uJY=;
+	s=default; t=1553256818;
+	bh=3G89iVRL/cRyx4cpNBf/i/egoSOlvEoehkY2wUogK0s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xqU1DSSiuJff6itTgD72JnRrnu8R4DrAOFTbA67NT4q8ecmYdE0xuue2XBbKZLGKe
-	 /xOFMcK5rdE5GMn3KthrnB99IjK1lh6ubTub+fcUwT3E7J5ZYO1c18o3aG6jBV5kH3
-	 57VSKBcm0+9fGZs/fnnP9qtQQKgpEzVPh8bKP4gA=
+	b=H0LESRIpvaYYz5yvTFXltPynRQrsfTSAVnz3YfO7wycwdQE/fXLpClA/OUZvQkVHm
+	 qRgGUiRXYy44GGcxyZVmj0+UtPBysQmjugNhoBDJEOqX5c1I1PeJRFJOyt5jzJJpHe
+	 UlKpo7kwEhHxVZNzDEBtV+CK499WRo6Ha3WP+rLA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389774AbfCVMNd (ORCPT
+        id S2389784AbfCVMNg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:13:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51760 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:13:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389317AbfCVMNa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:13:30 -0400
+        id S2389770AbfCVMNd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:13:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBAB42082C;
-        Fri, 22 Mar 2019 12:13:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC6CC20830;
+        Fri, 22 Mar 2019 12:13:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256809;
-        bh=IJy58t24/yf55gLR7LtAlKbX7PZlFxDbZzFxMjG2uJY=;
+        s=default; t=1553256812;
+        bh=3G89iVRL/cRyx4cpNBf/i/egoSOlvEoehkY2wUogK0s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZFzOSLBc7hcm8nRzFzLlF1JARCfRW+wF50QaTOJYtVtiU+l3dpqTl1J//EPMhEu8i
-         Bp0XLumaMPeeFZeuDTcT2ytmAbG2ogo7fn3ppfcupQUeIm4T7StsuDtgXMZqkO38Kn
-         jcs1y0VFc63lIhAjPDwTE6DUMB13Duhaf58i5sQA=
+        b=QXEFelXYVJprwHoa1VfhH05eQx/y8FJwBkrEqBqNvdUTJ5Uol7QkRTahCXO6ospLJ
+         +90RuUX45cs/SZ5RsfDM7eI30wP8msWJ7G0bXxARSpH0kjy6iVrOOtf83NuRagY+00
+         32MSGdoANO8Q4u9lU3oiKZPfKBGejx8JSMse8KzE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
-        Eric Biggers <ebiggers@google.com>,
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.0 043/238] crypto: pcbc - remove bogus memcpy()s with src == dest
-Date:   Fri, 22 Mar 2019 12:14:22 +0100
-Message-Id: <20190322111300.949119440@linuxfoundation.org>
+Subject: [PATCH 5.0 044/238] crypto: skcipher - set CRYPTO_TFM_NEED_KEY if ->setkey() fails
+Date:   Fri, 22 Mar 2019 12:14:23 +0100
+Message-Id: <20190322111301.005594456@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -68,91 +67,118 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Eric Biggers <ebiggers@google.com>
 
-commit 251b7aea34ba3c4d4fdfa9447695642eb8b8b098 upstream.
+commit b1f6b4bf416b49f00f3abc49c639371cdecaaad1 upstream.
 
-The memcpy()s in the PCBC implementation use walk->iv as both the source
-and destination, which has undefined behavior.  These memcpy()'s are
-actually unneeded, because walk->iv is already used to hold the previous
-plaintext block XOR'd with the previous ciphertext block.  Thus,
-walk->iv is already updated to its final value.
+Some algorithms have a ->setkey() method that is not atomic, in the
+sense that setting a key can fail after changes were already made to the
+tfm context.  In this case, if a key was already set the tfm can end up
+in a state that corresponds to neither the old key nor the new key.
 
-So remove the broken and unnecessary memcpy()s.
+For example, in lrw.c, if gf128mul_init_64k_bbe() fails due to lack of
+memory, then priv::table will be left NULL.  After that, encryption with
+that tfm will cause a NULL pointer dereference.
 
-Fixes: 91652be5d1b9 ("[CRYPTO] pcbc: Add Propagated CBC template")
-Cc: <stable@vger.kernel.org> # v2.6.21+
-Cc: David Howells <dhowells@redhat.com>
+It's not feasible to make all ->setkey() methods atomic, especially ones
+that have to key multiple sub-tfms.  Therefore, make the crypto API set
+CRYPTO_TFM_NEED_KEY if ->setkey() fails and the algorithm requires a
+key, to prevent the tfm from being used until a new key is set.
+
+[Cc stable mainly because when introducing the NEED_KEY flag I changed
+ AF_ALG to rely on it; and unlike in-kernel crypto API users, AF_ALG
+ previously didn't have this problem.  So these "incompletely keyed"
+ states became theoretically accessible via AF_ALG -- though, the
+ opportunities for causing real mischief seem pretty limited.]
+
+Fixes: f8d33fac8480 ("crypto: skcipher - prevent using skciphers without setting key")
+Cc: <stable@vger.kernel.org> # v4.16+
 Signed-off-by: Eric Biggers <ebiggers@google.com>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- crypto/pcbc.c |   14 ++++----------
- 1 file changed, 4 insertions(+), 10 deletions(-)
+ crypto/skcipher.c |   27 ++++++++++++++++++---------
+ 1 file changed, 18 insertions(+), 9 deletions(-)
 
---- a/crypto/pcbc.c
-+++ b/crypto/pcbc.c
-@@ -51,7 +51,7 @@ static int crypto_pcbc_encrypt_segment(s
- 	unsigned int nbytes = walk->nbytes;
- 	u8 *src = walk->src.virt.addr;
- 	u8 *dst = walk->dst.virt.addr;
--	u8 *iv = walk->iv;
-+	u8 * const iv = walk->iv;
- 
- 	do {
- 		crypto_xor(iv, src, bsize);
-@@ -72,7 +72,7 @@ static int crypto_pcbc_encrypt_inplace(s
- 	int bsize = crypto_cipher_blocksize(tfm);
- 	unsigned int nbytes = walk->nbytes;
- 	u8 *src = walk->src.virt.addr;
--	u8 *iv = walk->iv;
-+	u8 * const iv = walk->iv;
- 	u8 tmpbuf[MAX_CIPHER_BLOCKSIZE];
- 
- 	do {
-@@ -84,8 +84,6 @@ static int crypto_pcbc_encrypt_inplace(s
- 		src += bsize;
- 	} while ((nbytes -= bsize) >= bsize);
- 
--	memcpy(walk->iv, iv, bsize);
--
- 	return nbytes;
+--- a/crypto/skcipher.c
++++ b/crypto/skcipher.c
+@@ -585,6 +585,12 @@ static unsigned int crypto_skcipher_exts
+ 	return crypto_alg_extsize(alg);
  }
  
-@@ -121,7 +119,7 @@ static int crypto_pcbc_decrypt_segment(s
- 	unsigned int nbytes = walk->nbytes;
- 	u8 *src = walk->src.virt.addr;
- 	u8 *dst = walk->dst.virt.addr;
--	u8 *iv = walk->iv;
-+	u8 * const iv = walk->iv;
++static void skcipher_set_needkey(struct crypto_skcipher *tfm)
++{
++	if (tfm->keysize)
++		crypto_skcipher_set_flags(tfm, CRYPTO_TFM_NEED_KEY);
++}
++
+ static int skcipher_setkey_blkcipher(struct crypto_skcipher *tfm,
+ 				     const u8 *key, unsigned int keylen)
+ {
+@@ -598,8 +604,10 @@ static int skcipher_setkey_blkcipher(str
+ 	err = crypto_blkcipher_setkey(blkcipher, key, keylen);
+ 	crypto_skcipher_set_flags(tfm, crypto_blkcipher_get_flags(blkcipher) &
+ 				       CRYPTO_TFM_RES_MASK);
+-	if (err)
++	if (unlikely(err)) {
++		skcipher_set_needkey(tfm);
+ 		return err;
++	}
  
- 	do {
- 		crypto_cipher_decrypt_one(tfm, dst, src);
-@@ -132,8 +130,6 @@ static int crypto_pcbc_decrypt_segment(s
- 		dst += bsize;
- 	} while ((nbytes -= bsize) >= bsize);
+ 	crypto_skcipher_clear_flags(tfm, CRYPTO_TFM_NEED_KEY);
+ 	return 0;
+@@ -677,8 +685,7 @@ static int crypto_init_skcipher_ops_blkc
+ 	skcipher->ivsize = crypto_blkcipher_ivsize(blkcipher);
+ 	skcipher->keysize = calg->cra_blkcipher.max_keysize;
  
--	memcpy(walk->iv, iv, bsize);
--
- 	return nbytes;
+-	if (skcipher->keysize)
+-		crypto_skcipher_set_flags(skcipher, CRYPTO_TFM_NEED_KEY);
++	skcipher_set_needkey(skcipher);
+ 
+ 	return 0;
  }
+@@ -698,8 +705,10 @@ static int skcipher_setkey_ablkcipher(st
+ 	crypto_skcipher_set_flags(tfm,
+ 				  crypto_ablkcipher_get_flags(ablkcipher) &
+ 				  CRYPTO_TFM_RES_MASK);
+-	if (err)
++	if (unlikely(err)) {
++		skcipher_set_needkey(tfm);
+ 		return err;
++	}
  
-@@ -144,7 +140,7 @@ static int crypto_pcbc_decrypt_inplace(s
- 	int bsize = crypto_cipher_blocksize(tfm);
- 	unsigned int nbytes = walk->nbytes;
- 	u8 *src = walk->src.virt.addr;
--	u8 *iv = walk->iv;
-+	u8 * const iv = walk->iv;
- 	u8 tmpbuf[MAX_CIPHER_BLOCKSIZE] __aligned(__alignof__(u32));
+ 	crypto_skcipher_clear_flags(tfm, CRYPTO_TFM_NEED_KEY);
+ 	return 0;
+@@ -776,8 +785,7 @@ static int crypto_init_skcipher_ops_ablk
+ 			    sizeof(struct ablkcipher_request);
+ 	skcipher->keysize = calg->cra_ablkcipher.max_keysize;
  
- 	do {
-@@ -156,8 +152,6 @@ static int crypto_pcbc_decrypt_inplace(s
- 		src += bsize;
- 	} while ((nbytes -= bsize) >= bsize);
+-	if (skcipher->keysize)
+-		crypto_skcipher_set_flags(skcipher, CRYPTO_TFM_NEED_KEY);
++	skcipher_set_needkey(skcipher);
  
--	memcpy(walk->iv, iv, bsize);
--
- 	return nbytes;
+ 	return 0;
  }
+@@ -820,8 +828,10 @@ static int skcipher_setkey(struct crypto
+ 	else
+ 		err = cipher->setkey(tfm, key, keylen);
  
+-	if (err)
++	if (unlikely(err)) {
++		skcipher_set_needkey(tfm);
+ 		return err;
++	}
+ 
+ 	crypto_skcipher_clear_flags(tfm, CRYPTO_TFM_NEED_KEY);
+ 	return 0;
+@@ -852,8 +862,7 @@ static int crypto_skcipher_init_tfm(stru
+ 	skcipher->ivsize = alg->ivsize;
+ 	skcipher->keysize = alg->max_keysize;
+ 
+-	if (skcipher->keysize)
+-		crypto_skcipher_set_flags(skcipher, CRYPTO_TFM_NEED_KEY);
++	skcipher_set_needkey(skcipher);
+ 
+ 	if (alg->exit)
+ 		skcipher->base.exit = crypto_skcipher_exit_tfm;
 
 
