@@ -2,111 +2,139 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_SBL,URIBL_SBL_A autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84B5EC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:26:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59E50C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:28:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B510218D3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:26:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26CCC218D3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:28:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NEdJMIK9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728810AbfCVO0n (ORCPT
+        id S1728822AbfCVO16 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 10:26:43 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:51365 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728061AbfCVO0m (ORCPT
+        Fri, 22 Mar 2019 10:27:58 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:35849 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727996AbfCVO16 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 10:26:42 -0400
-Received: from wuerfel.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1McH1Q-1gZ7MZ0ZbA-00chgM; Fri, 22 Mar 2019 15:25:59 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     James Smart <james.smart@broadcom.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Hannes Reinecke <hare@suse.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] scsi: lpfc: avoid uninitialized variable warning
-Date:   Fri, 22 Mar 2019 15:25:49 +0100
-Message-Id: <20190322142557.929966-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Fri, 22 Mar 2019 10:27:58 -0400
+Received: by mail-it1-f195.google.com with SMTP id h9so3547733itl.1
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 07:27:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VCXkqtJXweMtT7tkjAU9aokE2Llx9dELHbkDZghxZuc=;
+        b=NEdJMIK9h2iWW4z/4DLDds0gdjLAJfcSG3gwWS4GiCWbhHKUQIw79yK8oSdAGIhDeK
+         1raJXetJfp6kF94+UUB0srpLPbwGjekNgmFDlB6KgIty68/w/6/NLVcBpr+16x7u7nsb
+         g0WCuYfXcivGP5WlTrH9iGAnxzRKZr7TIBgnkNp9ghvSryFQLeT87o12BVYrFeKK3Q6L
+         2ukOqNOquDy52Q7drG2QLI3NNZgwnnmn1hkF3wpMKz4A1kVNN0vHDLUS0TiHLOFcwBv/
+         PjQMrcqTgH6Q7iSOyRXS5y6Ki3qduxfM6RiTqkn08KwJ7p0sKykAxkGDVn/uqU4jrlZZ
+         n6JA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VCXkqtJXweMtT7tkjAU9aokE2Llx9dELHbkDZghxZuc=;
+        b=DrpRZWhvO3OJh4LXhfb7300lpfgTf1110vCXFu+vtwexOs3CqIXoMDkQG7TLd8YSzb
+         eoWs1+vE8rO95ZD5h49l295Urr8NPNmDMVrzKU48pV/23Dt0y47avcP5SBTQOdxUSc3w
+         omTUwdUlZV/SQr4edqUwXbTvJN+3KqiB0AMZr7g/xIc/veEsD1AAMz0oGEIDqix/pNue
+         vYWU+D1QL+ruHvIjGhO4Tota688xBT8hUCn+WnEIS96fG4bNdzKxA+i94tUV/OBklXO5
+         OGryzU29lySYd/tI2GSQ+AGrwHZ+wUZ0j+Ecocp3rsQYz6ROWGdSrzV+9We7batTvBnT
+         51xA==
+X-Gm-Message-State: APjAAAUH+qI+AnWo2fqYS9TG1j6rOmVlmCBtaYWMc99r3pB8/pzItIdf
+        aiC3cT1G1vQP/+AOZ7uuBfzYCK0mPCWMz9YFwBVBOQ==
+X-Google-Smtp-Source: APXvYqy7pT8oa0KnMZcYwqn/r+clsMGOQpxbdKlTodcdpwjkR1KBQZWCAyI9+0ugN+QbgK+EKvR92pQUHFYCanUGxGo=
+X-Received: by 2002:a02:ac14:: with SMTP id a20mr7591159jao.130.1553264877146;
+ Fri, 22 Mar 2019 07:27:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:PGU9lVKj/dKXmiqHlrV8Bly73FjLI9kdmgn+Cziu7tOV08Qy6Ev
- bxGqn4M0D7NkQhxZbGIBSOh3kb0D0dyd8ox1ZvRwR89OKiiodHUeod8pLCmGZ5ugw+AS7mz
- V0KLOHxiZo3so2lWDA6LsALzA6EdoVW0KETNKzrzI6Ag8MvfN18MF28KSZvJ4jeRGQuK4AJ
- TElZLVpn31dAeQKxdfTeA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:MVlH0d45pZk=:sI1gMV387Mc4/wy6tiGfV+
- 5Gpgvlx5nuQLJmBewGdZNG8GTVNoPN/xleIqA0xs/IvmYq7ybEc0q8QokvFuCOS9Bls68sqjq
- 4KFavIKumrPyawteq/dJqgUnciiZcV6HdzMt1MaRcnHdyOo4XRtBFrpq5BxcFlykRiqg5vpTp
- kUDSLAIcSrDnMa9FkfWR77br0qdZdW2cetjFwKDFAVWo1H3jNp6iOxxXkIpTda1rY3DBcxk6h
- 5D96uuEKMC4KDP/X1Izld5kznIAYLFBFxcYwBBNh0coDXN/t1xLgcnzXideaFmvwY66ywffpZ
- bFzPWKUVHFMotUo/UAYeTeE2z6+HsxKP1hmatl8U3kTGMppJsCJz5RpXS+WVe0emGLzxUpMIV
- TKOTFYJxZrX8sNMzsxNk52neksdHcHaAD+a0j2uHof0jwvaje8Bt0n9MF53e2Ue9VFSEmKnpt
- iDNwEitR4bBs/+sKXMz6PqO3gunnVmemc6MjmVnyvO5/ZV8Fdw+skOzvdH2MMyNifecK2H349
- pSrOiZIMw6mF3RRrZnsrONG+Gp3P8Jaml9rzlJwCLGhSdfvfjp9xu5awaEIUifiPUFHYOBBU2
- UZ0StH9QjaU4lOKO55RdTZBWV9dCaE1mET2EMVMPFMKmZDR7N8B5mclJE1fQYM1sB36ZOkJYZ
- Ug00Wpc8WgUTKTuJyGPsm4Un04AJYhR4AssaxPaahdwVHy6iFCZGXG6ici0qhkCDtIfqiX4MB
- iAGzPk+zx3fFgcaEIYLhFdWIIut/FIddQduYhw==
+References: <20190322103350.27764-1-jlee@suse.com> <20190322103350.27764-2-jlee@suse.com>
+In-Reply-To: <20190322103350.27764-2-jlee@suse.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Fri, 22 Mar 2019 15:27:46 +0100
+Message-ID: <CAKv+Gu8Xg3SBTpAFDSe5zyT8yjU71+HUT9LO18D+HiT+Hhp+Zg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] efi: print appropriate status message when loading certificates
+To:     "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
+Cc:     James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        David Howells <dhowells@redhat.com>,
+        Josh Boyer <jwboyer@fedoraproject.org>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Lee, Chun-Yi" <jlee@suse.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-clang -Wuninitialized incorrectly sees a variable being used without
-initialization:
+On Fri, 22 Mar 2019 at 11:34, Lee, Chun-Yi <joeyli.kernel@gmail.com> wrote:
+>
+> When loading certificates list from UEFI variable, the original error
+> message direct shows the efi status code from UEFI firmware. It looks
+> ugly:
+>
+> [    2.335031] Couldn't get size: 0x800000000000000e
+> [    2.335032] Couldn't get UEFI MokListRT
+> [    2.339985] Couldn't get size: 0x800000000000000e
+> [    2.339987] Couldn't get UEFI dbx list
+>
 
-drivers/scsi/lpfc/lpfc_nvme.c:2102:37: error: variable 'localport' is uninitialized when used here
-      [-Werror,-Wuninitialized]
-                lport = (struct lpfc_nvme_lport *)localport->private;
-                                                  ^~~~~~~~~
-drivers/scsi/lpfc/lpfc_nvme.c:2059:38: note: initialize the variable 'localport' to silence this warning
-        struct nvme_fc_local_port *localport;
-                                            ^
-                                             = NULL
-1 error generated.
+Why is it an error in the first place if these EFI variables do not exist?
 
-This is clearly in dead code, as the condition leading up to it is
-always false when CONFIG_NVME_FC is disabled, and the variable
-is always initialized when nvme_fc_register_localport() got
-called successfully.
 
-Change the preprocessor conditional to the equivalent C construct,
-which makes the code more readable and gets rid of the warning.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/scsi/lpfc/lpfc_nvme.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/scsi/lpfc/lpfc_nvme.c b/drivers/scsi/lpfc/lpfc_nvme.c
-index 1aa00d2c3f74..9defff711884 100644
---- a/drivers/scsi/lpfc/lpfc_nvme.c
-+++ b/drivers/scsi/lpfc/lpfc_nvme.c
-@@ -2080,15 +2080,15 @@ lpfc_nvme_create_localport(struct lpfc_vport *vport)
- 		lpfc_nvme_template.max_hw_queues =
- 			phba->sli4_hba.num_present_cpu;
- 
-+	if (!IS_ENABLED(CONFIG_NVME_FC))
-+		return ret;
-+
- 	/* localport is allocated from the stack, but the registration
- 	 * call allocates heap memory as well as the private area.
- 	 */
--#if (IS_ENABLED(CONFIG_NVME_FC))
-+
- 	ret = nvme_fc_register_localport(&nfcp_info, &lpfc_nvme_template,
- 					 &vport->phba->pcidev->dev, &localport);
--#else
--	ret = -ENOMEM;
--#endif
- 	if (!ret) {
- 		lpfc_printf_vlog(vport, KERN_INFO, LOG_NVME | LOG_NVME_DISC,
- 				 "6005 Successfully registered local "
--- 
-2.20.0
-
+> So, this patch shows the status string instead of status code.
+>
+> On the other hand, the error message of EFI_NOT_FOUND
+> (0x800000000000000e) doesn't need to be exposed because kernel
+> already prints "Couldn't get UEFI..." message. This patch also
+> filtered out it.
+>
+> Link: https://forums.opensuse.org/showthread.php/535324-MODSIGN-Couldn-t-get-UEFI-db-list?p=2897516#post2897516
+> Cc: James Morris <jmorris@namei.org>
+> Cc: Serge E. Hallyn" <serge@hallyn.com>
+> Cc: David Howells <dhowells@redhat.com>
+> Cc: Nayna Jain <nayna@linux.ibm.com>
+> Cc: Josh Boyer <jwboyer@fedoraproject.org>
+> Cc: Mimi Zohar <zohar@linux.ibm.com>
+> Signed-off-by: "Lee, Chun-Yi" <jlee@suse.com>
+> ---
+>  security/integrity/platform_certs/load_uefi.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+>
+> diff --git a/security/integrity/platform_certs/load_uefi.c b/security/integrity/platform_certs/load_uefi.c
+> index 81b19c52832b..fe261166621f 100644
+> --- a/security/integrity/platform_certs/load_uefi.c
+> +++ b/security/integrity/platform_certs/load_uefi.c
+> @@ -48,7 +48,9 @@ static __init void *get_cert_list(efi_char16_t *name, efi_guid_t *guid,
+>
+>         status = efi.get_variable(name, guid, NULL, &lsize, &tmpdb);
+>         if (status != EFI_BUFFER_TOO_SMALL) {
+> -               pr_err("Couldn't get size: 0x%lx\n", status);
+> +               if (status != EFI_NOT_FOUND)
+> +                       pr_err("Couldn't get size: %s\n",
+> +                               efi_status_to_str(status));
+>                 return NULL;
+>         }
+>
+> @@ -59,7 +61,8 @@ static __init void *get_cert_list(efi_char16_t *name, efi_guid_t *guid,
+>         status = efi.get_variable(name, guid, NULL, &lsize, db);
+>         if (status != EFI_SUCCESS) {
+>                 kfree(db);
+> -               pr_err("Error reading db var: 0x%lx\n", status);
+> +               pr_err("Error reading db var: %s\n",
+> +                       efi_status_to_str(status));
+>                 return NULL;
+>         }
+>
+> --
+> 2.16.4
+>
