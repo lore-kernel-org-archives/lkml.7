@@ -2,50 +2,51 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D96E6C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:15:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAE7BC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:15:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A80882083D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:15:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7ACE321900
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:15:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256944;
-	bh=R2w3xb8oXkV8UxB6av3knbaYIfJVGqUWdPtXdDFU48g=;
+	s=default; t=1553256947;
+	bh=OwRoT83iUpasr6TlbY0lZmz0Ln4WK5v+vPsW4hR/82o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VywEkOJ8LDgFUswF8Y1OGpkhP2qmmNc4UAjCP/T6Wfs0gKZ6/DtkNqOgpptFDSjuB
-	 fQ44g2LzcGPq5h1kq2qbM8Pu1HNAPo6UODB7+Cmi2y1QToA5DvWWNeu1Ym2oNh6Fe/
-	 ++YiRa5fzd3MjcDDE81HpqFbiYVT9GD8UNGHiYxQ=
+	b=wZrLYyQPDVeXI5I8mk93bPZ6kDnrYtzeD7u2Z0nN+DhbsrTsrL0Q2V5XzRrhAng4c
+	 qRCh4ie5pz6bnsHTXebfsxDLMbVlVOF0S8ym7ydijOdTYDZRr2jDDw8MfDVMn0IsJU
+	 vhxgczGymNSqYo1EAhMs6zXeP+fN226l9PPbp2r8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390106AbfCVMPn (ORCPT
+        id S2390119AbfCVMPq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:15:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54172 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:15:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54234 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388977AbfCVMPj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:15:39 -0400
+        id S2390100AbfCVMPm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:15:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 407AA2083D;
-        Fri, 22 Mar 2019 12:15:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A9D62083D;
+        Fri, 22 Mar 2019 12:15:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256938;
-        bh=R2w3xb8oXkV8UxB6av3knbaYIfJVGqUWdPtXdDFU48g=;
+        s=default; t=1553256941;
+        bh=OwRoT83iUpasr6TlbY0lZmz0Ln4WK5v+vPsW4hR/82o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1+R5DZ08AM5/j2kCpqH/6wPY1wUiQrrRGElaeCcB7h/cIdpIQPiaiOBLj7Ptlm7oA
-         Doc3RKGrnVOIAIACNDxPUuaA4eeqMc+evgWQ+4SswkPJBeHNedSOe+f/YBLzbH/iRj
-         HhK1Z661J21ShLQ4EsLxyqCGvPX0tdeu6fDpRync=
+        b=m0JhayUnx7kf/vHvHB4BIxQjkVv6ZMUD+hQMKHqltCdnWXGlsP9PrBgcXZuGd8zoK
+         KN7J/o+Q14NcvkjGwfK+l/uxA2b7cZBczQqc3sRXLRq4HXQ9qliVhrsoxEdf6/AH2c
+         69rGePEbejMcZ1s2pJirx7U9ZZGCwyCKr2PY4W+k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org
-Subject: [PATCH 5.0 082/238] scsi: target/iscsi: Avoid iscsit_release_commands_from_conn() deadlock
-Date:   Fri, 22 Mar 2019 12:15:01 +0100
-Message-Id: <20190322111303.428660508@linuxfoundation.org>
+        stable@vger.kernel.org, Himanshu Madhani <hmadhani@marvell.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 5.0 083/238] scsi: qla2xxx: Fix LUN discovery if loop id is not assigned yet by firmware
+Date:   Fri, 22 Mar 2019 12:15:02 +0100
+Message-Id: <20190322111303.489351779@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -64,61 +65,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Himanshu Madhani <hmadhani@marvell.com>
 
-commit 32e36bfbcf31452a854263e7c7f32fbefc4b44d8 upstream.
+commit ec322937a7f152d68755dc8316523bf6f831b48f upstream.
 
-When using SCSI passthrough in combination with the iSCSI target driver
-then cmd->t_state_lock may be obtained from interrupt context. Hence, all
-code that obtains cmd->t_state_lock from thread context must disable
-interrupts first. This patch avoids that lockdep reports the following:
+This patch fixes LUN discovery when loop ID is not yet assigned by the
+firmware during driver load/sg_reset operations. Driver will now search for
+new loop id before retrying login.
 
-WARNING: inconsistent lock state
-4.18.0-dbg+ #1 Not tainted
---------------------------------
-inconsistent {HARDIRQ-ON-W} -> {IN-HARDIRQ-W} usage.
-iscsi_ttx/1800 [HC1[1]:SC0[2]:HE0:SE0] takes:
-000000006e7b0ceb (&(&cmd->t_state_lock)->rlock){?...}, at: target_complete_cmd+0x47/0x2c0 [target_core_mod]
-{HARDIRQ-ON-W} state was registered at:
- lock_acquire+0xd2/0x260
- _raw_spin_lock+0x32/0x50
- iscsit_close_connection+0x97e/0x1020 [iscsi_target_mod]
- iscsit_take_action_for_connection_exit+0x108/0x200 [iscsi_target_mod]
- iscsi_target_rx_thread+0x180/0x190 [iscsi_target_mod]
- kthread+0x1cf/0x1f0
- ret_from_fork+0x24/0x30
-irq event stamp: 1281
-hardirqs last  enabled at (1279): [<ffffffff970ade79>] __local_bh_enable_ip+0xa9/0x160
-hardirqs last disabled at (1281): [<ffffffff97a008a5>] interrupt_entry+0xb5/0xd0
-softirqs last  enabled at (1278): [<ffffffff977cd9a1>] lock_sock_nested+0x51/0xc0
-softirqs last disabled at (1280): [<ffffffffc07a6e04>] ip6_finish_output2+0x124/0xe40 [ipv6]
-
-other info that might help us debug this:
-Possible unsafe locking scenario:
-
-      CPU0
-      ----
- lock(&(&cmd->t_state_lock)->rlock);
- <Interrupt>
-   lock(&(&cmd->t_state_lock)->rlock);
+Fixes: 48acad099074 ("scsi: qla2xxx: Fix N2N link re-connect")
+Cc: stable@vger.kernel.org #4.19
+Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/target/iscsi/iscsi_target.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/scsi/qla2xxx/qla_init.c |   13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
---- a/drivers/target/iscsi/iscsi_target.c
-+++ b/drivers/target/iscsi/iscsi_target.c
-@@ -4040,9 +4040,9 @@ static void iscsit_release_commands_from
- 		struct se_cmd *se_cmd = &cmd->se_cmd;
- 
- 		if (se_cmd->se_tfo != NULL) {
--			spin_lock(&se_cmd->t_state_lock);
-+			spin_lock_irq(&se_cmd->t_state_lock);
- 			se_cmd->transport_state |= CMD_T_FABRIC_STOP;
--			spin_unlock(&se_cmd->t_state_lock);
-+			spin_unlock_irq(&se_cmd->t_state_lock);
- 		}
- 	}
- 	spin_unlock_bh(&conn->cmd_lock);
+--- a/drivers/scsi/qla2xxx/qla_init.c
++++ b/drivers/scsi/qla2xxx/qla_init.c
+@@ -644,11 +644,14 @@ static void qla24xx_handle_gnl_done_even
+ 				break;
+ 			case DSC_LS_PORT_UNAVAIL:
+ 			default:
+-				if (fcport->loop_id != FC_NO_LOOP_ID)
+-					qla2x00_clear_loop_id(fcport);
+-
+-				fcport->loop_id = loop_id;
+-				fcport->fw_login_state = DSC_LS_PORT_UNAVAIL;
++				if (fcport->loop_id == FC_NO_LOOP_ID) {
++					qla2x00_find_new_loop_id(vha, fcport);
++					fcport->fw_login_state =
++					    DSC_LS_PORT_UNAVAIL;
++				}
++				ql_dbg(ql_dbg_disc, vha, 0x20e5,
++				    "%s %d %8phC\n", __func__, __LINE__,
++				    fcport->port_name);
+ 				qla24xx_fcport_handle_login(vha, fcport);
+ 				break;
+ 			}
 
 
