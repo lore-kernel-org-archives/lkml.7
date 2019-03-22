@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF797C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:49:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29237C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:49:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C2452183E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:49:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC10F2183E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:49:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553258960;
-	bh=K7c05FUVLw+FD/iJ3FxIRlqbpO/TKoWL1v8vpYyPlhU=;
+	s=default; t=1553258963;
+	bh=TDoH9qMKSpoHZCGFpc4ZPmyfK4Lh8NE4zUZvbteZgPk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gX/8wZ5F7xc26aD88V64WkdoJAF2/mm+dThgKqf+jwha5iIqhXeXI88SN5Q+rWVi+
-	 09OQtE+huQrKFbF8EVwn8gUfbCyg9vbpsLXL3OivOBY+z9bSx3Wq4Y7TVwAulNT6Zi
-	 icwqsXdwGEkfJ7zGTJgCWNpu3HRcMCiq0iduBWe8=
+	b=b5Np1S2LN5+K8TOjHJDJEUokY32ZHSbl1LAdoLnnPy4sK4hx7nTRdGdCLKLD3ITRt
+	 Fp72Y9dNxc0TVnyluBn+qAl0YwQ4I/MSZkgK8kPp5edixWkwKqUKCuGM5s+Xcx7lB2
+	 yHS7BKxdEgbG9+V3frzXI8lzFG3ZHhiaem4+rpWo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387619AbfCVL5I (ORCPT
+        id S2387783AbfCVMtV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:57:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33522 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:49:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732339AbfCVL5C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:57:02 -0400
+        id S2387427AbfCVL5J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:57:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2CDE720850;
-        Fri, 22 Mar 2019 11:57:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E71C92082C;
+        Fri, 22 Mar 2019 11:57:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255821;
-        bh=K7c05FUVLw+FD/iJ3FxIRlqbpO/TKoWL1v8vpYyPlhU=;
+        s=default; t=1553255828;
+        bh=TDoH9qMKSpoHZCGFpc4ZPmyfK4Lh8NE4zUZvbteZgPk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hBgRVW55PyGljRaejaCHYMtR4A9CEJiByLbXTUV6fTBNKy5uZFIykuRbpYO+BOdfV
-         BdHC03X7weQDanygWSvcmybWyQXKbvRnmTW3ymXACTi4/g4smbfro5nA5MfSXVcqjg
-         +wd08FeJTPFnmSBczaNSEL6TrduReeKdY7Rg/bhw=
+        b=n/3U9CMzpTlzuyWAqossz+trr9M511UT/IbkpRc72Th4EI5muZlNfOdfEHvMDl2nF
+         ZlNegbh4S1IPKc4mfhVkFhE0Ftff9irIMbsJCbvT61PZSTWljnETvmtK/weQo9RKjd
+         nilL9FZTLNAfdoj1uwC8RYaR+GlEytIvxokV4EBQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexander Usyskin <alexander.usyskin@intel.com>,
-        Tomas Winkler <tomas.winkler@intel.com>
-Subject: [PATCH 4.19 008/280] mei: hbm: clean the feature flags on link reset
-Date:   Fri, 22 Mar 2019 12:12:41 +0100
-Message-Id: <20190322111306.792957265@linuxfoundation.org>
+        stable@vger.kernel.org, Zhi Jin <zhi.jin@intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Subject: [PATCH 4.19 010/280] stm class: Fix an endless loop in channel allocation
+Date:   Fri, 22 Mar 2019 12:12:43 +0100
+Message-Id: <20190322111306.887011397@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -65,61 +64,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Alexander Usyskin <alexander.usyskin@intel.com>
+From: Zhi Jin <zhi.jin@intel.com>
 
-commit 37fd0b623023484ef6df79ed46f21f06ecc611ff upstream.
+commit a1d75dad3a2c689e70a1c4e0214cca9de741d0aa upstream.
 
-The list of supported functions can be altered upon link reset,
-clean the flags to allow correct selections of supported
-features.
+There is a bug in the channel allocation logic that leads to an endless
+loop when looking for a contiguous range of channels in a range with a
+mixture of free and occupied channels. For example, opening three
+consequtive channels, closing the first two and requesting 4 channels in
+a row will trigger this soft lockup. The bug is that the search loop
+forgets to skip over the range once it detects that one channel in that
+range is occupied.
 
-Cc: <stable@vger.kernel.org> v4.19+
-Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
-Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
+Restore the original intent to the logic by fixing the omission.
+
+Signed-off-by: Zhi Jin <zhi.jin@intel.com>
+Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Fixes: 7bd1d4093c2f ("stm class: Introduce an abstraction for System Trace Module devices")
+CC: stable@vger.kernel.org # v4.4+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/misc/mei/hbm.c |    7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/hwtracing/stm/core.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/misc/mei/hbm.c
-+++ b/drivers/misc/mei/hbm.c
-@@ -986,29 +986,36 @@ static void mei_hbm_config_features(stru
- 	    dev->version.minor_version >= HBM_MINOR_VERSION_PGI)
- 		dev->hbm_f_pg_supported = 1;
+--- a/drivers/hwtracing/stm/core.c
++++ b/drivers/hwtracing/stm/core.c
+@@ -244,6 +244,9 @@ static int find_free_channels(unsigned l
+ 			;
+ 		if (i == width)
+ 			return pos;
++
++		/* step over [pos..pos+i) to continue search */
++		pos += i;
+ 	}
  
-+	dev->hbm_f_dc_supported = 0;
- 	if (dev->version.major_version >= HBM_MAJOR_VERSION_DC)
- 		dev->hbm_f_dc_supported = 1;
- 
-+	dev->hbm_f_ie_supported = 0;
- 	if (dev->version.major_version >= HBM_MAJOR_VERSION_IE)
- 		dev->hbm_f_ie_supported = 1;
- 
- 	/* disconnect on connect timeout instead of link reset */
-+	dev->hbm_f_dot_supported = 0;
- 	if (dev->version.major_version >= HBM_MAJOR_VERSION_DOT)
- 		dev->hbm_f_dot_supported = 1;
- 
- 	/* Notification Event Support */
-+	dev->hbm_f_ev_supported = 0;
- 	if (dev->version.major_version >= HBM_MAJOR_VERSION_EV)
- 		dev->hbm_f_ev_supported = 1;
- 
- 	/* Fixed Address Client Support */
-+	dev->hbm_f_fa_supported = 0;
- 	if (dev->version.major_version >= HBM_MAJOR_VERSION_FA)
- 		dev->hbm_f_fa_supported = 1;
- 
- 	/* OS ver message Support */
-+	dev->hbm_f_os_supported = 0;
- 	if (dev->version.major_version >= HBM_MAJOR_VERSION_OS)
- 		dev->hbm_f_os_supported = 1;
- 
- 	/* DMA Ring Support */
-+	dev->hbm_f_dr_supported = 0;
- 	if (dev->version.major_version > HBM_MAJOR_VERSION_DR ||
- 	    (dev->version.major_version == HBM_MAJOR_VERSION_DR &&
- 	     dev->version.minor_version >= HBM_MINOR_VERSION_DR))
+ 	return -1;
 
 
