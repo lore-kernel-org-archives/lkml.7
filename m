@@ -2,169 +2,276 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2535EC10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:13:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A56CC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:13:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC72521900
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:13:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="Zb9Bl7Bn"
+	by mail.kernel.org (Postfix) with ESMTP id 3867C21900
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:13:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728189AbfCVWNI (ORCPT
+        id S1728219AbfCVWNS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 18:13:08 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:37288 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727606AbfCVWNI (ORCPT
+        Fri, 22 Mar 2019 18:13:18 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:43349 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727606AbfCVWNR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 18:13:08 -0400
-Received: by mail-it1-f196.google.com with SMTP id z124so5766936itc.2;
-        Fri, 22 Mar 2019 15:13:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VnWfr5Cz9g8Ts5McgdJK3bb2nMan4nq5nXqWONnMsfs=;
-        b=Zb9Bl7Bn4sqZs4rM2mwfzJd7rKnn+/+6ONyGGwJqa1scMrXWXjmi9yoQBAbfMlLpgS
-         RGV1LtFJyFJAtRyqt7x4phr5CYLMLHxyjOqtaGBIgKlABbih3LbLp5n0OYCbWIHRLaHd
-         TTQ98w8krLJnK39QE8Dp0ik11E8+01Sgyn1wW72V9bUGSzJ08oA4QbCqRZA5AnJQLOtm
-         o3basMsLTQYqNorbmDjd4KoyjPrND/z4P2rEoZfVYQnDMfAEdcsp9b63663QinvyZoJp
-         HOu5mHwb07RCBU+1v7ChvrPznU5/HmjF8OEnSTsQgs+cld8MrdbVwNZKadLpnlT93nHs
-         Yb2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VnWfr5Cz9g8Ts5McgdJK3bb2nMan4nq5nXqWONnMsfs=;
-        b=ccLQBoMktj+EGlvYTMnJ5ebXJJXkpSI17oyqZDEwmFSSCVRurSA6lDn53Bf1q2N4Zi
-         /mfNhg/da013n5C8g37oCBgu+s7ZwvOd00iQlWY/6pU+5Ka8Cf46p3+YIsggiA5Qb31F
-         DYB9PqNJB2svbkkxKrXdq4cQfsLCiLUS90WgKbOTSKqmt4RpjT6TmlSe8ohOTuyCaD9Z
-         uJeAAmFhMRRmB5OpWMDkLrNxp5putajre62dwMJK/JXrQx7BEJPAJs04rHVvkcVpALC+
-         ryL8THaArahcarhgknapFHuhBV+vdP2J3Jn742KsMBOS+cYRf2yoOZKLPEtZUF203Jlw
-         TrYA==
-X-Gm-Message-State: APjAAAUuLGoy3fMVubGbbqGOtpN5QdZhK61fveUtg2A9wDgBPNPXrO4+
-        clm9fbFR3BmLnP7CS2wcTKKh2IXLSdHU39RJ7aM=
-X-Google-Smtp-Source: APXvYqwPCPjaWzKVXpURWg65K5fkBoLbrluPEoFqqgn2rT6o/InM1ko8UbBUfBaLU8H/oERd+79+VhkVDmrMWUaE2i4=
-X-Received: by 2002:a02:c007:: with SMTP id y7mr8517902jai.1.1553292786464;
- Fri, 22 Mar 2019 15:13:06 -0700 (PDT)
+        Fri, 22 Mar 2019 18:13:17 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x2MMD9vT748948
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Fri, 22 Mar 2019 15:13:09 -0700
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x2MMD8LF748944;
+        Fri, 22 Mar 2019 15:13:08 -0700
+Date:   Fri, 22 Mar 2019 15:13:08 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Andi Kleen <tipbot@zytor.com>
+Message-ID: <tip-3723908d05834c76fd5cc9ecd17b0851342e1df4@git.kernel.org>
+Cc:     tglx@linutronix.de, mingo@kernel.org, hpa@zytor.com,
+        jolsa@kernel.org, linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        acme@redhat.com
+Reply-To: jolsa@kernel.org, hpa@zytor.com, acme@redhat.com,
+          ak@linux.intel.com, mingo@kernel.org,
+          linux-kernel@vger.kernel.org, tglx@linutronix.de
+In-Reply-To: <20190311144502.15423-4-andi@firstfloor.org>
+References: <20190311144502.15423-4-andi@firstfloor.org>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:perf/urgent] perf report: Support time sort key
+Git-Commit-ID: 3723908d05834c76fd5cc9ecd17b0851342e1df4
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-References: <20190317183438.2057-1-ira.weiny@intel.com> <20190317183438.2057-5-ira.weiny@intel.com>
-In-Reply-To: <20190317183438.2057-5-ira.weiny@intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 22 Mar 2019 15:12:55 -0700
-Message-ID: <CAA9_cmcx-Bqo=CFuSj7Xcap3e5uaAot2reL2T74C47Ut6_KtQw@mail.gmail.com>
-Subject: Re: [RESEND 4/7] mm/gup: Add FOLL_LONGTERM capability to GUP fast
-To:     ira.weiny@intel.com
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Michal Hocko <mhocko@suse.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Rich Felker <dalias@libc.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>, linux-mm <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-mips@vger.kernel.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Linux-sh <linux-sh@vger.kernel.org>, sparclinux@vger.kernel.org,
-        linux-rdma@vger.kernel.org,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 17, 2019 at 7:36 PM <ira.weiny@intel.com> wrote:
->
-> From: Ira Weiny <ira.weiny@intel.com>
->
-> DAX pages were previously unprotected from longterm pins when users
-> called get_user_pages_fast().
->
-> Use the new FOLL_LONGTERM flag to check for DEVMAP pages and fall
-> back to regular GUP processing if a DEVMAP page is encountered.
->
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> ---
->  mm/gup.c | 29 +++++++++++++++++++++++++----
->  1 file changed, 25 insertions(+), 4 deletions(-)
->
-> diff --git a/mm/gup.c b/mm/gup.c
-> index 0684a9536207..173db0c44678 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -1600,6 +1600,9 @@ static int gup_pte_range(pmd_t pmd, unsigned long addr, unsigned long end,
->                         goto pte_unmap;
->
->                 if (pte_devmap(pte)) {
-> +                       if (unlikely(flags & FOLL_LONGTERM))
-> +                               goto pte_unmap;
-> +
->                         pgmap = get_dev_pagemap(pte_pfn(pte), pgmap);
->                         if (unlikely(!pgmap)) {
->                                 undo_dev_pagemap(nr, nr_start, pages);
-> @@ -1739,8 +1742,11 @@ static int gup_huge_pmd(pmd_t orig, pmd_t *pmdp, unsigned long addr,
->         if (!pmd_access_permitted(orig, flags & FOLL_WRITE))
->                 return 0;
->
-> -       if (pmd_devmap(orig))
-> +       if (pmd_devmap(orig)) {
-> +               if (unlikely(flags & FOLL_LONGTERM))
-> +                       return 0;
->                 return __gup_device_huge_pmd(orig, pmdp, addr, end, pages, nr);
-> +       }
->
->         refs = 0;
->         page = pmd_page(orig) + ((addr & ~PMD_MASK) >> PAGE_SHIFT);
-> @@ -1777,8 +1783,11 @@ static int gup_huge_pud(pud_t orig, pud_t *pudp, unsigned long addr,
->         if (!pud_access_permitted(orig, flags & FOLL_WRITE))
->                 return 0;
->
-> -       if (pud_devmap(orig))
-> +       if (pud_devmap(orig)) {
-> +               if (unlikely(flags & FOLL_LONGTERM))
-> +                       return 0;
->                 return __gup_device_huge_pud(orig, pudp, addr, end, pages, nr);
-> +       }
->
->         refs = 0;
->         page = pud_page(orig) + ((addr & ~PUD_MASK) >> PAGE_SHIFT);
-> @@ -2066,8 +2075,20 @@ int get_user_pages_fast(unsigned long start, int nr_pages,
->                 start += nr << PAGE_SHIFT;
->                 pages += nr;
->
-> -               ret = get_user_pages_unlocked(start, nr_pages - nr, pages,
-> -                                             gup_flags);
-> +               if (gup_flags & FOLL_LONGTERM) {
-> +                       down_read(&current->mm->mmap_sem);
-> +                       ret = __gup_longterm_locked(current, current->mm,
-> +                                                   start, nr_pages - nr,
-> +                                                   pages, NULL, gup_flags);
-> +                       up_read(&current->mm->mmap_sem);
-> +               } else {
-> +                       /*
-> +                        * retain FAULT_FOLL_ALLOW_RETRY optimization if
-> +                        * possible
-> +                        */
-> +                       ret = get_user_pages_unlocked(start, nr_pages - nr,
-> +                                                     pages, gup_flags);
+Commit-ID:  3723908d05834c76fd5cc9ecd17b0851342e1df4
+Gitweb:     https://git.kernel.org/tip/3723908d05834c76fd5cc9ecd17b0851342e1df4
+Author:     Andi Kleen <ak@linux.intel.com>
+AuthorDate: Mon, 11 Mar 2019 07:44:54 -0700
+Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitDate: Mon, 11 Mar 2019 16:32:31 -0300
 
-I couldn't immediately grok why this path needs to branch on
-FOLL_LONGTERM? Won't get_user_pages_unlocked(..., FOLL_LONGTERM) do
-the right thing?
+perf report: Support time sort key
+
+Add a time sort key to perf report to display samples for different time
+quantums separately. This allows easier analysis of workloads that
+change over time, and also will allow looking at the context of samples.
+
+% perf record ...
+% perf report --sort time,overhead,symbol --time-quantum 1ms --stdio
+...
+     0.67%  277061.87300  [.] _dl_start
+     0.50%  277061.87300  [.] f1
+     0.50%  277061.87300  [.] f2
+     0.33%  277061.87300  [.] main
+     0.29%  277061.87300  [.] _dl_lookup_symbol_x
+     0.29%  277061.87300  [.] dl_main
+     0.29%  277061.87300  [.] do_lookup_x
+     0.17%  277061.87300  [.] _dl_debug_initialize
+     0.17%  277061.87300  [.] _dl_init_paths
+     0.08%  277061.87300  [.] check_match
+     0.04%  277061.87300  [.] _dl_count_modids
+     1.33%  277061.87400  [.] f1
+     1.33%  277061.87400  [.] f2
+     1.33%  277061.87400  [.] main
+     1.17%  277061.87500  [.] main
+     1.08%  277061.87500  [.] f1
+     1.08%  277061.87500  [.] f2
+     1.00%  277061.87600  [.] main
+     0.83%  277061.87600  [.] f1
+     0.83%  277061.87600  [.] f2
+     1.00%  277061.87700  [.] main
+
+Committer notes:
+
+Rename 'time' argument to hist_time() to htime to overcome this in older
+distros:
+
+  cc1: warnings being treated as errors
+  util/hist.c: In function 'hist_time':
+  util/hist.c:251: error: declaration of 'time' shadows a global declaration
+  /usr/include/time.h:186: error: shadowed declaration is here
+
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Link: http://lkml.kernel.org/r/20190311144502.15423-4-andi@firstfloor.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/Documentation/perf-report.txt |  2 ++
+ tools/perf/util/hist.c                   | 11 +++++++++
+ tools/perf/util/hist.h                   |  1 +
+ tools/perf/util/sort.c                   | 39 ++++++++++++++++++++++++++++++++
+ tools/perf/util/sort.h                   |  2 ++
+ 5 files changed, 55 insertions(+)
+
+diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
+index 9ec1702bccdd..546d87221ad8 100644
+--- a/tools/perf/Documentation/perf-report.txt
++++ b/tools/perf/Documentation/perf-report.txt
+@@ -105,6 +105,8 @@ OPTIONS
+ 	guest machine
+ 	- sample: Number of sample
+ 	- period: Raw number of event count of sample
++	- time: Separate the samples by time stamp with the resolution specified by
++	--time-quantum (default 100ms). Specify with overhead and before it.
+ 
+ 	By default, comm, dso and symbol keys are used.
+ 	(i.e. --sort comm,dso,symbol)
+diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+index f9eb95bf3938..34c0f00c68d1 100644
+--- a/tools/perf/util/hist.c
++++ b/tools/perf/util/hist.c
+@@ -19,6 +19,7 @@
+ #include <math.h>
+ #include <inttypes.h>
+ #include <sys/param.h>
++#include <linux/time64.h>
+ 
+ static bool hists__filter_entry_by_dso(struct hists *hists,
+ 				       struct hist_entry *he);
+@@ -192,6 +193,7 @@ void hists__calc_col_len(struct hists *hists, struct hist_entry *h)
+ 	hists__new_col_len(hists, HISTC_MEM_LVL, 21 + 3);
+ 	hists__new_col_len(hists, HISTC_LOCAL_WEIGHT, 12);
+ 	hists__new_col_len(hists, HISTC_GLOBAL_WEIGHT, 12);
++	hists__new_col_len(hists, HISTC_TIME, 12);
+ 
+ 	if (h->srcline) {
+ 		len = MAX(strlen(h->srcline), strlen(sort_srcline.se_header));
+@@ -246,6 +248,14 @@ static void he_stat__add_cpumode_period(struct he_stat *he_stat,
+ 	}
+ }
+ 
++static long hist_time(unsigned long htime)
++{
++	unsigned long time_quantum = symbol_conf.time_quantum;
++	if (time_quantum)
++		return (htime / time_quantum) * time_quantum;
++	return htime;
++}
++
+ static void he_stat__add_period(struct he_stat *he_stat, u64 period,
+ 				u64 weight)
+ {
+@@ -635,6 +645,7 @@ __hists__add_entry(struct hists *hists,
+ 		.raw_data = sample->raw_data,
+ 		.raw_size = sample->raw_size,
+ 		.ops = ops,
++		.time = hist_time(sample->time),
+ 	}, *he = hists__findnew_entry(hists, &entry, al, sample_self);
+ 
+ 	if (!hists->has_callchains && he && he->callchain_size != 0)
+diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
+index 4af27fbab24f..6279eca56409 100644
+--- a/tools/perf/util/hist.h
++++ b/tools/perf/util/hist.h
+@@ -31,6 +31,7 @@ enum hist_filter {
+ 
+ enum hist_column {
+ 	HISTC_SYMBOL,
++	HISTC_TIME,
+ 	HISTC_DSO,
+ 	HISTC_THREAD,
+ 	HISTC_COMM,
+diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+index d2299e912e59..bdd30cab51cb 100644
+--- a/tools/perf/util/sort.c
++++ b/tools/perf/util/sort.c
+@@ -3,6 +3,7 @@
+ #include <inttypes.h>
+ #include <regex.h>
+ #include <linux/mman.h>
++#include <linux/time64.h>
+ #include "sort.h"
+ #include "hist.h"
+ #include "comm.h"
+@@ -15,6 +16,7 @@
+ #include <traceevent/event-parse.h>
+ #include "mem-events.h"
+ #include "annotate.h"
++#include "time-utils.h"
+ #include <linux/kernel.h>
+ 
+ regex_t		parent_regex;
+@@ -654,6 +656,42 @@ struct sort_entry sort_socket = {
+ 	.se_width_idx	= HISTC_SOCKET,
+ };
+ 
++/* --sort time */
++
++static int64_t
++sort__time_cmp(struct hist_entry *left, struct hist_entry *right)
++{
++	return right->time - left->time;
++}
++
++static int hist_entry__time_snprintf(struct hist_entry *he, char *bf,
++				    size_t size, unsigned int width)
++{
++	unsigned long secs;
++	unsigned long long nsecs;
++	char he_time[32];
++
++	nsecs = he->time;
++	secs = nsecs / NSEC_PER_SEC;
++	nsecs -= secs * NSEC_PER_SEC;
++
++	if (symbol_conf.nanosecs)
++		snprintf(he_time, sizeof he_time, "%5lu.%09llu: ",
++			 secs, nsecs);
++	else
++		timestamp__scnprintf_usec(he->time, he_time,
++					  sizeof(he_time));
++
++	return repsep_snprintf(bf, size, "%-.*s", width, he_time);
++}
++
++struct sort_entry sort_time = {
++	.se_header      = "Time",
++	.se_cmp	        = sort__time_cmp,
++	.se_snprintf    = hist_entry__time_snprintf,
++	.se_width_idx	= HISTC_TIME,
++};
++
+ /* --sort trace */
+ 
+ static char *get_trace_output(struct hist_entry *he)
+@@ -1634,6 +1672,7 @@ static struct sort_dimension common_sort_dimensions[] = {
+ 	DIM(SORT_DSO_SIZE, "dso_size", sort_dso_size),
+ 	DIM(SORT_CGROUP_ID, "cgroup_id", sort_cgroup_id),
+ 	DIM(SORT_SYM_IPC_NULL, "ipc_null", sort_sym_ipc_null),
++	DIM(SORT_TIME, "time", sort_time),
+ };
+ 
+ #undef DIM
+diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
+index 2fbee0b1011c..19dceb7f6145 100644
+--- a/tools/perf/util/sort.h
++++ b/tools/perf/util/sort.h
+@@ -135,6 +135,7 @@ struct hist_entry {
+ 	char			*srcfile;
+ 	struct symbol		*parent;
+ 	struct branch_info	*branch_info;
++	long			time;
+ 	struct hists		*hists;
+ 	struct mem_info		*mem_info;
+ 	void			*raw_data;
+@@ -231,6 +232,7 @@ enum sort_type {
+ 	SORT_DSO_SIZE,
+ 	SORT_CGROUP_ID,
+ 	SORT_SYM_IPC_NULL,
++	SORT_TIME,
+ 
+ 	/* branch stack specific sort keys */
+ 	__SORT_BRANCH_STACK,
