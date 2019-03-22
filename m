@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-12.0 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5D54C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:04:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15053C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:04:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BE802190A
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:04:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E09A42192B
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:04:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbfCVWEM (ORCPT
+        id S1727852AbfCVWEP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 18:04:12 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:50803 "EHLO
+        Fri, 22 Mar 2019 18:04:15 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:59197 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727440AbfCVWEL (ORCPT
+        with ESMTP id S1727706AbfCVWEM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 18:04:11 -0400
+        Fri, 22 Mar 2019 18:04:12 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x2MM1uQ2745347
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x2MM3tQA745725
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Fri, 22 Mar 2019 15:01:56 -0700
+        Fri, 22 Mar 2019 15:03:55 -0700
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x2MM1t9N745344;
-        Fri, 22 Mar 2019 15:01:55 -0700
-Date:   Fri, 22 Mar 2019 15:01:55 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x2MM3sBX745721;
+        Fri, 22 Mar 2019 15:03:54 -0700
+Date:   Fri, 22 Mar 2019 15:03:54 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Adrian Hunter <tipbot@zytor.com>
-Message-ID: <tip-eaeffeb9838a7c0dec981d258666bfcc0fa6a947@git.kernel.org>
-Cc:     jiufei.xue@linux.alibaba.com, alexander.shishkin@linux.intel.com,
-        adrian.hunter@intel.com, peterz@infradead.org,
-        linux-kernel@vger.kernel.org, hpa@zytor.com,
-        gregkh@linuxfoundation.org, xuyu@linux.alibaba.com,
-        acme@redhat.com, joseph.qi@linux.alibaba.com, mhiramat@kernel.org,
-        mingo@kernel.org, luto@kernel.org, tglx@linutronix.de
-Reply-To: acme@redhat.com, luto@kernel.org, tglx@linutronix.de,
-          mhiramat@kernel.org, mingo@kernel.org,
-          joseph.qi@linux.alibaba.com, alexander.shishkin@linux.intel.com,
-          adrian.hunter@intel.com, jiufei.xue@linux.alibaba.com,
-          xuyu@linux.alibaba.com, hpa@zytor.com,
-          gregkh@linuxfoundation.org, peterz@infradead.org,
-          linux-kernel@vger.kernel.org
-In-Reply-To: <2ed432de-e904-85d2-5c36-5897ddc5b23b@intel.com>
-References: <2ed432de-e904-85d2-5c36-5897ddc5b23b@intel.com>
+From:   tip-bot for Jiri Olsa <tipbot@zytor.com>
+Message-ID: <tip-cd3dd8dd8ff62374d90cb3f2e54b8c94106c7810@git.kernel.org>
+Cc:     alexander.shishkin@linux.intel.com, tglx@linutronix.de,
+        hpa@zytor.com, mingo@kernel.org, jolsa@kernel.org,
+        eranian@google.com, alexey.budankov@linux.intel.com,
+        adrian.hunter@intel.com, linux-kernel@vger.kernel.org,
+        peterz@infradead.org, acme@redhat.com, ak@linux.intel.com,
+        namhyung@kernel.org
+Reply-To: hpa@zytor.com, alexander.shishkin@linux.intel.com,
+          tglx@linutronix.de, eranian@google.com,
+          alexey.budankov@linux.intel.com, linux-kernel@vger.kernel.org,
+          adrian.hunter@intel.com, mingo@kernel.org, jolsa@kernel.org,
+          peterz@infradead.org, namhyung@kernel.org, acme@redhat.com,
+          ak@linux.intel.com
+In-Reply-To: <20190308134745.5057-3-jolsa@kernel.org>
+References: <20190308134745.5057-3-jolsa@kernel.org>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/urgent] perf probe: Fix getting the kernel map
-Git-Commit-ID: eaeffeb9838a7c0dec981d258666bfcc0fa6a947
+Subject: [tip:perf/urgent] perf data: Don't store auxtrace index for
+ directory data file
+Git-Commit-ID: cd3dd8dd8ff62374d90cb3f2e54b8c94106c7810
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -63,53 +63,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  eaeffeb9838a7c0dec981d258666bfcc0fa6a947
-Gitweb:     https://git.kernel.org/tip/eaeffeb9838a7c0dec981d258666bfcc0fa6a947
-Author:     Adrian Hunter <adrian.hunter@intel.com>
-AuthorDate: Mon, 4 Mar 2019 15:13:21 +0200
+Commit-ID:  cd3dd8dd8ff62374d90cb3f2e54b8c94106c7810
+Gitweb:     https://git.kernel.org/tip/cd3dd8dd8ff62374d90cb3f2e54b8c94106c7810
+Author:     Jiri Olsa <jolsa@kernel.org>
+AuthorDate: Fri, 8 Mar 2019 14:47:36 +0100
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitDate: Mon, 11 Mar 2019 11:56:03 -0300
 
-perf probe: Fix getting the kernel map
+perf data: Don't store auxtrace index for directory data file
 
-Since commit 4d99e4136580 ("perf machine: Workaround missing maps for
-x86 PTI entry trampolines"), perf tools has been creating more than one
-kernel map, however 'perf probe' assumed there could be only one.
+We can't store the auxtrace index when we store into multiple files,
+because we keep only offset for it, not the file.
 
-Fix by using machine__kernel_map() to get the main kernel map.
+The auxtrace data will be processed correctly in the 'pipe' mode.
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Tested-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jiufei Xue <jiufei.xue@linux.alibaba.com>
+Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: stable@vger.kernel.org
-Cc: Xu Yu <xuyu@linux.alibaba.com>
-Fixes: 4d99e4136580 ("perf machine: Workaround missing maps for x86 PTI entry trampolines")
-Fixes: d83212d5dd67 ("kallsyms, x86: Export addresses of PTI entry trampolines")
-Link: http://lkml.kernel.org/r/2ed432de-e904-85d2-5c36-5897ddc5b23b@intel.com
+Cc: Stephane Eranian <eranian@google.com>
+Link: http://lkml.kernel.org/r/20190308134745.5057-3-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/probe-event.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ tools/perf/builtin-record.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-index a1b8d9649ca7..198e09ff611e 100644
---- a/tools/perf/util/probe-event.c
-+++ b/tools/perf/util/probe-event.c
-@@ -160,8 +160,10 @@ static struct map *kernel_get_module_map(const char *module)
- 	if (module && strchr(module, '/'))
- 		return dso__new_map(module);
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index f3f7f3100336..e983c8d71a79 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -392,7 +392,7 @@ static int record__process_auxtrace(struct perf_tool *tool,
+ 	size_t padding;
+ 	u8 pad[8] = {0};
  
--	if (!module)
--		module = "kernel";
-+	if (!module) {
-+		pos = machine__kernel_map(host_machine);
-+		return map__get(pos);
-+	}
- 
- 	for (pos = maps__first(maps); pos; pos = map__next(pos)) {
- 		/* short_name is "[module]" */
+-	if (!perf_data__is_pipe(data)) {
++	if (!perf_data__is_pipe(data) && !perf_data__is_dir(data)) {
+ 		off_t file_offset;
+ 		int fd = perf_data__fd(data);
+ 		int err;
