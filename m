@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 648F9C10F03
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:04:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5005C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:04:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27FC821B1C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:04:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A541E2192D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:04:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256289;
-	bh=M3aQnSW78gUOEVKRzh3QbPXio9NqgoCLjF6GHk/EbLA=;
+	s=default; t=1553256293;
+	bh=RgMJnDERoQkrmyDxnu9lN5+W5E0bHSSz56wUoDZ245k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lf0rwDEv8Xie7Hwi5KKC+n5ZtYyPGX/q2RCT5MSeKalsKSZoRMQfRGLHofYaloRXx
-	 VsUqf/T+6rSv9YrzwNpJH6ejchJo1na2FRyT+Yd3l/jp4jL2KniRi3eVWydLIZ3cqr
-	 V96Sfr/+IqBDo5MIfm4VyIO0DbMC8BSVUBtG/Tx8=
+	b=VHX3+tzjgaoCXUZCESo4uov4aD/oeGsPfyTQko6a/L7Ilh02aSz4jil/p5/h37m7D
+	 63yenq3f9F0WDpZsjmDXGGctJ/5cXL0DtZiTOq0/gAdK3+YU9Vc2eYM5VwGi7/l9nK
+	 SjL4BSxFpqAe+dKZY2mDyrqrL742NHDTbxcq9HAE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388399AbfCVMEs (ORCPT
+        id S2388727AbfCVMEw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:04:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43172 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:04:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388393AbfCVMEp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:04:45 -0400
+        id S1733252AbfCVMEt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:04:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8776121916;
-        Fri, 22 Mar 2019 12:04:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86757206C0;
+        Fri, 22 Mar 2019 12:04:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256285;
-        bh=M3aQnSW78gUOEVKRzh3QbPXio9NqgoCLjF6GHk/EbLA=;
+        s=default; t=1553256289;
+        bh=RgMJnDERoQkrmyDxnu9lN5+W5E0bHSSz56wUoDZ245k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aK/QvmUTxMUroOlGRzF6UDh2hcDQPN7zgwfkLmrve7e2etCws6Fb/am/6P3wMINZe
-         hK8iZZS9sQB1hXM+RKzvB74XEdPnxkRY+Ai+pl3K8K7bn+Kw6uOv9JTuaQQI5SMBi7
-         w7VLOTNqgS9vY2Thm/wlWLPteKSJpVjgLFwUxiq0=
+        b=k8NFNIWFyrWzAvUp29mQm+iCiEr4ZodO+1skpN86Qqs0T6u50QIxebbaLYGwXckQg
+         oE+FPHjaaE9AmteYLvbaAPWh6e8he9aZnQe/JDCnj72Z810mSXLzcdvk1MPMV7CcIZ
+         89FOv3A03Ev2NOk/gIZuz4Z9c7J/PsApJWapmPOU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "zhangyi (F)" <yi.zhang@huawei.com>,
+        stable@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Song Liu <songliubraving@fb.com>, Jann Horn <jannh@google.com>,
         "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 4.19 141/280] tracing: Do not free iter->trace in fail path of tracing_open_pipe()
-Date:   Fri, 22 Mar 2019 12:14:54 +0100
-Message-Id: <20190322111318.407219168@linuxfoundation.org>
+Subject: [PATCH 4.19 142/280] tracing/perf: Use strndup_user() instead of buggy open-coded version
+Date:   Fri, 22 Mar 2019 12:14:55 +0100
+Message-Id: <20190322111318.570881793@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -65,39 +66,54 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: zhangyi (F) <yi.zhang@huawei.com>
+From: Jann Horn <jannh@google.com>
 
-commit e7f0c424d0806b05d6f47be9f202b037eb701707 upstream.
+commit 83540fbc8812a580b6ad8f93f4c29e62e417687e upstream.
 
-Commit d716ff71dd12 ("tracing: Remove taking of trace_types_lock in
-pipe files") use the current tracer instead of the copy in
-tracing_open_pipe(), but it forget to remove the freeing sentence in
-the error path.
+The first version of this method was missing the check for
+`ret == PATH_MAX`; then such a check was added, but it didn't call kfree()
+on error, so there was still a small memory leak in the error case.
+Fix it by using strndup_user() instead of open-coding it.
 
-There's an error path that can call kfree(iter->trace) after the iter->trace
-was assigned to tr->current_trace, which would be bad to free.
+Link: http://lkml.kernel.org/r/20190220165443.152385-1-jannh@google.com
 
-Link: http://lkml.kernel.org/r/1550060946-45984-1-git-send-email-yi.zhang@huawei.com
-
+Cc: Ingo Molnar <mingo@kernel.org>
 Cc: stable@vger.kernel.org
-Fixes: d716ff71dd12 ("tracing: Remove taking of trace_types_lock in pipe files")
-Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
+Fixes: 0eadcc7a7bc0 ("perf/core: Fix perf_uprobe_init()")
+Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
+Acked-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Jann Horn <jannh@google.com>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/trace/trace.c |    1 -
- 1 file changed, 1 deletion(-)
+ kernel/trace/trace_event_perf.c |   16 +++++++---------
+ 1 file changed, 7 insertions(+), 9 deletions(-)
 
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -5606,7 +5606,6 @@ out:
- 	return ret;
+--- a/kernel/trace/trace_event_perf.c
++++ b/kernel/trace/trace_event_perf.c
+@@ -298,15 +298,13 @@ int perf_uprobe_init(struct perf_event *
  
- fail:
--	kfree(iter->trace);
- 	kfree(iter);
- 	__trace_array_put(tr);
- 	mutex_unlock(&trace_types_lock);
+ 	if (!p_event->attr.uprobe_path)
+ 		return -EINVAL;
+-	path = kzalloc(PATH_MAX, GFP_KERNEL);
+-	if (!path)
+-		return -ENOMEM;
+-	ret = strncpy_from_user(
+-		path, u64_to_user_ptr(p_event->attr.uprobe_path), PATH_MAX);
+-	if (ret == PATH_MAX)
+-		return -E2BIG;
+-	if (ret < 0)
+-		goto out;
++
++	path = strndup_user(u64_to_user_ptr(p_event->attr.uprobe_path),
++			    PATH_MAX);
++	if (IS_ERR(path)) {
++		ret = PTR_ERR(path);
++		return (ret == -EINVAL) ? -E2BIG : ret;
++	}
+ 	if (path[0] == '\0') {
+ 		ret = -EINVAL;
+ 		goto out;
 
 
