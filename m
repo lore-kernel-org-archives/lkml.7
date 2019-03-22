@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF8EC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:33:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32AE4C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:33:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD4E32054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:33:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBC412054F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:33:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553258003;
-	bh=LVmzGzdXQDF+iI2tiem7wO2p8OtOfqosvOv3ISN6Df8=;
+	s=default; t=1553258023;
+	bh=86ca78CONUTwoXMla2cfh8kZ2I4Gahr5jDOTewKAMtg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PLbg+7LL+uhbs3v9jHcLha8PyZxWhdrhr3cIswFV0YxvfzUaksYXnw2I01e6z7LuP
-	 zH19Kp9M8zMtL2chmm/aRfO9fTnvkaHIqriqoadq+7560IQUQ46ovH4na2ZrFJ+ezr
-	 fOxcJWAMZmLGNCwBZu+JDDrNBbUpmbQstIgss3GE=
+	b=Vbuayh7kt+iFJoyDbsrUNDcCoaG9qyOrsOTN+aLAn5NsrfUqa1kN0ZsagtwowH5/8
+	 enWMuhpM0xGNbqohAVQ5xzqioqVUKIGXXEyN9x8VfdVjYpS6g5vYW07FHoYmTM5Un7
+	 GvKjP6JYSK170E2+kqjnGntdLwA1jmkRTDtURCKg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389895AbfCVMdV (ORCPT
+        id S2389975AbfCVMdl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:33:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53102 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:33:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389976AbfCVMOu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:14:50 -0400
+        id S2389894AbfCVMOX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:14:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE0E62082C;
-        Fri, 22 Mar 2019 12:14:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E0182083D;
+        Fri, 22 Mar 2019 12:14:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256889;
-        bh=LVmzGzdXQDF+iI2tiem7wO2p8OtOfqosvOv3ISN6Df8=;
+        s=default; t=1553256862;
+        bh=86ca78CONUTwoXMla2cfh8kZ2I4Gahr5jDOTewKAMtg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g69ENPZLGEq71MqbyWLmeD+0UXiYDiuuwBZzI3e4TEfRaolMElreFTSJacpRmtk6k
-         aSIUYKeJ7UlK5Ydh2959pfMcrDI+bvOAkvIFhrDwZ/B7wIBr7IfBjt+HGkyhB2Kl9h
-         2nojGuN2JU9+N3UeBDdUNAHjisjecUz9Dp26veR4=
+        b=FRvQ4jVpOKfOZ8ik4Yjpu4BBGpy46E6jD3Tbzz7xCa8s3GWCQUoBGlnpAP/8M83+u
+         KFBzuiKBuXuL4M4GUUN6SaoqW0D8Xty1G1TYApfRvMIiP+sICpJH6uGYTnQGAViZsA
+         iuHjiBMZCApc/EbL1wIAqnBntRVp5Dmma8exFCk4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.0 068/238] spi: spi-gpio: fix SPI_CS_HIGH capability
-Date:   Fri, 22 Mar 2019 12:14:47 +0100
-Message-Id: <20190322111302.635574528@linuxfoundation.org>
+        stable@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: [PATCH 5.0 027/238] nfit: acpi_nfit_ctl(): Check out_obj->type in the right place
+Date:   Fri, 22 Mar 2019 12:14:06 +0100
+Message-Id: <20190322111259.824281376@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -65,46 +65,54 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Dexuan Cui <decui@microsoft.com>
 
-commit b89fefda7d4e3a649129584d855be233c7465264 upstream.
+commit 43f89877f26671c6309cd87d7364b1a3e66e71cf upstream.
 
-spi-gpio is capable of dealing with active-high chip-selects.
-Unfortunately, commit 4b859db2c606 ("spi: spi-gpio: add SPI_3WIRE
-support") broke this by setting master->mode_bits, which overrides
-the setting in the spi-bitbang code.  Fix this.
+In the case of ND_CMD_CALL, we should also check out_obj->type.
 
-[Fixed a trivial conflict with SPI_3WIRE_HIZ support -- broonie]
+The patch uses out_obj->type, which is a short alias to
+out_obj->package.type.
 
-Fixes: 4b859db2c606 ("spi: spi-gpio: add SPI_3WIRE support")
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Cc: stable@vger.kernel.org
+Fixes: 31eca76ba2fc ("nfit, libnvdimm: limited/whitelisted dimm command marshaling mechanism")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/spi/spi-gpio.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/acpi/nfit/core.c |   14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
---- a/drivers/spi/spi-gpio.c
-+++ b/drivers/spi/spi-gpio.c
-@@ -428,7 +428,8 @@ static int spi_gpio_probe(struct platfor
- 		return status;
- 
- 	master->bits_per_word_mask = SPI_BPW_RANGE_MASK(1, 32);
--	master->mode_bits = SPI_3WIRE | SPI_3WIRE_HIZ | SPI_CPHA | SPI_CPOL;
-+	master->mode_bits = SPI_3WIRE | SPI_3WIRE_HIZ | SPI_CPHA | SPI_CPOL |
-+			    SPI_CS_HIGH;
- 	master->flags = master_flags;
- 	master->bus_num = pdev->id;
- 	/* The master needs to think there is a chipselect even if not connected */
-@@ -455,7 +456,6 @@ static int spi_gpio_probe(struct platfor
- 		spi_gpio->bitbang.txrx_word[SPI_MODE_3] = spi_gpio_spec_txrx_word_mode3;
+--- a/drivers/acpi/nfit/core.c
++++ b/drivers/acpi/nfit/core.c
+@@ -554,6 +554,13 @@ int acpi_nfit_ctl(struct nvdimm_bus_desc
+ 		return -EINVAL;
  	}
- 	spi_gpio->bitbang.setup_transfer = spi_bitbang_setup_transfer;
--	spi_gpio->bitbang.flags = SPI_CS_HIGH;
  
- 	status = spi_bitbang_start(&spi_gpio->bitbang);
- 	if (status)
++	if (out_obj->type != ACPI_TYPE_BUFFER) {
++		dev_dbg(dev, "%s unexpected output object type cmd: %s type: %d\n",
++				dimm_name, cmd_name, out_obj->type);
++		rc = -EINVAL;
++		goto out;
++	}
++
+ 	if (call_pkg) {
+ 		call_pkg->nd_fw_size = out_obj->buffer.length;
+ 		memcpy(call_pkg->nd_payload + call_pkg->nd_size_in,
+@@ -572,13 +579,6 @@ int acpi_nfit_ctl(struct nvdimm_bus_desc
+ 		return 0;
+ 	}
+ 
+-	if (out_obj->package.type != ACPI_TYPE_BUFFER) {
+-		dev_dbg(dev, "%s unexpected output object type cmd: %s type: %d\n",
+-				dimm_name, cmd_name, out_obj->type);
+-		rc = -EINVAL;
+-		goto out;
+-	}
+-
+ 	dev_dbg(dev, "%s cmd: %s output length: %d\n", dimm_name,
+ 			cmd_name, out_obj->buffer.length);
+ 	print_hex_dump_debug(cmd_name, DUMP_PREFIX_OFFSET, 4, 4,
 
 
