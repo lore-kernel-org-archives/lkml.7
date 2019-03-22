@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C0E2C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:14:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 831C4C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:14:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B2572083D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:14:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5023F21929
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:14:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256881;
-	bh=FX/TvHuBurcW/orFJCjrgAD73kg+1PAxSTM2BOCNl3g=;
+	s=default; t=1553256885;
+	bh=LL9vF//DPh36mv6QmBbUkNlhFZ7cX0H28wWuGhFwb24=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qRM16V2EBlE0ljgQvmdjDEiLfV4asw9fnZPIIaJnSq79CIUA3ZFHFU+0gKfHYgc2e
-	 ocQ2rnUj86pxpvKEebUn+KmrrUurmcWcwNpK4icY86r0QG7t3ebDT7D4hrrqogG4Gt
-	 VhggfNwaNDd32XB5lynZJ9unCLbLUSbLpx1OkniU=
+	b=2Ip/m5OdLzqWX4pQpotVHVGcYlZaM6bquqEMvkIVromiXTSS+9jRd6BBzYnUx/H07
+	 ga4IXFbbujOSc8xnVLtEEYmBdNPe7mqSotzxIOFrs8ys5uSvmzDjFKC8d6LyyXvlnn
+	 d9aYg2J35mck8wZf2cFXKApzPcwT0EFBFB0qB8aw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389242AbfCVMOk (ORCPT
+        id S2389948AbfCVMOn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:14:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52838 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:14:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389215AbfCVMOg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:14:36 -0400
+        id S2389929AbfCVMOj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:14:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 807682083D;
-        Fri, 22 Mar 2019 12:14:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49D092083D;
+        Fri, 22 Mar 2019 12:14:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256876;
-        bh=FX/TvHuBurcW/orFJCjrgAD73kg+1PAxSTM2BOCNl3g=;
+        s=default; t=1553256878;
+        bh=LL9vF//DPh36mv6QmBbUkNlhFZ7cX0H28wWuGhFwb24=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oAgblGnf6Dgcq5vZA9nycDHeIEKZ07iJikO7WvFJQSmjYy9e1DmbawcG5WG/Sw25n
-         dAr2NMtAD0MV4PfNyyij3v5xyR1yTixi4j3CFkDC3NNNILL60fiq80OdtO6gPRZZhJ
-         w34kaa6s0IZUw/yuYrLIWDUypnyb1coZkrLFUc4w=
+        b=vvvYtNP2hrexbJ3iv0+wWOfZxUyJZB9k0eta9cgKLbTlFtw0EJPCMBeOmf/GsQtcv
+         lSK7KQ3032Y9wE3fBjqQUKZB8CfAYqP5IpylAirYNUU73Ww/R3I/OlX0AScEdCknOD
+         odDrQsRCsQLKP8D1ZYBGEJgJPgKBjgNThk22SJes=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiong Wu <Lohengrin1024@gmail.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 5.0 064/238] mmc:fix a bug when max_discard is 0
-Date:   Fri, 22 Mar 2019 12:14:43 +0100
-Message-Id: <20190322111302.359209256@linuxfoundation.org>
+        stable@vger.kernel.org, Vignesh R <vigneshr@ti.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.0 065/238] spi: ti-qspi: Fix mmap read when more than one CS in use
+Date:   Fri, 22 Mar 2019 12:14:44 +0100
+Message-Id: <20190322111302.435078188@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -65,49 +65,48 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jiong Wu <lohengrin1024@gmail.com>
+From: Vignesh R <vigneshr@ti.com>
 
-commit d4721339dcca7def04909a8e60da43c19a24d8bf upstream.
+commit 673c865efbdc5fec3cc525c46d71844d42c60072 upstream.
 
-The original purpose of the code I fix is to replace max_discard with
-max_trim if max_trim is less than max_discard. When max_discard is 0
-we should replace max_discard with max_trim as well, because
-max_discard equals 0 happens only when the max_do_calc_max_discard
-process is overflowed, so if mmc_can_trim(card) is true, max_discard
-should be replaced by an available max_trim.
-However, in the original code, there are two lines of code interfere
-the right process.
-1) if (max_discard && mmc_can_trim(card))
-when max_discard is 0, it skips the process checking if max_discard
-needs to be replaced with max_trim.
-2) if (max_trim < max_discard)
-the condition is false when max_discard is 0. it also skips the process
-that replaces max_discard with max_trim, in fact, we should replace the
-0-valued max_discard with max_trim.
+Commit 4dea6c9b0b64 ("spi: spi-ti-qspi: add mmap mode read support") has
+has got order of parameter wrong when calling regmap_update_bits() to
+select CS for mmap access. Mask and value arguments are interchanged.
+Code will work on a system with single slave, but fails when more than
+one CS is in use. Fix this by correcting the order of parameters when
+calling regmap_update_bits().
 
-Signed-off-by: Jiong Wu <Lohengrin1024@gmail.com>
-Fixes: b305882fbc87 (mmc: core: optimize mmc_calc_max_discard)
-Cc: stable@vger.kernel.org # v4.17+
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Fixes: 4dea6c9b0b64 ("spi: spi-ti-qspi: add mmap mode read support")
+Cc: stable@vger.kernel.org
+Signed-off-by: Vignesh R <vigneshr@ti.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/core/core.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/spi/spi-ti-qspi.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/mmc/core/core.c
-+++ b/drivers/mmc/core/core.c
-@@ -2381,9 +2381,9 @@ unsigned int mmc_calc_max_discard(struct
- 		return card->pref_erase;
+--- a/drivers/spi/spi-ti-qspi.c
++++ b/drivers/spi/spi-ti-qspi.c
+@@ -490,8 +490,8 @@ static void ti_qspi_enable_memory_map(st
+ 	ti_qspi_write(qspi, MM_SWITCH, QSPI_SPI_SWITCH_REG);
+ 	if (qspi->ctrl_base) {
+ 		regmap_update_bits(qspi->ctrl_base, qspi->ctrl_reg,
+-				   MEM_CS_EN(spi->chip_select),
+-				   MEM_CS_MASK);
++				   MEM_CS_MASK,
++				   MEM_CS_EN(spi->chip_select));
+ 	}
+ 	qspi->mmap_enabled = true;
+ }
+@@ -503,7 +503,7 @@ static void ti_qspi_disable_memory_map(s
+ 	ti_qspi_write(qspi, 0, QSPI_SPI_SWITCH_REG);
+ 	if (qspi->ctrl_base)
+ 		regmap_update_bits(qspi->ctrl_base, qspi->ctrl_reg,
+-				   0, MEM_CS_MASK);
++				   MEM_CS_MASK, 0);
+ 	qspi->mmap_enabled = false;
+ }
  
- 	max_discard = mmc_do_calc_max_discard(card, MMC_ERASE_ARG);
--	if (max_discard && mmc_can_trim(card)) {
-+	if (mmc_can_trim(card)) {
- 		max_trim = mmc_do_calc_max_discard(card, MMC_TRIM_ARG);
--		if (max_trim < max_discard)
-+		if (max_trim < max_discard || max_discard == 0)
- 			max_discard = max_trim;
- 	} else if (max_discard < card->erase_size) {
- 		max_discard = 0;
 
 
