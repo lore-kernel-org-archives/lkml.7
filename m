@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1A49C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:25:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2CECC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:25:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82495218A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:25:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2B8A2054F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:25:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553257544;
-	bh=BfWoab1GxUKbYRVoo6RMhS0zjKSq+2dF9hH500xPp9A=;
+	s=default; t=1553257550;
+	bh=v9beN2M1QfezDpmeoiPpBzs6mrFBEIojI8P/Vg3EhiY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rYz8EHsNnfLur2mJ3nc6ayTZqITt8HzMuHaaUrDPmapVhYwiP7Lml+DeXZO8FZnuP
-	 mc6c+y5bgXHeK04ze4uolwNWIys83SEG1051jQMeLx3QFPoCWcz6oQFFzM278nwXux
-	 4m+3bfex95RgxTFClnsVC+aFMaQOkeFwd/GV+pRQ=
+	b=kwsmKarDVG8tCDuRaAQy1a5cwU6GwTSa5/XitvEnC/B2wW2TftJ8yHmQE1gyZ7tjG
+	 pA1O9a9bay7sZSsAbtd5qH4Yt3meXpt4aihyVIbLv1nraam0/eJQ06Ak1rK6ywHltE
+	 FiQU3hGBBG5ovMwTpKc25lflA15MEmm4NwKPs+q0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390895AbfCVMZn (ORCPT
+        id S2390831AbfCVMXn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:25:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35346 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:23:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391159AbfCVMXq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:23:46 -0400
+        id S2390965AbfCVMXd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:23:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 399AE2054F;
-        Fri, 22 Mar 2019 12:23:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EFF20218A1;
+        Fri, 22 Mar 2019 12:23:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553257425;
-        bh=BfWoab1GxUKbYRVoo6RMhS0zjKSq+2dF9hH500xPp9A=;
+        s=default; t=1553257412;
+        bh=v9beN2M1QfezDpmeoiPpBzs6mrFBEIojI8P/Vg3EhiY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qHlLo9BE7s5JuvXWRB5QUZ7z5sEuEELKV3WwHhNIi81/PfXkvXteP+U14vS/Xa6wS
-         hwQdsspneAox8sNiV6huyIpTCbkCKX7l8sdytPRJ3OagBXbsCLzkxksoY5Rlsfj8Bn
-         DLhb3lk+g/AAv2Tz4kHX+Vj0iWqYBj7lSFNEEbcw=
+        b=fdUBrVW5Gmv99EHHnqj9+pMmOaPOP9erv3qiAvd+i3UpsrMayfg2WKfTMwrxEv5Mm
+         P+UYf7M1Lxa0v75IXun0NjIfCOh6f0mNQreiAoy3CeojbFe+vUJFrAcHrOh/Z1GpMb
+         FBle4Wzwbk7gOm4I2GQo1M02xXusyq2w8CrQZexE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tang Junhui <tang.junhui.linux@gmail.com>,
-        Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.0 195/238] bcache: treat stale && dirty keys as bad keys
-Date:   Fri, 22 Mar 2019 12:16:54 +0100
-Message-Id: <20190322111309.699373791@linuxfoundation.org>
+        stable@vger.kernel.org, Alex Deucher <alexander.deucher@amd.com>,
+        Harry Wentland <harry.wentland@amd.com>
+Subject: [PATCH 5.0 223/238] drm/amd/display: dont call dm_pp_ function from an fpu block
+Date:   Fri, 22 Mar 2019 12:17:22 +0100
+Message-Id: <20190322111311.493302162@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -65,95 +64,57 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Tang Junhui <tang.junhui.linux@gmail.com>
+From: Harry Wentland <harry.wentland@amd.com>
 
-commit 58ac323084ebf44f8470eeb8b82660f9d0ee3689 upstream.
+commit 59d3191f14dc18881fec1172c7096b7863622803 upstream.
 
-Stale && dirty keys can be produced in the follow way:
-After writeback in write_dirty_finish(), dirty keys k1 will
-replace by clean keys k2
-==>ret = bch_btree_insert(dc->disk.c, &keys, NULL, &w->key);
-==>btree_insert_fn(struct btree_op *b_op, struct btree *b)
-==>static int bch_btree_insert_node(struct btree *b,
-       struct btree_op *op,
-       struct keylist *insert_keys,
-       atomic_t *journal_ref,
-Then two steps:
-A) update k1 to k2 in btree node memory;
-   bch_btree_insert_keys(b, op, insert_keys, replace_key)
-B) Write the bset(contains k2) to cache disk by a 30s delay work
-   bch_btree_leaf_dirty(b, journal_ref).
-But before the 30s delay work write the bset to cache device,
-these things happened:
-A) GC works, and reclaim the bucket k2 point to;
-B) Allocator works, and invalidate the bucket k2 point to,
-   and increase the gen of the bucket, and place it into free_inc
-   fifo;
-C) Until now, the 30s delay work still does not finish work,
-   so in the disk, the key still is k1, it is dirty and stale
-   (its gen is smaller than the gen of the bucket). and then the
-   machine power off suddenly happens;
-D) When the machine power on again, after the btree reconstruction,
-   the stale dirty key appear.
+Powerplay functions called from dm_pp_* functions tend to do a
+mutex_lock which isn't safe to do inside a kernel_fpu_begin/end block as
+those will disable/enable preemption.
 
-In bch_extent_bad(), when expensive_debug_checks is off, it would
-treat the dirty key as good even it is stale keys, and it would
-cause bellow probelms:
-A) In read_dirty() it would cause machine crash:
-   BUG_ON(ptr_stale(dc->disk.c, &w->key, 0));
-B) It could be worse when reads hits stale dirty keys, it would
-   read old incorrect data.
+Rearrange the dm_pp_get_clock_levels_by_type_with_voltage calls to make
+sure they happen outside of kernel_fpu_begin/end.
 
-This patch tolerate the existence of these stale && dirty keys,
-and treat them as bad key in bch_extent_bad().
-
-(Coly Li: fix indent which was modified by sender's email client)
-
-Signed-off-by: Tang Junhui <tang.junhui.linux@gmail.com>
 Cc: stable@vger.kernel.org
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Acked-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Harry Wentland <harry.wentland@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/bcache/extents.c |   13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/amd/display/dc/calcs/dcn_calcs.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
---- a/drivers/md/bcache/extents.c
-+++ b/drivers/md/bcache/extents.c
-@@ -538,6 +538,7 @@ static bool bch_extent_bad(struct btree_
- {
- 	struct btree *b = container_of(bk, struct btree, keys);
- 	unsigned int i, stale;
-+	char buf[80];
+--- a/drivers/gpu/drm/amd/display/dc/calcs/dcn_calcs.c
++++ b/drivers/gpu/drm/amd/display/dc/calcs/dcn_calcs.c
+@@ -1355,12 +1355,12 @@ void dcn_bw_update_from_pplib(struct dc
+ 	struct dm_pp_clock_levels_with_voltage fclks = {0}, dcfclks = {0};
+ 	bool res;
  
- 	if (!KEY_PTRS(k) ||
- 	    bch_extent_invalid(bk, k))
-@@ -547,19 +548,19 @@ static bool bch_extent_bad(struct btree_
- 		if (!ptr_available(b->c, k, i))
- 			return true;
- 
--	if (!expensive_debug_checks(b->c) && KEY_DIRTY(k))
--		return false;
+-	kernel_fpu_begin();
 -
- 	for (i = 0; i < KEY_PTRS(k); i++) {
- 		stale = ptr_stale(b->c, k, i);
+ 	/* TODO: This is not the proper way to obtain fabric_and_dram_bandwidth, should be min(fclk, memclk) */
+ 	res = dm_pp_get_clock_levels_by_type_with_voltage(
+ 			ctx, DM_PP_CLOCK_TYPE_FCLK, &fclks);
  
-+		if (stale && KEY_DIRTY(k)) {
-+			bch_extent_to_text(buf, sizeof(buf), k);
-+			pr_info("stale dirty pointer, stale %u, key: %s",
-+				stale, buf);
-+		}
++	kernel_fpu_begin();
 +
- 		btree_bug_on(stale > BUCKET_GC_GEN_MAX, b,
- 			     "key too stale: %i, need_gc %u",
- 			     stale, b->c->need_gc);
+ 	if (res)
+ 		res = verify_clock_values(&fclks);
  
--		btree_bug_on(stale && KEY_DIRTY(k) && KEY_SIZE(k),
--			     b, "stale dirty pointer");
--
- 		if (stale)
- 			return true;
+@@ -1379,9 +1379,13 @@ void dcn_bw_update_from_pplib(struct dc
+ 	} else
+ 		BREAK_TO_DEBUGGER();
+ 
++	kernel_fpu_end();
++
+ 	res = dm_pp_get_clock_levels_by_type_with_voltage(
+ 			ctx, DM_PP_CLOCK_TYPE_DCFCLK, &dcfclks);
+ 
++	kernel_fpu_begin();
++
+ 	if (res)
+ 		res = verify_clock_values(&dcfclks);
  
 
 
