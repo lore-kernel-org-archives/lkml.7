@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35AEBC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:26:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80195C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:27:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0317F218B0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:26:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FA0620657
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:27:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254016;
-	bh=oY+/Jqh2TtnhI1Qrp3AcSjcK3lqguVR4b2hNEFjJ1JQ=;
+	s=default; t=1553254021;
+	bh=aumAjMVBbcN1iTAZBxqRgDOay8HHYtyOjOsGO9txkM0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0rAALeOrNRiuj3kH5mZ54dMVfUHeEa06KkQRGUrc8/EQ1b1wnCYBorLDPAksz6/MM
-	 a2Abo5kB7AtUlI8E9dlP27NgFj9vge92k7rjfogreWFsi605jE7TE5u9lg4q93ouyt
-	 fGPhMndlPyGNPiTMhurVg5uInyf2CozJkBYf/ijA=
+	b=wMgGuXncZHZXy9k5ShBML0HZAnXfyF69IB18lE80M4bVhQrmyqdxt0tOas2oz2XDb
+	 qoqsHMX+mulZE03HrArKAuWUozB8mKsg4kxQ5bbcPGgBAVxj2gY842rUPGF/u23qbr
+	 9sZDtT8hCnhn6Fl+CGpCfvs+ZAiSWz37zagYlOXk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728968AbfCVL0y (ORCPT
+        id S1729489AbfCVL07 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:26:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54590 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:26:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729454AbfCVL0v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:26:51 -0400
+        id S1729156AbfCVL05 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:26:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4499D218A2;
-        Fri, 22 Mar 2019 11:26:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2DC7221B24;
+        Fri, 22 Mar 2019 11:26:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254010;
-        bh=oY+/Jqh2TtnhI1Qrp3AcSjcK3lqguVR4b2hNEFjJ1JQ=;
+        s=default; t=1553254016;
+        bh=aumAjMVBbcN1iTAZBxqRgDOay8HHYtyOjOsGO9txkM0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XH0Dj8R++h2FaPSceGGcc9gGiJWwfEeCRpbHCvASjZ+g9nfUwiMYXf2WNvit6NhLo
-         9GZY6vOLZ4yVC6RGPuYQdScB9uN1rBqBfNnmz9VVPEK5fn57Ulho+JJxnavTW7H+A8
-         WGvYrOdNgAktqCdroZsJFs8u3Y50ElSYnZavmFag=
+        b=gLidCS2ygFAqVA2AlA9hpoux7sknbZjrKlCHTsIHXn41mZ0pvMs48/HF8qCrKFBvw
+         9pCuGU7I4/dKZazUjVio4xoQivzVme8r0IYi6bY+7IlrPzYIsaTavj1spqCzIx2lcr
+         tfyPbFtvjw8Opq5h+xV1D/QBzFg9nRF+lPxAvVtM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guoqing Jiang <gqjiang@suse.com>,
-        Aditya Pakki <pakki001@umn.edu>,
-        Song Liu <songliubraving@fb.com>
-Subject: [PATCH 3.18 131/134] md: Fix failed allocation of md_register_thread
-Date:   Fri, 22 Mar 2019 12:15:44 +0100
-Message-Id: <20190322111220.030238387@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: [PATCH 3.18 133/134] media: uvcvideo: Avoid NULL pointer dereference at the end of streaming
+Date:   Fri, 22 Mar 2019 12:15:46 +0100
+Message-Id: <20190322111220.190717235@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111210.465931067@linuxfoundation.org>
 References: <20190322111210.465931067@linuxfoundation.org>
@@ -66,49 +68,58 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Aditya Pakki <pakki001@umn.edu>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
 
-commit e406f12dde1a8375d77ea02d91f313fb1a9c6aec upstream.
+commit 9dd0627d8d62a7ddb001a75f63942d92b5336561 upstream.
 
-mddev->sync_thread can be set to NULL on kzalloc failure downstream.
-The patch checks for such a scenario and frees allocated resources.
+The UVC video driver converts the timestamp from hardware specific unit
+to one known by the kernel at the time when the buffer is dequeued. This
+is fine in general, but the streamoff operation consists of the
+following steps (among other things):
 
-Committer node:
+1. uvc_video_clock_cleanup --- the hardware clock sample array is
+   released and the pointer to the array is set to NULL,
 
-Added similar fix to raid5.c, as suggested by Guoqing.
+2. buffers in active state are returned to the user and
 
-Cc: stable@vger.kernel.org # v3.16+
-Acked-by: Guoqing Jiang <gqjiang@suse.com>
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Signed-off-by: Song Liu <songliubraving@fb.com>
+3. buf_finish callback is called on buffers that are prepared.
+   buf_finish includes calling uvc_video_clock_update that accesses the
+   hardware clock sample array.
+
+The above is serialised by a queue specific mutex. Address the problem
+by skipping the clock conversion if the hardware clock sample array is
+already released.
+
+Fixes: 9c0863b1cc48 ("[media] vb2: call buf_finish from __queue_cancel")
+
+Reported-by: Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>
+Tested-by: Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/raid10.c |    2 ++
- drivers/md/raid5.c  |    2 ++
- 2 files changed, 4 insertions(+)
+ drivers/media/usb/uvc/uvc_video.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/drivers/md/raid10.c
-+++ b/drivers/md/raid10.c
-@@ -3836,6 +3836,8 @@ static int run(struct mddev *mddev)
- 		set_bit(MD_RECOVERY_RUNNING, &mddev->recovery);
- 		mddev->sync_thread = md_register_thread(md_do_sync, mddev,
- 							"reshape");
-+		if (!mddev->sync_thread)
-+			goto out_free_conf;
- 	}
+--- a/drivers/media/usb/uvc/uvc_video.c
++++ b/drivers/media/usb/uvc/uvc_video.c
+@@ -627,6 +627,14 @@ void uvc_video_clock_update(struct uvc_s
+ 	u32 rem;
+ 	u64 y;
  
- 	return 0;
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -6171,6 +6171,8 @@ static int run(struct mddev *mddev)
- 		set_bit(MD_RECOVERY_RUNNING, &mddev->recovery);
- 		mddev->sync_thread = md_register_thread(md_do_sync, mddev,
- 							"reshape");
-+		if (!mddev->sync_thread)
-+			goto abort;
- 	}
++	/*
++	 * We will get called from __vb2_queue_cancel() if there are buffers
++	 * done but not dequeued by the user, but the sample array has already
++	 * been released at that time. Just bail out in that case.
++	 */
++	if (!clock->samples)
++		return;
++
+ 	spin_lock_irqsave(&clock->lock, flags);
  
- 	/* Ok, everything is just fine now */
+ 	if (clock->count < clock->size)
 
 
