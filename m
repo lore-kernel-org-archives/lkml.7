@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80195C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:27:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BFA4C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:27:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FA0620657
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:27:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B98720657
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:27:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254021;
-	bh=aumAjMVBbcN1iTAZBxqRgDOay8HHYtyOjOsGO9txkM0=;
+	s=default; t=1553254024;
+	bh=XBuECskMGsfO6fRwTV0yotdIcshD/fxmv1C5umaLj7A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wMgGuXncZHZXy9k5ShBML0HZAnXfyF69IB18lE80M4bVhQrmyqdxt0tOas2oz2XDb
-	 qoqsHMX+mulZE03HrArKAuWUozB8mKsg4kxQ5bbcPGgBAVxj2gY842rUPGF/u23qbr
-	 9sZDtT8hCnhn6Fl+CGpCfvs+ZAiSWz37zagYlOXk=
+	b=kyq1k48sHuk8EDcE37kNygf4KATCiljzcOzKH5EImIqXvXcuOO+XUlSX/CwPSILfQ
+	 QAkrJ+x3J+TTcwQ0kMzkc+t6SvEBhCOc7D5qIpUA1MlhV43Ec+oC61b05cvzk4ogjy
+	 q4D4NIZM8y9jvh4dpkAVg2T5vElEIPyChBbAYvgQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729489AbfCVL07 (ORCPT
+        id S1729501AbfCVL1C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:26:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54692 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:27:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54720 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729156AbfCVL05 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:26:57 -0400
+        id S1729156AbfCVL07 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:26:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DC7221B24;
-        Fri, 22 Mar 2019 11:26:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA06B218A2;
+        Fri, 22 Mar 2019 11:26:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254016;
-        bh=aumAjMVBbcN1iTAZBxqRgDOay8HHYtyOjOsGO9txkM0=;
+        s=default; t=1553254019;
+        bh=XBuECskMGsfO6fRwTV0yotdIcshD/fxmv1C5umaLj7A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gLidCS2ygFAqVA2AlA9hpoux7sknbZjrKlCHTsIHXn41mZ0pvMs48/HF8qCrKFBvw
-         9pCuGU7I4/dKZazUjVio4xoQivzVme8r0IYi6bY+7IlrPzYIsaTavj1spqCzIx2lcr
-         tfyPbFtvjw8Opq5h+xV1D/QBzFg9nRF+lPxAvVtM=
+        b=fZTVI8vfM0xpgXdWtNtCfK+r6Uvpcc02mAtBNEsCYBenj77ddVTsZky9KTpSp0Jge
+         igowV7a65QJHK27PzpQbTYPVSAWdIyL07s+Aut6kVXlAGrWfBNck5UvloV09HhLBa1
+         JyJ6juejaolgrOX9kWGuZFCr7tjDJDxFWlmChXwQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 3.18 133/134] media: uvcvideo: Avoid NULL pointer dereference at the end of streaming
-Date:   Fri, 22 Mar 2019 12:15:46 +0100
-Message-Id: <20190322111220.190717235@linuxfoundation.org>
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 3.18 134/134] drm/radeon/evergreen_cs: fix missing break in switch statement
+Date:   Fri, 22 Mar 2019 12:15:47 +0100
+Message-Id: <20190322111220.278514792@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111210.465931067@linuxfoundation.org>
 References: <20190322111210.465931067@linuxfoundation.org>
@@ -68,58 +66,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
+From: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-commit 9dd0627d8d62a7ddb001a75f63942d92b5336561 upstream.
+commit cc5034a5d293dd620484d1d836aa16c6764a1c8c upstream.
 
-The UVC video driver converts the timestamp from hardware specific unit
-to one known by the kernel at the time when the buffer is dequeued. This
-is fine in general, but the streamoff operation consists of the
-following steps (among other things):
+Add missing break statement in order to prevent the code from falling
+through to case CB_TARGET_MASK.
 
-1. uvc_video_clock_cleanup --- the hardware clock sample array is
-   released and the pointer to the array is set to NULL,
+This bug was found thanks to the ongoing efforts to enable
+-Wimplicit-fallthrough.
 
-2. buffers in active state are returned to the user and
-
-3. buf_finish callback is called on buffers that are prepared.
-   buf_finish includes calling uvc_video_clock_update that accesses the
-   hardware clock sample array.
-
-The above is serialised by a queue specific mutex. Address the problem
-by skipping the clock conversion if the hardware clock sample array is
-already released.
-
-Fixes: 9c0863b1cc48 ("[media] vb2: call buf_finish from __queue_cancel")
-
-Reported-by: Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>
-Tested-by: Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Fixes: dd220a00e8bd ("drm/radeon/kms: add support for streamout v7")
 Cc: stable@vger.kernel.org
-Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/usb/uvc/uvc_video.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/gpu/drm/radeon/evergreen_cs.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/media/usb/uvc/uvc_video.c
-+++ b/drivers/media/usb/uvc/uvc_video.c
-@@ -627,6 +627,14 @@ void uvc_video_clock_update(struct uvc_s
- 	u32 rem;
- 	u64 y;
- 
-+	/*
-+	 * We will get called from __vb2_queue_cancel() if there are buffers
-+	 * done but not dequeued by the user, but the sample array has already
-+	 * been released at that time. Just bail out in that case.
-+	 */
-+	if (!clock->samples)
-+		return;
-+
- 	spin_lock_irqsave(&clock->lock, flags);
- 
- 	if (clock->count < clock->size)
+--- a/drivers/gpu/drm/radeon/evergreen_cs.c
++++ b/drivers/gpu/drm/radeon/evergreen_cs.c
+@@ -1318,6 +1318,7 @@ static int evergreen_cs_check_reg(struct
+ 			return -EINVAL;
+ 		}
+ 		ib[idx] += (u32)((reloc->gpu_offset >> 8) & 0xffffffff);
++		break;
+ 	case CB_TARGET_MASK:
+ 		track->cb_target_mask = radeon_get_ib_value(p, idx);
+ 		track->cb_dirty = true;
 
 
