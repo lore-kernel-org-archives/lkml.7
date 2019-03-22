@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 588B2C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:48:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FD1EC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:48:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2767521916
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:48:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FE972082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:48:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255280;
-	bh=94a+Jayc3iCdqOaZdQ6h1GD7PNBNGNMtBb9h4t6N+ks=;
+	s=default; t=1553255284;
+	bh=/2fcsllkEJYQslElpzpI46P/bKnKyjHTkDKUVATSd9o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XEpjaH2/Y0DFqVXOSMAIZf23etSMfpD3Vbq6B2M6oUGvnZQz+RC0Ny5Lgg7jU1Cqc
-	 03eHgcQ2lX0QFOYhGFTEczBaQH6o2aK1eQOL/IBka7/xq5HFK3yZDB4jOd8/ARMgX8
-	 jS8cLmvW2u2fxcSl7aHs37/G5M5Sm698JMAZ6TsM=
+	b=Dz5ZbojHWYZ0Bjrz9/3Bp5dkAac3y4+woEHp94cIN+1/ZRhyriZ31+5znb9oB49oT
+	 6trXuudZQDo+7+jcSY5a0KjprqUE3xBwIdGhP2cWXLmNSCW0ZMHSxNnvARsfMLR3yu
+	 pJr9uuiMs6FSLGm7sxmKugC0rrVYHrBb/CyT/nBA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732251AbfCVLr6 (ORCPT
+        id S1731780AbfCVLsC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:47:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51254 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:48:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731322AbfCVLr5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:47:57 -0400
+        id S1731322AbfCVLr7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:47:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F18E02192C;
-        Fri, 22 Mar 2019 11:47:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3DAB2075E;
+        Fri, 22 Mar 2019 11:47:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255276;
-        bh=94a+Jayc3iCdqOaZdQ6h1GD7PNBNGNMtBb9h4t6N+ks=;
+        s=default; t=1553255279;
+        bh=/2fcsllkEJYQslElpzpI46P/bKnKyjHTkDKUVATSd9o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2Cl+u5OIYmPadNw+qEkqq6djCeGnNtp7mFYP2UUZK4bCWg2gMzN/tTychdu+pNi52
-         NAD/RqJaOqJJbOZMDOIbssQyNOW41OviCWF6RW0SqJ/yg8QL3TVtM9M9NYd8DwT+Wu
-         jPVumhcDnmPLIbg51ftlVsiiNdNLjY+C27fvGPQ4=
+        b=tIy5Th3o/C3e0cZ468RcRVDi4vsRfWjMqpJ52GpOZYqTPSBsbt61w9f7O2cu5uutj
+         medZiHjJaDVUElSDwlDRkhZgVIeyHXfuJ4xd7nqzgQUhk5soiWtIdSgOgwqDHyQpMU
+         xPhRuP3AurOjNf4rICA4iYNZ9wXSV8kTgAHL8E5I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sven Van Asbroeck <thesven73@gmail.com>,
-        Sven Van Asbroeck <TheSven73@googlemail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        stable@vger.kernel.org, Steve Longerbeam <slongerbeam@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 022/183] Input: cap11xx - switch to using set_brightness_blocking()
-Date:   Fri, 22 Mar 2019 12:14:10 +0100
-Message-Id: <20190322111243.363118498@linuxfoundation.org>
+Subject: [PATCH 4.14 013/183] gpu: ipu-v3: Fix CSI offsets for imx53
+Date:   Fri, 22 Mar 2019 12:14:01 +0100
+Message-Id: <20190322111242.747736031@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111241.819468003@linuxfoundation.org>
 References: <20190322111241.819468003@linuxfoundation.org>
@@ -68,99 +66,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 628442880af8c201d307a45f3862a7a17df8a189 ]
+[ Upstream commit bb867d219fda7fbaabea3314702474c4eac2b91d ]
 
-Updating LED state requires access to regmap and therefore we may sleep,
-so we could not do that directly form set_brightness() method.
-Historically we used private work to adjust the brightness, but with the
-introduction of set_brightness_blocking() we no longer need it.
+The CSI offsets are wrong for both CSI0 and CSI1. They are at
+physical address 0x1e030000 and 0x1e038000 respectively.
 
-As a bonus, not having our own work item means we do not have
-use-after-free issue as we neglected to cancel outstanding work on
-driver unbind.
+Fixes: 2ffd48f2e7 ("gpu: ipu-v3: Add Camera Sensor Interface unit")
 
-Reported-by: Sven Van Asbroeck <thesven73@gmail.com>
-Reviewed-by: Sven Van Asbroeck <TheSven73@googlemail.com>
-Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/keyboard/cap11xx.c | 35 ++++++++++----------------------
- 1 file changed, 11 insertions(+), 24 deletions(-)
+ drivers/gpu/ipu-v3/ipu-common.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/input/keyboard/cap11xx.c b/drivers/input/keyboard/cap11xx.c
-index 1a1eacae3ea1..87fb48143859 100644
---- a/drivers/input/keyboard/cap11xx.c
-+++ b/drivers/input/keyboard/cap11xx.c
-@@ -75,9 +75,7 @@
- struct cap11xx_led {
- 	struct cap11xx_priv *priv;
- 	struct led_classdev cdev;
--	struct work_struct work;
- 	u32 reg;
--	enum led_brightness new_brightness;
- };
- #endif
- 
-@@ -233,30 +231,21 @@ static void cap11xx_input_close(struct input_dev *idev)
- }
- 
- #ifdef CONFIG_LEDS_CLASS
--static void cap11xx_led_work(struct work_struct *work)
-+static int cap11xx_led_set(struct led_classdev *cdev,
-+			    enum led_brightness value)
- {
--	struct cap11xx_led *led = container_of(work, struct cap11xx_led, work);
-+	struct cap11xx_led *led = container_of(cdev, struct cap11xx_led, cdev);
- 	struct cap11xx_priv *priv = led->priv;
--	int value = led->new_brightness;
- 
- 	/*
--	 * All LEDs share the same duty cycle as this is a HW limitation.
--	 * Brightness levels per LED are either 0 (OFF) and 1 (ON).
-+	 * All LEDs share the same duty cycle as this is a HW
-+	 * limitation. Brightness levels per LED are either
-+	 * 0 (OFF) and 1 (ON).
- 	 */
--	regmap_update_bits(priv->regmap, CAP11XX_REG_LED_OUTPUT_CONTROL,
--				BIT(led->reg), value ? BIT(led->reg) : 0);
--}
--
--static void cap11xx_led_set(struct led_classdev *cdev,
--			   enum led_brightness value)
--{
--	struct cap11xx_led *led = container_of(cdev, struct cap11xx_led, cdev);
--
--	if (led->new_brightness == value)
--		return;
--
--	led->new_brightness = value;
--	schedule_work(&led->work);
-+	return regmap_update_bits(priv->regmap,
-+				  CAP11XX_REG_LED_OUTPUT_CONTROL,
-+				  BIT(led->reg),
-+				  value ? BIT(led->reg) : 0);
- }
- 
- static int cap11xx_init_leds(struct device *dev,
-@@ -299,7 +288,7 @@ static int cap11xx_init_leds(struct device *dev,
- 		led->cdev.default_trigger =
- 			of_get_property(child, "linux,default-trigger", NULL);
- 		led->cdev.flags = 0;
--		led->cdev.brightness_set = cap11xx_led_set;
-+		led->cdev.brightness_set_blocking = cap11xx_led_set;
- 		led->cdev.max_brightness = 1;
- 		led->cdev.brightness = LED_OFF;
- 
-@@ -312,8 +301,6 @@ static int cap11xx_init_leds(struct device *dev,
- 		led->reg = reg;
- 		led->priv = priv;
- 
--		INIT_WORK(&led->work, cap11xx_led_work);
--
- 		error = devm_led_classdev_register(dev, &led->cdev);
- 		if (error) {
- 			of_node_put(child);
+diff --git a/drivers/gpu/ipu-v3/ipu-common.c b/drivers/gpu/ipu-v3/ipu-common.c
+index 5f8b31f879ca..f3a57c0500f3 100644
+--- a/drivers/gpu/ipu-v3/ipu-common.c
++++ b/drivers/gpu/ipu-v3/ipu-common.c
+@@ -910,8 +910,8 @@ static struct ipu_devtype ipu_type_imx53 = {
+ 	.cpmem_ofs = 0x07000000,
+ 	.srm_ofs = 0x07040000,
+ 	.tpm_ofs = 0x07060000,
+-	.csi0_ofs = 0x07030000,
+-	.csi1_ofs = 0x07038000,
++	.csi0_ofs = 0x06030000,
++	.csi1_ofs = 0x06038000,
+ 	.ic_ofs = 0x06020000,
+ 	.disp0_ofs = 0x06040000,
+ 	.disp1_ofs = 0x06048000,
 -- 
 2.19.1
 
