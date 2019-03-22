@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67A31C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:57:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DEFBC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:57:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B0842192C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:57:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E3EB2192B
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:57:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255838;
-	bh=60nWjVLSzNnolshAjXM77sGQ0HZvmZvTQ5rc6wZRJ8w=;
+	s=default; t=1553255841;
+	bh=CI6OJJpJeC49gkm5VWyuHEROiDRWEbxUhx6WdLqEXHM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cD+/iC4x2/W9lTwzKhUBG4iuklrGzN/8EidapqemulO5k2ekk4+p2+lJff3Lh4iR4
-	 fhYhL05UGMEC8QoMGZnPE4CPHgc0D7a7pI7ICnCXQnj2NIwCXS4XEbxjBVy9dfPI1c
-	 0BCSnU/FFfToOQbybAZdga+vCKR2qrQXXLoQTElk=
+	b=QASggbLF0PPJKu0WOdfTA7+8+LuqAeC55bE+oXyIuWJNcqWzqk6eYf5sOOyuuCfJQ
+	 Atr2eBUf4dpdo+mJ/6T60Iy7CB3kQbUsSeHbsT1KGvdkarb0/jxachNhKtGEnX6lnt
+	 3Vs5fSw9n9RI7h/+JpGaanXJfRQkkIO+xVeDxjuA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387630AbfCVL5R (ORCPT
+        id S2387639AbfCVL5T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:57:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33660 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:57:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33730 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387624AbfCVL5L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:57:11 -0400
+        id S1732951AbfCVL5Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:57:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC3AA2082C;
-        Fri, 22 Mar 2019 11:57:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3B3B2192B;
+        Fri, 22 Mar 2019 11:57:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255831;
-        bh=60nWjVLSzNnolshAjXM77sGQ0HZvmZvTQ5rc6wZRJ8w=;
+        s=default; t=1553255835;
+        bh=CI6OJJpJeC49gkm5VWyuHEROiDRWEbxUhx6WdLqEXHM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y1ZH4SDStgpQSP7n0RgGApRgMhbBVrIJeGQP7uF5JZFuVbzhbScwttbhkQPPE99mM
-         nHXof4bVvEn4i3oVNYSLKylsBjhaK5CaxSd+yzZti1kxEyfiTzSQvjqt6Z7hGI5G9W
-         8DQ5x1MSeUUPMfIuqsON4F53JS7PhVcvD9r/v1k0=
+        b=h7OPojfGfXPNImriljuoLmA2di2r7JCDGCzrngQ6CgEJQPrrBrieqef58jgcuE79c
+         4HY8RojVZ5qKcZD7qjDOk70d6O+8+u1RzQDvQuLj7M0FmhgXbNTFWAZJCWW9sWRne/
+         dBSlXS7QEfvpTus9yS96fjM8ojrv7rupSWSzsZT8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Matthias Maennich <maennich@google.com>
-Subject: [PATCH 4.19 001/280] media: videobuf2-v4l2: drop WARN_ON in vb2_warn_zero_bytesused()
-Date:   Fri, 22 Mar 2019 12:12:34 +0100
-Message-Id: <20190322111306.431235384@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
+        Zhang Zhijie <zhangzj@rock-chips.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.19 021/280] crypto: rockchip - fix scatterlist nents error
+Date:   Fri, 22 Mar 2019 12:12:54 +0100
+Message-Id: <20190322111307.491937554@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -67,36 +66,83 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+From: Zhang Zhijie <zhangzj@rock-chips.com>
 
-commit 5e99456c20f712dcc13d9f6ca4278937d5367355 upstream.
+commit 4359669a087633132203c52d67dd8c31e09e7b2e upstream.
 
-Userspace shouldn't set bytesused to 0 for output buffers.
-vb2_warn_zero_bytesused() warns about this (only once!), but it also
-calls WARN_ON(1), which is confusing since it is not immediately clear
-that it warns about a 0 value for bytesused.
+In some cases, the nents of src scatterlist is different from
+dst scatterlist. So two variables are used to handle the nents
+of src&dst scatterlist.
 
-Just drop the WARN_ON as it serves no purpose.
-
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Acked-by: Ezequiel Garcia <ezequiel@collabora.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc: Matthias Maennich <maennich@google.com>
+Reported-by: Eric Biggers <ebiggers@google.com>
+Fixes: 433cd2c617bf ("crypto: rockchip - add crypto driver for rk3288")
+Cc: <stable@vger.kernel.org> # v4.5+
+Signed-off-by: Zhang Zhijie <zhangzj@rock-chips.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/common/videobuf2/videobuf2-v4l2.c |    1 -
- 1 file changed, 1 deletion(-)
+ drivers/crypto/rockchip/rk3288_crypto.c            |    2 +-
+ drivers/crypto/rockchip/rk3288_crypto.h            |    3 ++-
+ drivers/crypto/rockchip/rk3288_crypto_ablkcipher.c |    5 +++--
+ drivers/crypto/rockchip/rk3288_crypto_ahash.c      |    2 +-
+ 4 files changed, 7 insertions(+), 5 deletions(-)
 
---- a/drivers/media/common/videobuf2/videobuf2-v4l2.c
-+++ b/drivers/media/common/videobuf2/videobuf2-v4l2.c
-@@ -145,7 +145,6 @@ static void vb2_warn_zero_bytesused(stru
- 		return;
+--- a/drivers/crypto/rockchip/rk3288_crypto.c
++++ b/drivers/crypto/rockchip/rk3288_crypto.c
+@@ -119,7 +119,7 @@ static int rk_load_data(struct rk_crypto
+ 		count = (dev->left_bytes > PAGE_SIZE) ?
+ 			PAGE_SIZE : dev->left_bytes;
  
- 	check_once = true;
--	WARN_ON(1);
+-		if (!sg_pcopy_to_buffer(dev->first, dev->nents,
++		if (!sg_pcopy_to_buffer(dev->first, dev->src_nents,
+ 					dev->addr_vir, count,
+ 					dev->total - dev->left_bytes)) {
+ 			dev_err(dev->dev, "[%s:%d] pcopy err\n",
+--- a/drivers/crypto/rockchip/rk3288_crypto.h
++++ b/drivers/crypto/rockchip/rk3288_crypto.h
+@@ -207,7 +207,8 @@ struct rk_crypto_info {
+ 	void				*addr_vir;
+ 	int				aligned;
+ 	int				align_size;
+-	size_t				nents;
++	size_t				src_nents;
++	size_t				dst_nents;
+ 	unsigned int			total;
+ 	unsigned int			count;
+ 	dma_addr_t			addr_in;
+--- a/drivers/crypto/rockchip/rk3288_crypto_ablkcipher.c
++++ b/drivers/crypto/rockchip/rk3288_crypto_ablkcipher.c
+@@ -260,8 +260,9 @@ static int rk_ablk_start(struct rk_crypt
+ 	dev->total = req->nbytes;
+ 	dev->sg_src = req->src;
+ 	dev->first = req->src;
+-	dev->nents = sg_nents(req->src);
++	dev->src_nents = sg_nents(req->src);
+ 	dev->sg_dst = req->dst;
++	dev->dst_nents = sg_nents(req->dst);
+ 	dev->aligned = 1;
  
- 	pr_warn("use of bytesused == 0 is deprecated and will be removed in the future,\n");
- 	if (vb->vb2_queue->allow_zero_bytesused)
+ 	spin_lock_irqsave(&dev->lock, flags);
+@@ -297,7 +298,7 @@ static int rk_ablk_rx(struct rk_crypto_i
+ 
+ 	dev->unload_data(dev);
+ 	if (!dev->aligned) {
+-		if (!sg_pcopy_from_buffer(req->dst, dev->nents,
++		if (!sg_pcopy_from_buffer(req->dst, dev->dst_nents,
+ 					  dev->addr_vir, dev->count,
+ 					  dev->total - dev->left_bytes -
+ 					  dev->count)) {
+--- a/drivers/crypto/rockchip/rk3288_crypto_ahash.c
++++ b/drivers/crypto/rockchip/rk3288_crypto_ahash.c
+@@ -206,7 +206,7 @@ static int rk_ahash_start(struct rk_cryp
+ 	dev->sg_dst = NULL;
+ 	dev->sg_src = req->src;
+ 	dev->first = req->src;
+-	dev->nents = sg_nents(req->src);
++	dev->src_nents = sg_nents(req->src);
+ 	rctx = ahash_request_ctx(req);
+ 	rctx->mode = 0;
+ 
 
 
