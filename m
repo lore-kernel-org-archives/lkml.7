@@ -4,55 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F6CFC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:16:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D77B2C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:16:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 096BD2183E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:16:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A62212183E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:16:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553260579;
-	bh=Fb3Z68+YjKMKFGJpa/1U/zl2eaeSDC2tq/pfJp68x14=;
+	s=default; t=1553260599;
+	bh=HAyCZq/oIuQ67uR5cIbDu8hncq4VM9MZDnW9YQMf6gQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EZJR3nZeVJ9pR4kHozdn8j9PK+q2QnnUu0zbmTEhHHw08qiXhSmzXHGQ5+ErUTpbv
-	 X6uD1Us5gjZ7Vd0hDKtR/4pSDjDiXs4A+XhwWvDFJ2HCGu3wbXTZ4GdaSY6Y/V1ADE
-	 Y08vVlSk04CU0IHNMBZqOF+Czb0tGGrJAzHG69xU=
+	b=n0H3mZz4TeXNNxE8pzl8ftvw9LW4DHwdvA59ViFL9rBDPeEReWWwvS9BJBnIlZ/Ar
+	 TRDj1r8zyzUWB62VatfphP3+ZTW3TuPbXxHcyCL3hNjrUXM1LBXp24nbp9sADVdS1Y
+	 tLWxAQxlO9P+COWRSx6rKuObgtr9PX+zdReQ6lZE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729794AbfCVNQR (ORCPT
+        id S1729670AbfCVNQh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 09:16:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54896 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 09:16:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54350 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729162AbfCVL1I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:27:08 -0400
+        id S1728510AbfCVL0i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:26:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D3CC20657;
-        Fri, 22 Mar 2019 11:27:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3A2D218A2;
+        Fri, 22 Mar 2019 11:26:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254028;
-        bh=Fb3Z68+YjKMKFGJpa/1U/zl2eaeSDC2tq/pfJp68x14=;
+        s=default; t=1553253997;
+        bh=HAyCZq/oIuQ67uR5cIbDu8hncq4VM9MZDnW9YQMf6gQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xE7FUiowfJds+EQkAH/Yfrk3GS2vvh2xA4AAmPiIEnyXpjHeLT0CXw6cPo7/XAWY+
-         ij3iTpFPLk2pykx3UB3UUA6i9AfFFPJHW+ZVVRTJ89XSQNw0BKXryYMe8dXancoyIy
-         OzrElBO5WkqsfYuAAoU0osrQrqiNH6fFeB+MYHj0=
+        b=iVHP/1ewIPc+xlLTR1tBLPJBXc7dNDha8kXyU3rAtu7WS+oGIzooInHBU4eZOanGf
+         89h9cPH/YOrM0n6eUePCzdmCGka27aZ0ytZRRIgcRIfrooohySzWM8VQM2lj9chWr3
+         pKip61teDOHo68TecqWrhy/sv7Yr45DNUQqhk8aM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ralph Campbell <rcampbell@nvidia.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        Waiman Long <longman@redhat.com>,
+        stable@vger.kernel.org, Roman Penyaev <rpenyaev@suse.de>,
+        Michal Hocko <mhocko@suse.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Joe Perches <joe@perches.com>,
+        "Luis R. Rodriguez" <mcgrof@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.4 002/230] numa: change get_mempolicy() to use nr_node_ids instead of MAX_NUMNODES
-Date:   Fri, 22 Mar 2019 12:12:20 +0100
-Message-Id: <20190322111236.953659180@linuxfoundation.org>
+Subject: [PATCH 3.18 120/134] mm/vmalloc: fix size check for remap_vmalloc_range_partial()
+Date:   Fri, 22 Mar 2019 12:15:33 +0100
+Message-Id: <20190322111219.063712948@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
-References: <20190322111236.796964179@linuxfoundation.org>
+In-Reply-To: <20190322111210.465931067@linuxfoundation.org>
+References: <20190322111210.465931067@linuxfoundation.org>
 User-Agent: quilt/0.65
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -64,75 +66,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.4-stable review patch.  If anyone has any objections, please let me know.
+3.18-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
-From: Ralph Campbell <rcampbell@nvidia.com>
+From: Roman Penyaev <rpenyaev@suse.de>
 
-commit 050c17f239fd53adb55aa768d4f41bc76c0fe045 upstream.
+commit 401592d2e095947344e10ec0623adbcd58934dd4 upstream.
 
-The system call, get_mempolicy() [1], passes an unsigned long *nodemask
-pointer and an unsigned long maxnode argument which specifies the length
-of the user's nodemask array in bits (which is rounded up).  The manual
-page says that if the maxnode value is too small, get_mempolicy will
-return EINVAL but there is no system call to return this minimum value.
-To determine this value, some programs search /proc/<pid>/status for a
-line starting with "Mems_allowed:" and use the number of digits in the
-mask to determine the minimum value.  A recent change to the way this line
-is formatted [2] causes these programs to compute a value less than
-MAX_NUMNODES so get_mempolicy() returns EINVAL.
+When VM_NO_GUARD is not set area->size includes adjacent guard page,
+thus for correct size checking get_vm_area_size() should be used, but
+not area->size.
 
-Change get_mempolicy(), the older compat version of get_mempolicy(), and
-the copy_nodes_to_user() function to use nr_node_ids instead of
-MAX_NUMNODES, thus preserving the defacto method of computing the minimum
-size for the nodemask array and the maxnode argument.
+This fixes possible kernel oops when userspace tries to mmap an area on
+1 page bigger than was allocated by vmalloc_user() call: the size check
+inside remap_vmalloc_range_partial() accounts non-existing guard page
+also, so check successfully passes but vmalloc_to_page() returns NULL
+(guard page does not physically exist).
 
-[1] http://man7.org/linux/man-pages/man2/get_mempolicy.2.html
-[2] https://lore.kernel.org/lkml/1545405631-6808-1-git-send-email-longman@redhat.com
+The following code pattern example should trigger an oops:
 
-Link: http://lkml.kernel.org/r/20190211180245.22295-1-rcampbell@nvidia.com
-Fixes: 4fb8e5b89bcbbbb ("include/linux/nodemask.h: use nr_node_ids (not MAX_NUMNODES) in __nodemask_pr_numnodes()")
-Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
-Suggested-by: Alexander Duyck <alexander.duyck@gmail.com>
-Cc: Waiman Long <longman@redhat.com>
+  static int oops_mmap(struct file *file, struct vm_area_struct *vma)
+  {
+        void *mem;
+
+        mem = vmalloc_user(4096);
+        BUG_ON(!mem);
+        /* Do not care about mem leak */
+
+        return remap_vmalloc_range(vma, mem, 0);
+  }
+
+And userspace simply mmaps size + PAGE_SIZE:
+
+  mmap(NULL, 8192, PROT_WRITE|PROT_READ, MAP_PRIVATE, fd, 0);
+
+Possible candidates for oops which do not have any explicit size
+checks:
+
+   *** drivers/media/usb/stkwebcam/stk-webcam.c:
+   v4l_stk_mmap[789]   ret = remap_vmalloc_range(vma, sbuf->buffer, 0);
+
+Or the following one:
+
+   *** drivers/video/fbdev/core/fbmem.c
+   static int
+   fb_mmap(struct file *file, struct vm_area_struct * vma)
+        ...
+        res = fb->fb_mmap(info, vma);
+
+Where fb_mmap callback calls remap_vmalloc_range() directly without any
+explicit checks:
+
+   *** drivers/video/fbdev/vfb.c
+   static int vfb_mmap(struct fb_info *info,
+             struct vm_area_struct *vma)
+   {
+       return remap_vmalloc_range(vma, (void *)info->fix.smem_start, vma->vm_pgoff);
+   }
+
+Link: http://lkml.kernel.org/r/20190103145954.16942-2-rpenyaev@suse.de
+Signed-off-by: Roman Penyaev <rpenyaev@suse.de>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Cc: Joe Perches <joe@perches.com>
+Cc: "Luis R. Rodriguez" <mcgrof@kernel.org>
 Cc: <stable@vger.kernel.org>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/mempolicy.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ mm/vmalloc.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/mm/mempolicy.c
-+++ b/mm/mempolicy.c
-@@ -1295,7 +1295,7 @@ static int copy_nodes_to_user(unsigned l
- 			      nodemask_t *nodes)
- {
- 	unsigned long copy = ALIGN(maxnode-1, 64) / 8;
--	const int nbytes = BITS_TO_LONGS(MAX_NUMNODES) * sizeof(long);
-+	unsigned int nbytes = BITS_TO_LONGS(nr_node_ids) * sizeof(long);
- 
- 	if (copy > nbytes) {
- 		if (copy > PAGE_SIZE)
-@@ -1456,7 +1456,7 @@ SYSCALL_DEFINE5(get_mempolicy, int __use
- 	int uninitialized_var(pval);
- 	nodemask_t nodes;
- 
--	if (nmask != NULL && maxnode < MAX_NUMNODES)
-+	if (nmask != NULL && maxnode < nr_node_ids)
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -2140,7 +2140,7 @@ int remap_vmalloc_range_partial(struct v
+ 	if (!(area->flags & VM_USERMAP))
  		return -EINVAL;
  
- 	err = do_get_mempolicy(&pval, &nodes, addr, flags);
-@@ -1485,7 +1485,7 @@ COMPAT_SYSCALL_DEFINE5(get_mempolicy, in
- 	unsigned long nr_bits, alloc_size;
- 	DECLARE_BITMAP(bm, MAX_NUMNODES);
+-	if (kaddr + size > area->addr + area->size)
++	if (kaddr + size > area->addr + get_vm_area_size(area))
+ 		return -EINVAL;
  
--	nr_bits = min_t(unsigned long, maxnode-1, MAX_NUMNODES);
-+	nr_bits = min_t(unsigned long, maxnode-1, nr_node_ids);
- 	alloc_size = ALIGN(nr_bits, BITS_PER_LONG) / 8;
- 
- 	if (nmask)
+ 	do {
 
 
