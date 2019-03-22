@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E9E2C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:02:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8C21C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:02:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C4B92192D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:02:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7AE82192D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:02:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256120;
-	bh=gYdProl+vBB+QyJ0sWDz/QQWMA7Xjsjs898fpFoslCI=;
+	s=default; t=1553256123;
+	bh=elgIDh2E6Kru5oLUZxorCRT1Fpni8QFvmhHDMRpIqu0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rmB6EqpLm6Dmq5QsEALnoQwLsY6zhRupZdPT3H/RnGZBV1kJHd/R1xaaUEc22HiDG
-	 tkVYVD8HdyXZHA4ZJxu/wgYGhqC+fHKyZYfNHmYo8Nm+t/0Pn9KhvWEJNbqJubmfSP
-	 8YOBUD6XwYbA1DQv+zG8UDqtD0eI9UklCkA9l/Ig=
+	b=jjGB39MRV82W+qE+yCtgUZlWqxOe/li0VRRaU5jVHF7Hvzu5jPLAS/xZG31TdNZ+Q
+	 YwSYKCxozUDUwwiaKbMvPoo0ldLiFjHH5QdMjCyF6/oy/V/MZ5mG7DNH31VdUk8kUv
+	 pCIz+zedB8fnzqxj0aVNNzz1PKzKYa+Jnk3EPXxU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388289AbfCVMB6 (ORCPT
+        id S2388298AbfCVMCC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:01:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39820 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:02:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730323AbfCVMB4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:01:56 -0400
+        id S1730323AbfCVMB7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:01:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 128252192D;
-        Fri, 22 Mar 2019 12:01:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4429204FD;
+        Fri, 22 Mar 2019 12:01:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256115;
-        bh=gYdProl+vBB+QyJ0sWDz/QQWMA7Xjsjs898fpFoslCI=;
+        s=default; t=1553256118;
+        bh=elgIDh2E6Kru5oLUZxorCRT1Fpni8QFvmhHDMRpIqu0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XcmDFSPK4FwWAPGyJWZrXHXbJmRkFidC9HSTzDk4ezxWUQDe8hW/lt/F72eIY9zrH
-         FBHOVO1z1l7L7RSit3Od89Lhu3WX261TmBuTBZH//P1O7xSYHTLgkGDaaJ+ZfFDt5t
-         K8yZ3D4cky8WYNenTtlv4/OxY2/7w7WlOCzG3lb8=
+        b=LyAWje/VakhUW8f9Cj1PWAwoWgcI2uEYg4Y6ACW6Nk+7cpdILh+ETeuUtu5Lg3nHb
+         XJiHQlIU9FdRCQ+8ZJQPj9oAk9rH21AJlCMfjIiBk4veUSB71gznszlEKJs2wLpNEn
+         fdVNHbdiEcVy6gf+p+N+Do/wiR0dLhmw/0RXnBtQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
+        stable@vger.kernel.org, Vishal Verma <vishal.l.verma@intel.com>,
+        Grzegorz Burzynski <grzegorz.burzynski@intel.com>,
+        Jeff Moyer <jmoyer@redhat.com>,
         Dan Williams <dan.j.williams@intel.com>
-Subject: [PATCH 4.19 113/280] nfit: acpi_nfit_ctl(): Check out_obj->type in the right place
-Date:   Fri, 22 Mar 2019 12:14:26 +0100
-Message-Id: <20190322111313.843546391@linuxfoundation.org>
+Subject: [PATCH 4.19 114/280] acpi/nfit: Fix bus command validation
+Date:   Fri, 22 Mar 2019 12:14:27 +0100
+Message-Id: <20190322111313.990739666@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -65,54 +67,100 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Dexuan Cui <decui@microsoft.com>
+From: Dan Williams <dan.j.williams@intel.com>
 
-commit 43f89877f26671c6309cd87d7364b1a3e66e71cf upstream.
+commit ebe9f6f19d80d8978d16078dff3d5bd93ad8d102 upstream.
 
-In the case of ND_CMD_CALL, we should also check out_obj->type.
+Commit 11189c1089da "acpi/nfit: Fix command-supported detection" broke
+ND_CMD_CALL for bus-level commands. The "func = cmd" assumption is only
+valid for:
 
-The patch uses out_obj->type, which is a short alias to
-out_obj->package.type.
+    ND_CMD_ARS_CAP
+    ND_CMD_ARS_START
+    ND_CMD_ARS_STATUS
+    ND_CMD_CLEAR_ERROR
 
-Fixes: 31eca76ba2fc ("nfit, libnvdimm: limited/whitelisted dimm command marshaling mechanism")
+The function number otherwise needs to be pulled from the command
+payload for:
+
+    NFIT_CMD_TRANSLATE_SPA
+    NFIT_CMD_ARS_INJECT_SET
+    NFIT_CMD_ARS_INJECT_CLEAR
+    NFIT_CMD_ARS_INJECT_GET
+
+Update cmd_to_func() for the bus case and call it in the common path.
+
+Fixes: 11189c1089da ("acpi/nfit: Fix command-supported detection")
 Cc: <stable@vger.kernel.org>
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
+Reviewed-by: Vishal Verma <vishal.l.verma@intel.com>
+Reported-by: Grzegorz Burzynski <grzegorz.burzynski@intel.com>
+Tested-by: Jeff Moyer <jmoyer@redhat.com>
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/acpi/nfit/core.c |   14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ drivers/acpi/nfit/core.c |   22 ++++++++++++----------
+ 1 file changed, 12 insertions(+), 10 deletions(-)
 
 --- a/drivers/acpi/nfit/core.c
 +++ b/drivers/acpi/nfit/core.c
-@@ -533,6 +533,13 @@ int acpi_nfit_ctl(struct nvdimm_bus_desc
- 		return -EINVAL;
- 	}
- 
-+	if (out_obj->type != ACPI_TYPE_BUFFER) {
-+		dev_dbg(dev, "%s unexpected output object type cmd: %s type: %d\n",
-+				dimm_name, cmd_name, out_obj->type);
-+		rc = -EINVAL;
-+		goto out;
-+	}
-+
+@@ -397,7 +397,7 @@ static int cmd_to_func(struct nfit_mem *
  	if (call_pkg) {
- 		call_pkg->nd_fw_size = out_obj->buffer.length;
- 		memcpy(call_pkg->nd_payload + call_pkg->nd_size_in,
-@@ -551,13 +558,6 @@ int acpi_nfit_ctl(struct nvdimm_bus_desc
- 		return 0;
+ 		int i;
+ 
+-		if (nfit_mem->family != call_pkg->nd_family)
++		if (nfit_mem && nfit_mem->family != call_pkg->nd_family)
+ 			return -ENOTTY;
+ 
+ 		for (i = 0; i < ARRAY_SIZE(call_pkg->nd_reserved2); i++)
+@@ -406,6 +406,10 @@ static int cmd_to_func(struct nfit_mem *
+ 		return call_pkg->nd_command;
  	}
  
--	if (out_obj->package.type != ACPI_TYPE_BUFFER) {
--		dev_dbg(dev, "%s unexpected output object type cmd: %s type: %d\n",
--				dimm_name, cmd_name, out_obj->type);
--		rc = -EINVAL;
--		goto out;
--	}
--
- 	dev_dbg(dev, "%s cmd: %s output length: %d\n", dimm_name,
- 			cmd_name, out_obj->buffer.length);
- 	print_hex_dump_debug(cmd_name, DUMP_PREFIX_OFFSET, 4, 4,
++	/* In the !call_pkg case, bus commands == bus functions */
++	if (!nfit_mem)
++		return cmd;
++
+ 	/* Linux ND commands == NVDIMM_FAMILY_INTEL function numbers */
+ 	if (nfit_mem->family == NVDIMM_FAMILY_INTEL)
+ 		return cmd;
+@@ -436,17 +440,18 @@ int acpi_nfit_ctl(struct nvdimm_bus_desc
+ 	if (cmd_rc)
+ 		*cmd_rc = -EINVAL;
+ 
++	if (cmd == ND_CMD_CALL)
++		call_pkg = buf;
++	func = cmd_to_func(nfit_mem, cmd, call_pkg);
++	if (func < 0)
++		return func;
++
+ 	if (nvdimm) {
+ 		struct acpi_device *adev = nfit_mem->adev;
+ 
+ 		if (!adev)
+ 			return -ENOTTY;
+ 
+-		if (cmd == ND_CMD_CALL)
+-			call_pkg = buf;
+-		func = cmd_to_func(nfit_mem, cmd, call_pkg);
+-		if (func < 0)
+-			return func;
+ 		dimm_name = nvdimm_name(nvdimm);
+ 		cmd_name = nvdimm_cmd_name(cmd);
+ 		cmd_mask = nvdimm_cmd_mask(nvdimm);
+@@ -457,12 +462,9 @@ int acpi_nfit_ctl(struct nvdimm_bus_desc
+ 	} else {
+ 		struct acpi_device *adev = to_acpi_dev(acpi_desc);
+ 
+-		func = cmd;
+ 		cmd_name = nvdimm_bus_cmd_name(cmd);
+ 		cmd_mask = nd_desc->cmd_mask;
+-		dsm_mask = cmd_mask;
+-		if (cmd == ND_CMD_CALL)
+-			dsm_mask = nd_desc->bus_dsm_mask;
++		dsm_mask = nd_desc->bus_dsm_mask;
+ 		desc = nd_cmd_bus_desc(cmd);
+ 		guid = to_nfit_uuid(NFIT_DEV_BUS);
+ 		handle = adev->handle;
 
 
