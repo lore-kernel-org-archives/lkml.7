@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B0D4C10F03
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:06:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8C96C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:06:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CE46213F2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:06:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7E832183E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:06:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553259963;
-	bh=hpqwWChbNpGQa/hqxnZtJLvJnf5QGeHvBKdIzYFX7OA=;
+	s=default; t=1553259973;
+	bh=l4+5m+qUwc54exU1Ux5n8xMZlQqXnLE6v7cQTUW3BTA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BHWrUaQc3zH/iqf9j+NYIp6WJLSFZfHUUCGGOFWQRnqvOcn+nyirEeXIl5VLfc3mU
-	 leiyaRO9YsWNbgtAVJC8NfHUCKD4vNaN54s59U/CEqnag/trIzOImx3q3GDLoV3INE
-	 R/C1X2WkdMSpVKYE0qogYxEZNKPG3cSyGUJacrUk=
+	b=onpc3BDt5UZuVM2WGtEkT3r/5XG3cfuS5uGtAEyc8y1PrYrsNBl8OOBqQz71e+eK/
+	 pWNCecjeINyfH8WQQOLjCpkfConF4sL4XIPwEN3Wxrcydy1fZRGlPCzpqmAvjlCZcc
+	 hIgNoLTue6ksOdprWgJn88aiEnhuMddGNq2gtt0g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730935AbfCVLiK (ORCPT
+        id S1730895AbfCVLhx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:38:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39658 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:37:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730650AbfCVLiF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:38:05 -0400
+        id S1729774AbfCVLht (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:37:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C55E2082C;
-        Fri, 22 Mar 2019 11:38:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EF2D218B0;
+        Fri, 22 Mar 2019 11:37:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254685;
-        bh=hpqwWChbNpGQa/hqxnZtJLvJnf5QGeHvBKdIzYFX7OA=;
+        s=default; t=1553254668;
+        bh=l4+5m+qUwc54exU1Ux5n8xMZlQqXnLE6v7cQTUW3BTA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qQJecIJSSwbERwwzgZgqllIGUHlX2RTK6FsIB/14m4RP+ZPTIsGScR0h8Mtaq74CE
-         07+wjauKYcp0wLh5R3yW9+3MEmFVOzOY1q2IIKfim1sEZ8aX//opF5T6jDvcgo/kdC
-         J35YGUYLHYpdIZRzpJ3C3uK90sabfZIcLrl7jeJA=
+        b=WSsmi5q/11kmCoQfPAMHKViIy91Lt/SViDgfJgAZrjkfHhV/TEOfK1qhzxb2Fyvjo
+         pUr4t+5H8ROr7PwgNi4GUBIA/QqQWhLX4fBvAb14KK2OPtwp/ICuZolrkJbojQj166
+         FLVVB1WfN8gxUCLBbAqe7Sfna6fPmK6Xk6ocJ9nM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        Theodore Tso <tytso@mit.edu>
-Subject: [PATCH 4.4 195/230] ext4: fix crash during online resizing
-Date:   Fri, 22 Mar 2019 12:15:33 +0100
-Message-Id: <20190322111250.498377575@linuxfoundation.org>
+        stable@vger.kernel.org, Qu Wenruo <wqu@suse.com>,
+        Nikolay Borisov <nborisov@suse.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.4 190/230] btrfs: ensure that a DUP or RAID1 block group has exactly two stripes
+Date:   Fri, 22 Mar 2019 12:15:28 +0100
+Message-Id: <20190322111250.127951813@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -65,48 +67,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jan Kara <jack@suse.cz>
+From: Johannes Thumshirn <jthumshirn@suse.de>
 
-commit f96c3ac8dfc24b4e38fc4c2eba5fea2107b929d1 upstream.
+commit 349ae63f40638a28c6fce52e8447c2d14b84cc0c upstream.
 
-When computing maximum size of filesystem possible with given number of
-group descriptor blocks, we forget to include s_first_data_block into
-the number of blocks. Thus for filesystems with non-zero
-s_first_data_block it can happen that computed maximum filesystem size
-is actually lower than current filesystem size which confuses the code
-and eventually leads to a BUG_ON in ext4_alloc_group_tables() hitting on
-flex_gd->count == 0. The problem can be reproduced like:
+We recently had a customer issue with a corrupted filesystem. When
+trying to mount this image btrfs panicked with a division by zero in
+calc_stripe_length().
 
-truncate -s 100g /tmp/image
-mkfs.ext4 -b 1024 -E resize=262144 /tmp/image 32768
-mount -t ext4 -o loop /tmp/image /mnt
-resize2fs /dev/loop0 262145
-resize2fs /dev/loop0 300000
+The corrupt chunk had a 'num_stripes' value of 1. calc_stripe_length()
+takes this value and divides it by the number of copies the RAID profile
+is expected to have to calculate the amount of data stripes. As a DUP
+profile is expected to have 2 copies this division resulted in 1/2 = 0.
+Later then the 'data_stripes' variable is used as a divisor in the
+stripe length calculation which results in a division by 0 and thus a
+kernel panic.
 
-Fix the problem by properly including s_first_data_block into the
-computed number of filesystem blocks.
+When encountering a filesystem with a DUP block group and a
+'num_stripes' value unequal to 2, refuse mounting as the image is
+corrupted and will lead to unexpected behaviour.
 
-Fixes: 1c6bd7173d66 "ext4: convert file system to meta_bg if needed..."
-Signed-off-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Cc: stable@vger.kernel.org
+Code inspection showed a RAID1 block group has the same issues.
+
+Fixes: e06cd3dd7cea ("Btrfs: add validadtion checks for chunk loading")
+CC: stable@vger.kernel.org # 4.4+
+Reviewed-by: Qu Wenruo <wqu@suse.com>
+Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+Signed-off-by: Johannes Thumshirn <jthumshirn@suse.de>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/resize.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/btrfs/volumes.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/fs/ext4/resize.c
-+++ b/fs/ext4/resize.c
-@@ -1928,7 +1928,8 @@ retry:
- 				le16_to_cpu(es->s_reserved_gdt_blocks);
- 			n_group = n_desc_blocks * EXT4_DESC_PER_BLOCK(sb);
- 			n_blocks_count = (ext4_fsblk_t)n_group *
--				EXT4_BLOCKS_PER_GROUP(sb);
-+				EXT4_BLOCKS_PER_GROUP(sb) +
-+				le32_to_cpu(es->s_first_data_block);
- 			n_group--; /* set to last group number */
- 		}
+--- a/fs/btrfs/volumes.c
++++ b/fs/btrfs/volumes.c
+@@ -6287,10 +6287,10 @@ static int btrfs_check_chunk_valid(struc
+ 	}
  
+ 	if ((type & BTRFS_BLOCK_GROUP_RAID10 && sub_stripes != 2) ||
+-	    (type & BTRFS_BLOCK_GROUP_RAID1 && num_stripes < 1) ||
++	    (type & BTRFS_BLOCK_GROUP_RAID1 && num_stripes != 2) ||
+ 	    (type & BTRFS_BLOCK_GROUP_RAID5 && num_stripes < 2) ||
+ 	    (type & BTRFS_BLOCK_GROUP_RAID6 && num_stripes < 3) ||
+-	    (type & BTRFS_BLOCK_GROUP_DUP && num_stripes > 2) ||
++	    (type & BTRFS_BLOCK_GROUP_DUP && num_stripes != 2) ||
+ 	    ((type & BTRFS_BLOCK_GROUP_PROFILE_MASK) == 0 &&
+ 	     num_stripes != 1)) {
+ 		btrfs_err(root->fs_info,
 
 
