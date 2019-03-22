@@ -7,51 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A163C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:23:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0C06C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:23:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D897921916
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:23:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80519218A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:23:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553253819;
-	bh=XDhqWP88MH6PuPJ8I5ZEfcn+Fwpi7muDGJeSRyzdXQQ=;
+	s=default; t=1553253823;
+	bh=HBwhGeHY0QNVnL1IxGf5TcB1cSDtXp6Ia2ryZf1n4+w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1xF0aE0j15+tQYgJyLaIIwoxHX6D/KP7IEfvavFJ7PVkylKBZYqpZFCCB0+kq2MTj
-	 /bWJvNQbxMryrE9j2CtyGBBwID5zzz2OdJENPahDpmDItGDCZmGgtRr9rYyhQ5EwYE
-	 BOfE6k+56G+NDbXoH2dB5Fo2VfLOeembrzQiClbU=
+	b=Wo8H9lKrJSSHeNC95qk/mVBEZjWAH6jbMNeLVqhIESN6X5DiYshTf0uVU/5jrKNag
+	 SVgfTM4+BsRTP8z7D4um6Aok86bGPmsZglzFFh+3xCgokBnAnfu8afdxrvW0Xzua5G
+	 fZ9kjw4u/CCQKmNBhmvGW7cBKABp1iFdk+NKN6dI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728998AbfCVLXi (ORCPT
+        id S1728433AbfCVLXl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:23:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50584 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:23:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50624 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728375AbfCVLXf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:23:35 -0400
+        id S1728997AbfCVLXi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:23:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4F4F218A2;
-        Fri, 22 Mar 2019 11:23:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66F10218A2;
+        Fri, 22 Mar 2019 11:23:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553253815;
-        bh=XDhqWP88MH6PuPJ8I5ZEfcn+Fwpi7muDGJeSRyzdXQQ=;
+        s=default; t=1553253817;
+        bh=HBwhGeHY0QNVnL1IxGf5TcB1cSDtXp6Ia2ryZf1n4+w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MG5HdaOqXQe3hseXPbMzgoZWEABs1tIHI5Ijnp6DhlPAd17XRJW9PhJPrYrteN8Uo
-         J9axneSsZoXJjCwqAs+8X42n8WvdNjT65x1n88AcWUneWyT8IEFr2hQOpxTqCPVAnN
-         e0tB3adlVspvZ+H0q/NIKMY2Etj6+e+MxnvBMQ1U=
+        b=z/do2tWdAnXxPg39R7eD4xk+hXdYwvV2UtAK6fMyRG190rBIh0YPdCtRbV8MJ/XvN
+         yOxJC3qQlIvtMga51OPq9s2WF+4hIMzb0IQDkStj7UPjc1Rh6V2K1MvrhnOSyCKrNg
+         6cxlu2r2n+4V1uv+9Jhj8HC7e6vOLZruokLmfkBU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Tomonori Sakita <tomonori.sakita@sord.co.jp>,
-        Atsushi Nemoto <atsushi.nemoto@sord.co.jp>,
-        Dalon L Westergreen <dalon.westergreen@linux.intel.com>,
-        Thor Thayer <thor.thayer@linux.intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Yao Liu <yotta.liu@ucloud.cn>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 3.18 063/134] net: altera_tse: fix msgdma_tx_completion on non-zero fill_level case
-Date:   Fri, 22 Mar 2019 12:14:36 +0100
-Message-Id: <20190322111214.596798602@linuxfoundation.org>
+Subject: [PATCH 3.18 064/134] nfs: Fix NULL pointer dereference of dev_name
+Date:   Fri, 22 Mar 2019 12:14:37 +0100
+Message-Id: <20190322111214.674187569@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111210.465931067@linuxfoundation.org>
 References: <20190322111210.465931067@linuxfoundation.org>
@@ -70,38 +66,54 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 6571ebce112a21ec9be68ef2f53b96fcd41fd81b ]
+[ Upstream commit 80ff00172407e0aad4b10b94ef0816fc3e7813cb ]
 
-If fill_level was not zero and status was not BUSY,
-result of "tx_prod - tx_cons - inuse" might be zero.
-Subtracting 1 unconditionally results invalid negative return value
-on this case.
-Make sure not to return an negative value.
+There is a NULL pointer dereference of dev_name in nfs_parse_devname()
 
-Signed-off-by: Tomonori Sakita <tomonori.sakita@sord.co.jp>
-Signed-off-by: Atsushi Nemoto <atsushi.nemoto@sord.co.jp>
-Reviewed-by: Dalon L Westergreen <dalon.westergreen@linux.intel.com>
-Acked-by: Thor Thayer <thor.thayer@linux.intel.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+The oops looks something like:
+
+  BUG: unable to handle kernel NULL pointer dereference at 0000000000000000
+  ...
+  RIP: 0010:nfs_fs_mount+0x3b6/0xc20 [nfs]
+  ...
+  Call Trace:
+   ? ida_alloc_range+0x34b/0x3d0
+   ? nfs_clone_super+0x80/0x80 [nfs]
+   ? nfs_free_parsed_mount_data+0x60/0x60 [nfs]
+   mount_fs+0x52/0x170
+   ? __init_waitqueue_head+0x3b/0x50
+   vfs_kern_mount+0x6b/0x170
+   do_mount+0x216/0xdc0
+   ksys_mount+0x83/0xd0
+   __x64_sys_mount+0x25/0x30
+   do_syscall_64+0x65/0x220
+   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Fix this by adding a NULL check on dev_name
+
+Signed-off-by: Yao Liu <yotta.liu@ucloud.cn>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/altera/altera_msgdma.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/nfs/super.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/net/ethernet/altera/altera_msgdma.c b/drivers/net/ethernet/altera/altera_msgdma.c
-index 0fb986ba3290..0ae723f75341 100644
---- a/drivers/net/ethernet/altera/altera_msgdma.c
-+++ b/drivers/net/ethernet/altera/altera_msgdma.c
-@@ -145,7 +145,8 @@ u32 msgdma_tx_completions(struct altera_tse_private *priv)
- 			& 0xffff;
+diff --git a/fs/nfs/super.c b/fs/nfs/super.c
+index 655ac3a196e4..d2fcd6e9d675 100644
+--- a/fs/nfs/super.c
++++ b/fs/nfs/super.c
+@@ -1876,6 +1876,11 @@ static int nfs_parse_devname(const char *dev_name,
+ 	size_t len;
+ 	char *end;
  
- 	if (inuse) { /* Tx FIFO is not empty */
--		ready = priv->tx_prod - priv->tx_cons - inuse - 1;
-+		ready = max_t(int,
-+			      priv->tx_prod - priv->tx_cons - inuse - 1, 0);
- 	} else {
- 		/* Check for buffered last packet */
- 		status = csrrd32(priv->tx_dma_csr, msgdma_csroffs(status));
++	if (unlikely(!dev_name || !*dev_name)) {
++		dfprintk(MOUNT, "NFS: device name not specified\n");
++		return -EINVAL;
++	}
++
+ 	/* Is the host name protected with square brakcets? */
+ 	if (*dev_name == '[') {
+ 		end = strchr(++dev_name, ']');
 -- 
 2.19.1
 
