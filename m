@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BB17C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:27:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FAAEC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:27:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BA172070D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:27:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60FBD218A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:27:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553257654;
-	bh=A0KFbWB3KBrSd1f+WHHL+5tJjA4WCLsnWkbrrWTBBrg=;
+	s=default; t=1553257657;
+	bh=t6MmLYm0Wmc9yDVdp7FsI+xLa1mtbMs8BHn7lvW6kzU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GKtvuER/+BcqlBnYfR29JS705iDpTpP2sv/gb//zhVrwoy8XOe5CKwinw49rdnGHz
-	 Rt20OzOEFAcmLom9nRXyKnCuXcxuKA1NMGsmzy/YJgRQcU3iVkcX+VCCSKXNJQkGXq
-	 YcaXI8mxmk5PA4rrIUVDywIJgW8onjltcasd9VB8=
+	b=ayFSaTDd0tAJmO09xY68701oqhP/6/DTJjX8oAEtxszEMB1WLTk4Sx3UKFU7VWBNQ
+	 xGuZgaj1F/nTh17FI8+WntfBlqK4PN45p8u4jLqbCw7EFLCpym5GPKLUAmhbNzzyrO
+	 /zSHT6be8Zi6vRNZTgO46hsB3dKdFg7JdznGhmlw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391126AbfCVM1c (ORCPT
+        id S2391144AbfCVM1f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:27:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39008 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:27:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391008AbfCVM13 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:27:29 -0400
+        id S2391116AbfCVM1c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:27:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89C47218B0;
-        Fri, 22 Mar 2019 12:27:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C78A218A1;
+        Fri, 22 Mar 2019 12:27:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553257649;
-        bh=A0KFbWB3KBrSd1f+WHHL+5tJjA4WCLsnWkbrrWTBBrg=;
+        s=default; t=1553257651;
+        bh=t6MmLYm0Wmc9yDVdp7FsI+xLa1mtbMs8BHn7lvW6kzU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JJc87Kk9BZ9SCvWeLbHr2vLPe1/c5gVPIkV02F7J41/i9pvdOvaFH/6EKaPmTeMbM
-         gXCzP/NnYJlLSn1WerzaGn+V35IFvK8/BuMVn0TQsuxEDQJ+8Ex39yJ/9NRM4fZfdX
-         ebN48OnTxhHVvXf7h8U2r0u2aiKhmE8DHOZ1/Cfk=
+        b=RhDVvZYDYy5wiENK7LoPEuKRuK6M9j8sn1M1SF2coNXt0EIo+8Sy5HZk6DKCRu6C7
+         JNyBzoLL8j2t7PFawN/vUQKknI6F6GJ4/r9Flg64oT/KIsiBVYVstepTjczVxqupsI
+         OLc3bqIbXdchWgKhWRnDQqjZ49Q8Yrx25CWKbcnc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,12 +46,12 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Zhang, Jun" <jun.zhang@intel.com>,
         "Paul E. McKenney" <paulmck@linux.ibm.com>,
         "xiao, jin" <jin.xiao@intel.com>, Jie A <jie.a.bai@intel.com>
-Subject: [PATCH 4.19 262/280] rcu: Do RCU GP kthread self-wakeup from softirq and interrupt
-Date:   Fri, 22 Mar 2019 12:16:55 +0100
-Message-Id: <20190322111344.165568516@linuxfoundation.org>
+Subject: [PATCH 5.0 211/238] rcu: Do RCU GP kthread self-wakeup from softirq and interrupt
+Date:   Fri, 22 Mar 2019 12:17:10 +0100
+Message-Id: <20190322111310.710253266@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
-References: <20190322111306.356185024@linuxfoundation.org>
+In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
+References: <20190322111258.383569278@linuxfoundation.org>
 User-Agent: quilt/0.65
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -63,7 +63,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.19-stable review patch.  If anyone has any objections, please let me know.
+5.0-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
@@ -111,22 +111,20 @@ Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
 Link: https://lkml.kernel.org/r/CD6925E8781EFD4D8E11882D20FC406D52A11F61@SHSMSX104.ccr.corp.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-
 ---
- kernel/rcu/tree.c |   20 ++++++++++++++------
- 1 file changed, 14 insertions(+), 6 deletions(-)
+ kernel/rcu/tree.c |   19 ++++++++++++++-----
+ 1 file changed, 14 insertions(+), 5 deletions(-)
 
 --- a/kernel/rcu/tree.c
 +++ b/kernel/rcu/tree.c
-@@ -1689,15 +1689,23 @@ static bool rcu_future_gp_cleanup(struct
+@@ -1557,14 +1557,23 @@ static bool rcu_future_gp_cleanup(struct
  }
  
  /*
-- * Awaken the grace-period kthread for the specified flavor of RCU.
-- * Don't do a self-awaken, and don't bother awakening when there is
-- * nothing for the grace-period kthread to do (as in several CPUs
-- * raced to awaken, and we lost), and finally don't try to awaken
-- * a kthread that has not yet been created.
+- * Awaken the grace-period kthread.  Don't do a self-awaken, and don't
+- * bother awakening when there is nothing for the grace-period kthread
+- * to do (as in several CPUs raced to awaken, and we lost), and finally
+- * don't try to awaken a kthread that has not yet been created.
 + * Awaken the grace-period kthread.  Don't do a self-awaken (unless in
 + * an interrupt or softirq handler), and don't bother awakening when there
 + * is nothing for the grace-period kthread to do (as in several CPUs raced
@@ -140,13 +138,13 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 + * pre-sleep check of the awaken condition.  In this case, a wakeup really
 + * is required, and is therefore supplied.
   */
- static void rcu_gp_kthread_wake(struct rcu_state *rsp)
+ static void rcu_gp_kthread_wake(void)
  {
--	if (current == rsp->gp_kthread ||
-+	if ((current == rsp->gp_kthread &&
+-	if (current == rcu_state.gp_kthread ||
++	if ((current == rcu_state.gp_kthread &&
 +	     !in_interrupt() && !in_serving_softirq()) ||
- 	    !READ_ONCE(rsp->gp_flags) ||
- 	    !rsp->gp_kthread)
+ 	    !READ_ONCE(rcu_state.gp_flags) ||
+ 	    !rcu_state.gp_kthread)
  		return;
 
 
