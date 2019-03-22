@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96AD8C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:02:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF540C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:02:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68CE321B18
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:02:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAA882196E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:02:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256153;
-	bh=nHfYX/0EUAGT1HJ5q88LC7QJ8xQZSLKbhMMneAY/Ai4=;
+	s=default; t=1553256156;
+	bh=j1H0mLtazSwEK7wKm27j+DY9lrFjAlxrBi6QPnRLBV4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VzrIsaQ2MAQBtiuEoKd1Y5q96XhFPGuJEC3jWP/6xF7WB/0OMwoJKDl7YdSruHokO
-	 MUhB9vvZVX/y6L6wXv8Xn7LUxKkJdAqUxbBP+JTHjjwySpMP67d6ht0LgnvD07gd9f
-	 j9iqfMc4CD0OukpE2cBJwooc+RKYTpx6Clj5suNk=
+	b=EEK7Oaa+KVKMTeYFqItsOzPpbkY3WoGJXV93mlEYOjvghXZequ6zL8IvzPOZcvclQ
+	 8wDjlxeWLdzJkxAHxFX0uY9Jv0qQ0jf5IJ5MFkAheDl99X0ddr+mM7h9AsiGoDOBL1
+	 GIjGoXO/vxRI0Wpe117q/EXozeKXfkqzp56/xUaE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388378AbfCVMCb (ORCPT
+        id S2387984AbfCVMCf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:02:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40566 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:02:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388363AbfCVMCZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:02:25 -0400
+        id S2388377AbfCVMCc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:02:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C10D21934;
-        Fri, 22 Mar 2019 12:02:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29C9C21A4A;
+        Fri, 22 Mar 2019 12:02:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256144;
-        bh=nHfYX/0EUAGT1HJ5q88LC7QJ8xQZSLKbhMMneAY/Ai4=;
+        s=default; t=1553256151;
+        bh=j1H0mLtazSwEK7wKm27j+DY9lrFjAlxrBi6QPnRLBV4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=porhAgYf/pMMTMncx1CLXWbrc6yi4KiYSMVV0mYKjVtR9mVEaS+vZBRTZP7MTYlBk
-         G2DN56UCM8qHHsmZ8KQMTk0+p4HuBALuEOihuBcJADKxJO8jZ4OGV+iwQKQV7xDmOC
-         Af9pQrtMY5+smf6Sycm227VTQ7BzNMiKfbzghwhE=
+        b=zXG5j4JNuaqkVrVOdhCl6N9Ib7Vhd0tFpw7Uz9C4g//7nGez8FGkydfiXpZuUD9m4
+         wc1/bhVNNzv01vuXTgevP9L7G4j/tsS6d1m5OWURfmWveOFw7gn4K8xFMUcEwOZVaD
+         pLhqwvqSY35qbLxlXeEyalws9vzWiDREfT/U1EAQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vadim Lomovtsev <vlomovtsev@marvell.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jiong Wang <jiong.wang@netronome.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 104/280] net: thunderx: add nicvf_send_msg_to_pf result check for set_rx_mode_task
-Date:   Fri, 22 Mar 2019 12:14:17 +0100
-Message-Id: <20190322111312.574579576@linuxfoundation.org>
+Subject: [PATCH 4.19 106/280] nfp: bpf: fix ALU32 high bits clearance bug
+Date:   Fri, 22 Mar 2019 12:14:19 +0100
+Message-Id: <20190322111312.840486844@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -66,66 +68,94 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 7db730d9d2f7b6af6aeac621b1890ea477a0cb8d ]
+[ Upstream commit f036ebd9bfbe1e91a3d855e85e05fc5ff156b641 ]
 
-The rx_set_mode invokes number of messages to be send to PF for receive
-mode configuration. In case if there any issues we need to stop sending
-messages and release allocated memory.
+NFP BPF JIT compiler is doing a couple of small optimizations when jitting
+ALU imm instructions, some of these optimizations could save code-gen, for
+example:
 
-This commit is to implement check of nicvf_msg_send_to_pf() result.
+  A & -1 =  A
+  A |  0 =  A
+  A ^  0 =  A
 
-Signed-off-by: Vadim Lomovtsev <vlomovtsev@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+However, for ALU32, high 32-bit of the 64-bit register should still be
+cleared according to ISA semantics.
+
+Fixes: cd7df56ed3e6 ("nfp: add BPF to NFP code translator")
+Reviewed-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Signed-off-by: Jiong Wang <jiong.wang@netronome.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/cavium/thunder/nicvf_main.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/netronome/nfp/bpf/jit.c | 17 ++++++-----------
+ 1 file changed, 6 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/net/ethernet/cavium/thunder/nicvf_main.c b/drivers/net/ethernet/cavium/thunder/nicvf_main.c
-index 4eb24e10ba4d..9800738448ec 100644
---- a/drivers/net/ethernet/cavium/thunder/nicvf_main.c
-+++ b/drivers/net/ethernet/cavium/thunder/nicvf_main.c
-@@ -1950,7 +1950,8 @@ static void __nicvf_set_rx_mode_task(u8 mode, struct xcast_addr_list *mc_addrs,
+diff --git a/drivers/net/ethernet/netronome/nfp/bpf/jit.c b/drivers/net/ethernet/netronome/nfp/bpf/jit.c
+index 0a934296ea53..4e18d95e548f 100644
+--- a/drivers/net/ethernet/netronome/nfp/bpf/jit.c
++++ b/drivers/net/ethernet/netronome/nfp/bpf/jit.c
+@@ -1288,15 +1288,10 @@ wrp_alu64_reg(struct nfp_prog *nfp_prog, struct nfp_insn_meta *meta,
  
- 	/* flush DMAC filters and reset RX mode */
- 	mbx.xcast.msg = NIC_MBOX_MSG_RESET_XCAST;
--	nicvf_send_msg_to_pf(nic, &mbx);
-+	if (nicvf_send_msg_to_pf(nic, &mbx) < 0)
-+		goto free_mc;
+ static int
+ wrp_alu32_imm(struct nfp_prog *nfp_prog, struct nfp_insn_meta *meta,
+-	      enum alu_op alu_op, bool skip)
++	      enum alu_op alu_op)
+ {
+ 	const struct bpf_insn *insn = &meta->insn;
  
- 	if (mode & BGX_XCAST_MCAST_FILTER) {
- 		/* once enabling filtering, we need to signal to PF to add
-@@ -1958,7 +1959,8 @@ static void __nicvf_set_rx_mode_task(u8 mode, struct xcast_addr_list *mc_addrs,
- 		 */
- 		mbx.xcast.msg = NIC_MBOX_MSG_ADD_MCAST;
- 		mbx.xcast.data.mac = 0;
--		nicvf_send_msg_to_pf(nic, &mbx);
-+		if (nicvf_send_msg_to_pf(nic, &mbx) < 0)
-+			goto free_mc;
- 	}
+-	if (skip) {
+-		meta->skip = true;
+-		return 0;
+-	}
+-
+ 	wrp_alu_imm(nfp_prog, insn->dst_reg * 2, alu_op, insn->imm);
+ 	wrp_immed(nfp_prog, reg_both(insn->dst_reg * 2 + 1), 0);
  
- 	/* check if we have any specific MACs to be added to PF DMAC filter */
-@@ -1967,9 +1969,9 @@ static void __nicvf_set_rx_mode_task(u8 mode, struct xcast_addr_list *mc_addrs,
- 		for (idx = 0; idx < mc_addrs->count; idx++) {
- 			mbx.xcast.msg = NIC_MBOX_MSG_ADD_MCAST;
- 			mbx.xcast.data.mac = mc_addrs->mc[idx];
--			nicvf_send_msg_to_pf(nic, &mbx);
-+			if (nicvf_send_msg_to_pf(nic, &mbx) < 0)
-+				goto free_mc;
- 		}
--		kfree(mc_addrs);
- 	}
+@@ -2306,7 +2301,7 @@ static int xor_reg(struct nfp_prog *nfp_prog, struct nfp_insn_meta *meta)
  
- 	/* and finally set rx mode for PF accordingly */
-@@ -1977,6 +1979,8 @@ static void __nicvf_set_rx_mode_task(u8 mode, struct xcast_addr_list *mc_addrs,
- 	mbx.xcast.data.mode = mode;
- 
- 	nicvf_send_msg_to_pf(nic, &mbx);
-+free_mc:
-+	kfree(mc_addrs);
+ static int xor_imm(struct nfp_prog *nfp_prog, struct nfp_insn_meta *meta)
+ {
+-	return wrp_alu32_imm(nfp_prog, meta, ALU_OP_XOR, !meta->insn.imm);
++	return wrp_alu32_imm(nfp_prog, meta, ALU_OP_XOR);
  }
  
- static void nicvf_set_rx_mode_task(struct work_struct *work_arg)
+ static int and_reg(struct nfp_prog *nfp_prog, struct nfp_insn_meta *meta)
+@@ -2316,7 +2311,7 @@ static int and_reg(struct nfp_prog *nfp_prog, struct nfp_insn_meta *meta)
+ 
+ static int and_imm(struct nfp_prog *nfp_prog, struct nfp_insn_meta *meta)
+ {
+-	return wrp_alu32_imm(nfp_prog, meta, ALU_OP_AND, !~meta->insn.imm);
++	return wrp_alu32_imm(nfp_prog, meta, ALU_OP_AND);
+ }
+ 
+ static int or_reg(struct nfp_prog *nfp_prog, struct nfp_insn_meta *meta)
+@@ -2326,7 +2321,7 @@ static int or_reg(struct nfp_prog *nfp_prog, struct nfp_insn_meta *meta)
+ 
+ static int or_imm(struct nfp_prog *nfp_prog, struct nfp_insn_meta *meta)
+ {
+-	return wrp_alu32_imm(nfp_prog, meta, ALU_OP_OR, !meta->insn.imm);
++	return wrp_alu32_imm(nfp_prog, meta, ALU_OP_OR);
+ }
+ 
+ static int add_reg(struct nfp_prog *nfp_prog, struct nfp_insn_meta *meta)
+@@ -2336,7 +2331,7 @@ static int add_reg(struct nfp_prog *nfp_prog, struct nfp_insn_meta *meta)
+ 
+ static int add_imm(struct nfp_prog *nfp_prog, struct nfp_insn_meta *meta)
+ {
+-	return wrp_alu32_imm(nfp_prog, meta, ALU_OP_ADD, !meta->insn.imm);
++	return wrp_alu32_imm(nfp_prog, meta, ALU_OP_ADD);
+ }
+ 
+ static int sub_reg(struct nfp_prog *nfp_prog, struct nfp_insn_meta *meta)
+@@ -2346,7 +2341,7 @@ static int sub_reg(struct nfp_prog *nfp_prog, struct nfp_insn_meta *meta)
+ 
+ static int sub_imm(struct nfp_prog *nfp_prog, struct nfp_insn_meta *meta)
+ {
+-	return wrp_alu32_imm(nfp_prog, meta, ALU_OP_SUB, !meta->insn.imm);
++	return wrp_alu32_imm(nfp_prog, meta, ALU_OP_SUB);
+ }
+ 
+ static int mul_reg(struct nfp_prog *nfp_prog, struct nfp_insn_meta *meta)
 -- 
 2.19.1
 
