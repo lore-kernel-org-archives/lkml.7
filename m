@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8C21C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:02:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A30ACC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:02:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7AE82192D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:02:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 645D02192D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:02:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256123;
-	bh=elgIDh2E6Kru5oLUZxorCRT1Fpni8QFvmhHDMRpIqu0=;
+	s=default; t=1553256127;
+	bh=uJ8LOSN55WIAqoZ7LFnVSZKvV91Y04yCmXjMSpAZzjw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jjGB39MRV82W+qE+yCtgUZlWqxOe/li0VRRaU5jVHF7Hvzu5jPLAS/xZG31TdNZ+Q
-	 YwSYKCxozUDUwwiaKbMvPoo0ldLiFjHH5QdMjCyF6/oy/V/MZ5mG7DNH31VdUk8kUv
-	 pCIz+zedB8fnzqxj0aVNNzz1PKzKYa+Jnk3EPXxU=
+	b=Zngd6Qy8Xo3ld4bLlp2L2XFP9u2ynfKExLAHpTjoRaawqS3ykeotaaP/j7NvMteRN
+	 wOVLhf27DSHc6SkUTuNVDxTn8ICvRw3VA3hz02uxFtmTdRc1APZKTIhfQ9GD96XKTT
+	 Gd7gWayCsF/l33855veAFDpT2T4KmkPTKqyqk1RQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388298AbfCVMCC (ORCPT
+        id S2388309AbfCVMCG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:02:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39888 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:02:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730323AbfCVMB7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:01:59 -0400
+        id S2388297AbfCVMCC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:02:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4429204FD;
-        Fri, 22 Mar 2019 12:01:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6F8C204FD;
+        Fri, 22 Mar 2019 12:02:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256118;
-        bh=elgIDh2E6Kru5oLUZxorCRT1Fpni8QFvmhHDMRpIqu0=;
+        s=default; t=1553256122;
+        bh=uJ8LOSN55WIAqoZ7LFnVSZKvV91Y04yCmXjMSpAZzjw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LyAWje/VakhUW8f9Cj1PWAwoWgcI2uEYg4Y6ACW6Nk+7cpdILh+ETeuUtu5Lg3nHb
-         XJiHQlIU9FdRCQ+8ZJQPj9oAk9rH21AJlCMfjIiBk4veUSB71gznszlEKJs2wLpNEn
-         fdVNHbdiEcVy6gf+p+N+Do/wiR0dLhmw/0RXnBtQ=
+        b=jxu47VK8+Jp79wwlSMcSC+5X2SKSqYU+QjHOXmsZmX2t0p4hKGxhlMygl80tTEkdr
+         /bfmwp+M/Trot1WscyyATVL2WLAiGnsy7hjcxqAJtP0SwpyJip7iBT4UEOO4eXutVA
+         8E/nyWNDR2cog+3ehJdyFPa7D4x9cQlC9VFWJUM4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vishal Verma <vishal.l.verma@intel.com>,
-        Grzegorz Burzynski <grzegorz.burzynski@intel.com>,
-        Jeff Moyer <jmoyer@redhat.com>,
+        stable@vger.kernel.org,
+        Krzysztof Rusocki <krzysztof.rusocki@intel.com>,
+        Toshi Kani <toshi.kani@hpe.com>,
         Dan Williams <dan.j.williams@intel.com>
-Subject: [PATCH 4.19 114/280] acpi/nfit: Fix bus command validation
-Date:   Fri, 22 Mar 2019 12:14:27 +0100
-Message-Id: <20190322111313.990739666@linuxfoundation.org>
+Subject: [PATCH 4.19 115/280] nfit/ars: Attempt a short-ARS whenever the ARS state is idle at boot
+Date:   Fri, 22 Mar 2019 12:14:28 +0100
+Message-Id: <20190322111314.163455056@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -69,98 +69,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Dan Williams <dan.j.williams@intel.com>
 
-commit ebe9f6f19d80d8978d16078dff3d5bd93ad8d102 upstream.
+commit c6c5df293bf1b488cf8459aac658aecfdccb13a9 upstream.
 
-Commit 11189c1089da "acpi/nfit: Fix command-supported detection" broke
-ND_CMD_CALL for bus-level commands. The "func = cmd" assumption is only
-valid for:
+If query-ARS reports that ARS has stopped and requires continuation
+attempt to retrieve short-ARS results before continuing the long
+operation.
 
-    ND_CMD_ARS_CAP
-    ND_CMD_ARS_START
-    ND_CMD_ARS_STATUS
-    ND_CMD_CLEAR_ERROR
-
-The function number otherwise needs to be pulled from the command
-payload for:
-
-    NFIT_CMD_TRANSLATE_SPA
-    NFIT_CMD_ARS_INJECT_SET
-    NFIT_CMD_ARS_INJECT_CLEAR
-    NFIT_CMD_ARS_INJECT_GET
-
-Update cmd_to_func() for the bus case and call it in the common path.
-
-Fixes: 11189c1089da ("acpi/nfit: Fix command-supported detection")
+Fixes: bc6ba8085842 ("nfit, address-range-scrub: rework and simplify ARS...")
 Cc: <stable@vger.kernel.org>
-Reviewed-by: Vishal Verma <vishal.l.verma@intel.com>
-Reported-by: Grzegorz Burzynski <grzegorz.burzynski@intel.com>
-Tested-by: Jeff Moyer <jmoyer@redhat.com>
+Reported-by: Krzysztof Rusocki <krzysztof.rusocki@intel.com>
+Reviewed-by: Toshi Kani <toshi.kani@hpe.com>
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/acpi/nfit/core.c |   22 ++++++++++++----------
- 1 file changed, 12 insertions(+), 10 deletions(-)
+ drivers/acpi/nfit/core.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 --- a/drivers/acpi/nfit/core.c
 +++ b/drivers/acpi/nfit/core.c
-@@ -397,7 +397,7 @@ static int cmd_to_func(struct nfit_mem *
- 	if (call_pkg) {
- 		int i;
+@@ -2900,6 +2900,7 @@ static int ars_register(struct acpi_nfit
  
--		if (nfit_mem->family != call_pkg->nd_family)
-+		if (nfit_mem && nfit_mem->family != call_pkg->nd_family)
- 			return -ENOTTY;
- 
- 		for (i = 0; i < ARRAY_SIZE(call_pkg->nd_reserved2); i++)
-@@ -406,6 +406,10 @@ static int cmd_to_func(struct nfit_mem *
- 		return call_pkg->nd_command;
- 	}
- 
-+	/* In the !call_pkg case, bus commands == bus functions */
-+	if (!nfit_mem)
-+		return cmd;
-+
- 	/* Linux ND commands == NVDIMM_FAMILY_INTEL function numbers */
- 	if (nfit_mem->family == NVDIMM_FAMILY_INTEL)
- 		return cmd;
-@@ -436,17 +440,18 @@ int acpi_nfit_ctl(struct nvdimm_bus_desc
- 	if (cmd_rc)
- 		*cmd_rc = -EINVAL;
- 
-+	if (cmd == ND_CMD_CALL)
-+		call_pkg = buf;
-+	func = cmd_to_func(nfit_mem, cmd, call_pkg);
-+	if (func < 0)
-+		return func;
-+
- 	if (nvdimm) {
- 		struct acpi_device *adev = nfit_mem->adev;
- 
- 		if (!adev)
- 			return -ENOTTY;
- 
--		if (cmd == ND_CMD_CALL)
--			call_pkg = buf;
--		func = cmd_to_func(nfit_mem, cmd, call_pkg);
--		if (func < 0)
--			return func;
- 		dimm_name = nvdimm_name(nvdimm);
- 		cmd_name = nvdimm_cmd_name(cmd);
- 		cmd_mask = nvdimm_cmd_mask(nvdimm);
-@@ -457,12 +462,9 @@ int acpi_nfit_ctl(struct nvdimm_bus_desc
- 	} else {
- 		struct acpi_device *adev = to_acpi_dev(acpi_desc);
- 
--		func = cmd;
- 		cmd_name = nvdimm_bus_cmd_name(cmd);
- 		cmd_mask = nd_desc->cmd_mask;
--		dsm_mask = cmd_mask;
--		if (cmd == ND_CMD_CALL)
--			dsm_mask = nd_desc->bus_dsm_mask;
-+		dsm_mask = nd_desc->bus_dsm_mask;
- 		desc = nd_cmd_bus_desc(cmd);
- 		guid = to_nfit_uuid(NFIT_DEV_BUS);
- 		handle = adev->handle;
+ 	switch (acpi_nfit_query_poison(acpi_desc)) {
+ 	case 0:
++	case -ENOSPC:
+ 	case -EAGAIN:
+ 		rc = ars_start(acpi_desc, nfit_spa, ARS_REQ_SHORT);
+ 		/* shouldn't happen, try again later */
+@@ -2924,7 +2925,6 @@ static int ars_register(struct acpi_nfit
+ 		break;
+ 	case -EBUSY:
+ 	case -ENOMEM:
+-	case -ENOSPC:
+ 		/*
+ 		 * BIOS was using ARS, wait for it to complete (or
+ 		 * resources to become available) and then perform our
 
 
