@@ -2,112 +2,98 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5B12C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:41:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 348ACC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:42:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4F43218E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:41:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553258512;
-	bh=fraNlDS94Ao2ZiqrhxUgY8CrkVyXX4xbQL1UwjEU58k=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CRHtSnk9IifSqk7JDKZcFgMM1q9b1R/s8NH27c8KjVbLLwGu6jRyuo5xfCqOcV8QP
-	 nDkL1XSTdTBjm1T+JYjtiHc3VRng7YH0+woUQYkQpC+ZtyyuAxnDj1smLfSDCHs1T+
-	 umbaxHiOl94j0FkSzGMtFn3CW7BR1qEqqKYgVLJU=
+	by mail.kernel.org (Postfix) with ESMTP id EE9A1218E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:42:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TUzkCPGo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388933AbfCVMlv (ORCPT
+        id S2388702AbfCVMEh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:41:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43488 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388227AbfCVMFD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:05:03 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9A6721934;
-        Fri, 22 Mar 2019 12:05:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256302;
-        bh=fraNlDS94Ao2ZiqrhxUgY8CrkVyXX4xbQL1UwjEU58k=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AEymDbX8vNodZNCVHnPVEv/3p0DRf+/J02MlovxQUDZ7QYx+kTtx2yeit5Czlb9sW
-         doADDSm88Kv5jR37pe6UBHMb08XRRs1yQznJPKNhB7onPd3FFe6rPvmK5506t+a7Jr
-         kWeedXJZ4rhGn5Yvfyfy2RMzuPJawalk5DawnqfU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiong Wu <Lohengrin1024@gmail.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 4.19 146/280] mmc:fix a bug when max_discard is 0
-Date:   Fri, 22 Mar 2019 12:14:59 +0100
-Message-Id: <20190322111319.371532427@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
-References: <20190322111306.356185024@linuxfoundation.org>
-User-Agent: quilt/0.65
-X-stable: review
-X-Patchwork-Hint: ignore
+        Fri, 22 Mar 2019 08:04:37 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:37718 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388316AbfCVMEe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:04:34 -0400
+Received: by mail-pg1-f194.google.com with SMTP id q206so1398187pgq.4
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 05:04:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=4AWblRo5ewuA/4tmoQynrYwrFjG+ERQg40eyX191mqY=;
+        b=TUzkCPGo/SWoUh3nwd4QvDz4O/5nV2yLzP0SuahLZ5a6Grdb8EvlCAcIvBCVXUGVpN
+         09peSDYhlYVB2yhqbOOlRXxdAt9QqbvOQbplPhEOcpq/q9XUDttcWNKSEkYIVDG7ARiL
+         OSwrc1UOsqpzJzmvMOrlke7HydMGak9husvRVn9JvMfigu+2mv7NEsD8HGVEHzpTppjV
+         eyuuvHBwv+4NgeEb2w33i27cyRfpy1rUgc0X8bj1v2vs8+UtNjTqJJfFaDNYig0+tVer
+         xEOqyKbFQesO4PffjpoZR9oSs3Fu7Wc2ZiDYOkXIJs2ZQWUJCQ17RZpTzEfdyshFWNcq
+         /kdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4AWblRo5ewuA/4tmoQynrYwrFjG+ERQg40eyX191mqY=;
+        b=coVv7uFO8HHNn7tjNDu72Keu5dOTEQ5bY8VewIRP/YAdo79d35XpjURDkYBOfM6Xf/
+         Ds2cllH6LVxZokm2Vd5nxpFtURrafHzJS/Sgu/KALj/rlpH3oX1wopq+kpFFtQa9VaMX
+         xjmIifD66FBUHbgy6mFnz+0u0HkgATSe+x8qmKB6xT7YBl4YVmel4vootOEjif0jqOnX
+         BbXrhnR7QEZQIYFja1HOYbrzceCG6ugdXNYdejaXkR9XSdgn0JM0AEMYpjUfbTFzmwe9
+         iZnzyQGSzliYf0SpUGLEr1lwqivSryww3On6oCEnJouBH0pCVZHpnW3VuvZ9IZNdLPxL
+         u+Kw==
+X-Gm-Message-State: APjAAAUcDwLvX0LuZPa0rbRQDTh/jXyWoUvV+fu/HBQqqiIT8tUCr8/g
+        jBsfEc5kEOETG+BUa4zTPPg=
+X-Google-Smtp-Source: APXvYqz7kKZrT2PMCc9qfrbj8h0X9Txt6DTvb8QGnvNfeDFRUP4lBWrXckuTCulpRdgGJkWJoMCULQ==
+X-Received: by 2002:a63:c10b:: with SMTP id w11mr8624018pgf.39.1553256273504;
+        Fri, 22 Mar 2019 05:04:33 -0700 (PDT)
+Received: from bharath12345-Inspiron-5559 ([117.198.99.29])
+        by smtp.gmail.com with ESMTPSA id d3sm9981973pfc.125.2019.03.22.05.04.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 22 Mar 2019 05:04:32 -0700 (PDT)
+Date:   Fri, 22 Mar 2019 17:34:27 +0530
+From:   Bharath Vedartham <linux.bhar@gmail.com>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     gregkh@linuxfoundation.org, christian@lkamp.de,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: ralink-gdma: Change uint32_t to u32
+Message-ID: <20190322120427.GA3031@bharath12345-Inspiron-5559>
+References: <20190321192502.GA11144@bharath12345-Inspiron-5559>
+ <20190322100140.GL2202@kadam>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190322100140.GL2202@kadam>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.19-stable review patch.  If anyone has any objections, please let me know.
-
-------------------
-
-From: Jiong Wu <lohengrin1024@gmail.com>
-
-commit d4721339dcca7def04909a8e60da43c19a24d8bf upstream.
-
-The original purpose of the code I fix is to replace max_discard with
-max_trim if max_trim is less than max_discard. When max_discard is 0
-we should replace max_discard with max_trim as well, because
-max_discard equals 0 happens only when the max_do_calc_max_discard
-process is overflowed, so if mmc_can_trim(card) is true, max_discard
-should be replaced by an available max_trim.
-However, in the original code, there are two lines of code interfere
-the right process.
-1) if (max_discard && mmc_can_trim(card))
-when max_discard is 0, it skips the process checking if max_discard
-needs to be replaced with max_trim.
-2) if (max_trim < max_discard)
-the condition is false when max_discard is 0. it also skips the process
-that replaces max_discard with max_trim, in fact, we should replace the
-0-valued max_discard with max_trim.
-
-Signed-off-by: Jiong Wu <Lohengrin1024@gmail.com>
-Fixes: b305882fbc87 (mmc: core: optimize mmc_calc_max_discard)
-Cc: stable@vger.kernel.org # v4.17+
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/mmc/core/core.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
---- a/drivers/mmc/core/core.c
-+++ b/drivers/mmc/core/core.c
-@@ -2378,9 +2378,9 @@ unsigned int mmc_calc_max_discard(struct
- 		return card->pref_erase;
- 
- 	max_discard = mmc_do_calc_max_discard(card, MMC_ERASE_ARG);
--	if (max_discard && mmc_can_trim(card)) {
-+	if (mmc_can_trim(card)) {
- 		max_trim = mmc_do_calc_max_discard(card, MMC_TRIM_ARG);
--		if (max_trim < max_discard)
-+		if (max_trim < max_discard || max_discard == 0)
- 			max_discard = max_trim;
- 	} else if (max_discard < card->erase_size) {
- 		max_discard = 0;
-
-
+On Fri, Mar 22, 2019 at 01:01:40PM +0300, Dan Carpenter wrote:
+> On Fri, Mar 22, 2019 at 12:55:02AM +0530, Bharath Vedartham wrote:
+> > This is a follow up on my previous patch. Change occurences of the
+>   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+I did not send a patch set. I should have worded my changelog better.
+Thanks for the feedback. This was just one patch.
+> Put this sort of information under the --- cut off below the Sign off.
+> 
+> > stdint type uint32_t to its shortened type u32. This fixed the checkpatch.pl warning: "Prefer u32 over uint32_t".
+> 
+> This line is too long.  Limit it to 72 characters.
+> 
+Yes will do that.
+> > 
+> > Signed-off-by: Bharath Vedartham <linux.bhar@gmail.com>
+> > ---
+>   ^^^
+Got it. Thanks for the feedback.
+> 
+> regards,
+> dan carpenter
+> 
