@@ -2,75 +2,75 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ACD3C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 05:18:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8454C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 05:18:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B2B821904
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 05:18:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tomli.me header.i=@tomli.me header.b="Zb6Hg81B"
+	by mail.kernel.org (Postfix) with ESMTP id 7813D21925
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 05:18:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553231932;
+	bh=1jBf8qsSVEzRA/E+kFeS8qozylZZOG3vwReMA/YDsbw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=EiDyeGwMQbxRhwrEjhoWYwlHjIAh/C5A8cSsNd8Huk8otKL+BFZpR3+7iVPUx000N
+	 eia1a/xR+WZpAYbVNsKx2FqX4zzm34OPKir9cbnh3DLvqneDQLksmwFCRuueqUKeT1
+	 GYgdP6HAwtWhWf6WRPWrteDGQkB1IgeOsOQcldN8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727747AbfCVFSt (ORCPT
+        id S1726032AbfCVFSu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 01:18:49 -0400
-Received: from tomli.me ([153.92.126.73]:58774 "EHLO tomli.me"
+        Fri, 22 Mar 2019 01:18:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39972 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727719AbfCVFSq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 01:18:46 -0400
-Received: from tomli.me (localhost [127.0.0.1])
-        by tomli.me (OpenSMTPD) with ESMTP id 43220baa;
-        Fri, 22 Mar 2019 05:18:44 +0000 (UTC)
-X-HELO: localhost.lan
-Authentication-Results: tomli.me; auth=pass (login) smtp.auth=tomli
-Received: from Unknown (HELO localhost.lan) (2402:f000:1:1501:200:5efe:dddb:8cda)
- by tomli.me (qpsmtpd/0.95) with ESMTPSA (DHE-RSA-CHACHA20-POLY1305 encrypted); Fri, 22 Mar 2019 05:18:44 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=tomli.me; h=from:to:cc:subject:date:message-id:in-reply-to:references:mime-version:content-transfer-encoding; s=1490979754; bh=MLJ+eN9q2Vru6tsjA4mvWrQPNlupWr+eL239fVtxbxY=; b=Zb6Hg81BEV3jRcHwyOkfaho23AHpl6F3xc9IG572YbQFDumpslFrnjA0R2qtmgJktkwluLUcVYIoAfsxSviSskHh7Lw0FNikgEsUNHijoZKlTxAnU2eNYwci42oBTtRZSCXx/TytyPcwM+34w6RbR7SuaVyfygxfxsX8kcvHxXXyo+1B9LNXBY4jOttApWALfPx1/f9XKrUBGImOppDSdQNrzOXpbMIA2FuWDc7kprfHWxIU9WhDD6kEch3bA/vFvh9uH4ifPe5la2bLEDtUXPXwPdl5xtYqQxNefXkdW8BMTLGh37DsrydV1+54YFq10TA14hh3vVJgljvEnz89Mg==
-From:   Yifeng Li <tomli@tomli.me>
-To:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Teddy Wang <teddy.wang@siliconmotion.com>,
-        linux-kernel@vger.kernel.org
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Yifeng Li <tomli@tomli.me>
-Subject: [PATCH v2 7/7] MAINTAINERS: sm712fb: list myself as one maintainer.
-Date:   Fri, 22 Mar 2019 13:17:59 +0800
-Message-Id: <20190322051759.15007-8-tomli@tomli.me>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190322051759.15007-1-tomli@tomli.me>
-References: <20190322051759.15007-1-tomli@tomli.me>
+        id S1727632AbfCVFSr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 01:18:47 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54A9821902;
+        Fri, 22 Mar 2019 05:18:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553231926;
+        bh=1jBf8qsSVEzRA/E+kFeS8qozylZZOG3vwReMA/YDsbw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=v7byVg54am6TfCM2SjDaWC+6TmQUxdmqUlS2oToRH0ygdF6nwmdCqt1yDwtvOA6Zf
+         iLimVi483Jsf7hXqDJiqQqa8d+/YrbdvyCKXKEXST7D4EtgKPU4XvdBZZCQ7IdM8Ep
+         CHrN9ifwfbBWehZEtmj0FF7hf+5y/uM0oeRfyO8g=
+Date:   Fri, 22 Mar 2019 06:18:44 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     "Ji-Ze Hong (Peter Hong)" <hpeter@gmail.com>
+Cc:     wim@linux-watchdog.orgw, linux@roeck-us.net,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org,
+        "Ji-Ze Hong (Peter Hong)" <hpeter+linux_kernel@gmail.com>
+Subject: Re: [PATCH V1 1/1] watchdog: f71808e_wdt: fix F81866 bit operation
+Message-ID: <20190322051844.GB17257@kroah.com>
+References: <1553225816-24375-1-git-send-email-hpeter+linux_kernel@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1553225816-24375-1-git-send-email-hpeter+linux_kernel@gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I have working on the sm712fb driver for a while and have some familiarity
-with this hardware, I'll be helping working on and testing problems of this
-driver, so add myself to the MAINTAINERS file.
+On Fri, Mar 22, 2019 at 11:36:56AM +0800, Ji-Ze Hong (Peter Hong) wrote:
+> Fix error bit operation in watchdog_start()
+> 
+> Signed-off-by: Ji-Ze Hong (Peter Hong) <hpeter+linux_kernel@gmail.com>
+> ---
+>  drivers/watchdog/f71808e_wdt.c | 11 +++++------
+>  1 file changed, 5 insertions(+), 6 deletions(-)
 
-Signed-off-by: Yifeng Li <tomli@tomli.me>
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+<formletter>
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index dce5c099f43c..3f6686f0f020 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13871,6 +13871,7 @@ F:	drivers/input/touchscreen/silead.c
- F:	drivers/platform/x86/touchscreen_dmi.c
- 
- SILICON MOTION SM712 FRAME BUFFER DRIVER
-+M:	Tom Li <tomli@tomli.me>
- M:	Sudip Mukherjee <sudipm.mukherjee@gmail.com>
- M:	Teddy Wang <teddy.wang@siliconmotion.com>
- M:	Sudip Mukherjee <sudip.mukherjee@codethink.co.uk>
--- 
-2.20.1
+This is not the correct way to submit patches for inclusion in the
+stable kernel tree.  Please read:
+    https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
+for how to do this properly.
 
+</formletter>
