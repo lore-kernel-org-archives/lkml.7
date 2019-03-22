@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CD63C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:07:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 516DEC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:08:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF95A21939
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:07:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2003F2082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:08:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256478;
-	bh=jRIHKxbdO79B2qiVU9zmbXQKVtwRF4vRRP2QRiRuWHQ=;
+	s=default; t=1553256483;
+	bh=k/VtRJbAPxgyErTXN3D0ykeKefxicKJEfUdvxTXWjqk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BNXNU/wl0bPsSi0BwE9sbZJ8i5BWvncs7XGnHVZ1YLyoowW3yFFsH7y3Tix1eY4jD
-	 Odp4vO33NyxSylCrjgIAHX1axUM+chhOLGiAZvDZZklRM7nS4PLYNwkQVHdByEFisZ
-	 5Q5qblfcD++S6Y/7g9WWEWDAs3jmNx1kancsk8yY=
+	b=C3KaZ0MDIaTUnEsojVAWBaKs47uzxU9GUSm2WIMCLf6iroZFYyGwyLnnN/T1lN24l
+	 b/4tL9i5ba1jEJoYJDSCLh0hiePn2dwexFFw4cpRBxmMakfsqgeZgyknr0TtzQe1KL
+	 IWXM9KvQOXjapZJOITna6CpLNAH0LFw5hVFzjxR8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389107AbfCVMH5 (ORCPT
+        id S2389098AbfCVMH4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:07:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46298 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389094AbfCVMH4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 22 Mar 2019 08:07:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46244 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388858AbfCVMHw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:07:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17D6F2082C;
-        Fri, 22 Mar 2019 12:07:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BCBF21939;
+        Fri, 22 Mar 2019 12:07:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256475;
-        bh=jRIHKxbdO79B2qiVU9zmbXQKVtwRF4vRRP2QRiRuWHQ=;
+        s=default; t=1553256471;
+        bh=k/VtRJbAPxgyErTXN3D0ykeKefxicKJEfUdvxTXWjqk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MCE20JUCTIp7EomxpjKKtFP3IcVOH+KN9QM+fELcAYxjzLDkfs8Nee7onKJxY8nGO
-         STnHqgtAX3uxLLHXxsSsAZ/E3ktCdt5mqHvrSvWGXwioRkjX0M30wyJNsw2e2B7s8l
-         GkBRyX6BTrFz3U8lY/LwHNJVldOFfxDDlY15VnMo=
+        b=iwxcWgxNq/3/YQufyU2U/W/ZZYkJcsLLtq2dtkaKhGYo37w7fnpuYoiGUb/p6MV/y
+         IJRr/nghvPpruCG1dEtGMO+8Cm2SPfDR/Ih7rxgOirghiBS4MiJN3PPL3fne936I9o
+         KkpanFMkS94TtBdKwiHsOMLCsPMOnNSYFGrF6GoM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jordan Niethe <jniethe5@gmail.com>,
-        Stewart Smith <stewart@linux.ibm.com>,
-        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
+        stable@vger.kernel.org,
+        Jonathan Neuschafer <j.neuschaefer@gmx.net>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
         Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.19 223/280] powerpc/powernv: Make opal log only readable by root
-Date:   Fri, 22 Mar 2019 12:16:16 +0100
-Message-Id: <20190322111335.399249553@linuxfoundation.org>
+Subject: [PATCH 4.19 222/280] powerpc/wii: properly disable use of BATs when requested.
+Date:   Fri, 22 Mar 2019 12:16:15 +0100
+Message-Id: <20190322111335.220385510@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -67,37 +67,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jordan Niethe <jniethe5@gmail.com>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-commit 7b62f9bd2246b7d3d086e571397c14ba52645ef1 upstream.
+commit 6d183ca8baec983dc4208ca45ece3c36763df912 upstream.
 
-Currently the opal log is globally readable. It is kernel policy to
-limit the visibility of physical addresses / kernel pointers to root.
-Given this and the fact the opal log may contain this information it
-would be better to limit the readability to root.
+'nobats' kernel parameter or some options like CONFIG_DEBUG_PAGEALLOC
+deny the use of BATS for mapping memory.
 
-Fixes: bfc36894a48b ("powerpc/powernv: Add OPAL message log interface")
-Cc: stable@vger.kernel.org # v3.15+
-Signed-off-by: Jordan Niethe <jniethe5@gmail.com>
-Reviewed-by: Stewart Smith <stewart@linux.ibm.com>
-Reviewed-by: Andrew Donnellan <andrew.donnellan@au1.ibm.com>
+This patch makes sure that the specific wii RAM mapping function
+takes it into account as well.
+
+Fixes: de32400dd26e ("wii: use both mem1 and mem2 as ram")
+Cc: stable@vger.kernel.org
+Reviewed-by: Jonathan Neuschafer <j.neuschaefer@gmx.net>
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/platforms/powernv/opal-msglog.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/platforms/embedded6xx/wii.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/arch/powerpc/platforms/powernv/opal-msglog.c
-+++ b/arch/powerpc/platforms/powernv/opal-msglog.c
-@@ -98,7 +98,7 @@ static ssize_t opal_msglog_read(struct f
- }
- 
- static struct bin_attribute opal_msglog_attr = {
--	.attr = {.name = "msglog", .mode = 0444},
-+	.attr = {.name = "msglog", .mode = 0400},
- 	.read = opal_msglog_read
- };
- 
+--- a/arch/powerpc/platforms/embedded6xx/wii.c
++++ b/arch/powerpc/platforms/embedded6xx/wii.c
+@@ -83,6 +83,10 @@ unsigned long __init wii_mmu_mapin_mem2(
+ 	/* MEM2 64MB@0x10000000 */
+ 	delta = wii_hole_start + wii_hole_size;
+ 	size = top - delta;
++
++	if (__map_without_bats)
++		return delta;
++
+ 	for (bl = 128<<10; bl < max_size; bl <<= 1) {
+ 		if (bl * 2 > size)
+ 			break;
 
 
