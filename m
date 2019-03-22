@@ -4,50 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E43C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:16:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A4A5C10F03
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:16:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 428C521873
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:16:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3768A21873
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:16:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553260560;
-	bh=q0yXjPaSgnFacPwb7WXEtdBd/iRw1KfJqtoZtL80xSs=;
+	s=default; t=1553260564;
+	bh=GULG6rCrwifQwFSmQHv4AqvYZowhnTuNMavQj7pZW2Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hCAWOJD4V6hoiar0zRFe+HJZw2oCFEfFBZX/bXHuvdWkLF76lhh+XtG1Y1Md3xbye
-	 cBBTGPIH8eVY18H/Rv4QkxoRyFK3aYIlBsGGsa5paJwOni7hYzQGI3f+49vCvackKp
-	 ZIzuCWpezeBhhzBec+j9NFLJXd0cQENQ5My30N90=
+	b=PuHW43zXDw69FKU7NMpqTs8EU6HZ2YIQczG2+Wq/PqSPUKi1hPlowJcUFUyTBCImq
+	 wxHqqS5Sr+7TOaRzBC9FP/u0Bi2zR++QQ7rqRKoTK+gm4D0538B7kZ3fA5d27rmOli
+	 wJwMctN1A81gQ9ESzmnDGyLO4tjpXyjwFrfyh12U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729590AbfCVNP6 (ORCPT
+        id S1729536AbfCVL11 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 09:15:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55252 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:27:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728703AbfCVL1b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:27:31 -0400
+        id S1729006AbfCVL1W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:27:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17786218A2;
-        Fri, 22 Mar 2019 11:27:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99CEB218A2;
+        Fri, 22 Mar 2019 11:27:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254050;
-        bh=q0yXjPaSgnFacPwb7WXEtdBd/iRw1KfJqtoZtL80xSs=;
+        s=default; t=1553254041;
+        bh=GULG6rCrwifQwFSmQHv4AqvYZowhnTuNMavQj7pZW2Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y9C2x0PpCqfU2xT1HHqB68QOkwA/WVQEvavOdfLNd5fSt35SpiexsPZhcVPP2uXbK
-         jrUyL38UYPugJRg1X417rGQukSRYhwI/t0F1C8FsRPTz7k+S2N6ePs+Fuw5jB6e1uT
-         oYa2f0VRWB6RecvkdsVawBEvFu0oNXGpAXVl1rcU=
+        b=CjaGluqpfTS3Dg7qGBzZ1/Ert8K0HtdHdAIHY+n0PjXE3rzZNGaGGsEXgdU1qBlHy
+         hjmtt/1h5Kz5lgyo2M5vMdPEkyw6XzJc40y8VpIAtc81f2ic9EKKl1G6R4/qNdfq57
+         hHbMXemcky+YMEKi6t9DjS53otPBKolDdl+UV8u8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 017/230] atm: he: fix sign-extension overflow on large shift
-Date:   Fri, 22 Mar 2019 12:12:35 +0100
-Message-Id: <20190322111237.966968897@linuxfoundation.org>
+        stable@vger.kernel.org, Logan Gunthorpe <logang@deltatee.com>,
+        Intel SCU Linux support <intel-linux-scu@intel.com>,
+        Artur Paszkiewicz <artur.paszkiewicz@intel.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Jeff Moyer <jmoyer@redhat.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 014/230] scsi: isci: initialize shost fully before calling scsi_add_host()
+Date:   Fri, 22 Mar 2019 12:12:32 +0100
+Message-Id: <20190322111237.734703885@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -66,36 +70,95 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit cb12d72b27a6f41325ae23a11033cf5fedfa1b97 ]
+[ Upstream commit cc29a1b0a3f2597ce887d339222fa85b9307706d ]
 
-Shifting the 1 by exp by an int can lead to sign-extension overlow when
-exp is 31 since 1 is an signed int and sign-extending this result to an
-unsigned long long will set the upper 32 bits.  Fix this by shifting an
-unsigned long.
+scsi_mq_setup_tags(), which is called by scsi_add_host(), calculates the
+command size to allocate based on the prot_capabilities. In the isci
+driver, scsi_host_set_prot() is called after scsi_add_host() so the command
+size gets calculated to be smaller than it needs to be.  Eventually,
+scsi_mq_init_request() locates the 'prot_sdb' after the command assuming it
+was sized correctly and a buffer overrun may occur.
 
-Detected by cppcheck:
-(warning) Shifting signed 32-bit value by 31 bits is undefined behaviour
+However, seeing blk_mq_alloc_rqs() rounds up to the nearest cache line
+size, the mistake can go unnoticed.
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+The bug was noticed after the struct request size was reduced by commit
+9d037ad707ed ("block: remove req->timeout_list")
+
+Which likely reduced the allocated space for the request by an entire cache
+line, enough that the overflow could be hit and it caused a panic, on boot,
+at:
+
+  RIP: 0010:t10_pi_complete+0x77/0x1c0
+  Call Trace:
+    <IRQ>
+    sd_done+0xf5/0x340
+    scsi_finish_command+0xc3/0x120
+    blk_done_softirq+0x83/0xb0
+    __do_softirq+0xa1/0x2e6
+    irq_exit+0xbc/0xd0
+    call_function_single_interrupt+0xf/0x20
+    </IRQ>
+
+sd_done() would call scsi_prot_sg_count() which reads the number of
+entities in 'prot_sdb', but seeing 'prot_sdb' is located after the end of
+the allocated space it reads a garbage number and erroneously calls
+t10_pi_complete().
+
+To prevent this, the calls to scsi_host_set_prot() are moved into
+isci_host_alloc() before the call to scsi_add_host(). Out of caution, also
+move the similar call to scsi_host_set_guard().
+
+Fixes: 3d2d75254915 ("[SCSI] isci: T10 DIF support")
+Link: http://lkml.kernel.org/r/da851333-eadd-163a-8c78-e1f4ec5ec857@deltatee.com
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Cc: Intel SCU Linux support <intel-linux-scu@intel.com>
+Cc: Artur Paszkiewicz <artur.paszkiewicz@intel.com>
+Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
+Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: Jeff Moyer <jmoyer@redhat.com>
+Reviewed-by: Jeff Moyer <jmoyer@redhat.com>
+Reviewed-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/atm/he.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/isci/init.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/atm/he.c b/drivers/atm/he.c
-index 0f5cb37636bcc..010581e8bee05 100644
---- a/drivers/atm/he.c
-+++ b/drivers/atm/he.c
-@@ -717,7 +717,7 @@ static int he_init_cs_block_rcm(struct he_dev *he_dev)
- 			instead of '/ 512', use '>> 9' to prevent a call
- 			to divdu3 on x86 platforms
- 		*/
--		rate_cps = (unsigned long long) (1 << exp) * (man + 512) >> 9;
-+		rate_cps = (unsigned long long) (1UL << exp) * (man + 512) >> 9;
+diff --git a/drivers/scsi/isci/init.c b/drivers/scsi/isci/init.c
+index 77128d680e3bc..6f38fa1f468a7 100644
+--- a/drivers/scsi/isci/init.c
++++ b/drivers/scsi/isci/init.c
+@@ -595,6 +595,13 @@ static struct isci_host *isci_host_alloc(struct pci_dev *pdev, int id)
+ 	shost->max_lun = ~0;
+ 	shost->max_cmd_len = MAX_COMMAND_SIZE;
  
- 		if (rate_cps < 10)
- 			rate_cps = 10;	/* 2.2.1 minimum payload rate is 10 cps */
++	/* turn on DIF support */
++	scsi_host_set_prot(shost,
++			   SHOST_DIF_TYPE1_PROTECTION |
++			   SHOST_DIF_TYPE2_PROTECTION |
++			   SHOST_DIF_TYPE3_PROTECTION);
++	scsi_host_set_guard(shost, SHOST_DIX_GUARD_CRC);
++
+ 	err = scsi_add_host(shost, &pdev->dev);
+ 	if (err)
+ 		goto err_shost;
+@@ -682,13 +689,6 @@ static int isci_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 			goto err_host_alloc;
+ 		}
+ 		pci_info->hosts[i] = h;
+-
+-		/* turn on DIF support */
+-		scsi_host_set_prot(to_shost(h),
+-				   SHOST_DIF_TYPE1_PROTECTION |
+-				   SHOST_DIF_TYPE2_PROTECTION |
+-				   SHOST_DIF_TYPE3_PROTECTION);
+-		scsi_host_set_guard(to_shost(h), SHOST_DIX_GUARD_CRC);
+ 	}
+ 
+ 	err = isci_setup_interrupts(pdev);
 -- 
 2.19.1
 
