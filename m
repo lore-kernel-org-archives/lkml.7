@@ -2,101 +2,97 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF2B5C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:15:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09651C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:15:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A412D2183E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:15:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553260500;
-	bh=Uk1QjX++JvwS7HGJbKnuNR1/Y8X4u8/jbgSGbYvpoII=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TEF2+kesTOtf+d5d4SMYv7G1s7uxU1qR3kd+lfbxqe+ivcxHi4XRin7GhMixaCrlO
-	 qJxmHYmg8hCH7KL0Z9I1mCB0JuRgn+q4k/BnPFmUyWDKiUXXfyHzgO/SFqYTnYhOCd
-	 kUt76UAD4Bv/axFDMX+202VhhWHI2pSPFua+UfXA=
+	by mail.kernel.org (Postfix) with ESMTP id C277B2183E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:15:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QeXqNMZh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729249AbfCVNO7 (ORCPT
+        id S1729920AbfCVNPE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 09:14:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56426 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729697AbfCVL2h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:28:37 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 920CC218B0;
-        Fri, 22 Mar 2019 11:28:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254117;
-        bh=Uk1QjX++JvwS7HGJbKnuNR1/Y8X4u8/jbgSGbYvpoII=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bwVz2Ti4L+waYptrQhrHpYONdPbAg0ZJRnxat+BGVoJdw+rKasRaAvFh6EUB3O421
-         rqY+YLzqiCDl9uvRTiwfRfQ0dlApjknbUhagSDG9chD1JakUjLNvD5w8RoRuR7RxdS
-         d0kDsPdYcX2denLo7Ifik1Y9O5Hn+aJ8URdlAbYo=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 037/230] usb: gadget: Potential NULL dereference on allocation error
-Date:   Fri, 22 Mar 2019 12:12:55 +0100
-Message-Id: <20190322111239.300107737@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
-References: <20190322111236.796964179@linuxfoundation.org>
-User-Agent: quilt/0.65
-X-stable: review
-X-Patchwork-Hint: ignore
+        Fri, 22 Mar 2019 09:15:04 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:60492 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729753AbfCVNO5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 09:14:57 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2MDEiYd122726;
+        Fri, 22 Mar 2019 08:14:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1553260484;
+        bh=p186SIZOVCdmajVPM3qYi1henRAdn/qJaKsCmV3CVFQ=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=QeXqNMZhax2pxOW3BpOs2+wQno8BbG9SpNJtOz42Mj6CPSxxHg7kygiPJztW0Ioq0
+         6V/0mShDnQ7/I74uABjnCWz2gOKTljko1R2KtmRz64PrJYpo4doLBmtyUrC9Wc71sr
+         pY44Qx4EUo81EZBa0vq076H4xxsZV9I8IACAg5YI=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2MDEiuN104752
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 22 Mar 2019 08:14:44 -0500
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 22
+ Mar 2019 08:14:43 -0500
+Received: from dflp32.itg.ti.com (10.64.6.15) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_0,
+ cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5 via Frontend Transport;
+ Fri, 22 Mar 2019 08:14:43 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by dflp32.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2MDEfZV021486;
+        Fri, 22 Mar 2019 08:14:42 -0500
+Subject: Re: [PATCH v2 08/15] drm/bridge: tc358767: Increase AUX transfer
+ length limit
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        <dri-devel@lists.freedesktop.org>
+CC:     Archit Taneja <architt@codeaurora.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Andrey Gusakov <andrey.gusakov@cogentembedded.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        <linux-kernel@vger.kernel.org>
+References: <20190322032901.12045-1-andrew.smirnov@gmail.com>
+ <20190322032901.12045-9-andrew.smirnov@gmail.com>
+From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
+Message-ID: <7dbccf61-29fb-a6df-7f54-fd7c29bba57f@ti.com>
+Date:   Fri, 22 Mar 2019 15:14:41 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190322032901.12045-9-andrew.smirnov@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.4-stable review patch.  If anyone has any objections, please let me know.
+On 22/03/2019 05:28, Andrey Smirnov wrote:
+> According to the datasheet tc358767 can transfer up to 16 bytes via
+> its AUX channel, so the artificial limit of 8 apperas to be too
+> low. However only up to 15-bytes seem to be actually supported and
+> trying to use 16-byte transfers results in transfers failing
+> sporadically (with bogus status in case of I2C transfers), so limit it
+> to 15.
 
-------------------
+16 is the limit from the DP spec. I agree, 8 looks odd.
 
-[ Upstream commit df28169e1538e4a8bcd8b779b043e5aa6524545c ]
+15 looks odd too, so I think it warrants a comment there in the code.
 
-The source_sink_alloc_func() function is supposed to return error
-pointers on error.  The function is called from usb_get_function() which
-doesn't check for NULL returns so it would result in an Oops.
+Does 15 byte transfers ever work? Or mostly works but sometimes fails?
 
-Of course, in the current kernel, small allocations always succeed so
-this doesn't affect runtime.
+ Tomi
 
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/usb/gadget/function/f_sourcesink.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/usb/gadget/function/f_sourcesink.c b/drivers/usb/gadget/function/f_sourcesink.c
-index 67b2439899389..d7d095781be18 100644
---- a/drivers/usb/gadget/function/f_sourcesink.c
-+++ b/drivers/usb/gadget/function/f_sourcesink.c
-@@ -849,7 +849,7 @@ static struct usb_function *source_sink_alloc_func(
- 
- 	ss = kzalloc(sizeof(*ss), GFP_KERNEL);
- 	if (!ss)
--		return NULL;
-+		return ERR_PTR(-ENOMEM);
- 
- 	ss_opts =  container_of(fi, struct f_ss_opts, func_inst);
- 
 -- 
-2.19.1
-
-
-
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
