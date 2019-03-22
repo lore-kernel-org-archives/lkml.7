@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C58DDC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:21:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67BFBC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:21:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BA0C218A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:21:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34B1C218B0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:21:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553257308;
-	bh=m0FXCEsHKVZ9XXQxBjdVQ0Cy1fBB37hlmpY4YjIeqg0=;
+	s=default; t=1553257311;
+	bh=oSCveWRf0n+ygoLavqxzh0UXlrl6IiiT9g5knvyb/RQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qXZIEaboELHTVrQGIzXBUgXYw2EjLkKaY84nVPj+e3I3ZPz2rxg6J38/+zkG7Dfmo
-	 r1XcFsO8ShV9T1NQTG+yGNisp3TZrbxwcxawcSAZzIocdh25muXTbtsUOraFLXUa5a
-	 ccMA+Nznyit8rP9Ifno/wKclB5fZhQIfk/D1OInY=
+	b=PlAMFKeQjlQLniqtvFyez8NOsosc/3w3MRdOIArkWZrlgnIN+ZL17vCvrRuTm4MGc
+	 iJ9mkxvE3cuUl+aHeZTOVM+T4zBEg8GaCdzUITzx1ajoQ9vjW5FLS38HnieDPS6K8b
+	 AwQkh34z0hjctXHXvuAxsZo8fYasQULVvPJt7fl0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390710AbfCVMVr (ORCPT
+        id S2390918AbfCVMVt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:21:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60810 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:21:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390894AbfCVMVn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:21:43 -0400
+        id S2390737AbfCVMVr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:21:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91E792054F;
-        Fri, 22 Mar 2019 12:21:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 648032054F;
+        Fri, 22 Mar 2019 12:21:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553257303;
-        bh=m0FXCEsHKVZ9XXQxBjdVQ0Cy1fBB37hlmpY4YjIeqg0=;
+        s=default; t=1553257305;
+        bh=oSCveWRf0n+ygoLavqxzh0UXlrl6IiiT9g5knvyb/RQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2R8zm7cwBoYvD2IP/Zq7E7wc60J7i90gJUTjprICTQ1fEfo/kPViora8aDAVOGQ7p
-         Brrs0xDiTH0ZfNjUl18s1RLFkI/0NSh7YqvcwwiLxsFdraKJHmv7QdH0rS44DGUY+5
-         yqm7G1EKAfosoO+vbAa2iylB10oASTgxXeRlKAzQ=
+        b=fQ+s+sz/Y8ZRvaAJqBUI8ZKIem8/dimgNK6DIE5i2W6A4dkBZWz8Wu9g6pobnyAJH
+         vThxuvWxoBHcbY9Vux0LapSS8mGjSWxjIFhtCc+0EdtUZQqSak5AR9rJUXtr/g5rZo
+         6JTdWxhE3DuTKWOzLnxIy8bFYFum4i/+dUDLdfDA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>
-Subject: [PATCH 5.0 190/238] NFSv4.1: Reinitialise sequence results before retransmitting a request
-Date:   Fri, 22 Mar 2019 12:16:49 +0100
-Message-Id: <20190322111309.435585917@linuxfoundation.org>
+        stable@vger.kernel.org, Russell Currey <ruscur@russell.cc>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@ozlabs.org>
+Subject: [PATCH 5.0 160/238] powerpc/kvm: Save and restore host AMR/IAMR/UAMOR
+Date:   Fri, 22 Mar 2019 12:16:19 +0100
+Message-Id: <20190322111307.740167373@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -65,56 +66,130 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-commit c1dffe0bf7f9c3d57d9f237a7cb2a81e62babd2b upstream.
+commit c3c7470c75566a077c8dc71dcf8f1948b8ddfab4 upstream.
 
-If we have to retransmit a request, we should ensure that we reinitialise
-the sequence results structure, since in the event of a signal
-we need to treat the request as if it had not been sent.
+When the hash MMU is active the AMR, IAMR and UAMOR are used for
+pkeys. The AMR is directly writable by user space, and the UAMOR masks
+those writes, meaning both registers are effectively user register
+state. The IAMR is used to create an execute only key.
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Cc: stable@vger.kernel.org
+Also we must maintain the value of at least the AMR when running in
+process context, so that any memory accesses done by the kernel on
+behalf of the process are correctly controlled by the AMR.
+
+Although we are correctly switching all registers when going into a
+guest, on returning to the host we just write 0 into all regs, except
+on Power9 where we restore the IAMR correctly.
+
+This could be observed by a user process if it writes the AMR, then
+runs a guest and we then return immediately to it without
+rescheduling. Because we have written 0 to the AMR that would have the
+effect of granting read/write permission to pages that the process was
+trying to protect.
+
+In addition, when using the Radix MMU, the AMR can prevent inadvertent
+kernel access to userspace data, writing 0 to the AMR disables that
+protection.
+
+So save and restore AMR, IAMR and UAMOR.
+
+Fixes: cf43d3b26452 ("powerpc: Enable pkey subsystem")
+Cc: stable@vger.kernel.org # v4.16+
+Signed-off-by: Russell Currey <ruscur@russell.cc>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Acked-by: Paul Mackerras <paulus@ozlabs.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfs/nfs4proc.c |   12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ arch/powerpc/kvm/book3s_hv_rmhandlers.S |   26 +++++++++++++++++---------
+ 1 file changed, 17 insertions(+), 9 deletions(-)
 
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -947,6 +947,13 @@ nfs4_sequence_process_interrupted(struct
+--- a/arch/powerpc/kvm/book3s_hv_rmhandlers.S
++++ b/arch/powerpc/kvm/book3s_hv_rmhandlers.S
+@@ -58,6 +58,8 @@ END_FTR_SECTION_IFCLR(CPU_FTR_ARCH_300)
+ #define STACK_SLOT_DAWR		(SFS-56)
+ #define STACK_SLOT_DAWRX	(SFS-64)
+ #define STACK_SLOT_HFSCR	(SFS-72)
++#define STACK_SLOT_AMR		(SFS-80)
++#define STACK_SLOT_UAMOR	(SFS-88)
+ /* the following is used by the P9 short path */
+ #define STACK_SLOT_NVGPRS	(SFS-152)	/* 18 gprs */
  
- #endif	/* !CONFIG_NFS_V4_1 */
+@@ -726,11 +728,9 @@ BEGIN_FTR_SECTION
+ 	mfspr	r5, SPRN_TIDR
+ 	mfspr	r6, SPRN_PSSCR
+ 	mfspr	r7, SPRN_PID
+-	mfspr	r8, SPRN_IAMR
+ 	std	r5, STACK_SLOT_TID(r1)
+ 	std	r6, STACK_SLOT_PSSCR(r1)
+ 	std	r7, STACK_SLOT_PID(r1)
+-	std	r8, STACK_SLOT_IAMR(r1)
+ 	mfspr	r5, SPRN_HFSCR
+ 	std	r5, STACK_SLOT_HFSCR(r1)
+ END_FTR_SECTION_IFSET(CPU_FTR_ARCH_300)
+@@ -738,11 +738,18 @@ BEGIN_FTR_SECTION
+ 	mfspr	r5, SPRN_CIABR
+ 	mfspr	r6, SPRN_DAWR
+ 	mfspr	r7, SPRN_DAWRX
++	mfspr	r8, SPRN_IAMR
+ 	std	r5, STACK_SLOT_CIABR(r1)
+ 	std	r6, STACK_SLOT_DAWR(r1)
+ 	std	r7, STACK_SLOT_DAWRX(r1)
++	std	r8, STACK_SLOT_IAMR(r1)
+ END_FTR_SECTION_IFSET(CPU_FTR_ARCH_207S)
  
-+static void nfs41_sequence_res_init(struct nfs4_sequence_res *res)
-+{
-+	res->sr_timestamp = jiffies;
-+	res->sr_status_flags = 0;
-+	res->sr_status = 1;
-+}
++	mfspr	r5, SPRN_AMR
++	std	r5, STACK_SLOT_AMR(r1)
++	mfspr	r6, SPRN_UAMOR
++	std	r6, STACK_SLOT_UAMOR(r1)
 +
- static
- void nfs4_sequence_attach_slot(struct nfs4_sequence_args *args,
- 		struct nfs4_sequence_res *res,
-@@ -958,10 +965,6 @@ void nfs4_sequence_attach_slot(struct nf
- 	args->sa_slot = slot;
+ BEGIN_FTR_SECTION
+ 	/* Set partition DABR */
+ 	/* Do this before re-enabling PMU to avoid P7 DABR corruption bug */
+@@ -1631,22 +1638,25 @@ ALT_FTR_SECTION_END_IFCLR(CPU_FTR_ARCH_3
+ 	mtspr	SPRN_PSPB, r0
+ 	mtspr	SPRN_WORT, r0
+ BEGIN_FTR_SECTION
+-	mtspr	SPRN_IAMR, r0
+ 	mtspr	SPRN_TCSCR, r0
+ 	/* Set MMCRS to 1<<31 to freeze and disable the SPMC counters */
+ 	li	r0, 1
+ 	sldi	r0, r0, 31
+ 	mtspr	SPRN_MMCRS, r0
+ END_FTR_SECTION_IFCLR(CPU_FTR_ARCH_300)
+-8:
  
- 	res->sr_slot = slot;
--	res->sr_timestamp = jiffies;
--	res->sr_status_flags = 0;
--	res->sr_status = 1;
--
- }
+-	/* Save and reset AMR and UAMOR before turning on the MMU */
++	/* Save and restore AMR, IAMR and UAMOR before turning on the MMU */
++	ld	r8, STACK_SLOT_IAMR(r1)
++	mtspr	SPRN_IAMR, r8
++
++8:	/* Power7 jumps back in here */
+ 	mfspr	r5,SPRN_AMR
+ 	mfspr	r6,SPRN_UAMOR
+ 	std	r5,VCPU_AMR(r9)
+ 	std	r6,VCPU_UAMOR(r9)
+-	li	r6,0
+-	mtspr	SPRN_AMR,r6
++	ld	r5,STACK_SLOT_AMR(r1)
++	ld	r6,STACK_SLOT_UAMOR(r1)
++	mtspr	SPRN_AMR, r5
+ 	mtspr	SPRN_UAMOR, r6
  
- int nfs4_setup_sequence(struct nfs_client *client,
-@@ -1007,6 +1010,7 @@ int nfs4_setup_sequence(struct nfs_clien
+ 	/* Switch DSCR back to host value */
+@@ -1746,11 +1756,9 @@ BEGIN_FTR_SECTION
+ 	ld	r5, STACK_SLOT_TID(r1)
+ 	ld	r6, STACK_SLOT_PSSCR(r1)
+ 	ld	r7, STACK_SLOT_PID(r1)
+-	ld	r8, STACK_SLOT_IAMR(r1)
+ 	mtspr	SPRN_TIDR, r5
+ 	mtspr	SPRN_PSSCR, r6
+ 	mtspr	SPRN_PID, r7
+-	mtspr	SPRN_IAMR, r8
+ END_FTR_SECTION_IFSET(CPU_FTR_ARCH_300)
  
- 	trace_nfs4_setup_sequence(session, args);
- out_start:
-+	nfs41_sequence_res_init(res);
- 	rpc_call_start(task);
- 	return 0;
- 
+ #ifdef CONFIG_PPC_RADIX_MMU
 
 
