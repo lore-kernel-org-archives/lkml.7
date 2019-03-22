@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C19CC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:03:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C06DC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:03:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29EF421B18
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:03:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D94321A4A
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:03:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256235;
-	bh=elFe8A4KLWRXsj0lLmL+wyS1fuQD7a4WM9PmRNeDU1w=;
+	s=default; t=1553256238;
+	bh=xql/hhdeWiiailQT00lRiApZb+d/wh6bNuxkWQcqQAY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AphrrgMTJn0NjJnn03ZQrcISD4BeiriOso+7c75N1kxF2r2uU9Ysim8LQ+AIPRbF2
-	 mgukjLbOqokkex6XECG9WBDUd1IVj6+oQlDJQdRGt1IlWdh2XSwuZ82KhqDZxw6+g+
-	 InbFF4Y+xy2JDk4Hgryh0rQ2I3x80riQf/xTxjIE=
+	b=wkgudLItqjgwhDFmOkZ7VAH0+eMWdk6JheBi5ORIPNAqZnGhNaridV2DYt4d8ry42
+	 gsX0HJGOQicnpCMCPS/y7mtkvV+2BgSz4hqvM78jiFw0MnHjjSMUX5VUWmdf6ZbFpr
+	 pnzxxUe76i2v8WIQdJFXaEnzJsEhkO/WRYtUYDrw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388579AbfCVMDy (ORCPT
+        id S2388587AbfCVMD5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:03:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42212 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:03:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388576AbfCVMDt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:03:49 -0400
+        id S2388250AbfCVMDw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:03:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 779C8204FD;
-        Fri, 22 Mar 2019 12:03:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3339F204FD;
+        Fri, 22 Mar 2019 12:03:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256229;
-        bh=elFe8A4KLWRXsj0lLmL+wyS1fuQD7a4WM9PmRNeDU1w=;
+        s=default; t=1553256231;
+        bh=xql/hhdeWiiailQT00lRiApZb+d/wh6bNuxkWQcqQAY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ds8hz87hC9XaC2ccd+7/3q7py+u3fQzsbg1TwpOnGyy63boNuxFN21vvRZcSMMNSt
-         2TFs2mD13b6zxMqq9u9V4ZgwEOBXJf4NtfMHdlzD3hImdNaUb3fokyDd/jqmYY9/eB
-         KRZMHytAF0JlnfaSkf2elTTM+FtOgH6dVIaL93nM=
+        b=YCMJ+AJCAlBGwtyXuVBcWyNSo/xJHGqRQymQgR6E0y5IfE5Q9xkAFIvSLlypSZ6kY
+         rGW4IOMU3JbrNEWz9qJHC/tume34gHPkJyYJqmcdp0hmB1o6SVEkZkKRh2leegD55T
+         NY3ppqdYPD0/54ojvdnX+MvKbj+c7Anb9UWr7/W0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Shilovsky <pshilov@microsoft.com>,
-        Steve French <stfrench@microsoft.com>,
-        Ronnie Sahlberg <lsahlber@redhat.com>
-Subject: [PATCH 4.19 139/280] CIFS: Fix read after write for files with read caching
-Date:   Fri, 22 Mar 2019 12:14:52 +0100
-Message-Id: <20190322111318.017883204@linuxfoundation.org>
+        stable@vger.kernel.org, Vignesh R <vigneshr@ti.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.19 148/280] spi: ti-qspi: Fix mmap read when more than one CS in use
+Date:   Fri, 22 Mar 2019 12:15:01 +0100
+Message-Id: <20190322111319.893848266@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -66,54 +65,48 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Pavel Shilovsky <piastryyy@gmail.com>
+From: Vignesh R <vigneshr@ti.com>
 
-commit 6dfbd84684700cb58b34e8602c01c12f3d2595c8 upstream.
+commit 673c865efbdc5fec3cc525c46d71844d42c60072 upstream.
 
-When we have a READ lease for a file and have just issued a write
-operation to the server we need to purge the cache and set oplock/lease
-level to NONE to avoid reading stale data. Currently we do that
-only if a write operation succedeed thus not covering cases when
-a request was sent to the server but a negative error code was
-returned later for some other reasons (e.g. -EIOCBQUEUED or -EINTR).
-Fix this by turning off caching regardless of the error code being
-returned.
+Commit 4dea6c9b0b64 ("spi: spi-ti-qspi: add mmap mode read support") has
+has got order of parameter wrong when calling regmap_update_bits() to
+select CS for mmap access. Mask and value arguments are interchanged.
+Code will work on a system with single slave, but fails when more than
+one CS is in use. Fix this by correcting the order of parameters when
+calling regmap_update_bits().
 
-The patches fixes generic tests 075 and 112 from the xfs-tests.
-
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Fixes: 4dea6c9b0b64 ("spi: spi-ti-qspi: add mmap mode read support")
+Cc: stable@vger.kernel.org
+Signed-off-by: Vignesh R <vigneshr@ti.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/file.c |   12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ drivers/spi/spi-ti-qspi.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/fs/cifs/file.c
-+++ b/fs/cifs/file.c
-@@ -2871,14 +2871,16 @@ cifs_strict_writev(struct kiocb *iocb, s
- 	 * these pages but not on the region from pos to ppos+len-1.
- 	 */
- 	written = cifs_user_writev(iocb, from);
--	if (written > 0 && CIFS_CACHE_READ(cinode)) {
-+	if (CIFS_CACHE_READ(cinode)) {
- 		/*
--		 * Windows 7 server can delay breaking level2 oplock if a write
--		 * request comes - break it on the client to prevent reading
--		 * an old data.
-+		 * We have read level caching and we have just sent a write
-+		 * request to the server thus making data in the cache stale.
-+		 * Zap the cache and set oplock/lease level to NONE to avoid
-+		 * reading stale data from the cache. All subsequent read
-+		 * operations will read new data from the server.
- 		 */
- 		cifs_zap_mapping(inode);
--		cifs_dbg(FYI, "Set no oplock for inode=%p after a write operation\n",
-+		cifs_dbg(FYI, "Set Oplock/Lease to NONE for inode=%p after write\n",
- 			 inode);
- 		cinode->oplock = 0;
+--- a/drivers/spi/spi-ti-qspi.c
++++ b/drivers/spi/spi-ti-qspi.c
+@@ -490,8 +490,8 @@ static void ti_qspi_enable_memory_map(st
+ 	ti_qspi_write(qspi, MM_SWITCH, QSPI_SPI_SWITCH_REG);
+ 	if (qspi->ctrl_base) {
+ 		regmap_update_bits(qspi->ctrl_base, qspi->ctrl_reg,
+-				   MEM_CS_EN(spi->chip_select),
+-				   MEM_CS_MASK);
++				   MEM_CS_MASK,
++				   MEM_CS_EN(spi->chip_select));
  	}
+ 	qspi->mmap_enabled = true;
+ }
+@@ -503,7 +503,7 @@ static void ti_qspi_disable_memory_map(s
+ 	ti_qspi_write(qspi, 0, QSPI_SPI_SWITCH_REG);
+ 	if (qspi->ctrl_base)
+ 		regmap_update_bits(qspi->ctrl_base, qspi->ctrl_reg,
+-				   0, MEM_CS_MASK);
++				   MEM_CS_MASK, 0);
+ 	qspi->mmap_enabled = false;
+ }
+ 
 
 
