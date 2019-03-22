@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E5FFC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:14:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 511A9C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:14:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FF832083D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:14:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 216EF218A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:14:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256860;
-	bh=+R7KGsCTYhfuq6/Ihxf6lbnJvLVIP1WEEzi/r8S/XPc=;
+	s=default; t=1553256864;
+	bh=EUTQYl1C+28xN5VV3/tEDJEvWiCe25V60rs5vj9EMYM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iO6OTarcpcemRqJ58AR5ECJE6zb0qUWf3XSO1jf2SS6CdvGg63HK/XOA0BmP1PkJi
-	 DYnBX9yCOTS2V6dhz2a080tk12LYHrPUUv5oqgV/aZ4xOl9Dyk1NbZYqY7jdDlfqtz
-	 aQx5Wc8C5jURgXYPnIwovPfwEhO13iX+REo6bihs=
+	b=PI4s3ykqJfe6nrOx1oRN57YzsOAkElaB9m5NX8Smd0yzc88RMzjL0qs89vJaprXWA
+	 OOXq88Vt9bpVRuZ4rdzCULZz/IOqbrn/zmuFJrp62Cp+JYPh+kf+TjxHFTpOhlh2fr
+	 S/wK2DJll4ifJQebyLa715zpBxmbOon9Z9WniGNE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389887AbfCVMOS (ORCPT
+        id S2389709AbfCVMOX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:14:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52464 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:14:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389869AbfCVMOM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:14:12 -0400
+        id S2389275AbfCVMOR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:14:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BA1D21939;
-        Fri, 22 Mar 2019 12:14:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F67E2083D;
+        Fri, 22 Mar 2019 12:14:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256851;
-        bh=+R7KGsCTYhfuq6/Ihxf6lbnJvLVIP1WEEzi/r8S/XPc=;
+        s=default; t=1553256856;
+        bh=EUTQYl1C+28xN5VV3/tEDJEvWiCe25V60rs5vj9EMYM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eHtRPNGxrO3PGcpoObm1y/JWNF2R4EXMqLN5K0uOOAhuSBQvDpVZieaTl1ju+dkMp
-         z3G+SD+RWLYvRQAlPYazHjojbn77Mz84o63FgKNVv9EU/p+ONCVwgHwgYFpdhWnlkg
-         Y5IGLoD6JIA7EXjTZeZziiTiYNNi501KqP+SFvo4=
+        b=UbAwpCgtZqhPN1UG22YIi2p+CO4f/82KjFIFw0IQQT2qgkxcWKyoAxP92F2qIw8LQ
+         DlgBEDJ++L0UI3ktyXqiIMleHS4AAM+iVsT2fa+5GrvGknNwpxCxnXLulETyMU/T9v
+         eCQLZ3xafm0Jc+9FhCgx0a8sctgkJP2c8U55s4M8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
-        Zhang Zhijie <zhangzj@rock-chips.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.0 024/238] crypto: rockchip - update new iv to device in multiple operations
-Date:   Fri, 22 Mar 2019 12:14:03 +0100
-Message-Id: <20190322111259.591606576@linuxfoundation.org>
+        stable@vger.kernel.org, Piotr Balcer <piotr.balcer@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jan Kara <jack@suse.cz>, Matthew Wilcox <willy@infradead.org>
+Subject: [PATCH 5.0 025/238] dax: Flush partial PMDs correctly
+Date:   Fri, 22 Mar 2019 12:14:04 +0100
+Message-Id: <20190322111259.667020813@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -66,92 +66,76 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Zhang Zhijie <zhangzj@rock-chips.com>
+From: Matthew Wilcox <willy@infradead.org>
 
-commit c1c214adcb56d36433480c8fedf772498e7e539c upstream.
+commit e4b3448bc346fedf36db64124a664a959995b085 upstream.
 
-For chain mode in cipher(eg. AES-CBC/DES-CBC), the iv is continuously
-updated in the operation. The new iv value should be written to device
-register by software.
+The radix tree would rewind the index in an iterator to the lowest index
+of a multi-slot entry.  The XArray iterators instead leave the index
+unchanged, but I overlooked that when converting DAX from the radix tree
+to the XArray.  Adjust the index that we use for flushing to the start
+of the PMD range.
 
-Reported-by: Eric Biggers <ebiggers@google.com>
-Fixes: 433cd2c617bf ("crypto: rockchip - add crypto driver for rk3288")
-Cc: <stable@vger.kernel.org> # v4.5+
-Signed-off-by: Zhang Zhijie <zhangzj@rock-chips.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: c1901cd33cf4 ("page cache: Convert find_get_entries_tag to XArray")
+Cc: <stable@vger.kernel.org>
+Reported-by: Piotr Balcer <piotr.balcer@intel.com>
+Tested-by: Dan Williams <dan.j.williams@intel.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Matthew Wilcox <willy@infradead.org>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/rockchip/rk3288_crypto.h            |    1 
- drivers/crypto/rockchip/rk3288_crypto_ablkcipher.c |   34 +++++++++++++++++++++
- 2 files changed, 35 insertions(+)
+ fs/dax.c |   19 +++++++++----------
+ 1 file changed, 9 insertions(+), 10 deletions(-)
 
---- a/drivers/crypto/rockchip/rk3288_crypto.h
-+++ b/drivers/crypto/rockchip/rk3288_crypto.h
-@@ -245,6 +245,7 @@ struct rk_cipher_ctx {
- 	struct rk_crypto_info		*dev;
- 	unsigned int			keylen;
- 	u32				mode;
-+	u8				iv[AES_BLOCK_SIZE];
- };
- 
- enum alg_type {
---- a/drivers/crypto/rockchip/rk3288_crypto_ablkcipher.c
-+++ b/drivers/crypto/rockchip/rk3288_crypto_ablkcipher.c
-@@ -242,6 +242,17 @@ static void crypto_dma_start(struct rk_c
- static int rk_set_data_start(struct rk_crypto_info *dev)
+--- a/fs/dax.c
++++ b/fs/dax.c
+@@ -843,9 +843,8 @@ unlock_pte:
+ static int dax_writeback_one(struct xa_state *xas, struct dax_device *dax_dev,
+ 		struct address_space *mapping, void *entry)
  {
- 	int err;
-+	struct ablkcipher_request *req =
-+		ablkcipher_request_cast(dev->async_req);
-+	struct crypto_ablkcipher *tfm = crypto_ablkcipher_reqtfm(req);
-+	struct rk_cipher_ctx *ctx = crypto_ablkcipher_ctx(tfm);
-+	u32 ivsize = crypto_ablkcipher_ivsize(tfm);
-+	u8 *src_last_blk = page_address(sg_page(dev->sg_src)) +
-+		dev->sg_src->offset + dev->sg_src->length - ivsize;
-+
-+	/* store the iv that need to be updated in chain mode */
-+	if (ctx->mode & RK_CRYPTO_DEC)
-+		memcpy(ctx->iv, src_last_blk, ivsize);
+-	unsigned long pfn;
++	unsigned long pfn, index, count;
+ 	long ret = 0;
+-	size_t size;
  
- 	err = dev->load_data(dev, dev->sg_src, dev->sg_dst);
- 	if (!err)
-@@ -286,6 +297,28 @@ static void rk_iv_copyback(struct rk_cry
- 		memcpy_fromio(req->info, dev->reg + RK_CRYPTO_AES_IV_0, ivsize);
- }
+ 	/*
+ 	 * A page got tagged dirty in DAX mapping? Something is seriously
+@@ -894,17 +893,18 @@ static int dax_writeback_one(struct xa_s
+ 	xas_unlock_irq(xas);
  
-+static void rk_update_iv(struct rk_crypto_info *dev)
-+{
-+	struct ablkcipher_request *req =
-+		ablkcipher_request_cast(dev->async_req);
-+	struct crypto_ablkcipher *tfm = crypto_ablkcipher_reqtfm(req);
-+	struct rk_cipher_ctx *ctx = crypto_ablkcipher_ctx(tfm);
-+	u32 ivsize = crypto_ablkcipher_ivsize(tfm);
-+	u8 *new_iv = NULL;
-+
-+	if (ctx->mode & RK_CRYPTO_DEC) {
-+		new_iv = ctx->iv;
-+	} else {
-+		new_iv = page_address(sg_page(dev->sg_dst)) +
-+			 dev->sg_dst->offset + dev->sg_dst->length - ivsize;
-+	}
-+
-+	if (ivsize == DES_BLOCK_SIZE)
-+		memcpy_toio(dev->reg + RK_CRYPTO_TDES_IV_0, new_iv, ivsize);
-+	else if (ivsize == AES_BLOCK_SIZE)
-+		memcpy_toio(dev->reg + RK_CRYPTO_AES_IV_0, new_iv, ivsize);
-+}
-+
- /* return:
-  *	true	some err was occurred
-  *	fault	no err, continue
-@@ -307,6 +340,7 @@ static int rk_ablk_rx(struct rk_crypto_i
- 		}
- 	}
- 	if (dev->left_bytes) {
-+		rk_update_iv(dev);
- 		if (dev->aligned) {
- 			if (sg_is_last(dev->sg_src)) {
- 				dev_err(dev->dev, "[%s:%d] Lack of data\n",
+ 	/*
+-	 * Even if dax_writeback_mapping_range() was given a wbc->range_start
+-	 * in the middle of a PMD, the 'index' we are given will be aligned to
+-	 * the start index of the PMD, as will the pfn we pull from 'entry'.
++	 * If dax_writeback_mapping_range() was given a wbc->range_start
++	 * in the middle of a PMD, the 'index' we use needs to be
++	 * aligned to the start of the PMD.
+ 	 * This allows us to flush for PMD_SIZE and not have to worry about
+ 	 * partial PMD writebacks.
+ 	 */
+ 	pfn = dax_to_pfn(entry);
+-	size = PAGE_SIZE << dax_entry_order(entry);
++	count = 1UL << dax_entry_order(entry);
++	index = xas->xa_index & ~(count - 1);
+ 
+-	dax_entry_mkclean(mapping, xas->xa_index, pfn);
+-	dax_flush(dax_dev, page_address(pfn_to_page(pfn)), size);
++	dax_entry_mkclean(mapping, index, pfn);
++	dax_flush(dax_dev, page_address(pfn_to_page(pfn)), count * PAGE_SIZE);
+ 	/*
+ 	 * After we have flushed the cache, we can clear the dirty tag. There
+ 	 * cannot be new dirty data in the pfn after the flush has completed as
+@@ -917,8 +917,7 @@ static int dax_writeback_one(struct xa_s
+ 	xas_clear_mark(xas, PAGECACHE_TAG_DIRTY);
+ 	dax_wake_entry(xas, entry, false);
+ 
+-	trace_dax_writeback_one(mapping->host, xas->xa_index,
+-			size >> PAGE_SHIFT);
++	trace_dax_writeback_one(mapping->host, index, count);
+ 	return ret;
+ 
+  put_unlocked:
 
 
