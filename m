@@ -2,132 +2,226 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F92DC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 18:12:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8F70C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 18:12:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AE7A2192B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 18:12:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 913B2218A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 18:12:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="jx4aJp0P";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="YUa6f1Qo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729070AbfCVSMH convert rfc822-to-8bit (ORCPT
+        id S1729127AbfCVSMt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 14:12:07 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:51444 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727801AbfCVSMG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 14:12:06 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 22 Mar 2019 14:12:49 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:53904 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727570AbfCVSMs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 14:12:48 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 5B98C60E75; Fri, 22 Mar 2019 18:12:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553278367;
+        bh=h/R7kniVuCiOphnSmNE3PdeWk2a8lr2hgNKxXFAAz6s=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=jx4aJp0PVnHhHQ2Z9nXzbFxuGyzrDp8JUmBb9Zt/EAjGwPcdITH5lraV/gqtwHbGu
+         MmX7iB6JnspEfCkm0EDcfMW0MddynsQ/oqF5LTaVkI5piFyJh3Cqj/8WYjK8iCKk9f
+         tcy694/RnDKU+BxxcnRs9GbGqwku2dwQDKweXF/I=
+Received: from [192.168.1.4] (unknown [117.98.135.69])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id F30753084024;
-        Fri, 22 Mar 2019 18:12:05 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-47.bos.redhat.com [10.18.17.47])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AB6E560142;
-        Fri, 22 Mar 2019 18:12:01 +0000 (UTC)
-Subject: Re: [PATCH 2/4] signal: Make flush_sigqueue() use free_q to release
- memory
-To:     Christopher Lameter <cl@linux.com>
-Cc:     Oleg Nesterov <oleg@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        selinux@vger.kernel.org, Paul Moore <paul@paul-moore.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Eric Paris <eparis@parisplace.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-References: <20190321214512.11524-1-longman@redhat.com>
- <20190321214512.11524-3-longman@redhat.com>
- <20190322015208.GD19508@bombadil.infradead.org>
- <20190322111642.GA28876@redhat.com>
- <d9e02cc4-3162-57b0-7924-9642aecb8f49@redhat.com>
- <01000169a686689d-bc18fecd-95e1-4b3e-8cd5-dad1b1c570cc-000000@email.amazonses.com>
-From:   Waiman Long <longman@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=longman@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- weim8xU=
-Organization: Red Hat
-Message-ID: <93523469-48b0-07c8-54fd-300678af3163@redhat.com>
-Date:   Fri, 22 Mar 2019 14:12:01 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        (Authenticated sender: gkohli@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 681DC60E57;
+        Fri, 22 Mar 2019 18:12:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553278366;
+        bh=h/R7kniVuCiOphnSmNE3PdeWk2a8lr2hgNKxXFAAz6s=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=YUa6f1QoobXSuWvyhIcSCBxv+xzUXDmHILQDSliQnhgUn56lGxESqysMWxvkfpnbU
+         d8KfxqHB9xekcKXcTuDGtY3o+UNwZkdCkjFb+rF5KnLqlOmgfbw97BP+0wjoBxi5GD
+         0cgKWkVQM6zheIkElDz/Rf/XC4d0cxJumrZVmSEQ=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 681DC60E57
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=gkohli@codeaurora.org
+Subject: Re: [PATCH v2] nvmem: core: Set no-read-write provider to avoid
+ userspace read/write
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        linux-kernel@vger.kernel.org
+Cc:     linux-arm-msm@vger.kernel.org
+References: <1552831940-7327-1-git-send-email-gkohli@codeaurora.org>
+ <48a71861-c60b-7fe7-d4af-5269cd7c20eb@linaro.org>
+ <5f11070f-bf9b-c313-9a78-e412a2fb2908@codeaurora.org>
+ <865519b5-62c9-3eb3-3855-eebf98bded85@linaro.org>
+ <68755fdb-b2c6-ac25-a786-7593a692a173@codeaurora.org>
+ <cfa22512-2abe-f0db-0576-e6d0cd1eee9c@linaro.org>
+From:   Gaurav Kohli <gkohli@codeaurora.org>
+Message-ID: <4451d4f2-d651-9db6-99af-e07870fc699a@codeaurora.org>
+Date:   Fri, 22 Mar 2019 23:42:43 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.0
 MIME-Version: 1.0
-In-Reply-To: <01000169a686689d-bc18fecd-95e1-4b3e-8cd5-dad1b1c570cc-000000@email.amazonses.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <cfa22512-2abe-f0db-0576-e6d0cd1eee9c@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Fri, 22 Mar 2019 18:12:06 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/22/2019 01:50 PM, Christopher Lameter wrote:
-> On Fri, 22 Mar 2019, Waiman Long wrote:
+Hi Srinivas,
+
+Thanks for the patch, Something like this only i have tested in the 
+morning, instead of unused, i have put dev group inside config as well.
+
+We will test the exact patch and update the same.
+
+Regards
+
+Gaurav
+
+On 3/22/2019 8:32 PM, Srinivas Kandagatla wrote:
 >
->> I am looking forward to it.
-> There is also alrady rcu being used in these paths. kfree_rcu() would not
-> be enough? It is an estalished mechanism that is mature and well
-> understood.
 >
-In this case, the memory objects are from kmem caches, so they can't
-freed using kfree_rcu().
+> On 20/03/2019 17:50, Gaurav Kohli wrote:
+>>
+>>> Is root only option not helping you in this case?
+>> Yes we want to protect at root level as well, i mean it is better if 
+>> we can avoid exposing to userspace at all.
+> Can you try below patch!
+>
+>>>
+>>> We could go down the route of adding new config option something 
+>>> like CONFIG_NVMEM_NO_SYSFS_ENTRY to prevent adding nvmem entry in 
+>>> userspace.
+>>>
+>>> Let me know if you are happy to create a patch for this change?
+>>
+>> I am happy with either way config option or dt binding(seems easy), 
+>> please let me know we will post new patch for the same.
+> DT way is totally NAK.
+>
+>
+> --------------------------->cut<-----------------------------------
+>
+> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Date: Wed, 20 Mar 2019 16:15:21 +0000
+> Subject: [PATCH] nvmem: core: add support to NVMEM_NO_SYSFS_ENTRY
+>
+> Some users might not want to expose nvmem entry to sysfs and
+> only intend to use kernel interface so add such provision.
+>
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+>  Documentation/ABI/stable/sysfs-bus-nvmem |  2 ++
+>  drivers/nvmem/Kconfig                    |  5 +++++
+>  drivers/nvmem/core.c                     | 11 ++++++-----
+>  3 files changed, 13 insertions(+), 5 deletions(-)
+>
+> diff --git a/Documentation/ABI/stable/sysfs-bus-nvmem 
+> b/Documentation/ABI/stable/sysfs-bus-nvmem
+> index 5923ab4620c5..12aab0a85fea 100644
+> --- a/Documentation/ABI/stable/sysfs-bus-nvmem
+> +++ b/Documentation/ABI/stable/sysfs-bus-nvmem
+> @@ -6,6 +6,8 @@ Description:
+>          This file allows user to read/write the raw NVMEM contents.
+>          Permissions for write to this file depends on the nvmem
+>          provider configuration.
+> +        Note: This file is not present if CONFIG_NVMEM_NO_SYSFS_ENTRY
+> +        is enabled
+>
+>          ex:
+>          hexdump /sys/bus/nvmem/devices/qfprom0/nvmem
+> diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
+> index 0a7a470ee859..6ab3276d287c 100644
+> --- a/drivers/nvmem/Kconfig
+> +++ b/drivers/nvmem/Kconfig
+> @@ -192,4 +192,9 @@ config SC27XX_EFUSE
+>        This driver can also be built as a module. If so, the module
+>        will be called nvmem-sc27xx-efuse.
+>
+> +config NVMEM_NO_SYSFS_ENTRY
+> +    bool "No nvmem sysfs entry"
+> +
+> +    help
+> +        Say Yes if you do not want to add nvmem entry to sysfs.
+>  endif
+> diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+> index b9a0270883a0..c70f183fe379 100644
+> --- a/drivers/nvmem/core.c
+> +++ b/drivers/nvmem/core.c
+> @@ -216,7 +216,7 @@ static const struct attribute_group 
+> nvmem_bin_rw_group = {
+>      .attrs        = nvmem_attrs,
+>  };
+>
+> -static const struct attribute_group *nvmem_rw_dev_groups[] = {
+> +static const __maybe_unused struct attribute_group 
+> *nvmem_rw_dev_groups[] = {
+>      &nvmem_bin_rw_group,
+>      NULL,
+>  };
+> @@ -240,7 +240,7 @@ static const struct attribute_group 
+> nvmem_bin_ro_group = {
+>      .attrs        = nvmem_attrs,
+>  };
+>
+> -static const struct attribute_group *nvmem_ro_dev_groups[] = {
+> +static const __maybe_unused struct attribute_group 
+> *nvmem_ro_dev_groups[] = {
+>      &nvmem_bin_ro_group,
+>      NULL,
+>  };
+> @@ -265,7 +265,7 @@ static const struct attribute_group 
+> nvmem_bin_rw_root_group = {
+>      .attrs        = nvmem_attrs,
+>  };
+>
+> -static const struct attribute_group *nvmem_rw_root_dev_groups[] = {
+> +static const __maybe_unused struct attribute_group 
+> *nvmem_rw_root_dev_groups[] = {
+>      &nvmem_bin_rw_root_group,
+>      NULL,
+>  };
+> @@ -289,7 +289,7 @@ static const struct attribute_group 
+> nvmem_bin_ro_root_group = {
+>      .attrs        = nvmem_attrs,
+>  };
+>
+> -static const struct attribute_group *nvmem_ro_root_dev_groups[] = {
+> +static const __maybe_unused struct attribute_group 
+> *nvmem_ro_root_dev_groups[] = {
+>      &nvmem_bin_ro_root_group,
+>      NULL,
+>  };
+> @@ -688,6 +688,7 @@ struct nvmem_device *nvmem_register(const struct 
+> nvmem_config *config)
+>      nvmem->read_only = device_property_present(config->dev, 
+> "read-only") |
+>                 config->read_only;
+>
+> +#if !defined(CONFIG_NVMEM_NO_SYSFS_ENTRY)
+>      if (config->root_only)
+>          nvmem->dev.groups = nvmem->read_only ?
+>              nvmem_ro_root_dev_groups :
+> @@ -696,7 +697,7 @@ struct nvmem_device *nvmem_register(const struct 
+> nvmem_config *config)
+>          nvmem->dev.groups = nvmem->read_only ?
+>              nvmem_ro_dev_groups :
+>              nvmem_rw_dev_groups;
+> -
+> +#endif
+>      device_initialize(&nvmem->dev);
+>
+>      dev_dbg(&nvmem->dev, "Registering nvmem device %s\n", config->name);
 
-There are certainly overhead using the kfree_rcu(), or a
-kfree_rcu()-like mechanism. Also I think the actual freeing is done at
-SoftIRQ context which can be a problem if there are too many memory
-objects to free.
-
-I think what Oleg is trying to do is probably the most efficient way.
-
-Cheers,
-Longman
-
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center,
+Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project.
 
