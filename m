@@ -2,52 +2,55 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AF2DC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:55:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 449A8C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:55:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE0A420850
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:55:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 148742192B
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:55:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255728;
-	bh=VhBMGtEhNiyz82MS9joVlt1HqeI8kbzuquMJygNGrtc=;
+	s=default; t=1553255733;
+	bh=iaP6tjL41Gr6eJ6zro4soELsdReZ6RHWXJno1skuRXs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zooWs2MMq4o/2m9ymm4KVjihgqyXkbUBUwCkAv1odAbivZpi3nFj4H0ZjomoEmftC
-	 wh/eaig+De8PfOzXyETCvbVHrAVf71DP50pFw6hzHwdICdAXx1b2s+B0j53oZNWyZg
-	 ZXm5W6k+U4Klj2cB+sxkmN7elZj8LxlDZYxjWNPE=
+	b=x+Pe6W6J2p7eEWRQE0qyL4jhfmlebggeHv61P22aoc8202LISVlD7qALkPWubRcHg
+	 DPyBdlnjPw0OsOdLBVtgtr975jVBSuDg7urT3HlTO5C1JjsCRCIjQGDbHI9vfpIzfs
+	 oEsK/6HZ0XDauXuhbTYUev8lx7SHOBVPiiGqqohs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387401AbfCVLz1 (ORCPT
+        id S2387411AbfCVLzb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:55:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60028 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:55:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60096 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733312AbfCVLzZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:55:25 -0400
+        id S1733312AbfCVLz3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:55:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F1F22082C;
-        Fri, 22 Mar 2019 11:55:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A0A62082C;
+        Fri, 22 Mar 2019 11:55:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255724;
-        bh=VhBMGtEhNiyz82MS9joVlt1HqeI8kbzuquMJygNGrtc=;
+        s=default; t=1553255728;
+        bh=iaP6tjL41Gr6eJ6zro4soELsdReZ6RHWXJno1skuRXs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=apREyhFN+070AeJ+xaQFlyFxTqOM2lABbm+Wh5ncXb0O1zoGCh6/gDOoQ3Jog/Nri
-         uuqqQuHUDHAyfPdBfdmgx2wi7vt0eCKBKXLVJQZTkjNQvybMuNrKCM2SJh26WeElTx
-         VTYVnEdx6cXmZ0LBpfmt5IFjPZfNLgPEatg450Lg=
+        b=Q5KL9uo6OejQyqeb11fmb/FWpJ7RzWHhMSEJvIQuv8dvqgXzVFUI5O0QmTO19FPlf
+         PcyJaT0qX1ZmCVSePD4BwYZEmn7V159lEgOXY++0YXNuTBiWIyp0DzugX0d96j73gU
+         GMBkXIIxToaZHmHYwmg13PdNcCMzyiZxsT0L8P5o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kent Overstreet <koverstreet@google.com>,
-        Daniel Axtens <dja@axtens.net>, Coly Li <colyli@suse.de>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 4.14 161/183] bcache: never writeback a discard operation
-Date:   Fri, 22 Mar 2019 12:16:29 +0100
-Message-Id: <20190322111253.569735429@linuxfoundation.org>
+        stable@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
+        Dmitry Golovin <dima@golovin.in>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: [PATCH 4.14 162/183] x86/unwind/orc: Fix ORC unwind table alignment
+Date:   Fri, 22 Mar 2019 12:16:30 +0100
+Message-Id: <20190322111253.637843202@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111241.819468003@linuxfoundation.org>
 References: <20190322111241.819468003@linuxfoundation.org>
@@ -66,133 +69,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Daniel Axtens <dja@axtens.net>
+From: Josh Poimboeuf <jpoimboe@redhat.com>
 
-commit 9951379b0ca88c95876ad9778b9099e19a95d566 upstream.
+commit f76a16adc485699f95bb71fce114f97c832fe664 upstream.
 
-Some users see panics like the following when performing fstrim on a
-bcached volume:
+The .orc_unwind section is a packed array of 6-byte structs.  It's
+currently aligned to 6 bytes, which is causing warnings in the LLD
+linker.
 
-[  529.803060] BUG: unable to handle kernel NULL pointer dereference at 0000000000000008
-[  530.183928] #PF error: [normal kernel read fault]
-[  530.412392] PGD 8000001f42163067 P4D 8000001f42163067 PUD 1f42168067 PMD 0
-[  530.750887] Oops: 0000 [#1] SMP PTI
-[  530.920869] CPU: 10 PID: 4167 Comm: fstrim Kdump: loaded Not tainted 5.0.0-rc1+ #3
-[  531.290204] Hardware name: HP ProLiant DL360 Gen9/ProLiant DL360 Gen9, BIOS P89 12/27/2015
-[  531.693137] RIP: 0010:blk_queue_split+0x148/0x620
-[  531.922205] Code: 60 38 89 55 a0 45 31 db 45 31 f6 45 31 c9 31 ff 89 4d 98 85 db 0f 84 7f 04 00 00 44 8b 6d 98 4c 89 ee 48 c1 e6 04 49 03 70 78 <8b> 46 08 44 8b 56 0c 48
-8b 16 44 29 e0 39 d8 48 89 55 a8 0f 47 c3
-[  532.838634] RSP: 0018:ffffb9b708df39b0 EFLAGS: 00010246
-[  533.093571] RAX: 00000000ffffffff RBX: 0000000000046000 RCX: 0000000000000000
-[  533.441865] RDX: 0000000000000200 RSI: 0000000000000000 RDI: 0000000000000000
-[  533.789922] RBP: ffffb9b708df3a48 R08: ffff940d3b3fdd20 R09: 0000000000000000
-[  534.137512] R10: ffffb9b708df3958 R11: 0000000000000000 R12: 0000000000000000
-[  534.485329] R13: 0000000000000000 R14: 0000000000000000 R15: ffff940d39212020
-[  534.833319] FS:  00007efec26e3840(0000) GS:ffff940d1f480000(0000) knlGS:0000000000000000
-[  535.224098] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  535.504318] CR2: 0000000000000008 CR3: 0000001f4e256004 CR4: 00000000001606e0
-[  535.851759] Call Trace:
-[  535.970308]  ? mempool_alloc_slab+0x15/0x20
-[  536.174152]  ? bch_data_insert+0x42/0xd0 [bcache]
-[  536.403399]  blk_mq_make_request+0x97/0x4f0
-[  536.607036]  generic_make_request+0x1e2/0x410
-[  536.819164]  submit_bio+0x73/0x150
-[  536.980168]  ? submit_bio+0x73/0x150
-[  537.149731]  ? bio_associate_blkg_from_css+0x3b/0x60
-[  537.391595]  ? _cond_resched+0x1a/0x50
-[  537.573774]  submit_bio_wait+0x59/0x90
-[  537.756105]  blkdev_issue_discard+0x80/0xd0
-[  537.959590]  ext4_trim_fs+0x4a9/0x9e0
-[  538.137636]  ? ext4_trim_fs+0x4a9/0x9e0
-[  538.324087]  ext4_ioctl+0xea4/0x1530
-[  538.497712]  ? _copy_to_user+0x2a/0x40
-[  538.679632]  do_vfs_ioctl+0xa6/0x600
-[  538.853127]  ? __do_sys_newfstat+0x44/0x70
-[  539.051951]  ksys_ioctl+0x6d/0x80
-[  539.212785]  __x64_sys_ioctl+0x1a/0x20
-[  539.394918]  do_syscall_64+0x5a/0x110
-[  539.568674]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Six isn't a power of two, so it's not a valid alignment value.  The
+actual alignment doesn't matter much because it's an array of packed
+structs.  An alignment of two is sufficient.  In reality it always gets
+aligned to four bytes because it comes immediately after the
+4-byte-aligned .orc_unwind_ip section.
 
-We have observed it where both:
-1) LVM/devmapper is involved (bcache backing device is LVM volume) and
-2) writeback cache is involved (bcache cache_mode is writeback)
-
-On one machine, we can reliably reproduce it with:
-
- # echo writeback > /sys/block/bcache0/bcache/cache_mode
-   (not sure whether above line is required)
- # mount /dev/bcache0 /test
- # for i in {0..10}; do
-	file="$(mktemp /test/zero.XXX)"
-	dd if=/dev/zero of="$file" bs=1M count=256
-	sync
-	rm $file
-    done
-  # fstrim -v /test
-
-Observing this with tracepoints on, we see the following writes:
-
-fstrim-18019 [022] .... 91107.302026: bcache_write: 73f95583-561c-408f-a93a-4cbd2498f5c8 inode 0  DS 4260112 + 196352 hit 0 bypass 1
-fstrim-18019 [022] .... 91107.302050: bcache_write: 73f95583-561c-408f-a93a-4cbd2498f5c8 inode 0  DS 4456464 + 262144 hit 0 bypass 1
-fstrim-18019 [022] .... 91107.302075: bcache_write: 73f95583-561c-408f-a93a-4cbd2498f5c8 inode 0  DS 4718608 + 81920 hit 0 bypass 1
-fstrim-18019 [022] .... 91107.302094: bcache_write: 73f95583-561c-408f-a93a-4cbd2498f5c8 inode 0  DS 5324816 + 180224 hit 0 bypass 1
-fstrim-18019 [022] .... 91107.302121: bcache_write: 73f95583-561c-408f-a93a-4cbd2498f5c8 inode 0  DS 5505040 + 262144 hit 0 bypass 1
-fstrim-18019 [022] .... 91107.302145: bcache_write: 73f95583-561c-408f-a93a-4cbd2498f5c8 inode 0  DS 5767184 + 81920 hit 0 bypass 1
-fstrim-18019 [022] .... 91107.308777: bcache_write: 73f95583-561c-408f-a93a-4cbd2498f5c8 inode 0  DS 6373392 + 180224 hit 1 bypass 0
-<crash>
-
-Note the final one has different hit/bypass flags.
-
-This is because in should_writeback(), we were hitting a case where
-the partial stripe condition was returning true and so
-should_writeback() was returning true early.
-
-If that hadn't been the case, it would have hit the would_skip test, and
-as would_skip == s->iop.bypass == true, should_writeback() would have
-returned false.
-
-Looking at the git history from 'commit 72c270612bd3 ("bcache: Write out
-full stripes")', it looks like the idea was to optimise for raid5/6:
-
-       * If a stripe is already dirty, force writes to that stripe to
-	 writeback mode - to help build up full stripes of dirty data
-
-To fix this issue, make sure that should_writeback() on a discard op
-never returns true.
-
-More details of debugging:
-https://www.spinics.net/lists/linux-bcache/msg06996.html
-
-Previous reports:
- - https://bugzilla.kernel.org/show_bug.cgi?id=201051
- - https://bugzilla.kernel.org/show_bug.cgi?id=196103
- - https://www.spinics.net/lists/linux-bcache/msg06885.html
-
-(Coly Li: minor modification to follow maximum 75 chars per line rule)
-
-Cc: Kent Overstreet <koverstreet@google.com>
+Fixes: ee9f8fce9964 ("x86/unwind: Add the ORC unwinder")
+Reported-by: Nick Desaulniers <ndesaulniers@google.com>
+Reported-by: Dmitry Golovin <dima@golovin.in>
+Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: stable@vger.kernel.org
-Fixes: 72c270612bd3 ("bcache: Write out full stripes")
-Signed-off-by: Daniel Axtens <dja@axtens.net>
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Link: https://github.com/ClangBuiltLinux/linux/issues/218
+Link: https://lkml.kernel.org/r/d55027ee95fe73e952dcd8be90aebd31b0095c45.1551892041.git.jpoimboe@redhat.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/bcache/writeback.h |    3 +++
- 1 file changed, 3 insertions(+)
+ include/asm-generic/vmlinux.lds.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/md/bcache/writeback.h
-+++ b/drivers/md/bcache/writeback.h
-@@ -69,6 +69,9 @@ static inline bool should_writeback(stru
- 	    in_use > CUTOFF_WRITEBACK_SYNC)
- 		return false;
- 
-+	if (bio_op(bio) == REQ_OP_DISCARD)
-+		return false;
-+
- 	if (dc->partial_stripes_expensive &&
- 	    bcache_dev_stripe_dirty(dc, bio->bi_iter.bi_sector,
- 				    bio_sectors(bio)))
+--- a/include/asm-generic/vmlinux.lds.h
++++ b/include/asm-generic/vmlinux.lds.h
+@@ -696,7 +696,7 @@
+ 		KEEP(*(.orc_unwind_ip))					\
+ 		VMLINUX_SYMBOL(__stop_orc_unwind_ip) = .;		\
+ 	}								\
+-	. = ALIGN(6);							\
++	. = ALIGN(2);							\
+ 	.orc_unwind : AT(ADDR(.orc_unwind) - LOAD_OFFSET) {		\
+ 		VMLINUX_SYMBOL(__start_orc_unwind) = .;			\
+ 		KEEP(*(.orc_unwind))					\
 
 
