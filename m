@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CE76C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:44:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EF36C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:44:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CF9B2082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:44:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B99E2082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:44:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255056;
-	bh=OUhCqVtfrCrs28WRMbGeAmQMk13i+UUkMC6aONRgXLw=;
+	s=default; t=1553255061;
+	bh=a9Gnh4ofB8vFf2hhKoe99rY4cPLLzlsONBnH8sTZcp0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EL5+2FCvTGUx/CnvS4k/Up+z7noGbnTFvIHDZW5NxxgPprJXndbYGRxfN/PHjmhpI
-	 d22Le8Evsk6ZqQym4YD+rJc1awjobzS6IBdXag7kVtuN3n6HXCDB2Ue4D9/qFmHQDl
-	 kFNdpvLKO5Rfp7a4gCOconjnnNiq02FbAF4Xj/AQ=
+	b=07hSzloDpZoSbecVYDXKcmrZp5xrYO8/yhkk0Z1xZ0Qxdg89NdLqWFZxkVbPIH7O1
+	 2kQAz6YZsS9lixiKmaVeNy2zi1eVV4HSz7J7P3Cvx+LbZ8LhsdugxvFjZG7FKZ+cR/
+	 CbQvUJa3dNYMZ/Vvmqsx2aAG4btyFNJ32ct5X7ZM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731788AbfCVLoP (ORCPT
+        id S1731797AbfCVLoU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:44:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47102 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:44:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731414AbfCVLoN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:44:13 -0400
+        id S1731205AbfCVLoR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:44:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 51DFE204FD;
-        Fri, 22 Mar 2019 11:44:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34D0A2192C;
+        Fri, 22 Mar 2019 11:44:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255052;
-        bh=OUhCqVtfrCrs28WRMbGeAmQMk13i+UUkMC6aONRgXLw=;
+        s=default; t=1553255056;
+        bh=a9Gnh4ofB8vFf2hhKoe99rY4cPLLzlsONBnH8sTZcp0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pAQBKCxSFcP8NN4vAFV08zySqDOOUU3R6NNVz4mr3zQV+F4caYfKZMeVUB/773CT4
-         VkklC2TDyiwmk8O3mSqyMtAOiEuG6xz6plp/CrR3KYcg9vE/H8LvECP+qiXJR6aWrx
-         /GevukQb+VS2km/35jPM5kOlg8wiAb3lP+UGabmg=
+        b=PiSHjJJmyFIG/fvfEQQ0j/TGfC7zGXm61kA0WaOq76TqwIgRoe/TEwfJy6/VIKNOj
+         bqE0LBPBguC8eyDRc/IwG4UTzNuLNme8UZqP8gMcG+mXlwm46HUEtFuoWKX2SqKBGu
+         uXHdUSODIq9rnRtiex6mGcZcRpCgMxn9AJE5tLks=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "zhangyi (F)" <yi.zhang@huawei.com>,
-        Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.cz>
-Subject: [PATCH 4.9 092/118] jbd2: fix compile warning when using JBUFFER_TRACE
-Date:   Fri, 22 Mar 2019 12:16:04 +0100
-Message-Id: <20190322111223.071344557@linuxfoundation.org>
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 4.9 093/118] powerpc/32: Clear on-stack exception marker upon exception return
+Date:   Fri, 22 Mar 2019 12:16:05 +0100
+Message-Id: <20190322111223.108613208@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111215.873964544@linuxfoundation.org>
 References: <20190322111215.873964544@linuxfoundation.org>
@@ -65,87 +65,81 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: zhangyi (F) <yi.zhang@huawei.com>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-commit 01215d3edb0f384ddeaa5e4a22c1ae5ff634149f upstream.
+commit 9580b71b5a7863c24a9bd18bcd2ad759b86b1eff upstream.
 
-The jh pointer may be used uninitialized in the two cases below and the
-compiler complain about it when enabling JBUFFER_TRACE macro, fix them.
+Clear the on-stack STACK_FRAME_REGS_MARKER on exception exit in order
+to avoid confusing stacktrace like the one below.
 
-In file included from fs/jbd2/transaction.c:19:0:
-fs/jbd2/transaction.c: In function ‘jbd2_journal_get_undo_access’:
-./include/linux/jbd2.h:1637:38: warning: ‘jh’ is used uninitialized in this function [-Wuninitialized]
- #define JBUFFER_TRACE(jh, info) do { printk("%s: %d\n", __func__, jh->b_jcount);} while (0)
-                                      ^
-fs/jbd2/transaction.c:1219:23: note: ‘jh’ was declared here
-  struct journal_head *jh;
-                       ^
-In file included from fs/jbd2/transaction.c:19:0:
-fs/jbd2/transaction.c: In function ‘jbd2_journal_dirty_metadata’:
-./include/linux/jbd2.h:1637:38: warning: ‘jh’ may be used uninitialized in this function [-Wmaybe-uninitialized]
- #define JBUFFER_TRACE(jh, info) do { printk("%s: %d\n", __func__, jh->b_jcount);} while (0)
-                                      ^
-fs/jbd2/transaction.c:1332:23: note: ‘jh’ was declared here
-  struct journal_head *jh;
-                       ^
+  Call Trace:
+  [c0e9dca0] [c01c42a0] print_address_description+0x64/0x2bc (unreliable)
+  [c0e9dcd0] [c01c4684] kasan_report+0xfc/0x180
+  [c0e9dd10] [c0895130] memchr+0x24/0x74
+  [c0e9dd30] [c00a9e38] msg_print_text+0x124/0x574
+  [c0e9dde0] [c00ab710] console_unlock+0x114/0x4f8
+  [c0e9de40] [c00adc60] vprintk_emit+0x188/0x1c4
+  --- interrupt: c0e9df00 at 0x400f330
+      LR = init_stack+0x1f00/0x2000
+  [c0e9de80] [c00ae3c4] printk+0xa8/0xcc (unreliable)
+  [c0e9df20] [c0c27e44] early_irq_init+0x38/0x108
+  [c0e9df50] [c0c15434] start_kernel+0x310/0x488
+  [c0e9dff0] [00003484] 0x3484
 
-Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+With this patch the trace becomes:
+
+  Call Trace:
+  [c0e9dca0] [c01c42c0] print_address_description+0x64/0x2bc (unreliable)
+  [c0e9dcd0] [c01c46a4] kasan_report+0xfc/0x180
+  [c0e9dd10] [c0895150] memchr+0x24/0x74
+  [c0e9dd30] [c00a9e58] msg_print_text+0x124/0x574
+  [c0e9dde0] [c00ab730] console_unlock+0x114/0x4f8
+  [c0e9de40] [c00adc80] vprintk_emit+0x188/0x1c4
+  [c0e9de80] [c00ae3e4] printk+0xa8/0xcc
+  [c0e9df20] [c0c27e44] early_irq_init+0x38/0x108
+  [c0e9df50] [c0c15434] start_kernel+0x310/0x488
+  [c0e9dff0] [00003484] 0x3484
+
 Cc: stable@vger.kernel.org
-Reviewed-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/jbd2/transaction.c |   16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ arch/powerpc/kernel/entry_32.S |    9 +++++++++
+ 1 file changed, 9 insertions(+)
 
---- a/fs/jbd2/transaction.c
-+++ b/fs/jbd2/transaction.c
-@@ -1211,11 +1211,12 @@ int jbd2_journal_get_undo_access(handle_
- 	struct journal_head *jh;
- 	char *committed_data = NULL;
+--- a/arch/powerpc/kernel/entry_32.S
++++ b/arch/powerpc/kernel/entry_32.S
+@@ -698,6 +698,9 @@ fast_exception_return:
+ 	mtcr	r10
+ 	lwz	r10,_LINK(r11)
+ 	mtlr	r10
++	/* Clear the exception_marker on the stack to avoid confusing stacktrace */
++	li	r10, 0
++	stw	r10, 8(r11)
+ 	REST_GPR(10, r11)
+ 	mtspr	SPRN_SRR1,r9
+ 	mtspr	SPRN_SRR0,r12
+@@ -932,6 +935,9 @@ END_FTR_SECTION_IFSET(CPU_FTR_NEED_PAIRE
+ 	mtcrf	0xFF,r10
+ 	mtlr	r11
  
--	JBUFFER_TRACE(jh, "entry");
- 	if (jbd2_write_access_granted(handle, bh, true))
- 		return 0;
- 
- 	jh = jbd2_journal_add_journal_head(bh);
-+	JBUFFER_TRACE(jh, "entry");
-+
++	/* Clear the exception_marker on the stack to avoid confusing stacktrace */
++	li	r10, 0
++	stw	r10, 8(r1)
  	/*
- 	 * Do this first --- it can drop the journal lock, so we want to
- 	 * make sure that obtaining the committed_data is done
-@@ -1326,15 +1327,17 @@ int jbd2_journal_dirty_metadata(handle_t
- 
- 	if (is_handle_aborted(handle))
- 		return -EROFS;
--	if (!buffer_jbd(bh)) {
--		ret = -EUCLEAN;
--		goto out;
--	}
-+	if (!buffer_jbd(bh))
-+		return -EUCLEAN;
-+
- 	/*
- 	 * We don't grab jh reference here since the buffer must be part
- 	 * of the running transaction.
- 	 */
- 	jh = bh2jh(bh);
-+	jbd_debug(5, "journal_head %p\n", jh);
-+	JBUFFER_TRACE(jh, "entry");
-+
- 	/*
- 	 * This and the following assertions are unreliable since we may see jh
- 	 * in inconsistent state unless we grab bh_state lock. But this is
-@@ -1368,9 +1371,6 @@ int jbd2_journal_dirty_metadata(handle_t
- 	}
- 
- 	journal = transaction->t_journal;
--	jbd_debug(5, "journal_head %p\n", jh);
--	JBUFFER_TRACE(jh, "entry");
--
- 	jbd_lock_bh_state(bh);
- 
- 	if (jh->b_modified == 0) {
+ 	 * Once we put values in SRR0 and SRR1, we are in a state
+ 	 * where exceptions are not recoverable, since taking an
+@@ -969,6 +975,9 @@ exc_exit_restart_end:
+ 	mtlr	r11
+ 	lwz	r10,_CCR(r1)
+ 	mtcrf	0xff,r10
++	/* Clear the exception_marker on the stack to avoid confusing stacktrace */
++	li	r10, 0
++	stw	r10, 8(r1)
+ 	REST_2GPRS(9, r1)
+ 	.globl exc_exit_restart
+ exc_exit_restart:
 
 
