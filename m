@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C45F1C10F03
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:35:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63F4FC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:35:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92F4B2070D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:35:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34A6F2070D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:35:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553258137;
-	bh=b+R3NblMou0fFCrP5LMo8ljwcwqEb950fE0kL2wcnis=;
+	s=default; t=1553258143;
+	bh=/Bm9tFpclOoGhePGyNk/1S8mu1/DinNiE5cIb/+1e1E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gemPlmmD5zVYp3ymDWqXtnf3yW7y3UGUclKb9aski6McMdQE/7eq/YoJr5+xJlNQO
-	 SQmVL57/+krXBoEGJ3JdbcNJf2RmxDx5zSOldCHOK8f5KCmXxw9n0kfD6EUIqsnzjc
-	 9ssJ8rPk6rzxiCp7sxCxm1DztLfdWyOuyKzsPWa8=
+	b=RXBRGFu9J/ht1sgdPpvl328J+3XfiDequoz5crFZFJ512n4IfboMJ7ABI3v4V5rg5
+	 YysoyOzkDI7M8Hmwz0+H5CH+xckG03UJK9uvxGeciHiirLMelzw7DvXmJflYyDPqRr
+	 m5Wx4B/yQhmUNAn7tpWVKP76N1ZWtiVXdxuPxExA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389591AbfCVMMM (ORCPT
+        id S2389726AbfCVMNL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:12:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50362 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:13:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389128AbfCVMMK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:12:10 -0400
+        id S2389013AbfCVMNG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:13:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A23120830;
-        Fri, 22 Mar 2019 12:12:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40CA72082C;
+        Fri, 22 Mar 2019 12:13:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256729;
-        bh=b+R3NblMou0fFCrP5LMo8ljwcwqEb950fE0kL2wcnis=;
+        s=default; t=1553256785;
+        bh=/Bm9tFpclOoGhePGyNk/1S8mu1/DinNiE5cIb/+1e1E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jDvbkstV0Mwyix41uaNQg1bhUsDKvVziKz5rrvpa1Hnq342I/UddRG4qkIJjrEQoy
-         cNyX8YUzV4Aeb/zDyBMm5pbyo4MsnuhNqewLW4ME88tfcjWawBb+RZcaNwuaK/B5PB
-         4w63M9QHDAT98ZtrkHmxZQ0FYrUmorjFiR5LsAe0=
+        b=pxFGFEmDllBr8zQ4Bt1Me5U+1K1KUsO4FJh5S9CiG4BKe/DwNm+IKeAeoRX1U7Dp/
+         3y9T4lcA0f+LoqJS/S2X7879MYP0Et2m/UFxTEhp5kmUIrhnKsk9ASfKc+Bwnf8+mk
+         C1l3NhJFtm90nko0Vh/k/ILlCtVe+MqqG6or4RQw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shengjiu Wang <shengjiu.wang@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Nicolin Chen <nicoleotsuka@gmail.com>
-Subject: [PATCH 5.0 003/238] ASoC: fsl_esai: fix register setting issue in RIGHT_J mode
-Date:   Fri, 22 Mar 2019 12:13:42 +0100
-Message-Id: <20190322111258.552004792@linuxfoundation.org>
+        stable@vger.kernel.org, Ondrej Mosnacek <omosnace@redhat.com>,
+        Eric Biggers <ebiggers@google.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 5.0 037/238] crypto: aegis - fix handling chunked inputs
+Date:   Fri, 22 Mar 2019 12:14:16 +0100
+Message-Id: <20190322111300.549513632@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -66,51 +66,116 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: S.j. Wang <shengjiu.wang@nxp.com>
+From: Eric Biggers <ebiggers@google.com>
 
-commit cc29ea007347f39f4c5a4d27b0b555955a0277f9 upstream.
+commit 0f533e67d26f228ea5dfdacc8a4bdeb487af5208 upstream.
 
-The ESAI_xCR_xWA is xCR's bit, not the xCCR's bit, driver set it to
-wrong register, correct it.
+The generic AEGIS implementations all fail the improved AEAD tests
+because they produce the wrong result with some data layouts.  The issue
+is that they assume that if the skcipher_walk API gives 'nbytes' not
+aligned to the walksize (a.k.a. walk.stride), then it is the end of the
+data.  In fact, this can happen before the end.  Fix them.
 
-Fixes 43d24e76b698 ("ASoC: fsl_esai: Add ESAI CPU DAI driver")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
-Ackedy-by: Nicolin Chen <nicoleotsuka@gmail.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: f606a88e5823 ("crypto: aegis - Add generic AEGIS AEAD implementations")
+Cc: <stable@vger.kernel.org> # v4.18+
+Cc: Ondrej Mosnacek <omosnace@redhat.com>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Reviewed-by: Ondrej Mosnacek <omosnace@redhat.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/fsl/fsl_esai.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ crypto/aegis128.c  |   14 +++++++-------
+ crypto/aegis128l.c |   14 +++++++-------
+ crypto/aegis256.c  |   14 +++++++-------
+ 3 files changed, 21 insertions(+), 21 deletions(-)
 
---- a/sound/soc/fsl/fsl_esai.c
-+++ b/sound/soc/fsl/fsl_esai.c
-@@ -398,7 +398,8 @@ static int fsl_esai_set_dai_fmt(struct s
- 		break;
- 	case SND_SOC_DAIFMT_RIGHT_J:
- 		/* Data on rising edge of bclk, frame high, right aligned */
--		xccr |= ESAI_xCCR_xCKP | ESAI_xCCR_xHCKP | ESAI_xCR_xWA;
-+		xccr |= ESAI_xCCR_xCKP | ESAI_xCCR_xHCKP;
-+		xcr  |= ESAI_xCR_xWA;
- 		break;
- 	case SND_SOC_DAIFMT_DSP_A:
- 		/* Data on rising edge of bclk, frame high, 1clk before data */
-@@ -455,12 +456,12 @@ static int fsl_esai_set_dai_fmt(struct s
- 		return -EINVAL;
+--- a/crypto/aegis128.c
++++ b/crypto/aegis128.c
+@@ -290,19 +290,19 @@ static void crypto_aegis128_process_cryp
+ 					  const struct aegis128_ops *ops)
+ {
+ 	struct skcipher_walk walk;
+-	u8 *src, *dst;
+-	unsigned int chunksize;
+ 
+ 	ops->skcipher_walk_init(&walk, req, false);
+ 
+ 	while (walk.nbytes) {
+-		src = walk.src.virt.addr;
+-		dst = walk.dst.virt.addr;
+-		chunksize = walk.nbytes;
++		unsigned int nbytes = walk.nbytes;
+ 
+-		ops->crypt_chunk(state, dst, src, chunksize);
++		if (nbytes < walk.total)
++			nbytes = round_down(nbytes, walk.stride);
+ 
+-		skcipher_walk_done(&walk, 0);
++		ops->crypt_chunk(state, walk.dst.virt.addr, walk.src.virt.addr,
++				 nbytes);
++
++		skcipher_walk_done(&walk, walk.nbytes - nbytes);
  	}
+ }
  
--	mask = ESAI_xCR_xFSL | ESAI_xCR_xFSR;
-+	mask = ESAI_xCR_xFSL | ESAI_xCR_xFSR | ESAI_xCR_xWA;
- 	regmap_update_bits(esai_priv->regmap, REG_ESAI_TCR, mask, xcr);
- 	regmap_update_bits(esai_priv->regmap, REG_ESAI_RCR, mask, xcr);
+--- a/crypto/aegis128l.c
++++ b/crypto/aegis128l.c
+@@ -353,19 +353,19 @@ static void crypto_aegis128l_process_cry
+ 					   const struct aegis128l_ops *ops)
+ {
+ 	struct skcipher_walk walk;
+-	u8 *src, *dst;
+-	unsigned int chunksize;
  
- 	mask = ESAI_xCCR_xCKP | ESAI_xCCR_xHCKP | ESAI_xCCR_xFSP |
--		ESAI_xCCR_xFSD | ESAI_xCCR_xCKD | ESAI_xCR_xWA;
-+		ESAI_xCCR_xFSD | ESAI_xCCR_xCKD;
- 	regmap_update_bits(esai_priv->regmap, REG_ESAI_TCCR, mask, xccr);
- 	regmap_update_bits(esai_priv->regmap, REG_ESAI_RCCR, mask, xccr);
+ 	ops->skcipher_walk_init(&walk, req, false);
+ 
+ 	while (walk.nbytes) {
+-		src = walk.src.virt.addr;
+-		dst = walk.dst.virt.addr;
+-		chunksize = walk.nbytes;
++		unsigned int nbytes = walk.nbytes;
+ 
+-		ops->crypt_chunk(state, dst, src, chunksize);
++		if (nbytes < walk.total)
++			nbytes = round_down(nbytes, walk.stride);
+ 
+-		skcipher_walk_done(&walk, 0);
++		ops->crypt_chunk(state, walk.dst.virt.addr, walk.src.virt.addr,
++				 nbytes);
++
++		skcipher_walk_done(&walk, walk.nbytes - nbytes);
+ 	}
+ }
+ 
+--- a/crypto/aegis256.c
++++ b/crypto/aegis256.c
+@@ -303,19 +303,19 @@ static void crypto_aegis256_process_cryp
+ 					  const struct aegis256_ops *ops)
+ {
+ 	struct skcipher_walk walk;
+-	u8 *src, *dst;
+-	unsigned int chunksize;
+ 
+ 	ops->skcipher_walk_init(&walk, req, false);
+ 
+ 	while (walk.nbytes) {
+-		src = walk.src.virt.addr;
+-		dst = walk.dst.virt.addr;
+-		chunksize = walk.nbytes;
++		unsigned int nbytes = walk.nbytes;
+ 
+-		ops->crypt_chunk(state, dst, src, chunksize);
++		if (nbytes < walk.total)
++			nbytes = round_down(nbytes, walk.stride);
+ 
+-		skcipher_walk_done(&walk, 0);
++		ops->crypt_chunk(state, walk.dst.virt.addr, walk.src.virt.addr,
++				 nbytes);
++
++		skcipher_walk_done(&walk, walk.nbytes - nbytes);
+ 	}
+ }
  
 
 
