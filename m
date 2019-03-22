@@ -2,144 +2,196 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FEBAC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:11:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77CE9C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:13:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7603D218E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:11:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4609E218E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:13:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GpwSX9sP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728469AbfCVOL6 (ORCPT
+        id S1728277AbfCVONF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 10:11:58 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42092 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727746AbfCVOL5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 10:11:57 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 6209CB038;
-        Fri, 22 Mar 2019 14:11:55 +0000 (UTC)
-Subject: Re: [PATCH] btrfs: work around false-positive
- -Wsometimes-uninitialized warning
-To:     Arnd Bergmann <arnd@arndb.de>, Chris Mason <clm@fb.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>
-Cc:     clang-built-linux@googlegroups.com,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Lu Fengqi <lufq.fnst@cn.fujitsu.com>,
-        Anand Jain <anand.jain@oracle.com>,
-        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190322140753.286171-1-arnd@arndb.de>
-From:   Nikolay Borisov <nborisov@suse.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=nborisov@suse.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <57833895-fce3-75bc-a28e-6bdc6d14ea8c@suse.com>
-Date:   Fri, 22 Mar 2019 16:11:52 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Fri, 22 Mar 2019 10:13:05 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:34471 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727746AbfCVONE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 10:13:04 -0400
+Received: by mail-wr1-f67.google.com with SMTP id p10so2559428wrq.1
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 07:13:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=pyh8vTTyohuChTUCwCbUo+zep28Eqjn+MIdM/zUjGMM=;
+        b=GpwSX9sP+gNxrrwDGevhFnH156BVULnPdMflC4EtA2nV5lH09Tj9ZNxZfRoZPonkkk
+         EZYp9DTPfimc62wMxnLuYxS/1wRf6cgCWrpp6d2XWUYKRjZKBVrMef1zmIwZQITWGpdu
+         2pzENXU7WyIAu3mT4EIk4vaUGZfffzBs9CkyJ8RvEBBKRwthR607UR1a9dBaok1bwXPy
+         nC6+h5AyM9NkpksPsthgutWR7BYgD3F8CFnCXA0y6NL5fbhbnxQxcgqOeSVja29p7OfG
+         85UWRqiC9taTqaSglL+sJL8+7K1c7lqmuT1FmHe43dNts2yP95v0oWQEmvNaM38fRYYj
+         6u+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=pyh8vTTyohuChTUCwCbUo+zep28Eqjn+MIdM/zUjGMM=;
+        b=ZQSXBu/GZal2lHSalNeYng7Au3B5kceuWhPbSTVrmMtSwAZyB0DzM6URUt8c7GoLIU
+         +Q0XwldWrYSuMjEnYKnn8XS6fDLYgpNsN4kXtBAgIew076Nz+S+hlS0bV/LjaG+2ruwH
+         puYUrj0mnAB23o6JgE4Ts++jUzEy+itTZw19lMNU4j9CH8tnoBNEyXdc1nKzpfJh3DhO
+         jZbIWukjjC8BuEttFEajWSNipu958hUmsMDHH1DMNhZTLUT6hOJHfsgIJuNlWhc8x/PX
+         4+pFcCEB1tUzmXPEs4BH+ID66Ozy4IPHqSOMwBS8hYaxvjQuQsXkBpxHduHCwrppJAsW
+         YpZQ==
+X-Gm-Message-State: APjAAAX/jtVghx8sOv54+ajKxR3bzPrfCANhKld9fHKwZ40Cyireg/DN
+        BsW4CjjDr9yV4JtZiqbaJ3flsw==
+X-Google-Smtp-Source: APXvYqxLQZ1mBf+svpCyGy80Ng16k+BzxRCmfTGNFpxGLnO31wV2tjKhMi7e/fAjrPJb+2FV31UnCw==
+X-Received: by 2002:adf:f451:: with SMTP id f17mr2603032wrp.272.1553263983118;
+        Fri, 22 Mar 2019 07:13:03 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id x18sm520275wrw.14.2019.03.22.07.13.02
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 22 Mar 2019 07:13:02 -0700 (PDT)
+Date:   Fri, 22 Mar 2019 14:13:00 +0000
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Joe Perches <joe@perches.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [possible PATCH] crypto: sahara - Use #ifdef DEBUG not
+ IS_ENABLED(DEBUG)
+Message-ID: <20190322141300.foza2h2lx5aklchq@holly.lan>
+References: <5ef0cab4dee128058a43f43c723c13924662e80d.camel@perches.com>
+ <4ea24643-5832-981f-3d39-9a84692be6e7@c-s.fr>
 MIME-Version: 1.0
-In-Reply-To: <20190322140753.286171-1-arnd@arndb.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <4ea24643-5832-981f-3d39-9a84692be6e7@c-s.fr>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 22.03.19 Ð³. 16:07 Ñ‡., Arnd Bergmann wrote:
-> clang fails to see that the last 'else if() in btrfs_uuid_tree_add()
-> is always true, so 'eb' is always initialized correctly:
+On Fri, Mar 22, 2019 at 01:54:47PM +0100, Christophe Leroy wrote:
 > 
-> fs/btrfs/uuid-tree.c:129:13: error: variable 'eb' is used uninitialized whenever 'if' condition is false [-Werror,-Wsometimes-uninitialized]
->         } else if (ret < 0) {
->                    ^~~~~~~
-> fs/btrfs/uuid-tree.c:139:22: note: uninitialized use occurs here
->         write_extent_buffer(eb, &subid_le, offset, sizeof(subid_le));
->                             ^~
-> fs/btrfs/uuid-tree.c:129:9: note: remove the 'if' if its condition is always true
->         } else if (ret < 0) {
->                ^~~~~~~~~~~~~
-> fs/btrfs/uuid-tree.c:90:26: note: initialize the variable 'eb' to silence this warning
->         struct extent_buffer *eb;
->                                 ^
->                                  = NULL
 > 
-> Change it into a plain 'else' to shut up that warning.
+> Le 08/03/2019 à 01:15, Joe Perches a écrit :
+> > Normal use of IS_ENABLED is with a CONFIG_<SYMBOL> and
+> > there is no -DDEBUG in the Makefile here.
+> > 
+> > Replace the IS_ENABLED(DEBUG) with #ifdef DEBUG/#endif
+> > blocks.
 > 
-> Link: https://bugs.llvm.org/show_bug.cgi?id=41197
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> By doing this you hide a big part of the code which cannot be verified
+> unless DEBUG is defined.
 
-Such a patch has already been merged to misc-next:
+The dump functions already use dev_dbg() throughout and appear not to
+have any side effects (only local variables are modified). Can we not simply
+*remove* the if(IS_ENABLED_DEBUG) and rely on dev_dbg() to hide things
+from the code generater when the debug messages are disabled?
 
-f22898caa6a5 ("btrfs: Turn an 'else if' into an 'else' in
-btrfs_uuid_tree_add")
+Or put another way, is there any harm in allowing a system that enables
+CONFIG_DYNAMIC_DEBUG to observe the status dumps?
 
 
+Daniel.
 
-> ---
->  fs/btrfs/uuid-tree.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+
+> static bool is_debug_enabled(void)
+> {
+> #ifdef DEBUG
+> 	return true;
+> #else
+> 	return false;
+> #endif
+> }
 > 
-> diff --git a/fs/btrfs/uuid-tree.c b/fs/btrfs/uuid-tree.c
-> index 3b2ae342e649..c1cc9a5c0024 100644
-> --- a/fs/btrfs/uuid-tree.c
-> +++ b/fs/btrfs/uuid-tree.c
-> @@ -126,7 +126,7 @@ int btrfs_uuid_tree_add(struct btrfs_trans_handle *trans, u8 *uuid, u8 type,
->  		slot = path->slots[0];
->  		offset = btrfs_item_ptr_offset(eb, slot);
->  		offset += btrfs_item_size_nr(eb, slot) - sizeof(subid_le);
-> -	} else if (ret < 0) {
-> +	} else {
->  		btrfs_warn(fs_info,
->  			   "insert uuid item failed %d (0x%016llx, 0x%016llx) type %u!",
->  			   ret, (unsigned long long)key.objectid,
+> then replace
 > 
+> if (IS_ENABLED(DEBUG))
+> 
+> by
+> 
+> if (is_debug_enabled())
+> 
+> Christophe
+> 
+> > 
+> > Miscellanea:
+> > 
+> > o Move the sahara_state array into the function that uses it.
+> > 
+> > Signed-off-by: Joe Perches <joe@perches.com>
+> > ---
+> >   drivers/crypto/sahara.c | 20 +++++++++-----------
+> >   1 file changed, 9 insertions(+), 11 deletions(-)
+> > 
+> > diff --git a/drivers/crypto/sahara.c b/drivers/crypto/sahara.c
+> > index 8c32a3059b4a..d2b4bd483507 100644
+> > --- a/drivers/crypto/sahara.c
+> > +++ b/drivers/crypto/sahara.c
+> > @@ -348,14 +348,13 @@ static void sahara_decode_error(struct sahara_dev *dev, unsigned int error)
+> >   	dev_err(dev->device, "\n");
+> >   }
+> > -static const char *sahara_state[4] = { "Idle", "Busy", "Error", "HW Fault" };
+> > -
+> >   static void sahara_decode_status(struct sahara_dev *dev, unsigned int status)
+> >   {
+> > +#ifdef DEBUG
+> >   	u8 state;
+> > -
+> > -	if (!IS_ENABLED(DEBUG))
+> > -		return;
+> > +	static const char *sahara_state[4] = {
+> > +		"Idle", "Busy", "Error", "HW Fault"
+> > +	};
+> >   	state = SAHARA_STATUS_GET_STATE(status);
+> > @@ -400,15 +399,14 @@ static void sahara_decode_status(struct sahara_dev *dev, unsigned int status)
+> >   		sahara_read(dev, SAHARA_REG_CDAR));
+> >   	dev_dbg(dev->device, "Initial DAR: 0x%08x\n\n",
+> >   		sahara_read(dev, SAHARA_REG_IDAR));
+> > +#endif
+> >   }
+> >   static void sahara_dump_descriptors(struct sahara_dev *dev)
+> >   {
+> > +#ifdef DEBUG
+> >   	int i;
+> > -	if (!IS_ENABLED(DEBUG))
+> > -		return;
+> > -
+> >   	for (i = 0; i < SAHARA_MAX_HW_DESC; i++) {
+> >   		dev_dbg(dev->device, "Descriptor (%d) (%pad):\n",
+> >   			i, &dev->hw_phys_desc[i]);
+> > @@ -421,15 +419,14 @@ static void sahara_dump_descriptors(struct sahara_dev *dev)
+> >   			dev->hw_desc[i]->next);
+> >   	}
+> >   	dev_dbg(dev->device, "\n");
+> > +#endif
+> >   }
+> >   static void sahara_dump_links(struct sahara_dev *dev)
+> >   {
+> > +#ifdef DEBUG
+> >   	int i;
+> > -	if (!IS_ENABLED(DEBUG))
+> > -		return;
+> > -
+> >   	for (i = 0; i < SAHARA_MAX_HW_LINK; i++) {
+> >   		dev_dbg(dev->device, "Link (%d) (%pad):\n",
+> >   			i, &dev->hw_phys_link[i]);
+> > @@ -439,6 +436,7 @@ static void sahara_dump_links(struct sahara_dev *dev)
+> >   			dev->hw_link[i]->next);
+> >   	}
+> >   	dev_dbg(dev->device, "\n");
+> > +#endif
+> >   }
+> >   static int sahara_hw_descriptor_create(struct sahara_dev *dev)
+> > 
