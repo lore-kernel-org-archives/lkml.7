@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 264C2C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:05:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7AA7C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:05:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E09D121916
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:05:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0ACC206C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:05:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256313;
-	bh=RmrDQJLE3/gS73Cg8wuV9xgO0drVIljeHyUZVsFu1Fs=;
+	s=default; t=1553256316;
+	bh=cEx+BKpucAahQioEBw5JRIhb6sqvaynHd41tZ5y+dYo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wg2JOsyk1z5GmxzndQo3AKapTA//jcXO9Cakwl860Xjch17DwH40IH24ka+zPRZTf
-	 lu1fhO+fJ0ZlXj73OOwjFUN232FfYlhMBpDCpaX8HqsxHheQM9RsaMr7rJYbJcgDA9
-	 kM1tMUzdj+o61BngBPd0o90YtSXGjz5KHxT05aKo=
+	b=TUmBNxe9QKOfewt8LJUwy7m/rKwF5pYUFRDl2sE8BkckgsnwlwMz7mH2V2Sr8XcFt
+	 YcInjc6DyZeFwfozKTNrGJ/EwGMyG2KFtrY/f1y4nD8K+kJ6aO3uHTn5OA03kHoMoD
+	 HlYWbehdambZ8OVSoiLVJ41IBO4aAsDrFou0UYyQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388780AbfCVMFL (ORCPT
+        id S2388789AbfCVMFP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:05:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43618 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:05:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388172AbfCVMFK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:05:10 -0400
+        id S2388460AbfCVMFM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:05:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C1C72192D;
-        Fri, 22 Mar 2019 12:05:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09C4621929;
+        Fri, 22 Mar 2019 12:05:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256308;
-        bh=RmrDQJLE3/gS73Cg8wuV9xgO0drVIljeHyUZVsFu1Fs=;
+        s=default; t=1553256311;
+        bh=cEx+BKpucAahQioEBw5JRIhb6sqvaynHd41tZ5y+dYo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RpnCGTqluw3dq797U/kSV0aGj2ahFjEEnRrWi3HPtg4nSXde6oq0JADGIENYS/bw8
-         C69lbKlx/4iAtaL1zfTE6X3J2duwNZGe3pVY9Sd5qNTvP8WgDxHYwyjamfrY+7LOJt
-         eeGcWdgfboRyB/rp0BMD6MDM7DZSJ5v5UjyGPK4s=
+        b=D4q9OWHxxM6wH+XouczmUsCtSozy+/P4DxtfSATs2IfEIPH2ei8fZH4q2h/3gT8jW
+         19MOeJx56gcp5+UejQan9eE/byXJd/h80wjFJOTs42ethiiKjFib3pBDNQ5YJAYor+
+         x0qQPCKSL483G7lxvD4gbq7VR8AQduDq0PhwK3aU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Shilovsky <pshilov@microsoft.com>,
-        Steve French <stfrench@microsoft.com>
-Subject: [PATCH 4.19 138/280] CIFS: Do not skip SMB2 message IDs on send failures
-Date:   Fri, 22 Mar 2019 12:14:51 +0100
-Message-Id: <20190322111317.789437724@linuxfoundation.org>
+        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        Jann Horn <jannh@google.com>
+Subject: [PATCH 4.19 164/280] splice: dont merge into linked buffers
+Date:   Fri, 22 Mar 2019 12:15:17 +0100
+Message-Id: <20190322111323.143782969@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -65,207 +65,113 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Pavel Shilovsky <piastryyy@gmail.com>
+From: Jann Horn <jannh@google.com>
 
-commit c781af7e0c1fed9f1d0e0ec31b86f5b21a8dca17 upstream.
+commit a0ce2f0aa6ad97c3d4927bf2ca54bcebdf062d55 upstream.
 
-When we hit failures during constructing MIDs or sending PDUs
-through the network, we end up not using message IDs assigned
-to the packet. The next SMB packet will skip those message IDs
-and continue with the next one. This behavior may lead to a server
-not granting us credits until we use the skipped IDs. Fix this by
-reverting the current ID to the original value if any errors occur
-before we push the packet through the network stack.
+Before this patch, it was possible for two pipes to affect each other after
+data had been transferred between them with tee():
 
-This patch fixes the generic/310 test from the xfs-tests.
+============
+$ cat tee_test.c
 
-Cc: <stable@vger.kernel.org> # 4.19.x
-Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+int main(void) {
+  int pipe_a[2];
+  if (pipe(pipe_a)) err(1, "pipe");
+  int pipe_b[2];
+  if (pipe(pipe_b)) err(1, "pipe");
+  if (write(pipe_a[1], "abcd", 4) != 4) err(1, "write");
+  if (tee(pipe_a[0], pipe_b[1], 2, 0) != 2) err(1, "tee");
+  if (write(pipe_b[1], "xx", 2) != 2) err(1, "write");
+
+  char buf[5];
+  if (read(pipe_a[0], buf, 4) != 4) err(1, "read");
+  buf[4] = 0;
+  printf("got back: '%s'\n", buf);
+}
+$ gcc -o tee_test tee_test.c
+$ ./tee_test
+got back: 'abxx'
+$
+============
+
+As suggested by Al Viro, fix it by creating a separate type for
+non-mergeable pipe buffers, then changing the types of buffers in
+splice_pipe_to_pipe() and link_pipe().
+
+Cc: <stable@vger.kernel.org>
+Fixes: 7c77f0b3f920 ("splice: implement pipe to pipe splicing")
+Fixes: 70524490ee2e ("[PATCH] splice: add support for sys_tee()")
+Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Jann Horn <jannh@google.com>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/cifsglob.h      |   19 +++++++++++++++++++
- fs/cifs/smb2ops.c       |   13 +++++++++++++
- fs/cifs/smb2transport.c |   14 ++++++++++++--
- fs/cifs/transport.c     |    6 +++++-
- 4 files changed, 49 insertions(+), 3 deletions(-)
+ fs/pipe.c                 |   14 ++++++++++++++
+ fs/splice.c               |    4 ++++
+ include/linux/pipe_fs_i.h |    1 +
+ 3 files changed, 19 insertions(+)
 
---- a/fs/cifs/cifsglob.h
-+++ b/fs/cifs/cifsglob.h
-@@ -235,6 +235,8 @@ struct smb_version_operations {
- 	int * (*get_credits_field)(struct TCP_Server_Info *, const int);
- 	unsigned int (*get_credits)(struct mid_q_entry *);
- 	__u64 (*get_next_mid)(struct TCP_Server_Info *);
-+	void (*revert_current_mid)(struct TCP_Server_Info *server,
-+				   const unsigned int val);
- 	/* data offset from read response message */
- 	unsigned int (*read_data_offset)(char *);
- 	/*
-@@ -756,6 +758,22 @@ get_next_mid(struct TCP_Server_Info *ser
- 	return cpu_to_le16(mid);
- }
+--- a/fs/pipe.c
++++ b/fs/pipe.c
+@@ -234,6 +234,14 @@ static const struct pipe_buf_operations
+ 	.get = generic_pipe_buf_get,
+ };
  
-+static inline void
-+revert_current_mid(struct TCP_Server_Info *server, const unsigned int val)
++static const struct pipe_buf_operations anon_pipe_buf_nomerge_ops = {
++	.can_merge = 0,
++	.confirm = generic_pipe_buf_confirm,
++	.release = anon_pipe_buf_release,
++	.steal = anon_pipe_buf_steal,
++	.get = generic_pipe_buf_get,
++};
++
+ static const struct pipe_buf_operations packet_pipe_buf_ops = {
+ 	.can_merge = 0,
+ 	.confirm = generic_pipe_buf_confirm,
+@@ -242,6 +250,12 @@ static const struct pipe_buf_operations
+ 	.get = generic_pipe_buf_get,
+ };
+ 
++void pipe_buf_mark_unmergeable(struct pipe_buffer *buf)
 +{
-+	if (server->ops->revert_current_mid)
-+		server->ops->revert_current_mid(server, val);
++	if (buf->ops == &anon_pipe_buf_ops)
++		buf->ops = &anon_pipe_buf_nomerge_ops;
 +}
 +
-+static inline void
-+revert_current_mid_from_hdr(struct TCP_Server_Info *server,
-+			    const struct smb2_sync_hdr *shdr)
-+{
-+	unsigned int num = le16_to_cpu(shdr->CreditCharge);
-+
-+	return revert_current_mid(server, num > 0 ? num : 1);
-+}
-+
- static inline __u16
- get_mid(const struct smb_hdr *smb)
+ static ssize_t
+ pipe_read(struct kiocb *iocb, struct iov_iter *to)
  {
-@@ -1391,6 +1409,7 @@ struct mid_q_entry {
- 	struct kref refcount;
- 	struct TCP_Server_Info *server;	/* server corresponding to this mid */
- 	__u64 mid;		/* multiplex id */
-+	__u16 credits;		/* number of credits consumed by this mid */
- 	__u32 pid;		/* process id */
- 	__u32 sequence_number;  /* for CIFS signing */
- 	unsigned long when_alloc;  /* when mid was created */
---- a/fs/cifs/smb2ops.c
-+++ b/fs/cifs/smb2ops.c
-@@ -204,6 +204,15 @@ smb2_get_next_mid(struct TCP_Server_Info
- 	return mid;
- }
+--- a/fs/splice.c
++++ b/fs/splice.c
+@@ -1593,6 +1593,8 @@ retry:
+ 			 */
+ 			obuf->flags &= ~PIPE_BUF_FLAG_GIFT;
  
-+static void
-+smb2_revert_current_mid(struct TCP_Server_Info *server, const unsigned int val)
-+{
-+	spin_lock(&GlobalMid_Lock);
-+	if (server->CurrentMid >= val)
-+		server->CurrentMid -= val;
-+	spin_unlock(&GlobalMid_Lock);
-+}
++			pipe_buf_mark_unmergeable(obuf);
 +
- static struct mid_q_entry *
- smb2_find_mid(struct TCP_Server_Info *server, char *buf)
- {
-@@ -3256,6 +3265,7 @@ struct smb_version_operations smb20_oper
- 	.get_credits = smb2_get_credits,
- 	.wait_mtu_credits = cifs_wait_mtu_credits,
- 	.get_next_mid = smb2_get_next_mid,
-+	.revert_current_mid = smb2_revert_current_mid,
- 	.read_data_offset = smb2_read_data_offset,
- 	.read_data_length = smb2_read_data_length,
- 	.map_error = map_smb2_to_linux_error,
-@@ -3350,6 +3360,7 @@ struct smb_version_operations smb21_oper
- 	.get_credits = smb2_get_credits,
- 	.wait_mtu_credits = smb2_wait_mtu_credits,
- 	.get_next_mid = smb2_get_next_mid,
-+	.revert_current_mid = smb2_revert_current_mid,
- 	.read_data_offset = smb2_read_data_offset,
- 	.read_data_length = smb2_read_data_length,
- 	.map_error = map_smb2_to_linux_error,
-@@ -3445,6 +3456,7 @@ struct smb_version_operations smb30_oper
- 	.get_credits = smb2_get_credits,
- 	.wait_mtu_credits = smb2_wait_mtu_credits,
- 	.get_next_mid = smb2_get_next_mid,
-+	.revert_current_mid = smb2_revert_current_mid,
- 	.read_data_offset = smb2_read_data_offset,
- 	.read_data_length = smb2_read_data_length,
- 	.map_error = map_smb2_to_linux_error,
-@@ -3549,6 +3561,7 @@ struct smb_version_operations smb311_ope
- 	.get_credits = smb2_get_credits,
- 	.wait_mtu_credits = smb2_wait_mtu_credits,
- 	.get_next_mid = smb2_get_next_mid,
-+	.revert_current_mid = smb2_revert_current_mid,
- 	.read_data_offset = smb2_read_data_offset,
- 	.read_data_length = smb2_read_data_length,
- 	.map_error = map_smb2_to_linux_error,
---- a/fs/cifs/smb2transport.c
-+++ b/fs/cifs/smb2transport.c
-@@ -576,6 +576,7 @@ smb2_mid_entry_alloc(const struct smb2_s
- 		     struct TCP_Server_Info *server)
- {
- 	struct mid_q_entry *temp;
-+	unsigned int credits = le16_to_cpu(shdr->CreditCharge);
+ 			obuf->len = len;
+ 			opipe->nrbufs++;
+ 			ibuf->offset += obuf->len;
+@@ -1667,6 +1669,8 @@ static int link_pipe(struct pipe_inode_i
+ 		 */
+ 		obuf->flags &= ~PIPE_BUF_FLAG_GIFT;
  
- 	if (server == NULL) {
- 		cifs_dbg(VFS, "Null TCP session in smb2_mid_entry_alloc\n");
-@@ -586,6 +587,7 @@ smb2_mid_entry_alloc(const struct smb2_s
- 	memset(temp, 0, sizeof(struct mid_q_entry));
- 	kref_init(&temp->refcount);
- 	temp->mid = le64_to_cpu(shdr->MessageId);
-+	temp->credits = credits > 0 ? credits : 1;
- 	temp->pid = current->pid;
- 	temp->command = shdr->Command; /* Always LE */
- 	temp->when_alloc = jiffies;
-@@ -674,13 +676,18 @@ smb2_setup_request(struct cifs_ses *ses,
- 	smb2_seq_num_into_buf(ses->server, shdr);
- 
- 	rc = smb2_get_mid_entry(ses, shdr, &mid);
--	if (rc)
-+	if (rc) {
-+		revert_current_mid_from_hdr(ses->server, shdr);
- 		return ERR_PTR(rc);
-+	}
++		pipe_buf_mark_unmergeable(obuf);
 +
- 	rc = smb2_sign_rqst(rqst, ses->server);
- 	if (rc) {
-+		revert_current_mid_from_hdr(ses->server, shdr);
- 		cifs_delete_mid(mid);
- 		return ERR_PTR(rc);
- 	}
-+
- 	return mid;
- }
+ 		if (obuf->len > len)
+ 			obuf->len = len;
  
-@@ -695,11 +702,14 @@ smb2_setup_async_request(struct TCP_Serv
- 	smb2_seq_num_into_buf(server, shdr);
+--- a/include/linux/pipe_fs_i.h
++++ b/include/linux/pipe_fs_i.h
+@@ -182,6 +182,7 @@ void generic_pipe_buf_get(struct pipe_in
+ int generic_pipe_buf_confirm(struct pipe_inode_info *, struct pipe_buffer *);
+ int generic_pipe_buf_steal(struct pipe_inode_info *, struct pipe_buffer *);
+ void generic_pipe_buf_release(struct pipe_inode_info *, struct pipe_buffer *);
++void pipe_buf_mark_unmergeable(struct pipe_buffer *buf);
  
- 	mid = smb2_mid_entry_alloc(shdr, server);
--	if (mid == NULL)
-+	if (mid == NULL) {
-+		revert_current_mid_from_hdr(server, shdr);
- 		return ERR_PTR(-ENOMEM);
-+	}
- 
- 	rc = smb2_sign_rqst(rqst, server);
- 	if (rc) {
-+		revert_current_mid_from_hdr(server, shdr);
- 		DeleteMidQEntry(mid);
- 		return ERR_PTR(rc);
- 	}
---- a/fs/cifs/transport.c
-+++ b/fs/cifs/transport.c
-@@ -638,6 +638,7 @@ cifs_call_async(struct TCP_Server_Info *
- 	cifs_in_send_dec(server);
- 
- 	if (rc < 0) {
-+		revert_current_mid(server, mid->credits);
- 		server->sequence_number -= 2;
- 		cifs_delete_mid(mid);
- 	}
-@@ -842,6 +843,7 @@ compound_send_recv(const unsigned int xi
- 	for (i = 0; i < num_rqst; i++) {
- 		midQ[i] = ses->server->ops->setup_request(ses, &rqst[i]);
- 		if (IS_ERR(midQ[i])) {
-+			revert_current_mid(ses->server, i);
- 			for (j = 0; j < i; j++)
- 				cifs_delete_mid(midQ[j]);
- 			mutex_unlock(&ses->server->srv_mutex);
-@@ -867,8 +869,10 @@ compound_send_recv(const unsigned int xi
- 	for (i = 0; i < num_rqst; i++)
- 		cifs_save_when_sent(midQ[i]);
- 
--	if (rc < 0)
-+	if (rc < 0) {
-+		revert_current_mid(ses->server, num_rqst);
- 		ses->server->sequence_number -= 2;
-+	}
- 
- 	mutex_unlock(&ses->server->srv_mutex);
+ extern const struct pipe_buf_operations nosteal_pipe_buf_ops;
  
 
 
