@@ -2,98 +2,167 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 761F2C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:44:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D50C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:45:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5098F218E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:44:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A1D12070D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:45:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553258704;
+	bh=CaDydyJ97wXTSAAzgv+rlA634r4FgYnrSxO53XTdYGo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=v+b+SSwsKC3eq5C7gE2wXnPStV9bWe097aIrJDvN326S/ZN47gha8r+r0NyXmVKoI
+	 Y5Ky/j03dRyDFSxRfYphF5+6APTnXhQrCJglGy5Gy5fW1n6XQpJTi/5wNZ/FjhQCth
+	 JUT27X/KG0xNSNq2Q6Y92iHK0zYet/fvAToRbHgo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732678AbfCVMoJ (ORCPT
+        id S2388104AbfCVMpD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:44:09 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:47781 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388354AbfCVMoF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:44:05 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x2MChxnY579241
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Fri, 22 Mar 2019 05:43:59 -0700
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x2MChw5i579238;
-        Fri, 22 Mar 2019 05:43:58 -0700
-Date:   Fri, 22 Mar 2019 05:43:58 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Valdis Kletnieks <tipbot@zytor.com>
-Message-ID: <tip-48084abf212052ca1d39fae064c581b1ce5b1fdf@git.kernel.org>
-Cc:     hpa@zytor.com, mingo@kernel.org, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, valdis.kletnieks@vt.edu
-Reply-To: linux-kernel@vger.kernel.org, valdis.kletnieks@vt.edu,
-          tglx@linutronix.de, mingo@kernel.org, hpa@zytor.com
-In-Reply-To: <7855.1552383228@turing-police>
-References: <7855.1552383228@turing-police>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:core/urgent] watchdog/core: Make variables static
-Git-Commit-ID: 48084abf212052ca1d39fae064c581b1ce5b1fdf
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Fri, 22 Mar 2019 08:45:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38390 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387808AbfCVMBA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:01:00 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FD2F21A4A;
+        Fri, 22 Mar 2019 12:00:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553256058;
+        bh=CaDydyJ97wXTSAAzgv+rlA634r4FgYnrSxO53XTdYGo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=HiDN4b0pJvIHOkQlBRGdHMPHvjCRosifIR7LGSt+188szDzVz1CyFZe9UndlWBhst
+         fdLTeOcW0CVjAx/sGs9GpFAPXWDk1PXL2+TyXI+DKZCsu6K5rL/E8gOVFAwMEgpEFi
+         4p2IM8CfJxA7r9iryjZPnlLfNWW0msZSeVTMdP0E=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 096/280] ARCv2: lib: memcpy: fix doing prefetchw outside of buffer
+Date:   Fri, 22 Mar 2019 12:14:09 +0100
+Message-Id: <20190322111311.915609772@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
+References: <20190322111306.356185024@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  48084abf212052ca1d39fae064c581b1ce5b1fdf
-Gitweb:     https://git.kernel.org/tip/48084abf212052ca1d39fae064c581b1ce5b1fdf
-Author:     Valdis Kletnieks <valdis.kletnieks@vt.edu>
-AuthorDate: Tue, 12 Mar 2019 05:33:48 -0400
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Fri, 22 Mar 2019 13:40:17 +0100
+4.19-stable review patch.  If anyone has any objections, please let me know.
 
-watchdog/core: Make variables static
+------------------
 
-sparse complains:
-  CHECK   kernel/watchdog.c
-kernel/watchdog.c:45:19: warning: symbol 'nmi_watchdog_available'
-			 	  was not declared. Should it be static?
-kernel/watchdog.c:47:16: warning: symbol 'watchdog_allowed_mask'
-			 	  was not declared. Should it be static?
+[ Upstream commit f8a15f97664178f27dfbf86a38f780a532cb6df0 ]
 
-They're not referenced by name from anyplace else, make them static.
+ARCv2 optimized memcpy uses PREFETCHW instruction for prefetching the
+next cache line but doesn't ensure that the line is not past the end of
+the buffer. PRETECHW changes the line ownership and marks it dirty,
+which can cause data corruption if this area is used for DMA IO.
 
-Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/7855.1552383228@turing-police
+Fix the issue by avoiding the PREFETCHW. This leads to performance
+degradation but it is OK as we'll introduce new memcpy implementation
+optimized for unaligned memory access using.
 
+We also cut off all PREFETCH instructions at they are quite useless
+here:
+ * we call PREFETCH right before LOAD instruction call.
+ * we copy 16 or 32 bytes of data (depending on CONFIG_ARC_HAS_LL64)
+   in a main logical loop. so we call PREFETCH 4 times (or 2 times)
+   for each L1 cache line (in case of 64B L1 cache Line which is
+   default case). Obviously this is not optimal.
 
+Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/watchdog.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arc/lib/memcpy-archs.S | 14 --------------
+ 1 file changed, 14 deletions(-)
 
-diff --git a/kernel/watchdog.c b/kernel/watchdog.c
-index 8fbfda94a67b..403c9bd90413 100644
---- a/kernel/watchdog.c
-+++ b/kernel/watchdog.c
-@@ -42,9 +42,9 @@ int __read_mostly watchdog_user_enabled = 1;
- int __read_mostly nmi_watchdog_user_enabled = NMI_WATCHDOG_DEFAULT;
- int __read_mostly soft_watchdog_user_enabled = 1;
- int __read_mostly watchdog_thresh = 10;
--int __read_mostly nmi_watchdog_available;
-+static int __read_mostly nmi_watchdog_available;
+diff --git a/arch/arc/lib/memcpy-archs.S b/arch/arc/lib/memcpy-archs.S
+index d61044dd8b58..ea14b0bf3116 100644
+--- a/arch/arc/lib/memcpy-archs.S
++++ b/arch/arc/lib/memcpy-archs.S
+@@ -25,15 +25,11 @@
+ #endif
  
--struct cpumask watchdog_allowed_mask __read_mostly;
-+static struct cpumask watchdog_allowed_mask __read_mostly;
+ #ifdef CONFIG_ARC_HAS_LL64
+-# define PREFETCH_READ(RX)	prefetch    [RX, 56]
+-# define PREFETCH_WRITE(RX)	prefetchw   [RX, 64]
+ # define LOADX(DST,RX)		ldd.ab	DST, [RX, 8]
+ # define STOREX(SRC,RX)		std.ab	SRC, [RX, 8]
+ # define ZOLSHFT		5
+ # define ZOLAND			0x1F
+ #else
+-# define PREFETCH_READ(RX)	prefetch    [RX, 28]
+-# define PREFETCH_WRITE(RX)	prefetchw   [RX, 32]
+ # define LOADX(DST,RX)		ld.ab	DST, [RX, 4]
+ # define STOREX(SRC,RX)		st.ab	SRC, [RX, 4]
+ # define ZOLSHFT		4
+@@ -41,8 +37,6 @@
+ #endif
  
- struct cpumask watchdog_cpumask __read_mostly;
- unsigned long *watchdog_cpumask_bits = cpumask_bits(&watchdog_cpumask);
+ ENTRY_CFI(memcpy)
+-	prefetch [r1]		; Prefetch the read location
+-	prefetchw [r0]		; Prefetch the write location
+ 	mov.f	0, r2
+ ;;; if size is zero
+ 	jz.d	[blink]
+@@ -72,8 +66,6 @@ ENTRY_CFI(memcpy)
+ 	lpnz	@.Lcopy32_64bytes
+ 	;; LOOP START
+ 	LOADX (r6, r1)
+-	PREFETCH_READ (r1)
+-	PREFETCH_WRITE (r3)
+ 	LOADX (r8, r1)
+ 	LOADX (r10, r1)
+ 	LOADX (r4, r1)
+@@ -117,9 +109,7 @@ ENTRY_CFI(memcpy)
+ 	lpnz	@.Lcopy8bytes_1
+ 	;; LOOP START
+ 	ld.ab	r6, [r1, 4]
+-	prefetch [r1, 28]	;Prefetch the next read location
+ 	ld.ab	r8, [r1,4]
+-	prefetchw [r3, 32]	;Prefetch the next write location
+ 
+ 	SHIFT_1	(r7, r6, 24)
+ 	or	r7, r7, r5
+@@ -162,9 +152,7 @@ ENTRY_CFI(memcpy)
+ 	lpnz	@.Lcopy8bytes_2
+ 	;; LOOP START
+ 	ld.ab	r6, [r1, 4]
+-	prefetch [r1, 28]	;Prefetch the next read location
+ 	ld.ab	r8, [r1,4]
+-	prefetchw [r3, 32]	;Prefetch the next write location
+ 
+ 	SHIFT_1	(r7, r6, 16)
+ 	or	r7, r7, r5
+@@ -204,9 +192,7 @@ ENTRY_CFI(memcpy)
+ 	lpnz	@.Lcopy8bytes_3
+ 	;; LOOP START
+ 	ld.ab	r6, [r1, 4]
+-	prefetch [r1, 28]	;Prefetch the next read location
+ 	ld.ab	r8, [r1,4]
+-	prefetchw [r3, 32]	;Prefetch the next write location
+ 
+ 	SHIFT_1	(r7, r6, 8)
+ 	or	r7, r7, r5
+-- 
+2.19.1
+
+
+
