@@ -3,104 +3,110 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C709FC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:25:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84B5EC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:26:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97238218D3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:25:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B510218D3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:26:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728753AbfCVOZu (ORCPT
+        id S1728810AbfCVO0n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 10:25:50 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:39509 "EHLO
+        Fri, 22 Mar 2019 10:26:43 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:51365 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728100AbfCVOZt (ORCPT
+        with ESMTP id S1728061AbfCVO0m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 10:25:49 -0400
+        Fri, 22 Mar 2019 10:26:42 -0400
 Received: from wuerfel.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MiIhU-1gT2oE0K5G-00fRHK; Fri, 22 Mar 2019 15:25:32 +0100
+ (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1McH1Q-1gZ7MZ0ZbA-00chgM; Fri, 22 Mar 2019 15:25:59 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     QLogic-Storage-Upstream@qlogic.com,
+To:     James Smart <james.smart@broadcom.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
         "James E.J. Bottomley" <jejb@linux.ibm.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     clang-built-linux@googlegroups.com,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Manish Rangankar <mrangankar@marvell.com>,
-        Chengguang Xu <cgxu519@gmx.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
+Cc:     Arnd Bergmann <arnd@arndb.de>, Hannes Reinecke <hare@suse.com>,
         linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] scsi: qla4xxx: avoid freeing unallocated dma memory
-Date:   Fri, 22 Mar 2019 15:25:03 +0100
-Message-Id: <20190322142530.904080-1-arnd@arndb.de>
+Subject: [PATCH] scsi: lpfc: avoid uninitialized variable warning
+Date:   Fri, 22 Mar 2019 15:25:49 +0100
+Message-Id: <20190322142557.929966-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:Ld3F0hrJatNfmdt2OFIuffWFZjGGDCNGuU01maFhBtmKx1JSAzs
- 82c5XuRHym71YmZa7ql7llyTlp8QOnW+1mNalywMdDJxRBXOffWVuLPI7Ggp0K7u4+XQrHS
- 4aXr/T9WVT8XdX669vcM2IAK5So35aKlRrtjkvibtd0AXLOZrsqTqZtG4JF6RKP/7GdMy1g
- kiZEJgOvUKaGpUQUOguMg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:CaVxR7jP4bQ=:3jhgTJyc6Qjfc/fcy/+yRp
- 5sw95f6gxXneMgCqtiXwQAskl+Oy610fVWXOYJYoBHE7bxPicUxwRgSROCjjLhTbZeMIMDn9N
- kOhyyXkV2yWy7Cmyu9kI79Sv5hRTyRR/79Juy7j7ys2r5nGkz50I/PSAoP72V+GF8x70OmRio
- Yl6FF0P1cAg3lT+XvMMT/W7elMf3t/rFWctV/s6XcrqxoUSJMyPn9jwyd7B+grir0vyZrDQnY
- B8YPGIrwCOYDX2uv+YDzSb/cO4BvbFoEwZnuigqAJcM8zMMni6eqYh8p7Zgq1zC+p4kq2AlIf
- BT5MjVgNN1XlG25x7EI3Pf3ub9ghXQaIpdVOVK76zKZaCffkV7KeLceAT1cKS0JhdmQrkJG0I
- 9ivg6VFrhyf8iEC40y2VJj2o2QjqhejmSaFCdvlTYYOpwLsHS6xch0RqyiSLecyzZ7N1jLEfu
- e335MZF+uFs47x+ogqw1lsmcMdyae79wtlx5iUvkYYQ2KV+zwt0zpa6cHBL7GeXQb3HP4NFr6
- z4eixQlPK1dA3uWo2pMV1PX6QF5eB1eeK2KyhiD7ynIW368Rvntuc/IhUMeub6/6VROA6Wu3i
- MoVNyGVI97tSmmCK63haWobnVb+cv9sGqxA+Emd4xySQ75MDdmATRjEkspdut2y41GxM7meRb
- O7lk+94zDhpFj/2SVDbkp78DHaebr8dUS+lG/I5+32d+sJEOI3aCFJf35FQhy84nsD1K0mtwH
- hmmykpOsu6CZjv/mUdcUsuv9NGTft/NqvpJvMw==
+X-Provags-ID: V03:K1:PGU9lVKj/dKXmiqHlrV8Bly73FjLI9kdmgn+Cziu7tOV08Qy6Ev
+ bxGqn4M0D7NkQhxZbGIBSOh3kb0D0dyd8ox1ZvRwR89OKiiodHUeod8pLCmGZ5ugw+AS7mz
+ V0KLOHxiZo3so2lWDA6LsALzA6EdoVW0KETNKzrzI6Ag8MvfN18MF28KSZvJ4jeRGQuK4AJ
+ TElZLVpn31dAeQKxdfTeA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:MVlH0d45pZk=:sI1gMV387Mc4/wy6tiGfV+
+ 5Gpgvlx5nuQLJmBewGdZNG8GTVNoPN/xleIqA0xs/IvmYq7ybEc0q8QokvFuCOS9Bls68sqjq
+ 4KFavIKumrPyawteq/dJqgUnciiZcV6HdzMt1MaRcnHdyOo4XRtBFrpq5BxcFlykRiqg5vpTp
+ kUDSLAIcSrDnMa9FkfWR77br0qdZdW2cetjFwKDFAVWo1H3jNp6iOxxXkIpTda1rY3DBcxk6h
+ 5D96uuEKMC4KDP/X1Izld5kznIAYLFBFxcYwBBNh0coDXN/t1xLgcnzXideaFmvwY66ywffpZ
+ bFzPWKUVHFMotUo/UAYeTeE2z6+HsxKP1hmatl8U3kTGMppJsCJz5RpXS+WVe0emGLzxUpMIV
+ TKOTFYJxZrX8sNMzsxNk52neksdHcHaAD+a0j2uHof0jwvaje8Bt0n9MF53e2Ue9VFSEmKnpt
+ iDNwEitR4bBs/+sKXMz6PqO3gunnVmemc6MjmVnyvO5/ZV8Fdw+skOzvdH2MMyNifecK2H349
+ pSrOiZIMw6mF3RRrZnsrONG+Gp3P8Jaml9rzlJwCLGhSdfvfjp9xu5awaEIUifiPUFHYOBBU2
+ UZ0StH9QjaU4lOKO55RdTZBWV9dCaE1mET2EMVMPFMKmZDR7N8B5mclJE1fQYM1sB36ZOkJYZ
+ Ug00Wpc8WgUTKTuJyGPsm4Un04AJYhR4AssaxPaahdwVHy6iFCZGXG6ici0qhkCDtIfqiX4MB
+ iAGzPk+zx3fFgcaEIYLhFdWIIut/FIddQduYhw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clang -Wuninitialized notices that on is_qla40XX we never allocate
-any DMA memory in get_fw_boot_info() but attempt to free it anyway:
+clang -Wuninitialized incorrectly sees a variable being used without
+initialization:
 
-drivers/scsi/qla4xxx/ql4_os.c:5915:7: error: variable 'buf_dma' is used uninitialized whenever 'if' condition is false
-      [-Werror,-Wsometimes-uninitialized]
-                if (!(val & 0x07)) {
-                    ^~~~~~~~~~~~~
-drivers/scsi/qla4xxx/ql4_os.c:5985:47: note: uninitialized use occurs here
-        dma_free_coherent(&ha->pdev->dev, size, buf, buf_dma);
-                                                     ^~~~~~~
-drivers/scsi/qla4xxx/ql4_os.c:5915:3: note: remove the 'if' if its condition is always true
-                if (!(val & 0x07)) {
-                ^~~~~~~~~~~~~~~~~~~
-drivers/scsi/qla4xxx/ql4_os.c:5885:20: note: initialize the variable 'buf_dma' to silence this warning
-        dma_addr_t buf_dma;
-                          ^
-                           = 0
+drivers/scsi/lpfc/lpfc_nvme.c:2102:37: error: variable 'localport' is uninitialized when used here
+      [-Werror,-Wuninitialized]
+                lport = (struct lpfc_nvme_lport *)localport->private;
+                                                  ^~~~~~~~~
+drivers/scsi/lpfc/lpfc_nvme.c:2059:38: note: initialize the variable 'localport' to silence this warning
+        struct nvme_fc_local_port *localport;
+                                            ^
+                                             = NULL
+1 error generated.
 
-Skip the call to dma_free_coherent() here.
+This is clearly in dead code, as the condition leading up to it is
+always false when CONFIG_NVME_FC is disabled, and the variable
+is always initialized when nvme_fc_register_localport() got
+called successfully.
 
-Fixes: 2a991c215978 ("[SCSI] qla4xxx: Boot from SAN support for open-iscsi")
+Change the preprocessor conditional to the equivalent C construct,
+which makes the code more readable and gets rid of the warning.
+
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/scsi/qla4xxx/ql4_os.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/lpfc/lpfc_nvme.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/scsi/qla4xxx/ql4_os.c b/drivers/scsi/qla4xxx/ql4_os.c
-index 16a18d5d856f..daa884fa43f4 100644
---- a/drivers/scsi/qla4xxx/ql4_os.c
-+++ b/drivers/scsi/qla4xxx/ql4_os.c
-@@ -5928,7 +5928,7 @@ static int get_fw_boot_info(struct scsi_qla_host *ha, uint16_t ddb_index[])
- 		val = rd_nvram_byte(ha, sec_addr);
- 		if (val & BIT_7)
- 			ddb_index[1] = (val & 0x7f);
--
-+		goto exit_boot_info;
- 	} else if (is_qla80XX(ha)) {
- 		buf = dma_alloc_coherent(&ha->pdev->dev, size,
- 					 &buf_dma, GFP_KERNEL);
+diff --git a/drivers/scsi/lpfc/lpfc_nvme.c b/drivers/scsi/lpfc/lpfc_nvme.c
+index 1aa00d2c3f74..9defff711884 100644
+--- a/drivers/scsi/lpfc/lpfc_nvme.c
++++ b/drivers/scsi/lpfc/lpfc_nvme.c
+@@ -2080,15 +2080,15 @@ lpfc_nvme_create_localport(struct lpfc_vport *vport)
+ 		lpfc_nvme_template.max_hw_queues =
+ 			phba->sli4_hba.num_present_cpu;
+ 
++	if (!IS_ENABLED(CONFIG_NVME_FC))
++		return ret;
++
+ 	/* localport is allocated from the stack, but the registration
+ 	 * call allocates heap memory as well as the private area.
+ 	 */
+-#if (IS_ENABLED(CONFIG_NVME_FC))
++
+ 	ret = nvme_fc_register_localport(&nfcp_info, &lpfc_nvme_template,
+ 					 &vport->phba->pcidev->dev, &localport);
+-#else
+-	ret = -ENOMEM;
+-#endif
+ 	if (!ret) {
+ 		lpfc_printf_vlog(vport, KERN_INFO, LOG_NVME | LOG_NVME_DISC,
+ 				 "6005 Successfully registered local "
 -- 
 2.20.0
 
