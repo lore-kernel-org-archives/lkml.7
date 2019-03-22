@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1B8CC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:45:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 395DAC10F03
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:45:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF4432070D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:45:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 090992070D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:45:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553258749;
-	bh=tj1newpMcM4JR3gdhMBwCHqpt1G+RfwUyDsV6rpVpX0=;
+	s=default; t=1553258753;
+	bh=xf6bnsBR3Du1gFx8HsgVfYsu1NALMO8S2VnRB4ZLLmk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CwAayUcNUdLhGYVRrde8W1ZxcnGxq4QilabVkw9oU7+zCXNEhj1pNtYNVdjv7Yoyq
-	 38yDTgDY/w246vjPdNjg23x3Hf9mN/YsNEkqYbVjY194hrQFJ6bB+F8JVonECJzQDm
-	 6crIpI9/J3zCHImPq2z+7u9u6TKKwZfYjzHFR50g=
+	b=0jFCizOcAMnLYW5jPJ47M27hAR9jG9aM5qxu6Qsf9P6QlANxfYvatTrBxu9D0udf4
+	 eWHVXQOx0yTfDWRGLRkGeStszsnV2AZgN+J/9C5jec9HTE9m/HDkmScoLAKpVRbPWm
+	 H9mjW8CM/2mDl+QSHumycmG3HrJFpq4VH600Leqw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388461AbfCVMps (ORCPT
+        id S2388041AbfCVMAG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:45:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39134 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:00:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37044 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388037AbfCVMBa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:01:30 -0400
+        id S2388015AbfCVL77 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:59:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93C7E2192D;
-        Fri, 22 Mar 2019 12:01:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D533921934;
+        Fri, 22 Mar 2019 11:59:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256089;
-        bh=tj1newpMcM4JR3gdhMBwCHqpt1G+RfwUyDsV6rpVpX0=;
+        s=default; t=1553255998;
+        bh=xf6bnsBR3Du1gFx8HsgVfYsu1NALMO8S2VnRB4ZLLmk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iYV/V4N+5EC/gS1IkHuPUFwGwk+hGO/cjUzOAcv6s0jqGxjyDVA8wReDJsRAnQXCc
-         H2QV8jA3vyXsgGZKffue+CVPgwmL18VnsCyWAxWG8SbffQVd9QVjS9E2uX+qld54LX
-         FVeS86wmTi0PzoI+71a2ci/asGfGKr8LGcrwCuxM=
+        b=KFEf57awHzGDfOsBwdBEL+yRJB6arp3WNUwm92YMlcCGESRfVostyENa/XpCiynSQ
+         11n8/NHwmD/MuPmJbw4b3Fk4ycYF36bbdKb3PGVMEqbH/8uJkSoW92+/HndoaG14rh
+         KI+92AuOBlGPaR8EfJHtXmnb8FAl7tojrr+G2b80=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        stable@vger.kernel.org, Anoob Soman <anoob.soman@citrix.com>,
+        Bob Liu <bob.liu@oracle.com>, Lee Duncan <lduncan@suse.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 089/280] ARM: dts: armada-xp: fix Armada XP boards NAND description
-Date:   Fri, 22 Mar 2019 12:14:02 +0100
-Message-Id: <20190322111311.470883480@linuxfoundation.org>
+Subject: [PATCH 4.19 078/280] scsi: libiscsi: Fix race between iscsi_xmit_task and iscsi_complete_task
+Date:   Fri, 22 Mar 2019 12:13:51 +0100
+Message-Id: <20190322111310.755016174@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -67,212 +67,107 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 6fc979179c98d2591784937d5618edc3e5cd31c1 ]
+[ Upstream commit 79edd00dc6a96644d76b4a1cb97d94d49e026768 ]
 
-Commit 3b79919946cd2cf4dac47842afc9a893acec4ed7 ("ARM: dts:
-armada-370-xp: update NAND node with new bindings") updated some
-Marvell Armada DT description to use the new NAND controller bindings,
-but did it incorrectly for a number of boards: armada-xp-gp,
-armada-xp-db and armada-xp-lenovo-ix4-300d. Due to this, the NAND is
-no longer detected on those platforms.
+When a target sends Check Condition, whilst initiator is busy xmiting
+re-queued data, could lead to race between iscsi_complete_task() and
+iscsi_xmit_task() and eventually crashing with the following kernel
+backtrace.
 
-This commit fixes that by properly using the new NAND DT binding. This
-commit was runtime-tested on Armada XP GP, the two other platforms are
-only compile-tested.
+[3326150.987523] ALERT: BUG: unable to handle kernel NULL pointer dereference at 0000000000000078
+[3326150.987549] ALERT: IP: [<ffffffffa05ce70d>] iscsi_xmit_task+0x2d/0xc0 [libiscsi]
+[3326150.987571] WARN: PGD 569c8067 PUD 569c9067 PMD 0
+[3326150.987582] WARN: Oops: 0002 [#1] SMP
+[3326150.987593] WARN: Modules linked in: tun nfsv3 nfs fscache dm_round_robin
+[3326150.987762] WARN: CPU: 2 PID: 8399 Comm: kworker/u32:1 Tainted: G O 4.4.0+2 #1
+[3326150.987774] WARN: Hardware name: Dell Inc. PowerEdge R720/0W7JN5, BIOS 2.5.4 01/22/2016
+[3326150.987790] WARN: Workqueue: iscsi_q_13 iscsi_xmitworker [libiscsi]
+[3326150.987799] WARN: task: ffff8801d50f3800 ti: ffff8801f5458000 task.ti: ffff8801f5458000
+[3326150.987810] WARN: RIP: e030:[<ffffffffa05ce70d>] [<ffffffffa05ce70d>] iscsi_xmit_task+0x2d/0xc0 [libiscsi]
+[3326150.987825] WARN: RSP: e02b:ffff8801f545bdb0 EFLAGS: 00010246
+[3326150.987831] WARN: RAX: 00000000ffffffc3 RBX: ffff880282d2ab20 RCX: ffff88026b6ac480
+[3326150.987842] WARN: RDX: 0000000000000000 RSI: 00000000fffffe01 RDI: ffff880282d2ab20
+[3326150.987852] WARN: RBP: ffff8801f545bdc8 R08: 0000000000000000 R09: 0000000000000008
+[3326150.987862] WARN: R10: 0000000000000000 R11: 000000000000fe88 R12: 0000000000000000
+[3326150.987872] WARN: R13: ffff880282d2abe8 R14: ffff880282d2abd8 R15: ffff880282d2ac08
+[3326150.987890] WARN: FS: 00007f5a866b4840(0000) GS:ffff88028a640000(0000) knlGS:0000000000000000
+[3326150.987900] WARN: CS: e033 DS: 0000 ES: 0000 CR0: 0000000080050033
+[3326150.987907] WARN: CR2: 0000000000000078 CR3: 0000000070244000 CR4: 0000000000042660
+[3326150.987918] WARN: Stack:
+[3326150.987924] WARN: ffff880282d2ad58 ffff880282d2ab20 ffff880282d2abe8 ffff8801f545be18
+[3326150.987938] WARN: ffffffffa05cea90 ffff880282d2abf8 ffff88026b59cc80 ffff88026b59cc00
+[3326150.987951] WARN: ffff88022acf32c0 ffff880289491800 ffff880255a80800 0000000000000400
+[3326150.987964] WARN: Call Trace:
+[3326150.987975] WARN: [<ffffffffa05cea90>] iscsi_xmitworker+0x2f0/0x360 [libiscsi]
+[3326150.987988] WARN: [<ffffffff8108862c>] process_one_work+0x1fc/0x3b0
+[3326150.987997] WARN: [<ffffffff81088f95>] worker_thread+0x2a5/0x470
+[3326150.988006] WARN: [<ffffffff8159cad8>] ? __schedule+0x648/0x870
+[3326150.988015] WARN: [<ffffffff81088cf0>] ? rescuer_thread+0x300/0x300
+[3326150.988023] WARN: [<ffffffff8108ddf5>] kthread+0xd5/0xe0
+[3326150.988031] WARN: [<ffffffff8108dd20>] ? kthread_stop+0x110/0x110
+[3326150.988040] WARN: [<ffffffff815a0bcf>] ret_from_fork+0x3f/0x70
+[3326150.988048] WARN: [<ffffffff8108dd20>] ? kthread_stop+0x110/0x110
+[3326150.988127] ALERT: RIP [<ffffffffa05ce70d>] iscsi_xmit_task+0x2d/0xc0 [libiscsi]
+[3326150.988138] WARN: RSP <ffff8801f545bdb0>
+[3326150.988144] WARN: CR2: 0000000000000078
+[3326151.020366] WARN: ---[ end trace 1c60974d4678d81b ]---
 
-Fixes: 3b79919946cd2 ("ARM: dts: armada-370-xp: update NAND node with new bindings")
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+Commit 6f8830f5bbab ("scsi: libiscsi: add lock around task lists to fix
+list corruption regression") introduced "taskqueuelock" to fix list
+corruption during the race, but this wasn't enough.
+
+Re-setting of conn->task to NULL, could race with iscsi_xmit_task().
+iscsi_complete_task()
+{
+    ....
+    if (conn->task == task)
+        conn->task = NULL;
+}
+
+conn->task in iscsi_xmit_task() could be NULL and so will be task.
+__iscsi_get_task(task) will crash (NullPtr de-ref), trying to access
+refcount.
+
+iscsi_xmit_task()
+{
+    struct iscsi_task *task = conn->task;
+
+    __iscsi_get_task(task);
+}
+
+This commit will take extra conn->session->back_lock in iscsi_xmit_task()
+to ensure iscsi_xmit_task() waits for iscsi_complete_task(), if
+iscsi_complete_task() wins the race.  If iscsi_xmit_task() wins the race,
+iscsi_xmit_task() increments task->refcount
+(__iscsi_get_task) ensuring iscsi_complete_task() will not iscsi_free_task().
+
+Signed-off-by: Anoob Soman <anoob.soman@citrix.com>
+Signed-off-by: Bob Liu <bob.liu@oracle.com>
+Acked-by: Lee Duncan <lduncan@suse.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/armada-xp-db.dts            | 46 +++++-----
- arch/arm/boot/dts/armada-xp-gp.dts            | 13 +--
- .../boot/dts/armada-xp-lenovo-ix4-300d.dts    | 85 ++++++++++---------
- 3 files changed, 76 insertions(+), 68 deletions(-)
+ drivers/scsi/libiscsi.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm/boot/dts/armada-xp-db.dts b/arch/arm/boot/dts/armada-xp-db.dts
-index f3ac7483afed..5d04dc68cf57 100644
---- a/arch/arm/boot/dts/armada-xp-db.dts
-+++ b/arch/arm/boot/dts/armada-xp-db.dts
-@@ -144,30 +144,32 @@
- 				status = "okay";
- 			};
+diff --git a/drivers/scsi/libiscsi.c b/drivers/scsi/libiscsi.c
+index f78d2e5c1471..4ad61cfa69c0 100644
+--- a/drivers/scsi/libiscsi.c
++++ b/drivers/scsi/libiscsi.c
+@@ -1449,7 +1449,13 @@ static int iscsi_xmit_task(struct iscsi_conn *conn)
+ 	if (test_bit(ISCSI_SUSPEND_BIT, &conn->suspend_tx))
+ 		return -ENODATA;
  
--			nand@d0000 {
-+			nand-controller@d0000 {
- 				status = "okay";
--				label = "pxa3xx_nand-0";
--				num-cs = <1>;
--				marvell,nand-keep-config;
--				nand-on-flash-bbt;
--
--				partitions {
--					compatible = "fixed-partitions";
--					#address-cells = <1>;
--					#size-cells = <1>;
--
--					partition@0 {
--						label = "U-Boot";
--						reg = <0 0x800000>;
--					};
--					partition@800000 {
--						label = "Linux";
--						reg = <0x800000 0x800000>;
--					};
--					partition@1000000 {
--						label = "Filesystem";
--						reg = <0x1000000 0x3f000000>;
- 
-+				nand@0 {
-+					reg = <0>;
-+					label = "pxa3xx_nand-0";
-+					nand-rb = <0>;
-+					nand-on-flash-bbt;
-+
-+					partitions {
-+						compatible = "fixed-partitions";
-+						#address-cells = <1>;
-+						#size-cells = <1>;
-+
-+						partition@0 {
-+							label = "U-Boot";
-+							reg = <0 0x800000>;
-+						};
-+						partition@800000 {
-+							label = "Linux";
-+							reg = <0x800000 0x800000>;
-+						};
-+						partition@1000000 {
-+							label = "Filesystem";
-+							reg = <0x1000000 0x3f000000>;
-+						};
- 					};
- 				};
- 			};
-diff --git a/arch/arm/boot/dts/armada-xp-gp.dts b/arch/arm/boot/dts/armada-xp-gp.dts
-index 1139e9469a83..b4cca507cf13 100644
---- a/arch/arm/boot/dts/armada-xp-gp.dts
-+++ b/arch/arm/boot/dts/armada-xp-gp.dts
-@@ -160,12 +160,15 @@
- 				status = "okay";
- 			};
- 
--			nand@d0000 {
-+			nand-controller@d0000 {
- 				status = "okay";
--				label = "pxa3xx_nand-0";
--				num-cs = <1>;
--				marvell,nand-keep-config;
--				nand-on-flash-bbt;
-+
-+				nand@0 {
-+					reg = <0>;
-+					label = "pxa3xx_nand-0";
-+					nand-rb = <0>;
-+					nand-on-flash-bbt;
-+				};
- 			};
- 		};
- 
-diff --git a/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts b/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts
-index bbbb38888bb8..87dcb502f72d 100644
---- a/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts
-+++ b/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts
-@@ -81,49 +81,52 @@
- 
- 			};
- 
--			nand@d0000 {
-+			nand-controller@d0000 {
- 				status = "okay";
--				label = "pxa3xx_nand-0";
--				num-cs = <1>;
--				marvell,nand-keep-config;
--				nand-on-flash-bbt;
--
--				partitions {
--					compatible = "fixed-partitions";
--					#address-cells = <1>;
--					#size-cells = <1>;
--
--					partition@0 {
--						label = "u-boot";
--						reg = <0x00000000 0x000e0000>;
--						read-only;
--					};
--
--					partition@e0000 {
--						label = "u-boot-env";
--						reg = <0x000e0000 0x00020000>;
--						read-only;
--					};
--
--					partition@100000 {
--						label = "u-boot-env2";
--						reg = <0x00100000 0x00020000>;
--						read-only;
--					};
--
--					partition@120000 {
--						label = "zImage";
--						reg = <0x00120000 0x00400000>;
--					};
--
--					partition@520000 {
--						label = "initrd";
--						reg = <0x00520000 0x00400000>;
--					};
- 
--					partition@e00000 {
--						label = "boot";
--						reg = <0x00e00000 0x3f200000>;
-+				nand@0 {
-+					reg = <0>;
-+					label = "pxa3xx_nand-0";
-+					nand-rb = <0>;
-+					nand-on-flash-bbt;
-+
-+					partitions {
-+						compatible = "fixed-partitions";
-+						#address-cells = <1>;
-+						#size-cells = <1>;
-+
-+						partition@0 {
-+							label = "u-boot";
-+							reg = <0x00000000 0x000e0000>;
-+							read-only;
-+						};
-+
-+						partition@e0000 {
-+							label = "u-boot-env";
-+							reg = <0x000e0000 0x00020000>;
-+							read-only;
-+						};
-+
-+						partition@100000 {
-+							label = "u-boot-env2";
-+							reg = <0x00100000 0x00020000>;
-+							read-only;
-+						};
-+
-+						partition@120000 {
-+							label = "zImage";
-+							reg = <0x00120000 0x00400000>;
-+						};
-+
-+						partition@520000 {
-+							label = "initrd";
-+							reg = <0x00520000 0x00400000>;
-+						};
-+
-+						partition@e00000 {
-+							label = "boot";
-+							reg = <0x00e00000 0x3f200000>;
-+						};
- 					};
- 				};
- 			};
++	spin_lock_bh(&conn->session->back_lock);
++	if (conn->task == NULL) {
++		spin_unlock_bh(&conn->session->back_lock);
++		return -ENODATA;
++	}
+ 	__iscsi_get_task(task);
++	spin_unlock_bh(&conn->session->back_lock);
+ 	spin_unlock_bh(&conn->session->frwd_lock);
+ 	rc = conn->session->tt->xmit_task(task);
+ 	spin_lock_bh(&conn->session->frwd_lock);
 -- 
 2.19.1
 
