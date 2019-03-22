@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-12.0 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F753C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:38:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37975C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:39:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9276218D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:38:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0541F218D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:39:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728231AbfCVWid (ORCPT
+        id S1728297AbfCVWjM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 18:38:33 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:52945 "EHLO
+        Fri, 22 Mar 2019 18:39:12 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:55711 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726056AbfCVWic (ORCPT
+        with ESMTP id S1727906AbfCVWjM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 18:38:32 -0400
+        Fri, 22 Mar 2019 18:39:12 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x2MMbwaL754821
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x2MMcZkr754891
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Fri, 22 Mar 2019 15:37:58 -0700
+        Fri, 22 Mar 2019 15:38:35 -0700
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x2MMbub9754813;
-        Fri, 22 Mar 2019 15:37:56 -0700
-Date:   Fri, 22 Mar 2019 15:37:56 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x2MMcZVt754884;
+        Fri, 22 Mar 2019 15:38:35 -0700
+Date:   Fri, 22 Mar 2019 15:38:35 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Song Liu <tipbot@zytor.com>
-Message-ID: <tip-e5416950454fa79b7bdc86dac45661b97d887c97@git.kernel.org>
-Cc:     jolsa@kernel.org, acme@redhat.com, mingo@kernel.org,
-        peterz@infradead.org, sdf@google.com, songliubraving@fb.com,
-        namhyung@kernel.org, hpa@zytor.com, linux-kernel@vger.kernel.org,
-        daniel@iogearbox.net, tglx@linutronix.de, ast@kernel.org
-Reply-To: ast@kernel.org, hpa@zytor.com, namhyung@kernel.org,
-          tglx@linutronix.de, daniel@iogearbox.net, songliubraving@fb.com,
-          sdf@google.com, linux-kernel@vger.kernel.org,
-          peterz@infradead.org, mingo@kernel.org, acme@redhat.com,
-          jolsa@kernel.org
-In-Reply-To: <20190312053051.2690567-6-songliubraving@fb.com>
-References: <20190312053051.2690567-6-songliubraving@fb.com>
+Message-ID: <tip-e4378f0cb90be0368c48baad69a99203c58e3196@git.kernel.org>
+Cc:     sdf@google.com, daniel@iogearbox.net, mingo@kernel.org,
+        tglx@linutronix.de, linux-kernel@vger.kernel.org, jolsa@kernel.org,
+        ast@kernel.org, acme@redhat.com, hpa@zytor.com,
+        songliubraving@fb.com, namhyung@kernel.org, peterz@infradead.org
+Reply-To: mingo@kernel.org, daniel@iogearbox.net, ast@kernel.org,
+          jolsa@kernel.org, sdf@google.com, linux-kernel@vger.kernel.org,
+          peterz@infradead.org, namhyung@kernel.org, acme@redhat.com,
+          hpa@zytor.com, tglx@linutronix.de, songliubraving@fb.com
+In-Reply-To: <20190312053051.2690567-7-songliubraving@fb.com>
+References: <20190312053051.2690567-7-songliubraving@fb.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/urgent] perf bpf: Make synthesize_bpf_events() receive
- perf_session pointer instead of perf_tool
-Git-Commit-ID: e5416950454fa79b7bdc86dac45661b97d887c97
+Subject: [tip:perf/urgent] perf bpf: Save bpf_prog_info in a rbtree in
+ perf_env
+Git-Commit-ID: e4378f0cb90be0368c48baad69a99203c58e3196
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -60,18 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  e5416950454fa79b7bdc86dac45661b97d887c97
-Gitweb:     https://git.kernel.org/tip/e5416950454fa79b7bdc86dac45661b97d887c97
+Commit-ID:  e4378f0cb90be0368c48baad69a99203c58e3196
+Gitweb:     https://git.kernel.org/tip/e4378f0cb90be0368c48baad69a99203c58e3196
 Author:     Song Liu <songliubraving@fb.com>
-AuthorDate: Mon, 11 Mar 2019 22:30:41 -0700
+AuthorDate: Mon, 11 Mar 2019 22:30:42 -0700
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitDate: Tue, 19 Mar 2019 16:52:06 -0300
 
-perf bpf: Make synthesize_bpf_events() receive perf_session pointer instead of perf_tool
+perf bpf: Save bpf_prog_info in a rbtree in perf_env
 
-This patch changes the arguments of perf_event__synthesize_bpf_events()
-to include perf_session* instead of perf_tool*. perf_session will be
-used in the next patch.
+bpf_prog_info contains information necessary to annotate bpf programs.
+
+This patch saves bpf_prog_info for bpf programs loaded in the system.
+
+Some big picture of the next few patches:
+
+To fully annotate BPF programs with source code mapping, 4 different
+informations are needed:
+
+    1) PERF_RECORD_KSYMBOL
+    2) PERF_RECORD_BPF_EVENT
+    3) bpf_prog_info
+    4) btf
+
+Before this set, 1) and 2) in the list are already saved to perf.data
+file. For BPF programs that are already loaded before perf run, 1) and 2)
+are synthesized by perf_event__synthesize_bpf_events(). For short living
+BPF programs, 1) and 2) are generated by kernel.
+
+This set handles 3) and 4) from the list. Again, it is necessary to handle
+existing BPF program and short living program separately.
+
+This patch handles 3) for exising BPF programs while synthesizing 1) and
+2) in perf_event__synthesize_bpf_events(). These data are stored in
+perf_env. The next patch saves these data from perf_env to perf.data as
+headers.
+
+Similarly, the two patches after the next saves 4) of existing BPF
+programs to perf_env and perf.data.
+
+Another patch later will handle 3) and 4) for short living BPF programs
+by monitoring 1) and 2) in a dedicate thread.
 
 Signed-off-by: Song Liu <songliubraving@fb.com>
 Reviewed-by: Jiri Olsa <jolsa@kernel.org>
@@ -81,107 +109,298 @@ Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Stanislav Fomichev <sdf@google.com>
 Cc: kernel-team@fb.com
-Link: http://lkml.kernel.org/r/20190312053051.2690567-6-songliubraving@fb.com
+Link: http://lkml.kernel.org/r/20190312053051.2690567-7-songliubraving@fb.com
+[ set env->bpf_progs.infos_cnt to zero in perf_env__purge_bpf() as noted by jolsa ]
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-record.c | 2 +-
- tools/perf/builtin-top.c    | 2 +-
- tools/perf/util/bpf-event.c | 8 +++++---
- tools/perf/util/bpf-event.h | 4 ++--
- 4 files changed, 9 insertions(+), 7 deletions(-)
+ tools/perf/perf.c           |  1 +
+ tools/perf/util/bpf-event.c | 30 +++++++++++++++-
+ tools/perf/util/bpf-event.h |  7 +++-
+ tools/perf/util/env.c       | 88 +++++++++++++++++++++++++++++++++++++++++++++
+ tools/perf/util/env.h       | 19 ++++++++++
+ tools/perf/util/session.c   |  1 +
+ 6 files changed, 144 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index f29874192d3e..e79faccd7842 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -1114,7 +1114,7 @@ static int record__synthesize(struct record *rec, bool tail)
- 		return err;
- 	}
+diff --git a/tools/perf/perf.c b/tools/perf/perf.c
+index a11cb006f968..72df4b6fa36f 100644
+--- a/tools/perf/perf.c
++++ b/tools/perf/perf.c
+@@ -298,6 +298,7 @@ static int run_builtin(struct cmd_struct *p, int argc, const char **argv)
+ 		use_pager = 1;
+ 	commit_pager_choice();
  
--	err = perf_event__synthesize_bpf_events(tool, process_synthesized_event,
-+	err = perf_event__synthesize_bpf_events(session, process_synthesized_event,
- 						machine, opts);
- 	if (err < 0)
- 		pr_warning("Couldn't synthesize bpf events.\n");
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index 2508a7a552fa..77e6190211d2 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -1208,7 +1208,7 @@ static int __cmd_top(struct perf_top *top)
- 
- 	init_process_thread(top);
- 
--	ret = perf_event__synthesize_bpf_events(&top->tool, perf_event__process,
-+	ret = perf_event__synthesize_bpf_events(top->session, perf_event__process,
- 						&top->session->machines.host,
- 						&top->record_opts);
- 	if (ret < 0)
++	perf_env__init(&perf_env);
+ 	perf_env__set_cmdline(&perf_env, argc, argv);
+ 	status = p->fn(argc, argv);
+ 	perf_config__exit();
 diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
-index e0cbe7f87170..5237e8f11997 100644
+index 5237e8f11997..37ee4e2a728a 100644
 --- a/tools/perf/util/bpf-event.c
 +++ b/tools/perf/util/bpf-event.c
 @@ -10,6 +10,7 @@
  #include "debug.h"
  #include "symbol.h"
  #include "machine.h"
-+#include "session.h"
++#include "env.h"
+ #include "session.h"
  
  #define ptr_to_u64(ptr)    ((__u64)(unsigned long)(ptr))
- 
-@@ -42,7 +43,7 @@ int machine__process_bpf_event(struct machine *machine __maybe_unused,
-  *   -1 for failures;
-  *   -2 for lack of kernel support.
-  */
--static int perf_event__synthesize_one_bpf_prog(struct perf_tool *tool,
-+static int perf_event__synthesize_one_bpf_prog(struct perf_session *session,
- 					       perf_event__handler_t process,
- 					       struct machine *machine,
- 					       int fd,
-@@ -52,6 +53,7 @@ static int perf_event__synthesize_one_bpf_prog(struct perf_tool *tool,
- 	struct ksymbol_event *ksymbol_event = &event->ksymbol_event;
+@@ -54,17 +55,28 @@ static int perf_event__synthesize_one_bpf_prog(struct perf_session *session,
  	struct bpf_event *bpf_event = &event->bpf_event;
  	struct bpf_prog_info_linear *info_linear;
-+	struct perf_tool *tool = session->tool;
+ 	struct perf_tool *tool = session->tool;
++	struct bpf_prog_info_node *info_node;
  	struct bpf_prog_info *info;
  	struct btf *btf = NULL;
  	bool has_btf = false;
-@@ -175,7 +177,7 @@ out:
- 	return err ? -1 : 0;
- }
++	struct perf_env *env;
+ 	u32 sub_prog_cnt, i;
+ 	int err = 0;
+ 	u64 arrays;
  
--int perf_event__synthesize_bpf_events(struct perf_tool *tool,
-+int perf_event__synthesize_bpf_events(struct perf_session *session,
- 				      perf_event__handler_t process,
- 				      struct machine *machine,
- 				      struct record_opts *opts)
-@@ -209,7 +211,7 @@ int perf_event__synthesize_bpf_events(struct perf_tool *tool,
- 			continue;
- 		}
++	/*
++	 * for perf-record and perf-report use header.env;
++	 * otherwise, use global perf_env.
++	 */
++	env = session->data ? &session->header.env : &perf_env;
++
+ 	arrays = 1UL << BPF_PROG_INFO_JITED_KSYMS;
+ 	arrays |= 1UL << BPF_PROG_INFO_JITED_FUNC_LENS;
+ 	arrays |= 1UL << BPF_PROG_INFO_FUNC_INFO;
+ 	arrays |= 1UL << BPF_PROG_INFO_PROG_TAGS;
++	arrays |= 1UL << BPF_PROG_INFO_JITED_INSNS;
++	arrays |= 1UL << BPF_PROG_INFO_LINE_INFO;
++	arrays |= 1UL << BPF_PROG_INFO_JITED_LINE_INFO;
  
--		err = perf_event__synthesize_one_bpf_prog(tool, process,
-+		err = perf_event__synthesize_one_bpf_prog(session, process,
- 							  machine, fd,
- 							  event, opts);
- 		close(fd);
+ 	info_linear = bpf_program__get_prog_info_linear(fd, arrays);
+ 	if (IS_ERR_OR_NULL(info_linear)) {
+@@ -153,8 +165,8 @@ static int perf_event__synthesize_one_bpf_prog(struct perf_session *session,
+ 						     machine, process);
+ 	}
+ 
+-	/* Synthesize PERF_RECORD_BPF_EVENT */
+ 	if (!opts->no_bpf_event) {
++		/* Synthesize PERF_RECORD_BPF_EVENT */
+ 		*bpf_event = (struct bpf_event){
+ 			.header = {
+ 				.type = PERF_RECORD_BPF_EVENT,
+@@ -167,6 +179,22 @@ static int perf_event__synthesize_one_bpf_prog(struct perf_session *session,
+ 		memcpy(bpf_event->tag, info->tag, BPF_TAG_SIZE);
+ 		memset((void *)event + event->header.size, 0, machine->id_hdr_size);
+ 		event->header.size += machine->id_hdr_size;
++
++		/* save bpf_prog_info to env */
++		info_node = malloc(sizeof(struct bpf_prog_info_node));
++		if (!info_node) {
++			err = -1;
++			goto out;
++		}
++
++		info_node->info_linear = info_linear;
++		perf_env__insert_bpf_prog_info(env, info_node);
++		info_linear = NULL;
++
++		/*
++		 * process after saving bpf_prog_info to env, so that
++		 * required information is ready for look up
++		 */
+ 		err = perf_tool__process_synth_event(tool, event,
+ 						     machine, process);
+ 	}
 diff --git a/tools/perf/util/bpf-event.h b/tools/perf/util/bpf-event.h
-index 7890067e1a37..6698683612a7 100644
+index 6698683612a7..fad932f7404f 100644
 --- a/tools/perf/util/bpf-event.h
 +++ b/tools/perf/util/bpf-event.h
-@@ -15,7 +15,7 @@ struct record_opts;
+@@ -3,14 +3,19 @@
+ #define __PERF_BPF_EVENT_H
+ 
+ #include <linux/compiler.h>
++#include <linux/rbtree.h>
+ #include "event.h"
+ 
+ struct machine;
+ union perf_event;
+ struct perf_sample;
+-struct perf_tool;
+ struct record_opts;
+ 
++struct bpf_prog_info_node {
++	struct bpf_prog_info_linear	*info_linear;
++	struct rb_node			rb_node;
++};
++
+ #ifdef HAVE_LIBBPF_SUPPORT
  int machine__process_bpf_event(struct machine *machine, union perf_event *event,
  			       struct perf_sample *sample);
+diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
+index 4c23779e271a..98cd36f0e317 100644
+--- a/tools/perf/util/env.c
++++ b/tools/perf/util/env.c
+@@ -3,15 +3,97 @@
+ #include "env.h"
+ #include "sane_ctype.h"
+ #include "util.h"
++#include "bpf-event.h"
+ #include <errno.h>
+ #include <sys/utsname.h>
++#include <bpf/libbpf.h>
  
--int perf_event__synthesize_bpf_events(struct perf_tool *tool,
-+int perf_event__synthesize_bpf_events(struct perf_session *session,
- 				      perf_event__handler_t process,
- 				      struct machine *machine,
- 				      struct record_opts *opts);
-@@ -27,7 +27,7 @@ static inline int machine__process_bpf_event(struct machine *machine __maybe_unu
- 	return 0;
+ struct perf_env perf_env;
+ 
++void perf_env__insert_bpf_prog_info(struct perf_env *env,
++				    struct bpf_prog_info_node *info_node)
++{
++	__u32 prog_id = info_node->info_linear->info.id;
++	struct bpf_prog_info_node *node;
++	struct rb_node *parent = NULL;
++	struct rb_node **p;
++
++	down_write(&env->bpf_progs.lock);
++	p = &env->bpf_progs.infos.rb_node;
++
++	while (*p != NULL) {
++		parent = *p;
++		node = rb_entry(parent, struct bpf_prog_info_node, rb_node);
++		if (prog_id < node->info_linear->info.id) {
++			p = &(*p)->rb_left;
++		} else if (prog_id > node->info_linear->info.id) {
++			p = &(*p)->rb_right;
++		} else {
++			pr_debug("duplicated bpf prog info %u\n", prog_id);
++			goto out;
++		}
++	}
++
++	rb_link_node(&info_node->rb_node, parent, p);
++	rb_insert_color(&info_node->rb_node, &env->bpf_progs.infos);
++	env->bpf_progs.infos_cnt++;
++out:
++	up_write(&env->bpf_progs.lock);
++}
++
++struct bpf_prog_info_node *perf_env__find_bpf_prog_info(struct perf_env *env,
++							__u32 prog_id)
++{
++	struct bpf_prog_info_node *node = NULL;
++	struct rb_node *n;
++
++	down_read(&env->bpf_progs.lock);
++	n = env->bpf_progs.infos.rb_node;
++
++	while (n) {
++		node = rb_entry(n, struct bpf_prog_info_node, rb_node);
++		if (prog_id < node->info_linear->info.id)
++			n = n->rb_left;
++		else if (prog_id > node->info_linear->info.id)
++			n = n->rb_right;
++		else
++			break;
++	}
++
++	up_read(&env->bpf_progs.lock);
++	return node;
++}
++
++/* purge data in bpf_progs.infos tree */
++static void perf_env__purge_bpf(struct perf_env *env)
++{
++	struct rb_root *root;
++	struct rb_node *next;
++
++	down_write(&env->bpf_progs.lock);
++
++	root = &env->bpf_progs.infos;
++	next = rb_first(root);
++
++	while (next) {
++		struct bpf_prog_info_node *node;
++
++		node = rb_entry(next, struct bpf_prog_info_node, rb_node);
++		next = rb_next(&node->rb_node);
++		rb_erase(&node->rb_node, root);
++		free(node);
++	}
++
++	env->bpf_progs.infos_cnt = 0;
++
++	up_write(&env->bpf_progs.lock);
++}
++
+ void perf_env__exit(struct perf_env *env)
+ {
+ 	int i;
+ 
++	perf_env__purge_bpf(env);
+ 	zfree(&env->hostname);
+ 	zfree(&env->os_release);
+ 	zfree(&env->version);
+@@ -38,6 +120,12 @@ void perf_env__exit(struct perf_env *env)
+ 	zfree(&env->memory_nodes);
  }
  
--static inline int perf_event__synthesize_bpf_events(struct perf_tool *tool __maybe_unused,
-+static inline int perf_event__synthesize_bpf_events(struct perf_session *session __maybe_unused,
- 						    perf_event__handler_t process __maybe_unused,
- 						    struct machine *machine __maybe_unused,
- 						    struct record_opts *opts __maybe_unused)
++void perf_env__init(struct perf_env *env)
++{
++	env->bpf_progs.infos = RB_ROOT;
++	init_rwsem(&env->bpf_progs.lock);
++}
++
+ int perf_env__set_cmdline(struct perf_env *env, int argc, const char *argv[])
+ {
+ 	int i;
+diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
+index d01b8355f4ca..24b11c564ba4 100644
+--- a/tools/perf/util/env.h
++++ b/tools/perf/util/env.h
+@@ -3,7 +3,9 @@
+ #define __PERF_ENV_H
+ 
+ #include <linux/types.h>
++#include <linux/rbtree.h>
+ #include "cpumap.h"
++#include "rwsem.h"
+ 
+ struct cpu_topology_map {
+ 	int	socket_id;
+@@ -64,8 +66,20 @@ struct perf_env {
+ 	struct memory_node	*memory_nodes;
+ 	unsigned long long	 memory_bsize;
+ 	u64                     clockid_res_ns;
++
++	/*
++	 * bpf_info_lock protects bpf rbtrees. This is needed because the
++	 * trees are accessed by different threads in perf-top
++	 */
++	struct {
++		struct rw_semaphore	lock;
++		struct rb_root		infos;
++		u32			infos_cnt;
++	} bpf_progs;
+ };
+ 
++struct bpf_prog_info_node;
++
+ extern struct perf_env perf_env;
+ 
+ void perf_env__exit(struct perf_env *env);
+@@ -80,4 +94,9 @@ const char *perf_env__arch(struct perf_env *env);
+ const char *perf_env__raw_arch(struct perf_env *env);
+ int perf_env__nr_cpus_avail(struct perf_env *env);
+ 
++void perf_env__init(struct perf_env *env);
++void perf_env__insert_bpf_prog_info(struct perf_env *env,
++				    struct bpf_prog_info_node *info_node);
++struct bpf_prog_info_node *perf_env__find_bpf_prog_info(struct perf_env *env,
++							__u32 prog_id);
+ #endif /* __PERF_ENV_H */
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index 0ec34227bd60..b17f1c9bc965 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -132,6 +132,7 @@ struct perf_session *perf_session__new(struct perf_data *data,
+ 	ordered_events__init(&session->ordered_events,
+ 			     ordered_events__deliver_event, NULL);
+ 
++	perf_env__init(&session->header.env);
+ 	if (data) {
+ 		if (perf_data__open(data))
+ 			goto out_delete;
