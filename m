@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 551A3C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:31:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6ED7C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:31:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2651B2054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:31:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61FE62054F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:31:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553257860;
-	bh=Hx0bkBdvuhlnnCiHmrgqAIyv2QbbSqanMWsD7GZ2mmM=;
+	s=default; t=1553257868;
+	bh=98K35g9c2xarOfvm1FDLEJI3S3EZR9qLgmJocNaIwhU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mEKF7YYPiPb7xFKDaDcA98DV8RwDogtraz58gKd+oRxKbpZTiq3T4R2W9byD/jXKO
-	 vSXGPLn1IFdY79bF04F3ZVa8MrDssBT0sLFvtToDR23VL8rtn8prUKH8x5Xb5A7xPE
-	 NaJO+fvVfRqIsxmnbJwkPyArC1yuTG4x0ETmgvEY=
+	b=Nj9WQg5twBihkskZUX3xSHUVB106NRrI7dYdKqVIOCIsOE5IVTdWnkKNVJA+56/nX
+	 ugqLmUhOumi/cc4wz11mhp3hxwjdU5Fb113YgAHohaUu35s1hFVNLtXcefKiXA8Lj5
+	 cqMXmI5RiC48E0wFriUECvadh+MKngp4qjWEXAwo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390431AbfCVMRy (ORCPT
+        id S2390571AbfCVMbH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:17:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56752 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:31:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389940AbfCVMRu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:17:50 -0400
+        id S2390160AbfCVMRj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:17:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4693B2082C;
-        Fri, 22 Mar 2019 12:17:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF86621900;
+        Fri, 22 Mar 2019 12:17:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553257069;
-        bh=Hx0bkBdvuhlnnCiHmrgqAIyv2QbbSqanMWsD7GZ2mmM=;
+        s=default; t=1553257059;
+        bh=98K35g9c2xarOfvm1FDLEJI3S3EZR9qLgmJocNaIwhU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qzY2KOspswp81ZDev/gHofKBKm5VzS00NWnxfr8NkFcI2ocn+NbaCTaabUD1WqyHq
-         8JpPW4yrk1INW8IwWwCnFjNylWCL4KxhB/2kY/3+HIuZnsrhHojAxSIG0lCDzTHt+8
-         6+mz/fYZBNvTM71bgkDC8rGIgyfkh3ZJvNWU3yWw=
+        b=XKFC0MUS/2GFt95SAvDkDztnG/3Q+/ggJ5EII++HtnCakbA2FK7Z5XBGR6HfxmhHY
+         g9kFLSEWxdENcoMhKberGRxVJIEK0RXLtb8i1YA5ouj2LLKDB/ubrhaygeqvFoyAnn
+         TFLI8/TjGUHvGVSosy4MHGCOwvQ4Hy/BGFs8Ku8c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, yangerkun <yangerkun@huawei.com>,
-        Theodore Tso <tytso@mit.edu>, stable@kernel.org
-Subject: [PATCH 5.0 121/238] ext4: update quota information while swapping boot loader inode
-Date:   Fri, 22 Mar 2019 12:15:40 +0100
-Message-Id: <20190322111305.677644877@linuxfoundation.org>
+        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Wolfram Sang <wsa@the-dreams.de>
+Subject: [PATCH 5.0 118/238] i2c: tegra: update maximum transfer size
+Date:   Fri, 22 Mar 2019 12:15:37 +0100
+Message-Id: <20190322111305.478168444@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -65,115 +66,54 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: yangerkun <yangerkun@huawei.com>
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
 
-commit aa507b5faf38784defe49f5e64605ac3c4425e26 upstream.
+commit b03ff2a23359d0dd6f0a1516c6a9e9c4760ed230 upstream.
 
-While do swap between two inode, they swap i_data without update
-quota information. Also, swap_inode_boot_loader can do "revert"
-somtimes, so update the quota while all operations has been finished.
+Tegra194 supports maximum 64K bytes per packet including 12 bytes of
+packet header irrespective of PIO or DMA mode transfer.
 
-Signed-off-by: yangerkun <yangerkun@huawei.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Cc: stable@kernel.org
+This patch updates Tegra194 max write length to account for packet
+header size for transfers.
+
+Cc: stable@vger.kernel.org # 4.20+
+
+Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/ioctl.c |   56 +++++++++++++++++++++++++++++++++++++++++++-------------
- 1 file changed, 43 insertions(+), 13 deletions(-)
+ drivers/i2c/busses/i2c-tegra.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
---- a/fs/ext4/ioctl.c
-+++ b/fs/ext4/ioctl.c
-@@ -68,8 +68,6 @@ static void swap_inode_data(struct inode
- 	ei2 = EXT4_I(inode2);
+--- a/drivers/i2c/busses/i2c-tegra.c
++++ b/drivers/i2c/busses/i2c-tegra.c
+@@ -118,6 +118,9 @@
+ #define I2C_MST_FIFO_STATUS_TX_MASK		0xff0000
+ #define I2C_MST_FIFO_STATUS_TX_SHIFT		16
  
- 	swap(inode1->i_version, inode2->i_version);
--	swap(inode1->i_blocks, inode2->i_blocks);
--	swap(inode1->i_bytes, inode2->i_bytes);
- 	swap(inode1->i_atime, inode2->i_atime);
- 	swap(inode1->i_mtime, inode2->i_mtime);
- 
-@@ -115,6 +113,9 @@ static long swap_inode_boot_loader(struc
- 	int err;
- 	struct inode *inode_bl;
- 	struct ext4_inode_info *ei_bl;
-+	qsize_t size, size_bl, diff;
-+	blkcnt_t blocks;
-+	unsigned short bytes;
- 
- 	inode_bl = ext4_iget(sb, EXT4_BOOT_LOADER_INO, EXT4_IGET_SPECIAL);
- 	if (IS_ERR(inode_bl))
-@@ -180,6 +181,13 @@ static long swap_inode_boot_loader(struc
- 			memset(ei_bl->i_data, 0, sizeof(ei_bl->i_data));
- 	}
- 
-+	err = dquot_initialize(inode);
-+	if (err)
-+		goto err_out1;
++/* Packet header size in bytes */
++#define I2C_PACKET_HEADER_SIZE			12
 +
-+	size = (qsize_t)(inode->i_blocks) * (1 << 9) + inode->i_bytes;
-+	size_bl = (qsize_t)(inode_bl->i_blocks) * (1 << 9) + inode_bl->i_bytes;
-+	diff = size - size_bl;
- 	swap_inode_data(inode, inode_bl);
+ /*
+  * msg_end_type: The bus control which need to be send at end of transfer.
+  * @MSG_END_STOP: Send stop pulse at end of transfer.
+@@ -836,12 +839,13 @@ static const struct i2c_algorithm tegra_
+ /* payload size is only 12 bit */
+ static const struct i2c_adapter_quirks tegra_i2c_quirks = {
+ 	.flags = I2C_AQ_NO_ZERO_LEN,
+-	.max_read_len = 4096,
+-	.max_write_len = 4096 - 12,
++	.max_read_len = SZ_4K,
++	.max_write_len = SZ_4K - I2C_PACKET_HEADER_SIZE,
+ };
  
- 	inode->i_ctime = inode_bl->i_ctime = current_time(inode);
-@@ -193,24 +201,46 @@ static long swap_inode_boot_loader(struc
+ static const struct i2c_adapter_quirks tegra194_i2c_quirks = {
+ 	.flags = I2C_AQ_NO_ZERO_LEN,
++	.max_write_len = SZ_64K - I2C_PACKET_HEADER_SIZE,
+ };
  
- 	err = ext4_mark_inode_dirty(handle, inode);
- 	if (err < 0) {
-+		/* No need to update quota information. */
- 		ext4_warning(inode->i_sb,
- 			"couldn't mark inode #%lu dirty (err %d)",
- 			inode->i_ino, err);
- 		/* Revert all changes: */
- 		swap_inode_data(inode, inode_bl);
- 		ext4_mark_inode_dirty(handle, inode);
--	} else {
--		err = ext4_mark_inode_dirty(handle, inode_bl);
--		if (err < 0) {
--			ext4_warning(inode_bl->i_sb,
--				"couldn't mark inode #%lu dirty (err %d)",
--				inode_bl->i_ino, err);
--			/* Revert all changes: */
--			swap_inode_data(inode, inode_bl);
--			ext4_mark_inode_dirty(handle, inode);
--			ext4_mark_inode_dirty(handle, inode_bl);
--		}
-+		goto err_out1;
-+	}
-+
-+	blocks = inode_bl->i_blocks;
-+	bytes = inode_bl->i_bytes;
-+	inode_bl->i_blocks = inode->i_blocks;
-+	inode_bl->i_bytes = inode->i_bytes;
-+	err = ext4_mark_inode_dirty(handle, inode_bl);
-+	if (err < 0) {
-+		/* No need to update quota information. */
-+		ext4_warning(inode_bl->i_sb,
-+			"couldn't mark inode #%lu dirty (err %d)",
-+			inode_bl->i_ino, err);
-+		goto revert;
-+	}
-+
-+	/* Bootloader inode should not be counted into quota information. */
-+	if (diff > 0)
-+		dquot_free_space(inode, diff);
-+	else
-+		err = dquot_alloc_space(inode, -1 * diff);
-+
-+	if (err < 0) {
-+revert:
-+		/* Revert all changes: */
-+		inode_bl->i_blocks = blocks;
-+		inode_bl->i_bytes = bytes;
-+		swap_inode_data(inode, inode_bl);
-+		ext4_mark_inode_dirty(handle, inode);
-+		ext4_mark_inode_dirty(handle, inode_bl);
- 	}
-+
-+err_out1:
- 	ext4_journal_stop(handle);
- 	ext4_double_up_write_data_sem(inode, inode_bl);
- 
+ static const struct tegra_i2c_hw_feature tegra20_i2c_hw = {
 
 
