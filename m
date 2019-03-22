@@ -2,207 +2,156 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0E4EC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 07:43:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11C0EC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 07:44:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3B1221904
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 07:43:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dosrz1Ky"
+	by mail.kernel.org (Postfix) with ESMTP id D98B4218FE
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 07:44:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727691AbfCVHnt (ORCPT
+        id S1727703AbfCVHop (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 03:43:49 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:54109 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726029AbfCVHnr (ORCPT
+        Fri, 22 Mar 2019 03:44:45 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:38397 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726091AbfCVHop (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 03:43:47 -0400
-Received: by mail-it1-f196.google.com with SMTP id w85so2218692itc.3
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 00:43:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1LJcxQiBxVwiPD/78aWDVPhv4zia0X6OwrfoJ2C57Ig=;
-        b=Dosrz1Kyr+wp4IPD3C52twTiKvDkttURLJyLSwV4HCR4gST2aLzZPrY3fD2qhiZRrn
-         c4KkHRfc8p3PRsxaoDWHGd+joZT3Ppizx2Ejw92ao7BBUTR3cjUBkeLvgfdt4uIDqDAG
-         1voNNiEOpC8ekRrne1CcP5ZZVXjow/vkxIWMlkkE1dLipbViY/2DscbPXf7x5AtkDmCF
-         2tEWvQdfqSZ0lKCyvSmsi+IalhVNqgv8yP00wgo6C6t5MG5mySpW9NXVAyrn2Q1plwGv
-         OLC47812RnJeOgf9FrODw251F6YSU4gsCfjNFgXFdrSDyrG5ma8wPQr+oqJyNTfq9EVM
-         W49A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1LJcxQiBxVwiPD/78aWDVPhv4zia0X6OwrfoJ2C57Ig=;
-        b=W9Fwvam5BXwT8PTIY1c4/runNGnaXJnmut2YJ/w6hluVqtdylVumv6G6/ny23P3ikM
-         g03qPgroCRyUBTy0CN0mT8ecZm7Nu4ELP52WXD+ySjTM2+gGuA0nZKENoIEC8J/kNQKN
-         Xgs/DiASJvUsJ7tnjGYx3SzhGtbcHp5U/HGUBkDm0Dc5m6MsC+Wvja1mWIqwoYNSKmya
-         8+To0JfqPzPwCM1uWhNxRjawdi6B6CuV42HxluSV3/YPQ0YbbvuLz8Oi+4isyRezJmko
-         ZlakB+ENgCX/X7Y9jZJxSqTRdq45x/p4eotlU2vyYpv/7nLiH+mhODJKVDUwUX5apziw
-         hOgA==
-X-Gm-Message-State: APjAAAVCY/L7O8soAyWjva5/N+6uNib7bJ+wfYzlKzPs3ZCOtTQWZEZE
-        ox50iDY78kavFiSp12H8eNuBq9LlNb9le6rpYQ==
-X-Google-Smtp-Source: APXvYqwhXNoh9Ovd4O++Jj41YC7k2xLDnIgHgg2Is0g1WiRyfL3YKX2u1AUwUcaGx6aT5+ABEwhXBZIi5kzyDm1KQn8=
-X-Received: by 2002:a02:93ee:: with SMTP id z101mr6217191jah.17.1553240626579;
- Fri, 22 Mar 2019 00:43:46 -0700 (PDT)
-MIME-Version: 1.0
-References: <1552450771-8360-1-git-send-email-kernelfans@gmail.com> <20190320002524.GD18740@MiWiFi-R3L-srv>
-In-Reply-To: <20190320002524.GD18740@MiWiFi-R3L-srv>
-From:   Pingfan Liu <kernelfans@gmail.com>
-Date:   Fri, 22 Mar 2019 15:43:35 +0800
-Message-ID: <CAFgQCTt3-9oZ6yi_MGYFOZhn5+cSdJLGf3OQRMJ1CJr0eXiE5w@mail.gmail.com>
-Subject: Re: [PATCHv2] x86/boot/KASLR: skip the specified crashkernel reserved region
-To:     Baoquan He <bhe@redhat.com>
-Cc:     x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
+        Fri, 22 Mar 2019 03:44:45 -0400
+Received: from alex.numericable.fr (127.19.86.79.rev.sfr.net [79.86.19.127])
+        (Authenticated sender: alex@ghiti.fr)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id E7FFE20000D;
+        Fri, 22 Mar 2019 07:44:38 +0000 (UTC)
+From:   Alexandre Ghiti <alex@ghiti.fr>
+To:     Christoph Hellwig <hch@infradead.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will.deacon@arm.com>,
-        Nicolas Pitre <nico@linaro.org>,
-        Chao Fan <fanc.fnst@cn.fujitsu.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
+Cc:     Alexandre Ghiti <alex@ghiti.fr>
+Subject: [PATCH 2/4] arm: Use generic mmap top-down layout
+Date:   Fri, 22 Mar 2019 03:42:23 -0400
+Message-Id: <20190322074225.22282-3-alex@ghiti.fr>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190322074225.22282-1-alex@ghiti.fr>
+References: <20190322074225.22282-1-alex@ghiti.fr>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 20, 2019 at 8:25 AM Baoquan He <bhe@redhat.com> wrote:
->
-> Please change subject as:
->
-> "x86/boot/KASLR: skip the specified crashkernel region"
->
-OK.
+arm uses a top-down layout by default that fits the generic functions.
+At the same time, this commit allows to fix the following problems:
 
-> Don't see why reserved is needed here.
->
-> On 03/13/19 at 12:19pm, Pingfan Liu wrote:
-> > crashkernel=x@y option may fail to reserve the required memory region if
-> > KASLR puts kernel into the region. To avoid this uncertainty, making KASLR
-> > skip the required region.
-> >
-> > Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
-> > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > Cc: Ingo Molnar <mingo@redhat.com>
-> > Cc: Borislav Petkov <bp@alien8.de>
-> > Cc: "H. Peter Anvin" <hpa@zytor.com>
-> > Cc: Baoquan He <bhe@redhat.com>
-> > Cc: Will Deacon <will.deacon@arm.com>
-> > Cc: Nicolas Pitre <nico@linaro.org>
-> > Cc: Pingfan Liu <kernelfans@gmail.com>
-> > Cc: Chao Fan <fanc.fnst@cn.fujitsu.com>
-> > Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-> > Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> > Cc: linux-kernel@vger.kernel.org
-> > ---
-> > v1 -> v2: fix some trival format
-> >
-> >  arch/x86/boot/compressed/kaslr.c | 26 ++++++++++++++++++++++++--
-> >  1 file changed, 24 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
-> > index 9ed9709..e185318 100644
-> > --- a/arch/x86/boot/compressed/kaslr.c
-> > +++ b/arch/x86/boot/compressed/kaslr.c
-> > @@ -109,6 +109,7 @@ enum mem_avoid_index {
-> >       MEM_AVOID_BOOTPARAMS,
-> >       MEM_AVOID_MEMMAP_BEGIN,
-> >       MEM_AVOID_MEMMAP_END = MEM_AVOID_MEMMAP_BEGIN + MAX_MEMMAP_REGIONS - 1,
-> > +     MEM_AVOID_CRASHKERNEL,
-> >       MEM_AVOID_MAX,
-> >  };
-> >
-> > @@ -240,6 +241,25 @@ static void parse_gb_huge_pages(char *param, char *val)
-> >       }
-> >  }
-> >
-> > +/* parse crashkernel=x@y option */
-> > +static void mem_avoid_crashkernel_simple(char *option)
->
-> Chao ever mentioned this, I want to ask again, why does it has to be
-> xxx_simple()?
->
-Seems that I had replied Chao's question in another email. The naming
-follows the function parse_crashkernel_simple(), as the notes above
-the definition
-/*
- * That function parses "simple" (old) crashkernel command lines like
- *
- * crashkernel=size[@offset]
- *
- * It returns 0 on success and -EINVAL on failure.
- */
-static int __init parse_crashkernel_simple(char *cmdline,
+- one uncovered and not fixed for arm here:
+https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1429066.html
 
-Do you have alternative suggestion?
+- the use of TASK_SIZE instead of STACK_TOP in mmap_base which, when
+  address space of a task is 26 bits, would assign mmap base way too high.
 
-> Except of these, patch looks good to me. It's a nice catch, and only
-> need a simple fix based on the current code.
->
-Thank you for the kindly review.
+Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
+---
+ arch/arm/include/asm/processor.h |  2 +-
+ arch/arm/mm/mmap.c               | 52 --------------------------------
+ 2 files changed, 1 insertion(+), 53 deletions(-)
 
-Regards,
-Pingfan
+diff --git a/arch/arm/include/asm/processor.h b/arch/arm/include/asm/processor.h
+index 57fe73ea0f72..03837d325a2f 100644
+--- a/arch/arm/include/asm/processor.h
++++ b/arch/arm/include/asm/processor.h
+@@ -143,7 +143,7 @@ static inline void prefetchw(const void *ptr)
+ #endif
+ #endif
+ 
+-#define HAVE_ARCH_PICK_MMAP_LAYOUT
++#define ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT
+ 
+ #endif
+ 
+diff --git a/arch/arm/mm/mmap.c b/arch/arm/mm/mmap.c
+index f866870db749..b8d912ac9e61 100644
+--- a/arch/arm/mm/mmap.c
++++ b/arch/arm/mm/mmap.c
+@@ -17,33 +17,6 @@
+ 	((((addr)+SHMLBA-1)&~(SHMLBA-1)) +	\
+ 	 (((pgoff)<<PAGE_SHIFT) & (SHMLBA-1)))
+ 
+-/* gap between mmap and stack */
+-#define MIN_GAP (128*1024*1024UL)
+-#define MAX_GAP ((TASK_SIZE)/6*5)
+-
+-static int mmap_is_legacy(struct rlimit *rlim_stack)
+-{
+-	if (current->personality & ADDR_COMPAT_LAYOUT)
+-		return 1;
+-
+-	if (rlim_stack->rlim_cur == RLIM_INFINITY)
+-		return 1;
+-
+-	return sysctl_legacy_va_layout;
+-}
+-
+-static unsigned long mmap_base(unsigned long rnd, struct rlimit *rlim_stack)
+-{
+-	unsigned long gap = rlim_stack->rlim_cur;
+-
+-	if (gap < MIN_GAP)
+-		gap = MIN_GAP;
+-	else if (gap > MAX_GAP)
+-		gap = MAX_GAP;
+-
+-	return PAGE_ALIGN(TASK_SIZE - gap - rnd);
+-}
+-
+ /*
+  * We need to ensure that shared mappings are correctly aligned to
+  * avoid aliasing issues with VIPT caches.  We need to ensure that
+@@ -171,31 +144,6 @@ arch_get_unmapped_area_topdown(struct file *filp, const unsigned long addr0,
+ 	return addr;
+ }
+ 
+-unsigned long arch_mmap_rnd(void)
+-{
+-	unsigned long rnd;
+-
+-	rnd = get_random_long() & ((1UL << mmap_rnd_bits) - 1);
+-
+-	return rnd << PAGE_SHIFT;
+-}
+-
+-void arch_pick_mmap_layout(struct mm_struct *mm, struct rlimit *rlim_stack)
+-{
+-	unsigned long random_factor = 0UL;
+-
+-	if (current->flags & PF_RANDOMIZE)
+-		random_factor = arch_mmap_rnd();
+-
+-	if (mmap_is_legacy(rlim_stack)) {
+-		mm->mmap_base = TASK_UNMAPPED_BASE + random_factor;
+-		mm->get_unmapped_area = arch_get_unmapped_area;
+-	} else {
+-		mm->mmap_base = mmap_base(random_factor, rlim_stack);
+-		mm->get_unmapped_area = arch_get_unmapped_area_topdown;
+-	}
+-}
+-
+ /*
+  * You really shouldn't be using read() or write() on /dev/mem.  This
+  * might go away in the future.
+-- 
+2.20.1
 
-> Thanks
-> Baoquan
->
-> > +{
-> > +     unsigned long long crash_size, crash_base;
-> > +     char *cur = option;
-> > +
-> > +     crash_size = memparse(option, &cur);
-> > +     if (option == cur)
-> > +             return;
-> > +
-> > +     if (*cur == '@') {
-> > +             option = cur + 1;
-> > +             crash_base = memparse(option, &cur);
-> > +             if (option == cur)
-> > +                     return;
-> > +             mem_avoid[MEM_AVOID_CRASHKERNEL].start = crash_base;
-> > +             mem_avoid[MEM_AVOID_CRASHKERNEL].size = crash_size;
-> > +     }
-> > +}
-> >
-> >  static void handle_mem_options(void)
-> >  {
-> > @@ -250,7 +270,7 @@ static void handle_mem_options(void)
-> >       u64 mem_size;
-> >
-> >       if (!strstr(args, "memmap=") && !strstr(args, "mem=") &&
-> > -             !strstr(args, "hugepages"))
-> > +             !strstr(args, "hugepages") && !strstr(args, "crashkernel="))
-> >               return;
-> >
-> >       tmp_cmdline = malloc(len + 1);
-> > @@ -286,6 +306,8 @@ static void handle_mem_options(void)
-> >                               goto out;
-> >
-> >                       mem_limit = mem_size;
-> > +             } else if (strstr(param, "crashkernel")) {
-> > +                     mem_avoid_crashkernel_simple(val);
-> >               }
-> >       }
-> >
-> > @@ -414,7 +436,7 @@ static void mem_avoid_init(unsigned long input, unsigned long input_size,
-> >
-> >       /* We don't need to set a mapping for setup_data. */
-> >
-> > -     /* Mark the memmap regions we need to avoid */
-> > +     /* Mark the regions we need to avoid */
-> >       handle_mem_options();
-> >
-> >  #ifdef CONFIG_X86_VERBOSE_BOOTUP
-> > --
-> > 2.7.4
-> >
