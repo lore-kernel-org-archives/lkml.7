@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BBC7C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:51:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8CE1C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:51:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAE332082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:51:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A57592082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:51:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553259074;
-	bh=HDHdPlaLshy97OU/tJGbqKf+6o7bJhnFNnYfAAccnWg=;
+	s=default; t=1553259079;
+	bh=5qJBM/Pqc9C+QKKBC9OR+eUCqsYBkgEQ8uHZd9LgTGw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RIAw+R5jnjZrDNv/WY6ZpS9/LT7/R7DsFxGM8bj3Jz+m7Od/AkoDGmtssvHX694ST
-	 WxfmVmfJZgfCUws0UWUhDxJ3Vh0W9B4P3ijOwfNd5nP1mhR3Pfw/eyFHc1+zLuMdOV
-	 ODMcg1ZBysYvicYSyxq0VffoC18EFRiEX4ERIUkA=
+	b=r4ZcpzfaPZnSTpN5Ogqd6WGPR8V9Axde6yDkIp2MdJ1/QbVIzcRIjUuIt+6sFb1hH
+	 Z9zHcKb+d65tPHj4BAa7xAIXvH6pZU1u7DCUOtNBeJSJSCw2CuylTQLrcJrPqSposM
+	 S0yFnQti6RCnaNLtMoRj/pIZsi71nvefPunDD59g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733206AbfCVLyk (ORCPT
+        id S1733197AbfCVLyd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:54:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59128 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:54:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733204AbfCVLyg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:54:36 -0400
+        id S1732835AbfCVLya (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:54:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE9B02082C;
-        Fri, 22 Mar 2019 11:54:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C52120850;
+        Fri, 22 Mar 2019 11:54:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255675;
-        bh=HDHdPlaLshy97OU/tJGbqKf+6o7bJhnFNnYfAAccnWg=;
+        s=default; t=1553255669;
+        bh=5qJBM/Pqc9C+QKKBC9OR+eUCqsYBkgEQ8uHZd9LgTGw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uSCTz0QbnVor/PL1rxa5Q4y+GZCck+of7UA8VreZ6jwc8Cu8Jh0oqGh5ZDclCkMXl
-         +OI99PARuQF1o+xoHrUIdA4RV5q//U59Z3Y0GhBYtfTFKjXd9gu8tlNgKDK95Jmh1T
-         YQngA4YgpMHKJwPjGzTNpleUl17bqiOKn4u3hxw4=
+        b=MQRimWe6zD4TXMXtoWsKBKVZ/9iJnmMHcIZ+hCubtQRjU+amCyCEPPxizfBxBrPlk
+         Hw0QPK1TimWtwwPG9Q5MXHpnfCfJH72jjMMdfrU66+i1Tl6NnOZWr3OzpEYTgiuttL
+         oW2H02ve1YYR4XVH8qgbmbKZmVrIHUQAf9ehXMRQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 4.14 164/183] perf auxtrace: Define auxtrace record alignment
-Date:   Fri, 22 Mar 2019 12:16:32 +0100
-Message-Id: <20190322111253.787652738@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>
+Subject: [PATCH 4.14 154/183] NFS: Fix I/O request leakages
+Date:   Fri, 22 Mar 2019 12:16:22 +0100
+Message-Id: <20190322111253.036922882@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111241.819468003@linuxfoundation.org>
 References: <20190322111241.819468003@linuxfoundation.org>
@@ -65,52 +65,89 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-commit c3fcadf0bb765faf45d6d562246e1d08885466df upstream.
+commit f57dcf4c72113c745d83f1c65f7291299f65c14f upstream.
 
-Define auxtrace record alignment so that it can be referenced elsewhere.
+When we fail to add the request to the I/O queue, we currently leave it
+to the caller to free the failed request. However since some of the
+requests that fail are actually created by nfs_pageio_add_request()
+itself, and are not passed back the caller, this leads to a leakage
+issue, which can again cause page locks to leak.
 
-Note this is preparation for patch "perf intel-pt: Fix overlap calculation
-for padding"
+This commit addresses the leakage by freeing the created requests on
+error, using desc->pg_completion_ops->error_cleanup()
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: stable@vger.kernel.org
-Link: http://lkml.kernel.org/r/20190206103947.15750-2-adrian.hunter@intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Fixes: a7d42ddb30997 ("nfs: add mirroring support to pgio layer")
+Cc: stable@vger.kernel.org # v4.0: c18b96a1b862: nfs: clean up rest of reqs
+Cc: stable@vger.kernel.org # v4.0: d600ad1f2bdb: NFS41: pop some layoutget
+Cc: stable@vger.kernel.org # v4.0+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/perf/util/auxtrace.c |    4 ++--
- tools/perf/util/auxtrace.h |    3 +++
- 2 files changed, 5 insertions(+), 2 deletions(-)
+ fs/nfs/pagelist.c |   26 +++++++++++++++++++++-----
+ 1 file changed, 21 insertions(+), 5 deletions(-)
 
---- a/tools/perf/util/auxtrace.c
-+++ b/tools/perf/util/auxtrace.c
-@@ -1264,9 +1264,9 @@ static int __auxtrace_mmap__read(struct
+--- a/fs/nfs/pagelist.c
++++ b/fs/nfs/pagelist.c
+@@ -988,6 +988,17 @@ static void nfs_pageio_doio(struct nfs_p
+ 	}
+ }
+ 
++static void
++nfs_pageio_cleanup_request(struct nfs_pageio_descriptor *desc,
++		struct nfs_page *req)
++{
++	LIST_HEAD(head);
++
++	nfs_list_remove_request(req);
++	nfs_list_add_request(req, &head);
++	desc->pg_completion_ops->error_cleanup(&head);
++}
++
+ /**
+  * nfs_pageio_add_request - Attempt to coalesce a request into a page list.
+  * @desc: destination io descriptor
+@@ -1025,10 +1036,8 @@ static int __nfs_pageio_add_request(stru
+ 			nfs_page_group_unlock(req);
+ 			desc->pg_moreio = 1;
+ 			nfs_pageio_doio(desc);
+-			if (desc->pg_error < 0)
+-				return 0;
+-			if (mirror->pg_recoalesce)
+-				return 0;
++			if (desc->pg_error < 0 || mirror->pg_recoalesce)
++				goto out_cleanup_subreq;
+ 			/* retry add_request for this subreq */
+ 			nfs_page_group_lock(req);
+ 			continue;
+@@ -1061,6 +1070,10 @@ err_ptr:
+ 	desc->pg_error = PTR_ERR(subreq);
+ 	nfs_page_group_unlock(req);
+ 	return 0;
++out_cleanup_subreq:
++	if (req != subreq)
++		nfs_pageio_cleanup_request(desc, subreq);
++	return 0;
+ }
+ 
+ static int nfs_do_recoalesce(struct nfs_pageio_descriptor *desc)
+@@ -1168,11 +1181,14 @@ int nfs_pageio_add_request(struct nfs_pa
+ 		if (nfs_pgio_has_mirroring(desc))
+ 			desc->pg_mirror_idx = midx;
+ 		if (!nfs_pageio_add_request_mirror(desc, dupreq))
+-			goto out_failed;
++			goto out_cleanup_subreq;
  	}
  
- 	/* padding must be written by fn() e.g. record__process_auxtrace() */
--	padding = size & 7;
-+	padding = size & (PERF_AUXTRACE_RECORD_ALIGNMENT - 1);
- 	if (padding)
--		padding = 8 - padding;
-+		padding = PERF_AUXTRACE_RECORD_ALIGNMENT - padding;
+ 	return 1;
  
- 	memset(&ev, 0, sizeof(ev));
- 	ev.auxtrace.header.type = PERF_RECORD_AUXTRACE;
---- a/tools/perf/util/auxtrace.h
-+++ b/tools/perf/util/auxtrace.h
-@@ -38,6 +38,9 @@ struct record_opts;
- struct auxtrace_info_event;
- struct events_stats;
- 
-+/* Auxtrace records must have the same alignment as perf event records */
-+#define PERF_AUXTRACE_RECORD_ALIGNMENT 8
-+
- enum auxtrace_type {
- 	PERF_AUXTRACE_UNKNOWN,
- 	PERF_AUXTRACE_INTEL_PT,
++out_cleanup_subreq:
++	if (req != dupreq)
++		nfs_pageio_cleanup_request(desc, dupreq);
+ out_failed:
+ 	/* remember fatal errors */
+ 	if (nfs_error_is_fatal(desc->pg_error))
 
 
