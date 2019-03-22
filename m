@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1897DC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:11:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C521FC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:11:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBCEE21934
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:11:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 910BD2195D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:11:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256709;
-	bh=tBP8j01uVvnOhVTgUdPCk2CQMkIxHOC6NbK0/v30Yu8=;
+	s=default; t=1553256713;
+	bh=S47NSWzpzWBygLdfIQbBL5muhP+weMDCZtgmVTXy71U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LMadQIQ2sITbTyysynqKqrDlgiXxcDycSpGtwu0n71PO9BCpU+sEdEQTIuR6P1E9D
-	 rxYcpNpFm7zxEwmvKGVmTNq1sZE8MNM9PcHyuXZhwtSQN1jiwN5pOYORJKl1cqCg9o
-	 EwTN3yAQgRA7W0PPd26oCz8dSLQzSTmEkE6oYTj0=
+	b=YRuM1eoNBugmLNvR3MsscTaeGp/NdqtpalfWNEsPKNDz0KShj5cMIx8x5RJz2tfPz
+	 dIIVW8MiUZB96zWf4T8LzRUD/5MaGNN8oAsqEzNE7zpfQIxCrmZmzvKZFrmvERYc3R
+	 Ea9gtHVXp1z/ee5MOC3ajfM1iiFFSeGpL06OTqzQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389355AbfCVMLs (ORCPT
+        id S2389419AbfCVMLw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:11:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49984 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:11:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389003AbfCVMLo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:11:44 -0400
+        id S2389553AbfCVMLq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:11:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D501E21929;
-        Fri, 22 Mar 2019 12:11:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ACD9A2083D;
+        Fri, 22 Mar 2019 12:11:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256703;
-        bh=tBP8j01uVvnOhVTgUdPCk2CQMkIxHOC6NbK0/v30Yu8=;
+        s=default; t=1553256706;
+        bh=S47NSWzpzWBygLdfIQbBL5muhP+weMDCZtgmVTXy71U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FzkgEawEe77U62I5cdLqfLApOtNoCdVq/kz5Zu3uKYx2Cy9QSCD2+prWqYiHQgHwH
-         HaWm9ftBgQdLyuFrsKjRXbzKyBngKumqzKQYsiqC2/tN8K4rAZL3k5c+z5Rf8Fgy59
-         dP5nMZVOnbMhDJ433HbU9LfDV4YTaW7LEStc8Z9E=
+        b=Ip3/eKccI9/2L7o9OmTsKyuq69kBe9dIMvYko2IVeJ+4ksyXgO122aTEEjDBX/PKO
+         UuWphRlRpo3DXDhU10rCYpgETpILFZAxKFTxeKmpr/rkVupX2ABdrSX268+qFydHlE
+         dNd7Mu1BG7l4rB1bLqk4djsNx981+Vg6uzJaFZ9Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Franck LENORMAND <franck.lenormand@nxp.com>,
-        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.0 012/238] crypto: caam - fix hash context DMA unmap size
-Date:   Fri, 22 Mar 2019 12:13:51 +0100
-Message-Id: <20190322111258.963703538@linuxfoundation.org>
+Subject: [PATCH 5.0 013/238] crypto: ccree - fix missing break in switch statement
+Date:   Fri, 22 Mar 2019 12:13:52 +0100
+Message-Id: <20190322111259.012590292@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -67,72 +66,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Franck LENORMAND <franck.lenormand@nxp.com>
+From: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-commit 65055e2108847af5e577cc7ce6bde45ea136d29a upstream.
+commit b5be853181a8d4a6e20f2073ccd273d6280cad88 upstream.
 
-When driver started using state->caam_ctxt for storing both running hash
-and final hash, it was not updated to handle different DMA unmap
-lengths.
+Add missing break statement in order to prevent the code from falling
+through to case S_DIN_to_DES.
 
-Cc: <stable@vger.kernel.org> # v4.19+
-Fixes: c19650d6ea99 ("crypto: caam - fix DMA mapping of stack memory")
-Signed-off-by: Franck LENORMAND <franck.lenormand@nxp.com>
-Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
+This bug was found thanks to the ongoing efforts to enable
+-Wimplicit-fallthrough.
+
+Fixes: 63ee04c8b491 ("crypto: ccree - add skcipher support")
+Cc: stable@vger.kernel.org
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/caam/caamhash.c |    8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/crypto/ccree/cc_cipher.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/crypto/caam/caamhash.c
-+++ b/drivers/crypto/caam/caamhash.c
-@@ -113,6 +113,7 @@ struct caam_hash_ctx {
- struct caam_hash_state {
- 	dma_addr_t buf_dma;
- 	dma_addr_t ctx_dma;
-+	int ctx_dma_len;
- 	u8 buf_0[CAAM_MAX_HASH_BLOCK_SIZE] ____cacheline_aligned;
- 	int buflen_0;
- 	u8 buf_1[CAAM_MAX_HASH_BLOCK_SIZE] ____cacheline_aligned;
-@@ -165,6 +166,7 @@ static inline int map_seq_out_ptr_ctx(u3
- 				      struct caam_hash_state *state,
- 				      int ctx_len)
- {
-+	state->ctx_dma_len = ctx_len;
- 	state->ctx_dma = dma_map_single(jrdev, state->caam_ctx,
- 					ctx_len, DMA_FROM_DEVICE);
- 	if (dma_mapping_error(jrdev, state->ctx_dma)) {
-@@ -218,6 +220,7 @@ static inline int ctx_map_to_sec4_sg(str
- 				     struct caam_hash_state *state, int ctx_len,
- 				     struct sec4_sg_entry *sec4_sg, u32 flag)
- {
-+	state->ctx_dma_len = ctx_len;
- 	state->ctx_dma = dma_map_single(jrdev, state->caam_ctx, ctx_len, flag);
- 	if (dma_mapping_error(jrdev, state->ctx_dma)) {
- 		dev_err(jrdev, "unable to map ctx\n");
-@@ -468,12 +471,10 @@ static inline void ahash_unmap_ctx(struc
- 			struct ahash_edesc *edesc,
- 			struct ahash_request *req, int dst_len, u32 flag)
- {
--	struct crypto_ahash *ahash = crypto_ahash_reqtfm(req);
--	struct caam_hash_ctx *ctx = crypto_ahash_ctx(ahash);
- 	struct caam_hash_state *state = ahash_request_ctx(req);
- 
- 	if (state->ctx_dma) {
--		dma_unmap_single(dev, state->ctx_dma, ctx->ctx_len, flag);
-+		dma_unmap_single(dev, state->ctx_dma, state->ctx_dma_len, flag);
- 		state->ctx_dma = 0;
- 	}
- 	ahash_unmap(dev, edesc, req, dst_len);
-@@ -1446,6 +1447,7 @@ static int ahash_init(struct ahash_reque
- 	state->final = ahash_final_no_ctx;
- 
- 	state->ctx_dma = 0;
-+	state->ctx_dma_len = 0;
- 	state->current_buf = 0;
- 	state->buf_dma = 0;
- 	state->buflen_0 = 0;
+--- a/drivers/crypto/ccree/cc_cipher.c
++++ b/drivers/crypto/ccree/cc_cipher.c
+@@ -80,6 +80,7 @@ static int validate_keys_sizes(struct cc
+ 		default:
+ 			break;
+ 		}
++		break;
+ 	case S_DIN_to_DES:
+ 		if (size == DES3_EDE_KEY_SIZE || size == DES_KEY_SIZE)
+ 			return 0;
 
 
