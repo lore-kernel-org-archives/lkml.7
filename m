@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8836C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:03:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6466FC10F03
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:03:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 704512075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:03:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B5F02075E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:03:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553259790;
-	bh=GPPHb0N4V5rNMD5NDMCRzchC/HhEPs2uzcObAbigUaQ=;
+	s=default; t=1553259794;
+	bh=MqfhNqtz+rWE1FAbysPkHoay6zZF4Tnp+ixumvANKGE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mTuzAZVrxZLMXLZPIsL5rqG6qDCQEvMmEJuINx3nb7s6MvyshhkwVtnS+OpM1ITcI
-	 c6tEdrmRN0o3XU4iq8cj0/7oPJ0OhwS3H81kLVQJOSDt27nykztG4OPG+SMgATC3Iw
-	 1WeukgasZF6FpJPOhloOFCSvK95nZA1egKnVfeHU=
+	b=LasJl2j/MHPgplhgO1cZdeRVzL2BsIRaElxAMDQPbbrLp+vUgGVw1CFEKrS0Uuish
+	 Db8nyYFmcgAMy6pl6BCJKqvhOOdmYtuQy9J/6m5nWYp6iSP+6TfGgnil4cksZrWix9
+	 CDu4EL4MO7oNbbaqH3Gr6RSDOj/WV01odcDdSPsg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731326AbfCVLkz (ORCPT
+        id S1731314AbfCVLkx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:40:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42780 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:40:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731296AbfCVLkq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:40:46 -0400
+        id S1730221AbfCVLku (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:40:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94EAC2082C;
-        Fri, 22 Mar 2019 11:40:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71FAE2082C;
+        Fri, 22 Mar 2019 11:40:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254846;
-        bh=GPPHb0N4V5rNMD5NDMCRzchC/HhEPs2uzcObAbigUaQ=;
+        s=default; t=1553254850;
+        bh=MqfhNqtz+rWE1FAbysPkHoay6zZF4Tnp+ixumvANKGE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xY0vF7zMHFT8kaTL/ZzO5KtEd14OisRaJdsV0XaJor5ie7r1EMmh8CpCxV6Cbvntm
-         j6CljV2s56iPl9Wv4ic5JMM2dk0z7kSkvlwf0671AeunTletCqV0mevpCgvpi0GI23
-         a8jGl2Uja1vzqRSe6PxXHB0iiwxFFceg9Sn/u5Eg=
+        b=JcDqcHGLhlvuyzJCZ7Wy/WEZGk8Qn4JeyxjFyOiJ0vRbfqusIwOw5yzugTs3OO2ap
+         rEMgx8WMSpRo8VoZDmg4miax86kGtM8dqbYOeuyGPVW/oyWxDNvqjrgHvmreZ1itl7
+         Y792avAzlxZAaD0ODXlBe6Fb8ihvWsvV+hcXe+OE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Chase Conklin <Chase.Conklin@arm.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Vladimir Murzin <vladimir.murzin@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 029/118] ASoC: topology: free created components in tplg load error
-Date:   Fri, 22 Mar 2019 12:15:01 +0100
-Message-Id: <20190322111218.223767030@linuxfoundation.org>
+Subject: [PATCH 4.9 030/118] arm64: Relax GIC version check during early boot
+Date:   Fri, 22 Mar 2019 12:15:02 +0100
+Message-Id: <20190322111218.283951585@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111215.873964544@linuxfoundation.org>
 References: <20190322111215.873964544@linuxfoundation.org>
@@ -67,43 +68,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 304017d31df36fb61eb2ed3ebf65fb6870b3c731 ]
+[ Upstream commit 74698f6971f25d045301139413578865fc2bd8f9 ]
 
-Topology resources are no longer needed if any element failed to load.
+Updates to the GIC architecture allow ID_AA64PFR0_EL1.GIC to have
+values other than 0 or 1. At the moment, Linux is quite strict in the
+way it handles this field at early boot stage (cpufeature is fine) and
+will refuse to use the system register CPU interface if it doesn't
+find the value 1.
 
-Signed-off-by: Bard liao <yung-chuan.liao@linux.intel.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 021f653791ad17e03f98aaa7fb933816ae16f161 ("irqchip: gic-v3: Initial support for GICv3")
+Reported-by: Chase Conklin <Chase.Conklin@arm.com>
+Reviewed-by: Marc Zyngier <marc.zyngier@arm.com>
+Signed-off-by: Vladimir Murzin <vladimir.murzin@arm.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/soc-topology.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ arch/arm64/kernel/head.S | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/sound/soc/soc-topology.c b/sound/soc/soc-topology.c
-index d6b48c796bfc..086fe4d27f60 100644
---- a/sound/soc/soc-topology.c
-+++ b/sound/soc/soc-topology.c
-@@ -1989,6 +1989,7 @@ int snd_soc_tplg_component_load(struct snd_soc_component *comp,
- 	struct snd_soc_tplg_ops *ops, const struct firmware *fw, u32 id)
- {
- 	struct soc_tplg tplg;
-+	int ret;
+diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
+index 3289d1458791..db6ff1944c41 100644
+--- a/arch/arm64/kernel/head.S
++++ b/arch/arm64/kernel/head.S
+@@ -534,8 +534,7 @@ set_hcr:
+ 	/* GICv3 system register access */
+ 	mrs	x0, id_aa64pfr0_el1
+ 	ubfx	x0, x0, #24, #4
+-	cmp	x0, #1
+-	b.ne	3f
++	cbz	x0, 3f
  
- 	/* setup parsing context */
- 	memset(&tplg, 0, sizeof(tplg));
-@@ -2002,7 +2003,12 @@ int snd_soc_tplg_component_load(struct snd_soc_component *comp,
- 	tplg.bytes_ext_ops = ops->bytes_ext_ops;
- 	tplg.bytes_ext_ops_count = ops->bytes_ext_ops_count;
- 
--	return soc_tplg_load(&tplg);
-+	ret = soc_tplg_load(&tplg);
-+	/* free the created components if fail to load topology */
-+	if (ret)
-+		snd_soc_tplg_component_remove(comp, SND_SOC_TPLG_INDEX_ALL);
-+
-+	return ret;
- }
- EXPORT_SYMBOL_GPL(snd_soc_tplg_component_load);
- 
+ 	mrs_s	x0, ICC_SRE_EL2
+ 	orr	x0, x0, #ICC_SRE_EL2_SRE	// Set ICC_SRE_EL2.SRE==1
 -- 
 2.19.1
 
