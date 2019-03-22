@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E5FC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:21:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC75FC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:21:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 425B721934
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:21:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0ADE21934
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:21:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553253675;
-	bh=tkV1TpvmJe77mtEi11D+/CaNkHmZuRRuQKV4rvFnYUY=;
+	s=default; t=1553253679;
+	bh=ULgt3+rjF2V4nYsdgFns8N/iZA+0Tif+SxWkczdh5XM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pRH5WmgCQhZH3y00+fjWOISTwAwWKipz5sJ3ZxFbTG30Ej4r782kOq1D9AxbPLX1L
-	 cpJVPh9AR97c4l5k98ZjxsjkR0jff2P56XXfukiQTwHBcfXOcj/p2U88cQ++0qZuyE
-	 iufZQu5vgEFlgCQFhCsuh43kNOViL7qzl/05lSsI=
+	b=ddVxM6yrTwhczm66Sr2jaK2l4gGewx6oULfhK3B6E4fMAF5fOnOWbtoQmsP3cGdkZ
+	 m8X0qV84qGkke4Wk7EuY1eBatnrx6jyuw3oWGsbsslJTslOdg+bwQemJ7Hgacy70ao
+	 qsq09l5amGJabvLBENM+OAcJ1do5pUYUu6UbWiWQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728555AbfCVLVO (ORCPT
+        id S1728568AbfCVLVS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:21:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47670 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:21:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47730 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728542AbfCVLVM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:21:12 -0400
+        id S1728126AbfCVLVP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:21:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA35421917;
-        Fri, 22 Mar 2019 11:21:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96C5C21917;
+        Fri, 22 Mar 2019 11:21:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553253671;
-        bh=tkV1TpvmJe77mtEi11D+/CaNkHmZuRRuQKV4rvFnYUY=;
+        s=default; t=1553253675;
+        bh=ULgt3+rjF2V4nYsdgFns8N/iZA+0Tif+SxWkczdh5XM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LGryAmeHRYPCBFmWd0moudEEbHn8qdYJ3ca2PR1xb4jukooiM+WBYAEjxYULt+6jG
-         WTGz+eTHxwWHijDBOo0lZdpX3RUQlxgmu06detUvKA/EgyXLQlpcfEtuVHNm8OKKIB
-         428L2FgoMdfleJnH+v/A6QlGIjJgS5j8pvzfl4ng=
+        b=W3SavU9J8XNdEQUz8AFkmjl4vfB3KtWToNP23qpWhGTYKM5GBQcaJavUyS8P/WHQV
+         gfa4xsavdDT8HfiaAmJ+5bD10a8e2s2xuFEmiQ7z+PoDm/kWhuQQUildHM8n0x5wSr
+         ERx8ld9Y2E7F+N3l5dRm47vQMyYLMRvyp8PhqtbI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Atsushi Nemoto <atsushi.nemoto@sord.co.jp>,
-        Thor Thayer <thor.thayer@linux.intel.com>,
+        stable@vger.kernel.org, Thomas Falcon <tlfalcon@linux.ibm.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 3.18 036/134] net: altera_tse: fix connect_local_phy error path
-Date:   Fri, 22 Mar 2019 12:14:09 +0100
-Message-Id: <20190322111212.363111558@linuxfoundation.org>
+Subject: [PATCH 3.18 037/134] ibmveth: Do not process frames after calling napi_reschedule
+Date:   Fri, 22 Mar 2019 12:14:10 +0100
+Message-Id: <20190322111212.432914255@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111210.465931067@linuxfoundation.org>
 References: <20190322111210.465931067@linuxfoundation.org>
@@ -67,35 +66,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 17b42a20d7ca59377788c6a2409e77569570cc10 ]
+[ Upstream commit e95d22c69b2c130ccce257b84daf283fd82d611e ]
 
-The connect_local_phy should return NULL (not negative errno) on
-error, since its caller expects it.
+The IBM virtual ethernet driver's polling function continues
+to process frames after rescheduling NAPI, resulting in a warning
+if it exhausted its budget. Do not restart polling after calling
+napi_reschedule. Instead let frames be processed in the following
+instance.
 
-Signed-off-by: Atsushi Nemoto <atsushi.nemoto@sord.co.jp>
-Acked-by: Thor Thayer <thor.thayer@linux.intel.com>
+Signed-off-by: Thomas Falcon <tlfalcon@linux.ibm.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/altera/altera_tse_main.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/ibm/ibmveth.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/altera/altera_tse_main.c b/drivers/net/ethernet/altera/altera_tse_main.c
-index 2eb6404755b1f..c1b599c521953 100644
---- a/drivers/net/ethernet/altera/altera_tse_main.c
-+++ b/drivers/net/ethernet/altera/altera_tse_main.c
-@@ -706,8 +706,10 @@ static struct phy_device *connect_local_phy(struct net_device *dev)
+diff --git a/drivers/net/ethernet/ibm/ibmveth.c b/drivers/net/ethernet/ibm/ibmveth.c
+index 427a6674d237b..f0301b1ff56cb 100644
+--- a/drivers/net/ethernet/ibm/ibmveth.c
++++ b/drivers/net/ethernet/ibm/ibmveth.c
+@@ -1085,7 +1085,6 @@ static int ibmveth_poll(struct napi_struct *napi, int budget)
+ 	int frames_processed = 0;
+ 	unsigned long lpar_rc;
  
- 		phydev = phy_connect(dev, phy_id_fmt, &altera_tse_adjust_link,
- 				     priv->phy_iface);
--		if (IS_ERR(phydev))
-+		if (IS_ERR(phydev)) {
- 			netdev_err(dev, "Could not attach to PHY\n");
-+			phydev = NULL;
-+		}
+-restart_poll:
+ 	while (frames_processed < budget) {
+ 		if (!ibmveth_rxq_pending_buffer(adapter))
+ 			break;
+@@ -1154,7 +1153,6 @@ static int ibmveth_poll(struct napi_struct *napi, int budget)
+ 		    napi_reschedule(napi)) {
+ 			lpar_rc = h_vio_signal(adapter->vdev->unit_address,
+ 					       VIO_IRQ_DISABLE);
+-			goto restart_poll;
+ 		}
+ 	}
  
- 	} else {
- 		int ret;
 -- 
 2.19.1
 
