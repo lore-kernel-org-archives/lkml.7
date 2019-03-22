@@ -4,55 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24797C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:52:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD38EC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:52:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E92E42192C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:52:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C84F20693
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:52:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255544;
-	bh=2/ZDDQu6+75AQRY9jyAv0tOXJa4d8eW4HxFyVzLI12U=;
+	s=default; t=1553255550;
+	bh=UnwThm/Zq7cFUy0+YFCKYGaGo2/dAFxsP9Qm3WlvRi4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yDt+uLQ8B7z0Z+wPLDGm0koB4FFOoBoB0A0yxodpmjsxhAYjFnDB62FJS4fje6fi0
-	 SrMDh+RUSTlsO3aKy7JiVSL/z/YBxKby8lzFD/RYf6vVNfKjPLLSzQMuV9MtV3oM27
-	 KModCJ1qPFAo10TyGUOiU2IzyuGdpDpgenr9xxT0=
+	b=Ar6kn5rt/1l/XPDzNsN82OX5PI4ber4feWkBsq0z28A+EcS+3XtfEYWjw65YAv88e
+	 PwboIW5+diuv8b9PP6XuAv/plPxpuOVAQjoR10NfXZjyyV1JP543zbU5341lV1RIiZ
+	 1UJQ8qHJgnYsHcGbNP9uZVIRo/Xxj5hXGmclh46U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732887AbfCVLwW (ORCPT
+        id S1732902AbfCVLw3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:52:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56252 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:52:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732683AbfCVLwT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:52:19 -0400
+        id S1732890AbfCVLwZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:52:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E313721916;
-        Fri, 22 Mar 2019 11:52:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88CE32192B;
+        Fri, 22 Mar 2019 11:52:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255538;
-        bh=2/ZDDQu6+75AQRY9jyAv0tOXJa4d8eW4HxFyVzLI12U=;
+        s=default; t=1553255545;
+        bh=UnwThm/Zq7cFUy0+YFCKYGaGo2/dAFxsP9Qm3WlvRi4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oZdDdXW7Ngpo0qKa02V25JCTMoQx5soOnIzo3mKCF+AYGf5qObZ3qHW+8QR4DkbCy
-         VmnER6D++rC6mABUa/rjbBNwEls8/g00/8hhmP+Yqvt5jPgRvLEXU58zeTQF7vDY4m
-         yZJZa10+8z5DG49CAylL4A1zhDSAF/8rvkzeFvtM=
+        b=ZQhyZ3t5iRDlKWv815agd1zyza+6QqdsbBcvSwrFecF2/9oZ9qXHi9eKN5H95Fk5i
+         C1ve8kDYnWlcNFtG9Zj4D+TLnnFUVA8nP2OS6+yd5YtsgDsEv7pwaOXJV1Y61+4ME9
+         NRqmgmVosKLaPgReOhZiLxYGZWg5LqG1IMvIsFAk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, zhongjiang <zhongjiang@huawei.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Hugh Dickins <hughd@google.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Andrea Arcangeli <aarcange@redhat.com>,
+        stable@vger.kernel.org, Zev Weiss <zev@bewilderbeest.net>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.14 122/183] mm: hwpoison: fix thp split handing in soft_offline_in_use_page()
-Date:   Fri, 22 Mar 2019 12:15:50 +0100
-Message-Id: <20190322111250.543180785@linuxfoundation.org>
+Subject: [PATCH 4.14 124/183] kernel/sysctl.c: add missing range check in do_proc_dointvec_minmax_conv
+Date:   Fri, 22 Mar 2019 12:15:52 +0100
+Message-Id: <20190322111250.706897652@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111241.819468003@linuxfoundation.org>
 References: <20190322111241.819468003@linuxfoundation.org>
@@ -71,76 +70,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: zhongjiang <zhongjiang@huawei.com>
+From: Zev Weiss <zev@bewilderbeest.net>
 
-commit 46612b751c4941c5c0472ddf04027e877ae5990f upstream.
+commit 8cf7630b29701d364f8df4a50e4f1f5e752b2778 upstream.
 
-When soft_offline_in_use_page() runs on a thp tail page after pmd is
-split, we trigger the following VM_BUG_ON_PAGE():
+This bug has apparently existed since the introduction of this function
+in the pre-git era (4500e91754d3 in Thomas Gleixner's history.git,
+"[NET]: Add proc_dointvec_userhz_jiffies, use it for proper handling of
+neighbour sysctls.").
 
-  Memory failure: 0x3755ff: non anonymous thp
-  __get_any_page: 0x3755ff: unknown zero refcount page type 2fffff80000000
-  Soft offlining pfn 0x34d805 at process virtual address 0x20fff000
-  page:ffffea000d360140 count:0 mapcount:0 mapping:0000000000000000 index:0x1
-  flags: 0x2fffff80000000()
-  raw: 002fffff80000000 ffffea000d360108 ffffea000d360188 0000000000000000
-  raw: 0000000000000001 0000000000000000 00000000ffffffff 0000000000000000
-  page dumped because: VM_BUG_ON_PAGE(page_ref_count(page) == 0)
-  ------------[ cut here ]------------
-  kernel BUG at ./include/linux/mm.h:519!
+As a minimal fix we can simply duplicate the corresponding check in
+do_proc_dointvec_conv().
 
-soft_offline_in_use_page() passed refcount and page lock from tail page
-to head page, which is not needed because we can pass any subpage to
-split_huge_page().
-
-Naoya had fixed a similar issue in c3901e722b29 ("mm: hwpoison: fix thp
-split handling in memory_failure()").  But he missed fixing soft
-offline.
-
-Link: http://lkml.kernel.org/r/1551452476-24000-1-git-send-email-zhongjiang@huawei.com
-Fixes: 61f5d698cc97 ("mm: re-enable THP")
-Signed-off-by: zhongjiang <zhongjiang@huawei.com>
-Acked-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Hugh Dickins <hughd@google.com>
-Cc: Kirill A. Shutemov <kirill@shutemov.name>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: <stable@vger.kernel.org>	[4.5+]
+Link: http://lkml.kernel.org/r/20190207123426.9202-3-zev@bewilderbeest.net
+Signed-off-by: Zev Weiss <zev@bewilderbeest.net>
+Cc: Brendan Higgins <brendanhiggins@google.com>
+Cc: Iurii Zaikin <yzaikin@google.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Luis Chamberlain <mcgrof@kernel.org>
+Cc: <stable@vger.kernel.org>	[2.6.2+]
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/memory-failure.c |   14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
+ kernel/sysctl.c |   11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
---- a/mm/memory-failure.c
-+++ b/mm/memory-failure.c
-@@ -1701,19 +1701,17 @@ static int soft_offline_in_use_page(stru
- 	struct page *hpage = compound_head(page);
- 
- 	if (!PageHuge(page) && PageTransHuge(hpage)) {
--		lock_page(hpage);
--		if (!PageAnon(hpage) || unlikely(split_huge_page(hpage))) {
--			unlock_page(hpage);
--			if (!PageAnon(hpage))
-+		lock_page(page);
-+		if (!PageAnon(page) || unlikely(split_huge_page(page))) {
-+			unlock_page(page);
-+			if (!PageAnon(page))
- 				pr_info("soft offline: %#lx: non anonymous thp\n", page_to_pfn(page));
- 			else
- 				pr_info("soft offline: %#lx: thp split failed\n", page_to_pfn(page));
--			put_hwpoison_page(hpage);
-+			put_hwpoison_page(page);
- 			return -EBUSY;
- 		}
--		unlock_page(hpage);
--		get_hwpoison_page(page);
--		put_hwpoison_page(hpage);
-+		unlock_page(page);
- 	}
- 
- 	if (PageHuge(page))
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -2530,7 +2530,16 @@ static int do_proc_dointvec_minmax_conv(
+ {
+ 	struct do_proc_dointvec_minmax_conv_param *param = data;
+ 	if (write) {
+-		int val = *negp ? -*lvalp : *lvalp;
++		int val;
++		if (*negp) {
++			if (*lvalp > (unsigned long) INT_MAX + 1)
++				return -EINVAL;
++			val = -*lvalp;
++		} else {
++			if (*lvalp > (unsigned long) INT_MAX)
++				return -EINVAL;
++			val = *lvalp;
++		}
+ 		if ((param->min && *param->min > val) ||
+ 		    (param->max && *param->max < val))
+ 			return -EINVAL;
 
 
