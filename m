@@ -2,90 +2,201 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77F8BC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:04:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64BC5C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:05:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45D0120693
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:04:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31B4C20693
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:05:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553259903;
+	bh=D0B8hAhm9EfNPwbOec2bazG4LfGo/ZrQLepLTj12Lu8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=mOJvpvTvm2lGdIJKOzB0D18dt7eUFDbDDT2Fx+rmWL/2BZNPfWRla1mj0L9oGvva5
+	 ztTgrSYYDGgwmT2Zx9AQX7M4OVu/L5Z+evNEhOSbNYmqmsiOxZfHrIVwzqUVDdjnMO
+	 fvRGy/cZIr+paactB/slfjYCnnuw9oEZuxt1aPBw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731111AbfCVLjW (ORCPT
+        id S1731716AbfCVNFB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:39:22 -0400
-Received: from vegas.theobroma-systems.com ([144.76.126.164]:37950 "EHLO
-        mail.theobroma-systems.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731092AbfCVLjS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:39:18 -0400
-Received: from ip092042140082.rev.nessus.at ([92.42.140.82]:55278 helo=purcell.lan)
-        by mail.theobroma-systems.com with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA1:256)
-        (Exim 4.80)
-        (envelope-from <christoph.muellner@theobroma-systems.com>)
-        id 1h7IVm-0006yM-6O; Fri, 22 Mar 2019 12:38:58 +0100
-From:   Christoph Muellner <christoph.muellner@theobroma-systems.com>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, heiko@sntech.de,
-        shawn.lin@rock-chips.com, ulf.hansson@linaro.org,
-        adrian.hunter@intel.com
-Cc:     Christoph Muellner <christoph.muellner@theobroma-systems.com>,
-        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Tony Xie <tony.xie@rock-chips.com>,
-        Randy Li <ayaka@soulik.info>,
-        Vicente Bergas <vicencb@gmail.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Klaus Goger <klaus.goger@theobroma-systems.com>,
-        linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Subject: [PATCH v3 2/3] mmc: sdhci-of-arasan: Add DTS property to disable DCMDs.
-Date:   Fri, 22 Mar 2019 12:38:05 +0100
-Message-Id: <20190322113808.16858-2-christoph.muellner@theobroma-systems.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20190322113808.16858-1-christoph.muellner@theobroma-systems.com>
-References: <20190322113808.16858-1-christoph.muellner@theobroma-systems.com>
+        Fri, 22 Mar 2019 09:05:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40896 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731095AbfCVLjR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:39:17 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7277321916;
+        Fri, 22 Mar 2019 11:39:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553254756;
+        bh=D0B8hAhm9EfNPwbOec2bazG4LfGo/ZrQLepLTj12Lu8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=sJm42/uOuGITJn+h4PydSyqJAoop4fTL07/5AW27kqDJCTZ0OJKjBS2kKUe9IWwvG
+         +GFlr079ut7QzInwEWoyVSfSX2X6/0mM7DWe/9RVkRWwHkriG/fDXS2SqxOuMLKAd8
+         cupyYsNFGUmNVoRtr3f4eWTth3ooP4K6o3IhCGIU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Jay Dolan <jay.dolan@accesio.com>
+Subject: [PATCH 4.4 205/230] serial: 8250_pci: Fix number of ports for ACCES serial cards
+Date:   Fri, 22 Mar 2019 12:15:43 +0100
+Message-Id: <20190322111251.270329864@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
+References: <20190322111236.796964179@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Direct commands (DCMDs) are an optional feature of eMMC 5.1's command
-queue engine (CQE). The Arasan eMMC 5.1 controller uses the CQHCI,
-which exposes a control register bit to enable the feature.
-The current implementation sets this bit unconditionally.
+4.4-stable review patch.  If anyone has any objections, please let me know.
 
-This patch allows to suppress the feature activation,
-by specifying the property disable-cqe-dcmd.
+------------------
 
-Signed-off-by: Christoph Muellner <christoph.muellner@theobroma-systems.com>
-Signed-off-by: Philipp Tomsich <philipp.tomsich@theobroma-systems.com>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+From: Jay Dolan <jay.dolan@accesio.com>
+
+commit b896b03bc7fce43a07012cc6bf5e2ab2fddf3364 upstream.
+
+Have the correct number of ports created for ACCES serial cards. Two port
+cards show up as four ports, and four port cards show up as eight.
+
+Fixes: c8d192428f52 ("serial: 8250: added acces i/o products quad and octal serial cards")
+Signed-off-by: Jay Dolan <jay.dolan@accesio.com>
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/mmc/host/sdhci-of-arasan.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/tty/serial/8250/8250_pci.c |   36 ++++++++++++++++++------------------
+ 1 file changed, 18 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
-index c9e3e050ccc8..88dc3f00a5be 100644
---- a/drivers/mmc/host/sdhci-of-arasan.c
-+++ b/drivers/mmc/host/sdhci-of-arasan.c
-@@ -832,7 +832,10 @@ static int sdhci_arasan_probe(struct platform_device *pdev)
- 		host->mmc_host_ops.start_signal_voltage_switch =
- 					sdhci_arasan_voltage_switch;
- 		sdhci_arasan->has_cqe = true;
--		host->mmc->caps2 |= MMC_CAP2_CQE | MMC_CAP2_CQE_DCMD;
-+		host->mmc->caps2 |= MMC_CAP2_CQE;
-+
-+		if (!of_property_read_bool(np, "disable-cqe-dcmd"))
-+			host->mmc->caps2 |= MMC_CAP2_CQE_DCMD;
- 	}
- 
- 	ret = sdhci_arasan_add_host(sdhci_arasan);
--- 
-2.11.0
+--- a/drivers/tty/serial/8250/8250_pci.c
++++ b/drivers/tty/serial/8250/8250_pci.c
+@@ -5176,10 +5176,10 @@ static struct pci_device_id serial_pci_t
+ 	 */
+ 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_COM_2SDB,
+ 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7954 },
++		pbn_pericom_PI7C9X7952 },
+ 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_MPCIE_COM_2S,
+ 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7954 },
++		pbn_pericom_PI7C9X7952 },
+ 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_COM_4SDB,
+ 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+ 		pbn_pericom_PI7C9X7954 },
+@@ -5188,10 +5188,10 @@ static struct pci_device_id serial_pci_t
+ 		pbn_pericom_PI7C9X7954 },
+ 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_COM232_2DB,
+ 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7954 },
++		pbn_pericom_PI7C9X7952 },
+ 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_MPCIE_COM232_2,
+ 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7954 },
++		pbn_pericom_PI7C9X7952 },
+ 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_COM232_4DB,
+ 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+ 		pbn_pericom_PI7C9X7954 },
+@@ -5200,10 +5200,10 @@ static struct pci_device_id serial_pci_t
+ 		pbn_pericom_PI7C9X7954 },
+ 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_COM_2SMDB,
+ 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7954 },
++		pbn_pericom_PI7C9X7952 },
+ 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_MPCIE_COM_2SM,
+ 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7954 },
++		pbn_pericom_PI7C9X7952 },
+ 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_COM_4SMDB,
+ 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+ 		pbn_pericom_PI7C9X7954 },
+@@ -5212,13 +5212,13 @@ static struct pci_device_id serial_pci_t
+ 		pbn_pericom_PI7C9X7954 },
+ 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_MPCIE_ICM485_1,
+ 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7954 },
++		pbn_pericom_PI7C9X7951 },
+ 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_MPCIE_ICM422_2,
+ 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7954 },
++		pbn_pericom_PI7C9X7952 },
+ 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_MPCIE_ICM485_2,
+ 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7954 },
++		pbn_pericom_PI7C9X7952 },
+ 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_MPCIE_ICM422_4,
+ 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+ 		pbn_pericom_PI7C9X7954 },
+@@ -5227,16 +5227,16 @@ static struct pci_device_id serial_pci_t
+ 		pbn_pericom_PI7C9X7954 },
+ 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_ICM_2S,
+ 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7954 },
++		pbn_pericom_PI7C9X7952 },
+ 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_ICM_4S,
+ 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+ 		pbn_pericom_PI7C9X7954 },
+ 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_ICM232_2,
+ 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7954 },
++		pbn_pericom_PI7C9X7952 },
+ 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_MPCIE_ICM232_2,
+ 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7954 },
++		pbn_pericom_PI7C9X7952 },
+ 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_ICM232_4,
+ 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+ 		pbn_pericom_PI7C9X7954 },
+@@ -5245,13 +5245,13 @@ static struct pci_device_id serial_pci_t
+ 		pbn_pericom_PI7C9X7954 },
+ 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_ICM_2SM,
+ 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7954 },
++		pbn_pericom_PI7C9X7952 },
+ 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_COM422_4,
+ 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7958 },
++		pbn_pericom_PI7C9X7954 },
+ 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_COM485_4,
+ 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7958 },
++		pbn_pericom_PI7C9X7954 },
+ 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_COM422_8,
+ 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+ 		pbn_pericom_PI7C9X7958 },
+@@ -5260,19 +5260,19 @@ static struct pci_device_id serial_pci_t
+ 		pbn_pericom_PI7C9X7958 },
+ 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_COM232_4,
+ 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7958 },
++		pbn_pericom_PI7C9X7954 },
+ 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_COM232_8,
+ 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+ 		pbn_pericom_PI7C9X7958 },
+ 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_COM_4SM,
+ 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7958 },
++		pbn_pericom_PI7C9X7954 },
+ 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_COM_8SM,
+ 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+ 		pbn_pericom_PI7C9X7958 },
+ 	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_ICM_4SM,
+ 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7958 },
++		pbn_pericom_PI7C9X7954 },
+ 	/*
+ 	 * Topic TP560 Data/Fax/Voice 56k modem (reported by Evan Clarke)
+ 	 */
+
 
