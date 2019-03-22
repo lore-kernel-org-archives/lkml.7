@@ -1,251 +1,164 @@
-Return-Path: <SRS0=/BZh=RY=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B584C10F00
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 23:58:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20588C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 00:01:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F7D621902
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Mar 2019 23:58:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E139121902
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 00:01:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MPlhlOyy"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QOfrRQlX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727366AbfCUX6a (ORCPT
+        id S1727162AbfCVABK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 19:58:30 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:46791 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726374AbfCUX63 (ORCPT
+        Thu, 21 Mar 2019 20:01:10 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:34330 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726377AbfCVABK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 19:58:29 -0400
-Received: by mail-qt1-f195.google.com with SMTP id z17so606733qts.13
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 16:58:28 -0700 (PDT)
+        Thu, 21 Mar 2019 20:01:10 -0400
+Received: by mail-pg1-f195.google.com with SMTP id v12so188190pgq.1
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 17:01:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yDJgdezwv9pb242vYRRmjQ+71NeLZ6x0P4nCuwhNF0Y=;
-        b=MPlhlOyyK7u4fqsteq1DAEZTAYrFd+a2qBWI/pK5peJhhF2+Uul6P2iYAgx2H97Jeg
-         N+N8zwJdJISkaib/XjXsjMcwD/Gukrdo3YtTkWGAMsXbgPeDnlpRpX+MdbtoUS2NwBKo
-         2dBmLsN12RBI8cqFobRCfWG9GwF4uId38gnan/UP024I/cerlCxP2yZ16+bZDkO5KXGA
-         KIME3MjKWo8rP1/Xvf5pO8LzPByR3aIgLn8EGZT8MohLa9HfR+K672xPem2gHboejnNB
-         Mlv/pMyC8QTwfVEdPz0jXRvDV+oq4eVMwzJvDeQyUF8R+NvGSBm4O4IuSQsXUrlGZ7G1
-         qamQ==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=mbUY1OHCeDnwyDZsP92jAEWpkbO9ni7ahbfUuhZ6LRE=;
+        b=QOfrRQlX5/fxad5/FSbfrEcaOzOPUQR6+AoBWJzl1HHGBSlUApV2kj+/K6LB5w68Fn
+         sjWSBu0+amGzUjv9ccCMceLxLiayUGylnkSeHmScLURvlFt++tug6Iggx2pUksVvaW5c
+         DtQUZL4Q0RHqaWhrVRrlzfxM0ABJJ1PXX2PTw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yDJgdezwv9pb242vYRRmjQ+71NeLZ6x0P4nCuwhNF0Y=;
-        b=j3ULEpDY0XFlJi4huLWBo6ig7uFJ14icFs3Tegh0G1807LmxS1c4SBcxKA8Uoa8Ke1
-         kQTUvu3+2TYJDfrS1gvQiCVCsOLxOdKobpQrAHqAJLON9L6dW9IuXhz1L5GEFKl6of0h
-         NIca3KLWEUpP0nwLXPuELs7gPPZDwcANWlESuX7QzNBYF4eVkXD8r89m878wVmaRmVON
-         TikEV5TpAWCIJSMr54wNWx3WDktUs2weLN1emkKruZq+UeA3hBfZzXox+2zspddtjJN/
-         Psx8p5wS0SHS7MNJ/eCk8Xq7LWGRSoa2EsB9XKDzP8J3vGmFSoEKcmPVxHRFm/oAi2b6
-         vZOQ==
-X-Gm-Message-State: APjAAAXHrOfSI14Cl4COUoob2qa7IkKernbHI4YChpXTjjMpDS0aTTxq
-        9XPMceqYQg8UUl5faHp2lZ99Zy8+I7JYryKXOtY=
-X-Google-Smtp-Source: APXvYqyg4mvl7a96NwP/BjBX/ejJizfb0+w4DB6UBlte5NkFd6Cn97Y9pIRsoiyE3EBPwp70t0jQVR6v1T0HOBVgfOA=
-X-Received: by 2002:ac8:2e99:: with SMTP id h25mr5780960qta.166.1553212708415;
- Thu, 21 Mar 2019 16:58:28 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=mbUY1OHCeDnwyDZsP92jAEWpkbO9ni7ahbfUuhZ6LRE=;
+        b=hrbC+2XpooJ3eBJ6qy5yA2Wz+5ESzHSjN9995dSSOg4faVkBQxFsfmMrVpa/lHdoCe
+         qLfpac9C9zxkgD/HFh2cKCcZSwwyeFFLeJweKUUyyE5GaiBRUR0Sp5lcjypZeySdcZAA
+         HPekQ5pNNCHSW064rTsozj06jmogh7G9O1oUkZSCqQUF6+Bv4eeqRxeuk5hbXvBUO67/
+         w9hrYMesf8AhJm/QnAvU6kaZVC8BDusPu7VNt6cZJKVFijG4LVIELR2f4MdNeQTaJkk3
+         5TO02hWsu8Us88mnjho2/8ustX/nrTl2Vfte1b+NGvHiFFO1dJVpZIZ8VNaeQQpbcvrH
+         tMpQ==
+X-Gm-Message-State: APjAAAXxaad6LOKWW5POzjtS0NybKr/e+P1piREVv8Tx29d+j4lou9FL
+        EU37UanyjhPFFvKhdXZe0GksFg==
+X-Google-Smtp-Source: APXvYqws1eulgf0bY+vTEUSoo8RYFI28ZIhXFkHYCDDtLa4tURcjuzPnhg6SntBIS/oaYeLvcwAS5g==
+X-Received: by 2002:a63:e813:: with SMTP id s19mr5944970pgh.12.1553212869251;
+        Thu, 21 Mar 2019 17:01:09 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
+        by smtp.gmail.com with ESMTPSA id 7sm11465465pgj.64.2019.03.21.17.01.08
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 21 Mar 2019 17:01:08 -0700 (PDT)
+Date:   Thu, 21 Mar 2019 17:01:07 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     =?utf-8?B?R2HDq2w=?= PORTAY <gael.portay@collabora.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        Derek Basehore <dbasehore@chromium.org>,
+        Heiko Stuebner <heiko@sntech.de>, linux-pm@vger.kernel.org,
+        Brian Norris <briannorris@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        linux-kernel@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Klaus Goger <klaus.goger@theobroma-systems.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        linux-rockchip@lists.infradead.org, Randy Li <ayaka@soulik.info>,
+        kernel@collabora.com, linux-arm-kernel@lists.infradead.org,
+        Lin Huang <hl@rock-chips.com>
+Subject: Re: [PATCH v2 3/5] devfreq: rk3399_dmc: Pass ODT and auto power down
+ parameters to TF-A.
+Message-ID: <20190322000107.GU112750@google.com>
+References: <20190319181323.22804-1-gael.portay@collabora.com>
+ <20190319181323.22804-4-gael.portay@collabora.com>
+ <20190320003352.GN112750@google.com>
+ <20190320215013.43zgvyn5frnb3yud@archlinux.localdomain>
+ <20190320220223.GP112750@google.com>
+ <20190321231055.j7z23f3k3rcngq4u@archlinux.localdomain>
 MIME-Version: 1.0
-References: <20190321200157.29678-1-keith.busch@intel.com> <20190321200157.29678-4-keith.busch@intel.com>
-In-Reply-To: <20190321200157.29678-4-keith.busch@intel.com>
-From:   Yang Shi <shy828301@gmail.com>
-Date:   Thu, 21 Mar 2019 16:58:16 -0700
-Message-ID: <CAHbLzkqGGJ7dFiZkR-=yvGEF0AM4JbBe6pxGFbSe9tSnC7wgzQ@mail.gmail.com>
-Subject: Re: [PATCH 3/5] mm: Attempt to migrate page in lieu of discard
-To:     Keith Busch <keith.busch@intel.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>, linux-nvdimm@lists.01.org,
-        Dave Hansen <dave.hansen@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190321231055.j7z23f3k3rcngq4u@archlinux.localdomain>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 21, 2019 at 1:03 PM Keith Busch <keith.busch@intel.com> wrote:
->
-> If a memory node has a preferred migration path to demote cold pages,
-> attempt to move those inactive pages to that migration node before
-> reclaiming. This will better utilize available memory, provide a faster
-> tier than swapping or discarding, and allow such pages to be reused
-> immediately without IO to retrieve the data.
->
-> Some places we would like to see this used:
->
->  1. Persistent memory being as a slower, cheaper DRAM replacement
->  2. Remote memory-only "expansion" NUMA nodes
->  3. Resolving memory imbalances where one NUMA node is seeing more
->     allocation activity than another.  This helps keep more recent
->     allocations closer to the CPUs on the node doing the allocating.
->
-> Signed-off-by: Keith Busch <keith.busch@intel.com>
-> ---
->  include/linux/migrate.h        |  6 ++++++
->  include/trace/events/migrate.h |  3 ++-
->  mm/debug.c                     |  1 +
->  mm/migrate.c                   | 45 ++++++++++++++++++++++++++++++++++++++++++
->  mm/vmscan.c                    | 15 ++++++++++++++
->  5 files changed, 69 insertions(+), 1 deletion(-)
->
-> diff --git a/include/linux/migrate.h b/include/linux/migrate.h
-> index e13d9bf2f9a5..a004cb1b2dbb 100644
-> --- a/include/linux/migrate.h
-> +++ b/include/linux/migrate.h
-> @@ -25,6 +25,7 @@ enum migrate_reason {
->         MR_MEMPOLICY_MBIND,
->         MR_NUMA_MISPLACED,
->         MR_CONTIG_RANGE,
-> +       MR_DEMOTION,
->         MR_TYPES
->  };
->
-> @@ -79,6 +80,7 @@ extern int migrate_huge_page_move_mapping(struct address_space *mapping,
->  extern int migrate_page_move_mapping(struct address_space *mapping,
->                 struct page *newpage, struct page *page, enum migrate_mode mode,
->                 int extra_count);
-> +extern bool migrate_demote_mapping(struct page *page);
->  #else
->
->  static inline void putback_movable_pages(struct list_head *l) {}
-> @@ -105,6 +107,10 @@ static inline int migrate_huge_page_move_mapping(struct address_space *mapping,
->         return -ENOSYS;
->  }
->
-> +static inline bool migrate_demote_mapping(struct page *page)
-> +{
-> +       return false;
-> +}
->  #endif /* CONFIG_MIGRATION */
->
->  #ifdef CONFIG_COMPACTION
-> diff --git a/include/trace/events/migrate.h b/include/trace/events/migrate.h
-> index 705b33d1e395..d25de0cc8714 100644
-> --- a/include/trace/events/migrate.h
-> +++ b/include/trace/events/migrate.h
-> @@ -20,7 +20,8 @@
->         EM( MR_SYSCALL,         "syscall_or_cpuset")            \
->         EM( MR_MEMPOLICY_MBIND, "mempolicy_mbind")              \
->         EM( MR_NUMA_MISPLACED,  "numa_misplaced")               \
-> -       EMe(MR_CONTIG_RANGE,    "contig_range")
-> +       EM(MR_CONTIG_RANGE,     "contig_range")                 \
-> +       EMe(MR_DEMOTION,        "demotion")
->
->  /*
->   * First define the enums in the above macros to be exported to userspace
-> diff --git a/mm/debug.c b/mm/debug.c
-> index c0b31b6c3877..53d499f65199 100644
-> --- a/mm/debug.c
-> +++ b/mm/debug.c
-> @@ -25,6 +25,7 @@ const char *migrate_reason_names[MR_TYPES] = {
->         "mempolicy_mbind",
->         "numa_misplaced",
->         "cma",
-> +       "demotion",
->  };
->
->  const struct trace_print_flags pageflag_names[] = {
-> diff --git a/mm/migrate.c b/mm/migrate.c
-> index 705b320d4b35..83fad87361bf 100644
-> --- a/mm/migrate.c
-> +++ b/mm/migrate.c
-> @@ -1152,6 +1152,51 @@ static int __unmap_and_move(struct page *page, struct page *newpage,
->         return rc;
->  }
->
-> +/**
-> + * migrate_demote_mapping() - Migrate this page and its mappings to its
-> + *                           demotion node.
-> + * @page: An isolated, non-compound page that should move to
-> + *       its current node's migration path.
-> + *
-> + * @returns: True if migrate demotion was successful, false otherwise
-> + */
-> +bool migrate_demote_mapping(struct page *page)
-> +{
-> +       int rc, next_nid = next_migration_node(page_to_nid(page));
-> +       struct page *newpage;
-> +
-> +       /*
-> +        * The flags are set to allocate only on the desired node in the
-> +        * migration path, and to fail fast if not immediately available. We
-> +        * are already in the memory reclaim path, we don't want heroic
-> +        * efforts to get a page.
-> +        */
-> +       gfp_t mask = GFP_NOWAIT | __GFP_NOWARN | __GFP_NORETRY |
-> +                    __GFP_NOMEMALLOC | __GFP_THISNODE;
-> +
-> +       VM_BUG_ON_PAGE(PageCompound(page), page);
-> +       VM_BUG_ON_PAGE(PageLRU(page), page);
-> +
-> +       if (next_nid < 0)
-> +               return false;
-> +
-> +       newpage = alloc_pages_node(next_nid, mask, 0);
-> +       if (!newpage)
-> +               return false;
-> +
-> +       /*
-> +        * MIGRATE_ASYNC is the most light weight and never blocks.
-> +        */
-> +       rc = __unmap_and_move_locked(page, newpage, MIGRATE_ASYNC);
-> +       if (rc != MIGRATEPAGE_SUCCESS) {
-> +               __free_pages(newpage, 0);
-> +               return false;
-> +       }
-> +
-> +       set_page_owner_migrate_reason(newpage, MR_DEMOTION);
-> +       return true;
-> +}
-> +
->  /*
->   * gcc 4.7 and 4.8 on arm get an ICEs when inlining unmap_and_move().  Work
->   * around it.
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> index a5ad0b35ab8e..0a95804e946a 100644
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -1261,6 +1261,21 @@ static unsigned long shrink_page_list(struct list_head *page_list,
->                         ; /* try to reclaim the page below */
->                 }
->
-> +               if (!PageCompound(page)) {
-> +                       if (migrate_demote_mapping(page)) {
-> +                                unlock_page(page);
-> +                                if (likely(put_page_testzero(page)))
-> +                                        goto free_it;
-> +
-> +                                /*
-> +                                * Speculative reference will free this page,
-> +                                * so leave it off the LRU.
-> +                                */
-> +                                nr_reclaimed++;
-> +                                continue;
-> +                        }
-> +               }
+Hi Gaël,
 
-It looks the reclaim path would fall through if the migration is
-failed. But, it looks, with patch #4, you may end up trying reclaim an
-anon page on swapless system if migration is failed?
+On Thu, Mar 21, 2019 at 07:10:55PM -0400, Gaël PORTAY wrote:
+> Matthias,
+> 
+> On Wed, Mar 20, 2019 at 03:02:23PM -0700, Matthias Kaehlcke wrote:
+> > Hi Gaël,
+> > 
+> > On Wed, Mar 20, 2019 at 05:50:13PM -0400, Gaël PORTAY wrote:
+> > > Hi Matthias,
+> > > 
+> > > On Tue, Mar 19, 2019 at 05:33:52PM -0700, Matthias Kaehlcke wrote:
+> > > > ...
+> > > > > @@ -95,6 +103,19 @@ static int rk3399_dmcfreq_target(struct device *dev, unsigned long *freq,
+> > > > >  
+> > > > >  	mutex_lock(&dmcfreq->lock);
+> > > > >  
+> > > > > +	if (target_rate >= dmcfreq->odt_dis_freq)
+> > > > > +		odt_enable = true;
+> > > > > +
+> > > > > +	/*
+> > > > > +	 * This makes a SMC call to the TF-A to set the DDR PD (power-down)
+> > > > > +	 * timings and to enable or disable the ODT (on-die termination)
+> > > > > +	 * resistors.
+> > > > > +	 */
+> > > > > +	arm_smccc_smc(ROCKCHIP_SIP_DRAM_FREQ, dmcfreq->odt_pd_arg0,
+> > > > > +		      dmcfreq->odt_pd_arg1,
+> > > > > +		      ROCKCHIP_SIP_CONFIG_DRAM_SET_ODT_PD,
+> > > > > +		      odt_enable, 0, 0, 0, &res);
+> > > > 
+> > > > Is it necessary/desirable to make this call for every frequency
+> > > > change? IIUC it should be only needed when odt_enable changes and the
+> > > > driver could track the state. If the DDR frequency doesn't change too
+> > > > often and the overhead of the call is small it shouldn't be really
+> > > > important though.
+> > > >
+> > > 
+> > > I will test your solution first to make sure there is no regression to
+> > > run that call for frequency change only.
+> > 
+> 
+> Oops, I wanted to say when odt_enable changes since last call.
+> 
+> > If there is no frequency change the function returns at the
+> > beginning. My suggestion was to only do the call when 'odt_enable'
+> > changes, i.e. when a change (up or down) passes the 'odt_dis_freq'
+> > threshold.
+> > 
+> 
+> So, for a reason that I ignore, if we try to save unecessary calls to
+> ROCKCHIP_SIP_CONFIG_DRAM_SET_ODT_PD (odt_enable has not changed since
+> last call), we get stalled in the call to ROCKCHIP_SIP_CONFIG_SET_RAGE
+> that follows. The function arm_smccc_smc never returns and the device
+> hard hang.
 
-And, actually I have the same question with Yan Zi. Why not just put
-the demote candidate into a separate list, then migrate all the
-candidates in bulk with migrate_pages()?
+Thanks for giving it a try!
 
-Thanks,
-Yang
+Did your code ensure to perform the SMC call for the first frequency
+change? If not the problem could be that the DDR PD timings and ODT
+resistors are not properly configured for the new frequency.
 
-> +
->                 /*
->                  * Anonymous process memory has backing store?
->                  * Try to allocate it some swap space here.
-> --
-> 2.14.4
->
+In case you already did this or it doesn't help I think it's fine to
+just do the call always, we can always revisit this later.
+
+> Thanks to your remark, I have also fixed an issue with the odt_dis_freq
+> value. Its value is initialized to 0 in the probe function. Thus the
+> odt_enable is always true (target_rate > 0). I moved its initialization
+> after the timings are parsed from the device-tree; its value is now none
+> zero (333000000 in my case).
+
+Great!
