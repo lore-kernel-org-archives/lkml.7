@@ -2,109 +2,70 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84794C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:21:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06DE2C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:24:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51F20218A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:21:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D131320828
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:24:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727455AbfCVQVs (ORCPT
+        id S1727378AbfCVQX7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 12:21:48 -0400
-Received: from [110.188.70.11] ([110.188.70.11]:5237 "EHLO spam1.hygon.cn"
-        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727246AbfCVQVs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 12:21:48 -0400
-Received: from MK-FE.hygon.cn ([172.23.18.61])
-        by spam1.hygon.cn with ESMTP id x2MGJ5JE005624;
-        Sat, 23 Mar 2019 00:19:06 +0800 (GMT-8)
-        (envelope-from puwen@hygon.cn)
-Received: from cncheex01.Hygon.cn ([172.23.18.10])
-        by MK-FE.hygon.cn with ESMTP id x2MGJ0Pv072954;
-        Sat, 23 Mar 2019 00:19:00 +0800 (GMT-8)
-        (envelope-from puwen@hygon.cn)
-Received: from [192.168.1.193] (172.23.18.44) by cncheex01.Hygon.cn
- (172.23.18.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1466.3; Sat, 23 Mar
- 2019 00:19:00 +0800
-Subject: Re: [RFC PATCH] x86/cpu/hygon: Fix phys_proc_id calculation logic for
- multi-die processor
-To:     Borislav Petkov <bp@alien8.de>
-CC:     "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "hpa@zytor.com" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <1553251380-7015-1-git-send-email-puwen@hygon.cn>
- <20190322155449.GE12472@zn.tnic>
-From:   Pu Wen <puwen@hygon.cn>
-Message-ID: <639a5bc6-f821-ee9d-1594-d02701321192@hygon.cn>
-Date:   Sat, 23 Mar 2019 00:19:01 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.0
-MIME-Version: 1.0
-In-Reply-To: <20190322155449.GE12472@zn.tnic>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [172.23.18.44]
-X-ClientProxiedBy: cncheex01.Hygon.cn (172.23.18.10) To cncheex01.Hygon.cn
- (172.23.18.10)
-X-MAIL: spam1.hygon.cn x2MGJ5JE005624
-X-DNSRBL: 
+        Fri, 22 Mar 2019 12:23:59 -0400
+Received: from mga04.intel.com ([192.55.52.120]:16427 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726034AbfCVQX7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 12:23:59 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Mar 2019 09:23:58 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,256,1549958400"; 
+   d="scan'208";a="329760961"
+Received: from plaxmina-desktop.iind.intel.com ([10.66.245.186])
+  by fmsmga006.fm.intel.com with ESMTP; 22 Mar 2019 09:23:56 -0700
+From:   Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>
+To:     lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
+        tiwai@suse.com, alsa-devel@alsa-project.org
+Cc:     linux-kernel@vger.kernel.org,
+        pankaj.laxminarayan.bharadiya@intel.com
+Subject: [PATCH] ASoC: dapm: Initialize private_value in snd_soc_dapm_new_dai
+Date:   Fri, 22 Mar 2019 21:53:39 +0530
+Message-Id: <1553271819-24576-1-git-send-email-pankaj.laxminarayan.bharadiya@intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/3/22 23:55, Borislav Petkov wrote:
-> On Fri, Mar 22, 2019 at 06:43:00PM +0800, Pu Wen wrote:
->> Current codes direct use "phys_proc_id = initial_apicid >> bits", which
-> 
-> Use proper english please - there's no "codes"
-> 
->> calc phys_proc_id from initial_apicid by shifting *bits*, will get
-> 
-> ... or "calc"
+In case of single config, private_value is left uninitialized.
 
-Okay, will correct the spelling.
+The private_value does need to be initialized or in
+snd_soc_dapm_new_control_unlocked() call failure case, it leads to a
+bogus free in snd_soc_dapm_free_kcontrol()
 
->> For Hygon family 18h CPU the socket ID should be obtained from ApicId[6].
->> To fix the problem and match ApicID field definition, adjust the shift
->> bits to 6 for all Hygon family 18h multi-die CPUs.
-> 
-> Sounds to me like you're programming the initial APIC ID not
-> the same way as AMD do...
+Signed-off-by: Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>
+---
+ sound/soc/soc-dapm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-In the same way.
-
->> Reference:
->> [1] https://www.amd.com/system/files/TechDocs/54945_PPR_Family_17h_Models_00h-0Fh.pdf
->>
->> Signed-off-by: Pu Wen <puwen@hygon.cn>
->> ---
->>   arch/x86/kernel/cpu/hygon.c | 3 +++
->>   1 file changed, 3 insertions(+)
->>
->> diff --git a/arch/x86/kernel/cpu/hygon.c b/arch/x86/kernel/cpu/hygon.c
->> index cf25405..2df6dd9 100644
->> --- a/arch/x86/kernel/cpu/hygon.c
->> +++ b/arch/x86/kernel/cpu/hygon.c
->> @@ -87,6 +87,9 @@ static void hygon_get_topology(struct cpuinfo_x86 *c)
->>   		if (!err)
->>   			c->x86_coreid_bits = get_count_order(c->x86_max_cores);
->>   
->> +		/* Socket ID is ApicId[6] for these processors. */
->> +		c->phys_proc_id = c->apicid >> 6;
-> 
-> That 6 is a magic number, I assume?
-
-That 6 is not a magic number. It indicate bit 6 of ApicId. This calculation
-is the same as the LLC ID calculation in cacheinfo_hygon_init_llc_id().
-
+diff --git a/sound/soc/soc-dapm.c b/sound/soc/soc-dapm.c
+index 67b032c..665a6b1 100644
+--- a/sound/soc/soc-dapm.c
++++ b/sound/soc/soc-dapm.c
+@@ -4042,7 +4042,7 @@ snd_soc_dapm_new_dai(struct snd_soc_card *card, struct snd_soc_pcm_runtime *rtd,
+ 	struct snd_soc_dapm_widget template;
+ 	struct snd_soc_dapm_widget *w;
+ 	const char **w_param_text;
+-	unsigned long private_value;
++	unsigned long private_value = 0;
+ 	char *link_name;
+ 	int ret;
+ 
 -- 
-Regards,
-Pu Wen
+2.7.4
+
