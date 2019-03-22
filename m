@@ -2,90 +2,94 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98CD1C10F03
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 20:02:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED8E6C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 20:02:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6669A21874
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 20:02:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B53F621874
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 20:02:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=mbuki-mvuki-org.20150623.gappssmtp.com header.i=@mbuki-mvuki-org.20150623.gappssmtp.com header.b="P3w7P9NB"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="jH9uz9xZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727012AbfCVUCZ (ORCPT
+        id S1727183AbfCVUCm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 16:02:25 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:43411 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725999AbfCVUCY (ORCPT
+        Fri, 22 Mar 2019 16:02:42 -0400
+Received: from mail-lj1-f181.google.com ([209.85.208.181]:44462 "EHLO
+        mail-lj1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725999AbfCVUCm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 16:02:24 -0400
-Received: by mail-wr1-f65.google.com with SMTP id d17so3616854wre.10
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 13:02:23 -0700 (PDT)
+        Fri, 22 Mar 2019 16:02:42 -0400
+Received: by mail-lj1-f181.google.com with SMTP id n18so3028445ljg.11
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 13:02:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=mbuki-mvuki-org.20150623.gappssmtp.com; s=20150623;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ap5o+tpn9OtFrN8fvD2s704ORsBw+ecBVyZ08vMFyXc=;
-        b=P3w7P9NBzwxqvpiAgCWiiWVf5FPKSLkD8sq1m+sMhA28iRqGhFlMCQ5d/9v24QJJF8
-         bS+iEg22otoDjF3waHdWyvHpMSV9f1GCieQQs6J43ifTZ+/KtUj8qK0EFbA8Ae6dSkLp
-         dpc3cv4bJcTCvrishP2nWXTLBiw8LUkQeSWOlsB6Q0t8UL7r7G8DS65ZIGbmAh4gTyNb
-         7lr630bxk+srk/WDp7xzX9EEjxkpDAaR9gHpx1jTh7CtW+h/FYeyfQs17oC6Jzw7wpcr
-         WDxSb3qgGD7sOO05sQC8f6twHmoJonys2Yhr2k0xQXSElIvV5zA0HL9HBe96k4W9Nl/s
-         syzg==
+        bh=gVhcFvBSU0ilIWQ6zraITGsbJeqbqMeecPM//6iFgS0=;
+        b=jH9uz9xZZX2F8LWYXB1jJVPYDGKpnIcwAFsdxCmgl1V2qAjGcgryI9I8IM0mljKQD4
+         cZ4mFjNX3Dx2Z5aI24LwSRw9IppAC1Hu1OtSSpRYSWb0zJth/V0rJKI1aGHIekcng5Zf
+         LHBqAKbpCB1B5Iy2WmoQ+s9QdwzgT3Qqv1SB+nRwcWGFaiv6fMTNrzcUW/ukYtCeRlQ8
+         kGgXsITY6gZnnGZpaAEh1wjrYsDPcbJFqWDc4uqg+/Fy8I+pXfQecwAi2LQMs+WQHaOM
+         ON3SD6nvib27G15Z6OCem40jwr29WbT1A2tJv7fKX9DCd8fJGbtCatPD7SRmcGLZK8NP
+         Ccng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ap5o+tpn9OtFrN8fvD2s704ORsBw+ecBVyZ08vMFyXc=;
-        b=c3KaG3l1qNnYXKY/rcFhqJpDLKVTvkBdwXLCeeD3UW6B25B5heW9v5wYE3CM2Vwbj8
-         vtqrNGx1nVVg6j9VSZOwDUsIfk5nNOUXpxRZn0+ldyrnyz2qYSNcBjVjq4lbxmJyhc/H
-         0tC2zb+0fFz7t0TU8zXgLHmytjEQSWr4JXI5T4CTlXjuXhopFfKWjySwE86NikVT9P9h
-         odinKhsn9pby6o9O3Yx7W+g2yzSorZbLf2rmej/cxf1hHKhF49lrA9Dd5IwNQwDe4iM5
-         tpKhTExse/3E+VqjeUSS98NeFESNQ+H5s3xObPkHHdo7F5gSsAhbu12sQUt/8aE8oa9G
-         4ikQ==
-X-Gm-Message-State: APjAAAXIPpcBJB87x+TSF7CfEPUPFZUSk/2czz7OUbDtn9lK4ADOSQZy
-        wMMBpLPQVJMGizNPVY+CsW6a0XpwJLO3AS0kCLk6/g==
-X-Google-Smtp-Source: APXvYqwdZHSyLgAhMoA7chBDfM5toGHV0VUiq62d4vN12G3QYWWYNlprnAUylg0F96eGO38gghyNLTmmJ65hDjZKujs=
-X-Received: by 2002:a5d:5108:: with SMTP id s8mr7015877wrt.99.1553284942891;
- Fri, 22 Mar 2019 13:02:22 -0700 (PDT)
+        bh=gVhcFvBSU0ilIWQ6zraITGsbJeqbqMeecPM//6iFgS0=;
+        b=ft8mP0Hoc4sEPwIjwgo8L7gbFSyXip2QER67XtLKp9KgzggAdMaeTSNDa/T2J/GHkX
+         dwSu7Q1Qozl+VbXhKMg675lcHE0GKFXAGGRqkpOTQjD12pgsB/NkgpfyNikD2bdYeH9z
+         4FXCKugo1b0WMHFiSYlXkxbSter784HQS3Q2HrQnJ9ev3banx5svSVyGJ0NePH+O+y8G
+         lo95a3RLC8DGXkf37qLUl3ITQovcfKOlU33iw6eSQl9YeGCjkt52HPXYsUzhBASihvhI
+         z4CtKVKjYGsUllaHAohkYKFnk36ArO8TH78YG6ObWQXagRmUBd9P5wz/pHH4ZCaoVYrK
+         5ieA==
+X-Gm-Message-State: APjAAAXe+/f/xrOsJtf4kEXBqvpp/AybfIh5Hzcf1ythLIDCDYcGPvZz
+        lYF2iZUIKW/98Oz75zagwJJzs17uY+5B4mFexSXm
+X-Google-Smtp-Source: APXvYqx1sPszIyYrTFmMNiYbIBu5EMB5UYqK1dgtaba+v7+UHYP8hAvhq6PSz4sDL9jUH2b01NQunZsR3JZjZ2T6knk=
+X-Received: by 2002:a2e:904b:: with SMTP id n11mr6274461ljg.57.1553284959714;
+ Fri, 22 Mar 2019 13:02:39 -0700 (PDT)
 MIME-Version: 1.0
-References: <CANSNSoWiKd98Dt1N2sSjP9Af8zk1NPV-=3P4VLtFs_cSQG4RUg@mail.gmail.com>
- <20190313232112.GC210027@google.com> <CANSNSoXPFDu9RQAUA6dUCUrSCAj68q-Nj2W7ECz3fKpFtSNU+Q@mail.gmail.com>
- <20190321232310.GL251185@google.com>
-In-Reply-To: <20190321232310.GL251185@google.com>
-From:   Jesse Hathaway <jesse@mbuki-mvuki.org>
-Date:   Fri, 22 Mar 2019 15:02:11 -0500
-Message-ID: <CANSNSoXhiYP4Ad3hO1v03aMOX1VtUao2yCLgj_J0z9fCNwWo5w@mail.gmail.com>
-Subject: Re: Regression causes a hang on boot with a Comtrol PCI card
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+References: <20190322140400.18892-1-yuehaibing@huawei.com> <CAFqZXNv-u+nAr2F+bYuovqMgvVJaS1LK9kCWXCZCtWGBYGj_cQ@mail.gmail.com>
+In-Reply-To: <CAFqZXNv-u+nAr2F+bYuovqMgvVJaS1LK9kCWXCZCtWGBYGj_cQ@mail.gmail.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Fri, 22 Mar 2019 16:02:27 -0400
+Message-ID: <CAHC9VhR7eUWxB3Fviqtp5ZUtdjJVasVOdF2MbKTgqufa2vXLdg@mail.gmail.com>
+Subject: Re: [PATCH -next] selinux: Make selinux_kernfs_init_security static
+To:     Yue Haibing <yuehaibing@huawei.com>
+Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
+        Eric Paris <eparis@parisplace.org>,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>,
+        selinux@vger.kernel.org, Ondrej Mosnacek <omosnace@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> So apparently the hang happens while we're running the "final" PCI
-> fixups.  This happens after all the rest of PCI is initialized.
+On Fri, Mar 22, 2019 at 1:46 PM Ondrej Mosnacek <omosnace@redhat.com> wrote:
+> On Fri, Mar 22, 2019 at 3:04 PM Yue Haibing <yuehaibing@huawei.com> wrote:
+> > From: YueHaibing <yuehaibing@huawei.com>
+> >
+> > Fix sparse warning:
+> >
+> > security/selinux/hooks.c:3389:5: warning:
+> >  symbol 'selinux_kernfs_init_security' was not declared. Should it be static?
+> >
+> > Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 >
-> Can you boot v5.0 vanilla with "initcall_debug"?  Maybe we can narrow
-> it down to a specific quirk.
+> Yup, another trivial mistake on my part...
+>
+> Acked-by: Ondrej Mosnacek <omosnace@redhat.com>
+>
+> Thanks for catching that!
 
-yup, added the "initcall_debug" output to the ticket:
-https://bugzilla.kernel.org/show_bug.cgi?id=202927, here is the tail end
+Yes, thanks for the patch; I don't always check for static (or
+const'ified args) as much as I should when reviewing code.  Merged
+into selinux/next.
 
-[   14.896337] NET: Registered protocol family 1
-[   14.901314] initcall af_unix_init+0x0/0x4e returned 0 after 4866 usecs
-[   14.908694] calling  ipv6_offload_init+0x0/0x7f @ 1
-[   14.914238] initcall ipv6_offload_init+0x0/0x7f returned 0 after 1 usecs
-[   14.921821] calling  vlan_offload_init+0x0/0x20 @ 1
-[   14.927365] initcall vlan_offload_init+0x0/0x20 returned 0 after 0 usecs
-[   14.934948] calling  pci_apply_final_quirks+0x0/0x126 @ 1
-[   14.941106] pci 0000:00:1a.0: calling  quirk_usb_early_handoff+0x0/0x6a0 @ 1
-
-thanks, Jesse Hathaway
+-- 
+paul moore
+www.paul-moore.com
