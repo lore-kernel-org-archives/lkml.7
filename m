@@ -2,53 +2,52 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BIGNUM_EMAILS,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD820C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:36:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 646CDC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:36:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CDA12082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:36:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EC262082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:36:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254563;
-	bh=g1YJSvTXpR8Px9Gq1jzxzajItD84MTEAfV6V3vFxGF8=;
+	s=default; t=1553254567;
+	bh=NDRW8a4eLQytd5EB9pjAdhRmmcF5h45ICkL7tH89674=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xTWsKsM3jDdPsyRhF/oZLUplfz2ZqZi9/sjlbDRqVNjiicnW8u5SLITCYwR0vFgfo
-	 44/hnlm17e9CetLRZ7sZRD3mParz4uHTSSlZqPbd4A6dIFnEcCfXa2+itjZBWdu6IX
-	 fAmasz3Th8bqtXu3IF5z+vViCUSLLAMeaGaj4Qzg=
+	b=S+XICcjgVc/mld9jHt0VD/P9XD2eG3S/UCuTYD9Mw2DoOEHFKJmxujEeE3ReBC5+e
+	 W8WB3A9lvfjGcOmsuyh2j5FpigHFpoZqD/9MBbLEo0+ECP2gQXrxk3rM9yrYdtmKTI
+	 dLP/kmgvnCMouAUxH94p9p5Jg5xcR5ucZE0SVcXk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730637AbfCVLgC (ORCPT
+        id S1730647AbfCVLgF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:36:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37156 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:36:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730631AbfCVLf7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:35:59 -0400
+        id S1730632AbfCVLgC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:36:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85B712082C;
-        Fri, 22 Mar 2019 11:35:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 003172082C;
+        Fri, 22 Mar 2019 11:36:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254557;
-        bh=g1YJSvTXpR8Px9Gq1jzxzajItD84MTEAfV6V3vFxGF8=;
+        s=default; t=1553254561;
+        bh=NDRW8a4eLQytd5EB9pjAdhRmmcF5h45ICkL7tH89674=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HZV9inobYa+CZNWG6EV+1ACfmBB/473ApnWlnpP+qkogQx2rMRGR4+O2CnmI9lPtc
-         XD1E5xWj7pW7KrCn3JJMSCE/DBWQ8wdXS9Lu+soFuds/48L6ucDZM3PTC+RDCqjuF8
-         J8gTF8UsdLq9SkzMl/gw1ue6KNAeIC4okJpKR7Tc=
+        b=VZLI4e+GnMEBsCTSJjYCkQh4UEvU9HPO9DxM1g7Uocm6lvfq6yQtDOxMPthB0Tvfo
+         t8ZvSDa+K/EFfMw89CKaa03+sJBeVqVD2wywHspbJj4gTuimjVKwiWbZHrXClt92UX
+         1C9PnBwSD4n5F6h9gwmGMgyD4fpHvxjHUeQufZSY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Stefan Haberland <sth@linux.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        stable@vger.kernel.org, Yizhuo <yzhai003@ucr.edu>,
+        Tony Lindgren <tony@atomide.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 158/230] s390/dasd: fix using offset into zero size array error
-Date:   Fri, 22 Mar 2019 12:14:56 +0100
-Message-Id: <20190322111247.814154015@linuxfoundation.org>
+Subject: [PATCH 4.4 159/230] ARM: OMAP2+: Variable "reg" in function omap4_dsi_mux_pads() could be uninitialized
+Date:   Fri, 22 Mar 2019 12:14:57 +0100
+Message-Id: <20190322111247.886568789@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -67,94 +66,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 4a8ef6999bce998fa5813023a9a6b56eea329dba ]
+[ Upstream commit dc30e70391376ba3987aeb856ae6d9c0706534f1 ]
 
-Dan Carpenter reported the following:
+In function omap4_dsi_mux_pads(), local variable "reg" could
+be uninitialized if function regmap_read() returns -EINVAL.
+However, it will be used directly in the later context, which
+is potentially unsafe.
 
-The patch 52898025cf7d: "[S390] dasd: security and PSF update patch
-for EMC CKD ioctl" from Mar 8, 2010, leads to the following static
-checker warning:
-
-	drivers/s390/block/dasd_eckd.c:4486 dasd_symm_io()
-	error: using offset into zero size array 'psf_data[]'
-
-drivers/s390/block/dasd_eckd.c
-  4458          /* Copy parms from caller */
-  4459          rc = -EFAULT;
-  4460          if (copy_from_user(&usrparm, argp, sizeof(usrparm)))
-                                    ^^^^^^^
-The user can specify any "usrparm.psf_data_len".  They choose zero by
-mistake.
-
-  4461                  goto out;
-  4462          if (is_compat_task()) {
-  4463                  /* Make sure pointers are sane even on 31 bit. */
-  4464                  rc = -EINVAL;
-  4465                  if ((usrparm.psf_data >> 32) != 0)
-  4466                          goto out;
-  4467                  if ((usrparm.rssd_result >> 32) != 0)
-  4468                          goto out;
-  4469                  usrparm.psf_data &= 0x7fffffffULL;
-  4470                  usrparm.rssd_result &= 0x7fffffffULL;
-  4471          }
-  4472          /* alloc I/O data area */
-  4473          psf_data = kzalloc(usrparm.psf_data_len, GFP_KERNEL
-  			   				 | GFP_DMA);
-  4474          rssd_result = kzalloc(usrparm.rssd_result_len, GFP_KERNEL
-							       | GFP_DMA);
-  4475          if (!psf_data || !rssd_result) {
-
-kzalloc() returns a ZERO_SIZE_PTR (0x16).
-
-  4476                  rc = -ENOMEM;
-  4477                  goto out_free;
-  4478          }
-  4479
-  4480          /* get syscall header from user space */
-  4481          rc = -EFAULT;
-  4482          if (copy_from_user(psf_data,
-  4483                             (void __user *)(unsigned long)
-  				   	 		 usrparm.psf_data,
-  4484                             usrparm.psf_data_len))
-
-That all works great.
-
-  4485                  goto out_free;
-  4486          psf0 = psf_data[0];
-  4487          psf1 = psf_data[1];
-
-But now we're assuming that "->psf_data_len" was at least 2 bytes.
-
-Fix this by checking the user specified length psf_data_len.
-
-Fixes: 52898025cf7d ("[S390] dasd: security and PSF update patch for EMC CKD ioctl")
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Stefan Haberland <sth@linux.ibm.com>
-Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Signed-off-by: Yizhuo <yzhai003@ucr.edu>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/block/dasd_eckd.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/arm/mach-omap2/display.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/s390/block/dasd_eckd.c b/drivers/s390/block/dasd_eckd.c
-index dac2f6883e28..80a43074c2f9 100644
---- a/drivers/s390/block/dasd_eckd.c
-+++ b/drivers/s390/block/dasd_eckd.c
-@@ -4023,6 +4023,14 @@ static int dasd_symm_io(struct dasd_device *device, void __user *argp)
- 		usrparm.psf_data &= 0x7fffffffULL;
- 		usrparm.rssd_result &= 0x7fffffffULL;
+diff --git a/arch/arm/mach-omap2/display.c b/arch/arm/mach-omap2/display.c
+index 6ab13d18c636..cde86d1199cf 100644
+--- a/arch/arm/mach-omap2/display.c
++++ b/arch/arm/mach-omap2/display.c
+@@ -115,6 +115,7 @@ static int omap4_dsi_mux_pads(int dsi_id, unsigned lanes)
+ 	u32 enable_mask, enable_shift;
+ 	u32 pipd_mask, pipd_shift;
+ 	u32 reg;
++	int ret;
+ 
+ 	if (dsi_id == 0) {
+ 		enable_mask = OMAP4_DSI1_LANEENABLE_MASK;
+@@ -130,7 +131,11 @@ static int omap4_dsi_mux_pads(int dsi_id, unsigned lanes)
+ 		return -ENODEV;
  	}
-+	/* at least 2 bytes are accessed and should be allocated */
-+	if (usrparm.psf_data_len < 2) {
-+		DBF_DEV_EVENT(DBF_WARNING, device,
-+			      "Symmetrix ioctl invalid data length %d",
-+			      usrparm.psf_data_len);
-+		rc = -EINVAL;
-+		goto out;
-+	}
- 	/* alloc I/O data area */
- 	psf_data = kzalloc(usrparm.psf_data_len, GFP_KERNEL | GFP_DMA);
- 	rssd_result = kzalloc(usrparm.rssd_result_len, GFP_KERNEL | GFP_DMA);
+ 
+-	regmap_read(omap4_dsi_mux_syscon, OMAP4_DSIPHY_SYSCON_OFFSET, &reg);
++	ret = regmap_read(omap4_dsi_mux_syscon,
++					  OMAP4_DSIPHY_SYSCON_OFFSET,
++					  &reg);
++	if (ret)
++		return ret;
+ 
+ 	reg &= ~enable_mask;
+ 	reg &= ~pipd_mask;
 -- 
 2.19.1
 
