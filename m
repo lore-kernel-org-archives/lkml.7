@@ -4,54 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 561CBC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:45:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4445C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:45:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23ED021971
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:45:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 940882082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:45:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255111;
-	bh=Vs9qvTtNOn6rNm0xHLk/zouYIELul+aUDrVXYcA+25U=;
+	s=default; t=1553255115;
+	bh=sM0NgIw2v9EHs41AbeK96Viv0Vv5pi6P6bVSzy6Z4yE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=holucszGDEogprv5YMEs/FEggWRRedHiiZHgfMbmc3+kxFijErw4/uKkMx+5VGPeq
-	 NAyHD7PXhDELZCrtRE/M7wzn+NxZhys9sdbZERSaGu/iBpVA8MeOIgSbpq88MGy1m0
-	 zew9/j8jYiIdKPqKzbkMw0Laol5iqvaXd5BXCEfs=
+	b=naKZHHtemx0UswikTRYEOMf7589WreuoiAu2QsVwI/FW+p+tUrVl7bxQJ25qkrwRZ
+	 t6qD3vqKx6vuiOhh+T/jWbk+7FFLN2Uv/xgpF0B/ZjceungOGPh/hhIxpgYqWXV0lx
+	 jlTq+4chb0e0ZZnjCyVPxM2fdGsh2YTskLPC3dUY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731923AbfCVLpJ (ORCPT
+        id S1731930AbfCVLpO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:45:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48200 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:45:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731332AbfCVLpG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:45:06 -0400
+        id S1731010AbfCVLpK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:45:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5AE012195D;
-        Fri, 22 Mar 2019 11:45:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63E3721934;
+        Fri, 22 Mar 2019 11:45:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255105;
-        bh=Vs9qvTtNOn6rNm0xHLk/zouYIELul+aUDrVXYcA+25U=;
+        s=default; t=1553255109;
+        bh=sM0NgIw2v9EHs41AbeK96Viv0Vv5pi6P6bVSzy6Z4yE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EIDAWfgr/woZB26it5B72OvEL5+XAiUHeYBvXOzDRfBX+SW8odshbyZpEWMXd4TB2
-         kL7EMiTgfxgqVv9s8IvtplKK267qYbR4MQg8Tb+ICMxe2DimhIfVwfjkuf+Sf7AjyO
-         5yE5YqMLUFHwOK97PqnuVc0bBdnhlvYIesIOk7h8=
+        b=lyD45Lq0mePpnIU12biAGAKONJaeJkIBCYbtDwTYmCGNWMlNLJo7LdJ5TLbuzplDA
+         B+qQRj2jX6QSidbP5ozMWgkVuhfaxGaJFCOJKnMwpIo1I76SfgxOKBMMZn1rvWCPTD
+         rllm+K8jQdXUuslzyT+BVw274u3GSuTPIF+bCmxQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Roman Penyaev <rpenyaev@suse.de>,
-        Michal Hocko <mhocko@suse.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Joe Perches <joe@perches.com>,
-        "Luis R. Rodriguez" <mcgrof@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.9 079/118] mm/vmalloc: fix size check for remap_vmalloc_range_partial()
-Date:   Fri, 22 Mar 2019 12:15:51 +0100
-Message-Id: <20190322111222.157867874@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>
+Subject: [PATCH 4.9 101/118] NFS: Fix I/O request leakages
+Date:   Fri, 22 Mar 2019 12:16:13 +0100
+Message-Id: <20190322111223.506026668@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111215.873964544@linuxfoundation.org>
 References: <20190322111215.873964544@linuxfoundation.org>
@@ -70,86 +65,89 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Roman Penyaev <rpenyaev@suse.de>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-commit 401592d2e095947344e10ec0623adbcd58934dd4 upstream.
+commit f57dcf4c72113c745d83f1c65f7291299f65c14f upstream.
 
-When VM_NO_GUARD is not set area->size includes adjacent guard page,
-thus for correct size checking get_vm_area_size() should be used, but
-not area->size.
+When we fail to add the request to the I/O queue, we currently leave it
+to the caller to free the failed request. However since some of the
+requests that fail are actually created by nfs_pageio_add_request()
+itself, and are not passed back the caller, this leads to a leakage
+issue, which can again cause page locks to leak.
 
-This fixes possible kernel oops when userspace tries to mmap an area on
-1 page bigger than was allocated by vmalloc_user() call: the size check
-inside remap_vmalloc_range_partial() accounts non-existing guard page
-also, so check successfully passes but vmalloc_to_page() returns NULL
-(guard page does not physically exist).
+This commit addresses the leakage by freeing the created requests on
+error, using desc->pg_completion_ops->error_cleanup()
 
-The following code pattern example should trigger an oops:
-
-  static int oops_mmap(struct file *file, struct vm_area_struct *vma)
-  {
-        void *mem;
-
-        mem = vmalloc_user(4096);
-        BUG_ON(!mem);
-        /* Do not care about mem leak */
-
-        return remap_vmalloc_range(vma, mem, 0);
-  }
-
-And userspace simply mmaps size + PAGE_SIZE:
-
-  mmap(NULL, 8192, PROT_WRITE|PROT_READ, MAP_PRIVATE, fd, 0);
-
-Possible candidates for oops which do not have any explicit size
-checks:
-
-   *** drivers/media/usb/stkwebcam/stk-webcam.c:
-   v4l_stk_mmap[789]   ret = remap_vmalloc_range(vma, sbuf->buffer, 0);
-
-Or the following one:
-
-   *** drivers/video/fbdev/core/fbmem.c
-   static int
-   fb_mmap(struct file *file, struct vm_area_struct * vma)
-        ...
-        res = fb->fb_mmap(info, vma);
-
-Where fb_mmap callback calls remap_vmalloc_range() directly without any
-explicit checks:
-
-   *** drivers/video/fbdev/vfb.c
-   static int vfb_mmap(struct fb_info *info,
-             struct vm_area_struct *vma)
-   {
-       return remap_vmalloc_range(vma, (void *)info->fix.smem_start, vma->vm_pgoff);
-   }
-
-Link: http://lkml.kernel.org/r/20190103145954.16942-2-rpenyaev@suse.de
-Signed-off-by: Roman Penyaev <rpenyaev@suse.de>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: Joe Perches <joe@perches.com>
-Cc: "Luis R. Rodriguez" <mcgrof@kernel.org>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Fixes: a7d42ddb30997 ("nfs: add mirroring support to pgio layer")
+Cc: stable@vger.kernel.org # v4.0: c18b96a1b862: nfs: clean up rest of reqs
+Cc: stable@vger.kernel.org # v4.0: d600ad1f2bdb: NFS41: pop some layoutget
+Cc: stable@vger.kernel.org # v4.0+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/vmalloc.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfs/pagelist.c |   26 +++++++++++++++++++++-----
+ 1 file changed, 21 insertions(+), 5 deletions(-)
 
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -2191,7 +2191,7 @@ int remap_vmalloc_range_partial(struct v
- 	if (!(area->flags & VM_USERMAP))
- 		return -EINVAL;
+--- a/fs/nfs/pagelist.c
++++ b/fs/nfs/pagelist.c
+@@ -975,6 +975,17 @@ static void nfs_pageio_doio(struct nfs_p
+ 	}
+ }
  
--	if (kaddr + size > area->addr + area->size)
-+	if (kaddr + size > area->addr + get_vm_area_size(area))
- 		return -EINVAL;
++static void
++nfs_pageio_cleanup_request(struct nfs_pageio_descriptor *desc,
++		struct nfs_page *req)
++{
++	LIST_HEAD(head);
++
++	nfs_list_remove_request(req);
++	nfs_list_add_request(req, &head);
++	desc->pg_completion_ops->error_cleanup(&head);
++}
++
+ /**
+  * nfs_pageio_add_request - Attempt to coalesce a request into a page list.
+  * @desc: destination io descriptor
+@@ -1012,10 +1023,8 @@ static int __nfs_pageio_add_request(stru
+ 			nfs_page_group_unlock(req);
+ 			desc->pg_moreio = 1;
+ 			nfs_pageio_doio(desc);
+-			if (desc->pg_error < 0)
+-				return 0;
+-			if (mirror->pg_recoalesce)
+-				return 0;
++			if (desc->pg_error < 0 || mirror->pg_recoalesce)
++				goto out_cleanup_subreq;
+ 			/* retry add_request for this subreq */
+ 			nfs_page_group_lock(req, false);
+ 			continue;
+@@ -1048,6 +1057,10 @@ err_ptr:
+ 	desc->pg_error = PTR_ERR(subreq);
+ 	nfs_page_group_unlock(req);
+ 	return 0;
++out_cleanup_subreq:
++	if (req != subreq)
++		nfs_pageio_cleanup_request(desc, subreq);
++	return 0;
+ }
  
- 	do {
+ static int nfs_do_recoalesce(struct nfs_pageio_descriptor *desc)
+@@ -1141,11 +1154,14 @@ int nfs_pageio_add_request(struct nfs_pa
+ 		if (nfs_pgio_has_mirroring(desc))
+ 			desc->pg_mirror_idx = midx;
+ 		if (!nfs_pageio_add_request_mirror(desc, dupreq))
+-			goto out_failed;
++			goto out_cleanup_subreq;
+ 	}
+ 
+ 	return 1;
+ 
++out_cleanup_subreq:
++	if (req != dupreq)
++		nfs_pageio_cleanup_request(desc, dupreq);
+ out_failed:
+ 	/*
+ 	 * We might have failed before sending any reqs over wire.
 
 
