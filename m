@@ -2,387 +2,138 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF38CC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 01:32:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DA70C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 01:33:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90D4320700
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 01:32:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553218346;
-	bh=OVzh/0wg9uiQK9IOT3dYhmzsMv8mvSaRvQykIFKAvOQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Jypx7NX/IbZ/AWuqiIXhkkP+Tr29PcPIhQJ51HDMyR1tQ4J+L4AJQH8jgjeHJUTPT
-	 t+7VSuxZFELKKxjHDK5xn1mOgroWzF0gLIlWBK0LEN69wzyV7nJjQSaaL55l89l30X
-	 feLzclutaxikSy3L8fqqfPDHue+e6bQp+N6asyH8=
+	by mail.kernel.org (Postfix) with ESMTP id 2877820700
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 01:33:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727544AbfCVBcZ (ORCPT
+        id S1727558AbfCVBdQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 21:32:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53128 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727397AbfCVBcY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 21:32:24 -0400
-Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4DB8F20700;
-        Fri, 22 Mar 2019 01:32:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553218342;
-        bh=OVzh/0wg9uiQK9IOT3dYhmzsMv8mvSaRvQykIFKAvOQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GvX9gfUVIGB0S4RsdR15TI4rn6XgLZPIWHWJpKlD/PjrDHP7nglL7yO97YYVWY7+g
-         3guSwX6WT9wImkPuCG2DY/4yegDZ5q/ZA1P2flsV2BN1SK0nmYuMxpmphko2cjeMwc
-         007wx4LmkZLZGSnmFeXc6jiExCcdf+0NF8SmDL1o=
-Date:   Fri, 22 Mar 2019 09:31:53 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Johan Hovold <johan@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/5] ARM: dts: imx50: Add Kobo Aura DTS
-Message-ID: <20190322013151.GR12513@dragon>
-References: <20190319152421.16179-1-j.neuschaefer@gmx.net>
- <20190319152421.16179-3-j.neuschaefer@gmx.net>
+        Thu, 21 Mar 2019 21:33:16 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:34378 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727397AbfCVBdP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 21:33:15 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id DC447D9B7003816B4A18;
+        Fri, 22 Mar 2019 09:33:06 +0800 (CST)
+Received: from [127.0.0.1] (10.177.96.203) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.408.0; Fri, 22 Mar 2019
+ 09:33:01 +0800
+Subject: Re: [RFC PATCH v2] scsi: fix oops in scsi_uninit_cmd()
+To:     Bart Van Assche <bvanassche@acm.org>, <martin.petersen@oracle.com>,
+        <jejb@linux.vnet.ibm.com>
+CC:     <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <hare@suse.com>, <hch@lst.de>, <tom.leiming@gmail.com>
+References: <20190316020905.14962-1-yanaijie@huawei.com>
+ <1553193542.65329.119.camel@acm.org>
+From:   Jason Yan <yanaijie@huawei.com>
+Message-ID: <eb0051ca-2676-e6b8-0362-8a89f01e58ec@huawei.com>
+Date:   Fri, 22 Mar 2019 09:33:01 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <1553193542.65329.119.camel@acm.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190319152421.16179-3-j.neuschaefer@gmx.net>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Originating-IP: [10.177.96.203]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 19, 2019 at 04:24:17PM +0100, Jonathan Neuschäfer wrote:
-> The Kobo Aura is an e-book reader released in 2013.
+
+On 2019/3/22 2:39, Bart Van Assche wrote:
+> On Sat, 2019-03-16 at 10:09 +0800, Jason Yan wrote:
+>> If we remove the scsi disk when running io with fio, oops occured with
+>> the following condition.
+>>
+>> [scsi_eh_0]                              [fio]
+>> scsi_end_request
+>>    ->blk_update_request
+>>      ->end_bio(io returned to userspace)
+>>                                           close
+>>                                             ->sd_release
+>>                                                ->scsi_disk_put
+>>                                                   ->scsi_disk_release
+>>                                                       ->disk->private_data = NULL;
+>>
+>>    ->scsi_mq_uninit_cmd
+>>      ->scsi_uninit_cmd
+>>        ->scsi_cmd_to_driver
+>>      ->drv is NULL, Oops
+>>
+>> There is a small window between blk_update_request() and
+>> scsi_mq_uninit_cmd() that scsi disk may have been released. This will
+>> cause a oops like below:
+>>
+>> Unable to handle kernel NULL pointer dereference at virtual address
+>> 0000000000000000
+>> s/sync.c:67, func=xfer, error=In[11347.116050] Mem abort info:
+>> put/output error
+>> [11347.121598]   ESR = 0x96000006
+>> [11347.126200]   Exception class = DABT (current EL), IL = 32 bits
+>> [11347.132117]   SET = 0, FnV = 0
+>> [11347.135170]   EA = 0, S1PTW = 0
+>> [11347.138308] Data abort info:
+>> [11347.141186]   ISV = 0, ISS = 0x00000006
+>> [11347.145019]   CM = 0, WnR = 0
+>> [11347.147977] user pgtable: 4k pages, 48-bit VAs, pgdp =
+>> 00000000a67aece2
+>> [11347.154591] [0000000000000000] pgd=0000002f90774003,
+>> pud=0000002fab098003, pmd=0000000000000000
+>> [11347.163304] Internal error: Oops: 96000006 [#1] PREEMPT SMP
+>> [11347.168870] Modules linked in: hisi_sas_v3_hw hisi_sas_main libsas
+>> [11347.175044] CPU: 56 PID: 4294 Comm: scsi_eh_2 Not tainted
+>> 4.19.0-g8052059-dirty #2
+>> [11347.182600] Hardware name: Huawei D06/D06, BIOS Hisilicon D06 UEFI
+>> RC0 - B601 (V6.01) 11/08/2018
+>> [11347.191370] pstate: a0c00009 (NzCv daif ã°ƒç¹Îµí¾ã¯—
 > 
-> With the devicetree in its current state, the kernel will boot and run
-> for about ten seconds. To solve this, the embedded controller needs to
-> be told that the system should stay powered on. This will be done in a
-> later patchset.
+> Please verify whether the following patch is a valid alternative for your patch:
 > 
-> - The IOMUXC mode bits for the SD interfaces were taken from the
->   vendor's U-Boot fork.
-> - The bus width of the eMMC is 4 bits in the vendor kernel, but I
->   achieved better performance with 8 bits.
-> - The SDIO clock frequency for the WiFi chip is 25MHz in the vendor
->   kernel, but the WiFi chip (BCM43362) supports 50MHz, which works
->   reliably on this board and gives slightly better performance.
-> - The I2C pins' IOMUXC settings come from the vendor's U-Boot fork.
+
+Thanks Bart, I will verify it later.
+
+> diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
+> index ed34bfbc3844..745ffdda1bc1 100644
+> --- a/drivers/scsi/sd.c
+> +++ b/drivers/scsi/sd.c
+> @@ -1408,6 +1408,7 @@ static void sd_release(struct gendisk *disk, fmode_t mode)
+>   {
+>   	struct scsi_disk *sdkp = scsi_disk(disk);
+>   	struct scsi_device *sdev = sdkp->device;
+> +	struct request_queue *q = sdkp->disk->queue;
+>   
+>   	SCSI_LOG_HLQUEUE(3, sd_printk(KERN_INFO, sdkp, "sd_release\n"));
+>   
+> @@ -1417,9 +1418,12 @@ static void sd_release(struct gendisk *disk, fmode_t mode)
+>   	}
+>   
+>   	/*
+> -	 * XXX and what if there are packets in flight and this close()
+> -	 * XXX is followed by a "rmmod sd_mod"?
+> +	 * Wait until any requests that are in progress have completed.
+> +	 * This is necessary to avoid that e.g. scsi_end_request() crashes
+> +	 * due to scsi_disk_relase() clearing the disk->private_data pointer.
+>   	 */
+> +	blk_mq_freeze_queue(q);
+> +	blk_mq_unfreeze_queue(q);
+>   
+>   	scsi_disk_put(sdkp);
+>   }
 > 
-> Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
-> ---
->  arch/arm/boot/dts/Makefile            |   3 +-
->  arch/arm/boot/dts/imx50-kobo-aura.dts | 245 ++++++++++++++++++++++++++
->  2 files changed, 247 insertions(+), 1 deletion(-)
->  create mode 100644 arch/arm/boot/dts/imx50-kobo-aura.dts
+> Thanks,
 > 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index f4f5aeaf3298..0c85156c552b 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -363,7 +363,8 @@ dtb-$(CONFIG_SOC_IMX35) += \
->  	imx35-eukrea-mbimxsd35-baseboard.dtb \
->  	imx35-pdk.dtb
->  dtb-$(CONFIG_SOC_IMX50) += \
-> -	imx50-evk.dtb
-> +	imx50-evk.dtb \
-> +	imx50-kobo-aura.dtb
->  dtb-$(CONFIG_SOC_IMX51) += \
->  	imx51-apf51.dtb \
->  	imx51-apf51dev.dtb \
-> diff --git a/arch/arm/boot/dts/imx50-kobo-aura.dts b/arch/arm/boot/dts/imx50-kobo-aura.dts
-> new file mode 100644
-> index 000000000000..e778a677c752
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/imx50-kobo-aura.dts
-> @@ -0,0 +1,245 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +// Copyright 2019 Jonathan Neuschäfer
-> +//
-> +// The Kobo Aura e-book reader, model N514. The mainboard is marked as E606F0B.
-> +
-> +/dts-v1/;
-> +#include "imx50.dtsi"
-> +#include <dt-bindings/input/input.h>
-> +
-> +/ {
-> +	model = "Kobo Aura (N514)";
-> +	compatible = "kobo,aura", "fsl,imx50";
-
-Board compatible should also be documented.
-
-> +
-> +	chosen {
-> +		stdout-path = "serial1:115200n8";
-> +	};
-> +
-> +	memory@70000000 {
-> +		device_type = "memory";
-> +		reg = <0x70000000 0x10000000>;
-> +	};
-> +
-> +	gpio-leds {
-> +		compatible = "gpio-leds";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_leds>;
-> +
-> +		on {
-> +			label = "kobo_aura:orange:on";
-> +			gpios = <&gpio6 24 GPIO_ACTIVE_LOW>;
-> +			panic-indicator;
-> +		};
-> +	};
-> +
-> +	gpio-keys {
-> +		compatible = "gpio-keys";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_gpiokeys>;
-> +
-> +		power {
-> +			label = "Power Button";
-> +			gpios = <&gpio4 10 GPIO_ACTIVE_LOW>;
-> +			linux,code = <KEY_POWER>;
-> +		};
-> +
-> +		hallsensor {
-> +			label = "Hallsensor";
-> +			gpios = <&gpio5 15 GPIO_ACTIVE_LOW>;
-> +			linux,code = <0>;
-
-Use define KEY_RESERVED?
-
-> +			linux,input-type = <5>;
-
-Use define EV_SW?
-
-> +		};
-> +
-> +		frontlight {
-> +			label = "Frontlight";
-> +			gpios = <&gpio4 1 GPIO_ACTIVE_LOW>;
-> +			linux,code = <KEY_DISPLAYTOGGLE>;
-> +		};
-> +	};
-> +
-> +	sd2_pwrseq: pwrseq {
-> +		compatible = "mmc-pwrseq-simple";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_sd2_reset>;
-> +
-
-Please do not have random newlines.
-
-> +		reset-gpios = <&gpio4 17 GPIO_ACTIVE_LOW>;
-> +	};
-> +
-> +	sd2_vmmc: gpio-regulator {
-> +		compatible = "regulator-gpio";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_sd2_vmmc>;
-> +
-> +		regulator-name = "vmmc";
-> +		states = <3300000 0>;
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		enable-gpio = <&gpio4 12 GPIO_ACTIVE_LOW>;
-> +		startup-delay-us = <100000>;
-> +	};
-> +};
-> +
-> +&iomuxc {
-> +	pinctrl_uart2: uart2 {
-> +		fsl,pins = <
-> +			MX50_PAD_UART2_TXD__UART2_TXD_MUX	0x1e4
-> +			MX50_PAD_UART2_RXD__UART2_RXD_MUX	0x1e4
-> +		>;
-> +	};
-> +
-> +	pinctrl_i2c1: i2c1 {
-
-Please sort these pinctrl nodes alphabetically.
-
-> +		fsl,pins = <
-> +			MX50_PAD_I2C1_SCL__I2C1_SCL		0x400001fd
-> +			MX50_PAD_I2C1_SDA__I2C1_SDA		0x400001fd
-> +		>;
-> +	};
-> +
-> +	pinctrl_i2c2: i2c2 {
-> +		fsl,pins = <
-> +			MX50_PAD_I2C2_SCL__I2C2_SCL		0x400001fd
-> +			MX50_PAD_I2C2_SDA__I2C2_SDA		0x400001fd
-> +		>;
-> +	};
-> +
-> +	pinctrl_i2c3: i2c3 {
-> +		fsl,pins = <
-> +			MX50_PAD_I2C3_SCL__I2C3_SCL		0x400001fd
-> +			MX50_PAD_I2C3_SDA__I2C3_SDA		0x400001fd
-> +		>;
-> +	};
-> +
-> +	pinctrl_leds: leds {
-> +		fsl,pins = <
-> +			MX50_PAD_PWM1__GPIO6_24			0x0
-> +		>;
-> +	};
-> +
-> +	pinctrl_gpiokeys: gpiokeys {
-> +		fsl,pins = <
-> +			MX50_PAD_CSPI_MISO__GPIO4_10		0x0
-> +			MX50_PAD_SD2_D7__GPIO5_15		0x0
-> +			MX50_PAD_KEY_ROW0__GPIO4_1		0x0
-> +		>;
-> +	};
-> +
-> +	pinctrl_sd1: sd1 {
-> +		fsl,pins = <
-> +			MX50_PAD_SD1_CMD__ESDHC1_CMD		0x1e4
-> +			MX50_PAD_SD1_CLK__ESDHC1_CLK		0xd4
-> +			MX50_PAD_SD1_D0__ESDHC1_DAT0		0x1d4
-> +			MX50_PAD_SD1_D1__ESDHC1_DAT1		0x1d4
-> +			MX50_PAD_SD1_D2__ESDHC1_DAT2		0x1d4
-> +			MX50_PAD_SD1_D3__ESDHC1_DAT3		0x1d4
-> +
-> +			MX50_PAD_SD2_CD__GPIO5_17		0x0
-> +		>;
-> +	};
-> +
-> +	pinctrl_sd2: sd2 {
-> +		fsl,pins = <
-> +			MX50_PAD_SD2_CMD__ESDHC2_CMD		0x1e4
-> +			MX50_PAD_SD2_CLK__ESDHC2_CLK		0xd4
-> +			MX50_PAD_SD2_D0__ESDHC2_DAT0		0x1d4
-> +			MX50_PAD_SD2_D1__ESDHC2_DAT1		0x1d4
-> +			MX50_PAD_SD2_D2__ESDHC2_DAT2		0x1d4
-> +			MX50_PAD_SD2_D3__ESDHC2_DAT3		0x1d4
-> +		>;
-> +	};
-> +
-> +	pinctrl_sd2_reset: sd2-reset {
-> +		fsl,pins = <
-> +			MX50_PAD_ECSPI2_MOSI__GPIO4_17		0x0
-> +		>;
-> +	};
-> +
-> +	pinctrl_sd2_vmmc: sd2-vmmc {
-> +		fsl,pins = <
-> +			MX50_PAD_ECSPI1_SCLK__GPIO4_12		0x0
-> +		>;
-> +	};
-> +
-> +	pinctrl_sd3: sd3 {
-> +		fsl,pins = <
-> +			MX50_PAD_SD3_CMD__ESDHC3_CMD		0x1e4
-> +			MX50_PAD_SD3_CLK__ESDHC3_CLK		0xd4
-> +			MX50_PAD_SD3_D0__ESDHC3_DAT0		0x1d4
-> +			MX50_PAD_SD3_D1__ESDHC3_DAT1		0x1d4
-> +			MX50_PAD_SD3_D2__ESDHC3_DAT2		0x1d4
-> +			MX50_PAD_SD3_D3__ESDHC3_DAT3		0x1d4
-> +			MX50_PAD_SD3_D4__ESDHC3_DAT4		0x1d4
-> +			MX50_PAD_SD3_D5__ESDHC3_DAT5		0x1d4
-> +			MX50_PAD_SD3_D6__ESDHC3_DAT6		0x1d4
-> +			MX50_PAD_SD3_D7__ESDHC3_DAT7		0x1d4
-> +		>;
-> +	};
-> +};
-> +
-> +&uart2 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_uart2>;
-> +	status = "okay";
-> +};
-> +
-> +&i2c1 {
-
-Please sort these labeled nodes alphabetically.
-
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_i2c1>;
-> +	status = "okay";
-> +
-> +	/* TODO: ektf2132 touch controller at 0x15 */
-> +};
-> +
-> +&i2c2 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_i2c2>;
-> +	status = "okay";
-> +
-> +	/* TODO: TPS65185 PMIC for E Ink at 0x68 */
-> +};
-> +
-> +&i2c3 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_i2c3>;
-> +	status = "okay";
-> +
-> +	/* TODO: embedded controller at 0x43 */
-> +};
-> +
-> +&esdhc1 {
-> +	status = "okay";
-
-We usually end property list with 'status'.
-
-Shawn
-
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_sd1>;
-> +
-> +	max-frequency = <50000000>;
-> +	bus-width = <4>;
-> +	cd-gpios = <&gpio5 17 GPIO_ACTIVE_LOW>;
-> +	disable-wp;
-> +
-> +	/* External µSD card */
-> +};
-> +
-> +&esdhc2 {
-> +	status = "okay";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_sd2>;
-> +
-> +	bus-width = <4>;
-> +	max-frequency = <50000000>;
-> +	disable-wp;
-> +	mmc-pwrseq = <&sd2_pwrseq>;
-> +	vmmc-supply = <&sd2_vmmc>;
-> +
-> +	/* CyberTan WC121 SDIO WiFi (BCM43362) */
-> +};
-> +
-> +&esdhc3 {
-> +	status = "okay";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_sd3>;
-> +
-> +	bus-width = <8>;
-> +	non-removable;
-> +	max-frequency = <50000000>;
-> +	disable-wp;
-> +
-> +	/* Internal eMMC */
-> +};
-> --
-> 2.20.1
+> Bart.
 > 
+> .
+> 
+
