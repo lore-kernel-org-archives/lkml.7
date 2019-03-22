@@ -2,129 +2,110 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC03EC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 20:56:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 472ECC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 20:59:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9135021925
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 20:56:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09976218E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 20:59:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=digitalocean.com header.i=@digitalocean.com header.b="TEace9K+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727591AbfCVU4a (ORCPT
+        id S1727252AbfCVU7w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 16:56:30 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:33644 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726944AbfCVU4X (ORCPT
+        Fri, 22 Mar 2019 16:59:52 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:41454 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726029AbfCVU7v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 16:56:23 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2MKmdJr135252
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 16:56:22 -0400
-Received: from e31.co.us.ibm.com (e31.co.us.ibm.com [32.97.110.149])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2rd60ejr8b-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 16:56:22 -0400
-Received: from localhost
-        by e31.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <arbab@linux.ibm.com>;
-        Fri, 22 Mar 2019 20:56:19 -0000
-Received: from b03cxnp07028.gho.boulder.ibm.com (9.17.130.15)
-        by e31.co.us.ibm.com (192.168.1.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 22 Mar 2019 20:56:14 -0000
-Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
-        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2MKuFfo8257776
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 22 Mar 2019 20:56:15 GMT
-Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2CDCD6E054;
-        Fri, 22 Mar 2019 20:56:15 +0000 (GMT)
-Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0FF346E04E;
-        Fri, 22 Mar 2019 20:56:15 +0000 (GMT)
-Received: from arbab-laptop.localdomain (unknown [9.53.179.210])
-        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Fri, 22 Mar 2019 20:56:14 +0000 (GMT)
-Received: by arbab-laptop.localdomain (Postfix, from userid 152845)
-        id 9E0A54608B4; Fri, 22 Mar 2019 15:56:13 -0500 (CDT)
-From:   Reza Arbab <arbab@linux.ibm.com>
-To:     Dave Airlie <airlied@redhat.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Robert Tarasov <tutankhamen@chromium.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Cc:     wzabolot@elektron.elka.pw.edu.pl, Pavel Machek <pavel@ucw.cz>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>
-Subject: [PATCH 2/2] drm/fb-helper: Do not scale depth down to 0
-Date:   Fri, 22 Mar 2019 15:56:13 -0500
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1553288173-10845-1-git-send-email-arbab@linux.ibm.com>
-References: <1553288173-10845-1-git-send-email-arbab@linux.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19032220-8235-0000-0000-00000E7224F5
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010796; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000282; SDB=6.01178185; UDB=6.00616394; IPR=6.00958883;
- MB=3.00026116; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-22 20:56:17
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19032220-8236-0000-0000-000044DEC245
-Message-Id: <1553288173-10845-3-git-send-email-arbab@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-22_12:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903220148
+        Fri, 22 Mar 2019 16:59:51 -0400
+Received: by mail-qk1-f195.google.com with SMTP id o129so2057122qke.8
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 13:59:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=digitalocean.com; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=uu3LkqEayfNWxAGHXa5LQ/QG4OaFYLEZAK6IQMPmgWU=;
+        b=TEace9K+CerAvL1vD5KYTJp5Yl4WDtY4l6Fq8IHyIggjbv89eNcwnc6JZJ8PG30Ijt
+         hM1mnKma9UPMlef2KhvA62mtqEwU+R6TXeTwdMrwaVD/Z42htn1EYfsx9ZkJG4xzRGA0
+         S5r5B7WY1yQxgW4GGElHlwSmefz9KCBqRahoc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=uu3LkqEayfNWxAGHXa5LQ/QG4OaFYLEZAK6IQMPmgWU=;
+        b=ayWN10jOvnXiTlIW7lyAgZce+GCgv7C+IMLbwl65+Th9VRVZEJlTfrIsskluOtBq34
+         qYuYM5s/soDy9qKIfKBEOXjSjzBWcalaBFwHFpIr87i64Rna5uv5djMbEqINwJq4wVI3
+         3G3OHWMO7I8chlRMjXGTeHUofpOZRNSsjKJmLu3+ChRudOQA8p8ZCJZk/UHp40yZVJBD
+         f1zc9OBgyryPD6Xb78XsTDiHzH1NOmPjBcBy7J/5U4gRCnc4KIrricSg7PIq7vkUm+Lt
+         f6T8icIRFr/3/YXrBu3pcM3SJOkoO7b2/IXCq3niag7txfkOsGTWn+vejTph9fFnpqiR
+         Ln8w==
+X-Gm-Message-State: APjAAAUUn7OUM7FRRTduWMWLGgiSpcrAlwLXTDvhk1aI68A8Ejcce7pt
+        Y8sKXiG7p9pR7HfsfLElI5nLxw==
+X-Google-Smtp-Source: APXvYqwppYI+M8yh3NfxIdPmUuXn9Et0tfqDRiaHsBImZTqsYD6tg+WzWZmWnQhC/cwNt01iYgX3Yw==
+X-Received: by 2002:a37:4804:: with SMTP id v4mr9335461qka.104.1553288390777;
+        Fri, 22 Mar 2019 13:59:50 -0700 (PDT)
+Received: from [192.168.1.240] ([142.169.78.14])
+        by smtp.gmail.com with ESMTPSA id k12sm6285132qti.38.2019.03.22.13.59.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 22 Mar 2019 13:59:49 -0700 (PDT)
+From:   Julien Desfossez <jdesfossez@digitalocean.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Julien Desfossez <jdesfossez@digitalocean.com>, mingo@kernel.org,
+        tglx@linutronix.de, pjt@google.com, tim.c.chen@linux.intel.com,
+        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        subhra.mazumdar@oracle.com, fweisbec@gmail.com,
+        keescook@chromium.org, kerrnel@google.com,
+        Vineeth Pillai <vpillai@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>
+Subject: Re: [RFC][PATCH 03/16] sched: Wrap rq::lock access
+Date:   Fri, 22 Mar 2019 16:59:30 -0400
+Message-Id: <1553288370-4167-1-git-send-email-jdesfossez@digitalocean.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <20190322133448.GT6058@hirez.programming.kicks-ass.net>
+References: <20190322133448.GT6058@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the scaling loop in drm_fb_helper_single_fb_probe() only finds
-supported depths greater than what it's looking for, it will set
-sizes.surface_depth = 0. This broke my udl device:
+On Fri, Mar 22, 2019 at 9:34 AM Peter Zijlstra <peterz@infradead.org> wrote:
+> On Thu, Mar 21, 2019 at 05:20:17PM -0400, Julien Desfossez wrote:
+> > On further investigation, we could see that the contention is mostly in
+> the
+> > way rq locks are taken. With this patchset, we lock the whole core if
+> > cpu.tag is set for at least one cgroup. Due to this, __schedule() is
+> more or
+> > less serialized for the core and that attributes to the performance loss
+> > that we are seeing. We also saw that newidle_balance() takes considerably
+> > long time in load_balance() due to the rq spinlock contention. Do you
+> think
+> > it would help if the core-wide locking was only performed when absolutely
+> > needed ?
+>
+> Something like that could be done, but then you end up with 2 locks,
+> something which I was hoping to avoid.
+>
+> Basically you keep rq->lock as it exists today, but add something like
+> rq->core->core_lock, you then have to take that second lock (nested
+> under rq->lock) for every scheduling action involving a tagged task.
+>
+> It makes things complicatd though; because now my head hurts thikning
+> about pick_next_task().
+>
+> (this can obviously do away with the whole rq->lock wrappery)
+>
+> Also, completely untested..
 
-[drm] test CRTC 0 primary plane
-udl 3-9.1:1.0: drm_fb_helper_single_fb_probe: test CRTC 0 format 0, depth=24
-udl 3-9.1:1.0: drm_fb_helper_single_fb_probe: 24 > 16, skipping
-udl 3-9.1:1.0: drm_fb_helper_single_fb_probe: test CRTC 0 format 1, depth=32
-udl 3-9.1:1.0: drm_fb_helper_single_fb_probe: 32 > 16, skipping
-[drm] requested bpp 16, scaled depth down to 0
+We tried it and it dies within 30ms of enabling the tag on 2 VMs :-)
+Now after trying to debug this my head hurts as well !
 
-Instead of setting zero depth, print that scaling was not possible and
-do nothing.
+We'll continue trying to figure this out, but if you want to take a look,
+the full dmesg is here: https://paste.debian.net/plainh/0b8f87f3
 
-Fixes: f4bd542bcaee ("drm/fb-helper: Scale back depth to supported maximum")
-Signed-off-by: Reza Arbab <arbab@linux.ibm.com>
----
- drivers/gpu/drm/drm_fb_helper.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+Thanks,
 
-diff --git a/drivers/gpu/drm/drm_fb_helper.c b/drivers/gpu/drm/drm_fb_helper.c
-index 0e9349ff2d16..a7028655a065 100644
---- a/drivers/gpu/drm/drm_fb_helper.c
-+++ b/drivers/gpu/drm/drm_fb_helper.c
-@@ -1963,7 +1963,11 @@ static int drm_fb_helper_single_fb_probe(struct drm_fb_helper *fb_helper,
- 				best_depth = fmt->depth;
- 		}
- 	}
--	if (sizes.surface_depth != best_depth) {
-+
-+	if (!best_depth) {
-+		DRM_INFO("Could not scale depth to requested bpp %d",
-+			 sizes.surface_bpp);
-+	} else if (sizes.surface_depth != best_depth) {
- 		DRM_INFO("requested bpp %d, scaled depth down to %d",
- 			 sizes.surface_bpp, best_depth);
- 		sizes.surface_depth = best_depth;
--- 
-1.8.3.1
-
+Julien
