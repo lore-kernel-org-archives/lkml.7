@@ -2,99 +2,97 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B55FC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:01:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7267C10F03
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:01:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A421213F2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:01:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553259683;
-	bh=hVyhiDCj04rp3csRNWp9F7OMoCyRSUzgnWwLtj+AqjA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QNtEicujh349SXgVsTJj4xObWTl3JeVjV/zC8tsJtF3x8q6sNhq7CCb99gVoHvpw9
-	 Q58AHNPWYDRPXaymRDMzhkD8iUMJV6swZh/h9gqcmWYy+1rWojJUMZ+tH8C5Kyetl4
-	 XlFsRqCRSn0Q3j7PeeiIsfBsFm8CjF5CafnXhTTU=
+	by mail.kernel.org (Postfix) with ESMTP id 78E0221917
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:01:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731615AbfCVLnG (ORCPT
+        id S1731843AbfCVNBb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:43:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45612 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 09:01:31 -0400
+Received: from mga18.intel.com ([134.134.136.126]:43881 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731602AbfCVLnA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:43:00 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 500B5218B0;
-        Fri, 22 Mar 2019 11:42:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254979;
-        bh=hVyhiDCj04rp3csRNWp9F7OMoCyRSUzgnWwLtj+AqjA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nlQ4m0M7bK0PAlheuo2tQ2kSUz8ZDuWoxyCxJKrDX9EGt6SQ30t+JGBY5T299Etk0
-         ZHS4seiQov3GmMlqtCJgYqUwlFtgtBGws7lFKQwybPdKKq+PawrcgaY8Xra1xfXh8Z
-         +43Lf4Z/p1inn/ETwr0czfAZnTfX6vXuIIdlFQ3g=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Subject: [PATCH 4.9 070/118] cpufreq: tegra124: add missing of_node_put()
-Date:   Fri, 22 Mar 2019 12:15:42 +0100
-Message-Id: <20190322111221.598131080@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190322111215.873964544@linuxfoundation.org>
-References: <20190322111215.873964544@linuxfoundation.org>
-User-Agent: quilt/0.65
-X-stable: review
-X-Patchwork-Hint: ignore
+        id S1731007AbfCVLm7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:42:59 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Mar 2019 04:42:58 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,256,1549958400"; 
+   d="scan'208";a="154749600"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
+  by fmsmga004.fm.intel.com with ESMTP; 22 Mar 2019 04:42:56 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1h7IZa-0001v2-Vx; Fri, 22 Mar 2019 13:42:54 +0200
+Date:   Fri, 22 Mar 2019 13:42:54 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Ian W MORRISON <ianwmorrison@gmail.com>
+Cc:     benjamin.tissoires@redhat.com, hdegoede@redhat.com,
+        mika.westerberg@linux.intel.com, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, linux-gpio@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] Skip deferred request irqs for devices known to fail
+Message-ID: <20190322114254.GT9224@smile.fi.intel.com>
+References: <20190322110515.21499-1-ianwmorrison@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190322110515.21499-1-ianwmorrison@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.9-stable review patch.  If anyone has any objections, please let me know.
+On Fri, Mar 22, 2019 at 10:05:15PM +1100, Ian W MORRISON wrote:
 
-------------------
+Thanks for the patch, my comments below.
 
-From: Yangtao Li <tiny.windzz@gmail.com>
+> Patch ca876c7483b6 "gpiolib-acpi: make sure we trigger edge events at
+> least once on boot" causes the MINIX family of mini PCs to fail to boot
+> resulting in a "black screen". 
 
-commit 446fae2bb5395f3028d8e3aae1508737e5a72ea1 upstream.
+> This patch excludes MINIX devices from executing this trigger in order
+> to successfully boot.
 
-of_cpu_device_node_get() will increase the refcount of device_node,
-it is necessary to call of_node_put() at the end to release the
-refcount.
+Hmm... Feels like this is symptomatic healing.
+Hans, do you have anything in mind about this case?
 
-Fixes: 9eb15dbbfa1a2 ("cpufreq: Add cpufreq driver for Tegra124")
-Cc: <stable@vger.kernel.org> # 4.4+
-Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>  #include <linux/interrupt.h>
+>  #include <linux/mutex.h>
+>  #include <linux/pinctrl/pinctrl.h>
+> +#include <linux/dmi.h>
 
----
- drivers/cpufreq/tegra124-cpufreq.c |    2 ++
- 1 file changed, 2 insertions(+)
+This should be in order.
 
---- a/drivers/cpufreq/tegra124-cpufreq.c
-+++ b/drivers/cpufreq/tegra124-cpufreq.c
-@@ -134,6 +134,8 @@ static int tegra124_cpufreq_probe(struct
- 
- 	platform_set_drvdata(pdev, priv);
- 
-+	of_node_put(np);
-+
- 	return 0;
- 
- out_switch_to_pllx:
+>  /* Run deferred acpi_gpiochip_request_irqs() */
+> +/* but exclude devices known to fail */
+
+/*
+ * This should be done in the similar style
+ * as for multi-line comments. Like this one.
+ */
+
+> +	dmi_id = dmi_first_match(skip_deferred_request_irqs_table);
+> +
+
+Redundant blank line.
+
+> +	if (! dmi_id) {
+
+No space here, however, better to write positive conditional.
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
