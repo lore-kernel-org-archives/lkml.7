@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67DA5C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:15:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 917B5C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:15:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36DB22083D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:15:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60B5C2082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:15:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256936;
-	bh=+3mT/WplwPpcbsQ+nQwZl0nVm6vIFn9fgxTXbsH4FE0=;
+	s=default; t=1553256940;
+	bh=nhdkVoDvq+EZKMYtEgmR1yrlfjEbkr7w5BKISJsAMlA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p7oPBQFztj5NGyRMKb3i6uVGpPYHHY3pjFo1mMa971dkI5Rba/TbSJzw/1jaX31+y
-	 LM0KbKbznZ9Uwm68mxBOmqdMAKPvRE7lIOIjtf+voUr48+RWT8I5SqanlhU0ihE99s
-	 EFCHy7BKNoZgC6gQUWVhweL4W2qX3JvDijhid6h0=
+	b=06zSj2apRvqW1N8aRT+dZZulH5LhA3/ne7h8Md6bgjD2Go3v9Uotpd7nXVMRrNsDW
+	 dhr0vTtQuQicPpzo0Lz+alRwAooGfC2m3IyknApOFCWOqRZBhXR8mYkmiDOLDmAGIz
+	 CMUq95foSh13OtsU/GtnYufY9wNQDualt3wR2WHA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390090AbfCVMPe (ORCPT
+        id S2390098AbfCVMPi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:15:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54052 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:15:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54102 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390075AbfCVMPc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:15:32 -0400
+        id S2388977AbfCVMPg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:15:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 019882083D;
-        Fri, 22 Mar 2019 12:15:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77D372082C;
+        Fri, 22 Mar 2019 12:15:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256932;
-        bh=+3mT/WplwPpcbsQ+nQwZl0nVm6vIFn9fgxTXbsH4FE0=;
+        s=default; t=1553256936;
+        bh=nhdkVoDvq+EZKMYtEgmR1yrlfjEbkr7w5BKISJsAMlA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L6KWcmbNjFTVCUj8YuQynz5NjLM9eJ+M7LRnCQETfQT7snwDg4MPIBINv220ymO8i
-         HtBS05Ufo7RfcorynbKT/lj06XIj7T/CO4s1O5IJPSfiVA13k9f/IYFQQ8UmXSJ9JG
-         BQzfJitRDmWZOJbo3Il9okly3uY4zkToalQavEhs=
+        b=VFWvuI6RHB/gnoPxSysb5Au3lV0QRY0E4Qk/TZ+1jTNo5zWZQVoqHffIQrjpQ0sXN
+         ZV9UbxaugxIgjZvtbs/uEvqrB/dA4KAlhY3XWbJc4R1DYKa8F10vjsZfWR8Ii1SQEz
+         1gpijgGah60LldTu4xqpQ8PhB3KP7N7LsU6jiBc8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Sagar Biradar <Sagar.Biradar@microchip.com>,
-        Dave Carroll <david.carroll@microsemi.com>,
+        Christoph Anton Mitterer <calestyo@scientia.net>,
+        Christoph Hellwig <hch@lst.de>,
         "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 5.0 080/238] scsi: aacraid: Fix performance issue on logical drives
-Date:   Fri, 22 Mar 2019 12:14:59 +0100
-Message-Id: <20190322111303.320063865@linuxfoundation.org>
+Subject: [PATCH 5.0 081/238] scsi: sd: Optimal I/O size should be a multiple of physical block size
+Date:   Fri, 22 Mar 2019 12:15:00 +0100
+Message-Id: <20190322111303.371848976@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -67,47 +67,106 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Sagar Biradar <sagar.biradar@microchip.com>
+From: Martin K. Petersen <martin.petersen@oracle.com>
 
-commit 0015437cc046e5ec2b57b00ff8312b8d432eac7c upstream.
+commit a83da8a4509d3ebfe03bb7fffce022e4d5d4764f upstream.
 
-Fix performance issue where the queue depth for SmartIOC logical volumes is
-set to 1, and allow the usual logical volume code to be executed
+It was reported that some devices report an OPTIMAL TRANSFER LENGTH of
+0xFFFF blocks. That looks bogus, especially for a device with a
+4096-byte physical block size.
 
-Fixes: a052865fe287 (aacraid: Set correct Queue Depth for HBA1000 RAW disks)
-Cc: stable@vger.kernel.org
-Signed-off-by: Sagar Biradar <Sagar.Biradar@microchip.com>
-Reviewed-by: Dave Carroll <david.carroll@microsemi.com>
+Ignore OPTIMAL TRANSFER LENGTH if it is not a multiple of the device's
+reported physical block size.
+
+To make the sanity checking conditionals more readable--and to
+facilitate printing warnings--relocate the checking to a helper
+function. No functional change aside from the printks.
+
+Cc: <stable@vger.kernel.org>
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=199759
+Reported-by: Christoph Anton Mitterer <calestyo@scientia.net>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/aacraid/linit.c |   13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ drivers/scsi/sd.c |   59 +++++++++++++++++++++++++++++++++++++++++++++---------
+ 1 file changed, 50 insertions(+), 9 deletions(-)
 
---- a/drivers/scsi/aacraid/linit.c
-+++ b/drivers/scsi/aacraid/linit.c
-@@ -413,13 +413,16 @@ static int aac_slave_configure(struct sc
- 	if (chn < AAC_MAX_BUSES && tid < AAC_MAX_TARGETS && aac->sa_firmware) {
- 		devtype = aac->hba_map[chn][tid].devtype;
+--- a/drivers/scsi/sd.c
++++ b/drivers/scsi/sd.c
+@@ -3047,6 +3047,55 @@ static void sd_read_security(struct scsi
+ 		sdkp->security = 1;
+ }
  
--		if (devtype == AAC_DEVTYPE_NATIVE_RAW)
-+		if (devtype == AAC_DEVTYPE_NATIVE_RAW) {
- 			depth = aac->hba_map[chn][tid].qd_limit;
--		else if (devtype == AAC_DEVTYPE_ARC_RAW)
-+			set_timeout = 1;
-+			goto common_config;
-+		}
-+		if (devtype == AAC_DEVTYPE_ARC_RAW) {
- 			set_qd_dev_type = true;
--
--		set_timeout = 1;
--		goto common_config;
-+			set_timeout = 1;
-+			goto common_config;
-+		}
- 	}
++/*
++ * Determine the device's preferred I/O size for reads and writes
++ * unless the reported value is unreasonably small, large, not a
++ * multiple of the physical block size, or simply garbage.
++ */
++static bool sd_validate_opt_xfer_size(struct scsi_disk *sdkp,
++				      unsigned int dev_max)
++{
++	struct scsi_device *sdp = sdkp->device;
++	unsigned int opt_xfer_bytes =
++		logical_to_bytes(sdp, sdkp->opt_xfer_blocks);
++
++	if (sdkp->opt_xfer_blocks > dev_max) {
++		sd_first_printk(KERN_WARNING, sdkp,
++				"Optimal transfer size %u logical blocks " \
++				"> dev_max (%u logical blocks)\n",
++				sdkp->opt_xfer_blocks, dev_max);
++		return false;
++	}
++
++	if (sdkp->opt_xfer_blocks > SD_DEF_XFER_BLOCKS) {
++		sd_first_printk(KERN_WARNING, sdkp,
++				"Optimal transfer size %u logical blocks " \
++				"> sd driver limit (%u logical blocks)\n",
++				sdkp->opt_xfer_blocks, SD_DEF_XFER_BLOCKS);
++		return false;
++	}
++
++	if (opt_xfer_bytes < PAGE_SIZE) {
++		sd_first_printk(KERN_WARNING, sdkp,
++				"Optimal transfer size %u bytes < " \
++				"PAGE_SIZE (%u bytes)\n",
++				opt_xfer_bytes, (unsigned int)PAGE_SIZE);
++		return false;
++	}
++
++	if (opt_xfer_bytes & (sdkp->physical_block_size - 1)) {
++		sd_first_printk(KERN_WARNING, sdkp,
++				"Optimal transfer size %u bytes not a " \
++				"multiple of physical block size (%u bytes)\n",
++				opt_xfer_bytes, sdkp->physical_block_size);
++		return false;
++	}
++
++	sd_first_printk(KERN_INFO, sdkp, "Optimal transfer size %u bytes\n",
++			opt_xfer_bytes);
++	return true;
++}
++
+ /**
+  *	sd_revalidate_disk - called the first time a new disk is seen,
+  *	performs disk spin up, read_capacity, etc.
+@@ -3125,15 +3174,7 @@ static int sd_revalidate_disk(struct gen
+ 	dev_max = min_not_zero(dev_max, sdkp->max_xfer_blocks);
+ 	q->limits.max_dev_sectors = logical_to_sectors(sdp, dev_max);
  
- 	if (aac->jbod && (sdev->type == TYPE_DISK))
+-	/*
+-	 * Determine the device's preferred I/O size for reads and writes
+-	 * unless the reported value is unreasonably small, large, or
+-	 * garbage.
+-	 */
+-	if (sdkp->opt_xfer_blocks &&
+-	    sdkp->opt_xfer_blocks <= dev_max &&
+-	    sdkp->opt_xfer_blocks <= SD_DEF_XFER_BLOCKS &&
+-	    logical_to_bytes(sdp, sdkp->opt_xfer_blocks) >= PAGE_SIZE) {
++	if (sd_validate_opt_xfer_size(sdkp, dev_max)) {
+ 		q->limits.io_opt = logical_to_bytes(sdp, sdkp->opt_xfer_blocks);
+ 		rw_max = logical_to_sectors(sdp, sdkp->opt_xfer_blocks);
+ 	} else
 
 
