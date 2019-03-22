@@ -2,224 +2,169 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C893AC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:12:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2535EC10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:13:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9800721900
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:12:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC72521900
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:13:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="Zb9Bl7Bn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728145AbfCVWMh (ORCPT
+        id S1728189AbfCVWNI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 18:12:37 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:52213 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727865AbfCVWMg (ORCPT
+        Fri, 22 Mar 2019 18:13:08 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:37288 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727606AbfCVWNI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 18:12:36 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x2MMCRSL748870
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Fri, 22 Mar 2019 15:12:27 -0700
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x2MMCQ6K748865;
-        Fri, 22 Mar 2019 15:12:26 -0700
-Date:   Fri, 22 Mar 2019 15:12:26 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Andi Kleen <tipbot@zytor.com>
-Message-ID: <tip-e87e548126cdc66fd4f194b38b59f351b6e5d3e8@git.kernel.org>
-Cc:     linux-kernel@vger.kernel.org, hpa@zytor.com, tglx@linutronix.de,
-        mingo@kernel.org, acme@redhat.com, jolsa@kernel.org,
-        ak@linux.intel.com
-Reply-To: mingo@kernel.org, tglx@linutronix.de, jolsa@kernel.org,
-          ak@linux.intel.com, linux-kernel@vger.kernel.org,
-          acme@redhat.com, hpa@zytor.com
-In-Reply-To: <20190311144502.15423-2-andi@firstfloor.org>
-References: <20190311144502.15423-2-andi@firstfloor.org>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/urgent] perf script: Filter COMM/FORK/.. events by CPU
-Git-Commit-ID: e87e548126cdc66fd4f194b38b59f351b6e5d3e8
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Fri, 22 Mar 2019 18:13:08 -0400
+Received: by mail-it1-f196.google.com with SMTP id z124so5766936itc.2;
+        Fri, 22 Mar 2019 15:13:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VnWfr5Cz9g8Ts5McgdJK3bb2nMan4nq5nXqWONnMsfs=;
+        b=Zb9Bl7Bn4sqZs4rM2mwfzJd7rKnn+/+6ONyGGwJqa1scMrXWXjmi9yoQBAbfMlLpgS
+         RGV1LtFJyFJAtRyqt7x4phr5CYLMLHxyjOqtaGBIgKlABbih3LbLp5n0OYCbWIHRLaHd
+         TTQ98w8krLJnK39QE8Dp0ik11E8+01Sgyn1wW72V9bUGSzJ08oA4QbCqRZA5AnJQLOtm
+         o3basMsLTQYqNorbmDjd4KoyjPrND/z4P2rEoZfVYQnDMfAEdcsp9b63663QinvyZoJp
+         HOu5mHwb07RCBU+1v7ChvrPznU5/HmjF8OEnSTsQgs+cld8MrdbVwNZKadLpnlT93nHs
+         Yb2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VnWfr5Cz9g8Ts5McgdJK3bb2nMan4nq5nXqWONnMsfs=;
+        b=ccLQBoMktj+EGlvYTMnJ5ebXJJXkpSI17oyqZDEwmFSSCVRurSA6lDn53Bf1q2N4Zi
+         /mfNhg/da013n5C8g37oCBgu+s7ZwvOd00iQlWY/6pU+5Ka8Cf46p3+YIsggiA5Qb31F
+         DYB9PqNJB2svbkkxKrXdq4cQfsLCiLUS90WgKbOTSKqmt4RpjT6TmlSe8ohOTuyCaD9Z
+         uJeAAmFhMRRmB5OpWMDkLrNxp5putajre62dwMJK/JXrQx7BEJPAJs04rHVvkcVpALC+
+         ryL8THaArahcarhgknapFHuhBV+vdP2J3Jn742KsMBOS+cYRf2yoOZKLPEtZUF203Jlw
+         TrYA==
+X-Gm-Message-State: APjAAAUuLGoy3fMVubGbbqGOtpN5QdZhK61fveUtg2A9wDgBPNPXrO4+
+        clm9fbFR3BmLnP7CS2wcTKKh2IXLSdHU39RJ7aM=
+X-Google-Smtp-Source: APXvYqwPCPjaWzKVXpURWg65K5fkBoLbrluPEoFqqgn2rT6o/InM1ko8UbBUfBaLU8H/oERd+79+VhkVDmrMWUaE2i4=
+X-Received: by 2002:a02:c007:: with SMTP id y7mr8517902jai.1.1553292786464;
+ Fri, 22 Mar 2019 15:13:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+References: <20190317183438.2057-1-ira.weiny@intel.com> <20190317183438.2057-5-ira.weiny@intel.com>
+In-Reply-To: <20190317183438.2057-5-ira.weiny@intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 22 Mar 2019 15:12:55 -0700
+Message-ID: <CAA9_cmcx-Bqo=CFuSj7Xcap3e5uaAot2reL2T74C47Ut6_KtQw@mail.gmail.com>
+Subject: Re: [RESEND 4/7] mm/gup: Add FOLL_LONGTERM capability to GUP fast
+To:     ira.weiny@intel.com
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Michal Hocko <mhocko@suse.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Rich Felker <dalias@libc.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>, linux-mm <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-mips@vger.kernel.org,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Linux-sh <linux-sh@vger.kernel.org>, sparclinux@vger.kernel.org,
+        linux-rdma@vger.kernel.org,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  e87e548126cdc66fd4f194b38b59f351b6e5d3e8
-Gitweb:     https://git.kernel.org/tip/e87e548126cdc66fd4f194b38b59f351b6e5d3e8
-Author:     Andi Kleen <ak@linux.intel.com>
-AuthorDate: Mon, 11 Mar 2019 07:44:52 -0700
-Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Mon, 11 Mar 2019 16:13:05 -0300
+On Sun, Mar 17, 2019 at 7:36 PM <ira.weiny@intel.com> wrote:
+>
+> From: Ira Weiny <ira.weiny@intel.com>
+>
+> DAX pages were previously unprotected from longterm pins when users
+> called get_user_pages_fast().
+>
+> Use the new FOLL_LONGTERM flag to check for DEVMAP pages and fall
+> back to regular GUP processing if a DEVMAP page is encountered.
+>
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> ---
+>  mm/gup.c | 29 +++++++++++++++++++++++++----
+>  1 file changed, 25 insertions(+), 4 deletions(-)
+>
+> diff --git a/mm/gup.c b/mm/gup.c
+> index 0684a9536207..173db0c44678 100644
+> --- a/mm/gup.c
+> +++ b/mm/gup.c
+> @@ -1600,6 +1600,9 @@ static int gup_pte_range(pmd_t pmd, unsigned long addr, unsigned long end,
+>                         goto pte_unmap;
+>
+>                 if (pte_devmap(pte)) {
+> +                       if (unlikely(flags & FOLL_LONGTERM))
+> +                               goto pte_unmap;
+> +
+>                         pgmap = get_dev_pagemap(pte_pfn(pte), pgmap);
+>                         if (unlikely(!pgmap)) {
+>                                 undo_dev_pagemap(nr, nr_start, pages);
+> @@ -1739,8 +1742,11 @@ static int gup_huge_pmd(pmd_t orig, pmd_t *pmdp, unsigned long addr,
+>         if (!pmd_access_permitted(orig, flags & FOLL_WRITE))
+>                 return 0;
+>
+> -       if (pmd_devmap(orig))
+> +       if (pmd_devmap(orig)) {
+> +               if (unlikely(flags & FOLL_LONGTERM))
+> +                       return 0;
+>                 return __gup_device_huge_pmd(orig, pmdp, addr, end, pages, nr);
+> +       }
+>
+>         refs = 0;
+>         page = pmd_page(orig) + ((addr & ~PMD_MASK) >> PAGE_SHIFT);
+> @@ -1777,8 +1783,11 @@ static int gup_huge_pud(pud_t orig, pud_t *pudp, unsigned long addr,
+>         if (!pud_access_permitted(orig, flags & FOLL_WRITE))
+>                 return 0;
+>
+> -       if (pud_devmap(orig))
+> +       if (pud_devmap(orig)) {
+> +               if (unlikely(flags & FOLL_LONGTERM))
+> +                       return 0;
+>                 return __gup_device_huge_pud(orig, pudp, addr, end, pages, nr);
+> +       }
+>
+>         refs = 0;
+>         page = pud_page(orig) + ((addr & ~PUD_MASK) >> PAGE_SHIFT);
+> @@ -2066,8 +2075,20 @@ int get_user_pages_fast(unsigned long start, int nr_pages,
+>                 start += nr << PAGE_SHIFT;
+>                 pages += nr;
+>
+> -               ret = get_user_pages_unlocked(start, nr_pages - nr, pages,
+> -                                             gup_flags);
+> +               if (gup_flags & FOLL_LONGTERM) {
+> +                       down_read(&current->mm->mmap_sem);
+> +                       ret = __gup_longterm_locked(current, current->mm,
+> +                                                   start, nr_pages - nr,
+> +                                                   pages, NULL, gup_flags);
+> +                       up_read(&current->mm->mmap_sem);
+> +               } else {
+> +                       /*
+> +                        * retain FAULT_FOLL_ALLOW_RETRY optimization if
+> +                        * possible
+> +                        */
+> +                       ret = get_user_pages_unlocked(start, nr_pages - nr,
+> +                                                     pages, gup_flags);
 
-perf script: Filter COMM/FORK/.. events by CPU
-
-The --cpu option only filtered samples. Filter other perf events, such
-as COMM, FORK, SWITCH by the CPU too.
-
-Reported-by: Jiri Olsa <jolsa@kernel.org>
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Link: http://lkml.kernel.org/r/20190311144502.15423-2-andi@firstfloor.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/builtin-script.c | 71 ++++++++++++++++++++++++++++++---------------
- 1 file changed, 47 insertions(+), 24 deletions(-)
-
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 111787e83784..b695b20ffc8a 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -1933,6 +1933,13 @@ static int cleanup_scripting(void)
- 	return scripting_ops ? scripting_ops->stop_script() : 0;
- }
- 
-+static bool filter_cpu(struct perf_sample *sample)
-+{
-+	if (cpu_list)
-+		return !test_bit(sample->cpu, cpu_bitmap);
-+	return false;
-+}
-+
- static int process_sample_event(struct perf_tool *tool,
- 				union perf_event *event,
- 				struct perf_sample *sample,
-@@ -1967,7 +1974,7 @@ static int process_sample_event(struct perf_tool *tool,
- 	if (al.filtered)
- 		goto out_put;
- 
--	if (cpu_list && !test_bit(sample->cpu, cpu_bitmap))
-+	if (filter_cpu(sample))
- 		goto out_put;
- 
- 	if (scripting_ops)
-@@ -2052,9 +2059,11 @@ static int process_comm_event(struct perf_tool *tool,
- 		sample->tid = event->comm.tid;
- 		sample->pid = event->comm.pid;
- 	}
--	perf_sample__fprintf_start(sample, thread, evsel,
-+	if (!filter_cpu(sample)) {
-+		perf_sample__fprintf_start(sample, thread, evsel,
- 				   PERF_RECORD_COMM, stdout);
--	perf_event__fprintf(event, stdout);
-+		perf_event__fprintf(event, stdout);
-+	}
- 	ret = 0;
- out:
- 	thread__put(thread);
-@@ -2088,9 +2097,11 @@ static int process_namespaces_event(struct perf_tool *tool,
- 		sample->tid = event->namespaces.tid;
- 		sample->pid = event->namespaces.pid;
- 	}
--	perf_sample__fprintf_start(sample, thread, evsel,
--				   PERF_RECORD_NAMESPACES, stdout);
--	perf_event__fprintf(event, stdout);
-+	if (!filter_cpu(sample)) {
-+		perf_sample__fprintf_start(sample, thread, evsel,
-+					   PERF_RECORD_NAMESPACES, stdout);
-+		perf_event__fprintf(event, stdout);
-+	}
- 	ret = 0;
- out:
- 	thread__put(thread);
-@@ -2122,9 +2133,11 @@ static int process_fork_event(struct perf_tool *tool,
- 		sample->tid = event->fork.tid;
- 		sample->pid = event->fork.pid;
- 	}
--	perf_sample__fprintf_start(sample, thread, evsel,
--				   PERF_RECORD_FORK, stdout);
--	perf_event__fprintf(event, stdout);
-+	if (!filter_cpu(sample)) {
-+		perf_sample__fprintf_start(sample, thread, evsel,
-+					   PERF_RECORD_FORK, stdout);
-+		perf_event__fprintf(event, stdout);
-+	}
- 	thread__put(thread);
- 
- 	return 0;
-@@ -2152,9 +2165,11 @@ static int process_exit_event(struct perf_tool *tool,
- 		sample->tid = event->fork.tid;
- 		sample->pid = event->fork.pid;
- 	}
--	perf_sample__fprintf_start(sample, thread, evsel,
--				   PERF_RECORD_EXIT, stdout);
--	perf_event__fprintf(event, stdout);
-+	if (!filter_cpu(sample)) {
-+		perf_sample__fprintf_start(sample, thread, evsel,
-+					   PERF_RECORD_EXIT, stdout);
-+		perf_event__fprintf(event, stdout);
-+	}
- 
- 	if (perf_event__process_exit(tool, event, sample, machine) < 0)
- 		err = -1;
-@@ -2188,9 +2203,11 @@ static int process_mmap_event(struct perf_tool *tool,
- 		sample->tid = event->mmap.tid;
- 		sample->pid = event->mmap.pid;
- 	}
--	perf_sample__fprintf_start(sample, thread, evsel,
--				   PERF_RECORD_MMAP, stdout);
--	perf_event__fprintf(event, stdout);
-+	if (!filter_cpu(sample)) {
-+		perf_sample__fprintf_start(sample, thread, evsel,
-+					   PERF_RECORD_MMAP, stdout);
-+		perf_event__fprintf(event, stdout);
-+	}
- 	thread__put(thread);
- 	return 0;
- }
-@@ -2220,9 +2237,11 @@ static int process_mmap2_event(struct perf_tool *tool,
- 		sample->tid = event->mmap2.tid;
- 		sample->pid = event->mmap2.pid;
- 	}
--	perf_sample__fprintf_start(sample, thread, evsel,
--				   PERF_RECORD_MMAP2, stdout);
--	perf_event__fprintf(event, stdout);
-+	if (!filter_cpu(sample)) {
-+		perf_sample__fprintf_start(sample, thread, evsel,
-+					   PERF_RECORD_MMAP2, stdout);
-+		perf_event__fprintf(event, stdout);
-+	}
- 	thread__put(thread);
- 	return 0;
- }
-@@ -2247,9 +2266,11 @@ static int process_switch_event(struct perf_tool *tool,
- 		return -1;
- 	}
- 
--	perf_sample__fprintf_start(sample, thread, evsel,
--				   PERF_RECORD_SWITCH, stdout);
--	perf_event__fprintf(event, stdout);
-+	if (!filter_cpu(sample)) {
-+		perf_sample__fprintf_start(sample, thread, evsel,
-+					   PERF_RECORD_SWITCH, stdout);
-+		perf_event__fprintf(event, stdout);
-+	}
- 	thread__put(thread);
- 	return 0;
- }
-@@ -2270,9 +2291,11 @@ process_lost_event(struct perf_tool *tool,
- 	if (thread == NULL)
- 		return -1;
- 
--	perf_sample__fprintf_start(sample, thread, evsel,
--				   PERF_RECORD_LOST, stdout);
--	perf_event__fprintf(event, stdout);
-+	if (!filter_cpu(sample)) {
-+		perf_sample__fprintf_start(sample, thread, evsel,
-+					   PERF_RECORD_LOST, stdout);
-+		perf_event__fprintf(event, stdout);
-+	}
- 	thread__put(thread);
- 	return 0;
- }
+I couldn't immediately grok why this path needs to branch on
+FOLL_LONGTERM? Won't get_user_pages_unlocked(..., FOLL_LONGTERM) do
+the right thing?
