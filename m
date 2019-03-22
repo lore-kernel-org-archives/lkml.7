@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8697BC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:35:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F21FC10F03
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:35:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 508AB2183E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:35:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E6742183E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:35:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254555;
-	bh=s1+Sszes50hXP6bmGkrGs/toPseNDmxoOe2ECAvHGdA=;
+	s=default; t=1553254559;
+	bh=0pZRMtgw5Cv0coooHofIALEsfReDkC6h/LQgKuWF8sI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DpRSB1qCywGmX0l4MIZlRUB7q3lEmeYEetnm+fw4X5y0e6n4CeUWRuwHywtHWHVMn
-	 lCzgazTLyaJE+Ndz2NwQho9TqLZ9kuzoRAUY2xXGtE1Q9Urc9mBeb+Y05kz3rx5w90
-	 7GAI/kjjK3CvqKP1ZSiFOrNECNCAg2ercHMKQew4=
+	b=Q+bLADF4KNntDojzZYa2Dx8fRJMcAfuAxNCYIdDm5QdEgyySTKCYc73dK7MwoY78V
+	 sLxyTDHMEbRUZdabI/cbg0nKqtqNN787tcvlRJXcLzlsAWEQJ4gezF5oYY2i8lPELn
+	 ownCSXfp7TM+THfkdJV3xPDWb4Tj75WmUWt9JusE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730621AbfCVLfy (ORCPT
+        id S1730629AbfCVLf5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:35:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36952 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:35:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729668AbfCVLfv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:35:51 -0400
+        id S1729668AbfCVLfz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:35:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0362218B0;
-        Fri, 22 Mar 2019 11:35:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6ADA2082C;
+        Fri, 22 Mar 2019 11:35:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254551;
-        bh=s1+Sszes50hXP6bmGkrGs/toPseNDmxoOe2ECAvHGdA=;
+        s=default; t=1553254555;
+        bh=0pZRMtgw5Cv0coooHofIALEsfReDkC6h/LQgKuWF8sI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mh4hpC2Tx3WW+Yef6xXgXsM7DSsZVPeYpsEfhYruE7GCose0+tCTx4ony/X8Qi65z
-         HH/uD2RgkftkU9FYQq9JhWZLVwHVeCfwsThhE1WmZrpmN6e8BDF0rPw0fmySkc1v8M
-         7J1gLsIav9rrKS7RUH20vwPgwvii7XvPlOqxvp2k=
+        b=S3iIRxjK1tKH7T8os98o2F6XgLNTZ1GsWNbj8EwiVpqlEtUzfGseWiQ1i5kodT15m
+         f/oUDTPaMY/9IihzJpGhAdxYbIg17NbdUeu40wFEOEYDs734UU03vC4W56f23l74zv
+         4r0rkNynFT8Ko0sUMHN4v/I+0N78MX5P3zGms5RE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexander Shiyan <shc_work@mail.ru>,
+        stable@vger.kernel.org, Steve Longerbeam <slongerbeam@gmail.com>,
         Philipp Zabel <p.zabel@pengutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 156/230] gpu: ipu-v3: Fix i.MX51 CSI control registers offset
-Date:   Fri, 22 Mar 2019 12:14:54 +0100
-Message-Id: <20190322111247.645823158@linuxfoundation.org>
+Subject: [PATCH 4.4 157/230] gpu: ipu-v3: Fix CSI offsets for imx53
+Date:   Fri, 22 Mar 2019 12:14:55 +0100
+Message-Id: <20190322111247.735501758@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -66,15 +66,14 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 2c0408dd0d8906b26fe8023889af7adf5e68b2c2 ]
+[ Upstream commit bb867d219fda7fbaabea3314702474c4eac2b91d ]
 
-The CSI0/CSI1 registers offset is at +0xe030000/+0xe038000 relative
-to the control module registers on IPUv3EX.
-This patch fixes wrong values for i.MX51 CSI0/CSI1.
+The CSI offsets are wrong for both CSI0 and CSI1. They are at
+physical address 0x1e030000 and 0x1e038000 respectively.
 
 Fixes: 2ffd48f2e7 ("gpu: ipu-v3: Add Camera Sensor Interface unit")
 
-Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
+Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
 Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
@@ -82,20 +81,20 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/gpu/ipu-v3/ipu-common.c b/drivers/gpu/ipu-v3/ipu-common.c
-index 5030cba4a581..0c51b1dde494 100644
+index 0c51b1dde494..df295a0ce87d 100644
 --- a/drivers/gpu/ipu-v3/ipu-common.c
 +++ b/drivers/gpu/ipu-v3/ipu-common.c
-@@ -746,8 +746,8 @@ static struct ipu_devtype ipu_type_imx51 = {
- 	.cpmem_ofs = 0x1f000000,
- 	.srm_ofs = 0x1f040000,
- 	.tpm_ofs = 0x1f060000,
--	.csi0_ofs = 0x1f030000,
--	.csi1_ofs = 0x1f038000,
-+	.csi0_ofs = 0x1e030000,
-+	.csi1_ofs = 0x1e038000,
- 	.ic_ofs = 0x1e020000,
- 	.disp0_ofs = 0x1e040000,
- 	.disp1_ofs = 0x1e048000,
+@@ -762,8 +762,8 @@ static struct ipu_devtype ipu_type_imx53 = {
+ 	.cpmem_ofs = 0x07000000,
+ 	.srm_ofs = 0x07040000,
+ 	.tpm_ofs = 0x07060000,
+-	.csi0_ofs = 0x07030000,
+-	.csi1_ofs = 0x07038000,
++	.csi0_ofs = 0x06030000,
++	.csi1_ofs = 0x06038000,
+ 	.ic_ofs = 0x06020000,
+ 	.disp0_ofs = 0x06040000,
+ 	.disp1_ofs = 0x06048000,
 -- 
 2.19.1
 
