@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58B80C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:56:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26754C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:57:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B52421873
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:56:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8FEB21873
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:57:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553259417;
-	bh=Q1zraPLTzAQTHXF8LMQAdm3LCVkBV+9Qh9Nzqzczhgo=;
+	s=default; t=1553259430;
+	bh=PMG4qo4SNX0Ew8xTdVFqlB1EYOSCwtpezuaXj9sdLq4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LL/TjpkMP+basA5UMXpAyU2rN0xulQ/WgzCavBEFlj2o0O/PPy/1Lgi3gfQSYsFc3
-	 DEWErgFtQ3S5I+FBH5B07zA/M4zGpgS3fGsPyqPoqETbwf2XqI0GhRzVzlTUAbkMQL
-	 rhDMtQfFjaHV71+iJ4v4jFDdT0/8641BHqft92nw=
+	b=r8ZyfT2TnyHn74xWhs7k/vgFoS1xg8OJ+E6NaHAYuKAZV5iRZh5qorvPRRRRpbox2
+	 i6nFB3xTOTSYsvVhHhhgJrPga/XT0crDDPqNunBT+oI7C/J1LPBiGu0G356w1pr8Rq
+	 DlkE6kx/VUO8CkQofvbZMienfQKyn065jpxyTpdc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732330AbfCVM44 (ORCPT
+        id S1732527AbfCVM5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:56:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51964 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:57:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731868AbfCVLsg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:48:36 -0400
+        id S1731636AbfCVLsX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:48:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 63712218B0;
-        Fri, 22 Mar 2019 11:48:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 60031218B0;
+        Fri, 22 Mar 2019 11:48:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255315;
-        bh=Q1zraPLTzAQTHXF8LMQAdm3LCVkBV+9Qh9Nzqzczhgo=;
+        s=default; t=1553255302;
+        bh=PMG4qo4SNX0Ew8xTdVFqlB1EYOSCwtpezuaXj9sdLq4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c5TA9iVMOpC9twC5U8e8PNisHoZhQI9NNsRCc3rZ60fUydDolQYg9DUb7nqH6DrwS
-         oE0hU+gVZw+6dwlarmWJpVWo2jI4D7jHdb+hvfgVlkvn5fhZ5u4GSOn2sEUzGLMx64
-         FDA3SGP2LSqE0TlWBEpPxHo7hau982Vr3sm2ZOC8=
+        b=ToB4JBHp2gPqXf0UPZTVfrfdRARmqY0aEM28W77qvxmYNLbqRs04RuX998J7zDLMN
+         64RakKEjzZJ/6eS6skEELhQpc0x59NJqwODo/vpVYwqx08xkmdtTZhjbNF4rX0HBWw
+         Hz3S9k1q618GYMh5XsxsUOwVcZWnJvpzcLNoWlc4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chase Conklin <Chase.Conklin@arm.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Vladimir Murzin <vladimir.murzin@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
+        stable@vger.kernel.org, Alexey Khoroshilov <khoroshilov@ispras.ru>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 052/183] arm64: Relax GIC version check during early boot
-Date:   Fri, 22 Mar 2019 12:14:40 +0100
-Message-Id: <20190322111245.463015452@linuxfoundation.org>
+Subject: [PATCH 4.14 048/183] net: mv643xx_eth: disable clk on error path in mv643xx_eth_shared_probe()
+Date:   Fri, 22 Mar 2019 12:14:36 +0100
+Message-Id: <20190322111245.195704428@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111241.819468003@linuxfoundation.org>
 References: <20190322111241.819468003@linuxfoundation.org>
@@ -68,38 +66,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 74698f6971f25d045301139413578865fc2bd8f9 ]
+[ Upstream commit e928b5d6b75e239feb9c6d5488974b6646a0ebc8 ]
 
-Updates to the GIC architecture allow ID_AA64PFR0_EL1.GIC to have
-values other than 0 or 1. At the moment, Linux is quite strict in the
-way it handles this field at early boot stage (cpufeature is fine) and
-will refuse to use the system register CPU interface if it doesn't
-find the value 1.
+If mv643xx_eth_shared_of_probe() fails, mv643xx_eth_shared_probe()
+leaves clk enabled.
 
-Fixes: 021f653791ad17e03f98aaa7fb933816ae16f161 ("irqchip: gic-v3: Initial support for GICv3")
-Reported-by: Chase Conklin <Chase.Conklin@arm.com>
-Reviewed-by: Marc Zyngier <marc.zyngier@arm.com>
-Signed-off-by: Vladimir Murzin <vladimir.murzin@arm.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
+Found by Linux Driver Verification project (linuxtesting.org).
+
+Signed-off-by: Alexey Khoroshilov <khoroshilov@ispras.ru>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/head.S | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/net/ethernet/marvell/mv643xx_eth.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
-index ec393275ba04..1371542de0d3 100644
---- a/arch/arm64/kernel/head.S
-+++ b/arch/arm64/kernel/head.S
-@@ -442,8 +442,7 @@ set_hcr:
- 	/* GICv3 system register access */
- 	mrs	x0, id_aa64pfr0_el1
- 	ubfx	x0, x0, #24, #4
--	cmp	x0, #1
--	b.ne	3f
-+	cbz	x0, 3f
+diff --git a/drivers/net/ethernet/marvell/mv643xx_eth.c b/drivers/net/ethernet/marvell/mv643xx_eth.c
+index 81c1fac00d33..2434409f84b2 100644
+--- a/drivers/net/ethernet/marvell/mv643xx_eth.c
++++ b/drivers/net/ethernet/marvell/mv643xx_eth.c
+@@ -2886,7 +2886,7 @@ static int mv643xx_eth_shared_probe(struct platform_device *pdev)
  
- 	mrs_s	x0, SYS_ICC_SRE_EL2
- 	orr	x0, x0, #ICC_SRE_EL2_SRE	// Set ICC_SRE_EL2.SRE==1
+ 	ret = mv643xx_eth_shared_of_probe(pdev);
+ 	if (ret)
+-		return ret;
++		goto err_put_clk;
+ 	pd = dev_get_platdata(&pdev->dev);
+ 
+ 	msp->tx_csum_limit = (pd != NULL && pd->tx_csum_limit) ?
+@@ -2894,6 +2894,11 @@ static int mv643xx_eth_shared_probe(struct platform_device *pdev)
+ 	infer_hw_params(msp);
+ 
+ 	return 0;
++
++err_put_clk:
++	if (!IS_ERR(msp->clk))
++		clk_disable_unprepare(msp->clk);
++	return ret;
+ }
+ 
+ static int mv643xx_eth_shared_remove(struct platform_device *pdev)
 -- 
 2.19.1
 
