@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBDF4C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:05:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3F41C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:05:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CD8921929
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:05:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BC0621916
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:05:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256323;
-	bh=5IKZ7jpQwnmRhVAeOsXJRU7CFep5QBdYDXPu1Ith5go=;
+	s=default; t=1553256327;
+	bh=AX8C5EWBgznx8T2SolHXsGRoOKJV0cpm9FRgi22h1UI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k8sXlCY6MBo1a1pCcozHo/3/Yv8d+pH/AGqS0eZ0oEybEsKeRKyGNSIDkdzJGn+A4
-	 j5dUhoGYcdeALU6OKU/0FCmvwQF+aACZ+VrOnXjGNg8tkB2mMvqDO+KWWcwMugwIvM
-	 nt4CLWpW5gPwxNcxyOrv+aVaK18oQGkq003zCH5o=
+	b=CeytQ/Rn2e6aYFuVEfHJCzx4oLHioTqhIxH+geheHbWu1/kz8nVTiP0svwWAgTHBH
+	 TeiwTeXVjg8Sia8LM0CP2FKycElGrxq0sP/koOA01557my1bekogoprI3U+N9H9kqi
+	 1r22e2ipWegWhGzcKvk4/hDMwH7Faduv65muUJmI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388809AbfCVMFV (ORCPT
+        id S2388819AbfCVMF0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:05:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43782 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:05:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43854 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388800AbfCVMFS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:05:18 -0400
+        id S2388014AbfCVMFW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:05:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A26B321929;
-        Fri, 22 Mar 2019 12:05:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 751E821916;
+        Fri, 22 Mar 2019 12:05:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256318;
-        bh=5IKZ7jpQwnmRhVAeOsXJRU7CFep5QBdYDXPu1Ith5go=;
+        s=default; t=1553256322;
+        bh=AX8C5EWBgznx8T2SolHXsGRoOKJV0cpm9FRgi22h1UI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EbG3yqEHJ7Al07DeUdRyi7YqCp/Z+pfJdcTOgO/yvTUNbiDoOciORWuJx9vXcsO5V
-         ZMQZKiQzHGDcwg4G+jtwXjN2aw4VpGJGjqkcw/c5Tpvj2USpBLelAfr6fZlTA8o184
-         6jY7Vx94bFUvK24D2zoA2wRrJM2RA5/uc0nnoVGA=
+        b=Fg8MR+R6N2vjUBVdrruLEd34DyA9/HZPWpxiq+AS2ruzNFlBcTQVdpPwRt+NI54d1
+         a77cRadxUl+7pMfAkeLjiWZVT5yUgLx0fLaPhs3S+PaIB/4EEa2Lj8yGxA6G9Tz+bu
+         Coe0NFjlaumaozJKHg56JdCeUKyz198B7BVBQe8U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zenghui Yu <yuzenghui@huawei.com>,
+        stable@vger.kernel.org, Doug Berger <opendmb@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
         Marc Zyngier <marc.zyngier@arm.com>
-Subject: [PATCH 4.19 174/280] irqchip/gic-v3-its: Avoid parsing _indirect_ twice for Device table
-Date:   Fri, 22 Mar 2019 12:15:27 +0100
-Message-Id: <20190322111325.236155152@linuxfoundation.org>
+Subject: [PATCH 4.19 175/280] irqchip/brcmstb-l2: Use _irqsave locking variants in non-interrupt code
+Date:   Fri, 22 Mar 2019 12:15:28 +0100
+Message-Id: <20190322111325.438497383@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -65,34 +66,68 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Zenghui Yu <yuzenghui@huawei.com>
+From: Doug Berger <opendmb@gmail.com>
 
-commit 8d565748b6035eeda18895c213396a4c9fac6a4c upstream.
+commit 33517881ede742107f416533b8c3e4abc56763da upstream.
 
-In current logic, its_parse_indirect_baser() will be invoked twice
-when allocating Device tables. Add a *break* to omit the unnecessary
-and annoying (might be ...) invoking.
+Using the irq_gc_lock/irq_gc_unlock functions in the suspend and
+resume functions creates the opportunity for a deadlock during
+suspend, resume, and shutdown. Using the irq_gc_lock_irqsave/
+irq_gc_unlock_irqrestore variants prevents this possible deadlock.
 
-Fixes: 32bd44dc19de ("irqchip/gic-v3-its: Fix the incorrect parsing of VCPU table size")
 Cc: stable@vger.kernel.org
-Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+Fixes: 7f646e92766e2 ("irqchip: brcmstb-l2: Add Broadcom Set Top Box Level-2 interrupt controller")
+Signed-off-by: Doug Berger <opendmb@gmail.com>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+[maz: tidied up $SUBJECT]
 Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/irqchip/irq-gic-v3-its.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/irqchip/irq-brcmstb-l2.c |   10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -1893,6 +1893,8 @@ static int its_alloc_tables(struct its_n
- 			indirect = its_parse_indirect_baser(its, baser,
- 							    psz, &order,
- 							    its->device_ids);
-+			break;
-+
- 		case GITS_BASER_TYPE_VCPU:
- 			indirect = its_parse_indirect_baser(its, baser,
- 							    psz, &order,
+--- a/drivers/irqchip/irq-brcmstb-l2.c
++++ b/drivers/irqchip/irq-brcmstb-l2.c
+@@ -129,8 +129,9 @@ static void brcmstb_l2_intc_suspend(stru
+ 	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
+ 	struct irq_chip_type *ct = irq_data_get_chip_type(d);
+ 	struct brcmstb_l2_intc_data *b = gc->private;
++	unsigned long flags;
+ 
+-	irq_gc_lock(gc);
++	irq_gc_lock_irqsave(gc, flags);
+ 	/* Save the current mask */
+ 	b->saved_mask = irq_reg_readl(gc, ct->regs.mask);
+ 
+@@ -139,7 +140,7 @@ static void brcmstb_l2_intc_suspend(stru
+ 		irq_reg_writel(gc, ~gc->wake_active, ct->regs.disable);
+ 		irq_reg_writel(gc, gc->wake_active, ct->regs.enable);
+ 	}
+-	irq_gc_unlock(gc);
++	irq_gc_unlock_irqrestore(gc, flags);
+ }
+ 
+ static void brcmstb_l2_intc_resume(struct irq_data *d)
+@@ -147,8 +148,9 @@ static void brcmstb_l2_intc_resume(struc
+ 	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
+ 	struct irq_chip_type *ct = irq_data_get_chip_type(d);
+ 	struct brcmstb_l2_intc_data *b = gc->private;
++	unsigned long flags;
+ 
+-	irq_gc_lock(gc);
++	irq_gc_lock_irqsave(gc, flags);
+ 	if (ct->chip.irq_ack) {
+ 		/* Clear unmasked non-wakeup interrupts */
+ 		irq_reg_writel(gc, ~b->saved_mask & ~gc->wake_active,
+@@ -158,7 +160,7 @@ static void brcmstb_l2_intc_resume(struc
+ 	/* Restore the saved mask */
+ 	irq_reg_writel(gc, b->saved_mask, ct->regs.disable);
+ 	irq_reg_writel(gc, ~b->saved_mask, ct->regs.enable);
+-	irq_gc_unlock(gc);
++	irq_gc_unlock_irqrestore(gc, flags);
+ }
+ 
+ static int __init brcmstb_l2_intc_of_init(struct device_node *np,
 
 
