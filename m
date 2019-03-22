@@ -2,92 +2,71 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B383DC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 19:09:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED1B8C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 19:12:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86315218FE
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 19:09:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8DCB2190A
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 19:12:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727620AbfCVTJ1 (ORCPT
+        id S1727733AbfCVTMH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 15:09:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39192 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 15:12:07 -0400
+Received: from mga02.intel.com ([134.134.136.20]:55340 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726215AbfCVTJ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 15:09:26 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C304218FE;
-        Fri, 22 Mar 2019 19:09:25 +0000 (UTC)
-Date:   Fri, 22 Mar 2019 15:09:23 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Shuah Khan <shuahkhan@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH] selftests/ftrace: Select an existing function in
- kprobe_eventname test
-Message-ID: <20190322150923.1b58eca5@gandalf.local.home>
-X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1727157AbfCVTMH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 15:12:07 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Mar 2019 12:12:06 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,256,1549958400"; 
+   d="scan'208";a="127802059"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
+  by orsmga008.jf.intel.com with ESMTP; 22 Mar 2019 12:12:03 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1h7PaE-000642-8v; Fri, 22 Mar 2019 21:12:02 +0200
+Date:   Fri, 22 Mar 2019 21:12:02 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     William Breathitt Gray <vilhelm.gray@gmail.com>
+Cc:     linus.walleij@linaro.org, akpm@linux-foundation.org,
+        linux-gpio@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux@rasmusvillemoes.dk,
+        yamada.masahiro@socionext.com, bgolaszewski@baylibre.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v10 00/10] Introduce the for_each_set_clump8 macro
+Message-ID: <20190322191202.GC9224@smile.fi.intel.com>
+References: <cover.1552566113.git.vilhelm.gray@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1552566113.git.vilhelm.gray@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steven Rostedt (VMware) <rostedt@goodmis.org>
+On Thu, Mar 14, 2019 at 09:29:32PM +0900, William Breathitt Gray wrote:
+> Changes in v10:
+>   - Fix off-by-one error in bitmap initialization in the
+>     test_for_each_set_clump8 function
+>   - Fix typos in clump_exp array definition in test_bitmap.c ("0x28"
+>     should have been "0x38")
+>   - Utilize for_each_set_clump8 macro in intel_soc_dts_iosf.c
 
-Running the ftrace selftests on the latest kernel caused the
-kprobe_eventname test to fail. It was due to the test that searches for
-a function with at "dot" in the name and adding a probe to that.
-Unfortunately, for this test, it picked:
+One more, can you look at gen_74x164_set_multiple() ? It seems a candidate as
+well, if I'm not mistaken.
 
- optimize_nops.isra.2.cold.4
 
-Which happens to be marked as "__init", which means it no longer exists
-in the kernel! (kallsyms keeps those function names around for tracing
-purposes)
+-- 
+With Best Regards,
+Andy Shevchenko
 
-As only functions that still exist are in the
-available_filter_functions file, as they are removed when the functions
-are freed at boot or module exit, have the test search for a function
-with ".isra." in the name as well as being in the
-available_filter_functions (if the file exists).
 
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
-diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_eventname.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_eventname.tc
-index 3fb70e01b1fe..3ff236719b6e 100644
---- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_eventname.tc
-+++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_eventname.tc
-@@ -24,7 +24,21 @@ test -d events/kprobes2/event2 || exit_failure
- 
- :;: "Add an event on dot function without name" ;:
- 
--FUNC=`grep -m 10 " [tT] .*\.isra\..*$" /proc/kallsyms | tail -n 1 | cut -f 3 -d " "`
-+find_dot_func() {
-+	if [ ! -f available_filter_functions ]; then
-+		grep -m 10 " [tT] .*\.isra\..*$" /proc/kallsyms | tail -n 1 | cut -f 3 -d " "
-+		return;
-+	fi
-+
-+	grep " [tT] .*\.isra\..*" /proc/kallsyms | cut -f 3 -d " " | while read f; do
-+		if grep -s $f available_filter_functions; then
-+			echo $f
-+			break
-+		fi
-+	done
-+}
-+
-+FUNC=`find_dot_func | tail -n 1`
- [ "x" != "x$FUNC" ] || exit_unresolved
- echo "p $FUNC" > kprobe_events
- EVENT=`grep $FUNC kprobe_events | cut -f 1 -d " " | cut -f 2 -d:`
