@@ -2,184 +2,140 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D803DC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:29:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1905C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:29:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A23592070D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:29:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553257790;
-	bh=7tZkvRCcrdfTnBGnYmkgnAnJEGxeASGr6fz4vnoQ0NU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QWNcbMlmS8XGIUaANVseJ+eWzzTT0BJnqVtBOWOhhk2kBqFdTYbJM+SSBl9QkbamN
-	 bakwyv62DgqpTaJ0yIco8Sb2KI84eHNTAg1DldswYQirAt+sj+i1YVDMCMgsTYO7z3
-	 JVZpzfaS+5TpUKd5QwA1pdkSvEIUpX3spvFUuW3c=
+	by mail.kernel.org (Postfix) with ESMTP id AE2832070D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:29:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="ftE8tYFt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390803AbfCVM3t (ORCPT
+        id S2389798AbfCVM3y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:29:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57792 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389798AbfCVMSu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:18:50 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 48DFC2082C;
-        Fri, 22 Mar 2019 12:18:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553257129;
-        bh=7tZkvRCcrdfTnBGnYmkgnAnJEGxeASGr6fz4vnoQ0NU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uy92EwWVUmd2OSUzxZ16ZY5crcUqeqt2yKYIFYeaZUXJtRR1LcmG6/URU+eiTFmeL
-         SnKezgm9mSUMHiO28dXtMTrrpMT5Uq2dIRdnh+2wVeeWa/jiN555g0FnUvfF37esKO
-         AvxVD0TUtAVS/BkiwzvdvqhR6AdHKL/YgMVH+yf8=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Christoph Hellwig <hch@lst.de>, Joerg Roedel <jroedel@suse.de>,
-        "Michael S. Tsirkin" <mst@redhat.com>
-Subject: [PATCH 5.0 124/238] dma: Introduce dma_max_mapping_size()
-Date:   Fri, 22 Mar 2019 12:15:43 +0100
-Message-Id: <20190322111305.835827654@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
-References: <20190322111258.383569278@linuxfoundation.org>
-User-Agent: quilt/0.65
-X-stable: review
-X-Patchwork-Hint: ignore
+        Fri, 22 Mar 2019 08:29:54 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:42683 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390453AbfCVM3u (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:29:50 -0400
+Received: by mail-pg1-f196.google.com with SMTP id p6so1428076pgh.9
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 05:29:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=/o8b/zZ6NprDWsXSmkG/SfqSy1qZBYXQNf6+um0F+b0=;
+        b=ftE8tYFtQBBQie92Bv7tAu5aO2BAglFveBV9KL1w0tmXALkual8bgm/j3I5bl5wZ+e
+         /0Qng0kJxIyVq8dGQItia2U0CF8wmr5UcTkhDgm16iEh2tbyu1JMIwH9ooKV0KmoZdpM
+         ijfG6YnRMhg3QwvE4Wbv4i/ZnLngj+ZHotkEM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=/o8b/zZ6NprDWsXSmkG/SfqSy1qZBYXQNf6+um0F+b0=;
+        b=jdnFwrmDDbqwiB0Yt2nvgBftqniz6AvsT7SiXpWAy4yKjLmMrWtDPUV4TIzms9h6zM
+         MmrVlLtyEHEpovUVI930TaASzI7FniMMoGIttz0dRePhqnQ6rGHLYsvYVajx8TU4hV4h
+         0/zgGLpN0UE4EVtyhYqkXwFyA1THVH2y5i7NKPTZOOCv3zVsMVRRx0fF0JBQidbRwRIt
+         AyVMObdNEt+EaOhBYTsrtnuQcLYSqySjaHNjSVIxaoIwCyz7zosFo2dr7nFjhYWFd1iE
+         b38LGDw7NyyvTp3yppPu5D7Jcg9aIjS4HR5fcmf7U4SHhiVe+fES6KZWxaTGVZKS2h0x
+         e5ag==
+X-Gm-Message-State: APjAAAXD6L5YW7bHKcRe1RdqpZgExUhZE4OdIrJdF9lhmHCebtmBiqYF
+        HQvLS4FFOVfEr80eu6v9DbBCZg==
+X-Google-Smtp-Source: APXvYqzsqtygRG9T2ppku3CZdV3yO3VQ78upwJuoSfMu+dwD0/EKHp0AZWxY4h53CfoWCXvdUyGWew==
+X-Received: by 2002:a63:ed53:: with SMTP id m19mr8620860pgk.78.1553257789257;
+        Fri, 22 Mar 2019 05:29:49 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id e22sm10014783pfi.126.2019.03.22.05.29.47
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 22 Mar 2019 05:29:48 -0700 (PDT)
+Date:   Fri, 22 Mar 2019 08:29:47 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Chenbo Feng <fengc@google.com>
+Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-media@vger.kernel.org, kernel-team@android.com,
+        Sumit Semwal <sumit.semwal@linaro.org>, erickreyes@google.com,
+        Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [RFC v2 dma-buf 0/3] Improve the dma-buf tracking
+Message-ID: <20190322122947.GA47151@google.com>
+References: <20190322025135.118201-1-fengc@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190322025135.118201-1-fengc@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-5.0-stable review patch.  If anyone has any objections, please let me know.
+On Thu, Mar 21, 2019 at 07:51:32PM -0700, Chenbo Feng wrote:
+> Currently, all dma-bufs share the same anonymous inode. While we can count
+> how many dma-buf fds or mappings a process has, we can't get the size of
+> the backing buffers or tell if two entries point to the same dma-buf. And
+> in debugfs, we can get a per-buffer breakdown of size and reference count,
+> but can't tell which processes are actually holding the references to each
+> buffer.
+> 
+> To resolve the issue above and provide better method for userspace to track
+> the dma-buf usage across different processes, the following changes are
+> proposed in dma-buf kernel side. First of all, replace the singleton inode
+> inside the dma-buf subsystem with a mini-filesystem, and assign each
+> dma-buf a unique inode out of this filesystem.  With this change, calling
+> stat(2) on each entry gives the caller a unique ID (st_ino), the buffer's
+> size (st_size), and even the number of pages assigned to each dma-buffer.
+> Secoundly, add the inode information to /sys/kernel/debug/dma_buf/bufinfo
+> so in the case where a buffer is mmap()ed into a process’s address space
 
-------------------
+Is there a better place to add bufinfo than debugfs, since debugfs is not
+something Android may mount for non-debug uses in the future?
 
-From: Joerg Roedel <jroedel@suse.de>
+> but all remaining fds have been closed, we can still get the dma-buf
+> information and try to accociate it with the process by searching the
+> proc/pid/maps and looking for the corresponding inode number exposed in
+> dma-buf debug fs. Thirdly, created an ioctl to assign names to dma-bufs
+> which lets userspace assign short names (e.g., "CAMERA") to buffers. This
+> information can be extremely helpful for tracking and accounting shared
+> buffers based on their usage and original purpose. Last but not least, add
+> dma-buf information to /proc/pid/fdinfo by adding a show_fdinfo() handler
+> to dma_buf_file_operations. The handler will print the file_count and name
+> of each buffer.
 
-commit 133d624b1cee16906134e92d5befb843b58bcf31 upstream.
+There are a couple more entries shown in fdinfo per patch 3/3 so it is worth
+mentioning those here as well.
 
-The function returns the maximum size that can be mapped
-using DMA-API functions. The patch also adds the
-implementation for direct DMA and a new dma_map_ops pointer
-so that other implementations can expose their limit.
+Also, is there kselftests to add or modify? I suggest we add those since they
+are always invaluable.
 
-Cc: stable@vger.kernel.org
-Reviewed-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+I'll review more soon. Currently traveling. I am especially curious how you
+created the new inodes since I recently had to do so for another usecase as
+well. thanks!
 
----
- Documentation/DMA-API.txt   |    8 ++++++++
- include/linux/dma-mapping.h |    8 ++++++++
- kernel/dma/direct.c         |   11 +++++++++++
- kernel/dma/mapping.c        |   14 ++++++++++++++
- 4 files changed, 41 insertions(+)
+ - Joel
 
---- a/Documentation/DMA-API.txt
-+++ b/Documentation/DMA-API.txt
-@@ -195,6 +195,14 @@ Requesting the required mask does not al
- wish to take advantage of it, you should issue a dma_set_mask()
- call to set the mask to the value returned.
- 
-+::
-+
-+	size_t
-+	dma_direct_max_mapping_size(struct device *dev);
-+
-+Returns the maximum size of a mapping for the device. The size parameter
-+of the mapping functions like dma_map_single(), dma_map_page() and
-+others should not be larger than the returned value.
- 
- Part Id - Streaming DMA mappings
- --------------------------------
---- a/include/linux/dma-mapping.h
-+++ b/include/linux/dma-mapping.h
-@@ -130,6 +130,7 @@ struct dma_map_ops {
- 			enum dma_data_direction direction);
- 	int (*dma_supported)(struct device *dev, u64 mask);
- 	u64 (*get_required_mask)(struct device *dev);
-+	size_t (*max_mapping_size)(struct device *dev);
- };
- 
- #define DMA_MAPPING_ERROR		(~(dma_addr_t)0)
-@@ -257,6 +258,8 @@ static inline void dma_direct_sync_sg_fo
- }
- #endif
- 
-+size_t dma_direct_max_mapping_size(struct device *dev);
-+
- #ifdef CONFIG_HAS_DMA
- #include <asm/dma-mapping.h>
- 
-@@ -460,6 +463,7 @@ int dma_supported(struct device *dev, u6
- int dma_set_mask(struct device *dev, u64 mask);
- int dma_set_coherent_mask(struct device *dev, u64 mask);
- u64 dma_get_required_mask(struct device *dev);
-+size_t dma_max_mapping_size(struct device *dev);
- #else /* CONFIG_HAS_DMA */
- static inline dma_addr_t dma_map_page_attrs(struct device *dev,
- 		struct page *page, size_t offset, size_t size,
-@@ -561,6 +565,10 @@ static inline u64 dma_get_required_mask(
- {
- 	return 0;
- }
-+static inline size_t dma_max_mapping_size(struct device *dev)
-+{
-+	return 0;
-+}
- #endif /* CONFIG_HAS_DMA */
- 
- static inline dma_addr_t dma_map_single_attrs(struct device *dev, void *ptr,
---- a/kernel/dma/direct.c
-+++ b/kernel/dma/direct.c
-@@ -380,3 +380,14 @@ int dma_direct_supported(struct device *
- 	 */
- 	return mask >= __phys_to_dma(dev, min_mask);
- }
-+
-+size_t dma_direct_max_mapping_size(struct device *dev)
-+{
-+	size_t size = SIZE_MAX;
-+
-+	/* If SWIOTLB is active, use its maximum mapping size */
-+	if (is_swiotlb_active())
-+		size = swiotlb_max_mapping_size(dev);
-+
-+	return size;
-+}
---- a/kernel/dma/mapping.c
-+++ b/kernel/dma/mapping.c
-@@ -357,3 +357,17 @@ void dma_cache_sync(struct device *dev,
- 		ops->cache_sync(dev, vaddr, size, dir);
- }
- EXPORT_SYMBOL(dma_cache_sync);
-+
-+size_t dma_max_mapping_size(struct device *dev)
-+{
-+	const struct dma_map_ops *ops = get_dma_ops(dev);
-+	size_t size = SIZE_MAX;
-+
-+	if (dma_is_direct(ops))
-+		size = dma_direct_max_mapping_size(dev);
-+	else if (ops && ops->max_mapping_size)
-+		size = ops->max_mapping_size(dev);
-+
-+	return size;
-+}
-+EXPORT_SYMBOL_GPL(dma_max_mapping_size);
-
-
+> 
+> Change in v2:
+> * Add a check to prevent changing dma-buf name when it is attached to
+>   devices.
+> * Fixed some compile warnings
+> 
+> Greg Hackmann (3):
+>   dma-buf: give each buffer a full-fledged inode
+>   dma-buf: add DMA_BUF_{GET,SET}_NAME ioctls
+>   dma-buf: add show_fdinfo handler
+> 
+>  drivers/dma-buf/dma-buf.c    | 121 ++++++++++++++++++++++++++++++++---
+>  include/linux/dma-buf.h      |   5 +-
+>  include/uapi/linux/dma-buf.h |   4 ++
+>  include/uapi/linux/magic.h   |   1 +
+>  4 files changed, 122 insertions(+), 9 deletions(-)
+> 
+> -- 
+> 2.21.0.rc2.261.ga7da99ff1b-goog
+> 
