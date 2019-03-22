@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B92FC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 05:24:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08217C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 05:24:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14D9A213F2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 05:24:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFF0F213F2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 05:24:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727926AbfCVFYU (ORCPT
+        id S1727937AbfCVFYV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 01:24:20 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:45648 "EHLO
+        Fri, 22 Mar 2019 01:24:21 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:45640 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726543AbfCVFXQ (ORCPT
+        by vger.kernel.org with ESMTP id S1726667AbfCVFXQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 22 Mar 2019 01:23:16 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1h7CeA-000166-09; Fri, 22 Mar 2019 05:23:14 +0000
+        id 1h7Ce9-000163-SE; Fri, 22 Mar 2019 05:23:13 +0000
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1h7Ce9-0001pG-P9; Fri, 22 Mar 2019 05:23:13 +0000
+        id 1h7Ce9-0001p2-Mm; Fri, 22 Mar 2019 05:23:13 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Paolo Bonzini" <pbonzini@redhat.com>,
-        "Jann Horn" <jannh@google.com>
+        "Radim =?UTF-8?Q?Kr=C4=8Dm=C3=A1=C5=99?=" <rkrcmar@redhat.com>,
+        "Christoffer Dall" <christoffer.dall@linaro.org>,
+        "Paolo Bonzini" <pbonzini@redhat.com>
 Date:   Fri, 22 Mar 2019 05:20:18 +0000
-Message-ID: <lsq.1553232018.735676904@decadent.org.uk>
+Message-ID: <lsq.1553232018.206593928@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 14/16] kvm: fix kvm_ioctl_create_device() reference
- counting (CVE-2019-6974)
+Subject: [PATCH 3.16 11/16] KVM: PPC: Move xics_debugfs_init out of create
 In-Reply-To: <lsq.1553232017.771830163@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,54 +56,82 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jann Horn <jannh@google.com>
+From: Christoffer Dall <christoffer.dall@linaro.org>
 
-commit cfa39381173d5f969daf43582c95ad679189cbc9 upstream.
+commit 023e9fddc3616b005c3753fc1bb6526388cd7a30 upstream.
 
-kvm_ioctl_create_device() does the following:
+As we are about to hold the kvm->lock during the create operation on KVM
+devices, we should move the call to xics_debugfs_init into its own
+function, since holding a mutex over extended amounts of time might not
+be a good idea.
 
-1. creates a device that holds a reference to the VM object (with a borrowed
-   reference, the VM's refcount has not been bumped yet)
-2. initializes the device
-3. transfers the reference to the device to the caller's file descriptor table
-4. calls kvm_get_kvm() to turn the borrowed reference to the VM into a real
-   reference
+Introduce an init operation on the kvm_device_ops struct which cannot
+fail and call this, if configured, after the device has been created.
 
-The ownership transfer in step 3 must not happen before the reference to the VM
-becomes a proper, non-borrowed reference, which only happens in step 4.
-After step 3, an attacker can close the file descriptor and drop the borrowed
-reference, which can cause the refcount of the kvm object to drop to zero.
-
-This means that we need to grab a reference for the device before
-anon_inode_getfd(), otherwise the VM can disappear from under us.
-
-Fixes: 852b6d57dc7f ("kvm: add device control API")
-Signed-off-by: Jann Horn <jannh@google.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Christoffer Dall <christoffer.dall@linaro.org>
+Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Radim Krčmář <rkrcmar@redhat.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- virt/kvm/kvm_main.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/powerpc/kvm/book3s_xics.c | 10 ++++++++--
+ include/linux/kvm_host.h       |  6 ++++++
+ virt/kvm/kvm_main.c            |  3 +++
+ 3 files changed, 17 insertions(+), 2 deletions(-)
 
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -2340,8 +2340,10 @@ static int kvm_ioctl_create_device(struc
- 	if (ops->init)
- 		ops->init(dev);
- 
-+	kvm_get_kvm(kvm);
- 	ret = anon_inode_getfd(ops->name, &kvm_device_fops, dev, O_RDWR | O_CLOEXEC);
- 	if (ret < 0) {
-+		kvm_put_kvm(kvm);
- 		mutex_lock(&kvm->lock);
- 		list_del(&dev->vm_node);
- 		mutex_unlock(&kvm->lock);
-@@ -2349,7 +2351,6 @@ static int kvm_ioctl_create_device(struc
+--- a/arch/powerpc/kvm/book3s_xics.c
++++ b/arch/powerpc/kvm/book3s_xics.c
+@@ -1251,8 +1251,6 @@ static int kvmppc_xics_create(struct kvm
  		return ret;
  	}
  
--	kvm_get_kvm(kvm);
- 	cd->fd = ret;
+-	xics_debugfs_init(xics);
+-
+ #ifdef CONFIG_KVM_BOOK3S_HV_POSSIBLE
+ 	if (cpu_has_feature(CPU_FTR_ARCH_206)) {
+ 		/* Enable real mode support */
+@@ -1264,9 +1262,17 @@ static int kvmppc_xics_create(struct kvm
  	return 0;
  }
+ 
++static void kvmppc_xics_init(struct kvm_device *dev)
++{
++	struct kvmppc_xics *xics = (struct kvmppc_xics *)dev->private;
++
++	xics_debugfs_init(xics);
++}
++
+ struct kvm_device_ops kvm_xics_ops = {
+ 	.name = "kvm-xics",
+ 	.create = kvmppc_xics_create,
++	.init = kvmppc_xics_init,
+ 	.destroy = kvmppc_xics_free,
+ 	.set_attr = xics_set_attr,
+ 	.get_attr = xics_get_attr,
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -1062,6 +1062,12 @@ struct kvm_device_ops {
+ 	int (*create)(struct kvm_device *dev, u32 type);
+ 
+ 	/*
++	 * init is called after create if create is successful and is called
++	 * outside of holding kvm->lock.
++	 */
++	void (*init)(struct kvm_device *dev);
++
++	/*
+ 	 * Destroy is responsible for freeing dev.
+ 	 *
+ 	 * Destroy may be called before or after destructors are called
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -2328,6 +2328,9 @@ static int kvm_ioctl_create_device(struc
+ 		return ret;
+ 	}
+ 
++	if (ops->init)
++		ops->init(dev);
++
+ 	ret = anon_inode_getfd(ops->name, &kvm_device_fops, dev, O_RDWR | O_CLOEXEC);
+ 	if (ret < 0) {
+ 		ops->destroy(dev);
 
