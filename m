@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0966C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:51:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BBC7C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:51:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 816712082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:51:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAE332082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:51:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553259068;
-	bh=l22FuXsRRIZsRw2c4Wtrhi/O4BufEwrM6VkpG4ZvIu0=;
+	s=default; t=1553259074;
+	bh=HDHdPlaLshy97OU/tJGbqKf+6o7bJhnFNnYfAAccnWg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ztcJXt4RcnNb3ZGfkfg4nDCIDjMg/msKgAT3q3A3xZl12oP6GDM6W/yq1YWEnHdOs
-	 8adXh5qeNqvMPxPo8rr1YqCaO2Hzn1rqab3wluSXAFq2xlWgRjCjsj2XPQdvcnshxe
-	 6HDAU7D9EaXXKOtXxSB9eR+X+XiIp6ygRksOqZN8=
+	b=RIAw+R5jnjZrDNv/WY6ZpS9/LT7/R7DsFxGM8bj3Jz+m7Od/AkoDGmtssvHX694ST
+	 WxfmVmfJZgfCUws0UWUhDxJ3Vh0W9B4P3ijOwfNd5nP1mhR3Pfw/eyFHc1+zLuMdOV
+	 ODMcg1ZBysYvicYSyxq0VffoC18EFRiEX4ERIUkA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733173AbfCVMvH (ORCPT
+        id S1733206AbfCVLyk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:51:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59522 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:54:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733215AbfCVLy6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:54:58 -0400
+        id S1733204AbfCVLyg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:54:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AD492082C;
-        Fri, 22 Mar 2019 11:54:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE9B02082C;
+        Fri, 22 Mar 2019 11:54:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255697;
-        bh=l22FuXsRRIZsRw2c4Wtrhi/O4BufEwrM6VkpG4ZvIu0=;
+        s=default; t=1553255675;
+        bh=HDHdPlaLshy97OU/tJGbqKf+6o7bJhnFNnYfAAccnWg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c1VLgJwcpeWOAs9qX5XdNfkGaln41IZtf1BXAwf3vR2ZatkjhNf84f/qkDGlU9c8b
-         I2Sp8rGV3r1O0cc9bLXjmUch3AL5VFk+zgJqdRJ3AGIKePfXr0W0HY5QuCTvVkWaY8
-         n+UcX9/hQQFNruId1KfKDiHwUTXVF2nUah0+thW0=
+        b=uSCTz0QbnVor/PL1rxa5Q4y+GZCck+of7UA8VreZ6jwc8Cu8Jh0oqGh5ZDclCkMXl
+         +OI99PARuQF1o+xoHrUIdA4RV5q//U59Z3Y0GhBYtfTFKjXd9gu8tlNgKDK95Jmh1T
+         YQngA4YgpMHKJwPjGzTNpleUl17bqiOKn4u3hxw4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Ga=C3=ABl=20PORTAY?= <gael.portay@collabora.com>,
-        Steve Longerbeam <slongerbeam@gmail.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 4.14 171/183] media: imx: prpencvf: Stop upstream before disabling IDMA channel
-Date:   Fri, 22 Mar 2019 12:16:39 +0100
-Message-Id: <20190322111254.289598788@linuxfoundation.org>
+        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 4.14 164/183] perf auxtrace: Define auxtrace record alignment
+Date:   Fri, 22 Mar 2019 12:16:32 +0100
+Message-Id: <20190322111253.787652738@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111241.819468003@linuxfoundation.org>
 References: <20190322111241.819468003@linuxfoundation.org>
@@ -68,97 +65,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Steve Longerbeam <slongerbeam@gmail.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
 
-commit a19c22677377b87e4354f7306f46ad99bc982a9f upstream.
+commit c3fcadf0bb765faf45d6d562246e1d08885466df upstream.
 
-Upstream must be stopped immediately after receiving the last EOF and
-before disabling the IDMA channel. This can be accomplished by moving
-upstream stream off to just after receiving the last EOF completion in
-prp_stop(). For symmetry also move upstream stream on to end of
-prp_start().
+Define auxtrace record alignment so that it can be referenced elsewhere.
 
-This fixes a complete system hard lockup on the SabreAuto when streaming
-from the ADV7180, by repeatedly sending a stream off immediately followed
-by stream on:
+Note this is preparation for patch "perf intel-pt: Fix overlap calculation
+for padding"
 
-while true; do v4l2-ctl  -d1 --stream-mmap --stream-count=3; done
-
-Eventually this either causes the system lockup or EOF timeouts at all
-subsequent stream on, until a system reset.
-
-The lockup occurs when disabling the IDMA channel at stream off. Stopping
-the video data stream entering the IDMA channel before disabling the
-channel itself appears to be a reliable fix for the hard lockup.
-
-Fixes: f0d9c8924e2c3 ("[media] media: imx: Add IC subdev drivers")
-
-Reported-by: Gaël PORTAY <gael.portay@collabora.com>
-Tested-by: Gaël PORTAY <gael.portay@collabora.com>
-Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
-Cc: stable@vger.kernel.org	# for 4.13 and up
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: stable@vger.kernel.org
+Link: http://lkml.kernel.org/r/20190206103947.15750-2-adrian.hunter@intel.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/media/imx/imx-ic-prpencvf.c |   26 +++++++++++++++++---------
- 1 file changed, 17 insertions(+), 9 deletions(-)
+ tools/perf/util/auxtrace.c |    4 ++--
+ tools/perf/util/auxtrace.h |    3 +++
+ 2 files changed, 5 insertions(+), 2 deletions(-)
 
---- a/drivers/staging/media/imx/imx-ic-prpencvf.c
-+++ b/drivers/staging/media/imx/imx-ic-prpencvf.c
-@@ -676,12 +676,23 @@ static int prp_start(struct prp_priv *pr
- 		goto out_free_nfb4eof_irq;
+--- a/tools/perf/util/auxtrace.c
++++ b/tools/perf/util/auxtrace.c
+@@ -1264,9 +1264,9 @@ static int __auxtrace_mmap__read(struct
  	}
  
-+	/* start upstream */
-+	ret = v4l2_subdev_call(priv->src_sd, video, s_stream, 1);
-+	ret = (ret && ret != -ENOIOCTLCMD) ? ret : 0;
-+	if (ret) {
-+		v4l2_err(&ic_priv->sd,
-+			 "upstream stream on failed: %d\n", ret);
-+		goto out_free_eof_irq;
-+	}
+ 	/* padding must be written by fn() e.g. record__process_auxtrace() */
+-	padding = size & 7;
++	padding = size & (PERF_AUXTRACE_RECORD_ALIGNMENT - 1);
+ 	if (padding)
+-		padding = 8 - padding;
++		padding = PERF_AUXTRACE_RECORD_ALIGNMENT - padding;
+ 
+ 	memset(&ev, 0, sizeof(ev));
+ 	ev.auxtrace.header.type = PERF_RECORD_AUXTRACE;
+--- a/tools/perf/util/auxtrace.h
++++ b/tools/perf/util/auxtrace.h
+@@ -38,6 +38,9 @@ struct record_opts;
+ struct auxtrace_info_event;
+ struct events_stats;
+ 
++/* Auxtrace records must have the same alignment as perf event records */
++#define PERF_AUXTRACE_RECORD_ALIGNMENT 8
 +
- 	/* start the EOF timeout timer */
- 	mod_timer(&priv->eof_timeout_timer,
- 		  jiffies + msecs_to_jiffies(IMX_MEDIA_EOF_TIMEOUT));
- 
- 	return 0;
- 
-+out_free_eof_irq:
-+	devm_free_irq(ic_priv->dev, priv->eof_irq, priv);
- out_free_nfb4eof_irq:
- 	devm_free_irq(ic_priv->dev, priv->nfb4eof_irq, priv);
- out_unsetup:
-@@ -713,6 +724,12 @@ static void prp_stop(struct prp_priv *pr
- 	if (ret == 0)
- 		v4l2_warn(&ic_priv->sd, "wait last EOF timeout\n");
- 
-+	/* stop upstream */
-+	ret = v4l2_subdev_call(priv->src_sd, video, s_stream, 0);
-+	if (ret && ret != -ENOIOCTLCMD)
-+		v4l2_warn(&ic_priv->sd,
-+			  "upstream stream off failed: %d\n", ret);
-+
- 	devm_free_irq(ic_priv->dev, priv->eof_irq, priv);
- 	devm_free_irq(ic_priv->dev, priv->nfb4eof_irq, priv);
- 
-@@ -1144,15 +1161,6 @@ static int prp_s_stream(struct v4l2_subd
- 	if (ret)
- 		goto out;
- 
--	/* start/stop upstream */
--	ret = v4l2_subdev_call(priv->src_sd, video, s_stream, enable);
--	ret = (ret && ret != -ENOIOCTLCMD) ? ret : 0;
--	if (ret) {
--		if (enable)
--			prp_stop(priv);
--		goto out;
--	}
--
- update_count:
- 	priv->stream_count += enable ? 1 : -1;
- 	if (priv->stream_count < 0)
+ enum auxtrace_type {
+ 	PERF_AUXTRACE_UNKNOWN,
+ 	PERF_AUXTRACE_INTEL_PT,
 
 
