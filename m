@@ -2,114 +2,103 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C2E8C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:55:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 647BEC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:56:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30A49218E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:55:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="VEEywSkz"
+	by mail.kernel.org (Postfix) with ESMTP id 36FF921925
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:56:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728236AbfCVWzW (ORCPT
+        id S1728311AbfCVW4m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 18:55:22 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:44148 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727918AbfCVWzW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 18:55:22 -0400
-Received: by mail-ot1-f65.google.com with SMTP id d24so3326887otl.11
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 15:55:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=upbNMLpI0X86aVZZo1g1MqpgVhmYo1BXLtxATqKVkf8=;
-        b=VEEywSkzwZT/3lo7CtHMNLfdXabMqG3hH+rKxUEerA2QMjX/xsiBzxyPNUKzSnALAc
-         oZgxSbZwKAZ2Na1S5ELIzCIOJyIjOm5IMYaui3W9eI0FwrrfbSgUVlqMJ7lOnw1NykNw
-         Ou/g77QqYDfye2OfBecDoTC8kEEcxkDg142KGLRCxD3OVoWuBRUX0WTmo5dMIwNNFwch
-         8sqHVPqFmkrc+LLW5sPt2Ze5x+Vr9pmpitCw8kFxWwhS0HsEpejzIPFJCNm51IOrDJ8I
-         8osG8u9PImVmqZyLWyQw5K1T38/pz/bKRNNK1NOWgq6YoVQc+BrxOSuHz1yUl0/wcpHt
-         e1xA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=upbNMLpI0X86aVZZo1g1MqpgVhmYo1BXLtxATqKVkf8=;
-        b=aGQTvVakpUkKqpS5+yskyL57tk/zhYwI78nUruN72w9tzgc51sOb05HjXBd7TngCAz
-         8MQuMhF+RJK7ITlqThhA1PgCOxpOGFd50iV0DrGEjT0HeinMrNgD9FPpRFkQApjCXgnv
-         QpkPQdB0tPPXRAedJU1yVq1XoXzmT5A06kZgYMPgBpJTp00ws8r67XqGVfwFgl89fABG
-         RvmArEImjWlfdP7/EoImXyiyoEf40sj3sBUpbRyRGFA7PAOJ+ZR22kquDM16NCwItP2+
-         Eo7mSlrpAuD8KowUZEsaIgcJN9qoQpcq79uAFlOXcxdYPrcTgQTx7g3YE2Q0wXt60dZ1
-         /vNA==
-X-Gm-Message-State: APjAAAUWTAS+xNCR0WoPZR+Yg5gVPeZOCodAohHguzNEsDA2+isbhXiu
-        jePiPSLVfMsAADdW1IC+BOyU7GADjUEOJlpw3YXmhsVotD0=
-X-Google-Smtp-Source: APXvYqyMNOAvNKZLPPWlA48yzXu4dcwX80bxtc/3Yd3ymNieIqfD8K+g1ghQSQZci2Zs71KsgZv9Q5ssFy/ivTu2gnE=
-X-Received: by 2002:a9d:224a:: with SMTP id o68mr9135935ota.214.1553295321323;
- Fri, 22 Mar 2019 15:55:21 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190312081529.4889-1-kjlu@umn.edu>
-In-Reply-To: <20190312081529.4889-1-kjlu@umn.edu>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 22 Mar 2019 15:55:10 -0700
-Message-ID: <CAPcyv4jfoUCK8dCCgGRG3GPxxk2mgrQd=zpJ9OnwzngXJ+LwpA@mail.gmail.com>
+        Fri, 22 Mar 2019 18:56:42 -0400
+Received: from mga05.intel.com ([192.55.52.43]:38775 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727883AbfCVW4m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 18:56:42 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Mar 2019 15:56:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,256,1549958400"; 
+   d="scan'208";a="309625013"
+Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
+  by orsmga005.jf.intel.com with ESMTP; 22 Mar 2019 15:56:41 -0700
+Received: from fmsmsx119.amr.corp.intel.com (10.18.124.207) by
+ FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Fri, 22 Mar 2019 15:56:40 -0700
+Received: from fmsmsx113.amr.corp.intel.com ([169.254.13.56]) by
+ FMSMSX119.amr.corp.intel.com ([169.254.14.119]) with mapi id 14.03.0415.000;
+ Fri, 22 Mar 2019 15:56:40 -0700
+From:   "Verma, Vishal L" <vishal.l.verma@intel.com>
+To:     "kjlu@umn.edu" <kjlu@umn.edu>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        "pakki001@umn.edu" <pakki001@umn.edu>,
+        "zwisler@kernel.org" <zwisler@kernel.org>
 Subject: Re: [PATCH] nvdimm: btt_devs: fix a NULL pointer dereference and a
  memory leak
-To:     Kangjie Lu <kjlu@umn.edu>
-Cc:     pakki001@umn.edu, Ross Zwisler <zwisler@kernel.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Thread-Topic: [PATCH] nvdimm: btt_devs: fix a NULL pointer dereference and a
+ memory leak
+Thread-Index: AQHU2KvP9fAOZmRsOECRxfaC1K1yNKYYxwKAgAACAgA=
+Date:   Fri, 22 Mar 2019 22:56:40 +0000
+Message-ID: <4377c210798b000d60ebdc5150e015737d05565b.camel@intel.com>
+References: <20190312081529.4889-1-kjlu@umn.edu>
+         <eea1b50fe8c76d45fef0aaca1878c30fa8f2cbde.camel@intel.com>
+In-Reply-To: <eea1b50fe8c76d45fef0aaca1878c30fa8f2cbde.camel@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+x-originating-ip: [10.232.112.185]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <9DA9F31267ADB746A1202655693A23A7@intel.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 12, 2019 at 1:16 AM Kangjie Lu <kjlu@umn.edu> wrote:
->
-> In case kmemdup fails, the fix releases resources and returns to
-> avoid the NULL pointer dereference.
-> Also, the error paths in the following code should release
-> resources to avoid memory leaks.
->
-> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-> ---
->  drivers/nvdimm/btt_devs.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/nvdimm/btt_devs.c b/drivers/nvdimm/btt_devs.c
-> index 795ad4ff35ca..565ea0b6f765 100644
-> --- a/drivers/nvdimm/btt_devs.c
-> +++ b/drivers/nvdimm/btt_devs.c
-> @@ -196,8 +196,13 @@ static struct device *__nd_btt_create(struct nd_region *nd_region,
->         }
->
->         nd_btt->lbasize = lbasize;
-> -       if (uuid)
-> +       if (uuid) {
->                 uuid = kmemdup(uuid, 16, GFP_KERNEL);
-> +               if (!uuid) {
-> +                       kfree(nd_btt);
-> +                       return NULL;
-
-What about nd_btt->id? That needs to be released as well.
-
-> +               }
-> +       }
->         nd_btt->uuid = uuid;
->         dev = &nd_btt->dev;
->         dev_set_name(dev, "btt%d.%d", nd_region->id, nd_btt->id);
-> @@ -209,6 +214,7 @@ static struct device *__nd_btt_create(struct nd_region *nd_region,
->                 dev_dbg(&ndns->dev, "failed, already claimed by %s\n",
->                                 dev_name(ndns->claim));
->                 put_device(dev);
-> +               kfree(uuid);
-
-This will be a double free because put_device() will arrange for
-nd_btt_release() to be called which does kfree(nd_btt->uuid);
+DQpPbiBGcmksIDIwMTktMDMtMjIgYXQgMjI6NDkgKzAwMDAsIFZlcm1hLCBWaXNoYWwgTCB3cm90
+ZToNCj4gT24gVHVlLCAyMDE5LTAzLTEyIGF0IDAzOjE1IC0wNTAwLCBLYW5namllIEx1IHdyb3Rl
+Og0KPiA+IEluIGNhc2Uga21lbWR1cCBmYWlscywgdGhlIGZpeCByZWxlYXNlcyByZXNvdXJjZXMg
+YW5kIHJldHVybnMgdG8NCj4gPiBhdm9pZCB0aGUgTlVMTCBwb2ludGVyIGRlcmVmZXJlbmNlLg0K
+PiA+IEFsc28sIHRoZSBlcnJvciBwYXRocyBpbiB0aGUgZm9sbG93aW5nIGNvZGUgc2hvdWxkIHJl
+bGVhc2UNCj4gPiByZXNvdXJjZXMgdG8gYXZvaWQgbWVtb3J5IGxlYWtzLg0KPiA+IA0KPiA+IFNp
+Z25lZC1vZmYtYnk6IEthbmdqaWUgTHUgPGtqbHVAdW1uLmVkdT4NCj4gPiAtLS0NCj4gPiAgZHJp
+dmVycy9udmRpbW0vYnR0X2RldnMuYyB8IDggKysrKysrKy0NCj4gPiAgMSBmaWxlIGNoYW5nZWQs
+IDcgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiA+IA0KPiANCj4gTG9va3MgZ29vZCwN
+Cj4gUmV2aWV3ZWQtYnk6IFZpc2hhbCBWZXJtYSA8dmlzaGFsLmwudmVybWFAaW50ZWwuY29tPg0K
+DQpMb29raW5nIGFnYWluLCB0aGVyZSBpcyBhbm90aGVyIGttZW1kdXAoKSBjYWxsIGluIF9fbmRf
+YnR0X3Byb2JlIHdoaWNoDQppcyBsYWNraW5nIGVycm9yIGNoZWNraW5nLg0KQW5kIHJlZmVycmlu
+ZyB0byB5b3VyIG90aGVyIHJlbGF0ZWQgcGF0Y2ggdG8gbmFtZXNwYWNlX2RldnMsIHRoYXQgaGFz
+DQovc2V2ZXJhbC8gaW5zdGFuY2VzIG9mIHRoZSBzYW1lIHRoaW5nLg0KDQpJbnN0ZWFkIG9mIGZp
+eGluZyBqdXN0IGEgY291cGxlIG9mIHRoZXNlLCBpdCBtaWdodCBiZSB3b3J0aHdoaWxlIHRvIHNl
+bmQNCmEgd2lkZXIgY2xlYW51cCBwYXRjaCB0byBjYXRjaCBhbGwgb2YgdGhlc2UsIGF0IGxlYXN0
+IHdpdGhpbg0KZHJpdmVycy9udmRpbW0vIGZvciBzdGFydGVycywgaW5zdGVhZCBvZiBhIHNlbGVj
+dCBmZXcuDQoNCj4gDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbnZkaW1tL2J0dF9kZXZzLmMg
+Yi9kcml2ZXJzL252ZGltbS9idHRfZGV2cy5jDQo+ID4gaW5kZXggNzk1YWQ0ZmYzNWNhLi41NjVl
+YTBiNmY3NjUgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9udmRpbW0vYnR0X2RldnMuYw0KPiA+
+ICsrKyBiL2RyaXZlcnMvbnZkaW1tL2J0dF9kZXZzLmMNCj4gPiBAQCAtMTk2LDggKzE5NiwxMyBA
+QCBzdGF0aWMgc3RydWN0IGRldmljZSAqX19uZF9idHRfY3JlYXRlKHN0cnVjdA0KPiA+IG5kX3Jl
+Z2lvbiAqbmRfcmVnaW9uLA0KPiA+ICAJfQ0KPiA+ICANCj4gPiAgCW5kX2J0dC0+bGJhc2l6ZSA9
+IGxiYXNpemU7DQo+ID4gLQlpZiAodXVpZCkNCj4gPiArCWlmICh1dWlkKSB7DQo+ID4gIAkJdXVp
+ZCA9IGttZW1kdXAodXVpZCwgMTYsIEdGUF9LRVJORUwpOw0KPiA+ICsJCWlmICghdXVpZCkgew0K
+PiA+ICsJCQlrZnJlZShuZF9idHQpOw0KPiA+ICsJCQlyZXR1cm4gTlVMTDsNCj4gPiArCQl9DQo+
+ID4gKwl9DQo+ID4gIAluZF9idHQtPnV1aWQgPSB1dWlkOw0KPiA+ICAJZGV2ID0gJm5kX2J0dC0+
+ZGV2Ow0KPiA+ICAJZGV2X3NldF9uYW1lKGRldiwgImJ0dCVkLiVkIiwgbmRfcmVnaW9uLT5pZCwg
+bmRfYnR0LT5pZCk7DQo+ID4gQEAgLTIwOSw2ICsyMTQsNyBAQCBzdGF0aWMgc3RydWN0IGRldmlj
+ZSAqX19uZF9idHRfY3JlYXRlKHN0cnVjdA0KPiA+IG5kX3JlZ2lvbiAqbmRfcmVnaW9uLA0KPiA+
+ICAJCWRldl9kYmcoJm5kbnMtPmRldiwgImZhaWxlZCwgYWxyZWFkeSBjbGFpbWVkIGJ5ICVzXG4i
+LA0KPiA+ICAJCQkJZGV2X25hbWUobmRucy0+Y2xhaW0pKTsNCj4gPiAgCQlwdXRfZGV2aWNlKGRl
+dik7DQo+ID4gKwkJa2ZyZWUodXVpZCk7DQo+ID4gIAkJcmV0dXJuIE5VTEw7DQo+ID4gIAl9DQo+
+ID4gIAlyZXR1cm4gZGV2Ow0KPiANCj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18NCj4gTGludXgtbnZkaW1tIG1haWxpbmcgbGlzdA0KPiBMaW51eC1udmRp
+bW1AbGlzdHMuMDEub3JnDQo+IGh0dHBzOi8vbGlzdHMuMDEub3JnL21haWxtYW4vbGlzdGluZm8v
+bGludXgtbnZkaW1tDQoNCg==
