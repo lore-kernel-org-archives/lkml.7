@@ -4,38 +4,38 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BE18C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 20:26:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B697C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 20:26:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C47C021841
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 20:26:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7F9921925
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 20:26:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="1Mf/49jv"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="xgSPojH4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728000AbfCVU0n (ORCPT
+        id S1727960AbfCVU0l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 16:26:43 -0400
-Received: from mail-eopbgr720071.outbound.protection.outlook.com ([40.107.72.71]:57856
-        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726589AbfCVU0l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 22 Mar 2019 16:26:41 -0400
+Received: from mail-eopbgr690060.outbound.protection.outlook.com ([40.107.69.60]:13587
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727839AbfCVU0j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 16:26:39 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=amdcloud.onmicrosoft.com; s=selector1-amd-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ypHsmOzKoO8CbtlP60gaGkfz+t4ohUU+fEsdKDjkjAE=;
- b=1Mf/49jvNxe1xlryohx96QjGlzd6wtu2MBqGnULysOHEgpy5L0F8YrMJCVkPAj8rwICNzZNbnRAPdr94WrQXsCeHFx+DCXtNqw/5Qz+Ff4YRj+YRESc6leVKzV+JInXhuWDhvvdSnGWvseD6dwOqDVNpcQDYazf9PnxVkcDSg7o=
+ bh=sgQachq8VeiInYdzKF4eJJorRhyrfl2FDTiMgRAfLLg=;
+ b=xgSPojH4jeGcGUBu8Eq9ucWkCWrR6apGWqyG4C23HevvPU7JaNDlF522aiiwpDxGfmW7EnHndBwvXk68UadL/0Mzsr8B3Bk1gDxLJwtieNKdaM02QG5Rz8uzo9TwYVuHLBInOyGPgeY87ZB2AdH62CMQVVmsyxgAedMX6lJmos8=
 Received: from SN6PR12MB2736.namprd12.prod.outlook.com (52.135.107.27) by
  SN6PR12MB2687.namprd12.prod.outlook.com (52.135.103.28) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1730.16; Fri, 22 Mar 2019 20:25:58 +0000
+ 15.20.1730.16; Fri, 22 Mar 2019 20:26:08 +0000
 Received: from SN6PR12MB2736.namprd12.prod.outlook.com
  ([fe80::9584:f1be:656e:b00b]) by SN6PR12MB2736.namprd12.prod.outlook.com
  ([fe80::9584:f1be:656e:b00b%5]) with mapi id 15.20.1709.015; Fri, 22 Mar 2019
- 20:25:58 +0000
+ 20:26:08 +0000
 From:   "Natarajan, Janakarajan" <Janakarajan.Natarajan@amd.com>
 To:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
@@ -46,14 +46,14 @@ CC:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
         Viresh Kumar <viresh.kumar@linaro.org>,
         Robert Moore <robert.moore@intel.com>,
         Erik Schmauss <erik.schmauss@intel.com>,
+        "Ghannam, Yazen" <Yazen.Ghannam@amd.com>,
         "Natarajan, Janakarajan" <Janakarajan.Natarajan@amd.com>
-Subject: [PATCH 1/6] acpi/cppc: Ensure only supported CPPC sysfs entries are
- created
-Thread-Topic: [PATCH 1/6] acpi/cppc: Ensure only supported CPPC sysfs entries
- are created
-Thread-Index: AQHU4O113BSSNkgmEEC187+8w8GSwQ==
-Date:   Fri, 22 Mar 2019 20:25:58 +0000
-Message-ID: <c7fe67527a77fed160a09939b1f11dbc417f4287.1553285718.git.Janakarajan.Natarajan@amd.com>
+Subject: [PATCH 3/6] acpi/cppc: Rework cppc_set_perf() to use cppc_regs index
+Thread-Topic: [PATCH 3/6] acpi/cppc: Rework cppc_set_perf() to use cppc_regs
+ index
+Thread-Index: AQHU4O17a9va4LXrc0+ezVzya9jPUw==
+Date:   Fri, 22 Mar 2019 20:26:08 +0000
+Message-ID: <13617b46c2ed526ffa614c39d50cd32d58fc3c3b.1553285718.git.Janakarajan.Natarajan@amd.com>
 References: <cover.1553285718.git.Janakarajan.Natarajan@amd.com>
 In-Reply-To: <cover.1553285718.git.Janakarajan.Natarajan@amd.com>
 Accept-Language: en-US
@@ -69,23 +69,23 @@ x-ms-exchange-messagesentrepresentingtype: 1
 x-mailer: git-send-email 2.17.1
 x-originating-ip: [165.204.78.2]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9fbdd0c2-848e-404d-60a9-08d6af0497b2
+x-ms-office365-filtering-correlation-id: ead36795-c8b9-4390-935d-08d6af049db4
 x-ms-office365-filtering-ht: Tenant
 x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:SN6PR12MB2687;
 x-ms-traffictypediagnostic: SN6PR12MB2687:
-x-microsoft-antispam-prvs: <SN6PR12MB26879DA506098F17174AFD37E7430@SN6PR12MB2687.namprd12.prod.outlook.com>
+x-microsoft-antispam-prvs: <SN6PR12MB2687FB6448557D4E7458897CE7430@SN6PR12MB2687.namprd12.prod.outlook.com>
 x-forefront-prvs: 09840A4839
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(366004)(39860400002)(396003)(136003)(376002)(189003)(199004)(7736002)(11346002)(71190400001)(5660300002)(14454004)(71200400001)(478600001)(6436002)(446003)(72206003)(2616005)(476003)(305945005)(97736004)(68736007)(2501003)(6486002)(256004)(105586002)(486006)(118296001)(54906003)(53936002)(110136005)(81166006)(2906002)(81156014)(25786009)(99286004)(6512007)(106356001)(8936002)(36756003)(50226002)(102836004)(4326008)(26005)(6116002)(2201001)(6506007)(66066001)(3846002)(76176011)(316002)(386003)(86362001)(52116002)(186003)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2687;H:SN6PR12MB2736.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(366004)(39860400002)(396003)(136003)(376002)(189003)(199004)(7736002)(11346002)(71190400001)(5660300002)(14454004)(71200400001)(478600001)(6436002)(446003)(72206003)(2616005)(476003)(305945005)(97736004)(68736007)(2501003)(6486002)(14444005)(256004)(105586002)(486006)(118296001)(54906003)(53936002)(110136005)(81166006)(2906002)(81156014)(25786009)(99286004)(6512007)(106356001)(8936002)(36756003)(50226002)(102836004)(4326008)(26005)(6116002)(2201001)(6506007)(66066001)(3846002)(76176011)(316002)(386003)(86362001)(52116002)(186003)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2687;H:SN6PR12MB2736.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: amd.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Duckk0lyZt/Yc4po6656TX3h2XSloemvdd8vsmqGGDpB8st6Z0JQTKDZcCg+H0ynm1+qI84BTi2MO0bqR6MVC/9A5JpPxTS6R9rmkpHR3VclgtoaOOfq8NuCZXxfv64A5keVR4d/i9IUhikJCwUvc5I7T+Bt2F8G7BvLluVfeyHcmEzCzcwLh6lVWg2QLpsZyfue2x+lgeacPo6ZBnGIX8A2GooJ1VNA0xHbGkfjHmpL7vR46jxE0ffpZAqCu0iW/sqmlOeklK2wZ2gyo4w0/0FB/g8ZjwVncWHx6SueEPLEFqk8QKY2d/4s6FpQ7udilKPw2a0KEAqwV5vCtq4lPSjcIiWyz/h3c+FEuGw2txsFx6CZ6nkmBVWVLyraBMpVjl6MtyfnCo/u2igaLkV8joJZwjh6mw+LftQpL/YIfCg=
+x-microsoft-antispam-message-info: qNuRoeB3CeBwJfLpA1Fg1GvMFax2pncfrFR630rrfphNZ1pSiFuqE0sPV1Mcx39EHzWeUM58XfsyZ7hI15JULyUIDvt4vAlNGOCLktiFRHyIDiICoYXxdrvQYUfRgES9RWMpSfs+AvtZX2fodBaXP9KAxjq/4rGj2bB8NFMVU1e8b5xqa9kKmcvzAQ5AyIRfXqGz5DGX+PM4Ek1fssJNJKtzp9gVukFIXw4N/p/zKpVHA6NKmFfgdsYRJDMs5wNv+VuNHmB/G5iS5ku7A8U4Z2RwTEsdKQnhrOFgWmmeqDa51H3K6scsOF9c1BFpLCSYAhCRppT+rOnO+aSJEasxpFnXhrOZbZJDNJDeG+D0hNst1Ciw47LNqpYQe4R1f6bu2/rV0fKlG1eiLIFZmsTiodQ9vGEScBH4XB7DZF0tWVI=
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9fbdd0c2-848e-404d-60a9-08d6af0497b2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Mar 2019 20:25:58.4617
+X-MS-Exchange-CrossTenant-Network-Message-Id: ead36795-c8b9-4390-935d-08d6af049db4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Mar 2019 20:26:08.2962
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
@@ -96,123 +96,181 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add attributes for registers that are supported by the platform. This preve=
-nts
-unsupported optional registers from having sysfs entries created.
+From: Yazen Ghannam <Yazen.Ghannam@amd.com>
 
+The cppc_set_perf() currently only works for DESIRED_PERF. To make it
+generic, pass in the index of the register being accessed.
+
+Also, rename cppc_set_perf() to cppc_set_reg(). This is in preparation
+for it to be used for more than just the DESIRED_PERF register.
+
+Signed-off-by: Yazen Ghannam <Yazen.Ghannam@amd.com>
+[ carved out into a patch, cleaned up, productized ]
 Signed-off-by: Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>
 ---
- drivers/acpi/cppc_acpi.c | 70 ++++++++++++++++++++++++++++++++--------
- 1 file changed, 56 insertions(+), 14 deletions(-)
+ drivers/acpi/cppc_acpi.c       | 36 ++++++++++++++++++++++------------
+ drivers/cpufreq/cppc_cpufreq.c |  6 +++---
+ include/acpi/cppc_acpi.h       |  2 +-
+ 3 files changed, 28 insertions(+), 16 deletions(-)
 
 diff --git a/drivers/acpi/cppc_acpi.c b/drivers/acpi/cppc_acpi.c
-index 1b207fca1420..66fad270376c 100644
+index 9daeb0b034d5..e81c19316628 100644
 --- a/drivers/acpi/cppc_acpi.c
 +++ b/drivers/acpi/cppc_acpi.c
-@@ -179,22 +179,8 @@ static ssize_t show_feedback_ctrs(struct kobject *kobj=
-,
- }
- define_one_cppc_ro(feedback_ctrs);
+@@ -60,7 +60,7 @@ struct cppc_pcc_data {
+ 	/*
+ 	 * Lock to provide controlled access to the PCC channel.
+ 	 *
+-	 * For performance critical usecases(currently cppc_set_perf)
++	 * For performance-critical usecases(currently cppc_set_reg)
+ 	 *	We need to take read_lock and check if channel belongs to OSPM
+ 	 * before reading or writing to PCC subspace
+ 	 *	We need to take write_lock before transferring the channel
+@@ -1303,26 +1303,38 @@ int cppc_get_perf_ctrs(int cpunum, struct cppc_perf=
+_fb_ctrs *perf_fb_ctrs)
+ EXPORT_SYMBOL_GPL(cppc_get_perf_ctrs);
 =20
--static struct attribute *cppc_attrs[] =3D {
--	&feedback_ctrs.attr,
--	&reference_perf.attr,
--	&wraparound_time.attr,
--	&highest_perf.attr,
--	&lowest_perf.attr,
--	&lowest_nonlinear_perf.attr,
--	&nominal_perf.attr,
--	&nominal_freq.attr,
--	&lowest_freq.attr,
--	NULL
--};
--
- static struct kobj_type cppc_ktype =3D {
- 	.sysfs_ops =3D &kobj_sysfs_ops,
--	.default_attrs =3D cppc_attrs,
- };
-=20
- static int check_pcc_chan(int pcc_ss_id, bool chk_err_bit)
-@@ -709,6 +695,57 @@ static bool is_cppc_supported(int revision, int num_en=
-t)
-  *	}
-  */
-=20
-+int set_cppc_attrs(struct cpc_desc *cpc, int entries)
-+{
-+	static struct attribute **cppc_attrs;
-+	int i, attr_i =3D 0;
-+
-+	/* Extra for feedback_ctrs to be exposed via sysfs */
-+	cppc_attrs =3D kcalloc(entries + 1, sizeof(*cppc_attrs), GFP_KERNEL);
-+	if (!cppc_attrs)
-+		return -ENOMEM;
-+
-+	for (i =3D 0; i < MAX_CPC_REG_ENT && attr_i < entries; i++) {
-+		if (!CPC_SUPPORTED(&cpc->cpc_regs[i]))
-+			continue;
-+
-+		switch (i) {
-+		case HIGHEST_PERF:
-+			cppc_attrs[attr_i++] =3D &highest_perf.attr;
-+			break;
-+		case NOMINAL_PERF:
-+			cppc_attrs[attr_i++] =3D &nominal_perf.attr;
-+			break;
-+		case LOW_NON_LINEAR_PERF:
-+			cppc_attrs[attr_i++] =3D &lowest_nonlinear_perf.attr;
-+			break;
-+		case LOWEST_PERF:
-+			cppc_attrs[attr_i++] =3D &lowest_perf.attr;
-+			break;
-+		case NOMINAL_FREQ:
-+			cppc_attrs[attr_i++] =3D &nominal_freq.attr;
-+			break;
-+		case LOWEST_FREQ:
-+			cppc_attrs[attr_i++] =3D &lowest_freq.attr;
-+			break;
-+		case REFERENCE_PERF:
-+			cppc_attrs[attr_i++] =3D &reference_perf.attr;
-+			break;
-+		case CTR_WRAP_TIME:
-+			cppc_attrs[attr_i++] =3D &wraparound_time.attr;
-+			break;
-+		}
-+	}
-+
-+	/* Set feedback_ctr sysfs entry */
-+	cppc_attrs[attr_i] =3D &feedback_ctrs.attr;
-+
-+	/* Set kobj_type member */
-+	cppc_ktype.default_attrs =3D cppc_attrs;
-+
-+	return 0;
-+}
-+
  /**
-  * acpi_cppc_processor_probe - Search for per CPU _CPC objects.
-  * @pr: Ptr to acpi_processor containing this CPUs logical Id.
-@@ -863,6 +900,10 @@ int acpi_cppc_processor_probe(struct acpi_processor *p=
-r)
- 	/* Plug PSD data into this CPUs CPC descriptor. */
- 	per_cpu(cpc_desc_ptr, pr->id) =3D cpc_ptr;
+- * cppc_set_perf - Set a CPUs performance controls.
+- * @cpu: CPU for which to set performance controls.
++ * cppc_set_reg - Set the CPUs control register.
++ * @cpu: CPU for which to set the register.
+  * @perf_ctrls: ptr to cppc_perf_ctrls. See cppc_acpi.h
++ * @reg_idx: Index of the register being accessed
+  *
+  * Return: 0 for success, -ERRNO otherwise.
+  */
+-int cppc_set_perf(int cpu, struct cppc_perf_ctrls *perf_ctrls)
++int cppc_set_reg(int cpu, struct cppc_perf_ctrls *perf_ctrls,
++		 enum cppc_regs reg_idx)
+ {
+ 	struct cpc_desc *cpc_desc =3D per_cpu(cpc_desc_ptr, cpu);
+-	struct cpc_register_resource *desired_reg;
+ 	int pcc_ss_id =3D per_cpu(cpu_pcc_subspace_idx, cpu);
+ 	struct cppc_pcc_data *pcc_ss_data =3D NULL;
++	struct cpc_register_resource *reg;
+ 	int ret =3D 0;
++	u32 value;
 =20
-+	ret =3D set_cppc_attrs(cpc_ptr, num_ent - 2);
-+	if (ret)
-+		goto out_free;
-+
- 	ret =3D kobject_init_and_add(&cpc_ptr->kobj, &cppc_ktype, &cpu_dev->kobj,
- 			"acpi_cppc");
- 	if (ret) {
-@@ -924,6 +965,7 @@ void acpi_cppc_processor_exit(struct acpi_processor *pr=
-)
- 			iounmap(addr);
+ 	if (!cpc_desc) {
+ 		pr_debug("No CPC descriptor for CPU:%d\n", cpu);
+ 		return -ENODEV;
  	}
 =20
-+	kfree(cppc_ktype.default_attrs);
- 	kobject_put(&cpc_ptr->kobj);
- 	kfree(cpc_ptr);
+-	desired_reg =3D &cpc_desc->cpc_regs[DESIRED_PERF];
++	switch (reg_idx) {
++	case DESIRED_PERF:
++		value =3D perf_ctrls->desired_perf;
++		break;
++	default:
++		pr_debug("CPC register index #%d not writeable\n", reg_idx);
++		return -EINVAL;
++	}
++
++	reg =3D &cpc_desc->cpc_regs[reg_idx];
+=20
+ 	/*
+ 	 * This is Phase-I where we want to write to CPC registers
+@@ -1331,7 +1343,7 @@ int cppc_set_perf(int cpu, struct cppc_perf_ctrls *pe=
+rf_ctrls)
+ 	 * Since read_lock can be acquired by multiple CPUs simultaneously we
+ 	 * achieve that goal here
+ 	 */
+-	if (CPC_IN_PCC(desired_reg)) {
++	if (CPC_IN_PCC(reg)) {
+ 		if (pcc_ss_id < 0) {
+ 			pr_debug("Invalid pcc_ss_id\n");
+ 			return -ENODEV;
+@@ -1358,14 +1370,14 @@ int cppc_set_perf(int cpu, struct cppc_perf_ctrls *=
+perf_ctrls)
+ 	 * Skip writing MIN/MAX until Linux knows how to come up with
+ 	 * useful values.
+ 	 */
+-	cpc_write(cpu, desired_reg, perf_ctrls->desired_perf);
++	cpc_write(cpu, reg, value);
+=20
+-	if (CPC_IN_PCC(desired_reg))
++	if (CPC_IN_PCC(reg))
+ 		up_read(&pcc_ss_data->pcc_lock);	/* END Phase-I */
+ 	/*
+ 	 * This is Phase-II where we transfer the ownership of PCC to Platform
+ 	 *
+-	 * Short Summary: Basically if we think of a group of cppc_set_perf
++	 * Short Summary: Basically if we think of a group of cppc_set_reg
+ 	 * requests that happened in short overlapping interval. The last CPU to
+ 	 * come out of Phase-I will enter Phase-II and ring the doorbell.
+ 	 *
+@@ -1408,7 +1420,7 @@ int cppc_set_perf(int cpu, struct cppc_perf_ctrls *pe=
+rf_ctrls)
+ 	 * case during a CMD_READ and if there are pending writes it delivers
+ 	 * the write command before servicing the read command
+ 	 */
+-	if (CPC_IN_PCC(desired_reg)) {
++	if (CPC_IN_PCC(reg)) {
+ 		if (down_write_trylock(&pcc_ss_data->pcc_lock)) {/* BEGIN Phase-II */
+ 			/* Update only if there are pending write commands */
+ 			if (pcc_ss_data->pending_pcc_write_cmd)
+@@ -1424,7 +1436,7 @@ int cppc_set_perf(int cpu, struct cppc_perf_ctrls *pe=
+rf_ctrls)
+ 	}
+ 	return ret;
  }
+-EXPORT_SYMBOL_GPL(cppc_set_perf);
++EXPORT_SYMBOL_GPL(cppc_set_reg);
+=20
+ /**
+  * cppc_get_transition_latency - returns frequency transition latency in n=
+s
+diff --git a/drivers/cpufreq/cppc_cpufreq.c b/drivers/cpufreq/cppc_cpufreq.=
+c
+index 2ae978d27e61..420bd44f6958 100644
+--- a/drivers/cpufreq/cppc_cpufreq.c
++++ b/drivers/cpufreq/cppc_cpufreq.c
+@@ -211,7 +211,7 @@ static int cppc_cpufreq_set_target(struct cpufreq_polic=
+y *policy,
+ 	freqs.new =3D target_freq;
+=20
+ 	cpufreq_freq_transition_begin(policy, &freqs);
+-	ret =3D cppc_set_perf(cpu->cpu, &cpu->perf_ctrls);
++	ret =3D cppc_set_reg(cpu->cpu, &cpu->perf_ctrls, DESIRED_PERF);
+ 	cpufreq_freq_transition_end(policy, &freqs, ret !=3D 0);
+=20
+ 	if (ret)
+@@ -235,7 +235,7 @@ static void cppc_cpufreq_stop_cpu(struct cpufreq_policy=
+ *policy)
+=20
+ 	cpu->perf_ctrls.desired_perf =3D cpu->perf_caps.lowest_perf;
+=20
+-	ret =3D cppc_set_perf(cpu_num, &cpu->perf_ctrls);
++	ret =3D cppc_set_reg(cpu_num, &cpu->perf_ctrls, DESIRED_PERF);
+ 	if (ret)
+ 		pr_debug("Err setting perf value:%d on CPU:%d. ret:%d\n",
+ 				cpu->perf_caps.lowest_perf, cpu_num, ret);
+@@ -348,7 +348,7 @@ static int cppc_cpufreq_cpu_init(struct cpufreq_policy =
+*policy)
+ 					cpu->perf_caps.highest_perf);
+ 	cpu->perf_ctrls.desired_perf =3D cpu->perf_caps.highest_perf;
+=20
+-	ret =3D cppc_set_perf(cpu_num, &cpu->perf_ctrls);
++	ret =3D cppc_set_reg(cpu_num, &cpu->perf_ctrls, DESIRED_PERF);
+ 	if (ret)
+ 		pr_debug("Err setting perf value:%d on CPU:%d. ret:%d\n",
+ 				cpu->perf_caps.highest_perf, cpu_num, ret);
+diff --git a/include/acpi/cppc_acpi.h b/include/acpi/cppc_acpi.h
+index ba6fd7202775..ba3b3fb64572 100644
+--- a/include/acpi/cppc_acpi.h
++++ b/include/acpi/cppc_acpi.h
+@@ -139,7 +139,7 @@ struct cppc_cpudata {
+=20
+ extern int cppc_get_desired_perf(int cpunum, u64 *desired_perf);
+ extern int cppc_get_perf_ctrs(int cpu, struct cppc_perf_fb_ctrs *perf_fb_c=
+trs);
+-extern int cppc_set_perf(int cpu, struct cppc_perf_ctrls *perf_ctrls);
++extern int cppc_set_reg(int cpu, struct cppc_perf_ctrls *perf_ctrls, enum =
+cppc_regs reg_idx);
+ extern int cppc_get_perf_caps(int cpu, struct cppc_perf_caps *caps);
+ extern int acpi_get_psd_map(struct cppc_cpudata **);
+ extern unsigned int cppc_get_transition_latency(int cpu);
 --=20
 2.17.1
 
