@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 236BAC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:46:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEF89C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:46:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E749D218B0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:46:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E96A218B0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:46:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255207;
-	bh=znMkddJcjVto+p97eDOprf0x0nH3xomdE+wbOmgMAbQ=;
+	s=default; t=1553255211;
+	bh=SgyA/WqVdREM8jNKAVbjfsMVCSn3uyGuy+4vENzdylU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tQ9q3tjPlW4LdrJca9GnAe8EfngzOAruTyQL/bZeDJEFR5JgCWqKZT7LYvnQcAO7A
-	 Z+GxcGtI/J0RY/H+JaG7jWjx2lIwKcGtMeGEw4IAwi0vxjd2VZKe6jp7U4qyl6tnDm
-	 jswwq6ZtBc5dzLjsGWIZVtVxoGRhWnIjI29n7xJk=
+	b=082BpdkvzYuJ4dUsggck+fOw6q4PZRR9jhQTV5K8lDrCBHxIT7BjrSo2/v8JKtlco
+	 q3mRNvIttE1ln2ducs3DKsxj3YKN0WCoE89t1E0VHKGXxhSZUzg9IotxhNGzlhu2yY
+	 CzY0qy26n7VsdamuBliqyJxHA7124FqH7fTE/fsc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732086AbfCVLqp (ORCPT
+        id S1732092AbfCVLqt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:46:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49802 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:46:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731770AbfCVLqk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:46:40 -0400
+        id S1731766AbfCVLqr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:46:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F18E52075E;
-        Fri, 22 Mar 2019 11:46:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91D052075E;
+        Fri, 22 Mar 2019 11:46:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255199;
-        bh=znMkddJcjVto+p97eDOprf0x0nH3xomdE+wbOmgMAbQ=;
+        s=default; t=1553255206;
+        bh=SgyA/WqVdREM8jNKAVbjfsMVCSn3uyGuy+4vENzdylU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ugiTZluu5kLZU/OXuXS1m9lzbi3PRFQaH0s5j+PUiuRDKAdN0T7m5VJrJnBlSboWB
-         0HLrsLsTi82yDvTChA/4Ze6dLIN/k35gTFxsYkuUD5zSe7EAgEtNk372gItewXiB7c
-         DD35Vv+gBIDDYfk96t0tTNQ0R63Z5wZRWvLqHU5s=
+        b=p22s5nSyXR1+8TqyzXKmVC3TKlXmeJY1DUlXCQz/2ZMR2AI0QVhR6MiumX9QmRkXO
+         7PZNgaVTILQ4dPNanGp4x+h673iV8DpK13MuOJX+9Doyc0dPiKuqTu5PtDIxFgYUEm
+         gZNTs5Hxm0AyBB2udpL6vbYYpjkLSION/JPjiItM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pankaj Gupta <pankaj.gupta@nxp.com>,
-        Arun Pathak <arun.pathak@nxp.com>,
-        Horia Geanta <horia.geanta@nxp.com>,
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
+        Zhang Zhijie <zhangzj@rock-chips.com>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.14 006/183] crypto: caam - fixed handling of sg list
-Date:   Fri, 22 Mar 2019 12:13:54 +0100
-Message-Id: <20190322111242.250612206@linuxfoundation.org>
+Subject: [PATCH 4.14 008/183] crypto: rockchip - fix scatterlist nents error
+Date:   Fri, 22 Mar 2019 12:13:56 +0100
+Message-Id: <20190322111242.383421791@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111241.819468003@linuxfoundation.org>
 References: <20190322111241.819468003@linuxfoundation.org>
@@ -67,35 +66,83 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Pankaj Gupta <pankaj.gupta@nxp.com>
+From: Zhang Zhijie <zhangzj@rock-chips.com>
 
-commit 42e95d1f10dcf8b18b1d7f52f7068985b3dc5b79 upstream.
+commit 4359669a087633132203c52d67dd8c31e09e7b2e upstream.
 
-when the source sg contains more than 1 fragment and
-destination sg contains 1 fragment, the caam driver
-mishandle the buffers to be sent to caam.
+In some cases, the nents of src scatterlist is different from
+dst scatterlist. So two variables are used to handle the nents
+of src&dst scatterlist.
 
-Fixes: f2147b88b2b1 ("crypto: caam - Convert GCM to new AEAD interface")
-Cc: <stable@vger.kernel.org> # 4.2+
-Signed-off-by: Pankaj Gupta <pankaj.gupta@nxp.com>
-Signed-off-by: Arun Pathak <arun.pathak@nxp.com>
-Reviewed-by: Horia Geanta <horia.geanta@nxp.com>
+Reported-by: Eric Biggers <ebiggers@google.com>
+Fixes: 433cd2c617bf ("crypto: rockchip - add crypto driver for rk3288")
+Cc: <stable@vger.kernel.org> # v4.5+
+Signed-off-by: Zhang Zhijie <zhangzj@rock-chips.com>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/caam/caamalg.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/crypto/rockchip/rk3288_crypto.c            |    2 +-
+ drivers/crypto/rockchip/rk3288_crypto.h            |    3 ++-
+ drivers/crypto/rockchip/rk3288_crypto_ablkcipher.c |    5 +++--
+ drivers/crypto/rockchip/rk3288_crypto_ahash.c      |    2 +-
+ 4 files changed, 7 insertions(+), 5 deletions(-)
 
---- a/drivers/crypto/caam/caamalg.c
-+++ b/drivers/crypto/caam/caamalg.c
-@@ -1097,6 +1097,7 @@ static void init_ablkcipher_job(u32 *sh_
- 	} else {
- 		if (edesc->dst_nents == 1) {
- 			dst_dma = sg_dma_address(req->dst);
-+			out_options = 0;
- 		} else {
- 			dst_dma = edesc->sec4_sg_dma + (edesc->src_nents + 1) *
- 				  sizeof(struct sec4_sg_entry);
+--- a/drivers/crypto/rockchip/rk3288_crypto.c
++++ b/drivers/crypto/rockchip/rk3288_crypto.c
+@@ -119,7 +119,7 @@ static int rk_load_data(struct rk_crypto
+ 		count = (dev->left_bytes > PAGE_SIZE) ?
+ 			PAGE_SIZE : dev->left_bytes;
+ 
+-		if (!sg_pcopy_to_buffer(dev->first, dev->nents,
++		if (!sg_pcopy_to_buffer(dev->first, dev->src_nents,
+ 					dev->addr_vir, count,
+ 					dev->total - dev->left_bytes)) {
+ 			dev_err(dev->dev, "[%s:%d] pcopy err\n",
+--- a/drivers/crypto/rockchip/rk3288_crypto.h
++++ b/drivers/crypto/rockchip/rk3288_crypto.h
+@@ -207,7 +207,8 @@ struct rk_crypto_info {
+ 	void				*addr_vir;
+ 	int				aligned;
+ 	int				align_size;
+-	size_t				nents;
++	size_t				src_nents;
++	size_t				dst_nents;
+ 	unsigned int			total;
+ 	unsigned int			count;
+ 	dma_addr_t			addr_in;
+--- a/drivers/crypto/rockchip/rk3288_crypto_ablkcipher.c
++++ b/drivers/crypto/rockchip/rk3288_crypto_ablkcipher.c
+@@ -260,8 +260,9 @@ static int rk_ablk_start(struct rk_crypt
+ 	dev->total = req->nbytes;
+ 	dev->sg_src = req->src;
+ 	dev->first = req->src;
+-	dev->nents = sg_nents(req->src);
++	dev->src_nents = sg_nents(req->src);
+ 	dev->sg_dst = req->dst;
++	dev->dst_nents = sg_nents(req->dst);
+ 	dev->aligned = 1;
+ 
+ 	spin_lock_irqsave(&dev->lock, flags);
+@@ -297,7 +298,7 @@ static int rk_ablk_rx(struct rk_crypto_i
+ 
+ 	dev->unload_data(dev);
+ 	if (!dev->aligned) {
+-		if (!sg_pcopy_from_buffer(req->dst, dev->nents,
++		if (!sg_pcopy_from_buffer(req->dst, dev->dst_nents,
+ 					  dev->addr_vir, dev->count,
+ 					  dev->total - dev->left_bytes -
+ 					  dev->count)) {
+--- a/drivers/crypto/rockchip/rk3288_crypto_ahash.c
++++ b/drivers/crypto/rockchip/rk3288_crypto_ahash.c
+@@ -206,7 +206,7 @@ static int rk_ahash_start(struct rk_cryp
+ 	dev->sg_dst = NULL;
+ 	dev->sg_src = req->src;
+ 	dev->first = req->src;
+-	dev->nents = sg_nents(req->src);
++	dev->src_nents = sg_nents(req->src);
+ 	rctx = ahash_request_ctx(req);
+ 	rctx->mode = 0;
+ 
 
 
