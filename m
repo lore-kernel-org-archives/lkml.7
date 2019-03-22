@@ -6,52 +6,53 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C583C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 10:27:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA1B4C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 10:28:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 589A721874
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 10:27:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7931C21874
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 10:28:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553250428;
-	bh=wb+TkfGGbG7IlDksyqANWBYupnlyZPsNXiMukzjM2l4=;
+	s=default; t=1553250501;
+	bh=iKr4d+9CDxuKto9/gsDbiCrLXdxCEHxm2JAjxw4sM3Y=;
 	h=From:Date:Subject:To:Cc:List-ID:From;
-	b=Vameh9e/IG7jmaMQMBySi4JPX2pH1Iyu1O8cG+wF2xQWEhugTOAI4kie93hz5Vfd6
-	 5gbz6kNte8KS7I+TEzeLrGTEL/lZgqVij8BL5d/2CRgYLfQkR9nkS/8ZYy0qonrUbT
-	 qjULA657huc34FCHZej+kMz/OX9HP68bWxP48xK0=
+	b=GttbVIa645U3FUrs5rcPntxmWhAugRmxQnpqaHrKfHJfvmgGztUzbyu0Cr43UAz0I
+	 VhyLdx5ZqeK7yfenEMg1RonZRyCBcyvAB2SvbGnGtbxUpglcwFrGzOLt0AgM3463Bw
+	 0LQxfxvFx2hcAsEImyIvW625JpFK+QMDEj8fZKkw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728061AbfCVK1H (ORCPT
+        id S1728063AbfCVK2U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 06:27:07 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:35965 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727739AbfCVK1G (ORCPT
+        Fri, 22 Mar 2019 06:28:20 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:38643 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727739AbfCVK2T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 06:27:06 -0400
-Received: by mail-oi1-f193.google.com with SMTP id t206so1332263oib.3;
-        Fri, 22 Mar 2019 03:27:06 -0700 (PDT)
+        Fri, 22 Mar 2019 06:28:19 -0400
+Received: by mail-ot1-f67.google.com with SMTP id e80so1475469ote.5;
+        Fri, 22 Mar 2019 03:28:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=PgW+rQ9wOe65xHIoqowyFCc2NKawp6+fSTZv+pAqQKQ=;
-        b=C5WXbkiLpJbWOkFaWuDekLPUlYDwbCf0sfhpKIqqjyjGl0X8wgFc+4UTnQoZWqMUVj
-         A3yIaHrSx1GKoMmENjV2LApaoJ3wCs7/xZUX+rs5IufzGQolN88uBsPdFathvrwaiIKn
-         7fL3ql6aHxiWKOI6/pCwuS1xEVP/BabGGduCE1d5Vx5PQEraqaNGwz6zIHmrPmsfSSCH
-         0yyxLRQ2+kPkmaoveMpFjR51fu3cbgqtQ/K52f1NXf80WmgGNVd93gb/pocrwNX4N0+3
-         PxTPRDcOB+2CxeKtUIjGPCh3jFxeLLW8LPfcgcfDjjAW27QHafZxatxwrAWFiNZW9xQu
-         I7XA==
-X-Gm-Message-State: APjAAAUl4xvWBLH7Mx46YuFvOof8GU+1it4wfRZrV9TtoIuhyNiTEIXV
-        aXsNZnApjgd7YUWgUxdwvqEduuqxDbr9LjkkN3VhdYGZ
-X-Google-Smtp-Source: APXvYqywbDJ1wHrjBefvHW/HQEz1QqQKkGxkoLh9RZ+6Xf0SxhIjnEttZ3iQZZ/HdckX/mNz2oyurZILL28+TT9+lU0=
-X-Received: by 2002:aca:8d3:: with SMTP id 202mr1327222oii.76.1553250425727;
- Fri, 22 Mar 2019 03:27:05 -0700 (PDT)
+        bh=elHykPYN2bpDNdYbHd7n+k6DCnnNEnK+sfeC+gWZLts=;
+        b=qss36nuwpIiYm2MEkOnnk8+P4ZTDEu2XyM4jQPKXYKCfT1u4i3IiWtfBn+PsqFo35y
+         dR3NW3mVcFVuLVJvfCqPMibY84beFG29/bkg+9iOyIM6yV/yNd1+8NqcedY/14mchcAz
+         gklDe/ctZMSufmV9eg91Csy9jTxofH1qTy8MaV51bNlf9iDoNysQag6SiUqPyRsOZhr+
+         kDS7xIDMe5AmbuS4TH+hgFS7GbJvQ2hL5eygwD45O+vbRqLL93CpwxNNh+hCUck6E767
+         NutA+4O225sYXQRdph9WFy1gYWcvnI7Gzizj+BJtkBz+J+Md/yxoTuUn2T1QckXXxax5
+         i/NA==
+X-Gm-Message-State: APjAAAVTSQc+lha1T0v32ktwZasNo8TAPK3ocmaaEMwTwI0VlKYJP3Hf
+        XMREROoHdHUOI5cWEdoyAb0sBO2EqX9x1lpGmGUAbbGK
+X-Google-Smtp-Source: APXvYqxtFNukVNHkQun1344roAerIMWFt3A4NByASfcOF7QmBn+ZS7YPg2X0xhlB0cDtgDjeNNsmipAnZsQ6IwgGtFc=
+X-Received: by 2002:a9d:36a:: with SMTP id 97mr5798160otv.124.1553250499236;
+ Fri, 22 Mar 2019 03:28:19 -0700 (PDT)
 MIME-Version: 1.0
 From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 22 Mar 2019 11:26:55 +0100
-Message-ID: <CAJZ5v0g3_wWoN4Bp1+EKLuNxi3XDp2LrMq21cXCm8FFPoo6FOg@mail.gmail.com>
-Subject: [GIT PULL] ACPI fix for v5.1-rc2
+Date:   Fri, 22 Mar 2019 11:28:08 +0100
+Message-ID: <CAJZ5v0i5Jy9sAXLQX-Wap5qW6_sw+CW9JOx4t8E=hazK39_xHw@mail.gmail.com>
+Subject: [GIT PULL] Device properties framework fix for v5.1-rc2
 To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -63,30 +64,29 @@ Hi Linus,
 Please pull from the tag
 
  git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
- acpi-5.1-rc2
+ devprop-5.1-rc2
 
-with top-most commit 54e3aca84e571559915998aa6cc05e5ac37c043b
+with top-most commit 0e3edd94448001a33ed7f8af2179cd4a280348a2
 
- ACPI / utils: Drop reference in test for device presence
+ drivers: base: swnode: Make two functions static
 
 on top of commit 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b
 
  Linux 5.1-rc1
 
-to receive an ACPI fix for 5.1-rc2.
+to receive a device properties framework fix for 5.1-rc2.
 
-This prevents device references acquired by bus_find_device() in
-acpi_dev_present() from being leaked (Andy Shevchenko).
+This adds missing "static" in two places (YueHaibing).
 
 Thanks!
 
 
 ---------------
 
-Andy Shevchenko (1):
-      ACPI / utils: Drop reference in test for device presence
+YueHaibing (1):
+      drivers: base: swnode: Make two functions static
 
 ---------------
 
- drivers/acpi/utils.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/base/swnode.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
