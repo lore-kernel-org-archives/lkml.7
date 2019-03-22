@@ -7,47 +7,53 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F604C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:44:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46C13C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:44:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D6A82082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:44:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 162652196F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:44:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255090;
-	bh=zxjaSCvdHWYbMC3EMDCInJ6tzIGqztMxGN1jJyuSQac=;
+	s=default; t=1553255098;
+	bh=xYFi3/bBWwRjcEhh5G16jq25FQ2lpe98kxIJ5cIuKnw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CNrLYAGC5hhZV2LTfQ8QmHrfx8u0Ck0CVYhJzWpUnPc4XbwdQO1YA2kpPJSAu9HSN
-	 b8Tk0O6VBA0g+ch3qYA+dqOX9lhBVLjRoP82ndvxCbEWSKYcXyVCKkr08C/vT9WJDM
-	 CALPqU49iKwN6+ZZB3PRry/68n3ljlxby98LQQpg=
+	b=0o+EB5dm9CAMU6R2/DJQczWWrDLQA0lysDcDtioThq2N0kDVnURdwrmrxinAnoFUo
+	 GY0LhO2TTFZP0/ZyM2GTehL8Fp/MHC1czBG76tQ/qh3loUQOAVrmDHuOB82rMaKtX6
+	 8IaHCAnYA1W59eOhY+4F9vXVX3QH63PpKxfLmrMI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731847AbfCVLos (ORCPT
+        id S1731901AbfCVLo4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:44:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47806 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:44:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47912 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731881AbfCVLor (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:44:47 -0400
+        id S1731874AbfCVLox (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:44:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E2922075E;
-        Fri, 22 Mar 2019 11:44:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06DE22082C;
+        Fri, 22 Mar 2019 11:44:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255086;
-        bh=zxjaSCvdHWYbMC3EMDCInJ6tzIGqztMxGN1jJyuSQac=;
+        s=default; t=1553255092;
+        bh=xYFi3/bBWwRjcEhh5G16jq25FQ2lpe98kxIJ5cIuKnw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ll3gqN4L0bGz32RDDE4xAUNc8wiX/lfMEJGz7ljp7R0QSW4V0zFJPi7k4SM4wpaKJ
-         Y2xWmYdjb6FvwwwhvxHAdEb9ewE/HFOv1Eq3Uhk4zouiO1TzLVvMMiKH73lz0ciPfY
-         59aoYYN3Jp93qjMrjhjWJhqCqYD7/LRbYYBmT8SI=
+        b=pL/sLmrtviywxxhzOD4c4iSAMOCTtC+b87YmSmTMvVfzJbVh6f03lgM90tsP0M2lS
+         cVF05TCuQVWR1hiTsfgJOtea9I4G9PYFPvO9JnkAoKDJfDx87i/egFuxCXYybYSuVr
+         N/d9fm8iy21xKGa8J30900U15gn2Cv6zDNNqR+tA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Cox <alan@linux.intel.com>,
-        QiaoChong <qiaochong@loongson.cn>,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Subject: [PATCH 4.9 083/118] parport_pc: fix find_superio io compare code, should use equal test.
-Date:   Fri, 22 Mar 2019 12:15:55 +0100
-Message-Id: <20190322111222.509290006@linuxfoundation.org>
+        stable@vger.kernel.org, Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Adam Zabrocki <adamza@microsoft.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Akash Goel <akash.goel@intel.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        intel-gfx@lists.freedesktop.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 085/118] drm/i915: Relax mmap VMA check
+Date:   Fri, 22 Mar 2019 12:15:57 +0100
+Message-Id: <20190322111222.612208265@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111215.873964544@linuxfoundation.org>
 References: <20190322111215.873964544@linuxfoundation.org>
@@ -66,40 +72,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: QiaoChong <qiaochong@loongson.cn>
+[ Upstream commit ca22f32a6296cbfa29de56328c8505560a18cfa8 ]
 
-commit 21698fd57984cd28207d841dbdaa026d6061bceb upstream.
+Legacy behaviour was to allow non-page-aligned mmap requests, as does the
+linux mmap(2) implementation by virtue of automatically rounding up for
+the caller.
 
-In the original code before 181bf1e815a2 the loop was continuing until
-it finds the first matching superios[i].io and p->base.
-But after 181bf1e815a2 the logic changed and the loop now returns the
-pointer to the first mismatched array element which is then used in
-get_superio_dma() and get_superio_irq() and thus returning the wrong
-value.
-Fix the condition so that it now returns the correct pointer.
+To avoid breaking legacy userspace relax the newly introduced fix.
 
-Fixes: 181bf1e815a2 ("parport_pc: clean up the modified while loops using for")
-Cc: Alan Cox <alan@linux.intel.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: QiaoChong <qiaochong@loongson.cn>
-[rewrite the commit message]
-Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
+Fixes: 5c4604e757ba ("drm/i915: Prevent a race during I915_GEM_MMAP ioctl with WC set")
+Reported-by: Guenter Roeck <linux@roeck-us.net>
+Cc: Adam Zabrocki <adamza@microsoft.com>
+Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+Cc: <stable@vger.kernel.org> # v4.0+
+Cc: Akash Goel <akash.goel@intel.com>
+Cc: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Jani Nikula <jani.nikula@linux.intel.com>
+Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Cc: intel-gfx@lists.freedesktop.org
+Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190305110409.28633-1-tvrtko.ursulin@linux.intel.com
+(cherry picked from commit a90e1948efb648f567444f87f3c19b2a0787affd)
+Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/parport/parport_pc.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/i915/i915_gem.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/parport/parport_pc.c
-+++ b/drivers/parport/parport_pc.c
-@@ -1377,7 +1377,7 @@ static struct superio_struct *find_super
- {
- 	int i;
- 	for (i = 0; i < NR_SUPERIOS; i++)
--		if (superios[i].io != p->base)
-+		if (superios[i].io == p->base)
- 			return &superios[i];
- 	return NULL;
+--- a/drivers/gpu/drm/i915/i915_gem.c
++++ b/drivers/gpu/drm/i915/i915_gem.c
+@@ -1600,7 +1600,8 @@ __vma_matches(struct vm_area_struct *vma
+ 	if (vma->vm_file != filp)
+ 		return false;
+ 
+-	return vma->vm_start == addr && (vma->vm_end - vma->vm_start) == size;
++	return vma->vm_start == addr &&
++	       (vma->vm_end - vma->vm_start) == PAGE_ALIGN(size);
  }
+ 
+ /**
 
 
