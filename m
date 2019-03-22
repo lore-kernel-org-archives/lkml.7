@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2D7AC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:01:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E9E2C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:02:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2C7D204FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:01:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C4B92192D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:02:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256115;
-	bh=KxXE8HN87I3w5+ZGfSUbJ/9zZt9lp8IloUjB3w/Ncas=;
+	s=default; t=1553256120;
+	bh=gYdProl+vBB+QyJ0sWDz/QQWMA7Xjsjs898fpFoslCI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lp84Y8jPmAzaUCtDWAGHP6BQuQgJ2qlQO31b8ryUWygiD3ft/hlV+2d++TkekW+Ay
-	 q+qvDeuTy5KAL63ogR5XfqnMwzFN0OjvEnGOcLvb2lPKdVVedGNmgTPe3M63pcm9Ea
-	 28n9MjA9v8CirtxAp5hkVQqFnFb4CPB7gQuD4Edg=
+	b=rmB6EqpLm6Dmq5QsEALnoQwLsY6zhRupZdPT3H/RnGZBV1kJHd/R1xaaUEc22HiDG
+	 tkVYVD8HdyXZHA4ZJxu/wgYGhqC+fHKyZYfNHmYo8Nm+t/0Pn9KhvWEJNbqJubmfSP
+	 8YOBUD6XwYbA1DQv+zG8UDqtD0eI9UklCkA9l/Ig=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388284AbfCVMBy (ORCPT
+        id S2388289AbfCVMB6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:01:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39722 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:01:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39820 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388274AbfCVMBw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:01:52 -0400
+        id S1730323AbfCVMB4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:01:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 507672192D;
-        Fri, 22 Mar 2019 12:01:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 128252192D;
+        Fri, 22 Mar 2019 12:01:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256111;
-        bh=KxXE8HN87I3w5+ZGfSUbJ/9zZt9lp8IloUjB3w/Ncas=;
+        s=default; t=1553256115;
+        bh=gYdProl+vBB+QyJ0sWDz/QQWMA7Xjsjs898fpFoslCI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f8P7aab2F2nDGof9ypfw5vixWP0BQ3gDzYfYFfiWskOOyXxljaxvZynKMf5rOFHro
-         h710HJT4ADDu22D6TnoQzmhgc5aBn5oK4ECJvF4Vzwe1AvE+OYF7oEzEOagSc+nYIL
-         +ObnrjXFWeBH1iVqX9fMlOirb79KMgamFFQoZ2M0=
+        b=XcmDFSPK4FwWAPGyJWZrXHXbJmRkFidC9HSTzDk4ezxWUQDe8hW/lt/F72eIY9zrH
+         FBHOVO1z1l7L7RSit3Od89Lhu3WX261TmBuTBZH//P1O7xSYHTLgkGDaaJ+ZfFDt5t
+         K8yZ3D4cky8WYNenTtlv4/OxY2/7w7WlOCzG3lb8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Subject: [PATCH 4.19 112/280] stm class: Prevent division by zero
-Date:   Fri, 22 Mar 2019 12:14:25 +0100
-Message-Id: <20190322111313.682852489@linuxfoundation.org>
+        stable@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: [PATCH 4.19 113/280] nfit: acpi_nfit_ctl(): Check out_obj->type in the right place
+Date:   Fri, 22 Mar 2019 12:14:26 +0100
+Message-Id: <20190322111313.843546391@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -65,48 +65,54 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+From: Dexuan Cui <decui@microsoft.com>
 
-commit bf7cbaae0831252b416f375ca9b1027ecd4642dd upstream.
+commit 43f89877f26671c6309cd87d7364b1a3e66e71cf upstream.
 
-Using STP_POLICY_ID_SET ioctl command with dummy_stm device, or any STM
-device that supplies zero mmio channel size, will trigger a division by
-zero bug in the kernel.
+In the case of ND_CMD_CALL, we should also check out_obj->type.
 
-Prevent this by disallowing channel widths other than 1 for such devices.
+The patch uses out_obj->type, which is a short alias to
+out_obj->package.type.
 
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Fixes: 7bd1d4093c2f ("stm class: Introduce an abstraction for System Trace Module devices")
-CC: stable@vger.kernel.org # v4.4+
+Fixes: 31eca76ba2fc ("nfit, libnvdimm: limited/whitelisted dimm command marshaling mechanism")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hwtracing/stm/core.c |    8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/acpi/nfit/core.c |   14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
---- a/drivers/hwtracing/stm/core.c
-+++ b/drivers/hwtracing/stm/core.c
-@@ -553,7 +553,7 @@ static int stm_char_policy_set_ioctl(str
- {
- 	struct stm_device *stm = stmf->stm;
- 	struct stp_policy_id *id;
--	int ret = -EINVAL;
-+	int ret = -EINVAL, wlimit = 1;
- 	u32 size;
+--- a/drivers/acpi/nfit/core.c
++++ b/drivers/acpi/nfit/core.c
+@@ -533,6 +533,13 @@ int acpi_nfit_ctl(struct nvdimm_bus_desc
+ 		return -EINVAL;
+ 	}
  
- 	if (stmf->output.nr_chans)
-@@ -581,8 +581,10 @@ static int stm_char_policy_set_ioctl(str
- 	if (id->__reserved_0 || id->__reserved_1)
- 		goto err_free;
- 
--	if (id->width < 1 ||
--	    id->width > PAGE_SIZE / stm->data->sw_mmiosz)
-+	if (stm->data->sw_mmiosz)
-+		wlimit = PAGE_SIZE / stm->data->sw_mmiosz;
++	if (out_obj->type != ACPI_TYPE_BUFFER) {
++		dev_dbg(dev, "%s unexpected output object type cmd: %s type: %d\n",
++				dimm_name, cmd_name, out_obj->type);
++		rc = -EINVAL;
++		goto out;
++	}
 +
-+	if (id->width < 1 || id->width > wlimit)
- 		goto err_free;
+ 	if (call_pkg) {
+ 		call_pkg->nd_fw_size = out_obj->buffer.length;
+ 		memcpy(call_pkg->nd_payload + call_pkg->nd_size_in,
+@@ -551,13 +558,6 @@ int acpi_nfit_ctl(struct nvdimm_bus_desc
+ 		return 0;
+ 	}
  
- 	ret = stm_file_assign(stmf, id->id, id->width);
+-	if (out_obj->package.type != ACPI_TYPE_BUFFER) {
+-		dev_dbg(dev, "%s unexpected output object type cmd: %s type: %d\n",
+-				dimm_name, cmd_name, out_obj->type);
+-		rc = -EINVAL;
+-		goto out;
+-	}
+-
+ 	dev_dbg(dev, "%s cmd: %s output length: %d\n", dimm_name,
+ 			cmd_name, out_obj->buffer.length);
+ 	print_hex_dump_debug(cmd_name, DUMP_PREFIX_OFFSET, 4, 4,
 
 
