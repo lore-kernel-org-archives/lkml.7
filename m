@@ -2,53 +2,52 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BIGNUM_EMAILS,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F7A3C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:25:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F5F4C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:25:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E235420657
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:25:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E24CB218B0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:25:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553253936;
-	bh=hYpOdPjGUmDeh0vwJDPNgkS1I5zR9ewbYgJL7d6p3FE=;
+	s=default; t=1553253939;
+	bh=g7fHfEr47VrvvqCD6Vg3ex1s7wsyzlWSa/BB8+716P4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tLhhgTJUh9VTgsGgSlb82H2ZmAqGDthZVHIqBu6HOf7w5lCQb0ax15SnivchcHztR
-	 FxasO3exk7A0aM2+9vz0OKtjJUJDm/KuXxQg4mGQ79g+9pLKZ0tWK4yRCVoCE6QzLm
-	 b37QM9I06X18NGg6DusOGzGpdenHAdO3TVfjgdzI=
+	b=a8Re9Ld9nx3Wa7oN63hlhOEzw87GLV92x9r0uaDw18nXVqKxWOrwhZPu0WsA7VuPc
+	 hl8IHi8N2gIe3a5Cv9wBra/VXjgWzOVJrxef6+LKYhkvSmC0ctBox72m5Do3UeIXiK
+	 HPTDJ1Tq3ToUXZd6HchVpQ6J5xJyDUi8L6xGcBGs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729305AbfCVLZe (ORCPT
+        id S1729315AbfCVLZh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:25:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52904 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:25:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52990 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729290AbfCVLZb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:25:31 -0400
+        id S1728957AbfCVLZf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:25:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 638B120657;
-        Fri, 22 Mar 2019 11:25:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A73920657;
+        Fri, 22 Mar 2019 11:25:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553253930;
-        bh=hYpOdPjGUmDeh0vwJDPNgkS1I5zR9ewbYgJL7d6p3FE=;
+        s=default; t=1553253934;
+        bh=g7fHfEr47VrvvqCD6Vg3ex1s7wsyzlWSa/BB8+716P4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jT4QAmJUJj8vulbbXkV+SdyJGw3NquwL5gvvG5yh6e7P5NX/ghSF9+shaLvaI60hT
-         udn70NV0r/RnPgQPxj2FvCMGX+5AkXbuQUjbkTDmDT+IRflerO6K2FmqzTRCUf1Oux
-         9IKEs9EH1XkbFaoNPVVeiempkL3TZkPm9JMDQ55s=
+        b=ZBPRy5G2RJwDfic1bkzYx7mGFdiFMcQE+a47ALvQGJrIt5ZTmfu0bZSFJE4FkT7tX
+         ooTOVSY2Ofcxm0umE8HGjvGGTkdzVfzeUHJ751m0HOS47TnoLRsQ51tuVMtEqXEu2f
+         IyGxJb/2wG6EwTGIIVy93zUD82AzGdTd5jScXSa4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Stefan Haberland <sth@linux.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        stable@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 3.18 098/134] s390/dasd: fix using offset into zero size array error
-Date:   Fri, 22 Mar 2019 12:15:11 +0100
-Message-Id: <20190322111217.254608183@linuxfoundation.org>
+Subject: [PATCH 3.18 099/134] Input: matrix_keypad - use flush_delayed_work()
+Date:   Fri, 22 Mar 2019 12:15:12 +0100
+Message-Id: <20190322111217.319495080@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111210.465931067@linuxfoundation.org>
 References: <20190322111210.465931067@linuxfoundation.org>
@@ -67,94 +66,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 4a8ef6999bce998fa5813023a9a6b56eea329dba ]
+[ Upstream commit a342083abe576db43594a32d458a61fa81f7cb32 ]
 
-Dan Carpenter reported the following:
+We should be using flush_delayed_work() instead of flush_work() in
+matrix_keypad_stop() to ensure that we are not missing work that is
+scheduled but not yet put in the workqueue (i.e. its delay timer has not
+expired yet).
 
-The patch 52898025cf7d: "[S390] dasd: security and PSF update patch
-for EMC CKD ioctl" from Mar 8, 2010, leads to the following static
-checker warning:
-
-	drivers/s390/block/dasd_eckd.c:4486 dasd_symm_io()
-	error: using offset into zero size array 'psf_data[]'
-
-drivers/s390/block/dasd_eckd.c
-  4458          /* Copy parms from caller */
-  4459          rc = -EFAULT;
-  4460          if (copy_from_user(&usrparm, argp, sizeof(usrparm)))
-                                    ^^^^^^^
-The user can specify any "usrparm.psf_data_len".  They choose zero by
-mistake.
-
-  4461                  goto out;
-  4462          if (is_compat_task()) {
-  4463                  /* Make sure pointers are sane even on 31 bit. */
-  4464                  rc = -EINVAL;
-  4465                  if ((usrparm.psf_data >> 32) != 0)
-  4466                          goto out;
-  4467                  if ((usrparm.rssd_result >> 32) != 0)
-  4468                          goto out;
-  4469                  usrparm.psf_data &= 0x7fffffffULL;
-  4470                  usrparm.rssd_result &= 0x7fffffffULL;
-  4471          }
-  4472          /* alloc I/O data area */
-  4473          psf_data = kzalloc(usrparm.psf_data_len, GFP_KERNEL
-  			   				 | GFP_DMA);
-  4474          rssd_result = kzalloc(usrparm.rssd_result_len, GFP_KERNEL
-							       | GFP_DMA);
-  4475          if (!psf_data || !rssd_result) {
-
-kzalloc() returns a ZERO_SIZE_PTR (0x16).
-
-  4476                  rc = -ENOMEM;
-  4477                  goto out_free;
-  4478          }
-  4479
-  4480          /* get syscall header from user space */
-  4481          rc = -EFAULT;
-  4482          if (copy_from_user(psf_data,
-  4483                             (void __user *)(unsigned long)
-  				   	 		 usrparm.psf_data,
-  4484                             usrparm.psf_data_len))
-
-That all works great.
-
-  4485                  goto out_free;
-  4486          psf0 = psf_data[0];
-  4487          psf1 = psf_data[1];
-
-But now we're assuming that "->psf_data_len" was at least 2 bytes.
-
-Fix this by checking the user specified length psf_data_len.
-
-Fixes: 52898025cf7d ("[S390] dasd: security and PSF update patch for EMC CKD ioctl")
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Stefan Haberland <sth@linux.ibm.com>
-Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/block/dasd_eckd.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/input/keyboard/matrix_keypad.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/s390/block/dasd_eckd.c b/drivers/s390/block/dasd_eckd.c
-index ff1ab6da8cff..4bbcdf991c26 100644
---- a/drivers/s390/block/dasd_eckd.c
-+++ b/drivers/s390/block/dasd_eckd.c
-@@ -3990,6 +3990,14 @@ static int dasd_symm_io(struct dasd_device *device, void __user *argp)
- 		usrparm.psf_data &= 0x7fffffffULL;
- 		usrparm.rssd_result &= 0x7fffffffULL;
- 	}
-+	/* at least 2 bytes are accessed and should be allocated */
-+	if (usrparm.psf_data_len < 2) {
-+		DBF_DEV_EVENT(DBF_WARNING, device,
-+			      "Symmetrix ioctl invalid data length %d",
-+			      usrparm.psf_data_len);
-+		rc = -EINVAL;
-+		goto out;
-+	}
- 	/* alloc I/O data area */
- 	psf_data = kzalloc(usrparm.psf_data_len, GFP_KERNEL | GFP_DMA);
- 	rssd_result = kzalloc(usrparm.rssd_result_len, GFP_KERNEL | GFP_DMA);
+diff --git a/drivers/input/keyboard/matrix_keypad.c b/drivers/input/keyboard/matrix_keypad.c
+index 176bdd140769..a1b9753e0616 100644
+--- a/drivers/input/keyboard/matrix_keypad.c
++++ b/drivers/input/keyboard/matrix_keypad.c
+@@ -220,7 +220,7 @@ static void matrix_keypad_stop(struct input_dev *dev)
+ 	keypad->stopped = true;
+ 	spin_unlock_irq(&keypad->lock);
+ 
+-	flush_work(&keypad->work.work);
++	flush_delayed_work(&keypad->work);
+ 	/*
+ 	 * matrix_keypad_scan() will leave IRQs enabled;
+ 	 * we should disable them now.
 -- 
 2.19.1
 
