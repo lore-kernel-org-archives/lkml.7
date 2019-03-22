@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F43C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:26:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 465BCC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:26:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D7E920657
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:26:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12C0021925
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:26:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553253986;
-	bh=6zZXyh6ObCwwl4V2tIiGwrv1BdjEWUmH4N4hUXbou3g=;
+	s=default; t=1553253990;
+	bh=JW8pHTtbhe1pTAw0ZBp0SimrBO3fQ2ypaPbr+1DcNmU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LzIk5RmySibX/s0FNY4yAlm3Mk/wpLZ3CKj1oYeiyKGZKXLErKbsKmOLhizw6+Ljj
-	 SNH9cHTxPR5Yq0Fl4kSDjuWadgkZwnc1lzpQfjxweenCc57T6O2IQGyuR37FSBCNJc
-	 rtXA8ZamhoMK3nlHwVblmdYT++iZphEKzb7ymhVw=
+	b=y60LRLD54t5H8M19pWFow13NB9yVxbLlS0oyoSJT7AcjVvvLgJlCiEzpIXoJqmlvx
+	 8Wm21cS4syzitnwf/wtKGPzYeG05tVY/9TcShaZyASMAUpz18OzyHzLDmxpnsN4/Q/
+	 maJoaWakF+vtEE0a0dQlj4LTQXNsJwk1Sn5d0o8w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729420AbfCVL0Z (ORCPT
+        id S1729429AbfCVL02 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:26:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54020 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:26:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729394AbfCVL0P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:26:15 -0400
+        id S1729416AbfCVL0Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:26:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60D2E20657;
-        Fri, 22 Mar 2019 11:26:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2F5C218B0;
+        Fri, 22 Mar 2019 11:26:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553253974;
-        bh=6zZXyh6ObCwwl4V2tIiGwrv1BdjEWUmH4N4hUXbou3g=;
+        s=default; t=1553253984;
+        bh=JW8pHTtbhe1pTAw0ZBp0SimrBO3fQ2ypaPbr+1DcNmU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jxSqqDl8NSQymZwUvZ62vfnG5Iwnnn9d9CPJzRM1klfnfItgO6xp4b00jnV5Pp33T
-         5ArgZCQSxniZDuZKZ5Ywv5atrtON6r01GDM26d9AxwRGAmzXxMQoeYmicdPNwZ4r3b
-         tBaZwBqNPvmJTW5jJV5OQFBqIDKs2sCDupPMBMNs=
+        b=xLSz9ETktQ9yuurfM0Mx4IxS7AVH/JObI0+yWyGl6MIgKUuVmMKeIY3fkTza60dFD
+         YYfBiG6f/T4pxJHpy3abJXy2WYYYV0Mox3vVcHAglYGNxuGvFTLjNd0TOQc8qOS9Lg
+         hnYbNZDYrLwljKDr8Eo57Y0dob3Yx3+Jy1UBRCtY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 3.18 128/134] ARM: s3c24xx: Fix boolean expressions in osiris_dvs_notify
-Date:   Fri, 22 Mar 2019 12:15:41 +0100
-Message-Id: <20190322111219.755765860@linuxfoundation.org>
+        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        Eric Biggers <ebiggers@google.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Maxim Zhukov <mussitantesmortem@gmail.com>
+Subject: [PATCH 3.18 116/134] crypto: pcbc - remove bogus memcpy()s with src == dest
+Date:   Fri, 22 Mar 2019 12:15:29 +0100
+Message-Id: <20190322111218.728609677@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111210.465931067@linuxfoundation.org>
 References: <20190322111210.465931067@linuxfoundation.org>
@@ -66,48 +67,93 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Gustavo A. R. Silva <gustavo@embeddedor.com>
+From: Eric Biggers <ebiggers@google.com>
 
-commit e2477233145f2156434afb799583bccd878f3e9f upstream.
+commit 251b7aea34ba3c4d4fdfa9447695642eb8b8b098 upstream.
 
-Fix boolean expressions by using logical AND operator '&&' instead of
-bitwise operator '&'.
+The memcpy()s in the PCBC implementation use walk->iv as both the source
+and destination, which has undefined behavior.  These memcpy()'s are
+actually unneeded, because walk->iv is already used to hold the previous
+plaintext block XOR'd with the previous ciphertext block.  Thus,
+walk->iv is already updated to its final value.
 
-This issue was detected with the help of Coccinelle.
+So remove the broken and unnecessary memcpy()s.
 
-Fixes: 4fa084af28ca ("ARM: OSIRIS: DVS (Dynamic Voltage Scaling) supoort.")
-Cc: stable@vger.kernel.org
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-[krzk: Fix -Wparentheses warning]
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Fixes: 91652be5d1b9 ("[CRYPTO] pcbc: Add Propagated CBC template")
+Cc: <stable@vger.kernel.org> # v2.6.21+
+Cc: David Howells <dhowells@redhat.com>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Maxim Zhukov <mussitantesmortem@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- arch/arm/mach-s3c24xx/mach-osiris-dvs.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ crypto/pcbc.c |   14 ++++----------
+ 1 file changed, 4 insertions(+), 10 deletions(-)
 
---- a/arch/arm/mach-s3c24xx/mach-osiris-dvs.c
-+++ b/arch/arm/mach-s3c24xx/mach-osiris-dvs.c
-@@ -70,16 +70,16 @@ static int osiris_dvs_notify(struct noti
+--- a/crypto/pcbc.c
++++ b/crypto/pcbc.c
+@@ -52,7 +52,7 @@ static int crypto_pcbc_encrypt_segment(s
+ 	unsigned int nbytes = walk->nbytes;
+ 	u8 *src = walk->src.virt.addr;
+ 	u8 *dst = walk->dst.virt.addr;
+-	u8 *iv = walk->iv;
++	u8 * const iv = walk->iv;
  
- 	switch (val) {
- 	case CPUFREQ_PRECHANGE:
--		if (old_dvs & !new_dvs ||
--		    cur_dvs & !new_dvs) {
-+		if ((old_dvs && !new_dvs) ||
-+		    (cur_dvs && !new_dvs)) {
- 			pr_debug("%s: exiting dvs\n", __func__);
- 			cur_dvs = false;
- 			gpio_set_value(OSIRIS_GPIO_DVS, 1);
- 		}
- 		break;
- 	case CPUFREQ_POSTCHANGE:
--		if (!old_dvs & new_dvs ||
--		    !cur_dvs & new_dvs) {
-+		if ((!old_dvs && new_dvs) ||
-+		    (!cur_dvs && new_dvs)) {
- 			pr_debug("entering dvs\n");
- 			cur_dvs = true;
- 			gpio_set_value(OSIRIS_GPIO_DVS, 0);
+ 	do {
+ 		crypto_xor(iv, src, bsize);
+@@ -76,7 +76,7 @@ static int crypto_pcbc_encrypt_inplace(s
+ 	int bsize = crypto_cipher_blocksize(tfm);
+ 	unsigned int nbytes = walk->nbytes;
+ 	u8 *src = walk->src.virt.addr;
+-	u8 *iv = walk->iv;
++	u8 * const iv = walk->iv;
+ 	u8 tmpbuf[bsize];
+ 
+ 	do {
+@@ -89,8 +89,6 @@ static int crypto_pcbc_encrypt_inplace(s
+ 		src += bsize;
+ 	} while ((nbytes -= bsize) >= bsize);
+ 
+-	memcpy(walk->iv, iv, bsize);
+-
+ 	return nbytes;
+ }
+ 
+@@ -130,7 +128,7 @@ static int crypto_pcbc_decrypt_segment(s
+ 	unsigned int nbytes = walk->nbytes;
+ 	u8 *src = walk->src.virt.addr;
+ 	u8 *dst = walk->dst.virt.addr;
+-	u8 *iv = walk->iv;
++	u8 * const iv = walk->iv;
+ 
+ 	do {
+ 		fn(crypto_cipher_tfm(tfm), dst, src);
+@@ -142,8 +140,6 @@ static int crypto_pcbc_decrypt_segment(s
+ 		dst += bsize;
+ 	} while ((nbytes -= bsize) >= bsize);
+ 
+-	memcpy(walk->iv, iv, bsize);
+-
+ 	return nbytes;
+ }
+ 
+@@ -156,7 +152,7 @@ static int crypto_pcbc_decrypt_inplace(s
+ 	int bsize = crypto_cipher_blocksize(tfm);
+ 	unsigned int nbytes = walk->nbytes;
+ 	u8 *src = walk->src.virt.addr;
+-	u8 *iv = walk->iv;
++	u8 * const iv = walk->iv;
+ 	u8 tmpbuf[bsize];
+ 
+ 	do {
+@@ -169,8 +165,6 @@ static int crypto_pcbc_decrypt_inplace(s
+ 		src += bsize;
+ 	} while ((nbytes -= bsize) >= bsize);
+ 
+-	memcpy(walk->iv, iv, bsize);
+-
+ 	return nbytes;
+ }
+ 
 
 
