@@ -2,196 +2,111 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77CE9C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:13:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC36C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:13:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4609E218E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:13:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GpwSX9sP"
+	by mail.kernel.org (Postfix) with ESMTP id 6ED94218E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:13:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728277AbfCVONF (ORCPT
+        id S1728552AbfCVONO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 10:13:05 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:34471 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727746AbfCVONE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 10:13:04 -0400
-Received: by mail-wr1-f67.google.com with SMTP id p10so2559428wrq.1
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 07:13:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=pyh8vTTyohuChTUCwCbUo+zep28Eqjn+MIdM/zUjGMM=;
-        b=GpwSX9sP+gNxrrwDGevhFnH156BVULnPdMflC4EtA2nV5lH09Tj9ZNxZfRoZPonkkk
-         EZYp9DTPfimc62wMxnLuYxS/1wRf6cgCWrpp6d2XWUYKRjZKBVrMef1zmIwZQITWGpdu
-         2pzENXU7WyIAu3mT4EIk4vaUGZfffzBs9CkyJ8RvEBBKRwthR607UR1a9dBaok1bwXPy
-         nC6+h5AyM9NkpksPsthgutWR7BYgD3F8CFnCXA0y6NL5fbhbnxQxcgqOeSVja29p7OfG
-         85UWRqiC9taTqaSglL+sJL8+7K1c7lqmuT1FmHe43dNts2yP95v0oWQEmvNaM38fRYYj
-         6u+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=pyh8vTTyohuChTUCwCbUo+zep28Eqjn+MIdM/zUjGMM=;
-        b=ZQSXBu/GZal2lHSalNeYng7Au3B5kceuWhPbSTVrmMtSwAZyB0DzM6URUt8c7GoLIU
-         +Q0XwldWrYSuMjEnYKnn8XS6fDLYgpNsN4kXtBAgIew076Nz+S+hlS0bV/LjaG+2ruwH
-         puYUrj0mnAB23o6JgE4Ts++jUzEy+itTZw19lMNU4j9CH8tnoBNEyXdc1nKzpfJh3DhO
-         jZbIWukjjC8BuEttFEajWSNipu958hUmsMDHH1DMNhZTLUT6hOJHfsgIJuNlWhc8x/PX
-         4+pFcCEB1tUzmXPEs4BH+ID66Ozy4IPHqSOMwBS8hYaxvjQuQsXkBpxHduHCwrppJAsW
-         YpZQ==
-X-Gm-Message-State: APjAAAX/jtVghx8sOv54+ajKxR3bzPrfCANhKld9fHKwZ40Cyireg/DN
-        BsW4CjjDr9yV4JtZiqbaJ3flsw==
-X-Google-Smtp-Source: APXvYqxLQZ1mBf+svpCyGy80Ng16k+BzxRCmfTGNFpxGLnO31wV2tjKhMi7e/fAjrPJb+2FV31UnCw==
-X-Received: by 2002:adf:f451:: with SMTP id f17mr2603032wrp.272.1553263983118;
-        Fri, 22 Mar 2019 07:13:03 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id x18sm520275wrw.14.2019.03.22.07.13.02
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 22 Mar 2019 07:13:02 -0700 (PDT)
-Date:   Fri, 22 Mar 2019 14:13:00 +0000
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     Joe Perches <joe@perches.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [possible PATCH] crypto: sahara - Use #ifdef DEBUG not
- IS_ENABLED(DEBUG)
-Message-ID: <20190322141300.foza2h2lx5aklchq@holly.lan>
-References: <5ef0cab4dee128058a43f43c723c13924662e80d.camel@perches.com>
- <4ea24643-5832-981f-3d39-9a84692be6e7@c-s.fr>
+        Fri, 22 Mar 2019 10:13:14 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:50636 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727749AbfCVONN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 10:13:13 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 42CBACF8E40F0F7716F4;
+        Fri, 22 Mar 2019 22:12:20 +0800 (CST)
+Received: from HGHY1l002753561.china.huawei.com (10.177.23.164) by
+ DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
+ 14.3.408.0; Fri, 22 Mar 2019 22:12:10 +0800
+From:   Zhen Lei <thunder.leizhen@huawei.com>
+To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        John Garry <john.garry@huawei.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu <iommu@lists.linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+CC:     Zhen Lei <thunder.leizhen@huawei.com>,
+        Hanjun Guo <guohanjun@huawei.com>
+Subject: [PATCH 1/1] iommu: Add config option to set lazy mode as default
+Date:   Fri, 22 Mar 2019 22:11:21 +0800
+Message-ID: <20190322141121.18428-1-thunder.leizhen@huawei.com>
+X-Mailer: git-send-email 2.19.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <4ea24643-5832-981f-3d39-9a84692be6e7@c-s.fr>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.177.23.164]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 22, 2019 at 01:54:47PM +0100, Christophe Leroy wrote:
-> 
-> 
-> Le 08/03/2019 à 01:15, Joe Perches a écrit :
-> > Normal use of IS_ENABLED is with a CONFIG_<SYMBOL> and
-> > there is no -DDEBUG in the Makefile here.
-> > 
-> > Replace the IS_ENABLED(DEBUG) with #ifdef DEBUG/#endif
-> > blocks.
-> 
-> By doing this you hide a big part of the code which cannot be verified
-> unless DEBUG is defined.
+This allows the default behaviour to be controlled by a kernel config
+option instead of changing the command line for the kernel to include
+"iommu.strict=0" on ARM64 where this is desired.
 
-The dump functions already use dev_dbg() throughout and appear not to
-have any side effects (only local variables are modified). Can we not simply
-*remove* the if(IS_ENABLED_DEBUG) and rely on dev_dbg() to hide things
-from the code generater when the debug messages are disabled?
+This is similar to CONFIG_IOMMU_DEFAULT_PASSTHROUGH.
 
-Or put another way, is there any harm in allowing a system that enables
-CONFIG_DYNAMIC_DEBUG to observe the status dumps?
+Note: At present, intel_iommu, amd_iommu and s390_iommu use lazy mode as
+defalut, so there is no need to add code for them.
+
+Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+---
+ drivers/iommu/Kconfig | 14 ++++++++++++++
+ drivers/iommu/iommu.c |  5 +++++
+ 2 files changed, 19 insertions(+)
+
+diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
+index 6f07f3b21816c64..5ec9780f564eaf8 100644
+--- a/drivers/iommu/Kconfig
++++ b/drivers/iommu/Kconfig
+@@ -85,6 +85,20 @@ config IOMMU_DEFAULT_PASSTHROUGH
+
+ 	  If unsure, say N here.
+
++config IOMMU_LAZY_MODE
++	bool "IOMMU use lazy mode to flush IOTLB and free IOVA"
++	depends on IOMMU_API
++	help
++	  For every IOMMU unmap operation, the flush operation of IOTLB and the free
++	  operation of IOVA are deferred. They are only guaranteed to be done before
++	  the related IOVA will be reused. Removing the need to pass in iommu.strict=0
++	  through command line on ARM64(Now, intel_iommu, amd_iommu, s390_iommu use
++	  lazy mode as deault). If this is enabled, you can still disable with kernel
++	  parameters, such as iommu.strict=1, intel_iommu=strict, amd_iommu=fullflush
++	  or s390_iommu=strict depending on the architecture.
++
++	  If unsure, say N here.
++
+ config OF_IOMMU
+        def_bool y
+        depends on OF && IOMMU_API
+diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+index 33a982e33716369..e307d70d1578b3b 100644
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -43,7 +43,12 @@
+ #else
+ static unsigned int iommu_def_domain_type = IOMMU_DOMAIN_DMA;
+ #endif
++
++#ifdef CONFIG_IOMMU_LAZY_MODE
++static bool iommu_dma_strict __read_mostly;
++#else
+ static bool iommu_dma_strict __read_mostly = true;
++#endif
+
+ struct iommu_callback_data {
+ 	const struct iommu_ops *ops;
+--
+1.8.3
 
 
-Daniel.
-
-
-> static bool is_debug_enabled(void)
-> {
-> #ifdef DEBUG
-> 	return true;
-> #else
-> 	return false;
-> #endif
-> }
-> 
-> then replace
-> 
-> if (IS_ENABLED(DEBUG))
-> 
-> by
-> 
-> if (is_debug_enabled())
-> 
-> Christophe
-> 
-> > 
-> > Miscellanea:
-> > 
-> > o Move the sahara_state array into the function that uses it.
-> > 
-> > Signed-off-by: Joe Perches <joe@perches.com>
-> > ---
-> >   drivers/crypto/sahara.c | 20 +++++++++-----------
-> >   1 file changed, 9 insertions(+), 11 deletions(-)
-> > 
-> > diff --git a/drivers/crypto/sahara.c b/drivers/crypto/sahara.c
-> > index 8c32a3059b4a..d2b4bd483507 100644
-> > --- a/drivers/crypto/sahara.c
-> > +++ b/drivers/crypto/sahara.c
-> > @@ -348,14 +348,13 @@ static void sahara_decode_error(struct sahara_dev *dev, unsigned int error)
-> >   	dev_err(dev->device, "\n");
-> >   }
-> > -static const char *sahara_state[4] = { "Idle", "Busy", "Error", "HW Fault" };
-> > -
-> >   static void sahara_decode_status(struct sahara_dev *dev, unsigned int status)
-> >   {
-> > +#ifdef DEBUG
-> >   	u8 state;
-> > -
-> > -	if (!IS_ENABLED(DEBUG))
-> > -		return;
-> > +	static const char *sahara_state[4] = {
-> > +		"Idle", "Busy", "Error", "HW Fault"
-> > +	};
-> >   	state = SAHARA_STATUS_GET_STATE(status);
-> > @@ -400,15 +399,14 @@ static void sahara_decode_status(struct sahara_dev *dev, unsigned int status)
-> >   		sahara_read(dev, SAHARA_REG_CDAR));
-> >   	dev_dbg(dev->device, "Initial DAR: 0x%08x\n\n",
-> >   		sahara_read(dev, SAHARA_REG_IDAR));
-> > +#endif
-> >   }
-> >   static void sahara_dump_descriptors(struct sahara_dev *dev)
-> >   {
-> > +#ifdef DEBUG
-> >   	int i;
-> > -	if (!IS_ENABLED(DEBUG))
-> > -		return;
-> > -
-> >   	for (i = 0; i < SAHARA_MAX_HW_DESC; i++) {
-> >   		dev_dbg(dev->device, "Descriptor (%d) (%pad):\n",
-> >   			i, &dev->hw_phys_desc[i]);
-> > @@ -421,15 +419,14 @@ static void sahara_dump_descriptors(struct sahara_dev *dev)
-> >   			dev->hw_desc[i]->next);
-> >   	}
-> >   	dev_dbg(dev->device, "\n");
-> > +#endif
-> >   }
-> >   static void sahara_dump_links(struct sahara_dev *dev)
-> >   {
-> > +#ifdef DEBUG
-> >   	int i;
-> > -	if (!IS_ENABLED(DEBUG))
-> > -		return;
-> > -
-> >   	for (i = 0; i < SAHARA_MAX_HW_LINK; i++) {
-> >   		dev_dbg(dev->device, "Link (%d) (%pad):\n",
-> >   			i, &dev->hw_phys_link[i]);
-> > @@ -439,6 +436,7 @@ static void sahara_dump_links(struct sahara_dev *dev)
-> >   			dev->hw_link[i]->next);
-> >   	}
-> >   	dev_dbg(dev->device, "\n");
-> > +#endif
-> >   }
-> >   static int sahara_hw_descriptor_create(struct sahara_dev *dev)
-> > 
