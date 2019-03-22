@@ -3,110 +3,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC36C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:13:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE96C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:13:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6ED94218E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:13:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E80AF218E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:13:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728552AbfCVONO (ORCPT
+        id S1728677AbfCVONR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 10:13:14 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:50636 "EHLO huawei.com"
+        Fri, 22 Mar 2019 10:13:17 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:50978 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727749AbfCVONN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 10:13:13 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 42CBACF8E40F0F7716F4;
-        Fri, 22 Mar 2019 22:12:20 +0800 (CST)
-Received: from HGHY1l002753561.china.huawei.com (10.177.23.164) by
- DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
- 14.3.408.0; Fri, 22 Mar 2019 22:12:10 +0800
-From:   Zhen Lei <thunder.leizhen@huawei.com>
-To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        John Garry <john.garry@huawei.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu <iommu@lists.linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-CC:     Zhen Lei <thunder.leizhen@huawei.com>,
-        Hanjun Guo <guohanjun@huawei.com>
-Subject: [PATCH 1/1] iommu: Add config option to set lazy mode as default
-Date:   Fri, 22 Mar 2019 22:11:21 +0800
-Message-ID: <20190322141121.18428-1-thunder.leizhen@huawei.com>
-X-Mailer: git-send-email 2.19.2.windows.1
+        id S1727749AbfCVONP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 10:13:15 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 2D04CC982697FAF57854;
+        Fri, 22 Mar 2019 22:08:37 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.408.0; Fri, 22 Mar 2019
+ 22:08:28 +0800
+From:   Yue Haibing <yuehaibing@huawei.com>
+To:     <p.paillet@st.com>, <lee.jones@linaro.org>
+CC:     <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] mfd: stpmic1: Make stpmic1_regmap_config static
+Date:   Fri, 22 Mar 2019 22:08:00 +0800
+Message-ID: <20190322140800.9916-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.177.23.164]
+Content-Type: text/plain
+X-Originating-IP: [10.177.31.96]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This allows the default behaviour to be controlled by a kernel config
-option instead of changing the command line for the kernel to include
-"iommu.strict=0" on ARM64 where this is desired.
+From: YueHaibing <yuehaibing@huawei.com>
 
-This is similar to CONFIG_IOMMU_DEFAULT_PASSTHROUGH.
+Fix sparse warning:
 
-Note: At present, intel_iommu, amd_iommu and s390_iommu use lazy mode as
-defalut, so there is no need to add code for them.
+drivers/mfd/stpmic1.c:62:28: warning:
+ symbol 'stpmic1_regmap_config' was not declared. Should it be static?
 
-Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/iommu/Kconfig | 14 ++++++++++++++
- drivers/iommu/iommu.c |  5 +++++
- 2 files changed, 19 insertions(+)
+ drivers/mfd/stpmic1.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-index 6f07f3b21816c64..5ec9780f564eaf8 100644
---- a/drivers/iommu/Kconfig
-+++ b/drivers/iommu/Kconfig
-@@ -85,6 +85,20 @@ config IOMMU_DEFAULT_PASSTHROUGH
-
- 	  If unsure, say N here.
-
-+config IOMMU_LAZY_MODE
-+	bool "IOMMU use lazy mode to flush IOTLB and free IOVA"
-+	depends on IOMMU_API
-+	help
-+	  For every IOMMU unmap operation, the flush operation of IOTLB and the free
-+	  operation of IOVA are deferred. They are only guaranteed to be done before
-+	  the related IOVA will be reused. Removing the need to pass in iommu.strict=0
-+	  through command line on ARM64(Now, intel_iommu, amd_iommu, s390_iommu use
-+	  lazy mode as deault). If this is enabled, you can still disable with kernel
-+	  parameters, such as iommu.strict=1, intel_iommu=strict, amd_iommu=fullflush
-+	  or s390_iommu=strict depending on the architecture.
-+
-+	  If unsure, say N here.
-+
- config OF_IOMMU
-        def_bool y
-        depends on OF && IOMMU_API
-diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index 33a982e33716369..e307d70d1578b3b 100644
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -43,7 +43,12 @@
- #else
- static unsigned int iommu_def_domain_type = IOMMU_DOMAIN_DMA;
- #endif
-+
-+#ifdef CONFIG_IOMMU_LAZY_MODE
-+static bool iommu_dma_strict __read_mostly;
-+#else
- static bool iommu_dma_strict __read_mostly = true;
-+#endif
-
- struct iommu_callback_data {
- 	const struct iommu_ops *ops;
---
-1.8.3
+diff --git a/drivers/mfd/stpmic1.c b/drivers/mfd/stpmic1.c
+index 7dfbe89..eb3da55 100644
+--- a/drivers/mfd/stpmic1.c
++++ b/drivers/mfd/stpmic1.c
+@@ -59,7 +59,7 @@ static const struct regmap_access_table stpmic1_volatile_table = {
+ 	.n_yes_ranges = ARRAY_SIZE(stpmic1_volatile_ranges),
+ };
+ 
+-const struct regmap_config stpmic1_regmap_config = {
++static const struct regmap_config stpmic1_regmap_config = {
+ 	.reg_bits = 8,
+ 	.val_bits = 8,
+ 	.cache_type = REGCACHE_RBTREE,
+-- 
+2.7.0
 
 
