@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE31BC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:25:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C2AEC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:25:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B099218A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:25:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38B622054F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:25:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553257514;
-	bh=ahwCBb5teDE71cdhGpq9QYVKMnKtPJmZ0wwOMj3NCjA=;
+	s=default; t=1553257532;
+	bh=AkUmdsYypfrl9pl0ckXpNqBp+sBQnbWNcPyjqqey/6c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wnIQmPEvZ59cb1cyaZX9ORPwmf4hyHGLJBVpgh8heG+gml1AL4zbjCg6660aoSUSz
-	 JSVSQbOa8d341HwhwMjwMQOQ1FDcd1LXtNfu4Jlklnapr6By07FhZ8qekC7gRLjdaj
-	 IWahX7yf/gno8JvIob4svukR4CY2ghLoCCTIEuZQ=
+	b=fL82i+LTlWVCZLf5bGwaWLHaj9zhInLQBvsgf7P2pRP3INKPPT7jTkGGpj6il1hob
+	 aOYw/C+Mhsy7aZnR/9cWPuFIK3CnxqGFvrF8HRmTiAkW4FYvfovR9/vxX8sa+hw7C9
+	 mppP52vDngvkZsD/90Vp0FhbOt6sD5rQaMj1C8TE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390917AbfCVMYX (ORCPT
+        id S2391202AbfCVMX5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:24:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36124 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:23:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403760AbfCVMYT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:24:19 -0400
+        id S2391182AbfCVMXx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:23:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52FC32054F;
-        Fri, 22 Mar 2019 12:24:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E7DAD218A1;
+        Fri, 22 Mar 2019 12:23:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553257458;
-        bh=ahwCBb5teDE71cdhGpq9QYVKMnKtPJmZ0wwOMj3NCjA=;
+        s=default; t=1553257432;
+        bh=AkUmdsYypfrl9pl0ckXpNqBp+sBQnbWNcPyjqqey/6c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GQ32Vx+pKsNsmYi5ZGwRnPkqmZZNzhy5RBg8OMuQ/9SD3JejrM1BMHiHur6S39Nyj
-         2u7ues6+4Eo+E07mFcfbv48q/rEauoF9vvBFNsuEBhDOYijXAMsYrP1wKfIVH6qLcF
-         GkaJ4o3ELtaKU7f50KZ5sgqKHqtTuFYRQYONqBPU=
+        b=ZEc9ShVw4wKCAUxPkZe1JuSvWcWufnx45ARhShTSvY8sC3nANMOqf+BTau8Ht4isj
+         T0ZIGPc/+itUh53RwERn1pG4M1ZYMT48xW/HMlNJSkxci3uunDZpSyW5MqW7GWMZYK
+         eCIdR/hBADE0Z4xX7ZE2jHi7Y5GrYHNZZ4HliKrE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.0 229/238] KVM: nVMX: Sign extend displacements of VMX instrs mem operands
-Date:   Fri, 22 Mar 2019 12:17:28 +0100
-Message-Id: <20190322111311.872258998@linuxfoundation.org>
+        stable@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+        Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH 5.0 197/238] stable-kernel-rules.rst: add link to networking patch queue
+Date:   Fri, 22 Mar 2019 12:16:56 +0100
+Message-Id: <20190322111309.818783621@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -66,68 +65,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-commit 946c522b603f281195af1df91837a1d4d1eb3bc9 upstream.
+commit a41e8f25fa8f8f67360d88eb0eebbabe95a64bdf upstream.
 
-The VMCS.EXIT_QUALIFCATION field reports the displacements of memory
-operands for various instructions, including VMX instructions, as a
-naturally sized unsigned value, but masks the value by the addr size,
-e.g. given a ModRM encoded as -0x28(%ebp), the -0x28 displacement is
-reported as 0xffffffd8 for a 32-bit address size.  Despite some weird
-wording regarding sign extension, the SDM explicitly states that bits
-beyond the instructions address size are undefined:
+The networking maintainer keeps a public list of the patches being
+queued up for the next round of stable releases.  Be sure to check there
+before asking for a patch to be applied so that you do not waste
+people's time.
 
-    In all cases, bits of this field beyond the instructionâ€™s address
-    size are undefined.
-
-Failure to sign extend the displacement results in KVM incorrectly
-treating a negative displacement as a large positive displacement when
-the address size of the VMX instruction is smaller than KVM's native
-size, e.g. a 32-bit address size on a 64-bit KVM.
-
-The very original decoding, added by commit 064aea774768 ("KVM: nVMX:
-Decoding memory operands of VMX instructions"), sort of modeled sign
-extension by truncating the final virtual/linear address for a 32-bit
-address size.  I.e. it messed up the effective address but made it work
-by adjusting the final address.
-
-When segmentation checks were added, the truncation logic was kept
-as-is and no sign extension logic was introduced.  In other words, it
-kept calculating the wrong effective address while mostly generating
-the correct virtual/linear address.  As the effective address is what's
-used in the segment limit checks, this results in KVM incorreclty
-injecting #GP/#SS faults due to non-existent segment violations when
-a nested VMM uses negative displacements with an address size smaller
-than KVM's native address size.
-
-Using the -0x28(%ebp) example, an EBP value of 0x1000 will result in
-KVM using 0x100000fd8 as the effective address when checking for a
-segment limit violation.  This causes a 100% failure rate when running
-a 32-bit KVM build as L1 on top of a 64-bit KVM L0.
-
-Fixes: f9eb4af67c9d ("KVM: nVMX: VMX instructions: add checks for #GP/#SS exceptions")
-Cc: stable@vger.kernel.org
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Acked-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Jonathan Corbet <corbet@lwn.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/vmx/nested.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ Documentation/process/stable-kernel-rules.rst |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -4035,6 +4035,10 @@ int get_vmx_mem_address(struct kvm_vcpu
- 	/* Addr = segment_base + offset */
- 	/* offset = base + [index * scale] + displacement */
- 	off = exit_qualification; /* holds the displacement */
-+	if (addr_size == 1)
-+		off = (gva_t)sign_extend64(off, 31);
-+	else if (addr_size == 0)
-+		off = (gva_t)sign_extend64(off, 15);
- 	if (base_is_valid)
- 		off += kvm_register_read(vcpu, base_reg);
- 	if (index_is_valid)
+--- a/Documentation/process/stable-kernel-rules.rst
++++ b/Documentation/process/stable-kernel-rules.rst
+@@ -38,6 +38,9 @@ Procedure for submitting patches to the
+  - If the patch covers files in net/ or drivers/net please follow netdev stable
+    submission guidelines as described in
+    :ref:`Documentation/networking/netdev-FAQ.rst <netdev-FAQ>`
++   after first checking the stable networking queue at
++   https://patchwork.ozlabs.org/bundle/davem/stable/?series=&submitter=&state=*&q=&archive=
++   to ensure the requested patch is not already queued up.
+  - Security patches should not be handled (solely) by the -stable review
+    process but should follow the procedures in
+    :ref:`Documentation/admin-guide/security-bugs.rst <securitybugs>`.
 
 
