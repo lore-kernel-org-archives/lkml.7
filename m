@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01559C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:12:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13D7DC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:12:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C547B2083D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:12:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5FD72082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:12:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256742;
-	bh=lFmiHzMxA9irccZlgSBqnfmYinVia1Agczz5mLITE+M=;
+	s=default; t=1553256747;
+	bh=2enijqRYHKKbSyfjpH7eBjAEmWDUrXzDgPoZ4nsG3lc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=og2yC92iX4NCEK/NORaljTUo1YPcS9N6V26s7Ae7x0sJ7QxJihsRBXFktSaOWnjkP
-	 Sv5A/zNd3IZ9wj5aVm8lY7Jqn4l0+FvXBEuyAZE4tuRBjDb5vRN7mxwtlybLFN9ybI
-	 +weze7BcBUy30YYh4shqq4oYmYM4i5OqVjtjTC4A=
+	b=pyr2lxbAxPb3UAr4FtUZStxBHOoZwgMvxJgk6fvhLqc4pF/Wvpzgq5bkUc198gf6D
+	 1OezG5sLzZLRhvSrSit6pSbA+oWzHkjddlivdjsQLgJttMl7HS91spQdZV2S0qvSJO
+	 FbrG67xkVy/rSs2rqLUy8X7ppNz+0Vy8ugVjJUq0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389619AbfCVMMV (ORCPT
+        id S2389624AbfCVMM0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:12:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50460 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:12:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389608AbfCVMMR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:12:17 -0400
+        id S2389481AbfCVMMU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:12:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E56C21929;
-        Fri, 22 Mar 2019 12:12:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D243221929;
+        Fri, 22 Mar 2019 12:12:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256736;
-        bh=lFmiHzMxA9irccZlgSBqnfmYinVia1Agczz5mLITE+M=;
+        s=default; t=1553256739;
+        bh=2enijqRYHKKbSyfjpH7eBjAEmWDUrXzDgPoZ4nsG3lc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yxlxMTKJLVWYdOp82m/ae0NTjoPqrm6dV9aZRV4wWHzTb5NaZ/O/Un6ECt8PlQV2I
-         fPgHUs/vu8yhTLGrhJGyeDlS8IsxA4TsS0pq+LT7qSefnVv0FKYdRy9TLKZcskLj3c
-         LJxFIszM2aXkn433WXq/L2nFnMZnnBPBmw2IM9PI=
+        b=euh7Elup3e4fY+/HpUMQeozk3G7LeVkY/ARX4E9YJ69Pj1Xrri3VzYxwT+Qap8Vkf
+         /fYtadDkgr1u6xH6+cobc1SkTfMzi/iSF49i4Hs0Luh/f+6A+6rc2CQpw2JuIMcghn
+         HLe5kY2ZuArZOTVkAOrNaqTaB7n0xQd1WHmn6NXk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
-        "Andrew F. Davis" <afd@ti.com>, Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.0 005/238] ASoC: codecs: pcm186x: Fix energysense SLEEP bit
-Date:   Fri, 22 Mar 2019 12:13:44 +0100
-Message-Id: <20190322111258.642516886@linuxfoundation.org>
+        stable@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 5.0 006/238] iio: adc: exynos-adc: Fix NULL pointer exception on unbind
+Date:   Fri, 22 Mar 2019 12:13:45 +0100
+Message-Id: <20190322111258.683826425@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -66,45 +65,48 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 
-commit 05bd7fcdd06b19a10f069af1bea3ad9abac038d7 upstream.
+commit 2ea8bab4dd2a9014e723b28091831fa850b82d83 upstream.
 
-The ADCs are sleeping when the SLEEP bit is set and running when it's
-cleared, so the bit should be inverted.
-Tested on pcm1863.
+Fix NULL pointer exception on device unbind when device tree does not
+contain "has-touchscreen" property.  In such case the input device is
+not registered so it should not be unregistered.
 
-Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Acked-by: Andrew F. Davis <afd@ti.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Cc: stable@vger.kernel.org
+    $ echo "12d10000.adc" > /sys/bus/platform/drivers/exynos-adc/unbind
+
+    Unable to handle kernel NULL pointer dereference at virtual address 00000474
+    ...
+    (input_unregister_device) from [<c0772060>] (exynos_adc_remove+0x20/0x80)
+    (exynos_adc_remove) from [<c0587d5c>] (platform_drv_remove+0x20/0x40)
+    (platform_drv_remove) from [<c05860f0>] (device_release_driver_internal+0xdc/0x1ac)
+    (device_release_driver_internal) from [<c0583ecc>] (unbind_store+0x60/0xd4)
+    (unbind_store) from [<c031b89c>] (kernfs_fop_write+0x100/0x1e0)
+    (kernfs_fop_write) from [<c029709c>] (__vfs_write+0x2c/0x17c)
+    (__vfs_write) from [<c0297374>] (vfs_write+0xa4/0x184)
+    (vfs_write) from [<c0297594>] (ksys_write+0x4c/0xac)
+    (ksys_write) from [<c0101000>] (ret_fast_syscall+0x0/0x28)
+
+Fixes: 2bb8ad9b44c5 ("iio: exynos-adc: add experimental touchscreen support")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/codecs/pcm186x.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/iio/adc/exynos_adc.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/soc/codecs/pcm186x.c
-+++ b/sound/soc/codecs/pcm186x.c
-@@ -158,7 +158,7 @@ static const struct snd_soc_dapm_widget
- 	 * Put the codec into SLEEP mode when not in use, allowing the
- 	 * Energysense mechanism to operate.
- 	 */
--	SND_SOC_DAPM_ADC("ADC", "HiFi Capture", PCM186X_POWER_CTRL, 1,  0),
-+	SND_SOC_DAPM_ADC("ADC", "HiFi Capture", PCM186X_POWER_CTRL, 1,  1),
- };
+--- a/drivers/iio/adc/exynos_adc.c
++++ b/drivers/iio/adc/exynos_adc.c
+@@ -929,7 +929,7 @@ static int exynos_adc_remove(struct plat
+ 	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
+ 	struct exynos_adc *info = iio_priv(indio_dev);
  
- static const struct snd_soc_dapm_widget pcm1865_dapm_widgets[] = {
-@@ -184,8 +184,8 @@ static const struct snd_soc_dapm_widget
- 	 * Put the codec into SLEEP mode when not in use, allowing the
- 	 * Energysense mechanism to operate.
- 	 */
--	SND_SOC_DAPM_ADC("ADC1", "HiFi Capture 1", PCM186X_POWER_CTRL, 1,  0),
--	SND_SOC_DAPM_ADC("ADC2", "HiFi Capture 2", PCM186X_POWER_CTRL, 1,  0),
-+	SND_SOC_DAPM_ADC("ADC1", "HiFi Capture 1", PCM186X_POWER_CTRL, 1,  1),
-+	SND_SOC_DAPM_ADC("ADC2", "HiFi Capture 2", PCM186X_POWER_CTRL, 1,  1),
- };
- 
- static const struct snd_soc_dapm_route pcm1863_dapm_routes[] = {
+-	if (IS_REACHABLE(CONFIG_INPUT)) {
++	if (IS_REACHABLE(CONFIG_INPUT) && info->input) {
+ 		free_irq(info->tsirq, info);
+ 		input_unregister_device(info->input);
+ 	}
 
 
