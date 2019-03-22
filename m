@@ -2,123 +2,142 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C63FC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:42:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1A46C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:43:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 074D32190A
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:42:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8515C21900
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 14:43:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729068AbfCVOmT (ORCPT
+        id S1729147AbfCVOnR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 10:42:19 -0400
-Received: from mga02.intel.com ([134.134.136.20]:30471 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727719AbfCVOmT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 10:42:19 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Mar 2019 07:42:18 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,256,1549958400"; 
-   d="scan'208";a="216591125"
-Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
-  by orsmga001.jf.intel.com with SMTP; 22 Mar 2019 07:42:11 -0700
-Received: by stinkbox (sSMTP sendmail emulation); Fri, 22 Mar 2019 16:42:10 +0200
-Date:   Fri, 22 Mar 2019 16:42:10 +0200
-From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To:     Nicolas Dufresne <nicolas@ndufresne.ca>
-Cc:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-media@vger.kernel.org, Daniel Stone <daniels@collabora.com>
-Subject: Re: [RFC PATCH 18/20] lib: image-formats: Add v4l2 formats support
-Message-ID: <20190322144210.GB3888@intel.com>
-References: <20190320142739.GK3888@intel.com>
- <a13f7fdeaf1a5e97f21a6048da765705b59d64c2.camel@ndufresne.ca>
- <20190320160939.GR3888@intel.com>
- <f3f8749e30aad81bc39ed9b60cd308ac5f3c6707.camel@ndufresne.ca>
- <20190320164133.GT3888@intel.com>
- <d46b30ca8962d3c31b1273cf010ca9fb7b145fe8.camel@ndufresne.ca>
- <20190320183914.GV3888@intel.com>
- <46df4fb13636b90c147839b0aa5ad1ac33030461.camel@bootlin.com>
- <20190321163532.GG3888@intel.com>
- <ac5329d77f83af2804c240ebe479ec323b60aec3.camel@ndufresne.ca>
+        Fri, 22 Mar 2019 10:43:17 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5733 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727719AbfCVOnR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 10:43:17 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id A877160326F883332D7C;
+        Fri, 22 Mar 2019 22:43:14 +0800 (CST)
+Received: from [127.0.0.1] (10.202.227.238) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.408.0; Fri, 22 Mar 2019
+ 22:43:03 +0800
+From:   John Garry <john.garry@huawei.com>
+Subject: Re: [PATCH 1/1] iommu: Add config option to set lazy mode as default
+To:     Zhen Lei <thunder.leizhen@huawei.com>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        "Will Deacon" <will.deacon@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu <iommu@lists.linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20190322141121.18428-1-thunder.leizhen@huawei.com>
+CC:     Hanjun Guo <guohanjun@huawei.com>
+Message-ID: <8cf20613-7a9a-d4a1-b52e-4b526f2c7ff2@huawei.com>
+Date:   Fri, 22 Mar 2019 14:42:57 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ac5329d77f83af2804c240ebe479ec323b60aec3.camel@ndufresne.ca>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190322141121.18428-1-thunder.leizhen@huawei.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.238]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 21, 2019 at 03:14:06PM -0400, Nicolas Dufresne wrote:
-> Le jeudi 21 mars 2019 à 18:35 +0200, Ville Syrjälä a écrit :
-> > > I'm not sure what it's worth, but there is a "pixel format guide"
-> > > project that is all about matching formats from one API to another: 
-> > > https://afrantzis.com/pixel-format-guide/ (and it has an associated
-> > > tool too).
-> > > 
-> > > On the page about DRM, it seems that they got the word that DRM formats
-> > > are the native pixel order in little-endian systems:
-> > > https://afrantzis.com/pixel-format-guide/drm.html
-> > 
-> > Looks consistent with the official word in drm_fourcc.h.
-> > 
-> > $ python3 -m pfg find-compatible V4L2_PIX_FMT_XBGR32 drm
-> > Format: V4L2_PIX_FMT_XBGR32
-> > Is compatible on all systems with:
-> >         DRM_FORMAT_XRGB8888
-> > Is compatible on little-endian systems with:
-> > Is compatible on big-endian systems with:
-> > 
-> > $ python3 -m pfg find-compatible DRM_FORMAT_XRGB8888 v4l2
-> > Format: DRM_FORMAT_XRGB8888
-> > Is compatible on all systems with:
-> >         V4L2_PIX_FMT_XBGR32
-> > Is compatible on little-endian systems with:
-> > Is compatible on big-endian systems with:
-> > 
-> > Even works both ways :)
-> > 
-> > > Perhaps some drivers have been abusing the format definitions, leading
-> > > to the inconsistencies that Nicolas could witness?
-> > 
-> > That is quite possible, perhaps even likely. No one really
-> > seems interested in making sure big endian systems actually
-> > work properly. I believe the usual approach is to hack
-> > around semi-rnadomly until the correct colors accidentally
-> > appear on the screen.
-> 
-> We did not hack around randomly.
+On 22/03/2019 14:11, Zhen Lei wrote:
 
-BTW I didn't mean to imply it was you who hacked around randomly.
-Sorry if you got that impression.
+> This allows the default behaviour to be controlled by a kernel config
+> option instead of changing the command line for the kernel to include
+> "iommu.strict=0" on ARM64 where this is desired.
+>
+> This is similar to CONFIG_IOMMU_DEFAULT_PASSTHROUGH
+>
+> Note: At present, intel_iommu, amd_iommu and s390_iommu use lazy mode as
+> defalut, so there is no need to add code for them.
 
-What I was trying to convey is the following sequence of events:
-1. random person X gets their hand on a big endian machine for
-   a while
-2. colors are wrong
-3. they hack stuff until the colors are correct in their
-   current use case
-4. they move on to more interesting things
+/s/defalut/default/
 
--- 
-Ville Syrjälä
-Intel
+>
+> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+> ---
+>  drivers/iommu/Kconfig | 14 ++++++++++++++
+>  drivers/iommu/iommu.c |  5 +++++
+
+Do we need to update kernel-parameters.txt for iommu.strict?
+
+>  2 files changed, 19 insertions(+)
+>
+> diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
+> index 6f07f3b21816c64..5ec9780f564eaf8 100644
+> --- a/drivers/iommu/Kconfig
+> +++ b/drivers/iommu/Kconfig
+> @@ -85,6 +85,20 @@ config IOMMU_DEFAULT_PASSTHROUGH
+>
+>  	  If unsure, say N here.
+>
+> +config IOMMU_LAZY_MODE
+
+maybe should add "DMA" to the name, and even "DEFAULT"
+
+> +	bool "IOMMU use lazy mode to flush IOTLB and free IOVA"
+> +	depends on IOMMU_API
+> +	help
+> +	  For every IOMMU unmap operation, the flush operation of IOTLB and the free
+> +	  operation of IOVA are deferred.
+
+This is a bit unclear, as there is no context. I think that you need to 
+say something like, "Support lazy mode, where for every IOMMU DMA unmap 
+operation, the flush operation of IOTLB and the free operation of IOVA 
+are deferred. "
+
+
+They are only guaranteed to be done before
+> +	  the related IOVA will be reused. Removing the need to pass in iommu.strict=0
+> +	  through command line on ARM64(Now, intel_iommu, amd_iommu, s390_iommu use
+> +	  lazy mode as deault).
+
+prone to going out-of-date
+
+  If this is enabled, you can still disable with kernel
+> +	  parameters, such as iommu.strict=1, intel_iommu=strict, amd_iommu=fullflush
+> +	  or s390_iommu=strict depending on the architecture.
+> +
+> +	  If unsure, say N here.
+> +
+>  config OF_IOMMU
+>         def_bool y
+>         depends on OF && IOMMU_API
+> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+> index 33a982e33716369..e307d70d1578b3b 100644
+> --- a/drivers/iommu/iommu.c
+> +++ b/drivers/iommu/iommu.c
+> @@ -43,7 +43,12 @@
+>  #else
+>  static unsigned int iommu_def_domain_type = IOMMU_DOMAIN_DMA;
+>  #endif
+> +
+> +#ifdef CONFIG_IOMMU_LAZY_MODE
+> +static bool iommu_dma_strict __read_mostly;
+> +#else
+>  static bool iommu_dma_strict __read_mostly = true;
+> +#endif
+>
+>  struct iommu_callback_data {
+>  	const struct iommu_ops *ops;
+> --
+> 1.8.3
+>
+>
+>
+
+Cheers
+
+
+
