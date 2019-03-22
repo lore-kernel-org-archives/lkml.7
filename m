@@ -2,106 +2,147 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93C17C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:47:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 073A4C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:47:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BEE32183E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:47:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC1EE2183E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:47:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xy1ZClP4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727899AbfCVPrG (ORCPT
+        id S1727952AbfCVPrO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 11:47:06 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:36445 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727244AbfCVPrE (ORCPT
+        Fri, 22 Mar 2019 11:47:14 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:46510 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727244AbfCVPrN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 11:47:04 -0400
-Received: from wuerfel.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1N2E5Q-1h0ShS0wrm-013iJA; Fri, 22 Mar 2019 16:46:48 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     stable@vger.kernel.org, Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Roger Quadros <rogerq@ti.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Thinh Nguyen <thinh.nguyen@synopsys.com>,
-        Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [BACKPORT 4.4.y 09/25] usb: dwc3: gadget: Fix suspend/resume during device mode
-Date:   Fri, 22 Mar 2019 16:44:00 +0100
-Message-Id: <20190322154425.3852517-10-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20190322154425.3852517-1-arnd@arndb.de>
-References: <20190322154425.3852517-1-arnd@arndb.de>
+        Fri, 22 Mar 2019 11:47:13 -0400
+Received: by mail-oi1-f196.google.com with SMTP id x188so2022678oia.13;
+        Fri, 22 Mar 2019 08:47:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Yw6foJsGwWELoKTF1wCnhUr8FwBtYg2gy4HXb/JJ/6g=;
+        b=Xy1ZClP4cZ2LWIjWXgolJNUmDJlIL9pDmDwdkp8a1H1g4nrxE56mDUbHD2+TibYyOi
+         xWXVzqRy7zMVsHIe/bdI7ojCwYoJv8yevuGwgal5g3YSJUaXn+IXQNl/X0O5MocAFeFJ
+         MlCxf+0bd2MVjLhgJLVogm2U44IxUfNJZL6rOjydjBKDXHrbSQ5zV0PDlLL2K3IMaCeA
+         wdfkTsbRQWMzGCDGNmtoAal8c35c9gjoR0ZPsqDJYv6IIrLhEIXxosCC6bWoqW4VSgKm
+         cFxA21J495rLUwkpPx7YapSoc0Amnb+yBeZ/VfCBoHpMl8lhKJDXGD4iSE5iGgnvZsxk
+         e6Ew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Yw6foJsGwWELoKTF1wCnhUr8FwBtYg2gy4HXb/JJ/6g=;
+        b=ZRkfD/7FCYDm9IubmDlJoIEjSPaLf/APguMeV/j3llR3ZSEzmrQ8pLI5paNFbfT56m
+         8IxTm+5QH8lFuYoPuELDXZxMqgBgKYjntb/1K5L5FvxoR/Jfsiyhcfiag6yfsL64Q+h8
+         jiZi5f/Xx3dAWmbVBDsqdBO6+PPv98K3uzh4blpvS/R54iOvLQGd5xst4Omo1BjtpF4u
+         fWq7fPHPmzoqusYGzD6vvBOBfkTBVcnXRr7B88IaT6Oeph3V1KvYDs9rXzgx1HhDvpaG
+         9480XO6zRdCT6rOhlXQiRUTRJeXJPImQFa9yUhaD+crCAYUcADW37TNFGUCkllRBVg30
+         SDJA==
+X-Gm-Message-State: APjAAAXw1lcSffLo691CG1HWPjL0lUZrF0aYxEpjVskDJWWkUkZj/ZCC
+        EwTwHZoaMz7UXezFC8CwJqfmzDQ/
+X-Google-Smtp-Source: APXvYqyZSpPqajZbDwjkRpYELZz+3VkPHlaC5JG6XY+HYrSMXKdEBiJ6VQtsvpSh+Tp8vuKtKKkzfA==
+X-Received: by 2002:aca:c782:: with SMTP id x124mr2357328oif.61.1553269631998;
+        Fri, 22 Mar 2019 08:47:11 -0700 (PDT)
+Received: from [192.168.1.112] (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
+        by smtp.gmail.com with ESMTPSA id p187sm3144838oif.17.2019.03.22.08.47.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 22 Mar 2019 08:47:11 -0700 (PDT)
+Subject: Re: [PATCH] b43: shut up clang -Wuninitialized variable warning
+To:     Arnd Bergmann <arnd@arndb.de>, Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Priit Laes <plaes@plaes.org>
+Cc:     clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        linux-wireless@vger.kernel.org, b43-dev@lists.infradead.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190322143725.1332353-1-arnd@arndb.de>
+From:   Larry Finger <Larry.Finger@lwfinger.net>
+Message-ID: <758d6087-bd8c-a60f-919a-40c170f7b23c@lwfinger.net>
+Date:   Fri, 22 Mar 2019 10:47:10 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:Wa0NxvaJKz9beWWyK1EmT1GXc1pQUSQRbNYzwZGpDAvrUmOYVYT
- q3CqinTh9aDABHa0qxK1R/HCGB1KbBMcCZ4Fe1UqQp5zRwBy19SpIOItH5dEX2pbxKvSgFF
- 2bis02UUdwIjepEi2xBbwSpJ2hFx4+nLB5QVIycTDOHVWwD2Kh6XJ9KNymAD3uVFz0ZGpZ2
- Ce7OEFixLoPZbyvrHwDIA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:CS48oms4k5w=:vp39lAbh7N7UOKpIVgtHb2
- 5g3ykR086ja1JLlNtCrAgvl2QwLdKiCbRBfYNF21ciOKlMv17WPa/537erZMitBhSNwPXm99A
- 2gTX0rvmrp/+4haUYR7bUKtb6c0Uo70r28JLpE4DHPmV64B/o7b1E/6WV5raNX+Pi4vq7pFHJ
- 2ueU8xm7rlF4d4Wyw/BzvJEuoAh3jzFCEUHRcJ4YJTGaGNFFqUMtwfOVDFvFU6lezU4drF54V
- Xnljq9Cz4tk2xij/jD+c+J5K8Ie3CrVilqDi4RL1DWWg0gUSpmvSkLTPZhr+sraqXTkEwAcKi
- hfoYCuQAsBA+lWOit8/PvhWaNiFgE5LBVMa/zvUmc5zBakF+JBnzTljv4B3WRpiGOJt9QacLk
- bt00+6NwA7CqNo/mRJiL4ST4bx1PdxmcwSzHhWmheyqkA8zwOJlh+NiWZyhPKFcvmfJ27F4JT
- vcyWAh86VImTYLsdCt/l7sqRIqryRFcic6vmAEYX/4g/iPtx8IexKcdLC2yNLUlTdE9gL4mXd
- OYvIjDi2wZYhMXFGgc63x4qofteLKsVRCwe8K6EvHCxCfuGrkkc4AqfN6XDBWMDFQaH3cdKzr
- gyn+hwdDyFlcKsQBNyvEi4vMZMmFVLlLGHQX2HP1A3vpC+FaMz+mKIhcccq2oUnRuLSIN1aHR
- TE3uxZc/aobrU7F67dA3cElJF1c8fyZbTf1LUHmdli6Up4I65GBtpbWHKO7fDozQBN0O2qpOF
- 7CvpTRWDpELhDEzviXhKRn7v5bnqcPqhnVYrNg==
+In-Reply-To: <20190322143725.1332353-1-arnd@arndb.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roger Quadros <rogerq@ti.com>
+On 3/22/19 9:37 AM, Arnd Bergmann wrote:
+> Clang warns about what is clearly a case of passing an uninitalized
+> variable into a static function:
+> 
+> drivers/net/wireless/broadcom/b43/phy_lp.c:1852:23: error: variable 'gains' is uninitialized when used here
+>        [-Werror,-Wuninitialized]
+>                  lpphy_papd_cal(dev, gains, 0, 1, 30);
+>                                      ^~~~~
+> drivers/net/wireless/broadcom/b43/phy_lp.c:1838:2: note: variable 'gains' is declared here
+>          struct lpphy_tx_gains gains, oldgains;
+>          ^
+> 1 error generated.
+> 
+> However, this function is empty, and its arguments are never evaluated,
+> so gcc in contrast does not warn here. Both compilers behave in a
+> reasonable way as far as I can tell, so we should change the code
+> to avoid the warning everywhere.
+> 
+> We could just eliminate the lpphy_papd_cal() function entirely,
+> given that it has had the TODO comment in it for 10 years now
+> and is rather unlikely to ever get done. I'm doing a simpler
+> change here, and just pass the 'oldgains' variable in that has
+> been initialized, based on the guess that this is what was
+> originally meant.
+> 
+> Fixes: 2c0d6100da3e ("b43: LP-PHY: Begin implementing calibration & software RFKILL support")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>   drivers/net/wireless/broadcom/b43/phy_lp.c | 6 +++---
+>   1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/net/wireless/broadcom/b43/phy_lp.c b/drivers/net/wireless/broadcom/b43/phy_lp.c
+> index 46408a560814..aedee026c5e2 100644
+> --- a/drivers/net/wireless/broadcom/b43/phy_lp.c
+> +++ b/drivers/net/wireless/broadcom/b43/phy_lp.c
+> @@ -1835,7 +1835,7 @@ static void lpphy_papd_cal(struct b43_wldev *dev, struct lpphy_tx_gains gains,
+>   static void lpphy_papd_cal_txpwr(struct b43_wldev *dev)
+>   {
+>   	struct b43_phy_lp *lpphy = dev->phy.lp;
+> -	struct lpphy_tx_gains gains, oldgains;
+> +	struct lpphy_tx_gains oldgains;
+>   	int old_txpctl, old_afe_ovr, old_rf, old_bbmult;
+>   
+>   	lpphy_read_tx_pctl_mode_from_hardware(dev);
+> @@ -1849,9 +1849,9 @@ static void lpphy_papd_cal_txpwr(struct b43_wldev *dev)
+>   	lpphy_set_tx_power_control(dev, B43_LPPHY_TXPCTL_OFF);
+>   
+>   	if (dev->dev->chip_id == 0x4325 && dev->dev->chip_rev == 0)
+> -		lpphy_papd_cal(dev, gains, 0, 1, 30);
+> +		lpphy_papd_cal(dev, oldgains, 0, 1, 30);
+>   	else
+> -		lpphy_papd_cal(dev, gains, 0, 1, 65);
+> +		lpphy_papd_cal(dev, oldgains, 0, 1, 65);
+>   
+>   	if (old_afe_ovr)
+>   		lpphy_set_tx_gains(dev, oldgains);
+> 
 
-Gadget controller might not be always active during system
-suspend/resume as gadget driver might not have yet been loaded or
-might have been unloaded prior to system suspend.
+Acked-by: Larry Finger <Larry.Finger@lwfinger.net>
 
-Check if we're active and only then perform
-necessary actions during suspend/resume.
+Thanks. I will submit a patch that removes lpphy_papd_cal(). You are correct 
+that it is unlikely ever to be implemented.
 
-Signed-off-by: Roger Quadros <rogerq@ti.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
-(cherry picked from commit 9772b47a4c2916d645c551228b6085ea24acbe5d)
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/usb/dwc3/gadget.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
-index b6037a0ae829..58e67c228971 100644
---- a/drivers/usb/dwc3/gadget.c
-+++ b/drivers/usb/dwc3/gadget.c
-@@ -2893,6 +2893,9 @@ void dwc3_gadget_exit(struct dwc3 *dwc)
- 
- int dwc3_gadget_suspend(struct dwc3 *dwc)
- {
-+	if (!dwc->gadget_driver)
-+		return 0;
-+
- 	if (dwc->pullups_connected) {
- 		dwc3_gadget_disable_irq(dwc);
- 		dwc3_gadget_run_stop(dwc, true, true);
-@@ -2911,6 +2914,9 @@ int dwc3_gadget_resume(struct dwc3 *dwc)
- 	struct dwc3_ep		*dep;
- 	int			ret;
- 
-+	if (!dwc->gadget_driver)
-+		return 0;
-+
- 	/* Start with SuperSpeed Default */
- 	dwc3_gadget_ep0_desc.wMaxPacketSize = cpu_to_le16(512);
- 
--- 
-2.20.0
+Larry
 
