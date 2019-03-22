@@ -2,54 +2,51 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 934C5C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:11:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85126C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:11:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53EED2183E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:11:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 484732183E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:11:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553260284;
-	bh=dTSZHDnq5fNvQsiQ6b5jX9abW04YFo9sioKHxq30GpM=;
+	s=default; t=1553260296;
+	bh=UWGX2Q5l0E/YCTEfZIY+E8MF7w1257p09VPp0YHkYaM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hcsq09UtVnefwKCNSxG1IzwUxX0GyLvUvflDyFDKksMjBDkd9JC0FhEgY8roGfMeW
-	 SGRnwtnqwfq1VQ22lh7oorgxvGuImEI1xmI04xGu7mkKWeb4L/h2w8IaaZMbirtNqW
-	 +Y3ap7T/j6ypQ3n4aK9JC3SHWGzN8IplHWOFc3VE=
+	b=etXHLQELTwpGmSvhgXUyx1R1q3+gPWgBLx3ln7SthkvJk0whnG1j11r7lh6FgwMgB
+	 VZhKkC97HZXk4NMlzcmoQWBOxSuw62AIz5oiirKxprA7MA8zonfp4xObu4sTVAUHTT
+	 CQBJrOcyzlRX745tk8n71TYB11gjTrJACCzaVr6A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730517AbfCVNLX (ORCPT
+        id S1730467AbfCVNLe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 09:11:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33370 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 09:11:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728873AbfCVLdA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:33:00 -0400
+        id S1729833AbfCVLcp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:32:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F1A521917;
-        Fri, 22 Mar 2019 11:32:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6750621925;
+        Fri, 22 Mar 2019 11:32:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254380;
-        bh=dTSZHDnq5fNvQsiQ6b5jX9abW04YFo9sioKHxq30GpM=;
+        s=default; t=1553254364;
+        bh=UWGX2Q5l0E/YCTEfZIY+E8MF7w1257p09VPp0YHkYaM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=estZnnJQErs0HoLT/Ft/u5pcJPqVrFwHn4SeUvcO0j26LiLuJYos+CULH2AS+V8iD
-         kDnMeuk0zQp4Cc1VmQ5h7p4tRy3vFZXwIl7GNOxL1dXXWLyHZpHW4K0QRFz+tCOVH/
-         HMgWOD3huyeKmJicseNX1ftkczofWmPHqxkJsXic=
+        b=OgSpJ+HdUfWnBdGc7FM8lCpGeE1pMKdtX6ETzTwpzmffe/AxAiA7df9aUnW1kc4Xq
+         AoqkAfl10FNHqquJ4yPcHB4fXAVipLcCg7UOlKlBdBgHlUrUEFW6f3Qf+wIeZ35Rqh
+         M0dD9+Joma1XPXVuFCtNRga2JmVFslXgNb4EU3WU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pan Bian <bianpan2016@163.com>,
-        Ian Kent <raven@themaw.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 103/230] autofs: drop dentry reference only when it is never used
-Date:   Fri, 22 Mar 2019 12:14:01 +0100
-Message-Id: <20190322111243.818296802@linuxfoundation.org>
+        stable@vger.kernel.org, Vincent Batts <vbatts@hashbangbash.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 4.4 113/230] Input: elan_i2c - add id for touchpad found in Lenovo s21e-20
+Date:   Fri, 22 Mar 2019 12:14:11 +0100
+Message-Id: <20190322111244.570415697@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -68,46 +65,30 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 63ce5f552beb9bdb41546b3a26c4374758b21815 ]
+From: Vincent Batts <vbatts@hashbangbash.com>
 
-autofs_expire_run() calls dput(dentry) to drop the reference count of
-dentry.  However, dentry is read via autofs_dentry_ino(dentry) after
-that.  This may result in a use-free-bug.  The patch drops the reference
-count of dentry only when it is never used.
+commit e154ab69321ce2c54f19863d75c77b4e2dc9d365 upstream.
 
-Link: http://lkml.kernel.org/r/154725122396.11260.16053424107144453867.stgit@pluto-themaw-net
-Signed-off-by: Pan Bian <bianpan2016@163.com>
-Signed-off-by: Ian Kent <raven@themaw.net>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Lenovo s21e-20 uses ELAN0601 in its ACPI tables for the Elan touchpad.
+
+Signed-off-by: Vincent Batts <vbatts@hashbangbash.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/autofs4/expire.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/input/mouse/elan_i2c_core.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/autofs4/expire.c b/fs/autofs4/expire.c
-index 7a5a598a2d94..0d8b9c4f27f2 100644
---- a/fs/autofs4/expire.c
-+++ b/fs/autofs4/expire.c
-@@ -560,7 +560,6 @@ int autofs4_expire_run(struct super_block *sb,
- 	pkt.len = dentry->d_name.len;
- 	memcpy(pkt.name, dentry->d_name.name, pkt.len);
- 	pkt.name[pkt.len] = '\0';
--	dput(dentry);
- 
- 	if ( copy_to_user(pkt_p, &pkt, sizeof(struct autofs_packet_expire)) )
- 		ret = -EFAULT;
-@@ -573,6 +572,8 @@ int autofs4_expire_run(struct super_block *sb,
- 	complete_all(&ino->expire_complete);
- 	spin_unlock(&sbi->fs_lock);
- 
-+	dput(dentry);
-+
- 	return ret;
- }
- 
--- 
-2.19.1
-
+--- a/drivers/input/mouse/elan_i2c_core.c
++++ b/drivers/input/mouse/elan_i2c_core.c
+@@ -1241,6 +1241,7 @@ static const struct acpi_device_id elan_
+ 	{ "ELAN0000", 0 },
+ 	{ "ELAN0100", 0 },
+ 	{ "ELAN0600", 0 },
++	{ "ELAN0601", 0 },
+ 	{ "ELAN0602", 0 },
+ 	{ "ELAN0605", 0 },
+ 	{ "ELAN0608", 0 },
 
 
