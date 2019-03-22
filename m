@@ -2,148 +2,139 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C461C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 07:53:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ADB5C10F03
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 07:56:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43D8621917
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 07:53:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A454218FE
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 07:56:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ifmqZX1t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727558AbfCVHxK (ORCPT
+        id S1727427AbfCVH4w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 03:53:10 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:51668 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725981AbfCVHxJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 03:53:09 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 49B08308622C;
-        Fri, 22 Mar 2019 07:53:09 +0000 (UTC)
-Received: from localhost (ovpn-12-81.pek2.redhat.com [10.72.12.81])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 01D216012C;
-        Fri, 22 Mar 2019 07:53:02 +0000 (UTC)
-Date:   Fri, 22 Mar 2019 15:52:59 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Pingfan Liu <kernelfans@gmail.com>
-Cc:     x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Nicolas Pitre <nico@linaro.org>,
-        Chao Fan <fanc.fnst@cn.fujitsu.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCHv2] x86/boot/KASLR: skip the specified crashkernel
- reserved region
-Message-ID: <20190322075259.GA18740@MiWiFi-R3L-srv>
-References: <1552450771-8360-1-git-send-email-kernelfans@gmail.com>
- <20190320002524.GD18740@MiWiFi-R3L-srv>
- <CAFgQCTt3-9oZ6yi_MGYFOZhn5+cSdJLGf3OQRMJ1CJr0eXiE5w@mail.gmail.com>
+        Fri, 22 Mar 2019 03:56:52 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:46924 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725981AbfCVH4w (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 03:56:52 -0400
+Received: by mail-io1-f66.google.com with SMTP id b9so961706iot.13
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 00:56:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Kl1B+Ivc3PKE8hoZ+rXxR+ntuCueGNULslvt7Pmb2oI=;
+        b=ifmqZX1tPPiMNpFENczDCPjKuTYRRkca3MZnukeCdbmUMCdE6LvqM4ym9J3njeoqGu
+         7yxFPVfgu12Ik4ivsZ+lWJq7exygXLTBPijnHWugRQxLi+YjC9Z7vOODCUNNAOHnmZzv
+         0iVWqM1W4yZo4QHrhyvYIutLWGGabwIJFa9/tMbNEiSHdpknl9G6J9WcXKhOcY4aKUvN
+         Hc9OWVcCBVQDurmO++Qal0qA3tz0lRs2AUn3Wm+IMElEAzUcD0lBC93GeEz/+8cnPLTG
+         N6I8fvzMzrPCDWeYlvxVr3SdT1jT3tdgtAjvNvAktilipyyPqZT1RfVQ8tP0U3Y8MkUR
+         cktQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Kl1B+Ivc3PKE8hoZ+rXxR+ntuCueGNULslvt7Pmb2oI=;
+        b=eJbJFl7/wRnz5cptqlTeS9YtNAW2bIh5YjL959BBPTgppoEZdh2wL+XR6N/KAdRSmB
+         RTnU3/AIAimFjJdLY0cXhbgSopZ3oHx476e1aVi2JGoq8bCkQAotVEKzNIhLC2u3ntNc
+         oha55H1GoqsoR+ZinqtlT9YsdY8Io7FOWXXMOqNz1DV33z9v6qaFhIedVEGf/Z3iAqVK
+         /SJA8KI/yShIlPkdKZoQ4qRQa4fqw9Ycqg+MAJlZC+6khY+q7/FeeYJpiPltF/3le4a/
+         ZYLtpyszWu9G+rY6P9aAHnv0kRVoHKHDfnHW9/ZIZLUQ13WHAgLjXd6VRqgDU961aS39
+         9w5g==
+X-Gm-Message-State: APjAAAUIf/nX751zBNeqRChauBMnYeVHe4xF7seZO3it+yHc8aOJbZuq
+        YX5/iRzB1ZIW++7p2KTEe1Xo0RT2uiu+nDoLNJziWg==
+X-Google-Smtp-Source: APXvYqwUme5xtdHv4AlR+suujBzCOLgYFRnxpvKNt4H0I10djQYsbBd1LrB4SPuHe+Dw6ZaDFDEmalMGQFVYAoziV2w=
+X-Received: by 2002:a5e:9b17:: with SMTP id j23mr6291159iok.60.1553241411186;
+ Fri, 22 Mar 2019 00:56:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFgQCTt3-9oZ6yi_MGYFOZhn5+cSdJLGf3OQRMJ1CJr0eXiE5w@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Fri, 22 Mar 2019 07:53:09 +0000 (UTC)
+References: <20190322062740.nrwfx2rvmt7lzotj@gondor.apana.org.au>
+In-Reply-To: <20190322062740.nrwfx2rvmt7lzotj@gondor.apana.org.au>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Fri, 22 Mar 2019 08:56:39 +0100
+Message-ID: <CAKv+Gu_mgyzqUCeb+wke--8Gn8YbjOb8jyrSgFr3-tcNP8ccEQ@mail.gmail.com>
+Subject: Re: [PATCH 0/17] Add zinc using existing algorithm implementations
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        linux-fscrypt@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Paul Crowley <paulcrowley@google.com>,
+        Greg Kaiser <gkaiser@google.com>,
+        Samuel Neves <samuel.c.p.neves@gmail.com>,
+        Tomer Ashur <tomer.ashur@esat.kuleuven.be>,
+        Martin Willi <martin@strongswan.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/22/19 at 03:43pm, Pingfan Liu wrote:
-> > > +/* parse crashkernel=x@y option */
-> > > +static void mem_avoid_crashkernel_simple(char *option)
-> >
-> > Chao ever mentioned this, I want to ask again, why does it has to be
-> > xxx_simple()?
-> >
-> Seems that I had replied Chao's question in another email. The naming
-> follows the function parse_crashkernel_simple(), as the notes above
-                       ~~~~~~~~~~~~~~~~~~~~~~~~
+On Fri, 22 Mar 2019 at 07:28, Herbert Xu <herbert@gondor.apana.org.au> wrote:
+>
+> Hi:
+>
+> In the interest of moving forward with wireguard, this patch
+> series adds the zinc interface as submitted in
+>
+> https://patchwork.kernel.org/project/linux-crypto/list/?series=32507&state=*
+>
+> with the change that existing implementations of chacha20 and
+> poly1305 are used instead of the new ones.  The use of the existing
+> chacha20/poly1305 implementations does not involve any use of the
+> crypto API or indirect function calls.  Only direct function calls
+> are made into the underlying implementation.
+>
+> This should allow the wireguard code itself to proceed.  At the
+> same time we can also move forward with replacing the existing
+> implementations of chacha20 and/or poly1305 where appropriate.
+>
 
-Sorry, I don't get.  typo?
+Hi Herbert,
 
-> the definition
-> /*
->  * That function parses "simple" (old) crashkernel command lines like
->  *
->  * crashkernel=size[@offset]
+Let me reiterate some of my concerns with Zinc, which aren't really
+addressed by your patches afaict.
 
-Hmm, should only crashkernel=size@offset be cared? crashkernel=size will
-auto finding a place to reserve, and that is after KASLR.
+- The way WireGuard uses crypto in the kernel is essentially a
+layering violation - while we already have an asynchronous API that
+implements ChaCha20Poly1305 in a way that WireGuard /could/ benefit
+from, and while we even have support already for async accelerators
+that implement it, the reluctance of Jason to work with the community
+to fix the issues that he identified in the crypto API means that
+WireGuard will not be able to use these, and is restricted to
+synchronous software implementations. Saying accelerators will not
+matter is a bit like saying there are no American soldiers in Iraq.
+(Note that adding async interfaces to Zinc is not the right way to
+deal with this IMO)
+- I think it is fine to have a 'blessed' set of software crypto in the
+kernel that we standardize on for internal use cases but WireGuard is
+not one of them. Having two separate s/w crypto stacks is a problem,
+and I don't think it helps to have a cute name either.
+- I don't think Zinc changes should go through Greg's tree and have
+separate maintainers - in fact, I am a bit concerned about the fact
+that, after the last Zinc/WG submission in October, Jason has not
+really interacted with the linux-crypto community at all, while at lot
+of work was being done (especially by Eric) to address issues that he
+helped identify. So letting Jason (and Samuel, who has not chimed in
+at all, IIRC) maintain something that is relevant to crypto in the
+kernel, but without a community and without involvement of the
+linux-crypto maintainer is not acceptable to me. (In general, people
+tend to join a community before being volunteered to maintain its
+codebase)
 
->  *
->  * It returns 0 on success and -EINVAL on failure.
->  */
-> static int __init parse_crashkernel_simple(char *cmdline,
-> 
-> Do you have alternative suggestion?
-> 
-> > Except of these, patch looks good to me. It's a nice catch, and only
-> > need a simple fix based on the current code.
-> >
-> Thank you for the kindly review.
-> 
-> Regards,
-> Pingfan
-> 
-> > Thanks
-> > Baoquan
-> >
-> > > +{
-> > > +     unsigned long long crash_size, crash_base;
-> > > +     char *cur = option;
-> > > +
-> > > +     crash_size = memparse(option, &cur);
-> > > +     if (option == cur)
-> > > +             return;
-> > > +
-> > > +     if (*cur == '@') {
-> > > +             option = cur + 1;
-> > > +             crash_base = memparse(option, &cur);
-> > > +             if (option == cur)
-> > > +                     return;
-> > > +             mem_avoid[MEM_AVOID_CRASHKERNEL].start = crash_base;
-> > > +             mem_avoid[MEM_AVOID_CRASHKERNEL].size = crash_size;
-> > > +     }
-> > > +}
-> > >
-> > >  static void handle_mem_options(void)
-> > >  {
-> > > @@ -250,7 +270,7 @@ static void handle_mem_options(void)
-> > >       u64 mem_size;
-> > >
-> > >       if (!strstr(args, "memmap=") && !strstr(args, "mem=") &&
-> > > -             !strstr(args, "hugepages"))
-> > > +             !strstr(args, "hugepages") && !strstr(args, "crashkernel="))
-> > >               return;
-> > >
-> > >       tmp_cmdline = malloc(len + 1);
-> > > @@ -286,6 +306,8 @@ static void handle_mem_options(void)
-> > >                               goto out;
-> > >
-> > >                       mem_limit = mem_size;
-> > > +             } else if (strstr(param, "crashkernel")) {
-> > > +                     mem_avoid_crashkernel_simple(val);
-> > >               }
-> > >       }
-> > >
-> > > @@ -414,7 +436,7 @@ static void mem_avoid_init(unsigned long input, unsigned long input_size,
-> > >
-> > >       /* We don't need to set a mapping for setup_data. */
-> > >
-> > > -     /* Mark the memmap regions we need to avoid */
-> > > +     /* Mark the regions we need to avoid */
-> > >       handle_mem_options();
-> > >
-> > >  #ifdef CONFIG_X86_VERBOSE_BOOTUP
-> > > --
-> > > 2.7.4
-> > >
+I am among the people who really want to see WireGuard merged. But the
+whole Zinc thing is an unnecessary distraction from getting the
+existing crypto API fixed in places where it fails to support
+WireGuard's use case, and that is a loss for WireGuard users as well
+as the linux-crypto community.
+
+-- 
+Ard.
