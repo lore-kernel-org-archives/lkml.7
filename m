@@ -3,92 +3,119 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6384CC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:46:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F3BC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:46:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FA1D218FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:46:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7151E2183E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:46:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727723AbfCVPqi (ORCPT
+        id S1727764AbfCVPql (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 11:46:38 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:39051 "EHLO
+        Fri, 22 Mar 2019 11:46:41 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:45691 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727251AbfCVPqe (ORCPT
+        with ESMTP id S1727251AbfCVPqk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 11:46:34 -0400
+        Fri, 22 Mar 2019 11:46:40 -0400
 Received: from wuerfel.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1M1Hi8-1hA7Fs3q1K-002mWu; Fri, 22 Mar 2019 16:46:07 +0100
+ 1MnpwC-1gfVXC0zBS-00pKgq; Fri, 22 Mar 2019 16:45:08 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     stable@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>,
-        hongjiefang <hongjiefang@asrmicro.com>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Jennifer Dahm <jennifer.dahm@ni.com>,
-        Yinbo Zhu <yinbo.zhu@nxp.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Kyle Roeschley <kyle.roeschley@ni.com>
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [BACKPORT 4.4.y 06/25] mmc: make MAN_BKOPS_EN message a debug
-Date:   Fri, 22 Mar 2019 16:43:57 +0100
-Message-Id: <20190322154425.3852517-7-arnd@arndb.de>
+To:     stable@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc:     Ravindra Lokhande <rlokhande@nvidia.com>,
+        Vinod Koul <vinod.koul@intel.com>,
+        Takashi Iwai <tiwai@suse.de>, Arnd Bergmann <arnd@arndb.de>,
+        Mark Brown <broonie@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Joe Perches <joe@perches.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: [BACKPORT 4.4.y 02/25] ALSA: compress: add support for 32bit calls in a 64bit kernel
+Date:   Fri, 22 Mar 2019 16:43:53 +0100
+Message-Id: <20190322154425.3852517-3-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20190322154425.3852517-1-arnd@arndb.de>
 References: <20190322154425.3852517-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:RWCkPDa1RfODQ0CZQuzMTOyyy2eIm16NST7+OZno7XSgnPYCTH4
- /y/qoDARhKGdcdXUcBB4gtsDxCKATndrYjVgnud2zIa+wI3TUMYa1jKjZXOOctVijd/vINm
- cY1kv17brk0/njzjWlJdCJMo2RTliVmdF15KW8BkgZKGk81Bzo42F/6GkMIp1ufgmyrgOSU
- 1Z4jmvQdJrKbgjk8xMz1g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:YgBfrG/uq1c=:I4UntfcZItaVU6X37yNOeT
- dywgzQnJK7DWuALu/7Mq0b4nDZRwmHqmWMvtbM5g9zG6RzdOd72CrO7W6A7FNqDniazvCfhYu
- 1mvkBe0gIMRUT2+WVM89yxmZC7YWK/wcAN1ugXXa02CwA19EiHV0AcLBsd/tEKZlPaBbfahhB
- rNUXoW0pKvQNPsBf5+kuMMHRBdsF+sEOCCTg5S2YSnhWg8rPX1ReAtOTbAJA3y0zIZos0CyNt
- gM2Zo5kevM8l9CkWsBU88mZzskgjuO02MsjXu8MA6CgJOPvdax+NPVlib3ZX9hVPs8j4qAsVD
- M6w987t8L4+17ECIexEWIrRrtdJ8cAA7NvEJ201sM7faZ+VkZ+8QloGmj4jRCYj6QRMslffcI
- GfXp1DEUs+mfkZ2QT8PCfORkJTZvNvUWuUVWazE8N+YSK8t7aKLrq5bjYeAB1j1ZzJ7VkiH1D
- f+IEszEdJMMuRZYOMPrGV2NWVU+BFFJi0f8qg9GSlYTKEILMlNmVs932F3d4gJ24Vgvk4S2iI
- wISMmt2bz87uVEIZKgUCE19VA9QMAG7uQNUpi4bywERe2kqubghIQSMXBzCnP35a+5UgQgdGM
- SnqVOXGZTeBNldMqiQSWRYcmYlAhi1icivNYN/BmTDBsNz8yQMgJXyT+gyl9JmfK7dFmG13D5
- vEjV7T1Z70sPPZOySMfDvxm4R/p5l0vQxpy9NIsux4rUylT50rAAC6wjPegoyGaPS4ORgnTPa
- +BdjwTWxlsyi/mzDtyf4T4KiwRJRL6fI1vbT4w==
+X-Provags-ID: V03:K1:qdmoVgn5qRBXiX0rd6Jjr6hDFLSAzZ7K8GEgzOoBTJ7z24e4UWD
+ RjKLEBCA6OW0mDWPPMZuNQ0nofk8g9w/lw97NF0CYfqxbdatuEs1E/WFUeMImyuAmTRweg8
+ VS7I91GhVWgKkiLqm740IaYAOQU3cFPKM+JkraWNkzIt5H0WbCXp6os0vwagWMGQNljHAdb
+ p/Z2CFCmOWedlw7LF25tQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Ctb8eMkV2xI=:Q7CpqNFjF8sfLZetR/lwPI
+ dIAMil0TxiU1g3D27dOwhRGZ6fHDZRML4J32+m4sRNxFGQWtIQMf96SsXVxx0VuqrGdV3RVBu
+ 3FXGN2+HmJDkSOx/YaAP5tjLVSj1ZWO0YSgFDg/McX61rwyn9XA7YBMv7NVNvLh+ev26NKoff
+ DdLXd6WiT7F2pcs4JPkg/sQNfYM9ej71b7TH26P7CpiR7RSpm6wXDVXmmgYOeb8otUosJOcAF
+ 9TJlnQLIvmBQETigdnHcOePeKKtccrkDWE4qXryEezqE51gFnTZ0WGqPF3xVqK+RtD6FXMOPD
+ QIABs0JOPdNubjvuzSwl46x/VumGHJa8NN35aAHS/lnNAOgTi4fAQ+e0JHRqxnPKQ6p/wqh1V
+ tkAVJOaiMKq0GMr8ZnCfQXqY3vyjqTO8bn/6JhL2qZw47NmgNxf0OMUyigubdBZLQKSTKf4zT
+ UK4wulxOvRCttye8f8O5fNUR8h1Tbb1gVwA+xnwL2PgnYtnRjHY845QAJVYEjn/nleEG7zAHw
+ EKiURZvOJj4GwFYKj3cyCJTW3nFg35TNwelxaT+yueAgbKScTBcIoZEsCeyUahqhat5hhWIge
+ HLcQo7dkK/gZ38Z1uMD04o2z5OHO9++iBEkvWWeutqCoS3CcxGyrHHLRTCDTXw/a/OHTUZvN4
+ kleH6Yae12LIR7P0/9S7h4df+Fu30EioWPAYnN86hglLv5wXh/d8ZeFZRd5+IOYoQeYcKIqam
+ SuC83ORPZKj5YF7OBWsWcMmR2EHnq+EBpwlZPw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+From: Ravindra Lokhande <rlokhande@nvidia.com>
 
-IMO this info is only useful for developers. Most users won't need this
-information, since there is not much they can do about it.
+Compress offload does not support ioctl calls from a 32bit userspace
+in a 64 bit kernel. This patch adds support for ioctls from a 32bit
+userspace in a 64bit kernel
 
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-(cherry picked from commit 4ec96b4cbde8d5714a4477b5a2562c3dd40bc5fa)
+Signed-off-by: Ravindra Lokhande <rlokhande@nvidia.com>
+Acked-by: Vinod Koul <vinod.koul@intel.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+(cherry picked from commit c10368897e104c008c610915a218f0fe5fa4ec96)
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/mmc/core/mmc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/core/compress_offload.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
-index a31789be0840..adc3291e9d6a 100644
---- a/drivers/mmc/core/mmc.c
-+++ b/drivers/mmc/core/mmc.c
-@@ -508,7 +508,7 @@ static int mmc_decode_ext_csd(struct mmc_card *card, u8 *ext_csd)
- 			card->ext_csd.raw_bkops_status =
- 				ext_csd[EXT_CSD_BKOPS_STATUS];
- 			if (!card->ext_csd.man_bkops_en)
--				pr_info("%s: MAN_BKOPS_EN bit is not set\n",
-+				pr_debug("%s: MAN_BKOPS_EN bit is not set\n",
- 					mmc_hostname(card->host));
- 		}
+diff --git a/sound/core/compress_offload.c b/sound/core/compress_offload.c
+index 6163bf3e8177..33d40d6fa3f1 100644
+--- a/sound/core/compress_offload.c
++++ b/sound/core/compress_offload.c
+@@ -38,6 +38,7 @@
+ #include <linux/uio.h>
+ #include <linux/uaccess.h>
+ #include <linux/module.h>
++#include <linux/compat.h>
+ #include <sound/core.h>
+ #include <sound/initval.h>
+ #include <sound/compress_params.h>
+@@ -858,6 +859,15 @@ static long snd_compr_ioctl(struct file *f, unsigned int cmd, unsigned long arg)
+ 	return retval;
+ }
  
++/* support of 32bit userspace on 64bit platforms */
++#ifdef CONFIG_COMPAT
++static long snd_compr_ioctl_compat(struct file *file, unsigned int cmd,
++						unsigned long arg)
++{
++	return snd_compr_ioctl(file, cmd, (unsigned long)compat_ptr(arg));
++}
++#endif
++
+ static const struct file_operations snd_compr_file_ops = {
+ 		.owner =	THIS_MODULE,
+ 		.open =		snd_compr_open,
+@@ -865,6 +875,9 @@ static const struct file_operations snd_compr_file_ops = {
+ 		.write =	snd_compr_write,
+ 		.read =		snd_compr_read,
+ 		.unlocked_ioctl = snd_compr_ioctl,
++#ifdef CONFIG_COMPAT
++		.compat_ioctl = snd_compr_ioctl_compat,
++#endif
+ 		.mmap =		snd_compr_mmap,
+ 		.poll =		snd_compr_poll,
+ };
 -- 
 2.20.0
 
