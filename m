@@ -2,69 +2,99 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B86CDC10F03
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 17:52:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32939C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 17:55:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 839CB2083D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 17:52:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="e1GXrN0y"
+	by mail.kernel.org (Postfix) with ESMTP id 08AE62083D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 17:55:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728475AbfCVRw1 (ORCPT
+        id S1728260AbfCVRzG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 13:52:27 -0400
-Received: from a9-46.smtp-out.amazonses.com ([54.240.9.46]:49172 "EHLO
-        a9-46.smtp-out.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727801AbfCVRw1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 13:52:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=6gbrjpgwjskckoa6a5zn6fwqkn67xbtw; d=amazonses.com; t=1553277146;
-        h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type:Feedback-ID;
-        bh=4LmkY378p9IKWuPaxRNrOpznTZtEYeypgpUdKx9r6Vo=;
-        b=e1GXrN0yDwa0T8TV5m5Wqs4aJ+t7LB51Oh3a8UvZRW7aYkbfdw131t5ua28iVA5J
-        9PUjeLS565oBrK4sUjVng25TgdtBqwPK7fvvCaxeyAY7d/YXa7Be2flDAGwkW5BUnQ0
-        lJzae1gKtLzFhDrcOOVDXC7sYlEwIvEwszRDzY24=
-Date:   Fri, 22 Mar 2019 17:52:25 +0000
-From:   Christopher Lameter <cl@linux.com>
-X-X-Sender: cl@nuc-kabylake
-To:     Vlastimil Babka <vbabka@suse.cz>
-cc:     linux-mm@kvack.org, Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Michal Hocko <mhocko@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-block@vger.kernel.org
-Subject: Re: [RFC 0/2] guarantee natural alignment for kmalloc()
-In-Reply-To: <4d2a55dc-b29f-1309-0a8e-83b057e186e6@suse.cz>
-Message-ID: <01000169a68852ed-d621a35c-af0c-4759-a8a3-e97e7dfc17a5-000000@email.amazonses.com>
-References: <20190319211108.15495-1-vbabka@suse.cz> <01000169988d4e34-b4178f68-c390-472b-b62f-a57a4f459a76-000000@email.amazonses.com> <5d7fee9c-1a80-6ac9-ac1d-b1ce05ed27a8@suse.cz> <010001699c5563f8-36c6909f-ed43-4839-82da-b5f9f21594b8-000000@email.amazonses.com>
- <4d2a55dc-b29f-1309-0a8e-83b057e186e6@suse.cz>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Fri, 22 Mar 2019 13:55:06 -0400
+Received: from mga11.intel.com ([192.55.52.93]:4115 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727801AbfCVRzG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 13:55:06 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Mar 2019 10:55:05 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,256,1549958400"; 
+   d="scan'208";a="136401075"
+Received: from agluck-desk.sc.intel.com (HELO agluck-desk) ([10.3.52.160])
+  by orsmga003.jf.intel.com with ESMTP; 22 Mar 2019 10:55:05 -0700
+Date:   Fri, 22 Mar 2019 10:55:05 -0700
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] EDAC, {skx|i10nm}_edac: Fix randconfig build error
+Message-ID: <20190322175504.GA11213@agluck-desk>
+References: <20190314215952.GA303@agluck-desk>
+ <20190315094341.GA12523@zn.tnic>
+ <20190315155718.GA17775@agluck-desk>
+ <20190315173720.GC12523@zn.tnic>
+ <20190315174956.GA20831@agluck-desk>
+ <20190315180206.GD12523@zn.tnic>
+ <20190315181108.GA21111@agluck-desk>
+ <CAK8P3a2CFyF5wExbZPb20E56sJ=3DpsP+0m2Px6D5Sw_L3pKXA@mail.gmail.com>
+ <3908561D78D1C84285E8C5FCA982C28F7D53BD42@ORSMSX110.amr.corp.intel.com>
+ <CAK8P3a0WjUi+mBZ0nO2FFFCRvy5mA10frZMAaXisGWOs4pnPCA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-SES-Outgoing: 2019.03.22-54.240.9.46
-Feedback-ID: 1.us-east-1.fQZZZ0Xtj2+TD7V5apTT/NrT6QKuPgzCT/IC7XYgDKI=:AmazonSES
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a0WjUi+mBZ0nO2FFFCRvy5mA10frZMAaXisGWOs4pnPCA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 21 Mar 2019, Vlastimil Babka wrote:
+On Fri, Mar 22, 2019 at 03:00:25PM +0100, Arnd Bergmann wrote:
+> Sorry, this was my mistake, my email was garbled. The patch was
+> correct though: the idea here is not to change the Kconfig symbols
+> but to change the Makefile to do the right thing even when Kconfig
+> is set wrong.
 
-> That however doesn't work well for the xfs/IO case where block sizes are
-> not known in advance:
->
-> https://lore.kernel.org/linux-fsdevel/20190225040904.5557-1-ming.lei@redhat.com/T/#ec3a292c358d05a6b29cc4a9ce3ae6b2faf31a23f
+Well this does seem like a "clever" way out of the randconfig
+problem.  New patch applies and when I set .config to have:
 
-I thought we agreed to use custom slab caches for that?
+CONFIG_EDAC_DEBUG=y
+CONFIG_EDAC_SKX=y
+CONFIG_EDAC_I10NM=m
+CONFIG_EDAC_SKX_COMMON=y
 
+I don't see any build errors.
+
+There are lots of "skx_" symbols in System.map
+
+But I'm not at all sure what happened to the I10NM driver.
+
+I don't see it mentioned in the output from "make".
+
+It didn't get built as a module (no ".ko" file for it).
+
+It doesn't seem to be built in (no ".o" in drivers/edac/built-in.a)
+
+So I added a #error line to the start of i10nm_edac.c and
+ran "make" again.  Nothing.
+
+So, I don't think this is doing what you think it should
+do.  Even if it did, it would seem very confusing to a user
+that asked for "one module, one built-in" in Kconfig, but
+found both built-in.
+
+Boris: I'm voting for Qiuxu's most recent solution (moving
+all the EDAC_DEBUG bits out of skx_common.c).
+
+-Tony
