@@ -7,50 +7,52 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 162B7C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:00:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0818C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:00:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D990721939
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:00:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F56821A4A
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:00:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256053;
-	bh=XR/8oQcwp6+Bx10xVjI37uDZax1W8ZQlk188pSjhs60=;
+	s=default; t=1553256056;
+	bh=ZLcMDv+91fRPbFcO+IioEWSuL0lnx+sEFtqNWviD8O8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oC8kIIH0gFGfv0I0DKVC4tWG13E32jiGg15RORv00BeX4PYWt526QtlStZi0HVt22
-	 vfOON5MtqXr6V87LpIihsQgOjFiqxAndqBAyt1mCBeMsdihGMP5ChGHA1Ya+23Pda4
-	 jTaI71f9TvzdJP4QIJYiOUuvveXqPijgdmkEiYUc=
+	b=TlfVbdU2M0XcdtLo73MYAVtknfl3Sn7CzV44DBHvPJb+PupbN/PfPeorkU51NM9CT
+	 PMDobDeTkfJGRehVx8Uh7eg1QBX3grwdYV0dx7e91Tqpw6E99z7092i25c4QE6367R
+	 EVzMEwt3TcqV+6JLcjF5iHJs2x4P7GvRptamBuLo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388129AbfCVMAw (ORCPT
+        id S2388139AbfCVMAy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:00:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38132 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:00:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733120AbfCVMAu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:00:50 -0400
+        id S2388125AbfCVMAw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:00:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 828222192D;
-        Fri, 22 Mar 2019 12:00:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D84A21934;
+        Fri, 22 Mar 2019 12:00:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256049;
-        bh=XR/8oQcwp6+Bx10xVjI37uDZax1W8ZQlk188pSjhs60=;
+        s=default; t=1553256051;
+        bh=ZLcMDv+91fRPbFcO+IioEWSuL0lnx+sEFtqNWviD8O8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KlKDjVOcshNrVRuXCpZ+Zv2dKI1PqRfmSdQ/Iio8tojM/ZuBmXnW8WXKbDF+1vwlx
-         BrgtDQ8+pHVEfMUO64liDRMzEWAf28QQ8vYhXEP5vWZdMcLc+G1sQ/Dq1dGacj2Sgd
-         EO19TnziyuY9yCH4iNlDkNHtfectfNTbCuKQCvyU=
+        b=K5bkWeDjMLlPLeeSyCKv3KsdxQs80U/oPZnNnvcaAlmnkhIis3hb/NfQ2/mrFSInm
+         2K+fiM9hdJqFHODSAiYn4/cEn8ICYSAoLLNalgcu5eBDtSY++gEx3r/WiR5Og2g+5B
+         xAbXQ9khWlytR1TekrrOiiEMGKtUXEJ4o2uzm5Cc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>, Tejun Heo <tj@kernel.org>,
+        stable@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Hugh Dickins <hughd@google.com>,
+        Matej Kupljen <matej.kupljen@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Subject: [PATCH 4.19 093/280] mm: handle lru_add_drain_all for UP properly
-Date:   Fri, 22 Mar 2019 12:14:06 +0100
-Message-Id: <20190322111311.719819625@linuxfoundation.org>
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 094/280] tmpfs: fix link accounting when a tmpfile is linked in
+Date:   Fri, 22 Mar 2019 12:14:07 +0100
+Message-Id: <20190322111311.782243647@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -69,82 +71,60 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 6ea183d60c469560e7b08a83c9804299e84ec9eb ]
+[ Upstream commit 1062af920c07f5b54cf5060fde3339da6df0cf6b ]
 
-Since for_each_cpu(cpu, mask) added by commit 2d3854a37e8b767a
-("cpumask: introduce new API, without changing anything") did not
-evaluate the mask argument if NR_CPUS == 1 due to CONFIG_SMP=n,
-lru_add_drain_all() is hitting WARN_ON() at __flush_work() added by
-commit 4d43d395fed12463 ("workqueue: Try to catch flush_work() without
-INIT_WORK().") by unconditionally calling flush_work() [1].
+tmpfs has a peculiarity of accounting hard links as if they were
+separate inodes: so that when the number of inodes is limited, as it is
+by default, a user cannot soak up an unlimited amount of unreclaimable
+dcache memory just by repeatedly linking a file.
 
-Workaround this issue by using CONFIG_SMP=n specific lru_add_drain_all
-implementation.  There is no real need to defer the implementation to
-the workqueue as the draining is going to happen on the local cpu.  So
-alias lru_add_drain_all to lru_add_drain which does all the necessary
-work.
+But when v3.11 added O_TMPFILE, and the ability to use linkat() on the
+fd, we missed accommodating this new case in tmpfs: "df -i" shows that
+an extra "inode" remains accounted after the file is unlinked and the fd
+closed and the actual inode evicted.  If a user repeatedly links
+tmpfiles into a tmpfs, the limit will be hit (ENOSPC) even after they
+are deleted.
 
-[akpm@linux-foundation.org: fix various build warnings]
-[1] https://lkml.kernel.org/r/18a30387-6aa5-6123-e67c-57579ecc3f38@roeck-us.net
-Link: http://lkml.kernel.org/r/20190213124334.GH4525@dhcp22.suse.cz
-Signed-off-by: Michal Hocko <mhocko@suse.com>
-Reported-by: Guenter Roeck <linux@roeck-us.net>
-Debugged-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Cc: Tejun Heo <tj@kernel.org>
+Just skip the extra reservation from shmem_link() in this case: there's
+a sense in which this first link of a tmpfile is then cheaper than a
+hard link of another file, but the accounting works out, and there's
+still good limiting, so no need to do anything more complicated.
+
+Link: http://lkml.kernel.org/r/alpine.LSU.2.11.1902182134370.7035@eggly.anvils
+Fixes: f4e0c30c191 ("allow the temp files created by open() to be linked to")
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Hugh Dickins <hughd@google.com>
+Reported-by: Matej Kupljen <matej.kupljen@gmail.com>
+Acked-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/swap.c | 17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
+ mm/shmem.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/mm/swap.c b/mm/swap.c
-index 26fc9b5f1b6c..a3fc028e338e 100644
---- a/mm/swap.c
-+++ b/mm/swap.c
-@@ -321,11 +321,6 @@ static inline void activate_page_drain(int cpu)
- {
- }
+diff --git a/mm/shmem.c b/mm/shmem.c
+index b6cf0e8e685b..bf13966b009c 100644
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -2901,10 +2901,14 @@ static int shmem_link(struct dentry *old_dentry, struct inode *dir, struct dentr
+ 	 * No ordinary (disk based) filesystem counts links as inodes;
+ 	 * but each new link needs a new dentry, pinning lowmem, and
+ 	 * tmpfs dentries cannot be pruned until they are unlinked.
++	 * But if an O_TMPFILE file is linked into the tmpfs, the
++	 * first link must skip that, to get the accounting right.
+ 	 */
+-	ret = shmem_reserve_inode(inode->i_sb);
+-	if (ret)
+-		goto out;
++	if (inode->i_nlink) {
++		ret = shmem_reserve_inode(inode->i_sb);
++		if (ret)
++			goto out;
++	}
  
--static bool need_activate_page_drain(int cpu)
--{
--	return false;
--}
--
- void activate_page(struct page *page)
- {
- 	struct zone *zone = page_zone(page);
-@@ -654,13 +649,15 @@ void lru_add_drain(void)
- 	put_cpu();
- }
- 
-+#ifdef CONFIG_SMP
-+
-+static DEFINE_PER_CPU(struct work_struct, lru_add_drain_work);
-+
- static void lru_add_drain_per_cpu(struct work_struct *dummy)
- {
- 	lru_add_drain();
- }
- 
--static DEFINE_PER_CPU(struct work_struct, lru_add_drain_work);
--
- /*
-  * Doesn't need any cpu hotplug locking because we do rely on per-cpu
-  * kworkers being shut down before our page_alloc_cpu_dead callback is
-@@ -703,6 +700,12 @@ void lru_add_drain_all(void)
- 
- 	mutex_unlock(&lock);
- }
-+#else
-+void lru_add_drain_all(void)
-+{
-+	lru_add_drain();
-+}
-+#endif
- 
- /**
-  * release_pages - batched put_page()
+ 	dir->i_size += BOGO_DIRENT_SIZE;
+ 	inode->i_ctime = dir->i_ctime = dir->i_mtime = current_time(inode);
 -- 
 2.19.1
 
