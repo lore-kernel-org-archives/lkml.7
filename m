@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70D82C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:25:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAD59C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:26:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E6ED2054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:25:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E3132054F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:26:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553257557;
-	bh=Vesv24FGq5Mhk1AifxEUVO6wf0uDqPI3suR/+KI934Q=;
+	s=default; t=1553257570;
+	bh=c6vEHRq7td5b5uLcbRzk4Lqczwkpuxb04uhpaeTq4Qk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xqLfphmRpdw2wHvuJb16r2sRxXiUWxfe11PAXiBeT7evGOf96CNr6jXhbxBe9eWcM
-	 MnmePy5I1//jVubLitBOYQAr7ke2EKyWCMFLE0M9PldUev6RvueFBSJ51mFIZ9Hwr5
-	 HrYmHJs6KjbWsronDt01w8LqBFUP2rXBxM0pQPnc=
+	b=mtvDviKhMwtBIwElPeAPohypM9XUFcGGgWm5QJdji8E6xCNdh4IyXVqqQnHqRdQgQ
+	 i6xfXyN25dsYAl5Z/Cj3CW+vysPENA3pGzCoiJEwHSkaV6iQZyxd6utGQp8oL/lrGn
+	 pZInZkQtG0AOG8bD7h392Zwc1WXZRUfImMNbrZQQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391043AbfCVMZ4 (ORCPT
+        id S2391081AbfCVM0J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:25:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34798 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:26:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403752AbfCVMXU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:23:20 -0400
+        id S2390694AbfCVMW7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:22:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC77E2054F;
-        Fri, 22 Mar 2019 12:23:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EEDB2054F;
+        Fri, 22 Mar 2019 12:22:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553257399;
-        bh=Vesv24FGq5Mhk1AifxEUVO6wf0uDqPI3suR/+KI934Q=;
+        s=default; t=1553257378;
+        bh=c6vEHRq7td5b5uLcbRzk4Lqczwkpuxb04uhpaeTq4Qk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fGx0GceykPZ/pC+ygK8t+r7Q9aJ+B4To74m4AeZQQeFPRKZzNfstgklwf+E/yC/Jm
-         FZrtPRUZ3XquVAtYI3oLEVFpTzsVhX7itgftQOBBvxmLtQ47MS7hWpg+0gN8thpIS1
-         tp31VTFjzCmvJt1nyW03ATSitjoFe1mce6SYzSz8=
+        b=aZQKWy5qClSdP6+Fi1Igc3BnciDCnONFyKpyxjcCZHY1a3wD/nwQnS7hipI7Luxfj
+         ioTz0vpBNIliCLb4c25lGQ8uhB0VGgOZ1DNzA6ds6WOOSJQ6W1pBQnmscXFkgk4tuc
+         2xG2NHQMODmBvU01/TVShZ3JOumIRLkoLO2njVL8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>,
-        Gerd Hoffmann <kraxel@redhat.com>
-Subject: [PATCH 5.0 220/238] drm/fb-helper: generic: Fix drm_fbdev_client_restore()
-Date:   Fri, 22 Mar 2019 12:17:19 +0100
-Message-Id: <20190322111311.281033629@linuxfoundation.org>
+        stable@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: [PATCH 5.0 214/238] media: sun6i: Fix CSI regmaps max_register
+Date:   Fri, 22 Mar 2019 12:17:13 +0100
+Message-Id: <20190322111310.910068499@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -65,70 +67,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Noralf Trønnes <noralf@tronnes.org>
+From: Chen-Yu Tsai <wens@csie.org>
 
-commit 78de14c23e031420aa5f61973583635eccd6cd2a upstream.
+commit d31b282e2c0de9c7fb113516820340251f03a625 upstream.
 
-If fbdev setup has failed, lastclose will give a NULL pointer deref:
+max_register is currently set to 0x1000. This is beyond the mapped
+address range of the hardware, so attempts to dump the regmap from
+debugfs would trigger a kernel exception.
 
-[   77.794295] [drm:drm_lastclose]
-[   77.794414] [drm:drm_lastclose] driver lastclose completed
-[   77.794660] Unable to handle kernel NULL pointer dereference at virtual address 00000014
-[   77.809460] pgd = b376b71b
-[   77.818275] [00000014] *pgd=175ba831, *pte=00000000, *ppte=00000000
-[   77.830813] Internal error: Oops: 17 [#1] ARM
-[   77.840963] Modules linked in: mi0283qt mipi_dbi tinydrm raspberrypi_hwmon gpio_backlight backlight snd_bcm2835(C) bcm2835_rng rng_core
-[   77.865203] CPU: 0 PID: 527 Comm: lt-modetest Tainted: G         C        5.0.0-rc1+ #1
-[   77.879525] Hardware name: BCM2835
-[   77.889185] PC is at restore_fbdev_mode+0x20/0x164
-[   77.900261] LR is at drm_fb_helper_restore_fbdev_mode_unlocked+0x54/0x9c
-[   78.002446] Process lt-modetest (pid: 527, stack limit = 0x7a3d5c14)
-[   78.291030] Backtrace:
-[   78.300815] [<c04f2d0c>] (restore_fbdev_mode) from [<c04f4708>] (drm_fb_helper_restore_fbdev_mode_unlocked+0x54/0x9c)
-[   78.319095]  r9:d8a8a288 r8:d891acf0 r7:d7697910 r6:00000000 r5:d891ac00 r4:d891ac00
-[   78.334432] [<c04f46b4>] (drm_fb_helper_restore_fbdev_mode_unlocked) from [<c04f47e8>] (drm_fbdev_client_restore+0x18/0x20)
-[   78.353296]  r8:d76978c0 r7:d7697910 r6:d7697950 r5:d7697800 r4:d891ac00 r3:c04f47d0
-[   78.368689] [<c04f47d0>] (drm_fbdev_client_restore) from [<c051b6b4>] (drm_client_dev_restore+0x7c/0xc0)
-[   78.385982] [<c051b638>] (drm_client_dev_restore) from [<c04f8fd0>] (drm_lastclose+0xc4/0xd4)
-[   78.402332]  r8:d76978c0 r7:d7471080 r6:c0e0c088 r5:d8a85e00 r4:d7697800
-[   78.416688] [<c04f8f0c>] (drm_lastclose) from [<c04f9088>] (drm_release+0xa8/0x10c)
-[   78.431929]  r5:d8a85e00 r4:d7697800
-[   78.442989] [<c04f8fe0>] (drm_release) from [<c02640c4>] (__fput+0x104/0x1c8)
-[   78.457740]  r8:d5ccea10 r7:d96cfb10 r6:00000008 r5:d74c1b90 r4:d8a8a280
-[   78.472043] [<c0263fc0>] (__fput) from [<c02641ec>] (____fput+0x18/0x1c)
-[   78.486363]  r10:00000006 r9:d7722000 r8:c01011c4 r7:00000000 r6:c0ebac6c r5:d892a340
-[   78.501869]  r4:d8a8a280
-[   78.512002] [<c02641d4>] (____fput) from [<c013ef1c>] (task_work_run+0x98/0xac)
-[   78.527186] [<c013ee84>] (task_work_run) from [<c010cc54>] (do_work_pending+0x4f8/0x570)
-[   78.543238]  r7:d7722030 r6:00000004 r5:d7723fb0 r4:00000000
-[   78.556825] [<c010c75c>] (do_work_pending) from [<c0101034>] (slow_work_pending+0xc/0x20)
-[   78.674256] ---[ end trace 70d3a60cf739be3b ]---
+Furthermore, the useful registers only occupy a small section at the
+beginning of the full range. Change the value to 0x9c, the last known
+register on the V3s and H3.
 
-Fix by using drm_fb_helper_lastclose() which checks if fbdev is in use.
+On the A31, the register range is extended to support additional
+capture channels. Since this is not yet supported, ignore it for now.
 
-Fixes: 9060d7f49376 ("drm/fb-helper: Finish the generic fbdev emulation")
-Cc: stable@vger.kernel.org
-Signed-off-by: Noralf Trønnes <noralf@tronnes.org>
-Reviewed-by: Gerd Hoffmann <kraxel@redhat.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190125150300.33268-1-noralf@tronnes.org
+Fixes: 5cc7522d8965 ("media: sun6i: Add support for Allwinner CSI V3s")
+
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/drm_fb_helper.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/gpu/drm/drm_fb_helper.c
-+++ b/drivers/gpu/drm/drm_fb_helper.c
-@@ -3170,9 +3170,7 @@ static void drm_fbdev_client_unregister(
+--- a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
++++ b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
+@@ -793,7 +793,7 @@ static const struct regmap_config sun6i_
+ 	.reg_bits       = 32,
+ 	.reg_stride     = 4,
+ 	.val_bits       = 32,
+-	.max_register	= 0x1000,
++	.max_register	= 0x9c,
+ };
  
- static int drm_fbdev_client_restore(struct drm_client_dev *client)
- {
--	struct drm_fb_helper *fb_helper = drm_fb_helper_from_client(client);
--
--	drm_fb_helper_restore_fbdev_mode_unlocked(fb_helper);
-+	drm_fb_helper_lastclose(client->dev);
- 
- 	return 0;
- }
+ static int sun6i_csi_resource_request(struct sun6i_csi_dev *sdev,
 
 
