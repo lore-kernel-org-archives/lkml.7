@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CC11C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:10:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA0F1C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:10:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CA2F2082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:10:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76B7F2083D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:10:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256651;
-	bh=Q/W3NwF/0aElKhhHgr8UGWy4QjWoaut0ayzvMIi7xI0=;
+	s=default; t=1553256657;
+	bh=5fYPGOiRMcYQrOHBEBRIyt6RcpGfAnwbJrDhUeNk6kI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VM5Uy77XXfDeItm7J5aLdOwmOZDK5urLUgEtPqy20Sdyn0imrArJPyFk0fVrWji/P
-	 7YRtQK59pwz7kf3wrxyn7vCUk/a9ZOuVapKDwNE9Cka+6g/oA8QdEceFF5o9mwzfH9
-	 vf14k1jlsdJQDZ6Q0+wlv95E6n8quUBgvJ8Hm30k=
+	b=jUhtk5KTyxwG8g4LzKCEwHCmSEuyGb2OvkmDYdtcraZjXSzVm0IravsxZnI8W1gIe
+	 0B6eV6xb1VXviTr0rDu1gn17YsFf6UtcEh7jBMm8g9pwIWN/CLyUQn/H8ERtBOH6fr
+	 wLw2akrm3AMcS3Wb5PpQyC5qSya1j06TLCfu78sw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389457AbfCVMKt (ORCPT
+        id S2389472AbfCVMKz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:10:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49136 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:10:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388861AbfCVMKn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:10:43 -0400
+        id S2389111AbfCVMKx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:10:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD2B220830;
-        Fri, 22 Mar 2019 12:10:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 410902082C;
+        Fri, 22 Mar 2019 12:10:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256643;
-        bh=Q/W3NwF/0aElKhhHgr8UGWy4QjWoaut0ayzvMIi7xI0=;
+        s=default; t=1553256652;
+        bh=5fYPGOiRMcYQrOHBEBRIyt6RcpGfAnwbJrDhUeNk6kI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gS/tt+jOWvqZnm9l1mNB295pQ/LOi/ZLnl3lt+59I83I4NTjz6qxmZ1Xw2cM1cJxh
-         tsJ1FNbdIIiPKTDcqhaExcZxylPlokNaWuBwsanKtcRNLJSluza2B174bYyTD9JgUl
-         Gaxn+vudFP4Oflha0emU1PlhY/rTbB4h6TbdqXX0=
+        b=v5woDywS42FgGbYc7jb5f7yDLb+bEx4T3O/b+enyJwmVI3qeBad9wMyBasnqraPl4
+         BIy47FKB3eCgFAkfLF/Ypeyn8pzYVU0gXtzKGaIjUGI7nWhmlqeIzsOwXSgnEghoF+
+         wdeHchwzxjpTdsp2BjAHu32ffMh+n/ysbETatPuY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         Sean Christopherson <sean.j.christopherson@intel.com>,
         Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.19 275/280] KVM: x86/mmu: Do not cache MMIO accesses while memslots are in flux
-Date:   Fri, 22 Mar 2019 12:17:08 +0100
-Message-Id: <20190322111347.016510644@linuxfoundation.org>
+Subject: [PATCH 4.19 278/280] KVM: nVMX: Ignore limit checks on VMX instructions using flat segments
+Date:   Fri, 22 Mar 2019 12:17:11 +0100
+Message-Id: <20190322111347.752867653@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -68,62 +68,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit ddfd1730fd829743e41213e32ccc8b4aa6dc8325 upstream.
+commit 34333cc6c2cb021662fd32e24e618d1b86de95bf upstream.
 
-When installing new memslots, KVM sets bit 0 of the generation number to
-indicate that an update is in-progress.  Until the update is complete,
-there are no guarantees as to whether a vCPU will see the old or the new
-memslots.  Explicity prevent caching MMIO accesses so as to avoid using
-an access cached from the old memslots after the new memslots have been
-installed.
+Regarding segments with a limit==0xffffffff, the SDM officially states:
 
-Note that it is unclear whether or not disabling caching during the
-update window is strictly necessary as there is no definitive
-documentation as to what ordering guarantees KVM provides with respect
-to updating memslots.  That being said, the MMIO spte code does not
-allow reusing sptes created while an update is in-progress, and the
-associated documentation explicitly states:
+    When the effective limit is FFFFFFFFH (4 GBytes), these accesses may
+    or may not cause the indicated exceptions.  Behavior is
+    implementation-specific and may vary from one execution to another.
 
-    We do not want to use an MMIO sptes created with an odd generation
-    number, ...  If KVM is unlucky and creates an MMIO spte while the
-    low bit is 1, the next access to the spte will always be a cache miss.
+In practice, all CPUs that support VMX ignore limit checks for "flat
+segments", i.e. an expand-up data or code segment with base=0 and
+limit=0xffffffff.  This is subtly different than wrapping the effective
+address calculation based on the address size, as the flat segment
+behavior also applies to accesses that would wrap the 4g boundary, e.g.
+a 4-byte access starting at 0xffffffff will access linear addresses
+0xffffffff, 0x0, 0x1 and 0x2.
 
-At the very least, disabling the per-vCPU MMIO cache during updates will
-make its behavior consistent with the MMIO spte behavior and
-documentation.
-
-Fixes: 56f17dd3fbc4 ("kvm: x86: fix stale mmio cache bug")
-Cc: <stable@vger.kernel.org>
+Fixes: f9eb4af67c9d ("KVM: nVMX: VMX instructions: add checks for #GP/#SS exceptions")
+Cc: stable@vger.kernel.org
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/x86.h |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ arch/x86/kvm/vmx.c |   12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
---- a/arch/x86/kvm/x86.h
-+++ b/arch/x86/kvm/x86.h
-@@ -181,6 +181,11 @@ static inline bool emul_is_noncanonical_
- static inline void vcpu_cache_mmio_info(struct kvm_vcpu *vcpu,
- 					gva_t gva, gfn_t gfn, unsigned access)
- {
-+	u64 gen = kvm_memslots(vcpu->kvm)->generation;
+--- a/arch/x86/kvm/vmx.c
++++ b/arch/x86/kvm/vmx.c
+@@ -8251,10 +8251,16 @@ static int get_vmx_mem_address(struct kv
+ 		/* Protected mode: #GP(0)/#SS(0) if the segment is unusable.
+ 		 */
+ 		exn = (s.unusable != 0);
+-		/* Protected mode: #GP(0)/#SS(0) if the memory
+-		 * operand is outside the segment limit.
 +
-+	if (unlikely(gen & 1))
-+		return;
-+
- 	/*
- 	 * If this is a shadow nested page table, the "GVA" is
- 	 * actually a nGPA.
-@@ -188,7 +193,7 @@ static inline void vcpu_cache_mmio_info(
- 	vcpu->arch.mmio_gva = mmu_is_nested(vcpu) ? 0 : gva & PAGE_MASK;
- 	vcpu->arch.access = access;
- 	vcpu->arch.mmio_gfn = gfn;
--	vcpu->arch.mmio_gen = kvm_memslots(vcpu->kvm)->generation;
-+	vcpu->arch.mmio_gen = gen;
- }
- 
- static inline bool vcpu_match_mmio_gen(struct kvm_vcpu *vcpu)
++		/*
++		 * Protected mode: #GP(0)/#SS(0) if the memory operand is
++		 * outside the segment limit.  All CPUs that support VMX ignore
++		 * limit checks for flat segments, i.e. segments with base==0,
++		 * limit==0xffffffff and of type expand-up data or code.
+ 		 */
+-		exn = exn || (off + sizeof(u64) > s.limit);
++		if (!(s.base == 0 && s.limit == 0xffffffff &&
++		     ((s.type & 8) || !(s.type & 4))))
++			exn = exn || (off + sizeof(u64) > s.limit);
+ 	}
+ 	if (exn) {
+ 		kvm_queue_exception_e(vcpu,
 
 
