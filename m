@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67BFBC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:21:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98D50C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:21:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34B1C218B0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:21:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60649218B0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:21:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553257311;
-	bh=oSCveWRf0n+ygoLavqxzh0UXlrl6IiiT9g5knvyb/RQ=;
+	s=default; t=1553257316;
+	bh=/Qa2QOrCopwcalx/Qgi9Fq8tG9K3enciv2dPvjhx9yI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PlAMFKeQjlQLniqtvFyez8NOsosc/3w3MRdOIArkWZrlgnIN+ZL17vCvrRuTm4MGc
-	 iJ9mkxvE3cuUl+aHeZTOVM+T4zBEg8GaCdzUITzx1ajoQ9vjW5FLS38HnieDPS6K8b
-	 AwQkh34z0hjctXHXvuAxsZo8fYasQULVvPJt7fl0=
+	b=Ae2XmIZv90jUercXlysEOsxKUFGKMfTAo/qFIsg7d4sVy5NfOtUowNcARN4YA++Yd
+	 0eYSq3XK2hW6eF6Ib2XvjpoKSCmXAGt33G+IasVl0/YF26O9Rc/kqwpcYErLdfCdWY
+	 Sy4F4DvQcPixqjA2avKgrINaOspu11N4VG5y5eDo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390918AbfCVMVt (ORCPT
+        id S2390927AbfCVMVy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:21:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60932 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:21:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390737AbfCVMVr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:21:47 -0400
+        id S2390737AbfCVMVv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:21:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 648032054F;
-        Fri, 22 Mar 2019 12:21:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 565C1218A1;
+        Fri, 22 Mar 2019 12:21:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553257305;
-        bh=oSCveWRf0n+ygoLavqxzh0UXlrl6IiiT9g5knvyb/RQ=;
+        s=default; t=1553257309;
+        bh=/Qa2QOrCopwcalx/Qgi9Fq8tG9K3enciv2dPvjhx9yI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fQ+s+sz/Y8ZRvaAJqBUI8ZKIem8/dimgNK6DIE5i2W6A4dkBZWz8Wu9g6pobnyAJH
-         vThxuvWxoBHcbY9Vux0LapSS8mGjSWxjIFhtCc+0EdtUZQqSak5AR9rJUXtr/g5rZo
-         6JTdWxhE3DuTKWOzLnxIy8bFYFum4i/+dUDLdfDA=
+        b=09nSA36lQhurwSFijpCXPiVkXpjeJueH72843M1g4mL7hAcBFQXwrgQBNlSRGCrKr
+         X7UeCrHvB9aSgXPEkPLCB3hER0GRTcoQnLx6Tq85VvbHlVNo63/Qj0e4BEfnx/vie/
+         irjDzM6icC/m5+FcGdcRS636X/CsdAgkekP6xLF4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Russell Currey <ruscur@russell.cc>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@ozlabs.org>
-Subject: [PATCH 5.0 160/238] powerpc/kvm: Save and restore host AMR/IAMR/UAMOR
-Date:   Fri, 22 Mar 2019 12:16:19 +0100
-Message-Id: <20190322111307.740167373@linuxfoundation.org>
+        stable@vger.kernel.org, Paul Mackerras <paulus@ozlabs.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.0 161/238] powerpc/powernv: Dont reprogram SLW image on every KVM guest entry/exit
+Date:   Fri, 22 Mar 2019 12:16:20 +0100
+Message-Id: <20190322111307.801129632@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -66,130 +65,157 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: Paul Mackerras <paulus@ozlabs.org>
 
-commit c3c7470c75566a077c8dc71dcf8f1948b8ddfab4 upstream.
+commit 19f8a5b5be2898573a5e1dc1db93e8d40117606a upstream.
 
-When the hash MMU is active the AMR, IAMR and UAMOR are used for
-pkeys. The AMR is directly writable by user space, and the UAMOR masks
-those writes, meaning both registers are effectively user register
-state. The IAMR is used to create an execute only key.
+Commit 24be85a23d1f ("powerpc/powernv: Clear PECE1 in LPCR via stop-api
+only on Hotplug", 2017-07-21) added two calls to opal_slw_set_reg()
+inside pnv_cpu_offline(), with the aim of changing the LPCR value in
+the SLW image to disable wakeups from the decrementer while a CPU is
+offline.  However, pnv_cpu_offline() gets called each time a secondary
+CPU thread is woken up to participate in running a KVM guest, that is,
+not just when a CPU is offlined.
 
-Also we must maintain the value of at least the AMR when running in
-process context, so that any memory accesses done by the kernel on
-behalf of the process are correctly controlled by the AMR.
+Since opal_slw_set_reg() is a very slow operation (with observed
+execution times around 20 milliseconds), this means that an offline
+secondary CPU can often be busy doing the opal_slw_set_reg() call
+when the primary CPU wants to grab all the secondary threads so that
+it can run a KVM guest.  This leads to messages like "KVM: couldn't
+grab CPU n" being printed and guest execution failing.
 
-Although we are correctly switching all registers when going into a
-guest, on returning to the host we just write 0 into all regs, except
-on Power9 where we restore the IAMR correctly.
+There is no need to reprogram the SLW image on every KVM guest entry
+and exit.  So that we do it only when a CPU is really transitioning
+between online and offline, this moves the calls to
+pnv_program_cpu_hotplug_lpcr() into pnv_smp_cpu_kill_self().
 
-This could be observed by a user process if it writes the AMR, then
-runs a guest and we then return immediately to it without
-rescheduling. Because we have written 0 to the AMR that would have the
-effect of granting read/write permission to pages that the process was
-trying to protect.
-
-In addition, when using the Radix MMU, the AMR can prevent inadvertent
-kernel access to userspace data, writing 0 to the AMR disables that
-protection.
-
-So save and restore AMR, IAMR and UAMOR.
-
-Fixes: cf43d3b26452 ("powerpc: Enable pkey subsystem")
-Cc: stable@vger.kernel.org # v4.16+
-Signed-off-by: Russell Currey <ruscur@russell.cc>
+Fixes: 24be85a23d1f ("powerpc/powernv: Clear PECE1 in LPCR via stop-api only on Hotplug")
+Cc: stable@vger.kernel.org # v4.14+
+Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Acked-by: Paul Mackerras <paulus@ozlabs.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/kvm/book3s_hv_rmhandlers.S |   26 +++++++++++++++++---------
- 1 file changed, 17 insertions(+), 9 deletions(-)
+ arch/powerpc/include/asm/powernv.h    |    2 ++
+ arch/powerpc/platforms/powernv/idle.c |   27 ++-------------------------
+ arch/powerpc/platforms/powernv/smp.c  |   25 +++++++++++++++++++++++++
+ 3 files changed, 29 insertions(+), 25 deletions(-)
 
---- a/arch/powerpc/kvm/book3s_hv_rmhandlers.S
-+++ b/arch/powerpc/kvm/book3s_hv_rmhandlers.S
-@@ -58,6 +58,8 @@ END_FTR_SECTION_IFCLR(CPU_FTR_ARCH_300)
- #define STACK_SLOT_DAWR		(SFS-56)
- #define STACK_SLOT_DAWRX	(SFS-64)
- #define STACK_SLOT_HFSCR	(SFS-72)
-+#define STACK_SLOT_AMR		(SFS-80)
-+#define STACK_SLOT_UAMOR	(SFS-88)
- /* the following is used by the P9 short path */
- #define STACK_SLOT_NVGPRS	(SFS-152)	/* 18 gprs */
+--- a/arch/powerpc/include/asm/powernv.h
++++ b/arch/powerpc/include/asm/powernv.h
+@@ -23,6 +23,8 @@ extern int pnv_npu2_handle_fault(struct
+ 				unsigned long *flags, unsigned long *status,
+ 				int count);
  
-@@ -726,11 +728,9 @@ BEGIN_FTR_SECTION
- 	mfspr	r5, SPRN_TIDR
- 	mfspr	r6, SPRN_PSSCR
- 	mfspr	r7, SPRN_PID
--	mfspr	r8, SPRN_IAMR
- 	std	r5, STACK_SLOT_TID(r1)
- 	std	r6, STACK_SLOT_PSSCR(r1)
- 	std	r7, STACK_SLOT_PID(r1)
--	std	r8, STACK_SLOT_IAMR(r1)
- 	mfspr	r5, SPRN_HFSCR
- 	std	r5, STACK_SLOT_HFSCR(r1)
- END_FTR_SECTION_IFSET(CPU_FTR_ARCH_300)
-@@ -738,11 +738,18 @@ BEGIN_FTR_SECTION
- 	mfspr	r5, SPRN_CIABR
- 	mfspr	r6, SPRN_DAWR
- 	mfspr	r7, SPRN_DAWRX
-+	mfspr	r8, SPRN_IAMR
- 	std	r5, STACK_SLOT_CIABR(r1)
- 	std	r6, STACK_SLOT_DAWR(r1)
- 	std	r7, STACK_SLOT_DAWRX(r1)
-+	std	r8, STACK_SLOT_IAMR(r1)
- END_FTR_SECTION_IFSET(CPU_FTR_ARCH_207S)
- 
-+	mfspr	r5, SPRN_AMR
-+	std	r5, STACK_SLOT_AMR(r1)
-+	mfspr	r6, SPRN_UAMOR
-+	std	r6, STACK_SLOT_UAMOR(r1)
++void pnv_program_cpu_hotplug_lpcr(unsigned int cpu, u64 lpcr_val);
 +
- BEGIN_FTR_SECTION
- 	/* Set partition DABR */
- 	/* Do this before re-enabling PMU to avoid P7 DABR corruption bug */
-@@ -1631,22 +1638,25 @@ ALT_FTR_SECTION_END_IFCLR(CPU_FTR_ARCH_3
- 	mtspr	SPRN_PSPB, r0
- 	mtspr	SPRN_WORT, r0
- BEGIN_FTR_SECTION
--	mtspr	SPRN_IAMR, r0
- 	mtspr	SPRN_TCSCR, r0
- 	/* Set MMCRS to 1<<31 to freeze and disable the SPMC counters */
- 	li	r0, 1
- 	sldi	r0, r0, 31
- 	mtspr	SPRN_MMCRS, r0
- END_FTR_SECTION_IFCLR(CPU_FTR_ARCH_300)
--8:
+ void pnv_tm_init(void);
+ #else
+ static inline void powernv_set_nmmu_ptcr(unsigned long ptcr) { }
+--- a/arch/powerpc/platforms/powernv/idle.c
++++ b/arch/powerpc/platforms/powernv/idle.c
+@@ -458,7 +458,8 @@ EXPORT_SYMBOL_GPL(pnv_power9_force_smt4_
+ #endif /* CONFIG_KVM_BOOK3S_HV_POSSIBLE */
  
--	/* Save and reset AMR and UAMOR before turning on the MMU */
-+	/* Save and restore AMR, IAMR and UAMOR before turning on the MMU */
-+	ld	r8, STACK_SLOT_IAMR(r1)
-+	mtspr	SPRN_IAMR, r8
+ #ifdef CONFIG_HOTPLUG_CPU
+-static void pnv_program_cpu_hotplug_lpcr(unsigned int cpu, u64 lpcr_val)
 +
-+8:	/* Power7 jumps back in here */
- 	mfspr	r5,SPRN_AMR
- 	mfspr	r6,SPRN_UAMOR
- 	std	r5,VCPU_AMR(r9)
- 	std	r6,VCPU_UAMOR(r9)
--	li	r6,0
--	mtspr	SPRN_AMR,r6
-+	ld	r5,STACK_SLOT_AMR(r1)
-+	ld	r6,STACK_SLOT_UAMOR(r1)
-+	mtspr	SPRN_AMR, r5
- 	mtspr	SPRN_UAMOR, r6
++void pnv_program_cpu_hotplug_lpcr(unsigned int cpu, u64 lpcr_val)
+ {
+ 	u64 pir = get_hard_smp_processor_id(cpu);
  
- 	/* Switch DSCR back to host value */
-@@ -1746,11 +1756,9 @@ BEGIN_FTR_SECTION
- 	ld	r5, STACK_SLOT_TID(r1)
- 	ld	r6, STACK_SLOT_PSSCR(r1)
- 	ld	r7, STACK_SLOT_PID(r1)
--	ld	r8, STACK_SLOT_IAMR(r1)
- 	mtspr	SPRN_TIDR, r5
- 	mtspr	SPRN_PSSCR, r6
- 	mtspr	SPRN_PID, r7
--	mtspr	SPRN_IAMR, r8
- END_FTR_SECTION_IFSET(CPU_FTR_ARCH_300)
+@@ -481,20 +482,6 @@ unsigned long pnv_cpu_offline(unsigned i
+ {
+ 	unsigned long srr1;
+ 	u32 idle_states = pnv_get_supported_cpuidle_states();
+-	u64 lpcr_val;
+-
+-	/*
+-	 * We don't want to take decrementer interrupts while we are
+-	 * offline, so clear LPCR:PECE1. We keep PECE2 (and
+-	 * LPCR_PECE_HVEE on P9) enabled as to let IPIs in.
+-	 *
+-	 * If the CPU gets woken up by a special wakeup, ensure that
+-	 * the SLW engine sets LPCR with decrementer bit cleared, else
+-	 * the CPU will come back to the kernel due to a spurious
+-	 * wakeup.
+-	 */
+-	lpcr_val = mfspr(SPRN_LPCR) & ~(u64)LPCR_PECE1;
+-	pnv_program_cpu_hotplug_lpcr(cpu, lpcr_val);
  
- #ifdef CONFIG_PPC_RADIX_MMU
+ 	__ppc64_runlatch_off();
+ 
+@@ -526,16 +513,6 @@ unsigned long pnv_cpu_offline(unsigned i
+ 
+ 	__ppc64_runlatch_on();
+ 
+-	/*
+-	 * Re-enable decrementer interrupts in LPCR.
+-	 *
+-	 * Further, we want stop states to be woken up by decrementer
+-	 * for non-hotplug cases. So program the LPCR via stop api as
+-	 * well.
+-	 */
+-	lpcr_val = mfspr(SPRN_LPCR) | (u64)LPCR_PECE1;
+-	pnv_program_cpu_hotplug_lpcr(cpu, lpcr_val);
+-
+ 	return srr1;
+ }
+ #endif
+--- a/arch/powerpc/platforms/powernv/smp.c
++++ b/arch/powerpc/platforms/powernv/smp.c
+@@ -39,6 +39,7 @@
+ #include <asm/cpuidle.h>
+ #include <asm/kexec.h>
+ #include <asm/reg.h>
++#include <asm/powernv.h>
+ 
+ #include "powernv.h"
+ 
+@@ -153,6 +154,7 @@ static void pnv_smp_cpu_kill_self(void)
+ {
+ 	unsigned int cpu;
+ 	unsigned long srr1, wmask;
++	u64 lpcr_val;
+ 
+ 	/* Standard hot unplug procedure */
+ 	/*
+@@ -174,6 +176,19 @@ static void pnv_smp_cpu_kill_self(void)
+ 	if (cpu_has_feature(CPU_FTR_ARCH_207S))
+ 		wmask = SRR1_WAKEMASK_P8;
+ 
++	/*
++	 * We don't want to take decrementer interrupts while we are
++	 * offline, so clear LPCR:PECE1. We keep PECE2 (and
++	 * LPCR_PECE_HVEE on P9) enabled so as to let IPIs in.
++	 *
++	 * If the CPU gets woken up by a special wakeup, ensure that
++	 * the SLW engine sets LPCR with decrementer bit cleared, else
++	 * the CPU will come back to the kernel due to a spurious
++	 * wakeup.
++	 */
++	lpcr_val = mfspr(SPRN_LPCR) & ~(u64)LPCR_PECE1;
++	pnv_program_cpu_hotplug_lpcr(cpu, lpcr_val);
++
+ 	while (!generic_check_cpu_restart(cpu)) {
+ 		/*
+ 		 * Clear IPI flag, since we don't handle IPIs while
+@@ -246,6 +261,16 @@ static void pnv_smp_cpu_kill_self(void)
+ 
+ 	}
+ 
++	/*
++	 * Re-enable decrementer interrupts in LPCR.
++	 *
++	 * Further, we want stop states to be woken up by decrementer
++	 * for non-hotplug cases. So program the LPCR via stop api as
++	 * well.
++	 */
++	lpcr_val = mfspr(SPRN_LPCR) | (u64)LPCR_PECE1;
++	pnv_program_cpu_hotplug_lpcr(cpu, lpcr_val);
++
+ 	DBG("CPU%d coming online...\n", cpu);
+ }
+ 
 
 
