@@ -3,115 +3,87 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1EAAC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:03:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82D2DC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:04:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AA2C21900
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:03:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E1712075C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:04:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728115AbfCVLDF (ORCPT
+        id S1728121AbfCVLEA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:03:05 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45454 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727786AbfCVLDF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:03:05 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id CAE86AEDF;
-        Fri, 22 Mar 2019 11:03:02 +0000 (UTC)
-Subject: Re: [Xen-devel][PATCH] Input: xen-kbdfront - signal the backend that
- we disconnect
-To:     Oleksandr Andrushchenko <andr2000@gmail.com>,
-        xen-devel@lists.xenproject.org, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dmitry.torokhov@gmail.com,
-        boris.ostrovsky@oracle.com
-Cc:     Volodymyr_Babchuk@epam.com,
-        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
-References: <20190315092348.32613-1-andr2000@gmail.com>
-From:   Juergen Gross <jgross@suse.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jgross@suse.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <32add426-ae36-ecc9-aa3e-6169fe04f231@suse.com>
-Date:   Fri, 22 Mar 2019 12:03:02 +0100
+        Fri, 22 Mar 2019 07:04:00 -0400
+Received: from relay.sw.ru ([185.231.240.75]:34636 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727713AbfCVLD7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:03:59 -0400
+Received: from [172.16.25.169]
+        by relay.sw.ru with esmtp (Exim 4.91)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1h7Hxq-0000lf-FV; Fri, 22 Mar 2019 14:03:54 +0300
+Subject: Re: [PATCH net] netlink: fix a memory leak on error path
+To:     Chengguang Xu <cgxu519@gmx.com>, davem@davemloft.net
+Cc:     keescook@chromium.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190322105845.25046-1-cgxu519@gmx.com>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <2acfd376-7b25-5eeb-2770-413b880bd4d9@virtuozzo.com>
+Date:   Fri, 22 Mar 2019 14:03:53 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <20190315092348.32613-1-andr2000@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
+In-Reply-To: <20190322105845.25046-1-cgxu519@gmx.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/03/2019 10:23, Oleksandr Andrushchenko wrote:
-> From: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
+Hi, Chengguang,
+
+On 22.03.2019 13:58, Chengguang Xu wrote:
+> In genl_register_family(), when idr_alloc() fails,
+> we forget to free family->attrbuf.
 > 
-> While disconnecting from the backend we clean up shared resources
-> (event channel, ring buffer), but never let the backend know about
-> that. This may lead to inconsistent backend state and/or shared
-> resources use.
-> Fix this by explicitly letting the backend know that frontend has
-> destroyed shared resources by changing its Xen bus state accordingly.
+> Note, some callers call genl_unregister_family() to clean up
+> on error path, it doesn't work because the family is inserted
+> to the global list in the nearly last step.
 > 
-> Signed-off-by: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
+> Fixes: 2ae0f17df1c ("genetlink: use idr to track families").
+> Signed-off-by: Chengguang Xu <cgxu519@gmx.com>
+
+have you seen https://patchwork.ozlabs.org/patch/1059834/ ?
+
+Kirill
 > ---
->  drivers/input/misc/xen-kbdfront.c | 2 ++
->  1 file changed, 2 insertions(+)
+>  net/netlink/genetlink.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/input/misc/xen-kbdfront.c b/drivers/input/misc/xen-kbdfront.c
-> index 24bc5c5d876f..ecb6e719e0e2 100644
-> --- a/drivers/input/misc/xen-kbdfront.c
-> +++ b/drivers/input/misc/xen-kbdfront.c
-> @@ -488,6 +488,8 @@ static int xenkbd_connect_backend(struct xenbus_device *dev,
->  
->  static void xenkbd_disconnect_backend(struct xenkbd_info *info)
->  {
-> +	xenbus_switch_state(info->xbdev, XenbusStateClosing);
-> +
->  	if (info->irq >= 0)
->  		unbind_from_irqhandler(info->irq, info);
->  	info->irq = -1;
+> diff --git a/net/netlink/genetlink.c b/net/netlink/genetlink.c
+> index 25eeb6d2a75a..f0ec068e1d02 100644
+> --- a/net/netlink/genetlink.c
+> +++ b/net/netlink/genetlink.c
+> @@ -366,7 +366,7 @@ int genl_register_family(struct genl_family *family)
+>  			       start, end + 1, GFP_KERNEL);
+>  	if (family->id < 0) {
+>  		err = family->id;
+> -		goto errout_locked;
+> +		goto errout_free;
+>  	}
 > 
-
-As already stated for the related netfront patch: I'm not sure this
-is really what we want. Have you tested xl save/restore or migration
-of the guest with your patch applied?
-
-
-Juergen
+>  	err = genl_validate_assign_mc_groups(family);
+> @@ -385,6 +385,7 @@ int genl_register_family(struct genl_family *family)
+> 
+>  errout_remove:
+>  	idr_remove(&genl_fam_idr, family->id);
+> +errout_free:
+>  	kfree(family->attrbuf);
+>  errout_locked:
+>  	genl_unlock_all();
+> --
+> 2.20.1
+> 
