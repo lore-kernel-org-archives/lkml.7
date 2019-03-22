@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A443C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 05:23:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D40CC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 05:23:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C78B218E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 05:23:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 304992075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 05:23:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727817AbfCVFXa (ORCPT
+        id S1727783AbfCVFX0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 01:23:30 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:45650 "EHLO
+        Fri, 22 Mar 2019 01:23:26 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:45682 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727451AbfCVFXQ (ORCPT
+        by vger.kernel.org with ESMTP id S1727538AbfCVFXQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 22 Mar 2019 01:23:16 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1h7CeA-00016E-4T; Fri, 22 Mar 2019 05:23:14 +0000
+        id 1h7Ce9-00015y-Np; Fri, 22 Mar 2019 05:23:13 +0000
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1h7Ce9-0001pQ-R9; Fri, 22 Mar 2019 05:23:13 +0000
+        id 1h7Ce9-0001oX-H4; Fri, 22 Mar 2019 05:23:13 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,17 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Paolo Bonzini" <pbonzini@redhat.com>,
-        "Felix Wilhelm" <fwilhelm@google.com>
+        "David S. Miller" <davem@davemloft.net>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "Hui Peng" <benquike@gmail.com>,
+        "Mathias Payer" <mathias.payer@nebelwelt.net>,
+        "Sebastian Andrzej Siewior" <bigeasy@linutronix.de>
 Date:   Fri, 22 Mar 2019 05:20:18 +0000
-Message-ID: <lsq.1553232018.568574877@decadent.org.uk>
+Message-ID: <lsq.1553232018.475737595@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 16/16] KVM: x86: work around leak of uninitialized
- stack contents (CVE-2019-7222)
+Subject: [PATCH 3.16 05/16] USB: hso: Fix OOB memory access in
+ hso_probe/hso_get_config_data
 In-Reply-To: <lsq.1553232017.771830163@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,44 +59,65 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Paolo Bonzini <pbonzini@redhat.com>
+From: Hui Peng <benquike@gmail.com>
 
-commit 353c0956a618a07ba4bbe7ad00ff29fe70e8412a upstream.
+commit 5146f95df782b0ac61abde36567e718692725c89 upstream.
 
-Bugzilla: 1671930
+The function hso_probe reads if_num from the USB device (as an u8) and uses
+it without a length check to index an array, resulting in an OOB memory read
+in hso_probe or hso_get_config_data.
 
-Emulation of certain instructions (VMXON, VMCLEAR, VMPTRLD, VMWRITE with
-memory operand, INVEPT, INVVPID) can incorrectly inject a page fault
-when passed an operand that points to an MMIO address.  The page fault
-will use uninitialized kernel stack memory as the CR2 and error code.
+Add a length check for both locations and updated hso_probe to bail on
+error.
 
-The right behavior would be to abort the VM with a KVM_EXIT_INTERNAL_ERROR
-exit to userspace; however, it is not an easy fix, so for now just
-ensure that the error code and CR2 are zero.
+This issue has been assigned CVE-2018-19985.
 
-Embargoed until Feb 7th 2019.
-
-Reported-by: Felix Wilhelm <fwilhelm@google.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Reported-by: Hui Peng <benquike@gmail.com>
+Reported-by: Mathias Payer <mathias.payer@nebelwelt.net>
+Signed-off-by: Hui Peng <benquike@gmail.com>
+Signed-off-by: Mathias Payer <mathias.payer@nebelwelt.net>
+Reviewed-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/x86/kvm/x86.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/net/usb/hso.c | 18 ++++++++++++++++--
+ 1 file changed, 16 insertions(+), 2 deletions(-)
 
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -4208,6 +4208,13 @@ int kvm_read_guest_virt(struct kvm_vcpu
- {
- 	u32 access = (kvm_x86_ops->get_cpl(vcpu) == 3) ? PFERR_USER_MASK : 0;
+--- a/drivers/net/usb/hso.c
++++ b/drivers/net/usb/hso.c
+@@ -2812,6 +2812,12 @@ static int hso_get_config_data(struct us
+ 		return -EIO;
+ 	}
  
-+	/*
-+	 * FIXME: this should call handle_emulation_failure if X86EMUL_IO_NEEDED
-+	 * is returned, but our callers are not ready for that and they blindly
-+	 * call kvm_inject_page_fault.  Ensure that they at least do not leak
-+	 * uninitialized kernel stack memory into cr2 and error code.
-+	 */
-+	memset(exception, 0, sizeof(*exception));
- 	return kvm_read_guest_virt_helper(addr, val, bytes, vcpu, access,
- 					  exception);
- }
++	/* check if we have a valid interface */
++	if (if_num > 16) {
++		kfree(config_data);
++		return -EINVAL;
++	}
++
+ 	switch (config_data[if_num]) {
+ 	case 0x0:
+ 		result = 0;
+@@ -2882,10 +2888,18 @@ static int hso_probe(struct usb_interfac
+ 
+ 	/* Get the interface/port specification from either driver_info or from
+ 	 * the device itself */
+-	if (id->driver_info)
++	if (id->driver_info) {
++		/* if_num is controlled by the device, driver_info is a 0 terminated
++		 * array. Make sure, the access is in bounds! */
++		for (i = 0; i <= if_num; ++i)
++			if (((u32 *)(id->driver_info))[i] == 0)
++				goto exit;
+ 		port_spec = ((u32 *)(id->driver_info))[if_num];
+-	else
++	} else {
+ 		port_spec = hso_get_config_data(interface);
++		if (port_spec < 0)
++			goto exit;
++	}
+ 
+ 	/* Check if we need to switch to alt interfaces prior to port
+ 	 * configuration */
 
