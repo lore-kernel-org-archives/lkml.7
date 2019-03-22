@@ -4,38 +4,38 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1CB3C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:48:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E488C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:48:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B834A2070D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:48:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34AF42070D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:48:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="Vizm6Ueo"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="fDaIt6BB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733213AbfCVMsO (ORCPT
+        id S2387707AbfCVL5k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:48:14 -0400
+        Fri, 22 Mar 2019 07:57:40 -0400
 Received: from mail-eopbgr750053.outbound.protection.outlook.com ([40.107.75.53]:65282
         "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732855AbfCVL5n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:57:43 -0400
+        id S2387680AbfCVL5h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:57:37 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=amdcloud.onmicrosoft.com; s=selector1-amd-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jg+5LF+hGiRJgBVGwIy+/QdCK9IT8A1B38ggtPjuyyU=;
- b=Vizm6Ueo3vGSW8gVO6MpUx4UPe+XH6s9JsYQk03b1FCFDpL7fXGv+KsRJBfzzS0I15P4kG7n0TIic3XkuXxzOciqNb31Z5id/Ixx8Wqq97r8vruNANXJSI7Wtx/xeL/l9QcL//QPkku5U2FEJAoWVRPvSglGP1mXWd+KtpcbrRc=
+ bh=xmiWwO3BkUkIczul5UaDEtWkAK+bBCcf6R8AvNYn2dI=;
+ b=fDaIt6BBvBmiiXaRLVcazLU6EIieM3urqZGXeFJt8pX1D/7a06ChRRuXXX32VyQQUSH+AGKYp3NHazYe/MDt6Dgl4kbSDiOEMoxo3cdkPxzS3iX/qTiyvtQIF6al+WeKdYFX7H0tPs/6HM0mx2GEjPsmMh1fwT5xCUj8wwl+YgU=
 Received: from DM6PR12MB2844.namprd12.prod.outlook.com (20.176.117.96) by
  DM6PR12MB2811.namprd12.prod.outlook.com (20.176.117.92) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1709.15; Fri, 22 Mar 2019 11:57:37 +0000
+ 15.20.1709.15; Fri, 22 Mar 2019 11:57:34 +0000
 Received: from DM6PR12MB2844.namprd12.prod.outlook.com
  ([fe80::3589:a066:e1d:b1f0]) by DM6PR12MB2844.namprd12.prod.outlook.com
  ([fe80::3589:a066:e1d:b1f0%5]) with mapi id 15.20.1709.015; Fri, 22 Mar 2019
- 11:57:37 +0000
+ 11:57:34 +0000
 From:   "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>
 To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "kvm@vger.kernel.org" <kvm@vger.kernel.org>
@@ -43,13 +43,12 @@ CC:     "joro@8bytes.org" <joro@8bytes.org>,
         "pbonzini@redhat.com" <pbonzini@redhat.com>,
         "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
         "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>
-Subject: [PATCH 5/6] KVM: x86: Add interface for run-time activate/de-activate
- APIC virtualization
-Thread-Topic: [PATCH 5/6] KVM: x86: Add interface for run-time
- activate/de-activate APIC virtualization
-Thread-Index: AQHU4KZxvEXsSaT7I0eWBkO/ZFGgyw==
-Date:   Fri, 22 Mar 2019 11:57:37 +0000
-Message-ID: <20190322115702.10166-6-suravee.suthikulpanit@amd.com>
+Subject: [PATCH 4/6] kvm: lapic: Add apicv activate/deactivate helper function
+Thread-Topic: [PATCH 4/6] kvm: lapic: Add apicv activate/deactivate helper
+ function
+Thread-Index: AQHU4KZvukQXllsT80ClQydRuIOOIg==
+Date:   Fri, 22 Mar 2019 11:57:34 +0000
+Message-ID: <20190322115702.10166-5-suravee.suthikulpanit@amd.com>
 References: <20190322115702.10166-1-suravee.suthikulpanit@amd.com>
 In-Reply-To: <20190322115702.10166-1-suravee.suthikulpanit@amd.com>
 Accept-Language: en-US
@@ -64,23 +63,23 @@ authentication-results: spf=none (sender IP is )
 x-ms-exchange-messagesentrepresentingtype: 1
 x-mailer: git-send-email 2.17.1
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 11fa066c-3131-4765-76b3-08d6aebd93cc
+x-ms-office365-filtering-correlation-id: 10ea35b9-8e05-4bb0-4629-08d6aebd9210
 x-ms-office365-filtering-ht: Tenant
 x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:DM6PR12MB2811;
 x-ms-traffictypediagnostic: DM6PR12MB2811:
-x-microsoft-antispam-prvs: <DM6PR12MB2811A15A9EB85DAFC228868AF3430@DM6PR12MB2811.namprd12.prod.outlook.com>
+x-microsoft-antispam-prvs: <DM6PR12MB2811DD1366B3752EEC8AFB87F3430@DM6PR12MB2811.namprd12.prod.outlook.com>
 x-forefront-prvs: 09840A4839
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(366004)(136003)(346002)(396003)(376002)(199004)(189003)(52116002)(71190400001)(86362001)(105586002)(7736002)(5660300002)(186003)(106356001)(53936002)(25786009)(76176011)(316002)(4326008)(14454004)(71200400001)(99286004)(110136005)(97736004)(102836004)(26005)(54906003)(386003)(2906002)(11346002)(478600001)(2501003)(66066001)(6486002)(6512007)(6506007)(68736007)(14444005)(256004)(446003)(36756003)(476003)(72206003)(486006)(1076003)(6116002)(81156014)(3846002)(8936002)(2616005)(8676002)(81166006)(305945005)(50226002)(6436002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB2811;H:DM6PR12MB2844.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(366004)(136003)(346002)(396003)(376002)(199004)(189003)(52116002)(71190400001)(86362001)(105586002)(7736002)(5660300002)(186003)(106356001)(53936002)(25786009)(76176011)(316002)(4326008)(14454004)(71200400001)(99286004)(110136005)(97736004)(102836004)(26005)(54906003)(386003)(2906002)(11346002)(478600001)(2501003)(66066001)(6486002)(6512007)(6506007)(68736007)(14444005)(256004)(446003)(36756003)(476003)(72206003)(486006)(1076003)(6116002)(81156014)(3846002)(8936002)(2616005)(8676002)(81166006)(305945005)(50226002)(6436002)(309714004);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB2811;H:DM6PR12MB2844.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 received-spf: None (protection.outlook.com: amd.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: xwGiBL4vSLELwvekGqf7IBlXLzICY/ylXjW8iz4BurAE6rimi8hQQ+plFvnSTCnJ91mOLYk9WJmJAlVLy2Ris0aNTPPkxvDRPT3ho8wZiIaaWNd4movk+gdqLYXe8HBGUUWCto2S9iS8nRgaPCOemoWqBfjD0nlzS/sWxVE/x4WtGmLTwHHpkQK1KfixZ/1Kneal5tG/be9lgBOLInCEcKIdLaPmycA7xi0V+MQp4hD507rOOdYAf/uQAcrfw134jxkoMxqMZz/31S4vIgdlpS2LPqLWX6w4iCUryw7ejb772hXmV/ReTTh15ByXsKUNmaeg/2Ew7gyJqcdfLYoG5YFMNQY4TC3hxyMn7+bh4sysOdEqMUnadb9dmmtOp9iZ3GFIsZLBovCd4erTw8y2Cq7KAGEiuNF1spqW6hf8xvg=
+x-microsoft-antispam-message-info: pE/y4tl99dw1aAUwjTA6uVubSudFx/4f/UWHcew6lavoghmuw/zW5IRzkpDtlwBORmUBEoWRuzhC42YBmCR6Ot/vkEuADMkjcW+N90rewmSrVRpma9vAR7pnBLxrKXWwANfZnmqyjbEJcip1ZcqMR7UxC43iP9uijxlw3m92Tmo6ngD0VhzatCX5W4j/iPrAOuFyWieXOh22z1pLjtMwjj4xJp+4UhmfZrE3V/V8qLPJbBXe+VLnG2n2opMRR3Wiggg/qduOaqJdrQRcE9/O9eFY9CsknxaaWpW5La1G1oP/poHpuPe7vAPFGx+eCmekjMoWQ3HatL4Jk7sv37FGNiIXYxikiyeNyX4nvpS1iFP6RkNYRCUuA2AQgKHQLa1ztXpVSPahHITxDhUWMXbzDhSte+SnRBQDJ40hiJFybgw=
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 11fa066c-3131-4765-76b3-08d6aebd93cc
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Mar 2019 11:57:37.5699
+X-MS-Exchange-CrossTenant-Network-Message-Id: 10ea35b9-8e05-4bb0-4629-08d6aebd9210
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Mar 2019 11:57:34.5958
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
@@ -91,135 +90,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When activate / deactivate AVIC during runtime, all vcpus has to be
-operating in the same mode. So, introduce new interface to request
-all vCPUs to activate/deactivate APICV.
+Introduce a helper function for setting lapic parameters when
+activate/deactivate apicv.
 
 Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
 ---
- arch/x86/include/asm/kvm_host.h |  8 ++++++
- arch/x86/kvm/x86.c              | 48 +++++++++++++++++++++++++++++++++
- 2 files changed, 56 insertions(+)
+ arch/x86/kvm/lapic.c | 23 ++++++++++++++++++-----
+ arch/x86/kvm/lapic.h |  1 +
+ 2 files changed, 19 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_hos=
-t.h
-index 1906e205e6a3..31dee26a37f2 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -79,6 +79,10 @@
- #define KVM_REQ_HV_STIMER		KVM_ARCH_REQ(22)
- #define KVM_REQ_LOAD_EOI_EXITMAP	KVM_ARCH_REQ(23)
- #define KVM_REQ_GET_VMCS12_PAGES	KVM_ARCH_REQ(24)
-+#define KVM_REQ_APICV_ACTIVATE		\
-+	KVM_ARCH_REQ_FLAGS(25, KVM_REQUEST_WAIT | KVM_REQUEST_NO_WAKEUP)
-+#define KVM_REQ_APICV_DEACTIVATE	\
-+	KVM_ARCH_REQ_FLAGS(26, KVM_REQUEST_WAIT | KVM_REQUEST_NO_WAKEUP)
+diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+index 95295cf81283..9c5cd1a98928 100644
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -2126,6 +2126,22 @@ void kvm_lapic_set_base(struct kvm_vcpu *vcpu, u64 v=
+alue)
 =20
- #define CR0_RESERVED_BITS                                               \
- 	(~(unsigned long)(X86_CR0_PE | X86_CR0_MP | X86_CR0_EM | X86_CR0_TS \
-@@ -1537,6 +1541,10 @@ bool kvm_is_linear_rip(struct kvm_vcpu *vcpu, unsign=
-ed long linear_rip);
-=20
- void kvm_make_mclock_inprogress_request(struct kvm *kvm);
- void kvm_make_scan_ioapic_request(struct kvm *kvm);
-+void kvm_vcpu_deactivate_apicv(struct kvm_vcpu *vcpu);
-+void kvm_vcpu_activate_apicv(struct kvm_vcpu *vcpu);
-+void kvm_make_apicv_activate_request(struct kvm *kvm);
-+void kvm_make_apicv_deactivate_request(struct kvm *kvm);
-=20
- void kvm_arch_async_page_not_present(struct kvm_vcpu *vcpu,
- 				     struct kvm_async_pf *work);
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 65e4559eef2f..1cd49c394680 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -29,6 +29,7 @@
- #include "cpuid.h"
- #include "pmu.h"
- #include "hyperv.h"
-+#include "lapic.h"
-=20
- #include <linux/clocksource.h>
- #include <linux/interrupt.h>
-@@ -7054,6 +7055,22 @@ static void kvm_pv_kick_cpu_op(struct kvm *kvm, unsi=
-gned long flags, int apicid)
- 	kvm_irq_delivery_to_apic(kvm, NULL, &lapic_irq, NULL);
  }
 =20
-+void kvm_vcpu_activate_apicv(struct kvm_vcpu *vcpu)
++void kvm_apic_update_apicv(struct kvm_vcpu *vcpu)
 +{
-+	if (!lapic_in_kernel(vcpu)) {
-+		WARN_ON_ONCE(!vcpu->arch.apicv_active);
-+		return;
++	struct kvm_lapic *apic =3D vcpu->arch.apic;
++	bool active =3D vcpu->arch.apicv_active;
++
++	if (active) {
++		/* irr_pending is always true when apicv is activated. */
++		apic->irr_pending =3D true;
++		apic->isr_count =3D 1;
++	} else {
++		apic->irr_pending =3D !!count_vectors(apic->regs + APIC_IRR);
++		apic->isr_count =3D count_vectors(apic->regs + APIC_ISR);
 +	}
-+	if (vcpu->arch.apicv_active)
-+		return;
-+
-+	vcpu->arch.apicv_active =3D true;
-+	kvm_apic_update_apicv(vcpu);
-+
-+	kvm_x86_ops->refresh_apicv_exec_ctrl(vcpu);
 +}
-+EXPORT_SYMBOL_GPL(kvm_vcpu_activate_apicv);
++EXPORT_SYMBOL(kvm_apic_update_apicv);
 +
- void kvm_vcpu_deactivate_apicv(struct kvm_vcpu *vcpu)
+ void kvm_lapic_reset(struct kvm_vcpu *vcpu, bool init_event)
  {
- 	if (!lapic_in_kernel(vcpu)) {
-@@ -7064,8 +7081,11 @@ void kvm_vcpu_deactivate_apicv(struct kvm_vcpu *vcpu=
-)
- 		return;
-=20
- 	vcpu->arch.apicv_active =3D false;
-+	kvm_apic_update_apicv(vcpu);
-+
- 	kvm_x86_ops->refresh_apicv_exec_ctrl(vcpu);
- }
-+EXPORT_SYMBOL_GPL(kvm_vcpu_deactivate_apicv);
-=20
- int kvm_emulate_hypercall(struct kvm_vcpu *vcpu)
- {
-@@ -7557,6 +7577,30 @@ void kvm_make_scan_ioapic_request(struct kvm *kvm)
- 	kvm_make_all_cpus_request(kvm, KVM_REQ_SCAN_IOAPIC);
- }
-=20
-+void kvm_make_apicv_activate_request(struct kvm *kvm)
-+{
-+	int i;
-+	struct kvm_vcpu *v;
-+
-+	kvm_for_each_vcpu(i, v, kvm)
-+		kvm_clear_request(KVM_REQ_APICV_DEACTIVATE, v);
-+
-+	kvm_make_all_cpus_request(kvm, KVM_REQ_APICV_ACTIVATE);
-+}
-+EXPORT_SYMBOL_GPL(kvm_make_apicv_activate_request);
-+
-+void kvm_make_apicv_deactivate_request(struct kvm *kvm)
-+{
-+	int i;
-+	struct kvm_vcpu *v;
-+
-+	kvm_for_each_vcpu(i, v, kvm)
-+		kvm_clear_request(KVM_REQ_APICV_ACTIVATE, v);
-+
-+	kvm_make_all_cpus_request(kvm, KVM_REQ_APICV_DEACTIVATE);
-+}
-+EXPORT_SYMBOL_GPL(kvm_make_apicv_deactivate_request);
-+
- static void vcpu_scan_ioapic(struct kvm_vcpu *vcpu)
- {
- 	if (!kvm_apic_present(vcpu))
-@@ -7743,6 +7787,10 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
- 		 */
- 		if (kvm_check_request(KVM_REQ_HV_STIMER, vcpu))
- 			kvm_hv_process_stimers(vcpu);
-+		if (kvm_check_request(KVM_REQ_APICV_ACTIVATE, vcpu))
-+			kvm_vcpu_activate_apicv(vcpu);
-+		if (kvm_check_request(KVM_REQ_APICV_DEACTIVATE, vcpu))
-+			kvm_vcpu_deactivate_apicv(vcpu);
+ 	struct kvm_lapic *apic =3D vcpu->arch.apic;
+@@ -2170,8 +2186,7 @@ void kvm_lapic_reset(struct kvm_vcpu *vcpu, bool init=
+_event)
+ 		kvm_lapic_set_reg(apic, APIC_ISR + 0x10 * i, 0);
+ 		kvm_lapic_set_reg(apic, APIC_TMR + 0x10 * i, 0);
  	}
+-	apic->irr_pending =3D vcpu->arch.apicv_active;
+-	apic->isr_count =3D vcpu->arch.apicv_active ? 1 : 0;
++	kvm_apic_update_apicv(vcpu);
+ 	apic->highest_isr_cache =3D -1;
+ 	update_divide_count(apic);
+ 	atomic_set(&apic->lapic_timer.pending, 0);
+@@ -2433,9 +2448,7 @@ int kvm_apic_set_state(struct kvm_vcpu *vcpu, struct =
+kvm_lapic_state *s)
+ 	apic_manage_nmi_watchdog(apic, kvm_lapic_get_reg(apic, APIC_LVT0));
+ 	update_divide_count(apic);
+ 	start_apic_timer(apic);
+-	apic->irr_pending =3D true;
+-	apic->isr_count =3D vcpu->arch.apicv_active ?
+-				1 : count_vectors(apic->regs + APIC_ISR);
++	kvm_apic_update_apicv(vcpu);
+ 	apic->highest_isr_cache =3D -1;
+ 	if (vcpu->arch.apicv_active) {
+ 		kvm_x86_ops->apicv_post_state_restore(vcpu);
+diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
+index ff6ef9c3d760..b657605cfec0 100644
+--- a/arch/x86/kvm/lapic.h
++++ b/arch/x86/kvm/lapic.h
+@@ -88,6 +88,7 @@ void kvm_apic_update_ppr(struct kvm_vcpu *vcpu);
+ int kvm_apic_set_irq(struct kvm_vcpu *vcpu, struct kvm_lapic_irq *irq,
+ 		     struct dest_map *dest_map);
+ int kvm_apic_local_deliver(struct kvm_lapic *apic, int lvt_type);
++void kvm_apic_update_apicv(struct kvm_vcpu *vcpu);
 =20
- 	if (kvm_check_request(KVM_REQ_EVENT, vcpu) || req_int_win) {
+ bool kvm_irq_delivery_to_apic_fast(struct kvm *kvm, struct kvm_lapic *src,
+ 		struct kvm_lapic_irq *irq, int *r, struct dest_map *dest_map);
 --=20
 2.17.1
 
