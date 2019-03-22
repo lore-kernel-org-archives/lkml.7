@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4936C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:11:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10648C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:11:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73A7720830
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:11:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5E3521929
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:11:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256688;
-	bh=zIlraMoxsv+SbzTh/sL22uIkqlf98E3EPBWLm7Hllvo=;
+	s=default; t=1553256695;
+	bh=fZt6u4MprsXwIiQhhloL1FTJWJC+64ebKaRFWLUutWU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WMJR9fYkgV+JtQkYXo+FpNkhoFAJqD+eIPTyYyVZtnkVO5vfCjdNo05XNmxsdOq8N
-	 7zLLW6ZohVXMSXJlL8ywbsHx1BBFQ6jpL+sHiLWO0jnce8wnGkcA1OxM8E9+tJz/lv
-	 4GnRwhmhtW1+Pai3/krWhHpA6LWZ/daQ01Rr0GIc=
+	b=CKYch7Wf8v66TUU+F9libOi8/QGzlFDbHMF3XZpKxHpDlnTxmjemSV7jQeSVRfiEr
+	 bSb9fbs+zGxzyaO+XxWwr1miz6CDKl8L2QyGj1scUn4o2eYRTfGnryVlsJYvGkOQmE
+	 LTA4cDz6rNIcR1ltMy+wQ3N+1d9KPCOYrBCGn6qg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389203AbfCVML1 (ORCPT
+        id S2388949AbfCVMLd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:11:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49668 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:11:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389493AbfCVMLU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:11:20 -0400
+        id S2389170AbfCVML0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:11:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 12EE82082C;
-        Fri, 22 Mar 2019 12:11:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4D932082C;
+        Fri, 22 Mar 2019 12:11:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256679;
-        bh=zIlraMoxsv+SbzTh/sL22uIkqlf98E3EPBWLm7Hllvo=;
+        s=default; t=1553256686;
+        bh=fZt6u4MprsXwIiQhhloL1FTJWJC+64ebKaRFWLUutWU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IG/nO0pY8OGwSOyBrJzvoLhckwhwT9ZCHrqbdxuVqPHlY2vMFkck9dSgXEGaCBWTN
-         bMNJIpbysRnOkM2i9OtHHN3ZW2kKN4eAfannxxnZHuIAyYDI+sX/yH+ep74Qul11Mw
-         0xADK2EF3M7NfaY8x1emrR2ZBP4C07hksvj0bJ2w=
+        b=y2/oLh5egiZjQ5WM7qfKjpEh7I0+rDVfuf/Cu4YhgdLIxoTevYm0efO07tgADAh6y
+         AnbHucvHqjGMFcAdUxfHwDg1qxuoi3Lx0QaF+2s0QlUDOaMYfsmFSKSUatlilVb2lx
+         iVdsCO/0OfowsGrW82CDGu7vZtUOYEB8WxEYlO5Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steve Longerbeam <slongerbeam@gmail.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 4.19 268/280] media: imx: csi: Stop upstream before disabling IDMA channel
-Date:   Fri, 22 Mar 2019 12:17:01 +0100
-Message-Id: <20190322111345.484199391@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 4.19 270/280] drm/radeon/evergreen_cs: fix missing break in switch statement
+Date:   Fri, 22 Mar 2019 12:17:03 +0100
+Message-Id: <20190322111345.929829902@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -66,91 +66,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Steve Longerbeam <slongerbeam@gmail.com>
+From: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-commit 4bc1ab41eee9d02ad2483bf8f51a7b72e3504eba upstream.
+commit cc5034a5d293dd620484d1d836aa16c6764a1c8c upstream.
 
-Move upstream stream off to just after receiving the last EOF completion
-and disabling the CSI (and thus before disabling the IDMA channel) in
-csi_stop(). For symmetry also move upstream stream on to beginning of
-csi_start().
+Add missing break statement in order to prevent the code from falling
+through to case CB_TARGET_MASK.
 
-Doing this makes csi_s_stream() more symmetric with prp_s_stream() which
-will require the same change to fix a hard lockup.
+This bug was found thanks to the ongoing efforts to enable
+-Wimplicit-fallthrough.
 
-Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
-Cc: stable@vger.kernel.org	# for 4.13 and up
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Fixes: dd220a00e8bd ("drm/radeon/kms: add support for streamout v7")
+Cc: stable@vger.kernel.org
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/media/imx/imx-media-csi.c |   25 +++++++++++++------------
- 1 file changed, 13 insertions(+), 12 deletions(-)
+ drivers/gpu/drm/radeon/evergreen_cs.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/staging/media/imx/imx-media-csi.c
-+++ b/drivers/staging/media/imx/imx-media-csi.c
-@@ -722,10 +722,16 @@ static int csi_start(struct csi_priv *pr
- 
- 	output_fi = &priv->frame_interval[priv->active_output_pad];
- 
-+	/* start upstream */
-+	ret = v4l2_subdev_call(priv->src_sd, video, s_stream, 1);
-+	ret = (ret && ret != -ENOIOCTLCMD) ? ret : 0;
-+	if (ret)
-+		return ret;
-+
- 	if (priv->dest == IPU_CSI_DEST_IDMAC) {
- 		ret = csi_idmac_start(priv);
- 		if (ret)
--			return ret;
-+			goto stop_upstream;
- 	}
- 
- 	ret = csi_setup(priv);
-@@ -753,6 +759,8 @@ fim_off:
- idmac_stop:
- 	if (priv->dest == IPU_CSI_DEST_IDMAC)
- 		csi_idmac_stop(priv);
-+stop_upstream:
-+	v4l2_subdev_call(priv->src_sd, video, s_stream, 0);
- 	return ret;
- }
- 
-@@ -768,6 +776,9 @@ static void csi_stop(struct csi_priv *pr
- 	 */
- 	ipu_csi_disable(priv->csi);
- 
-+	/* stop upstream */
-+	v4l2_subdev_call(priv->src_sd, video, s_stream, 0);
-+
- 	if (priv->dest == IPU_CSI_DEST_IDMAC) {
- 		csi_idmac_stop(priv);
- 
-@@ -935,23 +946,13 @@ static int csi_s_stream(struct v4l2_subd
- 		goto update_count;
- 
- 	if (enable) {
--		/* upstream must be started first, before starting CSI */
--		ret = v4l2_subdev_call(priv->src_sd, video, s_stream, 1);
--		ret = (ret && ret != -ENOIOCTLCMD) ? ret : 0;
--		if (ret)
--			goto out;
--
- 		dev_dbg(priv->dev, "stream ON\n");
- 		ret = csi_start(priv);
--		if (ret) {
--			v4l2_subdev_call(priv->src_sd, video, s_stream, 0);
-+		if (ret)
- 			goto out;
--		}
- 	} else {
- 		dev_dbg(priv->dev, "stream OFF\n");
--		/* CSI must be stopped first, then stop upstream */
- 		csi_stop(priv);
--		v4l2_subdev_call(priv->src_sd, video, s_stream, 0);
- 	}
- 
- update_count:
+--- a/drivers/gpu/drm/radeon/evergreen_cs.c
++++ b/drivers/gpu/drm/radeon/evergreen_cs.c
+@@ -1299,6 +1299,7 @@ static int evergreen_cs_handle_reg(struc
+ 			return -EINVAL;
+ 		}
+ 		ib[idx] += (u32)((reloc->gpu_offset >> 8) & 0xffffffff);
++		break;
+ 	case CB_TARGET_MASK:
+ 		track->cb_target_mask = radeon_get_ib_value(p, idx);
+ 		track->cb_dirty = true;
 
 
