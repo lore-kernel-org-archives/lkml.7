@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D95C1C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:03:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6598C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:03:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8F82204FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:03:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9046221934
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:03:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256216;
-	bh=RADVDQbNv4aDyJMtqSTiyNG0dviOKFYM5DVWpzOU634=;
+	s=default; t=1553256219;
+	bh=vY6/4A0CRsEO2HchmoeZ6tnNc8Js0XVaoy52Pwgp74c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vJEWN0sYeRYi/kG3JdKFLK2WDzuwKaepCg5fEgBeKbUDGhf3hR00cTVTo2MS6xnJn
-	 /Dpf6KvzGDZMoKes2rnfUlm94m7EemPQx9D7lbSY8uH8KLUZYUHSMXwcdO79xMQRXO
-	 +XGgltzeeFSaSKN4oiobZBNvkuCJjM/BeSex/25E=
+	b=gevkTcHCbhT20/PzH3TyWTMxFbSSxagoPh9hjuLfbv/82bAzQ16kP5SMKwNS/cbwA
+	 xfxH4PR3M19FtY3331StoDrmB+tIGw+yEFGFthnuHWF6zL3e0b+awWQTw04D0IZnRC
+	 I9OMDyg+EgMIDuR7tBpCQVTbDWMfyO7RIKc6AZ60=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388537AbfCVMDe (ORCPT
+        id S2388545AbfCVMDi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:03:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41916 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:03:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388006AbfCVMDc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:03:32 -0400
+        id S2388006AbfCVMDf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:03:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B1E3204FD;
-        Fri, 22 Mar 2019 12:03:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0B1021934;
+        Fri, 22 Mar 2019 12:03:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256211;
-        bh=RADVDQbNv4aDyJMtqSTiyNG0dviOKFYM5DVWpzOU634=;
+        s=default; t=1553256215;
+        bh=vY6/4A0CRsEO2HchmoeZ6tnNc8Js0XVaoy52Pwgp74c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bzhq2W4yMef43B9gtl79HQ5ZmcdI11AgXgQ1A6qWYuqCtJMr8+shVCZSc6zZO7d5v
-         RsM08ao1QNmgfO91rJsq9/yqVXUipPvVRseBovZY/GOlMVxPiFlsnMqajDbiIRRpY+
-         FaQkALbHifsaGXFjtW33CyGvT96c8fHAIrv4a7is=
+        b=kkX5rPquhAdRFgV0lMFq+3UkL9Ymd2/c+aqZR31jOwUxn0ZfFlZRC0GKPTqrJ8NQL
+         pIai6iprGu0R+08BwfGtf84VY1ljdYDwXvuALg3BsY1p9wgkzDa2s91z/SYvJP9G7H
+         Xqt4rt32MKJCWzBwgHrpp0UnyBo9ZqlVzyaKUBQ4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        stable@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Eric Biggers <ebiggers@google.com>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.19 124/280] crypto: arm/crct10dif - revert to C code for short inputs
-Date:   Fri, 22 Mar 2019 12:14:37 +0100
-Message-Id: <20190322111315.544052942@linuxfoundation.org>
+Subject: [PATCH 4.19 125/280] crypto: arm64/aes-neonbs - fix returning final keystream block
+Date:   Fri, 22 Mar 2019 12:14:38 +0100
+Message-Id: <20190322111315.730916793@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -66,115 +66,56 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+From: Eric Biggers <ebiggers@google.com>
 
-commit 62fecf295e3c48be1b5f17c440b93875b9adb4d6 upstream.
+commit 12455e320e19e9cc7ad97f4ab89c280fe297387c upstream.
 
-The SIMD routine ported from x86 used to have a special code path
-for inputs < 16 bytes, which got lost somewhere along the way.
-Instead, the current glue code aligns the input pointer to permit
-the NEON routine to use special versions of the vld1 instructions
-that assume 16 byte alignment, but this could result in inputs of
-less than 16 bytes to be passed in. This not only fails the new
-extended tests that Eric has implemented, it also results in the
-code reading past the end of the input, which could potentially
-result in crashes when dealing with less than 16 bytes of input
-at the end of a page which is followed by an unmapped page.
+The arm64 NEON bit-sliced implementation of AES-CTR fails the improved
+skcipher tests because it sometimes produces the wrong ciphertext.  The
+bug is that the final keystream block isn't returned from the assembly
+code when the number of non-final blocks is zero.  This can happen if
+the input data ends a few bytes after a page boundary.  In this case the
+last bytes get "encrypted" by XOR'ing them with uninitialized memory.
 
-So update the glue code to only invoke the NEON routine if the
-input is at least 16 bytes.
+Fix the assembly code to return the final keystream block when needed.
 
-Reported-by: Eric Biggers <ebiggers@kernel.org>
-Reviewed-by: Eric Biggers <ebiggers@kernel.org>
-Fixes: 1d481f1cd892 ("crypto: arm/crct10dif - port x86 SSE implementation to ARM")
-Cc: <stable@vger.kernel.org> # v4.10+
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Fixes: 88a3f582bea9 ("crypto: arm64/aes - don't use IV buffer to return final keystream block")
+Cc: <stable@vger.kernel.org> # v4.11+
+Reviewed-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/crypto/crct10dif-ce-core.S |   14 +++++++-------
- arch/arm/crypto/crct10dif-ce-glue.c |   23 ++++++-----------------
- 2 files changed, 13 insertions(+), 24 deletions(-)
+ arch/arm64/crypto/aes-neonbs-core.S |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
---- a/arch/arm/crypto/crct10dif-ce-core.S
-+++ b/arch/arm/crypto/crct10dif-ce-core.S
-@@ -124,10 +124,10 @@ ENTRY(crc_t10dif_pmull)
- 	vext.8		q10, qzr, q0, #4
+--- a/arch/arm64/crypto/aes-neonbs-core.S
++++ b/arch/arm64/crypto/aes-neonbs-core.S
+@@ -971,18 +971,22 @@ CPU_LE(	rev		x8, x8		)
  
- 	// receive the initial 64B data, xor the initial crc value
--	vld1.64		{q0-q1}, [arg2, :128]!
--	vld1.64		{q2-q3}, [arg2, :128]!
--	vld1.64		{q4-q5}, [arg2, :128]!
--	vld1.64		{q6-q7}, [arg2, :128]!
-+	vld1.64		{q0-q1}, [arg2]!
-+	vld1.64		{q2-q3}, [arg2]!
-+	vld1.64		{q4-q5}, [arg2]!
-+	vld1.64		{q6-q7}, [arg2]!
- CPU_LE(	vrev64.8	q0, q0			)
- CPU_LE(	vrev64.8	q1, q1			)
- CPU_LE(	vrev64.8	q2, q2			)
-@@ -167,7 +167,7 @@ CPU_LE(	vrev64.8	q7, q7			)
- _fold_64_B_loop:
+ 8:	next_ctr	v0
+ 	st1		{v0.16b}, [x24]
+-	cbz		x23, 0f
++	cbz		x23, .Lctr_done
  
- 	.macro		fold64, reg1, reg2
--	vld1.64		{q11-q12}, [arg2, :128]!
-+	vld1.64		{q11-q12}, [arg2]!
+ 	cond_yield_neon	98b
+ 	b		99b
  
- 	vmull.p64	q8, \reg1\()h, d21
- 	vmull.p64	\reg1, \reg1\()l, d20
-@@ -238,7 +238,7 @@ _16B_reduction_loop:
- 	vmull.p64	q7, d15, d21
- 	veor.8		q7, q7, q8
+-0:	frame_pop
++.Lctr_done:
++	frame_pop
+ 	ret
  
--	vld1.64		{q0}, [arg2, :128]!
-+	vld1.64		{q0}, [arg2]!
- CPU_LE(	vrev64.8	q0, q0		)
- 	vswp		d0, d1
- 	veor.8		q7, q7, q0
-@@ -335,7 +335,7 @@ _less_than_128:
- 	vmov.i8		q0, #0
- 	vmov		s3, arg1_low32		// get the initial crc value
- 
--	vld1.64		{q7}, [arg2, :128]!
-+	vld1.64		{q7}, [arg2]!
- CPU_LE(	vrev64.8	q7, q7		)
- 	vswp		d14, d15
- 	veor.8		q7, q7, q0
---- a/arch/arm/crypto/crct10dif-ce-glue.c
-+++ b/arch/arm/crypto/crct10dif-ce-glue.c
-@@ -35,26 +35,15 @@ static int crct10dif_update(struct shash
- 			    unsigned int length)
- {
- 	u16 *crc = shash_desc_ctx(desc);
--	unsigned int l;
- 
--	if (!may_use_simd()) {
--		*crc = crc_t10dif_generic(*crc, data, length);
-+	if (length >= CRC_T10DIF_PMULL_CHUNK_SIZE && may_use_simd()) {
-+		kernel_neon_begin();
-+		*crc = crc_t10dif_pmull(*crc, data, length);
-+		kernel_neon_end();
- 	} else {
--		if (unlikely((u32)data % CRC_T10DIF_PMULL_CHUNK_SIZE)) {
--			l = min_t(u32, length, CRC_T10DIF_PMULL_CHUNK_SIZE -
--				  ((u32)data % CRC_T10DIF_PMULL_CHUNK_SIZE));
--
--			*crc = crc_t10dif_generic(*crc, data, l);
--
--			length -= l;
--			data += l;
--		}
--		if (length > 0) {
--			kernel_neon_begin();
--			*crc = crc_t10dif_pmull(*crc, data, length);
--			kernel_neon_end();
--		}
-+		*crc = crc_t10dif_generic(*crc, data, length);
- 	}
-+
- 	return 0;
- }
- 
+ 	/*
+ 	 * If we are handling the tail of the input (x6 != NULL), return the
+ 	 * final keystream block back to the caller.
+ 	 */
++0:	cbz		x25, 8b
++	st1		{v0.16b}, [x25]
++	b		8b
+ 1:	cbz		x25, 8b
+ 	st1		{v1.16b}, [x25]
+ 	b		8b
 
 
