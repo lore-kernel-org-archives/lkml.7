@@ -6,92 +6,87 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52E15C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 03:07:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58589C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 03:07:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C9D1218B0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 03:07:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BD63218B0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 03:07:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727574AbfCVDHM (ORCPT
+        id S1727675AbfCVDHR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 23:07:12 -0400
-Received: from mxhk.zte.com.cn ([63.217.80.70]:39582 "EHLO mxhk.zte.com.cn"
+        Thu, 21 Mar 2019 23:07:17 -0400
+Received: from out1.zte.com.cn ([202.103.147.172]:58104 "EHLO mxct.zte.com.cn"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727222AbfCVDHM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 23:07:12 -0400
+        id S1727576AbfCVDHQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 23:07:16 -0400
 Received: from mse01.zte.com.cn (unknown [10.30.3.20])
-        by Forcepoint Email with ESMTPS id 69DE437EF9822F2DE665;
-        Fri, 22 Mar 2019 11:07:10 +0800 (CST)
+        by Forcepoint Email with ESMTPS id EF639D0898BEB91D10D3;
+        Fri, 22 Mar 2019 11:07:09 +0800 (CST)
 Received: from notes_smtp.zte.com.cn ([10.30.1.239])
-        by mse01.zte.com.cn with ESMTP id x2M35kRq078031;
-        Fri, 22 Mar 2019 11:05:46 +0800 (GMT-8)
+        by mse01.zte.com.cn with ESMTP id x2M35lS2078047;
+        Fri, 22 Mar 2019 11:05:47 +0800 (GMT-8)
         (envelope-from wen.yang99@zte.com.cn)
 Received: from fox-host8.localdomain ([10.74.120.8])
           by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
-          with ESMTP id 2019032211062248-5922967 ;
-          Fri, 22 Mar 2019 11:06:22 +0800 
+          with ESMTP id 2019032211062412-5922971 ;
+          Fri, 22 Mar 2019 11:06:24 +0800 
 From:   Wen Yang <wen.yang99@zte.com.cn>
 To:     linux-kernel@vger.kernel.org
 Cc:     wang.yi59@zte.com.cn, Wen Yang <wen.yang99@zte.com.cn>,
+        Scott Wood <oss@buserror.net>,
+        Kumar Gala <galak@kernel.crashing.org>,
         Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>,
         linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH 1/5] powerpc/sparse: fix possible object reference leak
-Date:   Fri, 22 Mar 2019 11:05:51 +0800
-Message-Id: <1553223955-7350-1-git-send-email-wen.yang99@zte.com.cn>
+Subject: [PATCH 2/5] powerpc/83xx: fix possible object reference leak
+Date:   Fri, 22 Mar 2019 11:05:52 +0800
+Message-Id: <1553223955-7350-2-git-send-email-wen.yang99@zte.com.cn>
 X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1553223955-7350-1-git-send-email-wen.yang99@zte.com.cn>
+References: <1553223955-7350-1-git-send-email-wen.yang99@zte.com.cn>
 X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
- 21, 2013) at 2019-03-22 11:06:22,
+ 21, 2013) at 2019-03-22 11:06:24,
         Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
- 2019-03-22 11:05:31,
-        Serialize complete at 2019-03-22 11:05:31
-X-MAIL: mse01.zte.com.cn x2M35kRq078031
+ 2019-03-22 11:05:32,
+        Serialize complete at 2019-03-22 11:05:32
+X-MAIL: mse01.zte.com.cn x2M35lS2078047
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The call to of_find_node_by_path returns a node pointer with refcount
+The call to of_find_node_by_name returns a node pointer with refcount
 incremented thus it must be explicitly decremented after the last
 usage.
 
 Detected by coccinelle with the following warnings:
-./arch/powerpc/platforms/pseries/pseries_energy.c:101:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 46, but without a corresponding object release within this function.
-./arch/powerpc/platforms/pseries/pseries_energy.c:172:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 111, but without a corresponding object release within this function.
+./arch/powerpc/platforms/83xx/km83xx.c:68:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 59, but without a corresponding object release within this function.
 
 Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: Scott Wood <oss@buserror.net>
+Cc: Kumar Gala <galak@kernel.crashing.org>
 Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 Cc: Paul Mackerras <paulus@samba.org>
 Cc: Michael Ellerman <mpe@ellerman.id.au>
 Cc: linuxppc-dev@lists.ozlabs.org
 Cc: linux-kernel@vger.kernel.org
 ---
- arch/powerpc/platforms/pseries/pseries_energy.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/powerpc/platforms/83xx/km83xx.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/powerpc/platforms/pseries/pseries_energy.c b/arch/powerpc/platforms/pseries/pseries_energy.c
-index 6ed2212..e3913e4 100644
---- a/arch/powerpc/platforms/pseries/pseries_energy.c
-+++ b/arch/powerpc/platforms/pseries/pseries_energy.c
-@@ -69,7 +69,7 @@ static u32 cpu_to_drc_index(int cpu)
+diff --git a/arch/powerpc/platforms/83xx/km83xx.c b/arch/powerpc/platforms/83xx/km83xx.c
+index d8642a4..11eea7c 100644
+--- a/arch/powerpc/platforms/83xx/km83xx.c
++++ b/arch/powerpc/platforms/83xx/km83xx.c
+@@ -65,6 +65,7 @@ static void quirk_mpc8360e_qe_enet10(void)
+ 	ret = of_address_to_resource(np_par, 0, &res);
+ 	if (ret) {
+ 		pr_warn("%s couldn;t map par_io registers\n", __func__);
++		of_node_put(np_par);
+ 		return;
+ 	}
  
- 			of_read_drc_info_cell(&info, &value, &drc);
- 			if (strncmp(drc.drc_type, "CPU", 3))
--				goto err;
-+				goto err_of_node_put;
- 
- 			if (thread_index < drc.last_drc_index)
- 				break;
-@@ -131,7 +131,7 @@ static int drc_index_to_cpu(u32 drc_index)
- 
- 			of_read_drc_info_cell(&info, &value, &drc);
- 			if (strncmp(drc.drc_type, "CPU", 3))
--				goto err;
-+				goto err_of_node_put;
- 
- 			if (drc_index > drc.last_drc_index) {
- 				cpu += drc.num_sequential_elems;
 -- 
 2.9.5
 
