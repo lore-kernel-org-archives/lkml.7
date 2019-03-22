@@ -2,103 +2,374 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 647BEC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:56:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE07EC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:59:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36FF921925
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:56:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ACA720685
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:59:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="DKQUvxjY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728311AbfCVW4m (ORCPT
+        id S1728346AbfCVW7o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 18:56:42 -0400
-Received: from mga05.intel.com ([192.55.52.43]:38775 "EHLO mga05.intel.com"
+        Fri, 22 Mar 2019 18:59:44 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:60586 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727883AbfCVW4m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 18:56:42 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Mar 2019 15:56:41 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,256,1549958400"; 
-   d="scan'208";a="309625013"
-Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
-  by orsmga005.jf.intel.com with ESMTP; 22 Mar 2019 15:56:41 -0700
-Received: from fmsmsx119.amr.corp.intel.com (10.18.124.207) by
- FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Fri, 22 Mar 2019 15:56:40 -0700
-Received: from fmsmsx113.amr.corp.intel.com ([169.254.13.56]) by
- FMSMSX119.amr.corp.intel.com ([169.254.14.119]) with mapi id 14.03.0415.000;
- Fri, 22 Mar 2019 15:56:40 -0700
-From:   "Verma, Vishal L" <vishal.l.verma@intel.com>
-To:     "kjlu@umn.edu" <kjlu@umn.edu>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        "pakki001@umn.edu" <pakki001@umn.edu>,
-        "zwisler@kernel.org" <zwisler@kernel.org>
-Subject: Re: [PATCH] nvdimm: btt_devs: fix a NULL pointer dereference and a
- memory leak
-Thread-Topic: [PATCH] nvdimm: btt_devs: fix a NULL pointer dereference and a
- memory leak
-Thread-Index: AQHU2KvP9fAOZmRsOECRxfaC1K1yNKYYxwKAgAACAgA=
-Date:   Fri, 22 Mar 2019 22:56:40 +0000
-Message-ID: <4377c210798b000d60ebdc5150e015737d05565b.camel@intel.com>
-References: <20190312081529.4889-1-kjlu@umn.edu>
-         <eea1b50fe8c76d45fef0aaca1878c30fa8f2cbde.camel@intel.com>
-In-Reply-To: <eea1b50fe8c76d45fef0aaca1878c30fa8f2cbde.camel@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.30.5 (3.30.5-1.fc29) 
-x-originating-ip: [10.232.112.185]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <9DA9F31267ADB746A1202655693A23A7@intel.com>
-Content-Transfer-Encoding: base64
+        id S1727846AbfCVW7n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 18:59:43 -0400
+Received: from zn.tnic (p200300EC2F098000329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:8000:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D59B61EC0AB1;
+        Fri, 22 Mar 2019 23:59:40 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1553295581;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=ODJgH8cK0dRVnTkySycVgcmFCa334CVgP66cVUl9IPo=;
+        b=DKQUvxjYsO8QGJTNQaJj+5oCdApFPI2KR4LeDW96x7zNOnGq1LCWiZNae2DF6ldVqWhzE/
+        70krGqQ9nUs5jW4LeHN7iZEk9alRFlZvXNUOgGqzSWUtklwjGlhLfO5KTLrMkoXYVbzojk
+        lhPLYUnHhHsl0TCNUMDqEuw410gnjRY=
+Date:   Fri, 22 Mar 2019 23:59:44 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Luck, Tony" <tony.luck@intel.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Qiuxu Zhuo <qiuxu.zhuo@intel.com>, linux-edac@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] EDAC, {skx|i10nm}_edac: Fix randconfig build error
+Message-ID: <20190322225928.GR12472@zn.tnic>
+References: <20190314110413.GA32277@zn.tnic>
+ <20190314215952.GA303@agluck-desk>
+ <20190315094341.GA12523@zn.tnic>
+ <20190315155718.GA17775@agluck-desk>
+ <20190315173720.GC12523@zn.tnic>
+ <20190315174956.GA20831@agluck-desk>
+ <20190315180206.GD12523@zn.tnic>
+ <20190315181108.GA21111@agluck-desk>
+ <CAK8P3a2CFyF5wExbZPb20E56sJ=3DpsP+0m2Px6D5Sw_L3pKXA@mail.gmail.com>
+ <20190321221339.GA32323@agluck-desk>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190321221339.GA32323@agluck-desk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpPbiBGcmksIDIwMTktMDMtMjIgYXQgMjI6NDkgKzAwMDAsIFZlcm1hLCBWaXNoYWwgTCB3cm90
-ZToNCj4gT24gVHVlLCAyMDE5LTAzLTEyIGF0IDAzOjE1IC0wNTAwLCBLYW5namllIEx1IHdyb3Rl
-Og0KPiA+IEluIGNhc2Uga21lbWR1cCBmYWlscywgdGhlIGZpeCByZWxlYXNlcyByZXNvdXJjZXMg
-YW5kIHJldHVybnMgdG8NCj4gPiBhdm9pZCB0aGUgTlVMTCBwb2ludGVyIGRlcmVmZXJlbmNlLg0K
-PiA+IEFsc28sIHRoZSBlcnJvciBwYXRocyBpbiB0aGUgZm9sbG93aW5nIGNvZGUgc2hvdWxkIHJl
-bGVhc2UNCj4gPiByZXNvdXJjZXMgdG8gYXZvaWQgbWVtb3J5IGxlYWtzLg0KPiA+IA0KPiA+IFNp
-Z25lZC1vZmYtYnk6IEthbmdqaWUgTHUgPGtqbHVAdW1uLmVkdT4NCj4gPiAtLS0NCj4gPiAgZHJp
-dmVycy9udmRpbW0vYnR0X2RldnMuYyB8IDggKysrKysrKy0NCj4gPiAgMSBmaWxlIGNoYW5nZWQs
-IDcgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiA+IA0KPiANCj4gTG9va3MgZ29vZCwN
-Cj4gUmV2aWV3ZWQtYnk6IFZpc2hhbCBWZXJtYSA8dmlzaGFsLmwudmVybWFAaW50ZWwuY29tPg0K
-DQpMb29raW5nIGFnYWluLCB0aGVyZSBpcyBhbm90aGVyIGttZW1kdXAoKSBjYWxsIGluIF9fbmRf
-YnR0X3Byb2JlIHdoaWNoDQppcyBsYWNraW5nIGVycm9yIGNoZWNraW5nLg0KQW5kIHJlZmVycmlu
-ZyB0byB5b3VyIG90aGVyIHJlbGF0ZWQgcGF0Y2ggdG8gbmFtZXNwYWNlX2RldnMsIHRoYXQgaGFz
-DQovc2V2ZXJhbC8gaW5zdGFuY2VzIG9mIHRoZSBzYW1lIHRoaW5nLg0KDQpJbnN0ZWFkIG9mIGZp
-eGluZyBqdXN0IGEgY291cGxlIG9mIHRoZXNlLCBpdCBtaWdodCBiZSB3b3J0aHdoaWxlIHRvIHNl
-bmQNCmEgd2lkZXIgY2xlYW51cCBwYXRjaCB0byBjYXRjaCBhbGwgb2YgdGhlc2UsIGF0IGxlYXN0
-IHdpdGhpbg0KZHJpdmVycy9udmRpbW0vIGZvciBzdGFydGVycywgaW5zdGVhZCBvZiBhIHNlbGVj
-dCBmZXcuDQoNCj4gDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbnZkaW1tL2J0dF9kZXZzLmMg
-Yi9kcml2ZXJzL252ZGltbS9idHRfZGV2cy5jDQo+ID4gaW5kZXggNzk1YWQ0ZmYzNWNhLi41NjVl
-YTBiNmY3NjUgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9udmRpbW0vYnR0X2RldnMuYw0KPiA+
-ICsrKyBiL2RyaXZlcnMvbnZkaW1tL2J0dF9kZXZzLmMNCj4gPiBAQCAtMTk2LDggKzE5NiwxMyBA
-QCBzdGF0aWMgc3RydWN0IGRldmljZSAqX19uZF9idHRfY3JlYXRlKHN0cnVjdA0KPiA+IG5kX3Jl
-Z2lvbiAqbmRfcmVnaW9uLA0KPiA+ICAJfQ0KPiA+ICANCj4gPiAgCW5kX2J0dC0+bGJhc2l6ZSA9
-IGxiYXNpemU7DQo+ID4gLQlpZiAodXVpZCkNCj4gPiArCWlmICh1dWlkKSB7DQo+ID4gIAkJdXVp
-ZCA9IGttZW1kdXAodXVpZCwgMTYsIEdGUF9LRVJORUwpOw0KPiA+ICsJCWlmICghdXVpZCkgew0K
-PiA+ICsJCQlrZnJlZShuZF9idHQpOw0KPiA+ICsJCQlyZXR1cm4gTlVMTDsNCj4gPiArCQl9DQo+
-ID4gKwl9DQo+ID4gIAluZF9idHQtPnV1aWQgPSB1dWlkOw0KPiA+ICAJZGV2ID0gJm5kX2J0dC0+
-ZGV2Ow0KPiA+ICAJZGV2X3NldF9uYW1lKGRldiwgImJ0dCVkLiVkIiwgbmRfcmVnaW9uLT5pZCwg
-bmRfYnR0LT5pZCk7DQo+ID4gQEAgLTIwOSw2ICsyMTQsNyBAQCBzdGF0aWMgc3RydWN0IGRldmlj
-ZSAqX19uZF9idHRfY3JlYXRlKHN0cnVjdA0KPiA+IG5kX3JlZ2lvbiAqbmRfcmVnaW9uLA0KPiA+
-ICAJCWRldl9kYmcoJm5kbnMtPmRldiwgImZhaWxlZCwgYWxyZWFkeSBjbGFpbWVkIGJ5ICVzXG4i
-LA0KPiA+ICAJCQkJZGV2X25hbWUobmRucy0+Y2xhaW0pKTsNCj4gPiAgCQlwdXRfZGV2aWNlKGRl
-dik7DQo+ID4gKwkJa2ZyZWUodXVpZCk7DQo+ID4gIAkJcmV0dXJuIE5VTEw7DQo+ID4gIAl9DQo+
-ID4gIAlyZXR1cm4gZGV2Ow0KPiANCj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18NCj4gTGludXgtbnZkaW1tIG1haWxpbmcgbGlzdA0KPiBMaW51eC1udmRp
-bW1AbGlzdHMuMDEub3JnDQo+IGh0dHBzOi8vbGlzdHMuMDEub3JnL21haWxtYW4vbGlzdGluZm8v
-bGludXgtbnZkaW1tDQoNCg==
+On Thu, Mar 21, 2019 at 03:13:39PM -0700, Luck, Tony wrote:
+> 
+> From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+> 
+> Kbuild failed on the kernel configurations below:
+
+...
+
+I've massaged this into the below and running randconfigs now:
+
+---
+From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Date: Thu, 21 Mar 2019 15:13:39 -0700
+Subject: [PATCH] EDAC, skx, i10nm: Make skx_common.c a pure library
+
+The following Kconfig constellations fail randconfig builds:
+
+  CONFIG_ACPI_NFIT=y
+  CONFIG_EDAC_DEBUG=y
+  CONFIG_EDAC_SKX=m
+  CONFIG_EDAC_I10NM=y
+
+or
+
+  CONFIG_ACPI_NFIT=y
+  CONFIG_EDAC_DEBUG=y
+  CONFIG_EDAC_SKX=y
+  CONFIG_EDAC_I10NM=m
+
+with:
+  ...
+  CC [M]  drivers/edac/skx_common.o
+  ...
+  .../skx_common.o:.../skx_common.c:672: undefined reference to `__this_module'
+
+That is because if one of the two drivers - skx_edac or i10nm_edac - is
+built-in and the other one is a module, the shared file skx_common.c
+gets linked into a module object by kbuild. Therefore, when linking that
+same file into vmlinux, the '__this_module' symbol used in debugfs isn't
+defined, leading to the above error.
+
+Fix it by moving all debugfs code from skx_common.c to both skx_base.c
+and i10nm_base.c respectively. Thus, skx_common.c doesn't refer to
+'__this_module' symbol anymore.
+
+Clarify its purpose at the top of the file for future reference, while
+at it.
+
+ [ bp: Make text more readable. ]
+
+Fixes: d4dc89d069aa ("EDAC, i10nm: Add a driver for Intel 10nm server processors")
+Reported-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Signed-off-by: Tony Luck <tony.luck@intel.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: James Morse <james.morse@arm.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: linux-edac <linux-edac@vger.kernel.org>
+Link: https://lkml.kernel.org/r/20190321221339.GA32323@agluck-desk
+---
+ drivers/edac/i10nm_base.c | 52 +++++++++++++++++++++++++++++++++--
+ drivers/edac/skx_base.c   | 50 +++++++++++++++++++++++++++++++++-
+ drivers/edac/skx_common.c | 57 +++++++--------------------------------
+ drivers/edac/skx_common.h |  8 ------
+ 4 files changed, 109 insertions(+), 58 deletions(-)
+
+diff --git a/drivers/edac/i10nm_base.c b/drivers/edac/i10nm_base.c
+index c334fb7c63df..6f06aec4877c 100644
+--- a/drivers/edac/i10nm_base.c
++++ b/drivers/edac/i10nm_base.c
+@@ -181,6 +181,54 @@ static struct notifier_block i10nm_mce_dec = {
+ 	.priority	= MCE_PRIO_EDAC,
+ };
+ 
++#ifdef CONFIG_EDAC_DEBUG
++/*
++ * Debug feature.
++ * Exercise the address decode logic by writing an address to
++ * /sys/kernel/debug/edac/i10nm_test/addr.
++ */
++static struct dentry *i10nm_test;
++
++static int debugfs_u64_set(void *data, u64 val)
++{
++	struct mce m;
++
++	pr_warn_once("Fake error to 0x%llx injected via debugfs\n", val);
++
++	memset(&m, 0, sizeof(m));
++	/* ADDRV + MemRd + Unknown channel */
++	m.status = MCI_STATUS_ADDRV + 0x90;
++	/* One corrected error */
++	m.status |= BIT_ULL(MCI_STATUS_CEC_SHIFT);
++	m.addr = val;
++	skx_mce_check_error(NULL, 0, &m);
++
++	return 0;
++}
++DEFINE_SIMPLE_ATTRIBUTE(fops_u64_wo, NULL, debugfs_u64_set, "%llu\n");
++
++static void setup_i10nm_debug(void)
++{
++	i10nm_test = edac_debugfs_create_dir("i10nm_test");
++	if (!i10nm_test)
++		return;
++
++	if (!edac_debugfs_create_file("addr", 0200, i10nm_test,
++				      NULL, &fops_u64_wo)) {
++		debugfs_remove(i10nm_test);
++		i10nm_test = NULL;
++	}
++}
++
++static void teardown_i10nm_debug(void)
++{
++	debugfs_remove_recursive(i10nm_test);
++}
++#else
++static inline void setup_i10nm_debug(void) {}
++static inline void teardown_i10nm_debug(void) {}
++#endif /*CONFIG_EDAC_DEBUG*/
++
+ static int __init i10nm_init(void)
+ {
+ 	u8 mc = 0, src_id = 0, node_id = 0;
+@@ -249,7 +297,7 @@ static int __init i10nm_init(void)
+ 
+ 	opstate_init();
+ 	mce_register_decode_chain(&i10nm_mce_dec);
+-	setup_skx_debug("i10nm_test");
++	setup_i10nm_debug();
+ 
+ 	i10nm_printk(KERN_INFO, "%s\n", I10NM_REVISION);
+ 
+@@ -262,7 +310,7 @@ static int __init i10nm_init(void)
+ static void __exit i10nm_exit(void)
+ {
+ 	edac_dbg(2, "\n");
+-	teardown_skx_debug();
++	teardown_i10nm_debug();
+ 	mce_unregister_decode_chain(&i10nm_mce_dec);
+ 	skx_adxl_put();
+ 	skx_remove();
+diff --git a/drivers/edac/skx_base.c b/drivers/edac/skx_base.c
+index adae4c848ca1..a5c8fa3a249a 100644
+--- a/drivers/edac/skx_base.c
++++ b/drivers/edac/skx_base.c
+@@ -540,6 +540,54 @@ static struct notifier_block skx_mce_dec = {
+ 	.priority	= MCE_PRIO_EDAC,
+ };
+ 
++#ifdef CONFIG_EDAC_DEBUG
++/*
++ * Debug feature.
++ * Exercise the address decode logic by writing an address to
++ * /sys/kernel/debug/edac/skx_test/addr.
++ */
++static struct dentry *skx_test;
++
++static int debugfs_u64_set(void *data, u64 val)
++{
++	struct mce m;
++
++	pr_warn_once("Fake error to 0x%llx injected via debugfs\n", val);
++
++	memset(&m, 0, sizeof(m));
++	/* ADDRV + MemRd + Unknown channel */
++	m.status = MCI_STATUS_ADDRV + 0x90;
++	/* One corrected error */
++	m.status |= BIT_ULL(MCI_STATUS_CEC_SHIFT);
++	m.addr = val;
++	skx_mce_check_error(NULL, 0, &m);
++
++	return 0;
++}
++DEFINE_SIMPLE_ATTRIBUTE(fops_u64_wo, NULL, debugfs_u64_set, "%llu\n");
++
++static void setup_skx_debug(void)
++{
++	skx_test = edac_debugfs_create_dir("skx_test");
++	if (!skx_test)
++		return;
++
++	if (!edac_debugfs_create_file("addr", 0200, skx_test,
++				      NULL, &fops_u64_wo)) {
++		debugfs_remove(skx_test);
++		skx_test = NULL;
++	}
++}
++
++static void teardown_skx_debug(void)
++{
++	debugfs_remove_recursive(skx_test);
++}
++#else
++static inline void setup_skx_debug(void) {}
++static inline void teardown_skx_debug(void) {}
++#endif /*CONFIG_EDAC_DEBUG*/
++
+ /*
+  * skx_init:
+  *	make sure we are running on the correct cpu model
+@@ -619,7 +667,7 @@ static int __init skx_init(void)
+ 	/* Ensure that the OPSTATE is set correctly for POLL or NMI */
+ 	opstate_init();
+ 
+-	setup_skx_debug("skx_test");
++	setup_skx_debug();
+ 
+ 	mce_register_decode_chain(&skx_mce_dec);
+ 
+diff --git a/drivers/edac/skx_common.c b/drivers/edac/skx_common.c
+index 0e96e7b5b0a7..b0dddcfa9baa 100644
+--- a/drivers/edac/skx_common.c
++++ b/drivers/edac/skx_common.c
+@@ -1,7 +1,15 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Common codes for both the skx_edac driver and Intel 10nm server EDAC driver.
+- * Originally split out from the skx_edac driver.
++ *
++ * Shared code by both skx_edac and i10nm_edac. Originally split out
++ * from the skx_edac driver.
++ *
++ * This file is linked into both skx_edac and i10nm_edac drivers. In
++ * order to avoid link errors, this file must be like a pure library
++ * without including symbols and defines which would otherwise conflict,
++ * when linked once into a module and into a built-in object, at the
++ * same time. For example, __this_module symbol references when that
++ * file is being linked into a built-in object.
+  *
+  * Copyright (c) 2018, Intel Corporation.
+  */
+@@ -644,48 +652,3 @@ void skx_remove(void)
+ 		kfree(d);
+ 	}
+ }
+-
+-#ifdef CONFIG_EDAC_DEBUG
+-/*
+- * Debug feature.
+- * Exercise the address decode logic by writing an address to
+- * /sys/kernel/debug/edac/dirname/addr.
+- */
+-static struct dentry *skx_test;
+-
+-static int debugfs_u64_set(void *data, u64 val)
+-{
+-	struct mce m;
+-
+-	pr_warn_once("Fake error to 0x%llx injected via debugfs\n", val);
+-
+-	memset(&m, 0, sizeof(m));
+-	/* ADDRV + MemRd + Unknown channel */
+-	m.status = MCI_STATUS_ADDRV + 0x90;
+-	/* One corrected error */
+-	m.status |= BIT_ULL(MCI_STATUS_CEC_SHIFT);
+-	m.addr = val;
+-	skx_mce_check_error(NULL, 0, &m);
+-
+-	return 0;
+-}
+-DEFINE_SIMPLE_ATTRIBUTE(fops_u64_wo, NULL, debugfs_u64_set, "%llu\n");
+-
+-void setup_skx_debug(const char *dirname)
+-{
+-	skx_test = edac_debugfs_create_dir(dirname);
+-	if (!skx_test)
+-		return;
+-
+-	if (!edac_debugfs_create_file("addr", 0200, skx_test,
+-				      NULL, &fops_u64_wo)) {
+-		debugfs_remove(skx_test);
+-		skx_test = NULL;
+-	}
+-}
+-
+-void teardown_skx_debug(void)
+-{
+-	debugfs_remove_recursive(skx_test);
+-}
+-#endif /*CONFIG_EDAC_DEBUG*/
+diff --git a/drivers/edac/skx_common.h b/drivers/edac/skx_common.h
+index d25374e34d4f..d18fa98669af 100644
+--- a/drivers/edac/skx_common.h
++++ b/drivers/edac/skx_common.h
+@@ -141,12 +141,4 @@ int skx_mce_check_error(struct notifier_block *nb, unsigned long val,
+ 
+ void skx_remove(void);
+ 
+-#ifdef CONFIG_EDAC_DEBUG
+-void setup_skx_debug(const char *dirname);
+-void teardown_skx_debug(void);
+-#else
+-static inline void setup_skx_debug(const char *dirname) {}
+-static inline void teardown_skx_debug(void) {}
+-#endif /*CONFIG_EDAC_DEBUG*/
+-
+ #endif /* _SKX_COMM_EDAC_H */
+-- 
+2.21.0
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
