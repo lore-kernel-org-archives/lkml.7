@@ -2,243 +2,310 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C90AC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:09:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9D01C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:10:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E46992183E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:09:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553260195;
-	bh=p2AS3DPkjCcPFI/HPaCFjCUsf0/HROq7V4j+oHuDSqM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ESpLU8RU5/gNRH+DQZM68NjuPFEXxBQ9Wupe+ORBEwV3wBM+EKp90QIzOqa8vGwnB
-	 6ySZYBu8EZ74qNVw+TjlmjKaZAyluJOwyn5x7jDF1Kz8lr/CCbKP72mwM3CAdaPVJE
-	 apyMb121S0RjGW9Gd8S7aRZ5LOXIMLJIG+pCGjfI=
+	by mail.kernel.org (Postfix) with ESMTP id 8D4722183E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:10:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730431AbfCVLed (ORCPT
+        id S1731207AbfCVNKA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:34:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35178 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730405AbfCVLeb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:34:31 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 51D7521917;
-        Fri, 22 Mar 2019 11:34:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254470;
-        bh=p2AS3DPkjCcPFI/HPaCFjCUsf0/HROq7V4j+oHuDSqM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f3asozV23mhAO1KXz/5kcVlsx9zHUCwmtNYJI8cpwd9KNu662wu5y0jYx0Eun1jf1
-         wv/qWmVJ/JTZ7gn453mrh+dALFEb+R1HnL88CyY5Cbo0XfUj/zeBiva++iAYR9ddpw
-         V25kVYQK5tflhcgjdkeI/nGU8NBm/AlaGoRxEI/k=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.4 146/230] ALSA: bebob: use more identical mod_alias for Saffire Pro 10 I/O against Liquid Saffire 56
-Date:   Fri, 22 Mar 2019 12:14:44 +0100
-Message-Id: <20190322111246.885027190@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
-References: <20190322111236.796964179@linuxfoundation.org>
-User-Agent: quilt/0.65
-X-stable: review
-X-Patchwork-Hint: ignore
+        Fri, 22 Mar 2019 09:10:00 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:37897 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730063AbfCVNJ7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 09:09:59 -0400
+X-Originating-IP: 90.88.33.153
+Received: from localhost (aaubervilliers-681-1-92-153.w90-88.abo.wanadoo.fr [90.88.33.153])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id ADD671BF20B;
+        Fri, 22 Mar 2019 13:09:53 +0000 (UTC)
+Date:   Fri, 22 Mar 2019 14:09:53 +0100
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Bin Liu <b-liu@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Paul Kocialkowski <contact@paulk.fr>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH] usb: musb: Support gadget mode when the port is set to
+ dual role
+Message-ID: <20190322130953.kb4llrtz2nriyfbu@flea>
+References: <20180328215213.29538-1-contact@paulk.fr>
+ <20180329092326.dayuccomq5zrywqo@flea>
+ <1522324644.1746.19.camel@bootlin.com>
+ <20180420142524.GB29011@uda0271908>
+ <2db056d6f65ecbcdc4f31a37fe2e1b1ddfb93c87.camel@paulk.fr>
+ <20180421143426.GA10632@LTA0271908.dhcp.ti.com>
+ <20190321130133.zllt5pqbrhiecoch@flea>
+ <20190321164138.GB11121@kroah.com>
+ <20190322124622.GB25852@uda0271908>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ls5fgcgtksm3xyoa"
+Content-Disposition: inline
+In-Reply-To: <20190322124622.GB25852@uda0271908>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.4-stable review patch.  If anyone has any objections, please let me know.
 
-------------------
+--ls5fgcgtksm3xyoa
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+On Fri, Mar 22, 2019 at 07:46:22AM -0500, Bin Liu wrote:
+> On Thu, Mar 21, 2019 at 05:41:38PM +0100, Greg Kroah-Hartman wrote:
+> > On Thu, Mar 21, 2019 at 02:01:33PM +0100, Maxime Ripard wrote:
+> > > Hi,
+> > >
+> > > I'm reviving this thread a bit, because I encountered this bug today.
+> > >
+> > > On Thu, Mar 21, 2019 at 11:02:10AM +0100, Bin Liu wrote:
+> > > > On Sat, Apr 21, 2018 at 12:59:23PM +0200, Paul Kocialkowski wrote:
+> > > > > Hi,
+> > > > >
+> > > > > Le vendredi 20 avril 2018 =E0 09:25 -0500, Bin Liu a =E9crit :
+> > > > > > On Thu, Mar 29, 2018 at 01:57:24PM +0200, Paul Kocialkowski wro=
+te:
+> > > > > > > Hi,
+> > > > > > >
+> > > > > > > On Thu, 2018-03-29 at 11:23 +0200, Maxime Ripard wrote:
+> > > > > > > > On Wed, Mar 28, 2018 at 11:52:13PM +0200, Paul Kocialkowski=
+ wrote:
+> > > > > > > > > This allows dual-role ports to be reported as having gadg=
+et mode
+> > > > > > > > > by
+> > > > > > > > > the
+> > > > > > > > > musb_has_gadget helper. This is required to enable MUSB a=
+t all
+> > > > > > > > > with
+> > > > > > > > > MUSB
+> > > > > > > > > glue layers that set the port mode to MUSB_PORT_MODE_DUAL=
+_ROLE
+> > > > > > > > > at
+> > > > > > > > > init.
+> > > > > > > > >
+> > > > > > > > > Most notably, this allows calling musb_start when needed =
+in the
+> > > > > > > > > virtual
+> > > > > > > > > MUSB root HUB, regardless of whether the current mode sho=
+uld be
+> > > > > > > > > gadget
+> > > > > > > > > or host.
+> > > > > > > > >
+> > > > > > > > > This fixes USB OTG on Allwinner devices that I could test=
+ it
+> > > > > > > > > with,
+> > > > > > > > > mainly A20 devices.
+> > > > > > > > >
+> > > > > > > > > Signed-off-by: Paul Kocialkowski <contact@paulk.fr>
+> > > > > > > >
+> > > > > > > > Surely there's more to it than that. The gadget mode of A20=
+ boards
+> > > > > > > > have been working in the past, including when compiling wit=
+h mUSB
+> > > > > > > > setup as dual role.
+> > > > > > > >
+> > > > > > > > Is this a regression since a particular commit? Or is there
+> > > > > > > > another,
+> > > > > > > > deeper issue overlooked in the commit log?
+> > > > > > >
+> > > > > > > The root of the issue here is that musb_start is not called a=
+t any
+> > > > > > > point
+> > > > > > > without this patch. My understanding of the flow is the follo=
+wing:
+> > > > > > > when
+> > > > > > > the PHY detects that there was a VBUS/ID change, it will noti=
+fy its
+> > > > > > > listeners (mainly the musb sunxi glue layer). This will then
+> > > > > > > schedule
+> > > > > > > the driver's work (sunxi_musb_work), which does nothing since=
+ the
+> > > > > > > SUNXI_MUSB_FL_ENABLED bit was never set. This bit is only set=
+ after
+> > > > > > > calling sunxi_musb_enable, which is called from
+> > > > > > > musb_platform_enable,
+> > > > > > > that originates from musb_start.
+> > > > > > >
+> > > > > > > Currently I see two places where musb_start is called:
+> > > > > > > * musb_virthub
+> > > > > > > * musb_gadget
+> > > > > > >
+> > > > > > > In the latter case, it is in turn called from udc_start, which
+> > > > > > > should
+> > > > > > > probably (correct me if I'm wrong) happen later in the call c=
+hain
+> > > > > > > than
+> > > > > > > ID/VBUS change notification time.
+> > > > > >
+> > > > > > I don't think it is correct that udc_start() is triggered by ID=
+/VBUS
+> > > > > > events, but I don't have an Allwinner platform to verify the ca=
+llflow.
+> > > > >
+> > > > > Yes you're right, I didn't make myself very clear here. I didn't
+> > > > > investigate the udc_start call path much since it was apparently =
+not the
+> > > > > culprit.
+> > > > >
+> > > > > > Have you tried to load with a gadget driver? When a gadget func=
+tion is
+> > > > > > bound to UDC, udc_start() is triggered, which in turn calls
+> > > > > > musb_start().
+> > > > >
+> > > > > It does work under that scenario, although my used case here is u=
+sing
+> > > > > musb with DUAL_ROLE but no gadget driver loaded. That it, I want =
+the
+> > > > > musb_start call to originate from the virtual hub, not from the g=
+adget
+> > > > > side.
+> > > > >
+> > > > > > > In the former case, musb_start is called in the root controll=
+er hub
+> > > > > > > control, when setting the USB_PORT_FEAT_POWER feature. This l=
+ooks
+> > > > > > > perfectly legit and IMO this is where it should be initially =
+calling
+> > > > > > > musb_start in the dual role case. The kernel is indeed settin=
+g the
+> > > > > >
+> > > > > > No actually. A dual-role port should be in b_idle state by defa=
+ult, so
+> > > > > > logically all actions should go to the gadget path until the po=
+rt
+> > > > > > switches to host mode.
+> > > > >
+> > > > > It makes sense that the port should be in b_idle state by default=
+, but
+> > > > > here it fails to switch to host mode when the ID pin detects that=
+ it
+> > > > > should. Or does b_idle state entail that a gadget must be loaded =
+(per
+> > > > > the USB spec), and thus nothing should (ever) happen until that h=
+appens?
+> > > > >
+> > > > > I find it really odd to need a gadget device to trigger host mode.
+> > > > > This patch does fix the issue, but I am puzzled as to why it is n=
+eeded
+> > > > > in the first place. The comment above it mentions that "In OTG mo=
+de we
+> > > > > have to wait until we loaded a gadget. We don't really need a gad=
+get if
+> > > > > we operate as a host but we should not start a session as a device
+> > > > > without a gadget or else we explode.", which is apparently compat=
+ible
+> > > > > with my use case: a gadget is not really needed and I'm not tryin=
+g to
+> > > > > start a session as a device without a gadget loaded.
+> > > > >
+> > > > > What do you think?
+> > > >
+> > > > Okay, this came down to an argument that whether we should require
+> > > > loading a gadget driver on a dual-role port to work in host mode,
+> > > > which is currently required on musb since a long long time ago.
+> > > >
+> > > > I understand the requirement is kinda unnecessary, but since it alr=
+eady
+> > > > exists on musb stack for a long time, I don't plan to change it. Be=
+cause I
+> > > > cannot think of a use case in real products that doesn't automatica=
+lly
+> > > > load a gadget function on the dual-role port.
+> > > >
+> > > > If you can explain a use case in real world (not a engineering lab)=
+ that
+> > > > the gadget driver will not be loaded at linux booting up, but later
+> > > > based on user's input, I will reconsider my decision. To remove this
+> > > > requirement from musb stack, the work is more than this patch.
+> > >
+> > > I have one for you: we're working on a device that boots pretty fast,
+> > > and therefore are pushing as much things as we can to modules. It
+> > > includes gadgets, the musb driver and glue, etc. That doesn't sound
+> > > way very different from what a generic distro would do as well.
+> > >
+> > > At boot, the various modules for the hardware are loaded
+> > > automatically: the musb glue, the musb core, our USB PHY, etc. We end
+> > > up in a situation where the musb driver is loaded and reported to work
+> > > properly. The USB cable to the OTG port (in peripheral) might or might
+> > > not be connected, it's kind of irrelevant.
+> > >
+> > > The gadgets, however, are not loaded automatically.
+> > >
+> > > Now comes a user that wants to use musb as a host, and connect a
+> > > proper USB adapter, that wires the ID pin properly. In our case, the
+> > > phy detects it, reports the mode change, and .... nothing.
+> > >
+> > > That doesn't really look like an engineering lab setup to me.
+> >
+> > I agree, that sounds like a valid setup.
+> >
+> > Also realize that Android is pushing to have all drivers as modules, so
+> > you will start to see a whole lot more devices out there be modular
+> > instead of statically built kernels.  So issues like this are good to
+> > resolve :)
+>
+> This issue here is not related to building all drivers as modules. Today
+> we already have all musb related drivers including gadget drivers in
+> modules.
+>
+> The issue discussed here is that when musb is configured in dual-role
+> mode (dr_mode =3D 'otg' in dts), a gadget driver has to be bound to the
+> udc to make musb working in host mode.
+>
+> I never disagree it is not ideal, but I consider it is minor - since the
+> port is configured to dual-role mode, it is intended to work in
+> peripheral mode, then why not automatically load the gadget driver when
+> linux boots up.
 
-commit 7dc661bd8d3261053b69e4e2d0050cd1ee540fc1 upstream.
+Because no other controller requires it and therefore it's not
+standard and violates the principle of least surprise?
 
-ALSA bebob driver has an entry for Focusrite Saffire Pro 10 I/O. The
-entry matches vendor_id in root directory and model_id in unit
-directory of configuration ROM for IEEE 1394 bus.
+And even without taking this into account, there's also the fact that
+while the *hardware* can do dual role, the software might decide
+otherwise. If I don't want to have support for any gadget (at all) in
+the end system, then why should I be forced to compile and load
+something I don't even want to use in the first place?
 
-On the other hand, configuration ROM of Focusrite Liquid Saffire 56
-has the same vendor_id and model_id. This device is an application of
-TCAT Dice (TCD2220 a.k.a Dice Jr.) however ALSA bebob driver can be
-bound to it randomly instead of ALSA dice driver. At present, drivers
-in ALSA firewire stack can not handle this situation appropriately.
+The same story goes with cold booting with a device plugged in, and
+therefore acting as a host from the very beginning. It will never ever
+be configured as a peripheral, even though you might have loaded a
+module.
 
-This commit uses more identical mod_alias for Focusrite Saffire Pro 10
-I/O in ALSA bebob driver.
+> To summaries my comments on this again, since it is minor in my opinion,
+> I won't spend time to solve it myself (in a near future), but I am more
+> than happy to review and take any patch which solve it.
 
-$ python2 crpp < /sys/bus/firewire/devices/fw1/config_rom
-               ROM header and bus information block
-               -----------------------------------------------------------------
-400  042a829d  bus_info_length 4, crc_length 42, crc 33437
-404  31333934  bus_name "1394"
-408  f0649222  irmc 1, cmc 1, isc 1, bmc 1, pmc 0, cyc_clk_acc 100,
-               max_rec 9 (1024), max_rom 2, gen 2, spd 2 (S400)
-40c  00130e01  company_id 00130e     |
-410  000606e0  device_id 01000606e0  | EUI-64 00130e01000606e0
+Paul provided a patch that started this discussion. You mentionned
+that it's not enough and other parts should be missing. What are
+those?
 
-               root directory
-               -----------------------------------------------------------------
-414  0009d31c  directory_length 9, crc 54044
-418  04000014  hardware version
-41c  0c0083c0  node capabilities per IEEE 1394
-420  0300130e  vendor
-424  81000012  --> descriptor leaf at 46c
-428  17000006  model
-42c  81000016  --> descriptor leaf at 484
-430  130120c2  version
-434  d1000002  --> unit directory at 43c
-438  d4000006  --> dependent info directory at 450
+Maxime
 
-               unit directory at 43c
-               -----------------------------------------------------------------
-43c  0004707c  directory_length 4, crc 28796
-440  1200a02d  specifier id: 1394 TA
-444  13010001  version: AV/C
-448  17000006  model
-44c  81000013  --> descriptor leaf at 498
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-               dependent info directory at 450
-               -----------------------------------------------------------------
-450  000637c7  directory_length 6, crc 14279
-454  120007f5  specifier id
-458  13000001  version
-45c  3affffc7  (immediate value)
-460  3b100000  (immediate value)
-464  3cffffc7  (immediate value)
-468  3d600000  (immediate value)
+--ls5fgcgtksm3xyoa
+Content-Type: application/pgp-signature; name="signature.asc"
 
-               descriptor leaf at 46c
-               -----------------------------------------------------------------
-46c  00056f3b  leaf_length 5, crc 28475
-470  00000000  textual descriptor
-474  00000000  minimal ASCII
-478  466f6375  "Focu"
-47c  73726974  "srit"
-480  65000000  "e"
+-----BEGIN PGP SIGNATURE-----
 
-               descriptor leaf at 484
-               -----------------------------------------------------------------
-484  0004a165  leaf_length 4, crc 41317
-488  00000000  textual descriptor
-48c  00000000  minimal ASCII
-490  50726f31  "Pro1"
-494  30494f00  "0IO"
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXJTeoQAKCRDj7w1vZxhR
+xa3xAQDsznoQw/xX3MEVTOqcNGnfQ+17N9b9LxR5R5rtgbvO+QD+NiIhUR0dfhNr
+Rh/K7EEurHa63raCN6UlhcB8rwJU4wY=
+=Ls7s
+-----END PGP SIGNATURE-----
 
-               descriptor leaf at 498
-               -----------------------------------------------------------------
-498  0004a165  leaf_length 4, crc 41317
-49c  00000000  textual descriptor
-4a0  00000000  minimal ASCII
-4a4  50726f31  "Pro1"
-4a8  30494f00  "0IO"
-
-$ python2 crpp < /sys/bus/firewire/devices/fw1/config_rom
-               ROM header and bus information block
-               -----------------------------------------------------------------
-400  040442e4  bus_info_length 4, crc_length 4, crc 17124
-404  31333934  bus_name "1394"
-408  e0ff8112  irmc 1, cmc 1, isc 1, bmc 0, pmc 0, cyc_clk_acc 255,
-               max_rec 8 (512), max_rom 1, gen 1, spd 2 (S400)
-40c  00130e04  company_id 00130e     |
-410  018001e9  device_id 04018001e9  | EUI-64 00130e04018001e9
-
-               root directory
-               -----------------------------------------------------------------
-414  00065612  directory_length 6, crc 22034
-418  0300130e  vendor
-41c  8100000a  --> descriptor leaf at 444
-420  17000006  model
-424  8100000e  --> descriptor leaf at 45c
-428  0c0087c0  node capabilities per IEEE 1394
-42c  d1000001  --> unit directory at 430
-
-               unit directory at 430
-               -----------------------------------------------------------------
-430  000418a0  directory_length 4, crc 6304
-434  1200130e  specifier id
-438  13000001  version
-43c  17000006  model
-440  8100000f  --> descriptor leaf at 47c
-
-               descriptor leaf at 444
-               -----------------------------------------------------------------
-444  00056f3b  leaf_length 5, crc 28475
-448  00000000  textual descriptor
-44c  00000000  minimal ASCII
-450  466f6375  "Focu"
-454  73726974  "srit"
-458  65000000  "e"
-
-               descriptor leaf at 45c
-               -----------------------------------------------------------------
-45c  000762c6  leaf_length 7, crc 25286
-460  00000000  textual descriptor
-464  00000000  minimal ASCII
-468  4c495155  "LIQU"
-46c  49445f53  "ID_S"
-470  41464649  "AFFI"
-474  52455f35  "RE_5"
-478  36000000  "6"
-
-               descriptor leaf at 47c
-               -----------------------------------------------------------------
-47c  000762c6  leaf_length 7, crc 25286
-480  00000000  textual descriptor
-484  00000000  minimal ASCII
-488  4c495155  "LIQU"
-48c  49445f53  "ID_S"
-490  41464649  "AFFI"
-494  52455f35  "RE_5"
-498  36000000  "6"
-
-Cc: <stable@vger.kernel.org> # v3.16+
-Fixes: 25784ec2d034 ("ALSA: bebob: Add support for Focusrite Saffire/SaffirePro series")
-Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- sound/firewire/bebob/bebob.c |   14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
-
---- a/sound/firewire/bebob/bebob.c
-+++ b/sound/firewire/bebob/bebob.c
-@@ -422,7 +422,19 @@ static const struct ieee1394_device_id b
- 	/* Focusrite, SaffirePro 26 I/O */
- 	SND_BEBOB_DEV_ENTRY(VEN_FOCUSRITE, 0x00000003, &saffirepro_26_spec),
- 	/* Focusrite, SaffirePro 10 I/O */
--	SND_BEBOB_DEV_ENTRY(VEN_FOCUSRITE, 0x00000006, &saffirepro_10_spec),
-+	{
-+		// The combination of vendor_id and model_id is the same as the
-+		// same as the one of Liquid Saffire 56.
-+		.match_flags	= IEEE1394_MATCH_VENDOR_ID |
-+				  IEEE1394_MATCH_MODEL_ID |
-+				  IEEE1394_MATCH_SPECIFIER_ID |
-+				  IEEE1394_MATCH_VERSION,
-+		.vendor_id	= VEN_FOCUSRITE,
-+		.model_id	= 0x000006,
-+		.specifier_id	= 0x00a02d,
-+		.version	= 0x010001,
-+		.driver_data	= (kernel_ulong_t)&saffirepro_10_spec,
-+	},
- 	/* Focusrite, Saffire(no label and LE) */
- 	SND_BEBOB_DEV_ENTRY(VEN_FOCUSRITE, MODEL_FOCUSRITE_SAFFIRE_BOTH,
- 			    &saffire_spec),
-
-
+--ls5fgcgtksm3xyoa--
