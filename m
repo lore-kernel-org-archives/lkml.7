@@ -2,122 +2,100 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50E29C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:45:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ACC7C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:45:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FA492070D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:45:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553258722;
-	bh=N3hUm2I4FqONBKT0iDRhSqLWIkEDH7qx1Eh/psaEOoc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Pqp8aQHukHIIgnpAToHMcTDzYfazJVNB0uYhqJ6rOg1dEGpgsOfRz+kGwez1xq97X
-	 tw1H4QT944hcUZHQdK1GUP2/LvAn0XTtDl+y7L+SG/TyeH8fQgglRcclv+WuEOkEtw
-	 ZBlOEx/1n1vHseO9hwBNELZJXhOaxQYxbdITYa5M=
+	by mail.kernel.org (Postfix) with ESMTP id 1A8DD218E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:45:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388357AbfCVMpV (ORCPT
+        id S2388452AbfCVMp2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:45:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37722 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732945AbfCVMAc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:00:32 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58A40204FD;
-        Fri, 22 Mar 2019 12:00:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256031;
-        bh=N3hUm2I4FqONBKT0iDRhSqLWIkEDH7qx1Eh/psaEOoc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VKtA+TwAL1tjgIBfXsPSTR+xuD9U4QgcDXe/aWnXg9WlyZqNRCz9svYBO99KrPgMD
-         GBPrC3JLx+c/NAC+aGdWNUrHr6Cm3a69Y3bV4UUPhRHWUwkzisptPfzacVtUv1M2mc
-         gaMK8youQpxHUFvfiz/7M9cBqHoVxlDc7cRR0cr4=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>,
-        Borislav Petkov <bp@suse.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "David E. Box" <david.e.box@intel.com>, dvhart@infradead.org,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        platform-driver-x86@vger.kernel.org,
-        Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 060/280] x86/CPU: Add Icelake model number
-Date:   Fri, 22 Mar 2019 12:13:33 +0100
-Message-Id: <20190322111309.636121466@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
-References: <20190322111306.356185024@linuxfoundation.org>
-User-Agent: quilt/0.65
-X-stable: review
-X-Patchwork-Hint: ignore
+        Fri, 22 Mar 2019 08:45:28 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:54824 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730518AbfCVMpT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:45:19 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: gportay)
+        with ESMTPSA id 57870260891
+Date:   Fri, 22 Mar 2019 08:45:26 -0400
+From:   =?utf-8?B?R2HDq2w=?= PORTAY <gael.portay@collabora.com>
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        Derek Basehore <dbasehore@chromium.org>,
+        Heiko Stuebner <heiko@sntech.de>, linux-pm@vger.kernel.org,
+        Brian Norris <briannorris@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        linux-kernel@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Klaus Goger <klaus.goger@theobroma-systems.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        linux-rockchip@lists.infradead.org, Randy Li <ayaka@soulik.info>,
+        kernel@collabora.com, linux-arm-kernel@lists.infradead.org,
+        Lin Huang <hl@rock-chips.com>
+Subject: Re: [PATCH v2 3/5] devfreq: rk3399_dmc: Pass ODT and auto power down
+ parameters to TF-A.
+Message-ID: <20190322124525.ge5thq4a7c6ufcra@archlinux.localdomain>
+References: <20190319181323.22804-1-gael.portay@collabora.com>
+ <20190319181323.22804-4-gael.portay@collabora.com>
+ <20190320003352.GN112750@google.com>
+ <20190320215013.43zgvyn5frnb3yud@archlinux.localdomain>
+ <20190320220223.GP112750@google.com>
+ <20190321231055.j7z23f3k3rcngq4u@archlinux.localdomain>
+ <20190322000107.GU112750@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190322000107.GU112750@google.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.19-stable review patch.  If anyone has any objections, please let me know.
+Hi Matthias,
 
-------------------
+On Thu, Mar 21, 2019 at 05:01:07PM -0700, Matthias Kaehlcke wrote:
+> > ...
+> > 
+> > So, for a reason that I ignore, if we try to save unecessary calls to
+> > ROCKCHIP_SIP_CONFIG_DRAM_SET_ODT_PD (odt_enable has not changed since
+> > last call), we get stalled in the call to ROCKCHIP_SIP_CONFIG_SET_RAGE
+> > that follows. The function arm_smccc_smc never returns and the device
+> > hard hang.
+> 
+> Thanks for giving it a try!
+> 
+> Did your code ensure to perform the SMC call for the first frequency
+> change? If not the problem could be that the DDR PD timings and ODT
+> resistors are not properly configured for the new frequency.
+> 
 
-[ Upstream commit 8cd8f0ce0d6aafe661cb3d6781c8b82bc696c04d ]
+The DRAM_ODT_PD SMC call is supposed to be performed before the
+DRAM_SET_RATE; unless someone else is doing the set_rate.
 
-Add the CPUID model number of Icelake (ICL) mobile processors to the
-Intel family list. Icelake U/Y series uses model number 0x7E.
+Does the ODT resistors should be configured for every existing
+frequency?
 
-Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: "David E. Box" <david.e.box@intel.com>
-Cc: dvhart@infradead.org
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org
-Cc: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190214115712.19642-2-rajneesh.bhardwaj@linux.intel.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/x86/include/asm/intel-family.h | 2 ++
- 1 file changed, 2 insertions(+)
+> In case you already did this or it doesn't help I think it's fine to
+> just do the call always, we can always revisit this later.
+> 
 
-diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
-index 7ed08a7c3398..0ad25cc895ae 100644
---- a/arch/x86/include/asm/intel-family.h
-+++ b/arch/x86/include/asm/intel-family.h
-@@ -55,6 +55,8 @@
- 
- #define INTEL_FAM6_CANNONLAKE_MOBILE	0x66
- 
-+#define INTEL_FAM6_ICELAKE_MOBILE	0x7E
-+
- /* "Small Core" Processors (Atom) */
- 
- #define INTEL_FAM6_ATOM_PINEVIEW	0x1C
--- 
-2.19.1
+Okay, sounds good.
 
+> > Thanks to your remark, I have also fixed an issue with the odt_dis_freq
+> > value. Its value is initialized to 0 in the probe function. Thus the
+> > odt_enable is always true (target_rate > 0). I moved its initialization
+> > after the timings are parsed from the device-tree; its value is now none
+> > zero (333000000 in my case).
+> 
+> Great!
 
-
+Gael
