@@ -6,47 +6,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8B5CC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:38:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27737C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:38:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7170218B0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:38:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5B84218B0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:38:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254709;
-	bh=Vm2m0EqLUU3PLerBkGMLQOhkLqAQuoVL7CC/zyGj8Yc=;
+	s=default; t=1553254714;
+	bh=44nlyRHTOdR6CrP1qgxq1qzsP1j2Zg2ZNyQzwpr1414=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q2Ft2B0zNGQeoeBQt0IrBN8RHruGlY+P0DRQ/jdv4xtnB6WmQCAoF4stejDP5NFkg
-	 NvJIDFPjDyIolo+4AobD0uWtHwcEMAQY96QL9xqF7YkqMrMJzEuK0PoxktzN4D19qS
-	 CWvEc5zBNuVndXT8JrEQxcAII3mLgwB1tt55wDeA=
+	b=CaUiOCbNN8nDKXuyfH9pCRU62RYTDGMjMQgymCtJIHd4KCdLm1FLyfDRKOp9ukMZv
+	 a1jEhNaiMC4S47NLtnLS6inDdLDLhis7WsYiKfMWectzsXPHnHCsj0kDAZs6cXZ8aQ
+	 oe3NrvMuLUg1nVd8SSEl+0V2vYPZF3+a9bJdeYuQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730981AbfCVLi2 (ORCPT
+        id S1730984AbfCVLic (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:38:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39970 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:38:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40026 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730223AbfCVLi0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:38:26 -0400
+        id S1730223AbfCVLia (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:38:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB1C22082C;
-        Fri, 22 Mar 2019 11:38:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6A812082C;
+        Fri, 22 Mar 2019 11:38:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254705;
-        bh=Vm2m0EqLUU3PLerBkGMLQOhkLqAQuoVL7CC/zyGj8Yc=;
+        s=default; t=1553254709;
+        bh=44nlyRHTOdR6CrP1qgxq1qzsP1j2Zg2ZNyQzwpr1414=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HKaiQN8p0FSx/QUZWePf7qzOsQX+kXZMGMEfjY3GjU4MV5EaTuhWmaLM0xGhql8VB
-         soNiUbB2I5sWbc4wz9RufveASgvkqosGw2YyNo1QhnsiaPDQZmPujqn4ezpxbXkHjY
-         yzTqdHv6W2RDYPrhvV44/6YsqODAB7CgXGTpdksQ=
+        b=14a+/pEJbW/4OECLtT081U5rlmYC1jx7DRqmW+N27BR60crj2qVcMu0jvmzLlWv9Y
+         Dp89mteYWSjDVnTUVPv+PFatrD1Z2G0915CNMxfT9FIdSpnB+ciRGmogl/NGrbvD/F
+         qI2xSHkI+GR719mKY7MU/uZzQLCdOnOtxjcxdpGI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 4.4 217/230] perf auxtrace: Define auxtrace record alignment
-Date:   Fri, 22 Mar 2019 12:15:55 +0100
-Message-Id: <20190322111252.112022945@linuxfoundation.org>
+Subject: [PATCH 4.4 218/230] perf intel-pt: Fix overlap calculation for padding
+Date:   Fri, 22 Mar 2019 12:15:56 +0100
+Message-Id: <20190322111252.185432994@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -67,50 +67,88 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Adrian Hunter <adrian.hunter@intel.com>
 
-commit c3fcadf0bb765faf45d6d562246e1d08885466df upstream.
+commit 5a99d99e3310a565b0cf63f785b347be9ee0da45 upstream.
 
-Define auxtrace record alignment so that it can be referenced elsewhere.
-
-Note this is preparation for patch "perf intel-pt: Fix overlap calculation
-for padding"
+Auxtrace records might have up to 7 bytes of padding appended. Adjust
+the overlap accordingly.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: stable@vger.kernel.org
-Link: http://lkml.kernel.org/r/20190206103947.15750-2-adrian.hunter@intel.com
+Link: http://lkml.kernel.org/r/20190206103947.15750-3-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/perf/util/auxtrace.c |    4 ++--
- tools/perf/util/auxtrace.h |    3 +++
- 2 files changed, 5 insertions(+), 2 deletions(-)
+ tools/perf/util/intel-pt-decoder/intel-pt-decoder.c |   36 ++++++++++++++++++--
+ 1 file changed, 34 insertions(+), 2 deletions(-)
 
---- a/tools/perf/util/auxtrace.c
-+++ b/tools/perf/util/auxtrace.c
-@@ -1226,9 +1226,9 @@ static int __auxtrace_mmap__read(struct
+--- a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
++++ b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
+@@ -26,6 +26,7 @@
+ 
+ #include "../cache.h"
+ #include "../util.h"
++#include "../auxtrace.h"
+ 
+ #include "intel-pt-insn-decoder.h"
+ #include "intel-pt-pkt-decoder.h"
+@@ -2320,6 +2321,34 @@ static int intel_pt_tsc_cmp(uint64_t tsc
  	}
+ }
  
- 	/* padding must be written by fn() e.g. record__process_auxtrace() */
--	padding = size & 7;
-+	padding = size & (PERF_AUXTRACE_RECORD_ALIGNMENT - 1);
- 	if (padding)
--		padding = 8 - padding;
-+		padding = PERF_AUXTRACE_RECORD_ALIGNMENT - padding;
- 
- 	memset(&ev, 0, sizeof(ev));
- 	ev.auxtrace.header.type = PERF_RECORD_AUXTRACE;
---- a/tools/perf/util/auxtrace.h
-+++ b/tools/perf/util/auxtrace.h
-@@ -37,6 +37,9 @@ struct record_opts;
- struct auxtrace_info_event;
- struct events_stats;
- 
-+/* Auxtrace records must have the same alignment as perf event records */
-+#define PERF_AUXTRACE_RECORD_ALIGNMENT 8
++#define MAX_PADDING (PERF_AUXTRACE_RECORD_ALIGNMENT - 1)
 +
- enum auxtrace_type {
- 	PERF_AUXTRACE_UNKNOWN,
- 	PERF_AUXTRACE_INTEL_PT,
++/**
++ * adj_for_padding - adjust overlap to account for padding.
++ * @buf_b: second buffer
++ * @buf_a: first buffer
++ * @len_a: size of first buffer
++ *
++ * @buf_a might have up to 7 bytes of padding appended. Adjust the overlap
++ * accordingly.
++ *
++ * Return: A pointer into @buf_b from where non-overlapped data starts
++ */
++static unsigned char *adj_for_padding(unsigned char *buf_b,
++				      unsigned char *buf_a, size_t len_a)
++{
++	unsigned char *p = buf_b - MAX_PADDING;
++	unsigned char *q = buf_a + len_a - MAX_PADDING;
++	int i;
++
++	for (i = MAX_PADDING; i; i--, p++, q++) {
++		if (*p != *q)
++			break;
++	}
++
++	return p;
++}
++
+ /**
+  * intel_pt_find_overlap_tsc - determine start of non-overlapped trace data
+  *                             using TSC.
+@@ -2370,8 +2399,11 @@ static unsigned char *intel_pt_find_over
+ 
+ 			/* Same TSC, so buffers are consecutive */
+ 			if (!cmp && rem_b >= rem_a) {
++				unsigned char *start;
++
+ 				*consecutive = true;
+-				return buf_b + len_b - (rem_b - rem_a);
++				start = buf_b + len_b - (rem_b - rem_a);
++				return adj_for_padding(start, buf_a, len_a);
+ 			}
+ 			if (cmp < 0)
+ 				return buf_b; /* tsc_a < tsc_b => no overlap */
+@@ -2434,7 +2466,7 @@ unsigned char *intel_pt_find_overlap(uns
+ 		found = memmem(buf_a, len_a, buf_b, len_a);
+ 		if (found) {
+ 			*consecutive = true;
+-			return buf_b + len_a;
++			return adj_for_padding(buf_b + len_a, buf_a, len_a);
+ 		}
+ 
+ 		/* Try again at next PSB in buffer 'a' */
 
 
