@@ -2,104 +2,107 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 997FFC10F03
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:49:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C0DFC10F03
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:54:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 695A0218B0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:49:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ZBgPMVLJ"
+	by mail.kernel.org (Postfix) with ESMTP id 13943218E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:54:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728409AbfCVNtP (ORCPT
+        id S1728596AbfCVNx7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 09:49:15 -0400
-Received: from mail-eopbgr130053.outbound.protection.outlook.com ([40.107.13.53]:36376
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728005AbfCVNtO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 09:49:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RJAU8HfhEeBWxNFZQDzx0L9V6CZVs4e7iDml7bkmpuQ=;
- b=ZBgPMVLJ0GS1QBXc8DceIHfOt5a9zjYt/WAoMy0jcxVHkPJcMcsNKGtmO/lCuhxvKfdt1SwMNH832/7MlD6R943b0sn1/4Pb1DaKvHsHLIveaUnBW4JbpzViEmHnS74rIA0YwbDe3MyVQY5toXakopSSzeZfo5miBGhG+s+dAtk=
-Received: from AM0PR0402MB3476.eurprd04.prod.outlook.com (52.133.50.141) by
- AM0PR0402MB3780.eurprd04.prod.outlook.com (52.133.39.154) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1709.15; Fri, 22 Mar 2019 13:49:11 +0000
-Received: from AM0PR0402MB3476.eurprd04.prod.outlook.com
- ([fe80::211a:4b31:ec05:6b2d]) by AM0PR0402MB3476.eurprd04.prod.outlook.com
- ([fe80::211a:4b31:ec05:6b2d%4]) with mapi id 15.20.1730.017; Fri, 22 Mar 2019
- 13:49:11 +0000
-From:   Horia Geanta <horia.geanta@nxp.com>
-To:     Iuliana Prodan <iuliana.prodan@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>
-CC:     "David S. Miller" <davem@davemloft.net>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH] crypto: caam - limit AXI pipeline to a depth of 1
-Thread-Topic: [PATCH] crypto: caam - limit AXI pipeline to a depth of 1
-Thread-Index: AQHU4LS0PhbDv36r/UaEkV+h8tAXFw==
-Date:   Fri, 22 Mar 2019 13:49:10 +0000
-Message-ID: <AM0PR0402MB3476CFA25333D7821B5079D898430@AM0PR0402MB3476.eurprd04.prod.outlook.com>
-References: <1553261968-5766-1-git-send-email-iuliana.prodan@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a6fa8235-57fb-4e48-1e04-08d6aecd29b1
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600127)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:AM0PR0402MB3780;
-x-ms-traffictypediagnostic: AM0PR0402MB3780:
-x-microsoft-antispam-prvs: <AM0PR0402MB37808804F7784751278B504298430@AM0PR0402MB3780.eurprd04.prod.outlook.com>
-x-forefront-prvs: 09840A4839
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(346002)(366004)(396003)(39860400002)(376002)(199004)(189003)(9686003)(186003)(81166006)(66066001)(81156014)(55016002)(478600001)(74316002)(44832011)(6436002)(2906002)(52536014)(68736007)(7736002)(71190400001)(3846002)(305945005)(71200400001)(6116002)(316002)(97736004)(86362001)(7696005)(5660300002)(229853002)(53936002)(486006)(53546011)(26005)(446003)(6246003)(476003)(25786009)(102836004)(6636002)(4326008)(4744005)(105586002)(14444005)(54906003)(99286004)(106356001)(33656002)(8936002)(110136005)(14454004)(8676002)(76176011)(6506007)(256004)(6346003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR0402MB3780;H:AM0PR0402MB3476.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=horia.geanta@nxp.com; 
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: rv7q/d5P66k6SnshxXSzrEy2Oah3nhb+iEp9I7zlG0qXk7VMIg3cA2kHdQtzqTU+T6343R4UdnFwCgwndv2XCz8apLw98OvBYk+vcdc2G0jCaHCnYyCwSFQ6BYECusD443UHUYNtqZpGJwgqFui4LwX5heuRT44k7eQ/WCsmFJAVKm1ADjJBSk08mFwZQ3ydscF/Js3pTxjjxW1vtYPAPhVf2v3VsCD3fwyyBPwJEs9tKRO7JTN6Y1WP03zqj4teca4aGXIvKa8jFJPSYUCZegIQgp/9F8KQRxEyQM+l6o3Ii0syd02tVRk5MUv4wrHu57GdNV8lDxErWjWX96zCm1GoI3Pm1xdLhy/2xRhwKZ+OyWdLNQ0C9uxUthPgL0ojCWkJ+v6STgSqQyabgQgec/QHqbr4dbPHpLO8j1Z6n40=
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 22 Mar 2019 09:53:59 -0400
+Received: from mga04.intel.com ([192.55.52.120]:7181 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728005AbfCVNx6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 09:53:58 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Mar 2019 06:53:57 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,256,1549958400"; 
+   d="scan'208";a="124964705"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by orsmga007.jf.intel.com with ESMTP; 22 Mar 2019 06:53:51 -0700
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id C176C205C1; Fri, 22 Mar 2019 15:53:50 +0200 (EET)
+Date:   Fri, 22 Mar 2019 15:53:50 +0200
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        scsi <linux-scsi@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Linux MMC List <linux-mmc@vger.kernel.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-block@vger.kernel.org,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        linux-btrfs <linux-btrfs@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        sparclinux <sparclinux@vger.kernel.org>,
+        xen-devel@lists.xenproject.org,
+        ceph-devel <ceph-devel@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Lars Ellenberg <drbd-dev@lists.linbit.com>
+Subject: Re: [PATCH 0/2] Remove support for deprecated %pf and %pF in vsprintf
+Message-ID: <20190322135350.2btpno7vspvewxvk@paasikivi.fi.intel.com>
+References: <20190322132108.25501-1-sakari.ailus@linux.intel.com>
+ <CAMuHMdVmqqjVx7As9AAywYxYXG=grijF5rF77OBn6TUjM9+xKw@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a6fa8235-57fb-4e48-1e04-08d6aecd29b1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Mar 2019 13:49:10.9415
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR0402MB3780
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdVmqqjVx7As9AAywYxYXG=grijF5rF77OBn6TUjM9+xKw@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/22/2019 3:39 PM, Iuliana Prodan wrote:=0A=
-> Some i.MX6 devices (imx6D, imx6Q, imx6DL, imx6S, imx6DP and imx6DQ) have=
-=0A=
-> an issue wherein AXI bus transactions may not occur in the correct order.=
-=0A=
-> This isn't a problem running single descriptors, but can be if running=0A=
-> multiple concurrent descriptors. Reworking the CAAM driver to throttle=0A=
-> to single requests is impractical, so this patch limits the AXI pipeline=
-=0A=
-> to a depth of one (from a default of 4) to preclude this situation from=
-=0A=
-> occurring.=0A=
-> This patch applies to known affected platforms.=0A=
-> =0A=
-> Signed-off-by: Radu Solea <radu.solea@nxp.com>=0A=
-> Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>=0A=
-Reviewed-by: Horia Geant=E3 <horia.geanta@nxp.com>=0A=
-=0A=
-Thanks,=0A=
-Horia=0A=
+Hi Geert,
+
+On Fri, Mar 22, 2019 at 02:37:18PM +0100, Geert Uytterhoeven wrote:
+> Hi Sakari,
+> 
+> On Fri, Mar 22, 2019 at 2:25 PM Sakari Ailus
+> <sakari.ailus@linux.intel.com> wrote:
+> > The printk family of functions supports %ps and %pS conversion specifiers
+> > to print function names. Yet the deprecated %pf and %pF conversion
+> > specifiers with equivalent functionality remain supported. A number of
+> > users of %pf and %pF remain.
+> >
+> > This patchsets converts the existing users of %pf and %pF to %ps and %pS,
+> > respectively, and removes support for the deprecated %pf and %pF.
+> >
+> > The patches apply cleanly both on 5.1-rc1 as well as on Linux-next. No new
+> > %pf or %pF users have been added in the meantime so the patch is
+> > sufficient as itself on linux-next, too.
+> 
+> Do you know in which commit they became deprecated, so the backporters
+> know how far this can be backported safely?
+
+That appears to be 04b8eb7a4ccd
+("symbol lookup: introduce dereference_symbol_descriptor()"), the same
+patch that made %p[fF] and %p[sS] functionally equivalent.
+
+But my personal opinion would be not to backport the patch for two reasons:
+the sheer number of files it touches (those format strings change for
+various reasons) and the meager benefits it has on older kernels as any
+backported patch using %s or %S still works as such. Porting a patch
+forward should have no issues either as checkpatch.pl has been complaining
+of the use of %pf and %pF for a while now.
+
+-- 
+Kind regards,
+
+Sakari Ailus
+sakari.ailus@linux.intel.com
