@@ -2,118 +2,205 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9657C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 19:33:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2697C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 19:36:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84240218FE
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 19:33:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="xM89No+0"
+	by mail.kernel.org (Postfix) with ESMTP id 8C52E20883
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 19:36:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727468AbfCVTds (ORCPT
+        id S1727392AbfCVTgi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 15:33:48 -0400
-Received: from mail-eopbgr740043.outbound.protection.outlook.com ([40.107.74.43]:18205
-        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726472AbfCVTdr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 15:33:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector1-amd-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/fWImCqqomlpkY3iZdAg7rwvbYHSdoHEGa1v4LwjAaI=;
- b=xM89No+02OOgDWyuRJGpx6INpyBCohx/KLb8SwBXTLwQ6MGt8RVuO3U8P5/kMag32WTonDoy4rni+BvR8k7OSg1hwUVwESzReUbafRM29cwoTvaPKU2dSB/jq1ytMc77ikI2kji9C+IryRodNbTgLOrsVJVRLw9NA/jb1hbeD9g=
-Received: from SN6PR12MB2639.namprd12.prod.outlook.com (52.135.103.16) by
- SN6PR12MB2751.namprd12.prod.outlook.com (52.135.107.31) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1709.14; Fri, 22 Mar 2019 19:33:44 +0000
-Received: from SN6PR12MB2639.namprd12.prod.outlook.com
- ([fe80::d49d:a1ee:9bcf:20e2]) by SN6PR12MB2639.namprd12.prod.outlook.com
- ([fe80::d49d:a1ee:9bcf:20e2%5]) with mapi id 15.20.1730.013; Fri, 22 Mar 2019
- 19:33:43 +0000
-From:   "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
-To:     Borislav Petkov <bp@alien8.de>
-CC:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "rafal@milecki.pl" <rafal@milecki.pl>,
-        "clemej@gmail.com" <clemej@gmail.com>
-Subject: RE: [PATCH v2 2/2] x86/MCE/AMD: Don't report L1 BTB MCA errors on
- some Family 17h models
-Thread-Topic: [PATCH v2 2/2] x86/MCE/AMD: Don't report L1 BTB MCA errors on
- some Family 17h models
-Thread-Index: AQHU4CQzOwE6EEZAWEC91l7umX/fDqYX6sEAgAAejgCAAAJgAIAAADDg
-Date:   Fri, 22 Mar 2019 19:33:43 +0000
-Message-ID: <SN6PR12MB2639D01961ADF8782EE36BA1F8430@SN6PR12MB2639.namprd12.prod.outlook.com>
-References: <20190321202505.5553-1-Yazen.Ghannam@amd.com>
- <20190321202505.5553-2-Yazen.Ghannam@amd.com>
- <20190322173436.GK12472@zn.tnic>
- <feea1978-04ef-82f9-933e-4ae280391aea@amd.com>
- <20190322193228.GN12472@zn.tnic>
-In-Reply-To: <20190322193228.GN12472@zn.tnic>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Yazen.Ghannam@amd.com; 
-x-originating-ip: [165.204.84.17]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9e495d77-4505-454a-7b17-08d6aefd4bba
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:SN6PR12MB2751;
-x-ms-traffictypediagnostic: SN6PR12MB2751:
-x-microsoft-antispam-prvs: <SN6PR12MB27513E10BD37335C4614C00AF8430@SN6PR12MB2751.namprd12.prod.outlook.com>
-x-forefront-prvs: 09840A4839
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(346002)(39860400002)(396003)(136003)(366004)(199004)(189003)(13464003)(76176011)(476003)(71190400001)(6116002)(8676002)(105586002)(256004)(81156014)(93886005)(33656002)(7736002)(8936002)(54906003)(3846002)(74316002)(305945005)(106356001)(66066001)(68736007)(71200400001)(6436002)(97736004)(11346002)(486006)(446003)(2906002)(4326008)(86362001)(7696005)(14454004)(72206003)(102836004)(6246003)(5660300002)(6916009)(53546011)(478600001)(53936002)(81166006)(55016002)(186003)(52536014)(9686003)(26005)(229853002)(6506007)(99286004)(25786009)(316002)(170073001);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2751;H:SN6PR12MB2639.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: ZU5D5wQp4LoW2d63BwRUioJ9gxiRtLV2AntQro2Fpj/Ttpq+u+jihP5wQnDNDGmI3gDDLp6cZU5EWV1qzaDiwhS2T5i1/mVFofhhnC409F6ChlmwEsOn/OjkOVlcGFoab54g9aFPSuFYk6MPWnAIhpyG3y+xhjoLSP0ZGK9rdZCEJx81bXgwPvy1hi/0JWEfTACGynjzPlflcDsdrHtEF3fDFwCs+O4cknn4IxotIYPwk71qcS+EjRJtdSVmyeHgbyrJA0qphaynhp71w1X5QK/8lClaqpNlbTvyVwvyb4RnnpFJeSXiklgiFoPLs0L9f6K3HfWsGCnJNBbNdtwnRy9DH7hJO/iFISaAGyhi/bZhTcIBfmXVOYUryIE+2xkS1Hs3u+PtimrUhdpAZv0ga1vTQvik+TZuZkt6TQ6ejF0=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9e495d77-4505-454a-7b17-08d6aefd4bba
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Mar 2019 19:33:43.9014
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2751
+        Fri, 22 Mar 2019 15:36:38 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:56288 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726472AbfCVTgh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 15:36:37 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2MJYcVP059669
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 15:36:36 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2rd5x008qy-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 15:36:35 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Fri, 22 Mar 2019 19:36:25 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 22 Mar 2019 19:36:22 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2MJaUNU37355676
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 22 Mar 2019 19:36:30 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3E77242041;
+        Fri, 22 Mar 2019 19:36:30 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3400D42042;
+        Fri, 22 Mar 2019 19:36:29 +0000 (GMT)
+Received: from dhcp-9-31-103-153.watson.ibm.com (unknown [9.31.103.153])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 22 Mar 2019 19:36:29 +0000 (GMT)
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     linux-integrity@vger.kernel.org
+Cc:     linux-kselftest@vger.kernel.org, kexec@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Petr Vorel <pvorel@suse.cz>,
+        Dave Young <dyoung@redhat.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Mimi Zohar <zohar@linux.ibm.com>
+Subject: [PATCH v4a 1/2] selftests/kexec: make tests independent of IMA being enabled
+Date:   Fri, 22 Mar 2019 15:35:50 -0400
+X-Mailer: git-send-email 2.7.5
+X-TM-AS-GCONF: 00
+x-cbid: 19032219-4275-0000-0000-0000031E2F76
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19032219-4276-0000-0000-0000382CBC96
+Message-Id: <1553283351-6310-1-git-send-email-zohar@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-22_11:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=6 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=991 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903220139
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBsaW51eC1lZGFjLW93bmVyQHZn
-ZXIua2VybmVsLm9yZyA8bGludXgtZWRhYy1vd25lckB2Z2VyLmtlcm5lbC5vcmc+IE9uIEJlaGFs
-ZiBPZiBCb3Jpc2xhdiBQZXRrb3YNCj4gU2VudDogRnJpZGF5LCBNYXJjaCAyMiwgMjAxOSAyOjMy
-IFBNDQo+IFRvOiBHaGFubmFtLCBZYXplbiA8WWF6ZW4uR2hhbm5hbUBhbWQuY29tPg0KPiBDYzog
-bGludXgtZWRhY0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7
-IHRvbnkubHVja0BpbnRlbC5jb207IHg4NkBrZXJuZWwub3JnOyByYWZhbEBtaWxlY2tpLnBsOw0K
-PiBjbGVtZWpAZ21haWwuY29tDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjIgMi8yXSB4ODYvTUNF
-L0FNRDogRG9uJ3QgcmVwb3J0IEwxIEJUQiBNQ0EgZXJyb3JzIG9uIHNvbWUgRmFtaWx5IDE3aCBt
-b2RlbHMNCj4gDQo+IE9uIEZyaSwgTWFyIDIyLCAyMDE5IGF0IDA3OjI0OjAxUE0gKzAwMDAsIEdo
-YW5uYW0sIFlhemVuIHdyb3RlOg0KPiA+IEdlbmVyYWxseSwgdGhlIG1vZGVsIGdyb3VwcyBzaGFy
-ZSB0aGUgc2FtZSBoYXJkd2FyZSBkZXNpZ24gYW5kIHNvIHRoZQ0KPiA+IHNhbWUgcXVpcmtzLiBT
-byBJJ20gdGhpbmtpbmcgdGhhdCBpdCdkIGJlIG1vcmUgZWZmaWNpZW50IHRvIGhhdmUgYQ0KPiA+
-IGZpbHRlciBmdW5jdGlvbiB0aGF0IHRhcmdldHMgYSBzcGVjaWZpYyBncm91cCBvZiBtb2RlbHMg
-cmF0aGVyIHRoYW4NCj4gPiBvbmUgdGhhdCBjaGVja3MgYWxsIGtub3duIHF1aXJrcyBvbiBhbGwg
-bW9kZWxzLg0KPiANCj4gT3Igc2ltcGx5IHN0YXJ0IHdpdGggYSBhbWRfZmlsdGVyX21jZSgpIGZ1
-bmN0aW9uIGFuZCB3aGVuIGl0IGdyb3dzIGJpZw0KPiBhbmQgdW53aWVsZHksIG9ubHkgKnRoZW4q
-IHN0YXJ0IHRoaW5raW5nIGFib3V0IHNwbGl0dGluZyBpdCBpbnRvIG1vZGVscw0KPiBhbmQgZmFt
-aWxpZXMuIEZvciBub3csIHlvdSdyZSBmaW5lIHdpdGggYSBzaW5nbGUgQU1ELXNwZWNpZmljIGZ1
-bmN0aW9uLg0KPiANCg0KVW5kZXJzdG9vZC4NCg0KPiA+IE1vc3Qgb2YgdGhlIHF1aXJrcyBhcmUg
-ZGVhbHQgd2l0aCBhdCBpbml0IHRpbWUsIGJ1dCB0aGlzIG5lZWRzIGJlIHRvDQo+ID4gZG9uZSBk
-dXJpbmcgcnVuIHRpbWUgZm9yIGVhY2ggTUNFIHRoYXQgaXMgbG9nZ2VkLiBTbyBJIGRpZG4ndCB3
-YW50IHRvDQo+ID4gYWRkIHVubmVjZXNzYXJ5IGNoZWNrcyB0byB0aGUgTUNFIGhhbmRsZXJzLiBX
-ZSBoYXZlIHF1aXJrX25vX3dheV9vdXQoKQ0KPiA+IHRoYXQgZG9lcyBzb21ldGhpbmcgc2ltaWxh
-ci4NCj4gDQo+IEkgZG9uJ3QgdGhpbmsgYSBjb3VwbGUgb2YgaW5zdHJ1Y3Rpb25zIGNoZWNraW5n
-IHZlbmRvciBhbmQgZmFtaWx5IHdvdWxkDQo+IGJlIGF0IGFsbCBub3RpY2VhYmxlIHNvIGxldCdz
-IHN0YXJ0IHNpbXBsZS4NCj4gDQoNCk9rYXksIHdpbGwgZG8uDQoNClRoYW5rcywNCllhemVuDQo=
+Verify IMA is enabled before failing tests or emitting irrelevant
+messages.  Also, don't skip the test if signatures are not required.
+
+Suggested-by: Dave Young <dyoung@redhat.com>
+Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+---
+Dave, if this patch resolves the outstanding issues, I can fold these
+changes into the original patches. (Reminder, these patches will need to
+be updated to support the "lockdown" patch set.)
+
+ .../selftests/kexec/test_kexec_file_load.sh        | 27 ++++++++++++++--------
+ tools/testing/selftests/kexec/test_kexec_load.sh   | 24 ++++++++++++-------
+ 2 files changed, 33 insertions(+), 18 deletions(-)
+
+diff --git a/tools/testing/selftests/kexec/test_kexec_file_load.sh b/tools/testing/selftests/kexec/test_kexec_file_load.sh
+index 1d2e5e799523..57b636792086 100755
+--- a/tools/testing/selftests/kexec/test_kexec_file_load.sh
++++ b/tools/testing/selftests/kexec/test_kexec_file_load.sh
+@@ -110,11 +110,20 @@ kexec_file_load_test()
+ 			log_fail "$succeed_msg (missing IMA sig)"
+ 		fi
+ 
+-		if [ $pe_sig_required -eq 0 ] && [ $ima_sig_required -eq 0 ] \
+-		    && [ $ima_read_policy -eq 0 ] && [ $ima_signed -eq 0 ]; then
++		if [ $pe_sig_required -eq 0 ] && [ $ima_appraise -eq 1 ] \
++		    && [ $ima_sig_required -eq 0 ] && [ $ima_signed -eq 0 ] \
++	            && [ $ima_read_policy -eq 0 ]; then
+ 			log_fail "$succeed_msg (possibly missing IMA sig)"
+ 		fi
+ 
++		if [ $pe_sig_required -eq 0 ] && [ $ima_appraise -eq 0 ]; then
++			log_info "No signature verification required"
++		elif [ $pe_sig_required -eq 0 ] && [ $ima_appraise -eq 1 ] \
++		    && [ $ima_sig_required -eq 0 ] && [ $ima_signed -eq 0 ] \
++	            && [ $ima_read_policy -eq 1 ]; then
++			log_info "No signature verification required"
++		fi
++
+ 		log_pass "$succeed_msg"
+ 	fi
+ 
+@@ -136,8 +145,9 @@ kexec_file_load_test()
+ 		log_pass "$failed_msg (missing IMA sig)"
+ 	fi
+ 
+-	if [ $pe_sig_required -eq 0 ] && [ $ima_sig_required -eq 0 ] \
+-	    && [ $ima_read_policy -eq 0 ] && [ $ima_signed -eq 0 ]; then
++	if [ $pe_sig_required -eq 0 ] && [ $ima_appraise -eq 1 ] \
++	    && [ $ima_sig_required -eq 0 ] && [ $ima_read_policy -eq 0 ] \
++	    && [ $ima_signed -eq 0 ]; then
+ 		log_pass "$failed_msg (possibly missing IMA sig)"
+ 	fi
+ 
+@@ -157,6 +167,9 @@ if [ $? -eq 0 ]; then
+ fi
+ 
+ # Determine which kernel config options are enabled
++kconfig_enabled "CONFIG_IMA_APPRAISE=y" "IMA enabled"
++ima_appraise=$?
++
+ kconfig_enabled "CONFIG_IMA_ARCH_POLICY=y" \
+ 	"architecture specific policy enabled"
+ arch_policy=$?
+@@ -178,12 +191,6 @@ ima_sig_required=$?
+ get_secureboot_mode
+ secureboot=$?
+ 
+-if [ $secureboot -eq 0 ] && [ $arch_policy -eq 0 ] && \
+-   [ $pe_sig_required -eq 0 ] && [ $ima_sig_required -eq 0 ] && \
+-   [ $ima_read_policy -eq 1 ]; then
+-	log_skip "No signature verification required"
+-fi
+-
+ # Are there pe and ima signatures
+ check_for_pesig
+ pe_signed=$?
+diff --git a/tools/testing/selftests/kexec/test_kexec_load.sh b/tools/testing/selftests/kexec/test_kexec_load.sh
+index 2a66c8897f55..49c6aa929137 100755
+--- a/tools/testing/selftests/kexec/test_kexec_load.sh
++++ b/tools/testing/selftests/kexec/test_kexec_load.sh
+@@ -1,8 +1,8 @@
+ #!/bin/sh
+ # SPDX-License-Identifier: GPL-2.0
+-# Loading a kernel image via the kexec_load syscall should fail
+-# when the kernel is CONFIG_KEXEC_VERIFY_SIG enabled and the system
+-# is booted in secureboot mode.
++#
++# Prevent loading a kernel image via the kexec_load syscall when
++# signatures are required.  (Dependent on CONFIG_IMA_ARCH_POLICY.)
+ 
+ TEST="$0"
+ . ./kexec_common_lib.sh
+@@ -18,20 +18,28 @@ if [ $? -eq 0 ]; then
+ 	log_skip "kexec_load is not enabled"
+ fi
+ 
++kconfig_enabled "CONFIG_IMA_APPRAISE=y" "IMA enabled"
++ima_appraise=$?
++
++kconfig_enabled "CONFIG_IMA_ARCH_POLICY=y" \
++	"IMA architecture specific policy enabled"
++arch_policy=$?
++
+ get_secureboot_mode
+ secureboot=$?
+ 
+-# kexec_load should fail in secure boot mode
++# kexec_load should fail in secure boot mode and CONFIG_IMA_ARCH_POLICY enabled
+ kexec --load $KERNEL_IMAGE > /dev/null 2>&1
+ if [ $? -eq 0 ]; then
+ 	kexec --unload
+-	if [ $secureboot -eq 1 ]; then
++	if [ $secureboot -eq 1 ] && [ $arch_policy -eq 1 ]; then
+ 		log_fail "kexec_load succeeded"
+-	else
+-		log_pass "kexec_load succeeded"
++	elif [ $ima_appraise -eq 0 -o $arch_policy -eq 0 ]; then
++		log_info "Either IMA or the IMA arch policy is not enabled"
+ 	fi
++	log_pass "kexec_load succeeded"
+ else
+-	if [ $secureboot -eq 1 ]; then
++	if [ $secureboot -eq 1 ] && [ $arch_policy -eq 1 ] ; then
+ 		log_pass "kexec_load failed"
+ 	else
+ 		log_fail "kexec_load failed"
+-- 
+2.7.5
+
