@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D1B1C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:53:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B347C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:53:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AD5C2082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:53:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C6A82082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:53:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255604;
-	bh=Fy8oe6xRhkv+e6UZeZhGyNTnky7VcJYCTV9w/yVfi2s=;
+	s=default; t=1553255607;
+	bh=SknzV6Meb5O2BMKhF6/srXb0+eSe3xq+HyNHRC+nBp8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=COdfYNT3alLQQjg10u9d5lUq/rKqoaegoYwKHF1Rx+MaNLkruCEYdNCYdPaMGPJxs
-	 DKS0Cqei+47KD5sp0iWoqWxrUFvpZ9CuF0AsWCt3N98rarTydNOxmmZhPEsVZ/Sotp
-	 ZGhVlyy10VaBIuzGCx7Ii/ouA4YmZAQH9ug9Fp8U=
+	b=voQTfrr6QwqnDMpmdXT/MPHFKFTXH/RZALD841AF9LKHgCKcClLP5rsQr1XSx7iml
+	 SLU9zOmRgAlYOsOI9GLW1TISs1o1oZ/zwqI7s3B0IQ8iK6DX0NvVPSJsU3DSwvCzEc
+	 nqYd+ME4RjYNqC37Js5GRoluC2FjOpxf33HZkHFY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733029AbfCVLxW (ORCPT
+        id S1733039AbfCVLxZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:53:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57450 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:53:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732826AbfCVLxS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:53:18 -0400
+        id S1732456AbfCVLxW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:53:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 794B82082C;
-        Fri, 22 Mar 2019 11:53:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F79020693;
+        Fri, 22 Mar 2019 11:53:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255598;
-        bh=Fy8oe6xRhkv+e6UZeZhGyNTnky7VcJYCTV9w/yVfi2s=;
+        s=default; t=1553255602;
+        bh=SknzV6Meb5O2BMKhF6/srXb0+eSe3xq+HyNHRC+nBp8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KT+fyFatbchU6gzdmy0fmS3PNHSA3jcM8DDqZLsrBZZ+eSBqxGLt2NOXgR5c8dlMw
-         C5qbu0O09qcwgq+4CEEp4Ozeukkjmsc0H5ddOSJnRELQ3GK13UAXKvhMcp14IA6TK0
-         iu8FCMI6YO7fcUgC32vIelLO+6Eqkt1S89YgSYGs=
+        b=sgphStpwoC8iqwlUcKGE8OYB8V9ABHwL6xz/YAg0ViD53fRqrcGSloKxQQ2ce37xA
+         s8AKZQmvt6mFt9OgnuzO8+JDVuSmqTVVf3omAsrWlRNdfYH9IHo8S6SYa93/HSsMDh
+         Nmmh1AqKIXbq7+FTDpQwhnnm5AMWLYc+eB9/8U0s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: [PATCH 4.14 121/183] nfit: acpi_nfit_ctl(): Check out_obj->type in the right place
-Date:   Fri, 22 Mar 2019 12:15:49 +0100
-Message-Id: <20190322111250.468536937@linuxfoundation.org>
+        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        Theodore Tso <tytso@mit.edu>
+Subject: [PATCH 4.14 112/183] ext4: fix crash during online resizing
+Date:   Fri, 22 Mar 2019 12:15:40 +0100
+Message-Id: <20190322111249.817276740@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111241.819468003@linuxfoundation.org>
 References: <20190322111241.819468003@linuxfoundation.org>
@@ -65,55 +65,48 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Dexuan Cui <decui@microsoft.com>
+From: Jan Kara <jack@suse.cz>
 
-commit 43f89877f26671c6309cd87d7364b1a3e66e71cf upstream.
+commit f96c3ac8dfc24b4e38fc4c2eba5fea2107b929d1 upstream.
 
-In the case of ND_CMD_CALL, we should also check out_obj->type.
+When computing maximum size of filesystem possible with given number of
+group descriptor blocks, we forget to include s_first_data_block into
+the number of blocks. Thus for filesystems with non-zero
+s_first_data_block it can happen that computed maximum filesystem size
+is actually lower than current filesystem size which confuses the code
+and eventually leads to a BUG_ON in ext4_alloc_group_tables() hitting on
+flex_gd->count == 0. The problem can be reproduced like:
 
-The patch uses out_obj->type, which is a short alias to
-out_obj->package.type.
+truncate -s 100g /tmp/image
+mkfs.ext4 -b 1024 -E resize=262144 /tmp/image 32768
+mount -t ext4 -o loop /tmp/image /mnt
+resize2fs /dev/loop0 262145
+resize2fs /dev/loop0 300000
 
-Fixes: 31eca76ba2fc ("nfit, libnvdimm: limited/whitelisted dimm command marshaling mechanism")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Fix the problem by properly including s_first_data_block into the
+computed number of filesystem blocks.
+
+Fixes: 1c6bd7173d66 "ext4: convert file system to meta_bg if needed..."
+Signed-off-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-
 ---
- drivers/acpi/nfit/core.c |   14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ fs/ext4/resize.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/acpi/nfit/core.c
-+++ b/drivers/acpi/nfit/core.c
-@@ -329,6 +329,13 @@ int acpi_nfit_ctl(struct nvdimm_bus_desc
- 		return -EINVAL;
- 	}
+--- a/fs/ext4/resize.c
++++ b/fs/ext4/resize.c
+@@ -1930,7 +1930,8 @@ retry:
+ 				le16_to_cpu(es->s_reserved_gdt_blocks);
+ 			n_group = n_desc_blocks * EXT4_DESC_PER_BLOCK(sb);
+ 			n_blocks_count = (ext4_fsblk_t)n_group *
+-				EXT4_BLOCKS_PER_GROUP(sb);
++				EXT4_BLOCKS_PER_GROUP(sb) +
++				le32_to_cpu(es->s_first_data_block);
+ 			n_group--; /* set to last group number */
+ 		}
  
-+	if (out_obj->type != ACPI_TYPE_BUFFER) {
-+		dev_dbg(dev, "%s unexpected output object type cmd: %s type: %d\n",
-+				dimm_name, cmd_name, out_obj->type);
-+		rc = -EINVAL;
-+		goto out;
-+	}
-+
- 	if (call_pkg) {
- 		call_pkg->nd_fw_size = out_obj->buffer.length;
- 		memcpy(call_pkg->nd_payload + call_pkg->nd_size_in,
-@@ -347,13 +354,6 @@ int acpi_nfit_ctl(struct nvdimm_bus_desc
- 		return 0;
- 	}
- 
--	if (out_obj->package.type != ACPI_TYPE_BUFFER) {
--		dev_dbg(dev, "%s:%s unexpected output object type cmd: %s type: %d\n",
--				__func__, dimm_name, cmd_name, out_obj->type);
--		rc = -EINVAL;
--		goto out;
--	}
--
- 	dev_dbg(dev, "%s:%s cmd: %s output length: %d\n", __func__, dimm_name,
- 			cmd_name, out_obj->buffer.length);
- 	print_hex_dump_debug(cmd_name, DUMP_PREFIX_OFFSET, 4, 4,
 
 
