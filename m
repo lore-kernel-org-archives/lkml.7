@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7AA7C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:05:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE1FBC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:05:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0ACC206C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:05:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFA15206C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:05:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256316;
-	bh=cEx+BKpucAahQioEBw5JRIhb6sqvaynHd41tZ5y+dYo=;
+	s=default; t=1553256319;
+	bh=OMdnrxHElTckJNKwPYhFebdDSnknv5B0yWEV1hba+hE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TUmBNxe9QKOfewt8LJUwy7m/rKwF5pYUFRDl2sE8BkckgsnwlwMz7mH2V2Sr8XcFt
-	 YcInjc6DyZeFwfozKTNrGJ/EwGMyG2KFtrY/f1y4nD8K+kJ6aO3uHTn5OA03kHoMoD
-	 HlYWbehdambZ8OVSoiLVJ41IBO4aAsDrFou0UYyQ=
+	b=XjFSQz2pCSoMeXVicdmv7Z+z6bR9I1MEilBsMTfBcg7vBgnCyL5KuvOlo1hmkdI6/
+	 7xk6DeJtGyZJCre0oJY/QMz/tijy0epuSUd+M2Vg6D44Bu7MYA4OQBcQwy6VitGDeB
+	 FdLFd/9mJfcwvI/OnPq63LsRsUY4q/Pw+ZglmaRo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388789AbfCVMFP (ORCPT
+        id S2388801AbfCVMFS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:05:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43656 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:05:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388460AbfCVMFM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:05:12 -0400
+        id S2388460AbfCVMFQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:05:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09C4621929;
-        Fri, 22 Mar 2019 12:05:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5BC321916;
+        Fri, 22 Mar 2019 12:05:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256311;
-        bh=cEx+BKpucAahQioEBw5JRIhb6sqvaynHd41tZ5y+dYo=;
+        s=default; t=1553256315;
+        bh=OMdnrxHElTckJNKwPYhFebdDSnknv5B0yWEV1hba+hE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D4q9OWHxxM6wH+XouczmUsCtSozy+/P4DxtfSATs2IfEIPH2ei8fZH4q2h/3gT8jW
-         19MOeJx56gcp5+UejQan9eE/byXJd/h80wjFJOTs42ethiiKjFib3pBDNQ5YJAYor+
-         x0qQPCKSL483G7lxvD4gbq7VR8AQduDq0PhwK3aU=
+        b=yEb+90PYaiCfxQl5x8UdSmi5ghszKtMHTOHX21a/zrulAWoTAC0rH1lnxnOl2AGKy
+         rouj/YEz4NzaE9PZpJOiylnogobyXf0Ud4/iMAM6Boucu3R3KTx2DxHoIYo4BDIokg
+         ivGxhNbztZCh+blxUt0btQhEAbwaO6QICyg+h9qY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Jann Horn <jannh@google.com>
-Subject: [PATCH 4.19 164/280] splice: dont merge into linked buffers
-Date:   Fri, 22 Mar 2019 12:15:17 +0100
-Message-Id: <20190322111323.143782969@linuxfoundation.org>
+        stable@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>,
+        Steve deRosier <derosier@cal-sierra.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 4.19 173/280] libertas_tf: dont set URB_ZERO_PACKET on IN USB transfer
+Date:   Fri, 22 Mar 2019 12:15:26 +0100
+Message-Id: <20190322111325.000072034@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -65,113 +66,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jann Horn <jannh@google.com>
+From: Lubomir Rintel <lkundrak@v3.sk>
 
-commit a0ce2f0aa6ad97c3d4927bf2ca54bcebdf062d55 upstream.
+commit 607076a904c435f2677fadaadd4af546279db68b upstream.
 
-Before this patch, it was possible for two pipes to affect each other after
-data had been transferred between them with tee():
+It doesn't make sense and the USB core warns on each submit of such
+URB, easily flooding the message buffer with tracebacks.
 
-============
-$ cat tee_test.c
+Analogous issue was fixed in regular libertas driver in commit 6528d8804780
+("libertas: don't set URB_ZERO_PACKET on IN USB transfer").
 
-int main(void) {
-  int pipe_a[2];
-  if (pipe(pipe_a)) err(1, "pipe");
-  int pipe_b[2];
-  if (pipe(pipe_b)) err(1, "pipe");
-  if (write(pipe_a[1], "abcd", 4) != 4) err(1, "write");
-  if (tee(pipe_a[0], pipe_b[1], 2, 0) != 2) err(1, "tee");
-  if (write(pipe_b[1], "xx", 2) != 2) err(1, "write");
-
-  char buf[5];
-  if (read(pipe_a[0], buf, 4) != 4) err(1, "read");
-  buf[4] = 0;
-  printf("got back: '%s'\n", buf);
-}
-$ gcc -o tee_test tee_test.c
-$ ./tee_test
-got back: 'abxx'
-$
-============
-
-As suggested by Al Viro, fix it by creating a separate type for
-non-mergeable pipe buffers, then changing the types of buffers in
-splice_pipe_to_pipe() and link_pipe().
-
-Cc: <stable@vger.kernel.org>
-Fixes: 7c77f0b3f920 ("splice: implement pipe to pipe splicing")
-Fixes: 70524490ee2e ("[PATCH] splice: add support for sys_tee()")
-Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Jann Horn <jannh@google.com>
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Cc: stable@vger.kernel.org
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+Reviewed-by: Steve deRosier <derosier@cal-sierra.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/pipe.c                 |   14 ++++++++++++++
- fs/splice.c               |    4 ++++
- include/linux/pipe_fs_i.h |    1 +
- 3 files changed, 19 insertions(+)
+ drivers/net/wireless/marvell/libertas_tf/if_usb.c |    2 --
+ 1 file changed, 2 deletions(-)
 
---- a/fs/pipe.c
-+++ b/fs/pipe.c
-@@ -234,6 +234,14 @@ static const struct pipe_buf_operations
- 	.get = generic_pipe_buf_get,
- };
+--- a/drivers/net/wireless/marvell/libertas_tf/if_usb.c
++++ b/drivers/net/wireless/marvell/libertas_tf/if_usb.c
+@@ -433,8 +433,6 @@ static int __if_usb_submit_rx_urb(struct
+ 			  skb_tail_pointer(skb),
+ 			  MRVDRV_ETH_RX_PACKET_BUFFER_SIZE, callbackfn, cardp);
  
-+static const struct pipe_buf_operations anon_pipe_buf_nomerge_ops = {
-+	.can_merge = 0,
-+	.confirm = generic_pipe_buf_confirm,
-+	.release = anon_pipe_buf_release,
-+	.steal = anon_pipe_buf_steal,
-+	.get = generic_pipe_buf_get,
-+};
-+
- static const struct pipe_buf_operations packet_pipe_buf_ops = {
- 	.can_merge = 0,
- 	.confirm = generic_pipe_buf_confirm,
-@@ -242,6 +250,12 @@ static const struct pipe_buf_operations
- 	.get = generic_pipe_buf_get,
- };
- 
-+void pipe_buf_mark_unmergeable(struct pipe_buffer *buf)
-+{
-+	if (buf->ops == &anon_pipe_buf_ops)
-+		buf->ops = &anon_pipe_buf_nomerge_ops;
-+}
-+
- static ssize_t
- pipe_read(struct kiocb *iocb, struct iov_iter *to)
- {
---- a/fs/splice.c
-+++ b/fs/splice.c
-@@ -1593,6 +1593,8 @@ retry:
- 			 */
- 			obuf->flags &= ~PIPE_BUF_FLAG_GIFT;
- 
-+			pipe_buf_mark_unmergeable(obuf);
-+
- 			obuf->len = len;
- 			opipe->nrbufs++;
- 			ibuf->offset += obuf->len;
-@@ -1667,6 +1669,8 @@ static int link_pipe(struct pipe_inode_i
- 		 */
- 		obuf->flags &= ~PIPE_BUF_FLAG_GIFT;
- 
-+		pipe_buf_mark_unmergeable(obuf);
-+
- 		if (obuf->len > len)
- 			obuf->len = len;
- 
---- a/include/linux/pipe_fs_i.h
-+++ b/include/linux/pipe_fs_i.h
-@@ -182,6 +182,7 @@ void generic_pipe_buf_get(struct pipe_in
- int generic_pipe_buf_confirm(struct pipe_inode_info *, struct pipe_buffer *);
- int generic_pipe_buf_steal(struct pipe_inode_info *, struct pipe_buffer *);
- void generic_pipe_buf_release(struct pipe_inode_info *, struct pipe_buffer *);
-+void pipe_buf_mark_unmergeable(struct pipe_buffer *buf);
- 
- extern const struct pipe_buf_operations nosteal_pipe_buf_ops;
- 
+-	cardp->rx_urb->transfer_flags |= URB_ZERO_PACKET;
+-
+ 	lbtf_deb_usb2(&cardp->udev->dev, "Pointer for rx_urb %p\n",
+ 		cardp->rx_urb);
+ 	ret = usb_submit_urb(cardp->rx_urb, GFP_ATOMIC);
 
 
