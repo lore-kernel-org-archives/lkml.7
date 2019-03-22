@@ -2,102 +2,96 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04D8BC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:16:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D958C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:19:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5542218A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:16:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43659218A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:19:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553253573;
+	bh=GVqepg8j2feKULwFOgRtv40LNGib7ZBrE8EvgO88yPA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=KOW5LpVhvc0otSNXzDmPTQ8+GWTgbv8c/lbBIOxqItG+vGBxRqtVOgPZ9f9wpJ5X9
+	 ILjF6zpiMwO3chA98UVjsX8J43HMCJWeLKrQcVLRTmWKn6mMhNB/oTXue1x1cm46ML
+	 mD7B6i5veweSL3aIXGbH7CLS1SA0O5/qCfg6t1SY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728102AbfCVLQv (ORCPT
+        id S1728142AbfCVLTc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:16:51 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52934 "EHLO mx1.redhat.com"
+        Fri, 22 Mar 2019 07:19:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726667AbfCVLQv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:16:51 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1727957AbfCVLTb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:19:31 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id BEC5B3083363;
-        Fri, 22 Mar 2019 11:16:50 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.32])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 41AA71A914;
-        Fri, 22 Mar 2019 11:16:45 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Fri, 22 Mar 2019 12:16:48 +0100 (CET)
-Date:   Fri, 22 Mar 2019 12:16:42 +0100
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Waiman Long <longman@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        selinux@vger.kernel.org, Paul Moore <paul@paul-moore.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Eric Paris <eparis@parisplace.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: Re: [PATCH 2/4] signal: Make flush_sigqueue() use free_q to release
- memory
-Message-ID: <20190322111642.GA28876@redhat.com>
-References: <20190321214512.11524-1-longman@redhat.com>
- <20190321214512.11524-3-longman@redhat.com>
- <20190322015208.GD19508@bombadil.infradead.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id C7DB8218A2;
+        Fri, 22 Mar 2019 11:19:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553253571;
+        bh=GVqepg8j2feKULwFOgRtv40LNGib7ZBrE8EvgO88yPA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=sdYNvhVJRm/mXrSpUKaBQrV9fTU9eDplsIIOzn/qQQPwNaJmISRoYOIBy3p4hFfEh
+         07xAtGc/GeBTj8MUER+JczBZCsvArH9n2yYzhQYX8c8A7HlrGqDbbdFrjY87LYGO83
+         DeGx9w7wpk00LpoKcL+qpSPbLnhG1YX6tvz/2B/0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, "Yan, Zheng" <zyan@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>
+Subject: [PATCH 3.18 001/134] ceph: avoid repeatedly adding inode to mdsc->snap_flush_list
+Date:   Fri, 22 Mar 2019 12:13:34 +0100
+Message-Id: <20190322111210.519567556@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190322111210.465931067@linuxfoundation.org>
+References: <20190322111210.465931067@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190322015208.GD19508@bombadil.infradead.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Fri, 22 Mar 2019 11:16:51 +0000 (UTC)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/21, Matthew Wilcox wrote:
->
-> On Thu, Mar 21, 2019 at 05:45:10PM -0400, Waiman Long wrote:
->
-> > To avoid this dire condition and reduce lock hold time of tasklist_lock,
-> > flush_sigqueue() is modified to pass in a freeing queue pointer so that
-> > the actual freeing of memory objects can be deferred until after the
-> > tasklist_lock is released and irq re-enabled.
->
-> I think this is a really bad solution.  It looks kind of generic,
-> but isn't.  It's terribly inefficient, and all it's really doing is
-> deferring the debugging code until we've re-enabled interrupts.
+3.18-stable review patch.  If anyone has any objections, please let me know.
 
-Agreed.
+------------------
 
-> We'd be much better off just having a list_head in the caller
-> and list_splice() the queue->list onto that caller.  Then call
-> __sigqueue_free() for each signal on the queue.
+From: Yan, Zheng <zyan@redhat.com>
 
-This won't work, note the comment which explains the race with sigqueue_free().
+commit 04242ff3ac0abbaa4362f97781dac268e6c3541a upstream.
 
-Let me think about it... at least we can do something like
+Otherwise, mdsc->snap_flush_list may get corrupted.
 
-	close_the_race_with_sigqueue_free(struct sigpending *queue)
-	{
-		struct sigqueue *q, *t;
+Cc: stable@vger.kernel.org
+Signed-off-by: "Yan, Zheng" <zyan@redhat.com>
+Reviewed-by: Ilya Dryomov <idryomov@gmail.com>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-		list_for_each_entry_safe(q, t, ...) {
-			if (q->flags & SIGQUEUE_PREALLOC)
-				list_del_init(&q->list);
-	}
+---
+ fs/ceph/snap.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-called with ->siglock held, tasklist_lock is not needed.
+--- a/fs/ceph/snap.c
++++ b/fs/ceph/snap.c
+@@ -566,7 +566,8 @@ int __ceph_finish_cap_snap(struct ceph_i
+ 	     capsnap->size);
+ 
+ 	spin_lock(&mdsc->snap_flush_lock);
+-	list_add_tail(&ci->i_snap_flush_item, &mdsc->snap_flush_list);
++	if (list_empty(&ci->i_snap_flush_item))
++		list_add_tail(&ci->i_snap_flush_item, &mdsc->snap_flush_list);
+ 	spin_unlock(&mdsc->snap_flush_lock);
+ 	return 1;  /* caller may want to ceph_flush_snaps */
+ }
 
-After that flush_sigqueue() can be called lockless in release_task() release_task.
-
-I'll try to make the patch tomorrow.
-
-Oleg.
 
