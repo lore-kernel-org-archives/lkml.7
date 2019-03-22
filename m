@@ -6,46 +6,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B11CC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:40:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 079F7C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:40:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08077218E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:40:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA75D218E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:40:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553258400;
-	bh=JObGYx1l5yB9vW03STDYS1A9H0UOKaL0IfM1YtVDnto=;
+	s=default; t=1553258406;
+	bh=tNeplT9eEOEOZlPo34G9wKqydncRo3l6BnMT33uu+vY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gUkq7+vG4lpRsyeJlUPsDYyl/8Bf961NbjvEkv9a+q1ZuboJrRJ1KcHoH6+gZ78oe
-	 aP+9cLVhw4GgdYbCQ5qetMiywO9gpGCjHQ5ataIQETpDDg06+m6OBs2oKtGIdvR600
-	 mIveDOoIDWAwbXVkPAJunSTFh38XmLSfWK/mDQYQ=
+	b=tVHoySJWFq3bP1B05HTu0CUBPkeCs+ybIpm4FQT6dtcLO4wYpAq0ST5n9Vh1JuEUY
+	 50G7oetTJW1Gj5nYX359UYCznSRE3OI9V45sEJs/8rIbTRwoZ8356qpNPMVeo0px0C
+	 GDndyPZnDlRjEndZgtxpjiDHbe285TuXq6n4O748=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389086AbfCVMj6 (ORCPT
+        id S2388986AbfCVMHD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:39:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45740 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:07:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45440 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388774AbfCVMHT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:07:19 -0400
+        id S2388505AbfCVMG7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:06:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF50721929;
-        Fri, 22 Mar 2019 12:07:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0C4B206C0;
+        Fri, 22 Mar 2019 12:06:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256438;
-        bh=JObGYx1l5yB9vW03STDYS1A9H0UOKaL0IfM1YtVDnto=;
+        s=default; t=1553256418;
+        bh=tNeplT9eEOEOZlPo34G9wKqydncRo3l6BnMT33uu+vY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sjP1eOFzLaERFaYrnTNtdRKDZly7tNC9vuazI0nQlBHtpF8KvfBQWgAD987ufQ1Hj
-         R6Jlx3i3X/u9DESM0sRJEbY3exZCaHcqBvzvFB2j9R4dV7Vl9veu+ljjHY5jVMY17/
-         R7W2uR+H0ytN8ljAGQZvbPEhHfy5NrBP3GfwdkHU=
+        b=VBZHPlwcPlpjGJ+Tjn2j2qtp1Bwb0BePbL3W1RwX5Z7FOfSin+XkcwhKYVYN4EZ71
+         ZvgYprQ7AcCa2plnPNq1BCUYuHNfrXScXUHnNKbQeIeiPuWTGOSPNzVV7siczgUk2D
+         lP+sK20QQzYjNlpYQguUqOZpT/AZTDw6y4gxet5I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, yangerkun <yangerkun@huawei.com>,
-        Jan Kara <jack@suse.cz>
-Subject: [PATCH 4.19 190/280] ext2: Fix underflow in ext2_max_size()
-Date:   Fri, 22 Mar 2019 12:15:43 +0100
-Message-Id: <20190322111328.520441664@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ammy Yi <ammy.yi@intel.com>
+Subject: [PATCH 4.19 205/280] intel_th: Dont reference unassigned outputs
+Date:   Fri, 22 Mar 2019 12:15:58 +0100
+Message-Id: <20190322111331.560487328@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -64,98 +65,60 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jan Kara <jack@suse.cz>
+From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 
-commit 1c2d14212b15a60300a2d4f6364753e87394c521 upstream.
+commit 9ed3f22223c33347ed963e7c7019cf2956dd4e37 upstream.
 
-When ext2 filesystem is created with 64k block size, ext2_max_size()
-will return value less than 0. Also, we cannot write any file in this fs
-since the sb->maxbytes is less than 0. The core of the problem is that
-the size of block index tree for such large block size is more than
-i_blocks can carry. So fix the computation to count with this
-possibility.
+When an output port driver is removed, also remove references to it from
+any masters. Failing to do this causes a NULL ptr dereference when
+configuring another output port:
 
-File size limits computed with the new function for the full range of
-possible block sizes look like:
+> BUG: unable to handle kernel NULL pointer dereference at 000000000000000d
+> RIP: 0010:master_attr_store+0x9d/0x160 [intel_th_gth]
+> Call Trace:
+> dev_attr_store+0x1b/0x30
+> sysfs_kf_write+0x3c/0x50
+> kernfs_fop_write+0x125/0x1a0
+> __vfs_write+0x3a/0x190
+> ? __vfs_write+0x5/0x190
+> ? _cond_resched+0x1a/0x50
+> ? rcu_all_qs+0x5/0xb0
+> ? __vfs_write+0x5/0x190
+> vfs_write+0xb8/0x1b0
+> ksys_write+0x55/0xc0
+> __x64_sys_write+0x1a/0x20
+> do_syscall_64+0x5a/0x140
+> entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-bits file_size
-10     17247252480
-11    275415851008
-12   2196873666560
-13   2197948973056
-14   2198486220800
-15   2198754754560
-16   2198888906752
-
-CC: stable@vger.kernel.org
-Reported-by: yangerkun <yangerkun@huawei.com>
-Signed-off-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Fixes: b27a6a3f97b9 ("intel_th: Add Global Trace Hub driver")
+CC: stable@vger.kernel.org # v4.4+
+Reported-by: Ammy Yi <ammy.yi@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext2/super.c |   41 ++++++++++++++++++++++++++---------------
- 1 file changed, 26 insertions(+), 15 deletions(-)
+ drivers/hwtracing/intel_th/gth.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/fs/ext2/super.c
-+++ b/fs/ext2/super.c
-@@ -761,7 +761,8 @@ static loff_t ext2_max_size(int bits)
+--- a/drivers/hwtracing/intel_th/gth.c
++++ b/drivers/hwtracing/intel_th/gth.c
+@@ -607,6 +607,7 @@ static void intel_th_gth_unassign(struct
  {
- 	loff_t res = EXT2_NDIR_BLOCKS;
- 	int meta_blocks;
--	loff_t upper_limit;
-+	unsigned int upper_limit;
-+	unsigned int ppb = 1 << (bits-2);
+ 	struct gth_device *gth = dev_get_drvdata(&thdev->dev);
+ 	int port = othdev->output.port;
++	int master;
  
- 	/* This is calculated to be the largest file size for a
- 	 * dense, file such that the total number of
-@@ -775,24 +776,34 @@ static loff_t ext2_max_size(int bits)
- 	/* total blocks in file system block size */
- 	upper_limit >>= (bits - 9);
- 
--
--	/* indirect blocks */
--	meta_blocks = 1;
--	/* double indirect blocks */
--	meta_blocks += 1 + (1LL << (bits-2));
--	/* tripple indirect blocks */
--	meta_blocks += 1 + (1LL << (bits-2)) + (1LL << (2*(bits-2)));
--
--	upper_limit -= meta_blocks;
--	upper_limit <<= bits;
--
-+	/* Compute how many blocks we can address by block tree */
- 	res += 1LL << (bits-2);
- 	res += 1LL << (2*(bits-2));
- 	res += 1LL << (3*(bits-2));
-+	/* Does block tree limit file size? */
-+	if (res < upper_limit)
-+		goto check_lfs;
-+
-+	res = upper_limit;
-+	/* How many metadata blocks are needed for addressing upper_limit? */
-+	upper_limit -= EXT2_NDIR_BLOCKS;
-+	/* indirect blocks */
-+	meta_blocks = 1;
-+	upper_limit -= ppb;
-+	/* double indirect blocks */
-+	if (upper_limit < ppb * ppb) {
-+		meta_blocks += 1 + DIV_ROUND_UP(upper_limit, ppb);
-+		res -= meta_blocks;
-+		goto check_lfs;
-+	}
-+	meta_blocks += 1 + ppb;
-+	upper_limit -= ppb * ppb;
-+	/* tripple indirect blocks for the rest */
-+	meta_blocks += 1 + DIV_ROUND_UP(upper_limit, ppb) +
-+		DIV_ROUND_UP(upper_limit, ppb*ppb);
-+	res -= meta_blocks;
-+check_lfs:
- 	res <<= bits;
--	if (res > upper_limit)
--		res = upper_limit;
--
- 	if (res > MAX_LFS_FILESIZE)
- 		res = MAX_LFS_FILESIZE;
+ 	if (thdev->host_mode)
+ 		return;
+@@ -615,6 +616,9 @@ static void intel_th_gth_unassign(struct
+ 	othdev->output.port = -1;
+ 	othdev->output.active = false;
+ 	gth->output[port].output = NULL;
++	for (master = 0; master < TH_CONFIGURABLE_MASTERS; master++)
++		if (gth->master[master] == port)
++			gth->master[master] = -1;
+ 	spin_unlock(&gth->gth_lock);
+ }
  
 
 
