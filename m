@@ -2,98 +2,112 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 348ACC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:42:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3B07C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:42:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE9A1218E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:42:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TUzkCPGo"
+	by mail.kernel.org (Postfix) with ESMTP id A61B8218E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:42:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553258531;
+	bh=RQAGB/8MhC3bHe3/PtOmoP0L8zj6WuHJB9B/QfKDGsI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=fEvTqaH/RnVF/j5co4heuncIJtwiwsYy3hZL97N1/IzL2SFHkIARNhgJ15mDhHSAM
+	 0dicX805t922VndILuGZrS/Z1R4PhGdyGDIWG4aOraLXSLhX7B24/dM4F3mjcZjkEd
+	 ORcHwqF0de0sY5dt/h+I0L/BZtB69Ng77s3mQ25A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388702AbfCVMEh (ORCPT
+        id S2388690AbfCVMEg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:04:37 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:37718 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388316AbfCVMEe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:04:34 -0400
-Received: by mail-pg1-f194.google.com with SMTP id q206so1398187pgq.4
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 05:04:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=4AWblRo5ewuA/4tmoQynrYwrFjG+ERQg40eyX191mqY=;
-        b=TUzkCPGo/SWoUh3nwd4QvDz4O/5nV2yLzP0SuahLZ5a6Grdb8EvlCAcIvBCVXUGVpN
-         09peSDYhlYVB2yhqbOOlRXxdAt9QqbvOQbplPhEOcpq/q9XUDttcWNKSEkYIVDG7ARiL
-         OSwrc1UOsqpzJzmvMOrlke7HydMGak9husvRVn9JvMfigu+2mv7NEsD8HGVEHzpTppjV
-         eyuuvHBwv+4NgeEb2w33i27cyRfpy1rUgc0X8bj1v2vs8+UtNjTqJJfFaDNYig0+tVer
-         xEOqyKbFQesO4PffjpoZR9oSs3Fu7Wc2ZiDYOkXIJs2ZQWUJCQ17RZpTzEfdyshFWNcq
-         /kdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4AWblRo5ewuA/4tmoQynrYwrFjG+ERQg40eyX191mqY=;
-        b=coVv7uFO8HHNn7tjNDu72Keu5dOTEQ5bY8VewIRP/YAdo79d35XpjURDkYBOfM6Xf/
-         Ds2cllH6LVxZokm2Vd5nxpFtURrafHzJS/Sgu/KALj/rlpH3oX1wopq+kpFFtQa9VaMX
-         xjmIifD66FBUHbgy6mFnz+0u0HkgATSe+x8qmKB6xT7YBl4YVmel4vootOEjif0jqOnX
-         BbXrhnR7QEZQIYFja1HOYbrzceCG6ugdXNYdejaXkR9XSdgn0JM0AEMYpjUfbTFzmwe9
-         iZnzyQGSzliYf0SpUGLEr1lwqivSryww3On6oCEnJouBH0pCVZHpnW3VuvZ9IZNdLPxL
-         u+Kw==
-X-Gm-Message-State: APjAAAUcDwLvX0LuZPa0rbRQDTh/jXyWoUvV+fu/HBQqqiIT8tUCr8/g
-        jBsfEc5kEOETG+BUa4zTPPg=
-X-Google-Smtp-Source: APXvYqz7kKZrT2PMCc9qfrbj8h0X9Txt6DTvb8QGnvNfeDFRUP4lBWrXckuTCulpRdgGJkWJoMCULQ==
-X-Received: by 2002:a63:c10b:: with SMTP id w11mr8624018pgf.39.1553256273504;
-        Fri, 22 Mar 2019 05:04:33 -0700 (PDT)
-Received: from bharath12345-Inspiron-5559 ([117.198.99.29])
-        by smtp.gmail.com with ESMTPSA id d3sm9981973pfc.125.2019.03.22.05.04.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 22 Mar 2019 05:04:32 -0700 (PDT)
-Date:   Fri, 22 Mar 2019 17:34:27 +0530
-From:   Bharath Vedartham <linux.bhar@gmail.com>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     gregkh@linuxfoundation.org, christian@lkamp.de,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: ralink-gdma: Change uint32_t to u32
-Message-ID: <20190322120427.GA3031@bharath12345-Inspiron-5559>
-References: <20190321192502.GA11144@bharath12345-Inspiron-5559>
- <20190322100140.GL2202@kadam>
+        Fri, 22 Mar 2019 08:04:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42960 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388180AbfCVMEc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:04:32 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BAFA92195D;
+        Fri, 22 Mar 2019 12:04:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553256271;
+        bh=RQAGB/8MhC3bHe3/PtOmoP0L8zj6WuHJB9B/QfKDGsI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=LcOyV3JTQuI54KzcIVIu8RLT4Yfik7Wmkm/ckcPq7zE3zBoGDqhwaaUXjXrMSULBK
+         g1dA3+c8/Ll5RFxmZNtBsIw+PQINSbOL9QNYikG4fPsBZfCuG743eU7qCydBc3/ss6
+         NfffY9inrK6n8ZbS2g0B7hL3A3Nb9tnCJXKB3X3o=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Sagar Biradar <Sagar.Biradar@microchip.com>,
+        Dave Carroll <david.carroll@microsemi.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.19 159/280] scsi: aacraid: Fix performance issue on logical drives
+Date:   Fri, 22 Mar 2019 12:15:12 +0100
+Message-Id: <20190322111322.064415871@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
+References: <20190322111306.356185024@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190322100140.GL2202@kadam>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 22, 2019 at 01:01:40PM +0300, Dan Carpenter wrote:
-> On Fri, Mar 22, 2019 at 12:55:02AM +0530, Bharath Vedartham wrote:
-> > This is a follow up on my previous patch. Change occurences of the
->   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-I did not send a patch set. I should have worded my changelog better.
-Thanks for the feedback. This was just one patch.
-> Put this sort of information under the --- cut off below the Sign off.
-> 
-> > stdint type uint32_t to its shortened type u32. This fixed the checkpatch.pl warning: "Prefer u32 over uint32_t".
-> 
-> This line is too long.  Limit it to 72 characters.
-> 
-Yes will do that.
-> > 
-> > Signed-off-by: Bharath Vedartham <linux.bhar@gmail.com>
-> > ---
->   ^^^
-Got it. Thanks for the feedback.
-> 
-> regards,
-> dan carpenter
-> 
+4.19-stable review patch.  If anyone has any objections, please let me know.
+
+------------------
+
+From: Sagar Biradar <sagar.biradar@microchip.com>
+
+commit 0015437cc046e5ec2b57b00ff8312b8d432eac7c upstream.
+
+Fix performance issue where the queue depth for SmartIOC logical volumes is
+set to 1, and allow the usual logical volume code to be executed
+
+Fixes: a052865fe287 (aacraid: Set correct Queue Depth for HBA1000 RAW disks)
+Cc: stable@vger.kernel.org
+Signed-off-by: Sagar Biradar <Sagar.Biradar@microchip.com>
+Reviewed-by: Dave Carroll <david.carroll@microsemi.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/scsi/aacraid/linit.c |   13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
+
+--- a/drivers/scsi/aacraid/linit.c
++++ b/drivers/scsi/aacraid/linit.c
+@@ -413,13 +413,16 @@ static int aac_slave_configure(struct sc
+ 	if (chn < AAC_MAX_BUSES && tid < AAC_MAX_TARGETS && aac->sa_firmware) {
+ 		devtype = aac->hba_map[chn][tid].devtype;
+ 
+-		if (devtype == AAC_DEVTYPE_NATIVE_RAW)
++		if (devtype == AAC_DEVTYPE_NATIVE_RAW) {
+ 			depth = aac->hba_map[chn][tid].qd_limit;
+-		else if (devtype == AAC_DEVTYPE_ARC_RAW)
++			set_timeout = 1;
++			goto common_config;
++		}
++		if (devtype == AAC_DEVTYPE_ARC_RAW) {
+ 			set_qd_dev_type = true;
+-
+-		set_timeout = 1;
+-		goto common_config;
++			set_timeout = 1;
++			goto common_config;
++		}
+ 	}
+ 
+ 	if (aac->jbod && (sdev->type == TYPE_DISK))
+
+
