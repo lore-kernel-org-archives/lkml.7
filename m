@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94519C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:38:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4EC5C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:38:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63AC62082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:38:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1FD1218B0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:38:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254720;
-	bh=4L5dq1uD9iaN0XB/fWf/AgQLv56NgpwTyKXmpsSi0W8=;
+	s=default; t=1553254721;
+	bh=U/eXxMtCikT9/HJbCoYnbEtAU5anNatq9Zts6aV60eM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R+pgjo9+oiYk5/Iy81XKq6xpp6/2dW4Zyj8uYW43JBO8voAsToyVv6K4rWL63+iBU
-	 1qeG9CFUubiYHupjwOHpm9EeAFDc+tEUFB266bfWv2pdig9sWYcFXWe04oH7XaKCqV
-	 5mFcB1L9yXERH86xJJ++XELFUgtfMbrkjh71E4S8=
+	b=h1a45Rb9Kip4+z+QT3+J3iI93KZ9VZY5vEbMkWpLbgrAvMwIRCUZ2atZDTRb/qE14
+	 MODvJLee2DJZ3JTBgEU6FuRVLvpsNCNOhISgVfLoOh/5XwqjK2AecJsz1VUbfM4/+S
+	 gA3qZeD/D6rot4+YCfVfQWgzedKyDGXASvnTJl4U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731004AbfCVLij (ORCPT
+        id S1731013AbfCVLik (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:38:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40142 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:38:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40198 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730993AbfCVLig (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:38:36 -0400
+        id S1731003AbfCVLij (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:38:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B7D2218B0;
-        Fri, 22 Mar 2019 11:38:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33E6F2082C;
+        Fri, 22 Mar 2019 11:38:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254715;
-        bh=4L5dq1uD9iaN0XB/fWf/AgQLv56NgpwTyKXmpsSi0W8=;
+        s=default; t=1553254718;
+        bh=U/eXxMtCikT9/HJbCoYnbEtAU5anNatq9Zts6aV60eM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZM1b2ohgB/xe/BRh2ed8F51eNFZhISXM8cuhDsvXEugAiMMaQtSUJ3AjbGldgsK8F
-         r5T6e1rpq49XrrPQjISHpNGUB2ak3N/pvAA97+P53nbrzsVjZSo7MIG198b6tPes/6
-         EiepL+ECHwcOKBR+tfMoNEPG9CApDGhKnHqXyfAo=
+        b=sO766XqC5D6AtIM7bJtlRoHyYi7iVJ6YfRFNTVAway8GNNhkkivA+UiPVk1WbhK7J
+         X0c8Eff2P9s5+ICoDP92bjdYrOefGMhfP6nOnd68v7NUBW1dXH4amOQ8BHnJZrVWyk
+         noE078hjZkuPUKYRP58xAPX1QBRGJy0Ye5T935hY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         Trond Myklebust <trond.myklebust@hammerspace.com>
-Subject: [PATCH 4.4 220/230] NFS: Fix an I/O request leakage in nfs_do_recoalesce
-Date:   Fri, 22 Mar 2019 12:15:58 +0100
-Message-Id: <20190322111252.339230786@linuxfoundation.org>
+Subject: [PATCH 4.4 221/230] NFS: Dont recoalesce on error in nfs_pageio_complete_mirror()
+Date:   Fri, 22 Mar 2019 12:15:59 +0100
+Message-Id: <20190322111252.421797067@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -67,29 +67,30 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-commit 4d91969ed4dbcefd0e78f77494f0cb8fada9048a upstream.
+commit 8127d82705998568b52ac724e28e00941538083d upstream.
 
-Whether we need to exit early, or just reprocess the list, we
-must not lost track of the request which failed to get recoalesced.
+If the I/O completion failed with a fatal error, then we should just
+exit nfs_pageio_complete_mirror() rather than try to recoalesce.
 
-Fixes: 03d5eb65b538 ("NFS: Fix a memory leak in nfs_do_recoalesce")
+Fixes: a7d42ddb3099 ("nfs: add mirroring support to pgio layer")
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Cc: stable@vger.kernel.org # v4.0+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfs/pagelist.c |    1 -
- 1 file changed, 1 deletion(-)
+ fs/nfs/pagelist.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 --- a/fs/nfs/pagelist.c
 +++ b/fs/nfs/pagelist.c
-@@ -1107,7 +1107,6 @@ static int nfs_do_recoalesce(struct nfs_
- 			struct nfs_page *req;
- 
- 			req = list_first_entry(&head, struct nfs_page, wb_list);
--			nfs_list_remove_request(req);
- 			if (__nfs_pageio_add_request(desc, req))
- 				continue;
- 			if (desc->pg_error < 0) {
+@@ -1202,7 +1202,7 @@ static void nfs_pageio_complete_mirror(s
+ 		desc->pg_mirror_idx = mirror_idx;
+ 	for (;;) {
+ 		nfs_pageio_doio(desc);
+-		if (!mirror->pg_recoalesce)
++		if (desc->pg_error < 0 || !mirror->pg_recoalesce)
+ 			break;
+ 		if (!nfs_do_recoalesce(desc))
+ 			break;
 
 
