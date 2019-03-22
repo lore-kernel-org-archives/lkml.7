@@ -2,132 +2,139 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97661C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 17:08:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67B77C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 17:10:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68C8221925
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 17:08:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RXHuvxKX"
+	by mail.kernel.org (Postfix) with ESMTP id 3D6F421917
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 17:10:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728894AbfCVRI4 (ORCPT
+        id S1728478AbfCVRKf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 13:08:56 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:51328 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728291AbfCVRIu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 13:08:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Y/SDMualcy90uB9a78NRZwOtAxZtmRvJztAn99Durk8=; b=RXHuvxKXaVr1j8OO2rQwq9cuX
-        htXX0RPGjIrOMhODd9vYFCW4wzBrBwtICwCE7TIYgt4P+k2k2baD4AzxVL0pswmpNHH7jLKqs+xYX
-        hqHwBwdDV9vjwvDSWpDLd7Hnk4Bv9ucRJC0WOyD99dcvxXv6s0FxGDMyUSEO96eLbZEJ/rsu0uPt9
-        fl8Q8uIFQDAx54ys5Mh+IUWGcb+pFqmYGRQmOE6aMdv2F4BGsqaeqYfzGK2HSLR4DAhjjDkYpUlQF
-        /fy2fS8AIb+BOECGl9rh31oqqs+BJ2Aq7n2+gkoOuDjXYLyK30BEyuiewq2jUhscUiTnuL/59RwXt
-        +F+KXF2SA==;
-Received: from [31.161.229.66] (helo=worktop.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h7Neu-0003eJ-A1; Fri, 22 Mar 2019 17:08:44 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 6E36A983858; Fri, 22 Mar 2019 18:08:41 +0100 (CET)
-Date:   Fri, 22 Mar 2019 18:08:41 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     kan.liang@linux.intel.com
-Cc:     acme@kernel.org, mingo@redhat.com, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
-        alexander.shishkin@linux.intel.com, ak@linux.intel.com
-Subject: Re: [PATCH V3 01/23] perf/x86: Support outputting XMM registers
-Message-ID: <20190322170841.GJ7905@worktop.programming.kicks-ass.net>
-References: <20190322163718.2191-1-kan.liang@linux.intel.com>
- <20190322163718.2191-2-kan.liang@linux.intel.com>
+        Fri, 22 Mar 2019 13:10:35 -0400
+Received: from mga11.intel.com ([192.55.52.93]:1496 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727803AbfCVRKe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 13:10:34 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Mar 2019 10:10:33 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,256,1549958400"; 
+   d="scan'208";a="154240203"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
+  by fmsmga002.fm.intel.com with ESMTP; 22 Mar 2019 10:10:33 -0700
+Subject: [PATCH v5 00/10] mm: Sub-section memory hotplug support
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     akpm@linux-foundation.org
+Cc:     =?utf-8?b?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Toshi Kani <toshi.kani@hpe.com>,
+        Jeff Moyer <jmoyer@redhat.com>, Michal Hocko <mhocko@suse.com>,
+        Vlastimil Babka <vbabka@suse.cz>, stable@vger.kernel.org,
+        linux-mm@kvack.org, linux-nvdimm@lists.01.org,
+        linux-kernel@vger.kernel.org
+Date:   Fri, 22 Mar 2019 09:57:54 -0700
+Message-ID: <155327387405.225273.9325594075351253804.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-2-gc94f
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190322163718.2191-2-kan.liang@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 22, 2019 at 09:36:56AM -0700, kan.liang@linux.intel.com wrote:
-> From: Kan Liang <kan.liang@linux.intel.com>
-> 
-> Starting from Icelake, XMM registers can be collected in PEBS record.
-> But current code only output the pt_regs.
-> 
-> Add a new struct x86_perf_regs for both pt_regs and xmm_regs.
-> XMM registers are 128 bit. To simplify the code, they are handled like
-> two different registers, which means setting two bits in the register
-> bitmap. This also allows only sampling the lower 64bit bits in XMM.
-> The index of XMM registers starts from 32. There are 16 XMM registers.
-> So all reserved space for regs are used.
-> PERF_REG_X86_MAX stands for the max number of all x86 regs include XMM.
-> PERF_REG_GPR_X86_MAX stands for the max number of all x86 general
-> purpose registers, which not include XMM.
-> PERF_REG_GPR_X86_32_MAX and PERF_REG_GPR_X86_64_MAX are introduced to
-> replace PERF_REG_X86_32_MAX and PERF_REG_X86_64_MAX for x86 general
-> purpose registers.
-> 
-> The REG_RESERVED is also updated to allow the XMM registers.
-> XMM is not supported on all platforms. Adding has_xmm_regs to indicate
-> the specific platform. Also add checks in x86_pmu_hw_config() to reject
-> invalid config of regs_user and regs_intr.
+Changes since v4 [1]:
+- Given v4 was from March of 2017 the bulk of the changes result from
+  rebasing the patch set from a v4.11-rc2 baseline to v5.1-rc1.
 
-> diff --git a/arch/x86/include/uapi/asm/perf_regs.h b/arch/x86/include/uapi/asm/perf_regs.h
-> index f3329cabce5c..b33995313d17 100644
-> --- a/arch/x86/include/uapi/asm/perf_regs.h
-> +++ b/arch/x86/include/uapi/asm/perf_regs.h
-> @@ -28,7 +28,29 @@ enum perf_event_x86_regs {
->  	PERF_REG_X86_R14,
->  	PERF_REG_X86_R15,
->  
-> -	PERF_REG_X86_32_MAX = PERF_REG_X86_GS + 1,
-> -	PERF_REG_X86_64_MAX = PERF_REG_X86_R15 + 1,
+- A unit test is added to ndctl to exercise the creation and dax
+  mounting of multiple independent namespaces in a single 128M section.
 
-So this changes UAPI visible symbols... did we think about that?
+[1]: https://lwn.net/Articles/717383/
 
-> +	/* These all need two bits set because they are 128bit */
-> +	PERF_REG_X86_XMM0  = 32,
-> +	PERF_REG_X86_XMM1  = 34,
-> +	PERF_REG_X86_XMM2  = 36,
-> +	PERF_REG_X86_XMM3  = 38,
-> +	PERF_REG_X86_XMM4  = 40,
-> +	PERF_REG_X86_XMM5  = 42,
-> +	PERF_REG_X86_XMM6  = 44,
-> +	PERF_REG_X86_XMM7  = 46,
-> +	PERF_REG_X86_XMM8  = 48,
-> +	PERF_REG_X86_XMM9  = 50,
-> +	PERF_REG_X86_XMM10 = 52,
-> +	PERF_REG_X86_XMM11 = 54,
-> +	PERF_REG_X86_XMM12 = 56,
-> +	PERF_REG_X86_XMM13 = 58,
-> +	PERF_REG_X86_XMM14 = 60,
-> +	PERF_REG_X86_XMM15 = 62,
-> +
-> +	/* This does not include the XMMX registers */
-> +	PERF_REG_GPR_X86_32_MAX = PERF_REG_X86_GS + 1,
-> +	PERF_REG_GPR_X86_64_MAX = PERF_REG_X86_R15 + 1,
-> +
-> +	/* All registers include the XMMX registers */
-> +	PERF_REG_X86_MAX = PERF_REG_X86_XMM15 + 2,
->  };
->  #endif /* _ASM_X86_PERF_REGS_H */
+---
 
-Also, what happens if we run a 32bit kernel or 32bit compat task?
+Quote patch7:
 
-Then the register dump will report PERF_SAMPLE_REGS_ABI_32, should we
-then still interpret the XMM registers as 2x64bit?
+"The libnvdimm sub-system has suffered a series of hacks and broken
+ workarounds for the memory-hotplug implementation's awkward
+ section-aligned (128MB) granularity. For example the following backtrace
+ is emitted when attempting arch_add_memory() with physical address
+ ranges that intersect 'System RAM' (RAM) with 'Persistent Memory' (PMEM)
+ within a given section:
+ 
+  WARNING: CPU: 0 PID: 558 at kernel/memremap.c:300 devm_memremap_pages+0x3b5/0x4c0
+  devm_memremap_pages attempted on mixed region [mem 0x200000000-0x2fbffffff flags 0x200]
+  [..]
+  Call Trace:
+    dump_stack+0x86/0xc3
+    __warn+0xcb/0xf0
+    warn_slowpath_fmt+0x5f/0x80
+    devm_memremap_pages+0x3b5/0x4c0
+    __wrap_devm_memremap_pages+0x58/0x70 [nfit_test_iomap]
+    pmem_attach_disk+0x19a/0x440 [nd_pmem]
+ 
+ Recently it was discovered that the problem goes beyond RAM vs PMEM
+ collisions as some platform produce PMEM vs PMEM collisions within a
+ given section. The libnvdimm workaround for that case revealed that the
+ libnvdimm section-alignment-padding implementation has been broken for a
+ long while. A fix for that long-standing breakage introduces as many
+ problems as it solves as it would require a backward-incompatible change
+ to the namespace metadata interpretation. Instead of that dubious route
+ [2], address the root problem in the memory-hotplug implementation."
 
-Are they still at the same offset?
+The approach is taken is to observe that each section already maintains
+an array of 'unsigned long' values to hold the pageblock_flags. A single
+additional 'unsigned long' is added to house a 'sub-section active'
+bitmask. Each bit tracks the mapped state of one sub-section's worth of
+capacity which is SECTION_SIZE / BITS_PER_LONG, or 2MB on x86-64.
 
-Do we need additional PERF_SAMPLE_REGS_ABI_* definitions for this?
+The implication of allowing sections to be piecemeal mapped/unmapped is
+that the valid_section() helper is no longer authoritative to determine
+if a section is fully mapped. Instead pfn_valid() is updated to consult
+the section-active bitmask. Given that typical memory hotplug still has
+deep "section" dependencies the sub-section capability is limited to
+'want_memblock=false' invocations of arch_add_memory(), effectively only
+devm_memremap_pages() users for now.
+
+With this in place the hacks in the libnvdimm sub-system can be
+dropped, and other devm_memremap_pages() users need no longer be
+constrained to 128MB mapping granularity.
+
+[2]: https://lore.kernel.org/r/155000671719.348031.2347363160141119237.stgit@dwillia2-desk3.amr.corp.intel.com
+
+---
+
+Dan Williams (10):
+      mm/sparsemem: Introduce struct mem_section_usage
+      mm/sparsemem: Introduce common definitions for the size and mask of a section
+      mm/sparsemem: Add helpers track active portions of a section at boot
+      mm/hotplug: Prepare shrink_{zone,pgdat}_span for sub-section removal
+      mm/sparsemem: Convert kmalloc_section_memmap() to populate_section_memmap()
+      mm/sparsemem: Prepare for sub-section ranges
+      mm/sparsemem: Support sub-section hotplug
+      mm/devm_memremap_pages: Enable sub-section remap
+      libnvdimm/pfn: Fix fsdax-mode namespace info-block zero-fields
+      libnvdimm/pfn: Stop padding pmem namespaces to section alignment
+
+
+ arch/x86/mm/init_64.c          |   15 +-
+ drivers/nvdimm/dax_devs.c      |    2 
+ drivers/nvdimm/pfn.h           |   12 -
+ drivers/nvdimm/pfn_devs.c      |   93 +++-------
+ include/linux/memory_hotplug.h |    7 -
+ include/linux/mm.h             |    4 
+ include/linux/mmzone.h         |   60 ++++++
+ kernel/memremap.c              |   57 ++----
+ mm/hmm.c                       |    2 
+ mm/memory_hotplug.c            |  119 +++++++-----
+ mm/page_alloc.c                |    6 -
+ mm/sparse-vmemmap.c            |   21 +-
+ mm/sparse.c                    |  382 ++++++++++++++++++++++++++++------------
+ 13 files changed, 476 insertions(+), 304 deletions(-)
