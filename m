@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B331C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:04:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5A60C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:04:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E709D2082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:04:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0DE4204FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:04:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256248;
-	bh=MIeqIQ/oj/0+Va7Po6VtKCfkwk21IMwJkr844aU/CDI=;
+	s=default; t=1553256250;
+	bh=4Fdy5wFf4qnzGm3jPLcaXK9tIjl+yy1fbRI4m7MXjIE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GOaSMBuzh7uTc4nZkDBRYFiUb7SeGcamO4p3NufqWbS2H4PMERCpHOenpvldFixdt
-	 CYsvBHM0GhBXrKFRjDPdnuUNvDqcMDzNt+u28jiOCDajVCUhyLZ0Ftnx6FBB20NGHW
-	 MPzZKeY6il36jlJkjtwj1FJaVKnzYhaDidMyuSIw=
+	b=gDJJajqyF0P3PDQEWKbWV0MN5YTsP4H/gWGT0jrdea8od65cEz70mF9rrHQ+wsdak
+	 veocBsaiTfMQ1tBo7986Ze8Xmgq3IwooBPLryQ5Eu6ogSNErLTcpRLRiHuPeGJZ/vM
+	 MAWNiupfp8sX0lAVRNW+75t5yS/BhEjLclVxf9Lg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388618AbfCVMEG (ORCPT
+        id S2388628AbfCVMEJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:04:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42428 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:04:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388608AbfCVMEC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:04:02 -0400
+        id S2388614AbfCVMEF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:04:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C71B3204FD;
-        Fri, 22 Mar 2019 12:04:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93E132082C;
+        Fri, 22 Mar 2019 12:04:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256242;
-        bh=MIeqIQ/oj/0+Va7Po6VtKCfkwk21IMwJkr844aU/CDI=;
+        s=default; t=1553256245;
+        bh=4Fdy5wFf4qnzGm3jPLcaXK9tIjl+yy1fbRI4m7MXjIE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bUaGfXYAP5rgq4uI1VEt31ExiGgoHUiJr2cOFZzBI3PtfBs7g4TPVx/LhoUAIxYps
-         Ejxyc+lzbgpplGR5zLEmp+C8VshfrwynS1IcpVF26dx0dh7uK/zxXX6JcaX6kj1DkJ
-         XdpswjSjdeG38R8hp+08zQiNuGlZVnDlHPJHAxMY=
+        b=ZNALM81M4Ue4PcWYgfJ2yLYN/GlLbYE5mBVYoQHblqat3WbZG+TeBGkjlN5AB/OQM
+         tDgVGHdgGraHXcNVYslqAp3lqKeOd8urpGrJdl3dv8ePFRABXdBPI6W4o9KFIezVbH
+         5NcNfcGq/NrhSR56LJLGWFEDY4+zanSLkxnDgbJk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jinyoung Park <jinyoungp@nvidia.com>,
-        Mark Zhang <markz@nvidia.com>, Mark Brown <broonie@kernel.org>
-Subject: [PATCH 4.19 151/280] regulator: max77620: Initialize values for DT properties
-Date:   Fri, 22 Mar 2019 12:15:04 +0100
-Message-Id: <20190322111320.470223520@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Stuart Menefy <stuart.menefy@mathembedded.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.19 152/280] regulator: s2mpa01: Fix step values for some LDOs
+Date:   Fri, 22 Mar 2019 12:15:05 +0100
+Message-Id: <20190322111320.642214964@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -64,50 +67,56 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Mark Zhang <markz@nvidia.com>
+From: Stuart Menefy <stuart.menefy@mathembedded.com>
 
-commit 0ab66b3c326ef8f77dae9f528118966365757c0c upstream.
+commit 28c4f730d2a44f2591cb104091da29a38dac49fe upstream.
 
-If regulator DT node doesn't exist, its of_parse_cb callback
-function isn't called. Then all values for DT properties are
-filled with zero. This leads to wrong register update for
-FPS and POK settings.
+The step values for some of the LDOs appears to be incorrect, resulting
+in incorrect voltages (or at least, ones which are different from the
+Samsung 3.4 vendor kernel).
 
-Signed-off-by: Jinyoung Park <jinyoungp@nvidia.com>
-Signed-off-by: Mark Zhang <markz@nvidia.com>
+Signed-off-by: Stuart Menefy <stuart.menefy@mathembedded.com>
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/regulator/max77620-regulator.c |   10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ drivers/regulator/s2mpa01.c |   10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
---- a/drivers/regulator/max77620-regulator.c
-+++ b/drivers/regulator/max77620-regulator.c
-@@ -1,7 +1,7 @@
- /*
-  * Maxim MAX77620 Regulator driver
-  *
-- * Copyright (c) 2016, NVIDIA CORPORATION.  All rights reserved.
-+ * Copyright (c) 2016-2018, NVIDIA CORPORATION.  All rights reserved.
-  *
-  * Author: Mallikarjun Kasoju <mkasoju@nvidia.com>
-  *	Laxman Dewangan <ldewangan@nvidia.com>
-@@ -803,6 +803,14 @@ static int max77620_regulator_probe(stru
- 		rdesc = &rinfo[id].desc;
- 		pmic->rinfo[id] = &max77620_regs_info[id];
- 		pmic->enable_power_mode[id] = MAX77620_POWER_MODE_NORMAL;
-+		pmic->reg_pdata[id].active_fps_src = -1;
-+		pmic->reg_pdata[id].active_fps_pd_slot = -1;
-+		pmic->reg_pdata[id].active_fps_pu_slot = -1;
-+		pmic->reg_pdata[id].suspend_fps_src = -1;
-+		pmic->reg_pdata[id].suspend_fps_pd_slot = -1;
-+		pmic->reg_pdata[id].suspend_fps_pu_slot = -1;
-+		pmic->reg_pdata[id].power_ok = -1;
-+		pmic->reg_pdata[id].ramp_rate_setting = -1;
- 
- 		ret = max77620_read_slew_rate(pmic, id);
- 		if (ret < 0)
+--- a/drivers/regulator/s2mpa01.c
++++ b/drivers/regulator/s2mpa01.c
+@@ -298,13 +298,13 @@ static const struct regulator_desc regul
+ 	regulator_desc_ldo(2, STEP_50_MV),
+ 	regulator_desc_ldo(3, STEP_50_MV),
+ 	regulator_desc_ldo(4, STEP_50_MV),
+-	regulator_desc_ldo(5, STEP_50_MV),
++	regulator_desc_ldo(5, STEP_25_MV),
+ 	regulator_desc_ldo(6, STEP_25_MV),
+ 	regulator_desc_ldo(7, STEP_50_MV),
+ 	regulator_desc_ldo(8, STEP_50_MV),
+ 	regulator_desc_ldo(9, STEP_50_MV),
+ 	regulator_desc_ldo(10, STEP_50_MV),
+-	regulator_desc_ldo(11, STEP_25_MV),
++	regulator_desc_ldo(11, STEP_50_MV),
+ 	regulator_desc_ldo(12, STEP_50_MV),
+ 	regulator_desc_ldo(13, STEP_50_MV),
+ 	regulator_desc_ldo(14, STEP_50_MV),
+@@ -315,11 +315,11 @@ static const struct regulator_desc regul
+ 	regulator_desc_ldo(19, STEP_50_MV),
+ 	regulator_desc_ldo(20, STEP_50_MV),
+ 	regulator_desc_ldo(21, STEP_50_MV),
+-	regulator_desc_ldo(22, STEP_25_MV),
+-	regulator_desc_ldo(23, STEP_25_MV),
++	regulator_desc_ldo(22, STEP_50_MV),
++	regulator_desc_ldo(23, STEP_50_MV),
+ 	regulator_desc_ldo(24, STEP_50_MV),
+ 	regulator_desc_ldo(25, STEP_50_MV),
+-	regulator_desc_ldo(26, STEP_50_MV),
++	regulator_desc_ldo(26, STEP_25_MV),
+ 	regulator_desc_buck1_4(1),
+ 	regulator_desc_buck1_4(2),
+ 	regulator_desc_buck1_4(3),
 
 
