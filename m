@@ -4,47 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E747C10F03
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:44:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CE76C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:44:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF4B32075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:44:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CF9B2082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:44:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255052;
-	bh=M3pYBI78GRF5DOuuSW3Jr4Ty4CMAD3Y3r7vb3L1ocBM=;
+	s=default; t=1553255056;
+	bh=OUhCqVtfrCrs28WRMbGeAmQMk13i+UUkMC6aONRgXLw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mYqPnUU5bTw3T+O6DRE8wHX5QRzFmUbGBwONaX5nbj4MiOTLTjCVD2e6sELniS6TR
-	 W1+VzYGEVTWl0o2HO8oyPB/Xvu5DCeUZQEMuV3DSpizl5irkY8RmpVu0lH8x2CqT74
-	 f9QPKE7V/3BkAFRzojZ8rwtuP5pvcUDPyaI4RcS8=
+	b=EL5+2FCvTGUx/CnvS4k/Up+z7noGbnTFvIHDZW5NxxgPprJXndbYGRxfN/PHjmhpI
+	 d22Le8Evsk6ZqQym4YD+rJc1awjobzS6IBdXag7kVtuN3n6HXCDB2Ue4D9/qFmHQDl
+	 kFNdpvLKO5Rfp7a4gCOconjnnNiq02FbAF4Xj/AQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731379AbfCVLoL (ORCPT
+        id S1731788AbfCVLoP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:44:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46976 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:44:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47102 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731767AbfCVLoH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:44:07 -0400
+        id S1731414AbfCVLoN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:44:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85D79204FD;
-        Fri, 22 Mar 2019 11:44:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51DFE204FD;
+        Fri, 22 Mar 2019 11:44:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255046;
-        bh=M3pYBI78GRF5DOuuSW3Jr4Ty4CMAD3Y3r7vb3L1ocBM=;
+        s=default; t=1553255052;
+        bh=OUhCqVtfrCrs28WRMbGeAmQMk13i+UUkMC6aONRgXLw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kGkUiYkiEmYk2zUJGZOze+Uvzn7GJxV8MP0J+moOEABYF0iuv5VKukvtQQ/MsN6Fo
-         OtOtY4GBIF+K0OOp0FHrKm0v5vxoTQnx5PpKACRdwMSuj6KQx9hPMwGMRXcPfijorB
-         21Wew2DzXQT3rL6LxOlEdyKu+58p9KItOxq8Yexk=
+        b=pAQBKCxSFcP8NN4vAFV08zySqDOOUU3R6NNVz4mr3zQV+F4caYfKZMeVUB/773CT4
+         VkklC2TDyiwmk8O3mSqyMtAOiEuG6xz6plp/CrR3KYcg9vE/H8LvECP+qiXJR6aWrx
+         /GevukQb+VS2km/35jPM5kOlg8wiAb3lP+UGabmg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jay Dolan <jay.dolan@accesio.com>
-Subject: [PATCH 4.9 090/118] serial: 8250_pci: Have ACCES cards that use the four port Pericom PI7C9X7954 chip use the pci_pericom_setup()
-Date:   Fri, 22 Mar 2019 12:16:02 +0100
-Message-Id: <20190322111222.970007471@linuxfoundation.org>
+        stable@vger.kernel.org, "zhangyi (F)" <yi.zhang@huawei.com>,
+        Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.cz>
+Subject: [PATCH 4.9 092/118] jbd2: fix compile warning when using JBUFFER_TRACE
+Date:   Fri, 22 Mar 2019 12:16:04 +0100
+Message-Id: <20190322111223.071344557@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111215.873964544@linuxfoundation.org>
 References: <20190322111215.873964544@linuxfoundation.org>
@@ -63,135 +65,87 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jay Dolan <jay.dolan@accesio.com>
+From: zhangyi (F) <yi.zhang@huawei.com>
 
-commit 78d3820b9bd39028727c6aab7297b63c093db343 upstream.
+commit 01215d3edb0f384ddeaa5e4a22c1ae5ff634149f upstream.
 
-The four port Pericom chips have the fourth port at the wrong address.
-Make use of quirk to fix it.
+The jh pointer may be used uninitialized in the two cases below and the
+compiler complain about it when enabling JBUFFER_TRACE macro, fix them.
 
-Fixes: c8d192428f52 ("serial: 8250: added acces i/o products quad and octal serial cards")
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Jay Dolan <jay.dolan@accesio.com>
+In file included from fs/jbd2/transaction.c:19:0:
+fs/jbd2/transaction.c: In function ‘jbd2_journal_get_undo_access’:
+./include/linux/jbd2.h:1637:38: warning: ‘jh’ is used uninitialized in this function [-Wuninitialized]
+ #define JBUFFER_TRACE(jh, info) do { printk("%s: %d\n", __func__, jh->b_jcount);} while (0)
+                                      ^
+fs/jbd2/transaction.c:1219:23: note: ‘jh’ was declared here
+  struct journal_head *jh;
+                       ^
+In file included from fs/jbd2/transaction.c:19:0:
+fs/jbd2/transaction.c: In function ‘jbd2_journal_dirty_metadata’:
+./include/linux/jbd2.h:1637:38: warning: ‘jh’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+ #define JBUFFER_TRACE(jh, info) do { printk("%s: %d\n", __func__, jh->b_jcount);} while (0)
+                                      ^
+fs/jbd2/transaction.c:1332:23: note: ‘jh’ was declared here
+  struct journal_head *jh;
+                       ^
+
+Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Cc: stable@vger.kernel.org
+Reviewed-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/8250/8250_pci.c |  105 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 105 insertions(+)
+ fs/jbd2/transaction.c |   16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
---- a/drivers/tty/serial/8250/8250_pci.c
-+++ b/drivers/tty/serial/8250/8250_pci.c
-@@ -2160,6 +2160,111 @@ static struct pci_serial_quirk pci_seria
- 		.setup		= pci_default_setup,
- 		.exit		= pci_plx9050_exit,
- 	},
-+	{
-+		.vendor     = PCI_VENDOR_ID_ACCESIO,
-+		.device     = PCI_DEVICE_ID_ACCESIO_PCIE_COM_4SDB,
-+		.subvendor  = PCI_ANY_ID,
-+		.subdevice  = PCI_ANY_ID,
-+		.setup      = pci_pericom_setup,
-+	},
-+	{
-+		.vendor     = PCI_VENDOR_ID_ACCESIO,
-+		.device     = PCI_DEVICE_ID_ACCESIO_MPCIE_COM_4S,
-+		.subvendor  = PCI_ANY_ID,
-+		.subdevice  = PCI_ANY_ID,
-+		.setup      = pci_pericom_setup,
-+	},
-+	{
-+		.vendor     = PCI_VENDOR_ID_ACCESIO,
-+		.device     = PCI_DEVICE_ID_ACCESIO_PCIE_COM232_4DB,
-+		.subvendor  = PCI_ANY_ID,
-+		.subdevice  = PCI_ANY_ID,
-+		.setup      = pci_pericom_setup,
-+	},
-+	{
-+		.vendor     = PCI_VENDOR_ID_ACCESIO,
-+		.device     = PCI_DEVICE_ID_ACCESIO_MPCIE_COM232_4,
-+		.subvendor  = PCI_ANY_ID,
-+		.subdevice  = PCI_ANY_ID,
-+		.setup      = pci_pericom_setup,
-+	},
-+	{
-+		.vendor     = PCI_VENDOR_ID_ACCESIO,
-+		.device     = PCI_DEVICE_ID_ACCESIO_PCIE_COM_4SMDB,
-+		.subvendor  = PCI_ANY_ID,
-+		.subdevice  = PCI_ANY_ID,
-+		.setup      = pci_pericom_setup,
-+	},
-+	{
-+		.vendor     = PCI_VENDOR_ID_ACCESIO,
-+		.device     = PCI_DEVICE_ID_ACCESIO_MPCIE_COM_4SM,
-+		.subvendor  = PCI_ANY_ID,
-+		.subdevice  = PCI_ANY_ID,
-+		.setup      = pci_pericom_setup,
-+	},
-+	{
-+		.vendor     = PCI_VENDOR_ID_ACCESIO,
-+		.device     = PCI_DEVICE_ID_ACCESIO_MPCIE_ICM422_4,
-+		.subvendor  = PCI_ANY_ID,
-+		.subdevice  = PCI_ANY_ID,
-+		.setup      = pci_pericom_setup,
-+	},
-+	{
-+		.vendor     = PCI_VENDOR_ID_ACCESIO,
-+		.device     = PCI_DEVICE_ID_ACCESIO_MPCIE_ICM485_4,
-+		.subvendor  = PCI_ANY_ID,
-+		.subdevice  = PCI_ANY_ID,
-+		.setup      = pci_pericom_setup,
-+	},
-+	{
-+		.vendor     = PCI_DEVICE_ID_ACCESIO_PCIE_ICM_4S,
-+		.device     = PCI_DEVICE_ID_ACCESIO_PCIE_ICM232_4,
-+		.subvendor  = PCI_ANY_ID,
-+		.subdevice  = PCI_ANY_ID,
-+		.setup      = pci_pericom_setup,
-+	},
-+	{
-+		.vendor     = PCI_VENDOR_ID_ACCESIO,
-+		.device     = PCI_DEVICE_ID_ACCESIO_MPCIE_ICM232_4,
-+		.subvendor  = PCI_ANY_ID,
-+		.subdevice  = PCI_ANY_ID,
-+		.setup      = pci_pericom_setup,
-+	},
-+	{
-+		.vendor     = PCI_VENDOR_ID_ACCESIO,
-+		.device     = PCI_DEVICE_ID_ACCESIO_PCIE_COM422_4,
-+		.subvendor  = PCI_ANY_ID,
-+		.subdevice  = PCI_ANY_ID,
-+		.setup      = pci_pericom_setup,
-+	},
-+	{
-+		.vendor     = PCI_VENDOR_ID_ACCESIO,
-+		.device     = PCI_DEVICE_ID_ACCESIO_PCIE_COM485_4,
-+		.subvendor  = PCI_ANY_ID,
-+		.subdevice  = PCI_ANY_ID,
-+		.setup      = pci_pericom_setup,
-+	},
-+	{
-+		.vendor     = PCI_VENDOR_ID_ACCESIO,
-+		.device     = PCI_DEVICE_ID_ACCESIO_PCIE_COM232_4,
-+		.subvendor  = PCI_ANY_ID,
-+		.subdevice  = PCI_ANY_ID,
-+		.setup      = pci_pericom_setup,
-+	},
-+	{
-+		.vendor     = PCI_VENDOR_ID_ACCESIO,
-+		.device     = PCI_DEVICE_ID_ACCESIO_PCIE_COM_4SM,
-+		.subvendor  = PCI_ANY_ID,
-+		.subdevice  = PCI_ANY_ID,
-+		.setup      = pci_pericom_setup,
-+	},
-+	{
-+		.vendor     = PCI_VENDOR_ID_ACCESIO,
-+		.device     = PCI_DEVICE_ID_ACCESIO_PCIE_ICM_4SM,
-+		.subvendor  = PCI_ANY_ID,
-+		.subdevice  = PCI_ANY_ID,
-+		.setup      = pci_pericom_setup,
-+	},
+--- a/fs/jbd2/transaction.c
++++ b/fs/jbd2/transaction.c
+@@ -1211,11 +1211,12 @@ int jbd2_journal_get_undo_access(handle_
+ 	struct journal_head *jh;
+ 	char *committed_data = NULL;
+ 
+-	JBUFFER_TRACE(jh, "entry");
+ 	if (jbd2_write_access_granted(handle, bh, true))
+ 		return 0;
+ 
+ 	jh = jbd2_journal_add_journal_head(bh);
++	JBUFFER_TRACE(jh, "entry");
++
  	/*
- 	 * SBS Technologies, Inc., PMC-OCTALPRO 232
+ 	 * Do this first --- it can drop the journal lock, so we want to
+ 	 * make sure that obtaining the committed_data is done
+@@ -1326,15 +1327,17 @@ int jbd2_journal_dirty_metadata(handle_t
+ 
+ 	if (is_handle_aborted(handle))
+ 		return -EROFS;
+-	if (!buffer_jbd(bh)) {
+-		ret = -EUCLEAN;
+-		goto out;
+-	}
++	if (!buffer_jbd(bh))
++		return -EUCLEAN;
++
+ 	/*
+ 	 * We don't grab jh reference here since the buffer must be part
+ 	 * of the running transaction.
  	 */
+ 	jh = bh2jh(bh);
++	jbd_debug(5, "journal_head %p\n", jh);
++	JBUFFER_TRACE(jh, "entry");
++
+ 	/*
+ 	 * This and the following assertions are unreliable since we may see jh
+ 	 * in inconsistent state unless we grab bh_state lock. But this is
+@@ -1368,9 +1371,6 @@ int jbd2_journal_dirty_metadata(handle_t
+ 	}
+ 
+ 	journal = transaction->t_journal;
+-	jbd_debug(5, "journal_head %p\n", jh);
+-	JBUFFER_TRACE(jh, "entry");
+-
+ 	jbd_lock_bh_state(bh);
+ 
+ 	if (jh->b_modified == 0) {
 
 
