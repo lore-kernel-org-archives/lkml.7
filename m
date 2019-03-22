@@ -2,51 +2,55 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F164C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:09:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38231C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:09:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D394521929
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:09:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 085672083D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:09:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256570;
-	bh=Dp9kn2dsroe4I/CEdu/K4i/iQCEw3KRyZMZgtPuI1YE=;
+	s=default; t=1553256575;
+	bh=EPzuhdadrVe4QivfyrqbN7HmjoZ3v3fW4f3I4m6+2PE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c5b7ya0kIhICKUlUY8o413YSfy3ecU8oiHQ33NTzYDl/0e5n8E3F9siun3ejmGr/w
-	 4m6Sumiq9yPytzhwI6biSfTm99QcdQwyUERtiv6guZdMpUy2+vaQBOug9SIkvPiNon
-	 pLu3TzILhChpJ9qaW77N4qhJIZC49uF2aCuqY7ow=
+	b=uzfmwMbomLvr62fM3l3R/A3YfsdZoipER+6ukah8lzr9EO1IbGkjOwgra2ADrSFEp
+	 yiq+qkWceY676z6CnQ5z9c5mqGpXShxhsG+i2+DximLu+LfIonaBzPuDI7D4odzROV
+	 Qv+J8OQCh56V6pVwhJLQFzWlUbTd9ZHDJYqT4K0Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389324AbfCVMJ3 (ORCPT
+        id S2389104AbfCVMJd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:09:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47912 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:09:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389311AbfCVMJ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:09:26 -0400
+        id S2388657AbfCVMJa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:09:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9ACF2082C;
-        Fri, 22 Mar 2019 12:09:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 749E72082C;
+        Fri, 22 Mar 2019 12:09:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256566;
-        bh=Dp9kn2dsroe4I/CEdu/K4i/iQCEw3KRyZMZgtPuI1YE=;
+        s=default; t=1553256570;
+        bh=EPzuhdadrVe4QivfyrqbN7HmjoZ3v3fW4f3I4m6+2PE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LeXdZrw626NQOJPigVrDO51XT9VOBC7gJmMaDDVJvvros0ScxP1uO9+wVuL3RVdeF
-         25o+KXpZqmjbA+hwpvxr8Wxr8AZkbzH0h/Mwt8utfIz1Lojg6qNadI0RDc97ZMB9th
-         pRmmgquRSRJLj7LIVJ/+xK/+8YZg7LI+nKoExHCk=
+        b=l1vkvfSrOWRRzeCzjk9jrxBftn1LXoS7mlrEmTJeGMujJu8jevIwWUoBdiEoUWFXF
+         3witVVP6lcPAp3NoWFB4Ib461c6VDl4VhWRq3bCEYzRbWgwK5qsaFBWAewrUu+CKVV
+         wOWt569Nw2yeRVk/FgCeRkVW+qWc/Zw0aM4pGM6U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matthew Whitehead <tedheadster@gmail.com>,
-        Nicolas Pitre <nico@linaro.org>
-Subject: [PATCH 4.19 251/280] vt: perform safe console erase in the right order
-Date:   Fri, 22 Mar 2019 12:16:44 +0100
-Message-Id: <20190322111341.543743624@linuxfoundation.org>
+        stable@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
+        Dmitry Golovin <dima@golovin.in>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: [PATCH 4.19 252/280] x86/unwind/orc: Fix ORC unwind table alignment
+Date:   Fri, 22 Mar 2019 12:16:45 +0100
+Message-Id: <20190322111341.781646687@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -65,69 +69,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Nicolas Pitre <nicolas.pitre@linaro.org>
+From: Josh Poimboeuf <jpoimboe@redhat.com>
 
-commit a6dbe442755999960ca54a9b8ecfd9606be0ea75 upstream.
+commit f76a16adc485699f95bb71fce114f97c832fe664 upstream.
 
-Commit 4b4ecd9cb853 ("vt: Perform safe console erase only once") removed
-what appeared to be an extra call to scr_memsetw(). This missed the fact
-that set_origin() must be called before clearing the screen otherwise
-old screen content gets restored on the screen when using vgacon. Let's
-fix that by moving all the scrollback handling to flush_scrollback()
-where it logically belongs, and invoking it before the actual screen
-clearing in csi_J(), making the code simpler in the end.
+The .orc_unwind section is a packed array of 6-byte structs.  It's
+currently aligned to 6 bytes, which is causing warnings in the LLD
+linker.
 
-Reported-by: Matthew Whitehead <tedheadster@gmail.com>
-Signed-off-by: Nicolas Pitre <nico@linaro.org>
-Tested-by: Matthew Whitehead <tedheadster@gmail.com>
-Fixes: 4b4ecd9cb853 ("vt: Perform safe console erase only once")
+Six isn't a power of two, so it's not a valid alignment value.  The
+actual alignment doesn't matter much because it's an array of packed
+structs.  An alignment of two is sufficient.  In reality it always gets
+aligned to four bytes because it comes immediately after the
+4-byte-aligned .orc_unwind_ip section.
+
+Fixes: ee9f8fce9964 ("x86/unwind: Add the ORC unwinder")
+Reported-by: Nick Desaulniers <ndesaulniers@google.com>
+Reported-by: Dmitry Golovin <dima@golovin.in>
+Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: stable@vger.kernel.org
+Link: https://github.com/ClangBuiltLinux/linux/issues/218
+Link: https://lkml.kernel.org/r/d55027ee95fe73e952dcd8be90aebd31b0095c45.1551892041.git.jpoimboe@redhat.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/vt/vt.c |   15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
+ include/asm-generic/vmlinux.lds.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/tty/vt/vt.c
-+++ b/drivers/tty/vt/vt.c
-@@ -935,8 +935,11 @@ static void flush_scrollback(struct vc_d
- {
- 	WARN_CONSOLE_UNLOCKED();
- 
-+	set_origin(vc);
- 	if (vc->vc_sw->con_flush_scrollback)
- 		vc->vc_sw->con_flush_scrollback(vc);
-+	else
-+		vc->vc_sw->con_switch(vc);
- }
- 
- /*
-@@ -1506,8 +1509,10 @@ static void csi_J(struct vc_data *vc, in
- 			count = ((vc->vc_pos - vc->vc_origin) >> 1) + 1;
- 			start = (unsigned short *)vc->vc_origin;
- 			break;
-+		case 3: /* include scrollback */
-+			flush_scrollback(vc);
-+			/* fallthrough */
- 		case 2: /* erase whole display */
--		case 3: /* (and scrollback buffer later) */
- 			vc_uniscr_clear_lines(vc, 0, vc->vc_rows);
- 			count = vc->vc_cols * vc->vc_rows;
- 			start = (unsigned short *)vc->vc_origin;
-@@ -1516,13 +1521,7 @@ static void csi_J(struct vc_data *vc, in
- 			return;
- 	}
- 	scr_memsetw(start, vc->vc_video_erase_char, 2 * count);
--	if (vpar == 3) {
--		set_origin(vc);
--		flush_scrollback(vc);
--		if (con_is_visible(vc))
--			update_screen(vc);
--	} else if (con_should_update(vc))
--		do_update_region(vc, (unsigned long) start, count);
-+	update_region(vc, (unsigned long) start, count);
- 	vc->vc_need_wrap = 0;
- }
- 
+--- a/include/asm-generic/vmlinux.lds.h
++++ b/include/asm-generic/vmlinux.lds.h
+@@ -727,7 +727,7 @@
+ 		KEEP(*(.orc_unwind_ip))					\
+ 		__stop_orc_unwind_ip = .;				\
+ 	}								\
+-	. = ALIGN(6);							\
++	. = ALIGN(2);							\
+ 	.orc_unwind : AT(ADDR(.orc_unwind) - LOAD_OFFSET) {		\
+ 		__start_orc_unwind = .;					\
+ 		KEEP(*(.orc_unwind))					\
 
 
