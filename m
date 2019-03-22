@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24054C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:56:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C2E1C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:56:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E53442192C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:56:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D149820850
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:56:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255767;
-	bh=kgI9TsUw57pvrSLM/LtQTbUgP5jRV5QNx967GbcwMtA=;
+	s=default; t=1553255772;
+	bh=CbZh/J1RAUhTsnjU0qfYQiZOObREr5BYnslLU20AkHQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kc7ColSltVv3mxJp0VivSNgXTKyClfN8By2vbpd+nFGm+VKA5xvQ/N+cAyNlVIwHh
-	 FWc2ajLzqM/yrHrEa8u1DgMKsIUPJwNH8pd9ysUIntiZq8fDMfjhFSvD7jJYnbX85T
-	 Vf/554v8k/Z50beE2erZsybbTUHWKZhVI6xhJlu0=
+	b=p01gagV5s71UUPrVXRGlEz0l3B1Jupd1oiZ45VKwBYhZYGDJfUBfVY0Pry3GOMhLl
+	 2wP0SWJQHwLTuE6aENFBwygtDJ44fdzVWn9J5ia5ejuoV0On2owyMgQZZrzMYpGJpp
+	 KRPPq3zsCdrX878kIUamPKJwV1BVxwggmgjVqk74=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387487AbfCVL4F (ORCPT
+        id S1733211AbfCVL4K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:56:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60610 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:56:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732549AbfCVLz6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:55:58 -0400
+        id S1732770AbfCVL4G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:56:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 503F920850;
-        Fri, 22 Mar 2019 11:55:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 125F220850;
+        Fri, 22 Mar 2019 11:56:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255757;
-        bh=kgI9TsUw57pvrSLM/LtQTbUgP5jRV5QNx967GbcwMtA=;
+        s=default; t=1553255764;
+        bh=CbZh/J1RAUhTsnjU0qfYQiZOObREr5BYnslLU20AkHQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gk0EXD+4MzDVIQcH2J++1bX3jpYSu4qabSqAa9AbetlCsKX9eOCqbxLhhpKkeoPDU
-         IUQB0lcxvFpx5pK6nPyKOY/BZbvgPOzplFp10/ZV0/Li2xtEq8MA+ea6SVhdY6NJmf
-         Kgd7VQsSMZ4LRA3IvYK87TeX1erSyptc8ZqSs4ug=
+        b=I8hjtl2v6M2WWW0zjcmPCR/cHBMuEQvxYtkSOZU5j9Pw3EbHXkdwcLdZaMVbZKb9V
+         F6k5MRpWLe0t9QHkEVIGzX9cNRxXH2ifJ7WzrKAGxnph61tfLwFQA/3tiz537/a56b
+         rvjmLzEGTLc4+ikSTAPFdvmPAKDi5Lxk9iRmshDc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.14 182/183] KVM: nVMX: Ignore limit checks on VMX instructions using flat segments
-Date:   Fri, 22 Mar 2019 12:16:50 +0100
-Message-Id: <20190322111255.066141222@linuxfoundation.org>
+        =?UTF-8?q?Ga=C3=ABl=20PORTAY?= <gael.portay@collabora.com>,
+        Steve Longerbeam <slongerbeam@gmail.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: [PATCH 4.14 174/183] media: imx: csi: Disable CSI immediately after last EOF
+Date:   Fri, 22 Mar 2019 12:16:42 +0100
+Message-Id: <20190322111254.504396249@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111241.819468003@linuxfoundation.org>
 References: <20190322111241.819468003@linuxfoundation.org>
@@ -66,55 +68,87 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Steve Longerbeam <slongerbeam@gmail.com>
 
-commit 34333cc6c2cb021662fd32e24e618d1b86de95bf upstream.
+commit 2e0fe66e0a136252f4d89dbbccdcb26deb867eb8 upstream.
 
-Regarding segments with a limit==0xffffffff, the SDM officially states:
+Disable the CSI immediately after receiving the last EOF before stream
+off (and thus before disabling the IDMA channel). Do this by moving the
+wait for EOF completion into a new function csi_idmac_wait_last_eof().
 
-    When the effective limit is FFFFFFFFH (4 GBytes), these accesses may
-    or may not cause the indicated exceptions.  Behavior is
-    implementation-specific and may vary from one execution to another.
+This fixes a complete system hard lockup on the SabreAuto when streaming
+from the ADV7180, by repeatedly sending a stream off immediately followed
+by stream on:
 
-In practice, all CPUs that support VMX ignore limit checks for "flat
-segments", i.e. an expand-up data or code segment with base=0 and
-limit=0xffffffff.  This is subtly different than wrapping the effective
-address calculation based on the address size, as the flat segment
-behavior also applies to accesses that would wrap the 4g boundary, e.g.
-a 4-byte access starting at 0xffffffff will access linear addresses
-0xffffffff, 0x0, 0x1 and 0x2.
+while true; do v4l2-ctl  -d4 --stream-mmap --stream-count=3; done
 
-Fixes: f9eb4af67c9d ("KVM: nVMX: VMX instructions: add checks for #GP/#SS exceptions")
-Cc: stable@vger.kernel.org
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Eventually this either causes the system lockup or EOF timeouts at all
+subsequent stream on, until a system reset.
+
+The lockup occurs when disabling the IDMA channel at stream off. Disabling
+the CSI before disabling the IDMA channel appears to be a reliable fix for
+the hard lockup.
+
+Fixes: 4a34ec8e470cb ("[media] media: imx: Add CSI subdev driver")
+
+Reported-by: Gaël PORTAY <gael.portay@collabora.com>
+Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
+Cc: stable@vger.kernel.org	# for 4.13 and up
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/vmx.c |   12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/staging/media/imx/imx-media-csi.c |   17 ++++++++++++++---
+ 1 file changed, 14 insertions(+), 3 deletions(-)
 
---- a/arch/x86/kvm/vmx.c
-+++ b/arch/x86/kvm/vmx.c
-@@ -7513,10 +7513,16 @@ static int get_vmx_mem_address(struct kv
- 		/* Protected mode: #GP(0)/#SS(0) if the segment is unusable.
- 		 */
- 		exn = (s.unusable != 0);
--		/* Protected mode: #GP(0)/#SS(0) if the memory
--		 * operand is outside the segment limit.
+--- a/drivers/staging/media/imx/imx-media-csi.c
++++ b/drivers/staging/media/imx/imx-media-csi.c
+@@ -538,7 +538,7 @@ out_put_ipu:
+ 	return ret;
+ }
+ 
+-static void csi_idmac_stop(struct csi_priv *priv)
++static void csi_idmac_wait_last_eof(struct csi_priv *priv)
+ {
+ 	unsigned long flags;
+ 	int ret;
+@@ -555,7 +555,10 @@ static void csi_idmac_stop(struct csi_pr
+ 		&priv->last_eof_comp, msecs_to_jiffies(IMX_MEDIA_EOF_TIMEOUT));
+ 	if (ret == 0)
+ 		v4l2_warn(&priv->sd, "wait last EOF timeout\n");
++}
+ 
++static void csi_idmac_stop(struct csi_priv *priv)
++{
+ 	devm_free_irq(priv->dev, priv->eof_irq, priv);
+ 	devm_free_irq(priv->dev, priv->nfb4eof_irq, priv);
+ 
+@@ -681,6 +684,16 @@ idmac_stop:
+ 
+ static void csi_stop(struct csi_priv *priv)
+ {
++	if (priv->dest == IPU_CSI_DEST_IDMAC)
++		csi_idmac_wait_last_eof(priv);
 +
-+		/*
-+		 * Protected mode: #GP(0)/#SS(0) if the memory operand is
-+		 * outside the segment limit.  All CPUs that support VMX ignore
-+		 * limit checks for flat segments, i.e. segments with base==0,
-+		 * limit==0xffffffff and of type expand-up data or code.
- 		 */
--		exn = exn || (off + sizeof(u64) > s.limit);
-+		if (!(s.base == 0 && s.limit == 0xffffffff &&
-+		     ((s.type & 8) || !(s.type & 4))))
-+			exn = exn || (off + sizeof(u64) > s.limit);
++	/*
++	 * Disable the CSI asap, after syncing with the last EOF.
++	 * Doing so after the IDMA channel is disabled has shown to
++	 * create hard system-wide hangs.
++	 */
++	ipu_csi_disable(priv->csi);
++
+ 	if (priv->dest == IPU_CSI_DEST_IDMAC) {
+ 		csi_idmac_stop(priv);
+ 
+@@ -688,8 +701,6 @@ static void csi_stop(struct csi_priv *pr
+ 		if (priv->fim)
+ 			imx_media_fim_set_stream(priv->fim, NULL, false);
  	}
- 	if (exn) {
- 		kvm_queue_exception_e(vcpu,
+-
+-	ipu_csi_disable(priv->csi);
+ }
+ 
+ static const struct csi_skip_desc csi_skip[12] = {
 
 
