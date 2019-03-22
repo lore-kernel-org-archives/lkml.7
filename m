@@ -2,130 +2,198 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA27BC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 18:26:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 241C9C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 18:29:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91BDD21917
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 18:26:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5E472175B
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 18:29:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728648AbfCVS04 (ORCPT
+        id S1729009AbfCVS3e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 14:26:56 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:59643 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726875AbfCVS04 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 14:26:56 -0400
-Received: from [192.168.1.110] ([95.115.33.167]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MA7b8-1hIuOI130c-00BZEf; Fri, 22 Mar 2019 19:26:48 +0100
-Subject: Re: [PATCH] Respond:add support for SUNIX Multi-I/O board
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Morris Ku <saumah@gmail.com>, gregkh <gregkh@linuxfoundation.org>,
-        morris_ku@sunix.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20190315100614.25027-1-saumah@gmail.com>
- <ef1abb26-4c88-1b11-da25-f6891bee0e21@metux.net>
- <CAK8P3a1TkKtG3E3U0xxpJrf=qph0dkn27Apd99EaHMAPOfPtpw@mail.gmail.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <a2758c4b-ac49-e731-46b0-6990c3534da7@metux.net>
-Date:   Fri, 22 Mar 2019 19:26:46 +0100
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Fri, 22 Mar 2019 14:29:34 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48322 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727050AbfCVS3e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 14:29:34 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 79D2D89C37;
+        Fri, 22 Mar 2019 18:29:32 +0000 (UTC)
+Received: from [10.18.17.208] (dhcp-17-208.bos.redhat.com [10.18.17.208])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A4DE15D70A;
+        Fri, 22 Mar 2019 18:29:30 +0000 (UTC)
+Subject: Re: [PATCH v2 5/8] modpost: Integrate klp-convert
+To:     Joao Moreira <jmoreira@suse.de>
+Cc:     live-patching@vger.kernel.org, mbenes@suse.cz, pmladek@suse.cz,
+        jikos@suse.cz, nstange@suse.de, jpoimboe@redhat.com,
+        khlebnikov@yandex-team.ru, jeyu@kernel.org, matz@suse.de,
+        linux-kernel@vger.kernel.org, yamada.masahiro@socionext.com,
+        linux-kbuild@vger.kernel.org, michal.lkml@markovi.net,
+        live-patching-owner@vger.kernel.org
+References: <20190301141313.15057-1-jmoreira@suse.de>
+ <20190301141313.15057-6-jmoreira@suse.de> <20190322145404.GA31248@redhat.com>
+ <48deaa61c7bd81e40df445ba80825ad7@suse.de>
+From:   Joe Lawrence <joe.lawrence@redhat.com>
+Message-ID: <548c547a-d56c-40e9-6747-016c9eba7bf4@redhat.com>
+Date:   Fri, 22 Mar 2019 14:29:29 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a1TkKtG3E3U0xxpJrf=qph0dkn27Apd99EaHMAPOfPtpw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <48deaa61c7bd81e40df445ba80825ad7@suse.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:bSe+Olam9USK9i2uYUIcf8hKg6LQRrsne84NaUsaxvdAPmTH7Vu
- jxi81wIAfHi2SxTORg+ez2mHiaif6iujtitzIni8fIVIluwYRSsqdLiO1kmUDfD4ULjdaEn
- HXAUA0Sc8WbboA+skoVt0A2IYBggn75ZefrRDa2ldFVE57l7bzvI3LRa+Lh0e+KLjjqc3c4
- jFdpn9Y3i7Qz+xqNBQz4Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:fOXTrWO7Pzo=:NiLwjYy//DnkBhhDbobLwZ
- 8NA0ee1rEB3H6+WDbIN3hPzq6iL+95K9bpvaDIy1rPfwfkMm1EDbLIstIEU3f6cgn4aozsrNA
- l6PYiIkn5zxyQMEi7Q0KfLFXsxvBgPY9BqtKL4Wgd2Tqk9SRH2ljZJ34LvT37o6fHwtojfnPU
- akn1J+TpsFal5ySNH+kB8vl1XsdNaqnsaHY2y/F79KQyybll591ji41C0hRjQ4AJcFu66TrXQ
- +teJ3J3KrKpJ/sR///ztuJ8oeDZV7Mto+TfIhrifCB8UoVvg7DiQbxfNQL5TEj6T7bRFG8/8U
- aTdTWSya1IMVUIgsgtcafdWz5gIeGt08DIr19wbUGMejSZJ3rDVqf2YLT9dAq3jTTObtQlFkA
- 4bNXwHpFE7Y/e7625lUZk6VT7yi6PKHgOQyVIpVU9jV6LHzLaSUQdG6VhKSgmvV2gkecgd2Bq
- qT2y+vpJoP7Ag9lm7uhkFw+nVCNUdxHDC3rb2HpIF92gy2GzdYqCZNMGo/K1IWk3/tTi8yB8z
- ACjaUEhhvAgtCjSj8PUAgUuT82FxXlN2ZIqPN3dW7FbX+yW5HXCcCx4LmXlwKhzsLZa47F8FE
- MeotpFARtX5vZb+baTyvasxQz1KzUXP7qIeT4jegN5cVd7jfsG3KVB1d1zZx3qLJQ8WGsEAzb
- ZJV/mjkjrFT1CGsTYcSKMkzC8rOevGR6COuVppklXO/dl54rMzSIgRBhWZz+zqCNifquaLtHC
- 21ZXzS2L7xHM3dsRulV9w8GiMYE9YuvqZkUCURwwXFld713IAYH0UsNTjxE=
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Fri, 22 Mar 2019 18:29:33 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21.03.19 09:53, Arnd Bergmann wrote:
-
-> I think serial port drivers typically have a limit on the number of
-> ports, so we likely need the same here. 
-
-Except for earlycon (haven't had a closer look at it yet), I don't see
-any hard reason for that (maybe Greg could give us more insight here).
-I seriously doubt that these boards could be relevant for earlycon.
-(hard to find a machine that needs serial earlycon while not having some
-uart on-board ;-))
-
-> However the number of boards should not be limited in the mfd driver
-> that just exports the serial ports to the serial driver.
-
-Exactly. And there should be any global arrays for these boards, where
-every access runs through. Or even worse: looping through it, to find
-the right entry, within ISRs.
-
->>> +> +static int snx_ser_port_total_cnt;
->>> +> +static int snx_par_port_total_cnt;
->>> +> +
->>> +> +int snx_board_count;
->>> +> +
->>> +> +static struct snx_ser_driver sunix_ser_reg = {
->>> +> +     .dev_name = "ttySNX",
->>> +> +     .major = 0,
->>> +> +     .minor = 0,
->>> +> +     .nr = (SNX_SER_TOTAL_MAX + 1),
->>> +> +};
+On 3/22/19 12:37 PM, Joao Moreira wrote:
+> On 2019-03-22 11:54, Joe Lawrence wrote:
+>> On Fri, Mar 01, 2019 at 11:13:10AM -0300, Joao Moreira wrote:
+>>> From: Josh Poimboeuf <jpoimboe@redhat.com>
+>>>
+>>> Create cmd_klp_convert and hook it into scripts/Makefile.modpost.
+>>> cmd_klp_convert invokes klp-convert with the right arguments for the
+>>> conversion of unresolved symbols inside a livepatch.
+>>>
+>>> [khlebnikov:
+>>> * save cmd_ld_ko_o into .module.cmd, if_changed_rule doesn't do that
+>>> * fix bashisms for debian where /bin/sh is a symlink to /bin/dash
+>>> * rename rule_link_module to rule_ld_ko_o, otherwise arg-check inside
+>>>    if_changed_rule compares cmd_link_module and cmd_ld_ko_o
+>>> * check modinfo -F livepatch only if CONFIG_LIVEPATCH is true
+>>> ]
+>>>
+>>> [mbenes:
+>>> * remove modinfo call. LIVEPATCH_ in Makefiled
+>>> ]
+>>>
+>>> [jmoreira:
+>>> * split up: move the .livepatch file-based scheme for identifying
+>>> livepatches to a previous patch, as it was required for correctly
+>>> building Symbols.list there.
+>>> ]
+>>>
+>>> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+>>> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+>>> Signed-off-by: Miroslav Benes <mbenes@suse.cz>
+>>> Signed-off-by: Joao Moreira <jmoreira@suse.de>
+>>> ---
+>>>   scripts/Kbuild.include   |  4 +++-
+>>>   scripts/Makefile.modpost | 16 +++++++++++++++-
+>>>   scripts/mod/modpost.c    |  6 +++++-
+>>>   scripts/mod/modpost.h    |  1 +
+>>>   4 files changed, 24 insertions(+), 3 deletions(-)
+>>>
+>>>
+>>> [ ... snip ... ]
+>>>
+>>> diff --git a/scripts/Makefile.modpost b/scripts/Makefile.modpost
+>>> index 7d4af0d0accb..da779a185218 100644
+>>> --- a/scripts/Makefile.modpost
+>>> +++ b/scripts/Makefile.modpost
+>>> @@ -125,8 +125,22 @@ quiet_cmd_ld_ko_o = LD [M]  $@
+>>>                    -o $@ $(filter-out FORCE,$^) ;
+>>>    \
+>>>   	$(if $(ARCH_POSTLINK), $(MAKE) -f $(ARCH_POSTLINK) $@, true)
+>>>
+>>> +SLIST = $(objtree)/Symbols.list
+>>> +KLP_CONVERT = scripts/livepatch/klp-convert
+>>> +quiet_cmd_klp_convert = KLP $@
+>>> +      cmd_klp_convert = mv $@ $(@:.ko=.klp.o);				\
+>>> +			$(KLP_CONVERT) $(SLIST) $(@:.ko=.klp.o) $@
 >>> +
->>> +can't this be const ?
->>> +
->>> i prefer keep it in current format.
+>>> +define rule_ld_ko_o
+>>> +	$(call cmd,ld_ko_o) $(cmd_ld_ko_o) ;				\
+>>                             ^
+>> Should there be a ';' semicolon here (and maybe a line-break) between
+>> $(call cmd,ld_ko_o) and $(cmd_ld_ko_o)?
 >>
->> Why ? do you ever have to write into this struct ?
+>> I didn't see this in my x86_64 VM, but on a ppc64le box, I kept getting
+>> really strange build errors that I traced to this line.  Without a
+>> semicolon, the build was trying to run a make command with a linker
+>> command smashed onto the end of it:
+>>
+>>    make -f ./arch/powerpc/Makefile.postlink crypto/xts.ko ld -r  -EL -m
+>> elf64lppc -T ./scripts/module-common.lds -T
+>> ./arch/powerpc/kernel/module.lds --save-restore-funcs  --build-id  -o
+>> crypto/xts.ko crypto/xts.o crypto/xts.mod.o
+>>
+>>
+>> Now, klp-convert looks like will need some ppc64le work as well, as
+>> it's
+>> confused about .TOC. symbols:
+>>
+>>      CC      samples/livepatch/livepatch-annotated-sample.mod.o
+>>      CC      samples/livepatch/livepatch-callbacks-busymod.mod.o
+>>      CC      samples/livepatch/livepatch-callbacks-demo.mod.o
+>>      CC      samples/livepatch/livepatch-callbacks-mod.mod.o
+>>      CC      samples/livepatch/livepatch-sample.mod.o
+>>      CC      samples/livepatch/livepatch-shadow-fix1.mod.o
+>>      CC      samples/livepatch/livepatch-shadow-fix2.mod.o
+>>      CC      samples/livepatch/livepatch-shadow-mod.mod.o
+>>      LD [M]  samples/livepatch/livepatch-annotated-sample.ko
+>>      LD [M]  samples/livepatch/livepatch-callbacks-demo.ko
+>>      KLP     samples/livepatch/livepatch-annotated-sample.ko
+>>      LD [M]  samples/livepatch/livepatch-callbacks-mod.ko
+>>      KLP     samples/livepatch/livepatch-callbacks-demo.ko
+>>      LD [M]  samples/livepatch/livepatch-sample.ko
+>>      LD [M]  samples/livepatch/livepatch-shadow-fix1.ko
+>>    klp-convert: Define KLP_SYMPOS for the symbol: .TOC.
+>>    Valid KLP_SYMPOS for symbol .TOC.:
+>>
+>>    [ ... snip listing of all .TOC's across the kernel ... ]
+>>
+>> but we can save that for another day.
+>>
 > 
-> I think this will just go away after the rewrite into a proper
-> layered driver, so it doesn't matter.
+> Hi Joe, first of all, thank you for you in-depth review. I did not have
+> the time to go through everything yet, and I'll reply properly to the
+> other comments soon. Yet, I would like to add a quick note here, since
+> you are testing ppc64le. ppc64le is exactly one of the things I have
+> been dealing with in the last two days, specifically the .TOC. symbols
+> (there is also another bug related to converting relocations of symbols
+> with index 0, but this one is architecture agnostic).
+> 
+> If you would like to take a look, the fix is in the latest commit here:
+> - https://github.com/SUSE/klp-convert/tree/fixppc64le
+> 
+> I would be very glad if you have any comment or input on that, and I
+> guess that if the fix is that simple, I can manage to squash it into v3.
 
-That's exactly the point, which I've been repeating over and over again.
+Hi João,
 
-By the way, one more weird thing that slipped trough my previous
-reviews: he's redefining standard structs and typecasting them.
-Actually, he copy+paste'd large parts of the serial and parport
-subsystems.
+I added https://github.com/SUSE/klp-convert/commit/69b89ef5c366 on top 
+of my 
+https://github.com/joe-lawrence/linux/tree/klp-convert-v2-rebase-review 
+branch with positive results:
 
-> The best way I can think of to do this would be to have a nested
-> irqchip in the mfd driver that handles the per-board interrupt and
-> provides a unique irq number to the individual port drivers.
-> This makes a very simple irq handler in the port driver, and keeps
-> the multiplexing where it belongs.
+(No build klp-convert build complaints)
 
-Exactly. That's the way it works w/ lot's of other composite devices.
-(I recall some exotic daq cards that work similar way)
+   % uname -r
+   Linux ibm-p9z-21-lp26.mpc.lab.eng.bos.redhat.com 5.1.0-rc1+ #6 SMP 
+Thu Mar 21 11:40:24 EDT 2019 ppc64le ppc64le ppc64le GNU/Linux
 
-@Morris: please try to find a fitting generic, configurable irqchip
-driver first. If you don't find one, talk to us and give us a detailed
-explaination how that part of your cards actually works, so we could
-write some generic driver. I might have some customer specific devices
-that could also benefit from that.
+   % insmod samples/livepatch/livepatch-annotated-sample.ko
+   % grep -o 'livepatch.*' /proc/cmdline
+   livepatch=1
 
---mtx
+   % ./tools/testing/selftests/livepatch/test-livepatch.sh
+   TEST: basic function patching ... ok
+   TEST: multiple livepatches ... ok
+   TEST: atomic replace livepatch ... ok
+   TEST: klp-convert symbols ... ok
 
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+There may be more ppc64le specifics lurking, but if we could get samples 
+and self-tests working, I think we'd be in good shape for v3.
+
+-- Joe
