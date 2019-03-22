@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68768C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F99DC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:39:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39596218B0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:39:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2562C204FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:39:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254776;
-	bh=NXupcm8szwvCIG4via/px6ciif+qpQZbQ28WeFeQrjQ=;
+	s=default; t=1553254781;
+	bh=zpFUQ+KchqTDPIGKRF427OiqMM1+PIdopTUHW+5yR3I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oOboS+nJFXXKE+QCJrvzqfqLR9o63195ue2umq/FelxGB+elay32CTF6jQgO36JAZ
-	 jHSmhVQ6apMh58spbjuwO3AdnKB0w1+wGIWWV2hAAfcntuuSggslwYk6zw8AOWyA33
-	 /l66f2c5SX5Yx+Mm3Rih6JSRu1y3VkrLBEvz2Fko=
+	b=f7r60eb7cZc+YZj15XHp0CleIIJWeQV0Woz2uUPrbhJfEh+Dqbn/KtSM805WeYNI3
+	 3m14XMl40EPHEbe58GdpIpBMXQj17qxraf1raA9dH8Sd1qUN1yV/GFqpDz6X1hULfR
+	 0enxfrVxRq3wagDIXepfRAWJCMEZsdwOc0yPzmh0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731165AbfCVLje (ORCPT
+        id S1730767AbfCVLjj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:39:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41138 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:39:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41286 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731155AbfCVLja (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:39:30 -0400
+        id S1730723AbfCVLjh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:39:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 344F4218B0;
-        Fri, 22 Mar 2019 11:39:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 033CA21916;
+        Fri, 22 Mar 2019 11:39:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254769;
-        bh=NXupcm8szwvCIG4via/px6ciif+qpQZbQ28WeFeQrjQ=;
+        s=default; t=1553254776;
+        bh=zpFUQ+KchqTDPIGKRF427OiqMM1+PIdopTUHW+5yR3I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sIFy2ep24XKQHLXOaiEU5BIQmoCDAHAg8LtIq43j8D+88TZyZf87/mt8+nG8HME8P
-         ByMHYFf7lmRO4WPefsQQynBWyBig2kvRBQHyo655897AoYmu4X18BWsK0DcM0dO9Nt
-         UsHjnHfzfXIW7LY1H5Ccs9YJqwHtuasCaAmHtxLA=
+        b=A9m8Gf/wEef1WVLUqIVzDGI7FsZpXfER2c/yPQ6ffKmi/F4uy+BAzwNOPh9DIfWC6
+         fQ64bN+G0yxuHwRo9cE02n1Y1c1KDgTAl22TvZ6EaNLQIiAdvHvjhP4YIpC50/faxI
+         EtYn5uHRipkuQM8/8qB0WFhCHsBvk+xYH87icfF0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.4 229/230] KVM: nVMX: Ignore limit checks on VMX instructions using flat segments
-Date:   Fri, 22 Mar 2019 12:16:07 +0100
-Message-Id: <20190322111253.042474968@linuxfoundation.org>
+        stable@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 4.4 224/230] PM / wakeup: Rework wakeup source timer cancellation
+Date:   Fri, 22 Mar 2019 12:16:02 +0100
+Message-Id: <20190322111252.660920993@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -66,55 +64,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
 
-commit 34333cc6c2cb021662fd32e24e618d1b86de95bf upstream.
+commit 1fad17fb1bbcd73159c2b992668a6957ecc5af8a upstream.
 
-Regarding segments with a limit==0xffffffff, the SDM officially states:
+If wakeup_source_add() is called right after wakeup_source_remove()
+for the same wakeup source, timer_setup() may be called for a
+potentially scheduled timer which is incorrect.
 
-    When the effective limit is FFFFFFFFH (4 GBytes), these accesses may
-    or may not cause the indicated exceptions.  Behavior is
-    implementation-specific and may vary from one execution to another.
+To avoid that, move the wakeup source timer cancellation from
+wakeup_source_drop() to wakeup_source_remove().
 
-In practice, all CPUs that support VMX ignore limit checks for "flat
-segments", i.e. an expand-up data or code segment with base=0 and
-limit=0xffffffff.  This is subtly different than wrapping the effective
-address calculation based on the address size, as the flat segment
-behavior also applies to accesses that would wrap the 4g boundary, e.g.
-a 4-byte access starting at 0xffffffff will access linear addresses
-0xffffffff, 0x0, 0x1 and 0x2.
+Moreover, make wakeup_source_remove() clear the timer function after
+canceling the timer to let wakeup_source_not_registered() treat
+unregistered wakeup sources in the same way as the ones that have
+never been registered.
 
-Fixes: f9eb4af67c9d ("KVM: nVMX: VMX instructions: add checks for #GP/#SS exceptions")
-Cc: stable@vger.kernel.org
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: 4.4+ <stable@vger.kernel.org> # 4.4+
+[ rjw: Subject, changelog, merged two patches together ]
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/vmx.c |   12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/base/power/wakeup.c |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
---- a/arch/x86/kvm/vmx.c
-+++ b/arch/x86/kvm/vmx.c
-@@ -6702,10 +6702,16 @@ static int get_vmx_mem_address(struct kv
- 		/* Protected mode: #GP(0)/#SS(0) if the segment is unusable.
- 		 */
- 		exn = (s.unusable != 0);
--		/* Protected mode: #GP(0)/#SS(0) if the memory
--		 * operand is outside the segment limit.
+--- a/drivers/base/power/wakeup.c
++++ b/drivers/base/power/wakeup.c
+@@ -113,7 +113,6 @@ void wakeup_source_drop(struct wakeup_so
+ 	if (!ws)
+ 		return;
+ 
+-	del_timer_sync(&ws->timer);
+ 	__pm_relax(ws);
+ }
+ EXPORT_SYMBOL_GPL(wakeup_source_drop);
+@@ -201,6 +200,13 @@ void wakeup_source_remove(struct wakeup_
+ 	list_del_rcu(&ws->entry);
+ 	spin_unlock_irqrestore(&events_lock, flags);
+ 	synchronize_srcu(&wakeup_srcu);
 +
-+		/*
-+		 * Protected mode: #GP(0)/#SS(0) if the memory operand is
-+		 * outside the segment limit.  All CPUs that support VMX ignore
-+		 * limit checks for flat segments, i.e. segments with base==0,
-+		 * limit==0xffffffff and of type expand-up data or code.
- 		 */
--		exn = exn || (off + sizeof(u64) > s.limit);
-+		if (!(s.base == 0 && s.limit == 0xffffffff &&
-+		     ((s.type & 8) || !(s.type & 4))))
-+			exn = exn || (off + sizeof(u64) > s.limit);
- 	}
- 	if (exn) {
- 		kvm_queue_exception_e(vcpu,
++	del_timer_sync(&ws->timer);
++	/*
++	 * Clear timer.function to make wakeup_source_not_registered() treat
++	 * this wakeup source as not registered.
++	 */
++	ws->timer.function = NULL;
+ }
+ EXPORT_SYMBOL_GPL(wakeup_source_remove);
+ 
 
 
