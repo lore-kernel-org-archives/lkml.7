@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8DB3C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:56:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AED2C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:56:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A13421916
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:56:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE77E2082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:56:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255803;
-	bh=esY3zVDN87paZVPuyLOPpUL98jXsk6O59DcHSxEQzqo=;
+	s=default; t=1553255806;
+	bh=55zJjsNJZMLBtFVBBuk/dGlmVNkhL0j6qxhIMw1KMGQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sbFeFKPe+A8/jjW42I6OJo/ji483zfqGuSRZUrO7CnHZ0sgT5XG7VIQki0DdA3yqF
-	 fC+3RWqOFyBkQ2x2x+FPruiqdoJLGlW4akQbn4Qr6vyY73F5f34iryUvpML+og/jIa
-	 sm5++qzj+750lduGub6IrFSDIlS2aDAW/nH308o8=
+	b=OylXKQ9Pnwh3QyX5Vw+e/toUnZhtLqx3LQeOrZ82hB0L5aEOEVxG9c/xAA8aHETrN
+	 RKpU+imL/tLbrGxLRHn7TN2OCOTfhRFqmT6bY/w004uFx/sLqZOMxfN/6jAbv5OgWs
+	 VDohVDdXI7SP+hwEaMWO3YJgdN0Eh4/XO+1zw5d4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387557AbfCVL4l (ORCPT
+        id S2387567AbfCVL4p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:56:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33104 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:56:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733132AbfCVL4i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:56:38 -0400
+        id S1733132AbfCVL4m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:56:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54F1321916;
-        Fri, 22 Mar 2019 11:56:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3FBDC2082C;
+        Fri, 22 Mar 2019 11:56:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255797;
-        bh=esY3zVDN87paZVPuyLOPpUL98jXsk6O59DcHSxEQzqo=;
+        s=default; t=1553255801;
+        bh=55zJjsNJZMLBtFVBBuk/dGlmVNkhL0j6qxhIMw1KMGQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gBul75a0PhEFSodsKOCknVPQL4n37BocqskCx/8m+5hqnJlCfjlLBg7fZ8WcDOnCN
-         009gXxvW6ZsMEXj5PlP7ucgzS4iFLZUHFl7o4G7N7WZ9EF+69sP1Kh8ZkAW74bpJar
-         4l6Mcc1JPSpqiQIutsMoIRX3Z7VnaxI1lvH002mE=
+        b=UUr2pNsttnG9cYeBbGfoDs32tgcwC3MwNFq3VrG3u/pjMMMdhq7kU2aj32xIdwMNY
+         NJeEnMOe1Bm5A/Wgrt/1P1H+GELn5Rg+S/wRE0Ho5KE2MDgwcuXocJC8fV437mq1VP
+         +JjL2JHr1Qli7BSi5HWAyiBp3fZChhWxcgeoa7WQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         James Bottomley <James.Bottomley@HansenPartnership.com>,
         Eric Biggers <ebiggers@google.com>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.19 018/280] crypto: cfb - add missing chunksize property
-Date:   Fri, 22 Mar 2019 12:12:51 +0100
-Message-Id: <20190322111307.333223891@linuxfoundation.org>
+Subject: [PATCH 4.19 019/280] crypto: cfb - remove bogus memcpy() with src == dest
+Date:   Fri, 22 Mar 2019 12:12:52 +0100
+Message-Id: <20190322111307.383697661@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -69,18 +69,19 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Eric Biggers <ebiggers@google.com>
 
-commit 394a9e044702e6a8958a5e89d2a291605a587a2a upstream.
+commit 6c2e322b3621dc8be72e5c86d4fdb587434ba625 upstream.
 
-Like some other block cipher mode implementations, the CFB
-implementation assumes that while walking through the scatterlist, a
-partial block does not occur until the end.  But the walk is incorrectly
-being done with a blocksize of 1, as 'cra_blocksize' is set to 1 (since
-CFB is a stream cipher) but no 'chunksize' is set.  This bug causes
-incorrect encryption/decryption for some scatterlist layouts.
+The memcpy() in crypto_cfb_decrypt_inplace() uses walk->iv as both the
+source and destination, which has undefined behavior.  It is unneeded
+because walk->iv is already used to hold the previous ciphertext block;
+thus, walk->iv is already updated to its final value.  So, remove it.
 
-Fix it by setting the 'chunksize'.  Also extend the CFB test vectors to
-cover this bug as well as cases where the message length is not a
-multiple of the block size.
+Also, note that in-place decryption is the only case where the previous
+ciphertext block is not directly available.  Therefore, as a related
+cleanup I also updated crypto_cfb_encrypt_segment() to directly use the
+previous ciphertext block rather than save it into walk->iv.  This makes
+it consistent with in-place encryption and out-of-place decryption; now
+only in-place decryption is different, because it has to be.
 
 Fixes: a7d85e06ed80 ("crypto: cfb - add support for Cipher FeedBack mode")
 Cc: <stable@vger.kernel.org> # v4.17+
@@ -90,58 +91,44 @@ Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- crypto/cfb.c     |    6 ++++++
- crypto/testmgr.h |   25 +++++++++++++++++++++++++
- 2 files changed, 31 insertions(+)
+ crypto/cfb.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 --- a/crypto/cfb.c
 +++ b/crypto/cfb.c
-@@ -298,6 +298,12 @@ static int crypto_cfb_create(struct cryp
- 	inst->alg.base.cra_blocksize = 1;
- 	inst->alg.base.cra_alignmask = alg->cra_alignmask;
+@@ -77,12 +77,14 @@ static int crypto_cfb_encrypt_segment(st
+ 	do {
+ 		crypto_cfb_encrypt_one(tfm, iv, dst);
+ 		crypto_xor(dst, src, bsize);
+-		memcpy(iv, dst, bsize);
++		iv = dst;
  
-+	/*
-+	 * To simplify the implementation, configure the skcipher walk to only
-+	 * give a partial block at the very end, never earlier.
-+	 */
-+	inst->alg.chunksize = alg->cra_blocksize;
+ 		src += bsize;
+ 		dst += bsize;
+ 	} while ((nbytes -= bsize) >= bsize);
+ 
++	memcpy(walk->iv, iv, bsize);
 +
- 	inst->alg.ivsize = alg->cra_blocksize;
- 	inst->alg.min_keysize = alg->cra_cipher.cia_min_keysize;
- 	inst->alg.max_keysize = alg->cra_cipher.cia_max_keysize;
---- a/crypto/testmgr.h
-+++ b/crypto/testmgr.h
-@@ -11416,6 +11416,31 @@ static const struct cipher_testvec aes_c
- 			  "\x75\xa3\x85\x74\x1a\xb9\xce\xf8"
- 			  "\x20\x31\x62\x3d\x55\xb1\xe4\x71",
- 		.len	= 64,
-+		.also_non_np = 1,
-+		.np	= 2,
-+		.tap	= { 31, 33 },
-+	}, { /* > 16 bytes, not a multiple of 16 bytes */
-+		.key	= "\x2b\x7e\x15\x16\x28\xae\xd2\xa6"
-+			  "\xab\xf7\x15\x88\x09\xcf\x4f\x3c",
-+		.klen	= 16,
-+		.iv	= "\x00\x01\x02\x03\x04\x05\x06\x07"
-+			  "\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f",
-+		.ptext	= "\x6b\xc1\xbe\xe2\x2e\x40\x9f\x96"
-+			  "\xe9\x3d\x7e\x11\x73\x93\x17\x2a"
-+			  "\xae",
-+		.ctext	= "\x3b\x3f\xd9\x2e\xb7\x2d\xad\x20"
-+			  "\x33\x34\x49\xf8\xe8\x3c\xfb\x4a"
-+			  "\xc8",
-+		.len	= 17,
-+	}, { /* < 16 bytes */
-+		.key	= "\x2b\x7e\x15\x16\x28\xae\xd2\xa6"
-+			  "\xab\xf7\x15\x88\x09\xcf\x4f\x3c",
-+		.klen	= 16,
-+		.iv	= "\x00\x01\x02\x03\x04\x05\x06\x07"
-+			  "\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f",
-+		.ptext	= "\x6b\xc1\xbe\xe2\x2e\x40\x9f",
-+		.ctext	= "\x3b\x3f\xd9\x2e\xb7\x2d\xad",
-+		.len	= 7,
- 	},
- };
+ 	return nbytes;
+ }
+ 
+@@ -162,7 +164,7 @@ static int crypto_cfb_decrypt_inplace(st
+ 	const unsigned int bsize = crypto_cfb_bsize(tfm);
+ 	unsigned int nbytes = walk->nbytes;
+ 	u8 *src = walk->src.virt.addr;
+-	u8 *iv = walk->iv;
++	u8 * const iv = walk->iv;
+ 	u8 tmp[MAX_CIPHER_BLOCKSIZE];
+ 
+ 	do {
+@@ -172,8 +174,6 @@ static int crypto_cfb_decrypt_inplace(st
+ 		src += bsize;
+ 	} while ((nbytes -= bsize) >= bsize);
+ 
+-	memcpy(walk->iv, iv, bsize);
+-
+ 	return nbytes;
+ }
  
 
 
