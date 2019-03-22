@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44146C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:05:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8177C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:05:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10C542192D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:05:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87D7F21934
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:05:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256302;
-	bh=NsGYUF1oNj4iOLCJJ6ujyXQF2d3a0oRqzKKDCu5D7No=;
+	s=default; t=1553256304;
+	bh=9cxJeWuTvTSMON4oCdGSeMBpWt8+bdvqde6Rjlkb5HQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RgYglz6r8PB6pXHy84PbPkP+DcO1Ee6jnWwRib1lbTDuT8MkVwwtHoVNLXA3ksSBg
-	 b9VFd4G6pRNSKgW2KgTDTo7oUsNKesBrUDrVHOsbbXZyTU9TgmFoi2n4uenN8pFCVH
-	 efUN24p9WjIe3lTkuPekykmUP5I0d+4SXOWXBB8o=
+	b=xGjpC400fdkkUEA/t72gZmQVoi98Ty+ot/Nw5LjhhxBB9M2MGQBqMmik29tfGDeWa
+	 oyBT4N5Qrf9+gK7b3Z/ENpggMoA1sFlpq2fsOhrkbM4CstALFRGIKptluRZhFUZgGv
+	 IUo29c5OwVT24bXG3mdsq8IQr1b9Ug4rnpGKAQF0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388760AbfCVMFA (ORCPT
+        id S2388770AbfCVMFD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:05:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43364 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:05:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388259AbfCVME4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:04:56 -0400
+        id S2388247AbfCVME7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:04:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25C392192D;
-        Fri, 22 Mar 2019 12:04:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDCE22192D;
+        Fri, 22 Mar 2019 12:04:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256295;
-        bh=NsGYUF1oNj4iOLCJJ6ujyXQF2d3a0oRqzKKDCu5D7No=;
+        s=default; t=1553256298;
+        bh=9cxJeWuTvTSMON4oCdGSeMBpWt8+bdvqde6Rjlkb5HQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SgfglyAD7zdHOgc7KIfzjCuaotBs6myhBOVKek5IiZQeCdBZLO6rbIdT7y+Q0BiO6
-         wYPIuZdsVtreQIMc08xrah6vAI2gYHdbcssZpodHZDUoI+WYvvDUVAfdA9mmwXKopM
-         dCT1W/aphrXEPxjMFw29Qzb3SA4qBZXzLm5ic03Y=
+        b=pxeDWN9PdvJtqYhRoJf1om3lqlNtdQsnvUzXmDCksTV5QuvnnQY10gvZp9t5KLNt8
+         sntwcjoYXyAxFTCT2tCwdCLjOso899fb8lBfUv0PB3pCrj0Kj8u1D25QSuPjIgBK2y
+         M/i0OEoJQ1T878gC4jhzFfK5sao4TfleoMlN0NIg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ferry Toth <fntoth@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 4.19 144/280] ACPI / device_sysfs: Avoid OF modalias creation for removed device
-Date:   Fri, 22 Mar 2019 12:14:57 +0100
-Message-Id: <20190322111318.930959206@linuxfoundation.org>
+        stable@vger.kernel.org, Haibo Chen <haibo.chen@nxp.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 4.19 145/280] mmc: sdhci-esdhc-imx: fix HS400 timing issue
+Date:   Fri, 22 Mar 2019 12:14:58 +0100
+Message-Id: <20190322111319.137302540@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -67,75 +66,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: BOUGH CHEN <haibo.chen@nxp.com>
 
-commit f16eb8a4b096514ac06fb25bf599dcc792899b3d upstream.
+commit de0a0decf2edfc5b0c782915f4120cf990a9bd13 upstream.
 
-If SSDT overlay is loaded via ConfigFS and then unloaded the device,
-we would like to have OF modalias for, already gone. Thus, acpi_get_name()
-returns no allocated buffer for such case and kernel crashes afterwards:
+Now tuning reset will be done when the timing is MMC_TIMING_LEGACY/
+MMC_TIMING_MMC_HS/MMC_TIMING_SD_HS. But for timing MMC_TIMING_MMC_HS,
+we can not do tuning reset, otherwise HS400 timing is not right.
 
- ACPI: Host-directed Dynamic ACPI Table Unload
- ads7950 spi-PRP0001:00: Dropping the link to regulator.0
- BUG: unable to handle kernel NULL pointer dereference at 0000000000000000
- #PF error: [normal kernel read fault]
- PGD 80000000070d6067 P4D 80000000070d6067 PUD 70d0067 PMD 0
- Oops: 0000 [#1] SMP PTI
- CPU: 0 PID: 40 Comm: kworker/u4:2 Not tainted 5.0.0+ #96
- Hardware name: Intel Corporation Merrifield/BODEGA BAY, BIOS 542 2015.01.21:18.19.48
- Workqueue: kacpi_hotplug acpi_device_del_work_fn
- RIP: 0010:create_of_modalias.isra.1+0x4c/0x150
- Code: 00 00 48 89 44 24 18 31 c0 48 8d 54 24 08 48 c7 44 24 10 00 00 00 00 48 c7 44 24 08 ff ff ff ff e8 7a b0 03 00 48 8b 4c 24 10 <0f> b6 01 84 c0 74 27 48 c7 c7 00 09 f4 a5 0f b6 f0 8d 50 20 f6 04
- RSP: 0000:ffffa51040297c10 EFLAGS: 00010246
- RAX: 0000000000001001 RBX: 0000000000000785 RCX: 0000000000000000
- RDX: 0000000000001001 RSI: 0000000000000286 RDI: ffffa2163dc042e0
- RBP: ffffa216062b1196 R08: 0000000000001001 R09: ffffa21639873000
- R10: ffffffffa606761d R11: 0000000000000001 R12: ffffa21639873218
- R13: ffffa2163deb5060 R14: ffffa216063d1010 R15: 0000000000000000
- FS:  0000000000000000(0000) GS:ffffa2163e000000(0000) knlGS:0000000000000000
- CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
- CR2: 0000000000000000 CR3: 0000000007114000 CR4: 00000000001006f0
- Call Trace:
-  __acpi_device_uevent_modalias+0xb0/0x100
-  spi_uevent+0xd/0x40
+Here is the process of init HS400, first finish tuning in HS200 mode,
+then switch to HS mode and 8 bit DDR mode, finally switch to HS400
+mode. If we do tuning reset in HS mode, this will cause HS400 mode
+lost the tuning setting, which will cause CRC error.
 
- ...
-
-In order to fix above let create_of_modalias() check the status returned
-by acpi_get_name() and bail out in case of failure.
-
-Fixes: 8765c5ba1949 ("ACPI / scan: Rework modalias creation when "compatible" is present")
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=201381
-Reported-by: Ferry Toth <fntoth@gmail.com>
-Tested-by: Ferry Toth<fntoth@gmail.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: 4.1+ <stable@vger.kernel.org> # 4.1+
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
+Cc: stable@vger.kernel.org # v4.12+
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Fixes: d9370424c948 ("mmc: sdhci-esdhc-imx: reset tuning circuit when power on mmc card")
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/acpi/device_sysfs.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/mmc/host/sdhci-esdhc-imx.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/acpi/device_sysfs.c
-+++ b/drivers/acpi/device_sysfs.c
-@@ -202,11 +202,15 @@ static int create_of_modalias(struct acp
- {
- 	struct acpi_buffer buf = { ACPI_ALLOCATE_BUFFER };
- 	const union acpi_object *of_compatible, *obj;
-+	acpi_status status;
- 	int len, count;
- 	int i, nval;
- 	char *c;
- 
--	acpi_get_name(acpi_dev->handle, ACPI_SINGLE_NAME, &buf);
-+	status = acpi_get_name(acpi_dev->handle, ACPI_SINGLE_NAME, &buf);
-+	if (ACPI_FAILURE(status))
-+		return -ENODEV;
-+
- 	/* DT strings are all in lower case */
- 	for (c = buf.pointer; *c != '\0'; c++)
- 		*c = tolower(*c);
+--- a/drivers/mmc/host/sdhci-esdhc-imx.c
++++ b/drivers/mmc/host/sdhci-esdhc-imx.c
+@@ -981,6 +981,7 @@ static void esdhc_set_uhs_signaling(stru
+ 	case MMC_TIMING_UHS_SDR25:
+ 	case MMC_TIMING_UHS_SDR50:
+ 	case MMC_TIMING_UHS_SDR104:
++	case MMC_TIMING_MMC_HS:
+ 	case MMC_TIMING_MMC_HS200:
+ 		writel(m, host->ioaddr + ESDHC_MIX_CTRL);
+ 		break;
 
 
