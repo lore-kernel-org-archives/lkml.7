@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B8DC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:33:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CAFEC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:34:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EFB721916
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:33:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CBE32192C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:34:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254435;
-	bh=i721EGfZ24JAuqsMgTQq07xjBicZ5WGeImgDtPnpZo4=;
+	s=default; t=1553254442;
+	bh=zf67P746qT+QrG5tpcWPq/6pmJc/BKgTDSDlJlRjoYQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iXgjhAhQ1DJ76pKfLRRbClR4vI26B166KPewEPQXwGo7NhYk7EYbSvzaNTmXfDAwK
-	 dE1umB8rdxfcuj0WKcGYj+VoCSuCGgTG8vs8S4LFK0NOfk3A2XzuESasCmxa870tOX
-	 LFpXZ46ZKTpa++6mKCrdJU8nuzshUSi1w7jLxbuo=
+	b=a/SylEKnY/6fi2AxB65Iz3/F/v/TfEyQS+g9mGL8JxntVRJui+KEs074MtEH+bqoR
+	 r/H0xnvjTRLg3oRfFFL0GHGPLHfuwIVnKHlnJbXLUAx9fINwFpCpjxss2S9nCDQvu3
+	 ToNwOTLeVcbTCrNh1kMqaJU+1k2T5M7fWk6fy1+o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730329AbfCVLdy (ORCPT
+        id S1730356AbfCVLeA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:33:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34340 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:34:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34506 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730317AbfCVLdt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:33:49 -0400
+        id S1730162AbfCVLd6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:33:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6247721916;
-        Fri, 22 Mar 2019 11:33:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D021721916;
+        Fri, 22 Mar 2019 11:33:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254427;
-        bh=i721EGfZ24JAuqsMgTQq07xjBicZ5WGeImgDtPnpZo4=;
+        s=default; t=1553254437;
+        bh=zf67P746qT+QrG5tpcWPq/6pmJc/BKgTDSDlJlRjoYQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r6erh5zVo8MFC9Wj1SQjOHaiMAdkpGatJMEUT9EGIZpz0fAfdjyGvEArmxschGEsK
-         A1Rocp0/ep2hUSbBAp6xfVGPx6Sy4MeUUCh13brouglgnO6B4sLHzPfLrLF/8ZEura
-         5e39AJQPWUDNvCS5Zd/QNnn5ttHXaXara9FAPWzg=
+        b=ctTgkkJAgZtWVAfEWqxN7F4uuU/Op/X0nw7nFJoro9Jo21WGq+O1ecFThrwzaC+yA
+         xow8K83U5OJdzHTn/1TOpvq0mi03hKOM1SvhbCnusEtfxDIOEHPXxIqLsb8zcJXy9U
+         ylFV16rOb6kQXJG21+DMiwkU08SeC+umVp3ZCgHA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 117/230] Revert "x86/platform/UV: Use efi_runtime_lock to serialise BIOS calls"
-Date:   Fri, 22 Mar 2019 12:14:15 +0100
-Message-Id: <20190322111244.855972199@linuxfoundation.org>
+        stable@vger.kernel.org, Baozeng Ding <sploving1@gmail.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Zubin Mithra <zsm@chromium.org>
+Subject: [PATCH 4.4 120/230] netfilter: x_tables: enforce nul-terminated table name from getsockopt GET_ENTRIES
+Date:   Fri, 22 Mar 2019 12:14:18 +0100
+Message-Id: <20190322111245.086979523@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -64,110 +66,99 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-This reverts commit 7212e37cbdf99f48e4a6c689a42f4bda1ae69001.
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-Hedi Berriche <hedi.berriche@hpe.com> notes:
+commit b301f2538759933cf9ff1f7c4f968da72e3f0757 upstream.
 
-> In 4.4-stable efi_runtime_lock as defined in drivers/firmware/efi/runtime-wrappers.c
-> is a spinlock (given it predates commit dce48e351c0d) and commit
->
->         f331e766c4be x86/platform/UV: Use efi_runtime_lock to serialise BIOS calls
->
-> which 7212e37cbdf9 is a backport of, needs it to be a semaphore.
+Make sure the table names via getsockopt GET_ENTRIES is nul-terminated
+in ebtables and all the x_tables variants and their respective compat
+code. Uncovered by KASAN.
 
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Reported-by: Baozeng Ding <sploving1@gmail.com>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Cc: Zubin Mithra <zsm@chromium.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/x86/include/asm/uv/bios.h          |    8 +-------
- arch/x86/platform/uv/bios_uv.c          |   23 ++---------------------
- drivers/firmware/efi/runtime-wrappers.c |    7 -------
- 3 files changed, 3 insertions(+), 35 deletions(-)
+ net/bridge/netfilter/ebtables.c |    4 ++++
+ net/ipv4/netfilter/arp_tables.c |    2 ++
+ net/ipv4/netfilter/ip_tables.c  |    2 ++
+ net/ipv6/netfilter/ip6_tables.c |    2 ++
+ 4 files changed, 10 insertions(+)
 
---- a/arch/x86/include/asm/uv/bios.h
-+++ b/arch/x86/include/asm/uv/bios.h
-@@ -48,8 +48,7 @@ enum {
- 	BIOS_STATUS_SUCCESS		=  0,
- 	BIOS_STATUS_UNIMPLEMENTED	= -ENOSYS,
- 	BIOS_STATUS_EINVAL		= -EINVAL,
--	BIOS_STATUS_UNAVAIL		= -EBUSY,
--	BIOS_STATUS_ABORT		= -EINTR,
-+	BIOS_STATUS_UNAVAIL		= -EBUSY
- };
+--- a/net/bridge/netfilter/ebtables.c
++++ b/net/bridge/netfilter/ebtables.c
+@@ -1528,6 +1528,8 @@ static int do_ebt_get_ctl(struct sock *s
+ 	if (copy_from_user(&tmp, user, sizeof(tmp)))
+ 		return -EFAULT;
  
- /*
-@@ -112,9 +111,4 @@ extern long system_serial_number;
++	tmp.name[sizeof(tmp.name) - 1] = '\0';
++
+ 	t = find_table_lock(net, tmp.name, &ret, &ebt_mutex);
+ 	if (!t)
+ 		return ret;
+@@ -2368,6 +2370,8 @@ static int compat_do_ebt_get_ctl(struct
+ 	if (copy_from_user(&tmp, user, sizeof(tmp)))
+ 		return -EFAULT;
  
- extern struct kobject *sgi_uv_kobj;	/* /sys/firmware/sgi_uv */
++	tmp.name[sizeof(tmp.name) - 1] = '\0';
++
+ 	t = find_table_lock(net, tmp.name, &ret, &ebt_mutex);
+ 	if (!t)
+ 		return ret;
+--- a/net/ipv4/netfilter/arp_tables.c
++++ b/net/ipv4/netfilter/arp_tables.c
+@@ -983,6 +983,7 @@ static int get_entries(struct net *net,
+ 			 sizeof(struct arpt_get_entries) + get.size);
+ 		return -EINVAL;
+ 	}
++	get.name[sizeof(get.name) - 1] = '\0';
  
--/*
-- * EFI runtime lock; cf. firmware/efi/runtime-wrappers.c for details
-- */
--extern struct semaphore __efi_uv_runtime_lock;
--
- #endif /* _ASM_X86_UV_BIOS_H */
---- a/arch/x86/platform/uv/bios_uv.c
-+++ b/arch/x86/platform/uv/bios_uv.c
-@@ -28,8 +28,7 @@
+ 	t = xt_find_table_lock(net, NFPROTO_ARP, get.name);
+ 	if (!IS_ERR_OR_NULL(t)) {
+@@ -1557,6 +1558,7 @@ static int compat_get_entries(struct net
+ 			 *len, sizeof(get) + get.size);
+ 		return -EINVAL;
+ 	}
++	get.name[sizeof(get.name) - 1] = '\0';
  
- static struct uv_systab uv_systab;
+ 	xt_compat_lock(NFPROTO_ARP);
+ 	t = xt_find_table_lock(net, NFPROTO_ARP, get.name);
+--- a/net/ipv4/netfilter/ip_tables.c
++++ b/net/ipv4/netfilter/ip_tables.c
+@@ -1171,6 +1171,7 @@ get_entries(struct net *net, struct ipt_
+ 			 *len, sizeof(get) + get.size);
+ 		return -EINVAL;
+ 	}
++	get.name[sizeof(get.name) - 1] = '\0';
  
--static s64 __uv_bios_call(enum uv_bios_cmd which, u64 a1, u64 a2, u64 a3,
--			u64 a4, u64 a5)
-+s64 uv_bios_call(enum uv_bios_cmd which, u64 a1, u64 a2, u64 a3, u64 a4, u64 a5)
- {
- 	struct uv_systab *tab = &uv_systab;
- 	s64 ret;
-@@ -44,19 +43,6 @@ static s64 __uv_bios_call(enum uv_bios_c
- 			a1, a2, a3, a4, a5);
- 	return ret;
- }
--
--s64 uv_bios_call(enum uv_bios_cmd which, u64 a1, u64 a2, u64 a3, u64 a4, u64 a5)
--{
--	s64 ret;
--
--	if (down_interruptible(&__efi_uv_runtime_lock))
--		return BIOS_STATUS_ABORT;
--
--	ret = __uv_bios_call(which, a1, a2, a3, a4, a5);
--	up(&__efi_uv_runtime_lock);
--
--	return ret;
--}
- EXPORT_SYMBOL_GPL(uv_bios_call);
+ 	t = xt_find_table_lock(net, AF_INET, get.name);
+ 	if (!IS_ERR_OR_NULL(t)) {
+@@ -1799,6 +1800,7 @@ compat_get_entries(struct net *net, stru
+ 			 *len, sizeof(get) + get.size);
+ 		return -EINVAL;
+ 	}
++	get.name[sizeof(get.name) - 1] = '\0';
  
- s64 uv_bios_call_irqsave(enum uv_bios_cmd which, u64 a1, u64 a2, u64 a3,
-@@ -65,15 +51,10 @@ s64 uv_bios_call_irqsave(enum uv_bios_cm
- 	unsigned long bios_flags;
- 	s64 ret;
+ 	xt_compat_lock(AF_INET);
+ 	t = xt_find_table_lock(net, AF_INET, get.name);
+--- a/net/ipv6/netfilter/ip6_tables.c
++++ b/net/ipv6/netfilter/ip6_tables.c
+@@ -1182,6 +1182,7 @@ get_entries(struct net *net, struct ip6t
+ 			 *len, sizeof(get) + get.size);
+ 		return -EINVAL;
+ 	}
++	get.name[sizeof(get.name) - 1] = '\0';
  
--	if (down_interruptible(&__efi_uv_runtime_lock))
--		return BIOS_STATUS_ABORT;
--
- 	local_irq_save(bios_flags);
--	ret = __uv_bios_call(which, a1, a2, a3, a4, a5);
-+	ret = uv_bios_call(which, a1, a2, a3, a4, a5);
- 	local_irq_restore(bios_flags);
+ 	t = xt_find_table_lock(net, AF_INET6, get.name);
+ 	if (!IS_ERR_OR_NULL(t)) {
+@@ -1800,6 +1801,7 @@ compat_get_entries(struct net *net, stru
+ 			 *len, sizeof(get) + get.size);
+ 		return -EINVAL;
+ 	}
++	get.name[sizeof(get.name) - 1] = '\0';
  
--	up(&__efi_uv_runtime_lock);
--
- 	return ret;
- }
- 
---- a/drivers/firmware/efi/runtime-wrappers.c
-+++ b/drivers/firmware/efi/runtime-wrappers.c
-@@ -88,13 +88,6 @@ static DEFINE_SPINLOCK(efi_runtime_lock)
-  */
- 
- /*
-- * Expose the EFI runtime lock to the UV platform
-- */
--#ifdef CONFIG_X86_UV
--extern struct semaphore __efi_uv_runtime_lock __alias(efi_runtime_lock);
--#endif
--
--/*
-  * As per commit ef68c8f87ed1 ("x86: Serialize EFI time accesses on rtc_lock"),
-  * the EFI specification requires that callers of the time related runtime
-  * functions serialize with other CMOS accesses in the kernel, as the EFI time
+ 	xt_compat_lock(AF_INET6);
+ 	t = xt_find_table_lock(net, AF_INET6, get.name);
 
 
