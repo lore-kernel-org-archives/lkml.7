@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AA24C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:12:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86777C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:13:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC51021873
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:12:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55F5621873
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:13:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553260377;
-	bh=N/DTIwdUyzc7Zx5VtzkBh3JM9wJgvSG//7iKYHHeT/c=;
+	s=default; t=1553260381;
+	bh=0ZocAiMeWoWxiXXRhIiHdSFDdCD4v3b/4VUGQj+lTxc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WkmSXI4YkSV3FXGruw1oiVdvl1TttYD17gMh29cnYu6S0y6WkYUZK1uSa2yYrEwag
-	 varjn82l+IXOXyaeUQUIxLYgn0TVoNPQLwGFRefsXRxTOH23RMP8JclQ1gvQrUKVfL
-	 F3e7kJ2DBodHZTBDLM2sbphwrX4WChi7hKOhr0QM=
+	b=INkTByI+ENG/US4MssX+X5uyaY2O0+rtniknbSMonwmREhrLRuBHQGRAjjVuSgIhn
+	 BZ8jlFHWfjaxYMWKEYPHOri6y8h7j2/NB/jCWzFdxna9hzemWmR8QNPPF7uvf0kOzJ
+	 AeoIjcOF8/bQGDnVoF+Vj4FccCN5hr6uyvpI1Uh8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729542AbfCVNM4 (ORCPT
+        id S1730310AbfCVNMx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 09:12:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59070 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 09:12:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59304 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730002AbfCVLbC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:31:02 -0400
+        id S1729334AbfCVLbL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:31:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 201D120449;
-        Fri, 22 Mar 2019 11:31:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E39221917;
+        Fri, 22 Mar 2019 11:31:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254261;
-        bh=N/DTIwdUyzc7Zx5VtzkBh3JM9wJgvSG//7iKYHHeT/c=;
+        s=default; t=1553254270;
+        bh=0ZocAiMeWoWxiXXRhIiHdSFDdCD4v3b/4VUGQj+lTxc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q6z3uiiCZ2jCGSv/tsgVyzRpMhoX6Oin228GULdTMe9ZmZ7ENKW/AhvTS2nwcP+Yp
-         W5UYh6zFOC4bJe+xcsp5ahp8Xoq+xhAEnilADFyrD1ADcwYpz4+l2G8vzyEH7WmGpc
-         Wopuu84seP64Hcp90U2arKUXgBuDDFhQYSN1m+oo=
+        b=O2af2BoAeGXkgNkvDbQid+Fp18GQ9P0U2tTwYu8yMXTZdXsdxdqkx0KKqCKsYmMhp
+         lXRx5gj2b61t8H6X5+pVuECWTYDY6EXCiMvVv+0g/j1LsNxwjrFNuqs25OzkJyUe7s
+         NLS6Tcy3IlyQ275mtpjpjSL72BM3dNBIATyrK4ZA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>,
+        stable@vger.kernel.org, Michael Chan <michael.chan@broadcom.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 063/230] net-sysfs: Fix mem leak in netdev_register_kobject
-Date:   Fri, 22 Mar 2019 12:13:21 +0100
-Message-Id: <20190322111241.116089975@linuxfoundation.org>
+Subject: [PATCH 4.4 066/230] bnxt_en: Drop oversize TX packets to prevent errors.
+Date:   Fri, 22 Mar 2019 12:13:24 +0100
+Message-Id: <20190322111241.314714819@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -66,55 +65,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Michael Chan <michael.chan@broadcom.com>
 
-[ Upstream commit 895a5e96dbd6386c8e78e5b78e067dcc67b7f0ab ]
+[ Upstream commit 2b3c6885386020b1b9d92d45e8349637e27d1f66 ]
 
-syzkaller report this:
-BUG: memory leak
-unreferenced object 0xffff88837a71a500 (size 256):
-  comm "syz-executor.2", pid 9770, jiffies 4297825125 (age 17.843s)
-  hex dump (first 32 bytes):
-    00 00 00 00 ad 4e ad de ff ff ff ff 00 00 00 00  .....N..........
-    ff ff ff ff ff ff ff ff 20 c0 ef 86 ff ff ff ff  ........ .......
-  backtrace:
-    [<00000000db12624b>] netdev_register_kobject+0x124/0x2e0 net/core/net-sysfs.c:1751
-    [<00000000dc49a994>] register_netdevice+0xcc1/0x1270 net/core/dev.c:8516
-    [<00000000e5f3fea0>] tun_set_iff drivers/net/tun.c:2649 [inline]
-    [<00000000e5f3fea0>] __tun_chr_ioctl+0x2218/0x3d20 drivers/net/tun.c:2883
-    [<000000001b8ac127>] vfs_ioctl fs/ioctl.c:46 [inline]
-    [<000000001b8ac127>] do_vfs_ioctl+0x1a5/0x10e0 fs/ioctl.c:690
-    [<0000000079b269f8>] ksys_ioctl+0x89/0xa0 fs/ioctl.c:705
-    [<00000000de649beb>] __do_sys_ioctl fs/ioctl.c:712 [inline]
-    [<00000000de649beb>] __se_sys_ioctl fs/ioctl.c:710 [inline]
-    [<00000000de649beb>] __x64_sys_ioctl+0x74/0xb0 fs/ioctl.c:710
-    [<000000007ebded1e>] do_syscall_64+0xc8/0x580 arch/x86/entry/common.c:290
-    [<00000000db315d36>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
-    [<00000000115be9bb>] 0xffffffffffffffff
+There have been reports of oversize UDP packets being sent to the
+driver to be transmitted, causing error conditions.  The issue is
+likely caused by the dst of the SKB switching between 'lo' with
+64K MTU and the hardware device with a smaller MTU.  Patches are
+being proposed by Mahesh Bandewar <maheshb@google.com> to fix the
+issue.
 
-It should call kset_unregister to free 'dev->queues_kset'
-in error path of register_queue_kobjects, otherwise will cause a mem leak.
+In the meantime, add a quick length check in the driver to prevent
+the error.  The driver uses the TX packet size as index to look up an
+array to setup the TX BD.  The array is large enough to support all MTU
+sizes supported by the driver.  The oversize TX packet causes the
+driver to index beyond the array and put garbage values into the
+TX BD.  Add a simple check to prevent this.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 1d24eb4815d1 ("xps: Transmit Packet Steering")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/core/net-sysfs.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/net/core/net-sysfs.c
-+++ b/net/core/net-sysfs.c
-@@ -1361,6 +1361,9 @@ static int register_queue_kobjects(struc
- error:
- 	netdev_queue_update_kobjects(dev, txq, 0);
- 	net_rx_queue_update_kobjects(dev, rxq, 0);
-+#ifdef CONFIG_SYSFS
-+	kset_unregister(dev->queues_kset);
-+#endif
- 	return error;
- }
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -330,6 +330,12 @@ normal_tx:
+ 	}
+ 
+ 	length >>= 9;
++	if (unlikely(length >= ARRAY_SIZE(bnxt_lhint_arr))) {
++		dev_warn_ratelimited(&pdev->dev, "Dropped oversize %d bytes TX packet.\n",
++				     skb->len);
++		i = 0;
++		goto tx_dma_error;
++	}
+ 	flags |= bnxt_lhint_arr[length];
+ 	txbd->tx_bd_len_flags_type = cpu_to_le32(flags);
  
 
 
