@@ -2,93 +2,108 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE562C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 06:12:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2BFCC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 06:13:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0ECC218E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 06:12:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A516B218FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 06:13:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727743AbfCVGMN convert rfc822-to-8bit (ORCPT
+        id S1727461AbfCVGNY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 02:12:13 -0400
-Received: from mga17.intel.com ([192.55.52.151]:45966 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727565AbfCVGMN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 02:12:13 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Mar 2019 23:12:12 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,255,1549958400"; 
-   d="scan'208";a="144207660"
-Received: from orsmsx103.amr.corp.intel.com ([10.22.225.130])
-  by orsmga002.jf.intel.com with ESMTP; 21 Mar 2019 23:12:12 -0700
-Received: from orsmsx113.amr.corp.intel.com (10.22.240.9) by
- ORSMSX103.amr.corp.intel.com (10.22.225.130) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Thu, 21 Mar 2019 23:12:12 -0700
-Received: from orsmsx102.amr.corp.intel.com ([169.254.3.192]) by
- ORSMSX113.amr.corp.intel.com ([169.254.9.249]) with mapi id 14.03.0415.000;
- Thu, 21 Mar 2019 23:12:11 -0700
-From:   "Yang, Fei" <fei.yang@intel.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-CC:     "balbi@kernel.org" <balbi@kernel.org>,
-        "andrzej.p@collabora.com" <andrzej.p@collabora.com>,
-        "plr.vincent@gmail.com" <plr.vincent@gmail.com>,
-        "Shen, JingX" <jingx.shen@intel.com>,
-        "john.stultz@linaro.org" <john.stultz@linaro.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v3] usb: gadget: f_fs: don't free buffer prematurely
-Thread-Topic: [PATCH v3] usb: gadget: f_fs: don't free buffer prematurely
-Thread-Index: AQHU4C1+gBTRGRZXck6FOc9ySCJUE6YXl0MA//+UF+A=
-Date:   Fri, 22 Mar 2019 06:12:11 +0000
-Message-ID: <02E7334B1630744CBDC55DA8586225837F7FC660@ORSMSX102.amr.corp.intel.com>
-References: <1553203874-130203-1-git-send-email-fei.yang@intel.com>
- <20190322053602.GA31708@kroah.com>
-In-Reply-To: <20190322053602.GA31708@kroah.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiYTEwZGE3MDctNWM1ZC00OTJhLTg5MWQtZTdhZWZmM2Y5MjhjIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoicGlic210U1A5Qnl6b3hEYlNFMHdabXJrdFhITVErejZDTyt5dUxINjFcL3FEd1dWOHhVVWFqMGk0VVhvWXJ2disifQ==
-dlp-product: dlpe-windows
-dlp-version: 11.0.400.15
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.138]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Fri, 22 Mar 2019 02:13:24 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60802 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726029AbfCVGNX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 02:13:23 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id B7FFBAE5A;
+        Fri, 22 Mar 2019 06:13:22 +0000 (UTC)
+From:   Michal Kubecek <mkubecek@suse.cz>
+To:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: regression (bisected): "modprobe parport_pc" hangs in current mainline
+Date:   Fri, 22 Mar 2019 07:13:23 +0100
+Message-ID: <1572645.oXzt2vILsi@alaris>
+Organization: SuSE
+In-Reply-To: <CADVatmNVM3a=L6McdCsr5xzCwZnW6N4r9Cf55gjQZjsGGosBDg@mail.gmail.com>
+References: <20190313064557.GA14531@unicorn.suse.cz> <20190320211813.GE29968@unicorn.suse.cz> <CADVatmNVM3a=L6McdCsr5xzCwZnW6N4r9Cf55gjQZjsGGosBDg@mail.gmail.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> The following kernel panic happens due to the io_data buffer gets 
->> deallocated before the async io is completed. Add a check for the case 
->> where io_data buffer should be deallocated by ffs_user_copy_worker.
->> 
->> [   41.663334] BUG: unable to handle kernel NULL pointer dereference at 0000000000000048
->> 
->> Fixes: 772a7a724f6 ("usb: gadget: f_fs: Allow scatter-gather buffers")
->> Signed-off-by: Fei Yang <fei.yang@intel.com>
->> Reviewed-by: Manu Gautam <mgautam@codeaurora.org>
->> Tested-by: John Stultz <john.stultz@linaro.org>
->> ---
->> v2: add tag: "Fixes: 772a7a724f6 ......", Reviewed-by and Tested-by.
->> v3: check data for NULL instead of "ret == -EIOCBQUEUED", which would be safer
->>     and keep the original logic intact.
+On Thursday, 21 March 2019 23:43 Sudip Mukherjee wrote:
+> HI Michal,
 > 
-> If it "fixes" a problem in 5.0, we should add a:
-> 	Cc: stable <stable@vger.kernel.org>
-> to it as well.
-Sent [PATCH v4] with Cc: stable
+> On Wed, Mar 20, 2019 at 9:18 PM Michal Kubecek <mkubecek@suse.cz> wrote:
+> > On Wed, Mar 20, 2019 at 09:30:59AM +0000, Sudip Mukherjee wrote:
+> > > Sorry, I didn't get the chance to look at it yet and have kept it
+> > > pending for this weekend. But just had a quick look and I was
+> > > wondering if the machine on which you are trying the modprobe has
+> > > an
+> > > actual parallel port or the machine is not having any parallel
+> > > port.
+> > > And also will you be able to send me a dmesg please.
+> > 
+> > Attaching dmesg output from a virtual machine which doesn't seem to
+> > have a (virtual) parallel port. This part:
+> > 
+> > [   63.962283] parport_pc 00:05: reported by Plug and Play ACPI
+> > [   63.962469] parport0: PC-style at 0x378, irq 7 [PCSPP,TRISTATE]
+> > [   64.061723] ppdev: user-space parallel port driver
+> > 
+> > was after I manually killed "/sbin/modprobe -q -- parport_lowlevel"
+> > which was started during boot.
+> 
+> Thanks for testing. I am unable to reproduce the problem in VM or in
+> machine, with or without parallel port. But from your logs it looks
+> like you have an alias set for "parport_lowlevel". When parport module
+> is being loaded if it does not find any port in its list, it will try
+> to load "parport_lowlevel" and that is where you are getting the
+> deadlock. "parport_lowlevel" is not a real module, but instead should
+> be an alias pointing to some real module. I tried by setting an alias
+> of parport_lowlevel" as parport_pc but still could not get the
+> problem.
+> Can you please check in your VM or machine what do you have the alias
+> as? It should be either in "/etc/modprobe.conf" or some conf file in
+> "/etc/modprobe.d" folder.
 
-> thanks,
-> 
-> greg k-h
+You are right, this is in /etc/modprobe.d/00-system which is part of
+suse-module-tools package:
+
+-----------------------------------------------------------------------
+alias parport_lowlevel    parport_pc
+# disable DMA for parallel port (bnc#180390)
+# Please note, the dma= and irq= options require that the io= option also be
+# specified.
+options parport_pc dma=none
+# options parport_pc io=0x378 irq=none
+# If you have multiple parallel ports, specify them this way:
+# options parport_pc io=0x378,0x278  irq=none,none
+-----------------------------------------------------------------------
+
+"bnc#180390" means https://bugzilla.suse.com/show_bug.cgi?id=180390
+
+There is a git repository for suse-module-tools package on github but
+unfortunately it starts in 2017 and as comment 98 in the bug above
+shows that the alias line was already in place in 2008, the reason
+won't be found in OBS history either.
+
+Anyway, when I comment out the alias line, "modprobe parport_pc"
+succeeds immediately and loads parport, parport_pc and ppdev.
+
+> And also, will you be able to test a debug patch on your VM?
+
+Yes, definitely.
+
+Michal
+
+
