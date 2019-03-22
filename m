@@ -7,51 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73AADC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:33:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADCECC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:33:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 389CB21925
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:33:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EA8121925
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:33:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254401;
-	bh=zR8UhD4zllPAfhgMrB7JOR4kEWth0nY1OHjiAn9T1ps=;
+	s=default; t=1553254405;
+	bh=mbGYhULpNWRoW185bR5yvtxQN28xqT21cZsWVvuAnQA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ALhiiwkF9ftm3sAIjTu6QwpITUxrrKRMNZ47qmmWjTUPyDv3W3k6AC8wo7CwvoInV
-	 O/B8f2+dXziY2rSL8JSUy48rFgtO2nvjiHaVmkK+//QA5qIm2tR4lKdpzrwGYW0+9A
-	 bjkARs6j9DX5GnC4h7Oojn9h3/q6i1KR9uOUFDgg=
+	b=zWVKHaBL47OX17G+5FU/AYDpPpetslo8ZTdtebV1VnN+FMdmnw9S769eHDYwqPmY6
+	 jFivtNg6ppw8YfKseYRvDF/dTfb+DtdjrGbfgtSp1GcuOR/6yX++9oS4c6sVd1lx7A
+	 ZFjAXT7weGH0V13FXLyo/XT3RB4VNfVOTG/OZLmo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730256AbfCVLdU (ORCPT
+        id S1729853AbfCVLdY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:33:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33656 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:33:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33772 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730244AbfCVLdQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:33:16 -0400
+        id S1730244AbfCVLdV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:33:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A8DA20449;
-        Fri, 22 Mar 2019 11:33:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9255B218B0;
+        Fri, 22 Mar 2019 11:33:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254394;
-        bh=zR8UhD4zllPAfhgMrB7JOR4kEWth0nY1OHjiAn9T1ps=;
+        s=default; t=1553254401;
+        bh=mbGYhULpNWRoW185bR5yvtxQN28xqT21cZsWVvuAnQA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Kc41BHXqK0pDmV/fA3TPvIwPlTu1YPdEioYBiASGCwR2rYc8crnwy4IuxtH3e/6nB
-         IQyUaDpvPDIPYMwGIlx8tN6xW6yu8tW0faET9ngfr0iozwx/yP9TUn3uxXY8U8urGO
-         YRpO0f+u/EDTvyQg2TtLaofyUzQ3R6NFaEzBAEHc=
+        b=sucxP9BpJcKeBZxh0OqwswR2WzbWgsLlLvpLDAJysCU9NQInjBbSFbrPlB109tODQ
+         3+naohwwKEFji9ght8u7GPvy+nqu23Ga4R01teBKutcYDGoSF07DYYKcdfHtfl7du/
+         v6UnPBPCIkV/yQ/EQaPybDEQKf/eNWfgQINU5IVU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        juri.lelli@arm.com, bigeasy@linutronix.de, xlpang@redhat.com,
-        rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
-        jdesfossez@efficios.com, dvhart@infradead.org, bristot@redhat.com,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Zubin Mithra <zsm@chromium.org>
-Subject: [PATCH 4.4 115/230] futex,rt_mutex: Restructure rt_mutex_finish_proxy_lock()
-Date:   Fri, 22 Mar 2019 12:14:13 +0100
-Message-Id: <20190322111244.718155150@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 125/230] l2tp: fix infoleak in l2tp_ip6_recvmsg()
+Date:   Fri, 22 Mar 2019 12:14:23 +0100
+Message-Id: <20190322111245.432918825@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -70,163 +66,83 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Eric Dumazet <edumazet@google.com>
 
-commit 38d589f2fd08f1296aea3ce62bebd185125c6d81 upstream.
+[ Upstream commit 163d1c3d6f17556ed3c340d3789ea93be95d6c28 ]
 
-With the ultimate goal of keeping rt_mutex wait_list and futex_q waiters
-consistent it's necessary to split 'rt_mutex_futex_lock()' into finer
-parts, such that only the actual blocking can be done without hb->lock
-held.
+Back in 2013 Hannes took care of most of such leaks in commit
+bceaa90240b6 ("inet: prevent leakage of uninitialized memory to user in recv syscalls")
 
-Split split_mutex_finish_proxy_lock() into two parts, one that does the
-blocking and one that does remove_waiter() when the lock acquire failed.
+But the bug in l2tp_ip6_recvmsg() has not been fixed.
 
-When the rtmutex was acquired successfully the waiter can be removed in the
-acquisiton path safely, since there is no concurrency on the lock owner.
+syzbot report :
 
-This means that, except for futex_lock_pi(), all wait_list modifications
-are done with both hb->lock and wait_lock held.
+BUG: KMSAN: kernel-infoleak in _copy_to_user+0x16b/0x1f0 lib/usercopy.c:32
+CPU: 1 PID: 10996 Comm: syz-executor362 Not tainted 5.0.0+ #11
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x173/0x1d0 lib/dump_stack.c:113
+ kmsan_report+0x12e/0x2a0 mm/kmsan/kmsan.c:600
+ kmsan_internal_check_memory+0x9f4/0xb10 mm/kmsan/kmsan.c:694
+ kmsan_copy_to_user+0xab/0xc0 mm/kmsan/kmsan_hooks.c:601
+ _copy_to_user+0x16b/0x1f0 lib/usercopy.c:32
+ copy_to_user include/linux/uaccess.h:174 [inline]
+ move_addr_to_user+0x311/0x570 net/socket.c:227
+ ___sys_recvmsg+0xb65/0x1310 net/socket.c:2283
+ do_recvmmsg+0x646/0x10c0 net/socket.c:2390
+ __sys_recvmmsg net/socket.c:2469 [inline]
+ __do_sys_recvmmsg net/socket.c:2492 [inline]
+ __se_sys_recvmmsg+0x1d1/0x350 net/socket.c:2485
+ __x64_sys_recvmmsg+0x62/0x80 net/socket.c:2485
+ do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:291
+ entry_SYSCALL_64_after_hwframe+0x63/0xe7
+RIP: 0033:0x445819
+Code: e8 6c b6 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 2b 12 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f64453eddb8 EFLAGS: 00000246 ORIG_RAX: 000000000000012b
+RAX: ffffffffffffffda RBX: 00000000006dac28 RCX: 0000000000445819
+RDX: 0000000000000005 RSI: 0000000020002f80 RDI: 0000000000000003
+RBP: 00000000006dac20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dac2c
+R13: 00007ffeba8f87af R14: 00007f64453ee9c0 R15: 20c49ba5e353f7cf
 
-[bigeasy@linutronix.de: fix for futex_requeue_pi_signal_restart]
+Local variable description: ----addr@___sys_recvmsg
+Variable was created at:
+ ___sys_recvmsg+0xf6/0x1310 net/socket.c:2244
+ do_recvmmsg+0x646/0x10c0 net/socket.c:2390
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: juri.lelli@arm.com
-Cc: bigeasy@linutronix.de
-Cc: xlpang@redhat.com
-Cc: rostedt@goodmis.org
-Cc: mathieu.desnoyers@efficios.com
-Cc: jdesfossez@efficios.com
-Cc: dvhart@infradead.org
-Cc: bristot@redhat.com
-Link: http://lkml.kernel.org/r/20170322104152.001659630@infradead.org
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Zubin Mithra <zsm@chromium.org>
+Bytes 0-31 of 32 are uninitialized
+Memory access of size 32 starts at ffff8880ae62fbb0
+Data copied to user address 0000000020000000
+
+Fixes: a32e0eec7042 ("l2tp: introduce L2TPv3 IP encapsulation support for IPv6")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- kernel/futex.c                  |    7 +++--
- kernel/locking/rtmutex.c        |   52 ++++++++++++++++++++++++++++++++++------
- kernel/locking/rtmutex_common.h |    8 +++---
- 3 files changed, 55 insertions(+), 12 deletions(-)
+ net/l2tp/l2tp_ip6.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
---- a/kernel/futex.c
-+++ b/kernel/futex.c
-@@ -2923,10 +2923,13 @@ static int futex_wait_requeue_pi(u32 __u
- 		 */
- 		WARN_ON(!q.pi_state);
- 		pi_mutex = &q.pi_state->pi_mutex;
--		ret = rt_mutex_finish_proxy_lock(pi_mutex, to, &rt_waiter);
--		debug_rt_mutex_free_waiter(&rt_waiter);
-+		ret = rt_mutex_wait_proxy_lock(pi_mutex, to, &rt_waiter);
+--- a/net/l2tp/l2tp_ip6.c
++++ b/net/l2tp/l2tp_ip6.c
+@@ -666,9 +666,6 @@ static int l2tp_ip6_recvmsg(struct sock
+ 	if (flags & MSG_OOB)
+ 		goto out;
  
- 		spin_lock(q.lock_ptr);
-+		if (ret && !rt_mutex_cleanup_proxy_lock(pi_mutex, &rt_waiter))
-+			ret = 0;
-+
-+		debug_rt_mutex_free_waiter(&rt_waiter);
- 		/*
- 		 * Fixup the pi_state owner and possibly acquire the lock if we
- 		 * haven't already.
---- a/kernel/locking/rtmutex.c
-+++ b/kernel/locking/rtmutex.c
-@@ -1712,21 +1712,23 @@ struct task_struct *rt_mutex_next_owner(
- }
- 
- /**
-- * rt_mutex_finish_proxy_lock() - Complete lock acquisition
-+ * rt_mutex_wait_proxy_lock() - Wait for lock acquisition
-  * @lock:		the rt_mutex we were woken on
-  * @to:			the timeout, null if none. hrtimer should already have
-  *			been started.
-  * @waiter:		the pre-initialized rt_mutex_waiter
-  *
-- * Complete the lock acquisition started our behalf by another thread.
-+ * Wait for the the lock acquisition started on our behalf by
-+ * rt_mutex_start_proxy_lock(). Upon failure, the caller must call
-+ * rt_mutex_cleanup_proxy_lock().
-  *
-  * Returns:
-  *  0 - success
-  * <0 - error, one of -EINTR, -ETIMEDOUT
-  *
-- * Special API call for PI-futex requeue support
-+ * Special API call for PI-futex support
-  */
--int rt_mutex_finish_proxy_lock(struct rt_mutex *lock,
-+int rt_mutex_wait_proxy_lock(struct rt_mutex *lock,
- 			       struct hrtimer_sleeper *to,
- 			       struct rt_mutex_waiter *waiter)
- {
-@@ -1739,9 +1741,6 @@ int rt_mutex_finish_proxy_lock(struct rt
- 	/* sleep on the mutex */
- 	ret = __rt_mutex_slowlock(lock, TASK_INTERRUPTIBLE, to, waiter);
- 
--	if (unlikely(ret))
--		remove_waiter(lock, waiter);
+-	if (addr_len)
+-		*addr_len = sizeof(*lsa);
 -
- 	/*
- 	 * try_to_take_rt_mutex() sets the waiter bit unconditionally. We might
- 	 * have to fix that up.
-@@ -1752,3 +1751,42 @@ int rt_mutex_finish_proxy_lock(struct rt
+ 	if (flags & MSG_ERRQUEUE)
+ 		return ipv6_recv_error(sk, msg, len, addr_len);
  
- 	return ret;
- }
-+
-+/**
-+ * rt_mutex_cleanup_proxy_lock() - Cleanup failed lock acquisition
-+ * @lock:		the rt_mutex we were woken on
-+ * @waiter:		the pre-initialized rt_mutex_waiter
-+ *
-+ * Attempt to clean up after a failed rt_mutex_wait_proxy_lock().
-+ *
-+ * Unless we acquired the lock; we're still enqueued on the wait-list and can
-+ * in fact still be granted ownership until we're removed. Therefore we can
-+ * find we are in fact the owner and must disregard the
-+ * rt_mutex_wait_proxy_lock() failure.
-+ *
-+ * Returns:
-+ *  true  - did the cleanup, we done.
-+ *  false - we acquired the lock after rt_mutex_wait_proxy_lock() returned,
-+ *          caller should disregards its return value.
-+ *
-+ * Special API call for PI-futex support
-+ */
-+bool rt_mutex_cleanup_proxy_lock(struct rt_mutex *lock,
-+				 struct rt_mutex_waiter *waiter)
-+{
-+	bool cleanup = false;
-+
-+	raw_spin_lock_irq(&lock->wait_lock);
-+	/*
-+	 * Unless we're the owner; we're still enqueued on the wait_list.
-+	 * So check if we became owner, if not, take us off the wait_list.
-+	 */
-+	if (rt_mutex_owner(lock) != current) {
-+		remove_waiter(lock, waiter);
-+		fixup_rt_mutex_waiters(lock);
-+		cleanup = true;
-+	}
-+	raw_spin_unlock_irq(&lock->wait_lock);
-+
-+	return cleanup;
-+}
---- a/kernel/locking/rtmutex_common.h
-+++ b/kernel/locking/rtmutex_common.h
-@@ -106,9 +106,11 @@ extern void rt_mutex_proxy_unlock(struct
- extern int rt_mutex_start_proxy_lock(struct rt_mutex *lock,
- 				     struct rt_mutex_waiter *waiter,
- 				     struct task_struct *task);
--extern int rt_mutex_finish_proxy_lock(struct rt_mutex *lock,
--				      struct hrtimer_sleeper *to,
--				      struct rt_mutex_waiter *waiter);
-+extern int rt_mutex_wait_proxy_lock(struct rt_mutex *lock,
-+			       struct hrtimer_sleeper *to,
-+			       struct rt_mutex_waiter *waiter);
-+extern bool rt_mutex_cleanup_proxy_lock(struct rt_mutex *lock,
-+				 struct rt_mutex_waiter *waiter);
- extern int rt_mutex_timed_futex_lock(struct rt_mutex *l, struct hrtimer_sleeper *to);
- extern bool rt_mutex_futex_unlock(struct rt_mutex *lock,
- 				  struct wake_q_head *wqh);
+@@ -698,6 +695,7 @@ static int l2tp_ip6_recvmsg(struct sock
+ 		lsa->l2tp_conn_id = 0;
+ 		if (ipv6_addr_type(&lsa->l2tp_addr) & IPV6_ADDR_LINKLOCAL)
+ 			lsa->l2tp_scope_id = inet6_iif(skb);
++		*addr_len = sizeof(*lsa);
+ 	}
+ 
+ 	if (np->rxopt.all)
 
 
