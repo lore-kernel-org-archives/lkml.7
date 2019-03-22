@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE8FBC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:57:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67A31C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:57:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E90C2192B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:57:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B0842192C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:57:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255833;
-	bh=OgNgUCgHLmYsUBx5/s1Zp8TcaynYkC7sWFJf2rDZEzM=;
+	s=default; t=1553255838;
+	bh=60nWjVLSzNnolshAjXM77sGQ0HZvmZvTQ5rc6wZRJ8w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hw4LlvpWFRqNxuQHp+uPufwp+f+nyMKtpxtXi1/G+zRfcqzAxaFx9LIQftaqXqozG
-	 kVAe0dstxUlW21OZpP4/aIJ4tI7tJJLNQhRgQp9wT8lD5IUQs4QMqjkLcSf2vZUHpY
-	 sBp3QjreQ18dR4c27yn92x1O7CWivJP6q9SqMqqE=
+	b=cD+/iC4x2/W9lTwzKhUBG4iuklrGzN/8EidapqemulO5k2ekk4+p2+lJff3Lh4iR4
+	 fhYhL05UGMEC8QoMGZnPE4CPHgc0D7a7pI7ICnCXQnj2NIwCXS4XEbxjBVy9dfPI1c
+	 0BCSnU/FFfToOQbybAZdga+vCKR2qrQXXLoQTElk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387626AbfCVL5L (ORCPT
+        id S2387630AbfCVL5R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:57:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33550 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:57:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733162AbfCVL5F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:57:05 -0400
+        id S2387624AbfCVL5L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:57:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 08B3320850;
-        Fri, 22 Mar 2019 11:57:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC3AA2082C;
+        Fri, 22 Mar 2019 11:57:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255824;
-        bh=OgNgUCgHLmYsUBx5/s1Zp8TcaynYkC7sWFJf2rDZEzM=;
+        s=default; t=1553255831;
+        bh=60nWjVLSzNnolshAjXM77sGQ0HZvmZvTQ5rc6wZRJ8w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h3zATvDQKOSso6+StL99lQ4E4Yj4qgTm9Fy5pWw5ZZhxLFio6V+6cRAJcKfuSL351
-         nAnPt4N9h5hqO0DRCbNg7XHy7YDXsaAtEwhCBFE6sAnxSQnSX0PUVt2aqv5gN56w52
-         rq21bHiB9/9K6tSFiZ34CdewrVUcIX8wxPkP1ZZs=
+        b=y1ZH4SDStgpQSP7n0RgGApRgMhbBVrIJeGQP7uF5JZFuVbzhbScwttbhkQPPE99mM
+         nHXof4bVvEn4i3oVNYSLKylsBjhaK5CaxSd+yzZti1kxEyfiTzSQvjqt6Z7hGI5G9W
+         8DQ5x1MSeUUPMfIuqsON4F53JS7PhVcvD9r/v1k0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexander Usyskin <alexander.usyskin@intel.com>,
-        Tomas Winkler <tomas.winkler@intel.com>
-Subject: [PATCH 4.19 009/280] mei: bus: move hw module get/put to probe/release
-Date:   Fri, 22 Mar 2019 12:12:42 +0100
-Message-Id: <20190322111306.838066085@linuxfoundation.org>
+        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Matthias Maennich <maennich@google.com>
+Subject: [PATCH 4.19 001/280] media: videobuf2-v4l2: drop WARN_ON in vb2_warn_zero_bytesused()
+Date:   Fri, 22 Mar 2019 12:12:34 +0100
+Message-Id: <20190322111306.431235384@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -66,82 +67,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Alexander Usyskin <alexander.usyskin@intel.com>
+From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 
-commit b5958faa34e2f99f3475ad89c52d98dfea079d33 upstream.
+commit 5e99456c20f712dcc13d9f6ca4278937d5367355 upstream.
 
-Fix unbalanced module reference counting during internal reset, which
-prevents the drivers unloading.
-Tracking mei_me/txe modules on mei client bus via
-mei_cldev_enable/disable is error prone due to possible internal
-reset flow, where clients are disconnected underneath.
-Moving reference counting to probe and release of mei bus client
-driver solves this issue in simplest way, as each client provides only
-a single connection to a client bus driver.
+Userspace shouldn't set bytesused to 0 for output buffers.
+vb2_warn_zero_bytesused() warns about this (only once!), but it also
+calls WARN_ON(1), which is confusing since it is not immediately clear
+that it warns about a 0 value for bytesused.
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
-Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
+Just drop the WARN_ON as it serves no purpose.
+
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Acked-by: Ezequiel Garcia <ezequiel@collabora.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc: Matthias Maennich <maennich@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/misc/mei/bus.c |   21 ++++++++++-----------
- 1 file changed, 10 insertions(+), 11 deletions(-)
+ drivers/media/common/videobuf2/videobuf2-v4l2.c |    1 -
+ 1 file changed, 1 deletion(-)
 
---- a/drivers/misc/mei/bus.c
-+++ b/drivers/misc/mei/bus.c
-@@ -541,17 +541,9 @@ int mei_cldev_enable(struct mei_cl_devic
- 		goto out;
- 	}
+--- a/drivers/media/common/videobuf2/videobuf2-v4l2.c
++++ b/drivers/media/common/videobuf2/videobuf2-v4l2.c
+@@ -145,7 +145,6 @@ static void vb2_warn_zero_bytesused(stru
+ 		return;
  
--	if (!mei_cl_bus_module_get(cldev)) {
--		dev_err(&cldev->dev, "get hw module failed");
--		ret = -ENODEV;
--		goto out;
--	}
--
- 	ret = mei_cl_connect(cl, cldev->me_cl, NULL);
--	if (ret < 0) {
-+	if (ret < 0)
- 		dev_err(&cldev->dev, "cannot connect\n");
--		mei_cl_bus_module_put(cldev);
--	}
+ 	check_once = true;
+-	WARN_ON(1);
  
- out:
- 	mutex_unlock(&bus->device_lock);
-@@ -614,7 +606,6 @@ int mei_cldev_disable(struct mei_cl_devi
- 	if (err < 0)
- 		dev_err(bus->dev, "Could not disconnect from the ME client\n");
- 
--	mei_cl_bus_module_put(cldev);
- out:
- 	/* Flush queues and remove any pending read */
- 	mei_cl_flush_queues(cl, NULL);
-@@ -725,9 +716,16 @@ static int mei_cl_device_probe(struct de
- 	if (!id)
- 		return -ENODEV;
- 
-+	if (!mei_cl_bus_module_get(cldev)) {
-+		dev_err(&cldev->dev, "get hw module failed");
-+		return -ENODEV;
-+	}
-+
- 	ret = cldrv->probe(cldev, id);
--	if (ret)
-+	if (ret) {
-+		mei_cl_bus_module_put(cldev);
- 		return ret;
-+	}
- 
- 	__module_get(THIS_MODULE);
- 	return 0;
-@@ -755,6 +753,7 @@ static int mei_cl_device_remove(struct d
- 
- 	mei_cldev_unregister_callbacks(cldev);
- 
-+	mei_cl_bus_module_put(cldev);
- 	module_put(THIS_MODULE);
- 	dev->driver = NULL;
- 	return ret;
+ 	pr_warn("use of bytesused == 0 is deprecated and will be removed in the future,\n");
+ 	if (vb->vb2_queue->allow_zero_bytesused)
 
 
