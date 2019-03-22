@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 948D6C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:36:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8896C10F03
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:36:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B546218A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:36:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76CEE218A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:36:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553258189;
-	bh=GaL1qzGgmeeAnuALu0HDCeUgRWikgrYQZRgkUj6fWbs=;
+	s=default; t=1553258194;
+	bh=oA0WJM1I0IQaPmAjsJZgMNExtqMo/FS2woJGpcr3H9E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g0Lt6X1n9JD0he0pRod5JHPc/wLtfPIJL7fNv/5dI0LUn+7LejxYz/7gnIowKELDn
-	 YxiYpUu3L0bs5Ay7O1P23Ac5QB3pvYFf4uV5piFWlnE+DYffKSIN6Bg8jKdDgxL/Yv
-	 EXRvqkOSb81UOLoKFzgBpTdTK6SE2Vqg7WTfAh3U=
+	b=MaN4z7OJnXNV5SyLzjfGWCGRDA84tM50EUbkxwvbuKXkaBSpxbgmjzkW5rbXosILE
+	 suDgEQiXv+zm+29IeL/qdgzQAxMn7uhrKg5pzPG2BSmG8AaJAZ1BPMNi9CrY9u9tMo
+	 XdYAzTWOv7JpnmD9JbSetes5ExH6VA6Yh5WWQTXw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389651AbfCVMg2 (ORCPT
+        id S2389301AbfCVMLA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:36:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49480 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:11:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49318 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389287AbfCVMLH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:11:07 -0400
+        id S2389473AbfCVMK6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:10:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B884F2082C;
-        Fri, 22 Mar 2019 12:11:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53A192082C;
+        Fri, 22 Mar 2019 12:10:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256666;
-        bh=GaL1qzGgmeeAnuALu0HDCeUgRWikgrYQZRgkUj6fWbs=;
+        s=default; t=1553256656;
+        bh=oA0WJM1I0IQaPmAjsJZgMNExtqMo/FS2woJGpcr3H9E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h06OG9+Z6mHjxS9He6owXeRhlBJVy2lFrSQi0hzQa9nE8RSzoUQqYAfO2naYBzAeW
-         FA1wt1+cQFF57VIuKaHzH3ZMexmi2zn1DWK51AXNKGM8RNuO/C2Vvp4huhSv3x/zbB
-         DAsXcfnLoJfXT0ssR3XlXYWXZEwUeXH8enMia8XM=
+        b=lmWcr7uUVZYhFN6JqgQZupxc0MjGqws/JMXee1F1n0CDLHrrMjIL/2IFDJByoNtoR
+         lXpQkSMc8tHZki9d4bQj64u7PZFfZP/MEIeli2AA1nzJXu2JWC20nJp/KCNbsjKKjl
+         0CRijDdx1CL+4TsqM5YVdI063XJ2jkFGkSHEfrGc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nick French <naf@ou.edu>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Adam Stylinski <kungfujesus06@gmail.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 4.19 264/280] media: lgdt330x: fix lock status reporting
-Date:   Fri, 22 Mar 2019 12:16:57 +0100
-Message-Id: <20190322111344.634765469@linuxfoundation.org>
+        stable@vger.kernel.org, Nix <nix@esperi.org.uk>,
+        Coly Li <colyli@suse.de>, Andre Noll <maan@tuebingen.mpg.de>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 4.19 279/280] bcache: use (REQ_META|REQ_PRIO) to indicate bio for metadata
+Date:   Fri, 22 Mar 2019 12:17:12 +0100
+Message-Id: <20190322111347.937046833@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -67,42 +66,73 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: French, Nicholas A <naf@ou.edu>
+From: Coly Li <colyli@suse.de>
 
-commit 1b4fd9de6ec7f3722c2b3e08cc5ad171c11f93be upstream.
+commit dc7292a5bcb4c878b076fca2ac3fc22f81b8f8df upstream.
 
-A typo in code cleanup commit db9c1007bc07 ("media: lgdt330x: do
-some cleanups at status logic") broke the FE_HAS_LOCK reporting
-for 3303 chips by inadvertently modifying the register mask.
+In 'commit 752f66a75aba ("bcache: use REQ_PRIO to indicate bio for
+metadata")' REQ_META is replaced by REQ_PRIO to indicate metadata bio.
+This assumption is not always correct, e.g. XFS uses REQ_META to mark
+metadata bio other than REQ_PRIO. This is why Nix noticed that bcache
+does not cache metadata for XFS after the above commit.
 
-The broken lock status is critial as it prevents video capture
-cards from reporting signal strength, scanning for channels,
-and capturing video.
+Thanks to Dave Chinner, he explains the difference between REQ_META and
+REQ_PRIO from view of file system developer. Here I quote part of his
+explanation from mailing list,
+   REQ_META is used for metadata. REQ_PRIO is used to communicate to
+   the lower layers that the submitter considers this IO to be more
+   important that non REQ_PRIO IO and so dispatch should be expedited.
 
-Fix regression by reverting mask change.
+   IOWs, if the filesystem considers metadata IO to be more important
+   that user data IO, then it will use REQ_PRIO | REQ_META rather than
+   just REQ_META.
 
-Cc: stable@vger.kernel.org # Kernel 4.17+
-Fixes: db9c1007bc07 ("media: lgdt330x: do some cleanups at status logic")
-Signed-off-by: Nick French <naf@ou.edu>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Tested-by: Adam Stylinski <kungfujesus06@gmail.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Then it seems bios with REQ_META or REQ_PRIO should both be cached for
+performance optimation, because they are all probably low I/O latency
+demand by upper layer (e.g. file system).
+
+So in this patch, when we want to decide whether to bypass the cache,
+REQ_META and REQ_PRIO are both checked. Then both metadata and
+high priority I/O requests will be handled properly.
+
+Reported-by: Nix <nix@esperi.org.uk>
+Signed-off-by: Coly Li <colyli@suse.de>
+Reviewed-by: Andre Noll <maan@tuebingen.mpg.de>
+Tested-by: Nix <nix@esperi.org.uk>
+Cc: stable@vger.kernel.org
+Cc: Dave Chinner <david@fromorbit.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/dvb-frontends/lgdt330x.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/md/bcache/request.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/drivers/media/dvb-frontends/lgdt330x.c
-+++ b/drivers/media/dvb-frontends/lgdt330x.c
-@@ -783,7 +783,7 @@ static int lgdt3303_read_status(struct d
+--- a/drivers/md/bcache/request.c
++++ b/drivers/md/bcache/request.c
+@@ -392,10 +392,11 @@ static bool check_should_bypass(struct c
  
- 		if ((buf[0] & 0x02) == 0x00)
- 			*status |= FE_HAS_SYNC;
--		if ((buf[0] & 0xfd) == 0x01)
-+		if ((buf[0] & 0x01) == 0x01)
- 			*status |= FE_HAS_VITERBI | FE_HAS_LOCK;
- 		break;
- 	default:
+ 	/*
+ 	 * Flag for bypass if the IO is for read-ahead or background,
+-	 * unless the read-ahead request is for metadata (eg, for gfs2).
++	 * unless the read-ahead request is for metadata
++	 * (eg, for gfs2 or xfs).
+ 	 */
+ 	if (bio->bi_opf & (REQ_RAHEAD|REQ_BACKGROUND) &&
+-	    !(bio->bi_opf & REQ_META))
++	    !(bio->bi_opf & (REQ_META|REQ_PRIO)))
+ 		goto skip;
+ 
+ 	if (bio->bi_iter.bi_sector & (c->sb.block_size - 1) ||
+@@ -877,7 +878,7 @@ static int cached_dev_cache_miss(struct
+ 	}
+ 
+ 	if (!(bio->bi_opf & REQ_RAHEAD) &&
+-	    !(bio->bi_opf & REQ_META) &&
++	    !(bio->bi_opf & (REQ_META|REQ_PRIO)) &&
+ 	    s->iop.c->gc_stats.in_use < CUTOFF_CACHE_READA)
+ 		reada = min_t(sector_t, dc->readahead >> 9,
+ 			      get_capacity(bio->bi_disk) - bio_end_sector(bio));
 
 
