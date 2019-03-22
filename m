@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 481F4C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:22:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CAA1C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:22:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14ACA218D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:22:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F01CC218D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:22:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553253758;
-	bh=lHP5V2AX/du/Qwilwc+t3bOPrAJFhuRg0pISt1gb4ks=;
+	s=default; t=1553253764;
+	bh=xYAgpWuhEuPMuRRw9l0jnGZQh/OXyZAEHAfzLG9nCnU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XS9svdMB4THgwN+NPb9rTYKfHYbj2kzpuCtA0PEQQ0ewUaL+XrN5uoBnxnEACplmJ
-	 OvKiMoEFwOo/iXoM8Wkt2Mqw/GhYEO5NSPrb/LRwiLfWJcKPeYT9WuBwXfrUPZfnx9
-	 cXOoh6QIytHin7jfZ2u3mr25oQBYfZLEA7DPKr1s=
+	b=EdnlQqCB/7zKO1yIR3JAApTr5DZPuU/tziNJqaWmJqqA7CXF23RusWuId/+a5pZJv
+	 OoCjslFIfomHw795o4x9fnSuobYn5yZpcc/2WOPtkvc0hIONXfTmTLlscxolbQr3pD
+	 78zoh7su3g6Q0rVI8Tc6f/ryLskFAeWzQ2gJ/lYI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728841AbfCVLWg (ORCPT
+        id S1728458AbfCVLWm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:22:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49280 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:22:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49412 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728808AbfCVLWb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:22:31 -0400
+        id S1728433AbfCVLWj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:22:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5C9F218D4;
-        Fri, 22 Mar 2019 11:22:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94343218A2;
+        Fri, 22 Mar 2019 11:22:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553253751;
-        bh=lHP5V2AX/du/Qwilwc+t3bOPrAJFhuRg0pISt1gb4ks=;
+        s=default; t=1553253758;
+        bh=xYAgpWuhEuPMuRRw9l0jnGZQh/OXyZAEHAfzLG9nCnU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F09pd14uh1KWwhb24mf5Fdeg5b3Guj/cCZeqrP6cSpeTcbom7U5ZIuaOBZcyUeihZ
-         0REbrfKk6XrdnprtxsuvER33db2V5xc5kzkKfdxb5NSj9hrpennk/o5xtB86G+ZDkX
-         uAQoRmDLwKDikKbCcy5h1Ls3lYuidlAporhJcR0E=
+        b=X/zNJ0wykq5t/jxw6wZyuKLVB5UTMNreOz3z/UM+jcq+aJ86t6tcnRIs0hEdOshJn
+         AvrvfVNDaF/GpFcnmdzEP42l7PJFboDattvV5HEdyNlF6u6rIWHnF2e3i96dFp1VZL
+         cuM2OC+m/PXMngPuXMvoKyYojNjVQeGZBXY7cw0E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>,
+        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
+        Amit Cohen <amitc@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 3.18 044/134] net-sysfs: Fix mem leak in netdev_register_kobject
-Date:   Fri, 22 Mar 2019 12:14:17 +0100
-Message-Id: <20190322111213.084688100@linuxfoundation.org>
+Subject: [PATCH 3.18 046/134] team: Free BPF filter when unregistering netdev
+Date:   Fri, 22 Mar 2019 12:14:19 +0100
+Message-Id: <20190322111213.236043976@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111210.465931067@linuxfoundation.org>
 References: <20190322111210.465931067@linuxfoundation.org>
@@ -66,55 +67,99 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Ido Schimmel <idosch@mellanox.com>
 
-[ Upstream commit 895a5e96dbd6386c8e78e5b78e067dcc67b7f0ab ]
+[ Upstream commit 692c31bd4054212312396b1d303bffab2c5b93a7 ]
 
-syzkaller report this:
-BUG: memory leak
-unreferenced object 0xffff88837a71a500 (size 256):
-  comm "syz-executor.2", pid 9770, jiffies 4297825125 (age 17.843s)
-  hex dump (first 32 bytes):
-    00 00 00 00 ad 4e ad de ff ff ff ff 00 00 00 00  .....N..........
-    ff ff ff ff ff ff ff ff 20 c0 ef 86 ff ff ff ff  ........ .......
+When team is used in loadbalance mode a BPF filter can be used to
+provide a hash which will determine the Tx port.
+
+When the netdev is later unregistered the filter is not freed which
+results in memory leaks [1].
+
+Fix by freeing the program and the corresponding filter when
+unregistering the netdev.
+
+[1]
+unreferenced object 0xffff8881dbc47cc8 (size 16):
+  comm "teamd", pid 3068, jiffies 4294997779 (age 438.247s)
+  hex dump (first 16 bytes):
+    a3 00 6b 6b 6b 6b 6b 6b 88 a5 82 e1 81 88 ff ff  ..kkkkkk........
   backtrace:
-    [<00000000db12624b>] netdev_register_kobject+0x124/0x2e0 net/core/net-sysfs.c:1751
-    [<00000000dc49a994>] register_netdevice+0xcc1/0x1270 net/core/dev.c:8516
-    [<00000000e5f3fea0>] tun_set_iff drivers/net/tun.c:2649 [inline]
-    [<00000000e5f3fea0>] __tun_chr_ioctl+0x2218/0x3d20 drivers/net/tun.c:2883
-    [<000000001b8ac127>] vfs_ioctl fs/ioctl.c:46 [inline]
-    [<000000001b8ac127>] do_vfs_ioctl+0x1a5/0x10e0 fs/ioctl.c:690
-    [<0000000079b269f8>] ksys_ioctl+0x89/0xa0 fs/ioctl.c:705
-    [<00000000de649beb>] __do_sys_ioctl fs/ioctl.c:712 [inline]
-    [<00000000de649beb>] __se_sys_ioctl fs/ioctl.c:710 [inline]
-    [<00000000de649beb>] __x64_sys_ioctl+0x74/0xb0 fs/ioctl.c:710
-    [<000000007ebded1e>] do_syscall_64+0xc8/0x580 arch/x86/entry/common.c:290
-    [<00000000db315d36>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
-    [<00000000115be9bb>] 0xffffffffffffffff
+    [<000000008a3b47e3>] team_nl_cmd_options_set+0x88f/0x11b0
+    [<00000000c4f4f27e>] genl_family_rcv_msg+0x78f/0x1080
+    [<00000000610ef838>] genl_rcv_msg+0xca/0x170
+    [<00000000a281df93>] netlink_rcv_skb+0x132/0x380
+    [<000000004d9448a2>] genl_rcv+0x29/0x40
+    [<000000000321b2f4>] netlink_unicast+0x4c0/0x690
+    [<000000008c25dffb>] netlink_sendmsg+0x929/0xe10
+    [<00000000068298c5>] sock_sendmsg+0xc8/0x110
+    [<0000000082a61ff0>] ___sys_sendmsg+0x77a/0x8f0
+    [<00000000663ae29d>] __sys_sendmsg+0xf7/0x250
+    [<0000000027c5f11a>] do_syscall_64+0x14d/0x610
+    [<000000006cfbc8d3>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
+    [<00000000e23197e2>] 0xffffffffffffffff
+unreferenced object 0xffff8881e182a588 (size 2048):
+  comm "teamd", pid 3068, jiffies 4294997780 (age 438.247s)
+  hex dump (first 32 bytes):
+    20 00 00 00 02 00 00 00 30 00 00 00 28 f0 ff ff   .......0...(...
+    07 00 00 00 00 00 00 00 28 00 00 00 00 00 00 00  ........(.......
+  backtrace:
+    [<000000002daf01fb>] lb_bpf_func_set+0x45c/0x6d0
+    [<000000008a3b47e3>] team_nl_cmd_options_set+0x88f/0x11b0
+    [<00000000c4f4f27e>] genl_family_rcv_msg+0x78f/0x1080
+    [<00000000610ef838>] genl_rcv_msg+0xca/0x170
+    [<00000000a281df93>] netlink_rcv_skb+0x132/0x380
+    [<000000004d9448a2>] genl_rcv+0x29/0x40
+    [<000000000321b2f4>] netlink_unicast+0x4c0/0x690
+    [<000000008c25dffb>] netlink_sendmsg+0x929/0xe10
+    [<00000000068298c5>] sock_sendmsg+0xc8/0x110
+    [<0000000082a61ff0>] ___sys_sendmsg+0x77a/0x8f0
+    [<00000000663ae29d>] __sys_sendmsg+0xf7/0x250
+    [<0000000027c5f11a>] do_syscall_64+0x14d/0x610
+    [<000000006cfbc8d3>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
+    [<00000000e23197e2>] 0xffffffffffffffff
 
-It should call kset_unregister to free 'dev->queues_kset'
-in error path of register_queue_kobjects, otherwise will cause a mem leak.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 1d24eb4815d1 ("xps: Transmit Packet Steering")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Fixes: 01d7f30a9f96 ("team: add loadbalance mode")
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Reported-by: Amit Cohen <amitc@mellanox.com>
+Acked-by: Jiri Pirko <jiri@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/core/net-sysfs.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/team/team_mode_loadbalance.c |   15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
---- a/net/core/net-sysfs.c
-+++ b/net/core/net-sysfs.c
-@@ -1241,6 +1241,9 @@ static int register_queue_kobjects(struc
- error:
- 	netdev_queue_update_kobjects(dev, txq, 0);
- 	net_rx_queue_update_kobjects(dev, rxq, 0);
-+#ifdef CONFIG_SYSFS
-+	kset_unregister(dev->queues_kset);
-+#endif
- 	return error;
+--- a/drivers/net/team/team_mode_loadbalance.c
++++ b/drivers/net/team/team_mode_loadbalance.c
+@@ -305,6 +305,20 @@ static int lb_bpf_func_set(struct team *
+ 	return 0;
  }
  
++static void lb_bpf_func_free(struct team *team)
++{
++	struct lb_priv *lb_priv = get_lb_priv(team);
++	struct bpf_prog *fp;
++
++	if (!lb_priv->ex->orig_fprog)
++		return;
++
++	__fprog_destroy(lb_priv->ex->orig_fprog);
++	fp = rcu_dereference_protected(lb_priv->fp,
++				       lockdep_is_held(&team->lock));
++	bpf_prog_destroy(fp);
++}
++
+ static int lb_tx_method_get(struct team *team, struct team_gsetter_ctx *ctx)
+ {
+ 	struct lb_priv *lb_priv = get_lb_priv(team);
+@@ -619,6 +633,7 @@ static void lb_exit(struct team *team)
+ 
+ 	team_options_unregister(team, lb_options,
+ 				ARRAY_SIZE(lb_options));
++	lb_bpf_func_free(team);
+ 	cancel_delayed_work_sync(&lb_priv->ex->stats.refresh_dw);
+ 	free_percpu(lb_priv->pcpu_stats);
+ 	kfree(lb_priv->ex);
 
 
