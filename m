@@ -2,104 +2,95 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EECD2C10F03
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:51:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1F5CC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:52:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5CB920850
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:51:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553273475;
-	bh=6Innu0l4fJVjRs+PzWv0iPhNGdT4HcVKkNrHsJUnb3Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AhGHtctstU6sK6MIXd8M4TKj47p3DxmVLwSo0AOvERGl0we1LbVY1zCNvR2cdP1Rt
-	 5dRIX6qR0ECpR7ieK9bXO68VFJzhoeXpVoD7a932sa3oq7gTCXFThv9qbZLRoshv8J
-	 dYjVoQPBOtBaj2CQcVEGf+JfTe9eTyXQQ1jcMo3I=
+	by mail.kernel.org (Postfix) with ESMTP id 86ED320850
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:52:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727944AbfCVQvO (ORCPT
+        id S1728045AbfCVQwJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 12:51:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58458 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727443AbfCVQvO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 12:51:14 -0400
-Received: from localhost (173-25-63-173.client.mchsi.com [173.25.63.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 113A320850;
-        Fri, 22 Mar 2019 16:51:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553273473;
-        bh=6Innu0l4fJVjRs+PzWv0iPhNGdT4HcVKkNrHsJUnb3Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EP4tEBpLsgH+yMxNfDIctcUOf1/ZUK9wqGKQUbCF1+cmAB49yl+mjZp2dWNFogzQI
-         /966I53iko4Y8Rj5JLHT7VV4BB4cjdklovoBnGrrBCzgCJeFTbXIPegW4jP+fCEWRP
-         k3mQ4B2vh8kLSaF18ahpDf3AuZpI16BlDqV6ggT4=
-Date:   Fri, 22 Mar 2019 11:51:12 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     linux-kernel@vger.kernel.org, linux-ntb@googlegroups.com,
-        linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linux-kselftest@vger.kernel.org, Jon Mason <jdmason@kudzu.us>,
-        Joerg Roedel <joro@8bytes.org>,
-        Allen Hubbe <allenbh@gmail.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Eric Pilmore <epilmore@gigaio.com>
-Subject: Re: [PATCH v3 03/10] NTB: Introduce helper functions to calculate
- logical port number
-Message-ID: <20190322165111.GO251185@google.com>
-References: <20190322000645.15580-1-logang@deltatee.com>
- <20190322000645.15580-4-logang@deltatee.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190322000645.15580-4-logang@deltatee.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 22 Mar 2019 12:52:09 -0400
+Received: from smtprelay0139.hostedemail.com ([216.40.44.139]:53987 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727443AbfCVQwJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 12:52:09 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 731BC40F4;
+        Fri, 22 Mar 2019 16:52:07 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: week26_4c650743d8113
+X-Filterd-Recvd-Size: 2562
+Received: from XPS-9350.home (unknown [47.151.153.53])
+        (Authenticated sender: joe@perches.com)
+        by omf17.hostedemail.com (Postfix) with ESMTPA;
+        Fri, 22 Mar 2019 16:52:04 +0000 (UTC)
+Message-ID: <aa5e2a093bf1c2d7ef024348065249bb6e4518b2.camel@perches.com>
+Subject: Re: [PATCH 1/2] PM / arch: x86: Rework the
+ MSR_IA32_ENERGY_PERF_BIAS handling
+From:   Joe Perches <joe@perches.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Len Brown <len.brown@intel.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Laura Abbott <labbott@fedoraproject.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Simon Schricker <sschricker@suse.de>,
+        Hannes Reinecke <hare@suse.de>
+Date:   Fri, 22 Mar 2019 09:52:03 -0700
+In-Reply-To: <alpine.DEB.2.21.1903221712020.1729@nanos.tec.linutronix.de>
+References: <1637073.gl2OfxWTjI@aspire.rjw.lan>
+         <1605148.8jT99SsvVP@aspire.rjw.lan> <20190322142828.GA12472@zn.tnic>
+         <alpine.DEB.2.21.1903221531080.1729@nanos.tec.linutronix.de>
+         <20190322143525.GB12472@zn.tnic>
+         <alpine.DEB.2.21.1903221712020.1729@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.1-1build1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 21, 2019 at 06:06:38PM -0600, Logan Gunthorpe wrote:
-> This patch introduces the "Logical Port Number" which is similar to the
-> "Port Number" in that it enumerates the ports in the system.
+On Fri, 2019-03-22 at 17:12 +0100, Thomas Gleixner wrote:
+> On Fri, 22 Mar 2019, Borislav Petkov wrote:
 > 
-> The original (or Physical) "Port Number" can be any number used by the
-> hardware to uniquley identify a port in the system. The "Logical Port
-
-s/uniquley/uniquely/
-
-> Number" enumerates all ports in the system from 0 to the number of
-> ports minus one.
+> > On Fri, Mar 22, 2019 at 03:31:54PM +0100, Thomas Gleixner wrote:
+> > > We have no proper decision/recommendation about documentation
+> > > licensing. That's being worked on.
+> > 
+> > Ok, I'm ignoring this checkpatch warning from now on.
 > 
-> For example a system with 5 ports might have the following port numbers
-> which would be enumareted thusly:
+> Only for Documentation/* files please.
 
-s/enumareted/enumerated/
+Perhaps
+---
+ scripts/checkpatch.pl | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-> + * ntb_logical_port_number() - get the logical port number of the local port
-> + * @ntb:	NTB device context.
-> + *
-> + * The Logical Port Number is defined to be a unique number for each
-> + * port starting from zero through to the number of ports minus one.
-> + * This is in contrast to the Port Number where each port can be assigned
-> + * any unqique physical number by the hardware.
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index d0001fd1112d..00c1457fe79b 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -3058,7 +3058,8 @@ sub process {
+ 					     "Improper SPDX comment style for '$realfile', please use '$comment' instead\n" . $herecurr);
+ 				}
+ 
+-				if ($comment !~ /^$/ &&
++				if ($realfile !~ m@^Documentation/@ &&
++				    $comment !~ /^$/ &&
+ 				    $rawline !~ m@^\+\Q$comment\E SPDX-License-Identifier: @) {
+ 					WARN("SPDX_LICENSE_TAG",
+ 					     "Missing or malformed SPDX-License-Identifier tag in line $checklicenseline\n" . $herecurr);
 
-s/unqique/unique/
 
-> + * ntb_peer_logical_port_number() - get the logical peer port by given index
-> + * @ntb:	NTB device context.
-> + * @pidx:	Peer port index.
-> + *
-> + * The Logical Port Number is defined to be a unique number for each
-> + * port starting from zero through to the number of ports minus one.
-> + * This is in contrast to the Port Number where each port can be assigned
-> + * any unqique physical number by the hardware.
-
-s/unqique/unique/
-
-Bjorn
