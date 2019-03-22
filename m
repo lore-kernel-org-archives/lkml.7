@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD4F2C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:27:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6E42C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:27:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D0AD2070D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:27:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 782752054F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:27:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553257643;
-	bh=ozLqMbItR6ADgErcU+L5iEwMHs0FzBf9wbCS16Vn5B4=;
+	s=default; t=1553257648;
+	bh=N+erI/6sSMJ+u/qoS9r5QPoJidtlNzv4sNmLMC25pu8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X0iO8sC5QRF9c/Qn3CN98yWbfF6I2YA/tnZINhALSA6qG6CP0obmPENmuHC5RDVOw
-	 1RsiFH3O+7wzMmOvZppsadnSSdS+UDaRR3K47G+e2283PG/sXAHCcSs6SBb7JnWnpb
-	 5JFlwPehqMLUCqrUpgFTGpjS0UTgWcStJNPYtxtk=
+	b=1cX90AzUqi4Ez+WNfObt0bkrSV1hmylle1dLnNzGPnwYcrlZa0zgekElLmwARc8/m
+	 lJ3Z7ehQ3C3dqEqBI38GP+eXkFRaZaMpqUDlgDibKLWQMZc+h5ebB2Lgwt45iXuKdd
+	 jPo+eunZCUgL4+DXUnI+SioNaL1G3464dwDLoQhM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403756AbfCVM1W (ORCPT
+        id S2391068AbfCVM10 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:27:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38846 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:27:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731406AbfCVM1S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:27:18 -0400
+        id S2390922AbfCVM1V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:27:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A1602070D;
-        Fri, 22 Mar 2019 12:27:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A9EC2054F;
+        Fri, 22 Mar 2019 12:27:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553257637;
-        bh=ozLqMbItR6ADgErcU+L5iEwMHs0FzBf9wbCS16Vn5B4=;
+        s=default; t=1553257640;
+        bh=N+erI/6sSMJ+u/qoS9r5QPoJidtlNzv4sNmLMC25pu8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2fMCJDUny3sJbi4c8flCbCZfPs/VK1pg1FHbe33mXKIe6uVwVt6gLLfF305ZAqn5R
-         GGN5+7lVYGwhvs9PVgwSjVOH7EMvsJxxwT4MbJGTddyqPKMA/gixicEBd/mI17Tat1
-         2XsgSfhCUEGGybSIFOxJ+HiYPLm/FTvAujoe0Ytg=
+        b=n/cYUXOGNCSElXTBsnAHrUpusdl/ePj+4lkcQRTvBOyvaUhWt3uQJGwIzt3ouBFwU
+         NLKGXlvjZoGG0kES2IFH/6JuXyu7lzrwhRWGTureT3rYrFBNmb5ybIrYadV5DtYzCT
+         cwseF5Fbq5tv/HPuxWwnBFBkPWZGczt5q+LWOr1o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,12 +46,12 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Zhang, Jun" <jun.zhang@intel.com>,
         "Paul E. McKenney" <paulmck@linux.ibm.com>,
         "xiao, jin" <jin.xiao@intel.com>, Jie A <jie.a.bai@intel.com>
-Subject: [PATCH 3.18 132/134] rcu: Do RCU GP kthread self-wakeup from softirq and interrupt
-Date:   Fri, 22 Mar 2019 12:15:45 +0100
-Message-Id: <20190322111220.102008032@linuxfoundation.org>
+Subject: [PATCH 4.4 225/230] rcu: Do RCU GP kthread self-wakeup from softirq and interrupt
+Date:   Fri, 22 Mar 2019 12:16:03 +0100
+Message-Id: <20190322111252.734441923@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190322111210.465931067@linuxfoundation.org>
-References: <20190322111210.465931067@linuxfoundation.org>
+In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
+References: <20190322111236.796964179@linuxfoundation.org>
 User-Agent: quilt/0.65
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -63,7 +63,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-3.18-stable review patch.  If anyone has any objections, please let me know.
+4.4-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
@@ -111,13 +111,14 @@ Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
 Link: https://lkml.kernel.org/r/CD6925E8781EFD4D8E11882D20FC406D52A11F61@SHSMSX104.ccr.corp.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
+
 ---
  kernel/rcu/tree.c |   20 ++++++++++++++------
  1 file changed, 14 insertions(+), 6 deletions(-)
 
 --- a/kernel/rcu/tree.c
 +++ b/kernel/rcu/tree.c
-@@ -1399,15 +1399,23 @@ static int rcu_future_gp_cleanup(struct
+@@ -1611,15 +1611,23 @@ static int rcu_future_gp_cleanup(struct
  }
  
  /*
@@ -144,7 +145,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 -	if (current == rsp->gp_kthread ||
 +	if ((current == rsp->gp_kthread &&
 +	     !in_interrupt() && !in_serving_softirq()) ||
- 	    !ACCESS_ONCE(rsp->gp_flags) ||
+ 	    !READ_ONCE(rsp->gp_flags) ||
  	    !rsp->gp_kthread)
  		return;
 
