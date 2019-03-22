@@ -6,35 +6,34 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C81BC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 10:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2759DC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 10:59:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F35CA2083D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 10:59:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3E2721900
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 10:59:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728135AbfCVK7C (ORCPT
+        id S1728145AbfCVK7L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 06:59:02 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44194 "EHLO mx1.suse.de"
+        Fri, 22 Mar 2019 06:59:11 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44216 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727915AbfCVK7C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 06:59:02 -0400
+        id S1727915AbfCVK7L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 06:59:11 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id EACE3AD0C;
-        Fri, 22 Mar 2019 10:59:00 +0000 (UTC)
-Date:   Fri, 22 Mar 2019 11:59:00 +0100
-Message-ID: <s5h4l7vb2ff.wl-tiwai@suse.de>
+        by mx1.suse.de (Postfix) with ESMTP id DAEF6AC89;
+        Fri, 22 Mar 2019 10:59:09 +0000 (UTC)
+Date:   Fri, 22 Mar 2019 11:59:09 +0100
+Message-ID: <s5h36nfb2f6.wl-tiwai@suse.de>
 From:   Takashi Iwai <tiwai@suse.de>
 To:     "Jian-Hong Pan" <jian-hong@endlessm.com>
-Cc:     <alsa-devel@alsa-project.org>, "Chris Chiu" <chiu@endlessm.com>,
-        "Daniel Drake" <drake@endlessm.com>, <linux@endlessm.com>,
-        "Kailang Yang" <kailang@realtek.com>,
+Cc:     <alsa-devel@alsa-project.org>, "Daniel Drake" <drake@endlessm.com>,
+        <linux@endlessm.com>, "Kailang Yang" <kailang@realtek.com>,
         <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/3] ALSA: hda/realtek: Enable headset mic of ASUS P5440FF with ALC256
-In-Reply-To: <20190322033719.10793-2-jian-hong@endlessm.com>
+Subject: Re: [PATCH 3/3] ALSA: hda/realtek: Enable headset MIC of ASUS X430UN and X512DK with ALC256
+In-Reply-To: <20190322033719.10793-3-jian-hong@endlessm.com>
 References: <20190322033719.10793-1-jian-hong@endlessm.com>
-        <20190322033719.10793-2-jian-hong@endlessm.com>
+        <20190322033719.10793-3-jian-hong@endlessm.com>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
  FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
  (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
@@ -45,17 +44,14 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 22 Mar 2019 04:37:20 +0100,
+On Fri, 22 Mar 2019 04:37:22 +0100,
 Jian-Hong Pan wrote:
 > 
-> From: Chris Chiu <chiu@endlessm.com>
-> 
-> The ASUS laptop P5440FF with ALC256 can't detect the headset microphone
+> The ASUS X430UN and X512DK with ALC256 cannot detect the headset MIC
 > until ALC256_FIXUP_ASUS_MIC_NO_PRESENCE quirk applied.
 > 
-> Signed-off-by: Chris Chiu <chiu@endlessm.com>
-> Signed-off-by: Daniel Drake <drake@endlessm.com>
 > Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+> Signed-off-by: Daniel Drake <drake@endlessm.com>
 
 Applied, thanks.
 
