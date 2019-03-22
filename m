@@ -4,48 +4,43 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDF8EC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6842BC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:19:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 928AE20883
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:19:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FC702190A
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 22:19:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727754AbfCVWTE (ORCPT
+        id S1727909AbfCVWTK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 18:19:04 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:34937 "EHLO
+        Fri, 22 Mar 2019 18:19:10 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:57671 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726205AbfCVWTD (ORCPT
+        with ESMTP id S1726205AbfCVWTK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 18:19:03 -0400
+        Fri, 22 Mar 2019 18:19:10 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x2MMIQdv750012
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x2MMJ34l750053
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Fri, 22 Mar 2019 15:18:26 -0700
+        Fri, 22 Mar 2019 15:19:03 -0700
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x2MMIPoQ750009;
-        Fri, 22 Mar 2019 15:18:25 -0700
-Date:   Fri, 22 Mar 2019 15:18:25 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x2MMJ3XH750050;
+        Fri, 22 Mar 2019 15:19:03 -0700
+Date:   Fri, 22 Mar 2019 15:19:03 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Arnaldo Carvalho de Melo <tipbot@zytor.com>
-Message-ID: <tip-5270n2quu2gqz22o7itfdx00@git.kernel.org>
-Cc:     daniel@iogearbox.net, quentin.monnet@netronome.com,
-        jakub.kicinski@netronome.com, ast@kernel.org,
-        linux-kernel@vger.kernel.org, acme@redhat.com, yhs@fb.com,
-        jolsa@kernel.org, mingo@kernel.org, sdf@google.com,
-        tglx@linutronix.de, hpa@zytor.com, namhyung@kernel.org
-Reply-To: linux-kernel@vger.kernel.org, ast@kernel.org,
-          jakub.kicinski@netronome.com, quentin.monnet@netronome.com,
-          daniel@iogearbox.net, yhs@fb.com, acme@redhat.com,
-          jolsa@kernel.org, sdf@google.com, namhyung@kernel.org,
-          hpa@zytor.com, tglx@linutronix.de, mingo@kernel.org
+From:   tip-bot for Andi Kleen <tipbot@zytor.com>
+Message-ID: <tip-1y8oi2s8c4jhjtykgs5zvda1@git.kernel.org>
+Cc:     ak@linux.intel.com, mingo@kernel.org, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, acme@redhat.com, hpa@zytor.com,
+        jolsa@kernel.org
+Reply-To: jolsa@kernel.org, hpa@zytor.com, acme@redhat.com,
+          tglx@linutronix.de, linux-kernel@vger.kernel.org,
+          mingo@kernel.org, ak@linux.intel.com
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/urgent] tools lib bpf: Fix the build by adding a missing
- stdarg.h include
-Git-Commit-ID: dfcbc2f2994b8a3af3605a26dc29c07ad7378bf4
+Subject: [tip:perf/urgent] perf list: Filter metrics too
+Git-Commit-ID: 6f40b2a5dac4b448fe1e8d94dc4238cd95cd5e34
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -59,59 +54,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  dfcbc2f2994b8a3af3605a26dc29c07ad7378bf4
-Gitweb:     https://git.kernel.org/tip/dfcbc2f2994b8a3af3605a26dc29c07ad7378bf4
-Author:     Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate: Mon, 11 Mar 2019 17:07:52 -0300
+Commit-ID:  6f40b2a5dac4b448fe1e8d94dc4238cd95cd5e34
+Gitweb:     https://git.kernel.org/tip/6f40b2a5dac4b448fe1e8d94dc4238cd95cd5e34
+Author:     Andi Kleen <ak@linux.intel.com>
+AuthorDate: Thu, 14 Mar 2019 15:49:53 -0700
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Mon, 11 Mar 2019 17:14:31 -0300
+CommitDate: Tue, 19 Mar 2019 11:56:19 -0300
 
-tools lib bpf: Fix the build by adding a missing stdarg.h include
+perf list: Filter metrics too
 
-The libbpf_print_fn_t typedef uses va_list without including the header
-where that type is defined, stdarg.h, breaking in places where we're
-unlucky for that type not to be already defined by some previously
-included header.
+When a filter is specified on the command line, filter the metrics too.
 
-Noticed while building on fedora 24 cross building tools/perf to the ARC
-architecture using the uClibc C library:
+Before:
 
-  28 fedora:24-x-ARC-uClibc   : FAIL arc-linux-gcc (ARCompact ISA Linux uClibc toolchain 2017.09-rc2) 7.1.1 20170710
+  % perf list foo
+  List of pre-defined events (to be used in -e):
 
-    CC       /tmp/build/perf/tests/llvm.o
-  In file included from tests/llvm.c:3:0:
-  /git/linux/tools/lib/bpf/libbpf.h:57:20: error: unknown type name 'va_list'
-        const char *, va_list ap);
-                      ^~~~~~~
-  /git/linux/tools/lib/bpf/libbpf.h:59:34: error: unknown type name 'libbpf_print_fn_t'
-   LIBBPF_API void libbpf_set_print(libbpf_print_fn_t fn);
-                                    ^~~~~~~~~~~~~~~~~
-  mv: cannot stat '/tmp/build/perf/tests/.llvm.o.tmp': No such file or directory
+  Metric Groups:
 
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Jakub Kicinski <jakub.kicinski@netronome.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Quentin Monnet <quentin.monnet@netronome.com>
-Cc: Stanislav Fomichev <sdf@google.com>
-Cc: Yonghong Song <yhs@fb.com>
-Fixes: a8a1f7d09cfc ("libbpf: fix libbpf_print")
-Link: https://lkml.kernel.org/n/tip-5270n2quu2gqz22o7itfdx00@git.kernel.org
+  DSB:
+    DSB_Coverage
+         [Fraction of Uops delivered by the DSB (aka Decoded Icache; or Uop Cache)]
+  ... more metrics ...
+
+After:
+
+% perf list foo
+
+  List of pre-defined events (to be used in -e):
+
+  Metric Groups:
+
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+LPU-Reference: 20190314225002.30108-1-andi@firstfloor.org
+Link: https://lkml.kernel.org/n/tip-1y8oi2s8c4jhjtykgs5zvda1@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/lib/bpf/libbpf.h | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/builtin-list.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/lib/bpf/libbpf.h b/tools/lib/bpf/libbpf.h
-index b4652aa1a58a..aa1521a51687 100644
---- a/tools/lib/bpf/libbpf.h
-+++ b/tools/lib/bpf/libbpf.h
-@@ -10,6 +10,7 @@
- #ifndef __LIBBPF_LIBBPF_H
- #define __LIBBPF_LIBBPF_H
- 
-+#include <stdarg.h>
- #include <stdio.h>
- #include <stdint.h>
- #include <stdbool.h>
+diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
+index c9f98d00c0e9..a8394b4f1167 100644
+--- a/tools/perf/builtin-list.c
++++ b/tools/perf/builtin-list.c
+@@ -119,7 +119,7 @@ int cmd_list(int argc, const char **argv)
+ 						details_flag);
+ 			print_tracepoint_events(NULL, s, raw_dump);
+ 			print_sdt_events(NULL, s, raw_dump);
+-			metricgroup__print(true, true, NULL, raw_dump, details_flag);
++			metricgroup__print(true, true, s, raw_dump, details_flag);
+ 			free(s);
+ 		}
+ 	}
