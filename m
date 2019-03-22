@@ -4,54 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74315C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:28:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF29AC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:28:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D9F121916
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:28:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD3FC21916
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:28:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254125;
-	bh=NKmZVUeeb8i1x38+mNmUdESAIDdrF1x2wiqcyS/H5UA=;
+	s=default; t=1553254129;
+	bh=Yq5/v/AjEXa1snK/i0V9M8cN0JTjNYjpj96LlMekUYM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PUFF1/lyMMIHuOzd/GS3geT9cChhsGaDgE8MFqOZXLHqmxSmr9uMruq7nKGlKZWlm
-	 EBz9qZb9uyuLb6OUMplAG9g82OVZDVx1AslfjdemHy8h71AjB52qfRZmjBT/zkTuy3
-	 ZU7FEas+HgMUIX+Lzrzb8yS6HBXOOZ+5xFyD3JV4=
+	b=cRhr1ucjU4pWquUfxZpsbeKhNXgMmD86ENDTZtn3Gx3Lxu4ioG/rUgwha8QoWC4ee
+	 H7Ap9ny5u3Vpz7EOhe9Qn7/f1HDJObHgdf04wCY4YryOwBqGiSXgzWCVmc/BDpUxLa
+	 7tjSd0m4ba5ca6hALDlIjm7uq12F/EjTfupqYz68=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729710AbfCVL2o (ORCPT
+        id S1729725AbfCVL2s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:28:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56496 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:28:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728239AbfCVL2m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:28:42 -0400
+        id S1729716AbfCVL2p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:28:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 833BF2183E;
-        Fri, 22 Mar 2019 11:28:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 486BF218B0;
+        Fri, 22 Mar 2019 11:28:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254121;
-        bh=NKmZVUeeb8i1x38+mNmUdESAIDdrF1x2wiqcyS/H5UA=;
+        s=default; t=1553254123;
+        bh=Yq5/v/AjEXa1snK/i0V9M8cN0JTjNYjpj96LlMekUYM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lu4TFsXar8ZZdewHeDSkXPNQl3+MH+J9QqbaewuQ6RdCThJUccRjrdSJewRVGDkT8
-         D0StDkTgkeh8d5rQYK0DBJmdWU12KbPeuq/Wr5leTpTTIBXzAu4m4/pWsK31akD2oM
-         uzthwKTZXAlg+9A/ax028FgjxvcHcvSWitfKqxLY=
+        b=w45qACsfgQFKAMS+fAYCWIifwhZll67qNoLpzRj9siaEi9+PmDIw0orhBznbND9Xx
+         i6wsoX7Uw9tRN8S23bH8PPyKzpaj7Egz5ozmKzthXji7pbQHASSYenrwMhzd+Us4HY
+         hGa5l996tgSzmfgcMTso9mGAD3MyK13pMFRgCo28=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Silvio Cesare <silvio.cesare@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
+        Timur Tabi <timur@kernel.org>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
         Mark Brown <broonie@kernel.org>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
         Dan Carpenter <dan.carpenter@oracle.com>,
         Kees Cook <keescook@chromium.org>,
         Will Deacon <will.deacon@arm.com>, Greg KH <greg@kroah.com>,
         Willy Tarreau <w@1wt.eu>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 038/230] ASoC: dapm: change snprintf to scnprintf for possible overflow
-Date:   Fri, 22 Mar 2019 12:12:56 +0100
-Message-Id: <20190322111239.369273303@linuxfoundation.org>
+Subject: [PATCH 4.4 039/230] ASoC: imx-audmux: change snprintf to scnprintf for possible overflow
+Date:   Fri, 22 Mar 2019 12:12:57 +0100
+Message-Id: <20190322111239.439877381@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -70,7 +73,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit e581e151e965bf1f2815dd94620b638fec4d0a7e ]
+[ Upstream commit c407cd008fd039320d147088b52d0fa34ed3ddcb ]
 
 Change snprintf to scnprintf. There are generally two cases where using
 snprintf causes problems.
@@ -95,56 +98,90 @@ characters actually written to the buffer, so the size variable will never
 exceed SIZE.
 
 Signed-off-by: Silvio Cesare <silvio.cesare@gmail.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>
+Cc: Timur Tabi <timur@kernel.org>
+Cc: Nicolin Chen <nicoleotsuka@gmail.com>
 Cc: Mark Brown <broonie@kernel.org>
+Cc: Xiubo Li <Xiubo.Lee@gmail.com>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>
 Cc: Dan Carpenter <dan.carpenter@oracle.com>
 Cc: Kees Cook <keescook@chromium.org>
 Cc: Will Deacon <will.deacon@arm.com>
 Cc: Greg KH <greg@kroah.com>
 Signed-off-by: Willy Tarreau <w@1wt.eu>
+Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/soc-dapm.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ sound/soc/fsl/imx-audmux.c | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/sound/soc/soc-dapm.c b/sound/soc/soc-dapm.c
-index 0aefed8ab0cf5..7e26d173da41c 100644
---- a/sound/soc/soc-dapm.c
-+++ b/sound/soc/soc-dapm.c
-@@ -1943,19 +1943,19 @@ static ssize_t dapm_widget_power_read_file(struct file *file,
- 		out = is_connected_output_ep(w, NULL);
- 	}
+diff --git a/sound/soc/fsl/imx-audmux.c b/sound/soc/fsl/imx-audmux.c
+index fc57da341d610..136df38c4536c 100644
+--- a/sound/soc/fsl/imx-audmux.c
++++ b/sound/soc/fsl/imx-audmux.c
+@@ -86,49 +86,49 @@ static ssize_t audmux_read_file(struct file *file, char __user *user_buf,
+ 	if (!buf)
+ 		return -ENOMEM;
  
--	ret = snprintf(buf, PAGE_SIZE, "%s: %s%s  in %d out %d",
-+	ret = scnprintf(buf, PAGE_SIZE, "%s: %s%s  in %d out %d",
- 		       w->name, w->power ? "On" : "Off",
- 		       w->force ? " (forced)" : "", in, out);
+-	ret = snprintf(buf, PAGE_SIZE, "PDCR: %08x\nPTCR: %08x\n",
++	ret = scnprintf(buf, PAGE_SIZE, "PDCR: %08x\nPTCR: %08x\n",
+ 		       pdcr, ptcr);
  
- 	if (w->reg >= 0)
+ 	if (ptcr & IMX_AUDMUX_V2_PTCR_TFSDIR)
 -		ret += snprintf(buf + ret, PAGE_SIZE - ret,
 +		ret += scnprintf(buf + ret, PAGE_SIZE - ret,
- 				" - R%d(0x%x) mask 0x%x",
- 				w->reg, w->reg, w->mask << w->shift);
+ 				"TxFS output from %s, ",
+ 				audmux_port_string((ptcr >> 27) & 0x7));
+ 	else
+-		ret += snprintf(buf + ret, PAGE_SIZE - ret,
++		ret += scnprintf(buf + ret, PAGE_SIZE - ret,
+ 				"TxFS input, ");
+ 
+ 	if (ptcr & IMX_AUDMUX_V2_PTCR_TCLKDIR)
+-		ret += snprintf(buf + ret, PAGE_SIZE - ret,
++		ret += scnprintf(buf + ret, PAGE_SIZE - ret,
+ 				"TxClk output from %s",
+ 				audmux_port_string((ptcr >> 22) & 0x7));
+ 	else
+-		ret += snprintf(buf + ret, PAGE_SIZE - ret,
++		ret += scnprintf(buf + ret, PAGE_SIZE - ret,
+ 				"TxClk input");
  
 -	ret += snprintf(buf + ret, PAGE_SIZE - ret, "\n");
 +	ret += scnprintf(buf + ret, PAGE_SIZE - ret, "\n");
  
- 	if (w->sname)
--		ret += snprintf(buf + ret, PAGE_SIZE - ret, " stream %s %s\n",
-+		ret += scnprintf(buf + ret, PAGE_SIZE - ret, " stream %s %s\n",
- 				w->sname,
- 				w->active ? "active" : "inactive");
- 
-@@ -1968,7 +1968,7 @@ static ssize_t dapm_widget_power_read_file(struct file *file,
- 			if (!p->connect)
- 				continue;
- 
+ 	if (ptcr & IMX_AUDMUX_V2_PTCR_SYN) {
+-		ret += snprintf(buf + ret, PAGE_SIZE - ret,
++		ret += scnprintf(buf + ret, PAGE_SIZE - ret,
+ 				"Port is symmetric");
+ 	} else {
+ 		if (ptcr & IMX_AUDMUX_V2_PTCR_RFSDIR)
 -			ret += snprintf(buf + ret, PAGE_SIZE - ret,
 +			ret += scnprintf(buf + ret, PAGE_SIZE - ret,
- 					" %s  \"%s\" \"%s\"\n",
- 					(rdir == SND_SOC_DAPM_DIR_IN) ? "in" : "out",
- 					p->name ? p->name : "static",
+ 					"RxFS output from %s, ",
+ 					audmux_port_string((ptcr >> 17) & 0x7));
+ 		else
+-			ret += snprintf(buf + ret, PAGE_SIZE - ret,
++			ret += scnprintf(buf + ret, PAGE_SIZE - ret,
+ 					"RxFS input, ");
+ 
+ 		if (ptcr & IMX_AUDMUX_V2_PTCR_RCLKDIR)
+-			ret += snprintf(buf + ret, PAGE_SIZE - ret,
++			ret += scnprintf(buf + ret, PAGE_SIZE - ret,
+ 					"RxClk output from %s",
+ 					audmux_port_string((ptcr >> 12) & 0x7));
+ 		else
+-			ret += snprintf(buf + ret, PAGE_SIZE - ret,
++			ret += scnprintf(buf + ret, PAGE_SIZE - ret,
+ 					"RxClk input");
+ 	}
+ 
+-	ret += snprintf(buf + ret, PAGE_SIZE - ret,
++	ret += scnprintf(buf + ret, PAGE_SIZE - ret,
+ 			"\nData received from %s\n",
+ 			audmux_port_string((pdcr >> 13) & 0x7));
+ 
 -- 
 2.19.1
 
