@@ -2,93 +2,102 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7933AC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:14:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04D8BC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:16:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53F5921939
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:14:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5542218A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:16:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728170AbfCVLOA (ORCPT
+        id S1728102AbfCVLQv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:14:00 -0400
-Received: from [110.188.70.11] ([110.188.70.11]:2941 "EHLO spam1.hygon.cn"
-        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726667AbfCVLOA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:14:00 -0400
-Received: from spam1.hygon.cn (localhost [127.0.0.2] (may be forged))
-        by spam1.hygon.cn with ESMTP id x2MAlAqd043331
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 18:47:10 +0800 (GMT-8)
-        (envelope-from puwen@hygon.cn)
-Received: from MK-DB.hygon.cn ([172.23.18.60])
-        by spam1.hygon.cn with ESMTP id x2MAiOqx042826;
-        Fri, 22 Mar 2019 18:44:24 +0800 (GMT-8)
-        (envelope-from puwen@hygon.cn)
-Received: from cncheex01.Hygon.cn ([172.23.18.10])
-        by MK-DB.hygon.cn with ESMTP id x2MAiHGn064391;
-        Fri, 22 Mar 2019 18:44:17 +0800 (GMT-8)
-        (envelope-from puwen@hygon.cn)
-Received: from pw-vbox.hygon.cn (172.23.18.44) by cncheex01.Hygon.cn
- (172.23.18.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1466.3; Fri, 22 Mar
- 2019 18:44:21 +0800
-From:   Pu Wen <puwen@hygon.cn>
-To:     <boris.ostrovsky@oracle.com>, <jgross@suse.com>, <bp@alien8.de>,
-        <tglx@linutronix.de>, <mingo@redhat.com>, <hpa@zytor.com>,
-        <x86@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <xen-devel@lists.xenproject.org>,
-        Pu Wen <puwen@hygon.cn>
-Subject: [RFC PATCH] x86/xen/pmu: Use MSRs C001_020X instead of the legacy MSRs for Hygon
-Date:   Fri, 22 Mar 2019 18:43:39 +0800
-Message-ID: <1553251419-7066-1-git-send-email-puwen@hygon.cn>
-X-Mailer: git-send-email 2.7.4
+        Fri, 22 Mar 2019 07:16:51 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:52934 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726667AbfCVLQv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:16:51 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id BEC5B3083363;
+        Fri, 22 Mar 2019 11:16:50 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.32])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 41AA71A914;
+        Fri, 22 Mar 2019 11:16:45 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Fri, 22 Mar 2019 12:16:48 +0100 (CET)
+Date:   Fri, 22 Mar 2019 12:16:42 +0100
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Waiman Long <longman@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        selinux@vger.kernel.org, Paul Moore <paul@paul-moore.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Eric Paris <eparis@parisplace.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Subject: Re: [PATCH 2/4] signal: Make flush_sigqueue() use free_q to release
+ memory
+Message-ID: <20190322111642.GA28876@redhat.com>
+References: <20190321214512.11524-1-longman@redhat.com>
+ <20190321214512.11524-3-longman@redhat.com>
+ <20190322015208.GD19508@bombadil.infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [172.23.18.44]
-X-ClientProxiedBy: cncheex02.Hygon.cn (172.23.18.12) To cncheex01.Hygon.cn
- (172.23.18.10)
-X-MAIL: spam1.hygon.cn x2MAiOqx042826
-X-DNSRBL: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190322015208.GD19508@bombadil.infradead.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Fri, 22 Mar 2019 11:16:51 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Hygon Dhyana processor supports MSRs C001_020X for the performance
-monitor counter(PMC). There are six core performance events counters for
-Dhyana but there are only four legacy PMC MSRs. So switching to use MSRs
-C001_020X(compatible with the F15H ones) for Xen vPMU infrastructure on
-Hygon platform.
+On 03/21, Matthew Wilcox wrote:
+>
+> On Thu, Mar 21, 2019 at 05:45:10PM -0400, Waiman Long wrote:
+>
+> > To avoid this dire condition and reduce lock hold time of tasklist_lock,
+> > flush_sigqueue() is modified to pass in a freeing queue pointer so that
+> > the actual freeing of memory objects can be deferred until after the
+> > tasklist_lock is released and irq re-enabled.
+>
+> I think this is a really bad solution.  It looks kind of generic,
+> but isn't.  It's terribly inefficient, and all it's really doing is
+> deferring the debugging code until we've re-enabled interrupts.
 
-Signed-off-by: Pu Wen <puwen@hygon.cn>
----
- arch/x86/xen/pmu.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Agreed.
 
-diff --git a/arch/x86/xen/pmu.c b/arch/x86/xen/pmu.c
-index e13b0b4..6480eed 100644
---- a/arch/x86/xen/pmu.c
-+++ b/arch/x86/xen/pmu.c
-@@ -92,11 +92,11 @@ static void xen_pmu_arch_init(void)
- 			break;
- 		}
- 	} else if (boot_cpu_data.x86_vendor == X86_VENDOR_HYGON) {
--		amd_num_counters = F10H_NUM_COUNTERS;
--		amd_counters_base = MSR_K7_PERFCTR0;
--		amd_ctrls_base = MSR_K7_EVNTSEL0;
--		amd_msr_step = 1;
--		k7_counters_mirrored = 0;
-+		amd_num_counters = F15H_NUM_COUNTERS;
-+		amd_counters_base = MSR_F15H_PERF_CTR;
-+		amd_ctrls_base = MSR_F15H_PERF_CTL;
-+		amd_msr_step = 2;
-+		k7_counters_mirrored = 1;
- 	} else {
- 		uint32_t eax, ebx, ecx, edx;
- 
--- 
-2.7.4
+> We'd be much better off just having a list_head in the caller
+> and list_splice() the queue->list onto that caller.  Then call
+> __sigqueue_free() for each signal on the queue.
+
+This won't work, note the comment which explains the race with sigqueue_free().
+
+Let me think about it... at least we can do something like
+
+	close_the_race_with_sigqueue_free(struct sigpending *queue)
+	{
+		struct sigqueue *q, *t;
+
+		list_for_each_entry_safe(q, t, ...) {
+			if (q->flags & SIGQUEUE_PREALLOC)
+				list_del_init(&q->list);
+	}
+
+called with ->siglock held, tasklist_lock is not needed.
+
+After that flush_sigqueue() can be called lockless in release_task() release_task.
+
+I'll try to make the patch tomorrow.
+
+Oleg.
 
