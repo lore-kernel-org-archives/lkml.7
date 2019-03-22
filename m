@@ -4,61 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C005C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:01:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3017EC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:01:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AAD92075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:01:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F09A42075E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:01:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553259662;
-	bh=ItaD8kDeaVxFGMcQUrCQHFrofUl3jtpJvFiM69Dqang=;
+	s=default; t=1553259670;
+	bh=Nc14EW6gtfd0IKGSMumnMoi4t6CC9i2gtf9FL2l1Tw4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UujAXnfxAfiHQIJRtU8y262hXFkx+Gl3JTqeZQiZxfJDClo5ERknIRM0EzEMViION
-	 4FXv8mO11+5xn7l0mXa+umd2+U4YzNjFIBd3VIpCb5JUNmQsqdFufkt2mARjMgFpRL
-	 +inlgxAVvQVmehpY3fRGVaN63hEaReaw2XspPfbA=
+	b=Okn4R0073QCNdBhiSkL64+Ks7Z499DjHV2dpiJ0WGb9YawSLqaEikIwm/rd2ES0M8
+	 UmHuA+lEtF0F3GTRdSI8boSjImayjcH+w/xcOBS9NUxSNCf86lA//1lAZTeVQhP54k
+	 2GhyzAry92bmjwcYMyAgwcqrmE8t0LpdBeoImMjc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731981AbfCVNBB (ORCPT
+        id S1731670AbfCVLn3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 09:01:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46380 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:43:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731299AbfCVLnh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:43:37 -0400
+        id S1727954AbfCVLn1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:43:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 540A921916;
-        Fri, 22 Mar 2019 11:43:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6451204FD;
+        Fri, 22 Mar 2019 11:43:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255016;
-        bh=ItaD8kDeaVxFGMcQUrCQHFrofUl3jtpJvFiM69Dqang=;
+        s=default; t=1553255006;
+        bh=Nc14EW6gtfd0IKGSMumnMoi4t6CC9i2gtf9FL2l1Tw4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gk7UngINHf80Lcrqg0zniNYHXVVU9+Sq/Qvntz6z17cMBmYcGW+uH9McBb7NIWPNY
-         toyC6dne71y4UXqK0M+FFHm286adALjFstPMZasQx7//u+hKgQpM52/EccasXNVU4/
-         ThPQc53EgfqmRJii2RQeCAGJm3nH7eubPt74ManU=
+        b=pfYOjnr30ChEGPxPk7S2r58duQLSHkQq27WAamKFP3IVgOW9PyQ2cqfKYECsi+g5p
+         MNpfUgJTsb+B7FGjlR8x9GcsiCSkYfabnFlzrGFOSwVQNCD8iywzlxft100GCQfHcv
+         lkk5uufirqkrT5wJ8j5tmp2JpWYeUAr4cs0w2LBA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Varad Gautam <vrd@amazon.de>,
-        Zheng Wang <wanz@amazon.de>,
-        Brandon Schwartz <bsschwar@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Maximilian Heyne <mheyne@amazon.de>,
-        Stefan Nuernberger <snu@amazon.de>, Amit Shah <aams@amazon.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@ZenIV.linux.org.uk>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Eric Biggers <ebiggers@google.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Nicolas Pernas Maradei <npernas@amazon.de>
-Subject: [PATCH 4.9 063/118] fs/devpts: always delete dcache dentry-s in dput()
-Date:   Fri, 22 Mar 2019 12:15:35 +0100
-Message-Id: <20190322111221.116818757@linuxfoundation.org>
+        stable@vger.kernel.org, zhongjiang <zhongjiang@huawei.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Hugh Dickins <hughd@google.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.9 078/118] mm: hwpoison: fix thp split handing in soft_offline_in_use_page()
+Date:   Fri, 22 Mar 2019 12:15:50 +0100
+Message-Id: <20190322111222.094337495@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111215.873964544@linuxfoundation.org>
 References: <20190322111215.873964544@linuxfoundation.org>
@@ -77,80 +71,76 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Varad Gautam <vrd@amazon.de>
+From: zhongjiang <zhongjiang@huawei.com>
 
-commit 73052b0daee0b750b39af18460dfec683e4f5887 upstream.
+commit 46612b751c4941c5c0472ddf04027e877ae5990f upstream.
 
-d_delete only unhashes an entry if it is reached with
-dentry->d_lockref.count != 1. Prior to commit 8ead9dd54716 ("devpts:
-more pty driver interface cleanups"), d_delete was called on a dentry
-from devpts_pty_kill with two references held, which would trigger the
-unhashing, and the subsequent dputs would release it.
+When soft_offline_in_use_page() runs on a thp tail page after pmd is
+split, we trigger the following VM_BUG_ON_PAGE():
 
-Commit 8ead9dd54716 reworked devpts_pty_kill to stop acquiring the second
-reference from d_find_alias, and the d_delete call left the dentries
-still on the hashed list without actually ever being dropped from dcache
-before explicit cleanup. This causes the number of negative dentries for
-devpts to pile up, and an `ls /dev/pts` invocation can take seconds to
-return.
+  Memory failure: 0x3755ff: non anonymous thp
+  __get_any_page: 0x3755ff: unknown zero refcount page type 2fffff80000000
+  Soft offlining pfn 0x34d805 at process virtual address 0x20fff000
+  page:ffffea000d360140 count:0 mapcount:0 mapping:0000000000000000 index:0x1
+  flags: 0x2fffff80000000()
+  raw: 002fffff80000000 ffffea000d360108 ffffea000d360188 0000000000000000
+  raw: 0000000000000001 0000000000000000 00000000ffffffff 0000000000000000
+  page dumped because: VM_BUG_ON_PAGE(page_ref_count(page) == 0)
+  ------------[ cut here ]------------
+  kernel BUG at ./include/linux/mm.h:519!
 
-Provide always_delete_dentry() from simple_dentry_operations
-as .d_delete for devpts, to make the dentry be dropped from dcache.
+soft_offline_in_use_page() passed refcount and page lock from tail page
+to head page, which is not needed because we can pass any subpage to
+split_huge_page().
 
-Without this cleanup, the number of dentries in /dev/pts/ can be grown
-arbitrarily as:
+Naoya had fixed a similar issue in c3901e722b29 ("mm: hwpoison: fix thp
+split handling in memory_failure()").  But he missed fixing soft
+offline.
 
-`python -c 'import pty; pty.spawn(["ls", "/dev/pts"])'`
-
-A systemtap probe on dcache_readdir to count d_subdirs shows this count
-to increase with each pty spawn invocation above:
-
-probe kernel.function("dcache_readdir") {
-    subdirs = &@cast($file->f_path->dentry, "dentry")->d_subdirs;
-    p = subdirs;
-    p = @cast(p, "list_head")->next;
-    i = 0
-    while (p != subdirs) {
-      p = @cast(p, "list_head")->next;
-      i = i+1;
-    }
-    printf("number of dentries: %d\n", i);
-}
-
-Fixes: 8ead9dd54716 ("devpts: more pty driver interface cleanups")
-Signed-off-by: Varad Gautam <vrd@amazon.de>
-Reported-by: Zheng Wang <wanz@amazon.de>
-Reported-by: Brandon Schwartz <bsschwar@amazon.de>
-Root-caused-by: Maximilian Heyne <mheyne@amazon.de>
-Root-caused-by: Nicolas Pernas Maradei <npernas@amazon.de>
-CC: David Woodhouse <dwmw@amazon.co.uk>
-CC: Maximilian Heyne <mheyne@amazon.de>
-CC: Stefan Nuernberger <snu@amazon.de>
-CC: Amit Shah <aams@amazon.de>
-CC: Linus Torvalds <torvalds@linux-foundation.org>
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: Al Viro <viro@ZenIV.linux.org.uk>
-CC: Christian Brauner <christian.brauner@ubuntu.com>
-CC: Eric W. Biederman <ebiederm@xmission.com>
-CC: Matthew Wilcox <willy@infradead.org>
-CC: Eric Biggers <ebiggers@google.com>
-CC: <stable@vger.kernel.org> # 4.9+
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Link: http://lkml.kernel.org/r/1551452476-24000-1-git-send-email-zhongjiang@huawei.com
+Fixes: 61f5d698cc97 ("mm: re-enable THP")
+Signed-off-by: zhongjiang <zhongjiang@huawei.com>
+Acked-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Hugh Dickins <hughd@google.com>
+Cc: Kirill A. Shutemov <kirill@shutemov.name>
+Cc: Andrea Arcangeli <aarcange@redhat.com>
+Cc: <stable@vger.kernel.org>	[4.5+]
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/devpts/inode.c |    1 +
- 1 file changed, 1 insertion(+)
+ mm/memory-failure.c |   14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
 
---- a/fs/devpts/inode.c
-+++ b/fs/devpts/inode.c
-@@ -396,6 +396,7 @@ devpts_fill_super(struct super_block *s,
- 	s->s_blocksize_bits = 10;
- 	s->s_magic = DEVPTS_SUPER_MAGIC;
- 	s->s_op = &devpts_sops;
-+	s->s_d_op = &simple_dentry_operations;
- 	s->s_time_gran = 1;
+--- a/mm/memory-failure.c
++++ b/mm/memory-failure.c
+@@ -1705,19 +1705,17 @@ static int soft_offline_in_use_page(stru
+ 	struct page *hpage = compound_head(page);
  
- 	error = -ENOMEM;
+ 	if (!PageHuge(page) && PageTransHuge(hpage)) {
+-		lock_page(hpage);
+-		if (!PageAnon(hpage) || unlikely(split_huge_page(hpage))) {
+-			unlock_page(hpage);
+-			if (!PageAnon(hpage))
++		lock_page(page);
++		if (!PageAnon(page) || unlikely(split_huge_page(page))) {
++			unlock_page(page);
++			if (!PageAnon(page))
+ 				pr_info("soft offline: %#lx: non anonymous thp\n", page_to_pfn(page));
+ 			else
+ 				pr_info("soft offline: %#lx: thp split failed\n", page_to_pfn(page));
+-			put_hwpoison_page(hpage);
++			put_hwpoison_page(page);
+ 			return -EBUSY;
+ 		}
+-		unlock_page(hpage);
+-		get_hwpoison_page(page);
+-		put_hwpoison_page(hpage);
++		unlock_page(page);
+ 	}
+ 
+ 	if (PageHuge(page))
 
 
