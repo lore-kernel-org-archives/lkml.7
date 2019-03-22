@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D933BC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:21:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E5FC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:21:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7CEF21917
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:21:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 425B721934
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:21:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553253672;
-	bh=Ci8r9JrvBQlkMj6wlh01sOCISBE4+eY9wb35xQ7lnnk=;
+	s=default; t=1553253675;
+	bh=tkV1TpvmJe77mtEi11D+/CaNkHmZuRRuQKV4rvFnYUY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D6MXnvkNt18yzyrS1xJzlMt6/+N87qxv5pYa9jl0jhSnZPYTSbvVgvnOmFSZBtdao
-	 ztEDb6oNDzc99rKFqeAoAs2CQ2RJtiSSTUk67PC4ax7JGRFnvh8e52pDAgN5Czm4OU
-	 4/nW32O+fjPwNP+U1mgM2E69yPqgLJYT9FLY7xtM=
+	b=pRH5WmgCQhZH3y00+fjWOISTwAwWKipz5sJ3ZxFbTG30Ej4r782kOq1D9AxbPLX1L
+	 cpJVPh9AR97c4l5k98ZjxsjkR0jff2P56XXfukiQTwHBcfXOcj/p2U88cQ++0qZuyE
+	 iufZQu5vgEFlgCQFhCsuh43kNOViL7qzl/05lSsI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728544AbfCVLVL (ORCPT
+        id S1728555AbfCVLVO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:21:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47610 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:21:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728504AbfCVLVJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:21:09 -0400
+        id S1728542AbfCVLVM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:21:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0166E218A2;
-        Fri, 22 Mar 2019 11:21:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA35421917;
+        Fri, 22 Mar 2019 11:21:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553253668;
-        bh=Ci8r9JrvBQlkMj6wlh01sOCISBE4+eY9wb35xQ7lnnk=;
+        s=default; t=1553253671;
+        bh=tkV1TpvmJe77mtEi11D+/CaNkHmZuRRuQKV4rvFnYUY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SVQ6B8BV76gNDw3+jYS4miXqU6m6IWy3jxPw7vEUMpFaKBJIMGY/eG6Gil75n06bh
-         jOJY0ULZ5wJMs/stLnH+WW83OBtZp+RTgHAynrk040MkeiKSbccM6jer6Gsx0b8h5Y
-         vTgGjoyoFBRibVKO/f3BIr+UqH3OyHsK2m0vys+E=
+        b=LGryAmeHRYPCBFmWd0moudEEbHn8qdYJ3ca2PR1xb4jukooiM+WBYAEjxYULt+6jG
+         WTGz+eTHxwWHijDBOo0lZdpX3RUQlxgmu06detUvKA/EgyXLQlpcfEtuVHNm8OKKIB
+         428L2FgoMdfleJnH+v/A6QlGIjJgS5j8pvzfl4ng=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Varun Prakash <varun@chelsio.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Atsushi Nemoto <atsushi.nemoto@sord.co.jp>,
+        Thor Thayer <thor.thayer@linux.intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 3.18 035/134] scsi: csiostor: fix NULL pointer dereference in csio_vport_set_state()
-Date:   Fri, 22 Mar 2019 12:14:08 +0100
-Message-Id: <20190322111212.275272667@linuxfoundation.org>
+Subject: [PATCH 3.18 036/134] net: altera_tse: fix connect_local_phy error path
+Date:   Fri, 22 Mar 2019 12:14:09 +0100
+Message-Id: <20190322111212.363111558@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111210.465931067@linuxfoundation.org>
 References: <20190322111210.465931067@linuxfoundation.org>
@@ -66,38 +67,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit fe35a40e675473eb65f2f5462b82770f324b5689 ]
+[ Upstream commit 17b42a20d7ca59377788c6a2409e77569570cc10 ]
 
-Assign fc_vport to ln->fc_vport before calling csio_fcoe_alloc_vnp() to
-avoid a NULL pointer dereference in csio_vport_set_state().
+The connect_local_phy should return NULL (not negative errno) on
+error, since its caller expects it.
 
-ln->fc_vport is dereferenced in csio_vport_set_state().
-
-Signed-off-by: Varun Prakash <varun@chelsio.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Atsushi Nemoto <atsushi.nemoto@sord.co.jp>
+Acked-by: Thor Thayer <thor.thayer@linux.intel.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/csiostor/csio_attr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/altera/altera_tse_main.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/csiostor/csio_attr.c b/drivers/scsi/csiostor/csio_attr.c
-index 065a87ace623b..22b800b5ac7ff 100644
---- a/drivers/scsi/csiostor/csio_attr.c
-+++ b/drivers/scsi/csiostor/csio_attr.c
-@@ -582,12 +582,12 @@ csio_vport_create(struct fc_vport *fc_vport, bool disable)
- 	}
+diff --git a/drivers/net/ethernet/altera/altera_tse_main.c b/drivers/net/ethernet/altera/altera_tse_main.c
+index 2eb6404755b1f..c1b599c521953 100644
+--- a/drivers/net/ethernet/altera/altera_tse_main.c
++++ b/drivers/net/ethernet/altera/altera_tse_main.c
+@@ -706,8 +706,10 @@ static struct phy_device *connect_local_phy(struct net_device *dev)
  
- 	fc_vport_set_state(fc_vport, FC_VPORT_INITIALIZING);
-+	ln->fc_vport = fc_vport;
+ 		phydev = phy_connect(dev, phy_id_fmt, &altera_tse_adjust_link,
+ 				     priv->phy_iface);
+-		if (IS_ERR(phydev))
++		if (IS_ERR(phydev)) {
+ 			netdev_err(dev, "Could not attach to PHY\n");
++			phydev = NULL;
++		}
  
- 	if (csio_fcoe_alloc_vnp(hw, ln))
- 		goto error;
- 
- 	*(struct csio_lnode **)fc_vport->dd_data = ln;
--	ln->fc_vport = fc_vport;
- 	if (!fc_vport->node_name)
- 		fc_vport->node_name = wwn_to_u64(csio_ln_wwnn(ln));
- 	if (!fc_vport->port_name)
+ 	} else {
+ 		int ret;
 -- 
 2.19.1
 
