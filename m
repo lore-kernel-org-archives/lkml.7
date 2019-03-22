@@ -2,116 +2,108 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D35C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 10:12:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64FD0C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 10:12:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45412218D3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 10:12:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3131E218D3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 10:12:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PgFqdHK7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728043AbfCVKMf (ORCPT
+        id S1728055AbfCVKMq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 06:12:35 -0400
-Received: from mga06.intel.com ([134.134.136.31]:49211 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727858AbfCVKMf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 06:12:35 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Mar 2019 03:12:34 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,256,1549958400"; 
-   d="scan'208";a="124918269"
-Received: from vanderss-mobl1.ger.corp.intel.com (HELO localhost) ([10.249.254.199])
-  by orsmga007.jf.intel.com with ESMTP; 22 Mar 2019 03:12:29 -0700
-Date:   Fri, 22 Mar 2019 12:12:27 +0200
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Roberto Sassu <roberto.sassu@huawei.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        David Howells <dhowells@redhat.com>, keyrings@vger.kernel.org,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
-Subject: Re: [PATCH] security/keys/trusted: Allow operation without hardware
- TPM
-Message-ID: <20190322101227.GB3122@linux.intel.com>
-References: <155295271345.1945351.6465460744078693578.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20190321135451.GD4603@linux.intel.com>
- <809e827b-fdbe-fbb8-8acf-2878ae9f7777@huawei.com>
- <CAPcyv4gc_KWedC12bTcX24KwjKiBCF=yvouRNzCbJKaLrgJdDg@mail.gmail.com>
- <d0434a90-4010-8c76-c02e-bb1a6ec831ef@huawei.com>
+        Fri, 22 Mar 2019 06:12:46 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:58028 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727858AbfCVKMq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 06:12:46 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2MACWpk006917;
+        Fri, 22 Mar 2019 05:12:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1553249552;
+        bh=a5BFW0ZexZTd5kUCcaCt98sCahj2yxbN9beRd9GDa7o=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=PgFqdHK7k/GT5xIZHDHZxwnNVGbsVZNLTOrtPD6EhyHcSEZ45h6+/jpW2ThbvFEnu
+         JIdmo+c4E0Dz3CFQuKCHhQMIS6MQpawV2mg6OQsQ6Hnl4isfzzOjdDUWJsm/WPWR5G
+         VZVH17ICus6CTOwycvu5ZpxF59yYV9m2aym067kw=
+Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2MACWSP055601
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 22 Mar 2019 05:12:32 -0500
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 22
+ Mar 2019 05:12:31 -0500
+Received: from dflp33.itg.ti.com (10.64.6.16) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_0,
+ cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5 via Frontend Transport;
+ Fri, 22 Mar 2019 05:12:31 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by dflp33.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2MACT6W019366;
+        Fri, 22 Mar 2019 05:12:29 -0500
+Subject: Re: [PATCH v2 01/15] drm/bridge: tc358767: Simplify tc_poll_timeout()
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        <dri-devel@lists.freedesktop.org>
+CC:     Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Archit Taneja <architt@codeaurora.org>,
+        Andrey Gusakov <andrey.gusakov@cogentembedded.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        <linux-kernel@vger.kernel.org>
+References: <20190322032901.12045-1-andrew.smirnov@gmail.com>
+ <20190322032901.12045-2-andrew.smirnov@gmail.com>
+From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
+Message-ID: <97427148-0a1f-ceab-e95a-846f1b7924c9@ti.com>
+Date:   Fri, 22 Mar 2019 12:12:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d0434a90-4010-8c76-c02e-bb1a6ec831ef@huawei.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190322032901.12045-2-andrew.smirnov@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 21, 2019 at 06:45:47PM +0100, Roberto Sassu wrote:
-> On 3/21/2019 5:30 PM, Dan Williams wrote:
-> > On Thu, Mar 21, 2019 at 7:27 AM Roberto Sassu <roberto.sassu@huawei.com> wrote:
-> > > 
-> > > On 3/21/2019 2:54 PM, Jarkko Sakkinen wrote:
-> > > > On Mon, Mar 18, 2019 at 04:45:13PM -0700, Dan Williams wrote:
-> > > > > Rather than fail initialization of the trusted.ko module, arrange for
-> > > > > the module to load, but rely on trusted_instantiate() to fail
-> > > > > trusted-key operations.
-> > > > > 
-> > > > > Fixes: 240730437deb ("KEYS: trusted: explicitly use tpm_chip structure...")
-> > > > > Cc: Roberto Sassu <roberto.sassu@huawei.com>
-> > > > > Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > > > > Cc: James Bottomley <jejb@linux.ibm.com>
-> > > > > Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > > > > Cc: Mimi Zohar <zohar@linux.ibm.com>
-> > > > > Cc: David Howells <dhowells@redhat.com>
-> > > > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> > > > 
-> > > > It should check for chip in each function that uses TPM now that
-> > > > the code does not rely on default chip. Otherwise, the semantics
-> > > > are kind of inconsistent.
-> > > 
-> > > If no other TPM function can be used before a successful key
-> > > instantiate, checking for a chip only in trusted_instantiate() seems
-> > > sufficient. Then, the same chip will be used by all TPM functions until
-> > > module unloading, since we incremented the reference count.
-> > > 
-> > > I would suggest to move the tpm_default_chip() and init_digests() calls
-> > > to trusted_instantiate() to restore the old behavior of init_trusted().
-> > > 
-> > > trusted_instantiate() should look like:
-> > > ---
-> > > if (!chip) {
-> > >          chip = tpm_default_chip();
-> > >          if (!chip)
-> > >                  return -ENODEV;
-> > > }
-> > > 
-> > > if (!digests) {
-> > >          ret = init_digests();
-> > >          if (ret < 0)
-> > >                  return ret;
-> > > }
-> > 
-> > This patch already achieves that because tpm_find_get_ops() will fail
-> > and cause tpm_is_tpm2() to return NULL.
+On 22/03/2019 05:28, Andrey Smirnov wrote:
+> Implementation of tc_poll_timeout() is almost a 100% copy-and-paste of
+> the code for regmap_read_poll_timeout(). Replace copied code with a
+> call to the original. While at it change tc_poll_timeout to accept
+> "struct tc_data *" instead of "struct regmap *" for brevity. No
+> functional change intended.
 > 
-> In addition, the changes I proposed would allow users to create trusted
-> keys if a TPM is added later. CONFIG_TRUSTED_KEYS=y and
-> CONFIG_TCG_TPM=m is a valid configuration.
-> 
-> Jarkko, Dan's patch seems sufficient to fix the issue. He could include
-> the changes I proposed in his patch. What is your opinion?
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Cc: Archit Taneja <architt@codeaurora.org>
+> Cc: Andrzej Hajda <a.hajda@samsung.com>
+> Cc: Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+> Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> Cc: Andrey Gusakov <andrey.gusakov@cogentembedded.com>
+> Cc: Philipp Zabel <p.zabel@pengutronix.de>
+> Cc: Chris Healy <cphealy@gmail.com>
+> Cc: Lucas Stach <l.stach@pengutronix.de>
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  drivers/gpu/drm/bridge/tc358767.c | 26 ++++++--------------------
+>  1 file changed, 6 insertions(+), 20 deletions(-)
 
-Agreed.
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
 
-/Jarkko
+ Tomi
+
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
