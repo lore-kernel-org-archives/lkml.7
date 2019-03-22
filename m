@@ -2,105 +2,174 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E26AC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 10:04:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD73FC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 10:05:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8D7E21917
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 10:04:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NF2eXsO+"
+	by mail.kernel.org (Postfix) with ESMTP id 9ACF52190A
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 10:05:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728022AbfCVKEx (ORCPT
+        id S1727998AbfCVKEs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 06:04:53 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:38516 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727996AbfCVKEt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 06:04:49 -0400
-Received: by mail-lf1-f67.google.com with SMTP id a6so978407lfl.5
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 03:04:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=t6+n4f41N7wv36g1UYXNys6g6DWKroMCT+XJiPmgZs8=;
-        b=NF2eXsO+IIaaDSuLXUNIe+TAs0D2e3redoJ13ZxlpYP9iYn0Mk2NqwFUgd4pUuFVyY
-         u7hWBtCkMlRcd88DuEf5bRgWduFgt9vYB+3Y1cZIh4SjOM8D3SRI447sK3z6LEMwAK4z
-         MdPaytWPspUZyb6VhTM/l7VNFhz5fcD/qdvhwJweJTiAvt/z6gttYcuYRtQwggIPcBA/
-         z0liLo08Soz3k3/O3tBe3ce59ULu5Ni7QWZNxFRZ8enAK/NQWEHZ0O3urr1dQ3ztvO5D
-         RJ/Ky0mRDuMlZBF0rIKz6qYcQZOtFs12i5ROR+Ff5LUMpiueXgRWW76p0x2yT9mjA9m5
-         lXtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=t6+n4f41N7wv36g1UYXNys6g6DWKroMCT+XJiPmgZs8=;
-        b=h+nVqsiz2Pi6UzIStOvDHbg/Lr0AvFhViCqIAfLc/5OW5LW3G3NZAADiCkdi+xc+XW
-         Rq6ARiSLbs7WhRsQ0OyGSD2wYJuZFD2mhLDrCNmCcQk0/mhreC9CNjwadD0Dfwd/4u5E
-         DYe4hwzVyxjPco5wHP977ed8l14p2GBI0ZRGvRLIr5IBMIoIl6779yizIwqE8ro6eodk
-         MFE3Ox+aYCAzjZp3t7GqR5hZsLiEgcCz1us4EgHJ8D7hOaWO7r24DtIVHR2Gay/vbVe1
-         4mDm63ki+R1MnCqwsnUk8n70lalIDinJ9gWgLsdeCZC38xSXl+6RaSqhoAgPGlOx2FYD
-         Chug==
-X-Gm-Message-State: APjAAAXRoUkTlCJQwoE8m0Z5t7aqV1Wz3yPTgphItOaWIew3J26OK+6D
-        BmuBya/OHsDf7pGtCgLZ2o8leQ==
-X-Google-Smtp-Source: APXvYqyu9SARpOCugOfNE66cWQctj0XoP8YyI1v2eDh+rMtaPFjfHVlwBUqg5OQKqgbrgCfNFPEpQA==
-X-Received: by 2002:a19:238f:: with SMTP id j137mr4633040lfj.79.1553249087589;
-        Fri, 22 Mar 2019 03:04:47 -0700 (PDT)
-Received: from localhost.localdomain ([212.45.67.2])
-        by smtp.googlemail.com with ESMTPSA id s76sm1550095lfs.32.2019.03.22.03.04.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 22 Mar 2019 03:04:46 -0700 (PDT)
-From:   Georgi Djakov <georgi.djakov@linaro.org>
-To:     gregkh@linuxfoundation.org
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        evgreen@chromium.org, daidavid1@codeaurora.org,
-        georgi.djakov@linaro.org,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH v2] MAINTAINERS: Add mailing list for the interconnect API
-Date:   Fri, 22 Mar 2019 12:04:41 +0200
-Message-Id: <20190322100441.6315-1-georgi.djakov@linaro.org>
-X-Mailer: git-send-email 2.21.0
+        Fri, 22 Mar 2019 06:04:48 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36112 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727680AbfCVKEr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 06:04:47 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 6F5EAACD0;
+        Fri, 22 Mar 2019 10:04:45 +0000 (UTC)
+From:   Luis Henriques <lhenriques@suse.com>
+To:     "Yan\, Zheng" <ukernel@gmail.com>
+Cc:     "Yan\, Zheng" <zyan@redhat.com>, Sage Weil <sage@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        ceph-devel <ceph-devel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] ceph: Fix a memory leak in ci->i_head_snapc
+References: <20190315111107.15154-1-lhenriques@suse.com>
+        <CAAM7YAnD_dK2py+95N8Z7T+Vgr2ZbBJne+tNYivEeUGObhpiCQ@mail.gmail.com>
+        <87r2b4zd2q.fsf@suse.com>
+        <CAAM7YAkhA6ddto3KESWm8yw3D6f02ev7oYmEto=nK3mXZeUy4A@mail.gmail.com>
+        <87lg1c17b2.fsf@suse.com>
+        <CAAM7YAnhJUey6eX6zeWuPCVgyG9JghGQetJ-hk5R8nONivZzkg@mail.gmail.com>
+        <87a7hr19v7.fsf@suse.com>
+Date:   Fri, 22 Mar 2019 10:04:44 +0000
+In-Reply-To: <87a7hr19v7.fsf@suse.com> (Luis Henriques's message of "Tue, 19
+        Mar 2019 09:39:24 +0000")
+Message-ID: <87o963jkcj.fsf@suse.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a mailing list for patch reviews and discussions related to tuning
-the on-chip interconnects. For now i am not expecting a lot of traffic,
-so let's use the linux-pm@ list.
+Luis Henriques <lhenriques@suse.com> writes:
 
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
----
+> "Yan, Zheng" <ukernel@gmail.com> writes:
+>
+>> On Tue, Mar 19, 2019 at 12:22 AM Luis Henriques <lhenriques@suse.com> wrote:
+>>>
+>>> "Yan, Zheng" <ukernel@gmail.com> writes:
+>>>
+>>> > On Mon, Mar 18, 2019 at 6:33 PM Luis Henriques <lhenriques@suse.com> wrote:
+>>> >>
+>>> >> "Yan, Zheng" <ukernel@gmail.com> writes:
+>>> >>
+>>> >> > On Fri, Mar 15, 2019 at 7:13 PM Luis Henriques <lhenriques@suse.com> wrote:
+>>> >> >>
+>>> >> >> I'm occasionally seeing a kmemleak warning in xfstest generic/013:
+>>> >> >>
+>>> >> >> unreferenced object 0xffff8881fccca940 (size 32):
+>>> >> >>   comm "kworker/0:1", pid 12, jiffies 4295005883 (age 130.648s)
+>>> >> >>   hex dump (first 32 bytes):
+>>> >> >>     01 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00  ................
+>>> >> >>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>>> >> >>   backtrace:
+>>> >> >>     [<00000000d741a1ea>] build_snap_context+0x5b/0x2a0
+>>> >> >>     [<0000000021a00533>] rebuild_snap_realms+0x27/0x90
+>>> >> >>     [<00000000ac538600>] rebuild_snap_realms+0x42/0x90
+>>> >> >>     [<000000000e955fac>] ceph_update_snap_trace+0x2ee/0x610
+>>> >> >>     [<00000000a9550416>] ceph_handle_snap+0x317/0x5f3
+>>> >> >>     [<00000000fc287b83>] dispatch+0x362/0x176c
+>>> >> >>     [<00000000a312c741>] ceph_con_workfn+0x9ce/0x2cf0
+>>> >> >>     [<000000004168e3a9>] process_one_work+0x1d4/0x400
+>>> >> >>     [<000000002188e9e7>] worker_thread+0x2d/0x3c0
+>>> >> >>     [<00000000b593e4b3>] kthread+0x112/0x130
+>>> >> >>     [<00000000a8587dca>] ret_from_fork+0x35/0x40
+>>> >> >>     [<00000000ba1c9c1d>] 0xffffffffffffffff
+>>> >> >>
+>>> >> >> It looks like it is possible that we miss a flush_ack from the MDS when,
+>>> >> >> for example, umounting the filesystem.  In that case, we can simply drop
+>>> >> >> the reference to the ceph_snap_context obtained in ceph_queue_cap_snap().
+>>> >> >>
+>>> >> >> Link: https://tracker.ceph.com/issues/38224
+>>> >> >> Cc: stable@vger.kernel.org
+>>> >> >> Signed-off-by: Luis Henriques <lhenriques@suse.com>
+>>> >> >> ---
+>>> >> >>  fs/ceph/caps.c | 7 +++++++
+>>> >> >>  1 file changed, 7 insertions(+)
+>>> >> >>
+>>> >> >> diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
+>>> >> >> index 36a8dc699448..208f4dc6f574 100644
+>>> >> >> --- a/fs/ceph/caps.c
+>>> >> >> +++ b/fs/ceph/caps.c
+>>> >> >> @@ -1054,6 +1054,7 @@ int ceph_is_any_caps(struct inode *inode)
+>>> >> >>  static void drop_inode_snap_realm(struct ceph_inode_info *ci)
+>>> >> >>  {
+>>> >> >>         struct ceph_snap_realm *realm = ci->i_snap_realm;
+>>> >> >> +
+>>> >> >>         spin_lock(&realm->inodes_with_caps_lock);
+>>> >> >>         list_del_init(&ci->i_snap_realm_item);
+>>> >> >>         ci->i_snap_realm_counter++;
+>>> >> >> @@ -1063,6 +1064,12 @@ static void drop_inode_snap_realm(struct ceph_inode_info *ci)
+>>> >> >>         spin_unlock(&realm->inodes_with_caps_lock);
+>>> >> >>         ceph_put_snap_realm(ceph_sb_to_client(ci->vfs_inode.i_sb)->mdsc,
+>>> >> >>                             realm);
+>>> >> >> +       /*
+>>> >> >> +        * ci->i_head_snapc should be NULL, but we may still be waiting for a
+>>> >> >> +        * flush_ack from the MDS.  In that case, we still hold a ref for the
+>>> >> >> +        * ceph_snap_context and we need to drop it.
+>>> >> >> +        */
+>>> >> >> +       ceph_put_snap_context(ci->i_head_snapc);
+>>> >> >>  }
+>>> >> >>
+>>> >> >>  /*
+>>> >> >
+>>> >> > This does not seem right.  i_head_snapc is cleared when
+>>> >> > (ci->i_wrbuffer_ref_head == 0 && ci->i_dirty_caps == 0 &&
+>>> >> > ci->i_flushing_caps == 0) . Nothing do with dropping ci->i_snap_realm.
+>>> >> > Did you see 'reconnect denied' during the test? If you did, the fix
+>>> >> > should be in iterate_session_caps()
+>>> >> >
+>>> >>
+>>> >> No, I didn't saw any 'reconnect denied' in the test.  The test actually
+>>> >> seems to execute fine, except from the memory leak.
+>>> >>
+>>> >> It's very difficult to reproduce this issue, but last time I managed to
+>>> >> get this memory leak to trigger I actually had some debugging code in
+>>> >> drop_inode_snap_realm, something like:
+>>> >>
+>>> >>   if (ci->i_head_snapc)
+>>> >>         printk("i_head_snapc: 0x%px\n", ci->i_head_snapc);
+>>> >
+>>> > please add code that prints i_wrbuffer_ref_head, i_dirty_caps,
+>>> > i_flushing_caps. and try reproducing it again.
+>>> >
+>>>
+>>> Ok, it took me a few hours, but I managed to reproduce the bug, with
+>>> those extra printks.  All those values are set to 0 when the bug
+>>> triggers (and i_head_snapc != NULL).
+>>>
+>>
+>> Thanks, which test triggers this bug?
+>
+> That's generic/013.  It usually triggers after a few hours of running it
+> in a loop (I'm using a vstart cluster for that).
+>
+>>
+>> I searched that code, found we may fail to cleanup i_head_snap in two
+>> places. One is in ceph_queue_cap_snap, Another is in
+>> remove_session_caps_cb().
+>
+> Ah, great!  I spent a lot of time looking but I couldn't really find it.
+> My bet was that ceph_queue_cap_snap was doing the ceph_get_snap_context
+> and that the corresponding ceph_put_snap_context would be done in
+> handle_cap_flush_ack. That's why I mentioned the missing flush_ack from
+> MDS.
 
-Hi Greg,
-Can you please pick this fix for the next possible -rc, so people can
-know where to send patches. Thanks!
-Georgi
+Something that I didn't said explicitly is that I *know* that the
+unbalanced ceph_get_snap_context() is the one in function
+ceph_queue_cap_snap().  I know this for sure because I've managed to
+reproduce the issue several times with an instrumented kernel (with
+tracepoints) that allowed me to keep track of all ceph_snap_context
+operations (create, get, put, delete).
 
-Changes since v1 (https://lore.kernel.org/lkml/20190321155050.25847-1-georgi.djakov@linaro.org/)
-- Picked Rafael's Ack.
-
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e17ebf70b548..186439e7f846 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8046,6 +8046,7 @@ F:	drivers/gpio/gpio-intel-mid.c
- 
- INTERCONNECT API
- M:	Georgi Djakov <georgi.djakov@linaro.org>
-+L:	linux-pm@vger.kernel.org
- S:	Maintained
- F:	Documentation/interconnect/
- F:	Documentation/devicetree/bindings/interconnect/
+Cheers,
+-- 
+Luis
