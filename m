@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8182EC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB21AC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:29:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CE3B218FE
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:29:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5D07218FE
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:29:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727390AbfCVP3g (ORCPT
+        id S1727409AbfCVP3h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 11:29:36 -0400
-Received: from retiisi.org.uk ([95.216.213.190]:37900 "EHLO
+        Fri, 22 Mar 2019 11:29:37 -0400
+Received: from retiisi.org.uk ([95.216.213.190]:37876 "EHLO
         hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727265AbfCVP3e (ORCPT
+        by vger.kernel.org with ESMTP id S1727243AbfCVP3e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 22 Mar 2019 11:29:34 -0400
 Received: from lanttu.localdomain (unknown [IPv6:2a01:4f9:c010:4572::e1:1001])
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTP id 19C7E634C83;
-        Fri, 22 Mar 2019 17:27:25 +0200 (EET)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTP id 8B016634C7F;
+        Fri, 22 Mar 2019 17:27:24 +0200 (EET)
 From:   Sakari Ailus <sakari.ailus@linux.intel.com>
 To:     Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
         rafael@kernel.org
 Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH 4/5] lib/vsprintf: Make use of fwnode API to obtain node names and separators
-Date:   Fri, 22 Mar 2019 17:29:29 +0200
-Message-Id: <20190322152930.16642-5-sakari.ailus@linux.intel.com>
+Subject: [PATCH 2/5] device property: Add fwnode_get_name for returning the name of a node
+Date:   Fri, 22 Mar 2019 17:29:27 +0200
+Message-Id: <20190322152930.16642-3-sakari.ailus@linux.intel.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20190322152930.16642-1-sakari.ailus@linux.intel.com>
 References: <20190322152930.16642-1-sakari.ailus@linux.intel.com>
@@ -39,93 +39,140 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of implementing our own means of discovering parent nodes, node
-names or counting how many parents a node has, use the newly added
-functions in the fwnode API to obtain that information.
+The fwnode framework did not have means to obtain the name of a node. Add
+that now, in form of the fwnode_get_name() function and a corresponding
+get_name fwnode op. OF and ACPI support is included.
 
 Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 ---
- lib/vsprintf.c | 37 +++++++++++++++----------------------
- 1 file changed, 15 insertions(+), 22 deletions(-)
+ drivers/acpi/property.c  | 24 ++++++++++++++++++++++++
+ drivers/base/property.c  | 12 ++++++++++++
+ drivers/of/property.c    |  6 ++++++
+ include/linux/fwnode.h   |  2 ++
+ include/linux/property.h |  1 +
+ 5 files changed, 45 insertions(+)
 
-diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-index 5f60b8d41277..91f2a3e4892e 100644
---- a/lib/vsprintf.c
-+++ b/lib/vsprintf.c
-@@ -37,6 +37,7 @@
- #include <net/addrconf.h>
- #include <linux/siphash.h>
- #include <linux/compiler.h>
-+#include <linux/property.h>
- #ifdef CONFIG_BLOCK
- #include <linux/blkdev.h>
- #endif
-@@ -1720,32 +1721,23 @@ char *flags_string(char *buf, char *end, void *flags_ptr, const char *fmt)
- 	return format_flags(buf, end, flags, names);
+diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
+index 77abe0ec4043..8c9a4c02cde2 100644
+--- a/drivers/acpi/property.c
++++ b/drivers/acpi/property.c
+@@ -1291,6 +1291,29 @@ acpi_fwnode_get_reference_args(const struct fwnode_handle *fwnode,
+ 						  args_count, args);
  }
  
--static const char *device_node_name_for_depth(const struct device_node *np, int depth)
--{
--	for ( ; np && depth; depth--)
--		np = np->parent;
--
--	return kbasename(np->full_name);
--}
--
- static noinline_for_stack
--char *device_node_gen_full_name(const struct device_node *np, char *buf, char *end)
-+char *fwnode_gen_full_name(struct fwnode_handle *fwnode, char *buf, char *end)
++static const char *acpi_fwnode_get_name(const struct fwnode_handle *fwnode)
++{
++	const struct acpi_device *adev;
++	struct fwnode_handle *parent;
++
++	parent = fwnode_get_parent(fwnode);
++	/* Is this the root node? */
++	if (!parent)
++		return "\\";
++
++	fwnode_handle_put(parent);
++
++	if (is_acpi_data_node(fwnode)) {
++		const struct acpi_data_node *dn = to_acpi_data_node(fwnode);
++
++		return dn->name;
++	}
++
++	adev = to_acpi_device_node(fwnode);
++
++	return adev ? acpi_device_bid(adev) : NULL;
++}
++
+ static struct fwnode_handle *
+ acpi_fwnode_get_parent(struct fwnode_handle *fwnode)
  {
- 	int depth;
--	const struct device_node *parent = np->parent;
+@@ -1331,6 +1354,7 @@ acpi_fwnode_device_get_match_data(const struct fwnode_handle *fwnode,
+ 		.get_parent = acpi_node_get_parent,			\
+ 		.get_next_child_node = acpi_get_next_subnode,		\
+ 		.get_named_child_node = acpi_fwnode_get_named_child_node, \
++		.get_name = acpi_fwnode_get_name,			\
+ 		.get_reference_args = acpi_fwnode_get_reference_args,	\
+ 		.graph_get_next_endpoint =				\
+ 			acpi_graph_get_next_endpoint,			\
+diff --git a/drivers/base/property.c b/drivers/base/property.c
+index 3f5ff6b23ae4..7ee3786bcde3 100644
+--- a/drivers/base/property.c
++++ b/drivers/base/property.c
+@@ -533,6 +533,18 @@ int device_add_properties(struct device *dev,
+ EXPORT_SYMBOL_GPL(device_add_properties);
  
--	/* special case for root node */
--	if (!parent)
--		return string(buf, end, "/", default_str_spec);
-+	for (depth = fwnode_count_parents(fwnode); depth >= 0; depth--) {
-+		struct fwnode_handle *__fwnode =
-+			fwnode_get_nth_parent(fwnode, depth);
- 
--	for (depth = 0; parent->parent; depth++)
--		parent = parent->parent;
--
--	for ( ; depth >= 0; depth--) {
--		buf = string(buf, end, "/", default_str_spec);
--		buf = string(buf, end, device_node_name_for_depth(np, depth),
-+		buf = string(buf, end, fwnode_get_name_prefix(__fwnode),
-+			     default_str_spec);
-+		buf = string(buf, end, fwnode_get_name(__fwnode),
- 			     default_str_spec);
+ /**
++ * fwnode_get_name - Return the name of a node
++ *
++ * @fwnode - The firmware node
++ *
++ * Returns a pointer to the node name.
++ */
++const char *fwnode_get_name(const struct fwnode_handle *fwnode)
++{
++	return fwnode_call_ptr_op(fwnode, get_name);
++}
 +
-+		fwnode_handle_put(__fwnode);
- 	}
-+
- 	return buf;
++/**
+  * fwnode_get_parent - Return parent firwmare node
+  * @fwnode: Firmware whose parent is retrieved
+  *
+diff --git a/drivers/of/property.c b/drivers/of/property.c
+index 8631efa1daa1..f0a7b78f2d9f 100644
+--- a/drivers/of/property.c
++++ b/drivers/of/property.c
+@@ -872,6 +872,11 @@ of_fwnode_property_read_string_array(const struct fwnode_handle *fwnode,
+ 		of_property_count_strings(node, propname);
  }
  
-@@ -1790,10 +1782,11 @@ char *device_node_string(char *buf, char *end, struct device_node *dn,
++static const char *of_fwnode_get_name(const struct fwnode_handle *fwnode)
++{
++	return kbasename(to_of_node(fwnode)->full_name);
++}
++
+ static struct fwnode_handle *
+ of_fwnode_get_parent(const struct fwnode_handle *fwnode)
+ {
+@@ -993,6 +998,7 @@ const struct fwnode_operations of_fwnode_ops = {
+ 	.property_present = of_fwnode_property_present,
+ 	.property_read_int_array = of_fwnode_property_read_int_array,
+ 	.property_read_string_array = of_fwnode_property_read_string_array,
++	.get_name = of_fwnode_get_name,
+ 	.get_parent = of_fwnode_get_parent,
+ 	.get_next_child_node = of_fwnode_get_next_child_node,
+ 	.get_named_child_node = of_fwnode_get_named_child_node,
+diff --git a/include/linux/fwnode.h b/include/linux/fwnode.h
+index faebf0ca0686..85b7fa4dc727 100644
+--- a/include/linux/fwnode.h
++++ b/include/linux/fwnode.h
+@@ -59,6 +59,7 @@ struct fwnode_reference_args {
+  *				 otherwise.
+  * @property_read_string_array: Read an array of string properties. Return zero
+  *				on success, a negative error code otherwise.
++ * @get_name: Return the name of an fwnode.
+  * @get_parent: Return the parent of an fwnode.
+  * @get_next_child_node: Return the next child node in an iteration.
+  * @get_named_child_node: Return a child node with a given name.
+@@ -85,6 +86,7 @@ struct fwnode_operations {
+ 	(*property_read_string_array)(const struct fwnode_handle *fwnode_handle,
+ 				      const char *propname, const char **val,
+ 				      size_t nval);
++	const char *(*get_name)(const struct fwnode_handle *fwnode);
+ 	struct fwnode_handle *(*get_parent)(const struct fwnode_handle *fwnode);
+ 	struct fwnode_handle *
+ 	(*get_next_child_node)(const struct fwnode_handle *fwnode,
+diff --git a/include/linux/property.h b/include/linux/property.h
+index 1164ac974ee8..2f5df900e310 100644
+--- a/include/linux/property.h
++++ b/include/linux/property.h
+@@ -78,6 +78,7 @@ int fwnode_property_get_reference_args(const struct fwnode_handle *fwnode,
+ 				       unsigned int nargs, unsigned int index,
+ 				       struct fwnode_reference_args *args);
  
- 		switch (*fmt) {
- 		case 'f':	/* full_name */
--			buf = device_node_gen_full_name(dn, buf, end);
-+			buf = fwnode_gen_full_name(of_fwnode_handle(dn), buf,
-+						   end);
- 			break;
- 		case 'n':	/* name */
--			p = kbasename(of_node_full_name(dn));
-+			p = fwnode_get_name(of_fwnode_handle(dn));
- 			precision = str_spec.precision;
- 			str_spec.precision = strchrnul(p, '@') - p;
- 			buf = string(buf, end, p, str_spec);
-@@ -1803,7 +1796,7 @@ char *device_node_string(char *buf, char *end, struct device_node *dn,
- 			buf = number(buf, end, (unsigned int)dn->phandle, num_spec);
- 			break;
- 		case 'P':	/* path-spec */
--			p = kbasename(of_node_full_name(dn));
-+			p = fwnode_get_name(of_fwnode_handle(dn));
- 			if (!p[1])
- 				p = "/";
- 			buf = string(buf, end, p, str_spec);
++const char *fwnode_get_name(const struct fwnode_handle *fwnode);
+ struct fwnode_handle *fwnode_get_parent(const struct fwnode_handle *fwnode);
+ struct fwnode_handle *fwnode_get_next_parent(
+ 	struct fwnode_handle *fwnode);
 -- 
 2.11.0
 
