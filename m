@@ -2,162 +2,230 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A45CBC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 04:03:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85A63C10F03
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 04:14:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 209ED218FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 04:03:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="Kp2YaAuE"
+	by mail.kernel.org (Postfix) with ESMTP id 50586218FE
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 04:14:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726029AbfCVEDb (ORCPT
+        id S1726066AbfCVEOQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 00:03:31 -0400
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:28516 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725550AbfCVEDb (ORCPT
+        Fri, 22 Mar 2019 00:14:16 -0400
+Received: from vmicros1.altlinux.org ([194.107.17.57]:53046 "EHLO
+        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725781AbfCVEOQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 00:03:31 -0400
-Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id x2M43PIY030740;
-        Fri, 22 Mar 2019 13:03:26 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x2M43PIY030740
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1553227406;
-        bh=28+xPXmYPeN1HBmtz7B9dIBqNJifFl2mSkf3nvWDJZs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Kp2YaAuEwLikmvC4tE1wAYayjOtkYpDMHd/shAcuCxRM8AgHeXq/+23dofrv4dVSb
-         8HVqnba7Yx3Ox5BtTYo0eetmpzNDc2uKvCm5wUPI0smYhOqbzK4uUIlMT/Ds5R6oET
-         j9lpSv6OknJZolWGzA0YH34/WqrI5c4wK+mlDvDbZ81HwstX03Ckp57upG1+MzLkDY
-         YLbHqO5PHnNcKgO/Y+RcPC/QCdXXk3uS+QNWZaekxLjwbYRQnlikhZ0Fn5KRzM3Llq
-         WIXeVPNiDBSPR8tQR8ATdS44X4opekuejL9WJvab1hAQNsWFf63Ve5pHUh4w4szBLJ
-         M/h/Tz9BsBsYg==
-X-Nifty-SrcIP: [209.85.217.47]
-Received: by mail-vs1-f47.google.com with SMTP id n14so587009vsp.12;
-        Thu, 21 Mar 2019 21:03:26 -0700 (PDT)
-X-Gm-Message-State: APjAAAXCjCme4oqE+5EffrQjbYMF+4fFjv7IrRi7nUNQQbgfdv3nAIes
-        lA8iG2jZr0vXN5KW4b/nwG2pbG8/gcIWGDmi4Rw=
-X-Google-Smtp-Source: APXvYqwHCEm0SC52OVyTV8OoSE7BfFl85FvHGE+Zip4cPyPTEvrYX2zS38nhxv3hXh8dKizOL2XZv8yCxd2Y9q+yrt8=
-X-Received: by 2002:a67:7c04:: with SMTP id x4mr4634867vsc.155.1553227405005;
- Thu, 21 Mar 2019 21:03:25 -0700 (PDT)
+        Fri, 22 Mar 2019 00:14:16 -0400
+Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
+        by vmicros1.altlinux.org (Postfix) with ESMTP id 2157372CC53;
+        Fri, 22 Mar 2019 07:14:10 +0300 (MSK)
+Received: by mua.local.altlinux.org (Postfix, from userid 508)
+        id 08D5A7CC74C; Fri, 22 Mar 2019 07:14:09 +0300 (MSK)
+Date:   Fri, 22 Mar 2019 07:14:09 +0300
+From:   "Dmitry V. Levin" <ldv@altlinux.org>
+To:     Oleg Nesterov <oleg@redhat.com>, Andy Lutomirski <luto@kernel.org>
+Cc:     Elvira Khabirova <lineprinter@altlinux.org>,
+        Eugene Syromyatnikov <esyr@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Greentime Hu <green.hu@gmail.com>,
+        Helge Deller <deller@gmx.de>,
+        "James E.J. Bottomley" <jejb@parisc-linux.org>,
+        James Hogan <jhogan@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Burton <paul.burton@mips.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Richard Kuo <rkuo@codeaurora.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vincent Chen <deanbo422@gmail.com>, linux-api@vger.kernel.org,
+        linux-hexagon@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        strace-devel@lists.strace.io
+Subject: [PATCH linux-next v8 0/7] ptrace: add PTRACE_GET_SYSCALL_INFO request
+Message-ID: <20190322041409.GA27266@altlinux.org>
 MIME-Version: 1.0
-References: <1548399259-17750-1-git-send-email-yamada.masahiro@socionext.com> <CAK7LNATPU9DJaOMP=8oOMjeGSuAqWSTh2rSesvvfhjXx4HfxRg@mail.gmail.com>
-In-Reply-To: <CAK7LNATPU9DJaOMP=8oOMjeGSuAqWSTh2rSesvvfhjXx4HfxRg@mail.gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Fri, 22 Mar 2019 13:02:49 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQ5g6pFronkmaJrVTvOnep+f_z-LeemDC8_SJAnYz=ZzQ@mail.gmail.com>
-Message-ID: <CAK7LNAQ5g6pFronkmaJrVTvOnep+f_z-LeemDC8_SJAnYz=ZzQ@mail.gmail.com>
-Subject: Re: [PATCH 0/3] media: clean-up header search paths and add
- $(srctree)/ prefix
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org
-Cc:     Sakari Ailus <sakari.ailus@iki.fi>,
-        Patrice Chotard <patrice.chotard@st.com>,
-        Akihiro Tsukada <tskd08@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Abylay Ospan <aospan@netup.ru>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Sergey Kozlov <serjk@netup.ru>, Mike Isely <isely@pobox.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Yasunari Takiguchi <Yasunari.Takiguchi@sony.com>,
-        Andy Walls <awalls@md.metrocast.net>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mauro,
+PTRACE_GET_SYSCALL_INFO is a generic ptrace API that lets ptracer obtain
+details of the syscall the tracee is blocked in.
 
+There are two reasons for a special syscall-related ptrace request.
 
-On Mon, Feb 18, 2019 at 1:41 PM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> Hi Mauro,
->
-> On Fri, Jan 25, 2019 at 4:00 PM Masahiro Yamada
-> <yamada.masahiro@socionext.com> wrote:
-> >
-> > My main motivation is to get rid of crappy header search path manipulation
-> > from Kbuild core.
-> >
-> > Before that, I want to do as many treewide cleanups as possible.
-> >
-> > If you are interested in the big picture of this work,
-> > the full patch set is available at:
-> > git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git build-test
->
->
-> Could you take a look at this series, please?
+Firstly, with the current ptrace API there are cases when ptracer cannot
+retrieve necessary information about syscalls.  Some examples include:
+* The notorious int-0x80-from-64-bit-task issue.  See [1] for details.
+In short, if a 64-bit task performs a syscall through int 0x80, its tracer
+has no reliable means to find out that the syscall was, in fact,
+a compat syscall, and misidentifies it.
+* Syscall-enter-stop and syscall-exit-stop look the same for the tracer.
+Common practice is to keep track of the sequence of ptrace-stops in order
+not to mix the two syscall-stops up.  But it is not as simple as it looks;
+for example, strace had a (just recently fixed) long-standing bug where
+attaching strace to a tracee that is performing the execve system call
+led to the tracer identifying the following syscall-exit-stop as
+syscall-enter-stop, which messed up all the state tracking.
+* Since the introduction of commit 84d77d3f06e7e8dea057d10e8ec77ad71f721be3
+("ptrace: Don't allow accessing an undumpable mm"), both PTRACE_PEEKDATA
+and process_vm_readv become unavailable when the process dumpable flag
+is cleared.  On such architectures as ia64 this results in all syscall
+arguments being unavailable for the tracer.
 
-Ping.
+Secondly, ptracers also have to support a lot of arch-specific code for
+obtaining information about the tracee.  For some architectures, this
+requires a ptrace(PTRACE_PEEKUSER, ...) invocation for every syscall
+argument and return value.
 
+PTRACE_GET_SYSCALL_INFO returns the following structure:
 
+struct ptrace_syscall_info {
+	__u8 op;	/* PTRACE_SYSCALL_INFO_* */
+	__u32 arch __attribute__((__aligned__(sizeof(__u32))));
+	__u64 instruction_pointer;
+	__u64 stack_pointer;
+	union {
+		struct {
+			__u64 nr;
+			__u64 args[6];
+		} entry;
+		struct {
+			__s64 rval;
+			__u8 is_error;
+		} exit;
+		struct {
+			__u64 nr;
+			__u64 args[6];
+			__u32 ret_data;
+		} seccomp;
+	};
+};
 
+The structure was chosen according to [2], except for the following
+changes:
+* seccomp substructure was added as a superset of entry substructure;
+* the type of nr field was changed from int to __u64 because syscall
+numbers are, as a practical matter, 64 bits;
+* stack_pointer field was added along with instruction_pointer field
+since it is readily available and can save the tracer from extra
+PTRACE_GETREGS/PTRACE_GETREGSET calls;
+* arch is always initialized to aid with tracing system calls
+* such as execve();
+* instruction_pointer and stack_pointer are always initialized
+so they could be easily obtained for non-syscall stops;
+* a boolean is_error field was added along with rval field, this way
+the tracer can more reliably distinguish a return value
+from an error value.
 
-> >
-> >
-> >
-> > Masahiro Yamada (3):
-> >   media: coda: remove -I$(src) header search path
-> >   media: remove unneeded header search paths
-> >   media: prefix header search paths with $(srctree)/
-> >
-> >  drivers/media/common/b2c2/Makefile            | 4 ++--
-> >  drivers/media/dvb-frontends/cxd2880/Makefile  | 2 --
-> >  drivers/media/i2c/smiapp/Makefile             | 2 +-
-> >  drivers/media/mmc/siano/Makefile              | 3 +--
-> >  drivers/media/pci/b2c2/Makefile               | 2 +-
-> >  drivers/media/pci/bt8xx/Makefile              | 5 ++---
-> >  drivers/media/pci/cx18/Makefile               | 4 ++--
-> >  drivers/media/pci/cx23885/Makefile            | 4 ++--
-> >  drivers/media/pci/cx88/Makefile               | 4 ++--
-> >  drivers/media/pci/ddbridge/Makefile           | 4 ++--
-> >  drivers/media/pci/dm1105/Makefile             | 2 +-
-> >  drivers/media/pci/mantis/Makefile             | 2 +-
-> >  drivers/media/pci/netup_unidvb/Makefile       | 2 +-
-> >  drivers/media/pci/ngene/Makefile              | 4 ++--
-> >  drivers/media/pci/pluto2/Makefile             | 2 +-
-> >  drivers/media/pci/pt1/Makefile                | 4 ++--
-> >  drivers/media/pci/pt3/Makefile                | 4 ++--
-> >  drivers/media/pci/smipcie/Makefile            | 5 ++---
-> >  drivers/media/pci/ttpci/Makefile              | 4 ++--
-> >  drivers/media/platform/coda/Makefile          | 2 --
-> >  drivers/media/platform/coda/coda-h264.c       | 3 ++-
-> >  drivers/media/platform/coda/trace.h           | 2 +-
-> >  drivers/media/platform/sti/c8sectpfe/Makefile | 5 ++---
-> >  drivers/media/radio/Makefile                  | 2 --
-> >  drivers/media/spi/Makefile                    | 4 +---
-> >  drivers/media/usb/as102/Makefile              | 2 +-
-> >  drivers/media/usb/au0828/Makefile             | 4 ++--
-> >  drivers/media/usb/b2c2/Makefile               | 2 +-
-> >  drivers/media/usb/cx231xx/Makefile            | 5 ++---
-> >  drivers/media/usb/em28xx/Makefile             | 4 ++--
-> >  drivers/media/usb/go7007/Makefile             | 2 +-
-> >  drivers/media/usb/pvrusb2/Makefile            | 4 ++--
-> >  drivers/media/usb/siano/Makefile              | 2 +-
-> >  drivers/media/usb/tm6000/Makefile             | 4 ++--
-> >  drivers/media/usb/ttusb-budget/Makefile       | 2 +-
-> >  drivers/media/usb/usbvision/Makefile          | 2 --
-> >  36 files changed, 50 insertions(+), 64 deletions(-)
-> >
-> > --
-> > 2.7.4
-> >
->
->
-> --
-> Best Regards
-> Masahiro Yamada
+strace has been ported to PTRACE_GET_SYSCALL_INFO.
+Starting with release 4.26, strace uses PTRACE_GET_SYSCALL_INFO API
+as the preferred mechanism of obtaining syscall information.
 
+[1] https://lore.kernel.org/lkml/CA+55aFzcSVmdDj9Lh_gdbz1OzHyEm6ZrGPBDAJnywm2LF_eVyg@mail.gmail.com/
+[2] https://lore.kernel.org/lkml/CAObL_7GM0n80N7J_DFw_eQyfLyzq+sf4y2AvsCCV88Tb3AwEHA@mail.gmail.com/
 
+---
+
+Notes:
+    v8:
+    * Moved syscall_get_arch() specific patches to a separate patchset
+      which is now merged into audit/next tree.
+    * Rebased to linux-next.
+    * Moved ptrace_get_syscall_info code under #ifdef CONFIG_HAVE_ARCH_TRACEHOOK,
+      narrowing down the set of architectures supported by this implementation
+      back to those 19 that enable CONFIG_HAVE_ARCH_TRACEHOOK because
+      I failed to get all syscall_get_*(), instruction_pointer(),
+      and user_stack_pointer() functions implemented on some niche
+      architectures.  This leaves the following architectures out:
+      alpha, h8300, m68k, microblaze, and unicore32.
+
+    v7:
+    * Rebased to v5.0-rc1.
+    * 5 arch-specific preparatory patches out of 25 have been merged
+      into v5.0-rc1 via arch trees.
+
+    v6:
+    * Add syscall_get_arguments and syscall_set_arguments wrappers
+      to asm-generic/syscall.h, requested by Geert.
+    * Change PTRACE_GET_SYSCALL_INFO return code: do not take trailing paddings
+      into account, use the end of the last field of the structure being written.
+    * Change struct ptrace_syscall_info:
+      * remove .frame_pointer field, is is not needed and not portable;
+      * make .arch field explicitly aligned, remove no longer needed
+        padding before .arch field;
+      * remove trailing pads, they are no longer needed.
+
+    v5:
+    * Merge separate series and patches into the single series.
+    * Change PTRACE_EVENTMSG_SYSCALL_{ENTRY,EXIT} values as requested by Oleg.
+    * Change struct ptrace_syscall_info: generalize instruction_pointer,
+      stack_pointer, and frame_pointer fields by moving them from
+      ptrace_syscall_info.{entry,seccomp} substructures to ptrace_syscall_info
+      and initializing them for all stops.
+    * Add PTRACE_SYSCALL_INFO_NONE, set it when not in a syscall stop,
+      so e.g. "strace -i" could use PTRACE_SYSCALL_INFO_SECCOMP to obtain
+      instruction_pointer when the tracee is in a signal stop.
+    * Patch all remaining architectures to provide all necessary
+      syscall_get_* functions.
+    * Make available for all architectures: do not conditionalize on
+      CONFIG_HAVE_ARCH_TRACEHOOK since all syscall_get_* functions
+      are implemented on all architectures.
+    * Add a test for PTRACE_GET_SYSCALL_INFO to selftests/ptrace.
+    
+    v4:
+    * Do not introduce task_struct.ptrace_event,
+      use child->last_siginfo->si_code instead.
+    * Implement PTRACE_SYSCALL_INFO_SECCOMP and ptrace_syscall_info.seccomp
+      support along with PTRACE_SYSCALL_INFO_{ENTRY,EXIT} and
+      ptrace_syscall_info.{entry,exit}.
+    
+    v3:
+    * Change struct ptrace_syscall_info.
+    * Support PTRACE_EVENT_SECCOMP by adding ptrace_event to task_struct.
+    * Add proper defines for ptrace_syscall_info.op values.
+    * Rename PT_SYSCALL_IS_ENTERING and PT_SYSCALL_IS_EXITING to
+      PTRACE_EVENTMSG_SYSCALL_ENTRY and PTRACE_EVENTMSG_SYSCALL_EXIT
+    * and move them to uapi.
+    
+    v2:
+    * Do not use task->ptrace.
+    * Replace entry_info.is_compat with entry_info.arch, use syscall_get_arch().
+    * Use addr argument of sys_ptrace to get expected size of the struct;
+      return full size of the struct.
+
+Dmitry V. Levin (6):
+  nds32: fix asm/syscall.h
+  hexagon: define syscall_get_error() and syscall_get_return_value()
+  mips: define syscall_get_error()
+  parisc: define syscall_get_error()
+  powerpc: define syscall_get_error()
+  selftests/ptrace: add a test case for PTRACE_GET_SYSCALL_INFO
+
+Elvira Khabirova (1):
+  ptrace: add PTRACE_GET_SYSCALL_INFO request
+
+ arch/hexagon/include/asm/syscall.h            |  14 +
+ arch/mips/include/asm/syscall.h               |   6 +
+ arch/nds32/include/asm/syscall.h              |  29 +-
+ arch/parisc/include/asm/syscall.h             |   7 +
+ arch/powerpc/include/asm/syscall.h            |  10 +
+ include/linux/tracehook.h                     |   9 +-
+ include/uapi/linux/ptrace.h                   |  35 +++
+ kernel/ptrace.c                               | 103 ++++++-
+ tools/testing/selftests/ptrace/.gitignore     |   1 +
+ tools/testing/selftests/ptrace/Makefile       |   2 +-
+ .../selftests/ptrace/get_syscall_info.c       | 271 ++++++++++++++++++
+ 11 files changed, 471 insertions(+), 16 deletions(-)
+ create mode 100644 tools/testing/selftests/ptrace/get_syscall_info.c
 
 -- 
-Best Regards
-Masahiro Yamada
+ldv
