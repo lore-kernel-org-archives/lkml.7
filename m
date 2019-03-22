@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86418C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:25:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37EBCC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:25:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DD6120657
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:25:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07B32218B0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:25:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553253946;
-	bh=/WdgL0K6RLWu9lh35MhPit1NBdlmFMc6TuF38/aDf+c=;
+	s=default; t=1553253951;
+	bh=XMZ4XN4kUDEllxWJ0IuHS++PhDlbBi+TdZnjWGdqprY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EKFZq5V1sV9Rr3j/xToFK1/e0oY3NR6SSR/mEkovchj3bVt1ZEQjRqa5XsXW3sd4B
-	 hvtflrtrhgi9OCpbYjDOH/QEcrHr1gJKR15b4Det0rrlA+nnbFsroyYZxf9CB06ang
-	 MqTjhkPfinnQqiQ9al8bsfhjd62AJCgFA/ao7wg4=
+	b=mrPsMvAp/orcYFDKAtnkx6yDqAaJFU4znFTZB8HwrFdJPFPT+0Thsfs5BT/xWhprZ
+	 sXr4+j5uG+zljNdQidpTTVQw1O/OgESV2MxeJOYN9Ei+6SbsiyJgvsPFcS3el083N1
+	 Y+79zczvTlrEZBFXqrFg0BrCVNzIAEjQ4jPOfjP8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729332AbfCVLZp (ORCPT
+        id S1729339AbfCVLZt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:25:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53190 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:25:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728241AbfCVLZm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:25:42 -0400
+        id S1729329AbfCVLZo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:25:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF75A21B1A;
-        Fri, 22 Mar 2019 11:25:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4DAE20657;
+        Fri, 22 Mar 2019 11:25:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553253941;
-        bh=/WdgL0K6RLWu9lh35MhPit1NBdlmFMc6TuF38/aDf+c=;
+        s=default; t=1553253944;
+        bh=XMZ4XN4kUDEllxWJ0IuHS++PhDlbBi+TdZnjWGdqprY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BPGLdxpihXuD5ZYpfyT+G3s7VLlVOfHFe5MBMOGEYAv0lzkdPX5DxIuOQrZU7J4vX
-         JvJ8znApvmfmcutiOa4SahsuB4sHCl1qwTFVQ9Mm/YW7gZAoUkVrRSXtCXLkA40FYQ
-         C9TR/naaw2+SACcYGn+99noAbmz3XiciM83m65pI=
+        b=dFuxjHaUuRFQWDln8ivWtsXTdSOajAw/Av4MXjYSxLa2PxjvU+G8LidKEgluEQTq2
+         wmxq5k0mQhxGgpNdhWr8UC0srdL2VneuqdGXlBPNj84b9E+J9VNRIo28aVOXp7bzU0
+         SCTHjXIYHjz1Lo1iQ42LAAshzhFkGJ/TZxsJV9DU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Gabriel Fernandez <gabriel.fernandez@st.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        James Morris <james.morris@microsoft.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 3.18 101/134] Input: st-keyscan - fix potential zalloc NULL dereference
-Date:   Fri, 22 Mar 2019 12:15:14 +0100
-Message-Id: <20190322111217.468219660@linuxfoundation.org>
+Subject: [PATCH 3.18 102/134] assoc_array: Fix shortcut creation
+Date:   Fri, 22 Mar 2019 12:15:15 +0100
+Message-Id: <20190322111217.548351431@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111210.465931067@linuxfoundation.org>
 References: <20190322111210.465931067@linuxfoundation.org>
@@ -67,43 +66,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 2439d37e1bf8a34d437573c086572abe0f3f1b15 ]
+[ Upstream commit bb2ba2d75a2d673e76ddaf13a9bd30d6a8b1bb08 ]
 
-This patch fixes the following static checker warning:
+Fix the creation of shortcuts for which the length of the index key value
+is an exact multiple of the machine word size.  The problem is that the
+code that blanks off the unused bits of the shortcut value malfunctions if
+the number of bits in the last word equals machine word size.  This is due
+to the "<<" operator being given a shift of zero in this case, and so the
+mask that should be all zeros is all ones instead.  This causes the
+subsequent masking operation to clear everything rather than clearing
+nothing.
 
-drivers/input/keyboard/st-keyscan.c:156 keyscan_probe()
-error: potential zalloc NULL dereference: 'keypad_data->input_dev'
+Ordinarily, the presence of the hash at the beginning of the tree index key
+makes the issue very hard to test for, but in this case, it was encountered
+due to a development mistake that caused the hash output to be either 0
+(keyring) or 1 (non-keyring) only.  This made it susceptible to the
+keyctl/unlink/valid test in the keyutils package.
 
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+The fix is simply to skip the blanking if the shift would be 0.  For
+example, an index key that is 64 bits long would produce a 0 shift and thus
+a 'blank' of all 1s.  This would then be inverted and AND'd onto the
+index_key, incorrectly clearing the entire last word.
+
+Fixes: 3cb989501c26 ("Add a generic associative array implementation.")
+Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: James Morris <james.morris@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/keyboard/st-keyscan.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ lib/assoc_array.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/input/keyboard/st-keyscan.c b/drivers/input/keyboard/st-keyscan.c
-index de7be4f03d91..ebf9f643d910 100644
---- a/drivers/input/keyboard/st-keyscan.c
-+++ b/drivers/input/keyboard/st-keyscan.c
-@@ -153,6 +153,8 @@ static int keyscan_probe(struct platform_device *pdev)
+diff --git a/lib/assoc_array.c b/lib/assoc_array.c
+index 0d122543bd63..1db287fffb67 100644
+--- a/lib/assoc_array.c
++++ b/lib/assoc_array.c
+@@ -780,9 +780,11 @@ all_leaves_cluster_together:
+ 		new_s0->index_key[i] =
+ 			ops->get_key_chunk(index_key, i * ASSOC_ARRAY_KEY_CHUNK_SIZE);
  
- 	input_dev->id.bustype = BUS_HOST;
+-	blank = ULONG_MAX << (level & ASSOC_ARRAY_KEY_CHUNK_MASK);
+-	pr_devel("blank off [%zu] %d: %lx\n", keylen - 1, level, blank);
+-	new_s0->index_key[keylen - 1] &= ~blank;
++	if (level & ASSOC_ARRAY_KEY_CHUNK_MASK) {
++		blank = ULONG_MAX << (level & ASSOC_ARRAY_KEY_CHUNK_MASK);
++		pr_devel("blank off [%zu] %d: %lx\n", keylen - 1, level, blank);
++		new_s0->index_key[keylen - 1] &= ~blank;
++	}
  
-+	keypad_data->input_dev = input_dev;
-+
- 	error = keypad_matrix_key_parse_dt(keypad_data);
- 	if (error)
- 		return error;
-@@ -168,8 +170,6 @@ static int keyscan_probe(struct platform_device *pdev)
- 
- 	input_set_drvdata(input_dev, keypad_data);
- 
--	keypad_data->input_dev = input_dev;
--
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	keypad_data->base = devm_ioremap_resource(&pdev->dev, res);
- 	if (IS_ERR(keypad_data->base))
+ 	/* This now reduces to a node splitting exercise for which we'll need
+ 	 * to regenerate the disparity table.
 -- 
 2.19.1
 
