@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17990C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:36:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61D74C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:36:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D730A2082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:36:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26D8E2082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:36:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254590;
-	bh=dq9HuEGGRW/3T/YRfbRwoBEfio/7b7suao690qwV8LE=;
+	s=default; t=1553254594;
+	bh=UC2clZ2RdXb/ZoBIpZgkVuG48CfvTq68m2rRX+ur+O8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BvlTC1i0eb1pyd0KthrVOXP4dodYgRQ39MxhacNQDD35wngC7eVlIvLzN9W0//SAW
-	 yILu7ekDSp2OCXdf5x4Ho+njxNXlnmHj2vhuvj42JnBOlmfp/sNMPJEmXIqJ3N+dh8
-	 diXp/MgV1DEKQFzcmE7I7IKK6iCVpX0Lvsz6TTBM=
+	b=n3I0OQUBHPKfn6/Bgc0y/7T7YN4YIgar2fGUyFeQbC1ExNwCqR6sl0X75uq37tPF0
+	 GRT/NHlRduVyp3BwwXme7TH/4gA+huua7q4bkKd4QnHf3ZEpJpM+cBtc2EZOpxL5Pc
+	 jj0ipIDeXMRuGkc2EXEi1PgRHmYf/Id8UC0jeLRc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730713AbfCVLg3 (ORCPT
+        id S1730285AbfCVLgc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:36:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37764 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:36:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37872 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729848AbfCVLgZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:36:25 -0400
+        id S1730711AbfCVLg3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:36:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B29C2082C;
-        Fri, 22 Mar 2019 11:36:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9A5B2082C;
+        Fri, 22 Mar 2019 11:36:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254584;
-        bh=dq9HuEGGRW/3T/YRfbRwoBEfio/7b7suao690qwV8LE=;
+        s=default; t=1553254588;
+        bh=UC2clZ2RdXb/ZoBIpZgkVuG48CfvTq68m2rRX+ur+O8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wqXpnmWWCSKlMyT9DVBcZB+mgGHOk4isFK3dsxXIB0xqMrSrmqPgGXWyGD9CDivId
-         HcW42K+0ohZr554gNpkEgMN38sG5vD6vUkgTc52WKwh+0FIuTf8khESGkDOEfi3aAF
-         qLAkp9LuwJc4y2NDuWTEnAZPPy0B8o2XvXpMMH0A=
+        b=0xKnIglE/cRVbW25ar9SATJ9nLz3vjB30Eiu9ylMZnJnsJyApSSczzjtg9fWbB8e6
+         iOKvzyi02lv4iSiTh5/ZdLbwyE3CK40cOp6Q2N/1Nrh40JitHIgNPlkahplluQbWVw
+         5wRC1OGrvzQRcvSH703mFM/UVg7j8ervXya95BYo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ferry Toth <fntoth@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 4.4 181/230] ACPI / device_sysfs: Avoid OF modalias creation for removed device
-Date:   Fri, 22 Mar 2019 12:15:19 +0100
-Message-Id: <20190322111249.480620240@linuxfoundation.org>
+        stable@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.4 182/230] regulator: s2mps11: Fix steps for buck7, buck8 and LDO35
+Date:   Fri, 22 Mar 2019 12:15:20 +0100
+Message-Id: <20190322111249.549584536@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -67,75 +65,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 
-commit f16eb8a4b096514ac06fb25bf599dcc792899b3d upstream.
+commit 56b5d4ea778c1b0989c5cdb5406d4a488144c416 upstream.
 
-If SSDT overlay is loaded via ConfigFS and then unloaded the device,
-we would like to have OF modalias for, already gone. Thus, acpi_get_name()
-returns no allocated buffer for such case and kernel crashes afterwards:
+LDO35 uses 25 mV step, not 50 mV.  Bucks 7 and 8 use 12.5 mV step
+instead of 6.25 mV.  Wrong step caused over-voltage (LDO35) or
+under-voltage (buck7 and 8) if regulators were used (e.g. on Exynos5420
+Arndale Octa board).
 
- ACPI: Host-directed Dynamic ACPI Table Unload
- ads7950 spi-PRP0001:00: Dropping the link to regulator.0
- BUG: unable to handle kernel NULL pointer dereference at 0000000000000000
- #PF error: [normal kernel read fault]
- PGD 80000000070d6067 P4D 80000000070d6067 PUD 70d0067 PMD 0
- Oops: 0000 [#1] SMP PTI
- CPU: 0 PID: 40 Comm: kworker/u4:2 Not tainted 5.0.0+ #96
- Hardware name: Intel Corporation Merrifield/BODEGA BAY, BIOS 542 2015.01.21:18.19.48
- Workqueue: kacpi_hotplug acpi_device_del_work_fn
- RIP: 0010:create_of_modalias.isra.1+0x4c/0x150
- Code: 00 00 48 89 44 24 18 31 c0 48 8d 54 24 08 48 c7 44 24 10 00 00 00 00 48 c7 44 24 08 ff ff ff ff e8 7a b0 03 00 48 8b 4c 24 10 <0f> b6 01 84 c0 74 27 48 c7 c7 00 09 f4 a5 0f b6 f0 8d 50 20 f6 04
- RSP: 0000:ffffa51040297c10 EFLAGS: 00010246
- RAX: 0000000000001001 RBX: 0000000000000785 RCX: 0000000000000000
- RDX: 0000000000001001 RSI: 0000000000000286 RDI: ffffa2163dc042e0
- RBP: ffffa216062b1196 R08: 0000000000001001 R09: ffffa21639873000
- R10: ffffffffa606761d R11: 0000000000000001 R12: ffffa21639873218
- R13: ffffa2163deb5060 R14: ffffa216063d1010 R15: 0000000000000000
- FS:  0000000000000000(0000) GS:ffffa2163e000000(0000) knlGS:0000000000000000
- CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
- CR2: 0000000000000000 CR3: 0000000007114000 CR4: 00000000001006f0
- Call Trace:
-  __acpi_device_uevent_modalias+0xb0/0x100
-  spi_uevent+0xd/0x40
-
- ...
-
-In order to fix above let create_of_modalias() check the status returned
-by acpi_get_name() and bail out in case of failure.
-
-Fixes: 8765c5ba1949 ("ACPI / scan: Rework modalias creation when "compatible" is present")
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=201381
-Reported-by: Ferry Toth <fntoth@gmail.com>
-Tested-by: Ferry Toth<fntoth@gmail.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: 4.1+ <stable@vger.kernel.org> # 4.1+
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Cc: <stable@vger.kernel.org>
+Fixes: cb74685ecb39 ("regulator: s2mps11: Add samsung s2mps11 regulator driver")
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/acpi/device_sysfs.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/regulator/s2mps11.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/acpi/device_sysfs.c
-+++ b/drivers/acpi/device_sysfs.c
-@@ -202,11 +202,15 @@ static int create_of_modalias(struct acp
- {
- 	struct acpi_buffer buf = { ACPI_ALLOCATE_BUFFER };
- 	const union acpi_object *of_compatible, *obj;
-+	acpi_status status;
- 	int len, count;
- 	int i, nval;
- 	char *c;
- 
--	acpi_get_name(acpi_dev->handle, ACPI_SINGLE_NAME, &buf);
-+	status = acpi_get_name(acpi_dev->handle, ACPI_SINGLE_NAME, &buf);
-+	if (ACPI_FAILURE(status))
-+		return -ENODEV;
-+
- 	/* DT strings are all in lower case */
- 	for (c = buf.pointer; *c != '\0'; c++)
- 		*c = tolower(*c);
+--- a/drivers/regulator/s2mps11.c
++++ b/drivers/regulator/s2mps11.c
+@@ -372,7 +372,7 @@ static const struct regulator_desc s2mps
+ 	regulator_desc_s2mps11_ldo(32, STEP_50_MV),
+ 	regulator_desc_s2mps11_ldo(33, STEP_50_MV),
+ 	regulator_desc_s2mps11_ldo(34, STEP_50_MV),
+-	regulator_desc_s2mps11_ldo(35, STEP_50_MV),
++	regulator_desc_s2mps11_ldo(35, STEP_25_MV),
+ 	regulator_desc_s2mps11_ldo(36, STEP_50_MV),
+ 	regulator_desc_s2mps11_ldo(37, STEP_50_MV),
+ 	regulator_desc_s2mps11_ldo(38, STEP_50_MV),
+@@ -382,8 +382,8 @@ static const struct regulator_desc s2mps
+ 	regulator_desc_s2mps11_buck1_4(4),
+ 	regulator_desc_s2mps11_buck5,
+ 	regulator_desc_s2mps11_buck67810(6, MIN_600_MV, STEP_6_25_MV),
+-	regulator_desc_s2mps11_buck67810(7, MIN_600_MV, STEP_6_25_MV),
+-	regulator_desc_s2mps11_buck67810(8, MIN_600_MV, STEP_6_25_MV),
++	regulator_desc_s2mps11_buck67810(7, MIN_600_MV, STEP_12_5_MV),
++	regulator_desc_s2mps11_buck67810(8, MIN_600_MV, STEP_12_5_MV),
+ 	regulator_desc_s2mps11_buck9,
+ 	regulator_desc_s2mps11_buck67810(10, MIN_750_MV, STEP_12_5_MV),
+ };
 
 
