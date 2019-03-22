@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EB4DC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:07:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CD63C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:07:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D3DA2082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:07:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF95A21939
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:07:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256474;
-	bh=dWj49IhVFvSbBwNaWAUWM7ZAT2amqWcvLpxJvPm5MBM=;
+	s=default; t=1553256478;
+	bh=jRIHKxbdO79B2qiVU9zmbXQKVtwRF4vRRP2QRiRuWHQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Jiu3kT7GtKX9x4o0GzFgxRBqFfawIGDoc0guLouZ10ZuBZEgHIUiUKaNwY3j9zHfs
-	 XAvffRbMsMeKgiu1uqTeb2WM0yWohN6wZB91Wk9/Y/NPXiGrsEXilGDe0TH4Dkk6vg
-	 jjI3VCMe3kUaJLahA7yO5YuZbbhZvMsrNx+p13YM=
+	b=BNXNU/wl0bPsSi0BwE9sbZJ8i5BWvncs7XGnHVZ1YLyoowW3yFFsH7y3Tix1eY4jD
+	 Odp4vO33NyxSylCrjgIAHX1axUM+chhOLGiAZvDZZklRM7nS4PLYNwkQVHdByEFisZ
+	 5Q5qblfcD++S6Y/7g9WWEWDAs3jmNx1kancsk8yY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389090AbfCVMHx (ORCPT
+        id S2389107AbfCVMH5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:07:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46186 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:07:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46298 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388860AbfCVMHu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:07:50 -0400
+        id S2389094AbfCVMH4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:07:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A95562192D;
-        Fri, 22 Mar 2019 12:07:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17D6F2082C;
+        Fri, 22 Mar 2019 12:07:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256469;
-        bh=dWj49IhVFvSbBwNaWAUWM7ZAT2amqWcvLpxJvPm5MBM=;
+        s=default; t=1553256475;
+        bh=jRIHKxbdO79B2qiVU9zmbXQKVtwRF4vRRP2QRiRuWHQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sfv9SPwoLrWrAv7djbz58Hw6/ltBXkryA6ehw0uC7m8WGZ+qAlmGK0CStV2GyfJJu
-         ZIlXiWUxPMJFdtbWJa0CCuR48lVvnT4Ef3CE6upDMr7WWYCXLkwEBE29kCj9A8sPkc
-         hW95v0YOY1wfAs/6esiyQxDofn75ZkcwOxzElCpE=
+        b=MCE20JUCTIp7EomxpjKKtFP3IcVOH+KN9QM+fELcAYxjzLDkfs8Nee7onKJxY8nGO
+         STnHqgtAX3uxLLHXxsSsAZ/E3ktCdt5mqHvrSvWGXwioRkjX0M30wyJNsw2e2B7s8l
+         GkBRyX6BTrFz3U8lY/LwHNJVldOFfxDDlY15VnMo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        stable@vger.kernel.org, Jordan Niethe <jniethe5@gmail.com>,
+        Stewart Smith <stewart@linux.ibm.com>,
+        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
         Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.19 221/280] powerpc/32: Clear on-stack exception marker upon exception return
-Date:   Fri, 22 Mar 2019 12:16:14 +0100
-Message-Id: <20190322111334.967179194@linuxfoundation.org>
+Subject: [PATCH 4.19 223/280] powerpc/powernv: Make opal log only readable by root
+Date:   Fri, 22 Mar 2019 12:16:16 +0100
+Message-Id: <20190322111335.399249553@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -64,81 +67,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Jordan Niethe <jniethe5@gmail.com>
 
-commit 9580b71b5a7863c24a9bd18bcd2ad759b86b1eff upstream.
+commit 7b62f9bd2246b7d3d086e571397c14ba52645ef1 upstream.
 
-Clear the on-stack STACK_FRAME_REGS_MARKER on exception exit in order
-to avoid confusing stacktrace like the one below.
+Currently the opal log is globally readable. It is kernel policy to
+limit the visibility of physical addresses / kernel pointers to root.
+Given this and the fact the opal log may contain this information it
+would be better to limit the readability to root.
 
-  Call Trace:
-  [c0e9dca0] [c01c42a0] print_address_description+0x64/0x2bc (unreliable)
-  [c0e9dcd0] [c01c4684] kasan_report+0xfc/0x180
-  [c0e9dd10] [c0895130] memchr+0x24/0x74
-  [c0e9dd30] [c00a9e38] msg_print_text+0x124/0x574
-  [c0e9dde0] [c00ab710] console_unlock+0x114/0x4f8
-  [c0e9de40] [c00adc60] vprintk_emit+0x188/0x1c4
-  --- interrupt: c0e9df00 at 0x400f330
-      LR = init_stack+0x1f00/0x2000
-  [c0e9de80] [c00ae3c4] printk+0xa8/0xcc (unreliable)
-  [c0e9df20] [c0c27e44] early_irq_init+0x38/0x108
-  [c0e9df50] [c0c15434] start_kernel+0x310/0x488
-  [c0e9dff0] [00003484] 0x3484
-
-With this patch the trace becomes:
-
-  Call Trace:
-  [c0e9dca0] [c01c42c0] print_address_description+0x64/0x2bc (unreliable)
-  [c0e9dcd0] [c01c46a4] kasan_report+0xfc/0x180
-  [c0e9dd10] [c0895150] memchr+0x24/0x74
-  [c0e9dd30] [c00a9e58] msg_print_text+0x124/0x574
-  [c0e9dde0] [c00ab730] console_unlock+0x114/0x4f8
-  [c0e9de40] [c00adc80] vprintk_emit+0x188/0x1c4
-  [c0e9de80] [c00ae3e4] printk+0xa8/0xcc
-  [c0e9df20] [c0c27e44] early_irq_init+0x38/0x108
-  [c0e9df50] [c0c15434] start_kernel+0x310/0x488
-  [c0e9dff0] [00003484] 0x3484
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Fixes: bfc36894a48b ("powerpc/powernv: Add OPAL message log interface")
+Cc: stable@vger.kernel.org # v3.15+
+Signed-off-by: Jordan Niethe <jniethe5@gmail.com>
+Reviewed-by: Stewart Smith <stewart@linux.ibm.com>
+Reviewed-by: Andrew Donnellan <andrew.donnellan@au1.ibm.com>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/kernel/entry_32.S |    9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/powerpc/platforms/powernv/opal-msglog.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/powerpc/kernel/entry_32.S
-+++ b/arch/powerpc/kernel/entry_32.S
-@@ -745,6 +745,9 @@ fast_exception_return:
- 	mtcr	r10
- 	lwz	r10,_LINK(r11)
- 	mtlr	r10
-+	/* Clear the exception_marker on the stack to avoid confusing stacktrace */
-+	li	r10, 0
-+	stw	r10, 8(r11)
- 	REST_GPR(10, r11)
- #if defined(CONFIG_PPC_8xx) && defined(CONFIG_PERF_EVENTS)
- 	mtspr	SPRN_NRI, r0
-@@ -982,6 +985,9 @@ END_FTR_SECTION_IFSET(CPU_FTR_NEED_PAIRE
- 	mtcrf	0xFF,r10
- 	mtlr	r11
+--- a/arch/powerpc/platforms/powernv/opal-msglog.c
++++ b/arch/powerpc/platforms/powernv/opal-msglog.c
+@@ -98,7 +98,7 @@ static ssize_t opal_msglog_read(struct f
+ }
  
-+	/* Clear the exception_marker on the stack to avoid confusing stacktrace */
-+	li	r10, 0
-+	stw	r10, 8(r1)
- 	/*
- 	 * Once we put values in SRR0 and SRR1, we are in a state
- 	 * where exceptions are not recoverable, since taking an
-@@ -1021,6 +1027,9 @@ exc_exit_restart_end:
- 	mtlr	r11
- 	lwz	r10,_CCR(r1)
- 	mtcrf	0xff,r10
-+	/* Clear the exception_marker on the stack to avoid confusing stacktrace */
-+	li	r10, 0
-+	stw	r10, 8(r1)
- 	REST_2GPRS(9, r1)
- 	.globl exc_exit_restart
- exc_exit_restart:
+ static struct bin_attribute opal_msglog_attr = {
+-	.attr = {.name = "msglog", .mode = 0444},
++	.attr = {.name = "msglog", .mode = 0400},
+ 	.read = opal_msglog_read
+ };
+ 
 
 
