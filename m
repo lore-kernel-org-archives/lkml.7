@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41600C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:00:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6765C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:00:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10DC921934
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:00:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9330E2192D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:00:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256036;
-	bh=duyIjb2IZgwNBkddrSR0gTemKuPqnbfA6KVji79dTsw=;
+	s=default; t=1553256041;
+	bh=6TUI+EoSpZ+bbaQwIQl1eyvq0e5SOCOG06WRScjhxwU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XJg85MkxUqQegb7Jg7izAStOGh7aA5wvneS/QP2k168uDUmbttx3nKYlqrb8TVGnO
-	 DtYJHBp6ulX67teANCoYI2TNmdmcHe2mZNzOfmOwKJ+M0lP6I6tqltWnoQuv8PyVcB
-	 NuU+20n4aHwPvd1FbgyysXeoA+zc3KAT047ikrYU=
+	b=VUAQDUtPQWawRLIZ0AHe8jMD/Vu/71WNqMIQzOh2LBqLjFVbIQ7081SOcHtz1DFWO
+	 Z7Z+Zo/zGL+iJvo258u8cPaFvcX+MST82lxlEzCZk5o017Cv3nLaavRrrDASOOWlUD
+	 Qqem6POtkLsvHiNlwww28xyoiQaOhM9ScotAvYlA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388099AbfCVMAe (ORCPT
+        id S2388103AbfCVMAk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:00:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37668 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:00:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37822 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730518AbfCVMA3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:00:29 -0400
+        id S1730518AbfCVMAg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:00:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B511221934;
-        Fri, 22 Mar 2019 12:00:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 303092192D;
+        Fri, 22 Mar 2019 12:00:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256029;
-        bh=duyIjb2IZgwNBkddrSR0gTemKuPqnbfA6KVji79dTsw=;
+        s=default; t=1553256035;
+        bh=6TUI+EoSpZ+bbaQwIQl1eyvq0e5SOCOG06WRScjhxwU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ph8ltF9VEMLzLdRecljGM+8gIXKjJJz2koPSL8XzjrnDe3/eHFsgXTUYY8J4hyatv
-         RPvXhajPhs0tVTI2p+lZdp97OmnKL+c1ka0ZvjBfts3uET/y+0l3jBoXQEcPo8KAnx
-         O3NE9a7LIRpco/2Vn3npx45FbMGGMIKMUYVgtJ9o=
+        b=iidHWp3nDdlgKIXsjHvfbJwX9lPWItfEsgJV1kNvgYbVcJ5sK1sFNXezulUjKXBRv
+         5sJX690zBkqDJdHqN6Ff6sROxIFzF9gYxpuFs+Pjl+uAaVYegTuowiCyIhbmmYfln5
+         Ca46y7grZaFANsoH0kNffDs7j8ltbbEnn4Ptf2Ms=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
+        stable@vger.kernel.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 069/280] clk: sunxi: A31: Fix wrong AHB gate number
-Date:   Fri, 22 Mar 2019 12:13:42 +0100
-Message-Id: <20190322111310.174199655@linuxfoundation.org>
+Subject: [PATCH 4.19 081/280] pinctrl: meson: meson8b: fix the sdxc_a data 1..3 pins
+Date:   Fri, 22 Mar 2019 12:13:54 +0100
+Message-Id: <20190322111310.934581556@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -66,37 +67,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit ee0b27a3a4da0b0ed2318aa092f8856896e9450b ]
+[ Upstream commit c17abcfa93bf0be5e48bb011607d237ac2bfc839 ]
 
-According to the manual the gate clock for MMC3 is at bit 11, and NAND1
-is controlled by bit 12.
+Fix the mismatch between the "sdxc_d13_1_a" pin group definition from
+meson8b_cbus_groups and the entry in sdxc_a_groups ("sdxc_d0_13_1_a").
+This makes it possible to use "sdxc_d13_1_a" in device-tree files to
+route the MMC data 1..3 pins to GPIOX_1..3.
 
-Fix the gate bit definitions in the clock driver.
-
-Fixes: c6e6c96d8fa6 ("clk: sunxi-ng: Add A31/A31s clocks")
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Fixes: 0fefcb6876d0d6 ("pinctrl: Add support for Meson8b")
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/sunxi-ng/ccu-sun6i-a31.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/pinctrl/meson/pinctrl-meson8b.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clk/sunxi-ng/ccu-sun6i-a31.c b/drivers/clk/sunxi-ng/ccu-sun6i-a31.c
-index 3b97f60540ad..609970c0b666 100644
---- a/drivers/clk/sunxi-ng/ccu-sun6i-a31.c
-+++ b/drivers/clk/sunxi-ng/ccu-sun6i-a31.c
-@@ -264,9 +264,9 @@ static SUNXI_CCU_GATE(ahb1_mmc1_clk,	"ahb1-mmc1",	"ahb1",
- static SUNXI_CCU_GATE(ahb1_mmc2_clk,	"ahb1-mmc2",	"ahb1",
- 		      0x060, BIT(10), 0);
- static SUNXI_CCU_GATE(ahb1_mmc3_clk,	"ahb1-mmc3",	"ahb1",
--		      0x060, BIT(12), 0);
-+		      0x060, BIT(11), 0);
- static SUNXI_CCU_GATE(ahb1_nand1_clk,	"ahb1-nand1",	"ahb1",
--		      0x060, BIT(13), 0);
-+		      0x060, BIT(12), 0);
- static SUNXI_CCU_GATE(ahb1_nand0_clk,	"ahb1-nand0",	"ahb1",
- 		      0x060, BIT(13), 0);
- static SUNXI_CCU_GATE(ahb1_sdram_clk,	"ahb1-sdram",	"ahb1",
+diff --git a/drivers/pinctrl/meson/pinctrl-meson8b.c b/drivers/pinctrl/meson/pinctrl-meson8b.c
+index 91cffc051055..ead4beb5f55f 100644
+--- a/drivers/pinctrl/meson/pinctrl-meson8b.c
++++ b/drivers/pinctrl/meson/pinctrl-meson8b.c
+@@ -665,7 +665,7 @@ static const char * const sd_a_groups[] = {
+ 
+ static const char * const sdxc_a_groups[] = {
+ 	"sdxc_d0_0_a", "sdxc_d13_0_a", "sdxc_d47_a", "sdxc_clk_a",
+-	"sdxc_cmd_a", "sdxc_d0_1_a", "sdxc_d0_13_1_a"
++	"sdxc_cmd_a", "sdxc_d0_1_a", "sdxc_d13_1_a"
+ };
+ 
+ static const char * const pcm_a_groups[] = {
 -- 
 2.19.1
 
