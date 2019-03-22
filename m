@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C56BC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:24:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9667CC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:24:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39C9E218B0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:24:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66A0921934
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:24:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553253881;
-	bh=MW9UEjgjQp2JunpCMRk/4++U5o+8k0u93p/XteIpvgk=;
+	s=default; t=1553253884;
+	bh=IeLcEfEH7otdVJcucPdaRb0gmbbyvnSwRT4531AhZC4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jx19QHYu5xOTpj8rbtvlEmKHk2KoLgbbgGs8jT4P4SAJqZtp9ox/ZuNV8eCNILBfT
-	 0DhLzj+wqujYERTG+OQEj9/TAri5TrpCVt5kT7RtvlZU9CdotPcGV6Vp8SeCo+hXgF
-	 dWpW37WhrL67QY0SiGWZBjO1UCAqcjP/2cI7Opik=
+	b=jQqxTxyB8saZ/gzwF4yF7e4EgJiUX1GlZl9kQFFlcmsBqIHN/ltqGrsba1JCYdTo2
+	 eeek8rlftvyubx5CzjqDD+xznoueoC2RAsapxXs2KnAhZtVowZJJc4eg//CX6Kcvsw
+	 JCjHY4pcdJ5NOogoRRqJlUr5e8Fv9iqQuEpEMegQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729166AbfCVLYj (ORCPT
+        id S1729174AbfCVLYn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:24:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51716 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:24:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51774 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729146AbfCVLYi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:24:38 -0400
+        id S1728619AbfCVLYm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:24:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 26FC8218B0;
-        Fri, 22 Mar 2019 11:24:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0AD3720657;
+        Fri, 22 Mar 2019 11:24:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553253877;
-        bh=MW9UEjgjQp2JunpCMRk/4++U5o+8k0u93p/XteIpvgk=;
+        s=default; t=1553253881;
+        bh=IeLcEfEH7otdVJcucPdaRb0gmbbyvnSwRT4531AhZC4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Cs6wL/Pw5HzZpBG3ZYVcv3XbYiCsH9BnjUnPd+Nnc5+GI9Dyypfo+oWi19GLmwYhh
-         vCyhY1YlbQZr61nF2u1aBZWeZIfnCwo4Z/llM/006SvizM6ft2bgvJ/mDWmJFQpMGV
-         +ZIuko9A8AkLh1GMyBq6mboGEtf/ya197zah6bRE=
+        b=KUxGooFFRub+fAzEqYLjVsozOB/0+CdzN4/QQ6lu+VqHjDlvVZoDZEFDvgmtT0Qzr
+         A+tu+7Q6OunKLwGKxCU4SSekAsOBx8uMCbb7joqflhRAZ7CGiaWLViu0FzajSia9Lz
+         u+/+oYOGqWN9RMyP23aTtrPrhuDNVt/BosaTT9iU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiumei Mu <xmu@redhat.com>,
-        Xin Long <lucien.xin@gmail.com>,
+        stable@vger.kernel.org,
+        Jack Morgenstein <jackm@dev.mellanox.co.il>,
+        Tariq Toukan <tariqt@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 3.18 084/134] pptp: dst_release sk_dst_cache in pptp_sock_destruct
-Date:   Fri, 22 Mar 2019 12:14:57 +0100
-Message-Id: <20190322111216.195203788@linuxfoundation.org>
+Subject: [PATCH 3.18 085/134] net/mlx4_core: Fix qp mtt size calculation
+Date:   Fri, 22 Mar 2019 12:14:58 +0100
+Message-Id: <20190322111216.265681642@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111210.465931067@linuxfoundation.org>
 References: <20190322111210.465931067@linuxfoundation.org>
@@ -66,46 +67,68 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Jack Morgenstein <jackm@dev.mellanox.co.il>
 
-[ Upstream commit 9417d81f4f8adfe20a12dd1fadf73a618cbd945d ]
+[ Upstream commit 8511a653e9250ef36b95803c375a7be0e2edb628 ]
 
-sk_setup_caps() is called to set sk->sk_dst_cache in pptp_connect,
-so we have to dst_release(sk->sk_dst_cache) in pptp_sock_destruct,
-otherwise, the dst refcnt will leak.
+Calculation of qp mtt size (in function mlx4_RST2INIT_wrapper)
+ultimately depends on function roundup_pow_of_two.
 
-It can be reproduced by this syz log:
+If the amount of memory required by the QP is less than one page,
+roundup_pow_of_two is called with argument zero.  In this case, the
+roundup_pow_of_two result is undefined.
 
-  r1 = socket$pptp(0x18, 0x1, 0x2)
-  bind$pptp(r1, &(0x7f0000000100)={0x18, 0x2, {0x0, @local}}, 0x1e)
-  connect$pptp(r1, &(0x7f0000000000)={0x18, 0x2, {0x3, @remote}}, 0x1e)
+Calling roundup_pow_of_two with a zero argument resulted in the
+following stack trace:
 
-Consecutive dmesg warnings will occur:
+UBSAN: Undefined behaviour in ./include/linux/log2.h:61:13
+shift exponent 64 is too large for 64-bit type 'long unsigned int'
+CPU: 4 PID: 26939 Comm: rping Tainted: G OE 4.19.0-rc1
+Hardware name: Supermicro X9DR3-F/X9DR3-F, BIOS 3.2a 07/09/2015
+Call Trace:
+dump_stack+0x9a/0xeb
+ubsan_epilogue+0x9/0x7c
+__ubsan_handle_shift_out_of_bounds+0x254/0x29d
+? __ubsan_handle_load_invalid_value+0x180/0x180
+? debug_show_all_locks+0x310/0x310
+? sched_clock+0x5/0x10
+? sched_clock+0x5/0x10
+? sched_clock_cpu+0x18/0x260
+? find_held_lock+0x35/0x1e0
+? mlx4_RST2INIT_QP_wrapper+0xfb1/0x1440 [mlx4_core]
+mlx4_RST2INIT_QP_wrapper+0xfb1/0x1440 [mlx4_core]
 
-  unregister_netdevice: waiting for lo to become free. Usage count = 1
+Fix this by explicitly testing for zero, and returning one if the
+argument is zero (assuming that the next higher power of 2 in this case
+should be one).
 
-v1->v2:
-  - use rcu_dereference_protected() instead of rcu_dereference_check(),
-    as suggested by Eric.
-
-Fixes: 00959ade36ac ("PPTP: PPP over IPv4 (Point-to-Point Tunneling Protocol)")
-Reported-by: Xiumei Mu <xmu@redhat.com>
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Fixes: c82e9aa0a8bc ("mlx4_core: resource tracking for HCA resources used by guests")
+Signed-off-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
+Signed-off-by: Tariq Toukan <tariqt@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ppp/pptp.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/mellanox/mlx4/resource_tracker.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/net/ppp/pptp.c
-+++ b/drivers/net/ppp/pptp.c
-@@ -564,6 +564,7 @@ static void pptp_sock_destruct(struct so
- 		pppox_unbind_sock(sk);
- 	}
- 	skb_queue_purge(&sk->sk_receive_queue);
-+	dst_release(rcu_dereference_protected(sk->sk_dst_cache, 1));
- }
+--- a/drivers/net/ethernet/mellanox/mlx4/resource_tracker.c
++++ b/drivers/net/ethernet/mellanox/mlx4/resource_tracker.c
+@@ -2474,13 +2474,13 @@ static int qp_get_mtt_size(struct mlx4_q
+ 	int total_pages;
+ 	int total_mem;
+ 	int page_offset = (be32_to_cpu(qpc->params2) >> 6) & 0x3f;
++	int tot;
  
- static int pptp_create(struct net *net, struct socket *sock)
+ 	sq_size = 1 << (log_sq_size + log_sq_sride + 4);
+ 	rq_size = (srq|rss|xrc) ? 0 : (1 << (log_rq_size + log_rq_stride + 4));
+ 	total_mem = sq_size + rq_size;
+-	total_pages =
+-		roundup_pow_of_two((total_mem + (page_offset << 6)) >>
+-				   page_shift);
++	tot = (total_mem + (page_offset << 6)) >> page_shift;
++	total_pages = !tot ? 1 : roundup_pow_of_two(tot);
+ 
+ 	return total_pages;
+ }
 
 
