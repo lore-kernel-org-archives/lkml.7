@@ -2,118 +2,206 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41119C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:26:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5806C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:27:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C1D0218A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:26:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="glUXnsMK"
+	by mail.kernel.org (Postfix) with ESMTP id 756D02190A
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:27:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728256AbfCVN0L (ORCPT
+        id S1728361AbfCVN1Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 09:26:11 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:38451 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728139AbfCVN0K (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 09:26:10 -0400
-Received: by mail-wm1-f68.google.com with SMTP id a188so2167487wmf.3
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 06:26:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=YUR9BD0OknTRpwxa7omTX6fkLtmusBY0KjBttpuweLE=;
-        b=glUXnsMKii9bEJsd3AnwfOBOqdIXHFOFx5dExl4Mk+I2W8ZppOED1boqhtXR8A0CRn
-         SoMGbV53PbG4AfKmZQ/ImldKle2BsZWz2EZqTINPFGxIcZuywL4OFB3dvwOydi/BDzPW
-         15d3R6uet+l+z+Y4HvYk/tGbWqOcD3HbzfZXsPGY4F89aFOfMPd62DB4G/c96TGx0BDQ
-         XJYUL526glwi4kGRbGAmYiqnm85yTbXk9sYr0RoM3KeTdZ8CWRdW2d+C5sM981IZy2bg
-         qFBQQUO/jFNxpIvKH01+B+F5NTwVTkJ+mRNul5oWXhWMzkCSQVaQhArQSY+AFGFmBWgu
-         iZTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=YUR9BD0OknTRpwxa7omTX6fkLtmusBY0KjBttpuweLE=;
-        b=o3/x3lJrjZDFEOOX6KR7gbOwBxmhxBDe3v7ymab/j6CU+wTcKTuGvPnLtwUi/Jj0+X
-         bWdWwLUwo6VmYjKWiI5rqXbmxsYf18TUisMrJH24ipRW5ZQQcykOCmQEihBfiHlGw9FJ
-         7ZHQkjDXM4VN9I2dVFf22xm+2nsOm1FKMa/3C43P4St5wjS/NpKEUWLqyw4cQN6ipQzi
-         cT570i7Zalff0EXL+5j6lYHWsYjJMyaEZB1c0y7I6zkEmutq84jEzLDREzsRo7MOI11D
-         Fn7KsiO/6MT7Ra1ey0GzPbhjsuudX84TziDRJJVb4PCa65XaWNixELbQFJIDDrjPD4le
-         hlVw==
-X-Gm-Message-State: APjAAAUlxqSy4fy2oA79sZ+D1TxYrAKIjm+FGAlXldQR6hgVISpuaeKC
-        MA127gT4EQMjZGTiEUDK4arGkg==
-X-Google-Smtp-Source: APXvYqwi0WvccLBM3J2CJUBQR+V2TOQ3nUIFcN6vLmKaJGFAyjNJoPKgU/Rke4qOFsxwyFYLGQX8JA==
-X-Received: by 2002:a1c:ef08:: with SMTP id n8mr1936534wmh.85.1553261168923;
-        Fri, 22 Mar 2019 06:26:08 -0700 (PDT)
-Received: from [192.168.0.41] (205.94.129.77.rev.sfr.net. [77.129.94.205])
-        by smtp.googlemail.com with ESMTPSA id b16sm7143988wrq.41.2019.03.22.06.26.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 22 Mar 2019 06:26:08 -0700 (PDT)
-Subject: Re: [PATCH 1/2] cpuidle : auto-promotion for cpuidle states
-To:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Abhishek Goel <huntbag@linux.vnet.ibm.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Michael Ellerman <mpe@ellerman.id.au>
-References: <20190322072942.8038-1-huntbag@linux.vnet.ibm.com>
- <20190322072942.8038-2-huntbag@linux.vnet.ibm.com>
- <CAJZ5v0gY-theHng=bQQpw-33jHGe++iEigEM5j6Ls7vEuewuSQ@mail.gmail.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <cfb0076f-0b56-f12c-a736-469a3d11ab83@linaro.org>
-Date:   Fri, 22 Mar 2019 14:26:07 +0100
+        Fri, 22 Mar 2019 09:27:25 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35424 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728146AbfCVN1Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 09:27:25 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 34D7630832DC;
+        Fri, 22 Mar 2019 13:27:24 +0000 (UTC)
+Received: from [10.36.116.167] (ovpn-116-167.ams2.redhat.com [10.36.116.167])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0A6B860857;
+        Fri, 22 Mar 2019 13:27:17 +0000 (UTC)
+Subject: Re: [PATCH v6 00/22] SMMUv3 Nested Stage Setup
+To:     eric.auger.pro@gmail.com, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        kvmarm@lists.cs.columbia.edu, joro@8bytes.org,
+        alex.williamson@redhat.com, jacob.jun.pan@linux.intel.com,
+        yi.l.liu@linux.intel.com, jean-philippe.brucker@arm.com,
+        will.deacon@arm.com, robin.murphy@arm.com
+Cc:     kevin.tian@intel.com, ashok.raj@intel.com, marc.zyngier@arm.com,
+        christoffer.dall@arm.com, peter.maydell@linaro.org,
+        vincent.stehle@arm.com
+References: <20190317172232.1068-1-eric.auger@redhat.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <1281b754-3a66-1dd2-5e7f-6dc853f09a90@redhat.com>
+Date:   Fri, 22 Mar 2019 14:27:16 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-In-Reply-To: <CAJZ5v0gY-theHng=bQQpw-33jHGe++iEigEM5j6Ls7vEuewuSQ@mail.gmail.com>
+In-Reply-To: <20190317172232.1068-1-eric.auger@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Fri, 22 Mar 2019 13:27:24 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22/03/2019 10:45, Rafael J. Wysocki wrote:
-> On Fri, Mar 22, 2019 at 8:31 AM Abhishek Goel
-> <huntbag@linux.vnet.ibm.com> wrote:
->>
->> Currently, the cpuidle governors (menu /ladder) determine what idle state
->> an idling CPU should enter into based on heuristics that depend on the
->> idle history on that CPU. Given that no predictive heuristic is perfect,
->> there are cases where the governor predicts a shallow idle state, hoping
->> that the CPU will be busy soon. However, if no new workload is scheduled
->> on that CPU in the near future, the CPU will end up in the shallow state.
->>
->> In case of POWER, this is problematic, when the predicted state in the
->> aforementioned scenario is a lite stop state, as such lite states will
->> inhibit SMT folding, thereby depriving the other threads in the core from
->> using the core resources.
->>
->> To address this, such lite states need to be autopromoted. The cpuidle-
->> core can queue timer to correspond with the residency value of the next
->> available state. Thus leading to auto-promotion to a deeper idle state as
->> soon as possible.
+Hi,
+
+On 3/17/19 6:22 PM, Eric Auger wrote:
+> This series allows a virtualizer to program the nested stage mode.
+> This is useful when both the host and the guest are exposed with
+> an SMMUv3 and a PCI device is assigned to the guest using VFIO.
 > 
-> Isn't the tick stopping avoidance sufficient for that?
+> In this mode, the physical IOMMU must be programmed to translate
+> the two stages: the one set up by the guest (IOVA -> GPA) and the
+> one set up by the host VFIO driver as part of the assignment process
+> (GPA -> HPA).
+> 
+> On Intel, this is traditionnaly achieved by combining the 2 stages
+> into a single physical stage. However this relies on the capability
+> to trap on each guest translation structure update. This is possible
+> by using the VTD Caching Mode. Unfortunately the ARM SMMUv3 does
+> not offer a similar mechanism.
+> 
+> However, the ARM SMMUv3 architecture supports 2 physical stages! Those
+> were devised exactly with that use case in mind. Assuming the HW
+> implements both stages (optional), the guest now can use stage 1
+> while the host uses stage 2.
+> 
+> This assumes the virtualizer has means to propagate guest settings
+> to the host SMMUv3 driver. This series brings this VFIO/IOMMU
+> infrastructure.  Those services are:
+> - bind the guest stage 1 configuration to the stream table entry
+> - propagate guest TLB invalidations
+> - bind MSI IOVAs
+> - propagate faults collected at physical level up to the virtualizer
+> 
+> This series largely reuses the user API and infrastructure originally
+> devised for SVA/SVM and patches submitted by Jacob, Yi Liu, Tianyu in
+> [1-2] and Jean-Philippe [3-4].
+> 
+> Best Regards
+> 
+> Eric
+> 
+> This series can be found at:
+> https://github.com/eauger/linux/tree/v5.0-2stage-v6
+For those who would like to test this series with qemu, please use the
+following qemu branch:
 
-I was about to ask the same :)
+https://github.com/eauger/qemu/tree/v4.0-2stage-unformal-for-v6-testing
 
+until I release a formal respin.
 
+Thanks
 
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+Eric
+> 
+> References:
+> [1] [PATCH v5 00/23] IOMMU and VT-d driver support for Shared Virtual
+>     Address (SVA)
+>     https://lwn.net/Articles/754331/
+> [2] [RFC PATCH 0/8] Shared Virtual Memory virtualization for VT-d
+>     (VFIO part)
+>     https://lists.linuxfoundation.org/pipermail/iommu/2017-April/021475.html
+> [3] [v2,00/40] Shared Virtual Addressing for the IOMMU
+>     https://patchwork.ozlabs.org/cover/912129/
+> [4] [PATCH v3 00/10] Shared Virtual Addressing for the IOMMU
+>     https://patchwork.kernel.org/cover/10608299/
+> 
+> History:
+> v5 -> v6:
+> - Fix compilation issue when CONFIG_IOMMU_API is unset
+> 
+> v4 -> v5:
+> - fix bug reported by Vincent: fault handler unregistration now happens in
+>   vfio_pci_release
+> - IOMMU_FAULT_PERM_* moved outside of struct definition + small
+>   uapi changes suggested by Kean-Philippe (except fetch_addr)
+> - iommu: introduce device fault report API: removed the PRI part.
+> - see individual logs for more details
+> - reset the ste abort flag on detach
+> 
+> v3 -> v4:
+> - took into account Alex, jean-Philippe and Robin's comments on v3
+> - rework of the smmuv3 driver integration
+> - add tear down ops for msi binding and PASID table binding
+> - fix S1 fault propagation
+> - put fault reporting patches at the beginning of the series following
+>   Jean-Philippe's request
+> - update of the cache invalidate and fault API uapis
+> - VFIO fault reporting rework with 2 separate regions and one mmappable
+>   segment for the fault queue
+> - moved to PATCH
+> 
+> v2 -> v3:
+> - When registering the S1 MSI binding we now store the device handle. This
+>   addresses Robin's comment about discimination of devices beonging to
+>   different S1 groups and using different physical MSI doorbells.
+> - Change the fault reporting API: use VFIO_PCI_DMA_FAULT_IRQ_INDEX to
+>   set the eventfd and expose the faults through an mmappable fault region
+> 
+> v1 -> v2:
+> - Added the fault reporting capability
+> - asid properly passed on invalidation (fix assignment of multiple
+>   devices)
+> - see individual change logs for more info
+> 
+> 
+> Eric Auger (13):
+>   iommu: Introduce bind/unbind_guest_msi
+>   vfio: VFIO_IOMMU_BIND/UNBIND_MSI
+>   iommu/smmuv3: Get prepared for nested stage support
+>   iommu/smmuv3: Implement attach/detach_pasid_table
+>   iommu/smmuv3: Implement cache_invalidate
+>   dma-iommu: Implement NESTED_MSI cookie
+>   iommu/smmuv3: Implement bind/unbind_guest_msi
+>   iommu/smmuv3: Report non recoverable faults
+>   vfio-pci: Add a new VFIO_REGION_TYPE_NESTED region type
+>   vfio-pci: Register an iommu fault handler
+>   vfio_pci: Allow to mmap the fault queue
+>   vfio-pci: Add VFIO_PCI_DMA_FAULT_IRQ_INDEX
+>   vfio: Document nested stage control
+> 
+> Jacob Pan (4):
+>   driver core: add per device iommu param
+>   iommu: introduce device fault data
+>   iommu: introduce device fault report API
+>   iommu: Introduce attach/detach_pasid_table API
+> 
+> Jean-Philippe Brucker (2):
+>   iommu/arm-smmu-v3: Link domains and devices
+>   iommu/arm-smmu-v3: Maintain a SID->device structure
+> 
+> Liu, Yi L (3):
+>   iommu: Introduce cache_invalidate API
+>   vfio: VFIO_IOMMU_ATTACH/DETACH_PASID_TABLE
+>   vfio: VFIO_IOMMU_CACHE_INVALIDATE
+> 
+>  Documentation/vfio.txt              |  83 ++++
+>  drivers/iommu/arm-smmu-v3.c         | 581 ++++++++++++++++++++++++++--
+>  drivers/iommu/dma-iommu.c           | 145 ++++++-
+>  drivers/iommu/iommu.c               | 201 +++++++++-
+>  drivers/vfio/pci/vfio_pci.c         | 214 ++++++++++
+>  drivers/vfio/pci/vfio_pci_intrs.c   |  19 +
+>  drivers/vfio/pci/vfio_pci_private.h |  18 +
+>  drivers/vfio/pci/vfio_pci_rdwr.c    |  73 ++++
+>  drivers/vfio/vfio_iommu_type1.c     | 158 ++++++++
+>  include/linux/device.h              |   3 +
+>  include/linux/dma-iommu.h           |  18 +
+>  include/linux/iommu.h               | 137 +++++++
+>  include/uapi/linux/iommu.h          | 233 +++++++++++
+>  include/uapi/linux/vfio.h           | 102 +++++
+>  14 files changed, 1951 insertions(+), 34 deletions(-)
+>  create mode 100644 include/uapi/linux/iommu.h
+> 
