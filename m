@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C594C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:56:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58B80C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:56:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4478F21873
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:56:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B52421873
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:56:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553259403;
-	bh=A4I4m9koCuXfB6FpWU/fob3Gb6j4XE5dFR9qnJdjaPw=;
+	s=default; t=1553259417;
+	bh=Q1zraPLTzAQTHXF8LMQAdm3LCVkBV+9Qh9Nzqzczhgo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eqObyfQPE/26zgMlEGT4R8hynAkaegigvlGJfUIPSIB9439qHUH8uyOz3x0jcSbQs
-	 DBV2/Fu29ODWjaG1p2Kigws5P0MtilNdb/nlr7QeR6uBq8F6EoAZkgI5zlBSETvBoN
-	 Zb2P9i+ErQFLWKHgVv0aMELx0d/8tI/UWuiCtQ8g=
+	b=LL/TjpkMP+basA5UMXpAyU2rN0xulQ/WgzCavBEFlj2o0O/PPy/1Lgi3gfQSYsFc3
+	 DEWErgFtQ3S5I+FBH5B07zA/M4zGpgS3fGsPyqPoqETbwf2XqI0GhRzVzlTUAbkMQL
+	 rhDMtQfFjaHV71+iJ4v4jFDdT0/8641BHqft92nw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732370AbfCVLs5 (ORCPT
+        id S1732330AbfCVM44 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:48:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52292 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:56:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732356AbfCVLsw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:48:52 -0400
+        id S1731868AbfCVLsg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:48:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B2E1218B0;
-        Fri, 22 Mar 2019 11:48:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63712218B0;
+        Fri, 22 Mar 2019 11:48:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255331;
-        bh=A4I4m9koCuXfB6FpWU/fob3Gb6j4XE5dFR9qnJdjaPw=;
+        s=default; t=1553255315;
+        bh=Q1zraPLTzAQTHXF8LMQAdm3LCVkBV+9Qh9Nzqzczhgo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aa5ZIv2h8yAIQBXMJDSpFRvYifRAS30/JjrKKuD2SVqmoRboWu75Ziqd+1qkUVQk7
-         tDwOSalXlhKFxTpV0ZNJqG1EtXnEHXdPp0lLrgk42bxjjJSdochCzkT7qC3kgLbQwF
-         o4ZbM6l2VwVWQcFs6M119ECQ0l584ln1oSWxHPas=
+        b=c5TA9iVMOpC9twC5U8e8PNisHoZhQI9NNsRCc3rZ60fUydDolQYg9DUb7nqH6DrwS
+         oE0hU+gVZw+6dwlarmWJpVWo2jI4D7jHdb+hvfgVlkvn5fhZ5u4GSOn2sEUzGLMx64
+         FDA3SGP2LSqE0TlWBEpPxHo7hau982Vr3sm2ZOC8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martin Willi <martin@strongswan.org>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
+        stable@vger.kernel.org, Chase Conklin <Chase.Conklin@arm.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Vladimir Murzin <vladimir.murzin@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 039/183] esp: Skip TX bytes accounting when sending from a request socket
-Date:   Fri, 22 Mar 2019 12:14:27 +0100
-Message-Id: <20190322111244.555727953@linuxfoundation.org>
+Subject: [PATCH 4.14 052/183] arm64: Relax GIC version check during early boot
+Date:   Fri, 22 Mar 2019 12:14:40 +0100
+Message-Id: <20190322111245.463015452@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111241.819468003@linuxfoundation.org>
 References: <20190322111241.819468003@linuxfoundation.org>
@@ -66,73 +68,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 09db51241118aeb06e1c8cd393b45879ce099b36 ]
+[ Upstream commit 74698f6971f25d045301139413578865fc2bd8f9 ]
 
-On ESP output, sk_wmem_alloc is incremented for the added padding if a
-socket is associated to the skb. When replying with TCP SYNACKs over
-IPsec, the associated sk is a casted request socket, only. Increasing
-sk_wmem_alloc on a request socket results in a write at an arbitrary
-struct offset. In the best case, this produces the following WARNING:
+Updates to the GIC architecture allow ID_AA64PFR0_EL1.GIC to have
+values other than 0 or 1. At the moment, Linux is quite strict in the
+way it handles this field at early boot stage (cpufeature is fine) and
+will refuse to use the system register CPU interface if it doesn't
+find the value 1.
 
-WARNING: CPU: 1 PID: 0 at lib/refcount.c:102 esp_output_head+0x2e4/0x308 [esp4]
-refcount_t: addition on 0; use-after-free.
-CPU: 1 PID: 0 Comm: swapper/1 Not tainted 5.0.0-rc3 #2
-Hardware name: Marvell Armada 380/385 (Device Tree)
-[...]
-[<bf0ff354>] (esp_output_head [esp4]) from [<bf1006a4>] (esp_output+0xb8/0x180 [esp4])
-[<bf1006a4>] (esp_output [esp4]) from [<c05dee64>] (xfrm_output_resume+0x558/0x664)
-[<c05dee64>] (xfrm_output_resume) from [<c05d07b0>] (xfrm4_output+0x44/0xc4)
-[<c05d07b0>] (xfrm4_output) from [<c05956bc>] (tcp_v4_send_synack+0xa8/0xe8)
-[<c05956bc>] (tcp_v4_send_synack) from [<c0586ad8>] (tcp_conn_request+0x7f4/0x948)
-[<c0586ad8>] (tcp_conn_request) from [<c058c404>] (tcp_rcv_state_process+0x2a0/0xe64)
-[<c058c404>] (tcp_rcv_state_process) from [<c05958ac>] (tcp_v4_do_rcv+0xf0/0x1f4)
-[<c05958ac>] (tcp_v4_do_rcv) from [<c0598a4c>] (tcp_v4_rcv+0xdb8/0xe20)
-[<c0598a4c>] (tcp_v4_rcv) from [<c056eb74>] (ip_protocol_deliver_rcu+0x2c/0x2dc)
-[<c056eb74>] (ip_protocol_deliver_rcu) from [<c056ee6c>] (ip_local_deliver_finish+0x48/0x54)
-[<c056ee6c>] (ip_local_deliver_finish) from [<c056eecc>] (ip_local_deliver+0x54/0xec)
-[<c056eecc>] (ip_local_deliver) from [<c056efac>] (ip_rcv+0x48/0xb8)
-[<c056efac>] (ip_rcv) from [<c0519c2c>] (__netif_receive_skb_one_core+0x50/0x6c)
-[...]
-
-The issue triggers only when not using TCP syncookies, as for syncookies
-no socket is associated.
-
-Fixes: cac2661c53f3 ("esp4: Avoid skb_cow_data whenever possible")
-Fixes: 03e2a30f6a27 ("esp6: Avoid skb_cow_data whenever possible")
-Signed-off-by: Martin Willi <martin@strongswan.org>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Fixes: 021f653791ad17e03f98aaa7fb933816ae16f161 ("irqchip: gic-v3: Initial support for GICv3")
+Reported-by: Chase Conklin <Chase.Conklin@arm.com>
+Reviewed-by: Marc Zyngier <marc.zyngier@arm.com>
+Signed-off-by: Vladimir Murzin <vladimir.murzin@arm.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/esp4.c | 2 +-
- net/ipv6/esp6.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/kernel/head.S | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/net/ipv4/esp4.c b/net/ipv4/esp4.c
-index b00e4a43b4dc..d30285c5d52d 100644
---- a/net/ipv4/esp4.c
-+++ b/net/ipv4/esp4.c
-@@ -307,7 +307,7 @@ int esp_output_head(struct xfrm_state *x, struct sk_buff *skb, struct esp_info *
- 			skb->len += tailen;
- 			skb->data_len += tailen;
- 			skb->truesize += tailen;
--			if (sk)
-+			if (sk && sk_fullsock(sk))
- 				refcount_add(tailen, &sk->sk_wmem_alloc);
+diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
+index ec393275ba04..1371542de0d3 100644
+--- a/arch/arm64/kernel/head.S
++++ b/arch/arm64/kernel/head.S
+@@ -442,8 +442,7 @@ set_hcr:
+ 	/* GICv3 system register access */
+ 	mrs	x0, id_aa64pfr0_el1
+ 	ubfx	x0, x0, #24, #4
+-	cmp	x0, #1
+-	b.ne	3f
++	cbz	x0, 3f
  
- 			goto out;
-diff --git a/net/ipv6/esp6.c b/net/ipv6/esp6.c
-index f112fef79216..ef7822fad0fd 100644
---- a/net/ipv6/esp6.c
-+++ b/net/ipv6/esp6.c
-@@ -275,7 +275,7 @@ int esp6_output_head(struct xfrm_state *x, struct sk_buff *skb, struct esp_info
- 			skb->len += tailen;
- 			skb->data_len += tailen;
- 			skb->truesize += tailen;
--			if (sk)
-+			if (sk && sk_fullsock(sk))
- 				refcount_add(tailen, &sk->sk_wmem_alloc);
- 
- 			goto out;
+ 	mrs_s	x0, SYS_ICC_SRE_EL2
+ 	orr	x0, x0, #ICC_SRE_EL2_SRE	// Set ICC_SRE_EL2.SRE==1
 -- 
 2.19.1
 
