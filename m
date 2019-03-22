@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFAC2C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:58:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4505C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:58:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFA542195D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:58:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 845312192D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:58:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255921;
-	bh=TOvfeCbjiEgKTlYzY2570u9EMgzj1o4jdp6oy94vEKg=;
+	s=default; t=1553255925;
+	bh=W3R0H/osxmZswlZ8lpgINOQOY5etppCBdq3PRPZBaBs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xn2y0hYjRvhzvkuiKA3PWxKKMljHiB571bx8cvkZztaVvNLSKzS+1OedjdIbCUYNB
-	 HcN+5E2gQ3lHruYDEKMfa3GujyISfGmoW/0A5Wq5gyGldlaqLVkBPM02g2GT+XJkPJ
-	 d7iqooq13OSrPS16WbKRx3AXyYIe/iCpdG8XLAxM=
+	b=A74WsNZ6QlcUkylMPIvK921sp5Uw5aoGI2ramCT1x5cFSXDWfN4y9BSEHskuPnCFz
+	 9hDb0moZQIAlTCHB055GuQ6NKtUNR/9zTt7+tWu1CG5Etdfd86LuqmuQR07c8pLl+F
+	 AuydhXKIXtpka5c01Fev1e1aPk3u7hPFI+Yo+1DE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732252AbfCVL6j (ORCPT
+        id S2387876AbfCVL6o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:58:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35356 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:58:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387851AbfCVL6f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:58:35 -0400
+        id S2387864AbfCVL6i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:58:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85D1B2192D;
-        Fri, 22 Mar 2019 11:58:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4CACE20850;
+        Fri, 22 Mar 2019 11:58:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255915;
-        bh=TOvfeCbjiEgKTlYzY2570u9EMgzj1o4jdp6oy94vEKg=;
+        s=default; t=1553255917;
+        bh=W3R0H/osxmZswlZ8lpgINOQOY5etppCBdq3PRPZBaBs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jxKSWhGuciE4y+8VNVd5BptAxrQOPwQLqKMccYE22uMyT0mu3QpUGwMm1UaRa8OiC
-         o/xwPhJrn40x1dDMBLX9Mv3bXTW/hljlXCrDtiVO2G0g945bGGA1lupPN/MYjx4MLj
-         tPXDAn7xYYYB8bdmFv4zWYFE7wWtDWALZyd6r6o0=
+        b=bAkW9cIbAfCFIetrsCspyMHRu/uceYI1H/UBWHfbEVNlFUPTlKQzrscdp8xwzoibM
+         tQt6USK+s4UOkHxcMBVh1uDedMLVTCWxbocsAbI31x/Ob0E9lL4ICK8ablFUsd+gDd
+         ZLvKOTamMJ4imBSwTsHEDVCkrNqPiRogJdH1PpeY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Yufen Yu <yuyufen@huawei.com>, Jens Axboe <axboe@kernel.dk>,
+        stable@vger.kernel.org,
+        Nicolas Morey-Chaisemartin <nmoreychaisemartin@suse.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 053/280] floppy: check_events callback should not return a negative number
-Date:   Fri, 22 Mar 2019 12:13:26 +0100
-Message-Id: <20190322111309.283619713@linuxfoundation.org>
+Subject: [PATCH 4.19 054/280] xprtrdma: Make sure Send CQ is allocated on an existing compvec
+Date:   Fri, 22 Mar 2019 12:13:27 +0100
+Message-Id: <20190322111309.327834156@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -66,39 +68,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 96d7cb932e826219ec41ac02e5af037ffae6098c ]
+[ Upstream commit a4cb5bdb754afe21f3e9e7164213e8600cf69427 ]
 
-floppy_check_events() is supposed to return bit flags to say which
-events occured. We should return zero to say that no event flags are
-set.  Only BIT(0) and BIT(1) are used in the caller. And .check_events
-interface also expect to return an unsigned int value.
+Make sure the device has at least 2 completion vectors
+before allocating to compvec#1
 
-However, after commit a0c80efe5956, it may return -EINTR (-4u).
-Here, both BIT(0) and BIT(1) are cleared. So this patch shouldn't
-affect runtime, but it obviously is still worth fixing.
-
-Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
-Fixes: a0c80efe5956 ("floppy: fix lock_fdc() signal handling")
-Signed-off-by: Yufen Yu <yuyufen@huawei.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: a4699f5647f3 (xprtrdma: Put Send CQ in IB_POLL_WORKQUEUE mode)
+Signed-off-by: Nicolas Morey-Chaisemartin <nmoreychaisemartin@suse.com>
+Reviewed-by: Chuck Lever <chuck.lever@oracle.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/floppy.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/sunrpc/xprtrdma/verbs.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
-index fdabd0b74492..a8de56f1936d 100644
---- a/drivers/block/floppy.c
-+++ b/drivers/block/floppy.c
-@@ -4084,7 +4084,7 @@ static unsigned int floppy_check_events(struct gendisk *disk,
+diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
+index 3d6bf790cf1f..5ddbf227e7c6 100644
+--- a/net/sunrpc/xprtrdma/verbs.c
++++ b/net/sunrpc/xprtrdma/verbs.c
+@@ -546,7 +546,8 @@ rpcrdma_ep_create(struct rpcrdma_ep *ep, struct rpcrdma_ia *ia,
  
- 	if (time_after(jiffies, UDRS->last_checked + UDP->checkfreq)) {
- 		if (lock_fdc(drive))
--			return -EINTR;
-+			return 0;
- 		poll_drive(false, 0);
- 		process_fd_request();
- 	}
+ 	sendcq = ib_alloc_cq(ia->ri_device, NULL,
+ 			     ep->rep_attr.cap.max_send_wr + 1,
+-			     1, IB_POLL_WORKQUEUE);
++			     ia->ri_device->num_comp_vectors > 1 ? 1 : 0,
++			     IB_POLL_WORKQUEUE);
+ 	if (IS_ERR(sendcq)) {
+ 		rc = PTR_ERR(sendcq);
+ 		dprintk("RPC:       %s: failed to create send CQ: %i\n",
 -- 
 2.19.1
 
