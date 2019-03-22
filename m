@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92EF9C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:50:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3751BC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:50:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5887A21873
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:50:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0898E21873
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:50:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553259031;
-	bh=XM1spQhoIrcHoszklAO1nnYCqWn5br3UzeLSapTTVaw=;
+	s=default; t=1553259037;
+	bh=vOJtz6tDHvcm/yg7Tj2kNRMcelL8kmVhgnoIfWmtSTw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qoxqo28jDXmLPdc3NrzIsUwLIRKePywE6IjgnMU17TQxrn7T6i+4C24mIQKP36IZD
-	 eIZpGaEB4gpYOovfFECsbtVVRxPffueq/fBuJjyb5ES5YSjY80nJ4CI0rf0azv7GtF
-	 yAsLYxuoOsLBVWQm9Gir82LAFhEGvECSHVtak4yg=
+	b=cnrfA2eHwqb9xpDFmJ8B7+7i3cP7GmXvmACSxCckGss1yxDGCZXGo1Oq56SGN0CnN
+	 PF6wBBKZLXaxZX9NLtQ2t8IMTYgAU4LPqI4RkNNUasCyqfaL0l4Cab2Ppy1dMe5Qd1
+	 tzqJLQtNEKsti6MrpP2iSC+zhQ9nlvvw0lLt3ROM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733233AbfCVMu3 (ORCPT
+        id S2387430AbfCVLzi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:50:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60312 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:55:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60206 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732458AbfCVLzn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:55:43 -0400
+        id S1732762AbfCVLzg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:55:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7945420850;
-        Fri, 22 Mar 2019 11:55:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5BCF20850;
+        Fri, 22 Mar 2019 11:55:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255742;
-        bh=XM1spQhoIrcHoszklAO1nnYCqWn5br3UzeLSapTTVaw=;
+        s=default; t=1553255735;
+        bh=vOJtz6tDHvcm/yg7Tj2kNRMcelL8kmVhgnoIfWmtSTw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ujsLyEc/f/i223ZiGGjbuyXnipoNfHA8BwFPhAaG7E/eV1UPYt7k4ovRfyC/Sa8kH
-         skD0MuBwmB02KCQ7R2IHzdaDkbq9FhYyQrXtSzw7FoNE1v5uUS7378TNLvrhw97ZtS
-         KfGFn390jcOwCrVKIaxfS61p9K5U0Q4dAjOjruyM=
+        b=mqnHMjA+Bt76FrJ7edg0Ljq5uf1PsMTDZfco+vKnxWKDb5IwI+Hm+QwWSVAnascw9
+         mhLroaL/snZ207A3d17BEJmmJIFN3bBeLkNhWlhelYV20vOG9lWjJIMbr0XMYZ0ni4
+         pFuxOAtVPrH7hfbJm3OYeSsVgRSFuAd3qMUUwp7M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.14 177/183] KVM: Call kvm_arch_memslots_updated() before updating memslots
-Date:   Fri, 22 Mar 2019 12:16:45 +0100
-Message-Id: <20190322111254.730818555@linuxfoundation.org>
+        stable@vger.kernel.org, Steve Longerbeam <slongerbeam@gmail.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: [PATCH 4.14 175/183] media: imx: csi: Stop upstream before disabling IDMA channel
+Date:   Fri, 22 Mar 2019 12:16:43 +0100
+Message-Id: <20190322111254.568277103@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111241.819468003@linuxfoundation.org>
 References: <20190322111241.819468003@linuxfoundation.org>
@@ -66,170 +66,91 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Steve Longerbeam <slongerbeam@gmail.com>
 
-commit 152482580a1b0accb60676063a1ac57b2d12daf6 upstream.
+commit 4bc1ab41eee9d02ad2483bf8f51a7b72e3504eba upstream.
 
-kvm_arch_memslots_updated() is at this point in time an x86-specific
-hook for handling MMIO generation wraparound.  x86 stashes 19 bits of
-the memslots generation number in its MMIO sptes in order to avoid
-full page fault walks for repeat faults on emulated MMIO addresses.
-Because only 19 bits are used, wrapping the MMIO generation number is
-possible, if unlikely.  kvm_arch_memslots_updated() alerts x86 that
-the generation has changed so that it can invalidate all MMIO sptes in
-case the effective MMIO generation has wrapped so as to avoid using a
-stale spte, e.g. a (very) old spte that was created with generation==0.
+Move upstream stream off to just after receiving the last EOF completion
+and disabling the CSI (and thus before disabling the IDMA channel) in
+csi_stop(). For symmetry also move upstream stream on to beginning of
+csi_start().
 
-Given that the purpose of kvm_arch_memslots_updated() is to prevent
-consuming stale entries, it needs to be called before the new generation
-is propagated to memslots.  Invalidating the MMIO sptes after updating
-memslots means that there is a window where a vCPU could dereference
-the new memslots generation, e.g. 0, and incorrectly reuse an old MMIO
-spte that was created with (pre-wrap) generation==0.
+Doing this makes csi_s_stream() more symmetric with prp_s_stream() which
+will require the same change to fix a hard lockup.
 
-Fixes: e59dbe09f8e6 ("KVM: Introduce kvm_arch_memslots_updated()")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
+Cc: stable@vger.kernel.org	# for 4.13 and up
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/mips/include/asm/kvm_host.h    |    2 +-
- arch/powerpc/include/asm/kvm_host.h |    2 +-
- arch/s390/include/asm/kvm_host.h    |    2 +-
- arch/x86/include/asm/kvm_host.h     |    2 +-
- arch/x86/kvm/mmu.c                  |    4 ++--
- arch/x86/kvm/x86.c                  |    4 ++--
- include/linux/kvm_host.h            |    2 +-
- virt/kvm/arm/mmu.c                  |    2 +-
- virt/kvm/kvm_main.c                 |    7 +++++--
- 9 files changed, 15 insertions(+), 12 deletions(-)
+ drivers/staging/media/imx/imx-media-csi.c |   25 +++++++++++++------------
+ 1 file changed, 13 insertions(+), 12 deletions(-)
 
---- a/arch/mips/include/asm/kvm_host.h
-+++ b/arch/mips/include/asm/kvm_host.h
-@@ -1132,7 +1132,7 @@ static inline void kvm_arch_hardware_uns
- static inline void kvm_arch_sync_events(struct kvm *kvm) {}
- static inline void kvm_arch_free_memslot(struct kvm *kvm,
- 		struct kvm_memory_slot *free, struct kvm_memory_slot *dont) {}
--static inline void kvm_arch_memslots_updated(struct kvm *kvm, struct kvm_memslots *slots) {}
-+static inline void kvm_arch_memslots_updated(struct kvm *kvm, u64 gen) {}
- static inline void kvm_arch_sched_in(struct kvm_vcpu *vcpu, int cpu) {}
- static inline void kvm_arch_vcpu_blocking(struct kvm_vcpu *vcpu) {}
- static inline void kvm_arch_vcpu_unblocking(struct kvm_vcpu *vcpu) {}
---- a/arch/powerpc/include/asm/kvm_host.h
-+++ b/arch/powerpc/include/asm/kvm_host.h
-@@ -809,7 +809,7 @@ struct kvm_vcpu_arch {
- static inline void kvm_arch_hardware_disable(void) {}
- static inline void kvm_arch_hardware_unsetup(void) {}
- static inline void kvm_arch_sync_events(struct kvm *kvm) {}
--static inline void kvm_arch_memslots_updated(struct kvm *kvm, struct kvm_memslots *slots) {}
-+static inline void kvm_arch_memslots_updated(struct kvm *kvm, u64 gen) {}
- static inline void kvm_arch_flush_shadow_all(struct kvm *kvm) {}
- static inline void kvm_arch_sched_in(struct kvm_vcpu *vcpu, int cpu) {}
- static inline void kvm_arch_exit(void) {}
---- a/arch/s390/include/asm/kvm_host.h
-+++ b/arch/s390/include/asm/kvm_host.h
-@@ -784,7 +784,7 @@ static inline void kvm_arch_vcpu_uninit(
- static inline void kvm_arch_sched_in(struct kvm_vcpu *vcpu, int cpu) {}
- static inline void kvm_arch_free_memslot(struct kvm *kvm,
- 		struct kvm_memory_slot *free, struct kvm_memory_slot *dont) {}
--static inline void kvm_arch_memslots_updated(struct kvm *kvm, struct kvm_memslots *slots) {}
-+static inline void kvm_arch_memslots_updated(struct kvm *kvm, u64 gen) {}
- static inline void kvm_arch_flush_shadow_all(struct kvm *kvm) {}
- static inline void kvm_arch_flush_shadow_memslot(struct kvm *kvm,
- 		struct kvm_memory_slot *slot) {}
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1121,7 +1121,7 @@ void kvm_mmu_clear_dirty_pt_masked(struc
- 				   struct kvm_memory_slot *slot,
- 				   gfn_t gfn_offset, unsigned long mask);
- void kvm_mmu_zap_all(struct kvm *kvm);
--void kvm_mmu_invalidate_mmio_sptes(struct kvm *kvm, struct kvm_memslots *slots);
-+void kvm_mmu_invalidate_mmio_sptes(struct kvm *kvm, u64 gen);
- unsigned int kvm_mmu_calculate_mmu_pages(struct kvm *kvm);
- void kvm_mmu_change_mmu_pages(struct kvm *kvm, unsigned int kvm_nr_mmu_pages);
- 
---- a/arch/x86/kvm/mmu.c
-+++ b/arch/x86/kvm/mmu.c
-@@ -5418,13 +5418,13 @@ static bool kvm_has_zapped_obsolete_page
- 	return unlikely(!list_empty_careful(&kvm->arch.zapped_obsolete_pages));
- }
- 
--void kvm_mmu_invalidate_mmio_sptes(struct kvm *kvm, struct kvm_memslots *slots)
-+void kvm_mmu_invalidate_mmio_sptes(struct kvm *kvm, u64 gen)
- {
- 	/*
- 	 * The very rare case: if the generation-number is round,
- 	 * zap all shadow pages.
- 	 */
--	if (unlikely((slots->generation & MMIO_GEN_MASK) == 0)) {
-+	if (unlikely((gen & MMIO_GEN_MASK) == 0)) {
- 		kvm_debug_ratelimited("kvm: zapping shadow pages for mmio generation wraparound\n");
- 		kvm_mmu_invalidate_zap_all_pages(kvm);
+--- a/drivers/staging/media/imx/imx-media-csi.c
++++ b/drivers/staging/media/imx/imx-media-csi.c
+@@ -648,10 +648,16 @@ static int csi_start(struct csi_priv *pr
+ 		usleep_range(delay_usec, delay_usec + 1000);
  	}
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -8524,13 +8524,13 @@ out_free:
- 	return -ENOMEM;
- }
  
--void kvm_arch_memslots_updated(struct kvm *kvm, struct kvm_memslots *slots)
-+void kvm_arch_memslots_updated(struct kvm *kvm, u64 gen)
- {
- 	/*
- 	 * memslots->generation has been incremented.
- 	 * mmio generation may have reached its maximum value.
- 	 */
--	kvm_mmu_invalidate_mmio_sptes(kvm, slots);
-+	kvm_mmu_invalidate_mmio_sptes(kvm, gen);
- }
- 
- int kvm_arch_prepare_memory_region(struct kvm *kvm,
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -625,7 +625,7 @@ void kvm_arch_free_memslot(struct kvm *k
- 			   struct kvm_memory_slot *dont);
- int kvm_arch_create_memslot(struct kvm *kvm, struct kvm_memory_slot *slot,
- 			    unsigned long npages);
--void kvm_arch_memslots_updated(struct kvm *kvm, struct kvm_memslots *slots);
-+void kvm_arch_memslots_updated(struct kvm *kvm, u64 gen);
- int kvm_arch_prepare_memory_region(struct kvm *kvm,
- 				struct kvm_memory_slot *memslot,
- 				const struct kvm_userspace_memory_region *mem,
---- a/virt/kvm/arm/mmu.c
-+++ b/virt/kvm/arm/mmu.c
-@@ -1955,7 +1955,7 @@ int kvm_arch_create_memslot(struct kvm *
- 	return 0;
- }
- 
--void kvm_arch_memslots_updated(struct kvm *kvm, struct kvm_memslots *slots)
-+void kvm_arch_memslots_updated(struct kvm *kvm, u64 gen)
- {
- }
- 
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -856,6 +856,7 @@ static struct kvm_memslots *install_new_
- 		int as_id, struct kvm_memslots *slots)
- {
- 	struct kvm_memslots *old_memslots = __kvm_memslots(kvm, as_id);
-+	u64 gen;
- 
- 	/*
- 	 * Set the low bit in the generation, which disables SPTE caching
-@@ -878,9 +879,11 @@ static struct kvm_memslots *install_new_
- 	 * space 0 will use generations 0, 4, 8, ... while * address space 1 will
- 	 * use generations 2, 6, 10, 14, ...
- 	 */
--	slots->generation += KVM_ADDRESS_SPACE_NUM * 2 - 1;
-+	gen = slots->generation + KVM_ADDRESS_SPACE_NUM * 2 - 1;
- 
--	kvm_arch_memslots_updated(kvm, slots);
-+	kvm_arch_memslots_updated(kvm, gen);
++	/* start upstream */
++	ret = v4l2_subdev_call(priv->src_sd, video, s_stream, 1);
++	ret = (ret && ret != -ENOIOCTLCMD) ? ret : 0;
++	if (ret)
++		return ret;
 +
-+	slots->generation = gen;
+ 	if (priv->dest == IPU_CSI_DEST_IDMAC) {
+ 		ret = csi_idmac_start(priv);
+ 		if (ret)
+-			return ret;
++			goto stop_upstream;
+ 	}
  
- 	return old_memslots;
+ 	ret = csi_setup(priv);
+@@ -679,6 +685,8 @@ fim_off:
+ idmac_stop:
+ 	if (priv->dest == IPU_CSI_DEST_IDMAC)
+ 		csi_idmac_stop(priv);
++stop_upstream:
++	v4l2_subdev_call(priv->src_sd, video, s_stream, 0);
+ 	return ret;
  }
+ 
+@@ -694,6 +702,9 @@ static void csi_stop(struct csi_priv *pr
+ 	 */
+ 	ipu_csi_disable(priv->csi);
+ 
++	/* stop upstream */
++	v4l2_subdev_call(priv->src_sd, video, s_stream, 0);
++
+ 	if (priv->dest == IPU_CSI_DEST_IDMAC) {
+ 		csi_idmac_stop(priv);
+ 
+@@ -861,23 +872,13 @@ static int csi_s_stream(struct v4l2_subd
+ 		goto update_count;
+ 
+ 	if (enable) {
+-		/* upstream must be started first, before starting CSI */
+-		ret = v4l2_subdev_call(priv->src_sd, video, s_stream, 1);
+-		ret = (ret && ret != -ENOIOCTLCMD) ? ret : 0;
+-		if (ret)
+-			goto out;
+-
+ 		dev_dbg(priv->dev, "stream ON\n");
+ 		ret = csi_start(priv);
+-		if (ret) {
+-			v4l2_subdev_call(priv->src_sd, video, s_stream, 0);
++		if (ret)
+ 			goto out;
+-		}
+ 	} else {
+ 		dev_dbg(priv->dev, "stream OFF\n");
+-		/* CSI must be stopped first, then stop upstream */
+ 		csi_stop(priv);
+-		v4l2_subdev_call(priv->src_sd, video, s_stream, 0);
+ 	}
+ 
+ update_count:
 
 
