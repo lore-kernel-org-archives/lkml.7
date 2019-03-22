@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25614C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:52:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5602FC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:52:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA7762195D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:52:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 252F32192B
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:52:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255525;
-	bh=x04yC2S3tL6CMTkpcmbqbWA7QxnK8NNDoQ2CwqoQQUw=;
+	s=default; t=1553255529;
+	bh=CQHnGyDky5rtd71wjfeKVVIgLGCi2zgdd2iznhZfxXM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QbwfVyNHQJSdThpHThcfzcVOS1qmit8W+6BWPNbSeG22FYBBWNMV1eiOtW86jTES3
-	 MBvinca62oOzgXZh2N+A88ttPVwwDhQxLEqgx/WdYnk1/Qi8+DcajqGJv22blYTtYd
-	 mVctnX8TY7nMwB6KntWwOoqXBcj6VWojig7mF4lI=
+	b=CbmO0krv1rGZEP7DfmuVhzmmmZzA28Hrq4Wy5yKYDWh1W348fsHzaDj7mh/ZXPz3X
+	 thz2Mo9kW6Jw3ZDuOBeWTayvwbjrll4XjHgygs/tZoE2ICXvWIUckb9gUFv6oZ2N/t
+	 Iq/NYIGhKKEk4xXCxGCIUNGGRV65aXee7tSdm5z4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729112AbfCVLwD (ORCPT
+        id S1732860AbfCVLwI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:52:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55876 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:52:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732154AbfCVLv7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:51:59 -0400
+        id S1732850AbfCVLwC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:52:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B53412192B;
-        Fri, 22 Mar 2019 11:51:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B465720850;
+        Fri, 22 Mar 2019 11:52:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255518;
-        bh=x04yC2S3tL6CMTkpcmbqbWA7QxnK8NNDoQ2CwqoQQUw=;
+        s=default; t=1553255522;
+        bh=CQHnGyDky5rtd71wjfeKVVIgLGCi2zgdd2iznhZfxXM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vGs9tyyLaS4r6YPuFTdX035m59fViJYTSslcSF6HQfS4kQ4Opro++o7O49EoxI0yU
-         WlnU8l9qBwo6zle355w+/IyIM5JM4T7pgaCaicETE3B6C6LiZ+CpVY3KZmVAZx3pjq
-         be7v6xyDE1tj9WfcFw2juyXG8zkzipQh1DDri/o8=
+        b=2NB6gtNgppqhJkvY+Oz74vOg3QE3iG5l/QRCvlFPBcspmoN9x7Yb4HHNCcM8gPkrM
+         AD4aBo1rS1WpSgc6TvDdzXKqgC0SK8+NEbT7TGqd/k3QOUioG1VCx4s6rqEFlC45Ug
+         PSv5YN6I4VINmvQieYnMGmQeRjq8xayHZ4bnYOZo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Jann Horn <jannh@google.com>
-Subject: [PATCH 4.14 100/183] splice: dont merge into linked buffers
-Date:   Fri, 22 Mar 2019 12:15:28 +0100
-Message-Id: <20190322111248.929624659@linuxfoundation.org>
+        stable@vger.kernel.org, Finn Thain <fthain@telegraphics.com.au>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: [PATCH 4.14 101/183] m68k: Add -ffreestanding to CFLAGS
+Date:   Fri, 22 Mar 2019 12:15:29 +0100
+Message-Id: <20190322111249.013350591@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111241.819468003@linuxfoundation.org>
 References: <20190322111241.819468003@linuxfoundation.org>
@@ -65,113 +65,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jann Horn <jannh@google.com>
+From: Finn Thain <fthain@telegraphics.com.au>
 
-commit a0ce2f0aa6ad97c3d4927bf2ca54bcebdf062d55 upstream.
+commit 28713169d879b67be2ef2f84dcf54905de238294 upstream.
 
-Before this patch, it was possible for two pipes to affect each other after
-data had been transferred between them with tee():
+This patch fixes a build failure when using GCC 8.1:
 
-============
-$ cat tee_test.c
+/usr/bin/ld: block/partitions/ldm.o: in function `ldm_parse_tocblock':
+block/partitions/ldm.c:153: undefined reference to `strcmp'
 
-int main(void) {
-  int pipe_a[2];
-  if (pipe(pipe_a)) err(1, "pipe");
-  int pipe_b[2];
-  if (pipe(pipe_b)) err(1, "pipe");
-  if (write(pipe_a[1], "abcd", 4) != 4) err(1, "write");
-  if (tee(pipe_a[0], pipe_b[1], 2, 0) != 2) err(1, "tee");
-  if (write(pipe_b[1], "xx", 2) != 2) err(1, "write");
+This is caused by a new optimization which effectively replaces a
+strncmp() call with a strcmp() call. This affects a number of strncmp()
+call sites in the kernel.
 
-  char buf[5];
-  if (read(pipe_a[0], buf, 4) != 4) err(1, "read");
-  buf[4] = 0;
-  printf("got back: '%s'\n", buf);
-}
-$ gcc -o tee_test tee_test.c
-$ ./tee_test
-got back: 'abxx'
-$
-============
+The entire class of optimizations is avoided with -fno-builtin, which
+gets enabled by -ffreestanding. This may avoid possible future build
+failures in case new optimizations appear in future compilers.
 
-As suggested by Al Viro, fix it by creating a separate type for
-non-mergeable pipe buffers, then changing the types of buffers in
-splice_pipe_to_pipe() and link_pipe().
+I haven't done any performance measurements with this patch but I did
+count the function calls in a defconfig build. For example, there are now
+23 more sprintf() calls and 39 fewer strcpy() calls. The effect on the
+other libc functions is smaller.
 
-Cc: <stable@vger.kernel.org>
-Fixes: 7c77f0b3f920 ("splice: implement pipe to pipe splicing")
-Fixes: 70524490ee2e ("[PATCH] splice: add support for sys_tee()")
-Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Jann Horn <jannh@google.com>
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+If this harms performance we can tackle that regression by optimizing
+the call sites, ideally using semantic patches. That way, clang and ICC
+builds might benfit too.
+
+Cc: stable@vger.kernel.org
+Reference: https://marc.info/?l=linux-m68k&m=154514816222244&w=2
+Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/pipe.c                 |   14 ++++++++++++++
- fs/splice.c               |    4 ++++
- include/linux/pipe_fs_i.h |    1 +
- 3 files changed, 19 insertions(+)
+ arch/m68k/Makefile |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/fs/pipe.c
-+++ b/fs/pipe.c
-@@ -239,6 +239,14 @@ static const struct pipe_buf_operations
- 	.get = generic_pipe_buf_get,
- };
+--- a/arch/m68k/Makefile
++++ b/arch/m68k/Makefile
+@@ -58,7 +58,10 @@ cpuflags-$(CONFIG_M5206e)	:= $(call cc-o
+ cpuflags-$(CONFIG_M5206)	:= $(call cc-option,-mcpu=5206,-m5200)
  
-+static const struct pipe_buf_operations anon_pipe_buf_nomerge_ops = {
-+	.can_merge = 0,
-+	.confirm = generic_pipe_buf_confirm,
-+	.release = anon_pipe_buf_release,
-+	.steal = anon_pipe_buf_steal,
-+	.get = generic_pipe_buf_get,
-+};
+ KBUILD_AFLAGS += $(cpuflags-y)
+-KBUILD_CFLAGS += $(cpuflags-y) -pipe
++KBUILD_CFLAGS += $(cpuflags-y)
 +
- static const struct pipe_buf_operations packet_pipe_buf_ops = {
- 	.can_merge = 0,
- 	.confirm = generic_pipe_buf_confirm,
-@@ -247,6 +255,12 @@ static const struct pipe_buf_operations
- 	.get = generic_pipe_buf_get,
- };
- 
-+void pipe_buf_mark_unmergeable(struct pipe_buffer *buf)
-+{
-+	if (buf->ops == &anon_pipe_buf_ops)
-+		buf->ops = &anon_pipe_buf_nomerge_ops;
-+}
++KBUILD_CFLAGS += -pipe -ffreestanding
 +
- static ssize_t
- pipe_read(struct kiocb *iocb, struct iov_iter *to)
- {
---- a/fs/splice.c
-+++ b/fs/splice.c
-@@ -1580,6 +1580,8 @@ retry:
- 			 */
- 			obuf->flags &= ~PIPE_BUF_FLAG_GIFT;
- 
-+			pipe_buf_mark_unmergeable(obuf);
-+
- 			obuf->len = len;
- 			opipe->nrbufs++;
- 			ibuf->offset += obuf->len;
-@@ -1654,6 +1656,8 @@ static int link_pipe(struct pipe_inode_i
- 		 */
- 		obuf->flags &= ~PIPE_BUF_FLAG_GIFT;
- 
-+		pipe_buf_mark_unmergeable(obuf);
-+
- 		if (obuf->len > len)
- 			obuf->len = len;
- 
---- a/include/linux/pipe_fs_i.h
-+++ b/include/linux/pipe_fs_i.h
-@@ -183,6 +183,7 @@ void generic_pipe_buf_get(struct pipe_in
- int generic_pipe_buf_confirm(struct pipe_inode_info *, struct pipe_buffer *);
- int generic_pipe_buf_steal(struct pipe_inode_info *, struct pipe_buffer *);
- void generic_pipe_buf_release(struct pipe_inode_info *, struct pipe_buffer *);
-+void pipe_buf_mark_unmergeable(struct pipe_buffer *buf);
- 
- extern const struct pipe_buf_operations nosteal_pipe_buf_ops;
- 
+ ifdef CONFIG_MMU
+ # without -fno-strength-reduce the 53c7xx.c driver fails ;-(
+ KBUILD_CFLAGS += -fno-strength-reduce -ffixed-a2
 
 
