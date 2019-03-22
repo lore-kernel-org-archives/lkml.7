@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A93ADC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:26:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F43C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:26:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78D3E218A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:26:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D7E920657
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:26:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553253978;
-	bh=DY/QYzKojD2BvCl/wMH+VUcC6QQEieNYPAYCG4bx7rI=;
+	s=default; t=1553253986;
+	bh=6zZXyh6ObCwwl4V2tIiGwrv1BdjEWUmH4N4hUXbou3g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BRjVCaMuuFKTIX7i1veyYKSSUya1ujicAmu2r09BNxxoQtw6n4z/EN6SEvv1SF95p
-	 //llj+8uVe2PkEhXywK1xs+K+YZ2i8mMs+ErTeIlvlMqIeF+sVq9E9R/ad0me0dvrH
-	 EjkWmBFzOyqheO2oNTksQc25TkTfzjP5dBerN1ys=
+	b=LzIk5RmySibX/s0FNY4yAlm3Mk/wpLZ3CKj1oYeiyKGZKXLErKbsKmOLhizw6+Ljj
+	 SNH9cHTxPR5Yq0Fl4kSDjuWadgkZwnc1lzpQfjxweenCc57T6O2IQGyuR37FSBCNJc
+	 rtXA8ZamhoMK3nlHwVblmdYT++iZphEKzb7ymhVw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729401AbfCVL0R (ORCPT
+        id S1729420AbfCVL0Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:26:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53946 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:26:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727786AbfCVL0L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:26:11 -0400
+        id S1729394AbfCVL0P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:26:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 51033218A2;
-        Fri, 22 Mar 2019 11:26:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 60D2E20657;
+        Fri, 22 Mar 2019 11:26:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553253970;
-        bh=DY/QYzKojD2BvCl/wMH+VUcC6QQEieNYPAYCG4bx7rI=;
+        s=default; t=1553253974;
+        bh=6zZXyh6ObCwwl4V2tIiGwrv1BdjEWUmH4N4hUXbou3g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vraA1PMkBE2FKQ7EbLndRFcJOtp6XQnZbKTOuZxCwusD6cltG43T51ldYOQ+me0X1
-         k1iSFEX5/mLt/Z7EjTOjkw6AiIdabO9cnUxM45EShRdVUOAj2pHAShbgX2E6fF7r5J
-         FYnvV7uqYF7JINIYlVg1K7dUMKNkwFqIqFFRUQK0=
+        b=jxSqqDl8NSQymZwUvZ62vfnG5Iwnnn9d9CPJzRM1klfnfItgO6xp4b00jnV5Pp33T
+         5ArgZCQSxniZDuZKZ5Ywv5atrtON6r01GDM26d9AxwRGAmzXxMQoeYmicdPNwZ4r3b
+         tBaZwBqNPvmJTW5jJV5OQFBqIDKs2sCDupPMBMNs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 3.18 127/134] powerpc/83xx: Also save/restore SPRG4-7 during suspend
-Date:   Fri, 22 Mar 2019 12:15:40 +0100
-Message-Id: <20190322111219.681540424@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 3.18 128/134] ARM: s3c24xx: Fix boolean expressions in osiris_dvs_notify
+Date:   Fri, 22 Mar 2019 12:15:41 +0100
+Message-Id: <20190322111219.755765860@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111210.465931067@linuxfoundation.org>
 References: <20190322111210.465931067@linuxfoundation.org>
@@ -65,79 +66,48 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-commit 36da5ff0bea2dc67298150ead8d8471575c54c7d upstream.
+commit e2477233145f2156434afb799583bccd878f3e9f upstream.
 
-The 83xx has 8 SPRG registers and uses at least SPRG4
-for DTLB handling LRU.
+Fix boolean expressions by using logical AND operator '&&' instead of
+bitwise operator '&'.
 
-Fixes: 2319f1239592 ("powerpc/mm: e300c2/c3/c4 TLB errata workaround")
+This issue was detected with the help of Coccinelle.
+
+Fixes: 4fa084af28ca ("ARM: OSIRIS: DVS (Dynamic Voltage Scaling) supoort.")
 Cc: stable@vger.kernel.org
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+[krzk: Fix -Wparentheses warning]
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/platforms/83xx/suspend-asm.S |   34 +++++++++++++++++++++++-------
- 1 file changed, 27 insertions(+), 7 deletions(-)
+ arch/arm/mach-s3c24xx/mach-osiris-dvs.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/arch/powerpc/platforms/83xx/suspend-asm.S
-+++ b/arch/powerpc/platforms/83xx/suspend-asm.S
-@@ -26,13 +26,13 @@
- #define SS_MSR		0x74
- #define SS_SDR1		0x78
- #define SS_LR		0x7c
--#define SS_SPRG		0x80 /* 4 SPRGs */
--#define SS_DBAT		0x90 /* 8 DBATs */
--#define SS_IBAT		0xd0 /* 8 IBATs */
--#define SS_TB		0x110
--#define SS_CR		0x118
--#define SS_GPREG	0x11c /* r12-r31 */
--#define STATE_SAVE_SIZE 0x16c
-+#define SS_SPRG		0x80 /* 8 SPRGs */
-+#define SS_DBAT		0xa0 /* 8 DBATs */
-+#define SS_IBAT		0xe0 /* 8 IBATs */
-+#define SS_TB		0x120
-+#define SS_CR		0x128
-+#define SS_GPREG	0x12c /* r12-r31 */
-+#define STATE_SAVE_SIZE 0x17c
+--- a/arch/arm/mach-s3c24xx/mach-osiris-dvs.c
++++ b/arch/arm/mach-s3c24xx/mach-osiris-dvs.c
+@@ -70,16 +70,16 @@ static int osiris_dvs_notify(struct noti
  
- 	.section .data
- 	.align	5
-@@ -103,6 +103,16 @@ _GLOBAL(mpc83xx_enter_deep_sleep)
- 	stw	r7, SS_SPRG+12(r3)
- 	stw	r8, SS_SDR1(r3)
- 
-+	mfspr	r4, SPRN_SPRG4
-+	mfspr	r5, SPRN_SPRG5
-+	mfspr	r6, SPRN_SPRG6
-+	mfspr	r7, SPRN_SPRG7
-+
-+	stw	r4, SS_SPRG+16(r3)
-+	stw	r5, SS_SPRG+20(r3)
-+	stw	r6, SS_SPRG+24(r3)
-+	stw	r7, SS_SPRG+28(r3)
-+
- 	mfspr	r4, SPRN_DBAT0U
- 	mfspr	r5, SPRN_DBAT0L
- 	mfspr	r6, SPRN_DBAT1U
-@@ -493,6 +503,16 @@ mpc83xx_deep_resume:
- 	mtspr	SPRN_IBAT7U, r6
- 	mtspr	SPRN_IBAT7L, r7
- 
-+	lwz	r4, SS_SPRG+16(r3)
-+	lwz	r5, SS_SPRG+20(r3)
-+	lwz	r6, SS_SPRG+24(r3)
-+	lwz	r7, SS_SPRG+28(r3)
-+
-+	mtspr	SPRN_SPRG4, r4
-+	mtspr	SPRN_SPRG5, r5
-+	mtspr	SPRN_SPRG6, r6
-+	mtspr	SPRN_SPRG7, r7
-+
- 	lwz	r4, SS_SPRG+0(r3)
- 	lwz	r5, SS_SPRG+4(r3)
- 	lwz	r6, SS_SPRG+8(r3)
+ 	switch (val) {
+ 	case CPUFREQ_PRECHANGE:
+-		if (old_dvs & !new_dvs ||
+-		    cur_dvs & !new_dvs) {
++		if ((old_dvs && !new_dvs) ||
++		    (cur_dvs && !new_dvs)) {
+ 			pr_debug("%s: exiting dvs\n", __func__);
+ 			cur_dvs = false;
+ 			gpio_set_value(OSIRIS_GPIO_DVS, 1);
+ 		}
+ 		break;
+ 	case CPUFREQ_POSTCHANGE:
+-		if (!old_dvs & new_dvs ||
+-		    !cur_dvs & new_dvs) {
++		if ((!old_dvs && new_dvs) ||
++		    (!cur_dvs && new_dvs)) {
+ 			pr_debug("entering dvs\n");
+ 			cur_dvs = true;
+ 			gpio_set_value(OSIRIS_GPIO_DVS, 0);
 
 
