@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BEBAC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:37:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E5CDC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:37:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A7472082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:37:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CE882183E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:37:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254650;
-	bh=oGQkQgKNfa0+TWZ38rwaUGuK8lBxdY1agCk+k13jjNA=;
+	s=default; t=1553254653;
+	bh=Vru0z6tooTPYgD+hG1R1HDJdwCVBRGGAZ/VtDoaKkJw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=weGc499u3IaWyj2JTReKnc9nat62rI6SRoTByZQzJ0qNdT7+IbOnMqtpq3a3mG4u0
-	 Y83cgL3l6seqvW8jVOElzR0IcXC1boQl6Nf0Fxd7foSYycI/E+oPyhONqvWGoNCO0I
-	 Ql7Cf8pMzEhe/KXssCRSWvVRVgs/m5AkqrEBVgeM=
+	b=bZuqzjhXg68wFCxgOg92ijNtewst8Gz7XTBbz3Qz0tdf5Ryuo+dr37phZer2dMbK7
+	 Jm8cDOuPtcB9NDDpvorpKjbkT8/NNXc6mGefP6s2KEZFrceQQf685qF2zvKBSU4FUz
+	 0LIUhyeGJ5MoV4Yrg+LBfXU9KQT+j6SK3VnsG99A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730846AbfCVLh2 (ORCPT
+        id S1730856AbfCVLhb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:37:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38920 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:37:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730415AbfCVLh0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:37:26 -0400
+        id S1730415AbfCVLh3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:37:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9165C2082C;
-        Fri, 22 Mar 2019 11:37:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 845AA2183E;
+        Fri, 22 Mar 2019 11:37:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254645;
-        bh=oGQkQgKNfa0+TWZ38rwaUGuK8lBxdY1agCk+k13jjNA=;
+        s=default; t=1553254649;
+        bh=Vru0z6tooTPYgD+hG1R1HDJdwCVBRGGAZ/VtDoaKkJw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wnSH/cZCxyPetCfS/s2yMO6s0rA61DUv6vtrllChxqVzlLySH0qToUxbK6xTEg72R
-         e5gxQpDLbBf/Z8tm+ADP9/n/6/Pt0F1IXM77nCwEiig9Q21rhCPo4M5wRoZD3I9r6O
-         xhRgDuLDqRLppK1yGgMC+gSRvyGdDkcntzMLvSSQ=
+        b=Jb/zbK2HlBiUC80j5fi3OeL4btsi0Reiv45kMlhcQoMiqmxSAmAGgS7oZhAu2LC1+
+         WfjEb1tzGozuuP8h6Ipa6M0Nxmog7awCQRshmANK9bs/5jiDRne7FzO9uPjBlDsXZC
+         amXGdOIpye8qg/K8N95yBuXIEUR0RMulPTfR5UAM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Roman Penyaev <rpenyaev@suse.de>,
-        Michal Hocko <mhocko@suse.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Joe Perches <joe@perches.com>,
-        "Luis R. Rodriguez" <mcgrof@kernel.org>,
+        stable@vger.kernel.org, Zev Weiss <zev@bewilderbeest.net>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.4 199/230] mm/vmalloc: fix size check for remap_vmalloc_range_partial()
-Date:   Fri, 22 Mar 2019 12:15:37 +0100
-Message-Id: <20190322111250.800331282@linuxfoundation.org>
+Subject: [PATCH 4.4 200/230] kernel/sysctl.c: add missing range check in do_proc_dointvec_minmax_conv
+Date:   Fri, 22 Mar 2019 12:15:38 +0100
+Message-Id: <20190322111250.880124393@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -70,86 +70,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Roman Penyaev <rpenyaev@suse.de>
+From: Zev Weiss <zev@bewilderbeest.net>
 
-commit 401592d2e095947344e10ec0623adbcd58934dd4 upstream.
+commit 8cf7630b29701d364f8df4a50e4f1f5e752b2778 upstream.
 
-When VM_NO_GUARD is not set area->size includes adjacent guard page,
-thus for correct size checking get_vm_area_size() should be used, but
-not area->size.
+This bug has apparently existed since the introduction of this function
+in the pre-git era (4500e91754d3 in Thomas Gleixner's history.git,
+"[NET]: Add proc_dointvec_userhz_jiffies, use it for proper handling of
+neighbour sysctls.").
 
-This fixes possible kernel oops when userspace tries to mmap an area on
-1 page bigger than was allocated by vmalloc_user() call: the size check
-inside remap_vmalloc_range_partial() accounts non-existing guard page
-also, so check successfully passes but vmalloc_to_page() returns NULL
-(guard page does not physically exist).
+As a minimal fix we can simply duplicate the corresponding check in
+do_proc_dointvec_conv().
 
-The following code pattern example should trigger an oops:
-
-  static int oops_mmap(struct file *file, struct vm_area_struct *vma)
-  {
-        void *mem;
-
-        mem = vmalloc_user(4096);
-        BUG_ON(!mem);
-        /* Do not care about mem leak */
-
-        return remap_vmalloc_range(vma, mem, 0);
-  }
-
-And userspace simply mmaps size + PAGE_SIZE:
-
-  mmap(NULL, 8192, PROT_WRITE|PROT_READ, MAP_PRIVATE, fd, 0);
-
-Possible candidates for oops which do not have any explicit size
-checks:
-
-   *** drivers/media/usb/stkwebcam/stk-webcam.c:
-   v4l_stk_mmap[789]   ret = remap_vmalloc_range(vma, sbuf->buffer, 0);
-
-Or the following one:
-
-   *** drivers/video/fbdev/core/fbmem.c
-   static int
-   fb_mmap(struct file *file, struct vm_area_struct * vma)
-        ...
-        res = fb->fb_mmap(info, vma);
-
-Where fb_mmap callback calls remap_vmalloc_range() directly without any
-explicit checks:
-
-   *** drivers/video/fbdev/vfb.c
-   static int vfb_mmap(struct fb_info *info,
-             struct vm_area_struct *vma)
-   {
-       return remap_vmalloc_range(vma, (void *)info->fix.smem_start, vma->vm_pgoff);
-   }
-
-Link: http://lkml.kernel.org/r/20190103145954.16942-2-rpenyaev@suse.de
-Signed-off-by: Roman Penyaev <rpenyaev@suse.de>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: Joe Perches <joe@perches.com>
-Cc: "Luis R. Rodriguez" <mcgrof@kernel.org>
-Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20190207123426.9202-3-zev@bewilderbeest.net
+Signed-off-by: Zev Weiss <zev@bewilderbeest.net>
+Cc: Brendan Higgins <brendanhiggins@google.com>
+Cc: Iurii Zaikin <yzaikin@google.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Luis Chamberlain <mcgrof@kernel.org>
+Cc: <stable@vger.kernel.org>	[2.6.2+]
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/vmalloc.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/sysctl.c |   11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -2162,7 +2162,7 @@ int remap_vmalloc_range_partial(struct v
- 	if (!(area->flags & VM_USERMAP))
- 		return -EINVAL;
- 
--	if (kaddr + size > area->addr + area->size)
-+	if (kaddr + size > area->addr + get_vm_area_size(area))
- 		return -EINVAL;
- 
- 	do {
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -2306,7 +2306,16 @@ static int do_proc_dointvec_minmax_conv(
+ {
+ 	struct do_proc_dointvec_minmax_conv_param *param = data;
+ 	if (write) {
+-		int val = *negp ? -*lvalp : *lvalp;
++		int val;
++		if (*negp) {
++			if (*lvalp > (unsigned long) INT_MAX + 1)
++				return -EINVAL;
++			val = -*lvalp;
++		} else {
++			if (*lvalp > (unsigned long) INT_MAX)
++				return -EINVAL;
++			val = *lvalp;
++		}
+ 		if ((param->min && *param->min > val) ||
+ 		    (param->max && *param->max < val))
+ 			return -EINVAL;
 
 
