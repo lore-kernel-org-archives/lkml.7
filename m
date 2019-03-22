@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3751BC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:50:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA4C8C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:50:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0898E21873
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:50:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF67D21873
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:50:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553259037;
-	bh=vOJtz6tDHvcm/yg7Tj2kNRMcelL8kmVhgnoIfWmtSTw=;
+	s=default; t=1553259044;
+	bh=Lo81r03Rr0dU3hK/7txLIXKiaZRIUs95pajM8lDByb4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cnrfA2eHwqb9xpDFmJ8B7+7i3cP7GmXvmACSxCckGss1yxDGCZXGo1Oq56SGN0CnN
-	 PF6wBBKZLXaxZX9NLtQ2t8IMTYgAU4LPqI4RkNNUasCyqfaL0l4Cab2Ppy1dMe5Qd1
-	 tzqJLQtNEKsti6MrpP2iSC+zhQ9nlvvw0lLt3ROM=
+	b=0ojFMqVhLXjG88brhJevyUbvID5tpnUHzykvFHk61C2MU/Mctm7X2x/Yy8ZToruwE
+	 JsCvlF3465b8EI/G/gPqtSh8UD3L5OA/T63ew4R55GuUXhDI7Kgm2xYsua2TXYSco0
+	 Qx2e9zcEGtXTdpxuoC12XLgjLoIokoZYEdSXfWbs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387430AbfCVLzi (ORCPT
+        id S2387393AbfCVLzZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:55:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60206 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:55:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59972 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732762AbfCVLzg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:55:36 -0400
+        id S1732970AbfCVLzW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:55:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5BCF20850;
-        Fri, 22 Mar 2019 11:55:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 837762082C;
+        Fri, 22 Mar 2019 11:55:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255735;
-        bh=vOJtz6tDHvcm/yg7Tj2kNRMcelL8kmVhgnoIfWmtSTw=;
+        s=default; t=1553255722;
+        bh=Lo81r03Rr0dU3hK/7txLIXKiaZRIUs95pajM8lDByb4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mqnHMjA+Bt76FrJ7edg0Ljq5uf1PsMTDZfco+vKnxWKDb5IwI+Hm+QwWSVAnascw9
-         mhLroaL/snZ207A3d17BEJmmJIFN3bBeLkNhWlhelYV20vOG9lWjJIMbr0XMYZ0ni4
-         pFuxOAtVPrH7hfbJm3OYeSsVgRSFuAd3qMUUwp7M=
+        b=m548LELFiCUsACJG1GNVo257vwowFkdW0OApTGZ/mnRiQMk1p8QqEHt/vx+0RCDq9
+         5df54jzXtXqdsszTB9zUW/E1+elfR2lNOV+YePyLqDCsbqATtf4BIpahaVsFEoqgBe
+         SOxHSWwW5E2G904SxMpkphTK3PUiB+IGkP4/t3jw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steve Longerbeam <slongerbeam@gmail.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 4.14 175/183] media: imx: csi: Stop upstream before disabling IDMA channel
-Date:   Fri, 22 Mar 2019 12:16:43 +0100
-Message-Id: <20190322111254.568277103@linuxfoundation.org>
+        stable@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 4.14 160/183] PM / wakeup: Rework wakeup source timer cancellation
+Date:   Fri, 22 Mar 2019 12:16:28 +0100
+Message-Id: <20190322111253.491219323@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111241.819468003@linuxfoundation.org>
 References: <20190322111241.819468003@linuxfoundation.org>
@@ -66,91 +65,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Steve Longerbeam <slongerbeam@gmail.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
 
-commit 4bc1ab41eee9d02ad2483bf8f51a7b72e3504eba upstream.
+commit 1fad17fb1bbcd73159c2b992668a6957ecc5af8a upstream.
 
-Move upstream stream off to just after receiving the last EOF completion
-and disabling the CSI (and thus before disabling the IDMA channel) in
-csi_stop(). For symmetry also move upstream stream on to beginning of
-csi_start().
+If wakeup_source_add() is called right after wakeup_source_remove()
+for the same wakeup source, timer_setup() may be called for a
+potentially scheduled timer which is incorrect.
 
-Doing this makes csi_s_stream() more symmetric with prp_s_stream() which
-will require the same change to fix a hard lockup.
+To avoid that, move the wakeup source timer cancellation from
+wakeup_source_drop() to wakeup_source_remove().
 
-Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
-Cc: stable@vger.kernel.org	# for 4.13 and up
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Moreover, make wakeup_source_remove() clear the timer function after
+canceling the timer to let wakeup_source_not_registered() treat
+unregistered wakeup sources in the same way as the ones that have
+never been registered.
+
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: 4.4+ <stable@vger.kernel.org> # 4.4+
+[ rjw: Subject, changelog, merged two patches together ]
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/media/imx/imx-media-csi.c |   25 +++++++++++++------------
- 1 file changed, 13 insertions(+), 12 deletions(-)
+ drivers/base/power/wakeup.c |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
---- a/drivers/staging/media/imx/imx-media-csi.c
-+++ b/drivers/staging/media/imx/imx-media-csi.c
-@@ -648,10 +648,16 @@ static int csi_start(struct csi_priv *pr
- 		usleep_range(delay_usec, delay_usec + 1000);
- 	}
+--- a/drivers/base/power/wakeup.c
++++ b/drivers/base/power/wakeup.c
+@@ -113,7 +113,6 @@ void wakeup_source_drop(struct wakeup_so
+ 	if (!ws)
+ 		return;
  
-+	/* start upstream */
-+	ret = v4l2_subdev_call(priv->src_sd, video, s_stream, 1);
-+	ret = (ret && ret != -ENOIOCTLCMD) ? ret : 0;
-+	if (ret)
-+		return ret;
-+
- 	if (priv->dest == IPU_CSI_DEST_IDMAC) {
- 		ret = csi_idmac_start(priv);
- 		if (ret)
--			return ret;
-+			goto stop_upstream;
- 	}
- 
- 	ret = csi_setup(priv);
-@@ -679,6 +685,8 @@ fim_off:
- idmac_stop:
- 	if (priv->dest == IPU_CSI_DEST_IDMAC)
- 		csi_idmac_stop(priv);
-+stop_upstream:
-+	v4l2_subdev_call(priv->src_sd, video, s_stream, 0);
- 	return ret;
+-	del_timer_sync(&ws->timer);
+ 	__pm_relax(ws);
  }
- 
-@@ -694,6 +702,9 @@ static void csi_stop(struct csi_priv *pr
- 	 */
- 	ipu_csi_disable(priv->csi);
- 
-+	/* stop upstream */
-+	v4l2_subdev_call(priv->src_sd, video, s_stream, 0);
+ EXPORT_SYMBOL_GPL(wakeup_source_drop);
+@@ -201,6 +200,13 @@ void wakeup_source_remove(struct wakeup_
+ 	list_del_rcu(&ws->entry);
+ 	spin_unlock_irqrestore(&events_lock, flags);
+ 	synchronize_srcu(&wakeup_srcu);
 +
- 	if (priv->dest == IPU_CSI_DEST_IDMAC) {
- 		csi_idmac_stop(priv);
++	del_timer_sync(&ws->timer);
++	/*
++	 * Clear timer.function to make wakeup_source_not_registered() treat
++	 * this wakeup source as not registered.
++	 */
++	ws->timer.function = NULL;
+ }
+ EXPORT_SYMBOL_GPL(wakeup_source_remove);
  
-@@ -861,23 +872,13 @@ static int csi_s_stream(struct v4l2_subd
- 		goto update_count;
- 
- 	if (enable) {
--		/* upstream must be started first, before starting CSI */
--		ret = v4l2_subdev_call(priv->src_sd, video, s_stream, 1);
--		ret = (ret && ret != -ENOIOCTLCMD) ? ret : 0;
--		if (ret)
--			goto out;
--
- 		dev_dbg(priv->dev, "stream ON\n");
- 		ret = csi_start(priv);
--		if (ret) {
--			v4l2_subdev_call(priv->src_sd, video, s_stream, 0);
-+		if (ret)
- 			goto out;
--		}
- 	} else {
- 		dev_dbg(priv->dev, "stream OFF\n");
--		/* CSI must be stopped first, then stop upstream */
- 		csi_stop(priv);
--		v4l2_subdev_call(priv->src_sd, video, s_stream, 0);
- 	}
- 
- update_count:
 
 
