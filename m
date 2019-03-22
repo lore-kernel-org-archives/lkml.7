@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8BFEC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:01:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79B13C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:01:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A40AD21873
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:01:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34BE52075E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 13:01:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553259699;
-	bh=u0j0m1qopNaMTVdJL4BCA/GFMC7pzc5QmcXWd6ihvwM=;
+	s=default; t=1553259715;
+	bh=IqUBv0BWFGSsnjQdewgzHnsNWu4PftvfYSKP651T48s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k5nijPup9qoXP52acevdqu/1XDZg6NIfz+auoGiZuGTvVu7/FwyisxQeRk5CR/WIH
-	 AMb0/kF9/aiokZ6fUcMG3qi0cZyhz/b0X0syvOu1cyzW3mYG2yhfNsFw0ctrsz59/x
-	 3kvtrmRtkfMf17FBPvLSlH2jLDltu8tJ9QrSK7kY=
+	b=WrS1cYPWi7HbOx7j8HQQCPFxyKqCf0dEWi3mE+SBYjntINbPMNFLG5NiWVajWnMc3
+	 bgBkNhHWnFo+0hG2oOUMnwO1wwxEC9+HxCKphdFrcvIAd2vtPgnnjq4DAuo/hmwWau
+	 2jlIhFTBv6CQQpFeq2/jchpHSuaCDYC8VWqoA4N8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731951AbfCVNBi (ORCPT
+        id S1731812AbfCVNBx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 09:01:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45466 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 09:01:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45146 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730389AbfCVLmx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:42:53 -0400
+        id S1731560AbfCVLmh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:42:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD6502082C;
-        Fri, 22 Mar 2019 11:42:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94B98204FD;
+        Fri, 22 Mar 2019 11:42:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254973;
-        bh=u0j0m1qopNaMTVdJL4BCA/GFMC7pzc5QmcXWd6ihvwM=;
+        s=default; t=1553254957;
+        bh=IqUBv0BWFGSsnjQdewgzHnsNWu4PftvfYSKP651T48s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZXLSjJedKv4jtuJ3NWqiwH7ze7xh96ngMTrWMI4pAeBBwXUPPzrDwN0Ur+btyQ76a
-         7IjasXR4wBGOvNE+BHfalLYxvLfO8YrhYMqDUwB9iHkf2CCl+QffNjJdeIgliud8rw
-         EY/QvWEflIE34hVCDMBXtjuEQUa5xiVJ688p0krY=
+        b=pdYEFnOR+TGJbCRR02e8apQoIm8rNFRk5UKrqiZMeUokCXIRsAguIPkwJCJdGC9lC
+         QHV9+9Qf9ppxwY+EdBbcbci0JeUKU65wY8qHz6cUxQD4jM7+rHwp8nA5QDQSYrA/Bh
+         qlxuWz4CR10KFQW7GqMd6jkLofbr8aEjQfbwNBOs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Felipe Franciosi <felipe@nutanix.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.9 060/118] scsi: virtio_scsi: dont send sc payload with tmfs
-Date:   Fri, 22 Mar 2019 12:15:32 +0100
-Message-Id: <20190322111220.788194139@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>
+Subject: [PATCH 4.9 044/118] libnvdimm/pmem: Honor force_raw for legacy pmem regions
+Date:   Fri, 22 Mar 2019 12:15:16 +0100
+Message-Id: <20190322111219.427074855@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111215.873964544@linuxfoundation.org>
 References: <20190322111215.873964544@linuxfoundation.org>
@@ -66,63 +64,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Felipe Franciosi <felipe@nutanix.com>
+From: Dan Williams <dan.j.williams@intel.com>
 
-commit 3722e6a52174d7c3a00e6f5efd006ca093f346c1 upstream.
+commit fa7d2e639cd90442d868dfc6ca1d4cc9d8bf206e upstream.
 
-The virtio scsi spec defines struct virtio_scsi_ctrl_tmf as a set of
-device-readable records and a single device-writable response entry:
+For recovery, where non-dax access is needed to a given physical address
+range, and testing, allow the 'force_raw' attribute to override the
+default establishment of a dev_pagemap.
 
-    struct virtio_scsi_ctrl_tmf
-    {
-        // Device-readable part
-        le32 type;
-        le32 subtype;
-        u8 lun[8];
-        le64 id;
-        // Device-writable part
-        u8 response;
-    }
+Otherwise without this capability it is possible to end up with a
+namespace that can not be activated due to corrupted info-block, and one
+that can not be repaired due to a section collision.
 
-The above should be organised as two descriptor entries (or potentially
-more if using VIRTIO_F_ANY_LAYOUT), but without any extra data after "le64
-id" or after "u8 response".
-
-The Linux driver doesn't respect that, with virtscsi_abort() and
-virtscsi_device_reset() setting cmd->sc before calling virtscsi_tmf().  It
-results in the original scsi command payload (or writable buffers) added to
-the tmf.
-
-This fixes the problem by leaving cmd->sc zeroed out, which makes
-virtscsi_kick_cmd() add the tmf to the control vq without any payload.
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Felipe Franciosi <felipe@nutanix.com>
-Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Cc: <stable@vger.kernel.org>
+Fixes: 004f1afbe199 ("libnvdimm, pmem: direct map legacy pmem by default")
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/virtio_scsi.c |    2 --
- 1 file changed, 2 deletions(-)
+ drivers/nvdimm/namespace_devs.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/scsi/virtio_scsi.c
-+++ b/drivers/scsi/virtio_scsi.c
-@@ -693,7 +693,6 @@ static int virtscsi_device_reset(struct
- 		return FAILED;
+--- a/drivers/nvdimm/namespace_devs.c
++++ b/drivers/nvdimm/namespace_devs.c
+@@ -138,6 +138,7 @@ bool nd_is_uuid_unique(struct device *de
+ bool pmem_should_map_pages(struct device *dev)
+ {
+ 	struct nd_region *nd_region = to_nd_region(dev->parent);
++	struct nd_namespace_common *ndns = to_ndns(dev);
+ 	struct nd_namespace_io *nsio;
  
- 	memset(cmd, 0, sizeof(*cmd));
--	cmd->sc = sc;
- 	cmd->req.tmf = (struct virtio_scsi_ctrl_tmf_req){
- 		.type = VIRTIO_SCSI_T_TMF,
- 		.subtype = cpu_to_virtio32(vscsi->vdev,
-@@ -752,7 +751,6 @@ static int virtscsi_abort(struct scsi_cm
- 		return FAILED;
+ 	if (!IS_ENABLED(CONFIG_ZONE_DEVICE))
+@@ -149,6 +150,9 @@ bool pmem_should_map_pages(struct device
+ 	if (is_nd_pfn(dev) || is_nd_btt(dev))
+ 		return false;
  
- 	memset(cmd, 0, sizeof(*cmd));
--	cmd->sc = sc;
- 	cmd->req.tmf = (struct virtio_scsi_ctrl_tmf_req){
- 		.type = VIRTIO_SCSI_T_TMF,
- 		.subtype = VIRTIO_SCSI_T_TMF_ABORT_TASK,
++	if (ndns->force_raw)
++		return false;
++
+ 	nsio = to_nd_namespace_io(dev);
+ 	if (region_intersects(nsio->res.start, resource_size(&nsio->res),
+ 				IORESOURCE_SYSTEM_RAM,
 
 
