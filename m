@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13D7DC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:12:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3E33C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:12:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5FD72082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:12:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 854912083D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:12:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256747;
-	bh=2enijqRYHKKbSyfjpH7eBjAEmWDUrXzDgPoZ4nsG3lc=;
+	s=default; t=1553256750;
+	bh=cCRWRuYpG/BljB2Kg0M3vZX9ifg7f8xhSe4tEdmpTGs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pyr2lxbAxPb3UAr4FtUZStxBHOoZwgMvxJgk6fvhLqc4pF/Wvpzgq5bkUc198gf6D
-	 1OezG5sLzZLRhvSrSit6pSbA+oWzHkjddlivdjsQLgJttMl7HS91spQdZV2S0qvSJO
-	 FbrG67xkVy/rSs2rqLUy8X7ppNz+0Vy8ugVjJUq0=
+	b=UH6Lx5YMLt4GbQG9F/DWUML9dX6qfCK0ShAiTzk3Un43vk+Qd8jbHzpiVsVMB5PdA
+	 igEQswCSU56snbgJGTX1QjcSu1tjHwzmTkXYtdz+JHAk66WWzMXMSJAGyCfzj7RJXS
+	 ufnmoDSg65jcR8+4MkskT+cnI4ooZiUeZqqFTVWY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389624AbfCVMM0 (ORCPT
+        id S2389628AbfCVMM3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:12:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50526 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:12:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50624 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389481AbfCVMMU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:12:20 -0400
+        id S2389625AbfCVMM0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:12:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D243221929;
-        Fri, 22 Mar 2019 12:12:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 559B02083D;
+        Fri, 22 Mar 2019 12:12:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256739;
-        bh=2enijqRYHKKbSyfjpH7eBjAEmWDUrXzDgPoZ4nsG3lc=;
+        s=default; t=1553256745;
+        bh=cCRWRuYpG/BljB2Kg0M3vZX9ifg7f8xhSe4tEdmpTGs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=euh7Elup3e4fY+/HpUMQeozk3G7LeVkY/ARX4E9YJ69Pj1Xrri3VzYxwT+Qap8Vkf
-         /fYtadDkgr1u6xH6+cobc1SkTfMzi/iSF49i4Hs0Luh/f+6A+6rc2CQpw2JuIMcghn
-         HLe5kY2ZuArZOTVkAOrNaqTaB7n0xQd1WHmn6NXk=
+        b=gQOo7E3hGV6BS2t8CTQ3EmHIdSNUGA6mYfM4DDAffT7E/5WvgWSslQspwY+b+AyAr
+         qyfc2P/JGrlmlq2nQPpdrI02WxDLI7EQEwQ/9hjz2IDpFFB1GFXmmu+sqa1JzUudbz
+         cyXRF447nrnTHr9/T0YFt2iIbRy/FDEeQcEopezE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 5.0 006/238] iio: adc: exynos-adc: Fix NULL pointer exception on unbind
-Date:   Fri, 22 Mar 2019 12:13:45 +0100
-Message-Id: <20190322111258.683826425@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alexander Usyskin <alexander.usyskin@intel.com>,
+        Tomas Winkler <tomas.winkler@intel.com>
+Subject: [PATCH 5.0 008/238] mei: hbm: clean the feature flags on link reset
+Date:   Fri, 22 Mar 2019 12:13:47 +0100
+Message-Id: <20190322111258.773969846@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -65,48 +66,61 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Krzysztof Kozlowski <krzk@kernel.org>
+From: Alexander Usyskin <alexander.usyskin@intel.com>
 
-commit 2ea8bab4dd2a9014e723b28091831fa850b82d83 upstream.
+commit 37fd0b623023484ef6df79ed46f21f06ecc611ff upstream.
 
-Fix NULL pointer exception on device unbind when device tree does not
-contain "has-touchscreen" property.  In such case the input device is
-not registered so it should not be unregistered.
+The list of supported functions can be altered upon link reset,
+clean the flags to allow correct selections of supported
+features.
 
-    $ echo "12d10000.adc" > /sys/bus/platform/drivers/exynos-adc/unbind
-
-    Unable to handle kernel NULL pointer dereference at virtual address 00000474
-    ...
-    (input_unregister_device) from [<c0772060>] (exynos_adc_remove+0x20/0x80)
-    (exynos_adc_remove) from [<c0587d5c>] (platform_drv_remove+0x20/0x40)
-    (platform_drv_remove) from [<c05860f0>] (device_release_driver_internal+0xdc/0x1ac)
-    (device_release_driver_internal) from [<c0583ecc>] (unbind_store+0x60/0xd4)
-    (unbind_store) from [<c031b89c>] (kernfs_fop_write+0x100/0x1e0)
-    (kernfs_fop_write) from [<c029709c>] (__vfs_write+0x2c/0x17c)
-    (__vfs_write) from [<c0297374>] (vfs_write+0xa4/0x184)
-    (vfs_write) from [<c0297594>] (ksys_write+0x4c/0xac)
-    (ksys_write) from [<c0101000>] (ret_fast_syscall+0x0/0x28)
-
-Fixes: 2bb8ad9b44c5 ("iio: exynos-adc: add experimental touchscreen support")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: <stable@vger.kernel.org> v4.19+
+Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
+Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/adc/exynos_adc.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/misc/mei/hbm.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/drivers/iio/adc/exynos_adc.c
-+++ b/drivers/iio/adc/exynos_adc.c
-@@ -929,7 +929,7 @@ static int exynos_adc_remove(struct plat
- 	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
- 	struct exynos_adc *info = iio_priv(indio_dev);
+--- a/drivers/misc/mei/hbm.c
++++ b/drivers/misc/mei/hbm.c
+@@ -1029,29 +1029,36 @@ static void mei_hbm_config_features(stru
+ 	    dev->version.minor_version >= HBM_MINOR_VERSION_PGI)
+ 		dev->hbm_f_pg_supported = 1;
  
--	if (IS_REACHABLE(CONFIG_INPUT)) {
-+	if (IS_REACHABLE(CONFIG_INPUT) && info->input) {
- 		free_irq(info->tsirq, info);
- 		input_unregister_device(info->input);
- 	}
++	dev->hbm_f_dc_supported = 0;
+ 	if (dev->version.major_version >= HBM_MAJOR_VERSION_DC)
+ 		dev->hbm_f_dc_supported = 1;
+ 
++	dev->hbm_f_ie_supported = 0;
+ 	if (dev->version.major_version >= HBM_MAJOR_VERSION_IE)
+ 		dev->hbm_f_ie_supported = 1;
+ 
+ 	/* disconnect on connect timeout instead of link reset */
++	dev->hbm_f_dot_supported = 0;
+ 	if (dev->version.major_version >= HBM_MAJOR_VERSION_DOT)
+ 		dev->hbm_f_dot_supported = 1;
+ 
+ 	/* Notification Event Support */
++	dev->hbm_f_ev_supported = 0;
+ 	if (dev->version.major_version >= HBM_MAJOR_VERSION_EV)
+ 		dev->hbm_f_ev_supported = 1;
+ 
+ 	/* Fixed Address Client Support */
++	dev->hbm_f_fa_supported = 0;
+ 	if (dev->version.major_version >= HBM_MAJOR_VERSION_FA)
+ 		dev->hbm_f_fa_supported = 1;
+ 
+ 	/* OS ver message Support */
++	dev->hbm_f_os_supported = 0;
+ 	if (dev->version.major_version >= HBM_MAJOR_VERSION_OS)
+ 		dev->hbm_f_os_supported = 1;
+ 
+ 	/* DMA Ring Support */
++	dev->hbm_f_dr_supported = 0;
+ 	if (dev->version.major_version > HBM_MAJOR_VERSION_DR ||
+ 	    (dev->version.major_version == HBM_MAJOR_VERSION_DR &&
+ 	     dev->version.minor_version >= HBM_MINOR_VERSION_DR))
 
 
