@@ -2,170 +2,170 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 549B5C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:37:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7CD8C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:39:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 239E821900
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:37:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ADBF2190A
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 16:39:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727593AbfCVQhq (ORCPT
+        id S1727640AbfCVQj3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 12:37:46 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40754 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727143AbfCVQho (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 12:37:44 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 39113AC9C;
-        Fri, 22 Mar 2019 16:37:42 +0000 (UTC)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Fri, 22 Mar 2019 13:37:40 -0300
-From:   Joao Moreira <jmoreira@suse.de>
-To:     Joe Lawrence <joe.lawrence@redhat.com>
-Cc:     live-patching@vger.kernel.org, mbenes@suse.cz, pmladek@suse.cz,
-        jikos@suse.cz, nstange@suse.de, jpoimboe@redhat.com,
-        khlebnikov@yandex-team.ru, jeyu@kernel.org, matz@suse.de,
-        linux-kernel@vger.kernel.org, yamada.masahiro@socionext.com,
-        linux-kbuild@vger.kernel.org, michal.lkml@markovi.net,
-        live-patching-owner@vger.kernel.org
-Subject: Re: [PATCH v2 5/8] modpost: Integrate klp-convert
-In-Reply-To: <20190322145404.GA31248@redhat.com>
-References: <20190301141313.15057-1-jmoreira@suse.de>
- <20190301141313.15057-6-jmoreira@suse.de>
- <20190322145404.GA31248@redhat.com>
-Message-ID: <48deaa61c7bd81e40df445ba80825ad7@suse.de>
-X-Sender: jmoreira@suse.de
-User-Agent: Roundcube Webmail
+        Fri, 22 Mar 2019 12:39:29 -0400
+Received: from mga18.intel.com ([134.134.136.126]:60735 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727028AbfCVQj2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 12:39:28 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Mar 2019 09:39:27 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,256,1549958400"; 
+   d="scan'208";a="144356573"
+Received: from otc-icl-cdi187.jf.intel.com ([10.54.55.103])
+  by orsmga002.jf.intel.com with ESMTP; 22 Mar 2019 09:39:27 -0700
+From:   kan.liang@linux.intel.com
+To:     peterz@infradead.org, acme@kernel.org, mingo@redhat.com,
+        linux-kernel@vger.kernel.org
+Cc:     tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
+        alexander.shishkin@linux.intel.com, ak@linux.intel.com,
+        Kan Liang <kan.liang@linux.intel.com>
+Subject: [PATCH V3 00/23] perf: Add Icelake support
+Date:   Fri, 22 Mar 2019 09:36:55 -0700
+Message-Id: <20190322163718.2191-1-kan.liang@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-03-22 11:54, Joe Lawrence wrote:
-> On Fri, Mar 01, 2019 at 11:13:10AM -0300, Joao Moreira wrote:
->> From: Josh Poimboeuf <jpoimboe@redhat.com>
->> 
->> Create cmd_klp_convert and hook it into scripts/Makefile.modpost.
->> cmd_klp_convert invokes klp-convert with the right arguments for the
->> conversion of unresolved symbols inside a livepatch.
->> 
->> [khlebnikov:
->> * save cmd_ld_ko_o into .module.cmd, if_changed_rule doesn't do that
->> * fix bashisms for debian where /bin/sh is a symlink to /bin/dash
->> * rename rule_link_module to rule_ld_ko_o, otherwise arg-check inside
->>   if_changed_rule compares cmd_link_module and cmd_ld_ko_o
->> * check modinfo -F livepatch only if CONFIG_LIVEPATCH is true
->> ]
->> 
->> [mbenes:
->> * remove modinfo call. LIVEPATCH_ in Makefiled
->> ]
->> 
->> [jmoreira:
->> * split up: move the .livepatch file-based scheme for identifying
->> livepatches to a previous patch, as it was required for correctly
->> building Symbols.list there.
->> ]
->> 
->> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
->> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
->> Signed-off-by: Miroslav Benes <mbenes@suse.cz>
->> Signed-off-by: Joao Moreira <jmoreira@suse.de>
->> ---
->>  scripts/Kbuild.include   |  4 +++-
->>  scripts/Makefile.modpost | 16 +++++++++++++++-
->>  scripts/mod/modpost.c    |  6 +++++-
->>  scripts/mod/modpost.h    |  1 +
->>  4 files changed, 24 insertions(+), 3 deletions(-)
->> 
->> 
->> [ ... snip ... ]
->> 
->> diff --git a/scripts/Makefile.modpost b/scripts/Makefile.modpost
->> index 7d4af0d0accb..da779a185218 100644
->> --- a/scripts/Makefile.modpost
->> +++ b/scripts/Makefile.modpost
->> @@ -125,8 +125,22 @@ quiet_cmd_ld_ko_o = LD [M]  $@
->>                   -o $@ $(filter-out FORCE,$^) ;                       
->>   \
->>  	$(if $(ARCH_POSTLINK), $(MAKE) -f $(ARCH_POSTLINK) $@, true)
->> 
->> +SLIST = $(objtree)/Symbols.list
->> +KLP_CONVERT = scripts/livepatch/klp-convert
->> +quiet_cmd_klp_convert = KLP $@
->> +      cmd_klp_convert = mv $@ $(@:.ko=.klp.o);				\
->> +			$(KLP_CONVERT) $(SLIST) $(@:.ko=.klp.o) $@
->> +
->> +define rule_ld_ko_o
->> +	$(call cmd,ld_ko_o) $(cmd_ld_ko_o) ;				\
->                            ^
-> Should there be a ';' semicolon here (and maybe a line-break) between
-> $(call cmd,ld_ko_o) and $(cmd_ld_ko_o)?
-> 
-> I didn't see this in my x86_64 VM, but on a ppc64le box, I kept getting
-> really strange build errors that I traced to this line.  Without a
-> semicolon, the build was trying to run a make command with a linker
-> command smashed onto the end of it:
-> 
->   make -f ./arch/powerpc/Makefile.postlink crypto/xts.ko ld -r  -EL -m
-> elf64lppc -T ./scripts/module-common.lds -T
-> ./arch/powerpc/kernel/module.lds --save-restore-funcs  --build-id  -o
-> crypto/xts.ko crypto/xts.o crypto/xts.mod.o
-> 
-> 
-> Now, klp-convert looks like will need some ppc64le work as well, as 
-> it's
-> confused about .TOC. symbols:
-> 
->     CC      samples/livepatch/livepatch-annotated-sample.mod.o
->     CC      samples/livepatch/livepatch-callbacks-busymod.mod.o
->     CC      samples/livepatch/livepatch-callbacks-demo.mod.o
->     CC      samples/livepatch/livepatch-callbacks-mod.mod.o
->     CC      samples/livepatch/livepatch-sample.mod.o
->     CC      samples/livepatch/livepatch-shadow-fix1.mod.o
->     CC      samples/livepatch/livepatch-shadow-fix2.mod.o
->     CC      samples/livepatch/livepatch-shadow-mod.mod.o
->     LD [M]  samples/livepatch/livepatch-annotated-sample.ko
->     LD [M]  samples/livepatch/livepatch-callbacks-demo.ko
->     KLP     samples/livepatch/livepatch-annotated-sample.ko
->     LD [M]  samples/livepatch/livepatch-callbacks-mod.ko
->     KLP     samples/livepatch/livepatch-callbacks-demo.ko
->     LD [M]  samples/livepatch/livepatch-sample.ko
->     LD [M]  samples/livepatch/livepatch-shadow-fix1.ko
->   klp-convert: Define KLP_SYMPOS for the symbol: .TOC.
->   Valid KLP_SYMPOS for symbol .TOC.:
-> 
->   [ ... snip listing of all .TOC's across the kernel ... ]
-> 
-> but we can save that for another day.
-> 
+From: Kan Liang <kan.liang@linux.intel.com>
 
-Hi Joe, first of all, thank you for you in-depth review. I did not have 
-the time to go through everything yet, and I'll reply properly to the 
-other comments soon. Yet, I would like to add a quick note here, since 
-you are testing ppc64le. ppc64le is exactly one of the things I have 
-been dealing with in the last two days, specifically the .TOC. symbols 
-(there is also another bug related to converting relocations of symbols 
-with index 0, but this one is architecture agnostic).
+The patch series intends to add Icelake support for Linux perf.
 
-If you would like to take a look, the fix is in the latest commit here:
-- https://github.com/SUSE/klp-convert/tree/fixppc64le
+PATCH 1-18: Kernel patches to support Icelake.
+ - 1-5: Support adaptive PEBS feature
+ - 6-7: Enable core support with some new features, e.g. 8 generic
+   counters, new event constraints, a new fixed counter.
+ - 8-11: Enable cstate, rapl, msr and uncore support on Icelake
+ - 12-18: Support hardware Metrics counters and SLOT fixed counter for
+   Topdown events.
+ - 19: Support CPUID 10.ECX to disable fixed counters
 
-I would be very glad if you have any comment or input on that, and I 
-guess that if the fix is that simple, I can manage to squash it into v3.
+PATCH 20-23: Perf tool patches to support XMM, Topdown and event list.
 
-Thanks,
-João
+Changes since V2:
+- Make the setup_pebs_sample_data() a function pointer argument
+- Use cpuc->pebs_record_size unconditionally
+- Add comments for EVENT_CONSTRAINT_RANGE
+- Correct the Author of "perf/x86: Support constraint ranges"
 
-> 
-> -- Joe
+Changes since V1:
+- Avoid the interface changes for perf_reg_value() and
+  perf_output_sample_regs().
+- Remove the extra_regs in struct perf_sample_data.
+- Add struct x86_perf_regs
+- Add has_xmm_regs to indicate the specific platform which support XMM
+  registers collection.
+- Add check in x86_pmu_hw_config() to reject invalid config of regs_user
+  and regs_intr.
+- Rename intel_hsw_weight and intel_hsw_transaction
+- Add missed inline for intel_get_tsx_transaction()
+- Add new patch to extract code of event update in short period
+- Code rebase on top of c634dc6bdede
+- Rename @d to pebs_data_cfg
+- Make pebs_update_adaptive_cfg readable
+- Clear pebs_data_cfg and pebs_record_size for first PEBS in add
+- Don't clear ICL_EVENTSEL_ADAPTIVE. Rely on MSR_PEBS_CFG settings
+- Change PEBS record parsing order (bug fix)
+- Support struct x86_perf_regs
+- make get_pebs_status generic
+- specific intel_pmu_drain_pebs_icl()
+- Use cpuc->pebs_record_size to replace format_size
+- Use 'size' to replace 'range_end' for constraint ranges
+- Add x86_pmu.has_xmm_regs = true;
+- Add more explanation in change log of REMOVE transaction
+- Make perf_regs.h consistent between kernel and user space
+
+Andi Kleen (11):
+  perf/x86/intel: Extract memory code PEBS parser for reuse
+  perf/x86/lbr: Avoid reading the LBRs when adaptive PEBS handles them
+  perf/core: Support a REMOVE transaction
+  perf/x86/intel: Basic support for metrics counters
+  perf/x86/intel: Support overflows on SLOTS
+  perf/x86/intel: Set correct weight for topdown subevent counters
+  perf/x86/intel: Export new top down events for Icelake
+  perf/x86/intel: Support CPUID 10.ECX to disable fixed counters
+  perf, tools: Add support for recording and printing XMM registers
+  perf, tools, stat: Support new per thread TopDown metrics
+  perf, tools: Add documentation for topdown metrics
+
+Kan Liang (11):
+  perf/x86: Support outputting XMM registers
+  perf/x86/intel/ds: Extract code of event update in short period
+  perf/x86/intel: Support adaptive PEBSv4
+  perf/x86/intel: Add Icelake support
+  perf/x86/intel/cstate: Add Icelake support
+  perf/x86/intel/rapl: Add Icelake support
+  perf/x86/msr: Add Icelake support
+  perf/x86/intel/uncore: Add Intel Icelake uncore support
+  perf/x86/intel: Support hardware TopDown metrics
+  perf/x86/intel: Disable sampling read slots and topdown
+  perf vendor events intel: Add JSON files for Icelake
+
+Peter Zijlstra (1):
+  perf/x86: Support constraint ranges
+
+ arch/x86/events/core.c                        |  81 +-
+ arch/x86/events/intel/core.c                  | 422 ++++++++-
+ arch/x86/events/intel/cstate.c                |   2 +
+ arch/x86/events/intel/ds.c                    | 496 ++++++++--
+ arch/x86/events/intel/lbr.c                   |  35 +-
+ arch/x86/events/intel/rapl.c                  |   2 +
+ arch/x86/events/intel/uncore.c                |   6 +
+ arch/x86/events/intel/uncore.h                |   1 +
+ arch/x86/events/intel/uncore_snb.c            |  91 ++
+ arch/x86/events/msr.c                         |   1 +
+ arch/x86/events/perf_event.h                  |  93 +-
+ arch/x86/include/asm/intel_ds.h               |   2 +-
+ arch/x86/include/asm/msr-index.h              |   4 +
+ arch/x86/include/asm/perf_event.h             |  79 +-
+ arch/x86/include/uapi/asm/perf_regs.h         |  26 +-
+ arch/x86/kernel/perf_regs.c                   |  18 +-
+ include/linux/perf_event.h                    |   7 +
+ kernel/events/core.c                          |   5 +
+ tools/arch/x86/include/uapi/asm/perf_regs.h   |  26 +-
+ tools/perf/Documentation/perf-stat.txt        |   9 +-
+ tools/perf/Documentation/topdown.txt          | 223 +++++
+ tools/perf/arch/x86/include/perf_regs.h       |  29 +-
+ tools/perf/arch/x86/util/perf_regs.c          |  16 +
+ tools/perf/builtin-stat.c                     |  24 +
+ .../pmu-events/arch/x86/icelake/cache.json    | 552 +++++++++++
+ .../arch/x86/icelake/floating-point.json      |  90 ++
+ .../pmu-events/arch/x86/icelake/frontend.json | 424 +++++++++
+ .../pmu-events/arch/x86/icelake/memory.json   | 410 ++++++++
+ .../pmu-events/arch/x86/icelake/other.json    | 133 +++
+ .../pmu-events/arch/x86/icelake/pipeline.json | 892 ++++++++++++++++++
+ .../arch/x86/icelake/virtual-memory.json      | 236 +++++
+ tools/perf/pmu-events/arch/x86/mapfile.csv    |   1 +
+ tools/perf/util/perf_regs.h                   |   1 +
+ tools/perf/util/stat-shadow.c                 |  89 ++
+ tools/perf/util/stat.c                        |   4 +
+ tools/perf/util/stat.h                        |   8 +
+ 36 files changed, 4418 insertions(+), 120 deletions(-)
+ create mode 100644 tools/perf/Documentation/topdown.txt
+ create mode 100644 tools/perf/pmu-events/arch/x86/icelake/cache.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/icelake/floating-point.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/icelake/frontend.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/icelake/memory.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/icelake/other.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/icelake/pipeline.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/icelake/virtual-memory.json
+
+-- 
+2.17.1
 
