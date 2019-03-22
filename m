@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5602FC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:52:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EBBCC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:52:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 252F32192B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:52:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DFCE21916
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:52:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553255529;
-	bh=CQHnGyDky5rtd71wjfeKVVIgLGCi2zgdd2iznhZfxXM=;
+	s=default; t=1553255536;
+	bh=2b8S8d5sn9CXAxZrZdH8FuhtuTYLQZfS90J28Rvisg0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CbmO0krv1rGZEP7DfmuVhzmmmZzA28Hrq4Wy5yKYDWh1W348fsHzaDj7mh/ZXPz3X
-	 thz2Mo9kW6Jw3ZDuOBeWTayvwbjrll4XjHgygs/tZoE2ICXvWIUckb9gUFv6oZ2N/t
-	 Iq/NYIGhKKEk4xXCxGCIUNGGRV65aXee7tSdm5z4=
+	b=IAzOjLBR+nfYWsEgMtBZSIs9af+1pLg8YwMDGBG9xvBR57is4DwONq67aFPIRMYeZ
+	 Qa1XnwrT7vc+3QJz41uTikb0KQko3U4B1P/rkmbxKUgxqhwhwiU4YY6DxsVeDL5Aq3
+	 2SaHZAyN9dP3cIRltQgKYntlSZ6hcyYGM97l6wIM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732860AbfCVLwI (ORCPT
+        id S1732868AbfCVLwO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:52:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55934 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:52:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732850AbfCVLwC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:52:02 -0400
+        id S1732850AbfCVLwJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:52:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B465720850;
-        Fri, 22 Mar 2019 11:52:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C57320850;
+        Fri, 22 Mar 2019 11:52:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255522;
-        bh=CQHnGyDky5rtd71wjfeKVVIgLGCi2zgdd2iznhZfxXM=;
+        s=default; t=1553255529;
+        bh=2b8S8d5sn9CXAxZrZdH8FuhtuTYLQZfS90J28Rvisg0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2NB6gtNgppqhJkvY+Oz74vOg3QE3iG5l/QRCvlFPBcspmoN9x7Yb4HHNCcM8gPkrM
-         AD4aBo1rS1WpSgc6TvDdzXKqgC0SK8+NEbT7TGqd/k3QOUioG1VCx4s6rqEFlC45Ug
-         PSv5YN6I4VINmvQieYnMGmQeRjq8xayHZ4bnYOZo=
+        b=tHgXC24Nv6SBNVTUXvE4q6LbSbaIdkD919Y+/zFFKb8kCipNXrcvPhM2kuLJVXaef
+         fpRNu7NX+TqG6WbLO85ElH044t7QhHcn1QHodnL7BO53CvHVZDGVHIFz/Lf8Rc1pIU
+         7bjBafKVodeLjDkb/v/2IqfRAt4YC4WLbrlOcpEI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Finn Thain <fthain@telegraphics.com.au>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH 4.14 101/183] m68k: Add -ffreestanding to CFLAGS
-Date:   Fri, 22 Mar 2019 12:15:29 +0100
-Message-Id: <20190322111249.013350591@linuxfoundation.org>
+        stable@vger.kernel.org, Qu Wenruo <wqu@suse.com>,
+        Nikolay Borisov <nborisov@suse.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.14 103/183] btrfs: ensure that a DUP or RAID1 block group has exactly two stripes
+Date:   Fri, 22 Mar 2019 12:15:31 +0100
+Message-Id: <20190322111249.152612544@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111241.819468003@linuxfoundation.org>
 References: <20190322111241.819468003@linuxfoundation.org>
@@ -65,55 +67,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Finn Thain <fthain@telegraphics.com.au>
+From: Johannes Thumshirn <jthumshirn@suse.de>
 
-commit 28713169d879b67be2ef2f84dcf54905de238294 upstream.
+commit 349ae63f40638a28c6fce52e8447c2d14b84cc0c upstream.
 
-This patch fixes a build failure when using GCC 8.1:
+We recently had a customer issue with a corrupted filesystem. When
+trying to mount this image btrfs panicked with a division by zero in
+calc_stripe_length().
 
-/usr/bin/ld: block/partitions/ldm.o: in function `ldm_parse_tocblock':
-block/partitions/ldm.c:153: undefined reference to `strcmp'
+The corrupt chunk had a 'num_stripes' value of 1. calc_stripe_length()
+takes this value and divides it by the number of copies the RAID profile
+is expected to have to calculate the amount of data stripes. As a DUP
+profile is expected to have 2 copies this division resulted in 1/2 = 0.
+Later then the 'data_stripes' variable is used as a divisor in the
+stripe length calculation which results in a division by 0 and thus a
+kernel panic.
 
-This is caused by a new optimization which effectively replaces a
-strncmp() call with a strcmp() call. This affects a number of strncmp()
-call sites in the kernel.
+When encountering a filesystem with a DUP block group and a
+'num_stripes' value unequal to 2, refuse mounting as the image is
+corrupted and will lead to unexpected behaviour.
 
-The entire class of optimizations is avoided with -fno-builtin, which
-gets enabled by -ffreestanding. This may avoid possible future build
-failures in case new optimizations appear in future compilers.
+Code inspection showed a RAID1 block group has the same issues.
 
-I haven't done any performance measurements with this patch but I did
-count the function calls in a defconfig build. For example, there are now
-23 more sprintf() calls and 39 fewer strcpy() calls. The effect on the
-other libc functions is smaller.
-
-If this harms performance we can tackle that regression by optimizing
-the call sites, ideally using semantic patches. That way, clang and ICC
-builds might benfit too.
-
-Cc: stable@vger.kernel.org
-Reference: https://marc.info/?l=linux-m68k&m=154514816222244&w=2
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Fixes: e06cd3dd7cea ("Btrfs: add validadtion checks for chunk loading")
+CC: stable@vger.kernel.org # 4.4+
+Reviewed-by: Qu Wenruo <wqu@suse.com>
+Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+Signed-off-by: Johannes Thumshirn <jthumshirn@suse.de>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/m68k/Makefile |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ fs/btrfs/volumes.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/m68k/Makefile
-+++ b/arch/m68k/Makefile
-@@ -58,7 +58,10 @@ cpuflags-$(CONFIG_M5206e)	:= $(call cc-o
- cpuflags-$(CONFIG_M5206)	:= $(call cc-option,-mcpu=5206,-m5200)
+--- a/fs/btrfs/volumes.c
++++ b/fs/btrfs/volumes.c
+@@ -6420,10 +6420,10 @@ static int btrfs_check_chunk_valid(struc
+ 	}
  
- KBUILD_AFLAGS += $(cpuflags-y)
--KBUILD_CFLAGS += $(cpuflags-y) -pipe
-+KBUILD_CFLAGS += $(cpuflags-y)
-+
-+KBUILD_CFLAGS += -pipe -ffreestanding
-+
- ifdef CONFIG_MMU
- # without -fno-strength-reduce the 53c7xx.c driver fails ;-(
- KBUILD_CFLAGS += -fno-strength-reduce -ffixed-a2
+ 	if ((type & BTRFS_BLOCK_GROUP_RAID10 && sub_stripes != 2) ||
+-	    (type & BTRFS_BLOCK_GROUP_RAID1 && num_stripes < 1) ||
++	    (type & BTRFS_BLOCK_GROUP_RAID1 && num_stripes != 2) ||
+ 	    (type & BTRFS_BLOCK_GROUP_RAID5 && num_stripes < 2) ||
+ 	    (type & BTRFS_BLOCK_GROUP_RAID6 && num_stripes < 3) ||
+-	    (type & BTRFS_BLOCK_GROUP_DUP && num_stripes > 2) ||
++	    (type & BTRFS_BLOCK_GROUP_DUP && num_stripes != 2) ||
+ 	    ((type & BTRFS_BLOCK_GROUP_PROFILE_MASK) == 0 &&
+ 	     num_stripes != 1)) {
+ 		btrfs_err(fs_info,
 
 
