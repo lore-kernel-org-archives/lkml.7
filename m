@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F2FC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:12:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E9BC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:12:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFA5021929
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:12:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6001621929
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:12:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553256768;
-	bh=qxFAZj5Uw8gYZnM/EK0ZgoHYzY2CHJQowmlq0b9NuQU=;
+	s=default; t=1553256771;
+	bh=QIb2Dl+Qv6AD2dnHXdkHLS/YQ455Te1K/YTHSYyJ++g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N4DwQwq1vxGqeVNrWHcW+E7svgWYHXq4lXALlUCTjrnul9kT/NxTeOhwctUBJHCzC
-	 8oOK9XiQOEzy/Y8QiIGPD9wutsvx3nXIZyAWg3+Yn5BcnCkTzHYETY9dmhnX7WX7AL
-	 iuAkVI9d7DCJtaZ8DeZdq3IiPOhgP9sbCA/82ZOI=
+	b=S95xykH20KJY/68F5UxztL79ttGQ09WVrtXxBDwYFBXWCqkafKou54cRhNyK5FovY
+	 tlxsFSBznxob3/yLXIkd/IiI+crmW5bZfCA2UEyXvD1dFkT+TgGKAsfpfAQlz7ncmS
+	 +ADcsC+cYbbdLJGKtd9KadDAZ6/fboFCHEzYKxBk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389654AbfCVMMq (ORCPT
+        id S2389664AbfCVMMu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:12:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50912 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:12:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389646AbfCVMMn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:12:43 -0400
+        id S2389651AbfCVMMq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:12:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D9202082C;
-        Fri, 22 Mar 2019 12:12:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4248E2082C;
+        Fri, 22 Mar 2019 12:12:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256763;
-        bh=qxFAZj5Uw8gYZnM/EK0ZgoHYzY2CHJQowmlq0b9NuQU=;
+        s=default; t=1553256765;
+        bh=QIb2Dl+Qv6AD2dnHXdkHLS/YQ455Te1K/YTHSYyJ++g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dM3JPOQxyA3C+iHHcVaMZVFYKVO/uu5RIbANjuifwI97cLv+K/ejVdmKg6wS8XAMZ
-         LwrlHR8v6JVa47fuj3frkv9xXRTh8agi2xYuQvXj2bPUUrobI9rznwYAWqwOCa9CA7
-         E8RqqnbBspAzsTHAfTXF6jdLmk+PQrVLFE1KbDss=
+        b=uKmk9K2+Cb5OH/TVPPWqNOJ17hIsulaZKDJeR7wPAjd0NcgBB0o7+VEEHy3aa9XiU
+         APeAUOkCMj2IFs6g0lPAnKvG6CzvKsUpQkXiFswafXPYPgTAd5VcB+wR1MkdOSnODF
+         uiocusdtI1FXi58UDUtf3wMmo3PpTJcHuXBaLzgA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Erwin Tsaur <erwin.tsaur@oracle.com>,
-        Toshi Kani <toshi.kani@hpe.com>,
+        stable@vger.kernel.org, Kelly Couch <kelly.j.couch@intel.com>,
         Dan Williams <dan.j.williams@intel.com>
-Subject: [PATCH 5.0 030/238] nfit/ars: Attempt short-ARS even in the no_init_ars case
-Date:   Fri, 22 Mar 2019 12:14:09 +0100
-Message-Id: <20190322111300.030389561@linuxfoundation.org>
+Subject: [PATCH 5.0 031/238] libnvdimm/label: Clear updating flag after label-set update
+Date:   Fri, 22 Mar 2019 12:14:10 +0100
+Message-Id: <20190322111300.107932286@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111258.383569278@linuxfoundation.org>
 References: <20190322111258.383569278@linuxfoundation.org>
@@ -68,38 +67,95 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Dan Williams <dan.j.williams@intel.com>
 
-commit fa3ed4d981b1fc19acdd07fcb152a4bd3706892b upstream.
+commit 966d23a006ca7b44ac8cf4d0c96b19785e0c3da0 upstream.
 
-The no_init_ars option is meant to prevent long-ARS, but short-ARS
-should be allowed to grab any immediate results.
+The UEFI 2.7 specification sets expectations that the 'updating' flag is
+eventually cleared. To date, the libnvdimm core has never adhered to
+that protocol. The policy of the core matches the policy of other
+multi-device info-block formats like MD-Software-RAID that expect
+administrator intervention on inconsistent info-blocks, not automatic
+invalidation.
 
-Fixes: bc6ba8085842 ("nfit, address-range-scrub: rework and simplify ARS...")
+However, some pre-boot environments may unfortunately attempt to "clean
+up" the labels and invalidate a set when it fails to find at least one
+"non-updating" label in the set. Clear the updating flag after set
+updates to minimize the window of vulnerability to aggressive pre-boot
+environments.
+
+Ideally implementations would not write to the label area outside of
+creating namespaces.
+
+Note that this only minimizes the window, it does not close it as the
+system can still crash while clearing the flag and the set can be
+subsequently deleted / invalidated by the pre-boot environment.
+
+Fixes: f524bf271a5c ("libnvdimm: write pmem label set")
 Cc: <stable@vger.kernel.org>
-Reported-by: Erwin Tsaur <erwin.tsaur@oracle.com>
-Reviewed-by: Toshi Kani <toshi.kani@hpe.com>
+Cc: Kelly Couch <kelly.j.couch@intel.com>
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/acpi/nfit/core.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/nvdimm/label.c |   23 ++++++++++++++++++-----
+ 1 file changed, 18 insertions(+), 5 deletions(-)
 
---- a/drivers/acpi/nfit/core.c
-+++ b/drivers/acpi/nfit/core.c
-@@ -3013,11 +3013,12 @@ static int ars_register(struct acpi_nfit
+--- a/drivers/nvdimm/label.c
++++ b/drivers/nvdimm/label.c
+@@ -755,7 +755,7 @@ static const guid_t *to_abstraction_guid
+ 
+ static int __pmem_label_update(struct nd_region *nd_region,
+ 		struct nd_mapping *nd_mapping, struct nd_namespace_pmem *nspm,
+-		int pos)
++		int pos, unsigned long flags)
  {
- 	int rc;
+ 	struct nd_namespace_common *ndns = &nspm->nsio.common;
+ 	struct nd_interleave_set *nd_set = nd_region->nd_set;
+@@ -796,7 +796,7 @@ static int __pmem_label_update(struct nd
+ 	memcpy(nd_label->uuid, nspm->uuid, NSLABEL_UUID_LEN);
+ 	if (nspm->alt_name)
+ 		memcpy(nd_label->name, nspm->alt_name, NSLABEL_NAME_LEN);
+-	nd_label->flags = __cpu_to_le32(NSLABEL_FLAG_UPDATING);
++	nd_label->flags = __cpu_to_le32(flags);
+ 	nd_label->nlabel = __cpu_to_le16(nd_region->ndr_mappings);
+ 	nd_label->position = __cpu_to_le16(pos);
+ 	nd_label->isetcookie = __cpu_to_le64(cookie);
+@@ -1249,13 +1249,13 @@ static int del_labels(struct nd_mapping
+ int nd_pmem_namespace_label_update(struct nd_region *nd_region,
+ 		struct nd_namespace_pmem *nspm, resource_size_t size)
+ {
+-	int i;
++	int i, rc;
  
--	if (no_init_ars || test_bit(ARS_FAILED, &nfit_spa->ars_state))
-+	if (test_bit(ARS_FAILED, &nfit_spa->ars_state))
- 		return acpi_nfit_register_region(acpi_desc, nfit_spa);
+ 	for (i = 0; i < nd_region->ndr_mappings; i++) {
+ 		struct nd_mapping *nd_mapping = &nd_region->mapping[i];
+ 		struct nvdimm_drvdata *ndd = to_ndd(nd_mapping);
+ 		struct resource *res;
+-		int rc, count = 0;
++		int count = 0;
  
- 	set_bit(ARS_REQ_SHORT, &nfit_spa->ars_state);
--	set_bit(ARS_REQ_LONG, &nfit_spa->ars_state);
-+	if (!no_init_ars)
-+		set_bit(ARS_REQ_LONG, &nfit_spa->ars_state);
+ 		if (size == 0) {
+ 			rc = del_labels(nd_mapping, nspm->uuid);
+@@ -1273,7 +1273,20 @@ int nd_pmem_namespace_label_update(struc
+ 		if (rc < 0)
+ 			return rc;
  
- 	switch (acpi_nfit_query_poison(acpi_desc)) {
- 	case 0:
+-		rc = __pmem_label_update(nd_region, nd_mapping, nspm, i);
++		rc = __pmem_label_update(nd_region, nd_mapping, nspm, i,
++				NSLABEL_FLAG_UPDATING);
++		if (rc)
++			return rc;
++	}
++
++	if (size == 0)
++		return 0;
++
++	/* Clear the UPDATING flag per UEFI 2.7 expectations */
++	for (i = 0; i < nd_region->ndr_mappings; i++) {
++		struct nd_mapping *nd_mapping = &nd_region->mapping[i];
++
++		rc = __pmem_label_update(nd_region, nd_mapping, nspm, i, 0);
+ 		if (rc)
+ 			return rc;
+ 	}
 
 
