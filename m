@@ -2,93 +2,111 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 127AFC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:43:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7821CC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:43:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D41182070D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:43:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48FB2218E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:43:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553258604;
+	bh=5cZvzoefyLH0+Nhn3cAEWZU/npiSIf9g3yP2YgmxLu4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=nSkDGKYgGggV32pJAHZq16r0x3BFDxRHhF0gLuAxCv1BTNvfmOxRbCZY8yMcGAUQr
+	 fmsernPnq4j6HYDNBTTNYfQxFu3ehKLMv80lA8WEZ81lCHuJZiP30jzEskS/BmUfUD
+	 fzqB/Ufrc0qyQk7Dh/L/c4HBv6LHx5W14VSEtax4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388595AbfCVMnT (ORCPT
+        id S2388484AbfCVMDN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:43:19 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:41687 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730416AbfCVMnS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:43:18 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x2MChC3F579181
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Fri, 22 Mar 2019 05:43:12 -0700
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x2MChCNT579178;
-        Fri, 22 Mar 2019 05:43:12 -0700
-Date:   Fri, 22 Mar 2019 05:43:12 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Valdis Kletnieks <tipbot@zytor.com>
-Message-ID: <tip-e8750053d64a3317cbc15f8341f0f11ca751bfeb@git.kernel.org>
-Cc:     hpa@zytor.com, linux-kernel@vger.kernel.org,
-        valdis.kletnieks@vt.edu, tglx@linutronix.de, mingo@kernel.org
-Reply-To: linux-kernel@vger.kernel.org, hpa@zytor.com,
-          valdis.kletnieks@vt.edu, tglx@linutronix.de, mingo@kernel.org
-In-Reply-To: <32342.1552379915@turing-police>
-References: <32342.1552379915@turing-police>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:timers/urgent] time/jiffies: Make refined_jiffies static
-Git-Commit-ID: e8750053d64a3317cbc15f8341f0f11ca751bfeb
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Fri, 22 Mar 2019 08:03:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41502 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730413AbfCVMDJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:03:09 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A231204FD;
+        Fri, 22 Mar 2019 12:03:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553256188;
+        bh=5cZvzoefyLH0+Nhn3cAEWZU/npiSIf9g3yP2YgmxLu4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=n8a0P/yUrYuCzk2vuqQtpLm5zAfprzGAgDgT+WMyZn2JotcWvwDQS1UYxjnlyCvVZ
+         8U1tsqWet1sD3ICUKbdndUdI0WQ5jaVcjKbK2aJFwomz/0+zTxG6hAN3Lz4ji8LzXX
+         o40UECH21urfSRbbDDqNF3i3ck5R4tnoAbfq3648=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Eric Biggers <ebiggers@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.19 135/280] crypto: arm64/aes-ccm - fix logical bug in AAD MAC handling
+Date:   Fri, 22 Mar 2019 12:14:48 +0100
+Message-Id: <20190322111317.313705889@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
+References: <20190322111306.356185024@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  e8750053d64a3317cbc15f8341f0f11ca751bfeb
-Gitweb:     https://git.kernel.org/tip/e8750053d64a3317cbc15f8341f0f11ca751bfeb
-Author:     Valdis Kletnieks <valdis.kletnieks@vt.edu>
-AuthorDate: Tue, 12 Mar 2019 04:38:35 -0400
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Fri, 22 Mar 2019 13:38:26 +0100
+4.19-stable review patch.  If anyone has any objections, please let me know.
 
-time/jiffies: Make refined_jiffies static
+------------------
 
-sparse complains:
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
-  CHECK   kernel/time/jiffies.c
-kernel/time/jiffies.c:92:20: warning: symbol 'refined_jiffies' was not
-			     	      declared. Should it be static?
+commit eaf46edf6ea89675bd36245369c8de5063a0272c upstream.
 
-Its only used in file scope. Make it static.
+The NEON MAC calculation routine fails to handle the case correctly
+where there is some data in the buffer, and the input fills it up
+exactly. In this case, we enter the loop at the end with w8 == 0,
+while a negative value is assumed, and so the loop carries on until
+the increment of the 32-bit counter wraps around, which is quite
+obviously wrong.
 
-Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/32342.1552379915@turing-police
+So omit the loop altogether in this case, and exit right away.
+
+Reported-by: Eric Biggers <ebiggers@kernel.org>
+Fixes: a3fd82105b9d1 ("arm64/crypto: AES in CCM mode using ARMv8 Crypto ...")
+Cc: stable@vger.kernel.org
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/time/jiffies.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/crypto/aes-ce-ccm-core.S |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/time/jiffies.c b/kernel/time/jiffies.c
-index dc1b6f1929f9..ac9c03dd6c7d 100644
---- a/kernel/time/jiffies.c
-+++ b/kernel/time/jiffies.c
-@@ -89,7 +89,7 @@ struct clocksource * __init __weak clocksource_default_clock(void)
- 	return &clocksource_jiffies;
- }
- 
--struct clocksource refined_jiffies;
-+static struct clocksource refined_jiffies;
- 
- int register_refined_jiffies(long cycles_per_second)
- {
+--- a/arch/arm64/crypto/aes-ce-ccm-core.S
++++ b/arch/arm64/crypto/aes-ce-ccm-core.S
+@@ -74,12 +74,13 @@ ENTRY(ce_aes_ccm_auth_data)
+ 	beq	10f
+ 	ext	v0.16b, v0.16b, v0.16b, #1	/* rotate out the mac bytes */
+ 	b	7b
+-8:	mov	w7, w8
++8:	cbz	w8, 91f
++	mov	w7, w8
+ 	add	w8, w8, #16
+ 9:	ext	v1.16b, v1.16b, v1.16b, #1
+ 	adds	w7, w7, #1
+ 	bne	9b
+-	eor	v0.16b, v0.16b, v1.16b
++91:	eor	v0.16b, v0.16b, v1.16b
+ 	st1	{v0.16b}, [x0]
+ 10:	str	w8, [x3]
+ 	ret
+
+
