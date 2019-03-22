@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00538C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:35:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C240BC10F03
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:35:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C02A320850
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:35:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BEDB20850
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 15:35:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553268945;
-	bh=hYpJ/QqCu2VPJ1ziJl6kJTmXakIcDvPOS/KFb9DFnU8=;
+	s=default; t=1553268950;
+	bh=T4rmInzsdjGQowM7a+hgGvi1BnDlxM/88LdiFSTcz8Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
 	 References:List-ID:From;
-	b=qDpkmW6KTQ4jQ2ZcsQnTQutN74J/gJ4yuW9nEy74Zg0YY+rLpDjZNmOZsfIYZzHLp
-	 n5C/nYVnFvFPMI79rafVYRVBcUShvPGeK5DcRm5p+2/4nIX6ox8j67g/UmM1FzayYe
-	 6O9s4pSprgOq5ZKiXiJdg9/U1KV6jkEFyroJ1AFI=
+	b=UxEXdStAcj2CdtyrHQSNU9itZUG4NK3blonC5kWWTBI/s/f75FTV2OoWNt+Gar0R6
+	 jK6hl7xnJMtFtUGQF20Y/t0ujxVME9jIBSTbkjyfBDq/o4GESCanr4hVC/iszmYSL4
+	 wWJJ9PcpLA+hQCm1uHVUPnqmzzYLQpw5rn3KkiqI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727648AbfCVPfo (ORCPT
+        id S1727650AbfCVPft (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 11:35:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53422 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 11:35:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727307AbfCVPev (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 11:34:51 -0400
+        id S1726022AbfCVPes (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 11:34:48 -0400
 Received: from localhost.localdomain (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A04A218FE;
-        Fri, 22 Mar 2019 15:34:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0A322190A;
+        Fri, 22 Mar 2019 15:34:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553268891;
-        bh=hYpJ/QqCu2VPJ1ziJl6kJTmXakIcDvPOS/KFb9DFnU8=;
+        s=default; t=1553268887;
+        bh=T4rmInzsdjGQowM7a+hgGvi1BnDlxM/88LdiFSTcz8Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=pZkv92GE9Kx8zZhTpErty1NoVRYjAxshwo6hn9dqJy2TlLvkPXwDOPNKQJzyqxZFj
-         gd4wpgL2ThSPU6GrQ9zNLq0tLIRXAhoJDP17ODc1iP8fQ++Ky2AB0+sOIhyA80q6Gf
-         lQTB49y+qy8tTn/hTFQS7WntlqxyfL5f34IlOtOQ=
+        b=iSJiNuAtRNmD2nAjJ9aMFNdgChIjqBHy4DGpjxR3JcGGl0Gglfbxnq2Yjpld26qwR
+         b+N3D+3grdymBudpBCI2IekWwtiko6PR57fksa0IW3p8DmkTqDbPTnwCFl9Rg9EZNi
+         FGuuwdTgPGsRfMzvSDISFvm/ELajlBBc/mxrabQw=
 From:   Tom Zanussi <zanussi@kernel.org>
 To:     rostedt@goodmis.org
 Cc:     tglx@linutronix.de, mhiramat@kernel.org, namhyung@kernel.org,
         bigeasy@linutronix.de, joel@joelfernandes.org,
         linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
-Subject: [PATCH v4 04/11] tracing: Use tracing error_log with trace event filters
-Date:   Fri, 22 Mar 2019 10:34:30 -0500
-Message-Id: <f0895856a61d95aba80f9668d6828234d33b5d7c.1553268040.git.tom.zanussi@linux.intel.com>
+Subject: [PATCH v4 02/11] tracing: Save the last hist command's associated event name
+Date:   Fri, 22 Mar 2019 10:34:28 -0500
+Message-Id: <21fb9a9ec5dabc06dcc538e2729939621d352d20.1553268040.git.tom.zanussi@linux.intel.com>
 X-Mailer: git-send-email 2.14.1
 In-Reply-To: <cover.1553268040.git.tom.zanussi@linux.intel.com>
 References: <cover.1553268040.git.tom.zanussi@linux.intel.com>
@@ -61,54 +61,87 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tom Zanussi <tom.zanussi@linux.intel.com>
 
-Use tracing_log_err() from the new tracing error_log mechanism to send
-filter parse errors to tracing/error_log.
-
-With this change, users will be able to see filter errors by looking
-at tracing/error_log.
-
-The same errors will also be available in the filter file, as
-expected.
+In preparation for making use of the new trace error log, save the
+subsystem and event name associated with the last hist command - it
+will be passed as the location param in the event_log_err() calls.
 
 Signed-off-by: Tom Zanussi <tom.zanussi@linux.intel.com>
 ---
- kernel/trace/trace_events_filter.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ kernel/trace/trace_events_hist.c | 33 +++++++++++++++++++++++++++------
+ 1 file changed, 27 insertions(+), 6 deletions(-)
 
-diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
-index ade606c33231..3a1ed8631aa0 100644
---- a/kernel/trace/trace_events_filter.c
-+++ b/kernel/trace/trace_events_filter.c
-@@ -66,7 +66,8 @@ static const char * ops[] = { OPS };
- 	C(INVALID_FILTER,	"Meaningless filter expression"),	\
- 	C(IP_FIELD_ONLY,	"Only 'ip' field is supported for function trace"), \
- 	C(INVALID_VALUE,	"Invalid value (did you forget quotes)?"), \
--	C(NO_FILTER,		"No filter found"),
-+	C(ERRNO,		"Error"),				\
-+	C(NO_FILTER,		"No filter found")
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index ca46339f3009..e93b59d80274 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -535,15 +535,34 @@ static struct track_data *track_data_alloc(unsigned int key_len,
+ 	return data;
+ }
  
- #undef C
- #define C(a, b)		FILT_ERR_##a
-@@ -76,7 +77,7 @@ enum { ERRORS };
- #undef C
- #define C(a, b)		b
+-static char last_hist_cmd[MAX_FILTER_STR_VAL];
++static char last_cmd[MAX_FILTER_STR_VAL];
++static char last_cmd_loc[MAX_FILTER_STR_VAL];
++
+ static char hist_err_str[MAX_FILTER_STR_VAL];
  
--static char *err_text[] = { ERRORS };
-+static const char *err_text[] = { ERRORS };
+-static void last_cmd_set(char *str)
++static void last_cmd_set(struct trace_event_file *file, char *str)
+ {
++	const char *system = NULL, *name = NULL;
++	struct trace_event_call *call;
++
+ 	if (!str)
+ 		return;
  
- /* Called after a '!' character but "!=" and "!~" are not "not"s */
- static bool is_not(const char *str)
-@@ -947,8 +948,10 @@ static void append_filter_err(struct filter_parse_error *pe,
- 	if (pe->lasterr > 0) {
- 		trace_seq_printf(s, "\n%*s", pos, "^");
- 		trace_seq_printf(s, "\nparse_error: %s\n", err_text[pe->lasterr]);
-+		tracing_log_err("event filter parse error", filter->filter_string, err_text, pe->lasterr, pe->lasterr_pos);
- 	} else {
- 		trace_seq_printf(s, "\nError: (%d)\n", pe->lasterr);
-+		tracing_log_err("event filter parse error", filter->filter_string, err_text, FILT_ERR_ERRNO, 0);
+-	strncpy(last_hist_cmd, str, MAX_FILTER_STR_VAL - 1);
++	strncpy(last_cmd, str, MAX_FILTER_STR_VAL - 1);
++
++	if (file) {
++		call = file->event_call;
++
++		system = call->class->system;
++		if (system) {
++			name = trace_event_name(call);
++			if (!name)
++				system = NULL;
++		}
++	}
++
++	if (system)
++		snprintf(last_cmd_loc, MAX_FILTER_STR_VAL, "hist:%s:%s", system, name);
+ }
+ 
+ static void hist_err(char *str, char *var)
+@@ -583,6 +602,8 @@ static void hist_err_event(char *str, char *system, char *event, char *var)
+ static void hist_err_clear(void)
+ {
+ 	hist_err_str[0] = '\0';
++	last_cmd[0] = '\0';
++	last_cmd_loc[0] = '\0';
+ }
+ 
+ static bool have_hist_err(void)
+@@ -5439,8 +5460,8 @@ static int hist_show(struct seq_file *m, void *v)
  	}
- 	trace_seq_putc(s, 0);
- 	buf = kmemdup_nul(s->buffer, s->seq.len, GFP_KERNEL);
+ 
+ 	if (have_hist_err()) {
+-		seq_printf(m, "\nERROR: %s\n", hist_err_str);
+-		seq_printf(m, "  Last command: %s\n", last_hist_cmd);
++		seq_printf(m, "\n%s: error: \n", hist_err_str);
++		seq_printf(m, "  Last command: %s\n", last_cmd);
+ 	}
+ 
+  out_unlock:
+@@ -6044,8 +6065,8 @@ static int event_hist_trigger_func(struct event_command *cmd_ops,
+ 	lockdep_assert_held(&event_mutex);
+ 
+ 	if (glob && strlen(glob)) {
+-		last_cmd_set(param);
+ 		hist_err_clear();
++		last_cmd_set(file, param);
+ 	}
+ 
+ 	if (!param)
 -- 
 2.14.1
 
