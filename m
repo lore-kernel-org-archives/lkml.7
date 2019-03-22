@@ -7,51 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E5CDC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:37:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 711E6C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:37:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CE882183E
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:37:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FCEE218B0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:37:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254653;
-	bh=Vru0z6tooTPYgD+hG1R1HDJdwCVBRGGAZ/VtDoaKkJw=;
+	s=default; t=1553254656;
+	bh=Wdif+3qxWYqftAvg1AccNCi38ZGN31HmE7I9wX8qSLg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bZuqzjhXg68wFCxgOg92ijNtewst8Gz7XTBbz3Qz0tdf5Ryuo+dr37phZer2dMbK7
-	 Jm8cDOuPtcB9NDDpvorpKjbkT8/NNXc6mGefP6s2KEZFrceQQf685qF2zvKBSU4FUz
-	 0LIUhyeGJ5MoV4Yrg+LBfXU9KQT+j6SK3VnsG99A=
+	b=WvAl7nRuXP3Cw71MfAtGAyofd5rKGFDnE0AhVeNpbqyb4dzaLG+T9gSIAqetcppi6
+	 LzfMtIhmUbHmaM8HDCVDAKmiRzs59eU53NW1XNsiE/tDE8U+fvPUUICLa+4TRGzkto
+	 Yx88OLUpN6pyvLqURNwgHQYwCrMyB4BilgtsVU1k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730856AbfCVLhb (ORCPT
+        id S1730865AbfCVLhf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:37:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38994 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:37:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730415AbfCVLh3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:37:29 -0400
+        id S1730415AbfCVLhc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:37:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 845AA2183E;
-        Fri, 22 Mar 2019 11:37:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 569EF2082C;
+        Fri, 22 Mar 2019 11:37:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254649;
-        bh=Vru0z6tooTPYgD+hG1R1HDJdwCVBRGGAZ/VtDoaKkJw=;
+        s=default; t=1553254651;
+        bh=Wdif+3qxWYqftAvg1AccNCi38ZGN31HmE7I9wX8qSLg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jb/zbK2HlBiUC80j5fi3OeL4btsi0Reiv45kMlhcQoMiqmxSAmAGgS7oZhAu2LC1+
-         WfjEb1tzGozuuP8h6Ipa6M0Nxmog7awCQRshmANK9bs/5jiDRne7FzO9uPjBlDsXZC
-         amXGdOIpye8qg/K8N95yBuXIEUR0RMulPTfR5UAM=
+        b=zceJrQTW0WAXw0DlKSXxrCelepz7XrH8n7q+PCDVMzr4wBEX57aPWsrbE/qufbIio
+         i0+i5IcF5OqCVxyCPtee1lMx6pVp13Bxwamz6/MiZKavR0lDwFm5qRB+e+au3ybdXb
+         ADP+2IQ5D9VqDEieVEEYvt3uRuAzcbXq78JVG+V8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zev Weiss <zev@bewilderbeest.net>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.4 200/230] kernel/sysctl.c: add missing range check in do_proc_dointvec_minmax_conv
-Date:   Fri, 22 Mar 2019 12:15:38 +0100
-Message-Id: <20190322111250.880124393@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ammy Yi <ammy.yi@intel.com>
+Subject: [PATCH 4.4 201/230] intel_th: Dont reference unassigned outputs
+Date:   Fri, 22 Mar 2019 12:15:39 +0100
+Message-Id: <20190322111250.959328359@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -70,52 +66,58 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Zev Weiss <zev@bewilderbeest.net>
+From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 
-commit 8cf7630b29701d364f8df4a50e4f1f5e752b2778 upstream.
+commit 9ed3f22223c33347ed963e7c7019cf2956dd4e37 upstream.
 
-This bug has apparently existed since the introduction of this function
-in the pre-git era (4500e91754d3 in Thomas Gleixner's history.git,
-"[NET]: Add proc_dointvec_userhz_jiffies, use it for proper handling of
-neighbour sysctls.").
+When an output port driver is removed, also remove references to it from
+any masters. Failing to do this causes a NULL ptr dereference when
+configuring another output port:
 
-As a minimal fix we can simply duplicate the corresponding check in
-do_proc_dointvec_conv().
+> BUG: unable to handle kernel NULL pointer dereference at 000000000000000d
+> RIP: 0010:master_attr_store+0x9d/0x160 [intel_th_gth]
+> Call Trace:
+> dev_attr_store+0x1b/0x30
+> sysfs_kf_write+0x3c/0x50
+> kernfs_fop_write+0x125/0x1a0
+> __vfs_write+0x3a/0x190
+> ? __vfs_write+0x5/0x190
+> ? _cond_resched+0x1a/0x50
+> ? rcu_all_qs+0x5/0xb0
+> ? __vfs_write+0x5/0x190
+> vfs_write+0xb8/0x1b0
+> ksys_write+0x55/0xc0
+> __x64_sys_write+0x1a/0x20
+> do_syscall_64+0x5a/0x140
+> entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-Link: http://lkml.kernel.org/r/20190207123426.9202-3-zev@bewilderbeest.net
-Signed-off-by: Zev Weiss <zev@bewilderbeest.net>
-Cc: Brendan Higgins <brendanhiggins@google.com>
-Cc: Iurii Zaikin <yzaikin@google.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Luis Chamberlain <mcgrof@kernel.org>
-Cc: <stable@vger.kernel.org>	[2.6.2+]
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Fixes: b27a6a3f97b9 ("intel_th: Add Global Trace Hub driver")
+CC: stable@vger.kernel.org # v4.4+
+Reported-by: Ammy Yi <ammy.yi@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/sysctl.c |   11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ drivers/hwtracing/intel_th/gth.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -2306,7 +2306,16 @@ static int do_proc_dointvec_minmax_conv(
+--- a/drivers/hwtracing/intel_th/gth.c
++++ b/drivers/hwtracing/intel_th/gth.c
+@@ -591,11 +591,15 @@ static void intel_th_gth_unassign(struct
  {
- 	struct do_proc_dointvec_minmax_conv_param *param = data;
- 	if (write) {
--		int val = *negp ? -*lvalp : *lvalp;
-+		int val;
-+		if (*negp) {
-+			if (*lvalp > (unsigned long) INT_MAX + 1)
-+				return -EINVAL;
-+			val = -*lvalp;
-+		} else {
-+			if (*lvalp > (unsigned long) INT_MAX)
-+				return -EINVAL;
-+			val = *lvalp;
-+		}
- 		if ((param->min && *param->min > val) ||
- 		    (param->max && *param->max < val))
- 			return -EINVAL;
+ 	struct gth_device *gth = dev_get_drvdata(&thdev->dev);
+ 	int port = othdev->output.port;
++	int master;
+ 
+ 	spin_lock(&gth->gth_lock);
+ 	othdev->output.port = -1;
+ 	othdev->output.active = false;
+ 	gth->output[port].output = NULL;
++	for (master = 0; master < TH_CONFIGURABLE_MASTERS; master++)
++		if (gth->master[master] == port)
++			gth->master[master] = -1;
+ 	spin_unlock(&gth->gth_lock);
+ }
+ 
 
 
