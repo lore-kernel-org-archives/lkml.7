@@ -2,50 +2,51 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 552EFC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:43:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD9CEC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:43:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AA742070D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:43:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B31C2070D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:43:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553258627;
-	bh=CrhGtTFFDpHYi5hy+1DvOfmUmltqf1IKZBVtoCdobjI=;
+	s=default; t=1553258630;
+	bh=+dY2g7V9n5br6mseKqaFVpo+g9AxzZzaoSasRFWEf24=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yBtdj3VkxI41aCyUIjlA9Tlnn4tG31PcSlRRmDGB3fNhenkmeQ6M2OxgCgNiVciGi
-	 kZ8QQBYg0wm7iuS/yvqwf0UGiWVNJdRlUz2hful1tRw20zuhCQfnrr/J6F7UIg+bn1
-	 SoMOrCo1vKNElzB9ZJd60eLjgsyfBt6RUx8+Ky3g=
+	b=gO/e8derdgek+T8HCT1EPz1775GFxNpoEMSwpqVw2UFPz+enFPiUKAAyxe5nmCiNR
+	 4t4RpBwgGX11/PLgmpoN2ER/v6WfYyNArUJUTX7gpuqq2N92dij3PseE/HJ1Ei1Oq8
+	 7jCzrcxDUi851q0aJP6y1LKRgFEyX8G/CtYuol0k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388418AbfCVMCs (ORCPT
+        id S2388407AbfCVMCq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:02:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40954 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:02:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40860 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388124AbfCVMCn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 08:02:43 -0400
+        id S2388377AbfCVMCj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 08:02:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3E2E204FD;
-        Fri, 22 Mar 2019 12:02:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3E29204FD;
+        Fri, 22 Mar 2019 12:02:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553256162;
-        bh=CrhGtTFFDpHYi5hy+1DvOfmUmltqf1IKZBVtoCdobjI=;
+        s=default; t=1553256158;
+        bh=+dY2g7V9n5br6mseKqaFVpo+g9AxzZzaoSasRFWEf24=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dmMyrt89aYLPJEMbLS1cqXqAU9x2q8elee+Ia+LBUf9D/4F+jY8jisJBmyix2G+6N
-         xl4w+71TIWsgK2jb2xxj7V9GXngfM62KrFow8e2a743+0pXQAe83tHccgQCIRk2gHk
-         ph3W1JIRkm2XJTTrV0Zv1J0UWEtCZZBqTZqpDLlc=
+        b=AIwlXBghOs9+ryAuLS9us81ohBhTt697svSNnaPoW8Pc/LHXP/KdKHZ2Q9Evya730
+         l3g2UAahik8OHDDM9TXcc64hC0hgVW6jxJrUI/1ZxjJjbCu+hSn+gFJZHrwf0iiQQI
+         JzeIXvSPElNQtzkzfhNXhb+iZPhEZ0VBxiRzUfnM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>
-Subject: [PATCH 4.19 119/280] libnvdimm/pmem: Honor force_raw for legacy pmem regions
-Date:   Fri, 22 Mar 2019 12:14:32 +0100
-Message-Id: <20190322111314.804191758@linuxfoundation.org>
+        stable@vger.kernel.org, Vineet Gupta <vgupta@synopsys.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 098/280] ARCv2: support manual regfile save on interrupts
+Date:   Fri, 22 Mar 2019 12:14:11 +0100
+Message-Id: <20190322111312.043648384@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
 References: <20190322111306.356185024@linuxfoundation.org>
@@ -64,46 +65,160 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Dan Williams <dan.j.williams@intel.com>
+[ Upstream commit e494239a007e601448110ac304fe055951f9de3b ]
 
-commit fa7d2e639cd90442d868dfc6ca1d4cc9d8bf206e upstream.
+There's a hardware bug which affects the HSDK platform, triggered by
+micro-ops for auto-saving regfile on taken interrupt. The workaround is
+to inhibit autosave.
 
-For recovery, where non-dax access is needed to a given physical address
-range, and testing, allow the 'force_raw' attribute to override the
-default establishment of a dev_pagemap.
-
-Otherwise without this capability it is possible to end up with a
-namespace that can not be activated due to corrupted info-block, and one
-that can not be repaired due to a section collision.
-
-Cc: <stable@vger.kernel.org>
-Fixes: 004f1afbe199 ("libnvdimm, pmem: direct map legacy pmem by default")
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvdimm/namespace_devs.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arc/Kconfig                   |  8 +++++
+ arch/arc/include/asm/entry-arcv2.h | 54 ++++++++++++++++++++++++++++++
+ arch/arc/kernel/entry-arcv2.S      |  4 ++-
+ arch/arc/kernel/intc-arcv2.c       |  2 ++
+ arch/arc/plat-hsdk/Kconfig         |  1 +
+ 5 files changed, 68 insertions(+), 1 deletion(-)
 
---- a/drivers/nvdimm/namespace_devs.c
-+++ b/drivers/nvdimm/namespace_devs.c
-@@ -138,6 +138,7 @@ bool nd_is_uuid_unique(struct device *de
- bool pmem_should_map_pages(struct device *dev)
- {
- 	struct nd_region *nd_region = to_nd_region(dev->parent);
-+	struct nd_namespace_common *ndns = to_ndns(dev);
- 	struct nd_namespace_io *nsio;
+diff --git a/arch/arc/Kconfig b/arch/arc/Kconfig
+index ac69f307dcfe..74953e76a57d 100644
+--- a/arch/arc/Kconfig
++++ b/arch/arc/Kconfig
+@@ -420,6 +420,14 @@ config ARC_HAS_ACCL_REGS
+ 	  (also referred to as r58:r59). These can also be used by gcc as GPR so
+ 	  kernel needs to save/restore per process
  
- 	if (!IS_ENABLED(CONFIG_ZONE_DEVICE))
-@@ -149,6 +150,9 @@ bool pmem_should_map_pages(struct device
- 	if (is_nd_pfn(dev) || is_nd_btt(dev))
- 		return false;
- 
-+	if (ndns->force_raw)
-+		return false;
++config ARC_IRQ_NO_AUTOSAVE
++	bool "Disable hardware autosave regfile on interrupts"
++	default n
++	help
++	  On HS cores, taken interrupt auto saves the regfile on stack.
++	  This is programmable and can be optionally disabled in which case
++	  software INTERRUPT_PROLOGUE/EPILGUE do the needed work
 +
- 	nsio = to_nd_namespace_io(dev);
- 	if (region_intersects(nsio->res.start, resource_size(&nsio->res),
- 				IORESOURCE_SYSTEM_RAM,
+ endif	# ISA_ARCV2
+ 
+ endmenu   # "ARC CPU Configuration"
+diff --git a/arch/arc/include/asm/entry-arcv2.h b/arch/arc/include/asm/entry-arcv2.h
+index 309f4e6721b3..225e7df2d8ed 100644
+--- a/arch/arc/include/asm/entry-arcv2.h
++++ b/arch/arc/include/asm/entry-arcv2.h
+@@ -17,6 +17,33 @@
+ 	;
+ 	; Now manually save: r12, sp, fp, gp, r25
+ 
++#ifdef CONFIG_ARC_IRQ_NO_AUTOSAVE
++.ifnc \called_from, exception
++	st.as	r9, [sp, -10]	; save r9 in it's final stack slot
++	sub	sp, sp, 12	; skip JLI, LDI, EI
++
++	PUSH	lp_count
++	PUSHAX	lp_start
++	PUSHAX	lp_end
++	PUSH	blink
++
++	PUSH	r11
++	PUSH	r10
++
++	sub	sp, sp, 4	; skip r9
++
++	PUSH	r8
++	PUSH	r7
++	PUSH	r6
++	PUSH	r5
++	PUSH	r4
++	PUSH	r3
++	PUSH	r2
++	PUSH	r1
++	PUSH	r0
++.endif
++#endif
++
+ #ifdef CONFIG_ARC_HAS_ACCL_REGS
+ 	PUSH	r59
+ 	PUSH	r58
+@@ -86,6 +113,33 @@
+ 	POP	r59
+ #endif
+ 
++#ifdef CONFIG_ARC_IRQ_NO_AUTOSAVE
++.ifnc \called_from, exception
++	POP	r0
++	POP	r1
++	POP	r2
++	POP	r3
++	POP	r4
++	POP	r5
++	POP	r6
++	POP	r7
++	POP	r8
++	POP	r9
++	POP	r10
++	POP	r11
++
++	POP	blink
++	POPAX	lp_end
++	POPAX	lp_start
++
++	POP	r9
++	mov	lp_count, r9
++
++	add	sp, sp, 12	; skip JLI, LDI, EI
++	ld.as	r9, [sp, -10]	; reload r9 which got clobbered
++.endif
++#endif
++
+ .endm
+ 
+ /*------------------------------------------------------------------------*/
+diff --git a/arch/arc/kernel/entry-arcv2.S b/arch/arc/kernel/entry-arcv2.S
+index cc558a25b8fa..562089d62d9d 100644
+--- a/arch/arc/kernel/entry-arcv2.S
++++ b/arch/arc/kernel/entry-arcv2.S
+@@ -209,7 +209,9 @@ restore_regs:
+ ;####### Return from Intr #######
+ 
+ debug_marker_l1:
+-	bbit1.nt r0, STATUS_DE_BIT, .Lintr_ret_to_delay_slot
++	; bbit1.nt r0, STATUS_DE_BIT, .Lintr_ret_to_delay_slot
++	btst	r0, STATUS_DE_BIT		; Z flag set if bit clear
++	bnz	.Lintr_ret_to_delay_slot	; branch if STATUS_DE_BIT set
+ 
+ .Lisr_ret_fast_path:
+ 	; Handle special case #1: (Entry via Exception, Return via IRQ)
+diff --git a/arch/arc/kernel/intc-arcv2.c b/arch/arc/kernel/intc-arcv2.c
+index 067ea362fb3e..cf18b3e5a934 100644
+--- a/arch/arc/kernel/intc-arcv2.c
++++ b/arch/arc/kernel/intc-arcv2.c
+@@ -49,11 +49,13 @@ void arc_init_IRQ(void)
+ 
+ 	*(unsigned int *)&ictrl = 0;
+ 
++#ifndef CONFIG_ARC_IRQ_NO_AUTOSAVE
+ 	ictrl.save_nr_gpr_pairs = 6;	/* r0 to r11 (r12 saved manually) */
+ 	ictrl.save_blink = 1;
+ 	ictrl.save_lp_regs = 1;		/* LP_COUNT, LP_START, LP_END */
+ 	ictrl.save_u_to_u = 0;		/* user ctxt saved on kernel stack */
+ 	ictrl.save_idx_regs = 1;	/* JLI, LDI, EI */
++#endif
+ 
+ 	WRITE_AUX(AUX_IRQ_CTRL, ictrl);
+ 
+diff --git a/arch/arc/plat-hsdk/Kconfig b/arch/arc/plat-hsdk/Kconfig
+index 9356753c2ed8..c285a83cbf08 100644
+--- a/arch/arc/plat-hsdk/Kconfig
++++ b/arch/arc/plat-hsdk/Kconfig
+@@ -9,6 +9,7 @@ menuconfig ARC_SOC_HSDK
+ 	bool "ARC HS Development Kit SOC"
+ 	depends on ISA_ARCV2
+ 	select ARC_HAS_ACCL_REGS
++	select ARC_IRQ_NO_AUTOSAVE
+ 	select CLK_HSDK
+ 	select RESET_HSDK
+ 	select MIGHT_HAVE_PCI
+-- 
+2.19.1
+
 
 
