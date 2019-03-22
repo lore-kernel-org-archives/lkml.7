@@ -2,1089 +2,924 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 772CEC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 01:13:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB20C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 01:15:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F74021902
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 01:13:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3133921900
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 01:15:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mz+EsFBQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727542AbfCVBNb (ORCPT
+        id S1727504AbfCVBPE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 21:13:31 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54976 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726460AbfCVBN2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 21:13:28 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9FF5B81F12;
-        Fri, 22 Mar 2019 01:13:28 +0000 (UTC)
-Received: from localhost.localdomain.com (ovpn-121-16.rdu2.redhat.com [10.10.121.16])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 76AF25D6B3;
-        Fri, 22 Mar 2019 01:13:27 +0000 (UTC)
-From:   jglisse@redhat.com
-To:     linux-kernel@vger.kernel.org
-Cc:     =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Artemy Kovalyov <artemyko@mellanox.com>,
-        Moni Shoua <monis@mellanox.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Kaike Wan <kaike.wan@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>
-Subject: [PATCH v2 1/1] RDMA/odp: convert to use HMM for ODP v2
-Date:   Thu, 21 Mar 2019 21:13:17 -0400
-Message-Id: <20190322011317.6585-2-jglisse@redhat.com>
-In-Reply-To: <20190322011317.6585-1-jglisse@redhat.com>
-References: <20190322011317.6585-1-jglisse@redhat.com>
+        Thu, 21 Mar 2019 21:15:04 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:46776 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725999AbfCVBPE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 21:15:04 -0400
+Received: by mail-pg1-f195.google.com with SMTP id a22so259717pgg.13;
+        Thu, 21 Mar 2019 18:15:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=V90qdfFQGBsn+mK4fjUdRUzkVQpl7RD5gYUSfaew7rM=;
+        b=mz+EsFBQMPLp8xIgsQn7i1PtrHko+w1XRfc0XVVpJPpGcqS1hGVW7rypRJc8jw0VBC
+         krtfxKrullXSzI5xAqmKJ64wrIetvhR/cZ3c4nupw9PJywqulN8PK5PqFhX5Yt5A77HK
+         y3b4Ox2b+DQHftQOASwx4PSAw0oQbXs1GBahIJMFPk2kqdKH1jEPPkXUozA+Mpki6be/
+         dRCnCS5EK2GZ53t292BESqz4GS5yBaImteBz139lqOnOYKx01ifcXeax5KDHK2o/HD7l
+         XCMGEXSSRhdcts3nwwWQEvIXh3O2dz03JWbUq7/VIsUWVoPRid4jNkPUJNhV0SM9Ie9G
+         ZBCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=V90qdfFQGBsn+mK4fjUdRUzkVQpl7RD5gYUSfaew7rM=;
+        b=cyMqX+ZY0yrZFhtwEtk0m49FLsSAIf7/Bklxtbe2bAt44nmtl6oH7/HkWPKVM+9+Nu
+         dLBJB+287u6K3Iqt6m3D8JcyCQPsbP1KYXzQXLt6NgUfpEh30eSBu6qKC650yjwwqE6I
+         8B/8Sz4pL7WSr1XUxeKhqnSk/hO1WBdRNpkxnnSekmikix0Ne2DshSErY+hS74bOQ+h/
+         Z+Q35UA8uWIYmBqHVzpK5bhpH3p1eVnin9HzoLHBkYPAydMIduW009JJZXWzPFfvOheO
+         9VHoC5liEmk2NheBfQwGai3MviQg2vsy43sW92JqwQtINz5L3TvDIDc72RJ99+fMDyNj
+         pJ3A==
+X-Gm-Message-State: APjAAAUfe5S0k9eF7jeCBEvD8BTTnmzrhcTwLte+VxUps31/LMKU8NUn
+        JTc8fyLt8JJ74af4uR98Qoo=
+X-Google-Smtp-Source: APXvYqzrcqWZHbvCl31R9agvBUS5qxdsYn4H1bGgXw3t0J3rnzoAPs2HZXgW5ZK5d1DSZpALZLdnzg==
+X-Received: by 2002:a17:902:a40d:: with SMTP id p13mr6574231plq.144.1553217302046;
+        Thu, 21 Mar 2019 18:15:02 -0700 (PDT)
+Received: from [192.168.1.70] (c-24-6-192-50.hsd1.ca.comcast.net. [24.6.192.50])
+        by smtp.gmail.com with ESMTPSA id f4sm7275164pgq.94.2019.03.21.18.14.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 21 Mar 2019 18:15:01 -0700 (PDT)
+Subject: Re: [RFC v4 16/17] of: unittest: split out a couple of test cases
+ from unittest
+To:     Brendan Higgins <brendanhiggins@google.com>, keescook@google.com,
+        mcgrof@kernel.org, shuah@kernel.org, robh@kernel.org,
+        kieran.bingham@ideasonboard.com
+Cc:     gregkh@linuxfoundation.org, joel@jms.id.au, mpe@ellerman.id.au,
+        joe@perches.com, brakmo@fb.com, rostedt@goodmis.org,
+        Tim.Bird@sony.com, khilman@baylibre.com, julia.lawall@lip6.fr,
+        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org, jdike@addtoit.com, richard@nod.at,
+        linux-um@lists.infradead.org, daniel@ffwll.ch,
+        dri-devel@lists.freedesktop.org, dan.j.williams@intel.com,
+        linux-nvdimm@lists.01.org, knut.omang@oracle.com,
+        devicetree@vger.kernel.org, pmladek@suse.com,
+        Alexander.Levin@microsoft.com, amir73il@gmail.com,
+        dan.carpenter@oracle.com, wfg@linux.intel.com
+References: <20190214213729.21702-1-brendanhiggins@google.com>
+ <20190214213729.21702-17-brendanhiggins@google.com>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <dd0c4033-183b-9e77-1dee-7c88f62771fa@gmail.com>
+Date:   Thu, 21 Mar 2019 18:14:58 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Fri, 22 Mar 2019 01:13:28 +0000 (UTC)
+In-Reply-To: <20190214213729.21702-17-brendanhiggins@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jérôme Glisse <jglisse@redhat.com>
+On 2/14/19 1:37 PM, Brendan Higgins wrote:
+> Split out a couple of test cases that these features in base.c from the
+> unittest.c monolith. The intention is that we will eventually split out
+> all test cases and group them together based on what portion of device
+> tree they test.
 
-Convert ODP to use HMM so that we can build on common infrastructure
-for different class of devices that want to mirror a process address
-space into a device. There is no functional changes.
+I still object to this patch.  I do not want this code scattered into
+additional files.
 
-Changes since v1:
-    - improved comments
-    - simplified page alignment computation
+-Frank
 
-Signed-off-by: Jérôme Glisse <jglisse@redhat.com>
-Cc: Jason Gunthorpe <jgg@mellanox.com>
-Cc: Leon Romanovsky <leonro@mellanox.com>
-Cc: Doug Ledford <dledford@redhat.com>
-Cc: Artemy Kovalyov <artemyko@mellanox.com>
-Cc: Moni Shoua <monis@mellanox.com>
-Cc: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Cc: Kaike Wan <kaike.wan@intel.com>
-Cc: Dennis Dalessandro <dennis.dalessandro@intel.com>
----
- drivers/infiniband/core/umem_odp.c | 488 ++++++++---------------------
- drivers/infiniband/hw/mlx5/mem.c   |  20 +-
- drivers/infiniband/hw/mlx5/mr.c    |   2 +-
- drivers/infiniband/hw/mlx5/odp.c   | 106 ++++---
- include/rdma/ib_umem_odp.h         |  48 ++-
- 5 files changed, 217 insertions(+), 447 deletions(-)
 
-diff --git a/drivers/infiniband/core/umem_odp.c b/drivers/infiniband/core/umem_odp.c
-index e6ec79ad9cc8..8ca90cc54b39 100644
---- a/drivers/infiniband/core/umem_odp.c
-+++ b/drivers/infiniband/core/umem_odp.c
-@@ -46,6 +46,20 @@
- #include <rdma/ib_umem.h>
- #include <rdma/ib_umem_odp.h>
- 
-+
-+static uint64_t odp_hmm_flags[HMM_PFN_FLAG_MAX] = {
-+	ODP_READ_BIT,	/* HMM_PFN_VALID */
-+	ODP_WRITE_BIT,	/* HMM_PFN_WRITE */
-+	ODP_DEVICE_BIT,	/* HMM_PFN_DEVICE_PRIVATE */
-+};
-+
-+static uint64_t odp_hmm_values[HMM_PFN_VALUE_MAX] = {
-+	-1UL,	/* HMM_PFN_ERROR */
-+	0UL,	/* HMM_PFN_NONE */
-+	-2UL,	/* HMM_PFN_SPECIAL */
-+};
-+
-+
- /*
-  * The ib_umem list keeps track of memory regions for which the HW
-  * device request to receive notification when the related memory
-@@ -78,57 +92,25 @@ static u64 node_last(struct umem_odp_node *n)
- INTERVAL_TREE_DEFINE(struct umem_odp_node, rb, u64, __subtree_last,
- 		     node_start, node_last, static, rbt_ib_umem)
- 
--static void ib_umem_notifier_start_account(struct ib_umem_odp *umem_odp)
--{
--	mutex_lock(&umem_odp->umem_mutex);
--	if (umem_odp->notifiers_count++ == 0)
--		/*
--		 * Initialize the completion object for waiting on
--		 * notifiers. Since notifier_count is zero, no one should be
--		 * waiting right now.
--		 */
--		reinit_completion(&umem_odp->notifier_completion);
--	mutex_unlock(&umem_odp->umem_mutex);
--}
--
--static void ib_umem_notifier_end_account(struct ib_umem_odp *umem_odp)
--{
--	mutex_lock(&umem_odp->umem_mutex);
--	/*
--	 * This sequence increase will notify the QP page fault that the page
--	 * that is going to be mapped in the spte could have been freed.
--	 */
--	++umem_odp->notifiers_seq;
--	if (--umem_odp->notifiers_count == 0)
--		complete_all(&umem_odp->notifier_completion);
--	mutex_unlock(&umem_odp->umem_mutex);
--}
--
- static int ib_umem_notifier_release_trampoline(struct ib_umem_odp *umem_odp,
- 					       u64 start, u64 end, void *cookie)
- {
- 	struct ib_umem *umem = &umem_odp->umem;
- 
--	/*
--	 * Increase the number of notifiers running, to
--	 * prevent any further fault handling on this MR.
--	 */
--	ib_umem_notifier_start_account(umem_odp);
- 	umem_odp->dying = 1;
- 	/* Make sure that the fact the umem is dying is out before we release
- 	 * all pending page faults. */
- 	smp_wmb();
--	complete_all(&umem_odp->notifier_completion);
- 	umem->context->invalidate_range(umem_odp, ib_umem_start(umem),
- 					ib_umem_end(umem));
- 	return 0;
- }
- 
--static void ib_umem_notifier_release(struct mmu_notifier *mn,
--				     struct mm_struct *mm)
-+static void ib_umem_notifier_release(struct hmm_mirror *mirror)
- {
--	struct ib_ucontext_per_mm *per_mm =
--		container_of(mn, struct ib_ucontext_per_mm, mn);
-+	struct ib_ucontext_per_mm *per_mm;
-+
-+	per_mm = container_of(mirror, struct ib_ucontext_per_mm, mirror);
- 
- 	down_read(&per_mm->umem_rwsem);
- 	if (per_mm->active)
-@@ -136,21 +118,24 @@ static void ib_umem_notifier_release(struct mmu_notifier *mn,
- 			&per_mm->umem_tree, 0, ULLONG_MAX,
- 			ib_umem_notifier_release_trampoline, true, NULL);
- 	up_read(&per_mm->umem_rwsem);
-+
-+	per_mm->mm = NULL;
- }
- 
--static int invalidate_range_start_trampoline(struct ib_umem_odp *item,
--					     u64 start, u64 end, void *cookie)
-+static int invalidate_range_trampoline(struct ib_umem_odp *item,
-+				       u64 start, u64 end, void *cookie)
- {
--	ib_umem_notifier_start_account(item);
- 	item->umem.context->invalidate_range(item, start, end);
- 	return 0;
- }
- 
--static int ib_umem_notifier_invalidate_range_start(struct mmu_notifier *mn,
--				const struct mmu_notifier_range *range)
-+static int ib_sync_cpu_device_pagetables(struct hmm_mirror *mirror,
-+			    const struct hmm_update *range)
- {
--	struct ib_ucontext_per_mm *per_mm =
--		container_of(mn, struct ib_ucontext_per_mm, mn);
-+	struct ib_ucontext_per_mm *per_mm;
-+	int ret;
-+
-+	per_mm = container_of(mirror, struct ib_ucontext_per_mm, mirror);
- 
- 	if (range->blockable)
- 		down_read(&per_mm->umem_rwsem);
-@@ -167,38 +152,17 @@ static int ib_umem_notifier_invalidate_range_start(struct mmu_notifier *mn,
- 		return 0;
- 	}
- 
--	return rbt_ib_umem_for_each_in_range(&per_mm->umem_tree, range->start,
-+	ret = rbt_ib_umem_for_each_in_range(&per_mm->umem_tree, range->start,
- 					     range->end,
--					     invalidate_range_start_trampoline,
-+					     invalidate_range_trampoline,
- 					     range->blockable, NULL);
--}
--
--static int invalidate_range_end_trampoline(struct ib_umem_odp *item, u64 start,
--					   u64 end, void *cookie)
--{
--	ib_umem_notifier_end_account(item);
--	return 0;
--}
--
--static void ib_umem_notifier_invalidate_range_end(struct mmu_notifier *mn,
--				const struct mmu_notifier_range *range)
--{
--	struct ib_ucontext_per_mm *per_mm =
--		container_of(mn, struct ib_ucontext_per_mm, mn);
--
--	if (unlikely(!per_mm->active))
--		return;
--
--	rbt_ib_umem_for_each_in_range(&per_mm->umem_tree, range->start,
--				      range->end,
--				      invalidate_range_end_trampoline, true, NULL);
- 	up_read(&per_mm->umem_rwsem);
-+	return ret;
- }
- 
--static const struct mmu_notifier_ops ib_umem_notifiers = {
-+static const struct hmm_mirror_ops ib_umem_notifiers = {
- 	.release                    = ib_umem_notifier_release,
--	.invalidate_range_start     = ib_umem_notifier_invalidate_range_start,
--	.invalidate_range_end       = ib_umem_notifier_invalidate_range_end,
-+	.sync_cpu_device_pagetables = ib_sync_cpu_device_pagetables,
- };
- 
- static void add_umem_to_per_mm(struct ib_umem_odp *umem_odp)
-@@ -222,7 +186,6 @@ static void remove_umem_from_per_mm(struct ib_umem_odp *umem_odp)
- 	if (likely(ib_umem_start(umem) != ib_umem_end(umem)))
- 		rbt_ib_umem_remove(&umem_odp->interval_tree,
- 				   &per_mm->umem_tree);
--	complete_all(&umem_odp->notifier_completion);
- 
- 	up_write(&per_mm->umem_rwsem);
- }
-@@ -249,11 +212,13 @@ static struct ib_ucontext_per_mm *alloc_per_mm(struct ib_ucontext *ctx,
- 
- 	WARN_ON(mm != current->mm);
- 
--	per_mm->mn.ops = &ib_umem_notifiers;
--	ret = mmu_notifier_register(&per_mm->mn, per_mm->mm);
-+	per_mm->mirror.ops = &ib_umem_notifiers;
-+	down_write(&mm->mmap_sem);
-+	ret = hmm_mirror_register(&per_mm->mirror, per_mm->mm);
-+	up_write(&mm->mmap_sem);
- 	if (ret) {
- 		dev_err(&ctx->device->dev,
--			"Failed to register mmu_notifier %d\n", ret);
-+			"Failed to register HMM mirror %d\n", ret);
- 		goto out_pid;
- 	}
- 
-@@ -295,11 +260,6 @@ static int get_per_mm(struct ib_umem_odp *umem_odp)
- 	return 0;
- }
- 
--static void free_per_mm(struct rcu_head *rcu)
--{
--	kfree(container_of(rcu, struct ib_ucontext_per_mm, rcu));
--}
--
- static void put_per_mm(struct ib_umem_odp *umem_odp)
- {
- 	struct ib_ucontext_per_mm *per_mm = umem_odp->per_mm;
-@@ -328,9 +288,10 @@ static void put_per_mm(struct ib_umem_odp *umem_odp)
- 	up_write(&per_mm->umem_rwsem);
- 
- 	WARN_ON(!RB_EMPTY_ROOT(&per_mm->umem_tree.rb_root));
--	mmu_notifier_unregister_no_release(&per_mm->mn, per_mm->mm);
-+	hmm_mirror_unregister(&per_mm->mirror);
- 	put_pid(per_mm->tgid);
--	mmu_notifier_call_srcu(&per_mm->rcu, free_per_mm);
-+
-+	kfree(per_mm);
- }
- 
- struct ib_umem_odp *ib_alloc_odp_umem(struct ib_umem_odp *root,
-@@ -358,11 +319,9 @@ struct ib_umem_odp *ib_alloc_odp_umem(struct ib_umem_odp *root,
- 	mmgrab(umem->owning_mm);
- 
- 	mutex_init(&odp_data->umem_mutex);
--	init_completion(&odp_data->notifier_completion);
- 
--	odp_data->page_list =
--		vzalloc(array_size(pages, sizeof(*odp_data->page_list)));
--	if (!odp_data->page_list) {
-+	odp_data->pfns = vzalloc(array_size(pages, sizeof(*odp_data->pfns)));
-+	if (!odp_data->pfns) {
- 		ret = -ENOMEM;
- 		goto out_odp_data;
- 	}
-@@ -371,7 +330,7 @@ struct ib_umem_odp *ib_alloc_odp_umem(struct ib_umem_odp *root,
- 		vzalloc(array_size(pages, sizeof(*odp_data->dma_list)));
- 	if (!odp_data->dma_list) {
- 		ret = -ENOMEM;
--		goto out_page_list;
-+		goto out_pfns;
- 	}
- 
- 	/*
-@@ -385,8 +344,8 @@ struct ib_umem_odp *ib_alloc_odp_umem(struct ib_umem_odp *root,
- 
- 	return odp_data;
- 
--out_page_list:
--	vfree(odp_data->page_list);
-+out_pfns:
-+	vfree(odp_data->pfns);
- out_odp_data:
- 	mmdrop(umem->owning_mm);
- 	kfree(odp_data);
-@@ -424,13 +383,11 @@ int ib_umem_odp_get(struct ib_umem_odp *umem_odp, int access)
- 
- 	mutex_init(&umem_odp->umem_mutex);
- 
--	init_completion(&umem_odp->notifier_completion);
--
- 	if (ib_umem_num_pages(umem)) {
--		umem_odp->page_list =
--			vzalloc(array_size(sizeof(*umem_odp->page_list),
-+		umem_odp->pfns =
-+			vzalloc(array_size(sizeof(*umem_odp->pfns),
- 					   ib_umem_num_pages(umem)));
--		if (!umem_odp->page_list)
-+		if (!umem_odp->pfns)
- 			return -ENOMEM;
- 
- 		umem_odp->dma_list =
-@@ -438,7 +395,7 @@ int ib_umem_odp_get(struct ib_umem_odp *umem_odp, int access)
- 					   ib_umem_num_pages(umem)));
- 		if (!umem_odp->dma_list) {
- 			ret_val = -ENOMEM;
--			goto out_page_list;
-+			goto out_pfns;
- 		}
- 	}
- 
-@@ -451,8 +408,8 @@ int ib_umem_odp_get(struct ib_umem_odp *umem_odp, int access)
- 
- out_dma_list:
- 	vfree(umem_odp->dma_list);
--out_page_list:
--	vfree(umem_odp->page_list);
-+out_pfns:
-+	vfree(umem_odp->pfns);
- 	return ret_val;
- }
- 
-@@ -472,296 +429,113 @@ void ib_umem_odp_release(struct ib_umem_odp *umem_odp)
- 	remove_umem_from_per_mm(umem_odp);
- 	put_per_mm(umem_odp);
- 	vfree(umem_odp->dma_list);
--	vfree(umem_odp->page_list);
-+	vfree(umem_odp->pfns);
- }
- 
--/*
-- * Map for DMA and insert a single page into the on-demand paging page tables.
-- *
-- * @umem: the umem to insert the page to.
-- * @page_index: index in the umem to add the page to.
-- * @page: the page struct to map and add.
-- * @access_mask: access permissions needed for this page.
-- * @current_seq: sequence number for synchronization with invalidations.
-- *               the sequence number is taken from
-- *               umem_odp->notifiers_seq.
-- *
-- * The function returns -EFAULT if the DMA mapping operation fails. It returns
-- * -EAGAIN if a concurrent invalidation prevents us from updating the page.
-+/**
-+ * ib_umem_odp_map_dma_pages - Pin and DMA map userspace memory in an ODP MR.
-+ * @umem_odp: the umem to map and pin
-+ * @range: range of virtual address to be mapped to the device
-+ * Returns: -EINVAL some invalid arguments, -EAGAIN need to try again, -ENOENT
-+ *          if process is being terminated, number of pages mapped otherwise.
-  *
-- * The page is released via put_page even if the operation failed. For
-- * on-demand pinning, the page is released whenever it isn't stored in the
-- * umem.
-+ * Map to device a range of virtual address passed in the argument. The DMA
-+ * addresses are in umem_odp->dma_list and the corresponding page informations
-+ * in umem_odp->pfns.
-  */
--static int ib_umem_odp_map_dma_single_page(
--		struct ib_umem_odp *umem_odp,
--		int page_index,
--		struct page *page,
--		u64 access_mask,
--		unsigned long current_seq)
-+long ib_umem_odp_map_dma_pages(struct ib_umem_odp *umem_odp,
-+			       struct hmm_range *range)
- {
-+	struct device *device = umem_odp->umem.context->device->dma_device;
-+	struct ib_ucontext_per_mm *per_mm = umem_odp->per_mm;
- 	struct ib_umem *umem = &umem_odp->umem;
--	struct ib_device *dev = umem->context->device;
--	dma_addr_t dma_addr;
--	int stored_page = 0;
--	int remove_existing_mapping = 0;
--	int ret = 0;
--
--	/*
--	 * Note: we avoid writing if seq is different from the initial seq, to
--	 * handle case of a racing notifier. This check also allows us to bail
--	 * early if we have a notifier running in parallel with us.
--	 */
--	if (ib_umem_mmu_notifier_retry(umem_odp, current_seq)) {
--		ret = -EAGAIN;
--		goto out;
--	}
--	if (!(umem_odp->dma_list[page_index])) {
--		dma_addr = ib_dma_map_page(dev,
--					   page,
--					   0, BIT(umem->page_shift),
--					   DMA_BIDIRECTIONAL);
--		if (ib_dma_mapping_error(dev, dma_addr)) {
--			ret = -EFAULT;
--			goto out;
--		}
--		umem_odp->dma_list[page_index] = dma_addr | access_mask;
--		umem_odp->page_list[page_index] = page;
--		umem->npages++;
--		stored_page = 1;
--	} else if (umem_odp->page_list[page_index] == page) {
--		umem_odp->dma_list[page_index] |= access_mask;
--	} else {
--		pr_err("error: got different pages in IB device and from get_user_pages. IB device page: %p, gup page: %p\n",
--		       umem_odp->page_list[page_index], page);
--		/* Better remove the mapping now, to prevent any further
--		 * damage. */
--		remove_existing_mapping = 1;
--	}
-+	struct mm_struct *mm = per_mm->mm;
-+	unsigned long idx, npages;
-+	long ret;
- 
--out:
--	/* On Demand Paging - avoid pinning the page */
--	if (umem->context->invalidate_range || !stored_page)
--		put_page(page);
--
--	if (remove_existing_mapping && umem->context->invalidate_range) {
--		ib_umem_notifier_start_account(umem_odp);
--		umem->context->invalidate_range(
--			umem_odp,
--			ib_umem_start(umem) + (page_index << umem->page_shift),
--			ib_umem_start(umem) +
--				((page_index + 1) << umem->page_shift));
--		ib_umem_notifier_end_account(umem_odp);
--		ret = -EAGAIN;
--	}
-+	if (mm == NULL)
-+		return -ENOENT;
- 
--	return ret;
--}
-+	/* Only drivers with invalidate support can use this function. */
-+	if (!umem->context->invalidate_range)
-+		return -EINVAL;
- 
--/**
-- * ib_umem_odp_map_dma_pages - Pin and DMA map userspace memory in an ODP MR.
-- *
-- * Pins the range of pages passed in the argument, and maps them to
-- * DMA addresses. The DMA addresses of the mapped pages is updated in
-- * umem_odp->dma_list.
-- *
-- * Returns the number of pages mapped in success, negative error code
-- * for failure.
-- * An -EAGAIN error code is returned when a concurrent mmu notifier prevents
-- * the function from completing its task.
-- * An -ENOENT error code indicates that userspace process is being terminated
-- * and mm was already destroyed.
-- * @umem_odp: the umem to map and pin
-- * @user_virt: the address from which we need to map.
-- * @bcnt: the minimal number of bytes to pin and map. The mapping might be
-- *        bigger due to alignment, and may also be smaller in case of an error
-- *        pinning or mapping a page. The actual pages mapped is returned in
-- *        the return value.
-- * @access_mask: bit mask of the requested access permissions for the given
-- *               range.
-- * @current_seq: the MMU notifiers sequance value for synchronization with
-- *               invalidations. the sequance number is read from
-- *               umem_odp->notifiers_seq before calling this function
-- */
--int ib_umem_odp_map_dma_pages(struct ib_umem_odp *umem_odp, u64 user_virt,
--			      u64 bcnt, u64 access_mask,
--			      unsigned long current_seq)
--{
--	struct ib_umem *umem = &umem_odp->umem;
--	struct task_struct *owning_process  = NULL;
--	struct mm_struct *owning_mm = umem_odp->umem.owning_mm;
--	struct page       **local_page_list = NULL;
--	u64 page_mask, off;
--	int j, k, ret = 0, start_idx, npages = 0, page_shift;
--	unsigned int flags = 0;
--	phys_addr_t p = 0;
--
--	if (access_mask == 0)
-+	/* Sanity checks. */
-+	if (range->default_flags == 0)
- 		return -EINVAL;
- 
--	if (user_virt < ib_umem_start(umem) ||
--	    user_virt + bcnt > ib_umem_end(umem))
--		return -EFAULT;
-+	if (range->start < ib_umem_start(umem) ||
-+	    range->end > ib_umem_end(umem))
-+		return -EINVAL;
- 
--	local_page_list = (struct page **)__get_free_page(GFP_KERNEL);
--	if (!local_page_list)
--		return -ENOMEM;
-+	idx = (range->start - ib_umem_start(umem)) >> umem->page_shift;
-+	range->pfns = &umem_odp->pfns[idx];
-+	range->pfn_shift = ODP_FLAGS_BITS;
-+	range->values = odp_hmm_values;
-+	range->flags = odp_hmm_flags;
- 
--	page_shift = umem->page_shift;
--	page_mask = ~(BIT(page_shift) - 1);
--	off = user_virt & (~page_mask);
--	user_virt = user_virt & page_mask;
--	bcnt += off; /* Charge for the first page offset as well. */
-+	ret = hmm_mirror_mm_down_read(&per_mm->mirror);
-+	if (ret)
-+		return ret;
-+	mutex_lock(&umem_odp->umem_mutex);
-+	ret = hmm_range_dma_map(range, device,
-+		&umem_odp->dma_list[idx], true);
-+	mutex_unlock(&umem_odp->umem_mutex);
-+	npages = ret;
- 
- 	/*
--	 * owning_process is allowed to be NULL, this means somehow the mm is
--	 * existing beyond the lifetime of the originating process.. Presumably
--	 * mmget_not_zero will fail in this case.
-+	 * The mmap_sem have been drop if hmm_vma_fault_and_dma_map() returned
-+	 * with -EAGAIN. In which case we need to retry as -EBUSY but we also
-+	 * need to take the mmap_sem again.
- 	 */
--	owning_process = get_pid_task(umem_odp->per_mm->tgid, PIDTYPE_PID);
--	if (!owning_process || !mmget_not_zero(owning_mm)) {
--		ret = -EINVAL;
--		goto out_put_task;
--	}
--
--	if (access_mask & ODP_WRITE_ALLOWED_BIT)
--		flags |= FOLL_WRITE;
--
--	start_idx = (user_virt - ib_umem_start(umem)) >> page_shift;
--	k = start_idx;
--
--	while (bcnt > 0) {
--		const size_t gup_num_pages = min_t(size_t,
--				(bcnt + BIT(page_shift) - 1) >> page_shift,
--				PAGE_SIZE / sizeof(struct page *));
-+	if (ret != -EAGAIN)
-+		 hmm_mirror_mm_up_read(&per_mm->mirror);
- 
--		down_read(&owning_mm->mmap_sem);
--		/*
--		 * Note: this might result in redundent page getting. We can
--		 * avoid this by checking dma_list to be 0 before calling
--		 * get_user_pages. However, this make the code much more
--		 * complex (and doesn't gain us much performance in most use
--		 * cases).
--		 */
--		npages = get_user_pages_remote(owning_process, owning_mm,
--				user_virt, gup_num_pages,
--				flags, local_page_list, NULL, NULL);
--		up_read(&owning_mm->mmap_sem);
--
--		if (npages < 0) {
--			if (npages != -EAGAIN)
--				pr_warn("fail to get %zu user pages with error %d\n", gup_num_pages, npages);
--			else
--				pr_debug("fail to get %zu user pages with error %d\n", gup_num_pages, npages);
--			break;
--		}
--
--		bcnt -= min_t(size_t, npages << PAGE_SHIFT, bcnt);
--		mutex_lock(&umem_odp->umem_mutex);
--		for (j = 0; j < npages; j++, user_virt += PAGE_SIZE) {
--			if (user_virt & ~page_mask) {
--				p += PAGE_SIZE;
--				if (page_to_phys(local_page_list[j]) != p) {
--					ret = -EFAULT;
--					break;
--				}
--				put_page(local_page_list[j]);
--				continue;
--			}
--
--			ret = ib_umem_odp_map_dma_single_page(
--					umem_odp, k, local_page_list[j],
--					access_mask, current_seq);
--			if (ret < 0) {
--				if (ret != -EAGAIN)
--					pr_warn("ib_umem_odp_map_dma_single_page failed with error %d\n", ret);
--				else
--					pr_debug("ib_umem_odp_map_dma_single_page failed with error %d\n", ret);
--				break;
--			}
--
--			p = page_to_phys(local_page_list[j]);
--			k++;
--		}
--		mutex_unlock(&umem_odp->umem_mutex);
--
--		if (ret < 0) {
--			/*
--			 * Release pages, remembering that the first page
--			 * to hit an error was already released by
--			 * ib_umem_odp_map_dma_single_page().
--			 */
--			if (npages - (j + 1) > 0)
--				release_pages(&local_page_list[j+1],
--					      npages - (j + 1));
--			break;
--		}
-+	if (ret <= 0) {
-+		/* Convert -EBUSY to -EAGAIN and 0 to -EAGAIN */
-+		ret = ret == -EBUSY ? -EAGAIN : ret;
-+		return ret ? ret : -EAGAIN;
- 	}
- 
--	if (ret >= 0) {
--		if (npages < 0 && k == start_idx)
--			ret = npages;
--		else
--			ret = k - start_idx;
--	}
--
--	mmput(owning_mm);
--out_put_task:
--	if (owning_process)
--		put_task_struct(owning_process);
--	free_page((unsigned long)local_page_list);
--	return ret;
-+	umem->npages += npages;
-+	return npages;
- }
- EXPORT_SYMBOL(ib_umem_odp_map_dma_pages);
- 
--void ib_umem_odp_unmap_dma_pages(struct ib_umem_odp *umem_odp, u64 virt,
--				 u64 bound)
-+void ib_umem_odp_unmap_dma_pages(struct ib_umem_odp *umem_odp,
-+				 u64 virt, u64 bound)
- {
-+	struct device *device = umem_odp->umem.context->device->dma_device;
- 	struct ib_umem *umem = &umem_odp->umem;
--	int idx;
--	u64 addr;
--	struct ib_device *dev = umem->context->device;
-+	unsigned long idx, page_mask;
-+	struct hmm_range range;
-+	long ret;
-+
-+	if (!umem->npages)
-+		return;
-+
-+	bound = ALIGN(bound, 1UL << umem->page_shift);
-+	page_mask = ~(BIT(umem->page_shift) - 1);
-+	virt &= page_mask;
- 
- 	virt  = max_t(u64, virt,  ib_umem_start(umem));
- 	bound = min_t(u64, bound, ib_umem_end(umem));
--	/* Note that during the run of this function, the
--	 * notifiers_count of the MR is > 0, preventing any racing
--	 * faults from completion. We might be racing with other
--	 * invalidations, so we must make sure we free each page only
--	 * once. */
-+
-+	idx = ((unsigned long)virt - ib_umem_start(umem)) >> PAGE_SHIFT;
-+
-+	range.page_shift = umem->page_shift;
-+	range.pfns = &umem_odp->pfns[idx];
-+	range.pfn_shift = ODP_FLAGS_BITS;
-+	range.values = odp_hmm_values;
-+	range.flags = odp_hmm_flags;
-+	range.start = virt;
-+	range.end = bound;
-+
- 	mutex_lock(&umem_odp->umem_mutex);
--	for (addr = virt; addr < bound; addr += BIT(umem->page_shift)) {
--		idx = (addr - ib_umem_start(umem)) >> umem->page_shift;
--		if (umem_odp->page_list[idx]) {
--			struct page *page = umem_odp->page_list[idx];
--			dma_addr_t dma = umem_odp->dma_list[idx];
--			dma_addr_t dma_addr = dma & ODP_DMA_ADDR_MASK;
--
--			WARN_ON(!dma_addr);
--
--			ib_dma_unmap_page(dev, dma_addr, PAGE_SIZE,
--					  DMA_BIDIRECTIONAL);
--			if (dma & ODP_WRITE_ALLOWED_BIT) {
--				struct page *head_page = compound_head(page);
--				/*
--				 * set_page_dirty prefers being called with
--				 * the page lock. However, MMU notifiers are
--				 * called sometimes with and sometimes without
--				 * the lock. We rely on the umem_mutex instead
--				 * to prevent other mmu notifiers from
--				 * continuing and allowing the page mapping to
--				 * be removed.
--				 */
--				set_page_dirty(head_page);
--			}
--			/* on demand pinning support */
--			if (!umem->context->invalidate_range)
--				put_page(page);
--			umem_odp->page_list[idx] = NULL;
--			umem_odp->dma_list[idx] = 0;
--			umem->npages--;
--		}
--	}
-+	ret = hmm_range_dma_unmap(&range, NULL, device,
-+		&umem_odp->dma_list[idx], true);
-+	if (ret > 0)
-+		umem->npages -= ret;
- 	mutex_unlock(&umem_odp->umem_mutex);
- }
- EXPORT_SYMBOL(ib_umem_odp_unmap_dma_pages);
-diff --git a/drivers/infiniband/hw/mlx5/mem.c b/drivers/infiniband/hw/mlx5/mem.c
-index 9f90be296ee0..e2481509b913 100644
---- a/drivers/infiniband/hw/mlx5/mem.c
-+++ b/drivers/infiniband/hw/mlx5/mem.c
-@@ -111,16 +111,16 @@ void mlx5_ib_cont_pages(struct ib_umem *umem, u64 addr,
- 	*count = i;
- }
- 
--static u64 umem_dma_to_mtt(dma_addr_t umem_dma)
-+static u64 umem_dma_to_mtt(struct ib_umem_odp *odp, size_t idx)
- {
--	u64 mtt_entry = umem_dma & ODP_DMA_ADDR_MASK;
-+	u64 mtt_entry = odp->dma_list[idx];
- 
--	if (umem_dma & ODP_READ_ALLOWED_BIT)
-+	if (odp->pfns[idx] & ODP_READ_BIT)
- 		mtt_entry |= MLX5_IB_MTT_READ;
--	if (umem_dma & ODP_WRITE_ALLOWED_BIT)
-+	if (odp->pfns[idx] & ODP_WRITE_BIT)
- 		mtt_entry |= MLX5_IB_MTT_WRITE;
- 
--	return mtt_entry;
-+	return cpu_to_be64(mtt_entry);
- }
- 
- /*
-@@ -151,15 +151,13 @@ void __mlx5_ib_populate_pas(struct mlx5_ib_dev *dev, struct ib_umem *umem,
- 	int entry;
- 
- 	if (umem->is_odp) {
-+		struct ib_umem_odp *odp = to_ib_umem_odp(umem);
-+
- 		WARN_ON(shift != 0);
- 		WARN_ON(access_flags != (MLX5_IB_MTT_READ | MLX5_IB_MTT_WRITE));
- 
--		for (i = 0; i < num_pages; ++i) {
--			dma_addr_t pa =
--				to_ib_umem_odp(umem)->dma_list[offset + i];
--
--			pas[i] = cpu_to_be64(umem_dma_to_mtt(pa));
--		}
-+		for (i = 0; i < num_pages; ++i)
-+			pas[i] = umem_dma_to_mtt(odp, offset + i);
- 		return;
- 	}
- 
-diff --git a/drivers/infiniband/hw/mlx5/mr.c b/drivers/infiniband/hw/mlx5/mr.c
-index c85f00255884..a683386fb127 100644
---- a/drivers/infiniband/hw/mlx5/mr.c
-+++ b/drivers/infiniband/hw/mlx5/mr.c
-@@ -1591,7 +1591,7 @@ static void dereg_mr(struct mlx5_ib_dev *dev, struct mlx5_ib_mr *mr)
- 		/* Wait for all running page-fault handlers to finish. */
- 		synchronize_srcu(&dev->mr_srcu);
- 		/* Destroy all page mappings */
--		if (umem_odp->page_list)
-+		if (umem_odp->pfns)
- 			mlx5_ib_invalidate_range(umem_odp, ib_umem_start(umem),
- 						 ib_umem_end(umem));
- 		else
-diff --git a/drivers/infiniband/hw/mlx5/odp.c b/drivers/infiniband/hw/mlx5/odp.c
-index c20bfc41ecf1..8983225c6bdb 100644
---- a/drivers/infiniband/hw/mlx5/odp.c
-+++ b/drivers/infiniband/hw/mlx5/odp.c
-@@ -257,8 +257,7 @@ void mlx5_ib_invalidate_range(struct ib_umem_odp *umem_odp, unsigned long start,
- 		 * estimate the cost of another UMR vs. the cost of bigger
- 		 * UMR.
- 		 */
--		if (umem_odp->dma_list[idx] &
--		    (ODP_READ_ALLOWED_BIT | ODP_WRITE_ALLOWED_BIT)) {
-+		if (umem_odp->pfns[idx] & ODP_READ_BIT) {
- 			if (!in_block) {
- 				blk_start_idx = idx;
- 				in_block = 1;
-@@ -580,17 +579,18 @@ static int pagefault_mr(struct mlx5_ib_dev *dev, struct mlx5_ib_mr *mr,
- 			u64 io_virt, size_t bcnt, u32 *bytes_mapped,
- 			u32 flags)
- {
--	int npages = 0, current_seq, page_shift, ret, np;
--	bool implicit = false;
- 	struct ib_umem_odp *odp_mr = to_ib_umem_odp(mr->umem);
- 	bool downgrade = flags & MLX5_PF_FLAGS_DOWNGRADE;
- 	bool prefetch = flags & MLX5_PF_FLAGS_PREFETCH;
--	u64 access_mask = ODP_READ_ALLOWED_BIT;
-+	unsigned long npages = 0, page_shift, np, off;
- 	u64 start_idx, page_mask;
- 	struct ib_umem_odp *odp;
--	size_t size;
-+	struct hmm_range range;
-+	bool implicit = false;
-+	size_t size, fault_size;
-+	long ret;
- 
--	if (!odp_mr->page_list) {
-+	if (!odp_mr->pfns) {
- 		odp = implicit_mr_get_data(mr, io_virt, bcnt);
- 
- 		if (IS_ERR(odp))
-@@ -603,11 +603,30 @@ static int pagefault_mr(struct mlx5_ib_dev *dev, struct mlx5_ib_mr *mr,
- 
- next_mr:
- 	size = min_t(size_t, bcnt, ib_umem_end(&odp->umem) - io_virt);
--
- 	page_shift = mr->umem->page_shift;
- 	page_mask = ~(BIT(page_shift) - 1);
-+	/*
-+	 * We need to align io_virt on page size so off is the extra bytes we
-+	 * will be faulting and fault_size is the page aligned size we are
-+	 * faulting.
-+	 */
-+	io_virt = io_virt & page_mask;
-+	off = (io_virt & (~page_mask));
-+	fault_size = ALIGN(size + off, 1UL << page_shift);
-+
-+	if (io_virt < ib_umem_start(&odp->umem))
-+		return -EINVAL;
-+
- 	start_idx = (io_virt - (mr->mmkey.iova & page_mask)) >> page_shift;
- 
-+	if (odp_mr->per_mm == NULL || odp_mr->per_mm->mm == NULL)
-+		return -ENOENT;
-+
-+	ret = hmm_range_register(&range, odp_mr->per_mm->mm,
-+				 io_virt, io_virt + fault_size, page_shift);
-+	if (ret)
-+		return ret;
-+
- 	if (prefetch && !downgrade && !mr->umem->writable) {
- 		/* prefetch with write-access must
- 		 * be supported by the MR
-@@ -616,58 +635,55 @@ static int pagefault_mr(struct mlx5_ib_dev *dev, struct mlx5_ib_mr *mr,
- 		goto out;
- 	}
- 
-+	range.default_flags = ODP_READ_BIT;
- 	if (mr->umem->writable && !downgrade)
--		access_mask |= ODP_WRITE_ALLOWED_BIT;
--
--	current_seq = READ_ONCE(odp->notifiers_seq);
--	/*
--	 * Ensure the sequence number is valid for some time before we call
--	 * gup.
--	 */
--	smp_rmb();
--
--	ret = ib_umem_odp_map_dma_pages(to_ib_umem_odp(mr->umem), io_virt, size,
--					access_mask, current_seq);
-+		range.default_flags |= ODP_WRITE_BIT;
- 
-+	ret = ib_umem_odp_map_dma_pages(to_ib_umem_odp(mr->umem), &range);
- 	if (ret < 0)
--		goto out;
-+		goto again;
- 
- 	np = ret;
- 
- 	mutex_lock(&odp->umem_mutex);
--	if (!ib_umem_mmu_notifier_retry(to_ib_umem_odp(mr->umem),
--					current_seq)) {
-+	if (hmm_range_valid(&range)) {
- 		/*
- 		 * No need to check whether the MTTs really belong to
--		 * this MR, since ib_umem_odp_map_dma_pages already
-+		 * this MR, since ib_umem_odp_map_dma_pages() already
- 		 * checks this.
- 		 */
- 		ret = mlx5_ib_update_xlt(mr, start_idx, np,
- 					 page_shift, MLX5_IB_UPD_XLT_ATOMIC);
--	} else {
-+	} else
- 		ret = -EAGAIN;
--	}
- 	mutex_unlock(&odp->umem_mutex);
- 
- 	if (ret < 0) {
--		if (ret != -EAGAIN)
-+		if (ret != -EAGAIN) {
- 			mlx5_ib_err(dev, "Failed to update mkey page tables\n");
--		goto out;
-+			goto out;
-+		}
-+		goto again;
- 	}
- 
- 	if (bytes_mapped) {
--		u32 new_mappings = (np << page_shift) -
--			(io_virt - round_down(io_virt, 1 << page_shift));
-+		long new_mappings = (np << page_shift) - off;
-+		new_mappings = new_mappings < 0 ? 0 : new_mappings;
- 		*bytes_mapped += min_t(u32, new_mappings, size);
- 	}
- 
- 	npages += np << (page_shift - PAGE_SHIFT);
-+	hmm_range_unregister(&range);
- 	bcnt -= size;
- 
--	if (unlikely(bcnt)) {
-+	if (unlikely(bcnt > 0)) {
- 		struct ib_umem_odp *next;
- 
--		io_virt += size;
-+		/*
-+		 * Next virtual address is after the number of bytes we faulted
-+		 * in this step.
-+		 */
-+		io_virt += fault_size;
- 		next = odp_next(odp);
- 		if (unlikely(!next || next->umem.address != io_virt)) {
- 			mlx5_ib_dbg(dev, "next implicit leaf removed at 0x%llx. got %p\n",
-@@ -681,24 +697,18 @@ static int pagefault_mr(struct mlx5_ib_dev *dev, struct mlx5_ib_mr *mr,
- 
- 	return npages;
- 
--out:
--	if (ret == -EAGAIN) {
--		if (implicit || !odp->dying) {
--			unsigned long timeout =
--				msecs_to_jiffies(MMU_NOTIFIER_TIMEOUT);
--
--			if (!wait_for_completion_timeout(
--					&odp->notifier_completion,
--					timeout)) {
--				mlx5_ib_warn(dev, "timeout waiting for mmu notifier. seq %d against %d. notifiers_count=%d\n",
--					     current_seq, odp->notifiers_seq, odp->notifiers_count);
--			}
--		} else {
--			/* The MR is being killed, kill the QP as well. */
--			ret = -EFAULT;
--		}
--	}
-+again:
-+	if (ret != -EAGAIN)
-+		goto out;
-+
-+	/* Check if the MR is being killed, kill the QP as well. */
-+	if (!implicit || odp->dying)
-+		ret = -EFAULT;
-+	else if (!hmm_range_wait_until_valid(&range, MMU_NOTIFIER_TIMEOUT))
-+		mlx5_ib_warn(dev, "timeout waiting for mmu notifier.\n");
- 
-+out:
-+	hmm_range_unregister(&range);
- 	return ret;
- }
- 
-diff --git a/include/rdma/ib_umem_odp.h b/include/rdma/ib_umem_odp.h
-index dadc96dea39c..ae34ad019dd7 100644
---- a/include/rdma/ib_umem_odp.h
-+++ b/include/rdma/ib_umem_odp.h
-@@ -36,6 +36,7 @@
- #include <rdma/ib_umem.h>
- #include <rdma/ib_verbs.h>
- #include <linux/interval_tree.h>
-+#include <linux/hmm.h>
- 
- struct umem_odp_node {
- 	u64 __subtree_last;
-@@ -47,11 +48,11 @@ struct ib_umem_odp {
- 	struct ib_ucontext_per_mm *per_mm;
- 
- 	/*
--	 * An array of the pages included in the on-demand paging umem.
--	 * Indices of pages that are currently not mapped into the device will
--	 * contain NULL.
-+	 * An array of the pages included in the on-demand paging umem. Indices
-+	 * of pages that are currently not mapped into the device will contain
-+	 * 0.
- 	 */
--	struct page		**page_list;
-+	uint64_t *pfns;
- 	/*
- 	 * An array of the same size as page_list, with DMA addresses mapped
- 	 * for pages the pages in page_list. The lower two bits designate
-@@ -67,13 +68,9 @@ struct ib_umem_odp {
- 	struct mutex		umem_mutex;
- 	void			*private; /* for the HW driver to use. */
- 
--	int notifiers_seq;
--	int notifiers_count;
--
- 	/* Tree tracking */
- 	struct umem_odp_node	interval_tree;
- 
--	struct completion	notifier_completion;
- 	int			dying;
- 	struct work_struct	work;
- };
-@@ -108,11 +105,10 @@ struct ib_ucontext_per_mm {
- 	/* Protects umem_tree */
- 	struct rw_semaphore umem_rwsem;
- 
--	struct mmu_notifier mn;
-+	struct hmm_mirror mirror;
- 	unsigned int odp_mrs_count;
- 
- 	struct list_head ucontext_list;
--	struct rcu_head rcu;
- };
- 
- int ib_umem_odp_get(struct ib_umem_odp *umem_odp, int access);
-@@ -120,9 +116,18 @@ struct ib_umem_odp *ib_alloc_odp_umem(struct ib_umem_odp *root_umem,
- 				      unsigned long addr, size_t size);
- void ib_umem_odp_release(struct ib_umem_odp *umem_odp);
- 
--int ib_umem_odp_map_dma_pages(struct ib_umem_odp *umem_odp, u64 start_offset,
--			      u64 bcnt, u64 access_mask,
--			      unsigned long current_seq);
-+#define ODP_READ_BIT	(1<<0ULL)
-+#define ODP_WRITE_BIT	(1<<1ULL)
-+/*
-+ * The device bit is not use by ODP but is there to full-fill HMM API which
-+ * also support device with device memory (like GPU). So from ODP/RDMA POV
-+ * this can be ignored.
-+ */
-+#define ODP_DEVICE_BIT	(1<<2ULL)
-+#define ODP_FLAGS_BITS	3
-+
-+long ib_umem_odp_map_dma_pages(struct ib_umem_odp *umem_odp,
-+			       struct hmm_range *range);
- 
- void ib_umem_odp_unmap_dma_pages(struct ib_umem_odp *umem_odp, u64 start_offset,
- 				 u64 bound);
-@@ -145,23 +150,6 @@ int rbt_ib_umem_for_each_in_range(struct rb_root_cached *root,
- struct ib_umem_odp *rbt_ib_umem_lookup(struct rb_root_cached *root,
- 				       u64 addr, u64 length);
- 
--static inline int ib_umem_mmu_notifier_retry(struct ib_umem_odp *umem_odp,
--					     unsigned long mmu_seq)
--{
--	/*
--	 * This code is strongly based on the KVM code from
--	 * mmu_notifier_retry. Should be called with
--	 * the relevant locks taken (umem_odp->umem_mutex
--	 * and the ucontext umem_mutex semaphore locked for read).
--	 */
--
--	if (unlikely(umem_odp->notifiers_count))
--		return 1;
--	if (umem_odp->notifiers_seq != mmu_seq)
--		return 1;
--	return 0;
--}
--
- #else /* CONFIG_INFINIBAND_ON_DEMAND_PAGING */
- 
- static inline int ib_umem_odp_get(struct ib_umem_odp *umem_odp, int access)
--- 
-2.17.2
+> 
+> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> ---
+>  drivers/of/Makefile      |   2 +-
+>  drivers/of/base-test.c   | 214 ++++++++++++++++++++++++
+>  drivers/of/test-common.c | 175 ++++++++++++++++++++
+>  drivers/of/test-common.h |  16 ++
+>  drivers/of/unittest.c    | 345 +--------------------------------------
+>  5 files changed, 407 insertions(+), 345 deletions(-)
+>  create mode 100644 drivers/of/base-test.c
+>  create mode 100644 drivers/of/test-common.c
+>  create mode 100644 drivers/of/test-common.h
+> 
+> diff --git a/drivers/of/Makefile b/drivers/of/Makefile
+> index 663a4af0cccd5..4a4bd527d586c 100644
+> --- a/drivers/of/Makefile
+> +++ b/drivers/of/Makefile
+> @@ -8,7 +8,7 @@ obj-$(CONFIG_OF_PROMTREE) += pdt.o
+>  obj-$(CONFIG_OF_ADDRESS)  += address.o
+>  obj-$(CONFIG_OF_IRQ)    += irq.o
+>  obj-$(CONFIG_OF_NET)	+= of_net.o
+> -obj-$(CONFIG_OF_UNITTEST) += unittest.o
+> +obj-$(CONFIG_OF_UNITTEST) += unittest.o base-test.o test-common.o
+>  obj-$(CONFIG_OF_MDIO)	+= of_mdio.o
+>  obj-$(CONFIG_OF_RESERVED_MEM) += of_reserved_mem.o
+>  obj-$(CONFIG_OF_RESOLVE)  += resolver.o
+> diff --git a/drivers/of/base-test.c b/drivers/of/base-test.c
+> new file mode 100644
+> index 0000000000000..3d3f4f1b74800
+> --- /dev/null
+> +++ b/drivers/of/base-test.c
+> @@ -0,0 +1,214 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Unit tests for functions defined in base.c.
+> + */
+> +#include <linux/of.h>
+> +
+> +#include <kunit/test.h>
+> +
+> +#include "test-common.h"
+> +
+> +static void of_unittest_find_node_by_name(struct kunit *test)
+> +{
+> +	struct device_node *np;
+> +	const char *options, *name;
+> +
+> +	np = of_find_node_by_path("/testcase-data");
+> +	name = kasprintf(GFP_KERNEL, "%pOF", np);
+> +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, np);
+> +	KUNIT_EXPECT_STREQ_MSG(test, "/testcase-data", name,
+> +			       "find /testcase-data failed\n");
+> +	of_node_put(np);
+> +	kfree(name);
+> +
+> +	/* Test if trailing '/' works */
+> +	KUNIT_EXPECT_EQ_MSG(test, of_find_node_by_path("/testcase-data/"), NULL,
+> +			    "trailing '/' on /testcase-data/ should fail\n");
+> +
+> +	np = of_find_node_by_path("/testcase-data/phandle-tests/consumer-a");
+> +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, np);
+> +	name = kasprintf(GFP_KERNEL, "%pOF", np);
+> +	KUNIT_EXPECT_STREQ_MSG(
+> +		test, "/testcase-data/phandle-tests/consumer-a", name,
+> +		"find /testcase-data/phandle-tests/consumer-a failed\n");
+> +	of_node_put(np);
+> +	kfree(name);
+> +
+> +	np = of_find_node_by_path("testcase-alias");
+> +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, np);
+> +	name = kasprintf(GFP_KERNEL, "%pOF", np);
+> +	KUNIT_EXPECT_STREQ_MSG(test, "/testcase-data", name,
+> +			       "find testcase-alias failed\n");
+> +	of_node_put(np);
+> +	kfree(name);
+> +
+> +	/* Test if trailing '/' works on aliases */
+> +	KUNIT_EXPECT_EQ_MSG(test, of_find_node_by_path("testcase-alias/"), NULL,
+> +			    "trailing '/' on testcase-alias/ should fail\n");
+> +
+> +	np = of_find_node_by_path("testcase-alias/phandle-tests/consumer-a");
+> +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, np);
+> +	name = kasprintf(GFP_KERNEL, "%pOF", np);
+> +	KUNIT_EXPECT_STREQ_MSG(
+> +		test, "/testcase-data/phandle-tests/consumer-a", name,
+> +		"find testcase-alias/phandle-tests/consumer-a failed\n");
+> +	of_node_put(np);
+> +	kfree(name);
+> +
+> +	KUNIT_EXPECT_EQ_MSG(
+> +		test,
+> +		np = of_find_node_by_path("/testcase-data/missing-path"), NULL,
+> +		"non-existent path returned node %pOF\n", np);
+> +	of_node_put(np);
+> +
+> +	KUNIT_EXPECT_EQ_MSG(
+> +		test, np = of_find_node_by_path("missing-alias"), NULL,
+> +		"non-existent alias returned node %pOF\n", np);
+> +	of_node_put(np);
+> +
+> +	KUNIT_EXPECT_EQ_MSG(
+> +		test,
+> +		np = of_find_node_by_path("testcase-alias/missing-path"), NULL,
+> +		"non-existent alias with relative path returned node %pOF\n",
+> +		np);
+> +	of_node_put(np);
+> +
+> +	np = of_find_node_opts_by_path("/testcase-data:testoption", &options);
+> +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, np);
+> +	KUNIT_EXPECT_STREQ_MSG(test, "testoption", options,
+> +			       "option path test failed\n");
+> +	of_node_put(np);
+> +
+> +	np = of_find_node_opts_by_path("/testcase-data:test/option", &options);
+> +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, np);
+> +	KUNIT_EXPECT_STREQ_MSG(test, "test/option", options,
+> +			       "option path test, subcase #1 failed\n");
+> +	of_node_put(np);
+> +
+> +	np = of_find_node_opts_by_path("/testcase-data/testcase-device1:test/option", &options);
+> +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, np);
+> +	KUNIT_EXPECT_STREQ_MSG(test, "test/option", options,
+> +			       "option path test, subcase #2 failed\n");
+> +	of_node_put(np);
+> +
+> +	np = of_find_node_opts_by_path("/testcase-data:testoption", NULL);
+> +	KUNIT_EXPECT_NOT_ERR_OR_NULL_MSG(test, np,
+> +					 "NULL option path test failed\n");
+> +	of_node_put(np);
+> +
+> +	np = of_find_node_opts_by_path("testcase-alias:testaliasoption",
+> +				       &options);
+> +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, np);
+> +	KUNIT_EXPECT_STREQ_MSG(test, "testaliasoption", options,
+> +			       "option alias path test failed\n");
+> +	of_node_put(np);
+> +
+> +	np = of_find_node_opts_by_path("testcase-alias:test/alias/option",
+> +				       &options);
+> +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, np);
+> +	KUNIT_EXPECT_STREQ_MSG(test, "test/alias/option", options,
+> +			       "option alias path test, subcase #1 failed\n");
+> +	of_node_put(np);
+> +
+> +	np = of_find_node_opts_by_path("testcase-alias:testaliasoption", NULL);
+> +	KUNIT_EXPECT_NOT_ERR_OR_NULL_MSG(
+> +			test, np, "NULL option alias path test failed\n");
+> +	of_node_put(np);
+> +
+> +	options = "testoption";
+> +	np = of_find_node_opts_by_path("testcase-alias", &options);
+> +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, np);
+> +	KUNIT_EXPECT_EQ_MSG(test, options, NULL,
+> +			    "option clearing test failed\n");
+> +	of_node_put(np);
+> +
+> +	options = "testoption";
+> +	np = of_find_node_opts_by_path("/", &options);
+> +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, np);
+> +	KUNIT_EXPECT_EQ_MSG(test, options, NULL,
+> +			    "option clearing root node test failed\n");
+> +	of_node_put(np);
+> +}
+> +
+> +static void of_unittest_dynamic(struct kunit *test)
+> +{
+> +	struct device_node *np;
+> +	struct property *prop;
+> +
+> +	np = of_find_node_by_path("/testcase-data");
+> +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, np);
+> +
+> +	/* Array of 4 properties for the purpose of testing */
+> +	prop = kcalloc(4, sizeof(*prop), GFP_KERNEL);
+> +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, prop);
+> +
+> +	/* Add a new property - should pass*/
+> +	prop->name = "new-property";
+> +	prop->value = "new-property-data";
+> +	prop->length = strlen(prop->value) + 1;
+> +	KUNIT_EXPECT_EQ_MSG(test, of_add_property(np, prop), 0,
+> +			    "Adding a new property failed\n");
+> +
+> +	/* Try to add an existing property - should fail */
+> +	prop++;
+> +	prop->name = "new-property";
+> +	prop->value = "new-property-data-should-fail";
+> +	prop->length = strlen(prop->value) + 1;
+> +	KUNIT_EXPECT_NE_MSG(test, of_add_property(np, prop), 0,
+> +			    "Adding an existing property should have failed\n");
+> +
+> +	/* Try to modify an existing property - should pass */
+> +	prop->value = "modify-property-data-should-pass";
+> +	prop->length = strlen(prop->value) + 1;
+> +	KUNIT_EXPECT_EQ_MSG(
+> +		test, of_update_property(np, prop), 0,
+> +		"Updating an existing property should have passed\n");
+> +
+> +	/* Try to modify non-existent property - should pass*/
+> +	prop++;
+> +	prop->name = "modify-property";
+> +	prop->value = "modify-missing-property-data-should-pass";
+> +	prop->length = strlen(prop->value) + 1;
+> +	KUNIT_EXPECT_EQ_MSG(test, of_update_property(np, prop), 0,
+> +			    "Updating a missing property should have passed\n");
+> +
+> +	/* Remove property - should pass */
+> +	KUNIT_EXPECT_EQ_MSG(test, of_remove_property(np, prop), 0,
+> +			    "Removing a property should have passed\n");
+> +
+> +	/* Adding very large property - should pass */
+> +	prop++;
+> +	prop->name = "large-property-PAGE_SIZEx8";
+> +	prop->length = PAGE_SIZE * 8;
+> +	prop->value = kzalloc(prop->length, GFP_KERNEL);
+> +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, prop->value);
+> +	KUNIT_EXPECT_EQ_MSG(test, of_add_property(np, prop), 0,
+> +			    "Adding a large property should have passed\n");
+> +}
+> +
+> +static int of_test_init(struct kunit *test)
+> +{
+> +	/* adding data for unittest */
+> +	KUNIT_ASSERT_EQ(test, 0, unittest_data_add());
+> +
+> +	if (!of_aliases)
+> +		of_aliases = of_find_node_by_path("/aliases");
+> +
+> +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, of_find_node_by_path(
+> +			"/testcase-data/phandle-tests/consumer-a"));
+> +
+> +	return 0;
+> +}
+> +
+> +static struct kunit_case of_test_cases[] = {
+> +	KUNIT_CASE(of_unittest_find_node_by_name),
+> +	KUNIT_CASE(of_unittest_dynamic),
+> +	{},
+> +};
+> +
+> +static struct kunit_module of_test_module = {
+> +	.name = "of-base-test",
+> +	.init = of_test_init,
+> +	.test_cases = of_test_cases,
+> +};
+> +module_test(of_test_module);
+> diff --git a/drivers/of/test-common.c b/drivers/of/test-common.c
+> new file mode 100644
+> index 0000000000000..4c9a5f3b82f7d
+> --- /dev/null
+> +++ b/drivers/of/test-common.c
+> @@ -0,0 +1,175 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Common code to be used by unit tests.
+> + */
+> +#include "test-common.h"
+> +
+> +#include <linux/of_fdt.h>
+> +#include <linux/slab.h>
+> +
+> +#include "of_private.h"
+> +
+> +/**
+> + *	update_node_properties - adds the properties
+> + *	of np into dup node (present in live tree) and
+> + *	updates parent of children of np to dup.
+> + *
+> + *	@np:	node whose properties are being added to the live tree
+> + *	@dup:	node present in live tree to be updated
+> + */
+> +static void update_node_properties(struct device_node *np,
+> +					struct device_node *dup)
+> +{
+> +	struct property *prop;
+> +	struct property *save_next;
+> +	struct device_node *child;
+> +	int ret;
+> +
+> +	for_each_child_of_node(np, child)
+> +		child->parent = dup;
+> +
+> +	/*
+> +	 * "unittest internal error: unable to add testdata property"
+> +	 *
+> +	 *    If this message reports a property in node '/__symbols__' then
+> +	 *    the respective unittest overlay contains a label that has the
+> +	 *    same name as a label in the live devicetree.  The label will
+> +	 *    be in the live devicetree only if the devicetree source was
+> +	 *    compiled with the '-@' option.  If you encounter this error,
+> +	 *    please consider renaming __all__ of the labels in the unittest
+> +	 *    overlay dts files with an odd prefix that is unlikely to be
+> +	 *    used in a real devicetree.
+> +	 */
+> +
+> +	/*
+> +	 * open code for_each_property_of_node() because of_add_property()
+> +	 * sets prop->next to NULL
+> +	 */
+> +	for (prop = np->properties; prop != NULL; prop = save_next) {
+> +		save_next = prop->next;
+> +		ret = of_add_property(dup, prop);
+> +		if (ret)
+> +			pr_err("unittest internal error: unable to add testdata property %pOF/%s",
+> +			       np, prop->name);
+> +	}
+> +}
+> +
+> +/**
+> + *	attach_node_and_children - attaches nodes
+> + *	and its children to live tree
+> + *
+> + *	@np:	Node to attach to live tree
+> + */
+> +static void attach_node_and_children(struct device_node *np)
+> +{
+> +	struct device_node *next, *dup, *child;
+> +	unsigned long flags;
+> +	const char *full_name;
+> +
+> +	full_name = kasprintf(GFP_KERNEL, "%pOF", np);
+> +
+> +	if (!strcmp(full_name, "/__local_fixups__") ||
+> +	    !strcmp(full_name, "/__fixups__"))
+> +		return;
+> +
+> +	dup = of_find_node_by_path(full_name);
+> +	kfree(full_name);
+> +	if (dup) {
+> +		update_node_properties(np, dup);
+> +		return;
+> +	}
+> +
+> +	child = np->child;
+> +	np->child = NULL;
+> +
+> +	mutex_lock(&of_mutex);
+> +	raw_spin_lock_irqsave(&devtree_lock, flags);
+> +	np->sibling = np->parent->child;
+> +	np->parent->child = np;
+> +	of_node_clear_flag(np, OF_DETACHED);
+> +	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+> +
+> +	__of_attach_node_sysfs(np);
+> +	mutex_unlock(&of_mutex);
+> +
+> +	while (child) {
+> +		next = child->sibling;
+> +		attach_node_and_children(child);
+> +		child = next;
+> +	}
+> +}
+> +
+> +/**
+> + *	unittest_data_add - Reads, copies data from
+> + *	linked tree and attaches it to the live tree
+> + */
+> +int unittest_data_add(void)
+> +{
+> +	void *unittest_data;
+> +	struct device_node *unittest_data_node, *np;
+> +	/*
+> +	 * __dtb_testcases_begin[] and __dtb_testcases_end[] are magically
+> +	 * created by cmd_dt_S_dtb in scripts/Makefile.lib
+> +	 */
+> +	extern uint8_t __dtb_testcases_begin[];
+> +	extern uint8_t __dtb_testcases_end[];
+> +	const int size = __dtb_testcases_end - __dtb_testcases_begin;
+> +	int rc;
+> +
+> +	if (!size) {
+> +		pr_warn("%s: No testcase data to attach; not running tests\n",
+> +			__func__);
+> +		return -ENODATA;
+> +	}
+> +
+> +	/* creating copy */
+> +	unittest_data = kmemdup(__dtb_testcases_begin, size, GFP_KERNEL);
+> +
+> +	if (!unittest_data) {
+> +		pr_warn("%s: Failed to allocate memory for unittest_data; "
+> +			"not running tests\n", __func__);
+> +		return -ENOMEM;
+> +	}
+> +	of_fdt_unflatten_tree(unittest_data, NULL, &unittest_data_node);
+> +	if (!unittest_data_node) {
+> +		pr_warn("%s: No tree to attach; not running tests\n", __func__);
+> +		return -ENODATA;
+> +	}
+> +
+> +	/*
+> +	 * This lock normally encloses of_resolve_phandles()
+> +	 */
+> +	of_overlay_mutex_lock();
+> +
+> +	rc = of_resolve_phandles(unittest_data_node);
+> +	if (rc) {
+> +		pr_err("%s: Failed to resolve phandles (rc=%i)\n", __func__, rc);
+> +		of_overlay_mutex_unlock();
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (!of_root) {
+> +		of_root = unittest_data_node;
+> +		for_each_of_allnodes(np)
+> +			__of_attach_node_sysfs(np);
+> +		of_aliases = of_find_node_by_path("/aliases");
+> +		of_chosen = of_find_node_by_path("/chosen");
+> +		of_overlay_mutex_unlock();
+> +		return 0;
+> +	}
+> +
+> +	/* attach the sub-tree to live tree */
+> +	np = unittest_data_node->child;
+> +	while (np) {
+> +		struct device_node *next = np->sibling;
+> +
+> +		np->parent = of_root;
+> +		attach_node_and_children(np);
+> +		np = next;
+> +	}
+> +
+> +	of_overlay_mutex_unlock();
+> +
+> +	return 0;
+> +}
+> +
+> diff --git a/drivers/of/test-common.h b/drivers/of/test-common.h
+> new file mode 100644
+> index 0000000000000..a35484406bbf1
+> --- /dev/null
+> +++ b/drivers/of/test-common.h
+> @@ -0,0 +1,16 @@
+> +/* SPDX-License-Identifier: GPL-2.0+ */
+> +/*
+> + * Common code to be used by unit tests.
+> + */
+> +#ifndef _LINUX_OF_TEST_COMMON_H
+> +#define _LINUX_OF_TEST_COMMON_H
+> +
+> +#include <linux/of.h>
+> +
+> +/**
+> + *	unittest_data_add - Reads, copies data from
+> + *	linked tree and attaches it to the live tree
+> + */
+> +int unittest_data_add(void);
+> +
+> +#endif /* _LINUX_OF_TEST_COMMON_H */
+> diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+> index 96de69ccb3e63..05a2610d0be7f 100644
+> --- a/drivers/of/unittest.c
+> +++ b/drivers/of/unittest.c
+> @@ -29,184 +29,7 @@
+>  #include <kunit/test.h>
+>  
+>  #include "of_private.h"
+> -
+> -static void of_unittest_find_node_by_name(struct kunit *test)
+> -{
+> -	struct device_node *np;
+> -	const char *options, *name;
+> -
+> -	np = of_find_node_by_path("/testcase-data");
+> -	name = kasprintf(GFP_KERNEL, "%pOF", np);
+> -	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, np);
+> -	KUNIT_EXPECT_STREQ_MSG(test, "/testcase-data", name,
+> -			       "find /testcase-data failed\n");
+> -	of_node_put(np);
+> -	kfree(name);
+> -
+> -	/* Test if trailing '/' works */
+> -	KUNIT_EXPECT_EQ_MSG(test, of_find_node_by_path("/testcase-data/"), NULL,
+> -			    "trailing '/' on /testcase-data/ should fail\n");
+> -
+> -	np = of_find_node_by_path("/testcase-data/phandle-tests/consumer-a");
+> -	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, np);
+> -	name = kasprintf(GFP_KERNEL, "%pOF", np);
+> -	KUNIT_EXPECT_STREQ_MSG(
+> -		test, "/testcase-data/phandle-tests/consumer-a", name,
+> -		"find /testcase-data/phandle-tests/consumer-a failed\n");
+> -	of_node_put(np);
+> -	kfree(name);
+> -
+> -	np = of_find_node_by_path("testcase-alias");
+> -	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, np);
+> -	name = kasprintf(GFP_KERNEL, "%pOF", np);
+> -	KUNIT_EXPECT_STREQ_MSG(test, "/testcase-data", name,
+> -			       "find testcase-alias failed\n");
+> -	of_node_put(np);
+> -	kfree(name);
+> -
+> -	/* Test if trailing '/' works on aliases */
+> -	KUNIT_EXPECT_EQ_MSG(test, of_find_node_by_path("testcase-alias/"), NULL,
+> -			    "trailing '/' on testcase-alias/ should fail\n");
+> -
+> -	np = of_find_node_by_path("testcase-alias/phandle-tests/consumer-a");
+> -	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, np);
+> -	name = kasprintf(GFP_KERNEL, "%pOF", np);
+> -	KUNIT_EXPECT_STREQ_MSG(
+> -		test, "/testcase-data/phandle-tests/consumer-a", name,
+> -		"find testcase-alias/phandle-tests/consumer-a failed\n");
+> -	of_node_put(np);
+> -	kfree(name);
+> -
+> -	KUNIT_EXPECT_EQ_MSG(
+> -		test,
+> -		np = of_find_node_by_path("/testcase-data/missing-path"), NULL,
+> -		"non-existent path returned node %pOF\n", np);
+> -	of_node_put(np);
+> -
+> -	KUNIT_EXPECT_EQ_MSG(
+> -		test, np = of_find_node_by_path("missing-alias"), NULL,
+> -		"non-existent alias returned node %pOF\n", np);
+> -	of_node_put(np);
+> -
+> -	KUNIT_EXPECT_EQ_MSG(
+> -		test,
+> -		np = of_find_node_by_path("testcase-alias/missing-path"), NULL,
+> -		"non-existent alias with relative path returned node %pOF\n",
+> -		np);
+> -	of_node_put(np);
+> -
+> -	np = of_find_node_opts_by_path("/testcase-data:testoption", &options);
+> -	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, np);
+> -	KUNIT_EXPECT_STREQ_MSG(test, "testoption", options,
+> -			       "option path test failed\n");
+> -	of_node_put(np);
+> -
+> -	np = of_find_node_opts_by_path("/testcase-data:test/option", &options);
+> -	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, np);
+> -	KUNIT_EXPECT_STREQ_MSG(test, "test/option", options,
+> -			       "option path test, subcase #1 failed\n");
+> -	of_node_put(np);
+> -
+> -	np = of_find_node_opts_by_path("/testcase-data/testcase-device1:test/option", &options);
+> -	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, np);
+> -	KUNIT_EXPECT_STREQ_MSG(test, "test/option", options,
+> -			       "option path test, subcase #2 failed\n");
+> -	of_node_put(np);
+> -
+> -	np = of_find_node_opts_by_path("/testcase-data:testoption", NULL);
+> -	KUNIT_EXPECT_NOT_ERR_OR_NULL_MSG(test, np,
+> -					 "NULL option path test failed\n");
+> -	of_node_put(np);
+> -
+> -	np = of_find_node_opts_by_path("testcase-alias:testaliasoption",
+> -				       &options);
+> -	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, np);
+> -	KUNIT_EXPECT_STREQ_MSG(test, "testaliasoption", options,
+> -			       "option alias path test failed\n");
+> -	of_node_put(np);
+> -
+> -	np = of_find_node_opts_by_path("testcase-alias:test/alias/option",
+> -				       &options);
+> -	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, np);
+> -	KUNIT_EXPECT_STREQ_MSG(test, "test/alias/option", options,
+> -			       "option alias path test, subcase #1 failed\n");
+> -	of_node_put(np);
+> -
+> -	np = of_find_node_opts_by_path("testcase-alias:testaliasoption", NULL);
+> -	KUNIT_EXPECT_NOT_ERR_OR_NULL_MSG(
+> -			test, np, "NULL option alias path test failed\n");
+> -	of_node_put(np);
+> -
+> -	options = "testoption";
+> -	np = of_find_node_opts_by_path("testcase-alias", &options);
+> -	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, np);
+> -	KUNIT_EXPECT_EQ_MSG(test, options, NULL,
+> -			    "option clearing test failed\n");
+> -	of_node_put(np);
+> -
+> -	options = "testoption";
+> -	np = of_find_node_opts_by_path("/", &options);
+> -	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, np);
+> -	KUNIT_EXPECT_EQ_MSG(test, options, NULL,
+> -			    "option clearing root node test failed\n");
+> -	of_node_put(np);
+> -}
+> -
+> -static void of_unittest_dynamic(struct kunit *test)
+> -{
+> -	struct device_node *np;
+> -	struct property *prop;
+> -
+> -	np = of_find_node_by_path("/testcase-data");
+> -	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, np);
+> -
+> -	/* Array of 4 properties for the purpose of testing */
+> -	prop = kcalloc(4, sizeof(*prop), GFP_KERNEL);
+> -	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, prop);
+> -
+> -	/* Add a new property - should pass*/
+> -	prop->name = "new-property";
+> -	prop->value = "new-property-data";
+> -	prop->length = strlen(prop->value) + 1;
+> -	KUNIT_EXPECT_EQ_MSG(test, of_add_property(np, prop), 0,
+> -			    "Adding a new property failed\n");
+> -
+> -	/* Try to add an existing property - should fail */
+> -	prop++;
+> -	prop->name = "new-property";
+> -	prop->value = "new-property-data-should-fail";
+> -	prop->length = strlen(prop->value) + 1;
+> -	KUNIT_EXPECT_NE_MSG(test, of_add_property(np, prop), 0,
+> -			    "Adding an existing property should have failed\n");
+> -
+> -	/* Try to modify an existing property - should pass */
+> -	prop->value = "modify-property-data-should-pass";
+> -	prop->length = strlen(prop->value) + 1;
+> -	KUNIT_EXPECT_EQ_MSG(
+> -		test, of_update_property(np, prop), 0,
+> -		"Updating an existing property should have passed\n");
+> -
+> -	/* Try to modify non-existent property - should pass*/
+> -	prop++;
+> -	prop->name = "modify-property";
+> -	prop->value = "modify-missing-property-data-should-pass";
+> -	prop->length = strlen(prop->value) + 1;
+> -	KUNIT_EXPECT_EQ_MSG(test, of_update_property(np, prop), 0,
+> -			    "Updating a missing property should have passed\n");
+> -
+> -	/* Remove property - should pass */
+> -	KUNIT_EXPECT_EQ_MSG(test, of_remove_property(np, prop), 0,
+> -			    "Removing a property should have passed\n");
+> -
+> -	/* Adding very large property - should pass */
+> -	prop++;
+> -	prop->name = "large-property-PAGE_SIZEx8";
+> -	prop->length = PAGE_SIZE * 8;
+> -	prop->value = kzalloc(prop->length, GFP_KERNEL);
+> -	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, prop->value);
+> -	KUNIT_EXPECT_EQ_MSG(test, of_add_property(np, prop), 0,
+> -			    "Adding a large property should have passed\n");
+> -}
+> +#include "test-common.h"
+>  
+>  static int of_unittest_check_node_linkage(struct device_node *np)
+>  {
+> @@ -1177,170 +1000,6 @@ static void of_unittest_platform_populate(struct kunit *test)
+>  	of_node_put(np);
+>  }
+>  
+> -/**
+> - *	update_node_properties - adds the properties
+> - *	of np into dup node (present in live tree) and
+> - *	updates parent of children of np to dup.
+> - *
+> - *	@np:	node whose properties are being added to the live tree
+> - *	@dup:	node present in live tree to be updated
+> - */
+> -static void update_node_properties(struct device_node *np,
+> -					struct device_node *dup)
+> -{
+> -	struct property *prop;
+> -	struct property *save_next;
+> -	struct device_node *child;
+> -	int ret;
+> -
+> -	for_each_child_of_node(np, child)
+> -		child->parent = dup;
+> -
+> -	/*
+> -	 * "unittest internal error: unable to add testdata property"
+> -	 *
+> -	 *    If this message reports a property in node '/__symbols__' then
+> -	 *    the respective unittest overlay contains a label that has the
+> -	 *    same name as a label in the live devicetree.  The label will
+> -	 *    be in the live devicetree only if the devicetree source was
+> -	 *    compiled with the '-@' option.  If you encounter this error,
+> -	 *    please consider renaming __all__ of the labels in the unittest
+> -	 *    overlay dts files with an odd prefix that is unlikely to be
+> -	 *    used in a real devicetree.
+> -	 */
+> -
+> -	/*
+> -	 * open code for_each_property_of_node() because of_add_property()
+> -	 * sets prop->next to NULL
+> -	 */
+> -	for (prop = np->properties; prop != NULL; prop = save_next) {
+> -		save_next = prop->next;
+> -		ret = of_add_property(dup, prop);
+> -		if (ret)
+> -			pr_err("unittest internal error: unable to add testdata property %pOF/%s",
+> -			       np, prop->name);
+> -	}
+> -}
+> -
+> -/**
+> - *	attach_node_and_children - attaches nodes
+> - *	and its children to live tree
+> - *
+> - *	@np:	Node to attach to live tree
+> - */
+> -static void attach_node_and_children(struct device_node *np)
+> -{
+> -	struct device_node *next, *dup, *child;
+> -	unsigned long flags;
+> -	const char *full_name;
+> -
+> -	full_name = kasprintf(GFP_KERNEL, "%pOF", np);
+> -
+> -	if (!strcmp(full_name, "/__local_fixups__") ||
+> -	    !strcmp(full_name, "/__fixups__"))
+> -		return;
+> -
+> -	dup = of_find_node_by_path(full_name);
+> -	kfree(full_name);
+> -	if (dup) {
+> -		update_node_properties(np, dup);
+> -		return;
+> -	}
+> -
+> -	child = np->child;
+> -	np->child = NULL;
+> -
+> -	mutex_lock(&of_mutex);
+> -	raw_spin_lock_irqsave(&devtree_lock, flags);
+> -	np->sibling = np->parent->child;
+> -	np->parent->child = np;
+> -	of_node_clear_flag(np, OF_DETACHED);
+> -	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+> -
+> -	__of_attach_node_sysfs(np);
+> -	mutex_unlock(&of_mutex);
+> -
+> -	while (child) {
+> -		next = child->sibling;
+> -		attach_node_and_children(child);
+> -		child = next;
+> -	}
+> -}
+> -
+> -/**
+> - *	unittest_data_add - Reads, copies data from
+> - *	linked tree and attaches it to the live tree
+> - */
+> -static int unittest_data_add(void)
+> -{
+> -	void *unittest_data;
+> -	struct device_node *unittest_data_node, *np;
+> -	/*
+> -	 * __dtb_testcases_begin[] and __dtb_testcases_end[] are magically
+> -	 * created by cmd_dt_S_dtb in scripts/Makefile.lib
+> -	 */
+> -	extern uint8_t __dtb_testcases_begin[];
+> -	extern uint8_t __dtb_testcases_end[];
+> -	const int size = __dtb_testcases_end - __dtb_testcases_begin;
+> -	int rc;
+> -
+> -	if (!size) {
+> -		pr_warn("%s: No testcase data to attach; not running tests\n",
+> -			__func__);
+> -		return -ENODATA;
+> -	}
+> -
+> -	/* creating copy */
+> -	unittest_data = kmemdup(__dtb_testcases_begin, size, GFP_KERNEL);
+> -
+> -	if (!unittest_data) {
+> -		pr_warn("%s: Failed to allocate memory for unittest_data; "
+> -			"not running tests\n", __func__);
+> -		return -ENOMEM;
+> -	}
+> -	of_fdt_unflatten_tree(unittest_data, NULL, &unittest_data_node);
+> -	if (!unittest_data_node) {
+> -		pr_warn("%s: No tree to attach; not running tests\n", __func__);
+> -		return -ENODATA;
+> -	}
+> -
+> -	/*
+> -	 * This lock normally encloses of_resolve_phandles()
+> -	 */
+> -	of_overlay_mutex_lock();
+> -
+> -	rc = of_resolve_phandles(unittest_data_node);
+> -	if (rc) {
+> -		pr_err("%s: Failed to resolve phandles (rc=%i)\n", __func__, rc);
+> -		of_overlay_mutex_unlock();
+> -		return -EINVAL;
+> -	}
+> -
+> -	if (!of_root) {
+> -		of_root = unittest_data_node;
+> -		for_each_of_allnodes(np)
+> -			__of_attach_node_sysfs(np);
+> -		of_aliases = of_find_node_by_path("/aliases");
+> -		of_chosen = of_find_node_by_path("/chosen");
+> -		of_overlay_mutex_unlock();
+> -		return 0;
+> -	}
+> -
+> -	/* attach the sub-tree to live tree */
+> -	np = unittest_data_node->child;
+> -	while (np) {
+> -		struct device_node *next = np->sibling;
+> -
+> -		np->parent = of_root;
+> -		attach_node_and_children(np);
+> -		np = next;
+> -	}
+> -
+> -	of_overlay_mutex_unlock();
+> -
+> -	return 0;
+> -}
+> -
+>  #ifdef CONFIG_OF_OVERLAY
+>  static int overlay_data_apply(const char *overlay_name, int *overlay_id);
+>  
+> @@ -2563,8 +2222,6 @@ static int of_test_init(struct kunit *test)
+>  static struct kunit_case of_test_cases[] = {
+>  	KUNIT_CASE(of_unittest_check_tree_linkage),
+>  	KUNIT_CASE(of_unittest_check_phandles),
+> -	KUNIT_CASE(of_unittest_find_node_by_name),
+> -	KUNIT_CASE(of_unittest_dynamic),
+>  	KUNIT_CASE(of_unittest_parse_phandle_with_args),
+>  	KUNIT_CASE(of_unittest_parse_phandle_with_args_map),
+>  	KUNIT_CASE(of_unittest_printf),
+> 
 
