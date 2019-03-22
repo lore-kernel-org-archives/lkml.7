@@ -4,162 +4,155 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50C54C10F03
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 03:26:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0642BC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 03:29:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2944F218FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 03:26:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC88C2082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 03:29:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727549AbfCVD0E (ORCPT
+        id S1727535AbfCVD3D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Mar 2019 23:26:04 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:50338 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727406AbfCVD0E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Mar 2019 23:26:04 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 533A4AED19FE037BC5B1;
-        Fri, 22 Mar 2019 11:26:02 +0800 (CST)
-Received: from [10.151.23.176] (10.151.23.176) by smtp.huawei.com
- (10.3.19.206) with Microsoft SMTP Server (TLS) id 14.3.408.0; Fri, 22 Mar
- 2019 11:25:56 +0800
-Subject: Re: [PATCH 1/3] staging: erofs: fix error handling when failed to
- read compresssed data
-To:     Chao Yu <yuchao0@huawei.com>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <devel@driverdev.osuosl.org>, LKML <linux-kernel@vger.kernel.org>,
-        <linux-erofs@lists.ozlabs.org>, Chao Yu <chao@kernel.org>,
-        Miao Xie <miaoxie@huawei.com>, <weidu.du@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>, <stable@vger.kernel.org>
-References: <20190319135501.28712-1-gaoxiang25@huawei.com>
-From:   Gao Xiang <gaoxiang25@huawei.com>
-Message-ID: <8966fa2c-5357-c472-ebb7-a3f3abcf60e8@huawei.com>
-Date:   Fri, 22 Mar 2019 11:25:31 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.3.0
+        Thu, 21 Mar 2019 23:29:03 -0400
+Received: from gateway24.websitewelcome.com ([192.185.51.172]:23544 "EHLO
+        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727222AbfCVD3C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Mar 2019 23:29:02 -0400
+Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
+        by gateway24.websitewelcome.com (Postfix) with ESMTP id 32ACE5C30
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Mar 2019 22:29:01 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 7ArdhNw9I4FKp7ArdhbGhE; Thu, 21 Mar 2019 22:29:01 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.137.161] (port=40588 helo=[192.168.1.76])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1h7Arc-000H2f-RJ; Thu, 21 Mar 2019 22:29:00 -0500
+To:     Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        gregkh@linuxfoundation.org, jslaby@suse.com,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190322030159.GA6551@hari-Inspiron-1545>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Subject: Re: [PATCH] tty: serial_core: Spelling correction
+Message-ID: <918f4d7f-e066-b926-b73b-331843a3a388@embeddedor.com>
+Date:   Thu, 21 Mar 2019 22:28:59 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <20190319135501.28712-1-gaoxiang25@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.151.23.176]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20190322030159.GA6551@hari-Inspiron-1545>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.137.161
+X-Source-L: No
+X-Exim-ID: 1h7Arc-000H2f-RJ
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.1.76]) [189.250.137.161]:40588
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 17
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ping?
 
-Hi Chao,
-could you take some time looking into this series?
 
-Thanks,
-Gao Xiang
+On 3/21/19 10:01 PM, Hariprasad Kelam wrote:
+> fix spelling mistake "overriden" -> "overridden"
+> This fix resolves warning reported by checkpatch tool
+> 
 
-On 2019/3/19 21:54, Gao Xiang wrote:
-> Complete read error handling paths for all three kinds of
-> compressed pages:
-> 
->  1) For cache-managed pages, PG_uptodate will be checked since
->     read_endio will unlock and SetPageUptodate for these pages;
-> 
->  2) For inplaced pages, read_endio cannot SetPageUptodate directly
->     since it should be used to mark the final decompressed data,
->     PG_error will be set with page locked for IO error instead;
-> 
->  3) For staging pages, PG_error is used, which is similar to
->     what we do for inplaced pages.
-> 
-> Fixes: 3883a79abd02 ("staging: erofs: introduce VLE decompression support")
-> Cc: <stable@vger.kernel.org> # 4.19+
-> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+Whenever you receive feedback on a patch, you need to version
+the patches that you re-send. Also, you should mention what has
+changed, so people know what to review.
+
+I encourage you take a look at this:
+
+https://kernelnewbies.org/Outreachyfirstpatch
+
+Thanks
+--
+Gustavo
+
+"If you receive feedback on a patch, and were asked to update the patch,
+you need to version the patches that you re-send. A new version number
+lets reviewers know you made changes to the patch, and they should review
+it again."
+
+> Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
 > ---
+>  drivers/tty/serial/serial_core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> This series focus on fixing error handling when failed to read
-> compresssed data due to previous incomplete paths.
-> 
-> In addition, the last 2 patches add IO error fault injection
-> for reading paths, which I have used to test the first patch as well.
-> 
-> Thanks,
-> Gao Xiang
-> 
->  drivers/staging/erofs/unzip_vle.c | 41 ++++++++++++++++++++++++++-------------
->  1 file changed, 28 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/staging/erofs/unzip_vle.c b/drivers/staging/erofs/unzip_vle.c
-> index 8715bc50e09c..3416d3f10324 100644
-> --- a/drivers/staging/erofs/unzip_vle.c
-> +++ b/drivers/staging/erofs/unzip_vle.c
-> @@ -972,6 +972,7 @@ static int z_erofs_vle_unzip(struct super_block *sb,
->  	overlapped = false;
->  	compressed_pages = grp->compressed_pages;
->  
-> +	err = 0;
->  	for (i = 0; i < clusterpages; ++i) {
->  		unsigned int pagenr;
->  
-> @@ -981,26 +982,39 @@ static int z_erofs_vle_unzip(struct super_block *sb,
->  		DBG_BUGON(!page);
->  		DBG_BUGON(!page->mapping);
->  
-> -		if (z_erofs_is_stagingpage(page))
-> -			continue;
-> +		if (!z_erofs_is_stagingpage(page)) {
->  #ifdef EROFS_FS_HAS_MANAGED_CACHE
-> -		if (page->mapping == MNGD_MAPPING(sbi)) {
-> -			DBG_BUGON(!PageUptodate(page));
-> -			continue;
-> -		}
-> +			if (page->mapping == MNGD_MAPPING(sbi)) {
-> +				if (unlikely(!PageUptodate(page)))
-> +					err = -EIO;
-> +				continue;
-> +			}
->  #endif
->  
-> -		/* only non-head page could be reused as a compressed page */
-> -		pagenr = z_erofs_onlinepage_index(page);
-> +			/*
-> +			 * only if non-head page can be selected
-> +			 * for inplace decompression
-> +			 */
-> +			pagenr = z_erofs_onlinepage_index(page);
->  
-> -		DBG_BUGON(pagenr >= nr_pages);
-> -		DBG_BUGON(pages[pagenr]);
-> -		++sparsemem_pages;
-> -		pages[pagenr] = page;
-> +			DBG_BUGON(pagenr >= nr_pages);
-> +			DBG_BUGON(pages[pagenr]);
-> +			++sparsemem_pages;
-> +			pages[pagenr] = page;
-> +
-> +			overlapped = true;
-> +		}
->  
-> -		overlapped = true;
-> +		/* PG_error needs checking for inplaced and staging pages */
-> +		if (unlikely(PageError(page))) {
-> +			DBG_BUGON(PageUptodate(page));
-> +			err = -EIO;
-> +		}
+> diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
+> index 351843f..69f4871 100644
+> --- a/drivers/tty/serial/serial_core.c
+> +++ b/drivers/tty/serial/serial_core.c
+> @@ -1514,7 +1514,7 @@ static void uart_set_termios(struct tty_struct *tty,
 >  	}
 >  
-> +	if (unlikely(err))
-> +		goto out;
-> +
->  	llen = (nr_pages << PAGE_SHIFT) - work->pageofs;
+>  	uart_change_speed(tty, state, old_termios);
+> -	/* reload cflag from termios; port driver may have overriden flags */
+> +	/* reload cflag from termios; port driver may have overridden flags */
+>  	cflag = tty->termios.c_cflag;
 >  
->  	if (z_erofs_vle_workgrp_fmt(grp) == Z_EROFS_VLE_WORKGRP_FMT_PLAIN) {
-> @@ -1194,6 +1208,7 @@ pickup_page_for_submission(struct z_erofs_vle_workgroup *grp,
->  	if (page->mapping == mc) {
->  		WRITE_ONCE(grp->compressed_pages[nr], page);
->  
-> +		ClearPageError(page);
->  		if (!PagePrivate(page)) {
->  			/*
->  			 * impossible to be !PagePrivate(page) for
+>  	/* Handle transition to B0 status */
 > 
