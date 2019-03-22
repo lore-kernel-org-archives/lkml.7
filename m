@@ -2,144 +2,308 @@ Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA5B0C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 23:50:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B71C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 23:50:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C0A721900
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 23:50:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BnZRpwmI"
+	by mail.kernel.org (Postfix) with ESMTP id 12F4321900
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 23:50:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727429AbfCVXuX (ORCPT
+        id S1727654AbfCVXu1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 19:50:23 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:34399 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726916AbfCVXuW (ORCPT
+        Fri, 22 Mar 2019 19:50:27 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:43354 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727457AbfCVXuZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 19:50:22 -0400
-Received: by mail-pg1-f196.google.com with SMTP id v12so2552555pgq.1
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 16:50:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references:from
-         :subject:cc:to:message-id:user-agent:date;
-        bh=IEOHDcRDNKEttMJKwIZbSUvgHF+/177DDBtgxfrk4Ug=;
-        b=BnZRpwmIGiuonDcgGQtpDZ/91xXwGJAyZOgKcsoMNsgR5LgPheQV42BKLmdqJFmIac
-         UlDEdS01yDRnpNb34opCbw/QpN8KQzluDcUBuQMO7EG2JuTsQcGNFsn4Sq3POGeMyFOu
-         3+rmBWhyOUCGXdG9a5ufkVgBXcXbF/+xfqEdE=
+        Fri, 22 Mar 2019 19:50:25 -0400
+Received: by mail-qt1-f194.google.com with SMTP id v32so4457095qtc.10
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 16:50:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:from:subject:cc:to:message-id:user-agent
-         :date;
-        bh=IEOHDcRDNKEttMJKwIZbSUvgHF+/177DDBtgxfrk4Ug=;
-        b=Cc6uHlySNNZOOjAG2X40ELZwq/+3g8X7/mUsqFoEn2y1j8sAoB+anAoR424MAZoamB
-         ASqxUkSduuLQUgGVfWEjkqVKbcERQS9Ind/HjNI2sgGL1fpDYh4qqs8EWslPSG4NAGhB
-         9HGPklHXgzCBcu4umd6yZknQtq2y33AJJSJkWM7pUAhEZ/5YUSr6ZaAMgJwbNIzoXjiI
-         3PSTu+y32cI0eoFFwHzPlOqD/th34OZEMe+/MKGrxTwtgW5K3EDZcIbp1bI/luDSJ/x9
-         JamabuD+fS3PsRUTO9YecOrnfonu5d00cg1+gtz8nFTcMOJiD/i3/y79TaiaP+prnKbG
-         329g==
-X-Gm-Message-State: APjAAAWB88Q8Rn4TtDUnn9144aGh171bYAvPIaRXS9Cm9elmT/4bx13d
-        SZopAmjBhbYMXNTVm5QszIojzY40rDQ9LA==
-X-Google-Smtp-Source: APXvYqzj+MCmadL4UBD9qDdLShFi9sFsNb7PDKT/0ft/KQPoz4/3C2ANwd5YRBMEo8v5s98KdBFtCg==
-X-Received: by 2002:a63:29c8:: with SMTP id p191mr3380288pgp.197.1553298621841;
-        Fri, 22 Mar 2019 16:50:21 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id b8sm9905445pgq.33.2019.03.22.16.50.20
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:organization:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=th36FAJVJTVRoMKc5rwU+hTs+FnbW4f1G9n/BJ1jnaA=;
+        b=i1KSaKYyWWB92TiT9U5B/HZ4esQvq6zXVc4sydIosLfUhu+FUiscUbYA6k+YiTg4Rs
+         6y4eCaS9A6s+rcPIMyqHsrr5f7Stfn7gmZSjJ2mv3O1cG8VtAttbgKCD6jLDbzW8Jr3J
+         4Nl/ya1gAdNf83NPyKL592/TBWZEksw8HRaqDn1fMjKL7zww/6i33UrRjwziLCaHXt9P
+         sXVEeu1Grm4w0KAHZJQQhhMqT79G6oHQsSGuDijUaRMVmVbq3sDaWjCHFxgm1eFn5eRl
+         ZN8JTfTjlrScoCBTD97bCWPuvRISzKj3kDPBUH6F6w0qRiNHynuqSbi1YC/4cz5MdTpP
+         Aj1A==
+X-Gm-Message-State: APjAAAWJ/jTtB9tB3324s3+bADjV/yRu/Vf0/Z4eY7p+zDfzkrmmOqlL
+        WmE6TQxpKfkSW+NYSt/6OBPYNA==
+X-Google-Smtp-Source: APXvYqwuaLFCZhS5kXq/KyS1ciOsqKe+8f7xqgoFsibjJZFdaYeZQgxzxFF1Ll6nBrXu4E7sE9wvjQ==
+X-Received: by 2002:ac8:a81:: with SMTP id d1mr10812920qti.213.1553298624132;
+        Fri, 22 Mar 2019 16:50:24 -0700 (PDT)
+Received: from dhcp-10-20-1-11.bss.redhat.com ([144.121.20.162])
+        by smtp.gmail.com with ESMTPSA id l6sm1543328qke.65.2019.03.22.16.50.22
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 22 Mar 2019 16:50:21 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Fri, 22 Mar 2019 16:50:23 -0700 (PDT)
+Message-ID: <b73419b7b48ef5ef26ae874dcfa19b21a7b0fde1.camel@redhat.com>
+Subject: Re: [PATCH] pci/quirks: Add quirk to reset nvgpu at boot for the
+ Lenovo ThinkPad P50
+From:   Lyude Paul <lyude@redhat.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     David Ober <dober@lenovo.com>, linux-pci@vger.kernel.org,
+        nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        Karol Herbst <kherbst@redhat.com>,
+        Ben Skeggs <skeggsb@gmail.com>, stable@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Date:   Fri, 22 Mar 2019 19:50:22 -0400
+In-Reply-To: <20190321224819.GK251185@google.com>
+References: <20190212220230.1568-1-lyude@redhat.com>
+         <20190215004329.GR96272@google.com>
+         <2fca9a9feafcd17b27bc71994a71ebc241a93e9a.camel@redhat.com>
+         <52b17f8cb24e179e9661d75548d193843ae87b4c.camel@redhat.com>
+         <20190321224819.GK251185@google.com>
+Organization: Red Hat
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <alpine.DEB.2.21.1903211007310.1777@nanos.tec.linutronix.de>
-References: <20190315200759.139479-1-swboyd@chromium.org> <alpine.DEB.2.21.1903211007310.1777@nanos.tec.linutronix.de>
-From:   Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH] genirq: Respect IRQCHIP_SKIP_SET_WAKE in irq_chip_set_wake_parent()
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-gpio@vger.kernel.org, Lina Iyer <ilina@codeaurora.org>,
-        Marc Zyngier <marc.zyngier@arm.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Message-ID: <155329862018.20095.14024385652448015564@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.8
-Date:   Fri, 22 Mar 2019 16:50:20 -0700
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Thomas Gleixner (2019-03-21 02:26:26)
-> On Fri, 15 Mar 2019, Stephen Boyd wrote:
->=20
-> > This function returns an error if a child interrupt controller calls
-> > irq_chip_set_wake_parent() but that parent interrupt controller has the
-> > IRQCHIP_SKIP_SET_WAKE flag. Let's return 0 for success instead because
-> > there isn't anything to do.
-> >=20
-> > There's also the possibility that a parent indicates that we should skip
-> > it, but the grandparent has an .irq_set_wake callback. Let's iterate
-> > through the parent chain as long as the IRQCHIP_SKIP_SET_WAKE flag isn't
-> > set so we can find the first parent that needs to handle the wake
-> > configuration. This fixes a problem on my Qualcomm sdm845 device where
-> > I'm trying to enable wake on an irq from the gpio controller that's a
-> > child of the qcom pdc interrupt controller. The qcom pdc interrupt
-> > controller has the IRQCHIP_SKIP_SET_WAKE flag set, and so does the
-> > grandparent (ARM GIC), causing this function to return a failure because
-> > the parent controller doesn't have the .irq_set_wake callback set.
->=20
-> It took me some time to distangle that changelog.... and I don't think th=
-at
-> this is the right thing to do.
+Note: I did read your response lower down in the thread, but I wanted to make
+sure I addressed one of the comments here (see below)
 
-Yes, your diagram would be a useful addition to the commit text.
+On Thu, 2019-03-21 at 17:48 -0500, Bjorn Helgaas wrote:
+> [+cc Rafael]
+> 
+> On Wed, Mar 13, 2019 at 06:25:02PM -0400, Lyude Paul wrote:
+> > On Fri, 2019-02-15 at 16:17 -0500, Lyude Paul wrote:
+> > > On Thu, 2019-02-14 at 18:43 -0600, Bjorn Helgaas wrote:
+> > > > On Tue, Feb 12, 2019 at 05:02:30PM -0500, Lyude Paul wrote:
+> > > > > On a very specific subset of ThinkPad P50 SKUs, particularly
+> > > > > ones that come with a Quadro M1000M chip instead of the M2000M
+> > > > > variant, the BIOS seems to have a very nasty habit of not
+> > > > > always resetting the secondary Nvidia GPU between full reboots
+> > > > > if the laptop is configured in Hybrid Graphics mode. The
+> > > > > reason for this happening is unknown, but the following steps
+> > > > > and possibly a good bit of patience will reproduce the issue:
+> > > > > 
+> > > > > 1. Boot up the laptop normally in Hybrid graphics mode
+> > > > > 2. Make sure nouveau is loaded and that the GPU is awake
+> > > > > 2. Allow the nvidia GPU to runtime suspend itself after being idle
+> > > > > 3. Reboot the machine, the more sudden the better (e.g sysrq-b may
+> > > > > help)
+> > > > > 4. If nouveau loads up properly, reboot the machine again and go
+> > > > > back to
+> > > > > step 2 until you reproduce the issue
+> > > > > 
+> > > > > This results in some very strange behavior: the GPU will quite
+> > > > > literally be left in exactly the same state it was in when the
+> > > > > previously booted kernel started the reboot. This has all
+> > > > > sorts of bad sideaffects: for starters, this completely breaks
+> > > > > nouveau starting with a mysterious EVO channel failure that
+> > > > > happens well before we've actually used the EVO channel for
+> > > > > anything:
+> 
+> Thanks for the hybrid tutorial (snipped from this response).  IIUC,
+> what you said was that in hybrid mode, the Intel GPU drives the
+> built-in display and the Nvidia GPU drives any external displays and
+> may be used for DRI PRIME rendering (whatever that is).  But since you
+> say the Nvidia device gets runtime suspended, I assume there's no
+> external display here and you're not using DRI PRIME.
+> 
+> I wonder if it's related to the fact that the Nvidia GPU has been
+> runtime suspended before you do the reboot.  Can you try turning of
+> runtime power management for the GPU by setting the runpm module
+> parameter to 0?  I *think* this would be booting with
+> "nouveau.runpm=0".
+> 
+> > > > Is there a bug report for this?  Bugzilla.kernel.org would be ideal,
+> > > > including "lspci -vvxxx" and dmidecode for the system.
+> > > > 
+> > > Not yet, but there has been discussion about this between nouveau
+> > > developers on our IRC channel.
+> > 
+> > I lied: yes there actually is a bug report for this, but it's
+> > currently on the Red Hat bugzilla. I can get more information from
+> > it if you need (with lenovo's approval of course).
+> 
+> Can you please make a bugzilla.kernel.org entry with as much
+> information (dmesg, "lspci -vvxxx", dmidecode, etc) as you can get
+> approval for?  You can include the Red Hat bugzilla URL in the commit
+> log, too, but that's not quite as good because we have no control over
+> whether it's public.
+> 
+> > And additionally: I've been working with Lenovo on this issue for a
+> > couple of months now, and we've gone through dozens of different
+> > trial BIOSes with no success thus far. However, Lenovo is currently
+> > working on trying to add this workaround into their BIOS but I've
+> > been told that this change is going to take a decent amount of time
+> > since they need to test it across multiple operating systems. I'd be
+> > happy to come back and add a conditional later to turn this
+> > workaround off for later BIOS versions once Lenovo has released a
+> > proper fix.
+> 
+> Sounds like Lenovo is going to a lot of trouble for this.  The ideal
+> thing from my point of view would be if they could figure out why this
+> works on Windows but not on Linux.  I doubt Windows has a quirk like
+> this, so if we could figure out why it works on Windows, we could
+> likely do something similar in Linux.
 
->=20
-> set_irq_wake_real() returns 0 when the topmost chip has SKIP_SET_WAKE set.
+I did actually try this route after first finding this bug, but unfortunately
+from what I understand there isn't really much more Lenovo can do other then
+give us a patched BIOS or look at their own BIOS to see if it's the cause. 
 
-Just to confirm, the topmost chip would be chip B or chip C below?
+Anyway, went ahead and filed a bug with as much information as I could get my
+hands on here (different email then the one I'm talking to you from): 
+https://bugzilla.kernel.org/show_bug.cgi?id=203003
 
->=20
-> So let's assume we have the following chains:
->=20
->   chip A -> chip B=20
->=20
->   chip A -> chip B -> chip C
->=20
-> chip A has SKIP_SET_WAKE not set
-> chip B has SKIP_SET_WAKE set
-> chip C has SKIP_SET_WAKE not set and invokes irq_chip_set_wake_parent()
->=20
-> Now assume we have interrupt X connected to chip B and interrupt Y
-> connected to chip C.
->=20
-> If irq_set_wake() is called for interrupt X, then the function returns
-> without trying to invoke the set_wake() callback of chip A.
-
-It's not clear to me that having SKIP_SET_WAKE set means "completely
-ignore set wake for irqs from this domain" vs. "skip setting wake here
-because the .irq_set_wake() is intentionally omitted for this chip".
-Reading Santosh's reasoning in commit 60f96b41f71d ("genirq: Add
-IRQCHIP_SKIP_SET_WAKE flag") just further confuses me because it sounds
-like the latter.
-
->=20
-> If irq_set_wake() is called for interrupt Y, irq_chip_set_wake_parent() is
-> invoked from chip C which then skips chip B, but tries to invoke the
-> callback on chip A.
->=20
-> That's inconsistent and changes the existing behaviour. So IMO, the right
-> thing to do is to return 0 from irq_chip_set_wake_parent() when the parent
-> has SKIP_SET_WAKE set and not to try to follow the whole chain. That shou=
-ld
-> fix your problem nicely w/o changing behaviour.
-
-Ok. I understand that with hierarchical chips you want it to be explicit
-in the code that a parent chip needs to be called or not. This works for
-me, and it's actually how I had originally solved this problem. Will you
-merge your patch or do you want me to resend it with some updated commit
-text?
+> 
+> > > > > So to do this, we add a new pci quirk using
+> > > > > DECLARE_PCI_FIXUP_CLASS_FINAL that will be invoked before the PCI
+> > > > > probe
+> > > > > at boot finishes. From there, we check to make sure that this is
+> > > > > indeed
+> > > > > the specific P50 variant of this GPU. We also make sure that the GPU
+> > > > > PCI
+> > > > > device is advertising NoReset- in order to prevent us from trying to
+> > > > > reset the GPU when the machine is in Dedicated graphics mode (where
+> > > > > the
+> > > > > GPU being initialized by the BIOS is normal and expected). Finally,
+> > > > > we
+> > > > > try mapping the MMIO space for the GPU which should only work if the
+> > > > > GPU
+> > > > > is actually active in D0 mode. We can then read the magic 0x2240c
+> > > > > register on the GPU, which will have bit 1 set if the GPU's firmware
+> > > > > has
+> > > > > already been posted during a previous boot. Once we've confirmed all
+> > > > > of
+> > > > > this, we reset the PCI device and re-disable it - bringing the GPU
+> > > > > back
+> > > > > into a healthy state.
+> > > > > 
+> > > > > Signed-off-by: Lyude Paul <lyude@redhat.com>
+> > > > > Cc: nouveau@lists.freedesktop.org
+> > > > > Cc: dri-devel@lists.freedesktop.org
+> > > > > Cc: Karol Herbst <kherbst@redhat.com>
+> > > > > Cc: Ben Skeggs <skeggsb@gmail.com>
+> > > > > Cc: stable@vger.kernel.org
+> > > > > ---
+> > > > >  drivers/pci/quirks.c | 65
+> > > > > ++++++++++++++++++++++++++++++++++++++++++++
+> > > > >  1 file changed, 65 insertions(+)
+> > > > > 
+> > > > > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> > > > > index b0a413f3f7ca..948492fda8bf 100644
+> > > > > --- a/drivers/pci/quirks.c
+> > > > > +++ b/drivers/pci/quirks.c
+> > > > > @@ -5117,3 +5117,68 @@ SWITCHTEC_QUIRK(0x8573);  /* PFXI 48XG3 */
+> > > > >  SWITCHTEC_QUIRK(0x8574);  /* PFXI 64XG3 */
+> > > > >  SWITCHTEC_QUIRK(0x8575);  /* PFXI 80XG3 */
+> > > > >  SWITCHTEC_QUIRK(0x8576);  /* PFXI 96XG3 */
+> > > > > +
+> > > > > +/*
+> > > > > + * On certain Lenovo Thinkpad P50 SKUs, specifically those with a
+> > > > > Nvidia
+> > > > > + * Quadro M1000M, the BIOS will occasionally make the mistake of
+> > > > > not
+> > > > > resetting
+> > > > > + * the nvidia GPU between reboots if the system is configured to
+> > > > > use
+> > > > > hybrid
+> > > > > + * graphics mode. This results in the GPU being left in whatever
+> > > > > state
+> > > > > it
+> > > > > was
+> > > > > + * in during the previous boot which causes spurious interrupts
+> > > > > from
+> > > > > the
+> > > > > GPU,
+> > > > > + * which in turn cause us to disable the wrong IRQs and end up
+> > > > > breaking
+> > > > > the
+> > > > > + * touchpad. Unsurprisingly, this also completely breaks nouveau.
+> > > > > + *
+> > > > > + * Luckily, it seems a simple reset of the PCI device for the
+> > > > > nvidia
+> > > > > GPU
+> > > > > + * manages to bring the GPU back into a clean state and fix all of
+> > > > > these
+> > > > > + * issues. Additionally since the GPU will report NoReset+ when the
+> > > > > machine is
+> > > > > + * configured in Dedicated display mode, we don't need to worry
+> > > > > about
+> > > > > + * accidentally resetting the GPU when it's supposed to already be
+> > > > > + * initialized.
+> > > > > + */
+> > > > > +static void
+> > > > > +quirk_lenovo_thinkpad_p50_nvgpu_survives_reboot(struct pci_dev
+> > > > > *pdev)
+> > > > > +{
+> > > > > +	void __iomem *map;
+> > > > > +	int ret;
+> > > > > +
+> > > > > +	if (pdev->subsystem_vendor != PCI_VENDOR_ID_LENOVO ||
+> > > > > +	    pdev->subsystem_device != 0x222e ||
+> > > > > +	    !pdev->reset_fn)
+> > > > > +		return;
+> > > > > +
+> > > > > +	/*
+> > > > > +	 * If we can't enable the device's mmio space, it's probably
+> > > > > not even
+> > > > > +	 * initialized. This is fine, and means we can just skip the
+> > > > > quirk
+> > > > > +	 * entirely.
+> > > > > +	 */
+> > > > > +	if (pci_enable_device_mem(pdev)) {
+> > > > > +		pci_dbg(pdev, "Can't enable device mem, no reset
+> > > > > needed\n");
+> > > > > +		return;
+> > > > > +	}
+> > > > > +
+> > > > > +	/* Taken from drivers/gpu/drm/nouveau/engine/device/base.c */
+> > > > > +	map = ioremap(pci_resource_start(pdev, 0), 0x102000);
+> > > > > +	if (!map) {
+> > > > > +		pci_err(pdev, "Can't map MMIO space, this is probably
+> > > > > very
+> > > > > bad\n");
+> > > > > +		goto out_disable;
+> > > > > +	}
+> > > > > +
+> > > > > +	/*
+> > > > > +	 * Be extra careful, and make sure that the GPU firmware is
+> > > > > posted
+> > > > > +	 * before trying a reset
+> > > > > +	 */
+> > > > > +	if (ioread32(map + 0x2240c) & 0x2) {
+> > > > > +		pci_info(pdev,
+> > > > > +			 FW_BUG "GPU left initialized by EFI,
+> > > > > resetting\n");
+> > > > > +		ret = pci_reset_function(pdev);
+> > > > > +		if (ret < 0)
+> > > > > +			pci_err(pdev, "Failed to reset GPU: %d\n",
+> > > > > ret);
+> > > > > +	}
+> > > > > +
+> > > > > +	iounmap(map);
+> > > > > +out_disable:
+> > > > > +	pci_disable_device(pdev);
+> > > > > +}
+> > > > > +
+> > > > > +DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, 0x13b1,
+> > > > > +			      PCI_CLASS_DISPLAY_VGA, 8,
+> > > > > +			      quirk_lenovo_thinkpad_p50_nvgpu_survives
+> > > > > _reboot)
+> > > > > ;
+> > > > > -- 
+> > > > > 2.20.1
+> > > > > 
+> > -- 
+> > Cheers,
+> > 	Lyude Paul
+> > 
+-- 
+Cheers,
+	Lyude Paul
 
