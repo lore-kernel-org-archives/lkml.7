@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B1DCC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:51:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA734C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:51:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 388E321873
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:51:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BDAF218FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 12:51:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553259091;
-	bh=xxbZvv8wIJxugE45gZ2Thr1TPoHsmAwJC4pyRq2Fh3M=;
+	s=default; t=1553259102;
+	bh=Lv11vLcgCKzGpdZk5NjyngKW/MONdZGyYZ09gu39aYg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=awIk55dtBANQ20Fs1BpYZffe/KGN5x2A2ciwqG9/EMzJZvZx8C/vbAM/HbzyDHeqy
-	 yCjoxh/jdAZTKNlqFRF+0RYM9mXnkfzY9idUrUCK9nzSZJs2eGxzVeDgvYHKlrW7kJ
-	 SevHmDCIT8AE05H0Nn9vNOIJ00AMMx8xc02SQefg=
+	b=j9utZP2Y87Y8UEAIcGIheH5IfGUL4ALl5k+wee7/P0xKpeWvZsMZKwOyQCkAEh/NT
+	 OUsczKWfcqEjyEeGGC5S+mJHtzKwYLw1TEUIWR9WgYjUXp1bFOyllNMhwP2mBRwyNL
+	 hLxNBwRknivrlyTV8LTP16lSfi31/qDB2iPL+UaQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733235AbfCVMva (ORCPT
+        id S1733302AbfCVMvl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 08:51:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58862 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 08:51:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58712 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732824AbfCVLyX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:54:23 -0400
+        id S1732919AbfCVLyQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:54:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4B0120643;
-        Fri, 22 Mar 2019 11:54:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8611320643;
+        Fri, 22 Mar 2019 11:54:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553255662;
-        bh=xxbZvv8wIJxugE45gZ2Thr1TPoHsmAwJC4pyRq2Fh3M=;
+        s=default; t=1553255656;
+        bh=Lv11vLcgCKzGpdZk5NjyngKW/MONdZGyYZ09gu39aYg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QzLltDZL/RavQryw5V7leTTfi/fluqDsYYSrrDWvYG6yerQTuj+fDBc0V/bTX+Spr
-         /2gLy9JNpeNADNx32DphRd/bLned+J+hp9MEOpAOWvd3hmbBJbWw8ryy0F5ByC5Aqq
-         PZadnwBGRxQNOMfb/1P7B3WMn3SR+LSHCsbdZ3Fw=
+        b=jrWBi8uVIhNXUrV6JJes+iA6NZKJXO2Rh6aTtC6xQjs5vtAVJG4Rr0Wt2joyKHVgW
+         73rykk2FwH/xWpCa2miU9mQRYrmkEKiuazx1XHu5e9mSQbXHcttKBJCSzpFf+CR/Pp
+         3SCNEmZTu/PCPa/LQD9DkBTfu/fuVgCgs60k1Mqc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk>,
+        stable@vger.kernel.org, Jordan Niethe <jniethe5@gmail.com>,
+        Stewart Smith <stewart@linux.ibm.com>,
+        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
         Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.14 142/183] powerpc: Fix 32-bit KVM-PR lockup and host crash with MacOS guest
-Date:   Fri, 22 Mar 2019 12:16:10 +0100
-Message-Id: <20190322111252.059428427@linuxfoundation.org>
+Subject: [PATCH 4.14 140/183] powerpc/powernv: Make opal log only readable by root
+Date:   Fri, 22 Mar 2019 12:16:08 +0100
+Message-Id: <20190322111251.906900123@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111241.819468003@linuxfoundation.org>
 References: <20190322111241.819468003@linuxfoundation.org>
@@ -66,48 +67,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk>
+From: Jordan Niethe <jniethe5@gmail.com>
 
-commit fe1ef6bcdb4fca33434256a802a3ed6aacf0bd2f upstream.
+commit 7b62f9bd2246b7d3d086e571397c14ba52645ef1 upstream.
 
-Commit 8792468da5e1 "powerpc: Add the ability to save FPU without
-giving it up" unexpectedly removed the MSR_FE0 and MSR_FE1 bits from
-the bitmask used to update the MSR of the previous thread in
-__giveup_fpu() causing a KVM-PR MacOS guest to lockup and panic the
-host kernel.
+Currently the opal log is globally readable. It is kernel policy to
+limit the visibility of physical addresses / kernel pointers to root.
+Given this and the fact the opal log may contain this information it
+would be better to limit the readability to root.
 
-Leaving FE0/1 enabled means unrelated processes might receive FPEs
-when they're not expecting them and crash. In particular if this
-happens to init the host will then panic.
-
-eg (transcribed):
-  qemu-system-ppc[837]: unhandled signal 8 at 12cc9ce4 nip 12cc9ce4 lr 12cc9ca4 code 0
-  systemd[1]: unhandled signal 8 at 202f02e0 nip 202f02e0 lr 001003d4 code 0
-  Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b
-
-Reinstate these bits to the MSR bitmask to enable MacOS guests to run
-under 32-bit KVM-PR once again without issue.
-
-Fixes: 8792468da5e1 ("powerpc: Add the ability to save FPU without giving it up")
-Cc: stable@vger.kernel.org # v4.6+
-Signed-off-by: Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk>
+Fixes: bfc36894a48b ("powerpc/powernv: Add OPAL message log interface")
+Cc: stable@vger.kernel.org # v3.15+
+Signed-off-by: Jordan Niethe <jniethe5@gmail.com>
+Reviewed-by: Stewart Smith <stewart@linux.ibm.com>
+Reviewed-by: Andrew Donnellan <andrew.donnellan@au1.ibm.com>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/kernel/process.c |    2 +-
+ arch/powerpc/platforms/powernv/opal-msglog.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/powerpc/kernel/process.c
-+++ b/arch/powerpc/kernel/process.c
-@@ -156,7 +156,7 @@ void __giveup_fpu(struct task_struct *ts
+--- a/arch/powerpc/platforms/powernv/opal-msglog.c
++++ b/arch/powerpc/platforms/powernv/opal-msglog.c
+@@ -98,7 +98,7 @@ static ssize_t opal_msglog_read(struct f
+ }
  
- 	save_fpu(tsk);
- 	msr = tsk->thread.regs->msr;
--	msr &= ~MSR_FP;
-+	msr &= ~(MSR_FP|MSR_FE0|MSR_FE1);
- #ifdef CONFIG_VSX
- 	if (cpu_has_feature(CPU_FTR_VSX))
- 		msr &= ~MSR_VSX;
+ static struct bin_attribute opal_msglog_attr = {
+-	.attr = {.name = "msglog", .mode = 0444},
++	.attr = {.name = "msglog", .mode = 0400},
+ 	.read = opal_msglog_read
+ };
+ 
 
 
