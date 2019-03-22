@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AF6AC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 05:24:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52F9DC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 05:24:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7276B213F2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 05:24:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CD07213F2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 05:24:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727873AbfCVFYI (ORCPT
+        id S1727912AbfCVFYS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 01:24:08 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:45712 "EHLO
+        Fri, 22 Mar 2019 01:24:18 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:45656 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727577AbfCVFXR (ORCPT
+        by vger.kernel.org with ESMTP id S1726553AbfCVFXQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 01:23:17 -0400
+        Fri, 22 Mar 2019 01:23:16 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1h7Ce9-00015w-Lg; Fri, 22 Mar 2019 05:23:13 +0000
+        id 1h7Ce9-00015t-Iz; Fri, 22 Mar 2019 05:23:13 +0000
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1h7Ce9-0001oS-GN; Fri, 22 Mar 2019 05:23:13 +0000
+        id 1h7Ce9-0001oE-CG; Fri, 22 Mar 2019 05:23:13 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Vasily Averin" <vvs@virtuozzo.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "J. Bruce Fields" <bfields@redhat.com>
+        "Brian Foster" <bfoster@redhat.com>,
+        "Dave Chinner" <dchinner@redhat.com>,
+        "Dave Chinner" <david@fromorbit.com>
 Date:   Fri, 22 Mar 2019 05:20:18 +0000
-Message-ID: <lsq.1553232018.783254154@decadent.org.uk>
+Message-ID: <lsq.1553232018.256555080@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 04/16] sunrpc: use-after-free in svc_process_common()
+Subject: [PATCH 3.16 01/16] xfs: don't BUG() on mixed direct and mapped I/O
 In-Reply-To: <lsq.1553232017.771830163@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,146 +56,85 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Vasily Averin <vvs@virtuozzo.com>
+From: Brian Foster <bfoster@redhat.com>
 
-commit d4b09acf924b84bae77cad090a9d108e70b43643 upstream.
+commit 04197b341f23b908193308b8d63d17ff23232598 upstream.
 
-if node have NFSv41+ mounts inside several net namespaces
-it can lead to use-after-free in svc_process_common()
+We've had reports of generic/095 causing XFS to BUG() in
+__xfs_get_blocks() due to the existence of delalloc blocks on a
+direct I/O read. generic/095 issues a mix of various types of I/O,
+including direct and memory mapped I/O to a single file. This is
+clearly not supported behavior and is known to lead to such
+problems. E.g., the lack of exclusion between the direct I/O and
+write fault paths means that a write fault can allocate delalloc
+blocks in a region of a file that was previously a hole after the
+direct read has attempted to flush/inval the file range, but before
+it actually reads the block mapping. In turn, the direct read
+discovers a delalloc extent and cannot proceed.
 
-svc_process_common()
-        /* Setup reply header */
-        rqstp->rq_xprt->xpt_ops->xpo_prep_reply_hdr(rqstp); <<< HERE
+While the appropriate solution here is to not mix direct and memory
+mapped I/O to the same regions of the same file, the current
+BUG_ON() behavior is probably overkill as it can crash the entire
+system.  Instead, localize the failure to the I/O in question by
+returning an error for a direct I/O that cannot be handled safely
+due to delalloc blocks. Be careful to allow the case of a direct
+write to post-eof delalloc blocks. This can occur due to speculative
+preallocation and is safe as post-eof blocks are not accompanied by
+dirty pages in pagecache (conversely, preallocation within eof must
+have been zeroed, and thus dirtied, before the inode size could have
+been increased beyond said blocks).
 
-svc_process_common() can use incorrect rqstp->rq_xprt,
-its caller function bc_svc_process() takes it from serv->sv_bc_xprt.
-The problem is that serv is global structure but sv_bc_xprt
-is assigned per-netnamespace.
+Finally, provide an additional warning if a direct I/O write occurs
+while the file is memory mapped. This may not catch all problematic
+scenarios, but provides a hint that some known-to-be-problematic I/O
+methods are in use.
 
-According to Trond, the whole "let's set up rqstp->rq_xprt
-for the back channel" is nothing but a giant hack in order
-to work around the fact that svc_process_common() uses it
-to find the xpt_ops, and perform a couple of (meaningless
-for the back channel) tests of xpt_flags.
-
-All we really need in svc_process_common() is to be able to run
-rqstp->rq_xprt->xpt_ops->xpo_prep_reply_hdr()
-
-Bruce J Fields points that this xpo_prep_reply_hdr() call
-is an awfully roundabout way just to do "svc_putnl(resv, 0);"
-in the tcp case.
-
-This patch does not initialiuze rqstp->rq_xprt in bc_svc_process(),
-now it calls svc_process_common() with rqstp->rq_xprt = NULL.
-
-To adjust reply header svc_process_common() just check
-rqstp->rq_prot and calls svc_tcp_prep_reply_hdr() for tcp case.
-
-To handle rqstp->rq_xprt = NULL case in functions called from
-svc_process_common() patch intruduces net namespace pointer
-svc_rqst->rq_bc_net and adjust SVC_NET() definition.
-Some other function was also adopted to properly handle described case.
-
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Fixes: 23c20ecd4475 ("NFS: callback up - users counting cleanup")
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
-v2: - added lost extern svc_tcp_prep_reply_hdr()
-    - context changes in svc_process_common()
-    - dropped trace_svc_process() changes
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Brian Foster <bfoster@redhat.com>
+Reviewed-by: Dave Chinner <dchinner@redhat.com>
+Signed-off-by: Dave Chinner <david@fromorbit.com>
+[bwh: Backported to 3.16:
+ - Assign positive error code to error variable
+ - Adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- include/linux/sunrpc/svc.h |  5 ++++-
- net/sunrpc/svc.c           | 10 +++++++---
- net/sunrpc/svc_xprt.c      |  5 +++--
- net/sunrpc/svcsock.c       |  2 +-
- 4 files changed, 15 insertions(+), 7 deletions(-)
+ fs/xfs/xfs_aops.c | 22 ++++++++++++++++++++--
+ 1 file changed, 20 insertions(+), 2 deletions(-)
 
---- a/include/linux/sunrpc/svc.h
-+++ b/include/linux/sunrpc/svc.h
-@@ -282,9 +282,12 @@ struct svc_rqst {
- 						 * cache pages */
- 	wait_queue_head_t	rq_wait;	/* synchronization */
- 	struct task_struct	*rq_task;	/* service thread */
-+	struct net		*rq_bc_net;	/* pointer to backchannel's
-+						 * net namespace
-+						 */
- };
+--- a/fs/xfs/xfs_aops.c
++++ b/fs/xfs/xfs_aops.c
+@@ -1300,6 +1300,26 @@ __xfs_get_blocks(
+ 	if (error)
+ 		goto out_unlock;
  
--#define SVC_NET(svc_rqst)	(svc_rqst->rq_xprt->xpt_net)
-+#define SVC_NET(rqst) (rqst->rq_xprt ? rqst->rq_xprt->xpt_net : rqst->rq_bc_net)
- 
- /*
-  * Rigorous type checking on sockaddr type conversions
---- a/net/sunrpc/svc.c
-+++ b/net/sunrpc/svc.c
-@@ -1063,6 +1063,8 @@ void svc_printk(struct svc_rqst *rqstp,
- static __printf(2,3) void svc_printk(struct svc_rqst *rqstp, const char *fmt, ...) {}
- #endif
- 
-+extern void svc_tcp_prep_reply_hdr(struct svc_rqst *);
++	/*
++	 * The only time we can ever safely find delalloc blocks on direct I/O
++	 * is a dio write to post-eof speculative preallocation. All other
++	 * scenarios are indicative of a problem or misuse (such as mixing
++	 * direct and mapped I/O).
++	 *
++	 * The file may be unmapped by the time we get here so we cannot
++	 * reliably fail the I/O based on mapping. Instead, fail the I/O if this
++	 * is a read or a write within eof. Otherwise, carry on but warn as a
++	 * precuation if the file happens to be mapped.
++	 */
++	if (direct && imap.br_startblock == DELAYSTARTBLOCK) {
++		if (!create || offset < i_size_read(VFS_I(ip))) {
++			WARN_ON_ONCE(1);
++			error = EIO;
++			goto out_unlock;
++		}
++		WARN_ON_ONCE(mapping_mapped(VFS_I(ip)->i_mapping));
++	}
 +
- /*
-  * Common routine for processing the RPC request.
-  */
-@@ -1092,7 +1094,8 @@ svc_process_common(struct svc_rqst *rqst
- 	rqstp->rq_dropme = false;
+ 	if (create &&
+ 	    (!nimaps ||
+ 	     (imap.br_startblock == HOLESTARTBLOCK ||
+@@ -1383,7 +1403,6 @@ __xfs_get_blocks(
+ 		set_buffer_new(bh_result);
  
- 	/* Setup reply header */
--	rqstp->rq_xprt->xpt_ops->xpo_prep_reply_hdr(rqstp);
-+	if (rqstp->rq_prot == IPPROTO_TCP)
-+		svc_tcp_prep_reply_hdr(rqstp);
- 
- 	svc_putu32(resv, rqstp->rq_xid);
- 
-@@ -1139,7 +1142,8 @@ svc_process_common(struct svc_rqst *rqst
- 	case SVC_DENIED:
- 		goto err_bad_auth;
- 	case SVC_CLOSE:
--		if (test_bit(XPT_TEMP, &rqstp->rq_xprt->xpt_flags))
-+		if (rqstp->rq_xprt &&
-+		    test_bit(XPT_TEMP, &rqstp->rq_xprt->xpt_flags))
- 			svc_close_xprt(rqstp->rq_xprt);
- 	case SVC_DROP:
- 		goto dropit;
-@@ -1354,10 +1358,10 @@ bc_svc_process(struct svc_serv *serv, st
- 	struct kvec	*resv = &rqstp->rq_res.head[0];
- 
- 	/* Build the svc_rqst used by the common processing routine */
--	rqstp->rq_xprt = serv->sv_bc_xprt;
- 	rqstp->rq_xid = req->rq_xid;
- 	rqstp->rq_prot = req->rq_xprt->prot;
- 	rqstp->rq_server = serv;
-+	rqstp->rq_bc_net = req->rq_xprt->xprt_net;
- 
- 	rqstp->rq_addrlen = sizeof(req->rq_xprt->addr);
- 	memcpy(&rqstp->rq_addr, &req->rq_xprt->addr, rqstp->rq_addrlen);
---- a/net/sunrpc/svc_xprt.c
-+++ b/net/sunrpc/svc_xprt.c
-@@ -432,10 +432,11 @@ static struct svc_xprt *svc_xprt_dequeue
-  */
- void svc_reserve(struct svc_rqst *rqstp, int space)
- {
-+	struct svc_xprt *xprt = rqstp->rq_xprt;
-+
- 	space += rqstp->rq_res.head[0].iov_len;
- 
--	if (space < rqstp->rq_reserved) {
--		struct svc_xprt *xprt = rqstp->rq_xprt;
-+	if (xprt && space < rqstp->rq_reserved) {
- 		atomic_sub((rqstp->rq_reserved - space), &xprt->xpt_reserved);
- 		rqstp->rq_reserved = space;
- 
---- a/net/sunrpc/svcsock.c
-+++ b/net/sunrpc/svcsock.c
-@@ -1195,7 +1195,7 @@ static int svc_tcp_sendto(struct svc_rqs
- /*
-  * Setup response header. TCP has a 4B record length field.
-  */
--static void svc_tcp_prep_reply_hdr(struct svc_rqst *rqstp)
-+void svc_tcp_prep_reply_hdr(struct svc_rqst *rqstp)
- {
- 	struct kvec *resv = &rqstp->rq_res.head[0];
- 
+ 	if (imap.br_startblock == DELAYSTARTBLOCK) {
+-		BUG_ON(direct);
+ 		if (create) {
+ 			set_buffer_uptodate(bh_result);
+ 			set_buffer_mapped(bh_result);
 
