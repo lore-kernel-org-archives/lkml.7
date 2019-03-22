@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21EC0C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:36:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70EA7C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:36:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7285218B0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:36:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4095C21916
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:36:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254601;
-	bh=juI14pYSiT69aqCBgrUnXh5O3PkbqWkgp94596QFje4=;
+	s=default; t=1553254605;
+	bh=zIf3H3NQHQ/V8DZP6agMe5ctNOflHsJP6oqSOaY1qnE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xNq2IIBE/7qPssDDp5UwGLTclu5PVEWHKBca3PpfbkFKf0bGscWFx7I8Q7yd+A7wI
-	 QZy5WV8lE2XnIz/PhCa6s77dhOH/G8mcbS2CZz2iGx29VVp/V3MO0pWxwpdtlxNUYX
-	 5WGmsFFW/gFV0DE5x/KnzouB776lXSk/87cPGIdU=
+	b=jWp6aiNRvjHMwLXSK1O52RTl4D2bZAPyCjXTl/nEoQJK63poNPee2VW+CxSosFUto
+	 7j3TiJTWD8fGBFv8X5vt1tLJ15aFaeBW8e+JjrsKQn9h9fC6/hb3OAkd2s7lfbF1N8
+	 dAvW6unCHboYCVgiuplUmmZ2jmP3oJsf1iMW6Nj8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730735AbfCVLgj (ORCPT
+        id S1730745AbfCVLgn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:36:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37990 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:36:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729777AbfCVLgf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:36:35 -0400
+        id S1730729AbfCVLgi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:36:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4EF5B2196E;
-        Fri, 22 Mar 2019 11:36:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E75B2082C;
+        Fri, 22 Mar 2019 11:36:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254594;
-        bh=juI14pYSiT69aqCBgrUnXh5O3PkbqWkgp94596QFje4=;
+        s=default; t=1553254597;
+        bh=zIf3H3NQHQ/V8DZP6agMe5ctNOflHsJP6oqSOaY1qnE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZRPdkY5nYpZligejPLTWXD6LonxdXPuEglrzDRyRmYcRK1FPu9zc/qJX5oVS5GKmP
-         n+XD1EFGCB/lin2nULnJKTW2jCXComGRFAwhdDnwDLmif3hBMz54HYdGzUEchzU7mo
-         VL+wNPAAXvc1sjqdiYZ4Jk/YGL4g3ZpNXB32MIGM=
+        b=Q67MS+sTqD2uCmS7PhZN+q34xKh5Ug6Va3wFT8FbcHQ/jJtTUrBF8BZZVWSpqb34p
+         G8z7mtcHyVcL0ZsvCXKbwsDm2l5218Gr1F2Z4BqLj8fy5dNu5Uu4WEN7T9aYKrysIW
+         7wsST9Tvv2/iQ3HJYdclJipq3l6txENb9LzOXKwE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -47,9 +47,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Krzysztof Kozlowski <krzk@kernel.org>,
         Marek Szyprowski <m.szyprowski@samsung.com>,
         Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: [PATCH 4.4 184/230] clocksource/drivers/exynos_mct: Move one-shot check from tick clear to ISR
-Date:   Fri, 22 Mar 2019 12:15:22 +0100
-Message-Id: <20190322111249.691774262@linuxfoundation.org>
+Subject: [PATCH 4.4 185/230] clocksource/drivers/exynos_mct: Clear timer interrupt when shutdown
+Date:   Fri, 22 Mar 2019 12:15:23 +0100
+Message-Id: <20190322111249.763966401@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -70,71 +70,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Stuart Menefy <stuart.menefy@mathembedded.com>
 
-commit a5719a40aef956ba704f2aa1c7b977224d60fa96 upstream.
+commit d2f276c8d3c224d5b493c42b6cf006ae4e64fb1c upstream.
 
-When a timer tick occurs and the clock is in one-shot mode, the timer
-needs to be stopped to prevent it triggering subsequent interrupts.
-Currently this code is in exynos4_mct_tick_clear(), but as it is
-only needed when an ISR occurs move it into exynos4_mct_tick_isr(),
-leaving exynos4_mct_tick_clear() just doing what its name suggests it
-should.
+When shutting down the timer, ensure that after we have stopped the
+timer any pending interrupts are cleared. This fixes a problem when
+suspending, as interrupts are disabled before the timer is stopped,
+so the timer interrupt may still be asserted, preventing the system
+entering a low power state when the wfi is executed.
 
 Signed-off-by: Stuart Menefy <stuart.menefy@mathembedded.com>
 Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
 Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: stable@vger.kernel.org # v4.3+
+Cc: <stable@vger.kernel.org> # v4.3+
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/clocksource/exynos_mct.c |   22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+ drivers/clocksource/exynos_mct.c |    1 +
+ 1 file changed, 1 insertion(+)
 
 --- a/drivers/clocksource/exynos_mct.c
 +++ b/drivers/clocksource/exynos_mct.c
-@@ -379,6 +379,13 @@ static void exynos4_mct_tick_start(unsig
- 	exynos4_mct_write(tmp, mevt->base + MCT_L_TCON_OFFSET);
- }
+@@ -402,6 +402,7 @@ static int set_state_shutdown(struct clo
  
-+static void exynos4_mct_tick_clear(struct mct_clock_event_device *mevt)
-+{
-+	/* Clear the MCT tick interrupt */
-+	if (readl_relaxed(reg_base + mevt->base + MCT_L_INT_CSTAT_OFFSET) & 1)
-+		exynos4_mct_write(0x1, mevt->base + MCT_L_INT_CSTAT_OFFSET);
-+}
-+
- static int exynos4_tick_set_next_event(unsigned long cycles,
- 				       struct clock_event_device *evt)
- {
-@@ -411,8 +418,11 @@ static int set_state_periodic(struct clo
+ 	mevt = container_of(evt, struct mct_clock_event_device, evt);
+ 	exynos4_mct_tick_stop(mevt);
++	exynos4_mct_tick_clear(mevt);
  	return 0;
  }
  
--static void exynos4_mct_tick_clear(struct mct_clock_event_device *mevt)
-+static irqreturn_t exynos4_mct_tick_isr(int irq, void *dev_id)
- {
-+	struct mct_clock_event_device *mevt = dev_id;
-+	struct clock_event_device *evt = &mevt->evt;
-+
- 	/*
- 	 * This is for supporting oneshot mode.
- 	 * Mct would generate interrupt periodically
-@@ -421,16 +431,6 @@ static void exynos4_mct_tick_clear(struc
- 	if (!clockevent_state_periodic(&mevt->evt))
- 		exynos4_mct_tick_stop(mevt);
- 
--	/* Clear the MCT tick interrupt */
--	if (readl_relaxed(reg_base + mevt->base + MCT_L_INT_CSTAT_OFFSET) & 1)
--		exynos4_mct_write(0x1, mevt->base + MCT_L_INT_CSTAT_OFFSET);
--}
--
--static irqreturn_t exynos4_mct_tick_isr(int irq, void *dev_id)
--{
--	struct mct_clock_event_device *mevt = dev_id;
--	struct clock_event_device *evt = &mevt->evt;
--
- 	exynos4_mct_tick_clear(mevt);
- 
- 	evt->event_handler(evt);
 
 
