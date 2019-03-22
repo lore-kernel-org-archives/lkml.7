@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BAFCC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:39:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C63AEC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:39:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30230204FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:39:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 938A92082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 11:39:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553254747;
-	bh=/dRj5GDuMBGcjiBidW3vzfvOc16HqPmFJaCLNOrZWfc=;
+	s=default; t=1553254750;
+	bh=n8y7avrUIOm+o1CE9RMNegcDEczHQ2EgVaVWcLX2mCc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vMFoqm0VsMUjNbZH90KOg273q1+zu50ZK+PPdFN4oyqjZrAdnizYdMlzvdsqWHdhC
-	 PFwNsoBOqvXD1E/rRhO4/SIY0T4OJTG/zyDykoUGBjMhQebCJUA5iRylx3zAidKzr7
-	 y7Y5z0wy6jN6VpYAB6OKSrHcbxaKMAUrg+vu+/es=
+	b=YJkh4TK7LMMJg52RLTeZz18JsS73pdqhsuPFgwONvCximBHaxKBlCuc9K/OrukXWT
+	 tlVoN7xbmqaK3fN82ovl8A17QKCy6/pGdbXQssobWO7BN5xgSOuzuH1cs63PekjgXc
+	 UFtOn38jE2rHzFSbXhlwCWiglp2H5gJMqSpz3UbQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730638AbfCVLjG (ORCPT
+        id S1731068AbfCVLjJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 07:39:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40544 "EHLO mail.kernel.org"
+        Fri, 22 Mar 2019 07:39:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40706 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731051AbfCVLi7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 07:38:59 -0400
+        id S1731063AbfCVLjF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 07:39:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1DA332082C;
-        Fri, 22 Mar 2019 11:38:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B58B22082C;
+        Fri, 22 Mar 2019 11:39:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553254738;
-        bh=/dRj5GDuMBGcjiBidW3vzfvOc16HqPmFJaCLNOrZWfc=;
+        s=default; t=1553254745;
+        bh=n8y7avrUIOm+o1CE9RMNegcDEczHQ2EgVaVWcLX2mCc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cBBsy+orDyZvc2EpJAkT/DXYutooufwnrgGGstnYRk2nhbqGrnZFB8+ltKl60Bady
-         lP4pOiRybGYTrLtfxquSMHRy4nV686g0p5QI2a5EzloTn1PoTaGW2IuKNqwsZrNBiX
-         lP5JHIBVtjH3kq/2axdPiTQfsET9mApIqE21mB/s=
+        b=TQrg0gHw6wKV+b8zuigV2BhgM8ZZ5tlzbLJhVufvaDN6X3l7cwy4kmp1STJPpr/Vb
+         5Qj6s4YIPvkQ+gdAOu0wsHDdH25A1dRxFBoaZpPtCvM8A8z1fFd6++2KkVE2kJHHcj
+         A8MYJOvSDvEbmgR7Oq4V/TwJIewcM2bbGthBedtM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jonathan Neuschafer <j.neuschaefer@gmx.net>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
         Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.4 210/230] powerpc/wii: properly disable use of BATs when requested.
-Date:   Fri, 22 Mar 2019 12:15:48 +0100
-Message-Id: <20190322111251.635165517@linuxfoundation.org>
+Subject: [PATCH 4.4 212/230] powerpc/83xx: Also save/restore SPRG4-7 during suspend
+Date:   Fri, 22 Mar 2019 12:15:50 +0100
+Message-Id: <20190322111251.756941083@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
 References: <20190322111236.796964179@linuxfoundation.org>
@@ -69,37 +67,77 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-commit 6d183ca8baec983dc4208ca45ece3c36763df912 upstream.
+commit 36da5ff0bea2dc67298150ead8d8471575c54c7d upstream.
 
-'nobats' kernel parameter or some options like CONFIG_DEBUG_PAGEALLOC
-deny the use of BATS for mapping memory.
+The 83xx has 8 SPRG registers and uses at least SPRG4
+for DTLB handling LRU.
 
-This patch makes sure that the specific wii RAM mapping function
-takes it into account as well.
-
-Fixes: de32400dd26e ("wii: use both mem1 and mem2 as ram")
+Fixes: 2319f1239592 ("powerpc/mm: e300c2/c3/c4 TLB errata workaround")
 Cc: stable@vger.kernel.org
-Reviewed-by: Jonathan Neuschafer <j.neuschaefer@gmx.net>
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/platforms/embedded6xx/wii.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ arch/powerpc/platforms/83xx/suspend-asm.S |   34 +++++++++++++++++++++++-------
+ 1 file changed, 27 insertions(+), 7 deletions(-)
 
---- a/arch/powerpc/platforms/embedded6xx/wii.c
-+++ b/arch/powerpc/platforms/embedded6xx/wii.c
-@@ -104,6 +104,10 @@ unsigned long __init wii_mmu_mapin_mem2(
- 	/* MEM2 64MB@0x10000000 */
- 	delta = wii_hole_start + wii_hole_size;
- 	size = top - delta;
+--- a/arch/powerpc/platforms/83xx/suspend-asm.S
++++ b/arch/powerpc/platforms/83xx/suspend-asm.S
+@@ -26,13 +26,13 @@
+ #define SS_MSR		0x74
+ #define SS_SDR1		0x78
+ #define SS_LR		0x7c
+-#define SS_SPRG		0x80 /* 4 SPRGs */
+-#define SS_DBAT		0x90 /* 8 DBATs */
+-#define SS_IBAT		0xd0 /* 8 IBATs */
+-#define SS_TB		0x110
+-#define SS_CR		0x118
+-#define SS_GPREG	0x11c /* r12-r31 */
+-#define STATE_SAVE_SIZE 0x16c
++#define SS_SPRG		0x80 /* 8 SPRGs */
++#define SS_DBAT		0xa0 /* 8 DBATs */
++#define SS_IBAT		0xe0 /* 8 IBATs */
++#define SS_TB		0x120
++#define SS_CR		0x128
++#define SS_GPREG	0x12c /* r12-r31 */
++#define STATE_SAVE_SIZE 0x17c
+ 
+ 	.section .data
+ 	.align	5
+@@ -103,6 +103,16 @@ _GLOBAL(mpc83xx_enter_deep_sleep)
+ 	stw	r7, SS_SPRG+12(r3)
+ 	stw	r8, SS_SDR1(r3)
+ 
++	mfspr	r4, SPRN_SPRG4
++	mfspr	r5, SPRN_SPRG5
++	mfspr	r6, SPRN_SPRG6
++	mfspr	r7, SPRN_SPRG7
 +
-+	if (__map_without_bats)
-+		return delta;
++	stw	r4, SS_SPRG+16(r3)
++	stw	r5, SS_SPRG+20(r3)
++	stw	r6, SS_SPRG+24(r3)
++	stw	r7, SS_SPRG+28(r3)
 +
- 	for (bl = 128<<10; bl < max_size; bl <<= 1) {
- 		if (bl * 2 > size)
- 			break;
+ 	mfspr	r4, SPRN_DBAT0U
+ 	mfspr	r5, SPRN_DBAT0L
+ 	mfspr	r6, SPRN_DBAT1U
+@@ -493,6 +503,16 @@ mpc83xx_deep_resume:
+ 	mtspr	SPRN_IBAT7U, r6
+ 	mtspr	SPRN_IBAT7L, r7
+ 
++	lwz	r4, SS_SPRG+16(r3)
++	lwz	r5, SS_SPRG+20(r3)
++	lwz	r6, SS_SPRG+24(r3)
++	lwz	r7, SS_SPRG+28(r3)
++
++	mtspr	SPRN_SPRG4, r4
++	mtspr	SPRN_SPRG5, r5
++	mtspr	SPRN_SPRG6, r6
++	mtspr	SPRN_SPRG7, r7
++
+ 	lwz	r4, SS_SPRG+0(r3)
+ 	lwz	r5, SS_SPRG+4(r3)
+ 	lwz	r6, SS_SPRG+8(r3)
 
 
