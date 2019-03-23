@@ -8,56 +8,56 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F23EC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 12:54:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 002B2C4360F
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 12:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E28F21902
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 12:54:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEC89218A2
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 12:58:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WBz/0PDl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oFgP7SfO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727684AbfCWMyN (ORCPT
+        id S1727440AbfCWM6Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Mar 2019 08:54:13 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:38832 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727611AbfCWMyJ (ORCPT
+        Sat, 23 Mar 2019 08:58:25 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:34045 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726118AbfCWM6Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Mar 2019 08:54:09 -0400
-Received: by mail-wm1-f65.google.com with SMTP id a188so4574960wmf.3;
-        Sat, 23 Mar 2019 05:54:07 -0700 (PDT)
+        Sat, 23 Mar 2019 08:58:25 -0400
+Received: by mail-wr1-f68.google.com with SMTP id p10so5192656wrq.1;
+        Sat, 23 Mar 2019 05:58:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=Ny71xhOGKsck3wpcdPBhP3pC5AeNrCyXceAXSaqpWV8=;
-        b=WBz/0PDlUgA2ECXOSSHZXIPUaWwVtFzg0myjIblAWt2Golzknk3QteHBMMX7TcFSK7
-         9hE7VqzsX5MbfFnBUvGKcOEkiZWSFK3jn4U7bo9+rqNmMHGEa1i5k9XCwzBdyDYnY2QE
-         gBpeGAzFctz4LeXd5dl+SJiuns5ZL0DvN3ia1ADhOkdDPlDIqMSBhDvrjkpxb+OJKxFk
-         1YS/T/YZKd0AYtwdU2bW9oF8cvZK9GAYcrN3xRC3gKRocgGoZ5V7ByERJe5k6bJZd9Es
-         Oxnreofp61hIy609tRjDhMK7AveOn6l83Pp3S/Icp71/qjlpoq38hN8mXEHoglmKFBKU
-         HPFQ==
+        bh=VUDfVjt25B5iuZ8LRf+UQ/eDY99yvTEQdrmA2/dK4O0=;
+        b=oFgP7SfO1X8+1TM3kr6Yc6KGNBfuAVRSCYcPHCKXJ/noJbyiyva17iXamZq3Gd5gH1
+         4OYVXU0IRDoXmxKMisvWcJ79/XF94kOVRpw4ad0wHoBEACypK7kaM5XDKK6HJTaw8mQR
+         6J87l/NTSaSFn20h+p5cb5c6M98QQGgK22U55gQ9NMT4TxkcX8M39ymuCiabLVltaXdt
+         vfCdgzMqPM7f55C0TCsWjNJhSDnuOmjsi8wuk8i3COl+ntlP/zY8bHY5bcN+GaySFhkt
+         IMV/9YpanVLXSUSEDg2fq5SdZrMvk/jNrWhd0ayu260WkxnGHtvXJJRfViW4T2k9k5bL
+         E2gw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Ny71xhOGKsck3wpcdPBhP3pC5AeNrCyXceAXSaqpWV8=;
-        b=iXZTPvN0Ac65pYCHgqNM16M/WTBrmj9MDh1W6LgcLCbalZjMjAm0ZMxHjdMPzHLF9C
-         VLb+bOi7nnFIOi1L+ypO11QICV+9g9L3J1tRpQ4s4ooXBOijqOPlq93hjGBci/uufshB
-         phKaVyc9kVBnV4/DjtvzBcWUV11gRcGAaOp842/vPKXwYjKa1jJjOQR05++FZEI0xauy
-         yZl6wiS3LFDXb4oTi+SG8Z7iRIqtMsbsHE2k3Rr13DHBeqyTPCtLZayRAteYEb4Ix1ac
-         Od4Csx5w/8z3tIkWhC8NPL0Hst5UdvJ7AWjcSFF+8xvQqwFhdOp9wVLgj1koyBAZwI9D
-         rUCg==
-X-Gm-Message-State: APjAAAW2DKJCicQLbaiH6dpVFwoLGG1ShmE0NamEpZRMKR1umQDxa8Cl
-        ncDuP87HaCT6xfkBH4LcWZ8=
-X-Google-Smtp-Source: APXvYqwVkAPBd1qBtMr+LfOAAJ8T7C5UMV7lcvUnd5ecz9x21hmsdORO8nd2bp5XjRV8QLgthjZYZg==
-X-Received: by 2002:a1c:3543:: with SMTP id c64mr1922wma.75.1553345646908;
-        Sat, 23 Mar 2019 05:54:06 -0700 (PDT)
+        bh=VUDfVjt25B5iuZ8LRf+UQ/eDY99yvTEQdrmA2/dK4O0=;
+        b=e/SILF85bnOgbacx5YFZZNpgt9xdUmtbsvtwyk4VfawdVajIYxfW0DrpOadizktHPf
+         sFrmq/G31oYQZx/4OcbA5pPBKfmEyadulmeTWy9gPgRs+WmUqMbpBUMf2mcyGj+xVoQ0
+         /sJj976RDMgytNWCjjdSQUdywdmqAypQOMcrbyVBdWq10p9ivb/UcyYFdtcJD3wXrupQ
+         cWoXK5vHa75P+s+kVIx0NXdo8dk1I9IS9kyadhsnlpjhM2ceJ6dBWEy1uVe8OGky3W3P
+         IL2QUggpi2pQKR4wpfy8bcvQTGeHElKLEL3UNvUfyUQiEP8F5hVHUlzjrksL4JOOO3CN
+         yoEg==
+X-Gm-Message-State: APjAAAVo5PwQ7K2T+lhAWp61uleoZlFiolhzSShkNy/9hoJTDLeIXQFo
+        yHHLe5ME22HBDA6b4geQ4fM=
+X-Google-Smtp-Source: APXvYqyaXkVwed/1F72vyi3T6fMrtXlwTftolrOcLFMnydPvj2DIX5Q0+n5q0WAiL6OdlEDJEICL+g==
+X-Received: by 2002:adf:ee07:: with SMTP id y7mr9468401wrn.219.1553345903488;
+        Sat, 23 Mar 2019 05:58:23 -0700 (PDT)
 Received: from peano ([87.19.116.42])
-        by smtp.gmail.com with ESMTPSA id r6sm10582987wrx.48.2019.03.23.05.54.05
+        by smtp.gmail.com with ESMTPSA id z8sm10608970wrh.80.2019.03.23.05.58.21
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 23 Mar 2019 05:54:06 -0700 (PDT)
-Date:   Sat, 23 Mar 2019 13:54:05 +0100
+        Sat, 23 Mar 2019 05:58:22 -0700 (PDT)
+Date:   Sat, 23 Mar 2019 13:58:21 +0100
 From:   Cristian Sicilia <sicilia.cristian@gmail.com>
 To:     Lars-Peter Clausen <lars@metafoo.de>,
         Michael Hennerich <Michael.Hennerich@analog.com>,
@@ -73,8 +73,8 @@ Cc:     Lars-Peter Clausen <lars@metafoo.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 5/5] staging: iio: adc: Remove CamelCase notation
-Message-ID: <e1a9e28d72babe4781c577c68e6508e01367943f.1553335775.git.sicilia.cristian@gmail.com>
+Subject: [PATCH 1/5] staging: iio: adc: Tab alignment
+Message-ID: <70101e0eaa253140218d833223e0862d8851c01d.1553335775.git.sicilia.cristian@gmail.com>
 References: <cover.1553335775.git.sicilia.cristian@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -86,40 +86,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Aligned some parameters.
+
 Signed-off-by: Cristian Sicilia <sicilia.cristian@gmail.com>
 ---
- drivers/staging/iio/adc/ad7280a.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+ drivers/staging/iio/adc/ad7280a.c | 36 ++++++++++++++++++------------------
+ 1 file changed, 18 insertions(+), 18 deletions(-)
 
 diff --git a/drivers/staging/iio/adc/ad7280a.c b/drivers/staging/iio/adc/ad7280a.c
-index 5d848aa..c02454c 100644
+index d9df126..55b5879 100644
 --- a/drivers/staging/iio/adc/ad7280a.c
 +++ b/drivers/staging/iio/adc/ad7280a.c
-@@ -917,8 +917,8 @@ static int ad7280_probe(struct spi_device *spi)
- 	const struct ad7280_platform_data *pdata = dev_get_platdata(&spi->dev);
- 	struct ad7280_state *st;
- 	int ret;
--	const unsigned short tACQ_ns[4] = {465, 1010, 1460, 1890};
--	const unsigned short nAVG[4] = {1, 2, 4, 8};
-+	const unsigned short t_acq_ns[4] = {465, 1010, 1460, 1890};
-+	const unsigned short n_avg[4] = {1, 2, 4, 8};
- 	struct iio_dev *indio_dev;
+@@ -830,30 +830,30 @@ static irqreturn_t ad7280_event_handler(int irq, void *private)
+ }
  
- 	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
-@@ -966,10 +966,9 @@ static int ad7280_probe(struct spi_device *spi)
- 	 */
+ static IIO_DEVICE_ATTR_NAMED(in_thresh_low_value,
+-		in_voltage-voltage_thresh_low_value,
+-		0644,
+-		ad7280_read_channel_config,
+-		ad7280_write_channel_config,
+-		AD7280A_CELL_UNDERVOLTAGE);
++			     in_voltage - voltage_thresh_low_value,
++			     0644,
++			     ad7280_read_channel_config,
++			     ad7280_write_channel_config,
++			     AD7280A_CELL_UNDERVOLTAGE);
  
- 	st->readback_delay_us =
--		((tACQ_ns[pdata->acquisition_time & 0x3] + 695) *
--		(AD7280A_NUM_CH * nAVG[pdata->conversion_averaging & 0x3]))
--		- tACQ_ns[pdata->acquisition_time & 0x3] +
--		st->slave_num * 250;
-+		((t_acq_ns[pdata->acquisition_time & 0x3] + 695) *
-+		 (AD7280A_NUM_CH * n_avg[pdata->conversion_averaging & 0x3])) -
-+		t_acq_ns[pdata->acquisition_time & 0x3] + st->slave_num * 250;
+ static IIO_DEVICE_ATTR_NAMED(in_thresh_high_value,
+-		in_voltage-voltage_thresh_high_value,
+-		0644,
+-		ad7280_read_channel_config,
+-		ad7280_write_channel_config,
+-		AD7280A_CELL_OVERVOLTAGE);
++			     in_voltage - voltage_thresh_high_value,
++			     0644,
++			     ad7280_read_channel_config,
++			     ad7280_write_channel_config,
++			     AD7280A_CELL_OVERVOLTAGE);
  
- 	/* Convert to usecs */
- 	st->readback_delay_us = DIV_ROUND_UP(st->readback_delay_us, 1000);
+ static IIO_DEVICE_ATTR(in_temp_thresh_low_value,
+-		0644,
+-		ad7280_read_channel_config,
+-		ad7280_write_channel_config,
+-		AD7280A_AUX_ADC_UNDERVOLTAGE);
++		       0644,
++		       ad7280_read_channel_config,
++		       ad7280_write_channel_config,
++		       AD7280A_AUX_ADC_UNDERVOLTAGE);
+ 
+ static IIO_DEVICE_ATTR(in_temp_thresh_high_value,
+-		0644,
+-		ad7280_read_channel_config,
+-		ad7280_write_channel_config,
+-		AD7280A_AUX_ADC_OVERVOLTAGE);
++		       0644,
++		       ad7280_read_channel_config,
++		       ad7280_write_channel_config,
++		       AD7280A_AUX_ADC_OVERVOLTAGE);
+ 
+ static struct attribute *ad7280_event_attributes[] = {
+ 	&iio_dev_attr_in_thresh_low_value.dev_attr.attr,
 -- 
 2.7.4
 
