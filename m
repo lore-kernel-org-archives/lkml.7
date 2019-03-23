@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0615FC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 19:21:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98A07C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 19:21:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0ED3218D4
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 19:21:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66A6F2183E
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 19:21:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dfVY3eU5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TrHcvgGr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727822AbfCWTVl (ORCPT
+        id S1727898AbfCWTVp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Mar 2019 15:21:41 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:33321 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727544AbfCWTVk (ORCPT
+        Sat, 23 Mar 2019 15:21:45 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:55582 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727544AbfCWTVn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Mar 2019 15:21:40 -0400
-Received: by mail-wr1-f67.google.com with SMTP id q1so5855991wrp.0;
-        Sat, 23 Mar 2019 12:21:38 -0700 (PDT)
+        Sat, 23 Mar 2019 15:21:43 -0400
+Received: by mail-wm1-f68.google.com with SMTP id o25so5125105wmf.5;
+        Sat, 23 Mar 2019 12:21:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=VUDfVjt25B5iuZ8LRf+UQ/eDY99yvTEQdrmA2/dK4O0=;
-        b=dfVY3eU5LrTwh7ElvVTG1eYwv6pF2EYNK4m5QW20DYRisY6eMv48Gj4Km1luQb3qYC
-         uzatxKFFCltCzVlWb5vuTt4H6TISxx06JmnjPRacznqetQ1+WKn8OcWd9hy6ZhN9zaq/
-         udOuRzlqfBeRYYea/ILiOiPb+qXj1NNL2mO2Dq8Rj2midDXWGNJTxy3F7lj5+uu5VHDo
-         quAZMlp9strreOWObr7jqRoie1BQdWxZ1vK9AEi9mjZWOxJuJ4fQUIXPS02mxUPRE1mq
-         GfKejtByLTvyXLBvmpvDAmCUQOYv9KDUpGCBS1wS1VZQVLNJqtnJFgHYnZyY/jU6mJV5
-         HO0w==
+        bh=kblbWvCyq1UZrHknp/mh7+F4dSszEzTXTDTT5S5waO4=;
+        b=TrHcvgGrgPB7qkt3XaSDn58liqYHKpUrUDPrmgGDZNhEtmiUPvAS5cE0eO8wOkqyg5
+         4oYuHAqg6R4mLLSaR8OIZTAAJRL+TRvfMrrBD97bYnEwy5C209X2lqrtPpql+IPMQlZz
+         ro69iQaRA91rjEFmQ/ut0y9PpAlfaLRmdXhZHFs181StPR/Ra9aLkYuXE2Ts+zVieOdW
+         bMqEgR7qubGzWO4A1b6PYayS5M2AD8pwsE9HfVm+FX5LE+lmqdqBvKjsN8EFP+Ca1lP0
+         Gx6m3OpBW1bxx7Sguk0CiT/ejkuyEXMQ4znYbDPmakK8yyySiC0dv9fGyaHwRsERLyr1
+         tUFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VUDfVjt25B5iuZ8LRf+UQ/eDY99yvTEQdrmA2/dK4O0=;
-        b=iWCf1SBl3Tmw8ly1sH4Zi9bBUQeOqarOzbVwiIyCFtBLnc+nkdf25r9vZYhHlxJvOQ
-         vljvF3FIbufq+52jzF6va9a+qlXAiY5JTSh7KHzym5RifVqmFzT1El794rQIDS2jJeIh
-         StftjyqX1bEpKeomLdJXH9nyxFRER9s7OwurIbG9duevBjfLITbkixLPl5wxpsmpwBrh
-         rF/Xv3cb+WFwi+AC+TIgwhm4ALznSAcIBPOV5PHaTw7c7M8CBB2zX7gpDUeZp5LbrwL7
-         sAPUlnQXM+XP93tH506gLqv/AGLSraS3p3bfTJLrDFb2ZnA7i4pk9xEzTXg7yuEES4Em
-         cZkw==
-X-Gm-Message-State: APjAAAUUHctTWS9vZojlYOuRsye9UAbSzUPHhxmaj2NHPUieEA1h5jvL
-        Rqgg7mdM6qt4Y9f3R5X1BKk=
-X-Google-Smtp-Source: APXvYqwjK18P6DxmBF6I3pUoL4KC56qOiw3dqrrGjTH1J08vTorfnRd8azS5AxFzBkM+PDhU/I/PFw==
-X-Received: by 2002:a5d:4606:: with SMTP id t6mr10423932wrq.43.1553368897714;
-        Sat, 23 Mar 2019 12:21:37 -0700 (PDT)
+        bh=kblbWvCyq1UZrHknp/mh7+F4dSszEzTXTDTT5S5waO4=;
+        b=MaXVZs+R7ZJlzAy8AYdk0TYUrYDwLBQv+fmy4kJoFuhzrEIP99jidM3hV3pkHslBOR
+         kY2q+bUkywbdudY7PUbiSPM2UPgNM1d7SOIbaZ5OJV2nmpw2At/UVtKVc21yGcC5j4/E
+         Eap3AG8Zrk+DYdkR8VQz4Jj0N//FhBffkjL0qqXsiRlA4q+eDrw19eDBY+8c9HSEX+eT
+         V4PXknnD/nXFdz0QE43KNSZnVnLNTHsyoKXvA5Y5qOn2yrnTPvrOlt4a/nlbHea147QE
+         X2G8E++vnEfRnb+cd3m7yva4GZojeG0+1bM0rPJqUipyUGmevsSv9zd77eWLuTx8/Alj
+         r9UA==
+X-Gm-Message-State: APjAAAVbyakh5XKZvCnF2nv5jiAyJ0tkXXNv78n7JipxFBBhwBDzSZC6
+        J6GjdbeU/jMOIoLNB+mn5V8=
+X-Google-Smtp-Source: APXvYqxYL6RnraC1/ufTRuGndOMaLG3h0U5xQlSSj6bayXMBom8QLm5TiFEP5Wxc6VjOe2A9BU4V3w==
+X-Received: by 2002:a1c:1a53:: with SMTP id a80mr6859687wma.15.1553368901136;
+        Sat, 23 Mar 2019 12:21:41 -0700 (PDT)
 Received: from peano ([87.19.116.42])
-        by smtp.gmail.com with ESMTPSA id d16sm9944689wru.49.2019.03.23.12.21.36
+        by smtp.gmail.com with ESMTPSA id r12sm18259628wrr.71.2019.03.23.12.21.39
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 23 Mar 2019 12:21:37 -0700 (PDT)
-Date:   Sat, 23 Mar 2019 20:21:36 +0100
+        Sat, 23 Mar 2019 12:21:40 -0700 (PDT)
+Date:   Sat, 23 Mar 2019 20:21:39 +0100
 From:   Cristian Sicilia <sicilia.cristian@gmail.com>
 To:     Lars-Peter Clausen <lars@metafoo.de>,
         Michael Hennerich <Michael.Hennerich@analog.com>,
@@ -72,8 +72,8 @@ Cc:     Lars-Peter Clausen <lars@metafoo.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/5] staging: iio: adc: Tab alignment
-Message-ID: <70101e0eaa253140218d833223e0862d8851c01d.1553366098.git.sicilia.cristian@gmail.com>
+Subject: [PATCH v2 2/5] staging: iio: adc: Converted bool to bitfield format
+Message-ID: <93b82557f3610f4bf4d09d0556e502b418376420.1553366098.git.sicilia.cristian@gmail.com>
 References: <cover.1553335775.git.sicilia.cristian@gmail.com>
  <cover.1553366098.git.sicilia.cristian@gmail.com>
 MIME-Version: 1.0
@@ -86,66 +86,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Aligned some parameters.
+Changed bool format to bitfield format to save space.
 
 Signed-off-by: Cristian Sicilia <sicilia.cristian@gmail.com>
----
- drivers/staging/iio/adc/ad7280a.c | 36 ++++++++++++++++++------------------
- 1 file changed, 18 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/staging/iio/adc/ad7280a.c b/drivers/staging/iio/adc/ad7280a.c
-index d9df126..55b5879 100644
---- a/drivers/staging/iio/adc/ad7280a.c
-+++ b/drivers/staging/iio/adc/ad7280a.c
-@@ -830,30 +830,30 @@ static irqreturn_t ad7280_event_handler(int irq, void *private)
- }
+---
+The strange thing is that this struct seems not populated
+using a DTS binding function.
+---
+ drivers/staging/iio/adc/ad7192.h | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/staging/iio/adc/ad7192.h b/drivers/staging/iio/adc/ad7192.h
+index 7433a43..87891ba 100644
+--- a/drivers/staging/iio/adc/ad7192.h
++++ b/drivers/staging/iio/adc/ad7192.h
+@@ -35,13 +35,13 @@ struct ad7192_platform_data {
+ 	u16		vref_mv;
+ 	u8		clock_source_sel;
+ 	u32		ext_clk_hz;
+-	bool		refin2_en;
+-	bool		rej60_en;
+-	bool		sinc3_en;
+-	bool		chop_en;
+-	bool		buf_en;
+-	bool		unipolar_en;
+-	bool		burnout_curr_en;
+-};
++	u8		refin2_en:1;
++	u8		rej60_en:1;
++	u8		sinc3_en:1;
++	u8		chop_en:1;
++	u8		buf_en:1;
++	u8		unipolar_en:1;
++	u8		burnout_curr_en:1;
++} __attribute__((__packed__));
  
- static IIO_DEVICE_ATTR_NAMED(in_thresh_low_value,
--		in_voltage-voltage_thresh_low_value,
--		0644,
--		ad7280_read_channel_config,
--		ad7280_write_channel_config,
--		AD7280A_CELL_UNDERVOLTAGE);
-+			     in_voltage - voltage_thresh_low_value,
-+			     0644,
-+			     ad7280_read_channel_config,
-+			     ad7280_write_channel_config,
-+			     AD7280A_CELL_UNDERVOLTAGE);
- 
- static IIO_DEVICE_ATTR_NAMED(in_thresh_high_value,
--		in_voltage-voltage_thresh_high_value,
--		0644,
--		ad7280_read_channel_config,
--		ad7280_write_channel_config,
--		AD7280A_CELL_OVERVOLTAGE);
-+			     in_voltage - voltage_thresh_high_value,
-+			     0644,
-+			     ad7280_read_channel_config,
-+			     ad7280_write_channel_config,
-+			     AD7280A_CELL_OVERVOLTAGE);
- 
- static IIO_DEVICE_ATTR(in_temp_thresh_low_value,
--		0644,
--		ad7280_read_channel_config,
--		ad7280_write_channel_config,
--		AD7280A_AUX_ADC_UNDERVOLTAGE);
-+		       0644,
-+		       ad7280_read_channel_config,
-+		       ad7280_write_channel_config,
-+		       AD7280A_AUX_ADC_UNDERVOLTAGE);
- 
- static IIO_DEVICE_ATTR(in_temp_thresh_high_value,
--		0644,
--		ad7280_read_channel_config,
--		ad7280_write_channel_config,
--		AD7280A_AUX_ADC_OVERVOLTAGE);
-+		       0644,
-+		       ad7280_read_channel_config,
-+		       ad7280_write_channel_config,
-+		       AD7280A_AUX_ADC_OVERVOLTAGE);
- 
- static struct attribute *ad7280_event_attributes[] = {
- 	&iio_dev_attr_in_thresh_low_value.dev_attr.attr,
+ #endif /* IIO_ADC_AD7192_H_ */
 -- 
 2.7.4
 
