@@ -2,77 +2,158 @@ Return-Path: <SRS0=q9dy=R2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C724C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 06:33:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A66F0C10F05
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 06:35:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A251218B0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 06:33:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553322802;
-	bh=h4GOi6W9NlH/jO055LyAVrumrXCY+vgkg+KpAF8DfKA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EPl0Aei9+SRv5CAv6IyuBddttCwoflGmOSeCuIMk3p0oG+cUQpTEXv47MshTTKxEL
-	 358F6RkQ1TmBMgpu8DPtKdMM1h3Idhm7D1TYsoBmq5ad11ex2G2pBaLt3fduMqxQyp
-	 6Jsoavo3WJZIZYBwZc11ACcI5TLG9/u67OZ6X0pM=
+	by mail.kernel.org (Postfix) with ESMTP id 691A621874
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 06:35:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="EpghnCiP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726649AbfCWGdT (ORCPT
+        id S1726839AbfCWGe6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Mar 2019 02:33:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35720 "EHLO mail.kernel.org"
+        Sat, 23 Mar 2019 02:34:58 -0400
+Received: from m13-37.163.com ([220.181.13.37]:46963 "EHLO m13-37.163.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726046AbfCWGdS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Mar 2019 02:33:18 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84767218B0;
-        Sat, 23 Mar 2019 06:33:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553322798;
-        bh=h4GOi6W9NlH/jO055LyAVrumrXCY+vgkg+KpAF8DfKA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vACviAQDl+M6M+7QhveZGl0qulXynfB1C7V1WdIDnm/ue8oVB4utAvaIQHkiOQIxQ
-         UDgwARg0p8o+yooJXAkSxMDwy11ILGV3CmYh053Lk15w16wmwr9E+yT5NN3PmZ+W/y
-         eaM8cYSS6zTbGeeasPMhMfYY9E91KY+5htspxuYs=
-Date:   Sat, 23 Mar 2019 07:33:15 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     "He, Bo" <bo.he@intel.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "Zhang, Jun" <jun.zhang@intel.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        "Xiao, Jin" <jin.xiao@intel.com>,
-        "Bai, Jie A" <jie.a.bai@intel.com>
-Subject: Re: [PATCH 3.18 132/134] rcu: Do RCU GP kthread self-wakeup from
- softirq and interrupt
-Message-ID: <20190323063315.GB31361@kroah.com>
-References: <20190322111210.465931067@linuxfoundation.org>
- <20190322111220.102008032@linuxfoundation.org>
- <CD6925E8781EFD4D8E11882D20FC406D52A646D1@SHSMSX104.ccr.corp.intel.com>
+        id S1726211AbfCWGe6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 Mar 2019 02:34:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=Date:From:Subject:MIME-Version:Message-ID; bh=miYSJ
+        G8KpKAlih9b8ElAxT99SSIoN+EhSb1raJGbYO0=; b=EpghnCiPA+qFR//hrLywX
+        GhhDOrUk5H6Niqu6hhGH7AjPHkZGr+g1lQoQq7RzvXjoD04CGL8zRHr9EhdLgKEl
+        KH4pjDvEciwhu7hPra+I20eKBoXUkElp3nEKE62y0gBsu7efwiEOArR0zIMUozsX
+        XnE0eXX/xlkf4hLGF5jM2s=
+Received: from luferry$163.com ( [47.251.3.230, 54.215.2.217] ) by
+ ajax-webmail-wmsvr37 (Coremail) ; Sat, 23 Mar 2019 14:34:25 +0800 (CST)
+X-Originating-IP: [47.251.3.230, 54.215.2.217]
+Date:   Sat, 23 Mar 2019 14:34:25 +0800 (CST)
+From:   luferry <luferry@163.com>
+To:     "Dongli Zhang" <dongli.zhang@oracle.com>
+Cc:     "Jens Axboe" <axboe@kernel.dk>, "Ming Lei" <ming.lei@redhat.com>,
+        "Christoph Hellwig" <hch@lst.de>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re:Re: [PATCH] block/mq: blk map queues by core id
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version SP_ntes V3.5 build
+ 20180927(cd7136b6) Copyright (c) 2002-2019 www.mailtech.cn 163com
+In-Reply-To: <9fa3eda2-536c-86a1-a7a3-c157fd0cdfdc@oracle.com>
+References: <20190322100949.5555-1-luferry@163.com>
+ <9fa3eda2-536c-86a1-a7a3-c157fd0cdfdc@oracle.com>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=GBK
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CD6925E8781EFD4D8E11882D20FC406D52A646D1@SHSMSX104.ccr.corp.intel.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Message-ID: <4cddfb88.8534.169a941f24a.Coremail.luferry@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID: JcGowABHZgRx05VcfTcaAA--.55002W
+X-CM-SenderInfo: poxiv2lu16il2tof0z/xtbBax6AWletueSFXAACsT
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 22, 2019 at 04:00:17PM +0000, He, Bo wrote:
-> Hi, Greg:
-> 	Can you hold on the 3.18-stable branch, it seems there are some issue, please see the comments from Paul:
-> 
-> Comments from Paul:
-> I subjected all of the others to light rcutorture testing, which they passed.  This v3.18 patch hung, however.  Trying it again with stock
-> v3.18 got the same hang, so I believe we can exonerate the patch and give it a good firm "maybe" on 3.18.
-> 
-> Worth paying special attention to further test results from 3.18.x, though!
-
-Ok, I've dropped this from the 3.18.y queue now, thanks.
-
-greg k-h
+CkkganVzdCBib3VnaHQgb25lIHZtICwgc28gaSBjYW5ub3QgYWNjZXNzIHRvIGh5cGVydmlzb3Iu
+IEkgd2lsbCB0cnkgdG8gYnVpbGQgdGhlIGVudmlyb25tZW50IG9uIG15IGRlc2t0b3AuCkknbSBz
+dXJlIGFib3V0IHNvbWV0aGluZy4KVGhlIGh5cGVydmlzb3IgaXMgS1ZNIGFuZCBkaXNrIGRyaXZl
+ciBpcyB2aXJ0aW8tYmxrLgpbcm9vdEBibGstbXEgfl0jIGRtZXNnIHxncmVwIEtWTQpbICAgIDAu
+MDAwMDAwXSBIeXBlcnZpc29yIGRldGVjdGVkOiBLVk0KWyAgICAwLjE4NjMzMF0gQm9vdGluZyBw
+YXJhdmlydHVhbGl6ZWQga2VybmVsIG9uIEtWTQpbICAgIDAuMjc5MTA2XSBLVk0gc2V0dXAgYXN5
+bmMgUEYgZm9yIGNwdSAwClsgICAgMC40MjA4MTldIEtWTSBzZXR1cCBhc3luYyBQRiBmb3IgY3B1
+IDEKWyAgICAwLjQyMTY4Ml0gS1ZNIHNldHVwIGFzeW5jIFBGIGZvciBjcHUgMgpbICAgIDAuNDIy
+MTEzXSBLVk0gc2V0dXAgYXN5bmMgUEYgZm9yIGNwdSAzClsgICAgMC40MjI0MzRdIEtWTSBzZXR1
+cCBhc3luYyBQRiBmb3IgY3B1IDQKWyAgICAwLjQyMjQzNF0gS1ZNIHNldHVwIGFzeW5jIFBGIGZv
+ciBjcHUgNQpbICAgIDAuNDIzMzEyXSBLVk0gc2V0dXAgYXN5bmMgUEYgZm9yIGNwdSA2ClsgICAg
+MC40MjMzOTRdIEtWTSBzZXR1cCBhc3luYyBQRiBmb3IgY3B1IDcKWyAgICAwLjQyNDEyNV0gS1ZN
+IHNldHVwIGFzeW5jIFBGIGZvciBjcHUgOApbICAgIDAuNDI0NDE0XSBLVk0gc2V0dXAgYXN5bmMg
+UEYgZm9yIGNwdSA5ClsgICAgMC40MjQ0MTVdIEtWTSBzZXR1cCBhc3luYyBQRiBmb3IgY3B1IDEw
+ClsgICAgMC40MjUzMjldIEtWTSBzZXR1cCBhc3luYyBQRiBmb3IgY3B1IDExClsgICAgMC40MjU0
+MjBdIEtWTSBzZXR1cCBhc3luYyBQRiBmb3IgY3B1IDEyClsgICAgMC40MjYxNTZdIEtWTSBzZXR1
+cCBhc3luYyBQRiBmb3IgY3B1IDEzClsgICAgMC40MjY0MzFdIEtWTSBzZXR1cCBhc3luYyBQRiBm
+b3IgY3B1IDE0ClsgICAgMC40MjY0MzFdIEtWTSBzZXR1cCBhc3luYyBQRiBmb3IgY3B1IDE1Clty
+b290QGJsay1tcSB+XSMgbHNwY2kgfGdyZXAgYmxvY2sKMDA6MDUuMCBTQ1NJIHN0b3JhZ2UgY29u
+dHJvbGxlcjogUmVkIEhhdCwgSW5jLiBWaXJ0aW8gYmxvY2sgZGV2aWNlCjAwOjA2LjAgU0NTSSBz
+dG9yYWdlIGNvbnRyb2xsZXI6IFJlZCBIYXQsIEluYy4gVmlydGlvIGJsb2NrIGRldmljZQoKW3Jv
+b3RAYmxrLW1xIH5dIyBsc2NwdQpBcmNoaXRlY3R1cmU6ICAgICAgICAgIHg4Nl82NApDUFUgb3At
+bW9kZShzKTogICAgICAgIDMyLWJpdCwgNjQtYml0CkJ5dGUgT3JkZXI6ICAgICAgICAgICAgTGl0
+dGxlIEVuZGlhbgpDUFUocyk6ICAgICAgICAgICAgICAgIDE2Ck9uLWxpbmUgQ1BVKHMpIGxpc3Q6
+ICAgMC0xNQpUaHJlYWQocykgcGVyIGNvcmU6ICAgIDIKQ29yZShzKSBwZXIgc29ja2V0OiAgICA4
+Cgpbcm9vdEBibGstbXEgfl0jIGxzIC9zeXMvYmxvY2svdmRiL21xLwowICAxICAyICAzCgpbcm9v
+dEBibGstbXEgfl0jIGNhdCAvcHJvYy9jcHVpbmZvIHxlZ3JlcCAncHJvY2Vzc29yfGNvcmUgaWQn
+CnByb2Nlc3Nvcgk6IDAKY29yZSBpZAkJOiAwCnByb2Nlc3Nvcgk6IDEKY29yZSBpZAkJOiAwCnBy
+b2Nlc3Nvcgk6IDIKY29yZSBpZAkJOiAxCnByb2Nlc3Nvcgk6IDMKY29yZSBpZAkJOiAxCnByb2Nl
+c3Nvcgk6IDQKY29yZSBpZAkJOiAyCnByb2Nlc3Nvcgk6IDUKY29yZSBpZAkJOiAyCnByb2Nlc3Nv
+cgk6IDYKY29yZSBpZAkJOiAzCnByb2Nlc3Nvcgk6IDcKY29yZSBpZAkJOiAzCnByb2Nlc3Nvcgk6
+IDgKY29yZSBpZAkJOiA0CnByb2Nlc3Nvcgk6IDkKY29yZSBpZAkJOiA0CnByb2Nlc3Nvcgk6IDEw
+CmNvcmUgaWQJCTogNQpwcm9jZXNzb3IJOiAxMQpjb3JlIGlkCQk6IDUKcHJvY2Vzc29yCTogMTIK
+Y29yZSBpZAkJOiA2CnByb2Nlc3Nvcgk6IDEzCmNvcmUgaWQJCTogNgpwcm9jZXNzb3IJOiAxNApj
+b3JlIGlkCQk6IDcKcHJvY2Vzc29yCTogMTUKY29yZSBpZAkJOiA3CgotLWJlZm9yZSB0aGlzIHBh
+dGNoLS0KW3Jvb3RAYmxrLW1xIH5dIyBjYXQgL3N5cy9ibG9jay92ZGIvbXEvKi9jcHVfbGlzdAow
+LCA0LCA1LCA4LCA5LCAxMiwgMTMKMQoyLCA2LCA3LCAxMCwgMTEsIDE0LCAxNQozCgotLWFmdGVy
+IHRoaXMgcGF0Y2gtLQpbcm9vdEBibGstbXEgfl0jIGNhdCAvc3lzL2Jsb2NrL3ZkYi9tcS8qL2Nw
+dV9saXN0CjAsIDQsIDUsIDEyLCAxMwoxLCA2LCA3LCAxNCwgMTUKMiwgOCwgOQozLCAxMCwgMTEK
+CgpJIGFkZCBkdW1wX3N0YWNrIGluc2VydCBibGtfbXFfbWFwX3F1ZXVlcy4KClsgICAgMS4zNzg2
+ODBdIENhbGwgVHJhY2U6ClsgICAgMS4zNzg2OTBdICBkdW1wX3N0YWNrKzB4NWEvMHg3MwpbICAg
+IDEuMzc4Njk1XSAgYmxrX21xX21hcF9xdWV1ZXMrMHgyOS8weGIwClsgICAgMS4zNzg3MDBdICBi
+bGtfbXFfYWxsb2NfdGFnX3NldCsweDFiZC8weDJkMApbICAgIDEuMzc4NzA1XSAgdmlydGJsa19w
+cm9iZSsweDFhZS8weDhlNCBbdmlydGlvX2Jsa10KWyAgICAxLjM3ODcwOV0gIHZpcnRpb19kZXZf
+cHJvYmUrMHgxOGEvMHgyMzAgW3ZpcnRpb10KWyAgICAxLjM3ODcxM10gIHJlYWxseV9wcm9iZSsw
+eDIxNS8weDNmMApbICAgIDEuMzc4NzE2XSAgZHJpdmVyX3Byb2JlX2RldmljZSsweDExNS8weDEz
+MApbICAgIDEuMzc4NzE4XSAgZGV2aWNlX2RyaXZlcl9hdHRhY2grMHg1MC8weDYwClsgICAgMS4z
+Nzg3MjBdICBfX2RyaXZlcl9hdHRhY2grMHhiZC8weDE0MApbICAgIDEuMzc4NzIyXSAgPyBkZXZp
+Y2VfZHJpdmVyX2F0dGFjaCsweDYwLzB4NjAKWyAgICAxLjM3ODcyNF0gIGJ1c19mb3JfZWFjaF9k
+ZXYrMHg2Ny8weGMwClsgICAgMS4zNzg3MjddICA/IGtsaXN0X2FkZF90YWlsKzB4NTcvMHg3MAoK
+CkF0IDIwMTktMDMtMjIgMTk6NTg6MDgsICJEb25nbGkgWmhhbmciIDxkb25nbGkuemhhbmdAb3Jh
+Y2xlLmNvbT4gd3JvdGU6Cj4KPgo+T24gMDMvMjIvMjAxOSAwNjowOSBQTSwgbHVmZXJyeSB3cm90
+ZToKPj4gdW5kZXIgdmlydHVhbCBtYWNoaW5lIGVudmlyb25tZW50LCBjcHUgdG9wb2xvZ3kgbWF5
+IGRpZmZlciBmcm9tIG5vcm1hbAo+PiBwaHlzaWNhbCBzZXJ2ZXIuCj4KPldvdWxkIG1pbmQgc2hh
+cmUgdGhlIG5hbWUgb2YgdmlydHVhbCBtYWNoaW5lIG1vbml0b3IsIHRoZSBjb21tYW5kIGxpbmUg
+aWYKPmF2YWlsYWJsZSwgYW5kIHdoaWNoIGRldmljZSB0byByZXByb2R1Y2UuCj4KPkZvciBpbnN0
+YW5jZSwgSSBhbSBub3QgYWJsZSB0byByZXByb2R1Y2Ugd2l0aCBxZW11IG52bWUgb3IgdmlydGlv
+LWJsayBhcyBJCj5hc3N1bWUgdGhleSB1c2UgcGNpIG9yIHZpcnRpbyBzcGVjaWZpYyBtYXBwZXIg
+dG8gZXN0YWJsaXNoIHRoZSBtYXBwaW5nLgo+Cj5FLmcuLCB3aXRoIHFlbXUgYW5kIG52bWU6IC1z
+bXAgOCxzb2NrZXRzPTEsY29yZXM9NCx0aHJlYWRzPTIKPgo+SW5kZWVkIEkgdXNlIHRocmVlIHF1
+ZXVlcyBpbnN0ZWFkIG9mIHR3cCBhcyBvbmUgaXMgcmVzZXJ2ZWQgZm9yIGFkbWluLgo+Cj4jIGxz
+IC9zeXMvYmxvY2svbnZtZTBuMS9tcS8qCj4vc3lzL2Jsb2NrL252bWUwbjEvbXEvMDoKPmNwdTAg
+IGNwdTEgIGNwdTIgIGNwdTMgIGNwdV9saXN0ICBucl9yZXNlcnZlZF90YWdzICBucl90YWdzCj4K
+Pi9zeXMvYmxvY2svbnZtZTBuMS9tcS8xOgo+Y3B1NCAgY3B1NSAgY3B1NiAgY3B1NyAgY3B1X2xp
+c3QgIG5yX3Jlc2VydmVkX3RhZ3MgIG5yX3RhZ3MKPgo+Cj5UaGFuayB5b3UgdmVyeSBtdWNoIQo+
+Cj5Eb25nbGkgWmhhbmcKPgo+PiBmb3IgZXhhbXBsZSAobWFjaGluZSB3aXRoIDQgY29yZXMsIDIg
+dGhyZWFkcyBwZXIgY29yZSk6Cj4+IAo+PiBub3JtYWwgcGh5c2ljYWwgc2VydmVyOgo+PiBjb3Jl
+LWlkICAgdGhyZWFkLTAtaWQgIHRocmVhZC0xLWlkCj4+IDAgICAgICAgICAwICAgICAgICAgICAg
+NAo+PiAxICAgICAgICAgMSAgICAgICAgICAgIDUKPj4gMiAgICAgICAgIDIgICAgICAgICAgICA2
+Cj4+IDMgICAgICAgICAzICAgICAgICAgICAgNwo+PiAKPj4gdmlydHVhbCBtYWNoaW5lOgo+PiBj
+b3JlLWlkICAgdGhyZWFkLTAtaWQgIHRocmVhZC0xLWlkCj4+IDAgICAgICAgICAwICAgICAgICAg
+ICAgMQo+PiAxICAgICAgICAgMiAgICAgICAgICAgIDMKPj4gMiAgICAgICAgIDQgICAgICAgICAg
+ICA1Cj4+IDMgICAgICAgICA2ICAgICAgICAgICAgNwo+PiAKPj4gV2hlbiBhdHRhY2ggZGlzayB3
+aXRoIHR3byBxdWV1ZXMsIGFsbCB0aGUgZXZlbiBudW1iZXJlZCBjcHVzIHdpbGwgYmUKPj4gbWFw
+cGVkIHRvIHF1ZXVlIDAuIFVuZGVyIHZpcnR1YWwgbWFjaGluZSwgYWxsIHRoZSBjcHVzIGlzIGZv
+bGxvd2VkIGJ5Cj4+IGl0cyBzaWJsaW5nIGNwdS5CZWZvcmUgdGhpcyBwYXRjaCwgYWxsIHRoZSBv
+ZGQgbnVtYmVyZWQgY3B1cyB3aWxsIGFsc28KPj4gYmUgbWFwcGVkIHRvIHF1ZXVlIDAsIGNhbiBj
+YXVzZSBzZXJpb3VzIGltYmFsYW5jZS50aGlzIHdpbGwgbGVhZCB0bwo+PiBwZXJmb3JtYW5jZSBp
+bXBhY3Qgb24gc3lzdGVtIElPCj4+IAo+PiBTbyBzdWdnZXN0IHRvIGFsbG9jYXRlIGNwdSBtYXAg
+YnkgY29yZSBpZCwgdGhpcyBjYW4gYmUgbW9yZSBjdXJyZW5jeQo+PiAKPj4gU2lnbmVkLW9mZi1i
+eTogbHVmZXJyeSA8bHVmZXJyeUAxNjMuY29tPgo+PiAtLS0KPj4gIGJsb2NrL2Jsay1tcS1jcHVt
+YXAuYyB8IDkgKysrKystLS0tCj4+ICAxIGZpbGUgY2hhbmdlZCwgNSBpbnNlcnRpb25zKCspLCA0
+IGRlbGV0aW9ucygtKQo+PiAKPj4gZGlmZiAtLWdpdCBhL2Jsb2NrL2Jsay1tcS1jcHVtYXAuYyBi
+L2Jsb2NrL2Jsay1tcS1jcHVtYXAuYwo+PiBpbmRleCAwM2E1MzQ4MjAyNzEuLjQxMjVlOGU3NzY3
+OSAxMDA2NDQKPj4gLS0tIGEvYmxvY2svYmxrLW1xLWNwdW1hcC5jCj4+ICsrKyBiL2Jsb2NrL2Js
+ay1tcS1jcHVtYXAuYwo+PiBAQCAtMzUsNyArMzUsNyBAQCBpbnQgYmxrX21xX21hcF9xdWV1ZXMo
+c3RydWN0IGJsa19tcV9xdWV1ZV9tYXAgKnFtYXApCj4+ICB7Cj4+ICAJdW5zaWduZWQgaW50ICpt
+YXAgPSBxbWFwLT5tcV9tYXA7Cj4+ICAJdW5zaWduZWQgaW50IG5yX3F1ZXVlcyA9IHFtYXAtPm5y
+X3F1ZXVlczsKPj4gLQl1bnNpZ25lZCBpbnQgY3B1LCBmaXJzdF9zaWJsaW5nOwo+PiArCXVuc2ln
+bmVkIGludCBjcHUsIGZpcnN0X3NpYmxpbmcsIGNvcmUgPSAwOwo+PiAgCj4+ICAJZm9yX2VhY2hf
+cG9zc2libGVfY3B1KGNwdSkgewo+PiAgCQkvKgo+PiBAQCAtNDgsOSArNDgsMTAgQEAgaW50IGJs
+a19tcV9tYXBfcXVldWVzKHN0cnVjdCBibGtfbXFfcXVldWVfbWFwICpxbWFwKQo+PiAgCQkJbWFw
+W2NwdV0gPSBjcHVfdG9fcXVldWVfaW5kZXgocW1hcCwgbnJfcXVldWVzLCBjcHUpOwo+PiAgCQl9
+IGVsc2Ugewo+PiAgCQkJZmlyc3Rfc2libGluZyA9IGdldF9maXJzdF9zaWJsaW5nKGNwdSk7Cj4+
+IC0JCQlpZiAoZmlyc3Rfc2libGluZyA9PSBjcHUpCj4+IC0JCQkJbWFwW2NwdV0gPSBjcHVfdG9f
+cXVldWVfaW5kZXgocW1hcCwgbnJfcXVldWVzLCBjcHUpOwo+PiAtCQkJZWxzZQo+PiArCQkJaWYg
+KGZpcnN0X3NpYmxpbmcgPT0gY3B1KSB7Cj4+ICsJCQkJbWFwW2NwdV0gPSBjcHVfdG9fcXVldWVf
+aW5kZXgocW1hcCwgbnJfcXVldWVzLCBjb3JlKTsKPj4gKwkJCQljb3JlKys7Cj4+ICsJCQl9IGVs
+c2UKPj4gIAkJCQltYXBbY3B1XSA9IG1hcFtmaXJzdF9zaWJsaW5nXTsKPj4gIAkJfQo+PiAgCX0K
+Pj4gCg==
