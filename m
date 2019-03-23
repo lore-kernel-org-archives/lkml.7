@@ -2,88 +2,121 @@ Return-Path: <SRS0=q9dy=R2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC595C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 12:15:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C24FC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 12:51:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AED09218E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 12:15:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA90A21874
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 12:51:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Dq5Q7N9T"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nlC9gaKa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727409AbfCWMPp (ORCPT
+        id S1727412AbfCWMvQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Mar 2019 08:15:45 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:54230 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726118AbfCWMPp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Mar 2019 08:15:45 -0400
-Received: from zn.tnic (p200300EC2F098000329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:8000:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C48F41EC0982;
-        Sat, 23 Mar 2019 13:15:43 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1553343343;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=cbTlQlq9ax0tFhHa1D8ky4Rnsvy7ZAQ3H63inArW7cE=;
-        b=Dq5Q7N9Tvp0dayr26hzk3tLFeCB+kZ/BizaZr3//PMomMH/mOM9/BGNJtOZDeuvKqBPI/o
-        sORSGy/GMaC092VaFBStFuaEnTIFvZnxn8UI3tAqy242VTvUuYsPFoV7BeJfHMkdDU3fSP
-        XzI9hxH+J+mM452ukpr4zy3r1V7K+Dc=
-Date:   Sat, 23 Mar 2019 13:15:47 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
-Cc:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 3/6] EDAC/amd64: Support more than two Unified Memory
- Controllers
-Message-ID: <20190323121546.GA17541@zn.tnic>
-References: <20190228153558.127292-1-Yazen.Ghannam@amd.com>
- <20190228153558.127292-3-Yazen.Ghannam@amd.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190228153558.127292-3-Yazen.Ghannam@amd.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Sat, 23 Mar 2019 08:51:16 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:39507 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727092AbfCWMvQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 Mar 2019 08:51:16 -0400
+Received: by mail-pg1-f193.google.com with SMTP id h8so3346969pgp.6
+        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2019 05:51:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=8ChnlVqrga2W8EZIJdLuUoeyqlT7OHpe4yzIC29FI84=;
+        b=nlC9gaKaMvjO9I+zCoKz3DAuQOFrWigLoi2/kt/FZIaAkdWQlv601my1uWwEL2o/lZ
+         Va0ZeSRLU5LTMYSb78t/LjeNTCYp5XggebFwiRdA+37vNVxcyLzAV+P7HjXNVXP1bjy9
+         5ki5cI5O0Hgt0IUB1RDZvF2zXaBENo/OVpliD+vsgBs73bJ0EzpkNQ77Igssc6LdgxKM
+         uLeBJQiYoVixkKXVIIFTzZPUnPKsEHkJfhEk6fpnFA0JGYvXyz73MKpyHTxNiI1r8KJW
+         u/IvNTcwoD+OCVr8yFcY+q7lBY63NSRSlNH1aXevzIOLgZj+UNeq51iaYJMg0YF/b8j3
+         G4Gg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=8ChnlVqrga2W8EZIJdLuUoeyqlT7OHpe4yzIC29FI84=;
+        b=pzCoMEiNWv9eV8DLCFrWRr4QwDisHM1VxsfeIrg9uuPYN6MIqUBPAPEaIzb/poowvO
+         kT5Sewyh1+6nWzQhwhdzhOS1BViD0IuxBmPtUfw8L8Q4pRQOOrifESIW0mVg0H8aqmBr
+         higTzeQBebQrZ9ywajaa9GMmbbz0w79wnWd9QOwNipQBTzz9SnF7uyuBXBWNQHMjB6Je
+         txA0Wp6lgANRH0/D+fnCDjf1QxZGJafJqBjDl7heCHPsWcznuWomOmc/r2e1HRioLRJr
+         /d1WIwqUKaAPNqmuQd2594e+3lFOSauMgEaINxTjjUg6enlPVp1ih5hPkc+JwjKwjf8C
+         ALqg==
+X-Gm-Message-State: APjAAAWaJcRHTMC2Bd/bFQTOvpvw0E9kONlClyiJJismGS5/KRb5kOpZ
+        1ERu2g7G8Uw9NoOQoJNoE0U=
+X-Google-Smtp-Source: APXvYqwYlcL6Cr3p/H7TNbgapyzT5BIiqgu/uTsPEQSH4BuWc/be2+h4wYHeckljdUQL1FrMI956bA==
+X-Received: by 2002:a17:902:1121:: with SMTP id d30mr15011160pla.104.1553345475734;
+        Sat, 23 Mar 2019 05:51:15 -0700 (PDT)
+Received: from CentOS76.localdomain.localdomain ([49.205.222.128])
+        by smtp.gmail.com with ESMTPSA id t190sm16657001pfb.33.2019.03.23.05.51.09
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 23 Mar 2019 05:51:14 -0700 (PDT)
+From:   jagdsh.linux@gmail.com
+To:     benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
+        npiggin@gmail.com, hristophe.leroy@c-s.fr, arnd@arndb.de,
+        anton@ozlabs.org, paul.burton@mips.com, mikey@neuling.org,
+        akpm@linux-foundation.org, mwb@linux.vnet.ibm.com
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Jagadeesh Pagadala <jagdsh.linux@gmail.com>
+Subject: [PATCH] arch/powerpc: Remove duplicate headers
+Date:   Sat, 23 Mar 2019 18:20:55 +0530
+Message-Id: <1553345455-32085-1-git-send-email-jagdsh.linux@gmail.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 28, 2019 at 03:36:10PM +0000, Ghannam, Yazen wrote:
-> diff --git a/drivers/edac/amd64_edac.h b/drivers/edac/amd64_edac.h
-> index de8dbb0b42b5..40e63cea2d81 100644
-> --- a/drivers/edac/amd64_edac.h
-> +++ b/drivers/edac/amd64_edac.h
-> @@ -274,7 +274,11 @@
->  
->  #define UMC_SDP_INIT			BIT(31)
->  
-> -#define NUM_UMCS			2
-> +/*
-> + * Number of Unified Memory Controllers
-> + * Set during driver init based on family/model.
-> + */
-> +static u8 num_umcs;
+From: Jagadeesh Pagadala <jagdsh.linux@gmail.com>
 
-Please don't do silly things like that:
+Remove duplicate headers which are included twice.
 
-In file included from drivers/edac/amd64_edac_inj.c:2:0:
-drivers/edac/amd64_edac.h:279:11: warning: ‘num_umcs’ defined but not used [-Wunused-variable]
- static u8 num_umcs;
-           ^~~~~~~~
+Signed-off-by: Jagadeesh Pagadala <jagdsh.linux@gmail.com>
+---
+ arch/powerpc/kernel/time.c       | 1 -
+ arch/powerpc/lib/code-patching.c | 1 -
+ arch/powerpc/mm/numa.c           | 1 -
+ 3 files changed, 3 deletions(-)
 
-I fixed it up now.
-
+diff --git a/arch/powerpc/kernel/time.c b/arch/powerpc/kernel/time.c
+index bc0503e..6ef3247 100644
+--- a/arch/powerpc/kernel/time.c
++++ b/arch/powerpc/kernel/time.c
+@@ -43,7 +43,6 @@
+ #include <linux/timex.h>
+ #include <linux/kernel_stat.h>
+ #include <linux/time.h>
+-#include <linux/clockchips.h>
+ #include <linux/init.h>
+ #include <linux/profile.h>
+ #include <linux/cpu.h>
+diff --git a/arch/powerpc/lib/code-patching.c b/arch/powerpc/lib/code-patching.c
+index 506413a..587ff97 100644
+--- a/arch/powerpc/lib/code-patching.c
++++ b/arch/powerpc/lib/code-patching.c
+@@ -15,7 +15,6 @@
+ #include <linux/cpuhotplug.h>
+ #include <linux/slab.h>
+ #include <linux/uaccess.h>
+-#include <linux/kprobes.h>
+ 
+ #include <asm/pgtable.h>
+ #include <asm/tlbflush.h>
+diff --git a/arch/powerpc/mm/numa.c b/arch/powerpc/mm/numa.c
+index f976676..f3ee0e1 100644
+--- a/arch/powerpc/mm/numa.c
++++ b/arch/powerpc/mm/numa.c
+@@ -32,7 +32,6 @@
+ #include <asm/sparsemem.h>
+ #include <asm/prom.h>
+ #include <asm/smp.h>
+-#include <asm/cputhreads.h>
+ #include <asm/topology.h>
+ #include <asm/firmware.h>
+ #include <asm/paca.h>
 -- 
-Regards/Gruss,
-    Boris.
+1.8.3.1
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
