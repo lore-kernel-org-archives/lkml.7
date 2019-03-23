@@ -2,85 +2,176 @@ Return-Path: <SRS0=q9dy=R2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDFDFC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 21:10:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5F49C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 21:16:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BABF21841
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 21:10:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70D252133F
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 21:16:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="xbSTH+a4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727980AbfCWVKC (ORCPT
+        id S1728014AbfCWVQj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Mar 2019 17:10:02 -0400
-Received: from mail-it1-f197.google.com ([209.85.166.197]:57707 "EHLO
-        mail-it1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726230AbfCWVKB (ORCPT
+        Sat, 23 Mar 2019 17:16:39 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40262 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727706AbfCWVQi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Mar 2019 17:10:01 -0400
-Received: by mail-it1-f197.google.com with SMTP id h82so5581999ita.7
-        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2019 14:10:01 -0700 (PDT)
+        Sat, 23 Mar 2019 17:16:38 -0400
+Received: by mail-wr1-f66.google.com with SMTP id t5so5963800wri.7
+        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2019 14:16:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4McGYYq2ZUptZXqYtAHX//HxnWqV5/YakhobL5pTDps=;
+        b=xbSTH+a45Zi6x1BUqwnibZCTkAFasMmJZQ8izwesJPZnHuZIHhGu3u8L01TmM1rHif
+         IEC78tWAov0bgc6JsgIYZ+dJ/n95+5BmkcA4N7dEW8PtXcJjtkCVqXgzV5DxTZ0TiBmM
+         5rTvHFrAK15HJ5fC9Jy0O/Zkbwp16Z4+fXEnFAutAue2+6brOUeBvFTiBn03QHH9kvBj
+         sZepdN0pD/hlLr7UC8BdXTg5r6PjUjF/Sf51Lf4wPpT0kvAtlOz73r11Y1br45+OomQD
+         SILOFMRo7kWJKUp8FgfgvaUga+0Vd1sg7Hgo7CcXCh3RqqzYzolyk8QA/cnLxQX03UI1
+         aeKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=H0YimcghHT0/gJPwSA1rkrR5qRnoKmjRqNBRjiJyio4=;
-        b=P/myhkbPoHQNGoJe4QTCpd60CX/woMxg4BZetCyKrimO1do6JkYK99/bOf9TFqhyxc
-         3XqSKFAa5pz1uFIDhp4uXNzK5r4pfDUt4Kw/6Y9fhu0T7KmDcopnP54H3bRLE88GP0v6
-         CDU+I1A8NiKS2yOdfNjiA8K2ZzAfSsoM+VnPiyFcgfFsabIBID0Zq7KN0fSSpMvc6ehb
-         C7i5U5YCAzW54nWRr0qOmo85IH4fYIp7RTh2YMpRfK30sUIIw2Uq9yYppkYPHh6a70GL
-         nF6QLcgcJjIxwuoPSr50R88ePw7nFLi3bcvYsLtPZX5mv2EMLAjAYTOZKRjND1pkA+Id
-         WC8A==
-X-Gm-Message-State: APjAAAVX4WFBxfHiiIKT76KdwYCHe3tzSgsXkoMn0fe0rgakRsbelkPI
-        fHwQ3cTZ+RJ4dByUtmShRrSGCQN+eDXY0AKLOpkbymEK1Ccz
-X-Google-Smtp-Source: APXvYqxy9GWCuMJhBKCK8ItNo5FsHlX2a7uRQ6tyfzhbCWhqbcLrzs3BiSl2CUL32rcErPUcGhf+lJViDCJ/wdIZYP6oC1dEQcB6
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4McGYYq2ZUptZXqYtAHX//HxnWqV5/YakhobL5pTDps=;
+        b=a4sEcCZCxfmaMFfm3SLGJo+J97ONpiP9ulEMExkbLQ2I2Z2SgJE0krtsjIiTF6xl6x
+         dksnndqKUzJooqo0ffUnmeA33e+knYEmQAcHsBPSGGbxdAQjx3Ow7nZwD1Ed5ct3gPZ/
+         t/A7yIhzJCHytcsGWvgpEJydhs8V0paGwrw841emIW3fZYALXim/0/q3TRXmfOZVM2Ei
+         qpUmp0VnVkKQLFh64OKMTwhv5izrKpm/V/8/vpMi+ZV6AaCw7TCjjY6+6kWfNOZk5Z2u
+         +5AZyjLkEgDLbjuipc7r+9WSAhKrXCHHvV5/TjvKLbW2yKdlcP8WOhloS7gBC539o5F1
+         n8yQ==
+X-Gm-Message-State: APjAAAVOIP78Gfacg9YHaIo2uIQIOeMMgfbKTM2Q72hktJ5iy5OMurEA
+        kyfw3yPGSRqc7dU/MQko2vaeH8T3quDrvCKs
+X-Google-Smtp-Source: APXvYqwWXn0fyODwrAZ6niPpQMs28EUAEIINdt1c/GXwI+ZaBvDHjV/+22ncaxIqZXuI8lOKAmFnvQ==
+X-Received: by 2002:a5d:6883:: with SMTP id h3mr10528279wru.215.1553375796536;
+        Sat, 23 Mar 2019 14:16:36 -0700 (PDT)
+Received: from localhost.localdomain (cag06-8-78-203-165-84.fbx.proxad.net. [78.203.165.84])
+        by smtp.gmail.com with ESMTPSA id y66sm8050503wmd.37.2019.03.23.14.16.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 23 Mar 2019 14:16:35 -0700 (PDT)
+From:   Fabien Parent <fparent@baylibre.com>
+To:     matthias.bgg@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     sean.wang@kernel.org, ryder.lee@mediatek.com,
+        hsin-hsiung.wang@mediatek.com, wenzhen.yu@mediatek.com,
+        chaotian.jing@mediatek.com, yong.mao@mediatek.com,
+        jjian.zhou@mediatek.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-mmc@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-clk@vger.kernel.org, stephane.leprovost@mediatek.com,
+        Fabien Parent <fparent@baylibre.com>
+Subject: [PATCH 00/24] arm64: mediatek: add support for Pumpkin MT8516 board
+Date:   Sat, 23 Mar 2019 22:15:48 +0100
+Message-Id: <20190323211612.860-1-fparent@baylibre.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-Received: by 2002:a24:e50b:: with SMTP id g11mr6475073iti.14.1553375400876;
- Sat, 23 Mar 2019 14:10:00 -0700 (PDT)
-Date:   Sat, 23 Mar 2019 14:10:00 -0700
-In-Reply-To: <00000000000066aa5f0581b6effe@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000f8e14f0584c96446@google.com>
-Subject: Re: KASAN: use-after-free Read in rt_cache_valid
-From:   syzbot <syzbot+c4c4b2bb358bb936ad7e@syzkaller.appspotmail.com>
-To:     alexandre.torgue@st.com, alsa-devel@alsa-project.org,
-        arnaud.pouliquen@st.com, broonie@kernel.org,
-        colin.king@canonical.com, davem@davemloft.net, dsahern@gmail.com,
-        ktkhai@virtuozzo.com, kuznet@ms2.inr.ac.ru, lgirdwood@gmail.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        mcoquelin.stm32@gmail.com, netdev@vger.kernel.org,
-        olivier.moysan@st.com, perex@perex.cz,
-        syzkaller-bugs@googlegroups.com, tiwai@suse.com,
-        tyhicks@canonical.com, willy@infradead.org, yoshfuji@linux-ipv6.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+The pumpkin board is designed by Gossamer Engineering and is
+using a MediaTek SoC. The board currently comes in two available
+version: MT8516 SoC and MT8167 SoC.
 
-commit 6b27e27729270a2478fdebea2db9c4f57bb4e8e6
-Author: Colin Ian King <colin.king@canonical.com>
-Date:   Wed Oct 31 19:31:43 2018 +0000
+The board provides the following IOs: eMMC, NAND, SD card, USB 2 type-A,
+Ethernet, Wi-Fi, Bluetooth, Audio (jack out, 2 PDM port, 1 analog in),
+serial over USB, and an expansion header.
 
-     ASoC: stm32: sai: fix less than zero comparison on unsigned int
+This patch series adds the basic board support to be able to boot
+on the eMMC of the MT8516 based Pumpkin board.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10c0298b200000
-start commit:   aa0c38cf Merge branch 'fixes' of git://git.kernel.org/pub/..
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=12c0298b200000
-console output: https://syzkaller.appspot.com/x/log.txt?x=14c0298b200000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ee434566c893c7b1
-dashboard link: https://syzkaller.appspot.com/bug?extid=c4c4b2bb358bb936ad7e
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1197cb88c00000
+The board is using a MT6392 PMIC.
 
-Reported-by: syzbot+c4c4b2bb358bb936ad7e@syzkaller.appspotmail.com
-Fixes: 6b27e2772927 ("ASoC: stm32: sai: fix less than zero comparison on  
-unsigned int")
+Fabien Parent (24):
+  dt-bindings: regulator: add support for MT6392
+  regulator: mt6392: Add support for MT6392 regulator
+  dt-bindings: pwrap: mediatek: add pwrap support for MT8516
+  soc: mediatek: pwrap: add missing check on rstc
+  soc: mediatek: pwrap: add support for MT8516 pwrap
+  mfd: mt6397: Add support for MT6397 pmic
+  arm64: dts: mt6392: Add PMIC mt6392 dtsi
+  dt-bindings: mmc: mtk-sd: add mtk-sd support for MT8516
+  mmc: mtk-sd: check for valid optional memory resource
+  mmc: mtk-sd: add support for MT8516
+  dt-bindings: mediatek: topckgen: add support for MT8516
+  dt-bindings: mediatek: infracfg: add support for MT8516
+  dt-bindings: mediatek: apmixedsys: add support for MT8516
+  clk: mediatek: add clock driver for MT8516
+  dt-bindings: pinctrl: pinctrl-mt65xx: add support for MT8516
+  pinctrl: mediatek: Add MT8516 Pinctrl driver
+  dt-bindings: wdog: mtk-wdt: add support for MT851
+  dt-bindings: timer: mtk-timer: add support for MT8516
+  dt-bindings: spi: spi-mt65xx: add support for MT8516
+  dt-bindings: serial: mtk-uart: add support for MT8516
+  dt-bindings: irq: mtk,sysirq: add support for MT8516
+  dt-bindings: i2c: i2c-mtk: add support for MT8516
+  arm64: dts: mediatek: add dtsi for MT8516
+  arm64: dts: mediatek: add pumpkin board dts
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+ .../arm/mediatek/mediatek,apmixedsys.txt      |    1 +
+ .../arm/mediatek/mediatek,infracfg.txt        |    1 +
+ .../arm/mediatek/mediatek,topckgen.txt        |    1 +
+ .../devicetree/bindings/i2c/i2c-mtk.txt       |    1 +
+ .../interrupt-controller/mediatek,sysirq.txt  |    3 +-
+ .../devicetree/bindings/mmc/mtk-sd.txt        |    1 +
+ .../bindings/pinctrl/pinctrl-mt65xx.txt       |    1 +
+ .../bindings/regulator/mt6392-regulator.txt   |  220 +++
+ .../devicetree/bindings/serial/mtk-uart.txt   |    1 +
+ .../bindings/soc/mediatek/pwrap.txt           |    1 +
+ .../devicetree/bindings/spi/spi-mt65xx.txt    |    1 +
+ .../bindings/timer/mediatek,mtk-timer.txt     |    1 +
+ .../devicetree/bindings/watchdog/mtk-wdt.txt  |    1 +
+ arch/arm64/boot/dts/mediatek/Makefile         |    1 +
+ arch/arm64/boot/dts/mediatek/mt6392.dtsi      |  208 +++
+ arch/arm64/boot/dts/mediatek/mt8516-pinfunc.h |  663 +++++++++
+ .../boot/dts/mediatek/mt8516-pumpkin.dts      |   19 +
+ arch/arm64/boot/dts/mediatek/mt8516.dtsi      |  409 ++++++
+ .../boot/dts/mediatek/pumpkin-common.dtsi     |  210 +++
+ .../dts/mediatek/pumpkin-emmc-common.dtsi     |   75 ++
+ drivers/clk/mediatek/Kconfig                  |    9 +
+ drivers/clk/mediatek/Makefile                 |    1 +
+ drivers/clk/mediatek/clk-mt8516.c             |  815 ++++++++++++
+ drivers/mfd/mt6397-core.c                     |   96 ++
+ drivers/mmc/host/mtk-sd.c                     |   19 +-
+ drivers/pinctrl/mediatek/Kconfig              |    7 +
+ drivers/pinctrl/mediatek/Makefile             |    1 +
+ drivers/pinctrl/mediatek/pinctrl-mt8516.c     |  384 ++++++
+ drivers/pinctrl/mediatek/pinctrl-mtk-mt8516.h | 1182 +++++++++++++++++
+ drivers/regulator/Kconfig                     |    9 +
+ drivers/regulator/Makefile                    |    1 +
+ drivers/regulator/mt6392-regulator.c          |  490 +++++++
+ drivers/soc/mediatek/mtk-pmic-wrap.c          |  109 +-
+ include/dt-bindings/clock/mt8516-clk.h        |  211 +++
+ include/linux/mfd/mt6392/core.h               |   42 +
+ include/linux/mfd/mt6392/registers.h          |  487 +++++++
+ include/linux/regulator/mt6392-regulator.h    |   40 +
+ 37 files changed, 5717 insertions(+), 5 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/regulator/mt6392-regulator.txt
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt6392.dtsi
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8516-pinfunc.h
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8516-pumpkin.dts
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8516.dtsi
+ create mode 100644 arch/arm64/boot/dts/mediatek/pumpkin-common.dtsi
+ create mode 100644 arch/arm64/boot/dts/mediatek/pumpkin-emmc-common.dtsi
+ create mode 100644 drivers/clk/mediatek/clk-mt8516.c
+ create mode 100644 drivers/pinctrl/mediatek/pinctrl-mt8516.c
+ create mode 100644 drivers/pinctrl/mediatek/pinctrl-mtk-mt8516.h
+ create mode 100644 drivers/regulator/mt6392-regulator.c
+ create mode 100644 include/dt-bindings/clock/mt8516-clk.h
+ create mode 100644 include/linux/mfd/mt6392/core.h
+ create mode 100644 include/linux/mfd/mt6392/registers.h
+ create mode 100644 include/linux/regulator/mt6392-regulator.h
+
+-- 
+2.20.1
+
