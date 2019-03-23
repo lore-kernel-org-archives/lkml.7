@@ -4,44 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EDBAC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 11:26:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64727C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 11:28:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57D9E218E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 11:26:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33A9E2190A
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 11:28:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727364AbfCWLZX (ORCPT
+        id S1727399AbfCWL2T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Mar 2019 07:25:23 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:56985 "EHLO
+        Sat, 23 Mar 2019 07:28:19 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:35333 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727054AbfCWLZW (ORCPT
+        with ESMTP id S1726801AbfCWL2T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Mar 2019 07:25:22 -0400
+        Sat, 23 Mar 2019 07:28:19 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x2NBPCps995391
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x2NBS97W996142
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sat, 23 Mar 2019 04:25:12 -0700
+        Sat, 23 Mar 2019 04:28:09 -0700
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x2NBPBZa995388;
-        Sat, 23 Mar 2019 04:25:11 -0700
-Date:   Sat, 23 Mar 2019 04:25:11 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x2NBS87H996139;
+        Sat, 23 Mar 2019 04:28:08 -0700
+Date:   Sat, 23 Mar 2019 04:28:08 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
-Message-ID: <tip-973f88ca8b159592685b6ccedb0b91db376bf20d@git.kernel.org>
-Cc:     fweisbec@gmail.com, tglx@linutronix.de, valentin.schneider@arm.com,
-        hpa@zytor.com, mingo@kernel.org, linux-kernel@vger.kernel.org
-Reply-To: linux-kernel@vger.kernel.org, hpa@zytor.com, mingo@kernel.org,
-          valentin.schneider@arm.com, tglx@linutronix.de,
-          fweisbec@gmail.com
-In-Reply-To: <alpine.DEB.2.21.1903211540180.1784@nanos.tec.linutronix.de>
-References: <alpine.DEB.2.21.1903211540180.1784@nanos.tec.linutronix.de>
+From:   tip-bot for Atish Patra <tipbot@zytor.com>
+Message-ID: <tip-32d0be018f6f5ee2d5d19c4795304613560814cf@git.kernel.org>
+Cc:     Damien.LeMoal@wdc.com, mingo@kernel.org, aou@eecs.berkeley.edu,
+        tglx@linutronix.de, atish.patra@wdc.com, daniel.lezcano@linaro.org,
+        anup@brainfault.org, Anup.Patel@wdc.com,
+        linux-kernel@vger.kernel.org, palmer@sifive.com, hpa@zytor.com
+Reply-To: mingo@kernel.org, tglx@linutronix.de, aou@eecs.berkeley.edu,
+          Damien.LeMoal@wdc.com, palmer@sifive.com, hpa@zytor.com,
+          atish.patra@wdc.com, Anup.Patel@wdc.com,
+          linux-kernel@vger.kernel.org, anup@brainfault.org,
+          daniel.lezcano@linaro.org
+In-Reply-To: <20190322215411.19362-1-atish.patra@wdc.com>
+References: <20190322215411.19362-1-atish.patra@wdc.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:timers/core] tick: Remove outgoing CPU from broadcast masks
-Git-Commit-ID: 973f88ca8b159592685b6ccedb0b91db376bf20d
+Subject: [tip:timers/urgent] clocksource/drivers/riscv: Fix clocksource mask
+Git-Commit-ID: 32d0be018f6f5ee2d5d19c4795304613560814cf
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -55,220 +59,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  973f88ca8b159592685b6ccedb0b91db376bf20d
-Gitweb:     https://git.kernel.org/tip/973f88ca8b159592685b6ccedb0b91db376bf20d
-Author:     Thomas Gleixner <tglx@linutronix.de>
-AuthorDate: Thu, 21 Mar 2019 16:39:20 +0100
+Commit-ID:  32d0be018f6f5ee2d5d19c4795304613560814cf
+Gitweb:     https://git.kernel.org/tip/32d0be018f6f5ee2d5d19c4795304613560814cf
+Author:     Atish Patra <atish.patra@wdc.com>
+AuthorDate: Fri, 22 Mar 2019 14:54:11 -0700
 Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Sat, 23 Mar 2019 12:21:32 +0100
+CommitDate: Sat, 23 Mar 2019 12:25:34 +0100
 
-tick: Remove outgoing CPU from broadcast masks
+clocksource/drivers/riscv: Fix clocksource mask
 
-Valentin reported that unplugging a CPU occasionally results in a warning
-in the tick broadcast code which is triggered when an offline CPU is in the
-broadcast mask.
+For all riscv architectures (RV32, RV64 and RV128), the clocksource
+is a 64 bit incrementing counter.
 
-This happens because the outgoing CPU is not removing itself from the
-broadcast masks, especially not from the broadcast_force_mask. The removal
-happens on the control CPU after the outgoing CPU is dead. It's a long
-standing issue, but the warning is harmless.
+Fix the clock source mask accordingly.
 
-Rework the hotplug mechanism so that the outgoing CPU removes itself from
-the broadcast masks after disabling interrupts and removing itself from the
-online mask.
+Tested on both 64bit and 32 bit virt machine in QEMU.
 
-Reported-by: Valentin Schneider <valentin.schneider@arm.com>
+Fixes: 62b019436814 ("clocksource: new RISC-V SBI timer driver")
+Signed-off-by: Atish Patra <atish.patra@wdc.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Valentin Schneider <valentin.schneider@arm.com>
-Cc: Frederic Weisbecker <fweisbec@gmail.com>
-Link: https://lkml.kernel.org/r/alpine.DEB.2.21.1903211540180.1784@nanos.tec.linutronix.de
+Reviewed-by: Anup Patel <anup@brainfault.org>
+Cc: Albert Ou <aou@eecs.berkeley.edu>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: linux-riscv@lists.infradead.org
+Cc: Palmer Dabbelt <palmer@sifive.com>
+Cc: Anup Patel <Anup.Patel@wdc.com>
+Cc: Damien Le Moal <Damien.LeMoal@wdc.com>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/20190322215411.19362-1-atish.patra@wdc.com
 
 ---
- include/linux/tick.h         |  6 ++++++
- kernel/cpu.c                 |  2 ++
- kernel/time/clockevents.c    | 18 ++++++++++++++++--
- kernel/time/tick-broadcast.c | 24 ++++++++++++++----------
- kernel/time/tick-internal.h  | 10 ++++++----
- 5 files changed, 44 insertions(+), 16 deletions(-)
+ drivers/clocksource/timer-riscv.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/tick.h b/include/linux/tick.h
-index 55388ab45fd4..76acb48acdb7 100644
---- a/include/linux/tick.h
-+++ b/include/linux/tick.h
-@@ -68,6 +68,12 @@ extern void tick_broadcast_control(enum tick_broadcast_mode mode);
- static inline void tick_broadcast_control(enum tick_broadcast_mode mode) { }
- #endif /* BROADCAST */
+diff --git a/drivers/clocksource/timer-riscv.c b/drivers/clocksource/timer-riscv.c
+index e8163693e936..5e6038fbf115 100644
+--- a/drivers/clocksource/timer-riscv.c
++++ b/drivers/clocksource/timer-riscv.c
+@@ -58,7 +58,7 @@ static u64 riscv_sched_clock(void)
+ static DEFINE_PER_CPU(struct clocksource, riscv_clocksource) = {
+ 	.name		= "riscv_clocksource",
+ 	.rating		= 300,
+-	.mask		= CLOCKSOURCE_MASK(BITS_PER_LONG),
++	.mask		= CLOCKSOURCE_MASK(64),
+ 	.flags		= CLOCK_SOURCE_IS_CONTINUOUS,
+ 	.read		= riscv_clocksource_rdtime,
+ };
+@@ -120,8 +120,7 @@ static int __init riscv_timer_init_dt(struct device_node *n)
+ 		return error;
+ 	}
  
-+#if defined(CONFIG_GENERIC_CLOCKEVENTS_BROADCAST) && defined(CONFIG_HOTPLUG_CPU)
-+extern void tick_offline_cpu(unsigned int cpu);
-+#else
-+static inline void tick_offline_cpu(unsigned int cpu) { }
-+#endif
-+
- #ifdef CONFIG_GENERIC_CLOCKEVENTS
- extern int tick_broadcast_oneshot_control(enum tick_broadcast_state state);
- #else
-diff --git a/kernel/cpu.c b/kernel/cpu.c
-index 025f419d16f6..f69ba38573c2 100644
---- a/kernel/cpu.c
-+++ b/kernel/cpu.c
-@@ -844,6 +844,8 @@ static int take_cpu_down(void *_param)
+-	sched_clock_register(riscv_sched_clock,
+-			BITS_PER_LONG, riscv_timebase);
++	sched_clock_register(riscv_sched_clock, 64, riscv_timebase);
  
- 	/* Give up timekeeping duties */
- 	tick_handover_do_timer();
-+	/* Remove CPU from timer broadcasting */
-+	tick_offline_cpu(cpu);
- 	/* Park the stopper thread */
- 	stop_machine_park(cpu);
- 	return 0;
-diff --git a/kernel/time/clockevents.c b/kernel/time/clockevents.c
-index 5e77662dd2d9..f5490222e134 100644
---- a/kernel/time/clockevents.c
-+++ b/kernel/time/clockevents.c
-@@ -611,6 +611,22 @@ void clockevents_resume(void)
- }
- 
- #ifdef CONFIG_HOTPLUG_CPU
-+
-+# ifdef CONFIG_GENERIC_CLOCKEVENTS_BROADCAST
-+/**
-+ * tick_offline_cpu - Take CPU out of the broadcast mechanism
-+ * @cpu:	The outgoing CPU
-+ *
-+ * Called on the outgoing CPU after it took itself offline.
-+ */
-+void tick_offline_cpu(unsigned int cpu)
-+{
-+	raw_spin_lock(&clockevents_lock);
-+	tick_broadcast_offline(cpu);
-+	raw_spin_unlock(&clockevents_lock);
-+}
-+# endif
-+
- /**
-  * tick_cleanup_dead_cpu - Cleanup the tick and clockevents of a dead cpu
-  */
-@@ -621,8 +637,6 @@ void tick_cleanup_dead_cpu(int cpu)
- 
- 	raw_spin_lock_irqsave(&clockevents_lock, flags);
- 
--	tick_shutdown_broadcast_oneshot(cpu);
--	tick_shutdown_broadcast(cpu);
- 	tick_shutdown(cpu);
- 	/*
- 	 * Unregister the clock event devices which were
-diff --git a/kernel/time/tick-broadcast.c b/kernel/time/tick-broadcast.c
-index ee834d4fb814..a4705191d344 100644
---- a/kernel/time/tick-broadcast.c
-+++ b/kernel/time/tick-broadcast.c
-@@ -36,10 +36,12 @@ static __cacheline_aligned_in_smp DEFINE_RAW_SPINLOCK(tick_broadcast_lock);
- static void tick_broadcast_setup_oneshot(struct clock_event_device *bc);
- static void tick_broadcast_clear_oneshot(int cpu);
- static void tick_resume_broadcast_oneshot(struct clock_event_device *bc);
-+static void tick_broadcast_oneshot_offline(unsigned int cpu);
- #else
- static inline void tick_broadcast_setup_oneshot(struct clock_event_device *bc) { BUG(); }
- static inline void tick_broadcast_clear_oneshot(int cpu) { }
- static inline void tick_resume_broadcast_oneshot(struct clock_event_device *bc) { }
-+static inline void tick_broadcast_oneshot_offline(unsigned int cpu) { }
- #endif
- 
- /*
-@@ -444,8 +446,6 @@ void tick_shutdown_broadcast(unsigned int cpu)
- 	raw_spin_lock_irqsave(&tick_broadcast_lock, flags);
- 
- 	bc = tick_broadcast_device.evtdev;
--	cpumask_clear_cpu(cpu, tick_broadcast_mask);
--	cpumask_clear_cpu(cpu, tick_broadcast_on);
- 
- 	if (tick_broadcast_device.mode == TICKDEV_MODE_PERIODIC) {
- 		if (bc && cpumask_empty(tick_broadcast_mask))
-@@ -454,6 +454,16 @@ void tick_shutdown_broadcast(unsigned int cpu)
- 
- 	raw_spin_unlock_irqrestore(&tick_broadcast_lock, flags);
- }
-+
-+void tick_broadcast_offline(unsigned int cpu)
-+{
-+	raw_spin_lock(&tick_broadcast_lock);
-+	cpumask_clear_cpu(cpu, tick_broadcast_mask);
-+	cpumask_clear_cpu(cpu, tick_broadcast_on);
-+	tick_broadcast_oneshot_offline(cpu);
-+	raw_spin_unlock(&tick_broadcast_lock);
-+}
-+
- #endif
- 
- void tick_suspend_broadcast(void)
-@@ -950,14 +960,10 @@ void hotplug_cpu__broadcast_tick_pull(int deadcpu)
- }
- 
- /*
-- * Remove a dead CPU from broadcasting
-+ * Remove a dying CPU from broadcasting
-  */
--void tick_shutdown_broadcast_oneshot(unsigned int cpu)
-+static void tick_broadcast_oneshot_offline(unsigned int cpu)
- {
--	unsigned long flags;
--
--	raw_spin_lock_irqsave(&tick_broadcast_lock, flags);
--
- 	/*
- 	 * Clear the broadcast masks for the dead cpu, but do not stop
- 	 * the broadcast device!
-@@ -965,8 +971,6 @@ void tick_shutdown_broadcast_oneshot(unsigned int cpu)
- 	cpumask_clear_cpu(cpu, tick_broadcast_oneshot_mask);
- 	cpumask_clear_cpu(cpu, tick_broadcast_pending_mask);
- 	cpumask_clear_cpu(cpu, tick_broadcast_force_mask);
--
--	raw_spin_unlock_irqrestore(&tick_broadcast_lock, flags);
- }
- #endif
- 
-diff --git a/kernel/time/tick-internal.h b/kernel/time/tick-internal.h
-index e277284c2831..7b2496136729 100644
---- a/kernel/time/tick-internal.h
-+++ b/kernel/time/tick-internal.h
-@@ -64,7 +64,6 @@ extern ssize_t sysfs_get_uname(const char *buf, char *dst, size_t cnt);
- extern int tick_device_uses_broadcast(struct clock_event_device *dev, int cpu);
- extern void tick_install_broadcast_device(struct clock_event_device *dev);
- extern int tick_is_broadcast_device(struct clock_event_device *dev);
--extern void tick_shutdown_broadcast(unsigned int cpu);
- extern void tick_suspend_broadcast(void);
- extern void tick_resume_broadcast(void);
- extern bool tick_resume_check_broadcast(void);
-@@ -78,7 +77,6 @@ static inline void tick_install_broadcast_device(struct clock_event_device *dev)
- static inline int tick_is_broadcast_device(struct clock_event_device *dev) { return 0; }
- static inline int tick_device_uses_broadcast(struct clock_event_device *dev, int cpu) { return 0; }
- static inline void tick_do_periodic_broadcast(struct clock_event_device *d) { }
--static inline void tick_shutdown_broadcast(unsigned int cpu) { }
- static inline void tick_suspend_broadcast(void) { }
- static inline void tick_resume_broadcast(void) { }
- static inline bool tick_resume_check_broadcast(void) { return false; }
-@@ -128,19 +126,23 @@ static inline int tick_check_oneshot_change(int allow_nohz) { return 0; }
- /* Functions related to oneshot broadcasting */
- #if defined(CONFIG_GENERIC_CLOCKEVENTS_BROADCAST) && defined(CONFIG_TICK_ONESHOT)
- extern void tick_broadcast_switch_to_oneshot(void);
--extern void tick_shutdown_broadcast_oneshot(unsigned int cpu);
- extern int tick_broadcast_oneshot_active(void);
- extern void tick_check_oneshot_broadcast_this_cpu(void);
- bool tick_broadcast_oneshot_available(void);
- extern struct cpumask *tick_get_broadcast_oneshot_mask(void);
- #else /* !(BROADCAST && ONESHOT): */
- static inline void tick_broadcast_switch_to_oneshot(void) { }
--static inline void tick_shutdown_broadcast_oneshot(unsigned int cpu) { }
- static inline int tick_broadcast_oneshot_active(void) { return 0; }
- static inline void tick_check_oneshot_broadcast_this_cpu(void) { }
- static inline bool tick_broadcast_oneshot_available(void) { return tick_oneshot_possible(); }
- #endif /* !(BROADCAST && ONESHOT) */
- 
-+#if defined(CONFIG_GENERIC_CLOCKEVENTS_BROADCAST) && defined(CONFIG_HOTPLUG_CPU)
-+extern void tick_broadcast_offline(unsigned int cpu);
-+#else
-+static inline void tick_broadcast_offline(unsigned int cpu) { }
-+#endif
-+
- /* NO_HZ_FULL internal */
- #ifdef CONFIG_NO_HZ_FULL
- extern void tick_nohz_init(void);
+ 	error = cpuhp_setup_state(CPUHP_AP_RISCV_TIMER_STARTING,
+ 			 "clockevents/riscv/timer:starting",
