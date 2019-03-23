@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1451C4360F
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 10:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64FA1C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 10:30:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69D99218E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 10:28:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 291A2218E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 10:30:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553336938;
-	bh=lJi6CXQSMwVzumijs3EMM8dN+bdwp67TeX8tTTTH5Lg=;
+	s=default; t=1553337054;
+	bh=HXC3j0GG7c73VC1iIbFLshNGxNZaZYRlFeVjuOUcK5I=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=OrGiYho/sM4RdX1uVNZHv4ChLSWx145KBD+MHwC4S/CNTkUY4XdaRuyT/ZUYRbLm5
-	 /7V7dym7sf8J1PLM1aLHHKmg/rTmG5T1Tj5jeoc/M3mRxGlbdjY/ItqFAM1B+8+1yW
-	 sBQ9H0kKDlOVFcRIwuFInJc3XKqGF+nFAU3Olgf8=
+	b=M9hMCOpVwCOF6duW8FEuEhyRIIUBAJLbbrDalnZb25CMSnYwniFbi+TdDk/Jy3x0Z
+	 vFEEsQnMcuBw6GYV0WMCXfRZs6YKJ/E5QCBsXjR5r3igrmEAnxZVB44OpmzkIxaCwX
+	 5BNm7zpr9N1khrIaZxr9SAetWWU0a82UT2Zd052I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727252AbfCWK25 (ORCPT
+        id S1727183AbfCWKaw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Mar 2019 06:28:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38642 "EHLO mail.kernel.org"
+        Sat, 23 Mar 2019 06:30:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726448AbfCWK24 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Mar 2019 06:28:56 -0400
+        id S1726448AbfCWKaw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 Mar 2019 06:30:52 -0400
 Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC1F920883;
-        Sat, 23 Mar 2019 10:28:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4876320883;
+        Sat, 23 Mar 2019 10:30:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553336936;
-        bh=lJi6CXQSMwVzumijs3EMM8dN+bdwp67TeX8tTTTH5Lg=;
+        s=default; t=1553337052;
+        bh=HXC3j0GG7c73VC1iIbFLshNGxNZaZYRlFeVjuOUcK5I=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=hPsI3bH4y4YSy7SVWWjyo0fl8CSQxCPyUmY2x5Ts+HvJf6ZBlyF+UoKXCBCPZFth9
-         P8gcAPpK9egAJNEMcr7yBw4zl4JgtCbhJY/bCUhY3tItSLj+kjIBPqDBxteBAUGAXh
-         Vd5hXDvV1Jo4nnkLOsKlkrRoLPzrXCKlijM01x3E=
-Date:   Sat, 23 Mar 2019 19:28:51 +0900
+        b=0E9GuLxGO1ypXj+a9vIYJSaEbCXAQ50qQ/XQxK9rzqtR2dgGyl4cVCozIeLk9X60K
+         Qh/5quJHLTz7arpU2BpqNXh0VkUM8+Qhul8sDLLlhCQnISLtQOExph9U8ZqBf8HFWS
+         7yLr4gBA9u0Dn1VYczebK4F+tcsW9BGD9IrLHlaY=
+Date:   Sat, 23 Mar 2019 19:30:48 +0900
 From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Tom Zanussi <zanussi@kernel.org>
-Cc:     rostedt@goodmis.org, tglx@linutronix.de, mhiramat@kernel.org,
-        namhyung@kernel.org, bigeasy@linutronix.de, joel@joelfernandes.org,
-        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
-Subject: Re: [PATCH v4 11/11] selftests/ftrace: Change stderr redirection
- for probe error_log testcase
-Message-Id: <20190323192851.ea9f26822f6572fafc946b74@kernel.org>
-In-Reply-To: <ce51abd8585b775fd98e31e5feb1b1505483312f.1553268041.git.tom.zanussi@linux.intel.com>
-References: <cover.1553268040.git.tom.zanussi@linux.intel.com>
-        <ce51abd8585b775fd98e31e5feb1b1505483312f.1553268041.git.tom.zanussi@linux.intel.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     frowand.list@gmail.com, linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
+Subject: Re: [PATCH v2] tracing: initialize variable in create_dyn_event()
+Message-Id: <20190323193048.35d96b86388552b0b7f7a36d@kernel.org>
+In-Reply-To: <20190322152000.0a357bb1@gandalf.local.home>
+References: <1553237900-8555-1-git-send-email-frowand.list@gmail.com>
+        <20190322152000.0a357bb1@gandalf.local.home>
 X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -59,63 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 22 Mar 2019 10:34:37 -0500
-Tom Zanussi <zanussi@kernel.org> wrote:
+On Fri, 22 Mar 2019 15:20:00 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> From: Tom Zanussi <tom.zanussi@linux.intel.com>
+> On Thu, 21 Mar 2019 23:58:20 -0700
+> frowand.list@gmail.com wrote:
 > 
-> On my system, /bin/sh is symlinked to dash, which doesn't understand
-> the >& syntax, so the kprobe and uprobe error cases fail, with this in
-> the log:
+> > From: Frank Rowand <frank.rowand@sony.com>
+> > 
+> > Fix compile warning in create_dyn_event(): 'ret' may be used uninitialized
+> > in this function [-Wuninitialized].
+> > 
+> > Fixes: 5448d44c3855 ("tracing: Add unified dynamic event framework")
+> > 
+> > Signed-off-by: Frank Rowand <frank.rowand@sony.com>
 > 
-> ./ftracetest: 26: tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc:
-> Syntax error: Bad fd number
-> 
-> Changing >& to 2> does work though, and should work in any shell.
+> Applied. Thanks Frank!
 
-Ah, I missed this patch.
+Thank you Frank and Steve,
 
-This looks good to me.
+feel free to add my ack.
 
 Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
 
-BTW, where is my checkbashisms testcase ...
+Thanks!
 
 > 
-> Signed-off-by: Tom Zanussi <tom.zanussi@linux.intel.com>
-> ---
->  tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc | 2 +-
->  tools/testing/selftests/ftrace/test.d/kprobe/uprobe_syntax_errors.tc | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
+> -- Steve
 > 
-> diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
-> index 281665b1348c..7eb577b1d222 100644
-> --- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
-> +++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
-> @@ -11,7 +11,7 @@ pos=$(echo -n "${1%^*}" | wc -c) # error position
->  command=$(echo "$1" | tr -d ^)
->  echo "Test command: $command"
->  echo > error_log
-> -(! echo "$command" > kprobe_events ) >& /dev/null
-> +(! echo "$command" > kprobe_events ) 2> /dev/null
->  grep "trace_kprobe: error:" -A 3 error_log
->  N=$(tail -n 1 error_log | wc -c)
->  # "  Command: " and "^\n" => 13
-> diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/uprobe_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/kprobe/uprobe_syntax_errors.tc
-> index 957011300bb7..ec7389b7934b 100644
-> --- a/tools/testing/selftests/ftrace/test.d/kprobe/uprobe_syntax_errors.tc
-> +++ b/tools/testing/selftests/ftrace/test.d/kprobe/uprobe_syntax_errors.tc
-> @@ -11,7 +11,7 @@ pos=$(echo -n "${1%^*}" | wc -c) # error position
->  command=$(echo "$1" | tr -d ^)
->  echo "Test command: $command"
->  echo > error_log
-> -(! echo "$command" > uprobe_events ) >& /dev/null
-> +(! echo "$command" > uprobe_events ) 2> /dev/null
->  grep "trace_uprobe: error:" -A 3 error_log
->  N=$(tail -n 1 error_log | wc -c)
->  # "  Command: " and "^\n" => 13
-> -- 
-> 2.14.1
+> > ---
+> > 
+> > changes since v1:
+> >   - initialize to -ENODEV instead of 0, as suggested by Steve
+> > 
+> >  kernel/trace/trace_dynevent.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/kernel/trace/trace_dynevent.c b/kernel/trace/trace_dynevent.c
+> > index dd1f43588d70..fa100ed3b4de 100644
+> > --- a/kernel/trace/trace_dynevent.c
+> > +++ b/kernel/trace/trace_dynevent.c
+> > @@ -74,7 +74,7 @@ int dyn_event_release(int argc, char **argv, struct dyn_event_operations *type)
+> >  static int create_dyn_event(int argc, char **argv)
+> >  {
+> >  	struct dyn_event_operations *ops;
+> > -	int ret;
+> > +	int ret = -ENODEV;
+> >  
+> >  	if (argv[0][0] == '-' || argv[0][0] == '!')
+> >  		return dyn_event_release(argc, argv, NULL);
 > 
 
 
