@@ -2,145 +2,85 @@ Return-Path: <SRS0=q9dy=R2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E712C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 21:04:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDFDFC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 21:10:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E304217D8
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 21:04:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="I4Ef8XT/"
+	by mail.kernel.org (Postfix) with ESMTP id 8BABF21841
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 21:10:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728028AbfCWVE2 (ORCPT
+        id S1727980AbfCWVKC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Mar 2019 17:04:28 -0400
-Received: from mta-p5.oit.umn.edu ([134.84.196.205]:52412 "EHLO
-        mta-p5.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727770AbfCWVE2 (ORCPT
+        Sat, 23 Mar 2019 17:10:02 -0400
+Received: from mail-it1-f197.google.com ([209.85.166.197]:57707 "EHLO
+        mail-it1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726230AbfCWVKB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Mar 2019 17:04:28 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p5.oit.umn.edu (Postfix) with ESMTP id 25B2BCBB
-        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2019 21:04:27 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p5.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p5.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id TyOuG-Km715d for <linux-kernel@vger.kernel.org>;
-        Sat, 23 Mar 2019 16:04:27 -0500 (CDT)
-Received: from mail-it1-f197.google.com (mail-it1-f197.google.com [209.85.166.197])
-        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p5.oit.umn.edu (Postfix) with ESMTPS id E7E50CBF
-        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2019 16:04:26 -0500 (CDT)
-Received: by mail-it1-f197.google.com with SMTP id 190so5585615itv.3
-        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2019 14:04:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=5wG4f1fEkLp966T1bSVeSK99W1Qeu2nVeK0taNfKzzQ=;
-        b=I4Ef8XT/jnbi+tMmAHG5WICb8qdNlNkhEGeMnG7BX2cTmGzsbQWhpaDzogleFYvnOn
-         FTiGI9G++d4xNJ5aq4XKaWU3JUrelm+iFniQ8rZjxWdhm5LST/Dd3EyHgJn2uobP4Ue2
-         cqoNk5Bl+C2B+g8lToWMhw+4SDodFTvbBlxbhFM/GYYBuUmOiN7Yp+K8Yw9HuOr3A4v5
-         /WELYfLIaJnThcKTxv2kHZJNZmzh5YNVpkYgbwDfL4XRL14z8OTA7FPqFqtkdnR3nkKF
-         08Zdij3YbRiPw8FIqp68WCWtGpZg5wpjP3BkfJbsZVI7uXg91tmcxqATbDhF7IkX01N9
-         v17A==
+        Sat, 23 Mar 2019 17:10:01 -0400
+Received: by mail-it1-f197.google.com with SMTP id h82so5581999ita.7
+        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2019 14:10:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=5wG4f1fEkLp966T1bSVeSK99W1Qeu2nVeK0taNfKzzQ=;
-        b=VGfN7mtaUWdeTHdw0Cw4a6b7dvEhJd9/LHORR0FDRu+LJml6LKG9/NX3TJAbz2TGt2
-         TVz0gv+Vv3hHuJ63khTTl2NmSimNuEUPnll9V2Pi2UlLOOQHGnmJLdZQe58adLuFC2Ka
-         xdfe8qk14VvIaN+1OxdQEsQRPk2ez9SGPShf+uH4m5XxMGf2yLG4WF4YRxloDc0a4Qi9
-         +uYZS/rtEY5OS74FAEyd20E26VJws5CZYWfoKfQHSlZsUb/XGdwYsGAqP+vmIqVhslIv
-         kaZlHeCW+6PZ2BWTdIOd9Lzg7nVXDmyspBZiIX2mKBnoLtC8po77tot+J6awxQuc1FGe
-         ZPmA==
-X-Gm-Message-State: APjAAAUNBmBXwVhOhTp0JA61pzwprxH2FIxxzKqEINZkM2F78x9RcXpl
-        98RpF3pNgJrbIwhXlva+8jM4OmK020LGAwmahk4kjGl1R6RG0F0P7pAB1NflqHAjbOy86cnHk1+
-        29pK6+fdpH37LySe+QwUC7RBvRby9
-X-Received: by 2002:a05:660c:711:: with SMTP id l17mr3140856itk.92.1553375066578;
-        Sat, 23 Mar 2019 14:04:26 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxy0U8g+TJEXWruwMJ6yj9GVhNXSU4I56D1uDEFVkrDtIqQ32mirdf4BRi6O68CHL7dEMQkZA==
-X-Received: by 2002:a05:660c:711:: with SMTP id l17mr3140846itk.92.1553375066381;
-        Sat, 23 Mar 2019 14:04:26 -0700 (PDT)
-Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
-        by smtp.gmail.com with ESMTPSA id c1sm3344399itd.23.2019.03.23.14.04.25
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 23 Mar 2019 14:04:25 -0700 (PDT)
-From:   Aditya Pakki <pakki001@umn.edu>
-To:     pakki001@umn.edu
-Cc:     kjlu@umn.edu, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] pci: pcie-xilinx: fix a missing-check bug for __get_free_pages
-Date:   Sat, 23 Mar 2019 16:04:23 -0500
-Message-Id: <20190323210423.8881-1-pakki001@umn.edu>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=H0YimcghHT0/gJPwSA1rkrR5qRnoKmjRqNBRjiJyio4=;
+        b=P/myhkbPoHQNGoJe4QTCpd60CX/woMxg4BZetCyKrimO1do6JkYK99/bOf9TFqhyxc
+         3XqSKFAa5pz1uFIDhp4uXNzK5r4pfDUt4Kw/6Y9fhu0T7KmDcopnP54H3bRLE88GP0v6
+         CDU+I1A8NiKS2yOdfNjiA8K2ZzAfSsoM+VnPiyFcgfFsabIBID0Zq7KN0fSSpMvc6ehb
+         C7i5U5YCAzW54nWRr0qOmo85IH4fYIp7RTh2YMpRfK30sUIIw2Uq9yYppkYPHh6a70GL
+         nF6QLcgcJjIxwuoPSr50R88ePw7nFLi3bcvYsLtPZX5mv2EMLAjAYTOZKRjND1pkA+Id
+         WC8A==
+X-Gm-Message-State: APjAAAVX4WFBxfHiiIKT76KdwYCHe3tzSgsXkoMn0fe0rgakRsbelkPI
+        fHwQ3cTZ+RJ4dByUtmShRrSGCQN+eDXY0AKLOpkbymEK1Ccz
+X-Google-Smtp-Source: APXvYqxy9GWCuMJhBKCK8ItNo5FsHlX2a7uRQ6tyfzhbCWhqbcLrzs3BiSl2CUL32rcErPUcGhf+lJViDCJ/wdIZYP6oC1dEQcB6
+MIME-Version: 1.0
+X-Received: by 2002:a24:e50b:: with SMTP id g11mr6475073iti.14.1553375400876;
+ Sat, 23 Mar 2019 14:10:00 -0700 (PDT)
+Date:   Sat, 23 Mar 2019 14:10:00 -0700
+In-Reply-To: <00000000000066aa5f0581b6effe@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000f8e14f0584c96446@google.com>
+Subject: Re: KASAN: use-after-free Read in rt_cache_valid
+From:   syzbot <syzbot+c4c4b2bb358bb936ad7e@syzkaller.appspotmail.com>
+To:     alexandre.torgue@st.com, alsa-devel@alsa-project.org,
+        arnaud.pouliquen@st.com, broonie@kernel.org,
+        colin.king@canonical.com, davem@davemloft.net, dsahern@gmail.com,
+        ktkhai@virtuozzo.com, kuznet@ms2.inr.ac.ru, lgirdwood@gmail.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        mcoquelin.stm32@gmail.com, netdev@vger.kernel.org,
+        olivier.moysan@st.com, perex@perex.cz,
+        syzkaller-bugs@googlegroups.com, tiwai@suse.com,
+        tyhicks@canonical.com, willy@infradead.org, yoshfuji@linux-ipv6.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case __get_free_pages fail, the fix returns error upstream
-to avoid NULL pointer dereference.
+syzbot has bisected this bug to:
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+commit 6b27e27729270a2478fdebea2db9c4f57bb4e8e6
+Author: Colin Ian King <colin.king@canonical.com>
+Date:   Wed Oct 31 19:31:43 2018 +0000
 
----
-v1: Return error upstream as suggested by Steven
----
- drivers/pci/controller/pcie-xilinx.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+     ASoC: stm32: sai: fix less than zero comparison on unsigned int
 
-diff --git a/drivers/pci/controller/pcie-xilinx.c b/drivers/pci/controller/pcie-xilinx.c
-index 9bd1a35cd5d8..91d8945bfb0c 100644
---- a/drivers/pci/controller/pcie-xilinx.c
-+++ b/drivers/pci/controller/pcie-xilinx.c
-@@ -335,15 +335,19 @@ static const struct irq_domain_ops msi_domain_ops = {
- /**
-  * xilinx_pcie_enable_msi - Enable MSI support
-  * @port: PCIe port information
-+ * Return: 0 on success, negative error on failure
-  */
--static void xilinx_pcie_enable_msi(struct xilinx_pcie_port *port)
-+static int xilinx_pcie_enable_msi(struct xilinx_pcie_port *port)
- {
- 	phys_addr_t msg_addr;
- 
- 	port->msi_pages = __get_free_pages(GFP_KERNEL, 0);
-+	if (!port->msi_pages)
-+		return -ENOMEM;
- 	msg_addr = virt_to_phys((void *)port->msi_pages);
- 	pcie_write(port, 0x0, XILINX_PCIE_REG_MSIBASE1);
- 	pcie_write(port, msg_addr, XILINX_PCIE_REG_MSIBASE2);
-+	return 0;
- }
- 
- /* INTx Functions */
-@@ -498,6 +502,7 @@ static int xilinx_pcie_init_irq_domain(struct xilinx_pcie_port *port)
- 	struct device *dev = port->dev;
- 	struct device_node *node = dev->of_node;
- 	struct device_node *pcie_intc_node;
-+	int ret;
- 
- 	/* Setup INTx */
- 	pcie_intc_node = of_get_next_child(node, NULL);
-@@ -526,7 +531,9 @@ static int xilinx_pcie_init_irq_domain(struct xilinx_pcie_port *port)
- 			return -ENODEV;
- 		}
- 
--		xilinx_pcie_enable_msi(port);
-+		ret = xilinx_pcie_enable_msi(port);
-+		if (ret)
-+			return ret;
- 	}
- 
- 	return 0;
--- 
-2.17.1
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10c0298b200000
+start commit:   aa0c38cf Merge branch 'fixes' of git://git.kernel.org/pub/..
+git tree:       upstream
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=12c0298b200000
+console output: https://syzkaller.appspot.com/x/log.txt?x=14c0298b200000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ee434566c893c7b1
+dashboard link: https://syzkaller.appspot.com/bug?extid=c4c4b2bb358bb936ad7e
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1197cb88c00000
 
+Reported-by: syzbot+c4c4b2bb358bb936ad7e@syzkaller.appspotmail.com
+Fixes: 6b27e2772927 ("ASoC: stm32: sai: fix less than zero comparison on  
+unsigned int")
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
