@@ -4,58 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6514C4360F
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 21:17:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7284FC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 21:17:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68AE221873
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 21:17:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D9F0218E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 21:17:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="ZOXO69iy"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="ZfoJ8FWW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728432AbfCWVQ7 (ORCPT
+        id S1728484AbfCWVRH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Mar 2019 17:16:59 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:34494 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728321AbfCWVQ5 (ORCPT
+        Sat, 23 Mar 2019 17:17:07 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:38338 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728449AbfCWVRC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Mar 2019 17:16:57 -0400
-Received: by mail-wm1-f65.google.com with SMTP id o10so6721011wmc.1
-        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2019 14:16:56 -0700 (PDT)
+        Sat, 23 Mar 2019 17:17:02 -0400
+Received: by mail-wm1-f66.google.com with SMTP id a188so5291289wmf.3
+        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2019 14:17:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=AdHRYJryAaxYVOMT8m1MuQVCWPZpf0WJ2ig7I3MUpzE=;
-        b=ZOXO69iyAEJoTueYZBYxaPeNXjucZ4yRr2588wavJL4dvF/TSIDm1HcsjMLdsP+U4s
-         hOkCOo7dsVU/IbrCGomdjvPCRW1kH3O24p7Q+yhICWNOTuuP42POXw7mgYrBo812CiCX
-         ljyaqqJ25StC4HDdn46+b0xRFo/pUKavgbBP/bl2f+DjdVhDOC8BazPCwilkWqT9q+wx
-         MMVPD2oPkdykfnF+gns/CWGHm7irAYjvBevgbEgfnZBgoKPOGj8KdujIsU7imFRndQDB
-         hzYWJ522OiDlUcOlbPyEjinyICam7ZD3lrRbyNH2w2W0tno++MG9NXV4s0t5SuvdLTRj
-         vLiQ==
+        bh=VDrizs2/2ZAftGyDtPa0UqsjZPPXfl5+5ooldcgiEvQ=;
+        b=ZfoJ8FWWjKGpcf9d8YwDrrIirJDbmWiEjOXqDMQPc8rWiEWNMYPlq1pRe8QH+BaV6H
+         pkrLqStBymgTLCR5hhVa9XS/OndbeL7zySXywosVPnf95crPm6DXiIq7K1kIo3xrhs36
+         pvZIuTX23bTXySIbRHTULrEB4Vu0bxx0I/dsLemhJ1ID/pUBe7s6X5AJXbLjVOCKOKCC
+         O8LPKDU+NZ2tFgvLKMJzAjeLaiTHVpCIHyXb0J1Ua1kYxpdvWG0yf1zNgYhHiWcyGoKJ
+         Wrz6wRK3KeNHqnpmlYcE1SfcxeU1v5wcz9/CYzAa6pZoJ26NTBmbEI3wcBHFs4iAMjCz
+         wvGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=AdHRYJryAaxYVOMT8m1MuQVCWPZpf0WJ2ig7I3MUpzE=;
-        b=A9iUp7qSSKTze0AisttXAFf8o+zRVobUcer/1sVT2/GZavBl3tCc3yl8zdWsskF/n+
-         Vh1HTdYcoZSIavgGKjPc+ew1JE5aBctd0Hb5o2TBIl118FcDpKcrAz40oX7BO24+HbvW
-         UgFNijFQnHV/lhB9xaHB/FkJUszMz54hDoOIDp63iQupqHauvkuoGAGHLuFW6XJ8ZK8G
-         RkH7dTR0LL+ghNi2FXCZJnvaS8LYcVpHxwPn0f5Te9KZM05v/q++1bucK6SOdgvA3FUK
-         TWoZws7CejK1JllhaKHE9N3dC7hsaOV8s4zt7CrMMUDAWEdWnUBEiIGApRM3APdUMMm5
-         6YEg==
-X-Gm-Message-State: APjAAAU9+6qaGm/QsMMHlERa9VJU1ISRczT0TO4mrv8IQcaOv+rkT5ED
-        HiEYmjWRFUjcKGRSQRyvv1MN5w==
-X-Google-Smtp-Source: APXvYqxYPaJhFRUHv8HBUyZW5omCRwDkkzMwHJ14T3fFjhXXI4tFr09qr7yHSwkWltyTVfz+3nuGqw==
-X-Received: by 2002:a1c:4cf:: with SMTP id 198mr831787wme.125.1553375815235;
-        Sat, 23 Mar 2019 14:16:55 -0700 (PDT)
+        bh=VDrizs2/2ZAftGyDtPa0UqsjZPPXfl5+5ooldcgiEvQ=;
+        b=gwy2KWMK4jvhLwBPRKYGxBd/zalJnn7TXjlYLQB3vYwYmeWpFO0xRe8lmCZ/EskvGE
+         aDX+5NFGsH1oNaVihCjFrf+tNFtsjGyRSsbgFiPv7G/4j6z+CjfG0CTTVXJQ0p91Rbno
+         e88Ri+Kv3ooH086f5YHewbm0RKSbuPEC4VZOv+QmaspDUfNKBZ3os6Y2cq1Sij4fBg99
+         hkSfHS2duDUj8GnLxf/3miHnJ4rmBsl0fcCC98+Y9+QuQteziJnQPpzqy0h19zrv3B2H
+         mCfJv1nkp1cXzWlcM3YeWZPG3zcSMW00/0O13T3fcyR9x5F1RBtQ1mSen/V2IVexH9vN
+         wVzg==
+X-Gm-Message-State: APjAAAUzLqOPLxCxsi6ZQhoBJ02tijqPKvUDO0dVio2gYakCIXZrQFuM
+        0iIgW3M8Kqkol7rfg4kUjJQzSA==
+X-Google-Smtp-Source: APXvYqynNilWbzifjm8V9o5qdrR1Mbct64Bkz7ip1tKMi8jiaJiaxwasknDL/Rs9NTJNNkzHIdVr6w==
+X-Received: by 2002:a7b:c404:: with SMTP id k4mr927170wmi.117.1553375820854;
+        Sat, 23 Mar 2019 14:17:00 -0700 (PDT)
 Received: from localhost.localdomain (cag06-8-78-203-165-84.fbx.proxad.net. [78.203.165.84])
-        by smtp.gmail.com with ESMTPSA id y66sm8050503wmd.37.2019.03.23.14.16.52
+        by smtp.gmail.com with ESMTPSA id y66sm8050503wmd.37.2019.03.23.14.16.58
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 23 Mar 2019 14:16:54 -0700 (PDT)
+        Sat, 23 Mar 2019 14:17:00 -0700 (PDT)
 From:   Fabien Parent <fparent@baylibre.com>
 To:     matthias.bgg@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
 Cc:     sean.wang@kernel.org, ryder.lee@mediatek.com,
@@ -69,9 +69,9 @@ Cc:     sean.wang@kernel.org, ryder.lee@mediatek.com,
         linux-spi@vger.kernel.org, linux-watchdog@vger.kernel.org,
         linux-clk@vger.kernel.org, stephane.leprovost@mediatek.com,
         Fabien Parent <fparent@baylibre.com>
-Subject: [PATCH 07/24] arm64: dts: mt6392: Add PMIC mt6392 dtsi
-Date:   Sat, 23 Mar 2019 22:15:55 +0100
-Message-Id: <20190323211612.860-8-fparent@baylibre.com>
+Subject: [PATCH 09/24] mmc: mtk-sd: check for valid optional memory resource
+Date:   Sat, 23 Mar 2019 22:15:57 +0100
+Message-Id: <20190323211612.860-10-fparent@baylibre.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190323211612.860-1-fparent@baylibre.com>
 References: <20190323211612.860-1-fparent@baylibre.com>
@@ -82,228 +82,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the regulator nodes for the MT6392 PMIC.
+'top_base' memory region is optional. Check that the resource is valid
+before using it. This avoid getting a "invalid resource" error message
+printed by the kernel.
 
 Signed-off-by: Fabien Parent <fparent@baylibre.com>
 ---
- arch/arm64/boot/dts/mediatek/mt6392.dtsi | 208 +++++++++++++++++++++++
- 1 file changed, 208 insertions(+)
- create mode 100644 arch/arm64/boot/dts/mediatek/mt6392.dtsi
+ drivers/mmc/host/mtk-sd.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt6392.dtsi b/arch/arm64/boot/dts/mediatek/mt6392.dtsi
-new file mode 100644
-index 000000000000..e33a45fd52af
---- /dev/null
-+++ b/arch/arm64/boot/dts/mediatek/mt6392.dtsi
-@@ -0,0 +1,208 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2019 MediaTek Inc.
-+ */
-+
-+&pwrap {
-+	pmic: mt6392 {
-+		compatible = "mediatek,mt6392", "mediatek,mt6323";
-+		mediatek,system-power-controller;
-+
-+		mt6392_regulator: mt6392_regulator {
-+			compatible = "mediatek,mt6392-regulator";
-+
-+			mt6392_vproc_reg: buck_vproc {
-+				regulator-name = "buck_vproc";
-+				regulator-min-microvolt = < 700000>;
-+				regulator-max-microvolt = <1350000>;
-+				regulator-ramp-delay = <12500>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			mt6392_vsys_reg: buck_vsys {
-+				regulator-name = "buck_vsys";
-+				regulator-min-microvolt = <1400000>;
-+				regulator-max-microvolt = <2987500>;
-+				regulator-ramp-delay = <25000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			mt6392_vcore_reg: buck_vcore {
-+				regulator-name = "buck_vcore";
-+				regulator-min-microvolt = < 700000>;
-+				regulator-max-microvolt = <1350000>;
-+				regulator-ramp-delay = <12500>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			mt6392_vxo22_reg: ldo_vxo22 {
-+				regulator-name = "ldo_vxo22";
-+				regulator-min-microvolt = <2200000>;
-+				regulator-max-microvolt = <2200000>;
-+				regulator-enable-ramp-delay = <110>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			mt6392_vaud22_reg: ldo_vaud22 {
-+				regulator-name = "ldo_vaud22";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <2200000>;
-+				regulator-enable-ramp-delay = <264>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			mt6392_vcama_reg: ldo_vcama {
-+				regulator-name = "ldo_vcama";
-+				regulator-min-microvolt = <2800000>;
-+				regulator-max-microvolt = <2800000>;
-+				regulator-enable-ramp-delay = <264>;
-+			};
-+
-+			mt6392_vaud28_reg: ldo_vaud28 {
-+				regulator-name = "ldo_vaud28";
-+				regulator-min-microvolt = <2800000>;
-+				regulator-max-microvolt = <2800000>;
-+				regulator-enable-ramp-delay = <264>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			mt6392_vadc18_reg: ldo_vadc18 {
-+				regulator-name = "ldo_vadc18";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-enable-ramp-delay = <264>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			mt6392_vcn35_reg: ldo_vcn35 {
-+				regulator-name = "ldo_vcn35";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3600000>;
-+				regulator-enable-ramp-delay = <264>;
-+			};
-+
-+			mt6392_vio28_reg: ldo_vio28 {
-+				regulator-name = "ldo_vio28";
-+				regulator-min-microvolt = <2800000>;
-+				regulator-max-microvolt = <2800000>;
-+				regulator-enable-ramp-delay = <264>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			mt6392_vusb_reg: ldo_vusb {
-+				regulator-name = "ldo_vusb";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-enable-ramp-delay = <264>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			mt6392_vmc_reg: ldo_vmc {
-+				regulator-name = "ldo_vmc";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-enable-ramp-delay = <264>;
-+				regulator-boot-on;
-+			};
-+
-+			mt6392_vmch_reg: ldo_vmch {
-+				regulator-name = "ldo_vmch";
-+				regulator-min-microvolt = <3000000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-enable-ramp-delay = <264>;
-+				regulator-boot-on;
-+			};
-+
-+			mt6392_vemc3v3_reg: ldo_vemc3v3 {
-+				regulator-name = "ldo_vemc3v3";
-+				regulator-min-microvolt = <3000000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-enable-ramp-delay = <264>;
-+				regulator-boot-on;
-+			};
-+
-+			mt6392_vgp1_reg: ldo_vgp1 {
-+				regulator-name = "ldo_vgp1";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-enable-ramp-delay = <264>;
-+			};
-+
-+			mt6392_vgp2_reg: ldo_vgp2 {
-+				regulator-name = "ldo_vgp2";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-enable-ramp-delay = <264>;
-+			};
-+
-+			mt6392_vcn18_reg: ldo_vcn18 {
-+				regulator-name = "ldo_vcn18";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-enable-ramp-delay = <264>;
-+			};
-+
-+			mt6392_vcamaf_reg: ldo_vcamaf {
-+				regulator-name = "ldo_vcamaf";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-enable-ramp-delay = <264>;
-+			};
-+
-+			mt6392_vm_reg: ldo_vm {
-+				regulator-name = "ldo_vm";
-+				regulator-min-microvolt = <1240000>;
-+				regulator-max-microvolt = <1390000>;
-+				regulator-enable-ramp-delay = <264>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			mt6392_vio18_reg: ldo_vio18 {
-+				regulator-name = "ldo_vio18";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-enable-ramp-delay = <264>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			mt6392_vcamd_reg: ldo_vcamd {
-+				regulator-name = "ldo_vcamd";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-enable-ramp-delay = <264>;
-+			};
-+
-+			mt6392_vcamio_reg: ldo_vcamio {
-+				regulator-name = "ldo_vcamio";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-enable-ramp-delay = <264>;
-+			};
-+
-+			mt6392_vm25_reg: ldo_vm25 {
-+				regulator-name = "ldo_vm25";
-+				regulator-min-microvolt = <2500000>;
-+				regulator-max-microvolt = <2500000>;
-+				regulator-enable-ramp-delay = <264>;
-+			};
-+
-+			mt6392_vefuse_reg: ldo_vefuse {
-+				regulator-name = "ldo_vefuse";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <2000000>;
-+				regulator-enable-ramp-delay = <264>;
-+			};
-+		};
-+	};
-+};
+diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
+index 833ef0590af8..573aa127d00b 100644
+--- a/drivers/mmc/host/mtk-sd.c
++++ b/drivers/mmc/host/mtk-sd.c
+@@ -2123,9 +2123,11 @@ static int msdc_drv_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+-	host->top_base = devm_ioremap_resource(&pdev->dev, res);
+-	if (IS_ERR(host->top_base))
+-		host->top_base = NULL;
++	if (ret) {
++		host->top_base = devm_ioremap_resource(&pdev->dev, res);
++		if (IS_ERR(host->top_base))
++			host->top_base = NULL;
++	}
+ 
+ 	ret = mmc_regulator_get_supply(mmc);
+ 	if (ret)
 -- 
 2.20.1
 
