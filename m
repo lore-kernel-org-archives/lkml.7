@@ -2,80 +2,112 @@ Return-Path: <SRS0=q9dy=R2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ED11C4360F
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 07:50:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EFCEC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 07:57:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5564721874
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 07:50:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C185218B0
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 07:57:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R/AR1oKE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726957AbfCWHuC (ORCPT
+        id S1727090AbfCWH5p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Mar 2019 03:50:02 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:46637 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726106AbfCWHuC (ORCPT
+        Sat, 23 Mar 2019 03:57:45 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:35538 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726555AbfCWH5p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Mar 2019 03:50:02 -0400
-Received: by mail-io1-f71.google.com with SMTP id k5so3668635ioh.13
-        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2019 00:50:01 -0700 (PDT)
+        Sat, 23 Mar 2019 03:57:45 -0400
+Received: by mail-lf1-f67.google.com with SMTP id u21so2896806lfu.2
+        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2019 00:57:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Z/aKwYGbH4+4di22m+SqS1QqQLmAyze04q50aG94qec=;
+        b=R/AR1oKEe2ljpDS5QiysNTkNvvv23MRCzkh8IOdwwVKfhH9n1/37FX8cdvDf831gCa
+         SnqtO9fIoYKGnZISeG7ZDbOo03+VZoUhvp336GETtE/SaFJLiLFBpx7PrkmLJgaH9FZk
+         u2HMtd6kmDSpKJyZvJ0nFUwsUXW2uYUicqD3K8JN5HIlW8MiSttM1meEE2cCsrtKFIoF
+         1VPJDiiBWU+y9Mx2idSR/XKXkefrMhPFvOheqblQuafQtEfJareRcryQUYTc86VKkBhL
+         GF94leqrp7yCFWjZoXG9OxKbT6m8obo4GgmzmoHrMsdFGZWB7JMi1XZ6E7bDGwHRZmxY
+         +irA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=uyeFy9nr6uooYOVc0CHdUGqt9tT2hLYONRn7P4dDucg=;
-        b=bDPLye0fJbycFu9BgEkSH+/o7H3DZSf8EJqTlX9GL7c6ISfv1PW8VeFGDpITCBMf5U
-         f6zjHgTAwIIfyd48SsMY4WTIa0CwWBQdkmUretMVUE4ZVjVwij7HOrqGoiOtYTd+jlWH
-         sgn8U+itxPRsfHhcIKiy3j/fsTszQjC9OoxOWpa1yfPM3mgALollPLgKtaa8AjImB/Tc
-         tgRUOufTUy51pnT+mX0YfboUl3IE5YhyOmFcfaneEXL/oqj2KOyjtiigyUpNXh5RMcEJ
-         kzUZXvGmoP5lQ/a/ozTxrjW1yJ55DXbgplMA1g7q7qo4KS01BNpAel4NWXj3hVOjJ8t4
-         9rPg==
-X-Gm-Message-State: APjAAAXB9WHy2qExIqK0xsrB0YnETtXfll4/XszKQZ3b3k2wVQifYfYs
-        skidAqTF8MWmijaE4ouHj51o0++ziBfd2xg0dZiKSt/JBsT4
-X-Google-Smtp-Source: APXvYqzZrZbo5PeFWeeCxw2kozFC7X+ewDnQXeBq96HUj4cWCMhdWnAAukpERSwWQxFqnqmC8wpB59chjLfgtwO7dEVA67L31Cso
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Z/aKwYGbH4+4di22m+SqS1QqQLmAyze04q50aG94qec=;
+        b=n+CitarikkQJbowgQUTt4LvtxevToVfxMEorqYi7mmBbXy4HcpLz/75pzGbT9rloP2
+         I5rNnUIxtUxs5esfFJ7I7Z3hXf6RdiYfnxzZ1kK8Ug4MjK9OcXea5jCwSRg9ggtkZBVV
+         /Iu0jjk/2jXoZoAcMiIDQjXidY1OZSlO42VCcbY8blLmh/7N+qV74CJrJQbBwYDM98sC
+         1iSOjgc1zR4IxR9NLRhp/ooabSI1qp2jrnLaCJQiinAoNl7coNQat1rb0ku1KXgprH1m
+         TzJ4/55A4L9g08FktU0GGVOWwX7+d37+nT29uXfI5rZkyHSyPd/QJBavklBmYjtcDi81
+         VNkQ==
+X-Gm-Message-State: APjAAAUKE6UUTosBfimqBVvi2CupCX9jfxCvdu4s9qYO71F94qMrRCRi
+        YW7/Z4RMWaAEv+20w85qqSKhYWSoljsply7lISg=
+X-Google-Smtp-Source: APXvYqw2OFgPkW1ptRJ1lwSvUOaaOxpN+Ynt1Ziwp7YAjcFek1jouzI8PAsRksV4xu6gcMDiRsc+83N/s8xFBzOIJDQ=
+X-Received: by 2002:a19:c9c1:: with SMTP id z184mr7129547lff.138.1553327863003;
+ Sat, 23 Mar 2019 00:57:43 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a24:6b8e:: with SMTP id v136mr4335629itc.146.1553327401001;
- Sat, 23 Mar 2019 00:50:01 -0700 (PDT)
-Date:   Sat, 23 Mar 2019 00:50:00 -0700
-In-Reply-To: <0000000000006971fa05769d22f6@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000f4efae0584be37ab@google.com>
-Subject: Re: WARNING in request_end
-From:   syzbot <syzbot+ef054c4d3f64cd7f7cec@syzkaller.appspotmail.com>
-To:     dvyukov@google.com, ebiederm@xmission.com, ktkhai@virtuozzo.com,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        miklos@szeredi.hu, mszeredi@redhat.com,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+References: <20190309075917.6791-1-kjlu@umn.edu> <11B50B8B-7A27-4BFD-B0C6-669C74381B46@umn.edu>
+In-Reply-To: <11B50B8B-7A27-4BFD-B0C6-669C74381B46@umn.edu>
+From:   Maxim Levitsky <maximlevitsky@gmail.com>
+Date:   Sat, 23 Mar 2019 09:57:32 +0200
+Message-ID: <CACAwPwaPb6x0WWay5Wt5hsYumLv3sQea9Nq4GAJHJ6qLs62apQ@mail.gmail.com>
+Subject: Re: [PATCH] memstick: fix a potential NULL pointer dereference
+To:     Kangjie Lu <kjlu@umn.edu>
+Cc:     pakki001@umn.edu, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+On Sat, Mar 23, 2019 at 5:08 AM Kangjie Lu <kjlu@umn.edu> wrote:
+>
+> Hi Maxim,
+>
+> Can you review this patch?
+>
+> Thanks,
+>
+> > On Mar 9, 2019, at 1:59 AM, Kangjie Lu <kjlu@umn.edu> wrote:
+> >
+> > In case alloc_ordered_workqueue fails, the fix returns ENOMEM to
+> > avoid potential NULL pointer dereference.
+> >
+> > Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+> > ---
+> > drivers/memstick/core/ms_block.c | 5 +++++
+> > 1 file changed, 5 insertions(+)
+> >
+> > diff --git a/drivers/memstick/core/ms_block.c b/drivers/memstick/core/ms_block.c
+> > index 82daccc9ea62..8e00de414567 100644
+> > --- a/drivers/memstick/core/ms_block.c
+> > +++ b/drivers/memstick/core/ms_block.c
+> > @@ -2149,6 +2149,11 @@ static int msb_init_disk(struct memstick_dev *card)
+> >
+> >       msb->usage_count = 1;
+> >       msb->io_queue = alloc_ordered_workqueue("ms_block", WQ_MEM_RECLAIM);
+> > +     if (!msb->io_queue) {
+> > +             rc = -ENOMEM;
+> > +             goto out_put_disk;
+> > +     }
+> > +
+> >       INIT_WORK(&msb->io_work, msb_io_work);
+> >       sg_init_table(msb->prealloc_sg, MS_BLOCK_MAX_SEGS+1);
+> >
+> > --
+> > 2.17.1
+> >
 
-commit 4ad769f3c346ec3d458e255548dec26ca5284cf6
-Author: Eric W. Biederman <ebiederm@xmission.com>
-Date:   Tue May 29 14:04:46 2018 +0000
+Looks OK to me!
 
-     fuse: Allow fully unprivileged mounts
+Reviewed-by: Maxim Levitsky <maximlevitsky@gmail.com>
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16b4518b200000
-start commit:   0238df64 Linux 4.19-rc7
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=15b4518b200000
-console output: https://syzkaller.appspot.com/x/log.txt?x=11b4518b200000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=88e9a8a39dc0be2d
-dashboard link: https://syzkaller.appspot.com/bug?extid=ef054c4d3f64cd7f7cec
-userspace arch: i386
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=119bf2e6400000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1760f806400000
-
-Reported-by: syzbot+ef054c4d3f64cd7f7cec@syzkaller.appspotmail.com
-Fixes: 4ad769f3c346 ("fuse: Allow fully unprivileged mounts")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+Best regards,
+     Maxim Levitsky
