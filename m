@@ -2,54 +2,54 @@ Return-Path: <SRS0=q9dy=R2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B90C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 10:22:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC5E6C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 10:27:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5F5D218B0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 10:22:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84E35218E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 10:27:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553336561;
-	bh=G3qTKmOseAR58ZODxZsb5koIUY8J3p8yEEyno26NAPM=;
+	s=default; t=1553336872;
+	bh=dw66iRYdx/1o/GQmWdl8qu3PmTegurNTy9BUzh5ugQY=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=j43lngOepR8BML/fLfc7OvV2TuTCrtzEor45s55TCA/x8jRCVA5ja7ux8ctOJOy3B
-	 Z6DwzGYKksJC2pDMYjQ4O61fEr79AaB2JbpzYfKEl7/DMuotmOxQzgOCQX712yGjCf
-	 HatPOCIF0hO7JhOExdTFmHYtETWSoKv3eYFp4Kjw=
+	b=vW9RJSF6wrlH2rRu3dRKdwTFD5k8zX4Pk2Dj/0m/CXFB9flEWOxHRjtL9SQVnQlrG
+	 MDkorWVt0LqxnT8Vy1XRsvZFcbNkyf10AlV2mPa1lsVIcP17gu7ziokKt1f3LlIiue
+	 VPnRSZdPjFYEdOCKYlf4WN7ErjEmNzcyJZ3rYoq4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727139AbfCWKWk (ORCPT
+        id S1727140AbfCWK1v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Mar 2019 06:22:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35628 "EHLO mail.kernel.org"
+        Sat, 23 Mar 2019 06:27:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726181AbfCWKWk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Mar 2019 06:22:40 -0400
+        id S1726256AbfCWK1u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 Mar 2019 06:27:50 -0400
 Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B409218A5;
-        Sat, 23 Mar 2019 10:22:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7BEB20883;
+        Sat, 23 Mar 2019 10:27:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553336559;
-        bh=G3qTKmOseAR58ZODxZsb5koIUY8J3p8yEEyno26NAPM=;
+        s=default; t=1553336870;
+        bh=dw66iRYdx/1o/GQmWdl8qu3PmTegurNTy9BUzh5ugQY=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=IOtx6ArLbNujV85CjsfbBjOThR8DRPptkcFRMvXbtraTsgCUyfOCdAyd7ZPIDXo92
-         NWYSbS6YUEiECnFm8EivZ2+VVrYnV1JQ0jP/SKiOj9lrSzcdFJSh12kUwyPnJxxTnh
-         ScFReQAwFOG1p7Jr7bOHD9NhDFo05LncKuDhj1xQ=
-Date:   Sat, 23 Mar 2019 19:22:34 +0900
+        b=L5TW4LQfOQV920GMeVJnJHlkJh0TEUxvXr/hJKL36rApUUDN2Pn+Vdx4cKaSa2irM
+         SwnqFdz3G7dVKh/gekon2m4XGNNoPa2/uJwVPvzVulr3c1sWQ5CaPrJn88tyutn4t9
+         1Qhk29+UKC0ND9+IMAl/beq4CRcKGcduimHk/zqU=
+Date:   Sat, 23 Mar 2019 19:27:46 +0900
 From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Tom Zanussi <zanussi@kernel.org>
-Cc:     rostedt@goodmis.org, tglx@linutronix.de, mhiramat@kernel.org,
-        namhyung@kernel.org, bigeasy@linutronix.de, joel@joelfernandes.org,
-        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
-Subject: Re: [PATCH v4 06/11] selftests/ftrace: Add error_log testcase for
- probe errors
-Message-Id: <20190323192234.7884a15d9fab262ef70d3cab@kernel.org>
-In-Reply-To: <c620157fa19f9df4ebf33e3e138c1234a4b5def7.1553268040.git.tom.zanussi@linux.intel.com>
-References: <cover.1553268040.git.tom.zanussi@linux.intel.com>
-        <c620157fa19f9df4ebf33e3e138c1234a4b5def7.1553268040.git.tom.zanussi@linux.intel.com>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Shuah Khan <shuah@kernel.org>,
+        Juerg Haefliger <juerg.haefliger@canonical.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH selftests 0/2] Add checkbashisms meta-testcase
+Message-Id: <20190323192746.59739e5e9ea0445791ac14ed@kernel.org>
+In-Reply-To: <155079878723.5157.12433171255092403676.stgit@devbox>
+References: <155079878723.5157.12433171255092403676.stgit@devbox>
 X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -59,76 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 22 Mar 2019 10:34:32 -0500
-Tom Zanussi <zanussi@kernel.org> wrote:
+Hi Shuah,
 
-> From: Masami Hiramatsu <mhiramat@kernel.org>
-> 
-> Add error_log testcase for error logs on probe events.
-> This tests most of error cases and checks the error position
-> is correct.
-> 
-> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> ---
->  .../ftrace/test.d/kprobe/kprobe_syntax_errors.tc   | 93 ++++++++++++++++++++++
->  .../ftrace/test.d/kprobe/uprobe_syntax_errors.tc   | 31 ++++++++
->  2 files changed, 124 insertions(+)
->  create mode 100644 tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
->  create mode 100644 tools/testing/selftests/ftrace/test.d/kprobe/uprobe_syntax_errors.tc
-> 
-> diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
-> new file mode 100644
-> index 000000000000..281665b1348c
-> --- /dev/null
-> +++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
-> @@ -0,0 +1,93 @@
-> +#!/bin/sh
-> +# SPDX-License-Identifier: GPL-2.0
-> +# description: Kprobe event parser error log check
-> +
-> +[ -f kprobe_events ] || exit_unsupported # this is configurable
-> +
-> +[ -f error_log ] || exit_unsupported
-> +
-> +check_error() { # command-with-error-pos-by-^
-> +pos=$(echo -n "${1%^*}" | wc -c) # error position
-> +command=$(echo "$1" | tr -d ^)
-> +echo "Test command: $command"
-> +echo > error_log
-> +(! echo "$command" > kprobe_events ) >& /dev/null
-
-Oops, this one. This must be
-
-(! echo "$command" > kprobe_events ) > /dev/null 2>&1
-
-[...]
-> diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/uprobe_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/kprobe/uprobe_syntax_errors.tc
-> new file mode 100644
-> index 000000000000..957011300bb7
-> --- /dev/null
-> +++ b/tools/testing/selftests/ftrace/test.d/kprobe/uprobe_syntax_errors.tc
-> @@ -0,0 +1,31 @@
-> +#!/bin/sh
-> +# SPDX-License-Identifier: GPL-2.0
-> +# description: Uprobe event parser error log check
-> +
-> +[ -f uprobe_events ] || exit_unsupported # this is configurable
-> +
-> +[ -f error_log ] || exit_unsupported
-> +
-> +check_error() { # command-with-error-pos-by-^
-> +pos=$(echo -n "${1%^*}" | wc -c) # error position
-> +command=$(echo "$1" | tr -d ^)
-> +echo "Test command: $command"
-> +echo > error_log
-> +(! echo "$command" > uprobe_events ) >& /dev/null
-
-Here too.
-
-Tom, if you don't mind, could you update it when you update
-the series? Or should I resend it?
+Could you pick this to your tree? I think this can prevent further
+simillar errors before release...
 
 Thank you,
+
+On Fri, 22 Feb 2019 10:26:27 +0900
+Masami Hiramatsu <mhiramat@kernel.org> wrote:
+
+> Hi,
+> 
+> Here are patches for making sure the ftracetest testcases
+> are checkbashisms clean.
+> 
+> This actually needs a patch from Juerg, "selftests/ftrace:
+> Make the coloring POSIX compliant" to complete the work.
+> 
+> http://lkml.kernel.org/r/20190220161333.28109-1-juergh@canonical.com
+> (Note that this is still under development)
+> 
+> So as Juerg pointed, recently ftracetest becomes not POSIX
+> compliant, and such kind of issues happened repeatedly.
+> To avoid those anymore, I decided to introduce a testcase
+> which runs checkbasisms on ftracetest and its testcases.
+> I think this can help us to find out whether it was
+> written in a way out of POSIX.
+> 
+> Thank you,
+> 
+> ---
+> 
+> Masami Hiramatsu (2):
+>       selftests/ftrace: Make a script checkbashisms clean
+>       selftests/ftrace: Add checkbashisms meta-testcase
+> 
+> 
+>  tools/testing/selftests/ftrace/ftracetest          |    1 +
+>  .../ftrace/test.d/kprobe/kprobe_ftrace.tc          |    2 +-
+>  .../selftests/ftrace/test.d/selftest/bashisms.tc   |   21 ++++++++++++++++++++
+>  3 files changed, 23 insertions(+), 1 deletion(-)
+>  create mode 100644 tools/testing/selftests/ftrace/test.d/selftest/bashisms.tc
+> 
+> --
+> Masami Hiramatsu (Linaro) <mhiramat@kernel.org>
+
 
 -- 
 Masami Hiramatsu <mhiramat@kernel.org>
