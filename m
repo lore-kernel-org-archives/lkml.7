@@ -2,150 +2,140 @@ Return-Path: <SRS0=q9dy=R2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 002B2C4360F
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 12:58:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7841C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 13:08:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEC89218A2
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 12:58:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oFgP7SfO"
+	by mail.kernel.org (Postfix) with ESMTP id 8B18C218B0
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 13:08:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553346524;
+	bh=sdVJbvTrPgJAKDylhcx74Gj22BFME3I9/CsiJxvJT+k=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=Fh4GTvv0LeGsghBX5VAjclY7rsunRo1RcnZI1qIqOygrfy0+cXiDeyxdxk70spEwD
+	 2oZL2KwH2NmTNu37wkq7a1LX+NgPjQx+guV7a9wRH1ETnhMmDR28MKjEI8/c2PglIC
+	 nEgM4LYNP95NYhd1ld0YA/bePbD1DEKuFLPzrwm0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727440AbfCWM6Z (ORCPT
+        id S1727463AbfCWNIj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Mar 2019 08:58:25 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34045 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726118AbfCWM6Z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Mar 2019 08:58:25 -0400
-Received: by mail-wr1-f68.google.com with SMTP id p10so5192656wrq.1;
-        Sat, 23 Mar 2019 05:58:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=VUDfVjt25B5iuZ8LRf+UQ/eDY99yvTEQdrmA2/dK4O0=;
-        b=oFgP7SfO1X8+1TM3kr6Yc6KGNBfuAVRSCYcPHCKXJ/noJbyiyva17iXamZq3Gd5gH1
-         4OYVXU0IRDoXmxKMisvWcJ79/XF94kOVRpw4ad0wHoBEACypK7kaM5XDKK6HJTaw8mQR
-         6J87l/NTSaSFn20h+p5cb5c6M98QQGgK22U55gQ9NMT4TxkcX8M39ymuCiabLVltaXdt
-         vfCdgzMqPM7f55C0TCsWjNJhSDnuOmjsi8wuk8i3COl+ntlP/zY8bHY5bcN+GaySFhkt
-         IMV/9YpanVLXSUSEDg2fq5SdZrMvk/jNrWhd0ayu260WkxnGHtvXJJRfViW4T2k9k5bL
-         E2gw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VUDfVjt25B5iuZ8LRf+UQ/eDY99yvTEQdrmA2/dK4O0=;
-        b=e/SILF85bnOgbacx5YFZZNpgt9xdUmtbsvtwyk4VfawdVajIYxfW0DrpOadizktHPf
-         sFrmq/G31oYQZx/4OcbA5pPBKfmEyadulmeTWy9gPgRs+WmUqMbpBUMf2mcyGj+xVoQ0
-         /sJj976RDMgytNWCjjdSQUdywdmqAypQOMcrbyVBdWq10p9ivb/UcyYFdtcJD3wXrupQ
-         cWoXK5vHa75P+s+kVIx0NXdo8dk1I9IS9kyadhsnlpjhM2ceJ6dBWEy1uVe8OGky3W3P
-         IL2QUggpi2pQKR4wpfy8bcvQTGeHElKLEL3UNvUfyUQiEP8F5hVHUlzjrksL4JOOO3CN
-         yoEg==
-X-Gm-Message-State: APjAAAVo5PwQ7K2T+lhAWp61uleoZlFiolhzSShkNy/9hoJTDLeIXQFo
-        yHHLe5ME22HBDA6b4geQ4fM=
-X-Google-Smtp-Source: APXvYqyaXkVwed/1F72vyi3T6fMrtXlwTftolrOcLFMnydPvj2DIX5Q0+n5q0WAiL6OdlEDJEICL+g==
-X-Received: by 2002:adf:ee07:: with SMTP id y7mr9468401wrn.219.1553345903488;
-        Sat, 23 Mar 2019 05:58:23 -0700 (PDT)
-Received: from peano ([87.19.116.42])
-        by smtp.gmail.com with ESMTPSA id z8sm10608970wrh.80.2019.03.23.05.58.21
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 23 Mar 2019 05:58:22 -0700 (PDT)
-Date:   Sat, 23 Mar 2019 13:58:21 +0100
-From:   Cristian Sicilia <sicilia.cristian@gmail.com>
-To:     Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/5] staging: iio: adc: Tab alignment
-Message-ID: <70101e0eaa253140218d833223e0862d8851c01d.1553335775.git.sicilia.cristian@gmail.com>
-References: <cover.1553335775.git.sicilia.cristian@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1553335775.git.sicilia.cristian@gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Sat, 23 Mar 2019 09:08:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53044 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727092AbfCWNIj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 Mar 2019 09:08:39 -0400
+Received: from tzanussi-mobl (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97EE9218A2;
+        Sat, 23 Mar 2019 13:08:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553346518;
+        bh=sdVJbvTrPgJAKDylhcx74Gj22BFME3I9/CsiJxvJT+k=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=iYpWrTNO2x8ygbWfuP9IKYo3X5vRXt1Uz8BRznY5qcvpWXeAEXSHZvh2wlCFl+VEW
+         93JEepjyU+fcr/ioGFQmuyDzLEWOvoF/0XQOo8UTqTj1PfHS4OvW2sCOhnSb+YPJkd
+         HoOn0gzNmIjpIcKLwHaY4u0WSkZIl1CBDYfZOStA=
+Message-ID: <1553346516.2307.6.camel@kernel.org>
+Subject: Re: [PATCH v4 07/11] tracing: Remove trigger-extended-error-support
+ testcase
+From:   Tom Zanussi <zanussi@kernel.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     rostedt@goodmis.org, tglx@linutronix.de, namhyung@kernel.org,
+        bigeasy@linutronix.de, joel@joelfernandes.org,
+        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
+Date:   Sat, 23 Mar 2019 08:08:36 -0500
+In-Reply-To: <20190323191302.321ea1d6b9cb1c75c7e828c7@kernel.org>
+References: <cover.1553268040.git.tom.zanussi@linux.intel.com>
+         <064693880a99a7ac3cb43ee375c265a938402257.1553268041.git.tom.zanussi@linux.intel.com>
+         <20190323191302.321ea1d6b9cb1c75c7e828c7@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.1-1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Aligned some parameters.
+Hi Masami,
 
-Signed-off-by: Cristian Sicilia <sicilia.cristian@gmail.com>
----
- drivers/staging/iio/adc/ad7280a.c | 36 ++++++++++++++++++------------------
- 1 file changed, 18 insertions(+), 18 deletions(-)
+On Sat, 2019-03-23 at 19:13 +0900, Masami Hiramatsu wrote:
+> Hi Tom,
+> 
+> This should be tagged with "selftests/ftrace:". :)
+> 
 
-diff --git a/drivers/staging/iio/adc/ad7280a.c b/drivers/staging/iio/adc/ad7280a.c
-index d9df126..55b5879 100644
---- a/drivers/staging/iio/adc/ad7280a.c
-+++ b/drivers/staging/iio/adc/ad7280a.c
-@@ -830,30 +830,30 @@ static irqreturn_t ad7280_event_handler(int irq, void *private)
- }
- 
- static IIO_DEVICE_ATTR_NAMED(in_thresh_low_value,
--		in_voltage-voltage_thresh_low_value,
--		0644,
--		ad7280_read_channel_config,
--		ad7280_write_channel_config,
--		AD7280A_CELL_UNDERVOLTAGE);
-+			     in_voltage - voltage_thresh_low_value,
-+			     0644,
-+			     ad7280_read_channel_config,
-+			     ad7280_write_channel_config,
-+			     AD7280A_CELL_UNDERVOLTAGE);
- 
- static IIO_DEVICE_ATTR_NAMED(in_thresh_high_value,
--		in_voltage-voltage_thresh_high_value,
--		0644,
--		ad7280_read_channel_config,
--		ad7280_write_channel_config,
--		AD7280A_CELL_OVERVOLTAGE);
-+			     in_voltage - voltage_thresh_high_value,
-+			     0644,
-+			     ad7280_read_channel_config,
-+			     ad7280_write_channel_config,
-+			     AD7280A_CELL_OVERVOLTAGE);
- 
- static IIO_DEVICE_ATTR(in_temp_thresh_low_value,
--		0644,
--		ad7280_read_channel_config,
--		ad7280_write_channel_config,
--		AD7280A_AUX_ADC_UNDERVOLTAGE);
-+		       0644,
-+		       ad7280_read_channel_config,
-+		       ad7280_write_channel_config,
-+		       AD7280A_AUX_ADC_UNDERVOLTAGE);
- 
- static IIO_DEVICE_ATTR(in_temp_thresh_high_value,
--		0644,
--		ad7280_read_channel_config,
--		ad7280_write_channel_config,
--		AD7280A_AUX_ADC_OVERVOLTAGE);
-+		       0644,
-+		       ad7280_read_channel_config,
-+		       ad7280_write_channel_config,
-+		       AD7280A_AUX_ADC_OVERVOLTAGE);
- 
- static struct attribute *ad7280_event_attributes[] = {
- 	&iio_dev_attr_in_thresh_low_value.dev_attr.attr,
--- 
-2.7.4
+Yeah, will change that in the next update.
 
+Thanks,
+
+Tom
+
+> Thank you,
+> 
+> On Fri, 22 Mar 2019 10:34:33 -0500
+> Tom Zanussi <zanussi@kernel.org> wrote:
+> 
+> > From: Tom Zanussi <tom.zanussi@linux.intel.com>
+> > 
+> > Error handling has been moved to the common tracing/error_log, so
+> > this
+> > test is no longer valid.
+> > 
+> > Signed-off-by: Tom Zanussi <tom.zanussi@linux.intel.com>
+> > ---
+> >  .../inter-event/trigger-extended-error-support.tc  | 28 ----------
+> > ------------
+> >  1 file changed, 28 deletions(-)
+> >  delete mode 100644
+> > tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-
+> > extended-error-support.tc
+> > 
+> > diff --git a/tools/testing/selftests/ftrace/test.d/trigger/inter-
+> > event/trigger-extended-error-support.tc
+> > b/tools/testing/selftests/ftrace/test.d/trigger/inter-
+> > event/trigger-extended-error-support.tc
+> > deleted file mode 100644
+> > index 9912616a8672..000000000000
+> > --- a/tools/testing/selftests/ftrace/test.d/trigger/inter-
+> > event/trigger-extended-error-support.tc
+> > +++ /dev/null
+> > @@ -1,28 +0,0 @@
+> > -#!/bin/sh
+> > -# SPDX-License-Identifier: GPL-2.0
+> > -# description: event trigger - test extended error support
+> > -
+> > -
+> > -fail() { #msg
+> > -    echo $1
+> > -    exit_fail
+> > -}
+> > -
+> > -if [ ! -f set_event ]; then
+> > -    echo "event tracing is not supported"
+> > -    exit_unsupported
+> > -fi
+> > -
+> > -if [ ! -f synthetic_events ]; then
+> > -    echo "synthetic event is not supported"
+> > -    exit_unsupported
+> > -fi
+> > -
+> > -echo "Test extended error support"
+> > -echo 'hist:keys=pid:ts0=common_timestamp.usecs if comm=="ping"' >
+> > events/sched/sched_wakeup/trigger
+> > -! echo 'hist:keys=pid:ts0=common_timestamp.usecs if comm=="ping"'
+> > >> events/sched/sched_wakeup/trigger 2> /dev/null
+> > -if ! grep -q "ERROR:" events/sched/sched_wakeup/hist; then
+> > -    fail "Failed to generate extended error in histogram"
+> > -fi
+> > -
+> > -exit 0
+> > -- 
+> > 2.14.1
+> > 
+> 
+> 
