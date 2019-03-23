@@ -6,21 +6,21 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45245C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 04:45:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF155C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 04:46:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B69721900
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 04:45:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5E2721900
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 04:46:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727585AbfCWEps (ORCPT
+        id S1727609AbfCWEqC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Mar 2019 00:45:48 -0400
-Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:45183 "EHLO
-        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727103AbfCWEps (ORCPT
+        Sat, 23 Mar 2019 00:46:02 -0400
+Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:44016 "EHLO
+        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726029AbfCWEqB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Mar 2019 00:45:48 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04428;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0TNPuxAM_1553316293;
+        Sat, 23 Mar 2019 00:46:01 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R981e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04455;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0TNPuxAM_1553316293;
 Received: from e19h19392.et15sqa.tbsite.net(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TNPuxAM_1553316293)
           by smtp.aliyun-inc.com(127.0.0.1);
           Sat, 23 Mar 2019 12:45:03 +0800
@@ -32,9 +32,9 @@ To:     mhocko@suse.com, mgorman@techsingularity.net, riel@surriel.com,
         ying.huang@intel.com
 Cc:     yang.shi@linux.alibaba.com, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 08/10] mm: numa: add page promotion counter
-Date:   Sat, 23 Mar 2019 12:44:33 +0800
-Message-Id: <1553316275-21985-9-git-send-email-yang.shi@linux.alibaba.com>
+Subject: [PATCH 07/10] mm: vmscan: add page demotion counter
+Date:   Sat, 23 Mar 2019 12:44:32 +0800
+Message-Id: <1553316275-21985-8-git-send-email-yang.shi@linux.alibaba.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1553316275-21985-1-git-send-email-yang.shi@linux.alibaba.com>
 References: <1553316275-21985-1-git-send-email-yang.shi@linux.alibaba.com>
@@ -43,70 +43,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add counter for page promotion for NUMA balancing.
+Demoted pages are counted into reclaim_state->nr_demoted instead of
+nr_reclaimed since they are not reclaimed actually.  They are still in
+memory, but just migrated to PMEM.
+
+Add pgdemote_kswapd and pgdemote_direct VM counters showed in
+/proc/vmstat.
 
 Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
 ---
- include/linux/vm_event_item.h | 1 +
- mm/huge_memory.c              | 4 ++++
- mm/memory.c                   | 4 ++++
- mm/vmstat.c                   | 1 +
- 4 files changed, 10 insertions(+)
+ include/linux/vm_event_item.h |  2 ++
+ include/linux/vmstat.h        |  1 +
+ mm/vmscan.c                   | 14 ++++++++++++++
+ mm/vmstat.c                   |  2 ++
+ 4 files changed, 19 insertions(+)
 
 diff --git a/include/linux/vm_event_item.h b/include/linux/vm_event_item.h
-index 499a3aa..9f52a62 100644
+index 47a3441..499a3aa 100644
 --- a/include/linux/vm_event_item.h
 +++ b/include/linux/vm_event_item.h
-@@ -51,6 +51,7 @@ enum vm_event_item { PGPGIN, PGPGOUT, PSWPIN, PSWPOUT,
- 		NUMA_HINT_FAULTS,
- 		NUMA_HINT_FAULTS_LOCAL,
- 		NUMA_PAGE_MIGRATE,
-+		NUMA_PAGE_PROMOTE,
- #endif
- #ifdef CONFIG_MIGRATION
- 		PGMIGRATE_SUCCESS, PGMIGRATE_FAIL,
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 8268a3c..9d5f5ce 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -1607,6 +1607,10 @@ vm_fault_t do_huge_pmd_numa_page(struct vm_fault *vmf, pmd_t pmd)
- 	migrated = migrate_misplaced_transhuge_page(vma->vm_mm, vma,
- 				vmf->pmd, pmd, vmf->address, page, target_nid);
- 	if (migrated) {
-+		if (!node_isset(page_nid, def_alloc_nodemask) &&
-+		    node_isset(target_nid, def_alloc_nodemask))
-+			count_vm_numa_events(NUMA_PAGE_PROMOTE, HPAGE_PMD_NR);
+@@ -32,6 +32,8 @@ enum vm_event_item { PGPGIN, PGPGOUT, PSWPIN, PSWPOUT,
+ 		PGREFILL,
+ 		PGSTEAL_KSWAPD,
+ 		PGSTEAL_DIRECT,
++		PGDEMOTE_KSWAPD,
++		PGDEMOTE_DIRECT,
+ 		PGSCAN_KSWAPD,
+ 		PGSCAN_DIRECT,
+ 		PGSCAN_DIRECT_THROTTLE,
+diff --git a/include/linux/vmstat.h b/include/linux/vmstat.h
+index 2db8d60..eb5d21c 100644
+--- a/include/linux/vmstat.h
++++ b/include/linux/vmstat.h
+@@ -29,6 +29,7 @@ struct reclaim_stat {
+ 	unsigned nr_activate;
+ 	unsigned nr_ref_keep;
+ 	unsigned nr_unmap_fail;
++	unsigned nr_demoted;
+ };
+ 
+ #ifdef CONFIG_VM_EVENT_COUNTERS
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index bdcab6b..3c7ba7e 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -1286,6 +1286,10 @@ static unsigned long shrink_page_list(struct list_head *page_list,
+ 
+ 			if (has_nonram_online()) {
+ 				list_add(&page->lru, &demote_pages);
++				if (PageTransHuge(page))
++					stat->nr_demoted += HPAGE_PMD_NR;
++				else
++					stat->nr_demoted++;
+ 				unlock_page(page);
+ 				continue;
+ 			}
+@@ -1523,7 +1527,17 @@ static unsigned long shrink_page_list(struct list_head *page_list,
+ 			putback_movable_pages(&demote_pages);
+ 
+ 			list_splice(&ret_pages, &demote_pages);
 +
- 		flags |= TNF_MIGRATED;
- 		page_nid = target_nid;
- 	} else
-diff --git a/mm/memory.c b/mm/memory.c
-index 2494c11..554191b 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -3691,6 +3691,10 @@ static vm_fault_t do_numa_page(struct vm_fault *vmf)
- 	/* Migrate to the requested node */
- 	migrated = migrate_misplaced_page(page, vma, target_nid);
- 	if (migrated) {
-+		if (!node_isset(page_nid, def_alloc_nodemask) &&
-+		    node_isset(target_nid, def_alloc_nodemask))
-+			count_vm_numa_event(NUMA_PAGE_PROMOTE);
++			if (err > 0)
++				stat->nr_demoted -= err;
++			else
++				stat->nr_demoted = 0;
+ 		}
 +
- 		page_nid = target_nid;
- 		flags |= TNF_MIGRATED;
- 	} else
++		if (current_is_kswapd())
++			__count_vm_events(PGDEMOTE_KSWAPD, stat->nr_demoted);
++		else
++			__count_vm_events(PGDEMOTE_DIRECT, stat->nr_demoted);
+ 	}
+ 
+ 	mem_cgroup_uncharge_list(&free_pages);
 diff --git a/mm/vmstat.c b/mm/vmstat.c
-index 0e863e7..4b44fc8 100644
+index 36b56f8..0e863e7 100644
 --- a/mm/vmstat.c
 +++ b/mm/vmstat.c
-@@ -1220,6 +1220,7 @@ int fragmentation_index(struct zone *zone, unsigned int order)
- 	"numa_hint_faults",
- 	"numa_hint_faults_local",
- 	"numa_pages_migrated",
-+	"numa_pages_promoted",
- #endif
- #ifdef CONFIG_MIGRATION
- 	"pgmigrate_success",
+@@ -1192,6 +1192,8 @@ int fragmentation_index(struct zone *zone, unsigned int order)
+ 	"pgrefill",
+ 	"pgsteal_kswapd",
+ 	"pgsteal_direct",
++	"pgdemote_kswapd",
++	"pgdemote_direct",
+ 	"pgscan_kswapd",
+ 	"pgscan_direct",
+ 	"pgscan_direct_throttle",
 -- 
 1.8.3.1
 
