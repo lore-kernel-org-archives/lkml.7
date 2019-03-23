@@ -2,112 +2,128 @@ Return-Path: <SRS0=q9dy=R2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-7.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	URIBL_SBL,URIBL_SBL_A,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04EFCC10F03
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 02:51:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 544E7C10F03
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 02:57:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4A622147A
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 02:51:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="Ty0nLjfR"
+	by mail.kernel.org (Postfix) with ESMTP id 2733A218E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 02:57:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728398AbfCWCvO (ORCPT
+        id S1728380AbfCWC5Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 22:51:14 -0400
-Received: from mta-p6.oit.umn.edu ([134.84.196.206]:53586 "EHLO
-        mta-p6.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727900AbfCWCvO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 22:51:14 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p6.oit.umn.edu (Postfix) with ESMTP id D8F82E34
-        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2019 02:51:12 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p6.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p6.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id sMTvJQ2TmWRO for <linux-kernel@vger.kernel.org>;
-        Fri, 22 Mar 2019 21:51:12 -0500 (CDT)
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
-        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p6.oit.umn.edu (Postfix) with ESMTPS id ABAC0E33
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 21:51:12 -0500 (CDT)
-Received: by mail-io1-f71.google.com with SMTP id b199so3306793iof.14
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 19:51:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=Qh7dmP8OZe6fXOK5lM+GtdS0NVXFbN1ThxpLg0QIvCU=;
-        b=Ty0nLjfRJ5w5mlY+Hs30RILsohSozZRZDBAhEEh3YZbE7R4FFEnC7RQ6nvcopCEP3+
-         5Zl5LsGcfL0bgWxYuOwGs6lM9KmZ45dNcYwXCELwDP6WcE+5IErBuMyPvDyrm/tuqaqh
-         g/McNeOCPMXYMGqaNyS+2IsHse6EqAz0X8jZ+to2QopKkJOESWVCH4X5EKxjxxE9PixB
-         2AVvTv1OlRnfQm0TkvhWIU11fVDVJwOnNxgOGFcavjd1F/1yrytlH9hrVuwC1T5JzPnS
-         a/WxeREjRbdyNc60Dw9GgvD+xq+E3iJvVpM/0IBv4SCS8MjRQEyLWTaarq2lzzDbfnNd
-         LAjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Qh7dmP8OZe6fXOK5lM+GtdS0NVXFbN1ThxpLg0QIvCU=;
-        b=ih4s/WQO3QRj+bpHYcv0DLFkO+C493jkRpFwGoohmiMGbrdFvgyFaFPw7NeIMHQu66
-         W2sWlSWl4NVz54K9Bu+t2FwIKbMUGWlhmkd4jCukvluicQC4k1AMwWsTI5zcFRYOaaM3
-         VldS7nR3MRaJ9M3i3TFCfE3ODb9ugEvY9InozMk7fPbKghPg68aeUPucxqH3EdC2JwH8
-         F6Z6jkIz3B7QlWuJc69NvNXE/7Ii2KG88nCIF6AzX6yJKCvj3J6VRxtDBZEqjiwaeyPa
-         Jmte7GgJsHHz8lGjz1pKdTjTzAMl/oS/f4lOW9vtblYqNkUUbsVR2iBfjPBjcX3BWY6K
-         1yDg==
-X-Gm-Message-State: APjAAAXwT8hXDUQnyaU08B0ZXRWnJtbxGXbqH28+W8vE33wYNfVHnfMd
-        dhlku3aOuCDDBmT+JTov21gDOUanoSIQ6hspmedoK/l0nv1mMot1VZCDNxS7rjBRkHLPqDpqt+5
-        sFai1PCbIXdavE1HadgNk3UF5VhAD
-X-Received: by 2002:a24:164d:: with SMTP id a74mr3523132ita.84.1553309472351;
-        Fri, 22 Mar 2019 19:51:12 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzc/EYQ0baGyH0yicCkhgVkDiPnfeqMWqmRSPW64NAdblPHYhRTDvPAgAGZaXan/XbNVtdXHw==
-X-Received: by 2002:a24:164d:: with SMTP id a74mr3523128ita.84.1553309472175;
-        Fri, 22 Mar 2019 19:51:12 -0700 (PDT)
-Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
-        by smtp.gmail.com with ESMTPSA id m69sm2324103itm.22.2019.03.22.19.51.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 22 Mar 2019 19:51:11 -0700 (PDT)
-From:   Kangjie Lu <kjlu@umn.edu>
-To:     kjlu@umn.edu
-Cc:     pakki001@umn.edu, "Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] media: vpss: fix a potential NULL pointer dereference
-Date:   Fri, 22 Mar 2019 21:51:06 -0500
-Message-Id: <20190323025106.15865-1-kjlu@umn.edu>
-X-Mailer: git-send-email 2.17.1
+        Fri, 22 Mar 2019 22:57:16 -0400
+Received: from smtp.nue.novell.com ([195.135.221.5]:35134 "EHLO
+        smtp.nue.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727363AbfCWC5Q (ORCPT
+        <rfc822;groupwise-linux-kernel@vger.kernel.org:0:0>);
+        Fri, 22 Mar 2019 22:57:16 -0400
+Received: from emea4-mta.ukb.novell.com ([10.120.13.87])
+        by smtp.nue.novell.com with ESMTP (TLS encrypted); Sat, 23 Mar 2019 03:57:14 +0100
+Received: from localhost (nwb-a10-snat.microfocus.com [10.120.13.202])
+        by emea4-mta.ukb.novell.com with ESMTP (TLS encrypted); Sat, 23 Mar 2019 02:56:32 +0000
+Date:   Sat, 23 Mar 2019 10:56:13 +0800
+From:   jlee@suse.com
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     "Lee, Chun-Yi" <joeyli.kernel@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        David Howells <dhowells@redhat.com>,
+        Josh Boyer <jwboyer@fedoraproject.org>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] efi: print appropriate status message when loading
+ certificates
+Message-ID: <20190323025613.GA7196@localhost>
+References: <20190322103350.27764-1-jlee@suse.com>
+ <20190322103350.27764-2-jlee@suse.com>
+ <CAKv+Gu8Xg3SBTpAFDSe5zyT8yjU71+HUT9LO18D+HiT+Hhp+Zg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKv+Gu8Xg3SBTpAFDSe5zyT8yjU71+HUT9LO18D+HiT+Hhp+Zg@mail.gmail.com>
+User-Agent: Mutt/1.11.2 (2019-01-07)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case ioremap fails, the fix returns -ENOMEM to avoid NULL
-pointer dereference.
+Hi Ard,
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
----
- drivers/media/platform/davinci/vpss.c | 5 +++++
- 1 file changed, 5 insertions(+)
+On Fri, Mar 22, 2019 at 03:27:46PM +0100, Ard Biesheuvel wrote:
+> On Fri, 22 Mar 2019 at 11:34, Lee, Chun-Yi <joeyli.kernel@gmail.com> wrote:
+> >
+> > When loading certificates list from UEFI variable, the original error
+> > message direct shows the efi status code from UEFI firmware. It looks
+> > ugly:
+> >
+> > [    2.335031] Couldn't get size: 0x800000000000000e
+> > [    2.335032] Couldn't get UEFI MokListRT
+> > [    2.339985] Couldn't get size: 0x800000000000000e
+> > [    2.339987] Couldn't get UEFI dbx list
+> >
+> 
+> Why is it an error in the first place if these EFI variables do not exist?
+> 
 
-diff --git a/drivers/media/platform/davinci/vpss.c b/drivers/media/platform/davinci/vpss.c
-index 19cf6853411e..89a86c19579b 100644
---- a/drivers/media/platform/davinci/vpss.c
-+++ b/drivers/media/platform/davinci/vpss.c
-@@ -518,6 +518,11 @@ static int __init vpss_init(void)
- 		return -EBUSY;
- 
- 	oper_cfg.vpss_regs_base2 = ioremap(VPSS_CLK_CTRL, 4);
-+	if (unlikely(!oper_cfg.vpss_regs_base2)) {
-+		release_mem_region(VPSS_CLK_CTRL, 4);
-+		return -ENOMEM;
-+	}
-+
- 	writel(VPSS_CLK_CTRL_VENCCLKEN |
- 		     VPSS_CLK_CTRL_DACCLKEN, oper_cfg.vpss_regs_base2);
- 
--- 
-2.17.1
+As you said, the error message should only be exposed when
+these EFI variables exist. I will change it in next version of
+my patch.
 
+Thanks a lot!
+Joey Lee
+
+> 
+> > So, this patch shows the status string instead of status code.
+> >
+> > On the other hand, the error message of EFI_NOT_FOUND
+> > (0x800000000000000e) doesn't need to be exposed because kernel
+> > already prints "Couldn't get UEFI..." message. This patch also
+> > filtered out it.
+> >
+> > Link: https://forums.opensuse.org/showthread.php/535324-MODSIGN-Couldn-t-get-UEFI-db-list?p=2897516#post2897516
+> > Cc: James Morris <jmorris@namei.org>
+> > Cc: Serge E. Hallyn" <serge@hallyn.com>
+> > Cc: David Howells <dhowells@redhat.com>
+> > Cc: Nayna Jain <nayna@linux.ibm.com>
+> > Cc: Josh Boyer <jwboyer@fedoraproject.org>
+> > Cc: Mimi Zohar <zohar@linux.ibm.com>
+> > Signed-off-by: "Lee, Chun-Yi" <jlee@suse.com>
+> > ---
+> >  security/integrity/platform_certs/load_uefi.c | 7 +++++--
+> >  1 file changed, 5 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/security/integrity/platform_certs/load_uefi.c b/security/integrity/platform_certs/load_uefi.c
+> > index 81b19c52832b..fe261166621f 100644
+> > --- a/security/integrity/platform_certs/load_uefi.c
+> > +++ b/security/integrity/platform_certs/load_uefi.c
+> > @@ -48,7 +48,9 @@ static __init void *get_cert_list(efi_char16_t *name, efi_guid_t *guid,
+> >
+> >         status = efi.get_variable(name, guid, NULL, &lsize, &tmpdb);
+> >         if (status != EFI_BUFFER_TOO_SMALL) {
+> > -               pr_err("Couldn't get size: 0x%lx\n", status);
+> > +               if (status != EFI_NOT_FOUND)
+> > +                       pr_err("Couldn't get size: %s\n",
+> > +                               efi_status_to_str(status));
+> >                 return NULL;
+> >         }
+> >
+> > @@ -59,7 +61,8 @@ static __init void *get_cert_list(efi_char16_t *name, efi_guid_t *guid,
+> >         status = efi.get_variable(name, guid, NULL, &lsize, db);
+> >         if (status != EFI_SUCCESS) {
+> >                 kfree(db);
+> > -               pr_err("Error reading db var: 0x%lx\n", status);
+> > +               pr_err("Error reading db var: %s\n",
+> > +                       efi_status_to_str(status));
+> >                 return NULL;
+> >         }
+> >
+> > --
+> > 2.16.4
+> >
