@@ -6,24 +6,24 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5FD9C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 04:45:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45245C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 04:45:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC199218E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 04:45:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B69721900
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 04:45:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727546AbfCWEpl (ORCPT
+        id S1727585AbfCWEps (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Mar 2019 00:45:41 -0400
-Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:52300 "EHLO
+        Sat, 23 Mar 2019 00:45:48 -0400
+Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:45183 "EHLO
         out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727103AbfCWEpk (ORCPT
+        by vger.kernel.org with ESMTP id S1727103AbfCWEps (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Mar 2019 00:45:40 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04389;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0TNPuxAM_1553316293;
+        Sat, 23 Mar 2019 00:45:48 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04428;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0TNPuxAM_1553316293;
 Received: from e19h19392.et15sqa.tbsite.net(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TNPuxAM_1553316293)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Sat, 23 Mar 2019 12:45:02 +0800
+          Sat, 23 Mar 2019 12:45:03 +0800
 From:   Yang Shi <yang.shi@linux.alibaba.com>
 To:     mhocko@suse.com, mgorman@techsingularity.net, riel@surriel.com,
         hannes@cmpxchg.org, akpm@linux-foundation.org,
@@ -32,9 +32,9 @@ To:     mhocko@suse.com, mgorman@techsingularity.net, riel@surriel.com,
         ying.huang@intel.com
 Cc:     yang.shi@linux.alibaba.com, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 04/10] mm: numa: promote pages to DRAM when it is accessed twice
-Date:   Sat, 23 Mar 2019 12:44:29 +0800
-Message-Id: <1553316275-21985-5-git-send-email-yang.shi@linux.alibaba.com>
+Subject: [PATCH 08/10] mm: numa: add page promotion counter
+Date:   Sat, 23 Mar 2019 12:44:33 +0800
+Message-Id: <1553316275-21985-9-git-send-email-yang.shi@linux.alibaba.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1553316275-21985-1-git-send-email-yang.shi@linux.alibaba.com>
 References: <1553316275-21985-1-git-send-email-yang.shi@linux.alibaba.com>
@@ -43,116 +43,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-NUMA balancing would promote the pages to DRAM once it is accessed, but
-it might be just one off access.  To reduce migration thrashing and
-memory bandwidth pressure, introduce PG_promote flag to mark promote
-candidate.  The page will be promoted to DRAM when it is accessed twice.
-This might be a good way to filter out those one-off access pages.
-
-PG_promote flag will be inherited by tail pages when THP gets split.
-But, it will not be copied to the new page once the migration is done.
-
-This approach is not definitely the optimal one to distinguish the
-hot or cold pages.  It may need much more sophisticated algorithm to
-distinguish hot or cold pages accurately.  Kernel may be not the good
-place to implement such algorithm considering the complexity and potential
-overhead.  But, kernel may still need such capability.
-
-With NUMA balancing the whole workingset of the process may end up being
-promoted to DRAM finally.  It depends on the page reclaim to demote
-inactive pages to PMEM implemented by the following patch.
+Add counter for page promotion for NUMA balancing.
 
 Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
 ---
- include/linux/page-flags.h     |  4 ++++
- include/trace/events/mmflags.h |  3 ++-
- mm/huge_memory.c               | 10 ++++++++++
- mm/memory.c                    |  8 ++++++++
- 4 files changed, 24 insertions(+), 1 deletion(-)
+ include/linux/vm_event_item.h | 1 +
+ mm/huge_memory.c              | 4 ++++
+ mm/memory.c                   | 4 ++++
+ mm/vmstat.c                   | 1 +
+ 4 files changed, 10 insertions(+)
 
-diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-index 9f8712a..2d53166 100644
---- a/include/linux/page-flags.h
-+++ b/include/linux/page-flags.h
-@@ -131,6 +131,7 @@ enum pageflags {
- 	PG_young,
- 	PG_idle,
+diff --git a/include/linux/vm_event_item.h b/include/linux/vm_event_item.h
+index 499a3aa..9f52a62 100644
+--- a/include/linux/vm_event_item.h
++++ b/include/linux/vm_event_item.h
+@@ -51,6 +51,7 @@ enum vm_event_item { PGPGIN, PGPGOUT, PSWPIN, PSWPOUT,
+ 		NUMA_HINT_FAULTS,
+ 		NUMA_HINT_FAULTS_LOCAL,
+ 		NUMA_PAGE_MIGRATE,
++		NUMA_PAGE_PROMOTE,
  #endif
-+	PG_promote,		/* Promote candidate for NUMA balancing */
- 	__NR_PAGEFLAGS,
- 
- 	/* Filesystems */
-@@ -348,6 +349,9 @@ static inline void page_init_poison(struct page *page, size_t size)
- PAGEFLAG(OwnerPriv1, owner_priv_1, PF_ANY)
- 	TESTCLEARFLAG(OwnerPriv1, owner_priv_1, PF_ANY)
- 
-+PAGEFLAG(Promote, promote, PF_ANY) __SETPAGEFLAG(Promote, promote, PF_ANY)
-+	__CLEARPAGEFLAG(Promote, promote, PF_ANY)
-+
- /*
-  * Only test-and-set exist for PG_writeback.  The unconditional operators are
-  * risky: they bypass page accounting.
-diff --git a/include/trace/events/mmflags.h b/include/trace/events/mmflags.h
-index a1675d4..f13c2a1 100644
---- a/include/trace/events/mmflags.h
-+++ b/include/trace/events/mmflags.h
-@@ -100,7 +100,8 @@
- 	{1UL << PG_mappedtodisk,	"mappedtodisk"	},		\
- 	{1UL << PG_reclaim,		"reclaim"	},		\
- 	{1UL << PG_swapbacked,		"swapbacked"	},		\
--	{1UL << PG_unevictable,		"unevictable"	}		\
-+	{1UL << PG_unevictable,		"unevictable"	},		\
-+	{1UL << PG_promote,		"promote"	}		\
- IF_HAVE_PG_MLOCK(PG_mlocked,		"mlocked"	)		\
- IF_HAVE_PG_UNCACHED(PG_uncached,	"uncached"	)		\
- IF_HAVE_PG_HWPOISON(PG_hwpoison,	"hwpoison"	)		\
+ #ifdef CONFIG_MIGRATION
+ 		PGMIGRATE_SUCCESS, PGMIGRATE_FAIL,
 diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 404acdc..8268a3c 100644
+index 8268a3c..9d5f5ce 100644
 --- a/mm/huge_memory.c
 +++ b/mm/huge_memory.c
-@@ -1589,6 +1589,15 @@ vm_fault_t do_huge_pmd_numa_page(struct vm_fault *vmf, pmd_t pmd)
- 					      haddr + HPAGE_PMD_SIZE);
- 	}
- 
-+	/* Promote page to DRAM when referenced twice */
-+	if (!(node_isset(page_nid, def_alloc_nodemask)) &&
-+	    !PagePromote(page)) {
-+		SetPagePromote(page);
-+		put_page(page);
-+		page_nid = -1;
-+		goto clear_pmdnuma;
-+	}
+@@ -1607,6 +1607,10 @@ vm_fault_t do_huge_pmd_numa_page(struct vm_fault *vmf, pmd_t pmd)
+ 	migrated = migrate_misplaced_transhuge_page(vma->vm_mm, vma,
+ 				vmf->pmd, pmd, vmf->address, page, target_nid);
+ 	if (migrated) {
++		if (!node_isset(page_nid, def_alloc_nodemask) &&
++		    node_isset(target_nid, def_alloc_nodemask))
++			count_vm_numa_events(NUMA_PAGE_PROMOTE, HPAGE_PMD_NR);
 +
- 	/*
- 	 * Migrate the THP to the requested node, returns with page unlocked
- 	 * and access rights restored.
-@@ -2396,6 +2405,7 @@ static void __split_huge_page_tail(struct page *head, int tail,
- 			 (1L << PG_workingset) |
- 			 (1L << PG_locked) |
- 			 (1L << PG_unevictable) |
-+			 (1L << PG_promote) |
- 			 (1L << PG_dirty)));
- 
- 	/* ->mapping in first tail page is compound_mapcount */
+ 		flags |= TNF_MIGRATED;
+ 		page_nid = target_nid;
+ 	} else
 diff --git a/mm/memory.c b/mm/memory.c
-index 47fe250..2494c11 100644
+index 2494c11..554191b 100644
 --- a/mm/memory.c
 +++ b/mm/memory.c
-@@ -3680,6 +3680,14 @@ static vm_fault_t do_numa_page(struct vm_fault *vmf)
- 		goto out;
- 	}
- 
-+	/* Promote the non-DRAM page when it is referenced twice */
-+	if (!(node_isset(page_nid, def_alloc_nodemask)) &&
-+	    !PagePromote(page)) {
-+		SetPagePromote(page);
-+		put_page(page);
-+		goto out;
-+	}
-+
+@@ -3691,6 +3691,10 @@ static vm_fault_t do_numa_page(struct vm_fault *vmf)
  	/* Migrate to the requested node */
  	migrated = migrate_misplaced_page(page, vma, target_nid);
  	if (migrated) {
++		if (!node_isset(page_nid, def_alloc_nodemask) &&
++		    node_isset(target_nid, def_alloc_nodemask))
++			count_vm_numa_event(NUMA_PAGE_PROMOTE);
++
+ 		page_nid = target_nid;
+ 		flags |= TNF_MIGRATED;
+ 	} else
+diff --git a/mm/vmstat.c b/mm/vmstat.c
+index 0e863e7..4b44fc8 100644
+--- a/mm/vmstat.c
++++ b/mm/vmstat.c
+@@ -1220,6 +1220,7 @@ int fragmentation_index(struct zone *zone, unsigned int order)
+ 	"numa_hint_faults",
+ 	"numa_hint_faults_local",
+ 	"numa_pages_migrated",
++	"numa_pages_promoted",
+ #endif
+ #ifdef CONFIG_MIGRATION
+ 	"pgmigrate_success",
 -- 
 1.8.3.1
 
