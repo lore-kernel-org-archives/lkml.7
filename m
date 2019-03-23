@@ -2,79 +2,107 @@ Return-Path: <SRS0=q9dy=R2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4154AC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 18:03:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAFF5C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 18:04:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0929120880
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 18:03:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83C612148D
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 18:04:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="V9HcOfem"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727822AbfCWSDC (ORCPT
+        id S1727918AbfCWSEQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Mar 2019 14:03:02 -0400
-Received: from mail-it1-f197.google.com ([209.85.166.197]:36081 "EHLO
-        mail-it1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727364AbfCWSDC (ORCPT
+        Sat, 23 Mar 2019 14:04:16 -0400
+Received: from pb-sasl-trial21.pobox.com ([173.228.157.51]:63167 "EHLO
+        pb-sasl-trial21.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727364AbfCWSEQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Mar 2019 14:03:02 -0400
-Received: by mail-it1-f197.google.com with SMTP id i4so4988275itb.1
-        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2019 11:03:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=+N7awhHuWyN2YJV30w2jij/7haw9+uyVGOS5hExwIlg=;
-        b=Mqntm8ITIK5JsBv0Qc+b2H1xK4+Lhvwjx/ey9Wc3nvhoiepD/GC4b8nHmHRr708cHp
-         h1nMBRz4NDZ4YX3ySfDIs0nsACkjvgUCz2VdWUXQt8pIl9wa8eeTPm+oe6BVHIxXkLtA
-         i2Cq42ymaDjdvAb+H6YppWZnAaJ55gF55e9RdYukXiAjhhCUAKShlgP0D0I5WXHL50qt
-         vzw9z7vtnL96lZm6v8qF7yVETijG7c676iofUbK5kkzfXXNbuzZZbJsdgeJSQHNegw0Q
-         sUJdb3QXcNIiYgE0hmtxjsxBO1Ouk+CuYo4Oo0noqLtA5oYz6kGhdJfPLyLxgJJxJwwt
-         JGvw==
-X-Gm-Message-State: APjAAAUelJ8SeyrgNs8ShYH/V/C5akZxXXVlL/DorSnW91F2W66qRm+2
-        u1FrbEnztcIswDxjynN6jJcSLKcW4Cs8gCkBorcLtWpg9cmf
-X-Google-Smtp-Source: APXvYqy2f4IKreOjAKpXR9xHjRHHTkGH/PFYpnaIPPaxvRM2wYm9pzSJXeKCl31B+nGCBH6YNFI0V3Lbma8yqZvbeuk7F4ChT+2Q
+        Sat, 23 Mar 2019 14:04:16 -0400
+X-Greylist: delayed 543 seconds by postgrey-1.27 at vger.kernel.org; Sat, 23 Mar 2019 14:04:14 EDT
+Received: from pb-sasl-trial21.pobox.com (localhost.local [127.0.0.1])
+        by pb-sasl-trial21.pobox.com (Postfix) with ESMTP id C78B632FAA;
+        Sat, 23 Mar 2019 13:55:10 -0400 (EDT)
+        (envelope-from nicolas.pitre@linaro.org)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
+        :cc:subject:in-reply-to:message-id:references:mime-version
+        :content-type; s=sasl; bh=DIkJurCus6SFb+cIyUoFy++M3GI=; b=V9HcOf
+        em98Sfs6qYemwA5C3xLyvmmLhGwS0U9phvICndbGmfJC8XTbJ+pK1tbQXumn4OIT
+        ak8MyTAUmueJkpybwpoftVtWN8fVl9uaW79LNoKVIAIKd6KFtn+/5FMBR+Yxn01S
+        doc2cnnvPus8mXriuEjpS07b2Fu83Fuj/45V4=
+Received: from pb-smtp21.sea.icgroup.com (pb-smtp21.pobox.com [10.110.30.21])
+        by pb-sasl-trial21.pobox.com (Postfix) with ESMTP id B56D832FA9;
+        Sat, 23 Mar 2019 13:55:10 -0400 (EDT)
+        (envelope-from nicolas.pitre@linaro.org)
+Received: from yoda.home (unknown [70.82.104.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by pb-smtp21.pobox.com (Postfix) with ESMTPSA id A916B53623;
+        Sat, 23 Mar 2019 13:55:07 -0400 (EDT)
+        (envelope-from nicolas.pitre@linaro.org)
+Received: from xanadu.home (xanadu.home [192.168.2.2])
+        by yoda.home (Postfix) with ESMTPSA id BB0C02DA01C2;
+        Sat, 23 Mar 2019 13:55:05 -0400 (EDT)
+Date:   Sat, 23 Mar 2019 13:55:05 -0400 (EDT)
+From:   nicolas.pitre@linaro.org
+To:     Stefan Agner <stefan@agner.ch>
+cc:     linux@armlinux.org.uk, arnd@arndb.de, ard.biesheuvel@linaro.org,
+        robin.murphy@arm.com, f.fainelli@gmail.com, rjui@broadcom.com,
+        sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
+        kgene@kernel.org, krzk@kernel.org, robh@kernel.org,
+        ssantosh@kernel.org, jason@lakedaemon.net, andrew@lunn.ch,
+        gregory.clement@bootlin.com, sebastian.hesselbarth@gmail.com,
+        tony@atomide.com, marc.w.gonzalez@free.fr, mans@mansr.com,
+        ndesaulniers@google.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] ARM: mvebu: drop unnecessary label
+In-Reply-To: <2046aa3ca5ae2f31188020d4f2df50de228a5d84.1553356359.git.stefan@agner.ch>
+Message-ID: <nycvar.YSQ.7.76.1903231354270.1971@knanqh.ubzr>
+References: <9641c58c03720104186a797a96e30a52ae9805e4.1553356359.git.stefan@agner.ch> <2046aa3ca5ae2f31188020d4f2df50de228a5d84.1553356359.git.stefan@agner.ch>
+User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
 MIME-Version: 1.0
-X-Received: by 2002:a5d:980c:: with SMTP id a12mr12258850iol.58.1553364181399;
- Sat, 23 Mar 2019 11:03:01 -0700 (PDT)
-Date:   Sat, 23 Mar 2019 11:03:01 -0700
-In-Reply-To: <000000000000bc227a0582464e62@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000003d44980584c6c82a@google.com>
-Subject: Re: WARNING: locking bug in icmp_send
-From:   syzbot <syzbot+ba21d65f55b562432c58@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, jon.maloy@ericsson.com, kuznet@ms2.inr.ac.ru,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com,
-        tipc-discussion@lists.sourceforge.net, ying.xue@windriver.com,
-        yoshfuji@linux-ipv6.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=US-ASCII
+X-Pobox-Relay-ID: CB8EEA0C-4D94-11E9-B4A6-EE24A11ADF13-78420484!pb-smtp21.pobox.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+On Sat, 23 Mar 2019, Stefan Agner wrote:
 
-commit 52dfae5c85a4c1078e9f1d5e8947d4a25f73dd81
-Author: Jon Maloy <jon.maloy@ericsson.com>
-Date:   Thu Mar 22 19:42:52 2018 +0000
+> The label mvebu_boot_wa_start is not necessary and causes a build
+> issue when building with LLVM's integrated assembler:
+>     AS      arch/arm/mach-mvebu/pmsu_ll.o
+>   arch/arm/mach-mvebu/pmsu_ll.S:59:1: error: invalid symbol redefinition
+>   mvebu_boot_wa_start:
+>   ^
+> 
+> Drop the label.
+> 
+> Signed-off-by: Stefan Agner <stefan@agner.ch>
 
-     tipc: obtain node identity from interface by default
+Acked-by: Nicolas Pitre <nico@fluxnic.net>
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11b6dc5d200000
-start commit:   b5372fe5 exec: load_script: Do not exec truncated interpre..
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=13b6dc5d200000
-console output: https://syzkaller.appspot.com/x/log.txt?x=15b6dc5d200000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=7132344728e7ec3f
-dashboard link: https://syzkaller.appspot.com/bug?extid=ba21d65f55b562432c58
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14c90fa7400000
-
-Reported-by: syzbot+ba21d65f55b562432c58@syzkaller.appspotmail.com
-Fixes: 52dfae5c85a4 ("tipc: obtain node identity from interface by default")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+> ---
+>  arch/arm/mach-mvebu/pmsu_ll.S | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/arch/arm/mach-mvebu/pmsu_ll.S b/arch/arm/mach-mvebu/pmsu_ll.S
+> index 88651221dbdd..c1fb713e9306 100644
+> --- a/arch/arm/mach-mvebu/pmsu_ll.S
+> +++ b/arch/arm/mach-mvebu/pmsu_ll.S
+> @@ -56,7 +56,6 @@ ENDPROC(armada_38x_cpu_resume)
+>  
+>  /* The following code will be executed from SRAM */
+>  ENTRY(mvebu_boot_wa_start)
+> -mvebu_boot_wa_start:
+>  ARM_BE8(setend	be)
+>  	adr	r0, 1f
+>  	ldr	r0, [r0]		@ load the address of the
+> -- 
+> 2.21.0
+> 
+> 
