@@ -2,176 +2,80 @@ Return-Path: <SRS0=q9dy=R2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72163C4360F
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 13:57:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3C71C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 14:14:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F5DD218B0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 13:57:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4E7020811
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 14:14:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727635AbfCWN5v (ORCPT
+        id S1727585AbfCWOOB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Mar 2019 09:57:51 -0400
-Received: from mga07.intel.com ([134.134.136.100]:17145 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726118AbfCWN5u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Mar 2019 09:57:50 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Mar 2019 06:55:48 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,256,1549958400"; 
-   d="scan'208";a="127999269"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga008.jf.intel.com with ESMTP; 23 Mar 2019 06:55:47 -0700
-Received: from pbayerle-mobl.amr.corp.intel.com (pbayerle-mobl.amr.corp.intel.com [10.254.188.179])
-        by linux.intel.com (Postfix) with ESMTP id 9916E5804B6;
-        Sat, 23 Mar 2019 06:55:46 -0700 (PDT)
-Subject: Re: [alsa-devel] [PATCH] ASoC: intel: Fix crash at suspend/resume
- after failed codec registration
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     alsa-devel@alsa-project.org, Jie Yang <yang.jie@linux.intel.com>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Curtis Malainey <cujomalainey@chromium.org>
-References: <1553294388-25293-1-git-send-email-linux@roeck-us.net>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <5451ba5b-1a5d-41b0-2b39-772c326de785@linux.intel.com>
-Date:   Sat, 23 Mar 2019 09:55:46 -0400
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
- Gecko/20100101 Thunderbird/60.6.0
+        Sat, 23 Mar 2019 10:14:01 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:42648 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727364AbfCWOOB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 Mar 2019 10:14:01 -0400
+Received: by mail-io1-f71.google.com with SMTP id i1so4194863ioq.9
+        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2019 07:14:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=PsYFp35cFHs+5EpxQdqt4DnROaY5BNIXaA5kW14ZkHM=;
+        b=jUSY36j09f2c4Kl/vgIHgSrmLDqoKXBsTuTH84A++kWi+kL+weh9iI0BfWV8/MhQ+1
+         pUS33NaMwbV3gme5CMsnDNVKn2DB67G7OSzbty+Q6RlX0V9vrQzXWu8JkhZngl6L7Q84
+         8Rc38Sa3ulWPIl8Rv4ULBSmjhNa0oKKfRpoQgyg/Ooz/BgsTqqoJdnDXR0I2kJJFl55x
+         zMk3qlFpuSFmFQ6dhBYSQ2rzjsAYvIxAss4iXsee8ZUovQbqbgUhM2TgXvriNVlq0HOJ
+         xVAy+3pn5KU+IWadJvJKMomoN+mUnQRDm4MzXNQoH9HHkYK3wULgDOaXy7hiJR6X95qc
+         SBAQ==
+X-Gm-Message-State: APjAAAUc2Br9TMCJUinEX+eziGkEc3fKjREq63SOw+AIUPdRJgMW8bjv
+        /QBfrY9wnSn0C51uKcrVll6NYJb86B8X+xmHKwnFdT222oUL
+X-Google-Smtp-Source: APXvYqxrlhN7ZDSj5xzFZUOsZkR2w5UMagQnWSWyFsjEj1xFUpW9RSUHz2nSPn08J7oOQmE0yPfsE/xLggyWS6ZwEfvr/Ehy7Hk1
 MIME-Version: 1.0
-In-Reply-To: <1553294388-25293-1-git-send-email-linux@roeck-us.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a02:8c2f:: with SMTP id l44mr10677090jak.46.1553350440469;
+ Sat, 23 Mar 2019 07:14:00 -0700 (PDT)
+Date:   Sat, 23 Mar 2019 07:14:00 -0700
+In-Reply-To: <000000000000685dc805829e835c@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000003749360584c395ba@google.com>
+Subject: Re: WARNING: bad unlock balance detected! (3)
+From:   syzbot <syzbot+f3e3434787332dfc1c47@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, devicetree@vger.kernel.org,
+        jbrunet@baylibre.com, khilman@baylibre.com, kuznet@ms2.inr.ac.ru,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        mark.rutland@arm.com, netdev@vger.kernel.org, robh+dt@kernel.org,
+        syzkaller-bugs@googlegroups.com, yoshfuji@linux-ipv6.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/22/19 6:39 PM, Guenter Roeck wrote:
-> If codec registration fails after the ASoC Intel SST driver has been probed,
-> the kernel will Oops and crash at suspend/resume.
-> 
-> general protection fault: 0000 [#1] PREEMPT SMP KASAN PTI
-> CPU: 1 PID: 2811 Comm: cat Tainted: G        W         4.19.30 #15
-> Hardware name: GOOGLE Clapper, BIOS Google_Clapper.5216.199.7 08/22/2014
-> RIP: 0010:snd_soc_suspend+0x5a/0xd21
-> Code: 03 80 3c 10 00 49 89 d7 74 0b 48 89 df e8 71 72 c4 fe 4c 89
-> fa 48 8b 03 48 89 45 d0 48 8d 98 a0 01 00 00 48 89 d8 48 c1 e8 03
-> <8a> 04 10 84 c0 0f 85 85 0c 00 00 80 3b 00 0f 84 6b 0c 00 00 48 8b
-> RSP: 0018:ffff888035407750 EFLAGS: 00010202
-> RAX: 0000000000000034 RBX: 00000000000001a0 RCX: 0000000000000000
-> RDX: dffffc0000000000 RSI: 0000000000000008 RDI: ffff88805c417098
-> RBP: ffff8880354077b0 R08: dffffc0000000000 R09: ffffed100b975718
-> R10: 0000000000000001 R11: ffffffff949ea4a3 R12: 1ffff1100b975746
-> R13: dffffc0000000000 R14: ffff88805cba4588 R15: dffffc0000000000
-> FS:  0000794a78e91b80(0000) GS:ffff888068d00000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00007bd5283ccf58 CR3: 000000004b7aa000 CR4: 00000000001006e0
-> Call Trace:
-> ? dpm_complete+0x67b/0x67b
-> ? i915_gem_suspend+0x14d/0x1ad
-> sst_soc_prepare+0x91/0x1dd
-> ? sst_be_hw_params+0x7e/0x7e
-> dpm_prepare+0x39a/0x88b
-> dpm_suspend_start+0x13/0x9d
-> suspend_devices_and_enter+0x18f/0xbd7
-> ? arch_suspend_enable_irqs+0x11/0x11
-> ? printk+0xd9/0x12d
-> ? lock_release+0x95f/0x95f
-> ? log_buf_vmcoreinfo_setup+0x131/0x131
-> ? rcu_read_lock_sched_held+0x140/0x22a
-> ? __bpf_trace_rcu_utilization+0xa/0xa
-> ? __pm_pr_dbg+0x186/0x190
-> ? pm_notifier_call_chain+0x39/0x39
-> ? suspend_test+0x9d/0x9d
-> pm_suspend+0x2f4/0x728
-> ? trace_suspend_resume+0x3da/0x3da
-> ? lock_release+0x95f/0x95f
-> ? kernfs_fop_write+0x19f/0x32d
-> state_store+0xd8/0x147
-> ? sysfs_kf_read+0x155/0x155
-> kernfs_fop_write+0x23e/0x32d
-> __vfs_write+0x108/0x608
-> ? vfs_read+0x2e9/0x2e9
-> ? rcu_read_lock_sched_held+0x140/0x22a
-> ? __bpf_trace_rcu_utilization+0xa/0xa
-> ? debug_smp_processor_id+0x10/0x10
-> ? selinux_file_permission+0x1c5/0x3c8
-> ? rcu_sync_lockdep_assert+0x6a/0xad
-> ? __sb_start_write+0x129/0x2ac
-> vfs_write+0x1aa/0x434
-> ksys_write+0xfe/0x1be
-> ? __ia32_sys_read+0x82/0x82
-> do_syscall_64+0xcd/0x120
-> entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> 
-> In the observed situation, the problem is seen because the codec driver
-> failed to probe due to a hardware problem.
-> 
-> max98090 i2c-193C9890:00: Failed to read device revision: -1
-> max98090 i2c-193C9890:00: ASoC: failed to probe component -1
-> cht-bsw-max98090 cht-bsw-max98090: ASoC: failed to instantiate card -1
-> cht-bsw-max98090 cht-bsw-max98090: snd_soc_register_card failed -1
-> cht-bsw-max98090: probe of cht-bsw-max98090 failed with error -1
-> 
-> The problem is similar to the problem solved with commit 2fc995a87f2e
-> ("ASoC: intel: Fix crash at suspend/resume without card registration"),
-> but codec registration fails at a later point. At that time, the pointer
-> checked with the above mentioned commit is already set, but it is not
-> cleared if the device is subsequently removed. Adding a remove function
-> to clear the pointer fixes the problem.
+syzbot has bisected this bug to:
 
-Makes sense
+commit ec01fb69ac8034ad6e839b31f9df167a110f868b
+Author: Jerome Brunet <jbrunet@baylibre.com>
+Date:   Wed Jan 16 17:59:47 2019 +0000
 
-Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+     arm64: dts: meson: s400: fix emmc maximum rate
 
-I'd like to highlight that there is a fundamental flaw in the way the 
-machine drivers are handled. Since we don't have a hook for the machine 
-driver in the BIOS, the DSP driver creates a platform_device which will 
-instantiate the machine driver. When errors happen in the machine driver 
-probe, they are suppressed due to a 'feature' of the device model, so 
-you can end-up with a broken configuration that is still reported as a 
-successful strobe.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10afb7cf200000
+start commit:   065b6c4c Merge tag 'devicetree-for-5.1' of git://git.kerne..
+git tree:       upstream
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=12afb7cf200000
+console output: https://syzkaller.appspot.com/x/log.txt?x=14afb7cf200000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ea4067c9a08ae046
+dashboard link: https://syzkaller.appspot.com/bug?extid=f3e3434787332dfc1c47
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12a10577200000
 
-> 
-> Cc: stable@vger.kernel.org
-> Cc: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-> Cc: Curtis Malainey <cujomalainey@chromium.org>
-> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-> ---
->   sound/soc/intel/atom/sst-mfld-platform-pcm.c | 8 ++++++++
->   1 file changed, 8 insertions(+)
-> 
-> diff --git a/sound/soc/intel/atom/sst-mfld-platform-pcm.c b/sound/soc/intel/atom/sst-mfld-platform-pcm.c
-> index 08cea5b5cda9..0e8b1c5eec88 100644
-> --- a/sound/soc/intel/atom/sst-mfld-platform-pcm.c
-> +++ b/sound/soc/intel/atom/sst-mfld-platform-pcm.c
-> @@ -706,9 +706,17 @@ static int sst_soc_probe(struct snd_soc_component *component)
->   	return sst_dsp_init_v2_dpcm(component);
->   }
->   
-> +static void sst_soc_remove(struct snd_soc_component *component)
-> +{
-> +	struct sst_data *drv = dev_get_drvdata(component->dev);
-> +
-> +	drv->soc_card = NULL;
-> +}
-> +
->   static const struct snd_soc_component_driver sst_soc_platform_drv  = {
->   	.name		= DRV_NAME,
->   	.probe		= sst_soc_probe,
-> +	.remove		= sst_soc_remove,
->   	.ops		= &sst_platform_ops,
->   	.compr_ops	= &sst_platform_compr_ops,
->   	.pcm_new	= sst_pcm_new,
-> 
+Reported-by: syzbot+f3e3434787332dfc1c47@syzkaller.appspotmail.com
+Fixes: ec01fb69ac80 ("arm64: dts: meson: s400: fix emmc maximum rate")
 
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
