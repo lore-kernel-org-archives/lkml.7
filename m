@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BCCDC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 14:19:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28EB0C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 14:19:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29E2B20870
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 14:19:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E927720870
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 14:19:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727856AbfCWOTL (ORCPT
+        id S1727797AbfCWOTI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Mar 2019 10:19:11 -0400
-Received: from mga01.intel.com ([192.55.52.88]:28331 "EHLO mga01.intel.com"
+        Sat, 23 Mar 2019 10:19:08 -0400
+Received: from mga01.intel.com ([192.55.52.88]:28327 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727694AbfCWOTH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Mar 2019 10:19:07 -0400
+        id S1727702AbfCWOTB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 Mar 2019 10:19:01 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Mar 2019 07:18:58 -0700
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Mar 2019 07:19:00 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,256,1549958400"; 
-   d="scan'208";a="129543566"
+   d="scan'208";a="129543575"
 Received: from xulike-server.sh.intel.com ([10.239.48.134])
-  by orsmga006.jf.intel.com with ESMTP; 23 Mar 2019 07:18:57 -0700
+  by orsmga006.jf.intel.com with ESMTP; 23 Mar 2019 07:18:59 -0700
 From:   Like Xu <like.xu@linux.intel.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
 Cc:     like.xu@intel.com, wei.w.wang@intel.com,
@@ -36,9 +36,9 @@ Cc:     like.xu@intel.com, wei.w.wang@intel.com,
         Kan Liang <kan.liang@linux.intel.com>,
         Ingo Molnar <mingo@redhat.com>,
         Paolo Bonzini <pbonzini@redhat.com>
-Subject: [RFC] [PATCH v2 4/5] KVM/x86/vPMU: add vCPU scheduling support for hw-assigned vPMC
-Date:   Sat, 23 Mar 2019 22:18:07 +0800
-Message-Id: <1553350688-39627-5-git-send-email-like.xu@linux.intel.com>
+Subject: [RFC] [PATCH v2 5/5] KVM/x86/vPMU: not do reprogram_counter for Intel hw-assigned vPMC
+Date:   Sat, 23 Mar 2019 22:18:08 +0800
+Message-Id: <1553350688-39627-6-git-send-email-like.xu@linux.intel.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1553350688-39627-1-git-send-email-like.xu@linux.intel.com>
 References: <1553350688-39627-1-git-send-email-like.xu@linux.intel.com>
@@ -47,222 +47,175 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch would dispatch the generic vPMU request to intel ones.
-In the vCPU scheduling context, this patch would save and restore
-those in-use assigned counter states without interference.
+Considering the cross-mapping issue, this patch directly passes
+the intel_pmu_set_msr request value to the hw-assigned vPMC.
 
-The intel_pmu_sched_in() would release the event if its hw_life_count
-has been counted down to zero OR if vPMC is disabled, it is considered
-to be no longer used and its hw_life_count is decreased by one.
+This patch would reprogram a counter from host perf scheduler
+just one time when it's first requested and keep to reuse it
+during a certain period of time until it's lazy-released, which
+is associated with HW_LIFE_COUNT_MAX and scheduling time slice.
 
-Signed-off-by: Wang Wei <wei.w.wang@intel.com>
 Signed-off-by: Like Xu <like.xu@linux.intel.com>
 ---
- arch/x86/kvm/pmu.c           | 15 ++++++++
- arch/x86/kvm/pmu.h           | 22 ++++++++++++
- arch/x86/kvm/vmx/pmu_intel.c | 81 ++++++++++++++++++++++++++++++++++++++++++++
- arch/x86/kvm/x86.c           |  6 ++++
- 4 files changed, 124 insertions(+)
+ arch/x86/kvm/pmu.c           | 19 +++++++++++++++
+ arch/x86/kvm/vmx/pmu_intel.c | 58 +++++++++++++++++++++++++++++++++++---------
+ 2 files changed, 65 insertions(+), 12 deletions(-)
 
 diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
-index 58ead7d..672e268 100644
+index 672e268..d7e7fb6 100644
 --- a/arch/x86/kvm/pmu.c
 +++ b/arch/x86/kvm/pmu.c
-@@ -284,6 +284,9 @@ int kvm_pmu_rdpmc(struct kvm_vcpu *vcpu, unsigned idx, u64 *data)
- 	struct kvm_pmc *pmc;
- 	u64 ctr_val;
+@@ -137,6 +137,11 @@ static void pmc_reprogram_counter(struct kvm_pmc *pmc, u32 type,
+ 	}
  
-+	if (kvm_x86_ops->pmu_ops->pmc_read_counter)
-+		return kvm_x86_ops->pmu_ops->pmc_read_counter(vcpu, idx, data);
+ 	pmc->perf_event = event;
++	if (pmc_is_assigned(pmc)) {
++		pmc->hw_life_count = HW_LIFE_COUNT_MAX;
++		wrmsrl(pmc->perf_event->hw.event_base, pmc->counter);
++	}
 +
- 	if (is_vmware_backdoor_pmc(idx))
- 		return kvm_pmu_rdpmc_vmware(vcpu, idx, data);
- 
-@@ -337,6 +340,18 @@ void kvm_pmu_reset(struct kvm_vcpu *vcpu)
- 	kvm_x86_ops->pmu_ops->reset(vcpu);
+ 	clear_bit(pmc->idx, (unsigned long*)&pmc_to_pmu(pmc)->reprogram_pmi);
  }
  
-+void kvm_pmu_sched_out(struct kvm_vcpu *vcpu)
-+{
-+	if (kvm_x86_ops->pmu_ops->sched_out)
-+		kvm_x86_ops->pmu_ops->sched_out(vcpu);
-+}
-+
-+void kvm_pmu_sched_in(struct kvm_vcpu *vcpu)
-+{
-+	if (kvm_x86_ops->pmu_ops->sched_in)
-+		kvm_x86_ops->pmu_ops->sched_in(vcpu);
-+}
-+
- void kvm_pmu_init(struct kvm_vcpu *vcpu)
- {
- 	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
-diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
-index ba8898e..de68ff0 100644
---- a/arch/x86/kvm/pmu.h
-+++ b/arch/x86/kvm/pmu.h
-@@ -33,6 +33,12 @@ struct kvm_pmu_ops {
- 	void (*refresh)(struct kvm_vcpu *vcpu);
- 	void (*init)(struct kvm_vcpu *vcpu);
- 	void (*reset)(struct kvm_vcpu *vcpu);
-+	bool (*pmc_is_assigned)(struct kvm_pmc *pmc);
-+	void (*pmc_stop_counter)(struct kvm_pmc *pmc);
-+	int (*pmc_read_counter)(struct kvm_vcpu *vcpu,
-+		unsigned int idx, u64 *data);
-+	void (*sched_out)(struct kvm_vcpu *vcpu);
-+	void (*sched_in)(struct kvm_vcpu *vcpu);
- };
+@@ -155,6 +160,13 @@ void reprogram_gp_counter(struct kvm_pmc *pmc, u64 eventsel)
+ 	if (!(eventsel & ARCH_PERFMON_EVENTSEL_ENABLE) || !pmc_is_enabled(pmc))
+ 		return;
  
- static inline u64 pmc_bitmask(struct kvm_pmc *pmc)
-@@ -54,8 +60,22 @@ static inline u64 pmc_read_counter(struct kvm_pmc *pmc)
- 	return counter & pmc_bitmask(pmc);
- }
- 
-+static inline bool pmc_is_assigned(struct kvm_pmc *pmc)
-+{
-+	if (kvm_x86_ops->pmu_ops->pmc_is_assigned)
-+		return kvm_x86_ops->pmu_ops->pmc_is_assigned(pmc);
-+
-+	return false;
-+}
-+
- static inline void pmc_stop_counter(struct kvm_pmc *pmc)
- {
-+	if (kvm_x86_ops->pmu_ops->pmc_stop_counter) {
-+		if (pmc_is_assigned(pmc))
-+			rdmsrl(pmc->perf_event->hw.event_base, pmc->counter);
++	if (pmc_is_assigned(pmc)) {
++		pmc->hw_life_count = HW_LIFE_COUNT_MAX;
++		clear_bit(pmc->idx,
++			(unsigned long *)&pmc_to_pmu(pmc)->reprogram_pmi);
 +		return;
 +	}
 +
- 	if (pmc->perf_event) {
- 		pmc->counter = pmc_read_counter(pmc);
- 		perf_event_release_kernel(pmc->perf_event);
-@@ -117,6 +137,8 @@ static inline struct kvm_pmc *get_fixed_pmc(struct kvm_pmu *pmu, u32 msr)
- void kvm_pmu_reset(struct kvm_vcpu *vcpu);
- void kvm_pmu_init(struct kvm_vcpu *vcpu);
- void kvm_pmu_destroy(struct kvm_vcpu *vcpu);
-+void kvm_pmu_sched_out(struct kvm_vcpu *vcpu);
-+void kvm_pmu_sched_in(struct kvm_vcpu *vcpu);
+ 	event_select = eventsel & ARCH_PERFMON_EVENTSEL_EVENT;
+ 	unit_mask = (eventsel & ARCH_PERFMON_EVENTSEL_UMASK) >> 8;
  
- bool is_vmware_backdoor_pmc(u32 pmc_idx);
+@@ -192,6 +204,13 @@ void reprogram_fixed_counter(struct kvm_pmc *pmc, u8 ctrl, int idx)
+ 	if (!en_field || !pmc_is_enabled(pmc))
+ 		return;
  
++	if (pmc_is_assigned(pmc)) {
++		pmc->hw_life_count = HW_LIFE_COUNT_MAX;
++		clear_bit(pmc->idx,
++			(unsigned long *)&pmc_to_pmu(pmc)->reprogram_pmi);
++		return;
++	}
++
+ 	pmc_reprogram_counter(pmc, PERF_TYPE_HARDWARE,
+ 			      kvm_x86_ops->pmu_ops->find_fixed_event(idx),
+ 			      !(en_field & 0x2), /* exclude user */
 diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
-index 0b69acc..63e00ea 100644
+index 63e00ea..2dfdf54 100644
 --- a/arch/x86/kvm/vmx/pmu_intel.c
 +++ b/arch/x86/kvm/vmx/pmu_intel.c
-@@ -522,6 +522,82 @@ static void intel_pmu_reset(struct kvm_vcpu *vcpu)
- 		pmu->global_ovf_ctrl = 0;
- }
+@@ -163,12 +163,13 @@ static void intel_pmu_disable_host_counter(struct kvm_pmc *pmc)
  
-+static void intel_pmu_sched_out(struct kvm_vcpu *vcpu)
-+{
-+	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
-+	struct kvm_pmc *pmc;
-+	int i;
-+
-+	for (i = 0; i < INTEL_PMC_MAX_GENERIC; i++) {
-+		pmc = &pmu->gp_counters[i];
-+		intel_pmu_disable_host_counter(pmc);
-+		intel_pmu_save_guest_pmc(pmu, pmc->idx);
-+	}
-+
-+	for (i = 0; i < INTEL_PMC_MAX_FIXED; i++) {
-+		pmc = &pmu->fixed_counters[i];
-+		intel_pmu_disable_host_counter(pmc);
-+		intel_pmu_save_guest_pmc(pmu, pmc->idx);
-+	}
-+}
-+
-+static void intel_pmu_sched_in(struct kvm_vcpu *vcpu)
-+{
-+	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
-+	struct kvm_pmc *pmc;
+ static void reprogram_fixed_counters(struct kvm_pmu *pmu, u64 data)
+ {
 +	struct hw_perf_event *hwc;
-+	u64 host_ctrl, test, disabled_ctrl_val = 0;
-+	int i;
-+
-+	for (i = 0; i < INTEL_PMC_MAX_GENERIC; i++) {
-+		pmc = &pmu->gp_counters[i];
-+
-+		if (pmc->perf_event && pmc->hw_life_count == 0)
-+			intel_pmc_stop_counter(pmc);
-+
-+		if (!intel_pmc_is_assigned(pmc))
-+			continue;
-+
-+		intel_pmu_restore_guest_pmc(pmu, pmc->idx);
-+
-+		hwc = &pmc->perf_event->hw;
-+		if (hwc->idx >= INTEL_PMC_IDX_FIXED) {
-+			u64 mask = 0xfULL <<
-+				((hwc->idx - INTEL_PMC_IDX_FIXED) * 4);
-+			disabled_ctrl_val &= ~mask;
-+			rdmsrl(hwc->config_base, host_ctrl);
-+			if (disabled_ctrl_val == host_ctrl)
-+				pmc->hw_life_count--;
-+		} else if (!(pmc->eventsel & ARCH_PERFMON_EVENTSEL_ENABLE)) {
-+			pmc->hw_life_count--;
-+		}
-+	}
-+
-+	for (i = 0; i < INTEL_PMC_MAX_FIXED; i++) {
-+		pmc = &pmu->fixed_counters[i];
-+
-+		if (pmc->perf_event && pmc->hw_life_count == 0)
-+			intel_pmc_stop_counter(pmc);
++	struct kvm_pmc *pmc;
+ 	int i;
+ 
+ 	for (i = 0; i < pmu->nr_arch_fixed_counters; i++) {
+ 		u8 new_ctrl = fixed_ctrl_field(data, i);
+ 		u8 old_ctrl = fixed_ctrl_field(pmu->fixed_ctr_ctrl, i);
+-		struct kvm_pmc *pmc;
+ 
+ 		pmc = get_fixed_pmc(pmu, MSR_CORE_PERF_FIXED_CTR0 + i);
+ 
+@@ -176,6 +177,19 @@ static void reprogram_fixed_counters(struct kvm_pmu *pmu, u64 data)
+ 			continue;
+ 
+ 		reprogram_fixed_counter(pmc, new_ctrl, i);
 +
 +		if (!intel_pmc_is_assigned(pmc))
 +			continue;
-+
-+		intel_pmu_restore_guest_pmc(pmu, pmc->idx);
 +
 +		hwc = &pmc->perf_event->hw;
 +		if (hwc->idx < INTEL_PMC_IDX_FIXED) {
-+			rdmsrl(hwc->config_base, test);
-+			if (!(test & ARCH_PERFMON_EVENTSEL_ENABLE))
-+				pmc->hw_life_count--;
++			u64 config = (new_ctrl == 0) ? 0 :
++				(hwc->config | ARCH_PERFMON_EVENTSEL_ENABLE);
++			wrmsrl(hwc->config_base, config);
 +		} else {
-+			u8 ctrl = fixed_ctrl_field(pmu->fixed_ctr_ctrl,
-+				pmc->idx - INTEL_PMC_IDX_FIXED);
-+			if (ctrl == 0)
-+				pmc->hw_life_count--;
++			intel_pmu_update_host_fixed_ctrl(new_ctrl,
++				hwc->idx - INTEL_PMC_IDX_FIXED);
 +		}
-+	}
-+}
-+
- struct kvm_pmu_ops intel_pmu_ops = {
- 	.find_arch_event = intel_find_arch_event,
- 	.find_fixed_event = intel_find_fixed_event,
-@@ -535,4 +611,9 @@ struct kvm_pmu_ops intel_pmu_ops = {
- 	.refresh = intel_pmu_refresh,
- 	.init = intel_pmu_init,
- 	.reset = intel_pmu_reset,
-+	.pmc_is_assigned = intel_pmc_is_assigned,
-+	.pmc_stop_counter = intel_pmc_stop_counter,
-+	.pmc_read_counter = intel_pmc_read_counter,
-+	.sched_out = intel_pmu_sched_out,
-+	.sched_in = intel_pmu_sched_in,
- };
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 65e4559..f9c715b 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -9100,9 +9100,15 @@ void kvm_arch_vcpu_uninit(struct kvm_vcpu *vcpu)
- 		static_key_slow_dec(&kvm_no_apic_vcpu);
- }
+ 	}
  
-+void kvm_arch_sched_out(struct kvm_vcpu *vcpu)
-+{
-+	kvm_pmu_sched_out(vcpu);
-+}
-+
- void kvm_arch_sched_in(struct kvm_vcpu *vcpu, int cpu)
+ 	pmu->fixed_ctr_ctrl = data;
+@@ -345,6 +359,7 @@ static int intel_pmu_get_msr(struct kvm_vcpu *vcpu, u32 msr, u64 *data)
  {
- 	vcpu->arch.l1tf_flush_l1d = true;
-+	kvm_pmu_sched_in(vcpu);
- 	kvm_x86_ops->sched_in(vcpu, cpu);
- }
+ 	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
+ 	struct kvm_pmc *pmc;
++	struct hw_perf_event *hwc;
  
+ 	switch (msr) {
+ 	case MSR_CORE_PERF_FIXED_CTR_CTRL:
+@@ -362,7 +377,13 @@ static int intel_pmu_get_msr(struct kvm_vcpu *vcpu, u32 msr, u64 *data)
+ 	default:
+ 		if ((pmc = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0)) ||
+ 		    (pmc = get_fixed_pmc(pmu, msr))) {
+-			*data = pmc_read_counter(pmc);
++			if (intel_pmc_is_assigned(pmc)) {
++				hwc = &pmc->perf_event->hw;
++				rdmsrl_safe(hwc->event_base, data);
++				pmc->counter = *data;
++			} else {
++				*data = pmc->counter;
++			}
+ 			return 0;
+ 		} else if ((pmc = get_gp_pmc(pmu, msr, MSR_P6_EVNTSEL0))) {
+ 			*data = pmc->eventsel;
+@@ -377,6 +398,7 @@ static int intel_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ {
+ 	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
+ 	struct kvm_pmc *pmc;
++	struct hw_perf_event *hwc;
+ 	u32 msr = msr_info->index;
+ 	u64 data = msr_info->data;
+ 
+@@ -414,18 +436,30 @@ static int intel_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 	default:
+ 		if ((pmc = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0)) ||
+ 		    (pmc = get_fixed_pmc(pmu, msr))) {
+-			if (!msr_info->host_initiated)
+-				data = (s64)(s32)data;
+-			pmc->counter += data - pmc_read_counter(pmc);
+-			return 0;
+-		} else if ((pmc = get_gp_pmc(pmu, msr, MSR_P6_EVNTSEL0))) {
+-			if (data == pmc->eventsel)
+-				return 0;
+-			if (!(data & pmu->reserved_bits)) {
+-				reprogram_gp_counter(pmc, data);
+-				return 0;
++			pmc->counter = data;
++			if (intel_pmc_is_assigned(pmc)) {
++				hwc = &pmc->perf_event->hw;
++				wrmsrl(hwc->event_base, pmc->counter);
+ 			}
++			return 0;
+ 		}
++
++		pmc = get_gp_pmc(pmu, msr, MSR_P6_EVNTSEL0);
++		if (!pmc)
++			return 1;
++
++		if (data == pmc->eventsel
++				|| (data & pmu->reserved_bits))
++			return 0;
++
++		reprogram_gp_counter(pmc, data);
++
++		if (pmc->eventsel & ARCH_PERFMON_EVENTSEL_ENABLE)
++			intel_pmu_enable_host_counter(pmc);
++		else
++			intel_pmu_disable_host_counter(pmc);
++
++		return 0;
+ 	}
+ 
+ 	return 1;
 -- 
 1.8.3.1
 
