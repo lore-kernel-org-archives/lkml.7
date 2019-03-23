@@ -2,79 +2,72 @@ Return-Path: <SRS0=q9dy=R2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85964C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 19:53:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB47EC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 20:06:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52DB9218B0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 19:53:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7DDD20811
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 20:06:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727784AbfCWTxB (ORCPT
+        id S1727804AbfCWUG6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Mar 2019 15:53:01 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:51380 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727504AbfCWTxB (ORCPT
+        Sat, 23 Mar 2019 16:06:58 -0400
+Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:27346
+        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727443AbfCWUG6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Mar 2019 15:53:01 -0400
-Received: by mail-io1-f71.google.com with SMTP id y18so4632223ior.18
-        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2019 12:53:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=hPCFZgSPwKo5tFQMJSrf7g8SCxJAS2Im00Nc2F8xtnU=;
-        b=ta1encnzSSluU/YaM3ky21elBxybhOihU92qch1kAcHAey0Oq6aJRBo6b+Qx8CnfQ4
-         KDnG/eI2NF92tGoEqmH01ewCdGkHQBiv5a6B+401jNJvNmLfJSDuOkqaWWE5S8sjkOFS
-         Y7F+QarWVKpnF0AKYez7rE20f8nm8Zf2CTGD+sg4rDIWTcrjHePVSc2EK+xRMv77gbQ7
-         QgS5MYvp78wOmLlDX/ou5Q8ybUxU6YfJ66LZr+X/TOiuD1dC2d0csoVqJAJilWp9Gj8v
-         f4taxa0dZMajghCtYv7y3AUiGEs9liPibM44t427XPRJOkKpy0YYAtP4/HFIeHYR3BEe
-         b0xQ==
-X-Gm-Message-State: APjAAAWn3Wgkh2aDiWMZhPI+mSI9wvhHVvFdgksMplHNmF7q8007LxYW
-        bxS5fCbS78emh6SZUdjKwZosvCcDqTBT6gIMpFw2iI8LO5KM
-X-Google-Smtp-Source: APXvYqypf8qFV5zqJBj4N6WfHbfjOygBoblDN40vDXoQbuohQsDwDzun4fF/7rEFX/3iD0QjrfRjgEo/OWYijkKMuWyotiarjnm8
+        Sat, 23 Mar 2019 16:06:58 -0400
+X-IronPort-AV: E=Sophos;i="5.60,256,1549926000"; 
+   d="scan'208";a="300496453"
+Received: from abo-58-107-68.mrs.modulonet.fr (HELO hadrien) ([85.68.107.58])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Mar 2019 21:06:55 +0100
+Date:   Sat, 23 Mar 2019 21:06:54 +0100 (CET)
+From:   Julia Lawall <julia.lawall@lip6.fr>
+X-X-Sender: jll@hadrien
+To:     Markus Elfring <Markus.Elfring@web.de>
+cc:     Wen Yang <wen.yang99@zte.com.cn>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        Yi Wang <wang.yi59@zte.com.cn>,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        cocci@systeme.lip6.fr
+Subject: Re: [PATCH] coccinelle: put_device: reduce false positives
+In-Reply-To: <179bbdd1-3fcb-bba5-52b3-7f96973c7650@web.de>
+Message-ID: <alpine.DEB.2.21.1903232104030.5660@hadrien>
+References: <1553321671-27749-1-git-send-email-wen.yang99@zte.com.cn> <179bbdd1-3fcb-bba5-52b3-7f96973c7650@web.de>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-X-Received: by 2002:a05:660c:80b:: with SMTP id j11mr6177901itk.22.1553370780631;
- Sat, 23 Mar 2019 12:53:00 -0700 (PDT)
-Date:   Sat, 23 Mar 2019 12:53:00 -0700
-In-Reply-To: <00000000000071be120581ca41ed@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000958aa50584c851b7@google.com>
-Subject: Re: BUG: soft lockup in kvm_vm_release
-From:   syzbot <syzbot+6349a512c2938b2ad058@syzkaller.appspotmail.com>
-To:     andrea.parri@amarulasolutions.com, jpoimboe@redhat.com,
-        linux-kernel@vger.kernel.org, luto@kernel.org, mingo@kernel.org,
-        peterz@infradead.org, riel@surriel.com,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
-        torvalds@linux-foundation.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: multipart/mixed; boundary="8323329-139833865-1553371615=:5660"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-commit 80eb865768703c0f85a0603762742ae1dedf21f0
-Author: Andrea Parri <andrea.parri@amarulasolutions.com>
-Date:   Tue Nov 27 11:01:10 2018 +0000
+--8323329-139833865-1553371615=:5660
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 
-     sched/fair: Clean up comment in nohz_idle_balance()
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1362209b200000
-start commit:   57902dc0 Merge tag 'riscv-for-linus-5.0-rc7' of git://git...
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=10e2209b200000
-console output: https://syzkaller.appspot.com/x/log.txt?x=1762209b200000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ee434566c893c7b1
-dashboard link: https://syzkaller.appspot.com/bug?extid=6349a512c2938b2ad058
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14287e78c00000
 
-Reported-by: syzbot+6349a512c2938b2ad058@syzkaller.appspotmail.com
-Fixes: 80eb86576870 ("sched/fair: Clean up comment in nohz_idle_balance()")
+On Sat, 23 Mar 2019, Markus Elfring wrote:
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+> > Don't complain about a return when this function returns "&pdev->dev".
+>
+> Would this information qualify to add the tag “Fixes” to the commit message?
+
+Fixes tags relate to stable kernels, so that one can see which stable
+kernels a particular patch should be propagated to.  There is no need to
+propagate patches on semantic patches to stable kernels.  People who run
+stable kernels are interested in their behavior, not the bug finding
+rules that they contain.
+
+julia
+--8323329-139833865-1553371615=:5660--
