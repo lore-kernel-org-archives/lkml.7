@@ -2,139 +2,108 @@ Return-Path: <SRS0=q9dy=R2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DF6AC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 17:21:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DDFEC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 17:22:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0680820879
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 17:21:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B7C020879
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 17:22:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="0WytAG4W"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="X5vXihH5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727784AbfCWRVm (ORCPT
+        id S1727864AbfCWRWR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Mar 2019 13:21:42 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:33904 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727364AbfCWRVm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Mar 2019 13:21:42 -0400
-Received: by mail-ot1-f68.google.com with SMTP id k21so3257333otf.1
-        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2019 10:21:41 -0700 (PDT)
+        Sat, 23 Mar 2019 13:22:17 -0400
+Received: from mail-eopbgr710074.outbound.protection.outlook.com ([40.107.71.74]:40299
+        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727298AbfCWRWR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 Mar 2019 13:22:17 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eeq8w5UoZqtPwtYCuvSGobWdwSJ7TL9pAZbFIGCz8uc=;
-        b=0WytAG4Wk5Oi/5ukZGTkMMCTVXUHPt5wKd8CN4IlVakyDUknYU9gO2o6YmgrDc0Gh2
-         tFh8Q2WR+/Zv1avHHPlkNOvZXziHzve4udgLrND2cPRcYjN5Bz77mTSPku6TGZkiOGiP
-         6fdnK7E5tPWQjgNTaaAo+qd9hXJnKNbTPXdb7niW9u0Gc66Qo8YQdrsyLvzTloD35bCz
-         Wojma7Mf9Ou1KeogCH0lqVyOvWMPNmzT4YVID4HGYCoU0GAWQVFHvTJlpRIBgyTyLaVh
-         ktFFHNrQzSkhMUkFxzcOpb3g3/7CWDRXpFfCSDA2Go9IS5uDo6mFzp+pn66Qv4in6Ums
-         Yg6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eeq8w5UoZqtPwtYCuvSGobWdwSJ7TL9pAZbFIGCz8uc=;
-        b=Z6zVqSfdM73uIInrfPpG3bw54cJdyk3aYvJ7mKPQKBApC1uFzBDlxs055PbjoaEiEJ
-         YUU1YgQZ1rOrydG3dJ7Q9lJlTBla6QpMrOh0/ZFCFrCnYiBny/n6KFsz5PogAIMQgZ1z
-         mcbf1fnLnSOF00mREmHG9tB7XO6HP4CtM+h4fjdXdZBG5mhRx8PzCAx2n2xFMLOm7Eup
-         TLTpthjp257dJfVSxb/iB8p/cGPLm4rxKmPh1V6K4nKIAAG15eovpIAx+GXI3L+WSL2G
-         GbeK6PyrRExadMVnazRzp5xo0IA98beCy/ooSxjn2NBtzj7lJbHJ/KuzunJIgjMH+cXr
-         xzfg==
-X-Gm-Message-State: APjAAAV0F/Qlpi1VOKACWnxbmhO2gZu6UkI5nhwlkrNJQNwvtW5LK2ud
-        East1X11lzsFJZlqNajmBGVTGerK5Rkz5wNJ0gK8VA==
-X-Google-Smtp-Source: APXvYqxI/TyfpdbcSgqn9sKIr9VnkGP9ptLAdKMEHZOdln61IUI0xQz7xzNTofy2+O4N3EPhoLjKRqdzP1P/Ka5palk=
-X-Received: by 2002:a9d:6a4f:: with SMTP id h15mr1290088otn.353.1553361701390;
- Sat, 23 Mar 2019 10:21:41 -0700 (PDT)
+ d=amdcloud.onmicrosoft.com; s=selector1-amd-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cRvBP0APmZJ/rJttL7En9aVx/3vkk+6V3cf/oxGZ83M=;
+ b=X5vXihH5J1fgvIFr7MG1nUuj1BrsYVeC6mjs82kUf6QoYqUjlyBHrP7oy56eO9dwWCXoCG/+sxUaCMZCpXYRrZT9owH3+HbWRQpH8xr1FjocBXbwLwZH+qPilnS7JHcufwvCNdBMFXAqPnx5sH3AlDiWaVGmLwl/iFp1o3NVZ4Y=
+Received: from SN6PR12MB2639.namprd12.prod.outlook.com (52.135.103.16) by
+ SN6PR12MB2669.namprd12.prod.outlook.com (52.135.103.22) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1730.18; Sat, 23 Mar 2019 17:22:14 +0000
+Received: from SN6PR12MB2639.namprd12.prod.outlook.com
+ ([fe80::d49d:a1ee:9bcf:20e2]) by SN6PR12MB2639.namprd12.prod.outlook.com
+ ([fe80::d49d:a1ee:9bcf:20e2%5]) with mapi id 15.20.1730.013; Sat, 23 Mar 2019
+ 17:22:14 +0000
+From:   "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
+To:     Borislav Petkov <bp@alien8.de>
+CC:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v3 3/6] EDAC/amd64: Support more than two Unified Memory
+ Controllers
+Thread-Topic: [PATCH v3 3/6] EDAC/amd64: Support more than two Unified Memory
+ Controllers
+Thread-Index: AQHUz3tUScjw79nRdk2YLwwHsenigaYZRVSAgABVYfA=
+Date:   Sat, 23 Mar 2019 17:22:14 +0000
+Message-ID: <SN6PR12MB2639EFF2DFF030F442075013F85C0@SN6PR12MB2639.namprd12.prod.outlook.com>
+References: <20190228153558.127292-1-Yazen.Ghannam@amd.com>
+ <20190228153558.127292-3-Yazen.Ghannam@amd.com>
+ <20190323121546.GA17541@zn.tnic>
+In-Reply-To: <20190323121546.GA17541@zn.tnic>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Yazen.Ghannam@amd.com; 
+x-originating-ip: [2601:3c2:8280:2327:e099:d447:2979:dd3f]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a28f3516-c012-47ca-0e2e-08d6afb417dc
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600127)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:SN6PR12MB2669;
+x-ms-traffictypediagnostic: SN6PR12MB2669:
+x-microsoft-antispam-prvs: <SN6PR12MB2669FA53D5DC856B50FD2959F85C0@SN6PR12MB2669.namprd12.prod.outlook.com>
+x-forefront-prvs: 0985DA2459
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(396003)(376002)(346002)(136003)(366004)(189003)(199004)(13464003)(2906002)(81156014)(8676002)(6916009)(229853002)(476003)(81166006)(14444005)(486006)(11346002)(6116002)(508600001)(186003)(97736004)(9686003)(53936002)(105586002)(446003)(33656002)(6246003)(8936002)(4326008)(6436002)(106356001)(99286004)(46003)(68736007)(6506007)(76176011)(53546011)(55016002)(25786009)(7696005)(54906003)(52536014)(14454004)(316002)(7736002)(86362001)(72206003)(71190400001)(256004)(5660300002)(71200400001)(102836004)(74316002)(305945005);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2669;H:SN6PR12MB2639.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: eH0Zp3eqeT4UmlYgZADkNoPNmtTMxx7gGYmBiNVYJROHDHitS6hFzhQQSUNvCoItcHQnYDMEX9JLBaqgg1bvErnRN2lNrHzyaYsWKSYVB7ANLoxhw6RKaI8f3F+fDOSH0YMHuHzE3+q8rDziWKRrS4k+kiXKTGJQTKfRBTBq/SX+Xj7+NrO3TO9ACj8bZFQXlHm9+rULyiOFc1+9fMVR0uwKmVIHHpGI9mJyVSlHm/jXllwuYdABObeDuMccVvDbaNplo7Nodfgnz+scd+V2EvuJpOJVMxTz+XpIiiJCshNNOU0Q35I3WGLQiwbqMEO1LaX7B5wR0HD65BopOyMx3axt/U2J/KZNcfhC6qH4WjSAFWgvgir3SqHqLnQjCvNu3Hh3T+SyHst200ktDMEItcWDgJC9LLEfnUm9zJuPrgo=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <1553316275-21985-1-git-send-email-yang.shi@linux.alibaba.com> <1553316275-21985-2-git-send-email-yang.shi@linux.alibaba.com>
-In-Reply-To: <1553316275-21985-2-git-send-email-yang.shi@linux.alibaba.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Sat, 23 Mar 2019 10:21:30 -0700
-Message-ID: <CAPcyv4g5RoHhXhkKQaYkqYLN1y3KavbGeM1zVus-3fY5Q+JdxA@mail.gmail.com>
-Subject: Re: [PATCH 01/10] mm: control memory placement by nodemask for two
- tier main memory
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     Michal Hocko <mhocko@suse.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Rik van Riel <riel@surriel.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Fengguang Wu <fengguang.wu@intel.com>,
-        "Du, Fan" <fan.du@intel.com>, "Huang, Ying" <ying.huang@intel.com>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a28f3516-c012-47ca-0e2e-08d6afb417dc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Mar 2019 17:22:14.7074
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2669
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 22, 2019 at 9:45 PM Yang Shi <yang.shi@linux.alibaba.com> wrote:
->
-> When running applications on the machine with NVDIMM as NUMA node, the
-> memory allocation may end up on NVDIMM node.  This may result in silent
-> performance degradation and regression due to the difference of hardware
-> property.
->
-> DRAM first should be obeyed to prevent from surprising regression.  Any
-> non-DRAM nodes should be excluded from default allocation.  Use nodemask
-> to control the memory placement.  Introduce def_alloc_nodemask which has
-> DRAM nodes set only.  Any non-DRAM allocation should be specified by
-> NUMA policy explicitly.
->
-> In the future we may be able to extract the memory charasteristics from
-> HMAT or other source to build up the default allocation nodemask.
-> However, just distinguish DRAM and PMEM (non-DRAM) nodes by SRAT flag
-> for the time being.
->
-> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
-> ---
->  arch/x86/mm/numa.c     |  1 +
->  drivers/acpi/numa.c    |  8 ++++++++
->  include/linux/mmzone.h |  3 +++
->  mm/page_alloc.c        | 18 ++++++++++++++++--
->  4 files changed, 28 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
-> index dfb6c4d..d9e0ca4 100644
-> --- a/arch/x86/mm/numa.c
-> +++ b/arch/x86/mm/numa.c
-> @@ -626,6 +626,7 @@ static int __init numa_init(int (*init_func)(void))
->         nodes_clear(numa_nodes_parsed);
->         nodes_clear(node_possible_map);
->         nodes_clear(node_online_map);
-> +       nodes_clear(def_alloc_nodemask);
->         memset(&numa_meminfo, 0, sizeof(numa_meminfo));
->         WARN_ON(memblock_set_node(0, ULLONG_MAX, &memblock.memory,
->                                   MAX_NUMNODES));
-> diff --git a/drivers/acpi/numa.c b/drivers/acpi/numa.c
-> index 867f6e3..79dfedf 100644
-> --- a/drivers/acpi/numa.c
-> +++ b/drivers/acpi/numa.c
-> @@ -296,6 +296,14 @@ void __init acpi_numa_slit_init(struct acpi_table_slit *slit)
->                 goto out_err_bad_srat;
->         }
->
-> +       /*
-> +        * Non volatile memory is excluded from zonelist by default.
-> +        * Only regular DRAM nodes are set in default allocation node
-> +        * mask.
-> +        */
-> +       if (!(ma->flags & ACPI_SRAT_MEM_NON_VOLATILE))
-> +               node_set(node, def_alloc_nodemask);
-
-Hmm, no, I don't think we should do this. Especially considering
-current generation NVDIMMs are energy backed DRAM there is no
-performance difference that should be assumed by the non-volatile
-flag.
-
-Why isn't default SLIT distance sufficient for ensuring a DRAM-first
-default policy?
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBsaW51eC1lZGFjLW93bmVyQHZn
+ZXIua2VybmVsLm9yZyA8bGludXgtZWRhYy1vd25lckB2Z2VyLmtlcm5lbC5vcmc+IE9uIEJlaGFs
+ZiBPZiBCb3Jpc2xhdiBQZXRrb3YNCj4gU2VudDogU2F0dXJkYXksIE1hcmNoIDIzLCAyMDE5IDc6
+MTYgQU0NCj4gVG86IEdoYW5uYW0sIFlhemVuIDxZYXplbi5HaGFubmFtQGFtZC5jb20+DQo+IENj
+OiBsaW51eC1lZGFjQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9y
+Zw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYzIDMvNl0gRURBQy9hbWQ2NDogU3VwcG9ydCBtb3Jl
+IHRoYW4gdHdvIFVuaWZpZWQgTWVtb3J5IENvbnRyb2xsZXJzDQo+IA0KPiBPbiBUaHUsIEZlYiAy
+OCwgMjAxOSBhdCAwMzozNjoxMFBNICswMDAwLCBHaGFubmFtLCBZYXplbiB3cm90ZToNCj4gPiBk
+aWZmIC0tZ2l0IGEvZHJpdmVycy9lZGFjL2FtZDY0X2VkYWMuaCBiL2RyaXZlcnMvZWRhYy9hbWQ2
+NF9lZGFjLmgNCj4gPiBpbmRleCBkZThkYmIwYjQyYjUuLjQwZTYzY2VhMmQ4MSAxMDA2NDQNCj4g
+PiAtLS0gYS9kcml2ZXJzL2VkYWMvYW1kNjRfZWRhYy5oDQo+ID4gKysrIGIvZHJpdmVycy9lZGFj
+L2FtZDY0X2VkYWMuaA0KPiA+IEBAIC0yNzQsNyArMjc0LDExIEBADQo+ID4NCj4gPiAgI2RlZmlu
+ZSBVTUNfU0RQX0lOSVQJCQlCSVQoMzEpDQo+ID4NCj4gPiAtI2RlZmluZSBOVU1fVU1DUwkJCTIN
+Cj4gPiArLyoNCj4gPiArICogTnVtYmVyIG9mIFVuaWZpZWQgTWVtb3J5IENvbnRyb2xsZXJzDQo+
+ID4gKyAqIFNldCBkdXJpbmcgZHJpdmVyIGluaXQgYmFzZWQgb24gZmFtaWx5L21vZGVsLg0KPiA+
+ICsgKi8NCj4gPiArc3RhdGljIHU4IG51bV91bWNzOw0KPiANCj4gUGxlYXNlIGRvbid0IGRvIHNp
+bGx5IHRoaW5ncyBsaWtlIHRoYXQ6DQo+IA0KPiBJbiBmaWxlIGluY2x1ZGVkIGZyb20gZHJpdmVy
+cy9lZGFjL2FtZDY0X2VkYWNfaW5qLmM6MjowOg0KPiBkcml2ZXJzL2VkYWMvYW1kNjRfZWRhYy5o
+OjI3OToxMTogd2FybmluZzog4oCYbnVtX3VtY3PigJkgZGVmaW5lZCBidXQgbm90IHVzZWQgWy1X
+dW51c2VkLXZhcmlhYmxlXQ0KPiAgc3RhdGljIHU4IG51bV91bWNzOw0KPiAgICAgICAgICAgIF5+
+fn5+fn5+DQo+IA0KPiBJIGZpeGVkIGl0IHVwIG5vdy4NCj4gDQoNClRoYW5rcy4gU29ycnkgSSBt
+aXNzZWQgdGhhdC4NCg0KLVlhemVuDQo=
