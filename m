@@ -2,283 +2,124 @@ Return-Path: <SRS0=q9dy=R2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F6B7C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 15:04:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 980AEC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 15:04:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6B78218A2
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 15:04:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aaZz3GwA"
+	by mail.kernel.org (Postfix) with ESMTP id 6FDCA218A2
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 15:04:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727668AbfCWPDl (ORCPT
+        id S1727679AbfCWPE1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Mar 2019 11:03:41 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:40105 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726118AbfCWPDk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Mar 2019 11:03:40 -0400
-Received: by mail-pg1-f194.google.com with SMTP id u9so3471115pgo.7;
-        Sat, 23 Mar 2019 08:03:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=y74O7cJJSSWu4auGgupzwHkycq7o8Xx2T8QJ9kIH7QI=;
-        b=aaZz3GwAWSHKHlYYWf/Eieb5ejXTd92NoKMXu1o/mWEYMyVN60+f1nXPdVXMk4+kYg
-         34iQXy3CvyVeDpOYRFPIG8AEC6ZoAPLUHGj55F1EKZWCqe0F/vaKNb4+jkP0tVD7vhy3
-         Do9DdjZaXga4FMREphYmESydkoVUKOsS6Lo5sWV2QK5W4MciaBqHi26V3TgUOPFsUOCN
-         Pnj+aBuC8+MhLsXiwfSAA+5G18+fmh8ThtJtms9sBc8Dx2KJMQfAuw8dwRQqxRW2EJGf
-         Tp0jYB/emvqNXz/OgX97NJy9eN8BHMPvBAGWT39R2ru4az0Y0zVMVPuoX5rQk0gz/kMW
-         GTNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=y74O7cJJSSWu4auGgupzwHkycq7o8Xx2T8QJ9kIH7QI=;
-        b=gpsK/FfZkdU9HI6Q/gVlNYxbcE3UMEX+5W+5bldvi8SqhP0TK1pa43ayrciO6RS5MD
-         OQ9adyyRTQWW5CGGsU7rhXqZ51LHgPl3ITxFpzh+D/wEuM+vkPp8nasoaECNzUdUyG5y
-         tw7BcVq7gk1NRvIFPsT1mb2inHbwO579kmdOL1rI5PjdxpwWiG0UHvDaRXh92t+B8Nn8
-         J1GjQK1hBmpjRnmqOsnge5bpgwpmSxbUF6Ie3i+O0/FvaiU+thR69HOK+Hp4KV8QKCFA
-         r9RVgInl4SQCLcVRkVLQOP1Ae/W321sEopXyiPup1ntP81igEjs0RJ7Q+fO/ZqubY74j
-         vDBg==
-X-Gm-Message-State: APjAAAWjVjxZ8nq8HsYnsQuUzrujyctN0JUfRf6w8vILhBF2DBkX8SOy
-        hT6dARhFFmeaI8qG5ar1rhKdAcE8
-X-Google-Smtp-Source: APXvYqwqqm9TvYC8AsBFQgw23ioOPpygOj8m2i9rj/O6uiDKjzIIOFImQX57iUzyhy+tRMIKu6n4sA==
-X-Received: by 2002:a65:6546:: with SMTP id a6mr14422644pgw.296.1553353418873;
-        Sat, 23 Mar 2019 08:03:38 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id f125sm19788056pfc.91.2019.03.23.08.03.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 23 Mar 2019 08:03:37 -0700 (PDT)
-Subject: Re: [PATCH V3 3/3] hwmon: pwm-fan: Add RPM support via external
- interrupt
-To:     Stefan Wahren <stefan.wahren@i2se.com>,
-        Kamil Debski <kamil@wypas.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>
-Cc:     linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1553243043-19486-1-git-send-email-stefan.wahren@i2se.com>
- <1553243043-19486-4-git-send-email-stefan.wahren@i2se.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <53485197-01e3-1f84-df93-a01164e5cded@roeck-us.net>
-Date:   Sat, 23 Mar 2019 08:03:36 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Sat, 23 Mar 2019 11:04:27 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56674 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726118AbfCWPE1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 Mar 2019 11:04:27 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id DD0E5F74B8;
+        Sat, 23 Mar 2019 15:04:26 +0000 (UTC)
+Received: from krava (ovpn-204-22.brq.redhat.com [10.40.204.22])
+        by smtp.corp.redhat.com (Postfix) with SMTP id D3B57601AE;
+        Sat, 23 Mar 2019 15:04:23 +0000 (UTC)
+Date:   Sat, 23 Mar 2019 16:04:22 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>,
+        Nageswara R Sastry <nasastry@in.ibm.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Subject: Re: [PATCH] perf tools: Move precise_ip detection into
+ perf_evsel__open
+Message-ID: <20190323150422.GA22122@krava>
+References: <20190305161319.GC17272@tassilo.jf.intel.com>
+ <20190305162854.GB4533@krava>
+ <20190305164017.GD17272@tassilo.jf.intel.com>
+ <20190307153500.GC29474@krava>
+ <20190307165123.GE7535@tassilo.jf.intel.com>
+ <20190314140124.GE4406@krava>
+ <20190314154911.GE24002@tassilo.jf.intel.com>
+ <20190315121546.GB1400@krava>
+ <20190315143504.GA24482@kernel.org>
+ <20190315145225.GC5200@krava>
 MIME-Version: 1.0
-In-Reply-To: <1553243043-19486-4-git-send-email-stefan.wahren@i2se.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190315145225.GC5200@krava>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Sat, 23 Mar 2019 15:04:27 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/22/19 1:24 AM, Stefan Wahren wrote:
-> This adds RPM support to the pwm-fan driver in order to use with
-> fancontrol/pwmconfig. This feature is intended for fans with a tachometer
-> output signal, which generate a defined number of pulses per revolution.
+On Fri, Mar 15, 2019 at 03:52:25PM +0100, Jiri Olsa wrote:
+> On Fri, Mar 15, 2019 at 11:35:04AM -0300, Arnaldo Carvalho de Melo wrote:
 > 
-> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
-> ---
->   drivers/hwmon/pwm-fan.c | 100 +++++++++++++++++++++++++++++++++++++++++++++++-
->   1 file changed, 99 insertions(+), 1 deletion(-)
+> SNIP
 > 
-> diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
-> index 167221c..c8fb6a3 100644
-> --- a/drivers/hwmon/pwm-fan.c
-> +++ b/drivers/hwmon/pwm-fan.c
-> @@ -18,6 +18,7 @@
->   
->   #include <linux/hwmon.h>
->   #include <linux/hwmon-sysfs.h>
-> +#include <linux/interrupt.h>
->   #include <linux/module.h>
->   #include <linux/mutex.h>
->   #include <linux/of.h>
-> @@ -26,6 +27,7 @@
->   #include <linux/regulator/consumer.h>
->   #include <linux/sysfs.h>
->   #include <linux/thermal.h>
-> +#include <linux/timer.h>
->   
->   #define MAX_PWM 255
->   
-> @@ -33,6 +35,14 @@ struct pwm_fan_ctx {
->   	struct mutex lock;
->   	struct pwm_device *pwm;
->   	struct regulator *reg_en;
-> +
-> +	int irq;
-> +	atomic_t pulses;
-> +	unsigned int rpm;
-> +	u32 pulses_per_revolution;
-> +	ktime_t sample_start;
-> +	struct timer_list rpm_timer;
-> +
->   	unsigned int pwm_value;
->   	unsigned int pwm_fan_state;
->   	unsigned int pwm_fan_max_state;
-> @@ -40,6 +50,32 @@ struct pwm_fan_ctx {
->   	struct thermal_cooling_device *cdev;
->   };
->   
-> +/* This handler assumes self resetting edge triggered interrupt. */
-> +static irqreturn_t pulse_handler(int irq, void *dev_id)
-> +{
-> +	struct pwm_fan_ctx *ctx = dev_id;
-> +
-> +	/* Avoid possible overflow */
-> +	if (atomic_read(&ctx->pulses) < 100000)
-> +		atomic_inc(&ctx->pulses);
-> +
-
-100000 * 60 * 1000 = 6,000,000,000, which is already above 32 bit,
-so you still get the overflow.
-
-Any limit would have to be below (0xffffffff / (60 * sample_ms))
-for the maximum expected value of sample_ms.
-
-You could select a working limit, such as 32768 (that is just as arbitrary
-as 100,000, but at least it works up to sample_ms above 2,000), or check
-for overflow when calculating rpm.
-
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static void sample_timer(struct timer_list *t)
-> +{
-> +	struct pwm_fan_ctx *ctx = from_timer(ctx, t, rpm_timer);
-> +	int pulses, sample_ms;
-> +
-> +	pulses = atomic_read(&ctx->pulses);
-> +	atomic_sub(pulses, &ctx->pulses);
-> +	sample_ms = ktime_ms_delta(ktime_get(), ctx->sample_start);
-> +	ctx->rpm = pulses * 60 * sample_ms / 1000 / ctx->pulses_per_revolution;
-> +
-> +	ctx->sample_start = ktime_get();
-> +	mod_timer(&ctx->rpm_timer, jiffies + HZ);
-> +}
-> +
->   static int  __set_pwm(struct pwm_fan_ctx *ctx, unsigned long pwm)
->   {
->   	unsigned long period;
-> @@ -100,15 +136,49 @@ static ssize_t pwm_show(struct device *dev, struct device_attribute *attr,
->   	return sprintf(buf, "%u\n", ctx->pwm_value);
->   }
->   
-> +static ssize_t rpm_show(struct device *dev,
-> +			struct device_attribute *attr, char *buf)
-> +{
-> +	struct pwm_fan_ctx *ctx = dev_get_drvdata(dev);
-> +
-> +	return sprintf(buf, "%u\n", ctx->rpm);
-> +}
->   
->   static SENSOR_DEVICE_ATTR_RW(pwm1, pwm, 0);
-> +static SENSOR_DEVICE_ATTR_RO(fan1_input, rpm, 0);
->   
->   static struct attribute *pwm_fan_attrs[] = {
->   	&sensor_dev_attr_pwm1.dev_attr.attr,
-> +	&sensor_dev_attr_fan1_input.dev_attr.attr,
->   	NULL,
->   };
->   
-> -ATTRIBUTE_GROUPS(pwm_fan);
-> +static umode_t pwm_fan_attrs_visible(struct kobject *kobj, struct attribute *a,
-> +				     int n)
-> +{
-> +	struct device *dev = container_of(kobj, struct device, kobj);
-> +	struct pwm_fan_ctx *ctx = dev_get_drvdata(dev);
-> +	struct device_attribute *devattr;
-> +
-> +	/* Hide fan_input in case no interrupt is available  */
-> +	devattr = container_of(a, struct device_attribute, attr);
-> +	if (devattr == &sensor_dev_attr_fan1_input.dev_attr) {
-> +		if (ctx->irq < 0)
-> +			return 0;
-> +	}
-> +
-> +	return a->mode;
-> +}
-> +
-> +static const struct attribute_group pwm_fan_group = {
-> +	.attrs = pwm_fan_attrs,
-> +	.is_visible = pwm_fan_attrs_visible,
-> +};
-> +
-> +static const struct attribute_group *pwm_fan_groups[] = {
-> +	&pwm_fan_group,
-> +	NULL,
-> +};
->   
->   /* thermal cooling device callbacks */
->   static int pwm_fan_get_max_state(struct thermal_cooling_device *cdev,
-> @@ -261,6 +331,32 @@ static int pwm_fan_probe(struct platform_device *pdev)
->   		goto err_reg_disable;
->   	}
->   
-> +	timer_setup(&ctx->rpm_timer, sample_timer, 0);
-> +
-> +	if (of_property_read_u32(pdev->dev.of_node, "pulses-per-revolution",
-> +				 &ctx->pulses_per_revolution)) {
-> +		ctx->pulses_per_revolution = 2;
-> +	}
-> +
-> +	if (!ctx->pulses_per_revolution) {
-> +		dev_err(&pdev->dev, "pulses-per-revolution can't be zero.\n");
-> +		ret = -EINVAL;
-> +		goto err_pwm_disable;
-> +	}
-> +
-> +	atomic_set(&ctx->pulses, 0);
-
-Already initialized with 0.
-
-> +	ctx->irq = platform_get_irq(pdev, 0);
-> +	if (ctx->irq >= 0) {
-
-I have seen other patches recently, changing this check to > 0.
-I never know what a valid irq is, but it may be prudent to change this to > 0
-(and the check in is_visible to <= 0).
-
-Either case, the function can return -EPROBE_DEFER, which should be handled
-and not be ignored.
-
-> +		ret = devm_request_irq(&pdev->dev, ctx->irq, pulse_handler, 0,
-> +				       pdev->name, ctx);
-> +		if (ret) {
-> +			dev_err(&pdev->dev, "Can't get interrupt working.\n");
-> +			goto err_pwm_disable;
-> +		}
-> +		ctx->sample_start = ktime_get();
-> +		mod_timer(&ctx->rpm_timer, jiffies + HZ);
-> +	}
-> +
->   	hwmon = devm_hwmon_device_register_with_groups(&pdev->dev, "pwmfan",
->   						       ctx, pwm_fan_groups);
->   	if (IS_ERR(hwmon)) {
-
-del_timer_sync() here ?
-
-> @@ -306,6 +402,8 @@ static int pwm_fan_remove(struct platform_device *pdev)
->   	struct pwm_fan_ctx *ctx = platform_get_drvdata(pdev);
->   
->   	thermal_cooling_device_unregister(ctx->cdev);
-> +	del_timer_sync(&ctx->rpm_timer);
-> +
->   	if (ctx->pwm_value)
->   		pwm_disable(ctx->pwm);
->   
+> > > +static void display_attr(struct perf_event_attr *attr)
+> > > +{
+> > > +	if (verbose >= 2) {
+> > > +		fprintf(stderr, "%.60s\n", graph_dotted_line);
+> > > +		fprintf(stderr, "perf_event_attr:\n");
+> > > +		perf_event_attr__fprintf(stderr, attr, __open_attr__fprintf, NULL);
+> > > +		fprintf(stderr, "%.60s\n", graph_dotted_line);
+> > > +	}
+> > > +}
+> > > +
+> > > +static int perf_event_open(struct perf_evsel *evsel,
+> > > +			   pid_t pid, int cpu, int group_fd,
+> > > +			   unsigned long flags)
+> > 
+> > 
+> > The patch is ok, but I think the naming of this function is too generic,
+> > so I'm renaming it to:
+> > 
+> > static int perf_evsel__open_adjust_precise_ip(struct perf_evsel *evsel,
+> > 					      pid_t pid, int cpu, int group_fd,
+> > 					      unsigned long flags)
+> > 
+> > Ok?
 > 
+> ok
+> 
+> > 
+> > The perf_evsel__open() code is already complex with that fallback
+> > mechanism, this is just one more way of fallbacking when asking the
+> > kernel for something that may fail.
+> > 
+> > In fact what happens if the precise_ip that is being asked _is_
+> > supported but sys_perf_event_open() fails because some other
+> > perf_event_attr attribute that is set is not supported? 
+> 
+> it's outside the scope of standard feature fallback code,
+> so we will try it for any possible fallback variant, so:
+> 
+> we will try all possible precise_ip (3,2,1,0) and they will
+> all fail because of the unsupported attribute - so we will
+> restore the precise_ip back and continue in standard fallback
+> code that will eventualy switch that attribute off
+> 
+> > 
+> > I see, it gets it back restored to what the user asked so that the
+> > standard fallback is tried, ok, I'll apply with just the rename for this
+> > function,
+> 
+> thanks,
+> jirka
 
+ping, there's rebased version in my perf/fixes branch
+
+jirka
