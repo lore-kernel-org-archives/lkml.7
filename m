@@ -2,211 +2,121 @@ Return-Path: <SRS0=q9dy=R2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23F13C4360F
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 06:59:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83045C4360F
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 07:16:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5FCC20850
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 06:59:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A93821902
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 07:16:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jn7QZ8S6"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tuYtwl0s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726915AbfCWG7Y (ORCPT
+        id S1726891AbfCWHQt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Mar 2019 02:59:24 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:34426 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726106AbfCWG7Y (ORCPT
+        Sat, 23 Mar 2019 03:16:49 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:53639 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726106AbfCWHQt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Mar 2019 02:59:24 -0400
-Received: by mail-ed1-f67.google.com with SMTP id x14so829861eds.1;
-        Fri, 22 Mar 2019 23:59:22 -0700 (PDT)
+        Sat, 23 Mar 2019 03:16:49 -0400
+Received: by mail-it1-f193.google.com with SMTP id w85so6870189itc.3
+        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2019 00:16:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=xPGocWTVd/nSz9pCODUG9wpnXOGLye4QDFZK77+yf9g=;
-        b=jn7QZ8S6kf8fGyNUCNIil+yFwiyTHK+iOG+glQ7VYcbFnYgUljpT/kO6fEvvS/HNFB
-         yH0L0gNuLDYok8O3qEbXGiBtLLg160UiyxY9ZcqvhysiCGae/y735V5qYqM+G8zkEjqe
-         1UHsi8CHQ9BI93SMmXqaJNxAaZF+H+z8iZgr3ZJJ8dvjZlhYURlaJYfk3hGJqtMzLFXE
-         FbLrnt7dzRblBwQcfUzbmlrdf5a6wo/vOVGSNKutdyjpsZrt8jYH0YD4F1Bgzpt+Ju19
-         GIRg4chuoYL17Dalcco/v7iqnPmLujraGkeLIvezDn1N6MqEAJl6uvSJTCV2laWJV0M/
-         6qYg==
+        bh=TkFN6mZO3jzTkDHV/Hmyrf49PT5DaBxkKPm0fJ0JB7Y=;
+        b=tuYtwl0sHaOtGRyid88R8OtvWqz5AG2NwDMia7jT+e90eHXqDasnpyMefZi2K/GvPT
+         U3on/kdx21QSFCm9IPSlvNpcSjtK8tx16vJ9ETOe9kGwfzM8dgj4KEa5QGWzR6fDe2Hn
+         CTCLi3dqKZjeM2+LkTvCYoYxuGAAXc/J5EaupsrUj8NjZyS5WGNtQbhDsXuXLWHXyKMR
+         TpkNS+GdHeKvgfzrJPyIV7S6gWcvbHtf1s3SRVrAEuAHBwWPLTa2EK33+iLp4pFIOIT3
+         pgmJC3U1wTUXK77iRBp0EH5YVV721kW33C3zP0zreR/SgUTgd6QGmyS5pS0VGdQ7P8aj
+         iEmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=xPGocWTVd/nSz9pCODUG9wpnXOGLye4QDFZK77+yf9g=;
-        b=LkiQWL9H217A2pMc1MZHxlVwXY10HCaEE2qlQGsCTNOdeIDGKp2MfdPsFEGNdEBSGL
-         KZM42M2NLy8WpgwK+tqhLkCWZZs1uNtnT/2WPtOwtL7NYu5uHiyBYvS2HJN2FJN3GpQH
-         kxkokhEK9YHULxNjhO9bhHL5xtUwq0VXVoVOwcJY7K6Sgnbc/TNr79pZ9kfiK3zOJauL
-         ws08gxIxD0zEAEpobadd1FQT2nJr2lY9HQrmN1Q7FpVAP5ZxBZIcAG11dBpyPp9+Awt+
-         t2mCiw1bD3hUOeFyly7nET3Ud1TX1wOKywHLri2VaD1PVBpdAmnQw/i+GRpRaERmpN7O
-         N7Mw==
-X-Gm-Message-State: APjAAAX5EgNF3J9oTEqrdZn3GHbZNlTeVMDnXIIcdGDNthFt+fY7gF9k
-        3pq324MkdtB6fO8txeSLxzY+X/lcj3J3oBhC4wF4cg==
-X-Google-Smtp-Source: APXvYqziWWz4RC37KSnnH3pcbg7kZZyBbwUDpgP+VE4ALMEVV5Pqd+atueoqXBmfon4tBJEVV8Eplztil+Zs0xp6Cs0=
-X-Received: by 2002:a50:aa2e:: with SMTP id o43mr8936733edc.67.1553324361517;
- Fri, 22 Mar 2019 23:59:21 -0700 (PDT)
+        bh=TkFN6mZO3jzTkDHV/Hmyrf49PT5DaBxkKPm0fJ0JB7Y=;
+        b=K1r/myxxqbnuDfR7HdmZaSGgM2+xgRSfXaw7wBy4btlELsZAHxZYWESeZRIp72MLi5
+         i4rhfJI/H8qdgf04TXwVTv08lCudPUPFkmCzqD1/nnCJMwDsOjTFJisxB6OHbDGwOvIi
+         PIQOG8CVp0mvy+R1uj/z61JgsoQCX0srBb+9lOOoJfK/pNQq9lDYAyB5aqIz/RsvdBx6
+         v6exH5/GN7P54VWsOq0+HaJDxFERgqOnZH4Sg4NlVr5x++Lf0kDwaob0R8Uw9Kw2+uJm
+         dORJ7HvpZyv0TEee6EJ2bDRFuyl7Uy+4BNDcu4ueyV1ObYgdADfeKD4dw0gvOQJzywkZ
+         2eRw==
+X-Gm-Message-State: APjAAAWueGYQ1vmPVBDfrZGMwptL9HAbiNGi4sq4xZUGgNg8jAFEPuJ7
+        Y4E3589dc9RdLD9oBeOqHIBHNCVL6rXuPEJhfiKF6A==
+X-Google-Smtp-Source: APXvYqwu0jZl1WMHUfwjCc8eNXQNMtRUY6cTb9zGogIf9gHJFZeSly1uN/MHdmpZevTU/Dnp0Zw/aw7coEIvqtnVR94=
+X-Received: by 2002:a24:3281:: with SMTP id j123mr3898152ita.166.1553325407533;
+ Sat, 23 Mar 2019 00:16:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <1553269010-15591-1-git-send-email-abel.vesa@nxp.com> <1553269010-15591-6-git-send-email-abel.vesa@nxp.com>
-In-Reply-To: <1553269010-15591-6-git-send-email-abel.vesa@nxp.com>
-From:   Daniel Baluta <daniel.baluta@gmail.com>
-Date:   Sat, 23 Mar 2019 08:59:09 +0200
-Message-ID: <CAEnQRZAEO-mnfeGtDX19Trjxc94FvPvvyfcVia=W5Zan+msVKQ@mail.gmail.com>
-Subject: Re: [RFC 05/19] clk: imx: clk-busy: Switch to clk_hw based API
-To:     Abel Vesa <abel.vesa@nxp.com>
-Cc:     Stephen Boyd <sboyd@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
+References: <000000000000cd1e2205785951c2@google.com> <00000000000088ea3e0584b5872d@google.com>
+In-Reply-To: <00000000000088ea3e0584b5872d@google.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Sat, 23 Mar 2019 08:16:36 +0100
+Message-ID: <CACT4Y+bBPvfnU4T=4ojw67FP0GBC49L2kKV+HQYxsV-DwT2b7w@mail.gmail.com>
+Subject: Re: possible deadlock in __generic_file_fsync
+To:     syzbot <syzbot+5cd33f0e6abe2bb3e397@syzkaller.appspotmail.com>
+Cc:     Andreas Dilger <adilger.kernel@dilger.ca>,
+        linux-ext4@vger.kernel.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Theodore Ts'o" <tytso@mit.edu>, Al Viro <viro@zeniv.linux.org.uk>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 22, 2019 at 5:39 PM Abel Vesa <abel.vesa@nxp.com> wrote:
+On Fri, Mar 22, 2019 at 10:28 PM syzbot
+<syzbot+5cd33f0e6abe2bb3e397@syzkaller.appspotmail.com> wrote:
 >
-> Switch all the clk_busy clock registering functions
-> to clk_hw based API.
+> syzbot has bisected this bug to:
 >
+> commit 9022ada8ab6f1f1a932a3c93815061042e6548a5
+> Author: Linus Torvalds <torvalds@linux-foundation.org>
+> Date:   Fri Aug 24 20:16:36 2018 +0000
+>
+>      Merge branch 'for-4.19' of
+> git://git.kernel.org/pub/scm/linux/kernel/git/tj/wq
+>
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15330437200000
+> start commit:   270b77a0 Merge tag 'drm-fixes-2018-10-20-1' of git://anong..
+> git tree:       upstream
+> final crash:    https://syzkaller.appspot.com/x/report.txt?x=17330437200000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=13330437200000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=b3f55cb3dfcc6c33
+> dashboard link: https://syzkaller.appspot.com/bug?extid=5cd33f0e6abe2bb3e397
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1436fc45400000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11058e2d400000
+>
+> Reported-by: syzbot+5cd33f0e6abe2bb3e397@syzkaller.appspotmail.com
+> Fixes: 9022ada8ab6f ("Merge branch 'for-4.19' of
+> git://git.kernel.org/pub/scm/linux/kernel/git/tj/wq")
+>
+> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
 
-Hi Abel,
 
-The commit message should explain why such a change is needed.
 
-thanks,
-Daniel.
-> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
-> ---
->  drivers/clk/imx/clk-busy.c | 30 ++++++++++++++++++++----------
->  drivers/clk/imx/clk.h      | 11 +++++++++--
->  2 files changed, 29 insertions(+), 12 deletions(-)
->
-> diff --git a/drivers/clk/imx/clk-busy.c b/drivers/clk/imx/clk-busy.c
-> index e695622..51f75500 100644
-> --- a/drivers/clk/imx/clk-busy.c
-> +++ b/drivers/clk/imx/clk-busy.c
-> @@ -78,13 +78,14 @@ static const struct clk_ops clk_busy_divider_ops = {
->         .set_rate = clk_busy_divider_set_rate,
->  };
->
-> -struct clk *imx_clk_busy_divider(const char *name, const char *parent_name,
-> +struct clk_hw *imx_clk_hw_busy_divider(const char *name, const char *parent_name,
->                                  void __iomem *reg, u8 shift, u8 width,
->                                  void __iomem *busy_reg, u8 busy_shift)
->  {
->         struct clk_busy_divider *busy;
-> -       struct clk *clk;
-> +       struct clk_hw *hw;
->         struct clk_init_data init;
-> +       int ret;
->
->         busy = kzalloc(sizeof(*busy), GFP_KERNEL);
->         if (!busy)
-> @@ -107,11 +108,15 @@ struct clk *imx_clk_busy_divider(const char *name, const char *parent_name,
->
->         busy->div.hw.init = &init;
->
-> -       clk = clk_register(NULL, &busy->div.hw);
-> -       if (IS_ERR(clk))
-> +       hw = &busy->div.hw;
-> +
-> +       ret = clk_hw_register(NULL, hw);
-> +       if (ret) {
->                 kfree(busy);
-> +               return ERR_PTR(ret);
-> +       }
->
-> -       return clk;
-> +       return hw;
->  }
->
->  struct clk_busy_mux {
-> @@ -152,13 +157,14 @@ static const struct clk_ops clk_busy_mux_ops = {
->         .set_parent = clk_busy_mux_set_parent,
->  };
->
-> -struct clk *imx_clk_busy_mux(const char *name, void __iomem *reg, u8 shift,
-> +struct clk_hw *imx_clk_hw_busy_mux(const char *name, void __iomem *reg, u8 shift,
->                              u8 width, void __iomem *busy_reg, u8 busy_shift,
->                              const char * const *parent_names, int num_parents)
->  {
->         struct clk_busy_mux *busy;
-> -       struct clk *clk;
-> +       struct clk_hw *hw;
->         struct clk_init_data init;
-> +       int ret;
->
->         busy = kzalloc(sizeof(*busy), GFP_KERNEL);
->         if (!busy)
-> @@ -181,9 +187,13 @@ struct clk *imx_clk_busy_mux(const char *name, void __iomem *reg, u8 shift,
->
->         busy->mux.hw.init = &init;
->
-> -       clk = clk_register(NULL, &busy->mux.hw);
-> -       if (IS_ERR(clk))
-> +       hw = &busy->mux.hw;
-> +
-> +       ret = clk_hw_register(NULL, hw);
-> +       if (ret) {
->                 kfree(busy);
-> +               return ERR_PTR(ret);
-> +       }
->
-> -       return clk;
-> +       return hw;
->  }
-> diff --git a/drivers/clk/imx/clk.h b/drivers/clk/imx/clk.h
-> index e78519c..69b2a13 100644
-> --- a/drivers/clk/imx/clk.h
-> +++ b/drivers/clk/imx/clk.h
-> @@ -10,6 +10,7 @@ extern spinlock_t imx_ccm_lock;
->  void imx_check_clocks(struct clk *clks[], unsigned int count);
->  void imx_check_clk_hws(struct clk_hw *clks[], unsigned int count);
->  void imx_register_uart_clocks(struct clk ** const clks[]);
-> +void imx_register_uart_clocks_hws(struct clk_hw ** const hws[]);
->
->  extern void imx_cscmr1_fixup(u32 *val);
->
-> @@ -48,6 +49,12 @@ struct imx_pll14xx_clk {
->         int flags;
->  };
->
-> +#define imx_clk_busy_divider(name, parent_name, reg, shift, width, busy_reg, busy_shift) \
-> +       imx_clk_hw_busy_divider(name, parent_name, reg, shift, width, busy_reg, busy_shift)->clk
-> +
-> +#define imx_clk_busy_mux(name, reg, shift, width, busy_reg, busy_shift, parent_names, num_parents) \
-> +       imx_clk_hw_busy_mux(name, reg, shift, width, busy_reg, busy_shift, parent_names, num_parents)->clk
-> +
->  struct clk *imx_clk_pll14xx(const char *name, const char *parent_name,
->                  void __iomem *base, const struct imx_pll14xx_clk *pll_clk);
->
-> @@ -109,11 +116,11 @@ struct clk *imx_clk_pfd(const char *name, const char *parent_name,
->  struct clk_hw *imx_clk_pfdv2(const char *name, const char *parent_name,
->                              void __iomem *reg, u8 idx);
->
-> -struct clk *imx_clk_busy_divider(const char *name, const char *parent_name,
-> +struct clk_hw *imx_clk_hw_busy_divider(const char *name, const char *parent_name,
->                                  void __iomem *reg, u8 shift, u8 width,
->                                  void __iomem *busy_reg, u8 busy_shift);
->
-> -struct clk *imx_clk_busy_mux(const char *name, void __iomem *reg, u8 shift,
-> +struct clk_hw *imx_clk_hw_busy_mux(const char *name, void __iomem *reg, u8 shift,
->                              u8 width, void __iomem *busy_reg, u8 busy_shift,
->                              const char * const *parent_names, int num_parents);
->
-> --
-> 2.7.4
->
+This is a lockdep-detected bug, but it is reproduced with very low probability:
+
+testing commit 270b77a0f30e7bc61a9081b86d74dbb62fa6a69d with gcc (GCC) 8.1.0
+run #0: crashed: possible deadlock in __generic_file_fsync
+run #1: OK
+run #2: OK
+run #3: OK
+run #4: OK
+run #5: OK
+run #6: OK
+run #7: OK
+run #8: OK
+run #9: OK
+
+I would expect that for lockdep it's only enough to trigger each path
+involved in the deadlock once. Why is it so hard to reproduce then? Is
+it something to improve in lockdep?
