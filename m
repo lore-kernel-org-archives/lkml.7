@@ -2,111 +2,104 @@ Return-Path: <SRS0=q9dy=R2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB3CEC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 08:18:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2205C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 08:26:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A21F5218E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 08:18:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 722A921900
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 08:26:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726543AbfCWISJ (ORCPT
+        id S1726448AbfCWI0o convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Mar 2019 04:18:09 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:55443 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726038AbfCWISJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Mar 2019 04:18:09 -0400
-Received: from [192.168.0.11] (127.19.86.79.rev.sfr.net [79.86.19.127])
-        (Authenticated sender: alex@ghiti.fr)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 9811C200009;
-        Sat, 23 Mar 2019 08:18:02 +0000 (UTC)
-Subject: Re: [PATCH 1/4] arm64, mm: Move generic mmap layout functions to mm
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
+        Sat, 23 Mar 2019 04:26:44 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:57429 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725909AbfCWI0n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 Mar 2019 04:26:43 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 44RDC462qgz9vCyN;
+        Sat, 23 Mar 2019 09:26:40 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id VNlVHoa45lz0; Sat, 23 Mar 2019 09:26:40 +0100 (CET)
+Received: from vm-hermes.si.c-s.fr (vm-hermes.si.c-s.fr [192.168.25.253])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 44RDC44wjLz9vCyM;
+        Sat, 23 Mar 2019 09:26:40 +0100 (CET)
+Received: by vm-hermes.si.c-s.fr (Postfix, from userid 33)
+        id 5157B437; Sat, 23 Mar 2019 09:26:40 +0100 (CET)
+Received: from arouen-653-1-146-8.w82-126.abo.wanadoo.fr
+ (arouen-653-1-146-8.w82-126.abo.wanadoo.fr [82.126.129.8]) by
+ messagerie.si.c-s.fr (Horde Framework) with HTTP; Sat, 23 Mar 2019 09:26:40
+ +0100
+Date:   Sat, 23 Mar 2019 09:26:40 +0100
+Message-ID: <20190323092640.Horde.2lm4u26aZox5ialxuIRcYw2@messagerie.si.c-s.fr>
+From:   LEROY Christophe <christophe.leroy@c-s.fr>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
-References: <20190322074225.22282-1-alex@ghiti.fr>
- <20190322074225.22282-2-alex@ghiti.fr> <20190322132127.GA18602@infradead.org>
-From:   Alex Ghiti <alex@ghiti.fr>
-Message-ID: <72751399-3170-059b-b572-b9b9986ca0fd@ghiti.fr>
-Date:   Sat, 23 Mar 2019 04:18:02 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-mips@vger.kernel.org,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Dave Hansen <dave@sr71.net>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH] compiler: allow all arches to enable
+ CONFIG_OPTIMIZE_INLINING
+References: <1553062828-27798-1-git-send-email-yamada.masahiro@socionext.com>
+ <CAK8P3a3BG_mxYxxCx4S_+ZKAer_+5FpmkzLk0VrACZekuD=2GQ@mail.gmail.com>
+ <CAK8P3a0GEYTbw5XCwzVeZe_-pGF=7e=1kXhH3U+fidnMZeP0CA@mail.gmail.com>
+In-Reply-To: <CAK8P3a0GEYTbw5XCwzVeZe_-pGF=7e=1kXhH3U+fidnMZeP0CA@mail.gmail.com>
+User-Agent: Internet Messaging Program (IMP) H5 (6.2.3)
+Content-Type: text/plain; charset=UTF-8; format=flowed; DelSp=Yes
 MIME-Version: 1.0
-In-Reply-To: <20190322132127.GA18602@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: sv-FI
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/22/19 9:21 AM, Christoph Hellwig wrote:
->> It then introduces a new define ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT
->> that can be defined by other architectures to benefit from those functions.
-> Can you make this a Kconfig option defined in arch/Kconfig or mm/Kconfig
-> and selected by the architectures?
+Arnd Bergmann <arnd@arndb.de> a écrit :
 
-
-Yes, I will do.
-
-
->> -#ifndef STACK_RND_MASK
->> -#define STACK_RND_MASK (0x7ff >> (PAGE_SHIFT - 12))	/* 8MB of VA */
->> -#endif
->> -
->> -static unsigned long randomize_stack_top(unsigned long stack_top)
->> -{
->> -	unsigned long random_variable = 0;
->> -
->> -	if (current->flags & PF_RANDOMIZE) {
->> -		random_variable = get_random_long();
->> -		random_variable &= STACK_RND_MASK;
->> -		random_variable <<= PAGE_SHIFT;
->> -	}
->> -#ifdef CONFIG_STACK_GROWSUP
->> -	return PAGE_ALIGN(stack_top) + random_variable;
->> -#else
->> -	return PAGE_ALIGN(stack_top) - random_variable;
->> -#endif
->> -}
->> -
-> Maybe the move of this function can be split into another prep patch,
-> as it is only very lightly related?
+> On Wed, Mar 20, 2019 at 10:41 AM Arnd Bergmann <arnd@arndb.de> wrote:
+>>
+>> I've added your patch to my randconfig test setup and will let you
+>> know if I see anything noticeable. I'm currently testing clang-arm32,
+>> clang-arm64 and gcc-x86.
 >
+> This is the only additional bug that has come up so far:
 >
+> `.exit.text' referenced in section `.alt.smp.init' of
+> drivers/char/ipmi/ipmi_msghandler.o: defined in discarded section
+> `exit.text' of drivers/char/ipmi/ipmi_msghandler.o
 
-Ok, that makes sense.
+Wouldn't it be useful to activate -Winline gcc warning to ease finding  
+out problematic usage of inline keyword ?
 
->> +#if defined(HAVE_ARCH_PICK_MMAP_LAYOUT) || \
->> +	defined(ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT)
-> Not sure if it is wrіtten down somehwere or just convention, but I
-> general see cpp defined statements aligned with spaces to the
-> one on the previous line.
+Christophe
 
+>
+> diff --git a/arch/arm/kernel/atags.h b/arch/arm/kernel/atags.h
+> index 201100226301..84b12e33104d 100644
+> --- a/arch/arm/kernel/atags.h
+> +++ b/arch/arm/kernel/atags.h
+> @@ -5,7 +5,7 @@ void convert_to_tag_list(struct tag *tags);
+>  const struct machine_desc *setup_machine_tags(phys_addr_t __atags_pointer,
+>         unsigned int machine_nr);
+>  #else
+> -static inline const struct machine_desc *
+> +static __always_inline const struct machine_desc *
+>  setup_machine_tags(phys_addr_t __atags_pointer, unsigned int machine_nr)
+>  {
+>         early_print("no ATAGS support: can't continue\n");
 
-Ok, I will fix that.
-
-
-> Except for these nitpicks this looks very nice to me, thanks for doing
-> this work!
-
-
-Thanks :)
 
