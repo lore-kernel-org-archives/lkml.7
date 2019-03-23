@@ -6,24 +6,24 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF155C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 04:46:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50C4AC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 04:46:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5E2721900
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 04:46:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20E3921900
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 04:46:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727609AbfCWEqC (ORCPT
+        id S1727625AbfCWEqZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Mar 2019 00:46:02 -0400
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:44016 "EHLO
-        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726029AbfCWEqB (ORCPT
+        Sat, 23 Mar 2019 00:46:25 -0400
+Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:47463 "EHLO
+        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725835AbfCWEqZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Mar 2019 00:46:01 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R981e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04455;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0TNPuxAM_1553316293;
+        Sat, 23 Mar 2019 00:46:25 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07487;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0TNPuxAM_1553316293;
 Received: from e19h19392.et15sqa.tbsite.net(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TNPuxAM_1553316293)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Sat, 23 Mar 2019 12:45:03 +0800
+          Sat, 23 Mar 2019 12:45:02 +0800
 From:   Yang Shi <yang.shi@linux.alibaba.com>
 To:     mhocko@suse.com, mgorman@techsingularity.net, riel@surriel.com,
         hannes@cmpxchg.org, akpm@linux-foundation.org,
@@ -32,9 +32,9 @@ To:     mhocko@suse.com, mgorman@techsingularity.net, riel@surriel.com,
         ying.huang@intel.com
 Cc:     yang.shi@linux.alibaba.com, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 07/10] mm: vmscan: add page demotion counter
-Date:   Sat, 23 Mar 2019 12:44:32 +0800
-Message-Id: <1553316275-21985-8-git-send-email-yang.shi@linux.alibaba.com>
+Subject: [PATCH 05/10] mm: page_alloc: make find_next_best_node could skip DRAM node
+Date:   Sat, 23 Mar 2019 12:44:30 +0800
+Message-Id: <1553316275-21985-6-git-send-email-yang.shi@linux.alibaba.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1553316275-21985-1-git-send-email-yang.shi@linux.alibaba.com>
 References: <1553316275-21985-1-git-send-email-yang.shi@linux.alibaba.com>
@@ -43,92 +43,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Demoted pages are counted into reclaim_state->nr_demoted instead of
-nr_reclaimed since they are not reclaimed actually.  They are still in
-memory, but just migrated to PMEM.
-
-Add pgdemote_kswapd and pgdemote_direct VM counters showed in
-/proc/vmstat.
+Need find the cloest non-DRAM node to demote DRAM pages.  Add
+"skip_ram_node" parameter to find_next_best_node() to skip DRAM node on
+demand.
 
 Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
 ---
- include/linux/vm_event_item.h |  2 ++
- include/linux/vmstat.h        |  1 +
- mm/vmscan.c                   | 14 ++++++++++++++
- mm/vmstat.c                   |  2 ++
- 4 files changed, 19 insertions(+)
+ mm/internal.h   | 11 +++++++++++
+ mm/page_alloc.c | 15 +++++++++++----
+ 2 files changed, 22 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/vm_event_item.h b/include/linux/vm_event_item.h
-index 47a3441..499a3aa 100644
---- a/include/linux/vm_event_item.h
-+++ b/include/linux/vm_event_item.h
-@@ -32,6 +32,8 @@ enum vm_event_item { PGPGIN, PGPGOUT, PSWPIN, PSWPOUT,
- 		PGREFILL,
- 		PGSTEAL_KSWAPD,
- 		PGSTEAL_DIRECT,
-+		PGDEMOTE_KSWAPD,
-+		PGDEMOTE_DIRECT,
- 		PGSCAN_KSWAPD,
- 		PGSCAN_DIRECT,
- 		PGSCAN_DIRECT_THROTTLE,
-diff --git a/include/linux/vmstat.h b/include/linux/vmstat.h
-index 2db8d60..eb5d21c 100644
---- a/include/linux/vmstat.h
-+++ b/include/linux/vmstat.h
-@@ -29,6 +29,7 @@ struct reclaim_stat {
- 	unsigned nr_activate;
- 	unsigned nr_ref_keep;
- 	unsigned nr_unmap_fail;
-+	unsigned nr_demoted;
- };
+diff --git a/mm/internal.h b/mm/internal.h
+index 9eeaf2b..46ad0d8 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -292,6 +292,17 @@ static inline bool is_data_mapping(vm_flags_t flags)
+ 	return (flags & (VM_WRITE | VM_SHARED | VM_STACK)) == VM_WRITE;
+ }
  
- #ifdef CONFIG_VM_EVENT_COUNTERS
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index bdcab6b..3c7ba7e 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -1286,6 +1286,10 @@ static unsigned long shrink_page_list(struct list_head *page_list,
- 
- 			if (has_nonram_online()) {
- 				list_add(&page->lru, &demote_pages);
-+				if (PageTransHuge(page))
-+					stat->nr_demoted += HPAGE_PMD_NR;
-+				else
-+					stat->nr_demoted++;
- 				unlock_page(page);
- 				continue;
- 			}
-@@ -1523,7 +1527,17 @@ static unsigned long shrink_page_list(struct list_head *page_list,
- 			putback_movable_pages(&demote_pages);
- 
- 			list_splice(&ret_pages, &demote_pages);
++#ifdef CONFIG_NUMA
++extern int find_next_best_node(int node, nodemask_t *used_node_mask,
++			       bool skip_ram_node);
++#else
++static inline int find_next_best_node(int node, nodemask_t *used_node_mask,
++				      bool skip_ram_node)
++{
++	return 0;
++}
++#endif
 +
-+			if (err > 0)
-+				stat->nr_demoted -= err;
-+			else
-+				stat->nr_demoted = 0;
- 		}
-+
-+		if (current_is_kswapd())
-+			__count_vm_events(PGDEMOTE_KSWAPD, stat->nr_demoted);
-+		else
-+			__count_vm_events(PGDEMOTE_DIRECT, stat->nr_demoted);
+ /* mm/util.c */
+ void __vma_link_list(struct mm_struct *mm, struct vm_area_struct *vma,
+ 		struct vm_area_struct *prev, struct rb_node *rb_parent);
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 68ad8c6..07d767b 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -5375,6 +5375,7 @@ int numa_zonelist_order_handler(struct ctl_table *table, int write,
+  * find_next_best_node - find the next node that should appear in a given node's fallback list
+  * @node: node whose fallback list we're appending
+  * @used_node_mask: nodemask_t of already used nodes
++ * @skip_ram_node: find next best non-DRAM node
+  *
+  * We use a number of factors to determine which is the next node that should
+  * appear on a given node's fallback list.  The node should not have appeared
+@@ -5386,7 +5387,8 @@ int numa_zonelist_order_handler(struct ctl_table *table, int write,
+  *
+  * Return: node id of the found node or %NUMA_NO_NODE if no node is found.
+  */
+-static int find_next_best_node(int node, nodemask_t *used_node_mask)
++int find_next_best_node(int node, nodemask_t *used_node_mask,
++			bool skip_ram_node)
+ {
+ 	int n, val;
+ 	int min_val = INT_MAX;
+@@ -5394,13 +5396,19 @@ static int find_next_best_node(int node, nodemask_t *used_node_mask)
+ 	const struct cpumask *tmp = cpumask_of_node(0);
+ 
+ 	/* Use the local node if we haven't already */
+-	if (!node_isset(node, *used_node_mask)) {
++	if (!node_isset(node, *used_node_mask) &&
++	    !skip_ram_node) {
+ 		node_set(node, *used_node_mask);
+ 		return node;
  	}
  
- 	mem_cgroup_uncharge_list(&free_pages);
-diff --git a/mm/vmstat.c b/mm/vmstat.c
-index 36b56f8..0e863e7 100644
---- a/mm/vmstat.c
-+++ b/mm/vmstat.c
-@@ -1192,6 +1192,8 @@ int fragmentation_index(struct zone *zone, unsigned int order)
- 	"pgrefill",
- 	"pgsteal_kswapd",
- 	"pgsteal_direct",
-+	"pgdemote_kswapd",
-+	"pgdemote_direct",
- 	"pgscan_kswapd",
- 	"pgscan_direct",
- 	"pgscan_direct_throttle",
+ 	for_each_node_state(n, N_MEMORY) {
+ 
++		/* Find next best non-DRAM node */
++		if (skip_ram_node &&
++		    (node_isset(n, def_alloc_nodemask)))
++			continue;
++
+ 		/* Don't want a node to appear more than once */
+ 		if (node_isset(n, *used_node_mask))
+ 			continue;
+@@ -5432,7 +5440,6 @@ static int find_next_best_node(int node, nodemask_t *used_node_mask)
+ 	return best_node;
+ }
+ 
+-
+ /*
+  * Build zonelists ordered by node and zones within node.
+  * This results in maximum locality--normal zone overflows into local
+@@ -5494,7 +5501,7 @@ static void build_zonelists(pg_data_t *pgdat)
+ 	nodes_clear(used_mask);
+ 
+ 	memset(node_order, 0, sizeof(node_order));
+-	while ((node = find_next_best_node(local_node, &used_mask)) >= 0) {
++	while ((node = find_next_best_node(local_node, &used_mask, false)) >= 0) {
+ 		/*
+ 		 * We don't want to pressure a particular node.
+ 		 * So adding penalty to the first node in same
 -- 
 1.8.3.1
 
