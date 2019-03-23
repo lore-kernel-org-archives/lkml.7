@@ -2,133 +2,105 @@ Return-Path: <SRS0=q9dy=R2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D5B4C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 09:56:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B46C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 10:05:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 622EA218E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 09:56:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E9432196F
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 10:05:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DYI5C/wT"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="CgywDg93";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="CgywDg93"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727092AbfCWJ4U (ORCPT
+        id S1727124AbfCWKF0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Mar 2019 05:56:20 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:53224 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726478AbfCWJ4U (ORCPT
+        Sat, 23 Mar 2019 06:05:26 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:54246 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726014AbfCWKF0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Mar 2019 05:56:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Yv2y1dnI1IMlueSXfn7Alpgw7H3d0jBHHD/J+YU1uuI=; b=DYI5C/wTJ1ouhecchHuspwaht
-        j+HRD33Foirq8MQ9O0AD4tTqQWD4onL4I69j2mwJFX2Cfk1Dub50bT2prFPzs2c6ev+dehdEK3F1s
-        4UAPcAWAzKec4Exi5qWb+n0dzQpP0kEhJe+0a1ed1yf3JhvLO053jfMSaSvQlDc1pnEg5Hc6LsjXU
-        VGBFyt7kuz0dXvNycxA6Tk2AkYDvRUepjMSiEoWLO1OBXzojRy03Jy24ylAtra9+spK3r3ydfQzyW
-        Cyb85EbgFHKWwSZ515kJGviQ5GKgoQYAJmi6b13W9+DelIdKO45xNp1T2f0bk+ceUA9ZgeaIZkWOo
-        zfqDSUNvw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h7dNt-0002bC-HR; Sat, 23 Mar 2019 09:56:13 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id C59C8203BF976; Sat, 23 Mar 2019 10:56:10 +0100 (CET)
-Date:   Sat, 23 Mar 2019 10:56:10 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Andi Kleen <ak@linux.intel.com>
-Cc:     kan.liang@linux.intel.com, acme@kernel.org, mingo@redhat.com,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, jolsa@kernel.org,
-        eranian@google.com, alexander.shishkin@linux.intel.com
-Subject: Re: [PATCH V3 01/23] perf/x86: Support outputting XMM registers
-Message-ID: <20190323095610.GB6058@hirez.programming.kicks-ass.net>
-References: <20190322163718.2191-1-kan.liang@linux.intel.com>
- <20190322163718.2191-2-kan.liang@linux.intel.com>
- <20190322170841.GJ7905@worktop.programming.kicks-ass.net>
- <20190322172250.GF24002@tassilo.jf.intel.com>
+        Sat, 23 Mar 2019 06:05:26 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id C641060744; Sat, 23 Mar 2019 10:05:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553335525;
+        bh=pBdEEZubPvVz719nusovDIQoBewY7OeC40ze3oeECVc=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=CgywDg93c124f0WqbXTF9OjEszoU1DiYv8pxN3la4nRwDzKtLvIBZd9RSeUtrwC2T
+         7/nLv29rEzzu22ee+XBrq9u9bdm246oEzPXJ/l07hZlgJtSQ3gXIZoKVJ+lMcT5MO4
+         8LbBXwILhxZyhKpevSC70iaP4Gs18rczmmvHmO4g=
+Received: from [10.79.165.251] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mojha@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id CDF8D60A43;
+        Sat, 23 Mar 2019 10:05:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553335525;
+        bh=pBdEEZubPvVz719nusovDIQoBewY7OeC40ze3oeECVc=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=CgywDg93c124f0WqbXTF9OjEszoU1DiYv8pxN3la4nRwDzKtLvIBZd9RSeUtrwC2T
+         7/nLv29rEzzu22ee+XBrq9u9bdm246oEzPXJ/l07hZlgJtSQ3gXIZoKVJ+lMcT5MO4
+         8LbBXwILhxZyhKpevSC70iaP4Gs18rczmmvHmO4g=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CDF8D60A43
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
+Subject: Re: [PATCH] drm: vkms: check status of alloc_ordered_workqueue
+To:     Kangjie Lu <kjlu@umn.edu>
+Cc:     pakki001@umn.edu, Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+        Haneen Mohammed <hamohammed.sa@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20190309043628.6078-1-kjlu@umn.edu>
+From:   Mukesh Ojha <mojha@codeaurora.org>
+Message-ID: <955fbabe-e5f2-cfff-8dfd-1730243b0fff@codeaurora.org>
+Date:   Sat, 23 Mar 2019 15:35:15 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190322172250.GF24002@tassilo.jf.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190309043628.6078-1-kjlu@umn.edu>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 22, 2019 at 10:22:50AM -0700, Andi Kleen wrote:
-> > > diff --git a/arch/x86/include/uapi/asm/perf_regs.h b/arch/x86/include/uapi/asm/perf_regs.h
-> > > index f3329cabce5c..b33995313d17 100644
-> > > --- a/arch/x86/include/uapi/asm/perf_regs.h
-> > > +++ b/arch/x86/include/uapi/asm/perf_regs.h
-> > > @@ -28,7 +28,29 @@ enum perf_event_x86_regs {
-> > >  	PERF_REG_X86_R14,
-> > >  	PERF_REG_X86_R15,
-> > >  
-> > > -	PERF_REG_X86_32_MAX = PERF_REG_X86_GS + 1,
-> > > -	PERF_REG_X86_64_MAX = PERF_REG_X86_R15 + 1,
-> > 
-> > So this changes UAPI visible symbols... did we think about that?
-> 
-> Should be fine. Old programs won't use the new bits,
-> and it just uses not yet used bits.
 
-Old programs (that used the above symbols) will now fail to compile.
-Even if they won't use the new bits, that seems like a bad thing.
+On 3/9/2019 10:06 AM, Kangjie Lu wrote:
+> alloc_ordered_workqueue may fail and return NULL.
+> The fix returns ENOMEM when it fails to avoid potential NULL
+> pointer dereference.
+>
+> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+> ---
+>   drivers/gpu/drm/vkms/vkms_crtc.c | 2 ++
+>   1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/gpu/drm/vkms/vkms_crtc.c b/drivers/gpu/drm/vkms/vkms_crtc.c
+> index 8a9aeb0a9ea8..bb66dbcd5e3f 100644
+> --- a/drivers/gpu/drm/vkms/vkms_crtc.c
+> +++ b/drivers/gpu/drm/vkms/vkms_crtc.c
+> @@ -219,6 +219,8 @@ int vkms_crtc_init(struct drm_device *dev, struct drm_crtc *crtc,
+>   	spin_lock_init(&vkms_out->state_lock);
+>   
+>   	vkms_out->crc_workq = alloc_ordered_workqueue("vkms_crc_workq", 0);
+> +	if (!vkms_out->crc_workq)
+> +		return -ENOMEM;
+>   
+>   	return ret;
+>   }
 
-> > > +	/* These all need two bits set because they are 128bit */
-> > > +	PERF_REG_X86_XMM0  = 32,
-> > > +	PERF_REG_X86_XMM1  = 34,
-> > > +	PERF_REG_X86_XMM2  = 36,
-> > > +	PERF_REG_X86_XMM3  = 38,
-> > > +	PERF_REG_X86_XMM4  = 40,
-> > > +	PERF_REG_X86_XMM5  = 42,
-> > > +	PERF_REG_X86_XMM6  = 44,
-> > > +	PERF_REG_X86_XMM7  = 46,
-> > > +	PERF_REG_X86_XMM8  = 48,
-> > > +	PERF_REG_X86_XMM9  = 50,
-> > > +	PERF_REG_X86_XMM10 = 52,
-> > > +	PERF_REG_X86_XMM11 = 54,
-> > > +	PERF_REG_X86_XMM12 = 56,
-> > > +	PERF_REG_X86_XMM13 = 58,
-> > > +	PERF_REG_X86_XMM14 = 60,
-> > > +	PERF_REG_X86_XMM15 = 62,
-> > > +
-> > > +	/* This does not include the XMMX registers */
-> > > +	PERF_REG_GPR_X86_32_MAX = PERF_REG_X86_GS + 1,
-> > > +	PERF_REG_GPR_X86_64_MAX = PERF_REG_X86_R15 + 1,
-> > > +
-> > > +	/* All registers include the XMMX registers */
-> > > +	PERF_REG_X86_MAX = PERF_REG_X86_XMM15 + 2,
-> > >  };
-> > >  #endif /* _ASM_X86_PERF_REGS_H */
-> > 
-> > Also, what happens if we run a 32bit kernel or 32bit compat task?
-> > 
-> > Then the register dump will report PERF_SAMPLE_REGS_ABI_32, should we
-> > then still interpret the XMM registers as 2x64bit?
-> 
-> Yes XMM registers are 128bit in 32bit mode too.
-> 
-> > 
-> > Are they still at the same offset?
-> 
-> Yes.
 
-I think that is broken.. perf_prepare_sample() does:
+Check the clean up path more carefully, you have undo which you have 
+done successfully in drm_crtc_init_with_planes.
 
- size += hweight(mask) * sizeof(u64);
 
-And since 32bits will not have r8-r15 set, the XMM registers will shift
-forward no?
+Thanks,
+  Mukesh
 
-> > Do we need additional PERF_SAMPLE_REGS_ABI_* definitions for this?
-> 
-> I don't think so.
-
-because....?
