@@ -2,77 +2,96 @@ Return-Path: <SRS0=q9dy=R2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE84C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 04:45:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC7B0C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 04:45:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 859C2218E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 04:45:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC60421900
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 04:45:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qN7z7n3O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727434AbfCWEp3 (ORCPT
+        id S1727504AbfCWEpd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Mar 2019 00:45:29 -0400
-Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:34001 "EHLO
-        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727103AbfCWEpO (ORCPT
+        Sat, 23 Mar 2019 00:45:33 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:45201 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727103AbfCWEpc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Mar 2019 00:45:14 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R231e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0TNPuxAM_1553316293;
-Received: from e19h19392.et15sqa.tbsite.net(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TNPuxAM_1553316293)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Sat, 23 Mar 2019 12:45:04 +0800
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-To:     mhocko@suse.com, mgorman@techsingularity.net, riel@surriel.com,
-        hannes@cmpxchg.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, keith.busch@intel.com,
-        dan.j.williams@intel.com, fengguang.wu@intel.com, fan.du@intel.com,
-        ying.huang@intel.com
-Cc:     yang.shi@linux.alibaba.com, linux-mm@kvack.org,
+        Sat, 23 Mar 2019 00:45:32 -0400
+Received: by mail-pf1-f194.google.com with SMTP id e24so1982756pfi.12;
+        Fri, 22 Mar 2019 21:45:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=HORkIJTsZrrnhQwa8A9amghPSQfX5EIafqJvOVg7cts=;
+        b=qN7z7n3Oo4GQnSRGzxog7BiS6YATQypSmToxk0ZUjb2PV6XGjREqXiBXCIiJGhDHfy
+         7NiLYgTP68SFH1StI92dEsuYra2FoRflfRDoP9MQg9ZBsKhzoqXSvMLAZScpXMUAVNlE
+         lZ7fJEqCgi8OJBnE8wo82QsSpsIsJf1G7bf3Jbap2a031OaaboTZINibDbQcmUfEaYGP
+         9aiDysXXOkBaew+DTwy5l9Z+5zkQcxrb3J0GFEsHKmBfnxGoXrPNCKp6eIvBtRxp5JVY
+         XzS8BCTvca0scHOc1nIlx3XbuVzzjBdrv7WoffpMooXZ9Kq0n98acLuN5Zb5BFr57iEm
+         m/ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=HORkIJTsZrrnhQwa8A9amghPSQfX5EIafqJvOVg7cts=;
+        b=HncrFfjnkIeB4/twDYGWFGfrh4FdHKPJAPKX4x8+LbArmbd6IMuaNzaR+60zslXuH6
+         1t6dtzS+1/iXv672oj+g9EvKfaegu8aZPyvWHQ0LyWcOsDC6JvETwtXUfC9vFeQEaizU
+         dXnAZ9v+hRr1/sRz3kXD6XuhmyZRgrG7qxjHOtR1+zgIyByPlwa0cTwOsGBPxzKMs/7P
+         koZJaoDorS6eh/DMfqbh7DmF4xTCw/L4z3uAnKY/dWh+ai/x1TNw9+SBuRqjw+wPPI9W
+         VefDvCUjG+1d1JxLjwQmQLPsC+1opswHkjxeUBJjjxip97dy3V0G3EgOhZxpZ5WyKcJL
+         CcCQ==
+X-Gm-Message-State: APjAAAVX6Zn/MkipoBq/UHMq8LM1wq5TvMyg4qw2x3mG5Chjo4EMbQbr
+        m5SlgwaMToVO+ngya89LF44Xnqk5
+X-Google-Smtp-Source: APXvYqzcCANdGmV7ubBjjStOwWiwDvSb21vJIAjvMrzmhl89/8mrzY+2YwV1Kylfw3jdcDMsUiqBGQ==
+X-Received: by 2002:a63:104e:: with SMTP id 14mr12338085pgq.185.1553316331087;
+        Fri, 22 Mar 2019 21:45:31 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id h64sm10325499pge.7.2019.03.22.21.45.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 22 Mar 2019 21:45:30 -0700 (PDT)
+Subject: Re: [PATCH 4.14 000/183] 4.14.108-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 10/10] doc: elaborate the PMEM allocation rule
-Date:   Sat, 23 Mar 2019 12:44:35 +0800
-Message-Id: <1553316275-21985-11-git-send-email-yang.shi@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1553316275-21985-1-git-send-email-yang.shi@linux.alibaba.com>
-References: <1553316275-21985-1-git-send-email-yang.shi@linux.alibaba.com>
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+References: <20190322111241.819468003@linuxfoundation.org>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <3ba95b01-8124-c8d7-4f09-ba492d6db9d2@roeck-us.net>
+Date:   Fri, 22 Mar 2019 21:45:29 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
+MIME-Version: 1.0
+In-Reply-To: <20190322111241.819468003@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-non-DRAM nodes are excluded from default allocation node mask, elaborate
-the rules.
+On 3/22/19 4:13 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.14.108 release.
+> There are 183 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sun Mar 24 11:11:06 UTC 2019.
+> Anything received after that time might be too late.
+> 
 
-Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
----
- Documentation/vm/numa.rst | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+Build results:
+	total: 172 pass: 172 fail: 0
+Qemu test results:
+	total: 329 pass: 329 fail: 0
 
-diff --git a/Documentation/vm/numa.rst b/Documentation/vm/numa.rst
-index 185d8a5..8c2fd5c 100644
---- a/Documentation/vm/numa.rst
-+++ b/Documentation/vm/numa.rst
-@@ -133,7 +133,7 @@ a subsystem allocates per CPU memory resources, for example.
- 
- A typical model for making such an allocation is to obtain the node id of the
- node to which the "current CPU" is attached using one of the kernel's
--numa_node_id() or CPU_to_node() functions and then request memory from only
-+numa_node_id() or cpu_to_node() functions and then request memory from only
- the node id returned.  When such an allocation fails, the requesting subsystem
- may revert to its own fallback path.  The slab kernel memory allocator is an
- example of this.  Or, the subsystem may choose to disable or not to enable
-@@ -148,3 +148,8 @@ architectures transparently, kernel subsystems can use the numa_mem_id()
- or cpu_to_mem() function to locate the "local memory node" for the calling or
- specified CPU.  Again, this is the same node from which default, local page
- allocations will be attempted.
-+
-+If the architecture supports non-regular DRAM nodes, i.e. NVDIMM on x86, the
-+non-DRAM nodes are hidden from default mode, IOWs the default allocation
-+would not end up on non-DRAM nodes, unless thoes nodes are specified
-+explicity by mempolicy. [see Documentation/vm/numa_memory_policy.txt.]
--- 
-1.8.3.1
-
+Guenter
