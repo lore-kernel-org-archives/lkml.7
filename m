@@ -2,81 +2,153 @@ Return-Path: <SRS0=q9dy=R2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19553C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 17:24:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98F86C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 17:25:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF6FE218A2
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 17:24:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="o1aVf4sK"
+	by mail.kernel.org (Postfix) with ESMTP id 5F6C920879
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 17:25:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727939AbfCWRYX (ORCPT
+        id S1727983AbfCWRZh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Mar 2019 13:24:23 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:52274 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727298AbfCWRYW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Mar 2019 13:24:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=1RnHrJKLinOTdv/ak7f9kAq9n9lscJauEZ8R2hd/aAU=; b=o1aVf4sKUfhE3CxCL3N82L9vI
-        PgqjFQLZrS109Q+b/SadUTNorpVj7Xomf3oA0YFopNadCHCaKstj68XjHqtEQKGXYFQMpDfiyeq9Y
-        oAihEUodyXtlx2PtqZ7JJcS/yCKSoE8dzzCU0KsWbVKZ2lJ9KPPmGQFXflZzj5nncgd2avgI+okaF
-        TCssDWOgMKrCNb34M/RO1kj16oxjXEDf5TtmXL3Az/25XkcJUgJA3PBZ1n6yN6BFzfAlibhv+P0R1
-        UiWU+n3ZpGFlwie/a5pNTFZp11QE7D0Yfh1izZpClwGS5M960+z2MxKBkway67B6Xj3i6c8tmf5tD
-        eYZPKLvUQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h7kNZ-0003jE-92; Sat, 23 Mar 2019 17:24:21 +0000
-Date:   Sat, 23 Mar 2019 10:24:21 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Mike Rapoport <rppt@linux.ibm.com>
-Cc:     Anup Patel <Anup.Patel@wdc.com>, Albert Ou <aou@eecs.berkeley.edu>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
-Subject: Re: [PATCH v2 3/5] RISC-V: Allow booting kernel from any 4KB aligned
- address
-Message-ID: <20190323172421.GA14080@infradead.org>
-References: <20190321094710.16552-1-anup.patel@wdc.com>
- <20190321094710.16552-4-anup.patel@wdc.com>
- <20190323154012.GA25149@rapoport-lnx>
+        Sat, 23 Mar 2019 13:25:37 -0400
+Received: from mga03.intel.com ([134.134.136.65]:53313 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727440AbfCWRZg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 Mar 2019 13:25:36 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Mar 2019 10:25:36 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,256,1549958400"; 
+   d="scan'208";a="128030843"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga008.jf.intel.com with ESMTP; 23 Mar 2019 10:25:33 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 10C5147; Sat, 23 Mar 2019 19:25:33 +0200 (EET)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Ray Jui <rjui@broadcom.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 2/2] lib/math: Move int_pow() from pwm_bl.c for wider use
+Date:   Sat, 23 Mar 2019 20:25:31 +0300
+Message-Id: <20190323172531.80025-2-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190323172531.80025-1-andriy.shevchenko@linux.intel.com>
+References: <20190323172531.80025-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190323154012.GA25149@rapoport-lnx>
-User-Agent: Mutt/1.9.2 (2017-12-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 23, 2019 at 05:40:12PM +0200, Mike Rapoport wrote:
-> I have no general objection, but I presume the patch will be significantly
-> simplified if the addition of 4K pages support will follow the removal of
-> the trampoline_pd_dir. 
-> 
-> That said, I didn't look into the details, since they will change
-> substantially, only some comments on the Kconfig part.
-> 
-> On the high level, have you considered using large pages in setup_vm() and
-> the remapping everything with 4K pages in setup_vm_final()?  This might
-> save you the whole ops-> churn.
+The integer exponentiation is used in few places and might be used
+in the future by other call sites. Move it to wider use.
 
-That would be a great start.  That being said the current tiny memory
-RISC-V devices don't even have a MMU, so the kernel pagetable mapping
-isn't even relevant for them.  I'm just not sure adding more complexity
-in the early boot path for a borderline case (MMU and tiny memory
-with a tiny kernel image) is reall worth all the complexity.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/video/backlight/pwm_bl.c | 15 ---------------
+ include/linux/kernel.h           |  1 +
+ lib/math/Makefile                |  2 +-
+ lib/math/int_pow.c               | 32 ++++++++++++++++++++++++++++++++
+ 4 files changed, 34 insertions(+), 16 deletions(-)
+ create mode 100644 lib/math/int_pow.c
+
+diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
+index 53b8ceea9bde..fb45f866b923 100644
+--- a/drivers/video/backlight/pwm_bl.c
++++ b/drivers/video/backlight/pwm_bl.c
+@@ -155,21 +155,6 @@ static const struct backlight_ops pwm_backlight_ops = {
+ #ifdef CONFIG_OF
+ #define PWM_LUMINANCE_SCALE	10000 /* luminance scale */
+ 
+-/* An integer based power function */
+-static u64 int_pow(u64 base, int exp)
+-{
+-	u64 result = 1;
+-
+-	while (exp) {
+-		if (exp & 1)
+-			result *= base;
+-		exp >>= 1;
+-		base *= base;
+-	}
+-
+-	return result;
+-}
+-
+ /*
+  * CIE lightness to PWM conversion.
+  *
+diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+index bb8958690b69..d327fe835f2c 100644
+--- a/include/linux/kernel.h
++++ b/include/linux/kernel.h
+@@ -500,6 +500,7 @@ extern int __kernel_text_address(unsigned long addr);
+ extern int kernel_text_address(unsigned long addr);
+ extern int func_ptr_is_kernel_text(void *ptr);
+ 
++u64 int_pow(u64 base, unsigned int exp);
+ unsigned long int_sqrt(unsigned long);
+ 
+ #if BITS_PER_LONG < 64
+diff --git a/lib/math/Makefile b/lib/math/Makefile
+index b75878420da6..583bbfebfc09 100644
+--- a/lib/math/Makefile
++++ b/lib/math/Makefile
+@@ -1,4 +1,4 @@
+-obj-y += div64.o gcd.o lcm.o int_sqrt.o reciprocal_div.o
++obj-y += div64.o gcd.o lcm.o int_pow.o int_sqrt.o reciprocal_div.o
+ 
+ obj-$(CONFIG_CORDIC)		+= cordic.o
+ obj-$(CONFIG_PRIME_NUMBERS)	+= prime_numbers.o
+diff --git a/lib/math/int_pow.c b/lib/math/int_pow.c
+new file mode 100644
+index 000000000000..622fc1ab3c74
+--- /dev/null
++++ b/lib/math/int_pow.c
+@@ -0,0 +1,32 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * An integer based power function
++ *
++ * Derived from drivers/video/backlight/pwm_bl.c
++ */
++
++#include <linux/export.h>
++#include <linux/kernel.h>
++#include <linux/types.h>
++
++/**
++ * int_pow - computes the exponentiation of the given base and exponent
++ * @base: base which will be raised to the given power
++ * @exp: power to be raised to
++ *
++ * Computes: pow(base, exp), i.e. @base raised to the @exp power
++ */
++u64 int_pow(u64 base, unsigned int exp)
++{
++	u64 result = 1;
++
++	while (exp) {
++		if (exp & 1)
++			result *= base;
++		exp >>= 1;
++		base *= base;
++	}
++
++	return result;
++}
++EXPORT_SYMBOL_GPL(int_pow);
+-- 
+2.20.1
+
