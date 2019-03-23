@@ -2,84 +2,94 @@ Return-Path: <SRS0=q9dy=R2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78281C43381
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F90CC10F05
 	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 14:31:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EA7E2190A
+	by mail.kernel.org (Postfix) with ESMTP id 6B86B2192B
 	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 14:31:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R3gh7JXz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727588AbfCWO2U (ORCPT
+        id S1727596AbfCWObS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Mar 2019 10:28:20 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:41828 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727267AbfCWO2U (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Mar 2019 10:28:20 -0400
-Received: by mail-lf1-f66.google.com with SMTP id 10so3224718lfr.8
-        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2019 07:28:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vtc6wmjbQBTBQdUz3oV7S43ZDs+IcAGzJyhPyCX9Nx8=;
-        b=R3gh7JXz32dmXFxJ2JcCHd9yJKGw9L1b9YMZYSsPsz9jb9ytauJTauxbBt1RYb18CU
-         gWPX/oHfpG/qST8eMMUAJkq0Qjp5x6lvpBeG71UOJFB6ibTgKwhYM8ANJlzTUr90JUrd
-         UJt85b53ej/7wNOWX1UpARjQbO9+0ocYkIYvQsues0R0vkC1Do2fdIWcQqpGSFWHL8PH
-         XuhWpn2ieii5XEwhQvq5BIUZUmUnzjVwuo45N6QP27GMMjJOnDW2wl/a+iVMZyqjIFXp
-         MZyDY8aMdUxNL/hAvjKBUkIuSnKxkiVMSHLbPAGEekA0PEc1e5YDwzHZbhYkLxfoM92I
-         A/nQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vtc6wmjbQBTBQdUz3oV7S43ZDs+IcAGzJyhPyCX9Nx8=;
-        b=UAfo0dIsqMgX6+zTMHpZmrZ36iSjGNqcTwhbywlGJoutyNINsW8dorLMxreGrvG8Rw
-         LS9oh8l4Q+KQACLkHQUaYOQBhYLHmyJLqb9jRTzKJl9sPySGATlAwwdOzm5xg+VWLzPK
-         KMbm4o6aGvrarroplsdDtWz4spUIL1kTuJ01dZvxqNKCNx4fBicQuU0/CVC+CA8ckB8G
-         cj5AImfSuQDY6b3FvnoYXju8d8tdUkHXluBUOXQDlcZlFVlexWlzRgV9djhniJjAFDEP
-         im1oIddlbPXEEAHH+tnex/p2PNlyOALEMgMV8u2QdA3xG4BrMj7adfn/EWWt+Vig+1eL
-         dVYw==
-X-Gm-Message-State: APjAAAU5DsWQq3tzpUZhPHZfvTpz4C5Pm3H0Efpr6YsI4U9SgT8fJ2Fe
-        e/PH8daUNIbzXVnc6nFdGpIvmj7imPiWctHh961JFAvT
-X-Google-Smtp-Source: APXvYqxrHPRHg9MFL94bt9APenD8tHShlD01TlQaMUMSYhcx19+tg96Q8NwK4vH61TBP87dYKQGLUNvy9SkNTWLs9o8=
-X-Received: by 2002:ac2:42da:: with SMTP id n26mr7056001lfl.91.1553351298620;
- Sat, 23 Mar 2019 07:28:18 -0700 (PDT)
+        Sat, 23 Mar 2019 10:31:18 -0400
+Received: from asrmicro.com ([210.13.118.86]:25522 "EHLO spam.asrmicro.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726118AbfCWObS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 Mar 2019 10:31:18 -0400
+X-Greylist: delayed 1469 seconds by postgrey-1.27 at vger.kernel.org; Sat, 23 Mar 2019 10:31:17 EDT
+Received: from spam.asrmicro.com (localhost [127.0.0.2] (may be forged))
+        by spam.asrmicro.com with ESMTP id x2NE5Bwm030919;
+        Sat, 23 Mar 2019 22:05:11 +0800 (GMT-8)
+        (envelope-from qiaozhou@asrmicro.com)
+Received: from mail2012.asrmicro.com (mail2012.asrmicro.com [10.1.24.123])
+        by spam.asrmicro.com with ESMTP id x2NDxqoa029570;
+        Sat, 23 Mar 2019 21:59:52 +0800 (GMT-8)
+        (envelope-from qiaozhou@asrmicro.com)
+Received: from localhost (10.1.170.171) by mail2012.asrmicro.com (10.1.24.123)
+ with Microsoft SMTP Server (TLS) id 15.0.847.32; Sat, 23 Mar 2019 22:01:28
+ +0800
+From:   qiaozhou <qiaozhou@asrmicro.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     qiaozhou <qiaozhou@asrmicro.com>
+Subject: [PATCH 0/7] Add dts files for ASR8751C SoC
+Date:   Sat, 23 Mar 2019 22:01:21 +0800
+Message-ID: <1553349688-1946-1-git-send-email-qiaozhou@asrmicro.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-References: <20190301184816.784-1-mans@mansr.com> <CANiq72=H1Gubbr+eoEKUR+m49fkcC7Sr_hsyP3azzpk=i-au+Q@mail.gmail.com>
-In-Reply-To: <CANiq72=H1Gubbr+eoEKUR+m49fkcC7Sr_hsyP3azzpk=i-au+Q@mail.gmail.com>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Sat, 23 Mar 2019 15:28:07 +0100
-Message-ID: <CANiq72=fExsa6cxG=TpuQb3OxcFDdfQhfrE5=OU8vS0gn8KgZA@mail.gmail.com>
-Subject: Re: [PATCH 1/3] auxdisplay: deconfuse configuration
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Mans Rullgard <mans@mansr.com>,
-        Ksenija Stanojevic <ksenija.stanojevic@gmail.com>,
-        Willy Tarreau <w@1wt.eu>,
-        Geert Uytterhoeven <geert.uytterhoeven@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.1.170.171]
+X-ClientProxiedBy: mail2012.asrmicro.com (10.1.24.123) To
+ mail2012.asrmicro.com (10.1.24.123)
+X-DNSRBL: 
+X-MAIL: spam.asrmicro.com x2NDxqoa029570
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 6, 2019 at 11:14 AM Miguel Ojeda
-<miguel.ojeda.sandonis@gmail.com> wrote:
->
-> Since you are touching the panel.c options, CC'ing the maintainers
-> (please do run get_maintainer.pl in that case!)
+Add dtsi file for ASR8751C SoC and dts file for ASR8751C AquilaC development
+board. Also add necessary dt-bindings document, header files.
 
-I was preparing the PR for -rc2 and I just noticed we didn't CC Randy
-which was the last one changing the Kconfig. CC'ing now in case he
-wants to take a look before I send the PR.
+Will add more driver of ASR8751C SoC in later patches. 
 
-Cheers,
-Miguel
+Qiao Zhou (7):
+  dt-bindings: arm: asr: add ASR8751C bindings
+  dt-bindings: bus: add ASR8751C APB/AXI bindings
+  dt-bindings: clocks: add ASR8751C bindings
+  dt-bindings: serial: add ASR8751C serial bindings
+  dt-bindings: Add header file of ASR8751C clock driver
+  dt-bindings: add header file of ASR8751C pinctrl driver
+  arm64: dts: add dts files for asr Aquilac SoC
+
+ .../devicetree/bindings/arm/asr/asr-8751c.txt      |   9 +
+ Documentation/devicetree/bindings/bus/asr,bus.txt  |  42 ++
+ .../devicetree/bindings/clock/asr,clock.txt        |  31 ++
+ .../devicetree/bindings/serial/asr-serial.txt      |  23 ++
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ arch/arm64/boot/dts/Makefile                       |   1 +
+ arch/arm64/boot/dts/asr/Makefile                   |   2 +
+ arch/arm64/boot/dts/asr/asr8751c-aquilac.dts       |  58 +++
+ arch/arm64/boot/dts/asr/asr8751c-pinctrl.dtsi      | 400 ++++++++++++++++++
+ arch/arm64/boot/dts/asr/asr8751c.dtsi              | 460 +++++++++++++++++++++
+ include/dt-bindings/clock/asr8751c-clk.h           | 252 +++++++++++
+ include/dt-bindings/pinctrl/asr8751c-pinfunc.h     | 341 +++++++++++++++
+ 12 files changed, 1620 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/asr/asr-8751c.txt
+ create mode 100644 Documentation/devicetree/bindings/bus/asr,bus.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/asr,clock.txt
+ create mode 100644 Documentation/devicetree/bindings/serial/asr-serial.txt
+ create mode 100644 arch/arm64/boot/dts/asr/Makefile
+ create mode 100644 arch/arm64/boot/dts/asr/asr8751c-aquilac.dts
+ create mode 100644 arch/arm64/boot/dts/asr/asr8751c-pinctrl.dtsi
+ create mode 100644 arch/arm64/boot/dts/asr/asr8751c.dtsi
+ create mode 100644 include/dt-bindings/clock/asr8751c-clk.h
+ create mode 100644 include/dt-bindings/pinctrl/asr8751c-pinfunc.h
+
+-- 
+2.7.4
+
