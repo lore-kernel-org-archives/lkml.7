@@ -2,132 +2,104 @@ Return-Path: <SRS0=q9dy=R2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AD10C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 17:36:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA3E1C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 17:38:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AA77218A2
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 17:36:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F83F21841
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 17:38:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (4096-bit key) header.d=kolabnow.com header.i=@kolabnow.com header.b="FpCSt/bH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728020AbfCWRgg convert rfc822-to-8bit (ORCPT
+        id S1728041AbfCWRhN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Mar 2019 13:36:36 -0400
-Received: from mga09.intel.com ([134.134.136.24]:7532 "EHLO mga09.intel.com"
+        Sat, 23 Mar 2019 13:37:13 -0400
+Received: from mx.kolabnow.com ([95.128.36.42]:38812 "EHLO mx.kolabnow.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727440AbfCWRgf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Mar 2019 13:36:35 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Mar 2019 10:36:34 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,256,1549958400"; 
-   d="scan'208";a="143234049"
-Received: from orsmsx102.amr.corp.intel.com ([10.22.225.129])
-  by FMSMGA003.fm.intel.com with ESMTP; 23 Mar 2019 10:36:34 -0700
-Received: from orsmsx125.amr.corp.intel.com (10.22.240.125) by
- ORSMSX102.amr.corp.intel.com (10.22.225.129) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Sat, 23 Mar 2019 10:36:34 -0700
-Received: from orsmsx116.amr.corp.intel.com ([169.254.7.78]) by
- ORSMSX125.amr.corp.intel.com ([169.254.3.65]) with mapi id 14.03.0415.000;
- Sat, 23 Mar 2019 10:36:33 -0700
-From:   "Xing, Cedric" <cedric.xing@intel.com>
-To:     "Christopherson, Sean J" <sean.j.christopherson@intel.com>
-CC:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "Svahn, Kai" <kai.svahn@intel.com>, "bp@alien8.de" <bp@alien8.de>,
-        "josh@joshtriplett.org" <josh@joshtriplett.org>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        "rientjes@google.com" <rientjes@google.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "Haitao Huang" <haitao.huang@linux.intel.com>,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Dr . Greg Wettstein" <greg@enjellic.com>
-Subject: RE: [PATCH v19,RESEND 24/27] x86/vdso: Add
- __vdso_sgx_enter_enclave() to wrap SGX enclave transitions
-Thread-Topic: [PATCH v19,RESEND 24/27] x86/vdso: Add
- __vdso_sgx_enter_enclave() to wrap SGX enclave transitions
-Thread-Index: AQHU3zmquZHDGSY4XUWmggeyxtSmi6YU12fwgACBcQD//5sEUIADt/WAgADIIJA=
-Date:   Sat, 23 Mar 2019 17:36:33 +0000
-Message-ID: <960B34DE67B9E140824F1DCDEC400C0F4E85E481@ORSMSX116.amr.corp.intel.com>
-References: <20190320162119.4469-1-jarkko.sakkinen@linux.intel.com>
- <20190320162119.4469-25-jarkko.sakkinen@linux.intel.com>
- <960B34DE67B9E140824F1DCDEC400C0F4E85C484@ORSMSX116.amr.corp.intel.com>
- <20190320191318.GF30469@linux.intel.com>
- <960B34DE67B9E140824F1DCDEC400C0F4E85C5AB@ORSMSX116.amr.corp.intel.com>
- <20190322215903.GE12666@linux.intel.com>
-In-Reply-To: <20190322215903.GE12666@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNDIzMWQ1ODItNjU4MS00ZDk2LTlhMmYtYTY5ZmMyOGI0OTE3IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiY0xcLzRkdEhvbENjTGVvY2pmN1dNUzBYUWRtV0d2bUFQMVRNVVJrXC9RZGErQ0JkZ2RoZ2tYcGJlaWU1M2NnRzJFIn0=
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.0.400.15
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.138]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        id S1727494AbfCWRhN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 Mar 2019 13:37:13 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by ext-mx-out003.mykolab.com (Postfix) with ESMTP id C5C4D40D4E;
+        Sat, 23 Mar 2019 18:37:11 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kolabnow.com; h=
+        content-type:content-type:content-transfer-encoding:mime-version
+        :references:in-reply-to:message-id:date:date:subject:subject
+        :from:from:received:received:received; s=dkim20160331; t=
+        1553362630; x=1555177031; bh=hcoSLnFTed5870JLH0jswjjIXWV/K5qViVe
+        JIv73MKY=; b=FpCSt/bHrTUSfPsHllT6XDyqfyJI/Gywf3FQMo+0qpeEuvnaLLn
+        i09A43O9iGE1LeO8gjwh0uCdkccRMKENMhpyI+r08nRuhnhJNrHS8seeK5SfyvaL
+        rEhheawEIFrb9ToUe29kY7mtg16ArdLRSssSehFz8i1GyMBc3SDw3pQZ8nZTI3RR
+        mS2Y/HTGmwLB2ghcy1mQQfdkwIIglhMOVvLRjs7q67ryMkhcp8kepSj4n3VfC9PI
+        9XOxDv92TFknXT9HYI2cIArhSX2IwDeQB2YT4idhJnrgxlR7yDTLmkRCWiqH8Y31
+        S1dyYukXZOpCh4qUS61rXUz0lDbE0pWl1x2pRqYiuIIZBJcZodCgWLlBoLTCW3Yc
+        I5exOy+DNdbmRtugMhiNgDNMqqK2ec/yf2SJi4lHK9d7aoFPQVSndH7p+87pEqBS
+        R6VjBZP0TInFDsVSS2z2FPvvsKnGPlnJJSEr/YdhUCp4Xbq2ulP4qksVqZmf0Sp5
+        eFOeAQZecz2Jwy92DakXn/DAm/WE6bGZaNo7sFF+NwpfYdJOcmGsq2/Le3/mHYED
+        Fc/7jjfQ/Hz64/gGfTk8TMtVldP9OvF1FCeCE+h7QPNVFn83aKgp0M1sbe3pCIvm
+        /3wf1VO2lfzqUSYn5ZIaZVrd5YnoBxFads0HO4if2qxh5GKFfpEPwaP0=
+X-Virus-Scanned: amavisd-new at mykolab.com
+Received: from mx.kolabnow.com ([127.0.0.1])
+        by localhost (ext-mx-out003.mykolab.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 97qysaN6vrOG; Sat, 23 Mar 2019 18:37:10 +0100 (CET)
+Received: from int-mx001.mykolab.com (unknown [10.9.13.1])
+        by ext-mx-out003.mykolab.com (Postfix) with ESMTPS id D41D6404B7;
+        Sat, 23 Mar 2019 18:37:10 +0100 (CET)
+Received: from ext-subm002.mykolab.com (unknown [10.9.6.2])
+        by int-mx001.mykolab.com (Postfix) with ESMTPS id ABDE02C7;
+        Sat, 23 Mar 2019 18:37:10 +0100 (CET)
+From:   Federico Vaga <federico.vaga@vaga.pv.it>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Alex Shi <alex.shi@linux.alibaba.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] doc: add translation disclaimer
+Date:   Sat, 23 Mar 2019 18:37:09 +0100
+Message-ID: <2719899.4lLstzLvQ9@harkonnen>
+In-Reply-To: <20190319073539.1f16831a@lwn.net>
+References: <20190314204516.10890-1-federico.vaga@vaga.pv.it> <14381941.zoZXB8H0OD@pcbe13614> <20190319073539.1f16831a@lwn.net>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sean,
-
-> Although its just 9 LOC, consider its impact on someone who is looking
-> at
-> the kernel's SGX support for the first time.  Questions they may have
-> when
-> looking at the vDSO code/documentation:
+On Tuesday, March 19, 2019 2:35:39 PM CET Jonathan Corbet wrote:
+> On Tue, 19 Mar 2019 09:03:53 +0100
 > 
->   - What's an exit handler?
->   - Why is an exit handler optional?  Don't I always want to handle
-> exits?
->   - What value should my exit handler return?
->   - What should my exit handler do if it detects an error?
->   - Why would I want to preserve %rbp and not %rsp?
->   - Isn't it insecure to use the untrusted stack in my enclave?
+> Federico Vaga <federico.vaga@vaga.pv.it> wrote:
+> > > Oh well, I went ahead and applied it.  I do think that it might make
+> > > sense
+> > > to move the TOC *above* the disclaimer, though, since that's what
+> > > readers
+> > > are really going to be interested in.
+> > 
+> > No, problem I can do it and send a new version
 > 
-> AFAIK, the only reason to preserve %rbp instead of %rsp, i.e. support an
-> "exit handler" callback, is to be able to implement an o-call scheme
-> using
-> the untrusted stack to pass data.  Every idea I came up with for using
-> the
-> callback, e.g. logging, handling stack corruptiong, testing hooks,
-> etc...
-> was at worst no more difficult to implement when using a barebones vDSO.
+> Note that I said I applied the patch, so "a new version" isn't quite
+> what's needed here.  
+
+Actually I've sent the V2 patch with fixes suggested by Rasmus Villemoes
+before you applied this (V1) patch. And in that patch the TOC is, indeed, 
+above.
+
+https://lkml.org/lkml/2019/3/15/714
+
+When I answered you talking about a new version I forgot that it was done 
+already (V2 patch above) ^_^'
+
+> If you feel so inclined, a patch to reorder that file
+> would be good, though.
+
+I will send a patch that fixes this misunderstanding
+
+> Thanks,
 > 
-> So, given the choice between a) documenting and maintaining all the
-> baggage
-> that comes with the exit handler and b) saying "go use signals", I chose
-> option b.
+> jon
 
-Disagreed!
 
-This API is NOT even x86_64 compatible and NOT intended to be used by average developers. Instead, this API will be used by SGX SDK vendors who have all the needed background/expertise. And flexibility is way more important to them than reduced documentation. Just imagine how much one needs to read to understand how SGX works, do you really think a function comprised of 20 or so LOC will be a big deal? 
 
-Anyway, the documentation needed IMO will not exceed even 1 page, which will be way shorter than most of docs in kernel source tree. I'll be more than happy to help you out if that's out of your competence!
 
-Regarding maintenance, I see an API may require maintenance for 2 possible categories of reasons: 1) its interface cannot satisfy emerging applications; or 2) the infrastructure it relies on has changed. Generally speaking, a more generic API with less assumption/dependence on other components will impose lower maintenance cost in the long run. Comparing our proposals, they share the same dependences (i.e. SGX ISA and vDSO extable) but mine is more generic (as yours could be implemented using mine as a subroutine). Thus, I bet your proposal will impose higher maintenance cost in the long run.
-
--Cedric
