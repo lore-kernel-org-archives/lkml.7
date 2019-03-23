@@ -7,83 +7,89 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 768F0C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 02:18:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAB2EC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 02:20:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4328321874
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 02:18:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70FF1218D3
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 02:20:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="De18o8v7"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="e2HYgg0d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728291AbfCWCSX (ORCPT
+        id S1728136AbfCWCUg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 22:18:23 -0400
-Received: from mta-p6.oit.umn.edu ([134.84.196.206]:44986 "EHLO
-        mta-p6.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727166AbfCWCSX (ORCPT
+        Fri, 22 Mar 2019 22:20:36 -0400
+Received: from mta-p7.oit.umn.edu ([134.84.196.207]:42166 "EHLO
+        mta-p7.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727166AbfCWCUf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 22:18:23 -0400
+        Fri, 22 Mar 2019 22:20:35 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mta-p6.oit.umn.edu (Postfix) with ESMTP id D6838E28
-        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2019 02:18:21 +0000 (UTC)
+        by mta-p7.oit.umn.edu (Postfix) with ESMTP id 22A2AE04
+        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2019 02:20:34 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p6.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p6.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id oIrs0Ko5qHp0 for <linux-kernel@vger.kernel.org>;
-        Fri, 22 Mar 2019 21:18:21 -0500 (CDT)
-Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com [209.85.215.197])
+Received: from mta-p7.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p7.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Lqa80upYIwBG for <linux-kernel@vger.kernel.org>;
+        Fri, 22 Mar 2019 21:20:34 -0500 (CDT)
+Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com [209.85.210.199])
         (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mta-p6.oit.umn.edu (Postfix) with ESMTPS id 9D11FE23
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 21:18:21 -0500 (CDT)
-Received: by mail-pg1-f197.google.com with SMTP id z14so3804506pgv.0
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 19:18:21 -0700 (PDT)
+        by mta-p7.oit.umn.edu (Postfix) with ESMTPS id E7255D9C
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 21:20:33 -0500 (CDT)
+Received: by mail-pf1-f199.google.com with SMTP id i23so4073163pfa.0
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 19:20:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=umn.edu; s=google;
         h=mime-version:subject:from:in-reply-to:date:cc
          :content-transfer-encoding:message-id:references:to;
-        bh=49BDh8uAQs0FlurZKtSoOCBnD+/2CKeGTvSVyoflBU8=;
-        b=De18o8v7SC2K13tpazPaJ2Ovb2qfxhLcLudMZ8E7AFTD6MtnHuIXcrIBTOca4S6DAq
-         XenLfQVWbuIbdiIzaNktPL7ieeCG2kT6KDxccU31apBFxgzukQpYTK/aBTl5iAtDwVa4
-         B6EV6qt/6MsBlTsi1LXNXCoSH6pgAGQ/7BLAk6e4MeZvtH/ld1wqEBp0VvnlNXjPc2NO
-         K736+6R7i4K+96PuBNVnJbi5dIxA7ZtAWeBu2JuphSn1IqkCDab37v2gHiQS4R8vVfVb
-         UqXDYfq6F1UMsLk17kJ452TY5nysZRv86x16qV0nafwSq9QONKlwzPE+rRbufyWIy0Nt
-         tGOQ==
+        bh=BWZZUaKtReGroxkl9MY5j63B/LwjEoKhQZNNmn9Fkpc=;
+        b=e2HYgg0dlNOnJjfZSUWe0M0fRG6xXzSfAJ6YJiYgAZeA8PrW5RGu7bk6dLPmjxTE9e
+         kEUw5mdczce2cLTOqQLiO8TB9gzf+LOzw4a4Gk8RDul2CcSXnVqLZqywYuA8UgvWb+Ph
+         XcAJJ6j29x/3XO/j6eBPf1iX8AQaTWl8krZ71Pdqb2UgosMSm3+em1VAhrzmNDcZZK61
+         ba6VxCJLVt1JUOFXPo573yL4su5uN9zPkwTdsPaWUN+cpux0p/3paQwcy1/J0YP0MC5n
+         vytYumm8YZKuybXzpphVL8zbw1rBRam2ICgjxak6OY13E9SK6AJChFIKwNzNyLSMUuz7
+         tg5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
          :content-transfer-encoding:message-id:references:to;
-        bh=49BDh8uAQs0FlurZKtSoOCBnD+/2CKeGTvSVyoflBU8=;
-        b=NqfpphgmR2cQr/7JdwpblNnteH5QfZW32VRIwKWVxmYeXQQTmP3CGvW0hbODso77tI
-         O7/SliwTyoUWInKyUxWGO/E4siI0IGkjEdQ7bJVP5J2tJub2NicKdsJ5T5hR2BwK/KSB
-         IheWDD64wGR1blOMgVZGAZSIssm01+jfdsSrZ/vKGDNmzHClUoVVuUn/2Dqp57A51EqN
-         FsyXUa3XVfUnXmiHmqLy7bxItUKtZYVXGMP2lZXzhl+IFPu5iZxowjyC0JH+2neOz4Vt
-         FzIdySdhnoRbCp/YwA3+WQB06fpKLlQfESDtvREAp/n/w9RcYQI4VOfaIUJJCwVYsCEa
-         cgRw==
-X-Gm-Message-State: APjAAAWhMeEyhrZIGudzR0YU5YtHLr3p3mTs5fLlGkW3PlitvPB9K59G
-        G/pBT0KOJl1juM/Kf/rKfInDRxaX5AJIzULmFh4JwH/1t/IvHeEQRtcvZo8dHE/GrAJyiAPSO4+
-        7J4ga5+TFES7ovteEqM3nKJGQ5eY6
-X-Received: by 2002:a17:902:45a5:: with SMTP id n34mr13121803pld.127.1553307501056;
-        Fri, 22 Mar 2019 19:18:21 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqw4R8NZs0UpRwEQ3M+DOha4DHOc6rbnGhKSo45eSLdEOMhK1L6iBANtzc8mjB8nfX6sKublNA==
-X-Received: by 2002:a17:902:45a5:: with SMTP id n34mr13121787pld.127.1553307500763;
-        Fri, 22 Mar 2019 19:18:20 -0700 (PDT)
+        bh=BWZZUaKtReGroxkl9MY5j63B/LwjEoKhQZNNmn9Fkpc=;
+        b=WIlFKc2OVuAu+QqW87J19GiHbbHFp+KiFRZrYS7tAXnxFtoBajLwp43SU9Cl4s71xA
+         wl23hHQg+jqhdERwoYZq0EhGq4OQT+KFNeSwNGzdX0l0yIalu17t4wVsmbSW40DNtke/
+         V1TMgPwS11ihhJBHhFaOKPVafOu21o4cggCH6Ban7u6Sp5kktvTsIG+4nJADLzVpMwXI
+         arbx7/qx/c0eyBa484/d0SY1ieLrhomms1NvDnucRvCiZrfJ1RXENwkdQlJLlcHDUjSf
+         2Z8IsPD8XN08bqJ6CtkbXr7xbiWeFzrOPXYMiPtwBX6CXeGdkfkJlf0SC2sroE2aCCIc
+         CgbQ==
+X-Gm-Message-State: APjAAAVOPaZv8wBJ75i4aHQ23QZoB5E6LPxGmf7isl//Iqy8G7hcOZVR
+        ZWC1J4Y+ClZb3A7ZwFEDmN6cQTiHd9mEclQCX2k1zhvFpib5+mzl8sMV6GWA1BoFEnV4PTnfV3i
+        NU0eHw4F/renK+VtvJdK9nUC52Je3
+X-Received: by 2002:a17:902:123:: with SMTP id 32mr12718452plb.187.1553307632273;
+        Fri, 22 Mar 2019 19:20:32 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzDK15Ufm3NgeoI2w6ahwHXZh9mhkwfRAoLsiNb7o1z5lD2XAQl15rbJ2lRlgMm95auiTHj2A==
+X-Received: by 2002:a17:902:123:: with SMTP id 32mr12718438plb.187.1553307632076;
+        Fri, 22 Mar 2019 19:20:32 -0700 (PDT)
 Received: from [10.184.4.71] (host-173-230-104-21.mnmigsc.mn.minneapolis.us.clients.pavlovmedia.net. [173.230.104.21])
-        by smtp.gmail.com with ESMTPSA id g143sm4987263pfb.157.2019.03.22.19.18.18
+        by smtp.gmail.com with ESMTPSA id u62sm26052006pfa.124.2019.03.22.19.20.30
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 22 Mar 2019 19:18:19 -0700 (PDT)
+        Fri, 22 Mar 2019 19:20:31 -0700 (PDT)
 Content-Type: text/plain;
         charset=us-ascii
 Mime-Version: 1.0 (Mac OS X Mail 12.2 \(3445.102.3\))
-Subject: Re: [PATCH] firmware: arm_scmi: check return value of idr_find
+Subject: Re: [PATCH] gpu: amdkfd: fix a missing check of kmemdup
 From:   Kangjie Lu <kjlu@umn.edu>
-In-Reply-To: <20190309040239.32431-1-kjlu@umn.edu>
-Date:   Fri, 22 Mar 2019 21:18:19 -0500
-Cc:     pakki001@umn.edu, Sudeep Holla <sudeep.holla@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20190309041949.3176-1-kjlu@umn.edu>
+Date:   Fri, 22 Mar 2019 21:20:31 -0500
+Cc:     pakki001@umn.edu, Oded Gabbay <oded.gabbay@gmail.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?utf-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <55DFE6B7-B936-4F15-98C0-69F425D51665@umn.edu>
-References: <20190309040239.32431-1-kjlu@umn.edu>
+Message-Id: <71B1FB5B-DB3A-4E23-A62B-3ACC63D83319@umn.edu>
+References: <20190309041949.3176-1-kjlu@umn.edu>
 To:     kjlu@umn.edu
 X-Mailer: Apple Mail (2.3445.102.3)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -93,34 +99,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-> On Mar 8, 2019, at 10:02 PM, Kangjie Lu <kjlu@umn.edu> wrote:
+> On Mar 8, 2019, at 10:19 PM, Kangjie Lu <kjlu@umn.edu> wrote:
 >=20
-> idr_find may return NULL, so check its return value and return an
-> error code.
+> kmemdup could fail and return NULL. To avoid null pointer
+> dereference, the fix checkes its return value and returns
+> ENOMEM upon failures.
 
+This is a NULL-pointer dereference issue.
 Can someone review this patch? Thanks.
 
 >=20
 > Signed-off-by: Kangjie Lu <kjlu@umn.edu>
 > ---
-> drivers/firmware/arm_scmi/driver.c | 2 ++
-> 1 file changed, 2 insertions(+)
+> drivers/gpu/drm/amd/amdkfd/kfd_crat.c | 3 +++
+> 1 file changed, 3 insertions(+)
 >=20
-> diff --git a/drivers/firmware/arm_scmi/driver.c =
-b/drivers/firmware/arm_scmi/driver.c
-> index 8f952f2f1a29..35faa203d549 100644
-> --- a/drivers/firmware/arm_scmi/driver.c
-> +++ b/drivers/firmware/arm_scmi/driver.c
-> @@ -709,6 +709,8 @@ scmi_mbox_chan_setup(struct scmi_info *info, =
-struct device *dev, int prot_id)
->=20
-> 	if (scmi_mailbox_check(np)) {
-> 		cinfo =3D idr_find(&info->tx_idr, SCMI_PROTOCOL_BASE);
-> +		if (!cinfo)
-> +			return -EINVAL;
-> 		goto idr_alloc;
-> 	}
->=20
+> diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_crat.c =
+b/drivers/gpu/drm/amd/amdkfd/kfd_crat.c
+> index 2e7c44955f43..7ef62d4e7598 100644
+> --- a/drivers/gpu/drm/amd/amdkfd/kfd_crat.c
+> +++ b/drivers/gpu/drm/amd/amdkfd/kfd_crat.c
+> @@ -404,6 +404,9 @@ static int kfd_parse_subtype_iolink(struct =
+crat_subtype_iolink *iolink,
+> 			return -ENODEV;
+> 		/* same everything but the other direction */
+> 		props2 =3D kmemdup(props, sizeof(*props2), GFP_KERNEL);
+> +		if (!props2)
+> +			return -ENOMEM;
+> +
+> 		props2->node_from =3D id_to;
+> 		props2->node_to =3D id_from;
+> 		props2->kobj =3D NULL;
 > --=20
 > 2.17.1
 >=20
