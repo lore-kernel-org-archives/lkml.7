@@ -2,157 +2,148 @@ Return-Path: <SRS0=q9dy=R2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2436AC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 15:45:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBB1AC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 15:46:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E34E921902
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 15:45:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 832E421902
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 15:46:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vPFgIIFW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727713AbfCWPpY (ORCPT
+        id S1727628AbfCWPq5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Mar 2019 11:45:24 -0400
-Received: from [110.188.70.11] ([110.188.70.11]:20953 "EHLO spam2.hygon.cn"
-        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726649AbfCWPpY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Mar 2019 11:45:24 -0400
-Received: from MK-FE.hygon.cn ([172.23.18.61])
-        by spam2.hygon.cn with ESMTP id x2NFgUCn087385;
-        Sat, 23 Mar 2019 23:42:30 +0800 (GMT-8)
-        (envelope-from puwen@hygon.cn)
-Received: from cncheex01.Hygon.cn ([172.23.18.10])
-        by MK-FE.hygon.cn with ESMTP id x2NFgRIP083306;
-        Sat, 23 Mar 2019 23:42:27 +0800 (GMT-8)
-        (envelope-from puwen@hygon.cn)
-Received: from localhost.localdomain (172.23.18.44) by cncheex01.Hygon.cn
- (172.23.18.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1466.3; Sat, 23 Mar
- 2019 23:42:28 +0800
-From:   Pu Wen <puwen@hygon.cn>
-To:     <bp@alien8.de>, <tglx@linutronix.de>, <mingo@redhat.com>,
-        <hpa@zytor.com>, <x86@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, Pu Wen <puwen@hygon.cn>
-Subject: [RFC PATCH v2] x86/cpu/hygon: Fix phys_proc_id calculation logic for multi-die processor
-Date:   Sat, 23 Mar 2019 23:42:20 +0800
-Message-ID: <1553355740-19999-1-git-send-email-puwen@hygon.cn>
-X-Mailer: git-send-email 2.7.4
+        Sat, 23 Mar 2019 11:46:57 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:35028 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726889AbfCWPq5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 Mar 2019 11:46:57 -0400
+Received: by mail-pf1-f194.google.com with SMTP id t21so3521204pfe.2
+        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2019 08:46:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=HbhPhbLIVf5pBOuyL/DhIEkSg/RkUI1HDLQ686o01hs=;
+        b=vPFgIIFWLotJk+HYP/LezUVIV1r7k2foi1ErvEPV079QPri/hrmJveiMOUtesCo8z+
+         aYyDNEuLcINtf94O14+N2T8vdWaZWmZDO21oluXbqc42x8nWJsj6ou3TwOHy1Tbh06B7
+         bz4AeAtP9ZSX9GcFL0j8M6ScajHrfh76zws+Kiccihb8dpmhvBRU7650CPTH9jEuSROK
+         HrgZYnEsMN3A86jA0M6dMw+E0Xx5ibJnRhTyTII7GWtzeI19PR4YxsGXonbgQasb/qgh
+         VbsfaGp7JSZX5tiPYj+V8WxppYDZ+8tIx4VP5LvcOFWBP4OpTNhlDcd2dD5usEbMUbAl
+         VfYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=HbhPhbLIVf5pBOuyL/DhIEkSg/RkUI1HDLQ686o01hs=;
+        b=DL6xgk+F1OSASPVtz5RZ/K0DDxNy9DVdQ4SC+84EnRVmjfHKd11HfimT1v1f8ZnQ4z
+         3CMDKZhpsD/efB4VAXiTIR2PZCpZUTkHtnk58N8Cy5DjLS5Qr1T96z9C8J/lH9liPbGG
+         fWJIuwIuXzU9P8nToHX+yQJhU9i/Jb/TQQ/0JK7F0L/0Y7WLx3lFgOcs1nzS4BfTZM81
+         YC5pLbkewz7IcKnoVmgsS4nKHeQDjEbZDoN9P9lbzEhzDf3dm1VLTCkBRpcl/qO56ZD1
+         uuOcxGuEdwweE/dae0w0CtM4Un8VzdNfm5K5NcFk12fyk+uTIdSq7qZ1FRBFaZkwmg23
+         X/hw==
+X-Gm-Message-State: APjAAAVffXrXAN1mbIWEpLseCOjCQr6O7Pe1QKT4IQWBrdSF+iYg5C7H
+        MMJ29e3t/K+KdroaYCgug7E=
+X-Google-Smtp-Source: APXvYqxjRO06/zsPr6Djb3C/qDydtkKK9MhvryPqta+rHa4nKYLzO4SYeO78/i3Py6T4v8KhOKOTTA==
+X-Received: by 2002:a62:1ac3:: with SMTP id a186mr14922610pfa.48.1553356016666;
+        Sat, 23 Mar 2019 08:46:56 -0700 (PDT)
+Received: from bharath12345-Inspiron-5559 ([103.110.42.35])
+        by smtp.gmail.com with ESMTPSA id s16sm6909519pgo.69.2019.03.23.08.46.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 23 Mar 2019 08:46:56 -0700 (PDT)
+Date:   Sat, 23 Mar 2019 21:16:48 +0530
+From:   Bharath Vedartham <linux.bhar@gmail.com>
+To:     gregkh@linuxfoundation.org, philipp.panzer@fau.de
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4] staging: ralink-gdma: Use u32 over uint32_t
+Message-ID: <20190323154648.GA10634@bharath12345-Inspiron-5559>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [172.23.18.44]
-X-ClientProxiedBy: cncheex02.Hygon.cn (172.23.18.12) To cncheex01.Hygon.cn
- (172.23.18.10)
-X-MAIL: spam2.hygon.cn x2NFgUCn087385
-X-DNSRBL: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Fixes the checkpatch.pl warning: "Prefer u32 over uint32_t"
 
-v1->v2:
-  - Define bit 6 of ApicId with a descriptive name.
-  - Add description about why Hygon need to do something different than
-    what AMD does.
-
-
-For Hygon family 18h multi-die processor platform, which support 1-Die/
-2-Die/4-Die per socket, the system view is shown in the following system
-topology.
-
-System View (with 1-Die 2-Socket):
-           |------------|
-         ------       -----
- SOCKET0 | D0 |       | D1 |  SOCKET1
-         ------       -----
-
-System View (with 2-Die 2-socket):
-           --------------------
-           |     -------------|------
-           |     |            |     |
-         ------------       ------------
- SOCKET0 | D1 -- D0 |       | D3 -- D2 | SOCKET1
-         ------------       ------------
-
-System View (with 4-Die 2-Socket) :
-           --------------------
-           |     -------------|------
-           |     |            |     |
-         ------------       ------------
-         | D1 -- D0 |       | D7 -- D6 |
-         | |  \/ |  |       | |  \/ |  |
- SOCKET0 | |  /\ |  |       | |  /\ |  | SOCKET1
-         | D2 -- D3 |       | D4 -- D5 |
-         ------------       ------------
-           |     |            |     |
-           ------|------------|     |
-                 --------------------
-
-Current code direct use "phys_proc_id = initial_apicid >> bits", which
-calculate phys_proc_id from initial_apicid by shifting *bits*, will get
-wrong phys_proc_id for Hygon family 18h 1-Die/2-Die 2-socket system.
-
-According to document [1] section 2.1.11.1, the *bits* is the value of
-CPUID_Fn80000008_ECX[12:15]. The value may be 4, 5 or 6. The definitions
-are: 4 - 1 die, 5 - 2 die, 6 - 3/4 die.
-
-Hygon programs the initial ApicId in the same way as AMD. The ApicId is
-read from CPUID_Fn00000001_EBX (see section 2.1.11.1 of referrence [1])
-and the definition is as below (see section 2.1.10.2.1.3 of [1]):
-             -------------------------------------------------
-         Bit |     6     |   5  4  |    3   |    2   1   0   |
-             |-----------|---------|--------|----------------|
-         IDs | Socket ID | Node ID | CCX ID | Core/Thread ID |
-             -------------------------------------------------
-
-So for 3/4-Die CPU the *bits* is 6, which is same to ApicID definition
-field, which still can get correct socket ID for 2-socket system. But
-for 1-Die or 2-Die CPU the *bits* is 4 or 5, which will cause the right
-shifted result is not exactly the value of socket ID.
-
-For Hygon family 18h CPU the socket ID should be obtained from ApicId[6].
-To fix the problem and match ApicID field definition, adjust the shift
-bits to 6 for all Hygon family 18h multi-die CPUs.
-
-Because AMD doesn't have 2-Socket system with 1-Die/2-Die processors(see
-reference [2]), so it will return the right result when getting physical
-ID in AMD system. Therefore this doesn't need to be changed in AMD code
-but only for Hygon.
-
-Reference:
-[1] https://www.amd.com/system/files/TechDocs/54945_PPR_Family_17h_Models_00h-0Fh.pdf
-[2] https://www.amd.com/en/products/specifications/processors
-
-Signed-off-by: Pu Wen <puwen@hygon.cn>
+Signed-off-by: Bharath Vedartham <linux.bhar@gmail.com>
 ---
- arch/x86/kernel/cpu/hygon.c | 5 +++++
- 1 file changed, 5 insertions(+)
+Changes since v3
+	- Fixed allignment issues.
+	- Submitted a seperate patch to change unsigned
+	to unsigned int.
+	- One of the allignments crosses 80 characters in a line
+	but I feel that we may loose readability if we try to reduce
+	the characters in the line.
+---
+ drivers/staging/ralink-gdma/ralink-gdma.c | 14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/hygon.c b/arch/x86/kernel/cpu/hygon.c
-index cf25405..415621d 100644
---- a/arch/x86/kernel/cpu/hygon.c
-+++ b/arch/x86/kernel/cpu/hygon.c
-@@ -19,6 +19,8 @@
+diff --git a/drivers/staging/ralink-gdma/ralink-gdma.c b/drivers/staging/ralink-gdma/ralink-gdma.c
+index d78042e..0b831f8 100644
+--- a/drivers/staging/ralink-gdma/ralink-gdma.c
++++ b/drivers/staging/ralink-gdma/ralink-gdma.c
+@@ -157,14 +157,12 @@ static struct gdma_dma_desc *to_gdma_dma_desc(struct virt_dma_desc *vdesc)
+ 	return container_of(vdesc, struct gdma_dma_desc, vdesc);
+ }
  
- #include "cpu.h"
+-static inline uint32_t gdma_dma_read(struct gdma_dma_dev *dma_dev,
+-				     unsigned int reg)
++static inline u32 gdma_dma_read(struct gdma_dma_dev *dma_dev, unsigned int reg)
+ {
+ 	return readl(dma_dev->base + reg);
+ }
  
-+#define APICID_SOCKET_ID_BIT 6
-+
- /*
-  * nodes_per_socket: Stores the number of nodes per socket.
-  * Refer to CPUID Fn8000_001E_ECX Node Identifiers[10:8]
-@@ -87,6 +89,9 @@ static void hygon_get_topology(struct cpuinfo_x86 *c)
- 		if (!err)
- 			c->x86_coreid_bits = get_count_order(c->x86_max_cores);
+-static inline void gdma_dma_write(struct gdma_dma_dev *dma_dev,
+-				  unsigned reg, uint32_t val)
++static inline void gdma_dma_write(struct gdma_dma_dev *dma_dev, unsigned reg, u32 val)
+ {
+ 	writel(val, dma_dev->base + reg);
+ }
+@@ -283,7 +281,7 @@ static int rt305x_gdma_start_transfer(struct gdma_dmaengine_chan *chan)
+ 	struct gdma_dma_dev *dma_dev = gdma_dma_chan_get_dev(chan);
+ 	dma_addr_t src_addr, dst_addr;
+ 	struct gdma_dma_sg *sg;
+-	uint32_t ctrl0, ctrl1;
++	u32 ctrl0, ctrl1;
  
-+		/* Socket ID is ApicId[6] for these processors. */
-+		c->phys_proc_id = c->apicid >> APICID_SOCKET_ID_BIT;
-+
- 		cacheinfo_hygon_init_llc_id(c, cpu, node_id);
- 	} else if (cpu_has(c, X86_FEATURE_NODEID_MSR)) {
- 		u64 value;
+ 	/* verify chan is already stopped */
+ 	ctrl0 = gdma_dma_read(dma_dev, GDMA_REG_CTRL0(chan->id));
+@@ -361,7 +359,7 @@ static int rt3883_gdma_start_transfer(struct gdma_dmaengine_chan *chan)
+ 	struct gdma_dma_dev *dma_dev = gdma_dma_chan_get_dev(chan);
+ 	dma_addr_t src_addr, dst_addr;
+ 	struct gdma_dma_sg *sg;
+-	uint32_t ctrl0, ctrl1;
++	u32 ctrl0, ctrl1;
+ 
+ 	/* verify chan is already stopped */
+ 	ctrl0 = gdma_dma_read(dma_dev, GDMA_REG_CTRL0(chan->id));
+@@ -753,7 +751,7 @@ static void gdma_dma_tasklet(unsigned long arg)
+ 
+ static void rt305x_gdma_init(struct gdma_dma_dev *dma_dev)
+ {
+-	uint32_t gct;
++	u32 gct;
+ 
+ 	/* all chans round robin */
+ 	gdma_dma_write(dma_dev, GDMA_RT305X_GCT, GDMA_REG_GCT_ARBIT_RR);
+@@ -767,7 +765,7 @@ static void rt305x_gdma_init(struct gdma_dma_dev *dma_dev)
+ 
+ static void rt3883_gdma_init(struct gdma_dma_dev *dma_dev)
+ {
+-	uint32_t gct;
++	u32 gct;
+ 
+ 	/* all chans round robin */
+ 	gdma_dma_write(dma_dev, GDMA_REG_GCT, GDMA_REG_GCT_ARBIT_RR);
 -- 
 2.7.4
 
