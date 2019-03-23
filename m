@@ -2,75 +2,75 @@ Return-Path: <SRS0=q9dy=R2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F15F8C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 01:29:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45841C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 01:54:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1581218E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 01:29:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 084AE2087F
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 01:54:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="svA0Tptk"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UiOmgfaF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728274AbfCWB3y (ORCPT
+        id S1728115AbfCWBxF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 21:29:54 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:39349 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728236AbfCWB3x (ORCPT
+        Fri, 22 Mar 2019 21:53:05 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:43509 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727733AbfCWBxE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 21:29:53 -0400
-Received: by mail-pg1-f193.google.com with SMTP id h8so2638317pgp.6
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 18:29:52 -0700 (PDT)
+        Fri, 22 Mar 2019 21:53:04 -0400
+Received: by mail-pg1-f195.google.com with SMTP id l11so2649347pgq.10
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 18:53:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=5N6D7hDjjGdTr25In9X+DMLqKrd0Dg1k+CEt/RF5aAI=;
-        b=svA0TptkO2OiuAGubaBDyr+jj5w23JOEPlUxrnTlPdC8V6Udk0NRfSsiXwWXsDbyIq
-         iHrfGjkzcx0c98zbtbdhKcsZdWsMBcH0sRlCeu4kBnKtYV73vVQxQ7lg0kPZUS9jdITp
-         CKM8KC2MYKZauZK/0xCP+z/Y4UdjAtWiaVKTA=
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AuNyeUjcjgM9t85Km8UXdB8JIJnuD60U7OVlczqKzp8=;
+        b=UiOmgfaFQfn94Vskp+AqrsOVXz65vPeRSQog9WXzKL5CmkHtAgEmGQYDPU+dIIWzp9
+         acXhWSwNKV848Lq2IBfVXBXnMdweWXyl4VO1cysm//XXzC3stfmVctvi7Et56aULFY/B
+         MdX0/6IAb4RWykiPkSgJtZvRbO/xSkANjSQ9I=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=5N6D7hDjjGdTr25In9X+DMLqKrd0Dg1k+CEt/RF5aAI=;
-        b=NseJaVoOysLIuYujcYnTBlht65VXCnifQCUHTlMs1LTd0B5H3u/VEz6JgFLtlSsvGi
-         c7iGzRzZkjL4b0Ut5hitKKDSAVGDa5BI8adwM4aqzpm/wcJy6jtckhwxw/e8L7jIcZtU
-         s3vIBQLPDtglSyZY3QqaDDIR25CoKkhzhuo7ohyxsbBkT3UIzBCzPbPEF+YeLmMC8igB
-         Isw4QO/pqsm29iqgJvYyTHadRcG+5XL/sh7ral7EIZ8p13L/7gtp4j+kxIy/DasVNrLT
-         nsrJIc50t6Wk4emdwgvsIEGgzre+EDjEe6RuLprH3817M7P2bqVNDvhceJHMpzaZjEmp
-         h9Bw==
-X-Gm-Message-State: APjAAAVXJf8AR4q2902hOJ39N1mSwhD5PKZ1+368Lpe0/eA8iR7L4ulj
-        Q4pz98I+uxEslgoW3dAeaJUUCKR5buM=
-X-Google-Smtp-Source: APXvYqxNUITaN7xRaY8xCyQS47WFEsMWa1fFG3yC6psOPSHq8l4qUx7Jyj/DLcvXBLuPC5ot1HLwDA==
-X-Received: by 2002:a65:60c1:: with SMTP id r1mr11757594pgv.137.1553304591571;
-        Fri, 22 Mar 2019 18:29:51 -0700 (PDT)
-Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id l7sm26672525pfj.162.2019.03.22.18.29.49
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AuNyeUjcjgM9t85Km8UXdB8JIJnuD60U7OVlczqKzp8=;
+        b=kBIV+OrMj0i4tTEY+F6a5XNxMXWVCgd1zjPAewmtGrcx8xYCTIxhZqKca2QELBC+G9
+         lx54tipKmlQwrmEGCXDYtD3+4oBMtKRAR9hl9O4+XLHo5LplQz+G6BTo1a7A83dLJKUb
+         naNejK3bOPPKNkWDvNA3W4UY8sq656HrN+7vhidKS7J4cpOOToZo8+gShINJFXd5b7zh
+         luSexERTd2I3uy41TkMMG6dJu672SlXTL0BeS7yRJdiUuTZBzAWbj2tks3l5OtA1Pkc9
+         QOT0Ija+oyuAEdWoSiXHQwwq459Ilc8Bu3nEvkG00u74ZRKWX4PVevkfRydK8Q4GRrc7
+         wnFw==
+X-Gm-Message-State: APjAAAVkUV8yEx9OpFKHxJ52Z0+8/TMimlm9v2tn/OmMVdesIFHUduU4
+        ZnBHMnoTxAxEyjqFcm43g9fQ+A==
+X-Google-Smtp-Source: APXvYqzXyjOLbHH27GafFdcA8WGUaouBIKHbtqx0THmjk/ToKdES/qvwBOcNhU9yj3iQmoJiWsi1kQ==
+X-Received: by 2002:aa7:8ad4:: with SMTP id b20mr5822844pfd.249.1553305983426;
+        Fri, 22 Mar 2019 18:53:03 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id m24sm9822534pgv.1.2019.03.22.18.53.02
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 22 Mar 2019 18:29:50 -0700 (PDT)
-From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        byungchul.park@lge.com, kernel-team@android.com,
-        rcu@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Will Deacon <will.deacon@arm.com>
-Subject: [RFC 2/2] rcutree: Add checks for dynticks counters in rcu_is_cpu_rrupt_from_idle
-Date:   Fri, 22 Mar 2019 21:29:39 -0400
-Message-Id: <20190323012939.15185-2-joel@joelfernandes.org>
+        Fri, 22 Mar 2019 18:53:02 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Daniel Thompson <daniel.thompson@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Douglas Anderson <dianders@chromium.org>,
+        Jason Wessel <jason.wessel@windriver.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Kees Cook <keescook@chromium.org>,
+        kgdb-bugreport@lists.sourceforge.net,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Nicholas Mc Guire <hofrat@osadl.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH] kdb: Get rid of broken attempt to print CCVERSION in kdb summary
+Date:   Fri, 22 Mar 2019 18:52:27 -0700
+Message-Id: <20190323015227.245455-1-dianders@chromium.org>
 X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
-In-Reply-To: <20190323012939.15185-1-joel@joelfernandes.org>
-References: <20190323012939.15185-1-joel@joelfernandes.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,91 +78,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the future we would like to combine the dynticks and dynticks_nesting
-counters thus leading to simplifying the code. At the moment we cannot
-do that due to concerns about usermode upcalls appearing to RCU as half
-of an interrupt. Byungchul tried to do it in [1] but the
-"half-interrupt" concern was raised. It is half because, what RCU
-expects is rcu_irq_enter() and rcu_irq_exit() pairs when the usermode
-exception happens. However, only rcu_irq_enter() is observed. This
-concern may not be valid anymore, but at least it used to be the case.
+If you drop into kdb and type "summary", it prints out a line that
+says this:
 
-Out of abundance of caution, Paul added warnings [2] in the RCU code
-which if not fired by 2021 may allow us to assume that such
-half-interrupt scenario cannot happen any more, which can lead to
-simplification of this code.
+  ccversion  CCVERSION
 
-Summary of the changes are the following:
+...and I don't mean that it actually prints out the version of the C
+compiler.  It literally prints out the string "CCVERSION".
 
-(1) In preparation for this combination of counters in the future, we
-first need to first be sure that rcu_rrupt_from_idle cannot be called
-from anywhere but a hard-interrupt because previously, the comments
-suggested otherwise so let us be sure. We discussed this here [3]. We
-use the services of lockdep to accomplish this.
+The version of the C Compiler is already printed at boot up and it
+doesn't seem useful to replicate this in kdb.  Let's just delete it.
+We can also delete the bit of the Makefile that called the C compiler
+in an attempt to pass this into kdb.  This will remove one extra call
+to the C compiler at Makefile parse time and (very slightly) speed up
+builds.
 
-(2) Further rcu_rrupt_from_idle() is not explicit about how it is using
-the counters which can lead to weird future bugs. This patch therefore
-makes it more explicit about the specific counter values being tested
-
-(3) Lastly, we check for counter underflows just to be sure these are
-not happening, because the previous code in rcu_rrupt_from_idle() was
-allowing the case where the counters can underflow, and the function
-would still return true. Now we are checking for specific values so let
-us be confident by additional checking, that such underflows don't
-happen. Any case, if they do, we should fix them and the screaming
-warning is appropriate. All these checks checks are NOOPs if PROVE_RCU
-and PROVE_LOCKING are disabled.
-
-[1] https://lore.kernel.org/patchwork/patch/952349/
-[2] Commit e11ec65cc8d6 ("rcu: Add warning to detect half-interrupts")
-[3] https://lore.kernel.org/lkml/20190312150514.GB249405@google.com/
-
-Cc: byungchul.park@lge.com
-Cc: kernel-team@android.com
-Cc: rcu@vger.kernel.org
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
- kernel/rcu/tree.c | 21 +++++++++++++++++----
- 1 file changed, 17 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index 9180158756d2..d94c8ed29f6b 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -381,16 +381,29 @@ static void __maybe_unused rcu_momentary_dyntick_idle(void)
- }
+ kernel/debug/kdb/Makefile   | 1 -
+ kernel/debug/kdb/kdb_main.c | 1 -
+ 2 files changed, 2 deletions(-)
+
+diff --git a/kernel/debug/kdb/Makefile b/kernel/debug/kdb/Makefile
+index d4fc58f4b88d..efac857c5511 100644
+--- a/kernel/debug/kdb/Makefile
++++ b/kernel/debug/kdb/Makefile
+@@ -6,7 +6,6 @@
+ # Copyright (c) 2009 Wind River Systems, Inc. All Rights Reserved.
+ #
  
- /**
-- * rcu_is_cpu_rrupt_from_idle - see if idle or immediately interrupted from idle
-+ * rcu_is_cpu_rrupt_from_idle - see if interrupted from idle
-  *
-- * If the current CPU is idle or running at a first-level (not nested)
-+ * If the current CPU is idle and running at a first-level (not nested)
-  * interrupt from idle, return true.  The caller must have at least
-  * disabled preemption.
-  */
- static int rcu_is_cpu_rrupt_from_idle(void)
- {
--	return __this_cpu_read(rcu_data.dynticks_nesting) <= 0 &&
--	       __this_cpu_read(rcu_data.dynticks_nmi_nesting) <= 1;
-+	/* Called only from within the scheduling-clock interrupt */
-+	lockdep_assert_in_irq();
-+
-+	/* Check for counter underflows */
-+	RCU_LOCKDEP_WARN(
-+		(__this_cpu_read(rcu_data.dynticks_nesting) < 0) &&
-+		(__this_cpu_read(rcu_data.dynticks_nmi_nesting) < 0),
-+		"RCU dynticks nesting counters underflow!");
-+
-+	/* Are we at first interrupt nesting level? */
-+	if (__this_cpu_read(rcu_data.dynticks_nmi_nesting) != 1)
-+		return false;
-+
-+	/* Does CPU appear to be idle from an RCU standpoint? */
-+	return __this_cpu_read(rcu_data.dynticks_nesting) == 0;
- }
+-CCVERSION	:= $(shell $(CC) -v 2>&1 | sed -ne '$$p')
+ obj-y := kdb_io.o kdb_main.o kdb_support.o kdb_bt.o gen-kdb_cmds.o kdb_bp.o kdb_debugger.o
+ obj-$(CONFIG_KDB_KEYBOARD)    += kdb_keyboard.o
  
- #define DEFAULT_RCU_BLIMIT 10     /* Maximum callbacks per rcu_do_batch. */
+diff --git a/kernel/debug/kdb/kdb_main.c b/kernel/debug/kdb/kdb_main.c
+index 82a3b32a7cfc..fc96dbf8d9de 100644
+--- a/kernel/debug/kdb/kdb_main.c
++++ b/kernel/debug/kdb/kdb_main.c
+@@ -2522,7 +2522,6 @@ static int kdb_summary(int argc, const char **argv)
+ 	kdb_printf("machine    %s\n", init_uts_ns.name.machine);
+ 	kdb_printf("nodename   %s\n", init_uts_ns.name.nodename);
+ 	kdb_printf("domainname %s\n", init_uts_ns.name.domainname);
+-	kdb_printf("ccversion  %s\n", __stringify(CCVERSION));
+ 
+ 	now = __ktime_get_real_seconds();
+ 	time64_to_tm(now, 0, &tm);
 -- 
 2.21.0.392.gf8f6787159e-goog
 
