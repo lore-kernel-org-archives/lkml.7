@@ -2,80 +2,195 @@ Return-Path: <SRS0=q9dy=R2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3C71C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 14:14:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE067C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 14:18:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4E7020811
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 14:14:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82E08218A2
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 14:18:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727585AbfCWOOB (ORCPT
+        id S1727570AbfCWOSy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Mar 2019 10:14:01 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:42648 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727364AbfCWOOB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Mar 2019 10:14:01 -0400
-Received: by mail-io1-f71.google.com with SMTP id i1so4194863ioq.9
-        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2019 07:14:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=PsYFp35cFHs+5EpxQdqt4DnROaY5BNIXaA5kW14ZkHM=;
-        b=jUSY36j09f2c4Kl/vgIHgSrmLDqoKXBsTuTH84A++kWi+kL+weh9iI0BfWV8/MhQ+1
-         pUS33NaMwbV3gme5CMsnDNVKn2DB67G7OSzbty+Q6RlX0V9vrQzXWu8JkhZngl6L7Q84
-         8Rc38Sa3ulWPIl8Rv4ULBSmjhNa0oKKfRpoQgyg/Ooz/BgsTqqoJdnDXR0I2kJJFl55x
-         zMk3qlFpuSFmFQ6dhBYSQ2rzjsAYvIxAss4iXsee8ZUovQbqbgUhM2TgXvriNVlq0HOJ
-         xVAy+3pn5KU+IWadJvJKMomoN+mUnQRDm4MzXNQoH9HHkYK3wULgDOaXy7hiJR6X95qc
-         SBAQ==
-X-Gm-Message-State: APjAAAUc2Br9TMCJUinEX+eziGkEc3fKjREq63SOw+AIUPdRJgMW8bjv
-        /QBfrY9wnSn0C51uKcrVll6NYJb86B8X+xmHKwnFdT222oUL
-X-Google-Smtp-Source: APXvYqxrlhN7ZDSj5xzFZUOsZkR2w5UMagQnWSWyFsjEj1xFUpW9RSUHz2nSPn08J7oOQmE0yPfsE/xLggyWS6ZwEfvr/Ehy7Hk1
-MIME-Version: 1.0
-X-Received: by 2002:a02:8c2f:: with SMTP id l44mr10677090jak.46.1553350440469;
- Sat, 23 Mar 2019 07:14:00 -0700 (PDT)
-Date:   Sat, 23 Mar 2019 07:14:00 -0700
-In-Reply-To: <000000000000685dc805829e835c@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000003749360584c395ba@google.com>
-Subject: Re: WARNING: bad unlock balance detected! (3)
-From:   syzbot <syzbot+f3e3434787332dfc1c47@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, devicetree@vger.kernel.org,
-        jbrunet@baylibre.com, khilman@baylibre.com, kuznet@ms2.inr.ac.ru,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        mark.rutland@arm.com, netdev@vger.kernel.org, robh+dt@kernel.org,
-        syzkaller-bugs@googlegroups.com, yoshfuji@linux-ipv6.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+        Sat, 23 Mar 2019 10:18:54 -0400
+Received: from mga01.intel.com ([192.55.52.88]:28331 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727192AbfCWOSx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 Mar 2019 10:18:53 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Mar 2019 07:18:53 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,256,1549958400"; 
+   d="scan'208";a="129543546"
+Received: from xulike-server.sh.intel.com ([10.239.48.134])
+  by orsmga006.jf.intel.com with ESMTP; 23 Mar 2019 07:18:51 -0700
+From:   Like Xu <like.xu@linux.intel.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     like.xu@intel.com, wei.w.wang@intel.com,
+        Andi Kleen <ak@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [RFC] [PATCH v2 1/5] perf/x86: avoid host changing counter state for kvm_intel events holder
+Date:   Sat, 23 Mar 2019 22:18:04 +0800
+Message-Id: <1553350688-39627-2-git-send-email-like.xu@linux.intel.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1553350688-39627-1-git-send-email-like.xu@linux.intel.com>
+References: <1553350688-39627-1-git-send-email-like.xu@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+When an perf_event is used by intel vPMU, the vPMU would be responsible
+for updating its event_base and config_base. Just checking the writes not
+including reading helps perf_events run as usual.
 
-commit ec01fb69ac8034ad6e839b31f9df167a110f868b
-Author: Jerome Brunet <jbrunet@baylibre.com>
-Date:   Wed Jan 16 17:59:47 2019 +0000
+Signed-off-by: Wei Wang <wei.w.wang@intel.com>
+Signed-off-by: Like Xu <like.xu@linux.intel.com>
+---
+ arch/x86/events/core.c       | 37 +++++++++++++++++++++++++++++++++----
+ arch/x86/events/intel/core.c |  5 +++--
+ arch/x86/events/perf_event.h | 13 +++++++++----
+ 3 files changed, 45 insertions(+), 10 deletions(-)
 
-     arm64: dts: meson: s400: fix emmc maximum rate
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index e2b1447..d4b5fc0 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -1120,6 +1120,35 @@ static void x86_pmu_enable(struct pmu *pmu)
+ static DEFINE_PER_CPU(u64 [X86_PMC_IDX_MAX], pmc_prev_left);
+ 
+ /*
++ * If this is an event used by intel vPMU,
++ * intel_kvm_pmu would be responsible for updating the HW.
++ */
++void x86_perf_event_set_event_base(struct perf_event *event,
++	unsigned long val)
++{
++	if (event->attr.exclude_host &&
++			boot_cpu_data.x86_vendor == X86_VENDOR_INTEL)
++		return;
++
++	wrmsrl(event->hw.event_base, val);
++}
++
++void x86_perf_event_set_config_base(struct perf_event *event,
++	unsigned long val, bool set_extra_config)
++{
++	struct hw_perf_event *hwc = &event->hw;
++
++	if (event->attr.exclude_host &&
++			boot_cpu_data.x86_vendor == X86_VENDOR_INTEL)
++		return;
++
++	if (set_extra_config)
++		wrmsrl(hwc->extra_reg.reg, hwc->extra_reg.config);
++
++	wrmsrl(event->hw.config_base, val);
++}
++
++/*
+  * Set the next IRQ period, based on the hwc->period_left value.
+  * To be called with the event disabled in hw:
+  */
+@@ -1169,17 +1198,17 @@ int x86_perf_event_set_period(struct perf_event *event)
+ 	 */
+ 	local64_set(&hwc->prev_count, (u64)-left);
+ 
+-	wrmsrl(hwc->event_base, (u64)(-left) & x86_pmu.cntval_mask);
++	x86_perf_event_set_event_base(event,
++		(u64)(-left) & x86_pmu.cntval_mask);
+ 
+ 	/*
+ 	 * Due to erratum on certan cpu we need
+ 	 * a second write to be sure the register
+ 	 * is updated properly
+ 	 */
+-	if (x86_pmu.perfctr_second_write) {
+-		wrmsrl(hwc->event_base,
++	if (x86_pmu.perfctr_second_write)
++		x86_perf_event_set_event_base(event,
+ 			(u64)(-left) & x86_pmu.cntval_mask);
+-	}
+ 
+ 	perf_event_update_userpage(event);
+ 
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 8baa441..817257c 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -2061,6 +2061,7 @@ static inline void intel_pmu_ack_status(u64 ack)
+ 
+ static void intel_pmu_disable_fixed(struct hw_perf_event *hwc)
+ {
++	struct perf_event *event = container_of(hwc, struct perf_event, hw);
+ 	int idx = hwc->idx - INTEL_PMC_IDX_FIXED;
+ 	u64 ctrl_val, mask;
+ 
+@@ -2068,7 +2069,7 @@ static void intel_pmu_disable_fixed(struct hw_perf_event *hwc)
+ 
+ 	rdmsrl(hwc->config_base, ctrl_val);
+ 	ctrl_val &= ~mask;
+-	wrmsrl(hwc->config_base, ctrl_val);
++	x86_perf_event_set_config_base(event, ctrl_val, false);
+ }
+ 
+ static inline bool event_is_checkpointed(struct perf_event *event)
+@@ -2148,7 +2149,7 @@ static void intel_pmu_enable_fixed(struct perf_event *event)
+ 	rdmsrl(hwc->config_base, ctrl_val);
+ 	ctrl_val &= ~mask;
+ 	ctrl_val |= bits;
+-	wrmsrl(hwc->config_base, ctrl_val);
++	x86_perf_event_set_config_base(event, ctrl_val, false);
+ }
+ 
+ static void intel_pmu_enable_event(struct perf_event *event)
+diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+index a759557..3029960 100644
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -726,6 +726,11 @@ static inline bool x86_pmu_has_lbr_callstack(void)
+ 
+ int x86_perf_event_set_period(struct perf_event *event);
+ 
++void x86_perf_event_set_config_base(struct perf_event *event,
++	unsigned long val, bool set_extra_config);
++void x86_perf_event_set_event_base(struct perf_event *event,
++	unsigned long val);
++
+ /*
+  * Generalized hw caching related hw_event table, filled
+  * in on a per model basis. A value of 0 means
+@@ -785,11 +790,11 @@ static inline int x86_pmu_rdpmc_index(int index)
+ static inline void __x86_pmu_enable_event(struct hw_perf_event *hwc,
+ 					  u64 enable_mask)
+ {
++	struct perf_event *event = container_of(hwc, struct perf_event, hw);
+ 	u64 disable_mask = __this_cpu_read(cpu_hw_events.perf_ctr_virt_mask);
+ 
+-	if (hwc->extra_reg.reg)
+-		wrmsrl(hwc->extra_reg.reg, hwc->extra_reg.config);
+-	wrmsrl(hwc->config_base, (hwc->config | enable_mask) & ~disable_mask);
++	x86_perf_event_set_config_base(event,
++		(hwc->config | enable_mask) & ~disable_mask, true);
+ }
+ 
+ void x86_pmu_enable_all(int added);
+@@ -804,7 +809,7 @@ static inline void x86_pmu_disable_event(struct perf_event *event)
+ {
+ 	struct hw_perf_event *hwc = &event->hw;
+ 
+-	wrmsrl(hwc->config_base, hwc->config);
++	x86_perf_event_set_config_base(event, hwc->config, false);
+ }
+ 
+ void x86_pmu_enable_event(struct perf_event *event);
+-- 
+1.8.3.1
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10afb7cf200000
-start commit:   065b6c4c Merge tag 'devicetree-for-5.1' of git://git.kerne..
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=12afb7cf200000
-console output: https://syzkaller.appspot.com/x/log.txt?x=14afb7cf200000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ea4067c9a08ae046
-dashboard link: https://syzkaller.appspot.com/bug?extid=f3e3434787332dfc1c47
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12a10577200000
-
-Reported-by: syzbot+f3e3434787332dfc1c47@syzkaller.appspotmail.com
-Fixes: ec01fb69ac80 ("arm64: dts: meson: s400: fix emmc maximum rate")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
