@@ -2,124 +2,274 @@ Return-Path: <SRS0=q9dy=R2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95BC6C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 16:03:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E17A1C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 16:14:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 709A2206BA
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 16:03:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9B2A20896
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 16:14:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727690AbfCWQC7 convert rfc822-to-8bit (ORCPT
+        id S1727680AbfCWQOl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Mar 2019 12:02:59 -0400
-Received: from unicorn.mansr.com ([81.2.72.234]:41680 "EHLO unicorn.mansr.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727298AbfCWQC6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Mar 2019 12:02:58 -0400
-Received: by unicorn.mansr.com (Postfix, from userid 51770)
-        id EDF2114CEA; Sat, 23 Mar 2019 16:02:49 +0000 (GMT)
-From:   =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
-To:     Stefan Agner <stefan@agner.ch>
-Cc:     linux@armlinux.org.uk, arnd@arndb.de, ard.biesheuvel@linaro.org,
-        robin.murphy@arm.com, nicolas.pitre@linaro.org,
-        f.fainelli@gmail.com, rjui@broadcom.com, sbranden@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, kgene@kernel.org,
-        krzk@kernel.org, robh@kernel.org, ssantosh@kernel.org,
-        jason@lakedaemon.net, andrew@lunn.ch, gregory.clement@bootlin.com,
-        sebastian.hesselbarth@gmail.com, tony@atomide.com,
-        marc.w.gonzalez@free.fr, ndesaulniers@google.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] ARM: use arch_extension directive instead of arch argument
-References: <9641c58c03720104186a797a96e30a52ae9805e4.1553356359.git.stefan@agner.ch>
-Date:   Sat, 23 Mar 2019 16:02:49 +0000
-In-Reply-To: <9641c58c03720104186a797a96e30a52ae9805e4.1553356359.git.stefan@agner.ch>
-        (Stefan Agner's message of "Sat, 23 Mar 2019 16:52:56 +0100")
-Message-ID: <yw1xa7hlzihi.fsf@mansr.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.3 (gnu/linux)
+        Sat, 23 Mar 2019 12:14:41 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:42648 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727267AbfCWQOl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 Mar 2019 12:14:41 -0400
+Received: from p5492e2fc.dip0.t-ipconnect.de ([84.146.226.252] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1h7jHu-0004rJ-J5; Sat, 23 Mar 2019 17:14:26 +0100
+Date:   Sat, 23 Mar 2019 17:14:20 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Andy Lutomirski <luto@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Oleg Nesterov <oleg@redhat.com>
+Subject: Re: [PATCH v2] x86/syscalls: Mark expected switch fall-throughs
+In-Reply-To: <20190228192746.GA13021@embeddedor>
+Message-ID: <alpine.DEB.2.21.1903231457590.1798@nanos.tec.linutronix.de>
+References: <20190228192746.GA13021@embeddedor>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Stefan Agner <stefan@agner.ch> writes:
+On Thu, 28 Feb 2019, Gustavo A. R. Silva wrote:
 
-> The LLVM Target parser currently does not allow to specify the security
-> extension as part of -march (see also LLVM Bug 40186 [0]). When trying
-> to use Clang with LLVM's integrated assembler, this leads to a build
-> errors such as this:
->   clang-8: error: the clang compiler does not support '-Wa,-march=armv7-a+sec'
->
-> Use ".arch_extension sec" to enable the security extension in a more
-> portable fasion.
->
-> Note that this is technically not exactly the same as the old code
-> checked for availabilty of the security extension by calling as-instr.
-> However, there are already other sites which use ".arch_extension sec"
-> unconditionally, hence de-facto we need an assembler capable of
-> ".arch_extension sec" already today (arch/arm/mm/proc-v7.S). The
-> arch extension "sec" is available since binutils 2.21 according to
-> its documentation [1].
->
-> [0] https://bugs.llvm.org/show_bug.cgi?id=40186
-> [1] https://sourceware.org/binutils/docs-2.21/as/ARM-Options.html
->
-> Signed-off-by: Stefan Agner <stefan@agner.ch>
-> ---
->  arch/arm/mach-bcm/Makefile         | 3 ---
->  arch/arm/mach-bcm/bcm_kona_smc.c   | 2 --
->  arch/arm/mach-exynos/Makefile      | 4 ----
->  arch/arm/mach-exynos/exynos-smc.S  | 2 +-
->  arch/arm/mach-exynos/sleep.S       | 2 +-
->  arch/arm/mach-highbank/Makefile    | 3 ---
->  arch/arm/mach-highbank/smc.S       | 2 +-
->  arch/arm/mach-keystone/Makefile    | 3 ---
->  arch/arm/mach-keystone/smc.S       | 1 +
->  arch/arm/mach-omap2/Makefile       | 8 --------
->  arch/arm/mach-omap2/omap-headsmp.S | 1 +
->  arch/arm/mach-omap2/omap-smc.S     | 2 +-
->  arch/arm/mach-omap2/sleep34xx.S    | 1 +
->  arch/arm/mach-omap2/sleep43xx.S    | 1 +
->  arch/arm/mach-omap2/sleep44xx.S    | 1 +
->  arch/arm/mach-tango/Makefile       | 3 ---
->  arch/arm/mach-tango/smc.S          | 1 +
->  17 files changed, 10 insertions(+), 30 deletions(-)
+>  arch/x86/include/asm/syscall.h | 28 ++++++++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
 
-[...]
+Second thoughts. So this adds 28 /* fall through */ comments. Now I
+appreciate the effort, but can we pretty please look at the code in
+question and figure out whether the implementation makes sense in the first
+place before adding falltrough comments blindly?
 
-> diff --git a/arch/arm/mach-tango/Makefile b/arch/arm/mach-tango/Makefile
-> index da6c633d3cc0..97cd04508fa1 100644
-> --- a/arch/arm/mach-tango/Makefile
-> +++ b/arch/arm/mach-tango/Makefile
-> @@ -1,7 +1,4 @@
->  # SPDX-License-Identifier: GPL-2.0
-> -plus_sec := $(call as-instr,.arch_extension sec,+sec)
-> -AFLAGS_smc.o := -Wa,-march=armv7-a$(plus_sec)
-> -
->  obj-y += setup.o smc.o
->  obj-$(CONFIG_SMP) += platsmp.o
->  obj-$(CONFIG_SUSPEND) += pm.o
-> diff --git a/arch/arm/mach-tango/smc.S b/arch/arm/mach-tango/smc.S
-> index 361a8dc89804..cf2d21e5226c 100644
-> --- a/arch/arm/mach-tango/smc.S
-> +++ b/arch/arm/mach-tango/smc.S
-> @@ -1,6 +1,7 @@
->  /* SPDX-License-Identifier: GPL-2.0 */
->  #include <linux/linkage.h>
->
-> +	.arch_extension sec
->  ENTRY(tango_smc)
->  	push	{lr}
->  	mov	ip, r1
+The whole exercise can be simplified. Untested patch below.
 
-For Tango:
+Looking at that stuff makes me wonder about two things:
 
-Acked-by: Mans Rullgard <mans@mansr.com>
+ 1) The third argument of get/set(), i.e. the argument offset, is 0 on all
+    call sites. Do we need it at all?
 
--- 
-Måns Rullgård
+ 2) syscall_set_arguments() has been introduced in 2008 and we still have
+    no caller. Instead of polishing it, can it be removed completely or are
+    there plans to actually use it?
+
+Thanks,
+
+	tglx
+
+8<----------------
+
+arch/x86/include/asm/syscall.h |  174 +++++++++++++++--------------------------
+ 1 file changed, 64 insertions(+), 110 deletions(-)
+
+--- a/arch/x86/include/asm/syscall.h
++++ b/arch/x86/include/asm/syscall.h
+@@ -114,126 +114,80 @@ static inline int syscall_get_arch(void)
+ 
+ #else	 /* CONFIG_X86_64 */
+ 
++static inline unsigned long syscall_get_argreg(struct pt_regs *regs,
++					       unsigned int idx)
++{
++	switch (idx) {
++	case  0: return regs->di;
++	case  1: return regs->si;
++	case  2: return regs->dx;
++	case  3: return regs->r10;
++	case  4: return regs->r8;
++	case  5: return regs->r9;
++#ifdef CONFIG_IA32_EMULATION
++	case  6: return regs->bx;
++	case  7: return regs->cx;
++	case  8: return regs->dx;
++	case  9: return regs->si;
++	case 10: return regs->di;
++	case 11: return regs->bp;
++#endif
++	}
++	return 0;
++}
++
+ static inline void syscall_get_arguments(struct task_struct *task,
+ 					 struct pt_regs *regs,
+-					 unsigned int i, unsigned int n,
++					 unsigned int idx, unsigned int cnt,
+ 					 unsigned long *args)
+ {
+-# ifdef CONFIG_IA32_EMULATION
+-	if (task->thread_info.status & TS_COMPAT)
+-		switch (i) {
+-		case 0:
+-			if (!n--) break;
+-			*args++ = regs->bx;
+-		case 1:
+-			if (!n--) break;
+-			*args++ = regs->cx;
+-		case 2:
+-			if (!n--) break;
+-			*args++ = regs->dx;
+-		case 3:
+-			if (!n--) break;
+-			*args++ = regs->si;
+-		case 4:
+-			if (!n--) break;
+-			*args++ = regs->di;
+-		case 5:
+-			if (!n--) break;
+-			*args++ = regs->bp;
+-		case 6:
+-			if (!n--) break;
+-		default:
+-			BUG();
+-			break;
+-		}
+-	else
+-# endif
+-		switch (i) {
+-		case 0:
+-			if (!n--) break;
+-			*args++ = regs->di;
+-		case 1:
+-			if (!n--) break;
+-			*args++ = regs->si;
+-		case 2:
+-			if (!n--) break;
+-			*args++ = regs->dx;
+-		case 3:
+-			if (!n--) break;
+-			*args++ = regs->r10;
+-		case 4:
+-			if (!n--) break;
+-			*args++ = regs->r8;
+-		case 5:
+-			if (!n--) break;
+-			*args++ = regs->r9;
+-		case 6:
+-			if (!n--) break;
+-		default:
+-			BUG();
+-			break;
+-		}
++	if (WARN_ON((idx + cnt) > 6))
++		return;
++
++	if (IS_ENABLED(CONFIG_IA32_EMULATION) &&
++	    task->thread_info.status & TS_COMPAT)
++		idx += 6;
++
++	for (; cnt > 0; cnt--)
++		*args++ = syscall_get_argreg(regs, idx++);
++}
++
++static inline void syscall_set_argreg(struct pt_regs *regs,
++				      unsigned int idx,
++				      unsigned long val)
++{
++	switch (idx) {
++	case  0: regs->di  = val; break;
++	case  1: regs->si  = val; break;
++	case  2: regs->dx  = val; break;
++	case  3: regs->r10 = val; break;
++	case  4: regs->r8  = val; break;
++	case  5: regs->r9  = val; break;
++#ifdef CONFIG_IA32_EMULATION
++	case  6: regs->bx  = val; break;
++	case  7: regs->cx  = val; break;
++	case  8: regs->dx  = val; break;
++	case  9: regs->si  = val; break;
++	case 10: regs->di  = val; break;
++	case 11: regs->bp  = val; break;
++#endif
++	}
+ }
+ 
+ static inline void syscall_set_arguments(struct task_struct *task,
+ 					 struct pt_regs *regs,
+-					 unsigned int i, unsigned int n,
++					 unsigned int idx, unsigned int cnt,
+ 					 const unsigned long *args)
+ {
+-# ifdef CONFIG_IA32_EMULATION
+-	if (task->thread_info.status & TS_COMPAT)
+-		switch (i) {
+-		case 0:
+-			if (!n--) break;
+-			regs->bx = *args++;
+-		case 1:
+-			if (!n--) break;
+-			regs->cx = *args++;
+-		case 2:
+-			if (!n--) break;
+-			regs->dx = *args++;
+-		case 3:
+-			if (!n--) break;
+-			regs->si = *args++;
+-		case 4:
+-			if (!n--) break;
+-			regs->di = *args++;
+-		case 5:
+-			if (!n--) break;
+-			regs->bp = *args++;
+-		case 6:
+-			if (!n--) break;
+-		default:
+-			BUG();
+-			break;
+-		}
+-	else
+-# endif
+-		switch (i) {
+-		case 0:
+-			if (!n--) break;
+-			regs->di = *args++;
+-		case 1:
+-			if (!n--) break;
+-			regs->si = *args++;
+-		case 2:
+-			if (!n--) break;
+-			regs->dx = *args++;
+-		case 3:
+-			if (!n--) break;
+-			regs->r10 = *args++;
+-		case 4:
+-			if (!n--) break;
+-			regs->r8 = *args++;
+-		case 5:
+-			if (!n--) break;
+-			regs->r9 = *args++;
+-		case 6:
+-			if (!n--) break;
+-		default:
+-			BUG();
+-			break;
+-		}
++	if (WARN_ON((idx + cnt) > 6))
++		return;
++
++	if (IS_ENABLED(CONFIG_IA32_EMULATION) &&
++	    task->thread_info.status & TS_COMPAT)
++		idx += 6;
++
++	for (; cnt > 0; cnt--)
++		syscall_set_argreg(regs, idx++, *args++);
+ }
+ 
+ static inline int syscall_get_arch(void)
