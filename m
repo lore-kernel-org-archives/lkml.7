@@ -2,132 +2,123 @@ Return-Path: <SRS0=q9dy=R2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D033AC4360F
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 12:02:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1C37C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 12:03:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CAD121902
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 12:02:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dcMGrPnS"
+	by mail.kernel.org (Postfix) with ESMTP id BFA0921902
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 12:03:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553342594;
+	bh=4vxIIsaura+dEKkTAJ/Vh24C6P2IwLpkVwGnXLKWKuo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=bjJufU8PJUAnR2kGsACTLq90lhytn6phAmR6GZDfHIzXBIrLAx0wjGpxanVgZdIC8
+	 eBMMq03ntOqmaWAqpeN82ckBrhzTxlgIVHIJSZSC0/w9fr9TUAOTtfG34DJubW4tZj
+	 68O/xwz73CXNpJyUcXzI8hmSqFhvABGw5cw1vlWs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727385AbfCWMBG (ORCPT
+        id S1727402AbfCWMDN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Mar 2019 08:01:06 -0400
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:41878 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726118AbfCWMBG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Mar 2019 08:01:06 -0400
-Received: by mail-yw1-f67.google.com with SMTP id l15so3357597ywe.8
-        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2019 05:01:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=OxtWF8GmikN+/3mXH6py7vzZ6KycdJnIWvcyc/DIb6A=;
-        b=dcMGrPnSUtoqjxhfLJs7nY564bSfH1rTmJgryZZZc5bjCCq5Zx1v5aT+6No6OV8i0M
-         vJVJuveL26qPkVohNXJqTMoht3s4LOryV7lNBKJ2okYblwCXl0BvAQzNh0D3GCeDhsB8
-         4bEysLJ36jp8Eh6WMmnPWsjeiowp7KdOrcpgvF8kYMniZbqgdfdnYcuNDmy10kudcNPU
-         AWJ3mjaM2hwh070PzYGPhhQKKbjoV49DjAD9BhfK+572drdGJuB+yfuXzMM+O2KGe62Y
-         pXxp30PxGobEn2Y+kFZBJyVlkO10iiFmTvX5hEKFS5vXiiHddlb8qEdB29I2FkHVY74I
-         HKvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=OxtWF8GmikN+/3mXH6py7vzZ6KycdJnIWvcyc/DIb6A=;
-        b=PvDRt5foW9gefupWZ0nKD2vQfObRK8Lfgz0IDczdCVdvPu2iF1CndxgRF2EEISKy47
-         tMgYW9Xj7k+omjQltstMR8mMsyVBnAKJIXzGoolAYG7HeHjv9V5VR1NepFSr1FyOPwPn
-         AH8wem3pi7/3SKGJ/1KxmlBqIkzEqcbTQbIEvGbyh3r4wKL1SPddqVmMGAi2Sl02vfPN
-         t+HcsSTX9djyL7Y8/5eYYAHR5bz2ka0+oo4hJJ1LS44cNUR334za2v4wt9dZc+kEoDu2
-         +sbWV+zg3U3v2dPWr8Mju25EtVEZ/anGC6yBiM4jBgD4ykokMYBCFQu3PcxRAriTK4wK
-         FEgg==
-X-Gm-Message-State: APjAAAWRMuFG94r9C6mcc1WuK1B6yLnqBr5mrBfsQ2eoNZoJo2Eio+Fr
-        hqGZJ4aD+o2cQpRWof855xE=
-X-Google-Smtp-Source: APXvYqzn4FMMWily8FQT5LLExBeX86jm+dO3qtpoZvBNUPGdF+z0kvtC/HCmBZOQNLFdDbKu2182AA==
-X-Received: by 2002:a0d:c9c2:: with SMTP id l185mr12972134ywd.227.1553342465644;
-        Sat, 23 Mar 2019 05:01:05 -0700 (PDT)
-Received: from centos-dev.localdomain (pool-173-66-89-81.washdc.fios.verizon.net. [173.66.89.81])
-        by smtp.gmail.com with ESMTPSA id g1sm3613882ywf.0.2019.03.23.05.01.04
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 23 Mar 2019 05:01:05 -0700 (PDT)
-Date:   Sat, 23 Mar 2019 08:00:52 -0400
-From:   Ryan Thibodeaux <thibodux@gmail.com>
-To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
-        oleksandr_andrushchenko@epam.com, tglx@linutronix.de,
-        jgross@suse.com, ryan.thibodeaux@starlab.io
-Subject: Re: [PATCH] x86/xen: Add "xen_timer_slop" command line option
-Message-ID: <20190323120052.GB11100@centos-dev.localdomain>
-References: <1553279397-130201-1-git-send-email-ryan.thibodeaux@starlab.io>
- <abf65a68-9463-0f0e-1f51-6eefd3cacc88@oracle.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <abf65a68-9463-0f0e-1f51-6eefd3cacc88@oracle.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+        Sat, 23 Mar 2019 08:03:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34778 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726909AbfCWMDN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 Mar 2019 08:03:13 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6502218A5;
+        Sat, 23 Mar 2019 12:03:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553342592;
+        bh=4vxIIsaura+dEKkTAJ/Vh24C6P2IwLpkVwGnXLKWKuo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=QOtYUWYXcCNfOsFqGQaT4uqsqKszp2XDiIyerd6iNtGvRTvw1E+pIh6OA9kxaRa9f
+         y7TRzd8fdn4gAzRG1F0v5Hn9vMGxXXJKw8WM1MnFBRbkGMrQQPXordnen/btht/PaI
+         I+71QYrlSctBePKxboCLXEsjGhUMZOUSUgHe+TcA=
+Date:   Sat, 23 Mar 2019 21:03:08 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Shuah Khan <shuahkhan@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH] selftests/ftrace: Select an existing function in
+ kprobe_eventname test
+Message-Id: <20190323210308.d47164c66489982e374f3db0@kernel.org>
+In-Reply-To: <20190322150923.1b58eca5@gandalf.local.home>
+References: <20190322150923.1b58eca5@gandalf.local.home>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 22, 2019 at 06:10:16PM -0400, Boris Ostrovsky wrote:
-> On 3/22/19 2:29 PM, thibodux@gmail.com wrote:
-> > From: Ryan Thibodeaux <ryan.thibodeaux@starlab.io>
-> >
-> > Add a new command-line option "xen_timer_slop=<INT>" that sets the
-> > minimum delta of virtual Xen timers. This commit does not change the
-> > default timer slop value for virtual Xen timers.
-> >
-> > Lowering the timer slop value should improve the accuracy of virtual
-> > timers (e.g., better process dispatch latency), but it will likely
-> > increase the number of virtual timer interrupts (relative to the
-> > original slop setting).
-> >
-> > The original timer slop value has not changed since the introduction
-> > of the Xen-aware Linux kernel code. This commit provides users an
-> > opportunity to tune timer performance given the refinements to
-> > hardware and the Xen event channel processing. It also mirrors
-> > a feature in the Xen hypervisor - the "timer_slop" Xen command line
-> > option.
+On Fri, 22 Mar 2019 15:09:23 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
+
+> From: Steven Rostedt (VMware) <rostedt@goodmis.org>
 > 
-> Is there any data that shows effects of using this new parameter?
+> Running the ftrace selftests on the latest kernel caused the
+> kprobe_eventname test to fail. It was due to the test that searches for
+> a function with at "dot" in the name and adding a probe to that.
+> Unfortunately, for this test, it picked:
 > 
-> -boris
+>  optimize_nops.isra.2.cold.4
 > 
+> Which happens to be marked as "__init", which means it no longer exists
+> in the kernel! (kallsyms keeps those function names around for tracing
+> purposes)
+> 
+> As only functions that still exist are in the
+> available_filter_functions file, as they are removed when the functions
+> are freed at boot or module exit, have the test search for a function
+> with ".isra." in the name as well as being in the
+> available_filter_functions (if the file exists).
 
-For our own testing using "cyclictest" from the rt-tests project,
-lowering the timer slop helped produce the best test runs, especially
-in terms of maximum process dispatch latency (PDL).
+OK, this looks good to me.
 
-Here is the output from one such test that ran overnight. The Xen
-timer slop in this case was 10000 or 10 microseconds.
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
 
-...
-[root@slop1 ~]# cset shield -c 3
-[root@slop1 ~]# echo ; date ; echo ; \
-./rt-tests-1.3/cyclictest -p95 -a3 -t1 -m; echo ; date
+Thank you,
 
-Thu Mar 14 19:45:36 UTC 2019
+> 
+> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> ---
+> diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_eventname.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_eventname.tc
+> index 3fb70e01b1fe..3ff236719b6e 100644
+> --- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_eventname.tc
+> +++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_eventname.tc
+> @@ -24,7 +24,21 @@ test -d events/kprobes2/event2 || exit_failure
+>  
+>  :;: "Add an event on dot function without name" ;:
+>  
+> -FUNC=`grep -m 10 " [tT] .*\.isra\..*$" /proc/kallsyms | tail -n 1 | cut -f 3 -d " "`
+> +find_dot_func() {
+> +	if [ ! -f available_filter_functions ]; then
+> +		grep -m 10 " [tT] .*\.isra\..*$" /proc/kallsyms | tail -n 1 | cut -f 3 -d " "
+> +		return;
+> +	fi
+> +
+> +	grep " [tT] .*\.isra\..*" /proc/kallsyms | cut -f 3 -d " " | while read f; do
+> +		if grep -s $f available_filter_functions; then
+> +			echo $f
+> +			break
+> +		fi
+> +	done
+> +}
+> +
+> +FUNC=`find_dot_func | tail -n 1`
+>  [ "x" != "x$FUNC" ] || exit_unresolved
+>  echo "p $FUNC" > kprobe_events
+>  EVENT=`grep $FUNC kprobe_events | cut -f 1 -d " " | cut -f 2 -d:`
 
-# /dev/cpu_dma_latency set to 0us
-policy: fifo: loadavg: 0.00 0.02 0.00 1/91 4260
-T: 0 ( 3212) P:95 I:1000 C:57077313 Min: 27 Act: 44 Avg: 43 Max: 145
-^C
-Fri Mar 15 11:36:53 UTC 2019
-...
 
-This test system was configured to use a TSC clocksource, disabled
-C states, and lowered the timer slop. I am not claiming the timer
-slop change was solely responsible for the best results. In other
-testing with the default timer slop setting of 100000 (100
-microseconds), the average PDL would run slightly higher, but the
-spikes were much higher and more in number, often near the 1000s
-and happening multiple times per 10 minutes of testing.
-
-- Ryan
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
