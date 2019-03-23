@@ -6,126 +6,100 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DEB1C4360F
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 00:02:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7489C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 00:09:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD953213F2
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 00:01:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F89321902
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 00:09:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ib6dPN7t"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="bs1Fc+qn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727413AbfCWAB6 (ORCPT
+        id S1727470AbfCWAJo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 20:01:58 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:39440 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727068AbfCWAB5 (ORCPT
+        Fri, 22 Mar 2019 20:09:44 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:59632 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726589AbfCWAJn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 20:01:57 -0400
-Received: by mail-pf1-f194.google.com with SMTP id i17so2556170pfo.6
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 17:01:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references:from
-         :subject:cc:to:message-id:user-agent:date;
-        bh=5yje7H5rdAOWpxB6jcxNx+cxLE7/VM5yKZAESv5Wx+M=;
-        b=Ib6dPN7tY/BXOd6LMUXEvJkkQDu4d/zpB6bVt+pbKCJ1R263uiTP/kkshMTHgxL/j+
-         pfmuiw2JBkj8WkjO7wyAUzF8LOkdh/ZHY9gMwCkh2kTcwXYjObyMXIMvtEA2HDnwxEFe
-         MzRZFcpWA1MDNaCLdMGyO1ATWTETKsgYTp1PE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:from:subject:cc:to:message-id:user-agent
-         :date;
-        bh=5yje7H5rdAOWpxB6jcxNx+cxLE7/VM5yKZAESv5Wx+M=;
-        b=YjbWe9djzRD0zaOkqkMzTdHW8ES6G6UoBOYyokRvcIDWRcGfl62DQVuPLEI3Q1jUgU
-         j4wLK6VEBA9izUL0fkzmrAWpS4DUswVfPVESD9BHk8XCwJoNWUzuNr5Pu9Vwb+fwXJ+Y
-         wDpT/ba9NNIfO1FuoRIzoBqk3apd+g+Va6zWrl2254h81hv9/M8vfz7GSRlzYjCt1EI9
-         Fs+0blnZHih1CwjbYAZOqpTmj0sAxSp1s5FzMXxQlkD1wfyRqWmJ+PREeqR4Aj8YDJ00
-         d5kwoEhhklOaEfTuYwKf3FOB308xHGqT5QAji11eFoqRhK6+XJToXi2wtcPClD3kLmrk
-         sYmw==
-X-Gm-Message-State: APjAAAWfbPnXOqh9Xl5KOA1/N44AsKtd1fru7tYFkcisRTnUJ8ZBuiVY
-        FvgM0Fl3S0y5KOqBReHMZ8OwKQ==
-X-Google-Smtp-Source: APXvYqwuFSrdFCriHHnOvn13w06G8aMMbQKooDfBeu2/5FPN9b3+zjlQe+FplE97HuJNzvzIW4IddQ==
-X-Received: by 2002:a63:8548:: with SMTP id u69mr11494045pgd.85.1553299317167;
-        Fri, 22 Mar 2019 17:01:57 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id 17sm1777527pgz.52.2019.03.22.17.01.56
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 22 Mar 2019 17:01:56 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Fri, 22 Mar 2019 20:09:43 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2N03d89186726;
+        Sat, 23 Mar 2019 00:09:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=JsewR+rEQJNLkaOGejcRRSalWo9h9s6Sg2idHE53oB4=;
+ b=bs1Fc+qn7wL9BdWvPgAV+6w35J6Ui8EqhVRTfyQjmNHbjGjLgUCRmLJnlQ+WO9PXNvUD
+ NpvvWQoWUZApf+Sa2e4adQ8xMB2f9p+hJbodGcFNMgVe9cFkd6z2ZBPeOu7NKpS60Z2D
+ VvtkU1QgZ7CfpGGwn/HcqD6yk3Z3foiwLXfIhFrtahFqT+M1eacEOMdbVUzPtT+kqgIo
+ svmvC7Z7L6FciANKE4SYyLTwBVcwBB+R+7avnIHBuBNnuxWMcvnKJ8RA9wo2IsixUCfD
+ 05YZlC75WT+4Jv+YI2aiDCFLNp9P/8W/XEvuMzb2WHBgQQ5Hd2JT7+ROjBXYWCd64bpO Wg== 
+Received: from aserv0022.oracle.com (aserv0022.oracle.com [141.146.126.234])
+        by userp2130.oracle.com with ESMTP id 2r8rjv8m0c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 23 Mar 2019 00:09:09 +0000
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x2N098pq020674
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 23 Mar 2019 00:09:08 GMT
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x2N097aQ004724;
+        Sat, 23 Mar 2019 00:09:07 GMT
+Received: from [10.132.91.175] (/10.132.91.175)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 22 Mar 2019 17:09:07 -0700
+Subject: Re: [RFC][PATCH 03/16] sched: Wrap rq::lock access
+To:     Julien Desfossez <jdesfossez@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>, mingo@kernel.org,
+        tglx@linutronix.de, pjt@google.com, tim.c.chen@linux.intel.com,
+        torvalds@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, fweisbec@gmail.com,
+        keescook@chromium.org, kerrnel@google.com,
+        Vineeth Pillai <vpillai@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>
+References: <15f3f7e6-5dce-6bbf-30af-7cffbd7bb0c3@oracle.com>
+ <1553203217-11444-1-git-send-email-jdesfossez@digitalocean.com>
+From:   Subhra Mazumdar <subhra.mazumdar@oracle.com>
+Message-ID: <fcad329b-e421-624a-0d1a-a98466eaf2ed@oracle.com>
+Date:   Fri, 22 Mar 2019 17:06:18 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CANNG1HV0Ai9oeUr55uk+wAf456vDn1qiYmeXYc3=rkpqhdoM4g@mail.gmail.com>
-References: <20190225065044.11023-1-vaishali.thakkar@linaro.org> <20190225065044.11023-5-vaishali.thakkar@linaro.org> <155138953788.16805.6820097041346672619@swboyd.mtv.corp.google.com> <CANNG1HWDc-PraBwG=8TBcfJSFFe+X+k6oVhOqyU=i5fAjpuoLw@mail.gmail.com> <155257912871.20095.1653828341120157988@swboyd.mtv.corp.google.com> <CANNG1HV0Ai9oeUr55uk+wAf456vDn1qiYmeXYc3=rkpqhdoM4g@mail.gmail.com>
-From:   Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH v4 4/5] soc: qcom: socinfo: Expose custom attributes
-Cc:     Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        rafael@kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>
-To:     Vaishali Thakkar <vaishali.thakkar@linaro.org>
-Message-ID: <155329931528.20095.6505466693897029315@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.8
-Date:   Fri, 22 Mar 2019 17:01:55 -0700
+In-Reply-To: <1553203217-11444-1-git-send-email-jdesfossez@digitalocean.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9203 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903220172
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Vaishali Thakkar (2019-03-20 22:51:20)
-> On Thu, 14 Mar 2019 at 21:28, Stephen Boyd <swboyd@chromium.org> wrote:
-> >
-> > Quoting Vaishali Thakkar (2019-03-14 04:25:16)
-> > > On Fri, 1 Mar 2019 at 03:02, Stephen Boyd <swboyd@chromium.org> wrote:
-> >
-> > >
-> > > In the case of converting it to cpu native during probe, I'll need to
-> > > declare an extra struct with u32 being the parsed version for it to be
-> > > correct. Wouldn't it add extra overhead?
-> >
-> > Yes it would be some small extra overhead that could be allocated on the
-> > kernel's heap. What's the maximum size? A hundred bytes or so?
-> >
-> > I don't see much of a problem with this approach. It simplifies the
-> > patch series because nothing new is introduced in debugfs core and the
-> > endian conversion is done once in one place instead of being scattered
-> > throughout the code. Sounds like a good improvement to me.
-> >
->=20
-> Yes, it's true that this approach is better than introducing new endian
-> functions in debugfs core but we should also keep in mind that this is
-> applicable only for 4 use cases. For other usecases, we want to print
-> string and hex values. So, I would either need new debugfs core
-> functions for the same. I tried introducing debugfs_create_str for string
-> values but we're ending up with introducing bunch of other helpers in
-> the core as simple_attr_read expects integer values. Similarly, for hex
-> values , I can't use debugfs_create_u32 as defined attributes in the
-> core has unsigned int as a specifier, will need to introduce some extra
-> helpers over there again.
 
-I imagine there are other uses of printing a string and hex value in
-debugfs. There's debugfs_create_x32() and debugfs_create_x64() for the
-hex value printing part (if you want that format). There's also
-debugfs_create_devm_seqfile() which may work to print a string from some
-struct member. I'm not sure why you're using simple_attr_read(). Where
-does that become important?
-
->=20
-> Also, in case of keeping all other cases as it is, it'll look quite
-> asymmetric to use debugfs u32 function in init and using local macros
-> for other cases. I can have DEBUGFS_UINT_ADD like wrapper
-> macro for debugfs_create_u32 but again not sure if doing
-> all of this looks better than what we have at the moment as just having
-> 3 local macros covering our all cases without having lot of duplicated
-> code.
->=20
->  Let me know if about your opinion on the same. Thanks.
-
-My opinion is still that it would be best to push things that aren't SoC
-specific into the debugfs core and try to use as much from the core as
-possible. There doesn't seem to be anything very SoC specific here so
-I'm lost why this isn't doable.
-
+On 3/21/19 2:20 PM, Julien Desfossez wrote:
+> On Tue, Mar 19, 2019 at 10:31 PM Subhra Mazumdar <subhra.mazumdar@oracle.com>
+> wrote:
+>> On 3/18/19 8:41 AM, Julien Desfossez wrote:
+>>
+> On further investigation, we could see that the contention is mostly in the
+> way rq locks are taken. With this patchset, we lock the whole core if
+> cpu.tag is set for at least one cgroup. Due to this, __schedule() is more or
+> less serialized for the core and that attributes to the performance loss
+> that we are seeing. We also saw that newidle_balance() takes considerably
+> long time in load_balance() due to the rq spinlock contention. Do you think
+> it would help if the core-wide locking was only performed when absolutely
+> needed ?
+>
+Is the core wide lock primarily responsible for the regression? I ran 
+upto patch
+12 which also has the core wide lock for tagged cgroups and also calls
+newidle_balance() from pick_next_task(). I don't see any regression.  Of 
+course
+the core sched version of pick_next_task() may be doing more but 
+comparing with
+the __pick_next_task() it doesn't look too horrible.
