@@ -2,122 +2,153 @@ Return-Path: <SRS0=q9dy=R2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9F4DC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 18:18:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CC40C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 18:44:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70EDF2183E
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 18:18:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D0192175B
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 18:44:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="Bz3MBBlN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eXRVeuu1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727758AbfCWSSr (ORCPT
+        id S1727746AbfCWSf3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Mar 2019 14:18:47 -0400
-Received: from pb-sasl-trial2.pobox.com ([64.147.108.86]:58360 "EHLO
-        pb-sasl-trial2.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727364AbfCWSSq (ORCPT
+        Sat, 23 Mar 2019 14:35:29 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:46370 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727504AbfCWSf2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Mar 2019 14:18:46 -0400
-X-Greylist: delayed 447 seconds by postgrey-1.27 at vger.kernel.org; Sat, 23 Mar 2019 14:18:46 EDT
-Received: from pb-sasl-trial2.pobox.com (localhost.local [127.0.0.1])
-        by pb-sasl-trial2.pobox.com (Postfix) with ESMTP id 987EDFAC2;
-        Sat, 23 Mar 2019 14:11:18 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
-        :cc:subject:in-reply-to:message-id:references:mime-version
-        :content-type; s=sasl; bh=UGmpSm0lKJWCOVV7sJlrEE3PltU=; b=Bz3MBB
-        lNqCttOHNi1aYu4wILYTzqtvQhuN2u9/2KGgtztIvrQ046u7fzGU5TVGv8uOW5oL
-        6l5PjJz8L2ksPaHhnjKG3xgCjtPB47KjzQibcvCQFihgfBG44D/MWdI3LSIwx9+6
-        8ZnqD0Bsq0kaHqY3YtC5KwbBn8RYbP4D9erdU=
-Received: from pb-smtp2.nyi.icgroup.com (pb-smtp2.pobox.com [10.90.30.54])
-        by pb-sasl-trial2.pobox.com (Postfix) with ESMTP id 7618EFAC1;
-        Sat, 23 Mar 2019 14:11:18 -0400 (EDT)
-Received: from yoda.home (unknown [70.82.104.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by pb-smtp2.pobox.com (Postfix) with ESMTPSA id 4580612C00B;
-        Sat, 23 Mar 2019 13:56:26 -0400 (EDT)
-Received: from xanadu.home (xanadu.home [192.168.2.2])
-        by yoda.home (Postfix) with ESMTPSA id 40A2B2DA01C2;
-        Sat, 23 Mar 2019 13:56:25 -0400 (EDT)
-Date:   Sat, 23 Mar 2019 13:56:24 -0400 (EDT)
-From:   nicolas.pitre@linaro.org
-To:     Stefan Agner <stefan@agner.ch>
-cc:     Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>, ard.biesheuvel@linaro.org,
-        robin.murphy@arm.com, f.fainelli@gmail.com, rjui@broadcom.com,
-        sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
-        kgene@kernel.org, krzk@kernel.org, robh@kernel.org,
-        ssantosh@kernel.org, jason@lakedaemon.net, andrew@lunn.ch,
-        gregory.clement@bootlin.com, sebastian.hesselbarth@gmail.com,
-        tony@atomide.com, marc.w.gonzalez@free.fr, mans@mansr.com,
-        ndesaulniers@google.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] ARM: mvebu: prefix coprocessor operand with p
-In-Reply-To: <7258b06ce7f788dd5d8eedc55855205c08068c0b.1553356359.git.stefan@agner.ch>
-Message-ID: <nycvar.YSQ.7.76.1903231355250.1971@knanqh.ubzr>
-References: <9641c58c03720104186a797a96e30a52ae9805e4.1553356359.git.stefan@agner.ch> <7258b06ce7f788dd5d8eedc55855205c08068c0b.1553356359.git.stefan@agner.ch>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+        Sat, 23 Mar 2019 14:35:28 -0400
+Received: by mail-pg1-f194.google.com with SMTP id a22so3648900pgg.13
+        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2019 11:35:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=HeVkiruF5QSnxERosUYXl9T9apvWKu/EfWrlZJcpFeM=;
+        b=eXRVeuu1ChFKOH8/ZvhOxx0IFmmqDwai7mK7UoO38kmgda6wf7KdWxhhr+jZNwwMQP
+         kvV7quiuYQ7Lm578bekEXbbm8dzfMM64+jEYike/QN7MyFGTFPU26FO518/N4e5Nf5qf
+         v5KMTDo89e89n9DuFinf3usidI1QgpFQZPAqHl6+KkgJ5iEjwq5SZ2GXKZImxUahwmuT
+         1K85BG0yyD+Qst3Fi6LM8evV7yF24DK5zzFVN7vkYa2IRDPnQazxzNK3d7pi1Tk7lwxn
+         cVhV4p9Pn71EGU3nU7vlPHUMxwMB2u0nufdUiJZzYTMnOil0ZD6yLHZYv6zGm5AZZ8Bp
+         HUyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=HeVkiruF5QSnxERosUYXl9T9apvWKu/EfWrlZJcpFeM=;
+        b=XtId/yBgw22r74GUfKh93Zl5+1uFN50B30ZW87dP0ufZ5tpjP7e3g+Fr2wCqz+O/KH
+         WqNzC/emcESs3lLNljCeDgvTONBOTBQ8vBJmXUW0mzB/CDow8o8h99ov93fDxJ9kx413
+         /2vPcIJbgPts0srTHMjxB5NNEAMYIqU1wZn9exYSGImKemlYu3MCMBdWkfPkVL1OqvWf
+         7BkkaqXStkLPF0oiz5CD1n/kgE+tyBJg6qeUemdW/viTomSMWgHke1mu5WpS1hmh12iD
+         0aZGZDubZQYXIdCA6A/5IIrXi3sY4rT4JrpRQU9KESiqn/eTn6v6RStOcuAaSTCtXjVZ
+         tJIQ==
+X-Gm-Message-State: APjAAAXl4CFxNybpqotDgrHDeasYICCOXGxypPuFepuyBewxXXVatoOR
+        ltS2/iFotJci80peZviUzCA=
+X-Google-Smtp-Source: APXvYqwlx8Aqie1YojmV4qQ6yVW2Tqm4xL9qryes5W83Cw45/FPPvCKkx0bs8oOqdqMW1NapQ4FSYA==
+X-Received: by 2002:a63:f707:: with SMTP id x7mr7337205pgh.343.1553366127702;
+        Sat, 23 Mar 2019 11:35:27 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.91.90])
+        by smtp.gmail.com with ESMTPSA id k3sm26126353pfc.59.2019.03.23.11.35.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 23 Mar 2019 11:35:27 -0700 (PDT)
+Date:   Sun, 24 Mar 2019 00:05:23 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: [PATCH] ftrace: fix warning using plain integer as NULL & spelling
+ corrections
+Message-ID: <20190323183523.GA2244@hari-Inspiron-1545>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Pobox-Relay-ID: FA672C9A-4D94-11E9-A4AF-DF19F34BB12D-78420484!pb-smtp2.pobox.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 23 Mar 2019, Stefan Agner wrote:
+Changed  0 --> NULL to avoid sparse warning
+Corrected spelling mistakes reported by checkpatch.pl
+Sparse warning below:
 
-> In every other instance where mrc is used the coprocessor operand
-> is prefix with p (e.g. p15). Use the p prefix in this case too.
-> This fixes a build issue when using LLVM's integrated assembler:
->   arch/arm/mach-mvebu/coherency_ll.S:69:6: error: invalid operand for instruction
->    mrc 15, 0, r3, cr0, cr0, 5
->        ^
->   arch/arm/mach-mvebu/pmsu_ll.S:19:6: error: invalid operand for instruction
->    mrc 15, 0, r0, cr0, cr0, 5 @ get the CPU ID
->        ^
-> 
-> Signed-off-by: Stefan Agner <stefan@agner.ch>
+sudo make C=2 CF=-D__CHECK_ENDIAN__ M=kernel/trace
 
-Acked-by: Nicolas Pitre <nico@fluxnic.net>
+CHECK   kernel/trace/ftrace.c
+kernel/trace/ftrace.c:3007:24: warning: Using plain integer as NULL
+pointer
+kernel/trace/ftrace.c:4758:37: warning: Using plain integer as NULL
+pointer
 
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+---
+ kernel/trace/ftrace.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-> ---
->  arch/arm/mach-mvebu/coherency_ll.S | 2 +-
->  arch/arm/mach-mvebu/pmsu_ll.S      | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm/mach-mvebu/coherency_ll.S b/arch/arm/mach-mvebu/coherency_ll.S
-> index 8b2fbc8b6bc6..2d962fe48821 100644
-> --- a/arch/arm/mach-mvebu/coherency_ll.S
-> +++ b/arch/arm/mach-mvebu/coherency_ll.S
-> @@ -66,7 +66,7 @@ ENDPROC(ll_get_coherency_base)
->   * fabric registers
->   */
->  ENTRY(ll_get_coherency_cpumask)
-> -	mrc	15, 0, r3, cr0, cr0, 5
-> +	mrc	p15, 0, r3, cr0, cr0, 5
->  	and	r3, r3, #15
->  	mov	r2, #(1 << 24)
->  	lsl	r3, r2, r3
-> diff --git a/arch/arm/mach-mvebu/pmsu_ll.S b/arch/arm/mach-mvebu/pmsu_ll.S
-> index c1fb713e9306..7aae9a25cfeb 100644
-> --- a/arch/arm/mach-mvebu/pmsu_ll.S
-> +++ b/arch/arm/mach-mvebu/pmsu_ll.S
-> @@ -16,7 +16,7 @@
->  ENTRY(armada_38x_scu_power_up)
->  	mrc     p15, 4, r1, c15, c0	@ get SCU base address
->  	orr	r1, r1, #0x8		@ SCU CPU Power Status Register
-> -	mrc	15, 0, r0, cr0, cr0, 5	@ get the CPU ID
-> +	mrc	p15, 0, r0, cr0, cr0, 5	@ get the CPU ID
->  	and	r0, r0, #15
->  	add	r1, r1, r0
->  	mov	r0, #0x0
-> -- 
-> 2.21.0
-> 
-> 
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index fa79323..26c8ca9 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -1992,7 +1992,7 @@ static void print_bug_type(void)
+  * modifying the code. @failed should be one of either:
+  * EFAULT - if the problem happens on reading the @ip address
+  * EINVAL - if what is read at @ip is not what was expected
+- * EPERM - if the problem happens on writting to the @ip address
++ * EPERM - if the problem happens on writing to the @ip address
+  */
+ void ftrace_bug(int failed, struct dyn_ftrace *rec)
+ {
+@@ -2391,7 +2391,7 @@ __ftrace_replace_code(struct dyn_ftrace *rec, int enable)
+ 		return ftrace_modify_call(rec, ftrace_old_addr, ftrace_addr);
+ 	}
+ 
+-	return -1; /* unknow ftrace bug */
++	return -1; /* unknown ftrace bug */
+ }
+ 
+ void __weak ftrace_replace_code(int mod_flags)
+@@ -3004,7 +3004,7 @@ ftrace_allocate_pages(unsigned long num_to_init)
+ 	int cnt;
+ 
+ 	if (!num_to_init)
+-		return 0;
++		return NULL;
+ 
+ 	start_pg = pg = kzalloc(sizeof(*pg), GFP_KERNEL);
+ 	if (!pg)
+@@ -4755,7 +4755,7 @@ static int
+ ftrace_set_addr(struct ftrace_ops *ops, unsigned long ip, int remove,
+ 		int reset, int enable)
+ {
+-	return ftrace_set_hash(ops, 0, 0, ip, remove, reset, enable);
++	return ftrace_set_hash(ops, NULL, 0, ip, remove, reset, enable);
+ }
+ 
+ /**
+@@ -5463,7 +5463,7 @@ void ftrace_create_filter_files(struct ftrace_ops *ops,
+ 
+ /*
+  * The name "destroy_filter_files" is really a misnomer. Although
+- * in the future, it may actualy delete the files, but this is
++ * in the future, it may actually delete the files, but this is
+  * really intended to make sure the ops passed in are disabled
+  * and that when this function returns, the caller is free to
+  * free the ops.
+@@ -5786,7 +5786,7 @@ void ftrace_module_enable(struct module *mod)
+ 	/*
+ 	 * If the tracing is enabled, go ahead and enable the record.
+ 	 *
+-	 * The reason not to enable the record immediatelly is the
++	 * The reason not to enable the record immediately is the
+ 	 * inherent check of ftrace_make_nop/ftrace_make_call for
+ 	 * correct previous instructions.  Making first the NOP
+ 	 * conversion puts the module to the correct state, thus
+-- 
+2.7.4
+
