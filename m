@@ -2,75 +2,84 @@ Return-Path: <SRS0=q9dy=R2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD57C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 01:56:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7B13C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 01:56:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AF2320896
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 01:56:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEC5C20896
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 01:56:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728287AbfCWB4L (ORCPT
+        id S1728346AbfCWB4p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 21:56:11 -0400
-Received: from [110.188.70.11] ([110.188.70.11]:51936 "EHLO spam2.hygon.cn"
-        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727900AbfCWB4L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 21:56:11 -0400
-Received: from MK-DB.hygon.cn ([172.23.18.60])
-        by spam2.hygon.cn with ESMTP id x2N1mpWt020948;
-        Sat, 23 Mar 2019 09:48:51 +0800 (GMT-8)
-        (envelope-from puwen@hygon.cn)
-Received: from cncheex01.Hygon.cn ([172.23.18.10])
-        by MK-DB.hygon.cn with ESMTP id x2N1mnVS085521;
-        Sat, 23 Mar 2019 09:48:49 +0800 (GMT-8)
-        (envelope-from puwen@hygon.cn)
-Received: from [192.168.1.193] (172.23.18.44) by cncheex01.Hygon.cn
- (172.23.18.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1466.3; Sat, 23 Mar
- 2019 09:48:49 +0800
-Subject: Re: [RFC PATCH] x86/cpu/hygon: Fix phys_proc_id calculation logic for
- multi-die processor
-To:     Borislav Petkov <bp@alien8.de>
-CC:     "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "hpa@zytor.com" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <1553251380-7015-1-git-send-email-puwen@hygon.cn>
- <20190322155449.GE12472@zn.tnic>
- <639a5bc6-f821-ee9d-1594-d02701321192@hygon.cn>
- <20190322164445.GG12472@zn.tnic>
-From:   Pu Wen <puwen@hygon.cn>
-Message-ID: <4a61a541-59fb-21f0-6e7f-cc9f045e190c@hygon.cn>
-Date:   Sat, 23 Mar 2019 09:48:52 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.0
+        Fri, 22 Mar 2019 21:56:45 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5175 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727900AbfCWB4p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Mar 2019 21:56:45 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id CDC3185F32234C512662;
+        Sat, 23 Mar 2019 09:56:42 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
+ 14.3.408.0; Sat, 23 Mar 2019 09:56:35 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        "Katsuhiro Suzuki" <suzuki.katsuhiro@socionext.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+CC:     YueHaibing <yuehaibing@huawei.com>, <alsa-devel@alsa-project.org>,
+        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
+Subject: [PATCH -next] ASoC: simple-card-utils: remove set but not used variable ''
+Date:   Sat, 23 Mar 2019 02:08:38 +0000
+Message-ID: <20190323020838.107533-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190322164445.GG12472@zn.tnic>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [172.23.18.44]
-X-ClientProxiedBy: cncheex01.Hygon.cn (172.23.18.10) To cncheex01.Hygon.cn
- (172.23.18.10)
-X-MAIL: spam2.hygon.cn x2N1mpWt020948
-X-DNSRBL: 
+Content-Type:   text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/3/23 0:44, Borislav Petkov wrote:
-> On Sat, Mar 23, 2019 at 12:19:01AM +0800, Pu Wen wrote:
->> That 6 is not a magic number.
-> 
-> Well, if I see a naked 6, then it is only magic to me. Now if it were a
-> proper define with a descriptive name...
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-So maybe define it as:
-#define APICID_SOCKET_ID BIT(6)
+sound/soc/generic/simple-card-utils.c: In function 'asoc_simple_parse_clk':
+sound/soc/generic/simple-card-utils.c:164:18: warning:
+ parameter 'dai_name' set but not used [-Wunused-but-set-parameter]
 
--- 
-Regards,
-Pu Wen
+It's not used since commit 0580dde59438 ("ASoC: simple-card-utils: add
+asoc_simple_debug_info()"), so can be removed.
+
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ sound/soc/generic/simple-card-utils.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/sound/soc/generic/simple-card-utils.c b/sound/soc/generic/simple-card-utils.c
+index 4ed68348f939..db1458a19985 100644
+--- a/sound/soc/generic/simple-card-utils.c
++++ b/sound/soc/generic/simple-card-utils.c
+@@ -173,10 +173,8 @@ int asoc_simple_parse_clk(struct device *dev,
+ 	 * see
+ 	 *	soc-core.c :: snd_soc_init_multicodec()
+ 	 */
+-	if (dlc) {
++	if (dlc)
+ 		dai_of_node	= dlc->of_node;
+-		dai_name	= dlc->dai_name;
+-	}
+ 
+ 	/*
+ 	 * Parse dai->sysclk come from "clocks = <&xxx>"
+
+
+
+
+
