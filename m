@@ -2,274 +2,255 @@ Return-Path: <SRS0=q9dy=R2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E17A1C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 16:14:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1481BC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 16:17:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9B2A20896
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 16:14:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD33A20896
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 16:17:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="vXKOnNoV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727680AbfCWQOl (ORCPT
+        id S1727702AbfCWQRE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Mar 2019 12:14:41 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:42648 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727267AbfCWQOl (ORCPT
+        Sat, 23 Mar 2019 12:17:04 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:47372 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726478AbfCWQRE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Mar 2019 12:14:41 -0400
-Received: from p5492e2fc.dip0.t-ipconnect.de ([84.146.226.252] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1h7jHu-0004rJ-J5; Sat, 23 Mar 2019 17:14:26 +0100
-Date:   Sat, 23 Mar 2019 17:14:20 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Andy Lutomirski <luto@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Oleg Nesterov <oleg@redhat.com>
-Subject: Re: [PATCH v2] x86/syscalls: Mark expected switch fall-throughs
-In-Reply-To: <20190228192746.GA13021@embeddedor>
-Message-ID: <alpine.DEB.2.21.1903231457590.1798@nanos.tec.linutronix.de>
-References: <20190228192746.GA13021@embeddedor>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Sat, 23 Mar 2019 12:17:04 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 9F1628EE109;
+        Sat, 23 Mar 2019 09:17:02 -0700 (PDT)
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id IZP19FsLQ5AA; Sat, 23 Mar 2019 09:16:59 -0700 (PDT)
+Received: from [153.66.254.194] (unknown [50.35.68.20])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id B19568EE656;
+        Sat, 23 Mar 2019 09:16:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1553357817;
+        bh=WCYsLZuQgr4l2FmeipQqczIDWQfEFbjoarRuVFwVtq8=;
+        h=Subject:From:To:Cc:Date:From;
+        b=vXKOnNoV2kasPzq84Wg64DB1aUD0+TTliTrxxfeYhcUcJJ+EaFvLlYl1ziAumVDAJ
+         mgGejvmbMZ5b5E0iajM6Et8SQwwneL6KSYASguiQqHeKKqjXuj2ygLUoBT7MvoTpWZ
+         dYJ4gSQ1+439AOmpWyzLTwbUrBOxaa2M5qTU85Mk=
+Message-ID: <1553357813.3120.4.camel@HansenPartnership.com>
+Subject: [GIT PULL] SCSI fixes for 5.1-rc1
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-scsi <linux-scsi@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Date:   Sat, 23 Mar 2019 09:16:53 -0700
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 28 Feb 2019, Gustavo A. R. Silva wrote:
+Six fixes to four drivers and two core fixes.  One core fix simply
+corrects a missed destroy_rcu_head() but the other is hopefully the end
+of an ongoing effort to make suspend/resume play nicely with scsi
+quiesce.
 
->  arch/x86/include/asm/syscall.h | 28 ++++++++++++++++++++++++++++
->  1 file changed, 28 insertions(+)
+The patch is available here:
 
-Second thoughts. So this adds 28 /* fall through */ comments. Now I
-appreciate the effort, but can we pretty please look at the code in
-question and figure out whether the implementation makes sense in the first
-place before adding falltrough comments blindly?
+git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
 
-The whole exercise can be simplified. Untested patch below.
+The short changelog is:
 
-Looking at that stuff makes me wonder about two things:
+Bart Van Assche (2):
+      scsi: core: Avoid that a kernel warning appears during system resume
+      scsi: core: Also call destroy_rcu_head() for passthrough requests
 
- 1) The third argument of get/set(), i.e. the argument offset, is 0 on all
-    call sites. Do we need it at all?
+Himanshu Madhani (1):
+      scsi: qla2xxx: Fix NULL pointer crash due to stale CPUID
 
- 2) syscall_set_arguments() has been introduced in 2008 and we still have
-    no caller. Instead of polishing it, can it be removed completely or are
-    there plans to actually use it?
+Luo Jiaxing (1):
+      scsi: hisi_sas: Add softreset in hisi_sas_I_T_nexus_reset()
 
-Thanks,
+Maurizio Lombardi (1):
+      scsi: iscsi: flush running unbind operations when removing a session
 
-	tglx
+Quinn Tran (1):
+      scsi: qla2xxx: Fix FC-AL connection target discovery
 
-8<----------------
+Tyrel Datwyler (2):
+      scsi: ibmvscsi: Fix empty event pool access during host removal
+      scsi: ibmvscsi: Protect ibmvscsi_head from concurrent modificaiton
 
-arch/x86/include/asm/syscall.h |  174 +++++++++++++++--------------------------
- 1 file changed, 64 insertions(+), 110 deletions(-)
+And the diffstat:
 
---- a/arch/x86/include/asm/syscall.h
-+++ b/arch/x86/include/asm/syscall.h
-@@ -114,126 +114,80 @@ static inline int syscall_get_arch(void)
+ drivers/scsi/hisi_sas/hisi_sas_main.c |  6 ++++++
+ drivers/scsi/ibmvscsi/ibmvscsi.c      | 23 +++++++++++++++++++----
+ drivers/scsi/qla2xxx/qla_init.c       |  7 +++++++
+ drivers/scsi/qla2xxx/qla_os.c         |  2 +-
+ drivers/scsi/scsi_lib.c               | 15 ++++++++++++---
+ drivers/scsi/scsi_transport_iscsi.c   |  2 ++
+ 6 files changed, 47 insertions(+), 8 deletions(-)
+
+With full diff below.
+
+James
+
+---
+
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
+index 3c3cf89f713f..14bac4966c87 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_main.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
+@@ -1801,6 +1801,12 @@ static int hisi_sas_I_T_nexus_reset(struct domain_device *device)
+ 	}
+ 	hisi_sas_dereg_device(hisi_hba, device);
  
- #else	 /* CONFIG_X86_64 */
- 
-+static inline unsigned long syscall_get_argreg(struct pt_regs *regs,
-+					       unsigned int idx)
-+{
-+	switch (idx) {
-+	case  0: return regs->di;
-+	case  1: return regs->si;
-+	case  2: return regs->dx;
-+	case  3: return regs->r10;
-+	case  4: return regs->r8;
-+	case  5: return regs->r9;
-+#ifdef CONFIG_IA32_EMULATION
-+	case  6: return regs->bx;
-+	case  7: return regs->cx;
-+	case  8: return regs->dx;
-+	case  9: return regs->si;
-+	case 10: return regs->di;
-+	case 11: return regs->bp;
-+#endif
++	if (dev_is_sata(device)) {
++		rc = hisi_sas_softreset_ata_disk(device);
++		if (rc)
++			return TMF_RESP_FUNC_FAILED;
 +	}
-+	return 0;
-+}
 +
- static inline void syscall_get_arguments(struct task_struct *task,
- 					 struct pt_regs *regs,
--					 unsigned int i, unsigned int n,
-+					 unsigned int idx, unsigned int cnt,
- 					 unsigned long *args)
+ 	rc = hisi_sas_debug_I_T_nexus_reset(device);
+ 
+ 	if ((rc == TMF_RESP_FUNC_COMPLETE) || (rc == -ENODEV))
+diff --git a/drivers/scsi/ibmvscsi/ibmvscsi.c b/drivers/scsi/ibmvscsi/ibmvscsi.c
+index 1135e74646e2..8cec5230fe31 100644
+--- a/drivers/scsi/ibmvscsi/ibmvscsi.c
++++ b/drivers/scsi/ibmvscsi/ibmvscsi.c
+@@ -96,6 +96,7 @@ static int client_reserve = 1;
+ static char partition_name[96] = "UNKNOWN";
+ static unsigned int partition_number = -1;
+ static LIST_HEAD(ibmvscsi_head);
++static DEFINE_SPINLOCK(ibmvscsi_driver_lock);
+ 
+ static struct scsi_transport_template *ibmvscsi_transport_template;
+ 
+@@ -2270,7 +2271,9 @@ static int ibmvscsi_probe(struct vio_dev *vdev, const struct vio_device_id *id)
+ 	}
+ 
+ 	dev_set_drvdata(&vdev->dev, hostdata);
++	spin_lock(&ibmvscsi_driver_lock);
+ 	list_add_tail(&hostdata->host_list, &ibmvscsi_head);
++	spin_unlock(&ibmvscsi_driver_lock);
+ 	return 0;
+ 
+       add_srp_port_failed:
+@@ -2292,15 +2295,27 @@ static int ibmvscsi_probe(struct vio_dev *vdev, const struct vio_device_id *id)
+ static int ibmvscsi_remove(struct vio_dev *vdev)
  {
--# ifdef CONFIG_IA32_EMULATION
--	if (task->thread_info.status & TS_COMPAT)
--		switch (i) {
--		case 0:
--			if (!n--) break;
--			*args++ = regs->bx;
--		case 1:
--			if (!n--) break;
--			*args++ = regs->cx;
--		case 2:
--			if (!n--) break;
--			*args++ = regs->dx;
--		case 3:
--			if (!n--) break;
--			*args++ = regs->si;
--		case 4:
--			if (!n--) break;
--			*args++ = regs->di;
--		case 5:
--			if (!n--) break;
--			*args++ = regs->bp;
--		case 6:
--			if (!n--) break;
--		default:
--			BUG();
--			break;
--		}
--	else
--# endif
--		switch (i) {
--		case 0:
--			if (!n--) break;
--			*args++ = regs->di;
--		case 1:
--			if (!n--) break;
--			*args++ = regs->si;
--		case 2:
--			if (!n--) break;
--			*args++ = regs->dx;
--		case 3:
--			if (!n--) break;
--			*args++ = regs->r10;
--		case 4:
--			if (!n--) break;
--			*args++ = regs->r8;
--		case 5:
--			if (!n--) break;
--			*args++ = regs->r9;
--		case 6:
--			if (!n--) break;
--		default:
--			BUG();
--			break;
--		}
-+	if (WARN_ON((idx + cnt) > 6))
-+		return;
+ 	struct ibmvscsi_host_data *hostdata = dev_get_drvdata(&vdev->dev);
+-	list_del(&hostdata->host_list);
+-	unmap_persist_bufs(hostdata);
++	unsigned long flags;
 +
-+	if (IS_ENABLED(CONFIG_IA32_EMULATION) &&
-+	    task->thread_info.status & TS_COMPAT)
-+		idx += 6;
++	srp_remove_host(hostdata->host);
++	scsi_remove_host(hostdata->host);
 +
-+	for (; cnt > 0; cnt--)
-+		*args++ = syscall_get_argreg(regs, idx++);
-+}
++	purge_requests(hostdata, DID_ERROR);
 +
-+static inline void syscall_set_argreg(struct pt_regs *regs,
-+				      unsigned int idx,
-+				      unsigned long val)
-+{
-+	switch (idx) {
-+	case  0: regs->di  = val; break;
-+	case  1: regs->si  = val; break;
-+	case  2: regs->dx  = val; break;
-+	case  3: regs->r10 = val; break;
-+	case  4: regs->r8  = val; break;
-+	case  5: regs->r9  = val; break;
-+#ifdef CONFIG_IA32_EMULATION
-+	case  6: regs->bx  = val; break;
-+	case  7: regs->cx  = val; break;
-+	case  8: regs->dx  = val; break;
-+	case  9: regs->si  = val; break;
-+	case 10: regs->di  = val; break;
-+	case 11: regs->bp  = val; break;
-+#endif
++	spin_lock_irqsave(hostdata->host->host_lock, flags);
+ 	release_event_pool(&hostdata->pool, hostdata);
++	spin_unlock_irqrestore(hostdata->host->host_lock, flags);
++
+ 	ibmvscsi_release_crq_queue(&hostdata->queue, hostdata,
+ 					max_events);
+ 
+ 	kthread_stop(hostdata->work_thread);
+-	srp_remove_host(hostdata->host);
+-	scsi_remove_host(hostdata->host);
++	unmap_persist_bufs(hostdata);
++
++	spin_lock(&ibmvscsi_driver_lock);
++	list_del(&hostdata->host_list);
++	spin_unlock(&ibmvscsi_driver_lock);
++
+ 	scsi_host_put(hostdata->host);
+ 
+ 	return 0;
+diff --git a/drivers/scsi/qla2xxx/qla_init.c b/drivers/scsi/qla2xxx/qla_init.c
+index 420045155ba0..0c700b140ce7 100644
+--- a/drivers/scsi/qla2xxx/qla_init.c
++++ b/drivers/scsi/qla2xxx/qla_init.c
+@@ -4991,6 +4991,13 @@ qla2x00_configure_local_loop(scsi_qla_host_t *vha)
+ 		if ((domain & 0xf0) == 0xf0)
+ 			continue;
+ 
++		/* Bypass if not same domain and area of adapter. */
++		if (area && domain && ((area != vha->d_id.b.area) ||
++		    (domain != vha->d_id.b.domain)) &&
++		    (ha->current_topology == ISP_CFG_NL))
++			continue;
++
++
+ 		/* Bypass invalid local loop ID. */
+ 		if (loop_id > LAST_LOCAL_LOOP_ID)
+ 			continue;
+diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
+index 677f82fdf56f..91f576d743fe 100644
+--- a/drivers/scsi/qla2xxx/qla_os.c
++++ b/drivers/scsi/qla2xxx/qla_os.c
+@@ -1517,7 +1517,7 @@ __qla2xxx_eh_generic_reset(char *name, enum nexus_wait_type type,
+ 		goto eh_reset_failed;
+ 	}
+ 	err = 2;
+-	if (do_reset(fcport, cmd->device->lun, blk_mq_rq_cpu(cmd->request) + 1)
++	if (do_reset(fcport, cmd->device->lun, 1)
+ 		!= QLA_SUCCESS) {
+ 		ql_log(ql_log_warn, vha, 0x800c,
+ 		    "do_reset failed for cmd=%p.\n", cmd);
+diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
+index 20189675677a..601b9f1de267 100644
+--- a/drivers/scsi/scsi_lib.c
++++ b/drivers/scsi/scsi_lib.c
+@@ -585,9 +585,16 @@ static bool scsi_end_request(struct request *req, blk_status_t error,
+ 	if (!blk_rq_is_scsi(req)) {
+ 		WARN_ON_ONCE(!(cmd->flags & SCMD_INITIALIZED));
+ 		cmd->flags &= ~SCMD_INITIALIZED;
+-		destroy_rcu_head(&cmd->rcu);
+ 	}
+ 
++	/*
++	 * Calling rcu_barrier() is not necessary here because the
++	 * SCSI error handler guarantees that the function called by
++	 * call_rcu() has been called before scsi_end_request() is
++	 * called.
++	 */
++	destroy_rcu_head(&cmd->rcu);
++
+ 	/*
+ 	 * In the MQ case the command gets freed by __blk_mq_end_request,
+ 	 * so we have to do all cleanup that depends on it earlier.
+@@ -2541,8 +2548,10 @@ void scsi_device_resume(struct scsi_device *sdev)
+ 	 * device deleted during suspend)
+ 	 */
+ 	mutex_lock(&sdev->state_mutex);
+-	sdev->quiesced_by = NULL;
+-	blk_clear_pm_only(sdev->request_queue);
++	if (sdev->quiesced_by) {
++		sdev->quiesced_by = NULL;
++		blk_clear_pm_only(sdev->request_queue);
 +	}
- }
+ 	if (sdev->sdev_state == SDEV_QUIESCE)
+ 		scsi_device_set_state(sdev, SDEV_RUNNING);
+ 	mutex_unlock(&sdev->state_mutex);
+diff --git a/drivers/scsi/scsi_transport_iscsi.c b/drivers/scsi/scsi_transport_iscsi.c
+index 0508831d6fb9..0a82e93566dc 100644
+--- a/drivers/scsi/scsi_transport_iscsi.c
++++ b/drivers/scsi/scsi_transport_iscsi.c
+@@ -2200,6 +2200,8 @@ void iscsi_remove_session(struct iscsi_cls_session *session)
+ 	scsi_target_unblock(&session->dev, SDEV_TRANSPORT_OFFLINE);
+ 	/* flush running scans then delete devices */
+ 	flush_work(&session->scan_work);
++	/* flush running unbind operations */
++	flush_work(&session->unbind_work);
+ 	__iscsi_unbind_session(&session->unbind_work);
  
- static inline void syscall_set_arguments(struct task_struct *task,
- 					 struct pt_regs *regs,
--					 unsigned int i, unsigned int n,
-+					 unsigned int idx, unsigned int cnt,
- 					 const unsigned long *args)
- {
--# ifdef CONFIG_IA32_EMULATION
--	if (task->thread_info.status & TS_COMPAT)
--		switch (i) {
--		case 0:
--			if (!n--) break;
--			regs->bx = *args++;
--		case 1:
--			if (!n--) break;
--			regs->cx = *args++;
--		case 2:
--			if (!n--) break;
--			regs->dx = *args++;
--		case 3:
--			if (!n--) break;
--			regs->si = *args++;
--		case 4:
--			if (!n--) break;
--			regs->di = *args++;
--		case 5:
--			if (!n--) break;
--			regs->bp = *args++;
--		case 6:
--			if (!n--) break;
--		default:
--			BUG();
--			break;
--		}
--	else
--# endif
--		switch (i) {
--		case 0:
--			if (!n--) break;
--			regs->di = *args++;
--		case 1:
--			if (!n--) break;
--			regs->si = *args++;
--		case 2:
--			if (!n--) break;
--			regs->dx = *args++;
--		case 3:
--			if (!n--) break;
--			regs->r10 = *args++;
--		case 4:
--			if (!n--) break;
--			regs->r8 = *args++;
--		case 5:
--			if (!n--) break;
--			regs->r9 = *args++;
--		case 6:
--			if (!n--) break;
--		default:
--			BUG();
--			break;
--		}
-+	if (WARN_ON((idx + cnt) > 6))
-+		return;
-+
-+	if (IS_ENABLED(CONFIG_IA32_EMULATION) &&
-+	    task->thread_info.status & TS_COMPAT)
-+		idx += 6;
-+
-+	for (; cnt > 0; cnt--)
-+		syscall_set_argreg(regs, idx++, *args++);
- }
- 
- static inline int syscall_get_arch(void)
+ 	/* hw iscsi may not have removed all connections from session */
