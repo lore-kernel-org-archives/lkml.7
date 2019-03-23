@@ -2,119 +2,115 @@ Return-Path: <SRS0=q9dy=R2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16FBFC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 09:23:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F286C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 09:43:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF1B8218D4
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 09:23:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="qzYr7/IM"
+	by mail.kernel.org (Postfix) with ESMTP id 3382C218E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 09:43:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726649AbfCWJXi (ORCPT
+        id S1726478AbfCWJnD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Mar 2019 05:23:38 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:59984 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726056AbfCWJXh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Mar 2019 05:23:37 -0400
-Received: from zn.tnic (p200300EC2F098000329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:8000:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 2A4FE1EC00FF;
-        Sat, 23 Mar 2019 10:23:35 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1553333015;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=my9tgc/yGxXqoruhF1BPgrv8mw0y9KhqQ61s1C7BKE0=;
-        b=qzYr7/IMYbmrRHsFn/1FRQfNlusiEQP07aXiZKKS2kZG53TU7tTiaCgTKCp0Z62fQs9Nxz
-        d/osXDERCNk2s/peeJA0WSA8H54PFEhfzlifyR8mz91ehwCtdHL4uTUbF9WscpuVDN7PVR
-        0a4UW8l7TKkDC40OZCIIidENLODoKSw=
-Date:   Sat, 23 Mar 2019 10:23:42 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Rui Zhao <ruizhao@outlook.com>,
-        "james.morse@arm.com" <james.morse@arm.com>
-Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "okaya@kernel.org" <okaya@kernel.org>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "hangl@microsoft.com" <hangl@microsoft.com>,
-        "lewan@microsoft.com" <lewan@microsoft.com>,
-        Rui Zhao <ruizhao@microsoft.com>
-Subject: Re: [PATCH v2 1/2] EDAC: add EDAC driver for DMC520
-Message-ID: <20190323092342.GD23698@zn.tnic>
-References: <BN7PR08MB5572D3A5217C4749AC4E7DC4AE4C0@BN7PR08MB5572.namprd08.prod.outlook.com>
+        Sat, 23 Mar 2019 05:43:03 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:42426 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726041AbfCWJnD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 Mar 2019 05:43:03 -0400
+Received: from p5492e2fc.dip0.t-ipconnect.de ([84.146.226.252] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1h7dB4-0000Ni-T0; Sat, 23 Mar 2019 10:42:59 +0100
+Date:   Sat, 23 Mar 2019 10:42:58 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Stephen Boyd <swboyd@chromium.org>
+cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-gpio@vger.kernel.org, Lina Iyer <ilina@codeaurora.org>,
+        Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH] genirq: Respect IRQCHIP_SKIP_SET_WAKE in
+ irq_chip_set_wake_parent()
+In-Reply-To: <155329862018.20095.14024385652448015564@swboyd.mtv.corp.google.com>
+Message-ID: <alpine.DEB.2.21.1903231035140.2157@nanos.tec.linutronix.de>
+References: <20190315200759.139479-1-swboyd@chromium.org> <alpine.DEB.2.21.1903211007310.1777@nanos.tec.linutronix.de> <155329862018.20095.14024385652448015564@swboyd.mtv.corp.google.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <BN7PR08MB5572D3A5217C4749AC4E7DC4AE4C0@BN7PR08MB5572.namprd08.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Just some initial comments. The general direction of this should be
-looked at by James.
+Stephen,
 
-On Thu, Mar 07, 2019 at 01:24:01AM +0000, Rui Zhao wrote:
-> From: Rui Zhao <ruizhao@microsoft.com>
+On Fri, 22 Mar 2019, Stephen Boyd wrote:
+> Quoting Thomas Gleixner (2019-03-21 02:26:26)
+> > 
+> > set_irq_wake_real() returns 0 when the topmost chip has SKIP_SET_WAKE set.
 > 
-> New driver supports error detection and correction on
-> the devices with ARM DMC-520 memory controller.
+> Just to confirm, the topmost chip would be chip B or chip C below?
+
+Yes. A is the parent of B, resp. the grandparent of C
+
+> > 
+> > So let's assume we have the following chains:
+> > 
+> >   chip A -> chip B 
+> > 
+> >   chip A -> chip B -> chip C
+> > 
+> > chip A has SKIP_SET_WAKE not set
+> > chip B has SKIP_SET_WAKE set
+> > chip C has SKIP_SET_WAKE not set and invokes irq_chip_set_wake_parent()
+> > 
+> > Now assume we have interrupt X connected to chip B and interrupt Y
+> > connected to chip C.
+> > 
+> > If irq_set_wake() is called for interrupt X, then the function returns
+> > without trying to invoke the set_wake() callback of chip A.
 > 
-> Signed-off-by: Rui Zhao <ruizhao@microsoft.com>
-> ---
->  MAINTAINERS                |   6 +
->  drivers/edac/Kconfig       |   7 +
->  drivers/edac/Makefile      |   1 +
->  drivers/edac/dmc520_edac.c | 619 +++++++++++++++++++++++++++++++++++++++++++++
->  4 files changed, 633 insertions(+)
->  create mode 100644 drivers/edac/dmc520_edac.c
+> It's not clear to me that having SKIP_SET_WAKE set means "completely
+> ignore set wake for irqs from this domain" vs. "skip setting wake here
+> because the .irq_set_wake() is intentionally omitted for this chip".
 
-...
+That's a really good question, but I'd say that if one part of the
+hierarchy does not require set wake, then this means no further action
+required.
 
-> diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
-> index 716096d..793d64f 100644
-> --- a/drivers/edac/Makefile
-> +++ b/drivers/edac/Makefile
-> @@ -78,3 +78,4 @@ obj-$(CONFIG_EDAC_SYNOPSYS)		+= synopsys_edac.o
->  obj-$(CONFIG_EDAC_XGENE)		+= xgene_edac.o
->  obj-$(CONFIG_EDAC_TI)			+= ti_edac.o
->  obj-$(CONFIG_EDAC_QCOM)			+= qcom_edac.o
-> +obj-$(CONFIG_EDAC_DMC520)		+= dmc520_edac.o
-> diff --git a/drivers/edac/dmc520_edac.c b/drivers/edac/dmc520_edac.c
-> new file mode 100644
-> index 0000000..c70ce4e
-> --- /dev/null
-> +++ b/drivers/edac/dmc520_edac.c
-> @@ -0,0 +1,619 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +// EDAC driver for DMC-520
+> Reading Santosh's reasoning in commit 60f96b41f71d ("genirq: Add
+> IRQCHIP_SKIP_SET_WAKE flag") just further confuses me because it sounds
+> like the latter.
 
-No "//" commenting in .c files. Make sure to have a cursory look at
+That preceeds hierarchical irq domains. So back then a hierarchy was
+expressed by weird callbacks, hardcoded dependencies, etc. That means if
+the top level chip had SKIP_SET_WAKE set, the whole hierarchy was excluded.
 
-Documentation/process/submitting-patches.rst
+> > If irq_set_wake() is called for interrupt Y, irq_chip_set_wake_parent() is
+> > invoked from chip C which then skips chip B, but tries to invoke the
+> > callback on chip A.
+> > 
+> > That's inconsistent and changes the existing behaviour. So IMO, the right
+> > thing to do is to return 0 from irq_chip_set_wake_parent() when the parent
+> > has SKIP_SET_WAKE set and not to try to follow the whole chain. That should
+> > fix your problem nicely w/o changing behaviour.
+> 
+> Ok. I understand that with hierarchical chips you want it to be explicit
+> in the code that a parent chip needs to be called or not. This works for
 
-Also, this patch doesn't apply - please redo it against:
+I think so.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/bp/bp.git/log/?h=for-next
+> me, and it's actually how I had originally solved this problem. Will you
+> merge your patch or do you want me to resend it with some updated commit
+> text?
 
-Thx.
+Please send a new version.
 
--- 
-Regards/Gruss,
-    Boris.
+Thanks,
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
+	tglx
