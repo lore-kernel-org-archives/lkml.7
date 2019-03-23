@@ -2,49 +2,41 @@ Return-Path: <SRS0=q9dy=R2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3D98C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 11:08:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1346CC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 11:13:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E8F5218B0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 11:08:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="DhlD0O8G"
+	by mail.kernel.org (Postfix) with ESMTP id D8AC2218A1
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 11:13:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727393AbfCWLIC (ORCPT
+        id S1727192AbfCWLNt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Mar 2019 07:08:02 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:45386 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726801AbfCWLIB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Mar 2019 07:08:01 -0400
-Received: from zn.tnic (p200300EC2F098000329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:8000:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A313A1EC00FF;
-        Sat, 23 Mar 2019 12:08:00 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1553339280;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=odrA26MNCMrGoFF4cR49F5G0Rzi28OkVXWWIfqOeh9M=;
-        b=DhlD0O8G1EMXZ89OHdX58GeB14oSTiyg3n852sjwoVpyL+/THT8VxGhqGSizw/8jsDQglT
-        KOmFVAbFU7x5OQjy2PEguy46+SX1goPvx7yo0C3HGl8C5iOJjAR85PJmQKaNBZ7/9aCvTY
-        1zKANl9tjazM4+6qlOODSFVoLOLJYxY=
-Date:   Sat, 23 Mar 2019 12:08:02 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Pu Wen <puwen@hygon.cn>
-Cc:     "tglx@linutronix.de" <tglx@linutronix.de>,
+        Sat, 23 Mar 2019 07:13:49 -0400
+Received: from [110.188.70.11] ([110.188.70.11]:50330 "EHLO spam2.hygon.cn"
+        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726801AbfCWLNt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 Mar 2019 07:13:49 -0400
+Received: from MK-DB.hygon.cn ([172.23.18.60])
+        by spam2.hygon.cn with ESMTP id x2NBB3h1066050;
+        Sat, 23 Mar 2019 19:11:03 +0800 (GMT-8)
+        (envelope-from puwen@hygon.cn)
+Received: from cncheex01.Hygon.cn ([172.23.18.10])
+        by MK-DB.hygon.cn with ESMTP id x2NBB1pF060270;
+        Sat, 23 Mar 2019 19:11:01 +0800 (GMT-8)
+        (envelope-from puwen@hygon.cn)
+Received: from [192.168.1.193] (172.23.18.44) by cncheex01.Hygon.cn
+ (172.23.18.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1466.3; Sat, 23 Mar
+ 2019 19:11:01 +0800
+Subject: Re: [RFC PATCH] x86/cpu/hygon: Fix phys_proc_id calculation logic for
+ multi-die processor
+To:     Borislav Petkov <bp@alien8.de>
+CC:     "tglx@linutronix.de" <tglx@linutronix.de>,
         "mingo@redhat.com" <mingo@redhat.com>,
         "hpa@zytor.com" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH] x86/cpu/hygon: Fix phys_proc_id calculation logic
- for multi-die processor
-Message-ID: <20190323110802.GE23698@zn.tnic>
 References: <1553251380-7015-1-git-send-email-puwen@hygon.cn>
  <20190322155449.GE12472@zn.tnic>
  <639a5bc6-f821-ee9d-1594-d02701321192@hygon.cn>
@@ -52,25 +44,37 @@ References: <1553251380-7015-1-git-send-email-puwen@hygon.cn>
  <18e15073-81c2-73a3-abf1-e785d6a5649b@hygon.cn>
  <20190323085934.GB23698@zn.tnic>
  <e181933e-775a-4597-7700-9dde8b98295f@hygon.cn>
+ <20190323110802.GE23698@zn.tnic>
+From:   Pu Wen <puwen@hygon.cn>
+Message-ID: <2247e2da-3fa0-406e-5960-2e14a6277ca9@hygon.cn>
+Date:   Sat, 23 Mar 2019 19:11:04 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <e181933e-775a-4597-7700-9dde8b98295f@hygon.cn>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190323110802.GE23698@zn.tnic>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [172.23.18.44]
+X-ClientProxiedBy: cncheex01.Hygon.cn (172.23.18.10) To cncheex01.Hygon.cn
+ (172.23.18.10)
+X-MAIL: spam2.hygon.cn x2NBB3h1066050
+X-DNSRBL: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 23, 2019 at 06:56:52PM +0800, Pu Wen wrote:
-> Because AMD doesn't have 2-Socket system with 1-Die/2-Die processors(see
-> reference [2]). So it will return the right result when getting physical
-> ID in AMD system.
+On 2019/3/23 19:08, Borislav Petkov wrote:
+> On Sat, Mar 23, 2019 at 06:56:52PM +0800, Pu Wen wrote:
+>> Because AMD doesn't have 2-Socket system with 1-Die/2-Die processors(see
+>> reference [2]). So it will return the right result when getting physical
+>> ID in AMD system.
+> 
+> There it is! Now add that to the commit message please.
 
-There it is! Now add that to the commit message please.
+Okay! :)
 
 -- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+Regards,
+Pu Wen
