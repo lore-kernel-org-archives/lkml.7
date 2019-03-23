@@ -2,184 +2,75 @@ Return-Path: <SRS0=q9dy=R2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F251C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 11:06:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3D98C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 11:08:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39984218B0
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 11:06:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E8F5218B0
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 11:08:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="DhlD0O8G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727327AbfCWLGt convert rfc822-to-8bit (ORCPT
+        id S1727393AbfCWLIC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Mar 2019 07:06:49 -0400
-Received: from mga09.intel.com ([134.134.136.24]:28080 "EHLO mga09.intel.com"
+        Sat, 23 Mar 2019 07:08:02 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:45386 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726801AbfCWLGt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Mar 2019 07:06:49 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Mar 2019 04:06:48 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,256,1549958400"; 
-   d="scan'208";a="136590245"
-Received: from fmsmsx104.amr.corp.intel.com ([10.18.124.202])
-  by orsmga003.jf.intel.com with ESMTP; 23 Mar 2019 04:06:48 -0700
-Received: from fmsmsx163.amr.corp.intel.com (10.18.125.72) by
- fmsmsx104.amr.corp.intel.com (10.18.124.202) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Sat, 23 Mar 2019 04:06:48 -0700
-Received: from shsmsx151.ccr.corp.intel.com (10.239.6.50) by
- fmsmsx163.amr.corp.intel.com (10.18.125.72) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Sat, 23 Mar 2019 04:06:47 -0700
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.74]) by
- SHSMSX151.ccr.corp.intel.com ([169.254.3.26]) with mapi id 14.03.0415.000;
- Sat, 23 Mar 2019 19:06:45 +0800
-From:   "Liu, Yi L" <yi.l.liu@intel.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-CC:     "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "jean-philippe.brucker@arm.com" <jean-philippe.brucker@arm.com>,
-        "peterx@redhat.com" <peterx@redhat.com>,
+        id S1726801AbfCWLIB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 Mar 2019 07:08:01 -0400
+Received: from zn.tnic (p200300EC2F098000329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:8000:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A313A1EC00FF;
+        Sat, 23 Mar 2019 12:08:00 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1553339280;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=odrA26MNCMrGoFF4cR49F5G0Rzi28OkVXWWIfqOeh9M=;
+        b=DhlD0O8G1EMXZ89OHdX58GeB14oSTiyg3n852sjwoVpyL+/THT8VxGhqGSizw/8jsDQglT
+        KOmFVAbFU7x5OQjy2PEguy46+SX1goPvx7yo0C3HGl8C5iOJjAR85PJmQKaNBZ7/9aCvTY
+        1zKANl9tjazM4+6qlOODSFVoLOLJYxY=
+Date:   Sat, 23 Mar 2019 12:08:02 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Pu Wen <puwen@hygon.cn>
+Cc:     "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "hpa@zytor.com" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [RFC v2 1/2] vfio/pci: export common symbols in vfio-pci
-Thread-Topic: [RFC v2 1/2] vfio/pci: export common symbols in vfio-pci
-Thread-Index: AQHU3n+esUAe9/isNUydLtMfe2TJLqYUYO3wgAAAWwCAAvOvgA==
-Date:   Sat, 23 Mar 2019 11:06:44 +0000
-Message-ID: <A2975661238FB949B60364EF0F2C257439E4BBF2@SHSMSX104.ccr.corp.intel.com>
-References: <1552378703-11202-1-git-send-email-yi.l.liu@intel.com>
-        <1552378703-11202-2-git-send-email-yi.l.liu@intel.com>
-        <20190319121416.27495651@x1.home>
-        <A2975661238FB949B60364EF0F2C257439E48CA9@SHSMSX104.ccr.corp.intel.com>
- <20190320132202.6279a190@x1.home>
-In-Reply-To: <20190320132202.6279a190@x1.home>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.0.400.15
-dlp-reaction: no-action
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiZjM4MjM5NjItNzRlNS00NmIzLTgxYzgtZmJiNjcxZTIxYjUwIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiMUpWb2pEZEpTeld4KzVLY3kzbThrcmdkNzF0OFN1cytLT29aczQzUWg5Q2JvMzZ2WVwvXC9NSVJpc3hmSVlIalBlIn0=
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Subject: Re: [RFC PATCH] x86/cpu/hygon: Fix phys_proc_id calculation logic
+ for multi-die processor
+Message-ID: <20190323110802.GE23698@zn.tnic>
+References: <1553251380-7015-1-git-send-email-puwen@hygon.cn>
+ <20190322155449.GE12472@zn.tnic>
+ <639a5bc6-f821-ee9d-1594-d02701321192@hygon.cn>
+ <20190322171632.GI12472@zn.tnic>
+ <18e15073-81c2-73a3-abf1-e785d6a5649b@hygon.cn>
+ <20190323085934.GB23698@zn.tnic>
+ <e181933e-775a-4597-7700-9dde8b98295f@hygon.cn>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <e181933e-775a-4597-7700-9dde8b98295f@hygon.cn>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Alex Williamson [mailto:alex.williamson@redhat.com]
-> Sent: Thursday, March 21, 2019 3:22 AM
-> To: Liu, Yi L <yi.l.liu@intel.com>
-> Subject: Re: [RFC v2 1/2] vfio/pci: export common symbols in vfio-pci
-> 
-> On Wed, 20 Mar 2019 11:49:37 +0000
-> "Liu, Yi L" <yi.l.liu@intel.com> wrote:
-> 
-> > > From: Alex Williamson [mailto:alex.williamson@redhat.com]
-> > > Sent: Wednesday, March 20, 2019 2:14 AM
-> > > To: Liu, Yi L <yi.l.liu@intel.com>
-> > > Subject: Re: [RFC v2 1/2] vfio/pci: export common symbols in vfio-pci
-> > >
-> > > On Tue, 12 Mar 2019 16:18:22 +0800
-> > > "Liu, Yi L" <yi.l.liu@intel.com> wrote:
-> > >
-> > > > This patch exports the following symbols from vfio-pci driver
-> > > > for vfio-pci alike driver. e.g. vfio-pci-mdev driver
-> > > >
-> > > > *) vfio_pci_set_vga_decode();
-> > > > *) vfio_pci_release();
-> > > > *) vfio_pci_open();
-> > > > *) vfio_pci_register_dev_region();
-> > > > *) vfio_pci_ioctl();
-> > > > *) vfio_pci_rw();
-> > > > *) vfio_pci_mmap();
-> > > > *) vfio_pci_request();
-> > > > *) vfio_pci_probe_misc();
-> > > > *) vfio_pci_remove_misc();
-> > > > *) vfio_err_handlers;
-> > > > *) vfio_pci_reflck_attach();
-> > > > *) vfio_pci_reflck_put();
-> > >
-> > > Exporting all these symbols scares me a bit.  They're GPL and we don't
-> > > guarantee a kernel ABI, but I don't really want to support arbitrary
-> > > use cases either.  What if we re-factored the shared bits into a common
-> > > file and just linked them together?  Thanks,
-> >
-> > Hi, Alex,
-> >
-> > Before refactor the code, I'd like to check with you on the module
-> > parameters for the two modules. The existing vfio-pci driver has
-> > some module parameters. e.g. ids, nointxmask, disable_idle_d3.
-> > For future usage and maintain, I think it is better to let the two
-> > drivers have same parameters. However, I'm not 100% on whether
-> > we want to allow user load vfio-pci.ko and vfio-pci-mdev.ko with
-> > different parameter value? e.g. load vfio-pci.ko with nointxmask=false
-> > while load vfio-pci-mdev.ko with nointxmask=true. How about your
-> > opinion on it?
-> 
-> Hi Yi,
-> 
-> I agree that it makes sense to retain the module options for the mdev
-> wrapped version, but I expect we should also allow dissimilar user
-> settings.  If those lived in the common code that gets linked separately
-> with each module, that should work fine, I think.  We can worry about
-> refactoring for future driver that might not want those options later.
+On Sat, Mar 23, 2019 at 06:56:52PM +0800, Pu Wen wrote:
+> Because AMD doesn't have 2-Socket system with 1-Die/2-Die processors(see
+> reference [2]). So it will return the right result when getting physical
+> ID in AMD system.
 
-Hi Alex,
+There it is! Now add that to the commit message please.
 
-I tried to get a common file which includes the definitions of the module
-options and the common interfaces and get it linked separately with each
-module. It works well when linked separately by config the
-CONFIG_VFIO_PCI=m and CONFIG_VFIO_PCI_MDEV=m in kernel
-configuration file. CONFIG_VFIO_PCI_MDEV is a new Kconfig macro
-for the mdev wrapped version driver. However, if building the vfio-pci
-and the mdev wrapped version into kernel image (config the
-CONFIG_VFIO_PCI=y and CONFIG_VFIO_PCI_MDEV=y), then the symbols
-defined in the common file will be shared thus doesn't allow dissimilar
-user settings.
+-- 
+Regards/Gruss,
+    Boris.
 
-Per my understanding, I think we expect to allow simultaneous usage of
-the two drivers. So I think the way above doesn't meet our expectation.
-I considered a possible proposal as below. May listen to your opinion
-on it before heading to cook. Also, better idea is welcomed. :-)
-
-- get a common file includes interfaces which are common and have
-  input parameters to differentiate the calling from vfio-pci and the
-  wrapped version. e.g. vfio_pci_rw(). may call it as vfio_pci_common.c.
-
-- get another common file includes the definitions of the module options,
-  and the functions which referred the options. Define all of them as static.
-  may call it as common.c
-
-- get vfio_pci.c which includes the module_init/exit interfaces and driver
-  registration operations of vfio-pci.ko. This file should include the common.c
-  above to have same module options with the mdev wrapped version.
-
-- get vfio_pci_mdev.c which includes the module_init/exit interfaces and
-  driver registration operations of vfio-pci-mdev.ko. It should also include
-  the common.c above to have same module options with vfio-pci.ko.
-
-- Makefile:
-vfio-pci-y := vfio_pci.o vfio_pci_common.o vfio_pci_intrs.o vfio_pci_rdwr.o vfio_pci_config.o
-vfio-pci-$(CONFIG_VFIO_PCI_IGD) += vfio_pci_igd.o
-vfio-pci-$(CONFIG_VFIO_PCI_NVLINK2) += vfio_pci_nvlink2.o
-
-vfio-pci-mdev-y := vfio_pci_mdev.o vfio_pci_common.o vfio_pci_intrs.o vfio_pci_rdwr.o vfio_pci_config.o
-vfio-pci-mdev-$(CONFIG_VFIO_PCI_IGD) += vfio_pci_igd.o
-vfio-pci-mdev-$(CONFIG_VFIO_PCI_NVLINK2) += vfio_pci_nvlink2.o
-
-obj-$(CONFIG_VFIO_PCI) += vfio-pci.o
-obj-$(CONFIG_VFIO_PCI_MDEV) += vfio-pci-mdev.o
-
-Thanks,
-Yi Liu
-
+Good mailing practices for 400: avoid top-posting and trim the reply.
