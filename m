@@ -5,222 +5,106 @@ X-Spam-Level:
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FBCBC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 21:01:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6464C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 21:03:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D73DA217D8
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 21:01:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB57D217D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 21:03:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727985AbfCWVBn (ORCPT
+        id S1728012AbfCWVD2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Mar 2019 17:01:43 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:46125 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727831AbfCWVBm (ORCPT
+        Sat, 23 Mar 2019 17:03:28 -0400
+Received: from mail.emypeople.net ([216.220.167.73]:40303 "EHLO
+        mail.emypeople.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727770AbfCWVD1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Mar 2019 17:01:42 -0400
-Received: by mail-qt1-f195.google.com with SMTP id z17so6289772qts.13
-        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2019 14:01:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=7Y/C6/J6hvHhGRPZPY/ty2xFGm7d+nEAkW6LEJpVPLE=;
-        b=VyI5WUkydJlNS/QCIZW2OCn4hIuNU3VIoBX7yHwAyOin1RNhNE0+vO5ZzcSwdZfBe0
-         kL7u/v5DhOg7SlAI5EzWm9IAYw1D0tpLmfBAibEoh4IRs08IrUC7JD404Lz+mfABA8QK
-         JOE880pppTxVHMr5VRO02s79wFIQBMWzXArp3ZR5HU/UweFxNCa78VXs3jmUPQjaFLP8
-         onKqpy97fkWGTc9rpd9fVN6227hveyfkPU0Ir0rVmibTXjN1B/zMtrbD6Uv0/QYvhXpa
-         J4HqNPxHNvBSAc2po+GPCsamg8a0DPtICS+JP/dpe/WcfqNPnsdPg6FMXD11QHFQKigA
-         PmRw==
-X-Gm-Message-State: APjAAAUa04uvYtBD6H6/aKsPUvDneBz/rIzXJnEqvI5y4XZuAz/wzA8J
-        dTL7BCI+gBf0RXe/92extLsfGg==
-X-Google-Smtp-Source: APXvYqyPvN4NsVhkdWrG9MPXcrjtVKC6+Or/OUcqjEZeYjzRvDY4vPXN9sGnLdtpnzI7/6dYjl/3QA==
-X-Received: by 2002:a0c:b0ea:: with SMTP id p39mr13958691qvc.132.1553374901511;
-        Sat, 23 Mar 2019 14:01:41 -0700 (PDT)
-Received: from redhat.com ([195.39.71.253])
-        by smtp.gmail.com with ESMTPSA id e2sm6955552qkd.7.2019.03.23.14.01.37
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 23 Mar 2019 14:01:40 -0700 (PDT)
-Date:   Sat, 23 Mar 2019 17:01:35 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Cc:     virtualization@lists.linux-foundation.org,
-        linuxppc-dev@lists.ozlabs.org, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        Alexey Kardashevskiy <aik@linux.ibm.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        Michael Roth <mdroth@linux.vnet.ibm.com>,
-        Mike Anderson <andmike@linux.ibm.com>
-Subject: Re: [RFC PATCH] virtio_ring: Use DMA API if guest memory is encrypted
-Message-ID: <20190323165456-mutt-send-email-mst@kernel.org>
-References: <87zhrj8kcp.fsf@morokweng.localdomain>
- <87womn8inf.fsf@morokweng.localdomain>
- <20190129134750-mutt-send-email-mst@kernel.org>
- <877eefxvyb.fsf@morokweng.localdomain>
- <20190204144048-mutt-send-email-mst@kernel.org>
- <87ef71seve.fsf@morokweng.localdomain>
- <20190320171027-mutt-send-email-mst@kernel.org>
- <87tvfvbwpb.fsf@morokweng.localdomain>
+        Sat, 23 Mar 2019 17:03:27 -0400
+X-Greylist: delayed 773 seconds by postgrey-1.27 at vger.kernel.org; Sat, 23 Mar 2019 17:03:26 EDT
+Received: from Shop7 ([166.182.243.197])
+        by mail.emypeople.net (12.1.1 build 4 DEB9 x64) with ASMTP id 201903231650322124;
+        Sat, 23 Mar 2019 16:50:32 -0400
+From:   "Edwin Zimmerman" <edwin@211mainstreet.net>
+To:     "'Miklos Szeredi'" <miklos@szeredi.hu>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "'Alexander Viro'" <viro@zeniv.linux.org.uk>
+Cc:     "'Edwin Zimmerman'" <edwin@211mainstreet.net>
+Subject: Pagefault in fuse_do_ioctl
+Date:   Sat, 23 Mar 2019 16:50:23 -0400
+Message-ID: <000101d4e1ba$09f90b70$1deb2250$@211mainstreet.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87tvfvbwpb.fsf@morokweng.localdomain>
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 15.0
+Thread-Index: AdThuYDUPRAM4GeaSVSl7444X/9wcQ==
+Content-Language: en-us
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 21, 2019 at 09:05:04PM -0300, Thiago Jung Bauermann wrote:
-> 
-> Michael S. Tsirkin <mst@redhat.com> writes:
-> 
-> > On Wed, Mar 20, 2019 at 01:13:41PM -0300, Thiago Jung Bauermann wrote:
-> >> >> Another way of looking at this issue which also explains our reluctance
-> >> >> is that the only difference between a secure guest and a regular guest
-> >> >> (at least regarding virtio) is that the former uses swiotlb while the
-> >> >> latter doens't.
-> >> >
-> >> > But swiotlb is just one implementation. It's a guest internal thing. The
-> >> > issue is that memory isn't host accessible.
-> >>
-> >> >From what I understand of the ACCESS_PLATFORM definition, the host will
-> >> only ever try to access memory addresses that are supplied to it by the
-> >> guest, so all of the secure guest memory that the host cares about is
-> >> accessible:
-> >>
-> >>     If this feature bit is set to 0, then the device has same access to
-> >>     memory addresses supplied to it as the driver has. In particular,
-> >>     the device will always use physical addresses matching addresses
-> >>     used by the driver (typically meaning physical addresses used by the
-> >>     CPU) and not translated further, and can access any address supplied
-> >>     to it by the driver. When clear, this overrides any
-> >>     platform-specific description of whether device access is limited or
-> >>     translated in any way, e.g. whether an IOMMU may be present.
-> >>
-> >> All of the above is true for POWER guests, whether they are secure
-> >> guests or not.
-> >>
-> >> Or are you saying that a virtio device may want to access memory
-> >> addresses that weren't supplied to it by the driver?
-> >
-> > Your logic would apply to IOMMUs as well.  For your mode, there are
-> > specific encrypted memory regions that driver has access to but device
-> > does not. that seems to violate the constraint.
-> 
-> Right, if there's a pre-configured 1:1 mapping in the IOMMU such that
-> the device can ignore the IOMMU for all practical purposes I would
-> indeed say that the logic would apply to IOMMUs as well. :-)
-> 
-> I guess I'm still struggling with the purpose of signalling to the
-> driver that the host may not have access to memory addresses that it
-> will never try to access.
+On 5.0.0-rc4+, I encountered a pagefault in fuse_do_ioctl when fuzzing with trinity
+on a ntfs filesystem mounted with fuse.  I have not been able to reproduce it
+on other filesystem types.  The following python script will reproduce this bug 
+when run on a fuse-mounted ntfs path.
 
-For example, one of the benefits is to signal to host that driver does
-not expect ability to access all memory. If it does, host can
-fail initialization gracefully.
+>import fcntl
+>f = open('testfile1', 'wb')
+>fcntl.ioctl(f, 0x80046601, -8)
 
-> >> >> And from the device's point of view they're
-> >> >> indistinguishable. It can't tell one guest that is using swiotlb from
-> >> >> one that isn't. And that implies that secure guest vs regular guest
-> >> >> isn't a virtio interface issue, it's "guest internal affairs". So
-> >> >> there's no reason to reflect that in the feature flags.
-> >> >
-> >> > So don't. The way not to reflect that in the feature flags is
-> >> > to set ACCESS_PLATFORM.  Then you say *I don't care let platform device*.
-> >> >
-> >> >
-> >> > Without ACCESS_PLATFORM
-> >> > virtio has a very specific opinion about the security of the
-> >> > device, and that opinion is that device is part of the guest
-> >> > supervisor security domain.
-> >>
-> >> Sorry for being a bit dense, but not sure what "the device is part of
-> >> the guest supervisor security domain" means. In powerpc-speak,
-> >> "supervisor" is the operating system so perhaps that explains my
-> >> confusion. Are you saying that without ACCESS_PLATFORM, the guest
-> >> considers the host to be part of the guest operating system's security
-> >> domain?
-> >
-> > I think so. The spec says "device has same access as driver".
-> 
-> Ok, makes sense.
-> 
-> >> If so, does that have any other implication besides "the host
-> >> can access any address supplied to it by the driver"? If that is the
-> >> case, perhaps the definition of ACCESS_PLATFORM needs to be amended to
-> >> include that information because it's not part of the current
-> >> definition.
-> >>
-> >> >> > But the name "sev_active" makes me scared because at least AMD guys who
-> >> >> > were doing the sensible thing and setting ACCESS_PLATFORM
-> >> >>
-> >> >> My understanding is, AMD guest-platform knows in advance that their
-> >> >> guest will run in secure mode and hence sets the flag at the time of VM
-> >> >> instantiation. Unfortunately we dont have that luxury on our platforms.
-> >> >
-> >> > Well you do have that luxury. It looks like that there are existing
-> >> > guests that already acknowledge ACCESS_PLATFORM and you are not happy
-> >> > with how that path is slow. So you are trying to optimize for
-> >> > them by clearing ACCESS_PLATFORM and then you have lost ability
-> >> > to invoke DMA API.
-> >> >
-> >> > For example if there was another flag just like ACCESS_PLATFORM
-> >> > just not yet used by anyone, you would be all fine using that right?
-> >>
-> >> Yes, a new flag sounds like a great idea. What about the definition
-> >> below?
-> >>
-> >> VIRTIO_F_ACCESS_PLATFORM_NO_IOMMU This feature has the same meaning as
-> >>     VIRTIO_F_ACCESS_PLATFORM both when set and when not set, with the
-> >>     exception that the IOMMU is explicitly defined to be off or bypassed
-> >>     when accessing memory addresses supplied to the device by the
-> >>     driver. This flag should be set by the guest if offered, but to
-> >>     allow for backward-compatibility device implementations allow for it
-> >>     to be left unset by the guest. It is an error to set both this flag
-> >>     and VIRTIO_F_ACCESS_PLATFORM.
-> >
-> > It looks kind of narrow but it's an option.
-> 
-> Great!
-> 
-> > I wonder how we'll define what's an iommu though.
-> 
-> Hm, it didn't occur to me it could be an issue. I'll try.
-> 
-> > Another idea is maybe something like virtio-iommu?
-> 
-> You mean, have legacy guests use virtio-iommu to request an IOMMU
-> bypass? If so, it's an interesting idea for new guests but it doesn't
-> help with guests that are out today in the field, which don't have A
-> virtio-iommu driver.
+Running mount.ntfs outputs the following:
 
-I presume legacy guests don't use encrypted memory so why do we
-worry about them at all?
+ntfs-3g 2017.3.23 integrated FUSE 28 - Third Generation NTFS Driver
+		Configuration type 7, XATTRS are on, POSIX ACLS are on
 
-> >> > Is there any justification to doing that beyond someone putting
-> >> > out slow code in the past?
-> >>
-> >> The definition of the ACCESS_PLATFORM flag is generic and captures the
-> >> notion of memory access restrictions for the device. Unfortunately, on
-> >> powerpc pSeries guests it also implies that the IOMMU is turned on
-> >
-> > IIUC that's really because on pSeries IOMMU is *always* turned on.
-> > Platform has no way to say what you want it to say
-> > which is bypass the iommu for the specific device.
-> 
-> Yes, that's correct. pSeries guests running on KVM are in a gray area
-> where theoretically they use an IOMMU but in practice KVM ignores it.
-> It's unfortunate but it's the reality on the ground today. :-/
 
-Well it's not just the reality, virt setups need something that
-emulated IOMMUs don't provide. That is not uncommon, e.g.
-intel's VTD has a "cache mode" field which AFAIK is only used for virt.
+Bug trace:
+[ 8102.178279] BUG: pagefault on kernel address 0xfffffff8 in non-whitelisted uaccess
+[ 8102.178296] BUG: unable to handle kernel paging request at fffffff8
+[ 8102.178301] #PF error: [WRITE]
+[ 8102.178305] *pdpt = 0000000012b90001 *pde = 0000000012b92063 *pte = 0000000000000000 
+[ 8102.178317] Oops: 0002 [#1] SMP NOPTI
+[ 8102.178326] CPU: 1 PID: 5122 Comm: python3 Not tainted 5.0.0-rc4+ #8
+[ 8102.178330] Hardware name: Acer AOA150/, BIOS v0.3305 05/09/2008
+[ 8102.178345] EIP: copy_page_to_iter+0xfd/0x2f1
+[ 8102.178352] Code: ec ff ff 8b 55 dc 29 c2 01 55 ec 8d 0c 13 8b 5d f0 89 4d e0 29 d3 e9 86 00 00 00 39 55 e8 0f 87 b6 00 00 00 8b
+45 e8 8d 76 00 <c6> 00 00 31 c9 eb 05 b9 f2 ff ff ff 8d 76 00 85 c9 0f 85 99 00 00
+[ 8102.178358] EAX: fffffff8 EBX: 00000004 ECX: 00001000 EDX: fffffffb
+[ 8102.178363] ESI: d3211000 EDI: d318de68 EBP: d318de18 ESP: d318ddf0
+[ 8102.178369] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010293
+[ 8102.178375] CR0: 80050033 CR2: fffffff8 CR3: 34cc5520 CR4: 000006e0
+[ 8102.178379] Call Trace:
+[ 8102.178396]  fuse_do_ioctl+0x438/0x4e2
+[ 8102.178410]  fuse_ioctl_common+0x49/0x59
+[ 8102.178417]  ? fuse_file_compat_ioctl+0x11/0x11
+[ 8102.178424]  fuse_file_ioctl+0xf/0x11
+[ 8102.178433]  vfs_ioctl+0x1f/0x29
+[ 8102.178440]  do_vfs_ioctl+0x535/0x552
+[ 8102.178447]  ? __do_sys_fstat64+0x33/0x49
+[ 8102.178456]  ? fuse_direct_mmap+0x34/0x34
+[ 8102.178464]  ksys_ioctl+0x46/0x66
+[ 8102.178472]  sys_ioctl+0x16/0x18
+[ 8102.178481]  do_fast_syscall_32+0x94/0xd3
+[ 8102.178490]  entry_SYSENTER_32+0x6b/0xbe
+[ 8102.178496] EIP: 0xb7fb27c5
+[ 8102.178503] Code: cd ff ff 85 d2 89 c8 74 02 89 0a 5b 5d c3 8b 04 24 c3 8b 14 24 c3 8b 1c 24 c3 8b 3c 24 c3 90 90 90 51 52 55 89
+e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 8d 76 00 58 b8 77 00 00 00 cd 80 90 8d 76
+[ 8102.178509] EAX: ffffffda EBX: 00000003 ECX: 80046601 EDX: fffffff8
+[ 8102.178514] ESI: bfa407f0 EDI: 80046601 EBP: 09c79a60 ESP: bfa407a8
+[ 8102.178519] DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00000282
+[ 8102.178527] Modules linked in: usblp nls_iso8859_1 ccm arc4 snd_hda_codec_realtek snd_hda_codec_generic uvcvideo ledtrig_audio
+snd_hda_intel snd_hda_codec videobuf2_vmalloc videobuf2_memops snd_hda_core videobuf2_v4l2 videobuf2_common snd_hwdep snd_pcm ath5k
+videodev acerhdf ath snd_seq_midi coretemp media mac80211 snd_seq_midi_event snd_rawmidi joydev input_leds snd_seq serio_raw
+snd_seq_device sparse_keymap snd_timer jmb38x_ms lpc_ich memstick snd cfg80211 soundcore mac_hid binfmt_misc sch_fq_codel parport_pc
+ppdev lp parport ip_tables x_tables autofs4 dm_mirror dm_region_hash dm_log i915 i2c_algo_bit drm_kms_helper syscopyarea sysfillrect
+sysimgblt psmouse sdhci_pci fb_sys_fops cqhci r8169 pata_acpi sdhci drm realtek wmi video uas usb_storage
+[ 8102.178621] CR2: 00000000fffffff8
+[ 8102.178628] ---[ end trace 526b529f6024cdd7 ]---
+[ 8102.178636] EIP: copy_page_to_iter+0xfd/0x2f1
+[ 8102.178642] Code: ec ff ff 8b 55 dc 29 c2 01 55 ec 8d 0c 13 8b 5d f0 89 4d e0 29 d3 e9 86 00 00 00 39 55 e8 0f 87 b6 00 00 00 8b
+45 e8 8d 76 00 <c6> 00 00 31 c9 eb 05 b9 f2 ff ff ff 8d 76 00 85 c9 0f 85 99 00 00
+[ 8102.178648] EAX: fffffff8 EBX: 00000004 ECX: 00001000 EDX: fffffffb
+[ 8102.178653] ESI: d3211000 EDI: d318de68 EBP: d318de18 ESP: d2b9be5c
+[ 8102.178658] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010293
+[ 8102.178664] CR0: 80050033 CR2: fffffff8 CR3: 34cc5520 CR4: 000006e0
 
-> --
-> Thiago Jung Bauermann
-> IBM Linux Technology Center
