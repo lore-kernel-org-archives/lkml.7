@@ -2,255 +2,144 @@ Return-Path: <SRS0=q9dy=R2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1481BC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 16:17:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 322D8C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 16:18:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD33A20896
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 16:17:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D84CA20896
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 16:18:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="vXKOnNoV"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="fd/kcQhZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727702AbfCWQRE (ORCPT
+        id S1727733AbfCWQSf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Mar 2019 12:17:04 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:47372 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726478AbfCWQRE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Mar 2019 12:17:04 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 9F1628EE109;
-        Sat, 23 Mar 2019 09:17:02 -0700 (PDT)
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id IZP19FsLQ5AA; Sat, 23 Mar 2019 09:16:59 -0700 (PDT)
-Received: from [153.66.254.194] (unknown [50.35.68.20])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id B19568EE656;
-        Sat, 23 Mar 2019 09:16:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1553357817;
-        bh=WCYsLZuQgr4l2FmeipQqczIDWQfEFbjoarRuVFwVtq8=;
-        h=Subject:From:To:Cc:Date:From;
-        b=vXKOnNoV2kasPzq84Wg64DB1aUD0+TTliTrxxfeYhcUcJJ+EaFvLlYl1ziAumVDAJ
-         mgGejvmbMZ5b5E0iajM6Et8SQwwneL6KSYASguiQqHeKKqjXuj2ygLUoBT7MvoTpWZ
-         dYJ4gSQ1+439AOmpWyzLTwbUrBOxaa2M5qTU85Mk=
-Message-ID: <1553357813.3120.4.camel@HansenPartnership.com>
-Subject: [GIT PULL] SCSI fixes for 5.1-rc1
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-scsi <linux-scsi@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Date:   Sat, 23 Mar 2019 09:16:53 -0700
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Sat, 23 Mar 2019 12:18:35 -0400
+Received: from mout.web.de ([212.227.17.11]:42049 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727440AbfCWQSe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 Mar 2019 12:18:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1553357888;
+        bh=Fxk6PLBzrEb6AMv0OsLqPP/74dKvMMQwN33fs/QcKLw=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=fd/kcQhZmoJ2s7vAPmH6HZGCLt2TbOgpE46Jx21rDlUCnP6fkrweSxnf7cx4W2P0z
+         PK9r9kL/VMnMXLN0EPXaPuvjUXsHAzP4fpMgQIYBfg9PYtNL876hjP5RH22234IyGv
+         s38oJJ9xM3hxGZu3EUQCjw4QpfIEwpJdCZM8/WdU=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.135.145.237]) by smtp.web.de (mrweb103
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0MAdol-1hIU3v1PS7-00BsWK; Sat, 23
+ Mar 2019 17:18:08 +0100
+Subject: Re: [v5] coccinelle: semantic code search for missing put_device()
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Wen Yang <wen.yang99@zte.com.cn>,
+        Julia Lawall <Julia.Lawall@lip6.fr>
+Cc:     Gilles Muller <Gilles.Muller@lip6.fr>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Yi Wang <wang.yi59@zte.com.cn>,
+        Wen Yang <yellowriver2010@hotmail.com>,
+        Cheng Shengyu <cheng.shengyu@zte.com.cn>,
+        cocci@systeme.lip6.fr, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1550217319-40418-1-git-send-email-wen.yang99@zte.com.cn>
+ <CAK7LNASzd=bL1H34w-E_UD9x6w2=ObyS+EPDZ_jrvfV+ncw-yA@mail.gmail.com>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <1691b160-5558-d4c3-afed-5773e115c5aa@web.de>
+Date:   Sat, 23 Mar 2019 17:17:46 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
+MIME-Version: 1.0
+In-Reply-To: <CAK7LNASzd=bL1H34w-E_UD9x6w2=ObyS+EPDZ_jrvfV+ncw-yA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+X-Provags-ID: V03:K1:LYI5KCaIHvIoNdKrw+qN+/gt/BJHI/MG+jWPbTbAGtetmLGjQ3/
+ K6xPmV3e7RorzPX94t1WPW0069Cg0Od45drSafDONup9Lp0vYmT33gIIzMePMUXbcLWF7j5
+ xIC6djy4gnxVK5OslaM1ExKNVlBfxiJ0K9v6tdI19bqoLZstIjAKBDk/BdaTUljEiGci3lE
+ XLTV2MNL8J1NWpgZg6D8g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:epNlFZ0gQCA=:3tDqdkng0J3+Nkpm51WU7F
+ q4hpE2Mwsjltsu7ZOZlwFQ8LKc5DjJ/6Ip8bVnp/xwynmVcIQjBLxZ/JwucpK5ASJu1JjJxnv
+ QiOCdU9gqAP7KH6TDVu+dV9omEvo+xv5+mw/sp1UPb+VXqnBARN41jIfBs0RIWiBnS+WQN3fs
+ +5jGVmPWi7teFMYRv99G0X7R9lZl1KAeFmwsYW0izS2ajns+/Bz/xD6AuB2d5naq3XkReOnL3
+ hxGA6UfD4fLsRpcQc5CIrg7PAqcGMSRtPfFZ2/6weycWTHqrBX/wCHMKrvJH10D1lRjy9UHRO
+ yImri79YCZgUDzBSiGm1Jao+fG4BoXS8T66FsaC+liVp8PYH5Fe0j02EaAOC5TOhb9lPtZHzA
+ s8gTWoKbPL57kZDecZHxGk6QM9i2eSCSt993HVSZ+4PMCcs83PTfrRCIIPi5qbxa3G0uWLjjE
+ 57DlEUONy1e0Bcc9KLidgNeYo9z+/2brIjo/2sCpU7Rm+HvfzSXp01OJ7ajqvQDK62uPoH7KI
+ BDbi8xESdjsIQRV+lvUtUxh/qP3acXuuvkZew9S5Es6WU7u67bW7GOpGtubLYVfZstlv8GJxZ
+ 7307TrQwSjQlg58casw9W2BdvxSyDNJJrKzXjiSOpAr42Oh0sei055Q/hN5EJ2PQ3/OWzdYFs
+ BVllvizs6L9r9Eavrv2/2WYLbf0opl4ydYeMoW5zP6oYzsBFMqGb7liAEM/TRbBMk2nCYgO2x
+ TmPzCL1/y/+s/VlR3BbqrGFNQrIWCKl7sCSvYtkJuuwCpsjGL1OW5ZZaaOj0fxoZmXdk9IYmw
+ QB18V8Urs61sZdFzRpXn7e2gJW/JEsDJrychazpTrpDEct1ukYAOI8IiXl8F2z9jDr0sx5QPv
+ MKXhZwY69Tk4kenj+BujarfzqkemrMLWrE80gjEhrMqZ4XonRVvPnwMdh72MA6ZS46jz07Cf1
+ XJxqawVOCUA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Six fixes to four drivers and two core fixes.  One core fix simply
-corrects a missed destroy_rcu_head() but the other is hopefully the end
-of an ongoing effort to make suspend/resume play nicely with scsi
-quiesce.
+> Applied to linux-kbuild.
 
-The patch is available here:
+A questionable development version was integrated for this SmPL script.
 
-git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/scripts/coccinelle/free/put_device.cocci?id=da9cfb87a44da61f2403c4312916befcb6b6d7e8
 
-The short changelog is:
+https://lore.kernel.org/cocci/201902191014156680299@zte.com.cn/
 
-Bart Van Assche (2):
-      scsi: core: Avoid that a kernel warning appears during system resume
-      scsi: core: Also call destroy_rcu_head() for passthrough requests
 
-Himanshu Madhani (1):
-      scsi: qla2xxx: Fix NULL pointer crash due to stale CPUID
+Now I am curious on how such a source code analysis approach will be
+improved further.
+Which changes will get the desired acceptance?
 
-Luo Jiaxing (1):
-      scsi: hisi_sas: Add softreset in hisi_sas_I_T_nexus_reset()
+https://lore.kernel.org/patchwork/patch/1053979/
+https://lore.kernel.org/lkml/1553321671-27749-1-git-send-email-wen.yang99@zte.com.cn/
+https://systeme.lip6.fr/pipermail/cocci/2019-March/005679.html
 
-Maurizio Lombardi (1):
-      scsi: iscsi: flush running unbind operations when removing a session
-
-Quinn Tran (1):
-      scsi: qla2xxx: Fix FC-AL connection target discovery
-
-Tyrel Datwyler (2):
-      scsi: ibmvscsi: Fix empty event pool access during host removal
-      scsi: ibmvscsi: Protect ibmvscsi_head from concurrent modificaiton
-
-And the diffstat:
-
- drivers/scsi/hisi_sas/hisi_sas_main.c |  6 ++++++
- drivers/scsi/ibmvscsi/ibmvscsi.c      | 23 +++++++++++++++++++----
- drivers/scsi/qla2xxx/qla_init.c       |  7 +++++++
- drivers/scsi/qla2xxx/qla_os.c         |  2 +-
- drivers/scsi/scsi_lib.c               | 15 ++++++++++++---
- drivers/scsi/scsi_transport_iscsi.c   |  2 ++
- 6 files changed, 47 insertions(+), 8 deletions(-)
-
-With full diff below.
-
-James
-
----
-
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
-index 3c3cf89f713f..14bac4966c87 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_main.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
-@@ -1801,6 +1801,12 @@ static int hisi_sas_I_T_nexus_reset(struct domain_device *device)
- 	}
- 	hisi_sas_dereg_device(hisi_hba, device);
- 
-+	if (dev_is_sata(device)) {
-+		rc = hisi_sas_softreset_ata_disk(device);
-+		if (rc)
-+			return TMF_RESP_FUNC_FAILED;
-+	}
-+
- 	rc = hisi_sas_debug_I_T_nexus_reset(device);
- 
- 	if ((rc == TMF_RESP_FUNC_COMPLETE) || (rc == -ENODEV))
-diff --git a/drivers/scsi/ibmvscsi/ibmvscsi.c b/drivers/scsi/ibmvscsi/ibmvscsi.c
-index 1135e74646e2..8cec5230fe31 100644
---- a/drivers/scsi/ibmvscsi/ibmvscsi.c
-+++ b/drivers/scsi/ibmvscsi/ibmvscsi.c
-@@ -96,6 +96,7 @@ static int client_reserve = 1;
- static char partition_name[96] = "UNKNOWN";
- static unsigned int partition_number = -1;
- static LIST_HEAD(ibmvscsi_head);
-+static DEFINE_SPINLOCK(ibmvscsi_driver_lock);
- 
- static struct scsi_transport_template *ibmvscsi_transport_template;
- 
-@@ -2270,7 +2271,9 @@ static int ibmvscsi_probe(struct vio_dev *vdev, const struct vio_device_id *id)
- 	}
- 
- 	dev_set_drvdata(&vdev->dev, hostdata);
-+	spin_lock(&ibmvscsi_driver_lock);
- 	list_add_tail(&hostdata->host_list, &ibmvscsi_head);
-+	spin_unlock(&ibmvscsi_driver_lock);
- 	return 0;
- 
-       add_srp_port_failed:
-@@ -2292,15 +2295,27 @@ static int ibmvscsi_probe(struct vio_dev *vdev, const struct vio_device_id *id)
- static int ibmvscsi_remove(struct vio_dev *vdev)
- {
- 	struct ibmvscsi_host_data *hostdata = dev_get_drvdata(&vdev->dev);
--	list_del(&hostdata->host_list);
--	unmap_persist_bufs(hostdata);
-+	unsigned long flags;
-+
-+	srp_remove_host(hostdata->host);
-+	scsi_remove_host(hostdata->host);
-+
-+	purge_requests(hostdata, DID_ERROR);
-+
-+	spin_lock_irqsave(hostdata->host->host_lock, flags);
- 	release_event_pool(&hostdata->pool, hostdata);
-+	spin_unlock_irqrestore(hostdata->host->host_lock, flags);
-+
- 	ibmvscsi_release_crq_queue(&hostdata->queue, hostdata,
- 					max_events);
- 
- 	kthread_stop(hostdata->work_thread);
--	srp_remove_host(hostdata->host);
--	scsi_remove_host(hostdata->host);
-+	unmap_persist_bufs(hostdata);
-+
-+	spin_lock(&ibmvscsi_driver_lock);
-+	list_del(&hostdata->host_list);
-+	spin_unlock(&ibmvscsi_driver_lock);
-+
- 	scsi_host_put(hostdata->host);
- 
- 	return 0;
-diff --git a/drivers/scsi/qla2xxx/qla_init.c b/drivers/scsi/qla2xxx/qla_init.c
-index 420045155ba0..0c700b140ce7 100644
---- a/drivers/scsi/qla2xxx/qla_init.c
-+++ b/drivers/scsi/qla2xxx/qla_init.c
-@@ -4991,6 +4991,13 @@ qla2x00_configure_local_loop(scsi_qla_host_t *vha)
- 		if ((domain & 0xf0) == 0xf0)
- 			continue;
- 
-+		/* Bypass if not same domain and area of adapter. */
-+		if (area && domain && ((area != vha->d_id.b.area) ||
-+		    (domain != vha->d_id.b.domain)) &&
-+		    (ha->current_topology == ISP_CFG_NL))
-+			continue;
-+
-+
- 		/* Bypass invalid local loop ID. */
- 		if (loop_id > LAST_LOCAL_LOOP_ID)
- 			continue;
-diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
-index 677f82fdf56f..91f576d743fe 100644
---- a/drivers/scsi/qla2xxx/qla_os.c
-+++ b/drivers/scsi/qla2xxx/qla_os.c
-@@ -1517,7 +1517,7 @@ __qla2xxx_eh_generic_reset(char *name, enum nexus_wait_type type,
- 		goto eh_reset_failed;
- 	}
- 	err = 2;
--	if (do_reset(fcport, cmd->device->lun, blk_mq_rq_cpu(cmd->request) + 1)
-+	if (do_reset(fcport, cmd->device->lun, 1)
- 		!= QLA_SUCCESS) {
- 		ql_log(ql_log_warn, vha, 0x800c,
- 		    "do_reset failed for cmd=%p.\n", cmd);
-diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
-index 20189675677a..601b9f1de267 100644
---- a/drivers/scsi/scsi_lib.c
-+++ b/drivers/scsi/scsi_lib.c
-@@ -585,9 +585,16 @@ static bool scsi_end_request(struct request *req, blk_status_t error,
- 	if (!blk_rq_is_scsi(req)) {
- 		WARN_ON_ONCE(!(cmd->flags & SCMD_INITIALIZED));
- 		cmd->flags &= ~SCMD_INITIALIZED;
--		destroy_rcu_head(&cmd->rcu);
- 	}
- 
-+	/*
-+	 * Calling rcu_barrier() is not necessary here because the
-+	 * SCSI error handler guarantees that the function called by
-+	 * call_rcu() has been called before scsi_end_request() is
-+	 * called.
-+	 */
-+	destroy_rcu_head(&cmd->rcu);
-+
- 	/*
- 	 * In the MQ case the command gets freed by __blk_mq_end_request,
- 	 * so we have to do all cleanup that depends on it earlier.
-@@ -2541,8 +2548,10 @@ void scsi_device_resume(struct scsi_device *sdev)
- 	 * device deleted during suspend)
- 	 */
- 	mutex_lock(&sdev->state_mutex);
--	sdev->quiesced_by = NULL;
--	blk_clear_pm_only(sdev->request_queue);
-+	if (sdev->quiesced_by) {
-+		sdev->quiesced_by = NULL;
-+		blk_clear_pm_only(sdev->request_queue);
-+	}
- 	if (sdev->sdev_state == SDEV_QUIESCE)
- 		scsi_device_set_state(sdev, SDEV_RUNNING);
- 	mutex_unlock(&sdev->state_mutex);
-diff --git a/drivers/scsi/scsi_transport_iscsi.c b/drivers/scsi/scsi_transport_iscsi.c
-index 0508831d6fb9..0a82e93566dc 100644
---- a/drivers/scsi/scsi_transport_iscsi.c
-+++ b/drivers/scsi/scsi_transport_iscsi.c
-@@ -2200,6 +2200,8 @@ void iscsi_remove_session(struct iscsi_cls_session *session)
- 	scsi_target_unblock(&session->dev, SDEV_TRANSPORT_OFFLINE);
- 	/* flush running scans then delete devices */
- 	flush_work(&session->scan_work);
-+	/* flush running unbind operations */
-+	flush_work(&session->unbind_work);
- 	__iscsi_unbind_session(&session->unbind_work);
- 
- 	/* hw iscsi may not have removed all connections from session */
+Regards,
+Markus
