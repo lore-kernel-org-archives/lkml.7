@@ -2,95 +2,84 @@ Return-Path: <SRS0=q9dy=R2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AB49C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 06:53:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 643FDC10F05
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 06:58:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5713C218E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 06:53:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553324012;
-	bh=HIrGCwioA/5bAPhN7nlHjKFq0oSQxap2fIyFELLnbF4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bRbMjigjsY6iF4ORSoNmz1pYGvYTB8qERz6qgbrAIE+A/fJDSi7jP6FSvGo3fA0jU
-	 YdudCJPoXW1EOnI6h7rtywmtCQwDwRbJSyzUnuXYxTPagqa6InZQM5VTZtkEwH/5HQ
-	 PnppFlqunpZlMbScyScUwudoHk3IFDZW7dMiQmsE=
+	by mail.kernel.org (Postfix) with ESMTP id 3A98F2083D
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 06:58:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726839AbfCWGxG (ORCPT
+        id S1726667AbfCWG6C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Mar 2019 02:53:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38162 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726063AbfCWGxF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Mar 2019 02:53:05 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D513218E2;
-        Sat, 23 Mar 2019 06:53:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553323984;
-        bh=HIrGCwioA/5bAPhN7nlHjKFq0oSQxap2fIyFELLnbF4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JbMvpnewIzHIgpk5vDpkCXMdHaf/k8OJHpGgtTe0xROj+yW8jdgdnYpOhyV25jxXW
-         iKkhROpgniEo88EsMDjy1lcTKj4mHNXfkdI+36426AJoA5Bw0SwbGhPMcWPTiHPmrH
-         tfjMZkICl5ta0O8xDjPlFdCZlHxUpcq+XF0PGsQw=
-Date:   Sat, 23 Mar 2019 07:53:02 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Subject: Re: [PATCH 5.0 000/238] 5.0.4-stable review
-Message-ID: <20190323065302.GC13517@kroah.com>
-References: <20190322111258.383569278@linuxfoundation.org>
- <CA+G9fYuzz8rkvdVMk+D2qm0pF5sFVmSbq+ad7434N_xe6D94yw@mail.gmail.com>
+        Sat, 23 Mar 2019 02:58:02 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:55838 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726106AbfCWG6B (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 Mar 2019 02:58:01 -0400
+Received: by mail-io1-f69.google.com with SMTP id z19so35750ioc.22
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 23:58:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=+jHD7zt1qXUVETzDrb4TXsejELYIvphHth1sfbXCJ4A=;
+        b=ADv5MJw62HaxKGLXy/Y8Yi8zHBYJbdZuf1bRQ9hf36VDMghXP5UZZYkoFA4sXjE+sh
+         h9oVhDp+Mf2SZWy98guTcC3o73QUZQEyR+89++lnXwq0svW4vhKVl/XVXGlKdLJqi35G
+         CYlLUF+0b+uXNcHFeouh4m4e2LOS7qvWwQLmIgjG/eFdYeR9jWS0GzcWU2Bp5oyf4d7F
+         6wZGlbCRst8B6QLspPGdNtlRxg2E7AqHg+Z7HnN9x6MqEGPVY3mSOOmBA+lQqqJXsw1L
+         +SGgb4c0kck3N3ldveoApe/Z0KedRkm05SK32of1RFmEXA/8QBJ8XfvTP4HVoMoSxEHt
+         3zsQ==
+X-Gm-Message-State: APjAAAXdQQZoDIIiHgtH9fh5nM8tDT8Xog8TEYPsQNsv84aF5WWA/yCI
+        KJMFFKzp1htDf+1eEJBZ6L/tuzJEBzuQen/KXili1sDTV5Kc
+X-Google-Smtp-Source: APXvYqywqECM9/Qy92UXMEsDYx1iP1dfg9HZOliwz/kdC2P/qr0XuINM0xz3ri0JvJsG92CT7IWy2/Am1ma+Blh3R0ZglJZjHXnS
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+G9fYuzz8rkvdVMk+D2qm0pF5sFVmSbq+ad7434N_xe6D94yw@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+X-Received: by 2002:a5d:8597:: with SMTP id f23mr9525256ioj.148.1553324280668;
+ Fri, 22 Mar 2019 23:58:00 -0700 (PDT)
+Date:   Fri, 22 Mar 2019 23:58:00 -0700
+In-Reply-To: <00000000000033ebee0577262a98@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000f8654a0584bd7d5d@google.com>
+Subject: Re: INFO: task hung in process_measurement
+From:   syzbot <syzbot+cdc562bc26a2b2b0a94f@syzkaller.appspotmail.com>
+To:     airlied@linux.ie, dmitry.kasatkin@gmail.com,
+        dri-devel@lists.freedesktop.org, james.l.morris@oracle.com,
+        jmorris@namei.org, jsarha@ti.com,
+        linux-ima-devel@lists.sourceforge.net,
+        linux-ima-user@lists.sourceforge.net,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, serge@hallyn.com,
+        syzkaller-bugs@googlegroups.com, tomi.valkeinen@ti.com,
+        zohar@linux.vnet.ibm.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 23, 2019 at 11:17:52AM +0530, Naresh Kamboju wrote:
-> On Fri, 22 Mar 2019 at 17:42, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > This is the start of the stable review cycle for the 5.0.4 release.
-> > There are 238 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> >
-> > Responses should be made by Sun Mar 24 11:11:13 UTC 2019.
-> > Anything received after that time might be too late.
-> >
-> > The whole patch series can be found in one patch at:
-> >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.0.4-rc1.gz
-> > or in the git tree and branch at:
-> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.0.y
-> > and the diffstat can be found below.
-> >
-> > thanks,
-> >
-> > greg k-h
-> >
-> 
-> Results from Linaro’s test farm.
-> No regressions on arm64, arm, x86_64, and i386.
+syzbot has bisected this bug to:
 
-Great!  Thanks for testing 5 of these and letting me know.
+commit 8fe5616b20e5742bb5fee0e77dffe2fc76ac92a0
+Author: Jyri Sarha <jsarha@ti.com>
+Date:   Tue Jun 14 08:43:30 2016 +0000
 
-greg k-h
+     drm/tilcdc: Restore old dpms state in pm_resume()
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10daff1b200000
+start commit:   291d0e5d Merge tag 'for-linus-20180929' of git://git.kerne..
+git tree:       upstream
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=12daff1b200000
+console output: https://syzkaller.appspot.com/x/log.txt?x=14daff1b200000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a8212f992609a887
+dashboard link: https://syzkaller.appspot.com/bug?extid=cdc562bc26a2b2b0a94f
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=140e285e400000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1237fe81400000
+
+Reported-by: syzbot+cdc562bc26a2b2b0a94f@syzkaller.appspotmail.com
+Fixes: 8fe5616b20e5 ("drm/tilcdc: Restore old dpms state in pm_resume()")
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
