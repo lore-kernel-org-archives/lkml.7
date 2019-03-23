@@ -2,79 +2,173 @@ Return-Path: <SRS0=q9dy=R2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8760DC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 05:36:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E06A0C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 05:38:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B7812148D
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 05:36:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A554B2148D
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 05:38:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fRbZbMN4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726179AbfCWFgC (ORCPT
+        id S1726118AbfCWFiO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Mar 2019 01:36:02 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:32774 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725838AbfCWFgC (ORCPT
+        Sat, 23 Mar 2019 01:38:14 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:38588 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725835AbfCWFiN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Mar 2019 01:36:02 -0400
-Received: by mail-io1-f71.google.com with SMTP id n15so3537625ioc.0
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 22:36:01 -0700 (PDT)
+        Sat, 23 Mar 2019 01:38:13 -0400
+Received: by mail-lf1-f65.google.com with SMTP id a6so2763261lfl.5
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 22:38:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=cZZJws5H2P6s4ksRmtvWJWzkl1YlVDsVksJF6aqH1L8=;
+        b=fRbZbMN4MBtTWZLTWGKxkucrl7l1onszeHy0CGHYiyylIwM7KW74+SLterXKyeRDjD
+         ULuWSdYxXiRqt3ql/S+AB+xuRlfj2XlthRepIE08lpXk6nLyMnUIfSTKBwRCePRPCxgg
+         w2IPE3vSC272L+JMXiZpJEde/lOtG8/4Wq6o/yXRM1vF0SS9WeGkXxfnxRBnyRYyZuVz
+         9aP5hqJYIQ46k1sI5+wz3KRGtX9b6CemLHBzBXuQVBNj5zYs748miL8vdqHWeBRgxCfL
+         sZjpux0kKGXrnH3PBc/asjLhPHuGxZDhpQkMtqj//O3ADchw9Cwq8D2LCmX7UQARqJjc
+         f0Qg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=z++wN6MsNBlJdUdBn+pWH89WCwCZZPoYFH9M+GJyXWc=;
-        b=L6CYOCzkWz+iJB/0eAtuU40wuxAYSLtphdEZtcwaTXpgRFUBW7Q4Pv47LBH9ZG4Zn2
-         l+vw1dGcQ9w+4qV1KIEZL8ktSP65vabmBXjxCSN60zhX/7Q8WRh1hsc7HlK3hxMFW9sj
-         kqOHvg22uXU/pQPh7XLzomeRmMW/C3BBidZBQ8raCDxQLH3rCpIX85s0X0o5bHiDKP87
-         sTe9qvZY09HCs0UYuhFfrXjwdUfOpOU0t5Q8aVZIje5KITXuVhsB/3sHPd0h81CPWe+i
-         hpqcJEOrdHM96BUf/u+jhwYgRDcXgdo9U+zU/VQCccK/axa5kJ6TOVs8m6gGslPmfNU/
-         fb9w==
-X-Gm-Message-State: APjAAAXyMfxpfNG3m1NQ3BVXQFbZ4vzZCtNjfhXxYuT21OtTznLWPS+i
-        XpirkaQOrqeE933pSMwaeUhYk9mko78AbiRtZBONlC1tl4WC
-X-Google-Smtp-Source: APXvYqzOkAJf9gB05Xqe+7jV0AzuXLOTdRwVNgTajFmFt+x6ObxihAWLOmt7wZGlqXgX8k7SBHd7/v7weC4udn7bK2KLYS5yUicW
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=cZZJws5H2P6s4ksRmtvWJWzkl1YlVDsVksJF6aqH1L8=;
+        b=O1BGGZMAy7RvDlRTnMnOh74mcxvz9JqQOJOJEcm0owdMa2ZQkzCQaInmyROnBdbwCv
+         NDJJYEt6YCCCnG5K+7Vr0WDhy1Ej81K4f4xKDgvL5d6TrVI1AGQgQFNLeEzNsmoH7uBO
+         wM7Pj+y+dDBGrVRRPap0e/TTxTbIPjisofCULsdSee+elyiXWwVmHKSumMKT+lwqH1my
+         p/CL67BJp24Ts0H1krirZnFeP+BheTgPp3JywpmTxRnyNAZzE70FWuSVxXNcueQ0QKFy
+         mkDuR2uANt/kcMyvzFGb9nRfmxBH/75jYkhlUyjg+3pwR+GrQqhr/THbZBlpyr+djDd6
+         oeTg==
+X-Gm-Message-State: APjAAAUsz7U9XwiVHfGs64SMgJVegR0LAQ7SZc2YWIdtalbBNnZ4L+k7
+        Ity1VBRQ70zF1ZojnHOCohOlbnj3oHp2aQLCzW5ySg==
+X-Google-Smtp-Source: APXvYqx6X3V3dNrfG3h2xUuLm1IUoz+1AIQ5Dr0tv5yKqSOCT464hBYGlttB0M17ZehQXWL2XURRtmzXeCVuzbLuKSw=
+X-Received: by 2002:ac2:482f:: with SMTP id 15mr6941203lft.57.1553319492063;
+ Fri, 22 Mar 2019 22:38:12 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a6b:760b:: with SMTP id g11mr9702414iom.249.1553319361315;
- Fri, 22 Mar 2019 22:36:01 -0700 (PDT)
-Date:   Fri, 22 Mar 2019 22:36:01 -0700
-In-Reply-To: <0000000000009ed0ce058474a0c1@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000c10d6e0584bc5866@google.com>
-Subject: Re: WARNING: suspicious RCU usage in xfrm_get_policy
-From:   syzbot <syzbot+670c11fba80a72c50a6a@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, fw@strlen.de, herbert@gondor.apana.org.au,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        steffen.klassert@secunet.com, suyj.fnst@cn.fujitsu.com,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+References: <20190322111306.356185024@linuxfoundation.org>
+In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Sat, 23 Mar 2019 11:08:01 +0530
+Message-ID: <CA+G9fYsKTMh3UuOu3WZE9R-bWWO+e0Odn6oT+nDfJRfwTiq7Zw@mail.gmail.com>
+Subject: Re: [PATCH 4.19 000/280] 4.19.31-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        lkft-triage@lists.linaro.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+On Fri, 22 Mar 2019 at 17:26, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 4.19.31 release.
+> There are 280 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sun Mar 24 11:11:09 UTC 2019.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.19.31-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.19.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
+>
 
-commit f10e0010fae8174dc20bdc872bcaa85baa925cb7
-Author: Su Yanjun <suyj.fnst@cn.fujitsu.com>
-Date:   Thu Mar 7 01:54:08 2019 +0000
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-     net: xfrm: Add '_rcu' tag for rcu protected pointer in netns_xfrm
+Summary
+------------------------------------------------------------------------
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10bddbef200000
-start commit:   75e6a83b Add linux-next specific files for 20190319
-git tree:       linux-next
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=12bddbef200000
-console output: https://syzkaller.appspot.com/x/log.txt?x=14bddbef200000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=84a8ad88e2cbdfd4
-dashboard link: https://syzkaller.appspot.com/bug?extid=670c11fba80a72c50a6a
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=129a0aa3200000
+kernel: 4.19.31-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.19.y
+git commit: f4bc3dea377c7afbfe0a36d2c72e9031910349e9
+git describe: v4.19.30-281-gf4bc3dea377c
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
+ild/v4.19.30-281-gf4bc3dea377c
 
-Reported-by: syzbot+670c11fba80a72c50a6a@syzkaller.appspotmail.com
-Fixes: f10e0010fae8 ("net: xfrm: Add '_rcu' tag for rcu protected pointer  
-in netns_xfrm")
+No regressions (compared to build v4.19.30)
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+
+No fixes (compared to build v4.19.30)
+
+
+Ran 23127 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+
+Test Suites
+-----------
+* boot
+* install-android-platform-tools-r2600
+* kselftest
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* ltp-timers-tests
+* spectre-meltdown-checker-test
+* ltp-open-posix-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
