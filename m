@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98A07C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 19:21:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 525E6C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 19:21:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66A6F2183E
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 19:21:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BDD22183E
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 19:21:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TrHcvgGr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kf8I+1Jm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727898AbfCWTVp (ORCPT
+        id S1727994AbfCWTVv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Mar 2019 15:21:45 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:55582 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727544AbfCWTVn (ORCPT
+        Sat, 23 Mar 2019 15:21:51 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:37362 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727544AbfCWTVt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Mar 2019 15:21:43 -0400
-Received: by mail-wm1-f68.google.com with SMTP id o25so5125105wmf.5;
-        Sat, 23 Mar 2019 12:21:41 -0700 (PDT)
+        Sat, 23 Mar 2019 15:21:49 -0400
+Received: by mail-wr1-f67.google.com with SMTP id w10so5840940wrm.4;
+        Sat, 23 Mar 2019 12:21:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=kblbWvCyq1UZrHknp/mh7+F4dSszEzTXTDTT5S5waO4=;
-        b=TrHcvgGrgPB7qkt3XaSDn58liqYHKpUrUDPrmgGDZNhEtmiUPvAS5cE0eO8wOkqyg5
-         4oYuHAqg6R4mLLSaR8OIZTAAJRL+TRvfMrrBD97bYnEwy5C209X2lqrtPpql+IPMQlZz
-         ro69iQaRA91rjEFmQ/ut0y9PpAlfaLRmdXhZHFs181StPR/Ra9aLkYuXE2Ts+zVieOdW
-         bMqEgR7qubGzWO4A1b6PYayS5M2AD8pwsE9HfVm+FX5LE+lmqdqBvKjsN8EFP+Ca1lP0
-         Gx6m3OpBW1bxx7Sguk0CiT/ejkuyEXMQ4znYbDPmakK8yyySiC0dv9fGyaHwRsERLyr1
-         tUFA==
+        bh=UNX6DqWrbbVQKs40nVLxu3cNUe9PZN8vCebi9sI0jrE=;
+        b=kf8I+1JmVgSyjktuio6doUoGCrZU9wYInsprBtF6Frm4VaDBDaCTJsjgRA1Mbfudry
+         S3mJ2O1/nsKq6PDbSOgrLirT+DP4Jxvt2Saug4SQLHrifh9ThFE0rjMaPcslCCylF23x
+         eD2AlnYemRT+L0HudujpLed6yaeDvp6GD8wN9/gi2IqilcEXDUOjtUzmZAbmEO12FIKz
+         iQnCYCjD5Ji6R//2bgp2e1vT0kHmSCWZKVLLkUnygzRmL8TrjTccdx4yhwQ02WpiPMuc
+         JZE1HxWJKkp8C0cV/RoBv83R3a+RN0sM4OAXY1CtiNPijDAf6LLhJ6atMuS3Pxz//3h1
+         ysUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kblbWvCyq1UZrHknp/mh7+F4dSszEzTXTDTT5S5waO4=;
-        b=MaXVZs+R7ZJlzAy8AYdk0TYUrYDwLBQv+fmy4kJoFuhzrEIP99jidM3hV3pkHslBOR
-         kY2q+bUkywbdudY7PUbiSPM2UPgNM1d7SOIbaZ5OJV2nmpw2At/UVtKVc21yGcC5j4/E
-         Eap3AG8Zrk+DYdkR8VQz4Jj0N//FhBffkjL0qqXsiRlA4q+eDrw19eDBY+8c9HSEX+eT
-         V4PXknnD/nXFdz0QE43KNSZnVnLNTHsyoKXvA5Y5qOn2yrnTPvrOlt4a/nlbHea147QE
-         X2G8E++vnEfRnb+cd3m7yva4GZojeG0+1bM0rPJqUipyUGmevsSv9zd77eWLuTx8/Alj
-         r9UA==
-X-Gm-Message-State: APjAAAVbyakh5XKZvCnF2nv5jiAyJ0tkXXNv78n7JipxFBBhwBDzSZC6
-        J6GjdbeU/jMOIoLNB+mn5V8=
-X-Google-Smtp-Source: APXvYqxYL6RnraC1/ufTRuGndOMaLG3h0U5xQlSSj6bayXMBom8QLm5TiFEP5Wxc6VjOe2A9BU4V3w==
-X-Received: by 2002:a1c:1a53:: with SMTP id a80mr6859687wma.15.1553368901136;
-        Sat, 23 Mar 2019 12:21:41 -0700 (PDT)
+        bh=UNX6DqWrbbVQKs40nVLxu3cNUe9PZN8vCebi9sI0jrE=;
+        b=piZj0HRnKa+FXuyJ9ocjwxGDLj/XhtoXiMnWv56heSS5W7MD+RjH76JTBSaTtofvr9
+         ywCMaWxjuP4SjCfGDcbkgT/NSDIH95r3WYsvCprjHmJVr+3h7SkZ6Vo1DULsl2J6LQ6A
+         XywMY36BpS7Mkt6JfDC6u4MPLX7AdIibYMHe9CC4vFklxWd33vfMPbe4iy/GSbI5LBnc
+         lbhz/wiJZkenX7M4wsfKiR5jgEnGZfJugsEIxOmIET5xcAmXX2v7pVJ2po3ANxZSBZny
+         idq9pK3XjU0K5WrJS9W+16QtrN5vH4c2tmE2CVXfznVuBMNBcALIbR7evcHbCADR9vO5
+         cnvw==
+X-Gm-Message-State: APjAAAXv1JbRLlfkNK7A65GZ2Y/smVqT1aLL0zZteSVb6oUfCjg+vFPw
+        rYmj9JKVZnqrSFFmS1u7/a0PjSK9S6E=
+X-Google-Smtp-Source: APXvYqzWCk9MZ1O2a1pFpPBgHO3NMJarhnR7GOTWgsYP6DyMRUmYa6ZUYSYTGKCSfvDrcQTtgwWezQ==
+X-Received: by 2002:adf:f48d:: with SMTP id l13mr11367355wro.2.1553368907716;
+        Sat, 23 Mar 2019 12:21:47 -0700 (PDT)
 Received: from peano ([87.19.116.42])
-        by smtp.gmail.com with ESMTPSA id r12sm18259628wrr.71.2019.03.23.12.21.39
+        by smtp.gmail.com with ESMTPSA id b3sm14153024wmj.15.2019.03.23.12.21.46
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 23 Mar 2019 12:21:40 -0700 (PDT)
-Date:   Sat, 23 Mar 2019 20:21:39 +0100
+        Sat, 23 Mar 2019 12:21:47 -0700 (PDT)
+Date:   Sat, 23 Mar 2019 20:21:45 +0100
 From:   Cristian Sicilia <sicilia.cristian@gmail.com>
 To:     Lars-Peter Clausen <lars@metafoo.de>,
         Michael Hennerich <Michael.Hennerich@analog.com>,
@@ -72,8 +72,9 @@ Cc:     Lars-Peter Clausen <lars@metafoo.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/5] staging: iio: adc: Converted bool to bitfield format
-Message-ID: <93b82557f3610f4bf4d09d0556e502b418376420.1553366098.git.sicilia.cristian@gmail.com>
+Subject: [PATCH v2 4/5] staging: iio: adc: Adding temp var to improve
+ readability
+Message-ID: <82dd56df8d410ec91061ef51c2653345d7e30aa2.1553366098.git.sicilia.cristian@gmail.com>
 References: <cover.1553335775.git.sicilia.cristian@gmail.com>
  <cover.1553366098.git.sicilia.cristian@gmail.com>
 MIME-Version: 1.0
@@ -86,43 +87,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Changed bool format to bitfield format to save space.
+Creating a temporary variable to improve readability
 
 Signed-off-by: Cristian Sicilia <sicilia.cristian@gmail.com>
-
 ---
-The strange thing is that this struct seems not populated
-using a DTS binding function.
----
- drivers/staging/iio/adc/ad7192.h | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ drivers/staging/iio/adc/ad7280a.c | 55 ++++++++++++++++++---------------------
+ 1 file changed, 25 insertions(+), 30 deletions(-)
 
-diff --git a/drivers/staging/iio/adc/ad7192.h b/drivers/staging/iio/adc/ad7192.h
-index 7433a43..87891ba 100644
---- a/drivers/staging/iio/adc/ad7192.h
-+++ b/drivers/staging/iio/adc/ad7192.h
-@@ -35,13 +35,13 @@ struct ad7192_platform_data {
- 	u16		vref_mv;
- 	u8		clock_source_sel;
- 	u32		ext_clk_hz;
--	bool		refin2_en;
--	bool		rej60_en;
--	bool		sinc3_en;
--	bool		chop_en;
--	bool		buf_en;
--	bool		unipolar_en;
--	bool		burnout_curr_en;
--};
-+	u8		refin2_en:1;
-+	u8		rej60_en:1;
-+	u8		sinc3_en:1;
-+	u8		chop_en:1;
-+	u8		buf_en:1;
-+	u8		unipolar_en:1;
-+	u8		burnout_curr_en:1;
-+} __attribute__((__packed__));
+diff --git a/drivers/staging/iio/adc/ad7280a.c b/drivers/staging/iio/adc/ad7280a.c
+index d81a5bd..5d848aa 100644
+--- a/drivers/staging/iio/adc/ad7280a.c
++++ b/drivers/staging/iio/adc/ad7280a.c
+@@ -784,43 +784,38 @@ static irqreturn_t ad7280_event_handler(int irq, void *private)
+ 	for (i = 0; i < st->scan_cnt; i++) {
+ 		if (((channels[i] >> 23) & 0xF) <= AD7280A_CELL_VOLTAGE_6) {
+ 			if (((channels[i] >> 11) & 0xFFF) >=
+-				st->cell_threshhigh)
+-				iio_push_event(indio_dev,
+-					       IIO_EVENT_CODE(IIO_VOLTAGE,
+-							1,
+-							0,
+-							IIO_EV_DIR_RISING,
+-							IIO_EV_TYPE_THRESH,
+-							0, 0, 0),
++			    st->cell_threshhigh) {
++				u64 tmp = IIO_EVENT_CODE(IIO_VOLTAGE, 1, 0,
++							 IIO_EV_DIR_RISING,
++							 IIO_EV_TYPE_THRESH,
++							 0, 0, 0);
++				iio_push_event(indio_dev, tmp,
+ 					       iio_get_time_ns(indio_dev));
+-			else if (((channels[i] >> 11) & 0xFFF) <=
+-				st->cell_threshlow)
+-				iio_push_event(indio_dev,
+-					       IIO_EVENT_CODE(IIO_VOLTAGE,
+-							1,
+-							0,
+-							IIO_EV_DIR_FALLING,
+-							IIO_EV_TYPE_THRESH,
+-							0, 0, 0),
++			} else if (((channels[i] >> 11) & 0xFFF) <=
++				   st->cell_threshlow) {
++				u64 tmp = IIO_EVENT_CODE(IIO_VOLTAGE, 1, 0,
++							 IIO_EV_DIR_FALLING,
++							 IIO_EV_TYPE_THRESH,
++							 0, 0, 0);
++				iio_push_event(indio_dev, tmp,
+ 					       iio_get_time_ns(indio_dev));
++			}
+ 		} else {
+-			if (((channels[i] >> 11) & 0xFFF) >= st->aux_threshhigh)
+-				iio_push_event(indio_dev,
+-					       IIO_UNMOD_EVENT_CODE(
+-							IIO_TEMP,
+-							0,
++			if (((channels[i] >> 11) & 0xFFF) >=
++			    st->aux_threshhigh) {
++				u64 tmp = IIO_UNMOD_EVENT_CODE(IIO_TEMP, 0,
+ 							IIO_EV_TYPE_THRESH,
+-							IIO_EV_DIR_RISING),
++							IIO_EV_DIR_RISING);
++				iio_push_event(indio_dev, tmp,
+ 					       iio_get_time_ns(indio_dev));
+-			else if (((channels[i] >> 11) & 0xFFF) <=
+-				st->aux_threshlow)
+-				iio_push_event(indio_dev,
+-					       IIO_UNMOD_EVENT_CODE(
+-							IIO_TEMP,
+-							0,
++			} else if (((channels[i] >> 11) & 0xFFF) <=
++				st->aux_threshlow) {
++				u64 tmp = IIO_UNMOD_EVENT_CODE(IIO_TEMP, 0,
+ 							IIO_EV_TYPE_THRESH,
+-							IIO_EV_DIR_FALLING),
++							IIO_EV_DIR_FALLING);
++				iio_push_event(indio_dev, tmp,
+ 					       iio_get_time_ns(indio_dev));
++			}
+ 		}
+ 	}
  
- #endif /* IIO_ADC_AD7192_H_ */
 -- 
 2.7.4
 
