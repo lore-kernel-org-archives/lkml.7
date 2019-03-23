@@ -2,122 +2,111 @@ Return-Path: <SRS0=q9dy=R2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6209C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 22:09:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B95C7C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 22:13:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A63CF2148D
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 22:09:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76D552148D
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 22:13:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="NwFi89bH"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="KN2ObHhr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727702AbfCWWJQ (ORCPT
+        id S1727850AbfCWWKZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Mar 2019 18:09:16 -0400
-Received: from mta-p7.oit.umn.edu ([134.84.196.207]:59532 "EHLO
-        mta-p7.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726823AbfCWWJP (ORCPT
+        Sat, 23 Mar 2019 18:10:25 -0400
+Received: from mta-p8.oit.umn.edu ([134.84.196.208]:53564 "EHLO
+        mta-p8.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727114AbfCWWKZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Mar 2019 18:09:15 -0400
+        Sat, 23 Mar 2019 18:10:25 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mta-p7.oit.umn.edu (Postfix) with ESMTP id 22C9D745
-        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2019 22:09:14 +0000 (UTC)
+        by mta-p8.oit.umn.edu (Postfix) with ESMTP id 1F845BA6
+        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2019 22:10:24 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p7.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p7.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id o71dImfpkexc for <linux-kernel@vger.kernel.org>;
-        Sat, 23 Mar 2019 17:09:14 -0500 (CDT)
-Received: from mail-it1-f199.google.com (mail-it1-f199.google.com [209.85.166.199])
+Received: from mta-p8.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p8.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id OnD5wULZoaee for <linux-kernel@vger.kernel.org>;
+        Sat, 23 Mar 2019 17:10:23 -0500 (CDT)
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
         (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mta-p7.oit.umn.edu (Postfix) with ESMTPS id E59BBCBA
-        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2019 17:09:13 -0500 (CDT)
-Received: by mail-it1-f199.google.com with SMTP id s3so5363013itl.0
-        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2019 15:09:13 -0700 (PDT)
+        by mta-p8.oit.umn.edu (Postfix) with ESMTPS id E62D89D2
+        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2019 17:10:23 -0500 (CDT)
+Received: by mail-io1-f69.google.com with SMTP id e126so4617737ioa.8
+        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2019 15:10:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=umn.edu; s=google;
-        h=subject:cc:references:in-reply-to:from:message-id:date:user-agent
-         :mime-version:content-transfer-encoding:content-language;
-        bh=YZQh7d4OLvCLB1Tazwzha2kIsiqXXBmwwhhfigRUgUc=;
-        b=NwFi89bH0EFwFfn3DQujACzYMTMLR3ql/KvYH+6ONLqXSc0He5DBqKl77tfSBonfzY
-         bR0d04QYqAom2Bk3eAzkbwzUag85/Ojx0KkhBZ2nAiyDXfQiCwBiR2TnlUS0MX9jr9PM
-         fJs2QBkZbwbmyk1MPFUPQCk2yRGCo8TjzHhptkWSzjdQ6Zd426UKgGVHpMy7+WcD2er4
-         mtjR+eqkgHN80yIgiWDF8VsSsj2D7qgggZqVYIjT6Drm3ZNwzM0eVmU1z0aIaIQOxuif
-         w3rY+Qj74lxy5dnDaMskFoLpol0zypTdg49xqg3twVTp3c9gVtADwhuGoO0X7uRRMp0S
-         FuVQ==
+        h=from:to:cc:subject:date:message-id;
+        bh=4N/n9Cj2LolUHnf3+FkKh4bEuQdQ9jfWnJb1diucgu4=;
+        b=KN2ObHhrt29Y0liChsaT3HzGeSW3TxGbIM79QEiVTHn4ouD3nfeFixfk6xVZJ7vfFQ
+         MVEOqOS6x1JuH918+o49aTklcnHMe1QD49Q1MpJhQQwswJC4CkeeeoJJA54wQ5r2ETjN
+         YVp809in6YRY6OrraaQIjwwhOIIfRpSKxY0QygcucjdN4HiM/tI5D5WlcFzQ8yF6oLCX
+         RQc7PE+Vd07Ze/c17R0tHpuQ7AP8WtGiNMlpz0zx+VqSe1CBZ234sLVU0BsXf+SP6sdR
+         nA0rdIKygnawfgEhsHIBWJKiKYXTC/1xbDhqlrsdtWJ8fxvKulw1dIzCRHO7UH+FKTAE
+         /tBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:cc:references:in-reply-to:from
-         :message-id:date:user-agent:mime-version:content-transfer-encoding
-         :content-language;
-        bh=YZQh7d4OLvCLB1Tazwzha2kIsiqXXBmwwhhfigRUgUc=;
-        b=IbfIpUryjSNEtH7Ch4ez3qVHY9y46dhX3rcZxc2vTIz1ZhGxgOFI2qf85j19/6TXTa
-         GavCFB/ors2o2Wn4f7RAs1V7C1iUb+lrIx+USJge7KXVZtrasDCXElN+vlqprG3WEaeY
-         9Lmo6GDDNVXsutiLcrGo5ut98ikM7+tTwZQdjGNzFMM4TzUA6h28BdLeBO7gMHplr76p
-         /HTz1ly6gA7tcRMEjoAmRvFPd97NTASYz0NaWF5ROvppWw6gDdfT/3UYSPzxAT3OWbm1
-         5cACDplsI7HQw3qFKfqG/0s/FhuOfH/ceHclc4UPRJ9S8WeJ27xvhxMeWEk83uZDDMUR
-         Y1xw==
-X-Gm-Message-State: APjAAAUM+M30PEMX0udZCJazlkQ5ODt2CdlIfoxREHEgT5PNPLg3vhZW
-        V15e5XQWuKt+fZTQ4t7q2t0a7Jfpa4itx8C/rMUs3LYcrPZmQrRci7mTPwFwjHfTqfGtDB1u/Hj
-        KtdLi7/6nF7ZqFT+9PhmUY0iNCzJy
-X-Received: by 2002:a24:5f52:: with SMTP id r79mr6962932itb.125.1553378953444;
-        Sat, 23 Mar 2019 15:09:13 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyUxD/6+derKpKvhoZ0ByPkDLHImuwkCfLrSBEud3I9n7acAGL3v2r1cWG2rTUWOphwLJ3LUw==
-X-Received: by 2002:a24:5f52:: with SMTP id r79mr6962920itb.125.1553378953231;
-        Sat, 23 Mar 2019 15:09:13 -0700 (PDT)
-Received: from [128.101.106.66] (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
-        by smtp.gmail.com with ESMTPSA id u82sm3544292itb.18.2019.03.23.15.09.12
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=4N/n9Cj2LolUHnf3+FkKh4bEuQdQ9jfWnJb1diucgu4=;
+        b=AIkh2lsqM1xJzpo2MFPKRJeEWmIGjNG5dnxfdi5M64LMlYV6fM2ilgqkfXs8LLeSDv
+         TAU06q2k16WWPZ5MnyK6F1rdk2gjPJ/C+I+2LM41dFkJBO92EgI/kpijDx0ACKLPX6ZI
+         /Wxv/61aKhNbiAoYCCvLqHETJeqm6qcVCh2HhSNX7KK9FIRwx/gx10BuUdz/L/0JVl2P
+         6C2Kb6d0NocZUcO8u1ejlS0JIevrK6BxyuioXAXIWQS63lW0INBPQaIh5HKUmMvozmgg
+         LPiE+yaqhJR+0CasaRTOWPdU7AcnkBlsJNFFgiFLCaPxVaiRNrIrRagCCXjNU2ZeEfEt
+         7nQA==
+X-Gm-Message-State: APjAAAVP0U4XEpmvAgP2l86LQCmqv0jlJe4Yb5LX+z+ATXtv303Hs+Ju
+        odoHFvX9Lm+6xffvYHBw6ArDoNd5EHlj0B0uGC8m0H/xa+1OzplyvrEhnbTgoREhWkqhaFR3cEJ
+        wUac0g5hXWulGjTtAxEY8QDthGdH+
+X-Received: by 2002:a5d:8708:: with SMTP id u8mr11267913iom.299.1553379023584;
+        Sat, 23 Mar 2019 15:10:23 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzxX7sCQKSZNK3lFu+yDYki7jqUWay6wOjljnmwvaptv2em3E67lXjGeBDy1+5NNYWig3LPJg==
+X-Received: by 2002:a5d:8708:: with SMTP id u8mr11267905iom.299.1553379023376;
+        Sat, 23 Mar 2019 15:10:23 -0700 (PDT)
+Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
+        by smtp.gmail.com with ESMTPSA id z13sm4730012ioj.21.2019.03.23.15.10.22
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 23 Mar 2019 15:09:12 -0700 (PDT)
-Subject: Re: [PATCH] pinctrl: axp209: Fix NULL pointer dereference after
- allocation
-Cc:     kjlu@umn.edu, Linus Walleij <linus.walleij@linaro.org>,
-        Chen-Yu Tsai <wens@csie.org>, linux-gpio@vger.kernel.org,
+        Sat, 23 Mar 2019 15:10:22 -0700 (PDT)
+From:   Kangjie Lu <kjlu@umn.edu>
+To:     kjlu@umn.edu
+Cc:     pakki001@umn.edu, Jiri Kosina <jkosina@suse.cz>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
         linux-kernel@vger.kernel.org
-References: <20190312151911.2207-1-pakki001@umn.edu>
-In-Reply-To: <20190312151911.2207-1-pakki001@umn.edu>
-From:   Aditya Pakki <pakki001@umn.edu>
-Message-ID: <94966a29-9c51-df66-552b-5a047499e229@umn.edu>
-Date:   Sat, 23 Mar 2019 17:09:11 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-To:     unlisted-recipients:; (no To-header on input)
+Subject: [PATCH] firmware: edd: fix a NULL pointer dereference
+Date:   Sat, 23 Mar 2019 17:10:16 -0500
+Message-Id: <20190323221018.13026-1-kjlu@umn.edu>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Gentle reminder, Can someone review this patch.
+As other functions in this module do, edev should be checked to
+ensure that it is not NULL.
+The fix inserts such as check to avoid potential NULL pointer
+dereference.
 
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+---
+ drivers/firmware/edd.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-On 3/12/19 10:19 AM, Aditya Pakki wrote:
-> axp20x_build_funcs_groups allocates groups via devm_kcalloc and tries to
-> dereference without checking for NULL. This patch avoids such a
-> scenario.
->
-> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-> ---
->  drivers/pinctrl/pinctrl-axp209.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/pinctrl/pinctrl-axp209.c b/drivers/pinctrl/pinctrl-axp209.c
-> index afd0b533c40a..4fcf7262bed9 100644
-> --- a/drivers/pinctrl/pinctrl-axp209.c
-> +++ b/drivers/pinctrl/pinctrl-axp209.c
-> @@ -366,6 +366,8 @@ static int axp20x_build_funcs_groups(struct platform_device *pdev)
->  		pctl->funcs[i].groups = devm_kcalloc(&pdev->dev,
->  						     npins, sizeof(char *),
->  						     GFP_KERNEL);
-> +		if (!pctl->funcs[i].groups)
-> +			return -ENOMEM;
->  		for (pin = 0; pin < npins; pin++)
->  			pctl->funcs[i].groups[pin] = pctl->desc->pins[pin].name;
->  	}
+diff --git a/drivers/firmware/edd.c b/drivers/firmware/edd.c
+index 1b82c89a49df..7ebfaca53721 100644
+--- a/drivers/firmware/edd.c
++++ b/drivers/firmware/edd.c
+@@ -279,6 +279,8 @@ static ssize_t
+ edd_show_mbr_signature(struct edd_device *edev, char *buf)
+ {
+ 	char *p = buf;
++	if (!edev)
++		return -EINVAL;
+ 	p += scnprintf(p, left, "0x%08x\n", edev->mbr_signature);
+ 	return (p - buf);
+ }
+-- 
+2.17.1
+
