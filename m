@@ -2,117 +2,173 @@ Return-Path: <SRS0=q9dy=R2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9AE4C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 20:25:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06501C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 20:49:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96AA921873
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 20:25:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB68E2148D
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 20:49:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qrWW+ZAP"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="WDTCNEvD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727877AbfCWUZV (ORCPT
+        id S1727925AbfCWUt2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Mar 2019 16:25:21 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:44000 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726230AbfCWUZV (ORCPT
+        Sat, 23 Mar 2019 16:49:28 -0400
+Received: from mta-p8.oit.umn.edu ([134.84.196.208]:53814 "EHLO
+        mta-p8.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726230AbfCWUt1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Mar 2019 16:25:21 -0400
-Received: by mail-pf1-f195.google.com with SMTP id c8so3733175pfd.10;
-        Sat, 23 Mar 2019 13:25:20 -0700 (PDT)
+        Sat, 23 Mar 2019 16:49:27 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p8.oit.umn.edu (Postfix) with ESMTP id 89B8FA81
+        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2019 20:49:26 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p8.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p8.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 2RDU9WlkEr0e for <linux-kernel@vger.kernel.org>;
+        Sat, 23 Mar 2019 15:49:26 -0500 (CDT)
+Received: from mail-it1-f200.google.com (mail-it1-f200.google.com [209.85.166.200])
+        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p8.oit.umn.edu (Postfix) with ESMTPS id 5420F924
+        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2019 15:49:26 -0500 (CDT)
+Received: by mail-it1-f200.google.com with SMTP id m70so5232201ita.2
+        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2019 13:49:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0KQ81DxjOPGjaEtWHLtdrsk+PBSnkB1EK3oNl2i2BSo=;
-        b=qrWW+ZAPE2cG7Ss0cHNcQWIuSgcE+ac6Sx7R5zO6RvEJ7fxOM4s7R2bwTrLXqNzlD0
-         WW4DyjRR4CyFtsekXGzSY7isUx0EnllD2jwbWrHItKQjKVpnwq7hmXt3eo4CyzMgDpHx
-         kPO96e5lP9nntt/d4p71YH7xk2TVv4vivt86ydkuVa+8o3Iw9Dik2Xd8lWUvjfpblfqx
-         RCPyfZudpczOxl9GC0T2oXd1DjAc4ISZSA6NcWLui3UEytjvk/yI5v1xc4+YEevqUtOi
-         ZSZqdJnIqJ2Q9XqfcoqA23OzDWJfulSWvrui9ZxA8fkVOolWUQF2XozZd5CncP0UcOkz
-         gUiw==
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=jZwkQfR3PdlNoXCLSo9JqoN1IY9HWnStGvd4CfPoCLk=;
+        b=WDTCNEvDYeHNuFTrfa4TPC09Fu0vREKReKMuP2wjC37czRlsLKfd/pxB/LDO27foDv
+         MvTNzVT0PufjpHZZy0bxFWfat1yLay6fAyv6iNrQDGCfQP7Z6zB8n5zKltp5Mwc2fyCg
+         5hlGvZbxVRTf0GDLqKoqt5oDO3McgKr9t8FpWuL6rmBrKFjd5zKXSNI4uVI4dtFRfL5+
+         51sdQWT6Kpgt6O1CvIe2VOWr1bPsFh+nk8tNsH/xSSFa465SYNlDP2HIoN1cqcOZzMn+
+         cJIBnh7m5/X6qSiee/6RPwp8lobXNAVO7rod1ZN1T4mn3fRLshe9rX06HkRcV2TL6NSH
+         srAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0KQ81DxjOPGjaEtWHLtdrsk+PBSnkB1EK3oNl2i2BSo=;
-        b=S4E8QVUYEjjWhUi/8MALVKAxkpia53+Y3nrHJnxtY6WZWZMt2U62Sb2dmj2SKlBQsn
-         4Z28NFH6gunkeJbVdHLfTqGs25py2IKXX2Gf3Rcgq2xkqvfD39YS0duu2XhfxtPYzq8a
-         PospO6/MkE8LPZPWT1uO7RQmwbMXHlf+gbgjODEEdR+bfn8BrOCS9nx2Gpmmpf/sYa83
-         Yd79qQO8MGduwVkTUgB4MgfgHONWKgB+/vDgkqBlslv6cshcpUC6LOCnIJVO3pH/GF+r
-         fs70yhR9xe/t8EATIiVGGCifpobghajfL1RzRNjtN2gU53t/zmkFWwwNlaBRsAENapti
-         tUrg==
-X-Gm-Message-State: APjAAAUOF69bZrVAMNxf7I0oTRs2eIn9NGSkRnj1dS5wVSAUdLLji3n/
-        B2FVZn2qJjBNwlmf9vfgu3D3ksw1y5OziOQZJeKtciDp
-X-Google-Smtp-Source: APXvYqx9/99LYR4LgVXyvmHt+G3hddxlVU0ASRaA+dPoIiRWrPw6zYSI5aQDP0XWHyo2FWgduDWZSEOwV7ulzy3LTso=
-X-Received: by 2002:a65:610d:: with SMTP id z13mr15858446pgu.104.1553372720524;
- Sat, 23 Mar 2019 13:25:20 -0700 (PDT)
-MIME-Version: 1.0
-References: <0000000000003692760578e651dd@google.com> <0000000000007917ff0584ada6e7@google.com>
- <CACT4Y+b0Onk4AB0hkvhXgZPdk+rERFsYAQra681o6QLDH_Ct-g@mail.gmail.com>
-In-Reply-To: <CACT4Y+b0Onk4AB0hkvhXgZPdk+rERFsYAQra681o6QLDH_Ct-g@mail.gmail.com>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Sat, 23 Mar 2019 13:25:08 -0700
-Message-ID: <CAM_iQpVHgHM-5NCE+FNZfpH6CWtYdt8BSmHJj_oa7CLKxYKLQw@mail.gmail.com>
-Subject: Re: KASAN: use-after-free Write in hci_sock_release
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     syzbot <syzbot+b364ed862aa07c74bc62@syzkaller.appspotmail.com>,
-        David Miller <davem@davemloft.net>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-bluetooth <linux-bluetooth@vger.kernel.org>,
-        "open list:KERNEL BUILD + fi..." <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Michal Marek <mmarek@suse.com>,
-        netdev <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=jZwkQfR3PdlNoXCLSo9JqoN1IY9HWnStGvd4CfPoCLk=;
+        b=Dz5/JB5eWB2BGMR+LdDI2fqT/zSOsKSBsFNUZXDfM5uAZn9bS1edM4y/J8MxEolnzg
+         gmk3wEG+nVoyFxdvwHL/5bEWndVgWOZjor38vIiExr3lMR8CJ/81sGE+KuEJ1g2j03n4
+         wkDNO+eTmVqE0SYjCa1mU/O3NfPZd1XKtL+PS968hDYnNUHcRDL7/fVe5B7HMJnBPIBD
+         Gl6fuzl5fgGagme8004DLXYjFnAfy2wtWjfdnE+tAle5H6zVqA6sR5S7ubCB0HcnZKQQ
+         6KdL2+jZIcFSKZrnzIZLFATDAqpGHPr87vBeJCiF//wrEj0/Ex/q2cS5nODMjFWXwNVC
+         Abnw==
+X-Gm-Message-State: APjAAAVKlN+yUvhLueL45+Hlr6fZeDyBZWtTKK/WVSAiy3E40kO2ts0B
+        qlOCPQ1aLDZEzBYYAWooW6Q9sKtqNKkrxEh8/cWFY3akegpiBQ3PlhD7V0jEFuYRm0nNUsfsBIG
+        8LHkdM6Ckz+rkSol1mgy9wmZ5QSYg
+X-Received: by 2002:a24:fcc1:: with SMTP id b184mr3035572ith.160.1553374165909;
+        Sat, 23 Mar 2019 13:49:25 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzXy6m2reLTCXl+O7yWe+NWwnoGE7LDXgFSbXHHbTcJojRUjqijrg3cYIpsOLv2n2gQutSjQQ==
+X-Received: by 2002:a24:fcc1:: with SMTP id b184mr3035558ith.160.1553374165652;
+        Sat, 23 Mar 2019 13:49:25 -0700 (PDT)
+Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
+        by smtp.gmail.com with ESMTPSA id w14sm3256529iol.32.2019.03.23.13.49.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 23 Mar 2019 13:49:25 -0700 (PDT)
+From:   Aditya Pakki <pakki001@umn.edu>
+To:     pakki001@umn.edu
+Cc:     kjlu@umn.edu, Amitkumar Karwar <amitkarwar@gmail.com>,
+        Siva Rebbagondla <siva8118@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] rsi: Fix NULL pointer dereference in kmalloc
+Date:   Sat, 23 Mar 2019 15:49:16 -0500
+Message-Id: <20190323204916.8368-1-pakki001@umn.edu>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 22, 2019 at 5:19 AM Dmitry Vyukov <dvyukov@google.com> wrote:
->
-> On Fri, Mar 22, 2019 at 1:04 PM syzbot
-> <syzbot+b364ed862aa07c74bc62@syzkaller.appspotmail.com> wrote:
-> >
-> > syzbot has bisected this bug to:
-> >
-> > commit c470abd4fde40ea6a0846a2beab642a578c0b8cd
-> > Author: Linus Torvalds <torvalds@linux-foundation.org>
-> > Date:   Sun Feb 19 22:34:00 2017 +0000
-> >
-> >      Linux 4.10
-> >
-> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1664c6df200000
-> > start commit:   c470abd4 Linux 4.10
-> > git tree:       upstream
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=7308e68273924137
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=b364ed862aa07c74bc62
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=152532bb400000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13f73320c00000
-> >
-> > Reported-by: syzbot+b364ed862aa07c74bc62@syzkaller.appspotmail.com
-> > Fixes: c470abd4fde4 ("Linux 4.10")
-> >
-> > For information about bisection process see: https://goo.gl/tpsmEJ#bisection
->
-> The same story of HCI being broken before v4.10, so this is bisected
-> to the release.
+kmalloc can fail in rsi_register_rates_channels but memcpy still attempts
+to write to channels. The patch replaces these calls with kmemdup and
+passes the error upstream.
 
-Does syzbot test the latest upstream? Isn't this supposed to be fixed by
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
 
-commit e20a2e9c42c9e4002d9e338d74e7819e88d77162
-Author: Myungho Jung <mhjungk@gmail.com>
-Date:   Sat Feb 2 16:56:36 2019 -0800
+---
+v1: Fix kmalloc failure by displaying a message. Change it to return the
+error upstream, suggested by Joe, Johannes.
+---
+ drivers/net/wireless/rsi/rsi_91x_mac80211.c | 30 ++++++++++++---------
+ 1 file changed, 18 insertions(+), 12 deletions(-)
 
-    Bluetooth: Fix decrementing reference count twice in releasing socket
+diff --git a/drivers/net/wireless/rsi/rsi_91x_mac80211.c b/drivers/net/wireless/rsi/rsi_91x_mac80211.c
+index 831046e760f8..49df3bb08d41 100644
+--- a/drivers/net/wireless/rsi/rsi_91x_mac80211.c
++++ b/drivers/net/wireless/rsi/rsi_91x_mac80211.c
+@@ -188,27 +188,27 @@ bool rsi_is_cipher_wep(struct rsi_common *common)
+  * @adapter: Pointer to the adapter structure.
+  * @band: Operating band to be set.
+  *
+- * Return: None.
++ * Return: int - 0 on success, negative error on failure.
+  */
+-static void rsi_register_rates_channels(struct rsi_hw *adapter, int band)
++static int rsi_register_rates_channels(struct rsi_hw *adapter, int band)
+ {
+ 	struct ieee80211_supported_band *sbands = &adapter->sbands[band];
+ 	void *channels = NULL;
+ 
+ 	if (band == NL80211_BAND_2GHZ) {
+-		channels = kmalloc(sizeof(rsi_2ghz_channels), GFP_KERNEL);
+-		memcpy(channels,
+-		       rsi_2ghz_channels,
+-		       sizeof(rsi_2ghz_channels));
++		channels = kmemdup(rsi_2ghz_channels, sizeof(rsi_2ghz_channels),
++				   GFP_KERNEL);
++		if (!channels)
++			return -ENOMEM;
+ 		sbands->band = NL80211_BAND_2GHZ;
+ 		sbands->n_channels = ARRAY_SIZE(rsi_2ghz_channels);
+ 		sbands->bitrates = rsi_rates;
+ 		sbands->n_bitrates = ARRAY_SIZE(rsi_rates);
+ 	} else {
+-		channels = kmalloc(sizeof(rsi_5ghz_channels), GFP_KERNEL);
+-		memcpy(channels,
+-		       rsi_5ghz_channels,
+-		       sizeof(rsi_5ghz_channels));
++		channels = kmemdup(rsi_5ghz_channels, sizeof(rsi_5ghz_channels),
++				   GFP_KERNEL);
++		if (!channels)
++			return -ENOMEM;
+ 		sbands->band = NL80211_BAND_5GHZ;
+ 		sbands->n_channels = ARRAY_SIZE(rsi_5ghz_channels);
+ 		sbands->bitrates = &rsi_rates[4];
+@@ -227,6 +227,7 @@ static void rsi_register_rates_channels(struct rsi_hw *adapter, int band)
+ 	sbands->ht_cap.mcs.rx_mask[0] = 0xff;
+ 	sbands->ht_cap.mcs.tx_params = IEEE80211_HT_MCS_TX_DEFINED;
+ 	/* sbands->ht_cap.mcs.rx_highest = 0x82; */
++	return 0;
+ }
+ 
+ static int rsi_mac80211_hw_scan_start(struct ieee80211_hw *hw,
+@@ -2064,11 +2065,16 @@ int rsi_mac80211_attach(struct rsi_common *common)
+ 	wiphy->available_antennas_rx = 1;
+ 	wiphy->available_antennas_tx = 1;
+ 
+-	rsi_register_rates_channels(adapter, NL80211_BAND_2GHZ);
++	status = rsi_register_rates_channels(adapter, NL80211_BAND_2GHZ);
++	if (status)
++		return status;
+ 	wiphy->bands[NL80211_BAND_2GHZ] =
+ 		&adapter->sbands[NL80211_BAND_2GHZ];
+ 	if (common->num_supp_bands > 1) {
+-		rsi_register_rates_channels(adapter, NL80211_BAND_5GHZ);
++		status = rsi_register_rates_channels(adapter,
++						     NL80211_BAND_5GHZ);
++		if (status)
++			return status;
+ 		wiphy->bands[NL80211_BAND_5GHZ] =
+ 			&adapter->sbands[NL80211_BAND_5GHZ];
+ 	}
+-- 
+2.17.1
 
-?
