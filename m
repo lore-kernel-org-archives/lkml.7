@@ -1,88 +1,131 @@
-Return-Path: <SRS0=oArh=RZ=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=q9dy=R2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34820C10F03
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 23:51:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DEB1C4360F
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 00:02:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9A992175B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Mar 2019 23:51:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD953213F2
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 00:01:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="F2HThYNw"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ib6dPN7t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727814AbfCVXvY (ORCPT
+        id S1727413AbfCWAB6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Mar 2019 19:51:24 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:35054 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726944AbfCVXvX (ORCPT
+        Fri, 22 Mar 2019 20:01:58 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:39440 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727068AbfCWAB5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Mar 2019 19:51:23 -0400
-Received: by mail-wr1-f67.google.com with SMTP id w1so4097118wrp.2
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 16:51:22 -0700 (PDT)
+        Fri, 22 Mar 2019 20:01:57 -0400
+Received: by mail-pf1-f194.google.com with SMTP id i17so2556170pfo.6
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Mar 2019 17:01:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chrisdown.name; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=uB1/IWOEK+GFSUVXVpArQJE+Iwx/dVBKwpNZw8eSYdI=;
-        b=F2HThYNwJG9xqwjVQ01U0dygceVtFhVN0zGiTc2s3fFci+rr5MHvTeD5KDR+N1swhg
-         X3d076qrgSksIDL+shRkHOExAf9duEYrkKtDhF+zKxlEIWgd0PSqwXV4x63UJIIQCSve
-         jF4basxGu6d75EeaUSo5T89X47nRmV5VwwpNY=
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references:from
+         :subject:cc:to:message-id:user-agent:date;
+        bh=5yje7H5rdAOWpxB6jcxNx+cxLE7/VM5yKZAESv5Wx+M=;
+        b=Ib6dPN7tY/BXOd6LMUXEvJkkQDu4d/zpB6bVt+pbKCJ1R263uiTP/kkshMTHgxL/j+
+         pfmuiw2JBkj8WkjO7wyAUzF8LOkdh/ZHY9gMwCkh2kTcwXYjObyMXIMvtEA2HDnwxEFe
+         MzRZFcpWA1MDNaCLdMGyO1ATWTETKsgYTp1PE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uB1/IWOEK+GFSUVXVpArQJE+Iwx/dVBKwpNZw8eSYdI=;
-        b=sfK6cmWI2tuQL1RUThzzCVAv9Y5v9US6kwaYy93uJXu1MbWMaOX4ezMFcR7L/e3O6p
-         yyUhXBsT+2Z/qbcwCbU/jfjshdPTgHpa7SvCKy3bZDlB7c60qpCnOqbBKKW7tFLgs57y
-         MhJyHUT6W9Ox+L1kX+4KMmOc14vL4r7OtEkazN3NtNgN292Lehq4l3/T9is5aaEGPlfa
-         b/5a/7N+P941OxByKDf4pEG0WBoQYRTs//rH7moAWeqSssdBhkjD1V2LOiqpYylURIFH
-         hNJ5OoH2UwtYfkdtJA9SPWg/faNnC7nIaTe4muhKjoK3sSdiFQiIjRIBceva7whM+BPd
-         VxWQ==
-X-Gm-Message-State: APjAAAV5bzbt4zFgFMsM5ht4VpmBHdecEMxoNxrYK7y4R+3Hq0eXAnPZ
-        BhHMc3K1aGuRLDhBWnFAvBYDfA==
-X-Google-Smtp-Source: APXvYqyRBZybPLJFkSojkdSL5WTU/65TusoLI8KSoWFwV/aSQt7LQc2reLKao6ubYa/QY/UGQAr7PQ==
-X-Received: by 2002:adf:fbd2:: with SMTP id d18mr8010207wrs.55.1553298681935;
-        Fri, 22 Mar 2019 16:51:21 -0700 (PDT)
-Received: from localhost ([89.36.66.5])
-        by smtp.gmail.com with ESMTPSA id y125sm5899796wmc.39.2019.03.22.16.51.20
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 22 Mar 2019 16:51:21 -0700 (PDT)
-Date:   Fri, 22 Mar 2019 23:51:20 +0000
-From:   Chris Down <chris@chrisdown.name>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>, Tejun Heo <tj@kernel.org>,
-        Dennis Zhou <dennis@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Kernel Team <Kernel-team@fb.com>
-Subject: Re: [PATCH REBASED] mm, memcg: Make scan aggression always exclude
- protection
-Message-ID: <20190322235120.GA31019@chrisdown.name>
-References: <20190228213050.GA28211@chrisdown.name>
- <20190322160307.GA3316@chrisdown.name>
- <20190322222907.GA17496@tower.DHCP.thefacebook.com>
- <20190322224946.GA12527@chrisdown.name>
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:from:subject:cc:to:message-id:user-agent
+         :date;
+        bh=5yje7H5rdAOWpxB6jcxNx+cxLE7/VM5yKZAESv5Wx+M=;
+        b=YjbWe9djzRD0zaOkqkMzTdHW8ES6G6UoBOYyokRvcIDWRcGfl62DQVuPLEI3Q1jUgU
+         j4wLK6VEBA9izUL0fkzmrAWpS4DUswVfPVESD9BHk8XCwJoNWUzuNr5Pu9Vwb+fwXJ+Y
+         wDpT/ba9NNIfO1FuoRIzoBqk3apd+g+Va6zWrl2254h81hv9/M8vfz7GSRlzYjCt1EI9
+         Fs+0blnZHih1CwjbYAZOqpTmj0sAxSp1s5FzMXxQlkD1wfyRqWmJ+PREeqR4Aj8YDJ00
+         d5kwoEhhklOaEfTuYwKf3FOB308xHGqT5QAji11eFoqRhK6+XJToXi2wtcPClD3kLmrk
+         sYmw==
+X-Gm-Message-State: APjAAAWfbPnXOqh9Xl5KOA1/N44AsKtd1fru7tYFkcisRTnUJ8ZBuiVY
+        FvgM0Fl3S0y5KOqBReHMZ8OwKQ==
+X-Google-Smtp-Source: APXvYqwuFSrdFCriHHnOvn13w06G8aMMbQKooDfBeu2/5FPN9b3+zjlQe+FplE97HuJNzvzIW4IddQ==
+X-Received: by 2002:a63:8548:: with SMTP id u69mr11494045pgd.85.1553299317167;
+        Fri, 22 Mar 2019 17:01:57 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id 17sm1777527pgz.52.2019.03.22.17.01.56
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 22 Mar 2019 17:01:56 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190322224946.GA12527@chrisdown.name>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CANNG1HV0Ai9oeUr55uk+wAf456vDn1qiYmeXYc3=rkpqhdoM4g@mail.gmail.com>
+References: <20190225065044.11023-1-vaishali.thakkar@linaro.org> <20190225065044.11023-5-vaishali.thakkar@linaro.org> <155138953788.16805.6820097041346672619@swboyd.mtv.corp.google.com> <CANNG1HWDc-PraBwG=8TBcfJSFFe+X+k6oVhOqyU=i5fAjpuoLw@mail.gmail.com> <155257912871.20095.1653828341120157988@swboyd.mtv.corp.google.com> <CANNG1HV0Ai9oeUr55uk+wAf456vDn1qiYmeXYc3=rkpqhdoM4g@mail.gmail.com>
+From:   Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH v4 4/5] soc: qcom: socinfo: Expose custom attributes
+Cc:     Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        rafael@kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>
+To:     Vaishali Thakkar <vaishali.thakkar@linaro.org>
+Message-ID: <155329931528.20095.6505466693897029315@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.8
+Date:   Fri, 22 Mar 2019 17:01:55 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Chris Down writes:
->Are you certain? If so, I don't see what you mean. This is how the 
->code looks in Linus' tree after the fixups:
+Quoting Vaishali Thakkar (2019-03-20 22:51:20)
+> On Thu, 14 Mar 2019 at 21:28, Stephen Boyd <swboyd@chromium.org> wrote:
+> >
+> > Quoting Vaishali Thakkar (2019-03-14 04:25:16)
+> > > On Fri, 1 Mar 2019 at 03:02, Stephen Boyd <swboyd@chromium.org> wrote:
+> >
+> > >
+> > > In the case of converting it to cpu native during probe, I'll need to
+> > > declare an extra struct with u32 being the parsed version for it to be
+> > > correct. Wouldn't it add extra overhead?
+> >
+> > Yes it would be some small extra overhead that could be allocated on the
+> > kernel's heap. What's the maximum size? A hundred bytes or so?
+> >
+> > I don't see much of a problem with this approach. It simplifies the
+> > patch series because nothing new is introduced in debugfs core and the
+> > endian conversion is done once in one place instead of being scattered
+> > throughout the code. Sounds like a good improvement to me.
+> >
+>=20
+> Yes, it's true that this approach is better than introducing new endian
+> functions in debugfs core but we should also keep in mind that this is
+> applicable only for 4 use cases. For other usecases, we want to print
+> string and hex values. So, I would either need new debugfs core
+> functions for the same. I tried introducing debugfs_create_str for string
+> values but we're ending up with introducing bunch of other helpers in
+> the core as simple_attr_read expects integer values. Similarly, for hex
+> values , I can't use debugfs_create_u32 as defined attributes in the
+> core has unsigned int as a specifier, will need to introduce some extra
+> helpers over there again.
 
-Hmm, apparently this actually didn't go into Linus' tree yet, so yeah, seems 
-worth having as a fixup maybe indeed.
+I imagine there are other uses of printing a string and hex value in
+debugfs. There's debugfs_create_x32() and debugfs_create_x64() for the
+hex value printing part (if you want that format). There's also
+debugfs_create_devm_seqfile() which may work to print a string from some
+struct member. I'm not sure why you're using simple_attr_read(). Where
+does that become important?
+
+>=20
+> Also, in case of keeping all other cases as it is, it'll look quite
+> asymmetric to use debugfs u32 function in init and using local macros
+> for other cases. I can have DEBUGFS_UINT_ADD like wrapper
+> macro for debugfs_create_u32 but again not sure if doing
+> all of this looks better than what we have at the moment as just having
+> 3 local macros covering our all cases without having lot of duplicated
+> code.
+>=20
+>  Let me know if about your opinion on the same. Thanks.
+
+My opinion is still that it would be best to push things that aren't SoC
+specific into the debugfs core and try to use as much from the core as
+possible. There doesn't seem to be anything very SoC specific here so
+I'm lost why this isn't doable.
+
