@@ -2,253 +2,157 @@ Return-Path: <SRS0=q9dy=R2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0819C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 15:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2436AC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 15:45:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D8B821902
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 15:45:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E34E921902
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 15:45:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727686AbfCWPpL (ORCPT
+        id S1727713AbfCWPpY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Mar 2019 11:45:11 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:33310 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726649AbfCWPpK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Mar 2019 11:45:10 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2NFhorx101865
-        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2019 11:45:09 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rdgpbcdm9-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2019 11:45:08 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Sat, 23 Mar 2019 15:45:01 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sat, 23 Mar 2019 15:44:58 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2NFj22E49676428
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 23 Mar 2019 15:45:02 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CF83E4C04E;
-        Sat, 23 Mar 2019 15:45:02 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 023814C040;
-        Sat, 23 Mar 2019 15:45:02 +0000 (GMT)
-Received: from rapoport-lnx (unknown [9.148.207.22])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Sat, 23 Mar 2019 15:45:01 +0000 (GMT)
-Date:   Sat, 23 Mar 2019 17:45:00 +0200
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Anup Patel <Anup.Patel@wdc.com>
-Cc:     Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/5] RISC-V: Make setup_vm() independent of GCC code
- model
-References: <20190321094710.16552-1-anup.patel@wdc.com>
- <20190321094710.16552-3-anup.patel@wdc.com>
+        Sat, 23 Mar 2019 11:45:24 -0400
+Received: from [110.188.70.11] ([110.188.70.11]:20953 "EHLO spam2.hygon.cn"
+        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726649AbfCWPpY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 Mar 2019 11:45:24 -0400
+Received: from MK-FE.hygon.cn ([172.23.18.61])
+        by spam2.hygon.cn with ESMTP id x2NFgUCn087385;
+        Sat, 23 Mar 2019 23:42:30 +0800 (GMT-8)
+        (envelope-from puwen@hygon.cn)
+Received: from cncheex01.Hygon.cn ([172.23.18.10])
+        by MK-FE.hygon.cn with ESMTP id x2NFgRIP083306;
+        Sat, 23 Mar 2019 23:42:27 +0800 (GMT-8)
+        (envelope-from puwen@hygon.cn)
+Received: from localhost.localdomain (172.23.18.44) by cncheex01.Hygon.cn
+ (172.23.18.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1466.3; Sat, 23 Mar
+ 2019 23:42:28 +0800
+From:   Pu Wen <puwen@hygon.cn>
+To:     <bp@alien8.de>, <tglx@linutronix.de>, <mingo@redhat.com>,
+        <hpa@zytor.com>, <x86@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, Pu Wen <puwen@hygon.cn>
+Subject: [RFC PATCH v2] x86/cpu/hygon: Fix phys_proc_id calculation logic for multi-die processor
+Date:   Sat, 23 Mar 2019 23:42:20 +0800
+Message-ID: <1553355740-19999-1-git-send-email-puwen@hygon.cn>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190321094710.16552-3-anup.patel@wdc.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-TM-AS-GCONF: 00
-x-cbid: 19032315-0012-0000-0000-00000306485A
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19032315-0013-0000-0000-0000213D679B
-Message-Id: <20190323154459.GC25149@rapoport-lnx>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-23_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903230121
+Content-Type: text/plain
+X-Originating-IP: [172.23.18.44]
+X-ClientProxiedBy: cncheex02.Hygon.cn (172.23.18.12) To cncheex01.Hygon.cn
+ (172.23.18.10)
+X-MAIL: spam2.hygon.cn x2NFgUCn087385
+X-DNSRBL: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 21, 2019 at 09:47:47AM +0000, Anup Patel wrote:
-> The setup_vm() must access kernel symbols in a position independent way
-> because it will be called from head.S with MMU off.
-> 
-> If we compile kernel with cmodel=medany then PC-relative addressing will
-> be used in setup_vm() to access kernel symbols so it works perfectly fine.
-> 
-> Although, if we compile kernel with cmodel=medlow then either absolute
-> addressing or PC-relative addressing (based on whichever requires fewer
-> instructions) is used to access kernel symbols in setup_vm(). This can
-> break setup_vm() whenever any absolute addressing is used to access
-> kernel symbols.
-> 
-> With the movement of setup_vm() from kernel/setup.c to mm/init.c, the
-> setup_vm() is now broken for cmodel=medlow but it works perfectly fine
-> for cmodel=medany.
-> 
-> This patch fixes setup_vm() and makes it independent of GCC code model
-> by accessing kernel symbols relative to kernel load address instead of
-> assuming PC-relative addressing.
-> 
-> Fixes: 6f1e9e946f0b ("RISC-V: Move setup_vm() to mm/init.c")
-> Signed-off-by: Anup Patel <anup.patel@wdc.com>
-> ---
->  arch/riscv/kernel/head.S |  1 +
->  arch/riscv/mm/init.c     | 73 ++++++++++++++++++++++++++--------------
->  2 files changed, 49 insertions(+), 25 deletions(-)
-> 
-> diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
-> index fe884cd69abd..7966262b4f9d 100644
-> --- a/arch/riscv/kernel/head.S
-> +++ b/arch/riscv/kernel/head.S
-> @@ -62,6 +62,7 @@ clear_bss_done:
->  
->  	/* Initialize page tables and relocate to virtual addresses */
->  	la sp, init_thread_union + THREAD_SIZE
-> +	la a0, _start
->  	call setup_vm
->  	call relocate
->  
-> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-> index b379a75ac6a6..e38f8195e45b 100644
-> --- a/arch/riscv/mm/init.c
-> +++ b/arch/riscv/mm/init.c
-> @@ -172,55 +172,78 @@ void __set_fixmap(enum fixed_addresses idx, phys_addr_t phys, pgprot_t prot)
->  	}
->  }
->  
-> -asmlinkage void __init setup_vm(void)
-> +static inline void *__load_addr(void *ptr, uintptr_t load_pa)
->  {
->  	extern char _start;
-> +	uintptr_t va = (uintptr_t)ptr;
-> +	uintptr_t sz = (uintptr_t)(&_end) - (uintptr_t)(&_start);
-> +
-> +	if (va >= PAGE_OFFSET && va <= (PAGE_OFFSET + sz))
-> +		return (void *)(load_pa + (va - PAGE_OFFSET));
-> +	return (void *)va;
-> +}
-> +
-> +#define __load_va(ptr, load_pa)	__load_addr(ptr, load_pa)
-> +#define __load_pa(ptr, load_pa)	((uintptr_t)__load_addr(ptr, load_pa))
-> +
-> +asmlinkage void __init setup_vm(uintptr_t load_pa)
-> +{
->  	uintptr_t i;
-> -	uintptr_t pa = (uintptr_t) &_start;
-> +#ifndef __PAGETABLE_PMD_FOLDED
-> +	pmd_t *pmdp;
-> +#endif
-> +	pgd_t *pgdp;
-> +	phys_addr_t map_pa;
-> +	pgprot_t tableprot = __pgprot(_PAGE_TABLE);
->  	pgprot_t prot = __pgprot(pgprot_val(PAGE_KERNEL) | _PAGE_EXEC);
->  
-> -	va_pa_offset = PAGE_OFFSET - pa;
-> -	pfn_base = PFN_DOWN(pa);
-> +	va_pa_offset = PAGE_OFFSET - load_pa;
-> +	pfn_base = PFN_DOWN(load_pa);
->  
->  	/* Sanity check alignment and size */
->  	BUG_ON((PAGE_OFFSET % PGDIR_SIZE) != 0);
-> -	BUG_ON((pa % (PAGE_SIZE * PTRS_PER_PTE)) != 0);
-> +	BUG_ON((load_pa % (PAGE_SIZE * PTRS_PER_PTE)) != 0);
->  
->  #ifndef __PAGETABLE_PMD_FOLDED
-> -	trampoline_pg_dir[(PAGE_OFFSET >> PGDIR_SHIFT) % PTRS_PER_PGD] =
-> -		pfn_pgd(PFN_DOWN((uintptr_t)trampoline_pmd),
-> -			__pgprot(_PAGE_TABLE));
-> -	trampoline_pmd[0] = pfn_pmd(PFN_DOWN(pa), prot);
-> +	pgdp = __load_va(trampoline_pg_dir, load_pa);
-> +	map_pa = __load_pa(trampoline_pmd, load_pa);
-> +	pgdp[(PAGE_OFFSET >> PGDIR_SHIFT) % PTRS_PER_PGD] =
 
-Can we use pgd_index(PAGE_OFFSET) here as index to PGD?
+v1->v2:
+  - Define bit 6 of ApicId with a descriptive name.
+  - Add description about why Hygon need to do something different than
+    what AMD does.
 
-> +		pfn_pgd(PFN_DOWN(map_pa), tableprot);
 
-It seems that __load_pa result is always used with PFN_DOWN(), it's worth
-adding __load_pfn(). Then the last two statements become
+For Hygon family 18h multi-die processor platform, which support 1-Die/
+2-Die/4-Die per socket, the system view is shown in the following system
+topology.
 
-	map_pfn = __load_pfn(trampoline_pmd, load_pa);
-	pgdp[pgd_index(PAGE_OFFSET)] = pfn_pgd(map_pfn, tableprot);
+System View (with 1-Die 2-Socket):
+           |------------|
+         ------       -----
+ SOCKET0 | D0 |       | D1 |  SOCKET1
+         ------       -----
 
-This applies to most of the mappings below as well.
+System View (with 2-Die 2-socket):
+           --------------------
+           |     -------------|------
+           |     |            |     |
+         ------------       ------------
+ SOCKET0 | D1 -- D0 |       | D3 -- D2 | SOCKET1
+         ------------       ------------
 
-> +	trampoline_pmd[0] = pfn_pmd(PFN_DOWN(load_pa), prot);
-> +
-> +	pgdp = __load_va(swapper_pg_dir, load_pa);
->  
->  	for (i = 0; i < (-PAGE_OFFSET)/PGDIR_SIZE; ++i) {
->  		size_t o = (PAGE_OFFSET >> PGDIR_SHIFT) % PTRS_PER_PGD + i;
->  
-> -		swapper_pg_dir[o] =
-> -			pfn_pgd(PFN_DOWN((uintptr_t)swapper_pmd) + i,
-> -				__pgprot(_PAGE_TABLE));
-> +		map_pa = __load_pa(swapper_pmd, load_pa);
-> +		pgdp[o] = pfn_pgd(PFN_DOWN(map_pa) + i, tableprot);
->  	}
-> +	pmdp = __load_va(swapper_pmd, load_pa);
->  	for (i = 0; i < ARRAY_SIZE(swapper_pmd); i++)
-> -		swapper_pmd[i] = pfn_pmd(PFN_DOWN(pa + i * PMD_SIZE), prot);
-> +		pmdp[i] = pfn_pmd(PFN_DOWN(load_pa + i * PMD_SIZE), prot);
->  
-> -	swapper_pg_dir[(FIXADDR_START >> PGDIR_SHIFT) % PTRS_PER_PGD] =
-> -		pfn_pgd(PFN_DOWN((uintptr_t)fixmap_pmd),
-> -				__pgprot(_PAGE_TABLE));
-> +	map_pa = __load_pa(fixmap_pmd, load_pa);
-> +	pgdp[(FIXADDR_START >> PGDIR_SHIFT) % PTRS_PER_PGD] =
-> +		pfn_pgd(PFN_DOWN(map_pa), tableprot);
-> +	pmdp = __load_va(fixmap_pmd, load_pa);
-> +	map_pa = __load_pa(fixmap_pte, load_pa);
->  	fixmap_pmd[(FIXADDR_START >> PMD_SHIFT) % PTRS_PER_PMD] =
-> -		pfn_pmd(PFN_DOWN((uintptr_t)fixmap_pte),
-> -				__pgprot(_PAGE_TABLE));
-> +		pfn_pmd(PFN_DOWN(map_pa), tableprot);
->  #else
-> -	trampoline_pg_dir[(PAGE_OFFSET >> PGDIR_SHIFT) % PTRS_PER_PGD] =
-> -		pfn_pgd(PFN_DOWN(pa), prot);
-> +	pgdp = __load_va(trampoline_pg_dir, load_pa);
-> +	pgdp[(PAGE_OFFSET >> PGDIR_SHIFT) % PTRS_PER_PGD] =
-> +		pfn_pgd(PFN_DOWN(load_pa), prot);
->  
-> +	pgdp = __load_va(swapper_pg_dir, load_pa);
->  	for (i = 0; i < (-PAGE_OFFSET)/PGDIR_SIZE; ++i) {
->  		size_t o = (PAGE_OFFSET >> PGDIR_SHIFT) % PTRS_PER_PGD + i;
->  
-> -		swapper_pg_dir[o] =
-> -			pfn_pgd(PFN_DOWN(pa + i * PGDIR_SIZE), prot);
-> +		pgdp[o] = pfn_pgd(PFN_DOWN(load_pa + i * PGDIR_SIZE), prot);
->  	}
->  
-> -	swapper_pg_dir[(FIXADDR_START >> PGDIR_SHIFT) % PTRS_PER_PGD] =
-> -		pfn_pgd(PFN_DOWN((uintptr_t)fixmap_pte),
-> -				__pgprot(_PAGE_TABLE));
-> +	map_pa = __load_pa(fixmap_pte, load_pa);
-> +	pgdp[(FIXADDR_START >> PGDIR_SHIFT) % PTRS_PER_PGD] =
-> +		pfn_pgd(PFN_DOWN(map_pa), tableprot);
->  #endif
->  }
-> -- 
-> 2.17.1
-> 
+System View (with 4-Die 2-Socket) :
+           --------------------
+           |     -------------|------
+           |     |            |     |
+         ------------       ------------
+         | D1 -- D0 |       | D7 -- D6 |
+         | |  \/ |  |       | |  \/ |  |
+ SOCKET0 | |  /\ |  |       | |  /\ |  | SOCKET1
+         | D2 -- D3 |       | D4 -- D5 |
+         ------------       ------------
+           |     |            |     |
+           ------|------------|     |
+                 --------------------
 
+Current code direct use "phys_proc_id = initial_apicid >> bits", which
+calculate phys_proc_id from initial_apicid by shifting *bits*, will get
+wrong phys_proc_id for Hygon family 18h 1-Die/2-Die 2-socket system.
+
+According to document [1] section 2.1.11.1, the *bits* is the value of
+CPUID_Fn80000008_ECX[12:15]. The value may be 4, 5 or 6. The definitions
+are: 4 - 1 die, 5 - 2 die, 6 - 3/4 die.
+
+Hygon programs the initial ApicId in the same way as AMD. The ApicId is
+read from CPUID_Fn00000001_EBX (see section 2.1.11.1 of referrence [1])
+and the definition is as below (see section 2.1.10.2.1.3 of [1]):
+             -------------------------------------------------
+         Bit |     6     |   5  4  |    3   |    2   1   0   |
+             |-----------|---------|--------|----------------|
+         IDs | Socket ID | Node ID | CCX ID | Core/Thread ID |
+             -------------------------------------------------
+
+So for 3/4-Die CPU the *bits* is 6, which is same to ApicID definition
+field, which still can get correct socket ID for 2-socket system. But
+for 1-Die or 2-Die CPU the *bits* is 4 or 5, which will cause the right
+shifted result is not exactly the value of socket ID.
+
+For Hygon family 18h CPU the socket ID should be obtained from ApicId[6].
+To fix the problem and match ApicID field definition, adjust the shift
+bits to 6 for all Hygon family 18h multi-die CPUs.
+
+Because AMD doesn't have 2-Socket system with 1-Die/2-Die processors(see
+reference [2]), so it will return the right result when getting physical
+ID in AMD system. Therefore this doesn't need to be changed in AMD code
+but only for Hygon.
+
+Reference:
+[1] https://www.amd.com/system/files/TechDocs/54945_PPR_Family_17h_Models_00h-0Fh.pdf
+[2] https://www.amd.com/en/products/specifications/processors
+
+Signed-off-by: Pu Wen <puwen@hygon.cn>
+---
+ arch/x86/kernel/cpu/hygon.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/arch/x86/kernel/cpu/hygon.c b/arch/x86/kernel/cpu/hygon.c
+index cf25405..415621d 100644
+--- a/arch/x86/kernel/cpu/hygon.c
++++ b/arch/x86/kernel/cpu/hygon.c
+@@ -19,6 +19,8 @@
+ 
+ #include "cpu.h"
+ 
++#define APICID_SOCKET_ID_BIT 6
++
+ /*
+  * nodes_per_socket: Stores the number of nodes per socket.
+  * Refer to CPUID Fn8000_001E_ECX Node Identifiers[10:8]
+@@ -87,6 +89,9 @@ static void hygon_get_topology(struct cpuinfo_x86 *c)
+ 		if (!err)
+ 			c->x86_coreid_bits = get_count_order(c->x86_max_cores);
+ 
++		/* Socket ID is ApicId[6] for these processors. */
++		c->phys_proc_id = c->apicid >> APICID_SOCKET_ID_BIT;
++
+ 		cacheinfo_hygon_init_llc_id(c, cpu, node_id);
+ 	} else if (cpu_has(c, X86_FEATURE_NODEID_MSR)) {
+ 		u64 value;
 -- 
-Sincerely yours,
-Mike.
+2.7.4
 
