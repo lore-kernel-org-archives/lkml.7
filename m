@@ -4,26 +4,26 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1A1FC4360F
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 04:45:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C907C10F05
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 04:45:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 970E32192B
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 04:45:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7E27218E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 04:45:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727106AbfCWEpK (ORCPT
+        id S1727192AbfCWEpO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Mar 2019 00:45:10 -0400
-Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:41077 "EHLO
-        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726840AbfCWEpH (ORCPT
+        Sat, 23 Mar 2019 00:45:14 -0400
+Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:59318 "EHLO
+        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725818AbfCWEpJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Mar 2019 00:45:07 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0TNPuxAM_1553316293;
+        Sat, 23 Mar 2019 00:45:09 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R661e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01424;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0TNPuxAM_1553316293;
 Received: from e19h19392.et15sqa.tbsite.net(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TNPuxAM_1553316293)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Sat, 23 Mar 2019 12:45:04 +0800
+          Sat, 23 Mar 2019 12:45:02 +0800
 From:   Yang Shi <yang.shi@linux.alibaba.com>
 To:     mhocko@suse.com, mgorman@techsingularity.net, riel@surriel.com,
         hannes@cmpxchg.org, akpm@linux-foundation.org,
@@ -32,9 +32,9 @@ To:     mhocko@suse.com, mgorman@techsingularity.net, riel@surriel.com,
         ying.huang@intel.com
 Cc:     yang.shi@linux.alibaba.com, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 09/10] doc: add description for MPOL_HYBRID mode
-Date:   Sat, 23 Mar 2019 12:44:34 +0800
-Message-Id: <1553316275-21985-10-git-send-email-yang.shi@linux.alibaba.com>
+Subject: [PATCH 03/10] mm: mempolicy: promote page to DRAM for MPOL_HYBRID
+Date:   Sat, 23 Mar 2019 12:44:28 +0800
+Message-Id: <1553316275-21985-4-git-send-email-yang.shi@linux.alibaba.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1553316275-21985-1-git-send-email-yang.shi@linux.alibaba.com>
 References: <1553316275-21985-1-git-send-email-yang.shi@linux.alibaba.com>
@@ -43,34 +43,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add description for MPOL_HYBRID mode in kernel documentation.
+With MPOL_HYBRID the memory allocation may end up on non-DRAM node, this
+may be not optimal for performance.  Promote pages to DRAM with NUMA
+balancing for MPOL_HYBRID.
+
+If DRAM nodes are specified, migrate to the specified nodes.  If no DRAM
+node is specified, migrate to the local DRAM node.
 
 Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
 ---
- Documentation/admin-guide/mm/numa_memory_policy.rst | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ mm/mempolicy.c | 20 +++++++++++++++++++-
+ 1 file changed, 19 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/admin-guide/mm/numa_memory_policy.rst b/Documentation/admin-guide/mm/numa_memory_policy.rst
-index d78c5b3..3db8257 100644
---- a/Documentation/admin-guide/mm/numa_memory_policy.rst
-+++ b/Documentation/admin-guide/mm/numa_memory_policy.rst
-@@ -198,6 +198,16 @@ MPOL_BIND
- 	the node in the set with sufficient free memory that is
- 	closest to the node where the allocation takes place.
+diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+index 7d0a432..87bc691 100644
+--- a/mm/mempolicy.c
++++ b/mm/mempolicy.c
+@@ -2339,6 +2339,7 @@ int mpol_misplaced(struct page *page, struct vm_area_struct *vma, unsigned long
+ 	struct zoneref *z;
+ 	int curnid = page_to_nid(page);
+ 	unsigned long pgoff;
++	nodemask_t nmask;
+ 	int thiscpu = raw_smp_processor_id();
+ 	int thisnid = cpu_to_node(thiscpu);
+ 	int polnid = NUMA_NO_NODE;
+@@ -2363,7 +2364,24 @@ int mpol_misplaced(struct page *page, struct vm_area_struct *vma, unsigned long
+ 		break;
  
-+MPOL_HYBRID
-+        This mode specifies that the page allocation must happen on the
-+        nodes specified by the policy.  If both DRAM and non-DRAM nodes
-+        are specified, NUMA balancing may promote the pages from non-DRAM
-+        nodes to the specified DRAM nodes.  If only non-DRAM nodes are
-+        specified, NUMA balancing may promote the pages to any available
-+        DRAM nodes.  Any other policy doesn't do such page promotion.  The
-+        default mode may do NUMA balancing, but non-DRAM nodes are masked
-+        off for default mode.
+ 	case MPOL_HYBRID:
+-		/* Fall through */
++		if (node_isset(curnid, pol->v.nodes) &&
++		    node_isset(curnid, def_alloc_nodemask))
++			/* The page is already on DRAM node */
++			goto out;
 +
- MPOL_PREFERRED
- 	This mode specifies that the allocation should be attempted
- 	from the single node specified in the policy.  If that
++		/*
++		 * Promote to the DRAM node specified by the policy, or
++		 * the local DRAM node if no DRAM node is specified.
++		 */
++		nodes_and(nmask, pol->v.nodes, def_alloc_nodemask);
++
++		z = first_zones_zonelist(
++			node_zonelist(numa_node_id(), GFP_HIGHUSER),
++			gfp_zone(GFP_HIGHUSER),
++			nodes_empty(nmask) ? &def_alloc_nodemask : &nmask);
++		polnid = z->zone->node;
++
++		break;
+ 
+ 	case MPOL_BIND:
+ 
 -- 
 1.8.3.1
 
