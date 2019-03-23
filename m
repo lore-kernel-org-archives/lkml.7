@@ -4,58 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14BD7C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 21:18:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69A18C10F05
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 21:19:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D63352133F
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 21:18:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3765B2133F
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 21:19:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="bbntovQe"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="OSSuiy0+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728854AbfCWVSv (ORCPT
+        id S1728709AbfCWVTE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Mar 2019 17:18:51 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:34510 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728550AbfCWVRO (ORCPT
+        Sat, 23 Mar 2019 17:19:04 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42636 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728470AbfCWVRG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Mar 2019 17:17:14 -0400
-Received: by mail-wm1-f65.google.com with SMTP id o10so6721269wmc.1
-        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2019 14:17:13 -0700 (PDT)
+        Sat, 23 Mar 2019 17:17:06 -0400
+Received: by mail-wr1-f68.google.com with SMTP id g3so2489781wrx.9
+        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2019 14:17:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=wAGL8iGF3lMEmJ2uQantEnutEW+aOmbcQ6qmxTQcrtw=;
-        b=bbntovQeLy+/qDuCYHnwKgjOwh57yDmKAoiUEGvZcoGUYug5LiOeCuoPx3Li9oZPa0
-         loVxl3YC3CkOwO4YCWQuVLY0EQqjcx9XY3EZgtlcG2QRAGjtBRbdTW6r7EJKEJQpz767
-         kJbB1GLxOQOrncOJNVBrmx7rQ20rntAC15NvVmFfjkJFput3J3qmjaen82tO734hg4Ie
-         dYMdtaCOmkxUSw8V6WxPdqcj5e+G2CsQdQHNjqh9dY31XXT+D8ZjL/AKA6k/m5dNd5Hj
-         uGfueM5e9ZinlKdBFvszHh8QtZIOOuiJ6TPBMvRpsNOGDtv59ZcFGOFHRDM6WalzGZA8
-         iluw==
+        bh=AbhkTI13AmSY9XKV0JobMbHsJRDpOGhDj343gt4xJ3k=;
+        b=OSSuiy0+nlnD/R893s9W0y/CWu7AdqerwHBWlHHl9ZlybkoGvfqGAN7L56WPPha1MB
+         MKaPDel06r9R3cRa8C477bVrlUanMhMvzKZhIt/raf8P1sZ7RVuoJFLiKWfNr9ejThFz
+         QdRTRvAS8+QJG6f/EoJZJxcaLaudyE1YxQbRb9Mh7svXXJTRiBSIgA/hZ/bzWJBgl7Lu
+         TtxW1WtMbum6aIhlnlNdOJdFt6LdRSIom125fdRYi8MqfNHSSqNmK/53EpARGjrVks66
+         Dw0oPwCtVWIPfYsiFJw2HH7Nnyn+25qJDCvSo7pPEgVaZzhGRV8rudg3ZcTAy7v/cYwZ
+         OW6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=wAGL8iGF3lMEmJ2uQantEnutEW+aOmbcQ6qmxTQcrtw=;
-        b=Qnv0vxCIoo6PsO8P0gsn7Kap4sbZnAvwblr0NLn8DRuvf120HX7UpgOoQFlUO7wCut
-         44LiWDwOedK4fjVKBMBHFYLwzh+xcnX8FiHkcgzQSYk/DmtIj70+nvS0OhajMGIDnrN6
-         7eRhUB6k5i79SsA5Vhk6sHKcPCd7tdwV4P/3Tu9S7uus43XtZi7xSF457m7tPpNlYCeu
-         IW3zNYK24tUZff/Q6gLJPORMsH3UQsE6DlIVW/i0NRLgxYLtYPY5xVs4MKXvuJVgM6ra
-         TaUaBqd10QeWX/+kDN2eL5dJaaooznWj1mo57qLI6WJ5p4X4bPkiv4dfwYujyYSFnBM/
-         50hQ==
-X-Gm-Message-State: APjAAAUNjrkTofujsRA+NSFgOn8D6V502h/0A2jcBpI9NSwvSmAls+64
-        2rPXTeqKmtK4craqwx/AT9ViSg==
-X-Google-Smtp-Source: APXvYqxMjTwXTMEFAp0Gzr3VorLKhzi3VUS3a1rCVhPbaueDCBLLUJz1Wqjy2n04R/toNi2OiWEpPg==
-X-Received: by 2002:a1c:720e:: with SMTP id n14mr848377wmc.107.1553375832356;
-        Sat, 23 Mar 2019 14:17:12 -0700 (PDT)
+        bh=AbhkTI13AmSY9XKV0JobMbHsJRDpOGhDj343gt4xJ3k=;
+        b=LGq38HZdB0bGUhbtNWc3xmAJlBELoo09c/DsCd2JTQAinBUSF+LiUbGwsxZK0742F2
+         x85XgoXVhbQ/KHFCliLVloCZYxFmDY88l1tJy9OY4M6Izj9Ha8xJgdbA35dBaaNlLCMR
+         5ShYqhbOThbTfICWn6AXic65+/ATTO0tpiZ/NkKBZnG3MeMDFSrcOs6QscOmURuCwmpo
+         FQW9PXMm/UjqLu4tIVQTbCkkyOFKL01cdiwbEq2znAkbujkVWRs7v+iY5oJHvgAi6eN9
+         UqBWQOeliQ0C/9kEyK+kn6kGG4y12fs1rP+0uEGxLSiqhfZnVnb59dqfxfyXGOYcc8CH
+         TRIA==
+X-Gm-Message-State: APjAAAX7T5VOY7dVYtRNqy4SSuNTq9xQbNKsM0oqxmvBnz9DQTf3IH9J
+        4lVN55VVJk1nrvMeZv6sL6hh1Q==
+X-Google-Smtp-Source: APXvYqw2oFsC1FoDUfneZhEfe0V8cFIQUhwZ73vh1DeurRVzjVV3E+VWUa1ylEOtMk0hNTMeTo+0qQ==
+X-Received: by 2002:a5d:4c88:: with SMTP id z8mr3724209wrs.291.1553375824363;
+        Sat, 23 Mar 2019 14:17:04 -0700 (PDT)
 Received: from localhost.localdomain (cag06-8-78-203-165-84.fbx.proxad.net. [78.203.165.84])
-        by smtp.gmail.com with ESMTPSA id y66sm8050503wmd.37.2019.03.23.14.17.09
+        by smtp.gmail.com with ESMTPSA id y66sm8050503wmd.37.2019.03.23.14.17.00
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 23 Mar 2019 14:17:11 -0700 (PDT)
+        Sat, 23 Mar 2019 14:17:03 -0700 (PDT)
 From:   Fabien Parent <fparent@baylibre.com>
 To:     matthias.bgg@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
 Cc:     sean.wang@kernel.org, ryder.lee@mediatek.com,
@@ -69,9 +69,9 @@ Cc:     sean.wang@kernel.org, ryder.lee@mediatek.com,
         linux-spi@vger.kernel.org, linux-watchdog@vger.kernel.org,
         linux-clk@vger.kernel.org, stephane.leprovost@mediatek.com,
         Fabien Parent <fparent@baylibre.com>
-Subject: [PATCH 13/24] dt-bindings: mediatek: apmixedsys: add support for MT8516
-Date:   Sat, 23 Mar 2019 22:16:01 +0100
-Message-Id: <20190323211612.860-14-fparent@baylibre.com>
+Subject: [PATCH 10/24] mmc: mtk-sd: add support for MT8516
+Date:   Sat, 23 Mar 2019 22:15:58 +0100
+Message-Id: <20190323211612.860-11-fparent@baylibre.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190323211612.860-1-fparent@baylibre.com>
 References: <20190323211612.860-1-fparent@baylibre.com>
@@ -82,47 +82,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add binding documentation of apmixedsys for MT8516 SoC.
+Add the MSDC configuration for the MT8516 SoC.
 
 Signed-off-by: Fabien Parent <fparent@baylibre.com>
 ---
- .../bindings/arm/mediatek/mediatek,apmixedsys.txt      |  1 +
- include/dt-bindings/clock/mt8516-clk.h                 | 10 ++++++++++
- 2 files changed, 11 insertions(+)
+ drivers/mmc/host/mtk-sd.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt
-index de4075413d91..c33d83f066c9 100644
---- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt
-+++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt
-@@ -14,6 +14,7 @@ Required Properties:
- 	- "mediatek,mt7629-apmixedsys"
- 	- "mediatek,mt8135-apmixedsys"
- 	- "mediatek,mt8173-apmixedsys"
-+	- "mediatek,mt8516-apmixedsys"
- - #clock-cells: Must be 1
+diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
+index 573aa127d00b..51139275b1b2 100644
+--- a/drivers/mmc/host/mtk-sd.c
++++ b/drivers/mmc/host/mtk-sd.c
+@@ -507,6 +507,16 @@ static const struct mtk_mmc_compatible mt7622_compat = {
+ 	.support_64g = false,
+ };
  
- The apmixedsys controller uses the common clk binding from
-diff --git a/include/dt-bindings/clock/mt8516-clk.h b/include/dt-bindings/clock/mt8516-clk.h
-index 956ee2c0748e..9cfca53cd78d 100644
---- a/include/dt-bindings/clock/mt8516-clk.h
-+++ b/include/dt-bindings/clock/mt8516-clk.h
-@@ -8,6 +8,16 @@
- #ifndef _DT_BINDINGS_CLK_MT8516_H
- #define _DT_BINDINGS_CLK_MT8516_H
- 
-+/* APMIXEDSYS */
++static const struct mtk_mmc_compatible mt8516_compat = {
++	.clk_div_bits = 12,
++	.hs400_tune = false,
++	.pad_tune_reg = MSDC_PAD_TUNE0,
++	.async_fifo = true,
++	.data_tune = true,
++	.busy_check = true,
++	.stop_clk_fix = true,
++};
 +
-+#define CLK_APMIXED_ARMPLL		0
-+#define CLK_APMIXED_MAINPLL		1
-+#define CLK_APMIXED_UNIVPLL		2
-+#define CLK_APMIXED_MMPLL		3
-+#define CLK_APMIXED_APLL1		4
-+#define CLK_APMIXED_APLL2		5
-+#define CLK_APMIXED_NR_CLK		6
-+
- /* INFRACFG */
- 
- #define CLK_IFR_MUX1_SEL		0
+ static const struct of_device_id msdc_of_ids[] = {
+ 	{ .compatible = "mediatek,mt8135-mmc", .data = &mt8135_compat},
+ 	{ .compatible = "mediatek,mt8173-mmc", .data = &mt8173_compat},
+@@ -514,6 +524,7 @@ static const struct of_device_id msdc_of_ids[] = {
+ 	{ .compatible = "mediatek,mt2701-mmc", .data = &mt2701_compat},
+ 	{ .compatible = "mediatek,mt2712-mmc", .data = &mt2712_compat},
+ 	{ .compatible = "mediatek,mt7622-mmc", .data = &mt7622_compat},
++	{ .compatible = "mediatek,mt8516-mmc", .data = &mt8516_compat},
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(of, msdc_of_ids);
 -- 
 2.20.1
 
