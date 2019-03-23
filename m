@@ -2,113 +2,125 @@ Return-Path: <SRS0=q9dy=R2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 857A8C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 20:07:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01942C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 20:14:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B43120811
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 20:07:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A56FA21873
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 20:14:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=digidescorp.com header.i=@digidescorp.com header.b="GLceO8C7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727868AbfCWUHP (ORCPT
+        id S1727808AbfCWUOI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Mar 2019 16:07:15 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:33629 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727514AbfCWUHO (ORCPT
+        Sat, 23 Mar 2019 16:14:08 -0400
+Received: from mail-it1-f176.google.com ([209.85.166.176]:54160 "EHLO
+        mail-it1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727544AbfCWUOI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Mar 2019 16:07:14 -0400
-Received: by mail-qt1-f194.google.com with SMTP id k14so6320430qtb.0
-        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2019 13:07:14 -0700 (PDT)
+        Sat, 23 Mar 2019 16:14:08 -0400
+Received: by mail-it1-f176.google.com with SMTP id w85so1523012itc.3
+        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2019 13:14:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=digidescorp.com; s=google;
+        h=from:subject:to:message-id:date:user-agent:mime-version
+         :content-transfer-encoding:content-language;
+        bh=QftJ9XujrPqD27cmAQFQRYEvhMiam8l9chwl5OSpN1k=;
+        b=GLceO8C7GUV6H7xdhTqPmqcyb7TgOsRCt6cxYLX2Qqq43uV8MHwAMiK0zL4inmkgNy
+         dZzQfpDfGZI5Hc5xwe5jfRQup3zQNba0W9My4S3vAImrJf82Mhze2fVTgX35UUHddNY0
+         GYXlTZ3QMQQHV1v4PCJXFAl2DYdmnYjT95wwA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lGIMTkb8Q6h0BN6ku5B4xFVCKzxQadbRHPxr8YdgvRk=;
-        b=A6AjdXPb0KR46D88xtkPyfEFxdBEiT/Tdfk+L6Y0K7gO6p3Auj6PnFrQpTdDV5H7AS
-         lrG3l2fXMt79vWNlSdmJ4nMPyL4UUKAdZg4s9al8nnn5mE0Gm7ZzrzRgGyVlVm/XaaCO
-         DKMeukcORvwm390j704sQ2RblCb22T8JS9kiKe+7ghVdTjwCIqklDZzgiedqAMIXBeyD
-         Af+d/knl7QMnP0m9d9cx2b2rQkqzlO7jZoLu2zM/LyXhgjTpLtCVlvu51X4oN4oFna90
-         E9H0L3Ck/YLmLyFuASFOnohUwZZegmF/rTpCPUY6v5/M9ZQNWYCu/AEfkKSeGZ0VIL3d
-         kAqw==
-X-Gm-Message-State: APjAAAVi/PRul0Ri/oGbvEjJizhyYNbYnh406IBs4xc4q65lyfIy4yIC
-        mSPYa53edDg9O6TfBA2o9tLGJfBy83lVm0zrDTo=
-X-Google-Smtp-Source: APXvYqzWeqoDbaspXcriPAMgZtke2iQY0xn81O6ymgoFUuYfRtWTrGNqrvgG3UaESs1zjexPpdARwjsS0OdvY+4j0Z4=
-X-Received: by 2002:ac8:276b:: with SMTP id h40mr14019232qth.319.1553371633696;
- Sat, 23 Mar 2019 13:07:13 -0700 (PDT)
+        h=x-gm-message-state:from:subject:to:message-id:date:user-agent
+         :mime-version:content-transfer-encoding:content-language;
+        bh=QftJ9XujrPqD27cmAQFQRYEvhMiam8l9chwl5OSpN1k=;
+        b=NR22swHThz5HnPW4VmYfeZuKLaaRj48yzRx5n1OJhKRENx2BQv483JZEDHzr0g6OAa
+         KzpRuBSFG0EiGLa2kDhxAqFGXxqK79RFMpMxRomPpS8v0uMcF6SVgfc6A02tv3pcHPfp
+         02c5ftOwSEhy6a/hpeMhlxZWCf2eDc0zeUwBPXlCtkAWxbthO9rcZw8dLgwolzMtpL//
+         i4WV5eD7zrZJDQTS+JAlSrN0/mmAXSQ2DYdANjjEfXZhaSiN7Fa4Zjybd4nf7IHClxRQ
+         ONCk0/YufW55eJ2i6NKpPZASfzMOum5EZ1MzCkgA7q/S26+Bo6AXD9cM3W0Q/1Ek4iKs
+         YiCw==
+X-Gm-Message-State: APjAAAXEFzKZCePsTWq6Os1BWdm5bYhacg03vsrEQHqPZPGFpT6l6VO/
+        185P6IbCZutXnJUbONgqrydrmQ==
+X-Google-Smtp-Source: APXvYqwN0zT8/+AtYlToZ4ZXLA8suH2UdI0rzO92DQSJ7WSl8+QrTLEfSRFLZyRWvEOLMUYwSRibaQ==
+X-Received: by 2002:a05:660c:ad2:: with SMTP id k18mr2811476itl.98.1553372046607;
+        Sat, 23 Mar 2019 13:14:06 -0700 (PDT)
+Received: from ?IPv6:2600:1700:c991:2dc0::64? ([2600:1700:c991:2dc0::64])
+        by smtp.googlemail.com with ESMTPSA id y101sm3334630ita.25.2019.03.23.13.14.05
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 23 Mar 2019 13:14:06 -0700 (PDT)
+From:   Steve Magnani <steve.magnani@digidescorp.com>
+Subject: Possible UDF locking error?
+To:     Jan Kara <jack@suse.cz>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org
+Message-ID: <224e1613-b080-bd64-ef88-badcb755a233@digidescorp.com>
+Date:   Sat, 23 Mar 2019 15:14:05 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <9641c58c03720104186a797a96e30a52ae9805e4.1553356359.git.stefan@agner.ch>
-In-Reply-To: <9641c58c03720104186a797a96e30a52ae9805e4.1553356359.git.stefan@agner.ch>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Sat, 23 Mar 2019 21:06:56 +0100
-Message-ID: <CAK8P3a0XBN+noCkdGT_TYfPNY1j9CcVH8mTjh_mQL3w+Z6jfaw@mail.gmail.com>
-Subject: Re: [PATCH 1/3] ARM: use arch_extension directive instead of arch argument
-To:     Stefan Agner <stefan@agner.ch>
-Cc:     Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Nicolas Pitre <nicolas.pitre@linaro.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Mans Rullgard <mans@mansr.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 23, 2019 at 4:52 PM Stefan Agner <stefan@agner.ch> wrote:
->
-> The LLVM Target parser currently does not allow to specify the security
-> extension as part of -march (see also LLVM Bug 40186 [0]). When trying
-> to use Clang with LLVM's integrated assembler, this leads to a build
-> errors such as this:
->   clang-8: error: the clang compiler does not support '-Wa,-march=armv7-a+sec'
->
-> Use ".arch_extension sec" to enable the security extension in a more
-> portable fasion.
->
-> Note that this is technically not exactly the same as the old code
-> checked for availabilty of the security extension by calling as-instr.
-> However, there are already other sites which use ".arch_extension sec"
-> unconditionally, hence de-facto we need an assembler capable of
-> ".arch_extension sec" already today (arch/arm/mm/proc-v7.S). The
-> arch extension "sec" is available since binutils 2.21 according to
-> its documentation [1].
->
-> [0] https://bugs.llvm.org/show_bug.cgi?id=40186
-> [1] https://sourceware.org/binutils/docs-2.21/as/ARM-Options.html
->
-> Signed-off-by: Stefan Agner <stefan@agner.ch>
+Hi,
 
-This sounds like a good idea. I think we have platform specific
-minimum toolchain versions elsewhere, but I don't see a problem
-with raising the minimum version for all the armv7ve platforms.
+I have been hunting a UDF bug that occasionally results in generation
+of an Allocation Extent Descriptor with an incorrect tagLocation. So
+far I haven't been able to see a path through the code that could
+cause that. But, I noticed some inconsistency in locking during
+AED generation and wonder if it could result in random corruption.
 
-I've added this patch to my randconfig test queue, but please
-send it to arm@kernel.org for inclusion when you have
-collected more Acks.
+The function udf_update_inode() has this general pattern:
 
-Do you have a git tree with other patches required for the
-integrated assembler? I might try that out as well with
-my randconfig tree. At the moment I'm building with
-clang-8 and a small number of patches on top.
+   bh = udf_tgetblk(...);   // calls sb_getblk()
+   lock_buffer(bh);
+   memset(bh->b_data, 0, inode->i_sb->s_blocksize);
+   
+   // <snip>other code to populate FE/EFE data in the block</snip>
+   
+   set_buffer_uptodate(bh);
+   unlock_buffer(bh);
+   mark_buffer_dirty(bh);
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+This I can understand - the lock is held for as long as the buffer
+contents are being assembled.
+
+In contrast, udf_setup_indirect_aext(), which constructs an AED,
+has this sequence:
+
+   bh = udf_tgetblk(...);   // calls sb_getblk()
+   lock_buffer(bh);
+   memset(bh->b_data, 0, inode->i_sb->s_blocksize);
+
+   set_buffer_uptodate(bh);
+   unlock_buffer(bh);
+   mark_buffer_dirty_inode(bh);
+
+   // <snip>other code to populate AED data in the block</snip>
+
+In this case the population of the block occurs without
+the protection of the lock.
+
+Because the block has been marked dirty, does this mean that
+writeback could occur at any point during population?
+
+There is one path through udf_setup_indirect_aext() where
+mark_buffer_dirty_inode() gets called again after population is
+complete, which I suppose could heal a partial writeout, but there is
+also another path in which the buffer does not get marked dirty again.
+
+Regards,
+  ------------------------------------------------------------------------
+  Steven J. Magnani               "I claim this network for MARS!
+  www.digidescorp.com              Earthling, return my space modulator!"
+
+  #include <standard.disclaimer>
+
