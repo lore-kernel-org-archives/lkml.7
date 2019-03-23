@@ -2,84 +2,74 @@ Return-Path: <SRS0=q9dy=R2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE434C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 06:15:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A8D2C4360F
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 06:32:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71E482148D
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 06:15:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4685B21902
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 06:32:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553322757;
+	bh=xYkqedQLnsIea2SH9S+am9SqhNCCG3uTIF6pQiTMWCw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=S45JJwCJyaD45MTq/UW8siPyuEncjq8pOykE2Wm64pXixZ7dMA6FU/ZW5r3acLfen
+	 343We6kOyfTnmplvPE/EQv4aJeuedniy9PgDgtr8/C5rBwfPk1d6sswmGw8WF5xINr
+	 aXaEhcjlYrPniBO3qqvKUybKufBuRNfQhHpP/wYQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726106AbfCWGPl (ORCPT
+        id S1726247AbfCWGcg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Mar 2019 02:15:41 -0400
-Received: from mxhk.zte.com.cn ([63.217.80.70]:49006 "EHLO mxhk.zte.com.cn"
+        Sat, 23 Mar 2019 02:32:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726029AbfCWGPk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Mar 2019 02:15:40 -0400
-Received: from mse01.zte.com.cn (unknown [10.30.3.20])
-        by Forcepoint Email with ESMTPS id 133E8B483DC486D6D641;
-        Sat, 23 Mar 2019 14:15:38 +0800 (CST)
-Received: from notes_smtp.zte.com.cn ([10.30.1.239])
-        by mse01.zte.com.cn with ESMTP id x2N6FOOh076138;
-        Sat, 23 Mar 2019 14:15:24 +0800 (GMT-8)
-        (envelope-from wen.yang99@zte.com.cn)
-Received: from fox-host8.localdomain ([10.74.120.8])
-          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
-          with ESMTP id 2019032314161028-6075699 ;
-          Sat, 23 Mar 2019 14:16:10 +0800 
-From:   Wen Yang <wen.yang99@zte.com.cn>
-To:     yamada.masahiro@socionext.com
-Cc:     linux-kernel@vger.kernel.org, wang.yi59@zte.com.cn,
-        Wen Yang <wen.yang99@zte.com.cn>,
-        Julia Lawall <Julia.Lawall@lip6.fr>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Michal Marek <michal.lkml@markovi.net>, cocci@systeme.lip6.fr
-Subject: [PATCH] coccinelle: put_device: reduce false positives
-Date:   Sat, 23 Mar 2019 14:14:31 +0800
-Message-Id: <1553321671-27749-1-git-send-email-wen.yang99@zte.com.cn>
-X-Mailer: git-send-email 1.8.3.1
-X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
- 21, 2013) at 2019-03-23 14:16:10,
-        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
- 2019-03-23 14:15:05,
-        Serialize complete at 2019-03-23 14:15:05
-X-MAIL: mse01.zte.com.cn x2N6FOOh076138
+        id S1726046AbfCWGcg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 Mar 2019 02:32:36 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 097E0218B0;
+        Sat, 23 Mar 2019 06:32:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553322755;
+        bh=xYkqedQLnsIea2SH9S+am9SqhNCCG3uTIF6pQiTMWCw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=x4nQPEEy5ZE/P7s3i1wVb7XOjckWp0KOPeh5nBiuIbxQqNuwg9e+2dMsMGy1DKtBi
+         cgIuwvetj68CUdwFcfWdkI2U/rtEfPyGot+nvs4oiJSij/F12FCSeEFtUdmn7pcfr8
+         FAAX83IHQnUdx0iRTTeu45oNu6zpXQ12tadyWhB0=
+Date:   Sat, 23 Mar 2019 07:32:32 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Hugh Dickins <hughd@google.com>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Matej Kupljen <matej.kupljen@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 3.18 107/134] tmpfs: fix link accounting when a tmpfile
+ is linked in
+Message-ID: <20190323063232.GA31361@kroah.com>
+References: <20190322111210.465931067@linuxfoundation.org>
+ <20190322111217.997579517@linuxfoundation.org>
+ <alpine.LSU.2.11.1903221200490.2995@eggly.anvils>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.LSU.2.11.1903221200490.2995@eggly.anvils>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Don't complain about a return when this function returns "&pdev->dev".
+On Fri, Mar 22, 2019 at 12:05:39PM -0700, Hugh Dickins wrote:
+> The other patchsets posted today are complete - thanks -
+> but this 3.18.137-rc1 tree still wants
+> 29b00e609960 ("tmpfs: fix uninitialized return value in shmem_link")
+> to be added to fix this one - thanks.
 
-Reported-by: Julia Lawall <Julia.Lawall@lip6.fr>
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: Julia Lawall <Julia.Lawall@lip6.fr>
-Cc: Gilles Muller <Gilles.Muller@lip6.fr>
-Cc: Nicolas Palix <nicolas.palix@imag.fr>
-Cc: Michal Marek <michal.lkml@markovi.net>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-CC: cocci@systeme.lip6.fr
-Cc: linux-kernel@vger.kernel.org
----
- scripts/coccinelle/free/put_device.cocci | 1 +
- 1 file changed, 1 insertion(+)
+Thanks for letting me know, now queued up.
 
-diff --git a/scripts/coccinelle/free/put_device.cocci b/scripts/coccinelle/free/put_device.cocci
-index 7395697..c9f071b 100644
---- a/scripts/coccinelle/free/put_device.cocci
-+++ b/scripts/coccinelle/free/put_device.cocci
-@@ -32,6 +32,7 @@ if (id == NULL || ...) { ... return ...; }
- (    id
- |    (T2)dev_get_drvdata(&id->dev)
- |    (T3)platform_get_drvdata(id)
-+|    &id->dev
- );
- | return@p2 ...;
- )
--- 
-2.9.5
-
+greg k-h
