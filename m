@@ -2,104 +2,118 @@ Return-Path: <SRS0=q9dy=R2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2205C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 08:26:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABF82C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 08:34:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 722A921900
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 08:26:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A599218D4
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 08:34:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b="ZlERwFy6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726448AbfCWI0o convert rfc822-to-8bit (ORCPT
+        id S1726181AbfCWIeQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Mar 2019 04:26:44 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:57429 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725909AbfCWI0n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Mar 2019 04:26:43 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 44RDC462qgz9vCyN;
-        Sat, 23 Mar 2019 09:26:40 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id VNlVHoa45lz0; Sat, 23 Mar 2019 09:26:40 +0100 (CET)
-Received: from vm-hermes.si.c-s.fr (vm-hermes.si.c-s.fr [192.168.25.253])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 44RDC44wjLz9vCyM;
-        Sat, 23 Mar 2019 09:26:40 +0100 (CET)
-Received: by vm-hermes.si.c-s.fr (Postfix, from userid 33)
-        id 5157B437; Sat, 23 Mar 2019 09:26:40 +0100 (CET)
-Received: from arouen-653-1-146-8.w82-126.abo.wanadoo.fr
- (arouen-653-1-146-8.w82-126.abo.wanadoo.fr [82.126.129.8]) by
- messagerie.si.c-s.fr (Horde Framework) with HTTP; Sat, 23 Mar 2019 09:26:40
- +0100
-Date:   Sat, 23 Mar 2019 09:26:40 +0100
-Message-ID: <20190323092640.Horde.2lm4u26aZox5ialxuIRcYw2@messagerie.si.c-s.fr>
-From:   LEROY Christophe <christophe.leroy@c-s.fr>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Paul Burton <paul.burton@mips.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-mips@vger.kernel.org,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Dave Hansen <dave@sr71.net>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH] compiler: allow all arches to enable
- CONFIG_OPTIMIZE_INLINING
-References: <1553062828-27798-1-git-send-email-yamada.masahiro@socionext.com>
- <CAK8P3a3BG_mxYxxCx4S_+ZKAer_+5FpmkzLk0VrACZekuD=2GQ@mail.gmail.com>
- <CAK8P3a0GEYTbw5XCwzVeZe_-pGF=7e=1kXhH3U+fidnMZeP0CA@mail.gmail.com>
-In-Reply-To: <CAK8P3a0GEYTbw5XCwzVeZe_-pGF=7e=1kXhH3U+fidnMZeP0CA@mail.gmail.com>
-User-Agent: Internet Messaging Program (IMP) H5 (6.2.3)
-Content-Type: text/plain; charset=UTF-8; format=flowed; DelSp=Yes
+        Sat, 23 Mar 2019 04:34:16 -0400
+Received: from mail.kmu-office.ch ([178.209.48.109]:49622 "EHLO
+        mail.kmu-office.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726038AbfCWIeP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 Mar 2019 04:34:15 -0400
+Received: from webmail.kmu-office.ch (unknown [IPv6:2a02:418:6a02::a3])
+        by mail.kmu-office.ch (Postfix) with ESMTPSA id D26905C011D;
+        Sat, 23 Mar 2019 09:34:13 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
+        t=1553330053;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/jswNjOKgHYsYeyKIft+oGJOrbPMQUtifCcL4PJzkMw=;
+        b=ZlERwFy6zHrWy/e4mFcUEjicL96LOC2ANB2rkfSM3/cTOtpDDUO1BK5kGBj51mcGBVLu6j
+        rGAZlpd1ZsxAC+4Hha8GviI3m3CGTXEfpKJ3mSYekBT5uBURb6zARBzrVDmvbunLd8OJ9L
+        HtQAsQEXEizRqF8XU2DCbDRCiUpKXQw=
 MIME-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Date:   Sat, 23 Mar 2019 09:34:13 +0100
+From:   Stefan Agner <stefan@agner.ch>
+To:     Axel Lin <axel.lin@ingics.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Pierre-Hugues Husson <phh@phh.me>,
+        Beniamino Galvani <b.galvani@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] regulator: rn5t618: Constify regulator_desc
+In-Reply-To: <20190320121057.31167-1-axel.lin@ingics.com>
+References: <20190320121057.31167-1-axel.lin@ingics.com>
+Message-ID: <6730c8bd06d5052439adaa2c66f68ea7@agner.ch>
+X-Sender: stefan@agner.ch
+User-Agent: Roundcube Webmail/1.3.7
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Arnd Bergmann <arnd@arndb.de> a écrit :
+On 20.03.2019 13:10, Axel Lin wrote:
+> The regulator_desc never need to be modified, so define them as const as a
+> hint to the compiler that they can go into .rodata.
+> 
+> Signed-off-by: Axel Lin <axel.lin@ingics.com>
 
-> On Wed, Mar 20, 2019 at 10:41 AM Arnd Bergmann <arnd@arndb.de> wrote:
->>
->> I've added your patch to my randconfig test setup and will let you
->> know if I see anything noticeable. I'm currently testing clang-arm32,
->> clang-arm64 and gcc-x86.
->
-> This is the only additional bug that has come up so far:
->
-> `.exit.text' referenced in section `.alt.smp.init' of
-> drivers/char/ipmi/ipmi_msghandler.o: defined in discarded section
-> `exit.text' of drivers/char/ipmi/ipmi_msghandler.o
+Looks good to me.
 
-Wouldn't it be useful to activate -Winline gcc warning to ease finding  
-out problematic usage of inline keyword ?
+Reviewed-by: Stefan Agner <stefan@agner.ch>
 
-Christophe
+--
+Stefan
 
->
-> diff --git a/arch/arm/kernel/atags.h b/arch/arm/kernel/atags.h
-> index 201100226301..84b12e33104d 100644
-> --- a/arch/arm/kernel/atags.h
-> +++ b/arch/arm/kernel/atags.h
-> @@ -5,7 +5,7 @@ void convert_to_tag_list(struct tag *tags);
->  const struct machine_desc *setup_machine_tags(phys_addr_t __atags_pointer,
->         unsigned int machine_nr);
->  #else
-> -static inline const struct machine_desc *
-> +static __always_inline const struct machine_desc *
->  setup_machine_tags(phys_addr_t __atags_pointer, unsigned int machine_nr)
->  {
->         early_print("no ATAGS support: can't continue\n");
-
-
+> ---
+>  drivers/regulator/rn5t618-regulator.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/regulator/rn5t618-regulator.c
+> b/drivers/regulator/rn5t618-regulator.c
+> index 790a4a73ea2c..a79c0c43b9f8 100644
+> --- a/drivers/regulator/rn5t618-regulator.c
+> +++ b/drivers/regulator/rn5t618-regulator.c
+> @@ -46,7 +46,7 @@ static const struct regulator_ops rn5t618_reg_ops = {
+>  		.vsel_mask	= (vmask),				\
+>  	}
+>  
+> -static struct regulator_desc rn5t567_regulators[] = {
+> +static const struct regulator_desc rn5t567_regulators[] = {
+>  	/* DCDC */
+>  	REG(DCDC1, DC1CTL, BIT(0), DC1DAC, 0xff, 600000, 3500000, 12500),
+>  	REG(DCDC2, DC2CTL, BIT(0), DC2DAC, 0xff, 600000, 3500000, 12500),
+> @@ -63,7 +63,7 @@ static struct regulator_desc rn5t567_regulators[] = {
+>  	REG(LDORTC2, LDOEN2, BIT(5), LDORTC2DAC, 0x7f, 900000, 3500000, 25000),
+>  };
+>  
+> -static struct regulator_desc rn5t618_regulators[] = {
+> +static const struct regulator_desc rn5t618_regulators[] = {
+>  	/* DCDC */
+>  	REG(DCDC1, DC1CTL, BIT(0), DC1DAC, 0xff, 600000, 3500000, 12500),
+>  	REG(DCDC2, DC2CTL, BIT(0), DC2DAC, 0xff, 600000, 3500000, 12500),
+> @@ -79,7 +79,7 @@ static struct regulator_desc rn5t618_regulators[] = {
+>  	REG(LDORTC2, LDOEN2, BIT(5), LDORTC2DAC, 0x7f, 900000, 3500000, 25000),
+>  };
+>  
+> -static struct regulator_desc rc5t619_regulators[] = {
+> +static const struct regulator_desc rc5t619_regulators[] = {
+>  	/* DCDC */
+>  	REG(DCDC1, DC1CTL, BIT(0), DC1DAC, 0xff, 600000, 3500000, 12500),
+>  	REG(DCDC2, DC2CTL, BIT(0), DC2DAC, 0xff, 600000, 3500000, 12500),
+> @@ -107,7 +107,7 @@ static int rn5t618_regulator_probe(struct
+> platform_device *pdev)
+>  	struct rn5t618 *rn5t618 = dev_get_drvdata(pdev->dev.parent);
+>  	struct regulator_config config = { };
+>  	struct regulator_dev *rdev;
+> -	struct regulator_desc *regulators;
+> +	const struct regulator_desc *regulators;
+>  	int i;
+>  	int num_regulators = 0;
