@@ -4,53 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1C37C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 12:03:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0B6AC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 12:08:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFA0921902
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 12:03:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EC2921902
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 12:08:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553342594;
-	bh=4vxIIsaura+dEKkTAJ/Vh24C6P2IwLpkVwGnXLKWKuo=;
+	s=default; t=1553342904;
+	bh=UDRvaXlFdveojcscNQrJKmmTeRaB6HZxZxF1KiFQTYs=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=bjJufU8PJUAnR2kGsACTLq90lhytn6phAmR6GZDfHIzXBIrLAx0wjGpxanVgZdIC8
-	 eBMMq03ntOqmaWAqpeN82ckBrhzTxlgIVHIJSZSC0/w9fr9TUAOTtfG34DJubW4tZj
-	 68O/xwz73CXNpJyUcXzI8hmSqFhvABGw5cw1vlWs=
+	b=wCL+HJh7eLb/uacQLvrSBcgNqfJ6hWnjZoY8Hsp/MtZeRg8jv6nHi42LxKF935b1B
+	 u1clvhxOryJrtPBhyQCQEx5HivDLGKoJD4C2dRpNgJ7huMoBgiFh+FN/8wcOg2zTcx
+	 aPC7ku4nYutVyjw4ifrfMfZRl4mw8vph0nWvxN70=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727402AbfCWMDN (ORCPT
+        id S1727434AbfCWMIX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Mar 2019 08:03:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34778 "EHLO mail.kernel.org"
+        Sat, 23 Mar 2019 08:08:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726909AbfCWMDN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Mar 2019 08:03:13 -0400
+        id S1726909AbfCWMIW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 Mar 2019 08:08:22 -0400
 Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6502218A5;
-        Sat, 23 Mar 2019 12:03:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 015F8218A5;
+        Sat, 23 Mar 2019 12:08:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553342592;
-        bh=4vxIIsaura+dEKkTAJ/Vh24C6P2IwLpkVwGnXLKWKuo=;
+        s=default; t=1553342901;
+        bh=UDRvaXlFdveojcscNQrJKmmTeRaB6HZxZxF1KiFQTYs=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=QOtYUWYXcCNfOsFqGQaT4uqsqKszp2XDiIyerd6iNtGvRTvw1E+pIh6OA9kxaRa9f
-         y7TRzd8fdn4gAzRG1F0v5Hn9vMGxXXJKw8WM1MnFBRbkGMrQQPXordnen/btht/PaI
-         I+71QYrlSctBePKxboCLXEsjGhUMZOUSUgHe+TcA=
-Date:   Sat, 23 Mar 2019 21:03:08 +0900
+        b=b0j1zPf3KfYYboICUpHV9q3EghZKEkNOcaMRCp5k1R5LWu9vdohrJhrSALUWMUq7g
+         IGPMUdYCPagI/3WJe+D3TAb//nfXfJE9OBRe5bPANA3wdvD/jJtS6SYDwzcfuq0pYQ
+         hgY4TGWaCuqdXQ+NNWHUHSgglDTkawez3pG18qMU=
+Date:   Sat, 23 Mar 2019 21:08:16 +0900
 From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Shuah Khan <shuahkhan@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH] selftests/ftrace: Select an existing function in
- kprobe_eventname test
-Message-Id: <20190323210308.d47164c66489982e374f3db0@kernel.org>
-In-Reply-To: <20190322150923.1b58eca5@gandalf.local.home>
-References: <20190322150923.1b58eca5@gandalf.local.home>
+To:     Tom Zanussi <zanussi@kernel.org>
+Cc:     rostedt@goodmis.org, tglx@linutronix.de, mhiramat@kernel.org,
+        namhyung@kernel.org, bigeasy@linutronix.de, joel@joelfernandes.org,
+        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
+Subject: Re: [PATCH v4 08/11] selftests/ftrace: Add tracing/error_log
+ testcase
+Message-Id: <20190323210816.5cc19aa0d7c43c4c19c639b8@kernel.org>
+In-Reply-To: <a0b936b8ba26b6c55bddc7d5ec22fc40e49a77b9.1553268041.git.tom.zanussi@linux.intel.com>
+References: <cover.1553268040.git.tom.zanussi@linux.intel.com>
+        <a0b936b8ba26b6c55bddc7d5ec22fc40e49a77b9.1553268041.git.tom.zanussi@linux.intel.com>
 X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -60,64 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 22 Mar 2019 15:09:23 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Fri, 22 Mar 2019 10:34:34 -0500
+Tom Zanussi <zanussi@kernel.org> wrote:
 
-> From: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> From: Tom Zanussi <tom.zanussi@linux.intel.com>
 > 
-> Running the ftrace selftests on the latest kernel caused the
-> kprobe_eventname test to fail. It was due to the test that searches for
-> a function with at "dot" in the name and adding a probe to that.
-> Unfortunately, for this test, it picked:
-> 
->  optimize_nops.isra.2.cold.4
-> 
-> Which happens to be marked as "__init", which means it no longer exists
-> in the kernel! (kallsyms keeps those function names around for tracing
-> purposes)
-> 
-> As only functions that still exist are in the
-> available_filter_functions file, as they are removed when the functions
-> are freed at boot or module exit, have the test search for a function
-> with ".isra." in the name as well as being in the
-> available_filter_functions (if the file exists).
+> Add a testcase verifying basic tracing/error_log functionality.
 
-OK, this looks good to me.
-
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+Would you be OK that you don't test all error cases with
+error position?
 
 Thank you,
 
 > 
-> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> Signed-off-by: Tom Zanussi <tom.zanussi@linux.intel.com>
 > ---
-> diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_eventname.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_eventname.tc
-> index 3fb70e01b1fe..3ff236719b6e 100644
-> --- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_eventname.tc
-> +++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_eventname.tc
-> @@ -24,7 +24,21 @@ test -d events/kprobes2/event2 || exit_failure
->  
->  :;: "Add an event on dot function without name" ;:
->  
-> -FUNC=`grep -m 10 " [tT] .*\.isra\..*$" /proc/kallsyms | tail -n 1 | cut -f 3 -d " "`
-> +find_dot_func() {
-> +	if [ ! -f available_filter_functions ]; then
-> +		grep -m 10 " [tT] .*\.isra\..*$" /proc/kallsyms | tail -n 1 | cut -f 3 -d " "
-> +		return;
-> +	fi
+>  .../ftrace/test.d/ftrace/tracing-error-log.tc      | 23 ++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+>  create mode 100644 tools/testing/selftests/ftrace/test.d/ftrace/tracing-error-log.tc
+> 
+> diff --git a/tools/testing/selftests/ftrace/test.d/ftrace/tracing-error-log.tc b/tools/testing/selftests/ftrace/test.d/ftrace/tracing-error-log.tc
+> new file mode 100644
+> index 000000000000..601ffebfbb9f
+> --- /dev/null
+> +++ b/tools/testing/selftests/ftrace/test.d/ftrace/tracing-error-log.tc
+> @@ -0,0 +1,23 @@
+> +#!/bin/sh
+> +# SPDX-License-Identifier: GPL-2.0
+> +# description: ftrace - test tracing error log support
 > +
-> +	grep " [tT] .*\.isra\..*" /proc/kallsyms | cut -f 3 -d " " | while read f; do
-> +		if grep -s $f available_filter_functions; then
-> +			echo $f
-> +			break
-> +		fi
-> +	done
+> +fail() { #msg
+> +    echo $1
+> +    exit_fail
 > +}
 > +
-> +FUNC=`find_dot_func | tail -n 1`
->  [ "x" != "x$FUNC" ] || exit_unresolved
->  echo "p $FUNC" > kprobe_events
->  EVENT=`grep $FUNC kprobe_events | cut -f 1 -d " " | cut -f 2 -d:`
+> +# event tracing is currently the only ftrace tracer that uses the
+> +# tracing error_log, hence this check
+> +if [ ! -f set_event ]; then
+> +    echo "event tracing is not supported"
+> +    exit_unsupported
+> +fi
+> +
+> +echo "Test tracing error log support"
+> +! echo "((sig >= 10 && sig < 15) || dsig == 17) && comm != bash" > events/signal/signal_generate/filter 2> /dev/null
+> +if ! grep "error:" error_log; then
+> +    fail "Failed to generate tracing error log error"
+> +fi
+> +
+> +exit 0
+> -- 
+> 2.14.1
+> 
 
 
 -- 
