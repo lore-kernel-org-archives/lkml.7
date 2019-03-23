@@ -2,125 +2,152 @@ Return-Path: <SRS0=q9dy=R2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01942C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 20:14:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A19B1C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 20:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A56FA21873
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 20:14:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=digidescorp.com header.i=@digidescorp.com header.b="GLceO8C7"
+	by mail.kernel.org (Postfix) with ESMTP id 6A51C21873
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 20:16:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727808AbfCWUOI (ORCPT
+        id S1727871AbfCWUQC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Mar 2019 16:14:08 -0400
-Received: from mail-it1-f176.google.com ([209.85.166.176]:54160 "EHLO
-        mail-it1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727544AbfCWUOI (ORCPT
+        Sat, 23 Mar 2019 16:16:02 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:56233 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727596AbfCWUQB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Mar 2019 16:14:08 -0400
-Received: by mail-it1-f176.google.com with SMTP id w85so1523012itc.3
-        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2019 13:14:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=digidescorp.com; s=google;
-        h=from:subject:to:message-id:date:user-agent:mime-version
-         :content-transfer-encoding:content-language;
-        bh=QftJ9XujrPqD27cmAQFQRYEvhMiam8l9chwl5OSpN1k=;
-        b=GLceO8C7GUV6H7xdhTqPmqcyb7TgOsRCt6cxYLX2Qqq43uV8MHwAMiK0zL4inmkgNy
-         dZzQfpDfGZI5Hc5xwe5jfRQup3zQNba0W9My4S3vAImrJf82Mhze2fVTgX35UUHddNY0
-         GYXlTZ3QMQQHV1v4PCJXFAl2DYdmnYjT95wwA=
+        Sat, 23 Mar 2019 16:16:01 -0400
+Received: by mail-io1-f70.google.com with SMTP id z19so1144946ioc.22
+        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2019 13:16:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:message-id:date:user-agent
-         :mime-version:content-transfer-encoding:content-language;
-        bh=QftJ9XujrPqD27cmAQFQRYEvhMiam8l9chwl5OSpN1k=;
-        b=NR22swHThz5HnPW4VmYfeZuKLaaRj48yzRx5n1OJhKRENx2BQv483JZEDHzr0g6OAa
-         KzpRuBSFG0EiGLa2kDhxAqFGXxqK79RFMpMxRomPpS8v0uMcF6SVgfc6A02tv3pcHPfp
-         02c5ftOwSEhy6a/hpeMhlxZWCf2eDc0zeUwBPXlCtkAWxbthO9rcZw8dLgwolzMtpL//
-         i4WV5eD7zrZJDQTS+JAlSrN0/mmAXSQ2DYdANjjEfXZhaSiN7Fa4Zjybd4nf7IHClxRQ
-         ONCk0/YufW55eJ2i6NKpPZASfzMOum5EZ1MzCkgA7q/S26+Bo6AXD9cM3W0Q/1Ek4iKs
-         YiCw==
-X-Gm-Message-State: APjAAAXEFzKZCePsTWq6Os1BWdm5bYhacg03vsrEQHqPZPGFpT6l6VO/
-        185P6IbCZutXnJUbONgqrydrmQ==
-X-Google-Smtp-Source: APXvYqwN0zT8/+AtYlToZ4ZXLA8suH2UdI0rzO92DQSJ7WSl8+QrTLEfSRFLZyRWvEOLMUYwSRibaQ==
-X-Received: by 2002:a05:660c:ad2:: with SMTP id k18mr2811476itl.98.1553372046607;
-        Sat, 23 Mar 2019 13:14:06 -0700 (PDT)
-Received: from ?IPv6:2600:1700:c991:2dc0::64? ([2600:1700:c991:2dc0::64])
-        by smtp.googlemail.com with ESMTPSA id y101sm3334630ita.25.2019.03.23.13.14.05
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 23 Mar 2019 13:14:06 -0700 (PDT)
-From:   Steve Magnani <steve.magnani@digidescorp.com>
-Subject: Possible UDF locking error?
-To:     Jan Kara <jack@suse.cz>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org
-Message-ID: <224e1613-b080-bd64-ef88-badcb755a233@digidescorp.com>
-Date:   Sat, 23 Mar 2019 15:14:05 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=vT4OejOfLvmgbRROWwX6HFyawim6eShT5FuxRtVPx4E=;
+        b=N2L03vGIToDtlX/SmNSbRFO26vnGH+Dyfn1Hv5K89ERpbmRQKzUQ5A/DpPK7o8cv7T
+         o8DE63UPR3YV8oJKe3ReW0Rv3Uk1OTcMioMgzaXI1c0x7TIVGz0+YbdA6qdMi4ZjJEpt
+         mCc1S9jf5/KSpEaueYGHeZOlw6L0C9Oh7qIskU8Nhe/4hRrrsj98AoauFwhtoY0CD8LZ
+         1Z7bUa1faCYpL+a7o+NBWfCqmQMbBVb+8Uln6lEF7CwRIbr3QCxCP5gYOf+nIDXoSYjA
+         VK684oLzzgoRxc+AONKYN/RFqAiEOFdZj7t6/OU28bX0JiJry8dYuwF/UPhcSgZqz4tM
+         AUbg==
+X-Gm-Message-State: APjAAAWVpkGRYMH9iSnsVdhGLpHijUpsmyDTBK9E+DVIQVw56rDEF8sr
+        MRGMs12KrNskdWIumbrhr8aGu3vJ0VaS6LuL2pO7Cm+6jMF4
+X-Google-Smtp-Source: APXvYqz6nx/DaHaeW3/I6fO+zWux7xGx6+uWbaJFXIWQxl9D/dxsT4CqcR6YmvB3to2zJFsPi6+PU9Y3U0vw2+EwI1Zc32lXGCdI
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+X-Received: by 2002:a6b:b797:: with SMTP id h145mr9380241iof.190.1553372160847;
+ Sat, 23 Mar 2019 13:16:00 -0700 (PDT)
+Date:   Sat, 23 Mar 2019 13:16:00 -0700
+In-Reply-To: <CAOssrKcsXPqH-s-YLYdao3REpD=iQAeX9UvasB3n6RK84PuP=Q@mail.gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000d9f9ac0584c8a309@google.com>
+Subject: Re: WARNING in request_end
+From:   syzbot <syzbot+ef054c4d3f64cd7f7cec@syzkaller.appspotmail.com>
+To:     dvyukov@google.com, ebiederm@xmission.com, ktkhai@virtuozzo.com,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        miklos@szeredi.hu, mszeredi@redhat.com,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hello,
 
-I have been hunting a UDF bug that occasionally results in generation
-of an Allocation Extent Descriptor with an incorrect tagLocation. So
-far I haven't been able to see a path through the code that could
-cause that. But, I noticed some inconsistency in locking during
-AED generation and wonder if it could result in random corruption.
+syzbot has tested the proposed patch but the reproducer still triggered  
+crash:
+WARNING in request_end
 
-The function udf_update_inode() has this general pattern:
+WARNING: CPU: 0 PID: 16992 at fs/fuse/dev.c:390 request_end+0x836/0xac0  
+fs/fuse/dev.c:390
+kobject: '0:49' (000000001562c524): kobject_uevent_env
+Kernel panic - not syncing: panic_on_warn set ...
 
-   bh = udf_tgetblk(...);   // calls sb_getblk()
-   lock_buffer(bh);
-   memset(bh->b_data, 0, inode->i_sb->s_blocksize);
-   
-   // <snip>other code to populate FE/EFE data in the block</snip>
-   
-   set_buffer_uptodate(bh);
-   unlock_buffer(bh);
-   mark_buffer_dirty(bh);
+CPU: 0 PID: 16992 Comm: syz-executor3 Not tainted 4.19.0-rc5+ #1
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x1db/0x2ce lib/dump_stack.c:113
+  panic+0x263/0x51a kernel/panic.c:184
+kobject: 'loop5' (0000000073db98f3): kobject_uevent_env
+  __warn.cold+0x13b/0x1ba kernel/panic.c:536
+  report_bug+0x263/0x2b0 lib/bug.c:186
+kobject: 'loop5' (0000000073db98f3): fill_kobj_path: path  
+= '/devices/virtual/block/loop5'
+  fixup_bug arch/x86/kernel/traps.c:178 [inline]
+  fixup_bug arch/x86/kernel/traps.c:173 [inline]
+  do_error_trap+0x200/0x4e0 arch/x86/kernel/traps.c:296
+kobject: '0:49' (000000001562c524): fill_kobj_path: path  
+= '/devices/virtual/bdi/0:49'
+  do_invalid_op+0x1b/0x20 arch/x86/kernel/traps.c:316
+  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:993
+kobject: '0:49' (000000001562c524): kobject_cleanup, parent           (null)
+RIP: 0010:request_end+0x836/0xac0 fs/fuse/dev.c:390
+Code: 3c 03 0f 8f 7d fe ff ff 48 8b bd 30 ff ff ff e8 b0 b4 3b ff e9 6c fe  
+ff ff e8 a6 ad f8 fe 0f 0b e9 be fa ff ff e8 9a ad f8 fe <0f> 0b e9 fc fa  
+ff ff e8 4e c7 c2 fe e8 a9 b4 3b ff e9 6a fb ff ff
+RSP: 0018:ffff8801c099f5a8 EFLAGS: 00010293
+RAX: ffff8801be90e040 RBX: 1ffff10038133eba RCX: ffffffff82858ce9
+RDX: 0000000000000000 RSI: ffffffff828591f6 RDI: 0000000000000007
+RBP: ffff8801c099f698 R08: ffff8801be90e040 R09: ffffed0037bc2c18
+R10: ffffed0037bc2c17 R11: ffff8801bde160bb R12: ffff8801a5ca9800
+R13: ffff8801bde16040 R14: ffff8801c099f670 R15: ffff8801a5ca9830
+kobject: '0:49' (000000001562c524): calling ktype release
+  fuse_dev_do_write+0x1888/0x3730 fs/fuse/dev.c:1917
+kobject: '0:49': free name
+kobject: '0:49' (000000005b47baa2): kobject_add_internal: parent: 'bdi',  
+set: 'devices'
+kobject: '0:49' (000000005b47baa2): kobject_uevent_env
+  fuse_dev_write+0x191/0x240 fs/fuse/dev.c:1941
+kobject: '0:49' (000000005b47baa2): fill_kobj_path: path  
+= '/devices/virtual/bdi/0:49'
+  call_write_iter include/linux/fs.h:1808 [inline]
+  new_sync_write fs/read_write.c:474 [inline]
+  __vfs_write+0x6e5/0xa80 fs/read_write.c:487
+kobject: '0:56' (00000000a2a816b6): kobject_add_internal: parent: 'bdi',  
+set: 'devices'
+kobject: '0:56' (00000000a2a816b6): kobject_uevent_env
+  vfs_write+0x20c/0x560 fs/read_write.c:549
+  ksys_write+0x105/0x260 fs/read_write.c:598
+kobject: '0:56' (00000000a2a816b6): fill_kobj_path: path  
+= '/devices/virtual/bdi/0:56'
+  __do_sys_write fs/read_write.c:610 [inline]
+  __se_sys_write fs/read_write.c:607 [inline]
+  __ia32_sys_write+0x71/0xb0 fs/read_write.c:607
+  do_syscall_32_irqs_on arch/x86/entry/common.c:326 [inline]
+  do_fast_syscall_32+0x333/0xf98 arch/x86/entry/common.c:397
+kobject: '0:57' (000000002c3163ad): kobject_add_internal: parent: 'bdi',  
+set: 'devices'
+kobject: '0:57' (000000002c3163ad): kobject_uevent_env
+  entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
+RIP: 0023:0xf7fa0cb9
+Code: 85 d2 74 02 89 0a 5b 5d c3 8b 04 24 c3 8b 0c 24 c3 8b 1c 24 c3 90 90  
+90 90 90 90 90 90 90 90 90 90 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90  
+90 90 90 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90
+RSP: 002b:00000000f7f5a0cc EFLAGS: 00000296 ORIG_RAX: 0000000000000004
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00000000200002c0
+RDX: 0000000000000050 RSI: 0000000000000000 RDI: 0000000000000000
+kobject: '0:57' (000000002c3163ad): fill_kobj_path: path  
+= '/devices/virtual/bdi/0:57'
+RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
-This I can understand - the lock is held for as long as the buffer
-contents are being assembled.
 
-In contrast, udf_setup_indirect_aext(), which constructs an AED,
-has this sequence:
+Tested on:
 
-   bh = udf_tgetblk(...);   // calls sb_getblk()
-   lock_buffer(bh);
-   memset(bh->b_data, 0, inode->i_sb->s_blocksize);
-
-   set_buffer_uptodate(bh);
-   unlock_buffer(bh);
-   mark_buffer_dirty_inode(bh);
-
-   // <snip>other code to populate AED data in the block</snip>
-
-In this case the population of the block occurs without
-the protection of the lock.
-
-Because the block has been marked dirty, does this mean that
-writeback could occur at any point during population?
-
-There is one path through udf_setup_indirect_aext() where
-mark_buffer_dirty_inode() gets called again after population is
-complete, which I suppose could heal a partial writeout, but there is
-also another path in which the buffer does not get marked dirty again.
-
-Regards,
-  ------------------------------------------------------------------------
-  Steven J. Magnani               "I claim this network for MARS!
-  www.digidescorp.com              Earthling, return my space modulator!"
-
-  #include <standard.disclaimer>
+commit:         bc78abbd fuse: Fix use-after-free in fuse_dev_do_read()
+git tree:        
+git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+console output: https://syzkaller.appspot.com/x/log.txt?x=175a556d200000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=eb49a17588446b34
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+userspace arch: i386
 
