@@ -2,117 +2,117 @@ Return-Path: <SRS0=q9dy=R2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA66C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 20:20:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9AE4C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 20:25:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8462D21873
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 20:20:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96AA921873
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 20:25:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="WRqmHuPT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qrWW+ZAP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727831AbfCWUUj (ORCPT
+        id S1727877AbfCWUZV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Mar 2019 16:20:39 -0400
-Received: from mta-p8.oit.umn.edu ([134.84.196.208]:44456 "EHLO
-        mta-p8.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727443AbfCWUUj (ORCPT
+        Sat, 23 Mar 2019 16:25:21 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:44000 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726230AbfCWUZV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Mar 2019 16:20:39 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p8.oit.umn.edu (Postfix) with ESMTP id 95121CC3
-        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2019 20:20:37 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p8.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p8.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id ShGCoGdQGIyS for <linux-kernel@vger.kernel.org>;
-        Sat, 23 Mar 2019 15:20:37 -0500 (CDT)
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
-        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p8.oit.umn.edu (Postfix) with ESMTPS id 61AE4CC4
-        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2019 15:20:37 -0500 (CDT)
-Received: by mail-io1-f71.google.com with SMTP id s184so4667183iod.23
-        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2019 13:20:37 -0700 (PDT)
+        Sat, 23 Mar 2019 16:25:21 -0400
+Received: by mail-pf1-f195.google.com with SMTP id c8so3733175pfd.10;
+        Sat, 23 Mar 2019 13:25:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=KFf7XYS7PvBJb6ZPERrz0Dwe5SpDIVt67VJxx6X5UGg=;
-        b=WRqmHuPTfyWhdp6dOFqteXAkwDYyMVwVA+UDNsPcP9+vCiu1dgmIveaECA9C/c+x9P
-         FoWF57QgHvOcezTEIZ+2WiBsa8fraLzsNBhXiRFVPvnuB09wIDgkCCJW1G9HK5+ozI2B
-         RIzhbdGNQmjR3D1fZxTBrFN4xB4CXokaP+H5qFw2vA3WYogHWODaHCyqA453Hpx8VV72
-         PYZviplYw0xMuVihMOIVCzMU50Y+RjAVDnQbUVo6hOo3lVR7KdJpAwuLGQJ8afPhip+Y
-         75gcG5GIxiSfk/xm2ZFaVt4GNYf+q+XbElPJJwB6/O8EepI2ODfSLaAm+WjkLnozuVB5
-         4nuQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0KQ81DxjOPGjaEtWHLtdrsk+PBSnkB1EK3oNl2i2BSo=;
+        b=qrWW+ZAPE2cG7Ss0cHNcQWIuSgcE+ac6Sx7R5zO6RvEJ7fxOM4s7R2bwTrLXqNzlD0
+         WW4DyjRR4CyFtsekXGzSY7isUx0EnllD2jwbWrHItKQjKVpnwq7hmXt3eo4CyzMgDpHx
+         kPO96e5lP9nntt/d4p71YH7xk2TVv4vivt86ydkuVa+8o3Iw9Dik2Xd8lWUvjfpblfqx
+         RCPyfZudpczOxl9GC0T2oXd1DjAc4ISZSA6NcWLui3UEytjvk/yI5v1xc4+YEevqUtOi
+         ZSZqdJnIqJ2Q9XqfcoqA23OzDWJfulSWvrui9ZxA8fkVOolWUQF2XozZd5CncP0UcOkz
+         gUiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=KFf7XYS7PvBJb6ZPERrz0Dwe5SpDIVt67VJxx6X5UGg=;
-        b=YYAjOfpRw/EtnjSOBQ+shmd4qrhi++DRIyNq3TRG0kn9ojgWDRRdrydT7iEwOyDphH
-         uTbxIEq+qlOxHMjuAjBMAI/CFvu3pYwhKpR3wo/ekidUsYEgvect1OK2bl0PEM+vkYxl
-         E2rSpGZDaNeX/DscyATX0Kc1UQg9UDKMhSk7ulDuRr1vorEjVhS1YArVXSrDEeTNQk0k
-         ZOkd4ptFnDRpniHjei1RjEJ9EqUbeTUVzzAO203sfC0X59RmThL2JU612R0USgRxFFCi
-         AkLwT/1v4Wxt7qeAzCkwq0ps0z4vBNI8TMMlXfoyRIsyc5XUf0WqYhxvcCObhKAlXMxK
-         StyA==
-X-Gm-Message-State: APjAAAX/Aahh5hCh+cVcMPOcGA6I4EJRruQFLXphMyJGBPvDaP4BlTyn
-        06OQoLKvAQ/+2aWMECA//pUK30a4O3Ktgj48wZ80kI14K9Az6Cx0TCd1f/Wap1/IAfVHcXZuF12
-        OytpTEtbCt451FCYCjx9vfVEKl0ck
-X-Received: by 2002:a24:c8c1:: with SMTP id w184mr6340822itf.135.1553372436978;
-        Sat, 23 Mar 2019 13:20:36 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxDcD0i+nNIhsggx5eIgIYCtA7w1aBr24vi9Cd0nxhHjN8fWZ+zJsx0LqQ5rZzQHFjrfglZ4A==
-X-Received: by 2002:a24:c8c1:: with SMTP id w184mr6340815itf.135.1553372436789;
-        Sat, 23 Mar 2019 13:20:36 -0700 (PDT)
-Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
-        by smtp.gmail.com with ESMTPSA id y22sm3821372ita.2.2019.03.23.13.20.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 23 Mar 2019 13:20:36 -0700 (PDT)
-From:   Aditya Pakki <pakki001@umn.edu>
-To:     pakki001@umn.edu
-Cc:     kjlu@umn.edu, Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] thunderbolt: Fix to check the return value of kmemdup
-Date:   Sat, 23 Mar 2019 15:20:33 -0500
-Message-Id: <20190323202034.7331-1-pakki001@umn.edu>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0KQ81DxjOPGjaEtWHLtdrsk+PBSnkB1EK3oNl2i2BSo=;
+        b=S4E8QVUYEjjWhUi/8MALVKAxkpia53+Y3nrHJnxtY6WZWZMt2U62Sb2dmj2SKlBQsn
+         4Z28NFH6gunkeJbVdHLfTqGs25py2IKXX2Gf3Rcgq2xkqvfD39YS0duu2XhfxtPYzq8a
+         PospO6/MkE8LPZPWT1uO7RQmwbMXHlf+gbgjODEEdR+bfn8BrOCS9nx2Gpmmpf/sYa83
+         Yd79qQO8MGduwVkTUgB4MgfgHONWKgB+/vDgkqBlslv6cshcpUC6LOCnIJVO3pH/GF+r
+         fs70yhR9xe/t8EATIiVGGCifpobghajfL1RzRNjtN2gU53t/zmkFWwwNlaBRsAENapti
+         tUrg==
+X-Gm-Message-State: APjAAAUOF69bZrVAMNxf7I0oTRs2eIn9NGSkRnj1dS5wVSAUdLLji3n/
+        B2FVZn2qJjBNwlmf9vfgu3D3ksw1y5OziOQZJeKtciDp
+X-Google-Smtp-Source: APXvYqx9/99LYR4LgVXyvmHt+G3hddxlVU0ASRaA+dPoIiRWrPw6zYSI5aQDP0XWHyo2FWgduDWZSEOwV7ulzy3LTso=
+X-Received: by 2002:a65:610d:: with SMTP id z13mr15858446pgu.104.1553372720524;
+ Sat, 23 Mar 2019 13:25:20 -0700 (PDT)
+MIME-Version: 1.0
+References: <0000000000003692760578e651dd@google.com> <0000000000007917ff0584ada6e7@google.com>
+ <CACT4Y+b0Onk4AB0hkvhXgZPdk+rERFsYAQra681o6QLDH_Ct-g@mail.gmail.com>
+In-Reply-To: <CACT4Y+b0Onk4AB0hkvhXgZPdk+rERFsYAQra681o6QLDH_Ct-g@mail.gmail.com>
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Sat, 23 Mar 2019 13:25:08 -0700
+Message-ID: <CAM_iQpVHgHM-5NCE+FNZfpH6CWtYdt8BSmHJj_oa7CLKxYKLQw@mail.gmail.com>
+Subject: Re: KASAN: use-after-free Write in hci_sock_release
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     syzbot <syzbot+b364ed862aa07c74bc62@syzkaller.appspotmail.com>,
+        David Miller <davem@davemloft.net>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-bluetooth <linux-bluetooth@vger.kernel.org>,
+        "open list:KERNEL BUILD + fi..." <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Michal Marek <mmarek@suse.com>,
+        netdev <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-uuid in add_switch is allocted via kmemdup which can fail. The patch
-logs the error and cleans up the allocated memory for switch.
+On Fri, Mar 22, 2019 at 5:19 AM Dmitry Vyukov <dvyukov@google.com> wrote:
+>
+> On Fri, Mar 22, 2019 at 1:04 PM syzbot
+> <syzbot+b364ed862aa07c74bc62@syzkaller.appspotmail.com> wrote:
+> >
+> > syzbot has bisected this bug to:
+> >
+> > commit c470abd4fde40ea6a0846a2beab642a578c0b8cd
+> > Author: Linus Torvalds <torvalds@linux-foundation.org>
+> > Date:   Sun Feb 19 22:34:00 2017 +0000
+> >
+> >      Linux 4.10
+> >
+> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1664c6df200000
+> > start commit:   c470abd4 Linux 4.10
+> > git tree:       upstream
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=7308e68273924137
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=b364ed862aa07c74bc62
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=152532bb400000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13f73320c00000
+> >
+> > Reported-by: syzbot+b364ed862aa07c74bc62@syzkaller.appspotmail.com
+> > Fixes: c470abd4fde4 ("Linux 4.10")
+> >
+> > For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+>
+> The same story of HCI being broken before v4.10, so this is bisected
+> to the release.
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Does syzbot test the latest upstream? Isn't this supposed to be fixed by
 
----
-v1: Change error handling from WARN_ONCE to return after clean up.
----
- drivers/thunderbolt/icm.c | 5 +++++
- 1 file changed, 5 insertions(+)
+commit e20a2e9c42c9e4002d9e338d74e7819e88d77162
+Author: Myungho Jung <mhjungk@gmail.com>
+Date:   Sat Feb 2 16:56:36 2019 -0800
 
-diff --git a/drivers/thunderbolt/icm.c b/drivers/thunderbolt/icm.c
-index e3fc920af682..be1174d86cef 100644
---- a/drivers/thunderbolt/icm.c
-+++ b/drivers/thunderbolt/icm.c
-@@ -473,6 +473,11 @@ static void add_switch(struct tb_switch *parent_sw, u64 route,
- 		goto out;
- 
- 	sw->uuid = kmemdup(uuid, sizeof(*uuid), GFP_KERNEL);
-+	if (!sw->uuid) {
-+		WARN_ONCE(1, "cannot allocate memory for switch\n");
-+		tb_switch_put(sw);
-+		goto out;
-+	}
- 	sw->connection_id = connection_id;
- 	sw->connection_key = connection_key;
- 	sw->link = link;
--- 
-2.17.1
+    Bluetooth: Fix decrementing reference count twice in releasing socket
 
+?
