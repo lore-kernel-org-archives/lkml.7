@@ -6,36 +6,34 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DF1EC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 13:30:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2046C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 13:32:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 500BE20828
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 13:30:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A196B20828
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 13:32:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727609AbfCWNae (ORCPT
+        id S1727556AbfCWNcp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Mar 2019 09:30:34 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:40062 "EHLO huawei.com"
+        Sat, 23 Mar 2019 09:32:45 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5741 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727364AbfCWNae (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Mar 2019 09:30:34 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 0EA015D3146232CD413D;
-        Sat, 23 Mar 2019 21:30:32 +0800 (CST)
-Received: from localhost (10.177.31.96) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.408.0; Sat, 23 Mar 2019
- 21:30:24 +0800
+        id S1727443AbfCWNco (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 Mar 2019 09:32:44 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 15F67D0E93AD75C01560;
+        Sat, 23 Mar 2019 21:32:42 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.408.0; Sat, 23 Mar 2019
+ 21:32:32 +0800
 From:   Yue Haibing <yuehaibing@huawei.com>
-To:     <amd-gfx@lists.freedesktop.org>, <harry.wentland@amd.com>,
-        <sunpeng.li@amd.com>, <alexander.deucher@amd.com>,
-        <christian.koenig@amd.com>, <David1.Zhou@amd.com>,
-        <airlied@linux.ie>, <daniel@ffwll.ch>, <mikita.lipski@amd.com>,
-        <David.Francis@amd.com>
+To:     <rex.zhu@amd.com>, <evan.quan@amd.com>,
+        <alexander.deucher@amd.com>, <christian.koenig@amd.com>,
+        <David1.Zhou@amd.com>, <airlied@linux.ie>, <daniel@ffwll.ch>
 CC:     <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] drm/amd/display: Remove useless set memory to zero use memset()
-Date:   Sat, 23 Mar 2019 21:30:19 +0800
-Message-ID: <20190323133019.13620-1-yuehaibing@huawei.com>
+        <amd-gfx@lists.freedesktop.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] drm/amd/powerplay: Remove useless set memory to zero use memset()
+Date:   Sat, 23 Mar 2019 21:32:16 +0800
+Message-ID: <20190323133216.16900-1-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
 Content-Type: text/plain
@@ -53,22 +51,21 @@ remove useless memset(0).
 
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_irq.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/gpu/drm/amd/powerplay/vega20_ppt.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_irq.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_irq.c
-index cd10f77..6c7a46a 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_irq.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_irq.c
-@@ -279,8 +279,6 @@ void *amdgpu_dm_irq_register_interrupt(struct amdgpu_device *adev,
- 		return DAL_INVALID_IRQ_HANDLER_IDX;
- 	}
+diff --git a/drivers/gpu/drm/amd/powerplay/vega20_ppt.c b/drivers/gpu/drm/amd/powerplay/vega20_ppt.c
+index 8fafcbd..0fb6066 100644
+--- a/drivers/gpu/drm/amd/powerplay/vega20_ppt.c
++++ b/drivers/gpu/drm/amd/powerplay/vega20_ppt.c
+@@ -1295,7 +1295,6 @@ static int vega20_set_default_od8_setttings(struct smu_context *smu)
+ 	if (!table_context->od8_settings)
+ 		return -ENOMEM;
  
--	memset(handler_data, 0, sizeof(*handler_data));
--
- 	init_handler_common_data(handler_data, ih, handler_args, &adev->dm);
+-	memset(table_context->od8_settings, 0, sizeof(struct vega20_od8_settings));
+ 	od8_settings = (struct vega20_od8_settings *)table_context->od8_settings;
  
- 	irq_source = int_params->irq_source;
+ 	if (smu_feature_is_enabled(smu, FEATURE_DPM_SOCCLK_BIT)) {
 -- 
 2.7.0
 
