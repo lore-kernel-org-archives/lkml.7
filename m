@@ -2,85 +2,104 @@ Return-Path: <SRS0=q9dy=R2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D0AC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 06:07:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EAB8C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 06:11:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AC39218E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 06:07:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553321262;
-	bh=i+W3s/Dy8mXwWlJKLQIHuN7xinXExHtZzDfjr9uQjps=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EwvXTjdTDYb8PMTkwgCZ9lgxyPNpagmagwzNrVBE4+CVJQ6B8uVzr7oLNx34Iu8RD
-	 JdkRfS+bda/1bmcw0Df08HUGu10f4pkiXODiPJVGUz4GP98rxYIA8Bx9+ptqPdpbhO
-	 XwZz15F+SdVCH7lKZH/RJBT4bzZcl4pXxawatH7c=
+	by mail.kernel.org (Postfix) with ESMTP id F00D9218E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 23 Mar 2019 06:11:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726649AbfCWGHk (ORCPT
+        id S1726301AbfCWGLV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Mar 2019 02:07:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56686 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725938AbfCWGHk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Mar 2019 02:07:40 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8990218E2;
-        Sat, 23 Mar 2019 06:07:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553321260;
-        bh=i+W3s/Dy8mXwWlJKLQIHuN7xinXExHtZzDfjr9uQjps=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=U6VcT9VOS9y2LHjNIRAtdZ13ydR/E/Kbp3mf7gJJZGsX+6qhejJd3I6+X1y5EJD07
-         0RDjJNzuXcj0ydF6+P9BMPPlf+UfCE13p3J33NU/PRUAibht2nP2C7ScKP7qLmXSTm
-         UXksTU9GBc7MyJrAaK5sCKsfRYwubI1zvWDSNsKg=
-Date:   Sat, 23 Mar 2019 07:07:37 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Kimberly Brown <kimbrownkd@gmail.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Sat, 23 Mar 2019 02:11:21 -0400
+Received: from paleale.coelho.fi ([176.9.41.70]:46472 "EHLO
+        farmhouse.coelho.fi" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726029AbfCWGLV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 23 Mar 2019 02:11:21 -0400
+Received: from 91-156-6-193.elisa-laajakaista.fi ([91.156.6.193] helo=redipa)
+        by farmhouse.coelho.fi with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.91)
+        (envelope-from <luca@coelho.fi>)
+        id 1h7Zs8-00015K-0H; Sat, 23 Mar 2019 08:11:12 +0200
+Message-ID: <a92bc0994d5f3fa5da5da471d0ccd01f8cefeee5.camel@coelho.fi>
+From:   Luca Coelho <luca@coelho.fi>
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Johannes Berg <johannes.berg@intel.com>
+Cc:     clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sara Sharon <sara.sharon@intel.com>,
+        Avraham Stern <avraham.stern@intel.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kobject: Add support for default attribute groups to
- kobj_type
-Message-ID: <20190323060737.GA28563@kroah.com>
-References: <20190322201440.GA30814@ubu-Virtual-Machine>
+Date:   Sat, 23 Mar 2019 08:11:10 +0200
+In-Reply-To: <20190322141322.463149-1-arnd@arndb.de>
+References: <20190322141322.463149-1-arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190322201440.GA30814@ubu-Virtual-Machine>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] iwlwifi: work around clang -Wuninitialized warning
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 22, 2019 at 04:14:40PM -0400, Kimberly Brown wrote:
-> kobj_type currently uses a list of individual attributes to store
-> default attributes. Attribute groups are more flexible than a list of
-> attributes because groups provide support for attribute visibility. So,
-> add support for default attribute groups to kobj_type.
+On Fri, 2019-03-22 at 15:13 +0100, Arnd Bergmann wrote:
+> Clang incorrectly warns about an uninitialized variable:
 > 
-> In future patches, the existing uses of kobj_type’s attribute list will
-> be converted to attribute groups. When that is complete, kobj_type’s
-> attribute list, “default_attrs”, will be removed.
+> drivers/net/wireless/intel/iwlwifi/mvm/sta.c:2114:12: error: variable
+> 'queue' is used uninitialized whenever 'if'
+>       condition is false [-Werror,-Wsometimes-uninitialized]
+>                 else if (WARN(1, "Missing required TXQ for adding
+> bcast STA\n"))
+>                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> ~~~~~~~~~~
+> include/asm-generic/bug.h:130:36: note: expanded from macro 'WARN'
+>  #define WARN(condition, format...)
+> ({                                   \
+>                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> ~~~~
+> drivers/net/wireless/intel/iwlwifi/mvm/sta.c:2119:33: note:
+> uninitialized use occurs here
+>                 iwl_mvm_enable_txq(mvm, NULL, queue, 0, &cfg,
+> wdg_timeout);
+>                                               ^~~~~
+> drivers/net/wireless/intel/iwlwifi/mvm/sta.c:2114:8: note: remove the
+> 'if' if its condition is always true
+>                 else if (WARN(1, "Missing required TXQ for adding
+> bcast STA\n"))
+>                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> ~~~~~~~~~~~
+> drivers/net/wireless/intel/iwlwifi/mvm/sta.c:2094:11: note:
+> initialize the variable 'queue' to silence this warning
+>         int queue;
+>                  ^
+>                   = 0
+> 1 error generated.
 > 
-> Signed-off-by: Kimberly Brown <kimbrownkd@gmail.com>
+> This cannot happen because the if/else if/else if block always
+> has one code path that is entered. However, we can simply
+> rearrange the code to let clang see this as well.
+> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 > ---
->  include/linux/kobject.h |  3 ++-
->  lib/kobject.c           | 14 ++++++++++++++
->  2 files changed, 16 insertions(+), 1 deletion(-)
 
-Yes!  Thanks for doing this.
+Thanks for the patch, Arnd! But I have already queued up an equivalent
+patch for v5.2 (should probably reach linux-next by the end of next
+week or so):
 
-But how did you test it?  Did you convert any kobj_type structures to
-the attribute group and see that all was the same?  Ideally I'd like to
-take this patch with at least one subsystem that uses the change,
-otherwise this looks like unused code in the kernel.
+https://patchwork.kernel.org/patch/10844025/
 
-thanks,
+--
+Cheers,
+Luca.
 
-greg k-h
