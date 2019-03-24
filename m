@@ -2,139 +2,120 @@ Return-Path: <SRS0=2kAr=R3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4372FC43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 02:23:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B4CDC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 02:29:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A484A20880
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 02:23:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="onRPPSSH"
+	by mail.kernel.org (Postfix) with ESMTP id 1A6872148D
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 02:29:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728012AbfCXCXH (ORCPT
+        id S1728080AbfCXC3g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Mar 2019 22:23:07 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:47226 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727746AbfCXCXG (ORCPT
+        Sat, 23 Mar 2019 22:29:36 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:38146 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727628AbfCXC3g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Mar 2019 22:23:06 -0400
-Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id x2O2Mlk4009950
-        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2019 11:22:48 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x2O2Mlk4009950
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1553394168;
-        bh=0BKPm+Ru2fB4N9zmFWmWzKSFfEVtQHafBqKAxQzeOVQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=onRPPSSHX9ZE/KzpxyLC9fAXA85Uk+NGHHtvsH/O589i8cX6IjcrC11IeCSqYROgK
-         HFPXMJ5X9+ebrZrGzrlEpM3PAvZ/iaAZcteWi3y50j86MNExVGGnzEz8NAtf3Pn9gH
-         1mmB5R6sG1/LBurOOMKr6wx3SZ1IJNrMuRinAp1yC4vvOtinOPLC+fTSm9QHn7nYfa
-         GbAYLOIdRWwT9ly9elRVyBvLvE0IE2wZoaYEGHDv/2NgwD30TieF08zKONhdD1rt7S
-         rHu91yl4Ndiofn5FRmfthTevflWfM+7ozcZOkfIOwTrkEpwy39qbU0Hw4aNR9a4MAs
-         7X4+T0PaZf9VA==
-X-Nifty-SrcIP: [209.85.217.47]
-Received: by mail-vs1-f47.google.com with SMTP id n4so3502622vsm.3
-        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2019 19:22:47 -0700 (PDT)
-X-Gm-Message-State: APjAAAW9gD7Xb3yu0fA/CK4+wdBe/e7BzyFEmKW1x4JvSs0RmQWb2Bc7
-        qzMjf6KqedwnmYO0oEuxC/4RYQ6Ll9r4o1FUbJo=
-X-Google-Smtp-Source: APXvYqwyQQ7qpdwGNa6t9b28zF2o74k7PqH4tBAxOeuTnsfvVwD8Uuj+XqnxeG2QOsHtfkLiaswd9NKLSjWTUPrfsvk=
-X-Received: by 2002:a67:f105:: with SMTP id n5mr11059166vsk.181.1553394166974;
- Sat, 23 Mar 2019 19:22:46 -0700 (PDT)
+        Sat, 23 Mar 2019 22:29:36 -0400
+Received: by mail-ot1-f67.google.com with SMTP id e80so5180241ote.5
+        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2019 19:29:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=eYHMHvfk1i1VZt1I+33kwKGsGJOWrp3Ur5mjx/9Dq0g=;
+        b=BhRTlu3wod3kO/LOWZisBHA8F7Bi1TIRxdfcdOw72IW8Mxtsw0scdU5eGMl4af7T2o
+         SG79D/fghmPkf06ZRFNpEi9LDezk04xuEbFDoE75R++CQtVDi7Pl44uMI3rPeaxl4cpk
+         jJ2Of7+fQN0K03aldcgAROMoaz4/MXIMgPRdA6O0dXttWmu8+aR9gENXB1olL1hx+zHL
+         gLxjBy0h5FtW5kLOg9GYqr8Drfsa2hZZySu9zUNpatBqJW0XDq7iITiiCRp3dXQBIHhI
+         UemGoGZoI7GKdOe9YxMUp/gq4cmBkTgdFIxhEyPhXRWPed+N5+YxWXW0xYg02TWk5mOe
+         h5qg==
+X-Gm-Message-State: APjAAAVaqw9OnqwJpFGHPw8bOTkeAylOs2ElLzzNexgiHDk00kDTthWO
+        a1Bf9IyopcZoi0MrB8AcuKo=
+X-Google-Smtp-Source: APXvYqw7jmx2tIC8gqel9Fs7pNtCg+gcN2P4LI2ePF/oVJlfKtdCdIKTzvc8tRAXWKUYOedPYYEN+A==
+X-Received: by 2002:a9d:7ac7:: with SMTP id m7mr13197905otn.179.1553394251435;
+        Sat, 23 Mar 2019 19:24:11 -0700 (PDT)
+Received: from sultan-box.localdomain ([107.193.118.89])
+        by smtp.gmail.com with ESMTPSA id 92sm4872410oti.60.2019.03.23.19.24.10
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 23 Mar 2019 19:24:10 -0700 (PDT)
+Date:   Sat, 23 Mar 2019 19:24:06 -0700
+From:   Sultan Alsawaf <sultan@kerneltoast.com>
+To:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: [RFCv2] string: Use faster alternatives when constant arguments are
+ used
+Message-ID: <20190324022406.GA18988@sultan-box.localdomain>
+References: <20190324014445.28688-1-sultan@kerneltoast.com>
 MIME-Version: 1.0
-References: <20190203084840.6113-1-vladimir.kondratiev@intel.com> <20190322155212.133029-1-andre.przywara@arm.com>
-In-Reply-To: <20190322155212.133029-1-andre.przywara@arm.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Sun, 24 Mar 2019 11:22:11 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAT3Yf1_3L77VNjtcr5SP2eM0x19hid0J45PcHqf8Fwcwg@mail.gmail.com>
-Message-ID: <CAK7LNAT3Yf1_3L77VNjtcr5SP2eM0x19hid0J45PcHqf8Fwcwg@mail.gmail.com>
-Subject: Re: [PATCH v2] kbuild: gitignore output directory
-To:     Andre Przywara <andre.przywara@arm.com>
-Cc:     Vladimir Kondratiev <vladimir.kondratiev@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190324014445.28688-1-sultan@kerneltoast.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 23, 2019 at 12:53 AM Andre Przywara <andre.przywara@arm.com> wrote:
->
-> Hi,
->
-> > When compiling into output directory using O=, many files
-> > created under KBUILD_OUTPUT that git considers
-> > as new ones; git clients, ex. "git gui" lists it, and it clutters
-> > file list making it difficult to see what was really changed
-> >
-> > Generate .gitignore in output directory that ignores all
-> > its content
->
-> just found this when testing -rc1.
-> Unfortunately this breaks my setup, because I keep a totally separate
-> git repository in my build directories to track (various versions of)
-> .config. So .gitignore there is carefully crafted to ignore most build
-> artefacts, but not .config, for instance.
->
-> I am not sure how git would interact with the build directory for you?
-> Do you build into a subdirectory of the kernel tree?
->
-> I was hoping that we would not overwrite unrelated files in directories
-> outside of the kernel tree. In case this is about a subdirectory of the
-> source tree, can we somehow check for this case?
+I messed up the return value for strcat in the first patch. Here's a fixed
+version, ready for some scathing reviews.
 
+From: Sultan Alsawaf <sultan@kerneltoast.com>
 
-I am not sure if it is worthwhile
-adjusting the upstream kernel to
-the workflow of an individual like this.
+When strcpy, strcat, and strcmp are used with a literal string, they can
+be optimized to memcpy or memcmp calls. These alternatives are faster
+since knowing the length of a string argument beforehand allows
+traversal through the string word at a time without being concerned
+about looking for the terminating zero character. In some cases, the
+replaced calls to memcpy or memcmp can even be optimized out completely
+for a significant speed up.
 
-If it is, we could like this:
+Signed-off-by: Sultan Alsawaf <sultan@kerneltoast.com>
+---
+ include/linux/string.h | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-outputmakefile:
-ifneq ($(KBUILD_SRC),)
-        $(Q)ln -fsn $(srctree) source
-        $(Q)$(CONFIG_SHELL) $(srctree)/scripts/mkmakefile $(srctree)
-        $(Q)test -e .gitignore || \
-        { echo "# this is build directory, ignore it"; echo "*"; } > .gitignore
-endif
-
-
-> Cheers,
-> Andre.
->
-> >
-> > Signed-off-by: Vladimir Kondratiev <vladimir.kondratiev@linux.intel.com>
-> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > ---
-> >  Makefile | 3 +++
-> >  1 file changed, 3 insertions(+)
-> >
-> > diff --git a/Makefile b/Makefile
-> > index 97ee0be24d52..d487fca342c4 100644
-> > --- a/Makefile
-> > +++ b/Makefile
-> > @@ -483,10 +483,13 @@ PHONY += outputmakefile
-> >  # outputmakefile generates a Makefile in the output directory, if using a
-> >  # separate output directory. This allows convenient use of make in the
-> >  # output directory.
-> > +# At the same time when output Makefile generated, generate .gitignore to
-> > +# ignore whole output directory
-> >  outputmakefile:
-> >  ifneq ($(KBUILD_SRC),)
-> >       $(Q)ln -fsn $(srctree) source
-> >       $(Q)$(CONFIG_SHELL) $(srctree)/scripts/mkmakefile $(srctree)
-> > +     $(Q){ echo "# this is build directory, ignore it"; echo "*"; } > .gitignore
-> >  endif
-> >
-> >  ifneq ($(shell $(CC) --version 2>&1 | head -n 1 | grep clang),)
-> > --
-> > 2.17.1
->
-
-
+diff --git a/include/linux/string.h b/include/linux/string.h
+index 7927b875f..59c301c0e 100644
+--- a/include/linux/string.h
++++ b/include/linux/string.h
+@@ -476,4 +476,34 @@ static __always_inline size_t str_has_prefix(const char *str, const char *prefix
+ 	return strncmp(str, prefix, len) == 0 ? len : 0;
+ }
+ 
++/*
++ * Replace some common string helpers with faster alternatives when one of the
++ * arguments is a constant (i.e., literal string). This uses strlen instead of
++ * sizeof for calculating the string length in order to silence compiler
++ * warnings that may arise due to what the compiler thinks is incorrect sizeof
++ * usage. The strlen calls on constants are folded into scalar values at compile
++ * time, so performance is not reduced by using strlen.
++ */
++#define strcpy(dest, src)							\
++	__builtin_choose_expr(__builtin_constant_p(src),			\
++		memcpy((dest), (src), strlen(src) + 1),				\
++		(strcpy)((dest), (src)))
++
++#define strcat(dest, src)							\
++	__builtin_choose_expr(__builtin_constant_p(src),			\
++		({								\
++			memcpy(strchr((dest), '\0'), (src), strlen(src) + 1);	\
++			(dest);							\
++		}),								\
++		(strcat)((dest), (src)))
++
++#define strcmp(dest, src)							\
++	__builtin_choose_expr(__builtin_constant_p(dest),			\
++		__builtin_choose_expr(__builtin_constant_p(src),		\
++			(strcmp)((dest), (src)),				\
++			memcmp((dest), (src), strlen(dest) + 1)),		\
++		__builtin_choose_expr(__builtin_constant_p(src),		\
++			memcmp((dest), (src), strlen(src) + 1),			\
++			(strcmp)((dest), (src))))
++
+ #endif /* _LINUX_STRING_H_ */
 -- 
-Best Regards
-Masahiro Yamada
+2.21.0
+
