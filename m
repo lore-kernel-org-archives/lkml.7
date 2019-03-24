@@ -2,70 +2,88 @@ Return-Path: <SRS0=2kAr=R3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C52E8C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 20:13:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7A80C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 20:13:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B9342082F
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 20:13:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553458397;
-	bh=IslnaD65RHmr0roZTq8R3PgpTKFF4Rz4ghX1fNEHS44=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1Fulbuk8pD56442OEdJoaV8yaKGovUavJzslDgM5tuCBBl0YEAcKsC3/uspz9+JK7
-	 QpP13dVB6Jk6gPMmrcVoil+UstrMlMR5h85dx12WT+aQ86VBrEuAtU7nJ83ff6Wdjb
-	 vl0b1dLBb3ovp/f5XmWJSkCqwZsFSF4qvzClgMYk=
+	by mail.kernel.org (Postfix) with ESMTP id 7B8E72082F
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 20:13:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728645AbfCXUNQ (ORCPT
+        id S1728878AbfCXUNW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 16:13:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55632 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726743AbfCXUNQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 16:13:16 -0400
-Received: from localhost (unknown [88.128.80.189])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 536AF2082F;
-        Sun, 24 Mar 2019 20:13:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553458395;
-        bh=IslnaD65RHmr0roZTq8R3PgpTKFF4Rz4ghX1fNEHS44=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ACbMUqREtRlWSq64JD6vTLe+7gHezaKr6/6DsWSJwoCKxs2nNKelL/u5BADQmX6hX
-         P2FYP/RFECjFCa4wiYDXSiqRmYjr8bF/jtn3a723Rcp2t7ABvdkp1t9Midq0DEbFpo
-         uMR9VyqZsFkYIt0HAgqIPqkBPvhU1Ao2iVs8IhEQ=
-Date:   Sun, 24 Mar 2019 20:57:14 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     ojaswin <ojaswin25111998@gmail.com>
-Cc:     Forest Bond <forest@alittletooquiet.net>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drivers/staging: fix styling of the comment related to
- SPDX-License-Identifier in vt6656/*.h
-Message-ID: <20190324195714.GA8262@kroah.com>
-References: <1553449747-25704-1-git-send-email-ojaswin25111998@gmail.com>
+        Sun, 24 Mar 2019 16:13:22 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:44234 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726743AbfCXUNW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Mar 2019 16:13:22 -0400
+Received: from p5492e2fc.dip0.t-ipconnect.de ([84.146.226.252] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1h89Uc-00060r-IC; Sun, 24 Mar 2019 21:13:19 +0100
+Date:   Sun, 24 Mar 2019 21:13:18 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Waiman Long <longman@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Kosina <jikos@kernel.org>
+Subject: Re: [PATCH] cpu/hotplug: Create SMT sysfs interface for all arches
+In-Reply-To: <426cde0f727f0cbadc501bb9bca8c99c4e11ac02.1551462051.git.jpoimboe@redhat.com>
+Message-ID: <alpine.DEB.2.21.1903242104280.1798@nanos.tec.linutronix.de>
+References: <426cde0f727f0cbadc501bb9bca8c99c4e11ac02.1551462051.git.jpoimboe@redhat.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1553449747-25704-1-git-send-email-ojaswin25111998@gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 24, 2019 at 11:17:22PM +0530, ojaswin wrote:
-> Fix checkpatch.pl styling error related to SPDX-License-Identifier comment 
-> in vt6656/*.h
+On Fri, 1 Mar 2019, Josh Poimboeuf wrote:
+> Make the /sys/devices/system/cpu/smt/* files available on all arches, so
+> user space has a consistent way to detect whether SMT is enabled.
 > 
-> Signed-off-by: ojaswin <ojaswin25111998@gmail.com>
+> The 'control' file now shows 'notsupported' for architectures which
+> don't yet have CONFIG_HOTPLUG_SMT.
 
-We need a "real name" here, please see the kernel documentation about
-this for the details.
+I'm slowly crawling through my backlog ...
 
-thanks,
+> --- a/Documentation/ABI/testing/sysfs-devices-system-cpu
+> +++ b/Documentation/ABI/testing/sysfs-devices-system-cpu
+> @@ -514,7 +514,8 @@ Description:	Control Symetric Multi Threading (SMT)
+>  			 "on"		SMT is enabled
+>  			 "off"		SMT is disabled
+>  			 "forceoff"	SMT is force disabled. Cannot be changed.
+> -			 "notsupported" SMT is not supported by the CPU
+> +			 "notsupported" Runtime SMT toggling is not currently
+> +					supported for the architecture
 
-greg k-h
+Second thoughts. I'm not really convinced that changing the meaning of
+notsupported and in fact overloading it, is the right thing to do.
+notsupported means now:
+
+  CPU does not support it - OR - architecture does not support it
+
+That's not pretty and we are surely not short of state space. There are
+several options for handling this:
+
+ 1) Do not expose the state file, just expose the active file
+
+ 2) Expose the state file, but return -ENOTSUPP or some other sensible error
+    code
+
+ 3) Expose the state file and let show return 'notimplemented' which is
+    more accurate. That wouldn't even require to expand the state space
+    enum. It just can be returned unconditionally.
+
+Thanks,
+
+	tglx
