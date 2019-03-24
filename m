@@ -2,160 +2,146 @@ Return-Path: <SRS0=2kAr=R3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97567C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 16:31:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD5E0C10F00
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 16:33:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C71420883
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 16:31:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553445092;
-	bh=+qLfnQ10YSK0PMT1IpXVQBR9aseZbtNDbB79Vhg5IR0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=gEv2UThxpD0u2Ll9QUyBGbaQbJ01wwjaamNtBc9WUUD5Q8gLUwTqrCO9P1u3Dlawu
-	 AnlGPkMfdtmvzjsEJhKgEOdyFxzAmnERUdyuwOkLcmyo0IvrSsWtWTPeotPBy8Sj1y
-	 Zr5eCe9tJCDfesTvvMsiMZl1kgoLGayIjbOvEfZo=
+	by mail.kernel.org (Postfix) with ESMTP id 86FCB20883
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 16:33:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PUNbwrNu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728783AbfCXQba (ORCPT
+        id S1728834AbfCXQdv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 12:31:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51744 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727192AbfCXQba (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 12:31:30 -0400
-Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D35EB20883;
-        Sun, 24 Mar 2019 16:31:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553445088;
-        bh=+qLfnQ10YSK0PMT1IpXVQBR9aseZbtNDbB79Vhg5IR0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=WqApMDzITf5UecXBilQWdcmRcpO+WAkFW8dJhWbcnlLYzKuFiwXJ+Ch+QTHc7MpHf
-         FF1ZKnV92pq0CcqtRTIZ/UOb2vynlawlwGRIBxrU2MIKSYQfMpwO0/lusH8xSCgOs2
-         z0372mdA/LKyQSGa7q4vsKkkgJiGyJiLknuiiC3E=
-Date:   Sun, 24 Mar 2019 16:31:23 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandru Ardelean <ardeleanalex@gmail.com>
-Cc:     Marcelo Schmitt <marcelo.schmitt1@gmail.com>,
-        "Hennerich, Michael" <michael.hennerich@analog.com>,
-        stefan.popa@analog.com, alexandru.Ardelean@analog.com,
-        dragos.bogdan@analog.com, linux-iio@vger.kernel.org,
-        devel@driverdev.osuosl.org, LKML <linux-kernel@vger.kernel.org>,
-        kernel-usp@googlegroups.com
-Subject: Re: Help on testing ad5933 driver
-Message-ID: <20190324163123.6324f6d7@archlinux>
-In-Reply-To: <CA+U=DsoWsWSfyrSneZfoWzXeYjO0u+G0PPtsPQi9ov11w+pcRQ@mail.gmail.com>
-References: <20190321193913.q46gq3h7h63ltpgp@smtp.gmail.com>
-        <CA+U=DsoWsWSfyrSneZfoWzXeYjO0u+G0PPtsPQi9ov11w+pcRQ@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 24 Mar 2019 12:33:51 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:42852 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727192AbfCXQdu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Mar 2019 12:33:50 -0400
+Received: by mail-wr1-f66.google.com with SMTP id g3so3931152wrx.9;
+        Sun, 24 Mar 2019 09:33:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=DLrP/4yFLW4qYmAZ27RnhMVnLiCxlI1IDTxiMEsU2WI=;
+        b=PUNbwrNuQkpTCXueTr0zZlvz81KfFmqHJfxaZGxe2bsjCexdEZ7KbuIaDpHwtfIqkk
+         cx1+poItDnSSpYThe2a2GhiXdyrHcOHVxC2Xn5fNDH/kAE/qO6KG4GdbSOORcriNEc94
+         EZXyZXx4dfCoRlYbLMd7WD1ws2vjIix1Pk8Yto4JcRLqIoOOXJBa6sX54pMlj8kYn49K
+         DMuzh/wSklbZV5XcgHM1T8c6Wvf5eUWC8NpqD7JmZcP5K7ZZuR9Gv7jGr8fuPSDOHGgu
+         1vSx99VF2lDvs+FtBPYGqxszXsVX7Dzu6ZUAnNkdLp2oYF62wVtr4iIdMeW/cBL9l4lK
+         bCmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DLrP/4yFLW4qYmAZ27RnhMVnLiCxlI1IDTxiMEsU2WI=;
+        b=jTu8EhHhi2vHrrAvHG6TdbswQnhodXCx5DtLrNDhT2lCRjiN3llGk73AF5Wr36gWgN
+         1/RxoR78adW+IAkffopLysQYOxjOqEr1cwJwF00AQeN8/DpcGa8WdHJOxgx4hfwd6mvU
+         lC34ho1yJIPLTiQse42Fnupe+oVefLwD8zjL7zOqa9OCMLURqG1Ra7mjc8suGqv6QCqn
+         nAILuIB7y0PIpCFDUd2Rxom89gdz5zVNi/QGuuTs1nWk950eGrYgO/GIu1OJ94NuPAqu
+         +oPiKVfWDJRKGvA61jkFzIfYctiGmTuL5O2DiN9TPo20yY+pMiwv6i7739R1MW64chwo
+         X57g==
+X-Gm-Message-State: APjAAAVe+PMOeaw91vWZizk/h5zpIVGADztZasEZ8k3ZRXmx6cWV6T9w
+        +4SXCuqJmF4P+u8YOmUPCxs=
+X-Google-Smtp-Source: APXvYqy/piVAW/0AnBZ4qne/7/SrAajTEr2OYDFXZUfm9atYNrGtYVKFEf8vCw0nSinvx1qDEicKcA==
+X-Received: by 2002:a5d:694a:: with SMTP id r10mr10077036wrw.313.1553445228553;
+        Sun, 24 Mar 2019 09:33:48 -0700 (PDT)
+Received: from peano ([87.19.116.42])
+        by smtp.gmail.com with ESMTPSA id i28sm21336529wrc.32.2019.03.24.09.33.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 24 Mar 2019 09:33:47 -0700 (PDT)
+Date:   Sun, 24 Mar 2019 17:33:45 +0100
+From:   Sicilia Cristian <sicilia.cristian@gmail.com>
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/5] staging: iio: adc: Converted bool to bitfield
+ format
+Message-ID: <20190324163345.GA791@peano>
+References: <cover.1553335775.git.sicilia.cristian@gmail.com>
+ <cover.1553366098.git.sicilia.cristian@gmail.com>
+ <93b82557f3610f4bf4d09d0556e502b418376420.1553366098.git.sicilia.cristian@gmail.com>
+ <20190324123452.66b81183@archlinux>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190324123452.66b81183@archlinux>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 22 Mar 2019 22:34:21 +0200
-Alexandru Ardelean <ardeleanalex@gmail.com> wrote:
+On Sun, Mar 24, 2019 at 12:34:52PM +0000, Jonathan Cameron wrote:
+> On Sat, 23 Mar 2019 20:21:39 +0100
+> Cristian Sicilia <sicilia.cristian@gmail.com> wrote:
+> 
+ > > Changed bool format to bitfield format to save space.
+> > 
+> > Signed-off-by: Cristian Sicilia <sicilia.cristian@gmail.com>
+> > 
+> > ---
+> > The strange thing is that this struct seems not populated
+> > using a DTS binding function.
+> Indeed and that should have definitely been a warning sign ;)
+> We are looking at traditional platform data here (pre device
+> tree) and generally we will want to drop it entirely for old
+> drivers that we are looking to move out of staging.
+> 
+> I don't mind improving it prior to dropping (as it avoids
+> setting bad precedence in the code base in the meantime) but
+> one comment inline...
+> 
 
-> On Thu, Mar 21, 2019 at 9:39 PM Marcelo Schmitt
-> <marcelo.schmitt1@gmail.com> wrote:
-> >
-> > Hello, would anyone mind helping me test ad5933 driver on actual
-> > hardware?  I went through this
-> > (https://oslongjourney.github.io/linux-kernel/experiment-one-iio-dummy/)
-> > tutorial so I was able to load iio_simple_dummy driver, create and
-> > inspect some dummy devices.  Now, as Jonathan has asked me, I would like
-> > to test ad5933 driver on an EVAL-AD5933 board which was donated to FLUSP
-> > (https://flusp.ime.usp.br/).
-> >
-> > So far I've been hesitating to plug this device on my Debian distro
-> > since this
-> > (https://www.analog.com/media/en/technical-documentation/user-guides/UG-364.pdf)
-> > user guide for Windows says not to connect it before driver
-> > installation. Is there something that could harm the board if plugged
-> > on a computer without a proper driver?
+Thanks for comment
+
+> > ---
+> >  drivers/staging/iio/adc/ad7192.h | 16 ++++++++--------
+> >  1 file changed, 8 insertions(+), 8 deletions(-)
+> > 
+> > diff --git a/drivers/staging/iio/adc/ad7192.h b/drivers/staging/iio/adc/ad7192.h
+> > index 7433a43..87891ba 100644
+> > --- a/drivers/staging/iio/adc/ad7192.h
+> > +++ b/drivers/staging/iio/adc/ad7192.h
+> > @@ -35,13 +35,13 @@ struct ad7192_platform_data {
+> >  	u16		vref_mv;
+> >  	u8		clock_source_sel;
+> >  	u32		ext_clk_hz;
+> > -	bool		refin2_en;
+> > -	bool		rej60_en;
+> > -	bool		sinc3_en;
+> > -	bool		chop_en;
+> > -	bool		buf_en;
+> > -	bool		unipolar_en;
+> > -	bool		burnout_curr_en;
+> > -};
+> > +	u8		refin2_en:1;
+> > +	u8		rej60_en:1;
+> > +	u8		sinc3_en:1;
+> > +	u8		chop_en:1;
+> > +	u8		buf_en:1;
+> > +	u8		unipolar_en:1;
+> > +	u8		burnout_curr_en:1;
+> > +} __attribute__((__packed__));
+> Please don't use packed for anything without a very very good reason.
+> it may result in data layouts that are much harder to read from.
+> That obviously doesn't matter here as I doubt it's read in a fast path.
+
+Ok, I remove it, thanks
+
+> 
 > >  
+> >  #endif /* IIO_ADC_AD7192_H_ */
 > 
-> You should take into account that a lot of eval boards have their eval
-> SW written for Windows.
-> This is something of a legacy-thing, because most corporations have
-> been running their computers (for work & dev & offices) on Windows.
-> 
-> So, you shouldn't take things ad-literam (to the letter) when reading
-> stuff for Windows and when writing code for Linux.
-> 
-> > I also didn't understand the hardware configuration showed on this
-> > (https://wiki.analog.com/resources/tools-software/linux-drivers/iio-impedance-analyzer/ad5933)
-> > page.  
-> 
-> Hmm, that doc was written a while ago.
-> The newer eval board doesn't look like the one in the wiki.
-> 
-> Also, since the eval SW was targeted for Windows, getting it to work
-> for Linux (and IIO) implies some hacking/reverse-engineering.
-> The reason for this (reverse-engineering) is because [traditionally]
-> eval boards are meant to highlight characteristics of the chip, so if
-> using Windows, this should be simple.
-> 
-> Unfortunately, the docs aren't helping in this case. So, in this case,
-> I would get some volt-meter & oscilloscope to help.
-> It looks to me that U2 is the AD5933 on the eval-board.
-> Worst case, you can solder directly to the pins and link them to a
-> Raspberry PI [on the I2C], power, ground, etc.
-> But, you can take a look at the T1 to T8 (if I didn't miss anything)
-> and connect to them, and see what each of them is for.
-> Hopefully, one of those test-points is for I2C, in which case you can
-> attach wires to them and connect them to a host.
-> I did not find a good doc for them yet.
-
-Circuit diagrams at the end of the datasheet for the eval board...
-
-Definitely start with i2c, as SPI can be considerably more irritating
-to get working (I've been on an off trying to deal with some reflections
-on a similar dev board for weeks whereas i2c tends to be more resilient).
-
-Hmm.. Normally there are some test points on the bus lines, but here there
-don't seem to be.  I definitely would solder to the chip only as a last resort.
-Here your best bet is the pads of R15 and R16. If that is no good
-find someone with a hot air gun (electronics lap) and lift U4 (the rom
-for the USB chip) as that will give some reasonable pads to solder to.
-
-It's possible you'll need to cut tracks on the way out of the usb chip, but
-you normally don't need to for i2c.
-
-Using the existing USB power supply is probably a good plan, but make sure to
-connect 0V between your host (raspberry pi or similar) and the dev board.
-
-Annoyingly the datasheet is missing the normal art work for the PCB so we
-can't actually tell you where any of these components is.  The photo's on
-the website aren't too bad though.  I'd wonder if those two long tracks
-(3,4 below the CLK socket) are the i2c traces. If they are then some
-careful work may let you solder nicely onto the pair of vias at the left
-hand end. 
-
-https://www.analog.com/-/media/analog/en/evaluation-board-images/images/eval-ad5933ebztop-web.gif?h=500&thn=1&hash=2226724BDCF5C3ED7854F8C55C51BB9C595CEF3D
-
-Note an oscilloscope is really useful when debugging your wiring so I'd
-try and borrow one of those for when you first try to talk to it!
-
-Feel free to ask for more advice if you need it.
-
-Jonathan
-
-> 
-> But anyway, I would ask some HW guy to help here (because I'm a SW guy
-> mostly),and get help on figuring out the eval board
-> 
-> >
-> > Any advice will be greatly appreciated.
-> > Thanks in advance,
-> >
-> > Marcelo  
-
