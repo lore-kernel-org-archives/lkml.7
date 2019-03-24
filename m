@@ -2,110 +2,109 @@ Return-Path: <SRS0=2kAr=R3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFFDCC10F00
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 16:43:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 571C0C4360F
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 16:43:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEA1D2171F
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 16:43:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A2BB2171F
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 16:43:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="tt9+WuWl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728870AbfCXQnb (ORCPT
+        id S1728890AbfCXQnj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 12:43:31 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:39382 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727137AbfCXQnb (ORCPT
+        Sun, 24 Mar 2019 12:43:39 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:33921 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727137AbfCXQnj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 12:43:31 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2OGdDNN189053
-        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2019 12:43:29 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2re22udrbp-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2019 12:43:29 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Sun, 24 Mar 2019 16:43:27 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sun, 24 Mar 2019 16:43:23 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2OGhM8U38010966
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 24 Mar 2019 16:43:22 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5F31642041;
-        Sun, 24 Mar 2019 16:43:22 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6E5E04203F;
-        Sun, 24 Mar 2019 16:43:21 +0000 (GMT)
-Received: from rapoport-lnx (unknown [9.148.207.29])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Sun, 24 Mar 2019 16:43:21 +0000 (GMT)
-Date:   Sun, 24 Mar 2019 18:43:17 +0200
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Anup Patel <Anup.Patel@wdc.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] RISC-V: Always compile mm/init.c with cmodel=medany
-References: <20190324110804.68555-1-anup.patel@wdc.com>
- <20190324145708.GA3355@lst.de>
+        Sun, 24 Mar 2019 12:43:39 -0400
+Received: by mail-wr1-f66.google.com with SMTP id p10so7470180wrq.1;
+        Sun, 24 Mar 2019 09:43:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=w2r38gJpfFe4P7HtoACDMN8D+Ed6JJt9Nux7ChLwiuk=;
+        b=tt9+WuWlBUcM3VoHmNt/kZywyCPpRq7NpHMDQI2bYrXvGbUwk4Jdg/p4HU6mWcnQb8
+         BIl099tfJO592uJMq/LbjsAy7m//DnLgHRFRWsQWMLuX8v56fXaXzVnRZqulYl7H00MX
+         nzBRRwwYXNhUSvhVBOempMLaSSThHwum8FhF35XUWAQ6gjocFAA00Olto/DLWxP0ZPJI
+         /2S/quGgmUSe9m7wC0dFCMEzfii9u+kebjs+FBwqfhdCC7raXKAiIkhrn5TfcZxs2mWT
+         Tqk3AZoZ6FFd4Wrc/BtuP8K+gSPNkhIIJYZW7s7YS+eI21NBHnWJAER9JqSV6LXB6lEX
+         hmEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=w2r38gJpfFe4P7HtoACDMN8D+Ed6JJt9Nux7ChLwiuk=;
+        b=BEscDDQJHnHt/TUvnQHtkV1vYTPMKLIlZ1dDg8FGgEEgCwc6LbzUe8OzP0uv6KwFtS
+         wOepwR6Yb8jZdYBj5fNP5rWuzXlXScs0Ag1Ixh2fZKaGGrLCWVTjo9g+PHvJHv7ogu+H
+         Z4wJrY1yooBaJKMQyGM6+0TV1g7GjD/pnna3RqrYd4QpteOClIrxkhRVoDOmSEzRJWPK
+         hBP1xP+Gm9K5iyTvTcPO2htHDCHlLA1yjFhGVUTcXnnyJLjG+QcLl2Q7+VZt2ffSpyTa
+         1v+tIrCI9qZnOY7I02JqaG6kmPXyEN8SQge57zEcUKR62x6SBQjPQ32w8qjVy+AviS6D
+         Wu6Q==
+X-Gm-Message-State: APjAAAXj/K4VtSmDEK1XLQc5OLuoc0aWHCPbUxozQ0t3djGKy6ukDooS
+        5e5R1ZDz1xPyvnI76Gw8K6kg7uHr
+X-Google-Smtp-Source: APXvYqxi7MrEGPvI0xo3HHvxXE+5nclfglXNSMkgiW0axjGrWnZa8Vm3ska1+I89HKUOFX6JXH12bA==
+X-Received: by 2002:adf:fbd2:: with SMTP id d18mr12858946wrs.55.1553445817321;
+        Sun, 24 Mar 2019 09:43:37 -0700 (PDT)
+Received: from blackbox.darklights.net (p200300DCD7399900428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:dc:d739:9900:428d:5cff:feb9:9db8])
+        by smtp.googlemail.com with ESMTPSA id v16sm19042461wru.76.2019.03.24.09.43.36
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 24 Mar 2019 09:43:36 -0700 (PDT)
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     narmstrong@baylibre.com, jbrunet@baylibre.com,
+        linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org
+Cc:     mturquette@baylibre.com, sboyd@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH 0/1] clk: meson: fix PLL rate rounding
+Date:   Sun, 24 Mar 2019 17:43:26 +0100
+Message-Id: <20190324164327.22590-1-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190324145708.GA3355@lst.de>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-TM-AS-GCONF: 00
-x-cbid: 19032416-4275-0000-0000-0000031EB317
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19032416-4276-0000-0000-0000382D429A
-Message-Id: <20190324164316.GA2925@rapoport-lnx>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-24_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=932 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903240128
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 24, 2019 at 03:57:08PM +0100, Christoph Hellwig wrote:
-> On Sun, Mar 24, 2019 at 11:08:29AM +0000, Anup Patel wrote:
-> > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> > Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-> 
-> Huh?  I don't think this is from Mike and me.
+Hi Jerome,
 
-Suggested-by: would me more appropriate indeed :)
- 
-> > +unsigned long va_pa_offset;
-> > +EXPORT_SYMBOL(va_pa_offset);
-> > +unsigned long pfn_base;
-> > +EXPORT_SYMBOL(pfn_base);
-> 
-> Can you move va_pa_offset and pfn_base next to the swapper_pg_dir
-> declaration?  Thats where I move them in my current nommu patchset,
-> as that allows to just have a single CONFIG_NOMMU in mm/init.c.
-> 
-> Otherwise this looks fine to me.
-> 
+can you please look at this small fix? I discovered that my Odroid-C1
+wasn't booting anymore. My other Meson8m2 board was using fine.
+
+While investigating this I found that it hangs while setting the
+sys_pll_dco rate. This is important because unlike Odroid-C1 my
+Meson8m2 board has a fixed regulator (and thus always runs at a
+fixed CPU speed).
+It always hanged while trying to set a CPU frequency of 312MHz. This
+can be achieved with:
+  24MHz (xtal) * 52 (m) / 1 (n) / 4 (sys_pll)
+However, my added debug logging showed that it was trying to set an
+M value of 51, resulting in an output frequency of 306MHz. My debug
+logs showed that meson_clk_get_pll_settings() considers 1248MHz
+(which is the rate requested for sys_pll_dco for a CPU frequency of
+ 312MHz) "worse" than 1224MHz.
+
+I'm not sure exactly why the bug caused the board to hang, but my
+patch fixes it.
+
+Please apply this to v5.1-rc as I believe the Odroid-C1 on kernelci
+also suffers from this issue.
+
+
+Martin Blumenstingl (1):
+  clk: meson: pll: fix rounding and setting a rate that matches
+    precisely
+
+ drivers/clk/meson/clk-pll.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 -- 
-Sincerely yours,
-Mike.
+2.21.0
 
