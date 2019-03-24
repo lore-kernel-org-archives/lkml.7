@@ -2,231 +2,129 @@ Return-Path: <SRS0=2kAr=R3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92AF1C10F00
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 15:47:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28126C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 16:09:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 564D421473
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 15:47:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553442432;
-	bh=50DQln5AVCznE4mmqWZsodhcfAL5ZWMKSQwwL3fIjLQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=UlzDsjpN9bMVhECC7ZDaq8ETRDFjX5CpWkKnS2n/lRnMXpv08xF1LXvFhH31d+N8/
-	 MZIkGvX21I8cs30Jja1eM+QHDyn8T1l0+qhbNQ0+dluy4BxyJRiwBxp7tXwEHZ0oj3
-	 EnlO/eiPIJWNm3x9g4oP92BgmwOavYu+klrUaua4=
+	by mail.kernel.org (Postfix) with ESMTP id E19FE2133F
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 16:09:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="JILXMdmq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728645AbfCXPrL (ORCPT
+        id S1727737AbfCXQJI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 11:47:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35102 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726603AbfCXPrK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 11:47:10 -0400
-Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Sun, 24 Mar 2019 12:09:08 -0400
+Received: from mta-p5.oit.umn.edu ([134.84.196.205]:58484 "EHLO
+        mta-p5.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726603AbfCXQJH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Mar 2019 12:09:07 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p5.oit.umn.edu (Postfix) with ESMTP id 53C58A11
+        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2019 16:09:06 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p5.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p5.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id CDhGxSlV8JOV for <linux-kernel@vger.kernel.org>;
+        Sun, 24 Mar 2019 11:09:06 -0500 (CDT)
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 05B2720880;
-        Sun, 24 Mar 2019 15:47:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553442429;
-        bh=50DQln5AVCznE4mmqWZsodhcfAL5ZWMKSQwwL3fIjLQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=UFiYmcLnUfvL9bOJngmPR6GFvdKjZiTh75CUzVD4QHahLRM+35bWVqEz01XFmXpb1
-         /SMvSGmmN9oFJKTsHoQyDHRPIrYvEfc34RpPrldUIcWdOoJZx7IecsIIAOGVoy3Dxa
-         wrwaoQJ4iwhJn1jgdI6fTrC9nvnhsOvwUHK0jPsw=
-Date:   Sun, 24 Mar 2019 15:47:04 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc:     <lars@metafoo.de>, <knaack.h@gmx.de>, <pmeerw@pmeerw.net>,
-        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>
-Subject: Re: [RFC PATCH] iio: core: fix a possible circular locking
- dependency
-Message-ID: <20190324154704.277327e2@archlinux>
-In-Reply-To: <1553262846-23126-1-git-send-email-fabrice.gasnier@st.com>
-References: <1553262846-23126-1-git-send-email-fabrice.gasnier@st.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        by mta-p5.oit.umn.edu (Postfix) with ESMTPS id 1EF889D7
+        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2019 11:09:06 -0500 (CDT)
+Received: by mail-io1-f72.google.com with SMTP id b16so5987215iot.5
+        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2019 09:09:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=EikQbOOPBrEMqbRaYH64XM9ulLCUbkuJUF0VhOtWzcQ=;
+        b=JILXMdmqW9JHsRWg+F0j2BbLXwrg2M0x1u6CMkdoKlL/UP7mZrPpaWW8Eo0SOuUvPZ
+         ZDpHqirutwemsmULZNHEPPCs1UFJbgk6AmqTbR9yoqUdpDjAeWAQg+/pFZVqZ4OO9Vlh
+         CSZ8GClUJuQBzyO7Y3y+ba8XxdgHrAnmK54h6FISSXBZ0y1xGzqy+h81oXImRUz3+9Zq
+         fQNrCLydiBXjuSv1wqvMkBIG1eqkZ0vT0xwLc7r4ou4khAY+c0jF8hx4Nekr7/ZFZxBe
+         dp6T7H3AzzPnrYTbINLeBFUsJDXvospnRSm0rWxROY1BO7NU1t+oj90OAqZWmmtwDZPm
+         lJwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=EikQbOOPBrEMqbRaYH64XM9ulLCUbkuJUF0VhOtWzcQ=;
+        b=AMxCQqIAGGnusuM0f2BCr7uP+7X81Qex4DaCurW+qv1nEPnQIYF5qfgsg6WuK6v8ac
+         a8BHeQApYVd/0XB8fs4s86cln+0s84kKFbn830MmKuVePnTki0NSwcux4N1/rDlk2GH4
+         0oEFRF9LuooaMr18IjVYP/BHKqTl5E73FL5FF5EwNA2+6waQvTfo7bEywkvJ4HAElkbU
+         gzIvodndHEOVFCi5zS2iW+qqmXXd5hya0z8QUIzyi+3e9uNGvUQkGDfkh7ur1skzhOqi
+         S6S5QMNLIpe/7fMoN16gVV5W2iqSTmVdyXobam2yGsZLYzDzsj1ipnJTpkf9TxeEvXS/
+         a8xQ==
+X-Gm-Message-State: APjAAAVJ5PxDqp6Orj9QMneFbU1GYPHas+7GwJqgT05K41+b9hb5bEcZ
+        BxcCWLLWnA9PrPRFhofOj/p1l1iX8fcZGbxy+GDxwXKnkezR7YmcwUF6Is64UuzyJTNVvkCkikv
+        ljS0HikGZX7pBS3pLxc2lGFEJSeOk
+X-Received: by 2002:a05:660c:1c8:: with SMTP id s8mr5799368itk.20.1553443745636;
+        Sun, 24 Mar 2019 09:09:05 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzk4D7zpNS8b8k0qB2Dm1/UHiyT4TGsqXsg/I6Q4C9nB1yGsAI0Zndj3VF2IW54EcKAiMSpWA==
+X-Received: by 2002:a05:660c:1c8:: with SMTP id s8mr5799353itk.20.1553443745419;
+        Sun, 24 Mar 2019 09:09:05 -0700 (PDT)
+Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
+        by smtp.gmail.com with ESMTPSA id y22sm5034957ita.2.2019.03.24.09.09.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 24 Mar 2019 09:09:04 -0700 (PDT)
+From:   Aditya Pakki <pakki001@umn.edu>
+To:     pakki001@umn.edu
+Cc:     kjlu@umn.edu, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Vinod Koul <vkoul@kernel.org>, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3] tty: 8250: fix a missing check for pci_ioremap_bar
+Date:   Sun, 24 Mar 2019 11:09:00 -0500
+Message-Id: <20190324160901.23001-1-pakki001@umn.edu>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 22 Mar 2019 14:54:06 +0100
-Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
+pci_ioremap_bar could fail. The patch returns in case of failure to
+acquire IOMEM. It also releases the acquired resource in the exit path.
 
-> This fixes a possible circular locking dependency detected warning seen
-> with:
-> - CONFIG_PROVE_LOCKING=y
-> - consumer/provider IIO devices (ex: "voltage-divider" consumer of "adc")
-> 
-> When using the IIO consumer interface, e.g. iio_channel_get(),
-> the consumer device will likely call iio_read_channel_raw() or similar that
-> rely on 'info_exist_lock' mutex.
-> 
-> typically:
-> ...
-> 	mutex_lock(&chan->indio_dev->info_exist_lock);
-> 	if (chan->indio_dev->info == NULL) {
-> 		ret = -ENODEV;
-> 		goto err_unlock;
-> 	}
-> 	ret = do_some_ops()
-> err_unlock:
-> 	mutex_unlock(&chan->indio_dev->info_exist_lock);
-> 	return ret;
-> ...
-> 
-> Same mutex is also hold in iio_device_unregister().
-> 
-> The following deadlock warning happens when:
-> - the consumer device has called an API like iio_read_channel_raw()
->   at least once.
-> - the consumer driver is unregistered, removed (unbind from sysfs)
-> 
-> ======================================================
-> WARNING: possible circular locking dependency detected
-> 4.19.24 #577 Not tainted
-> ------------------------------------------------------
-> sh/372 is trying to acquire lock:
-> (kn->count#30){++++}, at: kernfs_remove_by_name_ns+0x3c/0x84
-> 
-> but task is already holding lock:
-> (&dev->info_exist_lock){+.+.}, at: iio_device_unregister+0x18/0x60
-> 
-> which lock already depends on the new lock.
-> 
-> the existing dependency chain (in reverse order) is:
-> 
-> -> #1 (&dev->info_exist_lock){+.+.}:  
->        __mutex_lock+0x70/0xa3c
->        mutex_lock_nested+0x1c/0x24
->        iio_read_channel_raw+0x1c/0x60
->        iio_read_channel_info+0xa8/0xb0
->        dev_attr_show+0x1c/0x48
->        sysfs_kf_seq_show+0x84/0xec
->        seq_read+0x154/0x528
->        __vfs_read+0x2c/0x15c
->        vfs_read+0x8c/0x110
->        ksys_read+0x4c/0xac
->        ret_fast_syscall+0x0/0x28
->        0xbedefb60
-> 
-> -> #0 (kn->count#30){++++}:  
->        lock_acquire+0xd8/0x268
->        __kernfs_remove+0x288/0x374
->        kernfs_remove_by_name_ns+0x3c/0x84
->        remove_files+0x34/0x78
->        sysfs_remove_group+0x40/0x9c
->        sysfs_remove_groups+0x24/0x34
->        device_remove_attrs+0x38/0x64
->        device_del+0x11c/0x360
->        cdev_device_del+0x14/0x2c
->        iio_device_unregister+0x24/0x60
->        release_nodes+0x1bc/0x200
->        device_release_driver_internal+0x1a0/0x230
->        unbind_store+0x80/0x130
->        kernfs_fop_write+0x100/0x1e4
->        __vfs_write+0x2c/0x160
->        vfs_write+0xa4/0x17c
->        ksys_write+0x4c/0xac
->        ret_fast_syscall+0x0/0x28
->        0xbe906840
-> 
-> other info that might help us debug this:
-> 
->  Possible unsafe locking scenario:
-> 
->        CPU0                    CPU1
->        ----                    ----
->   lock(&dev->info_exist_lock);
->                                lock(kn->count#30);
->                                lock(&dev->info_exist_lock);
->   lock(kn->count#30);
-> 
->  *** DEADLOCK ***
-> ...
-> 
-> So only hold the mutex to:
-> - disable all buffers while 'info' is available
-> - set 'info' to NULL
-> Then release it to call cdev_device_del and so on.
-> 
-> Help to reproduce:
-> See example: Documentation/devicetree/bindings/iio/afe/voltage-divider.txt
-> sysv {
-> 	compatible = "voltage-divider";
-> 	io-channels = <&adc 0>;
-> 	output-ohms = <22>;
-> 	full-ohms = <222>;
-> };
-> 
-> First, go to iio:deviceX for the "voltage-divider", do one read:
-> $ cd /sys/bus/iio/devices/iio:deviceX
-> $ cat in_voltage0_raw
-> 
-> Then, unbind the consumer driver. It triggers above deadlock warning.
-> $ cd /sys/bus/platform/drivers/iio-rescale/
-> $ echo sysv > unbind
-> 
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-I'm not in principle against the fix. However it is reordering the
-remove wrt to the probe which I'm not so keen on.
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
 
-The cdev register is fundamentally the point where the device
-becomes exposed to userspace, so we naturally want to do it last
-(and remove it first).  I worry that we may have some paths
-in which we don't sanity check the existence of info (which
-is kind of our backup plan to indicate the device has gone
-away).
+---
+v2: Failed to release resource in exit path and incorrect code in non
+DMA case, suggested by Andy Shevchenko
+v1: Missed return by default in CONFIG_SERIAL_8250_DMA, suggested by
+Jiri Slaby
+---
+ drivers/tty/serial/8250/8250_lpss.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-Are we safe to instead of reordering, just not take the lock
-until after the problem functions?  Info doesn't go
-away until later so I think we are.  I haven't looked it in that
-much detail though!
-
-Thanks for raising this as it's a nasty little problem.
-
-Jonathan
-
-
-> ---
->  drivers/iio/industrialio-core.c | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
-> index 4700fd5..e03d6ff 100644
-> --- a/drivers/iio/industrialio-core.c
-> +++ b/drivers/iio/industrialio-core.c
-> @@ -1745,19 +1745,19 @@ void iio_device_unregister(struct iio_dev *indio_dev)
->  {
->  	mutex_lock(&indio_dev->info_exist_lock);
->  
-> -	cdev_device_del(&indio_dev->chrdev, &indio_dev->dev);
-> -
-> -	iio_device_unregister_debugfs(indio_dev);
-> -
->  	iio_disable_all_buffers(indio_dev);
->  
->  	indio_dev->info = NULL;
->  
-> +	mutex_unlock(&indio_dev->info_exist_lock);
-> +
-> +	cdev_device_del(&indio_dev->chrdev, &indio_dev->dev);
-> +
-> +	iio_device_unregister_debugfs(indio_dev);
-> +
->  	iio_device_wakeup_eventset(indio_dev);
->  	iio_buffer_wakeup_poll(indio_dev);
->  
-> -	mutex_unlock(&indio_dev->info_exist_lock);
-> -
->  	iio_buffer_free_sysfs_and_mask(indio_dev);
->  }
->  EXPORT_SYMBOL(iio_device_unregister);
+diff --git a/drivers/tty/serial/8250/8250_lpss.c b/drivers/tty/serial/8250/8250_lpss.c
+index 53ca9ba6ab4b..7889b2552013 100644
+--- a/drivers/tty/serial/8250/8250_lpss.c
++++ b/drivers/tty/serial/8250/8250_lpss.c
+@@ -170,9 +170,11 @@ static void qrk_serial_setup_dma(struct lpss8250 *lpss, struct uart_port *port)
+ 	int ret;
+ 
+ 	chip->dev = &pdev->dev;
++	chip->pdata = &qrk_serial_dma_pdata;
+ 	chip->irq = pci_irq_vector(pdev, 0);
+ 	chip->regs = pci_ioremap_bar(pdev, 1);
+-	chip->pdata = &qrk_serial_dma_pdata;
++	if (!chip->regs)
++		return;
+ 
+ 	/* Falling back to PIO mode if DMA probing fails */
+ 	ret = dw_dma_probe(chip);
+@@ -199,6 +201,7 @@ static void qrk_serial_exit_dma(struct lpss8250 *lpss)
+ 
+ 	if (!param->dma_dev)
+ 		return;
++	pci_iounmap(param->dma_dev, &lpss->dma_chip->regs);
+ 	dw_dma_remove(&lpss->dma_chip);
+ }
+ #else	/* CONFIG_SERIAL_8250_DMA */
+-- 
+2.17.1
 
