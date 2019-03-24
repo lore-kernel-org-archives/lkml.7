@@ -2,127 +2,118 @@ Return-Path: <SRS0=2kAr=R3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65D9FC43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 10:49:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3EABC4360F
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 10:57:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31431222D7
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 10:49:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553424545;
-	bh=/DFt5fU/vxRKsb8S7KrQ2hYgKHDtrEfUPgD2GgReHbM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=fSKd0ZklIyW/T5+HWI6l7mvYKAXGVr0ZTJ4GPmQgldhhpVfDkYYU6u1xt1i8CRC3G
-	 ZA5HolnVknKhR6t40QjcNBojx6k53itHzTzVMcnP3p5cE8cKZtPlgx/Rc2uWV6gY15
-	 SLS2VSQD/OY8RxDlaBjHt6xuncwfMfbgyFoYwTMQ=
+	by mail.kernel.org (Postfix) with ESMTP id 7B1D8222A7
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 10:57:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728509AbfCXKtC (ORCPT
+        id S1727481AbfCXK5g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 06:49:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49936 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726173AbfCXKtB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 06:49:01 -0400
-Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72D9321B24;
-        Sun, 24 Mar 2019 10:48:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553424541;
-        bh=/DFt5fU/vxRKsb8S7KrQ2hYgKHDtrEfUPgD2GgReHbM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=FmSox5H3xDWqzQ1jOPaDK/A+f4VsSNzgPtqAEsKqCFTyEjoMVzoteAYDSptUkcYAQ
-         trp1G/eRakBVTIjLswqs9/4252YAbqd8AKVXHN3c6ecBj1RlQ3JF4FRJ2ZG+fsVPNl
-         F39VT03WprLKJuKHVPMC9dNQunl+og1vpT1pHKfQ=
-Date:   Sun, 24 Mar 2019 10:48:56 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Kangjie Lu <kjlu@umn.edu>
-Cc:     pakki001@umn.edu, Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] iio: hmc5843: fix potential NULL pointer
- dereferences
-Message-ID: <20190324104856.3883150b@archlinux>
-In-Reply-To: <20190316220836.25092-1-kjlu@umn.edu>
-References: <20190316151912.4a7ea87d@archlinux>
-        <20190316220836.25092-1-kjlu@umn.edu>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 24 Mar 2019 06:57:36 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:38344 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726090AbfCXK5g (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Mar 2019 06:57:36 -0400
+Received: by mail-oi1-f194.google.com with SMTP id w137so4865820oiw.5
+        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2019 03:57:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9hVUhsAgvZtnx8r3Ef39s656IuqsCyUYiw0poxDFLhs=;
+        b=b8VapZLDO+BxXTeFgCbTeorm3bqO5rvQRiIoJ0EQYtQo4mjEQ39gWvkrIp+VUtEC9A
+         G5g0YzexY+HtbCX3SL+bV7yk1zEVhaeWnhtNe3oSY3Qbd18DOpOcwiodm0jEbRoExq07
+         5vLcUQubgmXRI+u1gKK9unLtE17LEIbSWb1guD0p8v6j+1YLDcIrpcip6usMzcT/5awg
+         VSkEBroLrPS4E2fK32Bkqbj9wyVuPDJPLuQglbpUA7ZKmA6uoS+9kzVOlBLg1EPxp1Y5
+         WlvkMhKqXWzULXKrXOyWw33alDa6KxYKVx/0nMVxr0YHIE/mrbl4ozL75A2ag5gWHvr6
+         nD7Q==
+X-Gm-Message-State: APjAAAWIpCxQV85zzNmVwbt2tv/P9oO65cdNrZQdtpW1NiS4dvDVo+C/
+        PPrT55WVHDlxvo4skw9c8FKS4CQwGYoC2ID/qgsWVQ==
+X-Google-Smtp-Source: APXvYqyIVULixzzNzbzaJ9gyNPYUv7ga0AGR78odQaExm9CJSwcoexz4TS3Br1hULsXra10jrgkOXbxTsZ72K+tMDnY=
+X-Received: by 2002:aca:5747:: with SMTP id l68mr8367963oib.103.1553425055605;
+ Sun, 24 Mar 2019 03:57:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20190324101003.GA17131@hari-Inspiron-1545>
+In-Reply-To: <20190324101003.GA17131@hari-Inspiron-1545>
+From:   Ondrej Mosnacek <omosnace@redhat.com>
+Date:   Sun, 24 Mar 2019 11:57:27 +0100
+Message-ID: <CAFqZXNsDrcfMsCwjqv=9H3LswS1jyigKgRCDmER59VJOVd-Edw@mail.gmail.com>
+Subject: Re: [PATCH] selinux: fixed parse warning Using plain integer as NULL pointer
+To:     Hariprasad Kelam <hariprasad.kelam@gmail.com>
+Cc:     Paul Moore <paul@paul-moore.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Eric Paris <eparis@parisplace.org>,
+        Kees Cook <keescook@chromium.org>,
+        Richard Guy Briggs <rgb@redhat.com>, jannh@google.com,
+        Alexey Dobriyan <adobriyan@gmail.com>, sgrover@codeaurora.org,
+        peter.enderborg@sony.com,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        selinux@vger.kernel.org,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 16 Mar 2019 17:08:33 -0500
-Kangjie Lu <kjlu@umn.edu> wrote:
-
-> devm_regmap_init_i2c may fail and return NULL. The fix returns
-> the error when it fails.
-> 
-> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Applied to the togreg branch of iio.git and pushed out as testing
-for the autobuilders to play with it.
-Thanks.
-
-Jonathan
-
+On Sun, Mar 24, 2019 at 11:10 AM Hariprasad Kelam
+<hariprasad.kelam@gmail.com> wrote:
+> Changed  0 --> NULL to avoid sparse warning
+>
+> Sparse warning below:
+>
+> sudo make C=2 CF=-D__CHECK_ENDIAN__ M=security
+>
+>  CHECK   security/selinux/ss/services.c
+> security/selinux/ss/services.c:1323:32: warning: Using plain integer as
+> NULL pointer
+>
+> Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
 > ---
-> V2: fix the two together
-> ---
->  drivers/iio/magnetometer/hmc5843_i2c.c | 7 ++++++-
->  drivers/iio/magnetometer/hmc5843_spi.c | 7 ++++++-
->  2 files changed, 12 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/iio/magnetometer/hmc5843_i2c.c b/drivers/iio/magnetometer/hmc5843_i2c.c
-> index 3de7f4426ac4..86abba5827a2 100644
-> --- a/drivers/iio/magnetometer/hmc5843_i2c.c
-> +++ b/drivers/iio/magnetometer/hmc5843_i2c.c
-> @@ -58,8 +58,13 @@ static const struct regmap_config hmc5843_i2c_regmap_config = {
->  static int hmc5843_i2c_probe(struct i2c_client *cli,
->  			     const struct i2c_device_id *id)
->  {
-> +	struct regmap *regmap = devm_regmap_init_i2c(cli,
-> +			&hmc5843_i2c_regmap_config);
-> +	if (IS_ERR(regmap))
-> +		return PTR_ERR(regmap);
-> +
->  	return hmc5843_common_probe(&cli->dev,
-> -			devm_regmap_init_i2c(cli, &hmc5843_i2c_regmap_config),
-> +			regmap,
->  			id->driver_data, id->name);
->  }
->  
-> diff --git a/drivers/iio/magnetometer/hmc5843_spi.c b/drivers/iio/magnetometer/hmc5843_spi.c
-> index 535f03a70d63..8355713651d4 100644
-> --- a/drivers/iio/magnetometer/hmc5843_spi.c
-> +++ b/drivers/iio/magnetometer/hmc5843_spi.c
-> @@ -58,6 +58,7 @@ static const struct regmap_config hmc5843_spi_regmap_config = {
->  static int hmc5843_spi_probe(struct spi_device *spi)
->  {
->  	int ret;
-> +	struct regmap *regmap;
->  	const struct spi_device_id *id = spi_get_device_id(spi);
->  
->  	spi->mode = SPI_MODE_3;
-> @@ -67,8 +68,12 @@ static int hmc5843_spi_probe(struct spi_device *spi)
->  	if (ret)
->  		return ret;
->  
-> +	regmap = devm_regmap_init(spi, &hmc5843_spi_regmap_config);
-> +	if (IS_ERR(regmap))
-> +		return PTR_ERR(devm_regmap);
-> +
->  	return hmc5843_common_probe(&spi->dev,
-> -			devm_regmap_init_spi(spi, &hmc5843_spi_regmap_config),
-> +			regmap,
->  			id->driver_data, id->name);
->  }
->  
+>  security/selinux/ss/services.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/security/selinux/ss/services.c b/security/selinux/ss/services.c
+> index ec62918..30cea59 100644
+> --- a/security/selinux/ss/services.c
+> +++ b/security/selinux/ss/services.c
+> @@ -1320,7 +1320,7 @@ static int security_sid_to_context_core(struct selinux_state *state,
+>         }
+>         if (only_invalid && !context->len) {
+>                 scontext = NULL;
+> -               scontext_len = 0;
+> +               scontext_len = NULL;
+>                 rc = 0;
 
+The warning is correct, but this patch is the wrong fix. I intended to
+set the values to the objects pointed to by the pointers, not the
+pointers themselves. As is, the assignments have no effect, because
+they only modify the local variables, which are not used further in
+the function. Fortunately, *scontext and *scontext_len are already set
+to NULL/0 at the beginning of the function, so the code is technically
+correct even without them.
+
+The correct fix is actually to remove the assignments entirely. I'll
+send a patch that does that tomorrow.
+
+>         } else {
+>                 rc = context_struct_to_string(policydb, context, scontext,
+> --
+> 2.7.4
+>
+
+Anyway, thank you for catching the mistake! One more reminder for me
+to finally install sparse and add C=1 to my kernel build command
+line...
+
+
+--
+Ondrej Mosnacek <omosnace at redhat dot com>
+Software Engineer, Security Technologies
+Red Hat, Inc.
