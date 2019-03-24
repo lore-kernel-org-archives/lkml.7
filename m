@@ -6,53 +6,54 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E757C4360F
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 17:12:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C81CBC10F00
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 17:18:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C52C2147C
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 17:12:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 964062147C
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 17:18:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553447571;
-	bh=wxEVUIOVR28lMtF1wwMqBmSMZBwZ6mSS/LE474j3grU=;
+	s=default; t=1553447909;
+	bh=+nuFAnvr7Z5REGjHMMxSmFfzF7WEhP7mgB9Ts+69wkk=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ogTEewDJA6Q3aq69QwipJPP6AYq4e5Rx13+5VsNwrTIZSByxB1QFk91gelV/yhrBc
-	 4QTbui+Husskane67CpPZMg6Nq5pSs3YBcfePD27CnVhTyMfryV76Ks3Nk7lzl1nJj
-	 acdarrP1IHFLE0ngQs+X+8i4mveIWj/ozM++AZmo=
+	b=Olwzld67IV6Gkw1yLvEZX3eP8hkEGAloonyZ8ma/zb0VLpl0weup52xD1d9tJnA2/
+	 y6u+Y7Rd3pEpOrZQtGeuLSvhu/YnyRHBnl5YszU8YPP7noAN60ps8nBzLS9/OeXFsc
+	 sU2ogV14gu/9JG9jcprDBJfO5N6Yd7IWTpQh2g+0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728896AbfCXRMu (ORCPT
+        id S1728873AbfCXRS2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 13:12:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34550 "EHLO mail.kernel.org"
+        Sun, 24 Mar 2019 13:18:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728642AbfCXRMt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 13:12:49 -0400
+        id S1728642AbfCXRS2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Mar 2019 13:18:28 -0400
 Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8A502087F;
-        Sun, 24 Mar 2019 17:12:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 295852087F;
+        Sun, 24 Mar 2019 17:18:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553447568;
-        bh=wxEVUIOVR28lMtF1wwMqBmSMZBwZ6mSS/LE474j3grU=;
+        s=default; t=1553447907;
+        bh=+nuFAnvr7Z5REGjHMMxSmFfzF7WEhP7mgB9Ts+69wkk=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ryai+PKxZG2ImA5XPZ54Y/sgGYy3WimplJ+XhO+MfZJT4yEsTSlSrKODPHU2mlj9k
-         pMTOwJB14V7Sgn/7uJlAoQkaWUcRD0gbdb1YZghRtIzSPR/E1NoTAq9GKuNmo6BR5d
-         V4QffoFAFEjaL9gkU+2/amojP8wOTvdDjm26F28c=
-Date:   Sun, 24 Mar 2019 17:12:42 +0000
+        b=YgvgC/maque3nqKteG8nR8TKYjddEn1/3ljMbrJVxlCEXSsfSS8Iy8gnEq6AUYzwC
+         r72o5hbV+9b0nWksbXlsUSKX3u1t3lrLQi9SESf6hW9FdW7DTRKG3PBWyOFvQ4Wdku
+         F/az9n0Bo5cKZVkKCgBzWcvd69GWtB8/hAchU1S0=
+Date:   Sun, 24 Mar 2019 17:18:21 +0000
 From:   Jonathan Cameron <jic23@kernel.org>
-To:     Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <linux-iio@vger.kernel.org>,
-        <lars@metafoo.de>, <knaack.h@gmx.de>, <pmeerw@pmeerw.net>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <arnaud.pouliquen@st.com>, <olivier.moysan@st.com>
-Subject: Re: [PATCH v2 8/8] iio: adc: stm32-dfsdm: claim direct mode for raw
- read and settings
-Message-ID: <20190324171242.67d7a486@archlinux>
-In-Reply-To: <1553186849-6261-9-git-send-email-fabrice.gasnier@st.com>
-References: <1553186849-6261-1-git-send-email-fabrice.gasnier@st.com>
-        <1553186849-6261-9-git-send-email-fabrice.gasnier@st.com>
+To:     "Angus Ainslie (Purism)" <angus@akkea.ca>
+Cc:     Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Tomas Novotny <tomas@novotny.cz>, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/5] iio: light: vcnl4000 use word writes instead of
+ byte writes
+Message-ID: <20190324171821.4deba8be@archlinux>
+In-Reply-To: <20190321154047.23236-2-angus@akkea.ca>
+References: <20190321154047.23236-1-angus@akkea.ca>
+        <20190321154047.23236-2-angus@akkea.ca>
 X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -62,92 +63,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 21 Mar 2019 17:47:29 +0100
-Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
+On Thu, 21 Mar 2019 08:40:43 -0700
+"Angus Ainslie (Purism)" <angus@akkea.ca> wrote:
 
-> Claim direct mode to ensure no buffer mode is in use for:
-> - single conversion
-> - sample rate setting (must be set when filter isn't enabled).
-> - oversampling ratio (must be set when filter isn't enabled).
+> The VCNL4200 datasheet says that word read and writes should be used
+> to access the registers.
 > 
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-Applied to the togreg branch of iio.git and pushed out as testing for
-the autobuilders to play with it.
+> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
+> Tested-by: Tomas Novotny <tomas@novotny.cz>
+
+So we did discuss if this was a fix for any of the existing devices.
+Not sure we reached a conclusion as clearly the worked for Tomas without
+this.  Anyhow, for now applied to the togreg branch of iio.git and pushed
+out as testing for the autobuilders to play with it.
 
 Thanks,
 
 Jonathan
 
 > ---
->  drivers/iio/adc/stm32-dfsdm-adc.c | 17 ++++++++++++++++-
->  1 file changed, 16 insertions(+), 1 deletion(-)
+>  drivers/iio/light/vcnl4000.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/iio/adc/stm32-dfsdm-adc.c b/drivers/iio/adc/stm32-dfsdm-adc.c
-> index 51688eb..ca42946 100644
-> --- a/drivers/iio/adc/stm32-dfsdm-adc.c
-> +++ b/drivers/iio/adc/stm32-dfsdm-adc.c
-> @@ -1039,16 +1039,23 @@ static int stm32_dfsdm_write_raw(struct iio_dev *indio_dev,
+> diff --git a/drivers/iio/light/vcnl4000.c b/drivers/iio/light/vcnl4000.c
+> index 04fd0d4b6f19..5e0a8eb83ebc 100644
+> --- a/drivers/iio/light/vcnl4000.c
+> +++ b/drivers/iio/light/vcnl4000.c
+> @@ -140,10 +140,10 @@ static int vcnl4200_init(struct vcnl4000_data *data)
+>  	data->rev = (ret >> 8) & 0xf;
 >  
->  	switch (mask) {
->  	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
-> +		ret = iio_device_claim_direct_mode(indio_dev);
-> +		if (ret)
-> +			return ret;
->  		ret = stm32_dfsdm_set_osrs(fl, 0, val);
->  		if (!ret)
->  			adc->oversamp = val;
-> -
-> +		iio_device_release_direct_mode(indio_dev);
+>  	/* Set defaults and enable both channels */
+> -	ret = i2c_smbus_write_byte_data(data->client, VCNL4200_AL_CONF, 0x00);
+> +	ret = i2c_smbus_write_word_data(data->client, VCNL4200_AL_CONF, 0);
+>  	if (ret < 0)
+>  		return ret;
+> -	ret = i2c_smbus_write_byte_data(data->client, VCNL4200_PS_CONF1, 0x00);
+> +	ret = i2c_smbus_write_word_data(data->client, VCNL4200_PS_CONF1, 0);
+>  	if (ret < 0)
 >  		return ret;
 >  
->  	case IIO_CHAN_INFO_SAMP_FREQ:
->  		if (!val)
->  			return -EINVAL;
->  
-> +		ret = iio_device_claim_direct_mode(indio_dev);
-> +		if (ret)
-> +			return ret;
-> +
->  		switch (ch->src) {
->  		case DFSDM_CHANNEL_SPI_CLOCK_INTERNAL:
->  			spi_freq = adc->dfsdm->spi_master_freq;
-> @@ -1070,9 +1077,11 @@ static int stm32_dfsdm_write_raw(struct iio_dev *indio_dev,
->  		if (ret < 0) {
->  			dev_err(&indio_dev->dev,
->  				"Not able to find parameter that match!\n");
-> +			iio_device_release_direct_mode(indio_dev);
->  			return ret;
->  		}
->  		adc->sample_freq = val;
-> +		iio_device_release_direct_mode(indio_dev);
->  
->  		return 0;
->  	}
-> @@ -1089,11 +1098,15 @@ static int stm32_dfsdm_read_raw(struct iio_dev *indio_dev,
->  
->  	switch (mask) {
->  	case IIO_CHAN_INFO_RAW:
-> +		ret = iio_device_claim_direct_mode(indio_dev);
-> +		if (ret)
-> +			return ret;
->  		ret = iio_hw_consumer_enable(adc->hwc);
->  		if (ret < 0) {
->  			dev_err(&indio_dev->dev,
->  				"%s: IIO enable failed (channel %d)\n",
->  				__func__, chan->channel);
-> +			iio_device_release_direct_mode(indio_dev);
->  			return ret;
->  		}
->  		ret = stm32_dfsdm_single_conv(indio_dev, chan, val);
-> @@ -1102,8 +1115,10 @@ static int stm32_dfsdm_read_raw(struct iio_dev *indio_dev,
->  			dev_err(&indio_dev->dev,
->  				"%s: Conversion failed (channel %d)\n",
->  				__func__, chan->channel);
-> +			iio_device_release_direct_mode(indio_dev);
->  			return ret;
->  		}
-> +		iio_device_release_direct_mode(indio_dev);
->  		return IIO_VAL_INT;
->  
->  	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
 
