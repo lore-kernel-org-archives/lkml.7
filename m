@@ -2,104 +2,145 @@ Return-Path: <SRS0=2kAr=R3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79DA3C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 06:21:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32646C4360F
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 06:24:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A50921741
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 06:21:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mail.ru header.i=@mail.ru header.b="hdzYNtH+";
-	dkim=pass (1024-bit key) header.d=mail.ru header.i=@mail.ru header.b="hdzYNtH+"
+	by mail.kernel.org (Postfix) with ESMTP id 09407218AC
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 06:24:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727727AbfCXGVO (ORCPT
+        id S1728040AbfCXGXG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 02:21:14 -0400
-Received: from fallback12.mail.ru ([94.100.179.29]:47014 "EHLO
-        fallback12.mail.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726139AbfCXGVO (ORCPT
+        Sun, 24 Mar 2019 02:23:06 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:36250 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727109AbfCXGXG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 02:21:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mail.ru; s=mail2;
-        h=References:In-Reply-To:Content-Transfer-Encoding:Content-Type:Message-ID:Reply-To:Date:MIME-Version:Subject:Cc:To:From; bh=zQVBcHXSSj9AnkE1e9fK/m8xhVIm8Bkfzr49TpNYx94=;
-        b=hdzYNtH+EJGvbr0zvzM2WBVW683eEgJshHhqCNs5jZDqNxVN6aTjI5GAetBCMW9exJbATwyfuIJ9KJtVG7+c6LhZVBW09/1cwIv2I7YxxHsBdvTvIOAL9OdZtC2Etie6VRck5DaHStd9Ei5MDOuhlc4hW+BZWQtkjmYADl+tupw=;
-Received: from [10.161.63.3] (port=56274 helo=f380.i.mail.ru)
-        by fallback12.m.smailru.net with esmtp (envelope-from <shc_work@mail.ru>)
-        id 1h7wVK-0005RR-T8; Sun, 24 Mar 2019 09:21:11 +0300
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mail.ru; s=mail2;
-        h=References:In-Reply-To:Content-Transfer-Encoding:Content-Type:Message-ID:Reply-To:Date:MIME-Version:Subject:Cc:To:From; bh=zQVBcHXSSj9AnkE1e9fK/m8xhVIm8Bkfzr49TpNYx94=;
-        b=hdzYNtH+EJGvbr0zvzM2WBVW683eEgJshHhqCNs5jZDqNxVN6aTjI5GAetBCMW9exJbATwyfuIJ9KJtVG7+c6LhZVBW09/1cwIv2I7YxxHsBdvTvIOAL9OdZtC2Etie6VRck5DaHStd9Ei5MDOuhlc4hW+BZWQtkjmYADl+tupw=;
-Received: by f380.i.mail.ru with local (envelope-from <shc_work@mail.ru>)
-        id 1h7wV2-0007iU-Bs; Sun, 24 Mar 2019 09:20:52 +0300
-Received: by e.mail.ru with HTTP;
-        Sun, 24 Mar 2019 09:20:52 +0300
-From:   =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
-To:     tglx@linutronix.de, yuehaibing@huawei.com, hpa@zytor.com,
-        mingo@kernel.org, shc_work@mail.ru, daniel.lezcano@linaro.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     linux-tip-commits@vger.kernel.org
-Subject: =?UTF-8?B?UmU6IFt0aXA6dGltZXJzL3VyZ2VudF0gY2xvY2tzb3VyY2UvZHJpdmVycy9j?=
- =?UTF-8?B?bHBzNzExeDogTWFrZSBjbHBzNzExeF9jbGtzcmNfaW5pdCgpIHN0YXRpYw==?=
+        Sun, 24 Mar 2019 02:23:06 -0400
+Received: by mail-io1-f70.google.com with SMTP id a7so5284984ioq.3
+        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2019 23:23:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=M+8R9CNl+dwGuvWY+cqskh4FBZP6bvG/g7lGqjy9mEU=;
+        b=niF2BztUQckv4fDdrcp8LMv3ZZBwRqgJ0Xk4g/5QejD9PbKtU7IywiS2f/tsKhMhsP
+         IiMCcqrBobvnRfNmW+8gNJPfLoRLVfXJ5d3vIvtYT64qX0IpCUQbUB7p5/e7szBvgsqb
+         r1qP1gEPixEAOjzMLNEu8+VaeL8xQBIDIdU09KGLVMdiNpJ1DgGOeVsQyMawrIamdyn1
+         N0nXisrmSdfFTSKizGwHJMwKnj3cWqnsPnEcHPu3lPQ9s7sVecKPUyZSICW6ZSDTwgfw
+         N+ZWV88eoX1q3aRy0DRu1tVY6JiV5SnNc74oFTIBvqYGp3wqVZ5kMHvHezuMX6Yh9exM
+         YfpA==
+X-Gm-Message-State: APjAAAUmvoHGZJD+ISPYH4fhP3i5UIag3Ok09BNlBovkzhejK8xpcpT5
+        0mQbse17/0DURyCrZvlA1rVv+6tnN+kSvlBh0PoD5dgaGCSg
+X-Google-Smtp-Source: APXvYqw8/BOnwzG48YPTfakxZQbqZiSoYReOd5vQ1QatQ8nIHWhhqGkF4aC3mjVTLdzmTgfPc0g9/+7o23ft+bJCistQJIESSQYr
 MIME-Version: 1.0
-X-Mailer: Mail.Ru Mailer 1.0
-Date:   Sun, 24 Mar 2019 09:20:52 +0300
-Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
-X-Priority: 3 (Normal)
-Message-ID: <1553408452.699853963@f380.i.mail.ru>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: base64
-X-77F55803: 3D9C1A1FBC8562E97F9F52485CB584D7ADE63D71A4B1B0B8691B11D22FA1AB3230CDF0EB01FE3C024AF03A03EF419C77F8D9167951635F18
-X-7FA49CB5: 70AAF3C13DB70168C09775C1D3CA48CF6804EF05EF4ADF2AB07C2033C5A38408395957E7521B51C2FE2CE64A2AE681D4725E5C173C3A84C337F46C620FF2CAEECEDC9CE4EAAF84414E70A05D1297E1BBC6CDE5D1141D2B1C9FB4829BD653A3C2E43CE4B7A93554AF3993E04D58DAE8269FA2833FD35BB23D9E625A9149C048EE9ECD01F8117BC8BEA471835C12D1D9774AD6D5ED66289B524E70A05D1297E1BBF6B57BC7E64490611E7FA7ABCAF51C92A417C69337E82CC2CC7F00164DA146DA6F5DAA56C3B73B23E7DDDDC251EA7DABAAAE862A0553A39223F8577A6DFFEA7C1593D163B8AF4A70E2553EE415A7400EEFF80C71ABB335746BA297DBC24807EA27F269C8F02392CD20465B3A5AADEC6827F269C8F02392CD5571747095F342E88FB05168BE4CE3AF
-X-Mailru-Sender: 139A7956A63CACCF2A18077BC60D2445CE79DC08C1D37936EC5C759CEE800C4F26BF58DC376B8FBEED073C8B0B556F46346D653DC8F96EBFDC7E5DB24DA7E57B1937939186396399F4ED1D881B4DF0A5EE23CE02E1CB6F8C5FEEDEB644C299C0ED14614B50AE0675
-X-Mras: OK
-X-Spam: undefined
-In-Reply-To: <tip-d18a7408d7be0f34a120d99051ed5187d9727728@git.kernel.org>
-References: <20190322143708.12716-1-yuehaibing@huawei.com>
- <tip-d18a7408d7be0f34a120d99051ed5187d9727728@git.kernel.org>
-X-77F55803: E8DB3678F13EF3E07F9F52485CB584D7271FD7DF62800FDC346C3E6FD0B958DBC8B99C379CFE161F760E554CF98BC6E470E04671A415C8E0
-X-7FA49CB5: 0D63561A33F958A567717898BCA0196AD01D39E0B440DD58C123A3F25BED42CA8941B15DA834481FA18204E546F3947CEDCF5861DED71B2F389733CBF5DBD5E9C8A9BA7A39EFB7666BA297DBC24807EA117882F44604297287769387670735209ECD01F8117BC8BEA471835C12D1D977C4224003CC836476C0CAF46E325F83A50BF2EBBBDD9D6B0F05F538519369F3743B503F486389A921A5CC5B56E945C8DA
-X-Mras: OK
+X-Received: by 2002:a05:660c:1c8:: with SMTP id s8mr4462341itk.20.1553408585569;
+ Sat, 23 Mar 2019 23:23:05 -0700 (PDT)
+Date:   Sat, 23 Mar 2019 23:23:05 -0700
+In-Reply-To: <000000000000639f6a0584d11b82@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000ef21490584d11e64@google.com>
+Subject: Re: WARNING in arch_install_hw_breakpoint
+From:   syzbot <syzbot+370a6b0f11867bf13515@syzkaller.appspotmail.com>
+To:     bp@alien8.de, frederic@kernel.org, gustavo@embeddedor.com,
+        hpa@zytor.com, linux-kernel@vger.kernel.org, mhiramat@kernel.org,
+        mingo@redhat.com, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhpcyBzaG91bGQgYmUgZml4ZWQgYnkgYXBwbHlpbmcgIltQQVRDSF0gY2xvY2tzb3VyY2U6IGNs
-cHM3MTF4OiBSZW1vdmUgYm9hcmQgc3VwcG9ydCIuCmh0dHBzOi8vd3d3LmxrbWwub3JnL2xrbWwv
-MjAxOC8xMi8yMC80NjgKCj7QodGD0LHQsdC+0YLQsCwgMjMg0LzQsNGA0YLQsCAyMDE5LCAxOjQ5
-ICswMzowMCDQvtGCIHRpcC1ib3QgZm9yIFl1ZUhhaWJpbmcgPHRpcGJvdEB6eXRvci5jb20+Ogo+
-Cj5Db21taXQtSUQ6ICBkMThhNzQwOGQ3YmUwZjM0YTEyMGQ5OTA1MWVkNTE4N2Q5NzI3NzI4Cj5H
-aXR3ZWI6ICBodHRwczovL2dpdC5rZXJuZWwub3JnL3RpcC9kMThhNzQwOGQ3YmUwZjM0YTEyMGQ5
-OTA1MWVkNTE4N2Q5NzI3NzI4Cj5BdXRob3I6ICAgICBZdWVIYWliaW5nIDwgeXVlaGFpYmluZ0Bo
-dWF3ZWkuY29tID4KPkF1dGhvckRhdGU6IEZyaSwgMjIgTWFyIDIwMTkgMjI6Mzc6MDggKzA4MDAK
-PkNvbW1pdHRlcjogIFRob21hcyBHbGVpeG5lciA8IHRnbHhAbGludXRyb25peC5kZSA+Cj5Db21t
-aXREYXRlOiBGcmksIDIyIE1hciAyMDE5IDIyOjU5OjMyICswMTAwCj4KPmNsb2Nrc291cmNlL2Ry
-aXZlcnMvY2xwczcxMXg6IE1ha2UgY2xwczcxMXhfY2xrc3JjX2luaXQoKSBzdGF0aWMKPgo+Rml4
-IHNwYXJzZSB3YXJuaW5nOgo+Cj5kcml2ZXJzL2Nsb2Nrc291cmNlL2NscHM3MTF4LXRpbWVyLmM6
-OTY6MTM6IHdhcm5pbmc6Cj7CoHN5bWJvbCAnY2xwczcxMXhfY2xrc3JjX2luaXQnIHdhcyBub3Qg
-ZGVjbGFyZWQuIFNob3VsZCBpdCBiZSBzdGF0aWM/Cj4KPlNpZ25lZC1vZmYtYnk6IFl1ZUhhaWJp
-bmcgPCB5dWVoYWliaW5nQGh1YXdlaS5jb20gPgo+U2lnbmVkLW9mZi1ieTogVGhvbWFzIEdsZWl4
-bmVyIDwgdGdseEBsaW51dHJvbml4LmRlID4KPkNjOiA8IGRhbmllbC5sZXpjYW5vQGxpbmFyby5v
-cmcgPgo+Q2M6IDwgc2hjX3dvcmtAbWFpbC5ydSA+Cj5DYzogPCBsaW51eC1hcm0ta2VybmVsQGxp
-c3RzLmluZnJhZGVhZC5vcmcgPgo+TGluazogIGh0dHBzOi8vbGttbC5rZXJuZWwub3JnL3IvMjAx
-OTAzMjIxNDM3MDguMTI3MTYtMS15dWVoYWliaW5nQGh1YXdlaS5jb20KPgo+LS0tCj7CoGRyaXZl
-cnMvY2xvY2tzb3VyY2UvY2xwczcxMXgtdGltZXIuYyB8IDUgKysrLS0KPsKgMSBmaWxlIGNoYW5n
-ZWQsIDMgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKPgo+ZGlmZiAtLWdpdCBhL2RyaXZl
-cnMvY2xvY2tzb3VyY2UvY2xwczcxMXgtdGltZXIuYyBiL2RyaXZlcnMvY2xvY2tzb3VyY2UvY2xw
-czcxMXgtdGltZXIuYwo+aW5kZXggYThkZDgwNTc2Yzk1Li5jZGMyNTE1MjRmNWUgMTAwNjQ0Cj4t
-LS0gYS9kcml2ZXJzL2Nsb2Nrc291cmNlL2NscHM3MTF4LXRpbWVyLmMKPisrKyBiL2RyaXZlcnMv
-Y2xvY2tzb3VyY2UvY2xwczcxMXgtdGltZXIuYwo+QEAgLTkzLDggKzkzLDkgQEAgc3RhdGljIGlu
-dCBfX2luaXQgX2NscHM3MTF4X2Nsa2V2dF9pbml0KHN0cnVjdCBjbGsgKmNsb2NrLCB2b2lkIF9f
-aW9tZW0gKmJhc2UsCj7CoCAgICJjbHBzNzExeC10aW1lciIsIGNsa2V2dCk7Cj7CoH0KPsKgCj4t
-dm9pZCBfX2luaXQgY2xwczcxMXhfY2xrc3JjX2luaXQodm9pZCBfX2lvbWVtICp0YzFfYmFzZSwg
-dm9pZCBfX2lvbWVtICp0YzJfYmFzZSwKPi0gdW5zaWduZWQgaW50IGlycSkKPitzdGF0aWMgdm9p
-ZCBfX2luaXQgY2xwczcxMXhfY2xrc3JjX2luaXQodm9pZCBfX2lvbWVtICp0YzFfYmFzZSwKPit2
-b2lkIF9faW9tZW0gKnRjMl9iYXNlLAo+K3Vuc2lnbmVkIGludCBpcnEpCj7CoHsKPsKgc3RydWN0
-IGNsayAqdGMxID0gY2xrX2dldF9zeXMoImNscHM3MTF4LXRpbWVyLjAiLCBOVUxMKTsKPsKgc3Ry
-dWN0IGNsayAqdGMyID0gY2xrX2dldF9zeXMoImNscHM3MTF4LXRpbWVyLjEiLCBOVUxMKTsKCgot
-LS0K
+syzbot has found a reproducer for the following crash on:
+
+HEAD commit:    fd1f297b Merge tag 'drm-fixes-2019-03-22' of git://anongit..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1574f56d200000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=9a31fb246de2a622
+dashboard link: https://syzkaller.appspot.com/bug?extid=370a6b0f11867bf13515
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1157b7cf200000
+
+Bisection is inconclusive: the bug happens on the oldest tested release.
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10ca39b3200000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=12ca39b3200000
+console output: https://syzkaller.appspot.com/x/log.txt?x=14ca39b3200000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+370a6b0f11867bf13515@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+Can't find any breakpoint slot
+WARNING: CPU: 0 PID: 8058 at arch/x86/kernel/hw_breakpoint.c:121  
+arch_install_hw_breakpoint+0x2d6/0x3a0 arch/x86/kernel/hw_breakpoint.c:121
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 8058 Comm: syz-executor.1 Not tainted 5.1.0-rc1+ #33
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  panic+0x2cb/0x65c kernel/panic.c:214
+  __warn.cold+0x20/0x45 kernel/panic.c:571
+  report_bug+0x263/0x2b0 lib/bug.c:186
+  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
+  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
+  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:973
+RIP: 0010:arch_install_hw_breakpoint+0x2d6/0x3a0  
+arch/x86/kernel/hw_breakpoint.c:121
+Code: c8 48 83 c4 18 5b 41 5c 41 5d 41 5e 41 5f 5d c3 0f 0b 0f 0b 48 c7 c7  
+40 23 65 87 89 45 d4 c6 05 ed 9d 32 08 01 e8 98 43 1b 00 <0f> 0b 8b 45 d4  
+e9 bc fd ff ff 40 88 75 c8 e8 a7 8e 80 00 0f b6 75
+RSP: 0018:ffff8880a512f6d8 EFLAGS: 00010086
+RAX: 0000000000000000 RBX: ffff8880ae81ec98 RCX: 0000000000000000
+RDX: 0000000040000000 RSI: ffffffff815ae266 RDI: ffffed1014a25ecd
+RBP: ffff8880a512f718 R08: ffff8880857382c0 R09: fffffbfff11335f5
+R10: fffffbfff11335f4 R11: ffffffff8899afa3 R12: ffff888085730380
+R13: dffffc0000000000 R14: 0000000000000004 R15: 000000000001eca0
+  hw_breakpoint_add+0xa7/0x130 kernel/events/hw_breakpoint.c:632
+  event_sched_in kernel/events/core.c:2281 [inline]
+  event_sched_in.isra.0+0x373/0xbf0 kernel/events/core.c:2245
+  group_sched_in+0xe4/0x3d0 kernel/events/core.c:2317
+  flexible_sched_in+0x615/0x9c0 kernel/events/core.c:3311
+  visit_groups_merge+0x336/0x5d0 kernel/events/core.c:3259
+  ctx_flexible_sched_in kernel/events/core.c:3345 [inline]
+  ctx_sched_in+0x330/0x670 kernel/events/core.c:3390
+  perf_event_sched_in+0x6e/0xa0 kernel/events/core.c:2426
+  perf_event_context_sched_in kernel/events/core.c:3430 [inline]
+  __perf_event_task_sched_in+0x609/0x820 kernel/events/core.c:3469
+  perf_event_task_sched_in include/linux/perf_event.h:1115 [inline]
+  finish_task_switch+0x2c2/0x780 kernel/sched/core.c:2725
+  context_switch kernel/sched/core.c:2880 [inline]
+  __schedule+0x81f/0x1cc0 kernel/sched/core.c:3518
+  schedule+0x92/0x180 kernel/sched/core.c:3562
+  freezable_schedule include/linux/freezer.h:172 [inline]
+  ptrace_stop+0x3fe/0x950 kernel/signal.c:2111
+  do_jobctl_trap kernel/signal.c:2330 [inline]
+  get_signal+0x1502/0x1d50 kernel/signal.c:2456
+  do_signal+0x87/0x1940 arch/x86/kernel/signal.c:816
+  exit_to_usermode_loop+0x244/0x2c0 arch/x86/entry/common.c:162
+  prepare_exit_to_usermode arch/x86/entry/common.c:197 [inline]
+  syscall_return_slowpath arch/x86/entry/common.c:268 [inline]
+  do_syscall_64+0x52d/0x610 arch/x86/entry/common.c:293
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x458209
+Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f6b1a2a8c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000129
+RAX: 0000000000000000 RBX: 0000000000000004 RCX: 0000000000458209
+RDX: 0000000000000016 RSI: 000000000000002a RDI: 000000000000002a
+RBP: 000000000073bf00 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000020000100 R11: 0000000000000246 R12: 00007f6b1a2a96d4
+R13: 00000000004c4f84 R14: 00000000004d8bd8 R15: 00000000ffffffff
+
+======================================================
+
