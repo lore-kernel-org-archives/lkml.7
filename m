@@ -2,108 +2,144 @@ Return-Path: <SRS0=2kAr=R3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0760C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 18:07:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 402D3C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 18:08:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B18E22147C
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 18:07:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553450843;
-	bh=nz+raG89T6BowVqL777gCMrpZ3eUummC3QwTDnNQiXw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=XXT/fAYu5//jIGN7hA/QVfKvYhtdisNlGCdp43DWJsCmmdjEXVOc2uH6UqjUDiPHk
-	 wyiGVnU2PKerX4J7OCqBiu2jFl3gnDaHoL1ZzA5tPw45K8NccgY5j+phccH1EtozIw
-	 MS3IVab8/sQZib3m2B52CTxk3gNwG26Gkae5faOU=
+	by mail.kernel.org (Postfix) with ESMTP id 106612147C
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 18:08:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="1S3hgTkY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728880AbfCXSHW (ORCPT
+        id S1728901AbfCXSH6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 14:07:22 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:44661 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726347AbfCXSHW (ORCPT
+        Sun, 24 Mar 2019 14:07:58 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:35036 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726347AbfCXSH6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 14:07:22 -0400
-Received: by mail-lj1-f193.google.com with SMTP id h16so1366550ljg.11
-        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2019 11:07:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=k0VEqFUW67Vjg9PES7Hhfwx95xrrA+t3oU072LrOAv8=;
-        b=HKPgyOMM+FtbcPx3ttml+1GzInSnU4Sp6aAlT/MAxWFkWHIKDuwYJPyX/yLajXZEda
-         gcNy6iFC1srYqr/WenxGSOLcZcz20KbpKt0R4OIzUcU8uUDdRt/0qqn4Ly+UAw1AZwZP
-         8axKV2A09P7n4JEBE2NcfbEX81BuegZjnq/4I=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=k0VEqFUW67Vjg9PES7Hhfwx95xrrA+t3oU072LrOAv8=;
-        b=Nz7CsCm2KRnVZtksDf6SYjGvLFTNIpjr48bMeO6WOuxUH52wUVy4hkkzOERad8KaDw
-         n2xHvKvJOxYfPD42whT8HEFyu2k67w1MdTfwJvY16G5UEhSsSEye9pj1Uxka1pDwH9Qj
-         AExkeh5uvZePTgorgqPiu4zNeHG6yme8w78HJnU2SVV2xRnbohxnL8R+ckXSiBKbwGlI
-         3f/aLUOBVYiIXdc6Umt1KSMHGnaphbqlU9tCANvNiH0bIgv7MQgk3Me0/kVFMsdfvQm4
-         X3gfJyecphuCJQm0yFEiNsag0iel7u5wlOSQmVqAWTSQWJzUiFXh5IK6VHrZDCb/Vo11
-         OG0Q==
-X-Gm-Message-State: APjAAAWjAzd2AtYG0MMMZkiiCXbjIpP8XiQ0zY+eXeDD5IXJ7JI9IYiX
-        gjfBAKtdLPE5WckJkymnWye8l14FuWw=
-X-Google-Smtp-Source: APXvYqza8un3gkKMsJmEAi+jz1CDgb0XOHsY9eWPogdt0mGqP5sCsyjbT8DBE7Pi1mLYEM1eTFQrMA==
-X-Received: by 2002:a2e:5dd2:: with SMTP id v79mr11042691lje.22.1553450839589;
-        Sun, 24 Mar 2019 11:07:19 -0700 (PDT)
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com. [209.85.208.181])
-        by smtp.gmail.com with ESMTPSA id t29sm504824ljd.82.2019.03.24.11.07.18
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 24 Mar 2019 11:07:18 -0700 (PDT)
-Received: by mail-lj1-f181.google.com with SMTP id y6so5829285ljd.12
-        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2019 11:07:18 -0700 (PDT)
-X-Received: by 2002:a2e:9786:: with SMTP id y6mr9835082lji.79.1553450838254;
- Sun, 24 Mar 2019 11:07:18 -0700 (PDT)
+        Sun, 24 Mar 2019 14:07:58 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2OI4vmh155809;
+        Sun, 24 Mar 2019 18:07:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=SLGCr8pYhi3ByqsLE70fRmvuYYUTuZJ04gB7QSmu7Vk=;
+ b=1S3hgTkY8zvoTyE3+Qdgy7t7g4h59aqAdJd7GDF6RHez9RS7B8h86RSBGomDeDm9odeg
+ JonKYFxPIQ+dji8jNGQ0PsGb7Y37aY4WW8YUX7V60JIn+53shVGZk/AkkyDj1/3R3JLF
+ fsukYVFebv8B+pe0kVyc+MDbWBCNpi6xVbPP/+bz0BgSq8I22ibjKdkrBpU6DDBAGvoH
+ X3lRB4EgHOwLbslAT84FPQKVBzrkepMdbhKMsHVM+xkr3G04MkQlP283Jqa0w1GQUEhe
+ UebuZTNjbxl7kr5jWc7+GGy0EDEkkY/XAFRL2c3YVrZzyTL+Pj2yGw68SPF5C60Ci2jw 2Q== 
+Received: from userv0022.oracle.com (userv0022.oracle.com [156.151.31.74])
+        by aserp2130.oracle.com with ESMTP id 2re6g0gqdx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 24 Mar 2019 18:07:11 +0000
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x2OI7An2007976
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 24 Mar 2019 18:07:10 GMT
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x2OI78id026806;
+        Sun, 24 Mar 2019 18:07:09 GMT
+Received: from nat-wireless-guest-reg-153-50.bu.edu (/204.8.153.50)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sun, 24 Mar 2019 11:07:08 -0700
+Date:   Sun, 24 Mar 2019 14:07:25 -0400
+From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
+To:     Ryan Thibodeaux <thibodux@gmail.com>
+Cc:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
+        oleksandr_andrushchenko@epam.com, tglx@linutronix.de,
+        jgross@suse.com, ryan.thibodeaux@starlab.io
+Subject: Re: [PATCH] x86/xen: Add "xen_timer_slop" command line option
+Message-ID: <20190324180724.GA4400@nat-wireless-guest-reg-153-50.bu.edu>
+References: <1553279397-130201-1-git-send-email-ryan.thibodeaux@starlab.io>
+ <abf65a68-9463-0f0e-1f51-6eefd3cacc88@oracle.com>
+ <20190323120052.GB11100@centos-dev.localdomain>
 MIME-Version: 1.0
-References: <155343674151.28403.7455818401538063350.tglx@nanos.tec.linutronix.de>
- <155343674152.28403.9250472064220526031.tglx@nanos.tec.linutronix.de>
-In-Reply-To: <155343674152.28403.9250472064220526031.tglx@nanos.tec.linutronix.de>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 24 Mar 2019 11:07:02 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgC4FQeT8Z6+gXnbsDFxRAD9sSELd8-G=6gQg4kxKKL4g@mail.gmail.com>
-Message-ID: <CAHk-=wgC4FQeT8Z6+gXnbsDFxRAD9sSELd8-G=6gQg4kxKKL4g@mail.gmail.com>
-Subject: Re: [GIT pull] scheduler updates for 5.1
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190323120052.GB11100@centos-dev.localdomain>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9205 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903240140
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 24, 2019 at 7:14 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> Second more careful attempt for this set of fixes:
+On Sat, Mar 23, 2019 at 08:00:52AM -0400, Ryan Thibodeaux wrote:
+> On Fri, Mar 22, 2019 at 06:10:16PM -0400, Boris Ostrovsky wrote:
+> > On 3/22/19 2:29 PM, thibodux@gmail.com wrote:
+> > > From: Ryan Thibodeaux <ryan.thibodeaux@starlab.io>
+> > >
+> > > Add a new command-line option "xen_timer_slop=<INT>" that sets the
+> > > minimum delta of virtual Xen timers. This commit does not change the
+> > > default timer slop value for virtual Xen timers.
+> > >
+> > > Lowering the timer slop value should improve the accuracy of virtual
+> > > timers (e.g., better process dispatch latency), but it will likely
+> > > increase the number of virtual timer interrupts (relative to the
+> > > original slop setting).
+> > >
+> > > The original timer slop value has not changed since the introduction
+> > > of the Xen-aware Linux kernel code. This commit provides users an
+> > > opportunity to tune timer performance given the refinements to
+> > > hardware and the Xen event channel processing. It also mirrors
+> > > a feature in the Xen hypervisor - the "timer_slop" Xen command line
+> > > option.
+> > 
+> > Is there any data that shows effects of using this new parameter?
+> > 
+> > -boris
+> > 
+> 
+> For our own testing using "cyclictest" from the rt-tests project,
+> lowering the timer slop helped produce the best test runs, especially
+> in terms of maximum process dispatch latency (PDL).
+> 
+> Here is the output from one such test that ran overnight. The Xen
+> timer slop in this case was 10000 or 10 microseconds.
+> 
+> ...
+> [root@slop1 ~]# cset shield -c 3
+> [root@slop1 ~]# echo ; date ; echo ; \
+> ./rt-tests-1.3/cyclictest -p95 -a3 -t1 -m; echo ; date
+> 
+> Thu Mar 14 19:45:36 UTC 2019
+> 
+> # /dev/cpu_dma_latency set to 0us
+> policy: fifo: loadavg: 0.00 0.02 0.00 1/91 4260
+> T: 0 ( 3212) P:95 I:1000 C:57077313 Min: 27 Act: 44 Avg: 43 Max: 145
+> ^C
+> Fri Mar 15 11:36:53 UTC 2019
+> ...
+> 
+> This test system was configured to use a TSC clocksource, disabled
+> C states, and lowered the timer slop. I am not claiming the timer
+> slop change was solely responsible for the best results.
 
-What? No. It's the exact same garbage as last time, with no more care
-shown anywhere:
+How can we then be sure that the proposed change will indeed provide
+some sort of benefit?
 
-  kernel/sched/cpufreq_schedutil.c:346:26: note: in expansion of macro =E2=
-=80=98min=E2=80=99
-     sg_cpu->iowait_boost =3D min(sg_cpu->iowait_boost << 1,
-SCHED_CAPACITY_SCALE);
+Were there any other changes between your tests to think that slop
+time modification may not be responsible for better results?
 
-I told you *exactly* what the problem was the last time, and it's
-*exactly* the same now too.
+-boris
 
-Hmm. Looking closer, I see that the patch you *claim* to send me has
-"min_t()". But the tree I actually got has the same old garbage.
 
-I suspect you didn't update the git repo properly or something.
-
-But since the -tip tree pull requests don't include the git hash
-value, I can't even tell what you *meant* to send me. I assume you
-also don't get the warning that "git request-pull" would give you
-about mismatches..
-
-                Linus
+> In other
+> testing with the default timer slop setting of 100000 (100
+> microseconds), the average PDL would run slightly higher, but the
+> spikes were much higher and more in number, often near the 1000s
+> and happening multiple times per 10 minutes of testing.
+> 
+> - Ryan
