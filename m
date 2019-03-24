@@ -2,118 +2,83 @@ Return-Path: <SRS0=2kAr=R3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCA34C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 17:19:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06852C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 17:20:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98B712147C
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 17:19:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553447978;
-	bh=TMw/UYNCgfgbO838VeRbfI4lIv1JvldzfOElLXpYmOo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=pAJCG+u3femn4pCpflEYvGemyINpE/cSJhayN+3nNrNMU8qKHKg6ignn/xt5bhHA5
-	 wmNQh1/N1Hmk3EZM+UggZ5b6G7zq2qVG+XfeI6oZ95pzKEFJKpI9LboQza3fuQ13g6
-	 1gQgQaQdMwtBsh7Y5lzdqUoDWbu4cisPZ7Wvenho=
+	by mail.kernel.org (Postfix) with ESMTP id C6F562147C
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 17:20:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="odfl4D2u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728910AbfCXRTh (ORCPT
+        id S1728916AbfCXRUU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 13:19:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35402 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728642AbfCXRTh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 13:19:37 -0400
-Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ADF0A20989;
-        Sun, 24 Mar 2019 17:19:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553447976;
-        bh=TMw/UYNCgfgbO838VeRbfI4lIv1JvldzfOElLXpYmOo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=0oqXzyfmHsLtNogn2gGP+0S3M+y/0kp4rWj8tFzsktRfsg2sp4+zdGw5OxQcP7P7P
-         RQyGzcrzTrMq8zk/KNPGK+p7QccyWAH2KPQxouxSg+551FXTXrDMHrk70wWELZa3W6
-         uvQbqwb2Z2RXWDprsvBWBCMBKnP4CPjqlSveUuRU=
-Date:   Sun, 24 Mar 2019 17:19:30 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     "Angus Ainslie (Purism)" <angus@akkea.ca>
-Cc:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Sun, 24 Mar 2019 13:20:20 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:38134 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726317AbfCXRUU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Mar 2019 13:20:20 -0400
+Received: by mail-pg1-f194.google.com with SMTP id j26so2782913pgl.5
+        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2019 10:20:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=b93MZFm0cjMk8vip+cTqYwYZn3dg8V909AgdpeqKtAQ=;
+        b=odfl4D2ufzt59IInjpsj4QnflwAf0txzAJdxDMRfioqFIF/XYQB5XJuTkQrEbzSXVS
+         2SPDlupC6xgCm7wafwFQXAniO6TX41+EWEYRFzwZcMuiMwqtI/bOFBNxrHt+E2bKv4QT
+         NapdFCFqhjYzb81uUK87leizB7YaqGIwRCREyvY85oXuQstIwdx59Nj2MAMtRGRTvFil
+         QBdUmH9H0/9UQ3c+EIUuVSsNqO9YmI5lmZ2J0oYuU+lbUagRm1yx/UzvZiyrU0N5GNh4
+         MTIrnxqb+ujJ7FGBLpgJ/p/2ErN8iiud5odYbBELMICgSMd81WToX/uL6gXVEKJAkujr
+         efTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=b93MZFm0cjMk8vip+cTqYwYZn3dg8V909AgdpeqKtAQ=;
+        b=DuL6ToCBOHeufDSPUmjcSdeutLfzBIWU1qOIMHMhIqtFYmK8XxzusAYnZNpl3BG2pY
+         SGy5NlQj1S/Uyr0xyW9gIQcaG4sNH+FCMVH0pjSVMUO3BcdukaX916iy9qsSUWsLdRyt
+         5fPmdFymtC2RnPFKHm83YPGfU9vLOhfmttizv4cbnWNE/W259uWdb2A6TGM5sEWtQBI9
+         +fd5DoWqadb7MP1s0Lz8KFpJx3xuy5gd7e9xZhbRmeUFjj2AhXNGotFUK6Am1clyKB+Y
+         +Wd+oKBQP0abjdPNa/k3yQKtObGWkT+naZkzWSxWQmdm/VwbW27MybE3CO7KJNbHUqKq
+         6bFw==
+X-Gm-Message-State: APjAAAUzbKSdFA/Uq5AGO40tHNqAwlkySTEf1Zk9MYqpJkjglaDXkCQv
+        felQ0br+wVQzwgxeEb+wZP7/7Q==
+X-Google-Smtp-Source: APXvYqzrBwGGudion6f2CxckcUleZfrmnFQI5ZQUdzeGPZyJYi+MAsokCnH1VQOSH4qRBsul6Mqv5g==
+X-Received: by 2002:a65:6108:: with SMTP id z8mr5362109pgu.106.1553448019601;
+        Sun, 24 Mar 2019 10:20:19 -0700 (PDT)
+Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id g6sm20382713pgq.54.2019.03.24.10.20.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 24 Mar 2019 10:20:18 -0700 (PDT)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Andy Gross <andy.gross@linaro.org>, Vinod Koul <vkoul@kernel.org>
+Cc:     David Brown <david.brown@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Tomas Novotny <tomas@novotny.cz>, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/5] iio: light: vcnl4000 add devicetree hooks
-Message-ID: <20190324171930.7580e6bb@archlinux>
-In-Reply-To: <20190321154047.23236-3-angus@akkea.ca>
-References: <20190321154047.23236-1-angus@akkea.ca>
-        <20190321154047.23236-3-angus@akkea.ca>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] arm64: dts: qcom: qcs404: CDSP for APF support
+Date:   Sun, 24 Mar 2019 10:20:14 -0700
+Message-Id: <20190324172016.1195-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.18.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 21 Mar 2019 08:40:44 -0700
-"Angus Ainslie (Purism)" <angus@akkea.ca> wrote:
+Add the clock controller and describe the cdsp in a way that it can be reused
+between different trusted environments.
 
-> Add an of_match table for devicetree probing.
-> 
-> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
+Bjorn Andersson (2):
+  arm64: dts: qcom: qcs404: Add turingcc node
+  arm64: dts: qcom: Fully describe the CDSP
 
-I made a small tweak (see inline) for an issue I'd missed
-previously (which is pretty obscure!)
+ arch/arm64/boot/dts/qcom/qcs404.dtsi | 100 ++++++++++++++++++---------
+ 1 file changed, 69 insertions(+), 31 deletions(-)
 
-Jonathan
-> ---
->  drivers/iio/light/vcnl4000.c | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
-> 
-> diff --git a/drivers/iio/light/vcnl4000.c b/drivers/iio/light/vcnl4000.c
-> index 5e0a8eb83ebc..308cb2d2b641 100644
-> --- a/drivers/iio/light/vcnl4000.c
-> +++ b/drivers/iio/light/vcnl4000.c
-> @@ -363,9 +363,31 @@ static int vcnl4000_probe(struct i2c_client *client,
->  	return devm_iio_device_register(&client->dev, indio_dev);
->  }
->  
-> +static const struct of_device_id vcnl_4000_of_match[] = {
-> +	{
-> +		.compatible = "vishay,vcnl4000",
-> +		.data = "VCNL4000",
-> +	},
-> +	{
-> +		.compatible = "vishay,vcnl4010",
-> +		.data = "VCNL4010",
-> +	},
-> +	{
-> +		.compatible = "vishay,vcnl4010",
-> +		.data = "VCNL4020",
-> +	},
-> +	{
-> +		.compatible = "vishay,vcnl4200",
-> +		.data = "VCNL4200",
-> +	},
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, vcnl4000_of_match);
-> +
->  static struct i2c_driver vcnl4000_driver = {
->  	.driver = {
->  		.name   = VCNL4000_DRV_NAME,
-> +		.of_match_table = of_match_ptr(vcnl_4000_of_match),
-Ah. I'd missed this previously.  Don't use the of_match_ptr
-magic anymore. It prevents ACPI probing via the weird
-DSDT entry that basically says "here be devicetree".
->  	},
->  	.probe  = vcnl4000_probe,
->  	.id_table = vcnl4000_id,
+-- 
+2.18.0
 
