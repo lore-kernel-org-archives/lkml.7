@@ -2,120 +2,76 @@ Return-Path: <SRS0=2kAr=R3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FB47C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 15:30:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 509E6C10F00
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 15:30:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32B1320880
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 15:30:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553441427;
-	bh=c1JBR5+9CHZ/4tEK1w07i8bqdgUu+1+BWEUyzj/Cwpc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=QG7EWKg2a6rV/LWGMt0sMUfDgT5CZgvAAar6phFg7XL3kdlR2qbyngGc6TqgzpyQI
-	 wXlCw3hY83pgi4vdiZfxQcpR6988W6oxhqqASHLHv2HmeDRIrwepkLSTRExOK0sRh3
-	 sMMsD/AGqRzw/OkyRqA7TAh1Z+0QSQz6t0xZE47Q=
+	by mail.kernel.org (Postfix) with ESMTP id 0B98D20830
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 15:30:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=yahoo.ca header.i=@yahoo.ca header.b="d37q/mmC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728707AbfCXPaZ (ORCPT
+        id S1728783AbfCXPat (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 11:30:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59656 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726317AbfCXPaZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 11:30:25 -0400
-Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5308A20830;
-        Sun, 24 Mar 2019 15:30:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553441424;
-        bh=c1JBR5+9CHZ/4tEK1w07i8bqdgUu+1+BWEUyzj/Cwpc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=nox7k5o1yZSZIu9YgWlaBFWIgVAPvZL1ePY7MGeIoFQN1SvmK8yuBgd0aZGZCsTbH
-         Mcj9ZBnFwRddbDJdqb3ZgJZAyX95Hso6HMm/e1cQ0kQyzJsRz+8tuBp+OVqAhlP96V
-         gaoBaxsDvmiU+H9YTcNQOH0ol1my19vhCB1Nr9No=
-Date:   Sun, 24 Mar 2019 15:30:18 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Artur Rojek <contact@artur-rojek.eu>
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v2 3/4] dt-bindings: power: supply: Add docs for Ingenic
- JZ47xx SoCs battery.
-Message-ID: <20190324153018.2e4011c9@archlinux>
-In-Reply-To: <20190323172809.14407-3-contact@artur-rojek.eu>
-References: <20190323172809.14407-1-contact@artur-rojek.eu>
-        <20190323172809.14407-3-contact@artur-rojek.eu>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 24 Mar 2019 11:30:49 -0400
+Received: from sonic311-31.consmr.mail.ir2.yahoo.com ([77.238.176.163]:38105
+        "EHLO sonic311-31.consmr.mail.ir2.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726317AbfCXPat (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Mar 2019 11:30:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.ca; s=s2048; t=1553441447; bh=3BTYe0wlCfoSo0zemgqZ21aETVAIwEHFHMSEn5+F3PY=; h=Date:From:Subject:To:Cc:From:Subject; b=d37q/mmCvQ+D03plP/UT+JItgRXOWUMbU5wbl3jkkNV7hKuIsSj/JI4qNqY2bvNf6dInLagN3IX1c5diDKtmepcZcPO3I1m1Ltjfdp5Q/oWBpcJ4X9KeyKTo8u6yqES5wHxEVZaAbvDp6TZFNQT7osakBGrU7T38RuMDXulWuANFNfUYv4MZAB00LRj81rCojU8lH4gp4xA/7RsY8mw919F1/+6TwRFLNoWzWiC90XbP7CBrafRQomGgjI6GZ7DFH+2w0g6nB8U33KU4NZrGyq+nBK2AX9TmTYr0cW387dK3/L35tZg+wp4uGXprCXnOojhqv2jgZ5LiXuczEfQefQ==
+X-YMail-OSG: N1cUSN0VM1nWUTKN1bMA6WwcgY45tKGfO5E38VeCuUkdAvKH.GmxcWOCh8Ca0lT
+ M3pzkKWCjDLaJDDiprTDzOROt6bPQt4yCsVDvhv4nCgMTM5wgeNGRfpTeNwIIMt4iL23xbR5_28N
+ Y6mAyGcUSvlokGjZSqpL.LifPaU0fVtcTCi8CIZMF0ZzwmWNTD.WuAbqu7GxUNy.5x2qZ6zYQRE_
+ MZngeccpE9yePcwG4T13PbPjW3.SocMBsLM8muUW1qkIS65w4Lwq1HOtfzWbKSQiP_Fb.y1IWq7b
+ mkwMnaoAk9Aconja5KKRvD4cLwp3H1Ex_xsE4fmvRvmRZiYD0qaEWJnV1KXLBdSKmL0F6.Ll7dAz
+ 3KWpQbnXCc_gh4kpjSJKWDl4PdC91v928OyO1ITn75i4Pr5ktMMTvC4cPTWJf.fMUyRAtbyjX7Iu
+ Qrgi4q4qpxFhGGoMo5p4cxvGWZYQnoVNDvqm6V4JaAe8IzOa_sAPV8rV6Q8bKg2OiGw7U.mnNByC
+ buSuqAqVqmrSE96e3dM8PeiOZDzfxTBwsWE5W4ijFLfFQxkUcsY7RpE_XILieuccngb7PBRFcl9m
+ MzCgUHPxS_00GXdwzBvNk8AHeoMBRr__zOR0oDXR7FV_dSdfnqvgaq9qKDfTz3iF9SwMKhPUWZeb
+ x4UYwyz8LDcdAWA2WeNvCgrxVIQXUwWhaarBRwKv_F8hN7Kz7bmmb21TfJaKTEphqYrt_EzQrZLS
+ 8S8KYMffS6wWXRmarkEMkFtIxDJWtBLRc93Y6YEG_4RaBa6Z32Nlfd8YyH98K2wr6JdS1KutAkiF
+ F6H2cywHf8RUFxgC3juo57WuFIn8jyIrikcazyti6AuCVTE5r73OoZu82wsj4V9q60kknuBr3J.S
+ uu4yyMinPuUnHYT6xqqtoSX6rx_YbqhUx8dTuhrmXR1QbM0SR8dMZKcEO_eatMF9f8udpLiGVBT.
+ P45TsafokONAOs0ub1bwyClWO3ndYq6.xe_0CPA6F0_dRdVfrWO8mvMr5a_LHKCaMG3FDo1I.p4E
+ qM5LMf.iang.psbs0q6CQHOMhL65DIYJLDlNn0EV.xHlWopsgllQz
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic311.consmr.mail.ir2.yahoo.com with HTTP; Sun, 24 Mar 2019 15:30:47 +0000
+Received: from pink.alxu.ca (EHLO localhost) ([198.98.62.56])
+          by smtp404.mail.ir2.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 6538810d4e26107911f82eb677458271;
+          Sun, 24 Mar 2019 15:30:45 +0000 (UTC)
+Date:   Sun, 24 Mar 2019 11:30:41 -0400
+From:   "Alex Xu (Hello71)" <alex_y_xu@yahoo.ca>
+Subject: shmem_recalc_inode: unable to handle kernel NULL pointer dereference
+To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Cc:     Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Kelley Nielsen <kelleynnn@gmail.com>,
+        Huang Ying <ying.huang@intel.com>,
+        Hugh Dickins <hughd@google.com>,
+        Rik van Riel <riel@surriel.com>,
+        Andrew Morton <akpm@linux-foundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: astroid/0.14.0 (https://github.com/astroidmail/astroid)
+Message-Id: <1553440122.7s759munpm.astroid@alex-desktop.none>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 23 Mar 2019 18:28:08 +0100
-Artur Rojek <contact@artur-rojek.eu> wrote:
+I get this BUG in 5.1-rc1 sometimes when powering off the machine. I=20
+suspect my setup erroneously executes two swapoff+cryptsetup close=20
+operations simultaneously, so a race condition is triggered.
 
-> Add documentation for the ingenic-battery driver, used on JZ47xx SoCs.
-> 
-> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
-Looks fine to me.
+I am using a single swap on a plain dm-crypt device on a MBR partition=20
+on a SATA drive.
 
-Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+I think the problem is probably related to=20
+b56a2d8af9147a4efe4011b60d93779c0461ca97, so CCing the related people.
 
-> ---
-> 
-> Changes:
-> 
-> v2: no change
-> 
->  .../bindings/power/supply/ingenic,battery.txt | 31 +++++++++++++++++++
->  1 file changed, 31 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/supply/ingenic,battery.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/power/supply/ingenic,battery.txt b/Documentation/devicetree/bindings/power/supply/ingenic,battery.txt
-> new file mode 100644
-> index 000000000000..66430bf73815
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/supply/ingenic,battery.txt
-> @@ -0,0 +1,31 @@
-> +* Ingenic JZ47xx battery bindings
-> +
-> +Required properties:
-> +
-> +- compatible: Must be "ingenic,jz4740-battery".
-> +- io-channels: phandle and IIO specifier pair to the IIO device.
-> +  Format described in iio-bindings.txt.
-> +- monitored-battery: phandle to a "simple-battery" compatible node.
-> +
-> +The "monitored-battery" property must be a phandle to a node using the format
-> +described in battery.txt, with the following properties being required:
-> +
-> +- voltage-min-design-microvolt: Drained battery voltage.
-> +- voltage-max-design-microvolt: Fully charged battery voltage.
-> +
-> +Example:
-> +
-> +#include <dt-bindings/iio/adc/ingenic,adc.h>
-> +
-> +simple_battery: battery {
-> +	compatible = "simple-battery";
-> +	voltage-min-design-microvolt = <3600000>;
-> +	voltage-max-design-microvolt = <4200000>;
-> +};
-> +
-> +ingenic_battery {
-> +	compatible = "ingenic,jz4740-battery";
-> +	io-channels = <&adc INGENIC_ADC_BATTERY>;
-> +	io-channel-names = "battery";
-> +	monitored-battery = <&simple_battery>;
-> +};
-
+Thanks,
+Alex.
