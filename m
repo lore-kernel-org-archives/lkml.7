@@ -2,113 +2,116 @@ Return-Path: <SRS0=2kAr=R3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A05CC10F00
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 14:54:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB7BFC10F00
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 14:56:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 586AA222C8
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 14:54:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tGKjTtMc"
+	by mail.kernel.org (Postfix) with ESMTP id B8661222C8
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 14:56:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553439385;
+	bh=PQJlMhXx19zgnuvUPgl3Tj6OKjYdEbKrT1DRDTlEb4w=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=sFfNT/rXthQh+wW3MyBCLDPco4Em757Gr81NWiF2+VZpTUueUqy9iettHciv87ev6
+	 dljWnZVhDhB/BMoep4LnLkzOgzrq03wqllC5jx93JAJOpX7o+CcUI/ATnj/R1h+ZX3
+	 9ivgE+FFiFuGQdVVwDVHY8YgA4cQPxrBZP/OM9EU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728265AbfCXOyz (ORCPT
+        id S1728697AbfCXO4Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 10:54:55 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:37496 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726603AbfCXOyz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 10:54:55 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 8so4611026pfr.4
-        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2019 07:54:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=EV0mtIUAZRfpoAAvMR47kvv6+WC7oxtvXJXhTk+1wes=;
-        b=tGKjTtMcbfkgYDwCTNLSSZE7OFMBUz6tpdMRv2cG090DsYEgqpFLTay56OTEMO4SQU
-         5l9tccGnugeFZuoUWtpjVmyXt/xnpTn1a79zECaAQ72yOyHswkSxgHUVwDmHMy7u5lBo
-         UiquzoOydvu+MSl0HDsIIVhQttYWBmV+1aNOghhzzhOVkYiw+7Pah917Po1a5SWvdyzH
-         Y1JC8RhzhVUHCD+GgNMm75gWKkRpSQKq2RPiIsNn4zgAWAS73G+3cT7QcHj0tId53gxR
-         hQju77C3Hlx9RDbyO31se3qLSyCsNZjgK1HCnk05MdFIIE2er2nXwr0kisUmrzr7O1Zt
-         MmYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=EV0mtIUAZRfpoAAvMR47kvv6+WC7oxtvXJXhTk+1wes=;
-        b=ezo/ySuyFzkcBvCqEWsjq2i2pnZP5L/z827vA4ibXyo8MzFuII4fWMVDlDahu+BWYz
-         ctrbYPilqAy/RApvqHE5q5HXpkaREhx3voTvEnRMmdlkWlb66Sd7R3ryWCkiZjTft+fi
-         FNV+vR8PSoAyiGXGm6T5rOJiR8vpON/cgI47pDI6Cf/cLjJjg2jMMlsdLklrkMlSUWuu
-         iIxGNFGf2+ZYiRmeU4/ChBkXMc/q0cF9uzJnVh6KQah74Qm96o4HM6AmGbIJCb34V5Kb
-         D+e5/lMSsLh0o/ayVRqeKL0UStAZbCzmxT1gfQkyhJFbvO1DT8SB1X5niM5uCH3CNFdi
-         1Yiw==
-X-Gm-Message-State: APjAAAXBq9QKwrgOTuTH5gr5HBKo6QwmvvZuE4sqgk41BdvDAKbT6oxD
-        EW4zzjDbE4px9zX8pSh49ctkbDae
-X-Google-Smtp-Source: APXvYqz/oYuFkToSANQ1vR8Zd/fgQOinUHYFU8LHMeG0rF928P1hH8ZcyO6rtc3yBJka4Y+FRTXtew==
-X-Received: by 2002:a17:902:e40a:: with SMTP id ci10mr20248567plb.77.1553439294445;
-        Sun, 24 Mar 2019 07:54:54 -0700 (PDT)
-Received: from localhost.localdomain ([61.83.141.141])
-        by smtp.gmail.com with ESMTPSA id 10sm20777961pft.83.2019.03.24.07.54.51
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 24 Mar 2019 07:54:53 -0700 (PDT)
-From:   Sidong Yang <realwakka@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Sidong Yang <realwakka@gmail.com>,
-        Michael Straube <straube.linux@gmail.com>,
-        Hugo Lefeuvre <hle@owl.eu.com>, devel@driverdev.osuosl.org,
+        Sun, 24 Mar 2019 10:56:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52076 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726603AbfCXO4Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Mar 2019 10:56:24 -0400
+Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6C5521906;
+        Sun, 24 Mar 2019 14:56:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553439383;
+        bh=PQJlMhXx19zgnuvUPgl3Tj6OKjYdEbKrT1DRDTlEb4w=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=keIji2J6jBhN3ZMGyT/qcLJsJ4tx+pXApBiZ8DVZ9l3QH3lpxpDEaU9UGA/YMpgzl
+         Lcv2PwJvr58b2g8C2k4QOlSrcPHMNlLE9m9J0m6OXN9a//jwwMCLyXcpV5vj1L5nZi
+         rIUxRILY+Wk7MWgNy3J9Bi+hrDW3nl8BhrMC8LDw=
+Date:   Sun, 24 Mar 2019 14:56:18 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Cristian Sicilia <sicilia.cristian@gmail.com>
+Cc:     Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: pi433: remove unnecessary calling rf69_set_mode()
-Date:   Sun, 24 Mar 2019 14:54:41 +0000
-Message-Id: <20190324145441.10013-1-realwakka@gmail.com>
-X-Mailer: git-send-email 2.11.0
+Subject: Re: [PATCH v2 5/5] staging: iio: adc: Remove CamelCase notation
+Message-ID: <20190324145618.5df31a70@archlinux>
+In-Reply-To: <e1a9e28d72babe4781c577c68e6508e01367943f.1553366098.git.sicilia.cristian@gmail.com>
+References: <cover.1553335775.git.sicilia.cristian@gmail.com>
+        <cover.1553366098.git.sicilia.cristian@gmail.com>
+        <e1a9e28d72babe4781c577c68e6508e01367943f.1553366098.git.sicilia.cristian@gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove unnecessary rf69_set_mode() function call when rx is waiting for
-a telegram. There is waste to call rf69_set_mode() twice for becoming
-standby mode.
+On Sat, 23 Mar 2019 20:21:49 +0100
+Cristian Sicilia <sicilia.cristian@gmail.com> wrote:
 
-Signed-off-by: Sidong Yang <realwakka@gmail.com>
----
- drivers/staging/pi433/pi433_if.c | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+> Fix CamelCase naming.
+> 
+> Signed-off-by: Cristian Sicilia <sicilia.cristian@gmail.com>
+Applied.
 
-diff --git a/drivers/staging/pi433/pi433_if.c b/drivers/staging/pi433/pi433_if.c
-index 53928af696a6..e822f87fc533 100644
---- a/drivers/staging/pi433/pi433_if.c
-+++ b/drivers/staging/pi433/pi433_if.c
-@@ -650,21 +650,19 @@ pi433_tx_thread(void *data)
- 		disable_irq(device->irq_num[DIO0]);
- 		device->tx_active = true;
- 
-+		/* clear fifo, set fifo threshold, set payload length */
-+		retval = rf69_set_mode(spi, standby); /* this clears the fifo */
-+		if (retval < 0)
-+			return retval;
-+
- 		if (device->rx_active && !rx_interrupted) {
- 			/*
- 			 * rx is currently waiting for a telegram;
- 			 * we need to set the radio module to standby
- 			 */
--			retval = rf69_set_mode(device->spi, standby);
--			if (retval < 0)
--				return retval;
- 			rx_interrupted = true;
- 		}
- 
--		/* clear fifo, set fifo threshold, set payload length */
--		retval = rf69_set_mode(spi, standby); /* this clears the fifo */
--		if (retval < 0)
--			return retval;
- 		retval = rf69_set_fifo_threshold(spi, FIFO_THRESHOLD);
- 		if (retval < 0)
- 			return retval;
--- 
-2.11.0
+Note that I added the part number to the titles of all these patches
+so that people can readily see what they are actually changing.
+Directory isn't very helpful when there can potentially be many 10s
+of drivers in there (not true in this case, but still more than 1!)
+
+Thanks,
+
+Jonathan
+
+
+> ---
+>  drivers/staging/iio/adc/ad7280a.c | 11 +++++------
+>  1 file changed, 5 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/staging/iio/adc/ad7280a.c b/drivers/staging/iio/adc/ad7280a.c
+> index 5d848aa..c02454c 100644
+> --- a/drivers/staging/iio/adc/ad7280a.c
+> +++ b/drivers/staging/iio/adc/ad7280a.c
+> @@ -917,8 +917,8 @@ static int ad7280_probe(struct spi_device *spi)
+>  	const struct ad7280_platform_data *pdata = dev_get_platdata(&spi->dev);
+>  	struct ad7280_state *st;
+>  	int ret;
+> -	const unsigned short tACQ_ns[4] = {465, 1010, 1460, 1890};
+> -	const unsigned short nAVG[4] = {1, 2, 4, 8};
+> +	const unsigned short t_acq_ns[4] = {465, 1010, 1460, 1890};
+> +	const unsigned short n_avg[4] = {1, 2, 4, 8};
+>  	struct iio_dev *indio_dev;
+>  
+>  	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
+> @@ -966,10 +966,9 @@ static int ad7280_probe(struct spi_device *spi)
+>  	 */
+>  
+>  	st->readback_delay_us =
+> -		((tACQ_ns[pdata->acquisition_time & 0x3] + 695) *
+> -		(AD7280A_NUM_CH * nAVG[pdata->conversion_averaging & 0x3]))
+> -		- tACQ_ns[pdata->acquisition_time & 0x3] +
+> -		st->slave_num * 250;
+> +		((t_acq_ns[pdata->acquisition_time & 0x3] + 695) *
+> +		 (AD7280A_NUM_CH * n_avg[pdata->conversion_averaging & 0x3])) -
+> +		t_acq_ns[pdata->acquisition_time & 0x3] + st->slave_num * 250;
+>  
+>  	/* Convert to usecs */
+>  	st->readback_delay_us = DIV_ROUND_UP(st->readback_delay_us, 1000);
 
