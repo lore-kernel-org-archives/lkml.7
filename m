@@ -7,113 +7,116 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCE79C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 22:43:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C59D8C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 22:49:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 860402087F
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 22:43:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83ECD2087F
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 22:49:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="OiFCf2Rc"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="eSNoAB45"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729086AbfCXWnk (ORCPT
+        id S1729057AbfCXWtZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 18:43:40 -0400
-Received: from mta-p8.oit.umn.edu ([134.84.196.208]:32886 "EHLO
-        mta-p8.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728907AbfCXWnj (ORCPT
+        Sun, 24 Mar 2019 18:49:25 -0400
+Received: from mta-p6.oit.umn.edu ([134.84.196.206]:51206 "EHLO
+        mta-p6.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728907AbfCXWtY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 18:43:39 -0400
+        Sun, 24 Mar 2019 18:49:24 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mta-p8.oit.umn.edu (Postfix) with ESMTP id 4C003BB1
-        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2019 22:43:38 +0000 (UTC)
+        by mta-p6.oit.umn.edu (Postfix) with ESMTP id 3B6DBB20
+        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2019 22:49:23 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p8.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p8.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id o4q0iXGOBA8v for <linux-kernel@vger.kernel.org>;
-        Sun, 24 Mar 2019 17:43:38 -0500 (CDT)
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+Received: from mta-p6.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p6.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id SIqpN3bAj5AL for <linux-kernel@vger.kernel.org>;
+        Sun, 24 Mar 2019 17:49:23 -0500 (CDT)
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
         (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mta-p8.oit.umn.edu (Postfix) with ESMTPS id 1DB5BBD6
-        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2019 17:43:38 -0500 (CDT)
-Received: by mail-io1-f72.google.com with SMTP id s24so6491666ioe.17
-        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2019 15:43:38 -0700 (PDT)
+        by mta-p6.oit.umn.edu (Postfix) with ESMTPS id 12E23939
+        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2019 17:49:23 -0500 (CDT)
+Received: by mail-io1-f69.google.com with SMTP id i1so6555487ioq.9
+        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2019 15:49:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=umn.edu; s=google;
         h=from:to:cc:subject:date:message-id;
-        bh=sul76dv3STc5/UWpJ9vmSfm2gGDqU8QZqXwdwOQU5TY=;
-        b=OiFCf2Rcvcde0rQcfubl62GwfWlDHhfYhlykKz5XlwGmQcfApV+fqeL1DPL7eTZRF0
-         zIb5ajAgkE/XUoKQGNWDPMwpML6NURRd3tPJeJ8baEFO2+ftwJBIje3WLP7ZOSVZd4FZ
-         7d3BlVvzuimlUK8WT51YO3VKa8edLI9I+sRlYPXxCpmVMRw24QjefIiperBcRpf8ZoGQ
-         ZRqPaxDEQ5ojQldUD1iOGOqDq+hHLbwqkipWAsViu/02kdcgEfbSW6jn0aXcFDBK0TLH
-         ZzaZk10jYTWMx3lD1CwSzTFnLVrU0/q8HJZ8G5SyHNFyq6jSK4Dmy8Djcx/lmsPhCqR1
-         0r2A==
+        bh=LANmRa7KJszDSWBvJL10LMMY9zi5I+m67De+DHavWrQ=;
+        b=eSNoAB45jVFfKnzij5+B6nfU55qugsZVlGbuck5hhjOhcygw9RpBbshVZzVZapZqYS
+         ZcujFhHqb68GtdtTk1LfBfPOzJKnDW1euDmjSsgZ2ZAJD4w2aUHjtiASIZs6/Px881vx
+         6q27C7FVx9YzbrWOZpcn+VBRkfbnEqOGl8TZkRpHdvT5ymX3HSR42y2N5td4BgUZxStj
+         gf6DOPEzDtigbkSsKGuBaI6VScb2nyrVLmEXiS4PjxD9CRttUo/nkLvml97CrAty6jcT
+         pMAh8Yk9yMqKIJkAw9h5GEJj7a2yb26CjZk23W616WxiWo2uWE0WNRGtqIiex9daoVhc
+         oddw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=sul76dv3STc5/UWpJ9vmSfm2gGDqU8QZqXwdwOQU5TY=;
-        b=ExdpKm+s3B1VPikcvm8OeGIZfhJyXLlW1N+VWy/tj1AGF0HFPDDsnkYABpm0MBYWNV
-         soJy+RTIbTlyPrxvUeJJKDo2agnsxHm1Py/8qIdyVr/lFdGoIGEK/LcFJoXqQfzMLu76
-         Puf1sNMLrR/125oAhdEJuT6joPDYkdhwUIW9g/9AeC281AEyaYWMVV3jx9Wmcg4gmqWO
-         mMGgRUKl8dDIj8Xgd8x49niqAHAgCI1Bbqbfk7oJ/Ml6gMp73UR84K2pzhrHkyA9b9VR
-         lz2bh2QROKsj/Tm/DwpsRGTnyZ5fvzdT7AVEzj1wmVZvS59LHiYt2vzb4jK0hoX54zDt
-         lXLQ==
-X-Gm-Message-State: APjAAAWSYzznwGbPjlrS5KNAabIBKdRJoaAkFSAXUUS2PvxnaTdo8eSv
-        FtW/1CbTwoGuE5WvUNbR/Pq4YNZYUy6PoIgABRMUsc+FZarliCCfBdylYkHjWOtAXsO6ZNdHDRu
-        7KHVQs8/VWv9tB4SVL7oEbAau8wHm
-X-Received: by 2002:a24:738e:: with SMTP id y136mr8595816itb.147.1553467417704;
-        Sun, 24 Mar 2019 15:43:37 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzUO7Bn5GLpNWzElf5/ivicSmFq6GXcjoX7+4cfOKgYh8GN51FbrJhA3d+3pNiUNn9c1S59IA==
-X-Received: by 2002:a24:738e:: with SMTP id y136mr8595803itb.147.1553467417518;
-        Sun, 24 Mar 2019 15:43:37 -0700 (PDT)
+        bh=LANmRa7KJszDSWBvJL10LMMY9zi5I+m67De+DHavWrQ=;
+        b=GW5hCfnwbWzY/UFUm6+lE8zuqpIa9V7obPZRALL3B+g0AzuMM8e2nr2k6Frj2o3Yhp
+         +gHTZYIcPGXI2QP0PsOW/xuIWmRNuNjO5SeqBXmygFUl3uPIjvTNvERl+MDJrCr9q0Cx
+         NkkpevFF5Jz2n2Ee2jQCFc/OIrSgpClkKjxBkNpWlZPxi/ZRkJZIJvUI/WtfRZqiJ+1p
+         PcBW0B5YpaU7FU/H/0d0peOL6yvfMgUP8K2CBYL8ZHKjQEnw/kxcPKfzZ089zCkE2E1C
+         gkXX3mQ2SK5T/iz/OtZAm55osBCSMhR/2HclPtwvaeWM88RytUwOWXvuh0k7gjcFFfcv
+         GQDA==
+X-Gm-Message-State: APjAAAWfVAmADW+4Nz1yYi89yKFKrH1iC2eNDp2J8pn0DFlgjCwGgP2t
+        h1xObaWQA8o+XDx8Bm1JxGd7tKLM8IS46W1J4Z5zos6uXaAzw6UUooIzfDCETgiaFgLzRMwRvK4
+        d4uTZwnEtgRMXWt+w79qo7HARjZ0W
+X-Received: by 2002:a24:7d84:: with SMTP id b126mr6192529itc.58.1553467762706;
+        Sun, 24 Mar 2019 15:49:22 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyLT+BJSAp1mo0Mu2/0YoiFKic7Z/VA6u1nQzLz7mGh8hjJkRgendz6UA6VSrCuKOyuQ89INA==
+X-Received: by 2002:a24:7d84:: with SMTP id b126mr6192519itc.58.1553467762504;
+        Sun, 24 Mar 2019 15:49:22 -0700 (PDT)
 Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
-        by smtp.gmail.com with ESMTPSA id u197sm4849059itb.9.2019.03.24.15.43.36
+        by smtp.gmail.com with ESMTPSA id e18sm5032726itc.20.2019.03.24.15.49.21
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 24 Mar 2019 15:43:36 -0700 (PDT)
+        Sun, 24 Mar 2019 15:49:21 -0700 (PDT)
 From:   Kangjie Lu <kjlu@umn.edu>
 To:     kjlu@umn.edu
-Cc:     pakki001@umn.edu, Eric Anholt <eric@anholt.net>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dominic Braun <inf.braun@fau.de>,
-        =?UTF-8?q?Tobias=20B=C3=BCttner?= <tobias.buettner@fau.de>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Phil Elwell <phil@raspberrypi.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, devel@driverdev.osuosl.org,
+Cc:     pakki001@umn.edu, Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] vc04_services: vchiq_arm: fix a NULL pointer dereference
-Date:   Sun, 24 Mar 2019 17:43:30 -0500
-Message-Id: <20190324224331.1163-1-kjlu@umn.edu>
+Subject: [PATCH] thunderbolt: property: fix a buffer overflow and a missing check
+Date:   Sun, 24 Mar 2019 17:49:16 -0500
+Message-Id: <20190324224916.1389-1-kjlu@umn.edu>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When kzalloc fails, "platform_state->inited = 1" is a NULL pointer
-dereference. The fix returns VCHIQ_ERROR in case it failed to
-avoid NULL pointer dereference.
+First, no memory is allocated for "property->value.text"; the
+following strcpy will lead to a buffer overflow.
+
+Second, no check is enforced for the return value of kzalloc,
+which may lead to NULL-pointer dereference.
+
+The patch fixes the two issues.
 
 Signed-off-by: Kangjie Lu <kjlu@umn.edu>
 ---
- .../staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c  | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/thunderbolt/property.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
-index dd4898861b83..0f12fe617575 100644
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
-@@ -209,6 +209,8 @@ vchiq_platform_init_state(struct vchiq_state *state)
- 	struct vchiq_2835_state *platform_state;
+diff --git a/drivers/thunderbolt/property.c b/drivers/thunderbolt/property.c
+index 841314deb446..d5b0cdb8f0b1 100644
+--- a/drivers/thunderbolt/property.c
++++ b/drivers/thunderbolt/property.c
+@@ -587,7 +587,12 @@ int tb_property_add_text(struct tb_property_dir *parent, const char *key,
+ 		return -ENOMEM;
  
- 	state->platform_state = kzalloc(sizeof(*platform_state), GFP_KERNEL);
-+	if (!state->platform_state)
-+		return VCHIQ_ERROR;
- 	platform_state = (struct vchiq_2835_state *)state->platform_state;
+ 	property->length = size / 4;
+-	property->value.data = kzalloc(size, GFP_KERNEL);
++	property->value.text = kzalloc(size, GFP_KERNEL);
++	if (!property->value.text) {
++		kfree(property);
++		return -ENOMEM;
++	}
++
+ 	strcpy(property->value.text, text);
  
- 	platform_state->inited = 1;
+ 	list_add_tail(&property->list, &parent->properties);
 -- 
 2.17.1
 
