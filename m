@@ -2,96 +2,102 @@ Return-Path: <SRS0=2kAr=R3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF273C4360F
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 12:25:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE63C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 12:26:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC290222D6
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 12:25:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553430352;
-	bh=FL3tEc7++85Ctteo5zQGlckdt3wcBl4YBAzOqEiKZOI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=loelahau+Xb+eYVKKUY3424jIUFGVJGL9yC2IT/hG2o2dkqyHV3OlMxEa/AvDWytX
-	 xknWoorVKK9fxrCi0IYbM5yes9EIxHfNSSp6ViBrtNFDQIeprJFTwqQHHd32BupOMG
-	 wnGMl4+BlmjB4QnOEc26BCnjyXj2ZxqjgLR+ncjM=
+	by mail.kernel.org (Postfix) with ESMTP id AD180222C5
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 12:26:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hnolyfo2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728711AbfCXMZv (ORCPT
+        id S1728765AbfCXM0i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 08:25:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48768 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726160AbfCXMZv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 08:25:51 -0400
-Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE476222C5;
-        Sun, 24 Mar 2019 12:25:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553430350;
-        bh=FL3tEc7++85Ctteo5zQGlckdt3wcBl4YBAzOqEiKZOI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=p5bgxZyA3UF3/2teLe1+8jKmvVpI/rbq1VXSaCVK9s1gJ4VtxA4aV20gzddA2rLzv
-         ewUAPD5r5sDucrQVXpCbsG06NDqUqmvMyHmQilNk9eZrfKwFRN1BY53CiDGzEjbHHb
-         +NRggoIRZShXFGENPFYGCFWdoPXjxx9Gkj5M+hgc=
-Date:   Sun, 24 Mar 2019 12:25:44 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Daniel Drake <drake@endlessm.com>, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iio: st_accel: remove unnecessary comparison of
- unsigned integer with < 0
-Message-ID: <20190324122544.4fe69a14@archlinux>
-In-Reply-To: <20190318173302.GA10761@embeddedor>
-References: <20190318173302.GA10761@embeddedor>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 24 Mar 2019 08:26:38 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:37662 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726160AbfCXM0h (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Mar 2019 08:26:37 -0400
+Received: by mail-pg1-f196.google.com with SMTP id q206so4553583pgq.4;
+        Sun, 24 Mar 2019 05:26:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uKfu66mvQqRA/YcTG3vp2291hPAVZQDmUDzveKho0Hw=;
+        b=hnolyfo29YXbVjM8VGNHhMnVcULIcdtKND8JAIUeNtRWNRJXSrxF1/AH25OTWN6WX4
+         71t4U7NKkNTNtN2ObOORAmgfqY0n7VJNOYkpU5iklny8JxfOmPqmVfXTGJQt/Y1CL0Do
+         bQ4NEuVbgC9d0brcM1NDjKMUQCzTy6BBneMcXtIyaCFp/4y+BSGTBBVRaq+awMVzmGbK
+         zcufxpJ6uYe7jxpihJwHcBbKdk9oY1cx/RrFL0YYOdpm1Ia4nzev1gxa2swjXX4Vy/ev
+         PUy8JM1TGio1Le4CppjqQl5DAsLj2wgg8SdtlXklpkRmm4I1ORfTG881ZC1esqzSl3we
+         zTvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uKfu66mvQqRA/YcTG3vp2291hPAVZQDmUDzveKho0Hw=;
+        b=UOfFlpQsr5fjmYjkySXCIxnbPucYbaH/uExJ0TgyDXIcSEYohcQX+7YEUPxcjlrAa8
+         Bkzc+76fNCmry2UrpjWJ8C4JKWsZApcs+Witl7iCiz5sp5x4Kvh4cMvbQBZWRlCG1C6s
+         H0qtXY0IQOI2iTIsxau5N1D/EHvdqLZrrqEkWnzEZG84UFRAka2vzCnO0yPkHb5EeukS
+         azzsYWEMNnmRu+8zZVVAylq9bZ7nNkZJgdsyvzTAxLLIm53w3/CMfOFeAtnxaisef7gf
+         PwF/UAkzHfpDMKcojNgMLmBkiOeEbz8Bcs3TLzwmmbiq5W/Z/G4fkOQs5UHwZrpydxtU
+         2vgw==
+X-Gm-Message-State: APjAAAU6xF8A7eKJ8mXGvA8MpwiKh8O1fYtgXh8Mk0Rjbcic9eNppRml
+        VITQYcyk9YyK+zmO07TwASzbVJizd5a36IzFAts=
+X-Google-Smtp-Source: APXvYqxbfX+RnFdm5sfTWfmLfjKsxJWXit6p9+/2Qdq+G02bAW7OypBpk7nZ4kDdvXJcIKO4pRj2b+ItAV8vamZcmW0=
+X-Received: by 2002:aa7:914f:: with SMTP id 15mr18720988pfi.49.1553430397196;
+ Sun, 24 Mar 2019 05:26:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20190323225313.12325-1-pakki001@umn.edu> <CAHp75VdeB=jPaqY_VNDA7YeCiEdyVFJAmOmC4sDvZLBv-7KQ0w@mail.gmail.com>
+In-Reply-To: <CAHp75VdeB=jPaqY_VNDA7YeCiEdyVFJAmOmC4sDvZLBv-7KQ0w@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sun, 24 Mar 2019 14:26:25 +0200
+Message-ID: <CAHp75VfbPue803w06GdJwU_JYcFKEcShLpyGRMhOg9xi4ZwpAA@mail.gmail.com>
+Subject: Re: [PATCH v2] tty: 8250: fix a missing check for pci_ioremap_bar
+To:     Aditya Pakki <pakki001@umn.edu>
+Cc:     Kangjie Lu <kjlu@umn.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, Vinod Koul <vkoul@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 18 Mar 2019 12:33:02 -0500
-"Gustavo A. R. Silva" <gustavo@embeddedor.com> wrote:
+On Sun, Mar 24, 2019 at 2:05 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+> On Sun, Mar 24, 2019 at 12:55 AM Aditya Pakki <pakki001@umn.edu> wrote:
+> >
+> > pci_ioremap_bar could fail. The fix captures the failure and
+> > pass an error code upstream. This can avoid potential NULL
+> > pointer dereferences in the future.
+> >
+>
+> NAK.
+> This will break non-DMA case.
 
-> There is no need to compare *val* with < 0 because such comparison
-> of an unsigned value is always false.
-> 
-> Fix this by removing such comparison.
-> 
-> Addresses-Coverity-ID: 1443919 ("Unsigned compared against 0")
-> Fixes: f38ab20b749d ("iio: st_accel: use ACPI orientation data")
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Thanks,
+> > @@ -172,12 +172,14 @@ static void qrk_serial_setup_dma(struct lpss8250 *lpss, struct uart_port *port)
 
-Colin King got there first and I have a patch fixing this queued up.
+Just to clarify, what you need is simple
 
-Jonathan
+void __iomem *regs;
 
-> ---
->  drivers/iio/accel/st_accel_core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iio/accel/st_accel_core.c b/drivers/iio/accel/st_accel_core.c
-> index a3c0916479fa..9930edf423bf 100644
-> --- a/drivers/iio/accel/st_accel_core.c
-> +++ b/drivers/iio/accel/st_accel_core.c
-> @@ -992,7 +992,7 @@ static int apply_acpi_orientation(struct iio_dev *indio_dev,
->  			goto out;
->  
->  		val = elements[i].integer.value;
-> -		if (val < 0 || val > 2)
-> +		if (val > 2)
->  			goto out;
->  
->  		/* Avoiding full matrix multiplication, we simply reorder the
+chip->pdata = ... //move it here for better looking code
+chip->irq = ...
+chip->regs = pci_ioremap_bar(...);
+if (!chip->regs)
+  return;
 
+and thank you for pointing to this.
+
+-- 
+With Best Regards,
+Andy Shevchenko
