@@ -7,107 +7,125 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFFCCC43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 23:16:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA19FC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 23:19:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A632220989
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 23:16:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE5A320989
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 23:19:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="p6FDm876"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="KI2/RLEU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729095AbfCXXQK (ORCPT
+        id S1729113AbfCXXTE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 19:16:10 -0400
-Received: from mta-p5.oit.umn.edu ([134.84.196.205]:47722 "EHLO
-        mta-p5.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728957AbfCXXQJ (ORCPT
+        Sun, 24 Mar 2019 19:19:04 -0400
+Received: from mta-p7.oit.umn.edu ([134.84.196.207]:58162 "EHLO
+        mta-p7.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729057AbfCXXTD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 19:16:09 -0400
+        Sun, 24 Mar 2019 19:19:03 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mta-p5.oit.umn.edu (Postfix) with ESMTP id 7CA6B75B
-        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2019 23:16:08 +0000 (UTC)
+        by mta-p7.oit.umn.edu (Postfix) with ESMTP id C455F789
+        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2019 23:19:02 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p5.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p5.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id qF8IgVf03wOm for <linux-kernel@vger.kernel.org>;
-        Sun, 24 Mar 2019 18:16:08 -0500 (CDT)
-Received: from mail-it1-f199.google.com (mail-it1-f199.google.com [209.85.166.199])
+Received: from mta-p7.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p7.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id W0TSjDLqiWYi for <linux-kernel@vger.kernel.org>;
+        Sun, 24 Mar 2019 18:19:02 -0500 (CDT)
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
         (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mta-p5.oit.umn.edu (Postfix) with ESMTPS id 4A97964B
-        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2019 18:16:08 -0500 (CDT)
-Received: by mail-it1-f199.google.com with SMTP id 9so7656566ita.8
-        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2019 16:16:08 -0700 (PDT)
+        by mta-p7.oit.umn.edu (Postfix) with ESMTPS id 98C5E2FB
+        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2019 18:19:02 -0500 (CDT)
+Received: by mail-io1-f70.google.com with SMTP id z19so3007596ioc.22
+        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2019 16:19:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=umn.edu; s=google;
         h=from:to:cc:subject:date:message-id;
-        bh=UMAQnPK8j5lO5BOxxgj71E79FbIAa75eJ6alCWr8K1k=;
-        b=p6FDm876+CtOb/WltSl9lshn+E4ZUw6BKrh0KCI2oxFFnrbPVDnkvvDE3hupwAH9sc
-         rN9uUgROqngd3IrnGtE4VC0Q5gVPT8cZBKYCIcD1nTKk/QZvgdokrS2ZfW9e1ZOKXgx4
-         d7MaYScWMo4kbmOoS/GoJWaWtTxH/8ilwZmcoS3HG8AZ4HjF1E01AVVsMy+weCoy6Gvp
-         MeaNDDz/ZFaXQEdSaxj7wspCXzIMIIP+4ZBLK8ETxyLxYJurkg5M6rxSYvZjvRaUatCS
-         xo2Wc1WJqcKYUDPxcrQLHHcCO6tZclOWFrSgkMIu9y4W/AXWKY+D3VViBmvU64HXu8sx
-         nXRw==
+        bh=DF91ha0dMKA4SNjEEqMCAtpvjdqVDKJqxhx+V1bk7ac=;
+        b=KI2/RLEUqprR9I3ac1e06vgceq9vpiWtSsx0rNIfJ0w1Cg16RDmmxxmNSCFS6VbbBp
+         pi4ov761hFS48x7HGV/2o51keAMe+AOREUcFuhlyEH7FrhHmAjqwH0VjLCceDCFcE8Wl
+         q/0f94sgFQHoPT58o0QIjs4I6gLcKN8udcJYXgCP5nQSDW5UaCcSyR96h/WbpgsPWttY
+         bj9T1iaS68titJlWB7vvjY7cvNwtn02EAfOadF2MFehQ7K9p4a523G3GdS3mL+p5EtZ3
+         YMEjrldZhvkbzOPCeE0xn8esA3hbxSjvTXzwYThrYr/TTwUcThD9ICulbHZ5nKwwUZk8
+         jokA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=UMAQnPK8j5lO5BOxxgj71E79FbIAa75eJ6alCWr8K1k=;
-        b=Dnk7vC5N48wdgAnmhc/R7FmY+nzFf7tZvev4lkBGKq6QPC4ZjKObiP6PZ1aKTQ38Ha
-         lrRiMLR6pdnjFqi8Qm5N7jkSNqS6H/4clihP84TJczQeGgxA4ZkEWFdc7ko/757cOFYW
-         kY0f3zyUnrEEhr0pMurWF8lMgIqA7TU1Oywx2kTuObeLeJ4g1bHEpNi8m4WtGip0B58Z
-         HuTlb4ZLRfFJ1LJ0MY4T1mN0wCiQ4Eq++TwQ34JbTdk5jxZTwZ98TC3GHAFs5N4I46ii
-         Kyq0HG+rzrUlLx4TS1GRle5JBf9jGUfTkrJRVFyGUFg/xBX7aqalxeT9kWBrVq71vvMy
-         P3Bg==
-X-Gm-Message-State: APjAAAWqzvxmhiZaUR99bILwzgqurs8Tg/Q8UzAjvEh+S8EFSMXtXBtP
-        tXX1ui/fb9/QWxKkJknu0PBOKtlM8tM5mvEdJvTXDYpYnjVxH+d9ZZ1xtdME61QFNM4OkpAzmC7
-        JaXNsobH4o8UkAUDBus9TrjyVY4NJ
-X-Received: by 2002:a24:66c8:: with SMTP id k191mr9041392itc.20.1553469367963;
-        Sun, 24 Mar 2019 16:16:07 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyQmdvSQx0UEc7t6VCyV20zttcRLKZUoiSr/ZW9vSuUpYzSY3m3DYXu4MH75EjHhgiz+c0+pw==
-X-Received: by 2002:a24:66c8:: with SMTP id k191mr9041383itc.20.1553469367773;
-        Sun, 24 Mar 2019 16:16:07 -0700 (PDT)
+        bh=DF91ha0dMKA4SNjEEqMCAtpvjdqVDKJqxhx+V1bk7ac=;
+        b=mGH1ykakS7jzLpDpM8iAlIGV1BrYSqdEM4PaOF/NRx96w+rrjAYjTRujnDKtX3ifg/
+         LJRkg8wTsJu0aDrlnMybb7IcSA4e5bgfzWFdXEjhugPg0bF7fi+nmngTb1CD/eYaxjuw
+         03ooOeZKhuU9WcwOVxtqI2EgAACfzk+AmsZkthesCyLxOiSHZLQdSmrk8LhHCcVeUiOd
+         8JgE76CoDEsH0KOugtULvMVg7Yb/Spq/uEWaQQ9zL3TCXRxNQ+tJOQWp/Z+/8W5rfJpm
+         vixSD666OtCO9vMsn//WyxIumXQgbw9UxmI3QlyV7Qz5XOkZaK2YPhBvmyh4m20PlVRY
+         Sqbw==
+X-Gm-Message-State: APjAAAUColCf+xWh0HYnThHTU/h6DPO90Wd8/ji8oNWaad6Jn4k8vw5I
+        Fhk+Xx/PlPi5+CAiEBcqsobbOxuo9CbNPvQK8LPYSOyPLpGkzM3T4HxVx+hDuLw4KOHY+73Hla5
+        Fz8ypZ55ZO2Z9ZNJGrbYRAkUmGbgv
+X-Received: by 2002:a24:640d:: with SMTP id t13mr9096362itc.38.1553469542276;
+        Sun, 24 Mar 2019 16:19:02 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyFQuXEad+2wsrWluMo+QJPb3mFhvyjTn+307I6YvAJC5ILc62zh4cQPSGe7Xoyiwkmxaa2Kw==
+X-Received: by 2002:a24:640d:: with SMTP id t13mr9096358itc.38.1553469542100;
+        Sun, 24 Mar 2019 16:19:02 -0700 (PDT)
 Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
-        by smtp.gmail.com with ESMTPSA id g186sm8731444iof.41.2019.03.24.16.16.06
+        by smtp.gmail.com with ESMTPSA id h131sm4948542itb.6.2019.03.24.16.19.00
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 24 Mar 2019 16:16:06 -0700 (PDT)
+        Sun, 24 Mar 2019 16:19:01 -0700 (PDT)
 From:   Kangjie Lu <kjlu@umn.edu>
 To:     kjlu@umn.edu
-Cc:     pakki001@umn.edu, Eric Anholt <eric@anholt.net>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] gpu: v3d: fix a missing check of pm_runtime_get_sync
-Date:   Sun, 24 Mar 2019 18:16:02 -0500
-Message-Id: <20190324231602.2436-1-kjlu@umn.edu>
+Cc:     pakki001@umn.edu, Xue Liu <liuxuenetmail@gmail.com>,
+        Alexander Aring <alex.aring@gmail.com>,
+        Stefan Schmidt <stefan@datenfreihafen.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wpan@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] net: ieee802154: fix missing checks for regmap_update_bits
+Date:   Sun, 24 Mar 2019 18:18:56 -0500
+Message-Id: <20190324231856.2664-1-kjlu@umn.edu>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pm_runtime_get_sync could fail and thus deserves a check.
+regmap_update_bits could fail and deserves a check.
 
-The patch adds such a check and return its error code upstream
-if it indeed failed.
+The patch adds the checks and if it fails, returns its error
+code upstream.
 
 Signed-off-by: Kangjie Lu <kjlu@umn.edu>
 ---
- drivers/gpu/drm/v3d/v3d_drv.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ieee802154/mcr20a.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/gpu/drm/v3d/v3d_drv.c b/drivers/gpu/drm/v3d/v3d_drv.c
-index f0afcec72c34..99daad11fac2 100644
---- a/drivers/gpu/drm/v3d/v3d_drv.c
-+++ b/drivers/gpu/drm/v3d/v3d_drv.c
-@@ -101,6 +101,8 @@ static int v3d_get_param_ioctl(struct drm_device *dev, void *data,
- 			return -EINVAL;
+diff --git a/drivers/net/ieee802154/mcr20a.c b/drivers/net/ieee802154/mcr20a.c
+index c589f5ae75bb..8bb53ec8d9cf 100644
+--- a/drivers/net/ieee802154/mcr20a.c
++++ b/drivers/net/ieee802154/mcr20a.c
+@@ -533,6 +533,8 @@ mcr20a_start(struct ieee802154_hw *hw)
+ 	dev_dbg(printdev(lp), "no slotted operation\n");
+ 	ret = regmap_update_bits(lp->regmap_dar, DAR_PHY_CTRL1,
+ 				 DAR_PHY_CTRL1_SLOTTED, 0x0);
++	if (ret < 0)
++		return ret;
  
- 		ret = pm_runtime_get_sync(v3d->dev);
-+		if (ret < 0)
-+			return ret;
- 		if (args->param >= DRM_V3D_PARAM_V3D_CORE0_IDENT0 &&
- 		    args->param <= DRM_V3D_PARAM_V3D_CORE0_IDENT2) {
- 			args->value = V3D_CORE_READ(0, offset);
+ 	/* enable irq */
+ 	enable_irq(lp->spi->irq);
+@@ -540,11 +542,15 @@ mcr20a_start(struct ieee802154_hw *hw)
+ 	/* Unmask SEQ interrupt */
+ 	ret = regmap_update_bits(lp->regmap_dar, DAR_PHY_CTRL2,
+ 				 DAR_PHY_CTRL2_SEQMSK, 0x0);
++	if (ret < 0)
++		return ret;
+ 
+ 	/* Start the RX sequence */
+ 	dev_dbg(printdev(lp), "start the RX sequence\n");
+ 	ret = regmap_update_bits(lp->regmap_dar, DAR_PHY_CTRL1,
+ 				 DAR_PHY_CTRL1_XCVSEQ_MASK, MCR20A_XCVSEQ_RX);
++	if (ret < 0)
++		return ret;
+ 
+ 	return 0;
+ }
 -- 
 2.17.1
 
