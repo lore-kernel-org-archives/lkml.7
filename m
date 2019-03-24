@@ -2,101 +2,123 @@ Return-Path: <SRS0=2kAr=R3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03EE9C10F00
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 12:02:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 179C4C10F00
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 12:03:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5711222D1
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 12:02:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="To7dSYWh"
+	by mail.kernel.org (Postfix) with ESMTP id DEA9E222D6
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 12:03:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553428992;
+	bh=SP6sjF3Itg97ixCpRTFZP7MS5K7NcsGqRZ0iTfksgso=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=GLDEp5urpN1Gpt4aVvIomxIrbpYV4dUwFs4hrZrYzfJHqrORWttzaaJJVepBuktvP
+	 EH6Fx1MOO8KfWCDCTAsNa95S3Ns2zM2JWH3cyPbtvtdXPH+DzWOzn3XpHr08uxP5nx
+	 WXSsXmAmWG7MwyzCpYr9SHZWhrL96Od76Y/fp9B8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728689AbfCXMCW (ORCPT
+        id S1728723AbfCXMDL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 08:02:22 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:10966 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726160AbfCXMCW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 08:02:22 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5c9771cc0000>; Sun, 24 Mar 2019 05:02:20 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sun, 24 Mar 2019 05:02:21 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sun, 24 Mar 2019 05:02:21 -0700
-Received: from [10.26.11.193] (172.20.13.39) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 24 Mar
- 2019 12:02:18 +0000
-Subject: Re: [PATCH 4.4 000/230] 4.4.177-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20190322111236.796964179@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <954b1f55-c267-b88a-51cd-0a409039142d@nvidia.com>
-Date:   Sun, 24 Mar 2019 12:02:15 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Sun, 24 Mar 2019 08:03:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44948 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726160AbfCXMDL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Mar 2019 08:03:11 -0400
+Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24575222D1;
+        Sun, 24 Mar 2019 12:03:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553428990;
+        bh=SP6sjF3Itg97ixCpRTFZP7MS5K7NcsGqRZ0iTfksgso=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=pBxT4zFd1duFKIfBCqNp1X+c99BBrA/4jptB+GMBG4sIIq0bxK7lpqCOnjGOxb/2M
+         3Yhc4O0HeHxk2vHbAY4KFxX0QNAU9nrpkUWMD6dP4ZOmWcu7dQZz7FXpxYq2kaSWhr
+         mz05c/cVtZ9xzTVDYjEzV8nRVG+I2hveeUpHiMgU=
+Date:   Sun, 24 Mar 2019 12:03:02 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Andreas Klinger <ak@it-klinger.de>
+Cc:     devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, afaerber@suse.de,
+        arnd@arndb.de, davem@davemloft.net, gregkh@linuxfoundation.org,
+        johan@kernel.org, khilman@baylibre.com, knaack.h@gmx.de,
+        lars@metafoo.de, linux-kernel@vger.kernel.org,
+        martin.blumenstingl@googlemail.com, mchehab+samsung@kernel.org,
+        m.othacehe@gmail.com, nicolas.ferre@microchip.com,
+        pmeerw@pmeerw.net, robh@kernel.org, songqiang1304521@gmail.com,
+        treding@nvidia.com, techsupport@maxbotix.com
+Subject: Re: [PATCH v3 2/4] dt-bindings: maxbotix,mb1232: Add MaxBotix i2c
+ ultrasonic rangers
+Message-ID: <20190324120302.55388208@archlinux>
+In-Reply-To: <20190317203526.4pcwo4gdrrng44v7@arbad>
+References: <20190317203526.4pcwo4gdrrng44v7@arbad>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20190322111236.796964179@linuxfoundation.org>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
- HQMAIL101.nvidia.com (172.20.187.10)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1553428940; bh=BMO+AKYBpGR/vjTW4l0J8xRDbq4XJpgNHJM/siWCfSk=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=To7dSYWhJGnQKx4bNppjVQrGhWiqPYmbcxZ/RSJxIxOYiO/4RSZvZ0ugTu3x/WTa/
-         nNNCk69HYP9xcoNQXION7WBiKRO0ylM2YcEpeTWJAbcLmHDLUYNdLdDaPDHCuBRSpH
-         jt0V7kS9FlhejiKVzz4+jEHyQs214pt8ftccAg14z6OzcOUc5aQQsPCTvK+Hc+gjmM
-         o0Rj6E1ahG2GUK0lqQ/vx5BIcgDLZySRTCY4kgnNETLiHl8MgjBYiFpT0E5s8m95ZG
-         Wt8SB7+vkq1ZfBxu4QqgYyWitI9va4PGZhpGJtlPPtKvpPiEybcrMUpsHmLIV+ca2+
-         DEIvlfuWWfs9w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, 17 Mar 2019 21:35:27 +0100
+Andreas Klinger <ak@it-klinger.de> wrote:
 
-On 22/03/2019 11:12, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.4.177 release.
-> There are 230 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+> Add doc for dt binding maxbotix,mb1232. This binding is for MaxBotix
+> I2CXL-MaxSonar ultrasonic rangers which share a common i2c interface.
 > 
-> Responses should be made by Sun Mar 24 11:10:58 UTC 2019.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.177-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-Our daily builder has taken the weekend off unexpectedly and so I don't
-have a test report for this branch yet (although I was able to pull some
-reports for other branches) but I have given it a quick test myself and
-see no issues.
+> Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+This seems pretty straight forward so I'll apply it to the togreg branch
+of iio.git and push out as testing.  Still time for any feedback from
+Rob or others though before this goes out as non rebasing.
 
-Cheers
-Jon
+Thanks,
 
--- 
-nvpublic
+Jonathan
+
+> ---
+>  .../bindings/iio/proximity/maxbotix,mb1232.txt     | 31 ++++++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt b/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt
+> new file mode 100644
+> index 000000000000..0e9df87eca1d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt
+> @@ -0,0 +1,31 @@
+> +* MaxBotix I2CXL-MaxSonar ultrasonic distance sensor of type  mb1202,
+> +  mb1212, mb1222, mb1232, mb1242, mb7040 or mb7137 using the i2c interface
+> +  for ranging
+> +
+> +Required properties:
+> + - compatible:		"maxbotix,mb1202",
+> +			"maxbotix,mb1212",
+> +			"maxbotix,mb1222",
+> +			"maxbotix,mb1232",
+> +			"maxbotix,mb1242",
+> +			"maxbotix,mb7040" or
+> +			"maxbotix,mb7137"
+> +
+> + - reg:			i2c address of the device, see also i2c/i2c.txt
+> +
+> +Optional properties:
+> + - interrupt-parent:	Interrupt controller to use
+> +
+> + - interrupts:		Interrupt used to announce the preceding reading
+> +			request has finished and that data is available.
+> +			If no interrupt is specified the device driver
+> +			falls back to wait a fixed amount of time until
+> +			data can be retrieved.
+> +
+> +Example:
+> +proximity@70 {
+> +	compatible = "maxbotix,mb1232";
+> +	reg = <0x70>;
+> +	interrupt-parent = <&gpio2>;
+> +	interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
+> +};
+
