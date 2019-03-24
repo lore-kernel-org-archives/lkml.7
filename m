@@ -6,62 +6,61 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE069C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 18:40:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06F1FC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 18:40:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADEDA2133D
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 18:40:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE2032133D
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 18:40:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553452843;
-	bh=ZV5EJNolKIvs+5KwA5v+icx1qJFbpDEkxW3x2LfO3oY=;
+	s=default; t=1553452847;
+	bh=hYOAVjNrZIsuLjbQqkOcKSg1fk9e71Id7dK/W1j7ftA=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=cURGKshl4krbL6NzRjP+PW4d3Da1szc7dwmzW4HunSP1zf7E5wUYQrffypEFwZujN
-	 uuPLXxk5kpoUHGN19lpfaDVQOladfxMHNjh23O8qlPARJUnwTQuYUd+nJ5suZ/ylcZ
-	 xVpFpM5PoAc2CIsNBNsQfPDJJE93KUPv5kRT6N8g=
+	b=0QdoI4cJkkrqLMwRjk2/XvWAcRk8TDVaxUYPcOcXRJcdAwI9N74imAkgd81dAqGr6
+	 xkWiAKxmbXPrY6Iot4DCcKWyP4sIHt877Bo+SBE/5p7HxxXmIMAdJHjKKY2krNd9AQ
+	 hfy4EojJ0WHbQdeUbsKvIJS/U+JZvalKKIxnDoQM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728949AbfCXSkm (ORCPT
+        id S1729240AbfCXSkl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 14:40:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58638 "EHLO mail.kernel.org"
+        Sun, 24 Mar 2019 14:40:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728935AbfCXSkN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729076AbfCXSkN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 24 Mar 2019 14:40:13 -0400
-Subject: Re: [GIT PULL] SMB3 Fixes
+Subject: Re: [GIT pull] core updates for 5.1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1553452813;
-        bh=ZV5EJNolKIvs+5KwA5v+icx1qJFbpDEkxW3x2LfO3oY=;
+        bh=hYOAVjNrZIsuLjbQqkOcKSg1fk9e71Id7dK/W1j7ftA=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=n6FBw1SrklUp3xOn0y4tkPMdez6XYClBqvqjDpkfuHT9pVAHOHk3qf4xBf4u9Eq4g
-         VGogA5XUvHPmpzMQCs2ML0EJA82KHtNhU1xkIYv1HTPlAz+CgWwImnQptQVB+u6fX5
-         3HCGPXvClrZu1nDZrDQ/nPrdEyTW5xaS+ttoVubI=
+        b=n3+IA6gyuVPU7Os5QC3Z7iXXWUac/83cIBpGrUeDsud8RyH3uytMLPTZd7dUAJ2zI
+         JHFTuQc8IfwYNiFIUIMWj7rDKrf2dh1OqrkhEp8vUvc4leItvghOWHwWziBrcSFDmE
+         uFEdnrFblYdAZ3xg6i9qk/H6tyM/GQy8K30HmxaY=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CAH2r5musNnYwS04DgN5W8yZMDvZG1UhLraOo_qsRjA8nVudacA@mail.gmail.com>
-References: <CAH2r5musNnYwS04DgN5W8yZMDvZG1UhLraOo_qsRjA8nVudacA@mail.gmail.com>
+In-Reply-To: <155343674151.28403.7455818401538063350.tglx@nanos.tec.linutronix.de>
+References: <155343674151.28403.7455818401538063350.tglx@nanos.tec.linutronix.de>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAH2r5musNnYwS04DgN5W8yZMDvZG1UhLraOo_qsRjA8nVudacA@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.samba.org/sfrench/cifs-2.6.git
- tags/5.1-rc1-cifs-smb3-fixes
-X-PR-Tracked-Commit-Id: cf7d624f8dcc9b833a8489208b6ef6dcc5dd308b
+X-PR-Tracked-Message-Id: <155343674151.28403.7455818401538063350.tglx@nanos.tec.linutronix.de>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
+ core-urgent-for-linus
+X-PR-Tracked-Commit-Id: 48084abf212052ca1d39fae064c581b1ce5b1fdf
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 38104c00200898120e12a73db27cea2b7055ea3c
-Message-Id: <155345281295.5356.14418180419225073288.pr-tracker-bot@kernel.org>
-Date:   Sun, 24 Mar 2019 18:40:12 +0000
-To:     Steve French <smfrench@gmail.com>
+X-PR-Merge-Commit-Id: 1ebf5afb23cd856043bd0a423e95f95e84d9728d
+Message-Id: <155345281332.5356.16625331020669889692.pr-tracker-bot@kernel.org>
+Date:   Sun, 24 Mar 2019 18:40:13 +0000
+To:     Thomas Gleixner <tglx@linutronix.de>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        CIFS <linux-cifs@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+        linux-kernel@vger.kernel.org, x86@kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sat, 23 Mar 2019 22:22:33 -0500:
+The pull request you sent on Sun, 24 Mar 2019 14:12:21 -0000:
 
-> git://git.samba.org/sfrench/cifs-2.6.git tags/5.1-rc1-cifs-smb3-fixes
+> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git core-urgent-for-linus
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/38104c00200898120e12a73db27cea2b7055ea3c
+https://git.kernel.org/torvalds/c/1ebf5afb23cd856043bd0a423e95f95e84d9728d
 
 Thank you!
 
