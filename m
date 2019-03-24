@@ -2,115 +2,90 @@ Return-Path: <SRS0=2kAr=R3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98DC4C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 11:31:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D4B7C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 11:32:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70EE8222D0
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 11:31:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33034222D1
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 11:32:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="DvaTcZ1w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728615AbfCXLbr (ORCPT
+        id S1728689AbfCXLcd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 07:31:47 -0400
-Received: from bmailout2.hostsharing.net ([83.223.90.240]:52689 "EHLO
-        bmailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726160AbfCXLbq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 07:31:46 -0400
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by bmailout2.hostsharing.net (Postfix) with ESMTPS id 847262800B48A;
-        Sun, 24 Mar 2019 12:31:44 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 34A8E33099; Sun, 24 Mar 2019 12:31:44 +0100 (CET)
-Date:   Sun, 24 Mar 2019 12:31:44 +0100
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH v2 17/28] thunderbolt: Add support for full PCIe daisy
- chains
-Message-ID: <20190324113144.wubme46hby7rj6r2@wunner.de>
-References: <20190206131738.43696-1-mika.westerberg@linux.intel.com>
- <20190206131738.43696-18-mika.westerberg@linux.intel.com>
+        Sun, 24 Mar 2019 07:32:33 -0400
+Received: from ozlabs.org ([203.11.71.1]:34819 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726160AbfCXLcc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Mar 2019 07:32:32 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44RwH244dfz9sS5;
+        Sun, 24 Mar 2019 22:32:30 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1553427150;
+        bh=Cz8HdbTt6cYAAD5buSDFvGalHWMmTtKSOpFWH57stWg=;
+        h=Date:From:To:Cc:Subject:From;
+        b=DvaTcZ1wAC9MJ+i3dqvcGQ7XkRbrQ9qJAHLVAodAMCJnuU5PqZwJLs/A6NwlcySVe
+         +GgBqVqnfCOYTzETOynWqXhetn6ayrTBsRCpK1J7lgmjhNrip8rESfHqYCc5p7VxR6
+         55q4jwxKLfwUnbOZVPjMx9eipV7Y+0QrYYosEi1XVtaxbjATyMatVRY/YhUAekP96+
+         WTGDk2YIqOk9Nb0HIjTLUg8JRJ6cEaDvXRvCjsBGYJPyAEb8YfokwdZv2wvQoZzzV5
+         MDxH+/kXmZ22rsDin9li7yM5Yexl54NpOf12D9NEIA62oLF85tKvRrnfubxkzUTT9r
+         TWzpaqUEepUxg==
+Date:   Sun, 24 Mar 2019 22:32:27 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Signed-off-by missing for commits in the coresight tree
+Message-ID: <20190324223227.1987c866@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190206131738.43696-18-mika.westerberg@linux.intel.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/9Cp+v+LaQOKw2piETWmDytV"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 06, 2019 at 04:17:27PM +0300, Mika Westerberg wrote:
-> @@ -63,6 +71,16 @@ static void tb_discover_tunnels(struct tb_switch *sw)
->  	}
->  }
->  
-> +static void tb_switch_authorize(struct work_struct *work)
-> +{
-> +	struct tb_switch *sw = container_of(work, typeof(*sw), work);
-> +
-> +	mutex_lock(&sw->tb->lock);
-> +	if (!sw->is_unplugged)
-> +		tb_domain_approve_switch(sw->tb, sw);
-> +	mutex_unlock(&sw->tb->lock);
-> +}
-> +
+--Sig_/9Cp+v+LaQOKw2piETWmDytV
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-You're establishing PCI tunnels by having tb_scan_port() schedule
-tb_switch_authorize() via a work item, which in turn calls
-tb_domain_approve_switch(), which in turn calls tb_approve_switch(),
-which in turn calls tb_tunnel_pci().
+Hi Mathieu,
 
-This seems kind of like a roundabout way of doing things, in particular
-since all switches are hardcoded to be automatically authorized.
+Commits
 
-Why don't you just invoke tb_tunnel_pci() directly from tb_scan_port()?
-And why is the work item needed?  I'm also confused that the work item
-has been present in struct tb_switch for 2 years but is put to use only
-now.
+  0a3a3dfb0d15 ("perf tools: Add missing case value")
+  0dd14fd06504 ("perf cs-etm: return errcode in cs_etm__process_auxtrace_in=
+fo()")
+  9b884872f9be ("perf cs-etm: Remove errnoeous ERR_PTR() usage in cs_etm__p=
+rocess_auxtrace_info")
 
+are missing a Signed-off-by from their committer.
 
-> -static void tb_activate_pcie_devices(struct tb *tb)
-> +static int tb_tunnel_pci(struct tb *tb, struct tb_switch *sw)
->  {
-[...]
-> +	/*
-> +	 * Look up available down port. Since we are chaining, it is
-> +	 * typically found right above this switch.
-> +	 */
-> +	down = NULL;
-> +	parent_sw = tb_to_switch(sw->dev.parent);
-> +	while (parent_sw) {
-> +		down = tb_find_unused_down_port(parent_sw);
-> +		if (down)
-> +			break;
-> +		parent_sw = tb_to_switch(parent_sw->dev.parent);
-> +	}
+--=20
+Cheers,
+Stephen Rothwell
 
-The problem I see here is that there's no guarantee that the switch
-on which you're selecting a down port is actually itself connected
-with a PCI tunnel.  E.g., allocation of a tunnel to that parent
-switch may have failed.  In that case you end up establishing a
-tunnel between that parent switch and the newly connected switch
-but the tunnel is of no use.
+--Sig_/9Cp+v+LaQOKw2piETWmDytV
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-It would seem more logical to me to walk down the chain of newly
-connected switches and try to establish a PCI tunnel to each of
-them in order.  By deferring tunnel establishment to a work item,
-I think the tunnels may be established in an arbitrary order, right?
+-----BEGIN PGP SIGNATURE-----
 
-Thanks,
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlyXassACgkQAVBC80lX
+0Gw0VggAlr3kAsn0tVyYqYAB7NipocrEVzLApUHlum2Ay1rA5Fh97WZd/4ZoiPnG
+uQGBbAYeKZ9iuVnydx6pMoG9J9Q47wNof2FyOf+ALgrVoOnvkQQNG4HwOl2qNwdn
+FVHhKMtbXVt5gAI0rax/qQbCU1GZLtUnOsUR0JH/iNlb3kboHucL1drL/KInsxLs
+uPu+zHyxcDynCYpZnT40YBLFWdERY+C+KC3oJFfkTQuakNcnDSn0YMIPHbgZ/ahP
+7DYKuUGmKidJ0KWuo3sgf5tbUc3lrMwOyzGbr3thHMb3kIvAG3qeT2bxRaWUtqZ4
+sW9JaI3C2+kJgoDOTNEqQx3XtagE8Q==
+=rdCs
+-----END PGP SIGNATURE-----
 
-Lukas
+--Sig_/9Cp+v+LaQOKw2piETWmDytV--
