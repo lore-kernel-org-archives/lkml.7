@@ -2,118 +2,185 @@ Return-Path: <SRS0=2kAr=R3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFBA4C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 22:28:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F419C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 22:32:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75CAB2133F
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 22:28:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="i6cW3FjB"
+	by mail.kernel.org (Postfix) with ESMTP id 547CF20989
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 22:32:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729065AbfCXW2P (ORCPT
+        id S1729053AbfCXWcJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 18:28:15 -0400
-Received: from ozlabs.org ([203.11.71.1]:38949 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728907AbfCXW2P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 18:28:15 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44SBqb29RVz9sRW;
-        Mon, 25 Mar 2019 09:28:11 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1553466492;
-        bh=XEV9ZXY5HIJIqh3sOrGG+59tMudBznBXQp8RASSRVao=;
-        h=Date:From:To:Cc:Subject:From;
-        b=i6cW3FjBE5JLLX3ehSEOlJZORN8/McdyjLh4qyYeAJh/x3CG0ik48JUf+9MedcMYy
-         jIXu98NTeo2WJkzvvG4qstcD+4x542CRR2woX2RhntRvDnrcJfx709FEMKkQBHV54n
-         Xm0PHXFDasHUeqKRJaaLmBFyeMfpdHED933kMpo3WtPRGHk7ipEjfm/8yY87Wk12yR
-         WGAw+RtA6Umu2lIDRqmbhB2micphWqKnBbT90+nls9AkM42Z9/62NXjPD+gTi3iEhs
-         9Q1OLxAj7CqmT1e4ElFKfmb8XMIJjehsK+vbCVkZH48fQolFxhk/TToKLAhhGi5A0t
-         EIzAia3f/npig==
-Date:   Mon, 25 Mar 2019 09:28:04 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Willem de Bruijn <willemb@google.com>,
-        David Miller <davem@davemloft.net>
-Subject: linux-next: build warning after merge of the bpf-next tree
-Message-ID: <20190325092804.650ebdb0@canb.auug.org.au>
+        Sun, 24 Mar 2019 18:32:09 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:43226 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728971AbfCXWcJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Mar 2019 18:32:09 -0400
+Received: by mail-oi1-f196.google.com with SMTP id 67so5489977oif.10
+        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2019 15:32:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XAfYxCECD1BumVMAvzc9x9UmHGldg5m5w2xbFoBWpts=;
+        b=j4hCJmRYwVhqDhVXhOCiFLSEyhQNGnGKIUOU1wm+0c/s515cm0JrQ5SvJrhDff8fkH
+         LEIQYz1KDfNuwaR8HK9XpCdYJvc+JMA+KQji6pBEBykimIjJwsKwW7KCbqXidpLWTKP3
+         YbSr/MthDzYqEB6ZnGt0+wXPJw/r613TaCnGsTFMpyUy55QViQ5ajYqGV6N7yph8tUUZ
+         Cj6iTbnNeOdHGToFngJ3PT6Ftm7hBh6O2FYlGyqjUvD8c8pVuG4oaVkoQbyXw9q+qMOi
+         cCh3F7Bl8gcn9/UdwuiNviYB0Z9T3adT3/aFsPFtdoA6+Ggxuru9Rt90imKjsc56e58X
+         oM7A==
+X-Gm-Message-State: APjAAAUazsiBcD4A3SlNbCsoULaDXbA+IdXVzURww1wlxIVCqpq8pysu
+        PrbCgRg4hdYyzE28+vDASuo=
+X-Google-Smtp-Source: APXvYqxywW9NrKkETCyQWHycpAOciWJnVNdC0hqqD9I5FdIl/LTCEmMi2QYAcle0nAnYWxUPTILWcQ==
+X-Received: by 2002:aca:3e83:: with SMTP id l125mr9428894oia.146.1553466728435;
+        Sun, 24 Mar 2019 15:32:08 -0700 (PDT)
+Received: from sultan-box.localdomain ([107.193.118.89])
+        by smtp.gmail.com with ESMTPSA id u22sm3836521otk.49.2019.03.24.15.32.06
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 24 Mar 2019 15:32:07 -0700 (PDT)
+Date:   Sun, 24 Mar 2019 15:32:02 -0700
+From:   Sultan Alsawaf <sultan@kerneltoast.com>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: Re: [RFCv2] string: Use faster alternatives when constant arguments
+ are used
+Message-ID: <20190324223202.GA875@sultan-box.localdomain>
+References: <20190324014445.28688-1-sultan@kerneltoast.com>
+ <20190324022406.GA18988@sultan-box.localdomain>
+ <2293c54f-40b1-1e59-665a-bd8f2cb957d2@rasmusvillemoes.dk>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/YNsqztMGNElbYCVRa5A4DFZ"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2293c54f-40b1-1e59-665a-bd8f2cb957d2@rasmusvillemoes.dk>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/YNsqztMGNElbYCVRa5A4DFZ
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Sun, Mar 24, 2019 at 10:17:49PM +0100, Rasmus Villemoes wrote:
+> gcc already knows the semantics of these functions and can optimize
+> accordingly. E.g. for strcpy() of a literal to a buffer, gcc readily
+> compiles
 
-Hi all,
+The example you gave appears to get optimized accordingly, but there are
+numerous sane counterexamples that don't get optimized.
 
-After merging the bpf-next tree, today's linux-next build (x86_64
-allmodconfig) produced this warning:
+On arm64, with GCC 8.3.0, let's look at the simple strcmp usage in
+kernel/trace/preemptirq_delay_test.c:
 
-net/core/filter.c: In function 'bpf_skb_adjust_room':
-net/core/filter.c:3022:31: warning: 'inner_trans' may be used uninitialized=
- in this function [-Wmaybe-uninitialized]
-   skb->inner_transport_header =3D inner_trans;
-   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~
-net/core/filter.c:2979:26: note: 'inner_trans' was declared here
-  u16 mac_len, inner_net, inner_trans;
-                          ^~~~~~~~~~~
-net/core/filter.c:3021:29: warning: 'inner_net' may be used uninitialized i=
-n this function [-Wmaybe-uninitialized]
-   skb->inner_network_header =3D inner_net;
-   ~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~
-net/core/filter.c:2979:15: note: 'inner_net' was declared here
-  u16 mac_len, inner_net, inner_trans;
-               ^~~~~~~~~
-net/core/filter.c:3026:3: warning: 'mac_len' may be used uninitialized in t=
-his function [-Wmaybe-uninitialized]
-   skb_set_network_header(skb, mac_len);
-   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-net/core/filter.c:2979:6: note: 'mac_len' was declared here
-  u16 mac_len, inner_net, inner_trans;
-      ^~~~~~~
+static int preemptirq_delay_run(void *data)
+{
+	unsigned long flags;
 
-Introduced by commit
+	if (!strcmp(test_mode, "irq")) {
+		local_irq_save(flags);
+		busy_wait(delay);
+		local_irq_restore(flags);
+	} else if (!strcmp(test_mode, "preempt")) {
+		preempt_disable();
+		busy_wait(delay);
+		preempt_enable();
+	}
 
-  868d523535c2 ("bpf: add bpf_skb_adjust_room encap flags")
+	return 0;
+}
 
+This is what happens without my patch:
 
-This looks like a false positive, it seems that they are only set and
-used when encap is true.
+preemptirq_delay_run:
+.LFB2517:
+	.cfi_startproc
+	stp	x29, x30, [sp, -32]!
+	.cfi_def_cfa_offset 32
+	.cfi_offset 29, -32
+	.cfi_offset 30, -24
+	adrp	x1, .LC0
+	add	x1, x1, :lo12:.LC0
+	mov	x29, sp
+	stp	x19, x20, [sp, 16]
+	.cfi_offset 19, -16
+	.cfi_offset 20, -8
+	adrp	x19, .LANCHOR0
+	add	x19, x19, :lo12:.LANCHOR0
+	mov	x0, x19
+>	bl	strcmp
+	cbz	w0, .L22
+	adrp	x1, .LC1
+	mov	x0, x19
+	add	x1, x1, :lo12:.LC1
+>	bl	strcmp
+	cbz	w0, .L23
 
---=20
-Cheers,
-Stephen Rothwell
+The calls to strcmp are not optimized out. Here is what this snippet looks like
+after my patch:
 
---Sig_/YNsqztMGNElbYCVRa5A4DFZ
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+preemptirq_delay_run:
+.LFB2517:
+	.cfi_startproc
+	stp	x29, x30, [sp, -32]!
+	.cfi_def_cfa_offset 32
+	.cfi_offset 29, -32
+	.cfi_offset 30, -24
+	adrp	x0, .LANCHOR0
+	mov	w1, 29289
+	mov	x29, sp
+	ldr	w2, [x0, #:lo12:.LANCHOR0]
+	movk	w1, 0x71, lsl 16
+	add	x3, x0, :lo12:.LANCHOR0
+	cmp	w2, w1
+	beq	.L23
+	ldr	x1, [x0, #:lo12:.LANCHOR0]
+	mov	x0, 29296
+	movk	x0, 0x6565, lsl 16
+	movk	x0, 0x706d, lsl 32
+	movk	x0, 0x74, lsl 48
+	cmp	x1, x0
+	beq	.L24
 
------BEGIN PGP SIGNATURE-----
+The calls to strcmp were optimized out completely, not even replaced by a call
+to memcmp.
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlyYBHQACgkQAVBC80lX
-0Gz5oQf/bqDuspc7rew3DSlB8gTjirNsI/I6Kr7rvSxha9KkS2dPYyc7PovVNLSL
-plCz3k3qAIvfOuu/ZthW6/NHTSrgfyKSoYqMXpztU8O2v1886BFsnW3eGhxbWrAi
-1fu4cFsTQ6VeYzVwSoKExwAKIR1/MYG6VAZzMGj91lsAmlaZtvkw4kzzKRRY6WKl
-WVKYwau53lLuQTs4HFGWZ8GiCdYLhbrp4RN5GjjyflAOZJPe6RHf9Z7fXOvvufAD
-+s8LlSnpxYaYIOj1uffM1ev+Vr1fzKjKUuwk7tvNYm+QW6FeqmGMRoxa+ntaHc04
-+pXcOofMZUn+discynRTAN/Xkf2V9Q==
-=0Joz
------END PGP SIGNATURE-----
+I can produce lots of kernel examples that don't seem to follow basic str*
+optimization, which is what prompted me to write this in the first place.
 
---Sig_/YNsqztMGNElbYCVRa5A4DFZ--
+> Does this even compile? It's a well-known (or perhaps
+> not-so-well-known?) pitfall that __builtin_constant_p() is not
+> guaranteed to be usable in __builtin_choose_expr() - the latter only
+> accepts bona fide integer constant expressions, while evaluation of
+> __builtin_constant_p can be delayed until various optimization phases.
+
+It not only compiles, but also seems to work correctly from what I've observed.
+
+> This seems to be buggy - you don't know that src is at least as long as
+> dest. And arguing "if it's shorter, there's a nul byte, which will
+> differ from dest at that point, so memcmp will/should stop" means that
+> the whole word-at-a-time argument would be out.
+
+You mean reading the last word of a string could read out of bounds of the
+string when using memcmp? There are lots of memcmp instances using a literal
+string in the kernel; I don't think it would be hard to find one that violates
+what you've pointed out, so I'm not really sure why it's a problem.
+
+After a few minutes of grepping, it seems like the memcmp usage in
+drivers/md/dm-integrity.c can read out of bounds on its arguments:
+} else if (!memcmp(opt_string, "internal_hash:", strlen("internal_hash:"))) {
+	r = get_alg_and_key(opt_string, &ic->internal_hash_alg, &ti->error,
+			    "Invalid internal_hash argument");
+	if (r)
+		goto bad;
+} else if (!memcmp(opt_string, "journal_crypt:", strlen("journal_crypt:"))) {
+	r = get_alg_and_key(opt_string, &ic->journal_crypt_alg, &ti->error,
+			    "Invalid journal_crypt argument");
+	if (r)
+		goto bad;
+} else if (!memcmp(opt_string, "journal_mac:", strlen("journal_mac:"))) {
+
+Where opt_string is a dynamically-set argument with no specified minimum length.
+
+Sultan
