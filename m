@@ -4,83 +4,143 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4926C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 07:35:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 208AFC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 07:35:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D2F32148D
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 07:35:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC6F12148D
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 07:35:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728525AbfCXHfC (ORCPT
+        id S1728550AbfCXHfI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 03:35:02 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:51998 "EHLO
+        Sun, 24 Mar 2019 03:35:08 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:47886 "EHLO
         mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728263AbfCXHfB (ORCPT
+        with ESMTP id S1728263AbfCXHfF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 03:35:01 -0400
-Received: by mail-io1-f71.google.com with SMTP id y18so5287418ior.18
-        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2019 00:35:01 -0700 (PDT)
+        Sun, 24 Mar 2019 03:35:05 -0400
+Received: by mail-io1-f71.google.com with SMTP id b199so5337160iof.14
+        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2019 00:35:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
          :from:to;
-        bh=Tb6hbSz7QJfU3STDpb3qAlCvwBNFR3Y5spmhaX59toU=;
-        b=l0JBgkTCdpCPyFPHSwqKRdb13q0vm1oZzvgz2k9IKXN29CHWtN7XVZncBx83aTPfUN
-         suzvwJH6qFAoWlxddASnE22Rs8O5kNPYEhXrEO3ZR5Q/hfNQJrjfjSydnAy1Em9yakKL
-         V3uEmGVLIkei5RUJjei/dh4tEF+zpNc5tumcU0fvxGOHiThn95oo6jda0AsJwXFUtgly
-         zldmoUR6lfn+whK18jIczVCNaRhVwq6knlfcF0W/FfCO5JvFpaO2DMBQO+GroluVfYRN
-         noq8sZSF1YPTn4oKEQBdMlt1svhAUKnTav8WsmipOR5VqwqJf9owm/3bo1l4wqOtijen
-         0wBA==
-X-Gm-Message-State: APjAAAVUoiywOKhxrs8jCy7eSWe1b8GjnW8iQk7pO+STX7iB9xzHnblG
-        Z2I9oPcTZz8F5lb/g0bB5dMpY2R2+PrxHIYhNZUsbNDi/0JN
-X-Google-Smtp-Source: APXvYqycjcc0exb2f2tjz6rFgVlnjVAl4Nis6sRSs02Mtxp5FLAjjfrUSMJP6XY+mWSSrseC3TXf08NWZpLrgvROhX1ok/3TwcW0
+        bh=M+8R9CNl+dwGuvWY+cqskh4FBZP6bvG/g7lGqjy9mEU=;
+        b=ei/sIypMFLsyOOesXQfwmbNj2+fVv2wqCwIJUvNBrdzl/0e8m0kfxaw0SZacprwYcA
+         JPBlPmEuFw3czuhQiXwQpDfZrLD6nsX7yT22F7I8wWXYzC7Xn942L9vyYwbV2YC+7Ye8
+         /7hOGpenr3E7CqtRPsGKDPi1VVes6mdAj4B0Up2YyVndg3TVW/9uKtkcS2IVhJN4P3NI
+         VnWwx85hrJsmSYhyKcYIrwqCOsQ5uUouMzgJCSG9vFf6jbk1zI3WJVJJ+G5mPgi5ednC
+         mG0HSnglGAYGScr+5cqBHcGqkJXwneEJRCqniMNcorBI4svwnaC/E59NhVRBtntXWUD5
+         FuUg==
+X-Gm-Message-State: APjAAAWXm33ln4MDmh9Jg1U9Z3sRFlBjXA0shKUVRA0lZaUP3vQd8EuA
+        Y3kZUdxTXaCWP7NVb42KGduMJEJ4w4wiO0vmNFDFg6te8RD2
+X-Google-Smtp-Source: APXvYqxSWcuslqrPVa2QlSE34/I+F/rjWT5GiXPhgUPghAIcZIy390/sCY1Pmo2XI2ODn9SeVVUANT8MqwtmHVe5py98caxoVVo2
 MIME-Version: 1.0
-X-Received: by 2002:a02:97f8:: with SMTP id v53mr13751082jaj.100.1553412901327;
- Sun, 24 Mar 2019 00:35:01 -0700 (PDT)
-Date:   Sun, 24 Mar 2019 00:35:01 -0700
-In-Reply-To: <000000000000fa4f60057e499989@google.com>
+X-Received: by 2002:a05:660c:14b:: with SMTP id r11mr7276145itk.157.1553412905242;
+ Sun, 24 Mar 2019 00:35:05 -0700 (PDT)
+Date:   Sun, 24 Mar 2019 00:35:05 -0700
+In-Reply-To: <000000000000639f6a0584d11b82@google.com>
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000002c5a7f0584d220fa@google.com>
-Subject: Re: WARNING in batadv_mcast_mla_tt_retract
-From:   syzbot <syzbot+83f2d54ec6b7e417e13f@syzkaller.appspotmail.com>
-To:     a@unstable.cc, alexander.h.duyck@intel.com,
-        amritha.nambiar@intel.com, avagin@gmail.com,
-        b.a.t.m.a.n@lists.open-mesh.org, davem@davemloft.net,
-        devicetree@vger.kernel.org, dmitry.torokhov@gmail.com,
-        heiko@sntech.de, jeffrey.t.kirsher@intel.com, joe@perches.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, mareklindner@neomailbox.ch,
-        mark.rutland@arm.com, netdev@vger.kernel.org, robh+dt@kernel.org,
-        sw@simonwunderlich.de, syzkaller-bugs@googlegroups.com,
-        tyhicks@canonical.com
+Message-ID: <000000000000681a2e0584d220d6@google.com>
+Subject: Re: WARNING in arch_install_hw_breakpoint
+From:   syzbot <syzbot+370a6b0f11867bf13515@syzkaller.appspotmail.com>
+To:     bp@alien8.de, frederic@kernel.org, gustavo@embeddedor.com,
+        hpa@zytor.com, linux-kernel@vger.kernel.org, mhiramat@kernel.org,
+        mingo@redhat.com, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de, x86@kernel.org
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+syzbot has found a reproducer for the following crash on:
 
-commit 2ed30cfcf866f657349bf9f54a017a957cd98378
-Author: Heiko Stuebner <heiko@sntech.de>
-Date:   Thu Aug 2 11:36:41 2018 +0000
-
-     arm64: dts: rockchip: enable dwc2-based otg controller on px30-evb
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=177e9917200000
-start commit:   4b3c31c8 Merge branch 'i2c/for-current' of git://git.kerne..
+HEAD commit:    fd1f297b Merge tag 'drm-fixes-2019-03-22' of git://anongit..
 git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=14fe9917200000
-console output: https://syzkaller.appspot.com/x/log.txt?x=10fe9917200000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b05cfdb4ee8ab9b2
-dashboard link: https://syzkaller.appspot.com/bug?extid=83f2d54ec6b7e417e13f
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=139c6408c00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=1574f56d200000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=9a31fb246de2a622
+dashboard link: https://syzkaller.appspot.com/bug?extid=370a6b0f11867bf13515
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1157b7cf200000
 
-Reported-by: syzbot+83f2d54ec6b7e417e13f@syzkaller.appspotmail.com
-Fixes: 2ed30cfcf866 ("arm64: dts: rockchip: enable dwc2-based otg  
-controller on px30-evb")
+Bisection is inconclusive: the bug happens on the oldest tested release.
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10ca39b3200000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=12ca39b3200000
+console output: https://syzkaller.appspot.com/x/log.txt?x=14ca39b3200000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+370a6b0f11867bf13515@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+Can't find any breakpoint slot
+WARNING: CPU: 0 PID: 8058 at arch/x86/kernel/hw_breakpoint.c:121  
+arch_install_hw_breakpoint+0x2d6/0x3a0 arch/x86/kernel/hw_breakpoint.c:121
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 8058 Comm: syz-executor.1 Not tainted 5.1.0-rc1+ #33
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  panic+0x2cb/0x65c kernel/panic.c:214
+  __warn.cold+0x20/0x45 kernel/panic.c:571
+  report_bug+0x263/0x2b0 lib/bug.c:186
+  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
+  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
+  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:973
+RIP: 0010:arch_install_hw_breakpoint+0x2d6/0x3a0  
+arch/x86/kernel/hw_breakpoint.c:121
+Code: c8 48 83 c4 18 5b 41 5c 41 5d 41 5e 41 5f 5d c3 0f 0b 0f 0b 48 c7 c7  
+40 23 65 87 89 45 d4 c6 05 ed 9d 32 08 01 e8 98 43 1b 00 <0f> 0b 8b 45 d4  
+e9 bc fd ff ff 40 88 75 c8 e8 a7 8e 80 00 0f b6 75
+RSP: 0018:ffff8880a512f6d8 EFLAGS: 00010086
+RAX: 0000000000000000 RBX: ffff8880ae81ec98 RCX: 0000000000000000
+RDX: 0000000040000000 RSI: ffffffff815ae266 RDI: ffffed1014a25ecd
+RBP: ffff8880a512f718 R08: ffff8880857382c0 R09: fffffbfff11335f5
+R10: fffffbfff11335f4 R11: ffffffff8899afa3 R12: ffff888085730380
+R13: dffffc0000000000 R14: 0000000000000004 R15: 000000000001eca0
+  hw_breakpoint_add+0xa7/0x130 kernel/events/hw_breakpoint.c:632
+  event_sched_in kernel/events/core.c:2281 [inline]
+  event_sched_in.isra.0+0x373/0xbf0 kernel/events/core.c:2245
+  group_sched_in+0xe4/0x3d0 kernel/events/core.c:2317
+  flexible_sched_in+0x615/0x9c0 kernel/events/core.c:3311
+  visit_groups_merge+0x336/0x5d0 kernel/events/core.c:3259
+  ctx_flexible_sched_in kernel/events/core.c:3345 [inline]
+  ctx_sched_in+0x330/0x670 kernel/events/core.c:3390
+  perf_event_sched_in+0x6e/0xa0 kernel/events/core.c:2426
+  perf_event_context_sched_in kernel/events/core.c:3430 [inline]
+  __perf_event_task_sched_in+0x609/0x820 kernel/events/core.c:3469
+  perf_event_task_sched_in include/linux/perf_event.h:1115 [inline]
+  finish_task_switch+0x2c2/0x780 kernel/sched/core.c:2725
+  context_switch kernel/sched/core.c:2880 [inline]
+  __schedule+0x81f/0x1cc0 kernel/sched/core.c:3518
+  schedule+0x92/0x180 kernel/sched/core.c:3562
+  freezable_schedule include/linux/freezer.h:172 [inline]
+  ptrace_stop+0x3fe/0x950 kernel/signal.c:2111
+  do_jobctl_trap kernel/signal.c:2330 [inline]
+  get_signal+0x1502/0x1d50 kernel/signal.c:2456
+  do_signal+0x87/0x1940 arch/x86/kernel/signal.c:816
+  exit_to_usermode_loop+0x244/0x2c0 arch/x86/entry/common.c:162
+  prepare_exit_to_usermode arch/x86/entry/common.c:197 [inline]
+  syscall_return_slowpath arch/x86/entry/common.c:268 [inline]
+  do_syscall_64+0x52d/0x610 arch/x86/entry/common.c:293
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x458209
+Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f6b1a2a8c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000129
+RAX: 0000000000000000 RBX: 0000000000000004 RCX: 0000000000458209
+RDX: 0000000000000016 RSI: 000000000000002a RDI: 000000000000002a
+RBP: 000000000073bf00 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000020000100 R11: 0000000000000246 R12: 00007f6b1a2a96d4
+R13: 00000000004c4f84 R14: 00000000004d8bd8 R15: 00000000ffffffff
+
+======================================================
+
