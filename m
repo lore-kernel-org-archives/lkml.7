@@ -2,146 +2,130 @@ Return-Path: <SRS0=2kAr=R3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10774C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 03:32:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64A02C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 03:32:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD81B2171F
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 03:32:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E6082171F
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 03:32:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KIszMrem"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="2AllWECy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728012AbfCXDb7 (ORCPT
+        id S1728115AbfCXDco (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Mar 2019 23:31:59 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:33260 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727808AbfCXDb6 (ORCPT
+        Sat, 23 Mar 2019 23:32:44 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:47086 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728019AbfCXDco (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Mar 2019 23:31:58 -0400
-Received: by mail-ed1-f67.google.com with SMTP id q3so4781972edg.0
-        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2019 20:31:57 -0700 (PDT)
+        Sat, 23 Mar 2019 23:32:44 -0400
+Received: by mail-wr1-f66.google.com with SMTP id o1so6354291wrs.13
+        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2019 20:32:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=AqWwPpOhsA2o26o2fmZIc6acNEKi6Y6NFEG4S68lPUs=;
-        b=KIszMremumzSDdJ3xuPEGgEipEtkj5zt6+55g2FJIl2mwoAqyD0quhSBjPAXzlMaJS
-         hX1N5PRsNxPeqPQZ8sMOjEEkTVgXxvk+KOpAawLWerSoFL8/z67AP1aJndttHKaykzEx
-         B+Cn6IRvyxl2GD5uyBciK0KzNyOjjqHNiQR7Ww5z+E3zWS4YTfF7AziChKCJC7FetjQj
-         XhrCxTJyFk87PXXrI1Fj4mpw4zGmlxziTQg8/hKu6ZfsOkmB9ePDmxGFNw1kIrAPWGLH
-         leua/G9u8yWmGmDvmpEEWrPYDLJjQf2cJXvtLAYgUcmaFlB+D1TTDGqLzpjvqwjuzIyp
-         iWEw==
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5r5BnJmBdEeR/Dv9Ixv/XBgxXRYB+lCzjMiA1TLjrxM=;
+        b=2AllWECyHNVdDWdGmXG3lZ/Yh4+CrRBHOFVG/W8CmEa/aq913z87NR6MXsFItvj4gJ
+         PY6v0y6rpiElfAIuWXSI+EXbQ1F5aS5AwWYrekhxYKatsylJhe9DuRZZQG124crIQM7Y
+         MLE1gfSsWSNZRedEewc3lruHi15EeaSo/lWkxp+zMN1qyKM+PddhKs462wdGueehZRRi
+         FyhZ4mEomgfhpKJGpGfrcAP04UaNrIu12gKvgKaP6PKWeG2txus1f6SFNEG3iEmrrFic
+         ycK02sKtwiR5QbS7gFi3QBL/w4CbJjwWNRIGt6mL+/IRwzsh//aDKVDO+X0JldoDQaPB
+         tHpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=AqWwPpOhsA2o26o2fmZIc6acNEKi6Y6NFEG4S68lPUs=;
-        b=mqRvAvCVNonyegJQ/aCZy9myT0paHvIhQ26SgSG3PpCzcL0rH2dReGMWu8KjBtSF3L
-         bBRMj59NEITlXWvJM8FYQQAngjZ/LgvVpiYr8AHhtBwzof7SErerrRrauRhwIsS1qWI6
-         tYwBUHI1AtyH+2UyeLEbj0RSP1IfgJlTrhCUVhsqLWE4s8DPdskVV9VYXs6Focd0nKXC
-         ZKNl6amZom7Ry0QjlH7H5kkgv5b7ArMycI9r3zsBjZ1j15R9XpYS+Pz3ixF3ePGNyjIR
-         Si2geBszghDWog0h6u1cDJXMAPuWmxS34ZhJMet7ybTCajIB4E/X5FoZlCLqOIW8fJTZ
-         qwZw==
-X-Gm-Message-State: APjAAAUEudd4RVeVqFvs0ENSa7G4LEAi0PFO/vi5dCPuYxKpyCW74Q3C
-        dyLxDSzHFN0y4WkiSESUjBU=
-X-Google-Smtp-Source: APXvYqw5/MMKSmr+0EO5r5Lpx64jOIzYSkiixFWRORRjiKJsnpDQ60OlL/Sam/GH6eulbPVQJvsiAA==
-X-Received: by 2002:a17:906:924e:: with SMTP id c14mr9851030ejx.230.1553398316876;
-        Sat, 23 Mar 2019 20:31:56 -0700 (PDT)
-Received: from archlinux-ryzen ([2a01:4f9:2a:1fae::2])
-        by smtp.gmail.com with ESMTPSA id d61sm4025148edd.96.2019.03.23.20.31.55
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 23 Mar 2019 20:31:55 -0700 (PDT)
-Date:   Sat, 23 Mar 2019 20:31:53 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Sultan Alsawaf <sultan@kerneltoast.com>
-Cc:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
-        arnd@arndb.de, keescook@chromium.org, linux@rasmusvillemoes.dk,
-        rostedt@goodmis.org, torvalds@linux-foundation.org,
-        viro@zeniv.linux.org.uk
-Subject: Re: [RFCv2] string: Use faster alternatives when constant arguments
- are used
-Message-ID: <20190324033153.GA15815@archlinux-ryzen>
-References: <20190324014445.28688-1-sultan@kerneltoast.com>
- <20190324022406.GA18988@sultan-box.localdomain>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5r5BnJmBdEeR/Dv9Ixv/XBgxXRYB+lCzjMiA1TLjrxM=;
+        b=fKaXC/2feFQ6dcs4ZyB/vzmjHgDxfCblRFe/fkG2EjM6w7+yw4T5H0pSF5JjrjAbYy
+         70mqmdV5VAEAv6Zimk9jtvSbINqSfvWDoXCGSspf0AR0IEuTeQMukI2mPihjzVUz34em
+         aGqy53yQETnIuNFAyjnEPnB0vufzbTTkUHwvqoyFpmPjcXKTfqjl8U1gLAl6w4gPbihE
+         74JGS+aWfZinvUf8ZJbRZgbLCPicHwS2XhSTKmyZOs9CAIaE2m6vhurq2Cm/ItQmwzak
+         xDD7MbaRYxKGJ0z2BtGRrNGddv3sF/XHHRJNkgd63p8glOYkbqh/d9R0P/IhRQk6e9rv
+         MIZw==
+X-Gm-Message-State: APjAAAW/YMmIrB+k6n83ng6EwdaMPVtgL1DcpAhZPwnhTF/yIb2MndgL
+        TWmgmRUT/WlGD54lnKIg3diUhKVMXgsLh6P09Iy3qQ==
+X-Google-Smtp-Source: APXvYqzZOBi3gtlVEklHVhBx+XcBOyXaK4/PmJSGRdZ/nRYL0+FoevrUxknF1S3nGnpQDeJH2UVQdr2gYqarqLUYto4=
+X-Received: by 2002:adf:fe03:: with SMTP id n3mr6925904wrr.59.1553398362654;
+ Sat, 23 Mar 2019 20:32:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190324022406.GA18988@sultan-box.localdomain>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <20190321094710.16552-1-anup.patel@wdc.com> <20190321094710.16552-4-anup.patel@wdc.com>
+ <20190323154012.GA25149@rapoport-lnx>
+In-Reply-To: <20190323154012.GA25149@rapoport-lnx>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Sun, 24 Mar 2019 09:02:31 +0530
+Message-ID: <CAAhSdy1enG_9o1rtZcwhht6e_-t2G1-yUy8Q5ENjnQKKW4UTeA@mail.gmail.com>
+Subject: Re: [PATCH v2 3/5] RISC-V: Allow booting kernel from any 4KB aligned address
+To:     Mike Rapoport <rppt@linux.ibm.com>
+Cc:     Anup Patel <Anup.Patel@wdc.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 23, 2019 at 07:24:06PM -0700, Sultan Alsawaf wrote:
-> I messed up the return value for strcat in the first patch. Here's a fixed
-> version, ready for some scathing reviews.
-> 
-> From: Sultan Alsawaf <sultan@kerneltoast.com>
-> 
-> When strcpy, strcat, and strcmp are used with a literal string, they can
-> be optimized to memcpy or memcmp calls. These alternatives are faster
-> since knowing the length of a string argument beforehand allows
-> traversal through the string word at a time without being concerned
-> about looking for the terminating zero character. In some cases, the
-> replaced calls to memcpy or memcmp can even be optimized out completely
-> for a significant speed up.
-> 
-> Signed-off-by: Sultan Alsawaf <sultan@kerneltoast.com>
-> ---
->  include/linux/string.h | 30 ++++++++++++++++++++++++++++++
->  1 file changed, 30 insertions(+)
-> 
-> diff --git a/include/linux/string.h b/include/linux/string.h
-> index 7927b875f..59c301c0e 100644
-> --- a/include/linux/string.h
-> +++ b/include/linux/string.h
-> @@ -476,4 +476,34 @@ static __always_inline size_t str_has_prefix(const char *str, const char *prefix
->  	return strncmp(str, prefix, len) == 0 ? len : 0;
->  }
->  
-> +/*
-> + * Replace some common string helpers with faster alternatives when one of the
-> + * arguments is a constant (i.e., literal string). This uses strlen instead of
-> + * sizeof for calculating the string length in order to silence compiler
-> + * warnings that may arise due to what the compiler thinks is incorrect sizeof
-> + * usage. The strlen calls on constants are folded into scalar values at compile
-> + * time, so performance is not reduced by using strlen.
-> + */
-> +#define strcpy(dest, src)							\
-> +	__builtin_choose_expr(__builtin_constant_p(src),			\
-> +		memcpy((dest), (src), strlen(src) + 1),				\
-> +		(strcpy)((dest), (src)))
-> +
-> +#define strcat(dest, src)							\
-> +	__builtin_choose_expr(__builtin_constant_p(src),			\
-> +		({								\
-> +			memcpy(strchr((dest), '\0'), (src), strlen(src) + 1);	\
-> +			(dest);							\
-> +		}),								\
-> +		(strcat)((dest), (src)))
-> +
-> +#define strcmp(dest, src)							\
-> +	__builtin_choose_expr(__builtin_constant_p(dest),			\
-> +		__builtin_choose_expr(__builtin_constant_p(src),		\
-> +			(strcmp)((dest), (src)),				\
-> +			memcmp((dest), (src), strlen(dest) + 1)),		\
-> +		__builtin_choose_expr(__builtin_constant_p(src),		\
-> +			memcmp((dest), (src), strlen(src) + 1),			\
-> +			(strcmp)((dest), (src))))
-> +
->  #endif /* _LINUX_STRING_H_ */
-> -- 
-> 2.21.0
-> 
+On Sat, Mar 23, 2019 at 9:10 PM Mike Rapoport <rppt@linux.ibm.com> wrote:
+>
+> On Thu, Mar 21, 2019 at 09:47:51AM +0000, Anup Patel wrote:
+> > Currently, we have to boot RISCV64 kernel from a 2MB aligned physical
+> > address and RISCV32 kernel from a 4MB aligned physical address. This
+> > constraint is because initial pagetable setup (i.e. setup_vm()) maps
+> > entire RAM using hugepages (i.e. 2MB for 3-level pagetable and 4MB for
+> > 2-level pagetable).
+> >
+> > Further, the above booting contraint also results in memory wastage
+> > because if we boot kernel from some <xyz> address (which is not same as
+> > RAM start address) then RISCV kernel will map PAGE_OFFSET virtual address
+> > lineraly to <xyz> physical address and memory between RAM start and <xyz>
+> > will be reserved/unusable.
+> >
+> > For example, RISCV64 kernel booted from 0x80200000 will waste 2MB of RAM
+> > and RISCV32 kernel booted from 0x80400000 will waste 4MB of RAM.
+> >
+> > This patch re-writes the initial pagetable setup code to allow booting
+> > RISV32 and RISCV64 kernel from any 4KB (i.e. PAGE_SIZE) aligned address.
+> >
+> > To achieve this:
+> > 1. We add kconfig option BOOT_PAGE_ALIGNED. When it is enabled we use
+> >    4KB mappings in initial page table setup otherwise we use 2MB/4MB
+> >    mappings.
+> > 2. We map kernel and dtb (few MBs) in setup_vm() (called from head.S)
+> > 3. Once we reach paging_init() (called from setup_arch()) after
+> >    memblock setup, we map all available memory banks.
+> >
+> > With this patch in-place, the booting constraint for RISCV32 and RISCV64
+> > kernel is much more relaxed when CONFIG_BOOT_PAGE_ALIGNED=y and we can
+> > now boot kernel very close to RAM start thereby minimizng memory wastage.
+>
+> I have no general objection, but I presume the patch will be significantly
+> simplified if the addition of 4K pages support will follow the removal of
+> the trampoline_pd_dir.
+>
+> That said, I didn't look into the details, since they will change
+> substantially, only some comments on the Kconfig part.
+>
+> On the high level, have you considered using large pages in setup_vm() and
+> the remapping everything with 4K pages in setup_vm_final()?  This might
+> save you the whole ops-> churn.
 
-Explicitly cc'ing some folks who have touched include/linux/string.h in
-the past and might want to take a look at this.
+Yes, it can save the ops churn in setup_vm() but we should let setup_vm()
+choose best possible mapping size based on load address alignment hence
+it's better have common page table setup code shared between early and
+final page table setup which can create mapping of any size.
 
-Nathan
+For example, if we are booted from 1G aligned load address then setup_vm()
+should create 1G mapping thereby getting better performance compared to
+2M mappings.
+
+Regards,
+Anup
