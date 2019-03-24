@@ -2,96 +2,63 @@ Return-Path: <SRS0=2kAr=R3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AB47C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 14:57:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26669C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 14:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA225222C8
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 14:57:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="jZ+YeB95";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Cz3JEDjr"
+	by mail.kernel.org (Postfix) with ESMTP id EC2F8222EA
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 14:57:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728741AbfCXO5M (ORCPT
+        id S1728779AbfCXO5S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 10:57:12 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:36488 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726603AbfCXO5M (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 10:57:12 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 642D1606AC; Sun, 24 Mar 2019 14:57:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553439431;
-        bh=M2kgVvCxxFln7pcAf/y6C2AajYo0qfzCTQF0TEAPzww=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jZ+YeB95XSLtx+Nn3e6J7+Qp/87qd1ueySm1NF6nUenXITv8ciXw1u0WHtVjVAWwM
-         XyHIWDtlnUd4hbqydl5GbEJyTopXqxRWozWklhz/eHIR2WZaBlFB4snDEKc8Ick6bd
-         WfYFeT7bQvi2EV2yo9UYyeIPGewpQYa1zn7D0XT8=
-Received: from psodagud-linux1.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: psodagud@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6B50C6083E;
-        Sun, 24 Mar 2019 14:57:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553439430;
-        bh=M2kgVvCxxFln7pcAf/y6C2AajYo0qfzCTQF0TEAPzww=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Cz3JEDjr964JJBt6zervgw0ipCPMf+q0GbUeexiPH+MrLeuRH6WyH+lC7lu8drnhu
-         aHgwB6ZOSkIpGZET/dJNNuVNhg2pMaEs6+1M1DOzeLpuVYX74l7XqtPvXya3TDRGQj
-         Z1BedAkR7uvLc/AHAdc1G9zgcz/Y5aFsDaKq6Sb0=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6B50C6083E
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=psodagud@codeaurora.org
-From:   Prasad Sodagudi <psodagud@codeaurora.org>
-To:     tglx@linutronix.de, marc.zyngier@arm.com
-Cc:     linux-kernel@vger.kernel.org, psodagud@codeaurora.org
-Subject: [PATCH v2] genirq: Prevent use-after-free and work list corruption
-Date:   Sun, 24 Mar 2019 07:57:04 -0700
-Message-Id: <1553439424-6529-1-git-send-email-psodagud@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <fd8a18f33a3f385575048969482fd22f@codeaurora.org>
-References: <fd8a18f33a3f385575048969482fd22f@codeaurora.org>
+        Sun, 24 Mar 2019 10:57:18 -0400
+Received: from verein.lst.de ([213.95.11.211]:52885 "EHLO newverein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726603AbfCXO5S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Mar 2019 10:57:18 -0400
+Received: by newverein.lst.de (Postfix, from userid 2407)
+        id 2F1A568B20; Sun, 24 Mar 2019 15:57:08 +0100 (CET)
+Date:   Sun, 24 Mar 2019 15:57:08 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     Anup Patel <Anup.Patel@wdc.com>
+Cc:     Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH] RISC-V: Always compile mm/init.c with cmodel=medany
+Message-ID: <20190324145708.GA3355@lst.de>
+References: <20190324110804.68555-1-anup.patel@wdc.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190324110804.68555-1-anup.patel@wdc.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When irq_set_affinity_notifier() replaces the notifier, then the
-reference count on the old notifier is dropped which causes it to be
-freed. But nothing ensures that the old notifier is not longer queued
-in the work list. If it is queued this results in a use after free and
-possibly in work list corruption.
+On Sun, Mar 24, 2019 at 11:08:29AM +0000, Anup Patel wrote:
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
 
-Ensure that the work is canceled before the reference is dropped.
+Huh?  I don't think this is from Mike and me.
 
-Signed-off-by: Prasad Sodagudi <psodagud@codeaurora.org>
----
- kernel/irq/manage.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+> +unsigned long va_pa_offset;
+> +EXPORT_SYMBOL(va_pa_offset);
+> +unsigned long pfn_base;
+> +EXPORT_SYMBOL(pfn_base);
 
-diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
-index 9ec34a2..1a1ac84 100644
---- a/kernel/irq/manage.c
-+++ b/kernel/irq/manage.c
-@@ -356,8 +356,10 @@ static void irq_affinity_notify(struct work_struct *work)
- 	desc->affinity_notify = notify;
- 	raw_spin_unlock_irqrestore(&desc->lock, flags);
- 
--	if (old_notify)
-+	if (old_notify) {
-+		cancel_work_sync(&old_notify->work);
- 		kref_put(&old_notify->kref, old_notify->release);
-+	}
- 
- 	return 0;
- }
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
+Can you move va_pa_offset and pfn_base next to the swapper_pg_dir
+declaration?  Thats where I move them in my current nommu patchset,
+as that allows to just have a single CONFIG_NOMMU in mm/init.c.
 
+Otherwise this looks fine to me.
