@@ -2,129 +2,111 @@ Return-Path: <SRS0=2kAr=R3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF273C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 15:00:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D9F3C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 15:11:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83954222EC
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 15:00:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BFCD222EC
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 15:11:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="FjA6xSzO"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="hs3OUz0J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727686AbfCXPAe (ORCPT
+        id S1728630AbfCXPLf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 11:00:34 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:55700 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726743AbfCXPAd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 11:00:33 -0400
-Received: from zn.tnic (p200300EC2F098000329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:8000:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 2B6A11EC00FF;
-        Sun, 24 Mar 2019 16:00:32 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1553439632;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=kp54LshAJMBMHu2DJKFtv+hvASa6jYCug3O09jofmXA=;
-        b=FjA6xSzO2M3J1dFCKUCbl369NK8ehaM4xft2jix8/NilIE+k2T+iHiU3b7oDOcSLijoTgp
-        /WeQ6VQ6F61YoqRELH2u96lpgRCWgWe62u7viosG+roq4qmxyekT5WE0rrTZk3mQ0dzof8
-        vbf5anyCkdkhNXo6jKK5pGuKuT/1J+0=
-Date:   Sun, 24 Mar 2019 16:00:34 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Lianbo Jiang <lijiang@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
-        tglx@linutronix.de, mingo@redhat.com, x86@kernel.org,
-        hpa@zytor.com, akpm@linux-foundation.org, dyoung@redhat.com,
-        brijesh.singh@amd.com, thomas.lendacky@amd.com, bhe@redhat.com
-Subject: Re: [PATCH 1/3] kexec: Do not map the kexec area as decrypted when
- SEV is active
-Message-ID: <20190324150034.GH23289@zn.tnic>
-References: <20190315103203.13128-1-lijiang@redhat.com>
- <20190315103203.13128-2-lijiang@redhat.com>
+        Sun, 24 Mar 2019 11:11:35 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:36327 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726603AbfCXPLf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Mar 2019 11:11:35 -0400
+Received: by mail-wm1-f67.google.com with SMTP id h18so6487408wml.1;
+        Sun, 24 Mar 2019 08:11:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1iOOQJkzqOi5ynjs0xO8WYzOHUwCsH2EAzRs/Ax8GJE=;
+        b=hs3OUz0JbxZxme1r8SwQL0kZwc6wySPZXX9gIRv7FU+yXvG2XCjdHfMktnUdqRcyI3
+         w1Co1Y+luHghdARp5MuWen7kUR6+n3IySEG1lXnPrjBk5BNZoX3xBeh3o17WR1OhRoCP
+         XshgrjbDjUejPMI8YQhFPUlgEFyzbFTxi8Z1KAwaWGrU1hS1fvU0VLiwUbhklWY7Zqov
+         O7j272zDZtSLuOQ/JDkHC6/vOWXLAAQNM1QfjQBBCBW92I69YYpCqWsTRthXQ1Zt4C1u
+         RKgPpywTHqMeal6CdAPEuw5sU3iB7ySblKZWqH4TgAdR+meV6bER4Edn+rxLho9FwrhJ
+         SRyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1iOOQJkzqOi5ynjs0xO8WYzOHUwCsH2EAzRs/Ax8GJE=;
+        b=fJidNiaXtFKFQIrPef/wyDxXrubNWosxfvZCw5RZtTpWWp+QE8N8K0+kxeN9g6w27Y
+         KK1m0CCZVTVmRcCKhyZwokRmJ7WZNddRdNZdQ+0CyckTLgO+X9Jqk0VHLy0ZQws+xFKS
+         L+9Ha5R+0VGboVXyEMY6MUNaet3FeODf6gdqJOAUMBGc/xbCMI5jk24mgA17CB2ffbRx
+         6S3FvH5V9tllQ5OE5bmh5O5Cx/q5utBGZOMwVcrBPtGdnhqVQSs7Puff7jHjeRAESGb2
+         0y9nadcH0OKGZNOlCFarpKULnkT67Cew2TSF/rDZDlXODAgWj0dwWp8luWzAhn7Vb+zO
+         ImUQ==
+X-Gm-Message-State: APjAAAUAul56OikLmsnwAdCDWMcxwa3a/D1dtT7U50gr5hsoPhuM3+a0
+        ncY+WGrVrXYtb2ErGnM/OAE=
+X-Google-Smtp-Source: APXvYqywixNeYOzIbg+q68/qtFvRc6hmSkULAK2cS8wT1U0oQ6U1t3UZUj7/NyH/qQsskEZbNUp3sA==
+X-Received: by 2002:a1c:ef1a:: with SMTP id n26mr9184065wmh.67.1553440293194;
+        Sun, 24 Mar 2019 08:11:33 -0700 (PDT)
+Received: from blackbox.darklights.net (p200300DCD7399900428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:dc:d739:9900:428d:5cff:feb9:9db8])
+        by smtp.googlemail.com with ESMTPSA id 66sm13697730wmd.3.2019.03.24.08.11.31
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 24 Mar 2019 08:11:32 -0700 (PDT)
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     narmstrong@baylibre.com, jbrunet@baylibre.com,
+        linux-amlogic@lists.infradead.org
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH v2 0/4] clk: meson8b: add the VPU clock tree
+Date:   Sun, 24 Mar 2019 16:11:00 +0100
+Message-Id: <20190324151104.18397-1-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190315103203.13128-2-lijiang@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Subject: Re: [PATCH 1/3] kexec: Do not map the kexec area as decrypted when SEV is active
+This adds the VPU clock tree for Meson8, Meson8b and Meson8m2.
+The VPU clock tree is slightly different on all three SoCs. The details
+are explained in patch #4.
 
-The tip tree preferred format for patch subject prefixes is
-'subsys/component:', e.g. 'x86/apic:', 'x86/mm/fault:', 'sched/fair:',
-'genirq/core:'. Please do not use file names or complete file paths as
-prefix. 'git log path/to/file' should give you a reasonable hint in most
-cases.
+Meson8m2 requires the previously unsupported "gp_pll" PLL. This PLL only
+exists on Meson8m2 - Meson8 and Meson8b don't have it.
+A separate clk_hw_onecell_data is introduced for Meson8m2 (using the
+compatible string which is already available) to account for this SoC
+specific clock setup.
 
-On Fri, Mar 15, 2019 at 06:32:01PM +0800, Lianbo Jiang wrote:
-> Currently, the arch_kexec_post_{alloc,free}_pages unconditionally
+dependencies:
+This series is meant to be applied on top of my other patch from [0]:
+  dt-bindings: clock: meson8b: drop the "ABP" clock definition
 
-Please end function names with parentheses.
+changes since v1 at [1]:
+- fixed typo in the subject of patch #2 (spotted by Neil)
+- collected Reviewed-by tags from Neil (thank you!)
 
-> maps the kexec area as decrypted. This works fine when SME is active.
-> Because in SME, the first kernel is loaded in decrypted area by the
-> BIOS, so the second kernel must be also loaded into the decrypted
-> memory.
-> 
-> When SEV is active, the first kernel is loaded into the encrypted
-> area, so the second kernel must be also loaded into the encrypted
-> memory. Lets make sure that arch_kexec_post_{alloc,free}_pages does
-> not clear the memory encryption mask from the kexec area when SEV
-> is active.
 
-Hold on, wait a minute!
+[0] https://patchwork.kernel.org/patch/10860387/
+[1] https://patchwork.kernel.org/cover/10860401/
 
-Why do we even need this? As usual, you guys never explain what the big
-picture is. So you mention SEV, which sounds to me like you want to be
-able to kexec the SEV *guest*. Yes?
 
-First of all, why?
+Martin Blumenstingl (4):
+  dt-bindings: clock: meson8b: export the VPU clock
+  clk: meson: meson8b: use a separate clock table for Meson8m2
+  clk: meson: meson8b: add support for the GP_PLL clock on Meson8m2
+  clk: meson: meson8b: add the VPU clock trees
 
-Then, if so...
-
-> Co-developed-by: Brijesh Singh <brijesh.singh@amd.com>
-> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
-> Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
-> ---
->  arch/x86/kernel/machine_kexec_64.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-> index ceba408ea982..bcebf4993da4 100644
-> --- a/arch/x86/kernel/machine_kexec_64.c
-> +++ b/arch/x86/kernel/machine_kexec_64.c
-> @@ -566,7 +566,10 @@ int arch_kexec_post_alloc_pages(void *vaddr, unsigned int pages, gfp_t gfp)
->  	 * not encrypted because when we boot to the new kernel the
->  	 * pages won't be accessed encrypted (initially).
->  	 */
-> -	return set_memory_decrypted((unsigned long)vaddr, pages);
-> +	if (sme_active())
-> +		return set_memory_decrypted((unsigned long)vaddr, pages);
-
-... then this looks yucky. Because, you're adding an sme_active() check here
-but then __set_memory_enc_dec() checks
-
-	if (!mem_encrypt_active())
-
-and heads will spin from all the checking of memory encryption aspects.
-
-So this would need a rework so that there are no multiple confusing
-checks.
-
-Thx.
+ drivers/clk/meson/meson8b.c              | 422 ++++++++++++++++++++++-
+ drivers/clk/meson/meson8b.h              |  12 +-
+ include/dt-bindings/clock/meson8b-clkc.h |   1 +
+ 3 files changed, 433 insertions(+), 2 deletions(-)
 
 -- 
-Regards/Gruss,
-    Boris.
+2.21.0
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
