@@ -2,112 +2,118 @@ Return-Path: <SRS0=2kAr=R3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C7FBC10F00
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 22:19:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFBA4C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 22:28:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 674F32133F
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 22:19:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553465978;
-	bh=mYgskR40nTFhXJ1RAp7B+npZAGg9e3LSMKOZAiE0Gjw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wbMsIsgtJjt2H0I4OYvixUn+jA/FjYGt7yyvcGSVchmKencxEvc5riDDX3QrMcEdR
-	 rN1OQkW0X8o7gtxcWCA2HFpFSgzOAML2vUdPMI+4RYeS2Vr/qX+OY+N7TSJr2NvVTz
-	 0k7tRgR99RDrOLW/rVK85IDE0a5yaWSgdTqWGkFU=
+	by mail.kernel.org (Postfix) with ESMTP id 75CAB2133F
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 22:28:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="i6cW3FjB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729039AbfCXWTg (ORCPT
+        id S1729065AbfCXW2P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 18:19:36 -0400
-Received: from mga03.intel.com ([134.134.136.65]:46004 "EHLO mga03.intel.com"
+        Sun, 24 Mar 2019 18:28:15 -0400
+Received: from ozlabs.org ([203.11.71.1]:38949 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728963AbfCXWTg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 18:19:36 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Mar 2019 15:19:35 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,256,1549958400"; 
-   d="scan'208";a="331609997"
-Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
-  by fmsmga005.fm.intel.com with ESMTP; 24 Mar 2019 15:19:34 -0700
-Date:   Sun, 24 Mar 2019 16:20:41 -0600
-From:   Keith Busch <kbusch@kernel.org>
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     mhocko@suse.com, mgorman@techsingularity.net, riel@surriel.com,
-        hannes@cmpxchg.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, keith.busch@intel.com,
-        dan.j.williams@intel.com, fengguang.wu@intel.com, fan.du@intel.com,
-        ying.huang@intel.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 06/10] mm: vmscan: demote anon DRAM pages to PMEM node
-Message-ID: <20190324222040.GE31194@localhost.localdomain>
-References: <1553316275-21985-1-git-send-email-yang.shi@linux.alibaba.com>
- <1553316275-21985-7-git-send-email-yang.shi@linux.alibaba.com>
+        id S1728907AbfCXW2P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Mar 2019 18:28:15 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44SBqb29RVz9sRW;
+        Mon, 25 Mar 2019 09:28:11 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1553466492;
+        bh=XEV9ZXY5HIJIqh3sOrGG+59tMudBznBXQp8RASSRVao=;
+        h=Date:From:To:Cc:Subject:From;
+        b=i6cW3FjBE5JLLX3ehSEOlJZORN8/McdyjLh4qyYeAJh/x3CG0ik48JUf+9MedcMYy
+         jIXu98NTeo2WJkzvvG4qstcD+4x542CRR2woX2RhntRvDnrcJfx709FEMKkQBHV54n
+         Xm0PHXFDasHUeqKRJaaLmBFyeMfpdHED933kMpo3WtPRGHk7ipEjfm/8yY87Wk12yR
+         WGAw+RtA6Umu2lIDRqmbhB2micphWqKnBbT90+nls9AkM42Z9/62NXjPD+gTi3iEhs
+         9Q1OLxAj7CqmT1e4ElFKfmb8XMIJjehsK+vbCVkZH48fQolFxhk/TToKLAhhGi5A0t
+         EIzAia3f/npig==
+Date:   Mon, 25 Mar 2019 09:28:04 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Willem de Bruijn <willemb@google.com>,
+        David Miller <davem@davemloft.net>
+Subject: linux-next: build warning after merge of the bpf-next tree
+Message-ID: <20190325092804.650ebdb0@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1553316275-21985-7-git-send-email-yang.shi@linux.alibaba.com>
-User-Agent: Mutt/1.9.1 (2017-09-22)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/YNsqztMGNElbYCVRa5A4DFZ"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 23, 2019 at 12:44:31PM +0800, Yang Shi wrote:
->  		/*
-> +		 * Demote DRAM pages regardless the mempolicy.
-> +		 * Demot anonymous pages only for now and skip MADV_FREE
-> +		 * pages.
-> +		 */
-> +		if (PageAnon(page) && !PageSwapCache(page) &&
-> +		    (node_isset(page_to_nid(page), def_alloc_nodemask)) &&
-> +		    PageSwapBacked(page)) {
-> +
-> +			if (has_nonram_online()) {
-> +				list_add(&page->lru, &demote_pages);
-> +				unlock_page(page);
-> +				continue;
-> +			}
-> +		}
-> +
-> +		/*
->  		 * Anonymous process memory has backing store?
->  		 * Try to allocate it some swap space here.
->  		 * Lazyfree page could be freed directly
-> @@ -1477,6 +1507,25 @@ static unsigned long shrink_page_list(struct list_head *page_list,
->  		VM_BUG_ON_PAGE(PageLRU(page) || PageUnevictable(page), page);
->  	}
->  
-> +	/* Demote pages to PMEM */
-> +	if (!list_empty(&demote_pages)) {
-> +		int err, target_nid;
-> +		nodemask_t used_mask;
-> +
-> +		nodes_clear(used_mask);
-> +		target_nid = find_next_best_node(pgdat->node_id, &used_mask,
-> +						 true);
-> +
-> +		err = migrate_pages(&demote_pages, alloc_new_node_page, NULL,
-> +				    target_nid, MIGRATE_ASYNC, MR_DEMOTE);
-> +
-> +		if (err) {
-> +			putback_movable_pages(&demote_pages);
-> +
-> +			list_splice(&ret_pages, &demote_pages);
-> +		}
-> +	}
-> +
->  	mem_cgroup_uncharge_list(&free_pages);
->  	try_to_unmap_flush();
->  	free_unref_page_list(&free_pages);
+--Sig_/YNsqztMGNElbYCVRa5A4DFZ
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-How do these pages eventually get to swap when migration fails? Looks
-like that's skipped.
+Hi all,
 
-And page cache demotion is useful too, we shouldn't consider only
-anonymous for this feature.
+After merging the bpf-next tree, today's linux-next build (x86_64
+allmodconfig) produced this warning:
+
+net/core/filter.c: In function 'bpf_skb_adjust_room':
+net/core/filter.c:3022:31: warning: 'inner_trans' may be used uninitialized=
+ in this function [-Wmaybe-uninitialized]
+   skb->inner_transport_header =3D inner_trans;
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~
+net/core/filter.c:2979:26: note: 'inner_trans' was declared here
+  u16 mac_len, inner_net, inner_trans;
+                          ^~~~~~~~~~~
+net/core/filter.c:3021:29: warning: 'inner_net' may be used uninitialized i=
+n this function [-Wmaybe-uninitialized]
+   skb->inner_network_header =3D inner_net;
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~
+net/core/filter.c:2979:15: note: 'inner_net' was declared here
+  u16 mac_len, inner_net, inner_trans;
+               ^~~~~~~~~
+net/core/filter.c:3026:3: warning: 'mac_len' may be used uninitialized in t=
+his function [-Wmaybe-uninitialized]
+   skb_set_network_header(skb, mac_len);
+   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+net/core/filter.c:2979:6: note: 'mac_len' was declared here
+  u16 mac_len, inner_net, inner_trans;
+      ^~~~~~~
+
+Introduced by commit
+
+  868d523535c2 ("bpf: add bpf_skb_adjust_room encap flags")
+
+
+This looks like a false positive, it seems that they are only set and
+used when encap is true.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/YNsqztMGNElbYCVRa5A4DFZ
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlyYBHQACgkQAVBC80lX
+0Gz5oQf/bqDuspc7rew3DSlB8gTjirNsI/I6Kr7rvSxha9KkS2dPYyc7PovVNLSL
+plCz3k3qAIvfOuu/ZthW6/NHTSrgfyKSoYqMXpztU8O2v1886BFsnW3eGhxbWrAi
+1fu4cFsTQ6VeYzVwSoKExwAKIR1/MYG6VAZzMGj91lsAmlaZtvkw4kzzKRRY6WKl
+WVKYwau53lLuQTs4HFGWZ8GiCdYLhbrp4RN5GjjyflAOZJPe6RHf9Z7fXOvvufAD
++s8LlSnpxYaYIOj1uffM1ev+Vr1fzKjKUuwk7tvNYm+QW6FeqmGMRoxa+ntaHc04
++pXcOofMZUn+discynRTAN/Xkf2V9Q==
+=0Joz
+-----END PGP SIGNATURE-----
+
+--Sig_/YNsqztMGNElbYCVRa5A4DFZ--
