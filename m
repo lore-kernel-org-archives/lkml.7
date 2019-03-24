@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25F95C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 04:45:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CDF9C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 04:45:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3648218D0
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 04:45:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69ED0218AC
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 04:45:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="EdcFhVHU"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="dn6kwszb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728312AbfCXEpd (ORCPT
+        id S1728350AbfCXEpi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 00:45:33 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:3229 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728235AbfCXEp3 (ORCPT
+        Sun, 24 Mar 2019 00:45:38 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:7539 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728235AbfCXEpg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 00:45:29 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5c970b6b0000>; Sat, 23 Mar 2019 21:45:31 -0700
+        Sun, 24 Mar 2019 00:45:36 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5c970b6e0000>; Sat, 23 Mar 2019 21:45:34 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate102.nvidia.com (PGP Universal service);
-  Sat, 23 Mar 2019 21:45:28 -0700
+  Sat, 23 Mar 2019 21:45:35 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Sat, 23 Mar 2019 21:45:28 -0700
-Received: from HQMAIL108.nvidia.com (172.18.146.13) by HQMAIL104.nvidia.com
- (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 24 Mar
- 2019 04:45:28 +0000
-Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL108.nvidia.com
- (172.18.146.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Sun, 24 Mar 2019 04:45:28 +0000
+        by hqpgpgate102.nvidia.com on Sat, 23 Mar 2019 21:45:35 -0700
+Received: from HQMAIL103.nvidia.com (172.20.187.11) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 24 Mar
+ 2019 04:45:35 +0000
+Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL103.nvidia.com
+ (172.20.187.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Sun, 24 Mar 2019 04:45:35 +0000
 Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.168.175]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5c970b660002>; Sat, 23 Mar 2019 21:45:27 -0700
+        id <B5c970b6d0000>; Sat, 23 Mar 2019 21:45:34 -0700
 From:   Sowjanya Komatineni <skomatineni@nvidia.com>
 To:     <adrian.hunter@intel.com>, <ulf.hansson@linaro.org>,
         <robh+dt@kernel.org>, <mark.rutland@arm.com>,
@@ -46,9 +46,9 @@ CC:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
         <jonathanh@nvidia.com>, <anrao@nvidia.com>,
         <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-mmc@vger.kernel.org>, <devicetree@vger.kernel.org>
-Subject: [PATCH V4 07/10] mmc: tegra: add Tegra186 WAR for CQE
-Date:   Sat, 23 Mar 2019 21:45:24 -0700
-Message-ID: <1553402727-23130-7-git-send-email-skomatineni@nvidia.com>
+Subject: [PATCH V4 10/10] arm64: tegra: enable command queue for tegra186 sdmmc4
+Date:   Sat, 23 Mar 2019 21:45:27 -0700
+Message-ID: <1553402727-23130-10-git-send-email-skomatineni@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1553402727-23130-1-git-send-email-skomatineni@nvidia.com>
 References: <1553402727-23130-1-git-send-email-skomatineni@nvidia.com>
@@ -56,93 +56,41 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1553402731; bh=XvBEM1ou6Cwc/840ianCBD/pVbq5vUB1W3wg0h5pFzQ=;
+        t=1553402734; bh=XRJSPEMXnOfGmyWHXqCKDR2X7Tf9RwugO0JR03NUVwg=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=EdcFhVHU7+/YmfQOkoEkA0Utd3ZSxgJu5vQ+ShnzN4nvd1JCUvEehdRPaiiM7GBJs
-         ZT8qxEWtMe0rMou6Ffnmd+QhF1zSOFKxSRyy9d+8l76cHW0qDJTS4FEGyYvmzTHlAS
-         bKnN1vQtgqXb5GsJq7bUtV3zauzliKqLiQxdJTeFOK0TfdfJk2g9upIYg5YWSdDfYO
-         G/35HBTBDgVa7Zm/aysvl7q48VG3Nmahu9pa8+fQmiZMQuZTxwhCOMimhZvOz+VrMD
-         3s3vqwtREbYel2TWsACQfNLYtlXdvSp06o0eh/Pq3GDHU5FteZcECnKcmoHsogvZRm
-         ll6/Bx0MA4aaQ==
+        b=dn6kwszbgEwCERWCFcSJ5FGtViEjFZ4qq/MncWwo/RbJzpuMB7FLb5cwqGX5VDjPB
+         xvxH2d3iXYxfL3/PlMaa0nPvacSiwZpwgNQxePDw3tI4Y2fXoSDN4tvnr0QtVGevIq
+         WtKm5rwuZbONcKnPd86ww9RX6xknPxiUM/eVkrB9PBOqQb2Vp3UHdN1cUZoAU7nvaC
+         /Vhq/b2QZVahvp/t1frXGquEFqGSq+5UPuhOvqvv6O6amXbPg97OAzsYbFdRAmJ3PO
+         vd7hjy65jPQB2qO2KvU8H3aGXty9raot6BmASgexB8+pGLXglLZthfXWE9DxQ44If6
+         tsLvClYT4Brmw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tegra186 CQHCI host has a known bug where CQHCI controller selects
-DATA_PRESENT_SELECT bit to 1 for DCMDs with R1B response type and
-since DCMD does not trigger any data transfer, DCMD task complete
-happens leaving the DATA FSM of host controller in wait state for
-the data.
-
-This effects the data transfer tasks issued after the DCMDs with
-R1b response type resulting in timeout.
-
-SW WAR is to set CMD_TIMING to 1 in DCMD task descriptor. This bug
-and SW WAR is applicable only for Tegra186 and not for Tegra194.
-
-This patch implements this WAR thru NVQUIRK_CQHCI_DCMD_R1B_CMD_TIMING
-for Tegra186 and also implements update_dcmd_desc of cqhci_host_ops
-interface to set CMD_TIMING bit depending on the NVQUIRK.
+This patch enables command queue support for Tegra186 SDMMC4.
 
 Tested-by: Jon Hunter <jonathanh@nvidia.com>
-Reviewed-by: Ritesh Harjani <riteshh@codeaurora.org>
 Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
- drivers/mmc/host/sdhci-tegra.c | 17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/nvidia/tegra186.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
-index f1aa0591112a..2f08b6e480df 100644
---- a/drivers/mmc/host/sdhci-tegra.c
-+++ b/drivers/mmc/host/sdhci-tegra.c
-@@ -106,6 +106,7 @@
- #define NVQUIRK_HAS_PADCALIB				BIT(6)
- #define NVQUIRK_NEEDS_PAD_CONTROL			BIT(7)
- #define NVQUIRK_DIS_CARD_CLK_CONFIG_TAP			BIT(8)
-+#define NVQUIRK_CQHCI_DCMD_R1B_CMD_TIMING		BIT(9)
+diff --git a/arch/arm64/boot/dts/nvidia/tegra186.dtsi b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
+index 472f55fe9488..6e2b6ce99df2 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra186.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
+@@ -321,6 +321,7 @@
+ 		nvidia,default-trim = <0x5>;
+ 		nvidia,dqs-trim = <63>;
+ 		mmc-hs400-1_8v;
++		supports-cqe;
+ 		status = "disabled";
+ 	};
  
- /* SDMMC CQE Base Address for Tegra Host Ver 4.1 and Higher */
- #define SDHCI_TEGRA_CQE_BASE_ADDR			0xF000
-@@ -1123,6 +1124,18 @@ static void tegra_sdhci_voltage_switch(struct sdhci_host *host)
- 		tegra_host->pad_calib_required = true;
- }
- 
-+static void sdhci_tegra_update_dcmd_desc(struct mmc_host *mmc,
-+					 struct mmc_request *mrq, u64 *data)
-+{
-+	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(mmc_priv(mmc));
-+	struct sdhci_tegra *tegra_host = sdhci_pltfm_priv(pltfm_host);
-+	const struct sdhci_tegra_soc_data *soc_data = tegra_host->soc_data;
-+
-+	if (soc_data->nvquirks & NVQUIRK_CQHCI_DCMD_R1B_CMD_TIMING &&
-+	    mrq->cmd->flags & MMC_RSP_R1B)
-+		*data |= CQHCI_CMD_TIMING(1);
-+}
-+
- static void sdhci_tegra_cqe_enable(struct mmc_host *mmc)
- {
- 	struct cqhci_host *cq_host = mmc->cqe_private;
-@@ -1164,6 +1177,7 @@ static const struct cqhci_host_ops sdhci_tegra_cqhci_ops = {
- 	.enable	= sdhci_tegra_cqe_enable,
- 	.disable = sdhci_cqe_disable,
- 	.dumpregs = sdhci_tegra_dumpregs,
-+	.update_dcmd_desc = sdhci_tegra_update_dcmd_desc,
- };
- 
- static const struct sdhci_ops tegra_sdhci_ops = {
-@@ -1345,7 +1359,8 @@ static const struct sdhci_tegra_soc_data soc_data_tegra186 = {
- 		    NVQUIRK_HAS_PADCALIB |
- 		    NVQUIRK_DIS_CARD_CLK_CONFIG_TAP |
- 		    NVQUIRK_ENABLE_SDR50 |
--		    NVQUIRK_ENABLE_SDR104,
-+		    NVQUIRK_ENABLE_SDR104 |
-+		    NVQUIRK_CQHCI_DCMD_R1B_CMD_TIMING,
- 	.min_tap_delay = 84,
- 	.max_tap_delay = 136,
- };
 -- 
 2.7.4
 
