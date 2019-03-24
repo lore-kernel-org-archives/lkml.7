@@ -2,165 +2,112 @@ Return-Path: <SRS0=2kAr=R3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A64BAC43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 10:11:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 815AAC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 10:28:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7215F222D1
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 10:11:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553422289;
-	bh=fTY6ByfBDjTqTC0vO4fhTB4xlWJtyXhHJRuBJjcij3I=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=DZeNP8lGoSYdVR343M655IBJBPsY/UKlJ+gDbAtP2OuClSpSwTYL9XtD5zOnbgFfR
-	 DGfSsNH03cXzZOPFSsv76Z7qinG0/Sh8A3YZCwjf5tzqW9Kw+9Z2IZiE8BeJHNBktt
-	 yZS/5ho57Mx/Zv9RHcZhBVK8z9jkiZ3ALlcaDmjw=
+	by mail.kernel.org (Postfix) with ESMTP id 4E05C222C1
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 10:28:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728697AbfCXKL2 (ORCPT
+        id S1728641AbfCXK2H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 06:11:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36684 "EHLO mail.kernel.org"
+        Sun, 24 Mar 2019 06:28:07 -0400
+Received: from mga02.intel.com ([134.134.136.20]:60422 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726160AbfCXKL1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 06:11:27 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92B26222D0;
-        Sun, 24 Mar 2019 10:11:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553422286;
-        bh=fTY6ByfBDjTqTC0vO4fhTB4xlWJtyXhHJRuBJjcij3I=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=lQFZjSc6AcJHEiDU3ytZBZa7EH+x/H4oqldi8e0n/7sV3m/H43EqLpZ66SGWY4LMd
-         cEoXICGQrLym6wBM4V8Aw1oy1wvm7bwG480CxyWTuOILESeY2WXgdyO4z/00jh7wni
-         6sxIESaKdBRT8Kk6iCrnrUdjzzpjdWHwV5Ji51zk=
-Date:   Sun, 24 Mar 2019 19:11:21 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Tom Zanussi <zanussi@kernel.org>
-Cc:     rostedt@goodmis.org, tglx@linutronix.de, namhyung@kernel.org,
-        bigeasy@linutronix.de, joel@joelfernandes.org,
-        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
-Subject: Re: [PATCH v4 06/11] selftests/ftrace: Add error_log testcase for
- probe errors
-Message-Id: <20190324191121.16b130a0c92ea1a8ff35194c@kernel.org>
-In-Reply-To: <1553346669.2307.8.camel@kernel.org>
-References: <cover.1553268040.git.tom.zanussi@linux.intel.com>
-        <c620157fa19f9df4ebf33e3e138c1234a4b5def7.1553268040.git.tom.zanussi@linux.intel.com>
-        <20190323192234.7884a15d9fab262ef70d3cab@kernel.org>
-        <1553346669.2307.8.camel@kernel.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726877AbfCXK2G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Mar 2019 06:28:06 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Mar 2019 03:28:06 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,256,1549958400"; 
+   d="scan'208";a="136945739"
+Received: from hwang32-mobl.ccr.corp.intel.com ([10.255.30.50])
+  by fmsmga007.fm.intel.com with ESMTP; 24 Mar 2019 03:28:04 -0700
+Message-ID: <1553423283.14989.6.camel@intel.com>
+Subject: [GIT PULL] Thermal management updates for v5.1-rc2
+From:   Zhang Rui <rui.zhang@intel.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Eduardo Valentin <edubezval@gmail.com>
+Date:   Sun, 24 Mar 2019 18:28:03 +0800
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.18.5.2-0ubuntu3.2 
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 23 Mar 2019 08:11:09 -0500
-Tom Zanussi <zanussi@kernel.org> wrote:
+Hi, Linus,
 
-> Hi Masami,
-> 
-> On Sat, 2019-03-23 at 19:22 +0900, Masami Hiramatsu wrote:
-> > On Fri, 22 Mar 2019 10:34:32 -0500
-> > Tom Zanussi <zanussi@kernel.org> wrote:
-> > 
-> > > From: Masami Hiramatsu <mhiramat@kernel.org>
-> > > 
-> > > Add error_log testcase for error logs on probe events.
-> > > This tests most of error cases and checks the error position
-> > > is correct.
-> > > 
-> > > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> > > ---
-> > >  .../ftrace/test.d/kprobe/kprobe_syntax_errors.tc   | 93
-> > > ++++++++++++++++++++++
-> > >  .../ftrace/test.d/kprobe/uprobe_syntax_errors.tc   | 31 ++++++++
-> > >  2 files changed, 124 insertions(+)
-> > >  create mode 100644
-> > > tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.t
-> > > c
-> > >  create mode 100644
-> > > tools/testing/selftests/ftrace/test.d/kprobe/uprobe_syntax_errors.t
-> > > c
-> > > 
-> > > diff --git
-> > > a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors
-> > > .tc
-> > > b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors
-> > > .tc
-> > > new file mode 100644
-> > > index 000000000000..281665b1348c
-> > > --- /dev/null
-> > > +++
-> > > b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors
-> > > .tc
-> > > @@ -0,0 +1,93 @@
-> > > +#!/bin/sh
-> > > +# SPDX-License-Identifier: GPL-2.0
-> > > +# description: Kprobe event parser error log check
-> > > +
-> > > +[ -f kprobe_events ] || exit_unsupported # this is configurable
-> > > +
-> > > +[ -f error_log ] || exit_unsupported
-> > > +
-> > > +check_error() { # command-with-error-pos-by-^
-> > > +pos=$(echo -n "${1%^*}" | wc -c) # error position
-> > > +command=$(echo "$1" | tr -d ^)
-> > > +echo "Test command: $command"
-> > > +echo > error_log
-> > > +(! echo "$command" > kprobe_events ) >& /dev/null
-> > 
-> > Oops, this one. This must be
-> > 
-> > (! echo "$command" > kprobe_events ) > /dev/null 2>&1
-> > 
-> > [...]
-> > > diff --git
-> > > a/tools/testing/selftests/ftrace/test.d/kprobe/uprobe_syntax_errors
-> > > .tc
-> > > b/tools/testing/selftests/ftrace/test.d/kprobe/uprobe_syntax_errors
-> > > .tc
-> > > new file mode 100644
-> > > index 000000000000..957011300bb7
-> > > --- /dev/null
-> > > +++
-> > > b/tools/testing/selftests/ftrace/test.d/kprobe/uprobe_syntax_errors
-> > > .tc
-> > > @@ -0,0 +1,31 @@
-> > > +#!/bin/sh
-> > > +# SPDX-License-Identifier: GPL-2.0
-> > > +# description: Uprobe event parser error log check
-> > > +
-> > > +[ -f uprobe_events ] || exit_unsupported # this is configurable
-> > > +
-> > > +[ -f error_log ] || exit_unsupported
-> > > +
-> > > +check_error() { # command-with-error-pos-by-^
-> > > +pos=$(echo -n "${1%^*}" | wc -c) # error position
-> > > +command=$(echo "$1" | tr -d ^)
-> > > +echo "Test command: $command"
-> > > +echo > error_log
-> > > +(! echo "$command" > uprobe_events ) >& /dev/null
-> > 
-> > Here too.
-> > 
-> > Tom, if you don't mind, could you update it when you update
-> > the series? Or should I resend it?
-> > 
-> 
-> I can just change it in the next update.  I assume 2> as in the other
-> patch?
+Please pull from
+  git://git.kernel.org/pub/scm/linux/kernel/git/rzhang/linux.git next
 
-Yes, that is better, since stdout goes to [ku]probe_event file.
+to receive the latest Thermal management updates for v5.1-rc2 with
+top-most commit 2d7c4e17811f766321b9c054609551fa40f0b445:
 
-Thank you!
+  Merge branches 'fixes' and 'thermal-intel' into next (2019-03-18
+22:37:44 +0800)
 
+on top of commit 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b:
 
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+  Linux 5.1-rc1 (2019-03-17 14:22:26 -0700)
+
+Specifics:
+
+- Fix a wrong __percpu structure declaration in intel_powerclamp
+driver. (Luc Van Oostenryck)
+
+- Fix truncated name of the idle injection kthreads created by
+intel_powerclamp driver. (Zhang Rui)
+
+- Fix the missing UUID supports in int3400 thermal driver. (Matthew
+Garrett)
+
+- Fix a crash when accessing the debugfs of bcm2835 SoC thermal driver.
+(Phil Elwell)
+
+- A couple of trivial fixes/cleanups in some SoC thermal drivers.
+
+thanks,
+rui
+
+----------------------------------------------------------------
+Luc Van Oostenryck (1):
+      thermal/intel_powerclamp: fix __percpu declaration of worker_data
+
+Marek Szyprowski (1):
+      thermal: samsung: Fix incorrect check after code merge
+
+Matthew Garrett (2):
+      thermal/int340x_thermal: Add additional UUIDs
+      thermal/int340x_thermal: fix mode setting
+
+Phil Elwell (1):
+      thermal: bcm2835: Fix crash in bcm2835_thermal_debugfs
+
+Pi-Hsun Shih (1):
+      thermal: mtk: Allocate enough space for mtk_thermal.
+
+Shaokun Zhang (1):
+      thermal: cpu_cooling: Remove unused cur_freq variable
+
+Zhang Rui (2):
+      thermal/intel_powerclamp: fix truncated kthread name
+      Merge branches 'fixes' and 'thermal-intel' into next
+
+ drivers/thermal/broadcom/bcm2835_thermal.c          |  9 ++++-----
+ drivers/thermal/cpu_cooling.c                       |  3 +--
+ .../thermal/intel/int340x_thermal/int3400_thermal.c | 21
++++++++++++++++++----
+ drivers/thermal/intel/intel_powerclamp.c            |  4 ++--
+ drivers/thermal/mtk_thermal.c                       |  7 +++++--
+ drivers/thermal/samsung/exynos_tmu.c                |  2 +-
+ 6 files changed, 30 insertions(+), 16 deletions(-)
