@@ -2,120 +2,99 @@ Return-Path: <SRS0=2kAr=R3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ADAEC43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 16:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECF42C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 16:19:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C3772148D
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 16:19:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE08B2148D
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 16:19:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="IQwS18ZI"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="2WqZSPCQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728361AbfCXQTC (ORCPT
+        id S1728772AbfCXQTI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 12:19:02 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:33311 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726889AbfCXQTC (ORCPT
+        Sun, 24 Mar 2019 12:19:08 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:59960 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726889AbfCXQTH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 12:19:02 -0400
-Received: by mail-lf1-f66.google.com with SMTP id v14so4451930lfi.0
-        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2019 09:19:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=UyqVDhLC4OHpuBtwhSQ0ZuhPa8nU+D6SzGMHE1FiNTs=;
-        b=IQwS18ZI7crnnbpYRF1xocEaHklD2D+PukRRZT1HnGmT23Ho34stCYUAqVnZmWrpYS
-         LeC8djYJrGiiVGUPHuQZKiG4sVYmpLw9PlETADEmNtv0h+vQDaAKL6DS//CwDJs6vHEK
-         dhDQ6yLxTMawIfy+Mr11A2JSj0kQRAgMxDGamA5bKvW87eeX93wzuep0FnqJou+9b6Xq
-         KFz/D3WpG595WX1BMyClnktSiGMmPZu7b5VGSgSOao8zcCJOC7wNshtyyRGZZPq5bvvj
-         HgwSD3D+Oc/we3vCc5VqEN4T8PYWvrft+GEi2LTdUSHy53u7lAeZQ3zYPTTt4Zs7kBqx
-         Y9jQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=UyqVDhLC4OHpuBtwhSQ0ZuhPa8nU+D6SzGMHE1FiNTs=;
-        b=X4ln1Y0V7grym9h+VACDfFIkHGKGdctX30Sr91WtizxcWnYZXKn4sVyvz1DxZEiWyA
-         OPdt3Bt1O7Bv8myZat166iofx8WAlNedENPdqDCRZHrfRfDC6jdftXRlWBqxE2/d+KKp
-         uZ7jpDpnf/VkOXOK88DEW9zSYPWwkeMIDBpOFkumyZx3wqnnXjxHYNK8+04Gk4AsOsjD
-         ZW9AaQrsNupuEpVF5SGN5zYNpr+2YkRXlYLay7q2ST1zy06GkQhrHThm96l3SuK76VvE
-         QDEWvrGvTBcbIzwDWInt0FZ1hjoqBnYxoQlEOh4K1KEL2Rz3hCVBzYd5JlqzsIznxLwg
-         Yxmw==
-X-Gm-Message-State: APjAAAWOfd9eSnT/34l6t1cBTGKth2SIu0iVsl5263musROrZd0hDMX1
-        nvfoBEoUVng156bkEprL9EdXLQ==
-X-Google-Smtp-Source: APXvYqwaqRFeeg5cMADmKN0HFpWflJH8cDWRvMWVzAbZ5tlzYUg0lBd+5ttgyFeD7jeKzZl+Fsw5Rw==
-X-Received: by 2002:a19:c90a:: with SMTP id z10mr9993966lff.40.1553444340176;
-        Sun, 24 Mar 2019 09:19:00 -0700 (PDT)
-Received: from wasted.cogentembedded.com ([31.173.80.147])
-        by smtp.gmail.com with ESMTPSA id u1sm3016475lfm.4.2019.03.24.09.18.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 24 Mar 2019 09:18:58 -0700 (PDT)
-Subject: Re: [RFC PATCH v2 2/5] dt-bindings: mtd: Add binding documentation
- for Hyperbus memory devices
-To:     Vignesh Raghavendra <vigneshr@ti.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, linux-mtd@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, tudor.ambarus@microchip.com,
-        nsekhar@ti.com, Mason Yang <masonccyang@mxic.com.tw>
-References: <20190321174548.9288-1-vigneshr@ti.com>
- <20190321174548.9288-3-vigneshr@ti.com>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Organization: Cogent Embedded
-Message-ID: <ca3326cb-1b37-cf9a-f196-3288a539d064@cogentembedded.com>
-Date:   Sun, 24 Mar 2019 19:18:56 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        Sun, 24 Mar 2019 12:19:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:Subject:Sender:
+        Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=aRspIVlEuYCMJaE2WdYVOtNE7eAruzV48OpTDyN/xt4=; b=2WqZSPCQEiKWYFu8OQojkMKM5s
+        uOzVYTPAxCZHDU749S2ox4Yx2BW/qf2W86Byc+T+hFeXaTPrUCDGWodDEOlXnVIKYP+afZNbtXZCO
+        lPcvNd9faT6+onh4/yEBRpBE+/fm9Asf+e6htdhHf1SVQu25bu+oxzUZIALV7RusABIp5MwUCXO8k
+        30J8BqQ7mQ0NQ+FJyrZ/3HzG70l7IA5CX2M52KWTdu+MZu6av8sn/pldR9ZrQpSSxjm/v2jQG9aAj
+        ZRDUvL/bKwOGUySE24YSvVg/UcnknN8yFTddBXHccmWhC+groEtx1EbbbN/sbWxmxTNRhMKpoG9Z2
+        aDhUSKPw==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h85pw-0003EP-2K; Sun, 24 Mar 2019 16:19:04 +0000
+Subject: Re: Debug scsi message in linux 4.19.31
+To:     Hussam Al-Tayeb <ht990332@gmx.com>, linux-kernel@vger.kernel.org,
+        linux-scsi <linux-scsi@vger.kernel.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+References: <624bbdbb24ad7db69be29956cbf14689fd003cdb.camel@gmx.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <25d0ddcb-b603-6e0d-d512-b188813837bf@infradead.org>
+Date:   Sun, 24 Mar 2019 09:18:58 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <20190321174548.9288-3-vigneshr@ti.com>
+In-Reply-To: <624bbdbb24ad7db69be29956cbf14689fd003cdb.camel@gmx.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+[adding linux-scsi and mkp]
 
-On 03/21/2019 08:45 PM, Vignesh Raghavendra wrote:
-
-> Add DT binding documentation for Hyperbus memory devices. Only
-> Hyperflash is supported at the moment.
+On 3/24/19 6:07 AM, Hussam Al-Tayeb wrote:
+> Hi. I'm seeing a debug message in linux stable kernel 4.19.31 with this
+> patch
+> scsi-sd-optimal-i-o-size-should-be-a-multiple-of-physical-block-
+> size.patch
 > 
-> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-> ---
->  Documentation/devicetree/bindings/mtd/cypress,hyperbus.txt | 6 ++++++
->  1 file changed, 6 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/cypress,hyperbus.txt
+> I am getting:
+> Mar 23 17:40:10 hades kernel: sd 0:0:0:0: [sda] Optimal transfer size 0
+> bytes < PAGE_SIZE (4096 bytes)
+> Mar 23 17:40:10 hades kernel: sd 2:0:0:0: [sdb] Optimal transfer size 0
+> bytes < PAGE_SIZE (4096 bytes)
+> Mar 23 17:46:43 hades kernel: sd 4:0:0:0: [sdc] Optimal transfer size 0
+> bytes < PAGE_SIZE (4096 bytes)
 > 
-> diff --git a/Documentation/devicetree/bindings/mtd/cypress,hyperbus.txt b/Documentation/devicetree/bindings/mtd/cypress,hyperbus.txt
-> new file mode 100644
-> index 000000000000..cb408f80b868
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mtd/cypress,hyperbus.txt
-> @@ -0,0 +1,6 @@
-> +Bindings for Hyperflash NOR flash chips compliant with Cypress Hyperbus
-> +specification and supports Cypress CFI specification 1.5 command set.
-> +
-> +Required properties:
-> +- compatible : "cypress,hyperflash" for Hyperflash NOR chips
+> sda and sdb are physically attached SATA mechanical disks (Western
+> Digital and Seagate, respectively).
+> sdc is a kingston usb flash drive. All three disks use ext4 luks
+> encrypted partitions.
+> Is the fact that it is reporting 0 as optimal transfer size something I
+> should worry about? Note that the the three storage devices are from
+> three different manufacturers.
+> This particular machine is a Lenovo Intel(R) Core(TM) i5-6400 CPU @
+> 2.70GHz with 16GB Kingston DDR4 ram.
+> 
+> I tried moving the root disk to another machine (a DELL Core I7 7700
+> with slightly faster ram from Samsung) and I saw the same message.
+> 
+> This seems like a patch that fits better in a hardware vendor or
+> operating system distributor tree than the upstream kernel. Shouldn't
+> stable tree kernels only contain direct fixes and regression fixes?
+> Does it really belong in an LTS kernel?
+> 
+> Please CC me in your reply as I am not subscribed to the list.
+> Thank you.
+> 
 
-   What about "cfi-flash", shouldn't it be also specified?
 
-> +- reg : Address where flash's memory mapped space
-
-MBR, Sergei
+-- 
+~Randy
