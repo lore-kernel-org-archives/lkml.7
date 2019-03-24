@@ -2,223 +2,100 @@ Return-Path: <SRS0=2kAr=R3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1A87C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 13:06:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 280ADC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 13:07:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A70B4222C5
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 13:06:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D91AB222C5
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 13:07:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f9jJVItZ"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="HbO+O/Uo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727686AbfCXNGy (ORCPT
+        id S1728673AbfCXNHZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 09:06:54 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:37156 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726090AbfCXNGy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 09:06:54 -0400
-Received: by mail-pg1-f193.google.com with SMTP id q206so4586777pgq.4
-        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2019 06:06:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=yOOufHbnikMM1LiQJPeWitOPftHSPpAB3K4xz2kxR88=;
-        b=f9jJVItZLZc+iIINfiByXwhSaxXneKFmTm4B6oGtCevYiLEHBZ5oyS/eGUw058u9Sk
-         sAFsiCd77HXmJHlZCTBYcZYaqmUxyVJni1AuPaLDdhOLOg3H03uqUY6sfaA4D1N2zOkr
-         6KttsynIrKEkrywuedKion+cXrc5hQuuq2DRDdfrCdkMmGC7wAyAhyivSMoQrgnLDQM8
-         nFnJqTMQt3pKF+fWOL3r9f/vjgaan/jC/icCVfEK1MM/aipFzWuvYbP3lApd7e9v7ViF
-         YNRAOlMBNH9BuqrzklpoTQUJMZpmb+fKSjXRF7igXAXZaVXSCtnIr1K1JBYN7I0b2g7R
-         Z49Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=yOOufHbnikMM1LiQJPeWitOPftHSPpAB3K4xz2kxR88=;
-        b=Soz6IKXpoxl3dRHkq/TfqKE5KvnkZTO5jlBjzvf8nyPja9Iz/O/rmzx04M3SpOLK0h
-         qEhPaRI9FNUpkMKEpB6j4YNZVfGMf9ptzARlnIGKzLwkoiPSFCHH3UlqnhqRVIiM9naK
-         OZQZmxFhPFA8ha3JeEuFLwDr/0jqE7OI/WTnp4UXTinLnl0VL0o4gGHBSNIiRc7GG0Jp
-         eYR+cb9HTq8eztKrqIcX5f9e0J3+iA7GfdgBGloQlEel38m9ZV0Uy0xqT0dc+4dpWwXk
-         T8qGJwhqfpXMjE+8zn6Vh2XeRIhrZLR7KzUFKHEFmewlN66RJ6nVysnv+Jt78mwMy3bP
-         kbnQ==
-X-Gm-Message-State: APjAAAWqL4+uiS1j879pUIgFbJwApTLfyEdvzdXC8aY1eOLm5wXO0qlh
-        7MApdYKR6qqKug1IhzceYkE=
-X-Google-Smtp-Source: APXvYqyJvrDk2faL3BlavlJ5iJeVbAE2HYGF42ELOyRZp1px/UMzxAFxTDPcaKvmiDZBAka9fqw1pw==
-X-Received: by 2002:a63:c06:: with SMTP id b6mr18477840pgl.440.1553432812962;
-        Sun, 24 Mar 2019 06:06:52 -0700 (PDT)
-Received: from localhost.localdomain ([103.252.26.177])
-        by smtp.gmail.com with ESMTPSA id s79sm26395687pfa.61.2019.03.24.06.06.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 24 Mar 2019 06:06:51 -0700 (PDT)
-From:   grbesd1@gmail.com
-To:     forest@alittletooquiet.net
-Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
-        gregkh@linuxfoundation.org, Ganesh Biradar <grbesd1@gmail.com>
-Subject: [PATCH 01/01] staging: vt6655: Modify comment style of SPDX License Identifier
-Date:   Sun, 24 Mar 2019 18:36:09 +0530
-Message-Id: <20190324130609.7571-1-grbesd1@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Sun, 24 Mar 2019 09:07:25 -0400
+Received: from mout.gmx.net ([212.227.15.15]:42645 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726963AbfCXNHY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Mar 2019 09:07:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1553432843;
+        bh=ghE7C3MmCEdxxtqwqprr06LXPWDQGdGSEmqxheIys3k=;
+        h=X-UI-Sender-Class:Subject:From:To:Date;
+        b=HbO+O/UoAM3RsVD6nra60HG9gYcRyzKpS7aF4/4+lwK3spoRFZUhyXme4pENPP20k
+         obmQqZ6q6dzWo2wcx1z0afb7YIZdGBfFo1zWEIqND0qLm8kgTrAGiNa+B0gc88aCtM
+         lN6V7h1yxu3W7r5GWaqoJweMH6PETrB6Q/X5qJ9A=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from hades ([185.6.148.228]) by mail.gmx.com (mrgmx001
+ [212.227.17.184]) with ESMTPSA (Nemesis) id 0MNqfr-1h52yP3OSB-007Rmt for
+ <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2019 14:07:23 +0100
+Message-ID: <624bbdbb24ad7db69be29956cbf14689fd003cdb.camel@gmx.com>
+Subject: Debug scsi message in linux 4.19.31
+From:   Hussam Al-Tayeb <ht990332@gmx.com>
+To:     linux-kernel@vger.kernel.org
+Date:   Sun, 24 Mar 2019 15:07:21 +0200
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.1 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:GxHDMKG/f4D1oFQrseUp8yGyo+gdfRpKNHRNCoQTOCRUmpgaukX
+ ui9GlTpFvqh1YCNI5MgFWTqEbLOooOX9ttz81dyw5jvgREn4etWz7ZzmUKwhHzFxYYxhpuc
+ rs1pW94ibBVdgXnR5Pym5FTDmiD8K7ek744Kc0Cy4dXw/hkx3eIo4/vSSfONnpTe/bwkZC3
+ BLcNgzlflks5kUVdeQRjQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:iRQTzXiqhUw=:paTNs18gp9zmIbb9cmYPcn
+ NRfnfurf0iAD8Fs+lZNaqlGCdG+ZVucBtd3wpUYJRwRObC6ycOPHWbBt9Vfq9irZvPUEmOonE
+ FQcFOWABbGv6r4nhZF6xxVEHR29MgbkXEXD5KSfCEbm7XxIPoajFXrSLAPFV+1KifiPwQmMhL
+ rL+Fkzi7CL2i03eKrD3yM7oc9TuQUJU7XQ54kOrE/F6E1AOwmpFRFGOgRZ+pk/1dLKSmQ8V5w
+ N7z6hqDiZvGS9X+19esPTCUBXrhhx08TSzrFsDftWRZXtkB4DCo+NoAE5pnOFbqFp1/gqyhi7
+ mjALtaw25bMdBGT3UNAQckyDL9xVZp5O7cfZo4Df4XVI1KkAHyadxIYw/OtL8mUbUBCtk0MzH
+ 8pK2qSz+LJHzd8VpLOT0NIEvmc1TNXTE3nR3oo8nFsXNT0eK37h9s6L0yyRWXfj6pzBEOSfjj
+ oq8K3zIAiywd7Fs9VItninOxYSRMOFMu0uIhDsz5Zo/Y/FnWoXh8vbMIbchEKsMdIYGI1FNsM
+ bCqILuOatFx4GrK20iwTx4CyY2hE6Y1qCdZ+h94LvrWN6wE5oXQmvKg3xHtJnlPs6sEIm3BMb
+ th/RBl7Kd1cr57oJN3P3X2BAfHC8DviyCmGvgST7DeN2Reu6LhRpuZdb0YKIzFW9yzgjrw+lc
+ ZQWfxq9NqMHVSC/3y1DuNA02a+Ja7unnUMhuUeMsEytNS7TPUU+IzvJFgR/qbv3aZeNk99Lyg
+ nCCxe+ZK2NaNNvIOs/MFaB0WLbdix6cVhekjW7J0rQfJGjrDSD/v79qzVHPZU9sX+txjS8JdZ
+ Zuaf/xsToanLFHxAxrDZ1MgdKGVUFOn4VtUjiu83/f2Gk7/lvfO7Zp6vTHXW5529lIlzP5O78
+ kS0CutiGgcpEnPAWqDLjLpHK2DbjankEza5Ns4+VFzzsSAi3pLG01A/R5YNZ17zQ9BGwJT28t
+ 3XkIdcPvSfw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ganesh Biradar <grbesd1@gmail.com>
+Hi. I'm seeing a debug message in linux stable kernel 4.19.31 with this
+patch
+scsi-sd-optimal-i-o-size-should-be-a-multiple-of-physical-block-
+size.patch
 
-Fix the comment style of SPDX license identifier based on header file
-type
+I am getting:
+Mar 23 17:40:10 hades kernel: sd 0:0:0:0: [sda] Optimal transfer size 0
+bytes < PAGE_SIZE (4096 bytes)
+Mar 23 17:40:10 hades kernel: sd 2:0:0:0: [sdb] Optimal transfer size 0
+bytes < PAGE_SIZE (4096 bytes)
+Mar 23 17:46:43 hades kernel: sd 4:0:0:0: [sdc] Optimal transfer size 0
+bytes < PAGE_SIZE (4096 bytes)
 
-Signed-off-by: Ganesh Biradar <grbesd1@gmail.com>
----
- drivers/staging/vt6655/channel.h    | 2 +-
- drivers/staging/vt6655/desc.h       | 2 +-
- drivers/staging/vt6655/device.h     | 2 +-
- drivers/staging/vt6655/device_cfg.h | 2 +-
- drivers/staging/vt6655/dpc.h        | 2 +-
- drivers/staging/vt6655/key.h        | 2 +-
- drivers/staging/vt6655/mac.h        | 2 +-
- drivers/staging/vt6655/power.h      | 2 +-
- drivers/staging/vt6655/rf.h         | 2 +-
- drivers/staging/vt6655/rxtx.h       | 2 +-
- drivers/staging/vt6655/srom.h       | 2 +-
- drivers/staging/vt6655/tmacro.h     | 2 +-
- drivers/staging/vt6655/upc.h        | 2 +-
- 13 files changed, 13 insertions(+), 13 deletions(-)
+sda and sdb are physically attached SATA mechanical disks (Western
+Digital and Seagate, respectively).
+sdc is a kingston usb flash drive. All three disks use ext4 luks
+encrypted partitions.
+Is the fact that it is reporting 0 as optimal transfer size something I
+should worry about? Note that the the three storage devices are from
+three different manufacturers.
+This particular machine is a Lenovo Intel(R) Core(TM) i5-6400 CPU @
+2.70GHz with 16GB Kingston DDR4 ram.
 
-diff --git a/drivers/staging/vt6655/channel.h b/drivers/staging/vt6655/channel.h
-index 53f623a4af65..0d2709607456 100644
---- a/drivers/staging/vt6655/channel.h
-+++ b/drivers/staging/vt6655/channel.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0+
-+/* SPDX-License-Identifier: GPL-2.0+ */
- /*
-  * Copyright (c) 1996, 2003 VIA Networking Technologies, Inc.
-  * All rights reserved.
-diff --git a/drivers/staging/vt6655/desc.h b/drivers/staging/vt6655/desc.h
-index b4a0037b40c1..d4572847b08a 100644
---- a/drivers/staging/vt6655/desc.h
-+++ b/drivers/staging/vt6655/desc.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0+
-+/* SPDX-License-Identifier: GPL-2.0+ */
- /*
-  * Copyright (c) 1996, 2003 VIA Networking Technologies, Inc.
-  * All rights reserved.
-diff --git a/drivers/staging/vt6655/device.h b/drivers/staging/vt6655/device.h
-index 2f9e9219e8c8..29f354ced563 100644
---- a/drivers/staging/vt6655/device.h
-+++ b/drivers/staging/vt6655/device.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0+
-+/* SPDX-License-Identifier: GPL-2.0+ */
- /*
-  * Copyright (c) 1996, 2003 VIA Networking Technologies, Inc.
-  * All rights reserved.
-diff --git a/drivers/staging/vt6655/device_cfg.h b/drivers/staging/vt6655/device_cfg.h
-index 6b41c74f7c2a..04db6a8d3db3 100644
---- a/drivers/staging/vt6655/device_cfg.h
-+++ b/drivers/staging/vt6655/device_cfg.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0+
-+/* SPDX-License-Identifier: GPL-2.0+ */
- /*
-  * Copyright (c) 1996, 2003 VIA Networking Technologies, Inc.
-  * All rights reserved.
-diff --git a/drivers/staging/vt6655/dpc.h b/drivers/staging/vt6655/dpc.h
-index 93af4220605f..eac67794cc49 100644
---- a/drivers/staging/vt6655/dpc.h
-+++ b/drivers/staging/vt6655/dpc.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0+
-+/* SPDX-License-Identifier: GPL-2.0+ */
- /*
-  * Copyright (c) 1996, 2003 VIA Networking Technologies, Inc.
-  * All rights reserved.
-diff --git a/drivers/staging/vt6655/key.h b/drivers/staging/vt6655/key.h
-index 0942d8703f98..9347776fa3a5 100644
---- a/drivers/staging/vt6655/key.h
-+++ b/drivers/staging/vt6655/key.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0+
-+/* SPDX-License-Identifier: GPL-2.0+ */
- /*
-  * Copyright (c) 1996, 2003 VIA Networking Technologies, Inc.
-  * All rights reserved.
-diff --git a/drivers/staging/vt6655/mac.h b/drivers/staging/vt6655/mac.h
-index b8ab09434773..8c8c26792343 100644
---- a/drivers/staging/vt6655/mac.h
-+++ b/drivers/staging/vt6655/mac.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0+
-+/* SPDX-License-Identifier: GPL-2.0+ */
- /*
-  * Copyright (c) 1996, 2003 VIA Networking Technologies, Inc.
-  * All rights reserved.
-diff --git a/drivers/staging/vt6655/power.h b/drivers/staging/vt6655/power.h
-index 2ec40045fddb..d1736c1cbfa8 100644
---- a/drivers/staging/vt6655/power.h
-+++ b/drivers/staging/vt6655/power.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0+
-+/* SPDX-License-Identifier: GPL-2.0+ */
- /*
-  * Copyright (c) 1996, 2003 VIA Networking Technologies, Inc.
-  * All rights reserved.
-diff --git a/drivers/staging/vt6655/rf.h b/drivers/staging/vt6655/rf.h
-index bfce5a89657d..042ac67a9709 100644
---- a/drivers/staging/vt6655/rf.h
-+++ b/drivers/staging/vt6655/rf.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0+
-+/* SPDX-License-Identifier: GPL-2.0+ */
- /*
-  * Copyright (c) 1996, 2003 VIA Networking Technologies, Inc.
-  * All rights reserved.
-diff --git a/drivers/staging/vt6655/rxtx.h b/drivers/staging/vt6655/rxtx.h
-index 08db848613f0..464dd89078b2 100644
---- a/drivers/staging/vt6655/rxtx.h
-+++ b/drivers/staging/vt6655/rxtx.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0+
-+/* SPDX-License-Identifier: GPL-2.0+ */
- /*
-  * Copyright (c) 1996, 2003 VIA Networking Technologies, Inc.
-  * All rights reserved.
-diff --git a/drivers/staging/vt6655/srom.h b/drivers/staging/vt6655/srom.h
-index 577f20dc4308..d8aad3ff5f46 100644
---- a/drivers/staging/vt6655/srom.h
-+++ b/drivers/staging/vt6655/srom.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0+
-+/* SPDX-License-Identifier: GPL-2.0+ */
- /*
-  * Copyright (c) 1996, 2003 VIA Networking Technologies, Inc.
-  * All rights reserved.
-diff --git a/drivers/staging/vt6655/tmacro.h b/drivers/staging/vt6655/tmacro.h
-index 6795b5d74cfc..8f4699f0d1f4 100644
---- a/drivers/staging/vt6655/tmacro.h
-+++ b/drivers/staging/vt6655/tmacro.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0+
-+/* SPDX-License-Identifier: GPL-2.0+ */
- /*
-  * Copyright (c) 1996, 2003 VIA Networking Technologies, Inc.
-  * All rights reserved.
-diff --git a/drivers/staging/vt6655/upc.h b/drivers/staging/vt6655/upc.h
-index 61b3e568ff9a..d028ad2ba0d4 100644
---- a/drivers/staging/vt6655/upc.h
-+++ b/drivers/staging/vt6655/upc.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0+
-+/* SPDX-License-Identifier: GPL-2.0+ */
- /*
-  * Copyright (c) 1996, 2003 VIA Networking Technologies, Inc.
-  * All rights reserved.
--- 
-2.17.1
+I tried moving the root disk to another machine (a DELL Core I7 7700
+with slightly faster ram from Samsung) and I saw the same message.
+
+This seems like a patch that fits better in a hardware vendor or
+operating system distributor tree than the upstream kernel. Shouldn't
+stable tree kernels only contain direct fixes and regression fixes?
+Does it really belong in an LTS kernel?
+
+Please CC me in your reply as I am not subscribed to the list.
+Thank you.
 
