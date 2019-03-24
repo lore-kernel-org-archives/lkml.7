@@ -2,133 +2,206 @@ Return-Path: <SRS0=2kAr=R3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 105D3C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 16:41:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A363C10F00
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 16:43:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D336520823
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 16:41:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="h2l66GGG"
+	by mail.kernel.org (Postfix) with ESMTP id E3B0C2087E
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 16:43:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553445808;
+	bh=Cb/0edEa0zDiHNSpD4LXCfUVokL9vtAUR86ZqD3RCqo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=eJCi21tQ1kzRTXYNEIuSdtkrzx3hETmAJZyrerWJugg07jx18iaBDRdUrpCxwEgJL
+	 zMzRD7M57ltvE9K1ZtcHvIx2cJRuLO5hRj4+lBLSJ0Wcjy0POQeUD48x9RIfz2vnZd
+	 V9dfxAVK6Mnrc5EjCzqUPu1THwPn4XJohIavJcks=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728814AbfCXQl4 (ORCPT
+        id S1728827AbfCXQn0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 12:41:56 -0400
-Received: from mta-p7.oit.umn.edu ([134.84.196.207]:57618 "EHLO
-        mta-p7.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726317AbfCXQlz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 12:41:55 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p7.oit.umn.edu (Postfix) with ESMTP id 49F4CBC0
-        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2019 16:41:54 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p7.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p7.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id M_mf9LE6QEY5 for <linux-kernel@vger.kernel.org>;
-        Sun, 24 Mar 2019 11:41:54 -0500 (CDT)
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
-        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+        Sun, 24 Mar 2019 12:43:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53996 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727137AbfCXQn0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Mar 2019 12:43:26 -0400
+Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mta-p7.oit.umn.edu (Postfix) with ESMTPS id 220E091F
-        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2019 11:41:54 -0500 (CDT)
-Received: by mail-io1-f69.google.com with SMTP id z6so5987333ioh.16
-        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2019 09:41:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=M08smIfHJAEEw5STDve0az8jRhJ94IrOSIYUTYTGmTU=;
-        b=h2l66GGG62aBS01xnl5p4wqsSv2S2sM26fp8Yhgjq7BqVDkXTLDQiec34o2DG3Jxw0
-         /RkePrpb3pWPMTqEp0aUG0a2ELnOm9SPEF3KkE7IVNS6WsJ3FmAJP7olBPGzlgtg7EXJ
-         y8UrLVb48BV4RONDXrR0SFeCTC0KhOBo+uSeWhb2mgMFNktPaAOsYzmiFOJLGuDQvfDm
-         cQz38HLo/xEqYGhTvM3Rx2MT4fdibFAKyHRGV71aiekAYz83y+vDK76r9ZeLoW828E4Y
-         6f9finQr1KiiqDsTNtCLRFy4Y+NNPIaFWLGVKZ+94j7Ayjzjmyjk6F62jGT0jUy67q9A
-         vbng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=M08smIfHJAEEw5STDve0az8jRhJ94IrOSIYUTYTGmTU=;
-        b=GjHi5JmVBoLTrxKu6z2qgM87lIduPxa/7q24xSchS/5W0hlf63YPnawgmHdwIyt09g
-         5TTEV5DLeUPih5p6QrPFckLupDk8fiqScG2RkzjthfM3TseW3I3+qKx7R+jl0Oq40pS8
-         ZQ6PcWgeG90E23U+XcU8v4a68t7Z1UFxiAc2DDZVd5GuCYWW+vDg/oFdsDcB6BT5C/Wa
-         YEYS/LQqGQ/WTsnBBSl4lbVBzDrVwuE82i4YL9FqPzSFm6lVaP/T306uikQrW/H/U55w
-         bbYfkEKJ6AOdOVyDxeaDmNihLY9FzU9Kx4mmFwZblC1IKA7xfsSogtZc4iX4PhdgCVB3
-         EOLA==
-X-Gm-Message-State: APjAAAUwR0k0ofqlIoYYwJUEBo+rADVVYvraKX8J5dKSEyDDnJTshAhm
-        kb0hIamYNeGPEzwTDaaaAUlHscL343Bh1wLOCszPjaIW9lh5Bl7rilyjYJTJQAgsyZeXgyJPIvb
-        AeE2hJda9h2pl8a//T9BbTGNWrw6O
-X-Received: by 2002:a6b:e009:: with SMTP id z9mr13262539iog.127.1553445713516;
-        Sun, 24 Mar 2019 09:41:53 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwuYMe19IToriQ1j3VaOzwtG2KSvRbWBNJ/fMUPwyQndLn3SE47ee5Q9oOFSIamulx0UTVEAQ==
-X-Received: by 2002:a6b:e009:: with SMTP id z9mr13262515iog.127.1553445712998;
-        Sun, 24 Mar 2019 09:41:52 -0700 (PDT)
-Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
-        by smtp.gmail.com with ESMTPSA id z22sm5454436ioc.68.2019.03.24.09.41.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 24 Mar 2019 09:41:52 -0700 (PDT)
-From:   Aditya Pakki <pakki001@umn.edu>
-To:     pakki001@umn.edu
-Cc:     kjlu@umn.edu, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Vinod Koul <vkoul@kernel.org>, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v4] tty: 8250: fix a missing check for pci_ioremap_bar
-Date:   Sun, 24 Mar 2019 11:41:38 -0500
-Message-Id: <20190324164139.23899-1-pakki001@umn.edu>
-X-Mailer: git-send-email 2.17.1
+        by mail.kernel.org (Postfix) with ESMTPSA id 87B3E20823;
+        Sun, 24 Mar 2019 16:43:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553445805;
+        bh=Cb/0edEa0zDiHNSpD4LXCfUVokL9vtAUR86ZqD3RCqo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=xQqF7ccOYV8CjzQYaokXu9LhrCPzhr1ONPukktecV/7mb3SHMtGSJCy42/iSF/2+j
+         3n4o0vG7E3vl4FhRCg6bsBvMD+2C+ZDDO1MsGvK8gHGkM6znkIlU+DkDtNxBesbL1j
+         Q9Aj4BJqF7/6PvrVbjaB4tqE1f1oPTf9tGfJLgAs=
+Date:   Sun, 24 Mar 2019 16:43:19 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <mcoquelin.stm32@gmail.com>,
+        <alexandre.torgue@st.com>, <linux-iio@vger.kernel.org>,
+        <lars@metafoo.de>, <knaack.h@gmx.de>, <pmeerw@pmeerw.net>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <arnaud.pouliquen@st.com>, <olivier.moysan@st.com>
+Subject: Re: [PATCH v2 2/8] iio: adc: stm32-dfsdm: continuous mode depends
+ on current mode
+Message-ID: <20190324164319.28cf5f57@archlinux>
+In-Reply-To: <1553186849-6261-3-git-send-email-fabrice.gasnier@st.com>
+References: <1553186849-6261-1-git-send-email-fabrice.gasnier@st.com>
+        <1553186849-6261-3-git-send-email-fabrice.gasnier@st.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pci_ioremap_bar could fail. The patch returns in case of failure to
-acquire IOMEM. It also releases the acquired resource in the exit path.
+On Thu, 21 Mar 2019 17:47:23 +0100
+Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+> DFSDM regular continuous mode usage depends on current mode (not DMA):
+> - for single conversion, RCONT doesn't need to be set.
+> - for buffer mode, RCONT has to be set (e.g. INDIO_BUFFER_SOFTWARE
+>   used by audio currently).
+> This is related to filter configuration, move it to relevant routine.
+> 
+> This is precursor patch to ease support of triggered buffer mode.
+> 
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+Applied,
 
----
-v3: Change the order of pci_iounmap and dw_dma_remove
-v2: Failed to release resource in exit path and incorrect code in non
-DMA case, suggested by Andy Shevchenko
-v1: Missed return by default in CONFIG_SERIAL_8250_DMA, suggested by
-Jiri Slaby
----
- drivers/tty/serial/8250/8250_lpss.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+Thanks,
 
-diff --git a/drivers/tty/serial/8250/8250_lpss.c b/drivers/tty/serial/8250/8250_lpss.c
-index 53ca9ba6ab4b..69d6e32da713 100644
---- a/drivers/tty/serial/8250/8250_lpss.c
-+++ b/drivers/tty/serial/8250/8250_lpss.c
-@@ -170,9 +170,11 @@ static void qrk_serial_setup_dma(struct lpss8250 *lpss, struct uart_port *port)
- 	int ret;
- 
- 	chip->dev = &pdev->dev;
-+	chip->pdata = &qrk_serial_dma_pdata;
- 	chip->irq = pci_irq_vector(pdev, 0);
- 	chip->regs = pci_ioremap_bar(pdev, 1);
--	chip->pdata = &qrk_serial_dma_pdata;
-+	if (!chip->regs)
-+		return;
- 
- 	/* Falling back to PIO mode if DMA probing fails */
- 	ret = dw_dma_probe(chip);
-@@ -199,7 +201,10 @@ static void qrk_serial_exit_dma(struct lpss8250 *lpss)
- 
- 	if (!param->dma_dev)
- 		return;
-+
- 	dw_dma_remove(&lpss->dma_chip);
-+
-+	pci_iounmap(param->dma_dev, &lpss->dma_chip->regs);
- }
- #else	/* CONFIG_SERIAL_8250_DMA */
- static void qrk_serial_setup_dma(struct lpss8250 *lpss, struct uart_port *port) {}
--- 
-2.17.1
+Jonathan
+> ---
+>  drivers/iio/adc/stm32-dfsdm-adc.c | 54 +++++++++++++++++++--------------------
+>  1 file changed, 27 insertions(+), 27 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/stm32-dfsdm-adc.c b/drivers/iio/adc/stm32-dfsdm-adc.c
+> index fcd4a1c..8690672 100644
+> --- a/drivers/iio/adc/stm32-dfsdm-adc.c
+> +++ b/drivers/iio/adc/stm32-dfsdm-adc.c
+> @@ -38,6 +38,10 @@
+>  #define DFSDM_MAX_RES BIT(31)
+>  #define DFSDM_DATA_RES BIT(23)
+>  
+> +/* Filter configuration */
+> +#define DFSDM_CR1_CFG_MASK (DFSDM_CR1_RCH_MASK | DFSDM_CR1_RCONT_MASK | \
+> +			    DFSDM_CR1_RSYNC_MASK)
+> +
+>  enum sd_converter_type {
+>  	DFSDM_AUDIO,
+>  	DFSDM_IIO,
+> @@ -262,11 +266,13 @@ static void stm32_dfsdm_stop_filter(struct stm32_dfsdm *dfsdm,
+>  			   DFSDM_CR1_DFEN_MASK, DFSDM_CR1_DFEN(0));
+>  }
+>  
+> -static int stm32_dfsdm_filter_configure(struct stm32_dfsdm *dfsdm,
+> +static int stm32_dfsdm_filter_configure(struct stm32_dfsdm_adc *adc,
+>  					unsigned int fl_id, unsigned int ch_id)
+>  {
+> -	struct regmap *regmap = dfsdm->regmap;
+> -	struct stm32_dfsdm_filter *fl = &dfsdm->fl_list[fl_id];
+> +	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
+> +	struct regmap *regmap = adc->dfsdm->regmap;
+> +	struct stm32_dfsdm_filter *fl = &adc->dfsdm->fl_list[fl_id];
+> +	u32 cr1;
+>  	int ret;
+>  
+>  	/* Average integrator oversampling */
+> @@ -287,14 +293,16 @@ static int stm32_dfsdm_filter_configure(struct stm32_dfsdm *dfsdm,
+>  		return ret;
+>  
+>  	/* No scan mode supported for the moment */
+> -	ret = regmap_update_bits(regmap, DFSDM_CR1(fl_id), DFSDM_CR1_RCH_MASK,
+> -				 DFSDM_CR1_RCH(ch_id));
+> -	if (ret)
+> -		return ret;
+> +	cr1 = DFSDM_CR1_RCH(ch_id);
+> +
+> +	/* Continuous conversions triggered by SPI clock in buffer mode */
+> +	if (indio_dev->currentmode & INDIO_BUFFER_SOFTWARE)
+> +		cr1 |= DFSDM_CR1_RCONT(1);
+>  
+> -	return regmap_update_bits(regmap, DFSDM_CR1(fl_id),
+> -				  DFSDM_CR1_RSYNC_MASK,
+> -				  DFSDM_CR1_RSYNC(fl->sync_mode));
+> +	cr1 |= DFSDM_CR1_RSYNC(fl->sync_mode);
+> +
+> +	return regmap_update_bits(regmap, DFSDM_CR1(fl_id), DFSDM_CR1_CFG_MASK,
+> +				  cr1);
+>  }
+>  
+>  static int stm32_dfsdm_channel_parse_of(struct stm32_dfsdm *dfsdm,
+> @@ -426,47 +434,39 @@ static int stm32_dfsdm_start_conv(struct stm32_dfsdm_adc *adc,
+>  {
+>  	struct regmap *regmap = adc->dfsdm->regmap;
+>  	int ret;
+> -	unsigned int dma_en = 0, cont_en = 0;
+> +	unsigned int dma_en = 0;
+>  
+>  	ret = stm32_dfsdm_start_channel(adc->dfsdm, chan->channel);
+>  	if (ret < 0)
+>  		return ret;
+>  
+> -	ret = stm32_dfsdm_filter_configure(adc->dfsdm, adc->fl_id,
+> -					   chan->channel);
+> +	ret = stm32_dfsdm_filter_configure(adc, adc->fl_id, chan->channel);
+>  	if (ret < 0)
+>  		goto stop_channels;
+>  
+>  	if (dma) {
+>  		/* Enable DMA transfer*/
+>  		dma_en =  DFSDM_CR1_RDMAEN(1);
+> -		/* Enable conversion triggered by SPI clock*/
+> -		cont_en = DFSDM_CR1_RCONT(1);
+>  	}
+>  	/* Enable DMA transfer*/
+>  	ret = regmap_update_bits(regmap, DFSDM_CR1(adc->fl_id),
+>  				 DFSDM_CR1_RDMAEN_MASK, dma_en);
+>  	if (ret < 0)
+> -		goto stop_channels;
+> -
+> -	/* Enable conversion triggered by SPI clock*/
+> -	ret = regmap_update_bits(regmap, DFSDM_CR1(adc->fl_id),
+> -				 DFSDM_CR1_RCONT_MASK, cont_en);
+> -	if (ret < 0)
+> -		goto stop_channels;
+> +		goto filter_unconfigure;
+>  
+>  	ret = stm32_dfsdm_start_filter(adc->dfsdm, adc->fl_id);
+>  	if (ret < 0)
+> -		goto stop_channels;
+> +		goto stop_dma;
+>  
+>  	return 0;
+>  
+> -stop_channels:
+> +stop_dma:
+>  	regmap_update_bits(regmap, DFSDM_CR1(adc->fl_id),
+>  			   DFSDM_CR1_RDMAEN_MASK, 0);
+> -
+> +filter_unconfigure:
+>  	regmap_update_bits(regmap, DFSDM_CR1(adc->fl_id),
+> -			   DFSDM_CR1_RCONT_MASK, 0);
+> +			   DFSDM_CR1_CFG_MASK, 0);
+> +stop_channels:
+>  	stm32_dfsdm_stop_channel(adc->dfsdm, chan->channel);
+>  
+>  	return ret;
+> @@ -484,7 +484,7 @@ static void stm32_dfsdm_stop_conv(struct stm32_dfsdm_adc *adc,
+>  			   DFSDM_CR1_RDMAEN_MASK, 0);
+>  
+>  	regmap_update_bits(regmap, DFSDM_CR1(adc->fl_id),
+> -			   DFSDM_CR1_RCONT_MASK, 0);
+> +			   DFSDM_CR1_CFG_MASK, 0);
+>  
+>  	stm32_dfsdm_stop_channel(adc->dfsdm, chan->channel);
+>  }
 
