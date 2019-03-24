@@ -2,257 +2,104 @@ Return-Path: <SRS0=2kAr=R3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.7 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D220C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 04:34:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB50DC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 04:45:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E32320879
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 04:34:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9161321741
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 04:45:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=aussec.com header.i=@aussec.com header.b="dJpVH4PV"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="mQnM2Cnb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728118AbfCXEeZ (ORCPT
+        id S1727211AbfCXEpP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 00:34:25 -0400
-Received: from csm1.csm-office.com.au ([165.228.118.109]:38354 "EHLO
-        sleepy.aussec.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbfCXEeX (ORCPT
+        Sun, 24 Mar 2019 00:45:15 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:3211 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726121AbfCXEpP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 00:34:23 -0400
-X-Virus-Scanned: amavisd-new at aussec.com
-Received: from hpdv6.aussec.com.com (c110-21-61-29.farfl4.nsw.optusnet.com.au [110.21.61.29])
-        (authenticated bits=0)
-        by sleepy.aussec.com (8.15.2/8.15.2) with ESMTPSA id x2O4XY4m008019
-        (version=TLSv1.2 cipher=DHE-RSA-AES128-SHA bits=128 verify=NO);
-        Sun, 24 Mar 2019 15:33:59 +1100
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aussec.com; s=2016;
-        t=1553402040; bh=AL3Brqp9RXWGiJIzpj0mtMNPk7I6jNZwrunE+/uegVo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=dJpVH4PV8vZpWrAFs4iHINA5XAYlJryyNdN2XexZdpEnKbZKYBqf/QqMyoHh01O3/
-         S1E1h5++wT5ceRPmBrVTZAF2MasNh+X2sHP5cBTkUKPxyewL1lyzbh2o8uft2mZ7Wg
-         6XX/Tvrzup092M8IqexoO6zxLk6hMue1uuf8bSucfSaEjmvOefWpw5QYSA+m+7HjIO
-         gmYsLqT4T8ujeun7xhI93dM06aJg7UcIP6zC7kOm+3yazcb2GfGzstSzQ6/TimQY2+
-         fz7zoC7to3zc6UKF98AFZVFzj5L/NN9cs/lnkbwaGXN0lmF3q35cQQkUjs1FbM9khg
-         GPNGLhQBOLK0g==
-From:   Tom Burkart <tom@aussec.com>
-To:     Linux kernel mailing list <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Tom Burkart <tom@aussec.com>,
-        Rodolfo Giometti <giometti@enneenne.com>,
-        Lukas Senger <lukas@fridolin.com>
-Subject: [PATCH v18 3/3] pps: pps-gpio PPS ECHO implementation
-Date:   Sun, 24 Mar 2019 15:33:05 +1100
-Message-Id: <20190324043305.6627-4-tom@aussec.com>
-X-Mailer: git-send-email 2.12.3
-In-Reply-To: <20190324043305.6627-3-tom@aussec.com>
-References: <20190321154633.b9d1a356a100a4a14fa219f7@linux-foundation.org>
- <20190324043305.6627-1-tom@aussec.com>
- <20190324043305.6627-2-tom@aussec.com>
- <20190324043305.6627-3-tom@aussec.com>
+        Sun, 24 Mar 2019 00:45:15 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5c970b5d0000>; Sat, 23 Mar 2019 21:45:17 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Sat, 23 Mar 2019 21:45:14 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Sat, 23 Mar 2019 21:45:14 -0700
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 24 Mar
+ 2019 04:45:14 +0000
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 24 Mar
+ 2019 04:45:13 +0000
+Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Sun, 24 Mar 2019 04:45:13 +0000
+Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.168.175]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5c970b580000>; Sat, 23 Mar 2019 21:45:13 -0700
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     <adrian.hunter@intel.com>, <ulf.hansson@linaro.org>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <riteshh@codeaurora.org>
+CC:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <anrao@nvidia.com>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-mmc@vger.kernel.org>, <devicetree@vger.kernel.org>
+Subject: [PATCH V4 01/10] mmc: tegra: fix ddr signaling for non-ddr modes
+Date:   Sat, 23 Mar 2019 21:45:18 -0700
+Message-ID: <1553402727-23130-1-git-send-email-skomatineni@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+X-NVConfidentiality: public
+MIME-Version: 1.0
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1553402717; bh=hyG6nL5bNLc49xU60zbU/EdhEZ33+W/EFOQiFZDWv4I=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=mQnM2CnbMyNJ5VmmitEAdkHwjawtMowyOgXTbXSiAK0nrRK5IDQZBEOjJ+CWWbSRb
+         BrGieSIMu7vccxLMQhebNoPE1sFv7UQ02AIYrXge/z6IxRMPux6fosIEzUJBvfCZGR
+         N1Yn+xhiOeuAbALs6qgEpCuZ9xBGRoC47Wl9FSk7RxhnZ4iVcn5Ps+m6LSsQ7bubty
+         8R8PyrDRciR8uHvxPBvEQe2L2RZPirmhN7sbpRc6Eyluazz1MMe1BIittNGGlkMeOp
+         Jh0p99iCoRPmnRIFGKe7kPkB/YAnv/OZ3uMGDeOHCdufs4DuAeI9jdvxM7ro8VnfoV
+         74L9acLfymfCA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch implements the PPS ECHO functionality for pps-gpio, that
-sysfs claims is available already.
+ddr_signaling is set to true for DDR50 and DDR52 modes but is
+not set back to false for other modes. This programs incorrect
+host clock when mode change happens from DDR52/DDR50 to other
+SDR or HS modes like incase of mmc_retune where it switches
+from HS400 to HS DDR and then from HS DDR to HS mode and then
+to HS200.
 
-Configuration is done via device tree bindings.
+This patch fixes the ddr_signaling to set properly for non DDR
+modes.
 
-No changes are made to userspace interfaces.
-
-This patch was originally written by Lukas Senger as part of a masters
-thesis project and modified for inclusion into the linux kernel by Tom
-Burkart.
-
-Acked-by: Rodolfo Giometti <giometti@enneenne.com>
-Signed-off-by: Lukas Senger <lukas@fridolin.com>
-Signed-off-by: Tom Burkart <tom@aussec.com>
+Tested-by: Jon Hunter <jonathanh@nvidia.com>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
- drivers/pps/clients/pps-gpio.c | 88 ++++++++++++++++++++++++++++++++++++++++--
- include/linux/pps-gpio.h       |  2 +
- 2 files changed, 87 insertions(+), 3 deletions(-)
+ drivers/mmc/host/sdhci-tegra.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pps/clients/pps-gpio.c b/drivers/pps/clients/pps-gpio.c
-index 4e5e9229814b..4b6418039387 100644
---- a/drivers/pps/clients/pps-gpio.c
-+++ b/drivers/pps/clients/pps-gpio.c
-@@ -35,6 +35,8 @@
- #include <linux/list.h>
- #include <linux/of_device.h>
- #include <linux/of_gpio.h>
-+#include <linux/timer.h>
-+#include <linux/jiffies.h>
+diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
+index 32e62904c0d3..46086dd43bfb 100644
+--- a/drivers/mmc/host/sdhci-tegra.c
++++ b/drivers/mmc/host/sdhci-tegra.c
+@@ -779,6 +779,7 @@ static void tegra_sdhci_set_uhs_signaling(struct sdhci_host *host,
+ 	bool set_dqs_trim = false;
+ 	bool do_hs400_dll_cal = false;
  
- /* Info for each registered platform device */
- struct pps_gpio_device_data {
-@@ -42,8 +44,12 @@ struct pps_gpio_device_data {
- 	struct pps_device *pps;		/* PPS source device */
- 	struct pps_source_info info;	/* PPS source information */
- 	struct gpio_desc *gpio_pin;	/* GPIO port descriptors */
-+	struct gpio_desc *echo_pin;
-+	struct timer_list echo_timer;	/* timer to reset echo active state */
- 	bool assert_falling_edge;
- 	bool capture_clear;
-+	unsigned int echo_active_ms;	/* PPS echo active duration */
-+	unsigned long echo_timeout;	/* timer timeout value in jiffies */
- };
- 
- /*
-@@ -64,19 +70,56 @@ static irqreturn_t pps_gpio_irq_handler(int irq, void *data)
- 	rising_edge = gpiod_get_value(info->gpio_pin);
- 	if ((rising_edge && !info->assert_falling_edge) ||
- 			(!rising_edge && info->assert_falling_edge))
--		pps_event(info->pps, &ts, PPS_CAPTUREASSERT, NULL);
-+		pps_event(info->pps, &ts, PPS_CAPTUREASSERT, data);
- 	else if (info->capture_clear &&
- 			((rising_edge && info->assert_falling_edge) ||
- 			(!rising_edge && !info->assert_falling_edge)))
--		pps_event(info->pps, &ts, PPS_CAPTURECLEAR, NULL);
-+		pps_event(info->pps, &ts, PPS_CAPTURECLEAR, data);
- 
- 	return IRQ_HANDLED;
- }
- 
-+/* This function will only be called when an ECHO GPIO is defined */
-+static void pps_gpio_echo(struct pps_device *pps, int event, void *data)
-+{
-+	/* add_timer() needs to write into info->echo_timer */
-+	struct pps_gpio_device_data *info = data;
-+
-+	switch (event) {
-+	case PPS_CAPTUREASSERT:
-+		if (pps->params.mode & PPS_ECHOASSERT)
-+			gpiod_set_value(info->echo_pin, 1);
-+		break;
-+
-+	case PPS_CAPTURECLEAR:
-+		if (pps->params.mode & PPS_ECHOCLEAR)
-+			gpiod_set_value(info->echo_pin, 1);
-+		break;
-+	}
-+
-+	/* fire the timer */
-+	if (info->pps->params.mode & (PPS_ECHOASSERT | PPS_ECHOCLEAR)) {
-+		info->echo_timer.expires = jiffies + info->echo_timeout;
-+		add_timer(&info->echo_timer);
-+	}
-+}
-+
-+/* Timer callback to reset the echo pin to the inactive state */
-+static void pps_gpio_echo_timer_callback(struct timer_list *t)
-+{
-+	const struct pps_gpio_device_data *info;
-+
-+	info = from_timer(info, t, echo_timer);
-+
-+	gpiod_set_value(info->echo_pin, 0);
-+}
-+
- static int pps_gpio_setup(struct platform_device *pdev)
- {
- 	struct pps_gpio_device_data *data = platform_get_drvdata(pdev);
- 	struct device_node *np = pdev->dev.of_node;
-+	int ret;
-+	u32 value;
- 
- 	data->gpio_pin = devm_gpiod_get(&pdev->dev,
- 		NULL,	/* request "gpios" */
-@@ -87,6 +130,33 @@ static int pps_gpio_setup(struct platform_device *pdev)
- 		return PTR_ERR(data->gpio_pin);
- 	}
- 
-+	data->echo_pin = devm_gpiod_get_optional(&pdev->dev,
-+			"echo",
-+			GPIOD_OUT_LOW);
-+	if (data->echo_pin) {
-+		if (IS_ERR(data->echo_pin)) {
-+			dev_err(&pdev->dev, "failed to request ECHO GPIO\n");
-+			return PTR_ERR(data->echo_pin);
-+		}
-+
-+		ret = of_property_read_u32(np,
-+			"echo-active-ms",
-+			&value);
-+		if (ret) {
-+			dev_err(&pdev->dev,
-+				"failed to get echo-active-ms from OF\n");
-+			return ret;
-+		}
-+		data->echo_active_ms = value;
-+		/* sanity check on echo_active_ms */
-+		if (!data->echo_active_ms || data->echo_active_ms > 999) {
-+			dev_err(&pdev->dev,
-+				"echo-active-ms: %u - bad value from OF\n",
-+				data->echo_active_ms);
-+			return -EINVAL;
-+		}
-+	}
-+
- 	if (of_property_read_bool(np, "assert-falling-edge"))
- 		data->assert_falling_edge = true;
- 	return 0;
-@@ -122,9 +192,11 @@ static int pps_gpio_probe(struct platform_device *pdev)
- 	/* GPIO setup */
- 	if (pdata) {
- 		data->gpio_pin = pdata->gpio_pin;
-+		data->echo_pin = pdata->echo_pin;
- 
- 		data->assert_falling_edge = pdata->assert_falling_edge;
- 		data->capture_clear = pdata->capture_clear;
-+		data->echo_active_ms = pdata->echo_active_ms;
- 	} else {
- 		ret = pps_gpio_setup(pdev);
- 		if (ret)
-@@ -148,6 +220,11 @@ static int pps_gpio_probe(struct platform_device *pdev)
- 	data->info.owner = THIS_MODULE;
- 	snprintf(data->info.name, PPS_MAX_NAME_LEN - 1, "%s.%d",
- 		 pdev->name, pdev->id);
-+	if (data->echo_pin) {
-+		data->info.echo = pps_gpio_echo;
-+		data->echo_timeout = msecs_to_jiffies(data->echo_active_ms);
-+		timer_setup(&data->echo_timer, pps_gpio_echo_timer_callback, 0);
-+	}
- 
- 	/* register PPS source */
- 	pps_default_params = PPS_CAPTUREASSERT | PPS_OFFSETASSERT;
-@@ -180,6 +257,11 @@ static int pps_gpio_remove(struct platform_device *pdev)
- 	struct pps_gpio_device_data *data = platform_get_drvdata(pdev);
- 
- 	pps_unregister_source(data->pps);
-+	if (data->echo_pin) {
-+		del_timer_sync(&data->echo_timer);
-+		/* reset echo pin in any case */
-+		gpiod_set_value(data->echo_pin, 0);
-+	}
- 	dev_info(&pdev->dev, "removed IRQ %d as PPS source\n", data->irq);
- 	return 0;
- }
-@@ -204,4 +286,4 @@ MODULE_AUTHOR("Ricardo Martins <rasm@fe.up.pt>");
- MODULE_AUTHOR("James Nuss <jamesnuss@nanometrics.ca>");
- MODULE_DESCRIPTION("Use GPIO pin as PPS source");
- MODULE_LICENSE("GPL");
--MODULE_VERSION("1.1.0");
-+MODULE_VERSION("1.2.0");
-diff --git a/include/linux/pps-gpio.h b/include/linux/pps-gpio.h
-index f028d2cda6f5..44171e6b7197 100644
---- a/include/linux/pps-gpio.h
-+++ b/include/linux/pps-gpio.h
-@@ -24,8 +24,10 @@
- 
- struct pps_gpio_platform_data {
- 	struct gpio_desc *gpio_pin;
-+	struct gpio_desc *echo_pin;
- 	bool assert_falling_edge;
- 	bool capture_clear;
-+	unsigned int echo_active_ms;
- };
- 
- #endif /* _PPS_GPIO_H */
++	tegra_host->ddr_signaling = false;
+ 	switch (timing) {
+ 	case MMC_TIMING_UHS_SDR50:
+ 	case MMC_TIMING_UHS_SDR104:
 -- 
-2.12.3
+2.7.4
 
