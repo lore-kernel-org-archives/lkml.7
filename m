@@ -2,70 +2,73 @@ Return-Path: <SRS0=2kAr=R3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D39EC43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 22:02:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0970EC4360F
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 22:02:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C35882082C
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 22:02:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBD112082C
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 22:02:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="l223+tlm"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="HTd5HhKi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729002AbfCXWCh (ORCPT
+        id S1729029AbfCXWCj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 18:02:37 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:35004 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728893AbfCXWCh (ORCPT
+        Sun, 24 Mar 2019 18:02:39 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:53287 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728907AbfCXWCi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 18:02:37 -0400
-Received: by mail-wm1-f68.google.com with SMTP id y197so7053116wmd.0;
-        Sun, 24 Mar 2019 15:02:35 -0700 (PDT)
+        Sun, 24 Mar 2019 18:02:38 -0400
+Received: by mail-wm1-f66.google.com with SMTP id q16so6947303wmj.3;
+        Sun, 24 Mar 2019 15:02:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=v+fyB4tI3gKbJMEPPqCvbrfsNxpucCIHFMC9GxrzHgg=;
-        b=l223+tlmj3z0NLeJvTxzZWimnTsh1nV0CycvWZG1TaxDt/+H7uAb/H2jY+oar8yEHg
-         DQwnqTePU+RWCD3KRQgpqeyl+GOU409bk8NP77wt9rInmAeg1PWNyBxmjWEtdA5a4pBi
-         9vvrjHkJeERhiN5txXHgVd08HH8fTIbbYcIi+0zaAnyZk2x3YwwdAJi8KjPOxaug1pwv
-         ELc1JCIFCGRWYxaBdvDIHl7EMoTBIxz7x7aNtE7jmrhg7+JjFMQCUEtNVy320ZRPW9V9
-         W1HWokG+Keb7510GRtYArjGdSGjRPtQaHJASMq+EF++D0YbBvVWQNCBjBbUautCKpDp9
-         nfYg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=91HdSPyf9HFmjS95lK9wkN7VvhcgvAMdo9F31XsmQH8=;
+        b=HTd5HhKiLz2vyrvOe2BVSJF/wUqAdo9KpqjyisggpqkoGmv6W2wRxcYjHUpOZGBBnR
+         iSqONn6Xa/c7rwGKVSLXS21NnbPmMprM0DkTkf7PA9gDn3eKkDs1N/1yshxvLsx/WWJe
+         RSHXe0JoVMmq+WsAAPXm/UYD04EzaLa1dfYN2M82mlzew9sm0uBVqreMzjWuYjIyQl0m
+         jMjNKOl946qcnWL7ODiqPtHd04jKKX4j/N0WRgDtS0M+2tWMIn/TRGd8XRlj0MvxOVj4
+         EwaFqBC/CusuBKTLRAoOtGjtO213VHYYSlbhB5q4CSLnsk/svcOf1tx6rBgxtCYgGS7X
+         QFUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=v+fyB4tI3gKbJMEPPqCvbrfsNxpucCIHFMC9GxrzHgg=;
-        b=DAWk/dqgDT+NFwJsIkujYNbq/pN8vR66ZcL8RDIOk2qSVK3uEV8J8Wq+9Mldtnk7Su
-         D2VpgRxowLttygA+6i6lTeptyy2TwrWsctktBheJFC9tiYkj0uptQg8IrDr8Ddqio6aR
-         VKOm4QHHsTrkS1V3EKphB3oWgPTYu0aqKyi5kTU9AB0EfSetJlmT79+FVlXEa8qhmXZn
-         TBk26wDp/U2NucTBsdOfvD5q2eO/GwhIzzJCW3Se8p5v05E/CRLijvxskpWUTDxLbpVa
-         Y1vIT9cwP1J7K2Z9mh5/KVg/xR2NUqrVq7AHomH6p1m1cRMekjTdqKLZMvf8lSc2RB1D
-         8rIg==
-X-Gm-Message-State: APjAAAXWjZ2PyNjghDPMCJ2BR1murt0GBSz7+9q3ZDO/ogeU9xRh2o3O
-        74JmI1im2CUQIAaCfMfGris=
-X-Google-Smtp-Source: APXvYqwtHPXmQGHQZmmujSavXIzMLmkHXwZYnhyA/LalXDpzzopkoylRvJOHBeHWi1NSKBFL1oDI5Q==
-X-Received: by 2002:a7b:cb58:: with SMTP id v24mr560348wmj.121.1553464954737;
-        Sun, 24 Mar 2019 15:02:34 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=91HdSPyf9HFmjS95lK9wkN7VvhcgvAMdo9F31XsmQH8=;
+        b=L9HOnXvRWya6Iy3Nl2XzxViTnRT0RcG0RUL59iCadxJ+BH7w/PnkHzcHSDsVTA4tFA
+         YJAMidr4F40gc5pp0IIkN5c/4OqIHQjfwOv9gagDwspe6Yjb0J+YE2W+pDZsmXT0Ykma
+         x29esMkJn4NA3yFGVj2CZyO6cTRQVxy1/9JEcTTs+1JEPATmsTFsz8J9LuE4MRJ+vv77
+         ZomD/WDbzF/TjwgzQii2xhsmcDeASB2bMPzxoJMwt6MV4mRh8DIASOBHa2ZlzUDf9qnA
+         6I78Mes3vngHgDU47lA7CxDkfolZkrCHuumQswUYZ5t1jomAwY8qfWh+TysjluGndXUf
+         X6Dg==
+X-Gm-Message-State: APjAAAXEpA0sddG1LxGF7qItYCyNISezsUw2Gd5p20ggnU8UlUPdHq17
+        Yo9zAnaypMw3ofLQyg2C50E=
+X-Google-Smtp-Source: APXvYqwz0lpfo9Nvim+OlD497Z6RpuvSNAV/i6qOhXa7qv449Bb+sK/Ed7IgzYBvS+X/cvtUsUXGlw==
+X-Received: by 2002:a1c:cc0a:: with SMTP id h10mr3249653wmb.20.1553464956265;
+        Sun, 24 Mar 2019 15:02:36 -0700 (PDT)
 Received: from blackbox.darklights.net (p200300DCD7399900428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:dc:d739:9900:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id o13sm12743485wmc.20.2019.03.24.15.02.33
+        by smtp.googlemail.com with ESMTPSA id o13sm12743485wmc.20.2019.03.24.15.02.34
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 24 Mar 2019 15:02:33 -0700 (PDT)
+        Sun, 24 Mar 2019 15:02:35 -0700 (PDT)
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 To:     thierry.reding@gmail.com, narmstrong@baylibre.com,
         jbrunet@baylibre.com, linux-pwm@vger.kernel.org,
         linux-amlogic@lists.infradead.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 0/1] pwm: meson: fix scheduling while atomic issue
-Date:   Sun, 24 Mar 2019 23:02:16 +0100
-Message-Id: <20190324220217.15813-1-martin.blumenstingl@googlemail.com>
+Subject: [PATCH 1/1] pwm: meson: use the spin-lock only to protect register modifications
+Date:   Sun, 24 Mar 2019 23:02:17 +0100
+Message-Id: <20190324220217.15813-2-martin.blumenstingl@googlemail.com>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190324220217.15813-1-martin.blumenstingl@googlemail.com>
+References: <20190324220217.15813-1-martin.blumenstingl@googlemail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -73,44 +76,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Back in January a "BUG: scheduling while atomic" error showed up during
-boot on my Meson8b Odroid-C1 (which uses a PWM regulator as CPU supply).
-The call trace comes down to:
-  __mutex_lock
-  clk_prepare_lock
-  clk_core_get_rate
-  meson_pwm_apply
-  ..
-  dev_pm_opp_set_rate
-  ..
+Holding the spin-lock for all of the code in meson_pwm_apply() can
+result in a "BUG: scheduling while atomic". This can happen because
+clk_get_rate() (which is called from meson_pwm_calc()) may sleep.
+Only hold the spin-lock when modifying registers to solve this.
 
-Jerome has also seen the same problem but from pwm-leds (instead of a
-pwm-regulator). He posted a patch which replaces the spinlock with a
-mutex. That works. I believe we can optimize this by reducing the time
-where the lock is held - that also allows to keep the spin-lock.
+The reason why we need a spin-lock in the driver is because the
+REG_MISC_AB register is shared between the two channels provided by one
+PWM controller. The only functions where REG_MISC_AB is modified are
+meson_pwm_enable() and meson_pwm_disable() so the register reads/writes
+in there need to be protected by the spin-lock.
 
-Analyzing this issue helped me understand the pwm-meson driver better.
-My plan is to send some cleanups (with the goal of re-using more of the
-goodies from the PWM core in the pwm-meson driver) after this single fix
-is merged (they can be found here: [1]).
+The original code also used the spin-lock to protect the values in
+struct meson_pwm_channel. This could be necessary if two consumers can
+use the same PWM channel. However, PWM core doesn't allow this so we
+don't need to protect the values in struct meson_pwm_channel with a
+lock.
 
-Dependencies: none
-
-Target version: please queue this for -fixes so it makes it's way into
-v5.1-rc (so we can get it backported from there, because this issue has
-existed since the pwm-meson driver was introduced).
-
-
-[0] http://lists.infradead.org/pipermail/linux-amlogic/2019-January/009690.html
-[1] https://github.com/xdarklight/linux/commits/meson-pwm-for-5.2-v0
-
-
-Martin Blumenstingl (1):
-  pwm: meson: use the spin-lock only to protect register modifications
-
+Fixes: 211ed630753d2f ("pwm: Add support for Meson PWM Controller")
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+---
  drivers/pwm/pwm-meson.c | 21 +++++++++++++--------
  1 file changed, 13 insertions(+), 8 deletions(-)
 
+diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
+index c1ed641b3e26..2b03938039b6 100644
+--- a/drivers/pwm/pwm-meson.c
++++ b/drivers/pwm/pwm-meson.c
+@@ -235,6 +235,7 @@ static void meson_pwm_enable(struct meson_pwm *meson,
+ {
+ 	u32 value, clk_shift, clk_enable, enable;
+ 	unsigned int offset;
++	unsigned long flags;
+ 
+ 	switch (id) {
+ 	case 0:
+@@ -255,6 +256,8 @@ static void meson_pwm_enable(struct meson_pwm *meson,
+ 		return;
+ 	}
+ 
++	spin_lock_irqsave(&meson->lock, flags);
++
+ 	value = readl(meson->base + REG_MISC_AB);
+ 	value &= ~(MISC_CLK_DIV_MASK << clk_shift);
+ 	value |= channel->pre_div << clk_shift;
+@@ -267,11 +270,14 @@ static void meson_pwm_enable(struct meson_pwm *meson,
+ 	value = readl(meson->base + REG_MISC_AB);
+ 	value |= enable;
+ 	writel(value, meson->base + REG_MISC_AB);
++
++	spin_unlock_irqrestore(&meson->lock, flags);
+ }
+ 
+ static void meson_pwm_disable(struct meson_pwm *meson, unsigned int id)
+ {
+ 	u32 value, enable;
++	unsigned long flags;
+ 
+ 	switch (id) {
+ 	case 0:
+@@ -286,9 +292,13 @@ static void meson_pwm_disable(struct meson_pwm *meson, unsigned int id)
+ 		return;
+ 	}
+ 
++	spin_lock_irqsave(&meson->lock, flags);
++
+ 	value = readl(meson->base + REG_MISC_AB);
+ 	value &= ~enable;
+ 	writel(value, meson->base + REG_MISC_AB);
++
++	spin_unlock_irqrestore(&meson->lock, flags);
+ }
+ 
+ static int meson_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+@@ -296,19 +306,16 @@ static int meson_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ {
+ 	struct meson_pwm_channel *channel = pwm_get_chip_data(pwm);
+ 	struct meson_pwm *meson = to_meson_pwm(chip);
+-	unsigned long flags;
+ 	int err = 0;
+ 
+ 	if (!state)
+ 		return -EINVAL;
+ 
+-	spin_lock_irqsave(&meson->lock, flags);
+-
+ 	if (!state->enabled) {
+ 		meson_pwm_disable(meson, pwm->hwpwm);
+ 		channel->state.enabled = false;
+ 
+-		goto unlock;
++		return 0;
+ 	}
+ 
+ 	if (state->period != channel->state.period ||
+@@ -329,7 +336,7 @@ static int meson_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 		err = meson_pwm_calc(meson, channel, pwm->hwpwm,
+ 				     state->duty_cycle, state->period);
+ 		if (err < 0)
+-			goto unlock;
++			return err;
+ 
+ 		channel->state.polarity = state->polarity;
+ 		channel->state.period = state->period;
+@@ -341,9 +348,7 @@ static int meson_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 		channel->state.enabled = true;
+ 	}
+ 
+-unlock:
+-	spin_unlock_irqrestore(&meson->lock, flags);
+-	return err;
++	return 0;
+ }
+ 
+ static void meson_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
 -- 
 2.21.0
 
