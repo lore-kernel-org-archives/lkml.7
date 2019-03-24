@@ -4,46 +4,46 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC808C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 09:17:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 260AAC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 09:18:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B69262148D
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 09:17:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA98C218AC
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 09:18:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728577AbfCXJRH (ORCPT
+        id S1728578AbfCXJSH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 05:17:07 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:37812 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726017AbfCXJRG (ORCPT
+        Sun, 24 Mar 2019 05:18:07 -0400
+Received: from mail-it1-f200.google.com ([209.85.166.200]:56164 "EHLO
+        mail-it1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726139AbfCXJSH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 05:17:06 -0400
-Received: by mail-io1-f71.google.com with SMTP id u22so5472841iof.4
-        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2019 02:17:06 -0700 (PDT)
+        Sun, 24 Mar 2019 05:18:07 -0400
+Received: by mail-it1-f200.google.com with SMTP id y6so6465002itj.5
+        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2019 02:18:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
          :from:to;
         bh=M+8R9CNl+dwGuvWY+cqskh4FBZP6bvG/g7lGqjy9mEU=;
-        b=QYtlVFmzHsCxQ+nYXEwb7slJBsE4e2qWNjT5YZOx8CHrLV8ai+ohYH6gr2U3bG0ISb
-         aT1LZc5nis2z72pQwi/ODRbPXK54vqOAUjiEkle7OEHqTBrarIUa3OWhaZZHHwzQwiOU
-         5a5EdFtqlAOCWT7zRzRkXOWaB1ICUaIbXN/x+VzkQeydGOXGDmLG5lA3Rv8cj4/SUkAG
-         wkyPlnV5r9PukcsPoXJAgqfFBC6/D5q5Amxx+T75aXEWJyyBsmrLzPuZnRgm5Wda83xu
-         Ab1ns566UFzgAEMdTALhLm97wIDkuCZrRq57iJOU35zbcYQToIemxwC7nA2SVk/QiHGB
-         U9mA==
-X-Gm-Message-State: APjAAAVRlzXBTdK5oaewH8XIqJ6uXaW6gt128tjxxzPYLD6xC1Y3Yezf
-        WxKQvuFB9yEJXup5PS/ajcxVdf/nrQCTCZVm+ZtSZ6ZZmNI6
-X-Google-Smtp-Source: APXvYqzb8o/+WPwdFnjl6TqjcsoDNB8+mwpObGYShi/KKuaDBOBBhbSvjXJKwxw63q342YVVHVMKRVaufHUuhDAEakwPKHBkoU3x
+        b=DtIqWqQIELSBWQi4KFZIO6RgmhNEpX1JusDWKi2YBomm2wkj8nNiJ0mIdG68BBbdBh
+         8NoRTg+OKrJ1QK3HSJj9vhULCM2Gb2YvKH1kGTockyleH0P/O3r2F7ScCpDJZdhNfugY
+         CcQpZg1umWINIXF29UZ2Q61oDhtuQJ15kEeB1ZhYOmlNrrH9FGqcKyqIi7b3w2SOS/il
+         rGv9fIK2MLDY4CemVIM9sa2mTb79U9ROf3fMttHosQxW7DhjGEPO773rOG7nCXqwX2Vs
+         /enIT9/mp3xlWEZ13sMEgHKiNSW/6YQzEDd/klzZ1oVzyuiWYwOR3xCkmX1qQGbSP6Ut
+         Cnuw==
+X-Gm-Message-State: APjAAAW93PGDcJ0R3/qulA9bC1lMtrOSbyPTw2IjY8dJvq5IisszuwTV
+        6DwPgawUUy48jyJA1hxeqaWaE4AbQSx2oUklM1EIII1+dpwT
+X-Google-Smtp-Source: APXvYqzzXfMAfxoYxKEkOkZPdNvQR/BCmooub8KOAp97WTwwyRGMKwnHhfjoW1FZ8WnU8wSg3s0+RBoWjyscgldVBpIvJaaMkyBh
 MIME-Version: 1.0
-X-Received: by 2002:a24:ad2:: with SMTP id 201mr3313218itw.26.1553419025761;
- Sun, 24 Mar 2019 02:17:05 -0700 (PDT)
-Date:   Sun, 24 Mar 2019 02:17:05 -0700
+X-Received: by 2002:a24:6f49:: with SMTP id x70mr7171996itb.102.1553419086168;
+ Sun, 24 Mar 2019 02:18:06 -0700 (PDT)
+Date:   Sun, 24 Mar 2019 02:18:06 -0700
 In-Reply-To: <000000000000639f6a0584d11b82@google.com>
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000037d01a0584d38dfd@google.com>
+Message-ID: <000000000000d1882f0584d39072@google.com>
 Subject: Re: WARNING in arch_install_hw_breakpoint
 From:   syzbot <syzbot+370a6b0f11867bf13515@syzkaller.appspotmail.com>
 To:     bp@alien8.de, frederic@kernel.org, gustavo@embeddedor.com,
