@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEEADC43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 15:27:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5069DC4360F
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 15:27:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BA3C20811
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 15:27:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 141F120880
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 15:27:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553441253;
-	bh=78Lv0vG8xWZ2J06Yt+iHM5Ufj+d+gA9U2JoTpxDcE3Y=;
+	s=default; t=1553441278;
+	bh=wmMFp47rXKkrxSNQ39fudLAGZy1dhilPCEU94iny3Lo=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=XBqvbyRNxJj4hQ9rvKHBdl+gCqbql9xVg9YF604n7v0E/N29n2H1uKBph+BSBwaow
-	 WBNpipngTZ6arUze/Ok47Xc+PYIGznne7qlBi/1zZ3eba5OSIi0PAOla3Jkhb0e0R5
-	 fZsoLXis47HdGvCjXLeebRGIEBd4y84Be6/+xRxI=
+	b=I2XPyPG+gvYcCSJWnPxE9NUnJBw96DBIYD1CSxXplFqCt/sc1EjUimIJnHL58FepU
+	 FWEI8D0/KblGVjl5pbxO/vo2T/Q0xko3hZdsugKSOaxAmblIXZVlxVfnU7blekjKBe
+	 Xkx4dD5LrIuZlzC/cyGbHBWKgROeI8snIfa9XD/4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728733AbfCXP1c (ORCPT
+        id S1728797AbfCXP15 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 11:27:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59060 "EHLO mail.kernel.org"
+        Sun, 24 Mar 2019 11:27:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726317AbfCXP1b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 11:27:31 -0400
+        id S1726317AbfCXP14 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Mar 2019 11:27:56 -0400
 Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6681120700;
-        Sun, 24 Mar 2019 15:27:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 455E020700;
+        Sun, 24 Mar 2019 15:27:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553441250;
-        bh=78Lv0vG8xWZ2J06Yt+iHM5Ufj+d+gA9U2JoTpxDcE3Y=;
+        s=default; t=1553441276;
+        bh=wmMFp47rXKkrxSNQ39fudLAGZy1dhilPCEU94iny3Lo=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Kenu0w6vZPIqYRoOmaw34mFonyETC7pJE40r6mKjDAkcGbY1NARQpPUi68o99kH1N
-         R6cP3eBh5RcPzAmALiikDk9Rzi2OkKl892sRHie6VO/5TEe0iDTXNYVUJh5ouplYmp
-         J0Mu+Wc1PscbHtOvDr+j9CgHz1sRAmuklBuUCJ9Q=
-Date:   Sun, 24 Mar 2019 15:27:25 +0000
+        b=lHFslGF+2IZPcFf1/f/mHKwkaSv5K+BqGROyFejzutS4O7zD1URW5zuhpU2MEGbud
+         6mQ7maGEwn9VgZ2C+iVjAHDSIM/4VsoNG4z9ORsuDEfwTpQGOfGRwSsINfiTuhn9S2
+         EkB5cKI1qQB/IawNgaFz6Kb7lF28qdlWX8l3YsB0=
+Date:   Sun, 24 Mar 2019 15:27:50 +0000
 From:   Jonathan Cameron <jic23@kernel.org>
 To:     Artur Rojek <contact@artur-rojek.eu>
 Cc:     Sebastian Reichel <sre@kernel.org>,
@@ -46,11 +46,12 @@ Cc:     Sebastian Reichel <sre@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org,
         linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v2 1/4] iio: inkern: API for reading available iio
- channel attribute values
-Message-ID: <20190324152725.35fed317@archlinux>
-In-Reply-To: <20190323172809.14407-1-contact@artur-rojek.eu>
+Subject: Re: [PATCH v2 2/4] iio: inkern: Convert iio_read_avail_channel_raw
+ into a wrapper
+Message-ID: <20190324152750.43edf737@archlinux>
+In-Reply-To: <20190323172809.14407-2-contact@artur-rojek.eu>
 References: <20190323172809.14407-1-contact@artur-rojek.eu>
+        <20190323172809.14407-2-contact@artur-rojek.eu>
 X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -60,82 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 23 Mar 2019 18:28:06 +0100
+On Sat, 23 Mar 2019 18:28:07 +0100
 Artur Rojek <contact@artur-rojek.eu> wrote:
 
-> Extend the inkern API with a function for reading available
-> attribute values of iio channels.
+> Convert "iio_read_avail_channel_raw" over to a wrapper around
+> "iio_read_avail_channel_attribute".
+> 
+> With the introduction of "iio_read_avail_channel_attribute",
+> the necessity of having a separate call to read raw channel values
+> became redundant.
 > 
 > Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
-If this goes through a route other than IIO (otherwise
-I'll just add a signed-off-by...)
-
 Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
 > ---
 > 
 > Changes:
 > 
-> v2: no change
+> v2: new patch
 > 
->  drivers/iio/inkern.c         | 20 ++++++++++++++++++++
->  include/linux/iio/consumer.h | 14 ++++++++++++++
->  2 files changed, 34 insertions(+)
+>  drivers/iio/inkern.c | 12 ++----------
+>  1 file changed, 2 insertions(+), 10 deletions(-)
 > 
 > diff --git a/drivers/iio/inkern.c b/drivers/iio/inkern.c
-> index 06ca3f7fcc44..f19dbde3c945 100644
+> index f19dbde3c945..4a5eff3f18bc 100644
 > --- a/drivers/iio/inkern.c
 > +++ b/drivers/iio/inkern.c
-> @@ -733,6 +733,26 @@ static int iio_channel_read_avail(struct iio_channel *chan,
->  						 vals, type, length, info);
->  }
+> @@ -759,16 +759,8 @@ int iio_read_avail_channel_raw(struct iio_channel *chan,
+>  	int ret;
+>  	int type;
 >  
-> +int iio_read_avail_channel_attribute(struct iio_channel *chan,
-> +				     const int **vals, int *type, int *length,
-> +				     enum iio_chan_info_enum attribute)
-> +{
-> +	int ret;
-> +
-> +	mutex_lock(&chan->indio_dev->info_exist_lock);
-> +	if (!chan->indio_dev->info) {
-> +		ret = -ENODEV;
-> +		goto err_unlock;
-> +	}
-> +
-> +	ret = iio_channel_read_avail(chan, vals, type, length, attribute);
-> +err_unlock:
-> +	mutex_unlock(&chan->indio_dev->info_exist_lock);
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(iio_read_avail_channel_attribute);
-> +
->  int iio_read_avail_channel_raw(struct iio_channel *chan,
->  			       const int **vals, int *length)
->  {
-> diff --git a/include/linux/iio/consumer.h b/include/linux/iio/consumer.h
-> index 9887f4f8e2a8..b2d34831ed7c 100644
-> --- a/include/linux/iio/consumer.h
-> +++ b/include/linux/iio/consumer.h
-> @@ -290,6 +290,20 @@ int iio_read_max_channel_raw(struct iio_channel *chan, int *val);
->  int iio_read_avail_channel_raw(struct iio_channel *chan,
->  			       const int **vals, int *length);
+> -	mutex_lock(&chan->indio_dev->info_exist_lock);
+> -	if (!chan->indio_dev->info) {
+> -		ret = -ENODEV;
+> -		goto err_unlock;
+> -	}
+> -
+> -	ret = iio_channel_read_avail(chan,
+> -				     vals, &type, length, IIO_CHAN_INFO_RAW);
+> -err_unlock:
+> -	mutex_unlock(&chan->indio_dev->info_exist_lock);
+> +	ret = iio_read_avail_channel_attribute(chan, vals, &type, length,
+> +					 IIO_CHAN_INFO_RAW);
 >  
-> +/**
-> + * iio_read_avail_channel_attribute() - read available channel attribute values
-> + * @chan:		The channel being queried.
-> + * @vals:		Available values read back.
-> + * @type:		Type of values read back.
-> + * @length:		Number of entries in vals.
-> + * @attribute:		info attribute to be read back.
-> + *
-> + * Returns an error code, IIO_AVAIL_RANGE or IIO_AVAIL_LIST.
-> + */
-> +int iio_read_avail_channel_attribute(struct iio_channel *chan,
-> +				     const int **vals, int *type, int *length,
-> +				     enum iio_chan_info_enum attribute);
-> +
->  /**
->   * iio_get_channel_type() - get the type of a channel
->   * @channel:		The channel being queried.
+>  	if (ret >= 0 && type != IIO_VAL_INT)
+>  		/* raw values are assumed to be IIO_VAL_INT */
 
