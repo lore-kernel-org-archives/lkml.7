@@ -4,47 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32646C4360F
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B937C43381
 	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 06:24:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09407218AC
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 06:24:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB56421741
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 06:24:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728040AbfCXGXG (ORCPT
+        id S1727919AbfCXGWH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 02:23:06 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:36250 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727109AbfCXGXG (ORCPT
+        Sun, 24 Mar 2019 02:22:07 -0400
+Received: from mail-it1-f197.google.com ([209.85.166.197]:40340 "EHLO
+        mail-it1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726139AbfCXGWH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 02:23:06 -0400
-Received: by mail-io1-f70.google.com with SMTP id a7so5284984ioq.3
-        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2019 23:23:05 -0700 (PDT)
+        Sun, 24 Mar 2019 02:22:07 -0400
+Received: by mail-it1-f197.google.com with SMTP id j8so5314847ita.5
+        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2019 23:22:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=M+8R9CNl+dwGuvWY+cqskh4FBZP6bvG/g7lGqjy9mEU=;
-        b=niF2BztUQckv4fDdrcp8LMv3ZZBwRqgJ0Xk4g/5QejD9PbKtU7IywiS2f/tsKhMhsP
-         IiMCcqrBobvnRfNmW+8gNJPfLoRLVfXJ5d3vIvtYT64qX0IpCUQbUB7p5/e7szBvgsqb
-         r1qP1gEPixEAOjzMLNEu8+VaeL8xQBIDIdU09KGLVMdiNpJ1DgGOeVsQyMawrIamdyn1
-         N0nXisrmSdfFTSKizGwHJMwKnj3cWqnsPnEcHPu3lPQ9s7sVecKPUyZSICW6ZSDTwgfw
-         N+ZWV88eoX1q3aRy0DRu1tVY6JiV5SnNc74oFTIBvqYGp3wqVZ5kMHvHezuMX6Yh9exM
-         YfpA==
-X-Gm-Message-State: APjAAAUmvoHGZJD+ISPYH4fhP3i5UIag3Ok09BNlBovkzhejK8xpcpT5
-        0mQbse17/0DURyCrZvlA1rVv+6tnN+kSvlBh0PoD5dgaGCSg
-X-Google-Smtp-Source: APXvYqw8/BOnwzG48YPTfakxZQbqZiSoYReOd5vQ1QatQ8nIHWhhqGkF4aC3mjVTLdzmTgfPc0g9/+7o23ft+bJCistQJIESSQYr
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=JgBehIPd0SstoKCpEs5/CiE2xmMN7/RVHQjZca+KoWY=;
+        b=lyrbtPYXxy0VZaRCldCrkbGxOlkLlCfynmjbH/+IusGz5eZg5yk1fQFA5HHEf+VIps
+         nElkZE/VQqpcLwjzXZ7cbgKNWJx7pjTvJy3qLKW4Lvt205kyCcAS035Hq85bhdvqGB2O
+         4gB62FSJbPlbPdMU7l+vVSMFYiP4Ic16HrqJp4x6qFIL/j2nOsUiM0C4KY1hLuvOHl3R
+         LcFuMEyICW6Dwqd+Z1S5vj9hV/S9xrt2c6hSGstjHopZ2FM3DxodbnF7cfhgRN82htnc
+         tA+LDDaOYEjg6p3svZBP0ETcicD6LUPeeCO9Lk/Spce+ynoPR9PuLAjpsKGw4VBsSywL
+         nDSQ==
+X-Gm-Message-State: APjAAAUDlEDjQmSADSuN/J7XPDT1hYJPkvIacKF6XZGUp+5hAz1Qgbb0
+        4JFkrAIh+o/Vwn5YvLPzykkqBxA2Bkmc8Z7qVYfnL0WgWfma
+X-Google-Smtp-Source: APXvYqzfSdHvD4Ou8YDTaSeR56MletqWtmPLtkhWbn1n++TjKA99SoWhWz7Teo8c8bazt3Zrr7RKJqvIxnzXmblr728Aj8KBWiHA
 MIME-Version: 1.0
-X-Received: by 2002:a05:660c:1c8:: with SMTP id s8mr4462341itk.20.1553408585569;
- Sat, 23 Mar 2019 23:23:05 -0700 (PDT)
-Date:   Sat, 23 Mar 2019 23:23:05 -0700
-In-Reply-To: <000000000000639f6a0584d11b82@google.com>
+X-Received: by 2002:a5e:830c:: with SMTP id x12mr12007961iom.224.1553408526096;
+ Sat, 23 Mar 2019 23:22:06 -0700 (PDT)
+Date:   Sat, 23 Mar 2019 23:22:06 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000ef21490584d11e64@google.com>
-Subject: Re: WARNING in arch_install_hw_breakpoint
+Message-ID: <000000000000639f6a0584d11b82@google.com>
+Subject: WARNING in arch_install_hw_breakpoint
 From:   syzbot <syzbot+370a6b0f11867bf13515@syzkaller.appspotmail.com>
 To:     bp@alien8.de, frederic@kernel.org, gustavo@embeddedor.com,
         hpa@zytor.com, linux-kernel@vger.kernel.org, mhiramat@kernel.org,
@@ -56,7 +54,9 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
+Hello,
+
+syzbot found the following crash on:
 
 HEAD commit:    fd1f297b Merge tag 'drm-fixes-2019-03-22' of git://anongit..
 git tree:       upstream
@@ -144,3 +144,14 @@ R13: 00000000004c4f84 R14: 00000000004d8bd8 R15: 00000000ffffffff
 
 ======================================================
 
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
