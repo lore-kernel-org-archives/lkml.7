@@ -2,59 +2,60 @@ Return-Path: <SRS0=2kAr=R3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,URIBL_SBL,URIBL_SBL_A,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98302C10F05
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 00:26:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2EC3C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 00:26:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60B89217D8
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 00:26:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F0BE217D8
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 00:26:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Spyy5rGW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MVUnQxOS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728014AbfCXA0o (ORCPT
+        id S1728113AbfCXA0t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Mar 2019 20:26:44 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:41393 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727319AbfCXA0o (ORCPT
+        Sat, 23 Mar 2019 20:26:49 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:37019 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727319AbfCXA0r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Mar 2019 20:26:44 -0400
-Received: by mail-pg1-f195.google.com with SMTP id k11so3948990pgb.8;
-        Sat, 23 Mar 2019 17:26:43 -0700 (PDT)
+        Sat, 23 Mar 2019 20:26:47 -0400
+Received: by mail-pf1-f196.google.com with SMTP id 8so3930250pfr.4;
+        Sat, 23 Mar 2019 17:26:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=dZhxDdC/Qe4tqiAOQJ+sInBhscxUK5dRSwY91CjQlSQ=;
-        b=Spyy5rGW+mybuiFbAZSI3utxWF/QbLOVK0U/rl6IYo3mkRjCowmXiJYqJCUnab4Uns
-         8AKSCgHNnuiS0A01agvJmQYCKtX+QdlgjGCWkJVdsXd7xBS1P1hYqqv3abm7HzUyl8EZ
-         RDu3lYmVAbYBAwcuumFxOoQqnDZ+CB9wm+gp3LVubEggi85oMaDPd3hfA9Lu5E+7ar59
-         5sqCofMA2/V4+OztSXTkTpjBoP3ff1LDFYBjLkHesDLdabNveX03sOnMlVQPo22JcNCI
-         /lqVJvuID0K5KpKAN0S0ECW/qbi2O/QuQjoseBPVwm3UGOTsPHwz8tWLIDytBKGBfE8T
-         Fn3A==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=2i6I3aOV8fq5o+Rl5JqFM+suB9/ZJPZk88xNYv5hrs0=;
+        b=MVUnQxOSAGdr6Jh3vFcFahSWploXSNtQn1jJwNS9KO8IghIuUB/6YvZTseAbfJQBVf
+         oIkGh3xMnu3MBie7cErZ8l6zaX8Ml7fDBhpIlj1ZMCWEsfExrSEBt3grFWuC2Lxadlhp
+         bgCf2kpB/M9t95GwL0vZi1mVfiwu/3z3xlS2xrkfBQkJ/Ylbm32BqVT31AZXEXjlpeKi
+         f6jGmkEec4ZNfQZhNdbigZurQu3HwK4IE99LrD3VAjETfg4ayZIgvz9yKuJBhfWi9rwT
+         WFZHCMLvdYr+keYhh98OHHY2eYQjCcxaYUgqb6e9ryOrh+kIwJxAy54PG7cn7ZPCG5Wj
+         OzZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=dZhxDdC/Qe4tqiAOQJ+sInBhscxUK5dRSwY91CjQlSQ=;
-        b=OTleZJ32DDVGcU39itjsIgB8YRvo9Twhnt/G2U1kx1hBgcQBHGMnL8kJ3SuCUKqmxf
-         4uy2rWTlhB63Ji6O46UhE1wiArnrL6uFA/f/m6Nw7z1lUK7f/lJs86nsG2J1ZrYt6Nmj
-         IjuSRilMl8KkX1cmtEueP30Ew+16Vpxyjxi58BuFc7Xzo4qJHlZaRBMmHnL7Vn+avSo2
-         rHpIlatWwvQnd8F31+nCLRn7wPEkKfCVhyD1Ct6WuG60DZ+H1qGaThixJmGuTWZ6HGCL
-         Pe1p1NIlxtXn/BWzjkMN2X/vSNhs6+75nvrOgYp03iHpscCw1vLyX3uRwrf7OS/xcFpd
-         q3pA==
-X-Gm-Message-State: APjAAAUPdx2R0hyEcvC1mIl2/ubWxTHHF/FxCpomrfKcyEiPIPw3oXZG
-        njFlDeTkXQT9IY5nI07svBM=
-X-Google-Smtp-Source: APXvYqxyrNhoqmRR2GtyxXyh4QHs1sQA01swBbH3fdhsIXVAgug9si2QT0NvHqrJ27GM4ugiyutOzQ==
-X-Received: by 2002:a17:902:8ecc:: with SMTP id x12mr5278077plo.0.1553387202877;
-        Sat, 23 Mar 2019 17:26:42 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=2i6I3aOV8fq5o+Rl5JqFM+suB9/ZJPZk88xNYv5hrs0=;
+        b=GafPzLC6Wm2El2zGPPHDtX9Cpuon3VCGyOpdpFnP3QTdm5HWRkZ2g1d/bGCynQsfU5
+         Cj4ErVBKEOiQ0oP94FgTdUJrh8hZNL5+fnaRyD3ixJcJX95Ka4Jj7tT+Z5IzK47pc6Nd
+         hwngLTQ2FOQJiIaAKpgdPP3iKCcWTq/KseZkjZtqp0kHuf2+nDgTU8rckdDhiA8Qiq8I
+         fZhtXcdKM/uV7rc/M2USwAxT6HiJU0u4WGfwKtS5pIkkXpaadqgEO3d021GR6C/HA6WP
+         /lyQbbyx4Bad0d2oAOnD6eXJC18aIsiZ/OvGwIXU8xXgBFQdFVCOOxFcvv9dduPUPUsN
+         st/A==
+X-Gm-Message-State: APjAAAUTEDOvtRh7Zkj7PwfGxXSDSguZ+ah6leAdm3/Re4atJjuIv+Uw
+        rsaktkxSHNWKmOs51FnRgsI=
+X-Google-Smtp-Source: APXvYqzTXIOsMmnnHX4DZ63AVrE0memn6apWOPYHFHdHR8Lpj7T5zrGK1FrBVCQjV5naRmc3x0NJyA==
+X-Received: by 2002:aa7:8144:: with SMTP id d4mr14647388pfn.88.1553387206789;
+        Sat, 23 Mar 2019 17:26:46 -0700 (PDT)
 Received: from linux-l9pv.suse ([124.11.22.254])
-        by smtp.gmail.com with ESMTPSA id r66sm13737687pfr.131.2019.03.23.17.26.37
+        by smtp.gmail.com with ESMTPSA id r66sm13737687pfr.131.2019.03.23.17.26.43
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sat, 23 Mar 2019 17:26:41 -0700 (PDT)
+        Sat, 23 Mar 2019 17:26:46 -0700 (PDT)
 From:   "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
 X-Google-Original-From: "Lee, Chun-Yi" <jlee@suse.com>
 To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
@@ -65,71 +66,100 @@ To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
         Nayna Jain <nayna@linux.ibm.com>,
         Mimi Zohar <zohar@linux.ibm.com>
 Cc:     linux-efi@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, "Lee, Chun-Yi" <jlee@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>
-Subject: [PATCH 1/2] efi: add a function for transferring status to string
-Date:   Sun, 24 Mar 2019 08:26:20 +0800
-Message-Id: <20190324002621.3551-1-jlee@suse.com>
+        linux-kernel@vger.kernel.org, "Lee, Chun-Yi" <jlee@suse.com>
+Subject: [PATCH 2/2 v2] efi: print appropriate status message when loading certificates
+Date:   Sun, 24 Mar 2019 08:26:21 +0800
+Message-Id: <20190324002621.3551-2-jlee@suse.com>
 X-Mailer: git-send-email 2.12.3
+In-Reply-To: <20190324002621.3551-1-jlee@suse.com>
+References: <20190324002621.3551-1-jlee@suse.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This function can be used to transfer EFI status code to string
-for printing out debug message. Using this function can improve
-the readability of log.
+When loading certificates list from UEFI variable, the original error
+message direct shows the efi status code from UEFI firmware. It looks
+ugly:
 
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Anton Vorontsov <anton@enomsg.org>
-Cc: Colin Cross <ccross@android.com>
-Cc: Tony Luck <tony.luck@intel.com>
+[    2.335031] Couldn't get size: 0x800000000000000e
+[    2.335032] Couldn't get UEFI MokListRT
+[    2.339985] Couldn't get size: 0x800000000000000e
+[    2.339987] Couldn't get UEFI dbx list
+
+So, this patch shows the status string instead of status code.
+
+On the other hand, the "Couldn't get UEFI" message doesn't need
+to be exposed when db/dbx/mok variable do not exist. So, this
+patch set the message level to debug.
+
+v2.
+Setting the MODSIGN messagse level to debug.
+
+Link: https://forums.opensuse.org/showthread.php/535324-MODSIGN-Couldn-t-get-UEFI-db-list?p=2897516#post2897516
+Cc: James Morris <jmorris@namei.org>
+Cc: Serge E. Hallyn" <serge@hallyn.com>
+Cc: David Howells <dhowells@redhat.com>
+Cc: Nayna Jain <nayna@linux.ibm.com>
+Cc: Josh Boyer <jwboyer@fedoraproject.org>
+Cc: Mimi Zohar <zohar@linux.ibm.com>
 Signed-off-by: "Lee, Chun-Yi" <jlee@suse.com>
 ---
- include/linux/efi.h | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ security/integrity/platform_certs/load_uefi.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-diff --git a/include/linux/efi.h b/include/linux/efi.h
-index 54357a258b35..a43cb0dc37af 100644
---- a/include/linux/efi.h
-+++ b/include/linux/efi.h
-@@ -1768,4 +1768,32 @@ struct linux_efi_memreserve {
- #define EFI_MEMRESERVE_COUNT(size) (((size) - sizeof(struct linux_efi_memreserve)) \
- 	/ sizeof(((struct linux_efi_memreserve *)0)->entry[0]))
+diff --git a/security/integrity/platform_certs/load_uefi.c b/security/integrity/platform_certs/load_uefi.c
+index 81b19c52832b..e65244b31f04 100644
+--- a/security/integrity/platform_certs/load_uefi.c
++++ b/security/integrity/platform_certs/load_uefi.c
+@@ -48,7 +48,9 @@ static __init void *get_cert_list(efi_char16_t *name, efi_guid_t *guid,
  
-+#define EFI_STATUS_STR(_status) \
-+case EFI_##_status: \
-+	return "EFI_" __stringify(_status);
-+
-+static inline char *
-+efi_status_to_str(efi_status_t status)
-+{
-+	switch (status) {
-+	EFI_STATUS_STR(SUCCESS)
-+	EFI_STATUS_STR(LOAD_ERROR)
-+	EFI_STATUS_STR(INVALID_PARAMETER)
-+	EFI_STATUS_STR(UNSUPPORTED)
-+	EFI_STATUS_STR(BAD_BUFFER_SIZE)
-+	EFI_STATUS_STR(BUFFER_TOO_SMALL)
-+	EFI_STATUS_STR(NOT_READY)
-+	EFI_STATUS_STR(DEVICE_ERROR)
-+	EFI_STATUS_STR(WRITE_PROTECTED)
-+	EFI_STATUS_STR(OUT_OF_RESOURCES)
-+	EFI_STATUS_STR(NOT_FOUND)
-+	EFI_STATUS_STR(ABORTED)
-+	EFI_STATUS_STR(SECURITY_VIOLATION)
-+	default:
-+		pr_warn("Unknown efi status: 0x%lx", status);
-+	}
-+
-+	return "Unknown efi status";
-+}
-+
- #endif /* _LINUX_EFI_H */
+ 	status = efi.get_variable(name, guid, NULL, &lsize, &tmpdb);
+ 	if (status != EFI_BUFFER_TOO_SMALL) {
+-		pr_err("Couldn't get size: 0x%lx\n", status);
++		if (status != EFI_NOT_FOUND)
++			pr_err("Couldn't get size: %s\n",
++				efi_status_to_str(status));
+ 		return NULL;
+ 	}
+ 
+@@ -59,7 +61,8 @@ static __init void *get_cert_list(efi_char16_t *name, efi_guid_t *guid,
+ 	status = efi.get_variable(name, guid, NULL, &lsize, db);
+ 	if (status != EFI_SUCCESS) {
+ 		kfree(db);
+-		pr_err("Error reading db var: 0x%lx\n", status);
++		pr_err("Error reading db var: %s\n",
++			efi_status_to_str(status));
+ 		return NULL;
+ 	}
+ 
+@@ -155,7 +158,7 @@ static int __init load_uefi_certs(void)
+ 	if (!uefi_check_ignore_db()) {
+ 		db = get_cert_list(L"db", &secure_var, &dbsize);
+ 		if (!db) {
+-			pr_err("MODSIGN: Couldn't get UEFI db list\n");
++			pr_debug("MODSIGN: Couldn't get UEFI db list\n");
+ 		} else {
+ 			rc = parse_efi_signature_list("UEFI:db",
+ 					db, dbsize, get_handler_for_db);
+@@ -168,7 +171,7 @@ static int __init load_uefi_certs(void)
+ 
+ 	mok = get_cert_list(L"MokListRT", &mok_var, &moksize);
+ 	if (!mok) {
+-		pr_info("Couldn't get UEFI MokListRT\n");
++		pr_debug("Couldn't get UEFI MokListRT\n");
+ 	} else {
+ 		rc = parse_efi_signature_list("UEFI:MokListRT",
+ 					      mok, moksize, get_handler_for_db);
+@@ -179,7 +182,7 @@ static int __init load_uefi_certs(void)
+ 
+ 	dbx = get_cert_list(L"dbx", &secure_var, &dbxsize);
+ 	if (!dbx) {
+-		pr_info("Couldn't get UEFI dbx list\n");
++		pr_debug("Couldn't get UEFI dbx list\n");
+ 	} else {
+ 		rc = parse_efi_signature_list("UEFI:dbx",
+ 					      dbx, dbxsize,
 -- 
 2.16.4
 
