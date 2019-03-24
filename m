@@ -2,90 +2,90 @@ Return-Path: <SRS0=2kAr=R3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F204C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 21:13:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65F60C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 21:16:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6060020989
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 21:13:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553462018;
-	bh=x2HIzQhIvkoBb8RYQnIvE8p4jSra0N+iO6KX8myIoyQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=LjGlUIgBqfcN1nkP7AVToCVU1+at+9Lr8uu1mjlBtegZZCYhX7XV++YDSdwBbLdEy
-	 SGZne5ZBcCD74yFYt/o6HvzxK869k+hHnFyw6Yg3yhGQB7/2KTseLr5/ussemXjV79
-	 bBNr5jUPwGo6/Cp3W+mz6RUi80MUhzPIbL7caW6Y=
+	by mail.kernel.org (Postfix) with ESMTP id 2C8C120989
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 21:16:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728948AbfCXVNh (ORCPT
+        id S1728885AbfCXVQN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 17:13:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42142 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727192AbfCXVNh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 17:13:37 -0400
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0DD02173C;
-        Sun, 24 Mar 2019 21:13:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553462016;
-        bh=x2HIzQhIvkoBb8RYQnIvE8p4jSra0N+iO6KX8myIoyQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=GyJ7YS+nckQbbO6vuDYBbT9h+m5eb8aF94LlQuaWwvvxWrSobNCQ1qAw94oTWyHSf
-         qbT+PFBPNosgBk+i0RKhomBAUDRDiBXX1ad4U0rqR1+3ldfMtZ0w/epebdRd0ld7q7
-         h18Fgkw7mHNQTYBJrXiuZ9Js4H/36+mVP3SoZQu8=
-Received: by mail-qk1-f178.google.com with SMTP id w20so4182902qka.7;
-        Sun, 24 Mar 2019 14:13:35 -0700 (PDT)
-X-Gm-Message-State: APjAAAUfkBFOl7gAtdDVuAn9FvYp9tlTcZs9HjN1RxpaCLNJuuS4xUa6
-        8fhgW9lUT8KWU8Mtn4s463753SIOEI0oK5saVA==
-X-Google-Smtp-Source: APXvYqzg4h+Cu3YIlg3bnpzwOR4M2QBbH8N22dFEfqkViTZFrn4+elyYizpdenA0DznNAIAg8dqUxN/mwt5MyXgilNE=
-X-Received: by 2002:a37:4a12:: with SMTP id x18mr16186408qka.184.1553462015134;
- Sun, 24 Mar 2019 14:13:35 -0700 (PDT)
+        Sun, 24 Mar 2019 17:16:13 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:44447 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726743AbfCXVQM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Mar 2019 17:16:12 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x2OLG5aX1635410
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Sun, 24 Mar 2019 14:16:05 -0700
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x2OLG4RM1635407;
+        Sun, 24 Mar 2019 14:16:04 -0700
+Date:   Sun, 24 Mar 2019 14:16:04 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Peng Hao <tipbot@zytor.com>
+Message-ID: <tip-7f2daa96759b0700ad28579133aa91bc663632a7@git.kernel.org>
+Cc:     linux-kernel@vger.kernel.org, peng.hao2@zte.com.cn,
+        tglx@linutronix.de, hpa@zytor.com, mingo@kernel.org
+Reply-To: mingo@kernel.org, hpa@zytor.com, tglx@linutronix.de,
+          peng.hao2@zte.com.cn, linux-kernel@vger.kernel.org
+In-Reply-To: <1552152584-26087-1-git-send-email-peng.hao2@zte.com.cn>
+References: <1552152584-26087-1-git-send-email-peng.hao2@zte.com.cn>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/urgent] x86/resctrl: Remove unused variable
+Git-Commit-ID: 7f2daa96759b0700ad28579133aa91bc663632a7
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-References: <cover.2aba8cbd95630d87f927465cc2beb881936c83d9.1553010938.git-series.maxime.ripard@bootlin.com>
- <8b1291b572695e4baa67c144dd6deee0563b7586.1553010938.git-series.maxime.ripard@bootlin.com>
-In-Reply-To: <8b1291b572695e4baa67c144dd6deee0563b7586.1553010938.git-series.maxime.ripard@bootlin.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Sun, 24 Mar 2019 16:13:23 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqKiCZrf0BVwN-q6a2SgZVco3iKhm8qeoeJr_wrSwCFUzQ@mail.gmail.com>
-Message-ID: <CAL_JsqKiCZrf0BVwN-q6a2SgZVco3iKhm8qeoeJr_wrSwCFUzQ@mail.gmail.com>
-Subject: Re: [PATCH v4 1/5] dt-bindings: media: Add Allwinner A10 CSI binding
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     Hans Verkuil <hans.verkuil@cisco.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Frank Rowand <frowand.list@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 19, 2019 at 10:56 AM Maxime Ripard
-<maxime.ripard@bootlin.com> wrote:
->
-> The Allwinner A10 CMOS Sensor Interface is a camera capture interface also
-> used in later (A10s, A13, A20, R8 and GR8) SoCs.
->
-> On some SoCs, like the A10, there's multiple instances of that controller,
-> with one instance supporting more channels and having an ISP.
->
-> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> ---
->  Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml | 94 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 94 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
+Commit-ID:  7f2daa96759b0700ad28579133aa91bc663632a7
+Gitweb:     https://git.kernel.org/tip/7f2daa96759b0700ad28579133aa91bc663632a7
+Author:     Peng Hao <peng.hao2@zte.com.cn>
+AuthorDate: Sun, 10 Mar 2019 01:29:44 +0800
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Sun, 24 Mar 2019 22:09:27 +0100
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+x86/resctrl: Remove unused variable
+
+Variable "struct rdt_resource *r" is set but not used. So remove it.
+
+Signed-off-by: Peng Hao <peng.hao2@zte.com.cn>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/1552152584-26087-1-git-send-email-peng.hao2@zte.com.cn
+
+---
+ arch/x86/kernel/cpu/resctrl/monitor.c | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
+index f33f11f69078..1573a0a6b525 100644
+--- a/arch/x86/kernel/cpu/resctrl/monitor.c
++++ b/arch/x86/kernel/cpu/resctrl/monitor.c
+@@ -501,11 +501,8 @@ out_unlock:
+ void cqm_setup_limbo_handler(struct rdt_domain *dom, unsigned long delay_ms)
+ {
+ 	unsigned long delay = msecs_to_jiffies(delay_ms);
+-	struct rdt_resource *r;
+ 	int cpu;
+ 
+-	r = &rdt_resources_all[RDT_RESOURCE_L3];
+-
+ 	cpu = cpumask_any(&dom->cpu_mask);
+ 	dom->cqm_work_cpu = cpu;
+ 
