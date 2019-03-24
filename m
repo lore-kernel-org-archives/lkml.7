@@ -2,131 +2,103 @@ Return-Path: <SRS0=2kAr=R3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21ABAC43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 18:48:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEEC0C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 18:49:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFD672147C
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 18:48:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XZSLpKB8"
+	by mail.kernel.org (Postfix) with ESMTP id BF7692147C
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 18:49:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553453341;
+	bh=O7WwLKZJhDTHk8h3DgBnKFODZLDNNLVGQjmP79/Yiy0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=rxiQHo/gMQTCrSRVG8KqrucL20sYXcR5IXhZItxYXixlz2yw0TJBleM5E/rdIbnBE
+	 endyEpVAlx9agg3MNQEr5MwfSQ+Qggtt/K7IPVHjwzbMy27FUaYFWD4CDiF09qS7mf
+	 RUEe/R2Dzwk1kT+cVk/sB+jhC1sAp0/dfnEPplLQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728907AbfCXSr6 (ORCPT
+        id S1728935AbfCXStA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 14:47:58 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:42532 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726139AbfCXSr6 (ORCPT
+        Sun, 24 Mar 2019 14:49:00 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:32882 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726139AbfCXSs7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 14:47:58 -0400
-Received: by mail-pf1-f194.google.com with SMTP id r15so4784780pfn.9;
-        Sun, 24 Mar 2019 11:47:57 -0700 (PDT)
+        Sun, 24 Mar 2019 14:48:59 -0400
+Received: by mail-lj1-f196.google.com with SMTP id f23so5919695ljc.0
+        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2019 11:48:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=tQstm92FW3ly5qHmfUez0JTBxcVvSYMnHU9LziNmEiE=;
-        b=XZSLpKB8uyDnrBRYZ8jstSzUYtRktCSuLo3fedehK/N/dPHvJ07GlhoG1dY2dc9t63
-         Xe5v1mbNsa37YHbYo7lxxR3KUOcwcl2gK4N5KJZh3alzmUbPUjZCVMzkv22TepfwvrlF
-         ON5RaVLs5+YIhIo2OpE3b97CsTnyYX4Z/bV2sA5h0iiUbo7A+dksNoidGIarjExtgVT3
-         Vdoz4eCaEiAQAEY3CVoLgsvfDs64Katm+PdJ9iExSsT4byH6UYGwmqtvPkxcchDNYfM2
-         ifPT8+UvapT4yFE/6ulyEK85IqD/57LNEpMbxIn39nx2k59UpdOJ3WXOK68eVbCdU8LZ
-         f9NA==
+        bh=ndkK6VwHx3xb4xU0AxgFMVrET1RjofRJzJnvlvrooLk=;
+        b=gTDvC31vg0BkcvYNz5ozk4N9zB3/XJXosb8TtdSSjQsXKU8MfFbKhY+huhfxZYSVLi
+         oxgUiZZOhJR1IgjQYvR/icGzyGQv7zmr9xmMLkWs2SKBWTUcFRKwloSdpPtpp14ffakc
+         mfbw4hfs3xNZ+Hy25kQwc003rPuXVDECt5TQ0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=tQstm92FW3ly5qHmfUez0JTBxcVvSYMnHU9LziNmEiE=;
-        b=oNZ+/Qk6cHDAcyaTu81il/fQpyRcV2kchmIDhUaINHXLsQLRj1RR5WDEXz/bTlzVJd
-         3/hLs3bicR5pJXh749K7anmkJtDqWHUc53PaVmmOu9fgTcB6K+bNAnhBuUpkVsCHxOml
-         qbsJ9B4egBmkvlZ4ObRr1XRV9XCP8RnRvEqSP1ybMlrF2fqNQyVH2o/hNS+cPjiIj0tf
-         85uducn5iK6g520pi03SPldP2EYdnb+Qw7jz63IHhm+WLmuVd68AeUkVzD93i2gEcARO
-         m7hgT0yLS0Ehvzjl+/ZiO+JmH+9o9cuX5Or/H6lFmO7yrYwTbheZOGfHuLTIoO053XK8
-         s30A==
-X-Gm-Message-State: APjAAAWsejM1cVgOqS8aH04vTe1h2a0ciDGtOItrYj28osUwRlIEuJlZ
-        VBFhVUPcfS1VUh4+bYYjpF0OAcMZtAQkXXbwk+s=
-X-Google-Smtp-Source: APXvYqzSRFy7nfov4ARIaNI+YInEaZ4uBqT7xiaPqbMvYoSzCEbxrjeec471kDfupgW9HfpbHK6Xrz7npJqNwBRf90c=
-X-Received: by 2002:aa7:8c97:: with SMTP id p23mr20512702pfd.229.1553453277002;
- Sun, 24 Mar 2019 11:47:57 -0700 (PDT)
+        bh=ndkK6VwHx3xb4xU0AxgFMVrET1RjofRJzJnvlvrooLk=;
+        b=qyxuLpaKXgDvBk3C5KqvVBwMY6tYPkmFmh/DbhEkfLYYk7ju8/nEGruZpybVSg0Pu1
+         SnLc+gwipeOj8m9sCuLkaa8bxLTqI5EB4/fT9/4BmgQvzZCbzw5/LAnriTRna2Ef24wH
+         /89Prk24CvwVCWkWLJXWbCqOOFBjr9SPdcqrujV3tKgsocsasZkWQEcuchmarD9H83/e
+         wQMPBImQSOdjMKp08H1L+m+LQlL8YoinxsGMjf/NcrX6vgP6q8UbC3GIEgtJk/yMs5+i
+         ZFW2K4hsKP3gdgjPJlCKe3nxln/iR1qB240QC3ZQPervqA1wLG6sekUAhjC2FbUjqLqD
+         TN5g==
+X-Gm-Message-State: APjAAAWVETKFKE7jZypE89I374p6AHqgOKkROVL4+wTDLAUhXte9L4Uz
+        QJn5WtLB84JYVDV4mBQdpmtpFQzPV/8=
+X-Google-Smtp-Source: APXvYqzNyWMpFGVta/jjqpeEgd+AyVaEySjCQPukCoEJi9uoM0uE2k/B5vvTt8/J3aY8SDnwprFX0g==
+X-Received: by 2002:a2e:4504:: with SMTP id s4mr10948623lja.150.1553453337550;
+        Sun, 24 Mar 2019 11:48:57 -0700 (PDT)
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
+        by smtp.gmail.com with ESMTPSA id v11sm1637676ljk.19.2019.03.24.11.48.56
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 24 Mar 2019 11:48:56 -0700 (PDT)
+Received: by mail-lj1-f169.google.com with SMTP id h16so1409183ljg.11
+        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2019 11:48:56 -0700 (PDT)
+X-Received: by 2002:a2e:94ca:: with SMTP id r10mr10612821ljh.118.1553453336266;
+ Sun, 24 Mar 2019 11:48:56 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190324164139.23899-1-pakki001@umn.edu>
-In-Reply-To: <20190324164139.23899-1-pakki001@umn.edu>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sun, 24 Mar 2019 20:47:45 +0200
-Message-ID: <CAHp75VcXg1HFKS6ve3v_Xs_fH+9ogm1hsOgKEe4Z1OYhABfFgg@mail.gmail.com>
-Subject: Re: [PATCH v4] tty: 8250: fix a missing check for pci_ioremap_bar
-To:     Aditya Pakki <pakki001@umn.edu>
-Cc:     Kangjie Lu <kjlu@umn.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <155343674151.28403.7455818401538063350.tglx@nanos.tec.linutronix.de>
+ <155343674152.28403.9250472064220526031.tglx@nanos.tec.linutronix.de>
+ <CAHk-=wgC4FQeT8Z6+gXnbsDFxRAD9sSELd8-G=6gQg4kxKKL4g@mail.gmail.com> <alpine.DEB.2.21.1903241929290.1798@nanos.tec.linutronix.de>
+In-Reply-To: <alpine.DEB.2.21.1903241929290.1798@nanos.tec.linutronix.de>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 24 Mar 2019 11:48:40 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wixSEaRjAPT8ZiJhbs-5phzjSrRktz7tOCdSe5OCixfmA@mail.gmail.com>
+Message-ID: <CAHk-=wixSEaRjAPT8ZiJhbs-5phzjSrRktz7tOCdSe5OCixfmA@mail.gmail.com>
+Subject: Re: [GIT pull] scheduler updates for 5.1
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 24, 2019 at 6:43 PM Aditya Pakki <pakki001@umn.edu> wrote:
+On Sun, Mar 24, 2019 at 11:39 AM Thomas Gleixner <tglx@linutronix.de> wrote:
 >
-> pci_ioremap_bar could fail. The patch returns in case of failure to
-> acquire IOMEM. It also releases the acquired resource in the exit path.
+> Now doing a fresh clone from git.k.org (not ssh) shows me the stale commit
+> from last week.
 
-This is good per se, but I'm so sorry I found another missed place.
-When DMA ->probe() fails, we have to unmap as well.
+Now it gets me the right thing too.
 
->
-> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
->
-> ---
-> v3: Change the order of pci_iounmap and dw_dma_remove
-> v2: Failed to release resource in exit path and incorrect code in non
-> DMA case, suggested by Andy Shevchenko
-> v1: Missed return by default in CONFIG_SERIAL_8250_DMA, suggested by
-> Jiri Slaby
-> ---
->  drivers/tty/serial/8250/8250_lpss.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/tty/serial/8250/8250_lpss.c b/drivers/tty/serial/8250/8250_lpss.c
-> index 53ca9ba6ab4b..69d6e32da713 100644
-> --- a/drivers/tty/serial/8250/8250_lpss.c
-> +++ b/drivers/tty/serial/8250/8250_lpss.c
-> @@ -170,9 +170,11 @@ static void qrk_serial_setup_dma(struct lpss8250 *lpss, struct uart_port *port)
->         int ret;
->
->         chip->dev = &pdev->dev;
-> +       chip->pdata = &qrk_serial_dma_pdata;
->         chip->irq = pci_irq_vector(pdev, 0);
->         chip->regs = pci_ioremap_bar(pdev, 1);
-> -       chip->pdata = &qrk_serial_dma_pdata;
-> +       if (!chip->regs)
-> +               return;
->
->         /* Falling back to PIO mode if DMA probing fails */
->         ret = dw_dma_probe(chip);
-> @@ -199,7 +201,10 @@ static void qrk_serial_exit_dma(struct lpss8250 *lpss)
->
->         if (!param->dma_dev)
->                 return;
-> +
->         dw_dma_remove(&lpss->dma_chip);
-> +
-> +       pci_iounmap(param->dma_dev, &lpss->dma_chip->regs);
->  }
->  #else  /* CONFIG_SERIAL_8250_DMA */
->  static void qrk_serial_setup_dma(struct lpss8250 *lpss, struct uart_port *port) {}
-> --
-> 2.17.1
->
+Note that I have some git magic that means that I always pull from the
+ssh side of kernel.org, just to avoid any stale issues:
 
+ - my ~/.gitconfig does url rewriting to use the ssh//gitolite address
 
--- 
-With Best Regards,
-Andy Shevchenko
+ - I have a prepare-commit-msg hook that then re-writes the ssh
+address to the public address
+
+so it wasn't due to mirroring latency.
+
+Whatever. It looks right to me now, so I've pulled it.
+
+               Linus
