@@ -2,88 +2,111 @@ Return-Path: <SRS0=2kAr=R3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 076A0C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 21:19:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20F36C10F00
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 21:19:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA65F20700
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 21:18:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553462339;
-	bh=eKgTUmPtDUGVNq9kEaQ0D/81uFrfvaP0/LdERMJleeQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=cf8080rRdtZvgnKt6LqYeCg/jBz8MFPZYZB+M3RCCQQQjcmk4z3JZA4FsJ5nnJoqW
-	 mf+ZfGRmRap+1I/21euVp2X+btBP6nUqIkKJokzQPzlc9DbY0fJ170/vWzPFLS/k2Z
-	 gsUr6JiO31uP+i8CiyZ6PCbgHpbdeEWc+F5MiSyM=
+	by mail.kernel.org (Postfix) with ESMTP id E99BB20811
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 21:19:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728971AbfCXVS6 (ORCPT
+        id S1729018AbfCXVTm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 17:18:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43770 "EHLO mail.kernel.org"
+        Sun, 24 Mar 2019 17:19:42 -0400
+Received: from mga09.intel.com ([134.134.136.24]:61922 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726743AbfCXVS6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 17:18:58 -0400
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 533F22148D;
-        Sun, 24 Mar 2019 21:18:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553462337;
-        bh=eKgTUmPtDUGVNq9kEaQ0D/81uFrfvaP0/LdERMJleeQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Hc2drgg+HJ8aGthfPdjQSxevvM9/7WXpBhQzyT/hkTeeMWm+/lH8xRfZ+Wj16x/AY
-         vGGGnjBwbBCx7Q1xshmbmSSZFI+CAyRw9GOqqCfCVdDRgGZ5Cd5Sc0UHAb8NXoLPpS
-         alwJ0qJSmNI4AJIHeRgZJCS1WqbHShZMyOm1WAGo=
-Received: by mail-qt1-f172.google.com with SMTP id y36so8185008qtb.3;
-        Sun, 24 Mar 2019 14:18:57 -0700 (PDT)
-X-Gm-Message-State: APjAAAU+n8kvCH530qSPluJLX5kfYfphX9f36FM7dAM5M6bfhNAM8qR5
-        Uful/9LZAdA1kfThskGtlGWJeWSwWRc2jBC5Sg==
-X-Google-Smtp-Source: APXvYqzeXvi+Thx3V6zOXH20G8AkRXshLAJUcIGXwweALGrtrTXak7HiSrNBBaCuE2TIn1y5Xsdcxp8AIYINoC/K5wE=
-X-Received: by 2002:a0c:c11c:: with SMTP id f28mr15691236qvh.106.1553462336595;
- Sun, 24 Mar 2019 14:18:56 -0700 (PDT)
+        id S1726743AbfCXVTl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Mar 2019 17:19:41 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Mar 2019 14:19:39 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,256,1549958400"; 
+   d="scan'208";a="129807518"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
+  by orsmga006.jf.intel.com with ESMTP; 24 Mar 2019 14:19:34 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1h8AWi-0006Gz-Fh; Sun, 24 Mar 2019 23:19:32 +0200
+Date:   Sun, 24 Mar 2019 23:19:32 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        scsi <linux-scsi@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Linux MMC List <linux-mmc@vger.kernel.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-block@vger.kernel.org,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        linux-btrfs <linux-btrfs@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        sparclinux <sparclinux@vger.kernel.org>,
+        xen-devel@lists.xenproject.org,
+        ceph-devel <ceph-devel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Lars Ellenberg <drbd-dev@lists.linbit.com>
+Subject: Re: [PATCH 0/2] Remove support for deprecated %pf and %pF in vsprintf
+Message-ID: <20190324211932.GK9224@smile.fi.intel.com>
+References: <20190322132108.25501-1-sakari.ailus@linux.intel.com>
+ <CAMuHMdVmqqjVx7As9AAywYxYXG=grijF5rF77OBn6TUjM9+xKw@mail.gmail.com>
+ <20190322135350.2btpno7vspvewxvk@paasikivi.fi.intel.com>
+ <20190322170550.GX9224@smile.fi.intel.com>
+ <20190324211008.lypghym3gqcp62th@mara.localdomain>
 MIME-Version: 1.0
-References: <20190322194310.61365-1-dianders@chromium.org>
-In-Reply-To: <20190322194310.61365-1-dianders@chromium.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Sun, 24 Mar 2019 16:18:45 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqK=kt3k=eXn6uuHoRboWMqLFbnqAvAveVmOjOC0+MK5gw@mail.gmail.com>
-Message-ID: <CAL_JsqK=kt3k=eXn6uuHoRboWMqLFbnqAvAveVmOjOC0+MK5gw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: ARM: dts: rockchip: Add bindings for rk3288-veyron-mighty
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Heiko Stuebner <heiko@sntech.de>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Ryan Case <ryandcase@chromium.org>, devicetree@vger.kernel.org,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Alexis Ballier <aballier@gentoo.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Akash Gajjar <Akash_Gajjar@mentor.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190324211008.lypghym3gqcp62th@mara.localdomain>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 22, 2019 at 2:43 PM Douglas Anderson <dianders@chromium.org> wrote:
->
-> Mighty is basically the same Chromebook as Jaq but it has a full-sized
-> SD slot and some different (slightly more rugged) plastics around it.
-> Like Jaq, Mighty may show up with various different brandings but all
-> of them have the same board inside.
->
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
->
->  Documentation/devicetree/bindings/arm/rockchip.yaml | 13 ++++++++++++-
->  1 file changed, 12 insertions(+), 1 deletion(-)
+On Sun, Mar 24, 2019 at 11:10:08PM +0200, Sakari Ailus wrote:
+> On Fri, Mar 22, 2019 at 07:05:50PM +0200, Andy Shevchenko wrote:
+> > On Fri, Mar 22, 2019 at 03:53:50PM +0200, Sakari Ailus wrote:
+> > 
+> > > Porting a patch
+> > > forward should have no issues either as checkpatch.pl has been complaining
+> > > of the use of %pf and %pF for a while now.
+> > 
+> > And that's exactly the reason why I think instead of removing warning on
+> > checkpatch, it makes sense to convert to an error for a while. People are
+> > tending read documentation on internet and thus might have outdated one. And
+> > yes, the compiler doesn't tell a thing about it.
+> > 
+> > P.S. Though, if majority of people will tell that I'm wrong, then it's okay to
+> > remove.
+> 
+> I wonder if you wrote this before seeing my other patchset.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Yes, I wrote it before seeing another series.
+
+> What I think could be done is to warn of plain %pf (without following "w")
+> in checkpatch.pl, and %pf that is not followed by "w" in the kernel.
+> Although we didn't have such checks to begin with. The case is still a
+> little bit different as %pf used to be a valid conversion specifier whereas
+> %pO likely has never existed.
+> 
+> So, how about adding such checks in the other set? I can retain %p[fF] check
+> here, too, if you like.
+
+Consistency tells me that the warning->error transformation in checkpatch.pl
+belongs this series.
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
