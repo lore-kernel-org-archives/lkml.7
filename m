@@ -2,116 +2,96 @@ Return-Path: <SRS0=2kAr=R3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB7BFC10F00
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 14:56:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AB47C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 14:57:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8661222C8
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 14:56:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553439385;
-	bh=PQJlMhXx19zgnuvUPgl3Tj6OKjYdEbKrT1DRDTlEb4w=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=sFfNT/rXthQh+wW3MyBCLDPco4Em757Gr81NWiF2+VZpTUueUqy9iettHciv87ev6
-	 dljWnZVhDhB/BMoep4LnLkzOgzrq03wqllC5jx93JAJOpX7o+CcUI/ATnj/R1h+ZX3
-	 9ivgE+FFiFuGQdVVwDVHY8YgA4cQPxrBZP/OM9EU=
+	by mail.kernel.org (Postfix) with ESMTP id EA225222C8
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 14:57:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="jZ+YeB95";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Cz3JEDjr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728697AbfCXO4Y (ORCPT
+        id S1728741AbfCXO5M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 10:56:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52076 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726603AbfCXO4Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 10:56:24 -0400
-Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Sun, 24 Mar 2019 10:57:12 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:36488 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726603AbfCXO5M (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Mar 2019 10:57:12 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 642D1606AC; Sun, 24 Mar 2019 14:57:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553439431;
+        bh=M2kgVvCxxFln7pcAf/y6C2AajYo0qfzCTQF0TEAPzww=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=jZ+YeB95XSLtx+Nn3e6J7+Qp/87qd1ueySm1NF6nUenXITv8ciXw1u0WHtVjVAWwM
+         XyHIWDtlnUd4hbqydl5GbEJyTopXqxRWozWklhz/eHIR2WZaBlFB4snDEKc8Ick6bd
+         WfYFeT7bQvi2EV2yo9UYyeIPGewpQYa1zn7D0XT8=
+Received: from psodagud-linux1.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6C5521906;
-        Sun, 24 Mar 2019 14:56:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553439383;
-        bh=PQJlMhXx19zgnuvUPgl3Tj6OKjYdEbKrT1DRDTlEb4w=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=keIji2J6jBhN3ZMGyT/qcLJsJ4tx+pXApBiZ8DVZ9l3QH3lpxpDEaU9UGA/YMpgzl
-         Lcv2PwJvr58b2g8C2k4QOlSrcPHMNlLE9m9J0m6OXN9a//jwwMCLyXcpV5vj1L5nZi
-         rIUxRILY+Wk7MWgNy3J9Bi+hrDW3nl8BhrMC8LDw=
-Date:   Sun, 24 Mar 2019 14:56:18 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Cristian Sicilia <sicilia.cristian@gmail.com>
-Cc:     Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 5/5] staging: iio: adc: Remove CamelCase notation
-Message-ID: <20190324145618.5df31a70@archlinux>
-In-Reply-To: <e1a9e28d72babe4781c577c68e6508e01367943f.1553366098.git.sicilia.cristian@gmail.com>
-References: <cover.1553335775.git.sicilia.cristian@gmail.com>
-        <cover.1553366098.git.sicilia.cristian@gmail.com>
-        <e1a9e28d72babe4781c577c68e6508e01367943f.1553366098.git.sicilia.cristian@gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        (Authenticated sender: psodagud@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6B50C6083E;
+        Sun, 24 Mar 2019 14:57:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553439430;
+        bh=M2kgVvCxxFln7pcAf/y6C2AajYo0qfzCTQF0TEAPzww=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Cz3JEDjr964JJBt6zervgw0ipCPMf+q0GbUeexiPH+MrLeuRH6WyH+lC7lu8drnhu
+         aHgwB6ZOSkIpGZET/dJNNuVNhg2pMaEs6+1M1DOzeLpuVYX74l7XqtPvXya3TDRGQj
+         Z1BedAkR7uvLc/AHAdc1G9zgcz/Y5aFsDaKq6Sb0=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6B50C6083E
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=psodagud@codeaurora.org
+From:   Prasad Sodagudi <psodagud@codeaurora.org>
+To:     tglx@linutronix.de, marc.zyngier@arm.com
+Cc:     linux-kernel@vger.kernel.org, psodagud@codeaurora.org
+Subject: [PATCH v2] genirq: Prevent use-after-free and work list corruption
+Date:   Sun, 24 Mar 2019 07:57:04 -0700
+Message-Id: <1553439424-6529-1-git-send-email-psodagud@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <fd8a18f33a3f385575048969482fd22f@codeaurora.org>
+References: <fd8a18f33a3f385575048969482fd22f@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 23 Mar 2019 20:21:49 +0100
-Cristian Sicilia <sicilia.cristian@gmail.com> wrote:
+When irq_set_affinity_notifier() replaces the notifier, then the
+reference count on the old notifier is dropped which causes it to be
+freed. But nothing ensures that the old notifier is not longer queued
+in the work list. If it is queued this results in a use after free and
+possibly in work list corruption.
 
-> Fix CamelCase naming.
-> 
-> Signed-off-by: Cristian Sicilia <sicilia.cristian@gmail.com>
-Applied.
+Ensure that the work is canceled before the reference is dropped.
 
-Note that I added the part number to the titles of all these patches
-so that people can readily see what they are actually changing.
-Directory isn't very helpful when there can potentially be many 10s
-of drivers in there (not true in this case, but still more than 1!)
+Signed-off-by: Prasad Sodagudi <psodagud@codeaurora.org>
+---
+ kernel/irq/manage.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Thanks,
-
-Jonathan
-
-
-> ---
->  drivers/staging/iio/adc/ad7280a.c | 11 +++++------
->  1 file changed, 5 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/staging/iio/adc/ad7280a.c b/drivers/staging/iio/adc/ad7280a.c
-> index 5d848aa..c02454c 100644
-> --- a/drivers/staging/iio/adc/ad7280a.c
-> +++ b/drivers/staging/iio/adc/ad7280a.c
-> @@ -917,8 +917,8 @@ static int ad7280_probe(struct spi_device *spi)
->  	const struct ad7280_platform_data *pdata = dev_get_platdata(&spi->dev);
->  	struct ad7280_state *st;
->  	int ret;
-> -	const unsigned short tACQ_ns[4] = {465, 1010, 1460, 1890};
-> -	const unsigned short nAVG[4] = {1, 2, 4, 8};
-> +	const unsigned short t_acq_ns[4] = {465, 1010, 1460, 1890};
-> +	const unsigned short n_avg[4] = {1, 2, 4, 8};
->  	struct iio_dev *indio_dev;
->  
->  	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
-> @@ -966,10 +966,9 @@ static int ad7280_probe(struct spi_device *spi)
->  	 */
->  
->  	st->readback_delay_us =
-> -		((tACQ_ns[pdata->acquisition_time & 0x3] + 695) *
-> -		(AD7280A_NUM_CH * nAVG[pdata->conversion_averaging & 0x3]))
-> -		- tACQ_ns[pdata->acquisition_time & 0x3] +
-> -		st->slave_num * 250;
-> +		((t_acq_ns[pdata->acquisition_time & 0x3] + 695) *
-> +		 (AD7280A_NUM_CH * n_avg[pdata->conversion_averaging & 0x3])) -
-> +		t_acq_ns[pdata->acquisition_time & 0x3] + st->slave_num * 250;
->  
->  	/* Convert to usecs */
->  	st->readback_delay_us = DIV_ROUND_UP(st->readback_delay_us, 1000);
+diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
+index 9ec34a2..1a1ac84 100644
+--- a/kernel/irq/manage.c
++++ b/kernel/irq/manage.c
+@@ -356,8 +356,10 @@ static void irq_affinity_notify(struct work_struct *work)
+ 	desc->affinity_notify = notify;
+ 	raw_spin_unlock_irqrestore(&desc->lock, flags);
+ 
+-	if (old_notify)
++	if (old_notify) {
++		cancel_work_sync(&old_notify->work);
+ 		kref_put(&old_notify->kref, old_notify->release);
++	}
+ 
+ 	return 0;
+ }
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
 
