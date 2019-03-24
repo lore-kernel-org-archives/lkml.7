@@ -2,130 +2,118 @@ Return-Path: <SRS0=2kAr=R3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA19FC43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 23:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DB1BC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 23:19:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE5A320989
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 23:19:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14E3D20989
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 23:19:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="KI2/RLEU"
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="q1dSQv8q";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="RbddL7t6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729113AbfCXXTE (ORCPT
+        id S1729140AbfCXXTN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 19:19:04 -0400
-Received: from mta-p7.oit.umn.edu ([134.84.196.207]:58162 "EHLO
-        mta-p7.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729057AbfCXXTD (ORCPT
+        Sun, 24 Mar 2019 19:19:13 -0400
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:57165 "EHLO
+        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729069AbfCXXTN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 19:19:03 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p7.oit.umn.edu (Postfix) with ESMTP id C455F789
-        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2019 23:19:02 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p7.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p7.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id W0TSjDLqiWYi for <linux-kernel@vger.kernel.org>;
-        Sun, 24 Mar 2019 18:19:02 -0500 (CDT)
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
-        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p7.oit.umn.edu (Postfix) with ESMTPS id 98C5E2FB
-        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2019 18:19:02 -0500 (CDT)
-Received: by mail-io1-f70.google.com with SMTP id z19so3007596ioc.22
-        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2019 16:19:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=DF91ha0dMKA4SNjEEqMCAtpvjdqVDKJqxhx+V1bk7ac=;
-        b=KI2/RLEUqprR9I3ac1e06vgceq9vpiWtSsx0rNIfJ0w1Cg16RDmmxxmNSCFS6VbbBp
-         pi4ov761hFS48x7HGV/2o51keAMe+AOREUcFuhlyEH7FrhHmAjqwH0VjLCceDCFcE8Wl
-         q/0f94sgFQHoPT58o0QIjs4I6gLcKN8udcJYXgCP5nQSDW5UaCcSyR96h/WbpgsPWttY
-         bj9T1iaS68titJlWB7vvjY7cvNwtn02EAfOadF2MFehQ7K9p4a523G3GdS3mL+p5EtZ3
-         YMEjrldZhvkbzOPCeE0xn8esA3hbxSjvTXzwYThrYr/TTwUcThD9ICulbHZ5nKwwUZk8
-         jokA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=DF91ha0dMKA4SNjEEqMCAtpvjdqVDKJqxhx+V1bk7ac=;
-        b=mGH1ykakS7jzLpDpM8iAlIGV1BrYSqdEM4PaOF/NRx96w+rrjAYjTRujnDKtX3ifg/
-         LJRkg8wTsJu0aDrlnMybb7IcSA4e5bgfzWFdXEjhugPg0bF7fi+nmngTb1CD/eYaxjuw
-         03ooOeZKhuU9WcwOVxtqI2EgAACfzk+AmsZkthesCyLxOiSHZLQdSmrk8LhHCcVeUiOd
-         8JgE76CoDEsH0KOugtULvMVg7Yb/Spq/uEWaQQ9zL3TCXRxNQ+tJOQWp/Z+/8W5rfJpm
-         vixSD666OtCO9vMsn//WyxIumXQgbw9UxmI3QlyV7Qz5XOkZaK2YPhBvmyh4m20PlVRY
-         Sqbw==
-X-Gm-Message-State: APjAAAUColCf+xWh0HYnThHTU/h6DPO90Wd8/ji8oNWaad6Jn4k8vw5I
-        Fhk+Xx/PlPi5+CAiEBcqsobbOxuo9CbNPvQK8LPYSOyPLpGkzM3T4HxVx+hDuLw4KOHY+73Hla5
-        Fz8ypZ55ZO2Z9ZNJGrbYRAkUmGbgv
-X-Received: by 2002:a24:640d:: with SMTP id t13mr9096362itc.38.1553469542276;
-        Sun, 24 Mar 2019 16:19:02 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyFQuXEad+2wsrWluMo+QJPb3mFhvyjTn+307I6YvAJC5ILc62zh4cQPSGe7Xoyiwkmxaa2Kw==
-X-Received: by 2002:a24:640d:: with SMTP id t13mr9096358itc.38.1553469542100;
-        Sun, 24 Mar 2019 16:19:02 -0700 (PDT)
-Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
-        by smtp.gmail.com with ESMTPSA id h131sm4948542itb.6.2019.03.24.16.19.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 24 Mar 2019 16:19:01 -0700 (PDT)
-From:   Kangjie Lu <kjlu@umn.edu>
-To:     kjlu@umn.edu
-Cc:     pakki001@umn.edu, Xue Liu <liuxuenetmail@gmail.com>,
-        Alexander Aring <alex.aring@gmail.com>,
-        Stefan Schmidt <stefan@datenfreihafen.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wpan@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] net: ieee802154: fix missing checks for regmap_update_bits
-Date:   Sun, 24 Mar 2019 18:18:56 -0500
-Message-Id: <20190324231856.2664-1-kjlu@umn.edu>
-X-Mailer: git-send-email 2.17.1
+        Sun, 24 Mar 2019 19:19:13 -0400
+X-Greylist: delayed 399 seconds by postgrey-1.27 at vger.kernel.org; Sun, 24 Mar 2019 19:19:12 EDT
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id BA353213CA;
+        Sun, 24 Mar 2019 19:12:32 -0400 (EDT)
+Received: from imap2 ([10.202.2.52])
+  by compute4.internal (MEProxy); Sun, 24 Mar 2019 19:12:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm2; bh=+AtqmXDbkawaUXtI5XQZuTYqeFZTunP
+        gF8mmNQUJkH8=; b=q1dSQv8qWhtPNFLm1fLDd1TWk345t7MlmBwINPQAt/rIWdq
+        F+Utjt+euP0VxVqAOZ4JLwq1EfMmuuJ90eqG26Ml/qqYz1zJ69yRU1oB7NXC4u9b
+        gHCIYYSMCz0Xb7E3m2T+MD9cxXeIvO/LR1HTLroOre6s7EV0qFpogNdkQQJvbWyI
+        fep0+G4bzWig4UGSDq4vJqIDdJjWE/rXuc+FwqTlWqCVLflmzSG71bEPtw/HF+mT
+        lSY0V6zkhH3HbJq7ELa9bUeq6+z9lpiBQJH3rWo6jT6qFPGU6G3YtlOapL5qwqWP
+        7islv7a7Dm4w2gyVFTidqJnQCNjKy/XnoMwp08w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=+AtqmX
+        DbkawaUXtI5XQZuTYqeFZTunPgF8mmNQUJkH8=; b=RbddL7t6omTBaG4Hnrp3Zh
+        l8K07N4RFgH+AHU3v7uqx/5Gi/aOkOgAC3Q26EVW4oKwchVPglrJpdwlh534evg8
+        EX/vmKEC1TtqApEoJZ89XZR50lN8Oa9cJcSaQev9ogQXDCS8SFvzP/0i3HZz+JHf
+        tUiSZ8Thn8Je7JoOrjV4f0Q13VMOxpy7iGXDreU9Wm2dkP4hhkF15006NIGwxa3I
+        aLP7E8KKpmUWBx9ZPppGxo+y9r4buGUjGytCJVDrjvHcISFpYVFKTke1Nv+KsfeF
+        IYVDhF0PkDnXIKbqxZ7Lj17ZJUvIRyoubBM5ZAIlnnq5FFpda0Y2NdprEoRdbVTQ
+        ==
+X-ME-Sender: <xms:3w6YXGCJqDd-fk-Zf201hqntID4LV5pQ3xjo1y0x4GCRmySJ43A1UA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedutddrjeeigddujeduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreertdenucfhrhhomhepfdetnhgu
+    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecurfgrrh
+    grmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgv
+    rhfuihiivgeptd
+X-ME-Proxy: <xmx:3w6YXHUjz6ZwAwV-QBUW9sgyoWYjNAjBXIgl3gWjY8RIx-pPn-s0hg>
+    <xmx:3w6YXCjNdiOVCyxtq2HLIQAOFaIygGrgiiI5YqPEN4as4CuEODSjNw>
+    <xmx:3w6YXHkVyb7xS-e9TUWeDgU3bBD8ZsCLeMUUsrVwDOVDxqKxELlxRA>
+    <xmx:4A6YXDjOrCKwoqGS5YqL5yNWcQMRfStA5chBauHd7NWaIhisyg1srg>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 473F97C63D; Sun, 24 Mar 2019 19:12:31 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.1.5-976-g376b1f3-fmstable-20190314v3
+Mime-Version: 1.0
+X-Me-Personality: 52947553
+Message-Id: <f4d27985-376a-42bb-b781-bdc96c0cef21@www.fastmail.com>
+In-Reply-To: <20190324231002.2106-1-kjlu@umn.edu>
+References: <20190324231002.2106-1-kjlu@umn.edu>
+Date:   Sun, 24 Mar 2019 19:12:06 -0400
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Kangjie Lu" <kjlu@umn.edu>
+Cc:     pakki001@umn.edu, "Linus Walleij" <linus.walleij@linaro.org>,
+        "Bartosz Golaszewski" <bgolaszewski@baylibre.com>,
+        "Joel Stanley" <joel@jms.id.au>, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] gpio: fix a potential NULL pointer dereference
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-regmap_update_bits could fail and deserves a check.
 
-The patch adds the checks and if it fails, returns its error
-code upstream.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
----
- drivers/net/ieee802154/mcr20a.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+On Mon, 25 Mar 2019, at 09:40, Kangjie Lu wrote:
+> In case devm_kzalloc, the patch returns ENOMEM to avoid potential
+> NULL pointer dereference.
+> 
+> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
 
-diff --git a/drivers/net/ieee802154/mcr20a.c b/drivers/net/ieee802154/mcr20a.c
-index c589f5ae75bb..8bb53ec8d9cf 100644
---- a/drivers/net/ieee802154/mcr20a.c
-+++ b/drivers/net/ieee802154/mcr20a.c
-@@ -533,6 +533,8 @@ mcr20a_start(struct ieee802154_hw *hw)
- 	dev_dbg(printdev(lp), "no slotted operation\n");
- 	ret = regmap_update_bits(lp->regmap_dar, DAR_PHY_CTRL1,
- 				 DAR_PHY_CTRL1_SLOTTED, 0x0);
-+	if (ret < 0)
-+		return ret;
- 
- 	/* enable irq */
- 	enable_irq(lp->spi->irq);
-@@ -540,11 +542,15 @@ mcr20a_start(struct ieee802154_hw *hw)
- 	/* Unmask SEQ interrupt */
- 	ret = regmap_update_bits(lp->regmap_dar, DAR_PHY_CTRL2,
- 				 DAR_PHY_CTRL2_SEQMSK, 0x0);
-+	if (ret < 0)
-+		return ret;
- 
- 	/* Start the RX sequence */
- 	dev_dbg(printdev(lp), "start the RX sequence\n");
- 	ret = regmap_update_bits(lp->regmap_dar, DAR_PHY_CTRL1,
- 				 DAR_PHY_CTRL1_XCVSEQ_MASK, MCR20A_XCVSEQ_RX);
-+	if (ret < 0)
-+		return ret;
- 
- 	return 0;
- }
--- 
-2.17.1
+Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
 
+> ---
+>  drivers/gpio/gpio-aspeed.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/gpio/gpio-aspeed.c b/drivers/gpio/gpio-aspeed.c
+> index 854bce4fb9e7..217507002dbc 100644
+> --- a/drivers/gpio/gpio-aspeed.c
+> +++ b/drivers/gpio/gpio-aspeed.c
+> @@ -1224,6 +1224,8 @@ static int __init aspeed_gpio_probe(struct 
+> platform_device *pdev)
+>  
+>  	gpio->offset_timer =
+>  		devm_kzalloc(&pdev->dev, gpio->chip.ngpio, GFP_KERNEL);
+> +	if (!gpio->offset_timer)
+> +		return -ENOMEM;
+>  
+>  	return aspeed_gpio_setup_irqs(gpio, pdev);
+>  }
+> -- 
+> 2.17.1
+> 
+>
