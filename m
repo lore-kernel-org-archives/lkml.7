@@ -2,145 +2,254 @@ Return-Path: <SRS0=2kAr=R3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E98CEC43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 08:33:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0315C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 08:33:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B06DD21741
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 08:33:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FB0A218AC
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 08:33:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ekAuhqdn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728331AbfCXIdG (ORCPT
+        id S1728505AbfCXIdK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 04:33:06 -0400
-Received: from mail-it1-f199.google.com ([209.85.166.199]:51748 "EHLO
-        mail-it1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726017AbfCXIdG (ORCPT
+        Sun, 24 Mar 2019 04:33:10 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:40006 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726017AbfCXIdJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 04:33:06 -0400
-Received: by mail-it1-f199.google.com with SMTP id e63so6436650ita.1
-        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2019 01:33:05 -0700 (PDT)
+        Sun, 24 Mar 2019 04:33:09 -0400
+Received: by mail-pf1-f195.google.com with SMTP id c207so4303903pfc.7;
+        Sun, 24 Mar 2019 01:33:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Dq88nNP562Ket7mD5f3s33SSWJorbaOn89O5ht4c0Bo=;
+        b=ekAuhqdn4IWcWOg7wz2HS8znjPcoRIiTk4qnfTHf0tjlCp7FMpjS0Dcne2ysMF7OGM
+         BmPSmkvApUcKFXUdOL1VzkU2WxEQK/fbskUhJCCfbMWdsi/E4cbXTIEAu/Y/q9/mfSjD
+         qPzPZtujuXwLeik+UDXhgUg4I/Rt1qXwkt5qbHzlDI7tcoNE+FCDDBXIUjkN1aqCOjj3
+         mskR2xdjpEq4E/ikSSDzS8k/l2jnb7RwyeJMUvhsRY+/BnUksjiqTJ2EVqXO+pyHtEVR
+         T8vhEYxnmLKJv9ITZSVqYN2WwG4bwv6r4ZGWwyAOf5Z58VLtlsv/dgD7BrdrXo4odEtw
+         nM7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=M+8R9CNl+dwGuvWY+cqskh4FBZP6bvG/g7lGqjy9mEU=;
-        b=ODAynBxcns1Hy5XIEhNPVBZbjy8+BSJg3mVZBlpDuAuVHbkhgbelw0/KwzwLiEI7dV
-         ZfMwVpO2n3eoHyG7BxMEYvGRybsQeTbgGqWr5WU7kICeBCzL1YRyVnb3U6hnicK+6TjL
-         rDu8K7NydpBg82TkVqEXU8NsFYutxWjh2+G5aI5qTvGkvmOstYMy9+SBAop2CqNAzH3Q
-         kF2dG1PDFHz+4WwRvE2kuyKr/PmkYOoRdh/WkGImrvdZqwKlR751oxfxUEN6rrf3impd
-         89fM1nE4gPPx38zitfnGuv/fvE2ivlKEUz2jPWox5qwJ8L1uHTM+2Cnja7l5B5s4ig7+
-         O3KA==
-X-Gm-Message-State: APjAAAXKvyEeFwqTNwBQsmGAScApT7uyHtu9yklZ3qO0N4mrZfUKBN+d
-        CmSyJjjD1xrNpuI3HbQm8N/Jnu1g4YwE3kIaTm4wyw3HvTtf
-X-Google-Smtp-Source: APXvYqwcvB4QExD4w4/lvQ8tQJqOofcyaYBBE2DrHV0kL4Imxmda4NtJ9RumCCB/GJQU7VlvmOVC6G0JcQdiZk1RjpopW5C3/x+m
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Dq88nNP562Ket7mD5f3s33SSWJorbaOn89O5ht4c0Bo=;
+        b=TevDHZtnyeq/ACjhTpnVISJ160z7iR7APcFLSf6W6IgleKZJ4U8W4oLNxcDjmIbFZO
+         OWtUBCYVU2xo4DdYnuWoZwe/w/ON+RTS1sdK6YndYCFCpGiehm15w6KrwxYlwLCaGJwG
+         pEcs9hB66311gm2VQfoqw9JkytyQmYQdDhV3ZToXwSJzWxcXwM7JrR+ZtWzDRDTSIsQV
+         Pkafjw0dJG+UaAwPIvKmmRtRaZVU589AKgXZ73BwBsBNWs2mjXGSUu6gX15CpFBCsNs+
+         tA0EUqqkEe+10RSVDArb2QkzttGPWS5Q24JYBboyLXSPGCy0wW8rGHWbM0AEnXNVRaRT
+         40UQ==
+X-Gm-Message-State: APjAAAWlFPTGf1p42F8fSmoz9UPCEY6sl0jWo0Ud40G/WZxp563KC80h
+        Y0lbDLV46cov9PbpBQJfHfsYLQPK
+X-Google-Smtp-Source: APXvYqykcQdcEDvxj80wgvTnISNk9vp0hSYzM0q/A7Dr5QPFp+W4bOOB986XCI8Y67GNkSrVF/+vug==
+X-Received: by 2002:a62:168a:: with SMTP id 132mr17938661pfw.155.1553416387843;
+        Sun, 24 Mar 2019 01:33:07 -0700 (PDT)
+Received: from localhost.localdomain ([45.114.62.12])
+        by smtp.gmail.com with ESMTPSA id i10sm14629503pgs.26.2019.03.24.01.33.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 24 Mar 2019 01:33:06 -0700 (PDT)
+From:   Anand Moon <linux.amoon@gmail.com>
+To:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>
+Subject: [PATCH v1] ARM: dts: exynos: Add proper regulator states for suspend-to-mem for odroid-u3
+Date:   Sun, 24 Mar 2019 14:02:56 +0530
+Message-Id: <20190324083256.1047-1-linux.amoon@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-X-Received: by 2002:a02:499c:: with SMTP id p28mr13536919jad.118.1553416385024;
- Sun, 24 Mar 2019 01:33:05 -0700 (PDT)
-Date:   Sun, 24 Mar 2019 01:33:05 -0700
-In-Reply-To: <000000000000639f6a0584d11b82@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000d15d1d0584d2ef61@google.com>
-Subject: Re: WARNING in arch_install_hw_breakpoint
-From:   syzbot <syzbot+370a6b0f11867bf13515@syzkaller.appspotmail.com>
-To:     bp@alien8.de, frederic@kernel.org, gustavo@embeddedor.com,
-        hpa@zytor.com, linux-kernel@vger.kernel.org, mhiramat@kernel.org,
-        mingo@redhat.com, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
+Add suspend-to-mem node to regulator core to be enabled or disabled
+during system suspend and also support changing the regulator operating
+mode during runtime and when the system enter sleep mode (stand by mode).
 
-HEAD commit:    fd1f297b Merge tag 'drm-fixes-2019-03-22' of git://anongit..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1574f56d200000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=9a31fb246de2a622
-dashboard link: https://syzkaller.appspot.com/bug?extid=370a6b0f11867bf13515
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1157b7cf200000
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+---
+Current patch:
 
-Bisection is inconclusive: the bug happens on the oldest tested release.
+Note: Both microSD and eMMC suspend resume works this changes at my end.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10ca39b3200000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=12ca39b3200000
-console output: https://syzkaller.appspot.com/x/log.txt?x=14ca39b3200000
+regulator-off-in-suspend:
+set the regulator node into suspend state i.e. standby mode during suspend
+operation.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+370a6b0f11867bf13515@syzkaller.appspotmail.com
+Current changes are based on
+[0] https://www.kernel.org/doc/Documentation/devicetree/bindings/regulator/max77686.txt
 
-------------[ cut here ]------------
-Can't find any breakpoint slot
-WARNING: CPU: 0 PID: 8058 at arch/x86/kernel/hw_breakpoint.c:121  
-arch_install_hw_breakpoint+0x2d6/0x3a0 arch/x86/kernel/hw_breakpoint.c:121
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 8058 Comm: syz-executor.1 Not tainted 5.1.0-rc1+ #33
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  panic+0x2cb/0x65c kernel/panic.c:214
-  __warn.cold+0x20/0x45 kernel/panic.c:571
-  report_bug+0x263/0x2b0 lib/bug.c:186
-  fixup_bug arch/x86/kernel/traps.c:179 [inline]
-  fixup_bug arch/x86/kernel/traps.c:174 [inline]
-  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
-  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
-  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:973
-RIP: 0010:arch_install_hw_breakpoint+0x2d6/0x3a0  
-arch/x86/kernel/hw_breakpoint.c:121
-Code: c8 48 83 c4 18 5b 41 5c 41 5d 41 5e 41 5f 5d c3 0f 0b 0f 0b 48 c7 c7  
-40 23 65 87 89 45 d4 c6 05 ed 9d 32 08 01 e8 98 43 1b 00 <0f> 0b 8b 45 d4  
-e9 bc fd ff ff 40 88 75 c8 e8 a7 8e 80 00 0f b6 75
-RSP: 0018:ffff8880a512f6d8 EFLAGS: 00010086
-RAX: 0000000000000000 RBX: ffff8880ae81ec98 RCX: 0000000000000000
-RDX: 0000000040000000 RSI: ffffffff815ae266 RDI: ffffed1014a25ecd
-RBP: ffff8880a512f718 R08: ffff8880857382c0 R09: fffffbfff11335f5
-R10: fffffbfff11335f4 R11: ffffffff8899afa3 R12: ffff888085730380
-R13: dffffc0000000000 R14: 0000000000000004 R15: 000000000001eca0
-  hw_breakpoint_add+0xa7/0x130 kernel/events/hw_breakpoint.c:632
-  event_sched_in kernel/events/core.c:2281 [inline]
-  event_sched_in.isra.0+0x373/0xbf0 kernel/events/core.c:2245
-  group_sched_in+0xe4/0x3d0 kernel/events/core.c:2317
-  flexible_sched_in+0x615/0x9c0 kernel/events/core.c:3311
-  visit_groups_merge+0x336/0x5d0 kernel/events/core.c:3259
-  ctx_flexible_sched_in kernel/events/core.c:3345 [inline]
-  ctx_sched_in+0x330/0x670 kernel/events/core.c:3390
-  perf_event_sched_in+0x6e/0xa0 kernel/events/core.c:2426
-  perf_event_context_sched_in kernel/events/core.c:3430 [inline]
-  __perf_event_task_sched_in+0x609/0x820 kernel/events/core.c:3469
-  perf_event_task_sched_in include/linux/perf_event.h:1115 [inline]
-  finish_task_switch+0x2c2/0x780 kernel/sched/core.c:2725
-  context_switch kernel/sched/core.c:2880 [inline]
-  __schedule+0x81f/0x1cc0 kernel/sched/core.c:3518
-  schedule+0x92/0x180 kernel/sched/core.c:3562
-  freezable_schedule include/linux/freezer.h:172 [inline]
-  ptrace_stop+0x3fe/0x950 kernel/signal.c:2111
-  do_jobctl_trap kernel/signal.c:2330 [inline]
-  get_signal+0x1502/0x1d50 kernel/signal.c:2456
-  do_signal+0x87/0x1940 arch/x86/kernel/signal.c:816
-  exit_to_usermode_loop+0x244/0x2c0 arch/x86/entry/common.c:162
-  prepare_exit_to_usermode arch/x86/entry/common.c:197 [inline]
-  syscall_return_slowpath arch/x86/entry/common.c:268 [inline]
-  do_syscall_64+0x52d/0x610 arch/x86/entry/common.c:293
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x458209
-Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f6b1a2a8c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000129
-RAX: 0000000000000000 RBX: 0000000000000004 RCX: 0000000000458209
-RDX: 0000000000000016 RSI: 000000000000002a RDI: 000000000000002a
-RBP: 000000000073bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000020000100 R11: 0000000000000246 R12: 00007f6b1a2a96d4
-R13: 00000000004c4f84 R14: 00000000004d8bd8 R15: 00000000ffffffff
+  Regulators which can be turned off during system suspend:
+	-LDOn	:	2, 6-8, 10-12, 14-16,
+	-BUCKn	:	1-4.
+  Use standard regulator bindings for it ('regulator-off-in-suspend').
 
-======================================================
+drop the suspend off binding which are not supported by the driver.
+
+RFC version
+[1] https://patchwork.kernel.org/patch/10810909/
+These changes had some problem with eMMC not entering into suspend mode.
+with some miss configuration in regulator-off-in-suspend mode.
+
+Changes from previos patch.
+[2] https://patchwork.kernel.org/patch/10712549/
+
+Set all the non used regulator in suspend-odd state
+LD02, LD03, LD05, LD06, LD07, LD011, LD013, LDO14, LD016
+
+BUCK5, BUCK6, BUCK7 and not confirable as per driver max77686-regulator
+---
+ .../boot/dts/exynos4412-odroid-common.dtsi    | 39 +++++++++++++++++++
+ 1 file changed, 39 insertions(+)
+
+diff --git a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+index 08d3a0a7b4eb..375156ad5454 100644
+--- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
++++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+@@ -288,6 +288,9 @@
+ 				regulator-min-microvolt = <1800000>;
+ 				regulator-max-microvolt = <1800000>;
+ 				regulator-always-on;
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
+ 			};
+ 
+ 			ldo3_reg: LDO3 {
+@@ -317,6 +320,9 @@
+ 				regulator-min-microvolt = <1000000>;
+ 				regulator-max-microvolt = <1000000>;
+ 				regulator-always-on;
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
+ 			};
+ 
+ 			ldo7_reg: LDO7 {
+@@ -324,18 +330,27 @@
+ 				regulator-min-microvolt = <1000000>;
+ 				regulator-max-microvolt = <1000000>;
+ 				regulator-always-on;
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
+ 			};
+ 
+ 			ldo8_reg: LDO8 {
+ 				regulator-name = "VDD10_HDMI_1.0V";
+ 				regulator-min-microvolt = <1000000>;
+ 				regulator-max-microvolt = <1000000>;
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
+ 			};
+ 
+ 			ldo10_reg: LDO10 {
+ 				regulator-name = "VDDQ_MIPIHSI_1.8V";
+ 				regulator-min-microvolt = <1800000>;
+ 				regulator-max-microvolt = <1800000>;
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
+ 			};
+ 
+ 			ldo11_reg: LDO11 {
+@@ -343,6 +358,9 @@
+ 				regulator-min-microvolt = <1800000>;
+ 				regulator-max-microvolt = <1800000>;
+ 				regulator-always-on;
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
+ 			};
+ 
+ 			ldo12_reg: LDO12 {
+@@ -351,6 +369,9 @@
+ 				regulator-max-microvolt = <3300000>;
+ 				regulator-always-on;
+ 				regulator-boot-on;
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
+ 			};
+ 
+ 			ldo13_reg: LDO13 {
+@@ -367,6 +388,9 @@
+ 				regulator-max-microvolt = <1800000>;
+ 				regulator-always-on;
+ 				regulator-boot-on;
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
+ 			};
+ 
+ 			ldo15_reg: LDO15 {
+@@ -375,6 +399,9 @@
+ 				regulator-max-microvolt = <1000000>;
+ 				regulator-always-on;
+ 				regulator-boot-on;
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
+ 			};
+ 
+ 			ldo16_reg: LDO16 {
+@@ -383,6 +410,9 @@
+ 				regulator-max-microvolt = <1800000>;
+ 				regulator-always-on;
+ 				regulator-boot-on;
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
+ 			};
+ 
+ 			ldo20_reg: LDO20 {
+@@ -421,6 +451,9 @@
+ 				regulator-max-microvolt = <1100000>;
+ 				regulator-always-on;
+ 				regulator-boot-on;
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
+ 			};
+ 
+ 			buck2_reg: BUCK2 {
+@@ -437,6 +470,9 @@
+ 				regulator-max-microvolt = <1050000>;
+ 				regulator-always-on;
+ 				regulator-boot-on;
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
+ 			};
+ 
+ 			buck4_reg: BUCK4 {
+@@ -444,6 +480,9 @@
+ 				regulator-min-microvolt = <900000>;
+ 				regulator-max-microvolt = <1100000>;
+ 				regulator-microvolt-offset = <50000>;
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
+ 			};
+ 
+ 			buck5_reg: BUCK5 {
+-- 
+2.21.0
 
