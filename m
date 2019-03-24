@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6F81C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 14:14:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B53BCC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 14:14:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9FD2222E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 14:14:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 778A3222E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 14:14:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728779AbfCXOOF (ORCPT
+        id S1728820AbfCXOOM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 10:14:05 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:43614 "EHLO
+        Sun, 24 Mar 2019 10:14:12 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:43634 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727137AbfCXOOE (ORCPT
+        with ESMTP id S1727137AbfCXOOI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 10:14:04 -0400
+        Sun, 24 Mar 2019 10:14:08 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1h83ss-0001yr-Vl; Sun, 24 Mar 2019 15:13:59 +0100
+        id 1h83sy-0001zO-TT; Sun, 24 Mar 2019 15:14:05 +0100
 Date:   Sun, 24 Mar 2019 14:12:21 -0000
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: [GIT pull] irq updates for 5.1
+Subject: [GIT pull] x86 updates for 5.1
 References: <155343674151.28403.7455818401538063350.tglx@nanos.tec.linutronix.de>
-Message-ID: <155343674151.28403.15105698349850612949.tglx@nanos.tec.linutronix.de>
+Message-ID: <155343674152.28403.17446642093501773007.tglx@nanos.tec.linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -38,403 +38,486 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Linus,
 
-please pull the latest irq-urgent-for-linus git tree from:
+please pull the latest x86-urgent-for-linus git tree from:
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq-urgent-for-linus
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-urgent-for-linus
 
-A set of fixes for the interrupt subsystem:
+A set of x86 fixes:
 
- - Remove secondary GIC support on systems w/o device-tree support
+ - Prevent potential NULL pointer dereferences in the HPET and HyperV code
 
- - A set of small fixlets in various irqchip drivers
-
- - static and fall-through annotations
+ - Exclude the GART aperture from /proc/kcore to prevent kernel crashes on
+   access
  
- - Kernel doc and typo fixes
+ - Use the correct macros for Cyrix I/O on Geode processors
+
+ - Remove yet another kernel address printk leak
+
+ - Announce microcode reload completion as requested by quite some
+   people. Microcode loading has become popular recently.
+
+ - Same 'Make Clang' happy fixlets
+
+ - A few cleanups for recently added code
 
 Thanks,
 
 	tglx
 
 ------------------>
-Arnd Bergmann (1):
-      irqchip/imx-irqsteer: Fix of_property_read_u32() error handling
+Aditya Pakki (1):
+      x86/hpet: Prevent potential NULL pointer dereference
 
-Fabien Dessenne (2):
-      irqchip/stm32: Don't clear rising/falling config registers at init
-      irqchip/stm32: Don't set rising configuration registers at init
+Borislav Petkov (1):
+      x86/microcode: Announce reload operation's completion
 
-Fabrizio Castro (1):
-      dt-bindings: irqchip: renesas-irqc: Document r8a774c0 support
+Colin Ian King (1):
+      x86/lib: Fix indentation issue, remove extra tab
 
-Gustavo A. R. Silva (1):
-      genirq: Mark expected switch case fall-through
+Ingo Molnar (1):
+      x86/cpufeature: Fix various quality problems in the <asm/cpu_device_hd.h> header
 
-Jianguo Chen (1):
-      irqchip/mbigen: Don't clear eventid when freeing an MSI
+Kairui Song (1):
+      x86/gart: Exclude GART aperture from kcore
 
-Marc Zyngier (1):
-      irqchip/gic: Drop support for secondary GIC in non-DT systems
+Kangjie Lu (1):
+      x86/hyperv: Prevent potential NULL pointer dereference
 
-Peter Xu (1):
-      genirq: Fix typo in comment of IRQD_MOVE_PCNTXT
+Matteo Croce (1):
+      x86/mm: Don't leak kernel addresses
 
-Rasmus Villemoes (1):
-      irqchip/gic-v3-its: Fix comparison logic in lpi_range_cmp
+Matthew Whitehead (2):
+      x86/cpu/cyrix: Use correct macros for Cyrix calls on Geode processors
+      x86/cpu/cyrix: Remove {get,set}Cx86_old macros used for Cyrix processors
+
+Nathan Chancellor (1):
+      x86/hw_breakpoints: Make default case in hw_breakpoint_arch_parse() return an error
+
+Nick Desaulniers (1):
+      x86/boot: Restrict header scope to make Clang happy
 
 Valdis Kletnieks (1):
-      genirq/devres: Remove excess parameter from kernel doc
-
-YueHaibing (3):
-      irqchip/brcmstb-l2: Make two init functions static
-      irqchip/mmp: Make mmp_irq_domain_ops static
-      irqchip/irq-mvebu-sei: Make mvebu_sei_ap806_caps static
+      x86/mm/pti: Make local symbols static
 
 
- .../bindings/interrupt-controller/renesas,irqc.txt |  1 +
- arch/arm/mach-cns3xxx/core.c                       |  2 +-
- drivers/irqchip/irq-brcmstb-l2.c                   |  4 +-
- drivers/irqchip/irq-gic-v3-its.c                   |  2 +-
- drivers/irqchip/irq-gic.c                          | 45 ++++++++--------------
- drivers/irqchip/irq-imx-irqsteer.c                 |  8 +++-
- drivers/irqchip/irq-mbigen.c                       |  3 ++
- drivers/irqchip/irq-mmp.c                          |  2 +-
- drivers/irqchip/irq-mvebu-sei.c                    |  2 +-
- drivers/irqchip/irq-stm32-exti.c                   | 10 -----
- include/linux/irq.h                                |  2 +-
- include/linux/irqchip/arm-gic.h                    |  3 +-
- kernel/irq/devres.c                                |  2 -
- kernel/irq/manage.c                                |  1 +
- 14 files changed, 35 insertions(+), 52 deletions(-)
+ arch/x86/boot/string.c                 |  3 ++-
+ arch/x86/hyperv/hv_init.c              |  6 +++++-
+ arch/x86/include/asm/cpu_device_id.h   | 31 +++++++++++++++----------------
+ arch/x86/include/asm/processor-cyrix.h | 21 ---------------------
+ arch/x86/kernel/aperture_64.c          | 20 +++++++++++++-------
+ arch/x86/kernel/cpu/cyrix.c            | 14 +++++++-------
+ arch/x86/kernel/cpu/microcode/core.c   |  2 ++
+ arch/x86/kernel/hpet.c                 |  2 ++
+ arch/x86/kernel/hw_breakpoint.c        |  1 +
+ arch/x86/kernel/mpparse.c              |  4 ++--
+ arch/x86/lib/csum-partial_64.c         |  2 +-
+ arch/x86/mm/pti.c                      |  4 ++--
+ fs/proc/kcore.c                        | 27 +++++++++++++++++++++++++++
+ include/linux/kcore.h                  |  2 ++
+ 14 files changed, 81 insertions(+), 58 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
-index 8de96a4fb2d5..f977ea7617f6 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
-@@ -16,6 +16,7 @@ Required properties:
-     - "renesas,irqc-r8a7793" (R-Car M2-N)
-     - "renesas,irqc-r8a7794" (R-Car E2)
-     - "renesas,intc-ex-r8a774a1" (RZ/G2M)
-+    - "renesas,intc-ex-r8a774c0" (RZ/G2E)
-     - "renesas,intc-ex-r8a7795" (R-Car H3)
-     - "renesas,intc-ex-r8a7796" (R-Car M3-W)
-     - "renesas,intc-ex-r8a77965" (R-Car M3-N)
-diff --git a/arch/arm/mach-cns3xxx/core.c b/arch/arm/mach-cns3xxx/core.c
-index 7d5a44a06648..f676592d8402 100644
---- a/arch/arm/mach-cns3xxx/core.c
-+++ b/arch/arm/mach-cns3xxx/core.c
-@@ -90,7 +90,7 @@ void __init cns3xxx_map_io(void)
- /* used by entry-macro.S */
- void __init cns3xxx_init_irq(void)
- {
--	gic_init(0, 29, IOMEM(CNS3XXX_TC11MP_GIC_DIST_BASE_VIRT),
-+	gic_init(IOMEM(CNS3XXX_TC11MP_GIC_DIST_BASE_VIRT),
- 		 IOMEM(CNS3XXX_TC11MP_GIC_CPU_BASE_VIRT));
- }
- 
-diff --git a/drivers/irqchip/irq-brcmstb-l2.c b/drivers/irqchip/irq-brcmstb-l2.c
-index 83364fedbf0a..5e4ca139e4ea 100644
---- a/drivers/irqchip/irq-brcmstb-l2.c
-+++ b/drivers/irqchip/irq-brcmstb-l2.c
-@@ -275,14 +275,14 @@ static int __init brcmstb_l2_intc_of_init(struct device_node *np,
- 	return ret;
- }
- 
--int __init brcmstb_l2_edge_intc_of_init(struct device_node *np,
-+static int __init brcmstb_l2_edge_intc_of_init(struct device_node *np,
- 	struct device_node *parent)
- {
- 	return brcmstb_l2_intc_of_init(np, parent, &l2_edge_intc_init);
- }
- IRQCHIP_DECLARE(brcmstb_l2_intc, "brcm,l2-intc", brcmstb_l2_edge_intc_of_init);
- 
--int __init brcmstb_l2_lvl_intc_of_init(struct device_node *np,
-+static int __init brcmstb_l2_lvl_intc_of_init(struct device_node *np,
- 	struct device_node *parent)
- {
- 	return brcmstb_l2_intc_of_init(np, parent, &l2_lvl_intc_init);
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 2dd1ff0cf558..7577755bdcf4 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -1482,7 +1482,7 @@ static int lpi_range_cmp(void *priv, struct list_head *a, struct list_head *b)
- 	ra = container_of(a, struct lpi_range, entry);
- 	rb = container_of(b, struct lpi_range, entry);
- 
--	return rb->base_id - ra->base_id;
-+	return ra->base_id - rb->base_id;
- }
- 
- static void merge_lpi_ranges(void)
-diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
-index ba2a37a27a54..fd3110c171ba 100644
---- a/drivers/irqchip/irq-gic.c
-+++ b/drivers/irqchip/irq-gic.c
-@@ -1089,11 +1089,10 @@ static void gic_init_chip(struct gic_chip_data *gic, struct device *dev,
- #endif
- }
- 
--static int gic_init_bases(struct gic_chip_data *gic, int irq_start,
-+static int gic_init_bases(struct gic_chip_data *gic,
- 			  struct fwnode_handle *handle)
- {
--	irq_hw_number_t hwirq_base;
--	int gic_irqs, irq_base, ret;
-+	int gic_irqs, ret;
- 
- 	if (IS_ENABLED(CONFIG_GIC_NON_BANKED) && gic->percpu_offset) {
- 		/* Frankein-GIC without banked registers... */
-@@ -1145,28 +1144,21 @@ static int gic_init_bases(struct gic_chip_data *gic, int irq_start,
- 	} else {		/* Legacy support */
- 		/*
- 		 * For primary GICs, skip over SGIs.
--		 * For secondary GICs, skip over PPIs, too.
-+		 * No secondary GIC support whatsoever.
- 		 */
--		if (gic == &gic_data[0] && (irq_start & 31) > 0) {
--			hwirq_base = 16;
--			if (irq_start != -1)
--				irq_start = (irq_start & ~31) + 16;
--		} else {
--			hwirq_base = 32;
--		}
-+		int irq_base;
- 
--		gic_irqs -= hwirq_base; /* calculate # of irqs to allocate */
-+		gic_irqs -= 16; /* calculate # of irqs to allocate */
- 
--		irq_base = irq_alloc_descs(irq_start, 16, gic_irqs,
-+		irq_base = irq_alloc_descs(16, 16, gic_irqs,
- 					   numa_node_id());
- 		if (irq_base < 0) {
--			WARN(1, "Cannot allocate irq_descs @ IRQ%d, assuming pre-allocated\n",
--			     irq_start);
--			irq_base = irq_start;
-+			WARN(1, "Cannot allocate irq_descs @ IRQ16, assuming pre-allocated\n");
-+			irq_base = 16;
- 		}
- 
- 		gic->domain = irq_domain_add_legacy(NULL, gic_irqs, irq_base,
--					hwirq_base, &gic_irq_domain_ops, gic);
-+						    16, &gic_irq_domain_ops, gic);
- 	}
- 
- 	if (WARN_ON(!gic->domain)) {
-@@ -1195,7 +1187,6 @@ static int gic_init_bases(struct gic_chip_data *gic, int irq_start,
- }
- 
- static int __init __gic_init_bases(struct gic_chip_data *gic,
--				   int irq_start,
- 				   struct fwnode_handle *handle)
- {
- 	char *name;
-@@ -1231,32 +1222,28 @@ static int __init __gic_init_bases(struct gic_chip_data *gic,
- 		gic_init_chip(gic, NULL, name, false);
- 	}
- 
--	ret = gic_init_bases(gic, irq_start, handle);
-+	ret = gic_init_bases(gic, handle);
- 	if (ret)
- 		kfree(name);
- 
- 	return ret;
- }
- 
--void __init gic_init(unsigned int gic_nr, int irq_start,
--		     void __iomem *dist_base, void __iomem *cpu_base)
-+void __init gic_init(void __iomem *dist_base, void __iomem *cpu_base)
- {
- 	struct gic_chip_data *gic;
- 
--	if (WARN_ON(gic_nr >= CONFIG_ARM_GIC_MAX_NR))
--		return;
--
- 	/*
- 	 * Non-DT/ACPI systems won't run a hypervisor, so let's not
- 	 * bother with these...
- 	 */
- 	static_branch_disable(&supports_deactivate_key);
- 
--	gic = &gic_data[gic_nr];
-+	gic = &gic_data[0];
- 	gic->raw_dist_base = dist_base;
- 	gic->raw_cpu_base = cpu_base;
- 
--	__gic_init_bases(gic, irq_start, NULL);
-+	__gic_init_bases(gic, NULL);
- }
- 
- static void gic_teardown(struct gic_chip_data *gic)
-@@ -1399,7 +1386,7 @@ int gic_of_init_child(struct device *dev, struct gic_chip_data **gic, int irq)
- 	if (ret)
- 		return ret;
- 
--	ret = gic_init_bases(*gic, -1, &dev->of_node->fwnode);
-+	ret = gic_init_bases(*gic, &dev->of_node->fwnode);
- 	if (ret) {
- 		gic_teardown(*gic);
- 		return ret;
-@@ -1459,7 +1446,7 @@ gic_of_init(struct device_node *node, struct device_node *parent)
- 	if (gic_cnt == 0 && !gic_check_eoimode(node, &gic->raw_cpu_base))
- 		static_branch_disable(&supports_deactivate_key);
- 
--	ret = __gic_init_bases(gic, -1, &node->fwnode);
-+	ret = __gic_init_bases(gic, &node->fwnode);
- 	if (ret) {
- 		gic_teardown(gic);
- 		return ret;
-@@ -1650,7 +1637,7 @@ static int __init gic_v2_acpi_init(struct acpi_subtable_header *header,
- 		return -ENOMEM;
- 	}
- 
--	ret = __gic_init_bases(gic, -1, domain_handle);
-+	ret = __gic_init_bases(gic, domain_handle);
- 	if (ret) {
- 		pr_err("Failed to initialise GIC\n");
- 		irq_domain_free_fwnode(domain_handle);
-diff --git a/drivers/irqchip/irq-imx-irqsteer.c b/drivers/irqchip/irq-imx-irqsteer.c
-index d1098f4da6a4..88df3d00052c 100644
---- a/drivers/irqchip/irq-imx-irqsteer.c
-+++ b/drivers/irqchip/irq-imx-irqsteer.c
-@@ -169,8 +169,12 @@ static int imx_irqsteer_probe(struct platform_device *pdev)
- 
- 	raw_spin_lock_init(&data->lock);
- 
--	of_property_read_u32(np, "fsl,num-irqs", &irqs_num);
--	of_property_read_u32(np, "fsl,channel", &data->channel);
-+	ret = of_property_read_u32(np, "fsl,num-irqs", &irqs_num);
-+	if (ret)
-+		return ret;
-+	ret = of_property_read_u32(np, "fsl,channel", &data->channel);
-+	if (ret)
-+		return ret;
- 
- 	/*
- 	 * There is one output irq for each group of 64 inputs.
-diff --git a/drivers/irqchip/irq-mbigen.c b/drivers/irqchip/irq-mbigen.c
-index 567b29c47608..98b6e1d4b1a6 100644
---- a/drivers/irqchip/irq-mbigen.c
-+++ b/drivers/irqchip/irq-mbigen.c
-@@ -161,6 +161,9 @@ static void mbigen_write_msg(struct msi_desc *desc, struct msi_msg *msg)
- 	void __iomem *base = d->chip_data;
- 	u32 val;
- 
-+	if (!msg->address_lo && !msg->address_hi)
-+		return;
-+ 
- 	base += get_mbigen_vec_reg(d->hwirq);
- 	val = readl_relaxed(base);
- 
-diff --git a/drivers/irqchip/irq-mmp.c b/drivers/irqchip/irq-mmp.c
-index 3496b61a312a..8eed478f3b7e 100644
---- a/drivers/irqchip/irq-mmp.c
-+++ b/drivers/irqchip/irq-mmp.c
-@@ -179,7 +179,7 @@ static int mmp_irq_domain_xlate(struct irq_domain *d, struct device_node *node,
- 	return 0;
- }
- 
--const struct irq_domain_ops mmp_irq_domain_ops = {
-+static const struct irq_domain_ops mmp_irq_domain_ops = {
- 	.map		= mmp_irq_domain_map,
- 	.xlate		= mmp_irq_domain_xlate,
- };
-diff --git a/drivers/irqchip/irq-mvebu-sei.c b/drivers/irqchip/irq-mvebu-sei.c
-index add4c9c934c8..18832ccc8ff8 100644
---- a/drivers/irqchip/irq-mvebu-sei.c
-+++ b/drivers/irqchip/irq-mvebu-sei.c
-@@ -478,7 +478,7 @@ static int mvebu_sei_probe(struct platform_device *pdev)
- 	return ret;
- }
- 
--struct mvebu_sei_caps mvebu_sei_ap806_caps = {
-+static struct mvebu_sei_caps mvebu_sei_ap806_caps = {
- 	.ap_range = {
- 		.first = 0,
- 		.size = 21,
-diff --git a/drivers/irqchip/irq-stm32-exti.c b/drivers/irqchip/irq-stm32-exti.c
-index a93296b9b45d..7bd1d4cb2e19 100644
---- a/drivers/irqchip/irq-stm32-exti.c
-+++ b/drivers/irqchip/irq-stm32-exti.c
-@@ -716,7 +716,6 @@ stm32_exti_chip_data *stm32_exti_chip_init(struct stm32_exti_host_data *h_data,
- 	const struct stm32_exti_bank *stm32_bank;
- 	struct stm32_exti_chip_data *chip_data;
- 	void __iomem *base = h_data->base;
--	u32 irqs_mask;
- 
- 	stm32_bank = h_data->drv_data->exti_banks[bank_idx];
- 	chip_data = &h_data->chips_data[bank_idx];
-@@ -725,21 +724,12 @@ stm32_exti_chip_data *stm32_exti_chip_init(struct stm32_exti_host_data *h_data,
- 
- 	raw_spin_lock_init(&chip_data->rlock);
- 
--	/* Determine number of irqs supported */
--	writel_relaxed(~0UL, base + stm32_bank->rtsr_ofst);
--	irqs_mask = readl_relaxed(base + stm32_bank->rtsr_ofst);
--
- 	/*
- 	 * This IP has no reset, so after hot reboot we should
- 	 * clear registers to avoid residue
- 	 */
- 	writel_relaxed(0, base + stm32_bank->imr_ofst);
- 	writel_relaxed(0, base + stm32_bank->emr_ofst);
--	writel_relaxed(0, base + stm32_bank->rtsr_ofst);
--	writel_relaxed(0, base + stm32_bank->ftsr_ofst);
--	writel_relaxed(~0UL, base + stm32_bank->rpr_ofst);
--	if (stm32_bank->fpr_ofst != UNDEF_REG)
--		writel_relaxed(~0UL, base + stm32_bank->fpr_ofst);
- 
- 	pr_info("%pOF: bank%d\n", h_data->node, bank_idx);
- 
-diff --git a/include/linux/irq.h b/include/linux/irq.h
-index d6160d479b14..7ae8de5ad0f2 100644
---- a/include/linux/irq.h
-+++ b/include/linux/irq.h
-@@ -195,7 +195,7 @@ struct irq_data {
-  * IRQD_LEVEL			- Interrupt is level triggered
-  * IRQD_WAKEUP_STATE		- Interrupt is configured for wakeup
-  *				  from suspend
-- * IRDQ_MOVE_PCNTXT		- Interrupt can be moved in process
-+ * IRQD_MOVE_PCNTXT		- Interrupt can be moved in process
-  *				  context
-  * IRQD_IRQ_DISABLED		- Disabled state of the interrupt
-  * IRQD_IRQ_MASKED		- Masked state of the interrupt
-diff --git a/include/linux/irqchip/arm-gic.h b/include/linux/irqchip/arm-gic.h
-index 626179077bb0..0f049b384ccd 100644
---- a/include/linux/irqchip/arm-gic.h
-+++ b/include/linux/irqchip/arm-gic.h
-@@ -158,8 +158,7 @@ int gic_of_init_child(struct device *dev, struct gic_chip_data **gic, int irq);
-  * Legacy platforms not converted to DT yet must use this to init
-  * their GIC
+diff --git a/arch/x86/boot/string.c b/arch/x86/boot/string.c
+index 315a67b8896b..90154df8f125 100644
+--- a/arch/x86/boot/string.c
++++ b/arch/x86/boot/string.c
+@@ -13,8 +13,9 @@
   */
--void gic_init(unsigned int nr, int start,
--	      void __iomem *dist , void __iomem *cpu);
-+void gic_init(void __iomem *dist , void __iomem *cpu);
  
- int gicv2m_init(struct fwnode_handle *parent_handle,
- 		struct irq_domain *parent);
-diff --git a/kernel/irq/devres.c b/kernel/irq/devres.c
-index 5d5378ea0afe..f808c6a97dcc 100644
---- a/kernel/irq/devres.c
-+++ b/kernel/irq/devres.c
-@@ -84,8 +84,6 @@ EXPORT_SYMBOL(devm_request_threaded_irq);
-  *	@dev: device to request interrupt for
-  *	@irq: Interrupt line to allocate
-  *	@handler: Function to be called when the IRQ occurs
-- *	@thread_fn: function to be called in a threaded interrupt context. NULL
-- *		    for devices which handle everything in @handler
-  *	@irqflags: Interrupt type flags
-  *	@devname: An ascii name for the claiming device, dev_name(dev) if NULL
-  *	@dev_id: A cookie passed back to the handler function
-diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
-index 9ec34a2a6638..1401afa0d58a 100644
---- a/kernel/irq/manage.c
-+++ b/kernel/irq/manage.c
-@@ -196,6 +196,7 @@ int irq_do_set_affinity(struct irq_data *data, const struct cpumask *mask,
- 	case IRQ_SET_MASK_OK:
- 	case IRQ_SET_MASK_OK_DONE:
- 		cpumask_copy(desc->irq_common_data.affinity, mask);
-+		/* fall through */
- 	case IRQ_SET_MASK_OK_NOCOPY:
- 		irq_validate_effective_affinity(data);
- 		irq_set_thread_affinity(desc);
+ #include <linux/types.h>
+-#include <linux/kernel.h>
++#include <linux/compiler.h>
+ #include <linux/errno.h>
++#include <linux/limits.h>
+ #include <asm/asm.h>
+ #include "ctype.h"
+ #include "string.h"
+diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+index 6461a16b4559..e4ba467a9fc6 100644
+--- a/arch/x86/hyperv/hv_init.c
++++ b/arch/x86/hyperv/hv_init.c
+@@ -103,9 +103,13 @@ static int hv_cpu_init(unsigned int cpu)
+ 	u64 msr_vp_index;
+ 	struct hv_vp_assist_page **hvp = &hv_vp_assist_page[smp_processor_id()];
+ 	void **input_arg;
++	struct page *pg;
+ 
+ 	input_arg = (void **)this_cpu_ptr(hyperv_pcpu_input_arg);
+-	*input_arg = page_address(alloc_page(GFP_KERNEL));
++	pg = alloc_page(GFP_KERNEL);
++	if (unlikely(!pg))
++		return -ENOMEM;
++	*input_arg = page_address(pg);
+ 
+ 	hv_get_vp_index(msr_vp_index);
+ 
+diff --git a/arch/x86/include/asm/cpu_device_id.h b/arch/x86/include/asm/cpu_device_id.h
+index 3417110574c1..31c379c1da41 100644
+--- a/arch/x86/include/asm/cpu_device_id.h
++++ b/arch/x86/include/asm/cpu_device_id.h
+@@ -1,6 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+-#ifndef _CPU_DEVICE_ID
+-#define _CPU_DEVICE_ID 1
++#ifndef _ASM_X86_CPU_DEVICE_ID
++#define _ASM_X86_CPU_DEVICE_ID
+ 
+ /*
+  * Declare drivers belonging to specific x86 CPUs
+@@ -9,8 +9,6 @@
+ 
+ #include <linux/mod_devicetable.h>
+ 
+-extern const struct x86_cpu_id *x86_match_cpu(const struct x86_cpu_id *match);
+-
+ /*
+  * Match specific microcode revisions.
+  *
+@@ -22,21 +20,22 @@ extern const struct x86_cpu_id *x86_match_cpu(const struct x86_cpu_id *match);
+  */
+ 
+ struct x86_cpu_desc {
+-	__u8	x86_family;
+-	__u8	x86_vendor;
+-	__u8	x86_model;
+-	__u8	x86_stepping;
+-	__u32	x86_microcode_rev;
++	u8	x86_family;
++	u8	x86_vendor;
++	u8	x86_model;
++	u8	x86_stepping;
++	u32	x86_microcode_rev;
+ };
+ 
+-#define INTEL_CPU_DESC(mod, step, rev) {			\
+-	.x86_family = 6,					\
+-	.x86_vendor = X86_VENDOR_INTEL,				\
+-	.x86_model = mod,					\
+-	.x86_stepping = step,					\
+-	.x86_microcode_rev = rev,				\
++#define INTEL_CPU_DESC(model, stepping, revision) {		\
++	.x86_family		= 6,				\
++	.x86_vendor		= X86_VENDOR_INTEL,		\
++	.x86_model		= (model),			\
++	.x86_stepping		= (stepping),			\
++	.x86_microcode_rev	= (revision),			\
+ }
+ 
++extern const struct x86_cpu_id *x86_match_cpu(const struct x86_cpu_id *match);
+ extern bool x86_cpu_has_min_microcode_rev(const struct x86_cpu_desc *table);
+ 
+-#endif
++#endif /* _ASM_X86_CPU_DEVICE_ID */
+diff --git a/arch/x86/include/asm/processor-cyrix.h b/arch/x86/include/asm/processor-cyrix.h
+index aaedd73ea2c6..df700a6cc869 100644
+--- a/arch/x86/include/asm/processor-cyrix.h
++++ b/arch/x86/include/asm/processor-cyrix.h
+@@ -3,19 +3,6 @@
+  * NSC/Cyrix CPU indexed register access. Must be inlined instead of
+  * macros to ensure correct access ordering
+  * Access order is always 0x22 (=offset), 0x23 (=value)
+- *
+- * When using the old macros a line like
+- *   setCx86(CX86_CCR2, getCx86(CX86_CCR2) | 0x88);
+- * gets expanded to:
+- *  do {
+- *    outb((CX86_CCR2), 0x22);
+- *    outb((({
+- *        outb((CX86_CCR2), 0x22);
+- *        inb(0x23);
+- *    }) | 0x88), 0x23);
+- *  } while (0);
+- *
+- * which in fact violates the access order (= 0x22, 0x22, 0x23, 0x23).
+  */
+ 
+ static inline u8 getCx86(u8 reg)
+@@ -29,11 +16,3 @@ static inline void setCx86(u8 reg, u8 data)
+ 	outb(reg, 0x22);
+ 	outb(data, 0x23);
+ }
+-
+-#define getCx86_old(reg) ({ outb((reg), 0x22); inb(0x23); })
+-
+-#define setCx86_old(reg, data) do { \
+-	outb((reg), 0x22); \
+-	outb((data), 0x23); \
+-} while (0)
+-
+diff --git a/arch/x86/kernel/aperture_64.c b/arch/x86/kernel/aperture_64.c
+index 58176b56354e..294ed4392a0e 100644
+--- a/arch/x86/kernel/aperture_64.c
++++ b/arch/x86/kernel/aperture_64.c
+@@ -14,6 +14,7 @@
+ #define pr_fmt(fmt) "AGP: " fmt
+ 
+ #include <linux/kernel.h>
++#include <linux/kcore.h>
+ #include <linux/types.h>
+ #include <linux/init.h>
+ #include <linux/memblock.h>
+@@ -57,7 +58,7 @@ int fallback_aper_force __initdata;
+ 
+ int fix_aperture __initdata = 1;
+ 
+-#ifdef CONFIG_PROC_VMCORE
++#if defined(CONFIG_PROC_VMCORE) || defined(CONFIG_PROC_KCORE)
+ /*
+  * If the first kernel maps the aperture over e820 RAM, the kdump kernel will
+  * use the same range because it will remain configured in the northbridge.
+@@ -66,20 +67,25 @@ int fix_aperture __initdata = 1;
+  */
+ static unsigned long aperture_pfn_start, aperture_page_count;
+ 
+-static int gart_oldmem_pfn_is_ram(unsigned long pfn)
++static int gart_mem_pfn_is_ram(unsigned long pfn)
+ {
+ 	return likely((pfn < aperture_pfn_start) ||
+ 		      (pfn >= aperture_pfn_start + aperture_page_count));
+ }
+ 
+-static void exclude_from_vmcore(u64 aper_base, u32 aper_order)
++static void __init exclude_from_core(u64 aper_base, u32 aper_order)
+ {
+ 	aperture_pfn_start = aper_base >> PAGE_SHIFT;
+ 	aperture_page_count = (32 * 1024 * 1024) << aper_order >> PAGE_SHIFT;
+-	WARN_ON(register_oldmem_pfn_is_ram(&gart_oldmem_pfn_is_ram));
++#ifdef CONFIG_PROC_VMCORE
++	WARN_ON(register_oldmem_pfn_is_ram(&gart_mem_pfn_is_ram));
++#endif
++#ifdef CONFIG_PROC_KCORE
++	WARN_ON(register_mem_pfn_is_ram(&gart_mem_pfn_is_ram));
++#endif
+ }
+ #else
+-static void exclude_from_vmcore(u64 aper_base, u32 aper_order)
++static void exclude_from_core(u64 aper_base, u32 aper_order)
+ {
+ }
+ #endif
+@@ -474,7 +480,7 @@ int __init gart_iommu_hole_init(void)
+ 			 * may have allocated the range over its e820 RAM
+ 			 * and fixed up the northbridge
+ 			 */
+-			exclude_from_vmcore(last_aper_base, last_aper_order);
++			exclude_from_core(last_aper_base, last_aper_order);
+ 
+ 			return 1;
+ 		}
+@@ -520,7 +526,7 @@ int __init gart_iommu_hole_init(void)
+ 	 * overlap with the first kernel's memory. We can't access the
+ 	 * range through vmcore even though it should be part of the dump.
+ 	 */
+-	exclude_from_vmcore(aper_alloc, aper_order);
++	exclude_from_core(aper_alloc, aper_order);
+ 
+ 	/* Fix up the north bridges */
+ 	for (i = 0; i < amd_nb_bus_dev_ranges[i].dev_limit; i++) {
+diff --git a/arch/x86/kernel/cpu/cyrix.c b/arch/x86/kernel/cpu/cyrix.c
+index d12226f60168..1d9b8aaea06c 100644
+--- a/arch/x86/kernel/cpu/cyrix.c
++++ b/arch/x86/kernel/cpu/cyrix.c
+@@ -124,7 +124,7 @@ static void set_cx86_reorder(void)
+ 	setCx86(CX86_CCR3, (ccr3 & 0x0f) | 0x10); /* enable MAPEN */
+ 
+ 	/* Load/Store Serialize to mem access disable (=reorder it) */
+-	setCx86_old(CX86_PCR0, getCx86_old(CX86_PCR0) & ~0x80);
++	setCx86(CX86_PCR0, getCx86(CX86_PCR0) & ~0x80);
+ 	/* set load/store serialize from 1GB to 4GB */
+ 	ccr3 |= 0xe0;
+ 	setCx86(CX86_CCR3, ccr3);
+@@ -135,11 +135,11 @@ static void set_cx86_memwb(void)
+ 	pr_info("Enable Memory-Write-back mode on Cyrix/NSC processor.\n");
+ 
+ 	/* CCR2 bit 2: unlock NW bit */
+-	setCx86_old(CX86_CCR2, getCx86_old(CX86_CCR2) & ~0x04);
++	setCx86(CX86_CCR2, getCx86(CX86_CCR2) & ~0x04);
+ 	/* set 'Not Write-through' */
+ 	write_cr0(read_cr0() | X86_CR0_NW);
+ 	/* CCR2 bit 2: lock NW bit and set WT1 */
+-	setCx86_old(CX86_CCR2, getCx86_old(CX86_CCR2) | 0x14);
++	setCx86(CX86_CCR2, getCx86(CX86_CCR2) | 0x14);
+ }
+ 
+ /*
+@@ -153,14 +153,14 @@ static void geode_configure(void)
+ 	local_irq_save(flags);
+ 
+ 	/* Suspend on halt power saving and enable #SUSP pin */
+-	setCx86_old(CX86_CCR2, getCx86_old(CX86_CCR2) | 0x88);
++	setCx86(CX86_CCR2, getCx86(CX86_CCR2) | 0x88);
+ 
+ 	ccr3 = getCx86(CX86_CCR3);
+ 	setCx86(CX86_CCR3, (ccr3 & 0x0f) | 0x10);	/* enable MAPEN */
+ 
+ 
+ 	/* FPU fast, DTE cache, Mem bypass */
+-	setCx86_old(CX86_CCR4, getCx86_old(CX86_CCR4) | 0x38);
++	setCx86(CX86_CCR4, getCx86(CX86_CCR4) | 0x38);
+ 	setCx86(CX86_CCR3, ccr3);			/* disable MAPEN */
+ 
+ 	set_cx86_memwb();
+@@ -296,7 +296,7 @@ static void init_cyrix(struct cpuinfo_x86 *c)
+ 		/* GXm supports extended cpuid levels 'ala' AMD */
+ 		if (c->cpuid_level == 2) {
+ 			/* Enable cxMMX extensions (GX1 Datasheet 54) */
+-			setCx86_old(CX86_CCR7, getCx86_old(CX86_CCR7) | 1);
++			setCx86(CX86_CCR7, getCx86(CX86_CCR7) | 1);
+ 
+ 			/*
+ 			 * GXm : 0x30 ... 0x5f GXm  datasheet 51
+@@ -319,7 +319,7 @@ static void init_cyrix(struct cpuinfo_x86 *c)
+ 		if (dir1 > 7) {
+ 			dir0_msn++;  /* M II */
+ 			/* Enable MMX extensions (App note 108) */
+-			setCx86_old(CX86_CCR7, getCx86_old(CX86_CCR7)|1);
++			setCx86(CX86_CCR7, getCx86(CX86_CCR7)|1);
+ 		} else {
+ 			/* A 6x86MX - it has the bug. */
+ 			set_cpu_bug(c, X86_BUG_COMA);
+diff --git a/arch/x86/kernel/cpu/microcode/core.c b/arch/x86/kernel/cpu/microcode/core.c
+index 97f9ada9ceda..5260185cbf7b 100644
+--- a/arch/x86/kernel/cpu/microcode/core.c
++++ b/arch/x86/kernel/cpu/microcode/core.c
+@@ -608,6 +608,8 @@ static int microcode_reload_late(void)
+ 	if (ret > 0)
+ 		microcode_check();
+ 
++	pr_info("Reload completed, microcode revision: 0x%x\n", boot_cpu_data.microcode);
++
+ 	return ret;
+ }
+ 
+diff --git a/arch/x86/kernel/hpet.c b/arch/x86/kernel/hpet.c
+index dfd3aca82c61..fb32925a2e62 100644
+--- a/arch/x86/kernel/hpet.c
++++ b/arch/x86/kernel/hpet.c
+@@ -905,6 +905,8 @@ int __init hpet_enable(void)
+ 		return 0;
+ 
+ 	hpet_set_mapping();
++	if (!hpet_virt_address)
++		return 0;
+ 
+ 	/*
+ 	 * Read the period and check for a sane value:
+diff --git a/arch/x86/kernel/hw_breakpoint.c b/arch/x86/kernel/hw_breakpoint.c
+index ff9bfd40429e..d73083021002 100644
+--- a/arch/x86/kernel/hw_breakpoint.c
++++ b/arch/x86/kernel/hw_breakpoint.c
+@@ -354,6 +354,7 @@ int hw_breakpoint_arch_parse(struct perf_event *bp,
+ #endif
+ 	default:
+ 		WARN_ON_ONCE(1);
++		return -EINVAL;
+ 	}
+ 
+ 	/*
+diff --git a/arch/x86/kernel/mpparse.c b/arch/x86/kernel/mpparse.c
+index 3482460d984d..1bfe5c6e6cfe 100644
+--- a/arch/x86/kernel/mpparse.c
++++ b/arch/x86/kernel/mpparse.c
+@@ -598,8 +598,8 @@ static int __init smp_scan_config(unsigned long base, unsigned long length)
+ 			mpf_base = base;
+ 			mpf_found = true;
+ 
+-			pr_info("found SMP MP-table at [mem %#010lx-%#010lx] mapped at [%p]\n",
+-				base, base + sizeof(*mpf) - 1, mpf);
++			pr_info("found SMP MP-table at [mem %#010lx-%#010lx]\n",
++				base, base + sizeof(*mpf) - 1);
+ 
+ 			memblock_reserve(base, sizeof(*mpf));
+ 			if (mpf->physptr)
+diff --git a/arch/x86/lib/csum-partial_64.c b/arch/x86/lib/csum-partial_64.c
+index 9baca3e054be..e7925d668b68 100644
+--- a/arch/x86/lib/csum-partial_64.c
++++ b/arch/x86/lib/csum-partial_64.c
+@@ -94,7 +94,7 @@ static unsigned do_csum(const unsigned char *buff, unsigned len)
+ 				    : "m" (*(unsigned long *)buff), 
+ 				    "r" (zero),  "0" (result));
+ 				--count; 
+-					buff += 8;
++				buff += 8;
+ 			}
+ 			result = add32_with_carry(result>>32,
+ 						  result&0xffffffff); 
+diff --git a/arch/x86/mm/pti.c b/arch/x86/mm/pti.c
+index 4fee5c3003ed..139b28a01ce4 100644
+--- a/arch/x86/mm/pti.c
++++ b/arch/x86/mm/pti.c
+@@ -77,7 +77,7 @@ static void __init pti_print_if_secure(const char *reason)
+ 		pr_info("%s\n", reason);
+ }
+ 
+-enum pti_mode {
++static enum pti_mode {
+ 	PTI_AUTO = 0,
+ 	PTI_FORCE_OFF,
+ 	PTI_FORCE_ON
+@@ -602,7 +602,7 @@ static void pti_clone_kernel_text(void)
+ 	set_memory_global(start, (end_global - start) >> PAGE_SHIFT);
+ }
+ 
+-void pti_set_kernel_image_nonglobal(void)
++static void pti_set_kernel_image_nonglobal(void)
+ {
+ 	/*
+ 	 * The identity map is created with PMDs, regardless of the
+diff --git a/fs/proc/kcore.c b/fs/proc/kcore.c
+index bbcc185062bb..d29d869abec1 100644
+--- a/fs/proc/kcore.c
++++ b/fs/proc/kcore.c
+@@ -54,6 +54,28 @@ static LIST_HEAD(kclist_head);
+ static DECLARE_RWSEM(kclist_lock);
+ static int kcore_need_update = 1;
+ 
++/*
++ * Returns > 0 for RAM pages, 0 for non-RAM pages, < 0 on error
++ * Same as oldmem_pfn_is_ram in vmcore
++ */
++static int (*mem_pfn_is_ram)(unsigned long pfn);
++
++int __init register_mem_pfn_is_ram(int (*fn)(unsigned long pfn))
++{
++	if (mem_pfn_is_ram)
++		return -EBUSY;
++	mem_pfn_is_ram = fn;
++	return 0;
++}
++
++static int pfn_is_ram(unsigned long pfn)
++{
++	if (mem_pfn_is_ram)
++		return mem_pfn_is_ram(pfn);
++	else
++		return 1;
++}
++
+ /* This doesn't grab kclist_lock, so it should only be used at init time. */
+ void __init kclist_add(struct kcore_list *new, void *addr, size_t size,
+ 		       int type)
+@@ -465,6 +487,11 @@ read_kcore(struct file *file, char __user *buffer, size_t buflen, loff_t *fpos)
+ 				goto out;
+ 			}
+ 			m = NULL;	/* skip the list anchor */
++		} else if (!pfn_is_ram(__pa(start) >> PAGE_SHIFT)) {
++			if (clear_user(buffer, tsz)) {
++				ret = -EFAULT;
++				goto out;
++			}
+ 		} else if (m->type == KCORE_VMALLOC) {
+ 			vread(buf, (char *)start, tsz);
+ 			/* we have to zero-fill user buffer even if no read */
+diff --git a/include/linux/kcore.h b/include/linux/kcore.h
+index 8c3f8c14eeaa..c843f4a9c512 100644
+--- a/include/linux/kcore.h
++++ b/include/linux/kcore.h
+@@ -44,6 +44,8 @@ void kclist_add_remap(struct kcore_list *m, void *addr, void *vaddr, size_t sz)
+ 	m->vaddr = (unsigned long)vaddr;
+ 	kclist_add(m, addr, sz, KCORE_REMAP);
+ }
++
++extern int __init register_mem_pfn_is_ram(int (*fn)(unsigned long pfn));
+ #else
+ static inline
+ void kclist_add(struct kcore_list *new, void *addr, size_t size, int type)
 
