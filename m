@@ -2,107 +2,90 @@ Return-Path: <SRS0=2kAr=R3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE92FC43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 21:10:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F204C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 21:13:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB00220880
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 21:10:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6060020989
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 21:13:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553461853;
-	bh=49Q36mgLGZFH0oTyMFeZGZ/knycNkO9zSFkEUEgu9lU=;
+	s=default; t=1553462018;
+	bh=x2HIzQhIvkoBb8RYQnIvE8p4jSra0N+iO6KX8myIoyQ=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ZXDogqHBZD03r5TAwnd0sd+IWOukAcWrYSQB2GVAyir31fhb82FRK1ly5L6FEBw9a
-	 DzlH/2jEwR7eCsRryomWC3h4zYGgF0HfVMpu8VWCyFUgyf1mIk8bjpB/V1NZt+jpFa
-	 fpx9InPpbkzJOhBBwuQdkmal66xROhmCaXOpOrvg=
+	b=LjGlUIgBqfcN1nkP7AVToCVU1+at+9Lr8uu1mjlBtegZZCYhX7XV++YDSdwBbLdEy
+	 SGZne5ZBcCD74yFYt/o6HvzxK869k+hHnFyw6Yg3yhGQB7/2KTseLr5/ussemXjV79
+	 bBNr5jUPwGo6/Cp3W+mz6RUi80MUhzPIbL7caW6Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729016AbfCXVKw (ORCPT
+        id S1728948AbfCXVNh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 17:10:52 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:38719 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726317AbfCXVKv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 17:10:51 -0400
-Received: by mail-lj1-f193.google.com with SMTP id p14so5077812ljg.5
-        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2019 14:10:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UPnZUl2pyPSTZ9/Y8P81ZMWjsc3IOBpSLH8EhbRIm8s=;
-        b=eNwWe+05WtC/sP+9fbn+hwObXfeoF7nfk4dDkpz6Z8PIOyZpydyrq2OlyztXekrllc
-         h2vaz210Dijd5aRi5IuQJzsvrCEDFpogg8Eku2we1Nd2d9SB9si95Hq+WvuUgOg9Y4XP
-         EM9+NVFiM4wmx19lvoADaOHQtxmeZzFgYWAPI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UPnZUl2pyPSTZ9/Y8P81ZMWjsc3IOBpSLH8EhbRIm8s=;
-        b=cHSSe5xaymOPFMrPFS9zLOinRdhJiWn9P00snJFO6AGnbQ3WtNSQDLZ3656pWUZoub
-         JSXREPhrYQihUc/l6bLX3TrERWJRuBcECUt+EnZyCl++z8m3AQ3I3gyfz5ORaM0kHQGT
-         BjML/oRGfFtliXFEtfgiZ/nOoV7m3a+frEcQTZrccfRo1DIjM+fubnhvTF6oFQKCKyu1
-         l7Ppt0t+frkVQ1B0ey7F4oeG8M8O6xZn9H34SBmjHmfoR01nZRdO4MPGhGOr6i49AY6R
-         8u1AvwPxeUY8zZgsg1C2AGAKWuEwJ5fvfP13PtJ+Ni5TdLVSYT2g+WJwtf4UnK+hxkVJ
-         lGfg==
-X-Gm-Message-State: APjAAAVecD82c2WwOlESZdITsnu64bckc/4Rq9xGgR3qp2K7tUmN7ukw
-        f/5uzn842Y3DJgcRq76MSW0Kemzazpg=
-X-Google-Smtp-Source: APXvYqxgWsdTc85qhw3qRJl2ha0uf0BUcIhwZLk/gUMP/a/C5gQJ8zMG7PI2gxtyB1akiK//I9VBDQ==
-X-Received: by 2002:a2e:9682:: with SMTP id q2mr10130819lji.168.1553461849513;
-        Sun, 24 Mar 2019 14:10:49 -0700 (PDT)
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com. [209.85.208.178])
-        by smtp.gmail.com with ESMTPSA id 88sm3103478ljs.34.2019.03.24.14.10.48
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 24 Mar 2019 14:10:48 -0700 (PDT)
-Received: by mail-lj1-f178.google.com with SMTP id y6so6026212ljd.12
-        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2019 14:10:48 -0700 (PDT)
-X-Received: by 2002:a2e:9786:: with SMTP id y6mr10085435lji.79.1553461848154;
- Sun, 24 Mar 2019 14:10:48 -0700 (PDT)
+        Sun, 24 Mar 2019 17:13:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42142 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727192AbfCXVNh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Mar 2019 17:13:37 -0400
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0DD02173C;
+        Sun, 24 Mar 2019 21:13:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553462016;
+        bh=x2HIzQhIvkoBb8RYQnIvE8p4jSra0N+iO6KX8myIoyQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=GyJ7YS+nckQbbO6vuDYBbT9h+m5eb8aF94LlQuaWwvvxWrSobNCQ1qAw94oTWyHSf
+         qbT+PFBPNosgBk+i0RKhomBAUDRDiBXX1ad4U0rqR1+3ldfMtZ0w/epebdRd0ld7q7
+         h18Fgkw7mHNQTYBJrXiuZ9Js4H/36+mVP3SoZQu8=
+Received: by mail-qk1-f178.google.com with SMTP id w20so4182902qka.7;
+        Sun, 24 Mar 2019 14:13:35 -0700 (PDT)
+X-Gm-Message-State: APjAAAUfkBFOl7gAtdDVuAn9FvYp9tlTcZs9HjN1RxpaCLNJuuS4xUa6
+        8fhgW9lUT8KWU8Mtn4s463753SIOEI0oK5saVA==
+X-Google-Smtp-Source: APXvYqzg4h+Cu3YIlg3bnpzwOR4M2QBbH8N22dFEfqkViTZFrn4+elyYizpdenA0DznNAIAg8dqUxN/mwt5MyXgilNE=
+X-Received: by 2002:a37:4a12:: with SMTP id x18mr16186408qka.184.1553462015134;
+ Sun, 24 Mar 2019 14:13:35 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190323171343.GA19483@gmail.com>
-In-Reply-To: <20190323171343.GA19483@gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 24 Mar 2019 14:10:32 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whLMT2kaYwwcdMtjvadjdv0aULvb8fsGWqT0V=DUMjp+w@mail.gmail.com>
-Message-ID: <CAHk-=whLMT2kaYwwcdMtjvadjdv0aULvb8fsGWqT0V=DUMjp+w@mail.gmail.com>
-Subject: Re: [GIT PULL] auxdisplay for v5.1-rc2
-To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mans Rullgard <mans@mansr.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Ksenija Stanojevic <ksenija.stanojevic@gmail.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+References: <cover.2aba8cbd95630d87f927465cc2beb881936c83d9.1553010938.git-series.maxime.ripard@bootlin.com>
+ <8b1291b572695e4baa67c144dd6deee0563b7586.1553010938.git-series.maxime.ripard@bootlin.com>
+In-Reply-To: <8b1291b572695e4baa67c144dd6deee0563b7586.1553010938.git-series.maxime.ripard@bootlin.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Sun, 24 Mar 2019 16:13:23 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKiCZrf0BVwN-q6a2SgZVco3iKhm8qeoeJr_wrSwCFUzQ@mail.gmail.com>
+Message-ID: <CAL_JsqKiCZrf0BVwN-q6a2SgZVco3iKhm8qeoeJr_wrSwCFUzQ@mail.gmail.com>
+Subject: Re: [PATCH v4 1/5] dt-bindings: media: Add Allwinner A10 CSI binding
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     Hans Verkuil <hans.verkuil@cisco.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Frank Rowand <frowand.list@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 23, 2019 at 10:13 AM Miguel Ojeda
-<miguel.ojeda.sandonis@gmail.com> wrote:
+On Tue, Mar 19, 2019 at 10:56 AM Maxime Ripard
+<maxime.ripard@bootlin.com> wrote:
 >
->   - Series to clean up the Kconfig menus and
->     a couple of improvements for charlcd.
->     From Mans Rullgard
+> The Allwinner A10 CMOS Sensor Interface is a camera capture interface also
+> used in later (A10s, A13, A20, R8 and GR8) SoCs.
+>
+> On some SoCs, like the A10, there's multiple instances of that controller,
+> with one instance supporting more channels and having an ISP.
+>
+> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> ---
+>  Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml | 94 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 94 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
 
-Side note: this is very annoying. As part of the rc release I'm going
-through things like this, and I notice that the new Kconfig option has
-absolutely no help text.
-
-That might be acceptable if the choice of options made sense and would
-be obvious to people, but they aren't obvious. Particularly not when
-you come from not having an option at all, it's not at all clear that
-what _used_ to happen was that "flash" option.
-
-And yes, the Kconfig source code makes it look like there are help
-texts. But a help text on the individual options for a choice isn't
-actually shown when you ask for help - it's the help text for the
-*choice* that matters. Not that those invisible help texts actually
-_help_ anything anyway.
-
-                Linus
+Reviewed-by: Rob Herring <robh@kernel.org>
