@@ -2,111 +2,106 @@ Return-Path: <SRS0=2kAr=R3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FBACC4360F
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 17:23:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 708CAC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 17:23:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D37DE20989
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 17:23:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FC952147C
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 17:23:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rd9EbLt8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728899AbfCXRXB (ORCPT
+        id S1728939AbfCXRXL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 13:23:01 -0400
-Received: from saturn.retrosnub.co.uk ([46.235.226.198]:38974 "EHLO
-        saturn.retrosnub.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726139AbfCXRXB (ORCPT
+        Sun, 24 Mar 2019 13:23:11 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:36117 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726139AbfCXRXL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 13:23:01 -0400
-Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
-        by saturn.retrosnub.co.uk (Postfix; Retrosnub mail submission) with ESMTPSA id 8708E9E7723;
-        Sun, 24 Mar 2019 17:22:58 +0000 (GMT)
-Date:   Sun, 24 Mar 2019 17:22:56 +0000
-From:   Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
-To:     "Angus Ainslie (Purism)" <angus@akkea.ca>
-Cc:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
+        Sun, 24 Mar 2019 13:23:11 -0400
+Received: by mail-wm1-f67.google.com with SMTP id h18so6668545wml.1;
+        Sun, 24 Mar 2019 10:23:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=VNt7l5+VWi0XRfJBxBlcdQKQzBExlbpk0rX49ypfAus=;
+        b=rd9EbLt82zVGU1yaxLJgWzcLRzT62RSCIqZXCeyd4cBflJ7RKVwrALTuephAZ1dHPT
+         Bs/R0eb50ocesOFcRE1xXyrBMdVeRblkxLBJUHrB32J8YfVDf03+cFaYDtdFNljVKRM8
+         UTzb3uXAMo2YeS0/u8ay3InvdlY1RYNP1588JMoD4e3odqGMC17rn7hcRNDXlfylExVw
+         Qiuw+D9XGaRgL6rWnzUT1wLjvq4x9UB9XPP+iEnxg9NPzVDytxEUBrXCmHnbkt/cL7Pm
+         n4iUiIjmMwMQP87ZAwaVBevsbJ+oSVM6Rzw0CDfG3IY+FhZdRtmPWgqyatnblWE1I901
+         BrEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VNt7l5+VWi0XRfJBxBlcdQKQzBExlbpk0rX49ypfAus=;
+        b=akVV8d6/tIXb6b8dmfY1GYlhf5vPrucHVHLlXmDRiZvCDnRJo5Hx9CPi7cdGXp18wL
+         V/6aQZoPIwyUKEMVo8CwkvbrirtgLxg6CHTfc+8YtaaESDJplRnk92siKvTomnr0Iwfp
+         LVvFHL0OGOFVR8hgKgzxw+Y47HVoEfR5KnD0j2fq0DIbdwtRVu9ZrgqWCaOu7dOPG4p2
+         RodcXSKEAyO2iFekhEMRg/1RM/3qHY2kPtI/D9i6wUPyFKypifZqeQZ1SMiVkEUbZ0cC
+         EYuRL854rMd/fdOKvdJ9quKcGj40P1VqVI73myMzzWJLXbYpaxZ25SA2TNQEHkMpuUCp
+         zvLQ==
+X-Gm-Message-State: APjAAAW1oxoO40Yr6SuCfqUtGw0ARoW6eF8SWvskmxmFAuOml5Qas02m
+        jSYQigfdRyKrFcdUTfuM2krtLUKcnKU=
+X-Google-Smtp-Source: APXvYqwh9FT830lWLt8Ubr2nPBrAg9+4WJOx1OB8Pqaq+hbGLZkyP8MfFpNVtYarBnZr0jz+fVRJLQ==
+X-Received: by 2002:a1c:4e04:: with SMTP id g4mr2900117wmh.127.1553448189358;
+        Sun, 24 Mar 2019 10:23:09 -0700 (PDT)
+Received: from peano ([87.19.116.42])
+        by smtp.gmail.com with ESMTPSA id k15sm9690641wmj.8.2019.03.24.10.23.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 24 Mar 2019 10:23:08 -0700 (PDT)
+Date:   Sun, 24 Mar 2019 18:23:06 +0100
+From:   Cristian Sicilia <sicilia.cristian@gmail.com>
+To:     Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
         Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Tomas Novotny <tomas@novotny.cz>, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/5] iio: light: vcnl4000 add devicetree hooks
-Message-ID: <20190324172256.79742403@archlinux>
-In-Reply-To: <20190324171930.7580e6bb@archlinux>
-References: <20190321154047.23236-1-angus@akkea.ca>
-        <20190321154047.23236-3-angus@akkea.ca>
-        <20190324171930.7580e6bb@archlinux>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/5] staging: iio: adc: Code refactoring and bool to
+ bitfield change
+Message-ID: <cover.1553447138.git.sicilia.cristian@gmail.com>
+References: <cover.1553366098.git.sicilia.cristian@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1553366098.git.sicilia.cristian@gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 24 Mar 2019 17:19:30 +0000
-Jonathan Cameron <jic23@kernel.org> wrote:
+Some source refactoring, parameters alignment and camel case clearing.
 
-> On Thu, 21 Mar 2019 08:40:44 -0700
-> "Angus Ainslie (Purism)" <angus@akkea.ca> wrote:
-> 
-> > Add an of_match table for devicetree probing.
-> > 
-> > Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>  
-> 
-> I made a small tweak (see inline) for an issue I'd missed
-> previously (which is pretty obscure!)
-> 
-> Jonathan
-> > ---
-> >  drivers/iio/light/vcnl4000.c | 22 ++++++++++++++++++++++
-> >  1 file changed, 22 insertions(+)
-> > 
-> > diff --git a/drivers/iio/light/vcnl4000.c b/drivers/iio/light/vcnl4000.c
-> > index 5e0a8eb83ebc..308cb2d2b641 100644
-> > --- a/drivers/iio/light/vcnl4000.c
-> > +++ b/drivers/iio/light/vcnl4000.c
-> > @@ -363,9 +363,31 @@ static int vcnl4000_probe(struct i2c_client *client,
-> >  	return devm_iio_device_register(&client->dev, indio_dev);
-> >  }
-> >  
-> > +static const struct of_device_id vcnl_4000_of_match[] = {
-> > +	{
-> > +		.compatible = "vishay,vcnl4000",
-> > +		.data = "VCNL4000",
-> > +	},
-> > +	{
-> > +		.compatible = "vishay,vcnl4010",
-> > +		.data = "VCNL4010",
-> > +	},
-> > +	{
-> > +		.compatible = "vishay,vcnl4010",
-> > +		.data = "VCNL4020",
-> > +	},
-> > +	{
-> > +		.compatible = "vishay,vcnl4200",
-> > +		.data = "VCNL4200",
-> > +	},
-> > +	{},
-> > +};
-> > +MODULE_DEVICE_TABLE(of, vcnl4000_of_match);
-vcnl_4000_of_match.
+Replacement of bool to bitfield in a struct, but not found
+the population to check if it is done correctly.
 
-Fixed up.
-> > +
-> >  static struct i2c_driver vcnl4000_driver = {
-> >  	.driver = {
-> >  		.name   = VCNL4000_DRV_NAME,
-> > +		.of_match_table = of_match_ptr(vcnl_4000_of_match),  
-> Ah. I'd missed this previously.  Don't use the of_match_ptr
-> magic anymore. It prevents ACPI probing via the weird
-> DSDT entry that basically says "here be devicetree".
-> >  	},
-> >  	.probe  = vcnl4000_probe,
-> >  	.id_table = vcnl4000_id,  
-> 
+Cristian Sicilia (5):
+  staging: iio: adc: ad7280a: Tab alignment
+  staging: iio: adc: ad7192: Converted bool to bitfield format
+  staging: iio: adc: ad7280a: Avoid precedence issues in macro
+  staging: iio: adc: ad7280a: Adding temp var to improve readability
+  staging: iio: adc: ad7280a: Remove CamelCase notation
+
+ drivers/staging/iio/adc/ad7192.h  |  14 ++---
+ drivers/staging/iio/adc/ad7280a.c | 109 ++++++++++++++++++--------------------
+ 2 files changed, 59 insertions(+), 64 deletions(-)
+
+-- 
+2.7.4
 
