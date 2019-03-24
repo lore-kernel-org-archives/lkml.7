@@ -2,118 +2,130 @@ Return-Path: <SRS0=2kAr=R3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37620C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 15:18:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B21C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 15:26:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDA2B222EC
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 15:18:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3667120700
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 15:26:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="mQUHe/2T"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="mH+bfUCD";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="X9dYIJl/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728730AbfCXPS6 (ORCPT
+        id S1728642AbfCXP0G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 11:18:58 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:34039 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726603AbfCXPS5 (ORCPT
+        Sun, 24 Mar 2019 11:26:06 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:38950 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726317AbfCXP0F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 11:18:57 -0400
-Received: by mail-it1-f196.google.com with SMTP id l4so5078831ite.1
-        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2019 08:18:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LA6GXUCgoW4lEEmR/LMufysHJYXyTKx9RuJsaqKLxUA=;
-        b=mQUHe/2T27VeYzPtkFZWO1opnsxSqurAU0juAhv8EYg793y8UFMp/YczASj+Er6Z3r
-         e85zNaO4H+71QAWIfcCYz9gh+g0W9X1kULySVZDNKRZaI1YDpVgkgR8dXUxaqWkBbwCA
-         b35aoGlfuXQBqmOsZNDNvK4+SjOE6mzMHAA8iFANLLbsDkfFqmPmQFJNuAcYbqcHVxKW
-         xglcSytksG3tFjvpVEh/g05uCObI7wJhkJasPFgnE2sKeGtJKZ+jBe78z3xlUTRDKpX3
-         P8ubfmY3jOhP2iixXc7eyPmcN+N1D0dq2Jge/QydJky8x8i4g52kQPlD7baUo7XgyeAx
-         FCIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LA6GXUCgoW4lEEmR/LMufysHJYXyTKx9RuJsaqKLxUA=;
-        b=gfYntPBlhS5gOgJLOl0Lqiw94Lqp/V4q0j4PSzaB2+DRzUNKR+iu1Hm2VVYYc72L6e
-         OUjxG/Z+BsVWo0I7TjmVST+jYSi/bY8rr6D6UhPeU797Q6zql18LdgbL87iqxuz6XqO/
-         c8f+QSFW6D7LHYATensEbPTMLSFMm46ANF7cgeuVucSYkRv3pqj0R40YnaB6zJcXGcax
-         1xbvwnLFxBO0EZEZNOmAmidq3bl1+cv7qT+U7PgbWiB7ipqk8wHMuFHz+tFU/jpXi2Xw
-         JTNUiF4ATXU27JuLBD7adjPpDMPNODBWIHDIm2r07yGVsg3EvnVyIkhLkiciNx4YWu9w
-         g4BQ==
-X-Gm-Message-State: APjAAAUNl/ZC/EqgIcZ5DrUeL/EqufniMExD/cPfzYTW9qX3CzHqVcwd
-        V/LGVmVdxY0dU3hMrVs2JBm/X8ikYWCMgcEHYcoE2g==
-X-Google-Smtp-Source: APXvYqw8WMiyqKB6zM8rvKiZfNagZNLvEHPd2d2+gxclGYL+TMCJXc47XLd0mHezierdMyacId2wPEUkNlQ/mF1nTnc=
-X-Received: by 2002:a24:3c4c:: with SMTP id m73mr8815805ita.23.1553440736289;
- Sun, 24 Mar 2019 08:18:56 -0700 (PDT)
+        Sun, 24 Mar 2019 11:26:05 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 3E93E608BA; Sun, 24 Mar 2019 15:26:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553441164;
+        bh=PT7gMdgDKCPg21cn8rPlhLS3pKQ4Q0XrDpgOh2KwebU=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=mH+bfUCD6jg8e8o8JkzDxTwkbBsN0/1fZsOQy1ouFpJOmyhAepHZbt94//8ZwQ/HR
+         TaqpjczZa03gGz3tq0f6P+SOCFPPxhLoQmmJEac/DTSPa3W7HLh7jFbNaCA1qXOGxL
+         yZ8CHK2GKtLXJhZDWsN1R/5yPpOPkqVKanAmow/Q=
+Received: from [192.168.1.4] (unknown [122.175.84.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: gkohli@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 04A3E602F8;
+        Sun, 24 Mar 2019 15:26:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553441163;
+        bh=PT7gMdgDKCPg21cn8rPlhLS3pKQ4Q0XrDpgOh2KwebU=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=X9dYIJl/2Z0zkpohshrLSipBdzoMc9VTXxn27m/lppN2BczqbCwu6EKEwb05PcLNE
+         do7mvjGDOT/PmRL1xoHklz/HM8LciqhElBxY1tkZuytOWcHMOsMRJhGCzXgwaKe+jS
+         2qkEfVA9p9+3I0aPcRnE3jjoDy090AvCpvTRBUDg=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 04A3E602F8
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=gkohli@codeaurora.org
+Subject: Re: [PATCH v0] nvmem: core: Export nvmem cell info to userspace
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        linux-kernel@vger.kernel.org
+Cc:     linux-arm-msm@vger.kernel.org,
+        Shiraz Hashim <shashim@codeaurora.org>
+References: <1553061201-28894-1-git-send-email-gkohli@codeaurora.org>
+ <b356f99c-15ff-06ce-e40b-4bb8b664b6c9@linaro.org>
+From:   Gaurav Kohli <gkohli@codeaurora.org>
+Message-ID: <ecd3986a-7846-1f87-4d2e-4c66bd6698c9@codeaurora.org>
+Date:   Sun, 24 Mar 2019 20:55:59 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.0
 MIME-Version: 1.0
-References: <20190323211612.860-1-fparent@baylibre.com> <20190323211612.860-10-fparent@baylibre.com>
- <1553398466.26628.0.camel@mtksdaap41>
-In-Reply-To: <1553398466.26628.0.camel@mtksdaap41>
-From:   Fabien Parent <fparent@baylibre.com>
-Date:   Sun, 24 Mar 2019 16:18:45 +0100
-Message-ID: <CAOwMV_zkHMZv8y_8C9kRCUsPtSbm+vPkJUNzU-_LK5=OhTkiPw@mail.gmail.com>
-Subject: Re: [PATCH 09/24] mmc: mtk-sd: check for valid optional memory resource
-To:     Yingjoe Chen <yingjoe.chen@mediatek.com>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, ryder.lee@mediatek.com,
-        linux-watchdog@vger.kernel.org, jjian.zhou@mediatek.com,
-        wenzhen.yu@mediatek.com,
-        Stephane Le Provost <stephane.leprovost@mediatek.com>,
-        sean.wang@kernel.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, yong.mao@mediatek.com,
-        linux-spi@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, hsin-hsiung.wang@mediatek.com,
-        linux-serial@vger.kernel.org, linux-clk@vger.kernel.org,
-        Chaotian Jing <chaotian.jing@mediatek.com>,
-        linux-i2c@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <b356f99c-15ff-06ce-e40b-4bb8b664b6c9@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 24, 2019 at 4:34 AM Yingjoe Chen <yingjoe.chen@mediatek.com> wrote:
->
-> On Sat, 2019-03-23 at 22:15 +0100, Fabien Parent wrote:
-> > 'top_base' memory region is optional. Check that the resource is valid
-> > before using it. This avoid getting a "invalid resource" error message
-> > printed by the kernel.
-> >
-> > Signed-off-by: Fabien Parent <fparent@baylibre.com>
-> > ---
-> >  drivers/mmc/host/mtk-sd.c | 8 +++++---
-> >  1 file changed, 5 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
-> > index 833ef0590af8..573aa127d00b 100644
-> > --- a/drivers/mmc/host/mtk-sd.c
-> > +++ b/drivers/mmc/host/mtk-sd.c
-> > @@ -2123,9 +2123,11 @@ static int msdc_drv_probe(struct platform_device *pdev)
-> >       }
-> >
-> >       res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> > -     host->top_base = devm_ioremap_resource(&pdev->dev, res);
-> > -     if (IS_ERR(host->top_base))
-> > -             host->top_base = NULL;
-> > +     if (ret) {
->
-> This should be res?
 
-Indeed. Thanks, I will fix it in v2.
+On 3/22/2019 8:53 PM, Srinivas Kandagatla wrote:
+>
+>
+> On 20/03/2019 05:53, Gaurav Kohli wrote:
+>> From: Shiraz Hashim <shashim@codeaurora.org>
+>>
+>> Existing nvmem framework export full register space
+>> as nvmem binary, but not exporting child node of nvmem
+>> which is nvmem cell. Kernel can read the specific cell
+>> by using nvmem_cell_read but userspace don't have such
+>> provision.
+>>
+>> Add framework to export nvmem cell as well, So
+>> userspace can use it directly.
+>>
+>> Signed-off-by: Shiraz Hashim <shashim@codeaurora.org>
+>> Signed-off-by: Gaurav Kohli <gkohli@codeaurora.org>
+>> Co-developed-by: Gaurav Kohli <gkohli@codeaurora.org>
+>>
+>> diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+>
+> Thankyou for the patch.
+>
+> Why do you need such provision when the userspace can just get the 
+> cell values using correct offset and size.
+> This will also bring over head of managing entries dynamically + 
+> confusing userspace abi.
+>
+> Unless you have a valid reason or usecase I don't see the need for this.
 
-> > +             host->top_base = devm_ioremap_resource(&pdev->dev, res);
-> > +             if (IS_ERR(host->top_base))
-> > +                     host->top_base = NULL;
-> > +     }
-> >
-> >       ret = mmc_regulator_get_supply(mmc);
-> >       if (ret)
+
+Hi Srinivas,
+
+
+This is mainly for user space convenience, In existing implementation 
+they have to do manipulation according
+
+to offset and bit, And with present patch, they just have to do cat for 
+cell name and which can also be easily maintainable
+
+for different soc. But with current, it is difficult to maintain users 
+space code as each time we have to change user space code according to bit.
+
+
+This would also help to expose certain bit only as per the bit parameter 
+mentioned in dt node, which would also help to protect exposing of
+
+other bits to user space.
+
 >
->
+> thanks,
+> srini
+
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center,
+Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project.
+
