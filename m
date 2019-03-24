@@ -2,201 +2,145 @@ Return-Path: <SRS0=2kAr=R3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6DB1C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 06:56:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B96A2C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 06:57:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 941A42148D
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 06:56:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="RgdRhpzk"
+	by mail.kernel.org (Postfix) with ESMTP id 80713218AC
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 06:57:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728330AbfCXG4i (ORCPT
+        id S1728335AbfCXG5H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 02:56:38 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.50]:25866 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726160AbfCXG4h (ORCPT
+        Sun, 24 Mar 2019 02:57:07 -0400
+Received: from mail-it1-f199.google.com ([209.85.166.199]:53567 "EHLO
+        mail-it1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726160AbfCXG5H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 02:56:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1553410592;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=I2pNVx4CIuoPq6vSqtXQJyDYpL3umI36N0rfNy2jcaA=;
-        b=RgdRhpzklOQUjOkBz3Fm2/J51XPJ7KmoFA7P4sv1cXGbtCBaeJiSS+mEYPJo0pntcz
-        c3YO4tiLXBDhcC4EnBBNFdFpjuxx9j0CYiKcW3VdCAU2OWIUwOit5JabP9RrDLYfvC9J
-        HoBO7fwzoz2+BrleziHId/jXGDSy471Fnqzpya5zBYETls62QlbTdd+GXtGml6qY+0cv
-        n2KSD9M7mT2DGT63CFjYvbApnSCTz3FgVw1ZDu0CcmUofeJzbLQORa/T/nwfMxIlw5L6
-        1x1/XJSrW1foN0Mp7xdJWZ66WKzP7T3tyr0qOCRylTApqfeT6O6fio4s3s65zvT0kbKg
-        SEpw==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGH/vqwDaqTQ=="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 44.16 DYNA|AUTH)
-        with ESMTPSA id h04075v2O6uI0ca
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Sun, 24 Mar 2019 07:56:18 +0100 (CET)
-Content-Type: text/plain; charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [BUG] gpiolib: spi chip select legacy support breaks modern chip select and whitens the GTA04 LCD panel
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <CACRpkdb4URKcdZ-=3aG_np86Bp=1ahs+qztM-7yQkSP18ZkE6A@mail.gmail.com>
-Date:   Sun, 24 Mar 2019 07:56:17 +0100
-Cc:     Jan Kotas <jank@cadence.com>, LKML <linux-kernel@vger.kernel.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Brown <broonie@kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <2286C331-4AFC-46A9-B8C4-8A8BA9CD33C2@goldelico.com>
-References: <7509BFB6-36E4-441A-9F16-7A4FEE7F7CF3@goldelico.com> <5488EF42-08DB-4273-95FF-49ED31E27472@goldelico.com> <CACRpkdb4URKcdZ-=3aG_np86Bp=1ahs+qztM-7yQkSP18ZkE6A@mail.gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-X-Mailer: Apple Mail (2.3124)
+        Sun, 24 Mar 2019 02:57:07 -0400
+Received: by mail-it1-f199.google.com with SMTP id 190so6308646itv.3
+        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2019 23:57:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=M+8R9CNl+dwGuvWY+cqskh4FBZP6bvG/g7lGqjy9mEU=;
+        b=BcDzwPFdlj1C1HwqNrCp330BbAnWeDFISkqM0/ZXcVZN9ez5b6euxomxVp1AuxDldd
+         g480lEAI0+x8kIwYXHJfcKVjWAnHLeOOj5PF/Q2EqTUEaN8rWbx0EkhLDoFQAinfo+6+
+         bJ1lbM8egzEIc1G3KauIeANgWpn9DWNTJX6z0OPluv3ttCqwViqjtRg+qTa8rWvusF/G
+         r7Slv7AY7eMiwA3mBBXsnXbCi62ffYXzFYO+3KrXQSmtxhlflVABsjHVYJhvmcuypHYk
+         8ywRfhWnBJqPArfnzRrS9SxMUKKZu6DSlmBuO/JKHUvL2nMq0SbWtGhijuKNSXjIStO1
+         nmGg==
+X-Gm-Message-State: APjAAAUXaDHNdixNb6xchvUb+IEnudD/k99u4cU6r6dYVux6xxHGqo8y
+        0uxuc8yrmGAp8CJd+SAy4e0IzQnd8orwqx4pEQuMeOZtd90J
+X-Google-Smtp-Source: APXvYqxeLYXQge4+lMi3nJDiIbj6NlLU3v7Tysw9KijHz5JoqSkBJMEk6VgU9jCbyD82akJ4c4c2xcaEJQsWqcxuPzihVD1RJ1Qk
+MIME-Version: 1.0
+X-Received: by 2002:a5e:9805:: with SMTP id s5mr7084058ioj.149.1553410625971;
+ Sat, 23 Mar 2019 23:57:05 -0700 (PDT)
+Date:   Sat, 23 Mar 2019 23:57:05 -0700
+In-Reply-To: <000000000000639f6a0584d11b82@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000008d33870584d198cd@google.com>
+Subject: Re: WARNING in arch_install_hw_breakpoint
+From:   syzbot <syzbot+370a6b0f11867bf13515@syzkaller.appspotmail.com>
+To:     bp@alien8.de, frederic@kernel.org, gustavo@embeddedor.com,
+        hpa@zytor.com, linux-kernel@vger.kernel.org, mhiramat@kernel.org,
+        mingo@redhat.com, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+syzbot has found a reproducer for the following crash on:
 
-> Am 24.03.2019 um 05:15 schrieb Linus Walleij =
-<linus.walleij@linaro.org>:
->=20
-> On Sat, Mar 23, 2019 at 3:40 PM H. Nikolaus Schaller =
-<hns@goldelico.com> wrote:
->=20
->> (1) c1c04cea13dc gpio: of: Fix logic inversion
->>=20
->> together with the basic patch
->>=20
->> (2) 6953c57ab172 gpio: of: Handle SPI chipselect legacy bindings
->>=20
->> leads to a severe regression for our GTA04 board.
->=20
-> Sorry! :(
->=20
-> I found the same problem on my Nomadik board.
->=20
-> But I fixed it in that case by introducing a spi-cs-high into the DTS =
-file:
-> https://marc.info/?l=3Dlinux-arm-kernel&m=3D155292310015309&w=3D2
+HEAD commit:    fd1f297b Merge tag 'drm-fixes-2019-03-22' of git://anongit..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1574f56d200000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=9a31fb246de2a622
+dashboard link: https://syzkaller.appspot.com/bug?extid=370a6b0f11867bf13515
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1157b7cf200000
 
-Yes, that of course works and is our temporary solution.
+Bisection is inconclusive: the bug happens on the oldest tested release.
 
-And I see that you also have it on the controller node and not the slave =
-node.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10ca39b3200000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=12ca39b3200000
+console output: https://syzkaller.appspot.com/x/log.txt?x=14ca39b3200000
 
->=20
->> I learned that it tries to handle a legacy "spi-cs-high" property of =
-SPI slaves, but was stopped
->> from doing so by a bug (1). So only with both patches, the legacy =
-handler becomes active which
->> explains why it was not noticed earlier.
->>=20
->> Now, our GTA04 device tree from 2014 (v3.16-rc1) was already written =
-without any legacy spi properties
->> in mind
->=20
-> I'm sorry about that, however if you look at the DT binding document:
-> Documentation/devicetree/bindings/spi/spi-bus.txt
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+370a6b0f11867bf13515@syzkaller.appspotmail.com
 
-Shouldn't it be a property of the slave node and not the controller =
-node?
+------------[ cut here ]------------
+Can't find any breakpoint slot
+WARNING: CPU: 0 PID: 8058 at arch/x86/kernel/hw_breakpoint.c:121  
+arch_install_hw_breakpoint+0x2d6/0x3a0 arch/x86/kernel/hw_breakpoint.c:121
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 8058 Comm: syz-executor.1 Not tainted 5.1.0-rc1+ #33
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  panic+0x2cb/0x65c kernel/panic.c:214
+  __warn.cold+0x20/0x45 kernel/panic.c:571
+  report_bug+0x263/0x2b0 lib/bug.c:186
+  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
+  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
+  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:973
+RIP: 0010:arch_install_hw_breakpoint+0x2d6/0x3a0  
+arch/x86/kernel/hw_breakpoint.c:121
+Code: c8 48 83 c4 18 5b 41 5c 41 5d 41 5e 41 5f 5d c3 0f 0b 0f 0b 48 c7 c7  
+40 23 65 87 89 45 d4 c6 05 ed 9d 32 08 01 e8 98 43 1b 00 <0f> 0b 8b 45 d4  
+e9 bc fd ff ff 40 88 75 c8 e8 a7 8e 80 00 0f b6 75
+RSP: 0018:ffff8880a512f6d8 EFLAGS: 00010086
+RAX: 0000000000000000 RBX: ffff8880ae81ec98 RCX: 0000000000000000
+RDX: 0000000040000000 RSI: ffffffff815ae266 RDI: ffffed1014a25ecd
+RBP: ffff8880a512f718 R08: ffff8880857382c0 R09: fffffbfff11335f5
+R10: fffffbfff11335f4 R11: ffffffff8899afa3 R12: ffff888085730380
+R13: dffffc0000000000 R14: 0000000000000004 R15: 000000000001eca0
+  hw_breakpoint_add+0xa7/0x130 kernel/events/hw_breakpoint.c:632
+  event_sched_in kernel/events/core.c:2281 [inline]
+  event_sched_in.isra.0+0x373/0xbf0 kernel/events/core.c:2245
+  group_sched_in+0xe4/0x3d0 kernel/events/core.c:2317
+  flexible_sched_in+0x615/0x9c0 kernel/events/core.c:3311
+  visit_groups_merge+0x336/0x5d0 kernel/events/core.c:3259
+  ctx_flexible_sched_in kernel/events/core.c:3345 [inline]
+  ctx_sched_in+0x330/0x670 kernel/events/core.c:3390
+  perf_event_sched_in+0x6e/0xa0 kernel/events/core.c:2426
+  perf_event_context_sched_in kernel/events/core.c:3430 [inline]
+  __perf_event_task_sched_in+0x609/0x820 kernel/events/core.c:3469
+  perf_event_task_sched_in include/linux/perf_event.h:1115 [inline]
+  finish_task_switch+0x2c2/0x780 kernel/sched/core.c:2725
+  context_switch kernel/sched/core.c:2880 [inline]
+  __schedule+0x81f/0x1cc0 kernel/sched/core.c:3518
+  schedule+0x92/0x180 kernel/sched/core.c:3562
+  freezable_schedule include/linux/freezer.h:172 [inline]
+  ptrace_stop+0x3fe/0x950 kernel/signal.c:2111
+  do_jobctl_trap kernel/signal.c:2330 [inline]
+  get_signal+0x1502/0x1d50 kernel/signal.c:2456
+  do_signal+0x87/0x1940 arch/x86/kernel/signal.c:816
+  exit_to_usermode_loop+0x244/0x2c0 arch/x86/entry/common.c:162
+  prepare_exit_to_usermode arch/x86/entry/common.c:197 [inline]
+  syscall_return_slowpath arch/x86/entry/common.c:268 [inline]
+  do_syscall_64+0x52d/0x610 arch/x86/entry/common.c:293
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x458209
+Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f6b1a2a8c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000129
+RAX: 0000000000000000 RBX: 0000000000000004 RCX: 0000000000458209
+RDX: 0000000000000016 RSI: 000000000000002a RDI: 000000000000002a
+RBP: 000000000073bf00 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000020000100 R11: 0000000000000246 R12: 00007f6b1a2a96d4
+R13: 00000000004c4f84 R14: 00000000004d8bd8 R15: 00000000ffffffff
 
->=20
-> You will see that spi-cs-high is mandatory. So these DTS files are
-> incorrect.
-
-How do you read that it is mandatory from
-
-"All slave nodes can contain the following optional properties:
-- spi-cs-high     - Empty property indicating device requires chip =
-select
-		    active high."
-
-I read it as optional and indicative. Equal priority to cs-gpios.
-
->=20
->> Therefore I would suggest:
->> * revert both patches as soon as possible (v5.1-rc series) to remove =
-the unexpected spi legacy
->>  code handler from the gpio subsystem.
->> * replace all uses of spi-cs-high by correct cs-gpios flags - unless =
-they already are there.
->>  fgrep spi-cs-high arch/*/boot/dts/*.dts* shows only a handful of DTS =
-candidates.
->> * fix spi-bus.txt documentation to describe this potential pitfall.
->=20
-> This does not work because there are devices that requires spi-cs-high =
-to be
-> respected and the DTS second cell GPIO flag to be ignored.
-
-Then, those should be fixed...
-
->=20
-> Jan Kotas reported this problem.
-
-Thanks for adding him to the discussion.
-
->=20
-> They might have deployed DTB binaries that need to keep working,
-
-Well, that is a weak argument. What if the GTA04 would have the DTB in =
-FLASH
-and would need it working (fortunately we always reflash kernel + dtbs)?
-
-> so we
-> cannot change it to ignore spi-cs-high like this. (I might give in if =
-it can be
-> proven that all of them just recompile the DTS all the time and no
-> DTBs are in flash.)
-
-BTW, on which node do these invariable DTBs have the spi-cs-high flag?
-In the controller node (IMHO wrong) or the slave node (according to =
-bindings doc)?
-
-I have checked with randomly picked imx51-babbage.dts and it has it in =
-the
-slave node (pmic: mc13892@0). It also seems to be an example where =
-different
-CS lines want different settings.
-
-If the all these DTBs have spi-cs-high in the slave node, none of them =
-will
-be fixed by the current code.
-
->=20
-> I think in this case the oldest binding wins.
-
-Ok, it is the question when such deprecated things are really removed.
-There is no clear answer...
-
-> The spi-cs-high was there before
-> we came up with the scheme to use the flags cell with GPIO phandles.
-
->=20
-> I think you simply have to patch these GTA04 DTS files to use
-> spi-cs-high.
-
-Ugly... Well, if DTS maintainers accept that?
-
->=20
-> But I'm open to other ideas, let's discuss this.
-
-What about a CONFIG to explicitly enable/disable this legacy support?
-
-IMHO it will need to be enabled for les than 1% of the kernel builds and
-therefore also keeps the zImage smaller for all others. And avoids DTB
-changes where the gpio flags are already correct.
-
-BR and thanks,
-Nikolaus
+======================================================
 
