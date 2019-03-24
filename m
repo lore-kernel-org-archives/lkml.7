@@ -2,88 +2,96 @@ Return-Path: <SRS0=2kAr=R3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73ED6C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 12:19:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF273C4360F
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 12:25:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FA3B222B0
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 12:19:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC290222D6
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 12:25:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553429948;
-	bh=GMYEsqGc5cVyAdwd+ntKMzWFgRKoxSZLxuh3ZOYmEw0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Nmy+UdJbgKQbg5C0PPQjkvseAj60Oq7ytmp0AircTLtHpkYhD4YC9YJnWtQBwgxfG
-	 FZtTKwCvB6OPKbuLAgxLg8sBpogMQ/Y5wVBx30sJJK1T4KtVojQaBBc2MYShM1Mc5z
-	 p39zVoqyJhB7LeynYqWy91aqrDRHGmgCcuAFIGGM=
+	s=default; t=1553430352;
+	bh=FL3tEc7++85Ctteo5zQGlckdt3wcBl4YBAzOqEiKZOI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=loelahau+Xb+eYVKKUY3424jIUFGVJGL9yC2IT/hG2o2dkqyHV3OlMxEa/AvDWytX
+	 xknWoorVKK9fxrCi0IYbM5yes9EIxHfNSSp6ViBrtNFDQIeprJFTwqQHHd32BupOMG
+	 wnGMl4+BlmjB4QnOEc26BCnjyXj2ZxqjgLR+ncjM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728740AbfCXMTH (ORCPT
+        id S1728711AbfCXMZv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 08:19:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48222 "EHLO mail.kernel.org"
+        Sun, 24 Mar 2019 08:25:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48768 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726160AbfCXMTG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 08:19:06 -0400
-Received: from localhost (unknown [88.128.80.97])
+        id S1726160AbfCXMZv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Mar 2019 08:25:51 -0400
+Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78BAB222B0;
-        Sun, 24 Mar 2019 12:19:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE476222C5;
+        Sun, 24 Mar 2019 12:25:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553429946;
-        bh=GMYEsqGc5cVyAdwd+ntKMzWFgRKoxSZLxuh3ZOYmEw0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=arJ8kNgBjjYYT4XhDucKFEGJ3FBF/GtMPS791UfGslL/mA6+HuwlfdsRtwGM2uOgN
-         p5DaT+F65rUwlUhBfZj1s46+tNJ2ztf4gqmTufEfRzz7Z+iY4XTE6snAM+XpJwaaX2
-         hMs/1XTCwXQ71snGTGUQPyPuXcIdf0Sr1zzZFeKM=
-Date:   Sun, 24 Mar 2019 13:19:01 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Bharath Vedartham <linux.bhar@gmail.com>
-Cc:     jfrederich@gmail.com, dsd@laptop.org, jon.nettleton@gmail.com,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC/PATCH] staging: olpc_dcon: Use WARN_ON instead of BUG_ON
-Message-ID: <20190324121901.GB6569@kroah.com>
-References: <20190324121208.GA24213@bharath12345-Inspiron-5559>
+        s=default; t=1553430350;
+        bh=FL3tEc7++85Ctteo5zQGlckdt3wcBl4YBAzOqEiKZOI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=p5bgxZyA3UF3/2teLe1+8jKmvVpI/rbq1VXSaCVK9s1gJ4VtxA4aV20gzddA2rLzv
+         ewUAPD5r5sDucrQVXpCbsG06NDqUqmvMyHmQilNk9eZrfKwFRN1BY53CiDGzEjbHHb
+         +NRggoIRZShXFGENPFYGCFWdoPXjxx9Gkj5M+hgc=
+Date:   Sun, 24 Mar 2019 12:25:44 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Daniel Drake <drake@endlessm.com>, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iio: st_accel: remove unnecessary comparison of
+ unsigned integer with < 0
+Message-ID: <20190324122544.4fe69a14@archlinux>
+In-Reply-To: <20190318173302.GA10761@embeddedor>
+References: <20190318173302.GA10761@embeddedor>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190324121208.GA24213@bharath12345-Inspiron-5559>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 24, 2019 at 05:42:08PM +0530, Bharath Vedartham wrote:
-> This is with respect to a checkpatch.pl CHECK: "Avoid crashing the
-> kernel. Use WARN_ON instead of BUG_ON". But I maybe wrong here. Is a
-> kernel crash desired if olpc_board_at_least(olpc_board(0xc2)) fails,
-> will there be inconsistent results if execution continues?
+On Mon, 18 Mar 2019 12:33:02 -0500
+"Gustavo A. R. Silva" <gustavo@embeddedor.com> wrote:
+
+> There is no need to compare *val* with < 0 because such comparison
+> of an unsigned value is always false.
 > 
-> Signed-off-by: Bharath Vedartham <linux.bhar@gmail.com>
+> Fix this by removing such comparison.
+> 
+> Addresses-Coverity-ID: 1443919 ("Unsigned compared against 0")
+> Fixes: f38ab20b749d ("iio: st_accel: use ACPI orientation data")
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Thanks,
+
+Colin King got there first and I have a patch fixing this queued up.
+
+Jonathan
+
 > ---
->  drivers/staging/olpc_dcon/olpc_dcon.c | 2 +-
+>  drivers/iio/accel/st_accel_core.c | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/staging/olpc_dcon/olpc_dcon.c b/drivers/staging/olpc_dcon/olpc_dcon.c
-> index 6b714f7..900baab7 100644
-> --- a/drivers/staging/olpc_dcon/olpc_dcon.c
-> +++ b/drivers/staging/olpc_dcon/olpc_dcon.c
-> @@ -138,7 +138,7 @@ static int dcon_bus_stabilize(struct dcon_priv *dcon, int is_powered_down)
->  	}
->  	if (x < 0) {
->  		pr_err("unable to stabilize dcon's smbus, reasserting power and praying.\n");
-> -		BUG_ON(olpc_board_at_least(olpc_board(0xc2)));
-> +		WARN_ON(olpc_board_at_least(olpc_board(0xc2)));
+> diff --git a/drivers/iio/accel/st_accel_core.c b/drivers/iio/accel/st_accel_core.c
+> index a3c0916479fa..9930edf423bf 100644
+> --- a/drivers/iio/accel/st_accel_core.c
+> +++ b/drivers/iio/accel/st_accel_core.c
+> @@ -992,7 +992,7 @@ static int apply_acpi_orientation(struct iio_dev *indio_dev,
+>  			goto out;
+>  
+>  		val = elements[i].integer.value;
+> -		if (val < 0 || val > 2)
+> +		if (val > 2)
+>  			goto out;
+>  
+>  		/* Avoiding full matrix multiplication, we simply reorder the
 
-Shouldn't you do something to handle this error, if it can actually
-happen?  Don't just warn and keep on going, if this was all that was
-needed to fix up these types of issues, we could do it all in one simple
-search/replace step :)
-
-thanks,
-
-greg k-h
