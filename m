@@ -2,112 +2,112 @@ Return-Path: <SRS0=2kAr=R3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 815AAC43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 10:28:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52732C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 10:28:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E05C222C1
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 10:28:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 290B7222C1
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 10:28:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728641AbfCXK2H (ORCPT
+        id S1728700AbfCXK2P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 06:28:07 -0400
-Received: from mga02.intel.com ([134.134.136.20]:60422 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726877AbfCXK2G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 06:28:06 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Mar 2019 03:28:06 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,256,1549958400"; 
-   d="scan'208";a="136945739"
-Received: from hwang32-mobl.ccr.corp.intel.com ([10.255.30.50])
-  by fmsmga007.fm.intel.com with ESMTP; 24 Mar 2019 03:28:04 -0700
-Message-ID: <1553423283.14989.6.camel@intel.com>
-Subject: [GIT PULL] Thermal management updates for v5.1-rc2
-From:   Zhang Rui <rui.zhang@intel.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Eduardo Valentin <edubezval@gmail.com>
-Date:   Sun, 24 Mar 2019 18:28:03 +0800
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.18.5.2-0ubuntu3.2 
-Mime-Version: 1.0
+        Sun, 24 Mar 2019 06:28:15 -0400
+Received: from avasout02.plus.net ([212.159.14.17]:47283 "EHLO
+        avasout02.plus.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728642AbfCXK2P (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Mar 2019 06:28:15 -0400
+Received: from deneb ([80.229.24.9])
+        by smtp with ESMTP
+        id 80MMh60E72SW580MNhM3SG; Sun, 24 Mar 2019 10:28:13 +0000
+X-CM-Score: 0.00
+X-CNFS-Analysis: v=2.3 cv=NtavjPVJ c=1 sm=1 tr=0
+ a=E/9URZZQ5L3bK/voZ0g0HQ==:117 a=E/9URZZQ5L3bK/voZ0g0HQ==:17
+ a=NTGMnVQrEZIA:10 a=CCpqsmhAAAAA:8 a=-An2I_7KAAAA:8 a=9qxNCY_qAAAA:8
+ a=VwQbUJbxAAAA:8 a=D19gQVrFAAAA:8 a=w-YdG8ML7ShXMl4_PY4A:9
+ a=ul9cdbp4aOFLsgKbc677:22 a=Sq34B_EcNBM9_nrAYB9S:22 a=A2X48xt2e1hG9NJDz63Y:22
+ a=AjGcO6oz07-iQ99wixmX:22 a=W4TVW4IDbPiebHqcZpNg:22
+Received: from mac by deneb with local (Exim 4.89)
+        (envelope-from <mac@mcrowe.com>)
+        id 1h80ML-0001xW-Mk; Sun, 24 Mar 2019 10:28:09 +0000
+From:   Mike Crowe <mac@mcrowe.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Mike Crowe <mac@mcrowe.com>, Kay Sievers <kay@vrfy.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
+        stable@vger.kernel.org
+Subject: [PATCH] kmsg: Return -ESPIPE rather than EBADF from llseek(SEEK_CUR)
+Date:   Sun, 24 Mar 2019 10:27:13 +0000
+Message-Id: <20190324102712.1488-1-mac@mcrowe.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4wfJl/CbTQc6m3M9qqf2LC9OSlcDhslkxIQU+lrsy3VpN2QmPF5yAQrfmdAL1uVVSiMq/3FkTlEOZTMBN5P6643y9Fjz4RwGO38TyBWYFNhYl1e1YlBIoG
+ 5NFrtdcr2xXiwgj9c5SmXRFwGr7zBNowkE8WwawjIPFMX9B95pFplnAw
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Linus,
+glibc's dprintf implementation tries to determine the current file position
+by calling lseek(fd, 0, SEEK_CUR). Unfortunately it treats receiving EINVAL
+as an error. See https://sourceware.org/bugzilla/show_bug.cgi?id=17830
 
-Please pull from
-  git://git.kernel.org/pub/scm/linux/kernel/git/rzhang/linux.git next
+From what I can tell prior to Kay Sievers printk record commit
+e11fea92e13fb91c50bacca799a6131c81929986, calling lseek(fd, 0, SEEK_CUR)
+with such a file descriptor would not return an error.
 
-to receive the latest Thermal management updates for v5.1-rc2 with
-top-most commit 2d7c4e17811f766321b9c054609551fa40f0b445:
+Prior to Kay's change, Arnd Bergmann's commit
+6038f373a3dc1f1c26496e60b6c40b164716f07e seemed to go to some lengths to
+preserve the successful return code rather than returning (the perhaps more
+logical) -ESPIPE.
 
-  Merge branches 'fixes' and 'thermal-intel' into next (2019-03-18
-22:37:44 +0800)
+glibc is happy with either a successful return or -ESPIPE. It seems that
+the consensus is to return -ESPIPE in this situation.
 
-on top of commit 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b:
+Alexander Sverdlin supplied this test case:
+--8<--
+ #define _GNU_SOURCE
+ #include <stdio.h>
+ #include <fcntl.h>
 
-  Linux 5.1-rc1 (2019-03-17 14:22:26 -0700)
+ int main(int argc, char **argv)
+ {
+         return dprintf(open("/dev/kmsg", O_WRONLY), "\n") < 0;
+ }
+-->8--
 
-Specifics:
+Signed-off-by: Mike Crowe <mac@mcrowe.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Tested-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
+Cc: stable@vger.kernel.org
+Fixes: e11fea92e1 ("kmsg: export printk records to the /dev/kmsg interface")
+---
+ kernel/printk/printk.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-- Fix a wrong __percpu structure declaration in intel_powerclamp
-driver. (Luc Van Oostenryck)
+Originally posted as https://lkml.org/lkml/2015/1/15/575 . Thanks to
+Alexander for waking this up and helping to test the updated fix.
 
-- Fix truncated name of the idle injection kthreads created by
-intel_powerclamp driver. (Zhang Rui)
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index 02ca827b8fac..4f047b13162c 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -945,6 +945,11 @@ static loff_t devkmsg_llseek(struct file *file, loff_t offset, int whence)
+ 		user->idx = log_next_idx;
+ 		user->seq = log_next_seq;
+ 		break;
++	case SEEK_CUR:
++		/* For compatibility with userspace expecting SEEK_CUR
++		 * to not yield EINVAL. */
++		ret = -ESPIPE;
++		break;
+ 	default:
+ 		ret = -EINVAL;
+ 	}
+-- 
+2.20.1
 
-- Fix the missing UUID supports in int3400 thermal driver. (Matthew
-Garrett)
-
-- Fix a crash when accessing the debugfs of bcm2835 SoC thermal driver.
-(Phil Elwell)
-
-- A couple of trivial fixes/cleanups in some SoC thermal drivers.
-
-thanks,
-rui
-
-----------------------------------------------------------------
-Luc Van Oostenryck (1):
-      thermal/intel_powerclamp: fix __percpu declaration of worker_data
-
-Marek Szyprowski (1):
-      thermal: samsung: Fix incorrect check after code merge
-
-Matthew Garrett (2):
-      thermal/int340x_thermal: Add additional UUIDs
-      thermal/int340x_thermal: fix mode setting
-
-Phil Elwell (1):
-      thermal: bcm2835: Fix crash in bcm2835_thermal_debugfs
-
-Pi-Hsun Shih (1):
-      thermal: mtk: Allocate enough space for mtk_thermal.
-
-Shaokun Zhang (1):
-      thermal: cpu_cooling: Remove unused cur_freq variable
-
-Zhang Rui (2):
-      thermal/intel_powerclamp: fix truncated kthread name
-      Merge branches 'fixes' and 'thermal-intel' into next
-
- drivers/thermal/broadcom/bcm2835_thermal.c          |  9 ++++-----
- drivers/thermal/cpu_cooling.c                       |  3 +--
- .../thermal/intel/int340x_thermal/int3400_thermal.c | 21
-+++++++++++++++++----
- drivers/thermal/intel/intel_powerclamp.c            |  4 ++--
- drivers/thermal/mtk_thermal.c                       |  7 +++++--
- drivers/thermal/samsung/exynos_tmu.c                |  2 +-
- 6 files changed, 30 insertions(+), 16 deletions(-)
