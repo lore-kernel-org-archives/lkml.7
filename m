@@ -2,133 +2,131 @@ Return-Path: <SRS0=2kAr=R3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32C10C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 04:15:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFCA7C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 04:16:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDEF32171F
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 04:15:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C5DC2171F
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 04:16:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yxR+jAXS"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="oMcV9Qsw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726474AbfCXEPR (ORCPT
+        id S1727181AbfCXEQs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 00:15:17 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:35268 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725790AbfCXEPR (ORCPT
+        Sun, 24 Mar 2019 00:16:48 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36558 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725783AbfCXEQr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 00:15:17 -0400
-Received: by mail-lj1-f195.google.com with SMTP id t13so5042759lji.2
-        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2019 21:15:15 -0700 (PDT)
+        Sun, 24 Mar 2019 00:16:47 -0400
+Received: by mail-wm1-f66.google.com with SMTP id h18so5704854wml.1
+        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2019 21:16:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=jer2AZEwQFVlrZwaIELF8+tLIxbA7AKPOFywFxWkr+4=;
-        b=yxR+jAXSxUxroOkB3b+QJe5C7v3mno+CD1NUFwUSUMKoPNm1ev+ZaBTjfDu5zt0uLj
-         Mq1vS5Jy4cBeuq04e8Sz/dwj0Eq/qFBCtWIeLdds7UJScn2pp12cLAze+SQ++rRdgJJB
-         fUONOGzxztve5GKa4vbGj0qJqSrWwH03mobFMWMQeUh7DQu2VWm/EwZxCDMRU1HLARWJ
-         vtStJsQPfQddgCEMRI4W1fu9716FBbtDxj8mmY9WQTj3nsZtPCW0mYN+ZD5kyjbsFvTO
-         M4dix9LItqfi2UoXZk+YrCz9cCfrE6/2q8OXfMat6Dr04/W8NRozJqrgB9OuXWRkP3Y7
-         KtHg==
+        bh=kJcnT5dwTmgu7HoGHnOBrIOugHBvna1fMwqu9gN6KUk=;
+        b=oMcV9QswJMr4ZCvb7NhJtyiTRvHaYDoT/4TqApGnGNwWRm8A9YhMU4e3xAplMrgSUk
+         4De8lGuuSLM7i1grA60EJrztUVKpyiDPghGsgnddW8CUTDoXOG/6IpWzJ/dTLR1K4bwR
+         hkQnPNyZMHo2picdY4834zqU6AEvjHubQJEiM4279qlgC+LgH5ZynNraTJLs1xjXRjBS
+         qf0xYhEM1iTi6IiPD9SvnS0yQK//Q1lPOiuhYCasCj0hZMqRlV5OLghvADZA8NiFgSzE
+         cCFcyVIKvkX1wd3/6XrYJxeP7deKokMwm0jWEoWwArSDxgH3GXs6fgTWFPvwk23fBOj8
+         QMjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=jer2AZEwQFVlrZwaIELF8+tLIxbA7AKPOFywFxWkr+4=;
-        b=fgoYLeeMdj2kwFgm+wgJCfyuzdEh/4P+/SVwTiTAMjiAQPIqk4pporKBcY9Ufl5Uw7
-         2pGokV1tTv6YFgoxVlduHjiIHmbOaoq3XpLTx2tJVSfd166eoLSNNxyeBaKNjA7q0XDy
-         gYPNa3XV/LyX39eX2NeEm0XfJ45MtrcRaLfNQ0W+TLKnRv+7bqKtXItWiP8iwA2CTmA4
-         t1AWK9kxXheKbJAHKZXG6Y0Ji54Ds7abcFlLgRaKvBnDPAHuqu2sjn6XFCf1tnz96Fsg
-         GCOErY+aA/bkaACF4kMRecuMYsFkg6EF8qpiA5KtgHOD1L6J2LGpVYRLL7DlUlgmQu90
-         jTBQ==
-X-Gm-Message-State: APjAAAVjEteubR07MNmJk4EdoHfazlfya0esPKJvKTxG4re2/hpTJ387
-        0aADO1cvZ1GQByqmU2bi9HoGuk81TbBE10o9TBdzKQ==
-X-Google-Smtp-Source: APXvYqwOOUc6CYdY/J3nH+HPmUc2wEFXNeU1t9CRbbD8EU6xrdA7PkuBQpqgFec0GFUczvgYbWxvDvz+w2PYVqJXjhk=
-X-Received: by 2002:a2e:b1c7:: with SMTP id e7mr9120808lja.107.1553400914975;
- Sat, 23 Mar 2019 21:15:14 -0700 (PDT)
+        bh=kJcnT5dwTmgu7HoGHnOBrIOugHBvna1fMwqu9gN6KUk=;
+        b=anEm3Ht7ZmW/SbaXORnZApyjLJp6tTktyjUO0K6ONStZ4+7XzUTCwpKnH+KiJ8SMoI
+         TaEUg5f+88T5IhGMbgfaVd2IsR5KZEEqL/Rej5saKq+Z7kKQR1NYvsnhGSIiU2boySFt
+         hzedJgDui+6on4yFL6ujWSkVmStbbm1wAkIMKaiL/zyb5k8v3b0/HPUyfyLM2NCiiL0F
+         yhaSGh0tRSCU+YTqm9SQLQpyqhAMjAi5HLP5RkalCdRirJiiZiOAUbUXzDWHueYx9N3o
+         cXZfsYvmwWzEqxhWhs64kPIHIF4jjO/dMVnSFPW9uXONKV/VhZeaCRvXtvk6v9xObh/B
+         tZPw==
+X-Gm-Message-State: APjAAAXSz22O/FVbyqajD2oeeK8MMcclWu3FfGZEd2OuQATyaxww1qeh
+        U4QYMYuhHeCENPfXkZhXHts++UQCmfVHGkyai8/5gA==
+X-Google-Smtp-Source: APXvYqyyIo4eYKj4CBhjPwWjw0kMvGMe3WtrqZt3RZz5gU1YJxxpWdIocVLVISDA8VmuBE3htmn9PfWYtBTX7dNekEE=
+X-Received: by 2002:a1c:700e:: with SMTP id l14mr6969803wmc.132.1553401006058;
+ Sat, 23 Mar 2019 21:16:46 -0700 (PDT)
 MIME-Version: 1.0
-References: <7509BFB6-36E4-441A-9F16-7A4FEE7F7CF3@goldelico.com> <5488EF42-08DB-4273-95FF-49ED31E27472@goldelico.com>
-In-Reply-To: <5488EF42-08DB-4273-95FF-49ED31E27472@goldelico.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 24 Mar 2019 05:15:03 +0100
-Message-ID: <CACRpkdb4URKcdZ-=3aG_np86Bp=1ahs+qztM-7yQkSP18ZkE6A@mail.gmail.com>
-Subject: Re: [BUG] gpiolib: spi chip select legacy support breaks modern chip
- select and whitens the GTA04 LCD panel
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Jan Kotas <jank@cadence.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Brown <broonie@kernel.org>
+References: <20190321094710.16552-1-anup.patel@wdc.com> <20190321094710.16552-4-anup.patel@wdc.com>
+ <20190323154012.GA25149@rapoport-lnx> <20190323172421.GA14080@infradead.org>
+In-Reply-To: <20190323172421.GA14080@infradead.org>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Sun, 24 Mar 2019 09:46:34 +0530
+Message-ID: <CAAhSdy2chHhAUJ5DtmaqHS8LFuFuiwhmnsh9mmuKZd8MX=Bqkg@mail.gmail.com>
+Subject: Re: [PATCH v2 3/5] RISC-V: Allow booting kernel from any 4KB aligned address
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Mike Rapoport <rppt@linux.ibm.com>,
+        Anup Patel <Anup.Patel@wdc.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 23, 2019 at 3:40 PM H. Nikolaus Schaller <hns@goldelico.com> wrote:
-
-> (1) c1c04cea13dc gpio: of: Fix logic inversion
+On Sat, Mar 23, 2019 at 10:54 PM Christoph Hellwig <hch@infradead.org> wrote:
 >
-> together with the basic patch
+> On Sat, Mar 23, 2019 at 05:40:12PM +0200, Mike Rapoport wrote:
+> > I have no general objection, but I presume the patch will be significantly
+> > simplified if the addition of 4K pages support will follow the removal of
+> > the trampoline_pd_dir.
+> >
+> > That said, I didn't look into the details, since they will change
+> > substantially, only some comments on the Kconfig part.
+> >
+> > On the high level, have you considered using large pages in setup_vm() and
+> > the remapping everything with 4K pages in setup_vm_final()?  This might
+> > save you the whole ops-> churn.
 >
-> (2) 6953c57ab172 gpio: of: Handle SPI chipselect legacy bindings
->
-> leads to a severe regression for our GTA04 board.
+> That would be a great start.  That being said the current tiny memory
+> RISC-V devices don't even have a MMU, so the kernel pagetable mapping
+> isn't even relevant for them.  I'm just not sure adding more complexity
+> in the early boot path for a borderline case (MMU and tiny memory
+> with a tiny kernel image) is reall worth all the complexity.
 
-Sorry! :(
+It's not just for addressing a borderline case (MMU and tiny memory with tiny
+kernel image).
 
-I found the same problem on my Nomadik board.
+We trying to addresses following issues in current code:
+1. The current setup_vm() maps all possible kernel virtual addresses (128GB
+on 64bit system and 1GB on 32bit system). The amount RAM present on
+real systems might be much less so we should not have kernel mappings for
+non-existent RAM. Of course, we don't know amount of RAM available in
+setup_vm() so we have to split page table setup in two parts and do minimal
+required mapping in setup_vm().
+2. NOMMU kernel requires a swapper_pg_dir with identity mapping (VA == PA)
+and without it we get boot-time crash so we cannot skip it for NOMMU case. For
+NOMMU, the PAGE_OFFSET will typically be 0x80020000 (or 0x80xxxxxx). This
+means swapper_pmd array (which uses -PAGE_OFFSET) will be over-sized
+causing compile errors.
+3. For both NOMMU with tiny memory and MMU with tiny memory, the current
+setup_vm() is not allowing us to place kernel on non-2M (or non-4M) aligned
+addressed there by causing memory below kernel to be wasted.
+4. For MMU based kernel, the current setup_vm() is hard-wired for fixed 2M
+mapping size. It will require more changes if we want to do 1G mappings.
 
-But I fixed it in that case by introducing a spi-cs-high into the DTS file:
-https://marc.info/?l=linux-arm-kernel&m=155292310015309&w=2
+The above issues motivated us to re-write setup_vm().
 
-> I learned that it tries to handle a legacy "spi-cs-high" property of SPI slaves, but was stopped
-> from doing so by a bug (1). So only with both patches, the legacy handler becomes active which
-> explains why it was not noticed earlier.
->
-> Now, our GTA04 device tree from 2014 (v3.16-rc1) was already written without any legacy spi properties
-> in mind
+We are trying to make initial page table setup more flexible and robust so that:
+1. We don't have any unwanted mappings pointing to non-existent RAM
+2. We can have any value of PAGE_OFFSET for NOMMU case without the
+page table arrays becoming oversized
+3. We can create mappings of best possible size to get good performance
+4. We can boot from any 4K/2M/1G (or just 4K) aligned load address
 
-I'm sorry about that, however if you look at the DT binding document:
-Documentation/devicetree/bindings/spi/spi-bus.txt
+Also, the end result of all this is a much more readable page table setup code
+shared between setup_vm() an setup_vm_final() where the differences are
+abstracted via mapping ops.
 
-You will see that spi-cs-high is mandatory. So these DTS files are
-incorrect.
-
-> Therefore I would suggest:
-> * revert both patches as soon as possible (v5.1-rc series) to remove the unexpected spi legacy
->   code handler from the gpio subsystem.
-> * replace all uses of spi-cs-high by correct cs-gpios flags - unless they already are there.
->   fgrep spi-cs-high arch/*/boot/dts/*.dts* shows only a handful of DTS candidates.
-> * fix spi-bus.txt documentation to describe this potential pitfall.
-
-This does not work because there are devices that requires spi-cs-high to be
-respected and the DTS second cell GPIO flag to be ignored.
-
-Jan Kotas reported this problem.
-
-They might have deployed DTB binaries that need to keep working, so we
-cannot change it to ignore spi-cs-high like this. (I might give in if it can be
-proven that all of them just recompile the DTS all the time and no
-DTBs are in flash.)
-
-I think in this case the oldest binding wins. The spi-cs-high was there before
-we came up with the scheme to use the flags cell with GPIO phandles.
-
-I think you simply have to patch these GTA04 DTS files to use
-spi-cs-high.
-
-But I'm open to other ideas, let's discuss this.
-
-Yours,
-Linus Walleij
+Regards,
+Anup
