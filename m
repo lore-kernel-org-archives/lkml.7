@@ -2,70 +2,73 @@ Return-Path: <SRS0=2kAr=R3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72D87C10F00
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 15:14:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA15C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 15:14:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4082B222C4
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 15:14:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4187222F1
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 15:14:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="W7tHdhv0"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="eG23jh5F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728759AbfCXPOm (ORCPT
+        id S1728813AbfCXPOp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 11:14:42 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:41809 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726877AbfCXPOl (ORCPT
+        Sun, 24 Mar 2019 11:14:45 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:34560 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726889AbfCXPOn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 11:14:41 -0400
-Received: by mail-wr1-f66.google.com with SMTP id p1so7262576wrs.8;
-        Sun, 24 Mar 2019 08:14:40 -0700 (PDT)
+        Sun, 24 Mar 2019 11:14:43 -0400
+Received: by mail-wr1-f65.google.com with SMTP id p10so7333706wrq.1;
+        Sun, 24 Mar 2019 08:14:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=tPPs4cqO/p0eCsszsL77g72f9HhvkgctqQ1mO/ZcfF8=;
-        b=W7tHdhv0K3oYuREw9pn1mtJLg8Ya/LFJBpCRVOHU0OTTxdEUfxsKf29c0p4e+rp1zp
-         rbJHK2BLm/QV7j8l37sqlf/vwloX7eshyNWH27dqKrhaAexqTIJ1uDOnOGo9zkf0m7wo
-         805X1YxUF++0xdUtOLtbMszZYGBdPqYQYoEYLYeVWfLSnpWdLx1L5ORQm4EWHXwpBhKe
-         rQMkBYZknlS14PBStt2FzLbUO8YU8DMXNARxufZnzfb4p9nWp0s11aklt4XHuRF8cmxT
-         g6mr4787BOFrG8ZCX1bGatRIf9HjJsoPGkp4hyjowsJtjzKGhL/VnXzH7o/+Q6sggj9K
-         XKKw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=HPJWUCkniYvFY+imhTP05E2QTQFEXxZDTbw3Sd6sRqw=;
+        b=eG23jh5FN8zbCRuTxemtu0s67vBLk9I3ZZ26vPcJnNQL+onnvAjosnm7iMDnXAYsv6
+         LKiDU1jxXIt67Eb+rqN70TPMEqvXl4NKuWme4dsVuwz1/OXcrcF8Gf4ke8uGKIKPlbOI
+         iEUIhOhfT7jHJ67xszlDsYqYvptcupAYGLk7sal4MzUyiDBEbwJN/mV2Kvk/W/aTm60B
+         I594dAH/H4XJtjtjk0hPCPTwx3CFo/D08hupElZ3fWlCGioq9tpAR0sjz4rB88ZqhERa
+         jXfNOeWo8k7byoOSa7jyeJDuTpOSMVfnrrDKyrZODsMcAxbhuVh4Gkw9Ahgsv6BkQ8fH
+         4Q5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=tPPs4cqO/p0eCsszsL77g72f9HhvkgctqQ1mO/ZcfF8=;
-        b=dOf58+gcJ90zUiUtWWFJmcK7K76beXtwu5tG7k6bOOVO6nrVEgn5K0kQOv9kUY80wA
-         vOjHaf1zKxB6k1URWWr3AJGpoZC1mqFdTT/0EdDdp32dUDpSf7ZP3O3JTfWT/MxK+L3+
-         tP0LVdWpbOIYxBlwOPam8JReXMYbjX3y0g0laQ+rxgB3QvyZRmxs2XJDhHa5V5UlKgMq
-         wJ35YV2NThvdi44PwVeLdEBM4K4TjAwDQ6ktVI6vzvELVWeuLr46vIzLbfla9CnRaOSE
-         LvFxZ8ryiiZN8BS7HGR+pnVRxUVFVqNz2dUhhyVSPyfzCpex0dWx2sZO5+GH6zO1IiRT
-         JD0A==
-X-Gm-Message-State: APjAAAUT5KrpA5bIHPO+ZxmQcyOjtB0GoW6xewQ125eDUj/jccL6SzI9
-        1MUSWTr1b/JXTkGZlhCO4yE=
-X-Google-Smtp-Source: APXvYqyIvJ1yldHZZfQLdrnadIfO3HzyeP+m636eMNcPVgg6y+YXhTA3F1Oe45APmhRFipVpPGM1EQ==
-X-Received: by 2002:adf:cf05:: with SMTP id o5mr11834366wrj.8.1553440479699;
-        Sun, 24 Mar 2019 08:14:39 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=HPJWUCkniYvFY+imhTP05E2QTQFEXxZDTbw3Sd6sRqw=;
+        b=PAqG3cg4OczKHJwgje1aKHh6rcJZK23CIXLVlczsD/YASBonVCo2BQlKd8s6Eon5bU
+         xelbnTwj2x/ThKoyRvnd/NFQgST5X5UvoBk4TqBpXrnepDe3b85beJLXFD+OJwyJoNOY
+         e1sk1GEjBy1HjH3xYaoaRP9Y7/fHjdxFOK+uE/Yv2D7/v7OxiaAnxjrbdD1CrM0F7jhX
+         h7DHGgVgQFmKIk+D68ET52ifpqwMdbCSbktBx3CWE4iZd2o6HxN1uIUsfiCutqlNZ8xD
+         SZ711Uad/ydIPqB00PFTNY38rjR7qykIZFOdkGA8qs4NwNNYO3fij2UacurnEI/N1AiY
+         HrvQ==
+X-Gm-Message-State: APjAAAWf3kvtl6SvVXL+MMWvEbtSSAX53sQQbO8dMxgnr3aDWidA6y1G
+        psyIhgGb2VAqVdVaYLv6U2s=
+X-Google-Smtp-Source: APXvYqxfbn7sRrbs8v3230Vgv2W8QHN2xDBdqp9ipKSgJQUuoCy93UO5kr0jnt/zoKOTT9qhVnYJ9A==
+X-Received: by 2002:adf:b6a3:: with SMTP id j35mr12931383wre.25.1553440481073;
+        Sun, 24 Mar 2019 08:14:41 -0700 (PDT)
 Received: from blackbox.darklights.net (p200300DCD7399900428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:dc:d739:9900:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id r16sm376889wrx.37.2019.03.24.08.14.38
+        by smtp.googlemail.com with ESMTPSA id r16sm376889wrx.37.2019.03.24.08.14.39
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 24 Mar 2019 08:14:38 -0700 (PDT)
+        Sun, 24 Mar 2019 08:14:40 -0700 (PDT)
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 To:     narmstrong@baylibre.com, jbrunet@baylibre.com,
         linux-amlogic@lists.infradead.org, mjourdan@baylibre.com
 Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
         Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v2 0/2] clk: meson8b: add the video decoder clocks
-Date:   Sun, 24 Mar 2019 16:14:21 +0100
-Message-Id: <20190324151423.19063-1-martin.blumenstingl@googlemail.com>
+Subject: [PATCH v2 1/2] dt-bindings: clock: meson8b: export the video decoder clocks
+Date:   Sun, 24 Mar 2019 16:14:22 +0100
+Message-Id: <20190324151423.19063-2-martin.blumenstingl@googlemail.com>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190324151423.19063-1-martin.blumenstingl@googlemail.com>
+References: <20190324151423.19063-1-martin.blumenstingl@googlemail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -73,43 +76,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds the video decoder clocks for Meson8, Meson8b and Meson8m2.
+Export the four video decoder clocks so they can be used by the video
+decoder driver:
+- VDEC_1
+- VDEC_HCODEC
+- VDEC_2
+- VDEC_HEVC
 
-The clock tree on Meson8 differs from the one one Meson8b and Meson8m2.
-Details can be found in patch #2.
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+---
+ include/dt-bindings/clock/meson8b-clkc.h | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-There are some checkpatch warnings in patch #2:
-  WARNING: please, no space before tabs
-I decided to still send the patch because we have the same inconsistency
-with all other clk_hw_onecell_data table entries. Please let me know if
-I should come up with a follow-up patch to clean them all up.
-
-Testing:
-I have not tested this with Maxime's video decoder driver yet.
-However, I manually enabled and set various frequencies for the HCODEC
-clock and verified that clkmsr reports the correct rate.
-
-Dependencies:
-This is meant to be applied on top of my other series from [0]:
-  clk: meson8b: add the VPU clock tree
-
-Changes since v1 at [1]:
-- collected Neil's and Maxime's Reviewed-by (thank you!)
-
-
-[0] https://patchwork.kernel.org/cover/10860401/
-[1] https://patchwork.kernel.org/cover/10860513/
-
-
-Martin Blumenstingl (2):
-  dt-bindings: clock: meson8b: export the video decoder clocks
-  clk: meson: meson8b: add the video decoder clock trees
-
- drivers/clk/meson/meson8b.c              | 312 +++++++++++++++++++++++
- drivers/clk/meson/meson8b.h              |  17 +-
- include/dt-bindings/clock/meson8b-clkc.h |   4 +
- 3 files changed, 332 insertions(+), 1 deletion(-)
-
+diff --git a/include/dt-bindings/clock/meson8b-clkc.h b/include/dt-bindings/clock/meson8b-clkc.h
+index 2ac9469a1c27..47556539f0ee 100644
+--- a/include/dt-bindings/clock/meson8b-clkc.h
++++ b/include/dt-bindings/clock/meson8b-clkc.h
+@@ -108,5 +108,9 @@
+ #define CLKID_AXI		128
+ #define CLKID_L2_DRAM		130
+ #define CLKID_VPU		190
++#define CLKID_VDEC_1		196
++#define CLKID_VDEC_HCODEC	199
++#define CLKID_VDEC_2		202
++#define CLKID_VDEC_HEVC		206
+ 
+ #endif /* __MESON8B_CLKC_H */
 -- 
 2.21.0
 
