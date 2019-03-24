@@ -2,105 +2,84 @@ Return-Path: <SRS0=2kAr=R3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65EB3C4360F
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 06:03:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8281C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 06:09:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 361772148D
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 06:03:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="Wx+7HXq0"
+	by mail.kernel.org (Postfix) with ESMTP id 8939C2148D
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 06:09:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728022AbfCXGAW (ORCPT
+        id S1727880AbfCXGJC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 02:00:22 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:41376 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726173AbfCXGAV (ORCPT
+        Sun, 24 Mar 2019 02:09:02 -0400
+Received: from mail-it1-f198.google.com ([209.85.166.198]:43078 "EHLO
+        mail-it1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726121AbfCXGJC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 02:00:21 -0400
-Received: by mail-pg1-f193.google.com with SMTP id f6so99401pgs.8
-        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2019 23:00:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ingics-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=RpsghNEoKDUGJY80S6ZRTuXGZP6cJNaic35UNAimvLw=;
-        b=Wx+7HXq0S544Q4e3auf8P1z2UmSujQ6Lg85Z8/3UtMEtcVuMCtL3gSQxlLK0gi9cBU
-         1LUDkTymbGA7MIlaJhrAbqTv6v1UTdMyOWvbfu3rshT6Cp3RDipF+dderq90wwDsVGUn
-         iE5OYHeJ8uJUdR8Sv1HGgTp2QVjJSVBWFLIMzcM/HWXOkuKVgE9ztbCeB2g3kTxMmV9V
-         m3nruDY9yAR7ZIscW+vVJEB4J+qqZ3p0JBzxade9PhfS55H42BTvOTD8DQf/KplJBCnw
-         gvVOOwOKh05MibTTRTYtw1ovGxozVTtDAU1ZCkuFmSSy2Avz0gRF60dd5RfXsXIBFAuI
-         T5SQ==
+        Sun, 24 Mar 2019 02:09:02 -0400
+Received: by mail-it1-f198.google.com with SMTP id w200so5917826itc.8
+        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2019 23:09:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=RpsghNEoKDUGJY80S6ZRTuXGZP6cJNaic35UNAimvLw=;
-        b=qVfduSm610Hmk61KvqYDil9P4CH8i6IO/IWT8xi+u2tpJD7N1taePyiAJi+oelzJgT
-         rbZhhXGX//dptJvrFl1eGfBjqGlwvFtGc2P5+a2/SpL3VagoNezTdawfOwfF5W4LCjhQ
-         4KO1jyFliH3CkqmJ0uu7pIHEb8R+oIwmGtOnAfQCZacudl2ieyjkPmInQQypCegLSYEZ
-         v90drn9u5jAICo94wxLHle1MzBoYkOPqZIqk1dd2pGsGoyj/CLUxW9jAEXSadhy+i1k9
-         hz4qUMCGmC4PoKKSuvTbReonRQkOYyrA7U8+UTQDeDlcb71K6KdGbTM3Tsg7QpqBJ8gn
-         J8sw==
-X-Gm-Message-State: APjAAAVZMVQQvVnULZrPawxZ8MrIbvwzYDq+edA/ajrxnM5NWHu0BIvn
-        U6TAkJQsxqK6Xot9J2Ig/AONJQ==
-X-Google-Smtp-Source: APXvYqytjyzjLZMY/JpIHV9ZzGpQmzCYns9t5ZXynGP70UN0EmgKxhKWeywZTW+EYfLAGc1153Gbow==
-X-Received: by 2002:a63:cd10:: with SMTP id i16mr16425541pgg.90.1553407220921;
-        Sat, 23 Mar 2019 23:00:20 -0700 (PDT)
-Received: from localhost.localdomain (118-171-129-125.dynamic-ip.hinet.net. [118.171.129.125])
-        by smtp.gmail.com with ESMTPSA id f6sm17426197pfd.115.2019.03.23.23.00.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 23 Mar 2019 23:00:20 -0700 (PDT)
-From:   Axel Lin <axel.lin@ingics.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Keerthy <j-keerthy@ti.com>, Russ Dill <Russ.Dill@ti.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
-Subject: [PATCH 2/2] regulator: tps65217: Constify regulator_ops
-Date:   Sun, 24 Mar 2019 14:00:05 +0800
-Message-Id: <20190324060005.22895-2-axel.lin@ingics.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190324060005.22895-1-axel.lin@ingics.com>
-References: <20190324060005.22895-1-axel.lin@ingics.com>
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=TLpu5Z7BhgHeIfV99kpBMulqLfk4Qeg+yuXuPCVOlps=;
+        b=nLKWvBhZgbXyMyzyiwzroaO0OVXsCQJO797p+ESAi8H3jS4dQXUB6cQqjfBEEg+I5P
+         3BdZQeuWFttFtbFyWidyatTZzDE4SIcV7vrwSWUZZla3AT/kXxnhUJ6IjhRVv8BFlYFY
+         0Frbxfb+w821QS0ae8RM2VbCMM5s8N3zHr1vHhZP7rC6mMR7F0bRBv4gTkZoGDgcKyC7
+         IrwBVQCev+qNLiqq5pmqZnc2K2hv+4xA6rDOdNKgQMRgksD+S/6LrZ53P9M8heZjkwIq
+         62cbqzfHfWWBP3tHWSzPti20Eo2LBwLVn6fjmMgPWFVDWCEmIoC40Wc7t9jz0iOCBDmr
+         Bzzg==
+X-Gm-Message-State: APjAAAUn6pwmbHoQQ/rnXHeh8qKBLDFXlsvUtQcRZnroP0Ajimgnwzau
+        REjuvqZAT25ePDXKiaaXrq/EVNr8OkHB8BHTLxYtWgyQzlm1
+X-Google-Smtp-Source: APXvYqxAKAfJWZ2v7Y++Ei2frHldyzdcxeLuASMyRXR+g8XVu3yjJeJ1kiz14OzgOvSMjElVnl9o+TPFn9Z2JppGVTrfGTJYSqM1
+MIME-Version: 1.0
+X-Received: by 2002:a24:6c84:: with SMTP id w126mr6854813itb.35.1553407741266;
+ Sat, 23 Mar 2019 23:09:01 -0700 (PDT)
+Date:   Sat, 23 Mar 2019 23:09:01 -0700
+In-Reply-To: <000000000000bc9ddf057e577c98@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000009c14c60584d0ec76@google.com>
+Subject: Re: WARNING: ODEBUG bug in netdev_freemem
+From:   syzbot <syzbot+979ffc89b87309b1b94b@syzkaller.appspotmail.com>
+To:     a@unstable.cc, alexander.h.duyck@intel.com,
+        amritha.nambiar@intel.com, b.a.t.m.a.n@lists.open-mesh.org,
+        davem@davemloft.net, decot@googlers.com, digetx@gmail.com,
+        dmitry.torokhov@gmail.com, jeffrey.t.kirsher@intel.com,
+        joe@perches.com, jonathanh@nvidia.com, ktkhai@virtuozzo.com,
+        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
+        mareklindner@neomailbox.ch, netdev@vger.kernel.org,
+        pdeschrijver@nvidia.com, petrm@mellanox.com, sw@simonwunderlich.de,
+        syzkaller-bugs@googlegroups.com, thierry.reding@gmail.com,
+        treding@nvidia.com, tyhicks@canonical.com, xiyou.wangcong@gmail.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These regulator_ops variables never need to be modified, make them const so
-compiler can put them to .rodata.
+syzbot has bisected this bug to:
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
----
- drivers/regulator/tps65217-regulator.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+commit 96e5da7c842424bcf64afe1082b960b42b96190b
+Author: Dmitry Osipenko <digetx@gmail.com>
+Date:   Sun Oct 21 18:30:52 2018 +0000
 
-diff --git a/drivers/regulator/tps65217-regulator.c b/drivers/regulator/tps65217-regulator.c
-index ead31741dc13..67ba78da77ec 100644
---- a/drivers/regulator/tps65217-regulator.c
-+++ b/drivers/regulator/tps65217-regulator.c
-@@ -149,7 +149,7 @@ static int tps65217_pmic_set_suspend_disable(struct regulator_dev *dev)
- }
- 
- /* Operations permitted on DCDCx, LDO2, LDO3 and LDO4 */
--static struct regulator_ops tps65217_pmic_ops = {
-+static const struct regulator_ops tps65217_pmic_ops = {
- 	.is_enabled		= regulator_is_enabled_regmap,
- 	.enable			= tps65217_pmic_enable,
- 	.disable		= tps65217_pmic_disable,
-@@ -162,7 +162,7 @@ static struct regulator_ops tps65217_pmic_ops = {
- };
- 
- /* Operations permitted on LDO1 */
--static struct regulator_ops tps65217_pmic_ldo1_ops = {
-+static const struct regulator_ops tps65217_pmic_ldo1_ops = {
- 	.is_enabled		= regulator_is_enabled_regmap,
- 	.enable			= tps65217_pmic_enable,
- 	.disable		= tps65217_pmic_disable,
--- 
-2.17.1
+     memory: tegra: Introduce Tegra20 EMC driver
 
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14450b93200000
+start commit:   28e8c4bc Merge tag 'rtc-4.21' of git://git.kernel.org/pub/..
+git tree:       upstream
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=16450b93200000
+console output: https://syzkaller.appspot.com/x/log.txt?x=12450b93200000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=c2ab9708c613a224
+dashboard link: https://syzkaller.appspot.com/bug?extid=979ffc89b87309b1b94b
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17a93c4b400000
+
+Reported-by: syzbot+979ffc89b87309b1b94b@syzkaller.appspotmail.com
+Fixes: 96e5da7c8424 ("memory: tegra: Introduce Tegra20 EMC driver")
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
