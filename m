@@ -2,112 +2,119 @@ Return-Path: <SRS0=2kAr=R3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56AF4C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 12:31:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72530C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 12:35:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21AE3222D0
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 12:31:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HX862r8o"
+	by mail.kernel.org (Postfix) with ESMTP id 3979A222D6
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 12:35:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553430901;
+	bh=veioUJlORlYBTD0o78zA7HRfOnNX8Cm8kLcrUfsYtD0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Am0UnuMT98UQStabUksQcsTyiK/IRjYvBOnUZHlSfwm5H1OcEosTIbUqqwgOka2Oe
+	 GfLSdkMYi8MuUec+ve24YIPPni//gMdJtdWLaRONxDpobbN+9G2GSNDKsncuJeWeU/
+	 OWHJPEh/aTXmPKiq/J9vNiufcXz0PBUIn9CzxgmQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728725AbfCXMbX (ORCPT
+        id S1728771AbfCXMe7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 08:31:23 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:44779 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726963AbfCXMbX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 08:31:23 -0400
-Received: by mail-pf1-f194.google.com with SMTP id a3so4475293pff.11;
-        Sun, 24 Mar 2019 05:31:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7iF0xLcGisMhpuy7zuhkEz0Y0tZ4OqFlr4oj1gxhfIM=;
-        b=HX862r8ofo+FGxQm+h8Mf+AyTKJi0iMtasDOO+MUm0RpsRB5pce/61loHvN2dDarLY
-         8SkqAU2LCJeKw55u1hEU8HXEpTPX7WkbB1sl/8O+HzuOre4URm91hDriKRvkkgUDbetL
-         N3KBgPiqkl9Q7AitXhRscz42P+P8tPH5mK8Kk2mPCC2r6r5AA2f++t5M7Cf0in5i44ad
-         pg+s5T4taW4AKy3uG1LFEjqHvJd8+lbhdcTLSfz5aQbilTHqe1YpvTLvzo487yayR/l7
-         bhuQZjMmdsbjyMF9WmRB2KFdXYzBNOPmlGKWHdDSBTsPKqnNH17Zy+rQU9CLW3yOUV5b
-         Y2nA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7iF0xLcGisMhpuy7zuhkEz0Y0tZ4OqFlr4oj1gxhfIM=;
-        b=Kf3mliVjLSs5fV/rMGrPaKeDU18qIoOiSiBvrlSKrcI6nYDqw2HiAcgQdreAf5WPby
-         7gkENARJoxHDW3p5ixdX5TWH+5iHfCnm99RREF9A9Enbh2KSXtd6aJs9d5KHzhNhh1fe
-         Ta61ZnaDVKBS01dXQBeOKHidrUHO5GOX2i5J7TJfrTOQGS6khOlaaxxty+bTD/4JHrFA
-         aLtkyKLA60KjCH5gAEefArF25ucmYbiXpqNK019AeO1NIwxY0T0LZtLEkjegxRFzrzX0
-         p7iGTnm16YhVBC/bflYJo5AdZEpAJCrkeHlCh0+cDo3TQKq2cCVYktY6GkMLkop1Xp36
-         gNlA==
-X-Gm-Message-State: APjAAAX9a5rhzFbbUXf2WToXjUtRdXU/VYfLELeYvawZIigbPvW7aGWM
-        4KvTjqBPXENgEIk/oBmZmBWWvuyTu2ah0Qf21SI=
-X-Google-Smtp-Source: APXvYqzqsjYzIB8Gue+ueZHBIzTQIolaysO+oTYKVzbMpirhD4Z0uVF1wMoInK/S6++H4s8WvAw7alwQzQOX/HVdb64=
-X-Received: by 2002:a63:b902:: with SMTP id z2mr18850693pge.428.1553430682297;
- Sun, 24 Mar 2019 05:31:22 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190323225313.12325-1-pakki001@umn.edu> <CAHp75VdeB=jPaqY_VNDA7YeCiEdyVFJAmOmC4sDvZLBv-7KQ0w@mail.gmail.com>
- <CAHp75VfbPue803w06GdJwU_JYcFKEcShLpyGRMhOg9xi4ZwpAA@mail.gmail.com>
-In-Reply-To: <CAHp75VfbPue803w06GdJwU_JYcFKEcShLpyGRMhOg9xi4ZwpAA@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sun, 24 Mar 2019 14:31:11 +0200
-Message-ID: <CAHp75VeyL-G9i=ABg8r6R7+oBBYRDM82L2-jFEm1uK0-136aMw@mail.gmail.com>
-Subject: Re: [PATCH v2] tty: 8250: fix a missing check for pci_ioremap_bar
-To:     Aditya Pakki <pakki001@umn.edu>
-Cc:     Kangjie Lu <kjlu@umn.edu>,
+        Sun, 24 Mar 2019 08:34:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50658 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726963AbfCXMe7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Mar 2019 08:34:59 -0400
+Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3DF19222D0;
+        Sun, 24 Mar 2019 12:34:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553430898;
+        bh=veioUJlORlYBTD0o78zA7HRfOnNX8Cm8kLcrUfsYtD0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=HJJB0NAHSx6ijrqAY2K4y+cwOeuyB3IX/ASm2ytXDH3qdJ7K3HJ4S9VZya9AQFQBC
+         FRR9H5FGqKfEPwXX9Gx9W1NFmOUNFnYYGsnLn6oSGrHyA+2x7v1s2egm5+5T4HK4aj
+         2FBzM40yfDhcmD16zp8xYK6iMXLiCXhF/wY8RAcU=
+Date:   Sun, 24 Mar 2019 12:34:52 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Cristian Sicilia <sicilia.cristian@gmail.com>
+Cc:     Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, Vinod Koul <vkoul@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/5] staging: iio: adc: Converted bool to bitfield
+ format
+Message-ID: <20190324123452.66b81183@archlinux>
+In-Reply-To: <93b82557f3610f4bf4d09d0556e502b418376420.1553366098.git.sicilia.cristian@gmail.com>
+References: <cover.1553335775.git.sicilia.cristian@gmail.com>
+        <cover.1553366098.git.sicilia.cristian@gmail.com>
+        <93b82557f3610f4bf4d09d0556e502b418376420.1553366098.git.sicilia.cristian@gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 24, 2019 at 2:26 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Sun, Mar 24, 2019 at 2:05 PM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> > On Sun, Mar 24, 2019 at 12:55 AM Aditya Pakki <pakki001@umn.edu> wrote:
-> > >
-> > > pci_ioremap_bar could fail. The fix captures the failure and
-> > > pass an error code upstream. This can avoid potential NULL
-> > > pointer dereferences in the future.
-> > >
-> >
-> > NAK.
-> > This will break non-DMA case.
->
-> > > @@ -172,12 +172,14 @@ static void qrk_serial_setup_dma(struct lpss8250 *lpss, struct uart_port *port)
->
-> Just to clarify, what you need is simple
->
+On Sat, 23 Mar 2019 20:21:39 +0100
+Cristian Sicilia <sicilia.cristian@gmail.com> wrote:
 
-> void __iomem *regs;
+> Changed bool format to bitfield format to save space.
+> 
+> Signed-off-by: Cristian Sicilia <sicilia.cristian@gmail.com>
+> 
+> ---
+> The strange thing is that this struct seems not populated
+> using a DTS binding function.
+Indeed and that should have definitely been a warning sign ;)
+We are looking at traditional platform data here (pre device
+tree) and generally we will want to drop it entirely for old
+drivers that we are looking to move out of staging.
 
-Sorry for leftover.
+I don't mind improving it prior to dropping (as it avoids
+setting bad precedence in the code base in the meantime) but
+one comment inline...
 
-> chip->pdata = ... //move it here for better looking code
-> chip->irq = ...
+> ---
+>  drivers/staging/iio/adc/ad7192.h | 16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/staging/iio/adc/ad7192.h b/drivers/staging/iio/adc/ad7192.h
+> index 7433a43..87891ba 100644
+> --- a/drivers/staging/iio/adc/ad7192.h
+> +++ b/drivers/staging/iio/adc/ad7192.h
+> @@ -35,13 +35,13 @@ struct ad7192_platform_data {
+>  	u16		vref_mv;
+>  	u8		clock_source_sel;
+>  	u32		ext_clk_hz;
+> -	bool		refin2_en;
+> -	bool		rej60_en;
+> -	bool		sinc3_en;
+> -	bool		chop_en;
+> -	bool		buf_en;
+> -	bool		unipolar_en;
+> -	bool		burnout_curr_en;
+> -};
+> +	u8		refin2_en:1;
+> +	u8		rej60_en:1;
+> +	u8		sinc3_en:1;
+> +	u8		chop_en:1;
+> +	u8		buf_en:1;
+> +	u8		unipolar_en:1;
+> +	u8		burnout_curr_en:1;
+> +} __attribute__((__packed__));
+Please don't use packed for anything without a very very good reason.
+it may result in data layouts that are much harder to read from.
+That obviously doesn't matter here as I doubt it's read in a fast path.
 
-> chip->regs = pci_ioremap_bar(...);
+>  
+>  #endif /* IIO_ADC_AD7192_H_ */
 
-And looking into the code it needs pci_iounmap() on exit one.
-
-> if (!chip->regs)
->   return;
->
-> and thank you for pointing to this.
-
--- 
-With Best Regards,
-Andy Shevchenko
