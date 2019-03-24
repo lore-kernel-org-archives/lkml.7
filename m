@@ -2,104 +2,145 @@ Return-Path: <SRS0=2kAr=R3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58142C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 08:54:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9921AC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 08:55:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C8D220685
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 08:54:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 636622147A
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 08:55:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728582AbfCXIyN (ORCPT
+        id S1728592AbfCXIzG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 04:54:13 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:38482 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726317AbfCXIyN (ORCPT
+        Sun, 24 Mar 2019 04:55:06 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:54503 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726317AbfCXIzF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 04:54:13 -0400
-Received: by mail-vs1-f67.google.com with SMTP id s2so2380586vsi.5;
-        Sun, 24 Mar 2019 01:54:12 -0700 (PDT)
+        Sun, 24 Mar 2019 04:55:05 -0400
+Received: by mail-io1-f69.google.com with SMTP id c17so5357032iom.21
+        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2019 01:55:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OlX5NVZHDNgHoVz3vRrZP7Qr5w4ujkQOALBwEQe8WUM=;
-        b=IIJeemqcj1XxJjAPax03JtLTPelnQSckjCIuBqoTCwJJW2G704arhntEqWQfT40fHm
-         7Rp2/5O/5aaFlanNOcTyE2f3nKZ961YVJtHWy153u/j/eMmxZ271VmOw+NnY/MXjQCst
-         FmG7VE5k5oM1Fk21pL5XjjWwwlhpToIzV0lA5iHv5N8OqNSksGXiQ6mYerKUFFdbRSKE
-         euKFnM/IHShQICyvwUR965AKSoVAgNyWD2qUtkj8ywz4AEKlf0+CPgc7brNjNp+SBYtz
-         oR1IEec0bgZlDH9xcqLoUOr/2AAJ2rVsqVVw0Na0+jGNriOWgVgXbglTNu+p1Wlpjl9Y
-         XZHA==
-X-Gm-Message-State: APjAAAXS/jUIDtpgLIVX9kFT7SooOABOlw7hfKvSFdotN6KsE2KbCl6y
-        AxQ7V0S1qJK/aXr3I3vM1gDXCWQgOx+4Ha+KBa4=
-X-Google-Smtp-Source: APXvYqwd4Oa+YSkmZkwiwJ+ImxSEtW21xnJZHbSvqC3n5tZRmbtLkBJAbyEyNDPF1t8xTBYcEjmHh4XqLcpFP9FLLlg=
-X-Received: by 2002:a67:f843:: with SMTP id b3mr11388126vsp.152.1553417652024;
- Sun, 24 Mar 2019 01:54:12 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=M+8R9CNl+dwGuvWY+cqskh4FBZP6bvG/g7lGqjy9mEU=;
+        b=k6cFu74qMhKYBnk6UcEHdDvVYu9oEM30xM4Gc42h4gkt2Un7bd9c0+JvBEfZdMH0Lt
+         3tu45ykaQbVoz3h4xrviBlkHLqROqPfjZAbailuf7WALhXvUDysREe7bkhi4CARS2cd8
+         23PY5mSKiN0YyqAcP9JLJ66zNsMclBJAYIPY8aX5xSWVFm8xG5f8IE4PaqlwQH9UysUI
+         RzZsEC+PGxtr2OnDkTR0XBIpNc6HwG58z4OFA11+C+dwt3gDbkQFAvqg3kndezuB0N9Z
+         PcsVfVMz5+gVl79QeztWoqUH6AszuokNRlwgSLttxTVqqKJKh25kdIlzX69l1FHqu9cy
+         SLpw==
+X-Gm-Message-State: APjAAAXCoa/cMrEAvgQl92Kv0JisIatTXj2kF3CKHPFS8lVckdGwWoFN
+        UXYaXwB0I5FoxwLTpYFuXSkkXCo2427zGxuDHUtG0xiflLTv
+X-Google-Smtp-Source: APXvYqx2UoZB2WNyPbsiN2DK1/Uzuma1xrk+1d216blz426qXHz0jcsrv2VJ1IVyMaOOSxUAcsVgr9Fk/FvNsh7eWT+CLjkra3GP
 MIME-Version: 1.0
-References: <cover.1552566113.git.vilhelm.gray@gmail.com> <20190322191202.GC9224@smile.fi.intel.com>
- <20190324040704.GA8285@icarus>
-In-Reply-To: <20190324040704.GA8285@icarus>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Sun, 24 Mar 2019 09:53:59 +0100
-Message-ID: <CAMuHMdUbXFRZZeE0gT-qhpps4SmHz4N5i_6329cz_vfCPBLtTw@mail.gmail.com>
-Subject: Re: [PATCH v10 00/10] Introduce the for_each_set_clump8 macro
-To:     William Breathitt Gray <vilhelm.gray@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Phil Reid <preid@electromag.com.au>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Received: by 2002:a05:660c:683:: with SMTP id n3mr7449973itk.70.1553417704885;
+ Sun, 24 Mar 2019 01:55:04 -0700 (PDT)
+Date:   Sun, 24 Mar 2019 01:55:04 -0700
+In-Reply-To: <000000000000639f6a0584d11b82@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000007cd9fb0584d33e2f@google.com>
+Subject: Re: WARNING in arch_install_hw_breakpoint
+From:   syzbot <syzbot+370a6b0f11867bf13515@syzkaller.appspotmail.com>
+To:     bp@alien8.de, frederic@kernel.org, gustavo@embeddedor.com,
+        hpa@zytor.com, linux-kernel@vger.kernel.org, mhiramat@kernel.org,
+        mingo@redhat.com, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 24, 2019 at 5:07 AM William Breathitt Gray
-<vilhelm.gray@gmail.com> wrote:
-> On Fri, Mar 22, 2019 at 09:12:02PM +0200, Andy Shevchenko wrote:
-> > On Thu, Mar 14, 2019 at 09:29:32PM +0900, William Breathitt Gray wrote:
-> > > Changes in v10:
-> > >   - Fix off-by-one error in bitmap initialization in the
-> > >     test_for_each_set_clump8 function
-> > >   - Fix typos in clump_exp array definition in test_bitmap.c ("0x28"
-> > >     should have been "0x38")
-> > >   - Utilize for_each_set_clump8 macro in intel_soc_dts_iosf.c
-> >
-> > One more, can you look at gen_74x164_set_multiple() ? It seems a candidate as
-> > well, if I'm not mistaken.
->
-> We can utilize the for_each_set_clump8 macro in the
-> gen_74x164_set_multiple function, but I skipped over it earlier since I
-> noticed it used the BITS_PER_BYTE define rather than a hardcoded 8. If
-> it always loops 8 bits at a time, then we can use the
-> for_each_set_clump8 macro; otherwise we would need the more generic
-> for_each_set_clump macro to handle the non-8-bit looping cases.
->
-> Will BITS_PER_BYTE always be defined as 8 bits?
+syzbot has found a reproducer for the following crash on:
 
-Yes, Linux cannot run on platforms where BITS_PER_BYTE != 8
-(no 9-bit bytes ;)
+HEAD commit:    fd1f297b Merge tag 'drm-fixes-2019-03-22' of git://anongit..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1574f56d200000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=9a31fb246de2a622
+dashboard link: https://syzkaller.appspot.com/bug?extid=370a6b0f11867bf13515
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1157b7cf200000
 
-include/linux/bits.h:#define BITS_PER_BYTE              8
+Bisection is inconclusive: the bug happens on the oldest tested release.
 
-Gr{oetje,eeting}s,
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10ca39b3200000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=12ca39b3200000
+console output: https://syzkaller.appspot.com/x/log.txt?x=14ca39b3200000
 
-                        Geert
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+370a6b0f11867bf13515@syzkaller.appspotmail.com
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+------------[ cut here ]------------
+Can't find any breakpoint slot
+WARNING: CPU: 0 PID: 8058 at arch/x86/kernel/hw_breakpoint.c:121  
+arch_install_hw_breakpoint+0x2d6/0x3a0 arch/x86/kernel/hw_breakpoint.c:121
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 8058 Comm: syz-executor.1 Not tainted 5.1.0-rc1+ #33
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  panic+0x2cb/0x65c kernel/panic.c:214
+  __warn.cold+0x20/0x45 kernel/panic.c:571
+  report_bug+0x263/0x2b0 lib/bug.c:186
+  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
+  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
+  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:973
+RIP: 0010:arch_install_hw_breakpoint+0x2d6/0x3a0  
+arch/x86/kernel/hw_breakpoint.c:121
+Code: c8 48 83 c4 18 5b 41 5c 41 5d 41 5e 41 5f 5d c3 0f 0b 0f 0b 48 c7 c7  
+40 23 65 87 89 45 d4 c6 05 ed 9d 32 08 01 e8 98 43 1b 00 <0f> 0b 8b 45 d4  
+e9 bc fd ff ff 40 88 75 c8 e8 a7 8e 80 00 0f b6 75
+RSP: 0018:ffff8880a512f6d8 EFLAGS: 00010086
+RAX: 0000000000000000 RBX: ffff8880ae81ec98 RCX: 0000000000000000
+RDX: 0000000040000000 RSI: ffffffff815ae266 RDI: ffffed1014a25ecd
+RBP: ffff8880a512f718 R08: ffff8880857382c0 R09: fffffbfff11335f5
+R10: fffffbfff11335f4 R11: ffffffff8899afa3 R12: ffff888085730380
+R13: dffffc0000000000 R14: 0000000000000004 R15: 000000000001eca0
+  hw_breakpoint_add+0xa7/0x130 kernel/events/hw_breakpoint.c:632
+  event_sched_in kernel/events/core.c:2281 [inline]
+  event_sched_in.isra.0+0x373/0xbf0 kernel/events/core.c:2245
+  group_sched_in+0xe4/0x3d0 kernel/events/core.c:2317
+  flexible_sched_in+0x615/0x9c0 kernel/events/core.c:3311
+  visit_groups_merge+0x336/0x5d0 kernel/events/core.c:3259
+  ctx_flexible_sched_in kernel/events/core.c:3345 [inline]
+  ctx_sched_in+0x330/0x670 kernel/events/core.c:3390
+  perf_event_sched_in+0x6e/0xa0 kernel/events/core.c:2426
+  perf_event_context_sched_in kernel/events/core.c:3430 [inline]
+  __perf_event_task_sched_in+0x609/0x820 kernel/events/core.c:3469
+  perf_event_task_sched_in include/linux/perf_event.h:1115 [inline]
+  finish_task_switch+0x2c2/0x780 kernel/sched/core.c:2725
+  context_switch kernel/sched/core.c:2880 [inline]
+  __schedule+0x81f/0x1cc0 kernel/sched/core.c:3518
+  schedule+0x92/0x180 kernel/sched/core.c:3562
+  freezable_schedule include/linux/freezer.h:172 [inline]
+  ptrace_stop+0x3fe/0x950 kernel/signal.c:2111
+  do_jobctl_trap kernel/signal.c:2330 [inline]
+  get_signal+0x1502/0x1d50 kernel/signal.c:2456
+  do_signal+0x87/0x1940 arch/x86/kernel/signal.c:816
+  exit_to_usermode_loop+0x244/0x2c0 arch/x86/entry/common.c:162
+  prepare_exit_to_usermode arch/x86/entry/common.c:197 [inline]
+  syscall_return_slowpath arch/x86/entry/common.c:268 [inline]
+  do_syscall_64+0x52d/0x610 arch/x86/entry/common.c:293
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x458209
+Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f6b1a2a8c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000129
+RAX: 0000000000000000 RBX: 0000000000000004 RCX: 0000000000458209
+RDX: 0000000000000016 RSI: 000000000000002a RDI: 000000000000002a
+RBP: 000000000073bf00 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000020000100 R11: 0000000000000246 R12: 00007f6b1a2a96d4
+R13: 00000000004c4f84 R14: 00000000004d8bd8 R15: 00000000ffffffff
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+======================================================
+
