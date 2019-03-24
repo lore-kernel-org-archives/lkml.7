@@ -2,79 +2,139 @@ Return-Path: <SRS0=2kAr=R3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCC71C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 02:16:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4372FC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 02:23:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E80020880
-	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 02:16:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A484A20880
+	for <linux-kernel@archiver.kernel.org>; Sun, 24 Mar 2019 02:23:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="onRPPSSH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727992AbfCXCQC (ORCPT
+        id S1728012AbfCXCXH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 23 Mar 2019 22:16:02 -0400
-Received: from mail-it1-f198.google.com ([209.85.166.198]:41948 "EHLO
-        mail-it1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727713AbfCXCQC (ORCPT
+        Sat, 23 Mar 2019 22:23:07 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:47226 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727746AbfCXCXG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 23 Mar 2019 22:16:02 -0400
-Received: by mail-it1-f198.google.com with SMTP id q184so5640027itd.6
-        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2019 19:16:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=NI+3zaFLSRZs9sBqyW51t7XrhlVl051kFI8gGqFgfC4=;
-        b=NvZftw6wbHXiAM+TPG0abtLLUC6aUGdSpos7jeQ0XzWVW63pC2zHWw7KEtlllS+wB/
-         DTI+qfJCRwqU+7NaJl6rsyoEOssF9TPpHKYrYlurYaqr5Cx5GWuEGAc2CLekcCQOQpnT
-         Mt+2k+456CVLNUw8R5Nf3thAFN1th3k/7L+aM8yZyN4BRHPr/tZDgM9yiTX1y4ezykNK
-         GOw4zJAsEM3TkZGyNS5GbDHYEk4k7yAWstak2Fn7qdr8/jHQGUeT74E2aXR6mE2+BDgW
-         HgF07dRNDmchEdvipr5LZe1RcK1OxvqiWjeQWUtAOxTvDR7Fv6AiAsDczIg1dd3vc2OE
-         /K8g==
-X-Gm-Message-State: APjAAAXWiD8wf+Ho5DLCnJAdwOV1mGTe/vvIPbUGmP3S/s7GaXj2R5sl
-        2LmYt14MgSR48bL5s2DAstm6Xu2rjjBT5Pkuwg/7e9TDNehg
-X-Google-Smtp-Source: APXvYqxxXK2a/2UR63qUugijt4ITVELrcK3BEwxf6njq23CTbYEHfjuipl4JeHglzvWSwnv9m0xyJA94niQ5nsBxxZZzhFOy05bZ
+        Sat, 23 Mar 2019 22:23:06 -0400
+Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id x2O2Mlk4009950
+        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2019 11:22:48 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x2O2Mlk4009950
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1553394168;
+        bh=0BKPm+Ru2fB4N9zmFWmWzKSFfEVtQHafBqKAxQzeOVQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=onRPPSSHX9ZE/KzpxyLC9fAXA85Uk+NGHHtvsH/O589i8cX6IjcrC11IeCSqYROgK
+         HFPXMJ5X9+ebrZrGzrlEpM3PAvZ/iaAZcteWi3y50j86MNExVGGnzEz8NAtf3Pn9gH
+         1mmB5R6sG1/LBurOOMKr6wx3SZ1IJNrMuRinAp1yC4vvOtinOPLC+fTSm9QHn7nYfa
+         GbAYLOIdRWwT9ly9elRVyBvLvE0IE2wZoaYEGHDv/2NgwD30TieF08zKONhdD1rt7S
+         rHu91yl4Ndiofn5FRmfthTevflWfM+7ozcZOkfIOwTrkEpwy39qbU0Hw4aNR9a4MAs
+         7X4+T0PaZf9VA==
+X-Nifty-SrcIP: [209.85.217.47]
+Received: by mail-vs1-f47.google.com with SMTP id n4so3502622vsm.3
+        for <linux-kernel@vger.kernel.org>; Sat, 23 Mar 2019 19:22:47 -0700 (PDT)
+X-Gm-Message-State: APjAAAW9gD7Xb3yu0fA/CK4+wdBe/e7BzyFEmKW1x4JvSs0RmQWb2Bc7
+        qzMjf6KqedwnmYO0oEuxC/4RYQ6Ll9r4o1FUbJo=
+X-Google-Smtp-Source: APXvYqwyQQ7qpdwGNa6t9b28zF2o74k7PqH4tBAxOeuTnsfvVwD8Uuj+XqnxeG2QOsHtfkLiaswd9NKLSjWTUPrfsvk=
+X-Received: by 2002:a67:f105:: with SMTP id n5mr11059166vsk.181.1553394166974;
+ Sat, 23 Mar 2019 19:22:46 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a5d:899a:: with SMTP id m26mr13114627iol.268.1553393761219;
- Sat, 23 Mar 2019 19:16:01 -0700 (PDT)
-Date:   Sat, 23 Mar 2019 19:16:01 -0700
-In-Reply-To: <000000000000f302fc057ea3b499@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000557b4c0584cdabed@google.com>
-Subject: Re: WARNING in bpf_prog_kallsyms_add
-From:   syzbot <syzbot+987e48d84abddbe2506d@syzkaller.appspotmail.com>
-To:     ast@kernel.org, daniel@iogearbox.net, davem@davemloft.net,
-        idosch@mellanox.com, jiri@mellanox.com, kuznet@ms2.inr.ac.ru,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, yoshfuji@linux-ipv6.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+References: <20190203084840.6113-1-vladimir.kondratiev@intel.com> <20190322155212.133029-1-andre.przywara@arm.com>
+In-Reply-To: <20190322155212.133029-1-andre.przywara@arm.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Sun, 24 Mar 2019 11:22:11 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAT3Yf1_3L77VNjtcr5SP2eM0x19hid0J45PcHqf8Fwcwg@mail.gmail.com>
+Message-ID: <CAK7LNAT3Yf1_3L77VNjtcr5SP2eM0x19hid0J45PcHqf8Fwcwg@mail.gmail.com>
+Subject: Re: [PATCH v2] kbuild: gitignore output directory
+To:     Andre Przywara <andre.przywara@arm.com>
+Cc:     Vladimir Kondratiev <vladimir.kondratiev@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+On Sat, Mar 23, 2019 at 12:53 AM Andre Przywara <andre.przywara@arm.com> wrote:
+>
+> Hi,
+>
+> > When compiling into output directory using O=, many files
+> > created under KBUILD_OUTPUT that git considers
+> > as new ones; git clients, ex. "git gui" lists it, and it clutters
+> > file list making it difficult to see what was really changed
+> >
+> > Generate .gitignore in output directory that ignores all
+> > its content
+>
+> just found this when testing -rc1.
+> Unfortunately this breaks my setup, because I keep a totally separate
+> git repository in my build directories to track (various versions of)
+> .config. So .gitignore there is carefully crafted to ignore most build
+> artefacts, but not .config, for instance.
+>
+> I am not sure how git would interact with the build directory for you?
+> Do you build into a subdirectory of the kernel tree?
+>
+> I was hoping that we would not overwrite unrelated files in directories
+> outside of the kernel tree. In case this is about a subdirectory of the
+> source tree, can we somehow check for this case?
 
-commit 7607dd35fc34893214284cca740d015154d20452
-Author: Ido Schimmel <idosch@mellanox.com>
-Date:   Mon Jul 17 12:15:30 2017 +0000
 
-     mlxsw: spectrum: Trap IPv4 packets with Router Alert option
+I am not sure if it is worthwhile
+adjusting the upstream kernel to
+the workflow of an individual like this.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14e0ac07200000
-start commit:   645ff1e8 Merge branch 'for-linus' of git://git.kernel.org/..
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=16e0ac07200000
-console output: https://syzkaller.appspot.com/x/log.txt?x=12e0ac07200000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=20271e14bc1c87f0
-dashboard link: https://syzkaller.appspot.com/bug?extid=987e48d84abddbe2506d
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13c69d20c00000
+If it is, we could like this:
 
-Reported-by: syzbot+987e48d84abddbe2506d@syzkaller.appspotmail.com
-Fixes: 7607dd35fc34 ("mlxsw: spectrum: Trap IPv4 packets with Router Alert  
-option")
+outputmakefile:
+ifneq ($(KBUILD_SRC),)
+        $(Q)ln -fsn $(srctree) source
+        $(Q)$(CONFIG_SHELL) $(srctree)/scripts/mkmakefile $(srctree)
+        $(Q)test -e .gitignore || \
+        { echo "# this is build directory, ignore it"; echo "*"; } > .gitignore
+endif
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+
+> Cheers,
+> Andre.
+>
+> >
+> > Signed-off-by: Vladimir Kondratiev <vladimir.kondratiev@linux.intel.com>
+> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > ---
+> >  Makefile | 3 +++
+> >  1 file changed, 3 insertions(+)
+> >
+> > diff --git a/Makefile b/Makefile
+> > index 97ee0be24d52..d487fca342c4 100644
+> > --- a/Makefile
+> > +++ b/Makefile
+> > @@ -483,10 +483,13 @@ PHONY += outputmakefile
+> >  # outputmakefile generates a Makefile in the output directory, if using a
+> >  # separate output directory. This allows convenient use of make in the
+> >  # output directory.
+> > +# At the same time when output Makefile generated, generate .gitignore to
+> > +# ignore whole output directory
+> >  outputmakefile:
+> >  ifneq ($(KBUILD_SRC),)
+> >       $(Q)ln -fsn $(srctree) source
+> >       $(Q)$(CONFIG_SHELL) $(srctree)/scripts/mkmakefile $(srctree)
+> > +     $(Q){ echo "# this is build directory, ignore it"; echo "*"; } > .gitignore
+> >  endif
+> >
+> >  ifneq ($(shell $(CC) --version 2>&1 | head -n 1 | grep clang),)
+> > --
+> > 2.17.1
+>
+
+
+-- 
+Best Regards
+Masahiro Yamada
