@@ -2,356 +2,194 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B968EC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:31:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC5B7C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:32:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74B4820848
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:31:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82AD620879
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:32:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="p/psuEGd"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="G5g/mI+b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730289AbfCYSbj (ORCPT
+        id S1730048AbfCYScW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 14:31:39 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:37373 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726217AbfCYSbi (ORCPT
+        Mon, 25 Mar 2019 14:32:22 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:35354 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729572AbfCYScV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 14:31:38 -0400
-Received: by mail-oi1-f194.google.com with SMTP id v84so7820174oif.4
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 11:31:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=De4EaLx9v93H4rVCB9OpKmCuXJ71zefVFfl8bToAja8=;
-        b=p/psuEGd+bbH84nCMhcR2daLTOwWMpTx48QQFy0ea9FgbMAPI8OV9l3cPelA0UnXTw
-         yNdukP3Njy2aa+tv22/A4TKJfJfS3wqJuVs0EI5WasO34XocggcaS/vpz4SV55Xh38/o
-         gWbu0WC6cb2vsKL8iXvgpr7O3J7RRcPfNuTHKV3qnsT9I413mAFzSA6GEoRzOwJECinC
-         1tsKI5tHfEiruKn1ztiO/tU65nym5IS2Vt9v3NO/GdbJor5opMqtdjM+mM0uj6BWLL9r
-         4vJwVIQJx13nSo3vkn8UNI4n5KcEZ+PhXibBCai21qWIn0djEfCrkuCFJLu4vYr8DDEG
-         Mw5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=De4EaLx9v93H4rVCB9OpKmCuXJ71zefVFfl8bToAja8=;
-        b=kb6GWR38DzDkIMqN+0vl+udJ5tgXzSbJzvBzcKAyn+fyV9V/jFrOyvpgzxcLRB2ref
-         Bl3HNhznxIK3I0eQ9dJUICT/FpLE9hkATgGVlapymYLF5q6RDF+qJ74EC7uZ9vCbRk0m
-         b03KSiZji5CutdRTt/LgQ12LiC5UZ/hXg535d/ker171XstjOOlKP25UfD/8jf9WMEvl
-         36ap1cX1xR5KpkIebF4P52AJtAQpfCLHvbQnOcLQCLDQ6tLmC/7P2REF+KFTYeSQA2PC
-         bmeBrSaHAWDNnp1DuNZmJOUtzQti6UejyJsUlLQrIEVXa84cT5PaP1ClRdqjQD++C7Xv
-         Fweg==
-X-Gm-Message-State: APjAAAVmyazOf2B7tSBILocMMGAyyYEfHG5zD7YAzFFiOhWb1V2iJkfw
-        9VsAn+3gxC0EJgcvqNk6ih86HJ6rmb5nz9PA6ZcKpA==
-X-Google-Smtp-Source: APXvYqweyMJzn4BD11eQrMQCO8LR/J0VVuDuZzmXPjzzKYYY6SYp4FkhWRAhdA0GV/Xtwo99XpOYoKmoe13aHDuvk5o=
-X-Received: by 2002:aca:6209:: with SMTP id w9mr13107288oib.47.1553538697302;
- Mon, 25 Mar 2019 11:31:37 -0700 (PDT)
+        Mon, 25 Mar 2019 14:32:21 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2PIOP1p084410;
+        Mon, 25 Mar 2019 18:31:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=suxbTCmF+HEgiXqzH4ga0Yl4/3by9ypkLgqXUuCJH8E=;
+ b=G5g/mI+bQehMMtA8yH7hz5QAADZK+HWSKfeyXjn/ujq1sBNIoZCjhrp7aywSWTJZfJgB
+ Xq1aI1//ppYCHrdsMqxAVcm/dI5vclrMVpJpibJq9rtMOwaHmE65R0JdqBcX206Trq/N
+ M4qKrJ/WEz+pLzu1NNfX+EzvZ4eaJStQumodwfAftSnhs2fwRy7rSJoWdvqPWOoD7w0d
+ woQBY0pCnf61rsIOUA4UxTqNi9m9q6NN4Rb49m4WvEzj77tW3yn1j4cAaYawBTutsIUQ
+ bRV3SbzXKn5NdMVGaN+4hgemHnxG0UT4fcZjzSAH730My2ikLiI/wZeAf4xFhf1LiVEJ Bg== 
+Received: from aserv0021.oracle.com (aserv0021.oracle.com [141.146.126.233])
+        by aserp2130.oracle.com with ESMTP id 2re6g0num8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 25 Mar 2019 18:31:53 +0000
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x2PIVrr0030136
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 25 Mar 2019 18:31:53 GMT
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x2PIVqKh024393;
+        Mon, 25 Mar 2019 18:31:52 GMT
+Received: from dhcp-burlington7-2nd-B-east-10-152-55-162.usdhcp.oraclecorp.com (/10.152.32.65)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 25 Mar 2019 11:31:52 -0700
+Subject: Re: [PATCH] x86/xen: Add "xen_timer_slop" command line option
+To:     Ryan Thibodeaux <thibodux@gmail.com>
+Cc:     luca abeni <luca.abeni@santannapisa.it>,
+        Dario Faggioli <dfaggioli@suse.com>,
+        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
+        oleksandr_andrushchenko@epam.com, tglx@linutronix.de,
+        jgross@suse.com, ryan.thibodeaux@starlab.io
+References: <1553279397-130201-1-git-send-email-ryan.thibodeaux@starlab.io>
+ <abf65a68-9463-0f0e-1f51-6eefd3cacc88@oracle.com>
+ <52bfeae7c256faec444b69efe58d363ad60c3fc5.camel@suse.com>
+ <20190323114151.5cebf31b@sweethome> <20190325130530.56603806@luca64>
+ <69e40698-f7ae-11c3-e4b7-dda4f1fadcf6@oracle.com>
+ <20190325141138.GA44413@centos-dev.localdomain>
+From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=boris.ostrovsky@oracle.com; prefer-encrypt=mutual; keydata=
+ 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
+ Jg6OxFYd01z+a+oL
+Message-ID: <48d80239-08ca-6bd0-84b0-95d0d0ab689c@oracle.com>
+Date:   Mon, 25 Mar 2019 14:31:36 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-References: <CAFBinCBOX8HyY-UocsVQvsnTr4XWXyE9oU+f2xhO1=JU0i_9ow@mail.gmail.com>
- <20190321214401.GC19508@bombadil.infradead.org> <CAFBinCA6oK5UhDAt9kva5qRisxr2gxMF26AMK8vC4b1DN5RXrw@mail.gmail.com>
- <5cad2529-8776-687e-58d0-4fb9e2ec59b1@amlogic.com>
-In-Reply-To: <5cad2529-8776-687e-58d0-4fb9e2ec59b1@amlogic.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Mon, 25 Mar 2019 19:31:26 +0100
-Message-ID: <CAFBinCA=0XSSVmzfTgb4eSiVFr=XRHqLOVFGyK0++XRty6VjnQ@mail.gmail.com>
-Subject: Re: 32-bit Amlogic (ARM) SoC: kernel BUG in kfree()
-To:     Liang Yang <liang.yang@amlogic.com>
-Cc:     Matthew Wilcox <willy@infradead.org>, mhocko@suse.com,
-        linux@armlinux.org.uk, linux-kernel@vger.kernel.org,
-        rppt@linux.ibm.com, linux-mm@kvack.org,
-        linux-mtd@lists.infradead.org, linux-amlogic@lists.infradead.org,
-        akpm@linux-foundation.org, linux-arm-kernel@lists.infradead.org
-Content-Type: multipart/mixed; boundary="0000000000003310550584ef6a0f"
+In-Reply-To: <20190325141138.GA44413@centos-dev.localdomain>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9206 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=877 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903250132
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---0000000000003310550584ef6a0f
-Content-Type: text/plain; charset="UTF-8"
-
-Hi Liang,
-
-On Mon, Mar 25, 2019 at 11:03 AM Liang Yang <liang.yang@amlogic.com> wrote:
+On 3/25/19 10:11 AM, Ryan Thibodeaux wrote:
+> On Mon, Mar 25, 2019 at 09:43:20AM -0400, Boris Ostrovsky wrote:
+>> On 3/25/19 8:05 AM, luca abeni wrote:
+>>> Hi all,
+>>>
+>>> On Sat, 23 Mar 2019 11:41:51 +0100
+>>> luca abeni <luca.abeni@santannapisa.it> wrote:
+>>> [...]
+>>>>>> Is there any data that shows effects of using this new parameter?
+>>>>>>     
+>>>>> Yes, I've done some research and experiments on this. I did it
+>>>>> together with a friend, which I'm Cc-ing, as I'm not sure we're
+>>>>> ready/capable to share the results, yet (Luca?).  
+>>>> I think we can easily share the experimental data (cyclictest output
+>>>> and plots).
+>>>>
+>>>> Moreover, we can share the scripts and tools for running the
+>>>> experiments (so, everyone can easily reproduce the numbers by simply
+>>>> typing "make" and waiting for some time :)
+>>>>
+>>>>
+>>>> I'll try to package the results and the scripts/tools this evening,
+>>>> and I'll send them.
+>>> Sorry for the delay. I put some quick results here:
+>>> http://retis.santannapisa.it/luca/XenTimers/
+>>> (there also is a link to the scripts to be used for reproducing the
+>>> results). The latencies have been measured by running cyclictest in the
+>>> guest (see the scripts for details).
+>>>
+>>> The picture shows the latencies measured with an unpatched guest kernel
+>>> and with a guest kernel having TIMER_SLOP set to 1000 (arbitrary small
+>>> value :).
+>>> All the experiments have been performed booting the hypervisor with a
+>>> small timer_slop (the hypervisor's one) value. So, they show that
+>>> decreasing the hypervisor's timer_slop is not enough to measure low
+>>> latencies with cyclictest.
+>>
+>>
+>> I have a couple of questions:
+>> * Does it make sense to make this a tunable for other clockevent devices
+>> as well?
+> I gather that would be on a case-by-case basis for very specific 
+> ones.
 >
-> Hi Martin,
+> For many timers in the kernel, the minimums are determined by the
+> actual hardware  backing the timer, and the minimum can be
+> adjusted by the clockevent code. This case is special since it 
+> is entirely a software-based implementation in the kernel, where 
+> the actual timer implementation is in the Xen hypervisor.
 >
-> On 2019/3/23 5:07, Martin Blumenstingl wrote:
-> > Hi Matthew,
-> >
-> > On Thu, Mar 21, 2019 at 10:44 PM Matthew Wilcox <willy@infradead.org> wrote:
-> >>
-> >> On Thu, Mar 21, 2019 at 09:17:34PM +0100, Martin Blumenstingl wrote:
-> >>> Hello,
-> >>>
-> >>> I am experiencing the following crash:
-> >>>    ------------[ cut here ]------------
-> >>>    kernel BUG at mm/slub.c:3950!
-> >>
-> >>          if (unlikely(!PageSlab(page))) {
-> >>                  BUG_ON(!PageCompound(page));
-> >>
-> >> You called kfree() on the address of a page which wasn't allocated by slab.
-> >>
-> >>> I have traced this crash to the kfree() in meson_nfc_read_buf().
-> >>> my observation is as follows:
-> >>> - meson_nfc_read_buf() is called 7 times without any crash, the
-> >>> kzalloc() call returns 0xe9e6c600 (virtual address) / 0x29e6c600
-> >>> (physical address)
-> >>> - the eight time meson_nfc_read_buf() is called kzalloc() call returns
-> >>> 0xee39a38b (virtual address) / 0x2e39a38b (physical address) and the
-> >>> final kfree() crashes
-> >>> - changing the size in the kzalloc() call from PER_INFO_BYTE (= 8) to
-> >>> PAGE_SIZE works around that crash
-> >>
-> >> I suspect you're doing something which corrupts memory.  Overrunning
-> >> the end of your allocation or something similar.  Have you tried KASAN
-> >> or even the various slab debugging (eg redzones)?
-> > KASAN is not available on 32-bit ARM. there was some progress last
-> > year [0] but it didn't make it into mainline. I tried to make the
-> > patches apply again and got it to compile (and my kernel is still
-> > booting) but I have no idea if it's still working. for anyone
-> > interested, my patches are here: [1] (I consider this a HACK because I
-> > don't know anything about the code which is being touched in the
-> > patches, I only made it compile)
-> >
-> > SLAB debugging (redzones) were a great hint, thank you very much for
-> > that Matthew! I enabled:
-> >    CONFIG_SLUB_DEBUG=y
-> >    CONFIG_SLUB_DEBUG_ON=y
-> > and with that I now get "BUG kmalloc-64 (Not tainted): Redzone
-> > overwritten" (a larger kernel log extract is attached).
-> >
-> > I'm starting to wonder if the NAND controller (hardware) writes more
-> > than 8 bytes.
-> > some context: the "info" buffer allocated in meson_nfc_read_buf is
-> > then passed to the NAND controller IP (after using dma_map_single).
-> >
-> > Liang, how does the NAND controller know that it only has to send
-> > PER_INFO_BYTE (= 8) bytes when called from meson_nfc_read_buf? all
-> > other callers of meson_nfc_dma_buffer_setup (which passes the info
-> > buffer to the hardware) are using (nand->ecc.steps * PER_INFO_BYTE)
-> > bytes?
-> >
-> NFC_CMD_N2M and CMDRWGEN are different commands. CMDRWGEN needs to set
-> the ecc page size (1KB or 512B) and Pages(2, 4, 8, ...), so
-> PER_INFO_BYTE(= 8) bytes for each ecc page.
-> I have never used NFC_CMD_N2M to transfer data before, because it is
-> very low efficient. And I do a experiment with the attachment and find
-> on overwritten on my meson axg platform.
->
-> Martin, I would appreciate it very much if you would try the attachment
-> on your meson m8b platform.
-thank you for your debug patch! on my board 2 * PER_INFO_BYTE is not enough.
-I took the idea from your patch and adapted it so I could print a
-buffer with 256 bytes (which seems to be "big enough" for my board).
-see the attached, modified patch
-
-in the output I see that sometimes the first 32 bytes are not touched
-by the controller, but everything beyond 32 bytes is modified in the
-info buffer.
-
-I also tried to increase the buffer size to 512, but that didn't make
-a difference (I never saw any info buffer modification beyond 256
-bytes).
-
-also I just noticed that I didn't give you much details on my NAND chip yet.
-from Amlogic vendor u-boot on Meson8m2 (all my Meson8b boards have
-eMMC flash, but I believe the NAND controller on Meson8 to GXBB is
-identical):
-  m8m2_n200_v1#amlnf chipinfo
-  flash  info
-  name:B revision 20nm NAND 8GiB H27UCG8T2B, id:ad de 94 eb 74 44  0  0
-  pagesize:0x4000, blocksize:0x400000, oobsize:0x500, chipsize:0x2000,
-    option:0x8, T_REA:16, T_RHOH:15
-  hw controller info
-  chip_num:1, onfi_mode:0, page_shift:14, block_shift:22, option:0xc2
-  ecc_unit:1024, ecc_bytes:70, ecc_steps:16, ecc_max:40
-  bch_mode:5, user_mode:2, oobavail:32, oobtail:64384
+>> * This patch adjusts min value. Could max value (ever) need a similar
+>> adjustment?
+> I cannot think of such a case where that would be helpful, but I
+> cannot rule that out or speak as an authority.
 
 
-Regards
+I am asking mostly because you are introducing new interface and I don't
+want it to change in the future. I suppose if later we decide to add
+control for the max value we could just expand your current proposal to
+xen_timer_slop=[min],[max] and keep it to be back-compatible.
 
-Martin
+For the patch:
 
---0000000000003310550584ef6a0f
-Content-Type: text/plain; charset="US-ASCII"; name="debug-256-buffer-output.txt"
-Content-Disposition: attachment; filename="debug-256-buffer-output.txt"
-Content-Transfer-Encoding: base64
-Content-ID: <f_jtoomclb1>
-X-Attachment-Id: f_jtoomclb1
+Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
 
-Li4uClsgICAgMi43MTY4ODVdIDAwMDAwMDAwOiAwMDAwIDgwMDUgMjgwMCAyOTQ1IGZkZmQgZmRm
-ZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkClsgICAg
-Mi43MjA0NjRdIDAwMDAwMDIwOiBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZk
-ZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkClsgICAgMi43Mjk2ODld
-IDAwMDAwMDQwOiBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBm
-ZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkClsgICAgMi43Mzg4NDddIDAwMDAwMDYw
-OiBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQg
-ZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkClsgICAgMi43NDgwNjVdIDAwMDAwMDgwOiBmZGZkIGZk
-ZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZk
-IGZkZmQgZmRmZCBmZGZkClsgICAgMi43NTcyMjhdIDAwMDAwMGEwOiBmZGZkIGZkZmQgZmRmZCBm
-ZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRm
-ZCBmZGZkClsgICAgMi43NjY0MDRdIDAwMDAwMGMwOiBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQg
-ZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkClsg
-ICAgMi43NzU2MDJdIDAwMDAwMGUwOiBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZk
-IGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkClsgICAgMi43ODQ3
-ODBdIApbICAgIDIuNzg2MzA2XSAwMDAwMDAwMDogMDAwMCA4MDFiIDI4MDAgMjk0NSBmZGZkIGZk
-ZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZApbICAg
-IDIuNzk1NDU1XSAwMDAwMDAyMDogZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBm
-ZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZApbICAgIDIuODA0NjM4
-XSAwMDAwMDA0MDogZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQg
-ZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZApbICAgIDIuODEzODI4XSAwMDAwMDA2
-MDogZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZk
-IGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZApbICAgIDIuODIzMDE0XSAwMDAwMDA4MDogZmRmZCBm
-ZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRm
-ZCBmZGZkIGZkZmQgZmRmZApbICAgIDIuODMyMjAzXSAwMDAwMDBhMDogZmRmZCBmZGZkIGZkZmQg
-ZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZk
-ZmQgZmRmZApbICAgIDIuODQxMzkwXSAwMDAwMDBjMDogZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZk
-IGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZApb
-ICAgIDIuODUwNTgwXSAwMDAwMDBlMDogZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRm
-ZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZApbICAgIDIuODU5
-NzU5XSAKWyAgICAyLjg2MTMwM10gMDAwMDAwMDA6IDAwMDAgODAxMSAzZDAwIDI5NWUgZmRmZCBm
-ZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQKWyAg
-ICAyLjg3MDQzNV0gMDAwMDAwMjA6IGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQg
-ZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQKWyAgICAyLjg3OTYx
-OF0gMDAwMDAwNDA6IGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZk
-IGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQKWyAgICAyLjg4ODgxMl0gMDAwMDAw
-NjA6IGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRm
-ZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQKWyAgICAyLjg5Nzk5Nl0gMDAwMDAwODA6IGZkZmQg
-ZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZk
-ZmQgZmRmZCBmZGZkIGZkZmQKWyAgICAyLjkwNzE4NF0gMDAwMDAwYTA6IGZkZmQgZmRmZCBmZGZk
-IGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBm
-ZGZkIGZkZmQKWyAgICAyLjkxNjM2NF0gMDAwMDAwYzA6IGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRm
-ZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQK
-WyAgICAyLjkyNTU1OV0gMDAwMDAwZTA6IGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZk
-ZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQKWyAgICAyLjkz
-NDc0MV0gClsgICAgMi45MzYzNjddIDAwMDAwMDAwOiBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQg
-ZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkClsg
-ICAgMi45NDU0MTNdIDAwMDAwMDIwOiA2YjZiIDZiNmIgNmI2YiA2YjZiIDZiNmIgNmI2YiA2YjZi
-IDZiNmIgNmI2YiA2YjZiIDZiNmIgNmI2YiA2YjZiIDZiNmIgNmI2YiA2YjZiClsgICAgMi45NTQ2
-MDBdIDAwMDAwMDQwOiA2YjZiIDZiNmIgNmI2YiA2YjZiIDZiNmIgNmI2YiA2YjZiIDZiNmIgNmI2
-YiA2YjZiIDZiNmIgNmI2YiA2YjZiIDZiNmIgNmI2YiA2YjZiClsgICAgMi45NjM4MDNdIDAwMDAw
-MDYwOiA2YjZiIDZiNmIgNmI2YiA2YjZiIDZiNmIgNmI2YiA2YjZiIDZiNmIgNmI2YiA2YjZiIDZi
-NmIgNmI2YiA2YjZiIDZiNmIgNmI2YiA2YjZiClsgICAgMi45NzI5NzhdIDAwMDAwMDgwOiA2YjZi
-IDZiNmIgNmI2YiA2YjZiIDZiNmIgNmI2YiA2YjZiIDZiNmIgNmI2YiA2YjZiIDZiNmIgNmI2YiA2
-YjZiIDZiNmIgNmI2YiA2YjZiClsgICAgMi45ODIxNjNdIDAwMDAwMGEwOiA2YjZiIDZiNmIgNmI2
-YiA2YjZiIDZiNmIgNmI2YiA2YjZiIDZiNmIgNmI2YiA2YjZiIDZiNmIgNmI2YiA2YjZiIDZiNmIg
-NmI2YiA2YjZiClsgICAgMi45OTEzNTJdIDAwMDAwMGMwOiA2YjZiIDZiNmIgNmI2YiA2YjZiIDZi
-NmIgNmI2YiA2YjZiIDZiNmIgNmI2YiA2YjZiIDZiNmIgNmI2YiA2YjZiIDZiNmIgNmI2YiA2YjZi
-ClsgICAgMy4wMDA1MzldIDAwMDAwMGUwOiA2YjZiIDZiNmIgNmI2YiA2YjZiIDZiNmIgNmI2YiA2
-YjZiIDZiNmIgNmI2YiA2YjZiIDZiNmIgNmI2YiA2YjZiIDZiNmIgNmI2YiBhNTZiClsgICAgMy4w
-MDk3MjJdIApbICAgIDMuMDExMjMzXSAwMDAwMDAwMDogZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZk
-IGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZApb
-ICAgIDMuMDIwMzkwXSAwMDAwMDAyMDogNmI2YiA2YjZiIDZiNmIgNmI2YiA2YjZiIDZiNmIgNmI2
-YiA2YjZiIDZiNmIgNmI2YiA2YjZiIDZiNmIgNmI2YiA2YjZiIDZiNmIgNmI2YgpbICAgIDMuMDI5
-NTgwXSAwMDAwMDA0MDogNmI2YiA2YjZiIDZiNmIgNmI2YiA2YjZiIDZiNmIgNmI2YiA2YjZiIDZi
-NmIgNmI2YiA2YjZiIDZiNmIgNmI2YiA2YjZiIDZiNmIgNmI2YgpbICAgIDMuMDM4NzY2XSAwMDAw
-MDA2MDogNmI2YiA2YjZiIDZiNmIgNmI2YiA2YjZiIDZiNmIgNmI2YiA2YjZiIDZiNmIgNmI2YiA2
-YjZiIDZiNmIgNmI2YiA2YjZiIDZiNmIgNmI2YgpbICAgIDMuMDQ3OTcxXSAwMDAwMDA4MDogNmI2
-YiA2YjZiIDZiNmIgNmI2YiA2YjZiIDZiNmIgNmI2YiA2YjZiIDZiNmIgNmI2YiA2YjZiIDZiNmIg
-NmI2YiA2YjZiIDZiNmIgNmI2YgpbICAgIDMuMDU3MTQ1XSAwMDAwMDBhMDogNmI2YiA2YjZiIDZi
-NmIgNmI2YiA2YjZiIDZiNmIgNmI2YiA2YjZiIDZiNmIgNmI2YiA2YjZiIDZiNmIgNmI2YiA2YjZi
-IDZiNmIgNmI2YgpbICAgIDMuMDY2MzI1XSAwMDAwMDBjMDogNmI2YiA2YjZiIDZiNmIgNmI2YiA2
-YjZiIDZiNmIgNmI2YiA2YjZiIDZiNmIgNmI2YiA2YjZiIDZiNmIgNmI2YiA2YjZiIDZiNmIgNmI2
-YgpbICAgIDMuMDc1NTIxXSAwMDAwMDBlMDogNmI2YiA2YjZiIDZiNmIgNmI2YiA2YjZiIDZiNmIg
-NmI2YiA2YjZiIDZiNmIgNmI2YiA2YjZiIDZiNmIgNmI2YiA2YjZiIDZiNmIgYTU2YgpbICAgIDMu
-MDg0NzAwXSAKWyAgICAzLjA4NjIxM10gMDAwMDAwMDA6IGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRm
-ZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQK
-WyAgICAzLjA5NTM3M10gMDAwMDAwMjA6IDZiNmIgNmI2YiA2YjZiIDZiNmIgNmI2YiA2YjZiIDZi
-NmIgNmI2YiA2YjZiIDZiNmIgNmI2YiA2YjZiIDZiNmIgNmI2YiA2YjZiIDZiNmIKWyAgICAzLjEw
-NDU1OF0gMDAwMDAwNDA6IDZiNmIgNmI2YiA2YjZiIDZiNmIgNmI2YiA2YjZiIDZiNmIgNmI2YiA2
-YjZiIDZiNmIgNmI2YiA2YjZiIDZiNmIgNmI2YiA2YjZiIDZiNmIKWyAgICAzLjExMzc0OF0gMDAw
-MDAwNjA6IDZiNmIgNmI2YiA2YjZiIDZiNmIgNmI2YiA2YjZiIDZiNmIgNmI2YiA2YjZiIDZiNmIg
-NmI2YiA2YjZiIDZiNmIgNmI2YiA2YjZiIDZiNmIKWyAgICAzLjEyMjkzNF0gMDAwMDAwODA6IDZi
-NmIgNmI2YiA2YjZiIDZiNmIgNmI2YiA2YjZiIDZiNmIgNmI2YiA2YjZiIDZiNmIgNmI2YiA2YjZi
-IDZiNmIgNmI2YiA2YjZiIDZiNmIKWyAgICAzLjEzMjEyNF0gMDAwMDAwYTA6IDZiNmIgNmI2YiA2
-YjZiIDZiNmIgNmI2YiA2YjZiIDZiNmIgNmI2YiA2YjZiIDZiNmIgNmI2YiA2YjZiIDZiNmIgNmI2
-YiA2YjZiIDZiNmIKWyAgICAzLjE0MTMxMV0gMDAwMDAwYzA6IDZiNmIgNmI2YiA2YjZiIDZiNmIg
-NmI2YiA2YjZiIDZiNmIgNmI2YiA2YjZiIDZiNmIgNmI2YiA2YjZiIDZiNmIgNmI2YiA2YjZiIDZi
-NmIKWyAgICAzLjE1MDUwNV0gMDAwMDAwZTA6IDZiNmIgNmI2YiA2YjZiIDZiNmIgNmI2YiA2YjZi
-IDZiNmIgNmI2YiA2YjZiIDZiNmIgNmI2YiA2YjZiIDZiNmIgNmI2YiA2YjZiIGE1NmIKWyAgICAz
-LjE1OTY4MV0gClsgICAgMy4xNjExNzFdIENvdWxkIG5vdCBmaW5kIGEgdmFsaWQgT05GSSBwYXJh
-bWV0ZXIgcGFnZSwgdHJ5aW5nIGJpdC13aXNlIG1ham9yaXR5IHRvIHJlY292ZXIgaXQKWyAgICAz
-LjE2OTc4Nl0gT05GSSBwYXJhbWV0ZXIgcmVjb3ZlcnkgZmFpbGVkLCBhYm9ydGluZwpbICAgIDMu
-MTc0NzQwXSAwMDAwMDAwMDogMDAwMCA4MDEwIDNkMDAgMjk1ZSBmZGZkIGZkZmQgZmRmZCBmZGZk
-IGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZApbICAgIDMuMTgzODc3XSAw
-MDAwMDAyMDogZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRm
-ZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZApbICAgIDMuMTkzMDY0XSAwMDAwMDA0MDog
-ZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZk
-ZmQgZmRmZCBmZGZkIGZkZmQgZmRmZApbICAgIDMuMjAyMjQ5XSAwMDAwMDA2MDogZmRmZCBmZGZk
-IGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBm
-ZGZkIGZkZmQgZmRmZApbICAgIDMuMjExNDM5XSAwMDAwMDA4MDogZmRmZCBmZGZkIGZkZmQgZmRm
-ZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQg
-ZmRmZApbICAgIDMuMjIwNjI2XSAwMDAwMDBhMDogZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZk
-ZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZApbICAg
-IDMuMjI5ODE1XSAwMDAwMDBjMDogZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBm
-ZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZApbICAgIDMuMjM5MDAy
-XSAwMDAwMDBlMDogZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQg
-ZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZApbICAgIDMuMjQ4MTg0XSAKWyAgICAz
-LjI0OTc0M10gMDAwMDAwMDA6IDAwMDAgODAxMCAyMmMwIDI5NWUgZmRmZCBmZGZkIGZkZmQgZmRm
-ZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQKWyAgICAzLjI1ODg1N10g
-MDAwMDAwMjA6IGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZk
-ZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQKWyAgICAzLjI2ODA0NF0gMDAwMDAwNDA6
-IGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBm
-ZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQKWyAgICAzLjI3NzIzMV0gMDAwMDAwNjA6IGZkZmQgZmRm
-ZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQg
-ZmRmZCBmZGZkIGZkZmQKWyAgICAzLjI4NjQxMV0gMDAwMDAwODA6IGZkZmQgZmRmZCBmZGZkIGZk
-ZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZk
-IGZkZmQKWyAgICAzLjI5NTYwN10gMDAwMDAwYTA6IGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBm
-ZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQKWyAg
-ICAzLjMwNDc5NF0gMDAwMDAwYzA6IGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQg
-ZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQKWyAgICAzLjMxMzk4
-NF0gMDAwMDAwZTA6IGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZk
-IGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQKWyAgICAzLjMyMzE2M10gClsgICAg
-My4zMjQ2NTddIG5hbmQ6IGRldmljZSBmb3VuZCwgTWFudWZhY3R1cmVyIElEOiAweGFkLCBDaGlw
-IElEOiAweGRlClsgICAgMy4zMzA5NjhdIG5hbmQ6IEh5bml4IE5BTkQgOEdpQiAzLDNWIDgtYml0
-ClsgICAgMy4zMzUyMTBdIG5hbmQ6IDgxOTIgTWlCLCBNTEMsIGVyYXNlIHNpemU6IDQwOTYgS2lC
-LCBwYWdlIHNpemU6IDE2Mzg0LCBPT0Igc2l6ZTogMTI4MApbICAgIDMuMzQzMjc0XSAwMDAwMDAw
-MDogMDAwMCA4MDEwIDI0MDAgMjk1ZSBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZk
-IGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZApbICAgIDMuMzUyMzkwXSAwMDAwMDAyMDogZmRmZCBm
-ZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRm
-ZCBmZGZkIGZkZmQgZmRmZApbICAgIDMuMzYxNTcyXSAwMDAwMDA0MDogZmRmZCBmZGZkIGZkZmQg
-ZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZk
-ZmQgZmRmZApbICAgIDMuMzcwNzYyXSAwMDAwMDA2MDogZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZk
-IGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZApb
-ICAgIDMuMzc5OTYzXSAwMDAwMDA4MDogZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRm
-ZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZApbICAgIDMuMzg5
-MTQwXSAwMDAwMDBhMDogZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZk
-ZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZApbICAgIDMuMzk4MzI2XSAwMDAw
-MDBjMDogZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBm
-ZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZApbICAgIDMuNDA3NTE5XSAwMDAwMDBlMDogZmRm
-ZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQgZmRmZCBmZGZkIGZkZmQg
-ZmRmZCBmZGZkIGZkZmQgZmRmZApbICAgIDMuNDE2Njk1XSAKLi4uCg==
---0000000000003310550584ef6a0f
-Content-Type: application/x-patch; name="nand_debug_martin.patch"
-Content-Disposition: attachment; filename="nand_debug_martin.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_jtoomcks0>
-X-Attachment-Id: f_jtoomcks0
 
-ZGlmZiAtLWdpdCBhL2RyaXZlcnMvbXRkL25hbmQvcmF3L21lc29uX25hbmQuYyBiL2RyaXZlcnMv
-bXRkL25hbmQvcmF3L21lc29uX25hbmQuYwppbmRleCBjYjBiMDNlMzZhMzUuLjZkNzkyNzE1MDA4
-MSAxMDA2NDQKLS0tIGEvZHJpdmVycy9tdGQvbmFuZC9yYXcvbWVzb25fbmFuZC5jCisrKyBiL2Ry
-aXZlcnMvbXRkL25hbmQvcmF3L21lc29uX25hbmQuYwpAQCAtNTI3LDEyICs1MjcsMTQgQEAgc3Rh
-dGljIGludCBtZXNvbl9uZmNfcmVhZF9idWYoc3RydWN0IG5hbmRfY2hpcCAqbmFuZCwgdTggKmJ1
-ZiwgaW50IGxlbikKIAl1MzIgY21kOwogCXU4ICppbmZvOwogCi0JaW5mbyA9IGt6YWxsb2MoUEVS
-X0lORk9fQllURSwgR0ZQX0tFUk5FTCk7CisJaW5mbyA9IGt6YWxsb2MoMjU2LCBHRlBfS0VSTkVM
-KTsKIAlpZiAoIWluZm8pCiAJCXJldHVybiAtRU5PTUVNOwogCi0JcmV0ID0gbWVzb25fbmZjX2Rt
-YV9idWZmZXJfc2V0dXAobmFuZCwgYnVmLCBsZW4sIGluZm8sCi0JCQkJCSBQRVJfSU5GT19CWVRF
-LCBETUFfRlJPTV9ERVZJQ0UpOworCW1lbXNldChpbmZvLCAweEZELCAyNTYpOworCisJcmV0ID0g
-bWVzb25fbmZjX2RtYV9idWZmZXJfc2V0dXAobmFuZCwgYnVmLCBsZW4sIGluZm8sIFBFUl9JTkZP
-X0JZVEUsCisJCQkJCSBETUFfRlJPTV9ERVZJQ0UpOwogCWlmIChyZXQpCiAJCWdvdG8gb3V0Owog
-CkBAIC01NDQsNiArNTQ2LDkgQEAgc3RhdGljIGludCBtZXNvbl9uZmNfcmVhZF9idWYoc3RydWN0
-IG5hbmRfY2hpcCAqbmFuZCwgdTggKmJ1ZiwgaW50IGxlbikKIAltZXNvbl9uZmNfZG1hX2J1ZmZl
-cl9yZWxlYXNlKG5hbmQsIGxlbiwgUEVSX0lORk9fQllURSwgRE1BX0ZST01fREVWSUNFKTsKIAog
-b3V0OgorCXByaW50X2hleF9kdW1wKEtFUk5fRVJSLCAiIiwgRFVNUF9QUkVGSVhfT0ZGU0VULCAz
-MiwgMiwgaW5mbywgMjU2LCBmYWxzZSk7CisJcHJpbnRrKCJcbiIpOworCiAJa2ZyZWUoaW5mbyk7
-CiAKIAlyZXR1cm4gcmV0Owo=
---0000000000003310550584ef6a0f--
+
