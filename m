@@ -2,124 +2,92 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45600C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 22:40:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A5AAC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 22:41:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15A462080F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 22:40:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="ic/YKzXz"
+	by mail.kernel.org (Postfix) with ESMTP id E6D322080F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 22:41:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730545AbfCYWkc (ORCPT
+        id S1730559AbfCYWlo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 18:40:32 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:37829 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726217AbfCYWkc (ORCPT
+        Mon, 25 Mar 2019 18:41:44 -0400
+Received: from www62.your-server.de ([213.133.104.62]:56828 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726010AbfCYWlo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 18:40:32 -0400
-Received: by mail-lf1-f68.google.com with SMTP id u2so7183390lfd.4
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 15:40:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xPJVtYHTXvM2orrKqfEZlo9B30GWJZdiCtAzgwEpUz0=;
-        b=ic/YKzXzFCdDKWbSifHEyTRsOTY5fUbQZ272MbPEmcdKrGXAEhfYiZKsqFvKv8Jefj
-         z3F6tlKvcWdOJmNkeqNP0SAR7OwIp8YX5BNcm+YG6xtwZ/JMPQCbJYfFQGxD7keUbU2j
-         ebQTAF7uelNv1wV+0MuprRNnnBNWaPQAvwj4w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xPJVtYHTXvM2orrKqfEZlo9B30GWJZdiCtAzgwEpUz0=;
-        b=aeD9yMp75NsJzmgD51UPeA+lFVUgKiVSBN+tqIg9rACuCund0Ux+eQH44Rd/6Ei62B
-         GAi1Fkle9MbJMsTNi3GfNG+iQSqAxnxfwGO8qgW+C5DLSY0RWodYtjPv04WlH1diwecw
-         j0guaoiO8AgQljBYwPAfVRQrkCc8k/n/L2H0xM1ioM43Yuq5qtMevSJAA01sM86jiYnA
-         lynF3MbAhasH7T644HkhMmy677N9WCOzOVIVc+3MxcHC5aajOsHJwSgnaHBqjJ6VX6FN
-         dPwqwTtl3iw6Kni3gFxl9tp45SGnX1OZmp4k2NGmMVzUIoF5yuiYbA5zAM+3dBX8bvz1
-         eShA==
-X-Gm-Message-State: APjAAAXJjQF/iAlV+f0rylqkcp6hYSlDGIg6Z6gmGgmTXNd4iKko7rUO
-        ecUGBbhnjd3XlDCtAjwOpWoA37wp1/UpuljgUGlJTpxA
-X-Google-Smtp-Source: APXvYqyDDCyOM4Dyea66QRIV6wrwf5sKMsRweHzL4U3HmIB1yXtuPPglDiIirFUHeMoY7qHBYT1sPs+Hgtonpju1MDs=
-X-Received: by 2002:a19:ee18:: with SMTP id g24mr14225773lfb.158.1553553628911;
- Mon, 25 Mar 2019 15:40:28 -0700 (PDT)
+        Mon, 25 Mar 2019 18:41:44 -0400
+Received: from [78.46.172.3] (helo=sslproxy06.your-server.de)
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1h8YHk-0005G9-DR; Mon, 25 Mar 2019 23:41:40 +0100
+Received: from [178.197.248.24] (helo=linux.home)
+        by sslproxy06.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1h8YHk-000BIL-65; Mon, 25 Mar 2019 23:41:40 +0100
+Subject: Re: KASAN: use-after-free Read in path_lookupat
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        syzbot <syzbot+7a8ba368b47fdefca61e@syzkaller.appspotmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+References: <0000000000006946d2057bbd0eef@google.com>
+ <CAHk-=wiijJMTw=nTj_ED+YWMCrvHzh3ezfVYRxvzcW6+trgyPA@mail.gmail.com>
+ <20190325045744.GK2217@ZenIV.linux.org.uk>
+ <CAHk-=wg4iJsMHBzK52WzP+5_92HbwvX_vh_s4mMUuN0FJGdM5A@mail.gmail.com>
+ <CAHk-=whJ4M5FegOLvnjUtJ0+pHv4L8UNFt+9jJDhox3Ada8kwA@mail.gmail.com>
+ <20190325211405.GP2217@ZenIV.linux.org.uk>
+ <CAHk-=wj+-e=X9cvvNwc5+QuvBOyYT7OtZTBzy-Wg8zGrUwxSbw@mail.gmail.com>
+ <f4eccb87-1ea2-c0d5-19db-d638f2c5aa57@iogearbox.net>
+ <CAHk-=wjD-A_VsYC_OKcn30_ZsrLEE1CN7mnwZ803cvaFTdTTfA@mail.gmail.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <79dfc903-cf0d-0091-ef96-76c2749abb9c@iogearbox.net>
+Date:   Mon, 25 Mar 2019 23:41:39 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.3.0
 MIME-Version: 1.0
-References: <20190323034619.15792-1-joel@joelfernandes.org>
- <20190325150133.GA4102@linux.ibm.com> <CAEXW_YRDfOEr-hdbKGDC6amRaaqTCCBsowRhVwDqJd-1BoO17g@mail.gmail.com>
- <20190325164253.GE4102@linux.ibm.com>
-In-Reply-To: <20190325164253.GE4102@linux.ibm.com>
-From:   Joel Fernandes <joel@joelfernandes.org>
-Date:   Mon, 25 Mar 2019 18:40:17 -0400
-Message-ID: <CAEXW_YT8dS--pBrQoBO=G_d+4Ffi7o2++PQukh6dyNHqX-TLBg@mail.gmail.com>
-Subject: Re: [PATCH] rcutorture: Select from only online CPUs
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        linux-kselftest <linux-kselftest@vger.kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAHk-=wjD-A_VsYC_OKcn30_ZsrLEE1CN7mnwZ803cvaFTdTTfA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.100.2/25399/Mon Mar 25 08:46:48 2019)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 12:42 PM Paul E. McKenney <paulmck@linux.ibm.com> wrote:
->
-> On Mon, Mar 25, 2019 at 12:33:37PM -0400, Joel Fernandes wrote:
-> > On Mon, Mar 25, 2019 at 11:02 AM Paul E. McKenney <paulmck@linux.ibm.com> wrote:
-> > >
-> > > On Fri, Mar 22, 2019 at 11:46:19PM -0400, Joel Fernandes (Google) wrote:
-> > > > The rcutorture jitter.sh script selects a random CPU but does not check
-> > > > if it is offline or online. This leads to taskset errors many times. On
-> > > > my machine, hyper threading is disabled so half the cores are offline
-> > > > causing taskset errors a lot of times. Let us fix this by checking from
-> > > > only the online CPUs on the system.
-> > > >
-> > > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > >
-> > > Good catch!
-> > >
-> > > Please see below for one suggestion for simplification.
-> > >
-> > >                                                         Thanx, Paul
-> > >
-> > > > ---
-> > > >  tools/testing/selftests/rcutorture/bin/jitter.sh | 11 ++++++++++-
-> > > >  1 file changed, 10 insertions(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/tools/testing/selftests/rcutorture/bin/jitter.sh b/tools/testing/selftests/rcutorture/bin/jitter.sh
-> > > > index 3633828375e3..53bf9d99b5cd 100755
-> > > > --- a/tools/testing/selftests/rcutorture/bin/jitter.sh
-> > > > +++ b/tools/testing/selftests/rcutorture/bin/jitter.sh
-> > > > @@ -47,10 +47,19 @@ do
-> > > >               exit 0;
-> > > >       fi
-> > > >
-> > > > -     # Set affinity to randomly selected CPU
-> > > > +     # Set affinity to randomly selected online CPU
-> > > >       cpus=`ls /sys/devices/system/cpu/*/online |
-> > >
-> > >         cpus=`grep 1 /sys/devices/system/cpu/*/online |
-> >
-> > Yes, this is better. Lets do it this way :)
-> >
-> > > >               sed -e 's,/[^/]*$,,' -e 's/^[^0-9]*//' |
-> > > >               grep -v '^0*$'`
-> > >
-> > > Of course, now I have no idea why I excluded CPU 0...  :-/
-> >
-> > Yes, I was wondering as well about that :-)
->
-> Please feel free to try including CPU 0 and running the set of single-CPU
-> rcutorture scenarios.  ;-)
+On 03/25/2019 11:13 PM, Linus Torvalds wrote:
+> On Mon, Mar 25, 2019 at 3:04 PM Daniel Borkmann <daniel@iogearbox.net> wrote:
+>>
+>> I'm fine either way, I think the rcu_destroy_inode would indeed simplify
+>> it nicely. In any case fwiw, here's what I'd have ready for standby on bpf
+>> side and tested as well. Decided to get rid of bpf_evict_inode() entirely
+>> since the only callback we'd really need is on final inode destruction:
+> 
+> Yes, this looks correct to me.
+> 
+> I think this is worth doing regardless. Even if we then make the vfs
+> layer add that rcu_destroy_inode(), that will fit very well with this
+> patch, and getting rid of the special bpf_evict_inode() logic and just
+> letting the normal vfs inode cleanup happen looks like the right
+> thing.
+> 
+> So ack from me on your
+> 
+>> Subject: [PATCH bpf] bpf: fix use after free in bpf_evict_inode
+> 
+> patch regardless of what else we might end up doing in this area to
+> clean things up.
 
-Will do and then will update the patch by adding the CPU back, if all
-is well. Thanks.
+Ok, thanks a lot. In that case, I just pushed this one to bpf tree, and
+it will come your way the usual route via David.
+
+Thanks,
+Daniel
