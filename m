@@ -2,118 +2,122 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62F4AC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:25:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9EA2C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:25:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34FC220848
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:25:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="pv00D3Lw"
+	by mail.kernel.org (Postfix) with ESMTP id 92FC520863
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:25:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730738AbfCYVZ3 (ORCPT
+        id S1730633AbfCYVZO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 17:25:29 -0400
-Received: from mta-p5.oit.umn.edu ([134.84.196.205]:58268 "EHLO
-        mta-p5.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730199AbfCYVZ1 (ORCPT
+        Mon, 25 Mar 2019 17:25:14 -0400
+Received: from smtprelay0035.hostedemail.com ([216.40.44.35]:53654 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730603AbfCYVZH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 17:25:27 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p5.oit.umn.edu (Postfix) with ESMTP id C1E3C9D7
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 21:25:25 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p5.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p5.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 5fmbAbsxdaS9 for <linux-kernel@vger.kernel.org>;
-        Mon, 25 Mar 2019 16:25:25 -0500 (CDT)
-Received: from mail-it1-f200.google.com (mail-it1-f200.google.com [209.85.166.200])
-        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p5.oit.umn.edu (Postfix) with ESMTPS id 96CC6863
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 16:25:25 -0500 (CDT)
-Received: by mail-it1-f200.google.com with SMTP id v193so3791489itv.9
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 14:25:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=3U671EtTZpOqkVrkynE1lDoal+7jnSwJUUteoPHc1Fw=;
-        b=pv00D3LwTocJMAQnyQvhPSZmTEuqZdVv2wFn9aFtwjf6kp+vwgZpmqTVusBWvx+m0R
-         2MqW6w8iHhayi6kYzIyuSueej6yc8fWiFlJifW96I80Ei4QMHsh58oGEIPCoJS9xpwh5
-         lnDYfkEzdKs/9CtRIRtxN8a4KKgyjivQKyYc8B5gHmx/8zsvHsQvtxKVwx3AwDkeFqK4
-         xMUighvm04NudQFbPW5A5K08mO3OZVYDtNFoqjjdOrGgQqnKYI1IRn5pWXvC3nUfqUN3
-         PtDpXPTvSL5/s6Mgv2BKiGlLcfynAq2Yd7EKMeXxWqh4w73uO/tMCchxM1UxqWMcfZmf
-         qB8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=3U671EtTZpOqkVrkynE1lDoal+7jnSwJUUteoPHc1Fw=;
-        b=NF542x3Unj+hy5ec4YMf0DYPEnDs9ytBsaEJjN+02VjdCXwufszmdIcq50yvgEL/Km
-         UxGSVZb2DN0FsptAfDheojceBca14lqJvTDh90OxPgqa2MWufCbjYKzlWb1HBHuJV260
-         ZPyOztlYbskc/ho3LrV7Y02rKBLrGGorRNSdqBc0y2AMCw7TnmhRn47WU1SSCKIofOQm
-         K5WsQfuF87tDlWNspwjX0TX/vDTtpEaAwBoxLkLz1EbjoGD5rSay0KFjX82/JdDo2LlK
-         9FDGxNfSCobFwJJPMqE9jFtztKtx2nPWaoTc8JyPJrH7oYillCS9rnqsTsxLFxXWYxZ3
-         FseA==
-X-Gm-Message-State: APjAAAXzcj6m11RnG4VZdsFPb3Vkv+dsSZd0zVcnKnIY21CRd8CPIbl8
-        BzESkCZtBpECx+rEvtkZ2lIaVQpU+KzjLX2HL/SZj4mBxt/GhipS3yLg49E2x/3IY4L35meN7nU
-        bsesBa09zt3+ezf/whMwJR99attX1
-X-Received: by 2002:a24:8986:: with SMTP id s128mr823600itd.165.1553549125242;
-        Mon, 25 Mar 2019 14:25:25 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyhB6MQ3+4APE6JP0tFjnoifp940LTAjTTMXetuXBHoRetTjhf3ybyy6UwSK/Y+ZJ4d0HUTOg==
-X-Received: by 2002:a24:8986:: with SMTP id s128mr823587itd.165.1553549125056;
-        Mon, 25 Mar 2019 14:25:25 -0700 (PDT)
-Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
-        by smtp.gmail.com with ESMTPSA id k18sm7878611iob.60.2019.03.25.14.25.24
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 25 Mar 2019 14:25:24 -0700 (PDT)
-From:   Aditya Pakki <pakki001@umn.edu>
-To:     pakki001@umn.edu
-Cc:     kjlu@umn.edu, Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3] thunderbolt: Fix to check the return value of kmemdup
-Date:   Mon, 25 Mar 2019 16:25:22 -0500
-Message-Id: <20190325212523.11799-1-pakki001@umn.edu>
-X-Mailer: git-send-email 2.17.1
+        Mon, 25 Mar 2019 17:25:07 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 3724D18224D67;
+        Mon, 25 Mar 2019 21:25:06 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: drum17_f4f8a4a31f27
+X-Filterd-Recvd-Size: 4301
+Received: from joe-laptop.perches.com (unknown [47.151.153.53])
+        (Authenticated sender: joe@perches.com)
+        by omf12.hostedemail.com (Postfix) with ESMTPA;
+        Mon, 25 Mar 2019 21:25:05 +0000 (UTC)
+From:   Joe Perches <joe@perches.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Richard Fitzgerald <rf@opensource.cirrus.com>,
+        patches@opensource.cirrus.com, Lee Jones <lee.jones@linaro.org>
+Subject: Bad file pattern in MAINTAINERS section 'CIRRUS LOGIC LOCHNAGAR DRIVER'
+Date:   Mon, 25 Mar 2019 14:25:04 -0700
+Message-Id: <20190325212504.26213-1-joe@perches.com>
+X-Mailer: git-send-email 2.15.0
+In-Reply-To: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com>
+References: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-uuid in add_switch is allocted via kmemdup which can fail. The patch
-logs the error and cleans up the allocated memory for switch.
+A file pattern line in this section of the MAINTAINERS file in linux-next
+does not have a match in the linux source files.
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+This could occur because a matching filename was never added, was deleted
+or renamed in some other commit.
 
----
-v2: replace WARN_ONCE with tb_sw_warn, as suggested by Mika
-v1: Change warn_once to return after clean up.
----
- drivers/thunderbolt/icm.c | 5 +++++
- 1 file changed, 5 insertions(+)
+The commits that added and if found renamed or removed the file pattern
+are shown below.
 
-diff --git a/drivers/thunderbolt/icm.c b/drivers/thunderbolt/icm.c
-index e3fc920af682..8b7f9131e9d1 100644
---- a/drivers/thunderbolt/icm.c
-+++ b/drivers/thunderbolt/icm.c
-@@ -473,6 +473,11 @@ static void add_switch(struct tb_switch *parent_sw, u64 route,
- 		goto out;
- 
- 	sw->uuid = kmemdup(uuid, sizeof(*uuid), GFP_KERNEL);
-+	if (!sw->uuid) {
-+		tb_sw_warn(sw, "cannot allocate memory for switch\n");
-+		tb_switch_put(sw);
-+		goto out;
-+	}
- 	sw->connection_id = connection_id;
- 	sw->connection_key = connection_key;
- 	sw->link = link;
--- 
-2.17.1
+Please fix this defect appropriately.
 
+1: ---------------------------------------------------------------------------
+
+linux-next MAINTAINERS section:
+
+	3792	CIRRUS LOGIC LOCHNAGAR DRIVER
+	3793	M:	Charles Keepax <ckeepax@opensource.cirrus.com>
+	3794	M:	Richard Fitzgerald <rf@opensource.cirrus.com>
+	3795	L:	patches@opensource.cirrus.com
+	3796	S:	Supported
+	3797	F:	drivers/clk/clk-lochnagar.c
+	3798	F:	drivers/mfd/lochnagar-i2c.c
+	3799	F:	drivers/pinctrl/cirrus/pinctrl-lochnagar.c
+	3800	F:	drivers/regulator/lochnagar-regulator.c
+	3801	F:	sound/soc/codecs/lochnagar-sc.c
+	3802	F:	include/dt-bindings/clk/lochnagar.h
+	3803	F:	include/dt-bindings/pinctrl/lochnagar.h
+	3804	F:	include/linux/mfd/lochnagar*
+	3805	F:	Documentation/devicetree/bindings/mfd/cirrus,lochnagar.txt
+	3806	F:	Documentation/devicetree/bindings/clock/cirrus,lochnagar.txt
+-->	3807	F:	Documentation/devicetree/bindings/pinctrl/cirrus,lochnagar.txt
+	3808	F:	Documentation/devicetree/bindings/regulator/cirrus,lochnagar.txt
+	3809	F:	Documentation/devicetree/bindings/sound/cirrus,lochnagar.txt
+
+2: ---------------------------------------------------------------------------
+
+The most recent commit that added or modified file pattern 'Documentation/devicetree/bindings/pinctrl/cirrus,lochnagar.txt':
+
+commit 422dcafe477c7240d03c7b150704c45e0b17be57
+Author: Charles Keepax <ckeepax@opensource.cirrus.com>
+Date:   Wed Jan 30 11:41:26 2019 +0000
+
+    mfd: lochnagar: Add support for the Cirrus Logic Lochnagar
+    
+    Lochnagar is an evaluation and development board for Cirrus
+    Logic Smart CODEC and Amp devices. It allows the connection of
+    most Cirrus Logic devices on mini-cards, as well as allowing
+    connection of various application processor systems to provide a
+    full evaluation platform. This driver supports the board
+    controller chip on the Lochnagar board. Audio system topology,
+    clocking and power can all be controlled through the Lochnagar
+    controller chip, allowing the device under test to be used in
+    a variety of possible use cases.
+    
+    As the Lochnagar is a fairly complex device this MFD driver
+    allows the drivers for the various features to be bound
+    in. Initially clocking, regulator and pinctrl will be added as
+    these are necessary to configure the system. But in time at least
+    audio and voltage/current monitoring will also be added.
+    
+    Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+    Signed-off-by: Lee Jones <lee.jones@linaro.org>
+
+ MAINTAINERS                         |  17 ++
+ drivers/mfd/Kconfig                 |   8 +
+ drivers/mfd/Makefile                |   2 +
+ drivers/mfd/lochnagar-i2c.c         | 398 ++++++++++++++++++++++++++++++++++++
+ include/linux/mfd/lochnagar.h       |  55 +++++
+ include/linux/mfd/lochnagar1_regs.h | 157 ++++++++++++++
+ include/linux/mfd/lochnagar2_regs.h | 291 ++++++++++++++++++++++++++
+ 7 files changed, 928 insertions(+)
+
+3: ---------------------------------------------------------------------------
+
+No commit with file pattern 'Documentation/devicetree/bindings/pinctrl/cirrus,lochnagar.txt' was found
