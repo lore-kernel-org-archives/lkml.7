@@ -2,122 +2,191 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 999BCC10F03
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:20:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BE38C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:21:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7220220989
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:20:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E01FF2083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:21:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="CiUqHD1w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729769AbfCYQUw (ORCPT
+        id S1729776AbfCYQVP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 12:20:52 -0400
-Received: from mga09.intel.com ([134.134.136.24]:11863 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726743AbfCYQUv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 12:20:51 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Mar 2019 09:20:49 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,269,1549958400"; 
-   d="scan'208";a="155016042"
-Received: from spandruv-desk.jf.intel.com ([10.54.75.31])
-  by fmsmga002.fm.intel.com with ESMTP; 25 Mar 2019 09:20:49 -0700
-Message-ID: <000d6a3a402461974a1ab4e3186173da1c47c118.camel@linux.intel.com>
-Subject: Re: [PATCH 1/1] hid: hid-sensor-custom: simplify getting
- .driver_data
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-kernel@vger.kernel.org
-Cc:     linux-renesas-soc@vger.kernel.org, Jiri Kosina <jikos@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-input@vger.kernel.org, linux-iio@vger.kernel.org
-Date:   Mon, 25 Mar 2019 09:20:48 -0700
-In-Reply-To: <20190319163638.31003-1-wsa+renesas@sang-engineering.com>
-References: <20190319163638.31003-1-wsa+renesas@sang-engineering.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-2.fc28) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Mon, 25 Mar 2019 12:21:15 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:39550 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726243AbfCYQVP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 12:21:15 -0400
+Received: by mail-ed1-f67.google.com with SMTP id p20so7610403eds.6
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 09:21:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7N20GLSn1zIzkh96lcjNafv3wdHS2F1WYmIZ+i8iyyo=;
+        b=CiUqHD1wUNiV+at0t+Y/BHxxxSx1R/msKFLdewkTu9PF+vW5LUvST9Syi9MR/5qWQu
+         HFV7KH/LP6a80Ni/8WA4RCErT0gB9Ux1xur8XCkFueTlhk4PqBKkW30XkRpWyrt7J3Gh
+         4PcuYQPpbj/np7GV63mRh9H27P0U1LFjjZWiV9ST19UtrvvT9Ep4iWo8TMqRnzAsIIDN
+         BgCCM/wN5TeKFZo9W6RufzdUYx8NcVl3uhhq6HpzMlukpw6C9+K6dr+T93yG2t4mnArP
+         W8OOAp1YwzapezGUCcKKx29vmW7Ri6jTLqOMx+WcGkWR3enhKkCB/9nSADa42cCcRucP
+         7N9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7N20GLSn1zIzkh96lcjNafv3wdHS2F1WYmIZ+i8iyyo=;
+        b=MiCd4YM0m5B1kqLEwk4/ALdfSVdXSeCm3603xgzJKKc7Txjr8LqtADXcuRZ1GNAG/S
+         3kBI2nb4QRr9Z475PYk1f304ZCXSHS1krigcTfKmJ3bpgpvWdp/DQj4x0Y/hb8xDU1dW
+         r9gGI72ORWDHIn5PmplKCDnTyE5XBxpPf7dyMb3usjw62g3o6j+hHLX7OQ7YX5tHHEZN
+         XOw8my/7XSJGPErzOdR7qmB0eltCOhA4bVmobFhi/Izaoh1IRZOlDtqmYplBxj6SfdId
+         7vNbRsPsXjjYgmjKpnPIGAzBuh2+WQg8NNZND5wLI3zgtMc48w0on/jtAudjf8rRXGeN
+         rnuw==
+X-Gm-Message-State: APjAAAVT8GxY8M1wl28R/suXBZQ+6yn3wdhxH8NnB1HPLozLa3Qmrzn6
+        nOYpgutAmryTtLZ2Jxs0OgUPYw==
+X-Google-Smtp-Source: APXvYqyBaYfHEr95rWUA+Ax9TEtXY3IDK1ZTMEU+lrUbWb4dh8imengdwnA+GxSBogmKHyZS2Hrtcg==
+X-Received: by 2002:a17:906:f2d6:: with SMTP id gz22mr8638674ejb.38.1553530872895;
+        Mon, 25 Mar 2019 09:21:12 -0700 (PDT)
+Received: from localhost.localdomain ([193.96.224.244])
+        by smtp.gmail.com with ESMTPSA id e45sm5027759edd.3.2019.03.25.09.21.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 25 Mar 2019 09:21:12 -0700 (PDT)
+From:   Christian Brauner <christian@brauner.io>
+To:     jannh@google.com, khlebnikov@yandex-team.ru, luto@kernel.org,
+        dhowells@redhat.com, serge@hallyn.com, ebiederm@xmission.com,
+        linux-api@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     arnd@arndb.de, keescook@chromium.org, adobriyan@gmail.com,
+        tglx@linutronix.de, mtk.manpages@gmail.com, bl0pbl33p@gmail.com,
+        ldv@altlinux.org, akpm@linux-foundation.org, oleg@redhat.com,
+        nagarathnam.muthusamy@oracle.com, cyphar@cyphar.com,
+        viro@zeniv.linux.org.uk, joel@joelfernandes.org, dancol@google.com,
+        Christian Brauner <christian@brauner.io>
+Subject: [PATCH 0/4] pid: add pidctl()
+Date:   Mon, 25 Mar 2019 17:20:48 +0100
+Message-Id: <20190325162052.28987-1-christian@brauner.io>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-03-19 at 17:36 +0100, Wolfram Sang wrote:
-> We should get 'driver_data' from 'struct device' directly. Going via
-> platform_device is an unneeded step back and forth.
-> 
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+The pidctl() syscalls builds on, extends, and improves translate_pid() [4].
+I quote Konstantins original patchset first that has already been acked and
+picked up by Eric before and whose functionality is preserved in this
+syscall. Multiple people have asked when this patchset will be sent in
+for merging (cf. [1], [2]). It has recently been revived by Nagarathnam
+Muthusamy from Oracle [3].
 
-> ---
-> 
-> Build tested only. buildbot is happy.
-> 
->  drivers/hid/hid-sensor-custom.c | 12 ++++--------
->  1 file changed, 4 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/hid/hid-sensor-custom.c b/drivers/hid/hid-
-> sensor-custom.c
-> index bb012bc032e0..462e653a7bbb 100644
-> --- a/drivers/hid/hid-sensor-custom.c
-> +++ b/drivers/hid/hid-sensor-custom.c
-> @@ -157,8 +157,7 @@ static int usage_id_cmp(const void *p1, const
-> void *p2)
->  static ssize_t enable_sensor_show(struct device *dev,
->  				  struct device_attribute *attr, char
-> *buf)
->  {
-> -	struct platform_device *pdev = to_platform_device(dev);
-> -	struct hid_sensor_custom *sensor_inst =
-> platform_get_drvdata(pdev);
-> +	struct hid_sensor_custom *sensor_inst = dev_get_drvdata(dev);
->  
->  	return sprintf(buf, "%d\n", sensor_inst->enable);
->  }
-> @@ -237,8 +236,7 @@ static ssize_t enable_sensor_store(struct device
-> *dev,
->  				   struct device_attribute *attr,
->  				   const char *buf, size_t count)
->  {
-> -	struct platform_device *pdev = to_platform_device(dev);
-> -	struct hid_sensor_custom *sensor_inst =
-> platform_get_drvdata(pdev);
-> +	struct hid_sensor_custom *sensor_inst = dev_get_drvdata(dev);
->  	int value;
->  	int ret = -EINVAL;
->  
-> @@ -283,8 +281,7 @@ static const struct attribute_group
-> enable_sensor_attr_group = {
->  static ssize_t show_value(struct device *dev, struct
-> device_attribute *attr,
->  			  char *buf)
->  {
-> -	struct platform_device *pdev = to_platform_device(dev);
-> -	struct hid_sensor_custom *sensor_inst =
-> platform_get_drvdata(pdev);
-> +	struct hid_sensor_custom *sensor_inst = dev_get_drvdata(dev);
->  	struct hid_sensor_hub_attribute_info *attribute;
->  	int index, usage, field_index;
->  	char name[HID_CUSTOM_NAME_LENGTH];
-> @@ -392,8 +389,7 @@ static ssize_t show_value(struct device *dev,
-> struct device_attribute *attr,
->  static ssize_t store_value(struct device *dev, struct
-> device_attribute *attr,
->  			   const char *buf, size_t count)
->  {
-> -	struct platform_device *pdev = to_platform_device(dev);
-> -	struct hid_sensor_custom *sensor_inst =
-> platform_get_drvdata(pdev);
-> +	struct hid_sensor_custom *sensor_inst = dev_get_drvdata(dev);
->  	int index, field_index, usage;
->  	char name[HID_CUSTOM_NAME_LENGTH];
->  	int value;
+The intention of the original translate_pid() syscall was twofold:
+1. Provide translation of pids between pid namespaces
+2. Provide implicit pid namespace introspection
+
+Both functionalities are preserved. The latter task has been improved
+upon though. In the original version of the pachset passing pid as 1
+would allow to deterimine the relationship between the pid namespaces.
+This is inherhently racy. If pid 1 inside a pid namespace has died it
+would report false negatives. For example, if pid 1 inside of the target
+pid namespace already died, it would report that the target pid
+namespace cannot be reached from the source pid namespace because it
+couldn't find the pid inside of the target pid namespace and thus
+falsely report to the user that the two pid namespaces are not related.
+This problem is simple to avoid. In the new version we simply walk the
+list of ancestors and check whether the namespace are related to each
+other. By doing it this way we can reliably report what the relationship
+between two pid namespace file descriptors looks like.
+
+Additionally, this syscall has been extended to allow the retrieval of
+pidfds independent of procfs. These pidfds can e.g. be used with the new
+pidfd_send_signal() syscall we recently merged. The ability to retrieve
+pidfds independent of procfs had already been requested in the
+pidfd_send_signal patchset by e.g. Andrew [4] and later again by Alexey
+[5]. A use-case where a kernel is compiled without procfs but where
+pidfds are still useful has been outlined by Andy in [6]. Regular
+anon-inode based file descriptors are used that stash a reference to
+struct pid in file->private_data and drop that reference on close.
+
+With this translate_pid() has three closely related but still distinct
+functionalities. To clarify the semantics and to make it easier for
+userspace to use the syscall it has:
+- gained a command argument and three commands clearly reflecting the
+  distinct functionalities (PIDCMD_QUERY_PID, PIDCMD_QUERY_PIDNS,
+  PIDCMD_GET_PIDFD).
+- been renamed to pidctl()
+
+By gaining support for cleanly retrieving pidfds this syscall connects the
+traditional pid-based and the newer pidfd-based process API in a natural
+and clean way. Another advantage is that embedding this functionality into
+pidctl() let's us avoid adding another syscall just serving the single
+purpose of retrieving a pidfd.
+The flag argument allows to atomically set the cloexec when retrieving
+pidfds.
+
+Note that this patchset also includes Al's and David's commit to make anon
+inodes unconditional. The original intention is to make it possible to use
+anon inodes in core vfs functions. pidctl() has the same requirement so
+David suggested I sent this in alongside this patch. Both are informed of
+this.
+
+The syscall comes with extensive testing for all functionalities.
+
+/* References */
+[1]: https://lore.kernel.org/lkml/37b17950-b130-7933-99a1-4846c61c8555@oracle.com/
+[2]: https://lore.kernel.org/lkml/20181109034919.GA21681@altlinux.org/
+[3]: https://lore.kernel.org/lkml/37b17950-b130-7933-99a1-4846c61c8555@oracle.com/
+[4]: 3eb39f47934f9d5a3027fe00d906a45fe3a15fad
+[5]: https://lore.kernel.org/lkml/20190320203910.GA2842@avx2/
+[6]: https://lore.kernel.org/lkml/CALCETrXO=V=+qEdLDVPf8eCgLZiB9bOTrUfe0V-U-tUZoeoRDA@mail.gmail.com/
+
+Thanks!
+Christian
+
+Christian Brauner (3):
+  pid: add pidctl()
+  signal: support pidctl() with pidfd_send_signal()
+  tests: add pidctl() tests
+
+David Howells (1):
+  Make anon_inodes unconditional
+
+ arch/arm/kvm/Kconfig                        |   1 -
+ arch/arm64/kvm/Kconfig                      |   1 -
+ arch/mips/kvm/Kconfig                       |   1 -
+ arch/powerpc/kvm/Kconfig                    |   1 -
+ arch/s390/kvm/Kconfig                       |   1 -
+ arch/x86/Kconfig                            |   1 -
+ arch/x86/entry/syscalls/syscall_32.tbl      |   1 +
+ arch/x86/entry/syscalls/syscall_64.tbl      |   1 +
+ arch/x86/kvm/Kconfig                        |   1 -
+ drivers/base/Kconfig                        |   1 -
+ drivers/char/tpm/Kconfig                    |   1 -
+ drivers/dma-buf/Kconfig                     |   1 -
+ drivers/gpio/Kconfig                        |   1 -
+ drivers/iio/Kconfig                         |   1 -
+ drivers/infiniband/Kconfig                  |   1 -
+ drivers/vfio/Kconfig                        |   1 -
+ fs/Makefile                                 |   2 +-
+ fs/notify/fanotify/Kconfig                  |   1 -
+ fs/notify/inotify/Kconfig                   |   1 -
+ include/linux/pid.h                         |   2 +
+ include/linux/pid_namespace.h               |   8 +
+ include/linux/syscalls.h                    |   2 +
+ include/uapi/linux/wait.h                   |  17 +
+ init/Kconfig                                |  10 -
+ kernel/pid.c                                | 162 ++++++
+ kernel/pid_namespace.c                      |  25 +
+ kernel/signal.c                             |  20 +-
+ kernel/sys_ni.c                             |   3 -
+ tools/testing/selftests/pidfd/Makefile      |   2 +-
+ tools/testing/selftests/pidfd/pidctl_test.c | 553 ++++++++++++++++++++
+ 30 files changed, 782 insertions(+), 42 deletions(-)
+ create mode 100644 tools/testing/selftests/pidfd/pidctl_test.c
+
+-- 
+2.21.0
 
