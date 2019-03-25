@@ -2,95 +2,85 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E56AC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 09:49:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12642C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 09:50:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3DFE20879
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 09:49:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553507355;
-	bh=Oal7flNQwT9u03yT3aAACwafEYYaGm4K4yZxV7zkB6g=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=YPUXP2RQRRreq1zuO6GotYbHVM9nSVIfXCA9hvdZCZJ6nbfPeyiqvxe0PwZNhI5lG
-	 zfXgMLNcOoTQPI4mRsxlkOJpwHKnNAL4eUluiFX2GGBEqfeG00AfNi93RRkG6dxoX6
-	 PTUndNL4/qakSGYlYdf8c21V0JAf73d3HWBeVnps=
+	by mail.kernel.org (Postfix) with ESMTP id D77D420870
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 09:50:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730545AbfCYJtP (ORCPT
+        id S1730519AbfCYJua (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 05:49:15 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:43281 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730354AbfCYJtN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 05:49:13 -0400
-Received: by mail-oi1-f194.google.com with SMTP id 67so6387940oif.10;
-        Mon, 25 Mar 2019 02:49:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Oal7flNQwT9u03yT3aAACwafEYYaGm4K4yZxV7zkB6g=;
-        b=FhD6nSp2ggaC+i/1W1I+REYtXoWG9ZHbZpVyTNcRrnXnB7Z0ohiSraB+LKQhUzfQbc
-         eBfCe/TzqQWoSiJEvhqzLl/a7GYWdvJpK+Z8GOBpOHLHQzrg2Z3+freA9jpWjt3Xcdkj
-         CfkbKxeHTLskvLo3ze4PJtMDaTHn72I2LJG83VJnOt4v9bHTQPjJ85YtnSf3ufMDx1Kb
-         Ix2RC2Dc6g61vUBdbOq0wiUtK0b039ijxHGknZ2cM1mOhoMNPUe6LWmz8lLeBP09vcL/
-         LBCMztWvBv7LjQLjjtr6SfzgDylWg2WX4TpxH3vT0Cea2j+cZJ0il8mzvRU5Wv8pm0jM
-         ynrg==
-X-Gm-Message-State: APjAAAVA3Xta7/2mG01L9NwAfzG2s+QUNEV09Ll+Ds33lAq1IkPVDg0A
-        64/GzIzZJHkXYnQjHyIWOYGqlPV2tgG6cQiBZ14=
-X-Google-Smtp-Source: APXvYqzJNFY+7ARxSB+4c0sPo+9Jc49EQ+AENFDT1Rq9ALKT80u54QwmuukEqifSZ5X/P4w7O9C0yhDGnkFMiwI6NzM=
-X-Received: by 2002:aca:eb93:: with SMTP id j141mr11026445oih.178.1553507352232;
- Mon, 25 Mar 2019 02:49:12 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190322132108.25501-1-sakari.ailus@linux.intel.com>
- <20190322132108.25501-3-sakari.ailus@linux.intel.com> <CAJZ5v0i8JiQGk25yZKQqTzCCY+nrfoKXOH8nM6eNPhkN-i+y9w@mail.gmail.com>
-In-Reply-To: <CAJZ5v0i8JiQGk25yZKQqTzCCY+nrfoKXOH8nM6eNPhkN-i+y9w@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 25 Mar 2019 10:49:01 +0100
-Message-ID: <CAJZ5v0ixukjWzSUqNCOpYuQci=7+ctdEhdZwOh=afz1b2zFVaw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] vsprintf: Remove support for %pF and %pf in favour of
- %pS and %ps
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     Petr Mladek <pmladek@suse.com>,
+        Mon, 25 Mar 2019 05:50:30 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46158 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730216AbfCYJua (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 05:50:30 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0F0CD30832CD;
+        Mon, 25 Mar 2019 09:50:30 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-18.pek2.redhat.com [10.72.8.18])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5E14D17156;
+        Mon, 25 Mar 2019 09:50:16 +0000 (UTC)
+Date:   Mon, 25 Mar 2019 17:50:13 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Peter Xu <peterx@redhat.com>, Christoph Hellwig <hch@lst.de>,
+        Jason Wang <jasowang@redhat.com>,
+        Luiz Capitulino <lcapitulino@redhat.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
-        xen-devel@lists.xenproject.org,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>, drbd-dev@lists.linbit.com,
-        linux-block@vger.kernel.org, linux-mmc <linux-mmc@vger.kernel.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        "open list:TARGET SUBSYSTEM" <linux-scsi@vger.kernel.org>,
-        linux-btrfs@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        ceph-devel@vger.kernel.org, netdev <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        "Michael S. Tsirkin" <mst@redhat.com>, minlei@redhat.com
+Subject: Re: Virtio-scsi multiqueue irq affinity
+Message-ID: <20190325095011.GA23225@ming.t460p>
+References: <20190318062150.GC6654@xz-x1>
+ <alpine.DEB.2.21.1903231805310.1798@nanos.tec.linutronix.de>
+ <20190325050213.GH9149@xz-x1>
+ <20190325070616.GA9642@ming.t460p>
+ <alpine.DEB.2.21.1903250948490.1798@nanos.tec.linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1903250948490.1798@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.9.1 (2017-09-22)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Mon, 25 Mar 2019 09:50:30 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 10:30 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
->
-> On Fri, Mar 22, 2019 at 2:21 PM Sakari Ailus
-> <sakari.ailus@linux.intel.com> wrote:
-> >
-> > %pS and %ps are now the preferred conversion specifiers to print function
-> > %names. The functionality is equivalent; remove the old, deprecated %pF
-> > %and %pf support.
->
-> Are %pF and %pf really not used any more in the kernel?
->
-> If that is not the case, you need to convert the remaining users of
-> them to using %ps or %pS before making support for them go away
-> completely.
+On Mon, Mar 25, 2019 at 09:53:28AM +0100, Thomas Gleixner wrote:
+> Ming,
+> 
+> On Mon, 25 Mar 2019, Ming Lei wrote:
+> > On Mon, Mar 25, 2019 at 01:02:13PM +0800, Peter Xu wrote:
+> > > One thing I can think of is the real-time scenario where "isolcpus="
+> > > is provided, then logically we should not allow any isolated CPUs to
+> > > be bound to any of the multi-queue IRQs.  Though Ming Lei and I had a
+> > 
+> > So far, this behaviour is made by user-space.
+> > 
+> > >From my understanding, IRQ subsystem doesn't handle "isolcpus=", even
+> > though the Kconfig help doesn't mention irq affinity affect:
+> > 
+> >           Make sure that CPUs running critical tasks are not disturbed by
+> >           any source of "noise" such as unbound workqueues, timers, kthreads...
+> >           Unbound jobs get offloaded to housekeeping CPUs. This is driven by
+> >           the "isolcpus=" boot parameter.
+> 
+> isolcpus has no effect on the interupts. That's what 'irqaffinity=' is for.
 
-Well, this is a [2/2] in a series, sorry for the noise (/me blames
-gmail for the confusion).
+Indeed.
+
+irq_default_affinity is built from 'irqaffinity=', however, we don't
+consider irq_default_affinity for managed IRQ affinity.
+
+Looks Peter wants to exclude some CPUs from the spread on managed IRQ.
+
+Thanks,
+Ming
