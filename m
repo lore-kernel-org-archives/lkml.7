@@ -2,102 +2,118 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8B92C4360F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:23:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 883D9C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:24:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 828CD20700
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:23:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47F2020657
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:24:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Ut548Gb1"
+	dkim=pass (1024-bit key) header.d=digidescorp.com header.i=@digidescorp.com header.b="TNVtqdyh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730159AbfCYSXj (ORCPT
+        id S1730160AbfCYSX7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 14:23:39 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:46302 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729716AbfCYSXj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 14:23:39 -0400
-Received: from zn.tnic (p200300EC2F098000329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:8000:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 9A8BB1EC06CA;
-        Mon, 25 Mar 2019 19:23:37 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1553538217;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:
-         content-transfer-encoding:content-transfer-encoding:in-reply-to:
-         references; bh=mGnzmZBEESQ1n8UULhPO3Hg8PnuEI4I6+ggV7or40e4=;
-        b=Ut548Gb1PUur/F2DkFg+yZDruBY+bhzWeZzXhCyuNUU5BvWsH3z3++DsbouaA6P1nrqvBr
-        f/c0ZHWyawNw6Q6ec4rynmXWvGH5JbeXWGf4+KVSO//X0y+h4og/XaX2rlhEAnc6TIyZ8I
-        0YNjNzT0BbYUHRkfW757NahSWYBai08=
-From:   Borislav Petkov <bp@alien8.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        linux-pci@vger.kernel.org
-Subject: [PATCH] PCI/LINK: Request a one-shot IRQ with NULL handler
-Date:   Mon, 25 Mar 2019 19:23:38 +0100
-Message-Id: <20190325182338.13609-1-bp@alien8.de>
-X-Mailer: git-send-email 2.21.0
+        Mon, 25 Mar 2019 14:23:59 -0400
+Received: from mail-io1-f53.google.com ([209.85.166.53]:43453 "EHLO
+        mail-io1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728912AbfCYSX7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 14:23:59 -0400
+Received: by mail-io1-f53.google.com with SMTP id x3so8472839iol.10
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 11:23:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=digidescorp.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=Fuerf2bI9t70P5LEgrUpoOfBjM1rTYvk8dbzFX1K27M=;
+        b=TNVtqdyhoYvyciWJujGPznE0tDkGTaw3rzj6pOY9cyuYEhZBSxx9ctDl2IwJbhKaxQ
+         HI9qsGKNLwC2FxJeUgSqjlCJTJihzUhLCTP+MVbxXPeHJUDf7v325aYJrssrDB6rm7vD
+         gCD1xS9crtbHGkPPsQdEcNIton7+4LhbUhQuE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=Fuerf2bI9t70P5LEgrUpoOfBjM1rTYvk8dbzFX1K27M=;
+        b=Jymc58asxmVfJ7AUCHhR4OWnpBpG1Y4nOkzsBJzFVAmpSpr7ucLUAW6dMNT96pPF0R
+         Y7Cb8CsdpeWE2N15bPqih3L7YIhRGX99JyCdZnSb1jJU1deU0XR/40CP2sO4rxxCfNY1
+         74mYETg0FhoV4wzxMXIsL/S/fqATJPU/J3S4p2qOghWygVtXFJjLA+JXc9Y+22AmYjLJ
+         lWoa3zzcLCd1YAxW31ZSaPP93t7DqLhphXQoUMHcGWwYATn6z4Xd5uJ+Nn7bZ4jCZoey
+         JuNOljZFJS9AXO72RnKHs/2zadOfBVXHlsgIwX6Vgxji9FHH2U5V8zJJlG0xK36FDk6d
+         BvRA==
+X-Gm-Message-State: APjAAAUKPlJTwkHLLhzMfPK8R5f+W/D4nmXwGTIkDhH9eEDkgMLPMxVk
+        lHkXUlDwVGXLzu90UUL2ND1G1g==
+X-Google-Smtp-Source: APXvYqyQIVkrRx1DBCMvLwUL5RGKAsmyS94+vb250ND/sGuK12xz1CR30ZXYwPeIaohGESFwTdoAWw==
+X-Received: by 2002:a5d:8918:: with SMTP id b24mr19078073ion.241.1553538238599;
+        Mon, 25 Mar 2019 11:23:58 -0700 (PDT)
+Received: from [10.10.7.164] ([50.73.98.161])
+        by smtp.googlemail.com with ESMTPSA id v133sm385601ita.2.2019.03.25.11.23.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 25 Mar 2019 11:23:58 -0700 (PDT)
+Subject: Re: Possible UDF locking error?
+To:     Jan Kara <jack@suse.cz>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org
+References: <224e1613-b080-bd64-ef88-badcb755a233@digidescorp.com>
+ <20190325164211.GF8308@quack2.suse.cz>
+From:   Steve Magnani <steve.magnani@digidescorp.com>
+Message-ID: <35961291-197a-0557-ff81-dc8686dd8661@digidescorp.com>
+Date:   Mon, 25 Mar 2019 13:23:57 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190325164211.GF8308@quack2.suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Borislav Petkov <bp@suse.de>
+On 3/25/19 11:42 AM, Jan Kara wrote:
+> Hi!
+>
+> On Sat 23-03-19 15:14:05, Steve Magnani wrote:
+>> ...
+>>
+>> In contrast, udf_setup_indirect_aext(), which constructs an AED,
+>> has this sequence:
+>>
+>>    bh = udf_tgetblk(...);   // calls sb_getblk()
+>>    lock_buffer(bh);
+>>    memset(bh->b_data, 0, inode->i_sb->s_blocksize);
+>>
+>>    set_buffer_uptodate(bh);
+>>    unlock_buffer(bh);
+>>    mark_buffer_dirty_inode(bh);
+>>
+>>    // <snip>other code to populate AED data in the block</snip>
+>>
+>> In this case the population of the block occurs without
+>> the protection of the lock.
+>>
+>> Because the block has been marked dirty, does this mean that
+>> writeback could occur at any point during population?
+> Yes. Thanks for noticing this!
+>
+>> There is one path through udf_setup_indirect_aext() where
+>> mark_buffer_dirty_inode() gets called again after population is
+>> complete, which I suppose could heal a partial writeout, but there is
+>> also another path in which the buffer does not get marked dirty again.
+> Generally, we add new extents to the created indirect extent which dirties
+> the buffer and that should fix the problem. But you are definitely right
+> that the code is suspicious and should be fixed. Will you send a patch?
+>
+> 								Honza
 
-Booting v5.1-rc1 causes these new messages in dmesg here:
 
-  genirq: Threaded irq requested with handler=NULL and !ONESHOT for irq 24
-  pcie_bw_notification: probe of 0000:00:02.0:pcie010 failed with error -22
+Sure. There's at least one other place where it looked like there might 
+be a similar issue.
 
-because requesting a threaded IRQ with NULL handler needs to be oneshot.
-Otherwise a level-triggered interrupt endless loop can happen, see the
-detailed explanation above the "Threaded irq... " error message in
-kernel/irq/manage.c.
+Steve
 
-And PCI-MSI type interrupts are one-shot safe but not in the IOAPIC
-case:
-
-  24: ... IO-APIC   28-fasteoi   PCIe BW notif, PCIe BW notif, PCIe BW notif
-  25: ... IO-APIC   29-fasteoi   PCIe BW notif, PCIe BW notif
-
-Make the BW notification handler oneshot too.
-
-Fixes: e8303bb7a75c ("PCI/LINK: Report degraded links via link bandwidth notification")
-Suggested-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Lukas Wunner <lukas@wunner.de>
-Cc: Alexandru Gagniuc <mr.nuke.me@gmail.com>
-Cc: linux-pci@vger.kernel.org
----
- drivers/pci/pcie/bw_notification.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/pci/pcie/bw_notification.c b/drivers/pci/pcie/bw_notification.c
-index d2eae3b7cc0f..16e11c09f6bd 100644
---- a/drivers/pci/pcie/bw_notification.c
-+++ b/drivers/pci/pcie/bw_notification.c
-@@ -81,7 +81,7 @@ static int pcie_bandwidth_notification_probe(struct pcie_device *srv)
- 		return -ENODEV;
- 
- 	ret = request_threaded_irq(srv->irq, NULL, pcie_bw_notification_handler,
--				   IRQF_SHARED, "PCIe BW notif", srv);
-+				   IRQF_SHARED | IRQF_ONESHOT, "PCIe BW notif", srv);
- 	if (ret)
- 		return ret;
- 
--- 
-2.21.0
 
