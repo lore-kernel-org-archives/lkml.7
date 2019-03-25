@@ -2,134 +2,137 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A73C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 09:44:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F99C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 09:44:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 880412087F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 09:44:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 710522087F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 09:44:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lk0jUiMT"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="yoa2l5HT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730766AbfCYJoF (ORCPT
+        id S1730778AbfCYJoI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 05:44:05 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:33588 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730332AbfCYJoD (ORCPT
+        Mon, 25 Mar 2019 05:44:08 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:53949 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730750AbfCYJoF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 05:44:03 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2P9hZ77011109;
-        Mon, 25 Mar 2019 04:43:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1553507016;
-        bh=F1vNw6974A4SxeLsowTyiNZ0yV33iVQDSJNdrli8b/8=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=lk0jUiMTO3bL980SrgGsvlkPHcorS0hl3VaUCKbJoAfkqj6xXOv+du67c1KxSu2dV
-         /S4+iDcjCrq1XoaWiAtkq+h/swtVcOfHVJ8wGj5BwllEPUDJgU9tf8W4z+l6xKO6J5
-         sZe2RPj+Sxe/EXMW5My1ycpdTsk3F5XBe3d+7DtQ=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2P9hZRt054894
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 25 Mar 2019 04:43:35 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 25
- Mar 2019 04:43:35 -0500
-Received: from dflp32.itg.ti.com (10.64.6.15) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_0,
- cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5 via Frontend Transport;
- Mon, 25 Mar 2019 04:43:35 -0500
-Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by dflp32.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2P9feaZ028077;
-        Mon, 25 Mar 2019 04:43:30 -0500
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Murali Karicheri <m-karicheri2@ti.com>
-CC:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-arm-kernel@axis.com>, Minghuan Lian <minghuan.Lian@nxp.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-        Jesper Nilsson <jesper.nilsson@axis.com>
-Subject: [PATCH v3 20/26] PCI: dwc: Fix dw_pcie_ep_find_capability to return correct capability offset
-Date:   Mon, 25 Mar 2019 15:09:41 +0530
-Message-ID: <20190325093947.32633-21-kishon@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190325093947.32633-1-kishon@ti.com>
-References: <20190325093947.32633-1-kishon@ti.com>
+        Mon, 25 Mar 2019 05:44:05 -0400
+Received: by mail-wm1-f66.google.com with SMTP id q16so8107786wmj.3
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 02:44:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=sjUvDw4gOuiKbCS9+L4oee/43lzsOILkxD3UaEvPcUw=;
+        b=yoa2l5HTCJDO4Qd6U5rUO2b4WmP82IkULUq78oxV7j/Ax1s1hLAsn8c1aJ570M4LLC
+         N05lcoIrTthH4x6l9yXaX3y8KcXf/H5LGSmkAppOeqM6d0RxPt/axfNLiGF7Vsa/TgIC
+         5/bKzMF+gYcPKSITZqN4iauYfCWOvsEadumgTNxXuh8cCWpPB3TOufiia3tnHEZ8S0PP
+         6sPftosrlPemduitr4nVbZIR6RTahp4w0I3DE/Z2oQ5C2/77UsmrlsPg2ggjlp0eNPYX
+         emd6NH9e0Guu9+ePoTOI2kpmNWrzlv18QalAijZKo9Kamt8v9o8Wqzc7mR3bSXJ+R7OL
+         BDkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=sjUvDw4gOuiKbCS9+L4oee/43lzsOILkxD3UaEvPcUw=;
+        b=U6E9s87TYSqgEeN1UZsrM3sF0I2JZbi5SwWIA5Pl3vYB6nW9vjC2cFHZ7wsziDCZHW
+         MZFs3Jux4e+e8r+3pdgB6UMx3o8LfupdrsVHMw1YW2KlZhbc/1EuK9CNhGKTUtz13W9b
+         2rbB0+qigkYII1s/bhILaqOcWgQM9HEzW5MmgqVKTKyg9UoDw46kGJ6gmOK+tiR8WdU4
+         lXKddCWU3OyBNUaCdWkkHVeDbqW24w+It8jW1UX0ePUDx746hicQe/uwt0moMtIOd1YU
+         T/GmL+F46V4Pgxco7CAW5RMrLdRXh7VFwFCbZHQl67kG+KvNlXWfrUiR+kQZfyn070qb
+         3NZg==
+X-Gm-Message-State: APjAAAXZWy16ruXefEppwXihmkvA7nhhDXV2+2Rbz3nSuSIWa0Hm2qaE
+        S019coG/bvkVK1ZR5Y9z3zwsRw==
+X-Google-Smtp-Source: APXvYqxgrEbmaJqb5t5YUHDJ+RSVQ8fPlX7fZ6D13OQumRAB3s5mmhRsLE0YzZ9FidXQfGQOu7FCeg==
+X-Received: by 2002:a1c:480b:: with SMTP id v11mr9792761wma.25.1553507043298;
+        Mon, 25 Mar 2019 02:44:03 -0700 (PDT)
+Received: from boomer.baylibre.com ([2a01:e34:eeb6:4690:106b:bae3:31ed:7561])
+        by smtp.gmail.com with ESMTPSA id h9sm3591056wmb.5.2019.03.25.02.44.01
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 25 Mar 2019 02:44:02 -0700 (PDT)
+Message-ID: <283b286671a65160ac8ae08b1e1889bc029db363.camel@baylibre.com>
+Subject: Re: [PATCH 0/2] pinctrl: meson: add g12a drive strength support
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        =?UTF-8?Q?Go=C5=82aszewski=2C?= Bartosz 
+        <bgolaszewski@baylibre.com>, Kevin Hilman <khilman@baylibre.com>
+Cc:     devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Guillaume La Roque <glaroque@baylibre.com>
+Date:   Mon, 25 Mar 2019 10:44:00 +0100
+In-Reply-To: <20190314163725.7918-1-jbrunet@baylibre.com>
+References: <20190314163725.7918-1-jbrunet@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit beb4641a787df79a ("PCI: dwc: Add MSI-X callbacks handler") while
-adding MSI-X callback handler, introduced dw_pcie_ep_find_capability and
-__dw_pcie_ep_find_next_cap for finding the MSI and MSIX capability.
+On Thu, 2019-03-14 at 17:37 +0100, Jerome Brunet wrote:
+> The purpose of this patchset is to add drive-strength support in meson pinconf
+> driver. This is a new feature that was added on the g12a. It is critical for us
+> to support this since many functions are failing with default pad drive-strength.
+> 
+> Now the slightly annoying part :(
+> The value achievable by the SoC are 0.5mA, 2.5mA, 3mA and 4mA and the DT property
+> 'drive-strength' is expressed in mA.
+> 
+> 1) Rounding down the value, we could be requesting a 0mA drive strength.
+>    That would look weird.
+> 2) Rounding up, we can't distinguish between 2.5mA and 3mA
+> 
+> To solve this issue in this in this v1, we chose to document that, on Amlogic,
+> drive-strength is expressed in uA instead of mA.
+> It works well and there is no impact on the other platforms but I'm not sure this
+> is really OK with the DT rules ?
+> 
+> Linus, if this is not OK with you, here are 2 other options we are
+> considering. We would be very interested to get your opinion on the matter:
+> 
+> 1) instead the generic 'drive-strength' property, we could add an amlogic
+> specific property, 'amlogic,drive-strength'. It would be expressed in uA
+> and parsed in amlogic specific code.
+> I think this option is kind of overkill. Expressing drive strength in uA is
+> not really amlogic specific so it does not make much sense, but it would
+> work ...
+> 
+> 2) Add another generic property "drive-strength-uA". The change to do so
+> would be minimal and could be benefit to other platforms later on.
 
-However if MSI or MSIX capability is the last capability (i.e there are
-no additional items in the capabilities list and the Next Capability
-Pointer is set to '0'), __dw_pcie_ep_find_next_cap will return '0'
-even though MSI or MSIX capability may be present. This is because of
-incorrect ordering of "next_cap_ptr" check. Fix it here.
+Hi Linus,
 
-Fixes: beb4641a787df79a142 ("PCI: dwc: Add MSI-X callbacks handler")
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- drivers/pci/controller/dwc/pcie-designware-ep.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+I know it has only been 10 days and you must be busy but I was wondering if we
+could get your view on the issue above ?
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-index dc6a4bbd3ace..74477ad7467f 100644
---- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-@@ -46,16 +46,19 @@ static u8 __dw_pcie_ep_find_next_cap(struct dw_pcie *pci, u8 cap_ptr,
- 	u8 cap_id, next_cap_ptr;
- 	u16 reg;
- 
-+	if (!cap_ptr)
-+		return 0;
-+
- 	reg = dw_pcie_readw_dbi(pci, cap_ptr);
--	next_cap_ptr = (reg & 0xff00) >> 8;
- 	cap_id = (reg & 0x00ff);
- 
--	if (!next_cap_ptr || cap_id > PCI_CAP_ID_MAX)
-+	if (cap_id > PCI_CAP_ID_MAX)
- 		return 0;
- 
- 	if (cap_id == cap)
- 		return cap_ptr;
- 
-+	next_cap_ptr = (reg & 0xff00) >> 8;
- 	return __dw_pcie_ep_find_next_cap(pci, next_cap_ptr, cap);
- }
- 
-@@ -67,9 +70,6 @@ static u8 dw_pcie_ep_find_capability(struct dw_pcie *pci, u8 cap)
- 	reg = dw_pcie_readw_dbi(pci, PCI_CAPABILITY_LIST);
- 	next_cap_ptr = (reg & 0x00ff);
- 
--	if (!next_cap_ptr)
--		return 0;
--
- 	return __dw_pcie_ep_find_next_cap(pci, next_cap_ptr, cap);
- }
- 
--- 
-2.17.1
+Since the vast majority of SoC functions need a drive strength setting, DT
+patches are somehow blocked until we decide which binding to use for it.
+
+Sorry for this early ping.
+Jerome
+
+
+> 
+> Cheers
+> Jerome
+> 
+> Guillaume La Roque (2):
+>   dt-bindings: pinctrl: meson: Add drive-strength property
+>   pinctrl: meson: add support of drive-strength
+> 
+>  .../bindings/pinctrl/meson,pinctrl.txt        |   3 +
+>  drivers/pinctrl/meson/pinctrl-meson-g12a.c    |  36 ++--
+>  drivers/pinctrl/meson/pinctrl-meson.c         | 166 +++++++++++++-----
+>  drivers/pinctrl/meson/pinctrl-meson.h         |  20 ++-
+>  4 files changed, 165 insertions(+), 60 deletions(-)
+> 
+
 
