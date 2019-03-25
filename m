@@ -2,138 +2,235 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE12C4360F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:56:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEE1EC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:58:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59E5320896
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:56:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="srMzDC+m"
+	by mail.kernel.org (Postfix) with ESMTP id 73A5F2083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:58:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729782AbfCYQ45 (ORCPT
+        id S1729473AbfCYQ6n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 12:56:57 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:37777 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725788AbfCYQ44 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 12:56:56 -0400
-Received: by mail-qt1-f196.google.com with SMTP id z16so11144741qtn.4
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 09:56:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=hdrToB2TSv1yp4eb70QIvwrlSIW2W5jFyB226wrDD0Q=;
-        b=srMzDC+ms5YQVqrvZwEGDX/E/ckzFQVhFOG1bMHwhic4SroBbCVHANYL/SW7vm3dcp
-         avpmvQxnZulEN13hnbtVkEInZPvG6TPTYzdDrz+/SKsrOhPEA9oiiF754eehdWTs2lLD
-         Gm7FtbqtzbumYo/P3bUaAQK0CG5bPTt/s9ZE4Xqrz46K+vzzbO3DuYepBASZG0TS4WLX
-         nliN3mXxhSN40Ia6QSqWfU9+lMq2AO9rAOlFtskjaIc+pmLucpgXw6v4ByzXWNa2jc7l
-         toVmuhIDkJ9VSAsPKdzbegy/3sLS/c7VmTttjV+bhDJF9mZUrMjXI6G474lIcbTt1PeZ
-         rgAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=hdrToB2TSv1yp4eb70QIvwrlSIW2W5jFyB226wrDD0Q=;
-        b=YrShlpm650Xf4Bu8sqicrL7n2kHF3qT2l83U/ar5YCAa/ntTnjlP/co8tUd4qCUMMZ
-         Lm+e85IjUAkBsTCOZc5KY0All0H5KEA5Jh5MeMQAcdBAkXyN6qBFLG40Qgt6V/XTJeWN
-         WB3PvvwsR7RSqFR9xAQ0Z4nne737N+a/ojSj9xZ2xV3Rl4dQt8nhiOoyxp5kL2/Y7ty3
-         vb2WP9m3eT6xCHR7PG9uDvU+WOvHMss+XJFb7S0MiRwboxEJV1sIgCFoml6fx72iF1Yq
-         xE3At1P1AWTmdYQqKjUGXRThHflzYFJ8ecSL/jjdZdrbmMUX9ZiyA/EXsQtnVRQZOA74
-         jSxA==
-X-Gm-Message-State: APjAAAXM9Nk8wWu0YN0WoxPqY38LXQLL8fh5d8UBxnRRgmI4Vm35kLKD
-        bksDcwmJUBmThLtb1JTYxiuVDj+rOyQGIhk5xosyxw==
-X-Google-Smtp-Source: APXvYqy5O1uj8uqWIybnhXlb2Rx+YIOdNrjiO8M6dBrKRM6Bjpvp5sf0FW3DMqU3p8w8Fpikdd4u7Clq96P0hl/KHRU=
-X-Received: by 2002:ac8:32fb:: with SMTP id a56mr21951184qtb.338.1553533015773;
- Mon, 25 Mar 2019 09:56:55 -0700 (PDT)
-MIME-Version: 1.0
-References: <1553316275-21985-1-git-send-email-yang.shi@linux.alibaba.com> <cc6f44e2-48b5-067f-9685-99d8ae470b50@inria.fr>
-In-Reply-To: <cc6f44e2-48b5-067f-9685-99d8ae470b50@inria.fr>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 25 Mar 2019 09:56:44 -0700
-Message-ID: <CAPcyv4it1w7SdDVBV24cRCVHtLb3s1pVB5+SDM02Uw4RbahKiA@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/10] Another Approach to Use PMEM as NUMA Node
-To:     Brice Goglin <Brice.Goglin@inria.fr>
-Cc:     Yang Shi <yang.shi@linux.alibaba.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Rik van Riel <riel@surriel.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Fengguang Wu <fengguang.wu@intel.com>,
-        "Du, Fan" <fan.du@intel.com>, "Huang, Ying" <ying.huang@intel.com>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 25 Mar 2019 12:58:43 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48684 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725788AbfCYQ6m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 12:58:42 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 72209ACE8;
+        Mon, 25 Mar 2019 16:58:40 +0000 (UTC)
+Date:   Mon, 25 Mar 2019 17:58:39 +0100
+Message-ID: <s5hlg127uww.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Timo Wischer <twischer@de.adit-jv.com>
+Cc:     <broonie@kernel.org>, <perex@perex.cz>,
+        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 04/10] ALSA: aloop: Use always spin_lock_irqsave() for cable->lock
+In-Reply-To: <237e2d2d-9a8f-a273-4c40-db2c670c6858@de.adit-jv.com>
+References: <1553529644-5654-1-git-send-email-twischer@de.adit-jv.com>
+        <1553529644-5654-5-git-send-email-twischer@de.adit-jv.com>
+        <s5htvfr6iqh.wl-tiwai@suse.de>
+        <237e2d2d-9a8f-a273-4c40-db2c670c6858@de.adit-jv.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 9:15 AM Brice Goglin <Brice.Goglin@inria.fr> wrote:
->
->
-> Le 23/03/2019 =C3=A0 05:44, Yang Shi a =C3=A9crit :
-> > With Dave Hansen's patches merged into Linus's tree
-> >
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/comm=
-it/?id=3Dc221c0b0308fd01d9fb33a16f64d2fd95f8830a4
-> >
-> > PMEM could be hot plugged as NUMA node now. But, how to use PMEM as NUM=
-A node
-> > effectively and efficiently is still a question.
-> >
-> > There have been a couple of proposals posted on the mailing list [1] [2=
-].
-> >
-> > The patchset is aimed to try a different approach from this proposal [1=
-]
-> > to use PMEM as NUMA nodes.
-> >
-> > The approach is designed to follow the below principles:
-> >
-> > 1. Use PMEM as normal NUMA node, no special gfp flag, zone, zonelist, e=
-tc.
-> >
-> > 2. DRAM first/by default. No surprise to existing applications and defa=
-ult
-> > running. PMEM will not be allocated unless its node is specified explic=
-itly
-> > by NUMA policy. Some applications may be not very sensitive to memory l=
-atency,
-> > so they could be placed on PMEM nodes then have hot pages promote to DR=
-AM
-> > gradually.
->
->
-> I am not against the approach for some workloads. However, many HPC
-> people would rather do this manually. But there's currently no easy way
-> to find out from userspace whether a given NUMA node is DDR or PMEM*. We
-> have to assume HMAT is available (and correct) and look at performance
-> attributes. When talking to humans, it would be better to say "I
-> allocated on the local DDR NUMA node" rather than "I allocated on the
-> fastest node according to HMAT latency".
->
-> Also, when we'll have HBM+DDR, some applications may want to use DDR by
-> default, which means they want the *slowest* node according to HMAT (by
-> the way, will your hybrid policy work if we ever have HBM+DDR+PMEM?).
-> Performance attributes could help, but how does user-space know for sure
-> that X>Y will still mean HBM>DDR and not DDR>PMEM in 5 years?
->
-> It seems to me that exporting a flag in sysfs saying whether a node is
-> PMEM could be convenient. Patch series [1] exported a "type" in sysfs
-> node directories ("pmem" or "dram"). I don't know how if there's an easy
-> way to define what HBM is and expose that type too.
+On Mon, 25 Mar 2019 17:40:23 +0100,
+Timo Wischer wrote:
+> 
+> Best regards
+> Timo Wischer
+> Engineering Software Base (ADITG/ESB)
+> 
+> Tel. +49 5121 49 6938
+> On 3/25/19 17:07, Takashi Iwai wrote:
+> 
+>     On Mon, 25 Mar 2019 17:00:38 +0100,
+>     <twischer@de.adit-jv.com> wrote:
+>     
+>         From: Timo Wischer <twischer@de.adit-jv.com>
+>         
+>         to allow the usage of timer callbacks from interrupt context.
+>         For example the sound timer.
+>         
+>     The trigger callback is already irq-disabled.  And, open/close must
+>     not be irq-disabled OTOH.  So these changes must be superfluous.
+>     
+> Hello Takashi,
+> 
+> could you explain why open/close must not be irq-disabled?
 
-I'm generally against the concept that a "pmem" or "type" flag should
-indicate anything about the expected performance of the address range.
-The kernel should explicitly look to the HMAT for performance data and
-not otherwise make type-based performance assumptions.
+The open/close callbacks get called always in sleepable context where
+you can use mutex & co gracefully.  The only non-sleepable (atomic)
+context is pointer and trigger callbacks.  So it's safe to use
+spin_lock() without irq in these callbacks.
+OTOH, the rest (open, close,hw_params, hw_free, prepare) callbacks are
+always sleepable, hence it's safe to use spin_lock_irq() (not
+save/restore) variant.
+
+When a driver declares as non-atomic via PCM flag, all callbacks
+become sleepable, but this isn't the case for aloop driver.
+
+> I see a potential deadlock in case of free_cable() uses only spin_lock()
+> instead of spin_lock_irqsave().
+> For example the following will be executed:
+> 
+> loopback_close()
+> free_cable()
+> spin_lock(&dpcm->cable->lock)
+
+Which spin_lock() call?  The free_cable() calls spin_lock_irq().
+
+> >> Interrupted by jiffies timer IRQ before calling spin_unlock()
+> 
+> loopback_jiffies_timer_function()
+> spin_lock_irqsave(&dpcm->cable->lock)
+> >> DEADLOCK due to dpcm->cable->lock is already locked
+> 
+> Do you also see this deadlock or do you see any reason why this could not
+> happen?
+
+If spin_lock_irq() is used in free_cable(), it must be OK.
+
+
+Takashi
+
+
+> Best regards
+> 
+> Timo
+> 
+>     thanks,
+>     
+>     Takashi
+> 
+>         Signed-off-by: Timo Wischer <twischer@de.adit-jv.com>
+>         ---
+>          sound/drivers/aloop.c | 33 +++++++++++++++++++--------------
+>          1 file changed, 19 insertions(+), 14 deletions(-)
+>         
+>         diff --git a/sound/drivers/aloop.c b/sound/drivers/aloop.c
+>         index 11e8ed6..c6217c4 100644
+>         --- a/sound/drivers/aloop.c
+>         +++ b/sound/drivers/aloop.c
+>         @@ -272,6 +272,7 @@ static int loopback_trigger(struct snd_pcm_substream *substream, int cmd)
+>               struct loopback_pcm *dpcm = runtime->private_data;
+>               struct loopback_cable *cable = dpcm->cable;
+>               int err = 0, stream = 1 << substream->stream;
+>         +     unsigned long flags;
+>          
+>               switch (cmd) {
+>               case SNDRV_PCM_TRIGGER_START:
+>         @@ -281,39 +282,39 @@ static int loopback_trigger(struct snd_pcm_substream *substream, int cmd)
+>                                     dpcm->last_jiffies = jiffies;
+>                                     dpcm->pcm_rate_shift = 0;
+>                                     dpcm->last_drift = 0;
+>         -                           spin_lock(&cable->lock);                    
+>         +                           spin_lock_irqsave(&cable->lock, flags);
+>                                     cable->running |= stream;
+>                                     cable->pause &= ~stream;
+>                                     err = loopback_timer_start(dpcm);
+>         -                           spin_unlock(&cable->lock);
+>         +                           spin_unlock_irqrestore(&cable->lock, flags);
+>                                     if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
+>                                                           loopback_active_notify(dpcm);
+>                                     break;
+>               case SNDRV_PCM_TRIGGER_STOP:
+>         -                           spin_lock(&cable->lock);                    
+>         +                           spin_lock_irqsave(&cable->lock, flags);
+>                                     cable->running &= ~stream;
+>                                     cable->pause &= ~stream;
+>                                     err = loopback_timer_stop(dpcm);
+>         -                           spin_unlock(&cable->lock);
+>         +                           spin_unlock_irqrestore(&cable->lock, flags);
+>                                     if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
+>                                                           loopback_active_notify(dpcm);
+>                                     break;
+>               case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
+>               case SNDRV_PCM_TRIGGER_SUSPEND:
+>         -                           spin_lock(&cable->lock);                    
+>         +                           spin_lock_irqsave(&cable->lock, flags);
+>                                     cable->pause |= stream;
+>                                     err = loopback_timer_stop(dpcm);
+>         -                           spin_unlock(&cable->lock);
+>         +                           spin_unlock_irqrestore(&cable->lock, flags);
+>                                     if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
+>                                                           loopback_active_notify(dpcm);
+>                                     break;
+>               case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
+>               case SNDRV_PCM_TRIGGER_RESUME:
+>         -                           spin_lock(&cable->lock);
+>         +                           spin_lock_irqsave(&cable->lock, flags);
+>                                     dpcm->last_jiffies = jiffies;
+>                                     cable->pause &= ~stream;
+>                                     err = loopback_timer_start(dpcm);
+>         -                           spin_unlock(&cable->lock);
+>         +                           spin_unlock_irqrestore(&cable->lock, flags);
+>                                     if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
+>                                                           loopback_active_notify(dpcm);
+>                                     break;
+>         @@ -557,12 +558,13 @@ static snd_pcm_uframes_t loopback_pointer(struct snd_pcm_substream *substream)
+>          {
+>               struct snd_pcm_runtime *runtime = substream->runtime;
+>               struct loopback_pcm *dpcm = runtime->private_data;
+>         +     unsigned long flags;
+>               snd_pcm_uframes_t pos;
+>          
+>         -     spin_lock(&dpcm->cable->lock);
+>         +     spin_lock_irqsave(&dpcm->cable->lock, flags);
+>               loopback_pos_update(dpcm->cable);
+>               pos = dpcm->buf_pos;
+>         -     spin_unlock(&dpcm->cable->lock);
+>         +     spin_unlock_irqrestore(&dpcm->cable->lock, flags);
+>               return bytes_to_frames(runtime, pos);
+>          }
+>          
+>         @@ -679,10 +681,12 @@ static void free_cable(struct snd_pcm_substream *substream)
+>               if (!cable)
+>                                     return;
+>               if (cable->streams[!substream->stream]) {
+>         +                           unsigned long flags;
+>         +
+>                                     /* other stream is still alive */
+>         -                           spin_lock_irq(&cable->lock);
+>         +                           spin_lock_irqsave(&cable->lock, flags);
+>                                     cable->streams[substream->stream] = NULL;
+>         -                           spin_unlock_irq(&cable->lock);
+>         +                           spin_unlock_irqrestore(&cable->lock, flags);
+>               } else {
+>                                     /* free the cable */
+>                                     loopback->cables[substream->number][dev] = NULL;
+>         @@ -698,6 +702,7 @@ static int loopback_open(struct snd_pcm_substream *substream)
+>               struct loopback_cable *cable = NULL;
+>               int err = 0;
+>               int dev = get_cable_index(substream);
+>         +     unsigned long flags;
+>          
+>               mutex_lock(&loopback->cable_lock);
+>               dpcm = kzalloc(sizeof(*dpcm), GFP_KERNEL);
+>         @@ -753,9 +758,9 @@ static int loopback_open(struct snd_pcm_substream *substream)
+>               else
+>                                     runtime->hw = cable->hw;
+>          
+>         -     spin_lock_irq(&cable->lock);
+>         +     spin_lock_irqsave(&cable->lock, flags);
+>               cable->streams[substream->stream] = dpcm;
+>         -     spin_unlock_irq(&cable->lock);
+>         +     spin_unlock_irqrestore(&cable->lock, flags);
+>          
+>           unlock:
+>               if (err < 0) {
+>         -- 
+>         2.7.4
+> 
+> 
