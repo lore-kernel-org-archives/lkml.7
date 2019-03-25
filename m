@@ -2,119 +2,108 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33922C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 06:54:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4244C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 06:54:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F251A20863
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 06:54:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8253A20854
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 06:54:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="B7gscBnN";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="B7gscBnN"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="STWh/0wQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729792AbfCYGy1 (ORCPT
+        id S1729809AbfCYGyy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 02:54:27 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:59730 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729656AbfCYGy0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 02:54:26 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id EF41D602BA; Mon, 25 Mar 2019 06:54:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553496865;
-        bh=1ovQDx4GGPKRoJdCnAe8rb5ACCsjCYaqsSigR07mCCc=;
-        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
-        b=B7gscBnNEjeJ72a6pzNSO+e3uKNT/2LJvOQlBxUVFZeaQm6cMNI0NL7BXuf/loVUM
-         5pn9qKE1VpBeaPZ5+VYE6EUE7f+KTxjC2IKwWdRqtuyk998BRsaDsa2/Of/Y00roA0
-         bcFTNE7/qgRQmP4F5BIortKFeHA0znM3wU09FdS0=
-Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Mon, 25 Mar 2019 02:54:54 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:54138 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729656AbfCYGyy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 02:54:54 -0400
+Received: from zn.tnic (p200300EC2F098000329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:8000:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 41DE0602BA;
-        Mon, 25 Mar 2019 06:54:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553496865;
-        bh=1ovQDx4GGPKRoJdCnAe8rb5ACCsjCYaqsSigR07mCCc=;
-        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
-        b=B7gscBnNEjeJ72a6pzNSO+e3uKNT/2LJvOQlBxUVFZeaQm6cMNI0NL7BXuf/loVUM
-         5pn9qKE1VpBeaPZ5+VYE6EUE7f+KTxjC2IKwWdRqtuyk998BRsaDsa2/Of/Y00roA0
-         bcFTNE7/qgRQmP4F5BIortKFeHA0znM3wU09FdS0=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 41DE0602BA
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH] sound: codecs: fix a potential NULL pointer dereference
-From:   Mukesh Ojha <mojha@codeaurora.org>
-To:     Kangjie Lu <kjlu@umn.edu>
-Cc:     pakki001@umn.edu, Bard Liao <bardliao@realtek.com>,
-        Oder Chiou <oder_chiou@realtek.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org
-References: <20190324231237.2246-1-kjlu@umn.edu>
- <4fa0e2cb-7044-12e1-33b3-14015c94e48d@codeaurora.org>
-Message-ID: <ddedc6d6-823a-44ea-e02b-b83fa80a4483@codeaurora.org>
-Date:   Mon, 25 Mar 2019 12:24:18 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.0
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id DC9BE1EC02AE;
+        Mon, 25 Mar 2019 07:54:51 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1553496892;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=LpYxhVlfV2gEX33wV6ozS41lCPpjrz6TfKLaI6w0DWs=;
+        b=STWh/0wQCrqwcWm8++Mv75iFq985KBxk9fW2UIzE9jzeS4H/PeIAVTo5GUx3nsNnkuzS59
+        3DWXY9nWcoWC+Geg2GaXQLj2/O4PxEs4VY5m1hTHyUwlYawz302mAy/2WyOoncQ8Brp1zV
+        EcdwslK0NW/UjdMzrOKk4QP8AyRGFlA=
+Date:   Mon, 25 Mar 2019 07:54:54 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Paul Walmsley <paul.walmsley@sifive.com>
+Cc:     Yash Shah <yash.shah@sifive.com>, linux-riscv@lists.infradead.org,
+        linux-edac@vger.kernel.org, palmer@sifive.com,
+        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, aou@eecs.berkeley.edu, mchehab@kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 2/2] sifive: edac: Add EDAC driver for Sifive l2 Cache
+ Controller
+Message-ID: <20190325065453.GC12016@zn.tnic>
+References: <1552382461-13051-1-git-send-email-yash.shah@sifive.com>
+ <1552382461-13051-3-git-send-email-yash.shah@sifive.com>
+ <20190312092842.GC28589@zn.tnic>
+ <alpine.DEB.2.21.9999.1903241705460.8028@viisi.sifive.com>
 MIME-Version: 1.0
-In-Reply-To: <4fa0e2cb-7044-12e1-33b3-14015c94e48d@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.9999.1903241705460.8028@viisi.sifive.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kangjje/Aditya,
+On Sun, Mar 24, 2019 at 05:16:17PM -0700, Paul Walmsley wrote:
+> Looking at the Synopsys,
 
-Please do take care of the return value you are sending upstream whether 
-still is checked or not
-otherwise NULL pointer dereference will still come.
-Also resource release properly otherwise your patch may looks simple but 
-it can introduce memory leak as well in other path.
+Look again at synopsys_edac.
 
+>  Highbank,
 
-Thanks,
-Mukesh
+Yes, that one and octeon.
 
-On 3/25/2019 12:15 PM, Mukesh Ojha wrote:
->
-> On 3/25/2019 4:42 AM, Kangjie Lu wrote:
->> In case devm_kzalloc fails, the patch returns -ENOMEM to avoid
->> potential NULL pointer dereference.
->>
->> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
->> ---
->>   sound/soc/codecs/rt5663.c | 2 ++
->>   1 file changed, 2 insertions(+)
->>
->> diff --git a/sound/soc/codecs/rt5663.c b/sound/soc/codecs/rt5663.c
->> index da6647015708..909ab99a1995 100644
->> --- a/sound/soc/codecs/rt5663.c
->> +++ b/sound/soc/codecs/rt5663.c
->> @@ -3480,6 +3480,8 @@ static int rt5663_parse_dp(struct rt5663_priv 
->> *rt5663, struct device *dev)
->>           table_size = sizeof(struct impedance_mapping_table) *
->>               rt5663->pdata.impedance_sensing_num;
->>           rt5663->imp_table = devm_kzalloc(dev, table_size, GFP_KERNEL);
->> +        if (!rt5663->imp_table)
->> +            return -ENOMEM;
->
-> add checks in rt5663_parse_dp  as well.
->
-> Thanks.
-> Mukesh
->
->
->> device_property_read_u32_array(dev,
->>               "realtek,impedance_sensing_table",
->>               (u32 *)rt5663->imp_table, table_size);
+> PowerPC 4xx, and
+
+also a single ppc4xx_edac driver.
+
+> TI EDAC drivers,
+
+There's TI drivers, plural? I see only ti_edac.c. Also, per-vendor.
+
+> all of those are clearly for IP block error management, rather than
+> platform error management. Has the upstream guidance changed since
+> those drivers were merged?
+
+There are others which are per-platform and work just fine this way:
+xgene_edac, altera_edac, layerscape_edac, qcom_edac, synopsys_edac...
+
+The problem with per IP block is that if those compilation units would
+need to share info or communicate, then that is impossible nowadays and
+you'd need to build something on your own.
+
+Also, the EDAC core supports only one driver.
+
+> The core issue for us is that we don't have a generalized "ECC management" 
+> IP block.  And I would just as soon not fake one in the DT data, since the 
+> general DT guidance is that the data in DT is meant to describe the actual 
+> hardware.
+
+Look at how the others I mentioned above do it.
+
+> Would it make more sense to put this driver outside of drivers/edac?
+
+If you're not going to need any EDAC facilities - which are not a lot,
+btw :) - you can do whatever you prefer.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
