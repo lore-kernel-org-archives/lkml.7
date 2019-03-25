@@ -2,72 +2,106 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01491C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:37:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77EEEC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:37:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0E30205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:37:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56F1A20896
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:37:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730129AbfCYRhb (ORCPT
+        id S1730149AbfCYRhf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 13:37:31 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:52602 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729946AbfCYRha (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 13:37:30 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6B82C1596;
-        Mon, 25 Mar 2019 10:37:28 -0700 (PDT)
-Received: from e112269-lin.arm.com (e112269-lin.cambridge.arm.com [10.1.196.69])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7E4983F575;
-        Mon, 25 Mar 2019 10:37:27 -0700 (PDT)
-From:   Steven Price <steven.price@arm.com>
-To:     Sudeep Holla <sudeep.holla@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, Steven Price <steven.price@arm.com>
-Subject: [PATCH] firmware: arm_scmi: Fix leak in scmi_mailbox_check
-Date:   Mon, 25 Mar 2019 17:37:22 +0000
-Message-Id: <20190325173722.49414-1-steven.price@arm.com>
-X-Mailer: git-send-email 2.20.1
+        Mon, 25 Mar 2019 13:37:35 -0400
+Received: from ns.iliad.fr ([212.27.33.1]:52534 "EHLO ns.iliad.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729946AbfCYRhd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 13:37:33 -0400
+Received: from ns.iliad.fr (localhost [127.0.0.1])
+        by ns.iliad.fr (Postfix) with ESMTP id 3C2CC208E6;
+        Mon, 25 Mar 2019 18:37:31 +0100 (CET)
+Received: from [192.168.108.8] (freebox.vlq16.iliad.fr [213.36.7.13])
+        by ns.iliad.fr (Postfix) with ESMTP id 22D0120814;
+        Mon, 25 Mar 2019 18:37:31 +0100 (CET)
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Kishon Vijay Abraham <kishon@ti.com>,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
+Subject: [PATCH v1] arm64: dts: qcom: msm8998: Add PCIe PHY node
+Message-ID: <cd3633a4-1781-0998-794d-d609daa9a89b@free.fr>
+Date:   Mon, 25 Mar 2019 18:37:31 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Mon Mar 25 18:37:31 2019 +0100 (CET)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-of_parse_phandle_with_args() requires the caller to call of_node_put() on
-the returned args->np pointer. Otherwise the reference count will remain
-incremented.
+Add MSM8998 PCIe QMP PHY DT node.
 
-However, in this case, since we don't actually use the returned pointer,
-we can simply pass in NULL.
-
-Fixes: aa4f886f3893f ("firmware: arm_scmi: add basic driver infrastructure for SCMI")
-Signed-off-by: Steven Price <steven.price@arm.com>
+Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
 ---
- drivers/firmware/arm_scmi/driver.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ arch/arm64/boot/dts/qcom/msm8998.dtsi | 39 +++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
-diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
-index 8f952f2f1a29..dd967d675c08 100644
---- a/drivers/firmware/arm_scmi/driver.c
-+++ b/drivers/firmware/arm_scmi/driver.c
-@@ -654,9 +654,7 @@ static int scmi_xfer_info_init(struct scmi_info *sinfo)
+diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+index f9a922fdae75..8344ed1bf08d 100644
+--- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+@@ -606,6 +606,45 @@
+ 			#thermal-sensor-cells = <1>;
+ 		};
  
- static int scmi_mailbox_check(struct device_node *np)
- {
--	struct of_phandle_args arg;
--
--	return of_parse_phandle_with_args(np, "mboxes", "#mbox-cells", 0, &arg);
-+	return of_parse_phandle_with_args(np, "mboxes", "#mbox-cells", 0, NULL);
- }
- 
- static int scmi_mbox_free_channel(int id, void *p, void *data)
++		phy@1c06000 {
++			compatible = "qcom,msm8998-qmp-pcie-phy";
++			reg = <0x01c06000 0x18c>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges;
++
++			clock-names =
++				"aux",
++				"cfg_ahb",
++				"ref";
++			clocks =
++				<&gcc GCC_PCIE_PHY_AUX_CLK>,
++				<&gcc GCC_PCIE_0_CFG_AHB_CLK>,
++				<&gcc GCC_PCIE_CLKREF_CLK>;
++
++			reset-names =
++				"phy",
++				"common",
++				"cfg";
++			resets =
++				<&gcc GCC_PCIE_PHY_BCR>,
++				<&gcc GCC_PCIE_PHY_COM_BCR>,
++				<&gcc GCC_PCIE_PHY_NOCSR_COM_PHY_BCR>;
++
++			vdda-phy-supply = <&vreg_l1a_0p875>;
++			vdda-pll-supply = <&vreg_l2a_1p2>;
++
++			pciephy: lane@1c06800 {
++				reg = <0x01c06200 0x128>, <0x01c06400 0x1fc>, <0x01c06800 0x20c>;
++				#phy-cells = <0>;
++
++				clock-names = "pipe0";
++				clocks = <&gcc GCC_PCIE_0_PIPE_CLK>;
++				clock-output-names = "pcie_0_pipe_clk_src";
++				#clock-cells = <0>;
++			};
++		};
++
+ 		tcsr_mutex_regs: syscon@1f40000 {
+ 			compatible = "syscon";
+ 			reg = <0x1f40000 0x20000>;
 -- 
-2.20.1
-
+2.17.1
