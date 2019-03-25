@@ -2,112 +2,109 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F00CC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:30:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AC5EC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:30:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 047F720830
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:30:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F32520830
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:30:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PfCSSn1k"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LQ3+xwbV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730111AbfCYSaZ (ORCPT
+        id S1730134AbfCYSal (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 14:30:25 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:36049 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729036AbfCYSaZ (ORCPT
+        Mon, 25 Mar 2019 14:30:41 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:40294 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729938AbfCYSal (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 14:30:25 -0400
-Received: by mail-pl1-f195.google.com with SMTP id k2so346351plt.3
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 11:30:25 -0700 (PDT)
+        Mon, 25 Mar 2019 14:30:41 -0400
+Received: by mail-lj1-f194.google.com with SMTP id q66so8795430ljq.7
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 11:30:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=fIZK9l/PSo/azPAD1wVNltgu5UI5I+sb6w/ogJ7GQDY=;
-        b=PfCSSn1k3fYKB6CvxNvYt/8YbWDO5ndMWqlhwOJqWWucEY5hf1+sFplX8hxLOrRgsB
-         ILaGHbbcHTJIdInhfYQWgL2ExTVBJsMumI3SZFr/QUM278m+fqBBxaUVbtMcrCGFht/w
-         1jtPSPaZMEQwI8Sd1ZpoW1t7aSn/5q9helDuWzYYMwpL9gf2kfOVvPpcF7d+VUnwdTAU
-         G2IxU+PmpTxhJ/RDMpAipZLT0g/oY9KI0aGDQr3d/Vl1Fthx2c6rKBFZkOk9oHyU30HR
-         I/ihM0uPnzDz3ZGVsmZ2Vwb6XHpX38BsSoNnTptbpjnKfQio3ebqS76Qu8Tyn1FnoVSD
-         cdNg==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ibmine5CoYu+qwC4nsM/es1TEToU8N581offEqa03Jg=;
+        b=LQ3+xwbVq0zaFEK2XfsapsupqeUvol/qn0i1bJhdWYbQh20ZA34zMArXfEXwDT8Dil
+         GR+jse4z+rLNFNXTSKDQDAhHY1PzNujlhn39b9q0Mhm4i2iBV6sR6HHQ4dJ6Jez9LHNM
+         kx1Hnkr2USGwkqddJnHNB/5DoxohADfmwimcc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=fIZK9l/PSo/azPAD1wVNltgu5UI5I+sb6w/ogJ7GQDY=;
-        b=Og3fnWRal4uiLnUQnTQL2amJR5uP/J5aNpEYCtpYSaxc2SZh8UqFIqLMYpnxXNGUF4
-         Mdtp3OUTd8kCdOJ/sXXEqOAHYr3FrLqBoHxGtckqV2h7Ps/x7zW2g/Q+XzAx7HfgHyo6
-         QQtXfI1KKQZtgBHbj/HgEfvkGr0eBA1E7Uku8qpi7xFcsgbZPW1UGGuXE4YWA8pLPmef
-         D6i4LNOYRYJEP5voNT7ooqwwDKlSU0K2q61IuBJEApWUpjfswPiCK8bBxiU3vWkQGq7y
-         SgMKBOlRlK/lwCnPnDVqtEezSeAnbepzJ05tc0N6Qk7AG/vXXDZZmB3fBzVbklMAkqCM
-         iv9Q==
-X-Gm-Message-State: APjAAAVGo7/4ashb85AhUMYUdQo76xFz6fDZ9tA5awE26kCoZDAl3sxl
-        TvJSKPDfzL7MnaBDzHRikGM=
-X-Google-Smtp-Source: APXvYqxAHqgnQXRYg+2ciIRVOrb8xTbUvqJYT34H3pUAoj7CYY2OEVRZVsDWCDQFqt7u6w6b6gy9Iw==
-X-Received: by 2002:a17:902:b593:: with SMTP id a19mr7780932pls.300.1553538624598;
-        Mon, 25 Mar 2019 11:30:24 -0700 (PDT)
-Received: from squirtle.lan (c-24-22-235-96.hsd1.wa.comcast.net. [24.22.235.96])
-        by smtp.gmail.com with ESMTPSA id d137sm24399887pfd.133.2019.03.25.11.30.23
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 25 Mar 2019 11:30:23 -0700 (PDT)
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-To:     Shawn Guo <shawnguo@kernel.org>
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Chris Healy <cphealy@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ARM: dts: vf610-zii-cfu1: Disable NOR flash/SPI controller
-Date:   Mon, 25 Mar 2019 11:30:17 -0700
-Message-Id: <20190325183017.22278-1-andrew.smirnov@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ibmine5CoYu+qwC4nsM/es1TEToU8N581offEqa03Jg=;
+        b=T1yXoY3AnqmmnNDpIdGJ2iYgKPHJXPANGjQBPPCf4GBqPb2hJHRXhYHt0Pqv/jhSSp
+         O1e5ZZYY5cvfKMsExKK2b51KMn/ivWYpLW+/IfvvjXiCRmjkxzRvlPO02GCFhhOmZRcz
+         CnBres29zuDRGZdVTcB9YTeYdRAgIuv9xkCDIya8ZU4dZza0TRi78jOgt6KUIPdeNaDU
+         j96KLcR8K62xD5thVcR+0OVWYYWxTdhVXWi1X8C12OK2Rf1zsgQUWuwgutnTveHAzi2K
+         4Iaw/eLLIWJI/p9c1eJAOIPFV8iC9LOENc+5LSKoKs/+HxdmRJnGEeBsGg1dZE7OGPO4
+         OzjQ==
+X-Gm-Message-State: APjAAAUHO1IAprCGa58wj16anZWru9B449Lr+mpF0dTyZVNfhy0vMiQ+
+        t0vy5KyH7Co0cJsicXfwELdZv967D10=
+X-Google-Smtp-Source: APXvYqzFoEkgOwT8KqLg+0DpxJinSQxmpJraq8SL4/W10LcxwN3MBLLVQRF9aQ5ZkCr2SjYAASKseA==
+X-Received: by 2002:a2e:6e14:: with SMTP id j20mr3474867ljc.172.1553538639026;
+        Mon, 25 Mar 2019 11:30:39 -0700 (PDT)
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com. [209.85.167.44])
+        by smtp.gmail.com with ESMTPSA id w22sm1633353ljd.42.2019.03.25.11.30.35
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 25 Mar 2019 11:30:36 -0700 (PDT)
+Received: by mail-lf1-f44.google.com with SMTP id u68so6750815lff.7
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 11:30:35 -0700 (PDT)
+X-Received: by 2002:a19:9794:: with SMTP id z142mr13924225lfd.46.1553538635692;
+ Mon, 25 Mar 2019 11:30:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190325125704.6585-1-hotwater438@tutanota.com>
+ <CAE_wzQ8Aep1FOONeCUxvjBFbgKcVRWP5mUuwQnDxzfemUw-eaA@mail.gmail.com>
+ <a2952bc4-0ad0-c8a0-5a5b-13a279023455@redhat.com> <CAE_wzQ8sYcMVYLmnctw_UQuvn0B8U2CU2dNeg-9sh85AL_CfgQ@mail.gmail.com>
+ <Laq4ykv--3-1@tutanota.com>
+In-Reply-To: <Laq4ykv--3-1@tutanota.com>
+From:   Dmitry Torokhov <dtor@chromium.org>
+Date:   Mon, 25 Mar 2019 11:30:24 -0700
+X-Gmail-Original-Message-ID: <CAE_wzQ9iqOW6zrR8p3knhiPwf6YcdLXd5v=F28shNZwaXVfPZQ@mail.gmail.com>
+Message-ID: <CAE_wzQ9iqOW6zrR8p3knhiPwf6YcdLXd5v=F28shNZwaXVfPZQ@mail.gmail.com>
+Subject: Re: [PATCH] ELAN touchpad i2c_hid bugs fix
+To:     hotwater438@tutanota.com
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Vladislav Dalechyn <vlad.dalechin@gmail.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Kai Heng Feng <kai.heng.feng@canonical.com>,
+        Swboyd <swboyd@chromium.org>, Bigeasy <bigeasy@linutronix.de>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Only a certain number of CFU1's come with NOR flash populated. Disable
-it by default to avoid trying to probe NOR flash on devices that don't
-have it. Devices that do have it can rely on the bootloader to enable
-this node.
+On Mon, Mar 25, 2019 at 11:23 AM <hotwater438@tutanota.com> wrote:
+>
+> Hi.
+>
+> Mar 25, 2019, 6:56 PM by dtor@chromium.org:
+>
+> If you want to keep on using edge you need to make sure that i2c-hid
+> never loses edge, as replaying of previously disabled interrupts in
+> not at all reliable. So you need to "kick" the device after
+> enable_irq() by initiating read from it and be ready to not get any
+> data or get valid data and process accordingly.
+>
+> I'm sorry, but how edge can be loosed? There is device ID and quirk's which are associated with that ID, and quirk will always trigger edge irq.
 
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: Andrew Lunn <andrew@lunn.ch>
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
----
- arch/arm/boot/dts/vf610-zii-cfu1.dts | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+If edge arrives while interrupt is disabled and replay of the
+interrupt does not work when it is reenabled (and I do not think it
+ever works for GPIO, you can hunt for Thomas Gleixner emails to that
+effect on LKML), then ISR in the driver will never be called, so
+driver will never read from the device to reset the interrupt
+condition and interrupt will never be reasserted again -> edge lost.
 
-diff --git a/arch/arm/boot/dts/vf610-zii-cfu1.dts b/arch/arm/boot/dts/vf610-zii-cfu1.dts
-index 6c78122401a1..afc25b33bd3b 100644
---- a/arch/arm/boot/dts/vf610-zii-cfu1.dts
-+++ b/arch/arm/boot/dts/vf610-zii-cfu1.dts
-@@ -87,7 +87,12 @@
- 	bus-num = <1>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_dspi1>;
--	status = "okay";
-+	/*
-+	 * Some CFU1s come with SPI-NOR chip DNPed, so we leave this
-+	 * node disabled by default and rely on bootloader to enable
-+	 * it when appropriate.
-+	 */
-+	status = "disabled";
- 
- 	m25p128@0 {
- 		#address-cells = <1>;
+Thanks.
+
 -- 
-2.20.1
-
+Dmitry
