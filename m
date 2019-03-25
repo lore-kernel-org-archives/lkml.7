@@ -2,136 +2,117 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E89C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 09:57:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D4FC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 09:58:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C30120870
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 09:57:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BC2320870
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 09:58:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730474AbfCYJ5i (ORCPT
+        id S1730505AbfCYJ6Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 05:57:38 -0400
-Received: from mga18.intel.com ([134.134.136.126]:28708 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730216AbfCYJ5i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 05:57:38 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Mar 2019 02:57:37 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,256,1549958400"; 
-   d="scan'208";a="331732903"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga005.fm.intel.com with SMTP; 25 Mar 2019 02:57:34 -0700
-Received: by lahna (sSMTP sendmail emulation); Mon, 25 Mar 2019 11:57:33 +0200
-Date:   Mon, 25 Mar 2019 11:57:33 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     linux-kernel@vger.kernel.org,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH v2 17/28] thunderbolt: Add support for full PCIe daisy
- chains
-Message-ID: <20190325095733.GC3622@lahna.fi.intel.com>
-References: <20190206131738.43696-1-mika.westerberg@linux.intel.com>
- <20190206131738.43696-18-mika.westerberg@linux.intel.com>
- <20190324113144.wubme46hby7rj6r2@wunner.de>
+        Mon, 25 Mar 2019 05:58:16 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:44160 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730250AbfCYJ6P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 05:58:15 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3980715AB;
+        Mon, 25 Mar 2019 02:58:15 -0700 (PDT)
+Received: from [10.1.196.93] (en101.cambridge.arm.com [10.1.196.93])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E47C53F614;
+        Mon, 25 Mar 2019 02:58:11 -0700 (PDT)
+Subject: Re: [PATCH] KVM: arm/arm64: Comments cleanup in mmu.c
+To:     yuzenghui@huawei.com, christoffer.dall@arm.com,
+        marc.zyngier@arm.com
+Cc:     james.morse@arm.com, julien.thierry@arm.com,
+        wanghaibin.wang@huawei.com, kvmarm@lists.cs.columbia.edu,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <1553500925-26000-1-git-send-email-yuzenghui@huawei.com>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <194b5370-0ed2-5dbd-9a5d-e20e4f8413ec@arm.com>
+Date:   Mon, 25 Mar 2019 09:58:09 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190324113144.wubme46hby7rj6r2@wunner.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <1553500925-26000-1-git-send-email-yuzenghui@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 24, 2019 at 12:31:44PM +0100, Lukas Wunner wrote:
-> On Wed, Feb 06, 2019 at 04:17:27PM +0300, Mika Westerberg wrote:
-> > @@ -63,6 +71,16 @@ static void tb_discover_tunnels(struct tb_switch *sw)
-> >  	}
-> >  }
-> >  
-> > +static void tb_switch_authorize(struct work_struct *work)
-> > +{
-> > +	struct tb_switch *sw = container_of(work, typeof(*sw), work);
-> > +
-> > +	mutex_lock(&sw->tb->lock);
-> > +	if (!sw->is_unplugged)
-> > +		tb_domain_approve_switch(sw->tb, sw);
-> > +	mutex_unlock(&sw->tb->lock);
-> > +}
-> > +
+
+
+On 25/03/2019 08:02, Zenghui Yu wrote:
+> Some comments in virt/kvm/arm/mmu.c are outdated and incorrect.
+> Get rid of these comments, to keep the code&comment correct and
+> current as a whole.
 > 
-> You're establishing PCI tunnels by having tb_scan_port() schedule
-> tb_switch_authorize() via a work item, which in turn calls
-> tb_domain_approve_switch(), which in turn calls tb_approve_switch(),
-> which in turn calls tb_tunnel_pci().
+> Only a cleanup here, no functional change.
 > 
-> This seems kind of like a roundabout way of doing things, in particular
-> since all switches are hardcoded to be automatically authorized.
+> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+> ---
+>   virt/kvm/arm/mmu.c | 23 +++++++++--------------
+>   1 file changed, 9 insertions(+), 14 deletions(-)
 > 
-> Why don't you just invoke tb_tunnel_pci() directly from tb_scan_port()?
+> diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
+> index ffd7acd..0a6efe7 100644
+> --- a/virt/kvm/arm/mmu.c
+> +++ b/virt/kvm/arm/mmu.c
+> @@ -102,8 +102,7 @@ static bool kvm_is_device_pfn(unsigned long pfn)
+>    * @addr:	IPA
+>    * @pmd:	pmd pointer for IPA
+>    *
+> - * Function clears a PMD entry, flushes addr 1st and 2nd stage TLBs. Marks all
+> - * pages in the range dirty.
+> + * Function clears a PMD entry, flushes addr 1st and 2nd stage TLBs.
+>    */
+>   static void stage2_dissolve_pmd(struct kvm *kvm, phys_addr_t addr, pmd_t *pmd)
+>   {
+> @@ -121,8 +120,7 @@ static void stage2_dissolve_pmd(struct kvm *kvm, phys_addr_t addr, pmd_t *pmd)
+>    * @addr:	IPA
+>    * @pud:	pud pointer for IPA
+>    *
+> - * Function clears a PUD entry, flushes addr 1st and 2nd stage TLBs. Marks all
+> - * pages in the range dirty.
+> + * Function clears a PUD entry, flushes addr 1st and 2nd stage TLBs.
+>    */
+>   static void stage2_dissolve_pud(struct kvm *kvm, phys_addr_t addr, pud_t *pudp)
+>   {
+> @@ -899,9 +897,8 @@ int create_hyp_exec_mappings(phys_addr_t phys_addr, size_t size,
+>    * kvm_alloc_stage2_pgd - allocate level-1 table for stage-2 translation.
+>    * @kvm:	The KVM struct pointer for the VM.
+>    *
+> - * Allocates only the stage-2 HW PGD level table(s) (can support either full
+> - * 40-bit input addresses or limited to 32-bit input addresses). Clears the
+> - * allocated pages.
+> + * Allocates only the stage-2 HW PGD level table(s) of size defined by
+> + * stage2_pgd_size(kvm).
+>    *
+>    * Note we don't need locking here as this is only called when the VM is
+>    * created, which can only be done once.
+> @@ -1451,13 +1448,11 @@ static void stage2_wp_pmds(struct kvm *kvm, pud_t *pud,
+>   }
+>   
+>   /**
+> -  * stage2_wp_puds - write protect PGD range
+> -  * @pgd:	pointer to pgd entry
+> -  * @addr:	range start address
+> -  * @end:	range end address
+> -  *
+> -  * Process PUD entries, for a huge PUD we cause a panic.
+> -  */
+> + * stage2_wp_puds - write protect PGD range
+> + * @pgd:	pointer to pgd entry
+> + * @addr:	range start address
+> + * @end:	range end address
+> + */
 
-Indeed, it does not make much sense to schedule separate work item just
-for this.
 
-I'm will remove it in v3. However, instead of always creating PCIe
-tunnels I'm going to propose that we implement the "user" security level
-in the software connection manager by default. While DMA protection
-relies on IOMMU, doing this allows user to turn off PCIe tunneling
-completely (or implement their own whitelisting of known good devices
-for example).
-
-> And why is the work item needed?  I'm also confused that the work item
-> has been present in struct tb_switch for 2 years but is put to use only
-> now.
-
-Yes, you are right - the work item here is not needed. It is actually
-remnant from the original patch series. I'll cook a patch removing it.
-
-> > -static void tb_activate_pcie_devices(struct tb *tb)
-> > +static int tb_tunnel_pci(struct tb *tb, struct tb_switch *sw)
-> >  {
-> [...]
-> > +	/*
-> > +	 * Look up available down port. Since we are chaining, it is
-> > +	 * typically found right above this switch.
-> > +	 */
-> > +	down = NULL;
-> > +	parent_sw = tb_to_switch(sw->dev.parent);
-> > +	while (parent_sw) {
-> > +		down = tb_find_unused_down_port(parent_sw);
-> > +		if (down)
-> > +			break;
-> > +		parent_sw = tb_to_switch(parent_sw->dev.parent);
-> > +	}
-> 
-> The problem I see here is that there's no guarantee that the switch
-> on which you're selecting a down port is actually itself connected
-> with a PCI tunnel.  E.g., allocation of a tunnel to that parent
-> switch may have failed.  In that case you end up establishing a
-> tunnel between that parent switch and the newly connected switch
-> but the tunnel is of no use.
-
-Since this is going through tb_domain_approve_switch() it does not allow
-PCIe tunnel creation if the parent is not authorized first.
-
-> It would seem more logical to me to walk down the chain of newly
-> connected switches and try to establish a PCI tunnel to each of
-> them in order.  By deferring tunnel establishment to a work item,
-> I think the tunnels may be established in an arbitrary order, right?
-
-The workqueue is ordered so AFAIK they should be run in the order the
-hotplug happened. In any case I'm going to remove the work item so this
-should not be an issue.
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
