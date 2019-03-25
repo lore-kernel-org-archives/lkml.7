@@ -2,232 +2,105 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 291DAC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 03:22:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 504ABC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 03:23:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB2AA20828
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 03:22:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23C3F20828
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 03:23:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729487AbfCYDWg (ORCPT
+        id S1729503AbfCYDXs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 23:22:36 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5744 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729422AbfCYDWf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 23:22:35 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 63DE3FA9C9784D6ADB46;
-        Mon, 25 Mar 2019 11:22:33 +0800 (CST)
-Received: from localhost.localdomain (10.175.124.28) by smtp.huawei.com
- (10.3.19.211) with Microsoft SMTP Server (TLS) id 14.3.408.0; Mon, 25 Mar
- 2019 11:22:26 +0800
-From:   Gao Xiang <gaoxiang25@huawei.com>
-To:     Chao Yu <yuchao0@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <devel@driverdev.osuosl.org>
-CC:     LKML <linux-kernel@vger.kernel.org>,
-        <linux-erofs@lists.ozlabs.org>, "Chao Yu" <chao@kernel.org>,
-        Miao Xie <miaoxie@huawei.com>, <weidu.du@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>,
-        Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH v2 3/3] staging: erofs: support IO read error injection
-Date:   Mon, 25 Mar 2019 11:40:09 +0800
-Message-ID: <20190325034009.38611-3-gaoxiang25@huawei.com>
-X-Mailer: git-send-email 2.17.2
-In-Reply-To: <20190325034009.38611-1-gaoxiang25@huawei.com>
-References: <20190325034009.38611-1-gaoxiang25@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.124.28]
-X-CFilter-Loop: Reflected
+        Sun, 24 Mar 2019 23:23:48 -0400
+Received: from mga18.intel.com ([134.134.136.126]:19145 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729361AbfCYDXs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Mar 2019 23:23:48 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Mar 2019 20:23:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,256,1549958400"; 
+   d="scan'208";a="310109607"
+Received: from hao-dev.bj.intel.com ([10.238.157.65])
+  by orsmga005.jf.intel.com with ESMTP; 24 Mar 2019 20:23:45 -0700
+From:   Wu Hao <hao.wu@intel.com>
+To:     atull@kernel.org, mdf@kernel.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     linux-api@vger.kernel.org, Wu Hao <hao.wu@intel.com>
+Subject: [PATCH 00/17] add new features for FPGA DFL drivers
+Date:   Mon, 25 Mar 2019 11:07:27 +0800
+Message-Id: <1553483264-5379-1-git-send-email-hao.wu@intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Used to simulate disk IO read error for testing fatal
-error tolerance.
+This patchset adds more features support for FPGA Device Feature List
+(DFL) drivers, including PR enhancement, virtualization support based
+on PCIe SRIOV, private features to Port, private features to FME, and
+enhancement to DFL framework. Please refer to details in below list.
 
-Here are the details,
-1) use bio->bi_private to indicate super_block
-   for non-compressed bios since some (mainly meta)
-   pages can be of the corresponding bdev inode;
-2) get super_block dynamically for compressed bios,
-   therefore it could not inject bios full of staging
-   pages, yet it doesn't affect the normal usage.
+Patch 1: A bug fixing to current dfl-fme-mgr driver.
+Patch 2-3: add 512bit data width PR support.
+Patch 4-6: add virtualization support based on PCIe SRIOV.
+Patch 7-8: add new AFU state and userclock related sysfs to dfl-afu.
+Patch 9-10: enhancement to DFL framework in order to support id_table.
+Patch 11: add error reporting private feature support to dfl-afu.
+Patch 12: add STP (SignalTap) private feature support to dfl-afu.
+Patch 13: add capability sysfs interfaces to dfl-fme.
+Patch 14: add thermal management private feature support to dfl-fme.
+Patch 15: add power management private feature support to dfl-fme.
+Patch 16: add global error reporitng private feature support to dfl-fme.
+Patch 17: add performance reporting support to dfl-fme.
 
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
----
- .../staging/erofs/Documentation/filesystems/erofs.txt  |  1 +
- drivers/staging/erofs/data.c                           | 18 ++++++++++++------
- drivers/staging/erofs/internal.h                       |  6 ++++--
- drivers/staging/erofs/super.c                          |  3 ++-
- drivers/staging/erofs/unzip_vle.c                      | 14 +++++++++-----
- 5 files changed, 28 insertions(+), 14 deletions(-)
+Wu Hao (17):
+  fpga: dfl-fme-mgr: fix FME_PR_INTFC_ID register address.
+  fpga: dfl: fme: align PR buffer size per PR datawidth
+  fpga: dfl: fme: support 512bit data width PR
+  Documentation: fpga: dfl: add descriptions for virtualization and new
+    interfaces.
+  fpga: dfl: fme: add DFL_FPGA_FME_PORT_RELEASE/ASSIGN ioctl support.
+  fpga: dfl: pci: enable SRIOV support.
+  fpga: dfl: afu: add AFU state related sysfs interfaces
+  fpga: dfl: afu: add userclock sysfs interfaces.
+  fpga: dfl: add id_table for dfl private feature driver
+  fpga: dfl: afu: export __port_enable/disable function.
+  fpga: dfl: afu: add error reporting support.
+  fpga: dfl: afu: add STP (SignalTap) support
+  fpga: dfl: fme: add capability sysfs interfaces
+  fpga: dfl: fme: add thermal management support
+  fpga: dfl: fme: add power management support
+  fpga: dfl: fme: add global error reporting support
+  fpga: dfl: fme: add performance reporting support
 
-diff --git a/drivers/staging/erofs/Documentation/filesystems/erofs.txt b/drivers/staging/erofs/Documentation/filesystems/erofs.txt
-index 961ec4da7705..74cf84ac48a3 100644
---- a/drivers/staging/erofs/Documentation/filesystems/erofs.txt
-+++ b/drivers/staging/erofs/Documentation/filesystems/erofs.txt
-@@ -60,6 +60,7 @@ fault_injection=%d     Enable fault injection in all supported types with
-                        specified injection rate. Supported injection type:
-                        Type_Name                Type_Value
-                        FAULT_KMALLOC            0x000000001
-+                       FAULT_READ_IO            0x000000002
- (no)user_xattr         Setup Extended User Attributes. Note: xattr is enabled
-                        by default if CONFIG_EROFS_FS_XATTR is selected.
- (no)acl                Setup POSIX Access Control List. Note: acl is enabled
-diff --git a/drivers/staging/erofs/data.c b/drivers/staging/erofs/data.c
-index 526e0dbea5b5..0714061ba888 100644
---- a/drivers/staging/erofs/data.c
-+++ b/drivers/staging/erofs/data.c
-@@ -17,11 +17,17 @@
- 
- static inline void read_endio(struct bio *bio)
- {
-+	struct super_block *const sb = bio->bi_private;
- 	int i;
- 	struct bio_vec *bvec;
--	const blk_status_t err = bio->bi_status;
-+	blk_status_t err = bio->bi_status;
- 	struct bvec_iter_all iter_all;
- 
-+	if (time_to_inject(EROFS_SB(sb), FAULT_READ_IO)) {
-+		erofs_show_injection_info(FAULT_READ_IO);
-+		err = BLK_STS_IOERR;
-+	}
-+
- 	bio_for_each_segment_all(bvec, bio, i, iter_all) {
- 		struct page *page = bvec->bv_page;
- 
-@@ -63,7 +69,7 @@ struct page *__erofs_get_meta_page(struct super_block *sb,
- 	if (!PageUptodate(page)) {
- 		struct bio *bio;
- 
--		bio = erofs_grab_bio(sb, blkaddr, 1, read_endio, nofail);
-+		bio = erofs_grab_bio(sb, blkaddr, 1, sb, read_endio, nofail);
- 		if (IS_ERR(bio)) {
- 			DBG_BUGON(nofail);
- 			err = PTR_ERR(bio);
-@@ -188,7 +194,8 @@ static inline struct bio *erofs_read_raw_page(struct bio *bio,
- 					      unsigned int nblocks,
- 					      bool ra)
- {
--	struct inode *inode = mapping->host;
-+	struct inode *const inode = mapping->host;
-+	struct super_block *const sb = inode->i_sb;
- 	erofs_off_t current_block = (erofs_off_t)page->index;
- 	int err;
- 
-@@ -280,9 +287,8 @@ static inline struct bio *erofs_read_raw_page(struct bio *bio,
- 		if (nblocks > BIO_MAX_PAGES)
- 			nblocks = BIO_MAX_PAGES;
- 
--		bio = erofs_grab_bio(inode->i_sb,
--				     blknr, nblocks, read_endio, false);
--
-+		bio = erofs_grab_bio(sb, blknr, nblocks, sb,
-+				     read_endio, false);
- 		if (IS_ERR(bio)) {
- 			err = PTR_ERR(bio);
- 			bio = NULL;
-diff --git a/drivers/staging/erofs/internal.h b/drivers/staging/erofs/internal.h
-index a66c7d495c35..c47778b3fabd 100644
---- a/drivers/staging/erofs/internal.h
-+++ b/drivers/staging/erofs/internal.h
-@@ -44,11 +44,12 @@
- 
- enum {
- 	FAULT_KMALLOC,
-+	FAULT_READ_IO,
- 	FAULT_MAX,
- };
- 
- #ifdef CONFIG_EROFS_FAULT_INJECTION
--extern char *erofs_fault_name[FAULT_MAX];
-+extern const char *erofs_fault_name[FAULT_MAX];
- #define IS_FAULT_SET(fi, type) ((fi)->inject_type & (1 << (type)))
- 
- struct erofs_fault_info {
-@@ -467,7 +468,7 @@ static inline int z_erofs_map_blocks_iter(struct inode *inode,
- /* data.c */
- static inline struct bio *
- erofs_grab_bio(struct super_block *sb,
--	       erofs_blk_t blkaddr, unsigned int nr_pages,
-+	       erofs_blk_t blkaddr, unsigned int nr_pages, void *bi_private,
- 	       bio_end_io_t endio, bool nofail)
- {
- 	const gfp_t gfp = GFP_NOIO;
-@@ -489,6 +490,7 @@ erofs_grab_bio(struct super_block *sb,
- 	bio->bi_end_io = endio;
- 	bio_set_dev(bio, sb->s_bdev);
- 	bio->bi_iter.bi_sector = (sector_t)blkaddr << LOG_SECTORS_PER_BLOCK;
-+	bio->bi_private = bi_private;
- 	return bio;
- }
- 
-diff --git a/drivers/staging/erofs/super.c b/drivers/staging/erofs/super.c
-index 7b460a3ca4d6..8bee0d3a161b 100644
---- a/drivers/staging/erofs/super.c
-+++ b/drivers/staging/erofs/super.c
-@@ -142,8 +142,9 @@ static int superblock_read(struct super_block *sb)
- }
- 
- #ifdef CONFIG_EROFS_FAULT_INJECTION
--char *erofs_fault_name[FAULT_MAX] = {
-+const char *erofs_fault_name[FAULT_MAX] = {
- 	[FAULT_KMALLOC]		= "kmalloc",
-+	[FAULT_READ_IO]		= "read IO error",
- };
- 
- static void __erofs_build_fault_attr(struct erofs_sb_info *sbi,
-diff --git a/drivers/staging/erofs/unzip_vle.c b/drivers/staging/erofs/unzip_vle.c
-index 8e720bb882c7..566835cf6f2f 100644
---- a/drivers/staging/erofs/unzip_vle.c
-+++ b/drivers/staging/erofs/unzip_vle.c
-@@ -844,8 +844,8 @@ static void z_erofs_vle_unzip_kickoff(void *ptr, int bios)
- 
- static inline void z_erofs_vle_read_endio(struct bio *bio)
- {
--	const blk_status_t err = bio->bi_status;
- 	struct erofs_sb_info *sbi = NULL;
-+	blk_status_t err = bio->bi_status;
- 	unsigned int i;
- 	struct bio_vec *bvec;
- 	struct bvec_iter_all iter_all;
-@@ -857,9 +857,15 @@ static inline void z_erofs_vle_read_endio(struct bio *bio)
- 		DBG_BUGON(PageUptodate(page));
- 		DBG_BUGON(!page->mapping);
- 
--		if (unlikely(!sbi && !z_erofs_is_stagingpage(page)))
-+		if (unlikely(!sbi && !z_erofs_is_stagingpage(page))) {
- 			sbi = EROFS_SB(page->mapping->host->i_sb);
- 
-+			if (time_to_inject(sbi, FAULT_READ_IO)) {
-+				erofs_show_injection_info(FAULT_READ_IO);
-+				err = BLK_STS_IOERR;
-+			}
-+		}
-+
- 		/* sbi should already be gotten if the page is managed */
- 		if (sbi)
- 			cachemngd = erofs_page_is_managed(sbi, page);
-@@ -1430,10 +1436,8 @@ static bool z_erofs_vle_submit_all(struct super_block *sb,
- 
- 		if (!bio) {
- 			bio = erofs_grab_bio(sb, first_index + i,
--					     BIO_MAX_PAGES,
-+					     BIO_MAX_PAGES, bi_private,
- 					     z_erofs_vle_read_endio, true);
--			bio->bi_private = bi_private;
--
- 			++nr_bios;
- 		}
- 
+ Documentation/ABI/testing/sysfs-platform-dfl-fme  | 279 +++++++
+ Documentation/ABI/testing/sysfs-platform-dfl-port |  94 +++
+ Documentation/fpga/dfl.txt                        | 115 +++
+ drivers/fpga/Makefile                             |   4 +-
+ drivers/fpga/dfl-afu-error.c                      | 225 +++++
+ drivers/fpga/dfl-afu-main.c                       | 335 +++++++-
+ drivers/fpga/dfl-afu.h                            |   7 +
+ drivers/fpga/dfl-fme-error.c                      | 390 +++++++++
+ drivers/fpga/dfl-fme-main.c                       | 583 ++++++++++++-
+ drivers/fpga/dfl-fme-mgr.c                        |  79 +-
+ drivers/fpga/dfl-fme-perf.c                       | 950 ++++++++++++++++++++++
+ drivers/fpga/dfl-fme-pr.c                         |  64 +-
+ drivers/fpga/dfl-fme.h                            |   9 +-
+ drivers/fpga/dfl-pci.c                            |  40 +
+ drivers/fpga/dfl.c                                | 170 +++-
+ drivers/fpga/dfl.h                                |  56 +-
+ include/uapi/linux/fpga-dfl.h                     |  32 +
+ 17 files changed, 3355 insertions(+), 77 deletions(-)
+ create mode 100644 drivers/fpga/dfl-afu-error.c
+ create mode 100644 drivers/fpga/dfl-fme-error.c
+ create mode 100644 drivers/fpga/dfl-fme-perf.c
+
 -- 
-2.12.2
+2.7.4
 
