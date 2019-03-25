@@ -2,153 +2,136 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D59C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:19:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36891C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:21:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D7E420700
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:19:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sofge5Zt"
+	by mail.kernel.org (Postfix) with ESMTP id 0D52720700
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:21:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730021AbfCYSTc (ORCPT
+        id S1729957AbfCYSVf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 14:19:32 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:40173 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729036AbfCYSTb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 14:19:31 -0400
-Received: by mail-qt1-f194.google.com with SMTP id x12so11457668qts.7;
-        Mon, 25 Mar 2019 11:19:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OgdsgHJcgRgphvylW+SbxQ9uq05xhpqcmxzkgd+jX0E=;
-        b=sofge5ZtL5VQw+du4wHZ+O94zQO2ncoyiIJlesL72MvgBiL4hPoHl+QDzpu6fcINc+
-         lHldT+O+aqNzm33dcO2HNgnJnzMaL81h6u9TYPlwqarGcU605o27ORzTPQl4oGyTGq8V
-         /xncWaH/RKlAFNt46pBd16EQN2V4WRkPJmdpENQEeS3t+UbxBwEulFh7YP/uLbyVygcs
-         k3NcRcMR0MIKwIGnZ3pEFeAskvGOWBf6TXCDXmQk02lKrSFCEAt4wdjpUUo+mdP9C1K+
-         kLdBgfcLNKvjwvKsV7xnYeA8S6WlGesgLsWW9ZNE/++Jbo8zRRnMUpOlR0j5rPdyvcte
-         y5LA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OgdsgHJcgRgphvylW+SbxQ9uq05xhpqcmxzkgd+jX0E=;
-        b=Yzt7tGca1zuOzqq1JJ3xGNqRotAlKrozlP8Ba7aHmVJTYZqICJQkTQHXleejBrVGKc
-         8ip0oPidZ7fREQ2Od6056Big27lIKaOvoxUtici0zIa6wCA+urYOJIOvijhn1KnYAQ4e
-         ZBNVYdyZqEFoh3iFflcGJMWrgnUpmp3kIXvwKoISZjN0NtQwO0ORnTwSp9OVL/tuakTn
-         vYFlNn48JOGYZ51j55Mp9t1uu0Rb/wkH3Og0+XYHw10c8FAaD8ilnvGI6z+2Bu7gbLjy
-         WPZrg9Gey5ONugn34V+/d+IDGI+o4JdiHqqJo4yCux6gFJw7zJe2Xt6wWZuPkyo5sQEl
-         AD7g==
-X-Gm-Message-State: APjAAAXaLUS5ABH6T3SND1AELKeqeVAKYM9aW7gIE/jixAHylwaxvRH8
-        uP/I4e6lUWO0iEvRRKUHRh5UIvE45+mfCjBwxCA=
-X-Google-Smtp-Source: APXvYqw6XP/QX2tZiLUJ+HIi2TBBN+nJo0c5x7geRIfVvsC8UHOauo8uRbinpI/6BkRdyKDygQCoUJvjfyVfR4mdJmw=
-X-Received: by 2002:aed:3faa:: with SMTP id s39mr16915570qth.280.1553537970723;
- Mon, 25 Mar 2019 11:19:30 -0700 (PDT)
+        Mon, 25 Mar 2019 14:21:35 -0400
+Received: from mga09.intel.com ([134.134.136.24]:20771 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729489AbfCYSVf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 14:21:35 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Mar 2019 11:21:34 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,269,1549958400"; 
+   d="scan'208";a="155664899"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
+  by fmsmga004.fm.intel.com with ESMTP; 25 Mar 2019 11:21:33 -0700
+Date:   Mon, 25 Mar 2019 11:21:33 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     KVM <kvm@vger.kernel.org>, Joerg Roedel <joro@8bytes.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Yazen Ghannam <Yazen.Ghannam@amd.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] kvm/x86: Move MSR_K7_HWCR to svm.c
+Message-ID: <20190325182133.GG31069@linux.intel.com>
+References: <20190325171649.7311-1-bp@alien8.de>
+ <20190325171649.7311-2-bp@alien8.de>
 MIME-Version: 1.0
-References: <20190325162052.28987-1-christian@brauner.io> <CAKOZueuJSAiKU7fZR2FNDKKCktdyE-sADtWprpsNMAqYQvD9Jw@mail.gmail.com>
- <20190325173614.GB25975@google.com> <CAKOZuetbZOs1Yur4OrW6hh3wVYdoKNkSqTszbpTWnuRBTmT9zA@mail.gmail.com>
-In-Reply-To: <CAKOZuetbZOs1Yur4OrW6hh3wVYdoKNkSqTszbpTWnuRBTmT9zA@mail.gmail.com>
-From:   Jonathan Kowalski <bl0pbl33p@gmail.com>
-Date:   Mon, 25 Mar 2019 18:19:16 +0000
-Message-ID: <CAGLj2rE1f4x36KFUjFLiFq8tF1RUmFuCSRTg_tCQ9W2G6LtizA@mail.gmail.com>
-Subject: Re: [PATCH 0/4] pid: add pidctl()
-To:     Daniel Colascione <dancol@google.com>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Andy Lutomirski <luto@kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Kees Cook <keescook@chromium.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Michael Kerrisk-manpages <mtk.manpages@gmail.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Nagarathnam Muthusamy <nagarathnam.muthusamy@oracle.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190325171649.7311-2-bp@alien8.de>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 5:53 PM Daniel Colascione <dancol@google.com> wrote:
->
-> [..snip..]
->
-> I don't like the idea of having one kind of pollfd be pollable and
-> another not. Such an interface would be confusing for users. If, as
-> you suggest below, we instead make the procfs-less FD the only thing
-> we call a "pidfd", then this proposal becomes less confusing and more
-> viable.
+On Mon, Mar 25, 2019 at 06:16:48PM +0100, Borislav Petkov wrote:
+> From: Borislav Petkov <bp@suse.de>
+> 
+> This is an AMD-specific MSR. Put it where it belongs.
+> 
+> Signed-off-by: Borislav Petkov <bp@suse.de>
+> Tested-by: Yazen Ghannam <yazen.ghannam@amd.com>
+> ---
+>  arch/x86/kvm/svm.c | 14 ++++++++++++++
+>  arch/x86/kvm/x86.c | 12 ------------
+>  2 files changed, 14 insertions(+), 12 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+> index b5b128a0a051..00eb44a2a377 100644
+> --- a/arch/x86/kvm/svm.c
+> +++ b/arch/x86/kvm/svm.c
+> @@ -4201,6 +4201,9 @@ static int svm_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>  	case MSR_F10H_DECFG:
+>  		msr_info->data = svm->msr_decfg;
+>  		break;
+> +	case MSR_K7_HWCR:
+> +		msr_info->data = 0;
+> +		break;
+>  	default:
+>  		return kvm_get_msr_common(vcpu, msr_info);
+>  	}
+> @@ -4405,6 +4408,17 @@ static int svm_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr)
+>  		svm->msr_decfg = data;
+>  		break;
+>  	}
+> +	case MSR_K7_HWCR:
+> +		data &= ~(u64)0x40;	/* ignore flush filter disable */
+> +		data &= ~(u64)0x100;	/* ignore ignne emulation enable */
+> +		data &= ~(u64)0x8;	/* ignore TLB cache disable */
+> +		data &= ~(u64)0x40000;  /* ignore Mc status write enable */
+> +		if (data != 0) {
+> +			vcpu_unimpl(vcpu, "unimplemented HWCR wrmsr: 0x%llx\n",
+> +				    data);
+> +			return 1;
+> +		}
+> +		break;
+>  	case MSR_IA32_APICBASE:
+>  		if (kvm_vcpu_apicv_active(vcpu))
+>  			avic_update_vapic_bar(to_svm(vcpu), data);
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 65e4559eef2f..e53d13cfceba 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -2445,17 +2445,6 @@ int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>  		break;
+>  	case MSR_EFER:
+>  		return set_efer(vcpu, data);
+> -	case MSR_K7_HWCR:
+> -		data &= ~(u64)0x40;	/* ignore flush filter disable */
+> -		data &= ~(u64)0x100;	/* ignore ignne emulation enable */
+> -		data &= ~(u64)0x8;	/* ignore TLB cache disable */
+> -		data &= ~(u64)0x40000;  /* ignore Mc status write enable */
+> -		if (data != 0) {
+> -			vcpu_unimpl(vcpu, "unimplemented HWCR wrmsr: 0x%llx\n",
+> -				    data);
+> -			return 1;
+> -		}
+> -		break;
+>  	case MSR_FAM10H_MMIO_CONF_BASE:
+>  		if (data != 0) {
+>  			vcpu_unimpl(vcpu, "unimplemented MMIO_CONF_BASE wrmsr: "
+> @@ -2724,7 +2713,6 @@ int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>  	case MSR_K8_SYSCFG:
+>  	case MSR_K8_TSEG_ADDR:
+>  	case MSR_K8_TSEG_MASK:
+> -	case MSR_K7_HWCR:
 
-That's certainly on the table, we remove the ability to open
-/proc/<PID> and use the dir fd with pidfd_send_signal. I'm in favor of
-this.
+Won't this prevent emulating an AMD guest on Intel hardware, e.g. due to
+injecting #GPs during boot?  Keeping support in kvm_{get,set}_msr_common
+doesn't preclude svm_{get,set}_msr() from having SVM-specific handling for
+the MSR.
 
-> > But.. one thing we could do for Daniel usecase is if a /proc/pid directory fd
-> > can be translated into a "pidfd" using another syscall or even a node, like
-> > /proc/pid/handle or something. I think this is what Christian suggested in
-> > the previous threads.
->
-> /proc/pid/handle, if I understand correctly, "translates" a
-> procfs-based pidfd to a non-pidfd one. The needed interface would have
-> to perform the opposite translation, providing a procfs directory for
-> a given pidfd.
->
-> > And also for the translation the other way, add a syscall or modify
-> > translate_fd or something, to covert a anon_inode pidfd into a /proc/pid
-> > directory fd. Then the user is welcomed to do openat(2) on _that_ directory fd.
-> > Then we modify pidfd_send_signal to only send signals to pure pidfd fds, not
-> > to /proc/pid directory fds.
->
-> This approach would work, but there's one subtlety to take into
-> account: which procfs? You'd want to take, as inputs, 1) the procfs
-> root you want, and 2) the pidfd, this way you could return to the user
-> a directory FD in the right procfs.
->
-
-I don't think metadata access is in the scope of such a pidfd itself.
-
-> > Should we work on patches for these? Please let us know if this idea makes
-> > sense and thanks a lot for adding us to the review as well.
->
-> I would strongly prefer that we not merge pidctl (or whatever it is)
-> without a story for metadata access, be it your suggestion or
-> something else.
-
-IMO, this is out of scope for a process handle. Hence, the need for
-metadata access musn't stall it as is.
-
-If you really need this, the pid this pidfd is mapped to can be
-exposed through fdinfo (which is perfectly fine for your case as you
-use /proc anyway). This means you can reliably determine if you're
-opening it for the same pid (and it hasn't been recycled) because this
-pidfd will be pollable for state change (in the future). Exposing it
-through fdinfo isn't a problem, pid ns is bound to the process during
-its lifetime, it's a process creation time property, so the value
-isn't going to change anyway. So you can do all metadata access you
-want subsequently.
-
-The upshot is that this same pidfd can then be returned from a future
-extension of clone(2) Christian is planning to work on. It is still
-undecided whether this fd should be only readable by the parent
-process or everyone (which would just be a matter of changing the
-access mode depending on the caller), but that we can discuss all that
-when the patchset is posted.
+>  	case MSR_VM_HSAVE_PA:
+>  	case MSR_K8_INT_PENDING_MSG:
+>  	case MSR_AMD64_NB_CFG:
+> -- 
+> 2.21.0
+> 
