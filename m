@@ -2,210 +2,244 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F91FC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 19:59:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2AA2C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 20:00:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5BF72087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 19:59:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98B3420850
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 20:00:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="CABYa7xM"
+	dkim=pass (2048-bit key) header.d=dilger-ca.20150623.gappssmtp.com header.i=@dilger-ca.20150623.gappssmtp.com header.b="DcP7yrUI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730221AbfCYT7g (ORCPT
+        id S1730260AbfCYUAG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 15:59:36 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:37205 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730159AbfCYT7f (ORCPT
+        Mon, 25 Mar 2019 16:00:06 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:36984 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729610AbfCYUAF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 15:59:35 -0400
-Received: by mail-wm1-f67.google.com with SMTP id v14so10489447wmf.2
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 12:59:33 -0700 (PDT)
+        Mon, 25 Mar 2019 16:00:05 -0400
+Received: by mail-pf1-f193.google.com with SMTP id 8so6942299pfr.4
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 13:00:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=VtwMp7N3+dPcWIGLIDHqlGDupoF1jb2q2KyRCg+HtNU=;
-        b=CABYa7xMtEz3gLMGjJrX6udViaHyNAqlvtBGHY0Kf/BCUqc5ywxN5M0JiW3fS6YuiQ
-         uRwcAsbqY8Z8pXIicsWa7K+UsR6p5nwhp8r0nTeTiUivfMhjNQarnEWzyQ/8uS0j6taf
-         vDgI6TWsXK95EgjG5BhO0C6+dOfcDFVCSlBdXmfyXJRJV+rbJIEicVzHe73aOPYjpj+t
-         G9IEocfXH+oqLEQrLOPQ2v8PBD7FRXPwtd2wFWtQWPp14OU0dkNzgTAD94irON8Gh36S
-         T14CNSAjz5KGTjlU8lm6lVIloyU8aQZukvQRGL2Ub9+IDQavyxUhRTYO+DIF38hkQgH7
-         Jl+A==
+        d=dilger-ca.20150623.gappssmtp.com; s=20150623;
+        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
+         :references;
+        bh=1zXhpRZO0WAdOqWP7x2ebolGGLk+YEfDkHo8iks+akk=;
+        b=DcP7yrUImHYE0ppg3I7gbMEVbKEqKEtqdx2yKINGm7hZbPC6vrJJmiUuBcct7zn1w/
+         1KxBW8Ec5Hn1eWG24P+RNGU/VdyCAVF/ef2moRdrYnNtbgK7G6uohnNLrr6FoUKMGEG2
+         JxIt1UJbZJQU9o9Bh1Rxw99c/zwR3oRdSUXWAnVO5JEyQOX42QWd4IaVh2FVYAdYRwr8
+         D0D7dZ/Fx0/iOmN0X2XlOYQEjBl6Rm3Lv99/1pHZPLOI0lrgRsdlsnvdFIDDUYCFxfZ6
+         CXx1sNvxaYOPoHp5Ujr610RqtyQrobzMcTjr2kRQ1mp4+VsLXhVIBIMC820Zf0FdOU7T
+         gEDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=VtwMp7N3+dPcWIGLIDHqlGDupoF1jb2q2KyRCg+HtNU=;
-        b=otIgzBZ9SN7Dsrx35MLGDOFxB8dvi51tuCU+HV7sSK4E79u2kKWNzsEOy35o0IRc2J
-         yvDo89U0GrZyhGwzq7TIUCoQ+kuNu7LwpDdyRN2bZ2g8n7OPAFzfDWbP66DDuh7lR0Wl
-         dk6/ISElfPDTYTnBanLyEb5p+JuvXoKozapNHiKTmxChTAWB1V5U2ij6AVnyQIryiPo4
-         qdHzXp18d9AR5ql0+fSu5ZgJUCEHN/qgXbqEUUdPO5IlExsO68wapaIZZeS/6587/csv
-         c4CmJOgzETdl7AWkM+1JQT3rT1Uh7ftf5f3hnOuNanM9/uCcq2CNZh15iLCrGHNDEVVs
-         OvEA==
-X-Gm-Message-State: APjAAAXoB73jIvqj1PBSgj7VD76dFqMZqP5cB0XV5GpNF3ACAI+WyB3/
-        pfh84LPhx/X2vw4Stw9bKFXjvg==
-X-Google-Smtp-Source: APXvYqzQkldz2kkcT+IjVAgA99RsGI77JaWtCWFsAcLNtPwzVswOzfzDwCeB24xugAbkJ9AD45mJRg==
-X-Received: by 2002:a1c:7211:: with SMTP id n17mr503422wmc.32.1553543972713;
-        Mon, 25 Mar 2019 12:59:32 -0700 (PDT)
-Received: from brauner.io (p200300EA6F14663DB13635B07C8C280A.dip0.t-ipconnect.de. [2003:ea:6f14:663d:b136:35b0:7c8c:280a])
-        by smtp.gmail.com with ESMTPSA id e1sm25288382wrw.66.2019.03.25.12.59.31
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 25 Mar 2019 12:59:32 -0700 (PDT)
-Date:   Mon, 25 Mar 2019 20:59:30 +0100
-From:   Christian Brauner <christian@brauner.io>
-To:     Mika =?utf-8?B?UGVudHRpbMOk?= <mika.penttila@nextfour.com>
-Cc:     "jannh@google.com" <jannh@google.com>,
-        "khlebnikov@yandex-team.ru" <khlebnikov@yandex-team.ru>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "dhowells@redhat.com" <dhowells@redhat.com>,
-        "serge@hallyn.com" <serge@hallyn.com>,
-        "ebiederm@xmission.com" <ebiederm@xmission.com>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "adobriyan@gmail.com" <adobriyan@gmail.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mtk.manpages@gmail.com" <mtk.manpages@gmail.com>,
-        "bl0pbl33p@gmail.com" <bl0pbl33p@gmail.com>,
-        "ldv@altlinux.org" <ldv@altlinux.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "oleg@redhat.com" <oleg@redhat.com>,
-        "nagarathnam.muthusamy@oracle.com" <nagarathnam.muthusamy@oracle.com>,
-        "cyphar@cyphar.com" <cyphar@cyphar.com>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "joel@joelfernandes.org" <joel@joelfernandes.org>,
-        "dancol@google.com" <dancol@google.com>
-Subject: Re: [PATCH 2/4] pid: add pidctl()
-Message-ID: <20190325195929.4ptq3lnm6bkvtvxx@brauner.io>
-References: <20190325162052.28987-1-christian@brauner.io>
- <20190325162052.28987-3-christian@brauner.io>
- <071b12db-f84e-8666-d70a-1b6cce71f9c0@nextfour.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <071b12db-f84e-8666-d70a-1b6cce71f9c0@nextfour.com>
-User-Agent: NeoMutt/20180716
+        h=x-gm-message-state:from:message-id:mime-version:subject:date
+         :in-reply-to:cc:to:references;
+        bh=1zXhpRZO0WAdOqWP7x2ebolGGLk+YEfDkHo8iks+akk=;
+        b=tQVdMnuGbfpJfM23Q3HuP/8ApqKrc2qtevvQR1PvhQ6agKGPrW175/yLXwsxXbgYTZ
+         Vyw5sd+Hqp6zs5vjHEhWZWKak+exUb7sE9gRshhlwdOycsP5rV6OFqqMAQQ9yPUI4pZ4
+         UScgtSapKMJKYYQeNhfE99hZOSNmgSbNTE9HuVebWhLioVr56LrZdigpDE8uuEudK5yl
+         P8MiKZycKuepc4qGs19Lw7X6IXH2W5iPNeKJWHO4zXR6h87wsPBkrWWeG018xKmVY0Dv
+         5oSnqv9igmQdOm7JSyc3qS+1A6K6NC4d0PEHKKxoE7LBqbfuxnzB2yyX9eBbZhZn7OJo
+         3HZQ==
+X-Gm-Message-State: APjAAAWz6vYBYsHDvl5v0uJ3W7duJXwMEuDHcz+CCh5BU++Biy91kzSu
+        HFvzWLqzyV2TuGfLjU8vnY5SvQ==
+X-Google-Smtp-Source: APXvYqycHrRTeR58160gy46GMcWU9UDYo3aBHMoqKWs/6YkXHeuUFWmC/woYJiDY61Jz0aSxOhZV+A==
+X-Received: by 2002:a62:4746:: with SMTP id u67mr25748583pfa.243.1553544004607;
+        Mon, 25 Mar 2019 13:00:04 -0700 (PDT)
+Received: from cabot.adilger.ext (S0106a84e3fe4b223.cg.shawcable.net. [70.77.216.213])
+        by smtp.gmail.com with ESMTPSA id i1sm1022990pgc.63.2019.03.25.13.00.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 25 Mar 2019 13:00:03 -0700 (PDT)
+From:   Andreas Dilger <adilger@dilger.ca>
+Message-Id: <9F56F958-2DEF-4350-8BBC-9A40598D0365@dilger.ca>
+Content-Type: multipart/signed;
+ boundary="Apple-Mail=_73BE7F53-B23C-4F73-89F8-8310F4842D0D";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
+Subject: Re: [PATCH] ext4: use BUG() instead of BUG_ON(1)
+Date:   Mon, 25 Mar 2019 13:59:58 -0600
+In-Reply-To: <20190325181422.GH1173@magnolia>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Theodore Ts'o <tytso@mit.edu>,
+        clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Eric Whitney <enwlinux@gmail.com>,
+        Sean Fu <fxinrong@gmail.com>, Jan Kara <jack@suse.cz>,
+        Eric Biggers <ebiggers@google.com>,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+References: <20190325130040.1437445-1-arnd@arndb.de>
+ <20190325181422.GH1173@magnolia>
+X-Mailer: Apple Mail (2.3273)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 05:20:54PM +0000, Mika Penttilä wrote:
-> Hi!
-> 
-> 
-> > +SYSCALL_DEFINE5(pidctl, unsigned int, cmd, pid_t, pid, int, source, int, target,
-> > +		unsigned int, flags)
-> > +{
-> > +	struct pid_namespace *source_ns = NULL, *target_ns = NULL;
-> > +	struct pid *struct_pid;
-> > +	pid_t result;
-> > +
-> > +	switch (cmd) {
-> > +	case PIDCMD_QUERY_PIDNS:
-> > +		if (pid != 0)
-> > +			return -EINVAL;
-> > +		pid = 1;
-> > +		/* fall through */
-> > +	case PIDCMD_QUERY_PID:
-> > +		if (flags != 0)
-> > +			return -EINVAL;
-> > +		break;
-> > +	case PIDCMD_GET_PIDFD:
-> > +		if (flags & ~PIDCTL_CLOEXEC)
-> > +			return -EINVAL;
-> > +		break;
-> > +	default:
-> > +		return -EOPNOTSUPP;
-> > +	}
-> > +
-> > +	source_ns = get_pid_ns_by_fd(source);
-> > +	result = PTR_ERR(source_ns);
-> > +	if (IS_ERR(source_ns))
-> > +		goto err_source;
-> > +
-> > +	target_ns = get_pid_ns_by_fd(target);
-> > +	result = PTR_ERR(target_ns);
-> > +	if (IS_ERR(target_ns))
-> > +		goto err_target;
-> > +
-> > +	if (cmd == PIDCMD_QUERY_PIDNS) {
-> > +		result = pidns_related(source_ns, target_ns);
-> > +	} else {
-> > +		rcu_read_lock();
-> > +		struct_pid = find_pid_ns(pid, source_ns);
-> > +		result = struct_pid ? pid_nr_ns(struct_pid, target_ns) : -ESRCH;
-> 
-> Should you do get_pid(struct_pid) here to keep it alive till 
-> pidfd_create_fd() ?
 
-Yes, indeed. You and Jann both pointed this out! Thank you.
+--Apple-Mail=_73BE7F53-B23C-4F73-89F8-8310F4842D0D
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=us-ascii
 
-> 
-> > +		rcu_read_unlock();
-> > +
-> > +		if (cmd == PIDCMD_GET_PIDFD) {
-> > +			int cloexec = (flags & PIDCTL_CLOEXEC) ? O_CLOEXEC : 0;
-> > +			if (result > 0)
-> > +				result = pidfd_create_fd(struct_pid, cloexec);
-> > +			else if (result == 0)
-> > +				result = -ENOENT;
-> > +		}
-> > +	}
-> > +
-> > +	if (target)
-> > +		put_pid_ns(target_ns);
-> > +err_target:
-> > +	if (source)
-> > +		put_pid_ns(source_ns);
-> > +err_source:
-> > +	return result;
-> > +}
-> > +
-> >  void __init pid_idr_init(void)
-> >  {
-> >  	/* Verify no one has done anything silly: */
-> > diff --git a/kernel/pid_namespace.c b/kernel/pid_namespace.c
-> > index aa6e72fb7c08..1c863fb3d55a 100644
-> > --- a/kernel/pid_namespace.c
-> > +++ b/kernel/pid_namespace.c
-> > @@ -429,6 +429,31 @@ static struct ns_common *pidns_get_parent(struct ns_common *ns)
-> >  	return &get_pid_ns(pid_ns)->ns;
-> >  }
-> >  
-> > +/**
-> > + * pidnscmp - Determine if @ancestor is ancestor of @descendant
-> > + * @ancestor:   pidns suspected to be the ancestor of @descendant
-> > + * @descendant: pidns suspected to be the descendant of @ancestor
-> > + *
-> > + * Returns -1 if @ancestor is not an ancestor of @descendant,
-> > + * 0 if @ancestor is the same pidns as @descendant, 1 if @ancestor
-> > + * is an ancestor of @descendant.
-> > + */
-> > +int pidnscmp(struct pid_namespace *ancestor, struct pid_namespace *descendant)
-> > +{
-> > +	if (ancestor == descendant)
-> > +		return 0;
-> > +
-> > +	for (;;) {
-> > +		if (!descendant)
-> > +			return -1;
-> > +		if (descendant == ancestor)
-> > +			break;
-> > +		descendant = descendant->parent;
-> > +	}
-> > +
-> > +	return 1;
-> > +}
-> > +
-> >  static struct user_namespace *pidns_owner(struct ns_common *ns)
-> >  {
-> >  	return to_pid_ns(ns)->user_ns;
+On Mar 25, 2019, at 12:14 PM, Darrick J. Wong <darrick.wong@oracle.com> =
+wrote:
+>=20
+> On Mon, Mar 25, 2019 at 02:00:25PM +0100, Arnd Bergmann wrote:
+>> BUG_ON(1) leads to bogus warnings from clang when
+>> CONFIG_PROFILE_ANNOTATED_BRANCHES is set:
+>>=20
+>> fs/ext4/inode.c:544:4: error: variable 'retval' is used uninitialized =
+whenever 'if' condition is false
+>>      [-Werror,-Wsometimes-uninitialized]
+>>                        BUG_ON(1);
+>>                        ^~~~~~~~~
+>> include/asm-generic/bug.h:61:36: note: expanded from macro 'BUG_ON'
+>>                                   ^~~~~~~~~~~~~~~~~~~
+>> include/linux/compiler.h:48:23: note: expanded from macro 'unlikely'
+>>                        =
+^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> fs/ext4/inode.c:591:6: note: uninitialized use occurs here
+>>        if (retval > 0 && map->m_flags & EXT4_MAP_MAPPED) {
+>>            ^~~~~~
+>> fs/ext4/inode.c:544:4: note: remove the 'if' if its condition is =
+always true
+>>                        BUG_ON(1);
+>>                        ^
+>> include/asm-generic/bug.h:61:32: note: expanded from macro 'BUG_ON'
+>>                               ^
+>> fs/ext4/inode.c:502:12: note: initialize the variable 'retval' to =
+silence this warning
+>>=20
+>> Change it to BUG() so clang can see that this code path can never
+>> continue.
+>=20
+> I grok that most of these look like "should never get here" =
+assertions,
+> but shouldn't we be converting these BUG*() calls to "shut down fs,
+> bounce error back to userspace" instead of killing the whole kernel?
+>=20
+> (He says knowing that ripping all of those out is its own project... =
+:P)
+
+We definitely shouldn't be adding "BUG()" or "BUG_ON()" to active code, =
+but
+rather call ext4_error() and let the admin to set "errors=3Dpanic" if =
+they
+want this action, or leave "errors=3Dremount-ro" (which is the default =
+these
+days) and just return an error to userspace.
+
+Looking at the nearby code, it is using pr_warn("ES insert assertion =
+failed..."
+instead of using an actual assertion for the failure cases.
+
+I guess a saving grace is that this code is only enabled if =
+ES_AGGRESSIVE_TEST
+is defined, which it is not by default, so probably it is only when some
+developer is testing this code.  So using BUG() is probably OK in this =
+case.
+
+Cheers, Andreas
+
+>=20
+>> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>> ---
+>> fs/ext4/extents_status.c | 4 ++--
+>> fs/ext4/inode.c          | 4 ++--
+>> 2 files changed, 4 insertions(+), 4 deletions(-)
+>>=20
+>> diff --git a/fs/ext4/extents_status.c b/fs/ext4/extents_status.c
+>> index 2b439afafe13..023a3eb3afa3 100644
+>> --- a/fs/ext4/extents_status.c
+>> +++ b/fs/ext4/extents_status.c
+>> @@ -711,7 +711,7 @@ static void =
+ext4_es_insert_extent_ind_check(struct inode *inode,
+>> 			 * We don't need to check unwritten extent =
+because
+>> 			 * indirect-based file doesn't have it.
+>> 			 */
+>> -			BUG_ON(1);
+>> +			BUG();
+>> 		}
+>> 	} else if (retval =3D=3D 0) {
+>> 		if (ext4_es_is_written(es)) {
+>> @@ -780,7 +780,7 @@ static int __es_insert_extent(struct inode =
+*inode, struct extent_status *newes)
+>> 			}
+>> 			p =3D &(*p)->rb_right;
+>> 		} else {
+>> -			BUG_ON(1);
+>> +			BUG();
+>> 			return -EINVAL;
+>> 		}
+>> 	}
+>> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+>> index b32a57bc5d5d..190f0478582a 100644
+>> --- a/fs/ext4/inode.c
+>> +++ b/fs/ext4/inode.c
+>> @@ -541,7 +541,7 @@ int ext4_map_blocks(handle_t *handle, struct =
+inode *inode,
+>> 			map->m_len =3D retval;
+>> 			retval =3D 0;
+>> 		} else {
+>> -			BUG_ON(1);
+>> +			BUG();
+>> 		}
+>> #ifdef ES_AGGRESSIVE_TEST
+>> 		ext4_map_blocks_es_recheck(handle, inode, map,
+>> @@ -1876,7 +1876,7 @@ static int ext4_da_map_blocks(struct inode =
+*inode, sector_t iblock,
+>> 		else if (ext4_es_is_unwritten(&es))
+>> 			map->m_flags |=3D EXT4_MAP_UNWRITTEN;
+>> 		else
+>> -			BUG_ON(1);
+>> +			BUG();
+>>=20
+>> #ifdef ES_AGGRESSIVE_TEST
+>> 		ext4_map_blocks_es_recheck(NULL, inode, map, &orig_map, =
+0);
+>> --
+>> 2.20.0
+
+
+Cheers, Andreas
+
+
+
+
+
+
+--Apple-Mail=_73BE7F53-B23C-4F73-89F8-8310F4842D0D
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename=signature.asc
+Content-Type: application/pgp-signature;
+	name=signature.asc
+Content-Description: Message signed with OpenPGP
+
+-----BEGIN PGP SIGNATURE-----
+Comment: GPGTools - http://gpgtools.org
+
+iQIzBAEBCAAdFiEEDb73u6ZejP5ZMprvcqXauRfMH+AFAlyZMz8ACgkQcqXauRfM
+H+Ceyw//Z1p1TGsGEo81YLhmCfuKm6wwixRreNCbZVn1BpHU18I7XdKGq3wwHLeK
+key5dIj6CuukFB4IyiesTgYvDSIgVgn6+twub0mPzya/oRm0BJhjwiZSvUOvwYDc
+lqLEDUrk9Ow9pYyUR+U14nEvQ10I9+tMx4u3iT6aTWcbdMnQAyzYVwr/6QGlJMCy
+yjy1wv9VVBhImj7mjPoCuRXckl6fxFtu2dYgXp2Bhx6g7RSxaOJPpIrBEXY0qH3E
+23Qvef3+6sdp30B40yFGmQC4uvoE6HHg6sUjC2YhWLqJIVcMvrS1MBnvHPYk+dZ3
+dlDNN/S4Gn5rfRRKRufsLEiHgAHB4RnMsg1o3D9VtqIyXtqYmcmizQrlu6mc/JmX
+hcfkUp7qT6wg/EzPrm8BVaOyn1lXKitx4wQUomNwnkzaWHE6xyu01r60fvzqx0ve
+RYRxo7xkSRHw4RAHFQQEM46Bm3GEFCSFwDAy6OXb5nf4oZoEcqnU+F5NKEP7Gd+d
+GLHu+QsR8Grn/zwMosUxbP5Y7uhgKBbhVa0Phok6GbPe8wuhoxf8jACOTARJEmSG
+nkdrLsMz++R+CzTvEPBPZL07fuE/ATAoXyRh2OhSpXveBYwJc6zo/6utCLDv1pOQ
+j27f3OyDdaLC158bHsCl4SvtAb39B0dHCrhPJ70cB3B+AQFvchQ=
+=kTBH
+-----END PGP SIGNATURE-----
+
+--Apple-Mail=_73BE7F53-B23C-4F73-89F8-8310F4842D0D--
