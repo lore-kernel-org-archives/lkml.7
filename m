@@ -2,159 +2,210 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC242C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 19:59:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F91FC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 19:59:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A41C220850
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 19:59:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5BF72087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 19:59:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="5ZxlS0Q0"
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="CABYa7xM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730149AbfCYT7d (ORCPT
+        id S1730221AbfCYT7g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 15:59:33 -0400
-Received: from mail-eopbgr680046.outbound.protection.outlook.com ([40.107.68.46]:54579
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728912AbfCYT7c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 15:59:32 -0400
+        Mon, 25 Mar 2019 15:59:36 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:37205 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730159AbfCYT7f (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 15:59:35 -0400
+Received: by mail-wm1-f67.google.com with SMTP id v14so10489447wmf.2
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 12:59:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector1-amd-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=v2f7+vCtCGYZqKD7q19c7Y2xs8uqe0AOMB/PY1TTG2U=;
- b=5ZxlS0Q0FpnR6vHtBM+l4eWQlKBJ2yn+Z1qVNXcaAYeeBEojD9GQ6NNttsvebeoEoa+79m4oRqaqDAouJ9BQHLtQTon3lZIJQksmTG9a9afjBBvFCIosXGvjjdHFBtWpZKj/+CvzOMVpMcc54ACgQDBApBrwFNGpjl+x+qvZJHc=
-Received: from DM6PR12MB3163.namprd12.prod.outlook.com (20.179.104.150) by
- DM6PR12MB2810.namprd12.prod.outlook.com (20.176.117.83) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1730.18; Mon, 25 Mar 2019 19:59:29 +0000
-Received: from DM6PR12MB3163.namprd12.prod.outlook.com
- ([fe80::a8aa:c9af:1f69:2a89]) by DM6PR12MB3163.namprd12.prod.outlook.com
- ([fe80::a8aa:c9af:1f69:2a89%6]) with mapi id 15.20.1730.019; Mon, 25 Mar 2019
- 19:59:28 +0000
-From:   "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
-To:     "Singh, Brijesh" <brijesh.singh@amd.com>,
-        Borislav Petkov <bp@alien8.de>
-CC:     lijiang <lijiang@redhat.com>,
+        d=brauner.io; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=VtwMp7N3+dPcWIGLIDHqlGDupoF1jb2q2KyRCg+HtNU=;
+        b=CABYa7xMtEz3gLMGjJrX6udViaHyNAqlvtBGHY0Kf/BCUqc5ywxN5M0JiW3fS6YuiQ
+         uRwcAsbqY8Z8pXIicsWa7K+UsR6p5nwhp8r0nTeTiUivfMhjNQarnEWzyQ/8uS0j6taf
+         vDgI6TWsXK95EgjG5BhO0C6+dOfcDFVCSlBdXmfyXJRJV+rbJIEicVzHe73aOPYjpj+t
+         G9IEocfXH+oqLEQrLOPQ2v8PBD7FRXPwtd2wFWtQWPp14OU0dkNzgTAD94irON8Gh36S
+         T14CNSAjz5KGTjlU8lm6lVIloyU8aQZukvQRGL2Ub9+IDQavyxUhRTYO+DIF38hkQgH7
+         Jl+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=VtwMp7N3+dPcWIGLIDHqlGDupoF1jb2q2KyRCg+HtNU=;
+        b=otIgzBZ9SN7Dsrx35MLGDOFxB8dvi51tuCU+HV7sSK4E79u2kKWNzsEOy35o0IRc2J
+         yvDo89U0GrZyhGwzq7TIUCoQ+kuNu7LwpDdyRN2bZ2g8n7OPAFzfDWbP66DDuh7lR0Wl
+         dk6/ISElfPDTYTnBanLyEb5p+JuvXoKozapNHiKTmxChTAWB1V5U2ij6AVnyQIryiPo4
+         qdHzXp18d9AR5ql0+fSu5ZgJUCEHN/qgXbqEUUdPO5IlExsO68wapaIZZeS/6587/csv
+         c4CmJOgzETdl7AWkM+1JQT3rT1Uh7ftf5f3hnOuNanM9/uCcq2CNZh15iLCrGHNDEVVs
+         OvEA==
+X-Gm-Message-State: APjAAAXoB73jIvqj1PBSgj7VD76dFqMZqP5cB0XV5GpNF3ACAI+WyB3/
+        pfh84LPhx/X2vw4Stw9bKFXjvg==
+X-Google-Smtp-Source: APXvYqzQkldz2kkcT+IjVAgA99RsGI77JaWtCWFsAcLNtPwzVswOzfzDwCeB24xugAbkJ9AD45mJRg==
+X-Received: by 2002:a1c:7211:: with SMTP id n17mr503422wmc.32.1553543972713;
+        Mon, 25 Mar 2019 12:59:32 -0700 (PDT)
+Received: from brauner.io (p200300EA6F14663DB13635B07C8C280A.dip0.t-ipconnect.de. [2003:ea:6f14:663d:b136:35b0:7c8c:280a])
+        by smtp.gmail.com with ESMTPSA id e1sm25288382wrw.66.2019.03.25.12.59.31
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 25 Mar 2019 12:59:32 -0700 (PDT)
+Date:   Mon, 25 Mar 2019 20:59:30 +0100
+From:   Christian Brauner <christian@brauner.io>
+To:     Mika =?utf-8?B?UGVudHRpbMOk?= <mika.penttila@nextfour.com>
+Cc:     "jannh@google.com" <jannh@google.com>,
+        "khlebnikov@yandex-team.ru" <khlebnikov@yandex-team.ru>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "dhowells@redhat.com" <dhowells@redhat.com>,
+        "serge@hallyn.com" <serge@hallyn.com>,
+        "ebiederm@xmission.com" <ebiederm@xmission.com>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        "adobriyan@gmail.com" <adobriyan@gmail.com>,
         "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+        "mtk.manpages@gmail.com" <mtk.manpages@gmail.com>,
+        "bl0pbl33p@gmail.com" <bl0pbl33p@gmail.com>,
+        "ldv@altlinux.org" <ldv@altlinux.org>,
         "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "dyoung@redhat.com" <dyoung@redhat.com>,
-        "bhe@redhat.com" <bhe@redhat.com>
-Subject: Re: [PATCH 1/3] kexec: Do not map the kexec area as decrypted when
- SEV is active
-Thread-Topic: [PATCH 1/3] kexec: Do not map the kexec area as decrypted when
- SEV is active
-Thread-Index: AQHU2xpoSs3WgtcWjUWUiL4VzQYPkqYa7nQAgAC3uICAAE4dAIAAsuCAgAAEHoCAAAyDAIAAHIAA
-Date:   Mon, 25 Mar 2019 19:59:28 +0000
-Message-ID: <be457f42-40b0-6d21-0f0c-2a5e3860d4d5@amd.com>
-References: <20190315103203.13128-1-lijiang@redhat.com>
- <20190315103203.13128-2-lijiang@redhat.com> <20190324150034.GH23289@zn.tnic>
- <7b115829-40d9-e55e-dee3-ec8e4766971f@redhat.com>
- <20190325063742.GA12016@zn.tnic>
- <652b9166-f06e-c210-3c3f-c9e80a97db18@amd.com>
- <20190325173239.GO12016@zn.tnic>
- <11013ad2-2eab-5a7a-d4e2-a9da4920cfab@amd.com>
-In-Reply-To: <11013ad2-2eab-5a7a-d4e2-a9da4920cfab@amd.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SN1PR12CA0081.namprd12.prod.outlook.com (52.132.192.144) To
- DM6PR12MB3163.namprd12.prod.outlook.com (20.179.104.150)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [165.204.78.1]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0811f786-53fe-485c-ec2b-08d6b15c6393
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600127)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:DM6PR12MB2810;
-x-ms-traffictypediagnostic: DM6PR12MB2810:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <DM6PR12MB281089EC169FB52849FE86E8EC5E0@DM6PR12MB2810.namprd12.prod.outlook.com>
-x-forefront-prvs: 0987ACA2E2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(376002)(39860400002)(136003)(396003)(366004)(189003)(76094002)(199004)(6506007)(386003)(105586002)(106356001)(53546011)(68736007)(99286004)(66066001)(26005)(6346003)(102836004)(81156014)(81166006)(476003)(2616005)(186003)(446003)(8676002)(71200400001)(52116002)(6116002)(71190400001)(25786009)(3846002)(4326008)(478600001)(11346002)(76176011)(256004)(72206003)(5660300002)(14444005)(86362001)(31696002)(14454004)(966005)(7736002)(53936002)(7416002)(93886005)(110136005)(305945005)(54906003)(316002)(36756003)(8936002)(6246003)(6486002)(6512007)(6306002)(229853002)(97736004)(6436002)(2906002)(31686004)(486006);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB2810;H:DM6PR12MB3163.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Thomas.Lendacky@amd.com; 
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: roWa4bTy1ScsHc0TAEDMGeZHnRtW4yC+TY70W5lbuV26PGjsnwTu5TYhM0eHoMkcMJEVVWVw+gh2c44DOSUpSxjIaLcNLdkqwsu5rwzAtfdECRItPZtxSeiOVm5949Mkcioqr06GwDp9Gq4oFGf7Dmp4MZ1lbsnvEAKrEV0I6trvjT3NxJh9t5J+4qMSH0PLqdwImZzGkxO+W1Eadu+wLpEoXx9j6CiQi1za5WQyY6ZGOioDwdLrU6C8YZ7r2ld2zohAVS9vBA94gOP8Mjjy2LJE/LbMybg1Y5hh84sbrjGzKxQIP/h4BmZlfWV9TfCZbr2tJDG6XqDcwSKrwlSOiRhMcsyPLuqPc2iI824NM5LVv6aCYcFecWhpDZ6AkQ+etll4RAxqNuMx07e/rXvr3LpUByYfrEhBuFUHHUrcs+Q=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <55B1418933BAD443B6014793C219213B@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        "oleg@redhat.com" <oleg@redhat.com>,
+        "nagarathnam.muthusamy@oracle.com" <nagarathnam.muthusamy@oracle.com>,
+        "cyphar@cyphar.com" <cyphar@cyphar.com>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "joel@joelfernandes.org" <joel@joelfernandes.org>,
+        "dancol@google.com" <dancol@google.com>
+Subject: Re: [PATCH 2/4] pid: add pidctl()
+Message-ID: <20190325195929.4ptq3lnm6bkvtvxx@brauner.io>
+References: <20190325162052.28987-1-christian@brauner.io>
+ <20190325162052.28987-3-christian@brauner.io>
+ <071b12db-f84e-8666-d70a-1b6cce71f9c0@nextfour.com>
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0811f786-53fe-485c-ec2b-08d6b15c6393
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Mar 2019 19:59:28.8742
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2810
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <071b12db-f84e-8666-d70a-1b6cce71f9c0@nextfour.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMy8yNS8xOSAxOjE3IFBNLCBTaW5naCwgQnJpamVzaCB3cm90ZToNCj4gDQo+IA0KPiBPbiAz
-LzI1LzE5IDEyOjMyIFBNLCBCb3Jpc2xhdiBQZXRrb3Ygd3JvdGU6DQo+PiBPbiBNb24sIE1hciAy
-NSwgMjAxOSBhdCAwNToxNzo1NVBNICswMDAwLCBTaW5naCwgQnJpamVzaCB3cm90ZToNCj4+PiBC
-eSBkZWZhdWx0IGFsbCB0aGUgbWVtb3J5IHJlZ2lvbnMgYXJlIG1hcHBlZCBlbmNyeXB0ZWQuIFRo
-ZQ0KPj4+IHNldF9tZW1vcnlfe2VuY3J5cHQsZGVjcnlwdH0oKSBpcyBhIGdlbmVyaWMgZnVuY3Rp
-b24gd2hpY2ggY2FuIGJlDQo+Pj4gY2FsbGVkIGV4cGxpY2l0bHkgdG8gY2xlYXIvc2V0IHRoZSBl
-bmNyeXB0aW9uIG1hc2sgZnJvbSB0aGUgZXhpc3RpbmcNCj4+PiBtZW1vcnkgbWFwcGluZy4gVGhl
-IG1lbV9lbmNyeXB0X2FjdGl2ZSgpIHJldHVybnMgdHJ1ZSBpZiBlaXRoZXIgU0VWIG9yDQo+Pj4g
-U01FIGlzIGFjdGl2ZS4gU28gdGhlIF9fc2V0X21lbW9yeV9lbmNfZGVjKCkgdXNlcyB0aGUNCj4+
-PiBtZW1vcnlfZW5jcnlwdF9hY3RpdmUoKSBjaGVjayB0byBlbnN1cmUgdGhhdCB0aGUgZnVuY3Rp
-b24gaXMgbm8tb3Agd2hlbg0KPj4+IFNNRS9TRVYgYXJlIG5vdCBhY3RpdmUuDQo+Pj4NCj4+PiBD
-dXJyZW50bHksIHRoZSBhcmNoX2tleGVjX3Bvc3RfYWxsb2NfcGFnZXMoKSB1bmNvbmRpdGlvbmFs
-bHkgY2xlYXIgdGhlDQo+Pj4gZW5jcnlwdGlvbiBtYXNrIGZyb20gdGhlIGtleGVjIGFyZWEuIElu
-IGNhc2Ugb2YgU0VWLCB3ZSBzaG91bGQgbm90IGNsZWFyDQo+Pj4gdGhlIGVuY3J5cHRpb24gbWFz
-ay4NCj4+DQo+PiBCcmlqZXNoLCBJIGtub3cgYWxsIHRoYXQuDQo+Pg0KPj4gUGxlYXNlIHJlYWQg
-d2hhdCBJIHNhaWQgaGVyZSBhdCB0aGUgZW5kOg0KPj4NCj4+IGh0dHBzOi8vbGttbC5rZXJuZWwu
-b3JnL3IvMjAxOTAzMjQxNTAwMzQuR0gyMzI4OUB6bi50bmljDQo+Pg0KPj4gV2l0aCB0aGlzIGNo
-YW5nZSwgdGhlIGNvZGUgbG9va3MgbGlrZSB0aGlzOg0KPj4NCj4+ICsgICAgICAgaWYgKHNtZV9h
-Y3RpdmUoKSkNCj4+ICsgICAgICAgICAgICAgICByZXR1cm4gc2V0X21lbW9yeV9kZWNyeXB0ZWQo
-KHVuc2lnbmVkIGxvbmcpdmFkZHIsIHBhZ2VzKTsNCj4+DQo+PiBub3cgaW4gX19zZXRfbWVtb3J5
-X2VuY19kZWMgdmlhIHNldF9tZW1vcnlfZGVjcnlwdGVkKCk6DQo+Pg0KPj4gICAgICAgICAgLyog
-Tm90aGluZyB0byBkbyBpZiBtZW1vcnkgZW5jcnlwdGlvbiBpcyBub3QgYWN0aXZlICovDQo+PiAg
-ICAgICAgICBpZiAoIW1lbV9lbmNyeXB0X2FjdGl2ZSgpKQ0KPj4gICAgICAgICAgICAgICAgICBy
-ZXR1cm4gMDsNCj4+DQo+Pg0KPj4gc28geW91IGhhdmU6DQo+Pg0KPj4gCWlmIChzbWVfYWN0aXZl
-KCkpDQo+Pg0KPj4gCQkuLi4NCj4+DQo+PiAJCWlmICghbWVtX2VuY3J5cHRfYWN0aXZlKCkpDQo+
-Pg0KPj4NCj4+IG5vdyBtYXliZSB0aGlzIGlzIGFsbCBjbGVhciB0byB5b3UgYW5kIFRvbSBidXQg
-SSBiZXRjaGEgb3RoZXJzIHdpbGwgZ2V0DQo+PiBjb25mdXNlZC4gUHJvYmFibHkgc29tZXRoaW5n
-IGxpa2UgIndlbGwsIHdoYXQgc2hvdWxkIGJlIGFjdGl2ZSBub3csIFNNRSwNCj4+IFNFViBvciBt
-ZW1vcnkgZW5jcnlwdGlvbiBpbiBnZW5lcmFsIj8NCj4+DQo+PiBJIGhvcGUgeW91J3JlIGNhdGNo
-aW5nIG15IGRyaWZ0Lg0KPj4NCj4+IFNvIGlmIHlvdSB3YW50IHRvICpub3QqIGRlY3J5cHQgbWVt
-b3J5IGluIHRoZSBTRVYgY2FzZSwgdGhlbiBkb2luZyBzb21ldGhpbmcNCj4+IGxpa2UgdGhpcyBz
-aG91bGQgbWFrZSBpdCBhIGJpdCBtb3JlIGNsZWFyOg0KPj4NCj4+DQo+PiAJaWYgKHNldl9hY3Rp
-dmUoKSkNCj4+IAkJcmV0dXJuOw0KPj4NCj4+IAlyZXR1cm4gc2V0X21lbW9yeV9kZWNyeXB0ZWQo
-KHVuc2lnbmVkIGxvbmcpdmFkZHIsIHBhZ2VzKTsNCj4+DQo+IA0KPiANCj4gSSBzZWUgeW91ciBw
-b2ludC4gSSBhZ3JlZSBpdCBjYW4gZ2V0IGNvbmZ1c2luZy4NCj4gDQo+IA0KPj4gYWxvbmcgd2l0
-aCBhIGNvbW1lbnQgKndoeSogd2UncmUgY2hlY2tpbmcgaGVyZS4NCj4+DQo+PiBCdXQgYWN0dWFs
-bHksIEknZCBwcmVmZXIgaWYgeW91IGhhZCBzZXBhcmF0ZSB3cmFwcGVycyB3aGljaCBhcmUgY2Fs
-bGVkDQo+PiBmb3IgU01FIGFuZCBmb3IgU0VWLg0KPiANCj4gDQo+IEp1c3QgYSB0aG91Z2h0LCBt
-YXliZSB3ZSBjYW4gbW92ZSB0aGUgYWJvdmUgaWYoc2V2X2FjdGl2ZSgpKSBjaGVjayB1cCBpbg0K
-PiBrZXJuZWwva2V4ZWNfY29yZS5jIGJlY2F1c2Ugd2UgZG9uJ3QgbmVlZCB0byBzZXQvY2xlYXIg
-dGhlIGVuY3J5cHRpb24NCj4gbWFza3Mgd2hlbiBTRVYgaXMgYWN0aXZlIHNvIHRoZXJlIGlzIG5v
-IG5lZWQgdG8gY2FsbCB0aGUgd3JhcHBlci4NCg0KSUlSQywgdGhlIHdyYXBwZXIgd2FzIGNyZWF0
-ZWQgdG8gYXZvaWQgY2hlY2tpbmcgaW4gdGhlIG1haW4ga2V4ZWMgc3VwcG9ydA0KYW5kIG1vdmUg
-dGhlIGNoZWNrIGRvd24gdG8gdGhlIGFyY2ggc3BlY2lmaWMgc3VwcG9ydC4gU28gSSBkb24ndCB0
-aGluayB3ZQ0Kc2hvdWxkIG1vdmUgaXQuDQoNCkknbSBub3Qgc3VyZSBhYm91dCB0aGUgc2VwYXJh
-dGUgd3JhcHBlcnMsIEkgbGlrZSB0aGUgYWJvdmUgY29kZSB3aGVyZSB0aGUNCmFyY2ggY2FsbGJh
-Y2sgcmV0dXJucyBpZiBzZXZfYWN0aXZlKCkgaXMgdHJ1ZS4NCg0KTWF5YmUgd2hhdCB3b3VsZCBo
-ZWxwIGlzIHRvIGRlc2NyaWJlIHdoeSB0aGVyZSBpcyBhIGRpZmZlcmVuY2UgYmV0d2VlbiBTTUUN
-CmFuZCBTRVYgaW4gcmVnYXJkcyB0byBrZXhlYy4gRHVyaW5nIGEgdHJhZGl0aW9uYWwgYm9vdCB1
-bmRlciBTTUUsIFNNRSB3aWxsDQplbmNyeXB0IHRoZSBrZXJuZWwsIHNvIHRoZSBTTUUga2V4ZWMg
-a2VybmVsIGFsc28gbmVlZHMgdG8gYmUgdW4tZW5jcnlwdGVkDQppbiBvcmRlciB0byByZXBsaWNh
-dGUgYSBub3JtYWwgU01FIGJvb3QuIER1cmluZyBhIHRyYWRpdGlvbmFsIGJvb3QgdW5kZXINClNF
-ViwgdGhlIGtlcm5lbCBoYXMgYWxyZWFkeSBiZWVuIGxvYWRlZCBlbmNyeXB0ZWQsIHNvIHRoZSBT
-RVYga2V4ZWMga2VybmVsDQpuZWVkcyB0byBiZSBlbmNyeXB0ZWQgaW4gb3JkZXIgdG8gcmVwbGlj
-YXRlIGEgbm9ybWFsIFNFViBib290Lg0KDQpUaGFua3MsDQpUb20NCg0KPiANCj4gDQo+Pg0KPj4g
-SSdsbCBsZXQgVG9tIGNoaW1lIGluIHRvby4NCj4+DQo+IA0K
+On Mon, Mar 25, 2019 at 05:20:54PM +0000, Mika Penttilä wrote:
+> Hi!
+> 
+> 
+> > +SYSCALL_DEFINE5(pidctl, unsigned int, cmd, pid_t, pid, int, source, int, target,
+> > +		unsigned int, flags)
+> > +{
+> > +	struct pid_namespace *source_ns = NULL, *target_ns = NULL;
+> > +	struct pid *struct_pid;
+> > +	pid_t result;
+> > +
+> > +	switch (cmd) {
+> > +	case PIDCMD_QUERY_PIDNS:
+> > +		if (pid != 0)
+> > +			return -EINVAL;
+> > +		pid = 1;
+> > +		/* fall through */
+> > +	case PIDCMD_QUERY_PID:
+> > +		if (flags != 0)
+> > +			return -EINVAL;
+> > +		break;
+> > +	case PIDCMD_GET_PIDFD:
+> > +		if (flags & ~PIDCTL_CLOEXEC)
+> > +			return -EINVAL;
+> > +		break;
+> > +	default:
+> > +		return -EOPNOTSUPP;
+> > +	}
+> > +
+> > +	source_ns = get_pid_ns_by_fd(source);
+> > +	result = PTR_ERR(source_ns);
+> > +	if (IS_ERR(source_ns))
+> > +		goto err_source;
+> > +
+> > +	target_ns = get_pid_ns_by_fd(target);
+> > +	result = PTR_ERR(target_ns);
+> > +	if (IS_ERR(target_ns))
+> > +		goto err_target;
+> > +
+> > +	if (cmd == PIDCMD_QUERY_PIDNS) {
+> > +		result = pidns_related(source_ns, target_ns);
+> > +	} else {
+> > +		rcu_read_lock();
+> > +		struct_pid = find_pid_ns(pid, source_ns);
+> > +		result = struct_pid ? pid_nr_ns(struct_pid, target_ns) : -ESRCH;
+> 
+> Should you do get_pid(struct_pid) here to keep it alive till 
+> pidfd_create_fd() ?
+
+Yes, indeed. You and Jann both pointed this out! Thank you.
+
+> 
+> > +		rcu_read_unlock();
+> > +
+> > +		if (cmd == PIDCMD_GET_PIDFD) {
+> > +			int cloexec = (flags & PIDCTL_CLOEXEC) ? O_CLOEXEC : 0;
+> > +			if (result > 0)
+> > +				result = pidfd_create_fd(struct_pid, cloexec);
+> > +			else if (result == 0)
+> > +				result = -ENOENT;
+> > +		}
+> > +	}
+> > +
+> > +	if (target)
+> > +		put_pid_ns(target_ns);
+> > +err_target:
+> > +	if (source)
+> > +		put_pid_ns(source_ns);
+> > +err_source:
+> > +	return result;
+> > +}
+> > +
+> >  void __init pid_idr_init(void)
+> >  {
+> >  	/* Verify no one has done anything silly: */
+> > diff --git a/kernel/pid_namespace.c b/kernel/pid_namespace.c
+> > index aa6e72fb7c08..1c863fb3d55a 100644
+> > --- a/kernel/pid_namespace.c
+> > +++ b/kernel/pid_namespace.c
+> > @@ -429,6 +429,31 @@ static struct ns_common *pidns_get_parent(struct ns_common *ns)
+> >  	return &get_pid_ns(pid_ns)->ns;
+> >  }
+> >  
+> > +/**
+> > + * pidnscmp - Determine if @ancestor is ancestor of @descendant
+> > + * @ancestor:   pidns suspected to be the ancestor of @descendant
+> > + * @descendant: pidns suspected to be the descendant of @ancestor
+> > + *
+> > + * Returns -1 if @ancestor is not an ancestor of @descendant,
+> > + * 0 if @ancestor is the same pidns as @descendant, 1 if @ancestor
+> > + * is an ancestor of @descendant.
+> > + */
+> > +int pidnscmp(struct pid_namespace *ancestor, struct pid_namespace *descendant)
+> > +{
+> > +	if (ancestor == descendant)
+> > +		return 0;
+> > +
+> > +	for (;;) {
+> > +		if (!descendant)
+> > +			return -1;
+> > +		if (descendant == ancestor)
+> > +			break;
+> > +		descendant = descendant->parent;
+> > +	}
+> > +
+> > +	return 1;
+> > +}
+> > +
+> >  static struct user_namespace *pidns_owner(struct ns_common *ns)
+> >  {
+> >  	return to_pid_ns(ns)->user_ns;
