@@ -2,159 +2,108 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9910C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 10:01:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF4DEC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 10:01:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92E7C206DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 10:01:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553508081;
-	bh=e57cBwNVhCgPqAuRAEZbgEhNU0b8epobT2WJnce8xBU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=RYUOKX3cqLvu/VsdzxU/puMGWHfwraGHGG7LB6MTJTeTC3trZAE0va8CzZkVd/xsW
-	 zw+BlLC9Dbvb49SoJAtxRd27D6z+J9NxBXgmp2Naepl50dYiZiR+EoHOg9iJr5LqwO
-	 0H2Y6aF0tLF5l/OtWMKMeumRlhr8uvSO1b9H0LXI=
+	by mail.kernel.org (Postfix) with ESMTP id A4BE1206DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 10:01:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a7SSI3hJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730555AbfCYKBU (ORCPT
+        id S1730568AbfCYKBd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 06:01:20 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:39358 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729912AbfCYKBT (ORCPT
+        Mon, 25 Mar 2019 06:01:33 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:35730 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730361AbfCYKBc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 06:01:19 -0400
-Received: by mail-ot1-f67.google.com with SMTP id f10so7444750otb.6;
-        Mon, 25 Mar 2019 03:01:19 -0700 (PDT)
+        Mon, 25 Mar 2019 06:01:32 -0400
+Received: by mail-oi1-f196.google.com with SMTP id j132so6463106oib.2
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 03:01:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QwhCg3B6/Un3AFC6Nt3b3MPD02mF4rhTJlHoVqv3zhY=;
+        b=a7SSI3hJe8Xxr63an4B0fRaFyl1HDSJ/YdPxQQQTZM69WDWA/7CVWxrKB/1JnY86vq
+         W8tu2wgvObA1IX0jSJ99/Y+ZWVorctXtvbwac26whAy78J7YjiNKsMOYSDT8fpD1smfZ
+         Wqpo3mQ3GXWcs1kiLyBr5BNRCaD2NFfFQ0sxTw44SM3Ums6ELvmnbO7o6m4CGPaMUeIo
+         El6jd5P46uM+ekskDmfeEV8dfOgucPth3Soxmck4iWfzG9RczWonClE2ApJkVZ5AENhW
+         dES97Z/ojaiQDSGTc5LH0mRqBgBuhuu+Qae+PNLt3WZezoziF9bESLs1KSsBNH8ZTK7M
+         jL9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=3mZCdUMQ/EmpArie8AgSdBX+Pv8ZoaXYZbo9SgN/d8c=;
-        b=FD0qOWIraQzp18uUKRlRfxUmWw4htKceKuvx7pYGzIbToxWdNoLB11gm0P68RN0Er2
-         x6B6cCgbac2IIhch3erg2BUKLU+z+hOlLv1Pi2wDheuJjacMBg4oyS+vueSNB2yxuulE
-         DaWobUx8RvtH6Uu9cBZ4OIuKvIaPNTbfbbbpdXyV1FHzyvjpfTd8J3PNVZSPcuWyi9TU
-         W9ReuaAK24cpzA7ASRVMjE6Q3uYddx6enz3KnRNmBWOUjyCs8gFjv+7roxapd2Yt4R1C
-         xIrRPXNQTupxQNMINlco6MyF2YkLe3UQLFxt/cCJ+zeJ1e4YumGMXjdOIWpkFLGdFo0r
-         4C9w==
-X-Gm-Message-State: APjAAAUuZqEvCBdQO8kRPoCMhrKTsFetZT9Mnch+nB+nDCt9stplbR1q
-        bTafkTOoCs+Fd9fbbv2doVqwy/W9PGucyTuD37k=
-X-Google-Smtp-Source: APXvYqykbUAQycL4J2KrCkI3meP39CZXXlE7zDksjkpwSu8UmKp75Xgu5SSBLoa/3aLh6eCqIrXvHV7CiwRqFVzrgZ4=
-X-Received: by 2002:a9d:36a:: with SMTP id 97mr16259753otv.124.1553508079246;
- Mon, 25 Mar 2019 03:01:19 -0700 (PDT)
+        bh=QwhCg3B6/Un3AFC6Nt3b3MPD02mF4rhTJlHoVqv3zhY=;
+        b=fh+rtCwVJGuG7QGx1KaXJQ9lKfu9KTp7kiTCypygjPnGrW9k8qQ4ZGEBm3WoAg0/ke
+         FR+AAi6LNgxWsftt5g40dPGvdqv9HwyyfRJ4GwDKGfvIH/MMgEoQo3qfOEMp4ljvbNBm
+         xXjYYH04KofLpfjuEg/RR2guebeJVpR0pKCt0vrLTuhQBJFqeTTL/81DBWG0dZ5oWvRv
+         IXJ/qxEpFz//tViesmrhkcWwqj7X7fVLKRct9BRRqRX0+7CxVsO9EeMHFrmdB/drufxf
+         wKX/oCeO3qwQ1bJv0Vgm+bi0t8Pm1Ix3xZbuSUzK3g2cCvzc7goh5aeMV3zpjMtD7e//
+         PXZw==
+X-Gm-Message-State: APjAAAV1h8yQ9L8TxOCEcjpB4O+GytsFzngMVkg5yvN0YmNaMQ7muhQL
+        5eMOnqA1qk6Trzq9t7A9oOvZa4Jyh36l9dQ/KNTf45v7Zzw=
+X-Google-Smtp-Source: APXvYqwdSH5T7tcjZ4I52oUp9mWoMmEHHS44hbyNdehtrMni8i3kHprXOPuRK1JowsjpsLmBYkLY/ac32IIV8VC4gJ0=
+X-Received: by 2002:aca:7505:: with SMTP id q5mr10620768oic.126.1553508092041;
+ Mon, 25 Mar 2019 03:01:32 -0700 (PDT)
 MIME-Version: 1.0
-References: <1637073.gl2OfxWTjI@aspire.rjw.lan> <1762575.ER2xjzr9E1@aspire.rjw.lan>
- <20190322144629.GC12472@zn.tnic>
-In-Reply-To: <20190322144629.GC12472@zn.tnic>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 25 Mar 2019 11:01:08 +0100
-Message-ID: <CAJZ5v0iML0dvzLszSnZjBPKc=2fWp4aUxEjAYWjJnz41Kz8w1g@mail.gmail.com>
-Subject: Re: [PATCH 2/2] PM / arch: x86: MSR_IA32_ENERGY_PERF_BIAS sysfs interface
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Len Brown <len.brown@intel.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Laura Abbott <labbott@fedoraproject.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Simon Schricker <sschricker@suse.de>,
-        Hannes Reinecke <hare@suse.de>
+References: <20190313064557.GA14531@unicorn.suse.cz> <20190320211813.GE29968@unicorn.suse.cz>
+ <CADVatmNVM3a=L6McdCsr5xzCwZnW6N4r9Cf55gjQZjsGGosBDg@mail.gmail.com>
+ <1572645.oXzt2vILsi@alaris> <20190324193838.ubiljot22zhf5mjq@debian> <20190325073045.GC26076@unicorn.suse.cz>
+In-Reply-To: <20190325073045.GC26076@unicorn.suse.cz>
+From:   Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Date:   Mon, 25 Mar 2019 10:00:54 +0000
+Message-ID: <CADVatmMX-HcORGXUdiBZn6hx4CAqZzyz_TGx=e0HwuPm-xoLsw@mail.gmail.com>
+Subject: Re: regression (bisected): "modprobe parport_pc" hangs in current mainline
+To:     Michal Kubecek <mkubecek@suse.cz>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 22, 2019 at 3:46 PM Borislav Petkov <bp@alien8.de> wrote:
+On Mon, Mar 25, 2019 at 7:30 AM Michal Kubecek <mkubecek@suse.cz> wrote:
 >
-> First of all, thanks a lot for doing that!
->
-> This is a good example for how we should convert all the /dev/msr
-> accessing tools.
->
-> Nitpicks below.
->
-> On Thu, Mar 21, 2019 at 11:20:17PM +0100, Rafael J. Wysocki wrote:
-> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> On Sun, Mar 24, 2019 at 07:38:38PM +0000, Sudip Mukherjee wrote:
+> > And I was able to reproduce the problem using a vm and Suse Tumblewood with
+> > next-20190322. Can you please try the attached patch and test on your vm and
+> > machine and check if it fixes the problem.
 > >
-> > The Performance and Energy Bias Hint (EPB) is expected to be set by
-> > user space through the generic MSR interface, but that interface is
-> > not particularly nice and there are security concerns regarding it,
-> > so it is not always available.
+> > --
+> > Regards
+> > Sudip
+>
+> > diff --git a/drivers/parport/share.c b/drivers/parport/share.c
+> > index 0171b8dbcdcd..f87948fbfc34 100644
+> > --- a/drivers/parport/share.c
+> > +++ b/drivers/parport/share.c
+> > @@ -274,7 +274,7 @@ static int port_check(struct device *dev, void *dev_drv)
+> >  int __parport_register_driver(struct parport_driver *drv, struct module *owner,
+> >                             const char *mod_name)
+> >  {
+> > -     if (list_empty(&portlist))
+> > +     if (list_empty(&portlist) && strcmp(drv->name, "daisy_drv"))
+> >               get_lowlevel_driver();
 > >
-> > For this reason, add a sysfs interface for reading and updating the
-> > EPB, in the form of a new attribute, energy_perf_bias, located
-> > under /sys/devices/system/cpu/cpu#/power/ for online CPUs that
-> > support the EPB feature.
-> >
-> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > ---
-> >  Documentation/ABI/testing/sysfs-devices-system-cpu |   18 ++++
-> >  Documentation/admin-guide/pm/intel_epb.rst         |   27 ++++++
-> >  arch/x86/kernel/cpu/intel_epb.c                    |   93 ++++++++++++++++++++-
-> >  3 files changed, 134 insertions(+), 4 deletions(-)
+> >       if (drv->devmodel) {
 >
-> ...
+> Yes, with this patch (on top of v5.1-rc2), both physical machine and VM
+> let the module(s) load cleanly even with the alias line restored.
 >
-> > +static ssize_t energy_perf_bias_show(struct device *dev,
-> > +                                  struct device_attribute *attr,
-> > +                                  char *buf)
-> > +{
-> > +     unsigned int cpu = dev->id;
-> > +     u64 epb;
-> > +     int ret;
-> > +
-> > +     ret = rdmsrl_on_cpu(cpu, MSR_IA32_ENERGY_PERF_BIAS, &epb);
->
-> That's an IPI and an MSR read each time. You could dump saved_epb
-> instead, no?
+> Tested-by: Michal Kubecek <mkubecek@suse.cz>
 
-No, because the MSR can change in ways beyond control of this code sometimes.
+Thanks Michal. I will add it to my queue with your Tested-by.
 
-Generally, saved_epb only is the right value at the CPU online time.
+btw, I think I liked using Suse. :)
 
-> > +     if (ret < 0)
-> > +             return ret;
-> > +
-> > +     return sprintf(buf, "%llu\n", epb);
-> > +}
-> > +
-> > +static ssize_t energy_perf_bias_store(struct device *dev,
-> > +                                   struct device_attribute *attr,
-> > +                                   const char *buf, size_t count)
-> > +{
-> > +     unsigned int cpu = dev->id;
-> > +     u64 epb, val;
-> > +     int ret;
-> > +
-> > +     ret = __sysfs_match_string(energy_perf_strings,
-> > +                                ARRAY_SIZE(energy_perf_strings), buf);
-> > +     if (ret >= 0)
-> > +             val = energ_perf_values[ret];
-> > +     else if (kstrtou64(buf, 0, &val) || val > MAX_EPB)
->
-> Range is 0 - 15 but u64? Maybe make it an u8? :)
 
-At the cost of an extra conversion below, right?
-
-> > +             return -EINVAL;
-> > +
-> > +     ret = rdmsrl_on_cpu(cpu, MSR_IA32_ENERGY_PERF_BIAS, &epb);
-> > +     if (ret < 0)
-> > +             return ret;
-> > +
-> > +     ret = wrmsrl_on_cpu(cpu, MSR_IA32_ENERGY_PERF_BIAS,
-> > +                         (epb & ~EPB_MASK) | val);
-> > +     if (ret < 0)
-> > +             return ret;
-> > +
-> > +     return count;
-> > +}
->
-> --
+-- 
+Regards
+Sudip
