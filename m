@@ -2,128 +2,93 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D12F5C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 19:30:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E75C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 19:30:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A0BC20811
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 19:30:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="1mdk+MBy"
+	by mail.kernel.org (Postfix) with ESMTP id 3790F20811
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 19:30:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553542210;
+	bh=8LWf69VxGPFVJfE+wvVvjSfwNHcnPBOuBo8RKaHc8lI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=afYibU+b37kCx1ixnLRPoissFGktGZ3D+jq6Vwr7QlS8NvZ2P6xd72gsvq9b9VxzI
+	 M1KRVkJQJPX6dKeyyR7XscOSeEHzZby0+M1X8XfCmx8FgSKU3esbIsAIhhGD/0xkI4
+	 o+nSUDUlNjAqpU4bCWnVRAXBxu2kfSWgRi/zA2kE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730048AbfCYTaA (ORCPT
+        id S1730137AbfCYTaI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 15:30:00 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:33873 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729548AbfCYTaA (ORCPT
+        Mon, 25 Mar 2019 15:30:08 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:39678 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729548AbfCYTaI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 15:30:00 -0400
-Received: by mail-ot1-f65.google.com with SMTP id k21so7802049otf.1
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 12:30:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=hXTt04+uP3CF2N6BhBBgJjHnEUj/7PvEFKIa60d+Aqg=;
-        b=1mdk+MBy7JP5R/Slb3flUfuhDER9hIZOWP46hDJe4hA2ypCGSWakbhLIz+M86ZE5bs
-         aOlurSVep85tCgTR1UQb/q6fr5Iwc+Wn7GO2M7iZ9MHdokXYk4cjabJofPmsycdAw4/S
-         N31aGtC9FFAbwvAMOaZtnxe8vfDu5ROV/RUu13S2iAV44eJRiFXYJCVAyheQw0FbA3kL
-         6yPvH8c5oxG4U6Qkq5/jjQMOHYbjexhhDqFUxBFQc8p2NkV9GlPJt2vtA8j4UGaw3XJm
-         U5RgW2tclPEMtg+IkqJve0Uo3wMTR+hazLxQYs20HbwPGSdMb6u4l3/grQ0RUnYvq04x
-         jGSA==
+        Mon, 25 Mar 2019 15:30:08 -0400
+Received: by mail-oi1-f196.google.com with SMTP id n187so5144316oih.6;
+        Mon, 25 Mar 2019 12:30:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=hXTt04+uP3CF2N6BhBBgJjHnEUj/7PvEFKIa60d+Aqg=;
-        b=VhN/ILNLy1XXzfBcOoZJhXf5X3qgrnj9x9njVaD5RH7EiXDcHhHYeREGU0p5nBX5Dj
-         g7xj3KGqHkRJulI4nmZxq6tj2P8754jdt2iMAUFvUkQfYwfxMOFOyjbTXHWoGiZLTQ3O
-         Ozo6+ZOkj5FdubWbin53b/PUXyExJf5GF2RDrKt/jdy8kFRYDSOQ2Zel/NuT3ktvvHnD
-         QKeii91poZTI4JWcemHXwj9IN9C6peEHasfg0ZcT320BJ2qyuK9wLxNNjOay5i0wFb0G
-         SMbS9jKZfgZSENbKRUp2gJgp923ZiuDwsZ6j7CIfqr4PhEiFyxoqsuAQmUuNycILZLm7
-         HqHg==
-X-Gm-Message-State: APjAAAXdsh9ABIe4nisvoSpOUfd11O2vVwrm2b4duvzHBOZ+psvHzDcE
-        Hg5kzLLljSuVjzVUE1aTsWNeJan8hlykohOl2lfDqg==
-X-Google-Smtp-Source: APXvYqzta2v2fqC1QO5NTeyuYEcNckY9JIm9c1OXKwXu+ldirLp79DrEZBPZu7PqPXrr+kF52rLsHn7QgzxoalBkCmE=
-X-Received: by 2002:a9d:224a:: with SMTP id o68mr20030389ota.214.1553542199941;
- Mon, 25 Mar 2019 12:29:59 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ZY2eg4/4XIiB14rL+iCO/iZZDg7Am/+m25Q6A/UFf70=;
+        b=qGVUCaujThvOo8NnISIemn/2lErVPo2WP3UR8UTl4BBox03oTUCO4LB8BAIdToRpfL
+         DCAr8bOMbq0TtCkN68zOrz9tDwvWG6Q3f3D9ohI5H3xIQBfcQj6WwuIZNEMwCT+SSKAz
+         ZmmxwLT2Iw2230aJAFA6UC0bRF42yGWVP2bNjZyaYO4Cx3iQyu+OSrvButr8XkfAQTI/
+         Soy9IeMJwalVIbCSBV+ajOTcCaUDojCZS0OsYhKZVuwOIa8bCXinPeaXDyeAevkENm4F
+         Pezi/DWtJJnw5RQ5wgtqvEtpjq2PYwUQPFV76rMBIZcEOVD2w0mlXrH63DkFDMPh/MlH
+         MSWg==
+X-Gm-Message-State: APjAAAVCuxvoC5sL2HNFKI6+z1fxIP8Ghk0IfSCZbK9BNJ1X+PIAwfLG
+        yHdhHqg0BAEN7i2wAeMuFA==
+X-Google-Smtp-Source: APXvYqzx+hvjUephMmngHDzZS47Ab3tENvyvPRGzV+BUSpVGCXYSkagCJCjNWjOyoeGFAwR964faBQ==
+X-Received: by 2002:aca:382:: with SMTP id 124mr12947109oid.22.1553542207271;
+        Mon, 25 Mar 2019 12:30:07 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id k23sm7221427otr.6.2019.03.25.12.30.05
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 25 Mar 2019 12:30:06 -0700 (PDT)
+Date:   Mon, 25 Mar 2019 14:30:05 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Zhiyong Tao <zhiyong.tao@mediatek.com>
+Cc:     linus.walleij@linaro.org, mark.rutland@arm.com,
+        matthias.bgg@gmail.com, sean.wang@kernel.org,
+        srv_heupstream@mediatek.com, hui.liu@mediatek.com,
+        eddie.huang@mediatek.com, chuanjia.liu@mediatek.com,
+        biao.huang@mediatek.com, hongzhou.yang@mediatek.com,
+        erin.lo@mediatek.com, sean.wang@mediatek.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 2/4] arm64: dts: mt8183: add pintcrl file
+Message-ID: <20190325193005.GA18114@bogus>
+References: <20190325122302.5483-1-zhiyong.tao@mediatek.com>
+ <20190325122302.5483-3-zhiyong.tao@mediatek.com>
 MIME-Version: 1.0
-References: <1553316275-21985-1-git-send-email-yang.shi@linux.alibaba.com>
- <cc6f44e2-48b5-067f-9685-99d8ae470b50@inria.fr> <CAPcyv4it1w7SdDVBV24cRCVHtLb3s1pVB5+SDM02Uw4RbahKiA@mail.gmail.com>
- <3df2bf0e-0b1d-d299-3b8e-51c306cdc559@inria.fr>
-In-Reply-To: <3df2bf0e-0b1d-d299-3b8e-51c306cdc559@inria.fr>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 25 Mar 2019 12:29:48 -0700
-Message-ID: <CAPcyv4gNrFOQJhKUV7crZqNfg8LQFZRVO04Z+Fo50kzswVQ=TA@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/10] Another Approach to Use PMEM as NUMA Node
-To:     Brice Goglin <Brice.Goglin@inria.fr>
-Cc:     Yang Shi <yang.shi@linux.alibaba.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Rik van Riel <riel@surriel.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Fengguang Wu <fengguang.wu@intel.com>,
-        "Du, Fan" <fan.du@intel.com>, "Huang, Ying" <ying.huang@intel.com>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190325122302.5483-3-zhiyong.tao@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 10:45 AM Brice Goglin <Brice.Goglin@inria.fr> wrote=
-:
->
-> Le 25/03/2019 =C3=A0 17:56, Dan Williams a =C3=A9crit :
-> >
-> > I'm generally against the concept that a "pmem" or "type" flag should
-> > indicate anything about the expected performance of the address range.
-> > The kernel should explicitly look to the HMAT for performance data and
-> > not otherwise make type-based performance assumptions.
->
->
-> Oh sorry, I didn't mean to have the kernel use such a flag to decide of
-> placement, but rather to expose more information to userspace to clarify
-> what all these nodes are about when userspace will decide where to
-> allocate things.
+On Mon, Mar 25, 2019 at 08:23:00PM +0800, Zhiyong Tao wrote:
+> This patch adds pinctrl file for mt8183.
 
-I understand, but I'm concerned about the risk of userspace developing
-vendor-specific, or generation-specific policies around a coarse type
-identifier. I think the lack of type specificity is a feature rather
-than a gap, because it requires userspace to consider deeper
-information.
+Still has a typo in the subject.
 
-Perhaps "path" might be a suitable replacement identifier rather than
-type. I.e. memory that originates from an ACPI.NFIT root device is
-likely "pmem".
+> 
+> Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
+> ---
+>  arch/arm64/boot/dts/mediatek/mt8183-pinfunc.h | 1120 +++++++++++++++++++++++++
+>  1 file changed, 1120 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/mediatek/mt8183-pinfunc.h
 
-> I understand that current NVDIMM-F are not slower than DDR and HMAT
-> would better describe this than a flag. But I have seen so many buggy or
-> dummy SLIT tables in the past that I wonder if we can expect HMAT to be
-> widely available (and correct).
+Add acks/reviewed-bys when posting new versions. This should also be 
+called v8 even though a different person sent it.
 
-That's always a fear that the platform BIOS will try to game OS
-behavior. However, that was the reason that HMAT was defined to
-indicate actual performance values rather than relative. It is
-hopefully harder to game than the relative SLIT values, but I'l  grant
-you it's now impossible.
+Rob
 
-> Is there a safe fallback in case of missing or buggy HMAT? For instance,
-> is DDR supposed to be listed before NVDIMM (or HBM) in SRAT?
-
-One fallback might be to make some of these sysfs attributes writable
-so userspace can correct the situation, but I'm otherwise unclear of
-what you mean by "safe". If a platform has hard dependencies on
-correctly enumerating memory performance capabilities then there's not
-much the kernel can do if the HMAT is botched. I would expect the
-general case is that the performance capabilities are a soft
-dependency. but things still work if the data is wrong.
