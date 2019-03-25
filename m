@@ -2,93 +2,131 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F922C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 11:50:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 592F1C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 11:51:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17A5B20850
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 11:50:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31D2C20850
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 11:51:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731013AbfCYLux (ORCPT
+        id S1731018AbfCYLvW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 07:50:53 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47070 "EHLO mx1.redhat.com"
+        Mon, 25 Mar 2019 07:51:22 -0400
+Received: from mga01.intel.com ([192.55.52.88]:64326 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730789AbfCYLux (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 07:50:53 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 462DE30018F4;
-        Mon, 25 Mar 2019 11:50:53 +0000 (UTC)
-Received: from maximlenovopc.usersys.redhat.com (unknown [10.35.206.72])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B52C06EA3F;
-        Mon, 25 Mar 2019 11:50:49 +0000 (UTC)
-Message-ID: <6522eaf89e86534167d3b91046f7aaab16fb38a8.camel@redhat.com>
-Subject: Re: [PATCH 3/8] vfio/mdev: Removed unused kref
-From:   Maxim Levitsky <mlevitsk@redhat.com>
-To:     Parav Pandit <parav@mellanox.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kwankhede@nvidia.com,
-        alex.williamson@redhat.com
-Date:   Mon, 25 Mar 2019 13:50:48 +0200
-In-Reply-To: <1553296835-37522-4-git-send-email-parav@mellanox.com>
-References: <1553296835-37522-1-git-send-email-parav@mellanox.com>
-         <1553296835-37522-4-git-send-email-parav@mellanox.com>
-Content-Type: text/plain; charset="UTF-8"
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Mon, 25 Mar 2019 11:50:53 +0000 (UTC)
+        id S1730831AbfCYLvV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 07:51:21 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Mar 2019 04:51:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,256,1549958400"; 
+   d="scan'208";a="330460711"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
+  by fmsmga006.fm.intel.com with ESMTP; 25 Mar 2019 04:51:19 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1h8O8M-0005AY-A3; Mon, 25 Mar 2019 13:51:18 +0200
+Date:   Mon, 25 Mar 2019 13:51:18 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Thomas Preston <thomas.preston@codethink.co.uk>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] Documentation: acpi: Add an example for PRP0001
+Message-ID: <20190325115118.GP9224@smile.fi.intel.com>
+References: <20190322134705.27994-1-thomas.preston@codethink.co.uk>
+ <CAJZ5v0isa7x+XPAregcKtMxtgsNw43JuBhGB_1x3eHkvaV8HRg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0isa7x+XPAregcKtMxtgsNw43JuBhGB_1x3eHkvaV8HRg@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-03-22 at 18:20 -0500, Parav Pandit wrote:
-> Remove unused kref from the mdev_device structure.
+On Mon, Mar 25, 2019 at 10:31:13AM +0100, Rafael J. Wysocki wrote:
+> On Fri, Mar 22, 2019 at 2:47 PM Thomas Preston
+> <thomas.preston@codethink.co.uk> wrote:
+> >
+> > Add an example for the magic PRP0001 device ID which allows matching
+> > ACPI devices against drivers using OF Device Tree compatible property.
+> > It wasn't clear to me that PRP0001 could be used in _CID.
 > 
-> Fixes: 7b96953bc640 ("vfio: Mediated device Core driver")
-> Signed-off-by: Parav Pandit <parav@mellanox.com>
-> ---
->  drivers/vfio/mdev/mdev_core.c    | 1 -
->  drivers/vfio/mdev/mdev_private.h | 1 -
->  2 files changed, 2 deletions(-)
-> 
-> diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
-> index 4f213e4d..3d91f62 100644
-> --- a/drivers/vfio/mdev/mdev_core.c
-> +++ b/drivers/vfio/mdev/mdev_core.c
-> @@ -311,7 +311,6 @@ int mdev_device_create(struct kobject *kobj, struct device
-> *dev, uuid_le uuid)
->  	mutex_unlock(&mdev_list_lock);
->  
->  	mdev->parent = parent;
-> -	kref_init(&mdev->ref);
->  
->  	mdev->dev.parent  = dev;
->  	mdev->dev.bus     = &mdev_bus_type;
-> diff --git a/drivers/vfio/mdev/mdev_private.h
-> b/drivers/vfio/mdev/mdev_private.h
-> index b5819b7..84b2b6c 100644
-> --- a/drivers/vfio/mdev/mdev_private.h
-> +++ b/drivers/vfio/mdev/mdev_private.h
-> @@ -30,7 +30,6 @@ struct mdev_device {
->  	struct mdev_parent *parent;
->  	uuid_le uuid;
->  	void *driver_data;
-> -	struct kref ref;
->  	struct list_head next;
->  	struct kobject *type_kobj;
->  	bool active;
+> Mika, Andy, can you have a look at this, please?
 
-When develping my nvme-mdev driver, I'll seen that unused kref too.
-Dead code has to go.
+Good to me,
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
+Though one thing I would like to add (not directly related to the patch
+per se), i.e. it would be nice to keep such examples under meta-acpi [1]
+umbrella as a database for such excerpts.
 
-Best regards,
-	Maxim Levitsky
+Thomas, can you do that?
+
+[1]: https://github.com/westeri/meta-acpi
+
+> > Signed-off-by: Thomas Preston <thomas.preston@codethink.co.uk>
+> > ---
+> >  Documentation/acpi/enumeration.txt | 27 +++++++++++++++++++++++++++
+> >  1 file changed, 27 insertions(+)
+> >
+> > diff --git a/Documentation/acpi/enumeration.txt b/Documentation/acpi/enumeration.txt
+> > index 7bcf9c3d9fbe..391db643065a 100644
+> > --- a/Documentation/acpi/enumeration.txt
+> > +++ b/Documentation/acpi/enumeration.txt
+> > @@ -410,6 +410,33 @@ Specifically, the device IDs returned by _HID and preceding PRP0001 in the _CID
+> >  return package will be checked first.  Also in that case the bus type the device
+> >  will be enumerated to depends on the device ID returned by _HID.
+> >
+> > +For example, the following ACPI sample might be used to enumerate an lm75-type
+> > +I2C temperature sensor and match it to the driver using the Device Tree
+> > +namespace link:
+> > +
+> > +       Device (TMP0)
+> > +       {
+> > +               Name (_HID, "TITMP75") /* _HID will appear in sysfs */
+> > +               Name (_CID, "PRP0001")
+> > +               Name (_DSD, Package() {
+> > +                       ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+> > +                       Package () {
+> > +                               Package (2) { "compatible", "ti,tmp75" },
+> > +                       }
+> > +               })
+> > +               Method (_CRS, 0, Serialized)
+> > +               {
+> > +                       Name (SBUF, ResourceTemplate ()
+> > +                       {
+> > +                               I2cSerialBusV2 (0x48, ControllerInitiated,
+> > +                                       400000, AddressingMode7Bit,
+> > +                                       "\\_SB.PCI0.I2C1", 0x00,
+> > +                                       ResourceConsumer, , Exclusive,)
+> > +                       })
+> > +                       Return (SBUF)
+> > +               }
+> > +       }
+> > +
+> >  It is valid to define device objects with a _HID returning PRP0001 and without
+> >  the "compatible" property in the _DSD or a _CID as long as one of their
+> >  ancestors provides a _DSD with a valid "compatible" property.  Such device
+> > --
+> > 2.11.0
+> >
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
