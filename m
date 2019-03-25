@@ -2,495 +2,278 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46D66C4360F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:56:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D60D3C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:56:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0179720823
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:56:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gOufiiRK"
+	by mail.kernel.org (Postfix) with ESMTP id 8E1E620823
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:56:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553518606;
+	bh=BKKTT753ARlZk/4IjdlC0bQRP/dJMnxRJWEhf3CQTSs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=hq/BLU7fOzs+GAkZ/LKpmTKUyis6n9sT4zpg5OhaPf95lKhF8y8pqpPje5GWFJxwh
+	 urT0JgqV0HFAcdVaIXacY4fe7HUFXLf61OvJKCHHgn+RWwZqUns7T9Y/wN5+R4eLu1
+	 zYdStG6K9vRL9KrRoe3T3KocIf6B8cR0AJVLF6YE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731259AbfCYM4U (ORCPT
+        id S1731288AbfCYM4p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 08:56:20 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:32966 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730889AbfCYM4T (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 08:56:19 -0400
-Received: by mail-pg1-f194.google.com with SMTP id b12so6549092pgk.0;
-        Mon, 25 Mar 2019 05:56:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=IC85t8NXcPK5Nj/dYjqXfSkJx20/U7CWu1BRcEArt7A=;
-        b=gOufiiRKJX06st+ZyfZDfRc+YG+ExYgwnNJ011uP2Rv1wQ9m0Gbdac4fimCOkFLuFX
-         DZ1Dry1rB1R13vSM9RXYI5TQ/zVeTh/CoH/0OiRg7xVl4psJZiLLt7xYwBe/6sixTL+t
-         SbcPOWlvKKdW7dqgklLwL5btPzF7nn2g7KjZqR2dec7zjtC8HKU8KW6/AI5w1e4tsjHH
-         SSnMstd1phRYyaZSKT1Iuoc0P+bg5i8lV+v3GzG4Vrv6lNJH06bWH4FKVVSHSyUSFwVl
-         P1jUnR2czw3ONnWOGofEVACEkNayfrftCCUENMiOcyErH/ekChzcROMm5wL1EP6oLWVr
-         mRGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=IC85t8NXcPK5Nj/dYjqXfSkJx20/U7CWu1BRcEArt7A=;
-        b=uX7CSJkM6FEqBe6imZVWVdpUDXIgl34e6Ri28v2qosX4LL8juGmQHrFOoQL687BfdY
-         nF9SOB101e4k8wUrhqqermTzgSBnf5weJaKXojAAf8WvM8XPs5C2pF4+YjlAviPmQCYD
-         nxo3d8l6qVFK6FjKMhWg+tj3meBGdCyZ4BuFCeHXXuSlNjeXn73WhUnlhOZ643OLwlwh
-         1hTl5YlfGYSHmXZfbqy5JHN6UsUKSV3/IdGTvSVB4JuBZJLPzgo5MrGyeerOjtywExsg
-         9i+waQQqwIs3JMn2twVqMS2LKrzhntImk6i0m0VgAdh0kMX7lKKUue8A/NKiFp29jeO/
-         96bQ==
-X-Gm-Message-State: APjAAAWebDW5BB3l7iL0DQARjagYR/5eqr0ZZiJyLjk3ki5CzMKm3hxT
-        Due5UJfp8p+6x7rNIRaS1A==
-X-Google-Smtp-Source: APXvYqxawfP8fM9zlBBtm4Egb4+KU0vE+FY29V3nghPB+iXM8at/fsrTclq8pETgd/5GAEh+obnQDg==
-X-Received: by 2002:aa7:9090:: with SMTP id i16mr23111754pfa.85.1553518578359;
-        Mon, 25 Mar 2019 05:56:18 -0700 (PDT)
-Received: from localhost (2.172.220.35.bc.googleusercontent.com. [35.220.172.2])
-        by smtp.gmail.com with ESMTPSA id c13sm25368944pfm.34.2019.03.25.05.56.11
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 25 Mar 2019 05:56:17 -0700 (PDT)
-Date:   Mon, 25 Mar 2019 20:56:08 +0800
-From:   Jacky Hu <hengqing.hu@gmail.com>
-To:     Simon Horman <horms@verge.net.au>
-Cc:     jacky.hu@walmart.com, jason.niesz@walmart.com,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Wensong Zhang <wensong@linux-vs.org>,
-        Julian Anastasov <ja@ssi.bg>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
-        Florian Westphal <fw@strlen.de>, netdev@vger.kernel.org,
-        lvs-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org
-Subject: Re: [PATCH v5] ipvs: allow tunneling with gue encapsulation
-Message-ID: <20190325125608.GA21392@i716>
-References: <20190319052656.23933-1-hengqing.hu@gmail.com>
- <20190325104639.guok6lrmn6vwg3e6@verge.net.au>
+        Mon, 25 Mar 2019 08:56:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41270 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730889AbfCYM4p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 08:56:45 -0400
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB25620989;
+        Mon, 25 Mar 2019 12:56:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553518603;
+        bh=BKKTT753ARlZk/4IjdlC0bQRP/dJMnxRJWEhf3CQTSs=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=p6oQgsJ9GZcEfxaVhPN7DWP6gsZFfDmT9x/5Ftl1E+aN8sAd/9uEfEgs/n2H/xK/a
+         kWsKfgmrfW8XvTGqCaSkQQVQgzQtBqlplCeLSJ6EZskt1cP4lr7WHvpVp7XmjTRhXc
+         X1/nRIrKiF2QOgisCPnCZeTur4q6Ml3OJPuGq5Aw=
+Received: by mail-lj1-f182.google.com with SMTP id f18so7699479lja.10;
+        Mon, 25 Mar 2019 05:56:42 -0700 (PDT)
+X-Gm-Message-State: APjAAAWcfgSNgky4MDsk/3R4bQCQp8QABZcBCEkUsec+70xZQF3QN+O9
+        N1VCxXVK/Z+xSL3cEazJ6PtNiBhTLmEvZXWtJ9U=
+X-Google-Smtp-Source: APXvYqx4ULap418Yb4oHUJzXqzqpA8wjx/DGPSoprELZQE7KotZb0i+ZqS6LAO7hB0UDm0kSGfvyRjNEDMhTisPG1zg=
+X-Received: by 2002:a2e:7206:: with SMTP id n6mr13225979ljc.112.1553518601013;
+ Mon, 25 Mar 2019 05:56:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190325104639.guok6lrmn6vwg3e6@verge.net.au>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <20190324083256.1047-1-linux.amoon@gmail.com> <CAJKOXPfLyLRwJKWcMCtDg10em2pfWZJzXr8FkFTf1vtavRdoTw@mail.gmail.com>
+In-Reply-To: <CAJKOXPfLyLRwJKWcMCtDg10em2pfWZJzXr8FkFTf1vtavRdoTw@mail.gmail.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Mon, 25 Mar 2019 13:56:29 +0100
+X-Gmail-Original-Message-ID: <CAJKOXPfUSqTRVa-KsGQ72QbHFf0-69uyAcVbx_SMd6EpePGf4w@mail.gmail.com>
+Message-ID: <CAJKOXPfUSqTRVa-KsGQ72QbHFf0-69uyAcVbx_SMd6EpePGf4w@mail.gmail.com>
+Subject: Re: [PATCH v1] ARM: dts: exynos: Add proper regulator states for
+ suspend-to-mem for odroid-u3
+To:     Anand Moon <linux.amoon@gmail.com>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>, linux-kernel@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 11:46:40AM +0100, Simon Horman wrote:
-> On Tue, Mar 19, 2019 at 01:26:55PM +0800, Jacky Hu wrote:
-> > ipip packets are blocked in some public cloud environments, this patch
-> > allows gue encapsulation with the tunneling method, which would make
-> > tunneling working in those environments.
-> > 
-> > Signed-off-by: Jacky Hu <hengqing.hu@gmail.com>
+On Mon, 25 Mar 2019 at 13:46, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>
+> On Sun, 24 Mar 2019 at 09:33, Anand Moon <linux.amoon@gmail.com> wrote:
+> >
+> > Add suspend-to-mem node to regulator core to be enabled or disabled
+> > during system suspend and also support changing the regulator operating
+> > mode during runtime and when the system enter sleep mode (stand by mode).
+> >
+> > Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+> > Cc: Krzysztof Kozlowski <krzk@kernel.org>
+> > Cc: Chanwoo Choi <cw00.choi@samsung.com>
+> > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
 > > ---
-> >  include/net/ip_vs.h             |   5 ++
-> >  include/uapi/linux/ip_vs.h      |  11 +++
-> >  net/netfilter/ipvs/ip_vs_ctl.c  |  43 ++++++++++-
-> >  net/netfilter/ipvs/ip_vs_xmit.c | 124 ++++++++++++++++++++++++++++++--
-> >  4 files changed, 178 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/include/net/ip_vs.h b/include/net/ip_vs.h
-> > index a0d2e0bb9a94..cdc7b621930d 100644
-> > --- a/include/net/ip_vs.h
-> > +++ b/include/net/ip_vs.h
-> > @@ -603,6 +603,9 @@ struct ip_vs_dest_user_kern {
-> >  
-> >  	/* Address family of addr */
-> >  	u16			af;
-> > +
-> > +	u16			tun_type;	/* tunnel type */
-> > +	__be16			tun_port;	/* tunnel port */
-> >  };
-> >  
-> >  
-> > @@ -663,6 +666,8 @@ struct ip_vs_dest {
-> >  	atomic_t		conn_flags;	/* flags to copy to conn */
-> >  	atomic_t		weight;		/* server weight */
-> >  	atomic_t		last_weight;	/* server latest weight */
-> > +	__u16			tun_type;	/* tunnel type */
-> > +	__be16			tun_port;	/* tunnel port */
-> >  
-> >  	refcount_t		refcnt;		/* reference counter */
-> >  	struct ip_vs_stats      stats;          /* statistics */
-> > diff --git a/include/uapi/linux/ip_vs.h b/include/uapi/linux/ip_vs.h
-> > index 1c916b2f89dc..e34f436fc79d 100644
-> > --- a/include/uapi/linux/ip_vs.h
-> > +++ b/include/uapi/linux/ip_vs.h
-> > @@ -124,6 +124,13 @@
-> >  
-> >  #define IP_VS_PEDATA_MAXLEN     255
-> >  
-> > +/* Tunnel types */
-> > +enum {
-> > +	IP_VS_CONN_F_TUNNEL_TYPE_IPIP = 0,	/* IPIP */
-> > +	IP_VS_CONN_F_TUNNEL_TYPE_GUE,		/* GUE */
-> > +	IP_VS_CONN_F_TUNNEL_TYPE_MAX,
-> > +};
-> > +
-> >  /*
-> >   *	The struct ip_vs_service_user and struct ip_vs_dest_user are
-> >   *	used to set IPVS rules through setsockopt.
-> > @@ -392,6 +399,10 @@ enum {
-> >  
-> >  	IPVS_DEST_ATTR_STATS64,		/* nested attribute for dest stats */
-> >  
-> > +	IPVS_DEST_ATTR_TUN_TYPE,	/* tunnel type */
-> > +
-> > +	IPVS_DEST_ATTR_TUN_PORT,	/* tunnel port */
-> > +
-> >  	__IPVS_DEST_ATTR_MAX,
-> >  };
-> >  
-> > diff --git a/net/netfilter/ipvs/ip_vs_ctl.c b/net/netfilter/ipvs/ip_vs_ctl.c
-> > index 432141f04af3..ddee6266b78b 100644
-> > --- a/net/netfilter/ipvs/ip_vs_ctl.c
-> > +++ b/net/netfilter/ipvs/ip_vs_ctl.c
-> > @@ -830,6 +830,10 @@ __ip_vs_update_dest(struct ip_vs_service *svc, struct ip_vs_dest *dest,
-> >  	conn_flags = udest->conn_flags & IP_VS_CONN_F_DEST_MASK;
-> >  	conn_flags |= IP_VS_CONN_F_INACTIVE;
-> >  
-> > +	/* set the tunnel info */
-> > +	dest->tun_type = udest->tun_type;
-> > +	dest->tun_port = udest->tun_port;
-> > +
-> >  	/* set the IP_VS_CONN_F_NOOUTPUT flag if not masquerading/NAT */
-> >  	if ((conn_flags & IP_VS_CONN_F_FWD_MASK) != IP_VS_CONN_F_MASQ) {
-> >  		conn_flags |= IP_VS_CONN_F_NOOUTPUT;
-> > @@ -980,6 +984,17 @@ ip_vs_add_dest(struct ip_vs_service *svc, struct ip_vs_dest_user_kern *udest)
-> >  		return -ERANGE;
-> >  	}
-> >  
-> > +	switch (udest->tun_type) {
-> > +	case IP_VS_CONN_F_TUNNEL_TYPE_GUE:
-> 
-> Given that tun_type check acts on an integer, as opposed to an enum,
-> I don't see that using a switch statement gives us much here,
-> and throughout the patch, other than extra verbosity.
-> 
-> Did you consider simply using an if statement?
-> 
-I was thinking about maybe IP_VS_CONN_F_TUNNEL_TYPE_FOU would be introduced
-later.
-But yes, I can simply using an if statement if you think that's more
-appropriate.
-> > +		if (udest->tun_port == 0) {
-> > +			pr_err("%s(): tunnel port is zero\n", __func__);
-> > +			return -EINVAL;
-> > +		}
-> > +		break;
-> > +	default:
-> > +		break;
-> > +	}
-> > +
-> >  	ip_vs_addr_copy(udest->af, &daddr, &udest->addr);
-> >  
-> >  	/* We use function that requires RCU lock */
-> > @@ -1044,6 +1059,17 @@ ip_vs_edit_dest(struct ip_vs_service *svc, struct ip_vs_dest_user_kern *udest)
-> >  		return -ERANGE;
-> >  	}
-> >  
-> > +	switch (udest->tun_type) {
-> > +	case IP_VS_CONN_F_TUNNEL_TYPE_GUE:
-> > +		if (udest->tun_port == 0) {
-> > +			pr_err("%s(): tunnel port is zero\n", __func__);
-> > +			return -EINVAL;
-> > +		}
-> > +		break;
-> > +	default:
-> > +		break;
-> > +	}
-> > +
-> >  	ip_vs_addr_copy(udest->af, &daddr, &udest->addr);
-> >  
-> >  	/* We use function that requires RCU lock */
-> > @@ -2310,6 +2336,7 @@ static void ip_vs_copy_udest_compat(struct ip_vs_dest_user_kern *udest,
-> >  	udest->u_threshold	= udest_compat->u_threshold;
-> >  	udest->l_threshold	= udest_compat->l_threshold;
-> >  	udest->af		= AF_INET;
-> > +	udest->tun_type		= IP_VS_CONN_F_TUNNEL_TYPE_IPIP;
-> >  }
-> >  
-> >  static int
-> > @@ -2869,6 +2896,8 @@ static const struct nla_policy ip_vs_dest_policy[IPVS_DEST_ATTR_MAX + 1] = {
-> >  	[IPVS_DEST_ATTR_PERSIST_CONNS]	= { .type = NLA_U32 },
-> >  	[IPVS_DEST_ATTR_STATS]		= { .type = NLA_NESTED },
-> >  	[IPVS_DEST_ATTR_ADDR_FAMILY]	= { .type = NLA_U16 },
-> > +	[IPVS_DEST_ATTR_TUN_TYPE]	= { .type = NLA_U8 },
-> > +	[IPVS_DEST_ATTR_TUN_PORT]	= { .type = NLA_U16 },
-> >  };
-> >  
-> >  static int ip_vs_genl_fill_stats(struct sk_buff *skb, int container_type,
-> > @@ -3172,6 +3201,10 @@ static int ip_vs_genl_fill_dest(struct sk_buff *skb, struct ip_vs_dest *dest)
-> >  			 IP_VS_CONN_F_FWD_MASK)) ||
-> >  	    nla_put_u32(skb, IPVS_DEST_ATTR_WEIGHT,
-> >  			atomic_read(&dest->weight)) ||
-> > +	    nla_put_u8(skb, IPVS_DEST_ATTR_TUN_TYPE,
-> > +		       dest->tun_type) ||
-> > +	    nla_put_be16(skb, IPVS_DEST_ATTR_TUN_PORT,
-> > +			 dest->tun_port) ||
-> >  	    nla_put_u32(skb, IPVS_DEST_ATTR_U_THRESH, dest->u_threshold) ||
-> >  	    nla_put_u32(skb, IPVS_DEST_ATTR_L_THRESH, dest->l_threshold) ||
-> >  	    nla_put_u32(skb, IPVS_DEST_ATTR_ACTIVE_CONNS,
-> > @@ -3294,12 +3327,14 @@ static int ip_vs_genl_parse_dest(struct ip_vs_dest_user_kern *udest,
-> >  	/* If a full entry was requested, check for the additional fields */
-> >  	if (full_entry) {
-> >  		struct nlattr *nla_fwd, *nla_weight, *nla_u_thresh,
-> > -			      *nla_l_thresh;
-> > +			      *nla_l_thresh, *nla_tun_type, *nla_tun_port;
-> >  
-> >  		nla_fwd		= attrs[IPVS_DEST_ATTR_FWD_METHOD];
-> >  		nla_weight	= attrs[IPVS_DEST_ATTR_WEIGHT];
-> >  		nla_u_thresh	= attrs[IPVS_DEST_ATTR_U_THRESH];
-> >  		nla_l_thresh	= attrs[IPVS_DEST_ATTR_L_THRESH];
-> > +		nla_tun_type	= attrs[IPVS_DEST_ATTR_TUN_TYPE];
-> > +		nla_tun_port	= attrs[IPVS_DEST_ATTR_TUN_PORT];
-> >  
-> >  		if (!(nla_fwd && nla_weight && nla_u_thresh && nla_l_thresh))
-> >  			return -EINVAL;
-> > @@ -3309,6 +3344,12 @@ static int ip_vs_genl_parse_dest(struct ip_vs_dest_user_kern *udest,
-> >  		udest->weight = nla_get_u32(nla_weight);
-> >  		udest->u_threshold = nla_get_u32(nla_u_thresh);
-> >  		udest->l_threshold = nla_get_u32(nla_l_thresh);
-> > +
-> > +		if (nla_tun_type)
-> > +			udest->tun_type = nla_get_u8(nla_tun_type);
-> > +
-> > +		if (nla_tun_port)
-> > +			udest->tun_port = nla_get_be16(nla_tun_port);
-> >  	}
-> >  
-> >  	return 0;
-> > diff --git a/net/netfilter/ipvs/ip_vs_xmit.c b/net/netfilter/ipvs/ip_vs_xmit.c
-> > index 473cce2a5231..730e108b9f36 100644
-> > --- a/net/netfilter/ipvs/ip_vs_xmit.c
-> > +++ b/net/netfilter/ipvs/ip_vs_xmit.c
-> > @@ -32,6 +32,7 @@
-> >  #include <linux/slab.h>
-> >  #include <linux/tcp.h>                  /* for tcphdr */
-> >  #include <net/ip.h>
-> > +#include <net/gue.h>
-> >  #include <net/tcp.h>                    /* for csum_tcpudp_magic */
-> >  #include <net/udp.h>
-> >  #include <net/icmp.h>                   /* for icmp_send */
-> > @@ -382,6 +383,15 @@ __ip_vs_get_out_rt(struct netns_ipvs *ipvs, int skb_af, struct sk_buff *skb,
-> >  		mtu = dst_mtu(&rt->dst);
-> >  	} else {
-> >  		mtu = dst_mtu(&rt->dst) - sizeof(struct iphdr);
-> > +		if (!dest)
-> > +			goto err_put;
-> > +		switch (dest->tun_type) {
-> > +		case IP_VS_CONN_F_TUNNEL_TYPE_GUE:
-> > +			mtu -= sizeof(struct udphdr) + sizeof(struct guehdr);
-> > +			break;
-> > +		default:
-> > +			break;
-> > +		}
-> >  		if (mtu < 68) {
-> >  			IP_VS_DBG_RL("%s(): mtu less than 68\n", __func__);
-> >  			goto err_put;
-> > @@ -533,6 +543,15 @@ __ip_vs_get_out_rt_v6(struct netns_ipvs *ipvs, int skb_af, struct sk_buff *skb,
-> >  		mtu = dst_mtu(&rt->dst);
-> >  	else {
-> >  		mtu = dst_mtu(&rt->dst) - sizeof(struct ipv6hdr);
-> > +		if (!dest)
-> > +			goto err_put;
-> > +		switch (dest->tun_type) {
-> > +		case IP_VS_CONN_F_TUNNEL_TYPE_GUE:
-> > +			mtu -= sizeof(struct udphdr) + sizeof(struct guehdr);
-> > +			break;
-> > +		default:
-> > +			break;
-> > +		}
-> >  		if (mtu < IPV6_MIN_MTU) {
-> >  			IP_VS_DBG_RL("%s(): mtu less than %d\n", __func__,
-> >  				     IPV6_MIN_MTU);
-> > @@ -989,6 +1008,41 @@ static inline int __tun_gso_type_mask(int encaps_af, int orig_af)
-> >  	}
-> >  }
-> >  
-> > +static int
-> > +ipvs_gue_encap(struct net *net, struct sk_buff *skb,
-> > +	       struct ip_vs_conn *cp, __u8 *next_protocol)
-> > +{
-> > +	__be16 dport;
-> > +	__be16 sport = udp_flow_src_port(net, skb, 0, 0, false);
-> > +	struct udphdr  *udph;	/* Our new UDP header */
-> > +	struct guehdr  *gueh;	/* Our new GUE header */
-> > +
-> > +	skb_push(skb, sizeof(struct guehdr));
-> > +
-> > +	gueh = (struct guehdr *)skb->data;
-> > +
-> > +	gueh->control = 0;
-> > +	gueh->version = 0;
-> > +	gueh->hlen = 0;
-> > +	gueh->flags = 0;
-> > +	gueh->proto_ctype = *next_protocol;
-> > +
-> > +	skb_push(skb, sizeof(struct udphdr));
-> > +	skb_reset_transport_header(skb);
-> > +
-> > +	udph = udp_hdr(skb);
-> > +
-> > +	dport = cp->dest->tun_port;
-> > +	udph->dest = dport;
-> > +	udph->source = sport;
-> > +	udph->len = htons(skb->len);
-> > +	udph->check = 0;
-> > +
-> > +	*next_protocol = IPPROTO_UDP;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> >  /*
-> >   *   IP Tunneling transmitter
-> >   *
-> > @@ -1025,6 +1079,7 @@ ip_vs_tunnel_xmit(struct sk_buff *skb, struct ip_vs_conn *cp,
-> >  	struct iphdr  *iph;			/* Our new IP header */
-> >  	unsigned int max_headroom;		/* The extra header space needed */
-> >  	int ret, local;
-> > +	int tun_type, gso_type;
-> >  
-> >  	EnterFunction(10);
-> >  
-> > @@ -1046,6 +1101,16 @@ ip_vs_tunnel_xmit(struct sk_buff *skb, struct ip_vs_conn *cp,
-> >  	 */
-> >  	max_headroom = LL_RESERVED_SPACE(tdev) + sizeof(struct iphdr);
-> >  
-> > +	tun_type = cp->dest->tun_type;
-> > +
-> > +	switch (tun_type) {
-> > +	case IP_VS_CONN_F_TUNNEL_TYPE_GUE:
-> > +		max_headroom += sizeof(struct udphdr) + sizeof(struct guehdr);
-> > +		break;
-> > +	default:
-> > +		break;
-> > +	}
-> > +
-> >  	/* We only care about the df field if sysctl_pmtu_disc(ipvs) is set */
-> >  	dfp = sysctl_pmtu_disc(ipvs) ? &df : NULL;
-> >  	skb = ip_vs_prepare_tunneled_skb(skb, cp->af, max_headroom,
-> > @@ -1054,11 +1119,30 @@ ip_vs_tunnel_xmit(struct sk_buff *skb, struct ip_vs_conn *cp,
-> >  	if (IS_ERR(skb))
-> >  		goto tx_error;
-> >  
-> > -	if (iptunnel_handle_offloads(skb, __tun_gso_type_mask(AF_INET, cp->af)))
-> > +	switch (tun_type) {
-> > +	case IP_VS_CONN_F_TUNNEL_TYPE_GUE:
-> > +		gso_type = SKB_GSO_UDP_TUNNEL;
-> > +		break;
-> > +	default:
-> > +		gso_type = __tun_gso_type_mask(AF_INET, cp->af);
-> > +		break;
-> > +	}
-> > +
-> > +	if (iptunnel_handle_offloads(skb, gso_type))
-> >  		goto tx_error;
-> >  
-> >  	skb->transport_header = skb->network_header;
-> >  
-> > +	skb_set_inner_ipproto(skb, next_protocol);
-> > +
-> > +	switch (tun_type) {
-> > +	case IP_VS_CONN_F_TUNNEL_TYPE_GUE:
-> > +		ipvs_gue_encap(net, skb, cp, &next_protocol);
-> > +		break;
-> > +	default:
-> > +		break;
-> > +	}
-> > +
-> >  	skb_push(skb, sizeof(struct iphdr));
-> >  	skb_reset_network_header(skb);
-> >  	memset(&(IPCB(skb)->opt), 0, sizeof(IPCB(skb)->opt));
-> > @@ -1102,6 +1186,8 @@ int
-> >  ip_vs_tunnel_xmit_v6(struct sk_buff *skb, struct ip_vs_conn *cp,
-> >  		     struct ip_vs_protocol *pp, struct ip_vs_iphdr *ipvsh)
-> >  {
-> > +	struct netns_ipvs *ipvs = cp->ipvs;
-> > +	struct net *net = ipvs->net;
-> >  	struct rt6_info *rt;		/* Route to the other host */
-> >  	struct in6_addr saddr;		/* Source for tunnel */
-> >  	struct net_device *tdev;	/* Device to other host */
-> > @@ -1112,10 +1198,11 @@ ip_vs_tunnel_xmit_v6(struct sk_buff *skb, struct ip_vs_conn *cp,
-> >  	struct ipv6hdr  *iph;		/* Our new IP header */
-> >  	unsigned int max_headroom;	/* The extra header space needed */
-> >  	int ret, local;
-> > +	int tun_type, gso_type;
-> >  
-> >  	EnterFunction(10);
-> >  
-> > -	local = __ip_vs_get_out_rt_v6(cp->ipvs, cp->af, skb, cp->dest,
-> > +	local = __ip_vs_get_out_rt_v6(ipvs, cp->af, skb, cp->dest,
-> >  				      &cp->daddr.in6,
-> >  				      &saddr, ipvsh, 1,
-> >  				      IP_VS_RT_MODE_LOCAL |
-> > @@ -1134,17 +1221,46 @@ ip_vs_tunnel_xmit_v6(struct sk_buff *skb, struct ip_vs_conn *cp,
-> >  	 */
-> >  	max_headroom = LL_RESERVED_SPACE(tdev) + sizeof(struct ipv6hdr);
-> >  
-> > +	tun_type = cp->dest->tun_type;
-> > +
-> > +	switch (tun_type) {
-> > +	case IP_VS_CONN_F_TUNNEL_TYPE_GUE:
-> > +		max_headroom += sizeof(struct udphdr) + sizeof(struct guehdr);
-> > +		break;
-> > +	default:
-> > +		break;
-> > +	}
-> > +
-> >  	skb = ip_vs_prepare_tunneled_skb(skb, cp->af, max_headroom,
-> >  					 &next_protocol, &payload_len,
-> >  					 &dsfield, &ttl, NULL);
-> >  	if (IS_ERR(skb))
-> >  		goto tx_error;
-> >  
-> > -	if (iptunnel_handle_offloads(skb, __tun_gso_type_mask(AF_INET6, cp->af)))
-> > +	switch (tun_type) {
-> > +	case IP_VS_CONN_F_TUNNEL_TYPE_GUE:
-> > +		gso_type = SKB_GSO_UDP_TUNNEL;
-> > +		break;
-> > +	default:
-> > +		gso_type = __tun_gso_type_mask(AF_INET6, cp->af);
-> > +		break;
-> > +	}
-> > +
-> > +	if (iptunnel_handle_offloads(skb, gso_type))
-> >  		goto tx_error;
-> >  
-> >  	skb->transport_header = skb->network_header;
-> >  
-> > +	skb_set_inner_ipproto(skb, next_protocol);
-> > +
-> > +	switch (tun_type) {
-> > +	case IP_VS_CONN_F_TUNNEL_TYPE_GUE:
-> > +		ipvs_gue_encap(net, skb, cp, &next_protocol);
-> > +		break;
-> > +	default:
-> > +		break;
-> > +	}
-> > +
-> >  	skb_push(skb, sizeof(struct ipv6hdr));
-> >  	skb_reset_network_header(skb);
-> >  	memset(&(IPCB(skb)->opt), 0, sizeof(IPCB(skb)->opt));
-> > @@ -1167,7 +1283,7 @@ ip_vs_tunnel_xmit_v6(struct sk_buff *skb, struct ip_vs_conn *cp,
-> >  
-> >  	ret = ip_vs_tunnel_xmit_prepare(skb, cp);
-> >  	if (ret == NF_ACCEPT)
-> > -		ip6_local_out(cp->ipvs->net, skb->sk, skb);
-> > +		ip6_local_out(net, skb->sk, skb);
-> >  	else if (ret == NF_DROP)
-> >  		kfree_skb(skb);
-> >  
-> > -- 
-> > 2.21.0
-> > 
+> > Current patch:
+> >
+> > Note: Both microSD and eMMC suspend resume works this changes at my end.
+> >
+> > regulator-off-in-suspend:
+> > set the regulator node into suspend state i.e. standby mode during suspend
+> > operation.
+> >
+> > Current changes are based on
+> > [0] https://www.kernel.org/doc/Documentation/devicetree/bindings/regulator/max77686.txt
+> >
+> >   Regulators which can be turned off during system suspend:
+> >         -LDOn   :       2, 6-8, 10-12, 14-16,
+> >         -BUCKn  :       1-4.
+> >   Use standard regulator bindings for it ('regulator-off-in-suspend').
+> >
+> > drop the suspend off binding which are not supported by the driver.
+> >
+> > RFC version
+> > [1] https://patchwork.kernel.org/patch/10810909/
+> > These changes had some problem with eMMC not entering into suspend mode.
+> > with some miss configuration in regulator-off-in-suspend mode.
+> >
+> > Changes from previos patch.
+> > [2] https://patchwork.kernel.org/patch/10712549/
+> >
+> > Set all the non used regulator in suspend-odd state
+> > LD02, LD03, LD05, LD06, LD07, LD011, LD013, LDO14, LD016
+> >
+> > BUCK5, BUCK6, BUCK7 and not confirable as per driver max77686-regulator
+> > ---
+> >  .../boot/dts/exynos4412-odroid-common.dtsi    | 39 +++++++++++++++++++
+> >  1 file changed, 39 insertions(+)
+> >
+> > diff --git a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+> > index 08d3a0a7b4eb..375156ad5454 100644
+> > --- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+> > +++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+> > @@ -288,6 +288,9 @@
+> >                                 regulator-min-microvolt = <1800000>;
+> >                                 regulator-max-microvolt = <1800000>;
+> >                                 regulator-always-on;
+> > +                               regulator-state-mem {
+> > +                                       regulator-off-in-suspend;
+>
+> Please maintain proper versioning of patches.
+> First patch sent to lists should be either RFC or v1. Second
+> release/submission is then always v2. Third v3.
+>
+> This is third or fourth submission but you marked it as v1. This makes
+> it very difficult to discuss and reference previous versions.
+>
+> The commit message did not change since beginning (first version). I
+> asked twice that you need to explain exactly why you put the the
+> regulator to off or on state in suspend. Why?
+> Because:
+> 1. This change looks without justification - once you put on, then you
+> put off, now again on,
+> 2. Anyone reading the code later must know the rationale why this was done,
+> 3. I am not quite sure whether this is good setting so I would be
+> happy to be convinced.
+>
+> How to provide such explanation? The best in commit message. Sometimes
+> in the comment in the code, depends.
+> How such explanation could look like? For example like this:
+> f8f3b7fc21b1 ("ARM: dts: exynos: Fix regulators configuration on Peach
+> Pi/Pit Chromebooks")
+> Marek clearly explained why he put the regulators "always-on", even
+> tough we do not know everything about this. More over, he mentions
+> that this fixes specific issue.
+>
+> Summarizing, please answer:
+> 1. Why this is made off-in-suspend?
+> 2. Why this can be made off-in-suspend?
+>
+> > +                               };
+> >                         };
+> >
+> >                         ldo3_reg: LDO3 {
+> > @@ -317,6 +320,9 @@
+> >                                 regulator-min-microvolt = <1000000>;
+> >                                 regulator-max-microvolt = <1000000>;
+> >                                 regulator-always-on;
+> > +                               regulator-state-mem {
+> > +                                       regulator-off-in-suspend;
+> > +                               };
+> >                         };
+> >
+> >                         ldo7_reg: LDO7 {
+> > @@ -324,18 +330,27 @@
+> >                                 regulator-min-microvolt = <1000000>;
+> >                                 regulator-max-microvolt = <1000000>;
+> >                                 regulator-always-on;
+> > +                               regulator-state-mem {
+> > +                                       regulator-off-in-suspend;
+> > +                               };
+> >                         };
+> >
+> >                         ldo8_reg: LDO8 {
+> >                                 regulator-name = "VDD10_HDMI_1.0V";
+> >                                 regulator-min-microvolt = <1000000>;
+> >                                 regulator-max-microvolt = <1000000>;
+> > +                               regulator-state-mem {
+> > +                                       regulator-off-in-suspend;
+> > +                               };
+> >                         };
+> >
+> >                         ldo10_reg: LDO10 {
+> >                                 regulator-name = "VDDQ_MIPIHSI_1.8V";
+> >                                 regulator-min-microvolt = <1800000>;
+> >                                 regulator-max-microvolt = <1800000>;
+> > +                               regulator-state-mem {
+> > +                                       regulator-off-in-suspend;
+> > +                               };
+> >                         };
+> >
+> >                         ldo11_reg: LDO11 {
+> > @@ -343,6 +358,9 @@
+> >                                 regulator-min-microvolt = <1800000>;
+> >                                 regulator-max-microvolt = <1800000>;
+> >                                 regulator-always-on;
+> > +                               regulator-state-mem {
+> > +                                       regulator-off-in-suspend;
+> > +                               };
+> >                         };
+> >
+> >                         ldo12_reg: LDO12 {
+> > @@ -351,6 +369,9 @@
+> >                                 regulator-max-microvolt = <3300000>;
+> >                                 regulator-always-on;
+> >                                 regulator-boot-on;
+> > +                               regulator-state-mem {
+> > +                                       regulator-off-in-suspend;
+> > +                               };
+> >                         };
+> >
+> >                         ldo13_reg: LDO13 {
+> > @@ -367,6 +388,9 @@
+> >                                 regulator-max-microvolt = <1800000>;
+> >                                 regulator-always-on;
+> >                                 regulator-boot-on;
+> > +                               regulator-state-mem {
+> > +                                       regulator-off-in-suspend;
+> > +                               };
+> >                         };
+> >
+> >                         ldo15_reg: LDO15 {
+> > @@ -375,6 +399,9 @@
+> >                                 regulator-max-microvolt = <1000000>;
+> >                                 regulator-always-on;
+> >                                 regulator-boot-on;
+> > +                               regulator-state-mem {
+> > +                                       regulator-off-in-suspend;
+> > +                               };
+> >                         };
+> >
+> >                         ldo16_reg: LDO16 {
+> > @@ -383,6 +410,9 @@
+> >                                 regulator-max-microvolt = <1800000>;
+> >                                 regulator-always-on;
+> >                                 regulator-boot-on;
+> > +                               regulator-state-mem {
+> > +                                       regulator-off-in-suspend;
+> > +                               };
+> >                         };
+> >
+> >                         ldo20_reg: LDO20 {
+> > @@ -421,6 +451,9 @@
+> >                                 regulator-max-microvolt = <1100000>;
+> >                                 regulator-always-on;
+> >                                 regulator-boot-on;
+> > +                               regulator-state-mem {
+> > +                                       regulator-off-in-suspend;
+> > +                               };
+> >                         };
+>
+> I questioned this change two times. You did not answer to my
+> question... If you turn memory bus regulator off, how the memory will
+> work in Suspend-to-Memory mode? I might be missing here something but
+> it just looks suspicious. Maybe the regulator does not supply the
+> memory itself (so refresh works even when it is down), just the
+> interface? I don't know, it just looks suspicious. I need to see
+> proper explanation.
+>
+> I am sorry but I will not check other hunks in this patch. Please
+> provide the answers for all my questions here first.
+
+I started digging around this and datasheet describes the regulator
+values in sleep mode. The MIF can be off if C2C is not used. It seems
+that the memory refresh is provided by CKEM regulators (which you
+wanted to turn off in first version of the patch). I am not happy that
+I ask about such information and cannot get it. It is the job of
+submitter to provide rationale.
+
+Best regards,
+Krzysztof
