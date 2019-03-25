@@ -6,46 +6,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 065C3C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:34:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 645A3C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:34:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCCCF2075D
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:34:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 240B62075D
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:34:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553538866;
-	bh=8dNQrxbDFMLReAt4an3K/41lo4f7y3htlrB90N5BTME=;
+	s=default; t=1553538873;
+	bh=UxWONWsL6txs55J0zpd5iY+QGPBw4hGVBRcu9t6czFA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SnY3AnzSj2O4bPtFqd6Ajdmy2+qOxFyTGFBmqr7SsHp97HxnQsOwvLhWpSPIqzi98
-	 33bczZ8AQQNWdRvezLZWgpTnFPoIKjVxtoPMj8rPSMzCPSERCVfdxkr1lpVdFyMWJf
-	 yTm2P2FuBm0Br6wTvbPUsREZQ0GinVDJrPsCtpsg=
+	b=djCCGFh4VMmy0iplY8K3NqiXqJhj+B/Pz+Y2Gm7OYvMywaTH1/fise001jMN9er4H
+	 opk+xipQeQnlT71cUpaoc4nmlYwveAJAf+L11/9YGryW9IhEKiYjt0PVAlXz6MjqjL
+	 2ncFoN00u9GT3XMrzfJOUKzJD8hTNGtvsQ7xpQYA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730239AbfCYSeY (ORCPT
+        id S1730265AbfCYSec (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 14:34:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38632 "EHLO mail.kernel.org"
+        Mon, 25 Mar 2019 14:34:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38764 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729548AbfCYSeT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 14:34:19 -0400
+        id S1730169AbfCYSeV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 14:34:21 -0400
 Received: from localhost (unknown [69.71.4.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C3E52075D;
-        Mon, 25 Mar 2019 18:34:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35B922087C;
+        Mon, 25 Mar 2019 18:34:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553538858;
-        bh=8dNQrxbDFMLReAt4an3K/41lo4f7y3htlrB90N5BTME=;
+        s=default; t=1553538860;
+        bh=UxWONWsL6txs55J0zpd5iY+QGPBw4hGVBRcu9t6czFA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Hx9TIwBtnjevmiDEn2eUfZDsxyE/TfYEu6MpIgP4SDer7Vicv4AkfZZ5/koiTgJ2h
-         Oc13oA4awHZwFtuJvnbN+97tiZtKsK4XksB7fHBrHvZjWJfJyuoG4A3vySlrxkhZWb
-         +aGgjxtKrPLXUmQttBQYlSy1MxkeSdgINQCjNYsg=
+        b=OEVfosBLSVh15xNaj2UJ2yRgL5i33Wi+tmSZ7T8GG4TrGDQWyX9C8jni1iFO3U4pG
+         GALAKpBwdiEhwbmOY7S2LnOR3XbrjPZpcgZf0tSuhwR4alU7hYwLOFmJhf3oK4/swv
+         tjBkUZ/zpsyux/VC9HwLn9VUrZSwCg4eXTvLmPxs=
 From:   helgaas@kernel.org
 To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
         Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 3/4] ACPI / scan: Simplify acpi_bus_extract_wakeup_device_power_package()
-Date:   Mon, 25 Mar 2019 13:34:02 -0500
-Message-Id: <20190325183403.251473-4-helgaas@kernel.org>
+Subject: [PATCH 4/4] ACPI / scan: Add labels for PNP button devices
+Date:   Mon, 25 Mar 2019 13:34:03 -0500
+Message-Id: <20190325183403.251473-5-helgaas@kernel.org>
 X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
 In-Reply-To: <20190325183403.251473-1-helgaas@kernel.org>
 References: <20190325183403.251473-1-helgaas@kernel.org>
@@ -58,54 +58,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bjorn Helgaas <bhelgaas@google.com>
 
-acpi_bus_extract_wakeup_device_power_package() is a static function with a
-single caller that supplies (device->handle, &device->wakeup).  Simplify
-the interface so the caller need only supply "device".
+Subsequent code treats button_device_ids[] entries differently, and it's
+hard to follow without a hint as to which is which.  Add comments to
+identify the power button, lid, and sleep button devices.
 
-This makes it obvious that "wakeup", i.e., &device->wakeup, can never be
-NULL, so remove the unnecessary check for that.
+The "PNP" prefix is owned by Microsoft, so they distribute the canonical
+list of "PNP" IDs.
 
+Link: https://uefi.org/PNP_ACPI_Registry
+Link: https://download.microsoft.com/download/1/6/1/161ba512-40e2-4cc9-843a-923143f3456c/devids.txt
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
- drivers/acpi/scan.c | 11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
+ drivers/acpi/scan.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-index 1b66fc835e39..f3b40299a641 100644
+index f3b40299a641..814a02568d68 100644
 --- a/drivers/acpi/scan.c
 +++ b/drivers/acpi/scan.c
-@@ -763,18 +763,16 @@ acpi_bus_get_ejd(acpi_handle handle, acpi_handle *ejd)
- }
- EXPORT_SYMBOL_GPL(acpi_bus_get_ejd);
- 
--static int acpi_bus_extract_wakeup_device_power_package(acpi_handle handle,
--					struct acpi_device_wakeup *wakeup)
-+static int acpi_bus_extract_wakeup_device_power_package(struct acpi_device *dev)
+@@ -846,9 +846,9 @@ static int acpi_bus_extract_wakeup_device_power_package(struct acpi_device *dev)
+ static bool acpi_wakeup_gpe_init(struct acpi_device *device)
  {
-+	acpi_handle handle = dev->handle;
-+	struct acpi_device_wakeup *wakeup = &dev->wakeup;
- 	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
- 	union acpi_object *package = NULL;
- 	union acpi_object *element = NULL;
- 	acpi_status status;
- 	int err = -ENODATA;
- 
--	if (!wakeup)
--		return -EINVAL;
--
- 	INIT_LIST_HEAD(&wakeup->resources);
- 
- 	/* _PRW */
-@@ -883,8 +881,7 @@ static void acpi_bus_get_wakeup_device_flags(struct acpi_device *device)
- 	if (!acpi_has_method(device->handle, "_PRW"))
- 		return;
- 
--	err = acpi_bus_extract_wakeup_device_power_package(device->handle,
--							   &device->wakeup);
-+	err = acpi_bus_extract_wakeup_device_power_package(device);
- 	if (err) {
- 		dev_err(&device->dev, "_PRW evaluation error: %d\n", err);
- 		return;
+ 	static const struct acpi_device_id button_device_ids[] = {
+-		{"PNP0C0C", 0},
+-		{"PNP0C0D", 0},
+-		{"PNP0C0E", 0},
++		{"PNP0C0C", 0},		/* Power button */
++		{"PNP0C0D", 0},		/* Lid */
++		{"PNP0C0E", 0},		/* Sleep button */
+ 		{"", 0},
+ 	};
+ 	struct acpi_device_wakeup *wakeup = &device->wakeup;
 -- 
 2.21.0.392.gf8f6787159e-goog
 
