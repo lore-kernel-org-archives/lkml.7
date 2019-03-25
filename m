@@ -2,259 +2,290 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01F95C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:57:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8768C10F03
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:58:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B09A220854
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:57:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="hrUhVeTE"
+	by mail.kernel.org (Postfix) with ESMTP id A1C2F20830
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:58:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553518717;
+	bh=N83MK0ZwmWb+hiS0Gliv7t5YuZgORyoIMZTA86CXAgY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qYJ8HMKekA0CUfBAchXyy7B5doWrwBTM0X4UPPxlOURPOV0b0h/4rdhqPjkdyO3np
+	 l5gVhqhAw9UPbkXMXNYyG+UrhxIP1eKwSpqKy7u4h5eZVzMTXmRmeLTJFn4PKuLHKm
+	 m6+0/r/Bdo1Ku5OPqFeqmNfp8TsDwvvbZvLLGoAw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731335AbfCYM55 (ORCPT
+        id S1731339AbfCYM6g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 08:57:57 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:37117 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731076AbfCYM54 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 08:57:56 -0400
-Received: by mail-ed1-f66.google.com with SMTP id v21so7439648edq.4
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 05:57:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=googlenew;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=rikHWJqq5dUX3/QcEPhvcwcsOZhZQGmFmwYhfWwIJhA=;
-        b=hrUhVeTElOh2I9CdBfs3B7hKTnt4fPtQoi47naxWAgFdcYqZG/twO9JOtBebJnefc7
-         hjGMQsuSltATOZU5YC8oeALGj8Y973FZo9xGxUlp53nFM914bo6uDSpcWu+NdpKKfzvJ
-         JFmfg3a+mXFi3u+hswBj8YBMntEsHlmZpYIoJKCP7wfIwcxZiH4SeCgDJsbOofV7N5Hh
-         KcLbJYxiBSvWuMEIS4DZ7DXRPFz9Q54zD0GlC0zvJ+2/RTrfed1YlKGqdHbaXyGHf3Is
-         4LepHMJcLRulpc9GhItZ/enGmr4k+vrHUHLoiiNkShZt4C1U3hg9PCRgCZbOLhj7mZKy
-         tSBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=rikHWJqq5dUX3/QcEPhvcwcsOZhZQGmFmwYhfWwIJhA=;
-        b=OYXaTVc8Ks+71jjOtFRUY5AoeB1AsSMFz1I4f8DH0KCkm2obl2UEJfn+xIIgmGIevQ
-         orkXwuxsMJwKWiGUM7wtEXUmNMJO/AEI7lEZbfPh3BixcQB+5yUoyB+DdhjCXrXUoX3c
-         MYFCuh06YJdcw0sWf+gOesWDksQnV8x0FlqCGkc3TIbAor3okWOAShKO4Lrd0yEmkET9
-         6FPYh1X5/AzI+HygoXSb1lZefsyCVua9ErInBNCWtTcSc9obuPvsRvRGLilI60lvIc+N
-         PBYcr0+TPXHd7pBV5d1OiHL1Xp5OgtoK+G5dBaVGewdrbUF54cDm4V76wnDvhdYoJMeZ
-         66gg==
-X-Gm-Message-State: APjAAAVlbbyI7nEB59XXBEGksYyaR7WiWDnYCau9OdIdVNrisSThtTyI
-        XPDDDE7uJNo8Dz88fA5RJfeb5A==
-X-Google-Smtp-Source: APXvYqw/4fMyl9m7i82eQC1VEMa/e5vWPRLJVLECsf6l0QncdYad+Orn8htSwHHfGMWMq3xR6uF7VQ==
-X-Received: by 2002:a50:a705:: with SMTP id h5mr6865531edc.226.1553518674556;
-        Mon, 25 Mar 2019 05:57:54 -0700 (PDT)
-Received: from [10.83.32.113] ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id f13sm3219075eda.38.2019.03.25.05.57.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 25 Mar 2019 05:57:54 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 12.2 \(3445.102.3\))
-Subject: Re: [PATCH v2 3/7] iommu/vt-d: Expose ISA direct mapping region via
- iommu_get_resv_regions
-From:   James Sewart <jamessewart@arista.com>
-In-Reply-To: <fb1565dc-d991-acf9-e275-c0090f69f47e@linux.intel.com>
-Date:   Mon, 25 Mar 2019 12:57:43 +0000
-Cc:     iommu@lists.linux-foundation.org, Tom Murphy <tmurphy@arista.com>,
-        Dmitry Safonov <dima@arista.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <445F31EA-20F3-481C-B1DF-8B163791FF8C@arista.com>
-References: <0F0C82BE-86E5-4BAC-938C-6F7629E18D27@arista.com>
- <83B82113-8AE5-4B0C-A079-F389520525BD@arista.com>
- <F531CABB-FFDA-4E0A-A3D5-095FF338DD5A@arista.com>
- <b6b3dda7-31e3-c1e8-16cb-07feb7d5431d@linux.intel.com>
- <A489539F-4DD4-438A-AD9A-1A2F50404DB9@arista.com>
- <fb1565dc-d991-acf9-e275-c0090f69f47e@linux.intel.com>
-To:     Lu Baolu <baolu.lu@linux.intel.com>
-X-Mailer: Apple Mail (2.3445.102.3)
+        Mon, 25 Mar 2019 08:58:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42640 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731076AbfCYM6f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 08:58:35 -0400
+Received: from localhost (173-25-63-173.client.mchsi.com [173.25.63.173])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2047220823;
+        Mon, 25 Mar 2019 12:58:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553518714;
+        bh=N83MK0ZwmWb+hiS0Gliv7t5YuZgORyoIMZTA86CXAgY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=s74ZNKYAKC/kbryT3hDlFnBZTW/yn/RgWbE8rWmzuQZBnsrLnBtmX7V41Z3JBbyxS
+         mO/n2G4ySyiTd99YsotiHrUT6TylSzSehR5gtqTi3QYxjnPdAlAX9KHcVSmcUlM2a7
+         NvTJ1/dKdrb1JwjhTdWBydQwnCSghgpCZ2138ikM=
+Date:   Mon, 25 Mar 2019 07:58:32 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     jonnyc@amazon.com
+Cc:     linux-pci@vger.kernel.org, lorenzo.pieralisi@arm.com,
+        linux-kernel@vger.kernel.org, vaerov@amazon.com, dwmw@amazon.co.uk,
+        benh@kernel.crashing.org, alisaidi@amazon.com, zeev@amazon.com,
+        ronenk@amazon.com, barakw@amazon.com
+Subject: Re: [PATCH] PCI: al: add pcie-al.c
+Message-ID: <20190325125832.GP251185@google.com>
+References: <1553512040-4453-1-git-send-email-jonnyc@amazon.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1553512040-4453-1-git-send-email-jonnyc@amazon.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Lu,
+Hi Jonathan,
 
-> On 25 Mar 2019, at 02:03, Lu Baolu <baolu.lu@linux.intel.com> wrote:
->=20
-> Hi James,
->=20
-> On 3/22/19 5:57 PM, James Sewart wrote:
->> Hey Lu,
->>> On 15 Mar 2019, at 02:19, Lu Baolu <baolu.lu@linux.intel.com> wrote:
->>>=20
->>> Hi James,
->>>=20
->>> On 3/14/19 7:58 PM, James Sewart wrote:
->>>> To support mapping ISA region via =
-iommu_group_create_direct_mappings,
->>>> make sure its exposed by iommu_get_resv_regions. This allows
->>>> deduplication of reserved region mappings
->>>> Signed-off-by: James Sewart <jamessewart@arista.com>
->>>> ---
->>>>  drivers/iommu/intel-iommu.c | 42 =
-+++++++++++++++++++++++++++++--------
->>>>  1 file changed, 33 insertions(+), 9 deletions(-)
->>>> diff --git a/drivers/iommu/intel-iommu.c =
-b/drivers/iommu/intel-iommu.c
->>>> index 8e0a4e2ff77f..2e00e8708f06 100644
->>>> --- a/drivers/iommu/intel-iommu.c
->>>> +++ b/drivers/iommu/intel-iommu.c
->>>> @@ -337,6 +337,8 @@ static LIST_HEAD(dmar_rmrr_units);
->>>>  #define for_each_rmrr_units(rmrr) \
->>>>  	list_for_each_entry(rmrr, &dmar_rmrr_units, list)
->>>>  +static struct iommu_resv_region *isa_resv_region;
->>>> +
->>>>  /* bitmap for indexing intel_iommus */
->>>>  static int g_num_of_iommus;
->>>>  @@ -2780,26 +2782,34 @@ static inline int =
-iommu_prepare_rmrr_dev(struct dmar_rmrr_unit *rmrr,
->>>>  					  rmrr->end_address);
->>>>  }
->>>>  +static inline struct iommu_resv_region =
-*iommu_get_isa_resv_region(void)
->>>> +{
->>>> +	if (!isa_resv_region)
->>>> +		isa_resv_region =3D iommu_alloc_resv_region(0,
->>>> +				16*1024*1024,
->>>> +				0, IOMMU_RESV_DIRECT);
->>>> +
->>>> +	return isa_resv_region;
->>>> +}
->>>> +
->>>>  #ifdef CONFIG_INTEL_IOMMU_FLOPPY_WA
->>>> -static inline void iommu_prepare_isa(void)
->>>> +static inline void iommu_prepare_isa(struct pci_dev *pdev)
->>>>  {
->>>> -	struct pci_dev *pdev;
->>>>  	int ret;
->>>> +	struct iommu_resv_region *reg =3D iommu_get_isa_resv_region();
->>>>  -	pdev =3D pci_get_class(PCI_CLASS_BRIDGE_ISA << 8, NULL);
->>>> -	if (!pdev)
->>>> +	if (!reg)
->>>>  		return;
->>>>    	pr_info("Prepare 0-16MiB unity mapping for LPC\n");
->>>> -	ret =3D iommu_prepare_identity_map(&pdev->dev, 0, 16*1024*1024 - =
-1);
->>>> +	ret =3D iommu_prepare_identity_map(&pdev->dev, reg->start,
->>>> +			reg->start + reg->length - 1);
->>>>    	if (ret)
->>>>  		pr_err("Failed to create 0-16MiB identity map - floppy =
-might not work\n");
->>>> -
->>>> -	pci_dev_put(pdev);
->>>>  }
->>>>  #else
->>>> -static inline void iommu_prepare_isa(void)
->>>> +static inline void iommu_prepare_isa(struct pci_dev *pdev)
->>>>  {
->>>>  	return;
->>>>  }
->>>> @@ -3289,6 +3299,7 @@ static int __init init_dmars(void)
->>>>  	struct dmar_rmrr_unit *rmrr;
->>>>  	bool copied_tables =3D false;
->>>>  	struct device *dev;
->>>> +	struct pci_dev *pdev;
->>>>  	struct intel_iommu *iommu;
->>>>  	int i, ret;
->>>>  @@ -3469,7 +3480,11 @@ static int __init init_dmars(void)
->>>>  		}
->>>>  	}
->>>>  -	iommu_prepare_isa();
->>>> +	pdev =3D pci_get_class(PCI_CLASS_BRIDGE_ISA << 8, NULL);
->>>> +	if (pdev) {
->>>> +		iommu_prepare_isa(pdev);
->>>> +		pci_dev_put(pdev);
->>>> +	}
->>>>    domains_done:
->>>>  @@ -5266,6 +5281,7 @@ static void =
-intel_iommu_get_resv_regions(struct device *device,
->>>>  	struct iommu_resv_region *reg;
->>>>  	struct dmar_rmrr_unit *rmrr;
->>>>  	struct device *i_dev;
->>>> +	struct pci_dev *pdev;
->>>>  	int i;
->>>>    	rcu_read_lock();
->>>> @@ -5280,6 +5296,14 @@ static void =
-intel_iommu_get_resv_regions(struct device *device,
->>>>  	}
->>>>  	rcu_read_unlock();
->>>>  +	if (dev_is_pci(device)) {
->>>> +		pdev =3D to_pci_dev(device);
->>>> +		if ((pdev->class >> 8) =3D=3D PCI_CLASS_BRIDGE_ISA) {
->>>> +			reg =3D iommu_get_isa_resv_region();
->>>> +			list_add_tail(&reg->list, head);
->>>> +		}
->>>> +	}
->>>> +
->>>=20
->>> Just wondering why not just
->>>=20
->>> +#ifdef CONFIG_INTEL_IOMMU_FLOPPY_WA
->>> +	if (dev_is_pci(device)) {
->>> +		pdev =3D to_pci_dev(device);
->>> +		if ((pdev->class >> 8) =3D=3D PCI_CLASS_BRIDGE_ISA) {
->>> +			reg =3D iommu_alloc_resv_region(0,
->>> +				16*1024*1024,
->>> +				0, IOMMU_RESV_DIRECT);
->>> +			if (reg)
->>> +				list_add_tail(&reg->list, head);
->>> +		}
->>> +	}
->>> +#endif
->>>=20
->>> and, remove all other related code?
->> At this point in the patchset if we remove iommu_prepare_isa then the =
-ISA
->> region won=E2=80=99t be mapped to the device. Only once the dma =
-domain is allocable
->> will the reserved regions be mapped by =
-iommu_group_create_direct_mappings.
->=20
-> Yes. So if we put the allocation code here, it won't impact anything =
-and
-> will take effect as soon as the dma domain is allocatable.
->=20
->> Theres an issue that if we choose to alloc a new resv_region with =
-type
->> IOMMU_RESV_DIRECT, we will need to refactor =
-intel_iommu_put_resv_regions
->> to free this entry type which means refactoring the rmrr regions in
->> get_resv_regions. Should this work be in this patchset?
->=20
-> Do you mean the rmrr regions are not allocated in get_resv_regions, =
-but
-> are freed in put_resv_regions? I think we should fix this in this =
-patch
-> set since this might impact the device passthrough if we don't do it.
+Looks good to me.  Looks like this hardware is sooooo close to Just
+Working with the generic driver; it's too bad we have to add more ECAM
+quirks, but sometimes life gives us lemons.  Trivial comments below.
+Lorenzo may have additional comments.
 
-They=E2=80=99re not allocated and not freed currently, only type =
-IOMMU_RESV_MSI is=20
-freed in put_resv_regions. If we allocate a new resv_region with type=20
-IOMMU_RESV_DIRECT for the isa region, then it won=E2=80=99t be freed. If =
-we modify=20
-put_resv_regions to free type IOMMU_RESV_DIRECT, then we will try to =
-free=20
-the static RMRR regions.
+The subject should be something like:
 
-Either the ISA region is static and not freed as with my implementation,=20=
+  PCI: al: Add Amazon Annapurna Labs PCIe host controller driver
 
-or the RMRR regions are converted to be allocated on each call to=20
-get_resv_regions and freed in put_resv_regions.
+On Mon, Mar 25, 2019 at 01:07:20PM +0200, jonnyc@amazon.com wrote:
+> From: Jonathan Chocron <jonnyc@amazon.com>
+> 
+> Adding support for Amazon's Annapurna Labs pcie driver.
 
->=20
-> Best regards,
-> Lu Baolu
+s/pcie/PCIe/
 
-Cheers,
-James.=
+> The HW controller is based on Designware's IP.
+> 
+> The HW doesn't support accessing the Root port's config space via
+> ECAM, so we obtain its base address via a PNP0C02 device.
+
+s/port's/Port's/
+
+I think you're actually looking for a AMZN0001 device, not a PNP0C02
+device.  Your firmware might have a PNP0C02 _HID and AMZN0001 _CID, but
+that's not relevant here since you're only filtering by AMZN0001.
+
+> Furthermore, the DesignWare PCIe controller doesn't filter out
+> config transactions sent to devices 1 and up on its bus, so they
+> are filtered by the driver.
+
+Separate paragraphs with blank lines.
+
+> All subordinate buses do support ECAM access.
+> 
+> Implementing specific PCI config access functions involves:
+>  - Adding an init function to obtain the Root Port's base address
+>    from a PNP0C02 device.
+
+s/PNP0C02/AMZN0001/
+
+>  - Adding a new entry in the mcfg quirk array
+> 
+> Co-developed-by: Vladimir Aerov <vaerov@amazon.com>
+> Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
+> Signed-off-by: Vladimir Aerov <vaerov@amazon.com>
+> Reviewed-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Reviewed-by: David Woodhouse <dwmw@amazon.co.uk>
+> ---
+>  MAINTAINERS                          |  6 +++
+>  drivers/acpi/pci_mcfg.c              | 12 +++++
+>  drivers/pci/controller/dwc/Makefile  |  1 +
+>  drivers/pci/controller/dwc/pcie-al.c | 92 ++++++++++++++++++++++++++++++++++++
+>  include/linux/pci-ecam.h             |  1 +
+>  5 files changed, 112 insertions(+)
+>  create mode 100644 drivers/pci/controller/dwc/pcie-al.c
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 32d444476a90..7a17017f9f82 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -11769,6 +11769,12 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git/
+>  S:	Supported
+>  F:	drivers/pci/controller/
+>  
+> +PCIE DRIVER FOR ANNAPURNA LABS
+> +M:	Jonathan Chocron <jonnyc@amazon.com>
+> +L:	linux-pci@vger.kernel.org
+> +S:	Maintained
+> +F:	drivers/pci/controller/dwc/pcie-al.c
+> +
+>  PCIE DRIVER FOR AMLOGIC MESON
+>  M:	Yue Wang <yue.wang@Amlogic.com>
+>  L:	linux-pci@vger.kernel.org
+> diff --git a/drivers/acpi/pci_mcfg.c b/drivers/acpi/pci_mcfg.c
+> index a4e8432fc2fb..b42be067fb83 100644
+> --- a/drivers/acpi/pci_mcfg.c
+> +++ b/drivers/acpi/pci_mcfg.c
+> @@ -52,6 +52,18 @@ struct mcfg_fixup {
+>  static struct mcfg_fixup mcfg_quirks[] = {
+>  /*	{ OEM_ID, OEM_TABLE_ID, REV, SEGMENT, BUS_RANGE, ops, cfgres }, */
+>  
+> +#define AL_ECAM(table_id, rev, seg, ops) \
+> +	{ "AMAZON", table_id, rev, seg, MCFG_BUS_ANY, ops }
+> +
+> +	AL_ECAM("GRAVITON", 0, 0, &al_pcie_ops),
+> +	AL_ECAM("GRAVITON", 0, 1, &al_pcie_ops),
+> +	AL_ECAM("GRAVITON", 0, 2, &al_pcie_ops),
+> +	AL_ECAM("GRAVITON", 0, 3, &al_pcie_ops),
+> +	AL_ECAM("GRAVITON", 0, 4, &al_pcie_ops),
+> +	AL_ECAM("GRAVITON", 0, 5, &al_pcie_ops),
+> +	AL_ECAM("GRAVITON", 0, 6, &al_pcie_ops),
+> +	AL_ECAM("GRAVITON", 0, 7, &al_pcie_ops),
+> +
+>  #define QCOM_ECAM32(seg) \
+>  	{ "QCOM  ", "QDF2432 ", 1, seg, MCFG_BUS_ANY, &pci_32b_ops }
+>  
+> diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
+> index 7bcdcdf5024e..1ea773c0070d 100644
+> --- a/drivers/pci/controller/dwc/Makefile
+> +++ b/drivers/pci/controller/dwc/Makefile
+> @@ -28,5 +28,6 @@ obj-$(CONFIG_PCIE_UNIPHIER) += pcie-uniphier.o
+>  # depending on whether ACPI, the DT driver, or both are enabled.
+>  
+>  ifdef CONFIG_PCI
+> +obj-$(CONFIG_ARM64) += pcie-al.o
+>  obj-$(CONFIG_ARM64) += pcie-hisi.o
+>  endif
+> diff --git a/drivers/pci/controller/dwc/pcie-al.c b/drivers/pci/controller/dwc/pcie-al.c
+> new file mode 100644
+> index 000000000000..019497c2c714
+> --- /dev/null
+> +++ b/drivers/pci/controller/dwc/pcie-al.c
+> @@ -0,0 +1,92 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * PCIe host controller driver for Amazon's Annapurna Labs IP (used in chips
+> + * such as Graviton and Alpine)
+> + *
+> + * Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+> + *
+> + * Author: Jonathan Chocron <jonnyc@amazon.com>
+> + */
+> +
+> +#include <linux/pci.h>
+> +#include <linux/pci-ecam.h>
+> +#include <linux/pci-acpi.h>
+> +#include "../../pci.h"
+> +
+> +#if defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS)
+> +
+> +struct al_pcie_acpi  {
+> +	void __iomem *dbi_base;
+> +};
+> +
+> +static void __iomem *al_pcie_map_bus(struct pci_bus *bus, unsigned int devfn,
+> +				     int where)
+> +{
+> +	struct pci_config_window *cfg = bus->sysdata;
+> +	struct al_pcie_acpi *pcie = cfg->priv;
+> +	void __iomem *dbi_base = pcie->dbi_base;
+> +
+> +	if (bus->number == cfg->busr.start) {
+> +		/* The DW PCIe core doesn't filter out transactions to other
+> +		 * devices/functions on the primary bus num, so we do this here.
+> +		 */
+
+Use usual multi-line comment style:
+
+    /*
+     * text ..
+     */
+
+> +		if (PCI_SLOT(devfn) > 0)
+> +			return NULL;
+> +		else
+> +			return dbi_base + where;
+> +	}
+> +
+> +	return pci_ecam_map_bus(bus, devfn, where);
+> +}
+> +
+> +static int al_pcie_init(struct pci_config_window *cfg)
+> +{
+> +	struct device *dev = cfg->parent;
+> +	struct acpi_device *adev = to_acpi_device(dev);
+> +	struct acpi_pci_root *root = acpi_driver_data(adev);
+> +	struct al_pcie_acpi *al_pcie;
+> +	struct resource *res;
+> +	int ret;
+> +
+> +	al_pcie = devm_kzalloc(dev, sizeof(*al_pcie), GFP_KERNEL);
+> +	if (!al_pcie)
+> +		return -ENOMEM;
+> +
+> +	res = devm_kzalloc(dev, sizeof(*res), GFP_KERNEL);
+> +	if (!res)
+> +		return -ENOMEM;
+> +
+> +	ret = acpi_get_rc_resources(dev, "AMZN0001", root->segment, res);
+> +	if (ret) {
+> +		dev_err(dev, "can't get rc dbi base address for SEG %d\n",
+> +			root->segment);
+> +		return ret;
+> +	}
+> +
+> +	dev_dbg(dev, "Root port dbi res: %pR\n", res);
+> +
+> +	al_pcie->dbi_base = devm_pci_remap_cfg_resource(dev, res);
+> +	if (IS_ERR(al_pcie->dbi_base)) {
+> +		long err = PTR_ERR(al_pcie->dbi_base);
+> +
+> +		dev_err(dev, "couldn't remap dbi base %pR (err:%ld)\n",
+> +			res, err);
+> +		return err;
+> +	}
+> +
+> +	cfg->priv = al_pcie;
+> +
+> +	return 0;
+> +}
+> +
+> +struct pci_ecam_ops al_pcie_ops = {
+> +	.bus_shift    = 20,
+> +	.init         =  al_pcie_init,
+> +	.pci_ops      = {
+> +		.map_bus    = al_pcie_map_bus,
+> +		.read       = pci_generic_config_read,
+> +		.write      = pci_generic_config_write,
+> +	}
+> +};
+> +
+> +#endif /* defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS) */
+> diff --git a/include/linux/pci-ecam.h b/include/linux/pci-ecam.h
+> index 29efa09d686b..a73164c85e78 100644
+> --- a/include/linux/pci-ecam.h
+> +++ b/include/linux/pci-ecam.h
+> @@ -56,6 +56,7 @@ void __iomem *pci_ecam_map_bus(struct pci_bus *bus, unsigned int devfn,
+>  extern struct pci_ecam_ops pci_thunder_ecam_ops; /* Cavium ThunderX 1.x */
+>  extern struct pci_ecam_ops xgene_v1_pcie_ecam_ops; /* APM X-Gene PCIe v1 */
+>  extern struct pci_ecam_ops xgene_v2_pcie_ecam_ops; /* APM X-Gene PCIe v2.x */
+> +extern struct pci_ecam_ops al_pcie_ops; /* Amazon Annapurna Labs PCIe */
+>  #endif
+>  
+>  #ifdef CONFIG_PCI_HOST_COMMON
+> -- 
+> 1.9.1
+> 
