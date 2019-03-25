@@ -2,102 +2,185 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68C08C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 04:06:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6620C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 04:08:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3322220872
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 04:06:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60D7C20872
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 04:08:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GK5qFhdb"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="eVP0gAX8";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="eVP0gAX8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726150AbfCYEGh (ORCPT
+        id S1726177AbfCYEIE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 00:06:37 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:43186 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725294AbfCYEGh (ORCPT
+        Mon, 25 Mar 2019 00:08:04 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:51990 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725294AbfCYEID (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 00:06:37 -0400
-Received: by mail-ed1-f66.google.com with SMTP id d26so6246418ede.10
-        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2019 21:06:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=W2uNIY+GHug5w4hGLJzjOfyvmHN3DHiOZjVJVsz6a6k=;
-        b=GK5qFhdb3lC61T8YNRTDbhllE6olxZaiAvpTFcun/+siRaLfDIVqvgvj1bzDczWYmx
-         2GFBYY+lbLtJtQAHaiON9a8ncV4xtBYDldV2Uc8ZLtlHoElqJQfN8clctogN7ze/nLUE
-         iBE9j8ITHrLz0ZwgEPNDkkxQKofXyjVuaGoztVfhuSf0By0fej12jRmE4UTriKBB60rW
-         1ySfCWTgEhWv+Jj0l0KXM11MGT9CY6DMf97Qz+NzbMCyAuVKYCbdPJtdEpr+IU9oqXCi
-         eDVP40mXvfYgB7oIDakPWNmZnJoNEPuVYRV4qjEjygjFGiTVzXovuxLmhiYhmpIXvrBP
-         zSdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=W2uNIY+GHug5w4hGLJzjOfyvmHN3DHiOZjVJVsz6a6k=;
-        b=j1guRMqwih2RD0E0nMuim2qTXQ4/6ePC3UTl0EVACVwb8tsVtG+CdFY9RntIpZWSvd
-         lVouWocO/L7Vi0cdym2Wf4QuglMEfytwRyX+9nh7i3G5JAHYG56NzuDDHptmpHwGzNl/
-         LSOyr7WjSHDcS2xtFY1GXypDfyOG8c7AbHXRyE9SpU2U6J8m1zkER1rpiL1nwVULhayW
-         XP+I2CR6Py1tsdA37D63k74SU0c/FvwkEHQQetobTyu32umWa2+mI4oE/j0ou682C4EO
-         oIkSgbU3v+Ekb9XJB1SdyHy4WV5FyiOP2pAQtWTe7CtdrvVe7rI7yu+Vt46QDM1kxuNe
-         eZOA==
-X-Gm-Message-State: APjAAAU2bc4sRXZzrgyJn4mAQR67dABkqeLHPVzhnyYMDXdJrG+/1+Mc
-        X5mtYOGUtbGanOIOlefB68FZcd78CgMgrgWiUuRjQn2rcMw=
-X-Google-Smtp-Source: APXvYqzjplzf7ok5wwS+XThTsJcFnkSG3GrKjGlA9iIUr8BSYEUXgirO2ujWl6YT1YiMSW/r/MeBfl5HU0oXud/bfCo=
-X-Received: by 2002:a50:90b3:: with SMTP id c48mr13614550eda.8.1553486795889;
- Sun, 24 Mar 2019 21:06:35 -0700 (PDT)
+        Mon, 25 Mar 2019 00:08:03 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 6E33A6079C; Mon, 25 Mar 2019 04:08:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553486882;
+        bh=rTkAqjkFbVfMS8Yg4milTXHinGnQ96GLZZG59pkDtT8=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=eVP0gAX8UafWnq36BA3mVk5Z+Q3JBvptTQ/kXKTa0fDxzjhGSiLP6LQJicQ8rCN4m
+         UPCePZgXQDIJ4zKM1CXHBQ2mBPbE4cjxlvLWcPtOwq5xTVZj/r9WiVv+3bg6eb6afD
+         n2ouW8VdGzkMsNXeb8ZP4jv1EdfejtGmhSbCRJW0=
+Received: from [10.79.128.22] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 88CE8602F8;
+        Mon, 25 Mar 2019 04:07:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553486882;
+        bh=rTkAqjkFbVfMS8Yg4milTXHinGnQ96GLZZG59pkDtT8=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=eVP0gAX8UafWnq36BA3mVk5Z+Q3JBvptTQ/kXKTa0fDxzjhGSiLP6LQJicQ8rCN4m
+         UPCePZgXQDIJ4zKM1CXHBQ2mBPbE4cjxlvLWcPtOwq5xTVZj/r9WiVv+3bg6eb6afD
+         n2ouW8VdGzkMsNXeb8ZP4jv1EdfejtGmhSbCRJW0=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 88CE8602F8
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH v2 3/9] soc: qcom: rpmpd: Modify corner defining macros
+To:     Sibi Sankar <sibis@codeaurora.org>, bjorn.andersson@linaro.org,
+        robh+dt@kernel.org, andy.gross@linaro.org
+Cc:     david.brown@linaro.org, mark.rutland@arm.com,
+        linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org,
+        devicetree@vger.kernel.org
+References: <20190324175007.29040-1-sibis@codeaurora.org>
+ <20190324175007.29040-4-sibis@codeaurora.org>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <6d1453af-b01f-9e5a-4c9a-b2af00d1f05f@codeaurora.org>
+Date:   Mon, 25 Mar 2019 09:37:57 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.0
 MIME-Version: 1.0
-References: <1553268101-18742-1-git-send-email-yamada.masahiro@socionext.com>
-In-Reply-To: <1553268101-18742-1-git-send-email-yamada.masahiro@socionext.com>
-From:   Greentime Hu <green.hu@gmail.com>
-Date:   Mon, 25 Mar 2019 12:05:59 +0800
-Message-ID: <CAEbi=3cWZYL96ytjGw0hOBHu-DKa27aQbRwfCsT24WdiYDsrNg@mail.gmail.com>
-Subject: Re: [PATCH] nds32: remove unused generic-y += cmpxchg-local.h
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Vincent Chen <deanbo422@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Nickhu <nickhu@andestech.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190324175007.29040-4-sibis@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Yamada,
 
-Masahiro Yamada <yamada.masahiro@socionext.com> =E6=96=BC 2019=E5=B9=B43=E6=
-=9C=8822=E6=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=8811:22=E5=AF=AB=E9=81=
-=93=EF=BC=9A
->
-> NDS32 is the only architecture that creates <asm/cmpxchg-local.h>,
-> which is not included anyone.
->
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+
+On 3/24/2019 11:20 PM, Sibi Sankar wrote:
+> From: Bjorn Andersson <bjorn.andersson@linaro.org>
+> 
+> QCS404 uses individual resource type magic for each power-domain, so
+> adjust the macros slightly to make them reusable for this.
+> 
+> [sibi: Extend rpmpd corner pair to a generic rpmpd pair]
+
+This needs to be right above your SoB I think.
+
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 > ---
->
->  arch/nds32/include/asm/Kbuild | 1 -
->  1 file changed, 1 deletion(-)
->
-> diff --git a/arch/nds32/include/asm/Kbuild b/arch/nds32/include/asm/Kbuil=
-d
-> index 7ef8695..c131e0e 100644
-> --- a/arch/nds32/include/asm/Kbuild
-> +++ b/arch/nds32/include/asm/Kbuild
-> @@ -5,7 +5,6 @@ generic-y +=3D bug.h
->  generic-y +=3D bugs.h
->  generic-y +=3D checksum.h
->  generic-y +=3D cmpxchg.h
-> -generic-y +=3D cmpxchg-local.h
->  generic-y +=3D compat.h
->  generic-y +=3D device.h
->  generic-y +=3D div64.h
+>   drivers/soc/qcom/rpmpd.c | 39 +++++++++++++++++----------------------
+>   1 file changed, 17 insertions(+), 22 deletions(-)
+> 
+> diff --git a/drivers/soc/qcom/rpmpd.c b/drivers/soc/qcom/rpmpd.c
+> index 71fdfafad2ea..17cd59d1ac3b 100644
+> --- a/drivers/soc/qcom/rpmpd.c
+> +++ b/drivers/soc/qcom/rpmpd.c
+> @@ -17,8 +17,8 @@
+>   #define domain_to_rpmpd(domain) container_of(domain, struct rpmpd, pd)
+>   
+>   /* Resource types */
+> -#define RPMPD_SMPA 0x61706d73
+> -#define RPMPD_LDOA 0x616f646c
+> +#define RPMPD_SMPA 0x61706d73 /* smpa */
+> +#define RPMPD_LDOA 0x616f646c /* ldoa */
+>   
+>   /* Operation Keys */
+>   #define KEY_CORNER		0x6e726f63 /* corn */
+> @@ -27,46 +27,41 @@
+>   
+>   #define MAX_RPMPD_STATE		6
+>   
+> -#define DEFINE_RPMPD_CORNER_SMPA(_platform, _name, _active, r_id)		\
+> +#define DEFINE_RPMPD_PAIR(_platform, _name, _active, r_type, r_key,	\
+> +			  r_id)						\
+>   	static struct rpmpd _platform##_##_active;			\
+>   	static struct rpmpd _platform##_##_name = {			\
+>   		.pd = {	.name = #_name,	},				\
+>   		.peer = &_platform##_##_active,				\
+> -		.res_type = RPMPD_SMPA,					\
+> +		.res_type = RPMPD_##r_type,				\
+>   		.res_id = r_id,						\
+> -		.key = KEY_CORNER,					\
+> +		.key = KEY_##r_key,					\
+>   	};								\
+>   	static struct rpmpd _platform##_##_active = {			\
+>   		.pd = { .name = #_active, },				\
+>   		.peer = &_platform##_##_name,				\
+>   		.active_only = true,					\
+> -		.res_type = RPMPD_SMPA,					\
+> +		.res_type = RPMPD_##r_type,				\
+>   		.res_id = r_id,						\
+> -		.key = KEY_CORNER,					\
+> +		.key = KEY_##r_key,					\
+>   	}
+>   
+> -#define DEFINE_RPMPD_CORNER_LDOA(_platform, _name, r_id)			\
+> +#define DEFINE_RPMPD_CORNER(_platform, _name, r_type, r_id)		\
+>   	static struct rpmpd _platform##_##_name = {			\
+>   		.pd = { .name = #_name, },				\
+> -		.res_type = RPMPD_LDOA,					\
+> +		.res_type = RPMPD_##r_type,				\
+>   		.res_id = r_id,						\
+>   		.key = KEY_CORNER,					\
+>   	}
+>   
+> -#define DEFINE_RPMPD_VFC(_platform, _name, r_id, r_type)		\
+> +#define DEFINE_RPMPD_VFC(_platform, _name, r_type, r_id)		\
+>   	static struct rpmpd _platform##_##_name = {			\
+>   		.pd = { .name = #_name, },				\
+> -		.res_type = r_type,					\
+> +		.res_type = RPMPD_##r_type,				\
+>   		.res_id = r_id,						\
+>   		.key = KEY_FLOOR_CORNER,				\
+>   	}
+>   
+> -#define DEFINE_RPMPD_VFC_SMPA(_platform, _name, r_id)			\
+> -	DEFINE_RPMPD_VFC(_platform, _name, r_id, RPMPD_SMPA)
+> -
+> -#define DEFINE_RPMPD_VFC_LDOA(_platform, _name, r_id)			\
+> -	DEFINE_RPMPD_VFC(_platform, _name, r_id, RPMPD_LDOA)
+> -
+>   struct rpmpd_req {
+>   	__le32 key;
+>   	__le32 nbytes;
+> @@ -96,12 +91,12 @@ struct rpmpd_desc {
+>   static DEFINE_MUTEX(rpmpd_lock);
+>   
+>   /* msm8996 RPM Power domains */
+> -DEFINE_RPMPD_CORNER_SMPA(msm8996, vddcx, vddcx_ao, 1);
+> -DEFINE_RPMPD_CORNER_SMPA(msm8996, vddmx, vddmx_ao, 2);
+> -DEFINE_RPMPD_CORNER_LDOA(msm8996, vddsscx, 26);
+> +DEFINE_RPMPD_PAIR(msm8996, vddcx, vddcx_ao, SMPA, CORNER, 1);
+> +DEFINE_RPMPD_PAIR(msm8996, vddmx, vddmx_ao, SMPA, CORNER, 2);
+> +DEFINE_RPMPD_CORNER(msm8996, vddsscx, LDOA, 26);
+>   
+> -DEFINE_RPMPD_VFC_SMPA(msm8996, vddcx_vfc, 1);
+> -DEFINE_RPMPD_VFC_LDOA(msm8996, vddsscx_vfc, 26);
+> +DEFINE_RPMPD_VFC(msm8996, vddcx_vfc, SMPA, 1);
+> +DEFINE_RPMPD_VFC(msm8996, vddsscx_vfc, LDOA, 26);
+>   
+>   static struct rpmpd *msm8996_rpmpds[] = {
+>   	[MSM8996_VDDCX] =	&msm8996_vddcx,
+> 
 
-Thank you.
-Acked-by: Greentime Hu <greentime@andestech.com>
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
