@@ -2,76 +2,70 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4727C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:45:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B95BC4360F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:46:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87BEB20823
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:45:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553535951;
-	bh=GvYjNH1rW56z00UHxMSr4BSA1Nwz6zb8ZKN5SlZqw/I=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=v7c71c8YpCbolJbxIHgsCt8z3n6CIRMe6Qvm5iYeo2MGIU0htVZe7pxGVe3AQ4diH
-	 XM3NIUmUJjt3aYg7HIQXZrPhwIRE0lD70zKp7eFVXM5sSqUp1UDRInOp5DBt5glW8E
-	 QvCgM+nZFRqH9xAiZDcoUI8gleGF/3n0zCpXZrcA=
+	by mail.kernel.org (Postfix) with ESMTP id 53D8D20823
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:46:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p4YvEa0n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729938AbfCYRpu (ORCPT
+        id S1729973AbfCYRqV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 13:45:50 -0400
-Received: from mail-lj1-f181.google.com ([209.85.208.181]:36895 "EHLO
-        mail-lj1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729774AbfCYRpt (ORCPT
+        Mon, 25 Mar 2019 13:46:21 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:33538 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729548AbfCYRqU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 13:45:49 -0400
-Received: by mail-lj1-f181.google.com with SMTP id v13so8661821ljk.4
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 10:45:48 -0700 (PDT)
+        Mon, 25 Mar 2019 13:46:20 -0400
+Received: by mail-pg1-f194.google.com with SMTP id b12so6960244pgk.0
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 10:46:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=qRe2oWrFowjPDwMQ0XzV+doqxVqQ9V1/hj0R7uFWrcE=;
-        b=FjpUfbuGF9Ba2aish+S9SNuMMwnK1poJo8Oj81SbdIah901GHv7zVQK5hLtkaPkRcz
-         kHbeSQZWCXO9w+Q4lLrdROL+JbH31HczbwfF5egbZ6RycWE+sfr4JXd2bG5kcS1jyjeY
-         NtrrLqyPNgcaSNoQAMQb2weh1FqMVW1iPa45s=
+        bh=Kotx3JpfQwJdbdIZ+VEivD1Jn7i50+L9ykmxgVe65Ac=;
+        b=p4YvEa0nVVJnRXGH6HWrhsYlDOk0YPkBGlbmRrZA0DR9VlzhtVxow0NNptxP7mS6MB
+         QxG0Q3D2EhHKTp2eEOH308gX6ytMf0ewk8d8VCXJ0vDUD/8GR4R2knYVBSEl6z+k08/K
+         vMBjTwuxNEcKu+TN2gofpV+63TVCA9Bt4VBoZkLkctSwpXFACmmuuxkPSWJghS4d4qqo
+         BCCzQYifiMigqy2IbTfqmFGHCsDHzXWnH1tQRSCKKzIWZelX/jvdOdwcP6sO0zPbI1Tp
+         5vDPt8CKMdlupTwARU2ln+MM9dyi8W16dj+A70KhlgUohIjkxGQns6ksEPI5kyIuUz7R
+         5rjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=qRe2oWrFowjPDwMQ0XzV+doqxVqQ9V1/hj0R7uFWrcE=;
-        b=Mxg03vc63FGYOK7KFmz/G1P52S6tKkKP9hYx2V1MemleiSB/nMft/lk0TF5gncsctl
-         6hpJtkdlwnks7GFGAAH8AVtFxHuZTTbvPSoH2tr8dh//Jgt+IPjZKNSvJTh8cTdPzHjM
-         HJsFgm64h2hfJKUQdE9nlyxUJ+IcFsS2z27LhiQsWYg5Fb+t8h1jwfmUe6u+GlTGljT9
-         GQ3ond+nacCH1FoUsWQ5dfcSWgRVrKRcNhQiCTVuV6uL0+klZArp0mByCOfB1qnmEGLd
-         9D/GeVCJr6CqNhA9Sdt0pLcZqsvRw0NRfsykYVecB+ET154Up79L6L9ALHjYQzGJ7ZJJ
-         YFlg==
-X-Gm-Message-State: APjAAAX/PDT6jbwm6ofmACKQlxx/0QTIEOIqd68+dYNARmDcuCqwXR3r
-        p27s+15q3CFcTMIrYFH7gSMq2MDow+M=
-X-Google-Smtp-Source: APXvYqwm+2rzS2d71VegkXH90FZNkwvKbwtoq4KLYIuKEAW8OeS6okpvgEV3kmn8OFYoTQbeYY5jWA==
-X-Received: by 2002:a2e:81c6:: with SMTP id s6mr13759481ljg.56.1553535947305;
-        Mon, 25 Mar 2019 10:45:47 -0700 (PDT)
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com. [209.85.208.172])
-        by smtp.gmail.com with ESMTPSA id s24sm2133677ljs.30.2019.03.25.10.45.46
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 25 Mar 2019 10:45:46 -0700 (PDT)
-Received: by mail-lj1-f172.google.com with SMTP id v22so8634475lje.9
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 10:45:46 -0700 (PDT)
-X-Received: by 2002:a2e:3e0e:: with SMTP id l14mr7533960lja.125.1553535945828;
- Mon, 25 Mar 2019 10:45:45 -0700 (PDT)
+        bh=Kotx3JpfQwJdbdIZ+VEivD1Jn7i50+L9ykmxgVe65Ac=;
+        b=m+hvPQjA6b9QID0NmllXTfeRcDAE0nJ/c6zvqIYQlYT0/3UcIBTeL/NM8O9VzFiPSa
+         od0LB+m/FUvfYqQh+pwcJicmsnlLpeBcC4Tt4qGZCiqGGdRjw3GXFft0o/w6bXeZbLlv
+         0AVD8upIW6LZpsmDDQmMjweRGET7aSHQmE0aJH6AX2AhzoyiZJqzP6mdl80Z0JwOms0P
+         u/I16p+Sj5BI49dFFzJZLBMgk3qa55Wd445BLAoDuHCRf3GHTCexC6c2YfSVpf6grGKd
+         zVG1RSSXHdtzCQ6dVkhmEeJSsh56ingzKDUyXughpzzKKjpAHhX4YgBERFliygB2Gphh
+         4CQA==
+X-Gm-Message-State: APjAAAU0/deK5/Rj96UMZR6Y3GeP9ERfHibSqHuMu8FnU7twkAuu8ttd
+        NEvnpqoT5uOl13AZVC1QAWSo4iqy8nLyYucw2W9PpA==
+X-Google-Smtp-Source: APXvYqxb7MetvyykLnAAyL8XA9NT4vWkq3+321BDw1z/JQauYtbOHp9eP0CWSIMtt8kxWjJIbQgooWdb0XBTf9Gg4hI=
+X-Received: by 2002:a62:209c:: with SMTP id m28mr12404429pfj.94.1553535979413;
+ Mon, 25 Mar 2019 10:46:19 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190320200702.GA27111@avx2> <CAMkWEXPsikD8uvMSxQH=RUx-qPHO1UBtKgXsg=p9hY_bD2u2ow@mail.gmail.com>
-In-Reply-To: <CAMkWEXPsikD8uvMSxQH=RUx-qPHO1UBtKgXsg=p9hY_bD2u2ow@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 25 Mar 2019 10:45:29 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgmKZm-fESEiLq_W37sKpqCY89nQkPNfWhvF_CQ1ANgcw@mail.gmail.com>
-Message-ID: <CAHk-=wgmKZm-fESEiLq_W37sKpqCY89nQkPNfWhvF_CQ1ANgcw@mail.gmail.com>
-Subject: Re: pidfd design
-To:     Michael Tirado <mtirado418@gmail.com>
-Cc:     Alexey Dobriyan <adobriyan@gmail.com>,
+References: <20190322140503.123580-1-arnd@arndb.de>
+In-Reply-To: <20190322140503.123580-1-arnd@arndb.de>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 25 Mar 2019 10:46:08 -0700
+Message-ID: <CAKwvOd=9wtPP-vhLknpc7cjMrV=NZWQJFmqxOvGEyzRc2FrnCw@mail.gmail.com>
+Subject: Re: [PATCH] bitrev: fix constant bitrev
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Zhao Qiang <qiang.zhao@nxp.com>,
+        Yalin Wang <yalin.wang@sonymobile.com>,
+        "# 3.4.x" <stable@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
@@ -79,50 +73,133 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 22, 2019 at 11:34 AM Michael Tirado <mtirado418@gmail.com> wrote:
+On Fri, Mar 22, 2019 at 7:05 AM Arnd Bergmann <arnd@arndb.de> wrote:
 >
-> On Wed, Mar 20, 2019 at 8:08 PM Alexey Dobriyan <adobriyan@gmail.com> wrote:
-> >
-> > pidfd code should be backed out immediately. Forget about /proc.
+> clang points out with hundreds of warnings that the bitrev macros
+> have a problem with constant input:
 >
-> Seems like Torvalds just merges this sort of "stuff" without reading
-> it now, or there's something that auto accepted pull request to RC tree?
+> drivers/hwmon/sht15.c:187:11: error: variable '__x' is uninitialized when used within its own initialization
+>       [-Werror,-Wuninitialized]
+>         u8 crc = bitrev8(data->val_status & 0x0F);
+>                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> include/linux/bitrev.h:102:21: note: expanded from macro 'bitrev8'
+>         __constant_bitrev8(__x) :                       \
+>         ~~~~~~~~~~~~~~~~~~~^~~~
+> include/linux/bitrev.h:67:11: note: expanded from macro '__constant_bitrev8'
+>         u8 __x = x;                     \
+>            ~~~   ^
+>
+> Both the bitrev and the __constant_bitrev macros use an internal variable
+> named __x, which goes horribly wrong when passing one to the other.
 
-There is no auto-accept.
+Oh man, so if you have a macro that expands another macro, you can run
+into this issue.  To see how this expands:
+https://godbolt.org/z/-khHN3
 
-But there also didn't seem to be any valid arguments against it, and
-the android people had arguments for it.
+>
+> The obvious fix is to rename one of the variables, so this adds an
+> extra '_'.
+>
+> It seems we got away with this because
+> - there are only a few drivers using bitrev macros
+> - usually there are no constant arguments to those
+> - when they are constant, they tend to be either 0 or (unsigned)-1
+>   (drivers/isdn/i4l/isdnhdlc.o, drivers/iio/amplifiers/ad8366.c)
+>   and give the correct result by pure chance.
+>
+> In fact, the only driver that I could find that gets different results
+> with this is drivers/net/wan/slic_ds26522.c, which in turn is a driver
+> for fairly rare hardware (adding the maintainer to Cc for testing).
+>
+> Cc: Zhao Qiang <qiang.zhao@nxp.com>
+> Cc: Yalin Wang <yalin.wang@sonymobile.com>
+> Cc: stable@vger.kernel.org
+> Fixes: 556d2f055bf6 ("ARM: 8187/1: add CONFIG_HAVE_ARCH_BITREVERSE to support rbit instruction")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Arguing against it based on "I don't like /proc" is pointless. The
-fact is, /proc is our system interface for a lot of things.
+I would have preferred to just name it `y` rather than keep tacking on
+underscores, but it doesn't matter what color the bikeshed is.  Thanks
+for the patch.
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 
-Arguing against it based on "I worry about the _other_
-non-signal-sending things that could be done with this" is also
-pointless. What other things? The only thing that got merged was the
-signalling.
+> ---
+>  include/linux/bitrev.h | 46 +++++++++++++++++++++---------------------
+>  1 file changed, 23 insertions(+), 23 deletions(-)
+>
+> diff --git a/include/linux/bitrev.h b/include/linux/bitrev.h
+> index 50fb0dee23e8..d35b8ec1c485 100644
+> --- a/include/linux/bitrev.h
+> +++ b/include/linux/bitrev.h
+> @@ -34,41 +34,41 @@ static inline u32 __bitrev32(u32 x)
+>
+>  #define __constant_bitrev32(x) \
+>  ({                                     \
+> -       u32 __x = x;                    \
+> -       __x = (__x >> 16) | (__x << 16);        \
+> -       __x = ((__x & (u32)0xFF00FF00UL) >> 8) | ((__x & (u32)0x00FF00FFUL) << 8);      \
+> -       __x = ((__x & (u32)0xF0F0F0F0UL) >> 4) | ((__x & (u32)0x0F0F0F0FUL) << 4);      \
+> -       __x = ((__x & (u32)0xCCCCCCCCUL) >> 2) | ((__x & (u32)0x33333333UL) << 2);      \
+> -       __x = ((__x & (u32)0xAAAAAAAAUL) >> 1) | ((__x & (u32)0x55555555UL) << 1);      \
+> -       __x;                                                            \
+> +       u32 ___x = x;                   \
+> +       ___x = (___x >> 16) | (___x << 16);     \
+> +       ___x = ((___x & (u32)0xFF00FF00UL) >> 8) | ((___x & (u32)0x00FF00FFUL) << 8);   \
+> +       ___x = ((___x & (u32)0xF0F0F0F0UL) >> 4) | ((___x & (u32)0x0F0F0F0FUL) << 4);   \
+> +       ___x = ((___x & (u32)0xCCCCCCCCUL) >> 2) | ((___x & (u32)0x33333333UL) << 2);   \
+> +       ___x = ((___x & (u32)0xAAAAAAAAUL) >> 1) | ((___x & (u32)0x55555555UL) << 1);   \
+> +       ___x;                                                           \
+>  })
+>
+>  #define __constant_bitrev16(x) \
+>  ({                                     \
+> -       u16 __x = x;                    \
+> -       __x = (__x >> 8) | (__x << 8);  \
+> -       __x = ((__x & (u16)0xF0F0U) >> 4) | ((__x & (u16)0x0F0FU) << 4);        \
+> -       __x = ((__x & (u16)0xCCCCU) >> 2) | ((__x & (u16)0x3333U) << 2);        \
+> -       __x = ((__x & (u16)0xAAAAU) >> 1) | ((__x & (u16)0x5555U) << 1);        \
+> -       __x;                                                            \
+> +       u16 ___x = x;                   \
+> +       ___x = (___x >> 8) | (___x << 8);       \
+> +       ___x = ((___x & (u16)0xF0F0U) >> 4) | ((___x & (u16)0x0F0FU) << 4);     \
+> +       ___x = ((___x & (u16)0xCCCCU) >> 2) | ((___x & (u16)0x3333U) << 2);     \
+> +       ___x = ((___x & (u16)0xAAAAU) >> 1) | ((___x & (u16)0x5555U) << 1);     \
+> +       ___x;                                                           \
+>  })
+>
+>  #define __constant_bitrev8x4(x) \
+>  ({                     \
+> -       u32 __x = x;    \
+> -       __x = ((__x & (u32)0xF0F0F0F0UL) >> 4) | ((__x & (u32)0x0F0F0F0FUL) << 4);      \
+> -       __x = ((__x & (u32)0xCCCCCCCCUL) >> 2) | ((__x & (u32)0x33333333UL) << 2);      \
+> -       __x = ((__x & (u32)0xAAAAAAAAUL) >> 1) | ((__x & (u32)0x55555555UL) << 1);      \
+> -       __x;                                                            \
+> +       u32 ___x = x;   \
+> +       ___x = ((___x & (u32)0xF0F0F0F0UL) >> 4) | ((___x & (u32)0x0F0F0F0FUL) << 4);   \
+> +       ___x = ((___x & (u32)0xCCCCCCCCUL) >> 2) | ((___x & (u32)0x33333333UL) << 2);   \
+> +       ___x = ((___x & (u32)0xAAAAAAAAUL) >> 1) | ((___x & (u32)0x55555555UL) << 1);   \
+> +       ___x;                                                           \
+>  })
+>
+>  #define __constant_bitrev8(x)  \
+>  ({                                     \
+> -       u8 __x = x;                     \
+> -       __x = (__x >> 4) | (__x << 4);  \
+> -       __x = ((__x & (u8)0xCCU) >> 2) | ((__x & (u8)0x33U) << 2);      \
+> -       __x = ((__x & (u8)0xAAU) >> 1) | ((__x & (u8)0x55U) << 1);      \
+> -       __x;                                                            \
+> +       u8 ___x = x;                    \
+> +       ___x = (___x >> 4) | (___x << 4);       \
+> +       ___x = ((___x & (u8)0xCCU) >> 2) | ((___x & (u8)0x33U) << 2);   \
+> +       ___x = ((___x & (u8)0xAAU) >> 1) | ((___x & (u8)0x55U) << 1);   \
+> +       ___x;                                                           \
+>  })
+>
+>  #define bitrev32(x) \
+> --
+> 2.20.0
+>
 
-Now, arguing that signalling should use the open-time credentials
-might make sense, but this isn't read/write. You can't fool some suid
-program to do magic randon system calls for you, and if you can, then
-arguing about pidfd is kind of pointless.
 
-So the model of using a file descriptor instead of a 'pid' for signal
-handling is actually very unix-like. Maybe that's how pid's should
-have worked to begin with. Remember that whole "everything is a file"
-thing?
-
-Now, the fact that fork() and clone() return a pid obviously means
-that pidfd isn't the primary model (not to decades of just history),
-but that doesn't make pidfd wrong.
-
-And namespace issues etc are all also kind of irrelevant. If you open
-random files in /proc and randomly do pidfd_send_signal() on those,
-you get random results. If that worries you, then DON'T DO THAT THEN,
-for chrissake! That's not a sane model to begin with, but it's not the
-usage model for this, so it's another completely specious argument.
-
-So yes, I thought about the pidfd pull (which was why it happened at
-the very end of the merge window), and I found the arguments against
-it bad.
-
-                Linus
+-- 
+Thanks,
+~Nick Desaulniers
