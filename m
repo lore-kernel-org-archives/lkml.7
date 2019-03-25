@@ -6,22 +6,22 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06EB4C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:59:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC9EC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:59:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2A6520645
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:59:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5878520830
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:59:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730681AbfCYV7T (ORCPT
+        id S1730717AbfCYV7W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 17:59:19 -0400
-Received: from muru.com ([72.249.23.125]:42642 "EHLO muru.com"
+        Mon, 25 Mar 2019 17:59:22 -0400
+Received: from muru.com ([72.249.23.125]:42654 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730641AbfCYV7Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 17:59:16 -0400
+        id S1730641AbfCYV7U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 17:59:20 -0400
 Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id 8869880CC;
-        Mon, 25 Mar 2019 21:59:28 +0000 (UTC)
+        by muru.com (Postfix) with ESMTP id 0B9EF80CC;
+        Mon, 25 Mar 2019 21:59:32 +0000 (UTC)
 From:   Tony Lindgren <tony@atomide.com>
 To:     linux-omap@vger.kernel.org
 Cc:     Dave Gerlach <d-gerlach@ti.com>, Faiz Abbas <faiz_abbas@ti.com>,
@@ -31,9 +31,9 @@ Cc:     Dave Gerlach <d-gerlach@ti.com>, Faiz Abbas <faiz_abbas@ti.com>,
         Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>,
         Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 08/14] bus: ti-sysc: Manage clocks for the interconnect target module in all cases
-Date:   Mon, 25 Mar 2019 14:58:43 -0700
-Message-Id: <20190325215849.13182-9-tony@atomide.com>
+Subject: [PATCH 10/14] bus: ti-sysc: Add support for early quirks based on register address
+Date:   Mon, 25 Mar 2019 14:58:45 -0700
+Message-Id: <20190325215849.13182-11-tony@atomide.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190325215849.13182-1-tony@atomide.com>
 References: <20190325215849.13182-1-tony@atomide.com>
@@ -44,75 +44,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We are currently not managing interconnect target module clocks in the
-for legacy platform data based case. This causes a problem for using the
-platform data based functions when dropping the platform data for the
-interconnect target module configuration.
+At least mcpdm needs an optional external clock enabled to function and
+this clock typically comes from the PMIC. We can detect mcpdm based on
+the interconnect target module address and set a quirk flag early.
 
-To avoid a situation where we need to populate the main and optional
-clocks also for the platform data based functions, let's just manage the
-clocks directly in ti-sysc driver. This means that until the interconnect
-target module confugration platform data is dropped our use count for
-clk_enable() will be 2 instead of 1.
+To do this, let's initialize the clocks a bit later and add a new
+function for sysc_init_early_quirks(). Note that we cannot yet enable
+the early quirks for mcpdm until the optional external clocks are
+handled in the in the following patch.
 
 Signed-off-by: Tony Lindgren <tony@atomide.com>
 ---
- drivers/bus/ti-sysc.c | 24 +++++++++++-------------
- 1 file changed, 11 insertions(+), 13 deletions(-)
+ drivers/bus/ti-sysc.c | 46 +++++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 42 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
 --- a/drivers/bus/ti-sysc.c
 +++ b/drivers/bus/ti-sysc.c
-@@ -783,10 +783,8 @@ static int __maybe_unused sysc_runtime_suspend(struct device *dev)
+@@ -959,6 +959,42 @@ static const struct sysc_revision_quirk sysc_revision_quirks[] = {
+ #endif
+ };
  
- 	if (ddata->legacy_mode) {
- 		error = sysc_runtime_suspend_legacy(dev, ddata);
--		if (!error)
--			ddata->enabled = false;
--
--		return error;
-+		if (error)
-+			return error;
- 	}
- 
- 	sysc_disable_main_clocks(ddata);
-@@ -809,14 +807,6 @@ static int __maybe_unused sysc_runtime_resume(struct device *dev)
- 	if (ddata->enabled)
- 		return 0;
- 
--	if (ddata->legacy_mode) {
--		error = sysc_runtime_resume_legacy(dev, ddata);
--		if (!error)
--			ddata->enabled = true;
--
--		return error;
--	}
--
- 	if (sysc_opt_clks_needed(ddata)) {
- 		error = sysc_enable_opt_clocks(ddata);
- 		if (error)
-@@ -825,13 +815,21 @@ static int __maybe_unused sysc_runtime_resume(struct device *dev)
- 
- 	error = sysc_enable_main_clocks(ddata);
- 	if (error)
--		goto err_main_clocks;
-+		goto err_opt_clocks;
++/*
++ * Early quirks based on module base and register offsets only that are
++ * needed before the module revision can be read
++ */
++static void sysc_init_early_quirks(struct sysc *ddata)
++{
++	const struct sysc_revision_quirk *q;
++	int i;
 +
-+	if (ddata->legacy_mode) {
-+		error = sysc_runtime_resume_legacy(dev, ddata);
-+		if (error)
-+			goto err_main_clocks;
++	for (i = 0; i < ARRAY_SIZE(sysc_revision_quirks); i++) {
++		q = &sysc_revision_quirks[i];
++
++		if (!q->base)
++			continue;
++
++		if (q->base != ddata->module_pa)
++			continue;
++
++		if (q->rev_offset >= 0 &&
++		    q->rev_offset != ddata->offsets[SYSC_REVISION])
++			continue;
++
++		if (q->sysc_offset >= 0 &&
++		    q->sysc_offset != ddata->offsets[SYSC_SYSCONFIG])
++			continue;
++
++		if (q->syss_offset >= 0 &&
++		    q->syss_offset != ddata->offsets[SYSC_SYSSTATUS])
++			continue;
++
++		ddata->name = q->name;
++		ddata->cfg.quirks |= q->quirks;
 +	}
++}
++
++/* Quirks that also consider the revision register value */
+ static void sysc_init_revision_quirks(struct sysc *ddata)
+ {
+ 	const struct sysc_revision_quirk *q;
+@@ -1825,10 +1861,6 @@ static int sysc_probe(struct platform_device *pdev)
+ 	if (error)
+ 		goto unprepare;
  
- 	ddata->enabled = true;
+-	error = sysc_get_clocks(ddata);
+-	if (error)
+-		return error;
+-
+ 	error = sysc_map_and_check_registers(ddata);
+ 	if (error)
+ 		goto unprepare;
+@@ -1849,6 +1881,12 @@ static int sysc_probe(struct platform_device *pdev)
+ 	if (error)
+ 		goto unprepare;
  
- 	return 0;
- 
- err_main_clocks:
-+	sysc_disable_main_clocks(ddata);
-+err_opt_clocks:
- 	if (sysc_opt_clks_needed(ddata))
- 		sysc_disable_opt_clocks(ddata);
- 
++	sysc_init_early_quirks(ddata);
++
++	error = sysc_get_clocks(ddata);
++	if (error)
++		return error;
++
+ 	error = sysc_init_resets(ddata);
+ 	if (error)
+ 		return error;
 -- 
 2.21.0
