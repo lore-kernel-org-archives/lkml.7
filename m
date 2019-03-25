@@ -2,186 +2,131 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16694C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 06:12:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B45E3C10F03
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 06:13:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D464C2075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 06:12:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CC182075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 06:13:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="M5yNkfWq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729704AbfCYGMl (ORCPT
+        id S1729709AbfCYGNg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 02:12:41 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:47654 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729400AbfCYGMl (ORCPT
+        Mon, 25 Mar 2019 02:13:36 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:18954 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729400AbfCYGNg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 02:12:41 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2P643Av035956
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 02:12:40 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2req235831-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 02:12:39 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Mon, 25 Mar 2019 06:12:37 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 25 Mar 2019 06:12:32 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2P6CV0923068912
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 25 Mar 2019 06:12:32 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DC4E8A4069;
-        Mon, 25 Mar 2019 06:12:31 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0B852A405F;
-        Mon, 25 Mar 2019 06:12:31 +0000 (GMT)
-Received: from rapoport-lnx (unknown [9.148.207.233])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Mon, 25 Mar 2019 06:12:30 +0000 (GMT)
-Date:   Mon, 25 Mar 2019 08:12:29 +0200
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Anup Patel <Anup.Patel@wdc.com>
-Cc:     Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] RISC-V: Always compile mm/init.c with cmodel=medany
-References: <20190325033648.16171-1-anup.patel@wdc.com>
+        Mon, 25 Mar 2019 02:13:36 -0400
+Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id x2P6DD5W021460;
+        Mon, 25 Mar 2019 15:13:14 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x2P6DD5W021460
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1553494394;
+        bh=Sx+F89ZCL+7I7bmEi4KU1fUncjZk/BW8NVT+rzg4YZM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=M5yNkfWqCZM61EfciI7aYwtMPdtHOgHCnWG7sAtBa01Yc3VAyopkSzeXY0q5UTSDx
+         xeqhv4xcdKYHOUOagTdXmlsTYoqrxNtVogm4r1yn+OP0WEdrb1tU7NZkE/m14eDLMu
+         UTdfbRtROPFjFBs6CgsxACemjQfyyrhRZa67i60+BlqdqVhCjc7Gy0M8A5FF7lcjPz
+         WCEdYKv8UXuykajnwJuc7FSjDyFHrSAVPmrWU7yBe5HavbJeYT7zVteHfRn5kDjGmb
+         G2Q5FGKAK68/GE3xqtCi3K916oI4lKIdXV6zURC3UF+0KRX4aHrmJjawz5lVS3DOUI
+         hw6/1aChaZADw==
+X-Nifty-SrcIP: [209.85.217.54]
+Received: by mail-vs1-f54.google.com with SMTP id w26so3643617vsk.13;
+        Sun, 24 Mar 2019 23:13:14 -0700 (PDT)
+X-Gm-Message-State: APjAAAW/1Ui+SMF53HANBP8vYzjiSBLEedWJLxWcGmpWPC93GF8ymAYQ
+        YTogkdMiHb67ZWoKzfZjL+AE5T/cvAcxYHHTeRM=
+X-Google-Smtp-Source: APXvYqzWUbmmHppt7GkpSeF6ZbIaPWFwcO9J7sA818cft6eG2FytjcwDC97ioibZl4L5MGq/cc4GOoihEgT7zdVYM4U=
+X-Received: by 2002:a67:7c04:: with SMTP id x4mr14129809vsc.155.1553494393497;
+ Sun, 24 Mar 2019 23:13:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190325033648.16171-1-anup.patel@wdc.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-TM-AS-GCONF: 00
-x-cbid: 19032506-0028-0000-0000-00000357D9DF
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19032506-0029-0000-0000-000024168AEE
-Message-Id: <20190325061228.GB2925@rapoport-lnx>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-25_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=903 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903250047
+References: <1553062828-27798-1-git-send-email-yamada.masahiro@socionext.com>
+ <CAK8P3a3BG_mxYxxCx4S_+ZKAer_+5FpmkzLk0VrACZekuD=2GQ@mail.gmail.com>
+ <CAK8P3a0GEYTbw5XCwzVeZe_-pGF=7e=1kXhH3U+fidnMZeP0CA@mail.gmail.com> <CAK7LNAQvvCVsQtd9ZYkechOSCg4HAeZFaNXCgaBbWWxBYXOgaQ@mail.gmail.com>
+In-Reply-To: <CAK7LNAQvvCVsQtd9ZYkechOSCg4HAeZFaNXCgaBbWWxBYXOgaQ@mail.gmail.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Mon, 25 Mar 2019 15:12:37 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASzZVKivBjEa-93Ary=x98WeqMddqTWsqe4U-GXyuHTWQ@mail.gmail.com>
+Message-ID: <CAK7LNASzZVKivBjEa-93Ary=x98WeqMddqTWsqe4U-GXyuHTWQ@mail.gmail.com>
+Subject: Re: [PATCH] compiler: allow all arches to enable CONFIG_OPTIMIZE_INLINING
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     linux-arch <linux-arch@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Dave Hansen <dave@sr71.net>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        linux-mips@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 03:37:38AM +0000, Anup Patel wrote:
-> The Linux RISC-V 32bit kernel is broken after we moved setup_vm() from
-> kernel/setup.c to mm/init.c because Linux RISC-V 32bit kernel by default
-> uses cmodel=medlow which results in a non-position-independent setup_vm().
-> 
-> This patch fixes Linux RISC-V 32bit kernel booting by:
-> 1. Forcing cmodel=medany for mm/init.c
-> 2. Moving remaing MM-related stuff va_pa_offset, pfn_base and
->    empty_zero_page from kernel/setup.c to mm/init.c
-> 
-> Fixes: 6f1e9e946f0b ("RISC-V: Move setup_vm() to mm/init.c")
-> Suggested-by: Christoph Hellwig <hch@lst.de>
-> Suggested-by: Mike Rapoport <rppt@linux.ibm.com>
-> Signed-off-by: Anup Patel <anup.patel@wdc.com>
+On Mon, Mar 25, 2019 at 3:10 PM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+>
+> Hi Arnd,
+>
+>
+>
+>
+> On Wed, Mar 20, 2019 at 10:34 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> >
+> > On Wed, Mar 20, 2019 at 10:41 AM Arnd Bergmann <arnd@arndb.de> wrote:
+> > >
+> > > I've added your patch to my randconfig test setup and will let you
+> > > know if I see anything noticeable. I'm currently testing clang-arm32,
+> > > clang-arm64 and gcc-x86.
+> >
+> > This is the only additional bug that has come up so far:
+> >
+> > `.exit.text' referenced in section `.alt.smp.init' of
+> > drivers/char/ipmi/ipmi_msghandler.o: defined in discarded section
+> > `exit.text' of drivers/char/ipmi/ipmi_msghandler.o
+> >
+> > diff --git a/arch/arm/kernel/atags.h b/arch/arm/kernel/atags.h
+> > index 201100226301..84b12e33104d 100644
+> > --- a/arch/arm/kernel/atags.h
+> > +++ b/arch/arm/kernel/atags.h
+> > @@ -5,7 +5,7 @@ void convert_to_tag_list(struct tag *tags);
+> >  const struct machine_desc *setup_machine_tags(phys_addr_t __atags_pointer,
+> >         unsigned int machine_nr);
+> >  #else
+> > -static inline const struct machine_desc *
+> > +static __always_inline const struct machine_desc *
+> >  setup_machine_tags(phys_addr_t __atags_pointer, unsigned int machine_nr)
+> >  {
+> >         early_print("no ATAGS support: can't continue\n");
+> >
+>
+>
+> I do not know why to reproduce it,
 
-Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
+"how to"
 
-> ---
-> v2: Removed CFLAGS_setup.o from kernel/Makefile and replaced SoBs
-> ---
->  arch/riscv/kernel/Makefile | 2 --
->  arch/riscv/kernel/setup.c  | 8 --------
->  arch/riscv/mm/Makefile     | 2 ++
->  arch/riscv/mm/init.c       | 9 +++++++++
->  4 files changed, 11 insertions(+), 10 deletions(-)
-> 
-> diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
-> index f13f7f276639..8b9780b6bd7f 100644
-> --- a/arch/riscv/kernel/Makefile
-> +++ b/arch/riscv/kernel/Makefile
-> @@ -29,8 +29,6 @@ obj-y	+= vdso.o
->  obj-y	+= cacheinfo.o
->  obj-y	+= vdso/
->  
-> -CFLAGS_setup.o := -mcmodel=medany
-> -
->  obj-$(CONFIG_FPU)		+= fpu.o
->  obj-$(CONFIG_SMP)		+= smpboot.o
->  obj-$(CONFIG_SMP)		+= smp.o
-> diff --git a/arch/riscv/kernel/setup.c b/arch/riscv/kernel/setup.c
-> index ecb654f6a79e..540a331d1376 100644
-> --- a/arch/riscv/kernel/setup.c
-> +++ b/arch/riscv/kernel/setup.c
-> @@ -48,14 +48,6 @@ struct screen_info screen_info = {
->  };
->  #endif
->  
-> -unsigned long va_pa_offset;
-> -EXPORT_SYMBOL(va_pa_offset);
-> -unsigned long pfn_base;
-> -EXPORT_SYMBOL(pfn_base);
-> -
-> -unsigned long empty_zero_page[PAGE_SIZE / sizeof(unsigned long)] __page_aligned_bss;
-> -EXPORT_SYMBOL(empty_zero_page);
-> -
->  /* The lucky hart to first increment this variable will boot the other cores */
->  atomic_t hart_lottery;
->  unsigned long boot_cpu_hartid;
-> diff --git a/arch/riscv/mm/Makefile b/arch/riscv/mm/Makefile
-> index eb22ab49b3e0..7307609d405b 100644
-> --- a/arch/riscv/mm/Makefile
-> +++ b/arch/riscv/mm/Makefile
-> @@ -3,3 +3,5 @@ obj-y += fault.o
->  obj-y += extable.o
->  obj-y += ioremap.o
->  obj-y += cacheflush.o
-> +
-> +CFLAGS_init.o := -mcmodel=medany
-> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-> index b379a75ac6a6..7a7c454378cb 100644
-> --- a/arch/riscv/mm/init.c
-> +++ b/arch/riscv/mm/init.c
-> @@ -25,6 +25,10 @@
->  #include <asm/pgtable.h>
->  #include <asm/io.h>
->  
-> +unsigned long empty_zero_page[PAGE_SIZE / sizeof(unsigned long)]
-> +							__page_aligned_bss;
-> +EXPORT_SYMBOL(empty_zero_page);
-> +
->  static void __init zone_sizes_init(void)
->  {
->  	unsigned long max_zone_pfns[MAX_NR_ZONES] = { 0, };
-> @@ -143,6 +147,11 @@ void __init setup_bootmem(void)
->  	}
->  }
->  
-> +unsigned long va_pa_offset;
-> +EXPORT_SYMBOL(va_pa_offset);
-> +unsigned long pfn_base;
-> +EXPORT_SYMBOL(pfn_base);
-> +
->  pgd_t swapper_pg_dir[PTRS_PER_PGD] __page_aligned_bss;
->  pgd_t trampoline_pg_dir[PTRS_PER_PGD] __initdata __aligned(PAGE_SIZE);
->  
-> -- 
-> 2.17.1
-> 
+
+> but is "__init __noreturn" more sensible than
+> "__always_inline" here?
+>
+>
+> --
+> Best Regards
+> Masahiro Yamada
+
+
 
 -- 
-Sincerely yours,
-Mike.
-
+Best Regards
+Masahiro Yamada
