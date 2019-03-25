@@ -2,154 +2,140 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3C69C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 00:35:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEE58C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 00:43:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B29F620989
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 00:35:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VQ48qull"
+	by mail.kernel.org (Postfix) with ESMTP id 8E87D21019
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 00:43:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729271AbfCYAfx (ORCPT
+        id S1729247AbfCYAnn convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 20:35:53 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:34041 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729146AbfCYAft (ORCPT
+        Sun, 24 Mar 2019 20:43:43 -0400
+Received: from tyo161.gate.nec.co.jp ([114.179.232.161]:37167 "EHLO
+        tyo161.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729132AbfCYAnm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 20:35:49 -0400
-Received: by mail-lj1-f195.google.com with SMTP id j89so6273512ljb.1;
-        Sun, 24 Mar 2019 17:35:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=YUIheokwKP1iea+PUIcrfKDpgFD2izisvAZon9oQcUk=;
-        b=VQ48qullWSVtP7SkdrAx0pjwc63YKBGaxmG0YJGhd1J6ZhPWi2fOWgKoSGOGbvDng8
-         BzYfnTrFthKy29foIWRTZO/ESztt6qkPlPJxqwq31sBLIoTQ8Msk9EyYCF2RR/jqNZVk
-         BmJF6iwdU1g1v+8vsIb6oHGLR/SDbdRuNs9aIBIPJHlptHpQTUqyg72cxZvUunfJsKIk
-         GJwmRwshJS5RSNnGfGvQtmP3yvHYYRt+I3CfTlKy3Uey+skGG16vLsTBb1ufOxid+db4
-         XA86VlVw7zpESnXVxpOHNuSmlviBmIfQaMTekveM7ArYxh6pIAXgoiYrAM/mVnbVCAoJ
-         +Gqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=YUIheokwKP1iea+PUIcrfKDpgFD2izisvAZon9oQcUk=;
-        b=fxU75qzWbN/YgFW25cbUplACV2GcSNBjHPuJ53QXBHrpAW0UY9xEFcEHH/eHr/d8qW
-         EQqTC9S49xdTy3IWIqrCYrW2Id5W18XgY2/rjjdplQLch588QnK4maMt64Fl+DDGsUm5
-         P98tAL5abdAiKLKpG0GcDH72no3bWbmHUDWhb5Nl03OyyvnrAOyh5gpt2pwj+cGLdPra
-         /bROCXwM2aLiktAxzgSztEg7XXQFNQWox/9+cmhvfwwxmqocjUIw6VZwSehb+phDDNu/
-         z+vACakaCT23jdHP2P+QMmRxbzOPjn7dw6/i4fWY+VzO9G852bJMngkuhkNHg0c8M3/N
-         GOHg==
-X-Gm-Message-State: APjAAAWd3qqv65fPTkW1iJleqgNbN7wNOkhdb7aKtuZYbKJO8ekeWauB
-        Qby0ogd4CQud79f79en+nL0=
-X-Google-Smtp-Source: APXvYqxfK6aYTyQ5eCBY6yvXZlnOljx3XRyPj+HwkTQKsnxrckwqoxSs/0Zqql6y8LQ3pu7kVmDZ8g==
-X-Received: by 2002:a2e:4209:: with SMTP id p9mr4969871lja.175.1553474146994;
-        Sun, 24 Mar 2019 17:35:46 -0700 (PDT)
-Received: from z50.gdansk-morena.vectranet.pl (109241207190.gdansk.vectranet.pl. [109.241.207.190])
-        by smtp.gmail.com with ESMTPSA id y17sm1217993ljd.54.2019.03.24.17.35.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 24 Mar 2019 17:35:46 -0700 (PDT)
-From:   Janusz Krzysztofik <jmkrzyszt@gmail.com>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Hans Verkuil <hans.verkuil@cisco.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Janusz Krzysztofik <jmkrzyszt@gmail.com>
-Subject: [PATCH 2/2] media: ov6650: Register with asynchronous subdevice framework
-Date:   Mon, 25 Mar 2019 01:35:01 +0100
-Message-Id: <20190325003501.14687-3-jmkrzyszt@gmail.com>
-X-Mailer: git-send-email 2.19.2
-In-Reply-To: <20190325003501.14687-1-jmkrzyszt@gmail.com>
-References: <20190325003501.14687-1-jmkrzyszt@gmail.com>
+        Sun, 24 Mar 2019 20:43:42 -0400
+X-Greylist: delayed 881 seconds by postgrey-1.27 at vger.kernel.org; Sun, 24 Mar 2019 20:43:41 EDT
+Received: from mailgate02.nec.co.jp ([114.179.233.122])
+        by tyo161.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x2P0SN30023340
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Mon, 25 Mar 2019 09:28:23 +0900
+Received: from mailsv01.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
+        by mailgate02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x2P0SNUw018972;
+        Mon, 25 Mar 2019 09:28:23 +0900
+Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
+        by mailsv01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x2P0SKHA015712;
+        Mon, 25 Mar 2019 09:28:23 +0900
+Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.139] [10.38.151.139]) by mail01b.kamome.nec.co.jp with ESMTP id BT-MMP-3615830; Mon, 25 Mar 2019 09:27:42 +0900
+Received: from BPXM12GP.gisp.nec.co.jp ([10.38.151.204]) by
+ BPXC11GP.gisp.nec.co.jp ([10.38.151.139]) with mapi id 14.03.0319.002; Mon,
+ 25 Mar 2019 09:27:41 +0900
+From:   Junichi Nomura <j-nomura@ce.jp.nec.com>
+To:     Borislav Petkov <bp@alien8.de>
+CC:     "fanc.fnst@cn.fujitsu.com" <fanc.fnst@cn.fujitsu.com>,
+        "bp@suse.de" <bp@suse.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+Subject: Re: [PATCH] x86/boot: Use EFI setup data if provided
+Thread-Topic: [PATCH] x86/boot: Use EFI setup data if provided
+Thread-Index: AQHU4J7q4uHsPFz2IEST45iCmNXrz6YXLkgAgAO8tgA=
+Date:   Mon, 25 Mar 2019 00:27:41 +0000
+Message-ID: <20190325002740.GA6637@jeru.linux.bs1.fc.nec.co.jp>
+References: <20190322110342.GA16202@jeru.linux.bs1.fc.nec.co.jp>
+ <20190322152328.GD12472@zn.tnic>
+In-Reply-To: <20190322152328.GD12472@zn.tnic>
+Accept-Language: en-US, ja-JP
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.34.125.85]
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-ID: <A42CEB7B089EDC4AACF327A66B35C369@gisp.nec.co.jp>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-TM-AS-MML: disable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Register V4L2 subdevice implemented by the driver to the V4L2
-asynchronous subdevice framework.
+On Fri, Mar 22, 2019 at 04:23:28PM +0100, Borislav Petkov wrote:
+> On Fri, Mar 22, 2019 at 11:03:43AM +0000, Junichi Nomura wrote:
+> > Commit 3a63f70bf4c3a ("x86/boot: Early parse RSDP and save it in
+> > boot_params") broke kexec boot on EFI systems.  efi_get_rsdp_addr()
+> > in the early parsing code tries to search RSDP from EFI table but
+> > whose address is virtual.
+> > 
+> > Since kexec(1) provides physical address of config_table via boot_params,
+> > efi_get_rsdp_addr() should look for setup_data in the same way as
+> > efi_systab_init() in arch/x86/platform/efi/efi.c does.
+> 
+> If the kexec kernel should continue to use efi_systab_init() then you
+> should make efi_get_rsdp_addr() exit early in the kexec-ed kernel.
 
-Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
----
- drivers/media/i2c/ov6650.c | 20 +++++++++++++++-----
- 1 file changed, 15 insertions(+), 5 deletions(-)
+I'm not sure which way kexec devel is going. Added kexec list.
+Here is the version that exits early in efi_get_rsdp_addr().
 
-diff --git a/drivers/media/i2c/ov6650.c b/drivers/media/i2c/ov6650.c
-index f10b8053ed73..cc9e5388d5ec 100644
---- a/drivers/media/i2c/ov6650.c
-+++ b/drivers/media/i2c/ov6650.c
-@@ -804,8 +804,9 @@ static int ov6650_prog_dflt(struct i2c_client *client)
- 	return ret;
+[PATCH] x86/boot: Don't try to search RSDP from EFI when kexec-booted
+
+Commit 3a63f70bf4c3a ("x86/boot: Early parse RSDP and save it in
+boot_params") broke kexec boot on EFI systems.  efi_get_rsdp_addr()
+in the early parsing code tries to search RSDP from EFI table but
+whose address is virtual.
+
+Normally kexec(1) provides physical address of config_table via boot_params
+and EFI code uses that during initialization.
+For the early boot code, we just exit efi_get_rsdp_addr() early if the kernel
+is booted by kexec.
+
+Fixes: 3a63f70bf4c3a ("x86/boot: Early parse RSDP and save it in boot_params")
+Signed-off-by: Jun'ichi Nomura <j-nomura@ce.jp.nec.com>
+Cc: Chao Fan <fanc.fnst@cn.fujitsu.com>
+Cc: Borislav Petkov <bp@suse.de>
+
+diff --git a/arch/x86/boot/compressed/acpi.c b/arch/x86/boot/compressed/acpi.c
+index 0ef4ad5..1cefc43 100644
+--- a/arch/x86/boot/compressed/acpi.c
++++ b/arch/x86/boot/compressed/acpi.c
+@@ -44,6 +44,24 @@ static acpi_physical_address get_acpi_rsdp(void)
+ 	return addr;
  }
  
--static int ov6650_video_probe(struct i2c_client *client)
-+static int ov6650_video_probe(struct v4l2_subdev *sd)
++static bool is_kexec_booted(void)
++{
++	struct setup_data *data;
++
++	/*
++	 * kexec-tools provides EFI setup data so that kexec-ed kernel
++	 * can find proper tables.
++	 */
++	data = (struct setup_data *) boot_params->hdr.setup_data;
++	while (data) {
++		if (data->type == SETUP_EFI)
++			return true;
++		data = (struct setup_data *) data->next;
++	}
++
++	return false;
++}
++
+ /* Search EFI system tables for RSDP. */
+ static acpi_physical_address efi_get_rsdp_addr(void)
  {
-+	struct i2c_client *client = v4l2_get_subdevdata(sd);
- 	struct ov6650 *priv = to_ov6650(client);
- 	u8		pidh, pidl, midh, midl;
- 	int		ret;
-@@ -817,7 +818,7 @@ static int ov6650_video_probe(struct i2c_client *client)
- 		return ret;
- 	}
+@@ -57,6 +75,10 @@ static acpi_physical_address efi_get_rsdp_addr(void)
+ 	int size, i;
+ 	char *sig;
  
--	ret = ov6650_s_power(&priv->subdev, 1);
-+	ret = ov6650_s_power(sd, 1);
- 	if (ret < 0)
- 		goto eclkput;
- 
-@@ -853,7 +854,7 @@ static int ov6650_video_probe(struct i2c_client *client)
- 		ret = v4l2_ctrl_handler_setup(&priv->hdl);
- 
- done:
--	ov6650_s_power(&priv->subdev, 0);
-+	ov6650_s_power(sd, 0);
- 	if (ret) {
- eclkput:
- 		v4l2_clk_put(priv->clk);
-@@ -941,6 +942,10 @@ static const struct v4l2_subdev_ops ov6650_subdev_ops = {
- 	.pad	= &ov6650_pad_ops,
- };
- 
-+static const struct v4l2_subdev_internal_ops ov6650_internal_ops = {
-+	.registered = ov6650_video_probe,
-+};
++	/* If the system is kexec-booted, poking EFI systab may not work. */
++	if (is_kexec_booted())
++		return 0;
 +
- /*
-  * i2c_driver function
-  */
-@@ -1001,7 +1006,12 @@ static int ov6650_probe(struct i2c_client *client,
- 	priv->code	  = MEDIA_BUS_FMT_YUYV8_2X8;
- 	priv->colorspace  = V4L2_COLORSPACE_JPEG;
+ 	ei = &boot_params->efi_info;
+ 	sig = (char *)&ei->efi_loader_signature;
  
--	ret = ov6650_video_probe(client);
-+	priv->subdev.internal_ops = &ov6650_internal_ops;
-+	priv->subdev.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
-+	snprintf(priv->subdev.name, sizeof(priv->subdev.name), "%s %d-%04x",
-+		 did->name, i2c_adapter_id(client->adapter), client->addr);
-+
-+	ret = v4l2_async_register_subdev(&priv->subdev);
- 	if (ret)
- 		v4l2_ctrl_handler_free(&priv->hdl);
- 
-@@ -1013,7 +1023,7 @@ static int ov6650_remove(struct i2c_client *client)
- 	struct ov6650 *priv = to_ov6650(client);
- 
- 	v4l2_clk_put(priv->clk);
--	v4l2_device_unregister_subdev(&priv->subdev);
-+	v4l2_async_unregister_subdev(&priv->subdev);
- 	v4l2_ctrl_handler_free(&priv->hdl);
- 	return 0;
- }
--- 
-2.19.2
-
