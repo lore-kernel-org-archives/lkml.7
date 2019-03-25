@@ -2,84 +2,89 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2A81C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 13:52:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11A5AC10F03
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 13:52:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C88A20830
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 13:52:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tbMsKd4H"
+	by mail.kernel.org (Postfix) with ESMTP id DFDCA20830
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 13:52:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729155AbfCYNwk (ORCPT
+        id S1729189AbfCYNwy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 09:52:40 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:39590 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726028AbfCYNwj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 09:52:39 -0400
-Received: by mail-ed1-f67.google.com with SMTP id p20so7130408eds.6;
-        Mon, 25 Mar 2019 06:52:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4OzG1uLbVv6oDbnWd35kcGwfjikD+ggtzmDC0RBAdOY=;
-        b=tbMsKd4H11Oc2A6/OwTSRm0x0A3KQmULWIdUDswJxDJdkLm9phRyqaX9OEuKok7Tqa
-         5NrJGb9ooY1ELlbUAbLghcZIYR1B3yscCBehBDNamdlqWyppjQRPZN7rP/BdBPi25CIt
-         Nz4HuqDVsZ3A30AVxdeN2++/JBT3hY+Vivp64EY1CQgFasOzG2t/LyotOgJV7/PIdzbZ
-         Uj8U2L33ryracTu/kbm9OdixqJ4rTXf0RO+1cFcdyG0z6hr0DkW97nZZA0LFg5dE8Jhu
-         YKuy1PwTot1nK8Tmo0TPY9FMaJHeXvyTGMuE0FRjGk2fBU3L2qyiFHHYj350UHfuqdoU
-         p3SA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4OzG1uLbVv6oDbnWd35kcGwfjikD+ggtzmDC0RBAdOY=;
-        b=GIJAQdFpTeQw9ZVgQDuzP6u41/c0kj/mMhobu8wLL/vkhdHVio7eg1PyCPruUqU5gx
-         jbmweM1/t+zgucA/94F8bX7cC/WYkqxBQP2s3v4K7J/4OdqWSS8++0pzng7OW+F7prOo
-         Fl5KN8WIJHvLX7Kc7MfuxP13m6ZhxdkGqkXQhIrRdHEQ1qgQZhtBCOJb0FIDB9r5qUfe
-         FaPJ3r3UHhck+eoK44AJxKeJwZGHC2Aokymp6uCyV+/iOKu/3AzBd3vnpBYa3Ta3AK3c
-         n2DGXV4tXMEOfGsM8vW0DTHbgT/ejapmJbhttoYGRLyF5c3zSfyn+TL1eGzlzDKpJ33S
-         2AMQ==
-X-Gm-Message-State: APjAAAXvAnmkcvvWWt9Rq7dJqsm18p3G1NzediZFASZ/amCloqVB0gtt
-        GFFj/+O61Stg3+G894Af0xEvzoPB7vjBLxjlhRs=
-X-Google-Smtp-Source: APXvYqxleo4XFR5okDqyLJDGpg5y3H4B0z97cJjo2uPWRnxA/okeoeUV5mc+uT3lNEd4/qojHpOHsuRhKl+vZC9+JhQ=
-X-Received: by 2002:a50:90e4:: with SMTP id d33mr16326534eda.265.1553521957463;
- Mon, 25 Mar 2019 06:52:37 -0700 (PDT)
-MIME-Version: 1.0
-References: <1553521721-12061-1-git-send-email-abel.vesa@nxp.com>
-In-Reply-To: <1553521721-12061-1-git-send-email-abel.vesa@nxp.com>
-From:   Daniel Baluta <daniel.baluta@gmail.com>
-Date:   Mon, 25 Mar 2019 15:52:25 +0200
-Message-ID: <CAEnQRZCo9NpvnDarG77+vNG8HtitUYknk=xr5Q59OWV0=8A5Jg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] pinctrl: pinctrl-imx: Add suspend/resume for LPSR
-To:     Abel Vesa <abel.vesa@nxp.com>
-Cc:     Aisheng Dong <aisheng.dong@nxp.com>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Stefan Agner <stefan@agner.ch>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "b38343@freescale.com" <b38343@freescale.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 25 Mar 2019 09:52:54 -0400
+Received: from mga12.intel.com ([192.55.52.136]:16341 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726028AbfCYNwx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 09:52:53 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Mar 2019 06:52:53 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,269,1549958400"; 
+   d="scan'208";a="154972584"
+Received: from ahunter-desktop.fi.intel.com ([10.237.72.198])
+  by fmsmga002.fm.intel.com with ESMTP; 25 Mar 2019 06:52:51 -0700
+From:   Adrian Hunter <adrian.hunter@intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
+Subject: [RESEND PATCH] perf intel-pt: Fix TSC slip
+Date:   Mon, 25 Mar 2019 15:51:35 +0200
+Message-Id: <20190325135135.18348-1-adrian.hunter@intel.com>
+X-Mailer: git-send-email 2.17.1
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 3:49 PM Abel Vesa <abel.vesa@nxp.com> wrote:
->
-> From: Robin Gong <b38343@freescale.com>
+A TSC packet can slip past MTC packets so that the timestamp appears to go
+backwards. One estimate is that can be up to about 40 CPU cycles, which is
+certainly less than 0x1000 TSC ticks, but accept slippage an order of
+magnitude more to be on the safe side.
 
-Please fix Robin's email.
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Fixes: 79b58424b821c ("perf tools: Add Intel PT support for decoding MTC packets")
+Cc: stable@vger.kernel.org
+---
+ .../util/intel-pt-decoder/intel-pt-decoder.c  | 20 ++++++++-----------
+ 1 file changed, 8 insertions(+), 12 deletions(-)
+
+diff --git a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
+index 6e03db142091..872fab163585 100644
+--- a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
++++ b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
+@@ -251,19 +251,15 @@ struct intel_pt_decoder *intel_pt_decoder_new(struct intel_pt_params *params)
+ 		if (!(decoder->tsc_ctc_ratio_n % decoder->tsc_ctc_ratio_d))
+ 			decoder->tsc_ctc_mult = decoder->tsc_ctc_ratio_n /
+ 						decoder->tsc_ctc_ratio_d;
+-
+-		/*
+-		 * Allow for timestamps appearing to backwards because a TSC
+-		 * packet has slipped past a MTC packet, so allow 2 MTC ticks
+-		 * or ...
+-		 */
+-		decoder->tsc_slip = multdiv(2 << decoder->mtc_shift,
+-					decoder->tsc_ctc_ratio_n,
+-					decoder->tsc_ctc_ratio_d);
+ 	}
+-	/* ... or 0x100 paranoia */
+-	if (decoder->tsc_slip < 0x100)
+-		decoder->tsc_slip = 0x100;
++
++	/*
++	 * A TSC packet can slip past MTC packets so that the timestamp appears
++	 * to go backwards. One estimate is that can be up to about 40 CPU
++	 * cycles, which is certainly less than 0x1000 TSC ticks, but accept
++	 * slippage an order of magnitude more to be on the safe side.
++	 */
++	decoder->tsc_slip = 0x10000;
+ 
+ 	intel_pt_log("timestamp: mtc_shift %u\n", decoder->mtc_shift);
+ 	intel_pt_log("timestamp: tsc_ctc_ratio_n %u\n", decoder->tsc_ctc_ratio_n);
+-- 
+2.17.1
+
