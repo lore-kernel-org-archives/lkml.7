@@ -6,122 +6,216 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5DDFC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:40:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AB69C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:41:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CCD720863
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:40:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EAF520863
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:41:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729606AbfCYQkv (ORCPT
+        id S1729693AbfCYQl4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 12:40:51 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45580 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725747AbfCYQku (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 12:40:50 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 80F26AFE7;
-        Mon, 25 Mar 2019 16:40:48 +0000 (UTC)
-Subject: Re: [PATCH] x86/paravirt: Guard against invalid cpu # in
- pv_vcpu_is_preempted()
-To:     Waiman Long <longman@redhat.com>,
-        Alok Kataria <akataria@vmware.com>,
+        Mon, 25 Mar 2019 12:41:56 -0400
+Received: from mga12.intel.com ([192.55.52.136]:27034 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725747AbfCYQlz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 12:41:55 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Mar 2019 09:41:55 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,269,1549958400"; 
+   d="scan'208";a="217410029"
+Received: from lxy-dell.sh.intel.com ([10.239.159.145])
+  by orsmga001.jf.intel.com with ESMTP; 25 Mar 2019 09:41:52 -0700
+Message-ID: <c1327e42b577155cfad3b2714acb55a8f7b938fd.camel@linux.intel.com>
+Subject: Re: [PATCH v3 1/2] kvm/vmx: Switch MSR_MISC_FEATURES_ENABLES
+ between host and guest
+From:   Xiaoyao Li <xiaoyao.li@linux.intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?UTF-8?Q?Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will.deacon@arm.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Paolo Bonzini <pbonzini@redhat.com>
-References: <20190325155706.26987-1-longman@redhat.com>
-From:   Juergen Gross <jgross@suse.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jgross@suse.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <e01da674-cbf0-22f1-7aba-6041f892b689@suse.com>
-Date:   Mon, 25 Mar 2019 17:40:46 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <20190325155706.26987-1-longman@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        chao.gao@intel.com
+Date:   Tue, 26 Mar 2019 00:38:26 +0800
+In-Reply-To: <20190325153304.GC31069@linux.intel.com>
+References: <20190325080650.19896-1-xiaoyao.li@linux.intel.com>
+         <20190325080650.19896-2-xiaoyao.li@linux.intel.com>
+         <20190325153304.GC31069@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-2.el7) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25/03/2019 16:57, Waiman Long wrote:
-> It was found that passing an invalid cpu number to pv_vcpu_is_preempted()
-> might panic the kernel in a VM guest. For example,
+On Mon, 2019-03-25 at 08:33 -0700, Sean Christopherson wrote:
+> On Mon, Mar 25, 2019 at 04:06:49PM +0800, Xiaoyao Li wrote:
+> > There are two defined bits in MSR_MISC_FEATURES_ENABLES, bit 0 for cpuid
+> > faulting and bit 1 for ring3mwait.
+> > 
+> > == cpuid Faulting ==
+> > cpuid faulting is a feature about CPUID instruction. When cpuid faulting
+> > is enabled, all execution of the CPUID instruction outside system-management
+> > mode (SMM) cause a general-protection (#GP) if the CPL > 0.
+> > 
+> > About this feature, detailed information can be found at
+> > 
+https://www.intel.com/content/dam/www/public/us/en/documents/application-notes/virtualization-technology-flexmigration-application-note.pdf
+> > 
+> > Current KVM provides software emulation of this feature for guest.
+> > However, because cpuid faulting takes higher priority over CPUID vm exit
+> > (Intel
+> > SDM vol3.25.1.1), there is a risk of leaking cpuid faulting to guest when
+> > host
+> > enables it. If host enables cpuid faulting by setting the bit 0 of
+> > MSR_MISC_FEATURES_ENABLES, it will pass to guest since there is no switch of
+> > MSR_MISC_FEATURES_ENABLES yet. As a result, when guest calls CPUID
+> > instruction
+> > in CPL > 0, it will generate a #GP instead of CPUID vm eixt.
+> > 
+> > This issue will cause guest boot failure when guest uses *modprobe*
+> > to load modules. *modprobe* calls CPUID instruction, thus causing #GP in
+> > guest. Since there is no handling of cpuid faulting in #GP handler, guest
+> > fails boot.
+> > 
+> > == ring3mwait ==
+> > Ring3mwait is a Xeon-Phi Product Family x200 series specific feature,
+> > which allows the MONITOR and MWAIT instructions to be executed in rings
+> > other than ring 0. The feature can be enabled by setting bit 1 in
+> > MSR_MISC_FEATURES_ENABLES. The register can also be read to determine
+> > whether the instructions are enabled at other than ring 0.
+> > 
+> > About this feature, description can be found at
+> > 
+https://software.intel.com/en-us/blogs/2016/10/06/intel-xeon-phi-product-family-x200-knl-user-mode-ring-3-monitor-and-mwait
+> > 
+> > Current kvm doesn't expose feature ring3mwait to guest. However, there is
+> > also
+> > a risk of leaking ring3mwait to guest if host enables it since there is no
+> > switch of MSR_MISC_FEATURES_ENABLES.
+> > 
+> > == solution ==
+> > From above analysis, both cpuid faulting and ring3mwait can be leaked to
+> > guest.
+> > To fix this issue, MSR_MISC_FEATURES_ENABLES should be switched between host
+> > and guest. Since MSR_MISC_FEATURES_ENABLES is intel-specific, this patch
+> > implement the switching only in vmx.
+> > 
+> > For the reason that kvm provides the software emulation of cpuid faulting
+> > and
+> > kvm doesn't expose ring3mwait to guest. MSR_MISC_FEATURES_ENABLES can be
+> > just
+> > cleared to zero for guest when any of the features is enabled in host.
+> > 
+> > Signed-off-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
+> > ---
+> >  arch/x86/kernel/process.c |  1 +
+> >  arch/x86/kvm/vmx/vmx.c    | 24 ++++++++++++++++++++++++
+> >  2 files changed, 25 insertions(+)
+> > 
+> > diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
+> > index 1bba1a3c0b01..94a566e79b6c 100644
+> > --- a/arch/x86/kernel/process.c
+> > +++ b/arch/x86/kernel/process.c
+> > @@ -191,6 +191,7 @@ int set_tsc_mode(unsigned int val)
+> >  }
+> >  
+> >  DEFINE_PER_CPU(u64, msr_misc_features_shadow);
+> > +EXPORT_PER_CPU_SYMBOL_GPL(msr_misc_features_shadow);
+> >  
+> >  static void set_cpuid_faulting(bool on)
+> >  {
+> > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> > index 270c6566fd5a..65aa947947ba 100644
+> > --- a/arch/x86/kvm/vmx/vmx.c
+> > +++ b/arch/x86/kvm/vmx/vmx.c
+> > @@ -1031,6 +1031,16 @@ static void pt_guest_exit(struct vcpu_vmx *vmx)
+> >  	wrmsrl(MSR_IA32_RTIT_CTL, vmx->pt_desc.host.ctl);
+> >  }
+> >  
+> > +static void vmx_prepare_guest_misc_features_enables(struct vcpu_vmx *vmx)
 > 
-> [    2.531077] Oops: 0000 [#1] SMP PTI
->   :
-> [    2.532545] Hardware name: Red Hat KVM, BIOS 0.5.1 01/01/2011
-> [    2.533321] RIP: 0010:__raw_callee_save___kvm_vcpu_is_preempted+0x0/0x20
+> No need for @vmx.  My preference would be to drop the helpers entirely,
+> e.g. it's two lines of code, three if you count the declaration of msrval.
+
+My mistake, @vmx should be removed and add in the next patch.
+
+Well, my initial thought of using the helper is because the handling of
+MSR_MISC_FEATURES_ENABLES might not be so simple if add the handling of
+ring3wait bit. Although in this patch, it just clears the bit 1
+of MSR_MISC_FEATURES_ENABLES since kvm doesn't expose ring3mwait to guest yet
+and kvm doesn't allow guest to set ring3mwait bit, there indeed is an issue that
+guest kernel will generate "unchecked MSR access error: WRMSR to 0x140" when we
+use `-cpu host` in a Xeon Phi 200 series host. Since feature ring3mwait is
+enumerated by FMS in current kernel code, using '-cpu host' makes guest kernel
+think it has feature ring3wait too. However there is support of ring3mwait yet,
+guest kernel will generate "unchecked MSR access error: WRMSR to 0x140" when it
+setup ring3mwait.
+
+Unfortunately, I didn't provide the emualtion and handling of ring3mwait in this
+patchset, but keep the helper. You're right, it is really unnecessary in this
+patchset. I will remove the helper in the next version. 
+
+> > +{
+> > +	u64 msrval = this_cpu_read(msr_misc_features_shadow);
+> > +
+> > +	if (!msrval)
+> > +		return;
+> > +
+> > +	wrmsrl(MSR_MISC_FEATURES_ENABLES, 0ULL);
+> > +}
+> > +
+> >  void vmx_prepare_switch_to_guest(struct kvm_vcpu *vcpu)
+> >  {
+> >  	struct vcpu_vmx *vmx = to_vmx(vcpu);
+> > @@ -1064,6 +1074,8 @@ void vmx_prepare_switch_to_guest(struct kvm_vcpu
+> > *vcpu)
+> >  	vmx->loaded_cpu_state = vmx->loaded_vmcs;
+> >  	host_state = &vmx->loaded_cpu_state->host_state;
+> >  
+> > +	vmx_prepare_guest_misc_features_enables(vmx);
+> > +
+> >  	/*
+> >  	 * Set host fs and gs selectors.  Unfortunately, 22.2.3 does not
+> >  	 * allow segment selectors with cpl > 0 or ti == 1.
+> > @@ -1120,6 +1132,16 @@ void vmx_prepare_switch_to_guest(struct kvm_vcpu
+> > *vcpu)
+> >  	}
+> >  }
+> >  
+> > +static void vmx_load_host_misc_features_enables(struct vcpu_vmx *vmx)
 > 
-> To guard against this kind of kernel panic, check is added to
-> pv_vcpu_is_preempted() to make sure that no invalid cpu number will
-> be used.
+> Likewise, no need for @vmx.
 > 
-> Signed-off-by: Waiman Long <longman@redhat.com>
-> ---
->  arch/x86/include/asm/paravirt.h | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/arch/x86/include/asm/paravirt.h b/arch/x86/include/asm/paravirt.h
-> index c25c38a05c1c..4cfb465dcde4 100644
-> --- a/arch/x86/include/asm/paravirt.h
-> +++ b/arch/x86/include/asm/paravirt.h
-> @@ -671,6 +671,12 @@ static __always_inline void pv_kick(int cpu)
->  
->  static __always_inline bool pv_vcpu_is_preempted(long cpu)
->  {
-> +	/*
-> +	 * Guard against invalid cpu number or the kernel might panic.
-> +	 */
-> +	if (WARN_ON_ONCE((unsigned long)cpu >= nr_cpu_ids))
-> +		return false;
-> +
->  	return PVOP_CALLEE1(bool, lock.vcpu_is_preempted, cpu);
->  }
+> > +{
+> > +	u64 msrval = this_cpu_read(msr_misc_features_shadow);
+> > +
+> > +	if (!msrval)
+> > +		return;
+> > +
+> > +	wrmsrl(MSR_MISC_FEATURES_ENABLES, msrval);
+> > +}
+> > +
+> >  static void vmx_prepare_switch_to_host(struct vcpu_vmx *vmx)
+> >  {
+> >  	struct vmcs_host_state *host_state;
+> > @@ -1133,6 +1155,8 @@ static void vmx_prepare_switch_to_host(struct vcpu_vmx
+> > *vmx)
+> >  	++vmx->vcpu.stat.host_state_reload;
+> >  	vmx->loaded_cpu_state = NULL;
+> >  
+> > +	vmx_load_host_misc_features_enables(vmx);
+> > +
+> >  #ifdef CONFIG_X86_64
+> >  	rdmsrl(MSR_KERNEL_GS_BASE, vmx->msr_guest_kernel_gs_base);
+> >  #endif
+> > -- 
+> > 2.19.1
+> > 
 
-Can this really happen without being a programming error?
-
-Basically you'd need to guard all percpu area accesses to foreign cpus
-this way. Why is this one special?
-
-
-Juergen
