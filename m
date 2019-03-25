@@ -6,70 +6,64 @@ X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0443FC4360F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 19:08:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D819BC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 19:08:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD74420685
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 19:08:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC98F20685
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 19:08:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730113AbfCYTId (ORCPT
+        id S1730180AbfCYTIj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 15:08:33 -0400
-Received: from namei.org ([65.99.196.166]:58388 "EHLO namei.org"
+        Mon, 25 Mar 2019 15:08:39 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:36390 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729898AbfCYTId (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 15:08:33 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by namei.org (8.14.4/8.14.4) with ESMTP id x2PJ8Abt014348;
-        Mon, 25 Mar 2019 19:08:10 GMT
-Date:   Tue, 26 Mar 2019 06:08:10 +1100 (AEDT)
-From:   James Morris <jmorris@namei.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Subject: Re: Linux 5.1-rc2
-In-Reply-To: <2d4f3bfa-22c7-a18c-3902-fe1b6ac401f7@infradead.org>
-Message-ID: <alpine.LRH.2.21.1903260607500.13529@namei.org>
-References: <CAHk-=wgg_PRWs3a6u2gnFLQjhxOJcrFkqqWVnLw60eQAwD-DNw@mail.gmail.com> <2d4f3bfa-22c7-a18c-3902-fe1b6ac401f7@infradead.org>
-User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+        id S1729898AbfCYTIi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 15:08:38 -0400
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtp (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1h8UxP-00011R-JZ; Mon, 25 Mar 2019 13:08:28 -0600
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-ntb@googlegroups.com,
+        linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org,
+        linux-kselftest@vger.kernel.org, Jon Mason <jdmason@kudzu.us>,
+        Joerg Roedel <joro@8bytes.org>,
+        Allen Hubbe <allenbh@gmail.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Eric Pilmore <epilmore@gigaio.com>
+References: <20190322000645.15580-1-logang@deltatee.com>
+ <20190322000645.15580-10-logang@deltatee.com>
+ <20190322164743.GN251185@google.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <ef64a491-cfad-5192-3b2f-515206036440@deltatee.com>
+Date:   Mon, 25 Mar 2019 13:08:24 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190322164743.GN251185@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: epilmore@gigaio.com, fancer.lancer@gmail.com, dave.jiang@intel.com, allenbh@gmail.com, joro@8bytes.org, jdmason@kudzu.us, linux-kselftest@vger.kernel.org, iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org, linux-ntb@googlegroups.com, linux-kernel@vger.kernel.org, helgaas@kernel.org
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH v3 09/10] NTB: Add MSI interrupt support to ntb_transport
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 24 Mar 2019, Randy Dunlap wrote:
 
-> On 3/24/19 2:26 PM, Linus Torvalds wrote:
-> > Well, we're a week away from the merge window close, and here's rc2.
-> > Things look fairly normal, but honestly, rc2 is usually too early to
-> > tell.  People haven't necessarily had time to notice problems yet.
-> > Which is just another way of saying "please test harder".
-> > 
-> > Nothing particularly stands out. Yes, we had some fixes for the new
-> > io_ring code for issues that were discussed when merging it. Other
-> > than that, worth noting is that the bulk of the patches are for
-> > tooling, not the core kernel. In fact, about two thirds of the patch
-> > is just for the tools/ subdirectory, most of it due to some late perf
-> > tool updates. The people involved promise they're done.
+
+On 2019-03-22 10:47 a.m., Bjorn Helgaas wrote:
+> Hi Logan,
 > 
-> Hmph.  I'm still looking for the patch that restores the various
-> CONFIG_DEFAULT_<security> kconfig options to be merged.
-> 
-> https://lore.kernel.org/linux-security-module/2bf23acd-22c4-a260-7648-845887a409d5@i-love.sakura.ne.jp/
-> 
-> since commit 70b62c25665f636c9f6c700b26af7df296b0887e dropped them somehow.
+> Drive-by nits:
 
-AFAICT we don't have a finalized version of the patch yet.
+Thanks Bjorn! I've updated my patches for v4 which I'll send out in a
+week or two.
 
-Kees?
-
-
--- 
-James Morris
-<jmorris@namei.org>
-
+Logan
