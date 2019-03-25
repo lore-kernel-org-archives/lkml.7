@@ -2,111 +2,103 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81D51C10F03
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:08:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C994AC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:10:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FA3B20850
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:08:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94F0120863
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:10:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="EBTa0Bbf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731089AbfCYMIg (ORCPT
+        id S1731072AbfCYMKV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 08:08:36 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:46304 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729386AbfCYMIf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 08:08:35 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1144980D;
-        Mon, 25 Mar 2019 05:08:35 -0700 (PDT)
-Received: from [10.1.196.69] (e112269-lin.cambridge.arm.com [10.1.196.69])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9B2FD3F575;
-        Mon, 25 Mar 2019 05:08:33 -0700 (PDT)
-Subject: Re: [PATCH v2] pci: pcie-xilinx: fix a missing-check bug for
- __get_free_pages
-To:     Aditya Pakki <pakki001@umn.edu>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-pci@vger.kernel.org, kjlu@umn.edu,
-        Michal Simek <michal.simek@xilinx.com>,
-        linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        linux-arm-kernel@lists.infradead.org
-References: <20190323210423.8881-1-pakki001@umn.edu>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <71b9d48b-c921-1d5a-782f-04a331c1a694@arm.com>
-Date:   Mon, 25 Mar 2019 12:08:31 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Mon, 25 Mar 2019 08:10:21 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:44729 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730988AbfCYMKV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 08:10:21 -0400
+Received: by mail-lj1-f193.google.com with SMTP id h16so3093364ljg.11
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 05:10:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=gbdnwxsyaq97iQCUafgGL5JXQ/w5Y2o2mTntOt3fm5w=;
+        b=EBTa0BbfezLE71AxQ7JPrG9Y9jz7eZCd4A0UWyQnAAD3xyxDj5N496268U78l2etgX
+         YZYn8r+8YU+b/qhe6J1OwNqDYbxpKb3xD43z2l6hQu7Z8gpCVYHyvDSyOnDgN39tq0zl
+         QnRBwlj6V9/vkbQZwR2HVVGUI3r9gj7Qb7hjP48p0xIZnsoVCtV0zlKooHwzM4z0jyFd
+         iQTTTFuiS3V0o6uOb4EhHIPGs7xEpITg4hCmeP9K0953xO22mXXtkaFq77U2O21QYE2g
+         ET47wHOFLw+Qxb4mFYH9rHPo9mzu9WXB1jDzP7ZVtBjxsW1eDryun1093Im4XNNd9GBp
+         iUbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=gbdnwxsyaq97iQCUafgGL5JXQ/w5Y2o2mTntOt3fm5w=;
+        b=oBNMe7sTc1TOGlYXIOS6oliaHmVvPB3Sz9g6xEYx5zjswjReZVmqE221LCrVzFn/N7
+         ZfvsHqkkR71MsAEbB1r0aVupA5oYPzkr4vG24u2PEPMjr7y0YC3rmU07cpF9MVJ+NjK+
+         y8AP11zWCRsG8cLEgnsmefL7xiMQ7oPHwbIhWJro0X3CCnSvziOt3Qc2wpyLPNuwdRPZ
+         alf3whGQnxfl/d4rdjw5p8aBWr7ZhaI66cvJKB+Caued31LyZ02rLzybqAuB9aqhQK/h
+         opAD/aHCJzoR3WdU001HH9uuq1+WG3ldz3avh+ivLVadBlQK5rVoyw2BxD7zklEl8+Jy
+         1jtQ==
+X-Gm-Message-State: APjAAAV967v+VmW9tSaoSV63KrKOU1YFuwEXdXb0KBo8dkj0/3le4NI+
+        X4X1lHxuOz0CIdroHp0bbW+iWQFVu+Kt+6FgsFU3yg==
+X-Google-Smtp-Source: APXvYqzWak45t1WHLVO1cDDvE/73sbvyQmCUK3nLR9o8/t5gyKuPjEIY08/E3rxfy8ilonoRbAO+24C9xClEix9Y+XQ=
+X-Received: by 2002:a2e:9a91:: with SMTP id p17mr12148154lji.127.1553515819051;
+ Mon, 25 Mar 2019 05:10:19 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190323210423.8881-1-pakki001@umn.edu>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <1552378289-27245-1-git-send-email-yash.shah@sifive.com>
+ <mvmimwotn60.fsf@suse.de> <CAJ2_jOE3RH9FyFg_NATcLEpHv5y89zdh06Ji2x8n3C_gp-wn6A@mail.gmail.com>
+ <mvm5zsgp00d.fsf@suse.de> <CAJ2_jOHoNnBF2UwU6G1vdvNrJAUJdGL_RncRAOaXMWoS03cagA@mail.gmail.com>
+ <CAJ2_jOFrXcxRS1oYOuYhtuRReTocmPKnoe5GO_3r_B1uAZb+xA@mail.gmail.com> <mvmmuljupwd.fsf@suse.de>
+In-Reply-To: <mvmmuljupwd.fsf@suse.de>
+From:   Yash Shah <yash.shah@sifive.com>
+Date:   Mon, 25 Mar 2019 17:39:42 +0530
+Message-ID: <CAJ2_jOFwDouMNAj8NxLX01bpLV+rG-rFsVh7e_e2ncCBX3qt_Q@mail.gmail.com>
+Subject: Re: [PATCH v9 0/2] PWM support for HiFive Unleashed
+To:     Andreas Schwab <schwab@suse.de>
+Cc:     Palmer Dabbelt <palmer@sifive.com>, linux-pwm@vger.kernel.org,
+        linux-riscv@lists.infradead.org,
+        Thierry Reding <thierry.reding@gmail.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Sachin Ghadi <sachin.ghadi@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/03/2019 21:04, Aditya Pakki wrote:
-> In case __get_free_pages fail, the fix returns error upstream
-> to avoid NULL pointer dereference.
-> 
-> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+On Mon, Mar 25, 2019 at 5:28 PM Andreas Schwab <schwab@suse.de> wrote:
+>
+> On M=C3=A4r 25 2019, Yash Shah <yash.shah@sifive.com> wrote:
+>
+> > I have sent out the v11 patchset, you can test the heartbeat
+> > application with that patchset.
+> > You still need to make that DT file modification which you previously
+> > did, using fsbl.bin
+>
+> Why can't the driver make use of sifive,approx-period?
 
-Reviewed-by: Steven Price <steven.price@arm.com>
+Because as per the review comments and discussions, it has been
+decided that the driver will make use of the conventional interface to
+pass period settings instead of 'sifive,approx-period'.
 
-> 
-> ---
-> v1: Return error upstream as suggested by Steven
-> ---
->  drivers/pci/controller/pcie-xilinx.c | 11 +++++++++--
->  1 file changed, 9 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-xilinx.c b/drivers/pci/controller/pcie-xilinx.c
-> index 9bd1a35cd5d8..91d8945bfb0c 100644
-> --- a/drivers/pci/controller/pcie-xilinx.c
-> +++ b/drivers/pci/controller/pcie-xilinx.c
-> @@ -335,15 +335,19 @@ static const struct irq_domain_ops msi_domain_ops = {
->  /**
->   * xilinx_pcie_enable_msi - Enable MSI support
->   * @port: PCIe port information
-> + * Return: 0 on success, negative error on failure
->   */
-> -static void xilinx_pcie_enable_msi(struct xilinx_pcie_port *port)
-> +static int xilinx_pcie_enable_msi(struct xilinx_pcie_port *port)
->  {
->  	phys_addr_t msg_addr;
->  
->  	port->msi_pages = __get_free_pages(GFP_KERNEL, 0);
-> +	if (!port->msi_pages)
-> +		return -ENOMEM;
->  	msg_addr = virt_to_phys((void *)port->msi_pages);
->  	pcie_write(port, 0x0, XILINX_PCIE_REG_MSIBASE1);
->  	pcie_write(port, msg_addr, XILINX_PCIE_REG_MSIBASE2);
-> +	return 0;
->  }
->  
->  /* INTx Functions */
-> @@ -498,6 +502,7 @@ static int xilinx_pcie_init_irq_domain(struct xilinx_pcie_port *port)
->  	struct device *dev = port->dev;
->  	struct device_node *node = dev->of_node;
->  	struct device_node *pcie_intc_node;
-> +	int ret;
->  
->  	/* Setup INTx */
->  	pcie_intc_node = of_get_next_child(node, NULL);
-> @@ -526,7 +531,9 @@ static int xilinx_pcie_init_irq_domain(struct xilinx_pcie_port *port)
->  			return -ENODEV;
->  		}
->  
-> -		xilinx_pcie_enable_msi(port);
-> +		ret = xilinx_pcie_enable_msi(port);
-> +		if (ret)
-> +			return ret;
->  	}
->  
->  	return 0;
-> 
+For your reference:
+https://lkml.org/lkml/2019/2/6/159
 
+>
+> Andreas.
+>
+> --
+> Andreas Schwab, SUSE Labs, schwab@suse.de
+> GPG Key fingerprint =3D 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D=
+7
+> "And now for something completely different."
