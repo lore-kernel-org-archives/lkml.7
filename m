@@ -2,215 +2,150 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4AA1C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 14:41:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDA69C4360F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 14:41:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95E392087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 14:41:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC7A520879
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 14:41:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="yqTQAioe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729631AbfCYOlD (ORCPT
+        id S1729644AbfCYOlH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 10:41:03 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57244 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726143AbfCYOkS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 10:40:18 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9F4CF308A968;
-        Mon, 25 Mar 2019 14:40:17 +0000 (UTC)
-Received: from localhost.localdomain.com (unknown [10.20.6.236])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0ECB6100164A;
-        Mon, 25 Mar 2019 14:40:16 +0000 (UTC)
-From:   jglisse@redhat.com
-To:     linux-mm@kvack.org
-Cc:     linux-kernel@vger.kernel.org,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: [PATCH v2 04/11] mm/hmm: improve and rename hmm_vma_get_pfns() to hmm_range_snapshot() v2
-Date:   Mon, 25 Mar 2019 10:40:04 -0400
-Message-Id: <20190325144011.10560-5-jglisse@redhat.com>
-In-Reply-To: <20190325144011.10560-1-jglisse@redhat.com>
-References: <20190325144011.10560-1-jglisse@redhat.com>
+        Mon, 25 Mar 2019 10:41:07 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:35779 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726010AbfCYOlE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 10:41:04 -0400
+Received: by mail-lj1-f193.google.com with SMTP id t13so8043696lji.2
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 07:41:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Youh5qKLBar4PTWYzgdvYi2dhgM3EondF10RxT99Kvs=;
+        b=yqTQAioe4vZrHbWH9dxQwMX0zBiHkRd5p9UMokjLpK7CYTpWjnjslpWhqMuaPLdnIA
+         QRzI4W2CIu/mAd16TQ89rg7fJFfdwoqf+uM7OTerzN2wveaUSr3+2xOxhs6NLglO3PWL
+         A8rRcq9yJEzv1Z9z0ewka7a8+dS30dsT4qg39pIvYizOXJMfFEuzD90es5RpN1X41LQt
+         w+hh575UNtbH0k0+3fnQcLlM6fFtzmuvI0K++u1NWZhMt3cZGHrTuhgVIkhH1HXwpKeC
+         SdeZh3qx5ansllA9p1VXPAeE/rxLwuzzPxVEHkUhlA5vOFkdewURJbN5tRFgcRCN5Hf1
+         10/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Youh5qKLBar4PTWYzgdvYi2dhgM3EondF10RxT99Kvs=;
+        b=f/K1RHuVlkvZkrRGsRmmjzY2Y35lB6BBWsBR88uoLZqXRpwEFLiFivC8g40O4sjeSv
+         sZ13I1H/wm/XmOsO2FH7Xkd1g1xA8RCJkMGSABhhRPXSepbsTHVJ7bhUG0SdK91CcmAU
+         Cxo/HMc9sVC2BNL3n8IOg2l4FNdj3Td9UyYMKMC8qysxzKZ3Q2zjd8V13bD4U7RjiE7Z
+         J8DMfHURE+IgNB0YKyiz/cGlTlxYoiWxfHreT7Kn7gsrOxbZOND2Zv9o6alggPK5FeGL
+         scwUcjaYIMcUxDJyW/eb+4K10+35go1WWpZueoCnV/nKfzd2JisTSbN5UxUxJ4WDhJUy
+         gbSw==
+X-Gm-Message-State: APjAAAW23aWmfwWplQmna9o1pITKdLGC68pqo4nukC73LV7+xnUmHtHX
+        VuYXNvvmDYOnIDXugIYWjSROTgy1AdcWYDNmZ/UJgvs=
+X-Google-Smtp-Source: APXvYqz2kIwYS+Cn9ieZen3HqTBofVYcyvC3cOHOtpRUcKLyKJYfdgPI/VkslaQ8XS0pj6464Pw4baHOdfBso/EEu/k=
+X-Received: by 2002:a2e:91d2:: with SMTP id u18mr13559936ljg.161.1553524860700;
+ Mon, 25 Mar 2019 07:41:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Mon, 25 Mar 2019 14:40:17 +0000 (UTC)
+References: <20190325142317.3666259-1-arnd@arndb.de>
+In-Reply-To: <20190325142317.3666259-1-arnd@arndb.de>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Mon, 25 Mar 2019 10:40:49 -0400
+Message-ID: <CAHC9VhTyVXMxqDvSQs5skCjAOwkjjQxENyv8UQUSMftkDBiTZg@mail.gmail.com>
+Subject: Re: [PATCH] [v3] selinux: avoid uninitialized variable warning
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
+        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jérôme Glisse <jglisse@redhat.com>
+On Mon, Mar 25, 2019 at 10:23 AM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> clang correctly points out a code path that would lead
+> to an uninitialized variable use:
+>
+> security/selinux/netlabel.c:310:6: error: variable 'addr' is used uninitialized whenever 'if' condition is false
+>       [-Werror,-Wsometimes-uninitialized]
+>         if (ip_hdr(skb)->version == 4) {
+>             ^~~~~~~~~~~~~~~~~~~~~~~~~
+> security/selinux/netlabel.c:322:40: note: uninitialized use occurs here
+>         rc = netlbl_conn_setattr(ep->base.sk, addr, &secattr);
+>                                               ^~~~
+> security/selinux/netlabel.c:310:2: note: remove the 'if' if its condition is always true
+>         if (ip_hdr(skb)->version == 4) {
+>         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> security/selinux/netlabel.c:291:23: note: initialize the variable 'addr' to silence this warning
+>         struct sockaddr *addr;
+>                              ^
+>                               = NULL
+>
+> This is probably harmless since we should not see ipv6 packets
+> of CONFIG_IPV6 is disabled, but it's better to rearrange the code
+> so this cannot happen.
+>
+> Link: https://lore.kernel.org/patchwork/patch/1053663/
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+> v3: add missing ip_hdr(skb)->version == 6 check
+> v2: revise after discussing with Paul Moore
+> ---
+>  security/selinux/netlabel.c | 14 +++++---------
+>  1 file changed, 5 insertions(+), 9 deletions(-)
 
-Rename for consistency between code, comments and documentation. Also
-improves the comments on all the possible returns values. Improve the
-function by returning the number of populated entries in pfns array.
+Better, thank you; merged into selinux/next.  FYI, I had to fix a
+couple of style errors that checkpatch.pl was complaining about ("void
+*" not "void*").
 
-Changes since v1:
-    - updated documentation
-    - reformated some comments
+> diff --git a/security/selinux/netlabel.c b/security/selinux/netlabel.c
+> index 186e727b737b..f10813e54d07 100644
+> --- a/security/selinux/netlabel.c
+> +++ b/security/selinux/netlabel.c
+> @@ -288,11 +288,8 @@ int selinux_netlbl_sctp_assoc_request(struct sctp_endpoint *ep,
+>         int rc;
+>         struct netlbl_lsm_secattr secattr;
+>         struct sk_security_struct *sksec = ep->base.sk->sk_security;
+> -       struct sockaddr *addr;
+>         struct sockaddr_in addr4;
+> -#if IS_ENABLED(CONFIG_IPV6)
+>         struct sockaddr_in6 addr6;
+> -#endif
+>
+>         if (ep->base.sk->sk_family != PF_INET &&
+>                                 ep->base.sk->sk_family != PF_INET6)
+> @@ -310,16 +307,15 @@ int selinux_netlbl_sctp_assoc_request(struct sctp_endpoint *ep,
+>         if (ip_hdr(skb)->version == 4) {
+>                 addr4.sin_family = AF_INET;
+>                 addr4.sin_addr.s_addr = ip_hdr(skb)->saddr;
+> -               addr = (struct sockaddr *)&addr4;
+> -#if IS_ENABLED(CONFIG_IPV6)
+> -       } else {
+> +               rc = netlbl_conn_setattr(ep->base.sk, (void*)&addr4, &secattr);
+> +       } else if (IS_ENABLED(CONFIG_IPV6) && ip_hdr(skb)->version == 6) {
+>                 addr6.sin6_family = AF_INET6;
+>                 addr6.sin6_addr = ipv6_hdr(skb)->saddr;
+> -               addr = (struct sockaddr *)&addr6;
+> -#endif
+> +               rc = netlbl_conn_setattr(ep->base.sk, (void*)&addr6, &secattr);
+> +       } else {
+> +               rc = -EAFNOSUPPORT;
+>         }
+>
+> -       rc = netlbl_conn_setattr(ep->base.sk, addr, &secattr);
+>         if (rc == 0)
+>                 sksec->nlbl_state = NLBL_LABELED;
+>
+> --
+> 2.20.0
 
-Signed-off-by: Jérôme Glisse <jglisse@redhat.com>
-Reviewed-by: Ralph Campbell <rcampbell@nvidia.com>
-Reviewed-by: John Hubbard <jhubbard@nvidia.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Dan Williams <dan.j.williams@intel.com>
----
- Documentation/vm/hmm.rst | 26 ++++++++++++++++++--------
- include/linux/hmm.h      |  4 ++--
- mm/hmm.c                 | 31 +++++++++++++++++--------------
- 3 files changed, 37 insertions(+), 24 deletions(-)
-
-diff --git a/Documentation/vm/hmm.rst b/Documentation/vm/hmm.rst
-index 44205f0b671f..d9b27bdadd1b 100644
---- a/Documentation/vm/hmm.rst
-+++ b/Documentation/vm/hmm.rst
-@@ -189,11 +189,7 @@ the driver callback returns.
- When the device driver wants to populate a range of virtual addresses, it can
- use either::
- 
--  int hmm_vma_get_pfns(struct vm_area_struct *vma,
--                      struct hmm_range *range,
--                      unsigned long start,
--                      unsigned long end,
--                      hmm_pfn_t *pfns);
-+  long hmm_range_snapshot(struct hmm_range *range);
-   int hmm_vma_fault(struct vm_area_struct *vma,
-                     struct hmm_range *range,
-                     unsigned long start,
-@@ -202,7 +198,7 @@ When the device driver wants to populate a range of virtual addresses, it can
-                     bool write,
-                     bool block);
- 
--The first one (hmm_vma_get_pfns()) will only fetch present CPU page table
-+The first one (hmm_range_snapshot()) will only fetch present CPU page table
- entries and will not trigger a page fault on missing or non-present entries.
- The second one does trigger a page fault on missing or read-only entry if the
- write parameter is true. Page faults use the generic mm page fault code path
-@@ -220,19 +216,33 @@ Locking with the update() callback is the most important aspect the driver must
-  {
-       struct hmm_range range;
-       ...
-+
-+      range.start = ...;
-+      range.end = ...;
-+      range.pfns = ...;
-+      range.flags = ...;
-+      range.values = ...;
-+      range.pfn_shift = ...;
-+
-  again:
--      ret = hmm_vma_get_pfns(vma, &range, start, end, pfns);
--      if (ret)
-+      down_read(&mm->mmap_sem);
-+      range.vma = ...;
-+      ret = hmm_range_snapshot(&range);
-+      if (ret) {
-+          up_read(&mm->mmap_sem);
-           return ret;
-+      }
-       take_lock(driver->update);
-       if (!hmm_vma_range_done(vma, &range)) {
-           release_lock(driver->update);
-+          up_read(&mm->mmap_sem);
-           goto again;
-       }
- 
-       // Use pfns array content to update device page table
- 
-       release_lock(driver->update);
-+      up_read(&mm->mmap_sem);
-       return 0;
-  }
- 
-diff --git a/include/linux/hmm.h b/include/linux/hmm.h
-index 716fc61fa6d4..32206b0b1bfd 100644
---- a/include/linux/hmm.h
-+++ b/include/linux/hmm.h
-@@ -365,11 +365,11 @@ void hmm_mirror_unregister(struct hmm_mirror *mirror);
-  * table invalidation serializes on it.
-  *
-  * YOU MUST CALL hmm_vma_range_done() ONCE AND ONLY ONCE EACH TIME YOU CALL
-- * hmm_vma_get_pfns() WITHOUT ERROR !
-+ * hmm_range_snapshot() WITHOUT ERROR !
-  *
-  * IF YOU DO NOT FOLLOW THE ABOVE RULE THE SNAPSHOT CONTENT MIGHT BE INVALID !
-  */
--int hmm_vma_get_pfns(struct hmm_range *range);
-+long hmm_range_snapshot(struct hmm_range *range);
- bool hmm_vma_range_done(struct hmm_range *range);
- 
- 
-diff --git a/mm/hmm.c b/mm/hmm.c
-index 213b0beee8d3..91361aa74b8b 100644
---- a/mm/hmm.c
-+++ b/mm/hmm.c
-@@ -698,23 +698,25 @@ static void hmm_pfns_special(struct hmm_range *range)
- }
- 
- /*
-- * hmm_vma_get_pfns() - snapshot CPU page table for a range of virtual addresses
-- * @range: range being snapshotted
-- * Returns: -EINVAL if invalid argument, -ENOMEM out of memory, -EPERM invalid
-- *          vma permission, 0 success
-+ * hmm_range_snapshot() - snapshot CPU page table for a range
-+ * @range: range
-+ * Returns: number of valid pages in range->pfns[] (from range start
-+ *          address). This may be zero. If the return value is negative,
-+ *          then one of the following values may be returned:
-+ *
-+ *           -EINVAL  invalid arguments or mm or virtual address are in an
-+ *                    invalid vma (ie either hugetlbfs or device file vma).
-+ *           -EPERM   For example, asking for write, when the range is
-+ *                    read-only
-+ *           -EAGAIN  Caller needs to retry
-+ *           -EFAULT  Either no valid vma exists for this range, or it is
-+ *                    illegal to access the range
-  *
-  * This snapshots the CPU page table for a range of virtual addresses. Snapshot
-  * validity is tracked by range struct. See hmm_vma_range_done() for further
-  * information.
-- *
-- * The range struct is initialized here. It tracks the CPU page table, but only
-- * if the function returns success (0), in which case the caller must then call
-- * hmm_vma_range_done() to stop CPU page table update tracking on this range.
-- *
-- * NOT CALLING hmm_vma_range_done() IF FUNCTION RETURNS 0 WILL LEAD TO SERIOUS
-- * MEMORY CORRUPTION ! YOU HAVE BEEN WARNED !
-  */
--int hmm_vma_get_pfns(struct hmm_range *range)
-+long hmm_range_snapshot(struct hmm_range *range)
- {
- 	struct vm_area_struct *vma = range->vma;
- 	struct hmm_vma_walk hmm_vma_walk;
-@@ -768,6 +770,7 @@ int hmm_vma_get_pfns(struct hmm_range *range)
- 	hmm_vma_walk.fault = false;
- 	hmm_vma_walk.range = range;
- 	mm_walk.private = &hmm_vma_walk;
-+	hmm_vma_walk.last = range->start;
- 
- 	mm_walk.vma = vma;
- 	mm_walk.mm = vma->vm_mm;
-@@ -784,9 +787,9 @@ int hmm_vma_get_pfns(struct hmm_range *range)
- 	 * function return 0).
- 	 */
- 	range->hmm = hmm;
--	return 0;
-+	return (hmm_vma_walk.last - range->start) >> PAGE_SHIFT;
- }
--EXPORT_SYMBOL(hmm_vma_get_pfns);
-+EXPORT_SYMBOL(hmm_range_snapshot);
- 
- /*
-  * hmm_vma_range_done() - stop tracking change to CPU page table over a range
 -- 
-2.17.2
-
+paul moore
+www.paul-moore.com
