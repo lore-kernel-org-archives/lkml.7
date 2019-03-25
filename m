@@ -2,192 +2,124 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B48EC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:57:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F5DC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 19:07:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56A6720685
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:57:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9C1520685
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 19:07:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="n9g0tgMy"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="qqozQFgg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730061AbfCYS5e (ORCPT
+        id S1729959AbfCYTHM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 14:57:34 -0400
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:37223 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729072AbfCYS5d (ORCPT
+        Mon, 25 Mar 2019 15:07:12 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:16552 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728912AbfCYTHM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 14:57:33 -0400
-Received: by mail-ua1-f66.google.com with SMTP id x1so3391802uaj.4
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 11:57:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=neIOP1aM1ltwCw3PcbDK4f1c+iSCYsKZkeuI3K2FKX8=;
-        b=n9g0tgMyYb5SHd9a+OJnMQcGkyXjoJUA1nTmEyAtl202TUSpGirkFg9opm5GJAI5yt
-         9YIvDtWLJ8f3W7v0ELATASt6BDXK6G6KkHAwHIrRUcvUQPpN393oXC/5QnfReXeTkqY7
-         8OYmotafC4Lq+gelcDt5MqmgWTSWHH1/U+kAHp35WD+FR2rDIKmtXEteDB09xyIkPQXt
-         iRTgdB2KHdM3hGGYdXslrnz00cwIJHCdgzFo4FGW1dLve8b9uE7VpBaMk+exjaxwKE67
-         YXhENqJrhyT0jMx548Wg1OuFvWMhkqsAz/vRgQnKEg4DCLXmhZHdvklpdy7J+m1TA6yN
-         1IoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=neIOP1aM1ltwCw3PcbDK4f1c+iSCYsKZkeuI3K2FKX8=;
-        b=SOHlGJ1mEYJiy2Opo39VHujaGdRDrE7k8wDfb1G02R2ygbIe/S5DnyzPR7pyUjSd/M
-         4uXum3lgxbbLU03i3E0Zc7JHTWk4/R4BWOuOFI+WDtDss8U6FXSUR3EXQkHNJjk+audp
-         fuzSWxxx7J2tG6obfpUfSrUsKweBwXCft29EMd7QatxcAdHrFH+t3FmTAEzV3uA33qRS
-         owNfjoFwgTwXE9uV7WhdMQUyAlb1Vhj6H0j6aBeI0BcSbImhGOSXGmJ5qGTV3HERh1Bs
-         LpeMzGyM7jrZGNmQ0zP0ENZ8KIu4E8fj4tr+NfPo+il3mFyeh6n0nlv63OCTP+KeYNoV
-         uLDg==
-X-Gm-Message-State: APjAAAXpcj4o3+/dvUkaeeOvh5mJD+akW2n00jfdGL0AJgzRxN2RpfQh
-        qJRsVHAVeuvv1mdmxTeJwks8rmHqpBcIO7mfU9vFCQ==
-X-Google-Smtp-Source: APXvYqz2xehaMIhLw8WqJc4olIHPF8MDtXfc8gzXZR/IUI3QK/gia39pWjbGgYnoVTkKX9MG33bsDS4iWrdZekwd5DE=
-X-Received: by 2002:ab0:72c2:: with SMTP id g2mr15056633uap.112.1553540252082;
- Mon, 25 Mar 2019 11:57:32 -0700 (PDT)
+        Mon, 25 Mar 2019 15:07:12 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5c9926e20000>; Mon, 25 Mar 2019 12:07:14 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 25 Mar 2019 12:07:11 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 25 Mar 2019 12:07:11 -0700
+Received: from [10.24.70.95] (172.20.13.39) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 25 Mar
+ 2019 19:07:09 +0000
+Subject: Re: [PATCH 4/8] vfio/mdev: Drop redundant extern for exported symbols
+To:     Parav Pandit <parav@mellanox.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>
+References: <1553296835-37522-1-git-send-email-parav@mellanox.com>
+ <1553296835-37522-5-git-send-email-parav@mellanox.com>
+X-Nvconfidentiality: public
+From:   Kirti Wankhede <kwankhede@nvidia.com>
+Message-ID: <658437a2-6ed1-c834-bc40-f1bf6dce920c@nvidia.com>
+Date:   Tue, 26 Mar 2019 00:37:04 +0530
 MIME-Version: 1.0
-References: <20190325162052.28987-1-christian@brauner.io> <CAKOZueuJSAiKU7fZR2FNDKKCktdyE-sADtWprpsNMAqYQvD9Jw@mail.gmail.com>
- <20190325173614.GB25975@google.com> <CAKOZuetbZOs1Yur4OrW6hh3wVYdoKNkSqTszbpTWnuRBTmT9zA@mail.gmail.com>
- <CAGLj2rE1f4x36KFUjFLiFq8tF1RUmFuCSRTg_tCQ9W2G6LtizA@mail.gmail.com>
-In-Reply-To: <CAGLj2rE1f4x36KFUjFLiFq8tF1RUmFuCSRTg_tCQ9W2G6LtizA@mail.gmail.com>
-From:   Daniel Colascione <dancol@google.com>
-Date:   Mon, 25 Mar 2019 11:57:20 -0700
-Message-ID: <CAKOZuetCFgu0B53+mGmQ3+539MPT_tiu-PACx2ATvihHrrmUKg@mail.gmail.com>
-Subject: Re: [PATCH 0/4] pid: add pidctl()
-To:     Jonathan Kowalski <bl0pbl33p@gmail.com>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Andy Lutomirski <luto@kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Kees Cook <keescook@chromium.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Michael Kerrisk-manpages <mtk.manpages@gmail.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Nagarathnam Muthusamy <nagarathnam.muthusamy@oracle.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1553296835-37522-5-git-send-email-parav@mellanox.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL103.nvidia.com (172.20.187.11) To
+ HQMAIL101.nvidia.com (172.20.187.10)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1553540834; bh=Y3L4lTBtYm3DgoGk8V3wwnm0/vEgQe1YGBLNasnjKLI=;
+        h=X-PGP-Universal:Subject:To:References:X-Nvconfidentiality:From:
+         Message-ID:Date:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=qqozQFggmLHSX5d/QduWSb8RXmmD2O4OdZEjIR/TnQv5AW+LDHBz45AL5Co7N1h5M
+         iMyVlFvJ3opxo6KHNeNWNQJ/hwtISq+uJlZyro6Fgfbqp2yofeIgyx9UHkH2lHCtpb
+         +TTVBNqJ4Znragz2d0f/vDWR7AlMHceKIUZKZS5HtdfXORyaLMTe4qzhWH9wh3UMCr
+         T/DKLJb/ivfM05fPj9tnQHJ9840mew8ulHZXBmjJKvsw8uTV4fgbXn/lZhx9HEetx+
+         hrxO9M8uhnyVTQ/xgiWGrhoFqKiF+nYK9pGtLGKjYDpW9FhUALgbi8Fmq5o4UbRdyz
+         QNdQV9cDkKCJw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 11:19 AM Jonathan Kowalski <bl0pbl33p@gmail.com> wrote:
->
-> On Mon, Mar 25, 2019 at 5:53 PM Daniel Colascione <dancol@google.com> wrote:
-> >
-> > [..snip..]
-> >
-> > I don't like the idea of having one kind of pollfd be pollable and
-> > another not. Such an interface would be confusing for users. If, as
-> > you suggest below, we instead make the procfs-less FD the only thing
-> > we call a "pidfd", then this proposal becomes less confusing and more
-> > viable.
->
-> That's certainly on the table, we remove the ability to open
-> /proc/<PID> and use the dir fd with pidfd_send_signal. I'm in favor of
-> this.
->
-> > > But.. one thing we could do for Daniel usecase is if a /proc/pid directory fd
-> > > can be translated into a "pidfd" using another syscall or even a node, like
-> > > /proc/pid/handle or something. I think this is what Christian suggested in
-> > > the previous threads.
-> >
-> > /proc/pid/handle, if I understand correctly, "translates" a
-> > procfs-based pidfd to a non-pidfd one. The needed interface would have
-> > to perform the opposite translation, providing a procfs directory for
-> > a given pidfd.
-> >
-> > > And also for the translation the other way, add a syscall or modify
-> > > translate_fd or something, to covert a anon_inode pidfd into a /proc/pid
-> > > directory fd. Then the user is welcomed to do openat(2) on _that_ directory fd.
-> > > Then we modify pidfd_send_signal to only send signals to pure pidfd fds, not
-> > > to /proc/pid directory fds.
-> >
-> > This approach would work, but there's one subtlety to take into
-> > account: which procfs? You'd want to take, as inputs, 1) the procfs
-> > root you want, and 2) the pidfd, this way you could return to the user
-> > a directory FD in the right procfs.
-> >
->
-> I don't think metadata access is in the scope of such a pidfd itself.
 
-It should be possible to write a race-free pkill(1) using pidfds.
-Without metadata access tied to the pidfd somehow, that can't be done.
 
-> > > Should we work on patches for these? Please let us know if this idea makes
-> > > sense and thanks a lot for adding us to the review as well.
-> >
-> > I would strongly prefer that we not merge pidctl (or whatever it is)
-> > without a story for metadata access, be it your suggestion or
-> > something else.
->
-> IMO, this is out of scope for a process handle. Hence, the need for
-> metadata access musn't stall it as is.
+On 3/23/2019 4:50 AM, Parav Pandit wrote:
+> There is no need use 'extern' for exported functions.
+> 
+> Signed-off-by: Parav Pandit <parav@mellanox.com>
+> ---
+>  include/linux/mdev.h | 21 ++++++++++-----------
+>  1 file changed, 10 insertions(+), 11 deletions(-)
+> 
+> diff --git a/include/linux/mdev.h b/include/linux/mdev.h
+> index b6e048e..0924c48 100644
+> --- a/include/linux/mdev.h
+> +++ b/include/linux/mdev.h
+> @@ -118,21 +118,20 @@ struct mdev_driver {
+>  
+>  #define to_mdev_driver(drv)	container_of(drv, struct mdev_driver, driver)
+>  
+> -extern void *mdev_get_drvdata(struct mdev_device *mdev);
+> -extern void mdev_set_drvdata(struct mdev_device *mdev, void *data);
+> -extern uuid_le mdev_uuid(struct mdev_device *mdev);
+> +void *mdev_get_drvdata(struct mdev_device *mdev);
+> +void mdev_set_drvdata(struct mdev_device *mdev, void *data);
+> +uuid_le mdev_uuid(struct mdev_device *mdev);
+>  
+>  extern struct bus_type mdev_bus_type;
+>  
+> -extern int  mdev_register_device(struct device *dev,
+> -				 const struct mdev_parent_ops *ops);
+> -extern void mdev_unregister_device(struct device *dev);
+> +int mdev_register_device(struct device *dev, const struct mdev_parent_ops *ops);
+> +void mdev_unregister_device(struct device *dev);
+>  
+> -extern int  mdev_register_driver(struct mdev_driver *drv, struct module *owner);
+> -extern void mdev_unregister_driver(struct mdev_driver *drv);
+> +int mdev_register_driver(struct mdev_driver *drv, struct module *owner);
+> +void mdev_unregister_driver(struct mdev_driver *drv);
+>  
+> -extern struct device *mdev_parent_dev(struct mdev_device *mdev);
+> -extern struct device *mdev_dev(struct mdev_device *mdev);
+> -extern struct mdev_device *mdev_from_dev(struct device *dev);
+> +struct device *mdev_parent_dev(struct mdev_device *mdev);
+> +struct device *mdev_dev(struct mdev_device *mdev);
+> +struct mdev_device *mdev_from_dev(struct device *dev);
+>  
+>  #endif /* MDEV_H */
+> 
 
-On the contrary, rather than metadata being out of scope, metadata
-access is essential. Given a file handle (an FD), you can learn about
-the file backing that handle by using fstat(2). Given a socket handle
-(a socket FD), you can learn about the socket with getsockopt(2) and
-ioctl(2). It would be strange not to be able, similarly, to learn
-things about a process given a handle (a pidfd) to that process. I
-want process handles to be "boring" in that they let users query and
-manipulate processes mostly like they manipulate other resources.
+Adding 'extern' to exported symbols is inline to other exported
+functions from device's core module like device_register(),
+device_unregister(), get_device(), put_device()
 
-> If you really need this, the pid this pidfd is mapped to can be
-> exposed through fdinfo (which is perfectly fine for your case as you
-> use /proc anyway). This means you can reliably determine if you're
-> opening it for the same pid (and it hasn't been recycled) because this
-> pidfd will be pollable for state change (in the future). Exposing it
-> through fdinfo isn't a problem, pid ns is bound to the process during
-> its lifetime, it's a process creation time property, so the value
-> isn't going to change anyway. So you can do all metadata access you
-> want subsequently.
+Thanks,
+Kirti
 
-Thanks for the proposal. I'm a bit confused. Are you suggesting that
-we report the numeric FD in fdinfo? Are you saying it should work
-basically like this?
-
-int get_oom_score_adj(int pidfd) {
-  unique_fd fdinfo_fd = open(fmt("/proc/self/fdinfo/%d", pidfd));
-  string fdinfo = read_all(fdinfo_fd);
-  numeric_pid = parse_fdinfo_for_line("pid");
-  unique_fd procdir_fd = open(fmt("/proc/%d", numeric_pid), O_DIRECTORY);
-  if(!is_pidfd_alive(pidfd)) { return -1; /* process died */ } /*
-LIVENESS CHECK */
-  // We know the process named by pidfd was called NUMERIC_PID
-  // in our namespace (because fdinfo told us) and we know that the
-named process
-  // was alive after we successfully opened its /proc/pid directory, therefore,
-  // PROCDIR_FD and PIDFD must refer to the same underlying process.
-  unique_fd oom_adj_score_fd = openat(procdir_fd, "oom_score_adj");
-  return parse_int(read_all(oom_adj_score_fd));
-}
-
-While this interface functions correctly, I have two concerns: 1) the
-number of system calls necessary is very large -- by my count,
-starting with the pifd, we need six, not counting the follow-on
-close(2) calls (which would bring the total to nine[1]), and 2) it's
-"fail unsafe": IMHO, most users in practice will skip the line marked
-"LIVENESS CHECK", and as a result, their code will appear to work but
-contain subtle race conditions. An explicit interface to translate
-from a (PIDFD, PROCFS_ROOT) tuple to a /proc/pid directory file
-descriptor would be both more efficient and fail-safe.
-
-[1] as a separate matter, it'd be nice to have a batch version of close(2).
