@@ -6,38 +6,40 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4924C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:25:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3125C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:25:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A154120848
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:25:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F6EB20854
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:25:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730599AbfCYVZG (ORCPT
+        id S1730649AbfCYVZP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 17:25:06 -0400
-Received: from smtprelay0197.hostedemail.com ([216.40.44.197]:34557 "EHLO
+        Mon, 25 Mar 2019 17:25:15 -0400
+Received: from smtprelay0025.hostedemail.com ([216.40.44.25]:58144 "EHLO
         smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730570AbfCYVZB (ORCPT
+        by vger.kernel.org with ESMTP id S1729714AbfCYVZL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 17:25:01 -0400
+        Mon, 25 Mar 2019 17:25:11 -0400
 Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay05.hostedemail.com (Postfix) with ESMTP id AF57F1803671A;
-        Mon, 25 Mar 2019 21:25:00 +0000 (UTC)
+        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 009513CF6;
+        Mon, 25 Mar 2019 21:25:09 +0000 (UTC)
 X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: road04_e82f4da6ea63
-X-Filterd-Recvd-Size: 4261
+X-HE-Tag: back78_fabd18bcf92e
+X-Filterd-Recvd-Size: 4240
 Received: from joe-laptop.perches.com (unknown [47.151.153.53])
         (Authenticated sender: joe@perches.com)
-        by omf16.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 25 Mar 2019 21:24:59 +0000 (UTC)
+        by omf12.hostedemail.com (Postfix) with ESMTPA;
+        Mon, 25 Mar 2019 21:25:07 +0000 (UTC)
 From:   Joe Perches <joe@perches.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Richard Fitzgerald <rf@opensource.cirrus.com>,
-        patches@opensource.cirrus.com, Lee Jones <lee.jones@linaro.org>
-Subject: Bad file pattern in MAINTAINERS section 'CIRRUS LOGIC LOCHNAGAR DRIVER'
-Date:   Mon, 25 Mar 2019 14:24:58 -0700
-Message-Id: <20190325212458.26072-1-joe@perches.com>
+Cc:     Tony Luck <tony.luck@intel.com>, linux-edac@vger.kernel.org,
+        Aristeu Rozanski <aris@redhat.com>,
+        Borislav Petkov <bp@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Subject: Bad file pattern in MAINTAINERS section 'EDAC-SKYLAKE'
+Date:   Mon, 25 Mar 2019 14:25:06 -0700
+Message-Id: <20190325212506.26282-1-joe@perches.com>
 X-Mailer: git-send-email 2.15.0
 In-Reply-To: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com>
 References: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com>
@@ -61,63 +63,73 @@ Please fix this defect appropriately.
 
 linux-next MAINTAINERS section:
 
-	3792	CIRRUS LOGIC LOCHNAGAR DRIVER
-	3793	M:	Charles Keepax <ckeepax@opensource.cirrus.com>
-	3794	M:	Richard Fitzgerald <rf@opensource.cirrus.com>
-	3795	L:	patches@opensource.cirrus.com
-	3796	S:	Supported
-	3797	F:	drivers/clk/clk-lochnagar.c
-	3798	F:	drivers/mfd/lochnagar-i2c.c
--->	3799	F:	drivers/pinctrl/cirrus/pinctrl-lochnagar.c
-	3800	F:	drivers/regulator/lochnagar-regulator.c
-	3801	F:	sound/soc/codecs/lochnagar-sc.c
-	3802	F:	include/dt-bindings/clk/lochnagar.h
-	3803	F:	include/dt-bindings/pinctrl/lochnagar.h
-	3804	F:	include/linux/mfd/lochnagar*
-	3805	F:	Documentation/devicetree/bindings/mfd/cirrus,lochnagar.txt
-	3806	F:	Documentation/devicetree/bindings/clock/cirrus,lochnagar.txt
-	3807	F:	Documentation/devicetree/bindings/pinctrl/cirrus,lochnagar.txt
-	3808	F:	Documentation/devicetree/bindings/regulator/cirrus,lochnagar.txt
-	3809	F:	Documentation/devicetree/bindings/sound/cirrus,lochnagar.txt
+	5684	EDAC-SKYLAKE
+	5685	M:	Tony Luck <tony.luck@intel.com>
+	5686	L:	linux-edac@vger.kernel.org
+	5687	S:	Maintained
+-->	5688	F:	drivers/edac/skx_edac.c
 
 2: ---------------------------------------------------------------------------
 
-The most recent commit that added or modified file pattern 'drivers/pinctrl/cirrus/pinctrl-lochnagar.c':
+The most recent commit that added or modified file pattern 'drivers/edac/skx_edac.c':
 
-commit 422dcafe477c7240d03c7b150704c45e0b17be57
-Author: Charles Keepax <ckeepax@opensource.cirrus.com>
-Date:   Wed Jan 30 11:41:26 2019 +0000
+commit 4ec656bdf43a13a655a8259b79dd63bc1f0b1e41
+Author: Tony Luck <tony.luck@intel.com>
+Date:   Sat Aug 20 16:27:58 2016 -0700
 
-    mfd: lochnagar: Add support for the Cirrus Logic Lochnagar
+    EDAC, skx_edac: Add EDAC driver for Skylake
     
-    Lochnagar is an evaluation and development board for Cirrus
-    Logic Smart CODEC and Amp devices. It allows the connection of
-    most Cirrus Logic devices on mini-cards, as well as allowing
-    connection of various application processor systems to provide a
-    full evaluation platform. This driver supports the board
-    controller chip on the Lochnagar board. Audio system topology,
-    clocking and power can all be controlled through the Lochnagar
-    controller chip, allowing the device under test to be used in
-    a variety of possible use cases.
+    This is an entirely new driver instead of yet another set of patches
+    to sb_edac.c because:
     
-    As the Lochnagar is a fairly complex device this MFD driver
-    allows the drivers for the various features to be bound
-    in. Initially clocking, regulator and pinctrl will be added as
-    these are necessary to configure the system. But in time at least
-    audio and voltage/current monitoring will also be added.
+    1) Mapping from PCI devices to socket/memory controller is significantly
+       different. Skylake scatters devices on a socket across a number of
+       PCI buses.
+    2) There is an extra level of interleaving via the "mcroute" register
+       that would be a little messy to squeeze into the old driver.
+    3) Validation is getting too expensive. Changes to sb_edac need to
+       be checked against Sandy Bridge, Ivy Bridge, Haswell, Broadwell and
+       Knights Landing.
     
-    Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-    Signed-off-by: Lee Jones <lee.jones@linaro.org>
+    Acked-by: Aristeu Rozanski <aris@redhat.com>
+    Acked-by: Borislav Petkov <bp@suse.de>
+    Signed-off-by: Tony Luck <tony.luck@intel.com>
+    Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 
- MAINTAINERS                         |  17 ++
- drivers/mfd/Kconfig                 |   8 +
- drivers/mfd/Makefile                |   2 +
- drivers/mfd/lochnagar-i2c.c         | 398 ++++++++++++++++++++++++++++++++++++
- include/linux/mfd/lochnagar.h       |  55 +++++
- include/linux/mfd/lochnagar1_regs.h | 157 ++++++++++++++
- include/linux/mfd/lochnagar2_regs.h | 291 ++++++++++++++++++++++++++
- 7 files changed, 928 insertions(+)
+ MAINTAINERS             |    6 +
+ drivers/edac/Kconfig    |    8 +
+ drivers/edac/Makefile   |    1 +
+ drivers/edac/skx_edac.c | 1121 +++++++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 1136 insertions(+)
 
 3: ---------------------------------------------------------------------------
 
-No commit with file pattern 'drivers/pinctrl/cirrus/pinctrl-lochnagar.c' was found
+The last commit with a real presence of file pattern 'drivers/edac/skx_edac.c':
+
+commit 98f2fc829e3b55a0ff1b82753fc1e10941535cb9
+Author: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Date:   Wed Jan 30 11:15:18 2019 -0800
+
+    EDAC, skx_edac: Delete duplicated code
+    
+    Delete the duplicated code from skx_edac.c and rename skx_edac.c to
+    skx_base.c. Update the Makefile to build the skx_edac driver from
+    skx_base.c and skx_common.c.
+    
+    Add SPDX to skx_base.c and clean out unnecessary #include lines.
+    
+     [ bp: Drop the license boilerplate - there's an SPDX identifier now. ]
+    
+    Co-developed-by: Tony Luck <tony.luck@intel.com>
+    Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+    Signed-off-by: Tony Luck <tony.luck@intel.com>
+    Signed-off-by: Borislav Petkov <bp@suse.de>
+    Cc: James Morse <james.morse@arm.com>
+    Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+    Cc: linux-edac <linux-edac@vger.kernel.org>
+    Link: https://lkml.kernel.org/r/20190130191519.15393-4-tony.luck@intel.com
+
+ drivers/edac/Makefile   |    4 +-
+ drivers/edac/skx_base.c |  650 +++++++++++++++++++++++
+ drivers/edac/skx_edac.c | 1358 -----------------------------------------------
+ 3 files changed, 653 insertions(+), 1359 deletions(-)
