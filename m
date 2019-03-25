@@ -2,122 +2,110 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98912C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:28:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8934EC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:28:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F59B20828
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:28:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 497422087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:28:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553531337;
+	bh=JE7jb7ygX6NdHQ+II/nw7qf4Ulhfht9v/6x6xYzUq8o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nhpr64aaP2PXLxqexqw/FFgveG1wzZ839I/cshyCB6UkVpdz1gnLIWD0rz52CfMgp
+	 BrnUaclbbOkGeGjUMupji5OTKavr8wDLj2A5trVoaxrukYRxR7eNShoo6fumjliLX1
+	 oD62Y8gapc4cASLhPdu8IY9WXJHygVkFRBQ12yLw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729413AbfCYQ2r (ORCPT
+        id S1729693AbfCYQ24 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 12:28:47 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43562 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725788AbfCYQ2r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 12:28:47 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C2CC9AFDA;
-        Mon, 25 Mar 2019 16:28:45 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id CA5401E429A; Mon, 25 Mar 2019 17:28:44 +0100 (CET)
-Date:   Mon, 25 Mar 2019 17:28:44 +0100
-From:   Jan Kara <jack@suse.cz>
-To:     Hariprasad Kelam <hariprasad.kelam@gmail.com>
-Cc:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
-        Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        Artem Bityutskiy <dedekind1@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mtd@lists.infradead.org
-Subject: Re: [PATCH] fs: fix warning about Using plain integer as NULL pointer
-Message-ID: <20190325162844.GD8308@quack2.suse.cz>
-References: <20190322221021.GA24814@hari-Inspiron-1545>
+        Mon, 25 Mar 2019 12:28:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40292 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725788AbfCYQ2z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 12:28:55 -0400
+Received: from localhost (unknown [171.61.95.149])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7256D20828;
+        Mon, 25 Mar 2019 16:28:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553531335;
+        bh=JE7jb7ygX6NdHQ+II/nw7qf4Ulhfht9v/6x6xYzUq8o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0nikvzujm1pUHwDQUWpTW6doZox5Cs480QZ5C1xj6sqO557U7w5h0wImf15JnEVgX
+         JH2D48wmjo54nH0s5vwx7Go6tei0dqvOqq860OnXJt1Kk+4UY3wV9r1FsJnLlmAmaw
+         ruxPWO86vVqz5skMDGpEAjZWPR5A3eiy29Dk81TI=
+Date:   Mon, 25 Mar 2019 21:58:49 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        dmaengine@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] dmaengine: stm32-mdma: Revert "Add a check on
+ read_u32_array"
+Message-ID: <20190325162849.GS5348@vkoul-mobl>
+References: <1553530915-1961-1-git-send-email-pierre-yves.mordret@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190322221021.GA24814@hari-Inspiron-1545>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1553530915-1961-1-git-send-email-pierre-yves.mordret@st.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat 23-03-19 03:40:21, Hariprasad Kelam wrote:
-> Sparse warning below:
+On 25-03-19, 17:21, Pierre-Yves MORDRET wrote:
+> This reverts commit 906b40b246b0 ("Add a check on read_u32_array")
+
+This and patch title should contain:
+906b40b246b0 ("dmaengine: stm32-mdma: Add a check on read_u32_array")
+
+I have fixed it up and applied.
+
+Thanks
+
+> As stated by bindings "st,ahb-addr-masks" is optional.
+> The statement inserted by this commit makes this property
+> mandatory and prevents MDMA to be probed in case property not present.
 > 
-> sudo make C=2 CF=-D__CHECK_ENDIAN__ M=fs
-> 
-> CHECK   fs/f2fs/data.c
-> fs/f2fs/data.c:426:47: warning: Using plain integer as NULL pointer
-> CHECK   fs/notify/fdinfo.c
-> fs/notify/fdinfo.c:53:87: warning: Using plain integer as NULL pointer
->  CHECK   fs/ubifs/xattr.c
-> fs/ubifs/xattr.c:615:58: warning: Using plain integer as NULL pointer
-> 
-> Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
-
-fs/notify part looks good to me. Feel free to add:
-
-Acked-by: Jan Kara <jack@suse.cz>
-
-								Honza
-
-
+> Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
 > ---
->  fs/f2fs/data.c     | 2 +-
->  fs/notify/fdinfo.c | 2 +-
->  fs/ubifs/xattr.c   | 2 +-
->  3 files changed, 3 insertions(+), 3 deletions(-)
+>   Version history:
+>     v2:
+>        * review commit message
+>     v1:
+>        * Initial
+> ---
+> ---
+>  drivers/dma/stm32-mdma.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
 > 
-> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-> index 97279441..15a2381 100644
-> --- a/fs/f2fs/data.c
-> +++ b/fs/f2fs/data.c
-> @@ -423,7 +423,7 @@ static void __submit_merged_write_cond(struct f2fs_sb_info *sbi,
+> diff --git a/drivers/dma/stm32-mdma.c b/drivers/dma/stm32-mdma.c
+> index 4e0eede..ac0301b 100644
+> --- a/drivers/dma/stm32-mdma.c
+> +++ b/drivers/dma/stm32-mdma.c
+> @@ -1578,11 +1578,9 @@ static int stm32_mdma_probe(struct platform_device *pdev)
 >  
->  void f2fs_submit_merged_write(struct f2fs_sb_info *sbi, enum page_type type)
->  {
-> -	__submit_merged_write_cond(sbi, NULL, 0, 0, type, true);
-> +	__submit_merged_write_cond(sbi, NULL, NULL, 0, type, true);
->  }
+>  	dmadev->nr_channels = nr_channels;
+>  	dmadev->nr_requests = nr_requests;
+> -	ret = device_property_read_u32_array(&pdev->dev, "st,ahb-addr-masks",
+> +	device_property_read_u32_array(&pdev->dev, "st,ahb-addr-masks",
+>  				       dmadev->ahb_addr_masks,
+>  				       count);
+> -	if (ret)
+> -		return ret;
+>  	dmadev->nr_ahb_addr_masks = count;
 >  
->  void f2fs_submit_merged_write_cond(struct f2fs_sb_info *sbi,
-> diff --git a/fs/notify/fdinfo.c b/fs/notify/fdinfo.c
-> index 1e2bfd2..ef83f40 100644
-> --- a/fs/notify/fdinfo.c
-> +++ b/fs/notify/fdinfo.c
-> @@ -50,7 +50,7 @@ static void show_mark_fhandle(struct seq_file *m, struct inode *inode)
->  	f.handle.handle_bytes = sizeof(f.pad);
->  	size = f.handle.handle_bytes >> 2;
->  
-> -	ret = exportfs_encode_inode_fh(inode, (struct fid *)f.handle.f_handle, &size, 0);
-> +	ret = exportfs_encode_inode_fh(inode, (struct fid *)f.handle.f_handle, &size, NULL);
->  	if ((ret == FILEID_INVALID) || (ret < 0)) {
->  		WARN_ONCE(1, "Can't encode file handler for inotify: %d\n", ret);
->  		return;
-> diff --git a/fs/ubifs/xattr.c b/fs/ubifs/xattr.c
-> index f5ad1ed..066a566 100644
-> --- a/fs/ubifs/xattr.c
-> +++ b/fs/ubifs/xattr.c
-> @@ -612,7 +612,7 @@ int ubifs_init_security(struct inode *dentry, struct inode *inode,
->  	int err;
->  
->  	err = security_inode_init_security(inode, dentry, qstr,
-> -					   &init_xattrs, 0);
-> +					   &init_xattrs, NULL);
->  	if (err) {
->  		struct ubifs_info *c = dentry->i_sb->s_fs_info;
->  		ubifs_err(c, "cannot initialize security for inode %lu, error %d",
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
 > -- 
 > 2.7.4
-> 
+
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+~Vinod
