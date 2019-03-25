@@ -2,119 +2,174 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC1E3C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 22:30:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31BBFC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 22:32:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64308206DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 22:30:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553553035;
-	bh=rOtJxdmhnaEaBn6oZpTzGQfR/BrregQvBi+ujajOrXw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gfssJbrO8rcO18TYac4SDr2D2408dKGPS1ZqziiCevQJSBQU7CGr7odng1nGmQrBL
-	 qVZeUYMs8QxUQuh4Vj4WXMclZCGXsT+QjEIELbWMO4cqCLWPzaJ9SKRxgZmpdjweQe
-	 J0HfVl4uI9JVY0QvXg5RJRzypYktaipSQCM560oI=
+	by mail.kernel.org (Postfix) with ESMTP id E9918206DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 22:32:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="O3ExTykj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730260AbfCYWae (ORCPT
+        id S1730450AbfCYWcU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 18:30:34 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:37444 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729127AbfCYWae (ORCPT
+        Mon, 25 Mar 2019 18:32:20 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:39583 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729714AbfCYWcU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 18:30:34 -0400
-Received: by mail-ot1-f66.google.com with SMTP id c16so9649968otn.4;
-        Mon, 25 Mar 2019 15:30:33 -0700 (PDT)
+        Mon, 25 Mar 2019 18:32:20 -0400
+Received: by mail-oi1-f193.google.com with SMTP id n187so5552166oih.6
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 15:32:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WGWDtMK/dsTPDyC5sqpAIR0H6yQciJJiOWrefhHIEOU=;
+        b=O3ExTykjQtCF9m/m8ZnZTZNyjSw/6FynnzGdt9KSg2tyAB1bp7g7i94Hjg7dzHmBnO
+         89dEjfQXr/3ayvSDgZ38Q25L+tq3w6lY7HkMpHoGiwXYvHHOFccgrgSIWUVQ/zEk3juU
+         +hRaI2RsGqCWoPqWzIMQKHygzhBZfKmXNM4UCDXU2cDpob4LXVswYs++ZcSl/QrRru4M
+         1y7Dn4uZ5ptPLPgpvw+U6Gw2lhyWtUkMe9c/YXkiyJginA0hNGaz27Na4yKtPC7Yxy0l
+         9Nia7RU03h+L28U4xJkOSw4JIBLZh1/Z9VAmH3TpnTTCCLih6w4bnwbY5o1mYuvMyoek
+         qrzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=GsGYe5V1VViY6vQfPEUD+WJk1lcYn9lcSZgLixaQZiU=;
-        b=aE4+a9RjdAgD8Zu1Zgb7I8H5EZ+tan9StVCArL2VvNWBw6yIFvIy0x9R/2fnAtEYZw
-         z052808eaiCjMLJc8vJtC9eLrnyglTWo9DE2+qYmHSkxQSiPbOQwjnfmd8w069xixpes
-         6aXWp7b0crwWZsLaYrGdHjNkeFbrU8MJp1k2ssl7JE5JeJlS6RKQH57gHMRoZJqiy0+o
-         9IOKzvQXRqFBporrUKVPqVZ46WGSGGCwxk+ZQ9UNzKS+xsY1ZM50taoF0T9WdG+lwxS/
-         1DJqbh7ntD+4nJSFlaM0U0yD0d8iFSyW7Oytn7nz8hnE3vo9IMLXAIKqcGDFnD9rtEK1
-         9DKA==
-X-Gm-Message-State: APjAAAVPmcHp4hM7kAYzeVExyb8OA0rtGyHzsb7hN/n7pKPIzLBaBZJC
-        Oi3SnZX0fcWZR1aG8JJFXg==
-X-Google-Smtp-Source: APXvYqw/FenOuv9IUj0YRaOWOcW+hcb35Jj9V2uHi1cs/g8UX/GegWF34Wy6vgkgeb/6T/+D+AMbaA==
-X-Received: by 2002:a9d:7306:: with SMTP id e6mr19082631otk.79.1553553033082;
-        Mon, 25 Mar 2019 15:30:33 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id e12sm6871036otl.61.2019.03.25.15.30.31
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 25 Mar 2019 15:30:32 -0700 (PDT)
-Date:   Mon, 25 Mar 2019 17:30:31 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH V2] dt-bindings: imx: update scu resource id headfile
-Message-ID: <20190325223031.GA22935@bogus>
-References: <1550663846-22698-1-git-send-email-Anson.Huang@nxp.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WGWDtMK/dsTPDyC5sqpAIR0H6yQciJJiOWrefhHIEOU=;
+        b=aoe3vvr1TOeWvKxN6MW+hZuQlbquAGRZePXPA7HT0sLvnTdaKkwDDzhZRpwWJDwgBL
+         gHa3IZtmPcby7Y33CGTMu+V5ZxjE8Ff68aCie158wg6SCvaZRufJmXhWq2smGhQZh0VE
+         v2vAqM12LSxcTR7mPumf2OW7dfbo7ldRq2NJVCeArPi0OGJuh1hvrMoL/7DOH+rAiKLy
+         foe7kTYX/eiu1GQxJx0/A1ai6UGGL9IWZZl+B7ZpqUPgaph3B5CCU8GupPrOK1CgWssm
+         Knnip9dPpOOwqVpiqwILU6jNDVxgt4X4OUBSP3qSw+WRntwuZ86EIxBoD9HhniIwFAHW
+         RWAw==
+X-Gm-Message-State: APjAAAUiAwzFKHJojHZuHKvW6/9+nRA/K1WUGK+KBxA1xo4E6cdhNMSQ
+        UKLJPDkaeRSOMeteLDUcOA5LCvR9+Y3fD1h4UJkqsQ==
+X-Google-Smtp-Source: APXvYqwtnSaCVLFKPNtkz+oD0ZL8JVRFbrZvVPYa4qE+KIj/DmpPDM/1H99NZB58DkyjPA7bQ6BSJppoSWdpz46bmSc=
+X-Received: by 2002:aca:f594:: with SMTP id t142mr14148424oih.100.1553553138946;
+ Mon, 25 Mar 2019 15:32:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1550663846-22698-1-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190214213729.21702-1-brendanhiggins@google.com>
+ <20190214213729.21702-9-brendanhiggins@google.com> <da1995fa-a362-dfe6-8184-7fcdf2b923e8@gmail.com>
+ <CAFd5g467OV8wTB7zEshgZw8g8=zoq0dLVfwx3wDH-8UA+9GWFA@mail.gmail.com>
+ <0124ed28-466c-e954-ddde-495419630a9f@gmail.com> <CAFd5g47EDmsBWKNiW0jpHW2VG_GWCfe8UO+=ofgM2_ru+_UBQA@mail.gmail.com>
+ <118d89b7-d468-6d68-a48d-4d6d9cefd106@gmail.com> <CAFd5g46AP9yZQ+z+60HGaZuqhJQmfSBw9+r62w4k=cGiMEkqLA@mail.gmail.com>
+ <e29d487f5ca0a5caf4723bc5d96b8a523a53a318.camel@oracle.com>
+In-Reply-To: <e29d487f5ca0a5caf4723bc5d96b8a523a53a318.camel@oracle.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Mon, 25 Mar 2019 15:32:07 -0700
+Message-ID: <CAFd5g44eqjN-nVCJuoeYFCxwVa5AorWiAnXe-tFCAc11zDgJFA@mail.gmail.com>
+Subject: Re: [RFC v4 08/17] kunit: test: add support for test abort
+To:     Knut Omang <knut.omang@oracle.com>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Kees Cook <keescook@google.com>,
+        Luis Chamberlain <mcgrof@kernel.org>, shuah@kernel.org,
+        Rob Herring <robh@kernel.org>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Joel Stanley <joel@jms.id.au>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Joe Perches <joe@perches.com>, brakmo@fb.com,
+        Steven Rostedt <rostedt@goodmis.org>,
+        "Bird, Timothy" <Tim.Bird@sony.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jeff Dike <jdike@addtoit.com>,
+        Richard Weinberger <richard@nod.at>,
+        linux-um@lists.infradead.org, Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>, wfg@linux.intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 20 Feb 2019 12:01:59 +0000, Anson Huang wrote:
-> Update i.MX SCU resource ID table according to latest
-> system controller firmware.
-> 
-> Latest system controller firmware removes below resources
-> which are never be used:
-> 	IMX_SC_R_DC_0_CAPTURE0
-> 	IMX_SC_R_DC_0_CAPTURE1
-> 	IMX_SC_R_DC_0_INTEGRAL0
-> 	IMX_SC_R_DC_0_INTEGRAL1
-> 	IMX_SC_R_DC_0_FRAC1
-> 	IMX_SC_R_DC_1_CAPTURE0
-> 	IMX_SC_R_DC_1_CAPTURE1
-> 	IMX_SC_R_DC_1_INTEGRAL0
-> 	IMX_SC_R_DC_1_INTEGRAL1
-> 	IMX_SC_R_DC_1_FRAC1
-> 	IMX_SC_R_GPU_3_PID0
-> 	IMX_SC_R_M4_0_SIM
-> 	IMX_SC_R_M4_0_WDOG
-> 	IMX_SC_R_M4_1_SIM
-> 	IMX_SC_R_M4_1_WDOG
-> 
-> and also add below resources to support new features:
-> 	IMX_SC_R_PERF
-> 	IMX_SC_R_OCRAM
-> 	IMX_SC_R_DMA_5_CH0
-> 	IMX_SC_R_DMA_5_CH1
-> 	IMX_SC_R_DMA_5_CH2
-> 	IMX_SC_R_DMA_5_CH3
-> 	IMX_SC_R_ATTESTATION
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> No changes since V1, just update the commit message to provide more detail info.
-> ---
->  include/dt-bindings/firmware/imx/rsrc.h | 39 +++++++++++++++++++--------------
->  1 file changed, 22 insertions(+), 17 deletions(-)
-> 
+On Fri, Mar 22, 2019 at 12:11 AM Knut Omang <knut.omang@oracle.com> wrote:
+>
+> On Thu, 2019-03-21 at 18:41 -0700, Brendan Higgins wrote:
+> > On Thu, Mar 21, 2019 at 6:10 PM Frank Rowand <frowand.list@gmail.com> wrote:
+> > > On 2/27/19 11:42 PM, Brendan Higgins wrote:
+> > > > On Tue, Feb 19, 2019 at 10:44 PM Frank Rowand <frowand.list@gmail.com>
+> > > > wrote:
+> > > > > On 2/19/19 7:39 PM, Brendan Higgins wrote:
+> > > > > > On Mon, Feb 18, 2019 at 11:52 AM Frank Rowand <frowand.list@gmail.com>
+> > > > > > wrote:
+> > > > > > > On 2/14/19 1:37 PM, Brendan Higgins wrote:
+< snip >
+> > > > > > > kunit_abort() is what will be call as the result of an assert
+> > > > > > > failure.
+> > > > > >
+> > > > > > Yep. Does that need clarified somewhere.
+> > > > > > > BUG(), which is a panic, which is crashing the system is not
+> > > > > > > acceptable
+> > > > > > > in the Linux kernel.  You will just annoy Linus if you submit this.
+> > > > > >
+> > > > > > Sorry, I thought this was an acceptable use case since, a) this should
+> > > > > > never be compiled in a production kernel, b) we are in a pretty bad,
+> > > > > > unpredictable state if we get here and keep going. I think you might
+> > > > > > have said elsewhere that you think "a" is not valid? In any case, I
+> > > > > > can replace this with a WARN, would that be acceptable?
+> > > > >
+> > > > > A WARN may or may not make sense, depending on the context.  It may
+> > > > > be sufficient to simply report a test failure (as in the old version
+> > > > > of case (2) below.
+> > > > >
+> > > > > Answers to "a)" and "b)":
+> > > > >
+> > > > > a) it might be in a production kernel
+> > > >
+> > > > Sorry for a possibly stupid question, how might it be so? Why would
+> > > > someone intentionally build unit tests into a production kernel?
+> > >
+> > > People do things.  Just expect it.
+> >
+> > Huh, alright. I will take your word for it then.
+>
+> I have a better explanation: Production kernels have bugs, unfortunately.
+> And sometimes those need to be investigated on systems than cannot be
+> brought down or affected more than absolutely necessary, maybe via a third party
+> doing the execution. A light weight, precise test (well tested ahead :) ) might
+> be a way of proving or disproving assumptions that can lead to the development
+> and application of a fix.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Sorry, you are not suggesting testing in production are you? To be
+clear, I am not concerned about someone using testing, KUnit, or
+whatever in a *production-like* environment: that's not what we are
+talking about here. My assumption is that no one will deploy tests
+into actual production.
+
+>
+> IMHO you're confusing "building into" with temporary applying, then removing
+> again - like the difference between running a local user space program vs
+> installing it under /usr and have it in everyone's PATH.
+
+I don't really see the point of distinguishing between "building into"
+and "temporary applying" in this case; that's part of my point. Maybe
+it makes sense in whitebox end-to-end testing, but in the case of unit
+testing, I don't think so.
+
+>
+> > > > > a') it is not acceptable in my development kernel either
+>
+> I think one of the fundamental properties of a good test framework is that it
+> should not require changes to the code under test by itself.
+>
+
+Sure, but that has nothing to do with the environment the code/tests
+are running in.
+
+< snip >
+
+Cheers
