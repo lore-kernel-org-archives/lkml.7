@@ -3,48 +3,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B12EC10F03
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 14:40:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A7FDC10F03
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 14:40:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 693D02087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 14:40:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EC602087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 14:40:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729492AbfCYOkd (ORCPT
+        id S1729405AbfCYOkX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 10:40:33 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54056 "EHLO mx1.redhat.com"
+        Mon, 25 Mar 2019 10:40:23 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57252 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729413AbfCYOkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 10:40:24 -0400
+        id S1729308AbfCYOkQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 10:40:16 -0400
 Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B07DB2026E;
-        Mon, 25 Mar 2019 14:40:23 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3699C3083363;
+        Mon, 25 Mar 2019 14:40:16 +0000 (UTC)
 Received: from localhost.localdomain.com (unknown [10.20.6.236])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EBEBD1001DC8;
-        Mon, 25 Mar 2019 14:40:22 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 744A21001DE4;
+        Mon, 25 Mar 2019 14:40:15 +0000 (UTC)
 From:   jglisse@redhat.com
 To:     linux-mm@kvack.org
 Cc:     linux-kernel@vger.kernel.org,
         =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ralph Campbell <rcampbell@nvidia.com>,
         John Hubbard <jhubbard@nvidia.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Dan Williams <dan.j.williams@intel.com>
-Subject: [PATCH v2 11/11] mm/hmm: add an helper function that fault pages and map them to a device v2
-Date:   Mon, 25 Mar 2019 10:40:11 -0400
-Message-Id: <20190325144011.10560-12-jglisse@redhat.com>
+Subject: [PATCH v2 02/11] mm/hmm: use reference counting for HMM struct v2
+Date:   Mon, 25 Mar 2019 10:40:02 -0400
+Message-Id: <20190325144011.10560-3-jglisse@redhat.com>
 In-Reply-To: <20190325144011.10560-1-jglisse@redhat.com>
 References: <20190325144011.10560-1-jglisse@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Mon, 25 Mar 2019 14:40:23 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Mon, 25 Mar 2019 14:40:16 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -52,216 +51,417 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jérôme Glisse <jglisse@redhat.com>
 
-This is a all in one helper that fault pages in a range and map them to
-a device so that every single device driver do not have to re-implement
-this common pattern.
-
-This is taken from ODP RDMA in preparation of ODP RDMA convertion. It
-will be use by nouveau and other drivers.
+Every time i read the code to check that the HMM structure does not
+vanish before it should thanks to the many lock protecting its removal
+i get a headache. Switch to reference counting instead it is much
+easier to follow and harder to break. This also remove some code that
+is no longer needed with refcounting.
 
 Changes since v1:
-    - improved commit message
+    - removed bunch of useless check (if API is use with bogus argument
+      better to fail loudly so user fix their code)
+    - s/hmm_get/mm_get_hmm/
 
 Signed-off-by: Jérôme Glisse <jglisse@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Ralph Campbell <rcampbell@nvidia.com>
+Reviewed-by: Ralph Campbell <rcampbell@nvidia.com>
 Cc: John Hubbard <jhubbard@nvidia.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Dan Williams <dan.j.williams@intel.com>
 ---
- include/linux/hmm.h |   9 +++
- mm/hmm.c            | 152 ++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 161 insertions(+)
+ include/linux/hmm.h |   2 +
+ mm/hmm.c            | 170 ++++++++++++++++++++++++++++----------------
+ 2 files changed, 112 insertions(+), 60 deletions(-)
 
 diff --git a/include/linux/hmm.h b/include/linux/hmm.h
-index 5f9deaeb9d77..7aadf18b29cb 100644
+index ad50b7b4f141..716fc61fa6d4 100644
 --- a/include/linux/hmm.h
 +++ b/include/linux/hmm.h
-@@ -568,6 +568,15 @@ int hmm_range_register(struct hmm_range *range,
- void hmm_range_unregister(struct hmm_range *range);
- long hmm_range_snapshot(struct hmm_range *range);
- long hmm_range_fault(struct hmm_range *range, bool block);
-+long hmm_range_dma_map(struct hmm_range *range,
-+		       struct device *device,
-+		       dma_addr_t *daddrs,
-+		       bool block);
-+long hmm_range_dma_unmap(struct hmm_range *range,
-+			 struct vm_area_struct *vma,
-+			 struct device *device,
-+			 dma_addr_t *daddrs,
-+			 bool dirty);
- 
+@@ -131,6 +131,7 @@ enum hmm_pfn_value_e {
  /*
-  * HMM_RANGE_DEFAULT_TIMEOUT - default timeout (ms) when waiting for a range
+  * struct hmm_range - track invalidation lock on virtual address range
+  *
++ * @hmm: the core HMM structure this range is active against
+  * @vma: the vm area struct for the range
+  * @list: all range lock are on a list
+  * @start: range virtual start address (inclusive)
+@@ -142,6 +143,7 @@ enum hmm_pfn_value_e {
+  * @valid: pfns array did not change since it has been fill by an HMM function
+  */
+ struct hmm_range {
++	struct hmm		*hmm;
+ 	struct vm_area_struct	*vma;
+ 	struct list_head	list;
+ 	unsigned long		start;
 diff --git a/mm/hmm.c b/mm/hmm.c
-index ce33151c6832..fd143251b157 100644
+index fe1cd87e49ac..306e57f7cded 100644
 --- a/mm/hmm.c
 +++ b/mm/hmm.c
-@@ -30,6 +30,7 @@
- #include <linux/hugetlb.h>
- #include <linux/memremap.h>
- #include <linux/jump_label.h>
-+#include <linux/dma-mapping.h>
- #include <linux/mmu_notifier.h>
- #include <linux/memory_hotplug.h>
+@@ -50,6 +50,7 @@ static const struct mmu_notifier_ops hmm_mmu_notifier_ops;
+  */
+ struct hmm {
+ 	struct mm_struct	*mm;
++	struct kref		kref;
+ 	spinlock_t		lock;
+ 	struct list_head	ranges;
+ 	struct list_head	mirrors;
+@@ -57,6 +58,16 @@ struct hmm {
+ 	struct rw_semaphore	mirrors_sem;
+ };
  
-@@ -1163,6 +1164,157 @@ long hmm_range_fault(struct hmm_range *range, bool block)
- 	return (hmm_vma_walk.last - range->start) >> PAGE_SHIFT;
++static inline struct hmm *mm_get_hmm(struct mm_struct *mm)
++{
++	struct hmm *hmm = READ_ONCE(mm->hmm);
++
++	if (hmm && kref_get_unless_zero(&hmm->kref))
++		return hmm;
++
++	return NULL;
++}
++
+ /*
+  * hmm_register - register HMM against an mm (HMM internal)
+  *
+@@ -67,14 +78,9 @@ struct hmm {
+  */
+ static struct hmm *hmm_register(struct mm_struct *mm)
+ {
+-	struct hmm *hmm = READ_ONCE(mm->hmm);
++	struct hmm *hmm = mm_get_hmm(mm);
+ 	bool cleanup = false;
+ 
+-	/*
+-	 * The hmm struct can only be freed once the mm_struct goes away,
+-	 * hence we should always have pre-allocated an new hmm struct
+-	 * above.
+-	 */
+ 	if (hmm)
+ 		return hmm;
+ 
+@@ -86,6 +92,7 @@ static struct hmm *hmm_register(struct mm_struct *mm)
+ 	hmm->mmu_notifier.ops = NULL;
+ 	INIT_LIST_HEAD(&hmm->ranges);
+ 	spin_lock_init(&hmm->lock);
++	kref_init(&hmm->kref);
+ 	hmm->mm = mm;
+ 
+ 	spin_lock(&mm->page_table_lock);
+@@ -106,7 +113,7 @@ static struct hmm *hmm_register(struct mm_struct *mm)
+ 	if (__mmu_notifier_register(&hmm->mmu_notifier, mm))
+ 		goto error_mm;
+ 
+-	return mm->hmm;
++	return hmm;
+ 
+ error_mm:
+ 	spin_lock(&mm->page_table_lock);
+@@ -118,9 +125,41 @@ static struct hmm *hmm_register(struct mm_struct *mm)
+ 	return NULL;
  }
- EXPORT_SYMBOL(hmm_range_fault);
-+
-+/*
-+ * hmm_range_dma_map() - hmm_range_fault() and dma map page all in one.
-+ * @range: range being faulted
-+ * @device: device against to dma map page to
-+ * @daddrs: dma address of mapped pages
-+ * @block: allow blocking on fault (if true it sleeps and do not drop mmap_sem)
-+ * Returns: number of pages mapped on success, -EAGAIN if mmap_sem have been
-+ *          drop and you need to try again, some other error value otherwise
-+ *
-+ * Note same usage pattern as hmm_range_fault().
-+ */
-+long hmm_range_dma_map(struct hmm_range *range,
-+		       struct device *device,
-+		       dma_addr_t *daddrs,
-+		       bool block)
+ 
++static void hmm_free(struct kref *kref)
 +{
-+	unsigned long i, npages, mapped;
-+	long ret;
++	struct hmm *hmm = container_of(kref, struct hmm, kref);
++	struct mm_struct *mm = hmm->mm;
 +
-+	ret = hmm_range_fault(range, block);
-+	if (ret <= 0)
-+		return ret ? ret : -EBUSY;
++	mmu_notifier_unregister_no_release(&hmm->mmu_notifier, mm);
 +
-+	npages = (range->end - range->start) >> PAGE_SHIFT;
-+	for (i = 0, mapped = 0; i < npages; ++i) {
-+		enum dma_data_direction dir = DMA_FROM_DEVICE;
-+		struct page *page;
++	spin_lock(&mm->page_table_lock);
++	if (mm->hmm == hmm)
++		mm->hmm = NULL;
++	spin_unlock(&mm->page_table_lock);
 +
-+		/*
-+		 * FIXME need to update DMA API to provide invalid DMA address
-+		 * value instead of a function to test dma address value. This
-+		 * would remove lot of dumb code duplicated accross many arch.
-+		 *
-+		 * For now setting it to 0 here is good enough as the pfns[]
-+		 * value is what is use to check what is valid and what isn't.
-+		 */
-+		daddrs[i] = 0;
++	kfree(hmm);
++}
 +
-+		page = hmm_pfn_to_page(range, range->pfns[i]);
-+		if (page == NULL)
-+			continue;
++static inline void hmm_put(struct hmm *hmm)
++{
++	kref_put(&hmm->kref, hmm_free);
++}
 +
-+		/* Check if range is being invalidated */
-+		if (!range->valid) {
-+			ret = -EBUSY;
-+			goto unmap;
-+		}
+ void hmm_mm_destroy(struct mm_struct *mm)
+ {
+-	kfree(mm->hmm);
++	struct hmm *hmm;
 +
-+		/* If it is read and write than map bi-directional. */
-+		if (range->pfns[i] & range->values[HMM_PFN_WRITE])
-+			dir = DMA_BIDIRECTIONAL;
-+
-+		daddrs[i] = dma_map_page(device, page, 0, PAGE_SIZE, dir);
-+		if (dma_mapping_error(device, daddrs[i])) {
-+			ret = -EFAULT;
-+			goto unmap;
-+		}
-+
-+		mapped++;
++	spin_lock(&mm->page_table_lock);
++	hmm = mm_get_hmm(mm);
++	mm->hmm = NULL;
++	if (hmm) {
++		hmm->mm = NULL;
++		spin_unlock(&mm->page_table_lock);
++		hmm_put(hmm);
++		return;
 +	}
 +
-+	return mapped;
++	spin_unlock(&mm->page_table_lock);
+ }
+ 
+ static int hmm_invalidate_range(struct hmm *hmm, bool device,
+@@ -165,7 +204,7 @@ static int hmm_invalidate_range(struct hmm *hmm, bool device,
+ static void hmm_release(struct mmu_notifier *mn, struct mm_struct *mm)
+ {
+ 	struct hmm_mirror *mirror;
+-	struct hmm *hmm = mm->hmm;
++	struct hmm *hmm = mm_get_hmm(mm);
+ 
+ 	down_write(&hmm->mirrors_sem);
+ 	mirror = list_first_entry_or_null(&hmm->mirrors, struct hmm_mirror,
+@@ -186,13 +225,16 @@ static void hmm_release(struct mmu_notifier *mn, struct mm_struct *mm)
+ 						  struct hmm_mirror, list);
+ 	}
+ 	up_write(&hmm->mirrors_sem);
 +
-+unmap:
-+	for (npages = i, i = 0; (i < npages) && mapped; ++i) {
-+		enum dma_data_direction dir = DMA_FROM_DEVICE;
-+		struct page *page;
-+
-+		page = hmm_pfn_to_page(range, range->pfns[i]);
-+		if (page == NULL)
-+			continue;
-+
-+		if (dma_mapping_error(device, daddrs[i]))
-+			continue;
-+
-+		/* If it is read and write than map bi-directional. */
-+		if (range->pfns[i] & range->values[HMM_PFN_WRITE])
-+			dir = DMA_BIDIRECTIONAL;
-+
-+		dma_unmap_page(device, daddrs[i], PAGE_SIZE, dir);
-+		mapped--;
-+	}
-+
++	hmm_put(hmm);
+ }
+ 
+ static int hmm_invalidate_range_start(struct mmu_notifier *mn,
+ 			const struct mmu_notifier_range *range)
+ {
++	struct hmm *hmm = mm_get_hmm(range->mm);
+ 	struct hmm_update update;
+-	struct hmm *hmm = range->mm->hmm;
++	int ret;
+ 
+ 	VM_BUG_ON(!hmm);
+ 
+@@ -200,14 +242,16 @@ static int hmm_invalidate_range_start(struct mmu_notifier *mn,
+ 	update.end = range->end;
+ 	update.event = HMM_UPDATE_INVALIDATE;
+ 	update.blockable = range->blockable;
+-	return hmm_invalidate_range(hmm, true, &update);
++	ret = hmm_invalidate_range(hmm, true, &update);
++	hmm_put(hmm);
 +	return ret;
-+}
-+EXPORT_SYMBOL(hmm_range_dma_map);
+ }
+ 
+ static void hmm_invalidate_range_end(struct mmu_notifier *mn,
+ 			const struct mmu_notifier_range *range)
+ {
++	struct hmm *hmm = mm_get_hmm(range->mm);
+ 	struct hmm_update update;
+-	struct hmm *hmm = range->mm->hmm;
+ 
+ 	VM_BUG_ON(!hmm);
+ 
+@@ -216,6 +260,7 @@ static void hmm_invalidate_range_end(struct mmu_notifier *mn,
+ 	update.event = HMM_UPDATE_INVALIDATE;
+ 	update.blockable = true;
+ 	hmm_invalidate_range(hmm, false, &update);
++	hmm_put(hmm);
+ }
+ 
+ static const struct mmu_notifier_ops hmm_mmu_notifier_ops = {
+@@ -241,24 +286,13 @@ int hmm_mirror_register(struct hmm_mirror *mirror, struct mm_struct *mm)
+ 	if (!mm || !mirror || !mirror->ops)
+ 		return -EINVAL;
+ 
+-again:
+ 	mirror->hmm = hmm_register(mm);
+ 	if (!mirror->hmm)
+ 		return -ENOMEM;
+ 
+ 	down_write(&mirror->hmm->mirrors_sem);
+-	if (mirror->hmm->mm == NULL) {
+-		/*
+-		 * A racing hmm_mirror_unregister() is about to destroy the hmm
+-		 * struct. Try again to allocate a new one.
+-		 */
+-		up_write(&mirror->hmm->mirrors_sem);
+-		mirror->hmm = NULL;
+-		goto again;
+-	} else {
+-		list_add(&mirror->list, &mirror->hmm->mirrors);
+-		up_write(&mirror->hmm->mirrors_sem);
+-	}
++	list_add(&mirror->list, &mirror->hmm->mirrors);
++	up_write(&mirror->hmm->mirrors_sem);
+ 
+ 	return 0;
+ }
+@@ -273,33 +307,18 @@ EXPORT_SYMBOL(hmm_mirror_register);
+  */
+ void hmm_mirror_unregister(struct hmm_mirror *mirror)
+ {
+-	bool should_unregister = false;
+-	struct mm_struct *mm;
+-	struct hmm *hmm;
++	struct hmm *hmm = READ_ONCE(mirror->hmm);
+ 
+-	if (mirror->hmm == NULL)
++	if (hmm == NULL)
+ 		return;
+ 
+-	hmm = mirror->hmm;
+ 	down_write(&hmm->mirrors_sem);
+ 	list_del_init(&mirror->list);
+-	should_unregister = list_empty(&hmm->mirrors);
++	/* To protect us against double unregister ... */
+ 	mirror->hmm = NULL;
+-	mm = hmm->mm;
+-	hmm->mm = NULL;
+ 	up_write(&hmm->mirrors_sem);
+ 
+-	if (!should_unregister || mm == NULL)
+-		return;
+-
+-	mmu_notifier_unregister_no_release(&hmm->mmu_notifier, mm);
+-
+-	spin_lock(&mm->page_table_lock);
+-	if (mm->hmm == hmm)
+-		mm->hmm = NULL;
+-	spin_unlock(&mm->page_table_lock);
+-
+-	kfree(hmm);
++	hmm_put(hmm);
+ }
+ EXPORT_SYMBOL(hmm_mirror_unregister);
+ 
+@@ -708,6 +727,8 @@ int hmm_vma_get_pfns(struct hmm_range *range)
+ 	struct mm_walk mm_walk;
+ 	struct hmm *hmm;
+ 
++	range->hmm = NULL;
 +
-+/*
-+ * hmm_range_dma_unmap() - unmap range of that was map with hmm_range_dma_map()
-+ * @range: range being unmapped
-+ * @vma: the vma against which the range (optional)
-+ * @device: device against which dma map was done
-+ * @daddrs: dma address of mapped pages
-+ * @dirty: dirty page if it had the write flag set
-+ * Returns: number of page unmapped on success, -EINVAL otherwise
-+ *
-+ * Note that caller MUST abide by mmu notifier or use HMM mirror and abide
-+ * to the sync_cpu_device_pagetables() callback so that it is safe here to
-+ * call set_page_dirty(). Caller must also take appropriate locks to avoid
-+ * concurrent mmu notifier or sync_cpu_device_pagetables() to make progress.
-+ */
-+long hmm_range_dma_unmap(struct hmm_range *range,
-+			 struct vm_area_struct *vma,
-+			 struct device *device,
-+			 dma_addr_t *daddrs,
-+			 bool dirty)
-+{
-+	unsigned long i, npages;
-+	long cpages = 0;
+ 	/* Sanity check, this really should not happen ! */
+ 	if (range->start < vma->vm_start || range->start >= vma->vm_end)
+ 		return -EINVAL;
+@@ -717,14 +738,18 @@ int hmm_vma_get_pfns(struct hmm_range *range)
+ 	hmm = hmm_register(vma->vm_mm);
+ 	if (!hmm)
+ 		return -ENOMEM;
+-	/* Caller must have registered a mirror, via hmm_mirror_register() ! */
+-	if (!hmm->mmu_notifier.ops)
 +
-+	/* Sanity check. */
-+	if (range->end <= range->start)
-+		return -EINVAL;
-+	if (!daddrs)
-+		return -EINVAL;
-+	if (!range->pfns)
-+		return -EINVAL;
-+
-+	npages = (range->end - range->start) >> PAGE_SHIFT;
-+	for (i = 0; i < npages; ++i) {
-+		enum dma_data_direction dir = DMA_FROM_DEVICE;
-+		struct page *page;
-+
-+		page = hmm_pfn_to_page(range, range->pfns[i]);
-+		if (page == NULL)
-+			continue;
-+
-+		/* If it is read and write than map bi-directional. */
-+		if (range->pfns[i] & range->values[HMM_PFN_WRITE]) {
-+			dir = DMA_BIDIRECTIONAL;
-+
-+			/*
-+			 * See comments in function description on why it is
-+			 * safe here to call set_page_dirty()
-+			 */
-+			if (dirty)
-+				set_page_dirty(page);
-+		}
-+
-+		/* Unmap and clear pfns/dma address */
-+		dma_unmap_page(device, daddrs[i], PAGE_SIZE, dir);
-+		range->pfns[i] = range->values[HMM_PFN_NONE];
-+		/* FIXME see comments in hmm_vma_dma_map() */
-+		daddrs[i] = 0;
-+		cpages++;
++	/* Check if hmm_mm_destroy() was call. */
++	if (hmm->mm == NULL) {
++		hmm_put(hmm);
+ 		return -EINVAL;
 +	}
+ 
+ 	/* FIXME support hugetlb fs */
+ 	if (is_vm_hugetlb_page(vma) || (vma->vm_flags & VM_SPECIAL) ||
+ 			vma_is_dax(vma)) {
+ 		hmm_pfns_special(range);
++		hmm_put(hmm);
+ 		return -EINVAL;
+ 	}
+ 
+@@ -736,6 +761,7 @@ int hmm_vma_get_pfns(struct hmm_range *range)
+ 		 * operations such has atomic access would not work.
+ 		 */
+ 		hmm_pfns_clear(range, range->pfns, range->start, range->end);
++		hmm_put(hmm);
+ 		return -EPERM;
+ 	}
+ 
+@@ -758,6 +784,12 @@ int hmm_vma_get_pfns(struct hmm_range *range)
+ 	mm_walk.pte_hole = hmm_vma_walk_hole;
+ 
+ 	walk_page_range(range->start, range->end, &mm_walk);
++	/*
++	 * Transfer hmm reference to the range struct it will be drop inside
++	 * the hmm_vma_range_done() function (which _must_ be call if this
++	 * function return 0).
++	 */
++	range->hmm = hmm;
+ 	return 0;
+ }
+ EXPORT_SYMBOL(hmm_vma_get_pfns);
+@@ -802,25 +834,27 @@ EXPORT_SYMBOL(hmm_vma_get_pfns);
+  */
+ bool hmm_vma_range_done(struct hmm_range *range)
+ {
+-	unsigned long npages = (range->end - range->start) >> PAGE_SHIFT;
+-	struct hmm *hmm;
++	bool ret = false;
+ 
+-	if (range->end <= range->start) {
++	/* Sanity check this really should not happen. */
++	if (range->hmm == NULL || range->end <= range->start) {
+ 		BUG();
+ 		return false;
+ 	}
+ 
+-	hmm = hmm_register(range->vma->vm_mm);
+-	if (!hmm) {
+-		memset(range->pfns, 0, sizeof(*range->pfns) * npages);
+-		return false;
+-	}
+-
+-	spin_lock(&hmm->lock);
++	spin_lock(&range->hmm->lock);
+ 	list_del_rcu(&range->list);
+-	spin_unlock(&hmm->lock);
++	ret = range->valid;
++	spin_unlock(&range->hmm->lock);
+ 
+-	return range->valid;
++	/* Is the mm still alive ? */
++	if (range->hmm->mm == NULL)
++		ret = false;
 +
-+	return cpages;
-+}
-+EXPORT_SYMBOL(hmm_range_dma_unmap);
- #endif /* IS_ENABLED(CONFIG_HMM_MIRROR) */
++	/* Drop reference taken by hmm_vma_fault() or hmm_vma_get_pfns() */
++	hmm_put(range->hmm);
++	range->hmm = NULL;
++	return ret;
+ }
+ EXPORT_SYMBOL(hmm_vma_range_done);
  
+@@ -880,6 +914,8 @@ int hmm_vma_fault(struct hmm_range *range, bool block)
+ 	struct hmm *hmm;
+ 	int ret;
  
++	range->hmm = NULL;
++
+ 	/* Sanity check, this really should not happen ! */
+ 	if (range->start < vma->vm_start || range->start >= vma->vm_end)
+ 		return -EINVAL;
+@@ -891,14 +927,18 @@ int hmm_vma_fault(struct hmm_range *range, bool block)
+ 		hmm_pfns_clear(range, range->pfns, range->start, range->end);
+ 		return -ENOMEM;
+ 	}
+-	/* Caller must have registered a mirror using hmm_mirror_register() */
+-	if (!hmm->mmu_notifier.ops)
++
++	/* Check if hmm_mm_destroy() was call. */
++	if (hmm->mm == NULL) {
++		hmm_put(hmm);
+ 		return -EINVAL;
++	}
+ 
+ 	/* FIXME support hugetlb fs */
+ 	if (is_vm_hugetlb_page(vma) || (vma->vm_flags & VM_SPECIAL) ||
+ 			vma_is_dax(vma)) {
+ 		hmm_pfns_special(range);
++		hmm_put(hmm);
+ 		return -EINVAL;
+ 	}
+ 
+@@ -910,6 +950,7 @@ int hmm_vma_fault(struct hmm_range *range, bool block)
+ 		 * operations such has atomic access would not work.
+ 		 */
+ 		hmm_pfns_clear(range, range->pfns, range->start, range->end);
++		hmm_put(hmm);
+ 		return -EPERM;
+ 	}
+ 
+@@ -945,7 +986,16 @@ int hmm_vma_fault(struct hmm_range *range, bool block)
+ 		hmm_pfns_clear(range, &range->pfns[i], hmm_vma_walk.last,
+ 			       range->end);
+ 		hmm_vma_range_done(range);
++		hmm_put(hmm);
++	} else {
++		/*
++		 * Transfer hmm reference to the range struct it will be drop
++		 * inside the hmm_vma_range_done() function (which _must_ be
++		 * call if this function return 0).
++		 */
++		range->hmm = hmm;
+ 	}
++
+ 	return ret;
+ }
+ EXPORT_SYMBOL(hmm_vma_fault);
 -- 
 2.17.2
 
