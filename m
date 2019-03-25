@@ -2,83 +2,117 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EE97C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 11:49:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA222C10F03
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 11:50:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECA602087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 11:49:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9ADC20850
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 11:50:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553514612;
+	bh=ojQ8xu1tZPYXOVLHMjBXyTM+lDx9aJKRyfDT9QlVzR4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=tbtK4MbdodI33R2KzJXQGpAdwkEe1MxKYTPEbte3S/1PQMNPe9Ii28UURCmVDlFBC
+	 gy6J3BKB4s1IBSTYQJEsIA1abyZerpCQO9zXvwnYtC4f54GEJicxo1BFplBA9jGM7d
+	 VqFZlt/OyXRwksbKD4GBns4db4IAD47sunimbqb8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730989AbfCYLtv (ORCPT
+        id S1731000AbfCYLuL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 07:49:51 -0400
-Received: from ns.iliad.fr ([212.27.33.1]:49834 "EHLO ns.iliad.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730917AbfCYLtu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 07:49:50 -0400
-Received: from ns.iliad.fr (localhost [127.0.0.1])
-        by ns.iliad.fr (Postfix) with ESMTP id 4ED0D208D5;
-        Mon, 25 Mar 2019 12:49:48 +0100 (CET)
-Received: from [192.168.108.8] (freebox.vlq16.iliad.fr [213.36.7.13])
-        by ns.iliad.fr (Postfix) with ESMTP id 35392207E5;
-        Mon, 25 Mar 2019 12:49:48 +0100 (CET)
-Subject: Re: [PATCH v4 1/2] Bluetooth: hci_qca: Added support for WCN3998
-To:     Harish Bandi <c-hbandi@codeaurora.org>
-References: <1553513491-25763-1-git-send-email-c-hbandi@codeaurora.org>
- <1553513491-25763-2-git-send-email-c-hbandi@codeaurora.org>
-Cc:     MSM <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-Message-ID: <e17eb2d2-8d32-70c6-32f9-435671233bfc@free.fr>
-Date:   Mon, 25 Mar 2019 12:49:48 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Mon, 25 Mar 2019 07:50:11 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:38605 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730730AbfCYLuL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 07:50:11 -0400
+Received: by mail-ot1-f67.google.com with SMTP id e80so7716967ote.5;
+        Mon, 25 Mar 2019 04:50:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=B01+fr2+NTMioALtiwXKnfmVVhNymoUrrB6iL0c6XLo=;
+        b=pxPryPjmCK2h3rZNMOWgvpNz5lSbIsn00yEBy3er4f8WNMQXvzBJnyMLJu9BBsC11B
+         JMFo8QYLBZmMaUIeYXpCqANncRURwlHOjKbqIok4Ch3xipk3Fg+0frlTR2hzyCrpVuae
+         mjzmj/H8BwZE9cZ5WCh24tA91jnJjhyAh+oNfXLuMn30kLF4DlW7sivw6pLm1+NQ96/c
+         jVYF47GJgt2UzUuBTzuz+DW/EGEfPJVMPRtGv3X4EyIfH55ylnREqV2CeMQiqv2vFWoI
+         cc8Az0Fqbm7uMBI0tXJKUYqgLFxQeiatddjAVnHOF8U8p99NQBjMgZp7ZfyTeFi8ozvH
+         hGtg==
+X-Gm-Message-State: APjAAAWQa1IAgEUTF4+I1u3uiY4I6HpvMbH6wOD4rE7OcQtW08gumFnJ
+        WPMuOWurxy/1TbN4TXA+p3zfT1ZIg08STYFpvbY=
+X-Google-Smtp-Source: APXvYqzaiHXfo5EDh97fUmKTxqQePTR+qWZyYH565Zl3ylwlW/YsxnPr6T/O6Zr1gY4kpGiRobaggbQm4ruVVnKba/s=
+X-Received: by 2002:a9d:738c:: with SMTP id j12mr16641308otk.119.1553514610189;
+ Mon, 25 Mar 2019 04:50:10 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1553513491-25763-2-git-send-email-c-hbandi@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Mon Mar 25 12:49:48 2019 +0100 (CET)
+References: <20190322224520.6740-1-srinivas.pandruvada@linux.intel.com> <20190322224520.6740-2-srinivas.pandruvada@linux.intel.com>
+In-Reply-To: <20190322224520.6740-2-srinivas.pandruvada@linux.intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 25 Mar 2019 12:49:59 +0100
+Message-ID: <CAJZ5v0g6=QZ7m8phjsYfZOxKNbc0Ny1ySPTScg=yzxOUsGk6HQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] ACPI / CPPC: Fix processing for guaranteed performance
+To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Prashanth Prakash <pprakash@codeaurora.org>,
+        Xiongfeng Wang <wangxiongfeng2@huawei.com>,
+        "4 . 20+" <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25/03/2019 12:31, Harish Bandi wrote:
+On Fri, Mar 22, 2019 at 11:45 PM Srinivas Pandruvada
+<srinivas.pandruvada@linux.intel.com> wrote:
+>
+> As per ACPI specification "Guaranteed Performance Register" is a "Buffer"
+> field. It can't be "Integer" field. So treat "Integer" type as invalid and
+> ignore "Guaranteed Performance Register".
+> Also save one cpc_read() call, when "Guaranteed Performance Register" is
+> not present, which means register defined as:
+> "Register(SystemMemory, 0, 0, 0, 0)".
+>
+> Fixes: 29523f095397 ("ACPI / CPPC: Add support for guaranteed performance")
+> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> Cc: 4.20+ <stable@vger.kernel.org> # 4.20+
+> ---
+>  drivers/acpi/cppc_acpi.c | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/acpi/cppc_acpi.c b/drivers/acpi/cppc_acpi.c
+> index 1b207fca1420..3f6c290e06af 100644
+> --- a/drivers/acpi/cppc_acpi.c
+> +++ b/drivers/acpi/cppc_acpi.c
+> @@ -1150,8 +1150,14 @@ int cppc_get_perf_caps(int cpunum, struct cppc_perf_caps *perf_caps)
+>         cpc_read(cpunum, nominal_reg, &nom);
+>         perf_caps->nominal_perf = nom;
+>
+> -       cpc_read(cpunum, guaranteed_reg, &guaranteed);
+> -       perf_caps->guaranteed_perf = guaranteed;
+> +       if (guaranteed_reg->type == ACPI_TYPE_INTEGER  ||
+> +           (guaranteed_reg->type == ACPI_TYPE_BUFFER &&
+> +            IS_NULL_REG(&guaranteed_reg->cpc_entry.reg))) {
 
-> +bool is_qca_soc_type_wcn399x_family(enum qca_btsoc_type soc_type)
-> +{
-> +	if ((soc_type  == QCA_WCN3990) || (soc_type  == QCA_WCN3998))
-                      ^                             ^
-            spurious white-space               here as well
+AFAICS anything different from a buffer should be rejected here, so
+why don't you do
 
-> +		return true;
-> +
-> +	return false;
-> +}
+if (guaranteed_reg->type != ACPI_TYPE_BUFFER  ||
+IS_NULL_REG(&guaranteed_reg->cpc_entry.reg))
 
-(Apologies for the bike-shed)
-
-I don't know what the kernel coding-style says about this, but for
-functions returning bool, isn't it better to write
-
-	return $BOOLEAN_EXPRESSION;
-
-instead of
-
-	if ($BOOLEAN_EXPRESSION)
-		return true;
-	return false;
-
-i.e.
-
-bool is_qca_soc_type_wcn399x_family(enum qca_btsoc_type soc_type)
-{
-	return soc_type == QCA_WCN3990 || soc_type  == QCA_WCN3998;
-}
-
-Regards.
+> +               perf_caps->guaranteed_perf = 0;
+> +       } else {
+> +               cpc_read(cpunum, guaranteed_reg, &guaranteed);
+> +               perf_caps->guaranteed_perf = guaranteed;
+> +       }
+>
+>         cpc_read(cpunum, lowest_non_linear_reg, &min_nonlinear);
+>         perf_caps->lowest_nonlinear_perf = min_nonlinear;
+> --
+> 2.17.2
+>
