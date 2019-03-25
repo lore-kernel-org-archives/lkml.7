@@ -6,38 +6,38 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C1E1C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:25:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D3C7C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:25:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67D3620848
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:25:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76EAD20848
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:25:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730581AbfCYVZC (ORCPT
+        id S1730621AbfCYVZH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 17:25:02 -0400
-Received: from smtprelay0181.hostedemail.com ([216.40.44.181]:41460 "EHLO
+        Mon, 25 Mar 2019 17:25:07 -0400
+Received: from smtprelay0037.hostedemail.com ([216.40.44.37]:55974 "EHLO
         smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730560AbfCYVY7 (ORCPT
+        by vger.kernel.org with ESMTP id S1730582AbfCYVZF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 17:24:59 -0400
+        Mon, 25 Mar 2019 17:25:05 -0400
 Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 21883182CF66A;
-        Mon, 25 Mar 2019 21:24:58 +0000 (UTC)
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id AFD3983777EE;
+        Mon, 25 Mar 2019 21:25:03 +0000 (UTC)
 X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: earth07_e201de3cbd2f
-X-Filterd-Recvd-Size: 4231
+X-HE-Tag: linen59_ef1bf3daae23
+X-Filterd-Recvd-Size: 4297
 Received: from joe-laptop.perches.com (unknown [47.151.153.53])
         (Authenticated sender: joe@perches.com)
-        by omf14.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 25 Mar 2019 21:24:56 +0000 (UTC)
+        by omf12.hostedemail.com (Postfix) with ESMTPA;
+        Mon, 25 Mar 2019 21:25:02 +0000 (UTC)
 From:   Joe Perches <joe@perches.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Charles Keepax <ckeepax@opensource.cirrus.com>,
         Richard Fitzgerald <rf@opensource.cirrus.com>,
         patches@opensource.cirrus.com, Lee Jones <lee.jones@linaro.org>
 Subject: Bad file pattern in MAINTAINERS section 'CIRRUS LOGIC LOCHNAGAR DRIVER'
-Date:   Mon, 25 Mar 2019 14:24:55 -0700
-Message-Id: <20190325212455.26003-1-joe@perches.com>
+Date:   Mon, 25 Mar 2019 14:25:01 -0700
+Message-Id: <20190325212501.26141-1-joe@perches.com>
 X-Mailer: git-send-email 2.15.0
 In-Reply-To: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com>
 References: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com>
@@ -66,7 +66,7 @@ linux-next MAINTAINERS section:
 	3794	M:	Richard Fitzgerald <rf@opensource.cirrus.com>
 	3795	L:	patches@opensource.cirrus.com
 	3796	S:	Supported
--->	3797	F:	drivers/clk/clk-lochnagar.c
+	3797	F:	drivers/clk/clk-lochnagar.c
 	3798	F:	drivers/mfd/lochnagar-i2c.c
 	3799	F:	drivers/pinctrl/cirrus/pinctrl-lochnagar.c
 	3800	F:	drivers/regulator/lochnagar-regulator.c
@@ -75,14 +75,14 @@ linux-next MAINTAINERS section:
 	3803	F:	include/dt-bindings/pinctrl/lochnagar.h
 	3804	F:	include/linux/mfd/lochnagar*
 	3805	F:	Documentation/devicetree/bindings/mfd/cirrus,lochnagar.txt
-	3806	F:	Documentation/devicetree/bindings/clock/cirrus,lochnagar.txt
+-->	3806	F:	Documentation/devicetree/bindings/clock/cirrus,lochnagar.txt
 	3807	F:	Documentation/devicetree/bindings/pinctrl/cirrus,lochnagar.txt
 	3808	F:	Documentation/devicetree/bindings/regulator/cirrus,lochnagar.txt
 	3809	F:	Documentation/devicetree/bindings/sound/cirrus,lochnagar.txt
 
 2: ---------------------------------------------------------------------------
 
-The most recent commit that added or modified file pattern 'drivers/clk/clk-lochnagar.c':
+The most recent commit that added or modified file pattern 'Documentation/devicetree/bindings/clock/cirrus,lochnagar.txt':
 
 commit 422dcafe477c7240d03c7b150704c45e0b17be57
 Author: Charles Keepax <ckeepax@opensource.cirrus.com>
@@ -120,4 +120,4 @@ Date:   Wed Jan 30 11:41:26 2019 +0000
 
 3: ---------------------------------------------------------------------------
 
-No commit with file pattern 'drivers/clk/clk-lochnagar.c' was found
+No commit with file pattern 'Documentation/devicetree/bindings/clock/cirrus,lochnagar.txt' was found
