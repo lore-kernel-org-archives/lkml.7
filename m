@@ -2,158 +2,90 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF140C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 03:15:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 207DBC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 03:19:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABD7A20828
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 03:15:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7F3320828
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 03:19:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="o/FaLzux"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729403AbfCYDP2 (ORCPT
+        id S1729407AbfCYDTc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 23:15:28 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5182 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729298AbfCYDP2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 23:15:28 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id BF446558F12D1AB5462D;
-        Mon, 25 Mar 2019 11:15:25 +0800 (CST)
-Received: from [127.0.0.1] (10.177.31.96) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.408.0; Mon, 25 Mar 2019
- 11:15:13 +0800
-Subject: Re: [PATCH] scsi: qedi: Fix global-out-of-bounds bug in qedi dbg
- function
-To:     <QLogic-Storage-Upstream@cavium.com>, <jejb@linux.ibm.com>,
-        <martin.petersen@oracle.com>
-References: <20190222033913.12480-1-yuehaibing@huawei.com>
-CC:     <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
-        <mrangankar@marvell.com>, <nilesh.javali@cavium.com>
-From:   YueHaibing <yuehaibing@huawei.com>
-Message-ID: <01c65070-b96b-db7c-6da2-25c9b7037b90@huawei.com>
-Date:   Mon, 25 Mar 2019 11:15:12 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        Sun, 24 Mar 2019 23:19:32 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:33956 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729285AbfCYDTc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Mar 2019 23:19:32 -0400
+Received: by mail-wm1-f65.google.com with SMTP id o10so488802wmc.1
+        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2019 20:19:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=m+KBawshO2ac9odd0aZdpxY21SVc/hnJhTxHZNDsCqc=;
+        b=o/FaLzuxCRSMDHvwZjCd2TG7JRIPfsq9KAJlNaJFIAILPPO3XvEIWHv5iMaJm4l575
+         I67VCbrEGCvRn8v9cBjY0DCkrYcvp5SfpxF6dwWr2zIeXn/sLjoJkjJ4aCZ7RbIz+FCg
+         k0aa2i++UENBkDf5vM71io2Yn0i2a1KtQOz4Y4N+ygpcOgb7DKHKrFjzdKUoUlBSVMWs
+         o21wxSpMfFkkINk4pyoPWWs7qpLN8wkxjgyx1xTpqGa3/tXCH6jxTe+3bUeNIma2ey2v
+         e9iasmi3Y5LCP0JqRJtF8835HM1g9+fFyIifhDNkyyDjshYlbvG+Pnunrmyq0pXRTV8d
+         UdKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=m+KBawshO2ac9odd0aZdpxY21SVc/hnJhTxHZNDsCqc=;
+        b=iai7xQwvEkioWwhi/XiePZL++WKkNy7c5sfJU+6f/1v4FGiPExf+1USVG7vtYCoCcf
+         7HJXdI8QsKNrHKTlsMKDQeErOQoMElIzHvCquL3kxJUHo0/HbLhGFNpry3zOwl6hBe9+
+         A54IrSSEQmDxJ0gjU1yM4jPUPiINRK/c9ylizM4+91vv5WiVbQzFNJSPa+QQ3CBsELBa
+         CLCylE6fqXbiGaIrzxz4U2oAc91/7Z20FlwlveQ93NqazOSMXXc7hGuNmwxJgOQQ6Llv
+         W1GB+eV2CalymhuRKBquoyGTf0ZDhlH/7GHnoSq/8oLAUYR4SHfyMTSb5e5oazUn8GuE
+         wZ3g==
+X-Gm-Message-State: APjAAAW3+kUF2Z4CBh84LU38YnQAxb8chKt5XJ7EWWUt1I7eyctiabEn
+        kzlOAqdsqFrP13+Skbkdl7iC5phjPVnAwzpNv8qkgg==
+X-Google-Smtp-Source: APXvYqwQ7z8znKmubuBIgR31+9p1eg7UMtNPW9S5EYCpJTKszx56IPpvbJ6XpTXteGOx38q7pSwx96CpB+nLFYXSbYE=
+X-Received: by 2002:a1c:9c14:: with SMTP id f20mr3917693wme.16.1553483970223;
+ Sun, 24 Mar 2019 20:19:30 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190222033913.12480-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
+References: <20190324110804.68555-1-anup.patel@wdc.com> <20190324145708.GA3355@lst.de>
+ <20190324164316.GA2925@rapoport-lnx>
+In-Reply-To: <20190324164316.GA2925@rapoport-lnx>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Mon, 25 Mar 2019 08:49:19 +0530
+Message-ID: <CAAhSdy1JcvFtzwcUpd5xHbeUiCBoTCy+AnEiW+nQAs2KHez44Q@mail.gmail.com>
+Subject: Re: [PATCH] RISC-V: Always compile mm/init.c with cmodel=medany
+To:     Mike Rapoport <rppt@linux.ibm.com>
+Cc:     Christoph Hellwig <hch@lst.de>, Anup Patel <Anup.Patel@wdc.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Mar 24, 2019 at 10:13 PM Mike Rapoport <rppt@linux.ibm.com> wrote:
+>
+> On Sun, Mar 24, 2019 at 03:57:08PM +0100, Christoph Hellwig wrote:
+> > On Sun, Mar 24, 2019 at 11:08:29AM +0000, Anup Patel wrote:
+> > > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > > Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> >
+> > Huh?  I don't think this is from Mike and me.
+>
+> Suggested-by: would me more appropriate indeed :)
 
-Friendly ping, could someone review this patch ?
+Sure, I will use Suggested-by: here.
 
-On 2019/2/22 11:39, Yue Haibing wrote:
-> From: YueHaibing <yuehaibing@huawei.com>
-> 
-> KASAN report this:
-> 
-> BUG: KASAN: global-out-of-bounds in qedi_dbg_err+0xda/0x330 [qedi]
-> Read of size 31 at addr ffffffffc12b0ae0 by task syz-executor.0/2429
-> 
-> CPU: 0 PID: 2429 Comm: syz-executor.0 Not tainted 5.0.0-rc7+ #45
-> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-> Call Trace:
->  __dump_stack lib/dump_stack.c:77 [inline]
->  dump_stack+0xfa/0x1ce lib/dump_stack.c:113
->  print_address_description+0x1c4/0x270 mm/kasan/report.c:187
->  kasan_report+0x149/0x18d mm/kasan/report.c:317
->  memcpy+0x1f/0x50 mm/kasan/common.c:130
->  qedi_dbg_err+0xda/0x330 [qedi]
->  ? 0xffffffffc12d0000
->  qedi_init+0x118/0x1000 [qedi]
->  ? 0xffffffffc12d0000
->  ? 0xffffffffc12d0000
->  ? 0xffffffffc12d0000
->  do_one_initcall+0xfa/0x5ca init/main.c:887
->  do_init_module+0x204/0x5f6 kernel/module.c:3460
->  load_module+0x66b2/0x8570 kernel/module.c:3808
->  __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
->  do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
->  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> RIP: 0033:0x462e99
-> Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
-> RSP: 002b:00007f2d57e55c58 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
-> RAX: ffffffffffffffda RBX: 000000000073bfa0 RCX: 0000000000462e99
-> RDX: 0000000000000000 RSI: 00000000200003c0 RDI: 0000000000000003
-> RBP: 00007f2d57e55c70 R08: 0000000000000000 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000246 R12: 00007f2d57e566bc
-> R13: 00000000004bcefb R14: 00000000006f7030 R15: 0000000000000004
-> 
-> The buggy address belongs to the variable:
->  __func__.67584+0x0/0xffffffffffffd520 [qedi]
-> 
-> Memory state around the buggy address:
->  ffffffffc12b0980: fa fa fa fa 00 04 fa fa fa fa fa fa 00 00 05 fa
->  ffffffffc12b0a00: fa fa fa fa 00 00 04 fa fa fa fa fa 00 05 fa fa
->> ffffffffc12b0a80: fa fa fa fa 00 06 fa fa fa fa fa fa 00 02 fa fa
->                                                           ^
->  ffffffffc12b0b00: fa fa fa fa 00 00 04 fa fa fa fa fa 00 00 03 fa
->  ffffffffc12b0b80: fa fa fa fa 00 00 02 fa fa fa fa fa 00 00 04 fa
-> 
-> qedi_dbg_err function does not check the length of caller's name,
-> blindly copy 31 characters to array 'nfunc', then print it to log,
-> which trigger global-out-of-bounds bug and may leak kernel info.
-> Also other qedi dbg function may have the same issue, this patch
-> fix this.
-> 
-> Fixes: ace7f46ba5fd ("scsi: qedi: Add QLogic FastLinQ offload iSCSI driver framework.")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/scsi/qedi/qedi_dbg.c | 12 ++++--------
->  1 file changed, 4 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/scsi/qedi/qedi_dbg.c b/drivers/scsi/qedi/qedi_dbg.c
-> index 8fd28b0..cce44b9 100644
-> --- a/drivers/scsi/qedi/qedi_dbg.c
-> +++ b/drivers/scsi/qedi/qedi_dbg.c
-> @@ -18,8 +18,7 @@ qedi_dbg_err(struct qedi_dbg_ctx *qedi, const char *func, u32 line,
->  	struct va_format vaf;
->  	char nfunc[32];
->  
-> -	memset(nfunc, 0, sizeof(nfunc));
-> -	memcpy(nfunc, func, sizeof(nfunc) - 1);
-> +	snprintf(nfunc, sizeof(nfunc), "%s", func);
->  
->  	va_start(va, fmt);
->  
-> @@ -43,8 +42,7 @@ qedi_dbg_warn(struct qedi_dbg_ctx *qedi, const char *func, u32 line,
->  	struct va_format vaf;
->  	char nfunc[32];
->  
-> -	memset(nfunc, 0, sizeof(nfunc));
-> -	memcpy(nfunc, func, sizeof(nfunc) - 1);
-> +	snprintf(nfunc, sizeof(nfunc), "%s", func);
->  
->  	va_start(va, fmt);
->  
-> @@ -72,8 +70,7 @@ qedi_dbg_notice(struct qedi_dbg_ctx *qedi, const char *func, u32 line,
->  	struct va_format vaf;
->  	char nfunc[32];
->  
-> -	memset(nfunc, 0, sizeof(nfunc));
-> -	memcpy(nfunc, func, sizeof(nfunc) - 1);
-> +	snprintf(nfunc, sizeof(nfunc), "%s", func);
->  
->  	va_start(va, fmt);
->  
-> @@ -102,8 +99,7 @@ qedi_dbg_info(struct qedi_dbg_ctx *qedi, const char *func, u32 line,
->  	struct va_format vaf;
->  	char nfunc[32];
->  
-> -	memset(nfunc, 0, sizeof(nfunc));
-> -	memcpy(nfunc, func, sizeof(nfunc) - 1);
-> +	snprintf(nfunc, sizeof(nfunc), "%s", func);
->  
->  	va_start(va, fmt);
->  
-> 
-
+Regards,
+Anup
