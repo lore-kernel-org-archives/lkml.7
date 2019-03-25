@@ -2,170 +2,186 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C8A2C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 06:12:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16694C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 06:12:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CE112075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 06:12:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D464C2075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 06:12:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729683AbfCYGMa convert rfc822-to-8bit (ORCPT
+        id S1729704AbfCYGMl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 02:12:30 -0400
-Received: from mga05.intel.com ([192.55.52.43]:22855 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729400AbfCYGMa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 02:12:30 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Mar 2019 23:12:29 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,256,1549958400"; 
-   d="scan'208";a="128374622"
-Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
-  by orsmga008.jf.intel.com with ESMTP; 24 Mar 2019 23:12:29 -0700
-Received: from fmsmsx151.amr.corp.intel.com (10.18.125.4) by
- FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Sun, 24 Mar 2019 23:12:28 -0700
-Received: from shsmsx102.ccr.corp.intel.com (10.239.4.154) by
- FMSMSX151.amr.corp.intel.com (10.18.125.4) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Sun, 24 Mar 2019 23:12:28 -0700
-Received: from shsmsx101.ccr.corp.intel.com ([169.254.1.158]) by
- shsmsx102.ccr.corp.intel.com ([169.254.2.163]) with mapi id 14.03.0415.000;
- Mon, 25 Mar 2019 14:12:26 +0800
-From:   "Zhao, Yakui" <yakui.zhao@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "Chen, Jason CJ" <jason.cj.chen@intel.com>
-Subject: RE: [RFC PATCH 3/3] arch/x86/acrn: add hypercall for acrn_hypervisor
-Thread-Topic: [RFC PATCH 3/3] arch/x86/acrn: add hypercall for
- acrn_hypervisor
-Thread-Index: AQHU1Ioz/GfpoMDRuEeI4ug5HTPNy6YXYe6AgARzlrA=
-Date:   Mon, 25 Mar 2019 06:12:25 +0000
-Message-ID: <01363028D91B0B448414F51B4258CAA574CD3DF5@SHSMSX101.ccr.corp.intel.com>
-References: <1551924251-19466-1-git-send-email-yakui.zhao@intel.com>
- <1551924251-19466-4-git-send-email-yakui.zhao@intel.com>
- <alpine.DEB.2.21.1903221644530.1729@nanos.tec.linutronix.de>
-In-Reply-To: <alpine.DEB.2.21.1903221644530.1729@nanos.tec.linutronix.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMWU1OGQyYzctZDJiMi00ZWU2LTlmZDMtZmY3ZmIzZGY2ZGZkIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiUGlLZVBIUjZMRElBSXMrWG1ZcDlaOE1uZzZNMnBoS1NwV1Nxb0VXRU9FVXJMSm1XXC9qRTdac0JncGtqbEpSVE8ifQ==
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.0.400.15
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Mon, 25 Mar 2019 02:12:41 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:47654 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729400AbfCYGMl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 02:12:41 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2P643Av035956
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 02:12:40 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2req235831-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 02:12:39 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Mon, 25 Mar 2019 06:12:37 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 25 Mar 2019 06:12:32 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2P6CV0923068912
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 25 Mar 2019 06:12:32 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DC4E8A4069;
+        Mon, 25 Mar 2019 06:12:31 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0B852A405F;
+        Mon, 25 Mar 2019 06:12:31 +0000 (GMT)
+Received: from rapoport-lnx (unknown [9.148.207.233])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Mon, 25 Mar 2019 06:12:30 +0000 (GMT)
+Date:   Mon, 25 Mar 2019 08:12:29 +0200
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Anup Patel <Anup.Patel@wdc.com>
+Cc:     Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] RISC-V: Always compile mm/init.c with cmodel=medany
+References: <20190325033648.16171-1-anup.patel@wdc.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190325033648.16171-1-anup.patel@wdc.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-TM-AS-GCONF: 00
+x-cbid: 19032506-0028-0000-0000-00000357D9DF
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19032506-0029-0000-0000-000024168AEE
+Message-Id: <20190325061228.GB2925@rapoport-lnx>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-25_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=903 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903250047
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Mar 25, 2019 at 03:37:38AM +0000, Anup Patel wrote:
+> The Linux RISC-V 32bit kernel is broken after we moved setup_vm() from
+> kernel/setup.c to mm/init.c because Linux RISC-V 32bit kernel by default
+> uses cmodel=medlow which results in a non-position-independent setup_vm().
+> 
+> This patch fixes Linux RISC-V 32bit kernel booting by:
+> 1. Forcing cmodel=medany for mm/init.c
+> 2. Moving remaing MM-related stuff va_pa_offset, pfn_base and
+>    empty_zero_page from kernel/setup.c to mm/init.c
+> 
+> Fixes: 6f1e9e946f0b ("RISC-V: Move setup_vm() to mm/init.c")
+> Suggested-by: Christoph Hellwig <hch@lst.de>
+> Suggested-by: Mike Rapoport <rppt@linux.ibm.com>
+> Signed-off-by: Anup Patel <anup.patel@wdc.com>
 
+Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
 
->-----Original Message-----
->From: Thomas Gleixner [mailto:tglx@linutronix.de]
->Sent: Saturday, March 23, 2019 12:02 AM
->To: Zhao, Yakui <yakui.zhao@intel.com>
->Cc: linux-kernel@vger.kernel.org; x86@kernel.org; Chen, Jason CJ
-><jason.cj.chen@intel.com>
->Subject: Re: [RFC PATCH 3/3] arch/x86/acrn: add hypercall for acrn_hypervisor
->
->On Thu, 7 Mar 2019, Zhao Yakui wrote:
->
->> When acrn_hypervisor is detected, the other module may communicate
->> with
->
->Which other module?
->
->> the hypervisor to query/config some settings. For example: it can be
->> used to query the resources in hypervisor and manage the
->> CPU/memory/device/ interrupt for Guest system.
->
->> +++ b/arch/x86/include/asm/acrn_hypercall.h
->> @@ -0,0 +1,85 @@
->> +/* SPDX-License-Identifier: GPL-2.0+ OR BSD-3-Clause */
->
->So the hypercall header is GPL-2.0+ and the acrn.c file is GPL-2.0. Not that I
->personally care, but is this intended?
+> ---
+> v2: Removed CFLAGS_setup.o from kernel/Makefile and replaced SoBs
+> ---
+>  arch/riscv/kernel/Makefile | 2 --
+>  arch/riscv/kernel/setup.c  | 8 --------
+>  arch/riscv/mm/Makefile     | 2 ++
+>  arch/riscv/mm/init.c       | 9 +++++++++
+>  4 files changed, 11 insertions(+), 10 deletions(-)
+> 
+> diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
+> index f13f7f276639..8b9780b6bd7f 100644
+> --- a/arch/riscv/kernel/Makefile
+> +++ b/arch/riscv/kernel/Makefile
+> @@ -29,8 +29,6 @@ obj-y	+= vdso.o
+>  obj-y	+= cacheinfo.o
+>  obj-y	+= vdso/
+>  
+> -CFLAGS_setup.o := -mcmodel=medany
+> -
+>  obj-$(CONFIG_FPU)		+= fpu.o
+>  obj-$(CONFIG_SMP)		+= smpboot.o
+>  obj-$(CONFIG_SMP)		+= smp.o
+> diff --git a/arch/riscv/kernel/setup.c b/arch/riscv/kernel/setup.c
+> index ecb654f6a79e..540a331d1376 100644
+> --- a/arch/riscv/kernel/setup.c
+> +++ b/arch/riscv/kernel/setup.c
+> @@ -48,14 +48,6 @@ struct screen_info screen_info = {
+>  };
+>  #endif
+>  
+> -unsigned long va_pa_offset;
+> -EXPORT_SYMBOL(va_pa_offset);
+> -unsigned long pfn_base;
+> -EXPORT_SYMBOL(pfn_base);
+> -
+> -unsigned long empty_zero_page[PAGE_SIZE / sizeof(unsigned long)] __page_aligned_bss;
+> -EXPORT_SYMBOL(empty_zero_page);
+> -
+>  /* The lucky hart to first increment this variable will boot the other cores */
+>  atomic_t hart_lottery;
+>  unsigned long boot_cpu_hartid;
+> diff --git a/arch/riscv/mm/Makefile b/arch/riscv/mm/Makefile
+> index eb22ab49b3e0..7307609d405b 100644
+> --- a/arch/riscv/mm/Makefile
+> +++ b/arch/riscv/mm/Makefile
+> @@ -3,3 +3,5 @@ obj-y += fault.o
+>  obj-y += extable.o
+>  obj-y += ioremap.o
+>  obj-y += cacheflush.o
+> +
+> +CFLAGS_init.o := -mcmodel=medany
+> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+> index b379a75ac6a6..7a7c454378cb 100644
+> --- a/arch/riscv/mm/init.c
+> +++ b/arch/riscv/mm/init.c
+> @@ -25,6 +25,10 @@
+>  #include <asm/pgtable.h>
+>  #include <asm/io.h>
+>  
+> +unsigned long empty_zero_page[PAGE_SIZE / sizeof(unsigned long)]
+> +							__page_aligned_bss;
+> +EXPORT_SYMBOL(empty_zero_page);
+> +
+>  static void __init zone_sizes_init(void)
+>  {
+>  	unsigned long max_zone_pfns[MAX_NR_ZONES] = { 0, };
+> @@ -143,6 +147,11 @@ void __init setup_bootmem(void)
+>  	}
+>  }
+>  
+> +unsigned long va_pa_offset;
+> +EXPORT_SYMBOL(va_pa_offset);
+> +unsigned long pfn_base;
+> +EXPORT_SYMBOL(pfn_base);
+> +
+>  pgd_t swapper_pg_dir[PTRS_PER_PGD] __page_aligned_bss;
+>  pgd_t trampoline_pg_dir[PTRS_PER_PGD] __initdata __aligned(PAGE_SIZE);
+>  
+> -- 
+> 2.17.1
+> 
 
-Sorry for my fault. It should be GPL-2.0
+-- 
+Sincerely yours,
+Mike.
 
->
->> +/*
->> + * acrn_hypercall.h : acrn hypervisor call API  */
->> +
->> +#ifndef __ACRN_HYPERCALL_H__
->> +#define __ACRN_HYPERCALL_H__
->> +
->> +#include <linux/errno.h>
->> +
->> +#ifdef CONFIG_ACRN
->> +
->> +static inline long acrn_hypercall0(unsigned long hcall_id) {
->> +
->> +	/* x86-64 System V ABI register usage */
->
->Well, yes. But can you please provide a link to the hypercall specification in the
->changelog?
->
->Also instead of repeating the same comment over and over, explain the calling
->convention in a top level comment.
-
-This is the low-level implementation of low-level hypercall. It is similar to 
-Kvm_hypercall1/2/3 in arch/x86/include/asm/kvm_para.h.
-Does it make sense that the below comments are added before acrn_hypercall0/1/2?
-/*
- * Hypercalls for ACRN Guest
- * 
- * Hypercall number is passed in r8 register.
- * Return value will be placed in rax. 
- * Up to 2 arguments are passed in rdi, rsi.
- */   
-
-Of course I will also remove the redundant comments.
-
->
->> +	register signed long    result asm("rax");
->> +	register unsigned long  r8 asm("r8")  = hcall_id;
->
->I appreciate the attempt of making this tabular, but it's unreadable and has
->random white space in it. Also please use 'long' and not 'signed long'.
-
-Ok. The type will be refined.
-
-
->
->	register unsigned long	r8	asm("r8") = hcall_id;
->	register long		result	asm("rax");
->
->> +
->> +	/* Execute vmcall */
->> +	asm volatile(".byte 0x0F,0x01,0xC1\n"
->> +			: "=r"(result)
->> +			:  "r"(r8));
->> +
->> +	/* Return result to caller */
->
->Please do not comment the obvious. It's entirely clear that this returns 'result'
->to the caller. Comments are there to explain what's not obvious.
-
-Thanks for pointing out the issue.
-I will remove the redundant comment.
-
->
->> +	return result;
->> +}
->
->Thanks,
->
->	tglx
