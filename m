@@ -2,114 +2,107 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8C7EC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:52:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C918C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:55:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82B6420854
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:52:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C994920879
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:55:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="KT8Ax0ZK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731257AbfCYMwL (ORCPT
+        id S1731202AbfCYMz2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 08:52:11 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:38175 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731088AbfCYMwK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 08:52:10 -0400
-Received: from wuerfel.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1N1Oft-1gy2xS483n-012s2n; Mon, 25 Mar 2019 13:51:50 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Ilya Dryomov <idryomov@gmail.com>, "Yan, Zheng" <zyan@redhat.com>,
-        Sage Weil <sage@redhat.com>
-Cc:     clang-built-linux@googlegroups.com,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, Alex Elder <elder@linaro.org>,
-        ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] [v2] ceph: fix clang warning for CEPH_DEFINE_OID_ONSTACK
-Date:   Mon, 25 Mar 2019 13:51:43 +0100
-Message-Id: <20190325125147.1436083-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Mon, 25 Mar 2019 08:55:28 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:52390 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730889AbfCYMz2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 08:55:28 -0400
+Received: from zn.tnic (p200300EC2F098000329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:8000:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 2C6EC1EC02D1;
+        Mon, 25 Mar 2019 13:55:26 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1553518526;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=TfXKG57jE9zlAcUNyv8YxG+cx4r0oKKJxK8A8ypCSMg=;
+        b=KT8Ax0ZKayh1VmBcIe1L8qZa09q58c8oi+gB0UOa15i2tQeKaGa8M/vpSxfbPSuRYpgvo2
+        KSTFRWgd1JQE2P2CHzsErnvxHSom/BmNnoX1xY9u3RnJThyGQtHU1pn44W8XSaOE0KhbIv
+        /+bu7vf6d4A6pzKgsg39HQMeypMU6Sg=
+Date:   Mon, 25 Mar 2019 13:55:28 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Kangjie Lu <kjlu@umn.edu>
+Cc:     pakki001@umn.edu, Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Mike Travis <mike.travis@hpe.com>,
+        Kees Cook <keescook@chromium.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Varsha Rao <rvarsha016@gmail.com>,
+        Nicolai Stange <nstange@suse.de>,
+        Andrew Banman <abanman@hpe.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] platform: uv: fix missing checks for kcalloc
+Message-ID: <20190325125528.GM12016@zn.tnic>
+References: <20190324225755.1702-1-kjlu@umn.edu>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:KWvfQc+4evNO9m8S8p3AoDmHUjX122/NcSdbgNhhaPGoBLr2fC3
- PZnt8of6Rnv8G4b4Ppnp6L30MFl96pxnIIjlLTJ2uSgHb0boHEol0gWaP7sPtKBPiOEXh+4
- dpKmvTIuSVBknRjZBX0B98K+x9NZp3w48l7AC8fJ7DAXwyPZHbpHL5MpkjUjQF5uWcpjvD9
- Y05wUJVGLKDdvUUE0qzCg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:eua1NsCnv1M=:L+K/YOrApGbhdwyDDeSJ8j
- uJ3V8KvnJxU95e0ftrqbkXQ1vlG0x/22VfE4/opMABDFsjE4IDm17Nur3yFMN0GPKPY7FNPtj
- 4Pa/eZM/kKKmFh+Et5pF99pJV+A1Fji8uID9YFt0fDcVFbQh6CAsd7drKdXXX+yGVUR7Xs+Vr
- y4olNimSb+1AcY1/jAJlHD523K0NJL5VsODDQKAY3OyanwlJvHGoDtscgy1xpsml9WRFBE24s
- xV6OWO+N7hqfYUqAy8hEphPVyCNGfhuEvm3623taxvoJwAWBxIg9IYoonqVgCrSuCIvU91qj6
- 4lx5VWYxD5yn/Q10udxap2Y/umFdONUhK9xyMcdbPawb/xhFEyCFBYeW+IXD8WSonX+q5DXRX
- jgG2PjHsjdB8LwMRNk3ZBRbinqvgKDD2wMW0WaHwZ9C5AL2K6WVZGARyMum8uIfos0ae472Xu
- REDE98raCMtZUSPK8H0gyQYqS9V8hGdjuDf4EaectfboZburMKWk4NNHSbDb7iaAia+gF2mC6
- Y48XO2IFHIBUEcdBd5ZcUT6687JMHLOmBFMiDsqBnS2o5+WiBlrmIPeWnXZKIgO5xb/zRx/s4
- rRWZs+kuuLJuQdEPW4GVmIOoro82wB381J2P8CQrzHMpTxxOt161nYl5ZOh/YaXq2jMuluB8j
- FjVfG1bIMWI520eIF3hJtxHYBnrYfZIXETg774/TXrk7GjT9dbBPYs7HgRlNd/Ji4jZ1e6PKN
- 3o6eYofop2HUxbSuWEHhnDmWP2skuNsev2TenA==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190324225755.1702-1-kjlu@umn.edu>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-clang complains about assigning a variable to itself during the
-declaration:
+On Sun, Mar 24, 2019 at 05:57:53PM -0500, Kangjie Lu wrote:
+> In case kcalloc fails, the patch return an error to avoid
+> potential NULL pointer dereference.
+> 
+> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+> ---
+>  arch/x86/platform/uv/tlb_uv.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/arch/x86/platform/uv/tlb_uv.c b/arch/x86/platform/uv/tlb_uv.c
+> index 2c53b0f19329..1ac777f14846 100644
+> --- a/arch/x86/platform/uv/tlb_uv.c
+> +++ b/arch/x86/platform/uv/tlb_uv.c
+> @@ -2140,7 +2140,13 @@ static int __init init_per_cpu(int nuvhubs, int base_part_pnode)
+>  		timeout_us = calculate_destination_timeout();
+>  
+>  	uvhub_descs = kcalloc(nuvhubs, sizeof(struct uvhub_desc), GFP_KERNEL);
+> +	if (!uvhub_descs)
+> +		return 1;
 
-fs/ceph/ioctl.c:187:26: error: variable 'oid' is uninitialized when used within its own initialization [-Werror,-Wuninitialized]
-        CEPH_DEFINE_OID_ONSTACK(oid);
-                                ^~~
-include/linux/ceph/osdmap.h:122:52: note: expanded from macro 'CEPH_DEFINE_OID_ONSTACK'
-        struct ceph_object_id oid = CEPH_OID_INIT_ONSTACK(oid)
-                              ~~~                         ^~~
-include/linux/ceph/osdmap.h:120:29: note: expanded from macro 'CEPH_OID_INIT_ONSTACK'
-    ({ ceph_oid_init(&oid); oid; })
-                            ^~~
+Here...
 
-We use this trick in other places, but it is completely unnecessary
-here, as we can just use a regular struct initializer.
+>  	uvhub_mask = kzalloc((nuvhubs+7)/8, GFP_KERNEL);
+> +	if (!uvhub_mask) {
+> +		kfree(uvhub_descs);
+> +		return 1;
+> +	}
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
-v2: rearrange to only have one instance of the initializer
----
- include/linux/ceph/osdmap.h | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+... and here you can simply do
 
-diff --git a/include/linux/ceph/osdmap.h b/include/linux/ceph/osdmap.h
-index 5675b1f09bc5..8794cf0f0b39 100644
---- a/include/linux/ceph/osdmap.h
-+++ b/include/linux/ceph/osdmap.h
-@@ -110,17 +110,16 @@ struct ceph_object_id {
- 	int name_len;
- };
- 
-+#define CEPH_OID_INITIALIZER(oid) { .name = (oid).inline_name }
-+
-+#define CEPH_DEFINE_OID_ONSTACK(oid)				\
-+	struct ceph_object_id oid = CEPH_OID_INITIALIZER(oid)
-+
- static inline void ceph_oid_init(struct ceph_object_id *oid)
- {
--	oid->name = oid->inline_name;
--	oid->name_len = 0;
-+	*oid = (struct ceph_object_id)CEPH_OID_INITIALIZER(*oid);
- }
- 
--#define CEPH_OID_INIT_ONSTACK(oid)					\
--    ({ ceph_oid_init(&oid); oid; })
--#define CEPH_DEFINE_OID_ONSTACK(oid)					\
--	struct ceph_object_id oid = CEPH_OID_INIT_ONSTACK(oid)
--
- static inline bool ceph_oid_empty(const struct ceph_object_id *oid)
- {
- 	return oid->name == oid->inline_name && !oid->name_len;
+		goto fail;
+
+instead. After having initialized uvhub_descs and uvhub_mask to NULL;
+
+Thx.
+
 -- 
-2.20.0
+Regards/Gruss,
+    Boris.
 
+Good mailing practices for 400: avoid top-posting and trim the reply.
