@@ -2,40 +2,51 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D232DC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:53:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DBF8C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:54:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9DC82083D
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:53:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DADD62083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:54:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553550878;
+	bh=x7swZbaedvnBUNIl2XBb7czEubkDx8HjKsBq4Pc2yWE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=cReJNLiZ1DboWmAUezAUXXECwC0Mka/AMd+0mghf+f3ASiIZqmhJKJjCUYCWNU8vO
+	 7Ks3teioOuxkAqmuRAQ6hZLiiISyHU5/J18/OILSjgR2KwZtVlPHLjErrUJmcewGbx
+	 XtKP/I0Yo2GSBAm5uCzBvhRzUy66K9SGcQbnu0Q0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730212AbfCYVxl (ORCPT
+        id S1730452AbfCYVyh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 17:53:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38920 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728912AbfCYVxk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 17:53:40 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BCF13206DF;
-        Mon, 25 Mar 2019 21:53:39 +0000 (UTC)
-Date:   Mon, 25 Mar 2019 17:53:38 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, Michal Kubecek <mkubecek@suse.cz>
-Subject: Re: [PATCH] parport: daisy: do not try to load lowlevel driver
-Message-ID: <20190325175338.2fa290cc@gandalf.local.home>
-In-Reply-To: <20190325211325.21411-1-sudipm.mukherjee@gmail.com>
-References: <20190325211325.21411-1-sudipm.mukherjee@gmail.com>
-X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
+        Mon, 25 Mar 2019 17:54:37 -0400
+Received: from mail.linuxfoundation.org ([140.211.169.12]:37234 "EHLO
+        mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728563AbfCYVyh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 17:54:37 -0400
+Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
+        by mail.linuxfoundation.org (Postfix) with ESMTPSA id 78091FB3;
+        Mon, 25 Mar 2019 21:54:29 +0000 (UTC)
+Date:   Mon, 25 Mar 2019 14:54:28 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Yury Norov <yury.norov@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Yury Norov <ynorov@marvell.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/6] bitmap_parselist: move non-parser logic to helpers
+Message-Id: <20190325145428.b826c281daa7f5cd1f110efe@linux-foundation.org>
+In-Reply-To: <20190325210748.6571-3-ynorov@marvell.com>
+References: <20190325210748.6571-1-ynorov@marvell.com>
+        <20190325210748.6571-3-ynorov@marvell.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -43,32 +54,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 25 Mar 2019 21:13:25 +0000
-Sudip Mukherjee <sudipm.mukherjee@gmail.com> wrote:
+On Tue, 26 Mar 2019 00:07:44 +0300 Yury Norov <yury.norov@gmail.com> wrote:
 
-> Some distros like Suse has an alias for "parport_lowlevel" and that
-> alias points to "parport_pc". Now when the parport bus registers, it
-> also initialises the daisy driver as the daisy driver is needed to
-> check the port when the port is first found. Due to the new device
-> model daisy driver will now try to find the parallel ports while trying
-> to register its driver so that it can bind with them. Now, since daisy
-> driver is loaded while parport bus is initialising the list of parport
-> is still empty and it tries to load the lowlevel driver, which has an
-> alias set to parport_pc, now causes a deadlock.
-> 
-> We do not need to search for ports and bind the initial list of ports
-> to daisy driver as daisy driver is always the first driver to use the
-> new found parport and we know when the parport bus is registering the
-> list of parport will always be empty. So, proceed with the daisy_drv
-> registration even if the list of parport is empty.
-> 
-> Fixes: 1aec4211204d ("parport: daisy: use new parport device model")
-> Reported-by: Michal Kubecek <mkubecek@suse.cz>
-> Reported-by: Steven Rostedt <rostedt@goodmis.org>
-> Tested-by: Michal Kubecek <mkubecek@suse.cz>
-> Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+> --- a/lib/bitmap.c
+> +++ b/lib/bitmap.c
+> @@ -477,6 +477,42 @@ int bitmap_print_to_pagebuf(bool list, char *buf, const unsigned long *maskp,
+>  }
+>  EXPORT_SYMBOL(bitmap_print_to_pagebuf);
+>  
+> +/*
+> + * Region 9-38:4/10 describes the following bitmap structure:
+> + * 0	   9  12    18			38
+> + * .........****......****......****......
+> + *	    ^  ^     ^			 ^
+> + *      start  off   grlen	       end
+> + */
+> +struct region {
+> +	unsigned int start;
+> +	unsigned int off;
+> +	unsigned int grlen;
+> +	unsigned int end;
+> +};
 
-Tested-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+grlen means...  group_len, I think?
 
--- Steve
+Perhaps it should be called group_len ;)
+
