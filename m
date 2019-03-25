@@ -2,216 +2,218 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68F26C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 13:12:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3C7EC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 13:12:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37F6E20854
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 13:12:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 819EC20854
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 13:12:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731354AbfCYNML (ORCPT
+        id S1731370AbfCYNMn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 09:12:11 -0400
-Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:43145 "EHLO
-        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731223AbfCYNMK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 09:12:10 -0400
-Received: from [192.168.2.10] ([212.251.195.8])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id 8POShfnT7NG8z8POVhOo3Y; Mon, 25 Mar 2019 14:12:07 +0100
-Subject: Re: [PATCH v3 2/2] media: docs-rst: Document memory-to-memory video
- encoder interface
-To:     Tomasz Figa <tfiga@chromium.org>, linux-media@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Pawel Osciak <posciak@chromium.org>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Kamil Debski <kamil@wypas.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Jeongtae Park <jtp.park@samsung.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        =?UTF-8?B?VGlmZmFueSBMaW4gKOael+aFp+ePiik=?= 
-        <tiffany.lin@mediatek.com>,
-        =?UTF-8?B?QW5kcmV3LUNUIENoZW4gKOmZs+aZuui/qik=?= 
-        <andrew-ct.chen@mediatek.com>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Todor Tomov <todor.tomov@linaro.org>,
-        Nicolas Dufresne <nicolas@ndufresne.ca>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        dave.stevenson@raspberrypi.org,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Maxime Jourdan <maxi.jourdan@wanadoo.fr>
-References: <20190124100419.26492-1-tfiga@chromium.org>
- <20190124100419.26492-3-tfiga@chromium.org>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <cb3c73e0-9481-54d1-8730-69e51655d7d8@xs4all.nl>
-Date:   Mon, 25 Mar 2019 14:12:00 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Mon, 25 Mar 2019 09:12:43 -0400
+Received: from mga03.intel.com ([134.134.136.65]:59834 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726166AbfCYNMm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 09:12:42 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Mar 2019 06:12:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,269,1549958400"; 
+   d="scan'208";a="129981054"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
+  by orsmga006.jf.intel.com with ESMTP; 25 Mar 2019 06:12:38 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1h8PP2-0005vP-9E; Mon, 25 Mar 2019 15:12:36 +0200
+Date:   Mon, 25 Mar 2019 15:12:36 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     William Breathitt Gray <vilhelm.gray@gmail.com>
+Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        akpm@linux-foundation.org, linux-gpio@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux@rasmusvillemoes.dk, yamada.masahiro@socionext.com,
+        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
+        geert@linux-m68k.org, preid@electromag.com.au,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v12 01/11] bitops: Introduce the for_each_set_clump8 macro
+Message-ID: <20190325131236.GW9224@smile.fi.intel.com>
+References: <cover.1553494625.git.vilhelm.gray@gmail.com>
+ <9afc30a574ce3e6a86b51dd522146a1d2156dedd.1553494625.git.vilhelm.gray@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190124100419.26492-3-tfiga@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfFjHFLLdnOq55cz/nHatxuxhs0wVuFlLjfiFBm3XCnVi2WN2m9QhfWBaoo/jCbFmioncjPdQoo9WWGZF+kx0hkuS/Rhdlew04eVzBDvrkIJMcFYZ7BJZ
- toyF5hDlj70eFQaxYJWS4v7ldnkQNibuOWGeLaAg7HortuegcDRz0NJ75JqL/T5Z6Cic3lOnCUWz84UEp7MVEz51ByXaC6MO0ceS40sBsuVq/5nxIavzn5dZ
- 06bXfavr2Q5Ai+c7fylX7jg5Tey/R36wGs/+YUqOMEG4qwsJtuj2uESviy7qkUyoyGtmHEZR5clJYaItwLrhQlidz4UZ9B7uTjtnJSlDEFEWee5OQXXxCLY7
- MraN63SCFjL1dQW0mu4FEWHn82xRC/w70Cs0wT5Stw2uOpWgMcFjQQs8ANe5Q1UOFuJFoRBAWTMihNRjYyfOyxuN6FWmA+DA9k7m+4/C4C/+dd9xW5jKEkTi
- 8NNary7rKlQtqc/NBPzhZLEvK9L5Mir3r/KKYbQ8rZWCV6SVy0UgWCFrZQVnxaMkLEPznoBzw1OcUTjMK3aQHqkkInUFDlyUz20TBHB8RcaIVtTtiwervRYk
- Jra3HPJqeKkNtWUXJri6VYQJT9QnpzSJ/1COLhGlvyfLKKKVScRg5TBfTRJ+hplYgxqxH9oeCbVfnwa3N0Rtkm4fVB8AYOM4JZZEs2JFAkG05BxFDYwPI0tB
- u7zb9gaNcTQA2Z5kHaWnoQKzzknXl36c0DCA4J/qqIKjrUnnWPgIiCYb6hgYYBHI9gvse4QCPSgsZVICDAGmhKlbcD89fHEGIZlc+aovIaf/t5FKxnx3lcQO
- x6/FkVWtrZ2H74iE8TCwXi5Q2r+UoijB285LdwAmAxTMkirVOVwYjAt6FNTRgnonelGUDearf+ayYfAqSdM=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9afc30a574ce3e6a86b51dd522146a1d2156dedd.1553494625.git.vilhelm.gray@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Another comment found while creating compliance tests:
+On Mon, Mar 25, 2019 at 03:22:23PM +0900, William Breathitt Gray wrote:
+> This macro iterates for each 8-bit group of bits (clump) with set bits,
+> within a bitmap memory region. For each iteration, "start" is set to the
+> bit offset of the found clump, while the respective clump value is
+> stored to the location pointed by "clump". Additionally, the
+> bitmap_get_value8 and bitmap_set_value8 functions are introduced to
+> respectively get and set an 8-bit value in a bitmap memory region.
 
-On 1/24/19 11:04 AM, Tomasz Figa wrote:
-> +Drain
-> +=====
-> +
-> +To ensure that all the queued ``OUTPUT`` buffers have been processed and the
-> +related ``CAPTURE`` buffers are given to the client, the client must follow the
-> +drain sequence described below. After the drain sequence ends, the client has
-> +received all encoded frames for all ``OUTPUT`` buffers queued before the
-> +sequence was started.
-> +
-> +1. Begin the drain sequence by issuing :c:func:`VIDIOC_ENCODER_CMD`.
-> +
-> +   * **Required fields:**
-> +
-> +     ``cmd``
-> +         set to ``V4L2_ENC_CMD_STOP``
-> +
-> +     ``flags``
-> +         set to 0
-> +
-> +     ``pts``
-> +         set to 0
-> +
-> +   .. warning::
-> +
-> +      The sequence can be only initiated if both ``OUTPUT`` and ``CAPTURE``
-> +      queues are streaming. For compatibility reasons, the call to
-> +      :c:func:`VIDIOC_ENCODER_CMD` will not fail even if any of the queues is
-> +      not streaming, but at the same time it will not initiate the `Drain`
-> +      sequence and so the steps described below would not be applicable.
-> +
-> +2. Any ``OUTPUT`` buffers queued by the client before the
-> +   :c:func:`VIDIOC_ENCODER_CMD` was issued will be processed and encoded as
-> +   normal. The client must continue to handle both queues independently,
-> +   similarly to normal encode operation. This includes:
-> +
-> +   * queuing and dequeuing ``CAPTURE`` buffers, until a buffer marked with the
-> +     ``V4L2_BUF_FLAG_LAST`` flag is dequeued,
-> +
-> +     .. warning::
-> +
-> +        The last buffer may be empty (with :c:type:`v4l2_buffer`
-> +        ``bytesused`` = 0) and in that case it must be ignored by the client,
-> +        as it does not contain an encoded frame.
-> +
-> +     .. note::
-> +
-> +        Any attempt to dequeue more buffers beyond the buffer marked with
-> +        ``V4L2_BUF_FLAG_LAST`` will result in a -EPIPE error from
-> +        :c:func:`VIDIOC_DQBUF`.
-> +
-> +   * dequeuing processed ``OUTPUT`` buffers, until all the buffers queued
-> +     before the ``V4L2_ENC_CMD_STOP`` command are dequeued,
-> +
-> +   * dequeuing the ``V4L2_EVENT_EOS`` event, if the client subscribes to it.
-> +
-> +   .. note::
-> +
-> +      For backwards compatibility, the encoder will signal a ``V4L2_EVENT_EOS``
-> +      event when the last frame has been decoded and all frames are ready to be
-> +      dequeued. It is deprecated behavior and the client must not rely on it.
-> +      The ``V4L2_BUF_FLAG_LAST`` buffer flag should be used instead.
-> +
-> +3. Once all ``OUTPUT`` buffers queued before the ``V4L2_ENC_CMD_STOP`` call are
-> +   dequeued and the last ``CAPTURE`` buffer is dequeued, the encoder is stopped
-> +   and it will accept, but not process any newly queued ``OUTPUT`` buffers
-> +   until the client issues any of the following operations:
-> +
-> +   * ``V4L2_ENC_CMD_START`` - the encoder will not be reset and will resume
-> +     operation normally, with all the state from before the drain,
 
-I assume that calling CMD_START when *not* draining will succeed but does nothing.
+This seems to miss Randy's (IIRC) comment about too many const specifiers.
 
-In other words: while draining is in progress START will return EBUSY. When draining
-was finished, then START will resume the encoder. In all other cases it just returns
-0 since the encoder is really already started.
-
+> Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Acked-by: Andrew Morton <akpm@linux-foundation.org>
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
+> ---
+>  include/asm-generic/bitops/find.h | 14 ++++++
+>  include/linux/bitops.h            |  5 ++
+>  lib/find_bit.c                    | 81 +++++++++++++++++++++++++++++++
+>  3 files changed, 100 insertions(+)
+> 
+> diff --git a/include/asm-generic/bitops/find.h b/include/asm-generic/bitops/find.h
+> index 8a1ee10014de..9a76adff59c6 100644
+> --- a/include/asm-generic/bitops/find.h
+> +++ b/include/asm-generic/bitops/find.h
+> @@ -80,4 +80,18 @@ extern unsigned long find_first_zero_bit(const unsigned long *addr,
+>  
+>  #endif /* CONFIG_GENERIC_FIND_FIRST_BIT */
+>  
+> +unsigned long bitmap_get_value8(const unsigned long *const bitmap,
+> +				const unsigned int size,
+> +				const unsigned int start);
 > +
-> +   * a pair of :c:func:`VIDIOC_STREAMOFF` and :c:func:`VIDIOC_STREAMON` on the
-> +     ``CAPTURE`` queue - the encoder will be reset (see the `Reset` sequence)
-> +     and then resume encoding,
+> +void bitmap_set_value8(unsigned long *const bitmap, const unsigned int size,
+> +		       const unsigned long value, const unsigned int start);
 > +
-> +   * a pair of :c:func:`VIDIOC_STREAMOFF` and :c:func:`VIDIOC_STREAMON` on the
-> +     ``OUTPUT`` queue - the encoder will resume operation normally, however any
-> +     source frames queued to the ``OUTPUT`` queue between ``V4L2_ENC_CMD_STOP``
-> +     and :c:func:`VIDIOC_STREAMOFF` will be discarded.
+> +unsigned int find_next_clump8(unsigned long *const clump,
+> +			      const unsigned long *const addr,
+> +			      unsigned int offset, const unsigned int size);
 > +
-> +.. note::
+> +#define find_first_clump8(clump, bits, size) \
+> +	find_next_clump8((clump), (bits), 0, (size))
 > +
-> +   Once the drain sequence is initiated, the client needs to drive it to
-> +   completion, as described by the steps above, unless it aborts the process by
-> +   issuing :c:func:`VIDIOC_STREAMOFF` on any of the ``OUTPUT`` or ``CAPTURE``
-> +   queues.  The client is not allowed to issue ``V4L2_ENC_CMD_START`` or
-> +   ``V4L2_ENC_CMD_STOP`` again while the drain sequence is in progress and they
-> +   will fail with -EBUSY error code if attempted.
-
-I assume calling STOP again once the drain sequence completed just returns 0 and
-doesn't do anything else (since we're already stopped).
-
+>  #endif /*_ASM_GENERIC_BITOPS_FIND_H_ */
+> diff --git a/include/linux/bitops.h b/include/linux/bitops.h
+> index 602af23b98c7..f19a7bc8f559 100644
+> --- a/include/linux/bitops.h
+> +++ b/include/linux/bitops.h
+> @@ -40,6 +40,11 @@ extern unsigned long __sw_hweight64(__u64 w);
+>  	     (bit) < (size);					\
+>  	     (bit) = find_next_zero_bit((addr), (size), (bit) + 1))
+>  
+> +#define for_each_set_clump8(start, clump, bits, size) \
+> +	for ((start) = find_first_clump8(&(clump), (bits), (size)); \
+> +	     (start) < (size); \
+> +	     (start) = find_next_clump8(&(clump), (bits), (start) + 8, (size)))
 > +
-> +   Although mandatory, the availability of encoder commands may be queried
-> +   using :c:func:`VIDIOC_TRY_ENCODER_CMD`.
+>  static inline int get_bitmask_order(unsigned int count)
+>  {
+>  	int order;
+> diff --git a/lib/find_bit.c b/lib/find_bit.c
+> index ee3df93ba69a..1b6f8a6f1957 100644
+> --- a/lib/find_bit.c
+> +++ b/lib/find_bit.c
+> @@ -218,3 +218,84 @@ EXPORT_SYMBOL(find_next_bit_le);
+>  #endif
+>  
+>  #endif /* __BIG_ENDIAN */
+> +
+> +/**
+> + * bitmap_get_value8 - get an 8-bit value within a memory region
+> + * @bitmap: address to the bitmap memory region
+> + * @size: bitmap size in number of bits
+> + * @start: bit offset of the 8-bit value
+> + *
+> + * Returns the 8-bit value located at the @start bit offset within the @bitmap
+> + * memory region.
+> + */
+> +unsigned long bitmap_get_value8(const unsigned long *const bitmap,
+> +				const unsigned int size,
+> +				const unsigned int start)
+> +{
+> +	const size_t index = BIT_WORD(start);
+> +	const unsigned int offset = start % BITS_PER_LONG;
+> +	const unsigned int low_width = (offset + 8 > BITS_PER_LONG) ?
+> +				       BITS_PER_LONG - offset : 8;
+> +	const unsigned long low = bitmap[index] >> offset;
+> +	const unsigned long high = (low_width < 8 && start + 8 <= size) ?
+> +				   bitmap[index + 1] << low_width : 0;
+> +
+> +	return (low | high) & 0xFF;
+> +}
+> +EXPORT_SYMBOL(bitmap_get_value8);
+> +
+> +/**
+> + * bitmap_set_value8 - set an 8-bit value within a memory region
+> + * @bitmap: address to the bitmap memory region
+> + * @size: bitmap size in number of bits
+> + * @value: the 8-bit value; values wider than 8 bits may clobber bitmap
+> + * @start: bit offset of the 8-bit value
+> + */
+> +void bitmap_set_value8(unsigned long *const bitmap, const unsigned int size,
+> +		       const unsigned long value, const unsigned int start)
+> +{
+> +	const size_t index = BIT_WORD(start);
+> +	const unsigned int offset = start % BITS_PER_LONG;
+> +	const unsigned int low_width = (offset + 8 > BITS_PER_LONG) ?
+> +				       BITS_PER_LONG - offset : 8;
+> +	const unsigned long low_mask = GENMASK(low_width - 1, 0) << offset;
+> +	const unsigned int high_width = 8 - low_width;
+> +	const unsigned long high_mask = GENMASK(high_width - 1, 0);
+> +
+> +	/* set lower portion */
+> +	bitmap[index] &= ~low_mask;
+> +	bitmap[index] |= value << offset;
+> +
+> +	/* set higher portion if space available in bitmap */
+> +	if (high_width && start + 8 <= size) {
+> +		bitmap[index + 1] &= ~high_mask;
+> +		bitmap[index + 1] |= value >> low_width;
+> +	}
+> +}
+> +EXPORT_SYMBOL(bitmap_set_value8);
+> +
+> +/**
+> + * find_next_clump8 - find next 8-bit clump with set bits in a memory region
+> + * @clump: location to store copy of found clump
+> + * @addr: address to base the search on
+> + * @offset: bit offset at which to start searching
+> + * @size: bitmap size in number of bits
+> + *
+> + * Returns the bit offset for the next set clump; the found clump value is
+> + * copied to the location pointed by @clump. If no bits are set, returns @size.
+> + */
+> +unsigned int find_next_clump8(unsigned long *const clump,
+> +			      const unsigned long *const addr,
+> +			      unsigned int offset, const unsigned int size)
+> +{
+> +	for (; offset < size; offset += 8) {
+> +		*clump = bitmap_get_value8(addr, size, offset);
+> +		if (!*clump)
+> +			continue;
+> +
+> +		return offset;
+> +	}
+> +
+> +	return size;
+> +}
+> +EXPORT_SYMBOL(find_next_clump8);
+> -- 
+> 2.21.0
+> 
 
-Some corner cases:
+-- 
+With Best Regards,
+Andy Shevchenko
 
-1) No buffers are queued on either vb2_queue, but STREAMON is called for both queues.
-   Now ENC_CMD_STOP is issued. What should happen?
 
-   Proposal: the next time the applications queues a CAPTURE buffer it is returned
-   at once as an empty buffer with FLAG_LAST set.
-
-2) Both queues are streaming and buffers have been encoded, but currently no buffers
-   are queued on either vb2_queue. Now ENC_CMD_STOP is issued. What should happen?
-
-   Proposal: the next time the applications queues a CAPTURE buffer it is returned
-   at once as an empty buffer with FLAG_LAST set. This is consistent with the
-   previous corner case.
-
-3) The CAPTURE queue contains buffers, the OUTPUT queue does not. Now ENC_CMD_STOP
-   is issued. What should happen?
-
-   Proposal: the oldest CAPTURE buffer in the ready queue is returned as an empty
-   buffer with FLAG_LAST set.
-
-4) Both queues have queued buffers. ENC_CMD_STOP is issued to start the drain process.
-   Before the drain process completes STREAMOFF is called for either CAPTURE or
-   OUTPUT queue. What should happen?
-
-   Proposal for STREAMOFF(CAPTURE): aborts the drain process and all CAPTURE buffers are
-   returned to userspace. If encoding is restarted, then any remaining OUTPUT buffers
-   will be used as input to the encoder.
-
-   Proposal for STREAMOFF(OUTPUT): the next capture buffer will be empty and have
-   FLAG_LAST set.
-
-Some of this might have to be documented, but these corner cases should certainly be
-tested by v4l2-compliance. Before I write those tests I'd like to know if you agree
-with this.
-
-Regards,
-
-	Hans
