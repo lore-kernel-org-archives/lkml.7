@@ -6,45 +6,40 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F035DC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:27:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07588C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:27:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB4B12070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:27:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8CB02084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:27:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730535AbfCYV1K (ORCPT
+        id S1729693AbfCYV1O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 17:27:10 -0400
-Received: from smtprelay0086.hostedemail.com ([216.40.44.86]:50341 "EHLO
+        Mon, 25 Mar 2019 17:27:14 -0400
+Received: from smtprelay0160.hostedemail.com ([216.40.44.160]:41777 "EHLO
         smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729693AbfCYV1K (ORCPT
+        by vger.kernel.org with ESMTP id S1730511AbfCYV1O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 17:27:10 -0400
+        Mon, 25 Mar 2019 17:27:14 -0400
 Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay07.hostedemail.com (Postfix) with ESMTP id B6988181D341F;
-        Mon, 25 Mar 2019 21:27:08 +0000 (UTC)
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 024EB182CED5B;
+        Mon, 25 Mar 2019 21:27:13 +0000 (UTC)
 X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: brass23_20f9e36b16e4b
-X-Filterd-Recvd-Size: 3426
+X-HE-Tag: ghost66_2196121266b06
+X-Filterd-Recvd-Size: 3843
 Received: from joe-laptop.perches.com (unknown [47.151.153.53])
         (Authenticated sender: joe@perches.com)
-        by omf05.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 25 Mar 2019 21:27:06 +0000 (UTC)
+        by omf10.hostedemail.com (Postfix) with ESMTPA;
+        Mon, 25 Mar 2019 21:27:10 +0000 (UTC)
 From:   Joe Perches <joe@perches.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     James Bottomley <jejb@linux.ibm.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
-        Mimi Zohar <zohar@us.ibm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jmorris@namei.org>,
-        Denis Kenzior <denkenz@gmail.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        James Morris <james.morris@microsoft.com>
-Subject: Bad file pattern in MAINTAINERS section 'KEYS-TRUSTED'
-Date:   Mon, 25 Mar 2019 14:27:05 -0700
-Message-Id: <20190325212705.26837-1-joe@perches.com>
+Cc:     Boris Pismenny <borisp@mellanox.com>, netdev@vger.kernel.org,
+        Ilan Tayari <ilant@mellanox.com>,
+        Yossi Kuperman <yossiku@mellanox.com>,
+        Yevgeny Kliteynik <kliteyn@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: Bad file pattern in MAINTAINERS section 'MELLANOX ETHERNET INNOVA IPSEC DRIVER'
+Date:   Mon, 25 Mar 2019 14:27:09 -0700
+Message-Id: <20190325212709.26906-1-joe@perches.com>
 X-Mailer: git-send-email 2.15.0
 In-Reply-To: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com>
 References: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com>
@@ -68,53 +63,56 @@ Please fix this defect appropriately.
 
 linux-next MAINTAINERS section:
 
-	8587	KEYS-TRUSTED
-	8588	M:	James Bottomley <jejb@linux.ibm.com>
-	8589	M:      Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-	8590	M:	Mimi Zohar <zohar@linux.ibm.com>
-	8591	L:	linux-integrity@vger.kernel.org
-	8592	L:	keyrings@vger.kernel.org
-	8593	S:	Supported
-	8594	F:	Documentation/security/keys/trusted-encrypted.rst
-	8595	F:	include/keys/trusted-type.h
-	8596	F:	security/keys/trusted.c
--->	8597	F:	security/keys/trusted.h
+	9887	MELLANOX ETHERNET INNOVA IPSEC DRIVER
+	9888	R:	Boris Pismenny <borisp@mellanox.com>
+	9889	L:	netdev@vger.kernel.org
+	9890	S:	Supported
+	9891	W:	http://www.mellanox.com
+	9892	Q:	http://patchwork.ozlabs.org/project/netdev/list/
+-->	9893	F:	drivers/net/ethernet/mellanox/mlx5/core/en_ipsec/*
+	9894	F:	drivers/net/ethernet/mellanox/mlx5/core/ipsec*
 
 2: ---------------------------------------------------------------------------
 
-The most recent commit that added or modified file pattern 'security/keys/trusted.h':
+The most recent commit that added or modified file pattern 'drivers/net/ethernet/mellanox/mlx5/core/en_ipsec/*':
 
-commit 7f3c68bee977ab872827e44de017216736fe21d7
-Author: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Date:   Tue Jan 18 09:07:13 2011 -0500
+commit 547eede070eb981f1442e494f08f4567dcf1d1c7
+Author: Ilan Tayari <ilant@mellanox.com>
+Date:   Tue Apr 18 16:04:28 2017 +0300
 
-    keys: add trusted and encrypted maintainers
+    net/mlx5e: IPSec, Innova IPSec offload infrastructure
     
-    Add myself and David Safford as maintainers for trusted/encrypted keys.
+    Add Innova IPSec ESP crypto offload configuration paths.
+    Detect Innova IPSec device and set the NETIF_F_HW_ESP flag.
+    Configure Security Associations using the API introduced in a previous
+    patch.
     
-    Signed-off-by: Mimi Zohar <zohar@us.ibm.com>
-    Acked-by: David Howells <dhowells@redhat.com>
-    Signed-off-by: James Morris <jmorris@namei.org>
+    Add Software-parser hardware descriptor layout
+    Software-Parser (swp) is a hardware feature in ConnectX which allows the
+    host software to specify protocol header offsets in the TX path, thus
+    overriding the hardware parser.
+    This is useful for protocols that the ASIC may not be able to parse on
+    its own.
+    
+    Note that due to inline metadata, XDP is not supported in Innova IPSec.
+    
+    Signed-off-by: Ilan Tayari <ilant@mellanox.com>
+    Signed-off-by: Yossi Kuperman <yossiku@mellanox.com>
+    Signed-off-by: Yevgeny Kliteynik <kliteyn@mellanox.com>
+    Signed-off-by: Boris Pismenny <borisp@mellanox.com>
+    Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 
- MAINTAINERS | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ MAINTAINERS                                        |  10 +
+ drivers/net/ethernet/mellanox/mlx5/core/Kconfig    |  12 +
+ drivers/net/ethernet/mellanox/mlx5/core/Makefile   |   2 +
+ drivers/net/ethernet/mellanox/mlx5/core/en.h       |   3 +
+ .../ethernet/mellanox/mlx5/core/en_accel/ipsec.c   | 415 +++++++++++++++++++++
+ .../ethernet/mellanox/mlx5/core/en_accel/ipsec.h   |  78 ++++
+ drivers/net/ethernet/mellanox/mlx5/core/en_main.c  |  14 +
+ include/linux/mlx5/mlx5_ifc.h                      |   8 +-
+ include/linux/mlx5/qp.h                            |  14 +-
+ 9 files changed, 552 insertions(+), 4 deletions(-)
 
 3: ---------------------------------------------------------------------------
 
-The last commit with a real presence of file pattern 'security/keys/trusted.h':
-
-commit 22447981fc050b5f1bdd0e7cbee89b4152a2b2d8
-Author: Denis Kenzior <denkenz@gmail.com>
-Date:   Tue Oct 9 17:48:49 2018 +0100
-
-    KEYS: Move trusted.h to include/keys [ver #2]
-    
-    Signed-off-by: Denis Kenzior <denkenz@gmail.com>
-    Signed-off-by: David Howells <dhowells@redhat.com>
-    Tested-by: Marcel Holtmann <marcel@holtmann.org>
-    Reviewed-by: Marcel Holtmann <marcel@holtmann.org>
-    Signed-off-by: James Morris <james.morris@microsoft.com>
-
- {security => include}/keys/trusted.h | 0
- security/keys/trusted.c              | 2 +-
- 2 files changed, 1 insertion(+), 1 deletion(-)
+No commit with file pattern 'drivers/net/ethernet/mellanox/mlx5/core/en_ipsec/*' was found
