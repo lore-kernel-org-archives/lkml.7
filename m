@@ -2,82 +2,83 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC0DAC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 11:49:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EE97C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 11:49:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8135D20850
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 11:49:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECA602087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 11:49:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730970AbfCYLto (ORCPT
+        id S1730989AbfCYLtv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 07:49:44 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38504 "EHLO mx1.redhat.com"
+        Mon, 25 Mar 2019 07:49:51 -0400
+Received: from ns.iliad.fr ([212.27.33.1]:49834 "EHLO ns.iliad.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730730AbfCYLto (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 07:49:44 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id DF4BB31408F1;
-        Mon, 25 Mar 2019 11:49:43 +0000 (UTC)
-Received: from maximlenovopc.usersys.redhat.com (unknown [10.35.206.72])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B18B46766F;
-        Mon, 25 Mar 2019 11:49:37 +0000 (UTC)
-Message-ID: <01d3cd705b9ec9d5d6b286381951e6168269bda6.camel@redhat.com>
-Subject: Re: [PATCH 2/8] vfio/mdev: Avoid release parent reference during
- error path
-From:   Maxim Levitsky <mlevitsk@redhat.com>
-To:     Parav Pandit <parav@mellanox.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kwankhede@nvidia.com,
-        alex.williamson@redhat.com
-Date:   Mon, 25 Mar 2019 13:49:36 +0200
-In-Reply-To: <1553296835-37522-3-git-send-email-parav@mellanox.com>
-References: <1553296835-37522-1-git-send-email-parav@mellanox.com>
-         <1553296835-37522-3-git-send-email-parav@mellanox.com>
-Content-Type: text/plain; charset="UTF-8"
-Mime-Version: 1.0
+        id S1730917AbfCYLtu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 07:49:50 -0400
+Received: from ns.iliad.fr (localhost [127.0.0.1])
+        by ns.iliad.fr (Postfix) with ESMTP id 4ED0D208D5;
+        Mon, 25 Mar 2019 12:49:48 +0100 (CET)
+Received: from [192.168.108.8] (freebox.vlq16.iliad.fr [213.36.7.13])
+        by ns.iliad.fr (Postfix) with ESMTP id 35392207E5;
+        Mon, 25 Mar 2019 12:49:48 +0100 (CET)
+Subject: Re: [PATCH v4 1/2] Bluetooth: hci_qca: Added support for WCN3998
+To:     Harish Bandi <c-hbandi@codeaurora.org>
+References: <1553513491-25763-1-git-send-email-c-hbandi@codeaurora.org>
+ <1553513491-25763-2-git-send-email-c-hbandi@codeaurora.org>
+Cc:     MSM <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>
+From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
+Message-ID: <e17eb2d2-8d32-70c6-32f9-435671233bfc@free.fr>
+Date:   Mon, 25 Mar 2019 12:49:48 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
+MIME-Version: 1.0
+In-Reply-To: <1553513491-25763-2-git-send-email-c-hbandi@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Mon, 25 Mar 2019 11:49:43 +0000 (UTC)
+X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Mon Mar 25 12:49:48 2019 +0100 (CET)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-03-22 at 18:20 -0500, Parav Pandit wrote:
-> During mdev parent registration in mdev_register_device(),
-> if parent device is duplicate, it releases the reference of existing
-> parent device.
-> This is incorrect. Existing parent device should not be touched.
-> 
-> Fixes: 7b96953bc640 ("vfio: Mediated device Core driver")
-> Signed-off-by: Parav Pandit <parav@mellanox.com>
-> ---
->  drivers/vfio/mdev/mdev_core.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
-> index 3e5880a..4f213e4d 100644
-> --- a/drivers/vfio/mdev/mdev_core.c
-> +++ b/drivers/vfio/mdev/mdev_core.c
-> @@ -182,6 +182,7 @@ int mdev_register_device(struct device *dev, const struct
-> mdev_parent_ops *ops)
->  	/* Check for duplicate */
->  	parent = __find_parent_device(dev);
->  	if (parent) {
-> +		parent = NULL;
->  		ret = -EEXIST;
->  		goto add_dev_err;
->  	}
+On 25/03/2019 12:31, Harish Bandi wrote:
 
-This is also clearly an issue.
+> +bool is_qca_soc_type_wcn399x_family(enum qca_btsoc_type soc_type)
+> +{
+> +	if ((soc_type  == QCA_WCN3990) || (soc_type  == QCA_WCN3998))
+                      ^                             ^
+            spurious white-space               here as well
 
-Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
+> +		return true;
+> +
+> +	return false;
+> +}
 
-Best regards,
-	Maxim Levitsky
+(Apologies for the bike-shed)
 
+I don't know what the kernel coding-style says about this, but for
+functions returning bool, isn't it better to write
+
+	return $BOOLEAN_EXPRESSION;
+
+instead of
+
+	if ($BOOLEAN_EXPRESSION)
+		return true;
+	return false;
+
+i.e.
+
+bool is_qca_soc_type_wcn399x_family(enum qca_btsoc_type soc_type)
+{
+	return soc_type == QCA_WCN3990 || soc_type  == QCA_WCN3998;
+}
+
+Regards.
