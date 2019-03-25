@@ -2,150 +2,110 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA54DC10F03
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 15:27:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC668C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 15:27:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98EBF20811
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 15:27:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alibaba-inc.com header.i=@alibaba-inc.com header.b="XfDEhfGU"
+	by mail.kernel.org (Postfix) with ESMTP id A520520811
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 15:27:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729471AbfCYP1X (ORCPT
+        id S1729581AbfCYP11 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 11:27:23 -0400
-Received: from out0-155.mail.aliyun.com ([140.205.0.155]:35438 "EHLO
-        out0-155.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726203AbfCYP1W (ORCPT
+        Mon, 25 Mar 2019 11:27:27 -0400
+Received: from vmicros1.altlinux.org ([194.107.17.57]:51594 "EHLO
+        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726203AbfCYP10 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 11:27:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=alibaba-inc.com; s=default;
-        t=1553527630; h=From:To:Subject:Date:Message-Id;
-        bh=jiJapBog30szdJZwNcqicqXvLmGj0FCkcBHUcQiZPUQ=;
-        b=XfDEhfGUO2kvpJt2MWEyrs9yVRdWGJdCxab+Xc5HiopirkeIGa2/EsDORpWKRCZmQqDNkbkEiW3sWYxsZJMCfoqQhVJRib/gzgNDdjlHAlk1m+lA3cxASsa5HHNB2HuLV3YwKAg8L0TI3xNxvfCsR+EYvovIfL1b3LlUK8XC3fk=
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01a16368;MF=xuyun.xy@alibaba-inc.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---.ECVXSGc_1553527622;
-Received: from localhost(mailfrom:xuyun.xy@alibaba-inc.com fp:SMTPD_---.ECVXSGc_1553527622)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 25 Mar 2019 23:27:08 +0800
-From:   luferry <luferry@163.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Dongli Zhang <dongli.zhang@oracle.com>,
-        Ming Lei <ming.lei@redhat.com>, Christoph Hellwig <hch@lst.de>,
-        xuyun <luferry@163.com>, linux-block@vger.kernel.org,
+        Mon, 25 Mar 2019 11:27:26 -0400
+Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
+        by vmicros1.altlinux.org (Postfix) with ESMTP id 20A8C72CCAC;
+        Mon, 25 Mar 2019 18:27:23 +0300 (MSK)
+Received: by mua.local.altlinux.org (Postfix, from userid 508)
+        id 1196B7CC74C; Mon, 25 Mar 2019 18:27:23 +0300 (MSK)
+Date:   Mon, 25 Mar 2019 18:27:23 +0300
+From:   "Dmitry V. Levin" <ldv@altlinux.org>
+To:     Guo Ren <guoren@kernel.org>
+Cc:     linux-arch@vger.kernel.org, ren_guo@c-sky.com,
+        strace-devel@lists.strace.io, arnd@arndb.de,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] make blk_mq_map_queues more friendly for cpu topology
-Date:   Mon, 25 Mar 2019 23:26:40 +0800
-Message-Id: <20190325152640.48120-1-luferry@163.com>
-X-Mailer: git-send-email 2.14.1.40.g8e62ba1
+Subject: Re: [PATCH] csky: Update syscall_trace_enter/exit implementation
+Message-ID: <20190325152722.GA23169@altlinux.org>
+References: <1553515419-1797-1-git-send-email-guoren@kernel.org>
+ <20190325121754.GB19244@altlinux.org>
+ <20190325124154.GA2653@guoren-Inspiron-7460>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="+HP7ph2BbKc20aGI"
+Content-Disposition: inline
+In-Reply-To: <20190325124154.GA2653@guoren-Inspiron-7460>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-under virtual machine environment, cpu topology may differ
-from normal physical server.
 
-for example (machine with 4 cores, 2 threads per core):
+--+HP7ph2BbKc20aGI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-normal physical server:
-core-id   thread-0-id  thread-1-id
-0         0            4
-1         1            5
-2         2            6
-3         3            7
+On Mon, Mar 25, 2019 at 08:41:54PM +0800, Guo Ren wrote:
+> On Mon, Mar 25, 2019 at 03:17:54PM +0300, Dmitry V. Levin wrote:
+> > On Mon, Mar 25, 2019 at 08:03:39PM +0800, guoren@kernel.org wrote:
+> > [...]
+> > > diff --git a/arch/csky/include/uapi/asm/ptrace.h b/arch/csky/include/=
+uapi/asm/ptrace.h
+> > > index a4eaa8d..9bf5b1a 100644
+> > > --- a/arch/csky/include/uapi/asm/ptrace.h
+> > > +++ b/arch/csky/include/uapi/asm/ptrace.h
+> > > @@ -62,6 +62,11 @@ struct user_fp {
+> > >  #define instruction_pointer(regs) ((regs)->pc)
+> > >  #define profile_pc(regs) instruction_pointer(regs)
+> > > =20
+> > > +static inline unsigned long regs_return_value(struct pt_regs *regs)
+> > > +{
+> > > +	return regs->a0;
+> > > +}
+> > > +
+> > >  #endif /* __KERNEL__ */
+> > >  #endif /* __ASSEMBLY__ */
+> > >  #endif /* _CSKY_PTRACE_H */
+> >=20
+> > I wonder why we have this #ifdef __KERNEL__ code in the uapi namespace,
+> > it defeats the idea of uapi.  Doesn't it belong to non-uapi
+> > include/asm/ptrace.h namespace?
+>=20
+> Yes, I should move __KERNEL__ codes into arch/csky/include/asm/ptrace.h.
+> But it'll be another patch for the modification. Any other problems?
 
-virtual machine:
-core-id   thread-0-id  thread-1-id
-0         0            1
-1         2            3
-2         4            5
-3         6            7
+=46rom UAPI perspective?  No, I don't see any more UAPI issues with the pat=
+ch.
 
-If we attach disk with multi queues to virtual machine,
-blk_mq_map_queues can cause serious imbalance.this will lead to
-performance impact on system IO.
 
-Here is the qemu cmdline:
-"-smp 8,sockets=1,cores=8,threads=2"
-"-device virtio-blk-pci,drive=drive0,id=device0,num-queues=4,vectors=2"
+--=20
+ldv
 
-when vectors less than num-queues, virtio-blk will fallback to
-blk_mq_map_queues
+--+HP7ph2BbKc20aGI
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Before this patch:
-[root@blk-mq ~]# cat /sys/block/vd*/mq/*/cpu_list
-0, 4, 5, 8, 9, 12, 13
-1
-2, 6, 7, 10, 11, 14, 15
-3
+-----BEGIN PGP SIGNATURE-----
 
-After this patch:
-[root@blk-mq ~]# cat /sys/block/vd*/mq/*/cpu_list
-0, 1, 8, 9
-2, 3, 10, 11
-4, 5, 12, 13
-6, 7, 14, 15
+iQIcBAEBCAAGBQJcmPNaAAoJEAVFT+BVnCUIcrAP+wRDIzrJTdAGamQ3viXl2Hoc
+mU2kNmYBr8p/xgLGeQsDNgiajI+ar0cklCjrXVJHP6A/H68GpVKuNNbVzo3znin6
+xmauwBBDIHqFBMooTP+nkA8201GDhWW+Br/VKbf9SkD+qgDypcf9aYBxBBI7X4G+
+ZTtAq1y3kEqsX+sUNKad381P5fUphd4vHow4B8NM9TQElS6dy0ztWrv6DIFVYWrl
+BPNPWNAalsSYBxg6U2FYqfzGsx/ZGHDAfo/8NaGosi+lIvQzSBS+ZwRbBFCOhdpR
+aqN8cyrZOmCAc8w0Z7DnoKP07Ex7D9C3Up0SPlsYpdL4CkBvFn+kF9zyN4jlKKC4
+m+ErATsKYDWOOU816ONLGm/H3Y+UXwsYlZxLJ8ob/bTTBFqbbtg5e/cZM+KwqkBp
+VYOzYw69JBwZ3K0sLy8egVf9jqJaMoGTcRmflYabFafSunG8Pu4l/M+tsodrqMye
+W1rwa6CPjRLKTMWTIXGzt7rrup2s7a3pPp91JT/kzbceNHVa1bUah0OzbYpr7JTh
+MHOzHmuqNiPctqWPwXtBDMetffUCr6Waf0yktrkV8cHtUU4sRG0seOZF8Uae2x0T
+m70gRi4ustN2EkOLUnjUFw1pqPB9iAb3FsVckLbUfgiIZWUoRHAySrmEjtt6/eQy
+xby6WSO+AlnXr2R5wdVr
+=Lg4C
+-----END PGP SIGNATURE-----
 
-Signed-off-by: luferry <luferry@163.com>
----
- block/blk-mq-cpumap.c | 31 +++++++++++++++++++++++--------
- 1 file changed, 23 insertions(+), 8 deletions(-)
-
-diff --git a/block/blk-mq-cpumap.c b/block/blk-mq-cpumap.c
-index 03a534820271..2eb78ad4a49b 100644
---- a/block/blk-mq-cpumap.c
-+++ b/block/blk-mq-cpumap.c
-@@ -35,22 +35,37 @@ int blk_mq_map_queues(struct blk_mq_queue_map *qmap)
- {
- 	unsigned int *map = qmap->mq_map;
- 	unsigned int nr_queues = qmap->nr_queues;
--	unsigned int cpu, first_sibling;
-+	unsigned int cpu, first_sibling, core = 0;
-+	bool core_map = false;
- 
-+	/*
-+	 * If core num is euqal or over nr_queues,
-+	 * there be sure at least per core per queue
-+	 */
-+	for_each_possible_cpu(cpu) {
-+		if (get_first_sibling(cpu) == cpu)
-+			core++;
-+	}
-+	if (core >= nr_queues)
-+		core_map = true;
-+
-+	core = 0;
- 	for_each_possible_cpu(cpu) {
- 		/*
--		 * First do sequential mapping between CPUs and queues.
--		 * In case we still have CPUs to map, and we have some number of
--		 * threads per cores then map sibling threads to the same queue for
-+		 * If cores is enough, just do map between cores and queues
-+		 * else will do sequential mapping between CPUs and queues first.
-+		 * For other cpus, we have some number of threads per cores
-+		 * then map sibling threads to the same queue for
- 		 * performace optimizations.
- 		 */
--		if (cpu < nr_queues) {
-+		if (!core_map && cpu < nr_queues) {
- 			map[cpu] = cpu_to_queue_index(qmap, nr_queues, cpu);
- 		} else {
- 			first_sibling = get_first_sibling(cpu);
--			if (first_sibling == cpu)
--				map[cpu] = cpu_to_queue_index(qmap, nr_queues, cpu);
--			else
-+			if (first_sibling == cpu) {
-+				map[cpu] = cpu_to_queue_index(qmap, nr_queues, core);
-+				core++;
-+			} else
- 				map[cpu] = map[first_sibling];
- 		}
- 	}
--- 
-2.14.1.40.g8e62ba1
-
+--+HP7ph2BbKc20aGI--
