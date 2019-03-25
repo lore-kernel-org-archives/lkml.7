@@ -2,170 +2,119 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9083C10F03
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 22:26:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC1E3C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 22:30:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8CD720828
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 22:26:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WLlU84Uk"
+	by mail.kernel.org (Postfix) with ESMTP id 64308206DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 22:30:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553553035;
+	bh=rOtJxdmhnaEaBn6oZpTzGQfR/BrregQvBi+ujajOrXw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gfssJbrO8rcO18TYac4SDr2D2408dKGPS1ZqziiCevQJSBQU7CGr7odng1nGmQrBL
+	 qVZeUYMs8QxUQuh4Vj4WXMclZCGXsT+QjEIELbWMO4cqCLWPzaJ9SKRxgZmpdjweQe
+	 J0HfVl4uI9JVY0QvXg5RJRzypYktaipSQCM560oI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730456AbfCYW00 (ORCPT
+        id S1730260AbfCYWae (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 18:26:26 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:35840 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728912AbfCYW00 (ORCPT
+        Mon, 25 Mar 2019 18:30:34 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:37444 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729127AbfCYWae (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 18:26:26 -0400
-Received: by mail-oi1-f194.google.com with SMTP id t206so8343679oib.3;
-        Mon, 25 Mar 2019 15:26:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=5h/GyZza/doCtTkWOkQGieP2czo8XItTBc2FSkF+nrI=;
-        b=WLlU84Ukf56ufikTqkZ55RU4W746kd5wCrCwEh+uZ+d0SawIBPv1xIaEPahync2+yD
-         NCyNTPFCeOQGkMVrzv+LbRdDq2SoCK0iKgBxklEtB+RIs5Ua1bVh4Egv7rED6VN27nIZ
-         6abZKFLJZ42ZOsVpKs07/PQOjhNxKFGCGDgpkxAEMRhqufc2Rncf9GKhFw88/1hnZZ5M
-         lgs1N47J2xvO5nSzWrWf9gmAlR47PrTxip9NOXaMNeEzkxaNCpGnYgXPoOblkhxtn1In
-         Jlk5ZvgodN07RrdQ+iAe6AoKDD09VcF/QSmdZx/keCuy9K/P5RqeKmTfcqJ5cEsLnYGw
-         Rluw==
+        Mon, 25 Mar 2019 18:30:34 -0400
+Received: by mail-ot1-f66.google.com with SMTP id c16so9649968otn.4;
+        Mon, 25 Mar 2019 15:30:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=5h/GyZza/doCtTkWOkQGieP2czo8XItTBc2FSkF+nrI=;
-        b=kyC3hGqp1p+jrRjuo2/ntPDXE/rJ4Q5iljiQOEpobLZkiGKOqRABz+RyygLvEHH2xR
-         WwuqwwISFoxS4no/efOfZrNkKHov2OnOhHuB/R0GJDaX0UAYKNjVgx+9cRvO6ptS5Qm/
-         ZHNXVF11V2G/Z/Vn4CTarfDSFos/obOtAcA6h4K0w8Fx5SKDugah00qWhzGsHytbauP5
-         V7tcn+8JozJQNsTydFUdk/9/E0mxuxJuGYXDZmh2uTN+SGT3MjSG9rwfsuMt3DQQThNb
-         s+XpG66243dbYrhTtyVba9S+eScLy6vnTucgXx/gLlLlcBcpWVNXr9VBSdyF2iSGBvgC
-         pzKQ==
-X-Gm-Message-State: APjAAAUSV2IA8BWFGpJA37AYQD7otWPSzsv4RVrSbvggVBujAp7SMwUq
-        mdKCVaj4q1uCsVtVdxygSAA7FAGO6ZM=
-X-Google-Smtp-Source: APXvYqzCXjyaRrwnl8q4AuAfRG52BbqaubUP0ujevBUez/z+Xp4QxxTy9D/lUs3pdlN63HayKGdLSQ==
-X-Received: by 2002:aca:c4cc:: with SMTP id u195mr12845107oif.40.1553552785003;
-        Mon, 25 Mar 2019 15:26:25 -0700 (PDT)
-Received: from nuclearis2-1.gtech (c-98-195-139-126.hsd1.tx.comcast.net. [98.195.139.126])
-        by smtp.gmail.com with ESMTPSA id n77sm6518885ota.77.2019.03.25.15.26.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 25 Mar 2019 15:26:24 -0700 (PDT)
-Subject: Re: [PATCH v2] PCI/LINK: bw_notification: Do not leave interrupt
- handler NULL
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     austin_bolen@dell.com, alex_gagniuc@dellteam.com,
-        keith.busch@intel.com, Shyam_Iyer@Dell.com, lukas@wunner.de,
-        okaya@kernel.org, torvalds@linux-foundation.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190320193504.GC251185@google.com>
- <20190323003700.7294-1-mr.nuke.me@gmail.com>
- <20190325222502.GC24180@google.com>
-From:   "Alex G." <mr.nuke.me@gmail.com>
-Message-ID: <2dce09cf-dba2-2b2a-412d-40a546d9e2ac@gmail.com>
-Date:   Mon, 25 Mar 2019 17:26:23 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=GsGYe5V1VViY6vQfPEUD+WJk1lcYn9lcSZgLixaQZiU=;
+        b=aE4+a9RjdAgD8Zu1Zgb7I8H5EZ+tan9StVCArL2VvNWBw6yIFvIy0x9R/2fnAtEYZw
+         z052808eaiCjMLJc8vJtC9eLrnyglTWo9DE2+qYmHSkxQSiPbOQwjnfmd8w069xixpes
+         6aXWp7b0crwWZsLaYrGdHjNkeFbrU8MJp1k2ssl7JE5JeJlS6RKQH57gHMRoZJqiy0+o
+         9IOKzvQXRqFBporrUKVPqVZ46WGSGGCwxk+ZQ9UNzKS+xsY1ZM50taoF0T9WdG+lwxS/
+         1DJqbh7ntD+4nJSFlaM0U0yD0d8iFSyW7Oytn7nz8hnE3vo9IMLXAIKqcGDFnD9rtEK1
+         9DKA==
+X-Gm-Message-State: APjAAAVPmcHp4hM7kAYzeVExyb8OA0rtGyHzsb7hN/n7pKPIzLBaBZJC
+        Oi3SnZX0fcWZR1aG8JJFXg==
+X-Google-Smtp-Source: APXvYqw/FenOuv9IUj0YRaOWOcW+hcb35Jj9V2uHi1cs/g8UX/GegWF34Wy6vgkgeb/6T/+D+AMbaA==
+X-Received: by 2002:a9d:7306:: with SMTP id e6mr19082631otk.79.1553553033082;
+        Mon, 25 Mar 2019 15:30:33 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id e12sm6871036otl.61.2019.03.25.15.30.31
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 25 Mar 2019 15:30:32 -0700 (PDT)
+Date:   Mon, 25 Mar 2019 17:30:31 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH V2] dt-bindings: imx: update scu resource id headfile
+Message-ID: <20190325223031.GA22935@bogus>
+References: <1550663846-22698-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <20190325222502.GC24180@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1550663846-22698-1-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/25/19 5:25 PM, Bjorn Helgaas wrote:
-> On Fri, Mar 22, 2019 at 07:36:51PM -0500, Alexandru Gagniuc wrote:
->> A threaded IRQ with a NULL handler does not work with level-triggered
->> interrupts. request_threaded_irq() will return an error:
->>
->>    genirq: Threaded irq requested with handler=NULL and !ONESHOT for irq 16
->>    pcie_bw_notification: probe of 0000:00:1b.0:pcie010 failed with error -22
->>
->> For level interrupts we need to silence the interrupt before exiting
->> the IRQ handler, so just clear the PCI_EXP_LNKSTA_LBMS bit there.
->>
->> Fixes: e8303bb7a75c ("PCI/LINK: Report degraded links via link bandwidth notification")
->> Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
->> Signed-off-by: Alexandru Gagniuc <mr.nuke.me@gmail.com>
+On Wed, 20 Feb 2019 12:01:59 +0000, Anson Huang wrote:
+> Update i.MX SCU resource ID table according to latest
+> system controller firmware.
 > 
-> Applied with the following subject line to for-linus for v5.1, thanks!
+> Latest system controller firmware removes below resources
+> which are never be used:
+> 	IMX_SC_R_DC_0_CAPTURE0
+> 	IMX_SC_R_DC_0_CAPTURE1
+> 	IMX_SC_R_DC_0_INTEGRAL0
+> 	IMX_SC_R_DC_0_INTEGRAL1
+> 	IMX_SC_R_DC_0_FRAC1
+> 	IMX_SC_R_DC_1_CAPTURE0
+> 	IMX_SC_R_DC_1_CAPTURE1
+> 	IMX_SC_R_DC_1_INTEGRAL0
+> 	IMX_SC_R_DC_1_INTEGRAL1
+> 	IMX_SC_R_DC_1_FRAC1
+> 	IMX_SC_R_GPU_3_PID0
+> 	IMX_SC_R_M4_0_SIM
+> 	IMX_SC_R_M4_0_WDOG
+> 	IMX_SC_R_M4_1_SIM
+> 	IMX_SC_R_M4_1_WDOG
 > 
->    PCI/LINK: Supply IRQ handler so level-triggered IRQs are acked
+> and also add below resources to support new features:
+> 	IMX_SC_R_PERF
+> 	IMX_SC_R_OCRAM
+> 	IMX_SC_R_DMA_5_CH0
+> 	IMX_SC_R_DMA_5_CH1
+> 	IMX_SC_R_DMA_5_CH2
+> 	IMX_SC_R_DMA_5_CH3
+> 	IMX_SC_R_ATTESTATION
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> No changes since V1, just update the commit message to provide more detail info.
+> ---
+>  include/dt-bindings/firmware/imx/rsrc.h | 39 +++++++++++++++++++--------------
+>  1 file changed, 22 insertions(+), 17 deletions(-)
+> 
 
-You're so much better at formulating commit messages. That sounds a lot 
-smoother. Thanks!
-
->> ---
->> Changes since v1:
->>   - move pcie_update_link_speed() to irq to prevent duplicate read of link_status
->>   - Add Fixes: to commit message
->>   
->>   drivers/pci/pcie/bw_notification.c | 19 ++++++++++++++-----
->>   1 file changed, 14 insertions(+), 5 deletions(-)
->>
->> diff --git a/drivers/pci/pcie/bw_notification.c b/drivers/pci/pcie/bw_notification.c
->> index d2eae3b7cc0f..c48746f1cf3c 100644
->> --- a/drivers/pci/pcie/bw_notification.c
->> +++ b/drivers/pci/pcie/bw_notification.c
->> @@ -44,11 +44,10 @@ static void pcie_disable_link_bandwidth_notification(struct pci_dev *dev)
->>   	pcie_capability_write_word(dev, PCI_EXP_LNKCTL, lnk_ctl);
->>   }
->>   
->> -static irqreturn_t pcie_bw_notification_handler(int irq, void *context)
->> +static irqreturn_t pcie_bw_notification_irq(int irq, void *context)
->>   {
->>   	struct pcie_device *srv = context;
->>   	struct pci_dev *port = srv->port;
->> -	struct pci_dev *dev;
->>   	u16 link_status, events;
->>   	int ret;
->>   
->> @@ -58,6 +57,17 @@ static irqreturn_t pcie_bw_notification_handler(int irq, void *context)
->>   	if (ret != PCIBIOS_SUCCESSFUL || !events)
->>   		return IRQ_NONE;
->>   
->> +	pcie_capability_write_word(port, PCI_EXP_LNKSTA, events);
->> +	pcie_update_link_speed(port->subordinate, link_status);
->> +	return IRQ_WAKE_THREAD;
->> +}
->> +
->> +static irqreturn_t pcie_bw_notification_handler(int irq, void *context)
->> +{
->> +	struct pcie_device *srv = context;
->> +	struct pci_dev *port = srv->port;
->> +	struct pci_dev *dev;
->> +
->>   	/*
->>   	 * Print status from downstream devices, not this root port or
->>   	 * downstream switch port.
->> @@ -67,8 +77,6 @@ static irqreturn_t pcie_bw_notification_handler(int irq, void *context)
->>   		__pcie_print_link_status(dev, false);
->>   	up_read(&pci_bus_sem);
->>   
->> -	pcie_update_link_speed(port->subordinate, link_status);
->> -	pcie_capability_write_word(port, PCI_EXP_LNKSTA, events);
->>   	return IRQ_HANDLED;
->>   }
->>   
->> @@ -80,7 +88,8 @@ static int pcie_bandwidth_notification_probe(struct pcie_device *srv)
->>   	if (!pcie_link_bandwidth_notification_supported(srv->port))
->>   		return -ENODEV;
->>   
->> -	ret = request_threaded_irq(srv->irq, NULL, pcie_bw_notification_handler,
->> +	ret = request_threaded_irq(srv->irq, pcie_bw_notification_irq,
->> +				   pcie_bw_notification_handler,
->>   				   IRQF_SHARED, "PCIe BW notif", srv);
->>   	if (ret)
->>   		return ret;
->> -- 
->> 2.19.2
->>
+Reviewed-by: Rob Herring <robh@kernel.org>
