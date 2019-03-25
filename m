@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38165C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 09:42:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3580AC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 09:42:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0290720879
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 09:42:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0549320870
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 09:42:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="iJaLiP/5"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="yc/ujBid"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730545AbfCYJmu (ORCPT
+        id S1730491AbfCYJmy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 05:42:50 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:33344 "EHLO
+        Mon, 25 Mar 2019 05:42:54 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:33368 "EHLO
         fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730363AbfCYJmm (ORCPT
+        with ESMTP id S1730538AbfCYJmt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 05:42:42 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2P9fpV9010312;
-        Mon, 25 Mar 2019 04:41:51 -0500
+        Mon, 25 Mar 2019 05:42:49 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2P9g8TM010414;
+        Mon, 25 Mar 2019 04:42:08 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1553506912;
-        bh=m/r4pmfH/rvhmKXLXqhFDQ96qk6ri3w13xsKwUvy1hk=;
+        s=ti-com-17Q1; t=1553506928;
+        bh=eZWnPPDbFVKunrhBYSdXwEOnltBVdXDnI/Xd180x+sM=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=iJaLiP/5/uP4Xejk94DcX6gByF8IzMSXFDvfmtZM7MEtmc9AbrEb7/An1Di80yRJ5
-         iUXTtJr/Ykm09GDJzLbQCkEWqI88Rc8cf/0RCwvgv8+pORFuJhxzPUD8Tq2zxMccGK
-         bBEDW7EJwAKekL+wVW6ThD2qugHpje0FEowi8Adg=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2P9fpLC052349
+        b=yc/ujBidK5yCsSyHttwMv+mXbScWQYJn4SdYvM6O7tiepCgKvTxu9mWOTVIisudxL
+         tBC/5YTf9jqEPV+t9j1cQpxtUHXMXrTLJgmDBEuh9n7nZ7dGqKBQPftSs0VX5TSOJs
+         EqE2+tjaMN0Ap9t8cjjAnHUKKHmJTrObkAI7oJqo=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2P9g8tW014234
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 25 Mar 2019 04:41:51 -0500
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+        Mon, 25 Mar 2019 04:42:08 -0500
+Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 25
- Mar 2019 04:41:51 -0500
-Received: from dflp32.itg.ti.com (10.64.6.15) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_0,
+ Mar 2019 04:42:08 -0500
+Received: from dflp32.itg.ti.com (10.64.6.15) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_0,
  cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5 via Frontend Transport;
- Mon, 25 Mar 2019 04:41:51 -0500
+ Mon, 25 Mar 2019 04:42:07 -0500
 Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by dflp32.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2P9feaG028077;
-        Mon, 25 Mar 2019 04:41:46 -0500
+        by dflp32.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2P9feaJ028077;
+        Mon, 25 Mar 2019 04:42:02 -0500
 From:   Kishon Vijay Abraham I <kishon@ti.com>
 To:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -64,9 +64,9 @@ CC:     Kishon Vijay Abraham I <kishon@ti.com>,
         <linux-arm-kernel@axis.com>, Minghuan Lian <minghuan.Lian@nxp.com>,
         Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
         Jesper Nilsson <jesper.nilsson@axis.com>
-Subject: [PATCH v3 01/26] PCI: keystone: Add start_link/stop_link dw_pcie_ops
-Date:   Mon, 25 Mar 2019 15:09:22 +0530
-Message-ID: <20190325093947.32633-2-kishon@ti.com>
+Subject: [PATCH v3 04/26] PCI: keystone: Perform host initialization in a single function
+Date:   Mon, 25 Mar 2019 15:09:25 +0530
+Message-ID: <20190325093947.32633-5-kishon@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190325093947.32633-1-kishon@ti.com>
 References: <20190325093947.32633-1-kishon@ti.com>
@@ -78,109 +78,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add start_link/stop_link dw_pcie_ops and invoke ks_pcie_start_link
-directly from host_init. start_link/stop_link ops is required for
-adding EP mode support.
+No functional change. Instead of having two functions
+ks_pcie_add_pcie_port and ks_pcie_dw_host_init for initializing host,
+have a single function to perform all the host initialization.
 
 Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
- drivers/pci/controller/dwc/pci-keystone.c | 44 +++++++++++------------
- 1 file changed, 22 insertions(+), 22 deletions(-)
+ drivers/pci/controller/dwc/pci-keystone.c | 63 +++++++++--------------
+ 1 file changed, 23 insertions(+), 40 deletions(-)
 
 diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
-index b757692e2848..07f55b355d75 100644
+index e50f8773e768..566718ea7ebf 100644
 --- a/drivers/pci/controller/dwc/pci-keystone.c
 +++ b/drivers/pci/controller/dwc/pci-keystone.c
-@@ -460,18 +460,33 @@ static int ks_pcie_link_up(struct dw_pcie *pci)
- 	return (val == PORT_LOGIC_LTSSM_STATE_L0);
- }
- 
--static void ks_pcie_initiate_link_train(struct keystone_pcie *ks_pcie)
-+static void ks_pcie_stop_link(struct dw_pcie *pci)
- {
-+	struct keystone_pcie *ks_pcie = to_keystone_pcie(pci);
- 	u32 val;
- 
- 	/* Disable Link training */
- 	val = ks_pcie_app_readl(ks_pcie, CMD_STATUS);
- 	val &= ~LTSSM_EN_VAL;
- 	ks_pcie_app_writel(ks_pcie, CMD_STATUS, LTSSM_EN_VAL | val);
-+}
-+
-+static int ks_pcie_start_link(struct dw_pcie *pci)
-+{
-+	struct keystone_pcie *ks_pcie = to_keystone_pcie(pci);
-+	struct device *dev = pci->dev;
-+	u32 val;
-+
-+	if (dw_pcie_link_up(pci)) {
-+		dev_dbg(dev, "link is already up\n");
-+		return 0;
-+	}
- 
- 	/* Initiate Link Training */
- 	val = ks_pcie_app_readl(ks_pcie, CMD_STATUS);
- 	ks_pcie_app_writel(ks_pcie, CMD_STATUS, LTSSM_EN_VAL | val);
-+
-+	return 0;
- }
- 
- /**
-@@ -556,26 +571,6 @@ static void ks_pcie_quirk(struct pci_dev *dev)
- }
- DECLARE_PCI_FIXUP_ENABLE(PCI_ANY_ID, PCI_ANY_ID, ks_pcie_quirk);
- 
--static int ks_pcie_establish_link(struct keystone_pcie *ks_pcie)
--{
--	struct dw_pcie *pci = ks_pcie->pci;
--	struct device *dev = pci->dev;
--
--	if (dw_pcie_link_up(pci)) {
--		dev_info(dev, "Link already up\n");
--		return 0;
--	}
--
--	ks_pcie_initiate_link_train(ks_pcie);
--
--	/* check if the link is up or not */
--	if (!dw_pcie_wait_for_link(pci))
--		return 0;
--
--	dev_err(dev, "phy link never came up\n");
--	return -ETIMEDOUT;
--}
--
- static void ks_pcie_msi_irq_handler(struct irq_desc *desc)
- {
- 	unsigned int irq = desc->irq_data.hwirq;
-@@ -813,7 +808,7 @@ static int __init ks_pcie_host_init(struct pcie_port *pp)
- 
- 	dw_pcie_setup_rc(pp);
- 
--	ks_pcie_establish_link(ks_pcie);
-+	ks_pcie_stop_link(pci);
- 	ks_pcie_setup_rc_app_regs(ks_pcie);
- 	ks_pcie_setup_interrupts(ks_pcie);
- 	writew(PCI_IO_RANGE_TYPE_32 | (PCI_IO_RANGE_TYPE_32 << 8),
-@@ -830,6 +825,9 @@ static int __init ks_pcie_host_init(struct pcie_port *pp)
- 	hook_fault_code(17, ks_pcie_fault, SIGBUS, 0,
- 			"Asynchronous external abort");
- 
-+	ks_pcie_start_link(pci);
-+	dw_pcie_wait_for_link(pci);
-+
+@@ -487,45 +487,6 @@ static int ks_pcie_start_link(struct dw_pcie *pci)
  	return 0;
  }
  
-@@ -892,6 +890,8 @@ static const struct of_device_id ks_pcie_of_match[] = {
- };
+-/**
+- * ks_pcie_dw_host_init() - initialize host for v3_65 dw hardware
+- *
+- * Ioremap the register resources, initialize legacy irq domain
+- * and call dw_pcie_v3_65_host_init() API to initialize the Keystone
+- * PCI host controller.
+- */
+-static int __init ks_pcie_dw_host_init(struct keystone_pcie *ks_pcie)
+-{
+-	struct dw_pcie *pci = ks_pcie->pci;
+-	struct pcie_port *pp = &pci->pp;
+-	struct device *dev = pci->dev;
+-	struct platform_device *pdev = to_platform_device(dev);
+-	struct resource *res;
+-
+-	/* Index 0 is the config reg. space address */
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	pci->dbi_base = devm_pci_remap_cfg_resource(dev, res);
+-	if (IS_ERR(pci->dbi_base))
+-		return PTR_ERR(pci->dbi_base);
+-
+-	/*
+-	 * We set these same and is used in pcie rd/wr_other_conf
+-	 * functions
+-	 */
+-	pp->va_cfg0_base = pci->dbi_base + SPACE0_REMOTE_CFG_OFFSET;
+-	pp->va_cfg1_base = pp->va_cfg0_base;
+-
+-	/* Index 1 is the application reg. space address */
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+-	ks_pcie->va_app_base = devm_ioremap_resource(dev, res);
+-	if (IS_ERR(ks_pcie->va_app_base))
+-		return PTR_ERR(ks_pcie->va_app_base);
+-
+-	ks_pcie->app = *res;
+-
+-	return dw_pcie_host_init(pp);
+-}
+-
+ static void ks_pcie_quirk(struct pci_dev *dev)
+ {
+ 	struct pci_bus *bus = dev->bus;
+@@ -843,10 +804,32 @@ static int __init ks_pcie_add_pcie_port(struct keystone_pcie *ks_pcie,
+ 	struct dw_pcie *pci = ks_pcie->pci;
+ 	struct pcie_port *pp = &pci->pp;
+ 	struct device *dev = &pdev->dev;
++	struct resource *res;
+ 	int ret;
  
- static const struct dw_pcie_ops ks_pcie_dw_pcie_ops = {
-+	.start_link = ks_pcie_start_link,
-+	.stop_link = ks_pcie_stop_link,
- 	.link_up = ks_pcie_link_up,
- };
- 
++	/* Index 0 is the config reg. space address */
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	pci->dbi_base = devm_pci_remap_cfg_resource(dev, res);
++	if (IS_ERR(pci->dbi_base))
++		return PTR_ERR(pci->dbi_base);
++
++	/*
++	 * We set these same and is used in pcie rd/wr_other_conf
++	 * functions
++	 */
++	pp->va_cfg0_base = pci->dbi_base + SPACE0_REMOTE_CFG_OFFSET;
++	pp->va_cfg1_base = pp->va_cfg0_base;
++
++	/* Index 1 is the application reg. space address */
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
++	ks_pcie->va_app_base = devm_ioremap_resource(dev, res);
++	if (IS_ERR(ks_pcie->va_app_base))
++		return PTR_ERR(ks_pcie->va_app_base);
++
++	ks_pcie->app = *res;
++
+ 	pp->ops = &ks_pcie_host_ops;
+-	ret = ks_pcie_dw_host_init(ks_pcie);
++	ret = dw_pcie_host_init(pp);
+ 	if (ret) {
+ 		dev_err(dev, "failed to initialize host\n");
+ 		return ret;
 -- 
 2.17.1
 
