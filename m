@@ -2,52 +2,52 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B35D9C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 09:44:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88006C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 09:45:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78B1F20879
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 09:44:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58C3820870
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 09:45:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="IQph3MKj"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NDl3Qn7Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730848AbfCYJov (ORCPT
+        id S1730662AbfCYJnZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 05:44:51 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:33566 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730367AbfCYJn6 (ORCPT
+        Mon, 25 Mar 2019 05:43:25 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:44996 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730601AbfCYJnP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 05:43:58 -0400
+        Mon, 25 Mar 2019 05:43:15 -0400
 Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2P9hfQl011167;
-        Mon, 25 Mar 2019 04:43:41 -0500
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2P9gphc067981;
+        Mon, 25 Mar 2019 04:42:51 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1553507021;
-        bh=mRZ/N3tIORcVcdf8U0MRLHXGRFmU8jONue5muhGax30=;
+        s=ti-com-17Q1; t=1553506971;
+        bh=QQnbdjchjriqY7MOSz5Hvpx/cYkzjC8wC0YfZRMaepc=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=IQph3MKj0FFIVKxRrdWpqnWE6Cbht0FZaHh/8sOKp5hdax6RXlg9LxsPZs1bvDoTP
-         ZvOzv2Xkiadn9RpJMh1mNBOOB0Yidkk2Rox3/m2JGgTcom2f7cHef+D3IF7sy9aWD+
-         LkgPT0qaXWQzU8yQF/yI2bisZXCR0Jowjts2KnjE=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2P9hfbE111505
+        b=NDl3Qn7ZEu82lsf1vt+RnsEdWpkiUl45E1Fcy1ZZNJ4MQ5Rs6PemOxjbDS/1L/mu0
+         oaUcM7nDgMOpCDvCbURT5JcG1ZHRrN+qKC6H05F/XLBa59BZZG4jP0+8vHFcALnYuK
+         eDIuWgHM05SkM/K3MQZZHiQK8g4/A44hMLdzs2PI=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2P9gpqu109935
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 25 Mar 2019 04:43:41 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+        Mon, 25 Mar 2019 04:42:51 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 25
- Mar 2019 04:43:40 -0500
-Received: from dflp32.itg.ti.com (10.64.6.15) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_0,
+ Mar 2019 04:42:51 -0500
+Received: from dflp32.itg.ti.com (10.64.6.15) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_0,
  cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5 via Frontend Transport;
- Mon, 25 Mar 2019 04:43:40 -0500
+ Mon, 25 Mar 2019 04:42:51 -0500
 Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by dflp32.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2P9feaa028077;
-        Mon, 25 Mar 2019 04:43:36 -0500
+        by dflp32.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2P9feaR028077;
+        Mon, 25 Mar 2019 04:42:46 -0500
 From:   Kishon Vijay Abraham I <kishon@ti.com>
 To:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -64,9 +64,9 @@ CC:     Kishon Vijay Abraham I <kishon@ti.com>,
         <linux-arm-kernel@axis.com>, Minghuan Lian <minghuan.Lian@nxp.com>,
         Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
         Jesper Nilsson <jesper.nilsson@axis.com>
-Subject: [PATCH v3 21/26] PCI: dwc: Add callbacks for accessing dbi2 address space
-Date:   Mon, 25 Mar 2019 15:09:42 +0530
-Message-ID: <20190325093947.32633-22-kishon@ti.com>
+Subject: [PATCH v3 12/26] PCI: keystone: Prevent ARM32 specific code to be compiled for ARM64
+Date:   Mon, 25 Mar 2019 15:09:33 +0530
+Message-ID: <20190325093947.32633-13-kishon@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190325093947.32633-1-kishon@ti.com>
 References: <20190325093947.32633-1-kishon@ti.com>
@@ -78,100 +78,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Certain platforms like TI's AM654 doesn't have separate address space for
-dbi2 instead they are accessed using the same address space as dbi
-with some configuration bit set. In order to support such platforms,
-add callbacks for accessing dbi2 address space.
+hook_fault_code is an ARM32 specific API for hooking into data abort.
+Since pci-keystone.c will be used for AM65X platforms which is an
+ARM64 platform, allow hook_fault_code to be compiled only for ARM32.
 
 Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
- drivers/pci/controller/dwc/pcie-designware.c | 31 ++++++++++++++++++++
- drivers/pci/controller/dwc/pcie-designware.h | 12 ++++++--
- 2 files changed, 41 insertions(+), 2 deletions(-)
+ drivers/pci/controller/dwc/pci-keystone.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index 4e2f7946da89..d7cc1a0c1de6 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -89,6 +89,37 @@ void __dw_pcie_write_dbi(struct dw_pcie *pci, void __iomem *base, u32 reg,
- 		dev_err(pci->dev, "Write DBI address failed\n");
+diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
+index dfe54553d832..93296d434f40 100644
+--- a/drivers/pci/controller/dwc/pci-keystone.c
++++ b/drivers/pci/controller/dwc/pci-keystone.c
+@@ -710,6 +710,7 @@ static int ks_pcie_config_legacy_irq(struct keystone_pcie *ks_pcie)
+ 	return ret;
  }
  
-+u32 __dw_pcie_read_dbi2(struct dw_pcie *pci, void __iomem *base, u32 reg,
-+			size_t size)
-+{
-+	int ret;
-+	u32 val;
-+
-+	if (pci->ops->read_dbi2)
-+		return pci->ops->read_dbi2(pci, base, reg, size);
-+
-+	ret = dw_pcie_read(base + reg, size, &val);
-+	if (ret)
-+		dev_err(pci->dev, "read DBI address failed\n");
-+
-+	return val;
-+}
-+
-+void __dw_pcie_write_dbi2(struct dw_pcie *pci, void __iomem *base, u32 reg,
-+			  size_t size, u32 val)
-+{
-+	int ret;
-+
-+	if (pci->ops->write_dbi2) {
-+		pci->ops->write_dbi2(pci, base, reg, size, val);
-+		return;
-+	}
-+
-+	ret = dw_pcie_write(base + reg, size, val);
-+	if (ret)
-+		dev_err(pci->dev, "write DBI address failed\n");
-+}
-+
- static u32 dw_pcie_readl_ob_unroll(struct dw_pcie *pci, u32 index, u32 reg)
- {
- 	u32 offset = PCIE_GET_ATU_OUTB_UNR_REG_OFFSET(index);
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index e36941ff7cf6..7abca9eb00bf 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -218,6 +218,10 @@ struct dw_pcie_ops {
- 			    size_t size);
- 	void	(*write_dbi)(struct dw_pcie *pcie, void __iomem *base, u32 reg,
- 			     size_t size, u32 val);
-+	u32     (*read_dbi2)(struct dw_pcie *pcie, void __iomem *base, u32 reg,
-+			     size_t size);
-+	void    (*write_dbi2)(struct dw_pcie *pcie, void __iomem *base, u32 reg,
-+			      size_t size, u32 val);
- 	int	(*link_up)(struct dw_pcie *pcie);
- 	int	(*start_link)(struct dw_pcie *pcie);
- 	void	(*stop_link)(struct dw_pcie *pcie);
-@@ -249,6 +253,10 @@ u32 __dw_pcie_read_dbi(struct dw_pcie *pci, void __iomem *base, u32 reg,
- 		       size_t size);
- void __dw_pcie_write_dbi(struct dw_pcie *pci, void __iomem *base, u32 reg,
- 			 size_t size, u32 val);
-+u32 __dw_pcie_read_dbi2(struct dw_pcie *pci, void __iomem *base, u32 reg,
-+			size_t size);
-+void __dw_pcie_write_dbi2(struct dw_pcie *pci, void __iomem *base, u32 reg,
-+			  size_t size, u32 val);
- int dw_pcie_link_up(struct dw_pcie *pci);
- int dw_pcie_wait_for_link(struct dw_pcie *pci);
- void dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index,
-@@ -292,12 +300,12 @@ static inline u8 dw_pcie_readb_dbi(struct dw_pcie *pci, u32 reg)
++#ifdef CONFIG_ARM
+ /*
+  * When a PCI device does not exist during config cycles, keystone host gets a
+  * bus error instead of returning 0xffffffff. This handler always returns 0
+@@ -729,6 +730,7 @@ static int ks_pcie_fault(unsigned long addr, unsigned int fsr,
  
- static inline void dw_pcie_writel_dbi2(struct dw_pcie *pci, u32 reg, u32 val)
- {
--	__dw_pcie_write_dbi(pci, pci->dbi_base2, reg, 0x4, val);
-+	__dw_pcie_write_dbi2(pci, pci->dbi_base2, reg, 0x4, val);
+ 	return 0;
  }
++#endif
  
- static inline u32 dw_pcie_readl_dbi2(struct dw_pcie *pci, u32 reg)
+ static int __init ks_pcie_init_id(struct keystone_pcie *ks_pcie)
  {
--	return __dw_pcie_read_dbi(pci, pci->dbi_base2, reg, 0x4);
-+	return __dw_pcie_read_dbi2(pci, pci->dbi_base2, reg, 0x4);
- }
+@@ -778,12 +780,14 @@ static int __init ks_pcie_host_init(struct pcie_port *pp)
+ 	if (ret < 0)
+ 		return ret;
  
- static inline void dw_pcie_writel_atu(struct dw_pcie *pci, u32 reg, u32 val)
++#ifdef CONFIG_ARM
+ 	/*
+ 	 * PCIe access errors that result into OCP errors are caught by ARM as
+ 	 * "External aborts"
+ 	 */
+ 	hook_fault_code(17, ks_pcie_fault, SIGBUS, 0,
+ 			"Asynchronous external abort");
++#endif
+ 
+ 	ks_pcie_start_link(pci);
+ 	dw_pcie_wait_for_link(pci);
 -- 
 2.17.1
 
