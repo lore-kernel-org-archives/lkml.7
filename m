@@ -2,132 +2,137 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3DDDC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 07:42:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46C6BC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 07:48:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1FB220879
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 07:42:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1193E2085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 07:48:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="KTz2fyi0";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="HW3zDwfQ"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Nu/rimeZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729893AbfCYHmM (ORCPT
+        id S1729905AbfCYHsP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 03:42:12 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:59170 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729755AbfCYHmK (ORCPT
+        Mon, 25 Mar 2019 03:48:15 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:49940 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729829AbfCYHsO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 03:42:10 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 0CDB9602FC; Mon, 25 Mar 2019 07:42:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553499729;
-        bh=pbTnG9ltVvVEU4phXZHMourowtAz45WwCMSgiC66PM8=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=KTz2fyi0Bv85YytYo3G0DGZYIZ0agxGmmdjMT/QO8uXtUQf7Kh26SrSfR9DuImGh4
-         cxCSEjsyj4KsDqDgh/H4F9B9YN8TBTqJKQaKbkXz+IYOnFts/l4Vxnxk1nkuME4LuO
-         NkCpQk6tL7ulLJqOlhReVpMT03EUd7vot/goyDbo=
-Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id F30AA602FC;
-        Mon, 25 Mar 2019 07:42:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553499727;
-        bh=pbTnG9ltVvVEU4phXZHMourowtAz45WwCMSgiC66PM8=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=HW3zDwfQiaALz6zP2Bm7696yo+XGHbuDfiADLBN/VnNhyVjr2FEeg4zcqv+kWseRW
-         foSpYfBqbXj/i4w+576Am1Z+UcuJ4qm0Gl6LWuqLa8xD+qJIxfn/qNXDsmOPEFyPTA
-         e4GQLQD4Sz50ookPgLsHqj0uvJTFzABA0b1le7DU=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org F30AA602FC
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH -next] ASoC: simple-card-utils: remove set but not used
- variable ''
-To:     YueHaibing <yuehaibing@huawei.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-References: <20190323020838.107533-1-yuehaibing@huawei.com>
-From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <6a0c2306-088f-cdbc-0730-60b899611c6f@codeaurora.org>
-Date:   Mon, 25 Mar 2019 13:12:01 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.0
-MIME-Version: 1.0
-In-Reply-To: <20190323020838.107533-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+        Mon, 25 Mar 2019 03:48:14 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2P7iTLW109622;
+        Mon, 25 Mar 2019 07:48:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2018-07-02;
+ bh=ZzPP1Q80oZYXtz0DutAUmGdavzK5I/DAdFRhvpBi/eM=;
+ b=Nu/rimeZrMg2HU+cGodSq5FaEKEwCpYVIwt4WSPLbLUSzWmiYYEJWrEpL9uah90YhnLU
+ IN35a+FhszNgYnRml5kVhsOollNO3Jos2bpEPCW4lDZceQzVyvqgGHaGmKPdi8cJAhJm
+ ++nS95w322ZmjnYn/7Ykqa+gtEp2WsGE4o0SoR+NuVtaSGHjCyNSE7nItsLJMKDMIuQz
+ tRmzp1q1zmyyQ64B1TDtiMoiuQo7rcGFb/kKaQ4lw82+ZIOVjfIzU4MYvv2ryJrw3MnV
+ zjgAjLigBNxFz3yQOrTymmkrh51gTqjTjOVjjfKpCN5TxF90jLE93Oo/ZonWSypHPkwM aQ== 
+Received: from userv0021.oracle.com (userv0021.oracle.com [156.151.31.71])
+        by userp2120.oracle.com with ESMTP id 2re6dj2c02-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 25 Mar 2019 07:48:12 +0000
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x2P7mBuk023690
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 25 Mar 2019 07:48:11 GMT
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x2P7mAi6002238;
+        Mon, 25 Mar 2019 07:48:10 GMT
+Received: from will-ThinkCentre-M93p.cn.oracle.com (/10.182.71.12)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 25 Mar 2019 00:48:10 -0700
+From:   Jianchao Wang <jianchao.w.wang@oracle.com>
+To:     jejb@linux.ibm.com, martin.petersen@oracle.com
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] scsi: ses: fix some risks of out of bound access
+Date:   Mon, 25 Mar 2019 15:40:02 +0800
+Message-Id: <1553499602-27810-1-git-send-email-jianchao.w.wang@oracle.com>
+X-Mailer: git-send-email 2.7.4
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9205 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=881 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903250059
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+We have some places with risk of accessing out of bound of the
+buffer allocated from slab, even it could corrupt the memory.
 
-On 3/23/2019 7:38 AM, YueHaibing wrote:
-> Fixes gcc '-Wunused-but-set-variable' warning:
->
-> sound/soc/generic/simple-card-utils.c: In function 'asoc_simple_parse_clk':
-> sound/soc/generic/simple-card-utils.c:164:18: warning:
->   parameter 'dai_name' set but not used [-Wunused-but-set-parameter]
->
-> It's not used since commit 0580dde59438 ("ASoC: simple-card-utils: add
+Signed-off-by: Jianchao Wang <jianchao.w.wang@oracle.com>
+---
+ drivers/scsi/ses.c | 27 ++++++++++++++++++++++-----
+ 1 file changed, 22 insertions(+), 5 deletions(-)
 
+diff --git a/drivers/scsi/ses.c b/drivers/scsi/ses.c
+index 0fc3922..42e6a1f 100644
+--- a/drivers/scsi/ses.c
++++ b/drivers/scsi/ses.c
+@@ -520,6 +520,7 @@ static void ses_enclosure_data_process(struct enclosure_device *edev,
+ 	struct ses_device *ses_dev = edev->scratch;
+ 	int types = ses_dev->page1_num_types;
+ 	unsigned char *hdr_buf = kzalloc(INIT_ALLOC_SIZE, GFP_KERNEL);
++	unsigned char *page1_end = ses_dev->page1 + ses_dev->page1_len;
+ 
+ 	if (!hdr_buf)
+ 		goto simple_populate;
+@@ -556,6 +557,11 @@ static void ses_enclosure_data_process(struct enclosure_device *edev,
+ 	type_ptr = ses_dev->page1_types;
+ 	components = 0;
+ 	for (i = 0; i < types; i++, type_ptr += 4) {
++		if (type_ptr > page1_end - 2) {
++			sdev_printk(KERN_ERR, sdev, "Access out of bound of page1"
++					"%p page1_end %p\n", page1_end, type_ptr);
++			break;
++		}
+ 		for (j = 0; j < type_ptr[1]; j++) {
+ 			char *name = NULL;
+ 			struct enclosure_component *ecomp;
+@@ -566,10 +572,15 @@ static void ses_enclosure_data_process(struct enclosure_device *edev,
+ 				} else {
+ 					len = (desc_ptr[2] << 8) + desc_ptr[3];
+ 					desc_ptr += 4;
+-					/* Add trailing zero - pushes into
+-					 * reserved space */
+-					desc_ptr[len] = '\0';
+-					name = desc_ptr;
++					if (desc_ptr + len >= buf + page7_len) {
++						desc_ptr = NULL;
++					} else {
++
++						/* Add trailing zero - pushes into
++						 * reserved space */
++						desc_ptr[len] = '\0';
++						name = desc_ptr;
++					}
+ 				}
+ 			}
+ 			if (type_ptr[0] == ENCLOSURE_COMPONENT_DEVICE ||
+@@ -693,7 +704,13 @@ static int ses_intf_add(struct device *cdev,
+ 	/* begin at the enclosure descriptor */
+ 	type_ptr = buf + 8;
+ 	/* skip all the enclosure descriptors */
+-	for (i = 0; i < num_enclosures && type_ptr < buf + len; i++) {
++	for (i = 0; i < num_enclosures; i++) {
++		if (type_ptr >= buf + len) {
++			sdev_printk(KERN_ERR, sdev, "Overflow the buf len = %d\n", len);
++			err = -EINVAL;
++			goto err_free;
++		}
++
+ 		types += type_ptr[2];
+ 		type_ptr += type_ptr[3] + 4;
+ 	}
+-- 
+2.7.4
 
-I am not able to find this commit
-
-0580dde59438
-
-
-> asoc_simple_debug_info()"), so can be removed.
->
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->   sound/soc/generic/simple-card-utils.c | 4 +---
->   1 file changed, 1 insertion(+), 3 deletions(-)
->
-> diff --git a/sound/soc/generic/simple-card-utils.c b/sound/soc/generic/simple-card-utils.c
-> index 4ed68348f939..db1458a19985 100644
-> --- a/sound/soc/generic/simple-card-utils.c
-> +++ b/sound/soc/generic/simple-card-utils.c
-> @@ -173,10 +173,8 @@ int asoc_simple_parse_clk(struct device *dev,
->   	 * see
->   	 *	soc-core.c :: snd_soc_init_multicodec()
->   	 */
-> -	if (dlc) {
-> +	if (dlc)
->   		dai_of_node	= dlc->of_node;
-> -		dai_name	= dlc->dai_name;
-
-I don't see any function like `asoc_simple_parse_clk`
-
-but instead this `asoc_simple_card_parse_clk` and there the variable is 
-used.
-
-Can you double check latest code base ?
-
-Thanks,
-Mukesh
-
-
-> -	}
->   
->   	/*
->   	 * Parse dai->sysclk come from "clocks = <&xxx>"
->
->
->
->
->
