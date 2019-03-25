@@ -2,50 +2,48 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E356EC10F03
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:27:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 667A6C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:27:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBCA820848
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:27:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 437FA2070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:27:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730429AbfCYV07 (ORCPT
+        id S1730500AbfCYV1G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 17:26:59 -0400
-Received: from smtprelay0211.hostedemail.com ([216.40.44.211]:53880 "EHLO
+        Mon, 25 Mar 2019 17:27:06 -0400
+Received: from smtprelay0160.hostedemail.com ([216.40.44.160]:37157 "EHLO
         smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729693AbfCYV06 (ORCPT
+        by vger.kernel.org with ESMTP id S1729693AbfCYV1G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 17:26:58 -0400
+        Mon, 25 Mar 2019 17:27:06 -0400
 Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay06.hostedemail.com (Postfix) with ESMTP id DF00718224D82;
-        Mon, 25 Mar 2019 21:26:56 +0000 (UTC)
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 6C4FA180A8136;
+        Mon, 25 Mar 2019 21:27:04 +0000 (UTC)
 X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: hat83_1f612ca211116
-X-Filterd-Recvd-Size: 3218
+X-HE-Tag: drop16_206a926781a2e
+X-Filterd-Recvd-Size: 3575
 Received: from joe-laptop.perches.com (unknown [47.151.153.53])
         (Authenticated sender: joe@perches.com)
         by omf02.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 25 Mar 2019 21:26:55 +0000 (UTC)
+        Mon, 25 Mar 2019 21:27:02 +0000 (UTC)
 From:   Joe Perches <joe@perches.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     =?UTF-8?q?Breno=20Leit=C3=A3o?= <leitao@debian.org>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Paulo Flabiano Smorigo <pfsmorigo@gmail.com>,
-        linux-crypto@vger.kernel.org, Dan Streetman <ddstreet@ieee.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: Bad file pattern in MAINTAINERS section 'IBM Power in-Nest Crypto Acceleration'
-Date:   Mon, 25 Mar 2019 14:26:54 -0700
-Message-Id: <20190325212654.26627-1-joe@perches.com>
+Cc:     Alexander Aring <alex.aring@gmail.com>,
+        Stefan Schmidt <stefan@datenfreihafen.org>,
+        linux-wpan@vger.kernel.org, Varka Bhadram <varkab@cdac.in>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        "David S . Miller" <davem@davemloft.net>
+Subject: Bad file pattern in MAINTAINERS section 'IEEE 802.15.4 SUBSYSTEM'
+Date:   Mon, 25 Mar 2019 14:27:01 -0700
+Message-Id: <20190325212701.26768-1-joe@perches.com>
 X-Mailer: git-send-email 2.15.0
 In-Reply-To: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com>
 References: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -66,46 +64,60 @@ Please fix this defect appropriately.
 
 linux-next MAINTAINERS section:
 
-	7370	IBM Power in-Nest Crypto Acceleration
-	7371	M:	Breno Leitão <leitao@debian.org>
-	7372	M:	Nayna Jain <nayna@linux.ibm.com>
-	7373	M:	Paulo Flabiano Smorigo <pfsmorigo@gmail.com>
-	7374	L:	linux-crypto@vger.kernel.org
-	7375	S:	Supported
-	7376	F:	drivers/crypto/nx/Makefile
-	7377	F:	drivers/crypto/nx/Kconfig
-	7378	F:	drivers/crypto/nx/nx-aes*
-	7379	F:	drivers/crypto/nx/nx-sha*
-	7380	F:	drivers/crypto/nx/nx.*
-	7381	F:	drivers/crypto/nx/nx_csbcpb.h
--->	7382	F:	drivers/crypto/nx/nx_debugfs.h
+	7509	IEEE 802.15.4 SUBSYSTEM
+	7510	M:	Alexander Aring <alex.aring@gmail.com>
+	7511	M:	Stefan Schmidt <stefan@datenfreihafen.org>
+	7512	L:	linux-wpan@vger.kernel.org
+	7513	W:	http://wpan.cakelab.org/
+	7514	T:	git git://git.kernel.org/pub/scm/linux/kernel/git/sschmidt/wpan.git
+	7515	T:	git git://git.kernel.org/pub/scm/linux/kernel/git/sschmidt/wpan-next.git
+	7516	S:	Maintained
+	7517	F:	net/ieee802154/
+	7518	F:	net/mac802154/
+	7519	F:	drivers/net/ieee802154/
+	7520	F:	include/linux/nl802154.h
+	7521	F:	include/linux/ieee802154.h
+	7522	F:	include/net/nl802154.h
+	7523	F:	include/net/mac802154.h
+	7524	F:	include/net/af_ieee802154.h
+	7525	F:	include/net/cfg802154.h
+	7526	F:	include/net/ieee802154_netdev.h
+-->	7527	F:	Documentation/networking/ieee802154.txt
 
 2: ---------------------------------------------------------------------------
 
-The most recent commit that added or modified file pattern 'drivers/crypto/nx/nx_debugfs.h':
+The most recent commit that added or modified file pattern 'Documentation/networking/ieee802154.txt':
 
-commit 28bceeaaf81140d69647acd0eb7dc9312f27844a
-Author: Dan Streetman <ddstreet@ieee.org>
-Date:   Thu Jun 18 12:28:32 2015 -0400
+commit ebef9c1236170fb3ba4dc05ccb41f6d842eb1c12
+Author: Varka Bhadram <varkab@cdac.in>
+Date:   Fri Aug 8 17:32:45 2014 +0530
 
-    MAINTAINERS: clarify drivers/crypto/nx/ file ownership
+    MAINTAINERS: update maintainers info
     
-    Update the "IBM Power in-Nest Crypto Acceleration" and
-    "IBM Power 842 compression accelerator" sections to specify the correct
-    files.
+    adds the mailing list address for bluetooth 6loWPAN and
+    IEEE-802.15.4 subsystems. Also adds web page info.
     
-    The "IBM Power in-Nest Crypto Acceleration" was originally the only
-    NX driver, and so its section listed all drivers/crypto/nx/ files,
-    but now there is also the 842 driver which has its own section.  This
-    lists explicitly what files are owned by the Crypto driver and which
-    files are owned by the 842 compression driver.
-    
-    Signed-off-by: Dan Streetman <ddstreet@ieee.org>
-    Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+    Signed-off-by: Varka Bhadram <varkab@cdac.in>
+    Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 
- MAINTAINERS | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ MAINTAINERS | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
 3: ---------------------------------------------------------------------------
 
-No commit with file pattern 'drivers/crypto/nx/nx_debugfs.h' was found
+The last commit with a real presence of file pattern 'Documentation/networking/ieee802154.txt':
+
+commit 8a42eda2582ada073d7320ca703fb5fa49600e87
+Author: Stefan Schmidt <stefan@datenfreihafen.org>
+Date:   Wed Feb 27 20:59:14 2019 +0100
+
+    doc: net: ieee802154: remove old plain text docs after switching to rst
+    
+    The plain text docs are converted to rst now, which allows us to remove
+    the old text file from the tree.
+    
+    Signed-off-by: Stefan Schmidt <stefan@datenfreihafen.org>
+    Signed-off-by: David S. Miller <davem@davemloft.net>
+
+ Documentation/networking/ieee802154.txt | 177 --------------------------------
+ 1 file changed, 177 deletions(-)
