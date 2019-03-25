@@ -2,129 +2,194 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CB2DC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 07:54:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBDEFC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 07:55:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4997C2085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 07:54:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="p7J8siA3"
+	by mail.kernel.org (Postfix) with ESMTP id C18C820879
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 07:55:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729925AbfCYHyF (ORCPT
+        id S1729942AbfCYHzr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 03:54:05 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:33282 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729822AbfCYHyE (ORCPT
+        Mon, 25 Mar 2019 03:55:47 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:38675 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729849AbfCYHzq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 03:54:04 -0400
-Received: by mail-wm1-f67.google.com with SMTP id z6so8954814wmi.0
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 00:54:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=YyUYCfnhSk2r5n7LaaJyStQSJS9igmkG7hjNDVuQbFA=;
-        b=p7J8siA3JHb87Ktj1uYFYTf6kGtkn/uvp8c8fyYZIcktVp9EQrptiL9Lmj7qH+g44Q
-         qlI5usOxJEsXR4tXqDuj/3hLNzJZmf/2SSsfWdwWzeGLiGv0TIhaHcmZPv6yDHSrzbxF
-         JufsH/5lr82Nq6hiUvggtrCFBTRxlhrRbCqkuFO8/71Eb4uhi/FSp+Dh7hkDPWDeqKg2
-         ygocrmypSUAVxndtoiAIQVQDUV9lOgYLrgetxelXUiwFfrcoXmeNEee98pEHcGEvLuZs
-         X/J9TL3zZRyB/5cruGDxMxdWOlIGRO+b1NdSOYUHxqgxD+uYZbMTz4R++QS6OBoLfC5S
-         J3SQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=YyUYCfnhSk2r5n7LaaJyStQSJS9igmkG7hjNDVuQbFA=;
-        b=n6zd8SLO7gUWcBS/iyiv9NkOAZb4hGVu/8tLLqjuhhDNU9+elBqE9gRT33XedokuWI
-         1r7aSbkVyku3Em41lsI+SGWTFoRPdpwGUIHrX6nTQp9d1TqNdlv20IJFj5Lwtk6hDlpb
-         XDt/KOxsWNkuNucbVKZtw+FOXGdShorCDdy7TeGYgDLUjb8Weh4ke3zYqW9hYICM1lhp
-         7iB69/c9Uygni5N1lPNq+7kEozD4bR27pwMzed/uXmKBotoqNUyMcK3CGfUB2ZH/mpvh
-         hpbSe71IL4kIXhL2bqG6OaCJB1zPEw4lCBWziQErjdcDzXHBGmSg2qOfirOEx8M5RCQq
-         hCTA==
-X-Gm-Message-State: APjAAAX4OV0l4J2asz3roJT6ldsVXPNjVp8LgWbIpnJkRQiq2LyV+fB0
-        uaiqJHiE5FJ/sR9gvQgxbBvCbw==
-X-Google-Smtp-Source: APXvYqyQnT6B6Fu6amjP3aDn/fCnRS7nivqP0IkcHnYHJ4GFIZsYyHTIxNJD1yFao71vrac6aa+43Q==
-X-Received: by 2002:a1c:4105:: with SMTP id o5mr10992727wma.35.1553500442663;
-        Mon, 25 Mar 2019 00:54:02 -0700 (PDT)
-Received: from dell ([2.27.167.37])
-        by smtp.gmail.com with ESMTPSA id y1sm36907228wrd.34.2019.03.25.00.54.01
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 25 Mar 2019 00:54:02 -0700 (PDT)
-Date:   Mon, 25 Mar 2019 07:54:00 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     robh+dt@kernel.org, jacek.anaszewski@gmail.com, pavel@ucw.cz,
-        tony@atomide.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
-Subject: Re: [PATCH 1/4] dt: lm3532: Add lm3532 dt doc and update ti_lmu doc
-Message-ID: <20190325075400.GX4731@dell>
-References: <20190321142838.22985-1-dmurphy@ti.com>
+        Mon, 25 Mar 2019 03:55:46 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2P7pmpY005740;
+        Mon, 25 Mar 2019 08:55:34 +0100
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2rddhaa771-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Mon, 25 Mar 2019 08:55:34 +0100
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B30E338;
+        Mon, 25 Mar 2019 07:55:33 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas22.st.com [10.75.90.92])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 8631526D1;
+        Mon, 25 Mar 2019 07:55:33 +0000 (GMT)
+Received: from SAFEX1HUBCAS21.st.com (10.75.90.45) by Safex1hubcas22.st.com
+ (10.75.90.92) with Microsoft SMTP Server (TLS) id 14.3.361.1; Mon, 25 Mar
+ 2019 08:55:33 +0100
+Received: from localhost (10.129.172.100) by Webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.361.1; Mon, 25 Mar 2019 08:55:32
+ +0100
+From:   Mickael Guene <mickael.guene@st.com>
+To:     <linux-media@vger.kernel.org>
+CC:     <hugues.fruchet@st.com>, Mickael Guene <mickael.guene@st.com>,
+        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Mark Rutland" <mark.rutland@arm.com>
+Subject: [PATCH v2 1/2] dt-bindings: Document MIPID02 bindings
+Date:   Mon, 25 Mar 2019 08:55:09 +0100
+Message-ID: <1553500510-153260-2-git-send-email-mickael.guene@st.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1553500510-153260-1-git-send-email-mickael.guene@st.com>
+References: <1552373045-134493-1-git-send-email-mickael.guene@st.com>
+ <1553500510-153260-1-git-send-email-mickael.guene@st.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190321142838.22985-1-dmurphy@ti.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+X-Originating-IP: [10.129.172.100]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-25_05:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 21 Mar 2019, Dan Murphy wrote:
+This adds documentation of device tree for MIPID02 CSI-2 to PARALLEL
+bridge.
 
-> Add the lm3532 device tree documentation.
-> Remove lm3532 device tree reference from the ti_lmu devicetree
-> documentation.
-> 
-> With the addition of the dedicated lm3532 documentation the device
-> can be removed from the ti_lmu.txt.
-> 
-> The reason for this is that the lm3532 dt documentation now defines
-> the ability to control LED output strings against different control
-> banks or groups multiple strings to be controlled by a single control
-> bank.
-> 
-> Another addition was for ALS lighting control and configuration.  The
-> LM3532 has a feature that can take in the ALS reading from 2 separate
-> ALS devices and adjust the brightness on the strings that are configured
-> to support this feature.
-> 
-> Finally the device specific properties were moved to the parent node as these
-> properties are not control bank configurable.  These include the runtime ramp
-> and the ALS configuration.
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
-> 
-> v5 - Moved ramping range to below property definition, updated keyboard label -
-> https://lore.kernel.org/patchwork/patch/1050412/
-> 
-> v4 - Appended "ti," to TI specific properties, add enable gpio documentation,
-> removed an example, moved ramp to optional parent properties - https://lore.kernel.org/patchwork/patch/1050122/
-> v3 - No changes - https://lore.kernel.org/patchwork/patch/1049026/
-> v2 - Fixed ramp-up and ramp-down properties, removed hard coded property values,
-> added ranges for variable properties, I did not change the label - https://lore.kernel.org/patchwork/patch/1048805/
-> 
->  .../devicetree/bindings/leds/leds-lm3532.txt  | 101 ++++++++++++++++++
->  .../devicetree/bindings/mfd/ti-lmu.txt        |  20 ----
->  2 files changed, 101 insertions(+), 20 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/leds/leds-lm3532.txt
+Signed-off-by: Mickael Guene <mickael.guene@st.com>
+---
 
-Same for this patch:
+Changes in v2:
+- Add precision about first CSI-2 port data rate
+- Document endpoints supported properties
+- Rename 'mipid02@14' into generic 'csi2rx@14' in example
 
-  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+ .../bindings/media/i2c/st,st-mipid02.txt           | 83 ++++++++++++++++++++++
+ MAINTAINERS                                        |  7 ++
+ 2 files changed, 90 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/st,st-mipid02.txt
 
+diff --git a/Documentation/devicetree/bindings/media/i2c/st,st-mipid02.txt b/Documentation/devicetree/bindings/media/i2c/st,st-mipid02.txt
+new file mode 100644
+index 0000000..dfeab45
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/st,st-mipid02.txt
+@@ -0,0 +1,83 @@
++STMicroelectronics MIPID02 CSI-2 to PARALLEL bridge
++
++MIPID02 has two CSI-2 input ports, only one of those ports can be active at a
++time. Active port input stream will be de-serialized and its content outputted
++through PARALLEL output port.
++CSI-2 first input port is a dual lane 800Mbps per lane whereas CSI-2 second
++input port is a single lane 800Mbps. Both ports support clock and data lane
++polarity swap. First port also supports data lane swap.
++PARALLEL output port has a maximum width of 12 bits.
++Supported formats are RAW6, RAW7, RAW8, RAW10, RAW12, RGB565, RGB888, RGB444,
++YUV420 8-bit, YUV422 8-bit and YUV420 10-bit.
++
++Required Properties:
++- compatible: should be "st,st-mipid02"
++- clocks: reference to the xclk input clock.
++- clock-names: should be "xclk".
++- VDDE-supply: sensor digital IO supply. Must be 1.8 volts.
++- VDDIN-supply: sensor internal regulator supply. Must be 1.8 volts.
++
++Optional Properties:
++- reset-gpios: reference to the GPIO connected to the xsdn pin, if any.
++	       This is an active low signal to the mipid02.
++
++Required subnodes:
++  - ports: A ports node with one port child node per device input and output
++	   port, in accordance with the video interface bindings defined in
++	   Documentation/devicetree/bindings/media/video-interfaces.txt. The
++	   port nodes are numbered as follows:
++
++	   Port Description
++	   -----------------------------
++	   0    CSI-2 first input port
++	   1    CSI-2 second input port
++	   2    PARALLEL output
++
++Endpoint node optional properties for CSI-2 connection are:
++- bus-type: if present should be 4 - MIPI CSI-2 D-PHY.
++- clock-lanes: should be set to <0> if present (clock lane on hardware lane 0).
++- data-lanes: if present should be <1> for Port 1. for Port 0 dual-lane
++operation should be <1 2> or <2 1>. For Port 0 single-lane operation should be
++<1> or <2>.
++- lane-polarities: any lane can be inverted.
++
++Endpoint node optional properties for PARALLEL connection are:
++- bus-type: if present should be 5 - Parallel.
++- bus-width: shall be set to <6>, <7>, <8>, <10> or <12>.
++- hsync-active: active state of the HSYNC signal, 0/1 for LOW/HIGH respectively.
++- vsync-active: active state of the VSYNC signal, 0/1 for LOW/HIGH respectively.
++
++Example:
++
++mipid02: csi2rx@14 {
++	compatible = "st,st-mipid02";
++	reg = <0x14>;
++	status = "okay";
++	clocks = <&clk_ext_camera_12>;
++	clock-names = "xclk";
++	VDDE-supply = <&vdd>;
++	VDDIN-supply = <&vdd>;
++	ports {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		port@0 {
++			reg = <0>;
++
++			ep0: endpoint {
++				clock-lanes = <0>;
++				data-lanes = <1 2>;
++				remote-endpoint = <&mipi_csi2_in>;
++			};
++		};
++		port@2 {
++			reg = <2>;
++
++			ep2: endpoint {
++				bus-width = <8>;
++				hsync-active = <0>;
++				vsync-active = <0>;
++				remote-endpoint = <&parallel_out>;
++			};
++		};
++	};
++};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e17ebf7..74da99d 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14668,6 +14668,13 @@ S:	Maintained
+ F:	drivers/iio/imu/st_lsm6dsx/
+ F:	Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt
+ 
++ST MIPID02 CSI-2 TO PARALLEL BRIDGE DRIVER
++M:	Mickael Guene <mickael.guene@st.com>
++L:	linux-media@vger.kernel.org
++T:	git git://linuxtv.org/media_tree.git
++S:	Maintained
++F:	Documentation/devicetree/bindings/media/i2c/st,st-mipid02.txt
++
+ ST STM32 I2C/SMBUS DRIVER
+ M:	Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+ L:	linux-i2c@vger.kernel.org
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.7.4
+
