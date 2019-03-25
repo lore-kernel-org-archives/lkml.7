@@ -6,22 +6,22 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69D80C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:59:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECC6AC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:59:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 435C120645
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:59:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C62DB20645
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:59:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730561AbfCYV7F (ORCPT
+        id S1730584AbfCYV7I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 17:59:05 -0400
-Received: from muru.com ([72.249.23.125]:42596 "EHLO muru.com"
+        Mon, 25 Mar 2019 17:59:08 -0400
+Received: from muru.com ([72.249.23.125]:42610 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729478AbfCYV7D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 17:59:03 -0400
+        id S1729478AbfCYV7G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 17:59:06 -0400
 Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id C286981CC;
-        Mon, 25 Mar 2019 21:59:16 +0000 (UTC)
+        by muru.com (Postfix) with ESMTP id 9C0DD81AE;
+        Mon, 25 Mar 2019 21:59:18 +0000 (UTC)
 From:   Tony Lindgren <tony@atomide.com>
 To:     linux-omap@vger.kernel.org
 Cc:     Dave Gerlach <d-gerlach@ti.com>, Faiz Abbas <faiz_abbas@ti.com>,
@@ -31,9 +31,9 @@ Cc:     Dave Gerlach <d-gerlach@ti.com>, Faiz Abbas <faiz_abbas@ti.com>,
         Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>,
         Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 03/14] bus: ti-sysc: Make functions static
-Date:   Mon, 25 Mar 2019 14:58:38 -0700
-Message-Id: <20190325215849.13182-4-tony@atomide.com>
+Subject: [PATCH 04/14] bus: ti-sysc: Move legacy platform data idling into separate functions
+Date:   Mon, 25 Mar 2019 14:58:39 -0700
+Message-Id: <20190325215849.13182-5-tony@atomide.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190325215849.13182-1-tony@atomide.com>
 References: <20190325215849.13182-1-tony@atomide.com>
@@ -44,34 +44,140 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We can make sysc_write() and sysc_child_pm_domain static as noted by
-sparse.
+Let's move the legacy idle and enable into separate functions to simplify
+PM runtime functions a bit.
 
 Signed-off-by: Tony Lindgren <tony@atomide.com>
 ---
- drivers/bus/ti-sysc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/bus/ti-sysc.c | 78 +++++++++++++++++++++++++++----------------
+ 1 file changed, 50 insertions(+), 28 deletions(-)
 
 diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
 --- a/drivers/bus/ti-sysc.c
 +++ b/drivers/bus/ti-sysc.c
-@@ -94,7 +94,7 @@ struct sysc {
- static void sysc_parse_dts_quirks(struct sysc *ddata, struct device_node *np,
- 				  bool is_child);
+@@ -622,9 +622,50 @@ static void sysc_show_registers(struct sysc *ddata)
+ 		buf);
+ }
  
--void sysc_write(struct sysc *ddata, int offset, u32 value)
-+static void sysc_write(struct sysc *ddata, int offset, u32 value)
+-static int __maybe_unused sysc_runtime_suspend(struct device *dev)
++static int __maybe_unused sysc_runtime_suspend_legacy(struct device *dev,
++						      struct sysc *ddata)
++{
++	struct ti_sysc_platform_data *pdata;
++	int error;
++
++	pdata = dev_get_platdata(ddata->dev);
++	if (!pdata)
++		return 0;
++
++	if (!pdata->idle_module)
++		return -ENODEV;
++
++	error = pdata->idle_module(dev, &ddata->cookie);
++	if (error)
++		dev_err(dev, "%s: could not idle: %i\n",
++			__func__, error);
++
++	return 0;
++}
++
++static int __maybe_unused sysc_runtime_resume_legacy(struct device *dev,
++						     struct sysc *ddata)
  {
- 	writel_relaxed(value, ddata->module_va + offset);
- }
-@@ -1209,7 +1209,7 @@ static int sysc_child_resume_noirq(struct device *dev)
- }
- #endif
+ 	struct ti_sysc_platform_data *pdata;
++	int error;
++
++	pdata = dev_get_platdata(ddata->dev);
++	if (!pdata)
++		return 0;
++
++	if (!pdata->enable_module)
++		return -ENODEV;
++
++	error = pdata->enable_module(dev, &ddata->cookie);
++	if (error)
++		dev_err(dev, "%s: could not enable: %i\n",
++			__func__, error);
++
++	return 0;
++}
++
++static int __maybe_unused sysc_runtime_suspend(struct device *dev)
++{
+ 	struct sysc *ddata;
+ 	int error = 0, i;
  
--struct dev_pm_domain sysc_child_pm_domain = {
-+static struct dev_pm_domain sysc_child_pm_domain = {
- 	.ops = {
- 		SET_RUNTIME_PM_OPS(sysc_child_runtime_suspend,
- 				   sysc_child_runtime_resume,
+@@ -634,19 +675,11 @@ static int __maybe_unused sysc_runtime_suspend(struct device *dev)
+ 		return 0;
+ 
+ 	if (ddata->legacy_mode) {
+-		pdata = dev_get_platdata(ddata->dev);
+-		if (!pdata)
+-			return 0;
+-
+-		if (!pdata->idle_module)
+-			return -ENODEV;
+-
+-		error = pdata->idle_module(dev, &ddata->cookie);
+-		if (error)
+-			dev_err(dev, "%s: could not idle: %i\n",
+-				__func__, error);
++		error = sysc_runtime_suspend_legacy(dev, ddata);
++		if (!error)
++			ddata->enabled = false;
+ 
+-		goto idled;
++		return error;
+ 	}
+ 
+ 	for (i = 0; i < ddata->nr_clocks; i++) {
+@@ -659,7 +692,6 @@ static int __maybe_unused sysc_runtime_suspend(struct device *dev)
+ 		clk_disable(ddata->clocks[i]);
+ 	}
+ 
+-idled:
+ 	ddata->enabled = false;
+ 
+ 	return error;
+@@ -667,7 +699,6 @@ static int __maybe_unused sysc_runtime_suspend(struct device *dev)
+ 
+ static int __maybe_unused sysc_runtime_resume(struct device *dev)
+ {
+-	struct ti_sysc_platform_data *pdata;
+ 	struct sysc *ddata;
+ 	int error = 0, i;
+ 
+@@ -677,19 +708,11 @@ static int __maybe_unused sysc_runtime_resume(struct device *dev)
+ 		return 0;
+ 
+ 	if (ddata->legacy_mode) {
+-		pdata = dev_get_platdata(ddata->dev);
+-		if (!pdata)
+-			return 0;
++		error = sysc_runtime_resume_legacy(dev, ddata);
++		if (!error)
++			ddata->enabled = true;
+ 
+-		if (!pdata->enable_module)
+-			return -ENODEV;
+-
+-		error = pdata->enable_module(dev, &ddata->cookie);
+-		if (error)
+-			dev_err(dev, "%s: could not enable: %i\n",
+-				__func__, error);
+-
+-		goto awake;
++		return error;
+ 	}
+ 
+ 	for (i = 0; i < ddata->nr_clocks; i++) {
+@@ -704,7 +727,6 @@ static int __maybe_unused sysc_runtime_resume(struct device *dev)
+ 			return error;
+ 	}
+ 
+-awake:
+ 	ddata->enabled = true;
+ 
+ 	return error;
 -- 
 2.21.0
