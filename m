@@ -2,201 +2,178 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67439C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:43:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A952C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:45:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D4EB20848
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:43:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="kI2uEGxx"
+	by mail.kernel.org (Postfix) with ESMTP id DC9EE20693
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:45:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553550324;
+	bh=kB9igm/FCAW80YnJMskcdFGh4XZxwEvYpPqFQaP+aBo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=SoHMvpdUghitlTAQKeESe/66IDDWbvgCFimKuOlGHMxrYKtnlnu1SysJVRmhjNV/M
+	 gGtvJY28G5sf/e3TDWjXtmtdP95sKps4fEr6UnejlNsKmj6JAFLmfob4liC+whyhbI
+	 jbGjKrHLmrPeHWikRkqbItPY4OfOFh+JnHHouK+c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730456AbfCYVnm (ORCPT
+        id S1730180AbfCYVpW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 17:43:42 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:45755 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728912AbfCYVnl (ORCPT
+        Mon, 25 Mar 2019 17:45:22 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:36554 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729106AbfCYVpV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 17:43:41 -0400
-Received: by mail-pg1-f193.google.com with SMTP id y3so7192211pgk.12
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 14:43:41 -0700 (PDT)
+        Mon, 25 Mar 2019 17:45:21 -0400
+Received: by mail-lf1-f68.google.com with SMTP id d18so7138637lfn.3
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 14:45:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=hYjKuuWxQc1DojvRTfgyLTAzGfTbAlSpe8k24XvTD4M=;
-        b=kI2uEGxxUQngz5U00JLdt/NofDDwF39A+pbPLuw2zI1Aomk74qDhqc51QuSQz+ne0N
-         cxJhz2kkZRUAeS2ikeeve2g9qJ9e5ItJh6Thq+qMjU3lBcYMLExIsNQLfj3X8JXiLM9j
-         VgM9rAuZjoEf6RKE8DbKU0cGpwvtkalAPZP+s=
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RyrGMeVONhvfWoKfN08XEzZDL45w36KigWKOTw1mc3I=;
+        b=Uz0aIzxx/3EgWDjsNP/gnfIPI2LVbLni/Kmq7pLXtN7Ip3sVQMgxHR3LDF4zfNwEbJ
+         eOAKhAIb+QUbOmu4vwn04d+2RgFG7hT04bLNwtW22w9kkJKfQ46cFKG2SwvQnIOV1Xyf
+         /homDzyLih6emk2h3yM48/WKn/oFK/YFsuKek=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hYjKuuWxQc1DojvRTfgyLTAzGfTbAlSpe8k24XvTD4M=;
-        b=g58+/ftoemGbRXs8p960rx0pLfCNA/tSkUtZesdGCREuJVQOCBlnwVt7TrNcZWUbxS
-         X+vtiTS6Z8qG6fEB3pL82/2Npxl0jZXLwJRQj7tD+xH+TRTraUbZXgbdWlkdzZg0Y5W7
-         moU8LfugTCCGidd+hGVA7HrYmYaS8TsEfFP2EwZ8sC9/3VvtjAasgISc3la/+iD8qYpe
-         ujmYRyEC2TthlKQrAjpUNI3zpQTtYxEZKYQUubtMWC2u9cGpNvLgRS9zhyq2Lc3KHVKq
-         fo9CqVf9wL+xPvxD4Y29b3VfE1k9uyX1ztgMJ4pxyH1oXfIAbx0dN0q9aTO1ivCro4H6
-         BmUA==
-X-Gm-Message-State: APjAAAX1BjIMtLV33z8Ob1obGpnekrgADiwib/GwHTeCC3CSeQlHWvVO
-        +szopIXq32eIcVeqQi3DWqr6RLDsICs=
-X-Google-Smtp-Source: APXvYqw2UHnWJLwISm4is2NhkfTJvCni8ppPLDs5XZ16VKZ/lk0YOUgyRhah9UFOlMomW8SrNHporA==
-X-Received: by 2002:a62:a219:: with SMTP id m25mr26234008pff.197.1553550220698;
-        Mon, 25 Mar 2019 14:43:40 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id c13sm26685021pfm.34.2019.03.25.14.43.39
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 25 Mar 2019 14:43:39 -0700 (PDT)
-Date:   Mon, 25 Mar 2019 17:43:38 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Jann Horn <jannh@google.com>
-Cc:     Christian Brauner <christian@brauner.io>,
-        Daniel Colascione <dancol@google.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Andy Lutomirski <luto@kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Kees Cook <keescook@chromium.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Michael Kerrisk-manpages <mtk.manpages@gmail.com>,
-        Jonathan Kowalski <bl0pbl33p@gmail.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Nagarathnam Muthusamy <nagarathnam.muthusamy@oracle.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH 0/4] pid: add pidctl()
-Message-ID: <20190325214338.GA16969@google.com>
-References: <20190325162052.28987-1-christian@brauner.io>
- <CAKOZueuJSAiKU7fZR2FNDKKCktdyE-sADtWprpsNMAqYQvD9Jw@mail.gmail.com>
- <20190325173614.GB25975@google.com>
- <20190325201544.7o2kwuie3infcblp@brauner.io>
- <20190325211132.GA6494@google.com>
- <CAG48ez0K9xcSf28rXOy3k0dEL3b_4b-DfcdCO=JO7vVZeJoBcA@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RyrGMeVONhvfWoKfN08XEzZDL45w36KigWKOTw1mc3I=;
+        b=iQe1BZ/RTTbX+zg1etI+1c3+Ni9bWPeIz0E/atdW2cdQL12n/Gr7CC1eyL2pKGVIdy
+         DJmXtXMtZxTBWd+eFqF19F4KvoNlMTsd+HYZloBJlCPjpwv9nwVxBN3ExhFPDzWvDlj/
+         b7tMBT/h7eKr7B44TfSbYWsHhnMRdfXPZRxvoQus49slZv0HhWFz8ipDBBP/Ss2mLnrQ
+         KcHKfvr2CY/Lab/6xk5MHyPBH7B/p5u8EcZu5pbKpGGbz0JmX5T7YnH9g6EyYdKu6zBZ
+         n8lAzLydKLXmx0BByFZXWbDGtEGJ8muauu3HcWWSqGtbch5D8uvkW1UkHDaTkw0PkAQD
+         Rw3A==
+X-Gm-Message-State: APjAAAVbgxru1mgyfVcdJExS2qFhk40L+K5DIPcvJ8nGDmtZ9d0SisGE
+        vfakMy2dqodH2Ptv8oezWlK5WWt9faE=
+X-Google-Smtp-Source: APXvYqzh8wIdxzsbqFY0DIhkTDTMHAy092DXE6ZC4N8VYjVpeqQAUvTiX6jOBPgacehlAp90GsiA+w==
+X-Received: by 2002:a19:9209:: with SMTP id u9mr14256463lfd.71.1553550317937;
+        Mon, 25 Mar 2019 14:45:17 -0700 (PDT)
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
+        by smtp.gmail.com with ESMTPSA id c7sm3931498lja.90.2019.03.25.14.45.16
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 25 Mar 2019 14:45:16 -0700 (PDT)
+Received: by mail-lj1-f180.google.com with SMTP id l7so9249329ljg.6
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 14:45:16 -0700 (PDT)
+X-Received: by 2002:a2e:960b:: with SMTP id v11mr4509575ljh.135.1553550316377;
+ Mon, 25 Mar 2019 14:45:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAG48ez0K9xcSf28rXOy3k0dEL3b_4b-DfcdCO=JO7vVZeJoBcA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <0000000000006946d2057bbd0eef@google.com> <CAHk-=wiijJMTw=nTj_ED+YWMCrvHzh3ezfVYRxvzcW6+trgyPA@mail.gmail.com>
+ <20190325045744.GK2217@ZenIV.linux.org.uk> <CAHk-=wg4iJsMHBzK52WzP+5_92HbwvX_vh_s4mMUuN0FJGdM5A@mail.gmail.com>
+ <CAHk-=whJ4M5FegOLvnjUtJ0+pHv4L8UNFt+9jJDhox3Ada8kwA@mail.gmail.com> <20190325211405.GP2217@ZenIV.linux.org.uk>
+In-Reply-To: <20190325211405.GP2217@ZenIV.linux.org.uk>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 25 Mar 2019 14:45:00 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wj+-e=X9cvvNwc5+QuvBOyYT7OtZTBzy-Wg8zGrUwxSbw@mail.gmail.com>
+Message-ID: <CAHk-=wj+-e=X9cvvNwc5+QuvBOyYT7OtZTBzy-Wg8zGrUwxSbw@mail.gmail.com>
+Subject: Re: KASAN: use-after-free Read in path_lookupat
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     syzbot <syzbot+7a8ba368b47fdefca61e@syzkaller.appspotmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 10:19:26PM +0100, Jann Horn wrote:
-> On Mon, Mar 25, 2019 at 10:11 PM Joel Fernandes <joel@joelfernandes.org> wrote:
-> > On Mon, Mar 25, 2019 at 09:15:45PM +0100, Christian Brauner wrote:
-> > > On Mon, Mar 25, 2019 at 01:36:14PM -0400, Joel Fernandes wrote:
-> > > > On Mon, Mar 25, 2019 at 09:48:43AM -0700, Daniel Colascione wrote:
-> > > > > On Mon, Mar 25, 2019 at 9:21 AM Christian Brauner <christian@brauner.io> wrote:
-> > > > > > The pidctl() syscalls builds on, extends, and improves translate_pid() [4].
-> > > > > > I quote Konstantins original patchset first that has already been acked and
-> > > > > > picked up by Eric before and whose functionality is preserved in this
-> > > > > > syscall. Multiple people have asked when this patchset will be sent in
-> > > > > > for merging (cf. [1], [2]). It has recently been revived by Nagarathnam
-> > > > > > Muthusamy from Oracle [3].
-> > > > > >
-> > > > > > The intention of the original translate_pid() syscall was twofold:
-> > > > > > 1. Provide translation of pids between pid namespaces
-> > > > > > 2. Provide implicit pid namespace introspection
-> > > > > >
-> > > > > > Both functionalities are preserved. The latter task has been improved
-> > > > > > upon though. In the original version of the pachset passing pid as 1
-> > > > > > would allow to deterimine the relationship between the pid namespaces.
-> > > > > > This is inherhently racy. If pid 1 inside a pid namespace has died it
-> > > > > > would report false negatives. For example, if pid 1 inside of the target
-> > > > > > pid namespace already died, it would report that the target pid
-> > > > > > namespace cannot be reached from the source pid namespace because it
-> > > > > > couldn't find the pid inside of the target pid namespace and thus
-> > > > > > falsely report to the user that the two pid namespaces are not related.
-> > > > > > This problem is simple to avoid. In the new version we simply walk the
-> > > > > > list of ancestors and check whether the namespace are related to each
-> > > > > > other. By doing it this way we can reliably report what the relationship
-> > > > > > between two pid namespace file descriptors looks like.
-> > > > > >
-> > > > > > Additionally, this syscall has been extended to allow the retrieval of
-> > > > > > pidfds independent of procfs. These pidfds can e.g. be used with the new
-> > > > > > pidfd_send_signal() syscall we recently merged. The ability to retrieve
-> > > > > > pidfds independent of procfs had already been requested in the
-> > > > > > pidfd_send_signal patchset by e.g. Andrew [4] and later again by Alexey
-> > > > > > [5]. A use-case where a kernel is compiled without procfs but where
-> > > > > > pidfds are still useful has been outlined by Andy in [6]. Regular
-> > > > > > anon-inode based file descriptors are used that stash a reference to
-> > > > > > struct pid in file->private_data and drop that reference on close.
-> > > > > >
-> > > > > > With this translate_pid() has three closely related but still distinct
-> > > > > > functionalities. To clarify the semantics and to make it easier for
-> > > > > > userspace to use the syscall it has:
-> > > > > > - gained a command argument and three commands clearly reflecting the
-> > > > > >   distinct functionalities (PIDCMD_QUERY_PID, PIDCMD_QUERY_PIDNS,
-> > > > > >   PIDCMD_GET_PIDFD).
-> > > > > > - been renamed to pidctl()
-> > > > >
-> > > > [snip]
-> > > > > Also, I'm still confused about how metadata access is supposed to work
-> > > > > for these procfs-less pidfs. If I use PIDCMD_GET_PIDFD on a process,
-> > > > > You snipped out a portion of a previous email in which I asked about
-> > > > > your thoughts on this question. With the PIDCMD_GET_PIDFD command in
-> > > > > place, we have two different kinds of file descriptors for processes,
-> > > > > one derived from procfs and one that's independent. The former works
-> > > > > with openat(2). The latter does not. To be very specific; if I'm
-> > > > > writing a function that accepts a pidfd and I get a pidfd that comes
-> > > > > from PIDCMD_GET_PIDFD, how am I supposed to get the equivalent of
-> > > > > smaps or oom_score_adj or statm for the named process in a race-free
-> > > > > manner?
-> > > >
-> > > > This is true, that such usecase will not be supportable.  But the advantage
-> > > > on the other hand, is that suchs "pidfd" can be made pollable or readable in
-> > > > the future. Potentially allowing us to return exit status without a new
-> > > > syscall (?). And we can add IOCTLs to the pidfd descriptor which we cannot do
-> > > > with proc.
-> > > >
-> > > > But.. one thing we could do for Daniel usecase is if a /proc/pid directory fd
-> > > > can be translated into a "pidfd" using another syscall or even a node, like
-> > > > /proc/pid/handle or something. I think this is what Christian suggested in
-> > > > the previous threads.
-> > >
-> > > Andy - and Jann who I just talked to - have proposed solutions for this.
-> > > Jann's idea is similar to what you suggested, Joel. You could e.g. do an
-> > > ioctl() handler for /proc that would give you a dirfd back for a given
-> > > pidfd. The advantage is that pidfd_clone() can then give back pidfds
-> > > without having to care in what procfs the process is supposed to live.
-> > > That makes things a lot easier. But pidfds for the general case should
-> > > be anon inodes. It's clean, it's simple and it is way more secure.
-> >
-> > That makes sense to me, it is clean and I agree let us do that.
-> >
-> > Also for the "blocking on pid exit status" usecase, instead of adding a new
-> > syscall like pidfd_wait, lets just make that a new IOCTL to the
-> > file_operations of the anon_inode pidfd file. This will lets us specify
-> > exactly what to wait on (wait on death or wait on zombie) and lets us avoid
-> > having a new syscall and create new fd just for waiting. Let me know if you
-> > disagree, but otherwise I am thinking of modifying my patches that way and
-> > avoid adding a new syscall.
-> 
-> But often you don't just want to wait for a single thing to happen;
-> you want to wait for many things at once, and react as soon as any one
-> of them happens. This is why the kernel has epoll and all the other
-> "wait for event on FD" APIs. If waiting for a process isn't possible
-> with fd-based APIs like epoll, users of this API have to spin up
-> useless helper threads.
+On Mon, Mar 25, 2019 at 2:14 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+>
+> Maybe, but we really need to come up with sane documentation on the
+> entire drop_inode/evict_inode/destroy_inode/rcu_destroy_inode
+> group ;-/
 
-This is true. I almost forgot about the polling requirement, sorry. So then a
-new syscall it is.. About what to wait for, that can be a separate parameter
-to pidfd_wait then.
+Yeah.
 
-Thanks.
+I actually think the "destroy_inode/rcu_destroy_inode" part is the
+simplest one to understand: it's just tearing down the inode, and the
+RCU part is (obviously, as shown by this thread) somewhat subtle, but
+at the same time not really all that hard to explain: "inodes that can
+be looked up through RCU lookup need to be destroyed with RCU delay".
 
- - Joel
+I think drop_inode->evict_inode is arguably the much more subtle
+stuff. That's the "we're not destroying things, we're making decisions
+about the state" kind of thing.
 
+And we actually don't have any documentation at all for those two.
+Well, there's the "porting" thing, but..
+
+> And I want to understand the writeback-related issues
+> in ocfs2 and f2fs - the current kludges in those smell fishy.
+
+I'm assuming you're talking about exactly that drop_inode() kind of subtlety.
+
+At least for ocfs2, the whole "rcu_destroy_inode()" patch I sent out
+would simplify things a lot. *All* that the ocfs2_destroy_inode()
+function does is to schedule the inode freeing for RCU delay.
+
+Assuming my patch is fine (as mentioned, it was entirely untested),
+that patch would actually simplify that a lot. Get rid of
+ocfs2_destroy_inode() entirely, and just make
+ocfs2_rcu_destroy_inode() do that kmem_cache_free(). Mucho clean-up
+(we have that ocfs2_rcu_destroy_inode() currently as
+ocfs2_i_callback(), but with the ugly rcu-head interface).
+
+> >       if (unlikely(inode_init_always(sb, inode))) {
+> > -             if (inode->i_sb->s_op->destroy_inode)
+> > +             if (inode->i_sb->s_op->destroy_inode) {
+> >                       inode->i_sb->s_op->destroy_inode(inode);
+> > -             else
+> > +                     if (!inode->i_sb->s_op->rcu_destroy_inode)
+> > +                             return NULL;
+> > +             }
+> > +             if (!inode->i_sb->s_op->rcu_destroy_inode ||
+> > +                 !inode->i_sb->s_op->rcu_destroy_inode(inode))
+> >                       kmem_cache_free(inode_cachep, inode);
+>
+> ITYM  i_callback(inode); here, possibly suitably renamed.
+
+Yeah, I guess we could just call that i_callback() directly. I wrote
+it that way because it was how the code was organized (it didn't call
+i_callback() before either), but yes, it woudl avoid some duplicate
+code to do it that way.
+
+And yes, at that point we'd probably want to rename it too.
+
+On the whole, looking at a few filesystems, I really think that
+'rcu_destroy_inode()" would simplify several of them.  That ocfs2 case
+I already mentioned, but looking around the exact same is trye in
+v9fs, vxfs, dlmfs, hostfs, bfs, coda, fatfs, isofs, minix, nfs,
+openprom, proc, qnx4, qnx6, sysv, befs, adfs, affs, efs, ext2, f2fs,
+gfs2, hfs, hfsplus, hpfs, jffs2, nilfs, reiserfs, romfs, squashfs)
+
+And in other filesystems that actually *do* have a real
+destroy_inode() that does other things too, they still want the rcu
+delayed part as well (eg btrfs, ceph, fuse, hugetlbfs, afs, ecryptfs,
+ext4, jfs, organgefs, ovl, ubifs).
+
+In fact, every single filesystem I looked at (and I looked at most)
+would be simplified by that patch.
+
+And for some it would make it easier to fix bugs in the process (ie
+bpf) because they don't currently have that rcu delay and they need
+it.
+
+So looking at all the existing users of destroy_inode(), I really do
+think we should have that rcu_destroy_inode() callback. Because that
+
+ 3 files changed, 28 insertions(+), 6 deletions(-)
+
+will allow quite a lot of lines to be removed from low-level
+filesystems with all the call_rcu() and callback container_of(head,
+struct inode, i_rcu) noise just going away.
+
+But yes, it would be good to have more documentation fo the drop/evict
+phase. As mentioned, I think the destroy phase is actually the easy
+one, with the RCU part being the most complex one that this would
+actually simplify.
+
+                   Linus
