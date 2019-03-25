@@ -2,115 +2,127 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 804D5C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 13:49:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7151DC4360F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 13:51:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 505A120830
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 13:49:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3986B20830
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 13:51:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="KfrrI3Vp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cJe2vQt5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729301AbfCYNtu (ORCPT
+        id S1729088AbfCYNvi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 09:49:50 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:45890 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728959AbfCYNtu (ORCPT
+        Mon, 25 Mar 2019 09:51:38 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:42946 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726166AbfCYNvi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 09:49:50 -0400
-Received: by mail-pf1-f196.google.com with SMTP id e24so5615850pfi.12
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 06:49:49 -0700 (PDT)
+        Mon, 25 Mar 2019 09:51:38 -0400
+Received: by mail-pg1-f193.google.com with SMTP id p6so6624581pgh.9;
+        Mon, 25 Mar 2019 06:51:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=gEMxR3R8hBEpdUjHceXVmy1fI1OviFSo7Nzefk6Rk0c=;
-        b=KfrrI3VpHzDfm+Fo6yJwhGo1KsoPzZdLadcmNAfepasR4k0Zoqf0byf/mXPV8y22EV
-         xckeKuzr63x4zukHO9VmiNCxCAmyBWP4px9fYcjRPIkTZY1BBsFqVv/iYrqjorRj2Fcz
-         Jp9WnLuu/hzw4wazOoNB6XyuJTKLA1hoptFeU=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=GT4Bk9dT9oL1IWkeLESxHzy5fnOkv7rMx/vbuzd5IjA=;
+        b=cJe2vQt5VACeXj3hzsSNgc5RCkAEph46QJg6wlGqUbIBUJ7X8dKEkQp2lxGsRB/8fZ
+         b90yyVJrwrqYDzy5gsUtcrFmR5uO3nqv0Y6QctDZpXfdIv5Xk8SfG/Fdk1BwGUpnDYVM
+         YPM/jO6fBrtqsGtsQH25wGszJWxSSoZbPezaPAUL5sIRUi3PEUW+oj7ysRIXK5twHV/d
+         GiCaEQmy/bBYkCF4lAL9bC5VpcDs2ZV4fjiMgRlloQl/DQrrJ3R5l8d1PAK4Qwk3B3Nu
+         w+P4cfNSg+jGHsgGMR5FJ/83G4E2xHePt1f02V/KZK/qWhOABHtoPdpHROZ1uZLMVHD1
+         xIIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gEMxR3R8hBEpdUjHceXVmy1fI1OviFSo7Nzefk6Rk0c=;
-        b=IB52Pg+jtJ0rxmFMSHSELFSoMTiopEVYqj2o4C8YkMghbBFB9b1Z+EljVRQjy31ZT2
-         6MBPHOzIoPZdUE5JYozqBDBVcQJAlhdfwEbjnCBdkq4y8QjkmX1vx8ZQI1fxhbvxClm2
-         +o4ReQzuZpW5vBRY1pr6n1FsCRwZejZs03hFKhHzjBWUedc3C3R/CLahLHanDXSB9RBO
-         EdUhXVB2h0pbps9TrQyCRwfTc+e5xt4aEraMdeLwSQeGzf910bVYlFUHd9vTCebkjWYo
-         +/7DjOlMgmbTWkrYhWrbhPG5TVBrC14q0pnTg0wMbwnJhReMtT0NVZgHrOUUlrC3Zr/F
-         avkg==
-X-Gm-Message-State: APjAAAWlyYgdTsZ3Jw2GWs48vmgq2e7aqsmkVueH44rHLgj4OPs4BU3q
-        hRaIQDy0wQ1E9lVy8ZggTbMU4g==
-X-Google-Smtp-Source: APXvYqzXcT4KS4Ahs0r/dMLNwVDljzWyaTnGeltOejYIVHFrWGFL/+7OX6BUZ1c9XSdoS7dHbQKf9w==
-X-Received: by 2002:a63:ca:: with SMTP id 193mr23340447pga.288.1553521789564;
-        Mon, 25 Mar 2019 06:49:49 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id r86sm25637914pfa.82.2019.03.25.06.49.47
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 25 Mar 2019 06:49:48 -0700 (PDT)
-Date:   Mon, 25 Mar 2019 09:49:47 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>, ast@kernel.org,
-        atishp04@gmail.com, dancol@google.com,
-        Dan Williams <dan.j.williams@intel.com>,
-        gregkh@linuxfoundation.org, Jonathan Corbet <corbet@lwn.net>,
-        karim.yaghmour@opersys.com, Kees Cook <keescook@chromium.org>,
-        linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        Manoj Rao <linux@manojrajarao.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        paulmck@linux.vnet.ibm.com,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        rdunlap@infradead.org, rostedt@goodmis.org,
-        Shuah Khan <shuah@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, yhs@fb.com
-Subject: Re: [PATCH v2 1/2] Provide in-kernel headers for making it easy to
- extend the kernel
-Message-ID: <20190325134947.GA187133@google.com>
-References: <20190211143600.15021-1-joel@joelfernandes.org>
- <20190215031926.ljzluy2cfxp64u6o@ast-mbp>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190215031926.ljzluy2cfxp64u6o@ast-mbp>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=GT4Bk9dT9oL1IWkeLESxHzy5fnOkv7rMx/vbuzd5IjA=;
+        b=MtigBaMK3ONtwlmQWNXtO98LhHfieG6o9xgnOzEFlSbx1HYfT0vltztabLekZH0VQO
+         ETscHOT9ON3uG4CN9X+zM4if1FhAF7tZpcOZijSrWpMdByurOWCNx5WDTSW4K9yxBiEi
+         +PXfE3QOcZXxr15L7JE0nmLISIlwb1M/A3bt5qehXT7Fl0j9tlzu7QGtbfO4zh/Z9JHw
+         X20L7knvUJBUt0dbg1egOa1NwBm+RfIdgri/y7/s9H04Vlo0BJjjcBk2qS2zkFJLBKGB
+         06uE2C+Drr2sMBdZei9yOYD3MSxwGojuoj4hHNbsMK19tyRjz2iyy4w6IEqDTlPsI2OT
+         sVLQ==
+X-Gm-Message-State: APjAAAWsDY5nkBHm/yuLPuH6uOfaPmPQd81sVqRlmClWjgRXLZMHZA9s
+        emBqRcgWpr3YRJV9fTVrJww=
+X-Google-Smtp-Source: APXvYqxCLuXkjUOEkHeMoZ7z9nIev5tNidhjhPgHiaUyDo9Ia490YfKclBXPY6maQF02rFx1+NfRIQ==
+X-Received: by 2002:a17:902:28e6:: with SMTP id f93mr25356170plb.264.1553521897966;
+        Mon, 25 Mar 2019 06:51:37 -0700 (PDT)
+Received: from tianyukernel.corp.microsoft.com ([167.220.255.93])
+        by smtp.googlemail.com with ESMTPSA id k72sm44694562pfb.122.2019.03.25.06.51.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 25 Mar 2019 06:51:37 -0700 (PDT)
+From:   lantianyu1986@gmail.com
+X-Google-Original-From: Tianyu.Lan@microsoft.com
+To:     tglx@linutronix.de, mingo@kernel.org, konrad.wilk@oracle.com,
+        jpoimboe@redhat.com, peterz@infraded.org, mojha@codeaurora.org,
+        peterz@infradead.org, jkosina@suse.cz, riel@surriel.com,
+        luto@kernel.org, Tianyu.Lan@microsoft.com,
+        michael.h.kelley@microsoft.com, kys@microsoft.com,
+        gregkh@linuxfoundation.org
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: [Fix PATCH] cpu/hotplug: Fix bug report when add "nosmt" parameter with CONFIG_HOTPLUG_CPU=N
+Date:   Mon, 25 Mar 2019 21:51:23 +0800
+Message-Id: <1553521883-20868-1-git-send-email-Tianyu.Lan@microsoft.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 14, 2019 at 07:19:29PM -0800, Alexei Starovoitov wrote:
-> On Mon, Feb 11, 2019 at 09:35:59AM -0500, Joel Fernandes (Google) wrote:
-> > Introduce in-kernel headers and other artifacts which are made available
-> > as an archive through proc (/proc/kheaders.txz file). This archive makes
-> > it possible to build kernel modules, run eBPF programs, and other
-> > tracing programs that need to extend the kernel for tracing purposes
-> > without any dependency on the file system having headers and build
-> > artifacts.
-> > 
-> > On Android and embedded systems, it is common to switch kernels but not
-> > have kernel headers available on the file system. Raw kernel headers
-> > also cannot be copied into the filesystem like they can be on other
-> > distros, due to licensing and other issues. There's no linux-headers
-> > package on Android. Further once a different kernel is booted, any
-> > headers stored on the file system will no longer be useful. By storing
-> > the headers as a compressed archive within the kernel, we can avoid these
-> > issues that have been a hindrance for a long time.
-> 
-> The set looks good to me and since the main use case is building bpf progs
-> I can route it via bpf-next tree if there are no objections.
-> Masahiro, could you please ack it?
+From: Lan Tianyu <Tianyu.Lan@microsoft.com>
 
-FYI, Masahiro's comments were all address by v5:
-https://lore.kernel.org/patchwork/project/lkml/list/?series=387311
+When add "nosmt" parameter, kernel still boots up all logical cpus once
+and set CR4.MCE on each CPU. This is to avoid shutting down machine
+when a broadacasted MCE is observed CR4.MCE=0b. (Detail please see comment
+in the cpu_smt_allowed()). Smt cpus will bring up and bring down during
+kernel boot with "nosmt" parameter.
 
-I believe aren't more outstanding concerns. Could we consider it for v5.2?
+When CONFIG_HOTPLUG_CPU=Y, CPU_DYING callbacks will be called inside
+stop-machine and irq is disabled. This happens in the take_cpu_down()
+callback. When CONFIG_HOTPLUG_CPU=N,CPU_DYING callbacks will be called
+with irq enabled.
 
-thanks,
+smpcfd_dying_cpu() is one of CPU_DYING callbacks and it assumes to be
+called when irq is disabled. smpcfd_dying_cpu() calls flush_smp_call_
+function_queue() which requires to be called with irq disabled.
 
- - Joel
+When CONFIG_HOTPLUG_CPU=N and add "nosmt" parameter, smpcfd_dying_cpu()
+is called with irq enalbed and this triggers BUG_ON(!irqs_disabled())
+in the irq_work_run_list(). This patch is to fix the issue.
+
+Fixes: 0cc3cd21657b ("cpu/hotplug: Boot HT siblings at least once")
+Signed-off-by: Lan Tianyu <Tianyu.Lan@microsoft.com>
+---
+ kernel/smp.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/kernel/smp.c b/kernel/smp.c
+index f4cf1b0..33f1970 100644
+--- a/kernel/smp.c
++++ b/kernel/smp.c
+@@ -73,6 +73,8 @@ int smpcfd_dead_cpu(unsigned int cpu)
+ 
+ int smpcfd_dying_cpu(unsigned int cpu)
+ {
++	unsigned long flags;
++
+ 	/*
+ 	 * The IPIs for the smp-call-function callbacks queued by other
+ 	 * CPUs might arrive late, either due to hardware latencies or
+@@ -82,7 +84,10 @@ int smpcfd_dying_cpu(unsigned int cpu)
+ 	 * ensure that the outgoing CPU doesn't go offline with work
+ 	 * still pending.
+ 	 */
++	local_irq_save(flags);
+ 	flush_smp_call_function_queue(false);
++	local_irq_restore(flags);
++
+ 	return 0;
+ }
+ 
+-- 
+2.7.4
+
