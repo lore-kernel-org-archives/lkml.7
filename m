@@ -2,108 +2,215 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED939C10F03
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:12:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20018C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:14:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB53F2085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:12:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553515958;
-	bh=Cq7JL8EE9L3QOxsLoqVtWqfpCEn6OemM/9uz505z2gU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=p596nqXRU4wDtdcgXvACZJMnslBrHBAzPYIC6QsMBS2L6cqEJjikfdR2PkafR25yC
-	 vtlZrARjTgeQZAyx5eMhDvEQqw94EVfBlUwkbi9UnSxVd1Hf27IaJuJgyPnUNpLqtA
-	 BwFy0k1bR+RN2AH2wYfebatg7/iHzvPGUwBlIGqc=
+	by mail.kernel.org (Postfix) with ESMTP id D1C2D2070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:14:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731158AbfCYMMh (ORCPT
+        id S1731086AbfCYMO1 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 08:12:37 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:48094 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730789AbfCYMMh (ORCPT
+        Mon, 25 Mar 2019 08:14:27 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:38892 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730789AbfCYMO1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 08:12:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=mUjnyHN4reLGLLj3kMsXoLYctaPjd+OJ4M++TfL3vpM=; b=ivnE98mRfo3bOpbjIgRKgROiC
-        wXGt72ErBs/V4KjR7qHAPrjv7jv8ILMLtHnLXJvPnoB5qHkt/R1F+uvYSbv7f2Rz+fl1/uJMCYtMy
-        juObg3XcEeWrUcjHq39/1YAayzbcEtaPzDEA64vrpO7p3re7hQ35sTFOKmvjdRUuP7pIs=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1h8OSv-00021j-Bw; Mon, 25 Mar 2019 12:12:33 +0000
-Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 58B7C11288F1; Mon, 25 Mar 2019 12:12:32 +0000 (GMT)
-Date:   Mon, 25 Mar 2019 12:12:32 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     Guenter Roeck <linux@roeck-us.net>, alsa-devel@alsa-project.org,
-        Jie Yang <yang.jie@linux.intel.com>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Curtis Malainey <cujomalainey@chromium.org>
-Subject: Re: [alsa-devel] [PATCH] ASoC: intel: Fix crash at suspend/resume
- after failed codec registration
-Message-ID: <20190325121232.GF7284@sirena.org.uk>
-References: <1553294388-25293-1-git-send-email-linux@roeck-us.net>
- <5451ba5b-1a5d-41b0-2b39-772c326de785@linux.intel.com>
+        Mon, 25 Mar 2019 08:14:27 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2PCB6LS027394;
+        Mon, 25 Mar 2019 13:14:07 +0100
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2rddh7b4ru-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Mon, 25 Mar 2019 13:14:07 +0100
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id CCE913F;
+        Mon, 25 Mar 2019 12:14:05 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 94C46556A;
+        Mon, 25 Mar 2019 12:14:05 +0000 (GMT)
+Received: from SFHDAG5NODE3.st.com (10.75.127.15) by SFHDAG5NODE3.st.com
+ (10.75.127.15) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 25 Mar
+ 2019 13:14:05 +0100
+Received: from SFHDAG5NODE3.st.com ([fe80::7c09:5d6b:d2c7:5f47]) by
+ SFHDAG5NODE3.st.com ([fe80::7c09:5d6b:d2c7:5f47%20]) with mapi id
+ 15.00.1347.000; Mon, 25 Mar 2019 13:14:05 +0100
+From:   Mickael GUENE <mickael.guene@st.com>
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+CC:     Sakari Ailus <sakari.ailus@iki.fi>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Matt Ranostay <matt.ranostay@konsulko.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Ben Kao <ben.kao@intel.com>,
+        Todor Tomov <todor.tomov@linaro.org>,
+        Rui Miguel Silva <rui.silva@linaro.org>,
+        "Akinobu Mita" <akinobu.mita@gmail.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        "Jason Chen" <jasonx.z.chen@intel.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Tianshu Qiu <tian.shu.qiu@intel.com>,
+        Bingbu Cao <bingbu.cao@intel.com>
+Subject: Re: [PATCH v1 2/3] media:st-mipid02: MIPID02 CSI-2 to PARALLEL bridge
+ driver
+Thread-Topic: [PATCH v1 2/3] media:st-mipid02: MIPID02 CSI-2 to PARALLEL
+ bridge driver
+Thread-Index: AQHU2J8yZZpo/KT5AkiuZtoI6rx6VqYOyUaAgAJWyACACxavgIAAD7oA
+Date:   Mon, 25 Mar 2019 12:14:05 +0000
+Message-ID: <80f98c19-6045-9f7c-d549-f559ae8eb9d9@st.com>
+References: <1552373045-134493-1-git-send-email-mickael.guene@st.com>
+ <1552373045-134493-3-git-send-email-mickael.guene@st.com>
+ <20190316221437.e3ukdpgyn2yq72tu@valkosipuli.retiisi.org.uk>
+ <024de1c6-3e40-ac5a-586e-d9878947ff18@st.com>
+ <20190325111746.h26isglf4d765mtg@kekkonen.localdomain>
+In-Reply-To: <20190325111746.h26isglf4d765mtg@kekkonen.localdomain>
+Accept-Language: fr-FR, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.48]
+Content-Type: text/plain; charset="Windows-1252"
+Content-ID: <924C16E91719D345BE366DEDA323D9BE@st.com>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="mrJd9p1Ce66CJMxE"
-Content-Disposition: inline
-In-Reply-To: <5451ba5b-1a5d-41b0-2b39-772c326de785@linux.intel.com>
-X-Cookie: Short people get rained on last.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-25_08:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Sakari,
 
---mrJd9p1Ce66CJMxE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 3/25/19 12:17, Sakari Ailus wrote:
+> Hi Mickael,
+> 
+> On Mon, Mar 18, 2019 at 09:57:44AM +0000, Mickael GUENE wrote:
+>> Hi Sakari,
+>>
+>> Thanks for your review. Find my comments below.
+>>
+>> On 3/16/19 23:14, Sakari Ailus wrote:
+> ...
+>>>> +static struct v4l2_subdev *mipid02_find_sensor(struct mipid02_dev *bridge)
+>>>> +{
+>>>> +	struct media_device *mdev = bridge->sd.v4l2_dev->mdev;
+>>>> +	struct media_entity *entity;
+>>>> +
+>>>> +	if (!mdev)
+>>>> +		return NULL;
+>>>> +
+>>>> +	media_device_for_each_entity(entity, mdev)
+>>>> +		if (entity->function == MEDIA_ENT_F_CAM_SENSOR)
+>>>> +			return media_entity_to_v4l2_subdev(entity);
+>>>
+>>> Hmm. Could you instead use the link state to determine which of the
+>>> receivers is active? You'll need one more pad, and then you'd had 1:1
+>>> mapping between ports and pads.
+>>>
+>>  Goal here is not to detect which of the receivers is active but to find
+>> sensor in case there are others sub-dev in chain (for example a 
+>> serializer/deserializer as found in cars).
+> 
+> You shouldn't make assumptions on the rest of the pipeline beyond the
+> device that's directly connected. You might not even have a camera there.
+> 
+ I have also seen your answer to '[PATCH v2 2/2] media:st-mipid02: MIPID02 CSI-2 to PARALLEL bridge driver'
+concerning support of set_fmt, get_fmt and link_validate.
+ My initial idea was to avoid to avoid to implement them and to avoid media ctrl configuration. According
+to your remark is seems a bad idea. Right ?
+ In that case I have to also implement enum_mbus_code ?
+ I will drop this code and use connected device only to get link speed.
 
-On Sat, Mar 23, 2019 at 09:55:46AM -0400, Pierre-Louis Bossart wrote:
-
-> I'd like to highlight that there is a fundamental flaw in the way the
-> machine drivers are handled. Since we don't have a hook for the machine
-> driver in the BIOS, the DSP driver creates a platform_device which will
-> instantiate the machine driver. When errors happen in the machine driver
-> probe, they are suppressed due to a 'feature' of the device model, so you
-> can end-up with a broken configuration that is still reported as a
-> successful strobe.
-
-These are driver specific issues not device model issues as far as I can
-see?  The issue fixed by this as is that you're storing a pointer in the
-ASoC level (not device model level) probe that you don't free when the
-component is unbound, causing you to dereference it later during
-suspend.  There is absolutely no problem with the machine driver not
-being guaranteed to bind at the time it's initially registered, that's
-perfectly normal and should cause no problems.
-
---mrJd9p1Ce66CJMxE
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlyYxa8ACgkQJNaLcl1U
-h9BQNQf/ZXvr/GtRQbc1tulU2dg2cV0Ubh1sW9F6qTbJgiJDD2cHA1EG8aoZaYEe
-vbrYbhpioejXYybsY1Y7J5fHvW1zCPCZ7A0qtP/RtBWt9Wagcq3glxuSlrPTx8tN
-Tdt+NcZnHN7D5ybaGmEaOcsNY431mEgJOfNZf08Zr/gHLWAe6QHNBYrlBEGhn7Up
-3vgh+G3W7JBpE3EytIIoaqfMqnTOkwN7lPl/3l3yEqk11rYYS8X2vJHzx2w2Dsdc
-Osq9rBM3qvwuSJjR1P5+kZJHm4JKzhUUhmXlvK43iHANba0IZthB617xMI9dK2B/
-ACLzGeDepi9dTaoEByAV6uPwIZ7LXA==
-=wwVO
------END PGP SIGNATURE-----
-
---mrJd9p1Ce66CJMxE--
+>>  For the moment the driver doesn't support second input port usage,
+>> this is why there is no such second sink pad yet in the driver.
+> 
+> Could you add the second sink pad now, so that the uAPI remains the same
+> when you add support for it? Nothing is connected to it but I don't think
+> it's an issue.
+> 
+> ...
+> 
+>>>> +
+>>>> +	sensor = mipid02_find_sensor(bridge);
+>>>> +	if (!sensor)
+>>>> +		goto error;
+>>>> +
+>>>> +	dev_dbg(&client->dev, "use sensor '%s'", sensor->name);
+>>>> +	memset(&bridge->r, 0, sizeof(bridge->r));
+>>>> +	/* build registers content */
+>>>> +	code = mipid02_get_source_code(bridge, sensor);
+>>>> +	ret |= mipid02_configure_from_rx(bridge, code, sensor);
+>>>> +	ret |= mipid02_configure_from_tx(bridge);
+>>>> +	ret |= mipid02_configure_from_code(bridge, code);
+>>>> +
+>>>> +	/* write mipi registers */
+>>>> +	ret |= mipid02_write_reg(bridge, MIPID02_CLK_LANE_REG1,
+>>>> +		bridge->r.clk_lane_reg1);
+>>>> +	ret |= mipid02_write_reg(bridge, MIPID02_CLK_LANE_REG3, CLK_MIPI_CSI);
+>>>> +	ret |= mipid02_write_reg(bridge, MIPID02_DATA_LANE0_REG1,
+>>>> +		bridge->r.data_lane0_reg1);
+>>>> +	ret |= mipid02_write_reg(bridge, MIPID02_DATA_LANE0_REG2,
+>>>> +		DATA_MIPI_CSI);
+>>>> +	ret |= mipid02_write_reg(bridge, MIPID02_DATA_LANE1_REG1,
+>>>> +		bridge->r.data_lane1_reg1);
+>>>> +	ret |= mipid02_write_reg(bridge, MIPID02_DATA_LANE1_REG2,
+>>>> +		DATA_MIPI_CSI);
+>>>> +	ret |= mipid02_write_reg(bridge, MIPID02_MODE_REG1,
+>>>> +		MODE_NO_BYPASS | bridge->r.mode_reg1);
+>>>> +	ret |= mipid02_write_reg(bridge, MIPID02_MODE_REG2,
+>>>> +		bridge->r.mode_reg2);
+>>>> +	ret |= mipid02_write_reg(bridge, MIPID02_DATA_ID_RREG,
+>>>> +		bridge->r.data_id_rreg);
+>>>> +	ret |= mipid02_write_reg(bridge, MIPID02_DATA_SELECTION_CTRL,
+>>>> +		SELECTION_MANUAL_DATA | SELECTION_MANUAL_WIDTH);
+>>>> +	ret |= mipid02_write_reg(bridge, MIPID02_PIX_WIDTH_CTRL,
+>>>> +		bridge->r.pix_width_ctrl);
+>>>> +	ret |= mipid02_write_reg(bridge, MIPID02_PIX_WIDTH_CTRL_EMB,
+>>>> +		bridge->r.pix_width_ctrl_emb);
+>>>
+>>> Be careful with the error codes. ret will be returned by the s_stream
+>>> callback below.
+>>>
+>>  I didn't understand your remark. Can you elaborate a little bit more ?
+> 
+> If the functions return different error codes, then ret possibly won't be a
+> valid error code, or at least it's not going to be what it was intended to
+> do. You'll need to stop when you encounter an error and then return it to
+> the caller.
+> 
+> ...
+> 
+Ok
+>>>> +static int mipid02_parse_tx_ep(struct mipid02_dev *bridge)
+>>>> +{
+>>>> +	struct i2c_client *client = bridge->i2c_client;
+>>>> +	struct v4l2_fwnode_endpoint ep;
+>>>> +	struct device_node *ep_node;
+>>>> +	int ret;
+>>>> +
+>>>> +	memset(&ep, 0, sizeof(ep));
+>>>> +	ep.bus_type = V4L2_MBUS_PARALLEL;
+>>>
+>>> You can set the field in variable declaration, and omit memset. The same in
+>>> the function above.
+>>>
+>> According to v4l2_fwnode_endpoint_parse() documentation:
+>>  * This function parses the V4L2 fwnode endpoint specific parameters from the
+>>  * firmware. The caller is responsible for assigning @vep.bus_type to a valid
+>>  * media bus type. The caller may also set the default configuration for the
+>>  * endpoint
+>> It seems safer to clear ep else it may select unwanted default configuration
+>> for the endpoint ?
+> 
+> By setting one of the fields in a struct in declaration, the rest will be
+> zeroed by the compiler. That's from the C standard.
+> 
+Ok
