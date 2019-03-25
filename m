@@ -2,926 +2,169 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 596BDC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:35:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 553C0C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:36:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBC97205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:35:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C92D205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:36:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="PO1TD3bb"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="C9RhioRv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730069AbfCYRfY (ORCPT
+        id S1729959AbfCYRgR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 13:35:24 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:55886 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730003AbfCYRfJ (ORCPT
+        Mon, 25 Mar 2019 13:36:17 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:39173 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729475AbfCYRgR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 13:35:09 -0400
-Received: by mail-wm1-f66.google.com with SMTP id o25so9845082wmf.5
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 10:35:07 -0700 (PDT)
+        Mon, 25 Mar 2019 13:36:17 -0400
+Received: by mail-pl1-f195.google.com with SMTP id b65so278713plb.6
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 10:36:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=aUEOOtTzdsd6XAN9pX+9wWzeqvycudwGanV071uDjsA=;
-        b=PO1TD3bbuvANznGunvE5Iwh7816DToep2izPNe0n3j2PcYGwaF8V9JOXN3Wg3M0UsI
-         +w9h0FuwezfwJbYhazGZv4f8zF5UGtkTaMu/hqaOAzDMTiRdEWdNgdV4SgNLPxZ/nRm6
-         GPlBBU3Gq/6EGmiVqRstCkDhQ9Iuvi+4ZDvgFird7Bm60lD2cBSiji8sZLmPwU9IIMdf
-         bA3avbCsfnnBCn+8ymAwcPBX7CeKIVRi1ntzLoQ75MRaoEMpYsmsH0d1+FqLQl/ZQGcP
-         I1DUwiZcZJUY6vgwd4WGZPHS6yI682HEPlu73eNIGRr3lArnAQWJv67DEfZF4isc5Ejb
-         m24w==
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=t7L/78W9/xl5hmvMNZIqgglD3emheP/nGj72k38eaXs=;
+        b=C9RhioRvNGlh8iHxjPPhAFRFgE9HpxV8AOPhH6bpQENk9N5MqccrN7fkxVY+/Fwqte
+         sGZVI9j0oVglBIuGANVoGdZG+23D8V5tNHBGEeGiTTyziPKwuabCLC1mmZtgfRAItyLf
+         IOblp3/tqYT4ivzWM7fWQrgXSa+Zg+qPd0BCs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=aUEOOtTzdsd6XAN9pX+9wWzeqvycudwGanV071uDjsA=;
-        b=ntrFGZ575BZjsOYYLphFIOTVBxJZrNLZNgWsHS7LKGswFu4Vv8fQ5GUBsg75ciFYFT
-         +nIvxuhaJOnpPs5B/5/rqwpuTUYArVZsA975YquIoSIwVDmrY42BFnEHZHdRZXkzFTaP
-         sxvk1ydKojW7CQ4gwNN/7kL9Hc8/xtZNWNwLfNJOKTbPn88uOsKfEaHf32sJcZ7I1L4K
-         O1m6xJ2rhoQ0PHk0ujX45pmN9mO8oZDbILXuFTJ9N8CXh+9orvBR7VEzdM8sdoj/j1Ud
-         eG+DzA8SO60L+DG8xwq8hWzfHYxur3oXb+cdyKvRvAjof/KGFqByLbhc5ARxzW6V78Ex
-         ZR8Q==
-X-Gm-Message-State: APjAAAWhIrW2hEqfYUQQKpcS+r7QxMStMfAN7ot53v/JLuLbxDjHlJby
-        1Ad4lZpos4YurUgwgSyf6S8LHg==
-X-Google-Smtp-Source: APXvYqyS0SUrZ9w8N2IWBO+K4T7hE6/lhzHFNyTOi1wZk+f0yM1wx7sFlWocwVOOqBYcvVi42NZB6Q==
-X-Received: by 2002:a1c:f204:: with SMTP id s4mr11579531wmc.51.1553535306559;
-        Mon, 25 Mar 2019 10:35:06 -0700 (PDT)
-Received: from localhost.localdomain (176-150-251-154.abo.bbox.fr. [176.150.251.154])
-        by smtp.gmail.com with ESMTPSA id o15sm16003227wrj.59.2019.03.25.10.35.05
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 25 Mar 2019 10:35:06 -0700 (PDT)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     hverkuil@xs4all.nl, mchehab@kernel.org
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        linux-amlogic@lists.infradead.org, linux-media@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/3] media: platform: meson: Add Amlogic Meson G12A AO CEC Controller driver
-Date:   Mon, 25 Mar 2019 18:35:00 +0100
-Message-Id: <20190325173501.22863-3-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190325173501.22863-1-narmstrong@baylibre.com>
-References: <20190325173501.22863-1-narmstrong@baylibre.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=t7L/78W9/xl5hmvMNZIqgglD3emheP/nGj72k38eaXs=;
+        b=NUNsbbRubCS9S93nHSx4r8fdUsuqEUGyvKo2L+ROq9Mcv57LMJ2R8iVjr8UPrIB6eq
+         kBMlO9xWOGHhbkp0kESTZq8X7t3REjWblJRKMd61ka8LU9mBUl4RFCrEL9jjfVQmGsUC
+         ZSDubIwMbRfJFYNzXUUslOoRBArdzPNkvATHdy4DS13ZSY/CRaviRCvIGvW7KXI5STpH
+         plg5po2ZQIF/uApIYIBy6+lD2CfWKwDl/d75sgLCIqhPY5fN8dPxS8lYeRCzzTF3/Et+
+         0xFlenKz7frkuT/9+BhMPCkpVDACJdptFhTGwy+xx90J/QDCHIXF0/H8LRL1J2w9ryTg
+         EQ0A==
+X-Gm-Message-State: APjAAAWdq6Rwo7PF2N/z3sSxYB0JstSSybcVII6XhpiAssW1y0MHe7sk
+        S8yE6549J7LT67WU4PGXlKcdrA==
+X-Google-Smtp-Source: APXvYqxBlUt3spnXbK5ldqGii5jZ1hOmKNfdGqF82qpFf0N28xUJw6T2O01wLVyK7JvYz8AHSaWP7w==
+X-Received: by 2002:a17:902:e101:: with SMTP id cc1mr14504927plb.129.1553535376382;
+        Mon, 25 Mar 2019 10:36:16 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id d137sm24294271pfd.133.2019.03.25.10.36.14
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 25 Mar 2019 10:36:15 -0700 (PDT)
+Date:   Mon, 25 Mar 2019 13:36:14 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Daniel Colascione <dancol@google.com>
+Cc:     Christian Brauner <christian@brauner.io>,
+        Jann Horn <jannh@google.com>, khlebnikov@yandex-team.ru,
+        Andy Lutomirski <luto@kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Kees Cook <keescook@chromium.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Michael Kerrisk-manpages <mtk.manpages@gmail.com>,
+        bl0pbl33p@gmail.com, "Dmitry V. Levin" <ldv@altlinux.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        nagarathnam.muthusamy@oracle.com, Aleksa Sarai <cyphar@cyphar.com>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Subject: Re: [PATCH 0/4] pid: add pidctl()
+Message-ID: <20190325173614.GB25975@google.com>
+References: <20190325162052.28987-1-christian@brauner.io>
+ <CAKOZueuJSAiKU7fZR2FNDKKCktdyE-sADtWprpsNMAqYQvD9Jw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKOZueuJSAiKU7fZR2FNDKKCktdyE-sADtWprpsNMAqYQvD9Jw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Amlogic G12A SoC embeds a second CEC controller with a totally
-different design.
+On Mon, Mar 25, 2019 at 09:48:43AM -0700, Daniel Colascione wrote:
+> On Mon, Mar 25, 2019 at 9:21 AM Christian Brauner <christian@brauner.io> wrote:
+> > The pidctl() syscalls builds on, extends, and improves translate_pid() [4].
+> > I quote Konstantins original patchset first that has already been acked and
+> > picked up by Eric before and whose functionality is preserved in this
+> > syscall. Multiple people have asked when this patchset will be sent in
+> > for merging (cf. [1], [2]). It has recently been revived by Nagarathnam
+> > Muthusamy from Oracle [3].
+> >
+> > The intention of the original translate_pid() syscall was twofold:
+> > 1. Provide translation of pids between pid namespaces
+> > 2. Provide implicit pid namespace introspection
+> >
+> > Both functionalities are preserved. The latter task has been improved
+> > upon though. In the original version of the pachset passing pid as 1
+> > would allow to deterimine the relationship between the pid namespaces.
+> > This is inherhently racy. If pid 1 inside a pid namespace has died it
+> > would report false negatives. For example, if pid 1 inside of the target
+> > pid namespace already died, it would report that the target pid
+> > namespace cannot be reached from the source pid namespace because it
+> > couldn't find the pid inside of the target pid namespace and thus
+> > falsely report to the user that the two pid namespaces are not related.
+> > This problem is simple to avoid. In the new version we simply walk the
+> > list of ancestors and check whether the namespace are related to each
+> > other. By doing it this way we can reliably report what the relationship
+> > between two pid namespace file descriptors looks like.
+> >
+> > Additionally, this syscall has been extended to allow the retrieval of
+> > pidfds independent of procfs. These pidfds can e.g. be used with the new
+> > pidfd_send_signal() syscall we recently merged. The ability to retrieve
+> > pidfds independent of procfs had already been requested in the
+> > pidfd_send_signal patchset by e.g. Andrew [4] and later again by Alexey
+> > [5]. A use-case where a kernel is compiled without procfs but where
+> > pidfds are still useful has been outlined by Andy in [6]. Regular
+> > anon-inode based file descriptors are used that stash a reference to
+> > struct pid in file->private_data and drop that reference on close.
+> >
+> > With this translate_pid() has three closely related but still distinct
+> > functionalities. To clarify the semantics and to make it easier for
+> > userspace to use the syscall it has:
+> > - gained a command argument and three commands clearly reflecting the
+> >   distinct functionalities (PIDCMD_QUERY_PID, PIDCMD_QUERY_PIDNS,
+> >   PIDCMD_GET_PIDFD).
+> > - been renamed to pidctl()
+> 
+[snip]
+> Also, I'm still confused about how metadata access is supposed to work
+> for these procfs-less pidfs. If I use PIDCMD_GET_PIDFD on a process,
+> You snipped out a portion of a previous email in which I asked about
+> your thoughts on this question. With the PIDCMD_GET_PIDFD command in
+> place, we have two different kinds of file descriptors for processes,
+> one derived from procfs and one that's independent. The former works
+> with openat(2). The latter does not. To be very specific; if I'm
+> writing a function that accepts a pidfd and I get a pidfd that comes
+> from PIDCMD_GET_PIDFD, how am I supposed to get the equivalent of
+> smaps or oom_score_adj or statm for the named process in a race-free
+> manner?
 
-The two controller can work in the same time since the CEC line can
-be set to two different pins on the two controllers.
+This is true, that such usecase will not be supportable.  But the advantage
+on the other hand, is that suchs "pidfd" can be made pollable or readable in
+the future. Potentially allowing us to return exit status without a new
+syscall (?). And we can add IOCTLs to the pidfd descriptor which we cannot do
+with proc.
 
-This second CEC controller is documented as "AO-CEC-B", thus the
-registers will be named "CECB_" to differenciate with the other
-AO-CEC driver.
+But.. one thing we could do for Daniel usecase is if a /proc/pid directory fd
+can be translated into a "pidfd" using another syscall or even a node, like
+/proc/pid/handle or something. I think this is what Christian suggested in
+the previous threads.
 
-Unlike the other AO-CEC controller, this one takes the Oscillator
-clock as input and embeds a dual-divider to provide a precise
-32768Hz clock for communication. This is handled by registering
-a clock in the driver.
+And also for the translation the other way, add a syscall or modify
+translate_fd or something, to covert a anon_inode pidfd into a /proc/pid
+directory fd. Then the user is welcomed to do openat(2) on _that_ directory fd.
+Then we modify pidfd_send_signal to only send signals to pure pidfd fds, not
+to /proc/pid directory fds.
 
-Unlike the other AO-CEC controller, this controller supports setting
-up to 15 logical adresses and supports the signal_free_time settings
-in the transmit function.
+Should we work on patches for these? Please let us know if this idea makes
+sense and thanks a lot for adding us to the review as well.
 
-Unfortunately, this controller does not support "monitor" mode.
+Best,
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- drivers/media/platform/Kconfig             |  13 +
- drivers/media/platform/meson/Makefile      |   1 +
- drivers/media/platform/meson/ao-cec-g12a.c | 783 +++++++++++++++++++++
- 3 files changed, 797 insertions(+)
- create mode 100644 drivers/media/platform/meson/ao-cec-g12a.c
-
-diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
-index 4acbed189644..92ea07ddc609 100644
---- a/drivers/media/platform/Kconfig
-+++ b/drivers/media/platform/Kconfig
-@@ -578,6 +578,19 @@ config VIDEO_MESON_AO_CEC
- 	  generic CEC framework interface.
- 	  CEC bus is present in the HDMI connector and enables communication
- 
-+config VIDEO_MESON_G12A_AO_CEC
-+	tristate "Amlogic Meson G12A AO CEC driver"
-+	depends on ARCH_MESON || COMPILE_TEST
-+	select CEC_CORE
-+	select CEC_NOTIFIER
-+	---help---
-+	  This is a driver for Amlogic Meson G12A SoCs AO CEC interface.
-+	  This driver if for the new AO-CEC module found in G12A SoCs,
-+	  usually named AO_CEC_B in documentation.
-+	  It uses the generic CEC framework interface.
-+	  CEC bus is present in the HDMI connector and enables communication
-+	  between compatible devices.
-+
- config CEC_GPIO
- 	tristate "Generic GPIO-based CEC driver"
- 	depends on PREEMPT || COMPILE_TEST
-diff --git a/drivers/media/platform/meson/Makefile b/drivers/media/platform/meson/Makefile
-index 597beb8f34d1..f611c23c3718 100644
---- a/drivers/media/platform/meson/Makefile
-+++ b/drivers/media/platform/meson/Makefile
-@@ -1 +1,2 @@
- obj-$(CONFIG_VIDEO_MESON_AO_CEC)	+= ao-cec.o
-+obj-$(CONFIG_VIDEO_MESON_G12A_AO_CEC)	+= ao-cec-g12a.o
-diff --git a/drivers/media/platform/meson/ao-cec-g12a.c b/drivers/media/platform/meson/ao-cec-g12a.c
-new file mode 100644
-index 000000000000..8977ae994164
---- /dev/null
-+++ b/drivers/media/platform/meson/ao-cec-g12a.c
-@@ -0,0 +1,783 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Driver for Amlogic Meson AO CEC G12A Controller
-+ *
-+ * Copyright (C) 2017 Amlogic, Inc. All rights reserved
-+ * Copyright (C) 2019 BayLibre, SAS
-+ * Author: Neil Armstrong <narmstrong@baylibre.com>
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/clk.h>
-+#include <linux/device.h>
-+#include <linux/io.h>
-+#include <linux/delay.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_platform.h>
-+#include <linux/platform_device.h>
-+#include <linux/types.h>
-+#include <linux/interrupt.h>
-+#include <linux/reset.h>
-+#include <linux/slab.h>
-+#include <linux/regmap.h>
-+#include <media/cec.h>
-+#include <media/cec-notifier.h>
-+#include <linux/clk-provider.h>
-+
-+/* CEC Registers */
-+
-+#define CECB_CLK_CNTL_REG0		0x00
-+
-+#define CECB_CLK_CNTL_N1		GENMASK(11, 0)
-+#define CECB_CLK_CNTL_N2		GENMASK(23, 12)
-+#define CECB_CLK_CNTL_DUAL_EN		BIT(28)
-+#define CECB_CLK_CNTL_OUTPUT_EN		BIT(30)
-+#define CECB_CLK_CNTL_INPUT_EN		BIT(31)
-+
-+#define CECB_CLK_CNTL_REG1		0x04
-+
-+#define CECB_CLK_CNTL_M1		GENMASK(11, 0)
-+#define CECB_CLK_CNTL_M2		GENMASK(23, 12)
-+#define CECB_CLK_CNTL_BYPASS_EN		BIT(24)
-+
-+/*
-+ * [14:12] Filter_del. For glitch-filtering CEC line, ignore signal
-+ *       change pulse width < filter_del * T(filter_tick) * 3.
-+ * [9:8] Filter_tick_sel: Select which periodical pulse for
-+ *       glitch-filtering CEC line signal.
-+ *  - 0=Use T(xtal)*3 = 125ns;
-+ *  - 1=Use once-per-1us pulse;
-+ *  - 2=Use once-per-10us pulse;
-+ *  - 3=Use once-per-100us pulse.
-+ * [3]   Sysclk_en. 0=Disable system clock; 1=Enable system clock.
-+ * [2:1] cntl_clk
-+ *  - 0 = Disable clk (Power-off mode)
-+ *  - 1 = Enable gated clock (Normal mode)
-+ *  - 2 = Enable free-run clk (Debug mode)
-+ * [0] SW_RESET 1=Apply reset; 0=No reset.
-+ */
-+#define CECB_GEN_CNTL_REG		0x08
-+
-+#define CECB_GEN_CNTL_RESET		BIT(0)
-+#define CECB_GEN_CNTL_CLK_DISABLE	0
-+#define CECB_GEN_CNTL_CLK_ENABLE	1
-+#define CECB_GEN_CNTL_CLK_ENABLE_DBG	2
-+#define CECB_GEN_CNTL_CLK_CTRL_MASK	GENMASK(2, 1)
-+#define CECB_GEN_CNTL_SYS_CLK_EN	BIT(3)
-+#define CECB_GEN_CNTL_FILTER_TICK_125NS	0
-+#define CECB_GEN_CNTL_FILTER_TICK_1US	1
-+#define CECB_GEN_CNTL_FILTER_TICK_10US	2
-+#define CECB_GEN_CNTL_FILTER_TICK_100US	3
-+#define CECB_GEN_CNTL_FILTER_TICK_SEL	GENMASK(9, 8)
-+#define CECB_GEN_CNTL_FILTER_DEL	GENMASK(14, 12)
-+
-+/*
-+ * [7:0] cec_reg_addr
-+ * [15:8] cec_reg_wrdata
-+ * [16] cec_reg_wr
-+ *  - 0 = Read
-+ *  - 1 = Write
-+ * [31:24] cec_reg_rddata
-+ */
-+#define CECB_RW_REG			0x0c
-+
-+#define CECB_RW_ADDR			GENMASK(7, 0)
-+#define CECB_RW_WR_DATA			GENMASK(15, 8)
-+#define CECB_RW_WRITE_EN		BIT(16)
-+#define CECB_RW_BUS_BUSY		BIT(23)
-+#define CECB_RW_RD_DATA			GENMASK(31, 24)
-+
-+/*
-+ * [0] DONE Interrupt
-+ * [1] End Of Message Interrupt
-+ * [2] Not Acknowlegde Interrupt
-+ * [3] Arbitration Loss Interrupt
-+ * [4] Initiator Error Interrupt
-+ * [5] Follower Error Interrupt
-+ * [6] Wake-Up Interrupt
-+ */
-+#define CECB_INTR_MASKN_REG		0x10
-+#define CECB_INTR_CLR_REG		0x14
-+#define CECB_INTR_STAT_REG		0x18
-+
-+#define CECB_INTR_DONE			BIT(0)
-+#define CECB_INTR_EOM			BIT(1)
-+#define CECB_INTR_NACK			BIT(2)
-+#define CECB_INTR_ARB_LOSS		BIT(3)
-+#define CECB_INTR_INITIATOR_ERR		BIT(4)
-+#define CECB_INTR_FOLLOWER_ERR		BIT(5)
-+#define CECB_INTR_WAKE_UP		BIT(6)
-+
-+/* CEC Commands */
-+
-+#define CECB_CTRL		0x00
-+
-+#define CECB_CTRL_SEND		BIT(0)
-+#define CECB_CTRL_TYPE		GENMASK(2, 1)
-+#define CECB_CTRL_TYPE_RETRY	0
-+#define CECB_CTRL_TYPE_NEW	1
-+#define CECB_CTRL_TYPE_NEXT	2
-+
-+#define CECB_CTRL2		0x01
-+#define CECB_INTR_MASK		0x02
-+#define CECB_LADD_LOW		0x05
-+#define CECB_LADD_HIGH		0x06
-+#define CECB_TX_CNT		0x07
-+#define CECB_RX_CNT		0x08
-+#define CECB_STAT0		0x09
-+#define CECB_TX_DATA00		0x10
-+#define CECB_TX_DATA01		0x11
-+#define CECB_TX_DATA02		0x12
-+#define CECB_TX_DATA03		0x13
-+#define CECB_TX_DATA04		0x14
-+#define CECB_TX_DATA05		0x15
-+#define CECB_TX_DATA06		0x16
-+#define CECB_TX_DATA07		0x17
-+#define CECB_TX_DATA08		0x18
-+#define CECB_TX_DATA09		0x19
-+#define CECB_TX_DATA10		0x1A
-+#define CECB_TX_DATA11		0x1B
-+#define CECB_TX_DATA12		0x1C
-+#define CECB_TX_DATA13		0x1D
-+#define CECB_TX_DATA14		0x1E
-+#define CECB_TX_DATA15		0x1F
-+#define CECB_RX_DATA00		0x20
-+#define CECB_RX_DATA01		0x21
-+#define CECB_RX_DATA02		0x22
-+#define CECB_RX_DATA03		0x23
-+#define CECB_RX_DATA04		0x24
-+#define CECB_RX_DATA05		0x25
-+#define CECB_RX_DATA06		0x26
-+#define CECB_RX_DATA07		0x27
-+#define CECB_RX_DATA08		0x28
-+#define CECB_RX_DATA09		0x29
-+#define CECB_RX_DATA10		0x2A
-+#define CECB_RX_DATA11		0x2B
-+#define CECB_RX_DATA12		0x2C
-+#define CECB_RX_DATA13		0x2D
-+#define CECB_RX_DATA14		0x2E
-+#define CECB_RX_DATA15		0x2F
-+#define CECB_LOCK_BUF		0x30
-+
-+#define CECB_LOCK_BUF_EN	BIT(0)
-+
-+#define CECB_WAKEUPCTRL		0x31
-+
-+struct meson_ao_cec_g12a_device {
-+	struct platform_device		*pdev;
-+	struct regmap			*regmap;
-+	struct regmap			*regmap_cec;
-+	spinlock_t			cec_reg_lock;
-+	struct cec_notifier		*notify;
-+	struct cec_adapter		*adap;
-+	struct cec_msg			rx_msg;
-+	struct clk			*oscin;
-+	struct clk			*core;
-+};
-+
-+static const struct regmap_config meson_ao_cec_g12a_regmap_conf = {
-+	.reg_bits = 8,
-+	.val_bits = 32,
-+	.reg_stride = 4,
-+	.max_register = CECB_INTR_STAT_REG,
-+};
-+
-+/*
-+ * The AO-CECB embeds a dual/divider to generate a more precise
-+ * 32,768KHz clock for CEC core clock.
-+ *                      ______   ______
-+ *                     |      | |      |
-+ *         ______      | Div1 |-| Cnt1 |       ______
-+ *        |      |    /|______| |______|\     |      |
-+ * Xtal-->| Gate |---|  ______   ______  X-X--| Gate |-->
-+ *        |______| |  \|      | |      |/  |  |______|
-+ *                 |   | Div2 |-| Cnt2 |   |
-+ *                 |   |______| |______|   |
-+ *                 |_______________________|
-+ *
-+ * The dividing can be switched to single or dual, with a counter
-+ * for each divider to set when the switching is done.
-+ * The entire dividing mechanism can be also bypassed.
-+ */
-+
-+struct meson_ao_cec_g12a_dualdiv_clk {
-+	struct clk_hw hw;
-+	struct regmap *regmap;
-+};
-+
-+#define hw_to_meson_ao_cec_g12a_dualdiv_clk(_hw)			\
-+	container_of(_hw, struct meson_ao_cec_g12a_dualdiv_clk, hw)	\
-+
-+static unsigned long
-+meson_ao_cec_g12a_dualdiv_clk_recalc_rate(struct clk_hw *hw,
-+					  unsigned long parent_rate)
-+{
-+	struct meson_ao_cec_g12a_dualdiv_clk *dualdiv_clk =
-+		hw_to_meson_ao_cec_g12a_dualdiv_clk(hw);
-+	unsigned long n1;
-+	u32 reg0, reg1;
-+
-+	regmap_read(dualdiv_clk->regmap, CECB_CLK_CNTL_REG0, &reg0);
-+	regmap_read(dualdiv_clk->regmap, CECB_CLK_CNTL_REG0, &reg1);
-+
-+	if (reg1 & CECB_CLK_CNTL_BYPASS_EN)
-+		return parent_rate;
-+
-+	if (reg0 & CECB_CLK_CNTL_DUAL_EN) {
-+		unsigned long n2, m1, m2, f1, f2, p1, p2;
-+
-+		n1 = FIELD_GET(CECB_CLK_CNTL_N1, reg0) + 1;
-+		n2 = FIELD_GET(CECB_CLK_CNTL_N2, reg0) + 1;
-+
-+		m1 = FIELD_GET(CECB_CLK_CNTL_M1, reg1) + 1;
-+		m2 = FIELD_GET(CECB_CLK_CNTL_M1, reg1) + 1;
-+
-+		f1 = DIV_ROUND_CLOSEST(parent_rate, n1);
-+		f2 = DIV_ROUND_CLOSEST(parent_rate, n2);
-+
-+		p1 = DIV_ROUND_CLOSEST(100000000 * m1, f1 * (m1 + m2));
-+		p2 = DIV_ROUND_CLOSEST(100000000 * m2, f2 * (m1 + m2));
-+
-+		return DIV_ROUND_UP(100000000, p1 + p2);
-+	}
-+
-+	n1 = FIELD_GET(CECB_CLK_CNTL_N1, reg0) + 1;
-+
-+	return DIV_ROUND_CLOSEST(parent_rate, n1);
-+}
-+
-+static int meson_ao_cec_g12a_dualdiv_clk_enable(struct clk_hw *hw)
-+{
-+	struct meson_ao_cec_g12a_dualdiv_clk *dualdiv_clk =
-+		hw_to_meson_ao_cec_g12a_dualdiv_clk(hw);
-+
-+
-+	/* Disable Input & Output */
-+	regmap_update_bits(dualdiv_clk->regmap, CECB_CLK_CNTL_REG0,
-+			   CECB_CLK_CNTL_INPUT_EN | CECB_CLK_CNTL_OUTPUT_EN,
-+			   0);
-+
-+	/* Set N1 & N2 */
-+	regmap_update_bits(dualdiv_clk->regmap, CECB_CLK_CNTL_REG0,
-+			   CECB_CLK_CNTL_N1,
-+			   FIELD_PREP(CECB_CLK_CNTL_N1, 733 - 1));
-+
-+	regmap_update_bits(dualdiv_clk->regmap, CECB_CLK_CNTL_REG0,
-+			   CECB_CLK_CNTL_N2,
-+			   FIELD_PREP(CECB_CLK_CNTL_N2, 732 - 1));
-+
-+	/* Set M1 & M2 */
-+	regmap_update_bits(dualdiv_clk->regmap, CECB_CLK_CNTL_REG1,
-+			   CECB_CLK_CNTL_M1,
-+			   FIELD_PREP(CECB_CLK_CNTL_M1, 8 - 1));
-+
-+	regmap_update_bits(dualdiv_clk->regmap, CECB_CLK_CNTL_REG1,
-+			   CECB_CLK_CNTL_M2,
-+			   FIELD_PREP(CECB_CLK_CNTL_M2, 11 - 1));
-+
-+	/* Enable Dual divisor */
-+	regmap_update_bits(dualdiv_clk->regmap, CECB_CLK_CNTL_REG0,
-+			   CECB_CLK_CNTL_DUAL_EN, CECB_CLK_CNTL_DUAL_EN);
-+
-+	/* Disable divisor bypass */
-+	regmap_update_bits(dualdiv_clk->regmap, CECB_CLK_CNTL_REG1,
-+			   CECB_CLK_CNTL_BYPASS_EN, 0);
-+
-+	/* Enable Input & Output */
-+	regmap_update_bits(dualdiv_clk->regmap, CECB_CLK_CNTL_REG0,
-+			   CECB_CLK_CNTL_INPUT_EN | CECB_CLK_CNTL_OUTPUT_EN,
-+			   CECB_CLK_CNTL_INPUT_EN | CECB_CLK_CNTL_OUTPUT_EN);
-+
-+	return 0;
-+}
-+
-+static void meson_ao_cec_g12a_dualdiv_clk_disable(struct clk_hw *hw)
-+{
-+	struct meson_ao_cec_g12a_dualdiv_clk *dualdiv_clk =
-+		hw_to_meson_ao_cec_g12a_dualdiv_clk(hw);
-+
-+	regmap_update_bits(dualdiv_clk->regmap, CECB_CLK_CNTL_REG0,
-+			   CECB_CLK_CNTL_INPUT_EN | CECB_CLK_CNTL_OUTPUT_EN,
-+			   0);
-+}
-+
-+static int meson_ao_cec_g12a_dualdiv_clk_is_enabled(struct clk_hw *hw)
-+{
-+	struct meson_ao_cec_g12a_dualdiv_clk *dualdiv_clk =
-+		hw_to_meson_ao_cec_g12a_dualdiv_clk(hw);
-+	int val;
-+
-+	regmap_read(dualdiv_clk->regmap, CECB_CLK_CNTL_REG0, &val);
-+
-+	return !!(val & (CECB_CLK_CNTL_INPUT_EN | CECB_CLK_CNTL_OUTPUT_EN));
-+}
-+
-+static const struct clk_ops meson_ao_cec_g12a_dualdiv_clk_ops = {
-+	.recalc_rate	= meson_ao_cec_g12a_dualdiv_clk_recalc_rate,
-+	.is_enabled	= meson_ao_cec_g12a_dualdiv_clk_is_enabled,
-+	.enable		= meson_ao_cec_g12a_dualdiv_clk_enable,
-+	.disable	= meson_ao_cec_g12a_dualdiv_clk_disable,
-+};
-+
-+static int meson_ao_cec_g12a_setup_clk(struct meson_ao_cec_g12a_device *ao_cec)
-+{
-+	struct meson_ao_cec_g12a_dualdiv_clk *dualdiv_clk;
-+	struct device *dev = &ao_cec->pdev->dev;
-+	struct clk_init_data init;
-+	const char *parent_name;
-+	struct clk *clk;
-+	char *name;
-+
-+	dualdiv_clk = devm_kzalloc(dev, sizeof(*dualdiv_clk), GFP_KERNEL);
-+	if (!dualdiv_clk)
-+		return -ENOMEM;
-+
-+	name = kasprintf(GFP_KERNEL, "%s#dualdiv_clk", dev_name(dev));
-+	if (!name)
-+		return -ENOMEM;
-+
-+	parent_name = __clk_get_name(ao_cec->oscin);
-+
-+	init.name = name;
-+	init.ops = &meson_ao_cec_g12a_dualdiv_clk_ops;
-+	init.flags = 0;
-+	init.parent_names = &parent_name;
-+	init.num_parents = 1;
-+	dualdiv_clk->regmap = ao_cec->regmap;
-+	dualdiv_clk->hw.init = &init;
-+
-+	clk = devm_clk_register(dev, &dualdiv_clk->hw);
-+	kfree(name);
-+	if (IS_ERR(clk)) {
-+		dev_err(dev, "failed to register clock\n");
-+		return PTR_ERR(clk);
-+	}
-+
-+	ao_cec->core = clk;
-+
-+	return 0;
-+}
-+
-+static int meson_ao_cec_g12a_read(void *context, unsigned int addr,
-+				  unsigned int *data)
-+{
-+	struct meson_ao_cec_g12a_device *ao_cec = context;
-+	u32 reg = FIELD_PREP(CECB_RW_ADDR, addr);
-+	unsigned long flags;
-+	int ret = 0;
-+
-+	spin_lock_irqsave(&ao_cec->cec_reg_lock, flags);
-+
-+	ret = regmap_write(ao_cec->regmap, CECB_RW_REG, reg);
-+
-+	ret = regmap_read_poll_timeout(ao_cec->regmap, CECB_RW_REG, reg,
-+				       !(reg & CECB_RW_BUS_BUSY),
-+				       5, 1000);
-+	if (ret)
-+		goto read_out;
-+
-+	ret = regmap_read(ao_cec->regmap, CECB_RW_REG, &reg);
-+
-+	*data = FIELD_GET(CECB_RW_RD_DATA, reg);
-+
-+read_out:
-+	spin_unlock_irqrestore(&ao_cec->cec_reg_lock, flags);
-+
-+	return ret;
-+}
-+
-+static int meson_ao_cec_g12a_write(void *context, unsigned int addr,
-+				   unsigned int data)
-+{
-+	struct meson_ao_cec_g12a_device *ao_cec = context;
-+	unsigned long flags;
-+	u32 reg = FIELD_PREP(CECB_RW_ADDR, addr) |
-+		  FIELD_PREP(CECB_RW_WR_DATA, data) |
-+		  CECB_RW_WRITE_EN;
-+	int ret = 0;
-+
-+	spin_lock_irqsave(&ao_cec->cec_reg_lock, flags);
-+
-+	ret = regmap_write(ao_cec->regmap, CECB_RW_REG, reg);
-+
-+	spin_unlock_irqrestore(&ao_cec->cec_reg_lock, flags);
-+
-+	return ret;
-+}
-+
-+static const struct regmap_config meson_ao_cec_g12a_cec_regmap_conf = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.reg_read = meson_ao_cec_g12a_read,
-+	.reg_write = meson_ao_cec_g12a_write,
-+	.max_register = 0xffff,
-+	.fast_io = true,
-+};
-+
-+static inline void
-+meson_ao_cec_g12a_irq_setup(struct meson_ao_cec_g12a_device *ao_cec,
-+			    bool enable)
-+{
-+	u32 cfg = CECB_INTR_DONE | CECB_INTR_EOM | CECB_INTR_NACK |
-+		  CECB_INTR_ARB_LOSS | CECB_INTR_INITIATOR_ERR |
-+		  CECB_INTR_FOLLOWER_ERR;
-+
-+	regmap_write(ao_cec->regmap, CECB_INTR_MASKN_REG,
-+		     enable ? cfg : 0);
-+}
-+
-+static void meson_ao_cec_g12a_irq_rx(struct meson_ao_cec_g12a_device *ao_cec)
-+{
-+	int i, ret = 0;
-+	u32 val;
-+
-+	ret = regmap_read(ao_cec->regmap_cec, CECB_RX_CNT, &val);
-+
-+	ao_cec->rx_msg.len = val;
-+	if (ao_cec->rx_msg.len > CEC_MAX_MSG_SIZE)
-+		ao_cec->rx_msg.len = CEC_MAX_MSG_SIZE;
-+
-+	for (i = 0; i < ao_cec->rx_msg.len; i++) {
-+		ret |= regmap_read(ao_cec->regmap_cec,
-+				   CECB_RX_DATA00 + i, &val);
-+
-+		ao_cec->rx_msg.msg[i] = val & 0xff;
-+	}
-+
-+	ret |= regmap_write(ao_cec->regmap_cec, CECB_LOCK_BUF, 0);
-+	if (ret)
-+		return;
-+
-+	cec_received_msg(ao_cec->adap, &ao_cec->rx_msg);
-+}
-+
-+static irqreturn_t meson_ao_cec_g12a_irq(int irq, void *data)
-+{
-+	struct meson_ao_cec_g12a_device *ao_cec = data;
-+	u32 stat;
-+
-+	regmap_read(ao_cec->regmap, CECB_INTR_STAT_REG, &stat);
-+	if (stat)
-+		return IRQ_WAKE_THREAD;
-+
-+	return IRQ_NONE;
-+}
-+
-+static irqreturn_t meson_ao_cec_g12a_irq_thread(int irq, void *data)
-+{
-+	struct meson_ao_cec_g12a_device *ao_cec = data;
-+	u32 stat;
-+
-+	regmap_read(ao_cec->regmap, CECB_INTR_STAT_REG, &stat);
-+	regmap_write(ao_cec->regmap, CECB_INTR_CLR_REG, stat);
-+
-+	if (stat & CECB_INTR_DONE)
-+		cec_transmit_attempt_done(ao_cec->adap, CEC_TX_STATUS_OK);
-+
-+	if (stat & CECB_INTR_EOM)
-+		meson_ao_cec_g12a_irq_rx(ao_cec);
-+
-+	if (stat & CECB_INTR_NACK)
-+		cec_transmit_attempt_done(ao_cec->adap, CEC_TX_STATUS_NACK);
-+
-+	if (stat & CECB_INTR_ARB_LOSS) {
-+		regmap_write(ao_cec->regmap_cec, CECB_TX_CNT, 0);
-+		regmap_update_bits(ao_cec->regmap_cec, CECB_CTRL,
-+				   CECB_CTRL_SEND | CECB_CTRL_TYPE, 0);
-+		cec_transmit_attempt_done(ao_cec->adap, CEC_TX_STATUS_ARB_LOST);
-+	}
-+
-+	if (stat & CECB_INTR_INITIATOR_ERR)
-+		cec_transmit_attempt_done(ao_cec->adap, CEC_TX_STATUS_NACK);
-+
-+	if (stat & CECB_INTR_FOLLOWER_ERR) {
-+		regmap_write(ao_cec->regmap_cec, CECB_LOCK_BUF, 0);
-+		cec_transmit_attempt_done(ao_cec->adap, CEC_TX_STATUS_NACK);
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int
-+meson_ao_cec_g12a_set_log_addr(struct cec_adapter *adap, u8 logical_addr)
-+{
-+	struct meson_ao_cec_g12a_device *ao_cec = adap->priv;
-+	int ret = 0;
-+
-+	if (logical_addr == CEC_LOG_ADDR_INVALID) {
-+		ret = regmap_write(ao_cec->regmap_cec, CECB_LADD_LOW, 0);
-+		ret = regmap_write(ao_cec->regmap_cec, CECB_LADD_HIGH, 0);
-+	} else if (logical_addr < 8) {
-+		ret = regmap_update_bits(ao_cec->regmap_cec, CECB_LADD_LOW,
-+					 BIT(logical_addr),
-+					 BIT(logical_addr));
-+	} else {
-+		ret = regmap_update_bits(ao_cec->regmap_cec, CECB_LADD_HIGH,
-+					 BIT(logical_addr - 8),
-+					 BIT(logical_addr - 8));
-+	}
-+
-+	/* Always set Broadcast/Unregistered 15 address */
-+	ret |= regmap_update_bits(ao_cec->regmap_cec, CECB_LADD_HIGH,
-+				  BIT(CEC_LOG_ADDR_UNREGISTERED - 8),
-+				  BIT(CEC_LOG_ADDR_UNREGISTERED - 8));
-+
-+	return ret;
-+}
-+
-+static int meson_ao_cec_g12a_transmit(struct cec_adapter *adap, u8 attempts,
-+				 u32 signal_free_time, struct cec_msg *msg)
-+{
-+	struct meson_ao_cec_g12a_device *ao_cec = adap->priv;
-+	unsigned int type;
-+	int ret = 0;
-+	u32 val;
-+	int i;
-+
-+	/* Check if RX is in progress */
-+	ret = regmap_read(ao_cec->regmap_cec, CECB_LOCK_BUF, &val);
-+	if (ret)
-+		return ret;
-+	if (val & CECB_LOCK_BUF_EN)
-+		return -EBUSY;
-+
-+	/* Check if TX Busy */
-+	ret = regmap_read(ao_cec->regmap_cec, CECB_CTRL, &val);
-+	if (ret)
-+		return ret;
-+	if (val & CECB_CTRL_SEND)
-+		return -EBUSY;
-+
-+	switch (signal_free_time) {
-+	case CEC_SIGNAL_FREE_TIME_RETRY:
-+		type = CECB_CTRL_TYPE_RETRY;
-+		break;
-+	case CEC_SIGNAL_FREE_TIME_NEXT_XFER:
-+		type = CECB_CTRL_TYPE_NEXT;
-+		break;
-+	case CEC_SIGNAL_FREE_TIME_NEW_INITIATOR:
-+	default:
-+		type = CECB_CTRL_TYPE_NEW;
-+		break;
-+	}
-+
-+	for (i = 0; i < msg->len; i++)
-+		ret |= regmap_write(ao_cec->regmap_cec, CECB_TX_DATA00 + i,
-+				    msg->msg[i]);
-+
-+	ret |= regmap_write(ao_cec->regmap_cec, CECB_TX_CNT, msg->len);
-+	ret = regmap_update_bits(ao_cec->regmap_cec, CECB_CTRL,
-+				 CECB_CTRL_SEND |
-+				 CECB_CTRL_TYPE,
-+				 CECB_CTRL_SEND |
-+				 FIELD_PREP(CECB_CTRL_TYPE, type));
-+
-+	return ret;
-+}
-+
-+static int meson_ao_cec_g12a_adap_enable(struct cec_adapter *adap, bool enable)
-+{
-+	struct meson_ao_cec_g12a_device *ao_cec = adap->priv;
-+
-+	meson_ao_cec_g12a_irq_setup(ao_cec, false);
-+
-+	regmap_update_bits(ao_cec->regmap, CECB_GEN_CNTL_REG,
-+			   CECB_GEN_CNTL_RESET, CECB_GEN_CNTL_RESET);
-+
-+	if (!enable)
-+		return 0;
-+
-+	/* Setup Filter */
-+	regmap_update_bits(ao_cec->regmap, CECB_GEN_CNTL_REG,
-+			   CECB_GEN_CNTL_FILTER_TICK_SEL |
-+			   CECB_GEN_CNTL_FILTER_DEL,
-+			   FIELD_PREP(CECB_GEN_CNTL_FILTER_TICK_SEL,
-+				      CECB_GEN_CNTL_FILTER_TICK_1US) |
-+			   FIELD_PREP(CECB_GEN_CNTL_FILTER_DEL, 7));
-+
-+	/* Enable System Clock */
-+	regmap_update_bits(ao_cec->regmap, CECB_GEN_CNTL_REG,
-+			   CECB_GEN_CNTL_SYS_CLK_EN,
-+			   CECB_GEN_CNTL_SYS_CLK_EN);
-+
-+	/* Enable gated clock (Normal mode). */
-+	regmap_update_bits(ao_cec->regmap, CECB_GEN_CNTL_REG,
-+			   CECB_GEN_CNTL_CLK_CTRL_MASK,
-+			    FIELD_PREP(CECB_GEN_CNTL_CLK_CTRL_MASK,
-+				       CECB_GEN_CNTL_CLK_ENABLE));
-+
-+	/* Release Reset */
-+	regmap_update_bits(ao_cec->regmap, CECB_GEN_CNTL_REG,
-+			   CECB_GEN_CNTL_RESET, 0);
-+
-+	meson_ao_cec_g12a_irq_setup(ao_cec, true);
-+
-+	return 0;
-+}
-+
-+static const struct cec_adap_ops meson_ao_cec_g12a_ops = {
-+	.adap_enable = meson_ao_cec_g12a_adap_enable,
-+	.adap_log_addr = meson_ao_cec_g12a_set_log_addr,
-+	.adap_transmit = meson_ao_cec_g12a_transmit,
-+};
-+
-+static int meson_ao_cec_g12a_probe(struct platform_device *pdev)
-+{
-+	struct meson_ao_cec_g12a_device *ao_cec;
-+	struct platform_device *hdmi_dev;
-+	struct device_node *np;
-+	struct resource *res;
-+	void __iomem *base;
-+	int ret, irq;
-+
-+	np = of_parse_phandle(pdev->dev.of_node, "hdmi-phandle", 0);
-+	if (!np) {
-+		dev_err(&pdev->dev, "Failed to find hdmi node\n");
-+		return -ENODEV;
-+	}
-+
-+	hdmi_dev = of_find_device_by_node(np);
-+	of_node_put(np);
-+	if (hdmi_dev == NULL)
-+		return -EPROBE_DEFER;
-+
-+	put_device(&hdmi_dev->dev);
-+	ao_cec = devm_kzalloc(&pdev->dev, sizeof(*ao_cec), GFP_KERNEL);
-+	if (!ao_cec)
-+		return -ENOMEM;
-+
-+	spin_lock_init(&ao_cec->cec_reg_lock);
-+	ao_cec->pdev = pdev;
-+
-+	ao_cec->notify = cec_notifier_get(&hdmi_dev->dev);
-+	if (!ao_cec->notify)
-+		return -ENOMEM;
-+
-+	ao_cec->adap = cec_allocate_adapter(&meson_ao_cec_g12a_ops, ao_cec,
-+					    "meson_g12a_ao_cec",
-+					    CEC_CAP_DEFAULTS,
-+					    CEC_MAX_LOG_ADDRS);
-+	if (IS_ERR(ao_cec->adap)) {
-+		ret = PTR_ERR(ao_cec->adap);
-+		goto out_probe_notify;
-+	}
-+
-+	ao_cec->adap->owner = THIS_MODULE;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(base)) {
-+		ret = PTR_ERR(base);
-+		goto out_probe_adapter;
-+	}
-+
-+	ao_cec->regmap = devm_regmap_init_mmio(&pdev->dev, base,
-+					       &meson_ao_cec_g12a_regmap_conf);
-+	if (IS_ERR(ao_cec->regmap)) {
-+		ret = PTR_ERR(ao_cec->regmap);
-+		goto out_probe_adapter;
-+	}
-+
-+	ao_cec->regmap_cec = devm_regmap_init(&pdev->dev, NULL, ao_cec,
-+					   &meson_ao_cec_g12a_cec_regmap_conf);
-+	if (IS_ERR(ao_cec->regmap_cec)) {
-+		ret = PTR_ERR(ao_cec->regmap_cec);
-+		goto out_probe_adapter;
-+	}
-+
-+	irq = platform_get_irq(pdev, 0);
-+	ret = devm_request_threaded_irq(&pdev->dev, irq,
-+					meson_ao_cec_g12a_irq,
-+					meson_ao_cec_g12a_irq_thread,
-+					0, NULL, ao_cec);
-+	if (ret) {
-+		dev_err(&pdev->dev, "irq request failed\n");
-+		goto out_probe_adapter;
-+	}
-+
-+	ao_cec->oscin = devm_clk_get(&pdev->dev, "oscin");
-+	if (IS_ERR(ao_cec->oscin)) {
-+		dev_err(&pdev->dev, "oscin clock request failed\n");
-+		ret = PTR_ERR(ao_cec->oscin);
-+		goto out_probe_adapter;
-+	}
-+
-+	ret = meson_ao_cec_g12a_setup_clk(ao_cec);
-+	if (ret)
-+		goto out_probe_clk;
-+
-+	ret = clk_prepare_enable(ao_cec->core);
-+	if (ret) {
-+		dev_err(&pdev->dev, "core clock enable failed\n");
-+		goto out_probe_clk;
-+	}
-+
-+	device_reset_optional(&pdev->dev);
-+
-+	platform_set_drvdata(pdev, ao_cec);
-+
-+	ret = cec_register_adapter(ao_cec->adap, &pdev->dev);
-+	if (ret < 0) {
-+		cec_notifier_put(ao_cec->notify);
-+		goto out_probe_core_clk;
-+	}
-+
-+	/* Setup Hardware */
-+	regmap_write(ao_cec->regmap, CECB_GEN_CNTL_REG, CECB_GEN_CNTL_RESET);
-+
-+	cec_register_cec_notifier(ao_cec->adap, ao_cec->notify);
-+
-+	return 0;
-+
-+out_probe_core_clk:
-+	clk_disable_unprepare(ao_cec->core);
-+
-+out_probe_clk:
-+	clk_disable_unprepare(ao_cec->oscin);
-+
-+out_probe_adapter:
-+	cec_delete_adapter(ao_cec->adap);
-+
-+out_probe_notify:
-+	cec_notifier_put(ao_cec->notify);
-+
-+	dev_err(&pdev->dev, "CEC controller registration failed\n");
-+
-+	return ret;
-+}
-+
-+static int meson_ao_cec_g12a_remove(struct platform_device *pdev)
-+{
-+	struct meson_ao_cec_g12a_device *ao_cec = platform_get_drvdata(pdev);
-+
-+	clk_disable_unprepare(ao_cec->oscin);
-+
-+	cec_unregister_adapter(ao_cec->adap);
-+
-+	cec_notifier_put(ao_cec->notify);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id meson_ao_cec_g12a_of_match[] = {
-+	{ .compatible = "amlogic,meson-g12a-ao-cec-b", },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, meson_ao_cec_g12a_of_match);
-+
-+static struct platform_driver meson_ao_cec_g12a_driver = {
-+	.probe   = meson_ao_cec_g12a_probe,
-+	.remove  = meson_ao_cec_g12a_remove,
-+	.driver  = {
-+		.name = "meson-ao-cec-g12a",
-+		.of_match_table = of_match_ptr(meson_ao_cec_g12a_of_match),
-+	},
-+};
-+
-+module_platform_driver(meson_ao_cec_g12a_driver);
-+
-+MODULE_DESCRIPTION("Meson AO CEC G12A Controller driver");
-+MODULE_AUTHOR("Neil Armstrong <narmstrong@baylibre.com>");
-+MODULE_LICENSE("GPL");
--- 
-2.21.0
-
+ - Joel
