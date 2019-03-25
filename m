@@ -2,178 +2,546 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AA58C10F03
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 23:18:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7F79C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 23:18:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B5C620848
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 23:18:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="bmWmtlOA"
+	by mail.kernel.org (Postfix) with ESMTP id 8E1A82080F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 23:18:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729993AbfCYXSR (ORCPT
+        id S1730402AbfCYXSe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 19:18:17 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:45432 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727192AbfCYXSR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 19:18:17 -0400
-Received: by mail-ot1-f68.google.com with SMTP id e5so9709302otk.12
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 16:18:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BDLk+jh0wm55D8ztyKQQjdMiusc96JMbtw9zCEj3y6A=;
-        b=bmWmtlOAfTKBgIkAV4K73DnNnvKLXfnnZaIk5Csh5dgshTgCKm/M1xryTKHq9HRx+9
-         dhfR0DJy4SFcZfYzPjzPO1tzxGr8+/UqlIdiLnFC4QxVfnB2Zboaw9Po9hneBmzjsojy
-         09UJ+4jx2az1c121Hp4cjizVAdaTIimVGF34xvc1vHZnfd79kxZJl7peyySjd17HEFzJ
-         M5jpsWKZEjrkYQu6gVasCkWeZPtpUR5rZXHi+uByOGwSYMEGb1EPOGw119GsMJ4WqjDd
-         Q4AJrkeVaRNCtcEndaloOGysrz1p2xFiifiUH1ZzTZOFMqykD97ylfpbTFs3oSmM+27Z
-         K+Rg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BDLk+jh0wm55D8ztyKQQjdMiusc96JMbtw9zCEj3y6A=;
-        b=OsOXAc4tarJW1DaqwvEu4FRcZRES8RtRj8nTf4aZaqD0FD6tl/mjIOgeKOIuN5i0mN
-         2m4varp4PPVAe3YFhzg8PwEChPs1XJivK3fSNQwf1y0IR2azl4ZdSy8a2GGyz2zKdhbk
-         eJq1/SDPLQGjcjQVQup7yI5pw4nr3DbMO3eb+gfHb/iEhRezapNwj3XCT4Y3AHmVd9tA
-         mYbGzsl9DzesTorCw4e+fsXo961Jx8owlNYteon9I2ZU2kDh/L1iL8mNw1pqFNTBW7Zx
-         whF3oOq3EI5/8SgjiWsPzN6fwx0+idaGT23nmL7e8HEZ2le7c0TOpqE2khqjK02/arCe
-         W0Kg==
-X-Gm-Message-State: APjAAAUuE3uhlTnUCTT8/Zq0hmfsZTjMPfqT0ZQkvUxLms9r3OlBsSFw
-        VN3Omn78NPhVYuuYvtG/Tvy7vk/WcqwBCZ7GQ4YlBg==
-X-Google-Smtp-Source: APXvYqxsQkP9wLF6Yl5w1yQJ8nJBIcMw0TELYRMa6MegAkNnD+70dwmUNmfysSws+BWUu5Xm2PiqA2KHF8fLGkQux1k=
-X-Received: by 2002:a9d:224a:: with SMTP id o68mr20779320ota.214.1553555896212;
- Mon, 25 Mar 2019 16:18:16 -0700 (PDT)
+        Mon, 25 Mar 2019 19:18:34 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60708 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727192AbfCYXSd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 19:18:33 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A200FC057F3D;
+        Mon, 25 Mar 2019 23:18:32 +0000 (UTC)
+Received: from x1.home (ovpn-116-33.phx2.redhat.com [10.3.116.33])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 41CBA5C232;
+        Mon, 25 Mar 2019 23:18:32 +0000 (UTC)
+Date:   Mon, 25 Mar 2019 17:18:31 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Parav Pandit <parav@mellanox.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kwankhede@nvidia.com
+Subject: Re: [PATCH 8/8] vfio/mdev: Improve the create/remove sequence
+Message-ID: <20190325171831.1ac2a441@x1.home>
+In-Reply-To: <1553296835-37522-9-git-send-email-parav@mellanox.com>
+References: <1553296835-37522-1-git-send-email-parav@mellanox.com>
+        <1553296835-37522-9-git-send-email-parav@mellanox.com>
+Organization: Red Hat
 MIME-Version: 1.0
-References: <1553316275-21985-1-git-send-email-yang.shi@linux.alibaba.com>
- <1553316275-21985-2-git-send-email-yang.shi@linux.alibaba.com>
- <CAPcyv4g5RoHhXhkKQaYkqYLN1y3KavbGeM1zVus-3fY5Q+JdxA@mail.gmail.com> <688dffbc-2adc-005d-223e-fe488be8c5fc@linux.alibaba.com>
-In-Reply-To: <688dffbc-2adc-005d-223e-fe488be8c5fc@linux.alibaba.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 25 Mar 2019 16:18:04 -0700
-Message-ID: <CAPcyv4g3xzuS8hP9jOX_BXWyFEH32YfCEDs3a_K_VRODfATc=Q@mail.gmail.com>
-Subject: Re: [PATCH 01/10] mm: control memory placement by nodemask for two
- tier main memory
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     Michal Hocko <mhocko@suse.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Rik van Riel <riel@surriel.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Fengguang Wu <fengguang.wu@intel.com>,
-        "Du, Fan" <fan.du@intel.com>, "Huang, Ying" <ying.huang@intel.com>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Vishal L Verma <vishal.l.verma@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Mon, 25 Mar 2019 23:18:32 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 12:28 PM Yang Shi <yang.shi@linux.alibaba.com> wrote:
->
->
->
-> On 3/23/19 10:21 AM, Dan Williams wrote:
-> > On Fri, Mar 22, 2019 at 9:45 PM Yang Shi <yang.shi@linux.alibaba.com> wrote:
-> >> When running applications on the machine with NVDIMM as NUMA node, the
-> >> memory allocation may end up on NVDIMM node.  This may result in silent
-> >> performance degradation and regression due to the difference of hardware
-> >> property.
-> >>
-> >> DRAM first should be obeyed to prevent from surprising regression.  Any
-> >> non-DRAM nodes should be excluded from default allocation.  Use nodemask
-> >> to control the memory placement.  Introduce def_alloc_nodemask which has
-> >> DRAM nodes set only.  Any non-DRAM allocation should be specified by
-> >> NUMA policy explicitly.
-> >>
-> >> In the future we may be able to extract the memory charasteristics from
-> >> HMAT or other source to build up the default allocation nodemask.
-> >> However, just distinguish DRAM and PMEM (non-DRAM) nodes by SRAT flag
-> >> for the time being.
-> >>
-> >> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
-> >> ---
-> >>   arch/x86/mm/numa.c     |  1 +
-> >>   drivers/acpi/numa.c    |  8 ++++++++
-> >>   include/linux/mmzone.h |  3 +++
-> >>   mm/page_alloc.c        | 18 ++++++++++++++++--
-> >>   4 files changed, 28 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
-> >> index dfb6c4d..d9e0ca4 100644
-> >> --- a/arch/x86/mm/numa.c
-> >> +++ b/arch/x86/mm/numa.c
-> >> @@ -626,6 +626,7 @@ static int __init numa_init(int (*init_func)(void))
-> >>          nodes_clear(numa_nodes_parsed);
-> >>          nodes_clear(node_possible_map);
-> >>          nodes_clear(node_online_map);
-> >> +       nodes_clear(def_alloc_nodemask);
-> >>          memset(&numa_meminfo, 0, sizeof(numa_meminfo));
-> >>          WARN_ON(memblock_set_node(0, ULLONG_MAX, &memblock.memory,
-> >>                                    MAX_NUMNODES));
-> >> diff --git a/drivers/acpi/numa.c b/drivers/acpi/numa.c
-> >> index 867f6e3..79dfedf 100644
-> >> --- a/drivers/acpi/numa.c
-> >> +++ b/drivers/acpi/numa.c
-> >> @@ -296,6 +296,14 @@ void __init acpi_numa_slit_init(struct acpi_table_slit *slit)
-> >>                  goto out_err_bad_srat;
-> >>          }
-> >>
-> >> +       /*
-> >> +        * Non volatile memory is excluded from zonelist by default.
-> >> +        * Only regular DRAM nodes are set in default allocation node
-> >> +        * mask.
-> >> +        */
-> >> +       if (!(ma->flags & ACPI_SRAT_MEM_NON_VOLATILE))
-> >> +               node_set(node, def_alloc_nodemask);
-> > Hmm, no, I don't think we should do this. Especially considering
-> > current generation NVDIMMs are energy backed DRAM there is no
-> > performance difference that should be assumed by the non-volatile
-> > flag.
->
-> Actually, here I would like to initialize a node mask for default
-> allocation. Memory allocation should not end up on any nodes excluded by
-> this node mask unless they are specified by mempolicy.
->
-> We may have a few different ways or criteria to initialize the node
-> mask, for example, we can read from HMAT (when HMAT is ready in the
-> future), and we definitely could have non-DRAM nodes set if they have no
-> performance difference (I'm supposed you mean NVDIMM-F  or HBM).
->
-> As long as there are different tiers, distinguished by performance, for
-> main memory, IMHO, there should be a defined default allocation node
-> mask to control the memory placement no matter where we get the information.
+On Fri, 22 Mar 2019 18:20:35 -0500
+Parav Pandit <parav@mellanox.com> wrote:
 
-I understand the intent, but I don't think the kernel should have such
-a hardline policy by default. However, it would be worthwhile
-mechanism and policy to consider for the dax-hotplug userspace
-tooling. I.e. arrange for a given device-dax instance to be onlined,
-but set the policy to require explicit opt-in by numa binding for it
-to be an allocation / migration option.
+> There are five problems with current code structure.
+> 1. mdev device is placed on the mdev bus before it is created in the
+> vendor driver. Once a device is placed on the mdev bus without creating
+> its supporting underlying vendor device, an open() can get triggered by
+> userspace on partially initialized device.
+> Below ladder diagram highlight it.
+> 
+>       cpu-0                                       cpu-1
+>       -----                                       -----
+>    create_store()
+>      mdev_create_device()
+>        device_register()
+>           ...
+>          vfio_mdev_probe()
+>          ...creates char device
+>                                         vfio_mdev_open()
+>                                           parent->ops->open(mdev)
+>                                             vfio_ap_mdev_open()
+>                                               matrix_mdev = NULL
+>         [...]
+>         parent->ops->create()
+>           vfio_ap_mdev_create()
+>             mdev_set_drvdata(mdev, matrix_mdev);
+>             /* Valid pointer set above */
+> 
+> 2. Current creation sequence is,
+>    parent->ops_create()
+>    groups_register()
+> 
+> Remove sequence is,
+>    parent->ops->remove()
+>    groups_unregister()
+> However, remove sequence should be exact mirror of creation sequence.
+> Once this is achieved, all users of the mdev will be terminated first
+> before removing underlying vendor device.
+> (Follow standard linux driver model).
+> At that point vendor's remove() ops shouldn't failed because device is
+> taken off the bus that should terminate the users.
+> 
+> 3. Additionally any new mdev driver that wants to work on mdev device
+> during probe() routine registered using mdev_register_driver() needs to
+> get stable mdev structure.
+> 
+> 4. In following sequence, child devices created while removing mdev parent
+> device can be left out, or it may lead to race of removing half
+> initialized child mdev devices.
+> 
+> issue-1:
+> --------
+>        cpu-0                         cpu-1
+>        -----                         -----
+>                                   mdev_unregister_device()
+>                                      device_for_each_child()
+>                                         mdev_device_remove_cb()
+>                                             mdev_device_remove()
+> create_store()
+>   mdev_device_create()                   [...]
+>        device_register()
+>                                   parent_remove_sysfs_files()
+>                                   /* BUG: device added by cpu-0
+>                                    * whose parent is getting removed.
+>                                    */
+> 
+> issue-2:
+> --------
+>        cpu-0                         cpu-1
+>        -----                         -----
+> create_store()
+>   mdev_device_create()                   [...]
+>        device_register()
+> 
+>        [...]                      mdev_unregister_device()
+>                                      device_for_each_child()
+>                                         mdev_device_remove_cb()
+>                                             mdev_device_remove()
+> 
+>        mdev_create_sysfs_files()
+>        /* BUG: create is adding
+>         * sysfs files for a device
+>         * which is undergoing removal.
+>         */
+>                                  parent_remove_sysfs_files()
 
-I added Vishal to the cc who is looking into such policy tooling.
+In both cases above, it looks like the device will hold a reference to
+the parent, so while there is a race, the parent object isn't released.
 
-> But, for now we haven't had such information ready for such use yet, so
-> the SRAT flag might be a choice.
->
-> >
-> > Why isn't default SLIT distance sufficient for ensuring a DRAM-first
-> > default policy?
->
-> "DRAM-first" may sound ambiguous, actually I mean "DRAM only by
-> default". SLIT should just can tell us what node is local what node is
-> remote, but can't tell us the performance difference.
+> 
+> 5. Below crash is observed when user initiated remove is in progress
+> and mdev_unregister_driver() completes parent unregistration.
+> 
+>        cpu-0                         cpu-1
+>        -----                         -----
+> remove_store()
+>    mdev_device_remove()
+>    active = false;
+>                                   mdev_unregister_device()
+>                                     remove type
+>    [...]
+>    mdev_remove_ops() crashes.
+> 
+> This is similar race like create() racing with mdev_unregister_device().
 
-I think it's a useful semantic, but let's leave the selection of that
-policy to an explicit userspace decision.
+Not sure I catch this, the device should have a reference to the
+parent, and we don't specifically clear parent->ops, so what's getting
+removed that causes this oops?  Is .remove pointing at bad text
+regardless?
+
+> mtty mtty: MDEV: Registered
+> iommu: Adding device 83b8f4f2-509f-382f-3c1e-e6bfe0fa1001 to group 57
+> vfio_mdev 83b8f4f2-509f-382f-3c1e-e6bfe0fa1001: MDEV: group_id = 57
+> mdev_device_remove sleep started
+> mtty mtty: MDEV: Unregistering
+> mtty_dev: Unloaded!
+> BUG: unable to handle kernel paging request at ffffffffc027d668
+> PGD af9818067 P4D af9818067 PUD af981a067 PMD 8583c3067 PTE 0
+> Oops: 0000 [#1] SMP PTI
+> CPU: 15 PID: 3517 Comm: bash Kdump: loaded Not tainted 5.0.0-rc7-vdevbus+ #2
+> Hardware name: Supermicro SYS-6028U-TR4+/X10DRU-i+, BIOS 2.0b 08/09/2016
+> RIP: 0010:mdev_device_remove_ops+0x1a/0x50 [mdev]
+> Call Trace:
+>  mdev_device_remove+0xef/0x130 [mdev]
+>  remove_store+0x77/0xa0 [mdev]
+>  kernfs_fop_write+0x113/0x1a0
+>  __vfs_write+0x33/0x1b0
+>  ? rcu_read_lock_sched_held+0x64/0x70
+>  ? rcu_sync_lockdep_assert+0x2a/0x50
+>  ? __sb_start_write+0x121/0x1b0
+>  ? vfs_write+0x17c/0x1b0
+>  vfs_write+0xad/0x1b0
+>  ? trace_hardirqs_on_thunk+0x1a/0x1c
+>  ksys_write+0x55/0xc0
+>  do_syscall_64+0x5a/0x210
+> 
+> Therefore, mdev core is improved in following ways to overcome above
+> issues.
+> 
+> 1. Before placing mdev devices on the bus, perform vendor drivers
+> creation which supports the mdev creation.
+> This ensures that mdev specific all necessary fields are initialized
+> before a given mdev can be accessed by bus driver.
+> 
+> 2. During remove flow, first remove the device from the bus. This
+> ensures that any bus specific devices and data is cleared.
+> Once device is taken of the mdev bus, perform remove() of mdev from the
+> vendor driver.
+> 
+> 3. Linux core device model provides way to register and auto unregister
+> the device sysfs attribute groups at dev->groups.
+> Make use of this groups to let core create the groups and simplify code
+> to avoid explicit groups creation and removal.
+> 
+> 4. Wait for any ongoing mdev create() and remove() to finish before
+> unregistering parent device using srcu. This continues to allow multiple
+> create and remove to progress in parallel. At the same time guard parent
+> removal while parent is being access by create() and remove callbacks.
+
+So there should be 4-5 separate patches here?  Wishful thinking?
+
+> Fixes: 7b96953bc640 ("vfio: Mediated device Core driver")
+> Signed-off-by: Parav Pandit <parav@mellanox.com>
+> ---
+>  drivers/vfio/mdev/mdev_core.c    | 142 +++++++++++++++++++++------------------
+>  drivers/vfio/mdev/mdev_private.h |   7 +-
+>  drivers/vfio/mdev/mdev_sysfs.c   |   6 +-
+>  3 files changed, 84 insertions(+), 71 deletions(-)
+> 
+> diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
+> index 944a058..8fe0ed1 100644
+> --- a/drivers/vfio/mdev/mdev_core.c
+> +++ b/drivers/vfio/mdev/mdev_core.c
+> @@ -84,6 +84,7 @@ static void mdev_release_parent(struct kref *kref)
+>  						  ref);
+>  	struct device *dev = parent->dev;
+>  
+> +	cleanup_srcu_struct(&parent->unreg_srcu);
+>  	kfree(parent);
+>  	put_device(dev);
+>  }
+> @@ -103,56 +104,30 @@ static inline void mdev_put_parent(struct mdev_parent *parent)
+>  		kref_put(&parent->ref, mdev_release_parent);
+>  }
+>  
+> -static int mdev_device_create_ops(struct kobject *kobj,
+> -				  struct mdev_device *mdev)
+> +static int mdev_device_must_remove(struct mdev_device *mdev)
+
+Naming is off here, mdev_device_remove_common()?
+
+>  {
+> -	struct mdev_parent *parent = mdev->parent;
+> +	struct mdev_parent *parent;
+> +	struct mdev_type *type;
+>  	int ret;
+>  
+> -	ret = parent->ops->create(kobj, mdev);
+> -	if (ret)
+> -		return ret;
+> +	type = to_mdev_type(mdev->type_kobj);
+>  
+> -	ret = sysfs_create_groups(&mdev->dev.kobj,
+> -				  parent->ops->mdev_attr_groups);
+> +	mdev_remove_sysfs_files(&mdev->dev, type);
+> +	device_del(&mdev->dev);
+> +	parent = mdev->parent;
+> +	ret = parent->ops->remove(mdev);
+>  	if (ret)
+> -		parent->ops->remove(mdev);
+> +		dev_err(&mdev->dev, "Remove failed: err=%d\n", ret);
+
+Let the caller decide whether to be verbose with the error, parent
+removal might want to warn, sysfs remove might just return an error.
+
+>  
+> +	/* Balances with device_initialize() */
+> +	put_device(&mdev->dev);
+>  	return ret;
+>  }
+>  
+> -/*
+> - * mdev_device_remove_ops gets called from sysfs's 'remove' and when parent
+> - * device is being unregistered from mdev device framework.
+> - * - 'force_remove' is set to 'false' when called from sysfs's 'remove' which
+> - *   indicates that if the mdev device is active, used by VMM or userspace
+> - *   application, vendor driver could return error then don't remove the device.
+> - * - 'force_remove' is set to 'true' when called from mdev_unregister_device()
+> - *   which indicate that parent device is being removed from mdev device
+> - *   framework so remove mdev device forcefully.
+> - */
+> -static int mdev_device_remove_ops(struct mdev_device *mdev, bool force_remove)
+> -{
+> -	struct mdev_parent *parent = mdev->parent;
+> -	int ret;
+> -
+> -	/*
+> -	 * Vendor driver can return error if VMM or userspace application is
+> -	 * using this mdev device.
+> -	 */
+> -	ret = parent->ops->remove(mdev);
+> -	if (ret && !force_remove)
+> -		return ret;
+> -
+> -	sysfs_remove_groups(&mdev->dev.kobj, parent->ops->mdev_attr_groups);
+> -	return 0;
+> -}
+
+Seems like there's easily a separate patch in pushing the create/remove
+ops into the calling function and separating for the iterator callback,
+that would make this easier to review.
+
+> -
+>  static int mdev_device_remove_cb(struct device *dev, void *data)
+>  {
+>  	if (dev_is_mdev(dev))
+> -		mdev_device_remove(dev, true);
+> -
+> +		mdev_device_must_remove(to_mdev_device(dev));
+>  	return 0;
+>  }
+>  
+> @@ -194,6 +169,7 @@ int mdev_register_device(struct device *dev, const struct mdev_parent_ops *ops)
+>  	}
+>  
+>  	kref_init(&parent->ref);
+> +	init_srcu_struct(&parent->unreg_srcu);
+>  
+>  	parent->dev = dev;
+>  	parent->ops = ops;
+> @@ -214,6 +190,7 @@ int mdev_register_device(struct device *dev, const struct mdev_parent_ops *ops)
+>  	if (ret)
+>  		dev_warn(dev, "Failed to create compatibility class link\n");
+>  
+> +	rcu_assign_pointer(parent->self, parent);
+>  	list_add(&parent->next, &parent_list);
+>  	mutex_unlock(&parent_list_lock);
+>  
+> @@ -244,21 +221,36 @@ void mdev_unregister_device(struct device *dev)
+>  
+>  	mutex_lock(&parent_list_lock);
+>  	parent = __find_parent_device(dev);
+> -
+>  	if (!parent) {
+>  		mutex_unlock(&parent_list_lock);
+>  		return;
+>  	}
+> +	list_del(&parent->next);
+> +	mutex_unlock(&parent_list_lock);
+> +
+>  	dev_info(dev, "MDEV: Unregistering\n");
+>  
+> -	list_del(&parent->next);
+> +	/* Publish that this mdev parent is unregistering. So any new
+> +	 * create/remove cannot start on this parent anymore by user.
+> +	 */
+
+Comment style, we're not in netdev.
+
+> +	rcu_assign_pointer(parent->self, NULL);
+> +
+> +	/*
+> +	 * Wait for any active create() or remove() mdev ops on the parent
+> +	 * to complete.
+> +	 */
+> +	synchronize_srcu(&parent->unreg_srcu);
+> +
+> +	/* At this point it is confirmed that any pending user initiated
+> +	 * create or remove callbacks accessing the parent are completed.
+> +	 * It is safe to remove the parent now.
+> +	 */
+>  	class_compat_remove_link(mdev_bus_compat_class, dev, NULL);
+>  
+>  	device_for_each_child(dev, NULL, mdev_device_remove_cb);
+>  
+>  	parent_remove_sysfs_files(parent);
+>  
+> -	mutex_unlock(&parent_list_lock);
+>  	mdev_put_parent(parent);
+>  }
+>  EXPORT_SYMBOL(mdev_unregister_device);
+> @@ -278,14 +270,24 @@ static void mdev_device_release(struct device *dev)
+>  int mdev_device_create(struct kobject *kobj, struct device *dev, uuid_le uuid)
+>  {
+>  	int ret;
+> +	struct mdev_parent *valid_parent;
+>  	struct mdev_device *mdev, *tmp;
+>  	struct mdev_parent *parent;
+>  	struct mdev_type *type = to_mdev_type(kobj);
+> +	int srcu_idx;
+>  
+>  	parent = mdev_get_parent(type->parent);
+>  	if (!parent)
+>  		return -EINVAL;
+>  
+> +	srcu_idx = srcu_read_lock(&parent->unreg_srcu);
+> +	valid_parent = srcu_dereference(parent->self, &parent->unreg_srcu);
+> +	if (!valid_parent) {
+> +		/* parent is undergoing unregistration */
+> +		ret = -ENODEV;
+> +		goto mdev_fail;
+> +	}
+> +
+>  	mutex_lock(&mdev_list_lock);
+>  
+>  	/* Check for duplicate */
+> @@ -310,68 +312,76 @@ int mdev_device_create(struct kobject *kobj, struct device *dev, uuid_le uuid)
+>  
+>  	mdev->parent = parent;
+>  
+> +	device_initialize(&mdev->dev);
+>  	mdev->dev.parent  = dev;
+>  	mdev->dev.bus     = &mdev_bus_type;
+>  	mdev->dev.release = mdev_device_release;
+> +	mdev->dev.groups = type->parent->ops->mdev_attr_groups;
+>  	dev_set_name(&mdev->dev, "%pUl", uuid.b);
+>  
+> -	ret = device_register(&mdev->dev);
+> +	ret = type->parent->ops->create(kobj, mdev);
+>  	if (ret)
+> -		goto mdev_fail;
+> +		goto create_fail;
+>  
+> -	ret = mdev_device_create_ops(kobj, mdev);
+> +	ret = device_add(&mdev->dev);
+
+Separating device_initialize() and device_add() also looks like a
+separate patch, then the srcu could be added at the end.  Thanks,
+
+Alex
+
+>  	if (ret)
+> -		goto create_fail;
+> +		goto dev_fail;
+>  
+>  	ret = mdev_create_sysfs_files(&mdev->dev, type);
+> -	if (ret) {
+> -		mdev_device_remove_ops(mdev, true);
+> -		goto create_fail;
+> -	}
+> +	if (ret)
+> +		goto sysfs_fail;
+>  
+>  	mdev->type_kobj = kobj;
+>  	mdev->active = true;
+>  	dev_dbg(&mdev->dev, "MDEV: created\n");
+> +	srcu_read_unlock(&parent->unreg_srcu, srcu_idx);
+>  
+>  	return 0;
+>  
+> +sysfs_fail:
+> +	device_del(&mdev->dev);
+> +dev_fail:
+> +	type->parent->ops->remove(mdev);
+>  create_fail:
+> -	device_unregister(&mdev->dev);
+> +	put_device(&mdev->dev);
+>  mdev_fail:
+> +	srcu_read_unlock(&parent->unreg_srcu, srcu_idx);
+>  	mdev_put_parent(parent);
+>  	return ret;
+>  }
+>  
+> -int mdev_device_remove(struct device *dev, bool force_remove)
+> +int mdev_device_remove(struct device *dev)
+>  {
+> +	struct mdev_parent *valid_parent;
+>  	struct mdev_device *mdev;
+>  	struct mdev_parent *parent;
+> -	struct mdev_type *type;
+> +	int srcu_idx;
+>  	int ret;
+>  
+>  	mdev = to_mdev_device(dev);
+> +	parent = mdev->parent;
+> +	srcu_idx = srcu_read_lock(&parent->unreg_srcu);
+> +	valid_parent = srcu_dereference(parent->self, &parent->unreg_srcu);
+> +	if (!valid_parent) {
+> +		srcu_read_unlock(&parent->unreg_srcu, srcu_idx);
+> +		/* parent is undergoing unregistration */
+> +		return -ENODEV;
+> +	}
+> +
+> +	mutex_lock(&mdev_list_lock);
+>  	if (!mdev->active) {
+>  		mutex_unlock(&mdev_list_lock);
+> -		return -EAGAIN;
+> +		srcu_read_unlock(&parent->unreg_srcu, srcu_idx);
+> +		return -ENODEV;
+>  	}
+> -
+>  	mdev->active = false;
+>  	mutex_unlock(&mdev_list_lock);
+>  
+> -	type = to_mdev_type(mdev->type_kobj);
+> -	parent = mdev->parent;
+> -
+> -	ret = mdev_device_remove_ops(mdev, force_remove);
+> -	if (ret) {
+> -		mdev->active = true;
+> -		return ret;
+> -	}
+> +	ret = mdev_device_must_remove(mdev);
+> +	srcu_read_unlock(&parent->unreg_srcu, srcu_idx);
+>  
+> -	mdev_remove_sysfs_files(dev, type);
+> -	device_unregister(dev);
+>  	mdev_put_parent(parent);
+> -
+> -	return 0;
+> +	return ret;
+>  }
+>  
+>  static int __init mdev_init(void)
+> diff --git a/drivers/vfio/mdev/mdev_private.h b/drivers/vfio/mdev/mdev_private.h
+> index 84b2b6c..3d17db9 100644
+> --- a/drivers/vfio/mdev/mdev_private.h
+> +++ b/drivers/vfio/mdev/mdev_private.h
+> @@ -23,6 +23,11 @@ struct mdev_parent {
+>  	struct list_head next;
+>  	struct kset *mdev_types_kset;
+>  	struct list_head type_list;
+> +	/* Protects unregistration to wait until create/remove
+> +	 * are completed.
+> +	 */
+> +	struct srcu_struct unreg_srcu;
+> +	struct mdev_parent __rcu *self;
+>  };
+>  
+>  struct mdev_device {
+> @@ -58,6 +63,6 @@ struct mdev_type {
+>  void mdev_remove_sysfs_files(struct device *dev, struct mdev_type *type);
+>  
+>  int  mdev_device_create(struct kobject *kobj, struct device *dev, uuid_le uuid);
+> -int  mdev_device_remove(struct device *dev, bool force_remove);
+> +int  mdev_device_remove(struct device *dev);
+>  
+>  #endif /* MDEV_PRIVATE_H */
+> diff --git a/drivers/vfio/mdev/mdev_sysfs.c b/drivers/vfio/mdev/mdev_sysfs.c
+> index c782fa9..68a8191 100644
+> --- a/drivers/vfio/mdev/mdev_sysfs.c
+> +++ b/drivers/vfio/mdev/mdev_sysfs.c
+> @@ -236,11 +236,9 @@ static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
+>  	if (val && device_remove_file_self(dev, attr)) {
+>  		int ret;
+>  
+> -		ret = mdev_device_remove(dev, false);
+> -		if (ret) {
+> -			device_create_file(dev, attr);
+> +		ret = mdev_device_remove(dev);
+> +		if (ret)
+>  			return ret;
+> -		}
+>  	}
+>  
+>  	return count;
+
