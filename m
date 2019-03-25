@@ -2,61 +2,64 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A0DCC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 00:12:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 128DFC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 00:14:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05AEF20896
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 00:12:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4CB920863
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 00:13:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729191AbfCYAM2 (ORCPT
+        id S1729210AbfCYAN6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 20:12:28 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:44584 "EHLO
+        Sun, 24 Mar 2019 20:13:58 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:44706 "EHLO
         shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729109AbfCYAM1 (ORCPT
+        with ESMTP id S1729109AbfCYAN6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 20:12:27 -0400
+        Sun, 24 Mar 2019 20:13:58 -0400
 Received: from localhost (unknown [50.233.106.125])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 33CF1108AE13A;
-        Sun, 24 Mar 2019 17:12:27 -0700 (PDT)
-Date:   Sun, 24 Mar 2019 20:12:26 -0400 (EDT)
-Message-Id: <20190324.201226.2195904854628723725.davem@davemloft.net>
-To:     yuehaibing@huawei.com
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id CB023108AE0DE;
+        Sun, 24 Mar 2019 17:13:57 -0700 (PDT)
+Date:   Sun, 24 Mar 2019 20:13:57 -0400 (EDT)
+Message-Id: <20190324.201357.1580092867848179795.davem@davemloft.net>
+To:     Markus.Amend@telekom.de
 Cc:     gerrit@erg.abdn.ac.uk, linux-kernel@vger.kernel.org,
         netdev@vger.kernel.org, dccp@vger.kernel.org
-Subject: Re: [PATCH v2] dccp: Fix memleak in __feat_register_sp
+Subject: Re: [PATCH] net: dccp: Checksum verification considering
+ skb->ip_summed
 From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190322134348.15048-1-yuehaibing@huawei.com>
-References: <20190322134348.15048-1-yuehaibing@huawei.com>
+In-Reply-To: <FRAPR01MB11703F861DE24373440FD1C0FA430@FRAPR01MB1170.DEUPRD01.PROD.OUTLOOK.DE>
+References: <FRAPR01MB11703F861DE24373440FD1C0FA430@FRAPR01MB1170.DEUPRD01.PROD.OUTLOOK.DE>
 X-Mailer: Mew version 6.8 on Emacs 26.1
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=iso-8859-7
-Content-Transfer-Encoding: base64
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 24 Mar 2019 17:12:27 -0700 (PDT)
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 24 Mar 2019 17:13:57 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogWXVlIEhhaWJpbmcgPHl1ZWhhaWJpbmdAaHVhd2VpLmNvbT4NCkRhdGU6IEZyaSwgMjIg
-TWFyIDIwMTkgMjE6NDM6NDggKzA4MDANCg0KPiBGcm9tOiBZdWVIYWliaW5nIDx5dWVoYWliaW5n
-QGh1YXdlaS5jb20+DQo+IA0KPiBJZiBkY2NwX2ZlYXRfcHVzaF9jaGFuZ2UgZmFpbHMsIHdlIGZv
-cmdldCBmcmVlIHRoZSBtZW0NCj4gd2hpY2ggaXMgYWxsb2NlZCBieSBrbWVtZHVwIGluIGRjY3Bf
-ZmVhdF9jbG9uZV9zcF92YWwuDQo+IA0KPiBSZXBvcnRlZC1ieTogSHVsayBSb2JvdCA8aHVsa2Np
-QGh1YXdlaS5jb20+DQo+IEZpeGVzOiBlOGVmOTY3YTU0ZjQgKCJkY2NwOiBSZWdpc3RyYXRpb24g
-cm91dGluZXMgZm9yIGNoYW5naW5nIGZlYXR1cmUgdmFsdWVzIikNCj4gU2lnbmVkLW9mZi1ieTog
-WXVlSGFpYmluZyA8eXVlaGFpYmluZ0BodWF3ZWkuY29tPg0KPiAtLS0NCj4gdjI6IGtmcmVlICd2
-YWwgLS0+ICdmdmFsJw0KDQpEb24ndCBzdWJtaXQgYW55IHBhdGNoZXMgZm9yIGF0IGxlYXN0IDIg
-ZGF5cywgSSBhbSBnZXR0aW5nIHJlYWxseSB0aXJlZCBvZg0KY2hhbmdlcyB5b3UgZG9uJ3QgZXZl
-biBDT01QSUxFIFRFU1Q6DQoNCiAgQ0MgW01dICBuZXQvZGNjcC9mZWF0Lm8NCm5ldC9kY2NwL2Zl
-YXQuYzogSW4gZnVuY3Rpb24goV9fZmVhdF9yZWdpc3Rlcl9zcKI6DQpuZXQvZGNjcC9mZWF0LmM6
-NzQyOjEzOiBlcnJvcjogaW52YWxpZCB0eXBlIGFyZ3VtZW50IG9mIKEtPqIgKGhhdmUgoWRjY3Bf
-ZmVhdF92YWyiIHtha2EgoXVuaW9uIDxhbm9ueW1vdXM+on0pDQogICBrZnJlZShmdmFsLT5zcC52
-ZWMpOw0KICAgICAgICAgICAgIF5+DQo=
+From: <Markus.Amend@telekom.de>
+Date: Fri, 22 Mar 2019 14:34:58 +0000
+
+> @@ -786,7 +787,8 @@ static int dccp_v4_rcv(struct sk_buff *skb)
+>  
+>  	iph = ip_hdr(skb);
+>  	/* Step 1: If header checksum is incorrect, drop packet and return */
+> -	if (dccp_v4_csum_finish(skb, iph->saddr, iph->daddr)) {
+> +	if (__skb_checksum_validate(skb, IPPROTO_DCCP,
+> +		  true, false, 0, inet_compute_pseudo)) {
+
+The arguments on the second and subsequent lines of a function call must
+begin precisely at the first column after the openning parenthesis of
+the first line of the function call.
+
+You must use the appropriate number of TAB, then SPACE, characters
+necessary to achieve this.
