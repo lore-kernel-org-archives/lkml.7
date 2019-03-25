@@ -7,41 +7,40 @@ X-Spam-Status: No, score=-11.0 required=3.0
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC9DEC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:28:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF2D5C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:28:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4CE92084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:28:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99C362070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:28:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730991AbfCYV2D (ORCPT
+        id S1731010AbfCYV2H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 17:28:03 -0400
-Received: from smtprelay0108.hostedemail.com ([216.40.44.108]:37318 "EHLO
+        Mon, 25 Mar 2019 17:28:07 -0400
+Received: from smtprelay0057.hostedemail.com ([216.40.44.57]:50466 "EHLO
         smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730260AbfCYV2C (ORCPT
+        by vger.kernel.org with ESMTP id S1730260AbfCYV2F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 17:28:02 -0400
+        Mon, 25 Mar 2019 17:28:05 -0400
 Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 3DD20180A884F;
-        Mon, 25 Mar 2019 21:28:01 +0000 (UTC)
+        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 608A2181D333D;
+        Mon, 25 Mar 2019 21:28:04 +0000 (UTC)
 X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: chair48_286528b3f2a55
-X-Filterd-Recvd-Size: 3657
+X-HE-Tag: skirt64_2936f772fa94d
+X-Filterd-Recvd-Size: 4191
 Received: from joe-laptop.perches.com (unknown [47.151.153.53])
         (Authenticated sender: joe@perches.com)
-        by omf13.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 25 Mar 2019 21:27:57 +0000 (UTC)
+        by omf06.hostedemail.com (Postfix) with ESMTPA;
+        Mon, 25 Mar 2019 21:28:03 +0000 (UTC)
 From:   Joe Perches <joe@perches.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     Paul Moore <paul@paul-moore.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
-        Joe Perches <joe@perches.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: Bad file pattern in MAINTAINERS section 'SELINUX SECURITY MODULE'
-Date:   Mon, 25 Mar 2019 14:27:55 -0700
-Message-Id: <20190325212756.27603-1-joe@perches.com>
+Cc:     linux-media@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@redhat.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: Bad file pattern in MAINTAINERS section 'SOC-CAMERA V4L2 SUBSYSTEM'
+Date:   Mon, 25 Mar 2019 14:28:01 -0700
+Message-Id: <20190325212801.27711-1-joe@perches.com>
 X-Mailer: git-send-email 2.15.0
 In-Reply-To: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com>
 References: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com>
@@ -65,62 +64,62 @@ Please fix this defect appropriately.
 
 linux-next MAINTAINERS section:
 
-	13949	SELINUX SECURITY MODULE
-	13950	M:	Paul Moore <paul@paul-moore.com>
-	13951	M:	Stephen Smalley <sds@tycho.nsa.gov>
-	13952	M:	Eric Paris <eparis@parisplace.org>
-	13953	L:	selinux@vger.kernel.org
-	13954	W:	https://selinuxproject.org
-	13955	W:	https://github.com/SELinuxProject
-	13956	T:	git git://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/selinux.git
-	13957	S:	Supported
--->	13958	F:	include/linux/selinux*
-	13959	F:	security/selinux/
-	13960	F:	scripts/selinux/
-	13961	F:	Documentation/admin-guide/LSM/SELinux.rst
+	14342	SOC-CAMERA V4L2 SUBSYSTEM
+	14343	L:	linux-media@vger.kernel.org
+	14344	T:	git git://linuxtv.org/media_tree.git
+	14345	S:	Orphan
+	14346	F:	include/media/soc*
+-->	14347	F:	drivers/media/i2c/soc_camera/
+	14348	F:	drivers/media/platform/soc_camera/
 
 2: ---------------------------------------------------------------------------
 
-The most recent commit that added or modified file pattern 'include/linux/selinux*':
+The most recent commit that added or modified file pattern 'drivers/media/i2c/soc_camera/':
 
-commit 679655daffdd2725b66ba2c5a759bbcb316fca5a
-Author: Joe Perches <joe@perches.com>
-Date:   Tue Apr 7 20:44:32 2009 -0700
+commit 90d72ac6e1c3c65233a13816770fb85c8831bff2
+Author: Mauro Carvalho Chehab <mchehab@redhat.com>
+Date:   Sat Sep 15 17:59:42 2012 -0300
 
-    MAINTAINERS - Add file patterns
+    MAINTAINERS: fix the path for the media drivers that got renamed
     
-    Better description of file pattern tag "F:"
-    Add file exclusion tag "X:"
-    Add patterns to sections
+    Due to the media tree path renaming, several drivers change their
+    location. Update MAINTAINERS accordingly.
     
-    Signed-off-by: Joe Perches <joe@perches.com>
+    Signed-off-by: Mauro Carvalho Chehab <mchehab@redhat.com>
 
- MAINTAINERS | 1194 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 1193 insertions(+), 1 deletion(-)
+ MAINTAINERS | 43 +++++++++++++++++++++----------------------
+ 1 file changed, 21 insertions(+), 22 deletions(-)
 
 3: ---------------------------------------------------------------------------
 
-The last commit with a real presence of file pattern 'include/linux/selinux*':
+The last commit with a real presence of file pattern 'drivers/media/i2c/soc_camera/':
 
-commit 3d252529480c68bfd6a6774652df7c8968b28e41
-Author: Casey Schaufler <casey@schaufler-ca.com>
-Date:   Fri Sep 21 17:17:34 2018 -0700
+commit 280de94a651945905cb8337626c40025e4cea56d
+Author: Sakari Ailus <sakari.ailus@linux.intel.com>
+Date:   Thu Feb 7 08:43:47 2019 -0500
 
-    SELinux: Remove unused selinux_is_enabled
+    media: soc_camera: Move to the staging tree
     
-    There are no longer users of selinux_is_enabled().
-    Remove it. As selinux_is_enabled() is the only reason
-    for include/linux/selinux.h remove that as well.
+    The SoC camera framework has no functional drivers left, something that
+    has not changed for years. Move the leftovers to the staging tree.
     
-    Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
-    Reviewed-by: Kees Cook <keescook@chromium.org>
-    Signed-off-by: Kees Cook <keescook@chromium.org>
+    Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+    Acked-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+    Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 
- include/linux/cred.h             |  1 -
- include/linux/selinux.h          | 35 -----------------------------------
- security/selinux/Makefile        |  2 +-
- security/selinux/exports.c       | 23 -----------------------
- security/selinux/hooks.c         |  1 -
- security/selinux/include/audit.h |  3 ---
- security/selinux/ss/services.c   |  1 -
- 7 files changed, 1 insertion(+), 65 deletions(-)
+ drivers/media/i2c/Kconfig                                         | 8 --------
+ drivers/media/i2c/Makefile                                        | 1 -
+ drivers/media/platform/Kconfig                                    | 1 -
+ drivers/media/platform/Makefile                                   | 2 --
+ drivers/media/platform/soc_camera/Kconfig                         | 8 --------
+ drivers/media/platform/soc_camera/Makefile                        | 1 -
+ drivers/staging/media/Kconfig                                     | 2 ++
+ drivers/staging/media/Makefile                                    | 1 +
+ drivers/{media/i2c => staging/media}/soc_camera/Kconfig           | 8 ++++++++
+ drivers/{media/i2c => staging/media}/soc_camera/Makefile          | 1 +
+ drivers/{media/platform => staging/media}/soc_camera/soc_camera.c | 0
+ .../{media/platform => staging/media}/soc_camera/soc_mediabus.c   | 0
+ drivers/{media/i2c => staging/media}/soc_camera/soc_mt9v022.c     | 0
+ drivers/{media/i2c => staging/media}/soc_camera/soc_ov5642.c      | 0
+ drivers/{media/i2c => staging/media}/soc_camera/soc_ov9740.c      | 0
+ 15 files changed, 12 insertions(+), 21 deletions(-)
