@@ -2,84 +2,85 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EFA7C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:37:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EF42C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:39:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 740292087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:37:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553539026;
-	bh=IN9vz6UZKdIt8wxBM33pyslmgsVbca2t352mBFP4rHI=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=DPChKquBv+hAkBZoL+ny7Ev0j2oCUAa4Hd842MgPOLtU/VsXwpyKjoLGGgtEUTR9x
-	 Y0W1azRthK6PRlOXR3jX0xtBboD8XWlD3vExzuDhmTb/sP/7a8hd611ZUolN8p0L69
-	 d5i5w0wcO2SHbv+pc5pLN9wFbOm3dQjbLCo+Dpiw=
+	by mail.kernel.org (Postfix) with ESMTP id E71A220863
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:39:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="ZvvGPOUK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730175AbfCYShF (ORCPT
+        id S1730112AbfCYSjI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 14:37:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47208 "EHLO mail.kernel.org"
+        Mon, 25 Mar 2019 14:39:08 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:48944 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729322AbfCYShE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 14:37:04 -0400
-Received: from localhost (unknown [69.71.4.100])
+        id S1729322AbfCYSjI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 14:39:08 -0400
+Received: from zn.tnic (p200300EC2F098000329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:8000:329c:23ff:fea6:a903])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA9F120879;
-        Mon, 25 Mar 2019 18:37:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553539024;
-        bh=IN9vz6UZKdIt8wxBM33pyslmgsVbca2t352mBFP4rHI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=s0hbvh1JmVtb5fGk5Vfl+5rP69FUzs92BJr58CQMMmO5htk7jUH+81kPnyhcKM3UD
-         08aobHtN5R3LYoNNi68z0CJTI+W7tphO4DTssW8pNO+rXMffzNIMzae+cIMUy0TZMe
-         805ohZWeSydKYfz4NJckTjPcMLlvnaAZNB7I4MqM=
-From:   helgaas@kernel.org
-To:     Jean Delvare <jdelvare@suse.com>
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH] i2c: isch: Remove unnecessary acpi.h include
-Date:   Mon, 25 Mar 2019 13:36:52 -0500
-Message-Id: <20190325183652.252175-1-helgaas@kernel.org>
-X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 9FEAC1EC0AB1;
+        Mon, 25 Mar 2019 19:39:06 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1553539146;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=gg2u1ds3XRqFyuFOielquJtFw5GjYPmcMuZcr6XBCVw=;
+        b=ZvvGPOUKdRkm62/l4Dw6xflmCxEoVtPqJU+XBL2fXBjT0iLY9P338P5wBTF29jZm1gp0Lb
+        7Hpdi/7Z1Ge9wDcfNTxBAqLP5yizQ23FYanlFvYUezrZxyB18BFLvDRf0oCdE0VdO0Zw7B
+        G2iS5zVY/PjcaqR+6avdn6qt+FdRNvs=
+Date:   Mon, 25 Mar 2019 19:39:09 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     KVM <kvm@vger.kernel.org>, Joerg Roedel <joro@8bytes.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Yazen Ghannam <Yazen.Ghannam@amd.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] kvm/x86: Move MSR_K7_HWCR to svm.c
+Message-ID: <20190325183909.GQ12016@zn.tnic>
+References: <20190325171649.7311-1-bp@alien8.de>
+ <20190325171649.7311-2-bp@alien8.de>
+ <20190325182133.GG31069@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190325182133.GG31069@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+On Mon, Mar 25, 2019 at 11:21:33AM -0700, Sean Christopherson wrote:
+> Won't this prevent emulating an AMD guest on Intel hardware, e.g. due to
+> injecting #GPs during boot?
 
-54fb4a05af0a ("i2c: Check for ACPI resource conflicts") included
-<linux/acpi.h> so we could use acpi_check_region().  fd46a0064af1 ("i2c:
-convert i2c-isch to platform_device") removed the use of
-acpi_check_region() but not the include.
+I guess, but...
 
-Remove the now-unnecessary include of <linux/acpi.h>.  No functional change
-intended.
+> Keeping support in kvm_{get,set}_msr_common
+> doesn't preclude svm_{get,set}_msr() from having SVM-specific handling for
+> the MSR.
 
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
----
- drivers/i2c/busses/i2c-isch.c | 1 -
- 1 file changed, 1 deletion(-)
+... is kvm_{get,set}_msr_common() supposed to cover for all those
+overlapping MSRs between AMD and Intel? svm_{get,set}_msr() have a lot
+more AMD-specific MSRs just like vmx_{get,set}_msr() respectively for
+Intel.
 
-diff --git a/drivers/i2c/busses/i2c-isch.c b/drivers/i2c/busses/i2c-isch.c
-index 5c754bf659e2..f64c1d72f73f 100644
---- a/drivers/i2c/busses/i2c-isch.c
-+++ b/drivers/i2c/busses/i2c-isch.c
-@@ -30,7 +30,6 @@
- #include <linux/ioport.h>
- #include <linux/i2c.h>
- #include <linux/io.h>
--#include <linux/acpi.h>
- 
- /* SCH SMBus address offsets */
- #define SMBHSTCNT	(0 + sch_smba)
+Which would mean that if you really want to support those cross-vendor
+emulations, you don't need the svm* and vmx* MSR accessors... or am I
+missing something?
+
 -- 
-2.21.0.392.gf8f6787159e-goog
+Regards/Gruss,
+    Boris.
 
+Good mailing practices for 400: avoid top-posting and trim the reply.
