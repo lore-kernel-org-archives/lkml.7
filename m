@@ -2,71 +2,66 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBFEEC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:18:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A50C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:19:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B11F42075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:18:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F3DA20830
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:19:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="BAk50GqH"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="GmXreevD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731136AbfCYMSd (ORCPT
+        id S1731173AbfCYMTE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 08:18:33 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:44122 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730904AbfCYMSc (ORCPT
+        Mon, 25 Mar 2019 08:19:04 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46301 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730827AbfCYMTD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 08:18:32 -0400
-Received: by mail-wr1-f65.google.com with SMTP id y7so5751174wrn.11
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 05:18:31 -0700 (PDT)
+        Mon, 25 Mar 2019 08:19:03 -0400
+Received: by mail-wr1-f67.google.com with SMTP id o1so9831937wrs.13
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 05:19:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:openpgp:autocrypt:organization
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=ryI/xER6NK6AjAKN1sxB3rkEWep17aXSwHBygfxt+DE=;
-        b=BAk50GqHOmASEaR5TewLzFUVWMlNf+GDKP8PC3YQ3RSNlH8VhCYidLKI3V7OQSIbC8
-         LQLTjgmxmApkGdbGg8S5ir2XQ7R9jP4qQMdDHIrcPjJqaLSKyLfTzQ2Q2gV0Dn0JPAWm
-         tqbXgkIUU79YH76Nz0rBheYS5aANIHFRsoOO+snvvtORQ7vkCIPoZhmFFHA9NeaDqSKW
-         B16T443s3thQcp+yiZtJqX58krqOewnWCGcm+cVu38NgG1Z5XIrybRRPKZe02RkpiRUv
-         oxhXcWQrE+JYOlEDDDTdkfWX9aOYwHoNjArODjnZQYeMHbv4uVOXYy5dTbU3xgX55MSP
-         zqsA==
+        bh=1qrD0pNedO545Z6zR3UYJpdgBiHehdBG64YXNUKI7/Y=;
+        b=GmXreevDd2SZAWhlCT80ULbwSzpQur8YzEgZZ+h8LzwgkFbDf6/sOIoTr59FsIygo6
+         qyf3NkhW4rlSaUgFyKsGC8gS7rPbejQRYrxmR04k+HvQJYA2/GaaHAv4RgovyU/8OKgB
+         Ew0ehD+hp+pkSgGu2GMpf2hxiREFHcwpxP9+zNvH7fzgYv4ldLXren98V/eUWRT7hS1B
+         zF8XH2OMi8t1AYp4PP2kFEb3FbILCeW2P99Vwl8HoWV/3G2gh5m9Nq75VHbOt2QdWb3M
+         cclS0bJHLhFm0u7yqCINFtqUP4xZdQ0rNk5ropL158QZX/53CpiMI/gvvFSqrVOv0CKx
+         0Vtw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
          :organization:message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=ryI/xER6NK6AjAKN1sxB3rkEWep17aXSwHBygfxt+DE=;
-        b=HgNd9qzR8pJx/fol5I1P6Ogx0bh3nRUMokZ2s58NVNFZ/PqoMykcc8esIlTcZJA7X4
-         jY8bOR5k/vK8nzd6q0MlXYwhv4NzIxniS5vYZABTxFA867ykRc0WFfpfSSupk5LHqA3b
-         RFND3BpmXhlNi+4UT9VU3v1XvrVs5067JeDW11LT8jlvLASadjUZCXPfnc/7ImsscMyp
-         ktg7AkXEagO9PBhZ0LxwYe6JyQ9zNSpfyWMiUz0Wy0uhw8lDZXWBMPJPi28psmOQgPAT
-         WHUCK4ltEyISyls8b/cdDqcs3x2B5YtGNTZBaMUjRN/quCuRgfdSP/6GPPSWHOu5qGYw
-         hmVQ==
-X-Gm-Message-State: APjAAAVA01KJv9RmMUQxCkMUGtM1uvjNe5nB4OhEA+0B3crvI6cg22Jh
-        zrAs1Zz7gnkLRsFBV3+2TeZGWfIAcOJRFg==
-X-Google-Smtp-Source: APXvYqyK3PWw1jd8lhWJOOIiFSYFRltrFxKMbJcCxiRlqZfNfpNbzgW4fndF5D7pty0W698sdhQQ1Q==
-X-Received: by 2002:a5d:5281:: with SMTP id c1mr15725435wrv.83.1553516310147;
-        Mon, 25 Mar 2019 05:18:30 -0700 (PDT)
+        bh=1qrD0pNedO545Z6zR3UYJpdgBiHehdBG64YXNUKI7/Y=;
+        b=njxL4W/QtnBs7d3x8/6mHHhCuqDnUSs1nvp4f1XZ3JGziTKKXLqulfIo/wcpZfkyPc
+         DVrRt25s9KqWL8M8VEEJEGy+VQXczUsP8SRjmRkNOFxWYFyvuYtjJLseYyOG3IXu2uxO
+         MooOPZqPuTGZ8fS/H5/BvXwYZAYA8zCoauBOxcKg8zWT8TUf0NkmUqj1pzDRlkZyCeit
+         PU4XmL4iTpMAsOHf1ybpu5NTcLvcwU/XKanvCwpqEnkDhmE3g2Babi1aSxurpEmGkBLQ
+         tG9gQZTqNPnYhIboYzD7rDvuWCVPi9+IoN0rAYS8KWROqfhlyTqatp/U/hwAlEH2HgFf
+         BXBQ==
+X-Gm-Message-State: APjAAAX4JYnpaRZbq4Vhem6xGPHI07JFrHoe1l48xlGq3MTzgcbBuI81
+        PYPvZn5CEjQpGHTa2IirNTulHbmls9Yabw==
+X-Google-Smtp-Source: APXvYqwJfdZgPAONI8e0/G1XG5qlwzZn/xbrpkhoUKToCGCBv43KLic98OAQKAPI4R2A6AmEEH3PHw==
+X-Received: by 2002:adf:f1ce:: with SMTP id z14mr15225249wro.152.1553516340696;
+        Mon, 25 Mar 2019 05:19:00 -0700 (PDT)
 Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id h17sm12776298wrq.93.2019.03.25.05.18.29
+        by smtp.gmail.com with ESMTPSA id 204sm23160312wmc.1.2019.03.25.05.18.59
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 25 Mar 2019 05:18:29 -0700 (PDT)
-Subject: Re: [PATCH 1/1] clk: meson: pll: fix rounding and setting a rate that
- matches precisely
-To:     Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org
-Cc:     mturquette@baylibre.com, sboyd@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20190324164327.22590-1-martin.blumenstingl@googlemail.com>
- <20190324164327.22590-2-martin.blumenstingl@googlemail.com>
- <c8328cbe29fe905834a618dbb263f4fb79be3d22.camel@baylibre.com>
+        Mon, 25 Mar 2019 05:19:00 -0700 (PDT)
+Subject: Re: [PATCH] clk: meson: g12a: fix gp0 and hifi ranges
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190325104230.11245-1-jbrunet@baylibre.com>
 From:   Neil Armstrong <narmstrong@baylibre.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
@@ -119,12 +114,12 @@ Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
  VsbXrP9BZ6snXyHfebPnno/te5XRqZTL9aJOytB/1iUna+1MAwBxGFPvqeEUUyT+gx1l3Acl
  ZaTUOEkgIor5losDrePdPgE=
 Organization: Baylibre
-Message-ID: <dad185b0-2cfc-0a2f-61cd-78bccfdc680b@baylibre.com>
-Date:   Mon, 25 Mar 2019 13:18:28 +0100
+Message-ID: <823ef5d3-3da8-2be0-5bef-ed9b601d287b@baylibre.com>
+Date:   Mon, 25 Mar 2019 13:18:59 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <c8328cbe29fe905834a618dbb263f4fb79be3d22.camel@baylibre.com>
+In-Reply-To: <20190325104230.11245-1-jbrunet@baylibre.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -133,29 +128,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25/03/2019 10:48, Jerome Brunet wrote:
-> On Sun, 2019-03-24 at 17:43 +0100, Martin Blumenstingl wrote:
->> Make meson_clk_pll_is_better() consider a rate that precisely matches
->> the requested rate to be better than any previous rate (which was
->> smaller than the current).
->>
->> Prior to commit 8eed1db1adec6a ("clk: meson: pll: update driver for the
->> g12a") meson_clk_get_pll_settings() returned early (before calling
->> meson_clk_pll_is_better()) if the rate from the current iteration
->> matches the requested rate precisely. After this commit
->> meson_clk_pll_is_better() is called unconditionally. This requires
->> meson_clk_pll_is_better() to work with the case where "now == rate".
->>
->> This fixes a hang during boot on Meson8b / Odroid-C1 for me.
->>
->> Fixes: 8eed1db1adec6a ("clk: meson: pll: update driver for the g12a")
->> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+On 25/03/2019 11:42, Jerome Brunet wrote:
+> While some SoC samples are able to lock with a PLL factor of 55, others
+> samples can't. ATM, a minimum of 60 appears to work on all the samples
+> I have tried, so lets use this value until we have a good reason to put
+> something else.
 > 
-> Good catch !
+> Fixes: 085a4ea93d54 ("clk: meson: g12a: add peripheral clock controller")
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> ---
+>  drivers/clk/meson/g12a.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Reviewed-by: Jerome Brunet <jbrunet@baylibre.com>
-> 
-> 
+> diff --git a/drivers/clk/meson/g12a.c b/drivers/clk/meson/g12a.c
+> index 0e1ce8c03259..d3f53a9b97dc 100644
+> --- a/drivers/clk/meson/g12a.c
+> +++ b/drivers/clk/meson/g12a.c
+> @@ -151,7 +151,7 @@ static struct clk_regmap g12a_sys_pll = {
+>  };
+>  
+>  static const struct pll_mult_range g12a_gp0_pll_mult_range = {
+> -	.min = 55,
+> +	.min = 60,
+>  	.max = 255,
+>  };
+>  
 > 
 
-Applied to fixes/drivers !
+Acked-by: Neil Armstrong <narmstrong@baylibre.com>
+
+And applied to fixes/drivers !
+
+Neil
