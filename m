@@ -2,104 +2,89 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D6CCC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 13:53:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F372EC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 13:54:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE84320830
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 13:53:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5D3820830
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 13:54:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729264AbfCYNxz (ORCPT
+        id S1729271AbfCYNyP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 09:53:55 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:59045 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726136AbfCYNxz (ORCPT
+        Mon, 25 Mar 2019 09:54:15 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:45918 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726136AbfCYNyP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 09:53:55 -0400
-Received: from wuerfel.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1Ml76o-1ggnzL0AV2-00lXoq; Mon, 25 Mar 2019 14:53:39 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Arnd Bergmann <arnd@arndb.de>, netfilter-devel@vger.kernel.org,
-        coreteam@netfilter.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] netfilter: nat: avoid unused-variable warning
-Date:   Mon, 25 Mar 2019 14:53:05 +0100
-Message-Id: <20190325135336.2107801-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Mon, 25 Mar 2019 09:54:15 -0400
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1h8Q3B-0005tv-T4; Mon, 25 Mar 2019 14:54:06 +0100
+Date:   Mon, 25 Mar 2019 14:54:05 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Chang-An Chen <chang-an.chen@mediatek.com>
+cc:     Frederic Weisbecker <fweisbec@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Pavel Tatashin <pasha.tatashin@oracle.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Kees Cook <keescook@chromium.org>,
+        Corey Minyard <cminyard@mvista.com>,
+        linux-kernel@vger.kernel.org, wsd_upstream@mediatek.com,
+        linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        kuohong.wang@mediatek.com
+Subject: Re: [PATCH 1/1] sched/clock: Prevent generic sched_clock wrap caused
+ by tick_freeze()
+In-Reply-To: <1553497460-24166-1-git-send-email-chang-an.chen@mediatek.com>
+Message-ID: <alpine.DEB.2.21.1903251449580.1656@nanos.tec.linutronix.de>
+References: <1553497460-24166-1-git-send-email-chang-an.chen@mediatek.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:CGJ0DOJHsCwmbLDcOAlalRstVPVwDxhUsFCatOpujVLgwDkeK2v
- Tot09vijRNlCuZvLQ3bwqjKoLejfq+f4RwK7e6GdTOPLH5DJ/ORLCrYDoJz+90+DshdTbaF
- /EXmLVJuIqL+tRAyZtncx9b0OMAR6bzScGwimnjcXDNafZgOGDQGyfYXJwRvjtFcotiX0UM
- ONZmrp5t7GuVs+x6utpbQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:ql8aJH6eo+c=:+QYhOVLgoGQ4+J6Dp2PaqJ
- lLiyQJ3CEA2OY8WNLEPyo7yOVTq1PKtbuCzUdInyEBF49Y0L6MILrHSgGpsqUM7PSZL9LIlkI
- R2SeitHC59sl4aLUGgXr3Zc6oJxp6A7xelbr2UGbUt1j7HLaNbtUoxGu5CMtUHQ85ckyr0dbp
- 6oOpBLA+5pPXGCkf4h7HC7bNrfeI1wIj5VAaA3zkyvknakodyHrCBe07cIFwoaHAzhQnIYkvC
- 1yucP/jcfrQz9d4I+lkS/m759ZrJhlv5dZJWP90llHm1SjfwIPDse1SCq9iiuhpzPUnYpsYT/
- fDjTm9KA47ASvf1SKnQPSdk+NEXOIBpqsHn8QbUPm6MaMxkLwIGnirNakX5oOBx86RKvJRHDI
- nPLkAH5A1CAJcWsg0vLAJP6h1ICal0R8/YS/uEH7TZUQf3Rj69tHWmudl615Wrxf+vxa1yyMr
- 4lVLjKmr4rRHMa4uqDl5+aKST315S4EogaDRKquD3W7JIDCony/pvvZKiKKqRUBgg8vpJUzCJ
- dt823DqAjLbchvg4x5qbh8zfVHWf28OVGGAnrBl6wMwhvDpzvao53+bT8TcuQ4djRjTs3sj6c
- k88WX5vBXOEzrfTBHuZRZkpdP5E5ZTW5hAWJ9wn9IxsfqZ1iSJPKSKfQpncsg//dDezPpGL9p
- 91Jx3VSdE0JL+8oqy8n1zxrsyrats0jnf9iBpoe/6uuId9vxAM4tJuNhws4bW5XRK3Ln5jwvD
- lpMiOnqYw3cLTWrOyJfgzWnUPxSUQrrITc6/nA==
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-masq_refcnt6 was added at the start of the file, but it is
-only used in the option IPv6 section of the file, causing
-a harmless compiler warning if IPv6 is disabled:
+On Mon, 25 Mar 2019, Chang-An Chen wrote:
+> --- a/include/linux/sched_clock.h
+> +++ b/include/linux/sched_clock.h
+> @@ -13,6 +13,10 @@
+>  
+>  extern void sched_clock_register(u64 (*read)(void), int bits,
+>  				 unsigned long rate);
+> +
+> +extern int sched_clock_suspend(void);
+> +
+> +extern void sched_clock_resume(void);
+>  #else
+>  static inline void generic_sched_clock_init(void) { }
+>  
+> @@ -20,6 +24,10 @@ static inline void sched_clock_register(u64 (*read)(void), int bits,
+>  					unsigned long rate)
+>  {
+>  }
+> +
+> +static int sched_clock_suspend(void) { }
 
-net/netfilter/nf_nat_masquerade.c:15:21: error: 'masq_refcnt6' defined but not used [-Werror=unused-variable]
- static unsigned int masq_refcnt6 __read_mostly;
+static inline ...
 
-Move the variable next to the user to avoid that warning.
+> +
+> +static void sched_clock_resume(void) { }
 
-Fixes: 46f7487e161b ("netfilter: nat: don't register device notifier twice")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-----
-This is an older patch stack, for some reason I seem to have never
-sent it, and I can't find any indication of anyone else sending
-a similar fix, so sending this out now.
+Ditto
 
-If it's already fixed upstream, please ignore.
----
- net/netfilter/nf_nat_masquerade.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+>  #endif
 
-diff --git a/net/netfilter/nf_nat_masquerade.c b/net/netfilter/nf_nat_masquerade.c
-index d85c4d902e7b..878a73b4f65c 100644
---- a/net/netfilter/nf_nat_masquerade.c
-+++ b/net/netfilter/nf_nat_masquerade.c
-@@ -12,7 +12,6 @@
- 
- static DEFINE_MUTEX(masq_mutex);
- static unsigned int masq_refcnt4 __read_mostly;
--static unsigned int masq_refcnt6 __read_mostly;
- 
- unsigned int
- nf_nat_masquerade_ipv4(struct sk_buff *skb, unsigned int hooknum,
-@@ -322,6 +321,8 @@ static struct notifier_block masq_inet6_notifier = {
- 	.notifier_call	= masq_inet6_event,
- };
- 
-+static unsigned int masq_refcnt6 __read_mostly;
-+
- int nf_nat_masquerade_ipv6_register_notifier(void)
- {
- 	int ret = 0;
--- 
-2.20.0
+Please do not expose this in the global header. All of this is local to
+kernel/time/. So adding this to kernel/time/timekeeping.h is sufficient.
 
+Thanks,
+
+	tglx
