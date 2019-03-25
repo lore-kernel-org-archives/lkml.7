@@ -2,244 +2,166 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2AA2C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 20:00:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAC60C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 20:02:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98B3420850
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 20:00:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A69620850
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 20:02:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dilger-ca.20150623.gappssmtp.com header.i=@dilger-ca.20150623.gappssmtp.com header.b="DcP7yrUI"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tycho.nsa.gov header.i=@tycho.nsa.gov header.b="cJqANCno"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730260AbfCYUAG (ORCPT
+        id S1729922AbfCYUCn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 16:00:06 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:36984 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729610AbfCYUAF (ORCPT
+        Mon, 25 Mar 2019 16:02:43 -0400
+Received: from uhil19pa09.eemsg.mail.mil ([214.24.21.82]:37409 "EHLO
+        uhil19pa09.eemsg.mail.mil" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728912AbfCYUCm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 16:00:05 -0400
-Received: by mail-pf1-f193.google.com with SMTP id 8so6942299pfr.4
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 13:00:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dilger-ca.20150623.gappssmtp.com; s=20150623;
-        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
-         :references;
-        bh=1zXhpRZO0WAdOqWP7x2ebolGGLk+YEfDkHo8iks+akk=;
-        b=DcP7yrUImHYE0ppg3I7gbMEVbKEqKEtqdx2yKINGm7hZbPC6vrJJmiUuBcct7zn1w/
-         1KxBW8Ec5Hn1eWG24P+RNGU/VdyCAVF/ef2moRdrYnNtbgK7G6uohnNLrr6FoUKMGEG2
-         JxIt1UJbZJQU9o9Bh1Rxw99c/zwR3oRdSUXWAnVO5JEyQOX42QWd4IaVh2FVYAdYRwr8
-         D0D7dZ/Fx0/iOmN0X2XlOYQEjBl6Rm3Lv99/1pHZPLOI0lrgRsdlsnvdFIDDUYCFxfZ6
-         CXx1sNvxaYOPoHp5Ujr610RqtyQrobzMcTjr2kRQ1mp4+VsLXhVIBIMC820Zf0FdOU7T
-         gEDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:message-id:mime-version:subject:date
-         :in-reply-to:cc:to:references;
-        bh=1zXhpRZO0WAdOqWP7x2ebolGGLk+YEfDkHo8iks+akk=;
-        b=tQVdMnuGbfpJfM23Q3HuP/8ApqKrc2qtevvQR1PvhQ6agKGPrW175/yLXwsxXbgYTZ
-         Vyw5sd+Hqp6zs5vjHEhWZWKak+exUb7sE9gRshhlwdOycsP5rV6OFqqMAQQ9yPUI4pZ4
-         UScgtSapKMJKYYQeNhfE99hZOSNmgSbNTE9HuVebWhLioVr56LrZdigpDE8uuEudK5yl
-         P8MiKZycKuepc4qGs19Lw7X6IXH2W5iPNeKJWHO4zXR6h87wsPBkrWWeG018xKmVY0Dv
-         5oSnqv9igmQdOm7JSyc3qS+1A6K6NC4d0PEHKKxoE7LBqbfuxnzB2yyX9eBbZhZn7OJo
-         3HZQ==
-X-Gm-Message-State: APjAAAWz6vYBYsHDvl5v0uJ3W7duJXwMEuDHcz+CCh5BU++Biy91kzSu
-        HFvzWLqzyV2TuGfLjU8vnY5SvQ==
-X-Google-Smtp-Source: APXvYqycHrRTeR58160gy46GMcWU9UDYo3aBHMoqKWs/6YkXHeuUFWmC/woYJiDY61Jz0aSxOhZV+A==
-X-Received: by 2002:a62:4746:: with SMTP id u67mr25748583pfa.243.1553544004607;
-        Mon, 25 Mar 2019 13:00:04 -0700 (PDT)
-Received: from cabot.adilger.ext (S0106a84e3fe4b223.cg.shawcable.net. [70.77.216.213])
-        by smtp.gmail.com with ESMTPSA id i1sm1022990pgc.63.2019.03.25.13.00.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 25 Mar 2019 13:00:03 -0700 (PDT)
-From:   Andreas Dilger <adilger@dilger.ca>
-Message-Id: <9F56F958-2DEF-4350-8BBC-9A40598D0365@dilger.ca>
-Content-Type: multipart/signed;
- boundary="Apple-Mail=_73BE7F53-B23C-4F73-89F8-8310F4842D0D";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Subject: Re: [PATCH] ext4: use BUG() instead of BUG_ON(1)
-Date:   Mon, 25 Mar 2019 13:59:58 -0600
-In-Reply-To: <20190325181422.GH1173@magnolia>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Theodore Ts'o <tytso@mit.edu>,
-        clang-built-linux@googlegroups.com,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Eric Whitney <enwlinux@gmail.com>,
-        Sean Fu <fxinrong@gmail.com>, Jan Kara <jack@suse.cz>,
-        Eric Biggers <ebiggers@google.com>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-References: <20190325130040.1437445-1-arnd@arndb.de>
- <20190325181422.GH1173@magnolia>
-X-Mailer: Apple Mail (2.3273)
+        Mon, 25 Mar 2019 16:02:42 -0400
+X-Greylist: delayed 589 seconds by postgrey-1.27 at vger.kernel.org; Mon, 25 Mar 2019 16:02:41 EDT
+X-EEMSG-check-017: 2835561|UHIL19PA09_EEMSG_MP7.csd.disa.mil
+Received: from emsm-gh1-uea10.ncsc.mil ([214.29.60.2])
+  by uhil19pa09.eemsg.mail.mil with ESMTP/TLS/DHE-RSA-AES256-SHA256; 25 Mar 2019 19:52:51 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=tycho.nsa.gov; i=@tycho.nsa.gov; q=dns/txt;
+  s=tycho.nsa.gov; t=1553543571; x=1585079571;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=WfisdA6pgf4+ZRdgKRHsyph3IO/NxqlTZnmGTF4p764=;
+  b=cJqANCnosUTrvl0iZJRbtSTP9AWIPwc2bfIOZY0jp/LxFBbXaVyk8lka
+   D/8XkLiJyUryxHt6zc3sj0IwLb4alWiZKZLgIj+xAj6FXk3u3mcjqRYZm
+   JImq2py1PM12nIfm9bOvY5Dbq/vcuH2C222YmbiErqtGcytQnOuoq9iHl
+   RoFipSCJOT7gRjn36a+t1/M958HcXQM0PRLJPI0BWdyzNKFPzjxEDRaFC
+   oZLi9x79wJfO1M78+qO26TJZk6em9FrLMsLeaoELZhn1dSedLqU8CHJ0P
+   7mYlkE8EvWr/a1mGOuDXaHpKDZAJ9zoW2rBb/5trt2oJAMkDbwmEaTL0e
+   A==;
+X-IronPort-AV: E=Sophos;i="5.60,270,1549929600"; 
+   d="scan'208";a="21817426"
+IronPort-PHdr: =?us-ascii?q?9a23=3AhkGqcxKfOTdBKVwNhdmcpTZWNBhigK39O0sv0r?=
+ =?us-ascii?q?FitYgXLvjzrarrMEGX3/hxlliBBdydt6sczbWG+Pm6BiQp2tWoiDg6aptCVh?=
+ =?us-ascii?q?sI2409vjcLJ4q7M3D9N+PgdCcgHc5PBxdP9nC/NlVJSo6lPwWB6nK94iQPFR?=
+ =?us-ascii?q?rhKAF7Ovr6GpLIj8Swyuu+54Dfbx9HiTagfb9+Nhe7oAbeusULn4dvKLs6xw?=
+ =?us-ascii?q?fUrHdPZ+lY335jK0iJnxb76Mew/Zpj/DpVtvk86cNOUrj0crohQ7BAAzsoL2?=
+ =?us-ascii?q?465MvwtRneVgSP/WcTUn8XkhVTHQfI6gzxU4rrvSv7sup93zSaPdHzQLspVz?=
+ =?us-ascii?q?mu87tnRRn1gygJLT459HzchNJ2gqxVvRmtowVzzo7QbY2QMvd1Y6HTcs4ARW?=
+ =?us-ascii?q?dZQ8hfSSJBDIO/YYUBAeUOMuRXoJXyqVYVsRuzBhOhCP/zxjJGhHL727Ax3e?=
+ =?us-ascii?q?Q7EQHB2QwtB88AsGjKo9XtNKcdT+a1x7TVwzXGdfxW3TP955bIcxs8pvyMRq?=
+ =?us-ascii?q?9/cdHKxEkzFwLKklWQqYv/MzOTzeQCqXKX7+VnVeKxkmMqrRx6rDu3xso0l4?=
+ =?us-ascii?q?XEiY0YxkrE+Clk2oo5O9K1RFBhbdK5FpZbqjuUOJFsQsw4RmFloCM6yrobtp?=
+ =?us-ascii?q?GlZCUK05EnxwLHa/yAboiI/grvVOaPLjd8g3JoYK6/iAyo8Uih1+38TdO40E?=
+ =?us-ascii?q?pKryVZktnMsWoB1xrP5cicVvRx5EKh2TeL1wzL6+FEJ147lbbDJpI8zbM9mY?=
+ =?us-ascii?q?AfvETeEiPshkn7g7Gael859uSw7uToeLTmppuSN49ujQH+N7wjmteiDuQjKQ?=
+ =?us-ascii?q?UOQ2ia9vi81L3k50H5Rq5KgecsnqnWt5DaO9wXprSlDA9NzoYj9xG/Ai+n0d?=
+ =?us-ascii?q?QEmnkHKl1FdQmZj4j1IV3BPu33DeqniVS2jDhr3+zGPqHmApjVKnjDkbHhfa?=
+ =?us-ascii?q?ty6kJFywo808pf55RKBbEFO//zREDxu8LCDhMjMAy73fznCNNj2YMaQ26PBb?=
+ =?us-ascii?q?WZMKzKu1+S+u0vO/WMZJMSuDvlL/gl5vjujWI2mFMEZqmmw4cYaG2iHvRnP0?=
+ =?us-ascii?q?WYYWPggtIGEWgXowo+SPLlhUacUT5ceXmyRbgw5jIlB4K8C4fMWIStjKaG3C?=
+ =?us-ascii?q?ehEZ1cfnpGBUyUEXf0a4WEXO8BZziRIs95lzwJTryhS44n1RGzuw720rRnLu?=
+ =?us-ascii?q?3J+i0eqJ3szsR15+zUlRE07zB0CN6d026VRWFugmwIXyM23Lx4oUFlz1eD0a?=
+ =?us-ascii?q?94jOBbFdxU/P5JSRo6NYXCwOBgF9/yXQfBdM+TSFm6WtWmHS0xTtUpztATeU?=
+ =?us-ascii?q?l9Hc+ujhLZ0yukAr8Vk7iLBJ0u/aLZxHj8PMd9y3Da1KY/i1kqWNdANWqjhq?=
+ =?us-ascii?q?Rn7QjcG5bJk1mFl6atbakcxi/N+3mFzWqSvkFXThVwXL7KXXAYYUvWotD56V?=
+ =?us-ascii?q?3YQ7CyDrQnNxNLydSeJatSdt3pkVJGSe/5N9vEeWK+h32/BRCHxrySd4fqYX?=
+ =?us-ascii?q?sS0zjdCEcejwAf52qJNQ87Bi25uWLRECRuFU7zY0Pr6eRxtWm0TlEqwAyRdE?=
+ =?us-ascii?q?1hy7W1+hkRhfOGUPwTxagIuCE/pDVoBFy9xc7ZC8Kcpwp9e6VRedA94FZd1W?=
+ =?us-ascii?q?LYswx9OoasL7tihl4DbwR4oUbu1xJpCohblcgqrXUqzBd9KK6C0VNBcS+Y0o?=
+ =?us-ascii?q?70OrHNNmby+xWvYbbM2l7CyNaW5rsP6PMgplX4vAGmCEwi8nt53NlTyHSc4Y?=
+ =?us-ascii?q?7KDA8TUZL1TEk67Bd6p7TAbSk844PYz2FjMa6xsmyK59V8OOwjxSSgdtFQeP?=
+ =?us-ascii?q?eWCAj0HOUEG46jJPF83xCNTTcgdLRW9agpL4aleuGA1aqDIulthnSlgH5B7Y?=
+ =?us-ascii?q?Q71ViDoW40Tu/OwoZA2PyTwxGGSya5iVCtr8T6sZ5LaCtUHWelzyXgQolLaf?=
+ =?us-ascii?q?5cZ4EOXFyyLtW3y9M2vJvkX3pV5Rb3HF8d8NO4chqVKVrm1Etf0lpB8i/voj?=
+ =?us-ascii?q?ex0zEhy2JhlaGYxiGbhrmzeQ=3D=3D?=
+X-IPAS-Result: =?us-ascii?q?A2BmAQAQMJlc/wHyM5BkDg0BAQEBAwEBAQcDAQEBgWWBZ?=
+ =?us-ascii?q?yqBODOENZQKAQEBAQEBBoE1fohHiWGFKIFnOgGEQAKFEiI4EgEBAwEBAQgBA?=
+ =?us-ascii?q?wIBbCiCOimCZwEBAQECASMPAQVBEAkCGAICJgICVwYBDAgBAYJfP4FpBQiSY?=
+ =?us-ascii?q?ZtmgS+FRoRngQskizIXeIEHgREngjY1PoQMBQESAYMpgjUiA6Q2YAmLbYdGB?=
+ =?us-ascii?q?hmTfi2Kb5U2IWVxKwgCGAghD4MokA9XIwOBNQEBjGGCPgEB?=
+Received: from tarius.tycho.ncsc.mil ([144.51.242.1])
+  by EMSM-GH1-UEA10.NCSC.MIL with ESMTP; 25 Mar 2019 19:52:50 +0000
+Received: from moss-pluto.infosec.tycho.ncsc.mil (moss-pluto [192.168.25.131])
+        by tarius.tycho.ncsc.mil (8.14.4/8.14.4) with ESMTP id x2PJqlSr015899;
+        Mon, 25 Mar 2019 15:52:47 -0400
+Subject: Re: Repost: Missing security_mmap_file() in remap_file_pages syscall
+To:     TongZhang <ztong@vt.edu>, LKML <linux-kernel@vger.kernel.org>,
+        linux-security-module@vger.kernel.org
+Cc:     akpm@linux-foundation.org, mhocko@suse.com,
+        dan.j.williams@intel.com, rientjes@google.com, aarcange@redhat.com,
+        dave@stgolabs.net, kirill.shutemov@linux.intel.com,
+        Shen Wenbo <shenwenbosmile@gmail.com>
+References: <A6FCC3DA-C72C-4B59-A27E-E91F85949608@vt.edu>
+From:   Stephen Smalley <sds@tycho.nsa.gov>
+Message-ID: <3fa343e7-5c22-5a97-cf4f-a9156a0696a7@tycho.nsa.gov>
+Date:   Mon, 25 Mar 2019 15:53:34 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.0
+MIME-Version: 1.0
+In-Reply-To: <A6FCC3DA-C72C-4B59-A27E-E91F85949608@vt.edu>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 3/25/19 1:33 PM, TongZhang wrote:
+> Dear Kernel Developers,
+> 
+> We’d like to bring this up for a discussion again.
+> 
+> Several months ago we posted an email discussing a case where remap_file_pages() has no security_mmap_file() check.
+> At that time we were told that do_mmap_pgoff() will base the new VMA permission on the old one.
+> But somehow we still think the check is needed, for the reason that the advisory could first do a
+> mmap() which can pass SELinux check then remap using a completely different file or region of file,
+> which could possibly pose a risk.
 
---Apple-Mail=_73BE7F53-B23C-4F73-89F8-8310F4842D0D
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain;
-	charset=us-ascii
+I don't see an issue there. The incoming prot value from userspace is 
+required to be zero (otherwise remap_file_pages returns -EINVAL), so the 
+prot passed to do_mmap_pgoff() is entirely computed based on the 
+existing vma flags.  The file is likewise obtained from the existing 
+vma.  Any flags supplied by the caller other than MAP_NONBLOCK are 
+ignored.  MAP_SHARED is always set in the flags passed to 
+do_mmap_pgoff(), and the existing vma was required to have VM_SHARED set 
+or remap_file_pages() would have returned -EINVAL.  If it spans more 
+than one vma, their files and flags must match.  It appears that all of 
+the inputs relevant to selinux_mmap_file() are necessarily the same as 
+they would have been when creating the original vma.  The same appears 
+to also be true for other security modules IIUC.
 
-On Mar 25, 2019, at 12:14 PM, Darrick J. Wong <darrick.wong@oracle.com> =
-wrote:
->=20
-> On Mon, Mar 25, 2019 at 02:00:25PM +0100, Arnd Bergmann wrote:
->> BUG_ON(1) leads to bogus warnings from clang when
->> CONFIG_PROFILE_ANNOTATED_BRANCHES is set:
->>=20
->> fs/ext4/inode.c:544:4: error: variable 'retval' is used uninitialized =
-whenever 'if' condition is false
->>      [-Werror,-Wsometimes-uninitialized]
->>                        BUG_ON(1);
->>                        ^~~~~~~~~
->> include/asm-generic/bug.h:61:36: note: expanded from macro 'BUG_ON'
->>                                   ^~~~~~~~~~~~~~~~~~~
->> include/linux/compiler.h:48:23: note: expanded from macro 'unlikely'
->>                        =
-^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->> fs/ext4/inode.c:591:6: note: uninitialized use occurs here
->>        if (retval > 0 && map->m_flags & EXT4_MAP_MAPPED) {
->>            ^~~~~~
->> fs/ext4/inode.c:544:4: note: remove the 'if' if its condition is =
-always true
->>                        BUG_ON(1);
->>                        ^
->> include/asm-generic/bug.h:61:32: note: expanded from macro 'BUG_ON'
->>                               ^
->> fs/ext4/inode.c:502:12: note: initialize the variable 'retval' to =
-silence this warning
->>=20
->> Change it to BUG() so clang can see that this code path can never
->> continue.
->=20
-> I grok that most of these look like "should never get here" =
-assertions,
-> but shouldn't we be converting these BUG*() calls to "shut down fs,
-> bounce error back to userspace" instead of killing the whole kernel?
->=20
-> (He says knowing that ripping all of those out is its own project... =
-:P)
+> 
+> Thanks,
+> - Tong
+> 
+> The original post is pasted below:
+> 
+> 8<—————————————————————————————
+> [1.] One line summary of the problem:
+> 
+> Possible missing security_mmap_file() in remap_file_pages
+> 
+> [2.] Full description of the problem/report:
+> 
+> We noticed remap_file_pages syscall uses do_mmap_pgoff without LSM check: security_mmap_file().
+> 
+> This system call passed user controllable parameters to do_mmap_pgoff().
+> 
+> We think that this LSM check should be added in order to be consistent with other cases,
+> for example:
+> in system call mmap_pgoff(), shmat(), they all have security_mmap_file() check before calling
+> do_mmap_pgoff().
+> 
+> [3.] Keywords: LSM check
+> [4.] Kernel information
+> [4.1] Kernel Version: 4.14.61
+> 
+> 8<—————————————————————————————
+> 
+> 
+> 
+> 
+> 
 
-We definitely shouldn't be adding "BUG()" or "BUG_ON()" to active code, =
-but
-rather call ext4_error() and let the admin to set "errors=3Dpanic" if =
-they
-want this action, or leave "errors=3Dremount-ro" (which is the default =
-these
-days) and just return an error to userspace.
-
-Looking at the nearby code, it is using pr_warn("ES insert assertion =
-failed..."
-instead of using an actual assertion for the failure cases.
-
-I guess a saving grace is that this code is only enabled if =
-ES_AGGRESSIVE_TEST
-is defined, which it is not by default, so probably it is only when some
-developer is testing this code.  So using BUG() is probably OK in this =
-case.
-
-Cheers, Andreas
-
->=20
->> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
->> ---
->> fs/ext4/extents_status.c | 4 ++--
->> fs/ext4/inode.c          | 4 ++--
->> 2 files changed, 4 insertions(+), 4 deletions(-)
->>=20
->> diff --git a/fs/ext4/extents_status.c b/fs/ext4/extents_status.c
->> index 2b439afafe13..023a3eb3afa3 100644
->> --- a/fs/ext4/extents_status.c
->> +++ b/fs/ext4/extents_status.c
->> @@ -711,7 +711,7 @@ static void =
-ext4_es_insert_extent_ind_check(struct inode *inode,
->> 			 * We don't need to check unwritten extent =
-because
->> 			 * indirect-based file doesn't have it.
->> 			 */
->> -			BUG_ON(1);
->> +			BUG();
->> 		}
->> 	} else if (retval =3D=3D 0) {
->> 		if (ext4_es_is_written(es)) {
->> @@ -780,7 +780,7 @@ static int __es_insert_extent(struct inode =
-*inode, struct extent_status *newes)
->> 			}
->> 			p =3D &(*p)->rb_right;
->> 		} else {
->> -			BUG_ON(1);
->> +			BUG();
->> 			return -EINVAL;
->> 		}
->> 	}
->> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
->> index b32a57bc5d5d..190f0478582a 100644
->> --- a/fs/ext4/inode.c
->> +++ b/fs/ext4/inode.c
->> @@ -541,7 +541,7 @@ int ext4_map_blocks(handle_t *handle, struct =
-inode *inode,
->> 			map->m_len =3D retval;
->> 			retval =3D 0;
->> 		} else {
->> -			BUG_ON(1);
->> +			BUG();
->> 		}
->> #ifdef ES_AGGRESSIVE_TEST
->> 		ext4_map_blocks_es_recheck(handle, inode, map,
->> @@ -1876,7 +1876,7 @@ static int ext4_da_map_blocks(struct inode =
-*inode, sector_t iblock,
->> 		else if (ext4_es_is_unwritten(&es))
->> 			map->m_flags |=3D EXT4_MAP_UNWRITTEN;
->> 		else
->> -			BUG_ON(1);
->> +			BUG();
->>=20
->> #ifdef ES_AGGRESSIVE_TEST
->> 		ext4_map_blocks_es_recheck(NULL, inode, map, &orig_map, =
-0);
->> --
->> 2.20.0
-
-
-Cheers, Andreas
-
-
-
-
-
-
---Apple-Mail=_73BE7F53-B23C-4F73-89F8-8310F4842D0D
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename=signature.asc
-Content-Type: application/pgp-signature;
-	name=signature.asc
-Content-Description: Message signed with OpenPGP
-
------BEGIN PGP SIGNATURE-----
-Comment: GPGTools - http://gpgtools.org
-
-iQIzBAEBCAAdFiEEDb73u6ZejP5ZMprvcqXauRfMH+AFAlyZMz8ACgkQcqXauRfM
-H+Ceyw//Z1p1TGsGEo81YLhmCfuKm6wwixRreNCbZVn1BpHU18I7XdKGq3wwHLeK
-key5dIj6CuukFB4IyiesTgYvDSIgVgn6+twub0mPzya/oRm0BJhjwiZSvUOvwYDc
-lqLEDUrk9Ow9pYyUR+U14nEvQ10I9+tMx4u3iT6aTWcbdMnQAyzYVwr/6QGlJMCy
-yjy1wv9VVBhImj7mjPoCuRXckl6fxFtu2dYgXp2Bhx6g7RSxaOJPpIrBEXY0qH3E
-23Qvef3+6sdp30B40yFGmQC4uvoE6HHg6sUjC2YhWLqJIVcMvrS1MBnvHPYk+dZ3
-dlDNN/S4Gn5rfRRKRufsLEiHgAHB4RnMsg1o3D9VtqIyXtqYmcmizQrlu6mc/JmX
-hcfkUp7qT6wg/EzPrm8BVaOyn1lXKitx4wQUomNwnkzaWHE6xyu01r60fvzqx0ve
-RYRxo7xkSRHw4RAHFQQEM46Bm3GEFCSFwDAy6OXb5nf4oZoEcqnU+F5NKEP7Gd+d
-GLHu+QsR8Grn/zwMosUxbP5Y7uhgKBbhVa0Phok6GbPe8wuhoxf8jACOTARJEmSG
-nkdrLsMz++R+CzTvEPBPZL07fuE/ATAoXyRh2OhSpXveBYwJc6zo/6utCLDv1pOQ
-j27f3OyDdaLC158bHsCl4SvtAb39B0dHCrhPJ70cB3B+AQFvchQ=
-=kTBH
------END PGP SIGNATURE-----
-
---Apple-Mail=_73BE7F53-B23C-4F73-89F8-8310F4842D0D--
