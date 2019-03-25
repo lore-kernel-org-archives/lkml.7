@@ -2,123 +2,91 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FF4DC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:47:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D742C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:49:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 565C920700
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:47:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ApsvyUbV"
+	by mail.kernel.org (Postfix) with ESMTP id CEBF12075D
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:49:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553539772;
+	bh=g0w3mA1lmQUz6jMdNxASe9eG/8dSKleEMARwjag5xvo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=xBvH12FveWPtvq8oG9ArZykZimdsn85NXZTTJqC23dRtiJe6Lp6U4LsrK7Xr7Qf+1
+	 aJWEfa77+sctgxSaitK04qj4zGL69JICip9XJFsvQFLIDTNAbmy6YIu2Rto64rgkB8
+	 p+60DniukFVrzC/csmdbwm3HBoEKYRlfv2raCKLA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730325AbfCYSrf (ORCPT
+        id S1730099AbfCYStb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 14:47:35 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:40956 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730212AbfCYSre (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 14:47:34 -0400
-Received: by mail-pg1-f195.google.com with SMTP id u9so6999593pgo.7
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 11:47:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:user-agent:mime-version;
-        bh=fRdq63OhSxm5cgv8tRdBJK1Sff/Wou+7tzmBvJBIrrU=;
-        b=ApsvyUbVLS4sN8mLCNZ0dSvTIL37bi8ZAKmmhCRHCqF/YOYbXxBHnlpBmimIgdrjPZ
-         D8eX4iQR/iV7vwrlu/a1q9PTDnqrdazDIhqfIeyA1Zg47+toNQdIqMFLg3UBE4mpqyVF
-         2FrrfdiEIWJ8keELyAaOmLJMLXl1PeU+CSezjU1LsmJGKP1IhUR0aL3UrSCyNM2OiUkD
-         72all7OweA4O7qWPv6WmgeSzrIlLAFy/A0TZ8kcFnQiEZfThjLFe/ff9lcIiU5VFwxI2
-         04F7YUp1RyoQOaijNWFANSlS+h/QH0+i/ufdYHwY/Pt1O3BitMDRMKBzwwfE7OnBN6FX
-         k1dQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:user-agent
-         :mime-version;
-        bh=fRdq63OhSxm5cgv8tRdBJK1Sff/Wou+7tzmBvJBIrrU=;
-        b=ejBjOGCcnw0IzO2ag753AEdXx2CD1Gd0fwQ/BJ/gP8ZPuIVAroo6OboRmeAtwNIsQr
-         99P3ynWODEbc7bYQwDDb1QENDZN1/ZqPp0AaXodQD2A252ydeRn7+Qsk9W4Z9ey+bB77
-         XZ2E85sDujDNYsjfUetQXWLcKFxZG53PyB60S309om9HI5FWaRqqZ6yQGHDiquioaNPz
-         dMIWI3py3bO7fIp5L2G+ZJiC2YZ7bVJ8gESeahC4RsikuVoIbWqLdA4/QSTEm4gHRZD9
-         IkaIbo7wRQpXWVdA7zS85pk+/25++b3cudhfdjHUVvQgsd2HJeYnJjI2JjOvg5MagALI
-         y5yg==
-X-Gm-Message-State: APjAAAVJ9OLIHjib/Vd4J2oPwzroMnDyY41ElgvkWAYCiJcdmxRqLmbV
-        5ypPprY+yD3bPbxg1mxvb2vuDg==
-X-Google-Smtp-Source: APXvYqxYG0EDdOeSHsVt+srIwGgDgZV5j2oAGIcoS+zCeAb0HoExNgRBQxX/Am1W5yFZrJ2AyVMS3Q==
-X-Received: by 2002:a63:c145:: with SMTP id p5mr25246258pgi.248.1553539652886;
-        Mon, 25 Mar 2019 11:47:32 -0700 (PDT)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id f14sm20714146pfn.3.2019.03.25.11.47.31
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 25 Mar 2019 11:47:32 -0700 (PDT)
-Date:   Mon, 25 Mar 2019 11:47:31 -0700 (PDT)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Brijesh Singh <brijesh.singh@amd.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?Q?Radim_Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
-cc:     Borislav Petkov <bp@suse.de>, x86@kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [patch] KVM: SVM: prevent DBG_DECRYPT and DBG_ENCRYPT overflow
-Message-ID: <alpine.DEB.2.21.1903251146160.188887@chino.kir.corp.google.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 25 Mar 2019 14:49:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57348 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729238AbfCYStb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 14:49:31 -0400
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E48A42075D;
+        Mon, 25 Mar 2019 18:49:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553539770;
+        bh=g0w3mA1lmQUz6jMdNxASe9eG/8dSKleEMARwjag5xvo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=L2Ghg82bgwQYfYVG/miLGmzVpSH30VtMnzS6wd8BwOZng85fMylAY9xRz6+lIBJJ9
+         1b6yS2kPZomJnsMNe5WZ47zDKh77UBecdYOYjyr+xDOqi8bo4E+Ot4DeO1vHZc+R8w
+         DCabNt/HpYRVno2Z3wWZ1v8ALr698hX64aC7/hxU=
+Received: by mail-ed1-f45.google.com with SMTP id v21so8503372edq.4;
+        Mon, 25 Mar 2019 11:49:29 -0700 (PDT)
+X-Gm-Message-State: APjAAAVGhfCYPIOJI82tNqZmDFgWRkclaXJb2zAneM91UyaxuSWL5yxV
+        U1PGI6C6elTr4yh0weofJdkjIvclQ1eMvmELwTI=
+X-Google-Smtp-Source: APXvYqwuUeOjq/5HjqHOU4aAiolpMWPbPzjpb/OsZNI75PR9jP8zOHO4krKy5tl/VZSxbsD/QmoT/8mflnlNqm4YRh0=
+X-Received: by 2002:a17:906:3db1:: with SMTP id y17mr14773290ejh.90.1553539768531;
+ Mon, 25 Mar 2019 11:49:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <1553483264-5379-1-git-send-email-hao.wu@intel.com> <1553483264-5379-4-git-send-email-hao.wu@intel.com>
+In-Reply-To: <1553483264-5379-4-git-send-email-hao.wu@intel.com>
+From:   Alan Tull <atull@kernel.org>
+Date:   Mon, 25 Mar 2019 13:48:52 -0500
+X-Gmail-Original-Message-ID: <CANk1AXTCbR3E=WFUvyHx3BDFwV19djuhC=qBpxQHT46qGgwWJA@mail.gmail.com>
+Message-ID: <CANk1AXTCbR3E=WFUvyHx3BDFwV19djuhC=qBpxQHT46qGgwWJA@mail.gmail.com>
+Subject: Re: [PATCH 03/17] fpga: dfl: fme: support 512bit data width PR
+To:     Wu Hao <hao.wu@intel.com>
+Cc:     Moritz Fischer <mdf@kernel.org>, linux-fpga@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-api@vger.kernel.org, Ananda Ravuri <ananda.ravuri@intel.com>,
+        Xu Yilun <yilun.xu@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This ensures that the address and length provided to DBG_DECRYPT and
-DBG_ENCRYPT do not cause an overflow.
+On Sun, Mar 24, 2019 at 10:23 PM Wu Hao <hao.wu@intel.com> wrote:
 
-At the same time, pass the actual number of pages pinned in memory to
-sev_unpin_memory() as a cleanup.
+Hi Hao,
 
-Reported-by: Cfir Cohen <cfir@google.com>
-Signed-off-by: David Rientjes <rientjes@google.com>
----
- arch/x86/kvm/svm.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+This looks fine.
 
-diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -6799,7 +6799,8 @@ static int sev_dbg_crypt(struct kvm *kvm, struct kvm_sev_cmd *argp, bool dec)
- 	struct page **src_p, **dst_p;
- 	struct kvm_sev_dbg debug;
- 	unsigned long n;
--	int ret, size;
-+	unsigned int size;
-+	int ret;
- 
- 	if (!sev_guest(kvm))
- 		return -ENOTTY;
-@@ -6807,6 +6808,11 @@ static int sev_dbg_crypt(struct kvm *kvm, struct kvm_sev_cmd *argp, bool dec)
- 	if (copy_from_user(&debug, (void __user *)(uintptr_t)argp->data, sizeof(debug)))
- 		return -EFAULT;
- 
-+	if (!debug.len || debug.src_uaddr + debug.len < debug.src_uaddr)
-+		return -EINVAL;
-+	if (!debug.dst_uaddr)
-+		return -EINVAL;
-+
- 	vaddr = debug.src_uaddr;
- 	size = debug.len;
- 	vaddr_end = vaddr + size;
-@@ -6857,8 +6863,8 @@ static int sev_dbg_crypt(struct kvm *kvm, struct kvm_sev_cmd *argp, bool dec)
- 						     dst_vaddr,
- 						     len, &argp->error);
- 
--		sev_unpin_memory(kvm, src_p, 1);
--		sev_unpin_memory(kvm, dst_p, 1);
-+		sev_unpin_memory(kvm, src_p, n);
-+		sev_unpin_memory(kvm, dst_p, n);
- 
- 		if (ret)
- 			goto err;
+>
+> In early partial reconfiguration private feature, it only
+> supports 32bit data width when writing data to hardware for
+> PR. 512bit data width PR support is an important optimization
+> for some specific solutions (e.g. XEON with FPGA integrated),
+> it allows driver to use AVX512 instruction to improve the
+> performance of partial reconfiguration. e.g. programming one
+> 100MB bitstream image via this 512bit data width PR hardware
+> only takes ~300ms, but 32bit revision requires ~3s per test
+> result.
+>
+> Please note now this optimization is only done on revision 2
+> of this PR private feature which is only used in integrated
+> solution that AVX512 is always supported.
+>
+> Signed-off-by: Ananda Ravuri <ananda.ravuri@intel.com>
+> Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+> Signed-off-by: Wu Hao <hao.wu@intel.com>
+
+Acked-by: Alan Tull <atull@kernel.org>
