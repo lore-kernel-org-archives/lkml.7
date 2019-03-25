@@ -2,143 +2,135 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05B4BC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:51:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FF90C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:51:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C566D20823
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:51:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553536280;
-	bh=YXo5aNrKEK0EVlMeYrxPR4GBMUR8+qdSey7Xzlh+O/U=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Mo8nUHs2y5ailsA7UoMyXhMHPLfLImVp+ujlQf41/WgBX3BEyIpiXow1MLfv+YqSm
-	 UNFgbCnHOaO+nRcmgoTjv1jp6BZGtFsbBsOSsOnZ0HFlZaNAi0dlOpdnQS3YZ2Pwey
-	 SyDkll45//MrQd7vWF0+SC7aaXL2dBGVAIz13Ndk=
+	by mail.kernel.org (Postfix) with ESMTP id 73A8A20896
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:51:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="mcakECUM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729829AbfCYRvT (ORCPT
+        id S1729980AbfCYRvy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 13:51:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40982 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726024AbfCYRvT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 13:51:19 -0400
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BCAF2087E;
-        Mon, 25 Mar 2019 17:51:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553536278;
-        bh=YXo5aNrKEK0EVlMeYrxPR4GBMUR8+qdSey7Xzlh+O/U=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=QYEofgxwTNcuoA3hpYeV20JlMdKEOorB1Q7ctsVKuJytn7Fgxs/AiISFgF+5Lv/gC
-         oWo1EBEWre+153b1fOBv4ioOZmkzrWSWIaHQuM2LJy9NZwqBldcg7rpsLMiCOwlAnF
-         bbXr4kcD/Oa6BVTm0Q0zMv9G2L/zqkGec38tWUpE=
-Received: by mail-ed1-f45.google.com with SMTP id x14so5693888eds.1;
-        Mon, 25 Mar 2019 10:51:18 -0700 (PDT)
-X-Gm-Message-State: APjAAAU6tdyt77lOoRBBTy7oueUMSYawVQcYuphldd6SEqgN40Zf5/5K
-        QjeluU2VL32iUq43Jlqs/zvvXBSkNyX9YcXFJOk=
-X-Google-Smtp-Source: APXvYqyz5f/froJTIgktYkNmr58HIacuDbVwRCfWQPPNZ0ymy3ueB/f/3N4ixNahUuXNy4ScWUinxmK5qCeD1t79/sw=
-X-Received: by 2002:a17:906:5949:: with SMTP id g9mr14883618ejr.15.1553536276904;
- Mon, 25 Mar 2019 10:51:16 -0700 (PDT)
+        Mon, 25 Mar 2019 13:51:54 -0400
+Received: from mail-qk1-f179.google.com ([209.85.222.179]:41162 "EHLO
+        mail-qk1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726024AbfCYRvx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 13:51:53 -0400
+Received: by mail-qk1-f179.google.com with SMTP id o129so5873154qke.8
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 10:51:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=00Ms6NJY8XZVY3PTifw/DWKACkhTufevyM9oDDMnZ98=;
+        b=mcakECUMzfnWJTjHKTgjHkQ3p5HiWz1AVOeK/ghfgih69htVJO9HDrS54A121ygzVY
+         gWLEZMejpsvVFhPFvHwICPJEGrqNyF2/qZcA0NNQdr9DSe7lhxSeAsy3AlI8/ilXz0Wy
+         iMjTD05URcYKbnMgowRxCxL/DBUygVp3Sma1XI81k+r9M7o2AAzJzmYJzZpoi21aczm0
+         eJeHxiLWuI7hbyS8S+/ZQ0NvTbpWGm3bLAR63L4Lfuo8GetXjU127prX/mYb1aNddl8p
+         PasZzEsnYa7YcrBr5PZX7TvDDfzStRfR4EBtHmAXdccRPyo5CD2MDBXpy7Y6pvzdL9FQ
+         Mskw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=00Ms6NJY8XZVY3PTifw/DWKACkhTufevyM9oDDMnZ98=;
+        b=CYqtk/pIAqOvl7QHh+biBdNqbNbY9SLG6ejh12AbOSRF6zfYIaQm1VWbgywTWJZo7y
+         sJkUXGMs06PVdTiEk5oHFc9uYpsYY/XCex16Xwf121DhhL808uXuoFsJDqrNoAmgC5vh
+         oTLd8qboUQNO/1VNkyT4kzTyuSRWRf1ubjYMmFX5zRBoIecJr32cuuuSBNHF7saSV5Y4
+         AMz5JOz8gofkA4ah4Wh/1gA1b0CD+RJA2n41p3EUBQw/6ONgkugnqc1RAfHJaXPE/+AG
+         +qCGKA0+A82qJDs45Fqfor3lBbUn0nymXLJR0JuC0qrvn89NiJNBQ54QtWUFQmzRv9N4
+         UWdA==
+X-Gm-Message-State: APjAAAUKFzxfkg0Yl1Qg+gDZAbyit/8mYJ6N4w1XwagjmyAcjPQp7AYg
+        aXk+sx/GoAVBjLtUzH/v1TpTAg==
+X-Google-Smtp-Source: APXvYqyPXE4H1Qt/wLb7MTNtAAHDbeoOG7ue4zLWhXEM5KYve0v2wSXPQ09LZ4L0EFTQCEmHdQgrlA==
+X-Received: by 2002:a37:7d86:: with SMTP id y128mr20700103qkc.36.1553536312325;
+        Mon, 25 Mar 2019 10:51:52 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-49-251.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.49.251])
+        by smtp.gmail.com with ESMTPSA id 56sm5277027qto.57.2019.03.25.10.51.50
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 25 Mar 2019 10:51:51 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1h8TlG-0005vR-FG; Mon, 25 Mar 2019 14:51:50 -0300
+Date:   Mon, 25 Mar 2019 14:51:50 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Michal Hocko <mhocko@suse.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Rich Felker <dalias@libc.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>, linux-mm <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-mips@vger.kernel.org,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Linux-sh <linux-sh@vger.kernel.org>, sparclinux@vger.kernel.org,
+        linux-rdma@vger.kernel.org,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: Re: [RESEND 4/7] mm/gup: Add FOLL_LONGTERM capability to GUP fast
+Message-ID: <20190325175150.GA21008@ziepe.ca>
+References: <20190317183438.2057-1-ira.weiny@intel.com>
+ <20190317183438.2057-5-ira.weiny@intel.com>
+ <CAA9_cmcx-Bqo=CFuSj7Xcap3e5uaAot2reL2T74C47Ut6_KtQw@mail.gmail.com>
+ <20190325084225.GC16366@iweiny-DESK2.sc.intel.com>
+ <20190325164713.GC9949@ziepe.ca>
+ <20190325092314.GF16366@iweiny-DESK2.sc.intel.com>
 MIME-Version: 1.0
-References: <1553483264-5379-1-git-send-email-hao.wu@intel.com> <1553483264-5379-3-git-send-email-hao.wu@intel.com>
-In-Reply-To: <1553483264-5379-3-git-send-email-hao.wu@intel.com>
-From:   Alan Tull <atull@kernel.org>
-Date:   Mon, 25 Mar 2019 12:50:40 -0500
-X-Gmail-Original-Message-ID: <CANk1AXSUMkfQu8QnN-T0B5qeA4vaGxDTvGur9EGyLbGsBFBeKQ@mail.gmail.com>
-Message-ID: <CANk1AXSUMkfQu8QnN-T0B5qeA4vaGxDTvGur9EGyLbGsBFBeKQ@mail.gmail.com>
-Subject: Re: [PATCH 02/17] fpga: dfl: fme: align PR buffer size per PR datawidth
-To:     Wu Hao <hao.wu@intel.com>
-Cc:     Moritz Fischer <mdf@kernel.org>, linux-fpga@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api@vger.kernel.org, Xu Yilun <yilun.xu@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190325092314.GF16366@iweiny-DESK2.sc.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 24, 2019 at 10:23 PM Wu Hao <hao.wu@intel.com> wrote:
+On Mon, Mar 25, 2019 at 02:23:15AM -0700, Ira Weiny wrote:
+> > > Unfortunately holding the lock is required to support FOLL_LONGTERM (to check
+> > > the VMAs) but we don't want to hold the lock to be optimal (specifically allow
+> > > FAULT_FOLL_ALLOW_RETRY).  So I'm maintaining the optimization for *_fast users
+> > > who do not specify FOLL_LONGTERM.
+> > > 
+> > > Another way to do this would have been to define __gup_longterm_unlocked with
+> > > the above logic, but that seemed overkill at this point.
+> > 
+> > get_user_pages_unlocked() is an exported symbol, shouldn't it work
+> > with the FOLL_LONGTERM flag?
+> > 
+> > I think it should even though we have no user..
+> > 
+> > Otherwise the GUP API just gets more confusing.
+> 
+> I agree WRT to the API.  But I think callers of get_user_pages_unlocked() are
+> not going to get the behavior they want if they specify FOLL_LONGTERM.
 
-Hi Hao,
+Oh? Isn't the only thing FOLL_LONGTERM does is block the call on DAX?
+Why does the locking mode matter to this test?
 
-Looks good, one question below.
+> What I could do is BUG_ON (or just WARN_ON) if unlocked is called with
+> FOLL_LONGTERM similar to the code in get_user_pages_locked() which does not
+> allow locked and vmas to be passed together:
 
->
-> Current driver checks if input bitstream file size is aligned or
-> not per PR data width (default 32bits). It requires one additional
-> step for end user when they generate the bitstream file, padding
-> extra zeros to bitstream file to align its size per PR data width,
-> but they don't have to as hardware will drop extra padding bytes
-> automatically.
->
-> In order to simplify the user steps, this patch aligns PR buffer
-> size per PR data width in driver, to allow user to pass unaligned
-> size bitstream files to driver.
->
-> Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-> Signed-off-by: Wu Hao <hao.wu@intel.com>
-> ---
->  drivers/fpga/dfl-fme-pr.c | 14 +++++++++-----
->  1 file changed, 9 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/fpga/dfl-fme-pr.c b/drivers/fpga/dfl-fme-pr.c
-> index d9ca955..c1fb1fe 100644
-> --- a/drivers/fpga/dfl-fme-pr.c
-> +++ b/drivers/fpga/dfl-fme-pr.c
-> @@ -74,6 +74,7 @@ static int fme_pr(struct platform_device *pdev, unsigned long arg)
->         struct dfl_fme *fme;
->         unsigned long minsz;
->         void *buf = NULL;
-> +       size_t length;
->         int ret = 0;
->         u64 v;
->
-> @@ -85,9 +86,6 @@ static int fme_pr(struct platform_device *pdev, unsigned long arg)
->         if (port_pr.argsz < minsz || port_pr.flags)
->                 return -EINVAL;
->
-> -       if (!IS_ALIGNED(port_pr.buffer_size, 4))
-> -               return -EINVAL;
-> -
->         /* get fme header region */
->         fme_hdr = dfl_get_feature_ioaddr_by_id(&pdev->dev,
->                                                FME_FEATURE_ID_HEADER);
-> @@ -103,7 +101,13 @@ static int fme_pr(struct platform_device *pdev, unsigned long arg)
->                        port_pr.buffer_size))
->                 return -EFAULT;
->
-> -       buf = vmalloc(port_pr.buffer_size);
-> +       /*
-> +        * align PR buffer per PR bandwidth, as HW ignores the extra padding
-> +        * data automatically.
-> +        */
-> +       length = ALIGN(port_pr.buffer_size, 4);
-> +
-> +       buf = vmalloc(length);
+The GUP call should fail if you are doing something like this. But I'd
+rather not see confusing specialc cases in code without a clear
+comment explaining why it has to be there.
 
-Since it may not be completely filled, would it be worthwhile to alloc
-a zero'ed buff?
-
-Alan
-
->         if (!buf)
->                 return -ENOMEM;
->
-> @@ -140,7 +144,7 @@ static int fme_pr(struct platform_device *pdev, unsigned long arg)
->         fpga_image_info_free(region->info);
->
->         info->buf = buf;
-> -       info->count = port_pr.buffer_size;
-> +       info->count = length;
->         info->region_id = port_pr.port_id;
->         region->info = info;
->
-> --
-> 2.7.4
->
+Jason
