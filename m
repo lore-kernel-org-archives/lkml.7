@@ -2,82 +2,86 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3743C4360F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 22:02:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2BDCC4360F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 22:03:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0CF9205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 22:02:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A230D205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 22:03:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553551394;
+	bh=AXimIyhreGVuv9mVtLtyAiUcs4M7GC0QkFEGZPfPFek=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hXi/sTVtBBOy/4pvziCAt2aLZqXuexIDkKaGmHQQjrMjfdzKrLUN4FrAXwF5l5mQ/
+	 pppZkRmVAlABHXDFR7RjKdVW6zQ0jkY8VI5ifiQpFEdaqV5UV1/eXiX/OME2D1BjIq
+	 VT/WT8eyEdjirfySpwCAm8msetU/9rv8f5eGnhQI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730525AbfCYWCw (ORCPT
+        id S1730568AbfCYWDN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 18:02:52 -0400
-Received: from smtprelay0229.hostedemail.com ([216.40.44.229]:45511 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729664AbfCYWCw (ORCPT
+        Mon, 25 Mar 2019 18:03:13 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:37535 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730006AbfCYWDM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 18:02:52 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 0B507182CED34;
-        Mon, 25 Mar 2019 22:02:51 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: teeth41_35cd99897ba57
-X-Filterd-Recvd-Size: 1924
-Received: from XPS-9350.home (unknown [47.151.153.53])
-        (Authenticated sender: joe@perches.com)
-        by omf01.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 25 Mar 2019 22:02:49 +0000 (UTC)
-Message-ID: <8a54298538371340d0a7fe762e742a88e12f43ba.camel@perches.com>
-Subject: Re: [PATCH] Bad file pattern in MAINTAINERS section 'SELINUX
- SECURITY MODULE'
-From:   Joe Perches <joe@perches.com>
-To:     Casey Schaufler <casey@schaufler-ca.com>,
-        linux-kernel@vger.kernel.org
-Cc:     Paul Moore <paul@paul-moore.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>
-Date:   Mon, 25 Mar 2019 15:02:48 -0700
-In-Reply-To: <a0847fd8-0b9b-69f5-e9b8-1e1cd3b5052d@schaufler-ca.com>
-References: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com>
-         <20190325212756.27603-1-joe@perches.com>
-         <a0847fd8-0b9b-69f5-e9b8-1e1cd3b5052d@schaufler-ca.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.1-1build1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Mon, 25 Mar 2019 18:03:12 -0400
+Received: by mail-ot1-f68.google.com with SMTP id c16so9590619otn.4;
+        Mon, 25 Mar 2019 15:03:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=X6cIFFo+5iJnTuGtifmpuC3Mvexk6jLnF97JhPvO7Vk=;
+        b=rBhwAjWi6XX0gX3R7CUua5gVjZ/BUWpJSMqLzzqaZ0eazNht0cVMuElvUE+SYFPIRW
+         y4pMhTRW39TENjVQsFMAuNDcwtI2HYWJ6lbNWPt/MTrpX9XEXe1bRD7BPrX6PjMQ2wWU
+         N/G93KCOpu1JaQ1zUgs8e/A7vL1uu92g3GgSHubZTtUxXaeCFc0e9BXBQWviFqJHdaha
+         9a7bZgKhssh2dhudVT7m0Wqt964CrtV/7Iw6Y3hM/xhY8ARyUKcPLTWP9Z350gW1R8N6
+         d5Zwwnt3y1rMxZ4peQ6QJrMc7vGqOvfKmmmmHnpLAfMKVgQVdg6G1Xaqkk9+0s9ba7Yc
+         jWVw==
+X-Gm-Message-State: APjAAAUWeiPnoRx8Ig/tMHib9Ohu8uFQap/Imq9MjbRBVMZmFt6qT9d+
+        0XhrMnBtcBWPbL5SdEy4nw==
+X-Google-Smtp-Source: APXvYqwUnKUqabk/5hXIy9C4asJJAp746TO0puiQW+9Se53ZyvCy4GkzAnkjzwZDE3DHt7O3WFc4GQ==
+X-Received: by 2002:a9d:77c9:: with SMTP id w9mr16737896otl.197.1553551392132;
+        Mon, 25 Mar 2019 15:03:12 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id w10sm6989278oiw.48.2019.03.25.15.03.11
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 25 Mar 2019 15:03:11 -0700 (PDT)
+Date:   Mon, 25 Mar 2019 17:03:10 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH 6/7] dt-bindings: clk: at91: add bindings for SAM9X60 pmc
+Message-ID: <20190325220310.GA18566@bogus>
+References: <20190220112605.23095-1-alexandre.belloni@bootlin.com>
+ <20190220112605.23095-7-alexandre.belloni@bootlin.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190220112605.23095-7-alexandre.belloni@bootlin.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-03-25 at 14:58 -0700, Casey Schaufler wrote:
-> The include/linux/selinux.h file has been removed.
-> Remove the entry from the MAINTAINERS file.
-
-This looks like it doesn't apply correctly as there
-are one too many spaces before each context lines.
-
-> Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
+On Wed, 20 Feb 2019 12:26:04 +0100, Alexandre Belloni wrote:
+> Add SAM9X60 PMC compatible string.
+> 
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 > ---
->   MAINTAINERS | 1 -
->   1 file changed, 1 deletion(-)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 3e5a5d263f29..1039c34dff3c 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -13947,7 +13947,6 @@ W:	https://selinuxproject.org
->   W:	https://github.com/SELinuxProject
->   T:	git git://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/selinux.git
->   S:	Supported
-> -F:	include/linux/selinux*
->   F:	security/selinux/
->   F:	scripts/selinux/
->   F:	Documentation/admin-guide/LSM/SELinux.rst
+>  Documentation/devicetree/bindings/clock/at91-clock.txt | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
 
+Reviewed-by: Rob Herring <robh@kernel.org>
