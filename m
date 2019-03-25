@@ -2,129 +2,113 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.7 required=3.0 tests=DATE_IN_PAST_12_24,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A390C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 13:49:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DCEFC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 13:51:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAE2C2075C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 13:49:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="MBnXWi3E"
+	by mail.kernel.org (Postfix) with ESMTP id 0095A20823
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 13:51:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731685AbfCZNth (ORCPT
+        id S1731540AbfCZNvm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 09:49:37 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:36678 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731471AbfCZNtg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 09:49:36 -0400
-Received: by mail-io1-f66.google.com with SMTP id f6so10822302iop.3
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 06:49:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=BbMzgIzQCfWFlXsfTKjvE5YFCQD6PlQb3XZXDhFLods=;
-        b=MBnXWi3EFgJUfYY0NfW9JI9zwf0RmGdMiCf2iziNzx/8pvXU0xsWMfahqhZl1sqJLb
-         aqQfrvZQggQjSBByeFyav0V+nj/g95aAWmRgMpMlNYpRRB7x5tjWrX5KMBJvFct6OqsZ
-         k1qI+8SwX/QWvA1piaEp8gbNCf/Om5sOMFik3AH/3iR5J4rfdbqerZeMlhA4fwWxNWz2
-         MZa5YsYJIK2lO/vDFxv2aosG3yCWZy36e5gseMwdKMX+OVJYYYOUZl5J5H6GNgD6yybv
-         RwN8DU0TggMxQbaLh1tde+/VthGKrhCJmieSNxjnPFdPXC0DgczNn6YtbLOlre4jCWQC
-         4Rcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=BbMzgIzQCfWFlXsfTKjvE5YFCQD6PlQb3XZXDhFLods=;
-        b=koi2rQb0QPknP5yecowv0eg1T7PBm+KL8jNeCOK7JzfBZaRVkdxLMK8XoI7LdBNduk
-         rgtWi360ZBMldXEK89L8sUN47nSrixJkUjQmaqar29ea/XUJ+30pmgy8ZdRd+jlRQ6XN
-         yv6EaIzlgS5Ecrpk7+KAjsTjhA3Vz7SoSzwbEuxV1uRjuciYk2inzYFxHt85AeXWN+nX
-         i7ZYa0tZjgUimeAMrwuKCl95MxmI4XZ4Am2JLzHcADGnhS9aimiq/uZa6hRHR1n6kUod
-         YtnEKF9aTTy28DdexByxWr2i5SEx1jMz8ZZAlaE4IE12eHryfT8Cufng9E9nQKB5FPt0
-         Iy9w==
-X-Gm-Message-State: APjAAAV/7bm9ly0d3e25dmxzDQRDiPBFSeTVAyAdiKKs2fZe4mFUeVQI
-        68akvP6XQYFd/JIO/GmlU0Lg6GBV9PIe0/LcxmtvfeEx
-X-Google-Smtp-Source: APXvYqyK8kulVJ2QGkqImXDk7FfdEcLLymLdmUxG/qvsquaryZoWLeZkfoWg3YLpmX4nTs7gHZFKuu8qWgRI4EtXxgo=
-X-Received: by 2002:a5d:91d3:: with SMTP id k19mr21355533ior.258.1553608175458;
- Tue, 26 Mar 2019 06:49:35 -0700 (PDT)
+        Tue, 26 Mar 2019 09:51:42 -0400
+Received: from mga03.intel.com ([134.134.136.65]:9037 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726111AbfCZNvm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 09:51:42 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Mar 2019 06:51:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,271,1549958400"; 
+   d="scan'208";a="332158383"
+Received: from local-michael-cet-test.sh.intel.com (HELO localhost) ([10.239.159.128])
+  by fmsmga005.fm.intel.com with ESMTP; 26 Mar 2019 06:51:39 -0700
+Date:   Tue, 26 Mar 2019 04:45:34 +0800
+From:   Yang Weijiang <weijiang.yang@intel.com>
+To:     pbonzini@redhat.com, kvm@vger.kernel.org, mst@redhat.com,
+        rkrcmar@redhat.com, jmattson@google.com,
+        linux-kernel@vger.kernel.org, yu-cheng.yu@intel.com
+Subject: Re: [RFC PATCH v4 0/8] This patch-set is to enable Guest CET support
+Message-ID: <20190325204533.GA12253@local-michael-cet-test.sh.intel.com>
+References: <20190318150351.15550-1-weijiang.yang@intel.com>
 MIME-Version: 1.0
-References: <20190318174228.18194-1-brgl@bgdev.pl> <20190318174228.18194-7-brgl@bgdev.pl>
- <20190322091223.GI27015@amd>
-In-Reply-To: <20190322091223.GI27015@amd>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 26 Mar 2019 14:49:24 +0100
-Message-ID: <CAMRc=Me1BbZKPQyAt4RR1eRk9pX3oHFudpm1CnHx3-AuD-G5ug@mail.gmail.com>
-Subject: Re: [RESEND PATCH v6 06/11] mfd: max77650: new core mfd driver
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Input <linux-input@vger.kernel.org>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190318150351.15550-1-weijiang.yang@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pt., 22 mar 2019 o 10:12 Pavel Machek <pavel@ucw.cz> napisa=C5=82(a):
->
-> On Mon 2019-03-18 18:42:23, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > Add the core mfd driver for max77650 PMIC. We define five sub-devices
-> > for which the drivers will be added in subsequent patches.
-> >
-> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > ---
-> >  drivers/mfd/Kconfig          |  14 +++
-> >  drivers/mfd/Makefile         |   1 +
-> >  drivers/mfd/max77650.c       | 234 +++++++++++++++++++++++++++++++++++
-> >  include/linux/mfd/max77650.h |  59 +++++++++
-> >  4 files changed, 308 insertions(+)
-> >  create mode 100644 drivers/mfd/max77650.c
-> >  create mode 100644 include/linux/mfd/max77650.h
-> >
-> > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> > index 0ce2d8dfc5f1..ade04e124aa0 100644
-> > --- a/drivers/mfd/Kconfig
-> > +++ b/drivers/mfd/Kconfig
-> > @@ -733,6 +733,20 @@ config MFD_MAX77620
-> >         provides common support for accessing the device; additional dr=
-ivers
-> >         must be enabled in order to use the functionality of the device=
-.
-> >
-> > +config MFD_MAX77650
-> > +     tristate "Maxim MAX77650/77651 PMIC Support"
-> > +     depends on I2C
-> > +     depends on OF || COMPILE_TEST
->
-> This says it will compile ok in !OF case. Will it?
->
-
-It will compile because the stubs for OF functions will be provided -
-it just won't work, because they won't be implemented.
-
-Bart
-
-> --
-> (english) http://www.livejournal.com/~pavelmachek
-> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/b=
-log.html
+On Mon, Mar 18, 2019 at 11:03:43PM +0800, Yang Weijiang wrote:
+> Control-flow Enforcement Technology (CET) provides protection against
+> return/jump-oriented programming (ROP) attacks. To make kvm Guest OS own
+> the capability, this patch-set is required. It enables CET related CPUID
+> report, xsaves/xrstors, vmx entry configuration etc. for Guest OS.
+> 
+> PATCH 1    : Define CET VMCS fields and bits.
+> PATCH 2/3  : Report CET feature support in CPUID.
+> PATCH 4    : Fix xsaves size calculation issue.
+> PATCH 5    : Pass through CET MSRs to Guest.
+> PATCH 6    : Set Guest CET state auto loading bit.
+> PATCH 7    : Load Guest fpu state when accessing CET XSAVES managed MSRs.
+> PATCH 8    : Add CET MSR user space access interface.
+> 
+> Changelog:
+> 
+>  v4:
+>  - Add Sean's patch for loading Guest fpu state before access XSAVES
+>    managed CET MSRs.
+>  - Melt down CET bits setting into CPUID configuration patch.
+>  - Add VMX interface to query Host XSS.
+>  - Check Host and Guest XSS support bits before set Guest XSS.
+>  - Make Guest SHSTK and IBT feature enabling independent.
+>  - Do not report CET support to Guest when Host CET feature is
+>    Disabled.
+> 
+>  v3:
+>  - Modified patches to make Guest CET independent to Host enabling.
+>  - Added patch 8 to add user space access for Guest CET MSR access.
+>  - Modified code comments and patch description to reflect changes.
+> 
+>  v2:
+>  - Re-ordered patch sequence, combined one patch.
+>  - Added more description for CET related VMCS fields.
+>  - Added Host CET capability check while enabling Guest CET loading bit.
+>  - Added Host CET capability check while reporting Guest CPUID(EAX=7,
+>    EXC=0).
+>  - Modified code in reporting Guest CPUID(EAX=D,ECX>=1), make it clearer.
+>  - Added Host and Guest XSS mask check while setting bits for Guest XSS.
+> 
+> 
+> Sean Christopherson (1):
+>   KVM:x86: load guest fpu state when accessing MSRs managed by XSAVES
+> 
+> Yang Weijiang (7):
+>   KVM:VMX: Define CET VMCS fields and bits
+>   KVM:CPUID: Add CET CPUID support for Guest
+>   KVM:CPUID: Fix xsaves area size calculation for CPUID.(EAX=0xD,ECX=1).
+>   KVM:VMX: Pass through host CET related MSRs to Guest.
+>   KVM:VMX: Load Guest CET via VMCS when CET is enabled in Guest
+>   KVM:x86: Allow Guest to set supported bits in XSS
+>   KVM:x86: Add user-space read/write interface for CET MSRs
+> 
+>  arch/x86/include/asm/kvm_host.h  |  5 +-
+>  arch/x86/include/asm/msr-index.h |  2 +
+>  arch/x86/include/asm/vmx.h       |  8 +++
+>  arch/x86/kvm/cpuid.c             | 53 ++++++++++++++------
+>  arch/x86/kvm/vmx.c               | 86 ++++++++++++++++++++++++++++++--
+>  arch/x86/kvm/x86.c               | 32 +++++++++++-
+>  arch/x86/kvm/x86.h               |  4 ++
+>  7 files changed, 167 insertions(+), 23 deletions(-)
+> 
+> -- 
+> 2.17.1
+Hi, Paolo and Sean,
+Do you have any comments on v4 patches?
