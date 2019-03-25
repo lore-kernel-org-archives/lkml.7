@@ -2,489 +2,184 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC6F6C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 14:28:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F317DC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 14:29:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97DFB20830
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 14:28:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9B4920850
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 14:29:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Cr/WI8W7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729248AbfCYO2i (ORCPT
+        id S1729305AbfCYO3T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 10:28:38 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:46884 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725788AbfCYO2h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 10:28:37 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 61F7D3084215;
-        Mon, 25 Mar 2019 14:28:36 +0000 (UTC)
-Received: from [10.18.17.32] (dhcp-17-32.bos.redhat.com [10.18.17.32])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id BB6DBA33BB;
-        Mon, 25 Mar 2019 14:27:56 +0000 (UTC)
-From:   Nitesh Narayan Lal <nitesh@redhat.com>
-To:     Alexander Duyck <alexander.duyck@gmail.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     David Hildenbrand <david@redhat.com>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
-        pagupta@redhat.com, wei.w.wang@intel.com,
-        Yang Zhang <yang.zhang.wz@gmail.com>,
-        Rik van Riel <riel@surriel.com>, dodgen@google.com,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>
-Subject: Re: [RFC][Patch v9 0/6] KVM: Guest Free Page Hinting
-References: <20190306155048.12868-1-nitesh@redhat.com>
- <20190306110501-mutt-send-email-mst@kernel.org>
- <bd029eb2-501a-8d2d-5f75-5d2b229c7e75@redhat.com>
- <20190306130955-mutt-send-email-mst@kernel.org>
- <ce55943e-87b6-c102-9827-2cfd45b7192c@redhat.com>
- <CAKgT0UcGCFNQRZFmp8oMkG+wKzRtwN292vtFWgyLsdyRnO04gQ@mail.gmail.com>
- <ed9f7c2e-a7e3-a990-bcc3-459e4f2b4a44@redhat.com>
- <4bd54f8b-3e9a-3493-40be-668962282431@redhat.com>
- <6d744ed6-9c1c-b29f-aa32-d38387187b74@redhat.com>
- <CAKgT0UcBDKr0ACHQWUCvmm8atxM6wSu7aCRFJkFvfjT_W_femQ@mail.gmail.com>
- <6709bb82-5e99-019d-7de0-3fded385b9ac@redhat.com>
- <6ab9b763-ac90-b3db-3712-79a20c949d5d@redhat.com>
-Organization: Red Hat Inc,
-Message-ID: <99b9fa88-17b1-f2a9-7dd4-7a8f6e790d30@redhat.com>
-Date:   Mon, 25 Mar 2019 10:27:46 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
-MIME-Version: 1.0
-In-Reply-To: <6ab9b763-ac90-b3db-3712-79a20c949d5d@redhat.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="OUEyeRINyY9r7rkz8NWRKqrGFm2wLnu3L"
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Mon, 25 Mar 2019 14:28:37 +0000 (UTC)
+        Mon, 25 Mar 2019 10:29:19 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:34996 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725788AbfCYO3S (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 10:29:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Mime-Version:Content-Type:References:
+        In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=HLf470DM6SoV6jMIkBmUWYj+DQnYIy833je27AXVgxs=; b=Cr/WI8W7aSVjCwBgdhhjtCPNX
+        d8hJbo7MLvzMWHsPb6ytzhTeWcpxd4Kr9yrPWCRl7yU50/Pu7wBAa2tfQF2lAWjSQkYkeE8RKVWjP
+        AEFPMH4x6N18RszcDs841iDR9NT2yyUcfRUcR3GnbU3Z5BVChOmDHbJthlXLMsBKNKPqVfL9QbFo1
+        UuJpaPpEJfnbQlI+oeW/jFvj4GmH7ixN2f+qwzMII3EVf0ieKsFw5BkXhWhJ2Kzcuwy+wWTElr1KG
+        y5Yl36YGLOu3TUTuJr7yrjpyxfLN/0f02V9w2H/73vB9cVUtvOzkF+Mu4TsoPChnb+IF7tnSOOFDv
+        z3NsR3U6Q==;
+Received: from 54-240-197-226.amazon.com ([54.240.197.226] helo=freeip.amazon.com)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h8Qav-0003WW-JS; Mon, 25 Mar 2019 14:28:58 +0000
+Message-ID: <73ab8319a67a2d894564019c6bb0a806455987c6.camel@infradead.org>
+Subject: Re: [PATCH] x86, retpolines: entirely disable switch jump tables
+ when retpolines are enabled
+From:   David Woodhouse <dwmw2@infradead.org>
+To:     Daniel Borkmann <daniel@iogearbox.net>, tglx@linutronix.de
+Cc:     linux-kernel@vger.kernel.org, mliska@suse.cz,
+        "H . J . Lu" <hjl.tools@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        =?ISO-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>
+Date:   Mon, 25 Mar 2019 14:28:51 +0000
+In-Reply-To: <20190325135620.14882-1-daniel@iogearbox.net>
+References: <20190325135620.14882-1-daniel@iogearbox.net>
+Content-Type: multipart/signed; micalg="sha-256";
+        protocol="application/x-pkcs7-signature";
+        boundary="=-au6cpXKqOq14GJSo6K1b"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---OUEyeRINyY9r7rkz8NWRKqrGFm2wLnu3L
-Content-Type: multipart/mixed; boundary="Uxy1fcR5FM2Ozt00umK0ZxNrLwPctajkC";
- protected-headers="v1"
-From: Nitesh Narayan Lal <nitesh@redhat.com>
-To: Alexander Duyck <alexander.duyck@gmail.com>,
- "Michael S. Tsirkin" <mst@redhat.com>
-Cc: David Hildenbrand <david@redhat.com>, kvm list <kvm@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
- Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
- pagupta@redhat.com, wei.w.wang@intel.com,
- Yang Zhang <yang.zhang.wz@gmail.com>, Rik van Riel <riel@surriel.com>,
- dodgen@google.com, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
- dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>
-Message-ID: <99b9fa88-17b1-f2a9-7dd4-7a8f6e790d30@redhat.com>
-Subject: Re: [RFC][Patch v9 0/6] KVM: Guest Free Page Hinting
 
---Uxy1fcR5FM2Ozt00umK0ZxNrLwPctajkC
-Content-Type: text/plain; charset=UTF-8
+--=-au6cpXKqOq14GJSo6K1b
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On 3/20/19 9:18 AM, Nitesh Narayan Lal wrote:
-> On 3/19/19 1:59 PM, Nitesh Narayan Lal wrote:
->> On 3/19/19 1:38 PM, Alexander Duyck wrote:
->>> On Tue, Mar 19, 2019 at 9:04 AM Nitesh Narayan Lal <nitesh@redhat.com=
-> wrote:
->>>> On 3/19/19 9:33 AM, David Hildenbrand wrote:
->>>>> On 18.03.19 16:57, Nitesh Narayan Lal wrote:
->>>>>> On 3/14/19 12:58 PM, Alexander Duyck wrote:
->>>>>>> On Thu, Mar 14, 2019 at 9:43 AM Nitesh Narayan Lal <nitesh@redhat=
-=2Ecom> wrote:
->>>>>>>> On 3/6/19 1:12 PM, Michael S. Tsirkin wrote:
->>>>>>>>> On Wed, Mar 06, 2019 at 01:07:50PM -0500, Nitesh Narayan Lal wr=
-ote:
->>>>>>>>>> On 3/6/19 11:09 AM, Michael S. Tsirkin wrote:
->>>>>>>>>>> On Wed, Mar 06, 2019 at 10:50:42AM -0500, Nitesh Narayan Lal =
-wrote:
->>>>>>>>>>>> The following patch-set proposes an efficient mechanism for =
-handing freed memory between the guest and the host. It enables the guest=
-s with no page cache to rapidly free and reclaims memory to and from the =
-host respectively.
->>>>>>>>>>>>
->>>>>>>>>>>> Benefit:
->>>>>>>>>>>> With this patch-series, in our test-case, executed on a sing=
-le system and single NUMA node with 15GB memory, we were able to successf=
-ully launch 5 guests(each with 5 GB memory) when page hinting was enabled=
- and 3 without it. (Detailed explanation of the test procedure is provide=
-d at the bottom under Test - 1).
->>>>>>>>>>>>
->>>>>>>>>>>> Changelog in v9:
->>>>>>>>>>>>    * Guest free page hinting hook is now invoked after a pag=
-e has been merged in the buddy.
->>>>>>>>>>>>         * Free pages only with order FREE_PAGE_HINTING_MIN_O=
-RDER(currently defined as MAX_ORDER - 1) are captured.
->>>>>>>>>>>>    * Removed kthread which was earlier used to perform the s=
-canning, isolation & reporting of free pages.
->>>>>>>>>>>>    * Pages, captured in the per cpu array are sorted based o=
-n the zone numbers. This is to avoid redundancy of acquiring zone locks.
->>>>>>>>>>>>         * Dynamically allocated space is used to hold the is=
-olated guest free pages.
->>>>>>>>>>>>         * All the pages are reported asynchronously to the h=
-ost via virtio driver.
->>>>>>>>>>>>         * Pages are returned back to the guest buddy free li=
-st only when the host response is received.
->>>>>>>>>>>>
->>>>>>>>>>>> Pending items:
->>>>>>>>>>>>         * Make sure that the guest free page hinting's curre=
-nt implementation doesn't break hugepages or device assigned guests.
->>>>>>>>>>>>    * Follow up on VIRTIO_BALLOON_F_PAGE_POISON's device side=
- support. (It is currently missing)
->>>>>>>>>>>>         * Compare reporting free pages via vring with vhost.=
+On Mon, 2019-03-25 at 14:56 +0100, Daniel Borkmann wrote:
+> More than 20 switch cases are not expected to be fast-path critical, but
+> it would still be good to align with gcc behavior for versions < 8.4.0 in
+> order to have consistency across supported gcc versions. vmlinux size is
+> slightly growing by 0.27% for older gcc. This flag is only set to work
+> around affected gcc, no change for clang.
 
->>>>>>>>>>>>         * Decide between MADV_DONTNEED and MADV_FREE.
->>>>>>>>>>>>    * Analyze overall performance impact due to guest free pa=
-ge hinting.
->>>>>>>>>>>>    * Come up with proper/traceable error-message/logs.
->>>>>>>>>>>>
->>>>>>>>>>>> Tests:
->>>>>>>>>>>> 1. Use-case - Number of guests we can launch
->>>>>>>>>>>>
->>>>>>>>>>>>    NUMA Nodes =3D 1 with 15 GB memory
->>>>>>>>>>>>    Guest Memory =3D 5 GB
->>>>>>>>>>>>    Number of cores in guest =3D 1
->>>>>>>>>>>>    Workload =3D test allocation program allocates 4GB memory=
-, touches it via memset and exits.
->>>>>>>>>>>>    Procedure =3D
->>>>>>>>>>>>    The first guest is launched and once its console is up, t=
-he test allocation program is executed with 4 GB memory request (Due to t=
-his the guest occupies almost 4-5 GB of memory in the host in a system wi=
-thout page hinting). Once this program exits at that time another guest i=
-s launched in the host and the same process is followed. We continue laun=
-ching the guests until a guest gets killed due to low memory condition in=
- the host.
->>>>>>>>>>>>
->>>>>>>>>>>>    Results:
->>>>>>>>>>>>    Without hinting =3D 3
->>>>>>>>>>>>    With hinting =3D 5
->>>>>>>>>>>>
->>>>>>>>>>>> 2. Hackbench
->>>>>>>>>>>>    Guest Memory =3D 5 GB
->>>>>>>>>>>>    Number of cores =3D 4
->>>>>>>>>>>>    Number of tasks         Time with Hinting       Time with=
-out Hinting
->>>>>>>>>>>>    4000                    19.540                  17.818
->>>>>>>>>>>>
->>>>>>>>>>> How about memhog btw?
->>>>>>>>>>> Alex reported:
->>>>>>>>>>>
->>>>>>>>>>>     My testing up till now has consisted of setting up 4 8GB =
-VMs on a system
->>>>>>>>>>>     with 32GB of memory and 4GB of swap. To stress the memory=
- on the system I
->>>>>>>>>>>     would run "memhog 8G" sequentially on each of the guests =
-and observe how
->>>>>>>>>>>     long it took to complete the run. The observed behavior i=
-s that on the
->>>>>>>>>>>     systems with these patches applied in both the guest and =
-on the host I was
->>>>>>>>>>>     able to complete the test with a time of 5 to 7 seconds p=
-er guest. On a
->>>>>>>>>>>     system without these patches the time ranged from 7 to 49=
- seconds per
->>>>>>>>>>>     guest. I am assuming the variability is due to time being=
- spent writing
->>>>>>>>>>>     pages out to disk in order to free up space for the guest=
-=2E
->>>>>>>>>>>
->>>>>>>>>> Here are the results:
->>>>>>>>>>
->>>>>>>>>> Procedure: 3 Guests of size 5GB is launched on a single NUMA n=
-ode with
->>>>>>>>>> total memory of 15GB and no swap. In each of the guest, memhog=
- is run
->>>>>>>>>> with 5GB. Post-execution of memhog, Host memory usage is monit=
-ored by
->>>>>>>>>> using Free command.
->>>>>>>>>>
->>>>>>>>>> Without Hinting:
->>>>>>>>>>                  Time of execution    Host used memory
->>>>>>>>>> Guest 1:        45 seconds            5.4 GB
->>>>>>>>>> Guest 2:        45 seconds            10 GB
->>>>>>>>>> Guest 3:        1  minute               15 GB
->>>>>>>>>>
->>>>>>>>>> With Hinting:
->>>>>>>>>>                 Time of execution     Host used memory
->>>>>>>>>> Guest 1:        49 seconds            2.4 GB
->>>>>>>>>> Guest 2:        40 seconds            4.3 GB
->>>>>>>>>> Guest 3:        50 seconds            6.3 GB
->>>>>>>>> OK so no improvement. OTOH Alex's patches cut time down to 5-7 =
-seconds
->>>>>>>>> which seems better. Want to try testing Alex's patches for comp=
-arison?
->>>>>>>>>
->>>>>>>> I realized that the last time I reported the memhog numbers, I d=
-idn't
->>>>>>>> enable the swap due to which the actual benefits of the series w=
-ere not
->>>>>>>> shown.
->>>>>>>> I have re-run the test by including some of the changes suggeste=
-d by
->>>>>>>> Alexander and David:
->>>>>>>>     * Reduced the size of the per-cpu array to 32 and minimum hi=
-nting
->>>>>>>> threshold to 16.
->>>>>>>>     * Reported length of isolated pages along with start pfn, in=
-stead of
->>>>>>>> the order from the guest.
->>>>>>>>     * Used the reported length to madvise the entire length of a=
-ddress
->>>>>>>> instead of a single 4K page.
->>>>>>>>     * Replaced MADV_DONTNEED with MADV_FREE.
->>>>>>>>
->>>>>>>> Setup for the test:
->>>>>>>> NUMA node:1
->>>>>>>> Memory: 15GB
->>>>>>>> Swap: 4GB
->>>>>>>> Guest memory: 6GB
->>>>>>>> Number of core: 1
->>>>>>>>
->>>>>>>> Process: A guest is launched and memhog is run with 6GB. As its
->>>>>>>> execution is over next guest is launched. Everytime memhog execu=
-tion
->>>>>>>> time is monitored.
->>>>>>>> Results:
->>>>>>>>     Without Hinting:
->>>>>>>>                  Time of execution
->>>>>>>>     Guest1:    22s
->>>>>>>>     Guest2:    24s
->>>>>>>>     Guest3: 1m29s
->>>>>>>>
->>>>>>>>     With Hinting:
->>>>>>>>                 Time of execution
->>>>>>>>     Guest1:    24s
->>>>>>>>     Guest2:    25s
->>>>>>>>     Guest3:    28s
->>>>>>>>
->>>>>>>> When hinting is enabled swap space is not used until memhog with=
- 6GB is
->>>>>>>> ran in 6th guest.
->>>>>>> So one change you may want to make to your test setup would be to=
+I note your final sentence doesn't actually say that clang doesn't have
+this problem, and doesn't *need* this (or an equivalent) change.
 
->>>>>>> launch the tests sequentially after all the guests all up, instea=
-d of
->>>>>>> combining the test and guest bring-up. In addition you could run
->>>>>>> through the guests more than once to determine a more-or-less ste=
-ady
->>>>>>> state in terms of the performance as you move between the guests =
-after
->>>>>>> they have hit the point of having to either swap or pull MADV_FRE=
-E
->>>>>>> pages.
->>>>>> I tried running memhog as you suggested, here are the results:
->>>>>> Setup for the test:
->>>>>> NUMA node:1
->>>>>> Memory: 15GB
->>>>>> Swap: 4GB
->>>>>> Guest memory: 6GB
->>>>>> Number of core: 1
->>>>>>
->>>>>> Process: 3 guests are launched and memhog is run with 6GB. Results=
- are
->>>>>> monitored after 1st-time execution of memhog. Memhog is launched
->>>>>> sequentially in each of the guests and time is observed after the
->>>>>> execution of all 3 memhog is over.
->>>>>>
->>>>>> Results:
->>>>>> Without Hinting
->>>>>>     Time of Execution
->>>>>> 1.    6m48s
->>>>>> 2.    6m9s
->>>>>>
->>>>>> With Hinting
->>>>>> Array size:16 Minimum Threshold:8
->>>>>> 1.    2m57s
->>>>>> 2.    2m20s
->>>>>>
->>>>>> The memhog execution time in the case of hinting is still not that=
- low
->>>>>> as we would have expected. This is due to the usage of swap space.=
-
->>>>>> Although wrt to non-hinting when swap used space is around 3.5G, w=
-ith
->>>>>> hinting it remains to around 1.1-1.5G.
->>>>>> I did try using a zone free page barrier which prevented hinting w=
-hen
->>>>>> free pages of order HINTING_ORDER goes below 256. This further bri=
-ngs
->>>>>> down the swap usage to 100-150 MB. The tricky part of this approac=
-h is
->>>>>> to configure this barrier condition for different guests.
->>>>>>
->>>>>> Array size:16 Minimum Threshold:8
->>>>>> 1.    1m16s
->>>>>> 2.    1m41s
->>>>>>
->>>>>> Note: Memhog time does seem to vary a little bit on every boot wit=
-h or
->>>>>> without hinting.
->>>>>>
->>>>> I don't quite understand yet why "hinting more pages" (no free page=
-
->>>>> barrier) should result in a higher swap usage in the hypervisor
->>>>> (1.1-1.5GB vs. 100-150 MB). If we are "hinting more pages" I would =
-have
->>>>> guessed that runtime could get slower, but not that we need more sw=
-ap.
->>>>>
->>>>> One theory:
->>>>>
->>>>> If you hint all MAX_ORDER - 1 pages, at one point it could be that =
-all
->>>>> "remaining" free pages are currently isolated to be hinted. As MM n=
-eeds
->>>>> more pages for a process, it will fallback to using "MAX_ORDER - 2"=
-
->>>>> pages and so on. These pages, when they are freed, you won't hint
->>>>> anymore unless they get merged. But after all they won't get merged=
-
->>>>> because they can't be merged (otherwise they wouldn't be "MAX_ORDER=
- - 2"
->>>>> after all right from the beginning).
->>>>>
->>>>> Try hinting a smaller granularity to see if this could actually be =
-the case.
->>>> So I have two questions in my mind after looking at the results now:=
-
->>>> 1. Why swap is coming into the picture when hinting is enabled?
->>>> 2. Same to what you have raised.
->>>> For the 1st question, I think the answer is: (correct me if I am wro=
-ng.)
->>>> Memhog while writing the memory does free memory but the pages it fr=
-ees
->>>> are of a lower order which doesn't merge until the memhog write
->>>> completes. After which we do get the MAX_ORDER - 1 page from the bud=
-dy
->>>> resulting in hinting.
->>>> As all 3 memhog are running parallelly we don't get free memory unti=
-l
->>>> one of them completes.
->>>> This does explain that when 3 guests each of 6GB on a 15GB host trie=
-s to
->>>> run memhog with 6GB parallelly, swap comes into the picture even if
->>>> hinting is enabled.
->>> Are you running them in parallel or sequentially?=20
->> I was running them parallelly but then I realized to see any benefits,=
-
->> in that case, I should have run less number of guests.
->>> I had suggested
->>> running them serially so that the previous one could complete and fre=
-e
->>> the memory before the next one allocated memory. In that setup you
->>> should see the guests still swapping without hints, but with hints th=
-e
->>> guest should free the memory up before the next one starts using it.
->> Yeah, I just realized this. Thanks for the clarification.
->>> If you are running them in parallel then you are going to see things
->>> going to swap because memhog does like what the name implies and it
->>> will use all of the memory you give it. It isn't until it completes
->>> that the memory is freed.
->>>
->>>> This doesn't explain why putting a barrier or avoid hinting reduced =
-the
->>>> swap usage. It seems I possibly had a wrong impression of the delayi=
-ng
->>>> hinting idea which we discussed.
->>>> As I was observing the value of the swap at the end of the memhog
->>>> execution which is logically incorrect. I will re-run the test and
->>>> observe the highest swap usage during the entire execution of memhog=
- for
->>>> hinting vs non-hinting.
->>> So one option you may look at if you are wanting to run the tests in
->>> parallel would be to limit the number of tests you have running at th=
-e
->>> same time. If you have 15G of memory and 6G per guest you should be
->>> able to run 2 sessions at a time without going to swap, however if yo=
-u
->>> run all 3 then you are likely going to be going to swap even with
->>> hinting.
->>>
->>> - Alex
-> Here are the updated numbers excluding the guest bring-up cost:
-> Setup for the test-
-> NUMA node:1
-> Memory: 15GB
-> Swap: 4GB
-> Guest memory: 6GB
-> Number of core: 1
-> Process: 3 guests are launched and memhog is run serially with 6GB.
-> Results:
-> Without Hinting
-> =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=
-=A0 =C2=A0=C2=A0=C2=A0 Time of Execution=C2=A0=C2=A0=C2=A0
-> Guest1:=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=
-=A0=C2=A0 56s =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=
-=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0
-> Guest2: =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0=C2=A0=
- 45s=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0
-> Guest3:=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=
-=A0=C2=A0 3m41s=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0
->
-> With Hinting
-> Guest1:=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=
-=A0=C2=A0 46s =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=
-=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0
-> Guest2: =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 45s=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0
-> Guest3:=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=
-=A0=C2=A0 49s=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0
->
->
->
->
-I performed some experiments to see if the current implementation of
-hinting breaks THP. I used AnonHugePages to track the THP pages
-currently in use and memhog as the guest workload.
-Setup:
-Host Size: 30GB (No swap)
-Guest Size: 15GB
-THP Size: 2MB
-Process: Guest is installed with different kernels to hint different
-granularities(MAX_ORDER - 1, MAX_ORDER - 2 and MAX_ORDER - 3). Memhog=C2=A0=
-
-15G is run multiple times in the same guest to see AnonHugePages usage
-in the host.
-
-Observation:
-There is no THP split for order MAX_ORDER - 1 & MAX_ORDER - 2 whereas
-for hinting granularity MAX_ORDER - 3 THP does split irrespective of
-MADVISE_FREE or MADVISE_DONTNEED.
---=20
-Regards
-Nitesh
+It should say that (if it's true). And if it isn't true, then other
+remedial action would be in order.
 
 
---Uxy1fcR5FM2Ozt00umK0ZxNrLwPctajkC--
+--=-au6cpXKqOq14GJSo6K1b
+Content-Type: application/x-pkcs7-signature; name="smime.p7s"
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Transfer-Encoding: base64
 
---OUEyeRINyY9r7rkz8NWRKqrGFm2wLnu3L
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCECow
+ggUcMIIEBKADAgECAhEA4rtJSHkq7AnpxKUY8ZlYZjANBgkqhkiG9w0BAQsFADCBlzELMAkGA1UE
+BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgG
+A1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhl
+bnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EwHhcNMTkwMTAyMDAwMDAwWhcNMjIwMTAxMjM1
+OTU5WjAkMSIwIAYJKoZIhvcNAQkBFhNkd213MkBpbmZyYWRlYWQub3JnMIIBIjANBgkqhkiG9w0B
+AQEFAAOCAQ8AMIIBCgKCAQEAsv3wObLTCbUA7GJqKj9vHGf+Fa+tpkO+ZRVve9EpNsMsfXhvFpb8
+RgL8vD+L133wK6csYoDU7zKiAo92FMUWaY1Hy6HqvVr9oevfTV3xhB5rQO1RHJoAfkvhy+wpjo7Q
+cXuzkOpibq2YurVStHAiGqAOMGMXhcVGqPuGhcVcVzVUjsvEzAV9Po9K2rpZ52FE4rDkpDK1pBK+
+uOAyOkgIg/cD8Kugav5tyapydeWMZRJQH1vMQ6OVT24CyAn2yXm2NgTQMS1mpzStP2ioPtTnszIQ
+Ih7ASVzhV6csHb8Yrkx8mgllOyrt9Y2kWRRJFm/FPRNEurOeNV6lnYAXOymVJwIDAQABo4IB0zCC
+Ac8wHwYDVR0jBBgwFoAUgq9sjPjF/pZhfOgfPStxSF7Ei8AwHQYDVR0OBBYEFLfuNf820LvaT4AK
+xrGK3EKx1DE7MA4GA1UdDwEB/wQEAwIFoDAMBgNVHRMBAf8EAjAAMB0GA1UdJQQWMBQGCCsGAQUF
+BwMEBggrBgEFBQcDAjBGBgNVHSAEPzA9MDsGDCsGAQQBsjEBAgEDBTArMCkGCCsGAQUFBwIBFh1o
+dHRwczovL3NlY3VyZS5jb21vZG8ubmV0L0NQUzBaBgNVHR8EUzBRME+gTaBLhklodHRwOi8vY3Js
+LmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWls
+Q0EuY3JsMIGLBggrBgEFBQcBAQR/MH0wVQYIKwYBBQUHMAKGSWh0dHA6Ly9jcnQuY29tb2RvY2Eu
+Y29tL0NPTU9ET1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcnQwJAYI
+KwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmNvbW9kb2NhLmNvbTAeBgNVHREEFzAVgRNkd213MkBpbmZy
+YWRlYWQub3JnMA0GCSqGSIb3DQEBCwUAA4IBAQALbSykFusvvVkSIWttcEeifOGGKs7Wx2f5f45b
+nv2ghcxK5URjUvCnJhg+soxOMoQLG6+nbhzzb2rLTdRVGbvjZH0fOOzq0LShq0EXsqnJbbuwJhK+
+PnBtqX5O23PMHutP1l88AtVN+Rb72oSvnD+dK6708JqqUx2MAFLMevrhJRXLjKb2Mm+/8XBpEw+B
+7DisN4TMlLB/d55WnT9UPNHmQ+3KFL7QrTO8hYExkU849g58Dn3Nw3oCbMUgny81ocrLlB2Z5fFG
+Qu1AdNiBA+kg/UxzyJZpFbKfCITd5yX49bOriL692aMVDyqUvh8fP+T99PqorH4cIJP6OxSTdxKM
+MIIFHDCCBASgAwIBAgIRAOK7SUh5KuwJ6cSlGPGZWGYwDQYJKoZIhvcNAQELBQAwgZcxCzAJBgNV
+BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
+BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRo
+ZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMB4XDTE5MDEwMjAwMDAwMFoXDTIyMDEwMTIz
+NTk1OVowJDEiMCAGCSqGSIb3DQEJARYTZHdtdzJAaW5mcmFkZWFkLm9yZzCCASIwDQYJKoZIhvcN
+AQEBBQADggEPADCCAQoCggEBALL98Dmy0wm1AOxiaio/bxxn/hWvraZDvmUVb3vRKTbDLH14bxaW
+/EYC/Lw/i9d98CunLGKA1O8yogKPdhTFFmmNR8uh6r1a/aHr301d8YQea0DtURyaAH5L4cvsKY6O
+0HF7s5DqYm6tmLq1UrRwIhqgDjBjF4XFRqj7hoXFXFc1VI7LxMwFfT6PStq6WedhROKw5KQytaQS
+vrjgMjpICIP3A/CroGr+bcmqcnXljGUSUB9bzEOjlU9uAsgJ9sl5tjYE0DEtZqc0rT9oqD7U57My
+ECIewElc4VenLB2/GK5MfJoJZTsq7fWNpFkUSRZvxT0TRLqznjVepZ2AFzsplScCAwEAAaOCAdMw
+ggHPMB8GA1UdIwQYMBaAFIKvbIz4xf6WYXzoHz0rcUhexIvAMB0GA1UdDgQWBBS37jX/NtC72k+A
+CsaxitxCsdQxOzAOBgNVHQ8BAf8EBAMCBaAwDAYDVR0TAQH/BAIwADAdBgNVHSUEFjAUBggrBgEF
+BQcDBAYIKwYBBQUHAwIwRgYDVR0gBD8wPTA7BgwrBgEEAbIxAQIBAwUwKzApBggrBgEFBQcCARYd
+aHR0cHM6Ly9zZWN1cmUuY29tb2RvLm5ldC9DUFMwWgYDVR0fBFMwUTBPoE2gS4ZJaHR0cDovL2Ny
+bC5jb21vZG9jYS5jb20vQ09NT0RPUlNBQ2xpZW50QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFp
+bENBLmNybDCBiwYIKwYBBQUHAQEEfzB9MFUGCCsGAQUFBzAChklodHRwOi8vY3J0LmNvbW9kb2Nh
+LmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWlsQ0EuY3J0MCQG
+CCsGAQUFBzABhhhodHRwOi8vb2NzcC5jb21vZG9jYS5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5m
+cmFkZWFkLm9yZzANBgkqhkiG9w0BAQsFAAOCAQEAC20spBbrL71ZEiFrbXBHonzhhirO1sdn+X+O
+W579oIXMSuVEY1LwpyYYPrKMTjKECxuvp24c829qy03UVRm742R9Hzjs6tC0oatBF7KpyW27sCYS
+vj5wbal+TttzzB7rT9ZfPALVTfkW+9qEr5w/nSuu9PCaqlMdjABSzHr64SUVy4ym9jJvv/FwaRMP
+gew4rDeEzJSwf3eeVp0/VDzR5kPtyhS+0K0zvIWBMZFPOPYOfA59zcN6AmzFIJ8vNaHKy5QdmeXx
+RkLtQHTYgQPpIP1Mc8iWaRWynwiE3ecl+PWzq4i+vdmjFQ8qlL4fHz/k/fT6qKx+HCCT+jsUk3cS
+jDCCBeYwggPOoAMCAQICEGqb4Tg7/ytrnwHV2binUlYwDQYJKoZIhvcNAQEMBQAwgYUxCzAJBgNV
+BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
+BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMSswKQYDVQQDEyJDT01PRE8gUlNBIENlcnRpZmljYXRp
+b24gQXV0aG9yaXR5MB4XDTEzMDExMDAwMDAwMFoXDTI4MDEwOTIzNTk1OVowgZcxCzAJBgNVBAYT
+AkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNV
+BAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50
+aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC
+AQEAvrOeV6wodnVAFsc4A5jTxhh2IVDzJXkLTLWg0X06WD6cpzEup/Y0dtmEatrQPTRI5Or1u6zf
++bGBSyD9aH95dDSmeny1nxdlYCeXIoymMv6pQHJGNcIDpFDIMypVpVSRsivlJTRENf+RKwrB6vcf
+WlP8dSsE3Rfywq09N0ZfxcBa39V0wsGtkGWC+eQKiz4pBZYKjrc5NOpG9qrxpZxyb4o4yNNwTqza
+aPpGRqXB7IMjtf7tTmU2jqPMLxFNe1VXj9XB1rHvbRikw8lBoNoSWY66nJN/VCJv5ym6Q0mdCbDK
+CMPybTjoNCQuelc0IAaO4nLUXk0BOSxSxt8kCvsUtQIDAQABo4IBPDCCATgwHwYDVR0jBBgwFoAU
+u69+Aj36pvE8hI6t7jiY7NkyMtQwHQYDVR0OBBYEFIKvbIz4xf6WYXzoHz0rcUhexIvAMA4GA1Ud
+DwEB/wQEAwIBhjASBgNVHRMBAf8ECDAGAQH/AgEAMBEGA1UdIAQKMAgwBgYEVR0gADBMBgNVHR8E
+RTBDMEGgP6A9hjtodHRwOi8vY3JsLmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDZXJ0aWZpY2F0aW9u
+QXV0aG9yaXR5LmNybDBxBggrBgEFBQcBAQRlMGMwOwYIKwYBBQUHMAKGL2h0dHA6Ly9jcnQuY29t
+b2RvY2EuY29tL0NPTU9ET1JTQUFkZFRydXN0Q0EuY3J0MCQGCCsGAQUFBzABhhhodHRwOi8vb2Nz
+cC5jb21vZG9jYS5jb20wDQYJKoZIhvcNAQEMBQADggIBAHhcsoEoNE887l9Wzp+XVuyPomsX9vP2
+SQgG1NgvNc3fQP7TcePo7EIMERoh42awGGsma65u/ITse2hKZHzT0CBxhuhb6txM1n/y78e/4ZOs
+0j8CGpfb+SJA3GaBQ+394k+z3ZByWPQedXLL1OdK8aRINTsjk/H5Ns77zwbjOKkDamxlpZ4TKSDM
+KVmU/PUWNMKSTvtlenlxBhh7ETrN543j/Q6qqgCWgWuMAXijnRglp9fyadqGOncjZjaaSOGTTFB+
+E2pvOUtY+hPebuPtTbq7vODqzCM6ryEhNhzf+enm0zlpXK7q332nXttNtjv7VFNYG+I31gnMrwfH
+M5tdhYF/8v5UY5g2xANPECTQdu9vWPoqNSGDt87b3gXb1AiGGaI06vzgkejL580ul+9hz9D0S0U4
+jkhJiA7EuTecP/CFtR72uYRBcunwwH3fciPjviDDAI9SnC/2aPY8ydehzuZutLbZdRJ5PDEJM/1t
+yZR2niOYihZ+FCbtf3D9mB12D4ln9icgc7CwaxpNSCPt8i/GqK2HsOgkL3VYnwtx7cJUmpvVdZ4o
+gnzgXtgtdk3ShrtOS1iAN2ZBXFiRmjVzmehoMof06r1xub+85hFQzVxZx5/bRaTKTlL8YXLI8nAb
+R9HWdFqzcOoB/hxfEyIQpx9/s81rgzdEZOofSlZHynoSMYIDyjCCA8YCAQEwga0wgZcxCzAJBgNV
+BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
+BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRo
+ZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA4rtJSHkq7AnpxKUY8ZlYZjANBglghkgB
+ZQMEAgEFAKCCAe0wGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMTkw
+MzI1MTQyODUxWjAvBgkqhkiG9w0BCQQxIgQggx/dAsAxtd0V0oMBK03fXaXD88ml7QB/nliMChh1
+Xckwgb4GCSsGAQQBgjcQBDGBsDCBrTCBlzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIg
+TWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQx
+PTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1h
+aWwgQ0ECEQDiu0lIeSrsCenEpRjxmVhmMIHABgsqhkiG9w0BCRACCzGBsKCBrTCBlzELMAkGA1UE
+BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgG
+A1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhl
+bnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0ECEQDiu0lIeSrsCenEpRjxmVhmMA0GCSqGSIb3
+DQEBAQUABIIBAD4akhQztiPUYC7JqXSAXisHhdXtCXBCU5GhQkUhzt2OEFaQV3PUSPnkz7ulkdIr
+r4WM3LOWmfTqfJvBuqtKgrMNJe4DM6Foze6oA2sCfvHVvCHqUnG9IZhWTRdcEPdz2rzKx/uL8pvx
+l19/c9eK+RaJKVRPsa0i/SYNIMtoqMMCSkkAHbhRitposTQjtp6BB3vhsU+gVm6t97DzvlaQoUVL
+CC9cWEGVdz2/Na1M88k6TE1162gp43MD/G7NvunH8AEZxc3L9uJN99JZamRlVSHfeRjpw6CDwkfb
+TYOT81lkpr3OQ5CG9oqEHNTtGD2bPMnT6krsU7HdGbL1/ePn3AcAAAAAAAA=
 
------BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEEkXcoRVGaqvbHPuAGo4ZA3AYyozkFAlyY5WIACgkQo4ZA3AYy
-ozmVbxAAgmGMsb521ImWzCfauPnm+tep4pu3vb4EKBM+pSlbARwL25A2qTu+tXc7
-tysKvC4U0OZ/oIPi4/q4NfpyvdRYXzS/SkQeK5paQHsxrjjzzsoEJyckbnjfqy5v
-NXMDEEYm0rZiWeeUCrY4iyZ73sbLUQNXk9RAVybbvg3mHm6TgSSXQZsn05YAwCIs
-Ue29RUIcmktloUObMxKekVQelu8txqpCLHBWq/wDkfxvAymkQKMj5ebGBBqkrSUW
-pEl1BPl1nPHpwuiYpwp9GBVqaoGoycRTm/SHJ6zEqy7f5DvWr0Wo7y0DMdRiTyfI
-xmTShn4gOfxKBy8sYAtr+gtdrqUjRaLd4JJnBzlGgEeTX9H3hOKL6vk2SHPO73Qd
-RnCE+3YHdgON3sv2/K6XqvF700jiLbB+nDPAqbUjr/mkOC7IYFs55GlZKNnokTVq
-OUaMSrBhNUFYkOZ86usN04EqNW8sFatNnHNhd8PhS0Rqcu0W0Q7X6rCSeI+mWf3z
-cO3XYHqtewV1OLt+LHrEs4GTvHdZWR0h4DNy2N4Tdd4ymIpMwCOXj6ioK8Sdo8Nc
-5XBi/5/uWCoGXzwcO1lTwWrSoFsZtYv3XRdyKCCBiGF1YlR9m1Dp4EJWLt6hply9
-g2RpzFk/QzNiPthoBwSz03DpLaKrFCn7sngIPmtKXGcuAdOGXqI=
-=hmRu
------END PGP SIGNATURE-----
+--=-au6cpXKqOq14GJSo6K1b--
 
---OUEyeRINyY9r7rkz8NWRKqrGFm2wLnu3L--
