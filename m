@@ -2,162 +2,112 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6059FC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:14:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 638B0C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:15:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3819C2083D
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:14:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BDF020896
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:15:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="1BHMTqWg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729382AbfCYQOK (ORCPT
+        id S1729450AbfCYQPO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 12:14:10 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:34032 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725747AbfCYQOJ (ORCPT
+        Mon, 25 Mar 2019 12:15:14 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:55384 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726127AbfCYQPM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 12:14:09 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2PGE5ls107453
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 12:14:08 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rf1duu2s6-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 12:14:08 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Mon, 25 Mar 2019 16:14:05 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 25 Mar 2019 16:14:02 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2PGE1FV46596148
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 25 Mar 2019 16:14:02 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D478CA405B;
-        Mon, 25 Mar 2019 16:14:01 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 03454A4054;
-        Mon, 25 Mar 2019 16:14:01 +0000 (GMT)
-Received: from rapoport-lnx (unknown [9.148.207.192])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Mon, 25 Mar 2019 16:14:00 +0000 (GMT)
-Date:   Mon, 25 Mar 2019 18:13:59 +0200
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Anup Patel <Anup.Patel@wdc.com>
-Cc:     Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 2/4] RISC-V: Fix memory reservation in setup_bootmem()
-References: <20190325092234.5451-1-anup.patel@wdc.com>
- <20190325092234.5451-3-anup.patel@wdc.com>
+        Mon, 25 Mar 2019 12:15:12 -0400
+Received: by mail-it1-f193.google.com with SMTP id z126so14803170itd.5
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 09:15:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=pqYUKVKMwv5YvhQa8I/3FZP8NUyCezJ/K6L0O0AKUWg=;
+        b=1BHMTqWgTQOGU1QcRFSfGlW0TLvJb8ToAg5PewmnCRznMEZLYJ0nJGeTrwQjfo1RZh
+         Qj/op9hkykWQJL4K1RYhgmWKr63lJeAT7vatheTSCR44PMsuIbTjjHjev0iSB6kYgkqa
+         EKY2ovK74Jpsy7LAnsIVJqtyEs8K8zqKYvaNTwpprHasIFtL8qz9BLuMcua0Hl+Qkhn/
+         nzSeadq1/Y6jio5y1LSFyhdhBVsDioDvkHD9Ph6feGBOWn+IiB6YUCCRIaWGns2WkD92
+         qgLTXOZG1irDj/TOuuLk/siDBdhRg474JSQspPnL2+QCtWB7uGjE3GILplHA2HAmkyEy
+         JzLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=pqYUKVKMwv5YvhQa8I/3FZP8NUyCezJ/K6L0O0AKUWg=;
+        b=oz6ZDtpQwhuPGqKo5jDN0dE8RTHjQdp0wjuUmpgyPCOB0LUgGZSkkXxtA3axGVGZHV
+         ITGr0uYBm4NuAZLsTCt0a3oO7IEz2p/F18fPpg/bk0CkDg+xq+t4W0EeBvE9usrJ/XJb
+         G8EYusoyxNMTv5sI+aTEVyUNl8Thudv6aciFxB3IZmj44DUDD09FKdKdb5hFmMXjeVe2
+         Cf6TKl8BZuUdsYFN16jLU+1gHRGueITW78A//FMqoaUFpG78/w60D+5Nq6CT8ULL38dq
+         NyYK6yD9MfC0AMDM7BmhOlYXqTlHoxGgccuqVjfG6XOuLUTBXt0jLjmtTji24Cmrcb9K
+         K1gw==
+X-Gm-Message-State: APjAAAXsO6RBfROWWKng6LLWcb8z1UtpM0weV+sbKoGR/ViRGoqP/cRF
+        7CMgacvqXYbx9G7eOv4/IZ/Sei2QVdIP5A==
+X-Google-Smtp-Source: APXvYqzhokJ/W9aLEg/odcdA2NQFO9N2nplNZZZZbt4De391Ejqe3S2SAaKA0D4tfu3m+PR/1pjmtw==
+X-Received: by 2002:a02:1ac3:: with SMTP id 186mr18374282jai.96.1553530510808;
+        Mon, 25 Mar 2019 09:15:10 -0700 (PDT)
+Received: from [192.168.1.158] ([216.160.245.98])
+        by smtp.gmail.com with ESMTPSA id i23sm6758795ion.40.2019.03.25.09.15.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 25 Mar 2019 09:15:09 -0700 (PDT)
+Subject: Re: [PATCH 1/2] io_uring: fix big-endian compat signal mask handling
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Hannes Reinecke <hare@suse.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        David Hildenbrand <david@redhat.com>,
+        Nikolay Borisov <nborisov@suse.com>,
+        linux-block <linux-block@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190325143521.34928-1-arnd@arndb.de>
+ <a29338b9-60ad-a4da-da9d-a0c522a5b9df@kernel.dk>
+ <CAK8P3a2SpydaLZijzUXxCzMKSEv3ymfpOCO4xSZOVfz2cwFxAQ@mail.gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <52bbd23b-3bda-31fc-3f38-16749b90be4c@kernel.dk>
+Date:   Mon, 25 Mar 2019 10:15:08 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190325092234.5451-3-anup.patel@wdc.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-TM-AS-GCONF: 00
-x-cbid: 19032516-0012-0000-0000-00000306EFF6
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19032516-0013-0000-0000-0000213E14EF
-Message-Id: <20190325161358.GA4783@rapoport-lnx>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-25_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903250120
+In-Reply-To: <CAK8P3a2SpydaLZijzUXxCzMKSEv3ymfpOCO4xSZOVfz2cwFxAQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 09:23:09AM +0000, Anup Patel wrote:
-> Currently, the setup_bootmem() reserves memory from RAM start to the
-> kernel end. This prevents us from exploring ways to use the RAM below
-> (or before) the kernel start hence this patch updates setup_bootmem()
-> to only reserve memory from the kernel start to the kernel end.
+On 3/25/19 10:11 AM, Arnd Bergmann wrote:
+> On Mon, Mar 25, 2019 at 5:05 PM Jens Axboe <axboe@kernel.dk> wrote:
+>>
+>> On 3/25/19 8:34 AM, Arnd Bergmann wrote:
+>>> On big-endian architectures, the signal masks are differnet
+>>> between 32-bit and 64-bit tasks, so we have to use a different
+>>> function for reading them from user space.
+>>>
+>>> io_cqring_wait() initially got this wrong, and always interprets
+>>> this as a native structure. This is ok on x86 and most arm64,
+>>> but not on s390, ppc64be, mips64be, sparc64 and parisc.
+>>
+>> Thanks Arnd, applied.
+>>
+>> Was there a 2/2 patch? I only received this one, 1/2.
 > 
-> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-
-Suggested-by: please :)
-
-> Signed-off-by: Anup Patel <anup.patel@wdc.com>
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
-
-Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
-
-> ---
->  arch/riscv/mm/init.c | 17 ++++++++---------
->  1 file changed, 8 insertions(+), 9 deletions(-)
+> Sorry I missed you on Cc:
+> https://lore.kernel.org/lkml/20190325144737.703921-1-arnd@arndb.de/T/#u
 > 
-> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-> index 8cf9ff1f9058..3e66b7cb3a61 100644
-> --- a/arch/riscv/mm/init.c
-> +++ b/arch/riscv/mm/init.c
-> @@ -29,6 +29,8 @@ unsigned long empty_zero_page[PAGE_SIZE / sizeof(unsigned long)]
->  							__page_aligned_bss;
->  EXPORT_SYMBOL(empty_zero_page);
->  
-> +extern char _start[];
-> +
->  static void __init zone_sizes_init(void)
->  {
->  	unsigned long max_zone_pfns[MAX_NR_ZONES] = { 0, };
-> @@ -108,23 +110,21 @@ void __init setup_bootmem(void)
->  {
->  	struct memblock_region *reg;
->  	phys_addr_t mem_size = 0;
-> +	phys_addr_t vmlinux_end = __pa(&_end);
-> +	phys_addr_t vmlinux_start = __pa(&_start);
->  
->  	/* Find the memory region containing the kernel */
->  	for_each_memblock(memory, reg) {
-> -		phys_addr_t vmlinux_end = __pa(_end);
->  		phys_addr_t end = reg->base + reg->size;
->  
-> -		if (reg->base <= vmlinux_end && vmlinux_end <= end) {
-> -			/*
-> -			 * Reserve from the start of the region to the end of
-> -			 * the kernel
-> -			 */
-> -			memblock_reserve(reg->base, vmlinux_end - reg->base);
-> +		if (reg->base <= vmlinux_end && vmlinux_end <= end)
->  			mem_size = min(reg->size, (phys_addr_t)-PAGE_OFFSET);
-> -		}
->  	}
->  	BUG_ON(mem_size == 0);
->  
-> +	/* Reserve from the start of the kernel to the end of the kernel */
-> +	memblock_reserve(vmlinux_start, vmlinux_end - vmlinux_start);
-> +
->  	set_max_mapnr(PFN_DOWN(mem_size));
->  	max_low_pfn = PFN_DOWN(memblock_end_of_DRAM());
->  
-> @@ -196,7 +196,6 @@ void __set_fixmap(enum fixed_addresses idx, phys_addr_t phys, pgprot_t prot)
->   */
->  asmlinkage void __init setup_vm(void)
->  {
-> -	extern char _start;
->  	uintptr_t i;
->  	uintptr_t pa = (uintptr_t) &_start;
->  	pgprot_t prot = __pgprot(pgprot_val(PAGE_KERNEL) | _PAGE_EXEC);
-> -- 
-> 2.17.1
-> 
+> This one went out to all the affected arch maintainers.
+
+Ah gotcha, just wanted to make sure I didn't miss a patch.
 
 -- 
-Sincerely yours,
-Mike.
+Jens Axboe
 
