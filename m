@@ -2,133 +2,102 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 286ECC10F03
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 23:49:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB125C10F03
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 23:53:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9E15206B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 23:48:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 866DA20848
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 23:53:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="UN9ZeObC"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="qq4Ew6ML"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727506AbfCYXs6 (ORCPT
+        id S1727492AbfCYXxB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 19:48:58 -0400
-Received: from mx0a-00190b01.pphosted.com ([67.231.149.131]:45276 "EHLO
-        mx0a-00190b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726061AbfCYXs6 (ORCPT
+        Mon, 25 Mar 2019 19:53:01 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:44137 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726061AbfCYXxB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 19:48:58 -0400
-X-Greylist: delayed 1857 seconds by postgrey-1.27 at vger.kernel.org; Mon, 25 Mar 2019 19:48:57 EDT
-Received: from pps.filterd (m0050095.ppops.net [127.0.0.1])
-        by m0050095.ppops.net-00190b01. (8.16.0.27/8.16.0.27) with SMTP id x2PNH4Vc021187;
-        Mon, 25 Mar 2019 23:17:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=from : to : subject :
- date : message-id : mime-version : content-type; s=jan2016.eng;
- bh=X7Yq7lzWiHoIVGny6a6yI9NtJiDITlYUlp8P78CG2P0=;
- b=UN9ZeObCJZKCK1BulL+2vqBUS796gPnE9DrZK9fEQjAr8Gi+poNwNTdohcxmr9PrkmfS
- ECp6rbQDeVRee2B9HK3gazeE6XJDlxy9uxLT2yCnc6F1sUeZu99yGd3EmYmq1x5en7+z
- Qfopo75GVTAOvOX0Z8QEfbQIEBtBAprrmo+40LZTBeCIV6NY/ingY2z3/bu7EcxzwiMy
- 00teumz9jTpHBKWpj/+A4rlJy8T2ZMWgFVPoKY8JbO9NNI0evApeECO21+HcpU6FKFIC
- 6mADlMVZOnssIm5UUpmSJ9dHBEj92Dv2gRSRT1iQvKX5y290BpCgvyT27eRvPadYMcg1 Nw== 
-Received: from prod-mail-ppoint1 (prod-mail-ppoint1.akamai.com [184.51.33.18])
-        by m0050095.ppops.net-00190b01. with ESMTP id 2rf30js1q3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 25 Mar 2019 23:17:50 +0000
-Received: from pps.filterd (prod-mail-ppoint1.akamai.com [127.0.0.1])
-        by prod-mail-ppoint1.akamai.com (8.16.0.27/8.16.0.27) with SMTP id x2PNHS4m028796;
-        Mon, 25 Mar 2019 19:17:49 -0400
-Received: from email.msg.corp.akamai.com ([172.27.123.34])
-        by prod-mail-ppoint1.akamai.com with ESMTP id 2rdg4vhyr1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 25 Mar 2019 19:17:48 -0400
-Received: from usma1ex-cas4.msg.corp.akamai.com (172.27.123.57) by
- usma1ex-dag1mb2.msg.corp.akamai.com (172.27.123.102) with Microsoft SMTP
- Server (TLS) id 15.0.1473.3; Mon, 25 Mar 2019 19:17:46 -0400
-Received: from igorcastle.kendall.corp.akamai.com (172.29.170.123) by
- usma1ex-cas4.msg.corp.akamai.com (172.27.123.57) with Microsoft SMTP Server
- id 15.0.1473.3 via Frontend Transport; Mon, 25 Mar 2019 16:17:46 -0700
-Received: by igorcastle.kendall.corp.akamai.com (Postfix, from userid 29659)
-        id 86C8161D63; Mon, 25 Mar 2019 19:17:46 -0400 (EDT)
-From:   Igor Lubashev <ilubashe@akamai.com>
-To:     Serge Hallyn <serge@hallyn.com>, James Morris <jmorris@namei.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list : CAPABILITIES" <linux-security-module@vger.kernel.org>,
-        Igor Lubashev <ilubashe@akamai.com>
-Subject: [PATCH 0/1] RFC: security: add SECURE_KEEP_FSUID to preserve fsuid/fsgid across execve
-Date:   Mon, 25 Mar 2019 19:17:43 -0400
-Message-ID: <1553555863-22455-1-git-send-email-ilubashe@akamai.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 25 Mar 2019 19:53:01 -0400
+Received: by mail-lf1-f66.google.com with SMTP id u9so7248368lfe.11
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 16:52:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2C3/YZIfjxsEf3cvSlX5xrvH6OIQ/5KnYDdX9pq9P+A=;
+        b=qq4Ew6MLnLW6H7k0yTZDHnW1OrwRWkLdpvqq104AtAjL9c0ZOKjv4nSxN72oWlTV8t
+         R0Yp4reZoRsrSQa1yJ3/WM6+/rj8eCs7sYtKU39UMwXW9+JWeGV16KkUkNaawGJ23iUz
+         qVBizpbS4M/vCm5bFA5kSfZC9pknB5v5acC7Hv2ULoNkzIHPZf1MwCsDwDgJ/49Ddke/
+         zs3rIqPb6I+JiWKtJqd/sDsujkDf4hpFiInsIHWXMaYeYJ7Ff73KYvuwuqTtQm6iU0Nb
+         emcVBZya+xoUvhKKVD6bsri8LAKuSK6CMlsDvxU+d6Rgi2kT7Vwx7xzXuOctgEW/e1Q0
+         Wqzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2C3/YZIfjxsEf3cvSlX5xrvH6OIQ/5KnYDdX9pq9P+A=;
+        b=ksP6722P3N5KV19uGCaXfk4rFKdLZiNqKvbXgjS+xnXDsUI6rmbjSyh1kuKq+PPKgq
+         c69qZ0TGJtu5q8Jw0X4zS7rjmspHoX1DBBoDLylz+hPDAvpNikhunW29Z1fjjX533CDI
+         88dPI85IdRaCYtt+iIwVCB9wDIfFGblPns58nbrKjIsg9I01byUoX39+kNEXwNt/NiDR
+         Z2IHUzxwj9hIbDOmLJ78YTCSZAbLm5Ti0Kze6cjoWXFrjfRGAmBHafI7W6mVDVMXdMcw
+         UFcbXzthCfzvSkQ8L8bX4AzJ9jbjyfdGspDgZiephp82ovH2P9HTgh8eVewX2xbkXxrF
+         ufHg==
+X-Gm-Message-State: APjAAAWjNfQmoSL4zKElFCkB52EnOGCU5CiMIJtKEJwMJ+1r8pd0ajeB
+        z9VuMp5hXIqTw3pZCRsbvNgLI8+Na9dhQKp++9GL
+X-Google-Smtp-Source: APXvYqynV8Ikurxi0oXyGibRiIrcukoR9Apwtj52nEez1ls3Ks4l8GRQ1gLcWvQ0Py7zhdEsAeiq5if4vmpBkXsdyaM=
+X-Received: by 2002:ac2:5921:: with SMTP id v1mr1130268lfi.135.1553557978700;
+ Mon, 25 Mar 2019 16:52:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-25_13:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=1 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=687
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1903250163
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-25_13:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=717 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903250163
+References: <20190325232125.1781-1-casey@schaufler-ca.com>
+In-Reply-To: <20190325232125.1781-1-casey@schaufler-ca.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Mon, 25 Mar 2019 19:52:47 -0400
+Message-ID: <CAHC9VhRJUxnEyFvJQ3PR+aQTnGt=GZ+EZ-oBQihEE9WgQ9n5EA@mail.gmail.com>
+Subject: Re: [PATCH] Bad file pattern in 'SELINUX SECURITY MODULE'
+To:     Casey Schaufler <casey@schaufler-ca.com>
+Cc:     joe@perches.com, linux-kernel@vger.kernel.org,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
+        keescook@chromium.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch introduces SECURE_KEEP_FSUID to allow fsuid/fsgid to be
-preserved across execve. I ran into a need for a patch trying to
-implement a set-uid-root wrapper for perf.
+On Mon, Mar 25, 2019 at 7:21 PM Casey Schaufler <casey@schaufler-ca.com> wrote:
+> The include/linux/selinux.h file has been removed.
+> Remove the entry from the MAINTAINERS file.
+>
+> Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
+> ---
+>  MAINTAINERS | 1 -
+>  1 file changed, 1 deletion(-)
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 3e5a5d263f29..1039c34dff3c 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -13947,7 +13947,6 @@ W:      https://selinuxproject.org
+>  W:     https://github.com/SELinuxProject
+>  T:     git git://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/selinux.git
+>  S:     Supported
+> -F:     include/linux/selinux*
 
-My set-uid-root wrapper implements local policies, allowing only
-certain users to run perf and only with certain arguments.
+This is fine with me, but if we're updating this file, we should
+probably add the following:
 
-Perf, like a number of other kernel features, checks euid (and KASLR
-access, required for perf top and perf report, also checks real uid)
-in addition to checking capabilities.  Hence, I must execve perf from
-my wrapper with root euid.
+F: include/uapi/linux/selinux_netlink.h
 
-However, when I execve perf with root euid, it automatically obtains
-root fsuid. This is very undesirable for a number of reasons:
-
-1. 'perf record' will create perf.data file that cannot be deleted by
-   the user.
-
-2. 'perf record' becomes insecure, allowing the user an ability to
-   overwrite any key file owned by root (and because of
-   time-of-check/time-of-use principle, nothing I can check in the
-   wrapper can reliably prevent the user from doing so).
-
-3. 'perf report' can potentially read files that the user does not
-   have permissions to read.
-
-
-Perf and KASLR are not the only kernel features that check for root
-uid/euid, so a general approach like the one in this patch seems
-warranted.
-
-
-This patch is the minimal set of changes required to achieve my goals.
-However, I am wondering if we might want to go a bit further and have
-a secure bit that stops fsuid/fsgid following euid/egid in all
-contexts, including set*uid as well as ignoring uid/suid/euid in
-setfsuid (and similarly for set*gid and setfsgid).
-
-I will update man pages as needed.
-
-Igor Lubashev (1):
-  security: add SECURE_KEEP_FSUID to preserve fsuid/fsgid across execve
-
- include/uapi/linux/securebits.h | 10 +++++++++-
- security/commoncap.c            |  9 +++++++--
- 2 files changed, 16 insertions(+), 3 deletions(-)
+>  F:     security/selinux/
+>  F:     scripts/selinux/
+>  F:     Documentation/admin-guide/LSM/SELinux.rst
 
 -- 
-2.7.4
-
+paul moore
+www.paul-moore.com
