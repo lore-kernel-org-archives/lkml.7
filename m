@@ -2,216 +2,168 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07EB2C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 13:41:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19E42C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 13:44:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE19F2084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 13:41:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2B7420830
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 13:44:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="HAtOT8bP"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="LHOiwx6p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728856AbfCYNld (ORCPT
+        id S1728972AbfCYNoF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 09:41:33 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:44584 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725554AbfCYNlc (ORCPT
+        Mon, 25 Mar 2019 09:44:05 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:55082 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725554AbfCYNoF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 09:41:32 -0400
-Received: by mail-pf1-f194.google.com with SMTP id y13so337198pfm.11
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 06:41:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=vmZ886XeEq2t6F/JowIHIfVi6NNlD5g4LWQjuV2UsAs=;
-        b=HAtOT8bPUUK6HLoHZFMCSdvQq+tBf8VlQYWxBdTc9CIeOV9GF77DFhZd0gwXC6EBF6
-         KeNe3curwr/ud6HPIuYL9MeN0Czr68cwiJn9L8f/VQQf7g62Ii0bteihNgyGQhvyO/1Y
-         2pfrGw2A5/gNq0kEaTsAWe+AeXujObl0kruY4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vmZ886XeEq2t6F/JowIHIfVi6NNlD5g4LWQjuV2UsAs=;
-        b=GxvokYppBZuwXHnxrHHVQoEuRnlJvekYTERQ9Sg9VwzTsWaUwa/Lh+LLy31KNdnhtc
-         iNi3syud8vKzTlY9YdXc1d6UrxIjLVwPiqvn0i6clvi75CjJfp8IEDSozLDgMz3ARrFZ
-         KOvHy0lfk0kwtG/5Et1tGgaD4tWAi3XQoynpCE5isQG0bpzB8zeOjzvhffKGC4dmzjXC
-         SuAOPblJYlWxug5tdVFuEnKLt70GOTZXRluu8oLgTsJFj3Ca4ORyYEyratIhfjUhTs6E
-         l05pn315rUK/z3lxtt1lCAoctK8ADfH4fm0pCQYGU2zi18s3XFFRY6YbDGByPw5O2Dpa
-         BNjQ==
-X-Gm-Message-State: APjAAAXTypO0HI178izyjFRtGbfm3/qQg9oQlevsnNOJ23zqc+2lee5D
-        +6zxZO9GxMfM2V5kyUYYysd0bA==
-X-Google-Smtp-Source: APXvYqwGB7NOycumzzY72q+dCcov1K4cdEOFY7Du6yDuNZA2EAHQ1qL4WwuCykSwLwz9s9fdTY52Ag==
-X-Received: by 2002:a65:63c1:: with SMTP id n1mr23169501pgv.339.1553521291764;
-        Mon, 25 Mar 2019 06:41:31 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id e21sm10288619pfd.177.2019.03.25.06.41.30
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 25 Mar 2019 06:41:30 -0700 (PDT)
-Date:   Mon, 25 Mar 2019 09:41:29 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        linux-kernel@vger.kernel.org,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>, tglx@linutronix.de,
-        Mike Galbraith <efault@gmx.de>
-Subject: Re: [PATCH v3] rcu: Allow to eliminate softirq processing from
- rcutree
-Message-ID: <20190325134129.GB182885@google.com>
-References: <20190320163532.mr32oi53iaueuizw@linutronix.de>
- <20190320173001.GM4102@linux.ibm.com>
- <20190320175952.yh6yfy64vaiurszw@linutronix.de>
- <20190320181210.GO4102@linux.ibm.com>
- <20190320181435.x3qyutwqllmq5zbk@linutronix.de>
- <20190320211333.eq7pwxnte7la67ph@linutronix.de>
- <20190322234819.GA99360@google.com>
- <20190323002519.GV4102@linux.ibm.com>
- <20190323161002.GA17112@linux.ibm.com>
- <20190324234211.GA28064@linux.ibm.com>
+        Mon, 25 Mar 2019 09:44:05 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2PDdDEp021316;
+        Mon, 25 Mar 2019 13:43:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=qrn9u5mHW4sG8yXU2kOK9D9Uq764IPV85IqK0rVex30=;
+ b=LHOiwx6pGJ3xsgNj7m9V3e2J+LgOrXMnShDVWl0kLml8v2HvrrD2Yih9CJjvPpIaUiKz
+ IyC/A9V/HTsRFF/4K45kQMyEDGN9s9xg1PxWi2ZXnJ15a8AO0pkDUvabpHmqC7ColAws
+ sZie+x4uua4SBu5dtpZXq73z6urd0xKQKK8Ky0j7KLh6ifxcOujXtSjXKsQKyrw3xs2n
+ dAHMj6ja7k1Ej3RJdZwU7V4audgoRD/zFNmdpwF52NblDWrK1sBARyHJnPkfiQrTVDaE
+ hWOMzLci8Of42MfCc2ju8fjLB8soj6zjxCZpoCmdWOICS2Xur4ZO2S9XGDHApWWKX8Rr xA== 
+Received: from userv0022.oracle.com (userv0022.oracle.com [156.151.31.74])
+        by userp2120.oracle.com with ESMTP id 2re6dj444r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 25 Mar 2019 13:43:38 +0000
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x2PDhbEC019529
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 25 Mar 2019 13:43:38 GMT
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x2PDhaK4008237;
+        Mon, 25 Mar 2019 13:43:37 GMT
+Received: from dhcp-burlington7-2nd-B-east-10-152-55-162.usdhcp.oraclecorp.com (/10.152.32.65)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 25 Mar 2019 06:43:36 -0700
+Subject: Re: [PATCH] x86/xen: Add "xen_timer_slop" command line option
+To:     luca abeni <luca.abeni@santannapisa.it>,
+        Dario Faggioli <dfaggioli@suse.com>
+Cc:     thibodux@gmail.com, xen-devel@lists.xenproject.org,
+        linux-kernel@vger.kernel.org, oleksandr_andrushchenko@epam.com,
+        tglx@linutronix.de, jgross@suse.com, ryan.thibodeaux@starlab.io
+References: <1553279397-130201-1-git-send-email-ryan.thibodeaux@starlab.io>
+ <abf65a68-9463-0f0e-1f51-6eefd3cacc88@oracle.com>
+ <52bfeae7c256faec444b69efe58d363ad60c3fc5.camel@suse.com>
+ <20190323114151.5cebf31b@sweethome> <20190325130530.56603806@luca64>
+From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=boris.ostrovsky@oracle.com; prefer-encrypt=mutual; keydata=
+ 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
+ Jg6OxFYd01z+a+oL
+Message-ID: <69e40698-f7ae-11c3-e4b7-dda4f1fadcf6@oracle.com>
+Date:   Mon, 25 Mar 2019 09:43:20 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190324234211.GA28064@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190325130530.56603806@luca64>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9205 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=891 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903250102
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 24, 2019 at 04:42:11PM -0700, Paul E. McKenney wrote:
-> On Sat, Mar 23, 2019 at 09:10:02AM -0700, Paul E. McKenney wrote:
-> > On Fri, Mar 22, 2019 at 05:25:19PM -0700, Paul E. McKenney wrote:
-> > > On Fri, Mar 22, 2019 at 07:48:19PM -0400, Joel Fernandes wrote:
-> > > > On Wed, Mar 20, 2019 at 10:13:33PM +0100, Sebastian Andrzej Siewior wrote:
-> > > > > Running RCU out of softirq is a problem for some workloads that would
-> > > > > like to manage RCU core processing independently of other softirq
-> > > > > work, for example, setting kthread priority.  This commit therefore
-> > > > > introduces the `rcunosoftirq' option which moves the RCU core work
-> > > > > from softirq to a per-CPU/per-flavor SCHED_OTHER kthread named rcuc.
-> > > > > The SCHED_OTHER approach avoids the scalability problems that appeared
-> > > > > with the earlier attempt to move RCU core processing to from softirq
-> > > > > to kthreads.  That said, kernels built with RCU_BOOST=y will run the
-> > > > > rcuc kthreads at the RCU-boosting priority.
-> > > > [snip]
-> > > > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> > > > > index 0f31b79eb6761..05a1e42fdaf10 100644
-> > > > > --- a/kernel/rcu/tree.c
-> > > > > +++ b/kernel/rcu/tree.c
-> > > > > @@ -51,6 +51,12 @@
-> > > > >  #include <linux/tick.h>
-> > > > >  #include <linux/sysrq.h>
-> > > > >  #include <linux/kprobes.h>
-> > > > > +#include <linux/gfp.h>
-> > > > > +#include <linux/oom.h>
-> > > > > +#include <linux/smpboot.h>
-> > > > > +#include <linux/jiffies.h>
-> > > > > +#include <linux/sched/isolation.h>
-> > > > > +#include "../time/tick-internal.h"
-> > > > >  
-> > > > >  #include "tree.h"
-> > > > >  #include "rcu.h"
-> > > > > @@ -92,6 +98,9 @@ struct rcu_state rcu_state = {
-> > > > >  /* Dump rcu_node combining tree at boot to verify correct setup. */
-> > > > >  static bool dump_tree;
-> > > > >  module_param(dump_tree, bool, 0444);
-> > > > > +/* Move RCU_SOFTIRQ to rcuc kthreads. */
-> > > > > +static bool use_softirq = 1;
-> > > > > +module_param(use_softirq, bool, 0444);
-> > > > >  /* Control rcu_node-tree auto-balancing at boot time. */
-> > > > >  static bool rcu_fanout_exact;
-> > > > >  module_param(rcu_fanout_exact, bool, 0444);
-> > > > > @@ -2253,7 +2262,7 @@ void rcu_force_quiescent_state(void)
-> > > > >  EXPORT_SYMBOL_GPL(rcu_force_quiescent_state);
-> > > > >  
-> > > > >  /* Perform RCU core processing work for the current CPU.  */
-> > > > > -static __latent_entropy void rcu_core(struct softirq_action *unused)
-> > > > > +static __latent_entropy void rcu_core(void)
-> > > > >  {
-> > > > >  	unsigned long flags;
-> > > > >  	struct rcu_data *rdp = raw_cpu_ptr(&rcu_data);
-> > > > > @@ -2295,6 +2304,34 @@ static __latent_entropy void rcu_core(struct softirq_action *unused)
-> > > > >  	trace_rcu_utilization(TPS("End RCU core"));
-> > > > >  }
-> > > > >  
-> > > > > +static void rcu_core_si(struct softirq_action *h)
-> > > > > +{
-> > > > > +	rcu_core();
-> > > > > +}
-> > > > > +
-> > > > > +static void rcu_wake_cond(struct task_struct *t, int status)
-> > > > > +{
-> > > > > +	/*
-> > > > > +	 * If the thread is yielding, only wake it when this
-> > > > > +	 * is invoked from idle
-> > > > > +	 */
-> > > > > +	if (t && (status != RCU_KTHREAD_YIELDING || is_idle_task(current)))
-> > > > > +		wake_up_process(t);
-> > > > > +}
-> > > > > +
-> > > > > +static void invoke_rcu_core_kthread(void)
-> > > > > +{
-> > > > > +	struct task_struct *t;
-> > > > > +	unsigned long flags;
-> > > > > +
-> > > > > +	local_irq_save(flags);
-> > > > > +	__this_cpu_write(rcu_data.rcu_cpu_has_work, 1);
-> > > > > +	t = __this_cpu_read(rcu_data.rcu_cpu_kthread_task);
-> > > > > +	if (t != NULL && t != current)
-> > > > > +		rcu_wake_cond(t, __this_cpu_read(rcu_data.rcu_cpu_kthread_status));
-> > > > > +	local_irq_restore(flags);
-> > > > > +}
-> > > > > +
-> > > > >  /*
-> > > > >   * Schedule RCU callback invocation.  If the running implementation of RCU
-> > > > >   * does not support RCU priority boosting, just do a direct call, otherwise
-> > > > > @@ -2306,19 +2343,95 @@ static void invoke_rcu_callbacks(struct rcu_data *rdp)
-> > > > >  {
-> > > > >  	if (unlikely(!READ_ONCE(rcu_scheduler_fully_active)))
-> > > > >  		return;
-> > > > > -	if (likely(!rcu_state.boost)) {
-> > > > > -		rcu_do_batch(rdp);
-> > > > > -		return;
-> > > > > -	}
-> > > > > -	invoke_rcu_callbacks_kthread();
-> > > > > +	if (rcu_state.boost || !use_softirq)
-> > > > > +		invoke_rcu_core_kthread();
-> > > > > +	rcu_do_batch(rdp);
-> > > > 
-> > > > Shouldn't there be an else before the rcu_do_batch? If we are waking up the
-> > > > rcuc thread, then that will do the rcu_do_batch when it runs right?
-> > > > 
-> > > > Something like:
-> > > > 	if (rcu_state.boost || !use_softirq)
-> > > > 		invoke_rcu_core_kthread();
-> > > > 	else
-> > > > 		rcu_do_batch(rdp);
-> > > > 
-> > > > Previous code similarly had a return; also.
-> > > 
-> > > I believe that you are correct, so I will give it a shot.  Good eyes!
-> > 
-> > Yet rcutorture disagrees.  Actually, if we are using rcuc kthreads, this
-> > is only ever invoked from within tha thread, so the only check we need is
-> > for the scheduler being operational.  I am therefore trying this one out.
-> > 
-> > Thoughts?
-> 
-> And rcutorture likes this one, though at this point this function should
-> be pulled into its sole callsite.  ;-)
+On 3/25/19 8:05 AM, luca abeni wrote:
+> Hi all,
+>
+> On Sat, 23 Mar 2019 11:41:51 +0100
+> luca abeni <luca.abeni@santannapisa.it> wrote:
+> [...]
+>>>> Is there any data that shows effects of using this new parameter?
+>>>>     
+>>> Yes, I've done some research and experiments on this. I did it
+>>> together with a friend, which I'm Cc-ing, as I'm not sure we're
+>>> ready/capable to share the results, yet (Luca?).  
+>> I think we can easily share the experimental data (cyclictest output
+>> and plots).
+>>
+>> Moreover, we can share the scripts and tools for running the
+>> experiments (so, everyone can easily reproduce the numbers by simply
+>> typing "make" and waiting for some time :)
+>>
+>>
+>> I'll try to package the results and the scripts/tools this evening,
+>> and I'll send them.
+> Sorry for the delay. I put some quick results here:
+> http://retis.santannapisa.it/luca/XenTimers/
+> (there also is a link to the scripts to be used for reproducing the
+> results). The latencies have been measured by running cyclictest in the
+> guest (see the scripts for details).
+>
+> The picture shows the latencies measured with an unpatched guest kernel
+> and with a guest kernel having TIMER_SLOP set to 1000 (arbitrary small
+> value :).
+> All the experiments have been performed booting the hypervisor with a
+> small timer_slop (the hypervisor's one) value. So, they show that
+> decreasing the hypervisor's timer_slop is not enough to measure low
+> latencies with cyclictest.
 
-Great, I'm glad the testing is going well.
 
-By the way I enlightened that jitter.sh script about CPU offline issues as
-well (sent patch last week).  Let me know if you agree with it.
 
-thanks!
+I have a couple of questions:
+* Does it make sense to make this a tunable for other clockevent devices
+as well?
+* This patch adjusts min value. Could max value (ever) need a similar
+adjustment?
 
- - Joel
-
+-boris
