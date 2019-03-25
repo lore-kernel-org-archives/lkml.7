@@ -2,142 +2,163 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DATE_IN_PAST_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 905A3C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:43:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92C77C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:43:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6241320863
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:43:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BBC520863
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:43:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729774AbfCYQm7 (ORCPT
+        id S1729805AbfCYQnm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 12:42:59 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:57632 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725795AbfCYQm7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 12:42:59 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2PGUDlm059936
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 12:42:58 -0400
-Received: from e16.ny.us.ibm.com (e16.ny.us.ibm.com [129.33.205.206])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rf0ss79ga-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 12:42:57 -0400
-Received: from localhost
-        by e16.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Mon, 25 Mar 2019 16:42:56 -0000
-Received: from b01cxnp22033.gho.pok.ibm.com (9.57.198.23)
-        by e16.ny.us.ibm.com (146.89.104.203) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 25 Mar 2019 16:42:53 -0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2PGgqqC26148930
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 25 Mar 2019 16:42:52 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A40CFB2064;
-        Mon, 25 Mar 2019 16:42:52 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 86560B2065;
-        Mon, 25 Mar 2019 16:42:52 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon, 25 Mar 2019 16:42:52 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id B4F0216C42B1; Mon, 25 Mar 2019 09:42:53 -0700 (PDT)
-Date:   Mon, 25 Mar 2019 09:42:53 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        linux-kselftest <linux-kselftest@vger.kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH] rcutorture: Select from only online CPUs
-Reply-To: paulmck@linux.ibm.com
-References: <20190323034619.15792-1-joel@joelfernandes.org>
- <20190325150133.GA4102@linux.ibm.com>
- <CAEXW_YRDfOEr-hdbKGDC6amRaaqTCCBsowRhVwDqJd-1BoO17g@mail.gmail.com>
+        Mon, 25 Mar 2019 12:43:42 -0400
+Received: from mga04.intel.com ([192.55.52.120]:17242 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728957AbfCYQnm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 12:43:42 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Mar 2019 09:43:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,269,1549958400"; 
+   d="scan'208";a="143686285"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by FMSMGA003.fm.intel.com with ESMTP; 25 Mar 2019 09:43:37 -0700
+Date:   Mon, 25 Mar 2019 01:42:26 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Michal Hocko <mhocko@suse.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Rich Felker <dalias@libc.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>, linux-mm <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-mips@vger.kernel.org,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Linux-sh <linux-sh@vger.kernel.org>, sparclinux@vger.kernel.org,
+        linux-rdma@vger.kernel.org,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: Re: [RESEND 4/7] mm/gup: Add FOLL_LONGTERM capability to GUP fast
+Message-ID: <20190325084225.GC16366@iweiny-DESK2.sc.intel.com>
+References: <20190317183438.2057-1-ira.weiny@intel.com>
+ <20190317183438.2057-5-ira.weiny@intel.com>
+ <CAA9_cmcx-Bqo=CFuSj7Xcap3e5uaAot2reL2T74C47Ut6_KtQw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAEXW_YRDfOEr-hdbKGDC6amRaaqTCCBsowRhVwDqJd-1BoO17g@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19032516-0072-0000-0000-000004101EC2
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010812; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000282; SDB=6.01179527; UDB=6.00617206; IPR=6.00960238;
- MB=3.00026149; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-25 16:42:55
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19032516-0073-0000-0000-00004B99E41A
-Message-Id: <20190325164253.GE4102@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-25_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903250122
+In-Reply-To: <CAA9_cmcx-Bqo=CFuSj7Xcap3e5uaAot2reL2T74C47Ut6_KtQw@mail.gmail.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 12:33:37PM -0400, Joel Fernandes wrote:
-> On Mon, Mar 25, 2019 at 11:02 AM Paul E. McKenney <paulmck@linux.ibm.com> wrote:
+On Fri, Mar 22, 2019 at 03:12:55PM -0700, Dan Williams wrote:
+> On Sun, Mar 17, 2019 at 7:36 PM <ira.weiny@intel.com> wrote:
 > >
-> > On Fri, Mar 22, 2019 at 11:46:19PM -0400, Joel Fernandes (Google) wrote:
-> > > The rcutorture jitter.sh script selects a random CPU but does not check
-> > > if it is offline or online. This leads to taskset errors many times. On
-> > > my machine, hyper threading is disabled so half the cores are offline
-> > > causing taskset errors a lot of times. Let us fix this by checking from
-> > > only the online CPUs on the system.
-> > >
-> > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > From: Ira Weiny <ira.weiny@intel.com>
 > >
-> > Good catch!
+> > DAX pages were previously unprotected from longterm pins when users
+> > called get_user_pages_fast().
 > >
-> > Please see below for one suggestion for simplification.
+> > Use the new FOLL_LONGTERM flag to check for DEVMAP pages and fall
+> > back to regular GUP processing if a DEVMAP page is encountered.
 > >
-> >                                                         Thanx, Paul
+> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> > ---
+> >  mm/gup.c | 29 +++++++++++++++++++++++++----
+> >  1 file changed, 25 insertions(+), 4 deletions(-)
 > >
-> > > ---
-> > >  tools/testing/selftests/rcutorture/bin/jitter.sh | 11 ++++++++++-
-> > >  1 file changed, 10 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/tools/testing/selftests/rcutorture/bin/jitter.sh b/tools/testing/selftests/rcutorture/bin/jitter.sh
-> > > index 3633828375e3..53bf9d99b5cd 100755
-> > > --- a/tools/testing/selftests/rcutorture/bin/jitter.sh
-> > > +++ b/tools/testing/selftests/rcutorture/bin/jitter.sh
-> > > @@ -47,10 +47,19 @@ do
-> > >               exit 0;
-> > >       fi
-> > >
-> > > -     # Set affinity to randomly selected CPU
-> > > +     # Set affinity to randomly selected online CPU
-> > >       cpus=`ls /sys/devices/system/cpu/*/online |
+> > diff --git a/mm/gup.c b/mm/gup.c
+> > index 0684a9536207..173db0c44678 100644
+> > --- a/mm/gup.c
+> > +++ b/mm/gup.c
+> > @@ -1600,6 +1600,9 @@ static int gup_pte_range(pmd_t pmd, unsigned long addr, unsigned long end,
+> >                         goto pte_unmap;
 > >
-> >         cpus=`grep 1 /sys/devices/system/cpu/*/online |
+> >                 if (pte_devmap(pte)) {
+> > +                       if (unlikely(flags & FOLL_LONGTERM))
+> > +                               goto pte_unmap;
+> > +
+> >                         pgmap = get_dev_pagemap(pte_pfn(pte), pgmap);
+> >                         if (unlikely(!pgmap)) {
+> >                                 undo_dev_pagemap(nr, nr_start, pages);
+> > @@ -1739,8 +1742,11 @@ static int gup_huge_pmd(pmd_t orig, pmd_t *pmdp, unsigned long addr,
+> >         if (!pmd_access_permitted(orig, flags & FOLL_WRITE))
+> >                 return 0;
+> >
+> > -       if (pmd_devmap(orig))
+> > +       if (pmd_devmap(orig)) {
+> > +               if (unlikely(flags & FOLL_LONGTERM))
+> > +                       return 0;
+> >                 return __gup_device_huge_pmd(orig, pmdp, addr, end, pages, nr);
+> > +       }
+> >
+> >         refs = 0;
+> >         page = pmd_page(orig) + ((addr & ~PMD_MASK) >> PAGE_SHIFT);
+> > @@ -1777,8 +1783,11 @@ static int gup_huge_pud(pud_t orig, pud_t *pudp, unsigned long addr,
+> >         if (!pud_access_permitted(orig, flags & FOLL_WRITE))
+> >                 return 0;
+> >
+> > -       if (pud_devmap(orig))
+> > +       if (pud_devmap(orig)) {
+> > +               if (unlikely(flags & FOLL_LONGTERM))
+> > +                       return 0;
+> >                 return __gup_device_huge_pud(orig, pudp, addr, end, pages, nr);
+> > +       }
+> >
+> >         refs = 0;
+> >         page = pud_page(orig) + ((addr & ~PUD_MASK) >> PAGE_SHIFT);
+> > @@ -2066,8 +2075,20 @@ int get_user_pages_fast(unsigned long start, int nr_pages,
+> >                 start += nr << PAGE_SHIFT;
+> >                 pages += nr;
+> >
+> > -               ret = get_user_pages_unlocked(start, nr_pages - nr, pages,
+> > -                                             gup_flags);
+> > +               if (gup_flags & FOLL_LONGTERM) {
+> > +                       down_read(&current->mm->mmap_sem);
+> > +                       ret = __gup_longterm_locked(current, current->mm,
+> > +                                                   start, nr_pages - nr,
+> > +                                                   pages, NULL, gup_flags);
+> > +                       up_read(&current->mm->mmap_sem);
+> > +               } else {
+> > +                       /*
+> > +                        * retain FAULT_FOLL_ALLOW_RETRY optimization if
+> > +                        * possible
+> > +                        */
+> > +                       ret = get_user_pages_unlocked(start, nr_pages - nr,
+> > +                                                     pages, gup_flags);
 > 
-> Yes, this is better. Lets do it this way :)
-> 
-> > >               sed -e 's,/[^/]*$,,' -e 's/^[^0-9]*//' |
-> > >               grep -v '^0*$'`
-> >
-> > Of course, now I have no idea why I excluded CPU 0...  :-/
-> 
-> Yes, I was wondering as well about that :-)
+> I couldn't immediately grok why this path needs to branch on
+> FOLL_LONGTERM? Won't get_user_pages_unlocked(..., FOLL_LONGTERM) do
+> the right thing?
 
-Please feel free to try including CPU 0 and running the set of single-CPU
-rcutorture scenarios.  ;-)
+Unfortunately holding the lock is required to support FOLL_LONGTERM (to check
+the VMAs) but we don't want to hold the lock to be optimal (specifically allow
+FAULT_FOLL_ALLOW_RETRY).  So I'm maintaining the optimization for *_fast users
+who do not specify FOLL_LONGTERM.
 
-							Thanx, Paul
+Another way to do this would have been to define __gup_longterm_unlocked with
+the above logic, but that seemed overkill at this point.
+
+Ira
 
