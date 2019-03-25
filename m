@@ -2,230 +2,118 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 012E1C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:33:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DF38C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:33:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C417620863
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:33:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 697B72087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:33:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="nWZGzzrs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729714AbfCYQdn (ORCPT
+        id S1729774AbfCYQdw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 12:33:43 -0400
-Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:35021 "EHLO
-        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726743AbfCYQdm (ORCPT
+        Mon, 25 Mar 2019 12:33:52 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:34274 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726743AbfCYQdv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 12:33:42 -0400
-Received: from [192.168.2.10] ([212.251.195.8])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id 8SXXhhRJONG8z8SXahQXQV; Mon, 25 Mar 2019 17:33:39 +0100
-Subject: Re: [PATCH v3 2/2] media: docs-rst: Document memory-to-memory video
- encoder interface
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-To:     Tomasz Figa <tfiga@chromium.org>, linux-media@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Pawel Osciak <posciak@chromium.org>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Kamil Debski <kamil@wypas.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Jeongtae Park <jtp.park@samsung.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        =?UTF-8?B?VGlmZmFueSBMaW4gKOael+aFp+ePiik=?= 
-        <tiffany.lin@mediatek.com>,
-        =?UTF-8?B?QW5kcmV3LUNUIENoZW4gKOmZs+aZuui/qik=?= 
-        <andrew-ct.chen@mediatek.com>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Todor Tomov <todor.tomov@linaro.org>,
-        Nicolas Dufresne <nicolas@ndufresne.ca>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        dave.stevenson@raspberrypi.org,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Maxime Jourdan <maxi.jourdan@wanadoo.fr>
-References: <20190124100419.26492-1-tfiga@chromium.org>
- <20190124100419.26492-3-tfiga@chromium.org>
- <cb3c73e0-9481-54d1-8730-69e51655d7d8@xs4all.nl>
-Message-ID: <7528bda2-a5a1-8f06-603c-00b7990c8bce@xs4all.nl>
-Date:   Mon, 25 Mar 2019 17:33:35 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Mon, 25 Mar 2019 12:33:51 -0400
+Received: by mail-lf1-f67.google.com with SMTP id y18so6566529lfe.1
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 09:33:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=deBhC4WtykdeZjvbpe4XikrP/yxal5UWT11yre07fd8=;
+        b=nWZGzzrsQt8f5e/nstnHJta3X24/JQZPx5ZsTwWrjpvtWlP2z23ZLk5HEnLLO+YHzA
+         ndcvKGyHMwC41KeSlYYVg1ZL3dSHj9TWI+pqVfjjJLORfhzf6TqiUBzpaLTa9Dy2O6/4
+         pxhGU49EGVUDj8GGqHCpyGhDE2gnP7fOVpeuQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=deBhC4WtykdeZjvbpe4XikrP/yxal5UWT11yre07fd8=;
+        b=E6YEWitUklEUlgSaAvw+3am4FnFrfuIw4fVHMSypSek6wHICA2lHTdmz6xSyvWbmUO
+         YLv2qJl/ef8t/aoSY+1Bb0O1sKu7o99kX9CfpOM/kqvB2PmN6JNG6VGLwk2J2P+MxlxV
+         kbNEavpkUP/xXJKhIfEkJrYOF0S7VjkyOh8cwBWs2pBtElPlvNzxbWV+0URccRSfqQ1n
+         9SEL49a+k3A/lReDbvboohMbIZDGDpasfWR48gmQpro3xv0AbAqfOHWV8ThSUq1BGisV
+         CNII3KtGT4IDCfF6FiqNuWwpwP8I9Nqyy6qn6DK77DBDx2x1+fyKTUWobY0okMA1hmDA
+         /23g==
+X-Gm-Message-State: APjAAAU8nJvkxIH7SnYyKehAt6os3ZEgw36Pz5M3CAuBtWQS44WkjpyN
+        4GdF0HtX654YPKbyUJbYa5R1KxY2eFV/lvr002/Jlg==
+X-Google-Smtp-Source: APXvYqzm2tcXB2HnO5KULcCIrt7Y8+TyBnvu1eym1PcbtPgwWeZcLsS4Yyq6+SCsbWs1CgnAgeljJDX0RVu+agaMQlU=
+X-Received: by 2002:ac2:44c3:: with SMTP id d3mr12686495lfm.14.1553531629616;
+ Mon, 25 Mar 2019 09:33:49 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <cb3c73e0-9481-54d1-8730-69e51655d7d8@xs4all.nl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfCLbI3jmaDk8Uum5+KFABJ+G45/uDS3DOCdi6YkAkQtmZo9jG51zyi18h/HPO9LRRWtGu+N2H0qmf97Lg6Z43fdZ62AhpWAGoCKbIEPaZ/WL9eQlwvpB
- K+b7gjqUmgj03vche3S37bmXHs5bwKqYFsCM3/vROOET0Cd16j8hkw7wxSibdzg1e9TSO/6B+jcsG9mNYNzE2EY4PTi4+Vdk+WZZP6GJKwhBlycSkWxjtBgn
- 768lBNcOcRPT0IeaWAe4zrgQplVspL55EOmEPOm9JjUYX+RoA06vEbEXynatim5NM9/DC5KOcxXinmfL7XBzwmBi3G9RA4Hgsol5b7IlffAPaYcFVVUISj3D
- yFaZ/bzRCDLGhoPvGXkC1cetWu7yyY3Dga9W4BLItO/8LC6veTfPBDYYYeYdAhG8IF78axy8yyLDvG72c/acSazwxHAY/iqZqpU4IGf4BQ7CqKQPp1eLgpCg
- fGdvAeHdn1A0Pay+0TSdEj35n4xnF2nvmv9C0gItBPEdmgnqK/tl7d+HVdquS6q+UW7PI0XFEWn9eRn+eO972mR66Utxcadok0aKoC9SQa0m2QxufyOuH9Hs
- JTMG3sp7Gop4eqHDIJckDZLaJwDVCpJYGx1AI1BtBvze0VUPmyBsSgDLYagyAuujUJtqPqT43xWwIVEvpEJyAvF2zOQ4tcfrkonHfQPt9+Qm7+YB/D2vYZjn
- SuotWNKUgkgNPAKCdvf9Ecfd3Q3OvvVGoaNpB0kjhZ6NHL1cPcw9arCjtn1Zzl4O9wx7gn/r1u4rdvYFDAFT7ohWHakL8UQmQSlZo3an3e2zL9yDn6565eJK
- Lm1nVO48NCNfe5vzI4fFdXI3Pn5A+H2EaIZSgWjGJzlc/lOvsUiwZ1Q2npjihEIDNn+wFwieVgJVNII4aZs=
+References: <20190323034619.15792-1-joel@joelfernandes.org> <20190325150133.GA4102@linux.ibm.com>
+In-Reply-To: <20190325150133.GA4102@linux.ibm.com>
+From:   Joel Fernandes <joel@joelfernandes.org>
+Date:   Mon, 25 Mar 2019 12:33:37 -0400
+Message-ID: <CAEXW_YRDfOEr-hdbKGDC6amRaaqTCCBsowRhVwDqJd-1BoO17g@mail.gmail.com>
+Subject: Re: [PATCH] rcutorture: Select from only online CPUs
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        linux-kselftest <linux-kselftest@vger.kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/25/19 2:12 PM, Hans Verkuil wrote:
-> Another comment found while creating compliance tests:
-> 
-> On 1/24/19 11:04 AM, Tomasz Figa wrote:
->> +Drain
->> +=====
->> +
->> +To ensure that all the queued ``OUTPUT`` buffers have been processed and the
->> +related ``CAPTURE`` buffers are given to the client, the client must follow the
->> +drain sequence described below. After the drain sequence ends, the client has
->> +received all encoded frames for all ``OUTPUT`` buffers queued before the
->> +sequence was started.
->> +
->> +1. Begin the drain sequence by issuing :c:func:`VIDIOC_ENCODER_CMD`.
->> +
->> +   * **Required fields:**
->> +
->> +     ``cmd``
->> +         set to ``V4L2_ENC_CMD_STOP``
->> +
->> +     ``flags``
->> +         set to 0
->> +
->> +     ``pts``
->> +         set to 0
->> +
->> +   .. warning::
->> +
->> +      The sequence can be only initiated if both ``OUTPUT`` and ``CAPTURE``
->> +      queues are streaming. For compatibility reasons, the call to
->> +      :c:func:`VIDIOC_ENCODER_CMD` will not fail even if any of the queues is
->> +      not streaming, but at the same time it will not initiate the `Drain`
->> +      sequence and so the steps described below would not be applicable.
->> +
->> +2. Any ``OUTPUT`` buffers queued by the client before the
->> +   :c:func:`VIDIOC_ENCODER_CMD` was issued will be processed and encoded as
->> +   normal. The client must continue to handle both queues independently,
->> +   similarly to normal encode operation. This includes:
->> +
->> +   * queuing and dequeuing ``CAPTURE`` buffers, until a buffer marked with the
->> +     ``V4L2_BUF_FLAG_LAST`` flag is dequeued,
->> +
->> +     .. warning::
->> +
->> +        The last buffer may be empty (with :c:type:`v4l2_buffer`
->> +        ``bytesused`` = 0) and in that case it must be ignored by the client,
->> +        as it does not contain an encoded frame.
->> +
->> +     .. note::
->> +
->> +        Any attempt to dequeue more buffers beyond the buffer marked with
->> +        ``V4L2_BUF_FLAG_LAST`` will result in a -EPIPE error from
->> +        :c:func:`VIDIOC_DQBUF`.
->> +
->> +   * dequeuing processed ``OUTPUT`` buffers, until all the buffers queued
->> +     before the ``V4L2_ENC_CMD_STOP`` command are dequeued,
->> +
->> +   * dequeuing the ``V4L2_EVENT_EOS`` event, if the client subscribes to it.
->> +
->> +   .. note::
->> +
->> +      For backwards compatibility, the encoder will signal a ``V4L2_EVENT_EOS``
->> +      event when the last frame has been decoded and all frames are ready to be
->> +      dequeued. It is deprecated behavior and the client must not rely on it.
->> +      The ``V4L2_BUF_FLAG_LAST`` buffer flag should be used instead.
->> +
->> +3. Once all ``OUTPUT`` buffers queued before the ``V4L2_ENC_CMD_STOP`` call are
->> +   dequeued and the last ``CAPTURE`` buffer is dequeued, the encoder is stopped
->> +   and it will accept, but not process any newly queued ``OUTPUT`` buffers
->> +   until the client issues any of the following operations:
->> +
->> +   * ``V4L2_ENC_CMD_START`` - the encoder will not be reset and will resume
->> +     operation normally, with all the state from before the drain,
-> 
-> I assume that calling CMD_START when *not* draining will succeed but does nothing.
-> 
-> In other words: while draining is in progress START will return EBUSY. When draining
-> was finished, then START will resume the encoder. In all other cases it just returns
-> 0 since the encoder is really already started.
-> 
->> +
->> +   * a pair of :c:func:`VIDIOC_STREAMOFF` and :c:func:`VIDIOC_STREAMON` on the
->> +     ``CAPTURE`` queue - the encoder will be reset (see the `Reset` sequence)
->> +     and then resume encoding,
->> +
->> +   * a pair of :c:func:`VIDIOC_STREAMOFF` and :c:func:`VIDIOC_STREAMON` on the
->> +     ``OUTPUT`` queue - the encoder will resume operation normally, however any
->> +     source frames queued to the ``OUTPUT`` queue between ``V4L2_ENC_CMD_STOP``
->> +     and :c:func:`VIDIOC_STREAMOFF` will be discarded.
->> +
->> +.. note::
->> +
->> +   Once the drain sequence is initiated, the client needs to drive it to
->> +   completion, as described by the steps above, unless it aborts the process by
->> +   issuing :c:func:`VIDIOC_STREAMOFF` on any of the ``OUTPUT`` or ``CAPTURE``
->> +   queues.  The client is not allowed to issue ``V4L2_ENC_CMD_START`` or
->> +   ``V4L2_ENC_CMD_STOP`` again while the drain sequence is in progress and they
->> +   will fail with -EBUSY error code if attempted.
-> 
-> I assume calling STOP again once the drain sequence completed just returns 0 and
-> doesn't do anything else (since we're already stopped).
-> 
->> +
->> +   Although mandatory, the availability of encoder commands may be queried
->> +   using :c:func:`VIDIOC_TRY_ENCODER_CMD`.
-> 
-> Some corner cases:
-> 
-> 1) No buffers are queued on either vb2_queue, but STREAMON is called for both queues.
->    Now ENC_CMD_STOP is issued. What should happen?
-> 
->    Proposal: the next time the applications queues a CAPTURE buffer it is returned
->    at once as an empty buffer with FLAG_LAST set.
-> 
-> 2) Both queues are streaming and buffers have been encoded, but currently no buffers
->    are queued on either vb2_queue. Now ENC_CMD_STOP is issued. What should happen?
-> 
->    Proposal: the next time the applications queues a CAPTURE buffer it is returned
->    at once as an empty buffer with FLAG_LAST set. This is consistent with the
->    previous corner case.
-> 
-> 3) The CAPTURE queue contains buffers, the OUTPUT queue does not. Now ENC_CMD_STOP
->    is issued. What should happen?
-> 
->    Proposal: the oldest CAPTURE buffer in the ready queue is returned as an empty
->    buffer with FLAG_LAST set.
-> 
-> 4) Both queues have queued buffers. ENC_CMD_STOP is issued to start the drain process.
->    Before the drain process completes STREAMOFF is called for either CAPTURE or
->    OUTPUT queue. What should happen?
-> 
->    Proposal for STREAMOFF(CAPTURE): aborts the drain process and all CAPTURE buffers are
->    returned to userspace. If encoding is restarted, then any remaining OUTPUT buffers
->    will be used as input to the encoder.
-> 
->    Proposal for STREAMOFF(OUTPUT): the next capture buffer will be empty and have
->    FLAG_LAST set.
+On Mon, Mar 25, 2019 at 11:02 AM Paul E. McKenney <paulmck@linux.ibm.com> wrote:
+>
+> On Fri, Mar 22, 2019 at 11:46:19PM -0400, Joel Fernandes (Google) wrote:
+> > The rcutorture jitter.sh script selects a random CPU but does not check
+> > if it is offline or online. This leads to taskset errors many times. On
+> > my machine, hyper threading is disabled so half the cores are offline
+> > causing taskset errors a lot of times. Let us fix this by checking from
+> > only the online CPUs on the system.
+> >
+> > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+>
+> Good catch!
+>
+> Please see below for one suggestion for simplification.
+>
+>                                                         Thanx, Paul
+>
+> > ---
+> >  tools/testing/selftests/rcutorture/bin/jitter.sh | 11 ++++++++++-
+> >  1 file changed, 10 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/tools/testing/selftests/rcutorture/bin/jitter.sh b/tools/testing/selftests/rcutorture/bin/jitter.sh
+> > index 3633828375e3..53bf9d99b5cd 100755
+> > --- a/tools/testing/selftests/rcutorture/bin/jitter.sh
+> > +++ b/tools/testing/selftests/rcutorture/bin/jitter.sh
+> > @@ -47,10 +47,19 @@ do
+> >               exit 0;
+> >       fi
+> >
+> > -     # Set affinity to randomly selected CPU
+> > +     # Set affinity to randomly selected online CPU
+> >       cpus=`ls /sys/devices/system/cpu/*/online |
+>
+>         cpus=`grep 1 /sys/devices/system/cpu/*/online |
+>
 
-Note: I'm not quite sure about that last one yet. It's a bit tricky to implement.
+Yes, this is better. Lets do it this way :)
 
-I think some of these rules might have to be implemented in v4l2-mem2mem.c to
-simplify drivers.
+> >               sed -e 's,/[^/]*$,,' -e 's/^[^0-9]*//' |
+> >               grep -v '^0*$'`
+>
+> Of course, now I have no idea why I excluded CPU 0...  :-/
 
-Regards,
+Yes, I was wondering as well about that :-)
 
-	Hans
+thanks,
 
-> 
-> Some of this might have to be documented, but these corner cases should certainly be
-> tested by v4l2-compliance. Before I write those tests I'd like to know if you agree
-> with this.
-> 
-> Regards,
-> 
-> 	Hans
-> 
-
+ - Joel
