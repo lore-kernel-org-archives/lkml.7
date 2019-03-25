@@ -2,217 +2,252 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E17CFC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:06:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF61EC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:06:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7B822087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:06:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JE3mN4Tq"
+	by mail.kernel.org (Postfix) with ESMTP id 9B4BC2087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:06:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729816AbfCYRGR (ORCPT
+        id S1729728AbfCYRGQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 13:06:17 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:46862 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725788AbfCYRGQ (ORCPT
+        Mon, 25 Mar 2019 13:06:16 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:34182 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726217AbfCYRGQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 25 Mar 2019 13:06:16 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2PH5ihm037944;
-        Mon, 25 Mar 2019 12:05:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1553533544;
-        bh=02geSVzvA+r31qJtwkAE2yIcfQK/66G9YGjroMZd+Qk=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=JE3mN4TqvRu+jVGzxsUvpWiwUxpU+a+KIQpoK7EFUNXjo4zR1IA/gD3ZOEQXky4hl
-         xoT3JRtUvEtmO6xVTteqBuNkI5pC0MFmLsobWOfq7nbnNDwxdGHkFf1Qga4lUvkN4G
-         tXsGnqIKFdx0CKlCuLtnOwaCsrdNsxlOeq0GhJcc=
-Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2PH5i1R048443
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 25 Mar 2019 12:05:44 -0500
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 25
- Mar 2019 12:05:44 -0500
-Received: from dlep32.itg.ti.com (157.170.170.100) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_0,
- cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5 via Frontend Transport;
- Mon, 25 Mar 2019 12:05:44 -0500
-Received: from [172.24.190.89] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by dlep32.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2PH5cHM025849;
-        Mon, 25 Mar 2019 12:05:39 -0500
-Subject: Re: [RFC PATCH v2 1/5] mtd: cfi_cmdset_0002: Add support for polling
- status register
-To:     Joakim Tjernlund <Joakim.Tjernlund@infinera.com>,
-        "richard@nod.at" <richard@nod.at>,
-        "computersforpeace@gmail.com" <computersforpeace@gmail.com>,
-        "bbrezillon@kernel.org" <bbrezillon@kernel.org>,
-        "marek.vasut@gmail.com" <marek.vasut@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "dwmw2@infradead.org" <dwmw2@infradead.org>
-CC:     "Nori, Sekhar" <nsekhar@ti.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "masonccyang@mxic.com.tw" <masonccyang@mxic.com.tw>,
-        "tudor.ambarus@microchip.com" <tudor.ambarus@microchip.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "sergei.shtylyov@cogentembedded.com" 
-        <sergei.shtylyov@cogentembedded.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "arnd@arndb.de" <arnd@arndb.de>
-References: <20190321174548.9288-1-vigneshr@ti.com>
- <20190321174548.9288-2-vigneshr@ti.com>
- <f92362a0678b07d22ccc0f271fe3483dc77364a9.camel@infinera.com>
- <b1961c49-6795-89e7-e154-6270bf43d49c@ti.com>
- <107cd92703919f97f4cf2d9cd279b091bc90518e.camel@infinera.com>
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-Message-ID: <08f5424f-3ce3-492a-d2b3-4798993d35b9@ti.com>
-Date:   Mon, 25 Mar 2019 22:36:37 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+Received: by mail-ot1-f65.google.com with SMTP id k21so7356597otf.1
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 10:06:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=g/8gNL5m4j1K4cVePYsER6NIaSDiVNIBJfapCUXp1qo=;
+        b=MbGlSUmkPc6by0We96H1qXkVxDd264qE8ZPnntalCblkvqphqzuYwnvk6kZDwmNg0c
+         y2pFytJdjol09+IOikPJZVCNRTNBvY5pxyBl9fufSeCeHlBUR6U5Lm7X1cyBOBA6aonO
+         hCjktTLamGZf8IPJj6jaKD5kHeJJgvqcH3mf06gW/zXhJUTP7ZzUU0giOaZPFhBOu8Co
+         caMe/8cIPo9wZ+gmJ+m6gu5rnnbBDQBYIczy6ZGXu7zl6baxyfgRrl5mjMud8EM0YTTg
+         i78yItecZ/b5ih9JWxapxOUgqPxWlXpdvFIKmABe1x5IZn6QvY+o07cx9DhaEowromcS
+         xUDQ==
+X-Gm-Message-State: APjAAAUS7nolFMqCAgZSoi8EFWr/NcItz8CvXQDxN4Q9mGSj1kIldElp
+        vqx1HXCIMsnA4QowaQM57dd87bBsNDley0iW6VTZzg==
+X-Google-Smtp-Source: APXvYqxN2Jg5+La3rSFlBZG1XTuNN6UfzoTuisgeRJhjmIqI8k7sgbJi/UgZqfqBnu6EWxcf1mp/F1F3f6uaZ/xodHI=
+X-Received: by 2002:a9d:6e17:: with SMTP id e23mr6434391otr.65.1553533574840;
+ Mon, 25 Mar 2019 10:06:14 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <107cd92703919f97f4cf2d9cd279b091bc90518e.camel@infinera.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20190325145032.GB21359@shao2-debian> <CAHC9VhQt6RMdOsVNAXHnPzTrVRpnfaq4PULzBCmMPg7SgdTpfw@mail.gmail.com>
+In-Reply-To: <CAHC9VhQt6RMdOsVNAXHnPzTrVRpnfaq4PULzBCmMPg7SgdTpfw@mail.gmail.com>
+From:   Ondrej Mosnacek <omosnace@redhat.com>
+Date:   Mon, 25 Mar 2019 18:06:03 +0100
+Message-ID: <CAFqZXNuJMJTjGL5qGoemy4O--Y3kGGwGb2TfwJ5xxFAz03uPqg@mail.gmail.com>
+Subject: Re: [kernfs] e19dfdc83b: BUG:KASAN:global-out-of-bounds_in_s
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     Casey Schaufler <casey@schaufler-ca.com>,
+        LKML <linux-kernel@vger.kernel.org>, selinux@vger.kernel.org,
+        lkp@01.org, kernel test robot <rong.a.chen@intel.com>,
+        Tejun Heo <tj@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Mar 25, 2019 at 4:17 PM Paul Moore <paul@paul-moore.com> wrote:
+> Ondrej, please look into this.
+>
+> You've looked at this code more recently than I have, but it looks
+> like there might be an issue with __kernfs_iattrs() returning a
+> pointer to a kernfs_iattrs object without taking a kernfs reference
+> (kernfs_get(kn)).  Although I would be a little surprised if this was
+> the problem as I think it would cause a number of issues beyond just
+> this one ... ?
 
+I think this is actually because of how xattr_full_name() reconstructs
+the full name from the xattr suffix. It assumes that the suffix was
+obtained from the full name by just taking a pointer inside it, but in
+kernfs_security_xattr_get/set() I pass the suffix directly... I'm
+surprised that this didn't fail spectacularly earlier during testing.
+Maybe the newer GCC does some clever merging of the string constants,
+so that XATTR_SELINUX_SUFFIX actually ends up as a substring of
+XATTR_NAME_SELINUX? (That would be one hell of a "lucky" coincidence
+:)
 
-On 25/03/19 7:21 PM, Joakim Tjernlund wrote:
-> On Mon, 2019-03-25 at 18:27 +0530, Vignesh Raghavendra wrote:
->> CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you recognize the sender and know the content is safe.
->>
->>
->> Hi,
->>
->> On 21/03/19 11:41 PM, Joakim Tjernlund wrote:
->>> On Thu, 2019-03-21 at 23:15 +0530, Vignesh Raghavendra wrote:
->>>> HyperFlash devices are compliant with CFI AMD/Fujitsu Extended Command
->>>> Set(0x0002) for flash operations, therefore drivers/mtd/chips/cfi_cmdset_0002.c
->>>> can be use as is. But these devices do not support DQ polling method of
->>>> determining chip ready/good status. These flashes provide Status
->>>> Register whose bits can be polled to know status of flash operation.
->>>>
->>>> Cypress HyperFlash datasheet here[1], talks about CFI Amd/Fujitsu
->>>> Extended Query version 1.5. Bit 0 of "Software Features supported" field
->>>> of CFI Primary Vendor-Specific Extended Query table indicates
->>>> presence/absence of status register and Bit 1 indicates whether or not
->>>> DQ polling is supported. Using these bits, its possible to determine
->>>> whether flash supports DQ polling or need to use Status Register.
->>>>
->>>> Add support for polling status register to know device ready/status of
->>>> erase/write operations when DQ polling is not supported.
->>>
->>> Isn't this new Status scheme just a copy of Intels(cmdset_0001)?
->>
->> Yes, but with one difference: At the end of program/erase operation,
->> device directly enters status register mode and  starts reflecting
->> status register content at any address.
->> The device remains in the read status register state until another
->> command is written to the device. Therefore there is notion of device is
->> in "status register read mode" (FL_STATUS) state
-> 
-> That seems to vary and long time ago RMK added this:
-> 		/* If the flash has finished erasing, then 'erase suspend'
-> 		 * appears to make some (28F320) flash devices switch to
-> 		 * 'read' mode.  Make sure that we switch to 'read status'
-> 		 * mode so we get the right data. --rmk
-> 		 */
-> 		map_write(map, CMD(0x70), chip->in_progress_block_addr);
-> 
+I'll post a patch that converts kernfs_security_xattr_get/set() to
+take the full name and hopefully that will fix the problem. I'll see
+if I can run the reproducer locally tomorrow...
 
-This behavior is expected with cmdset_0001. Because "The device remains
-in the read status register state until another command is written",
-therefore "erase suspend' command after erase completion will switch
-device to read mode. And therefore read status is safe thing to do for
-cmdset_0001.
+>
+> On Mon, Mar 25, 2019 at 10:50 AM kernel test robot
+> <rong.a.chen@intel.com> wrote:
+> >
+> > FYI, we noticed the following commit (built with gcc-7):
+> >
+> > commit: e19dfdc83b60f196e0653d683499f7bc5548128f ("kernfs: initialize security of newly created nodes")
+> > https://git.kernel.org/cgit/linux/kernel/git/pcmoore/selinux.git next
+> >
+> > in testcase: locktorture
+> > with following parameters:
+> >
+> >         runtime: 300s
+> >         test: default
+> >
+> > test-description: This torture test consists of creating a number of kernel threads which acquire the lock and hold it for specific amount of time, thus simulating different critical region behaviors.
+> > test-url: https://www.kernel.org/doc/Documentation/locking/locktorture.txt
+> >
+> >
+> > on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 2G
+> >
+> > caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
+> >
+> >
+> > +-------------------------------------------------+------------+------------+
+> > |                                                 | ec882da5cd | e19dfdc83b |
+> > +-------------------------------------------------+------------+------------+
+> > | boot_successes                                  | 0          | 0          |
+> > | boot_failures                                   | 8          | 8          |
+> > | BUG:kernel_reboot-without-warning_in_test_stage | 8          |            |
+> > | BUG:KASAN:global-out-of-bounds_in_s             | 0          | 8          |
+> > +-------------------------------------------------+------------+------------+
+> >
+> >
+> >
+> > [   27.938038] BUG: KASAN: global-out-of-bounds in strcmp+0x97/0xa0
+> > [   27.940755] Read of size 1 at addr ffffffff946a83d7 by task systemd/1
+> > [   27.943554]
+> > [   27.944603] CPU: 0 PID: 1 Comm: systemd Not tainted 5.1.0-rc1-00010-ge19dfdc #1
+> > [   27.948091] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
+> > [   27.951946] Call Trace:
+> > [   27.953353]  ? strcmp+0x97/0xa0
+> > [   27.955026]  print_address_description+0x22/0x270
+> > [   27.957203]  ? strcmp+0x97/0xa0
+> > [   27.958841]  kasan_report+0x13b/0x1d0
+> > [   27.960759]  ? strcmp+0x97/0xa0
+> > [   27.962378]  ? strcmp+0x97/0xa0
+> > [   27.963976]  strcmp+0x97/0xa0
+> > [   27.965846]  simple_xattr_get+0x7b/0x120
+> > [   27.967473]  selinux_kernfs_init_security+0x108/0x440
+> > [   27.969360]  ? __radix_tree_replace+0x9a/0x230
+> > [   27.971200]  ? selinux_secctx_to_secid+0x20/0x20
+> > [   27.973011]  ? __fprop_inc_percpu_max+0x190/0x190
+> > [   27.975563]  ? kvm_sched_clock_read+0x12/0x20
+> > [   27.977907]  ? sched_clock+0x5/0x10
+> > [   27.979867]  ? sched_clock_cpu+0x24/0xb0
+> > [   27.982048]  ? idr_alloc_cyclic+0xcb/0x190
+> > [   27.984229]  ? lock_downgrade+0x620/0x620
+> > [   27.986388]  security_kernfs_init_security+0x3c/0x70
+> > [   27.989012]  __kernfs_new_node+0x403/0x5e0
+> > [   27.991195]  ? kernfs_dop_revalidate+0x330/0x330
+> > [   27.993589]  ? css_next_child+0xec/0x260
+> > [   27.995685]  ? css_next_descendant_pre+0x36/0x110
+> > [   27.998115]  ? cgroup_propagate_control+0x2d6/0x460
+> > [   28.000662]  kernfs_new_node+0x72/0x140
+> > [   28.002818]  ? lockdep_hardirqs_on+0x379/0x560
+> > [   28.005171]  ? cgroup_idr_replace+0x35/0x40
+> > [   28.007417]  kernfs_create_dir_ns+0x26/0x130
+> > [   28.009690]  cgroup_mkdir+0x3b9/0xef0
+> > [   28.011764]  ? cgroup_destroy_locked+0x5e0/0x5e0
+> > [   28.014196]  kernfs_iop_mkdir+0x12f/0x1b0
+> > [   28.016396]  vfs_mkdir+0x2e6/0x510
+> > [   28.018317]  do_mkdirat+0x19b/0x1f0
+> > [   28.020284]  ? __x64_sys_mknod+0xb0/0xb0
+> > [   28.022437]  do_syscall_64+0xe5/0x10d0
+> > [   28.024408]  ? syscall_return_slowpath+0x790/0x790
+> > [   28.026874]  ? entry_SYSCALL_64_after_hwframe+0x3e/0xbe
+> > [   28.029504]  ? trace_hardirqs_off_caller+0x58/0x200
+> > [   28.031993]  ? trace_hardirqs_off_thunk+0x1a/0x1c
+> > [   28.034438]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> > [   28.036748] RIP: 0033:0x7f38cab6f447
+> > [   28.038825] Code: 00 b8 ff ff ff ff c3 0f 1f 40 00 48 8b 05 49 da 2b 00 64 c7 00 5f 00 00 00 b8 ff ff ff ff c3 0f 1f 40 00 b8 53 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 21 da 2b 00 f7 d8 64 89 01 48
+> > [   28.047736] RSP: 002b:00007ffeef143d88 EFLAGS: 00000246 ORIG_RAX: 0000000000000053
+> > [   28.051776] RAX: ffffffffffffffda RBX: 0000000000000001 RCX: 00007f38cab6f447
+> > [   28.055117] RDX: 00007ffeef143c30 RSI: 00000000000001ed RDI: 000055a7b0458560
+> > [   28.058533] RBP: 0000000000000040 R08: 0000000000000000 R09: 2f73662f7379732f
+> > [   28.062031] R10: 732f70756f726763 R11: 0000000000000246 R12: 000055a7b04b30a0
+> > [   28.065528] R13: 0000000000000000 R14: 000055a7b046bb88 R15: 000055a7b046b540
+> > [   28.068977]
+> > [   28.070240] The buggy address belongs to the variable:
+> > [   28.072491]  securityfs_super_operations+0x4917/0x6220
+> > [   28.075171]
+> > [   28.076286] Memory state around the buggy address:
+> > [   28.078861]  ffffffff946a8280: fa fa fa fa 00 01 fa fa fa fa fa fa 00 02 fa fa
+> > [   28.082610]  ffffffff946a8300: fa fa fa fa 00 02 fa fa fa fa fa fa 00 01 fa fa
+> > [   28.086669] >ffffffff946a8380: fa fa fa fa 00 03 fa fa fa fa fa fa 00 fa fa fa
+> > [   28.090587]                                                  ^
+> > [   28.093576]  ffffffff946a8400: fa fa fa fa 00 00 00 00 00 00 05 fa fa fa fa fa
+> > [   28.097599]  ffffffff946a8480: 00 00 01 fa fa fa fa fa 00 00 00 00 00 00 00 00
+> > [   28.101453] ==================================================================
+> > [   28.105478] Disabling lock debugging due to kernel taint
+> >          Starting Load Kernel Modules...
+> >          Mounting Debug File System...
+> > ] Listening on RPCbind Server Activation Socket.
+> >          Starting Remount Root and Kernel File Systems...
+> >          Starting Journal Service...
+> >          Mounting RPC Pipe File System...
+> > [   28.508319] _warn_unseeded_randomness: 131 callbacks suppressed
+> > [   28.508335] random: get_random_u64 called from copy_process+0x596/0x6450 with crng_init=1
+> >          Starting Create Static Device Nodes in /dev...
+> > [   28.552988] random: get_random_u64 called from arch_pick_mmap_layout+0x4a1/0x600 with crng_init=1
+> > [   28.556785] random: get_random_u64 called from arch_pick_mmap_layout+0x446/0x600 with crng_init=1
+> >          Starting Load/Save Random Seed...
+> >          Starting udev Coldplug all Devices...
+> >          Mounting FUSE Control File System...
+> >          Starting Apply Kernel Variables...
+> >          Mounting Configuration File System...
+> >          Starting Raise network interfaces...
+> >          Starting Preprocess NFS configuration...
+> >          Starting udev Kernel Device Manager...
+> >          Starting Flush Journal to Persistent Storage...
+> >          Starting Create Volatile Files and Directories...
+> > [   29.523554] random: get_random_u64 called from arch_pick_mmap_layout+0x446/0x600 with crng_init=1
+> > [   29.527262] random: get_random_u64 called from load_elf_binary+0x1281/0x2f30 with crng_init=1
+> >
+> >          Starting RPC bind portmap service...
+> >          Starting Network Time Synchronization...
+> >          Starting Update UTMP about System Boot/Shutdown...
+> > [   30.574449] _warn_unseeded_randomness: 154 callbacks suppressed
+> > [   30.574479] random: get_random_u32 called from bucket_table_alloc+0x149/0x370 with crng_init=1
+> > [   32.628754] random: get_random_u64 called from arch_pick_mmap_layout+0x4a1/0x600 with crng_init=1
+> > [   32.632973] random: get_random_u64 called from arch_pick_mmap_layout+0x446/0x600 with crng_init=1
+> > [   32.637364] random: get_random_u64 called from load_elf_binary+0x1281/0x2f30 with crng_init=1
+> >          Starting Login Service...
+> >          Starting LSB: Start and stop bmc-watchdog...
+> >          Starting LSB: Execute the kexec -e command to reboot system...
+> >
+> >
+> > To reproduce:
+> >
+> >         # build kernel
+> >         cd linux
+> >         cp config-5.1.0-rc1-00010-ge19dfdc .config
+> >         make HOSTCC=gcc-7 CC=gcc-7 ARCH=x86_64 olddefconfig
+> >         make HOSTCC=gcc-7 CC=gcc-7 ARCH=x86_64 prepare
+> >         make HOSTCC=gcc-7 CC=gcc-7 ARCH=x86_64 modules_prepare
+> >         make HOSTCC=gcc-7 CC=gcc-7 ARCH=x86_64 SHELL=/bin/bash
+> >         make HOSTCC=gcc-7 CC=gcc-7 ARCH=x86_64 bzImage
+> >
+> >
+> >         git clone https://github.com/intel/lkp-tests.git
+> >         cd lkp-tests
+> >         find lib/ | cpio -o -H newc --quiet | gzip > modules.cgz
+> >         bin/lkp qemu -k <bzImage> -m modules.cgz job-script # job-script is attached in this email
+> >
+> >
+> >
+> >
+> > Thanks,
+> > Rong Chen
+> >
+>
+>
+> --
+> paul moore
+> www.paul-moore.com
 
-But in case of cmdset_0002 erase completion will not put device to read
-status mode and therefore no special status tracking is required.
-
->>
->> But in case of cfi_cmdset_0002, once program/erase operation is
->> complete, device returns to previous address space overlay from which
->> operation was started from (mostly read mode)
-> 
-> I hope you can do the same as Intel here, issue an explicit Status CMD or you will be in trouble.
-
-Even if we issue Read Status command to enter read status mode, any
-single subsequent read will put device back to read mode. So, sending
-explicit Status CMD is of not much use.
-
-As long as cmdset_0002 driver ensures sending Read Status cmd and next
-single read can be done in one go (ie. mutex held), I don't see any
-trouble here. This is already take care off.
-
-> 
-> Also, I think you need to use the various map_word_xxx as in:
-> status = map_read(map, chip->in_progress_block_addr);
-> if (map_word_andequal(map, status, status_OK, status_OK))
-> 	break;
-
-Yes, I will fixup this patch to use map_word_* wherever necessary in the
-next revision.
-
-
-> otherwise you will break interleaved setups(like two 8-bit flashes in parallel to
-> form one 16 bit bus). Maybe this is not supported for CMDSET 0002 ?
-> 
-
-Interleaved is indeed supported by cmdset_0002. Thanks for pointing that
-out!
-
->  Jocke
-> 
->>
->> In order to enter status register overlay mode, Read Status command is
->> to be written to addr_unlock1(0x555) address. The overlay is in effect
->> for one read access, specifically the next read access that follows the
->> Status Register Read command
->> Therefore code around FL_STATUS state in cfi_cmdset_0001 is not
->> applicable to cfi_cmdset_0002 as is.
->>
->>
->>> If so I think the new status impl. in 0002 should borrow from 0001 as this is a
->>> hardened and battle tested impl.
->>>
->>
->> In case of cfi_cmdset_0001.c, program/erase is followed by
->> inval_cache_and_wait_for_operation() to poll ready bit and based on
->> status register value, success or the error handling is done.
->>
->> Most of the code corresponding to inval_cache_and_wait_for_operation()
->> is already in cfi_cmdset_0002.c. So, whats missing in this patch is
->> handling and reporting of errors as reflected in status register after
->> write/erase failures. I will add that in the next version.
->>
->> But, I don't see much to borrow apart from error handling sequence.
->> Please, let me know if I missed something.
->>
->>> I know other modern 0002 chips supports both old and new impl. of Status and I world
->>> guess that we will see more chips with new Status only.
->>>
->>
->> Agreed. Newer devices would mostly be CFI 1.5.
->>
->> --
->> Regards
->> Vignesh
-> 
-
--- 
-Regards
-Vignesh
+--
+Ondrej Mosnacek <omosnace at redhat dot com>
+Software Engineer, Security Technologies
+Red Hat, Inc.
