@@ -2,196 +2,148 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C516AC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 08:02:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5763DC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 08:02:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 936BD20830
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 08:02:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 234352087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 08:02:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FFPvFDh6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729950AbfCYICG (ORCPT
+        id S1729975AbfCYICP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 04:02:06 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:42561 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729812AbfCYICF (ORCPT
+        Mon, 25 Mar 2019 04:02:15 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:35601 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729952AbfCYICL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 04:02:05 -0400
-Received: by mail-io1-f71.google.com with SMTP id i1so7284988ioq.9
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 01:02:05 -0700 (PDT)
+        Mon, 25 Mar 2019 04:02:11 -0400
+Received: by mail-wm1-f67.google.com with SMTP id y197so7922202wmd.0
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 01:02:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=DtFA6qhgHmfe8jfD+WzaOVrPs09twP3dnTsyB25BXDA=;
+        b=FFPvFDh6MIyj8SKRNQTwFecYOmUhv/XelXhgOIlin3zWhX+b+LUQ2zoR5L8vxphroo
+         CmYRq2mxSjkDOM1ZxUM3q2OL8EZECNZGzWfjeQboagqUKpKCf/uDqIi9Seq2u6+ylY7u
+         X84uOlBcBJXPBLl2Cntey0yFS6fU2TW1vftk+CDOtpDfgEvEF1s3VFXfQkFizhlfpWJD
+         L4hJAaHpgUVM4qjHi9hVRN4woSu+4tx1oGzHKDuYw6Rbnuxy+YDF0O40Nr8KRrcL81at
+         NcgTPIMh9aiyYCZRNH5+v+QSaunZdffg3c12a5LbC5rB5zuLkWAYt+orsB5EEAWjA221
+         AH+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=dVZIxEfXukrD5ihgyOeTyg/2nUQwrj0xIEaYunjoTWc=;
-        b=JG9VQLltfeUtwCBC2iIXxvs3SAaKKg/erezHrfe0DFI3JP32gWOBZdG5gsqcZ9IkOf
-         LI2rOtvlmiFfEZzCx9S322wBMqqy4jxBQ3KQSXSmcDC/OelP/1VES3bq17RghXAUQys6
-         JPczolPirEL2pO+WKldvLBjQiPiZV297uKjyiVc0++vZqWAfig0ZOZ/69iMo5TCoFCrE
-         Q1n6lMDXTIGTEyM/IuUJYg/WGQcBPO889LC/Au4QY4OYRg+SHSx/NvZYOcenhooxHf/G
-         Ty+chM47l6WeK4mdFxp3oKgiLj9/VBwYawmcT0CdZpX8I4peowpr9VOVKEj7HljCxWYi
-         I27A==
-X-Gm-Message-State: APjAAAUpF7tIs8bbHUrpmdw1vNyqrXBatyQFKqclc+kqjnAdyfK83b9e
-        C7nQ6Z5VMLIlA26Sx2dkCPifpBq1lR/+4qrnWHvl+bffdKXc
-X-Google-Smtp-Source: APXvYqw6p4CmPLZawh/6VHBFQ2ri2a2d6Xsjg2vD2NXXV2ea4PepaZNZ2wJpho05PQi1Y8ePpSA/PIMbpM9KwixOj/Bwh3LpJcwj
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=DtFA6qhgHmfe8jfD+WzaOVrPs09twP3dnTsyB25BXDA=;
+        b=FXm50H1oC94oyQGtl/XAKCYW0IsZFvJKgwgJbxWmAWEalbWZEYM0tCgKuz3C9Iqwh1
+         LJnFeWHornX/RwpihxwoQKb89X2GqpntTyuZeSVfycSBOjzaq+L0JTMAzu5KaRBOGrZL
+         hhuFRrRy9RP8J1rXUiFGU9hJ0DVkdT27jc2czrG11adAiuFDydzw2CdioFLI7kOGIEKa
+         w1k5EWDXIC2NfIad5CVTQxauttRa8NrsCl5UMVm+7Fz8DE0OrNBrPtX/2wmfBezdpLwT
+         jCLPVF9FWZuh645wS/8lk09dctlYtvbFcV0JxXpLBhbGVhuGSR7tXJpgDpy+ZkJrL7Mg
+         YfgA==
+X-Gm-Message-State: APjAAAUbQXMz6xw+hEVV/Lo1VG/xmkVF2X9e3vEL2U9gK3fBg+fNZl0h
+        m+mFWQAfCdx5VxdrrsXCE1qsbQ==
+X-Google-Smtp-Source: APXvYqxm/tyX+0u/SnSNLlV7ar2/RNF1sAHIamradKZlDr69QuEaX23uoT3kd3UwFD0tFLm+y+0zlg==
+X-Received: by 2002:a1c:f510:: with SMTP id t16mr10157065wmh.105.1553500929763;
+        Mon, 25 Mar 2019 01:02:09 -0700 (PDT)
+Received: from dell ([2.27.167.37])
+        by smtp.gmail.com with ESMTPSA id s130sm19477743wms.13.2019.03.25.01.02.08
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 25 Mar 2019 01:02:09 -0700 (PDT)
+Date:   Mon, 25 Mar 2019 08:02:06 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     mazziesaccount@gmail.com, Guenter Roeck <linux@roeck-us.net>,
+        heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, broonie@kernel.org,
+        gregkh@linuxfoundation.org, rafael@kernel.org,
+        mturquette@baylibre.com, sboyd@kernel.org,
+        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        sre@kernel.org, lgirdwood@gmail.com, a.zummo@towertech.it,
+        alexandre.belloni@bootlin.com, wim@linux-watchdog.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-watchdog@vger.kernel.org, bogdan-petru.chircu-mare@nxp.com
+Subject: Re: [PATCH v10 0/9] support ROHM BD70528 PMIC
+Message-ID: <20190325080206.GZ4731@dell>
+References: <cover.1550148989.git.matti.vaittinen@fi.rohmeurope.com>
+ <20190228070450.GB3773@localhost.localdomain>
+ <20190228081055.GL4118@dell>
+ <20190228082248.GC3773@localhost.localdomain>
+ <20190325073640.GB6208@localhost.localdomain>
 MIME-Version: 1.0
-X-Received: by 2002:a6b:c995:: with SMTP id z143mr14356829iof.74.1553500924863;
- Mon, 25 Mar 2019 01:02:04 -0700 (PDT)
-Date:   Mon, 25 Mar 2019 01:02:04 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000c8f45a0584e69ea9@google.com>
-Subject: KASAN: use-after-free Read in seccomp_notify_release (2)
-From:   syzbot <syzbot+b562969adb2e04af3442@syzkaller.appspotmail.com>
-To:     ast@kernel.org, bpf@vger.kernel.org, coreteam@netfilter.org,
-        daniel@iogearbox.net, davem@davemloft.net, fw@strlen.de,
-        kadlec@blackhole.kfki.hu, kafai@fb.com, keescook@chromium.org,
-        linux-kernel@vger.kernel.org, luto@amacapital.net,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        pablo@netfilter.org, songliubraving@fb.com,
-        syzkaller-bugs@googlegroups.com, wad@chromium.org, wenxu@ucloud.cn,
-        yhs@fb.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190325073640.GB6208@localhost.localdomain>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Mon, 25 Mar 2019, Matti Vaittinen wrote:
 
-syzbot found the following crash on:
+> Hello again Lee & all,
+> 
+> On Thu, Feb 28, 2019 at 10:22:48AM +0200, Matti Vaittinen wrote:
+> > On Thu, Feb 28, 2019 at 08:10:55AM +0000, Lee Jones wrote:
+> > > On Thu, 28 Feb 2019, Matti Vaittinen wrote:
+> > > 
+> > > > Hello Lee and Mark,
+> > > > 
+> > > > On Thu, Feb 14, 2019 at 03:02:37PM +0200, Matti Vaittinen wrote:
+> > > > > Patch series introducing support for ROHM BD70528 PMIC
+> 
+> //snip
+> 
+> > > > 
+> > > > The MFD part depends on the regmap-irq changes and I think that most
+> > > > other subsystems want to have the MFD changes in before taking rest of
+> > > > the driver in their trees. So it will be a while untill all the changes
+> > > > are in. It would really be nice to have the drive in-tree sooner - hence
+> > > > I ask if theres a way. (I don't want to push, just ask if it is possible :])
+> > > 
+> > > It's possible, so long as there aren't any build-time dependencies
+> > > between the subsystems.  Immediate acceptance however isn't possible
+> > > due to the impending merge-window which opens in 3 days.
+> > 
+> > Thanks for reply Lee. So merge-window is opening - meaning the 5.1 is
+> > being baked now(?) 
+> > 
+> > Anyays to make it clear - there is build time dependency between MFD and
+> > regmap-irq changes. MFD part won't compile without the changes in regmap
+> > tree. And theres no new Kconfig to depend on or other compile time
+> > checks. So REGMAP changes are required for this MFD portion to compile.
+> 
+> //snip
+> 
+> > Rest of the subsystems (regulator, clk, watchdog, gpio) do all depend on
+> > MFD - but they should have 'depends on' KConfig to MFD meaning they
+> > won't be built without MFD.
+> 
+> I see the 5.1-rc1 and 5.1-rc2 are out. Those contain the regmap-irq
+> changes the BD70528 MFD driver depends on. Would you like me to rebase
+> the series to some other tree (which tree/branch? I don't see updated
+> for-mfd-next branch in kernel.org yet) and resend it? Original patch
+> series was created on top of the regulator tree.
 
-HEAD commit:    1bdd3dbf Merge tag 'io_uring-20190323' of git://git.kernel..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=12ae5b93200000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=9a31fb246de2a622
-dashboard link: https://syzkaller.appspot.com/bug?extid=b562969adb2e04af3442
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=162ca25d200000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1733b53b200000
+If you could rebase and resend, that would be great.
 
-The bug was bisected to:
+You should (very nearly) always base on an upstream tag, so v5.1-rc2
+would be best in this case.
 
-commit a799aea0988ea0d1b1f263e996fdad2f6133c680
-Author: wenxu <wenxu@ucloud.cn>
-Date:   Wed Jan 9 02:40:11 2019 +0000
-
-     netfilter: nft_flow_offload: Fix reverse route lookup
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10dcc517200000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=12dcc517200000
-console output: https://syzkaller.appspot.com/x/log.txt?x=14dcc517200000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+b562969adb2e04af3442@syzkaller.appspotmail.com
-Fixes: a799aea0988e ("netfilter: nft_flow_offload: Fix reverse route  
-lookup")
-
-==================================================================
-BUG: KASAN: use-after-free in __lock_acquire+0x2d5e/0x3fb0  
-kernel/locking/lockdep.c:3573
-Read of size 8 at addr ffff8880a621d080 by task syz-executor365/8267
-
-CPU: 0 PID: 8267 Comm: syz-executor365 Not tainted 5.1.0-rc1+ #35
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  print_address_description.cold+0x7c/0x20d mm/kasan/report.c:187
-  kasan_report.cold+0x1b/0x40 mm/kasan/report.c:317
-  __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:132
-  __lock_acquire+0x2d5e/0x3fb0 kernel/locking/lockdep.c:3573
-  lock_acquire+0x16f/0x3f0 kernel/locking/lockdep.c:4211
-  __mutex_lock_common kernel/locking/mutex.c:925 [inline]
-  __mutex_lock+0xf7/0x1310 kernel/locking/mutex.c:1072
-  mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1087
-  seccomp_notify_release+0x62/0x280 kernel/seccomp.c:984
-  __fput+0x2e5/0x8d0 fs/file_table.c:278
-  ____fput+0x16/0x20 fs/file_table.c:309
-  task_work_run+0x14a/0x1c0 kernel/task_work.c:113
-  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
-  exit_to_usermode_loop+0x273/0x2c0 arch/x86/entry/common.c:166
-  prepare_exit_to_usermode arch/x86/entry/common.c:197 [inline]
-  syscall_return_slowpath arch/x86/entry/common.c:268 [inline]
-  do_syscall_64+0x52d/0x610 arch/x86/entry/common.c:293
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x405621
-Code: 75 14 b8 03 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 04 19 00 00 c3 48  
-83 ec 08 e8 6a fc ff ff 48 89 04 24 b8 03 00 00 00 0f 05 <48> 8b 3c 24 48  
-89 c2 e8 b3 fc ff ff 48 89 d0 48 83 c4 08 48 3d 01
-RSP: 002b:00007ffe1ebba1e0 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
-RAX: 0000000000000000 RBX: 0000000000000004 RCX: 0000000000405621
-RDX: 0000000000000000 RSI: 0000000000000080 RDI: 0000000000000003
-RBP: 0000000000000064 R08: 00007f28ae4ca700 R09: 0000000000000000
-R10: 00007ffe1ebba1f0 R11: 0000000000000293 R12: 00000000006dbc30
-R13: 0000000000000002 R14: 00000000006dbc3c R15: 000000000000002d
-
-Allocated by task 8278:
-  save_stack+0x45/0xd0 mm/kasan/common.c:75
-  set_track mm/kasan/common.c:87 [inline]
-  __kasan_kmalloc mm/kasan/common.c:497 [inline]
-  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:470
-  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:511
-  kmem_cache_alloc_trace+0x151/0x760 mm/slab.c:3621
-  kmalloc include/linux/slab.h:545 [inline]
-  kzalloc include/linux/slab.h:740 [inline]
-  seccomp_prepare_filter kernel/seccomp.c:453 [inline]
-  seccomp_prepare_user_filter kernel/seccomp.c:493 [inline]
-  seccomp_set_mode_filter kernel/seccomp.c:1262 [inline]
-  do_seccomp+0x743/0x2250 kernel/seccomp.c:1376
-  __do_sys_seccomp kernel/seccomp.c:1395 [inline]
-  __se_sys_seccomp kernel/seccomp.c:1392 [inline]
-  __x64_sys_seccomp+0x73/0xb0 kernel/seccomp.c:1392
-  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Freed by task 8278:
-  save_stack+0x45/0xd0 mm/kasan/common.c:75
-  set_track mm/kasan/common.c:87 [inline]
-  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:459
-  kasan_slab_free+0xe/0x10 mm/kasan/common.c:467
-  __cache_free mm/slab.c:3498 [inline]
-  kfree+0xcf/0x230 mm/slab.c:3821
-  seccomp_filter_free kernel/seccomp.c:567 [inline]
-  seccomp_filter_free kernel/seccomp.c:563 [inline]
-  seccomp_set_mode_filter kernel/seccomp.c:1317 [inline]
-  do_seccomp+0xb00/0x2250 kernel/seccomp.c:1376
-  __do_sys_seccomp kernel/seccomp.c:1395 [inline]
-  __se_sys_seccomp kernel/seccomp.c:1392 [inline]
-  __x64_sys_seccomp+0x73/0xb0 kernel/seccomp.c:1392
-  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-The buggy address belongs to the object at ffff8880a621d000
-  which belongs to the cache kmalloc-192 of size 192
-The buggy address is located 128 bytes inside of
-  192-byte region [ffff8880a621d000, ffff8880a621d0c0)
-The buggy address belongs to the page:
-page:ffffea0002988740 count:1 mapcount:0 mapping:ffff88812c3f0040 index:0x0
-flags: 0x1fffc0000000200(slab)
-raw: 01fffc0000000200 ffffea0002981048 ffffea0002988048 ffff88812c3f0040
-raw: 0000000000000000 ffff8880a621d000 0000000100000010 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff8880a621cf80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-  ffff8880a621d000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> ffff8880a621d080: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
-                    ^
-  ffff8880a621d100: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  ffff8880a621d180: 00 00 fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-==================================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
