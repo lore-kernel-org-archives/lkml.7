@@ -2,84 +2,88 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A885C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:14:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58BEDC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:15:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B2CD20830
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:14:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 233DB2075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:15:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="ShxN0dwP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731150AbfCYMOn (ORCPT
+        id S1731155AbfCYMPz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 08:14:43 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:46378 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730899AbfCYMOm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 08:14:42 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8C12680D;
-        Mon, 25 Mar 2019 05:14:42 -0700 (PDT)
-Received: from mbp (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D58333F575;
-        Mon, 25 Mar 2019 05:14:39 -0700 (PDT)
-Date:   Mon, 25 Mar 2019 12:14:37 +0000
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Nicolin Chen <nicoleotsuka@gmail.com>
-Cc:     hch@lst.de, robin.murphy@arm.com, vdumpa@nvidia.com,
-        will.deacon@arm.com, chris@zankel.net, jcmvbkbc@gmail.com,
-        joro@8bytes.org, dwmw2@infradead.org, m.szyprowski@samsung.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, iommu@lists.linux-foundation.org,
-        jonathanh@nvidia.com
-Subject: Re: [PATCH v2 RFC/RFT] dma-contiguous: Get normal pages for
- single-page allocations
-Message-ID: <20190325121436.hwmzgqkaggxvnfqx@mbp>
-References: <20190305183202.16216-1-nicoleotsuka@gmail.com>
- <20190319144301.GG59586@arrakis.emea.arm.com>
- <20190321233248.GA6941@Asurada-Nvidia>
- <20190322105712.GB13384@arrakis.emea.arm.com>
- <20190322200925.GA22219@Asurada-Nvidia>
+        Mon, 25 Mar 2019 08:15:55 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:46270 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730799AbfCYMPz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 08:15:55 -0400
+Received: from zn.tnic (p200300EC2F098000329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:8000:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1E7061EC0AB1;
+        Mon, 25 Mar 2019 13:15:53 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1553516153;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=GpwgKkitpK+f0Ey08EjdEFFnzuGSVS8bHxedA0RAm7g=;
+        b=ShxN0dwP8ON2/3saF/L2IMkngQOI8dGzPJWBACHrBvN7etvFODl6yoeC9+dcsmIZPu48NN
+        b6/mqJtdLsZzVsfWSoZlDxG2sIjqqUkd1NSXp/nWzA0E7byGxgBgUEhVbxEcyVi9Ai4qzY
+        XdC3Gk5nVUuHsH/XoQnrEudld7CJUUY=
+Date:   Mon, 25 Mar 2019 13:15:54 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     lijiang <lijiang@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+        tglx@linutronix.de, mingo@redhat.com, akpm@linux-foundation.org,
+        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
+        x86@kernel.org, hpa@zytor.com, dyoung@redhat.com, bhe@redhat.com,
+        Thomas.Lendacky@amd.com
+Subject: Re: [PATCH 1/3 v9] x86/mm: Change the examination condition to avoid
+ confusion
+Message-ID: <20190325121554.GJ12016@zn.tnic>
+References: <20190321103309.27883-1-lijiang@redhat.com>
+ <20190321103309.27883-2-lijiang@redhat.com>
+ <20190322175114.GL12472@zn.tnic>
+ <aa4af285-0aa2-3477-76a8-87f93d4db599@redhat.com>
+ <20190325064046.GB12016@zn.tnic>
+ <dd7b5fb6-bd77-61a2-afa5-d52137c24cbd@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190322200925.GA22219@Asurada-Nvidia>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <dd7b5fb6-bd77-61a2-afa5-d52137c24cbd@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 22, 2019 at 01:09:26PM -0700, Nicolin Chen wrote:
-> On Fri, Mar 22, 2019 at 10:57:13AM +0000, Catalin Marinas wrote:
-> > > > Do you have any numbers to back this up? You don't seem to address
-> > > > dma_direct_alloc() either but, as I said above, it's not trivial since
-> > > > some platforms expect certain physical range for DMA allocations.
-> > > 
-> > > What's the dma_direct_alloc() here about? Mind elaborating?
-> > 
-> > I just did a grep for dma_alloc_from_contiguous() in the 5.1-rc1 kernel
-> > and came up with __dma_direct_alloc_pages(). Should your patch cover
-> > this as well?
+On Mon, Mar 25, 2019 at 05:20:43PM +0800, lijiang wrote:
+> Let's look at the discussion in patch v8, please refer to this link:
+> https://lkml.org/lkml/2019/3/16/15
 > 
-> I don't get the meaning of "cover this" here. What missing part
-> do you refer to?
+> I did a test according to Tom's reply, and the test indicated his suggestion was
+> correct, we should change this to check for IORES_DESC_ACPI_* values.
 
-What I meant, do you need this hunk as well in your patch?
+I know that discussion - I was on CC.
 
-diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
-index fcdb23e8d2fc..8955ba6f52fc 100644
---- a/kernel/dma/direct.c
-+++ b/kernel/dma/direct.c
-@@ -111,8 +111,7 @@ struct page *__dma_direct_alloc_pages(struct device *dev, size_t size,
- again:
- 	/* CMA can be used only in the context which permits sleeping */
- 	if (gfpflags_allow_blocking(gfp)) {
--		page = dma_alloc_from_contiguous(dev, count, page_order,
--						 gfp & __GFP_NOWARN);
-+		page = dma_alloc_from_contiguous(dev, count, page_order, gfp);
- 		if (page && !dma_coherent_ok(dev, page_to_phys(page), size)) {
- 			dma_release_from_contiguous(dev, page, count);
- 			page = NULL;
+Your patch still doesn't explain *why* this change is needed and the
+fact that you "did a test" and it worked doesn't answer my question a
+single bit. In fact, it tells me that you have tried something at random
+without even understanding why this is needed and makes me even more
+suspicious towards what you're doing.
+
+So slow down pls *think* why this change is needed and then *explain*
+that in the commit message.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
