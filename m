@@ -2,127 +2,145 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DB95C10F03
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 19:27:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59861C10F03
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 19:28:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6583020854
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 19:27:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26E6420879
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 19:28:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729883AbfCYT1x (ORCPT
+        id S1730006AbfCYT2U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 15:27:53 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:41074 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729238AbfCYT1x (ORCPT
+        Mon, 25 Mar 2019 15:28:20 -0400
+Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:51393 "EHLO
+        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729548AbfCYT2U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 15:27:53 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2PJOANn115864
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 15:27:51 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rf3v3ue5f-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 15:27:51 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Mon, 25 Mar 2019 19:27:49 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 25 Mar 2019 19:27:46 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2PJRjLP61341800
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 25 Mar 2019 19:27:46 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DAD1C4C058;
-        Mon, 25 Mar 2019 19:27:45 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5D0C44C040;
-        Mon, 25 Mar 2019 19:27:45 +0000 (GMT)
-Received: from dhcp-9-31-103-153.watson.ibm.com (unknown [9.31.103.153])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 25 Mar 2019 19:27:45 +0000 (GMT)
-Subject: Re: Portable Executable (PE) Signature Validation and Measurement
- for KEXEC system call using IMA
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Lakshmi Ramasubramanian <nramas@microsoft.com>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Date:   Mon, 25 Mar 2019 15:27:44 -0400
-In-Reply-To: <BYAPR21MB1301CBCD4956476F8F2F0FC4C3430@BYAPR21MB1301.namprd21.prod.outlook.com>
-References: <BYAPR21MB1301CBCD4956476F8F2F0FC4C3430@BYAPR21MB1301.namprd21.prod.outlook.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
+        Mon, 25 Mar 2019 15:28:20 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04392;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0TNeJ6Wf_1553542093;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TNeJ6Wf_1553542093)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 26 Mar 2019 03:28:16 +0800
+Subject: Re: [PATCH 01/10] mm: control memory placement by nodemask for two
+ tier main memory
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Michal Hocko <mhocko@suse.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Rik van Riel <riel@surriel.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Fengguang Wu <fengguang.wu@intel.com>,
+        "Du, Fan" <fan.du@intel.com>, "Huang, Ying" <ying.huang@intel.com>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <1553316275-21985-1-git-send-email-yang.shi@linux.alibaba.com>
+ <1553316275-21985-2-git-send-email-yang.shi@linux.alibaba.com>
+ <CAPcyv4g5RoHhXhkKQaYkqYLN1y3KavbGeM1zVus-3fY5Q+JdxA@mail.gmail.com>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <688dffbc-2adc-005d-223e-fe488be8c5fc@linux.alibaba.com>
+Date:   Mon, 25 Mar 2019 12:28:13 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
+MIME-Version: 1.0
+In-Reply-To: <CAPcyv4g5RoHhXhkKQaYkqYLN1y3KavbGeM1zVus-3fY5Q+JdxA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19032519-0008-0000-0000-000002D1676A
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19032519-0009-0000-0000-0000223D90D7
-Message-Id: <1553542064.3929.69.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-25_11:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903250139
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lakshmi,
 
-On Fri, 2019-03-22 at 17:39 +0000, Lakshmi Ramasubramanian wrote:
-> Hello,
-> 
-> When loading the new kernel image file for executing KEXEC system call, 
-> we would like to verify that the kernel image file is signed and 
-> the signer certificate is valid.
 
-I'm not sure what is meant by "and the signer certificate is valid".
+On 3/23/19 10:21 AM, Dan Williams wrote:
+> On Fri, Mar 22, 2019 at 9:45 PM Yang Shi <yang.shi@linux.alibaba.com> wrote:
+>> When running applications on the machine with NVDIMM as NUMA node, the
+>> memory allocation may end up on NVDIMM node.  This may result in silent
+>> performance degradation and regression due to the difference of hardware
+>> property.
+>>
+>> DRAM first should be obeyed to prevent from surprising regression.  Any
+>> non-DRAM nodes should be excluded from default allocation.  Use nodemask
+>> to control the memory placement.  Introduce def_alloc_nodemask which has
+>> DRAM nodes set only.  Any non-DRAM allocation should be specified by
+>> NUMA policy explicitly.
+>>
+>> In the future we may be able to extract the memory charasteristics from
+>> HMAT or other source to build up the default allocation nodemask.
+>> However, just distinguish DRAM and PMEM (non-DRAM) nodes by SRAT flag
+>> for the time being.
+>>
+>> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+>> ---
+>>   arch/x86/mm/numa.c     |  1 +
+>>   drivers/acpi/numa.c    |  8 ++++++++
+>>   include/linux/mmzone.h |  3 +++
+>>   mm/page_alloc.c        | 18 ++++++++++++++++--
+>>   4 files changed, 28 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
+>> index dfb6c4d..d9e0ca4 100644
+>> --- a/arch/x86/mm/numa.c
+>> +++ b/arch/x86/mm/numa.c
+>> @@ -626,6 +626,7 @@ static int __init numa_init(int (*init_func)(void))
+>>          nodes_clear(numa_nodes_parsed);
+>>          nodes_clear(node_possible_map);
+>>          nodes_clear(node_online_map);
+>> +       nodes_clear(def_alloc_nodemask);
+>>          memset(&numa_meminfo, 0, sizeof(numa_meminfo));
+>>          WARN_ON(memblock_set_node(0, ULLONG_MAX, &memblock.memory,
+>>                                    MAX_NUMNODES));
+>> diff --git a/drivers/acpi/numa.c b/drivers/acpi/numa.c
+>> index 867f6e3..79dfedf 100644
+>> --- a/drivers/acpi/numa.c
+>> +++ b/drivers/acpi/numa.c
+>> @@ -296,6 +296,14 @@ void __init acpi_numa_slit_init(struct acpi_table_slit *slit)
+>>                  goto out_err_bad_srat;
+>>          }
+>>
+>> +       /*
+>> +        * Non volatile memory is excluded from zonelist by default.
+>> +        * Only regular DRAM nodes are set in default allocation node
+>> +        * mask.
+>> +        */
+>> +       if (!(ma->flags & ACPI_SRAT_MEM_NON_VOLATILE))
+>> +               node_set(node, def_alloc_nodemask);
+> Hmm, no, I don't think we should do this. Especially considering
+> current generation NVDIMMs are energy backed DRAM there is no
+> performance difference that should be assumed by the non-volatile
+> flag.
 
-The kexec kernel image signature can be verified by keys either on the
-IMA keyring or the platform keyring.  The current method of verifying
-keys being added to the IMA keyring is by requiring them to be signed
-by a key on the builtin trusted keyring.  This provides a signature
-chain of trust from boot to the kernel, based on a HW root of trust,
-and then transitions to the kernel image's embedded keys.  You
-probably already know as to why/how the platform keys are trusted.
+Actually, here I would like to initialize a node mask for default 
+allocation. Memory allocation should not end up on any nodes excluded by 
+this node mask unless they are specified by mempolicy.
 
-> 
-> If the kernel image file is in Portable Executable (PE) format we want to 
-> validate the PE Signature and measure the signer X.509 certificate 
-> (Extend as part of IMA Template defaulting to PCR 10, if not otherwise set, 
->  and the IMA measurement log).
+We may have a few different ways or criteria to initialize the node 
+mask, for example, we can read from HMAT (when HMAT is ready in the 
+future), and we definitely could have non-DRAM nodes set if they have no 
+performance difference (I'm supposed you mean NVDIMM-F  or HBM).
 
-How/when do you plan to "measure the signer X.509 certificate"?  Is
-this when the certificate is being loaded onto the keyring or at use?
- I'm not sure how much of the certificate is available once loaded
-onto the keyring.
+As long as there are different tiers, distinguished by performance, for 
+main memory, IMHO, there should be a defined default allocation node 
+mask to control the memory placement no matter where we get the information.
 
-> 
-> We plan to use Integrity Measurement Architecture (IMA) for the above.
-> 
-> Please let us know if anyone is already working on a patch set
-> for such a functionality.
-> 
-> I am aware of the work that Thiago Jung Bauermann @ IBM is doing for 
-> "Appended signatures support for IMA appraisal" 
-> (Web link given below)
-> 
->     https://lkml.org/lkml/2018/12/12/1049
+But, for now we haven't had such information ready for such use yet, so 
+the SRAT flag might be a choice.
 
-Other than Thiago, I'm not aware of anyone else working on this.
- Thiago is actively working on these patches and will be re-posting
-them shortly.
+>
+> Why isn't default SLIT distance sufficient for ensuring a DRAM-first
+> default policy?
 
-Mimi
+"DRAM-first" may sound ambiguous, actually I mean "DRAM only by 
+default". SLIT should just can tell us what node is local what node is 
+remote, but can't tell us the performance difference.
+
+Thanks,
+Yang
+
 
