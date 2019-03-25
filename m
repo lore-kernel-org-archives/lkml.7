@@ -2,111 +2,134 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3D98C10F03
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 22:14:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A371AC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 22:15:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5A542075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 22:14:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553552042;
-	bh=gptljuDKYtd4mBF7inngaQOoThcVckkYVNKZFHbmhYA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=o8Rfjyl9bWpF7F84bofXkuSemkVeVPzolVf0R+nDuD72rXDZeakwpYwf2hODdzpOK
-	 G2+fFkq7qpR9nH/N4fhywpIwXjQoHt5v2KgbMlSQQPyxMkIU0xfwK/ltyz6TRVKYMD
-	 41taCpcJhXlJ+X5RgsIKL5kkaTuh5RNfLGb7URWc=
+	by mail.kernel.org (Postfix) with ESMTP id 726332075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 22:15:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I7giHjHD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730439AbfCYWOB (ORCPT
+        id S1730212AbfCYWP6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 18:14:01 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:45154 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729297AbfCYWOA (ORCPT
+        Mon, 25 Mar 2019 18:15:58 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:35320 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729106AbfCYWP5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 18:14:00 -0400
-Received: by mail-lj1-f194.google.com with SMTP id y6so9285437ljd.12
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 15:13:59 -0700 (PDT)
+        Mon, 25 Mar 2019 18:15:57 -0400
+Received: by mail-ot1-f68.google.com with SMTP id m10so2010007otp.2
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 15:15:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=AYHpnIVDKxmo6/3WilvIDPLEyb4Tfp7ExayQzfs9ItU=;
-        b=X5pQijd2sCBbiFaZv9aOINBZAkjXG50xrGdu6/8gh9h2CggXiUhpetTONeM04KsBBF
-         UhG2ENlH6PaHLFDngidjIDF5HFlqZR5/6PocyyQf84qd0bjbNFrf//+kG/3Dol9vOKKC
-         w7wwVMsD00c286MEpwLfY6n8U8ebGLVKdQnLg=
+        bh=mgKLCtqSYr9Ki4yiAt+9HJ6QF4zuEc1vdaoGRfW6GoI=;
+        b=I7giHjHDi8rVOI2Rj2M30ZWnci1QqF1BImghkOCQqbkje13vCYp3Rc0AsHiLMeHwOi
+         sx1vSxztRJyOWKx1OErgkF2CXwfFK/vvkxVplF/sd0er2siDSXIVUGOVUpciqS9bD3ka
+         xdx0pBvAiT2glVb+zBLmBjd6Go3N7eIFe1Rp5/i8Ki87yw0yboD8Ngj2SwRnOI3MLMZR
+         8xpY9MezFfwc47eyKMv7aqSzaxDdDoVv95460my0XDvqER2Bru4KdskOJLvnAYzlvWtC
+         eE4USJmCRtoFqHt6T6jFj5yYM6LylCoN8j289p+tRM+4NInqi3ETTZ7o6xjWw23nqOGh
+         3RXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=AYHpnIVDKxmo6/3WilvIDPLEyb4Tfp7ExayQzfs9ItU=;
-        b=eYkJgkAhVhfrhItn5sjBLScLvqsbLauio5rTKRdkjqM/Y0A+lHBy4tPwraKKjelGH5
-         VqBJA5roU5MFbw99TKvdjUNGzDgTLenuyM/BLKAImW9dotyBzFgK3Jdu90giRuvvh9Ts
-         y8UJRUO8YduWOcH3MHq3KV4MkGZ7Fj06e80NxjWybaWoRDWZCx9GoVWd7jaGnQZoMBBU
-         O0B+QoBOBMHkNYIhjarJJyIQgO4dFZlQQRnlvX4Y+zyxYwvJvAczjAcNazrge8f1T01t
-         bJL95kRrlAusTav25qrUA/lPDR6D/yJZp1lh7fXKC6XDd0Bng6nRNSPokW19FBOn0ANX
-         4CJQ==
-X-Gm-Message-State: APjAAAXvcoqJaxY35jk/FhjkfxaHx72cUJpp4klMvRbiNaMJ7LqStZ2w
-        82e3iA6v8eFdAXSHE/r2knc+aoRDhvw=
-X-Google-Smtp-Source: APXvYqxLGdCHtrAx7CzRNrncM8K+Pq5a7kQT+AXHZkr+3d034r06QLW7N+dsDr/fCjpXlr6pBIdhMA==
-X-Received: by 2002:a2e:8648:: with SMTP id i8mr15301932ljj.166.1553552037735;
-        Mon, 25 Mar 2019 15:13:57 -0700 (PDT)
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com. [209.85.167.47])
-        by smtp.gmail.com with ESMTPSA id i24sm3689767ljb.31.2019.03.25.15.13.56
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 25 Mar 2019 15:13:56 -0700 (PDT)
-Received: by mail-lf1-f47.google.com with SMTP id a6so7179586lfl.5
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 15:13:56 -0700 (PDT)
-X-Received: by 2002:ac2:4424:: with SMTP id w4mr13455337lfl.148.1553552036163;
- Mon, 25 Mar 2019 15:13:56 -0700 (PDT)
+        bh=mgKLCtqSYr9Ki4yiAt+9HJ6QF4zuEc1vdaoGRfW6GoI=;
+        b=jsnKt1e//HXrX/elb0X/m/7FtZGaXK3CZEP+horytB8EoJuSkXHQnODJnfVFNFUzmn
+         UQJvdX9zjh/FzpFQOHziq9edqS2F9NM0jb+h2xIpUKKa/TQVWKHQciaTO3vwKskwS+2M
+         4NNeNJ2aeMm9df7H7jaKDZ356MhtBuN2i++phpJpve73KxdKSwc8kPW8+rKGd9sFzRIY
+         TMNe6luZPrUNfrg4o0ZXgtY/8YDuV9G5zmBqhMrF6DLsr2tq36dkh6Z0OJuA0yZD4oBX
+         9Qt5AVUZf+aWQuYwvHAofvNu9yMJK0FafEevXOHxT2jgzhi5YCgAkNwiGCnz+8M0QH+R
+         36EQ==
+X-Gm-Message-State: APjAAAWaXwZfpiV5wr9b2mi0yhZzyVk1hXvots/uyB+T45pvCvOEtmaM
+        ma79Klhbwm4xOGXUzGWRlmYn8jIGmyOJzohHC1RpaA==
+X-Google-Smtp-Source: APXvYqzJvek+IoFlhWPin70hAf9vrEOdLe5uyrnjOlS8dUeEAoaxTVrgDEF35PG0gUI7qmRZ4/BORTVxwt3/MldsJSQ=
+X-Received: by 2002:a9d:73c2:: with SMTP id m2mr19133805otk.338.1553552156903;
+ Mon, 25 Mar 2019 15:15:56 -0700 (PDT)
 MIME-Version: 1.0
-References: <0000000000006946d2057bbd0eef@google.com> <CAHk-=wiijJMTw=nTj_ED+YWMCrvHzh3ezfVYRxvzcW6+trgyPA@mail.gmail.com>
- <20190325045744.GK2217@ZenIV.linux.org.uk> <CAHk-=wg4iJsMHBzK52WzP+5_92HbwvX_vh_s4mMUuN0FJGdM5A@mail.gmail.com>
- <CAHk-=whJ4M5FegOLvnjUtJ0+pHv4L8UNFt+9jJDhox3Ada8kwA@mail.gmail.com>
- <20190325211405.GP2217@ZenIV.linux.org.uk> <CAHk-=wj+-e=X9cvvNwc5+QuvBOyYT7OtZTBzy-Wg8zGrUwxSbw@mail.gmail.com>
- <f4eccb87-1ea2-c0d5-19db-d638f2c5aa57@iogearbox.net>
-In-Reply-To: <f4eccb87-1ea2-c0d5-19db-d638f2c5aa57@iogearbox.net>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 25 Mar 2019 15:13:40 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjD-A_VsYC_OKcn30_ZsrLEE1CN7mnwZ803cvaFTdTTfA@mail.gmail.com>
-Message-ID: <CAHk-=wjD-A_VsYC_OKcn30_ZsrLEE1CN7mnwZ803cvaFTdTTfA@mail.gmail.com>
-Subject: Re: KASAN: use-after-free Read in path_lookupat
-To:     Daniel Borkmann <daniel@iogearbox.net>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        syzbot <syzbot+7a8ba368b47fdefca61e@syzkaller.appspotmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+References: <20181128193636.254378-1-brendanhiggins@google.com>
+ <20181128193636.254378-19-brendanhiggins@google.com> <990bfc7d-dc5e-d8d3-c151-9b321ff2ac10@gmail.com>
+ <CAFd5g45tOGgf_sKGYRC=fpnTBKGaG=8frbQdgZ3ZTkQFyTfP5A@mail.gmail.com>
+ <88fe0546-7850-5bb4-9673-b1aef2dccb3e@gmail.com> <CAFd5g444f-FBq4x3U7BL-EY+bFxP0rsJhJ14=mjOi89PhMkURg@mail.gmail.com>
+ <0e311e88-c4d4-e98d-1720-53a04bd526fc@gmail.com> <CAFd5g44NTZoSAJPMvXP2xvJgn7m5QoV-KJu2AMrr67+eL+CKrQ@mail.gmail.com>
+ <d9f7e000-4cac-a35a-3ff9-60130e12ebea@gmail.com> <72cd1c5b-6f68-73ad-c8fd-f3a3268a0529@gmail.com>
+ <CAFd5g46UU9wk+F6A5wnKYYtYKmmtv__SaY8eg6v-T9xUjsoxhA@mail.gmail.com>
+ <bb5bcd3d-a09a-cfbe-c7fa-16e5eb75b0e4@gmail.com> <CAFd5g448xQLOJwVYU5Zmu4+OPWuboiWZPhBvK6au8Pgm5B9haQ@mail.gmail.com>
+ <bf094685-3f2a-dc7b-7291-0340136b87f3@gmail.com>
+In-Reply-To: <bf094685-3f2a-dc7b-7291-0340136b87f3@gmail.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Mon, 25 Mar 2019 15:15:45 -0700
+Message-ID: <CAFd5g46tpL8KaqKnAEWNRSBWpYMcptu1Eig+nEzq9HX7DF1YUA@mail.gmail.com>
+Subject: Re: [RFC v3 18/19] of: unittest: split out a couple of test cases
+ from unittest
+To:     Frank Rowand <frowand.list@gmail.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@google.com>,
+        Luis Chamberlain <mcgrof@kernel.org>, shuah@kernel.org,
+        Joel Stanley <joel@jms.id.au>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Joe Perches <joe@perches.com>, brakmo@fb.com,
+        Steven Rostedt <rostedt@goodmis.org>,
+        "Bird, Timothy" <Tim.Bird@sony.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jeff Dike <jdike@addtoit.com>,
+        Richard Weinberger <richard@nod.at>,
+        linux-um@lists.infradead.org, Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Rob Herring <robh@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Knut Omang <knut.omang@oracle.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 3:04 PM Daniel Borkmann <daniel@iogearbox.net> wrote:
+On Thu, Mar 21, 2019 at 6:47 PM Frank Rowand <frowand.list@gmail.com> wrote:
 >
-> I'm fine either way, I think the rcu_destroy_inode would indeed simplify
-> it nicely. In any case fwiw, here's what I'd have ready for standby on bpf
-> side and tested as well. Decided to get rid of bpf_evict_inode() entirely
-> since the only callback we'd really need is on final inode destruction:
+> On 3/21/19 6:30 PM, Brendan Higgins wrote:
+> > On Thu, Mar 21, 2019 at 5:22 PM Frank Rowand <frowand.list@gmail.com> wrote:
+> >>
+> >> On 2/27/19 7:52 PM, Brendan Higgins wrote:
+>
+> < snip >  but thanks for the comments in the snipped section.
+>
+>
+> >>
+> >> Thanks for leaving 18/19 and 19/19 off in v4.
+> >
+> > Sure, no problem. It was pretty clear that it was a waste of both of
+> > our times to continue discussing those at this juncture. :-)
+> >
+> > Do you still want me to try to convert the DT not-exactly-unittest to
+> > KUnit? I would kind of prefer (I don't feel *super* strongly about the
+> > matter) we don't call it that since I was intending for it to be the
+> > flagship initial example, but I certainly don't mind trying to clean
+> > this patch up to get it up to snuff. It's really just a question of
+> > whether it is worth it to you.
+>
+> In the long term, if KUnit is adopted by the kernel, then I think it
+> probably makes sense for devicetree unittest to convert from using
+> our own unittest() function to report an individual test pass/fail
+> to instead use something like KUNIT_EXPECT_*() to provide more
+> consistent test messages to test frameworks.  That is assuming
+> KUNIT_EXPECT_*() provides comparable functionality.  I still have
+> not looked into that question since the converted tests (patch 15/17
+> in v4) still does not execute without throwing internal errors.
 
-Yes, this looks correct to me.
+Sounds good.
 
-I think this is worth doing regardless. Even if we then make the vfs
-layer add that rcu_destroy_inode(), that will fit very well with this
-patch, and getting rid of the special bpf_evict_inode() logic and just
-letting the normal vfs inode cleanup happen looks like the right
-thing.
+>
+> If that conversion occurred, I would also avoid the ASSERTs.
 
-So ack from me on your
-
-> Subject: [PATCH bpf] bpf: fix use after free in bpf_evict_inode
-
-patch regardless of what else we might end up doing in this area to
-clean things up.
-
-                 Linus
+Noted.
