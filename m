@@ -2,94 +2,98 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DATE_IN_FUTURE_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBFD2C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 08:48:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21985C10F03
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 08:48:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B29872087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 08:48:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9E6620863
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 08:48:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730097AbfCYIsb (ORCPT
+        id S1730141AbfCYIsh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 04:48:31 -0400
-Received: from mxhk.zte.com.cn ([63.217.80.70]:38888 "EHLO mxhk.zte.com.cn"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729618AbfCYIsa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 04:48:30 -0400
-Received: from mse01.zte.com.cn (unknown [10.30.3.20])
-        by Forcepoint Email with ESMTPS id 8AC019DAEF393E055D82;
-        Mon, 25 Mar 2019 16:48:28 +0800 (CST)
-Received: from notes_smtp.zte.com.cn ([10.30.1.239])
-        by mse01.zte.com.cn with ESMTP id x2P8mHFU051832;
-        Mon, 25 Mar 2019 16:48:17 +0800 (GMT-8)
-        (envelope-from peng.hao2@zte.com.cn)
-Received: from localhost.localdomain.localdomain ([10.74.120.59])
-          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
-          with ESMTP id 2019032516482393-6244021 ;
-          Mon, 25 Mar 2019 16:48:23 +0800 
-From:   Peng Hao <peng.hao2@zte.com.cn>
-To:     vitb@kernel.crashing.org, benh@kernel.crashing.org,
-        paulus@samba.org, mpe@ellerman.id.au, christophe.leroy@c-s.fr
-Cc:     Wen Yang <wen.yang99@zte.com.cn>, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] powerpc/8xx: fix possible object reference leak
-Date:   Tue, 26 Mar 2019 01:11:59 +0800
-Message-Id: <1553533919-75527-1-git-send-email-peng.hao2@zte.com.cn>
-X-Mailer: git-send-email 1.8.3.1
-X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
- 21, 2013) at 2019-03-25 16:48:24,
-        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
- 2019-03-25 16:48:16,
-        Serialize complete at 2019-03-25 16:48:16
-X-MAIL: mse01.zte.com.cn x2P8mHFU051832
+        Mon, 25 Mar 2019 04:48:37 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:52237 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730102AbfCYIsf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 04:48:35 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1h8LHL-000192-E7; Mon, 25 Mar 2019 09:48:23 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1h8LHK-0005lS-Pm; Mon, 25 Mar 2019 09:48:22 +0100
+Date:   Mon, 25 Mar 2019 09:48:22 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     thierry.reding@gmail.com, narmstrong@baylibre.com,
+        jbrunet@baylibre.com, linux-pwm@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] pwm: meson: use the spin-lock only to protect
+ register modifications
+Message-ID: <20190325084822.ozixel6bzi6xiw67@pengutronix.de>
+References: <20190324220217.15813-1-martin.blumenstingl@googlemail.com>
+ <20190324220217.15813-2-martin.blumenstingl@googlemail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190324220217.15813-2-martin.blumenstingl@googlemail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Yang <wen.yang99@zte.com.cn>
+Hello,
 
-The call to of_find_compatible_node returns a node pointer with refcount
-incremented thus it must be explicitly decremented after the last
-usage.
-irq_domain_add_linear also calls of_node_get to increase refcount,
-so irq_domain will not be affected when it is released.
+On Sun, Mar 24, 2019 at 11:02:17PM +0100, Martin Blumenstingl wrote:
+> Holding the spin-lock for all of the code in meson_pwm_apply() can
+> result in a "BUG: scheduling while atomic". This can happen because
+> clk_get_rate() (which is called from meson_pwm_calc()) may sleep.
+> Only hold the spin-lock when modifying registers to solve this.
+> 
+> The reason why we need a spin-lock in the driver is because the
+> REG_MISC_AB register is shared between the two channels provided by one
+> PWM controller. The only functions where REG_MISC_AB is modified are
+> meson_pwm_enable() and meson_pwm_disable() so the register reads/writes
+> in there need to be protected by the spin-lock.
+> 
+> The original code also used the spin-lock to protect the values in
+> struct meson_pwm_channel. This could be necessary if two consumers can
+> use the same PWM channel. However, PWM core doesn't allow this so we
+> don't need to protect the values in struct meson_pwm_channel with a
+> lock.
+> 
+> Fixes: 211ed630753d2f ("pwm: Add support for Meson PWM Controller")
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-Detected by coccinelle with the following warnings:
-./arch/powerpc/platforms/8xx/pic.c:158:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 136, but without a corresponding object release within this function.
+Looks right.
 
-Fixes: a8db8cf0d894 ("irq_domain: Replace irq_alloc_host() with
-revmap-specific initializers")
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Suggested-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Reviewed-by: Peng Hao <peng.hao2@zte.com.cn>
-Cc: Vitaly Bordug <vitb@kernel.crashing.org>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: linux-kernel@vger.kernel.org
----
- arch/powerpc/platforms/8xx/pic.c | 2 --
- 1 file changed, 2 deletions(-)
+Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-diff --git a/arch/powerpc/platforms/8xx/pic.c b/arch/powerpc/platforms/8xx/pic.c
-index 8d5a25d..4453df6 100644
---- a/arch/powerpc/platforms/8xx/pic.c
-+++ b/arch/powerpc/platforms/8xx/pic.c
-@@ -153,9 +153,7 @@ int mpc8xx_pic_init(void)
- 	if (mpc8xx_pic_host == NULL) {
- 		printk(KERN_ERR "MPC8xx PIC: failed to allocate irq host!\n");
- 		ret = -ENOMEM;
--		goto out;
- 	}
--	return 0;
- 
- out:
- 	of_node_put(np);
+Bonus points for adding a comment to struct meson_pwm::lock. Something
+like:
+
+	/*
+	 * Protects register access to the MISC_AB register that is
+	 * shared between the two PWMs.
+	 */
+
+Best regards
+Uwe
+
 -- 
-2.9.5
-
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
