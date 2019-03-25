@@ -2,192 +2,152 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9099C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:56:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AD60C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:57:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A3F120823
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:56:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C4A02087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:57:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hlHXr/at"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="D9c8wTs0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729716AbfCYR4V (ORCPT
+        id S1729902AbfCYR5M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 13:56:21 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:34596 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729036AbfCYR4U (ORCPT
+        Mon, 25 Mar 2019 13:57:12 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:35821 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729728AbfCYR5M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 13:56:20 -0400
-Received: by mail-lf1-f68.google.com with SMTP id y18so6760660lfe.1
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 10:56:18 -0700 (PDT)
+        Mon, 25 Mar 2019 13:57:12 -0400
+Received: by mail-pg1-f193.google.com with SMTP id g8so6966112pgf.2
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 10:57:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=gxz4yoPt1q6OV76nKiFOODegQSe7rL5QL9V2EAX+Woo=;
-        b=hlHXr/at2H4nErYZbKBI1q2uTyv9g0aaTySTLBtg2fh3UIeutwX4ysAJkcWWQPQLuU
-         sgS3NrXbXlkxcjW1Y/jBm+/7LYo6volmPRiZxREkCSXGshOa00kS5t9u6sT1DEKAjcU3
-         S0Bw/Q3ROtGOnNS8vQ38KuW1BF2RINWpuSbkY=
+        bh=x0H6tmkxza/8d0+N913JHZ3De4yw9yKeqvruKlu2rc4=;
+        b=D9c8wTs0NkN7Uh8lWSEvsILq9RHew5bXj8s5S7P4xFoAEVAJph4XOii7koKyaN03i8
+         deWHhDjYPVRem2gGURMZ4Ohsf8uM4V/U/UpNEB+4oujSICm/Yu9uSBz6zYpjqpq88aps
+         cD7SPllYvd/Jqcqd0e0eGx0eoKh3AOqaK95m4iv0n/x/ImLIzC4k0BE7x9+W+jQYGaDC
+         5Pkw7EfoSMGMfnnVei/F5Afk4POU8ucNH2QlzZoD+DTO0pgEXDTNILnRmkQmguEoqK+O
+         ZNiPL/1e2LV2uHetTFT8HX5GxMyJBBBi+3I/EvxmmFCe3Es+fd2RuuWVFPctk/7DXEt3
+         iwWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=gxz4yoPt1q6OV76nKiFOODegQSe7rL5QL9V2EAX+Woo=;
-        b=C4A8KdSRZIfQJrI4CaGd46VmrzCm8FA8JyL/ebyqf49VY7hJwqoROA9Q0KfeS3GQqD
-         hHSgogew18EDI8lxth6XhQrcgOb0kwU4+Jf9Bmm68BJNk0Jcn1kGfYuZKuU7ndO8oPth
-         uPUyeM65MFIdRnl+wIkOb/DmjMCeBqsZJvdieEWuQ9NPzU3E7FVHKJ+s93MbUUX76Vdt
-         fzz+NCOX2hSXqiYkIOI9xUk4OY5I3oIdYdr38XDJN2DqB9Q3sSZcEdx0C1Ueewki4tll
-         caGL8XQhtvt7n+LEBolHRMHu6ZtTMtMbEyJezGzDUUfLiYNkFv8yPyFq302Zr+Yl08Y+
-         7xdg==
-X-Gm-Message-State: APjAAAWmG8I36vqeve3IANhsKTGQEgI3tGnTj5BE6pd4CoOZiWOKJ9sY
-        7Yi0kLGL2h/niB96wPZxnli5OESty0Y=
-X-Google-Smtp-Source: APXvYqwDcOTqWBdA1CPX5KwagShWn5wc/KZx80GoErTEUgk32bbm1FEd5TGH+S+hP6jcvkBzyZbQFg==
-X-Received: by 2002:a19:954b:: with SMTP id x72mr12968314lfd.67.1553536577474;
-        Mon, 25 Mar 2019 10:56:17 -0700 (PDT)
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com. [209.85.208.181])
-        by smtp.gmail.com with ESMTPSA id s10sm131988lfc.20.2019.03.25.10.56.14
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 25 Mar 2019 10:56:14 -0700 (PDT)
-Received: by mail-lj1-f181.google.com with SMTP id v22so8663845lje.9
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 10:56:14 -0700 (PDT)
-X-Received: by 2002:a2e:b058:: with SMTP id d24mr14870339ljl.42.1553536573991;
- Mon, 25 Mar 2019 10:56:13 -0700 (PDT)
+        bh=x0H6tmkxza/8d0+N913JHZ3De4yw9yKeqvruKlu2rc4=;
+        b=YfOM25VzNJaPHEnY2U7NHB2cn6Uto5cSqKQ897RN2HgccUQssQmesD3kC7C3SOT+YU
+         Y/mErCp0U+oszAwwuE6r1EU7ozL/C815ReMaJE/EDBtfPRIedjYnwtRNheNTOCrt+v0B
+         sw1pf5A4jpewwsjvjdxNWRHyX5oSubFXZXkDAoa21kx4l/GtqWB5WRrnCQH+Nro7lRI/
+         mvJJAyybm3vyHn7HZdP3+Xjt8ghHN/EakX8VKCOFdkWCnuBIiWBshplUm7fXCeq+0l4A
+         g4JlmpSRbJE7eGI66xUzbEYukCdfP6LyeWUxYDuJyMgvPMfLLuv1sIvtBFsFSJUn0m8D
+         s0MQ==
+X-Gm-Message-State: APjAAAU9AdVoFt3nvkuG4ECN2wztnF5/dBMafAuX3nif0hos1fZxh9/G
+        1RU6hitmgULXsjPYTe+DI9qUSLDenrA6iEZn69KJtw==
+X-Google-Smtp-Source: APXvYqzyuJ7+cZVdUhdxPd44AK/Lb7S1zjwyVJIgc78P3c9DApdnlx6RPs+bTeyQ6ch6HV72IUo+B3dO5vYPXABBB6E=
+X-Received: by 2002:a63:84c7:: with SMTP id k190mr24506978pgd.255.1553536631433;
+ Mon, 25 Mar 2019 10:57:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190306214730.6545-1-valleau@chromium.org> <44e151af-b6c4-d0af-3ef1-a5632d079915@kernel.org>
- <CA+ASDXMcnEfZzTjDGsDbZxX2Xknv6dt3H-3kN79WdKFzif2zsA@mail.gmail.com> <caee30e2-ddc4-0076-907e-558dbcfe7c52@kernel.org>
-In-Reply-To: <caee30e2-ddc4-0076-907e-558dbcfe7c52@kernel.org>
-From:   Brian Norris <briannorris@chromium.org>
-Date:   Mon, 25 Mar 2019 10:56:02 -0700
-X-Gmail-Original-Message-ID: <CA+ASDXOzTkXk_JtBDa4zkMhy3NyWv7Wn1i6YYtwRdeF8j_c2nA@mail.gmail.com>
-Message-ID: <CA+ASDXOzTkXk_JtBDa4zkMhy3NyWv7Wn1i6YYtwRdeF8j_c2nA@mail.gmail.com>
-Subject: Re: [PATCH] tools: usb: usbip: adding support for older kernel versions
-To:     shuah <shuah@kernel.org>
-Cc:     David Valleau <valleau@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux USB Mailing List <linux-usb@vger.kernel.org>,
-        Michael Grzeschik <m.grzeschik@pengutronix.de>,
-        Valentina Manea <valentina.manea.m@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <alexander.levin@microsoft.com>
+References: <20190324194505.3244479-1-arnd@arndb.de>
+In-Reply-To: <20190324194505.3244479-1-arnd@arndb.de>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 25 Mar 2019 10:57:00 -0700
+Message-ID: <CAKwvOdmH+G6asuizkYJ-A6OTepQ6MXKzTmLYoWrCK8nhXxYahw@mail.gmail.com>
+Subject: Re: [PATCH] ubifs: work around high stack usage with clang
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Richard Weinberger <richard@nod.at>,
+        Artem Bityutskiy <dedekind1@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Eric Biggers <ebiggers@google.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-mtd@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shuah,
-
-On Mon, Mar 25, 2019 at 8:51 AM shuah <shuah@kernel.org> wrote:
-> On 3/18/19 12:23 PM, Brian Norris wrote:
-> > On Sat, Mar 16, 2019 at 4:40 PM shuah <shuah@kernel.org> wrote:
-> >> I would like to understand the reasons for wanting to run new tool on
-> >> old kernels.
-> >
-> > On Chromium OS, we ship more or less the same user space for a variety
-> > of systems, but not all of those run the same kernel. That's not
-> > exactly a novel concept -- many good tools are written such that they
-> > degrade gracefully when running with reduced feature sets (e.g., older
-> > kernels). While we are working on reducing the divergence and number
-> > of kernels we ship, it's currently a fact of life that we have to
-> > support multiple target kernel versions.
+On Sun, Mar 24, 2019 at 12:45 PM Arnd Bergmann <arnd@arndb.de> wrote:
 >
-> Thanks for the context for this change.
-
-One thing to add: we're currently only using usbip as a test utility,
-and we're not yet enabling it on older kernels (because of this
-precise problem).
-
-> > Is there a fundamental problem with VHCI such that it doesn't have a
-> > stable ABI that tools can be written against?
-> >
+> Building this file with clang can result in large stack usage as seen from
+> this warning:
 >
-> In general the ABI is stable.
-
-No, it really isn't. This commit was a breaking change:
-
-commit 2f2d0088eb93db5c649d2a5e34a3800a8a935fc5
-Author: Shuah Khan <shuahkh@osg.samsung.com>
-Date: Thu Dec 7 14:16:49 2017 -0700
-
-  usbip: prevent vhci_hcd driver from leaking a socket pointer address
-
-That one is arguably OK, since nobody was actually using that field
-(except for parsing it and throwing it away), and it's a security
-leak.
-
-But this one is definitely a break:
-
-commit 1c9de5bf428612458427943b724bea51abde520a
-Author: Yuyang Du <yuyang.du@intel.com>
-Date: Thu Jun 8 13:04:10 2017 +0800
-
-  usbip: vhci-hcd: Add USB3 SuperSpeed support
-
-You can't just arbitrarily add columns to the beginning of a file like
-that and claim that you're not breaking ABI. And I shouldn't need to
-remind you that Thou Shalt Not Break User Space.
-
-Now, this whole file has tons of problems:
- * it's not documented at all in Documentation/ABI/ (so hey, you can
-argue there's no ABI to break!)
- * it violates the "one piece of information per attribute" rule; this
-contributes to the previous point, since it's hard to extend anything
-without breaking user space
-
-> +#define V3_18_STATUS_HEADER "prt sta spd bus dev socket
-> local_busid"
+> fs/ubifs/auth.c:78:5: error: stack frame size of 1152 bytes in function 'ubifs_prepare_auth_node'
 >
-> What's your 3.18 kernel version? I think you are missing security
-> fixes that prevent socket address leak in the status file.
-
-We're not using the latest 3.18.y stable series, if that's what you're
-asking. So no, we don't have that security patch. But we also don't
-currently enable USBIP_CORE and similar. We can backport stuff if we
-need (backporting that security fix is on my/our plate), but we'd
-probably like to understand the maintenance landscape here first.
-Clearly usbip is not maintained with ABI compatibility in mind.
-
-> +#define V4_4_STATUS_HEADER "prt sta spd dev      sockfd local_busid"
-> +#define V4_14_STATUS_HEADER "hub port sta spd dev      sockfd local_busid"
+> The problem is that inlining ubifs_hash_calc_hmac() leads to
+> two SHASH_DESC_ON_STACK() blocks in the same function, and clang
+> for some reason does not reuse the stack space as it should.
 >
-> The difference here is the high speed support. Let's find a better
-> way to fix this than hard-coding kernel revisions in the tool.
-
-Yeah, I'm not in love with this particular patch, but it exposes the
-systemic problems you have already, so at least it serves to start the
-discussion.
-
-> > If stability is possible but you just don't care, then I guess we can
-> > fork our own version...
-> >
-> > Or even worse, we could build N copies of usbip for N kernels. But we
-> > don't do that for any other user space component.
-> >
+> Putting the first declaration into a separate basic block avoids
+> this problem and reduces the stack allocation to 640 bytes.
 >
-> It might be easier to build N versions than maintaining the fork :)
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+
+LGTM; in general, it can be useful to always include a comment before
+a new scope like:
+
+/* New scope to limit lifetime of large stack allocated hash_desc. */
+
+but folks can always refer to the git blame/log for reasoning as to
+why a new scope was added.
+
+I plan on working on a pass in LLVM to improve stack slot reuse
+sometime in 2019Q2.  Thanks for this patch.
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+
+> ---
+>  fs/ubifs/auth.c | 17 ++++++++++-------
+>  1 file changed, 10 insertions(+), 7 deletions(-)
 >
-> In any case, let's find ways to fix the problem with a constructive
-> approach.
+> diff --git a/fs/ubifs/auth.c b/fs/ubifs/auth.c
+> index 5bf5fd08879e..5d3d0b37a908 100644
+> --- a/fs/ubifs/auth.c
+> +++ b/fs/ubifs/auth.c
+> @@ -78,7 +78,6 @@ static int ubifs_hash_calc_hmac(const struct ubifs_info *c, const u8 *hash,
+>  int ubifs_prepare_auth_node(struct ubifs_info *c, void *node,
+>                              struct shash_desc *inhash)
+>  {
+> -       SHASH_DESC_ON_STACK(hash_desc, c->hash_tfm);
+>         struct ubifs_auth_node *auth = node;
+>         u8 *hash;
+>         int err;
+> @@ -87,13 +86,17 @@ int ubifs_prepare_auth_node(struct ubifs_info *c, void *node,
+>         if (!hash)
+>                 return -ENOMEM;
+>
+> -       hash_desc->tfm = c->hash_tfm;
+> -       hash_desc->flags = CRYPTO_TFM_REQ_MAY_SLEEP;
+> -       ubifs_shash_copy_state(c, inhash, hash_desc);
+> +       {
+> +               SHASH_DESC_ON_STACK(hash_desc, c->hash_tfm);
+>
+> -       err = crypto_shash_final(hash_desc, hash);
+> -       if (err)
+> -               goto out;
+> +               hash_desc->tfm = c->hash_tfm;
+> +               hash_desc->flags = CRYPTO_TFM_REQ_MAY_SLEEP;
+> +               ubifs_shash_copy_state(c, inhash, hash_desc);
+> +
+> +               err = crypto_shash_final(hash_desc, hash);
+> +               if (err)
+> +                       goto out;
+> +       }
+>
+>         err = ubifs_hash_calc_hmac(c, hash, auth->hmac);
+>         if (err)
+> --
+> 2.20.0
+>
 
-I think we should settle the biggest questions first: documenting
-(and/or re-implementing) the current ABI, so that we have a stable
-target. Going forward, if we are to pretend this is a real kernel
-feature, it should not be breaking compatibility arbitrarily like it
-has already. If I started using usbip on kernel 3.18 (+ the
-pointer-leaking security fix), I should not expect to see my user
-space break just because I upgraded to the latest kernel.
 
-If we can agree on that part, *then* we can talk about what (if
-anything) to do about patching usbip for compatibility with old
-(ABI-broken) kernels. Perhaps we will just throw out old kernels. Or
-maybe we'll do some minimal user space patching. Or maybe we patch our
-old kernels to match the latest ABI. That's not quite as big as a
-problem, as long as we agree on what ABI stability means going
-forward.
-
-Brian
+-- 
+Thanks,
+~Nick Desaulniers
