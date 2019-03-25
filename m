@@ -2,106 +2,106 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CBDAC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 11:48:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AED9C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 11:48:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D2E520850
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 11:48:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FACB2087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 11:48:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730858AbfCYLsQ (ORCPT
+        id S1730938AbfCYLsZ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 07:48:16 -0400
-Received: from mga14.intel.com ([192.55.52.115]:4584 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730605AbfCYLsP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 07:48:15 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Mar 2019 04:48:15 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,256,1549958400"; 
-   d="scan'208";a="331757868"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
-  by fmsmga005.fm.intel.com with ESMTP; 25 Mar 2019 04:48:13 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1h8O5M-00058N-GF; Mon, 25 Mar 2019 13:48:12 +0200
-Date:   Mon, 25 Mar 2019 13:48:12 +0200
-From:   "andriy.shevchenko" <andriy.shevchenko@linux.intel.com>
-To:     "zhuchangchun@cvte.com" <zhuchangchun@cvte.com>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "linus.walleij" <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        hendychu <hendychu@aliyun.com>
-Subject: Re: Re: [PATCH] pinctrl: intel: Implements gpio free function
-Message-ID: <20190325114812.GO9224@smile.fi.intel.com>
-References: <20190321120324.GI3622@lahna.fi.intel.com>
- <2019032120213955866649@cvte.com>
- <20190321123637.GJ3622@lahna.fi.intel.com>
- <2019032121342663125658@cvte.com>
- <20190321135642.GK3622@lahna.fi.intel.com>
- <2019032211131426883268@cvte.com>
- <20190322104242.GV3622@lahna.fi.intel.com>
- <2019032314505202825175@cvte.com>
- <20190323164810.GE9224@smile.fi.intel.com>
- <2019032517511048990383@cvte.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2019032517511048990383@cvte.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 25 Mar 2019 07:48:25 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:58550 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729166AbfCYLsY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 07:48:24 -0400
+Received: from marcel-macpro.fritz.box (p4FEFC449.dip0.t-ipconnect.de [79.239.196.73])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 7390ACF35C;
+        Mon, 25 Mar 2019 12:56:24 +0100 (CET)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 12.2 \(3445.102.3\))
+Subject: Re: [PATCH v4 2/2] dt-bindings: net: bluetooth: Add device tree
+ bindings for QTI chip WCN3998
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <1553513491-25763-3-git-send-email-c-hbandi@codeaurora.org>
+Date:   Mon, 25 Mar 2019 12:48:22 +0100
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>,
+        Hemantg <hemantg@codeaurora.org>, linux-arm-msm@vger.kernel.org,
+        Balakrishna Godavarthi <bgodavar@codeaurora.org>,
+        anubhavg@codeaurora.org, devicetree <devicetree@vger.kernel.org>,
+        mark.rutland@arm.com, obh+dt@kernel.org
+Content-Transfer-Encoding: 8BIT
+Message-Id: <3AEE5277-5830-41FC-BC72-F5BE4B34B357@holtmann.org>
+References: <1553513491-25763-1-git-send-email-c-hbandi@codeaurora.org>
+ <1553513491-25763-3-git-send-email-c-hbandi@codeaurora.org>
+To:     Harish Bandi <c-hbandi@codeaurora.org>
+X-Mailer: Apple Mail (2.3445.102.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 05:52:10PM +0800, zhuchangchun@cvte.com wrote:
-> On Sat, Mar 23, 2019 at 02:51:52PM +0800, zhuchangchun@cvte.com wrote:
-> > On Fri, Mar 22, 2019 at 11:14:14AM +0800, zhuchangchun@cvte.com wrote:
->  
-> > >    From above,you can kown when you export a GPIO ,it will do request,
-> > >
-> > >    and there will set TX and RX register at the time same time.
-> > >
-> > >    when you try to set direction in and set value, TX register value can
-> > >    roll back
-> > >
-> > >    the value,but RX register was not set, so who will set RX value back??
-> > 
-> > I think you are looking at some older code. There is now function
-> > __intel_gpio_set_direction() that is supposed to set both buffers
-> > depending on the direction. It was introduced with commit 17fab473693e
-> > ("pinctrl: intel: Set pin direction properly").
-> >
-> >
-> > --> Yes ,I see the latest master branch, the __intel_gpio_set_direction will
-> > set RX and TX, but I still think we need to implement free function,cause
-> > it will help many other engineers,especailly for some manufactories use some
-> > module,and this modules embeded its own driver but not can be modified,
-> > if they want use the gpio control the module, they may meet the same problem.
->  
-> What problem?
-> Is it reproducible on latest vanilla kernel?
+Hi Harish,
+
+> This patch enables regulators for the Qualcomm Bluetooth WCN3998
+> controller.
 > 
-> --> Not yet, I mean if someone use export GPIO ,then forget to set direction in, 
-> and then set GPIO unexport directly, the GPIO buffer status may influence 
-> the device work flow.
+> Signed-off-by: Harish Bandi <c-hbandi@codeaurora.org>
+> ---
+> Changes in V4:
+> - Removed new compatible WCN3998
+> - changed wcn3990 to wcn399* to represent wcn399* family
+> ---
+> Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt | 7 ++++---
+> 1 file changed, 4 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+> index 824c0e2..de9cefa 100644
+> --- a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+> +++ b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+> @@ -11,20 +11,21 @@ Required properties:
+>  - compatible: should contain one of the following:
+>    * "qcom,qca6174-bt"
+>    * "qcom,wcn3990-bt"
+> +   * "qcom,wcn3998-bt"
+> 
+> Optional properties for compatible string qcom,qca6174-bt:
+> 
+>  - enable-gpios: gpio specifier used to enable chip
+>  - clocks: clock provided to the controller (SUSCLK_32KHZ)
+> 
+> -Required properties for compatible string qcom,wcn3990-bt:
+> +Required properties for compatible string qcom,wcn399*-bt:
+> 
+>  - vddio-supply: VDD_IO supply regulator handle.
+>  - vddxo-supply: VDD_XO supply regulator handle.
+>  - vddrf-supply: VDD_RF supply regulator handle.
+>  - vddch0-supply: VDD_CH0 supply regulator handle.
+> 
+> -Optional properties for compatible string qcom,wcn3990-bt:
+> +Optional properties for compatible string qcom,wcn399*-bt:
+> 
+>  - max-speed: see Documentation/devicetree/bindings/serial/slave-device.txt
+> 
+> @@ -44,7 +45,7 @@ serial@7570000 {
+> 
+> serial@898000 {
+> 	bluetooth {
+> -		compatible = "qcom,wcn3990-bt";
+> +		compatible = "qcom,wcn399*-bt”;
 
-If you would like to return pin back to the previous state, it should be done
-in generic way in the pin control subsystem.
+I am not convinced that examples should have a * in the compatible string. So lets have Rob ack this one.
 
-Since there is no problem, nothing to fix then.
+Regards
 
--- 
-With Best Regards,
-Andy Shevchenko
-
+Marcel
 
