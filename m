@@ -2,69 +2,126 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 651B4C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:40:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5DDFC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:40:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E44320863
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:40:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CCD720863
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:40:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729473AbfCYQkh (ORCPT
+        id S1729606AbfCYQkv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 12:40:37 -0400
-Received: from smtprelay0052.hostedemail.com ([216.40.44.52]:34794 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725747AbfCYQkh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 12:40:37 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 11201837F24D;
-        Mon, 25 Mar 2019 16:40:36 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: beef22_4f023205ee2d
-X-Filterd-Recvd-Size: 1686
-Received: from XPS-9350.home (unknown [47.151.153.53])
-        (Authenticated sender: joe@perches.com)
-        by omf17.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 25 Mar 2019 16:40:33 +0000 (UTC)
-Message-ID: <65a633806b819c3067972853a9f1c2b6029e0ce5.camel@perches.com>
-Subject: Re: [PATCH v5 1/2] docs: Clarify the usage and sign-off
- requirements for Co-developed-by
-From:   Joe Perches <joe@perches.com>
-To:     Jonathan Corbet <corbet@lwn.net>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Andy Whitcroft <apw@canonical.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, "Tobin C . Harding" <me@tobin.cc>,
+        Mon, 25 Mar 2019 12:40:51 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45580 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725747AbfCYQku (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 12:40:50 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 80F26AFE7;
+        Mon, 25 Mar 2019 16:40:48 +0000 (UTC)
+Subject: Re: [PATCH] x86/paravirt: Guard against invalid cpu # in
+ pv_vcpu_is_preempted()
+To:     Waiman Long <longman@redhat.com>,
+        Alok Kataria <akataria@vmware.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>
-Date:   Mon, 25 Mar 2019 09:40:32 -0700
-In-Reply-To: <20190325103114.2df3b91d@lwn.net>
-References: <20190322211137.18241-1-sean.j.christopherson@intel.com>
-         <20190322211137.18241-2-sean.j.christopherson@intel.com>
-         <20190325103114.2df3b91d@lwn.net>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.1-1build1 
-Mime-Version: 1.0
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will.deacon@arm.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Paolo Bonzini <pbonzini@redhat.com>
+References: <20190325155706.26987-1-longman@redhat.com>
+From:   Juergen Gross <jgross@suse.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jgross@suse.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <e01da674-cbf0-22f1-7aba-6041f892b689@suse.com>
+Date:   Mon, 25 Mar 2019 17:40:46 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
+MIME-Version: 1.0
+In-Reply-To: <20190325155706.26987-1-longman@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-03-25 at 10:31 -0600, Jonathan Corbet wrote:
-> On Fri, 22 Mar 2019 14:11:36 -0700 Sean Christopherson <sean.j.christopherson@intel.com> wrote:
-> > The documentation for Co-developed-by is a bit light on details,
-[]
-> I've applied this.  Joe, do you want to handle the checkpatch.pl patch, or
-> would you prefer I take that one too?
+On 25/03/2019 16:57, Waiman Long wrote:
+> It was found that passing an invalid cpu number to pv_vcpu_is_preempted()
+> might panic the kernel in a VM guest. For example,
+> 
+> [    2.531077] Oops: 0000 [#1] SMP PTI
+>   :
+> [    2.532545] Hardware name: Red Hat KVM, BIOS 0.5.1 01/01/2011
+> [    2.533321] RIP: 0010:__raw_callee_save___kvm_vcpu_is_preempted+0x0/0x20
+> 
+> To guard against this kind of kernel panic, check is added to
+> pv_vcpu_is_preempted() to make sure that no invalid cpu number will
+> be used.
+> 
+> Signed-off-by: Waiman Long <longman@redhat.com>
+> ---
+>  arch/x86/include/asm/paravirt.h | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/arch/x86/include/asm/paravirt.h b/arch/x86/include/asm/paravirt.h
+> index c25c38a05c1c..4cfb465dcde4 100644
+> --- a/arch/x86/include/asm/paravirt.h
+> +++ b/arch/x86/include/asm/paravirt.h
+> @@ -671,6 +671,12 @@ static __always_inline void pv_kick(int cpu)
+>  
+>  static __always_inline bool pv_vcpu_is_preempted(long cpu)
+>  {
+> +	/*
+> +	 * Guard against invalid cpu number or the kernel might panic.
+> +	 */
+> +	if (WARN_ON_ONCE((unsigned long)cpu >= nr_cpu_ids))
+> +		return false;
+> +
+>  	return PVOP_CALLEE1(bool, lock.vcpu_is_preempted, cpu);
+>  }
 
-You taking it is fine with me.
+Can this really happen without being a programming error?
+
+Basically you'd need to guard all percpu area accesses to foreign cpus
+this way. Why is this one special?
 
 
+Juergen
