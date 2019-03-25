@@ -2,86 +2,98 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDC91C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 20:12:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D1EBC10F03
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 20:12:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CD3620879
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 20:12:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBED520879
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 20:12:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553544749;
-	bh=3oHwXBvTE6P0LcmsGT1crfytrDhkDcpym/BAJIlrw08=;
+	s=default; t=1553544760;
+	bh=+YtJAzMwVrQKVqNDxH5zf87X6cik+yHaqvGJ7C6urKc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tkoiQJ+vB7uXYO46mJhj53dLYMKR7IWGB8VK/asHgKYvHLD7oA+W2g5SLiR7FTlio
-	 /ERHnskiYM4FJ1qu9KVCegPS150HYJLDN/VA1yNLOkKm3Yf9gTBPslLvS6eJZMF7ij
-	 hojXt+8RtlyICJbJkMlgvAUIwOQI3C8rkvahS6Zc=
+	b=B71uXKup85HwGNvgKyN7kBA6KlBNzcItg3dCmsS3m7SrpQAe7Nm1Sh1naFM+5m5DU
+	 L/9ehDwseCnJnnpbITLZGcC2ZcT1uRPP35DTKm9z/rwPvt3MZ20OX2X6rLXVzqrjDt
+	 AW665Gei9MVdueEgMcjymM5aXS26vbZHXiXYqEUI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730190AbfCYUM2 (ORCPT
+        id S1730263AbfCYUMi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 16:12:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49564 "EHLO mail.kernel.org"
+        Mon, 25 Mar 2019 16:12:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729283AbfCYUM2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 16:12:28 -0400
+        id S1729283AbfCYUMi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 16:12:38 -0400
 Received: from localhost (unknown [218.237.54.8])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F69420854;
-        Mon, 25 Mar 2019 20:12:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EFD8F2087C;
+        Mon, 25 Mar 2019 20:12:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553544747;
-        bh=3oHwXBvTE6P0LcmsGT1crfytrDhkDcpym/BAJIlrw08=;
+        s=default; t=1553544757;
+        bh=+YtJAzMwVrQKVqNDxH5zf87X6cik+yHaqvGJ7C6urKc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jgC7Oax0gF+3uMijkWGhqmAxdddv1Oyy0H0qSU4dgOY4T6coRJpafywafraXE5+on
-         EzLKKp1cWrTGDJdVMRHtWgp3U/k0tBkb6e6uQ4cBmg4g3TF54VhH+Z6Q7/dQwa7+T0
-         /oxomSYme3s4fFXj7hdT8te0oY1jIHiVhUzlU93g=
-Date:   Tue, 26 Mar 2019 04:25:46 +0900
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Subject: Re: [REGRESSION] failed to boot: commit 1aec4211204d parport: daisy:
- use new parport device model
-Message-ID: <20190325192546.GA14506@kroah.com>
-References: <20190325113650.56f596f9@gandalf.local.home>
- <CAHk-=wiyLkyu3b6CLkeBBCq+584Bi_ukaGbVsnMtczJQUWJDVA@mail.gmail.com>
+        b=r2jqTnS/qt63TU/pW06pRHyY3CP1t+2zymRi6bVai16JJCf0+U/6yxPMk9pGNuEd6
+         wzhrpauxe55fV1SuccYQnl+twaUJnSUMXDNruNjhgO+Qaurl/syqbbYgzKrpeM9k6q
+         kBBW0Q7GMU8YIz4bIy5iboAIcvBDr3tsU1Ux3o1E=
+Date:   Tue, 26 Mar 2019 04:31:13 +0900
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     lantianyu1986@gmail.com
+Cc:     tglx@linutronix.de, mingo@kernel.org, konrad.wilk@oracle.com,
+        jpoimboe@redhat.com, peterz@infraded.org, mojha@codeaurora.org,
+        peterz@infradead.org, jkosina@suse.cz, riel@surriel.com,
+        luto@kernel.org, Tianyu.Lan@microsoft.com,
+        michael.h.kelley@microsoft.com, kys@microsoft.com,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [Fix PATCH] cpu/hotplug: Fix bug report when add "nosmt"
+ parameter with CONFIG_HOTPLUG_CPU=N
+Message-ID: <20190325193113.GA14852@kroah.com>
+References: <1553521883-20868-1-git-send-email-Tianyu.Lan@microsoft.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wiyLkyu3b6CLkeBBCq+584Bi_ukaGbVsnMtczJQUWJDVA@mail.gmail.com>
+In-Reply-To: <1553521883-20868-1-git-send-email-Tianyu.Lan@microsoft.com>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 11:04:49AM -0700, Linus Torvalds wrote:
-> On Mon, Mar 25, 2019 at 8:36 AM Steven Rostedt <rostedt@goodmis.org> wrote:
-> >
-> > I bisected it down to this commit:
-> >
-> >   aec4211204d ("parport: daisy: use new parport device model")
+On Mon, Mar 25, 2019 at 09:51:23PM +0800, lantianyu1986@gmail.com wrote:
+> From: Lan Tianyu <Tianyu.Lan@microsoft.com>
 > 
-> I was confused, because no such commit exists.
+> When add "nosmt" parameter, kernel still boots up all logical cpus once
+> and set CR4.MCE on each CPU. This is to avoid shutting down machine
+> when a broadacasted MCE is observed CR4.MCE=0b. (Detail please see comment
+> in the cpu_smt_allowed()). Smt cpus will bring up and bring down during
+> kernel boot with "nosmt" parameter.
 > 
-> But it turns out you have the right commit ID in your subject line,
-> and you just dropped the initial '1' .
+> When CONFIG_HOTPLUG_CPU=Y, CPU_DYING callbacks will be called inside
+> stop-machine and irq is disabled. This happens in the take_cpu_down()
+> callback. When CONFIG_HOTPLUG_CPU=N,CPU_DYING callbacks will be called
+> with irq enabled.
 > 
-> Anyway, that commit does look odd - why is the daisy_drv_init() done
-> by parport_bus_init() rather than just as a regular module init? And
-> as a result, now when daisy_drv_init() blocks, that blocks
-> parport_bus_init(). I dunno. It seems to not really have a good reason
-> for it.
+> smpcfd_dying_cpu() is one of CPU_DYING callbacks and it assumes to be
+> called when irq is disabled. smpcfd_dying_cpu() calls flush_smp_call_
+> function_queue() which requires to be called with irq disabled.
 > 
-> I think it should just be reverted unless Sudip can come up with a
-> trivial fix. Greg?
+> When CONFIG_HOTPLUG_CPU=N and add "nosmt" parameter, smpcfd_dying_cpu()
+> is called with irq enalbed and this triggers BUG_ON(!irqs_disabled())
+> in the irq_work_run_list(). This patch is to fix the issue.
+> 
+> Fixes: 0cc3cd21657b ("cpu/hotplug: Boot HT siblings at least once")
+> Signed-off-by: Lan Tianyu <Tianyu.Lan@microsoft.com>
+> ---
+>  kernel/smp.c | 5 +++++
+>  1 file changed, 5 insertions(+)
 
-I recommend just reverting it for now.  The parport is "odd" in how it
-has had to be converted over time to the driver model, which is why I
-thought this patch was ok.  Looks like it wasn't, sorry.
+<formletter>
 
-greg k-h
+This is not the correct way to submit patches for inclusion in the
+stable kernel tree.  Please read:
+    https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
+for how to do this properly.
+
+</formletter>
