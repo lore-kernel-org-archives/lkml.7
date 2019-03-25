@@ -2,103 +2,136 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C994AC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:10:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E524C10F03
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:11:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94F0120863
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:10:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="EBTa0Bbf"
+	by mail.kernel.org (Postfix) with ESMTP id EC2AC20863
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:11:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731072AbfCYMKV (ORCPT
+        id S1731125AbfCYMLR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 08:10:21 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:44729 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730988AbfCYMKV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 08:10:21 -0400
-Received: by mail-lj1-f193.google.com with SMTP id h16so3093364ljg.11
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 05:10:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=gbdnwxsyaq97iQCUafgGL5JXQ/w5Y2o2mTntOt3fm5w=;
-        b=EBTa0BbfezLE71AxQ7JPrG9Y9jz7eZCd4A0UWyQnAAD3xyxDj5N496268U78l2etgX
-         YZYn8r+8YU+b/qhe6J1OwNqDYbxpKb3xD43z2l6hQu7Z8gpCVYHyvDSyOnDgN39tq0zl
-         QnRBwlj6V9/vkbQZwR2HVVGUI3r9gj7Qb7hjP48p0xIZnsoVCtV0zlKooHwzM4z0jyFd
-         iQTTTFuiS3V0o6uOb4EhHIPGs7xEpITg4hCmeP9K0953xO22mXXtkaFq77U2O21QYE2g
-         ET47wHOFLw+Qxb4mFYH9rHPo9mzu9WXB1jDzP7ZVtBjxsW1eDryun1093Im4XNNd9GBp
-         iUbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=gbdnwxsyaq97iQCUafgGL5JXQ/w5Y2o2mTntOt3fm5w=;
-        b=oBNMe7sTc1TOGlYXIOS6oliaHmVvPB3Sz9g6xEYx5zjswjReZVmqE221LCrVzFn/N7
-         ZfvsHqkkR71MsAEbB1r0aVupA5oYPzkr4vG24u2PEPMjr7y0YC3rmU07cpF9MVJ+NjK+
-         y8AP11zWCRsG8cLEgnsmefL7xiMQ7oPHwbIhWJro0X3CCnSvziOt3Qc2wpyLPNuwdRPZ
-         alf3whGQnxfl/d4rdjw5p8aBWr7ZhaI66cvJKB+Caued31LyZ02rLzybqAuB9aqhQK/h
-         opAD/aHCJzoR3WdU001HH9uuq1+WG3ldz3avh+ivLVadBlQK5rVoyw2BxD7zklEl8+Jy
-         1jtQ==
-X-Gm-Message-State: APjAAAV967v+VmW9tSaoSV63KrKOU1YFuwEXdXb0KBo8dkj0/3le4NI+
-        X4X1lHxuOz0CIdroHp0bbW+iWQFVu+Kt+6FgsFU3yg==
-X-Google-Smtp-Source: APXvYqzWak45t1WHLVO1cDDvE/73sbvyQmCUK3nLR9o8/t5gyKuPjEIY08/E3rxfy8ilonoRbAO+24C9xClEix9Y+XQ=
-X-Received: by 2002:a2e:9a91:: with SMTP id p17mr12148154lji.127.1553515819051;
- Mon, 25 Mar 2019 05:10:19 -0700 (PDT)
+        Mon, 25 Mar 2019 08:11:17 -0400
+Received: from ns.iliad.fr ([212.27.33.1]:52140 "EHLO ns.iliad.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730998AbfCYMLR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 08:11:17 -0400
+Received: from ns.iliad.fr (localhost [127.0.0.1])
+        by ns.iliad.fr (Postfix) with ESMTP id EF0E2207E5;
+        Mon, 25 Mar 2019 13:11:14 +0100 (CET)
+Received: from [192.168.108.8] (freebox.vlq16.iliad.fr [213.36.7.13])
+        by ns.iliad.fr (Postfix) with ESMTP id D3ACD1FF14;
+        Mon, 25 Mar 2019 13:11:14 +0100 (CET)
+Subject: Re: [PATCH v4] PCI: qcom: Use default config space read function
+From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
+To:     Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        PCI <linux-pci@vger.kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jeffrey Hugo <jhugo@codeaurora.org>
+References: <94bb3f22-c5a7-1891-9d89-42a520e9a592@free.fr>
+ <65321fe3-ca29-c454-63ae-98a46c2e5158@mm-sol.com>
+ <1205cbfb-ac06-63a5-9401-75d4e68b15b5@free.fr>
+ <38ad143b-3b07-4d19-8ccd-ca39fb51e53d@free.fr>
+ <7d3d788a-d6a3-a70b-adab-6c65771cacc4@free.fr>
+ <3c76613e-e60d-94b8-dd6f-b8f4e1928263@linaro.org>
+ <2f901228-52db-7661-8257-ca8fd2ff2a46@free.fr>
+ <29664b43-535c-c4b1-a93d-18f49687f929@linaro.org>
+ <b0e0dc68-4be9-1b0f-7528-fb7d143fea2b@free.fr>
+ <9c5a7620-e9ed-82d6-0708-34fe33e39030@linaro.org>
+ <29d33e81-fe8d-7fd9-843d-cc53ea6c9586@free.fr>
+ <a53911a5-198a-5073-59cf-a61ba067bfd8@free.fr>
+ <eb1d808e-00aa-5411-be03-2a1a8c8d655a@mm-sol.com>
+ <8cd24928-54d0-c320-b53f-08332d434477@free.fr>
+Message-ID: <f142da4d-303a-89f3-ba5a-b6800d613e15@free.fr>
+Date:   Mon, 25 Mar 2019 13:11:14 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <1552378289-27245-1-git-send-email-yash.shah@sifive.com>
- <mvmimwotn60.fsf@suse.de> <CAJ2_jOE3RH9FyFg_NATcLEpHv5y89zdh06Ji2x8n3C_gp-wn6A@mail.gmail.com>
- <mvm5zsgp00d.fsf@suse.de> <CAJ2_jOHoNnBF2UwU6G1vdvNrJAUJdGL_RncRAOaXMWoS03cagA@mail.gmail.com>
- <CAJ2_jOFrXcxRS1oYOuYhtuRReTocmPKnoe5GO_3r_B1uAZb+xA@mail.gmail.com> <mvmmuljupwd.fsf@suse.de>
-In-Reply-To: <mvmmuljupwd.fsf@suse.de>
-From:   Yash Shah <yash.shah@sifive.com>
-Date:   Mon, 25 Mar 2019 17:39:42 +0530
-Message-ID: <CAJ2_jOFwDouMNAj8NxLX01bpLV+rG-rFsVh7e_e2ncCBX3qt_Q@mail.gmail.com>
-Subject: Re: [PATCH v9 0/2] PWM support for HiFive Unleashed
-To:     Andreas Schwab <schwab@suse.de>
-Cc:     Palmer Dabbelt <palmer@sifive.com>, linux-pwm@vger.kernel.org,
-        linux-riscv@lists.infradead.org,
-        Thierry Reding <thierry.reding@gmail.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Sachin Ghadi <sachin.ghadi@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <8cd24928-54d0-c320-b53f-08332d434477@free.fr>
+Content-Type: text/plain; charset=iso-8859-15
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Mon Mar 25 13:11:15 2019 +0100 (CET)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 5:28 PM Andreas Schwab <schwab@suse.de> wrote:
->
-> On M=C3=A4r 25 2019, Yash Shah <yash.shah@sifive.com> wrote:
->
-> > I have sent out the v11 patchset, you can test the heartbeat
-> > application with that patchset.
-> > You still need to make that DT file modification which you previously
-> > did, using fsbl.bin
->
-> Why can't the driver make use of sifive,approx-period?
+Stanimir,
 
-Because as per the review comments and discussions, it has been
-decided that the driver will make use of the conventional interface to
-pass period settings instead of 'sifive,approx-period'.
+Is v4 good enough for Bjorn to pick up?
 
-For your reference:
-https://lkml.org/lkml/2019/2/6/159
+Regards.
 
->
-> Andreas.
->
-> --
-> Andreas Schwab, SUSE Labs, schwab@suse.de
-> GPG Key fingerprint =3D 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D=
-7
-> "And now for something completely different."
+On 18/03/2019 18:14, Marc Gonzalez wrote:
+
+> We don't need to fudge the device class in qcom_pcie_rd_own_conf()
+> because dw_pcie_setup_rc() already does the right thing:
+> 
+> 	/* Program correct class for RC */
+> 	dw_pcie_wr_own_conf(pp, PCI_CLASS_DEVICE, 2, PCI_CLASS_BRIDGE_PCI);
+> 
+> However, the above has no effect on 8064, thus a fixup is required.
+> 
+> Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+> Tested-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+> Changes from v3 to v4: Define and use DEV_ID_8064 (not in include/linux/pci_ids.h because not shared)
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom.c | 25 ++++++++-----------------
+>  1 file changed, 8 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index d185ea5fe996..712a83354f9d 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -1129,25 +1129,8 @@ static int qcom_pcie_host_init(struct pcie_port *pp)
+>  	return ret;
+>  }
+>  
+> -static int qcom_pcie_rd_own_conf(struct pcie_port *pp, int where, int size,
+> -				 u32 *val)
+> -{
+> -	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> -
+> -	/* the device class is not reported correctly from the register */
+> -	if (where == PCI_CLASS_REVISION && size == 4) {
+> -		*val = readl(pci->dbi_base + PCI_CLASS_REVISION);
+> -		*val &= 0xff;	/* keep revision id */
+> -		*val |= PCI_CLASS_BRIDGE_PCI << 16;
+> -		return PCIBIOS_SUCCESSFUL;
+> -	}
+> -
+> -	return dw_pcie_read(pci->dbi_base + where, size, val);
+> -}
+> -
+>  static const struct dw_pcie_host_ops qcom_pcie_dw_ops = {
+>  	.host_init = qcom_pcie_host_init,
+> -	.rd_own_conf = qcom_pcie_rd_own_conf,
+>  };
+>  
+>  /* Qcom IP rev.: 2.1.0	Synopsys IP rev.: 4.01a */
+> @@ -1309,6 +1292,14 @@ static const struct of_device_id qcom_pcie_match[] = {
+>  	{ }
+>  };
+>  
+> +#define DEV_ID_8064 0x0101
+> +
+> +static void qcom_fixup_class(struct pci_dev *dev)
+> +{
+> +	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
+> +}
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, DEV_ID_8064, qcom_fixup_class);
+> +
+>  static struct platform_driver qcom_pcie_driver = {
+>  	.probe = qcom_pcie_probe,
+>  	.driver = {
