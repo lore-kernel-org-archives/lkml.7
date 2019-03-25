@@ -6,22 +6,22 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1789C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:59:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06EB4C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:59:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8821720830
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:59:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2A6520645
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:59:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730657AbfCYV7R (ORCPT
+        id S1730681AbfCYV7T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 17:59:17 -0400
-Received: from muru.com ([72.249.23.125]:42636 "EHLO muru.com"
+        Mon, 25 Mar 2019 17:59:19 -0400
+Received: from muru.com ([72.249.23.125]:42642 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729478AbfCYV7N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 17:59:13 -0400
+        id S1730641AbfCYV7Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 17:59:16 -0400
 Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id 27AE881AE;
-        Mon, 25 Mar 2019 21:59:26 +0000 (UTC)
+        by muru.com (Postfix) with ESMTP id 8869880CC;
+        Mon, 25 Mar 2019 21:59:28 +0000 (UTC)
 From:   Tony Lindgren <tony@atomide.com>
 To:     linux-omap@vger.kernel.org
 Cc:     Dave Gerlach <d-gerlach@ti.com>, Faiz Abbas <faiz_abbas@ti.com>,
@@ -31,9 +31,9 @@ Cc:     Dave Gerlach <d-gerlach@ti.com>, Faiz Abbas <faiz_abbas@ti.com>,
         Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>,
         Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 07/14] bus: ti-sysc: Allocate mdata as needed and do platform data based init later
-Date:   Mon, 25 Mar 2019 14:58:42 -0700
-Message-Id: <20190325215849.13182-8-tony@atomide.com>
+Subject: [PATCH 08/14] bus: ti-sysc: Manage clocks for the interconnect target module in all cases
+Date:   Mon, 25 Mar 2019 14:58:43 -0700
+Message-Id: <20190325215849.13182-9-tony@atomide.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190325215849.13182-1-tony@atomide.com>
 References: <20190325215849.13182-1-tony@atomide.com>
@@ -44,114 +44,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The platform data based init functions typically reset the interconnect
-target module configure the registers. As we may need the interconnect
-target module specific quirks configured based on the revision register,
-we want to move the platform data based init to happen later.
+We are currently not managing interconnect target module clocks in the
+for legacy platform data based case. This causes a problem for using the
+platform data based functions when dropping the platform data for the
+interconnect target module configuration.
 
-Let's allocate mdata as needed so it's available for sysc_legacy_init()
-that we call with module clocks enabled from sysc_init_module().
+To avoid a situation where we need to populate the main and optional
+clocks also for the platform data based functions, let's just manage the
+clocks directly in ti-sysc driver. This means that until the interconnect
+target module confugration platform data is dropped our use count for
+clk_enable() will be 2 instead of 1.
 
 Signed-off-by: Tony Lindgren <tony@atomide.com>
 ---
- drivers/bus/ti-sysc.c | 54 +++++++++++++++++++++++++++++++------------
- 1 file changed, 39 insertions(+), 15 deletions(-)
+ drivers/bus/ti-sysc.c | 24 +++++++++++-------------
+ 1 file changed, 11 insertions(+), 13 deletions(-)
 
 diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
 --- a/drivers/bus/ti-sysc.c
 +++ b/drivers/bus/ti-sysc.c
-@@ -75,6 +75,7 @@ struct sysc {
- 	u32 module_size;
- 	void __iomem *module_va;
- 	int offsets[SYSC_MAX_REGS];
-+	struct ti_sysc_module_data *mdata;
- 	struct clk **clocks;
- 	const char **clock_roles;
- 	int nr_clocks;
-@@ -1012,6 +1013,26 @@ static void sysc_init_revision_quirks(struct sysc *ddata)
+@@ -783,10 +783,8 @@ static int __maybe_unused sysc_runtime_suspend(struct device *dev)
+ 
+ 	if (ddata->legacy_mode) {
+ 		error = sysc_runtime_suspend_legacy(dev, ddata);
+-		if (!error)
+-			ddata->enabled = false;
+-
+-		return error;
++		if (error)
++			return error;
  	}
- }
  
-+/*
-+ * Note that pdata->init_module() typically does a reset first. After
-+ * pdata->init_module() is done, PM runtime can be used for the interconnect
-+ * target module.
-+ */
-+static int sysc_legacy_init(struct sysc *ddata)
-+{
-+	struct ti_sysc_platform_data *pdata = dev_get_platdata(ddata->dev);
-+	int error;
-+
-+	if (!ddata->legacy_mode || !pdata || !pdata->init_module)
-+		return 0;
-+
-+	error = pdata->init_module(ddata->dev, ddata->mdata, &ddata->cookie);
-+	if (error == -EEXIST)
-+		error = 0;
-+
-+	return error;
-+}
-+
- static int sysc_reset(struct sysc *ddata)
- {
- 	int offset = ddata->offsets[SYSC_SYSCONFIG];
-@@ -1070,10 +1091,15 @@ static int sysc_init_module(struct sysc *ddata)
- 	ddata->revision = sysc_read_revision(ddata);
- 	sysc_init_revision_quirks(ddata);
- 
-+	error = sysc_legacy_init(ddata);
-+	if (error)
-+		goto err_main_clocks;
-+
- 	error = sysc_reset(ddata);
- 	if (error)
- 		dev_err(ddata->dev, "Reset failed with %d\n", error);
- 
-+err_main_clocks:
- 	if (manage_clocks)
- 		sysc_disable_main_clocks(ddata);
- err_opt_clocks:
-@@ -1715,28 +1741,26 @@ static const struct sysc_capabilities sysc_dra7_mcan = {
- static int sysc_init_pdata(struct sysc *ddata)
- {
- 	struct ti_sysc_platform_data *pdata = dev_get_platdata(ddata->dev);
--	struct ti_sysc_module_data mdata;
--	int error = 0;
-+	struct ti_sysc_module_data *mdata;
- 
- 	if (!pdata || !ddata->legacy_mode)
+ 	sysc_disable_main_clocks(ddata);
+@@ -809,14 +807,6 @@ static int __maybe_unused sysc_runtime_resume(struct device *dev)
+ 	if (ddata->enabled)
  		return 0;
  
--	mdata.name = ddata->legacy_mode;
--	mdata.module_pa = ddata->module_pa;
--	mdata.module_size = ddata->module_size;
--	mdata.offsets = ddata->offsets;
--	mdata.nr_offsets = SYSC_MAX_REGS;
--	mdata.cap = ddata->cap;
--	mdata.cfg = &ddata->cfg;
-+	mdata = devm_kzalloc(ddata->dev, sizeof(*mdata), GFP_KERNEL);
-+	if (!mdata)
-+		return -ENOMEM;
+-	if (ddata->legacy_mode) {
+-		error = sysc_runtime_resume_legacy(dev, ddata);
+-		if (!error)
+-			ddata->enabled = true;
+-
+-		return error;
+-	}
+-
+ 	if (sysc_opt_clks_needed(ddata)) {
+ 		error = sysc_enable_opt_clocks(ddata);
+ 		if (error)
+@@ -825,13 +815,21 @@ static int __maybe_unused sysc_runtime_resume(struct device *dev)
  
--	if (!pdata->init_module)
--		return -ENODEV;
-+	mdata->name = ddata->legacy_mode;
-+	mdata->module_pa = ddata->module_pa;
-+	mdata->module_size = ddata->module_size;
-+	mdata->offsets = ddata->offsets;
-+	mdata->nr_offsets = SYSC_MAX_REGS;
-+	mdata->cap = ddata->cap;
-+	mdata->cfg = &ddata->cfg;
+ 	error = sysc_enable_main_clocks(ddata);
+ 	if (error)
+-		goto err_main_clocks;
++		goto err_opt_clocks;
++
++	if (ddata->legacy_mode) {
++		error = sysc_runtime_resume_legacy(dev, ddata);
++		if (error)
++			goto err_main_clocks;
++	}
  
--	error = pdata->init_module(ddata->dev, &mdata, &ddata->cookie);
--	if (error == -EEXIST)
--		error = 0;
-+	ddata->mdata = mdata;
+ 	ddata->enabled = true;
  
--	return error;
-+	return 0;
- }
+ 	return 0;
  
- static int sysc_init_match(struct sysc *ddata)
+ err_main_clocks:
++	sysc_disable_main_clocks(ddata);
++err_opt_clocks:
+ 	if (sysc_opt_clks_needed(ddata))
+ 		sysc_disable_opt_clocks(ddata);
+ 
 -- 
 2.21.0
