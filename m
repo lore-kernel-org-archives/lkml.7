@@ -2,94 +2,173 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4808EC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 01:19:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E677C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 01:23:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0618920693
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 01:19:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Bm5lBrJF"
+	by mail.kernel.org (Postfix) with ESMTP id 23F9F20693
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 01:23:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553477028;
+	bh=QLE/muGLqp4ExMEy7KCJ6i4T1iu323BEk1k+JhCCWGM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=LyXYhjBDNKt+TOJGqPf+0PEJ/bMUYB4w9LcCznm+VT1/oKi+ECKcIxas5Pv44KY6t
+	 kcBLUPlhugiSw8qp7Kgxv83jKPKKWJG9w+Km0t21Rp/C2tERSslFypr+aZwBdnQCiG
+	 oUsicSMH12TgZ4lAe4cq2drjylV1J1tl6zPIYtmU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729253AbfCYBTV (ORCPT
+        id S1729217AbfCYBXq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 21:19:21 -0400
-Received: from mout.gmx.net ([212.227.15.15]:53157 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729123AbfCYBTV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 21:19:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1553476752;
-        bh=6ltL+c8f8yIUWA4h5cqKp/m1FaRIpzpblB49oQwoJqk=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=Bm5lBrJFZOPEW98coDTSYivGWvDW00uGiPByr2MVwE6Es6Pvu3Z4dgtyi+8PriMDy
-         fj2fbn2EV+qsQt8p2Ck69Vl2l9Sg6tbXZ9qNoAUMUS2PtRzdXoYFseWAgVWHzfYzBf
-         OX0+7q4GKSPAyT/mwyt61Y2KdxqH2p6AOQrzRf84=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [192.168.180.101] ([218.18.229.179]) by mail.gmx.com (mrgmx003
- [212.227.17.184]) with ESMTPSA (Nemesis) id 0MNZ9u-1h2BrJ3Czy-0079wp; Mon, 25
- Mar 2019 02:19:12 +0100
-Subject: Re: [PATCH net] netlink: fix a memory leak on error path
-To:     Kirill Tkhai <ktkhai@virtuozzo.com>, davem@davemloft.net
-Cc:     keescook@chromium.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190322105845.25046-1-cgxu519@gmx.com>
- <2acfd376-7b25-5eeb-2770-413b880bd4d9@virtuozzo.com>
-From:   cgxu519 <cgxu519@gmx.com>
-Message-ID: <786f1aec-fe47-f060-6f6e-4307ecaff82d@gmx.com>
-Date:   Mon, 25 Mar 2019 09:19:04 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
+        Sun, 24 Mar 2019 21:23:46 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:45299 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729127AbfCYBXp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Mar 2019 21:23:45 -0400
+Received: by mail-lj1-f194.google.com with SMTP id y6so6284561ljd.12
+        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2019 18:23:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Wf9yYyFx5XQycNPtTrNCRc9C90M0oW6GSIu1pC1YItI=;
+        b=e7jdEUyW3sYQ481V5uCwd0nHFZrOLlPdAmWu2ViiO7nkllP8t8muZrXYkTqJzUTTJX
+         EXfrZiDE/2CbKNS/1W1CU56XDBYV7+t0NaQJ6K02ZTiWYXa/JgAXwDv+5p2oSIBgzKfr
+         3HSdu1dDi/ZMK7h69Ghn4ZtJ37EaKRqtoYQ9M=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Wf9yYyFx5XQycNPtTrNCRc9C90M0oW6GSIu1pC1YItI=;
+        b=fLC40H6+zF5lNhxeOYqoWo+6H04L3I8gB4JGDPRUz3nBz86w6pEX2OapY5y58uLceO
+         XV/eb5FcC4DCPcHz0l9eBFm4yyP/egxuIheZPaaK+IEXXhBarUTUBKfS6iKw2OpbxEMr
+         mj2blcfnE8RbTCmq15vPV57eKhWReAgAqLXE6B/nocDdjlCsEP8Nv9rSuIBRKp8ZAzoH
+         7U3UkKcElr+4aU2S7ONHc30LMvCWzndB5zDv0jDyKEgfSzefZ8Zb+W2KTVjryPAARpkL
+         WBoznoQ6UHYIKWPuKFL0AotCEuonloG70YEkO7zDvWGWm0imi1C4Oc3ejNiIhtEwzsEc
+         w9Xw==
+X-Gm-Message-State: APjAAAWLrwRLGNV522aYjOIg4u8JOO0EVvJ73cwr74kUtzBu2S8eg1b+
+        EHVgr/6FNZwOLhdcNxN95BBL3hQLQeI=
+X-Google-Smtp-Source: APXvYqz1M7x+pEX4CdBEisxCB3TLJFjMLnBhOB+qPspxRgYWGKKqMMc4p7WZC4YsnSEiiGSUZctnTQ==
+X-Received: by 2002:a2e:1510:: with SMTP id s16mr11481023ljd.62.1553477022453;
+        Sun, 24 Mar 2019 18:23:42 -0700 (PDT)
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com. [209.85.208.177])
+        by smtp.gmail.com with ESMTPSA id t18sm3072356ljg.64.2019.03.24.18.23.40
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 24 Mar 2019 18:23:41 -0700 (PDT)
+Received: by mail-lj1-f177.google.com with SMTP id h16so1821567ljg.11
+        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2019 18:23:40 -0700 (PDT)
+X-Received: by 2002:a2e:22c4:: with SMTP id i187mr2863776lji.94.1553477020489;
+ Sun, 24 Mar 2019 18:23:40 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <2acfd376-7b25-5eeb-2770-413b880bd4d9@virtuozzo.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Provags-ID: V03:K1:te9b4vdvv2rQ88nYuLwkapse97nP7yaoigT66rvni0BD6CTIoXQ
- wAKzlZJHBbZ3HAJnVuEuWsb1olpTcp0Ea/AvyF/bpQuujBdxus0IjqW3r+EANRjt/leF+8p
- UsySAS7ape4UGkSp9n0mAs4c5J3CslP1FpnSj5MSL8bOhjHPcjNiapdIGGZP4fXekK3mFIE
- Rzg5qTSHnT8Y/8b0KRsOQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:REPv2JLi530=:yhoF7O3Goqm6w9Z+jpVE4q
- BXLZwm861uPhXzlMDAzLMxhc07eRtpnUlf+vZ28UWoY/nDLdMEO6wbHDTUtQvmCUmBe+y5RKg
- z2Q3HhDcCHgXp+wng6REm0ebvI3zUXpLf1RCiM9R8oHYAF83/R5tb7korSfoy9lk1s+kZZNoy
- xLEg1tu14E6pij/8zxC1dvJb/cniCws/K9zHN6tB5YHfXOrAZhQ9CChHtmFkp3f8E4/UlFMxX
- t0jcI9nRdJ3EJuvc/vU9+3eNLbWF4IDvBMdeg3c7noG0JrzB83XGiWxHNteMIepbGVELDjwcJ
- tNPtYGqoUdkDrqF0yywV3bVF/4R6XhIJ1snOK12dOi4N9s+wZQpaXuliMdRuUM7K1/q6PPl2b
- IjAEU9sgRhG2Jg3ov2Ax7idpXeSxFRjlyCxRFEaAERSPBNtZt0N4dra6i4w/w3nc8fqMpQvIf
- dUH8xRCluWl6hUGHXbgWssa4IYQc9aOeEghjRb4/FeVDBcblKsmGydLQ1lGB5gp+a0mF1LKsF
- Fw1hnIKrosdUJpJcSbvC1s8d9kZDhurfqh7I6qriGcL3/U/4c/9qiPXMy7vK6g9J4G0AzZnZH
- ysRYbZuu5Aw0nSFC3iJ1rV/dA8n1GRy1jgC8B05MmXc9sr+UWAUzfQElUb+RsV4Y6AH91UZde
- Q+ePiJfAxIHYBilXo6kG6LTKYXuGfrSA0NcCj+POJ50ciWWdCZNnoM9NeU4ld/egeh9fpZgpr
- Xs4gzohjnDrIOYQZn6Df/oSLT206Hibj+pXo55g9ldWhCogAzp145Z0WNecGEgQoSwx2C6qvR
- 8FUzxfRKU30NuuKvm6YH2hc90TjnDkJFslWzAmTIM5cDWNB3se4eu28Po7kA5jGAyA5yCfl+2
- IWP64RUJtKX3eFgZWkthiU8r9YSGNdWwmMwV01ksBi1yZJzJWKoiBt4I1Ad3g1Bn/jiokAiVb
- vzG2VrxjQ7Q==
+References: <0000000000006946d2057bbd0eef@google.com>
+In-Reply-To: <0000000000006946d2057bbd0eef@google.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 24 Mar 2019 18:23:24 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiijJMTw=nTj_ED+YWMCrvHzh3ezfVYRxvzcW6+trgyPA@mail.gmail.com>
+Message-ID: <CAHk-=wiijJMTw=nTj_ED+YWMCrvHzh3ezfVYRxvzcW6+trgyPA@mail.gmail.com>
+Subject: Re: KASAN: use-after-free Read in path_lookupat
+To:     syzbot <syzbot+7a8ba368b47fdefca61e@syzkaller.appspotmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/22/19 7:03 PM, Kirill Tkhai wrote:
-> Hi, Chengguang,
+Hmm.
+
+Al, this one seems real and also seems pretty nasty from a vfs
+interface standpoint.
+
+On Wed, Nov 28, 2018 at 9:40 AM syzbot
+<syzbot+7a8ba368b47fdefca61e@syzkaller.appspotmail.com> wrote:
 >
-> On 22.03.2019 13:58, Chengguang Xu wrote:
->> In genl_register_family(), when idr_alloc() fails,
->> we forget to free family->attrbuf.
->>
->> Note, some callers call genl_unregister_family() to clean up
->> on error path, it doesn't work because the family is inserted
->> to the global list in the nearly last step.
->>
->> Fixes: 2ae0f17df1c ("genetlink: use idr to track families").
->> Signed-off-by: Chengguang Xu <cgxu519@gmx.com>
-> have you seen https://patchwork.ozlabs.org/patch/1059834/ ?
+> BUG: KASAN: use-after-free in lookup_last fs/namei.c:2269 [inline]
+> BUG: KASAN: use-after-free in path_lookupat.isra.43+0x9f8/0xc00  fs/namei.c:2318
+> ...
+>   lookup_last fs/namei.c:2269 [inline]
+>   path_lookupat.isra.43+0x9f8/0xc00 fs/namei.c:2318
 
-Sorry, I didn't notice that because I'm mainly working on linus-tree.
-Please just ignore this patch.
+Ok, path lookup using RCU.
 
-Thanks.
+> Allocated by task 9424:
+>   kstrdup+0x39/0x70 mm/util.c:49
+>   bpf_symlink+0x26/0x140 kernel/bpf/inode.c:356
 
+It's the symlink data for the bpf filesystem. Fair enough.
+
+> Freed by task 9425:
+>   kfree+0xcf/0x230 mm/slab.c:3817
+>   bpf_evict_inode+0x11f/0x150 kernel/bpf/inode.c:565
+>   evict+0x4b9/0x980 fs/inode.c:558
+>   iput_final fs/inode.c:1550 [inline]
+>   iput+0x674/0xa90 fs/inode.c:1576
+>   do_unlinkat+0x733/0xa30 fs/namei.c:4069
+
+.. and the path lookup is racing with the final unlink.
+
+We actually RCU-delay the inode freeing itself, but when we do the
+final iput(), the "evict()" function is called synchronously.
+
+Now, the simple fix would seem to just RCU-delay the kfree() of the
+symlink data in bpf_evict_inode(). Maybe that's the right thing to do.
+I'd call it trivial, except you'd need to have that rcu head to attach
+it to, making it slightly less trivial. I guess the kmalloc could just
+malloc that too.
+
+But it does strike me that this might be a generic issue. I wonder how
+many other filesystems do this?
+
+Alexei, Daniel - the "proper" fix right is probably one of four cases:
+
+ (a) rcu-delay the freeing, and use simple_symlink_inode_operations().
+No set_delayed_call() needed, because it stays around for the inode
+lifetime, but the RCU-delaying is still needed for lookup.
+
+or
+
+ (b) put the symlink in a page, and use page_symlink_inode_operations
+for that inode, where we have a "struct delayed_call" and get a page
+ref
+
+or
+
+ (c) put the symlink in the inode itself, and then use that
+simple_symlink_inode_operations (and now the RCU-delaying of the inode
+protects it).
+
+of
+
+ (d) make a special getlink() that does "copy symlink,
+set_delayed_call(done, kfree_link, copy)"
+
+but I do wonder if we should perhaps just make
+simple_symlink_inode_operations do that (d) case for people.
+
+Al, comments? At the very least, if we don't make
+simple_symlink_inode_operations() do that, we should have a *big*
+comment that if it's not part of the inode data, it needs to be
+RCU-delayed.
+
+Or maybe we could add a final inode callback function for "rcu_free"
+that is called as the RCU-delayed freeing of the inode itself happens?
+And then people could hook into that for freeing the inode->i_link
+data.
+
+So many choices.. But the current situation seems unnecessarily
+complex for the filesystem, and isn't really documented.
+
+Our documentation currently says for get_link(): "If the body won't go
+away until the inode is gone, nothing else is needed", which is wrong
+(or at least very misleading, since the last "inode is gone" callback
+we have is that evict() function).
+
+               Linus
