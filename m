@@ -2,311 +2,135 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EB6CC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:32:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43FD8C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:32:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32031205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:32:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1447E2087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:32:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="YFUDar3o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729825AbfCYRcd (ORCPT
+        id S1729947AbfCYRci (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 13:32:33 -0400
-Received: from 12.mo4.mail-out.ovh.net ([178.33.104.253]:35824 "EHLO
-        12.mo4.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725788AbfCYRcc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 13:32:32 -0400
-X-Greylist: delayed 2224 seconds by postgrey-1.27 at vger.kernel.org; Mon, 25 Mar 2019 13:32:27 EDT
-Received: from player778.ha.ovh.net (unknown [10.109.160.232])
-        by mo4.mail-out.ovh.net (Postfix) with ESMTP id AAB511E011B
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 17:55:21 +0100 (CET)
-Received: from kaod.org (lns-bzn-46-82-253-208-248.adsl.proxad.net [82.253.208.248])
-        (Authenticated sender: groug@kaod.org)
-        by player778.ha.ovh.net (Postfix) with ESMTPSA id 26F163F9C8DF;
-        Mon, 25 Mar 2019 16:55:14 +0000 (UTC)
-Date:   Mon, 25 Mar 2019 17:55:13 +0100
-From:   Greg Kurz <groug@kaod.org>
-To:     "Alastair D'Silva" <alastair@au1.ibm.com>
-Cc:     alastair@d-silva.org, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v4 3/4] ocxl: Remove superfluous 'extern' from headers
-Message-ID: <20190325175513.72fb3173@bahia.lab.toulouse-stg.fr.ibm.com>
-In-Reply-To: <20190325053456.14599-4-alastair@au1.ibm.com>
-References: <20190320053448.2098-1-alastair@au1.ibm.com>
-        <20190325053456.14599-1-alastair@au1.ibm.com>
-        <20190325053456.14599-4-alastair@au1.ibm.com>
-X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Mon, 25 Mar 2019 13:32:38 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:38464 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729714AbfCYRci (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 13:32:38 -0400
+Received: from zn.tnic (p200300EC2F098000329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:8000:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 9FFF71EC0513;
+        Mon, 25 Mar 2019 18:32:36 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1553535156;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=fba9IzIQTZT23NikFz22dQO0PjauBkWFCObbQk9HoB8=;
+        b=YFUDar3oobJYrA/YCHuJL41EvqAfkuDWJwUHSKmKCBB+Me5W062tdJwTo70cpe5TcBHyaq
+        rz889huK840mQlCPvCThc9RZltyfQ8rdlbVoJDeDX8chZVvdHjguKmPTtvgODYuDkNAE9h
+        auZth8C9GIq/3VRdg811IWe0oWpalYc=
+Date:   Mon, 25 Mar 2019 18:32:39 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Singh, Brijesh" <brijesh.singh@amd.com>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
+Cc:     lijiang <lijiang@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "dyoung@redhat.com" <dyoung@redhat.com>,
+        "bhe@redhat.com" <bhe@redhat.com>
+Subject: Re: [PATCH 1/3] kexec: Do not map the kexec area as decrypted when
+ SEV is active
+Message-ID: <20190325173239.GO12016@zn.tnic>
+References: <20190315103203.13128-1-lijiang@redhat.com>
+ <20190315103203.13128-2-lijiang@redhat.com>
+ <20190324150034.GH23289@zn.tnic>
+ <7b115829-40d9-e55e-dee3-ec8e4766971f@redhat.com>
+ <20190325063742.GA12016@zn.tnic>
+ <652b9166-f06e-c210-3c3f-c9e80a97db18@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Ovh-Tracer-Id: 574490427766577483
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedutddrjeekgdeljecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <652b9166-f06e-c210-3c3f-c9e80a97db18@amd.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 25 Mar 2019 16:34:54 +1100
-"Alastair D'Silva" <alastair@au1.ibm.com> wrote:
-
-> From: Alastair D'Silva <alastair@d-silva.org>
+On Mon, Mar 25, 2019 at 05:17:55PM +0000, Singh, Brijesh wrote:
+> By default all the memory regions are mapped encrypted. The
+> set_memory_{encrypt,decrypt}() is a generic function which can be
+> called explicitly to clear/set the encryption mask from the existing
+> memory mapping. The mem_encrypt_active() returns true if either SEV or 
+> SME is active. So the __set_memory_enc_dec() uses the
+> memory_encrypt_active() check to ensure that the function is no-op when
+> SME/SEV are not active.
 > 
-> The 'extern' keyword adds no value here.
-> 
-> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> ---
+> Currently, the arch_kexec_post_alloc_pages() unconditionally clear the
+> encryption mask from the kexec area. In case of SEV, we should not clear
+> the encryption mask.
 
-Reviewed-by: Greg Kurz <groug@kaod.org>
+Brijesh, I know all that.
 
->  drivers/misc/ocxl/ocxl_internal.h | 54 +++++++++++++++----------------
->  include/misc/ocxl.h               | 36 ++++++++++-----------
->  2 files changed, 44 insertions(+), 46 deletions(-)
-> 
-> diff --git a/drivers/misc/ocxl/ocxl_internal.h b/drivers/misc/ocxl/ocxl_internal.h
-> index a32f2151029f..321b29e77f45 100644
-> --- a/drivers/misc/ocxl/ocxl_internal.h
-> +++ b/drivers/misc/ocxl/ocxl_internal.h
-> @@ -16,7 +16,6 @@
->  
->  extern struct pci_driver ocxl_pci_driver;
->  
-> -
->  struct ocxl_fn {
->  	struct device dev;
->  	int bar_used[3];
-> @@ -92,41 +91,40 @@ struct ocxl_process_element {
->  	__be32 software_state;
->  };
->  
-> +struct ocxl_afu *ocxl_afu_get(struct ocxl_afu *afu);
-> +void ocxl_afu_put(struct ocxl_afu *afu);
->  
-> -extern struct ocxl_afu *ocxl_afu_get(struct ocxl_afu *afu);
-> -extern void ocxl_afu_put(struct ocxl_afu *afu);
-> -
-> -extern int ocxl_create_cdev(struct ocxl_afu *afu);
-> -extern void ocxl_destroy_cdev(struct ocxl_afu *afu);
-> -extern int ocxl_register_afu(struct ocxl_afu *afu);
-> -extern void ocxl_unregister_afu(struct ocxl_afu *afu);
-> +int ocxl_create_cdev(struct ocxl_afu *afu);
-> +void ocxl_destroy_cdev(struct ocxl_afu *afu);
-> +int ocxl_register_afu(struct ocxl_afu *afu);
-> +void ocxl_unregister_afu(struct ocxl_afu *afu);
->  
-> -extern int ocxl_file_init(void);
-> -extern void ocxl_file_exit(void);
-> +int ocxl_file_init(void);
-> +void ocxl_file_exit(void);
->  
-> -extern int ocxl_pasid_afu_alloc(struct ocxl_fn *fn, u32 size);
-> -extern void ocxl_pasid_afu_free(struct ocxl_fn *fn, u32 start, u32 size);
-> -extern int ocxl_actag_afu_alloc(struct ocxl_fn *fn, u32 size);
-> -extern void ocxl_actag_afu_free(struct ocxl_fn *fn, u32 start, u32 size);
-> +int ocxl_pasid_afu_alloc(struct ocxl_fn *fn, u32 size);
-> +void ocxl_pasid_afu_free(struct ocxl_fn *fn, u32 start, u32 size);
-> +int ocxl_actag_afu_alloc(struct ocxl_fn *fn, u32 size);
-> +void ocxl_actag_afu_free(struct ocxl_fn *fn, u32 start, u32 size);
->  
-> -extern struct ocxl_context *ocxl_context_alloc(void);
-> -extern int ocxl_context_init(struct ocxl_context *ctx, struct ocxl_afu *afu,
-> +struct ocxl_context *ocxl_context_alloc(void);
-> +int ocxl_context_init(struct ocxl_context *ctx, struct ocxl_afu *afu,
->  			struct address_space *mapping);
-> -extern int ocxl_context_attach(struct ocxl_context *ctx, u64 amr);
-> -extern int ocxl_context_mmap(struct ocxl_context *ctx,
-> +int ocxl_context_attach(struct ocxl_context *ctx, u64 amr);
-> +int ocxl_context_mmap(struct ocxl_context *ctx,
->  			struct vm_area_struct *vma);
-> -extern int ocxl_context_detach(struct ocxl_context *ctx);
-> -extern void ocxl_context_detach_all(struct ocxl_afu *afu);
-> -extern void ocxl_context_free(struct ocxl_context *ctx);
-> +int ocxl_context_detach(struct ocxl_context *ctx);
-> +void ocxl_context_detach_all(struct ocxl_afu *afu);
-> +void ocxl_context_free(struct ocxl_context *ctx);
->  
-> -extern int ocxl_sysfs_add_afu(struct ocxl_afu *afu);
-> -extern void ocxl_sysfs_remove_afu(struct ocxl_afu *afu);
-> +int ocxl_sysfs_add_afu(struct ocxl_afu *afu);
-> +void ocxl_sysfs_remove_afu(struct ocxl_afu *afu);
->  
-> -extern int ocxl_afu_irq_alloc(struct ocxl_context *ctx, u64 *irq_offset);
-> -extern int ocxl_afu_irq_free(struct ocxl_context *ctx, u64 irq_offset);
-> -extern void ocxl_afu_irq_free_all(struct ocxl_context *ctx);
-> -extern int ocxl_afu_irq_set_fd(struct ocxl_context *ctx, u64 irq_offset,
-> +int ocxl_afu_irq_alloc(struct ocxl_context *ctx, u64 *irq_offset);
-> +int ocxl_afu_irq_free(struct ocxl_context *ctx, u64 irq_offset);
-> +void ocxl_afu_irq_free_all(struct ocxl_context *ctx);
-> +int ocxl_afu_irq_set_fd(struct ocxl_context *ctx, u64 irq_offset,
->  			int eventfd);
-> -extern u64 ocxl_afu_irq_get_addr(struct ocxl_context *ctx, u64 irq_offset);
-> +u64 ocxl_afu_irq_get_addr(struct ocxl_context *ctx, u64 irq_offset);
->  
->  #endif /* _OCXL_INTERNAL_H_ */
-> diff --git a/include/misc/ocxl.h b/include/misc/ocxl.h
-> index 9ff6ddc28e22..4544573cc93c 100644
-> --- a/include/misc/ocxl.h
-> +++ b/include/misc/ocxl.h
-> @@ -53,7 +53,7 @@ struct ocxl_fn_config {
->   * Read the configuration space of a function and fill in a
->   * ocxl_fn_config structure with all the function details
->   */
-> -extern int ocxl_config_read_function(struct pci_dev *dev,
-> +int ocxl_config_read_function(struct pci_dev *dev,
->  				struct ocxl_fn_config *fn);
->  
->  /*
-> @@ -62,14 +62,14 @@ extern int ocxl_config_read_function(struct pci_dev *dev,
->   * AFU indexes can be sparse, so a driver should check all indexes up
->   * to the maximum found in the function description
->   */
-> -extern int ocxl_config_check_afu_index(struct pci_dev *dev,
-> +int ocxl_config_check_afu_index(struct pci_dev *dev,
->  				struct ocxl_fn_config *fn, int afu_idx);
->  
->  /*
->   * Read the configuration space of a function for the AFU specified by
->   * the index 'afu_idx'. Fills in a ocxl_afu_config structure
->   */
-> -extern int ocxl_config_read_afu(struct pci_dev *dev,
-> +int ocxl_config_read_afu(struct pci_dev *dev,
->  				struct ocxl_fn_config *fn,
->  				struct ocxl_afu_config *afu,
->  				u8 afu_idx);
-> @@ -77,7 +77,7 @@ extern int ocxl_config_read_afu(struct pci_dev *dev,
->  /*
->   * Get the max PASID value that can be used by the function
->   */
-> -extern int ocxl_config_get_pasid_info(struct pci_dev *dev, int *count);
-> +int ocxl_config_get_pasid_info(struct pci_dev *dev, int *count);
->  
->  /*
->   * Tell an AFU, by writing in the configuration space, the PASIDs that
-> @@ -87,7 +87,7 @@ extern int ocxl_config_get_pasid_info(struct pci_dev *dev, int *count);
->   * 'afu_control_offset' is the offset of the AFU control DVSEC which
->   * can be found in the function configuration
->   */
-> -extern void ocxl_config_set_afu_pasid(struct pci_dev *dev,
-> +void ocxl_config_set_afu_pasid(struct pci_dev *dev,
->  				int afu_control_offset,
->  				int pasid_base, u32 pasid_count_log);
->  
-> @@ -98,7 +98,7 @@ extern void ocxl_config_set_afu_pasid(struct pci_dev *dev,
->   * 'supported' is the total number of actags desired by all the AFUs
->   *             of the function.
->   */
-> -extern int ocxl_config_get_actag_info(struct pci_dev *dev,
-> +int ocxl_config_get_actag_info(struct pci_dev *dev,
->  				u16 *base, u16 *enabled, u16 *supported);
->  
->  /*
-> @@ -108,7 +108,7 @@ extern int ocxl_config_get_actag_info(struct pci_dev *dev,
->   * 'func_offset' is the offset of the Function DVSEC that can found in
->   * the function configuration
->   */
-> -extern void ocxl_config_set_actag(struct pci_dev *dev, int func_offset,
-> +void ocxl_config_set_actag(struct pci_dev *dev, int func_offset,
->  				u32 actag_base, u32 actag_count);
->  
->  /*
-> @@ -118,7 +118,7 @@ extern void ocxl_config_set_actag(struct pci_dev *dev, int func_offset,
->   * 'afu_control_offset' is the offset of the AFU control DVSEC for the
->   * desired AFU. It can be found in the AFU configuration
->   */
-> -extern void ocxl_config_set_afu_actag(struct pci_dev *dev,
-> +void ocxl_config_set_afu_actag(struct pci_dev *dev,
->  				int afu_control_offset,
->  				int actag_base, int actag_count);
->  
-> @@ -128,7 +128,7 @@ extern void ocxl_config_set_afu_actag(struct pci_dev *dev,
->   * 'afu_control_offset' is the offset of the AFU control DVSEC for the
->   * desired AFU. It can be found in the AFU configuration
->   */
-> -extern void ocxl_config_set_afu_state(struct pci_dev *dev,
-> +void ocxl_config_set_afu_state(struct pci_dev *dev,
->  				int afu_control_offset, int enable);
->  
->  /*
-> @@ -139,7 +139,7 @@ extern void ocxl_config_set_afu_state(struct pci_dev *dev,
->   * between the host and device, and set the Transaction Layer on both
->   * accordingly.
->   */
-> -extern int ocxl_config_set_TL(struct pci_dev *dev, int tl_dvsec);
-> +int ocxl_config_set_TL(struct pci_dev *dev, int tl_dvsec);
->  
->  /*
->   * Request an AFU to terminate a PASID.
-> @@ -152,7 +152,7 @@ extern int ocxl_config_set_TL(struct pci_dev *dev, int tl_dvsec);
->   * 'afu_control_offset' is the offset of the AFU control DVSEC for the
->   * desired AFU. It can be found in the AFU configuration
->   */
-> -extern int ocxl_config_terminate_pasid(struct pci_dev *dev,
-> +int ocxl_config_terminate_pasid(struct pci_dev *dev,
->  				int afu_control_offset, int pasid);
->  
->  /*
-> @@ -165,13 +165,13 @@ extern int ocxl_config_terminate_pasid(struct pci_dev *dev,
->   * Returns a 'link handle' that should be used for further calls for
->   * the link
->   */
-> -extern int ocxl_link_setup(struct pci_dev *dev, int PE_mask,
-> +int ocxl_link_setup(struct pci_dev *dev, int PE_mask,
->  			void **link_handle);
->  
->  /*
->   * Remove the association between the function and its link.
->   */
-> -extern void ocxl_link_release(struct pci_dev *dev, void *link_handle);
-> +void ocxl_link_release(struct pci_dev *dev, void *link_handle);
->  
->  /*
->   * Add a Process Element to the Shared Process Area for a link.
-> @@ -183,7 +183,7 @@ extern void ocxl_link_release(struct pci_dev *dev, void *link_handle);
->   * 'xsl_err_data' is an argument passed to the above callback, if
->   * defined
->   */
-> -extern int ocxl_link_add_pe(void *link_handle, int pasid, u32 pidr, u32 tidr,
-> +int ocxl_link_add_pe(void *link_handle, int pasid, u32 pidr, u32 tidr,
->  		u64 amr, struct mm_struct *mm,
->  		void (*xsl_err_cb)(void *data, u64 addr, u64 dsisr),
->  		void *xsl_err_data);
-> @@ -195,12 +195,12 @@ extern int ocxl_link_add_pe(void *link_handle, int pasid, u32 pidr, u32 tidr,
->   * pasid: the PASID for the AFU context
->   * tid: the new thread id for the process element
->   */
-> -extern int ocxl_link_update_pe(void *link_handle, int pasid, __u16 tid);
-> +int ocxl_link_update_pe(void *link_handle, int pasid, __u16 tid);
->  
->  /*
->   * Remove a Process Element from the Shared Process Area for a link
->   */
-> -extern int ocxl_link_remove_pe(void *link_handle, int pasid);
-> +int ocxl_link_remove_pe(void *link_handle, int pasid);
->  
->  /*
->   * Allocate an AFU interrupt associated to the link.
-> @@ -212,12 +212,12 @@ extern int ocxl_link_remove_pe(void *link_handle, int pasid);
->   * interrupt. It is an MMIO address which needs to be remapped (one
->   * page).
->   */
-> -extern int ocxl_link_irq_alloc(void *link_handle, int *hw_irq,
-> +int ocxl_link_irq_alloc(void *link_handle, int *hw_irq,
->  			u64 *obj_handle);
->  
->  /*
->   * Free a previously allocated AFU interrupt
->   */
-> -extern void ocxl_link_free_irq(void *link_handle, int hw_irq);
-> +void ocxl_link_free_irq(void *link_handle, int hw_irq);
->  
->  #endif /* _MISC_OCXL_H_ */
+Please read what I said here at the end:
 
+https://lkml.kernel.org/r/20190324150034.GH23289@zn.tnic
+
+With this change, the code looks like this:
+
++       if (sme_active())
++               return set_memory_decrypted((unsigned long)vaddr, pages);
+
+now in __set_memory_enc_dec via set_memory_decrypted():
+
+        /* Nothing to do if memory encryption is not active */
+        if (!mem_encrypt_active())
+                return 0;
+
+
+so you have:
+
+	if (sme_active())
+
+		...
+
+		if (!mem_encrypt_active())
+
+
+now maybe this is all clear to you and Tom but I betcha others will get
+confused. Probably something like "well, what should be active now, SME,
+SEV or memory encryption in general"?
+
+I hope you're catching my drift.
+
+So if you want to *not* decrypt memory in the SEV case, then doing something
+like this should make it a bit more clear:
+
+
+	if (sev_active())
+		return;
+
+	return set_memory_decrypted((unsigned long)vaddr, pages);
+
+along with a comment *why* we're checking here.
+
+But actually, I'd prefer if you had separate wrappers which are called
+for SME and for SEV.
+
+I'll let Tom chime in too.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
