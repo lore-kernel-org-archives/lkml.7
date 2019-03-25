@@ -2,102 +2,158 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB125C10F03
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 23:53:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 523C3C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 23:54:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 866DA20848
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 23:53:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="qq4Ew6ML"
+	by mail.kernel.org (Postfix) with ESMTP id 1E7DD20854
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 23:54:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553558079;
+	bh=7IXy9PmaCQVWs3dr2OsZDsoJ+4vRKTCXqWnIvRBz76k=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=XD2mH3vExnnKyKorlg3CNcVrRjs5OozYmdm1+983yes5H70XAIJje6GxiIJ9WRkvO
+	 2qwSFcCpIkolr913fYN9xxiZH/JBflrXnknHebeyY4FM6yMvD7133UdWk7dgxdScUi
+	 qvaFIFi5JXts8nwA6ynTwOtja1BNaMqvx/1rbtJc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727492AbfCYXxB (ORCPT
+        id S1729250AbfCYXyh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 19:53:01 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:44137 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726061AbfCYXxB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 19:53:01 -0400
-Received: by mail-lf1-f66.google.com with SMTP id u9so7248368lfe.11
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 16:52:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2C3/YZIfjxsEf3cvSlX5xrvH6OIQ/5KnYDdX9pq9P+A=;
-        b=qq4Ew6MLnLW6H7k0yTZDHnW1OrwRWkLdpvqq104AtAjL9c0ZOKjv4nSxN72oWlTV8t
-         R0Yp4reZoRsrSQa1yJ3/WM6+/rj8eCs7sYtKU39UMwXW9+JWeGV16KkUkNaawGJ23iUz
-         qVBizpbS4M/vCm5bFA5kSfZC9pknB5v5acC7Hv2ULoNkzIHPZf1MwCsDwDgJ/49Ddke/
-         zs3rIqPb6I+JiWKtJqd/sDsujkDf4hpFiInsIHWXMaYeYJ7Ff73KYvuwuqTtQm6iU0Nb
-         emcVBZya+xoUvhKKVD6bsri8LAKuSK6CMlsDvxU+d6Rgi2kT7Vwx7xzXuOctgEW/e1Q0
-         Wqzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2C3/YZIfjxsEf3cvSlX5xrvH6OIQ/5KnYDdX9pq9P+A=;
-        b=ksP6722P3N5KV19uGCaXfk4rFKdLZiNqKvbXgjS+xnXDsUI6rmbjSyh1kuKq+PPKgq
-         c69qZ0TGJtu5q8Jw0X4zS7rjmspHoX1DBBoDLylz+hPDAvpNikhunW29Z1fjjX533CDI
-         88dPI85IdRaCYtt+iIwVCB9wDIfFGblPns58nbrKjIsg9I01byUoX39+kNEXwNt/NiDR
-         Z2IHUzxwj9hIbDOmLJ78YTCSZAbLm5Ti0Kze6cjoWXFrjfRGAmBHafI7W6mVDVMXdMcw
-         UFcbXzthCfzvSkQ8L8bX4AzJ9jbjyfdGspDgZiephp82ovH2P9HTgh8eVewX2xbkXxrF
-         ufHg==
-X-Gm-Message-State: APjAAAWjNfQmoSL4zKElFCkB52EnOGCU5CiMIJtKEJwMJ+1r8pd0ajeB
-        z9VuMp5hXIqTw3pZCRsbvNgLI8+Na9dhQKp++9GL
-X-Google-Smtp-Source: APXvYqynV8Ikurxi0oXyGibRiIrcukoR9Apwtj52nEez1ls3Ks4l8GRQ1gLcWvQ0Py7zhdEsAeiq5if4vmpBkXsdyaM=
-X-Received: by 2002:ac2:5921:: with SMTP id v1mr1130268lfi.135.1553557978700;
- Mon, 25 Mar 2019 16:52:58 -0700 (PDT)
+        Mon, 25 Mar 2019 19:54:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53122 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726301AbfCYXyh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 19:54:37 -0400
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AFFEF20870
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 23:54:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553558076;
+        bh=7IXy9PmaCQVWs3dr2OsZDsoJ+4vRKTCXqWnIvRBz76k=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=XzC69H/tN4lPBbDrQRBTbjkRY6pxU0kBw05NZkNo+WwxSSCEW+YwwBkPfcL+qKXc7
+         DJ0EU73PLPfGHUC2u0kMPObp5DuSB1wL4y1Cvg6PeFGwRd0jd25QMTAt3j45p/DmMS
+         2ofeIPxMjX+kFyYDBDh/oQrIshVWbKj7oRQpLq10=
+Received: by mail-wr1-f54.google.com with SMTP id k11so4810241wro.5
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 16:54:35 -0700 (PDT)
+X-Gm-Message-State: APjAAAWlyHBkEERK8Z5a39mM52fMG8fFcPUcNvt/8zrJtCuhH0ZhfvJ8
+        ozUz1I//4a8MdBzNUwRS3frbtmEKlNr3hK8P74zjLQ==
+X-Google-Smtp-Source: APXvYqyAwesAdogoyPBQ9Lxod/+wH/aY0JfqLt7v1iZAm0KdKDvtbjsSoVTIYoTo1koKcclzFlN3HyDGjBZx1lh/tOE=
+X-Received: by 2002:adf:f011:: with SMTP id j17mr15065852wro.330.1553558074255;
+ Mon, 25 Mar 2019 16:54:34 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190325232125.1781-1-casey@schaufler-ca.com>
-In-Reply-To: <20190325232125.1781-1-casey@schaufler-ca.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Mon, 25 Mar 2019 19:52:47 -0400
-Message-ID: <CAHC9VhRJUxnEyFvJQ3PR+aQTnGt=GZ+EZ-oBQihEE9WgQ9n5EA@mail.gmail.com>
-Subject: Re: [PATCH] Bad file pattern in 'SELINUX SECURITY MODULE'
-To:     Casey Schaufler <casey@schaufler-ca.com>
-Cc:     joe@perches.com, linux-kernel@vger.kernel.org,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
-        keescook@chromium.org
+References: <20190320162119.4469-1-jarkko.sakkinen@linux.intel.com>
+ <20190320162119.4469-25-jarkko.sakkinen@linux.intel.com> <960B34DE67B9E140824F1DCDEC400C0F4E85C484@ORSMSX116.amr.corp.intel.com>
+ <20190320191318.GF30469@linux.intel.com> <960B34DE67B9E140824F1DCDEC400C0F4E85C5AB@ORSMSX116.amr.corp.intel.com>
+ <20190322215903.GE12666@linux.intel.com> <960B34DE67B9E140824F1DCDEC400C0F4E85E481@ORSMSX116.amr.corp.intel.com>
+ <CALCETrV589POrG3RaPHBWOFuytkWjeJgJgLHk4OKbizOgJVKZQ@mail.gmail.com> <960B34DE67B9E140824F1DCDEC400C0F4E85E989@ORSMSX116.amr.corp.intel.com>
+In-Reply-To: <960B34DE67B9E140824F1DCDEC400C0F4E85E989@ORSMSX116.amr.corp.intel.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Mon, 25 Mar 2019 16:54:23 -0700
+X-Gmail-Original-Message-ID: <CALCETrWdc2d2HJ-aoE7-889sHN-YJiKXrEkssyWJ6QQTykb+EQ@mail.gmail.com>
+Message-ID: <CALCETrWdc2d2HJ-aoE7-889sHN-YJiKXrEkssyWJ6QQTykb+EQ@mail.gmail.com>
+Subject: Re: [PATCH v19,RESEND 24/27] x86/vdso: Add __vdso_sgx_enter_enclave()
+ to wrap SGX enclave transitions
+To:     "Xing, Cedric" <cedric.xing@intel.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "Svahn, Kai" <kai.svahn@intel.com>, "bp@alien8.de" <bp@alien8.de>,
+        "josh@joshtriplett.org" <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        "rientjes@google.com" <rientjes@google.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Haitao Huang <haitao.huang@linux.intel.com>,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Dr . Greg Wettstein" <greg@enjellic.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 7:21 PM Casey Schaufler <casey@schaufler-ca.com> wrote:
-> The include/linux/selinux.h file has been removed.
-> Remove the entry from the MAINTAINERS file.
+On Sun, Mar 24, 2019 at 1:59 AM Xing, Cedric <cedric.xing@intel.com> wrote:
 >
-> Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
-> ---
->  MAINTAINERS | 1 -
->  1 file changed, 1 deletion(-)
+> Hi Andy,
 >
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 3e5a5d263f29..1039c34dff3c 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -13947,7 +13947,6 @@ W:      https://selinuxproject.org
->  W:     https://github.com/SELinuxProject
->  T:     git git://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/selinux.git
->  S:     Supported
-> -F:     include/linux/selinux*
+> Thank you for your valuable feedbacks!
+>
+> Per what you have been saying, your feedbacks come from different angles =
+- i.e. functionality vs. security, but they are mixed up somehow.
 
-This is fine with me, but if we're updating this file, we should
-probably add the following:
+I think you're misunderstanding me.  I'm not talking about security at
+all here.  SGX isn't a sandbox, full stop.  I'm talking about the
+degree to which an SGX enclave acts like a well-behaved black box.
 
-F: include/uapi/linux/selinux_netlink.h
+>
+> > I=E2=80=99m going to put my vDSO maintainer hat on for a minute.  Cedri=
+c, your
+> > proposal has the following issues related specifically to the vDSO:
+> >
+> > It inherently contains indirect branches.  This means that, on retpolin=
+e
+> > configurations, it probably needs to use retpolines.  This is doable,
+> > but it=E2=80=99s nasty, and you need to worry about register clobbers.
+>
+> Only the weakest link matters in security. With dynamic linking in use, t=
+his additional indirect CALL can't make things worse. But I'm open to, and =
+in fact also willing to, apply whatever mitigation that you think is satisf=
+actory (or that has been applied to other indirect branches, such as in PLT=
+), such as retpoline. Btw, don't worry about register clobbers because we h=
+ave at least %rax at our disposal.
 
->  F:     security/selinux/
->  F:     scripts/selinux/
->  F:     Documentation/admin-guide/LSM/SELinux.rst
+There is no actual fundamental reason that dynamic linking has to work
+this way, and in principle, one could even use retpolines to the call
+the vDSO.  In any event, the vDSO is currently compiled with
+retpolines enabled, and if we decide to turn that off, it would be
+decision to be made independently of SGX.
 
--- 
-paul moore
-www.paul-moore.com
+>
+> >
+> > It uses effectively unbounded stack space. The vDSO timing functions ar=
+e
+> > already a problem for Go, and this is worse.
+>
+> If targeting the same functionality (i.e. no exit callback), my API uses =
+exactly 24 bytes more than Sean's. Is it really the case that those 24 byte=
+s will break Go?
+
+You're counting wrong.  Your version uses 24 bytes + the stack size of
+the exit handler + the amount of stack consumed by the enclave, which
+is effectively unbounded.  So this whole scheme becomes unusable on
+anything other than a stack that is "large" for a totally undefined
+value of large and that has guard pages.
+
+>
+> >
+> > Cedric, your proposal allows an enclave to muck with RSP, but not in a
+> > way that=E2=80=99s particularly pleasant.
+>
+> From security perspective, it is SGX ISA, but NOT any particular ABI, tha=
+t allows enclaves "to muck with RSP".
+
+Again, this has nothing to do with security.  With your proposal, it's
+not possible for the caller of an enclave to decide, in an ocall
+handler, to pause and do something else.  This isn't just theoretical.
+Suppose someone wants to send a network request in an ocall handler.
+With the current RSP approach, it's difficult to do this in a program
+that uses poll / select / epoll -- you can't return out from the ocall
+until you have an answer.
