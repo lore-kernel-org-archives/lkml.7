@@ -2,81 +2,70 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39CEAC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 11:58:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F2C3C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 11:58:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 113CF20850
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 11:58:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01A1120850
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 11:58:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730987AbfCYL6I (ORCPT
+        id S1731076AbfCYL62 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 07:58:08 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39764 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730899AbfCYL6I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 07:58:08 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 29821C066453;
-        Mon, 25 Mar 2019 11:58:08 +0000 (UTC)
-Received: from maximlenovopc.usersys.redhat.com (unknown [10.35.206.72])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9B80E76F62;
-        Mon, 25 Mar 2019 11:58:04 +0000 (UTC)
-Message-ID: <ae63716028ff7a3c87d2f341c04ccdbfdb565cfe.camel@redhat.com>
-Subject: Re: [PATCH 6/8] vfio/mdev: Follow correct remove sequence
-From:   Maxim Levitsky <mlevitsk@redhat.com>
-To:     Parav Pandit <parav@mellanox.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kwankhede@nvidia.com,
-        alex.williamson@redhat.com
-Date:   Mon, 25 Mar 2019 13:58:03 +0200
-In-Reply-To: <1553296835-37522-7-git-send-email-parav@mellanox.com>
-References: <1553296835-37522-1-git-send-email-parav@mellanox.com>
-         <1553296835-37522-7-git-send-email-parav@mellanox.com>
-Content-Type: text/plain; charset="UTF-8"
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Mon, 25 Mar 2019 11:58:08 +0000 (UTC)
+        Mon, 25 Mar 2019 07:58:28 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49270 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730839AbfCYL62 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 07:58:28 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id DB030AC61;
+        Mon, 25 Mar 2019 11:58:26 +0000 (UTC)
+From:   Andreas Schwab <schwab@suse.de>
+To:     Yash Shah <yash.shah@sifive.com>
+Cc:     Palmer Dabbelt <palmer@sifive.com>, linux-pwm@vger.kernel.org,
+        linux-riscv@lists.infradead.org,
+        Thierry Reding <thierry.reding@gmail.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Sachin Ghadi <sachin.ghadi@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>
+Subject: Re: [PATCH v9 0/2] PWM support for HiFive Unleashed
+References: <1552378289-27245-1-git-send-email-yash.shah@sifive.com>
+        <mvmimwotn60.fsf@suse.de>
+        <CAJ2_jOE3RH9FyFg_NATcLEpHv5y89zdh06Ji2x8n3C_gp-wn6A@mail.gmail.com>
+        <mvm5zsgp00d.fsf@suse.de>
+        <CAJ2_jOHoNnBF2UwU6G1vdvNrJAUJdGL_RncRAOaXMWoS03cagA@mail.gmail.com>
+        <CAJ2_jOFrXcxRS1oYOuYhtuRReTocmPKnoe5GO_3r_B1uAZb+xA@mail.gmail.com>
+X-Yow:  I was in a HOT TUB!  I was NORMAL!  I was ITALIAN!!  I enjoyed th'
+ EARTHQUAKE!
+Date:   Mon, 25 Mar 2019 12:58:26 +0100
+In-Reply-To: <CAJ2_jOFrXcxRS1oYOuYhtuRReTocmPKnoe5GO_3r_B1uAZb+xA@mail.gmail.com>
+        (Yash Shah's message of "Mon, 25 Mar 2019 17:13:29 +0530")
+Message-ID: <mvmmuljupwd.fsf@suse.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-03-22 at 18:20 -0500, Parav Pandit wrote:
-> mdev_remove_sysfs_files() should follow exact mirror sequence of a
-> create, similar to what is followed in error unwinding path of
-> mdev_create_sysfs_files().
-> 
-> Fixes: 7b96953bc640 ("vfio: Mediated device Core driver")
-> Signed-off-by: Parav Pandit <parav@mellanox.com>
-> ---
->  drivers/vfio/mdev/mdev_sysfs.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/vfio/mdev/mdev_sysfs.c b/drivers/vfio/mdev/mdev_sysfs.c
-> index ce5dd21..c782fa9 100644
-> --- a/drivers/vfio/mdev/mdev_sysfs.c
-> +++ b/drivers/vfio/mdev/mdev_sysfs.c
-> @@ -280,7 +280,7 @@ int  mdev_create_sysfs_files(struct device *dev, struct
-> mdev_type *type)
->  
->  void mdev_remove_sysfs_files(struct device *dev, struct mdev_type *type)
->  {
-> +	sysfs_remove_files(&dev->kobj, mdev_device_attrs);
->  	sysfs_remove_link(&dev->kobj, "mdev_type");
->  	sysfs_remove_link(type->devices_kobj, dev_name(dev));
-> -	sysfs_remove_files(&dev->kobj, mdev_device_attrs);
->  }
+On Mär 25 2019, Yash Shah <yash.shah@sifive.com> wrote:
 
-I agree with that.
+> I have sent out the v11 patchset, you can test the heartbeat
+> application with that patchset.
+> You still need to make that DT file modification which you previously
+> did, using fsbl.bin
 
-Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
+Why can't the driver make use of sifive,approx-period?
 
-Best regards,
-	Maxim Levitsky
+Andreas.
 
+-- 
+Andreas Schwab, SUSE Labs, schwab@suse.de
+GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
+"And now for something completely different."
