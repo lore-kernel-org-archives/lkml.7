@@ -2,36 +2,64 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DATE_IN_PAST_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26F53C10F03
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:45:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E300C10F03
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:45:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0013220879
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:45:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DCED20879
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:45:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="ZDbQf6wF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729882AbfCYQpN (ORCPT
+        id S1729920AbfCYQpZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 12:45:13 -0400
-Received: from mga07.intel.com ([134.134.136.100]:64699 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725795AbfCYQpM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 12:45:12 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Mar 2019 09:45:12 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,269,1549958400"; 
-   d="scan'208";a="125726528"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by orsmga007.jf.intel.com with ESMTP; 25 Mar 2019 09:45:11 -0700
-Date:   Mon, 25 Mar 2019 01:43:59 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Dan Williams <dan.j.williams@intel.com>
+        Mon, 25 Mar 2019 12:45:25 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:39833 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729204AbfCYQpY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 12:45:24 -0400
+Received: by mail-qt1-f194.google.com with SMTP id t28so11081445qte.6
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 09:45:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=azszLIWADnCz8AeAgm8+58HpL8DqZnCAWctdIVFE5Zo=;
+        b=ZDbQf6wFJU+EYUfgK208d7q5xgEAsedfDWsH7HcS+TgxZe1Tssa2BPdsAG2/hwMAys
+         rsvWpbV2F4p94YwmKTFIuX4ZYCNds18YVeb5XKR3N/q/IwU3EkNwJcTVzYn6EDh7fZln
+         2OZxPHIHWfFGj7YZXdyCqHS05W2dh7149lXSg4/ukEQUMHL7D7Y6NtaabG2aYj9KasxM
+         PHuOzwzg4iM4288xlpCX0Y7+myHdwiQDA5aQ9iytY8LSSCnI+uBbm/mNp75vQ71uvTOh
+         1u0QcVedoEpv2k/lmslIikFO/JBL2Dw9XFQLEa1MLkr1UZsADEa008jT8NGlhOraW5UW
+         A0zQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=azszLIWADnCz8AeAgm8+58HpL8DqZnCAWctdIVFE5Zo=;
+        b=RZCHGy8/So04prvzNKwrg2uM0q14jNIxPN4zfTSOl0kO3leKRdDvwS+4vZiDoAHE2i
+         St62pu2/6SNYNoa9fRaariWYOOmtjpagcblG1lv31weVeJpsNAQ5pjqDaPCOunNjmsw1
+         aHDg16xry3V17p9lEZkJ3w9cv6SpAtSANep4fbd4nNaKWTBY8HJ76AaA1jN16ShqCerV
+         FtCUuqi9I0ynWJ7QhBTWotFwGTMwUYT0n6BQdSsoe/EfBQ6X2UTLgv+fWNYepBumw5e/
+         PN/E/kPQbU25b7lfNYR1tKVRf0BYRJxxuSnmcYPFkxBwFaYevBWjoHAkOu1FbpQJA6bn
+         YVzg==
+X-Gm-Message-State: APjAAAWE6txDADmqNK2k9GUV8UYMq2cDP9gzwH3JrREQVvX/2hVsQlyd
+        2zv4YzFCIpPNYk/eTI92L3vIcbDhkd/RPD2Op3cmGA==
+X-Google-Smtp-Source: APXvYqwyqN1SmdoxO8BNg708b3bvqvBy5e7BsLNFvrI9L6R6ElZeTlrOFSa7GssTU28fSAH0U/YXsNRayrnRchybewU=
+X-Received: by 2002:ac8:2396:: with SMTP id q22mr22096706qtq.382.1553532323693;
+ Mon, 25 Mar 2019 09:45:23 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190317183438.2057-1-ira.weiny@intel.com> <20190317183438.2057-2-ira.weiny@intel.com>
+ <CAA9_cmffz1VBOJ0ykBtcj+hiznn-kbbuotu1uUhPiJtXiFjJXg@mail.gmail.com> <20190325061941.GA16366@iweiny-DESK2.sc.intel.com>
+In-Reply-To: <20190325061941.GA16366@iweiny-DESK2.sc.intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 25 Mar 2019 09:45:12 -0700
+Message-ID: <CAPcyv4hPxoX1+u=fjzCeVYOd9Bck9d=A9SQ-mjzeMA2tf9B9dA@mail.gmail.com>
+Subject: Re: [RESEND 1/7] mm/gup: Replace get_user_pages_longterm() with FOLL_LONGTERM
+To:     Ira Weiny <ira.weiny@intel.com>
 Cc:     Andrew Morton <akpm@linux-foundation.org>,
         John Hubbard <jhubbard@nvidia.com>,
         Michal Hocko <mhocko@suse.com>,
@@ -48,74 +76,53 @@ Cc:     Andrew Morton <akpm@linux-foundation.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>, linux-mm <linux-mm@kvack.org>,
+        James Hogan <jhogan@kernel.org>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         linux-mips@vger.kernel.org,
         linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
         linux-s390 <linux-s390@vger.kernel.org>,
         Linux-sh <linux-sh@vger.kernel.org>, sparclinux@vger.kernel.org,
-        linux-rdma@vger.kernel.org,
+        linux-rdma <linux-rdma@vger.kernel.org>,
         "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: Re: [RESEND 5/7] IB/hfi1: Use the new FOLL_LONGTERM flag to
- get_user_pages_fast()
-Message-ID: <20190325084359.GD16366@iweiny-DESK2.sc.intel.com>
-References: <20190317183438.2057-1-ira.weiny@intel.com>
- <20190317183438.2057-6-ira.weiny@intel.com>
- <CAA9_cmdQjMekSFU09gLc87-PVx2iHeeh2jC6KeFY1UeadpPh4A@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAA9_cmdQjMekSFU09gLc87-PVx2iHeeh2jC6KeFY1UeadpPh4A@mail.gmail.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 22, 2019 at 03:14:26PM -0700, Dan Williams wrote:
-> On Sun, Mar 17, 2019 at 7:36 PM <ira.weiny@intel.com> wrote:
+On Mon, Mar 25, 2019 at 7:21 AM Ira Weiny <ira.weiny@intel.com> wrote:
+[..]
+> > > @@ -1268,10 +1246,14 @@ static long check_and_migrate_cma_pages(unsigned long start, long nr_pages,
+> > >                                 putback_movable_pages(&cma_page_list);
+> > >                 }
+> > >                 /*
+> > > -                * We did migrate all the pages, Try to get the page references again
+> > > -                * migrating any new CMA pages which we failed to isolate earlier.
+> > > +                * We did migrate all the pages, Try to get the page references
+> > > +                * again migrating any new CMA pages which we failed to isolate
+> > > +                * earlier.
+> > >                  */
+> > > -               nr_pages = get_user_pages(start, nr_pages, gup_flags, pages, vmas);
+> > > +               nr_pages = __get_user_pages_locked(tsk, mm, start, nr_pages,
+> > > +                                                  pages, vmas, NULL,
+> > > +                                                  gup_flags);
+> > > +
 > >
-> > From: Ira Weiny <ira.weiny@intel.com>
-> >
-> > Use the new FOLL_LONGTERM to get_user_pages_fast() to protect against
-> > FS DAX pages being mapped.
-> >
-> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> > ---
-> >  drivers/infiniband/hw/hfi1/user_pages.c | 6 ++++--
-> >  1 file changed, 4 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/infiniband/hw/hfi1/user_pages.c b/drivers/infiniband/hw/hfi1/user_pages.c
-> > index 78ccacaf97d0..6a7f9cd5a94e 100644
-> > --- a/drivers/infiniband/hw/hfi1/user_pages.c
-> > +++ b/drivers/infiniband/hw/hfi1/user_pages.c
-> > @@ -104,9 +104,11 @@ int hfi1_acquire_user_pages(struct mm_struct *mm, unsigned long vaddr, size_t np
-> >                             bool writable, struct page **pages)
-> >  {
-> >         int ret;
-> > +       unsigned int gup_flags = writable ? FOLL_WRITE : 0;
-> 
-> Maybe:
-> 
->     unsigned int gup_flags = FOLL_LONGTERM | (writable ? FOLL_WRITE : 0);
-> 
-> ?
+> > Why did this need to change to __get_user_pages_locked?
+>
+> __get_uer_pages_locked() is now the "internal call" for get_user_pages.
+>
+> Technically it did not _have_ to change but there is no need to call
+> get_user_pages() again because the FOLL_TOUCH flags is already set.  Also this
+> call then matches the __get_user_pages_locked() which was called on the pages
+> we migrated from.  Mostly this keeps the code "symmetrical" in that we called
+> __get_user_pages_locked() on the pages we are migrating from and the same call
+> on the pages we migrated to.
+>
+> While the change here looks funny I think the final code is better.
 
-Sure looks good.
-
-Ira
-
-> 
-> >
-> > -       ret = get_user_pages_fast(vaddr, npages, writable ? FOLL_WRITE : 0,
-> > -                                 pages);
-> > +       gup_flags |= FOLL_LONGTERM;
-> > +
-> > +       ret = get_user_pages_fast(vaddr, npages, gup_flags, pages);
-> >         if (ret < 0)
-> >                 return ret;
-> >
-> > --
-> > 2.20.1
-> >
-> 
+Agree, but I think that either needs to be noted in the changelog so
+it's not a surprise, or moved to a follow-on cleanup patch.
