@@ -2,76 +2,101 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1695CC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:04:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 360BCC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:05:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6F6620830
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:04:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1033F20830
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:05:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729727AbfCYQEp (ORCPT
+        id S1729792AbfCYQE6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 12:04:45 -0400
-Received: from mga11.intel.com ([192.55.52.93]:30362 "EHLO mga11.intel.com"
+        Mon, 25 Mar 2019 12:04:58 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59630 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729010AbfCYQEl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 12:04:41 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Mar 2019 09:04:40 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,269,1549958400"; 
-   d="scan'208";a="145078748"
-Received: from spandruv-mobl.jf.intel.com ([10.24.11.149])
-  by orsmga002.jf.intel.com with ESMTP; 25 Mar 2019 09:04:40 -0700
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     rjw@rjwysocki.net, lenb@kernel.org, viresh.kumar@linaro.org
-Cc:     linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, pprakash@codeaurora.org,
-        wangxiongfeng2@huawei.com, srinivas.pandruvada@linux.intel.com
-Subject: [PATCH v2 0/2] Correct the processing for base_frequency
-Date:   Mon, 25 Mar 2019 09:04:38 -0700
-Message-Id: <20190325160440.7575-1-srinivas.pandruvada@linux.intel.com>
-X-Mailer: git-send-email 2.17.2
+        id S1728991AbfCYQE4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 12:04:56 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 656B63086211;
+        Mon, 25 Mar 2019 16:04:56 +0000 (UTC)
+Received: from jlaw-desktop.bos.redhat.com (dhcp-17-208.bos.redhat.com [10.18.17.208])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 38255909FF;
+        Mon, 25 Mar 2019 16:04:53 +0000 (UTC)
+From:   Joe Lawrence <joe.lawrence@redhat.com>
+To:     linux-kbuild@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+Cc:     Joe Lawrence <joe.lawrence@redhat.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: [PATCH] kbuild: strip whitespace in cmd_record_mcount findstring
+Date:   Mon, 25 Mar 2019 12:04:38 -0400
+Message-Id: <20190325160438.8982-1-joe.lawrence@redhat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Mon, 25 Mar 2019 16:04:56 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The base_frequency display in cpufreq sysfs for intel_pstate gets the
-guaranteed ratio by reading CPPC guaranteed performance register as a
-first preference before falling back to x86 MSR for Hardware P-state
-Capabilities. The current code in cppc_acpi.c assumed that "guaranteed
-performance register" can be an integer field, which is invalid as per
-ACPI spec. So this change explicitly check for INTEGER values for
-invalid BIOS/firmware and ignore. 
-Also guaranteed performance register field is optional and when not
-present, nominal performance can be used as the guaranteed performance.
-But spec calls that this is true only in non-autonomous mode. So
-no change is made in cppc_acpi.c to make nominal as guaranteed in this
-case to avoid dependency on autonomous and non-autonomous mode. Instead
-a change is added to intel_pstate driver, which is specific to x86 to
-make nominal as guaranteed when guaranteed performance field is absent
-or has invalid value.
-Also we are working to clarify this non-autonomous mode requirement
-through ACPI standard body.
+CC_FLAGS_FTRACE may contain trailing whitespace that interferes with
+findstring.
 
-v2:
-Changes done as suggested by Rafael.
+For example, commit 6977f95e63b9 ("powerpc: avoid -mno-sched-epilog on
+GCC 4.9 and newer") introduced a change such that on my ppc64le box,
+CC_FLAGS_FTRACE="-pg -mprofile-kernel ".  (Note the trailing space.)
+When cmd_record_mcount is now invoked, findstring fails as the ftrace
+flags were found at very end of _c_flags, without the trailing space.
 
+  _c_flags=" ... -pg -mprofile-kernel"
+  CC_FLAGS_FTRACE="-pg -mprofile-kernel "
+                                       ^
+    findstring is looking for this extra space
 
-Srinivas Pandruvada (2):
-  ACPI / CPPC: Fix processing for guaranteed performance
-  cpufreq: intel_pstate: Also use cppc nominal_perf for base_frequency
+Remove the redundant whitespaces from CC_FLAGS_FTRACE in
+cmd_record_mcount to avoid this problem.
 
- drivers/acpi/cppc_acpi.c       | 9 +++++++--
- drivers/cpufreq/intel_pstate.c | 5 ++++-
- 2 files changed, 11 insertions(+), 3 deletions(-)
+Fixes: 6977f95e63b9 ("powerpc: avoid -mno-sched-epilog on GCC 4.9 and newer").
+Signed-off-by: Joe Lawrence <joe.lawrence@redhat.com>
+---
 
+Standard disclaimer: I'm not a kbuild expert, but this works around the
+problem I reported where ftrace and livepatch self-tests were failing as
+specified object files were not run through the recordmcount.pl script:
+
+ppc64le: ftrace self-tests and $(CC_FLAGS_FTRACE) broken?
+https://lists.ozlabs.org/pipermail/linuxppc-dev/2019-March/187298.html
+
+ scripts/Makefile.build | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+index 2554a15ecf2b..74d402b5aa3c 100644
+--- a/scripts/Makefile.build
++++ b/scripts/Makefile.build
+@@ -199,10 +199,10 @@ sub_cmd_record_mcount = perl $(srctree)/scripts/recordmcount.pl "$(ARCH)" \
+ 	"$(if $(part-of-module),1,0)" "$(@)";
+ recordmcount_source := $(srctree)/scripts/recordmcount.pl
+ endif # BUILD_C_RECORDMCOUNT
+-cmd_record_mcount =						\
+-	if [ "$(findstring $(CC_FLAGS_FTRACE),$(_c_flags))" =	\
+-	     "$(CC_FLAGS_FTRACE)" ]; then			\
+-		$(sub_cmd_record_mcount)			\
++cmd_record_mcount =							\
++	if [ "$(findstring $(strip $(CC_FLAGS_FTRACE)),$(_c_flags))" =	\
++	     "$(strip $(CC_FLAGS_FTRACE))" ]; then			\
++		$(sub_cmd_record_mcount)				\
+ 	fi
+ endif # CC_USING_RECORD_MCOUNT
+ endif # CONFIG_FTRACE_MCOUNT_RECORD
 -- 
-2.17.2
+2.20.1
 
