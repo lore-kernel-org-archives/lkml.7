@@ -2,44 +2,40 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74B89C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 02:51:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 409E1C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 02:51:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 463D820863
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 02:51:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B29A20863
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 02:51:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729360AbfCYCv0 (ORCPT
+        id S1729388AbfCYCva (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 22:51:26 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:43242 "EHLO huawei.com"
+        Sun, 24 Mar 2019 22:51:30 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:43406 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729154AbfCYCvZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 22:51:25 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id C977FBF4C17C19322468;
-        Mon, 25 Mar 2019 10:51:20 +0800 (CST)
-Received: from [127.0.0.1] (10.177.31.96) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.408.0; Mon, 25 Mar 2019
- 10:51:15 +0800
-Subject: Re: [PATCH v2] dccp: Fix memleak in __feat_register_sp
-To:     David Miller <davem@davemloft.net>
-References: <20190322134348.15048-1-yuehaibing@huawei.com>
- <20190324.201226.2195904854628723725.davem@davemloft.net>
-CC:     <gerrit@erg.abdn.ac.uk>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <dccp@vger.kernel.org>
-From:   YueHaibing <yuehaibing@huawei.com>
-Message-ID: <f86a5326-2681-1d8f-094a-4316837f7beb@huawei.com>
-Date:   Mon, 25 Mar 2019 10:51:14 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        id S1729154AbfCYCv3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Mar 2019 22:51:29 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id D9E78FA6F3661C05EE9B;
+        Mon, 25 Mar 2019 10:51:26 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.408.0; Mon, 25 Mar 2019
+ 10:51:20 +0800
+From:   Yue Haibing <yuehaibing@huawei.com>
+To:     <davem@davemloft.net>, <gerrit@erg.abdn.ac.uk>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <dccp@vger.kernel.org>, <mojha@codeaurora.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH v3] dccp: Fix memleak in __feat_register_sp
+Date:   Mon, 25 Mar 2019 10:41:06 +0800
+Message-ID: <20190325024106.10808-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-In-Reply-To: <20190324.201226.2195904854628723725.davem@davemloft.net>
-Content-Type: text/plain; charset="iso-8859-7"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 X-Originating-IP: [10.177.31.96]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
@@ -47,33 +43,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: YueHaibing <yuehaibing@huawei.com>
 
-On 2019/3/25 8:12, David Miller wrote:
-> From: Yue Haibing <yuehaibing@huawei.com>
-> Date: Fri, 22 Mar 2019 21:43:48 +0800
-> 
->> From: YueHaibing <yuehaibing@huawei.com>
->>
->> If dccp_feat_push_change fails, we forget free the mem
->> which is alloced by kmemdup in dccp_feat_clone_sp_val.
->>
->> Reported-by: Hulk Robot <hulkci@huawei.com>
->> Fixes: e8ef967a54f4 ("dccp: Registration routines for changing feature values")
->> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
->> ---
->> v2: kfree 'val --> 'fval'
-> 
-> Don't submit any patches for at least 2 days, I am getting really tired of
-> changes you don't even COMPILE TEST:
-> 
->   CC [M]  net/dccp/feat.o
-> net/dccp/feat.c: In function ¡__feat_register_sp¢:
-> net/dccp/feat.c:742:13: error: invalid type argument of ¡->¢ (have ¡dccp_feat_val¢ {aka ¡union <anonymous>¢})
->    kfree(fval->sp.vec);
->       
+If dccp_feat_push_change fails, we forget free the mem
+which is alloced by kmemdup in dccp_feat_clone_sp_val.
 
-I'm very sorry for this, will self-reflection.
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: e8ef967a54f4 ("dccp: Registration routines for changing feature values")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+v3: fix compile issue, sorry for this again
+v2: kfree 'val --> 'fval'
+---
+ net/dccp/feat.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-       ^~
-> 
+diff --git a/net/dccp/feat.c b/net/dccp/feat.c
+index f227f00..db87d9f 100644
+--- a/net/dccp/feat.c
++++ b/net/dccp/feat.c
+@@ -738,7 +738,12 @@ static int __feat_register_sp(struct list_head *fn, u8 feat, u8 is_local,
+ 	if (dccp_feat_clone_sp_val(&fval, sp_val, sp_len))
+ 		return -ENOMEM;
+ 
+-	return dccp_feat_push_change(fn, feat, is_local, mandatory, &fval);
++	if (dccp_feat_push_change(fn, feat, is_local, mandatory, &fval)) {
++		kfree(fval.sp.vec);
++		return -ENOMEM;
++	}
++
++	return 0;
+ }
+ 
+ /**
+-- 
+2.7.4
+
 
