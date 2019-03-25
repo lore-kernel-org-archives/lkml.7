@@ -2,112 +2,149 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0535BC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 07:37:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF02C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 07:42:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C50902087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 07:37:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="0koYTBda"
+	by mail.kernel.org (Postfix) with ESMTP id D902820879
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 07:42:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729885AbfCYHhg (ORCPT
+        id S1729871AbfCYHmH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 03:37:36 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:39478 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729720AbfCYHhf (ORCPT
+        Mon, 25 Mar 2019 03:42:07 -0400
+Received: from mail-it1-f199.google.com ([209.85.166.199]:56104 "EHLO
+        mail-it1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729755AbfCYHmH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 03:37:35 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2P7Y2ol101899;
-        Mon, 25 Mar 2019 07:37:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=2VlQBHb5HwLShox7N890bgyUAQsYFewwS6A/Xh3YKjk=;
- b=0koYTBdahgG8L+HkuugwPUluQjoLt0aFjAM5h1EnoaZP9abJND3f9QCtv+2ft3u4ISLF
- 3q4s1ttzknR+h2BSdFW733ro/g66YzFfNRM6HaDcYeq23jud8Cwn4p+oXLSSsd1tnNmW
- fjn0U14M8PHpYxSom2mzktmicJGEZ9wgKVCJwttxB5/RssP0iXUyuPkgrTSs3WCX+8CC
- n8G2J48RDDLE9w8/2PYzwK7/SEKer/yItAjQg3ekPcWeJ627KpIaz3zqPa0Vy6sq1l8E
- iKXr9tDBlsJfoZs0JyzoSTot3+bjqRmilLLFnPsC+KyVIGf/7WxLjAJjsFqMk6JBE4X+ gw== 
-Received: from aserv0021.oracle.com (aserv0021.oracle.com [141.146.126.233])
-        by userp2120.oracle.com with ESMTP id 2re6dj2aky-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 25 Mar 2019 07:37:11 +0000
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x2P7b6Da000665
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 25 Mar 2019 07:37:06 GMT
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x2P7b5iw027258;
-        Mon, 25 Mar 2019 07:37:05 GMT
-Received: from [10.182.71.8] (/10.182.71.8)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 25 Mar 2019 00:37:05 -0700
-Subject: Re: [PATCH V2 8/8] blk-mq: remove blk_mq_tagset_busy_iter
-To:     Hannes Reinecke <hare@suse.de>, axboe@kernel.dk
-Cc:     linux-block@vger.kernel.org, jsmart2021@gmail.com,
-        sagi@grimberg.me, josef@toxicpanda.com,
-        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
-        keith.busch@intel.com, jthumshirn@suse.de, hch@lst.de,
-        bvanassche@acm.org
-References: <1553492318-1810-1-git-send-email-jianchao.w.wang@oracle.com>
- <1553492318-1810-9-git-send-email-jianchao.w.wang@oracle.com>
- <47fe0e2a-f427-0e3e-e15b-a9e2bffb502f@suse.de>
-From:   "jianchao.wang" <jianchao.w.wang@oracle.com>
-Message-ID: <f9d22543-65d1-e473-e3ab-deefa2d6e884@oracle.com>
-Date:   Mon, 25 Mar 2019 15:37:04 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Mon, 25 Mar 2019 03:42:07 -0400
+Received: by mail-it1-f199.google.com with SMTP id y6so8346473itj.5
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 00:42:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=J1bg7V3tT4vzizIIuHpcVh+etP4TuQAon6TicJ/+KKY=;
+        b=JWnzxKg5+pvam9lNxOF+oV7xNhqc8D/x9pAsMvO5/FXL/tExcc+CdtWODa3UNsZy/2
+         8TuTAqbB1rTZU6t2ImSZ03Uh2ei2q3aFBkO54ctVL2O/bZMBm04V3f9xo+wapu9W15wy
+         JBHR5szyO4kQwFKW3Letwe7qPyvjLa9EFP1n526vhQRS2LiCloMbQB5aeUAScBB7sU2H
+         ZUkZuPZhlzRcqo0FIb+U1jKh+MUGBBxEqCZb4PaN73HMi/0xA78f4Vez1ZrfMNe6/sGN
+         0Ekqet22+L5PYeIzBD3QOSYYqkSzEpFPODQHeZYykgvoxf6SYNxDJ2tMx/KKiMxAnlJM
+         KxNg==
+X-Gm-Message-State: APjAAAXscZCSgOlNaWR9Y4WOQVSk4A8AlN1QoQqnvxc71bJ+/RCJuY2g
+        Yqdk9O56BRctU0U67feouLcazyEmlcSH159dE3mzzqfiacPl
+X-Google-Smtp-Source: APXvYqxSAwWOdgDkKpTsxMhmUuydpncQwv46x6cF+4WEVvsKtjcIbGlNUaGTOFz0uCQDS+k4VxAis+/oJdVX+fg6Tw18iTW0kkdx
 MIME-Version: 1.0
-In-Reply-To: <47fe0e2a-f427-0e3e-e15b-a9e2bffb502f@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9205 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=950 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903250057
+X-Received: by 2002:a02:499c:: with SMTP id p28mr16593855jad.118.1553499725905;
+ Mon, 25 Mar 2019 00:42:05 -0700 (PDT)
+Date:   Mon, 25 Mar 2019 00:42:05 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000524ca80584e657d8@google.com>
+Subject: BUG: corrupted list in rhashtable_walk_enter
+From:   syzbot <syzbot+dae72a112334aa65a159@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, herbert@gondor.apana.org.au,
+        keescook@chromium.org, ktkhai@virtuozzo.com, kuznet@ms2.inr.ac.ru,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        stephen@networkplumber.org, syzkaller-bugs@googlegroups.com,
+        tom@herbertland.com, yoshfuji@linux-ipv6.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hannes
+Hello,
 
-On 3/25/19 3:18 PM, Hannes Reinecke wrote:
-> On 3/25/19 6:38 AM, Jianchao Wang wrote:
->> As nobody uses blk_mq_tagset_busy_iter, remove it.
->>
->> Signed-off-by: Jianchao Wang <jianchao.w.wang@oracle.com>
->> ---
->>   block/blk-mq-tag.c     | 95 --------------------------------------------------
->>   include/linux/blk-mq.h |  2 --
->>   2 files changed, 97 deletions(-)
->>
-> Please, don't.
-> 
-> I'm currently implementing reserved commands for SCSI and reworking the SCSI error handling where I rely on this interface quite heavily.
+syzbot found the following crash on:
+
+HEAD commit:    a5ed1e96 Merge tag 'powerpc-5.1-3' of git://git.kernel.org..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1788d34d200000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=9a31fb246de2a622
+dashboard link: https://syzkaller.appspot.com/bug?extid=dae72a112334aa65a159
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11d40c07200000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+dae72a112334aa65a159@syzkaller.appspotmail.com
+
+list_add corruption. next->prev should be prev (ffff888091d3aa60), but was  
+0000000000000002. (next=ffff8880984df5f0).
+------------[ cut here ]------------
+kernel BUG at lib/list_debug.c:23!
+invalid opcode: 0000 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 11985 Comm: syz-executor.4 Not tainted 5.1.0-rc1+ #34
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+RIP: 0010:__list_add_valid.cold+0xf/0x3c lib/list_debug.c:23
+Code: 77 fe eb d5 4c 89 e7 e8 ba 6a 77 fe eb a3 4c 89 f7 e8 b0 6a 77 fe e9  
+56 ff ff ff 4c 89 e1 48 c7 c7 00 d5 a1 87 e8 f0 ce 29 fe <0f> 0b 48 89 f2  
+4c 89 e1 4c 89 ee 48 c7 c7 40 d6 a1 87 e8 d9 ce 29
+RSP: 0018:ffff888085b3f4b0 EFLAGS: 00010286
+RAX: 0000000000000075 RBX: ffff888085b3f5d8 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff815ae266 RDI: ffffed1010b67e88
+RBP: ffff888085b3f4c8 R08: 0000000000000075 R09: ffffed1015d05011
+R10: ffffed1015d05010 R11: ffff8880ae828087 R12: ffff8880984df5f0
+R13: ffff888085b3f5f0 R14: ffff888091d3aa40 R15: ffff888091d3aa60
+FS:  00007f7a35de9700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020000000 CR3: 00000000a61fa000 CR4: 00000000001406f0
+Call Trace:
+  __list_add include/linux/list.h:60 [inline]
+  list_add include/linux/list.h:79 [inline]
+  rhashtable_walk_enter+0x1b0/0x390 lib/rhashtable.c:676
+  ila_xlat_nl_cmd_flush+0x244/0x1090 net/ipv6/ila/ila_xlat.c:388
+  genl_family_rcv_msg+0x6e1/0xd90 net/netlink/genetlink.c:601
+  genl_rcv_msg+0xca/0x16c net/netlink/genetlink.c:626
+  netlink_rcv_skb+0x17a/0x460 net/netlink/af_netlink.c:2485
+  genl_rcv+0x29/0x40 net/netlink/genetlink.c:637
+  netlink_unicast_kernel net/netlink/af_netlink.c:1310 [inline]
+  netlink_unicast+0x536/0x720 net/netlink/af_netlink.c:1336
+  netlink_sendmsg+0x8ae/0xd70 net/netlink/af_netlink.c:1925
+  sock_sendmsg_nosec net/socket.c:622 [inline]
+  sock_sendmsg+0xdd/0x130 net/socket.c:632
+  ___sys_sendmsg+0x806/0x930 net/socket.c:2137
+  __sys_sendmsg+0x105/0x1d0 net/socket.c:2175
+  __do_sys_sendmsg net/socket.c:2184 [inline]
+  __se_sys_sendmsg net/socket.c:2182 [inline]
+  __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2182
+  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x458209
+Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f7a35de8c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000458209
+RDX: 0000000000000000 RSI: 0000000020000000 RDI: 0000000000000003
+RBP: 000000000073bf00 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f7a35de96d4
+R13: 00000000004c57c8 R14: 00000000004d96b8 R15: 00000000ffffffff
+Modules linked in:
+---[ end trace 25c5a70a6fa97765 ]---
+RIP: 0010:__list_add_valid.cold+0xf/0x3c lib/list_debug.c:23
+Code: 77 fe eb d5 4c 89 e7 e8 ba 6a 77 fe eb a3 4c 89 f7 e8 b0 6a 77 fe e9  
+56 ff ff ff 4c 89 e1 48 c7 c7 00 d5 a1 87 e8 f0 ce 29 fe <0f> 0b 48 89 f2  
+4c 89 e1 4c 89 ee 48 c7 c7 40 d6 a1 87 e8 d9 ce 29
+RSP: 0018:ffff888085b3f4b0 EFLAGS: 00010286
+RAX: 0000000000000075 RBX: ffff888085b3f5d8 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff815ae266 RDI: ffffed1010b67e88
+RBP: ffff888085b3f4c8 R08: 0000000000000075 R09: ffffed1015d05011
+R10: ffffed1015d05010 R11: ffff8880ae828087 R12: ffff8880984df5f0
+R13: ffff888085b3f5f0 R14: ffff888091d3aa40 R15: ffff888091d3aa60
+FS:  00007f7a35de9700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020000000 CR3: 00000000a61fa000 CR4: 00000000001406f0
 
 
-blk_mq_tagset_busy_iter could access some stale requests which maybe freed due to io scheduler switching, request_queue cleanup (shared tagset)
-when there is someone submits io and gets driver tag. When io scheduler attached, even quiesce request_queue won't work.
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-If this patchset is accepted, blk_mq_tagset_busy_iter could be replaced with blk_mq_queue_inflight_tag_iter which needs
-to be invoked by every request_queue that shares the tagset.
-
-Please go ahead your work.
-
-Thanks
-Jianchao
-
-> 
-> Cheers,
-> 
-> Hannes
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
