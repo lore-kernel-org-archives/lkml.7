@@ -2,153 +2,84 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8FB4C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 02:21:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 530A1C4360F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 02:31:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6F4220830
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 02:21:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2386D20870
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 02:31:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qef6YXkq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729327AbfCYCV3 (ORCPT
+        id S1729342AbfCYCbZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 22:21:29 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5181 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729264AbfCYCV2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 22:21:28 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 1FC05F69CAA00AB2CC16;
-        Mon, 25 Mar 2019 10:21:27 +0800 (CST)
-Received: from [127.0.0.1] (10.177.23.164) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.408.0; Mon, 25 Mar 2019
- 10:21:17 +0800
-Subject: Re: [PATCH 1/1] iommu: Add config option to set lazy mode as default
-To:     John Garry <john.garry@huawei.com>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        "Will Deacon" <will.deacon@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu <iommu@lists.linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <20190322141121.18428-1-thunder.leizhen@huawei.com>
- <8cf20613-7a9a-d4a1-b52e-4b526f2c7ff2@huawei.com>
-CC:     Hanjun Guo <guohanjun@huawei.com>
-From:   "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
-Message-ID: <5C983B1C.80502@huawei.com>
-Date:   Mon, 25 Mar 2019 10:21:16 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
- Thunderbird/38.5.1
+        Sun, 24 Mar 2019 22:31:25 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:35786 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729154AbfCYCbZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Mar 2019 22:31:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:Cc:From:References:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=J6jg6kBLgFKMOwQ0kaoV8+aDrdID5J7wq9Obg02yBzA=; b=qef6YXkqlZNV7gnLA3TcpqUEh
+        E9HKsdxMeeN+UlSMr9PWWQtp6dwl/BD6o8SymnG/vXlwkRC2mllH3ImqEFMTg3111yIJxzuCvuE5C
+        hnFR3FUByKtzVJ0SKzKIC/GTOVEQGZTSYQCdIDbMOQS/tgxWDq6DcSYFAvy21V1AekyhBPJGZ2Xi5
+        PAeE5XhuTYxQmEtQioZFRH26Cs8BzBFqtizy6AI24n6o5gywh2LiVTpKyGTJtXfaV5lGdZaR2+bVg
+        y3MPIWvOZBw7VurSPYhm7bZJgc2IRqkA0tyiQX/GEIW6rO7HS8VGN1FrX/bAGA4bRunB6V6g7mgWR
+        isWOYJYxw==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h8FOS-0007nN-F7; Mon, 25 Mar 2019 02:31:20 +0000
+Subject: Re: Linux 5.1-rc2
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+References: <CAHk-=wgg_PRWs3a6u2gnFLQjhxOJcrFkqqWVnLw60eQAwD-DNw@mail.gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Cc:     linux-security-module <linux-security-module@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        James Morris <jmorris@namei.org>
+Message-ID: <2d4f3bfa-22c7-a18c-3902-fe1b6ac401f7@infradead.org>
+Date:   Sun, 24 Mar 2019 19:31:16 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <8cf20613-7a9a-d4a1-b52e-4b526f2c7ff2@huawei.com>
-Content-Type: text/plain; charset="windows-1252"
+In-Reply-To: <CAHk-=wgg_PRWs3a6u2gnFLQjhxOJcrFkqqWVnLw60eQAwD-DNw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.23.164]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 3/24/19 2:26 PM, Linus Torvalds wrote:
+> Well, we're a week away from the merge window close, and here's rc2.
+> Things look fairly normal, but honestly, rc2 is usually too early to
+> tell.  People haven't necessarily had time to notice problems yet.
+> Which is just another way of saying "please test harder".
+> 
+> Nothing particularly stands out. Yes, we had some fixes for the new
+> io_ring code for issues that were discussed when merging it. Other
+> than that, worth noting is that the bulk of the patches are for
+> tooling, not the core kernel. In fact, about two thirds of the patch
+> is just for the tools/ subdirectory, most of it due to some late perf
+> tool updates. The people involved promise they're done.
 
+Hmph.  I'm still looking for the patch that restores the various
+CONFIG_DEFAULT_<security> kconfig options to be merged.
 
-On 2019/3/22 22:42, John Garry wrote:
-> On 22/03/2019 14:11, Zhen Lei wrote:
-> 
->> This allows the default behaviour to be controlled by a kernel config
->> option instead of changing the command line for the kernel to include
->> "iommu.strict=0" on ARM64 where this is desired.
->>
->> This is similar to CONFIG_IOMMU_DEFAULT_PASSTHROUGH
->>
->> Note: At present, intel_iommu, amd_iommu and s390_iommu use lazy mode as
->> defalut, so there is no need to add code for them.
-> 
-> /s/defalut/default/
-> 
->>
->> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
->> ---
->>  drivers/iommu/Kconfig | 14 ++++++++++++++
->>  drivers/iommu/iommu.c |  5 +++++
-> 
-> Do we need to update kernel-parameters.txt for iommu.strict?
-> 
->>  2 files changed, 19 insertions(+)
->>
->> diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
->> index 6f07f3b21816c64..5ec9780f564eaf8 100644
->> --- a/drivers/iommu/Kconfig
->> +++ b/drivers/iommu/Kconfig
->> @@ -85,6 +85,20 @@ config IOMMU_DEFAULT_PASSTHROUGH
->>
->>        If unsure, say N here.
->>
->> +config IOMMU_LAZY_MODE
-> 
-> maybe should add "DMA" to the name, and even "DEFAULT"
-OK, thanks
+https://lore.kernel.org/linux-security-module/2bf23acd-22c4-a260-7648-845887a409d5@i-love.sakura.ne.jp/
 
-> 
->> +    bool "IOMMU use lazy mode to flush IOTLB and free IOVA"
->> +    depends on IOMMU_API
->> +    help
->> +      For every IOMMU unmap operation, the flush operation of IOTLB and the free
->> +      operation of IOVA are deferred.
-> 
-> This is a bit unclear, as there is no context. I think that you need to say something like, "Support lazy mode, where for every IOMMU DMA unmap operation, the flush operation of IOTLB and the free operation of IOVA are deferred. "
-> 
-> 
-> They are only guaranteed to be done before
->> +      the related IOVA will be reused. Removing the need to pass in iommu.strict=0
->> +      through command line on ARM64(Now, intel_iommu, amd_iommu, s390_iommu use
->> +      lazy mode as deault).
-> 
-> prone to going out-of-date
-> 
->  If this is enabled, you can still disable with kernel
->> +      parameters, such as iommu.strict=1, intel_iommu=strict, amd_iommu=fullflush
->> +      or s390_iommu=strict depending on the architecture.
->> +
->> +      If unsure, say N here.
->> +
->>  config OF_IOMMU
->>         def_bool y
->>         depends on OF && IOMMU_API
->> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
->> index 33a982e33716369..e307d70d1578b3b 100644
->> --- a/drivers/iommu/iommu.c
->> +++ b/drivers/iommu/iommu.c
->> @@ -43,7 +43,12 @@
->>  #else
->>  static unsigned int iommu_def_domain_type = IOMMU_DOMAIN_DMA;
->>  #endif
->> +
->> +#ifdef CONFIG_IOMMU_LAZY_MODE
->> +static bool iommu_dma_strict __read_mostly;
->> +#else
->>  static bool iommu_dma_strict __read_mostly = true;
->> +#endif
->>
->>  struct iommu_callback_data {
->>      const struct iommu_ops *ops;
->> -- 
->> 1.8.3
->>
->>
->>
-> 
-> Cheers
-> 
-> 
-> 
-> 
-> .
-> 
+since commit 70b62c25665f636c9f6c700b26af7df296b0887e dropped them somehow.
+
 
 -- 
-Thanks!
-BestRegards
-
+~Randy
