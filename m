@@ -2,96 +2,99 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD70FC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:23:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74FEFC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:23:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5E8220854
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:23:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5065A20854
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:23:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731285AbfCYMXM (ORCPT
+        id S1731301AbfCYMXQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 08:23:12 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59498 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731091AbfCYMXL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 08:23:11 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 38DA031449EA;
-        Mon, 25 Mar 2019 12:23:11 +0000 (UTC)
-Received: from dhcp-128-65.nay.redhat.com (ovpn-12-119.pek2.redhat.com [10.72.12.119])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D22FA1001DC8;
-        Mon, 25 Mar 2019 12:23:06 +0000 (UTC)
-Date:   Mon, 25 Mar 2019 20:23:02 +0800
-From:   Dave Young <dyoung@redhat.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Junichi Nomura <j-nomura@ce.jp.nec.com>,
-        "fanc.fnst@cn.fujitsu.com" <fanc.fnst@cn.fujitsu.com>,
-        "bhe@redhat.com" <bhe@redhat.com>,
-        "kasong@redhat.com" <kasong@redhat.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] x86/boot: Use EFI setup data if provided
-Message-ID: <20190325122302.GC13160@dhcp-128-65.nay.redhat.com>
-References: <20190325002740.GA6637@jeru.linux.bs1.fc.nec.co.jp>
- <20190325060128.GB9385@dhcp-128-65.nay.redhat.com>
- <20190325061929.GC9385@dhcp-128-65.nay.redhat.com>
- <bcb5bd29-a3b8-e42d-8da7-a8501f695c21@ce.jp.nec.com>
- <20190325065921.GA11096@dhcp-128-65.nay.redhat.com>
- <20190325082720.GA20771@jeru.linux.bs1.fc.nec.co.jp>
- <51D9A7D1-49BF-4679-B102-0FC5AC300C9F@alien8.de>
- <20190325101509.GA13160@dhcp-128-65.nay.redhat.com>
- <701c8e69-e1d4-c653-1d87-1c41789d3d54@ce.jp.nec.com>
- <20190325120149.GI12016@zn.tnic>
+        Mon, 25 Mar 2019 08:23:16 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:20967 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730938AbfCYMXO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 08:23:14 -0400
+X-UUID: 2d4a71afe45b4fc2b42a39350bc7eca9-20190325
+X-UUID: 2d4a71afe45b4fc2b42a39350bc7eca9-20190325
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
+        (envelope-from <zhiyong.tao@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1739437294; Mon, 25 Mar 2019 20:23:09 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 25 Mar 2019 20:23:08 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 25 Mar 2019 20:23:06 +0800
+From:   Zhiyong Tao <zhiyong.tao@mediatek.com>
+To:     <robh+dt@kernel.org>, <linus.walleij@linaro.org>,
+        <mark.rutland@arm.com>, <matthias.bgg@gmail.com>,
+        <sean.wang@kernel.org>
+CC:     <srv_heupstream@mediatek.com>, <zhiyong.tao@mediatek.com>,
+        <hui.liu@mediatek.com>, <eddie.huang@mediatek.com>,
+        <chuanjia.liu@mediatek.com>, <biao.huang@mediatek.com>,
+        <hongzhou.yang@mediatek.com>, <erin.lo@mediatek.com>,
+        <sean.wang@mediatek.com>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>
+Subject: [PATCH v3 0/4] PINCTRL: Mediatek pinctrl patch on mt8183 
+Date:   Mon, 25 Mar 2019 20:22:58 +0800
+Message-ID: <20190325122302.5483-1-zhiyong.tao@mediatek.com>
+X-Mailer: git-send-email 2.12.5
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190325120149.GI12016@zn.tnic>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Mon, 25 Mar 2019 12:23:11 +0000 (UTC)
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/25/19 at 01:01pm, Borislav Petkov wrote:
-> On Mon, Mar 25, 2019 at 10:36:33AM +0000, Junichi Nomura wrote:
-> > AFAIU, early parsing is new code in v5.1-rc1 to support kexec on systems
-> > with hotpluggable memory with KASLR enabled. For systems that requires the
-> > new feature, it may be ok to say "you need to use another kexec interface"
-> > and/or "you need new kexec-tools".
-> 
-> No, this exactly should *not* happen. kexec is already full of duct tape
-> - don't need any more of that.
-> 
-> So I suggested that efi_get_rsdp_addr() should exit early on in the
-> kexeced kernel but making this all play nice with the kexec-ed kernel,
-> as Dave suggests, is better.
-> 
-> Now, my next question is: why does the RDSP address need to come from
-> kexec(1) (by way of efi_setup_data) and why can't the kexec'ed kernel
-> figure it out itself by parsing the EFI tables in a similar way to
-> efi_get_rsdp_addr ?
+This series includes 4 patches:
+1.add pintcrl binding document on mt8183.
+2.add pintcrl file on mt8183.
+3.add pintcrl device node on mt8183.
+4.add drive for I2C related pins on MT8183.
 
-efi_enter_virtual_mode() can only run once because of efi firmware/spec
-limitation,  and after entered virtual mode, efi firmware just updated
-the original efi sys table, for example the original
-systab64->fw_vendor, systab64->tables, and even smbios (only found on
-some HPE machine) are changed from physcial address to virtual address.
+Changes in patch v3:
+1)add the patch "dt-bindings: pinctrl: mt8183: add binding document".
+2)add the patch "arm64: dts: mt8183: add pintcrl file".
+3)add the patch "arm64: dts: mt8183: add pintcrl device node".
+4)add more datail information for the specific driving setup in commit message.
+5)use "mediatek,drive-strength-adv" instead of
+  "mediatek,drive-enable-adv" and "mediatek,drive-enable-disable".
+6)change "PINCTRL_PIN_REG_DRV_EN_DIS" to "PINCTRL_PIN_REG_DRV_EN".
+7)change the function "mtk_pinconf_adv_drive_set".
 
-In the current efi_get_rsdp_addr, it assumes the efi config tables
-address is not touched (as physical addresses), it will break then.
+Changes in patch v2:
+1)add the details strength specification of the I2c pins.
+2)change "mt8183_pin_drv_en_dis_range" to "mt8183_pin_e1e0en_range".
+3)change "mt8183_pin_drv_e0_range" to "mt8183_pin_e0_range".
+4)change "mt8183_pin_drv_e1_range" to "mt8183_pin_e1_range".
 
-Kexec saved the original physical addresses, and pass them to kexeced
-kernel via x86 setup_data, so  both the early parsing or efi init code
-need to get those physical values from setup_data.
+Zhiyong Tao (4):
+  dt-bindings: pinctrl: mt8183: add binding document
+  arm64: dts: mt8183: add pintcrl file
+  arm64: dts: mt8183: add pintcrl device node
+  pinctrl: add drive for I2C related pins on MT8183
 
-Thanks
-Dave
+ .../devicetree/bindings/pinctrl/pinctrl-mt8183.txt |  132 +++
+ arch/arm64/boot/dts/mediatek/mt8183-pinfunc.h      | 1120 ++++++++++++++++++++
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi           |   27 +-
+ drivers/pinctrl/mediatek/pinctrl-mt8183.c          |   50 +
+ drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c   |   47 +
+ drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h   |   11 +
+ drivers/pinctrl/mediatek/pinctrl-paris.c           |   12 +
+ 7 files changed, 1398 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-mt8183.txt
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8183-pinfunc.h
+
+--
+2.12.5
+
