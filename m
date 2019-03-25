@@ -6,110 +6,65 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CBF5C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 13:11:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29D5AC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 13:12:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6AC420854
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 13:11:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7CB720854
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 13:12:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731222AbfCYNLy (ORCPT
+        id S1731312AbfCYNMG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 09:11:54 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33590 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726166AbfCYNLy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 09:11:54 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 0AB0BAE80;
-        Mon, 25 Mar 2019 13:11:52 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 3BDC3DA86C; Mon, 25 Mar 2019 14:13:05 +0100 (CET)
-Date:   Mon, 25 Mar 2019 14:13:05 +0100
-From:   David Sterba <dsterba@suse.cz>
-To:     Nikolay Borisov <nborisov@suse.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Chris Mason <clm@fb.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux@googlegroups.com,
-        Liu Bo <bo.liu@linux.alibaba.com>,
-        Anand Jain <Anand.Jain@oracle.com>,
-        Filipe Manana <FdManana@suse.com>, WenRuo Qu <wqu@suse.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] btrfs: use BUG() instead of BUG_ON(1)
-Message-ID: <20190325131305.GD10640@suse.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz, Nikolay Borisov <nborisov@suse.com>,
-        Arnd Bergmann <arnd@arndb.de>, Chris Mason <clm@fb.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux@googlegroups.com,
-        Liu Bo <bo.liu@linux.alibaba.com>,
-        Anand Jain <Anand.Jain@oracle.com>,
-        Filipe Manana <FdManana@suse.com>, WenRuo Qu <wqu@suse.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190325130256.1437810-1-arnd@arndb.de>
- <78cd318c-2094-87ca-4843-46af5e3d11ef@suse.com>
+        Mon, 25 Mar 2019 09:12:06 -0400
+Received: from mga07.intel.com ([134.134.136.100]:52576 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731223AbfCYNMG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 09:12:06 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Mar 2019 06:12:05 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,256,1549958400"; 
+   d="scan'208";a="137232288"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
+  by fmsmga007.fm.intel.com with ESMTP; 25 Mar 2019 06:12:01 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1h8POR-0005uu-Kb; Mon, 25 Mar 2019 15:11:59 +0200
+Date:   Mon, 25 Mar 2019 15:11:59 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     William Breathitt Gray <vilhelm.gray@gmail.com>
+Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        akpm@linux-foundation.org, linux-gpio@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux@rasmusvillemoes.dk, yamada.masahiro@socionext.com,
+        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
+        geert@linux-m68k.org, preid@electromag.com.au,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: Re: [PATCH v12 11/11] gpio: 74x164: Utilize the for_each_set_clump8
+ macro
+Message-ID: <20190325131159.GV9224@smile.fi.intel.com>
+References: <cover.1553494625.git.vilhelm.gray@gmail.com>
+ <d3cc8680aa3d0d741649ac7402a213db1a789583.1553494625.git.vilhelm.gray@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <78cd318c-2094-87ca-4843-46af5e3d11ef@suse.com>
-User-Agent: Mutt/1.5.23.1 (2014-03-12)
+In-Reply-To: <d3cc8680aa3d0d741649ac7402a213db1a789583.1553494625.git.vilhelm.gray@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 03:06:12PM +0200, Nikolay Borisov wrote:
-> 
-> 
-> On 25.03.19 г. 15:02 ч., Arnd Bergmann wrote:
-> > BUG_ON(1) leads to bogus warnings from clang when
-> > CONFIG_PROFILE_ANNOTATED_BRANCHES is set:
-> > 
-> > fs/btrfs/volumes.c:5041:3: error: variable 'max_chunk_size' is used uninitialized whenever 'if' condition is false
-> >       [-Werror,-Wsometimes-uninitialized]
-> >                 BUG_ON(1);
-> >                 ^~~~~~~~~
-> > include/asm-generic/bug.h:61:36: note: expanded from macro 'BUG_ON'
-> >  #define BUG_ON(condition) do { if (unlikely(condition)) BUG(); } while (0)
-> >                                    ^~~~~~~~~~~~~~~~~~~
-> > include/linux/compiler.h:48:23: note: expanded from macro 'unlikely'
-> >  #  define unlikely(x)   (__branch_check__(x, 0, __builtin_constant_p(x)))
-> >                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > fs/btrfs/volumes.c:5046:9: note: uninitialized use occurs here
-> >                              max_chunk_size);
-> >                              ^~~~~~~~~~~~~~
-> > include/linux/kernel.h:860:36: note: expanded from macro 'min'
-> >  #define min(x, y)       __careful_cmp(x, y, <)
-> >                                          ^
-> > include/linux/kernel.h:853:17: note: expanded from macro '__careful_cmp'
-> >                 __cmp_once(x, y, __UNIQUE_ID(__x), __UNIQUE_ID(__y), op))
-> >                               ^
-> > include/linux/kernel.h:847:25: note: expanded from macro '__cmp_once'
-> >                 typeof(y) unique_y = (y);               \
-> >                                       ^
-> > fs/btrfs/volumes.c:5041:3: note: remove the 'if' if its condition is always true
-> >                 BUG_ON(1);
-> >                 ^
-> > include/asm-generic/bug.h:61:32: note: expanded from macro 'BUG_ON'
-> >  #define BUG_ON(condition) do { if (unlikely(condition)) BUG(); } while (0)
-> >                                ^
-> > fs/btrfs/volumes.c:4993:20: note: initialize the variable 'max_chunk_size' to silence this warning
-> >         u64 max_chunk_size;
-> >                           ^
-> >                            = 0
-> > 
-> > Change it to BUG() so clang can see that this code path can never
-> > continue.
-> 
-> Long-term we have to eliminate to bug_on's but until then:
+On Mon, Mar 25, 2019 at 03:26:18PM +0900, William Breathitt Gray wrote:
+> Replace verbose implementation in set_multiple callback with
+> for_each_set_clump8 macro to simplify code and improve clarity.
 
-I think in those places it's "this must never happen", so it's not the
-the typical example of BUG_ON misuse we want to eliminate. Fixing the
-compiler waring is ok though.
+I guess it's better to group this with other GPIO related patches.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
