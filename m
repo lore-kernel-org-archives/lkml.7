@@ -2,97 +2,111 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F2AFC10F03
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 11:52:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFD62C4360F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 11:54:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08FCF2087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 11:52:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B59E20850
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 11:54:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Ps/ltZex"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731020AbfCYLwH (ORCPT
+        id S1730958AbfCYLyz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 07:52:07 -0400
-Received: from orcrist.hmeau.com ([104.223.48.154]:51386 "EHLO
-        deadmen.hmeau.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730605AbfCYLwH (ORCPT
+        Mon, 25 Mar 2019 07:54:55 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:42049 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730605AbfCYLyz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 07:52:07 -0400
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1h8O96-000159-O0; Mon, 25 Mar 2019 19:52:04 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1h8O8y-0000Ok-TE; Mon, 25 Mar 2019 19:51:56 +0800
-Date:   Mon, 25 Mar 2019 19:51:56 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, Jason@zx2c4.com,
-        torvalds@linux-foundation.org, davem@davemloft.net,
-        gregkh@linuxfoundation.org, ebiggers@kernel.org,
-        ard.biesheuvel@linaro.org, samuel.c.p.neves@gmail.com
-Subject: Re: [PATCH net-next v9 00/19] WireGuard: Secure Network Tunnel
-Message-ID: <20190325115156.wj4verbfdd2rspo5@gondor.apana.org.au>
+        Mon, 25 Mar 2019 07:54:55 -0400
+Received: by mail-wr1-f66.google.com with SMTP id g3so6282619wrx.9
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 04:54:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
+         :mime-version:content-transfer-encoding;
+        bh=AdpgoZOF5+08hWqxT68WkSHPgRmLJx4JnkStnFQFVnc=;
+        b=Ps/ltZexMWx9W4Vzm5hUCDd/3qbZzxJlDNgbh/X/Z56M9IAmpuwFDQWjO1sdOefkg7
+         gJJvmA0iOY2UfR5NjW6tVOimw2SNO3/qsNJcI3oeTChndsqhfgJZUWZaaoofJkO19ZfE
+         ImMlwlsQ/8+dwzUmOG3dSsIblhKsSgE6QUm5+VhfKc57z5uHOrvTdNq8plpmos9nRNNy
+         K4f3Aom19+6cw9U09u9HQilqZ+eruFfN7nZHOu/1yBP0kSsBukpkKZK+/mtOBYjTXxnL
+         pz+ZwZ8eVNTNgwnmKvu8noPoRXELGGEB9qs268ZgEnJQ+hvVbLcVOBOi6JlOG+/OtfV0
+         SRjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=AdpgoZOF5+08hWqxT68WkSHPgRmLJx4JnkStnFQFVnc=;
+        b=OInqu9nYJB+bI5CEKKjNTv/GYEQA6jirLBW8ckoDOlplUVnsusKo7mT2DiVZm+IaA8
+         xptSiq0HrLu10v8pwFZdHl9e2P94Y5n+A/zl4imA4Ytyw4hk7q/gBUHx1demUHFgFT49
+         0OcfzosAUOv8onRn7BOyRGeRr3v8TWpg7o6d1jIhNKkonidUGr742ZML9aMFKMBRlALS
+         I72FolDq3n8QxA2zvQJuNjeiOQiKgc+SdA+by1K1eOStIB/gPCkE2rglPZqqBlqkFit6
+         t1SuqBRRjdf0qlUDqDjid5/xrWCxe35Kyj+L8C4BMM9HQua3MDEljNV8nvrARZIeUcMy
+         4Ahw==
+X-Gm-Message-State: APjAAAXHhLAFi2biHv1Vz/TVL6CQRsrQXLyRIdFFJCYKrqugH+ouBHyS
+        aS9K1YabgMAfnuPluwk0IB4WQA==
+X-Google-Smtp-Source: APXvYqwkQLM4luYP8mb97pmXDQuShw3lZulQjA7xZHp1aET6ogZ9y9ujmPpKRPfKcum91FMJ7EQhoA==
+X-Received: by 2002:adf:f48d:: with SMTP id l13mr16563721wro.2.1553514893493;
+        Mon, 25 Mar 2019 04:54:53 -0700 (PDT)
+Received: from boomer.baylibre.com ([2a01:e34:eeb6:4690:106b:bae3:31ed:7561])
+        by smtp.gmail.com with ESMTPSA id b3sm19513901wmj.15.2019.03.25.04.54.51
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 25 Mar 2019 04:54:52 -0700 (PDT)
+Message-ID: <e3d9d95fd07502cccf8ef97ba7b2e2adb4eefbb3.camel@baylibre.com>
+Subject: Re: WARNING: bad unlock balance detected! (3)
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     syzbot <syzbot+f3e3434787332dfc1c47@syzkaller.appspotmail.com>,
+        davem@davemloft.net, devicetree@vger.kernel.org,
+        khilman@baylibre.com, kuznet@ms2.inr.ac.ru,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        mark.rutland@arm.com, netdev@vger.kernel.org, robh+dt@kernel.org,
+        syzkaller-bugs@googlegroups.com, yoshfuji@linux-ipv6.org
+Date:   Mon, 25 Mar 2019 12:54:49 +0100
+In-Reply-To: <0000000000003749360584c395ba@google.com>
+References: <0000000000003749360584c395ba@google.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190322071122.6677-1-Jason@zx2c4.com>
-X-Newsgroups: apana.lists.os.linux.cryptoapi,apana.lists.os.linux.kernel,apana.lists.os.linux.netdev
-Organization: Core
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jason A. Donenfeld <Jason@zx2c4.com> wrote:
-> Changes v8->v9, along with who suggested it.
-> --------------------------------------------
-> - [EVERYBODY] Zinc no longer ships generated assembly code. Rather, we now
->  bundle in the original perlasm generator for it. This is ongoing joint work
->  with Andy Polyakov upstream, so that the same .pl files can live in our tree
->  as well as in the CRYPTOGAMS tree. I personally find that the code required
->  to share this in both repositories to be a tiny bit ugly. I think there would
->  be some degree of an advantage to removing that and making the .pl
->  kernel-only, and then carefully tracking Andy's changes (as we already
->  do). Previous opinions on the list, though, were that there's also
->  significant advantage to being able to share the exact same code in both.
->  And I think there's a decent amount of wisdom in that too. Since that
->  appeared to be the prevailing view, and since it also has good reasons
->  arguments, we'll go with that for now.
+On Sat, 2019-03-23 at 07:14 -0700, syzbot wrote:
+> syzbot has bisected this bug to:
+> 
+> commit ec01fb69ac8034ad6e839b31f9df167a110f868b
+> Author: Jerome Brunet <jbrunet@baylibre.com>
+> Date:   Wed Jan 16 17:59:47 2019 +0000
+> 
+>      arm64: dts: meson: s400: fix emmc maximum rate
+> 
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10afb7cf200000
+> start commit:   065b6c4c Merge tag 'devicetree-for-5.1' of git://git.kerne..
+> git tree:       upstream
+> final crash:    https://syzkaller.appspot.com/x/report.txt?x=12afb7cf200000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=14afb7cf200000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=ea4067c9a08ae046
+> dashboard link: https://syzkaller.appspot.com/bug?extid=f3e3434787332dfc1c47
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12a10577200000
+> 
+> Reported-by: syzbot+f3e3434787332dfc1c47@syzkaller.appspotmail.com
+> Fixes: ec01fb69ac80 ("arm64: dts: meson: s400: fix emmc maximum rate")
+> 
+> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
 
-Thanks for the update.
- 
-> - Following the Adiantum merge, the two commits that port the old crypto API
->  over to use Zinc have been removed from this series. We can certainly add
->  them back in at some point, but I thought it'd be favorable to at least
->  begin to receive some sign-offs on the Zinc-specific commits, now that
->  (hopefully all of) the previous feedback has been taken care of. The two
->  commits porting it over are fairly standalone as well, so that shouldn't
->  impact the ability to review this. For now those are living in the
->  jd/with-cryptoapi-port branch of kernel.org's zx2c4/linux.git tree. This
->  also allows us to move this all forward a little bit.
+Hi David,
 
-Sorry but adding new implementations of chacha20/poly1305 without
-removing the existing ones is not acceptable.  I really think
-we ought to separate the zinc interface from these new crypto
-implementations.  They have nothing to do with each other.
+I'm not sure I understand what the problem reported is but I don't think a DT
+patch could be the cause of a locking issue on x86.
 
-As we've been stuck on this point for so long, let's get the
-ball rolling by first merging just the zinc interface itself
-with the existing chacha20/poly1305 code.  Then we can replace
-these implementations with your implementations without getting
-bogged down by all these other discussions.
+If I missed something, feel free to let me know.
 
-AFAICS once we resolve Thomas's concerns with regards to the simd
-patch, then we can merge the zinc interface right away and go from
-there.
+Cheers
+Jerome
 
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
