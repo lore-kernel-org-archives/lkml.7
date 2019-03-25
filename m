@@ -3,107 +3,120 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38D5EC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 10:34:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFB39C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 10:36:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F64B20863
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 10:34:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90EFC2064A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 10:36:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730780AbfCYKeo (ORCPT
+        id S1730711AbfCYKgc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 06:34:44 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:45392 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730588AbfCYKeo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 06:34:44 -0400
-Received: from localhost ([127.0.0.1] helo=vostro.local)
-        by Galois.linutronix.de with esmtp (Exim 4.80)
-        (envelope-from <john.ogness@linutronix.de>)
-        id 1h8MwB-00084h-EH; Mon, 25 Mar 2019 11:34:39 +0100
-From:   John Ogness <john.ogness@linutronix.de>
-To:     Julien Grall <julien.grall@arm.com>
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Dave P Martin <Dave.Martin@arm.com>
-Subject: Re: [ANNOUNCE] v5.0.3-rt1
-References: <20190320171511.icjhdlulgal2yeho@linutronix.de>
-        <791056c4-3575-0bd8-031e-44d0e3b21e54@arm.com>
-        <87tvfrs76z.fsf@linutronix.de>
-        <3cb3c190-e804-982a-1c5b-8545a97379b9@arm.com>
-Date:   Mon, 25 Mar 2019 11:34:38 +0100
-In-Reply-To: <3cb3c190-e804-982a-1c5b-8545a97379b9@arm.com> (Julien Grall's
-        message of "Mon, 25 Mar 2019 10:18:36 +0000")
-Message-ID: <87imw7qm2p.fsf@linutronix.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/23.4 (gnu/linux)
+        Mon, 25 Mar 2019 06:36:32 -0400
+Received: from smtp.nue.novell.com ([195.135.221.5]:58000 "EHLO
+        smtp.nue.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730484AbfCYKgb (ORCPT
+        <rfc822;groupwise-linux-kernel@vger.kernel.org:0:0>);
+        Mon, 25 Mar 2019 06:36:31 -0400
+Received: from emea4-mta.ukb.novell.com ([10.120.13.87])
+        by smtp.nue.novell.com with ESMTP (TLS encrypted); Mon, 25 Mar 2019 11:36:30 +0100
+Received: from [192.168.0.30] (nwb-a10-snat.microfocus.com [10.120.13.201])
+        by emea4-mta.ukb.novell.com with ESMTP (TLS encrypted); Mon, 25 Mar 2019 10:36:02 +0000
+Message-ID: <8eec0949bac18d8ee6f151027ff68de9827f143d.camel@suse.com>
+Subject: Re: [PATCH] x86/xen: Add "xen_timer_slop" command line option
+From:   Dario Faggioli <dfaggioli@suse.com>
+To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Ryan Thibodeaux <thibodux@gmail.com>
+Cc:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
+        oleksandr_andrushchenko@epam.com, tglx@linutronix.de,
+        jgross@suse.com, ryan.thibodeaux@starlab.io,
+        "luca.abeni" <luca.abeni@santannapisa.it>
+Date:   Mon, 25 Mar 2019 11:36:00 +0100
+In-Reply-To: <20190324180724.GA4400@nat-wireless-guest-reg-153-50.bu.edu>
+References: <1553279397-130201-1-git-send-email-ryan.thibodeaux@starlab.io>
+         <abf65a68-9463-0f0e-1f51-6eefd3cacc88@oracle.com>
+         <20190323120052.GB11100@centos-dev.localdomain>
+         <20190324180724.GA4400@nat-wireless-guest-reg-153-50.bu.edu>
+Organization: SUSE
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-2Aj+Mypawqc5P5Mv2XTx"
+User-Agent: Evolution 3.30.5 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-03-25, Julien Grall <julien.grall@arm.com> wrote:
->>> Using 5.0.3-rt1, I get some warning message completely mangled with
->>> the rest of the output (e.g systemd message) but also between
->>> them. Some excerpt of a 500 lines lockdep warning (AFAICT the printk
->>> is not related to the printk code):
->>>
->>> [   52.294547] 005: ... which became HARDIRQ-irq-unsafe at:
->>> [   52.294553] 005: ...
->>> [   52.294554] 005:   lock_acquire+0xf8/0x318
->>> [  OK  ] Reached target
->>> t_spin_lock+0x48/0x70  lock_acquire+0xf8/0x318
->>> [0;1;39mRemote File Systems.[   52.294570] 005:   iommu_dma_map_msi_msg+0x5c/0x1
->>>
->>> [   52.296824] 005: CPU: 5 PID: 2108 Comm: ip Not tainted 5.0.3-rt1-00007-g42ede
->>> 9a0fed6 #4312] 005:  __sys_sendmsg+0x68/0xb8
->>>
->>> I understand the new series add support for "atomic" print. So I am
->>> wondering whether this issue is related to it? Is there any advice
->>> to prevent the mangling?
->> 
->> The atomic print allows important messages to be print immediately
->> (regardless of the context of the printer). This means that if any
->> other context was already printing, it will be interrupted. This
->> cannot be synchronized without causing significant scheduling
->> delays.> The atomic messages always do the interrupting and will
->> continue to the end of the line. So it should be possible to piece
->> the non-atomic messages back together. However, I am a bit confused
->> by your output. Is it possible that I could see the full boot log?
->
-> I seem to have two issues. The first one is what you described above,
-> the other is what looks like spurious print. I have appended the full
-> boot log below.
 
-> [...]
-> [    1.169151] 002: Serial: AMBA PL011 UART driver
-> [    1.254891] 002: 7ff80000.uart: ttyAMA0 at MMIO 0x7ff80000 (irq = 32, base_baud = 0) is a PL011 rev3
-> [    1.255007] 002: printk: console [ttyAMA0] enabled
+--=-2Aj+Mypawqc5P5Mv2XTx
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The ttyAMA drivers do not have support for atomic printing, so it is not
-the new atomic feature that is causing the mangling. For your setup, all
-printk console printing is being handled within a specific context, the
-printk kernel thread.
+On Sun, 2019-03-24 at 14:07 -0400, Boris Ostrovsky wrote:
+> On Sat, Mar 23, 2019 at 08:00:52AM -0400, Ryan Thibodeaux wrote:
+> > This test system was configured to use a TSC clocksource, disabled
+> > C states, and lowered the timer slop. I am not claiming the timer
+> > slop change was solely responsible for the best results.
+>=20
+> How can we then be sure that the proposed change will indeed provide
+> some sort of benefit?
+>=20
+> Were there any other changes between your tests to think that slop
+> time modification may not be responsible for better results?
+>=20
+FWIW, in mine and Luca's experiments, changing lowering both timer_slop
+in Xen and TIMER_SLOP in Linux, improved latency dramatically, without
+any other change.
 
-It looks to me like some userspace application (systemd?) is writing
-directly to /dev/ttyAMA0. If the kernel is also writing to this device
-(because it is setup as a console), then the output will be
-mangled. There is no high-level synchronization between console output
-and directly writing to UART devices. Maybe you need to set your
-loglevel so that the kernel does not do the printing? For example,
-loglevel=1?
+We also tried _only_ playing with the Xen tunable (as there's a Xen
+boot parameter for it already) but that wasn't enough. It was only when
+we also tuned TIMER_SLOP in Linux's Xen clockevent device that we got
+decent numbers (i.e., comparable to KVM ones).
 
-You should see this problem with older kernel versions as well.
+Reason why we had not share these results yet was that we were still
+"polishing" them, and because we also found a couple of other issues,
+and we were trying to understand them better, before sending anything
+out. But those other issues were --although still about achieving low
+latencies-- orthogonal from this, and lowering the default slop is
+absolute prerequisite for even talking about having a reasonable vcpu
+response time.
 
-> Interestingly the dmesg output does not contain any mangling.
+A patch like this one, was something we were thinking to submit ourself
+sooner or later (backed up by our results). Personally, in addition to
+making the value tunable, which I think is a good thing, I also would
+lower the default.
 
-dmesg just dumps the kernel log buffer. The log buffer is synchronized
-(even for atomic writes), so it will never show the mangling.
+Regards,
+Dario
+--=20
+<<This happens because I choose it to happen!>> (Raistlin Majere)
+-----------------------------------------------------------------
+Dario Faggioli, Ph.D, http://about.me/dario.faggioli
+Software Engineer @ SUSE https://www.suse.com/
 
-John Ogness
+--=-2Aj+Mypawqc5P5Mv2XTx
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEES5ssOj3Vhr0WPnOLFkJ4iaW4c+4FAlyYrxAACgkQFkJ4iaW4
+c+4RBw/+Jb25t+D3NqB7raaBYvuDFoFlEdJJEBtsPLe8HNDFU3aD8p3Mr+v9m0KU
+hWiWBcAfqISbCk3gsb4Qfw5met5E1hg9EsA1qJVhsKdPiwPUrDnRfwxOHRgLSw/6
+FPZ+MKo0REE9VvXPkuhcebmM7Ec98Q4iiqXS9POF0iTlDnu1NqiQ2e1II9Eu2/L7
++Bdaq6kbSsTLRuI5HBNdOCcoFMJ74NcI+p6xSvVZOkHTyPFlNiXfhc/tXVXvkPJP
+jdJPyqGvVNUtawG/AtEDDwIUxhrEbr+iq4tFRGpVqEQBlYfqI1DbJMCRInEEGA+v
+n2bMWJGGSYTteIe1pyxnanCNrVr4q7IdIip0AIxnur6mwx2TDTdzTFI9kBjWZtGb
+VfzzXt6YXYiCAtcOIYNdd81xtVJukYsmuWLy8kG2/SCDLTSK1EaBidmUJzcydmfY
+pkpN2rS/4SyIw/uiAFxLuC3DaDNumVmiB+kJSJd0sOw+381YDmKr9O0YtiFD8E8K
+sgHSaaev73etzvIDawbZJ/6zwVp4wGzzll+lnLEqenzNaq7oPVc1AXag3JWU5dwU
+hT11iJseaqIcDhDZHJjQug//9enDk6gBDTcsCX/pGNi3wqrCm1BSSrD8fFqfCJWO
+Gc69tHtjXCUjJpOBign0HbJuni4P6LJcklcKyejceSCBwcaUsi8=
+=0s/V
+-----END PGP SIGNATURE-----
+
+--=-2Aj+Mypawqc5P5Mv2XTx--
+
