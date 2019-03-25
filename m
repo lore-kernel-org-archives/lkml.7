@@ -2,51 +2,52 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ACC5C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 09:42:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 747E6C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 09:42:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45BD020870
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 09:42:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4274620870
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 09:42:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="q6pA5E1v"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="f3DsT/1l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730409AbfCYJmG (ORCPT
+        id S1730452AbfCYJmS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 05:42:06 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:33190 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730243AbfCYJmE (ORCPT
+        Mon, 25 Mar 2019 05:42:18 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:37400 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730399AbfCYJmR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 05:42:04 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2P9fkeZ010255;
-        Mon, 25 Mar 2019 04:41:46 -0500
+        Mon, 25 Mar 2019 05:42:17 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2P9fvuV012556;
+        Mon, 25 Mar 2019 04:41:57 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1553506906;
-        bh=lQHDo+Oyg4XcgxiGs576DM8hYasqHT86g7aZskcyOAM=;
-        h=From:To:CC:Subject:Date;
-        b=q6pA5E1vanRJbtpQmX9w0pItz7+aEHUrsjlA2HVg82nOZ+qkgy93M9wAbm00jVUZF
-         yqeA+KAx+hxQTJg+yL9eFBvNUXHUp1W46TjZaWONGBaSNHXy+flEihBUkTGZLnQnCq
-         nhld7E7GmAreXXEWuuulNo1ReB7D8ViVlXq1jQpM=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2P9fkCE108638
+        s=ti-com-17Q1; t=1553506917;
+        bh=HfjjoKmsDgZT6jDC5T6H72l2yvWvnghjKzXKSseYIoU=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=f3DsT/1lr7cjO7CpXgVsetyb6Z1Uk3vtX+jlHTF8JCyt5KtMdZsRJoigCzC5UmBrK
+         Aa3vIVojViV3r4Z6gmznBMT7ZSQF0E8xCDcn8/FWIaXt4BC0lydmkaqUm9pbmBPdFi
+         cgx+Lz0KlPZ4GpdzQpVF16+7w6f7xhFHtS4jsuvA=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2P9fvNN013838
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 25 Mar 2019 04:41:46 -0500
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+        Mon, 25 Mar 2019 04:41:57 -0500
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 25
- Mar 2019 04:41:45 -0500
-Received: from dflp32.itg.ti.com (10.64.6.15) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_0,
+ Mar 2019 04:41:56 -0500
+Received: from dflp32.itg.ti.com (10.64.6.15) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_0,
  cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5 via Frontend Transport;
- Mon, 25 Mar 2019 04:41:46 -0500
+ Mon, 25 Mar 2019 04:41:56 -0500
 Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by dflp32.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2P9feaF028077;
-        Mon, 25 Mar 2019 04:41:41 -0500
+        by dflp32.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2P9feaH028077;
+        Mon, 25 Mar 2019 04:41:51 -0500
 From:   Kishon Vijay Abraham I <kishon@ti.com>
 To:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -63,109 +64,126 @@ CC:     Kishon Vijay Abraham I <kishon@ti.com>,
         <linux-arm-kernel@axis.com>, Minghuan Lian <minghuan.Lian@nxp.com>,
         Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
         Jesper Nilsson <jesper.nilsson@axis.com>
-Subject: [PATCH v3 00/26] Add support for PCIe RC and EP mode in TI's AM654 SoC
-Date:   Mon, 25 Mar 2019 15:09:21 +0530
-Message-ID: <20190325093947.32633-1-kishon@ti.com>
+Subject: [PATCH v3 02/26] PCI: keystone: Cleanup error_irq configuration
+Date:   Mon, 25 Mar 2019 15:09:23 +0530
+Message-ID: <20190325093947.32633-3-kishon@ti.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190325093947.32633-1-kishon@ti.com>
+References: <20190325093947.32633-1-kishon@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add PCIe RC support for TI's AM654 SoC. The PCIe controller in AM654
-uses Synopsys core revision 4.90a and uses the same TI wrapper as used
-in keystone2 with certain modification. Hence AM654 will use the same
-pci wrapper driver pci-keystone.c
+pci-keystone driver uses irq_of_parse_and_map to get irq number of
+error_irq. Use platform_get_irq instead and move platform_get_irq()
+and request_irq() of error_irq from ks_pcie_add_pcie_port to ks_pcie_probe
+since error_irq is common to both RC mode and EP mode.
 
-This series was initially part of [1]. This series only includes patches
-that has to be merged via Lorenzo's tree. The PHY patches and dt patches
-will be sent separately.
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+---
+ drivers/pci/controller/dwc/pci-keystone.c | 43 +++++++++--------------
+ 1 file changed, 17 insertions(+), 26 deletions(-)
 
-This series is created over keystone MSI cleanup series [2].
-
-This series:
-*) Cleanup pci-keystone driver so that both RC mode and EP mode of
-   AM654 can be supported
-*) Modify epc-core to support allocation of aligned buffers required for
-   AM654
-*) Fix ATU unroll identification
-*) Add support for both host mode and device mode in AM654
-
-Changes from v2:
-*) Missed updating "Reviewed-by: Rob Herring <robh@kernel.org>" tags
-   in the version that was sent to list.
-*) Add const qualifier to struct dw_pcie_ep_ops in pci-layerscape-ep.c
-
-Changes from v1:
-*) Support for legacy interrupt in AM654 is removed (see background here
-   [3])
-*) Allow of_pci_get_max_link_speed to be used by Endpoint controller
-driver
-*) Add support to set max-link-speed from DT in pci-keystone driver
-*) Update "Reviewed-by: Rob Herring <robh@kernel.org>" tags.
-
-[1] -> https://lore.kernel.org/patchwork/cover/989487/
-[2] -> https://lkml.org/lkml/2019/3/21/193
-[3] -> https://lkml.org/lkml/2019/3/19/235
-
-Kishon Vijay Abraham I (26):
-  PCI: keystone: Add start_link/stop_link dw_pcie_ops
-  PCI: keystone: Cleanup error_irq configuration
-  dt-bindings: PCI: keystone: Add "reg-names" binding information
-  PCI: keystone: Perform host initialization in a single function
-  PCI: keystone: Use platform_get_resource_byname to get memory
-    resources
-  PCI: keystone: Move initializations to appropriate places
-  dt-bindings: PCI: Add dt-binding to configure PCIe mode
-  PCI: keystone: Explicitly set the PCIe mode
-  dt-bindings: PCI: Document "atu" reg-names
-  PCI: dwc: Enable iATU unroll for endpoint too
-  PCI: dwc: Fix ATU identification for designware version >= 4.80
-  PCI: keystone: Prevent ARM32 specific code to be compiled for ARM64
-  dt-bindings: PCI: Add PCI RC dt binding documentation for AM654
-  PCI: keystone: Add support for PCIe RC in AM654x Platforms
-  PCI: keystone: Invoke phy_reset API before enabling PHY
-  PCI: OF: Allow of_pci_get_max_link_speed() to be used by PCI Endpoint
-    drivers
-  PCI: keystone: Add support to set the max link speed from DT
-  PCI: endpoint: Add support to allocate aligned buffers to be mapped in
-    BARs
-  PCI: dwc: Add const qualifier to struct dw_pcie_ep_ops
-  PCI: dwc: Fix dw_pcie_ep_find_capability to return correct capability
-    offset
-  PCI: dwc: Add callbacks for accessing dbi2 address space
-  PCI: keystone: Add support for PCIe EP in AM654x Platforms
-  PCI: designware-ep: Configure RESBAR to advertise the smallest size
-  PCI: designware-ep: Use aligned ATU window for raising MSI interrupts
-  misc: pci_endpoint_test: Add support to test PCI EP in AM654x
-  misc: pci_endpoint_test: Fix test_reg_bar to be updated in
-    pci_endpoint_test
-
- .../bindings/pci/designware-pcie.txt          |   7 +-
- .../devicetree/bindings/pci/pci-keystone.txt  |  14 +-
- drivers/misc/pci_endpoint_test.c              |  18 +
- drivers/pci/Makefile                          |   2 +-
- drivers/pci/controller/dwc/Kconfig            |  25 +-
- drivers/pci/controller/dwc/pci-dra7xx.c       |   2 +-
- drivers/pci/controller/dwc/pci-keystone.c     | 577 +++++++++++++++---
- .../pci/controller/dwc/pci-layerscape-ep.c    |   2 +-
- drivers/pci/controller/dwc/pcie-artpec6.c     |   2 +-
- .../pci/controller/dwc/pcie-designware-ep.c   |  55 +-
- .../pci/controller/dwc/pcie-designware-host.c |  19 -
- .../pci/controller/dwc/pcie-designware-plat.c |   2 +-
- drivers/pci/controller/dwc/pcie-designware.c  |  52 ++
- drivers/pci/controller/dwc/pcie-designware.h  |  15 +-
- drivers/pci/endpoint/functions/pci-epf-test.c |   5 +-
- drivers/pci/endpoint/pci-epf-core.c           |  10 +-
- drivers/pci/of.c                              |  44 +-
- include/linux/pci-epc.h                       |   2 +
- include/linux/pci-epf.h                       |   3 +-
- 19 files changed, 683 insertions(+), 173 deletions(-)
-
+diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
+index 07f55b355d75..e50f8773e768 100644
+--- a/drivers/pci/controller/dwc/pci-keystone.c
++++ b/drivers/pci/controller/dwc/pci-keystone.c
+@@ -98,8 +98,6 @@ struct keystone_pcie {
+ 	struct irq_domain	*legacy_irq_domain;
+ 	struct device_node	*np;
+ 
+-	int error_irq;
+-
+ 	/* Application register space */
+ 	void __iomem		*va_app_base;	/* DT 1st resource */
+ 	struct resource		app;
+@@ -743,12 +741,6 @@ static int ks_pcie_config_legacy_irq(struct keystone_pcie *ks_pcie)
+ 	return ret;
+ }
+ 
+-static void ks_pcie_setup_interrupts(struct keystone_pcie *ks_pcie)
+-{
+-	if (ks_pcie->error_irq > 0)
+-		ks_pcie_enable_error_irq(ks_pcie);
+-}
+-
+ /*
+  * When a PCI device does not exist during config cycles, keystone host gets a
+  * bus error instead of returning 0xffffffff. This handler always returns 0
+@@ -810,7 +802,6 @@ static int __init ks_pcie_host_init(struct pcie_port *pp)
+ 
+ 	ks_pcie_stop_link(pci);
+ 	ks_pcie_setup_rc_app_regs(ks_pcie);
+-	ks_pcie_setup_interrupts(ks_pcie);
+ 	writew(PCI_IO_RANGE_TYPE_32 | (PCI_IO_RANGE_TYPE_32 << 8),
+ 			pci->dbi_base + PCI_IO_BASE);
+ 
+@@ -854,23 +845,6 @@ static int __init ks_pcie_add_pcie_port(struct keystone_pcie *ks_pcie,
+ 	struct device *dev = &pdev->dev;
+ 	int ret;
+ 
+-	/*
+-	 * Index 0 is the platform interrupt for error interrupt
+-	 * from RC.  This is optional.
+-	 */
+-	ks_pcie->error_irq = irq_of_parse_and_map(ks_pcie->np, 0);
+-	if (ks_pcie->error_irq <= 0)
+-		dev_info(dev, "no error IRQ defined\n");
+-	else {
+-		ret = request_irq(ks_pcie->error_irq, ks_pcie_err_irq_handler,
+-				  IRQF_SHARED, "pcie-error-irq", ks_pcie);
+-		if (ret < 0) {
+-			dev_err(dev, "failed to request error IRQ %d\n",
+-				ks_pcie->error_irq);
+-			return ret;
+-		}
+-	}
+-
+ 	pp->ops = &ks_pcie_host_ops;
+ 	ret = ks_pcie_dw_host_init(ks_pcie);
+ 	if (ret) {
+@@ -946,6 +920,7 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
+ 	u32 num_lanes;
+ 	char name[10];
+ 	int ret;
++	int irq;
+ 	int i;
+ 
+ 	ks_pcie = devm_kzalloc(dev, sizeof(*ks_pcie), GFP_KERNEL);
+@@ -965,6 +940,20 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
++	irq = platform_get_irq(pdev, 0);
++	if (irq < 0) {
++		dev_err(dev, "missing IRQ resource: %d\n", irq);
++		return irq;
++	}
++
++	ret = request_irq(irq, ks_pcie_err_irq_handler, IRQF_SHARED,
++			  "ks-pcie-error-irq", ks_pcie);
++	if (ret < 0) {
++		dev_err(dev, "failed to request error IRQ %d\n",
++			irq);
++		return ret;
++	}
++
+ 	ret = of_property_read_u32(np, "num-lanes", &num_lanes);
+ 	if (ret)
+ 		num_lanes = 1;
+@@ -1020,6 +1009,8 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
+ 	if (ret < 0)
+ 		goto err_get_sync;
+ 
++	ks_pcie_enable_error_irq(ks_pcie);
++
+ 	return 0;
+ 
+ err_get_sync:
 -- 
 2.17.1
 
