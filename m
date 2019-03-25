@@ -2,129 +2,112 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5760BC4360F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 07:36:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0535BC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 07:37:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E29B2087F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 07:36:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C50902087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 07:37:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="0koYTBda"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729855AbfCYHgt (ORCPT
+        id S1729885AbfCYHhg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 03:36:49 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:37071 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729720AbfCYHgs (ORCPT
+        Mon, 25 Mar 2019 03:37:36 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:39478 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729720AbfCYHhf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 03:36:48 -0400
-Received: by mail-lf1-f67.google.com with SMTP id u2so5227059lfd.4;
-        Mon, 25 Mar 2019 00:36:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3zit+zHMjJqC+5ZLnskoQ4EDwxgMuwgUpGQ5brmYqTA=;
-        b=QxDVSudXH5pFgKapa3stq6/mS/DZO1iMntOo6E/+yY+liz81/ObrpWUfEiZCeaJOuw
-         lsTAHSPwio0xo97gGjKOQUKTyj7AQe3x+jliK5fJUm8PQiFWTocwladvo1yLK4cW6r6O
-         NZbrTLv8wUE3f0cpNfNbA0XYrJos0lcc5soT0PjD9FfXxZ6R0aiy9SkO+8awTExpDbrG
-         pgIjd2/MC1bQs0mAzy177JB5DDTcVhA5M6bwcSa89vBXmRKeonZa60RRfhrCf8zXjaBt
-         jMX8FLluvfNj7myMDQoj3PpZykmHsxFvWYPkLJExJmQrhdqsAnOnr4m+edfhzgSgbkat
-         UzAQ==
-X-Gm-Message-State: APjAAAX0D9N+fhO0oFi9HRhzLDqTZkbdM7X8DpRz9xv1NUzsZocukahC
-        mSn/6Q4oxwndqxSNtdnt7MY=
-X-Google-Smtp-Source: APXvYqzLeiWG6LPSaHeaCX6SI2behk4QpDy0H2rM9A/lBNpaOJ8F16Tezk50DUdC8qa5L2VF97CxJw==
-X-Received: by 2002:ac2:5479:: with SMTP id e25mr10449561lfn.121.1553499405088;
-        Mon, 25 Mar 2019 00:36:45 -0700 (PDT)
-Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id r24sm1615196ljr.63.2019.03.25.00.36.43
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 25 Mar 2019 00:36:44 -0700 (PDT)
-Date:   Mon, 25 Mar 2019 09:36:41 +0200
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     mazziesaccount@gmail.com, Guenter Roeck <linux@roeck-us.net>,
-        heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, broonie@kernel.org,
-        gregkh@linuxfoundation.org, rafael@kernel.org,
-        mturquette@baylibre.com, sboyd@kernel.org,
-        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        sre@kernel.org, lgirdwood@gmail.com, a.zummo@towertech.it,
-        alexandre.belloni@bootlin.com, wim@linux-watchdog.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-watchdog@vger.kernel.org, bogdan-petru.chircu-mare@nxp.com
-Subject: Re: [PATCH v10 0/9] support ROHM BD70528 PMIC
-Message-ID: <20190325073640.GB6208@localhost.localdomain>
-References: <cover.1550148989.git.matti.vaittinen@fi.rohmeurope.com>
- <20190228070450.GB3773@localhost.localdomain>
- <20190228081055.GL4118@dell>
- <20190228082248.GC3773@localhost.localdomain>
+        Mon, 25 Mar 2019 03:37:35 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2P7Y2ol101899;
+        Mon, 25 Mar 2019 07:37:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=2VlQBHb5HwLShox7N890bgyUAQsYFewwS6A/Xh3YKjk=;
+ b=0koYTBdahgG8L+HkuugwPUluQjoLt0aFjAM5h1EnoaZP9abJND3f9QCtv+2ft3u4ISLF
+ 3q4s1ttzknR+h2BSdFW733ro/g66YzFfNRM6HaDcYeq23jud8Cwn4p+oXLSSsd1tnNmW
+ fjn0U14M8PHpYxSom2mzktmicJGEZ9wgKVCJwttxB5/RssP0iXUyuPkgrTSs3WCX+8CC
+ n8G2J48RDDLE9w8/2PYzwK7/SEKer/yItAjQg3ekPcWeJ627KpIaz3zqPa0Vy6sq1l8E
+ iKXr9tDBlsJfoZs0JyzoSTot3+bjqRmilLLFnPsC+KyVIGf/7WxLjAJjsFqMk6JBE4X+ gw== 
+Received: from aserv0021.oracle.com (aserv0021.oracle.com [141.146.126.233])
+        by userp2120.oracle.com with ESMTP id 2re6dj2aky-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 25 Mar 2019 07:37:11 +0000
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x2P7b6Da000665
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 25 Mar 2019 07:37:06 GMT
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x2P7b5iw027258;
+        Mon, 25 Mar 2019 07:37:05 GMT
+Received: from [10.182.71.8] (/10.182.71.8)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 25 Mar 2019 00:37:05 -0700
+Subject: Re: [PATCH V2 8/8] blk-mq: remove blk_mq_tagset_busy_iter
+To:     Hannes Reinecke <hare@suse.de>, axboe@kernel.dk
+Cc:     linux-block@vger.kernel.org, jsmart2021@gmail.com,
+        sagi@grimberg.me, josef@toxicpanda.com,
+        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
+        keith.busch@intel.com, jthumshirn@suse.de, hch@lst.de,
+        bvanassche@acm.org
+References: <1553492318-1810-1-git-send-email-jianchao.w.wang@oracle.com>
+ <1553492318-1810-9-git-send-email-jianchao.w.wang@oracle.com>
+ <47fe0e2a-f427-0e3e-e15b-a9e2bffb502f@suse.de>
+From:   "jianchao.wang" <jianchao.w.wang@oracle.com>
+Message-ID: <f9d22543-65d1-e473-e3ab-deefa2d6e884@oracle.com>
+Date:   Mon, 25 Mar 2019 15:37:04 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190228082248.GC3773@localhost.localdomain>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <47fe0e2a-f427-0e3e-e15b-a9e2bffb502f@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9205 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=950 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903250057
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello again Lee & all,
+Hi Hannes
 
-On Thu, Feb 28, 2019 at 10:22:48AM +0200, Matti Vaittinen wrote:
-> On Thu, Feb 28, 2019 at 08:10:55AM +0000, Lee Jones wrote:
-> > On Thu, 28 Feb 2019, Matti Vaittinen wrote:
-> > 
-> > > Hello Lee and Mark,
-> > > 
-> > > On Thu, Feb 14, 2019 at 03:02:37PM +0200, Matti Vaittinen wrote:
-> > > > Patch series introducing support for ROHM BD70528 PMIC
-
-//snip
-
-> > > 
-> > > The MFD part depends on the regmap-irq changes and I think that most
-> > > other subsystems want to have the MFD changes in before taking rest of
-> > > the driver in their trees. So it will be a while untill all the changes
-> > > are in. It would really be nice to have the drive in-tree sooner - hence
-> > > I ask if theres a way. (I don't want to push, just ask if it is possible :])
-> > 
-> > It's possible, so long as there aren't any build-time dependencies
-> > between the subsystems.  Immediate acceptance however isn't possible
-> > due to the impending merge-window which opens in 3 days.
+On 3/25/19 3:18 PM, Hannes Reinecke wrote:
+> On 3/25/19 6:38 AM, Jianchao Wang wrote:
+>> As nobody uses blk_mq_tagset_busy_iter, remove it.
+>>
+>> Signed-off-by: Jianchao Wang <jianchao.w.wang@oracle.com>
+>> ---
+>>   block/blk-mq-tag.c     | 95 --------------------------------------------------
+>>   include/linux/blk-mq.h |  2 --
+>>   2 files changed, 97 deletions(-)
+>>
+> Please, don't.
 > 
-> Thanks for reply Lee. So merge-window is opening - meaning the 5.1 is
-> being baked now(?) 
+> I'm currently implementing reserved commands for SCSI and reworking the SCSI error handling where I rely on this interface quite heavily.
+
+
+blk_mq_tagset_busy_iter could access some stale requests which maybe freed due to io scheduler switching, request_queue cleanup (shared tagset)
+when there is someone submits io and gets driver tag. When io scheduler attached, even quiesce request_queue won't work.
+
+If this patchset is accepted, blk_mq_tagset_busy_iter could be replaced with blk_mq_queue_inflight_tag_iter which needs
+to be invoked by every request_queue that shares the tagset.
+
+Please go ahead your work.
+
+Thanks
+Jianchao
+
 > 
-> Anyays to make it clear - there is build time dependency between MFD and
-> regmap-irq changes. MFD part won't compile without the changes in regmap
-> tree. And theres no new Kconfig to depend on or other compile time
-> checks. So REGMAP changes are required for this MFD portion to compile.
-
-//snip
-
-> Rest of the subsystems (regulator, clk, watchdog, gpio) do all depend on
-> MFD - but they should have 'depends on' KConfig to MFD meaning they
-> won't be built without MFD.
-
-I see the 5.1-rc1 and 5.1-rc2 are out. Those contain the regmap-irq
-changes the BD70528 MFD driver depends on. Would you like me to rebase
-the series to some other tree (which tree/branch? I don't see updated
-for-mfd-next branch in kernel.org yet) and resend it? Original patch
-series was created on top of the regulator tree.
-
-Br,
-	Matti Vaittinen
-
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+> Cheers,
+> 
+> Hannes
