@@ -2,109 +2,167 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02DA2C4360F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 14:25:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A834AC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 14:25:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C627A20863
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 14:25:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="iiASSWbX"
+	by mail.kernel.org (Postfix) with ESMTP id 825EA2084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 14:25:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729036AbfCYOZJ (ORCPT
+        id S1729568AbfCYOZI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 10:25:09 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:54628 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728907AbfCYOYj (ORCPT
+        Mon, 25 Mar 2019 10:25:08 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:14221 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726194AbfCYOZG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 10:24:39 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2PEOXHF084114;
-        Mon, 25 Mar 2019 09:24:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1553523873;
-        bh=IsTrX3JSvlf2LbJ6dWgzs9JWRzikTQpgSOJMqvaDcEw=;
-        h=From:To:CC:Subject:Date;
-        b=iiASSWbXI2NcT/ALH1m9QmMFZtqdTlouHeZf5FvERyB1wAt6ZH8XKrMaXAXfNDog/
-         qbA1rXBbO+CUO73+Qn9ZvB3HLm1tCurny680ytpIcz/kwpCiBXGepDEgH+8FzXyHxy
-         hVhoUl9qhCf/PzRHAsvXx/BkJGGRf58D3KWRWMis=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2PEOXsc023275
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 25 Mar 2019 09:24:33 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 25
- Mar 2019 09:24:33 -0500
-Received: from dlep33.itg.ti.com (157.170.170.75) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_0,
- cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5 via Frontend Transport;
- Mon, 25 Mar 2019 09:24:33 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by dlep33.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2PEOWTv022478;
-        Mon, 25 Mar 2019 09:24:32 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <robh+dt@kernel.org>, <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
-CC:     <linux-kernel@vger.kernel.org>, <linux-leds@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH 0/5] TI LMU rework
-Date:   Mon, 25 Mar 2019 09:23:58 -0500
-Message-ID: <20190325142403.30447-1-dmurphy@ti.com>
-X-Mailer: git-send-email 2.12.2
+        Mon, 25 Mar 2019 10:25:06 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2PEL0C4019417;
+        Mon, 25 Mar 2019 15:24:20 +0100
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2rddhbbr65-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Mon, 25 Mar 2019 15:24:20 +0100
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 6A4AC31;
+        Mon, 25 Mar 2019 14:24:19 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3C6CAA493;
+        Mon, 25 Mar 2019 14:24:19 +0000 (GMT)
+Received: from localhost (10.75.127.45) by SFHDAG5NODE3.st.com (10.75.127.15)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 25 Mar 2019 15:24:18
+ +0100
+From:   Fabrice Gasnier <fabrice.gasnier@st.com>
+To:     <jic23@kernel.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <mcoquelin.stm32@gmail.com>,
+        <alexandre.torgue@st.com>, <fabrice.gasnier@st.com>,
+        <linux-iio@vger.kernel.org>, <lars@metafoo.de>, <knaack.h@gmx.de>,
+        <pmeerw@pmeerw.net>, <linux-stm32@st-md-mailman.stormreply.com>,
+        <arnaud.pouliquen@st.com>, <olivier.moysan@st.com>
+Subject: [PATCH] iio: adc: stm32-dfsdm: improve sampling frequency accuracy
+Date:   Mon, 25 Mar 2019 15:24:01 +0100
+Message-ID: <1553523841-16315-1-git-send-email-fabrice.gasnier@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
 Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Originating-IP: [10.75.127.45]
+X-ClientProxiedBy: SFHDAG8NODE2.st.com (10.75.127.23) To SFHDAG5NODE3.st.com
+ (10.75.127.15)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-25_09:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All
+The sample frequency is driven using the oversampling ratio depending
+on the SPI bus frequency.
+Currently, oversampling ratio is computed by an entire division:
+- spi_freq / sample_freq. This may result in inaccurate value.
+Using DIV_ROUND_CLOSEST improves resulting sample frequency, which is
+useful for audio that requests fixed rates (such as: 8, 16 or 32 kHz).
+BTW, introduce new routine to re-factor sample frequency setting, and
+move frequency accuracy message from warning to debug level.
 
-I know that it has been a long time but I put some additional effort into this
-code.  The TI LMU common code right now handles brightness and ramp up/down
-setting for the LM3697.  This so far are the common features I could find.
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+---
+ drivers/iio/adc/stm32-dfsdm-adc.c | 56 +++++++++++++++++++++------------------
+ 1 file changed, 30 insertions(+), 26 deletions(-)
 
-The LM3697 driver has the ability to assign HVLED strings to specific control
-banks as well as assigning different max brightnesses to these strings.
-
-Fault monitoring was removed as the data sheet indicates that this is for
-production tests only.
-
-I have plans to add additional LED drivers to use the TI LMU but I figured trying
-to add all of them at once would be a daunting review and probably wrought with 
-problems.
-
-Dan
-
-Dan Murphy (5):
-  dt-bindings: mfd: Update the ramp up/down property
-  leds: TI LMU: Add common code for TI LMU devices
-  dt-bindings: ti-lmu: Modify dt bindings for the LM3697
-  mfd: ti-lmu: Remove support for LM3697
-  leds: lm3697: Introduce the lm3697 driver
-
- .../devicetree/bindings/leds/leds-lm3697.txt  |  77 ++++
- .../devicetree/bindings/mfd/ti-lmu.txt        |  42 +-
- drivers/leds/Kconfig                          |  14 +
- drivers/leds/Makefile                         |   2 +
- drivers/leds/leds-lm3697.c                    | 401 ++++++++++++++++++
- drivers/leds/ti-lmu-led-common.c              | 131 ++++++
- drivers/mfd/Kconfig                           |   2 +-
- drivers/mfd/ti-lmu.c                          |  17 -
- include/linux/mfd/ti-lmu-register.h           |  44 --
- include/linux/mfd/ti-lmu.h                    |   1 -
- include/linux/ti-lmu-led-common.h             |  44 ++
- 11 files changed, 682 insertions(+), 93 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/leds/leds-lm3697.txt
- create mode 100644 drivers/leds/leds-lm3697.c
- create mode 100644 drivers/leds/ti-lmu-led-common.c
- create mode 100644 include/linux/ti-lmu-led-common.h
-
+diff --git a/drivers/iio/adc/stm32-dfsdm-adc.c b/drivers/iio/adc/stm32-dfsdm-adc.c
+index 531ca7e..051561c 100644
+--- a/drivers/iio/adc/stm32-dfsdm-adc.c
++++ b/drivers/iio/adc/stm32-dfsdm-adc.c
+@@ -558,13 +558,38 @@ static ssize_t dfsdm_adc_audio_get_spiclk(struct iio_dev *indio_dev,
+ 	return snprintf(buf, PAGE_SIZE, "%d\n", adc->spi_freq);
+ }
+ 
++static int dfsdm_adc_set_samp_freq(struct iio_dev *indio_dev,
++				   unsigned int sample_freq,
++				   unsigned int spi_freq)
++{
++	struct stm32_dfsdm_adc *adc = iio_priv(indio_dev);
++	struct stm32_dfsdm_filter *fl = &adc->dfsdm->fl_list[adc->fl_id];
++	unsigned int oversamp;
++	int ret;
++
++	oversamp = DIV_ROUND_CLOSEST(spi_freq, sample_freq);
++	if (spi_freq % sample_freq)
++		dev_dbg(&indio_dev->dev,
++			"Rate not accurate. requested (%u), actual (%u)\n",
++			sample_freq, spi_freq / oversamp);
++
++	ret = stm32_dfsdm_set_osrs(fl, 0, oversamp);
++	if (ret < 0) {
++		dev_err(&indio_dev->dev, "No filter parameters that match!\n");
++		return ret;
++	}
++	adc->sample_freq = spi_freq / oversamp;
++	adc->oversamp = oversamp;
++
++	return 0;
++}
++
+ static ssize_t dfsdm_adc_audio_set_spiclk(struct iio_dev *indio_dev,
+ 					  uintptr_t priv,
+ 					  const struct iio_chan_spec *chan,
+ 					  const char *buf, size_t len)
+ {
+ 	struct stm32_dfsdm_adc *adc = iio_priv(indio_dev);
+-	struct stm32_dfsdm_filter *fl = &adc->dfsdm->fl_list[adc->fl_id];
+ 	struct stm32_dfsdm_channel *ch = &adc->dfsdm->ch_list[chan->channel];
+ 	unsigned int sample_freq = adc->sample_freq;
+ 	unsigned int spi_freq;
+@@ -583,17 +608,9 @@ static ssize_t dfsdm_adc_audio_set_spiclk(struct iio_dev *indio_dev,
+ 		return -EINVAL;
+ 
+ 	if (sample_freq) {
+-		if (spi_freq % sample_freq)
+-			dev_warn(&indio_dev->dev,
+-				 "Sampling rate not accurate (%d)\n",
+-				 spi_freq / (spi_freq / sample_freq));
+-
+-		ret = stm32_dfsdm_set_osrs(fl, 0, (spi_freq / sample_freq));
+-		if (ret < 0) {
+-			dev_err(&indio_dev->dev,
+-				"No filter parameters that match!\n");
++		ret = dfsdm_adc_set_samp_freq(indio_dev, sample_freq, spi_freq);
++		if (ret < 0)
+ 			return ret;
+-		}
+ 	}
+ 	adc->spi_freq = spi_freq;
+ 
+@@ -1068,22 +1085,9 @@ static int stm32_dfsdm_write_raw(struct iio_dev *indio_dev,
+ 			spi_freq = adc->spi_freq;
+ 		}
+ 
+-		if (spi_freq % val)
+-			dev_warn(&indio_dev->dev,
+-				 "Sampling rate not accurate (%d)\n",
+-				 spi_freq / (spi_freq / val));
+-
+-		ret = stm32_dfsdm_set_osrs(fl, 0, (spi_freq / val));
+-		if (ret < 0) {
+-			dev_err(&indio_dev->dev,
+-				"Not able to find parameter that match!\n");
+-			iio_device_release_direct_mode(indio_dev);
+-			return ret;
+-		}
+-		adc->sample_freq = val;
++		ret = dfsdm_adc_set_samp_freq(indio_dev, val, spi_freq);
+ 		iio_device_release_direct_mode(indio_dev);
+-
+-		return 0;
++		return ret;
+ 	}
+ 
+ 	return -EINVAL;
 -- 
-2.19.0
+2.7.4
 
