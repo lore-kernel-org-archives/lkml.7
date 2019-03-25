@@ -2,142 +2,170 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60F99C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 20:34:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 796E3C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 20:36:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FD3020848
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 20:34:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JQcLdfA5"
+	by mail.kernel.org (Postfix) with ESMTP id 530AF20879
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 20:36:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730298AbfCYUe1 (ORCPT
+        id S1730246AbfCYUgB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 16:34:27 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:39922 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729610AbfCYUe1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 16:34:27 -0400
-Received: by mail-ot1-f67.google.com with SMTP id f10so9357843otb.6
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 13:34:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=epcnJRVRcwZXdSQ+iTPglDNMRevkUZIbnelduCAg4CI=;
-        b=JQcLdfA5zk+hKV/2XesKq9vYN6WriVOLPAgTeMkFYqiUJakkOKoHWuS0lOfdXl7AUQ
-         neRHS1hJTHTUfpuxDz33edboR36JwF4UYdGQH8TNf3Xswg3ql0XIpc5KbYclXdeI5RhP
-         5LOchdkEhF2aQDEQoXxHWisRvYlMaL4M826rBCSuXGxtXXE/6xo2SzqFMW+eRaqU0QPt
-         pbXdSkNGtt+JfKkCHhGT15UEJRgZKCt1iHCEhbep3xO1l2KsiXaAdaKcoZAnus23HiCb
-         14y4FD++oZA2tsyjCWPMhHWLGvNkyRFPX52G1IBVdbda37dAww8Y/cEAWSdPmX6bzz86
-         U7vw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=epcnJRVRcwZXdSQ+iTPglDNMRevkUZIbnelduCAg4CI=;
-        b=E30gNRkLlDBVXqxXN+pWOJFtEAuNIH5U14ta6Fn7C+etl9UPpLAohv3mzOUP4Q7uqT
-         FpepiaDgmKWxl6nju1j8I0V/mDRM2QZ0XJljFnT+2kqfYdbMwaQyhCFBqzW51xdNn0nQ
-         D7+We0nn4x8Qe7IAf6DaJnbjO3cUr8i7y1OQBnRfHFHKNApZzVYF4oO47+ZzEHscunnQ
-         8YMh/b6nwcJcmEekYeHNwKpT/a8O2OaYrvi5pv4aYffHMUHsBfH9ucIqzrbBef0Zo1ML
-         99RhW5Dh1QelNHFWW1WScYAkNXC+bSXi/XqygrqUv26/Ukh9TQPbZEbXOgEoSjXuC19q
-         3PEg==
-X-Gm-Message-State: APjAAAVkcGWRDJQbW19MLz6ns/OciR9L0ST959bFWDAhus7pifgS68DY
-        +2X0d4ML1rRS/Db2bSfL+iKgZ4TvQ+4nnoRVMO3+YA==
-X-Google-Smtp-Source: APXvYqzgCphFNrNTc11DzBHpjdZyhg1otvncX7I6pKbqFwUre5EIKczbS8KXhJMtjJRp/ql3UF2OQhUFIN02JASYyaI=
-X-Received: by 2002:a05:6830:1216:: with SMTP id r22mr20490544otp.198.1553546066315;
- Mon, 25 Mar 2019 13:34:26 -0700 (PDT)
+        Mon, 25 Mar 2019 16:36:01 -0400
+Received: from mga11.intel.com ([192.55.52.93]:48232 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729548AbfCYUgA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 16:36:00 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Mar 2019 13:36:00 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,270,1549958400"; 
+   d="scan'208";a="310336919"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga005.jf.intel.com with ESMTP; 25 Mar 2019 13:35:59 -0700
+Received: from [10.254.88.97] (kliang2-mobl.ccr.corp.intel.com [10.254.88.97])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 18CAE5804B4;
+        Mon, 25 Mar 2019 13:35:59 -0700 (PDT)
+Subject: Re: [PATCH V3 01/23] perf/x86: Support outputting XMM registers
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Andi Kleen <ak@linux.intel.com>
+Cc:     acme@kernel.org, mingo@redhat.com, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
+        alexander.shishkin@linux.intel.com
+References: <20190322163718.2191-1-kan.liang@linux.intel.com>
+ <20190322163718.2191-2-kan.liang@linux.intel.com>
+ <20190322170841.GJ7905@worktop.programming.kicks-ass.net>
+ <20190322172250.GF24002@tassilo.jf.intel.com>
+ <20190323095610.GB6058@hirez.programming.kicks-ass.net>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+Message-ID: <697d0b76-d08f-5fa4-d49a-c291ab0f57de@linux.intel.com>
+Date:   Mon, 25 Mar 2019 16:35:56 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.0
 MIME-Version: 1.0
-References: <20190325162052.28987-1-christian@brauner.io> <CAKOZueuJSAiKU7fZR2FNDKKCktdyE-sADtWprpsNMAqYQvD9Jw@mail.gmail.com>
- <20190325173614.GB25975@google.com> <CAKOZuetbZOs1Yur4OrW6hh3wVYdoKNkSqTszbpTWnuRBTmT9zA@mail.gmail.com>
- <CAGLj2rE1f4x36KFUjFLiFq8tF1RUmFuCSRTg_tCQ9W2G6LtizA@mail.gmail.com>
- <CAKOZuetCFgu0B53+mGmQ3+539MPT_tiu-PACx2ATvihHrrmUKg@mail.gmail.com>
- <CAGLj2rHETs+FjkOVP6PJ_EiePP7FKiDwxaWyjwg1gMZPYpU1fQ@mail.gmail.com> <CAKOZueuYMKdkt8BoSj1+p7=mpe2PA8r7xT5QiF6q3cTK+6HsAA@mail.gmail.com>
-In-Reply-To: <CAKOZueuYMKdkt8BoSj1+p7=mpe2PA8r7xT5QiF6q3cTK+6HsAA@mail.gmail.com>
-From:   Jann Horn <jannh@google.com>
-Date:   Mon, 25 Mar 2019 21:34:00 +0100
-Message-ID: <CAG48ez1ZVKgwfQDYT1k4pB4-8Y8Ywv12dabh5KFFxtKmT-e7Cw@mail.gmail.com>
-Subject: Re: [PATCH 0/4] pid: add pidctl()
-To:     Daniel Colascione <dancol@google.com>
-Cc:     Jonathan Kowalski <bl0pbl33p@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Christian Brauner <christian@brauner.io>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Andy Lutomirski <luto@kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Kees Cook <keescook@chromium.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Michael Kerrisk-manpages <mtk.manpages@gmail.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Nagarathnam Muthusamy <nagarathnam.muthusamy@oracle.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190323095610.GB6058@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 9:15 PM Daniel Colascione <dancol@google.com> wrote:
-> On Mon, Mar 25, 2019 at 12:42 PM Jonathan Kowalski <bl0pbl33p@gmail.com> wrote:
-> > On Mon, Mar 25, 2019 at 6:57 PM Daniel Colascione <dancol@google.com> wrote:
-[...]
-> > Yes, but everything in /proc is not equivalent to an attribute, or an
-> > option, and depending on its configuration, you may not want to allow
-> > processes to even be able to see /proc for any PIDs other than those
-> > running as their own user (hidepid). This means, even if this new
-> > system call is added, to respect hidepid, it must, depending on if
-> > /proc is mounted (and what hidepid is set to, and what gid= is set
-> > to), return EPERM, because then there is a discrepancy between how the
-> > two entrypoints to acquire a process handle do access control.
->
-> That's why I proposed that this translation mechanism accept a procfs
-> root directory --- so you'd specify *which* procfs you want and let
-> the kernel apply whatever hidepid access restrictions it wants.
-[...]
-> > > and 2) it's
-> > > "fail unsafe": IMHO, most users in practice will skip the line marked
-> > > "LIVENESS CHECK", and as a result, their code will appear to work but
-> > > contain subtle race conditions. An explicit interface to translate
-> > > from a (PIDFD, PROCFS_ROOT) tuple to a /proc/pid directory file
-> > > descriptor would be both more efficient and fail-safe.
-> > >
-> > > [1] as a separate matter, it'd be nice to have a batch version of close(2).
-> >
-> > Since /proc is full of gunk,
->
-> People keep saying /proc is bad, but I haven't seen any serious
-> proposals for a clean replacement. :-)
->
-> > how about adding more to it and making
-> > the magic symlink of /proc/self/fd for the pidfd to lead to the dirfd
-> > of the /proc entry of the process it maps to, when one uses
-> > O_DIRECTORY while opening it? Otherwise, it behaves as it does today.
-> > It would be equivalent to opening the proc entry with usual access
-> > restrictions (and hidepid made to work) but without the races, and
-> > because for processes outside your and children pid ns, it shouldn't
-> > work anyway, and since they wouldn't have their entry on this procfs
-> > instance, it would all just fit in nicely?
->
-> Thanks. That'll work. It's a bit magical, but /proc/self/fd is magical
-> anyway, so that's okay.
 
-Please don't do that. /proc/$pid/fd refers to the set of file
-descriptors the process has open, and semantically doesn't have much
-to do with the identity of the process. If you want to have a procfs
-directory entry for getting a pidfd, please add a new entry. (Although
-I don't see the point in adding a new procfs entry for this when you
-could instead have an ioctl or syscall operating on the procfs
-directory fd.)
+
+On 3/23/2019 5:56 AM, Peter Zijlstra wrote:
+> On Fri, Mar 22, 2019 at 10:22:50AM -0700, Andi Kleen wrote:
+>>>> diff --git a/arch/x86/include/uapi/asm/perf_regs.h b/arch/x86/include/uapi/asm/perf_regs.h
+>>>> index f3329cabce5c..b33995313d17 100644
+>>>> --- a/arch/x86/include/uapi/asm/perf_regs.h
+>>>> +++ b/arch/x86/include/uapi/asm/perf_regs.h
+>>>> @@ -28,7 +28,29 @@ enum perf_event_x86_regs {
+>>>>   	PERF_REG_X86_R14,
+>>>>   	PERF_REG_X86_R15,
+>>>>   
+>>>> -	PERF_REG_X86_32_MAX = PERF_REG_X86_GS + 1,
+>>>> -	PERF_REG_X86_64_MAX = PERF_REG_X86_R15 + 1,
+>>>
+>>> So this changes UAPI visible symbols... did we think about that?
+>>
+>> Should be fine. Old programs won't use the new bits,
+>> and it just uses not yet used bits.
+> 
+> Old programs (that used the above symbols) will now fail to compile.
+> Even if they won't use the new bits, that seems like a bad thing.
+>
+
+Yes, other programs which use the PERF_REG_GPR_X86_32/64_MAX symbols 
+should be broken.
+I think the new name PERF_REG_GPR_X86_32/64_MAX are more accurate. So I 
+will keep both names in V4, and add comments for the old names.
+
+/*
+  * These names are deprecated, please use new names as below to instead.
+  *     PERF_REG_GPR_X86_32_MAX
+  *     PERF_REG_GPR_X86_64_MAX
+  */
+PERF_REG_X86_32_MAX = PERF_REG_X86_GS + 1,
+PERF_REG_X86_64_MAX = PERF_REG_X86_R15 + 1,
+
+
+>>>> +	/* These all need two bits set because they are 128bit */
+>>>> +	PERF_REG_X86_XMM0  = 32,
+>>>> +	PERF_REG_X86_XMM1  = 34,
+>>>> +	PERF_REG_X86_XMM2  = 36,
+>>>> +	PERF_REG_X86_XMM3  = 38,
+>>>> +	PERF_REG_X86_XMM4  = 40,
+>>>> +	PERF_REG_X86_XMM5  = 42,
+>>>> +	PERF_REG_X86_XMM6  = 44,
+>>>> +	PERF_REG_X86_XMM7  = 46,
+>>>> +	PERF_REG_X86_XMM8  = 48,
+>>>> +	PERF_REG_X86_XMM9  = 50,
+>>>> +	PERF_REG_X86_XMM10 = 52,
+>>>> +	PERF_REG_X86_XMM11 = 54,
+>>>> +	PERF_REG_X86_XMM12 = 56,
+>>>> +	PERF_REG_X86_XMM13 = 58,
+>>>> +	PERF_REG_X86_XMM14 = 60,
+>>>> +	PERF_REG_X86_XMM15 = 62,
+>>>> +
+>>>> +	/* This does not include the XMMX registers */
+>>>> +	PERF_REG_GPR_X86_32_MAX = PERF_REG_X86_GS + 1,
+>>>> +	PERF_REG_GPR_X86_64_MAX = PERF_REG_X86_R15 + 1,
+>>>> +
+>>>> +	/* All registers include the XMMX registers */
+>>>> +	PERF_REG_X86_MAX = PERF_REG_X86_XMM15 + 2,
+>>>>   };
+>>>>   #endif /* _ASM_X86_PERF_REGS_H */
+>>>
+>>> Also, what happens if we run a 32bit kernel or 32bit compat task?
+>>>
+>>> Then the register dump will report PERF_SAMPLE_REGS_ABI_32, should we
+>>> then still interpret the XMM registers as 2x64bit?
+>>
+>> Yes XMM registers are 128bit in 32bit mode too.
+>>
+>>>
+>>> Are they still at the same offset?
+>>
+>> Yes.
+> 
+> I think that is broken.. perf_prepare_sample() does:
+> 
+>   size += hweight(mask) * sizeof(u64);
+
+It does size += hweight64(mask) * sizeof(u64);
+
+> 
+> And since 32bits will not have r8-r15 set, the XMM registers will shift
+> forward no?
+>
+
+I tried a 32bits kernel, but I didn't observe any issue.
+
+The index of XMM registers always start from 32. That's hard coded.
+
+To double check, I also dumped the mask value in perf_prepare_sample().
+With command "perf record -e cycles:p -IXMM0,IXMM1 sleep 1", the mask
+value is 0xf00000000, hweight64(mask) returns 4. That is expected.
+
+Is there anything I missed?
+
+>>> Do we need additional PERF_SAMPLE_REGS_ABI_* definitions for this?
+>>
+>> I don't think so.
+> 
+> because....?
+> 
+
+I didn't observe any broken on 32bit. I think we don't need ABI to 
+distinguish the XMM registers.
+
+Thanks,
+Kan
