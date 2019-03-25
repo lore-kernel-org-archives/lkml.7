@@ -2,124 +2,243 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0841BC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 15:16:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96076C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 15:16:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4CAD2083D
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 15:16:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46A662083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 15:16:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HNQrZ5zf"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="y55q/U1F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728912AbfCYPQx (ORCPT
+        id S1729204AbfCYPQ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 11:16:53 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:33598 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725788AbfCYPQw (ORCPT
+        Mon, 25 Mar 2019 11:16:58 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:45859 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725788AbfCYPQ4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 11:16:52 -0400
-Received: by mail-pf1-f194.google.com with SMTP id i19so6609372pfd.0;
-        Mon, 25 Mar 2019 08:16:52 -0700 (PDT)
+        Mon, 25 Mar 2019 11:16:56 -0400
+Received: by mail-lf1-f66.google.com with SMTP id 5so6269750lft.12
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 08:16:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=faTpefi6bfE1Gy0bAl165z7iWn5Zc8VEPB2MEZzT/UA=;
-        b=HNQrZ5zfEkiRkdncHiE7Xeb6mSgFB5dUVk3rE6RxUrkBz7mW7Qu651MRJ8xupugVqg
-         F21NjyuQ6lmZQbeL0mPbsoBGRxIQZNiWRvQhzEgVdURGTwKMpPzpklzSvF9qQmfxPVfK
-         zbk7LclusXEFx3S5/p70FW5ftkT8cITxeqa5nA86TS1EniFIr9N9KuaP47WIE/Zzu8tt
-         FvblGk/jnZfU9OfJ5ko2IBAKS0hwsT4ftT7PUjYZfXe9HVorjDyka9Q/wENezaSF/7cn
-         AkO0hxmLEJdPcJVQI5UwoPsCWTNRAcT34nvvgxpuPex+QYpmC+2a5h75cfL1GE/rEhQe
-         YSBA==
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0nSBhOkcRu9lXMDFAOR9o6xk3dCvFGinJDmxipn1cHY=;
+        b=y55q/U1FuUyAlyq3MB4kSiFKFspMUTIx7/BeZ8DqmgWyu0p6liv/JlilN5WJlCB2on
+         UBNtv3fiB+iHVZ5Rfi9+Io6rK7n/zXN2suYa/zmJV3+xAIt7WxFwcVULUATaMUb6EArQ
+         JwQsVDjzIs7A6oYcKH2PhoBw+sx+wMwpR8xZsGkRLBaZKN8Pgyw0VmLb1rLf86e/IP5D
+         4JNJmNp69qD/KAcev44PbVcBEQnfPNnyrqV1FVjaVRNsQvL/n5b/RlIVYo1Ac+6Wj1g5
+         rDcMClPEEcRYhwZMWcSttzDaUsDMyXWSJ4AXOxB1AR0Fr2KhE9GpwsHo4Gu3Ksv9LTCJ
+         +7uA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=faTpefi6bfE1Gy0bAl165z7iWn5Zc8VEPB2MEZzT/UA=;
-        b=ic7flZUBr0q9omXh+sEl9Pnzkq9GP9i8GFLs/MsLFTDmAczZ8S/DmmEMqoBoeE+7d9
-         HPqDp9zmptHd4bk9fhh0WgG8yRsoQl6pbEnrwYVEzO1LPp/ZHe81kQO3q+IF77tW8uUP
-         wlLFlqLY4XhYv4dtN/OagR0PjMM3hzABg0gEL+6oTvVOEHW2hm/mCzXpNv605sZ2hyUw
-         v1ZZfzNA7W7Jq8GHZAEg8ElvZWMExEMye2qcRTp02A375NxnvVSRGYILgOrxYaa3A+H0
-         Gbto8OoaOkv8mLqgUu9jNYd0dKRMFOP2WIyB7H3QfRnVkpLN78qJUJhvS7+KpCeS2ww3
-         Ge9w==
-X-Gm-Message-State: APjAAAWuPf7S20+ikR4tot9dgH1QWmyfkbhhJ+53s6xJOae1IMQ5wcXf
-        sOwaB21Fop/LEjDi6aENMy0=
-X-Google-Smtp-Source: APXvYqwnrw2/DINkuE2kqeNyEqG1PUpsxvVH70kmak6sCMiZlo/XfaRAL/gXXmoJ9TtBJ7lJpJnS8w==
-X-Received: by 2002:a62:e911:: with SMTP id j17mr24527336pfh.107.1553527011777;
-        Mon, 25 Mar 2019 08:16:51 -0700 (PDT)
-Received: from vultr.guest ([104.238.181.70])
-        by smtp.gmail.com with ESMTPSA id a7sm19776728pfc.45.2019.03.25.08.16.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 25 Mar 2019 08:16:51 -0700 (PDT)
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     sam@ravnborg.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH] kconfig/[mn]conf: handle backspace (^H) key
-Date:   Mon, 25 Mar 2019 15:16:47 +0000
-Message-Id: <20190325151647.11581-1-changbin.du@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0nSBhOkcRu9lXMDFAOR9o6xk3dCvFGinJDmxipn1cHY=;
+        b=FEswn2lOuy9AtrLYPNNbxs37wmj4RGxYBhomKPPy+xFtG1ODGewWhydG0wlxftIEZv
+         lMKsrg6AKn9ZlquSFDgH91bBuhkYe/lTSC8E0Awlu7EdFJhERq0ouSkX2LBpslZ3WBSz
+         G9yFgGp2WyJIZ3iVeOQBOkoiaSq244pUKmUm6KDvs54gW9ZmgJrnG7X9FkSwJjLlUR+n
+         KOYr6THqbeNcwLyPJ5RRsMq5Tp7oLbObshCH/+uitjrJMXEhcDpOTz1AlhY4sM01vfwV
+         rBSj2IxHYK/eDd3k3yw2AAE737cZ6xzrHLIZkksp3lgE6pJik/om93tGyS//sM9AuyYh
+         RgBQ==
+X-Gm-Message-State: APjAAAWpSwCSTp6otQWd/QHv14bZQZg4/4wdypgiRKP4t2flgCe4+7c7
+        8NZUVVTYwOPYFSzL/5p1fVz596joMb5nHaWi5seorJc=
+X-Google-Smtp-Source: APXvYqzxGVjrvGfPaV7Ly7qNH+kJkG1MNnKMoXjn/inqia3jE2JXpr8n97gx6xhxadfCqThAao88wEbgTnyr7Eoe0yc=
+X-Received: by 2002:ac2:5921:: with SMTP id v1mr37478lfi.135.1553527012543;
+ Mon, 25 Mar 2019 08:16:52 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190325145032.GB21359@shao2-debian>
+In-Reply-To: <20190325145032.GB21359@shao2-debian>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Mon, 25 Mar 2019 11:16:41 -0400
+Message-ID: <CAHC9VhQt6RMdOsVNAXHnPzTrVRpnfaq4PULzBCmMPg7SgdTpfw@mail.gmail.com>
+Subject: Re: [kernfs] e19dfdc83b: BUG:KASAN:global-out-of-bounds_in_s
+To:     Ondrej Mosnacek <omosnace@redhat.com>
+Cc:     Casey Schaufler <casey@schaufler-ca.com>,
+        LKML <linux-kernel@vger.kernel.org>, selinux@vger.kernel.org,
+        lkp@01.org, kernel test robot <rong.a.chen@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Backspace is not working on some terminal emulators which do not send the
-key code defined by terminfo. Terminals either send '^H' (8) or '^?' (127).
-But currently only '$?' is handled. Let's also handle '^H' for those
-terminals.
+Ondrej, please look into this.
 
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
----
- scripts/kconfig/lxdialog/inputbox.c | 3 ++-
- scripts/kconfig/nconf.c             | 2 +-
- scripts/kconfig/nconf.gui.c         | 3 ++-
- 3 files changed, 5 insertions(+), 3 deletions(-)
+You've looked at this code more recently than I have, but it looks
+like there might be an issue with __kernfs_iattrs() returning a
+pointer to a kernfs_iattrs object without taking a kernfs reference
+(kernfs_get(kn)).  Although I would be a little surprised if this was
+the problem as I think it would cause a number of issues beyond just
+this one ... ?
 
-diff --git a/scripts/kconfig/lxdialog/inputbox.c b/scripts/kconfig/lxdialog/inputbox.c
-index 611945611bf8..1dcfb288ee63 100644
---- a/scripts/kconfig/lxdialog/inputbox.c
-+++ b/scripts/kconfig/lxdialog/inputbox.c
-@@ -113,7 +113,8 @@ int dialog_inputbox(const char *title, const char *prompt, int height, int width
- 			case KEY_DOWN:
- 				break;
- 			case KEY_BACKSPACE:
--			case 127:
-+			case 8:   /* ^H */
-+			case 127: /* ^? */
- 				if (pos) {
- 					wattrset(dialog, dlg.inputbox.atr);
- 					if (input_x == 0) {
-diff --git a/scripts/kconfig/nconf.c b/scripts/kconfig/nconf.c
-index a4670f4e825a..ac92c0ded6c5 100644
---- a/scripts/kconfig/nconf.c
-+++ b/scripts/kconfig/nconf.c
-@@ -1048,7 +1048,7 @@ static int do_match(int key, struct match_state *state, int *ans)
- 		state->match_direction = FIND_NEXT_MATCH_UP;
- 		*ans = get_mext_match(state->pattern,
- 				state->match_direction);
--	} else if (key == KEY_BACKSPACE || key == 127) {
-+	} else if (key == KEY_BACKSPACE || key == 8 || key == 127) {
- 		state->pattern[strlen(state->pattern)-1] = '\0';
- 		adj_match_dir(&state->match_direction);
- 	} else
-diff --git a/scripts/kconfig/nconf.gui.c b/scripts/kconfig/nconf.gui.c
-index 7be620a1fcdb..77f525a8617c 100644
---- a/scripts/kconfig/nconf.gui.c
-+++ b/scripts/kconfig/nconf.gui.c
-@@ -439,7 +439,8 @@ int dialog_inputbox(WINDOW *main_window,
- 		case KEY_F(F_EXIT):
- 		case KEY_F(F_BACK):
- 			break;
--		case 127:
-+		case 8:   /* ^H */
-+		case 127: /* ^? */
- 		case KEY_BACKSPACE:
- 			if (cursor_position > 0) {
- 				memmove(&result[cursor_position-1],
+On Mon, Mar 25, 2019 at 10:50 AM kernel test robot
+<rong.a.chen@intel.com> wrote:
+>
+> FYI, we noticed the following commit (built with gcc-7):
+>
+> commit: e19dfdc83b60f196e0653d683499f7bc5548128f ("kernfs: initialize security of newly created nodes")
+> https://git.kernel.org/cgit/linux/kernel/git/pcmoore/selinux.git next
+>
+> in testcase: locktorture
+> with following parameters:
+>
+>         runtime: 300s
+>         test: default
+>
+> test-description: This torture test consists of creating a number of kernel threads which acquire the lock and hold it for specific amount of time, thus simulating different critical region behaviors.
+> test-url: https://www.kernel.org/doc/Documentation/locking/locktorture.txt
+>
+>
+> on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 2G
+>
+> caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
+>
+>
+> +-------------------------------------------------+------------+------------+
+> |                                                 | ec882da5cd | e19dfdc83b |
+> +-------------------------------------------------+------------+------------+
+> | boot_successes                                  | 0          | 0          |
+> | boot_failures                                   | 8          | 8          |
+> | BUG:kernel_reboot-without-warning_in_test_stage | 8          |            |
+> | BUG:KASAN:global-out-of-bounds_in_s             | 0          | 8          |
+> +-------------------------------------------------+------------+------------+
+>
+>
+>
+> [   27.938038] BUG: KASAN: global-out-of-bounds in strcmp+0x97/0xa0
+> [   27.940755] Read of size 1 at addr ffffffff946a83d7 by task systemd/1
+> [   27.943554]
+> [   27.944603] CPU: 0 PID: 1 Comm: systemd Not tainted 5.1.0-rc1-00010-ge19dfdc #1
+> [   27.948091] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
+> [   27.951946] Call Trace:
+> [   27.953353]  ? strcmp+0x97/0xa0
+> [   27.955026]  print_address_description+0x22/0x270
+> [   27.957203]  ? strcmp+0x97/0xa0
+> [   27.958841]  kasan_report+0x13b/0x1d0
+> [   27.960759]  ? strcmp+0x97/0xa0
+> [   27.962378]  ? strcmp+0x97/0xa0
+> [   27.963976]  strcmp+0x97/0xa0
+> [   27.965846]  simple_xattr_get+0x7b/0x120
+> [   27.967473]  selinux_kernfs_init_security+0x108/0x440
+> [   27.969360]  ? __radix_tree_replace+0x9a/0x230
+> [   27.971200]  ? selinux_secctx_to_secid+0x20/0x20
+> [   27.973011]  ? __fprop_inc_percpu_max+0x190/0x190
+> [   27.975563]  ? kvm_sched_clock_read+0x12/0x20
+> [   27.977907]  ? sched_clock+0x5/0x10
+> [   27.979867]  ? sched_clock_cpu+0x24/0xb0
+> [   27.982048]  ? idr_alloc_cyclic+0xcb/0x190
+> [   27.984229]  ? lock_downgrade+0x620/0x620
+> [   27.986388]  security_kernfs_init_security+0x3c/0x70
+> [   27.989012]  __kernfs_new_node+0x403/0x5e0
+> [   27.991195]  ? kernfs_dop_revalidate+0x330/0x330
+> [   27.993589]  ? css_next_child+0xec/0x260
+> [   27.995685]  ? css_next_descendant_pre+0x36/0x110
+> [   27.998115]  ? cgroup_propagate_control+0x2d6/0x460
+> [   28.000662]  kernfs_new_node+0x72/0x140
+> [   28.002818]  ? lockdep_hardirqs_on+0x379/0x560
+> [   28.005171]  ? cgroup_idr_replace+0x35/0x40
+> [   28.007417]  kernfs_create_dir_ns+0x26/0x130
+> [   28.009690]  cgroup_mkdir+0x3b9/0xef0
+> [   28.011764]  ? cgroup_destroy_locked+0x5e0/0x5e0
+> [   28.014196]  kernfs_iop_mkdir+0x12f/0x1b0
+> [   28.016396]  vfs_mkdir+0x2e6/0x510
+> [   28.018317]  do_mkdirat+0x19b/0x1f0
+> [   28.020284]  ? __x64_sys_mknod+0xb0/0xb0
+> [   28.022437]  do_syscall_64+0xe5/0x10d0
+> [   28.024408]  ? syscall_return_slowpath+0x790/0x790
+> [   28.026874]  ? entry_SYSCALL_64_after_hwframe+0x3e/0xbe
+> [   28.029504]  ? trace_hardirqs_off_caller+0x58/0x200
+> [   28.031993]  ? trace_hardirqs_off_thunk+0x1a/0x1c
+> [   28.034438]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> [   28.036748] RIP: 0033:0x7f38cab6f447
+> [   28.038825] Code: 00 b8 ff ff ff ff c3 0f 1f 40 00 48 8b 05 49 da 2b 00 64 c7 00 5f 00 00 00 b8 ff ff ff ff c3 0f 1f 40 00 b8 53 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 21 da 2b 00 f7 d8 64 89 01 48
+> [   28.047736] RSP: 002b:00007ffeef143d88 EFLAGS: 00000246 ORIG_RAX: 0000000000000053
+> [   28.051776] RAX: ffffffffffffffda RBX: 0000000000000001 RCX: 00007f38cab6f447
+> [   28.055117] RDX: 00007ffeef143c30 RSI: 00000000000001ed RDI: 000055a7b0458560
+> [   28.058533] RBP: 0000000000000040 R08: 0000000000000000 R09: 2f73662f7379732f
+> [   28.062031] R10: 732f70756f726763 R11: 0000000000000246 R12: 000055a7b04b30a0
+> [   28.065528] R13: 0000000000000000 R14: 000055a7b046bb88 R15: 000055a7b046b540
+> [   28.068977]
+> [   28.070240] The buggy address belongs to the variable:
+> [   28.072491]  securityfs_super_operations+0x4917/0x6220
+> [   28.075171]
+> [   28.076286] Memory state around the buggy address:
+> [   28.078861]  ffffffff946a8280: fa fa fa fa 00 01 fa fa fa fa fa fa 00 02 fa fa
+> [   28.082610]  ffffffff946a8300: fa fa fa fa 00 02 fa fa fa fa fa fa 00 01 fa fa
+> [   28.086669] >ffffffff946a8380: fa fa fa fa 00 03 fa fa fa fa fa fa 00 fa fa fa
+> [   28.090587]                                                  ^
+> [   28.093576]  ffffffff946a8400: fa fa fa fa 00 00 00 00 00 00 05 fa fa fa fa fa
+> [   28.097599]  ffffffff946a8480: 00 00 01 fa fa fa fa fa 00 00 00 00 00 00 00 00
+> [   28.101453] ==================================================================
+> [   28.105478] Disabling lock debugging due to kernel taint
+>          Starting Load Kernel Modules...
+>          Mounting Debug File System...
+> ] Listening on RPCbind Server Activation Socket.
+>          Starting Remount Root and Kernel File Systems...
+>          Starting Journal Service...
+>          Mounting RPC Pipe File System...
+> [   28.508319] _warn_unseeded_randomness: 131 callbacks suppressed
+> [   28.508335] random: get_random_u64 called from copy_process+0x596/0x6450 with crng_init=1
+>          Starting Create Static Device Nodes in /dev...
+> [   28.552988] random: get_random_u64 called from arch_pick_mmap_layout+0x4a1/0x600 with crng_init=1
+> [   28.556785] random: get_random_u64 called from arch_pick_mmap_layout+0x446/0x600 with crng_init=1
+>          Starting Load/Save Random Seed...
+>          Starting udev Coldplug all Devices...
+>          Mounting FUSE Control File System...
+>          Starting Apply Kernel Variables...
+>          Mounting Configuration File System...
+>          Starting Raise network interfaces...
+>          Starting Preprocess NFS configuration...
+>          Starting udev Kernel Device Manager...
+>          Starting Flush Journal to Persistent Storage...
+>          Starting Create Volatile Files and Directories...
+> [   29.523554] random: get_random_u64 called from arch_pick_mmap_layout+0x446/0x600 with crng_init=1
+> [   29.527262] random: get_random_u64 called from load_elf_binary+0x1281/0x2f30 with crng_init=1
+>
+>          Starting RPC bind portmap service...
+>          Starting Network Time Synchronization...
+>          Starting Update UTMP about System Boot/Shutdown...
+> [   30.574449] _warn_unseeded_randomness: 154 callbacks suppressed
+> [   30.574479] random: get_random_u32 called from bucket_table_alloc+0x149/0x370 with crng_init=1
+> [   32.628754] random: get_random_u64 called from arch_pick_mmap_layout+0x4a1/0x600 with crng_init=1
+> [   32.632973] random: get_random_u64 called from arch_pick_mmap_layout+0x446/0x600 with crng_init=1
+> [   32.637364] random: get_random_u64 called from load_elf_binary+0x1281/0x2f30 with crng_init=1
+>          Starting Login Service...
+>          Starting LSB: Start and stop bmc-watchdog...
+>          Starting LSB: Execute the kexec -e command to reboot system...
+>
+>
+> To reproduce:
+>
+>         # build kernel
+>         cd linux
+>         cp config-5.1.0-rc1-00010-ge19dfdc .config
+>         make HOSTCC=gcc-7 CC=gcc-7 ARCH=x86_64 olddefconfig
+>         make HOSTCC=gcc-7 CC=gcc-7 ARCH=x86_64 prepare
+>         make HOSTCC=gcc-7 CC=gcc-7 ARCH=x86_64 modules_prepare
+>         make HOSTCC=gcc-7 CC=gcc-7 ARCH=x86_64 SHELL=/bin/bash
+>         make HOSTCC=gcc-7 CC=gcc-7 ARCH=x86_64 bzImage
+>
+>
+>         git clone https://github.com/intel/lkp-tests.git
+>         cd lkp-tests
+>         find lib/ | cpio -o -H newc --quiet | gzip > modules.cgz
+>         bin/lkp qemu -k <bzImage> -m modules.cgz job-script # job-script is attached in this email
+>
+>
+>
+>
+> Thanks,
+> Rong Chen
+>
+
+
 -- 
-2.17.1
-
+paul moore
+www.paul-moore.com
