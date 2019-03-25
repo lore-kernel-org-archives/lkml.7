@@ -6,100 +6,125 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9498BC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:18:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C379C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:19:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C6DA2083D
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:18:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0F5A20828
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:19:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SvxECnfS"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mwEvBQ+i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729697AbfCYQSb (ORCPT
+        id S1729278AbfCYQTS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 12:18:31 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:40917 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725788AbfCYQSa (ORCPT
+        Mon, 25 Mar 2019 12:19:18 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:46820 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbfCYQTR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 12:18:30 -0400
-Received: by mail-oi1-f196.google.com with SMTP id 3so7419099oir.7
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 09:18:30 -0700 (PDT)
+        Mon, 25 Mar 2019 12:19:17 -0400
+Received: by mail-ot1-f66.google.com with SMTP id c18so8521637otl.13
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 09:19:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=RLDRoiBNbIAcIdIMLPqBzAQAHLBoEDdVU4Q4wOwG8Ms=;
-        b=SvxECnfSRkC11p+C5ALfZTkc9meVsdEhIfzq7trghnm0/pb2EXiT6M9azSNm1JOYZk
-         qPvdzYkGFaVFlK5Jij1L+zl+09EhR/TWwrQ+ODeYvEkhGt9injuE83BpO88WiRy9Y239
-         qPpHGNdkvE3mvxd02l696jBoLuE9Qh5MT8iRqi55Y2oHSY0RXLOc/EhNiWFKl8Y0CO1j
-         /jVStQo4fwar6VJZnTzu/lVyUQKEe1GAM92oZBmShgoC65F+stAEzurPhILNWg2lvPln
-         GbVEF+bMA6jDWIJPewjXX/HwnLXYOmXcx0rLyecXHdyCBQs/e5KLZ9v1XaTmRvDcaECl
-         LLkA==
+        bh=kNhjFyAJj2F2IJvSUMRthN84gt9w56CKqbJ/olM8L5c=;
+        b=mwEvBQ+ipRV1kh+mAX4sg5T8MvtOw5lQLKAyDP5KtmkAwpb/YJeM70ld9m7o3fvbAp
+         Jp0m9I1TqBMiAUvn0qWEKxfTi1HJU3s/C4KC7PFa3bUH0q7uXo52Ob+5h5rySV9gtzpq
+         yY6pfmedYOVX5w77uC0WNodR7KU4F9Z228xCQin880bDGeqYrfsxBcpcodkU+r5qNCkZ
+         fJyBXzfSAsyL47eA7d0IIonfarhs2sOu/Jix0Hb06w9cA2G7bJGjhQu/S9jJOX30fdmU
+         QdXnwvs3wc+4DMIKDCkEQANbYSO9j/s5qgat5yS9B7tNqM+DmSGx72Nw8Tb2nVaDzTxa
+         /01A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
          :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=RLDRoiBNbIAcIdIMLPqBzAQAHLBoEDdVU4Q4wOwG8Ms=;
-        b=ucgz8WOfMBxpDJQfqWxrR6jauxvNTvDFBUTFFAwxovpk79ENVehcgncZchKHLB4ybS
-         C3trivEQjcHo7MK7CEwS7aa9+N9qeFQBDJ84xWFxDBMMWAECRHSxsReII74/cRse0GfA
-         wIzbwnag4A6Do56tNPtLVfSWwX91+tvTCq1jdHftllLet41I5y02cJ+KjgW70CIUQelt
-         6cXPsB+rVum+s8DGcgy/w1+W6B2DlDjhB1uMkvLeP2u1TppGVbGJsbC+fGZwwhLikLJN
-         ODoetsA4x+2StmhX3oXxW0vcvpkxAKk0ZrIFYVtFMwkeDGB9j1SPq7ydrw1Q3lSC0N8o
-         6h7w==
-X-Gm-Message-State: APjAAAW2FIRc3xu1uBiLjD8dAnyDuGLXyq8661/wpwSdE6Yr79qMnxqA
-        u4EfYtK/wbnbJBxmRgOvhug=
-X-Google-Smtp-Source: APXvYqzS7odJS1ZMxA3shGVmeIIDMUwsBye/FsKIe8gQKuJ71NTAV2ToHkYbPlits7tnpLa/fXvOJg==
-X-Received: by 2002:aca:b3d5:: with SMTP id c204mr12392419oif.91.1553530709863;
-        Mon, 25 Mar 2019 09:18:29 -0700 (PDT)
+        bh=kNhjFyAJj2F2IJvSUMRthN84gt9w56CKqbJ/olM8L5c=;
+        b=PMW5LctadYF6QnIfoozFUYbo71VxE6VnCqt7xc5D0yIEyvMDf7fBCySuFVPume2HQd
+         t2JNGPgJudFJo5ksgGHldnAk+TisDymShxMzhq1WfDL9SGCe0Lc7rf5/d4zhnkqOcUbS
+         gKJdELYhV4L4NWGPcBSUtoG7C2N8J7+ujPBdBshvjejY90z57y5gPvw8WZa3SoA6KPyW
+         syBwiQwpkcPSaOf/k1X9+8aB5ofhp9VxaV+tVfskJ+zFJgmLBNGvR8WOOkDwzBfvawTX
+         VRYwOS9IfueLynVe2P4JkvxDbBEJyJRKeD4lR27okS+e2mYfQyGhNVkCVrSAFXiuB8tl
+         qgGw==
+X-Gm-Message-State: APjAAAWvhVVTpsa4vLEgmMq8XlGvk5NoOdzW1lH+ANOy6qGeyQVKuczN
+        fFAV4QbF/6juhG0SWKTI4j5356nG
+X-Google-Smtp-Source: APXvYqxwCD7u/nsuaz8zjuQ8HPzJ+ui04FJJBhLrRpeCfsUxtcLoyPMe+47GItlEnnVdu5AZuvnE3w==
+X-Received: by 2002:a05:6830:20cc:: with SMTP id z12mr18834817otq.334.1553530756491;
+        Mon, 25 Mar 2019 09:19:16 -0700 (PDT)
 Received: from [192.168.1.112] (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
-        by smtp.gmail.com with ESMTPSA id g17sm2288215otq.45.2019.03.25.09.18.28
+        by smtp.gmail.com with ESMTPSA id c131sm6457965oif.3.2019.03.25.09.19.15
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 25 Mar 2019 09:18:29 -0700 (PDT)
-Subject: Re: [PATCH] powerpc/rtas: fix early boot failure.
+        Mon, 25 Mar 2019 09:19:15 -0700 (PDT)
+Subject: Re: Regression in 5.1.0-rc2: PowerBook G4 Aluminum fails to boot -
+ bisected to commit 0df977eafc792
 To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <aab41779cac995ebdc03e700a9dc7cfc30a28770.1553503163.git.christophe.leroy@c-s.fr>
+        ppc-dev <linuxppc-dev@lists.ozlabs.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>
+References: <acc2d5a5-2fd4-4367-c8ef-497da951c208@lwfinger.net>
+ <1c1f7eae-0c49-dcb2-f27b-96a83d811df7@c-s.fr>
 From:   Larry Finger <Larry.Finger@lwfinger.net>
-Message-ID: <04c77eea-bda1-2bad-062f-d86d2ce6f192@lwfinger.net>
-Date:   Mon, 25 Mar 2019 11:18:28 -0500
+Message-ID: <4d7e3fc5-82d8-5bcf-0891-97445e284c36@lwfinger.net>
+Date:   Mon, 25 Mar 2019 11:19:15 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.5.2
 MIME-Version: 1.0
-In-Reply-To: <aab41779cac995ebdc03e700a9dc7cfc30a28770.1553503163.git.christophe.leroy@c-s.fr>
+In-Reply-To: <1c1f7eae-0c49-dcb2-f27b-96a83d811df7@c-s.fr>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/25/19 3:43 AM, Christophe Leroy wrote:
-> Commit 0df977eafc79 ("powerpc/6xx: Don't use SPRN_SPRG2 for storing
-> stack pointer while in RTAS") changes the code to use a field in
-> thread struct to store the stack pointer while in RTAS instead of
-> using SPRN_SPRG2. It therefore converts all places which were
-> manipulating SPRN_SPRG2 to use that field. During early startup,
-> the zeroing of SPRN_SPRG2 has been replaced by a zeroing of that
-> field in thread struct. But at least in start_here, that's done
-> wrongly because it used the physical address of the fields while
-> MMU is on at that time.
+On 3/25/19 3:46 AM, Christophe Leroy wrote:
 > 
-> So the virtual address of the field should be used instead, but in
-> the meantime, thread struct has already been zeroised and initialised
-> so we can just drop this initialisation.
 > 
-> Reported-by: Larry Finger <Larry.Finger@lwfinger.net>
-> Fixes: 0df977eafc79 ("powerpc/6xx: Don't use SPRN_SPRG2 for storing stack pointer while in RTAS")
-> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> Le 25/03/2019 à 01:49, Larry Finger a écrit :
+>> A build of kernel 5.1.0-rc2 resulted in a failure to boot on my PowerBook G4 
+>> Aluminum. The bootstrap loads the initial kernel and issues the appropriate 
+>> start, but the machine hangs at that point.
+>>
+>> The problem does not depend on the choice of PPC32 processor type. This 
+>> machine has a 7447A according to /proc/cpuinfo.
+>>
+>> The problem was bisected to the following:
+>>
+>> commit 0df977eafc792a5365a7f81d8d5920132e03afad
+>> Author: Christophe Leroy <christophe.leroy@c-s.fr>
+>> Date:   Thu Feb 21 10:37:54 2019 +0000
+>>
+>>      powerpc/6xx: Don't use SPRN_SPRG2 for storing stack pointer while in RTAS
+>>
+>>      When calling RTAS, the stack pointer is stored in SPRN_SPRG2
+>>      in order to be able to restore it in case of machine check in RTAS.
+>>
+>>      As machine check is not a perfomance critical path, this patch
+>>      frees SPRN_SPRG2 by using a field in thread struct instead.
+>>
+>>      Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+>>      Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+>>
+>> I reverted this patch and found that the system began execution, and then 
+>> failed, likely due to the reassignment of SPRN_SPRG2.
+>>
+>> I had found this problem with 5.1.0-rc1, but -rc2 was out by the time I 
+>> finished the bisection. Unfortunately, none of the changes in -rc2 fixed the 
+>> problem.
+> 
+> I think I identified the issue, see https://patchwork.ozlabs.org/patch/1063962/
+> 
+> It is now booting properly under QEMU with your .config
+> 
+> Could you please test it on your target ?
 
-Tested-by: Larry Finger <Larry.Finger@lwfinger.net>
-
-My PPC box now boots OK.
+Thanks. That patch fixes the issue.
 
 Larry
+
+
 
