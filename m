@@ -2,68 +2,71 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E58B3C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 10:14:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82BFFC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 10:15:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4BA720870
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 10:14:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DCBE20879
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 10:15:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Sab03Xgv"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="D9n9W/Wr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730785AbfCYKO6 (ORCPT
+        id S1730811AbfCYKPB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 06:14:58 -0400
-Received: from mail-wm1-f53.google.com ([209.85.128.53]:35211 "EHLO
-        mail-wm1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730564AbfCYKO5 (ORCPT
+        Mon, 25 Mar 2019 06:15:01 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:42510 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730456AbfCYKO6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 06:14:57 -0400
-Received: by mail-wm1-f53.google.com with SMTP id y197so8383075wmd.0
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 03:14:56 -0700 (PDT)
+        Mon, 25 Mar 2019 06:14:58 -0400
+Received: by mail-wr1-f67.google.com with SMTP id g3so5897578wrx.9
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 03:14:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/8o+LOU1T1ETU6b8hAChcmqvwxIICB9hO51bblD2L9U=;
-        b=Sab03Xgv7Fjl6R5FlBon9XdX7SHnlouqsD+wv85qjeWYRzwH+KqMRt38uPCcn8Vdld
-         mWxKgc6pmcRczSb3XKo3DZgl9eDoj56+AMUofjU2m1G3KKgukyzjvb4VYhFaFkKecb9/
-         z/fAlsqeMBQG/StELz1L5nXArKb66KQ3rzPf5vL8scAJ1YNCxBe7qSilv+BLIo2SIHuW
-         NsW7GF6dV6EcDs83+DdALzoJrS/eIsmQNXkzrwUD+Kd5ib53KYNp1LnzGoqL0R1tKKeH
-         lr175Tbqm3Nt7dj1x4+sieO00lxjtVw5Apc3vuN6ve9Fph/tYEBHIORePhT7att/6+Y4
-         YvHg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=mONwxENhpKvTTQwCoB1Esyjq9hiq9z607IfSptpkVMk=;
+        b=D9n9W/WrhVnLyL14ZrVWWRMVU7NxLkg4o76ElZp6yLWBsLpiC26p5JWjtySyUyh3v1
+         +tsIdKdw1UWSZNG+dBtb3nqWgikFvBVS8cH/sTeFTYWimpv+RgvfV8csX8RwXAppaEcW
+         EGvNVHe6Dp7ZawdRJcR2JM/i6a/vWXZbqCypp/8/fBQuRQ1PR6BZYBLSOzd8ofNhJQDT
+         iOKuupwE6xe2HEscaa7jhxLzv+CIXb5e8b4WIQIdve6Q8RKfugFYcpBSqNgwk631FuEc
+         lRJ6zowts3tEWXtdUHq0eHsKYKJaQ4lv9YM+PhS8KsvM1vxIuMFkpOZLr3PMTRsy8gWJ
+         HWnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/8o+LOU1T1ETU6b8hAChcmqvwxIICB9hO51bblD2L9U=;
-        b=Uci56WMiydXcPS1clElhvTdhwtb1QpPpjo5oVszrmQFUECEDKBhFz/ZZ1Zj4iXUrgC
-         I5gbK8djiZeBg53N6KbZFZKmQKo1g3TSQB2kAYDEMaVPYqVaqcU06zyFWBw1AtJH8Ghn
-         KJEOcvAdWDYxxYfKOI+m4Mv6KQpgiHhwJIabOkbvz+9xExurrVBW5wzTlBmfQTDDQOyd
-         W/RWGUpnSwV3kx6OaXXyDT8XpLWhjy4wX94arXzAsj5FK7IxLAZ/Uz/RppDobNX3CT68
-         eUHeesllP018QuLAsgVuYql2xHf7n1ooqNuhuLDGuvcW6i0QhoJvNAkTlls+mvIzM2wX
-         gJIw==
-X-Gm-Message-State: APjAAAXb3aATsK6WOxyznqSKGAHEJuSmccVwF/tD5rHp8Vli0nnq7VFd
-        5zujGeuoTv2CcFxQdDPJ7lxKMg==
-X-Google-Smtp-Source: APXvYqxFXgCghasvdXR9NXeqm91C6VP9B+1+B8C875TVNExSHsoA58wXRlC3w3+NPQzhuj8uTvKCjA==
-X-Received: by 2002:a7b:c446:: with SMTP id l6mr7138333wmi.80.1553508895899;
-        Mon, 25 Mar 2019 03:14:55 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=mONwxENhpKvTTQwCoB1Esyjq9hiq9z607IfSptpkVMk=;
+        b=otb4YfpA/y68PeGQ1WkQrR5trKa3KIJ+/2H+PA+DO0c+jnVkVgznwYOKsekCKUHC0L
+         DgsvkDjnmjjJ07oSouJzoEJXiHILzbVBZJ2zU49ilBezNVvDZ6OUtszYNXngphyNQboi
+         22wvEYQN8YaqJdjCGBmBC0wlX6kPoLdhx4amcVO1zDvnvUmc85CYsZeTABKyaSmH6xfN
+         kgascQegoJlBSIULFM0J9ikRshruDf6seSwTIZqIlGwmdAK8tY7czCpgT3SmPX39qHBJ
+         jP/XlMNwLAVIeStTMqwjM+pprJQ3ySyJu5kpYGTGt+O3DCgkRu5kiFEyIfda6nguE7Sz
+         tU+w==
+X-Gm-Message-State: APjAAAXqfAf6FoR8dgQzk0rHpr2chb9N+0d+/u59daYH4giykglwc/bk
+        W1hwwtE+GMICnxIQMGKExS52rHgdTTH7VQ==
+X-Google-Smtp-Source: APXvYqwY6vtF1bLLpkIF8ZiE5nBSl9EjUTCXx3wj95kqnSeBvfs2nPQ312T+uvVklUxQjj3p2kR9Gw==
+X-Received: by 2002:a5d:6706:: with SMTP id o6mr11531637wru.36.1553508896881;
+        Mon, 25 Mar 2019 03:14:56 -0700 (PDT)
 Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id v14sm20049484wrr.20.2019.03.25.03.14.54
+        by smtp.gmail.com with ESMTPSA id v14sm20049484wrr.20.2019.03.25.03.14.55
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 25 Mar 2019 03:14:55 -0700 (PDT)
+        Mon, 25 Mar 2019 03:14:56 -0700 (PDT)
 From:   Neil Armstrong <narmstrong@baylibre.com>
 To:     khilman@baylibre.com
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+Cc:     Guillaume La Roque <glaroque@baylibre.com>,
         linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 0/6] arm64: dts: g12a: Add boards peripherals
-Date:   Mon, 25 Mar 2019 11:14:47 +0100
-Message-Id: <20190325101453.3009-1-narmstrong@baylibre.com>
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH v3 1/6] arm64: dts: meson-g12a-x96-max: add regulators
+Date:   Mon, 25 Mar 2019 11:14:48 +0100
+Message-Id: <20190325101453.3009-2-narmstrong@baylibre.com>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190325101453.3009-1-narmstrong@baylibre.com>
+References: <20190325101453.3009-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -71,47 +74,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Following [1], add regulators, bluetooth and ADC keys on :
-- meson-g12a-x96-max
-- meson-g12a-u200
-- meson-g12a-sei510
+From: Guillaume La Roque <glaroque@baylibre.com>
 
-Dependencies :
-- Patch 1, 2: None
-- Patch 3: SAR ADC node at [2]
-- Patches 4, 5, & 6: USB nodes at [3]
+Add system regulators for the X96 Max Set-Top-Box.
 
-Changes since v2:
-- Dropped already applied patches
-- Collected martin's reviewed-bys
-- Fixed x96 5v regulator polarity
+Still missing
+* VDD_EE (0.8V - PWM controlled)
+* VDD_CPU (PWM controlled)
 
-Changes since v1:
-- Collected martin's reviewed-bys
-- Added missing regulators in commit logs
-- fixed x96 dc_in regulator
-- fixed includes overall
-- removed dwc2 enable floowing disabled remove in [1]
+Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ .../boot/dts/amlogic/meson-g12a-x96-max.dts   | 67 +++++++++++++++++++
+ 1 file changed, 67 insertions(+)
 
-[1] https://lkml.kernel.org/r/20190325100339.749-1-narmstrong@baylibre.com
-[2] https://lkml.kernel.org/r/20190325100339.749-2-narmstrong@baylibre.com
-[3] https://lkml.kernel.org/r/20190325100339.749-3-narmstrong@baylibre.com
-
-Guillaume La Roque (1):
-  arm64: dts: meson-g12a-x96-max: add regulators
-
-Neil Armstrong (5):
-  arm64: dts: meson-g12a-x96-max: Enable BT Module
-  arm64: dts: meson-g12a-sei510: Add ADC Key and BT support
-  arm64: dts: meson-g12a-sei510: Enable USB
-  arm64: dts: meson-g12a-u200: Enable USB
-  arm64: dts: meson-g12a-x96-max: Enable USB
-
- .../boot/dts/amlogic/meson-g12a-sei510.dts    | 35 ++++++++
- .../boot/dts/amlogic/meson-g12a-u200.dts      | 12 +++
- .../boot/dts/amlogic/meson-g12a-x96-max.dts   | 84 +++++++++++++++++++
- 3 files changed, 131 insertions(+)
-
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
+index 0edbd00b358f..0ba28491e2b0 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
+@@ -6,6 +6,8 @@
+ /dts-v1/;
+ 
+ #include "meson-g12a.dtsi"
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/gpio/meson-g12a-gpio.h>
+ 
+ / {
+ 	compatible = "amediatech,x96-max", "amlogic,u200", "amlogic,g12a";
+@@ -21,6 +23,71 @@
+ 		device_type = "memory";
+ 		reg = <0x0 0x0 0x0 0x40000000>;
+ 	};
++
++	flash_1v8: regulator-flash_1v8 {
++		compatible = "regulator-fixed";
++		regulator-name = "FLASH_1V8";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		vin-supply = <&vcc_3v3>;
++		regulator-always-on;
++	};
++
++	dc_in: regulator-dc_in {
++		compatible = "regulator-fixed";
++		regulator-name = "DC_IN";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		regulator-always-on;
++	};
++
++	vcc_1v8: regulator-vcc_1v8 {
++		compatible = "regulator-fixed";
++		regulator-name = "VCC_1V8";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		vin-supply = <&vcc_3v3>;
++		regulator-always-on;
++	};
++
++	vcc_3v3: regulator-vcc_3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "VCC_3V3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		vin-supply = <&vddao_3v3>;
++		regulator-always-on;
++		/* FIXME: actually controlled by VDDCPU_B_EN */
++	};
++
++	vcc_5v: regulator-vcc_5v {
++		compatible = "regulator-fixed";
++		regulator-name = "VCC_5V";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		vin-supply = <&dc_in>;
++
++		gpio = <&gpio GPIOH_8 GPIO_OPEN_DRAIN>;
++		enable-active-low;
++	};
++
++	vddao_1v8: regulator-vddao_1v8 {
++		compatible = "regulator-fixed";
++		regulator-name = "VDDAO_1V8";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		vin-supply = <&vddao_3v3>;
++		regulator-always-on;
++	};
++
++	vddao_3v3: regulator-vddao_3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "VDDAO_3V3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		vin-supply = <&dc_in>;
++		regulator-always-on;
++	};
+ };
+ 
+ &uart_AO {
 -- 
 2.21.0
 
