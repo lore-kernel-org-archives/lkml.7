@@ -2,45 +2,49 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 667A6C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:27:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F035DC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:27:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 437FA2070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:27:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB4B12070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:27:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730500AbfCYV1G (ORCPT
+        id S1730535AbfCYV1K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 17:27:06 -0400
-Received: from smtprelay0160.hostedemail.com ([216.40.44.160]:37157 "EHLO
+        Mon, 25 Mar 2019 17:27:10 -0400
+Received: from smtprelay0086.hostedemail.com ([216.40.44.86]:50341 "EHLO
         smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729693AbfCYV1G (ORCPT
+        by vger.kernel.org with ESMTP id S1729693AbfCYV1K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 17:27:06 -0400
+        Mon, 25 Mar 2019 17:27:10 -0400
 Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 6C4FA180A8136;
-        Mon, 25 Mar 2019 21:27:04 +0000 (UTC)
+        by smtprelay07.hostedemail.com (Postfix) with ESMTP id B6988181D341F;
+        Mon, 25 Mar 2019 21:27:08 +0000 (UTC)
 X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: drop16_206a926781a2e
-X-Filterd-Recvd-Size: 3575
+X-HE-Tag: brass23_20f9e36b16e4b
+X-Filterd-Recvd-Size: 3426
 Received: from joe-laptop.perches.com (unknown [47.151.153.53])
         (Authenticated sender: joe@perches.com)
-        by omf02.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 25 Mar 2019 21:27:02 +0000 (UTC)
+        by omf05.hostedemail.com (Postfix) with ESMTPA;
+        Mon, 25 Mar 2019 21:27:06 +0000 (UTC)
 From:   Joe Perches <joe@perches.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     Alexander Aring <alex.aring@gmail.com>,
-        Stefan Schmidt <stefan@datenfreihafen.org>,
-        linux-wpan@vger.kernel.org, Varka Bhadram <varkab@cdac.in>,
+Cc:     James Bottomley <jejb@linux.ibm.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
+        Mimi Zohar <zohar@us.ibm.com>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jmorris@namei.org>,
+        Denis Kenzior <denkenz@gmail.com>,
         Marcel Holtmann <marcel@holtmann.org>,
-        "David S . Miller" <davem@davemloft.net>
-Subject: Bad file pattern in MAINTAINERS section 'IEEE 802.15.4 SUBSYSTEM'
-Date:   Mon, 25 Mar 2019 14:27:01 -0700
-Message-Id: <20190325212701.26768-1-joe@perches.com>
+        James Morris <james.morris@microsoft.com>
+Subject: Bad file pattern in MAINTAINERS section 'KEYS-TRUSTED'
+Date:   Mon, 25 Mar 2019 14:27:05 -0700
+Message-Id: <20190325212705.26837-1-joe@perches.com>
 X-Mailer: git-send-email 2.15.0
 In-Reply-To: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com>
 References: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com>
@@ -64,60 +68,53 @@ Please fix this defect appropriately.
 
 linux-next MAINTAINERS section:
 
-	7509	IEEE 802.15.4 SUBSYSTEM
-	7510	M:	Alexander Aring <alex.aring@gmail.com>
-	7511	M:	Stefan Schmidt <stefan@datenfreihafen.org>
-	7512	L:	linux-wpan@vger.kernel.org
-	7513	W:	http://wpan.cakelab.org/
-	7514	T:	git git://git.kernel.org/pub/scm/linux/kernel/git/sschmidt/wpan.git
-	7515	T:	git git://git.kernel.org/pub/scm/linux/kernel/git/sschmidt/wpan-next.git
-	7516	S:	Maintained
-	7517	F:	net/ieee802154/
-	7518	F:	net/mac802154/
-	7519	F:	drivers/net/ieee802154/
-	7520	F:	include/linux/nl802154.h
-	7521	F:	include/linux/ieee802154.h
-	7522	F:	include/net/nl802154.h
-	7523	F:	include/net/mac802154.h
-	7524	F:	include/net/af_ieee802154.h
-	7525	F:	include/net/cfg802154.h
-	7526	F:	include/net/ieee802154_netdev.h
--->	7527	F:	Documentation/networking/ieee802154.txt
+	8587	KEYS-TRUSTED
+	8588	M:	James Bottomley <jejb@linux.ibm.com>
+	8589	M:      Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+	8590	M:	Mimi Zohar <zohar@linux.ibm.com>
+	8591	L:	linux-integrity@vger.kernel.org
+	8592	L:	keyrings@vger.kernel.org
+	8593	S:	Supported
+	8594	F:	Documentation/security/keys/trusted-encrypted.rst
+	8595	F:	include/keys/trusted-type.h
+	8596	F:	security/keys/trusted.c
+-->	8597	F:	security/keys/trusted.h
 
 2: ---------------------------------------------------------------------------
 
-The most recent commit that added or modified file pattern 'Documentation/networking/ieee802154.txt':
+The most recent commit that added or modified file pattern 'security/keys/trusted.h':
 
-commit ebef9c1236170fb3ba4dc05ccb41f6d842eb1c12
-Author: Varka Bhadram <varkab@cdac.in>
-Date:   Fri Aug 8 17:32:45 2014 +0530
+commit 7f3c68bee977ab872827e44de017216736fe21d7
+Author: Mimi Zohar <zohar@linux.vnet.ibm.com>
+Date:   Tue Jan 18 09:07:13 2011 -0500
 
-    MAINTAINERS: update maintainers info
+    keys: add trusted and encrypted maintainers
     
-    adds the mailing list address for bluetooth 6loWPAN and
-    IEEE-802.15.4 subsystems. Also adds web page info.
+    Add myself and David Safford as maintainers for trusted/encrypted keys.
     
-    Signed-off-by: Varka Bhadram <varkab@cdac.in>
-    Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+    Signed-off-by: Mimi Zohar <zohar@us.ibm.com>
+    Acked-by: David Howells <dhowells@redhat.com>
+    Signed-off-by: James Morris <jmorris@namei.org>
 
- MAINTAINERS | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ MAINTAINERS | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
 3: ---------------------------------------------------------------------------
 
-The last commit with a real presence of file pattern 'Documentation/networking/ieee802154.txt':
+The last commit with a real presence of file pattern 'security/keys/trusted.h':
 
-commit 8a42eda2582ada073d7320ca703fb5fa49600e87
-Author: Stefan Schmidt <stefan@datenfreihafen.org>
-Date:   Wed Feb 27 20:59:14 2019 +0100
+commit 22447981fc050b5f1bdd0e7cbee89b4152a2b2d8
+Author: Denis Kenzior <denkenz@gmail.com>
+Date:   Tue Oct 9 17:48:49 2018 +0100
 
-    doc: net: ieee802154: remove old plain text docs after switching to rst
+    KEYS: Move trusted.h to include/keys [ver #2]
     
-    The plain text docs are converted to rst now, which allows us to remove
-    the old text file from the tree.
-    
-    Signed-off-by: Stefan Schmidt <stefan@datenfreihafen.org>
-    Signed-off-by: David S. Miller <davem@davemloft.net>
+    Signed-off-by: Denis Kenzior <denkenz@gmail.com>
+    Signed-off-by: David Howells <dhowells@redhat.com>
+    Tested-by: Marcel Holtmann <marcel@holtmann.org>
+    Reviewed-by: Marcel Holtmann <marcel@holtmann.org>
+    Signed-off-by: James Morris <james.morris@microsoft.com>
 
- Documentation/networking/ieee802154.txt | 177 --------------------------------
- 1 file changed, 177 deletions(-)
+ {security => include}/keys/trusted.h | 0
+ security/keys/trusted.c              | 2 +-
+ 2 files changed, 1 insertion(+), 1 deletion(-)
