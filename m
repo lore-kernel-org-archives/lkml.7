@@ -3,33 +3,33 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1572AC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 05:06:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53F99C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 05:06:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D61F82087F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 05:06:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28D5820896
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 05:06:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729400AbfCYFGN (ORCPT
+        id S1729447AbfCYFGV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 01:06:13 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42516 "EHLO mx1.suse.de"
+        Mon, 25 Mar 2019 01:06:21 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42568 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726101AbfCYFGL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 01:06:11 -0400
+        id S1726101AbfCYFGT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 01:06:19 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 9C803AC85;
-        Mon, 25 Mar 2019 05:06:10 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id 40454AC61;
+        Mon, 25 Mar 2019 05:06:17 +0000 (UTC)
 From:   NeilBrown <neilb@suse.com>
 To:     Thomas Graf <tgraf@suug.ch>,
         Herbert Xu <herbert@gondor.apana.org.au>
 Date:   Mon, 25 Mar 2019 16:05:39 +1100
-Subject: [PATCH 1/4] rhashtable: use cmpxchg() in nested_table_alloc()
+Subject: [PATCH 2/4] rhashtable: allow rht_bucket_var to return NULL.
 Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-ID: <155349033954.1111.16843256359207016881.stgit@noble.brown>
+Message-ID: <155349033957.1111.16505338697791203910.stgit@noble.brown>
 In-Reply-To: <155349021177.1111.15681654355431465791.stgit@noble.brown>
 References: <155349021177.1111.15681654355431465791.stgit@noble.brown>
 User-Agent: StGit/0.17.1-dirty
@@ -41,44 +41,146 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-nested_table_alloc() relies on the fact that there is
-at most one spinlock allocated for every slot in the top
-level nested table, so it is not possible for two threads
-to try to allocate the same table at the same time.
+Rather than returning a pointer to a static nulls, rht_bucket_var()
+now returns NULL if the bucket doesn't exist.
+This will make the next patch, which stores a bitlock in the
+bucket pointer, somewhat cleaner.
 
-This assumption is a little fragile (it is not explicit) and is
-unnecessary as cmpxchg() can be used instead.
-
-A future patch will replace the spinlocks by per-bucket bitlocks,
-and then we won't be able to protect the slot pointer with a spinlock.
-
-So replace rcu_assign_pointer() with cmpxchg() - which has equivalent
-barrier properties.
-If it the cmp fails, free the table that was just allocated.
+This change involves introducing __rht_bucket_nested() which is
+like rht_bucket_nested(), but doesn't provide the static nulls,
+and changing rht_bucket_nested() to call this and possible
+provide a static nulls - as is still needed for the non-var case.
 
 Signed-off-by: NeilBrown <neilb@suse.com>
 ---
- lib/rhashtable.c |    8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ include/linux/rhashtable.h |   11 +++++++++--
+ lib/rhashtable.c           |   29 ++++++++++++++++++++---------
+ 2 files changed, 29 insertions(+), 11 deletions(-)
 
-diff --git a/lib/rhashtable.c b/lib/rhashtable.c
-index f65e43fb1ff8..afe01a5048d7 100644
---- a/lib/rhashtable.c
-+++ b/lib/rhashtable.c
-@@ -131,9 +131,11 @@ static union nested_table *nested_table_alloc(struct rhashtable *ht,
- 			INIT_RHT_NULLS_HEAD(ntbl[i].bucket);
- 	}
+diff --git a/include/linux/rhashtable.h b/include/linux/rhashtable.h
+index 86dfa417848d..0c9175aeab8a 100644
+--- a/include/linux/rhashtable.h
++++ b/include/linux/rhashtable.h
+@@ -265,6 +265,8 @@ void rhashtable_destroy(struct rhashtable *ht);
  
--	rcu_assign_pointer(*prev, ntbl);
--
--	return ntbl;
-+	if (cmpxchg(prev, NULL, ntbl) == NULL)
-+		return ntbl;
-+	/* Raced with another thread. */
-+	kfree(ntbl);
-+	return rcu_dereference(*prev);
+ struct rhash_head __rcu **rht_bucket_nested(const struct bucket_table *tbl,
+ 					    unsigned int hash);
++struct rhash_head __rcu **__rht_bucket_nested(const struct bucket_table *tbl,
++					      unsigned int hash);
+ struct rhash_head __rcu **rht_bucket_nested_insert(struct rhashtable *ht,
+ 						   struct bucket_table *tbl,
+ 						   unsigned int hash);
+@@ -294,7 +296,7 @@ static inline struct rhash_head __rcu *const *rht_bucket(
+ static inline struct rhash_head __rcu **rht_bucket_var(
+ 	struct bucket_table *tbl, unsigned int hash)
+ {
+-	return unlikely(tbl->nest) ? rht_bucket_nested(tbl, hash) :
++	return unlikely(tbl->nest) ? __rht_bucket_nested(tbl, hash) :
+ 				     &tbl->buckets[hash];
  }
  
- static struct bucket_table *nested_bucket_table_alloc(struct rhashtable *ht,
+@@ -890,6 +892,8 @@ static inline int __rhashtable_remove_fast_one(
+ 	spin_lock_bh(lock);
+ 
+ 	pprev = rht_bucket_var(tbl, hash);
++	if (!pprev)
++		goto out;
+ 	rht_for_each_from(he, *pprev, tbl, hash) {
+ 		struct rhlist_head *list;
+ 
+@@ -934,6 +938,7 @@ static inline int __rhashtable_remove_fast_one(
+ 		break;
+ 	}
+ 
++out:
+ 	spin_unlock_bh(lock);
+ 
+ 	if (err > 0) {
+@@ -1042,6 +1047,8 @@ static inline int __rhashtable_replace_fast(
+ 	spin_lock_bh(lock);
+ 
+ 	pprev = rht_bucket_var(tbl, hash);
++	if (!pprev)
++		goto out;
+ 	rht_for_each_from(he, *pprev, tbl, hash) {
+ 		if (he != obj_old) {
+ 			pprev = &he->next;
+@@ -1053,7 +1060,7 @@ static inline int __rhashtable_replace_fast(
+ 		err = 0;
+ 		break;
+ 	}
+-
++out:
+ 	spin_unlock_bh(lock);
+ 
+ 	return err;
+diff --git a/lib/rhashtable.c b/lib/rhashtable.c
+index afe01a5048d7..e3b726bf2dd3 100644
+--- a/lib/rhashtable.c
++++ b/lib/rhashtable.c
+@@ -237,8 +237,10 @@ static int rhashtable_rehash_one(struct rhashtable *ht, unsigned int old_hash)
+ 		goto out;
+ 
+ 	err = -ENOENT;
++	if (!pprev)
++		goto out;
+ 
+-	rht_for_each(entry, old_tbl, old_hash) {
++	rht_for_each_from(entry, *pprev, old_tbl, old_hash) {
+ 		err = 0;
+ 		next = rht_dereference_bucket(entry->next, old_tbl, old_hash);
+ 
+@@ -492,6 +494,8 @@ static void *rhashtable_lookup_one(struct rhashtable *ht,
+ 
+ 	elasticity = RHT_ELASTICITY;
+ 	pprev = rht_bucket_var(tbl, hash);
++	if (!pprev)
++		return ERR_PTR(-ENOENT);
+ 	rht_for_each_from(head, *pprev, tbl, hash) {
+ 		struct rhlist_head *list;
+ 		struct rhlist_head *plist;
+@@ -1157,11 +1161,10 @@ void rhashtable_destroy(struct rhashtable *ht)
+ }
+ EXPORT_SYMBOL_GPL(rhashtable_destroy);
+ 
+-struct rhash_head __rcu **rht_bucket_nested(const struct bucket_table *tbl,
+-					    unsigned int hash)
++struct rhash_head __rcu **__rht_bucket_nested(const struct bucket_table *tbl,
++					      unsigned int hash)
+ {
+ 	const unsigned int shift = PAGE_SHIFT - ilog2(sizeof(void *));
+-	static struct rhash_head __rcu *rhnull;
+ 	unsigned int index = hash & ((1 << tbl->nest) - 1);
+ 	unsigned int size = tbl->size >> tbl->nest;
+ 	unsigned int subhash = hash;
+@@ -1179,15 +1182,23 @@ struct rhash_head __rcu **rht_bucket_nested(const struct bucket_table *tbl,
+ 		subhash >>= shift;
+ 	}
+ 
+-	if (!ntbl) {
+-		if (!rhnull)
+-			INIT_RHT_NULLS_HEAD(rhnull);
+-		return &rhnull;
+-	}
++	if (!ntbl)
++		return NULL;
+ 
+ 	return &ntbl[subhash].bucket;
+ 
+ }
++EXPORT_SYMBOL_GPL(__rht_bucket_nested);
++
++struct rhash_head __rcu **rht_bucket_nested(const struct bucket_table *tbl,
++					    unsigned int hash)
++{
++	static struct rhash_head __rcu *rhnull;
++
++	if (!rhnull)
++		INIT_RHT_NULLS_HEAD(rhnull);
++	return __rht_bucket_nested(tbl, hash) ?: &rhnull;
++}
+ EXPORT_SYMBOL_GPL(rht_bucket_nested);
+ 
+ struct rhash_head __rcu **rht_bucket_nested_insert(struct rhashtable *ht,
 
 
