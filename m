@@ -2,115 +2,159 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC91C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 03:21:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E971C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 03:22:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23AB120828
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 03:21:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="xGeJ7KCS"
+	by mail.kernel.org (Postfix) with ESMTP id 173B620828
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 03:22:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729440AbfCYDVo (ORCPT
+        id S1729470AbfCYDWb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 23:21:44 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:37563 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729310AbfCYDVo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 23:21:44 -0400
-Received: by mail-wm1-f65.google.com with SMTP id v14so7413238wmf.2
-        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2019 20:21:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=PZL5T3XpqPXxaGPXLVF+FDWkhfoO8E1V4Dhl71Xctkg=;
-        b=xGeJ7KCSeWkFGa8Z4bFykhqJwVXmpeEsst/o+6N+0nBVzu6n+UE43qpjmrQusjaHcM
-         LP0So7k7B4O2u+/WptUiR8w/V0eUJIPSN4VztX4Xeg+roJNlqun7DRVfHD8xqcoroK0/
-         LxdWOYk4690SQWSvbqLhctlNFF5q8hobU2grqUMBs+ZoCF1bWZDvVFgRccCpYCaolmNX
-         W5A7BxtcQ4E2CD9+/OYAbmhw9daMx/J0zrRgQBJ16kOse3Z9XRveBBGMWD+v5RMoyKMO
-         gglROWde8p+mPuOL94xHN06epxIGD8G8t605unp370kFdwiOd+xxUiZsj8vA+jkNvv5f
-         viuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=PZL5T3XpqPXxaGPXLVF+FDWkhfoO8E1V4Dhl71Xctkg=;
-        b=Q2D6NAatSOrhg/Cfmd11ii0Z3OeLvX9xbMxrXC/W/G8HJYiTpZt601zMUEbXZl5nwL
-         iBvOteC691ryWBek296kNgZEGhwUKoG8Eh8kfkKZLfDtrkSzg06SbtZfJpQ3mcV9VdAK
-         7RI6qBZvexq2w3zBd5vr3iD+Afyn+7+eLDFeE0Jd+8W2STUulqQ4AfrP38oEQ/JL7Wkg
-         AEjo1Tfmas0g8mQFe4+kqZFlV15CQ7OL3CuaV3AfEFyvHxyNpVsu0D/oaglif/nmlFHK
-         oLl/AarGWq8iBKdvGA48+8WNbRTErdi3R3V70v0ddgT0fXtQe30QHXPxWg4Hi1ghCbjF
-         RrMg==
-X-Gm-Message-State: APjAAAV26csw1EMX6Jk0M/tsAPNTPcOnewRfX5whOu9lERRbQrPFLLzX
-        BPu8GzlgMB/Gy6kF6aLdhGyFKy9Sj62SG6BxllsxyQ==
-X-Google-Smtp-Source: APXvYqxZmxjPxGPAlpI+gi006nLnQg0EUNE3Gq1+wEfIbjNHiFg0o1ZW7lmOIPCiqHgMgE7htqIiF2XFHuCuV/Y5La8=
-X-Received: by 2002:a1c:b455:: with SMTP id d82mr4241588wmf.153.1553484102425;
- Sun, 24 Mar 2019 20:21:42 -0700 (PDT)
+        Sun, 24 Mar 2019 23:22:31 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:47040 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729422AbfCYDWa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Mar 2019 23:22:30 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 4C0FAB8ADD95ED1251BD;
+        Mon, 25 Mar 2019 11:22:28 +0800 (CST)
+Received: from localhost.localdomain (10.175.124.28) by smtp.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server (TLS) id 14.3.408.0; Mon, 25 Mar
+ 2019 11:22:22 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Chao Yu <yuchao0@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <devel@driverdev.osuosl.org>
+CC:     LKML <linux-kernel@vger.kernel.org>,
+        <linux-erofs@lists.ozlabs.org>, "Chao Yu" <chao@kernel.org>,
+        Miao Xie <miaoxie@huawei.com>, <weidu.du@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>,
+        Gao Xiang <gaoxiang25@huawei.com>, <stable@vger.kernel.org>
+Subject: [PATCH v2 1/3] staging: erofs: fix error handling when failed to read compresssed data
+Date:   Mon, 25 Mar 2019 11:40:07 +0800
+Message-ID: <20190325034009.38611-1-gaoxiang25@huawei.com>
+X-Mailer: git-send-email 2.17.2
 MIME-Version: 1.0
-References: <20190324110804.68555-1-anup.patel@wdc.com> <LO2P265MB08478847A45E7617FD906F8CD65D0@LO2P265MB0847.GBRP265.PROD.OUTLOOK.COM>
-In-Reply-To: <LO2P265MB08478847A45E7617FD906F8CD65D0@LO2P265MB0847.GBRP265.PROD.OUTLOOK.COM>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Mon, 25 Mar 2019 08:51:31 +0530
-Message-ID: <CAAhSdy0+9rgJtxjhrYAEt1Tem79ixL7sSKUHp63Hf-5sb+31+Q@mail.gmail.com>
-Subject: Re: [PATCH] RISC-V: Always compile mm/init.c with cmodel=medany
-To:     Gary Guo <gary@garyguo.net>
-Cc:     Anup Patel <Anup.Patel@wdc.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        Christoph Hellwig <hch@lst.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-Originating-IP: [10.175.124.28]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 12:44 AM Gary Guo <gary@garyguo.net> wrote:
->
->
->
-> > -----Original Message-----
-> > From: linux-riscv <linux-riscv-bounces@lists.infradead.org> On Behalf O=
-f Anup
-> > Patel
-> > Sent: Sunday, March 24, 2019 11:08
-> > To: Palmer Dabbelt <palmer@sifive.com>; Albert Ou <aou@eecs.berkeley.ed=
-u>
-> > Cc: Anup Patel <Anup.Patel@wdc.com>; linux-kernel@vger.kernel.org; Mike
-> > Rapoport <rppt@linux.ibm.com>; Christoph Hellwig <hch@infradead.org>; A=
-tish
-> > Patra <Atish.Patra@wdc.com>; Paul Walmsley <paul.walmsley@sifive.com>;
-> > linux-riscv@lists.infradead.org; Christoph Hellwig <hch@lst.de>
-> > Subject: [PATCH] RISC-V: Always compile mm/init.c with cmodel=3Dmedany
-> >
-> > diff --git a/arch/riscv/mm/Makefile b/arch/riscv/mm/Makefile
-> > index eb22ab49b3e0..7307609d405b 100644
-> > --- a/arch/riscv/mm/Makefile
-> > +++ b/arch/riscv/mm/Makefile
-> > @@ -3,3 +3,5 @@ obj-y +=3D fault.o
-> >  obj-y +=3D extable.o
-> >  obj-y +=3D ioremap.o
-> >  obj-y +=3D cacheflush.o
-> > +
-> > +CFLAGS_init.o :=3D -mcmodel=3Dmedany
->
-> I think you should also remove CFLAGS_setup.o from kernel/Makefile, as I =
-think it was there solely for the correctness of setup_vm. As setup_vm is n=
-ow in mm/init.o, the old CFLAGS probably isn't needed and should be removed=
- in the same patch. Disclaimer: I haven't tested it.
+Complete read error handling paths for all three kinds of
+compressed pages:
 
-Sure, I will remove it in v2 patch. Thanks for catching.
+ 1) For cache-managed pages, PG_uptodate will be checked since
+    read_endio will unlock and SetPageUptodate for these pages;
 
-Regards,
-Anup
+ 2) For inplaced pages, read_endio cannot SetPageUptodate directly
+    since it should be used to mark the final decompressed data,
+    PG_error will be set with page locked for IO error instead;
+
+ 3) For staging pages, PG_error is used, which is similar to
+    what we do for inplaced pages.
+
+Fixes: 3883a79abd02 ("staging: erofs: introduce VLE decompression support")
+Cc: <stable@vger.kernel.org> # 4.19+
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+---
+
+changelog v2:
+ - [3/3] wrap bio->bi_private assignment into erofs_grab_bio()
+   as suggested by Chao;
+
+This series focus on fixing error handling when failed to read
+compresssed data due to previous incomplete paths.
+
+In addition, the last 2 patches add IO error fault injection
+for reading paths, which I have used to test the first patch as well.
+
+Thanks,
+Gao Xiang
+
+ drivers/staging/erofs/unzip_vle.c | 41 ++++++++++++++++++++++++++-------------
+ 1 file changed, 28 insertions(+), 13 deletions(-)
+
+diff --git a/drivers/staging/erofs/unzip_vle.c b/drivers/staging/erofs/unzip_vle.c
+index bfd52ebd0403..45541be12972 100644
+--- a/drivers/staging/erofs/unzip_vle.c
++++ b/drivers/staging/erofs/unzip_vle.c
+@@ -973,6 +973,7 @@ static int z_erofs_vle_unzip(struct super_block *sb,
+ 	overlapped = false;
+ 	compressed_pages = grp->compressed_pages;
+ 
++	err = 0;
+ 	for (i = 0; i < clusterpages; ++i) {
+ 		unsigned int pagenr;
+ 
+@@ -982,26 +983,39 @@ static int z_erofs_vle_unzip(struct super_block *sb,
+ 		DBG_BUGON(!page);
+ 		DBG_BUGON(!page->mapping);
+ 
+-		if (z_erofs_is_stagingpage(page))
+-			continue;
++		if (!z_erofs_is_stagingpage(page)) {
+ #ifdef EROFS_FS_HAS_MANAGED_CACHE
+-		if (page->mapping == MNGD_MAPPING(sbi)) {
+-			DBG_BUGON(!PageUptodate(page));
+-			continue;
+-		}
++			if (page->mapping == MNGD_MAPPING(sbi)) {
++				if (unlikely(!PageUptodate(page)))
++					err = -EIO;
++				continue;
++			}
+ #endif
+ 
+-		/* only non-head page could be reused as a compressed page */
+-		pagenr = z_erofs_onlinepage_index(page);
++			/*
++			 * only if non-head page can be selected
++			 * for inplace decompression
++			 */
++			pagenr = z_erofs_onlinepage_index(page);
+ 
+-		DBG_BUGON(pagenr >= nr_pages);
+-		DBG_BUGON(pages[pagenr]);
+-		++sparsemem_pages;
+-		pages[pagenr] = page;
++			DBG_BUGON(pagenr >= nr_pages);
++			DBG_BUGON(pages[pagenr]);
++			++sparsemem_pages;
++			pages[pagenr] = page;
++
++			overlapped = true;
++		}
+ 
+-		overlapped = true;
++		/* PG_error needs checking for inplaced and staging pages */
++		if (unlikely(PageError(page))) {
++			DBG_BUGON(PageUptodate(page));
++			err = -EIO;
++		}
+ 	}
+ 
++	if (unlikely(err))
++		goto out;
++
+ 	llen = (nr_pages << PAGE_SHIFT) - work->pageofs;
+ 
+ 	if (z_erofs_vle_workgrp_fmt(grp) == Z_EROFS_VLE_WORKGRP_FMT_PLAIN) {
+@@ -1195,6 +1209,7 @@ pickup_page_for_submission(struct z_erofs_vle_workgroup *grp,
+ 	if (page->mapping == mc) {
+ 		WRITE_ONCE(grp->compressed_pages[nr], page);
+ 
++		ClearPageError(page);
+ 		if (!PagePrivate(page)) {
+ 			/*
+ 			 * impossible to be !PagePrivate(page) for
+-- 
+2.12.2
+
