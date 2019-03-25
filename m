@@ -2,386 +2,305 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3ECAC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:21:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70CBCC4360F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:21:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9448C20828
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:21:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BCC02146F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:21:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="OHrK3IMW"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="j1xr6nKD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729636AbfCYQVU (ORCPT
+        id S1729847AbfCYQVV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 12:21:20 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:45916 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729691AbfCYQVR (ORCPT
+        Mon, 25 Mar 2019 12:21:21 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:42177 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729819AbfCYQVU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 12:21:17 -0400
-Received: by mail-ed1-f67.google.com with SMTP id m16so8055551edd.12
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 09:21:15 -0700 (PDT)
+        Mon, 25 Mar 2019 12:21:20 -0400
+Received: by mail-pl1-f196.google.com with SMTP id cv12so184516plb.9
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 09:21:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=v7tO6H54bJ5hB4z3JTq3f9M5Z/1F2gebkVsbuhakZJE=;
-        b=OHrK3IMWw+iZBohKPEVTgcXGbvqGnIvxMa1ejKcFIwh+PL77uw3dbmDwfKOpJy5+Fa
-         2MOkzwlfr6B3lg2dgN/8CxCv1eUJhq6B8obWJ+wr/cPYWEnN3l4UOlql9w8WkDkVzsgL
-         +4r4f0xs7uz1DMdTm+xy7VO1fWhjKrrrtP0lnTm3hPMRnzdEMyOBE3zdrq2sqYPY2kWL
-         0PQOR/o7LlaY0TDzz8SS6uv36prEU7o5b/jltI07z5xcp8es5azbRw+DoSlmVaC7vLe2
-         INOscUZpe+bgwwb47enwPKrDeB9GKHS5loj6Ww4nqALd5QUaVV115SpCe/iikwCEED75
-         D1tg==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=x2X7Jj4zHFQxOSpY6qpjtHUKXT5JZQadjg/K5Vrur1c=;
+        b=j1xr6nKD+01mvkH9bXNG7RMeDsFONgDvnPkotRTUJSkJ7cUuDpzIYYK1DVhfzEr6yd
+         zjdA2u0vb/n4xxIN8u48NoHpKj0g09v7NEtfRFECXK1hftGxvs7xLyZliFjwGh8oIfdB
+         QtBK3ZMj2kxCUJ648BWG4M805WPl7XjtN+EGo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=v7tO6H54bJ5hB4z3JTq3f9M5Z/1F2gebkVsbuhakZJE=;
-        b=QqSsC6cI6J2WYMquUr8ttZCkHNvvDYWGz/gBPv7VHItapPs3zhaqIrjgVbd5fSheKY
-         Qjp8dNH7vSqITHxnsuRyv2C3D6RQxbG82mi+5cUVp4u0ppMMg6lpIENK6J+jbj/RsxKU
-         KVQBtpnT/vrXZx20exUOsoWPT03RhNQ1SS66HDdCVytG3A2LQ0IDCtNvIaAHLmyjkw+h
-         oPd9VKdut5W7m2/7yzouqmaKvyW7eDm/tGPxy3jMTBy5mBZf4We3PapQHdztkq41Tp9t
-         6hxxYxzTKuWfKPfUvt9pb7NuIbWKA0cvN1hIaEEt7wtwgUFC+4DNG6gaHAacME/qPl77
-         /rhg==
-X-Gm-Message-State: APjAAAXQBKRWbtNKmko2uVvhnpC8DPsQlNQ+0NldGxyrQMP5oQV0SkGg
-        IettJP7NLc/TihX7p3XJof4brA==
-X-Google-Smtp-Source: APXvYqw42rdvd69NTJCKW8Ag3/ZLrpZLKptYqjW8tBNiZsfpE9p/IpxlS6opGPN8xZoof02gvwI6/A==
-X-Received: by 2002:a17:906:5a59:: with SMTP id l25mr14588976ejs.122.1553530874954;
-        Mon, 25 Mar 2019 09:21:14 -0700 (PDT)
-Received: from localhost.localdomain ([193.96.224.244])
-        by smtp.gmail.com with ESMTPSA id e45sm5027759edd.3.2019.03.25.09.21.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 25 Mar 2019 09:21:14 -0700 (PDT)
-From:   Christian Brauner <christian@brauner.io>
-To:     jannh@google.com, khlebnikov@yandex-team.ru, luto@kernel.org,
-        dhowells@redhat.com, serge@hallyn.com, ebiederm@xmission.com,
-        linux-api@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     arnd@arndb.de, keescook@chromium.org, adobriyan@gmail.com,
-        tglx@linutronix.de, mtk.manpages@gmail.com, bl0pbl33p@gmail.com,
-        ldv@altlinux.org, akpm@linux-foundation.org, oleg@redhat.com,
-        nagarathnam.muthusamy@oracle.com, cyphar@cyphar.com,
-        viro@zeniv.linux.org.uk, joel@joelfernandes.org, dancol@google.com,
-        Christian Brauner <christian@brauner.io>
-Subject: [PATCH 1/4] Make anon_inodes unconditional
-Date:   Mon, 25 Mar 2019 17:20:49 +0100
-Message-Id: <20190325162052.28987-2-christian@brauner.io>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190325162052.28987-1-christian@brauner.io>
-References: <20190325162052.28987-1-christian@brauner.io>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=x2X7Jj4zHFQxOSpY6qpjtHUKXT5JZQadjg/K5Vrur1c=;
+        b=pSPrn89DHFMAozURq+ekUjrDBtwa0+D2+RwBu6/PgVOdskXT+XG5s3Jais5VocqmeF
+         WY5avy+Cy7C98zon8+MZm20Vr7WUUQ6yM19Oj9VgowyEAkSXJ72+3HQDx9ouf3E2dgkf
+         65vItKCUfFD7waO0xWqTkJGr2fR9Kw3ETGiBq6gU28GhKAqsHG5f0zBhk2gvNFzMdi3w
+         q2siv34VRUOP8vcCF5+QsnyO7uI1SvNtItq5L0766fT/NI46wVvusNrnfVIAX5mOKfJy
+         7WqegINmCcTiaojZBbmFRI+KpUP8jhfmqdyBGsiyyWq8r0N6ZhyYOBN5IyLdL/Ac0yaP
+         XCAg==
+X-Gm-Message-State: APjAAAVr9BIVwQ8LR1i//Yg0knPIiHGG4r3CwL1a8QptUypzN42JDe8B
+        k/cystwYjhsRpz98gw3d6MsVhw==
+X-Google-Smtp-Source: APXvYqwKsfWmkiVNoucY7boso+eHKCNZf3oAgnzB7iNEgynKfWTmOgJSK6+F7Z05DXbuMxuZVhEkOQ==
+X-Received: by 2002:a17:902:bd96:: with SMTP id q22mr17828575pls.322.1553530879565;
+        Mon, 25 Mar 2019 09:21:19 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
+        by smtp.gmail.com with ESMTPSA id p81sm19511264pfi.186.2019.03.25.09.21.18
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 25 Mar 2019 09:21:19 -0700 (PDT)
+Date:   Mon, 25 Mar 2019 09:21:18 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Harish Bandi <c-hbandi@codeaurora.org>
+Cc:     marcel@holtmann.org, johan.hedberg@gmail.com,
+        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        bgodavar@codeaurora.org, anubhavg@codeaurora.org,
+        devicetree@vger.kernel.org, mark.rutland@arm.com,
+        robh+dt@kernel.org
+Subject: Re: [PATCH v4 1/2] Bluetooth: hci_qca: Added support for WCN3998
+Message-ID: <20190325162118.GV112750@google.com>
+References: <1553513800-27611-1-git-send-email-c-hbandi@codeaurora.org>
+ <1553513800-27611-2-git-send-email-c-hbandi@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1553513800-27611-2-git-send-email-c-hbandi@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+On Mon, Mar 25, 2019 at 05:06:39PM +0530, Harish Bandi wrote:
+> Added new compatible for WCN3998 and corresponding voltage
+> and current values to WCN3998 compatible.
+> Changed driver code to support WCN3998
+> 
+> Signed-off-by: Harish Bandi <c-hbandi@codeaurora.org>
+> ---
+> Changes in V4:
+> - Added is_qca_soc_type_wcn399x_family helper function 
+> - to get the soc type is wcn399x or not.
+> ---
+>  drivers/bluetooth/btqca.c   |  4 ++--
+>  drivers/bluetooth/btqca.h   |  3 ++-
+>  drivers/bluetooth/hci_qca.c | 48 ++++++++++++++++++++++++++++++++-------------
+>  3 files changed, 38 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/bluetooth/btqca.c b/drivers/bluetooth/btqca.c
+> index 6122685..70cab13 100644
+> --- a/drivers/bluetooth/btqca.c
+> +++ b/drivers/bluetooth/btqca.c
+> @@ -344,7 +344,7 @@ int qca_uart_setup(struct hci_dev *hdev, uint8_t baudrate,
+>  
+>  	/* Download rampatch file */
+>  	config.type = TLV_TYPE_PATCH;
+> -	if (soc_type == QCA_WCN3990) {
+> +	if (soc_type >= QCA_WCN3990) {
 
-Make the anon_inodes facility unconditional so that it can be used by core
-VFS code and the pidctl() syscall.
+Move qca_is_wcn399x() to btqca.c and use it here. Export the symbol
+and declare the function in btqca.h, so it can be used in hci_qca.c
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-[christian@brauner.io: adapt commit message to mention pidctl()]
-Signed-off-by: Christian Brauner <christian@brauner.io>
----
- arch/arm/kvm/Kconfig       |  1 -
- arch/arm64/kvm/Kconfig     |  1 -
- arch/mips/kvm/Kconfig      |  1 -
- arch/powerpc/kvm/Kconfig   |  1 -
- arch/s390/kvm/Kconfig      |  1 -
- arch/x86/Kconfig           |  1 -
- arch/x86/kvm/Kconfig       |  1 -
- drivers/base/Kconfig       |  1 -
- drivers/char/tpm/Kconfig   |  1 -
- drivers/dma-buf/Kconfig    |  1 -
- drivers/gpio/Kconfig       |  1 -
- drivers/iio/Kconfig        |  1 -
- drivers/infiniband/Kconfig |  1 -
- drivers/vfio/Kconfig       |  1 -
- fs/Makefile                |  2 +-
- fs/notify/fanotify/Kconfig |  1 -
- fs/notify/inotify/Kconfig  |  1 -
- init/Kconfig               | 10 ----------
- 18 files changed, 1 insertion(+), 27 deletions(-)
+>  		/* Firmware files to download are based on ROM version.
+>  		 * ROM version is derived from last two bytes of soc_ver.
+>  		 */
+> @@ -365,7 +365,7 @@ int qca_uart_setup(struct hci_dev *hdev, uint8_t baudrate,
+>  
+>  	/* Download NVM configuration */
+>  	config.type = TLV_TYPE_NVM;
+> -	if (soc_type == QCA_WCN3990)
+> +	if (soc_type >= QCA_WCN3990)
 
-diff --git a/arch/arm/kvm/Kconfig b/arch/arm/kvm/Kconfig
-index 3f5320f46de2..f591026347a5 100644
---- a/arch/arm/kvm/Kconfig
-+++ b/arch/arm/kvm/Kconfig
-@@ -22,7 +22,6 @@ config KVM
- 	bool "Kernel-based Virtual Machine (KVM) support"
- 	depends on MMU && OF
- 	select PREEMPT_NOTIFIERS
--	select ANON_INODES
- 	select ARM_GIC
- 	select ARM_GIC_V3
- 	select ARM_GIC_V3_ITS
-diff --git a/arch/arm64/kvm/Kconfig b/arch/arm64/kvm/Kconfig
-index a3f85624313e..a67121d419a2 100644
---- a/arch/arm64/kvm/Kconfig
-+++ b/arch/arm64/kvm/Kconfig
-@@ -23,7 +23,6 @@ config KVM
- 	depends on OF
- 	select MMU_NOTIFIER
- 	select PREEMPT_NOTIFIERS
--	select ANON_INODES
- 	select HAVE_KVM_CPU_RELAX_INTERCEPT
- 	select HAVE_KVM_ARCH_TLB_FLUSH_ALL
- 	select KVM_MMIO
-diff --git a/arch/mips/kvm/Kconfig b/arch/mips/kvm/Kconfig
-index 4528bc9c3cb1..eac25aef21e0 100644
---- a/arch/mips/kvm/Kconfig
-+++ b/arch/mips/kvm/Kconfig
-@@ -21,7 +21,6 @@ config KVM
- 	depends on MIPS_FP_SUPPORT
- 	select EXPORT_UASM
- 	select PREEMPT_NOTIFIERS
--	select ANON_INODES
- 	select KVM_GENERIC_DIRTYLOG_READ_PROTECT
- 	select HAVE_KVM_VCPU_ASYNC_IOCTL
- 	select KVM_MMIO
-diff --git a/arch/powerpc/kvm/Kconfig b/arch/powerpc/kvm/Kconfig
-index bfdde04e4905..f53997a8ca62 100644
---- a/arch/powerpc/kvm/Kconfig
-+++ b/arch/powerpc/kvm/Kconfig
-@@ -20,7 +20,6 @@ if VIRTUALIZATION
- config KVM
- 	bool
- 	select PREEMPT_NOTIFIERS
--	select ANON_INODES
- 	select HAVE_KVM_EVENTFD
- 	select HAVE_KVM_VCPU_ASYNC_IOCTL
- 	select SRCU
-diff --git a/arch/s390/kvm/Kconfig b/arch/s390/kvm/Kconfig
-index 767453faacfc..1816ee48eadd 100644
---- a/arch/s390/kvm/Kconfig
-+++ b/arch/s390/kvm/Kconfig
-@@ -21,7 +21,6 @@ config KVM
- 	prompt "Kernel-based Virtual Machine (KVM) support"
- 	depends on HAVE_KVM
- 	select PREEMPT_NOTIFIERS
--	select ANON_INODES
- 	select HAVE_KVM_CPU_RELAX_INTERCEPT
- 	select HAVE_KVM_VCPU_ASYNC_IOCTL
- 	select HAVE_KVM_EVENTFD
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index c1f9b3cf437c..18f2c954464e 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -44,7 +44,6 @@ config X86
- 	#
- 	select ACPI_LEGACY_TABLES_LOOKUP	if ACPI
- 	select ACPI_SYSTEM_POWER_STATES_SUPPORT	if ACPI
--	select ANON_INODES
- 	select ARCH_32BIT_OFF_T			if X86_32
- 	select ARCH_CLOCKSOURCE_DATA
- 	select ARCH_CLOCKSOURCE_INIT
-diff --git a/arch/x86/kvm/Kconfig b/arch/x86/kvm/Kconfig
-index 72fa955f4a15..fc042419e670 100644
---- a/arch/x86/kvm/Kconfig
-+++ b/arch/x86/kvm/Kconfig
-@@ -27,7 +27,6 @@ config KVM
- 	depends on X86_LOCAL_APIC
- 	select PREEMPT_NOTIFIERS
- 	select MMU_NOTIFIER
--	select ANON_INODES
- 	select HAVE_KVM_IRQCHIP
- 	select HAVE_KVM_IRQFD
- 	select IRQ_BYPASS_MANAGER
-diff --git a/drivers/base/Kconfig b/drivers/base/Kconfig
-index 059700ea3521..03f067da12ee 100644
---- a/drivers/base/Kconfig
-+++ b/drivers/base/Kconfig
-@@ -174,7 +174,6 @@ source "drivers/base/regmap/Kconfig"
- config DMA_SHARED_BUFFER
- 	bool
- 	default n
--	select ANON_INODES
- 	select IRQ_WORK
- 	help
- 	  This option enables the framework for buffer-sharing between
-diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
-index 536e55d3919f..f3e4bc490cf0 100644
---- a/drivers/char/tpm/Kconfig
-+++ b/drivers/char/tpm/Kconfig
-@@ -157,7 +157,6 @@ config TCG_CRB
- config TCG_VTPM_PROXY
- 	tristate "VTPM Proxy Interface"
- 	depends on TCG_TPM
--	select ANON_INODES
- 	---help---
- 	  This driver proxies for an emulated TPM (vTPM) running in userspace.
- 	  A device /dev/vtpmx is provided that creates a device pair
-diff --git a/drivers/dma-buf/Kconfig b/drivers/dma-buf/Kconfig
-index 2e5a0faa2cb1..3fc9c2efc583 100644
---- a/drivers/dma-buf/Kconfig
-+++ b/drivers/dma-buf/Kconfig
-@@ -3,7 +3,6 @@ menu "DMABUF options"
- config SYNC_FILE
- 	bool "Explicit Synchronization Framework"
- 	default n
--	select ANON_INODES
- 	select DMA_SHARED_BUFFER
- 	---help---
- 	  The Sync File Framework adds explicit syncronization via
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 3f50526a771f..0f91600c27ae 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -12,7 +12,6 @@ config ARCH_HAVE_CUSTOM_GPIO_H
- 
- menuconfig GPIOLIB
- 	bool "GPIO Support"
--	select ANON_INODES
- 	help
- 	  This enables GPIO support through the generic GPIO library.
- 	  You only need to enable this, if you also want to enable
-diff --git a/drivers/iio/Kconfig b/drivers/iio/Kconfig
-index d08aeb41cd07..1dec0fecb6ef 100644
---- a/drivers/iio/Kconfig
-+++ b/drivers/iio/Kconfig
-@@ -4,7 +4,6 @@
- 
- menuconfig IIO
- 	tristate "Industrial I/O support"
--	select ANON_INODES
- 	help
- 	  The industrial I/O subsystem provides a unified framework for
- 	  drivers for many different types of embedded sensors using a
-diff --git a/drivers/infiniband/Kconfig b/drivers/infiniband/Kconfig
-index a1fb840de45d..d318bab25860 100644
---- a/drivers/infiniband/Kconfig
-+++ b/drivers/infiniband/Kconfig
-@@ -25,7 +25,6 @@ config INFINIBAND_USER_MAD
- 
- config INFINIBAND_USER_ACCESS
- 	tristate "InfiniBand userspace access (verbs and CM)"
--	select ANON_INODES
- 	depends on MMU
- 	---help---
- 	  Userspace InfiniBand access support.  This enables the
-diff --git a/drivers/vfio/Kconfig b/drivers/vfio/Kconfig
-index 9de5ed38da83..3798d77d131c 100644
---- a/drivers/vfio/Kconfig
-+++ b/drivers/vfio/Kconfig
-@@ -22,7 +22,6 @@ menuconfig VFIO
- 	tristate "VFIO Non-Privileged userspace driver framework"
- 	depends on IOMMU_API
- 	select VFIO_IOMMU_TYPE1 if (X86 || S390 || ARM || ARM64)
--	select ANON_INODES
- 	help
- 	  VFIO provides a framework for secure userspace device drivers.
- 	  See Documentation/vfio.txt for more details.
-diff --git a/fs/Makefile b/fs/Makefile
-index 427fec226fae..35945f8139e6 100644
---- a/fs/Makefile
-+++ b/fs/Makefile
-@@ -25,7 +25,7 @@ obj-$(CONFIG_PROC_FS) += proc_namespace.o
- 
- obj-y				+= notify/
- obj-$(CONFIG_EPOLL)		+= eventpoll.o
--obj-$(CONFIG_ANON_INODES)	+= anon_inodes.o
-+obj-y				+= anon_inodes.o
- obj-$(CONFIG_SIGNALFD)		+= signalfd.o
- obj-$(CONFIG_TIMERFD)		+= timerfd.o
- obj-$(CONFIG_EVENTFD)		+= eventfd.o
-diff --git a/fs/notify/fanotify/Kconfig b/fs/notify/fanotify/Kconfig
-index 735bfb2e9190..521dc91d2cb5 100644
---- a/fs/notify/fanotify/Kconfig
-+++ b/fs/notify/fanotify/Kconfig
-@@ -1,7 +1,6 @@
- config FANOTIFY
- 	bool "Filesystem wide access notification"
- 	select FSNOTIFY
--	select ANON_INODES
- 	select EXPORTFS
- 	default n
- 	---help---
-diff --git a/fs/notify/inotify/Kconfig b/fs/notify/inotify/Kconfig
-index b981fc0c8379..0161c74e76e2 100644
---- a/fs/notify/inotify/Kconfig
-+++ b/fs/notify/inotify/Kconfig
-@@ -1,6 +1,5 @@
- config INOTIFY_USER
- 	bool "Inotify support for userspace"
--	select ANON_INODES
- 	select FSNOTIFY
- 	default y
- 	---help---
-diff --git a/init/Kconfig b/init/Kconfig
-index 4592bf7997c0..be8f97e37a76 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -1171,9 +1171,6 @@ config LD_DEAD_CODE_DATA_ELIMINATION
- config SYSCTL
- 	bool
- 
--config ANON_INODES
--	bool
--
- config HAVE_UID16
- 	bool
- 
-@@ -1378,14 +1375,12 @@ config HAVE_FUTEX_CMPXCHG
- config EPOLL
- 	bool "Enable eventpoll support" if EXPERT
- 	default y
--	select ANON_INODES
- 	help
- 	  Disabling this option will cause the kernel to be built without
- 	  support for epoll family of system calls.
- 
- config SIGNALFD
- 	bool "Enable signalfd() system call" if EXPERT
--	select ANON_INODES
- 	default y
- 	help
- 	  Enable the signalfd() system call that allows to receive signals
-@@ -1395,7 +1390,6 @@ config SIGNALFD
- 
- config TIMERFD
- 	bool "Enable timerfd() system call" if EXPERT
--	select ANON_INODES
- 	default y
- 	help
- 	  Enable the timerfd() system call that allows to receive timer
-@@ -1405,7 +1399,6 @@ config TIMERFD
- 
- config EVENTFD
- 	bool "Enable eventfd() system call" if EXPERT
--	select ANON_INODES
- 	default y
- 	help
- 	  Enable the eventfd() system call that allows to receive both
-@@ -1516,7 +1509,6 @@ config KALLSYMS_BASE_RELATIVE
- # syscall, maps, verifier
- config BPF_SYSCALL
- 	bool "Enable bpf() system call"
--	select ANON_INODES
- 	select BPF
- 	select IRQ_WORK
- 	default n
-@@ -1533,7 +1525,6 @@ config BPF_JIT_ALWAYS_ON
- 
- config USERFAULTFD
- 	bool "Enable userfaultfd() system call"
--	select ANON_INODES
- 	depends on MMU
- 	help
- 	  Enable the userfaultfd() system call that allows to intercept and
-@@ -1600,7 +1591,6 @@ config PERF_EVENTS
- 	bool "Kernel performance events and counters"
- 	default y if PROFILING
- 	depends on HAVE_PERF_EVENTS
--	select ANON_INODES
- 	select IRQ_WORK
- 	select SRCU
- 	help
--- 
-2.21.0
+use qca_is_wcn399x()
 
+>  		snprintf(config.fwname, sizeof(config.fwname),
+>  			 "qca/crnv%02x.bin", rom_ver);
+>  	else
+> diff --git a/drivers/bluetooth/btqca.h b/drivers/bluetooth/btqca.h
+> index c72c56e..bd6a902 100644
+> --- a/drivers/bluetooth/btqca.h
+> +++ b/drivers/bluetooth/btqca.h
+> @@ -132,7 +132,8 @@ enum qca_btsoc_type {
+>  	QCA_INVALID = -1,
+>  	QCA_AR3002,
+>  	QCA_ROME,
+> -	QCA_WCN3990
+> +	QCA_WCN3990,
+> +	QCA_WCN3998,
+>  };
+>  
+>  #if IS_ENABLED(CONFIG_BT_QCA)
+> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+> index 4ea995d..e238c2b 100644
+> --- a/drivers/bluetooth/hci_qca.c
+> +++ b/drivers/bluetooth/hci_qca.c
+> @@ -189,6 +189,14 @@ static enum qca_btsoc_type qca_soc_type(struct hci_uart *hu)
+>  	return soc_type;
+>  }
+>  
+> +bool is_qca_soc_type_wcn399x_family(enum qca_btsoc_type soc_type)
+
+This long function name doesn't provide much value and degrades
+readability of the code that uses it. A short name like
+qca_is_wcn399x() is clear enough and friendlier to the code reader's
+eyes.
+
+> +{
+> +	if ((soc_type  == QCA_WCN3990) || (soc_type  == QCA_WCN3998))
+> +		return true;
+> +
+> +	return false;
+> +}
+> +
+>  static void __serial_clock_on(struct tty_struct *tty)
+>  {
+>  	/* TODO: Some chipset requires to enable UART clock on client
+> @@ -521,7 +529,7 @@ static int qca_open(struct hci_uart *hu)
+>  	if (hu->serdev) {
+>  
+>  		qcadev = serdev_device_get_drvdata(hu->serdev);
+> -		if (qcadev->btsoc_type != QCA_WCN3990) {
+> +		if (!is_qca_soc_type_wcn399x_family(qcadev->btsoc_type)) {
+>  			gpiod_set_value_cansleep(qcadev->bt_en, 1);
+>  		} else {
+>  			hu->init_speed = qcadev->init_speed;
+> @@ -627,7 +635,7 @@ static int qca_close(struct hci_uart *hu)
+>  
+>  	if (hu->serdev) {
+>  		qcadev = serdev_device_get_drvdata(hu->serdev);
+> -		if (qcadev->btsoc_type == QCA_WCN3990)
+> +		if (is_qca_soc_type_wcn399x_family(qcadev->btsoc_type))
+>  			qca_power_shutdown(hu);
+>  		else
+>  			gpiod_set_value_cansleep(qcadev->bt_en, 0);
+> @@ -1008,7 +1016,7 @@ static int qca_set_baudrate(struct hci_dev *hdev, uint8_t baudrate)
+>  		      msecs_to_jiffies(CMD_TRANS_TIMEOUT_MS));
+>  
+>  	/* Give the controller time to process the request */
+> -	if (qca_soc_type(hu) == QCA_WCN3990)
+> +	if (is_qca_soc_type_wcn399x_family(qca_soc_type(hu)))
+>  		msleep(10);
+>  	else
+>  		msleep(300);
+> @@ -1084,7 +1092,7 @@ static unsigned int qca_get_speed(struct hci_uart *hu,
+>  
+>  static int qca_check_speeds(struct hci_uart *hu)
+>  {
+> -	if (qca_soc_type(hu) == QCA_WCN3990) {
+> +	if (is_qca_soc_type_wcn399x_family(qca_soc_type(hu)) >= QCA_WCN3990) {
+
+Why '>= QCA_WCN3990'?
+
+>  		if (!qca_get_speed(hu, QCA_INIT_SPEED) &&
+>  		    !qca_get_speed(hu, QCA_OPER_SPEED))
+>  			return -EINVAL;
+> @@ -1116,7 +1124,7 @@ static int qca_set_speed(struct hci_uart *hu, enum qca_speed_type speed_type)
+>  		/* Disable flow control for wcn3990 to deassert RTS while
+>  		 * changing the baudrate of chip and host.
+>  		 */
+> -		if (soc_type == QCA_WCN3990)
+> +		if (is_qca_soc_type_wcn399x_family(soc_type))
+>  			hci_uart_set_flow_control(hu, true);
+>  
+>  		qca_baudrate = qca_get_baudrate_value(speed);
+> @@ -1128,7 +1136,7 @@ static int qca_set_speed(struct hci_uart *hu, enum qca_speed_type speed_type)
+>  		host_set_baudrate(hu, speed);
+>  
+>  error:
+> -		if (soc_type == QCA_WCN3990)
+> +		if (is_qca_soc_type_wcn399x_family(soc_type))
+>  			hci_uart_set_flow_control(hu, false);
+>  	}
+>  
+> @@ -1201,7 +1209,7 @@ static int qca_setup(struct hci_uart *hu)
+>  	/* Patch downloading has to be done without IBS mode */
+>  	clear_bit(STATE_IN_BAND_SLEEP_ENABLED, &qca->flags);
+>  
+> -	if (soc_type == QCA_WCN3990) {
+> +	if (is_qca_soc_type_wcn399x_family(soc_type)) {
+>  		bt_dev_info(hdev, "setting up wcn3990");
+>  
+>  		/* Enable NON_PERSISTENT_SETUP QUIRK to ensure to execute
+> @@ -1232,7 +1240,7 @@ static int qca_setup(struct hci_uart *hu)
+>  		qca_baudrate = qca_get_baudrate_value(speed);
+>  	}
+>  
+> -	if (soc_type != QCA_WCN3990) {
+> +	if (!is_qca_soc_type_wcn399x_family(soc_type)) {
+>  		/* Get QCA version information */
+>  		ret = qca_read_soc_version(hdev, &soc_ver);
+>  		if (ret)
+> @@ -1257,7 +1265,7 @@ static int qca_setup(struct hci_uart *hu)
+>  	}
+>  
+>  	/* Setup bdaddr */
+> -	if (soc_type == QCA_WCN3990)
+> +	if (is_qca_soc_type_wcn399x_family(soc_type))
+>  		hu->hdev->set_bdaddr = qca_set_bdaddr;
+>  	else
+>  		hu->hdev->set_bdaddr = qca_set_bdaddr_rome;
+> @@ -1280,7 +1288,7 @@ static int qca_setup(struct hci_uart *hu)
+>  	.dequeue	= qca_dequeue,
+>  };
+>  
+> -static const struct qca_vreg_data qca_soc_data = {
+> +static const struct qca_vreg_data qca_soc_data_wcn3990 = {
+>  	.soc_type = QCA_WCN3990,
+>  	.vregs = (struct qca_vreg []) {
+>  		{ "vddio",   1800000, 1900000,  15000  },
+> @@ -1291,6 +1299,17 @@ static int qca_setup(struct hci_uart *hu)
+>  	.num_vregs = 4,
+>  };
+>  
+> +static const struct qca_vreg_data qca_soc_data_wcn3998 = {
+> +	.soc_type = QCA_WCN3998,
+> +	.vregs = (struct qca_vreg []) {
+> +		{ "vddio",   1800000, 1900000,  10000  },
+> +		{ "vddxo",   1800000, 1900000,  80000  },
+> +		{ "vddrf",   1300000, 1352000,  300000 },
+> +		{ "vddch0",  3300000, 3300000,  450000 },
+> +	},
+> +	.num_vregs = 4,
+> +};
+> +
+>  static void qca_power_shutdown(struct hci_uart *hu)
+>  {
+>  	struct qca_data *qca = hu->priv;
+> @@ -1424,8 +1443,8 @@ static int qca_serdev_probe(struct serdev_device *serdev)
+>  	qcadev->serdev_hu.serdev = serdev;
+>  	data = of_device_get_match_data(&serdev->dev);
+>  	serdev_device_set_drvdata(serdev, qcadev);
+> -	if (data && data->soc_type == QCA_WCN3990) {
+> -		qcadev->btsoc_type = QCA_WCN3990;
+> +	if (data && is_qca_soc_type_wcn399x_family(data->soc_type)) {
+> +		qcadev->btsoc_type = data->soc_type;
+>  		qcadev->bt_power = devm_kzalloc(&serdev->dev,
+>  						sizeof(struct qca_power),
+>  						GFP_KERNEL);
+> @@ -1489,7 +1508,7 @@ static void qca_serdev_remove(struct serdev_device *serdev)
+>  {
+>  	struct qca_serdev *qcadev = serdev_device_get_drvdata(serdev);
+>  
+> -	if (qcadev->btsoc_type == QCA_WCN3990)
+> +	if (qcadev->btsoc_type >= QCA_WCN3990)
+
+use qca_is_wcn399x()
+
+>  		qca_power_shutdown(&qcadev->serdev_hu);
+>  	else
+>  		clk_disable_unprepare(qcadev->susclk);
+> @@ -1499,7 +1518,8 @@ static void qca_serdev_remove(struct serdev_device *serdev)
+>  
+>  static const struct of_device_id qca_bluetooth_of_match[] = {
+>  	{ .compatible = "qcom,qca6174-bt" },
+> -	{ .compatible = "qcom,wcn3990-bt", .data = &qca_soc_data},
+> +	{ .compatible = "qcom,wcn3990-bt", .data = &qca_soc_data_wcn3990},
+> +	{ .compatible = "qcom,wcn3998-bt", .data = &qca_soc_data_wcn3998},
+>  	{ /* sentinel */ }
+>  };
+>  MODULE_DEVICE_TABLE(of, qca_bluetooth_of_match);
