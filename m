@@ -2,152 +2,196 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76170C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 08:00:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C516AC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 08:02:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4018B20830
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 08:00:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 936BD20830
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 08:02:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729942AbfCYIAs (ORCPT
+        id S1729950AbfCYICG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 04:00:48 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34336 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729812AbfCYIAs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 04:00:48 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 69E9EAE8B;
-        Mon, 25 Mar 2019 08:00:46 +0000 (UTC)
-Subject: Re: [PATCH] firmware: edd: fix a NULL pointer dereference
-To:     Kangjie Lu <kjlu@umn.edu>
-Cc:     pakki001@umn.edu, Jiri Kosina <jkosina@suse.cz>,
-        linux-kernel@vger.kernel.org
-References: <20190323221018.13026-1-kjlu@umn.edu>
-From:   Johannes Thumshirn <jthumshirn@suse.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jthumshirn@suse.de; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <1455ed3c-a77d-41de-436f-621169403f94@suse.de>
-Date:   Mon, 25 Mar 2019 09:00:45 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.0
+        Mon, 25 Mar 2019 04:02:06 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:42561 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729812AbfCYICF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 04:02:05 -0400
+Received: by mail-io1-f71.google.com with SMTP id i1so7284988ioq.9
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 01:02:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=dVZIxEfXukrD5ihgyOeTyg/2nUQwrj0xIEaYunjoTWc=;
+        b=JG9VQLltfeUtwCBC2iIXxvs3SAaKKg/erezHrfe0DFI3JP32gWOBZdG5gsqcZ9IkOf
+         LI2rOtvlmiFfEZzCx9S322wBMqqy4jxBQ3KQSXSmcDC/OelP/1VES3bq17RghXAUQys6
+         JPczolPirEL2pO+WKldvLBjQiPiZV297uKjyiVc0++vZqWAfig0ZOZ/69iMo5TCoFCrE
+         Q1n6lMDXTIGTEyM/IuUJYg/WGQcBPO889LC/Au4QY4OYRg+SHSx/NvZYOcenhooxHf/G
+         Ty+chM47l6WeK4mdFxp3oKgiLj9/VBwYawmcT0CdZpX8I4peowpr9VOVKEj7HljCxWYi
+         I27A==
+X-Gm-Message-State: APjAAAUpF7tIs8bbHUrpmdw1vNyqrXBatyQFKqclc+kqjnAdyfK83b9e
+        C7nQ6Z5VMLIlA26Sx2dkCPifpBq1lR/+4qrnWHvl+bffdKXc
+X-Google-Smtp-Source: APXvYqw6p4CmPLZawh/6VHBFQ2ri2a2d6Xsjg2vD2NXXV2ea4PepaZNZ2wJpho05PQi1Y8ePpSA/PIMbpM9KwixOj/Bwh3LpJcwj
 MIME-Version: 1.0
-In-Reply-To: <20190323221018.13026-1-kjlu@umn.edu>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a6b:c995:: with SMTP id z143mr14356829iof.74.1553500924863;
+ Mon, 25 Mar 2019 01:02:04 -0700 (PDT)
+Date:   Mon, 25 Mar 2019 01:02:04 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000c8f45a0584e69ea9@google.com>
+Subject: KASAN: use-after-free Read in seccomp_notify_release (2)
+From:   syzbot <syzbot+b562969adb2e04af3442@syzkaller.appspotmail.com>
+To:     ast@kernel.org, bpf@vger.kernel.org, coreteam@netfilter.org,
+        daniel@iogearbox.net, davem@davemloft.net, fw@strlen.de,
+        kadlec@blackhole.kfki.hu, kafai@fb.com, keescook@chromium.org,
+        linux-kernel@vger.kernel.org, luto@amacapital.net,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        pablo@netfilter.org, songliubraving@fb.com,
+        syzkaller-bugs@googlegroups.com, wad@chromium.org, wenxu@ucloud.cn,
+        yhs@fb.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/03/2019 23:10, Kangjie Lu wrote:
-> As other functions in this module do, edev should be checked to
-> ensure that it is not NULL.
-> The fix inserts such as check to avoid potential NULL pointer
-> dereference.
-> 
-> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-> ---
->  drivers/firmware/edd.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/firmware/edd.c b/drivers/firmware/edd.c
-> index 1b82c89a49df..7ebfaca53721 100644
-> --- a/drivers/firmware/edd.c
-> +++ b/drivers/firmware/edd.c
-> @@ -279,6 +279,8 @@ static ssize_t
->  edd_show_mbr_signature(struct edd_device *edev, char *buf)
->  {
->  	char *p = buf;
-> +	if (!edev)
-> +		return -EINVAL;
+Hello,
+
+syzbot found the following crash on:
+
+HEAD commit:    1bdd3dbf Merge tag 'io_uring-20190323' of git://git.kernel..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=12ae5b93200000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=9a31fb246de2a622
+dashboard link: https://syzkaller.appspot.com/bug?extid=b562969adb2e04af3442
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=162ca25d200000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1733b53b200000
+
+The bug was bisected to:
+
+commit a799aea0988ea0d1b1f263e996fdad2f6133c680
+Author: wenxu <wenxu@ucloud.cn>
+Date:   Wed Jan 9 02:40:11 2019 +0000
+
+     netfilter: nft_flow_offload: Fix reverse route lookup
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10dcc517200000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=12dcc517200000
+console output: https://syzkaller.appspot.com/x/log.txt?x=14dcc517200000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+b562969adb2e04af3442@syzkaller.appspotmail.com
+Fixes: a799aea0988e ("netfilter: nft_flow_offload: Fix reverse route  
+lookup")
+
+==================================================================
+BUG: KASAN: use-after-free in __lock_acquire+0x2d5e/0x3fb0  
+kernel/locking/lockdep.c:3573
+Read of size 8 at addr ffff8880a621d080 by task syz-executor365/8267
+
+CPU: 0 PID: 8267 Comm: syz-executor365 Not tainted 5.1.0-rc1+ #35
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  print_address_description.cold+0x7c/0x20d mm/kasan/report.c:187
+  kasan_report.cold+0x1b/0x40 mm/kasan/report.c:317
+  __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:132
+  __lock_acquire+0x2d5e/0x3fb0 kernel/locking/lockdep.c:3573
+  lock_acquire+0x16f/0x3f0 kernel/locking/lockdep.c:4211
+  __mutex_lock_common kernel/locking/mutex.c:925 [inline]
+  __mutex_lock+0xf7/0x1310 kernel/locking/mutex.c:1072
+  mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1087
+  seccomp_notify_release+0x62/0x280 kernel/seccomp.c:984
+  __fput+0x2e5/0x8d0 fs/file_table.c:278
+  ____fput+0x16/0x20 fs/file_table.c:309
+  task_work_run+0x14a/0x1c0 kernel/task_work.c:113
+  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+  exit_to_usermode_loop+0x273/0x2c0 arch/x86/entry/common.c:166
+  prepare_exit_to_usermode arch/x86/entry/common.c:197 [inline]
+  syscall_return_slowpath arch/x86/entry/common.c:268 [inline]
+  do_syscall_64+0x52d/0x610 arch/x86/entry/common.c:293
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x405621
+Code: 75 14 b8 03 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 04 19 00 00 c3 48  
+83 ec 08 e8 6a fc ff ff 48 89 04 24 b8 03 00 00 00 0f 05 <48> 8b 3c 24 48  
+89 c2 e8 b3 fc ff ff 48 89 d0 48 83 c4 08 48 3d 01
+RSP: 002b:00007ffe1ebba1e0 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
+RAX: 0000000000000000 RBX: 0000000000000004 RCX: 0000000000405621
+RDX: 0000000000000000 RSI: 0000000000000080 RDI: 0000000000000003
+RBP: 0000000000000064 R08: 00007f28ae4ca700 R09: 0000000000000000
+R10: 00007ffe1ebba1f0 R11: 0000000000000293 R12: 00000000006dbc30
+R13: 0000000000000002 R14: 00000000006dbc3c R15: 000000000000002d
+
+Allocated by task 8278:
+  save_stack+0x45/0xd0 mm/kasan/common.c:75
+  set_track mm/kasan/common.c:87 [inline]
+  __kasan_kmalloc mm/kasan/common.c:497 [inline]
+  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:470
+  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:511
+  kmem_cache_alloc_trace+0x151/0x760 mm/slab.c:3621
+  kmalloc include/linux/slab.h:545 [inline]
+  kzalloc include/linux/slab.h:740 [inline]
+  seccomp_prepare_filter kernel/seccomp.c:453 [inline]
+  seccomp_prepare_user_filter kernel/seccomp.c:493 [inline]
+  seccomp_set_mode_filter kernel/seccomp.c:1262 [inline]
+  do_seccomp+0x743/0x2250 kernel/seccomp.c:1376
+  __do_sys_seccomp kernel/seccomp.c:1395 [inline]
+  __se_sys_seccomp kernel/seccomp.c:1392 [inline]
+  __x64_sys_seccomp+0x73/0xb0 kernel/seccomp.c:1392
+  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 8278:
+  save_stack+0x45/0xd0 mm/kasan/common.c:75
+  set_track mm/kasan/common.c:87 [inline]
+  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:459
+  kasan_slab_free+0xe/0x10 mm/kasan/common.c:467
+  __cache_free mm/slab.c:3498 [inline]
+  kfree+0xcf/0x230 mm/slab.c:3821
+  seccomp_filter_free kernel/seccomp.c:567 [inline]
+  seccomp_filter_free kernel/seccomp.c:563 [inline]
+  seccomp_set_mode_filter kernel/seccomp.c:1317 [inline]
+  do_seccomp+0xb00/0x2250 kernel/seccomp.c:1376
+  __do_sys_seccomp kernel/seccomp.c:1395 [inline]
+  __se_sys_seccomp kernel/seccomp.c:1392 [inline]
+  __x64_sys_seccomp+0x73/0xb0 kernel/seccomp.c:1392
+  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff8880a621d000
+  which belongs to the cache kmalloc-192 of size 192
+The buggy address is located 128 bytes inside of
+  192-byte region [ffff8880a621d000, ffff8880a621d0c0)
+The buggy address belongs to the page:
+page:ffffea0002988740 count:1 mapcount:0 mapping:ffff88812c3f0040 index:0x0
+flags: 0x1fffc0000000200(slab)
+raw: 01fffc0000000200 ffffea0002981048 ffffea0002988048 ffff88812c3f0040
+raw: 0000000000000000 ffff8880a621d000 0000000100000010 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+  ffff8880a621cf80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+  ffff8880a621d000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> ffff8880a621d080: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+                    ^
+  ffff8880a621d100: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  ffff8880a621d180: 00 00 fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+==================================================================
 
 
-I don't think this can ever be NULL.
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-edd_show_mbr_signature() is called from edd_attr_show(), which
-simplified looks like this:
-
-define to_edd_device(obj) container_of(obj,struct edd_device,kobj)
-
-edd_attr_show(struct kobject * kobj, struct attribute *attr, char *buf)
-{
-        struct edd_device *dev = to_edd_device(kobj);
-        [...]
-
-        if (edd_attr->show)
-                ret = edd_attr->show(dev, buf);
-        [...]
-}
-
-The edd_device structure has the kobject embedded, otherwise the up-cast
-won't work.
-
-Byte,
-	Johannes
--- 
-Johannes Thumshirn                            SUSE Labs Filesystems
-jthumshirn@suse.de                                +49 911 74053 689
-SUSE LINUX GmbH, Maxfeldstr. 5, 90409 Nürnberg
-GF: Felix Imendörffer, Mary Higgins, Sri Rasiah
-HRB 21284 (AG Nürnberg)
-Key fingerprint = EC38 9CAB C2C4 F25D 8600 D0D0 0393 969D 2D76 0850
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
