@@ -2,103 +2,97 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A150EC4360F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 09:59:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18BB1C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 10:01:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FBF820870
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 09:59:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E59BE206DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 10:01:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730537AbfCYJ7l (ORCPT
+        id S1730472AbfCYKBJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 05:59:41 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5186 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730250AbfCYJ7k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 05:59:40 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id C9F4FB21A0DF1DDCA60A;
-        Mon, 25 Mar 2019 17:59:36 +0800 (CST)
-Received: from [127.0.0.1] (10.202.227.238) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.408.0; Mon, 25 Mar 2019
- 17:59:26 +0800
-Subject: Re: [PATCH v2 2/3] lib: logic_pio: Reject access to unregistered CPU
- MMIO regions
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-References: <1553105650-28012-1-git-send-email-john.garry@huawei.com>
- <1553105650-28012-3-git-send-email-john.garry@huawei.com>
- <CAHp75VfRwp+XGdE6k4KU6hvLNu=h3TRVbm5AFOAZgsp-i1Ehjg@mail.gmail.com>
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Borislav Petkov <bp@suse.de>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Linuxarm <linuxarm@huawei.com>, Alexander Graf <agraf@suse.de>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <3e638993-9541-1ed7-743b-5c2ddba4104e@huawei.com>
-Date:   Mon, 25 Mar 2019 09:59:18 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.3.0
+        Mon, 25 Mar 2019 06:01:09 -0400
+Received: from mga11.intel.com ([192.55.52.93]:11202 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729912AbfCYKBJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 06:01:09 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Mar 2019 03:01:08 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,256,1549958400"; 
+   d="scan'208";a="143599480"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by FMSMGA003.fm.intel.com with SMTP; 25 Mar 2019 03:01:05 -0700
+Received: by lahna (sSMTP sendmail emulation); Mon, 25 Mar 2019 12:01:04 +0200
+Date:   Mon, 25 Mar 2019 12:01:04 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Kangjie Lu <kjlu@umn.edu>
+Cc:     pakki001@umn.edu, Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] thunderbolt: property: fix a buffer overflow and a
+ missing check
+Message-ID: <20190325100104.GE3622@lahna.fi.intel.com>
+References: <20190324224916.1389-1-kjlu@umn.edu>
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VfRwp+XGdE6k4KU6hvLNu=h3TRVbm5AFOAZgsp-i1Ehjg@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.238]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190324224916.1389-1-kjlu@umn.edu>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/03/2019 19:15, Andy Shevchenko wrote:
-> On Wed, Mar 20, 2019 at 8:14 PM John Garry <john.garry@huawei.com> wrote:
->>
->> Currently when accessing logical indirect PIO addresses in
->> logic_{in, out}{,s}, we first ensure that the region is registered.
->>
->> However, no such check exists for CPU MMIO regions. The CPU MMIO regions
->> would be registered by the PCI host (when PCI_IOBASE is defined) in
->> pci_register_io_range().
->>
->> We have seen scenarios when systems which don't have a PCI host or, they
->> do, and the PCI host probe fails, that certain devices attempts to still
->> attempt to access PCI IO ports; examples are in [1] and [2].
->>
->> And even though we would protect against this by ensuring the driver call
->> request_{muxed_}region(), some don't do this:
->>
->
+On Sun, Mar 24, 2019 at 05:49:16PM -0500, Kangjie Lu wrote:
+> First, no memory is allocated for "property->value.text"; the
+> following strcpy will lead to a buffer overflow.
 
-Hi Andy,
+It is actually member of union so assigning via value.txt or value.data
+is the same.
 
->
->>  #if defined(CONFIG_INDIRECT_PIO) && defined(PCI_IOBASE)
->> +#define INVALID_RANGE(range) (!range || \
->> +                             (range->flags == LOGIC_PIO_CPU_MMIO && !range->ops))
->
-> It would be better to read in a form
-> #define foo(x) \
+So no buffer overflow.
 
-Sure, I can change that if you think it reads better.
+> Second, no check is enforced for the return value of kzalloc,
+> which may lead to NULL-pointer dereference.
 
->  (...)
->
->> +               ret = range->ops->in(range->hostdata,                   \
->> +                                    addr, sizeof(type));               \
->
-> Can it fit one line?
+Yes, this is valid.
 
-It should be ok. I can shorten some variable names.
+Can you fix the changelog accordingly and resend?
 
->
-
-Thanks for checking,
-John
-
+> 
+> The patch fixes the two issues.
+> 
+> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+> ---
+>  drivers/thunderbolt/property.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/thunderbolt/property.c b/drivers/thunderbolt/property.c
+> index 841314deb446..d5b0cdb8f0b1 100644
+> --- a/drivers/thunderbolt/property.c
+> +++ b/drivers/thunderbolt/property.c
+> @@ -587,7 +587,12 @@ int tb_property_add_text(struct tb_property_dir *parent, const char *key,
+>  		return -ENOMEM;
+>  
+>  	property->length = size / 4;
+> -	property->value.data = kzalloc(size, GFP_KERNEL);
+> +	property->value.text = kzalloc(size, GFP_KERNEL);
+> +	if (!property->value.text) {
+> +		kfree(property);
+> +		return -ENOMEM;
+> +	}
+> +
+>  	strcpy(property->value.text, text);
+>  
+>  	list_add_tail(&property->list, &parent->properties);
+> -- 
+> 2.17.1
