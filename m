@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F4CDC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 08:37:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C6A9C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 08:37:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EA0320880
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 08:37:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CF6920883
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 08:37:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="y3kNCOz8"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bvvOX3aP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730387AbfCYIhl (ORCPT
+        id S1730405AbfCYIhp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 04:37:41 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:54964 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729929AbfCYIhi (ORCPT
+        Mon, 25 Mar 2019 04:37:45 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:34064 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730384AbfCYIhm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 04:37:38 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2P8bOBu106956;
-        Mon, 25 Mar 2019 03:37:24 -0500
+        Mon, 25 Mar 2019 04:37:42 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2P8b7pY031019;
+        Mon, 25 Mar 2019 03:37:07 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1553503044;
-        bh=F1vNw6974A4SxeLsowTyiNZ0yV33iVQDSJNdrli8b/8=;
+        s=ti-com-17Q1; t=1553503027;
+        bh=dFVQ4pidiC5cYCJgE2pe5Ra71CSY84AMLd39Zm5xel0=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=y3kNCOz8dBIRp1kJky4rjbnokoiNeMhg9+CX8D4GZ3jb/M1ISn0gUgVyujyYT0E6t
-         25GX4h/rYcc/ioIfebB/cBLCBCIwRL3PCKN8DtoB2wWHVLjx3fwOAEXoP+5sJIJ5ID
-         3ohoWPVJxiWiNHx6TCJUTJ+vKCoh+6WC0EYGFuxU=
-Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2P8bOqM017802
+        b=bvvOX3aPuVG2CgTj2NbwKfTkRdjvgSBQ6CFdQo8emOS3EcdAGZ/ZIFDU/gbvGXzTY
+         CwClzWFSqxrwEGPG6D07Z78bRYnpcG6+zPpJZIk2MvYUpc2bFqBoKk6/9TvKc04fgJ
+         BGEROm5xFWM04gDwSGxhs2z9VfJ6N9fGLahK/bVM=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2P8b7lm092499
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 25 Mar 2019 03:37:24 -0500
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+        Mon, 25 Mar 2019 03:37:07 -0500
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 25
- Mar 2019 03:37:23 -0500
-Received: from dlep33.itg.ti.com (157.170.170.75) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_0,
+ Mar 2019 03:37:06 -0500
+Received: from dlep33.itg.ti.com (157.170.170.75) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_0,
  cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5 via Frontend Transport;
- Mon, 25 Mar 2019 03:37:24 -0500
+ Mon, 25 Mar 2019 03:37:06 -0500
 Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by dlep33.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2P8ZsG2006534;
-        Mon, 25 Mar 2019 03:37:20 -0500
+        by dlep33.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2P8ZsFw006534;
+        Mon, 25 Mar 2019 03:37:02 -0500
 From:   Kishon Vijay Abraham I <kishon@ti.com>
 To:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -60,10 +60,11 @@ CC:     Kishon Vijay Abraham I <kishon@ti.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-arm-kernel@axis.com>
-Subject: [PATCH v2 20/26] PCI: dwc: Fix dw_pcie_ep_find_capability to return correct capability offset
-Date:   Mon, 25 Mar 2019 14:04:55 +0530
-Message-ID: <20190325083501.8088-21-kishon@ti.com>
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-arm-kernel@axis.com>, Sekhar Nori <nsekhar@ti.com>
+Subject: [PATCH v2 16/26] PCI: OF: Allow of_pci_get_max_link_speed() to be used by PCI Endpoint drivers
+Date:   Mon, 25 Mar 2019 14:04:51 +0530
+Message-ID: <20190325083501.8088-17-kishon@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190325083501.8088-1-kishon@ti.com>
 References: <20190325083501.8088-1-kishon@ti.com>
@@ -75,58 +76,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit beb4641a787df79a ("PCI: dwc: Add MSI-X callbacks handler") while
-adding MSI-X callback handler, introduced dw_pcie_ep_find_capability and
-__dw_pcie_ep_find_next_cap for finding the MSI and MSIX capability.
+of_pci_get_max_link_speed() is built only if CONFIG_PCI is enabled.
+Make of_pci_get_max_link_speed() to be also used by PCI Endpoint
+controllers with just CONFIG_PCI_ENDPOINT enabled.
 
-However if MSI or MSIX capability is the last capability (i.e there are
-no additional items in the capabilities list and the Next Capability
-Pointer is set to '0'), __dw_pcie_ep_find_next_cap will return '0'
-even though MSI or MSIX capability may be present. This is because of
-incorrect ordering of "next_cap_ptr" check. Fix it here.
-
-Fixes: beb4641a787df79a142 ("PCI: dwc: Add MSI-X callbacks handler")
 Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Sekhar Nori <nsekhar@ti.com>
 ---
- drivers/pci/controller/dwc/pcie-designware-ep.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/pci/Makefile |  2 +-
+ drivers/pci/of.c     | 44 +++++++++++++++++++++++---------------------
+ 2 files changed, 24 insertions(+), 22 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-index dc6a4bbd3ace..74477ad7467f 100644
---- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-@@ -46,16 +46,19 @@ static u8 __dw_pcie_ep_find_next_cap(struct dw_pcie *pci, u8 cap_ptr,
- 	u8 cap_id, next_cap_ptr;
- 	u16 reg;
+diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
+index 657d642fcc67..28cdd8c0213a 100644
+--- a/drivers/pci/Makefile
++++ b/drivers/pci/Makefile
+@@ -10,10 +10,10 @@ obj-$(CONFIG_PCI)		+= access.o bus.o probe.o host-bridge.o \
+ ifdef CONFIG_PCI
+ obj-$(CONFIG_PROC_FS)		+= proc.o
+ obj-$(CONFIG_SYSFS)		+= slot.o
+-obj-$(CONFIG_OF)		+= of.o
+ obj-$(CONFIG_ACPI)		+= pci-acpi.o
+ endif
  
-+	if (!cap_ptr)
-+		return 0;
-+
- 	reg = dw_pcie_readw_dbi(pci, cap_ptr);
--	next_cap_ptr = (reg & 0xff00) >> 8;
- 	cap_id = (reg & 0x00ff);
++obj-$(CONFIG_OF)		+= of.o
+ obj-$(CONFIG_PCI_QUIRKS)	+= quirks.o
+ obj-$(CONFIG_PCIEPORTBUS)	+= pcie/
+ obj-$(CONFIG_HOTPLUG_PCI)	+= hotplug/
+diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+index 3d32da15c215..8095933f8452 100644
+--- a/drivers/pci/of.c
++++ b/drivers/pci/of.c
+@@ -15,6 +15,7 @@
+ #include <linux/of_pci.h>
+ #include "pci.h"
  
--	if (!next_cap_ptr || cap_id > PCI_CAP_ID_MAX)
-+	if (cap_id > PCI_CAP_ID_MAX)
- 		return 0;
- 
- 	if (cap_id == cap)
- 		return cap_ptr;
- 
-+	next_cap_ptr = (reg & 0xff00) >> 8;
- 	return __dw_pcie_ep_find_next_cap(pci, next_cap_ptr, cap);
++#ifdef CONFIG_PCI
+ void pci_set_of_node(struct pci_dev *dev)
+ {
+ 	if (!dev->bus->dev.of_node)
+@@ -196,27 +197,6 @@ int of_get_pci_domain_nr(struct device_node *node)
  }
+ EXPORT_SYMBOL_GPL(of_get_pci_domain_nr);
  
-@@ -67,9 +70,6 @@ static u8 dw_pcie_ep_find_capability(struct dw_pcie *pci, u8 cap)
- 	reg = dw_pcie_readw_dbi(pci, PCI_CAPABILITY_LIST);
- 	next_cap_ptr = (reg & 0x00ff);
- 
--	if (!next_cap_ptr)
--		return 0;
+-/**
+- * This function will try to find the limitation of link speed by finding
+- * a property called "max-link-speed" of the given device node.
+- *
+- * @node: device tree node with the max link speed information
+- *
+- * Returns the associated max link speed from DT, or a negative value if the
+- * required property is not found or is invalid.
+- */
+-int of_pci_get_max_link_speed(struct device_node *node)
+-{
+-	u32 max_link_speed;
 -
- 	return __dw_pcie_ep_find_next_cap(pci, next_cap_ptr, cap);
+-	if (of_property_read_u32(node, "max-link-speed", &max_link_speed) ||
+-	    max_link_speed > 4)
+-		return -EINVAL;
+-
+-	return max_link_speed;
+-}
+-EXPORT_SYMBOL_GPL(of_pci_get_max_link_speed);
+-
+ /**
+  * of_pci_check_probe_only - Setup probe only mode if linux,pci-probe-only
+  *                           is present and valid
+@@ -537,3 +517,25 @@ int pci_parse_request_of_pci_ranges(struct device *dev,
+ 	return err;
  }
  
++#endif /* CONFIG_PCI */
++
++/**
++ * This function will try to find the limitation of link speed by finding
++ * a property called "max-link-speed" of the given device node.
++ *
++ * @node: device tree node with the max link speed information
++ *
++ * Returns the associated max link speed from DT, or a negative value if the
++ * required property is not found or is invalid.
++ */
++int of_pci_get_max_link_speed(struct device_node *node)
++{
++	u32 max_link_speed;
++
++	if (of_property_read_u32(node, "max-link-speed", &max_link_speed) ||
++	    max_link_speed > 4)
++		return -EINVAL;
++
++	return max_link_speed;
++}
++EXPORT_SYMBOL_GPL(of_pci_get_max_link_speed);
 -- 
 2.17.1
 
