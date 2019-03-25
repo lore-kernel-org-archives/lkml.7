@@ -6,216 +6,249 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31287C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 09:24:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4C95C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 09:24:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE5722085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 09:24:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 918BA2087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 09:24:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730318AbfCYJYA (ORCPT
+        id S1730332AbfCYJYM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 05:24:00 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:42424 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730182AbfCYJX7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 05:23:59 -0400
-Received: by mail-qt1-f196.google.com with SMTP id p20so9384680qtc.9
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 02:23:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zQqIEua7PVyZDl/EKiJcikUcbVrGD83ni60fBHGM7DQ=;
-        b=ACxALl5867kthPZC/QuDBD6cDQ6SYERt5pPlHCjVauIDiyjaRBN7irXzHct1TiNg+o
-         Gl6EsnbkkRI6erDWAurGOE+dhCcz+L+W4TgEFy4qFXXm+/93CLGsX8oIezBreepZFUgB
-         bBJLXGP+W12/DXS4byppTBX6DV0H82di5hON9uC5mDN1xU9007ogcgnAixcqCv+blRz0
-         gN9p+NylJ7OuYrI+Sgsu6IHEGLQTBz08qbolRADliCCaLf0bB9lVsaImAWJ2gcNJ5O1y
-         GxB1vNLta1Vh7k00GRjC+V6xp3ODDxVJj6CzlhbaU8q0wQ3LddtTCWxu8fY0xe0hfqeh
-         jTEQ==
-X-Gm-Message-State: APjAAAW5JnKmvZmVfN3Pc+Jgz2st8M4eA9XwRu0xCzxdOwSQeg3vb0VA
-        nc3kVxQkmzEsR6Uw4sSVlOF/OS7EMWtOm+eZz9dHXQ==
-X-Google-Smtp-Source: APXvYqwSt5Av2PLA28F7GqE1NfEKf53jPEY8527dvLS/x3Q2M8+yFIM3vsWEs+oBx7Em1+i7bCJRuI065m0MRJa0BuI=
-X-Received: by 2002:ac8:2cd6:: with SMTP id 22mr19701937qtx.112.1553505838462;
- Mon, 25 Mar 2019 02:23:58 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190324191035.18705-1-hotwater438@tutanota.com>
-In-Reply-To: <20190324191035.18705-1-hotwater438@tutanota.com>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Mon, 25 Mar 2019 10:23:47 +0100
-Message-ID: <CAO-hwJK6XU=4tXoe79cdp0OjchB2RzEGTX+WHx5NRRgWmkXXOw@mail.gmail.com>
-Subject: Re: [PATCH] ELAN touchpad i2c_hid bugs fix
-To:     Vladislav Dalechyn <vlad.dalechin@gmail.com>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        Kai Heng Feng <kai.heng.feng@canonical.com>,
-        Stephen Boyd <swboyd@chromium.org>, bigeasy@linutronix.de,
-        Dmitry Torokhov <dtor@chromium.org>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        h0tw4t3r <hotwater438@tutanota.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 25 Mar 2019 05:24:12 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:43118 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730096AbfCYJYL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 05:24:11 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1071A15AB;
+        Mon, 25 Mar 2019 02:24:11 -0700 (PDT)
+Received: from big-swifty.misterjones.org (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2A01B3F614;
+        Mon, 25 Mar 2019 02:24:08 -0700 (PDT)
+Date:   Mon, 25 Mar 2019 09:24:06 +0000
+Message-ID: <864l7rs3wp.wl-marc.zyngier@arm.com>
+From:   Marc Zyngier <marc.zyngier@arm.com>
+To:     Qiang Zhao <qiang.zhao@nxp.com>
+Cc:     "tglx@linutronix.de" <tglx@linutronix.de>,
+        "jason@lakedaemon.net" <jason@lakedaemon.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [patch v14 3/4] irqchip/qeic: merge qeic_of_init into qe_ic_init
+In-Reply-To: <20190325035418.19065-4-qiang.zhao@nxp.com>
+References: <20190325035418.19065-1-qiang.zhao@nxp.com>
+        <20190325035418.19065-4-qiang.zhao@nxp.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+Organization: ARM Ltd
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vladislav,
-
-we are almost there.
-
-When submitting/applying a patch, we do run ./script/checkpatch.pl on
-the final patch.
-
-This gives us here 2 warnings (inlined below)
-
-Also, can you versionize your submissions (use `-v` in git
-format-patch: `git format-patch -v3 HEAD`).
-
-On Sun, Mar 24, 2019 at 8:10 PM Vladislav Dalechyn
-<vlad.dalechin@gmail.com> wrote:
->
-> From: h0tw4t3r <hotwater438@tutanota.com>
-
-checkpatch.pl complains here:
-WARNING: Missing Signed-off-by: line by nominal patch author 'h0tw4t3r
-<hotwater438@tutanota.com>'
-
-Either:
-- change your git settings and reset the author (git commit --amend
---reset-author)
-- just drop this "From:" from the patch from git format-patch
-
-
->
-> Description: The ELAN1200:04F3:303E touchpad exposes several issues, all
-> caused by an error setting the correct IRQ_TRIGGER flag:
->     - i2c_hid incoplete error flood in journalctl;
->     - Five finger tap kill's module so you have to restart it;
->     - Two finger scoll is working incorrect and sometimes even when you
-> raised one of two finger still thinks that you are scrolling
->
-> Fix all of these with a new quirk that corrects the trigger flag
-> announced by the ACPI tables. (edge-falling).
->
-> Reason behind moving i2c_hid_init_irq section described below:
->     i2c_hid_init_irq now checks for a quirk, so we must setup the quirks
-> before we init the irq, and we cannot setup the quirk earlier, so we must
-> init the irq later.
->
-> Signed-off-by: Vladislav Dalechyn <hotwater438@tutanota.com>
-
-IIRC Andy said Co-developped-by: Hans de Goede <...> here. Does that stand Hans?
-
+On Mon, 25 Mar 2019 03:53:41 +0000,
+Qiang Zhao <qiang.zhao@nxp.com> wrote:
+> 
+> qeic_of_init just get device_node of qeic from dtb and call qe_ic_init,
+> pass the device_node to qe_ic_init.
+> So merge qeic_of_init into qe_ic_init to get the qeic node in
+> qe_ic_init.
+> 
+> Signed-off-by: Zhao Qiang <qiang.zhao@nxp.com>
 > ---
->  drivers/hid/hid-ids.h              |  1 +
->  drivers/hid/i2c-hid/i2c-hid-core.c | 25 +++++++++++++++----------
->  2 files changed, 16 insertions(+), 10 deletions(-)
->
-> diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-> index b6d93f4ad037..660b4e0e912e 100644
-> --- a/drivers/hid/hid-ids.h
-> +++ b/drivers/hid/hid-ids.h
-> @@ -389,6 +389,7 @@
->  #define USB_DEVICE_ID_TOSHIBA_CLICK_L9W        0x0401
->  #define USB_DEVICE_ID_HP_X2            0x074d
->  #define USB_DEVICE_ID_HP_X2_10_COVER   0x0755
-> +#define I2C_DEVICE_ID_ELAN_TOUCHPAD 0x303e
->
->  #define USB_VENDOR_ID_ELECOM           0x056e
->  #define USB_DEVICE_ID_ELECOM_BM084     0x0061
-> diff --git a/drivers/hid/i2c-hid/i2c-hid-core.c b/drivers/hid/i2c-hid/i2c-hid-core.c
-> index 90164fed08d3..9b417914411f 100644
-> --- a/drivers/hid/i2c-hid/i2c-hid-core.c
-> +++ b/drivers/hid/i2c-hid/i2c-hid-core.c
-> @@ -51,6 +51,7 @@
->  #define I2C_HID_QUIRK_NO_RUNTIME_PM            BIT(2)
->  #define I2C_HID_QUIRK_DELAY_AFTER_SLEEP                BIT(3)
->  #define I2C_HID_QUIRK_BOGUS_IRQ                        BIT(4)
-> +#define I2C_HID_QUIRK_FORCE_TRIGGER_FALLING    BIT(5)
->
->  /* flags */
->  #define I2C_HID_STARTED                0
-> @@ -182,8 +183,10 @@ static const struct i2c_hid_quirks {
->                 I2C_HID_QUIRK_NO_RUNTIME_PM },
->         { I2C_VENDOR_ID_GOODIX, I2C_DEVICE_ID_GOODIX_01F0,
->                 I2C_HID_QUIRK_NO_RUNTIME_PM },
-> +       { USB_VENDOR_ID_ELAN, I2C_DEVICE_ID_ELAN_TOUCHPAD,
-> +               I2C_HID_QUIRK_BOGUS_IRQ | I2C_HID_QUIRK_FORCE_TRIGGER_FALLING },
->         { USB_VENDOR_ID_ELAN, HID_ANY_ID,
-> -                I2C_HID_QUIRK_BOGUS_IRQ },
-> +               I2C_HID_QUIRK_BOGUS_IRQ },
->         { 0, 0 }
+>  drivers/irqchip/irq-qeic.c |  110 ++++++++++++--------------------------------
+>  include/soc/fsl/qe/qe_ic.h |    7 ---
+>  2 files changed, 30 insertions(+), 87 deletions(-)
+> 
+> diff --git a/drivers/irqchip/irq-qeic.c b/drivers/irqchip/irq-qeic.c
+> index 673afb4..a6ccbfb 100644
+> --- a/drivers/irqchip/irq-qeic.c
+> +++ b/drivers/irqchip/irq-qeic.c
+> @@ -407,27 +407,30 @@ unsigned int qe_ic_get_high_irq(struct qe_ic *qe_ic)
+>  	return irq_linear_revmap(qe_ic->irqhost, irq);
+>  }
+>  
+> -void __init qe_ic_init(struct device_node *node, unsigned int flags,
+> -		       void (*low_handler)(struct irq_desc *desc),
+> -		       void (*high_handler)(struct irq_desc *desc))
+> +static int __init qe_ic_init(struct device_node *node,
+> +			     struct device_node *parent)
+>  {
+>  	struct qe_ic *qe_ic;
+>  	struct resource res;
+> -	u32 temp = 0, ret, high_active = 0;
+> +	int ret = 0;
+>  
+>  	ret = of_address_to_resource(node, 0, &res);
+> -	if (ret)
+> -		return;
+> +	if (ret) {
+> +		ret = -ENODEV;
+> +		goto err_put_node;
+> +	}
+>  
+>  	qe_ic = kzalloc(sizeof(*qe_ic), GFP_KERNEL);
+> -	if (qe_ic == NULL)
+> -		return;
+> +	if (qe_ic == NULL) {
+> +		ret = -ENOMEM;
+> +		goto err_put_node;
+> +	}
+>  
+>  	qe_ic->irqhost = irq_domain_add_linear(node, NR_QE_IC_INTS,
+>  					       &qe_ic_host_ops, qe_ic);
+>  	if (qe_ic->irqhost == NULL) {
+> -		kfree(qe_ic);
+> -		return;
+> +		ret = -ENOMEM;
+> +		goto err_free_qe_ic;
+>  	}
+>  
+>  	qe_ic->regs = ioremap(res.start, resource_size(&res));
+> @@ -438,42 +441,30 @@ void __init qe_ic_init(struct device_node *node, unsigned int flags,
+>  	qe_ic->virq_low = irq_of_parse_and_map(node, 1);
+>  
+>  	if (qe_ic->virq_low == NO_IRQ) {
+> -		printk(KERN_ERR "Failed to map QE_IC low IRQ\n");
+> -		kfree(qe_ic);
+> -		return;
+> -	}
+> -
+> -	/* default priority scheme is grouped. If spread mode is    */
+> -	/* required, configure cicr accordingly.                    */
+> -	if (flags & QE_IC_SPREADMODE_GRP_W)
+> -		temp |= CICR_GWCC;
+> -	if (flags & QE_IC_SPREADMODE_GRP_X)
+> -		temp |= CICR_GXCC;
+> -	if (flags & QE_IC_SPREADMODE_GRP_Y)
+> -		temp |= CICR_GYCC;
+> -	if (flags & QE_IC_SPREADMODE_GRP_Z)
+> -		temp |= CICR_GZCC;
+> -	if (flags & QE_IC_SPREADMODE_GRP_RISCA)
+> -		temp |= CICR_GRTA;
+> -	if (flags & QE_IC_SPREADMODE_GRP_RISCB)
+> -		temp |= CICR_GRTB;
+> -
+> -	/* choose destination signal for highest priority interrupt */
+> -	if (flags & QE_IC_HIGH_SIGNAL) {
+> -		temp |= (SIGNAL_HIGH << CICR_HPIT_SHIFT);
+> -		high_active = 1;
+> +		pr_err("Failed to map QE_IC low IRQ\n");
+> +		ret = -ENOMEM;
+> +		goto err_domain_remove;
+
+None of this change is documented in the commit log. Why? How can you
+afford to get rid of it without breaking anything?
+
+>  	}
+>  
+> -	qe_ic_write(qe_ic->regs, QEIC_CICR, temp);
+> -
+>  	irq_set_handler_data(qe_ic->virq_low, qe_ic);
+> -	irq_set_chained_handler(qe_ic->virq_low, low_handler);
+> +	irq_set_chained_handler(qe_ic->virq_low, qe_ic_cascade_low_mpic);
+>  
+>  	if (qe_ic->virq_high != NO_IRQ &&
+>  			qe_ic->virq_high != qe_ic->virq_low) {
+>  		irq_set_handler_data(qe_ic->virq_high, qe_ic);
+> -		irq_set_chained_handler(qe_ic->virq_high, high_handler);
+> +		irq_set_chained_handler(qe_ic->virq_high,
+> +					qe_ic_cascade_high_mpic);
+>  	}
+> +	of_node_put(node);
+> +	return 0;
+> +
+> +err_domain_remove:
+> +	irq_domain_remove(qe_ic->irqhost);
+> +err_free_qe_ic:
+> +	kfree(qe_ic);
+> +err_put_node:
+> +	of_node_put(node);
+> +	return ret;
+>  }
+>  
+>  void qe_ic_set_highest_priority(unsigned int virq, int high)
+> @@ -570,45 +561,4 @@ int qe_ic_set_high_priority(unsigned int virq, unsigned int priority, int high)
+>  	return 0;
+>  }
+>  
+> -static struct bus_type qe_ic_subsys = {
+> -	.name = "qe_ic",
+> -	.dev_name = "qe_ic",
+> -};
+> -
+> -static struct device device_qe_ic = {
+> -	.id = 0,
+> -	.bus = &qe_ic_subsys,
+> -};
+> -
+> -static int __init init_qe_ic_sysfs(void)
+> -{
+> -	int rc;
+> -
+> -	printk(KERN_DEBUG "Registering qe_ic with sysfs...\n");
+> -
+> -	rc = subsys_system_register(&qe_ic_subsys, NULL);
+> -	if (rc) {
+> -		printk(KERN_ERR "Failed registering qe_ic sys class\n");
+> -		return -ENODEV;
+> -	}
+> -	rc = device_register(&device_qe_ic);
+> -	if (rc) {
+> -		printk(KERN_ERR "Failed registering qe_ic sys device\n");
+> -		return -ENODEV;
+> -	}
+> -	return 0;
+> -}
+
+You're removing this sysfs stuff. Granted, it is completely
+pointless. Are you sure no userspace ever relied on this thing? In any
+case, this needs documenting.
+
+> -
+> -static int __init qeic_of_init(struct device_node *node,
+> -			       struct device_node *parent)
+> -{
+> -	if (!node)
+> -		return -ENODEV;
+> -	qe_ic_init(node, 0, qe_ic_cascade_low_mpic,
+> -		   qe_ic_cascade_high_mpic);
+> -	of_node_put(node);
+> -	return 0;
+> -}
+> -
+> -IRQCHIP_DECLARE(qeic, "fsl,qe-ic", qeic_of_init);
+> -subsys_initcall(init_qe_ic_sysfs);
+> +IRQCHIP_DECLARE(qeic, "fsl,qe-ic", qe_ic_init);
+> diff --git a/include/soc/fsl/qe/qe_ic.h b/include/soc/fsl/qe/qe_ic.h
+> index 1e155ca..6113699 100644
+> --- a/include/soc/fsl/qe/qe_ic.h
+> +++ b/include/soc/fsl/qe/qe_ic.h
+> @@ -58,16 +58,9 @@ enum qe_ic_grp_id {
 >  };
->
-> @@ -854,6 +857,8 @@ static int i2c_hid_init_irq(struct i2c_client *client)
->
->         if (!irq_get_trigger_type(client->irq))
->                 irqflags = IRQF_TRIGGER_LOW;
-> +       if (ihid->quirks & I2C_HID_QUIRK_FORCE_TRIGGER_FALLING)
-> +               irqflags = IRQF_TRIGGER_FALLING;
->
->         ret = request_threaded_irq(client->irq, NULL, i2c_hid_irq,
->                                    irqflags | IRQF_ONESHOT, client->name, ihid);
-> @@ -1123,14 +1128,10 @@ static int i2c_hid_probe(struct i2c_client *client,
->         if (ret < 0)
->                 goto err_pm;
->
-> -       ret = i2c_hid_init_irq(client);
-> -       if (ret < 0)
-> -               goto err_pm;
-> -
->         hid = hid_allocate_device();
->         if (IS_ERR(hid)) {
->                 ret = PTR_ERR(hid);
-> -               goto err_irq;
-> +               goto err_pm;
->         }
->
->         ihid->hid = hid;
-> @@ -1149,11 +1150,15 @@ static int i2c_hid_probe(struct i2c_client *client,
->
->         ihid->quirks = i2c_hid_lookup_quirk(hid->vendor, hid->product);
->
-> +       ret = i2c_hid_init_irq(client);
-> +       if (ret < 0)
-> +               goto err_mem_free;
-> +
->         ret = hid_add_device(hid);
->         if (ret) {
->                 if (ret != -ENODEV)
->                         hid_err(client, "can't add hid device: %d\n", ret);
-> -               goto err_mem_free;
-> +               goto err_irq;
->         }
->
->         if (!(ihid->quirks & I2C_HID_QUIRK_NO_RUNTIME_PM))
-> @@ -1161,12 +1166,12 @@ static int i2c_hid_probe(struct i2c_client *client,
->
->         return 0;
->
-> +err_irq:
-> +    free_irq(client->irq, ihid);
-> +
+>  
+>  #ifdef CONFIG_QUICC_ENGINE
+> -void qe_ic_init(struct device_node *node, unsigned int flags,
+> -		void (*low_handler)(struct irq_desc *desc),
+> -		void (*high_handler)(struct irq_desc *desc));
+>  unsigned int qe_ic_get_low_irq(struct qe_ic *qe_ic);
+>  unsigned int qe_ic_get_high_irq(struct qe_ic *qe_ic);
+>  #else
+> -static inline void qe_ic_init(struct device_node *node, unsigned int flags,
+> -		void (*low_handler)(struct irq_desc *desc),
+> -		void (*high_handler)(struct irq_desc *desc))
+> -{}
+>  static inline unsigned int qe_ic_get_low_irq(struct qe_ic *qe_ic)
+>  { return 0; }
+>  static inline unsigned int qe_ic_get_high_irq(struct qe_ic *qe_ic)
+> -- 
+> 1.7.1
+> 
 
-WARNING: please, no spaces at the start of a line
-#112: FILE: drivers/hid/i2c-hid/i2c-hid-core.c:1170:
-+    free_irq(client->irq, ihid);$
+Thanks,
 
+	M.
 
-Thanks for fixing these 3 minor issues, and we will be able to merge it :)
-
-Cheers,
-Benjamin
-
->  err_mem_free:
->         hid_destroy_device(hid);
->
-> -err_irq:
-> -       free_irq(client->irq, ihid);
-> -
->  err_pm:
->         pm_runtime_put_noidle(&client->dev);
->         pm_runtime_disable(&client->dev);
-> --
-> 2.20.1
->
+-- 
+Jazz is not dead, it just smell funny.
