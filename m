@@ -2,178 +2,213 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_SBL,URIBL_SBL_A autolearn=ham
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F6C9C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:52:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 941BBC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:55:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3EB52075D
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:52:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6020F20850
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:55:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730056AbfCYSwm (ORCPT
+        id S1730012AbfCYSzG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 14:52:42 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44098 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728912AbfCYSwl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 14:52:41 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 649C2AB965;
-        Mon, 25 Mar 2019 18:52:40 +0000 (UTC)
-Received: from maximlenovopc.usersys.redhat.com (unknown [10.35.206.72])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4E8115DC1B;
-        Mon, 25 Mar 2019 18:52:33 +0000 (UTC)
-Message-ID: <dbec1f2bee53ab786bb4f6204f9a930eac279970.camel@redhat.com>
-Subject: Re: [PATCH 0/9] RFC: NVME VFIO mediated device [BENCHMARKS]
-From:   Maxim Levitsky <mlevitsk@redhat.com>
-To:     linux-nvme@lists.infradead.org
-Cc:     Fam Zheng <fam@euphon.net>, Keith Busch <keith.busch@intel.com>,
-        Sagi Grimberg <sagi@grimberg.me>, kvm@vger.kernel.org,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Liang Cunming <cunming.liang@intel.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        linux-kernel@vger.kernel.org,
-        Kirti Wankhede <kwankhede@nvidia.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jens Axboe <axboe@fb.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        John Ferlan <jferlan@redhat.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Liu Changpeng <changpeng.liu@intel.com>,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>,
-        Amnon Ilan <ailan@redhat.com>, Christoph Hellwig <hch@lst.de>
-Date:   Mon, 25 Mar 2019 20:52:32 +0200
-In-Reply-To: <d41484848b1832192c6978c7054bec5c326afa6d.camel@redhat.com>
-References: <20190319144116.400-1-mlevitsk@redhat.com>
-         <d41484848b1832192c6978c7054bec5c326afa6d.camel@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Mon, 25 Mar 2019 18:52:40 +0000 (UTC)
+        Mon, 25 Mar 2019 14:55:06 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:54693 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729072AbfCYSzG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 14:55:06 -0400
+Received: by mail-io1-f71.google.com with SMTP id c17so8388557iom.21
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 11:55:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=Z0ownJYY0upZe6Bb/8VeBpVkam3XWjAAMDVWKYlaKOY=;
+        b=ZGk+JkCddAqlQ9tjhAqupKxYlTuKPnGLpUTxW5DlDBmIKYTR1VuoHfE3o8j78dKM96
+         LbgI9iZmtD4CXmkkdwMrtxP/iXSqlk0IoRx55TKJ1DRwbtruKUTa3dbEYy9gvT6Oi/UL
+         YGnGvJDBj/s0rHfQT+ZrV3IdG4nCERyfUWFLDpeSBZCGmauP9oL6Db9dAyHKoltFguS+
+         CRaBpXGGa/T94cSnTj91Zo5QuVIWGyS9XG41MYFfuHVeSAantNE6qQGCmIJdrtoQWnEr
+         6lRW9Fv35NaWVxR49uzu7TsXQcQGos/HfG9jovBBtqYhmEpphQbQTtG3sQnpQ5HCHQX3
+         eXJA==
+X-Gm-Message-State: APjAAAVRu0OV18R50/cB1jZS4BeWdUFIIRXdx02AK40G4S9f6s2TOwDv
+        N2ESGPN91pkpzk1BG3lTtLp5WDwDxWEoDiBzLk+xTku6xoAN
+X-Google-Smtp-Source: APXvYqwrngyrwOoM66UYHwaDOiFSHuYBB3RzZK+rHIoSR3GtzB3uXtLkOUrkLdL1Qs65nP7g3NdCSmGFXqRuhqUI5obiALNL5arg
+MIME-Version: 1.0
+X-Received: by 2002:a02:960a:: with SMTP id c10mr19576155jai.31.1553540105042;
+ Mon, 25 Mar 2019 11:55:05 -0700 (PDT)
+Date:   Mon, 25 Mar 2019 11:55:05 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000001b07250584efbee3@google.com>
+Subject: inconsistent lock state in ax25_std_heartbeat_expiry
+From:   syzbot <syzbot+e350b81e95a6a214da8a@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, linux-hams@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        ralf@linux-mips.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+Hello,
 
-This is first round of benchmarks.
+syzbot found the following crash on:
 
-The system is Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
+HEAD commit:    5f543a54 net: hns3: fix for not calculating tx bd num corr..
+git tree:       net
+console output: https://syzkaller.appspot.com/x/log.txt?x=10c8652b200000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f05902bca21d8935
+dashboard link: https://syzkaller.appspot.com/bug?extid=e350b81e95a6a214da8a
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-The system has 2 numa nodes, but only cpus and memory from node 0 were used to
-avoid noise from numa.
+Unfortunately, I don't have any reproducer for this crash yet.
 
-The SSD is Intel® Optane™ SSD 900P Series, 280 GB version
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+e350b81e95a6a214da8a@syzkaller.appspotmail.com
+
+bridge0: received packet on bridge_slave_0 with own address as source  
+address (addr:aa:aa:aa:aa:aa:1b, vlan:0)
+bridge0: received packet on veth0_to_bridge with own address as source  
+address (addr:66:56:21:74:14:df, vlan:0)
+bridge0: received packet on bridge_slave_0 with own address as source  
+address (addr:aa:aa:aa:aa:aa:0c, vlan:0)
+================================
+WARNING: inconsistent lock state
+5.0.0+ #134 Not tainted
+--------------------------------
+inconsistent {SOFTIRQ-ON-W} -> {IN-SOFTIRQ-W} usage.
+ksoftirqd/1/16 [HC0[0]:SC1[1]:HE1:SE0] takes:
+000000008282a7d4 (slock-AF_AX25){+.?.}, at: spin_lock  
+include/linux/spinlock.h:329 [inline]
+000000008282a7d4 (slock-AF_AX25){+.?.}, at:  
+ax25_std_heartbeat_expiry+0x5d/0x3e0 net/ax25/ax25_std_timer.c:37
+{SOFTIRQ-ON-W} state was registered at:
+   lock_acquire+0x16f/0x3f0 kernel/locking/lockdep.c:4211
+   __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
+   _raw_spin_lock+0x2f/0x40 kernel/locking/spinlock.c:144
+   spin_lock include/linux/spinlock.h:329 [inline]
+   ax25_rt_autobind+0x3ca/0x720 net/ax25/ax25_route.c:432
+   ax25_connect.cold+0x30/0xa4 net/ax25/af_ax25.c:1224
+   __sys_connect+0x266/0x330 net/socket.c:1808
+   __do_sys_connect net/socket.c:1819 [inline]
+   __se_sys_connect net/socket.c:1816 [inline]
+   __x64_sys_connect+0x73/0xb0 net/socket.c:1816
+   do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+irq event stamp: 296868110
+hardirqs last  enabled at (296868110): [<ffffffff870f1ad8>]  
+__raw_spin_unlock_irq include/linux/spinlock_api_smp.h:168 [inline]
+hardirqs last  enabled at (296868110): [<ffffffff870f1ad8>]  
+_raw_spin_unlock_irq+0x28/0x90 kernel/locking/spinlock.c:192
+hardirqs last disabled at (296868109): [<ffffffff870f1c4a>]  
+__raw_spin_lock_irq include/linux/spinlock_api_smp.h:126 [inline]
+hardirqs last disabled at (296868109): [<ffffffff870f1c4a>]  
+_raw_spin_lock_irq+0x3a/0x80 kernel/locking/spinlock.c:160
+softirqs last  enabled at (296868102): [<ffffffff87400662>]  
+__do_softirq+0x662/0x95a kernel/softirq.c:320
+softirqs last disabled at (296868107): [<ffffffff8144c8ae>] run_ksoftirqd  
+kernel/softirq.c:655 [inline]
+softirqs last disabled at (296868107): [<ffffffff8144c8ae>]  
+run_ksoftirqd+0x8e/0x110 kernel/softirq.c:647
+
+other info that might help us debug this:
+  Possible unsafe locking scenario:
+
+        CPU0
+        ----
+   lock(slock-AF_AX25);
+   <Interrupt>
+     lock(slock-AF_AX25);
+
+  *** DEADLOCK ***
+
+1 lock held by ksoftirqd/1/16:
+  #0: 00000000654921c3 ((&ax25->timer)){+.-.}, at: lockdep_copy_map  
+include/linux/lockdep.h:170 [inline]
+  #0: 00000000654921c3 ((&ax25->timer)){+.-.}, at: call_timer_fn+0xda/0x720  
+kernel/time/timer.c:1315
+
+stack backtrace:
+CPU: 1 PID: 16 Comm: ksoftirqd/1 Not tainted 5.0.0+ #134
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  print_usage_bug.cold+0x330/0x42a kernel/locking/lockdep.c:2839
+  valid_state kernel/locking/lockdep.c:2852 [inline]
+  mark_lock_irq kernel/locking/lockdep.c:3046 [inline]
+  mark_lock+0xd58/0x1380 kernel/locking/lockdep.c:3421
+  mark_irqflags kernel/locking/lockdep.c:3299 [inline]
+  __lock_acquire+0x1654/0x3fb0 kernel/locking/lockdep.c:3653
+  lock_acquire+0x16f/0x3f0 kernel/locking/lockdep.c:4211
+  __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
+  _raw_spin_lock+0x2f/0x40 kernel/locking/spinlock.c:144
+  spin_lock include/linux/spinlock.h:329 [inline]
+  ax25_std_heartbeat_expiry+0x5d/0x3e0 net/ax25/ax25_std_timer.c:37
+  ax25_heartbeat_expiry+0xf3/0x120 net/ax25/ax25_timer.c:141
+  call_timer_fn+0x190/0x720 kernel/time/timer.c:1325
+  expire_timers kernel/time/timer.c:1362 [inline]
+  __run_timers kernel/time/timer.c:1681 [inline]
+  __run_timers kernel/time/timer.c:1649 [inline]
+  run_timer_softirq+0x652/0x1700 kernel/time/timer.c:1694
+  __do_softirq+0x266/0x95a kernel/softirq.c:293
+  run_ksoftirqd kernel/softirq.c:655 [inline]
+  run_ksoftirqd+0x8e/0x110 kernel/softirq.c:647
+  smpboot_thread_fn+0x6ab/0xa10 kernel/smpboot.c:164
+  kthread+0x357/0x430 kernel/kthread.c:253
+  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
+net_ratelimit: 21613 callbacks suppressed
+bridge0: received packet on veth0_to_bridge with own address as source  
+address (addr:66:56:21:74:14:df, vlan:0)
+bridge0: received packet on bridge_slave_0 with own address as source  
+address (addr:aa:aa:aa:aa:aa:0c, vlan:0)
+bridge0: received packet on veth0_to_bridge with own address as source  
+address (addr:aa:aa:aa:aa:aa:0c, vlan:0)
+bridge0: received packet on veth0_to_bridge with own address as source  
+address (addr:66:56:21:74:14:df, vlan:0)
+bridge0: received packet on bridge_slave_0 with own address as source  
+address (addr:aa:aa:aa:aa:aa:1b, vlan:0)
+bridge0: received packet on bridge_slave_0 with own address as source  
+address (addr:aa:aa:aa:aa:aa:1b, vlan:0)
+bridge0: received packet on bridge_slave_0 with own address as source  
+address (addr:aa:aa:aa:aa:aa:1b, vlan:0)
+bridge0: received packet on bridge_slave_0 with own address as source  
+address (addr:aa:aa:aa:aa:aa:1b, vlan:0)
+bridge0: received packet on bridge_slave_0 with own address as source  
+address (addr:aa:aa:aa:aa:aa:0c, vlan:0)
+bridge0: received packet on veth0_to_bridge with own address as source  
+address (addr:aa:aa:aa:aa:aa:0c, vlan:0)
+net_ratelimit: 16407 callbacks suppressed
+bridge0: received packet on bridge_slave_0 with own address as source  
+address (addr:aa:aa:aa:aa:aa:1b, vlan:0)
+bridge0: received packet on bridge_slave_0 with own address as source  
+address (addr:aa:aa:aa:aa:aa:1b, vlan:0)
+bridge0: received packet on bridge_slave_0 with own address as source  
+address (addr:aa:aa:aa:aa:aa:1b, vlan:0)
+bridge0: received packet on bridge_slave_0 with own address as source  
+address (addr:aa:aa:aa:aa:aa:0c, vlan:0)
+bridge0: received packet on veth0_to_bridge with own address as source  
+address (addr:aa:aa:aa:aa:aa:0c, vlan:0)
+bridge0: received packet on bridge_slave_0 with own address as source  
+address (addr:aa:aa:aa:aa:aa:1b, vlan:0)
+bridge0: received packet on veth0_to_bridge with own address as source  
+address (addr:66:56:21:74:14:df, vlan:0)
+bridge0: received packet on bridge_slave_0 with own address as source  
+address (addr:aa:aa:aa:aa:aa:0c, vlan:0)
+bridge0: received packet on veth0_to_bridge with own address as source  
+address (addr:aa:aa:aa:aa:aa:0c, vlan:0)
+bridge0: received packet on veth0_to_bridge with own address as source  
+address (addr:66:56:21:74:14:df, vlan:0)
 
 
-https://ark.intel.com/content/www/us/en/ark/products/123628/intel-optane-ssd-900p-series-280gb-1-2-height-pcie-x4-20nm-3d-xpoint.html
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-
-** Latency benchmark with no interrupts at all **
-
-spdk was complited with fio plugin in the host and in the guest.
-spdk was first run in the host
-then vm was started with one of spdk,pci passthrough, mdev and inside the
-vm spdk was run with fio plugin.
-
-spdk was taken from my branch on gitlab, and fio was complied from source for
-3.4 branch as needed by the spdk fio plugin.
-
-The following spdk command line was used:
-
-$WORK/fio/fio \
-	--name=job --runtime=40 --ramp_time=0 --time_based \
-	 --filename="trtype=PCIe traddr=$DEVICE_FOR_FIO ns=1" --ioengine=spdk  \
-	--direct=1 --rw=randread --bs=4K --cpus_allowed=0 \
-	--iodepth=1 --thread
-
-The average values for slat (submission latency), clat (completion latency) and
-its sum (slat+clat) were noted.
-
-The results:
-
-spdk fio host: 
-	573 Mib/s - slat 112.00ns, clat 6.400us, lat 6.52ms
-	573 Mib/s - slat 111.50ns, clat 6.406us, lat 6.52ms
-
-
-pci passthough host/
-spdk fio guest
-	571 Mib/s - slat 124.56ns, clat 6.422us  lat 6.55ms
-	571 Mib/s - slat 122.86ns, clat 6.410us  lat 6.53ms
-	570 Mib/s - slat 124.95ns, clat 6.425us  lat 6.55ms
-
-spdk host/
-spdk fio guest:
-	535 Mib/s - slat 125.00ns, clat 6.895us  lat 7.02ms
-	534 Mib/s - slat 125.36ns, clat 6.896us  lat 7.02ms
-	534 Mib/s - slat 125.82ns, clat 6.892us  lat 7.02ms
-
-mdev host/
-spdk fio guest:
-	534 Mib/s - slat 128.04ns, clat 6.902us  lat 7.03ms
-	535 Mib/s - slat 126.97ns, clat 6.900us  lat 7.03ms
-	535 Mib/s - slat 127.00ns, clat 6.898us  lat 7.03ms
-
-
-As you see, native latency is 6.52ms, pci passthrough barely adds any latency,
-while both mdev/spdk added about (7.03/2 - 6.52) - 0.51ms/0.50ms of latency.
-
-In addtion to that I added few 'rdtsc' into my mdev driver to strategically
-capture the cycle count it takes it to do 3 things:
-
-1. translate a just received command (till it is copied to the hardware
-submission queue)
-
-2. receive a completion (divided by the number of completion received in one
-round of polling)
-
-3. deliver an interupt to the guest (call to eventfd_signal)
-
-This is not the whole latency as there is also a latency between the point the
-submission entry is written and till it is visible on the polling cpu, plus
-latency till polling cpu gets to the code which reads the submission entry,
-and of course latency of interrupt delivery, but the above measurements mostly
-capture the latency I can control.
-
-The results are:
-
-commands translated : avg cycles: 459.844     avg time(usec): 0.135        
-commands completed  : avg cycles: 354.61      avg time(usec): 0.104        
-interrupts sent     : avg cycles: 590.227     avg time(usec): 0.174
-
-avg time total: 0.413 usec
-
-All measurmenets done in the host kernel. the time calculated using tsc_khz
-kernel variable.
-
-The biggest take from this is that both spdk and my driver are very fast and
-overhead is just a  thousand of cpu cycles give it or take.
-
-*** Throughput benchmarks ***
-
-https://paste.fedoraproject.org/paste/ecijclLMG2B11MVCVIst-w
-
-Here you can find the throughput benchmarks.
-
-The biggest take is that when using no interrupts (spdk fio in guest or spdk fio
-in host), the bottelneck is in the device, and througput is about 2290 Mib/s
-
-And mdev vs spdk, with interrupts, my driver sligly wins by giving throughput of
-about 2015 Mib/s while spdk is about 2005 Mib/s
-mostly due to slightly different timings as the latency of both is about the
-same.
-
-Disabling meltdown mitigation didn't had much effect on the performance.
-
-Best regards,
-	Maxim Levitsky
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
