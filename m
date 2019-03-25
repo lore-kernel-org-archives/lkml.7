@@ -2,67 +2,65 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C556C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 05:37:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4992AC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 05:37:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C28C2075D
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 05:37:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1654B20870
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 05:37:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="teoIyRCO"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="k206w3C+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729601AbfCYFhR (ORCPT
+        id S1729548AbfCYFhD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 01:37:17 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:47734 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729441AbfCYFhP (ORCPT
+        Mon, 25 Mar 2019 01:37:03 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:59444 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729293AbfCYFhC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 01:37:15 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2P5Xw1t193902;
-        Mon, 25 Mar 2019 05:36:38 GMT
+        Mon, 25 Mar 2019 01:37:02 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2P5YgIH005787;
+        Mon, 25 Mar 2019 05:36:29 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2018-07-02;
- bh=7aA4xWq/tfGdYTPt4hOCXVnTHtj21qv2ydS8SKqRloY=;
- b=teoIyRCOvRsf2FYglfMaTvtgDKe5LUbFVwsWw6Vga9siQtQk71AdKFf+u85iRchnuhrG
- J0wg45Q2BuAD5N87y8iAraSQEpAJ5Tj/AIkm+I1iEWk/m0esNX8++zYys6iWVSx2PQMP
- ROp2zVziesHExnV+5VpDNzrrACCXdCHRqXbz+A5R/y6tK/eKqIRg+SqQrhqb2MDFSDCL
- +0bRp1Niydfzhcx27u289I0NJvyCQ8jnbJa72V3GaLYbcIPIk6IgiTHb880Pa3Kv1dSl
- MOq1vNdskjREectzPZHULn6cT5tQyT40n1ADGmrESL2mBc9xg2XFkEIJggUaAZs6an64 JA== 
-Received: from aserv0022.oracle.com (aserv0022.oracle.com [141.146.126.234])
-        by userp2130.oracle.com with ESMTP id 2re6g0ssd0-1
+ subject : date : message-id; s=corp-2018-07-02;
+ bh=ZAE5EKg7j3MWXmklZuczQM1dXUA/DCU36YdmGVW1W1E=;
+ b=k206w3C+iF8za9tQstaB3L4fUQ6o1X1k7O78O7e5eEUH91v2Nc1ScwM7EzxS10YF4QfR
+ /SzS5lz0MzDmYczgqMBFydEifu2pL6mWoTE63mHl1hm9y4K+Ta+smmvmibTY9KYgQHQV
+ GiD3yZac9sknY1Q3FuSNGtDsPoTUbyclcsWIMaQQwF4bo9maFQJXyLP3nqivNbUKW5pl
+ xwWhh5/0J8nq9jAuExxTD8ULK7m8RCJNcPQyUA2bTooEn2mL0vOrgcX0U2FYM7JA2EQe
+ 4mWhyaWrS4b4VB5KyEpgdAUo2bkzMFCs0Pq3JQTiLTj0sPI4CO6kHaQNrf1Mr10nIJy5 lg== 
+Received: from aserv0021.oracle.com (aserv0021.oracle.com [141.146.126.233])
+        by userp2120.oracle.com with ESMTP id 2re6dj1tpu-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 25 Mar 2019 05:36:38 +0000
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x2P5abWj021269
+        Mon, 25 Mar 2019 05:36:29 +0000
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x2P5aSXX014978
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 25 Mar 2019 05:36:37 GMT
+        Mon, 25 Mar 2019 05:36:28 GMT
 Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x2P5aaZu008897;
-        Mon, 25 Mar 2019 05:36:36 GMT
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x2P5aRlc025211;
+        Mon, 25 Mar 2019 05:36:27 GMT
 Received: from will-ThinkCentre-M93p.cn.oracle.com (/10.182.71.12)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sun, 24 Mar 2019 22:36:36 -0700
+        with ESMTP ; Sun, 24 Mar 2019 22:36:27 -0700
 From:   Jianchao Wang <jianchao.w.wang@oracle.com>
 To:     axboe@kernel.dk
 Cc:     hch@lst.de, jthumshirn@suse.de, hare@suse.de, josef@toxicpanda.com,
         bvanassche@acm.org, sagi@grimberg.me, keith.busch@intel.com,
         jsmart2021@gmail.com, linux-nvme@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH V2 3/8] blk-mq: use blk_mq_queue_tag_inflight_iter in debugfs
-Date:   Mon, 25 Mar 2019 13:28:04 +0800
-Message-Id: <1553491689-1730-4-git-send-email-jianchao.w.wang@oracle.com>
+Subject: [PATCH V2 0/8]: blk-mq: use static_rqs to iterate busy tags
+Date:   Mon, 25 Mar 2019 13:28:01 +0800
+Message-Id: <1553491689-1730-1-git-send-email-jianchao.w.wang@oracle.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1553491689-1730-1-git-send-email-jianchao.w.wang@oracle.com>
-References: <1553491689-1730-1-git-send-email-jianchao.w.wang@oracle.com>
 X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9205 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
  definitions=main-1903250043
@@ -71,27 +69,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-blk_mq_tagset_busy_iter is not safe that it could get stale request
-in tags->rqs[]. Use blk_mq_queue_tag_inflight_iter here.
+Hi Jens
 
-Signed-off-by: Jianchao Wang <jianchao.w.wang@oracle.com>
----
- block/blk-mq-debugfs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+As we know, there is a risk of accesing stale requests when iterate
+in-flight requests with tags->rqs[] and this has been talked in following
+thread,
+[1] https://marc.info/?l=linux-scsi&m=154511693912752&w=2
+[2] https://marc.info/?l=linux-block&m=154526189023236&w=2
 
-diff --git a/block/blk-mq-debugfs.c b/block/blk-mq-debugfs.c
-index ec1d18c..b7f2538 100644
---- a/block/blk-mq-debugfs.c
-+++ b/block/blk-mq-debugfs.c
-@@ -438,7 +438,7 @@ static int hctx_busy_show(void *data, struct seq_file *m)
- 	struct blk_mq_hw_ctx *hctx = data;
- 	struct show_busy_params params = { .m = m, .hctx = hctx };
- 
--	blk_mq_tagset_busy_iter(hctx->queue->tag_set, hctx_show_busy_rq,
-+	blk_mq_queue_tag_inflight_iter(hctx->queue, hctx_show_busy_rq,
- 				&params);
- 
- 	return 0;
--- 
-2.7.4
+A typical sence could be
+blk_mq_get_request         blk_mq_queue_tag_busy_iter
+  -> blk_mq_get_tag
+                             -> bt_for_each
+                               -> bt_iter
+                                 -> rq = taags->rqs[]
+                                 -> rq->q
+  -> blk_mq_rq_ctx_init
+    -> data->hctx->tags->rqs[rq->tag] = rq;
 
+The root cause is that there is a window between set bit on tag sbitmap
+and set tags->rqs[].
+
+This patch would fix this issue by iterating requests with tags->static_rqs[]
+instead of tags->rqs[] which would be changed dynamically. Moreover,
+we will try to get a non-zero q_usage_counter before access hctxs and tags and
+thus could avoid the race with updating nr_hw_queues, switching io scheduler
+and even queue clean up which are all under a frozen and drained queue.
+
+The 1st patch get rid of the useless of synchronize_rcu in __blk_mq_update_nr_hw_queues
+
+The 2nd patch modify the blk_mq_queue_tag_busy_iter to use tags->static_rqs[]
+instead of tags->rqs[] to iterate the busy tags.
+
+The 3rd ~ 7th patch change the blk_mq_tagset_busy_iter to blk_mq_queue_tag_busy_iter
+which is safer
+
+The 8th patch get rid of the blk_mq_tagset_busy_iter.
+
+Change log
+
+V1 -> V2:
+ - Add wrapper to hide the 'infligh' parameter to user based on Sagi's suggestion.
+ - Other misc changes on comment.
+
+Jianchao Wang (8)
+blk-mq: get rid of the synchronize_rcu in
+blk-mq: use static_rqs instead of rqs to iterate tags
+blk-mq: use blk_mq_queue_tag_inflight_iter in debugfs
+mtip32xx: use blk_mq_queue_tag_inflight_iter
+nbd: use blk_mq_queue_tag_inflight_iter
+skd: use blk_mq_queue_tag_inflight_iter
+nvme: use blk_mq_queue_tag_inflight_iter
+blk-mq: remove blk_mq_tagset_busy_iter
+
+diff stat
+ block/blk-mq-debugfs.c            |   2 +-
+ block/blk-mq-tag.c                | 193 ++++++++++++++------------------------
+ block/blk-mq-tag.h                |   4 +-
+ block/blk-mq.c                    |  31 ++----
+ drivers/block/mtip32xx/mtip32xx.c |   6 +-
+ drivers/block/nbd.c               |   2 +-
+ drivers/block/skd_main.c          |   4 +-
+ drivers/nvme/host/core.c          |  12 +++
+ drivers/nvme/host/fc.c            |  10 +-
+ drivers/nvme/host/nvme.h          |   2 +
+ drivers/nvme/host/pci.c           |   5 +-
+ drivers/nvme/host/rdma.c          |   4 +-
+ drivers/nvme/host/tcp.c           |   5 +-
+ drivers/nvme/target/loop.c        |   4 +-
+ include/linux/blk-mq.h            |   7 +-
+ 15 files changed, 119 insertions(+), 172 deletions(-)
+
+Thanks
+Jianchao
