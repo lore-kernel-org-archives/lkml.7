@@ -6,51 +6,51 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60EDAC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:22:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60003C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:22:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CFC92146F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:22:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EB0920830
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:22:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553516554;
-	bh=GD/oSZScTP0QIUZsAdj8ZWjdACgzfdF8tH09RuelXPI=;
+	s=default; t=1553516557;
+	bh=uZ/W2akIcGhdV7mMdHXw317uhp5FGdLa7uqnIUccw7c=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=SquFZ4LgMICqeSkZ6WsI70O+JGKyd/w23K9APIrVdP/fusggA24d9d8C8ytotTC4o
-	 3YSq3Huc91G4UYCnLpInn/3BRywTEjfonEMuYyu8a43bUuMfc1ZjEWE0v+yz6p71Xa
-	 FKDDTT4k8bMbT3u/ELwB0jmvI/XoMq7NUw0tNeFk=
+	b=vq+Z61WvIgSepkk8SbvbTJdiWqOwAvl+jXUCvnGhUvdpuR5C0wcGr0uzkv5uEgK3f
+	 Qt4YAfDSFL1AXKInJ4pm4PBYf5dqqpw9y+TlPgJWPNZsVfbysyxajXG0sFM0eN/Lo0
+	 +5vhrBFyhHzHv24Uj2culbuLvKtCoI0ji3jpXYEM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731193AbfCYMWc (ORCPT
+        id S1731214AbfCYMWf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 08:22:32 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:36550 "EHLO
+        Mon, 25 Mar 2019 08:22:35 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:36612 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731131AbfCYMWa (ORCPT
+        with ESMTP id S1731184AbfCYMWc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 08:22:30 -0400
+        Mon, 25 Mar 2019 08:22:32 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=GUpZ5JfxMEEgCMnkjgv+ubGx6YXQAhDQmG12/cckAl8=; b=YvFdcSSCtbd8
-        zLDHFojO6LAavX9Vhrx+lXV+bk7G0EB1sEU0Hp59ACeiryOU7aOuMQU8s9u7UIAra1TrpaTiUPXUx
-        Oc3akvqiCC5hO1eOp2580fqRPXljLJwTE96kDHIU5N2d2IS/Zae3+TqSjqMKhZE/UCZTMM4UeDHjR
-        I/y84=;
+        List-Archive; bh=KF74b/xDgZ45PFKqr9aWq/eap9AoXio0TSdIUKa7W1s=; b=jU8jOzHE96V2
+        +PNlL7Z9dAARIFTjFSUF/aIDsobUPWQjTOqW0wKAUdb/C0NS+72gN3AGwF9+mAMvnZaAwyw3GUh8M
+        HRNDhemz+cjPFD6sXLR7Z7oiuEHu2jjKe+p3bidFe3Fhz26k0NDs4hJxq5vPgxI6pOKMUbb6GSiq2
+        ublkU=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1h8OcR-00024f-LX; Mon, 25 Mar 2019 12:22:23 +0000
+        id 1h8OcT-00024V-AD; Mon, 25 Mar 2019 12:22:25 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 1019F11288F3; Mon, 25 Mar 2019 12:22:23 +0000 (GMT)
+        id AE5DF11288F1; Mon, 25 Mar 2019 12:22:19 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
 To:     Axel Lin <axel.lin@ingics.com>
 Cc:     Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Applied "regulator: uniphier: Fix build dependency" to the regulator tree
+Subject: Applied "regulator: tps65217: Constify regulator_ops" to the regulator tree
 In-Reply-To: 
 X-Patchwork-Hint: ignore
-Message-Id: <20190325122223.1019F11288F3@debutante.sirena.org.uk>
-Date:   Mon, 25 Mar 2019 12:22:23 +0000 (GMT)
+Message-Id: <20190325122219.AE5DF11288F1@debutante.sirena.org.uk>
+Date:   Mon, 25 Mar 2019 12:22:19 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -58,7 +58,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: uniphier: Fix build dependency
+   regulator: tps65217: Constify regulator_ops
 
 has been applied to the regulator tree at
 
@@ -83,34 +83,42 @@ to this mail.
 Thanks,
 Mark
 
-From a71bcdfe6476b66cf6c632b1a4d0bdcb046e3d82 Mon Sep 17 00:00:00 2001
+From 2c33b50e6201881709b092b9b8566ae4b6dfc3ab Mon Sep 17 00:00:00 2001
 From: Axel Lin <axel.lin@ingics.com>
-Date: Mon, 25 Mar 2019 18:59:19 +0800
-Subject: [PATCH] regulator: uniphier: Fix build dependency
+Date: Sun, 24 Mar 2019 14:00:05 +0800
+Subject: [PATCH] regulator: tps65217: Constify regulator_ops
 
-This driver does not use any syscon APIs, so remove MFD_SYSCON dependency.
-Select REGMAP_MMIO since this driver uses devm_regmap_init_mmio().
+These regulator_ops variables never need to be modified, make them const so
+compiler can put them to .rodata.
 
 Signed-off-by: Axel Lin <axel.lin@ingics.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/Kconfig | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/regulator/tps65217-regulator.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
-index 6d2651cd9887..c4dc2bcafb56 100644
---- a/drivers/regulator/Kconfig
-+++ b/drivers/regulator/Kconfig
-@@ -1011,7 +1011,8 @@ config REGULATOR_TWL4030
- config REGULATOR_UNIPHIER
- 	tristate "UniPhier regulator driver"
- 	depends on ARCH_UNIPHIER || COMPILE_TEST
--	depends on OF && MFD_SYSCON
-+	depends on OF
-+	select REGMAP_MMIO
- 	default ARCH_UNIPHIER
- 	help
- 	  Support for regulators implemented on Socionext UniPhier SoCs.
+diff --git a/drivers/regulator/tps65217-regulator.c b/drivers/regulator/tps65217-regulator.c
+index ada62f792258..b0f5d8dcd741 100644
+--- a/drivers/regulator/tps65217-regulator.c
++++ b/drivers/regulator/tps65217-regulator.c
+@@ -149,7 +149,7 @@ static int tps65217_pmic_set_suspend_disable(struct regulator_dev *dev)
+ }
+ 
+ /* Operations permitted on DCDCx, LDO2, LDO3 and LDO4 */
+-static struct regulator_ops tps65217_pmic_ops = {
++static const struct regulator_ops tps65217_pmic_ops = {
+ 	.is_enabled		= regulator_is_enabled_regmap,
+ 	.enable			= tps65217_pmic_enable,
+ 	.disable		= tps65217_pmic_disable,
+@@ -162,7 +162,7 @@ static struct regulator_ops tps65217_pmic_ops = {
+ };
+ 
+ /* Operations permitted on LDO1 */
+-static struct regulator_ops tps65217_pmic_ldo1_ops = {
++static const struct regulator_ops tps65217_pmic_ldo1_ops = {
+ 	.is_enabled		= regulator_is_enabled_regmap,
+ 	.enable			= tps65217_pmic_enable,
+ 	.disable		= tps65217_pmic_disable,
 -- 
 2.20.1
 
