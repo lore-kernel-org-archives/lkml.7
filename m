@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9074C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:08:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A3FBC10F03
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:08:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB09920811
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:08:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3798720811
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:08:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mmdTLg9U"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="icboAJMm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730384AbfCYVH5 (ORCPT
+        id S1730421AbfCYVIA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 17:07:57 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:34866 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729283AbfCYVH4 (ORCPT
+        Mon, 25 Mar 2019 17:08:00 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:44738 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730362AbfCYVH5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 17:07:56 -0400
-Received: by mail-pf1-f193.google.com with SMTP id t21so7035944pfe.2
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 14:07:55 -0700 (PDT)
+        Mon, 25 Mar 2019 17:07:57 -0400
+Received: by mail-pl1-f195.google.com with SMTP id g12so533350pll.11
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 14:07:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=GY0lBb62Z1iVATnV+m0gDyVgNs1C49ML0/XutpXLjs8=;
-        b=mmdTLg9UiX/N1A5ZaqEEgsK4Z+pylWjrHAqTYY0Yz+5sCVRt1c7OLAKMckLP31JHy5
-         2WMASsVga6fcW7xwLKwo5drPqZQFb7REtIynrATTdtxTChHzOc1k9SUsC7hI1xQY3vgO
-         zE32VGYX+zqRgdY2VA2mrBElNnmoBysvFUXQ+j/vI9nMc6GhTH3yRt3DGoKqqmGRe1K2
-         8LQyQ5MCQUw8EdGoiQrG527Tr+mikurisn/Ewvnleu6SQP9Cx5fC95BKvCHVQWcqHBWu
-         Dh54vBKWSnbEYxtrQ/CI9qaSCKei7LY7ZKH1yJNmDN+6iFyRV43DsNZAxHL9PyFnYVac
-         rS3g==
+        bh=tbO13qcWhpaV3j472zTU1iP58H/m6cB1n2Az+u0mirc=;
+        b=icboAJMmijdWFqJUcGosRNwnko3kTFr77VDruCI0b67k27euNhhPjQhf/1of6Yw9Lf
+         MNONBHbQG+tmENu0dWE92GK9ykvd7SNI2L9SaTP1OHdM6/8Ulfi8mh1d7Wdhc1ava/D0
+         lsYlbRdNHE3/lAtfMusMO+ZiIOSalYzH9tSxFvotvfRNIB5db/bnGNJRZfHSXGMVAXYG
+         eYTri0Vuznmqe+veHrKQxLUeCi7/kyT9F5orEcW22cQQflEn4LjYxqUUPL0NUYcH9mLl
+         OazRd8fDy1SoedToUEjkGf/BJwBsuQvEjogKVr71fCGpN8Te/eIrcBjwU+bCE2wekIYv
+         iUbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=GY0lBb62Z1iVATnV+m0gDyVgNs1C49ML0/XutpXLjs8=;
-        b=tTw5bfjwj0VeodvoJYUV/62L+MEa6y3WgRNn6tobqRnxKrT8m2DbhYUWUC7r54qZj1
-         28wS72DXtlw/lO03SmJKOl8nNizFc6w88pLNdzKDkkUFY95Z+7h+/3RHsejCw9mbJIaf
-         QuEgQj11eTgmrzWGV3jFHbHZr3DV+gecYToUXGJjE+fEpwsAEUp3PUjkQN4QprjzZ9O2
-         aQXLwbGtvASqMfI55hXwf1T7Tqz2GLKcfhylsmZXAV1vvt/jfCyuy25M7NHbQE/cwRre
-         dOtpbH6qUdb5khit6lstJjsbdaJ7P3CcLoqyEWJWNJ5hAQ9pNCf/NwIsUCd+XlZ0UaET
-         /SLw==
-X-Gm-Message-State: APjAAAW7LVY7CLs6zviDfuXq9YnRhEkHdK5ztWlmcKL7WVuHsMwnAfZ2
-        LGi5VIHQlOBel4BvgcCmXG4=
-X-Google-Smtp-Source: APXvYqwqRICMtaC4r/hcxvJtB5uvAtce3B0EZdc2tZj3SFpSisrplCozuh13coB8yHjWW2W8Ce0flA==
-X-Received: by 2002:a63:4620:: with SMTP id t32mr23519881pga.363.1553548075505;
-        Mon, 25 Mar 2019 14:07:55 -0700 (PDT)
+        bh=tbO13qcWhpaV3j472zTU1iP58H/m6cB1n2Az+u0mirc=;
+        b=h0hI5k2JFCcPXYNZHMgNoJEeDkXImK2zgJhpdO6GsA1tsJyRP1mQdrWUWCo7mYzn1a
+         A83/EDVgFSlPsV1EMl0qJPhAPnyA0P8623ILGngpiTwEglXXIjXIczFIjxlyh2ih6t1x
+         nr3H1uqgLgOc0sAevyXgrCHO47Fag25pYD92j2Oy6hSKjsJ/LNPEDkHYbBmDVnH7B4tD
+         QK7UyBWHujk4KPn3oWmbUsO1Dso5l4iMGoltDZbej8RrsEv9HYn+2CTdiSRSsICg8JFe
+         Gh6kcg16O+b6i3s+ncJJwy3D8EqmtXujyLk9Ig2QTzWe+ABbl3NrrD6SSTEFXoSgiq7F
+         XjbQ==
+X-Gm-Message-State: APjAAAXtwIrLQLTpcxU29IrgsFbXVY/cLLXx0SODPmMQ2410B52aDKqP
+        zH2lwXPlMDnyPjEfb5LPKas=
+X-Google-Smtp-Source: APXvYqwqQsOSu1dW78PliMpu+q006bTxW2MAcPZT9yZetvyLNr9VCnRe8Grksnrk0Qpgv2HOJBnvSg==
+X-Received: by 2002:a17:902:2aa6:: with SMTP id j35mr27171125plb.56.1553548076969;
+        Mon, 25 Mar 2019 14:07:56 -0700 (PDT)
 Received: from localhost ([169.229.22.206])
-        by smtp.gmail.com with ESMTPSA id i79sm35719109pfj.28.2019.03.25.14.07.54
+        by smtp.gmail.com with ESMTPSA id r82sm30454861pfa.161.2019.03.25.14.07.56
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 25 Mar 2019 14:07:54 -0700 (PDT)
+        Mon, 25 Mar 2019 14:07:56 -0700 (PDT)
 From:   Yury Norov <yury.norov@gmail.com>
 X-Google-Original-From: Yury Norov <ynorov@marvell.com>
 To:     Andrew Morton <akpm@linux-foundation.org>,
@@ -66,9 +66,9 @@ To:     Andrew Morton <akpm@linux-foundation.org>,
         Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 Cc:     Yury Norov <ynorov@marvell.com>, Yury Norov <yury.norov@gmail.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 2/6] bitmap_parselist: move non-parser logic to helpers
-Date:   Tue, 26 Mar 2019 00:07:44 +0300
-Message-Id: <20190325210748.6571-3-ynorov@marvell.com>
+Subject: [PATCH 3/6] bitmap_parselist: rework input string parser
+Date:   Tue, 26 Mar 2019 00:07:45 +0300
+Message-Id: <20190325210748.6571-4-ynorov@marvell.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190325210748.6571-1-ynorov@marvell.com>
 References: <20190325210748.6571-1-ynorov@marvell.com>
@@ -77,105 +77,315 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move region checking and setting functionality of __bitmap_parselist()
-to helpers.
+The requirement for this rework is to keep the __bitmap_parselist()
+copy-less and single-pass but make it more readable and maintainable by
+splitting into logical parts and removing explicit nested cycles and
+opaque local variables.
+
+__bitmap_parselist() can parse userspace inputs and therefore we cannot
+use simple_strtoul() to parse numbers.
 
 Signed-off-by: Yury Norov <ynorov@marvell.com>
 ---
- lib/bitmap.c | 64 +++++++++++++++++++++++++++++++++++++++++++---------
- 1 file changed, 53 insertions(+), 11 deletions(-)
+ lib/bitmap.c | 247 ++++++++++++++++++++++++++++++---------------------
+ 1 file changed, 148 insertions(+), 99 deletions(-)
 
 diff --git a/lib/bitmap.c b/lib/bitmap.c
-index ad1fb7e6ad0e..307a1b20bead 100644
+index 307a1b20bead..aa15e529f364 100644
 --- a/lib/bitmap.c
 +++ b/lib/bitmap.c
-@@ -477,6 +477,42 @@ int bitmap_print_to_pagebuf(bool list, char *buf, const unsigned long *maskp,
+@@ -513,6 +513,139 @@ static int bitmap_check_region(const struct region *r)
+ 	return 0;
  }
- EXPORT_SYMBOL(bitmap_print_to_pagebuf);
  
-+/*
-+ * Region 9-38:4/10 describes the following bitmap structure:
-+ * 0	   9  12    18			38
-+ * .........****......****......****......
-+ *	    ^  ^     ^			 ^
-+ *      start  off   grlen	       end
-+ */
-+struct region {
-+	unsigned int start;
-+	unsigned int off;
-+	unsigned int grlen;
-+	unsigned int end;
-+};
-+
-+static int bitmap_set_region(const struct region *r,
-+				unsigned long *bitmap, int nbits)
++static long get_char(char *c, const char *str, int is_user)
 +{
-+	unsigned int start;
++	if (unlikely(is_user))
++		return __get_user(*c, (const char __force __user *)str);
 +
-+	if (r->end >= nbits)
-+		return -ERANGE;
-+
-+	for (start = r->start; start <= r->end; start += r->grlen)
-+		bitmap_set(bitmap, start, min(r->end - start + 1, r->off));
-+
++	*c = *str;
 +	return 0;
 +}
 +
-+static int bitmap_check_region(const struct region *r)
++static const char *bitmap_getnum(unsigned int *num, const char *str,
++			    const char *const end, int is_user)
 +{
-+	if (r->start > r->end || r->grlen == 0 || r->off > r->grlen)
-+		return -EINVAL;
++	unsigned int n = 0;
++	const char *_str;
++	long ret;
++	char c;
 +
-+	return 0;
++	for (_str = str, *num = 0; _str <= end; _str++) {
++		ret = get_char(&c, _str, is_user);
++		if (ret)
++			return ERR_PTR(ret);
++
++		if (!isdigit(c)) {
++			if (_str == str)
++				return ERR_PTR(-EINVAL);
++
++			return _str;
++		}
++
++		*num = *num * 10 + (c - '0');
++		if (*num < n)
++			return ERR_PTR(-EOVERFLOW);
++
++		n = *num;
++	}
++
++	return _str;
++}
++
++static const char *bitmap_find_region(const char *str,
++			const char *const end, int is_user)
++{
++	long ret;
++	char c;
++
++	for (; str <= end; str++) {
++		ret = get_char(&c, str, is_user);
++		if (ret)
++			return ERR_PTR(ret);
++
++		/* Unexpected end of line. */
++		if (c == 0 || c == '\n')
++			return NULL;
++
++		/*
++		 * The format allows commas and whitespases
++		 * at the beginning of the region, so skip it.
++		 */
++		if (!isspace(c) && c != ',')
++			break;
++	}
++
++	return str <= end ? str : NULL;
++}
++
++static const char *bitmap_parse_region(struct region *r, const char *str,
++				 const char *const end, int is_user)
++{
++	long ret;
++	char c;
++
++	str = bitmap_getnum(&r->start, str, end, is_user);
++	if (IS_ERR(str))
++		return str;
++
++	ret = get_char(&c, str, is_user);
++	if (ret)
++		return (char *)ret;
++
++	if (c == 0 || c == '\n') {
++		str = end + 1;
++		goto no_end;
++	}
++
++	if (isspace(c) || c == ',')
++		goto no_end;
++
++	if (c != '-')
++		return ERR_PTR(-EINVAL);
++
++	str = bitmap_getnum(&r->end, str + 1, end, is_user);
++	if (IS_ERR(str))
++		return str;
++
++	ret = get_char(&c, str, is_user);
++	if (ret)
++		return ERR_PTR(ret);
++
++	if (c == 0 || c == '\n') {
++		str = end + 1;
++		goto no_pattern;
++	}
++
++	if (isspace(c) || c == ',')
++		goto no_pattern;
++
++	if (c != ':')
++		return ERR_PTR(-EINVAL);
++
++	str = bitmap_getnum(&r->off, str + 1, end, is_user);
++	if (IS_ERR(str))
++		return str;
++
++	ret = get_char(&c, str, is_user);
++	if (ret)
++		return (char *)ret;
++
++	if (c != '/')
++		return ERR_PTR(-EINVAL);
++
++	str = bitmap_getnum(&r->grlen, str + 1, end, is_user);
++
++	return str;
++
++no_end:
++	r->end = r->start;
++no_pattern:
++	r->off = r->end + 1;
++	r->grlen = r->end + 1;
++
++	return str;
 +}
 +
  /**
   * __bitmap_parselist - convert list format ASCII string to bitmap
   * @buf: read nul-terminated user string from this buffer
-@@ -507,10 +543,11 @@ static int __bitmap_parselist(const char *buf, unsigned int buflen,
+@@ -534,113 +667,28 @@ static int bitmap_check_region(const struct region *r)
+  *
+  * Returns: 0 on success, -errno on invalid input strings. Error values:
+  *
+- *   - ``-EINVAL``: second number in range smaller than first
++ *   - ``-EINVAL``: wrong region format
+  *   - ``-EINVAL``: invalid character in string
+  *   - ``-ERANGE``: bit number specified too large for mask
++ *   - ``-EOVERFLOW``: integer overflow in the input parameters
+  */
+-static int __bitmap_parselist(const char *buf, unsigned int buflen,
++static int __bitmap_parselist(const char *buf, const char *const end,
+ 		int is_user, unsigned long *maskp,
  		int nmaskbits)
  {
- 	unsigned int a, b, old_a, old_b;
--	unsigned int group_size, used_size, off;
-+	unsigned int group_size, used_size;
- 	int c, old_c, totaldigits, ndigits;
- 	const char __user __force *ubuf = (const char __user __force *)buf;
--	int at_start, in_range, in_partial_range;
-+	int at_start, in_range, in_partial_range, ret;
-+	struct region r;
+-	unsigned int a, b, old_a, old_b;
+-	unsigned int group_size, used_size;
+-	int c, old_c, totaldigits, ndigits;
+-	const char __user __force *ubuf = (const char __user __force *)buf;
+-	int at_start, in_range, in_partial_range, ret;
+ 	struct region r;
++	long ret;
  
- 	totaldigits = c = 0;
- 	old_a = old_b = 0;
-@@ -599,15 +636,20 @@ static int __bitmap_parselist(const char *buf, unsigned int buflen,
- 		/* if no digit is after '-', it's wrong*/
- 		if (at_start && in_range)
- 			return -EINVAL;
--		if (!(a <= b) || group_size == 0 || !(used_size <= group_size))
--			return -EINVAL;
--		if (b >= nmaskbits)
--			return -ERANGE;
--		while (a <= b) {
--			off = min(b - a + 1, used_size);
--			bitmap_set(maskp, a, off);
--			a += group_size;
+-	totaldigits = c = 0;
+-	old_a = old_b = 0;
+-	group_size = used_size = 0;
+ 	bitmap_zero(maskp, nmaskbits);
+-	do {
+-		at_start = 1;
+-		in_range = 0;
+-		in_partial_range = 0;
+-		a = b = 0;
+-		ndigits = totaldigits;
+-
+-		/* Get the next cpu# or a range of cpu#'s */
+-		while (buflen) {
+-			old_c = c;
+-			if (is_user) {
+-				if (__get_user(c, ubuf++))
+-					return -EFAULT;
+-			} else
+-				c = *buf++;
+-			buflen--;
+-			if (isspace(c))
+-				continue;
+-
+-			/* A '\0' or a ',' signal the end of a cpu# or range */
+-			if (c == '\0' || c == ',')
+-				break;
+-			/*
+-			* whitespaces between digits are not allowed,
+-			* but it's ok if whitespaces are on head or tail.
+-			* when old_c is whilespace,
+-			* if totaldigits == ndigits, whitespace is on head.
+-			* if whitespace is on tail, it should not run here.
+-			* as c was ',' or '\0',
+-			* the last code line has broken the current loop.
+-			*/
+-			if ((totaldigits != ndigits) && isspace(old_c))
+-				return -EINVAL;
+-
+-			if (c == '/') {
+-				used_size = a;
+-				at_start = 1;
+-				in_range = 0;
+-				a = b = 0;
+-				continue;
+-			}
+-
+-			if (c == ':') {
+-				old_a = a;
+-				old_b = b;
+-				at_start = 1;
+-				in_range = 0;
+-				in_partial_range = 1;
+-				a = b = 0;
+-				continue;
+-			}
+-
+-			if (c == '-') {
+-				if (at_start || in_range)
+-					return -EINVAL;
+-				b = 0;
+-				in_range = 1;
+-				at_start = 1;
+-				continue;
+-			}
+ 
+-			if (!isdigit(c))
+-				return -EINVAL;
+-
+-			b = b * 10 + (c - '0');
+-			if (!in_range)
+-				a = b;
+-			at_start = 0;
+-			totaldigits++;
 -		}
-+
-+		r.start = a;
-+		r.off = used_size;
-+		r.grlen = group_size;
-+		r.end = b;
-+
-+		ret = bitmap_check_region(&r);
-+		if (ret)
-+			return ret;
-+
-+		ret = bitmap_set_region(&r, maskp, nmaskbits);
-+		if (ret)
-+			return ret;
-+
- 	} while (buflen && c == ',');
+-		if (ndigits == totaldigits)
+-			continue;
+-		if (in_partial_range) {
+-			group_size = a;
+-			a = old_a;
+-			b = old_b;
+-			old_a = old_b = 0;
+-		} else {
+-			used_size = group_size = b - a + 1;
+-		}
+-		/* if no digit is after '-', it's wrong*/
+-		if (at_start && in_range)
+-			return -EINVAL;
++	while (buf && buf <= end) {
++		buf = bitmap_find_region(buf, end, is_user);
++		if (buf == NULL)
++			return 0;
+ 
+-		r.start = a;
+-		r.off = used_size;
+-		r.grlen = group_size;
+-		r.end = b;
++		buf = bitmap_parse_region(&r, buf, end, is_user);
++		if (IS_ERR(buf))
++			return PTR_ERR(buf);
+ 
+ 		ret = bitmap_check_region(&r);
+ 		if (ret)
+@@ -649,14 +697,14 @@ static int __bitmap_parselist(const char *buf, unsigned int buflen,
+ 		ret = bitmap_set_region(&r, maskp, nmaskbits);
+ 		if (ret)
+ 			return ret;
++	}
+ 
+-	} while (buflen && c == ',');
  	return 0;
  }
+ 
+ int bitmap_parselist(const char *bp, unsigned long *maskp, int nmaskbits)
+ {
+-	return __bitmap_parselist(bp, UINT_MAX, 0, maskp, nmaskbits);
++	return __bitmap_parselist(bp, (char *)SIZE_MAX, 0, maskp, nmaskbits);
+ }
+ EXPORT_SYMBOL(bitmap_parselist);
+ 
+@@ -683,7 +731,8 @@ int bitmap_parselist_user(const char __user *ubuf,
+ 	if (!access_ok(ubuf, ulen))
+ 		return -EFAULT;
+ 	return __bitmap_parselist((const char __force *)ubuf,
+-					ulen, 1, maskp, nmaskbits);
++				  (const char __force *)ubuf + ulen - 1,
++				  1, maskp, nmaskbits);
+ }
+ EXPORT_SYMBOL(bitmap_parselist_user);
+ 
 -- 
 2.17.1
 
