@@ -2,108 +2,119 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF003C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 08:39:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CEE4C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 08:42:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A0C32085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 08:39:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="azTQ0AGm"
+	by mail.kernel.org (Postfix) with ESMTP id 2BC8C20830
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 08:42:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730109AbfCYIg3 (ORCPT
+        id S1730116AbfCYImH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 04:36:29 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:54822 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729965AbfCYIg1 (ORCPT
+        Mon, 25 Mar 2019 04:42:07 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:46779 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729920AbfCYImH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 04:36:27 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2P8aCpZ106411;
-        Mon, 25 Mar 2019 03:36:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1553502972;
-        bh=TXLdx2SAosMFqyOjlSQie8ZcUaPTkakA6by1/PgLXHo=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=azTQ0AGmsp4+BAkPd/6ewSMKH63GZ0o5P4D6DseFRL5X6k7/6OK84uARHwhUGvdM9
-         GNrFSEWe+s+zEKD3utzivbVQQDYQF/I615Q+dDOmZyWnimnOIqkqyJ2D+1cwVoabV3
-         3rVetJZ8kBOnVeVUSXpbQiArpNw2S3Y47XQYVbOg=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2P8aBWu091356
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 25 Mar 2019 03:36:11 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 25
- Mar 2019 03:36:11 -0500
-Received: from dlep33.itg.ti.com (157.170.170.75) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_0,
- cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5 via Frontend Transport;
- Mon, 25 Mar 2019 03:36:11 -0500
-Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by dlep33.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2P8ZsFj006534;
-        Mon, 25 Mar 2019 03:36:07 -0500
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Murali Karicheri <m-karicheri2@ti.com>
-CC:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-arm-kernel@axis.com>
-Subject: [PATCH v2 03/26] dt-bindings: PCI: keystone: Add "reg-names" binding information
-Date:   Mon, 25 Mar 2019 14:04:38 +0530
-Message-ID: <20190325083501.8088-4-kishon@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190325083501.8088-1-kishon@ti.com>
-References: <20190325083501.8088-1-kishon@ti.com>
+        Mon, 25 Mar 2019 04:42:07 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1h8LB4-0000Dm-Ks; Mon, 25 Mar 2019 09:41:54 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1h8LB3-0005Ss-Rx; Mon, 25 Mar 2019 09:41:53 +0100
+Date:   Mon, 25 Mar 2019 09:41:53 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     thierry.reding@gmail.com, narmstrong@baylibre.com,
+        jbrunet@baylibre.com, linux-pwm@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/1] pwm: meson: fix scheduling while atomic issue
+Message-ID: <20190325084153.l44pzfewcqlkoaoe@pengutronix.de>
+References: <20190324220217.15813-1-martin.blumenstingl@googlemail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190324220217.15813-1-martin.blumenstingl@googlemail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add "reg-names" binding information in order for device tree node
-to be populated with the correct register strings. This will break
-old dt compatibility. However Keystone PCI has never worked
-in upstream kernel due to lack of SERDES support. Before SERDES
-support is added, cleanup the Keystone PCI dt-bindngs. This new
-binding will also be used by PCI in AM654 platform.
+Hello Martin,
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- Documentation/devicetree/bindings/pci/pci-keystone.txt | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+On Sun, Mar 24, 2019 at 11:02:16PM +0100, Martin Blumenstingl wrote:
+> Back in January a "BUG: scheduling while atomic" error showed up during
+> boot on my Meson8b Odroid-C1 (which uses a PWM regulator as CPU supply).
+> The call trace comes down to:
+>   __mutex_lock
+>   clk_prepare_lock
+>   clk_core_get_rate
+>   meson_pwm_apply
+>   ..
+>   dev_pm_opp_set_rate
+>   ..
+> 
+> Jerome has also seen the same problem but from pwm-leds (instead of a
+> pwm-regulator). He posted a patch which replaces the spinlock with a
+> mutex. That works. I believe we can optimize this by reducing the time
+> where the lock is held - that also allows to keep the spin-lock.
+> 
+> Analyzing this issue helped me understand the pwm-meson driver better.
+> My plan is to send some cleanups (with the goal of re-using more of the
+> goodies from the PWM core in the pwm-meson driver) after this single fix
+> is merged (they can be found here: [1]).
 
-diff --git a/Documentation/devicetree/bindings/pci/pci-keystone.txt b/Documentation/devicetree/bindings/pci/pci-keystone.txt
-index 2030ee0dc4f9..3a551687cfa2 100644
---- a/Documentation/devicetree/bindings/pci/pci-keystone.txt
-+++ b/Documentation/devicetree/bindings/pci/pci-keystone.txt
-@@ -12,8 +12,10 @@ described here as well as properties that are not applicable.
- Required Properties:-
- 
- compatibility: "ti,keystone-pcie"
--reg:	index 1 is the base address and length of DW application registers.
--	index 2 is the base address and length of PCI device ID register.
-+reg: Three register ranges as listed in the reg-names property
-+reg-names: "dbics" for the DesignWare PCIe registers, "app" for the
-+	   TI specific application registers, "config" for the
-+	   configuration space address
- 
- pcie_msi_intc : Interrupt controller device node for MSI IRQ chip
- 	interrupt-cells: should be set to 1
+I didn't look over these in detail, but I see an issue that according
+to the shortlogs isn't addressed: In the .apply callback there is
+(simplified):
+
+	if (!state->enabled) {
+		meson_pwm_disable(meson, pwm->hwpwm);
+		return;
+	}
+
+This results in the wrong output after:
+
+	pwm_apply_state(pwm, { .enabled = true, .polarity = PWM_POLARITY_NORMAL, ...});
+	pwm_apply_state(pwm, { .enabled = false, .polarity = PWM_POLARITY_INVERTED, ...});
+
+because the polarity isn't checked.
+
+If you want to implement further cleanups, my questions and propositions
+are:
+
+ - Is there a publicly available manual for this hardware? If yes, you
+   can add a link to it in the header of the driver.
+
+ - Why do you handle reparenting of the PWM's clk in .request? Wouldn't
+   this be more suitable in .apply?
+
+ - Does stopping the PWM (i.e. clearing MISC_{A,B}_EN in the MISC_AB
+   register) freeze the output, or is the currently running period
+   completed first? (The latter is the right behaviour.)
+
+ - Please point out in the header that for changing period/duty
+   cycle/polarity the hardware must be stopped. (I suggest to apply the
+   style used in https://www.spinics.net/lists/linux-pwm/msg09262.html
+   for some consistency.)
+
+Best regards
+Uwe
+
 -- 
-2.17.1
-
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
