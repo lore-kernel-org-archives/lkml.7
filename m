@@ -2,127 +2,154 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A43EAC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 00:10:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E205C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 00:10:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A0292080F
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 00:10:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553559015;
-	bh=WMJRBKlNDw38qp/1xuZqDu2eoQ4xMd5LQSfiiy6YFr8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ojxJ1uAxFq2VER8BiqPMR6D7gMjgrkUyYaIpYJJpeqpOgmTeLBBK1FZVaC60JXJrD
-	 /32Gx7HVnK24x5VtpRcYzItfiB+YnpUQJXpzwrxrGhZe6/rIQsroJeQdWJ/iBgwib9
-	 zSpRk4+pspbWBKmPOTIT3DWNg56DXIgJX711m4Z0=
+	by mail.kernel.org (Postfix) with ESMTP id 11F062080F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 00:10:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="DLIRdcZs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729475AbfCZAKO (ORCPT
+        id S1730362AbfCZAKV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 20:10:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57314 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726616AbfCZAKN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 20:10:13 -0400
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB42220879
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 00:10:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553559013;
-        bh=WMJRBKlNDw38qp/1xuZqDu2eoQ4xMd5LQSfiiy6YFr8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=B7NlvGMOjuZ7UVPpSMgBRR9mAWUkSs9L7iOc/zLf4xTZqrL5HsqaurthuT7JVwX+v
-         cEMhgwQ+D5PQieYNWFfBrVYqcuf2TlNlyBOTLxBX5GNH76xEZ93nqRThYZ2HGNc5bF
-         h90lkF9LduKTnm6cylywmHcEBpOEBr09bAlW3JHc=
-Received: by mail-wm1-f47.google.com with SMTP id 4so10765733wmf.1
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 17:10:12 -0700 (PDT)
-X-Gm-Message-State: APjAAAWslpkTznIA2m99SS/Dt0tFLhO+lOZBRNxWC7j7ySjOgZpQyVGH
-        Ew4BSq+rgiO0B/GqlaLLsWFE/x5AL2CFvX1YMJ9Skg==
-X-Google-Smtp-Source: APXvYqwo6Frd6wZMrexD6Qd3HSV7HadjqnpeISg+KBAkuGAdk7BOjnEKUZk20j37g3jwwhuHtMIDerIQBIanJfohKrE=
-X-Received: by 2002:a1c:e188:: with SMTP id y130mr6750289wmg.83.1553559011275;
- Mon, 25 Mar 2019 17:10:11 -0700 (PDT)
+        Mon, 25 Mar 2019 20:10:21 -0400
+Received: from mx0b-00190b01.pphosted.com ([67.231.157.127]:57952 "EHLO
+        mx0b-00190b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727066AbfCZAKU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 20:10:20 -0400
+X-Greylist: delayed 3707 seconds by postgrey-1.27 at vger.kernel.org; Mon, 25 Mar 2019 20:10:19 EDT
+Received: from pps.filterd (m0122330.ppops.net [127.0.0.1])
+        by mx0b-00190b01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2PN1txP014442;
+        Mon, 25 Mar 2019 23:08:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=from : to : subject :
+ date : message-id : in-reply-to : references : mime-version :
+ content-type; s=jan2016.eng;
+ bh=0S5EZ2CZDM+bvFFmyhyPue+BljJixs0+paTHWPwXJQc=;
+ b=DLIRdcZs6CER7q1OhpuCEAEcay+JtpAJNuj9Yl4pQhOu60gLZLvZ+k+z8rlnk2zVT0P5
+ DSFWOzsCNxYgGH/aIGpgBLr6T0CTu+17TQd62ippp1atWSv2pwNqnQbcGLW5mjDEnh8H
+ eDu/AZ4ZCo1MwKW7LavP/en1JjX/g4HAqxBJXK4x5QJTS89xLW+Z8cy/2TtkfcRQpGzg
+ Qqt8ZN9Z+k0O5DmAsHWLXNjSloXn7HqflpfJCIE51knRwhKVgBTUP9Lhmh7Ps76nOa7X
+ Tcmk/RAcO2ythjiBmNEmozOpZvlSJLXa4/mCx1UmQCdSRMaXGHAGpAtv84Z827FDeKVu Fw== 
+Received: from prod-mail-ppoint4 (a96-6-114-87.deploy.static.akamaitechnologies.com [96.6.114.87] (may be forged))
+        by mx0b-00190b01.pphosted.com with ESMTP id 2rf3r98s5s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 25 Mar 2019 23:08:23 +0000
+Received: from pps.filterd (prod-mail-ppoint4.akamai.com [127.0.0.1])
+        by prod-mail-ppoint4.akamai.com (8.16.0.27/8.16.0.27) with SMTP id x2PN2Ow4005728;
+        Mon, 25 Mar 2019 19:08:22 -0400
+Received: from email.msg.corp.akamai.com ([172.27.123.57])
+        by prod-mail-ppoint4.akamai.com with ESMTP id 2rdg4v4b59-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Mon, 25 Mar 2019 19:08:22 -0400
+Received: from usma1ex-cas4.msg.corp.akamai.com (172.27.123.57) by
+ usma1ex-dag1mb3.msg.corp.akamai.com (172.27.123.103) with Microsoft SMTP
+ Server (TLS) id 15.0.1473.3; Mon, 25 Mar 2019 19:08:14 -0400
+Received: from igorcastle.kendall.corp.akamai.com (172.29.170.123) by
+ usma1ex-cas4.msg.corp.akamai.com (172.27.123.57) with Microsoft SMTP Server
+ id 15.0.1473.3 via Frontend Transport; Mon, 25 Mar 2019 16:08:15 -0700
+Received: by igorcastle.kendall.corp.akamai.com (Postfix, from userid 29659)
+        id 369C262BE9; Mon, 25 Mar 2019 19:08:14 -0400 (EDT)
+From:   Igor Lubashev <ilubashe@akamai.com>
+To:     Serge Hallyn <serge@hallyn.com>, James Morris <jmorris@namei.org>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:CAPABILITIES" <linux-security-module@vger.kernel.org>
+Subject: [PATCH 1/1] RFC: security: add SECURE_KEEP_FSUID to preserve fsuid/fsgid across execve
+Date:   Mon, 25 Mar 2019 19:07:58 -0400
+Message-ID: <1553555278-19153-2-git-send-email-ilubashe@akamai.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1553555278-19153-1-git-send-email-ilubashe@akamai.com>
+References: <1553555278-19153-1-git-send-email-ilubashe@akamai.com>
 MIME-Version: 1.0
-References: <20190325220954.29054-1-matthewgarrett@google.com>
- <20190325220954.29054-24-matthewgarrett@google.com> <20190325164221.5d8687bd@shemminger-XPS-13-9360>
-In-Reply-To: <20190325164221.5d8687bd@shemminger-XPS-13-9360>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Mon, 25 Mar 2019 17:10:00 -0700
-X-Gmail-Original-Message-ID: <CALCETrU=EqqRwyQGBT0=_N9-E_pBM53=z+WJrd9OzV7g6xJa0A@mail.gmail.com>
-Message-ID: <CALCETrU=EqqRwyQGBT0=_N9-E_pBM53=z+WJrd9OzV7g6xJa0A@mail.gmail.com>
-Subject: Re: [PATCH 23/27] bpf: Restrict kernel image access functions when
- the kernel is locked down
-To:     Stephen Hemminger <stephen@networkplumber.org>,
-        Linux API <linux-api@vger.kernel.org>
-Cc:     Matthew Garrett <matthewgarrett@google.com>,
-        James Morris <jmorris@namei.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Network Development <netdev@vger.kernel.org>,
-        Chun-Yi Lee <jlee@suse.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Kees Cook <keescook@chromium.org>,
-        Will Drewry <wad@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-25_13:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=885
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1903250161
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-25_13:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=919 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903250161
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 4:42 PM Stephen Hemminger
-<stephen@networkplumber.org> wrote:
->
-> On Mon, 25 Mar 2019 15:09:50 -0700
-> Matthew Garrett <matthewgarrett@google.com> wrote:
->
-> > From: David Howells <dhowells@redhat.com>
-> >
-> > There are some bpf functions can be used to read kernel memory:
-> > bpf_probe_read, bpf_probe_write_user and bpf_trace_printk.  These allow
-> > private keys in kernel memory (e.g. the hibernation image signing key) to
-> > be read by an eBPF program and kernel memory to be altered without
-> > restriction.
-> >
-> > Completely prohibit the use of BPF when the kernel is locked down.
-> >
-> > Suggested-by: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-> > Signed-off-by: David Howells <dhowells@redhat.com>
-> > cc: netdev@vger.kernel.org
-> > cc: Chun-Yi Lee <jlee@suse.com>
-> > cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-> > Cc: Daniel Borkmann <daniel@iogearbox.net>
-> > Signed-off-by: Matthew Garrett <matthewgarrett@google.com>
->
-> Wouldn't this mean that Seccomp won't work in locked down mode?
+Many kernel interfaces require real and/or effective root uid instead
+of relying solely of capabilities. An executable that uses such
+interfaces has to be set-uid-root or be executed by a thread with
+effective root uid. Presently, fsuid and saved uid will reset to the
+effective uid during execve. As a result, it is not possible to
+execute a binary such that it has effective root uid but retains
+fsuid/fsgid of the actual user. Retaining fsuid/fsgid of the actual
+user could be required if the executable needs to access the
+filesystem. It may also be desired from the security perspective of
+delegating the minimal set of privileges.
 
-I wasn't cc'd on this series, nor was linux-api, so it's awkward to review.
+Setting SECURE_KEEP_FSUID bit ensures that the current fsuid/fsgiud is
+retained by execve.
 
-A while back, I suggested an approach to actually make this stuff
-mergeable: submit a patch series that adds lockdown mode, enables it
-by command line option (and maybe sysctl) *only* and has either no
-effect or only a token effect.  Then we can add actual features to
-lockdown mode one at a time and review them separately.
+Signed-off-by: Igor Lubashev <ilubashe@akamai.com>
+---
+ include/uapi/linux/securebits.h | 10 +++++++++-
+ security/commoncap.c            |  9 +++++++--
+ 2 files changed, 16 insertions(+), 3 deletions(-)
 
-And I'm going to complain loudly unless two things change about this
-whole thing:
+diff --git a/include/uapi/linux/securebits.h b/include/uapi/linux/securebits.h
+index d6d9887..6c20b22 100644
+--- a/include/uapi/linux/securebits.h
++++ b/include/uapi/linux/securebits.h
+@@ -52,10 +52,18 @@
+ #define SECBIT_NO_CAP_AMBIENT_RAISE_LOCKED \
+ 			(issecure_mask(SECURE_NO_CAP_AMBIENT_RAISE_LOCKED))
+ 
++/* When set, execve does not reset fsuid/fsgid to euid/egid */
++#define SECURE_KEEP_FSUID		8
++#define SECURE_KEEP_FSUID_LOCKED	9  /* make bit-8 immutable */
++
++#define SECBIT_KEEP_FSUID	 (issecure_mask(SECURE_KEEP_FSUID))
++#define SECBIT_KEEP_FSUID_LOCKED (issecure_mask(SECURE_KEEP_FSUID_LOCKED))
++
+ #define SECURE_ALL_BITS		(issecure_mask(SECURE_NOROOT) | \
+ 				 issecure_mask(SECURE_NO_SETUID_FIXUP) | \
+ 				 issecure_mask(SECURE_KEEP_CAPS) | \
+-				 issecure_mask(SECURE_NO_CAP_AMBIENT_RAISE))
++				 issecure_mask(SECURE_NO_CAP_AMBIENT_RAISE) | \
++				 issecure_mask(SECURE_KEEP_FSUID))
+ #define SECURE_ALL_LOCKS	(SECURE_ALL_BITS << 1)
+ 
+ #endif /* _UAPI_LINUX_SECUREBITS_H */
+diff --git a/security/commoncap.c b/security/commoncap.c
+index c477fb6..490a7b4 100644
+--- a/security/commoncap.c
++++ b/security/commoncap.c
+@@ -852,8 +852,13 @@ int cap_bprm_set_creds(struct linux_binprm *bprm)
+ 						   old->cap_permitted);
+ 	}
+ 
+-	new->suid = new->fsuid = new->euid;
+-	new->sgid = new->fsgid = new->egid;
++	new->suid = new->euid;
++	new->sgid = new->egid;
++
++	if (!issecure(SECURE_KEEP_FSUID)) {
++		new->fsuid = new->euid;
++		new->fsgid = new->egid;
++	}
+ 
+ 	/* File caps or setid cancels ambient. */
+ 	if (has_fcap || is_setid)
+-- 
+2.7.4
 
-1. Lockdown mode becomes three states, not a boolean.  The states are:
-no lockdown, best-effort-to-protect-kernel-integrity, and
-best-effort-to-protect-kernel-secrecy-and-integrity.  And this BPF
-mess illustrates why: most users will really strongly object to
-turning off BPF when they actually just want to protect kernel
-integrity.  And as far as I know, things like Secure Boot policy will
-mostly care about integrity, not secrecy, and tracing and such should
-work on a normal locked-down kernel.  So I think we need this knob.
-
-2. All the proponents of this series, and the documentation, needs to
-document that it's best effort.  There will always be security bugs,
-and there will always be things we miss.
-
-
---Andy
