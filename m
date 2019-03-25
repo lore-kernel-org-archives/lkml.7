@@ -2,93 +2,162 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC939C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 08:54:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0932BC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 08:56:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74F4A20863
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 08:54:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="edUGzOpp"
+	by mail.kernel.org (Postfix) with ESMTP id CEC7C20863
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 08:56:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730123AbfCYIyX (ORCPT
+        id S1730076AbfCYI4j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 04:54:23 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:43766 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726234AbfCYIyW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 04:54:22 -0400
-Received: from [192.168.0.14] (pd95c0187.dip0.t-ipconnect.de [217.92.1.135])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 7E5231EC02D1;
-        Mon, 25 Mar 2019 09:54:21 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1553504061;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=z53EwizmjIyxN10SgYjxj3UycnodzftL3CAyddh94Xs=;
-        b=edUGzOppLyx7tUFB94Vly2sQwm9VqtBIhYlkOP49RBq6xI8o56blNZ//T/TDKm0Wg6L7Gi
-        pb8rwxi7g41CLCfq/uN2wBqO2NgH+XEAERA2Dpr0ivOGPmLXGK67T//PcbZGz7C/ObHnds
-        OOy8a0bvScJZFHQ32kXGHGJqtxv71HE=
-Date:   Mon, 25 Mar 2019 09:54:19 +0100
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20190325082720.GA20771@jeru.linux.bs1.fc.nec.co.jp>
-References: <20190322110342.GA16202@jeru.linux.bs1.fc.nec.co.jp> <20190322152328.GD12472@zn.tnic> <20190325002740.GA6637@jeru.linux.bs1.fc.nec.co.jp> <20190325060128.GB9385@dhcp-128-65.nay.redhat.com> <20190325061929.GC9385@dhcp-128-65.nay.redhat.com> <bcb5bd29-a3b8-e42d-8da7-a8501f695c21@ce.jp.nec.com> <20190325065921.GA11096@dhcp-128-65.nay.redhat.com> <20190325082720.GA20771@jeru.linux.bs1.fc.nec.co.jp>
+        Mon, 25 Mar 2019 04:56:39 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41826 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726234AbfCYI4i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 04:56:38 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 9D559AA71;
+        Mon, 25 Mar 2019 08:56:36 +0000 (UTC)
+Subject: Re: [PATCH v2] nvdimm: btt_devs: fix a NULL pointer dereference
+To:     Aditya Pakki <pakki001@umn.edu>
+Cc:     linux-nvdimm@lists.01.org, kjlu@umn.edu,
+        linux-kernel@vger.kernel.org
+References: <20190323214125.10233-1-pakki001@umn.edu>
+From:   Johannes Thumshirn <jthumshirn@suse.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jthumshirn@suse.de; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <08d11679-8efd-3710-b7b5-a25714c37920@suse.de>
+Date:   Mon, 25 Mar 2019 09:56:36 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.0
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2] x86/boot: Use EFI setup data if provided
-To:     Junichi Nomura <j-nomura@ce.jp.nec.com>,
-        Dave Young <dyoung@redhat.com>,
-        "fanc.fnst@cn.fujitsu.com" <fanc.fnst@cn.fujitsu.com>,
-        "bp@suse.de" <bp@suse.de>, "bhe@redhat.com" <bhe@redhat.com>,
-        "kasong@redhat.com" <kasong@redhat.com>
-CC:     "x86@kernel.org" <x86@kernel.org>,
-        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   Boris Petkov <bp@alien8.de>
-Message-ID: <51D9A7D1-49BF-4679-B102-0FC5AC300C9F@alien8.de>
+In-Reply-To: <20190323214125.10233-1-pakki001@umn.edu>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On March 25, 2019 9:27:21 AM GMT+01:00, Junichi Nomura <j-nomura@ce=2Ejp=2E=
-nec=2Ecom> wrote:
->On 3/25/19 3:59 PM, Dave Young wrote:
->> On 03/25/19 at 06:47am, Junichi Nomura wrote:
->>> On 3/25/19 3:19 PM, Dave Young wrote:
->>>> On 03/25/19 at 02:01pm, Dave Young wrote:
->>>> I think normally people do not see this bug, because kernel will
->set the
->>>> rsdp in boot_params->acpi_rsdp_addr=2E  Maybe you are testing with
->>>
->>> I think it's only done for file-based kexec interface=2E
->>=20
->> Saw Kairui's another reply, yes, kexec-tools need a patch to fill the
->> value as well then=2E
->>=20
->> I would vote for a repost of your old patch with some #ifdef
->
->Thanks for comments, Dave, Kairui and Baoquan=2E
->
->The problem for me is it's a regression in v5=2E1-rc1, that breaks
->existing setup=2E If early parsing of RSDP is required only for newly
->supported configuration, I'm fine such configuration requires
->new tools or new options=2E
->
->This is the 1st version plus #ifdef around the EFI code=2E
+On 23/03/2019 22:41, Aditya Pakki wrote:
+> In case kmemdup fails, the fix releases resources and returns to
+> avoid the NULL pointer dereference.
+> 
+> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+> 
+> ---
+> v1: Free nd_btt->id in case of failure and avoid double free, suggested
+> by Dan Williams
+> ---
+>  drivers/nvdimm/btt_devs.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/nvdimm/btt_devs.c b/drivers/nvdimm/btt_devs.c
+> index b72a303176c7..119a4ead2e46 100644
+> --- a/drivers/nvdimm/btt_devs.c
+> +++ b/drivers/nvdimm/btt_devs.c
+> @@ -204,8 +204,14 @@ static struct device *__nd_btt_create(struct nd_region *nd_region,
+>  	}
+>  
+>  	nd_btt->lbasize = lbasize;
+> -	if (uuid)
+> +	if (uuid) {
+>  		uuid = kmemdup(uuid, 16, GFP_KERNEL);
+> +		if (!uuid) {
+> +			kfree(nd_btt->id);
+> +			kfree(nd_btt);
+> +			return NULL;
+> +		}
+> +	}
 
-I'm going to repeat that again until you get it:
+nd_btt->id is an ida and thus must be freed using:
+ida_simple_remove(&nd_region->btt_ida, nd_btt->id);
 
-If the kexec kernel should continue to use efi_systab_init() then you
-should make efi_get_rsdp_addr() exit early in the kexec-ed kernel=2E
---=20
-Sent from a small device: formatting sux and brevity is inevitable=2E 
+that being I'd prefer a 'out_put_id' label at the end of the function
+and to the cleanups there.
+
+Something like this:
+
+	if (uuid) {
+		uuid = kmemdup(uuid, 16, GFP_KERNEL);
+		if (!uuid)
+			goto out_put_id;
+
+	[...]
+
+	return dev;
+
+out_put_id:
+	ida_simple_remove(&nd_region->btt_ida, nd_btt->id);
+	kfree(nd_btt);
+	return NULL;
+}
+
+
+-- 
+Johannes Thumshirn                            SUSE Labs Filesystems
+jthumshirn@suse.de                                +49 911 74053 689
+SUSE LINUX GmbH, Maxfeldstr. 5, 90409 Nürnberg
+GF: Felix Imendörffer, Mary Higgins, Sri Rasiah
+HRB 21284 (AG Nürnberg)
+Key fingerprint = EC38 9CAB C2C4 F25D 8600 D0D0 0393 969D 2D76 0850
