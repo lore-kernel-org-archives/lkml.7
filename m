@@ -2,141 +2,154 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C34EC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 13:14:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC8FC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 13:16:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E9DA20863
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 13:14:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="FQJbu9rW"
+	by mail.kernel.org (Postfix) with ESMTP id A72BE20863
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 13:16:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731288AbfCYNOA (ORCPT
+        id S1731257AbfCYNQM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 09:14:00 -0400
-Received: from mail-eopbgr50068.outbound.protection.outlook.com ([40.107.5.68]:55273
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730545AbfCYNOA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 09:14:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector1-arm-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VFFEIRDslJefBAyiiBheYGVFXi907zaXFDPE99IdjZM=;
- b=FQJbu9rWeR7VigS0oAbvDi3rdyJ3cYhNVvBg2qXZqjG0qmY6v2xnu3OmE1YQORgCXC+tvngoixHGxDR6vhYMKg3hgMBPGpyiJdFbws9HdnVq6rnGdadhxxAhDQsvhFPZJ3XYF7eO6AKtKwqKCZob1hIJ2F9vXegfww9SMbRwV6Q=
-Received: from VI1PR0802MB2528.eurprd08.prod.outlook.com (10.175.20.142) by
- VI1PR0802MB2399.eurprd08.prod.outlook.com (10.175.25.147) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1730.15; Mon, 25 Mar 2019 13:13:55 +0000
-Received: from VI1PR0802MB2528.eurprd08.prod.outlook.com
- ([fe80::24ef:2725:26cc:ae35]) by VI1PR0802MB2528.eurprd08.prod.outlook.com
- ([fe80::24ef:2725:26cc:ae35%8]) with mapi id 15.20.1730.019; Mon, 25 Mar 2019
- 13:13:55 +0000
-From:   Dave Rodgman <dave.rodgman@arm.com>
-To:     Nick Terrell <terrelln@fb.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>
-Subject: Re: Kernel LZO compressor
-Thread-Topic: Kernel LZO compressor
-Thread-Index: AQHU3pByWt4yBWNOP0ewGbmZjuuI6KYcXA+A
-Date:   Mon, 25 Mar 2019 13:13:55 +0000
-Message-ID: <3996dd23-75ab-1619-8ef4-3025436ed4f8@arm.com>
-References: <31D143C0-D64F-4905-B25F-5C3630D38913@fb.com>
-In-Reply-To: <31D143C0-D64F-4905-B25F-5C3630D38913@fb.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [217.140.106.54]
-x-clientproxiedby: LNXP123CA0023.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:d2::35) To VI1PR0802MB2528.eurprd08.prod.outlook.com
- (2603:10a6:800:b0::14)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=dave.rodgman@arm.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a0c59c11-bc68-445e-2c68-08d6b123bbaf
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:VI1PR0802MB2399;
-x-ms-traffictypediagnostic: VI1PR0802MB2399:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <VI1PR0802MB2399CE032B17A0CC3AC188928F5E0@VI1PR0802MB2399.eurprd08.prod.outlook.com>
-x-forefront-prvs: 0987ACA2E2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(136003)(376002)(346002)(366004)(39860400002)(189003)(199004)(40434004)(99286004)(14454004)(6486002)(6246003)(7116003)(6306002)(53936002)(966005)(2501003)(6436002)(52116002)(316002)(110136005)(2906002)(6512007)(26005)(86362001)(229853002)(25786009)(76176011)(102836004)(53546011)(386003)(6506007)(31696002)(446003)(11346002)(97736004)(476003)(2616005)(71200400001)(66066001)(31686004)(486006)(8676002)(81166006)(71190400001)(44832011)(106356001)(105586002)(256004)(14444005)(5024004)(68736007)(8936002)(478600001)(7736002)(3480700005)(305945005)(5660300002)(3846002)(6116002)(36756003)(81156014)(186003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0802MB2399;H:VI1PR0802MB2528.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: arm.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: wpxMakyPmRaqPmFyOOlicP2C0loVI+qYkXC6JR6tNpgnuWylVKKu1RuZbJrpOJLKZHtpxW/kgQA2TGWNEv/gCmpOgtK0MP1XgV+M9lPvsFAV/apiR34ICtKiLh/DQ3imFluinOI2llT34pz6rWXIZFnZ4Hfqn23GBIfc1xPJCLQCKRn93zs4JXQOi8Z7zzVzb3N06WMozXbd8IufLpooIc0JtX96+z08MGZzZe17NQaUB2FObeuGFLqPNbMbKgUq2Pujl9KwmKmzYuecTdvvelWwRYk/qIK67KSewHs8Q5qe8g92SftyH5RfjSGpbdmbbFKBjPbGkmV11gvcQP+zk3xSEf0py95XTSSwaUyvD/9uHL5BeDsaVeduliKJ6vxV662kF9arPUnBO+RqyHe8EnbUnxx0yUadGhYHYRzQO+c=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <6043B300CE5B65439B3D3AEF5A767FD0@eurprd08.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 25 Mar 2019 09:16:12 -0400
+Received: from mail.sssup.it ([193.205.80.98]:63838 "EHLO mail.santannapisa.it"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730694AbfCYNQM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 09:16:12 -0400
+Received: from [10.30.3.184] (HELO localhost.localdomain)
+  by santannapisa.it (CommuniGate Pro SMTP 6.1.11)
+  with ESMTPS id 137595740; Mon, 25 Mar 2019 14:16:08 +0100
+From:   luca abeni <luca.abeni@santannapisa.it>
+To:     linux-kernel@vger.kernel.org
+Cc:     "chengjian (D)" <cj.chengjian@huawei.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        luca abeni <luca.abeni@santannapisa.it>
+Subject: [PATCH] sched/deadline: correctly handle active 0-lag timers
+Date:   Mon, 25 Mar 2019 14:15:30 +0100
+Message-Id: <20190325131530.34706-1-luca.abeni@santannapisa.it>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a0c59c11-bc68-445e-2c68-08d6b123bbaf
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Mar 2019 13:13:55.3117
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0802MB2399
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMTkvMDMvMjAxOSA4OjE1IHBtLCBOaWNrIFRlcnJlbGwgd3JvdGU6DQo+IEhpIERhdmUsDQo+
-DQo+IEkganVzdCBzYXcgeW91IHBhdGNoZXMgYWRkaW5nIExaTy1STEUsIHNvIEkgZGVjaWRlZCB0
-byBmdXp6IHRoZSBMWk8NCj4gY29tcHJlc3NvciBhbmQgZGVjb21wcmVzc29yLiBJIGRpZG4ndCBm
-aW5kIGFueSBjcmFzaGVzLCBidXQgSSBmb3VuZCBzb21lIGVkZ2UNCj4gY2FzZXMgaW4gdGhlIGRl
-Y29tcHJlc3Nvci4NCg0KSGkgTmljaywNCg0KVGhhbmtzIC0gSSB3aWxsIHRha2UgYSBsb29rIGF0
-IHRoaXMuIFRoZXNlIGNhc2VzIHdvbid0IGFmZmVjdCB6cmFtLCB3aGljaCBpcw0KY3VycmVudGx5
-IHRoZSBvbmx5IHBsYWNlIGx6by1ybGUgaXMgdXNlZCwgYmVjYXVzZSB6cmFtIG9wZXJhdGVzIG92
-ZXIgY29tcGxldGUNCnBhZ2VzLCBidXQgSSB3b3VsZCBwcmVmZXIgbm90IHRvIGhhdmUgdGhpcyBr
-aW5kIG9mIGVkZ2UgY2FzZSBsdXJraW5nLg0KDQpQcmVzdW1hYmx5IHRoZSBmdXp6ZXIgZ2VuZXJh
-dGVzIGlucHV0cyBvZiB2YXJpb3VzIHNpemVzIC0gaG93IGxhcmdlIGRpZCB5b3UNCnRlc3QgdXAg
-dG8/DQoNCnRoYW5rcw0KDQpEYXZlDQoNCj4NCj4gQWZ0ZXIgY29tcHJlc3NpbmcgdGhlIGVtcHR5
-IGlucHV0IHdpdGggbHpvMXhfMV9jb21wcmVzcygpIEkgZ2V0DQo+IFsweDExLCAweDAwLCAweDAw
-XSB3aGljaCBpcyByZWplY3RlZCBieSBsem8xeF9kZWNvbXByZXNzX3NhZmUoKSBvbiBsaW5lIDYw
-DQo+IGJlY2F1c2UgKmlwID09IDE3IGFuZCBpbl9sZW4gPCA1IHdpdGggZXJyb3IgTFpPX0VfSU5Q
-VVRfT1ZFUlJVTi4NCj4NCj4gQWZ0ZXIgY29tcHJlc3NpbmcgdGhlIGlucHV0IFsweDAwXSB3aXRo
-IGx6b3JsZTF4XzFfY29tcHJlc3MoKSBJIGdldA0KPiBbMHgxMSwgMHgwMSwgMHgwMCwgMHgxMSwg
-MHgwMCwgMHgwMF0gd2hpY2ggaXMgcmVqZWN0ZWQgYnkNCj4gbHpvMXhfZGVjb21wcmVzc19zYWZl
-KCkgd2l0aCBlcnJvciBMWk9fRV9PVVRQVVRfT1ZFUlJVTi4NCj4NCj4gSSBwb3J0ZWQgTFpPIHRv
-IHVzZXJzcGFjZSBieSBjb3B5aW5nIHRoZSBoZWFkZXJzIGZyb20gdGhlIGtlcm5lbCB0bw0KPiB1
-c2Vyc3BhY2UgYW5kL29yIHJld3JpdGluZyB0aGVtLiBUaGUgZnV6emVycyBhbmQgcG9ydGVkIExa
-TyBhcmUgaW4NCj4gYSBHaXRIdWIgcmVwbyBzbyBpdCBjYW4gYmUgZWFzaWx5IHJlcHJvZHVjZWQg
-WzFdLiBUaGUgY29tcHJlc3Npb24NCj4gZnV6emVyIGlzIGFsc28gaW5jbHVkZWQgaW5saW5lIGJl
-bG93Lg0KPg0KPiBgYGANCj4gI3VuZGVmIE5ERUJVRw0KPiAjaW5jbHVkZSA8c3RyaW5nLmg+DQo+
-ICNpbmNsdWRlIDxzdGRpbnQuaD4NCj4gI2luY2x1ZGUgPHN0ZGRlZi5oPg0KPiAjaW5jbHVkZSA8
-c3RkbGliLmg+DQo+ICNpbmNsdWRlIDxhc3NlcnQuaD4NCj4gI2luY2x1ZGUgPHN0ZGlvLmg+DQo+
-DQo+ICNpbmNsdWRlICJsem8uaCINCj4NCj4gY2hhciB3cmttZW1bTFpPMVhfTUVNX0NPTVBSRVNT
-XTsNCj4NCj4gI2RlZmluZSBSTEUgMQ0KPg0KPiBleHRlcm4gIkMiIGludCBMTFZNRnV6emVyVGVz
-dE9uZUlucHV0KGNvbnN0IHVpbnQ4X3QgKmRhdGEsIHNpemVfdCBzaXplKSB7DQo+ICAgc2l6ZV90
-IG91dFNpemUgPSBsem8xeF93b3JzdF9jb21wcmVzcyhzaXplKTsNCj4gICB1aW50OF90KiBjb25z
-dCBvdXQgPSAodWludDhfdCopbWFsbG9jKG91dFNpemUpOw0KPiAgIGFzc2VydChvdXQpOw0KPiAj
-aWYgUkxFDQo+ICAgYXNzZXJ0KExaT19FX09LID09IGx6b3JsZTF4XzFfY29tcHJlc3MoZGF0YSwg
-c2l6ZSwgb3V0LCAmb3V0U2l6ZSwgd3JrbWVtKSk7DQo+ICNlbHNlDQo+ICAgYXNzZXJ0KExaT19F
-X09LID09IGx6bzF4XzFfY29tcHJlc3MoZGF0YSwgc2l6ZSwgb3V0LCAmb3V0U2l6ZSwgd3JrbWVt
-KSk7DQo+ICNlbmRpZg0KPiAgIHVpbnQ4X3QqIGNvbnN0IHJ0ID0gKHVpbnQ4X3QqKW1hbGxvYyhz
-aXplKTsNCj4gICBhc3NlcnQocnQpOw0KPiAgIHNpemVfdCBydHNpemUgPSBzaXplOw0KPiAgIGlu
-dCBjb25zdCByZXQgPSBsem8xeF9kZWNvbXByZXNzX3NhZmUob3V0LCBvdXRTaXplLCBydCwgJnJ0
-c2l6ZSk7DQo+ICAgaWYgKHJldCAhPSBMWk9fRV9PSykgew0KPiAgICAgYXNzZXJ0KHNpemUgPCA0
-KTsNCj4gICAgIGZwcmludGYoc3RkZXJyLCAiSU5QVVQ6ICIpOw0KPiAgICAgZm9yIChzaXplX3Qg
-aSA9IDA7IGkgPCBzaXplOyArK2kpDQo+ICAgICAgIGZwcmludGYoc3RkZXJyLCAiJXUgIiwgKHVu
-c2lnbmVkKWRhdGFbaV0pOw0KPiAgICAgZnByaW50ZihzdGRlcnIsICJcbk9VVFBVVDogIik7DQo+
-ICAgICBmb3IgKHNpemVfdCBpID0gMDsgaSA8IG91dFNpemU7ICsraSkNCj4gICAgICAgZnByaW50
-ZihzdGRlcnIsICIldSAiLCAodW5zaWduZWQpb3V0W2ldKTsNCj4gICAgIGZwcmludGYoc3RkZXJy
-LCAiXG5yZXQgPSAlZFxuIiwgcmV0KTsNCj4gICB9DQo+ICAgYXNzZXJ0KHJldCA9PSBMWk9fRV9P
-Syk7DQo+ICAgYXNzZXJ0KHJ0c2l6ZSA9PSBzaXplKTsNCj4gICBhc3NlcnQobWVtY21wKGRhdGEs
-IHJ0LCBzaXplKSA9PSAwKTsNCj4gICBmcmVlKG91dCk7DQo+ICAgZnJlZShydCk7DQo+ICAgcmV0
-dXJuIDA7DQo+IH0NCj4gYGBgDQo+DQo+IFsxXSBodHRwczovL2dpdGh1Yi5jb20vdGVycmVsbG4v
-bHpvLXVzZXJzcGFjZS1mdXp6DQo+DQo+IEJlc3QsDQo+IE5pY2sgVGVycmVsbA0KPg0KDQpJTVBP
-UlRBTlQgTk9USUNFOiBUaGUgY29udGVudHMgb2YgdGhpcyBlbWFpbCBhbmQgYW55IGF0dGFjaG1l
-bnRzIGFyZSBjb25maWRlbnRpYWwgYW5kIG1heSBhbHNvIGJlIHByaXZpbGVnZWQuIElmIHlvdSBh
-cmUgbm90IHRoZSBpbnRlbmRlZCByZWNpcGllbnQsIHBsZWFzZSBub3RpZnkgdGhlIHNlbmRlciBp
-bW1lZGlhdGVseSBhbmQgZG8gbm90IGRpc2Nsb3NlIHRoZSBjb250ZW50cyB0byBhbnkgb3RoZXIg
-cGVyc29uLCB1c2UgaXQgZm9yIGFueSBwdXJwb3NlLCBvciBzdG9yZSBvciBjb3B5IHRoZSBpbmZv
-cm1hdGlvbiBpbiBhbnkgbWVkaXVtLiBUaGFuayB5b3UuDQo=
+syzbot reported the following warning:
+[  948.126369] WARNING: CPU: 4 PID: 17089 at kernel/sched/deadline.c:255 task_non_contending+0xae0/0x1950
+[  948.130198] Kernel panic - not syncing: panic_on_warn set ...
+[  948.130198]
+[  948.134221] CPU: 4 PID: 17089 Comm: syz-executor.1 Not tainted 4.19.27 #2
+[  948.139072] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+[  948.141603] Call Trace:
+[  948.142277]  dump_stack+0xca/0x13e
+[  948.164636]  panic+0x1f7/0x543
+[  948.168704]  ? refcount_error_report+0x29d/0x29d
+[  948.172438]  ? __warn+0x1d1/0x210
+[  948.183359]  ? task_non_contending+0xae0/0x1950
+[  948.191747]  __warn+0x1ec/0x210
+[  948.196276]  ? task_non_contending+0xae0/0x1950
+[  948.202476]  report_bug+0x1ee/0x2b0
+[  948.204622]  fixup_bug.part.7+0x37/0x80
+[  948.206879]  do_error_trap+0x22c/0x290
+[  948.211340]  ? math_error+0x2f0/0x2f0
+[  948.217033]  ? trace_hardirqs_off_caller+0x40/0x190
+[  948.222477]  ? trace_hardirqs_off_thunk+0x1a/0x1c
+[  948.229877]  invalid_op+0x14/0x20
+[  948.238317] RIP: 0010:task_non_contending+0xae0/0x1950
+[  948.253825] Code: 6d 29 83 48 89 4c 24 20 48 89 54 24 10 c6 05 d0 89
+5a 03 01 e8 11 ea ee ff 0f 0b 48 8b 4c 24 20 48 8b 54 24 10 e9 bb f7 ff
+ff <0f> 0b e9 1d f6 ff ff e8 d4 a7 09 00 85 c0 0f 85 74 f8 ff ff 48 c7
+[  948.272329] RSP: 0018:ffff8883d443f8c0 EFLAGS: 00010002
+[  948.293045] RAX: 0000000000000001 RBX: ffff8883d3572468 RCX: ffffffff813a6571
+[  948.300323] RDX: 00000000000008ab RSI: ffffc900030e4000 RDI: ffff8883e2fe6278
+[  948.305278] RBP: ffff8883e2f00000 R08: ffffed1078ea3ab2 R09: ffffed1078ea3ab2
+[  948.316441] R10: 0000000000000001 R11: ffffed1078ea3ab1 R12: 000000000002c680
+[  948.320257] R13: ffff8883d357217c R14: 0000000000000001 R15: ffff8883d3572140
+[  948.324500]  ? hrtimer_active+0x171/0x1f0
+[  948.327421]  ? dequeue_task_dl+0x38/0x970
+[  948.330572]  __schedule+0x94b/0x1a80
+[  948.333578]  ? __sched_text_start+0x8/0x8
+[  948.336141]  ? lock_downgrade+0x5e0/0x5e0
+[  948.338111]  ? plist_add+0x23e/0x480
+[  948.339706]  schedule+0x7c/0x1a0
+[  948.341395]  futex_wait_queue_me+0x319/0x600
+[  948.343329]  ? get_futex_key_refs+0xd0/0xd0
+[  948.345037]  ? lock_downgrade+0x5e0/0x5e0
+[  948.347206]  ? get_futex_key_refs+0xa4/0xd0
+[  948.353007]  futex_wait+0x1e7/0x590
+[  948.355328]  ? futex_wait_setup+0x2b0/0x2b0
+[  948.360578]  ? __lock_acquire+0x60c/0x3b70
+[  948.369186]  ? __save_stack_trace+0x92/0x100
+[  948.374344]  ? hash_futex+0x15/0x210
+[  948.376832]  ? drop_futex_key_refs+0x3c/0xd0
+[  948.378591]  ? futex_wake+0x14e/0x450
+[  948.381609]  do_futex+0x5c9/0x15e0
+[  948.384567]  ? perf_syscall_enter+0xb1/0xc80
+[  948.390307]  ? exit_robust_list+0x240/0x240
+[  948.393566]  ? ftrace_syscall_exit+0x5c0/0x5c0
+[  948.396369]  ? lock_downgrade+0x5e0/0x5e0
+[  948.401748]  ? __might_fault+0x17c/0x1c0
+[  948.404171]  __x64_sys_futex+0x296/0x380
+[  948.406472]  ? __ia32_sys_futex+0x370/0x370
+[  948.440630]  ? trace_hardirqs_on_thunk+0x1a/0x1c
+[  948.441774]  ? trace_hardirqs_off_caller+0x40/0x190
+[  948.442770]  ? do_syscall_64+0x3b/0x580
+[  948.486728]  do_syscall_64+0xc8/0x580
+[  948.489138]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[  948.492072] RIP: 0033:0x462eb9
+[  948.492788] Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00
+48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f
+05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
+[  948.532016] RSP: 002b:00007f7ac8a67cd8 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
+[  948.536811] RAX: ffffffffffffffda RBX: 000000000073bf08 RCX: 0000000000462eb9
+[  948.542138] RDX: 0000000000000000 RSI: 0000000000000080 RDI: 000000000073bf08
+[  948.548077] RBP: 000000000073bf00 R08: 0000000000000000 R09: 0000000000000000
+[  948.562535] R10: 0000000000000000 R11: 0000000000000246 R12: 000000000073bf0c
+[  948.569184] R13: 0000000000000000 R14: 000000000073bf00 R15: 00007fff106d8c10
+
+line 255 of deadline.c is
+	WARN_ON(hrtimer_active(&dl_se->inactive_timer));
+in task_non_contending().
+Unfortunately, in some cases (for example, a deadline task
+continuosly blocking and waking immediately) it can happen that
+a task blocks (and task_non_contending() is called) while the
+0-lag timer is still active. In this case, the safest thing to
+do is to immediately decrease the running bandwidth of the task,
+without trying to re-arm the 0-lag timer.
+
+Signed-off-by: luca abeni <luca.abeni@santannapisa.it>
+---
+ kernel/sched/deadline.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
+index 6a73e41a2016..43901fa3f269 100644
+--- a/kernel/sched/deadline.c
++++ b/kernel/sched/deadline.c
+@@ -252,7 +252,6 @@ static void task_non_contending(struct task_struct *p)
+ 	if (dl_entity_is_special(dl_se))
+ 		return;
+ 
+-	WARN_ON(hrtimer_active(&dl_se->inactive_timer));
+ 	WARN_ON(dl_se->dl_non_contending);
+ 
+ 	zerolag_time = dl_se->deadline -
+@@ -269,7 +268,7 @@ static void task_non_contending(struct task_struct *p)
+ 	 * If the "0-lag time" already passed, decrease the active
+ 	 * utilization now, instead of starting a timer
+ 	 */
+-	if (zerolag_time < 0) {
++	if ((zerolag_time < 0) || hrtimer_active(&dl_se->inactive_timer)) {
+ 		if (dl_task(p))
+ 			sub_running_bw(dl_se, dl_rq);
+ 		if (!dl_task(p) || p->state == TASK_DEAD) {
+-- 
+2.17.1
+
