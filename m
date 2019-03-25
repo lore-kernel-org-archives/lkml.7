@@ -2,172 +2,205 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C57D7C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 05:54:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 306C3C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 05:56:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93EAE20879
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 05:54:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6A7920879
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 05:56:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sfx5CfDl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729555AbfCYFyk (ORCPT
+        id S1729571AbfCYF4u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 01:54:40 -0400
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:28909
-        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729400AbfCYFyj (ORCPT
+        Mon, 25 Mar 2019 01:56:50 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:37603 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729377AbfCYF4u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 01:54:39 -0400
-X-IronPort-AV: E=Sophos;i="5.60,256,1549926000"; 
-   d="scan'208";a="300570127"
-Received: from abo-58-107-68.mrs.modulonet.fr (HELO hadrien) ([85.68.107.58])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Mar 2019 06:54:35 +0100
-Date:   Mon, 25 Mar 2019 06:54:35 +0100 (CET)
-From:   Julia Lawall <julia.lawall@lip6.fr>
-X-X-Sender: jll@hadrien
-To:     Kangjie Lu <kjlu@umn.edu>
-cc:     kjlu@umn.edu, pakki001@umn.edu,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, usb-storage@lists.one-eyed-alien.net,
-        linux-kernel@vger.kernel.org, pakki001@umn.edu,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, usb-storage@lists.one-eyed-alien.net,
-        linux-kernel@vger.kernel.org, kbuild-all@01.org
-Subject: Re: [PATCH] usb: sierra: fix a missing check of device_create_file
- (fwd)
-Message-ID: <alpine.DEB.2.21.1903250653300.2742@hadrien>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 25 Mar 2019 01:56:50 -0400
+Received: by mail-io1-f65.google.com with SMTP id x7so6642626ioh.4
+        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2019 22:56:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rErnU8F2Tub/HLxErqtgrrFFFoxYilwVLP0ZwjlXNEE=;
+        b=Sfx5CfDlRll0o67vrQCTdFEeLo7TCb10zhVYYOb30y/xUvBqVZ0QaUmBWLooxcHPwH
+         2PEIeoJ4gwh/yS9ccDTw4K36qfp/VOvmdoFy0rpP57N6+E+FLjH6HEkn75z4uP7pHRjO
+         dCsD8FKDeCqKvxKO6vzuy68N6Zs9ZVn9sEAlkgl9FDlUoqStpmBN8smqWwJE03nokwiL
+         MAwdhlNbHeopVa8Tr/CluWAknA2PLN4mFppHuM1DELlBAuXTvqCoAdcfR9cFYAEM/OYU
+         kBOcXWOh22t+JRdhuGGq2VmmVadIHAphfSxQDcXR8MGhbwBJn5Jf7kGYEKCjktRuED1C
+         V4yA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rErnU8F2Tub/HLxErqtgrrFFFoxYilwVLP0ZwjlXNEE=;
+        b=oEf8SJ/5KpLy5QhtpNV2l8PekMtuuPL/9434Ycr2OCzvoOHY9rGpfnDu3sHu3RyiSR
+         rTLJzuL9/oUeJ59l2u1oQPzDuKzQo0F3fg5g1QAdBxEwqLRaEbOty8joI761asmysM5l
+         ckhng7Vj/RLMmRA1CgQHRcI96HzkDHnLRGCeJe8+DalLI3JwcyA5Bs14mFb3Hd/JMq4Q
+         xJi784jl9CFtCTCL8xj41Npu2JIhiu7TJux/IULCynBs1DR0ImuUjhZgCiPEJzv8o3Bu
+         KNkQtf20VuFjLZXhxtpiMPD8tXxn1t+qJY0fQZv4yy6eP9B9OJ6PGsLtuW8oGpulyJa5
+         DvnA==
+X-Gm-Message-State: APjAAAUyDkyFFnTqVxXIRVSYeOXeWoc7kptjj8OZZlHPzKVazrThEFwV
+        eCk2QNcfyCO0Io83Iqzjr+/sfSQbqKURmf9X4Q==
+X-Google-Smtp-Source: APXvYqxE4xctNjyxf8Y+oH412kBfJfvVPih+nLJLYmYrlSO47d3fNR8YlfGhvEHQpaI0GNbfj2CGC/Z/kzJQ+ryvs/Y=
+X-Received: by 2002:a6b:f10f:: with SMTP id e15mr15678796iog.106.1553493409070;
+ Sun, 24 Mar 2019 22:56:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <1552450771-8360-1-git-send-email-kernelfans@gmail.com>
+ <20190320002524.GD18740@MiWiFi-R3L-srv> <CAFgQCTt3-9oZ6yi_MGYFOZhn5+cSdJLGf3OQRMJ1CJr0eXiE5w@mail.gmail.com>
+ <20190322075259.GA18740@MiWiFi-R3L-srv> <20190322083419.GB18740@MiWiFi-R3L-srv>
+In-Reply-To: <20190322083419.GB18740@MiWiFi-R3L-srv>
+From:   Pingfan Liu <kernelfans@gmail.com>
+Date:   Mon, 25 Mar 2019 13:56:37 +0800
+Message-ID: <CAFgQCTuu1j64QUHfXp3MJYOD2U9zhrcNCNkWA=6KVy6_cwYyNw@mail.gmail.com>
+Subject: Re: [PATCHv2] x86/boot/KASLR: skip the specified crashkernel reserved region
+To:     Baoquan He <bhe@redhat.com>
+Cc:     Dave Young <dyoung@redhat.com>, x86@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Nicolas Pitre <nico@linaro.org>,
+        Chao Fan <fanc.fnst@cn.fujitsu.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This appears to be a possible double free.
+On Fri, Mar 22, 2019 at 4:34 PM Baoquan He <bhe@redhat.com> wrote:
+>
+> On 03/22/19 at 03:52pm, Baoquan He wrote:
+> > On 03/22/19 at 03:43pm, Pingfan Liu wrote:
+> > > > > +/* parse crashkernel=x@y option */
+> > > > > +static void mem_avoid_crashkernel_simple(char *option)
+> > > >
+> > > > Chao ever mentioned this, I want to ask again, why does it has to be
+> > > > xxx_simple()?
+> > > >
+> > > Seems that I had replied Chao's question in another email. The naming
+> > > follows the function parse_crashkernel_simple(), as the notes above
+> >                        ~~~~~~~~~~~~~~~~~~~~~~~~
+> >
+> > Sorry, I don't get.  typo?
+>
+> OK, I misunderstood it. We do have parse_crashkernel_simple() to handle
+> crashkernel=size[@offset] case, to differente with other complicated
+> cases, like crashkernel=size,[high|low],
+>
+> Then I am fine with this naming. Soryy about the noise.
+>
+> By the way, do you think if we should take care of this case:
+> crashkernel=<range1>:<size1>[,<range2>:<size2>,...][@offset]
+>
+> It can also specify @offset. Not sure if it's too complicated, you may
+> have a investigation.
+>
+OK, I will try it.
+> These two cases have dependency on your crashkernel=X bug fix patch.
+No, crashkernel=x@y should have no dependcy on crashkernel=X, the
+later one relies on memblock searching.
+> The current code only allow crashkernel= to reserve under 896MB. I
+> noticed Boris has agreed on the solution. Maybe you can repost a new
+> version based on the discussion.
+I will sync with Dave to see whether he will post the new version.
 
-julia
+Thank you for kindly review.
 
----------- Forwarded message ----------
-Date: Mon, 25 Mar 2019 12:21:18 +0800
-From: kbuild test robot <lkp@intel.com>
-To: kbuild@01.org
-Cc: Julia Lawall <julia.lawall@lip6.fr>
-Subject: Re: [PATCH] usb: sierra: fix a missing check of device_create_file
-
-CC: kbuild-all@01.org
-In-Reply-To: <20190324223920.961-1-kjlu@umn.edu>
-References: <20190324223920.961-1-kjlu@umn.edu>
-TO: Kangjie Lu <kjlu@umn.edu>
-CC: kjlu@umn.edu, pakki001@umn.edu, Alan Stern <stern@rowland.harvard.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, usb-storage@lists.one-eyed-alien.net, linux-kernel@vger.kernel.org
-CC: pakki001@umn.edu, Alan Stern <stern@rowland.harvard.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, usb-storage@lists.one-eyed-alien.net, linux-kernel@vger.kernel.org
-
-Hi Kangjie,
-
-Thank you for the patch! Perhaps something to improve:
-
-[auto build test WARNING on usb/usb-testing]
-[also build test WARNING on v5.1-rc2 next-20190322]
-[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-
-url:    https://github.com/0day-ci/linux/commits/Kangjie-Lu/usb-sierra-fix-a-missing-check-of-device_create_file/20190325-101328
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
-:::::: branch date: 2 hours ago
-:::::: commit date: 2 hours ago
-
->> drivers/usb/storage/sierra_ms.c:199:8-16: ERROR: reference preceded by free on line 194
-
-# https://github.com/0day-ci/linux/commit/04d66f3d072c3d14308aebecdbc0f2983ce443d2
-git remote add linux-review https://github.com/0day-ci/linux
-git remote update linux-review
-git checkout 04d66f3d072c3d14308aebecdbc0f2983ce443d2
-vim +199 drivers/usb/storage/sierra_ms.c
-
-32fe5e393 Kevin Lloyd  2008-07-10  126
-32fe5e393 Kevin Lloyd  2008-07-10  127  int sierra_ms_init(struct us_data *us)
-32fe5e393 Kevin Lloyd  2008-07-10  128  {
-32fe5e393 Kevin Lloyd  2008-07-10  129  	int result, retries;
-32fe5e393 Kevin Lloyd  2008-07-10  130  	struct swoc_info *swocInfo;
-32fe5e393 Kevin Lloyd  2008-07-10  131  	struct usb_device *udev;
-32fe5e393 Kevin Lloyd  2008-07-10  132  	struct Scsi_Host *sh;
-32fe5e393 Kevin Lloyd  2008-07-10  133
-32fe5e393 Kevin Lloyd  2008-07-10  134  	retries = 3;
-32fe5e393 Kevin Lloyd  2008-07-10  135  	result = 0;
-32fe5e393 Kevin Lloyd  2008-07-10  136  	udev = us->pusb_dev;
-32fe5e393 Kevin Lloyd  2008-07-10  137
-32fe5e393 Kevin Lloyd  2008-07-10  138  	sh = us_to_host(us);
-0220a3f01 Alan Cox     2012-09-19  139  	scsi_get_host_dev(sh);
-32fe5e393 Kevin Lloyd  2008-07-10  140
-32fe5e393 Kevin Lloyd  2008-07-10  141  	/* Force Modem mode */
-32fe5e393 Kevin Lloyd  2008-07-10  142  	if (swi_tru_install == TRU_FORCE_MODEM) {
-191648d03 Joe Perches  2013-04-19  143  		usb_stor_dbg(us, "SWIMS: Forcing Modem Mode\n");
-32fe5e393 Kevin Lloyd  2008-07-10  144  		result = sierra_set_ms_mode(udev, SWIMS_SET_MODE_Modem);
-32fe5e393 Kevin Lloyd  2008-07-10  145  		if (result < 0)
-191648d03 Joe Perches  2013-04-19  146  			usb_stor_dbg(us, "SWIMS: Failed to switch to modem mode\n");
-32fe5e393 Kevin Lloyd  2008-07-10  147  		return -EIO;
-32fe5e393 Kevin Lloyd  2008-07-10  148  	}
-32fe5e393 Kevin Lloyd  2008-07-10  149  	/* Force Mass Storage mode (keep CD-Rom) */
-32fe5e393 Kevin Lloyd  2008-07-10  150  	else if (swi_tru_install == TRU_FORCE_MS) {
-191648d03 Joe Perches  2013-04-19  151  		usb_stor_dbg(us, "SWIMS: Forcing Mass Storage Mode\n");
-32fe5e393 Kevin Lloyd  2008-07-10  152  		goto complete;
-32fe5e393 Kevin Lloyd  2008-07-10  153  	}
-32fe5e393 Kevin Lloyd  2008-07-10  154  	/* Normal TRU-Install Logic */
-32fe5e393 Kevin Lloyd  2008-07-10  155  	else {
-191648d03 Joe Perches  2013-04-19  156  		usb_stor_dbg(us, "SWIMS: Normal SWoC Logic\n");
-32fe5e393 Kevin Lloyd  2008-07-10  157
-32fe5e393 Kevin Lloyd  2008-07-10  158  		swocInfo = kmalloc(sizeof(struct swoc_info),
-32fe5e393 Kevin Lloyd  2008-07-10  159  				GFP_KERNEL);
-191648d03 Joe Perches  2013-04-19  160  		if (!swocInfo)
-32fe5e393 Kevin Lloyd  2008-07-10  161  			return -ENOMEM;
-32fe5e393 Kevin Lloyd  2008-07-10  162
-32fe5e393 Kevin Lloyd  2008-07-10  163  		retries = 3;
-32fe5e393 Kevin Lloyd  2008-07-10  164  		do {
-32fe5e393 Kevin Lloyd  2008-07-10  165  			retries--;
-32fe5e393 Kevin Lloyd  2008-07-10  166  			result = sierra_get_swoc_info(udev, swocInfo);
-32fe5e393 Kevin Lloyd  2008-07-10  167  			if (result < 0) {
-191648d03 Joe Perches  2013-04-19  168  				usb_stor_dbg(us, "SWIMS: Failed SWoC query\n");
-32fe5e393 Kevin Lloyd  2008-07-10  169  				schedule_timeout_uninterruptible(2*HZ);
-32fe5e393 Kevin Lloyd  2008-07-10  170  			}
-32fe5e393 Kevin Lloyd  2008-07-10  171  		} while (retries && result < 0);
-32fe5e393 Kevin Lloyd  2008-07-10  172
-32fe5e393 Kevin Lloyd  2008-07-10  173  		if (result < 0) {
-191648d03 Joe Perches  2013-04-19  174  			usb_stor_dbg(us, "SWIMS: Completely failed SWoC query\n");
-32fe5e393 Kevin Lloyd  2008-07-10  175  			kfree(swocInfo);
-32fe5e393 Kevin Lloyd  2008-07-10  176  			return -EIO;
-32fe5e393 Kevin Lloyd  2008-07-10  177  		}
-32fe5e393 Kevin Lloyd  2008-07-10  178
-191648d03 Joe Perches  2013-04-19  179  		debug_swoc(&us->pusb_dev->dev, swocInfo);
-32fe5e393 Kevin Lloyd  2008-07-10  180
-f0183a338 Felipe Balbi 2016-04-18  181  		/*
-f0183a338 Felipe Balbi 2016-04-18  182  		 * If there is not Linux software on the TRU-Install device
-32fe5e393 Kevin Lloyd  2008-07-10  183  		 * then switch to modem mode
-32fe5e393 Kevin Lloyd  2008-07-10  184  		 */
-32fe5e393 Kevin Lloyd  2008-07-10  185  		if (!containsFullLinuxPackage(swocInfo)) {
-191648d03 Joe Perches  2013-04-19  186  			usb_stor_dbg(us, "SWIMS: Switching to Modem Mode\n");
-32fe5e393 Kevin Lloyd  2008-07-10  187  			result = sierra_set_ms_mode(udev,
-32fe5e393 Kevin Lloyd  2008-07-10  188  				SWIMS_SET_MODE_Modem);
-32fe5e393 Kevin Lloyd  2008-07-10  189  			if (result < 0)
-191648d03 Joe Perches  2013-04-19  190  				usb_stor_dbg(us, "SWIMS: Failed to switch modem\n");
-32fe5e393 Kevin Lloyd  2008-07-10  191  			kfree(swocInfo);
-32fe5e393 Kevin Lloyd  2008-07-10  192  			return -EIO;
-32fe5e393 Kevin Lloyd  2008-07-10  193  		}
-32fe5e393 Kevin Lloyd  2008-07-10 @194  		kfree(swocInfo);
-32fe5e393 Kevin Lloyd  2008-07-10  195  	}
-32fe5e393 Kevin Lloyd  2008-07-10  196  complete:
-32fe5e393 Kevin Lloyd  2008-07-10  197  	result = device_create_file(&us->pusb_intf->dev, &dev_attr_truinst);
-04d66f3d0 Kangjie Lu   2019-03-24  198  	if (result) {
-04d66f3d0 Kangjie Lu   2019-03-24 @199  		kfree(swocInfo);
-04d66f3d0 Kangjie Lu   2019-03-24  200  		return result;
-04d66f3d0 Kangjie Lu   2019-03-24  201  	}
-32fe5e393 Kevin Lloyd  2008-07-10  202
-be475d902 Alan Stern   2009-05-21  203  	return 0;
-32fe5e393 Kevin Lloyd  2008-07-10  204  }
-32fe5e393 Kevin Lloyd  2008-07-10  205
-
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+Regards,
+Pingfan
+>
+> http://lkml.kernel.org/r/1548047768-7656-1-git-send-email-kernelfans@gmail.com
+> [PATCHv7] x86/kdump: bugfix, make the behavior of crashkernel=X consistent with kaslr
+>
+> Thanks
+> Baoquan
+>
+> >
+> > > the definition
+> > > /*
+> > >  * That function parses "simple" (old) crashkernel command lines like
+> > >  *
+> > >  * crashkernel=size[@offset]
+> >
+> > Hmm, should only crashkernel=size@offset be cared? crashkernel=size will
+> > auto finding a place to reserve, and that is after KASLR.
+> >
+> > >  *
+> > >  * It returns 0 on success and -EINVAL on failure.
+> > >  */
+> > > static int __init parse_crashkernel_simple(char *cmdline,
+> > >
+> > > Do you have alternative suggestion?
+> > >
+> > > > Except of these, patch looks good to me. It's a nice catch, and only
+> > > > need a simple fix based on the current code.
+> > > >
+> > > Thank you for the kindly review.
+> > >
+> > > Regards,
+> > > Pingfan
+> > >
+> > > > Thanks
+> > > > Baoquan
+> > > >
+> > > > > +{
+> > > > > +     unsigned long long crash_size, crash_base;
+> > > > > +     char *cur = option;
+> > > > > +
+> > > > > +     crash_size = memparse(option, &cur);
+> > > > > +     if (option == cur)
+> > > > > +             return;
+> > > > > +
+> > > > > +     if (*cur == '@') {
+> > > > > +             option = cur + 1;
+> > > > > +             crash_base = memparse(option, &cur);
+> > > > > +             if (option == cur)
+> > > > > +                     return;
+> > > > > +             mem_avoid[MEM_AVOID_CRASHKERNEL].start = crash_base;
+> > > > > +             mem_avoid[MEM_AVOID_CRASHKERNEL].size = crash_size;
+> > > > > +     }
+> > > > > +}
+> > > > >
+> > > > >  static void handle_mem_options(void)
+> > > > >  {
+> > > > > @@ -250,7 +270,7 @@ static void handle_mem_options(void)
+> > > > >       u64 mem_size;
+> > > > >
+> > > > >       if (!strstr(args, "memmap=") && !strstr(args, "mem=") &&
+> > > > > -             !strstr(args, "hugepages"))
+> > > > > +             !strstr(args, "hugepages") && !strstr(args, "crashkernel="))
+> > > > >               return;
+> > > > >
+> > > > >       tmp_cmdline = malloc(len + 1);
+> > > > > @@ -286,6 +306,8 @@ static void handle_mem_options(void)
+> > > > >                               goto out;
+> > > > >
+> > > > >                       mem_limit = mem_size;
+> > > > > +             } else if (strstr(param, "crashkernel")) {
+> > > > > +                     mem_avoid_crashkernel_simple(val);
+> > > > >               }
+> > > > >       }
+> > > > >
+> > > > > @@ -414,7 +436,7 @@ static void mem_avoid_init(unsigned long input, unsigned long input_size,
+> > > > >
+> > > > >       /* We don't need to set a mapping for setup_data. */
+> > > > >
+> > > > > -     /* Mark the memmap regions we need to avoid */
+> > > > > +     /* Mark the regions we need to avoid */
+> > > > >       handle_mem_options();
+> > > > >
+> > > > >  #ifdef CONFIG_X86_VERBOSE_BOOTUP
+> > > > > --
+> > > > > 2.7.4
+> > > > >
