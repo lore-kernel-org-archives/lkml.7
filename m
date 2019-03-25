@@ -3,33 +3,33 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34729C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:08:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 117F1C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:08:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7EE52087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:08:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6E3320896
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:08:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730309AbfCYRIi (ORCPT
+        id S1730344AbfCYRIn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 13:08:38 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51176 "EHLO mx1.suse.de"
+        Mon, 25 Mar 2019 13:08:43 -0400
+Received: from mx2.suse.de ([195.135.220.15]:51210 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730265AbfCYRIf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 13:08:35 -0400
+        id S1730295AbfCYRIj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 13:08:39 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 3C760B016;
-        Mon, 25 Mar 2019 17:08:34 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id 49FE2B017;
+        Mon, 25 Mar 2019 17:08:37 +0000 (UTC)
 Received: by unicorn.suse.cz (Postfix, from userid 1000)
-        id DC1CAE1404; Mon, 25 Mar 2019 18:08:33 +0100 (CET)
-Message-Id: <b7aea4b2642b2fe6f12cfb843a03154f584f3bf6.1553532199.git.mkubecek@suse.cz>
+        id E2B4AE1404; Mon, 25 Mar 2019 18:08:36 +0100 (CET)
+Message-Id: <1dce7f6dd3308ad4b90300014823d071f37b0f74.1553532199.git.mkubecek@suse.cz>
 In-Reply-To: <cover.1553532199.git.mkubecek@suse.cz>
 References: <cover.1553532199.git.mkubecek@suse.cz>
 From:   Michal Kubecek <mkubecek@suse.cz>
-Subject: [PATCH net-next v5 13/22] ethtool: provide driver/device information
+Subject: [PATCH net-next v5 14/22] ethtool: provide timestamping information
  in GET_INFO request
 To:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org
 Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
@@ -38,368 +38,397 @@ Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
         John Linville <linville@tuxdriver.com>,
         Stephen Hemminger <stephen@networkplumber.org>,
         linux-kernel@vger.kernel.org
-Date:   Mon, 25 Mar 2019 18:08:33 +0100 (CET)
+Date:   Mon, 25 Mar 2019 18:08:36 +0100 (CET)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement GET_INFO request to get basic driver and device information as
-provided by ETHTOOL_GDRVINFO ioct command. The information is read only so
-that the corresponding SET_INFO message is only used in kernel replies.
+Add timestamping information as provided by ETHTOOL_GET_TS_INFO ioctl
+command in GET_INFO reply if ETH_INFO_IM_TSINFO flag is set in the request.
 
-Move most of ethtool_get_drvinfo() int common.c so that the code can be
-shared by both ioctl and netlink interface.
+Add constants for counts of HWTSTAMP_TX_* and HWTSTAM_FILTER_* constants
+and provide symbolic names for timestamping related values so that they can
+be retrieved in GET_STRSET and GET_INFO requests.
 
 Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
 ---
- Documentation/networking/ethtool-netlink.txt |  43 ++++-
- include/uapi/linux/ethtool_netlink.h         |  30 ++++
- net/ethtool/Makefile                         |   2 +-
- net/ethtool/common.c                         |  52 ++++++
+ Documentation/networking/ethtool-netlink.txt |  10 +-
+ include/uapi/linux/ethtool.h                 |   6 +
+ include/uapi/linux/ethtool_netlink.h         |  16 ++-
+ include/uapi/linux/net_tstamp.h              |  13 ++
+ net/ethtool/common.c                         |  24 ++++
  net/ethtool/common.h                         |   2 +
- net/ethtool/info.c                           | 158 +++++++++++++++++++
- net/ethtool/ioctl.c                          |  50 +-----
- net/ethtool/netlink.c                        |   8 +
- net/ethtool/netlink.h                        |   1 +
- 9 files changed, 299 insertions(+), 47 deletions(-)
- create mode 100644 net/ethtool/info.c
+ net/ethtool/info.c                           | 138 +++++++++++++++++++
+ net/ethtool/ioctl.c                          |  20 +--
+ net/ethtool/netlink.h                        |   9 ++
+ net/ethtool/strset.c                         |  18 +++
+ 10 files changed, 236 insertions(+), 20 deletions(-)
 
 diff --git a/Documentation/networking/ethtool-netlink.txt b/Documentation/networking/ethtool-netlink.txt
-index 1508c16a236e..cffa508ca6c6 100644
+index cffa508ca6c6..74c62f11810c 100644
 --- a/Documentation/networking/ethtool-netlink.txt
 +++ b/Documentation/networking/ethtool-netlink.txt
-@@ -129,6 +129,8 @@ List of message types
-     ETHNL_CMD_EVENT			notification only
-     ETHNL_CMD_GET_STRSET
-     ETHNL_CMD_SET_STRSET		response only
-+    ETHNL_CMD_GET_INFO
-+    ETHNL_CMD_SET_INFO			response only
+@@ -240,6 +240,11 @@ Kernel response contents:
+         ETHA_DRVINFO_FWVERSION		(string)	firmware version
+         ETHA_DRVINFO_BUSINFO		(string)	device bus address
+         ETHA_DRVINFO_EROM_VER		(string)	expansion ROM version
++    ETHA_INFO_TSINFO		(nested)	timestamping information
++        ETHA_TSINFO_TIMESTAMPING	(bitset)	supported flags
++        ETHA_TSINFO_PHC_INDEX		(u32)		associated PHC
++        ETHA_TSINFO_TX_TYPES		(bitset)	Tx types
++        ETHA_TSINFO_RX_FILTERS		(bitset)	Rx filters
  
- All constants use ETHNL_CMD_ prefix, usually followed by "GET", "SET" or "ACT"
- to indicate the type.
-@@ -209,6 +211,45 @@ ETHA_STRSET_COUNTS tells kernel to only return string counts of the sets, not
- the actual strings.
+ The meaning of DRVINFO attributes follows the corresponding fields of
+ ETHTOOL_GDRVINFO response. Second part with various counts and sizes is
+@@ -247,6 +252,9 @@ omitted as these are not really needed (and if they are, they can be easily
+ found by different means). Driver version is also omitted as it is rather
+ misleading in most cases.
+ 
++ETHA_TSINFO_PHC_INDEX can be unsigned as there is no need for special value;
++if no PHC is associated, the attribute is not present.
++
+ GET_INFO requests allow dumps.
  
  
-+GET_INFO
-+--------
-+
-+GET_INFO requests information provided by ioctl commands ETHTOOL_GDRVINFO,
-+ETHTOOL_GPERMADDR and ETHTOOL_GET_TS_INFO to provide basic device information.
-+Common pattern is that all information is read only so that SET_INFO message
-+exists but is only used by kernel for replies to GET_INFO requests. There is
-+also no corresponding notification.
-+
-+Request contents:
-+
-+    ETHA_INFO_DEV		(nested)	device identification
-+    ETHA_INFO_INFOMASK		(u32)		info mask
-+    ETHA_INFO_COMPACT		(flag)		request compact bitsets
-+
-+Info mask bits meaning:
-+
-+    ETH_INFO_IM_DRVINFO			driver info (GDRVINFO)
-+    ETH_INFO_IM_PERMADDR		permanent HW address (GPERMADDR)
-+    ETH_INFO_IM_TSINFO			timestamping info (GET_TS_INFO)
-+
-+Kernel response contents:
-+
-+    ETHA_INFO_DEV		(nested)	device identification
-+    ETHA_INFO_DRVINFO		(nested)	driver information
-+        ETHA_DRVINFO_DRIVER		(string)	driver name
-+        ETHA_DRVINFO_FWVERSION		(string)	firmware version
-+        ETHA_DRVINFO_BUSINFO		(string)	device bus address
-+        ETHA_DRVINFO_EROM_VER		(string)	expansion ROM version
-+
-+The meaning of DRVINFO attributes follows the corresponding fields of
-+ETHTOOL_GDRVINFO response. Second part with various counts and sizes is
-+omitted as these are not really needed (and if they are, they can be easily
-+found by different means). Driver version is also omitted as it is rather
-+misleading in most cases.
-+
-+GET_INFO requests allow dumps.
-+
-+
- Request translation
- -------------------
+@@ -322,7 +330,7 @@ ETHTOOL_SCHANNELS		n/a
+ ETHTOOL_SET_DUMP		n/a
+ ETHTOOL_GET_DUMP_FLAG		n/a
+ ETHTOOL_GET_DUMP_DATA		n/a
+-ETHTOOL_GET_TS_INFO		n/a
++ETHTOOL_GET_TS_INFO		ETHNL_CMD_GET_INFO
+ ETHTOOL_GMODULEINFO		n/a
+ ETHTOOL_GMODULEEEPROM		n/a
+ ETHTOOL_GEEE			n/a
+diff --git a/include/uapi/linux/ethtool.h b/include/uapi/linux/ethtool.h
+index eaea804972f6..882a542eaaa9 100644
+--- a/include/uapi/linux/ethtool.h
++++ b/include/uapi/linux/ethtool.h
+@@ -563,6 +563,9 @@ struct ethtool_pauseparam {
+  * @ETH_SS_RSS_HASH_FUNCS: RSS hush function names
+  * @ETH_SS_PHY_STATS: Statistic names, for use with %ETHTOOL_GPHYSTATS
+  * @ETH_SS_PHY_TUNABLES: PHY tunable names
++ * @ETH_SS_TSTAMP_SOF: timestamping flag names
++ * @ETH_SS_TSTAMP_TX_TYPE: timestamping Tx type names
++ * @ETH_SS_TSTAMP_RX_FILTER: timestamping Rx filter names
+  */
+ enum ethtool_stringset {
+ 	ETH_SS_TEST		= 0,
+@@ -574,6 +577,9 @@ enum ethtool_stringset {
+ 	ETH_SS_TUNABLES,
+ 	ETH_SS_PHY_STATS,
+ 	ETH_SS_PHY_TUNABLES,
++	ETH_SS_TSTAMP_SOF,
++	ETH_SS_TSTAMP_TX_TYPE,
++	ETH_SS_TSTAMP_RX_FILTER,
  
-@@ -220,7 +261,7 @@ ioctl command			netlink command
- ---------------------------------------------------------------------
- ETHTOOL_GSET			n/a
- ETHTOOL_SSET			n/a
--ETHTOOL_GDRVINFO		n/a
-+ETHTOOL_GDRVINFO		ETHNL_CMD_GET_INFO
- ETHTOOL_GREGS			n/a
- ETHTOOL_GWOL			n/a
- ETHTOOL_SWOL			n/a
+ 	ETH_SS_COUNT
+ };
 diff --git a/include/uapi/linux/ethtool_netlink.h b/include/uapi/linux/ethtool_netlink.h
-index 66aeb436b822..386d4273ac44 100644
+index 386d4273ac44..e7a6e813150b 100644
 --- a/include/uapi/linux/ethtool_netlink.h
 +++ b/include/uapi/linux/ethtool_netlink.h
-@@ -16,6 +16,8 @@ enum {
- 	ETHNL_CMD_EVENT,		/* only for notifications */
- 	ETHNL_CMD_GET_STRSET,
- 	ETHNL_CMD_SET_STRSET,		/* only for reply */
-+	ETHNL_CMD_GET_INFO,
-+	ETHNL_CMD_SET_INFO,		/* only for reply */
+@@ -151,14 +151,17 @@ enum {
+ 	ETHA_INFO_INFOMASK,			/* u32 */
+ 	ETHA_INFO_COMPACT,			/* flag */
+ 	ETHA_INFO_DRVINFO,			/* nest - ETHA_DRVINFO_* */
++	ETHA_INFO_TSINFO,			/* nest - ETHA_TSINFO_* */
  
- 	__ETHNL_CMD_CNT,
- 	ETHNL_CMD_MAX = (__ETHNL_CMD_CNT - 1)
-@@ -141,6 +143,34 @@ enum {
- 	ETHA_STRSET_MAX = (__ETHA_STRSET_CNT - 1)
+ 	__ETHA_INFO_CNT,
+ 	ETHA_INFO_MAX = (__ETHA_INFO_CNT - 1)
  };
  
-+/* GET_INFO / SET_INFO */
-+
+ #define ETH_INFO_IM_DRVINFO			(1U << 0)
++#define ETH_INFO_IM_TSINFO			(1U << 1)
+ 
+-#define ETH_INFO_IM_ALL (ETH_INFO_IM_DRVINFO)
++#define ETH_INFO_IM_ALL (ETH_INFO_IM_DRVINFO | \
++			 ETH_INFO_IM_TSINFO)
+ 
+ enum {
+ 	ETHA_DRVINFO_UNSPEC,
+@@ -171,6 +174,17 @@ enum {
+ 	ETHA_DRVINFO_MAX = (__ETHA_DRVINFO_CNT - 1)
+ };
+ 
 +enum {
-+	ETHA_INFO_UNSPEC,
-+	ETHA_INFO_DEV,				/* nest - ETHA_DEV_* */
-+	ETHA_INFO_INFOMASK,			/* u32 */
-+	ETHA_INFO_COMPACT,			/* flag */
-+	ETHA_INFO_DRVINFO,			/* nest - ETHA_DRVINFO_* */
++	ETHA_TSINFO_UNSPEC,
++	ETHA_TSINFO_TIMESTAMPING,		/* bitset */
++	ETHA_TSINFO_PHC_INDEX,			/* u32 */
++	ETHA_TSINFO_TX_TYPES,			/* bitset */
++	ETHA_TSINFO_RX_FILTERS,			/* bitset */
 +
-+	__ETHA_INFO_CNT,
-+	ETHA_INFO_MAX = (__ETHA_INFO_CNT - 1)
-+};
-+
-+#define ETH_INFO_IM_DRVINFO			(1U << 0)
-+
-+#define ETH_INFO_IM_ALL (ETH_INFO_IM_DRVINFO)
-+
-+enum {
-+	ETHA_DRVINFO_UNSPEC,
-+	ETHA_DRVINFO_DRIVER,			/* string */
-+	ETHA_DRVINFO_FWVERSION,			/* string */
-+	ETHA_DRVINFO_BUSINFO,			/* string */
-+	ETHA_DRVINFO_EROM_VER,			/* string */
-+
-+	__ETHA_DRVINFO_CNT,
-+	ETHA_DRVINFO_MAX = (__ETHA_DRVINFO_CNT - 1)
++	__ETHA_TSINFO_CNT,
++	ETHA_TSINFO_MAX = (__ETHA_TSINFO_CNT - 1)
 +};
 +
  /* generic netlink info */
  #define ETHTOOL_GENL_NAME "ethtool"
  #define ETHTOOL_GENL_VERSION 1
-diff --git a/net/ethtool/Makefile b/net/ethtool/Makefile
-index 11ceb00821b3..96d41dc45d4f 100644
---- a/net/ethtool/Makefile
-+++ b/net/ethtool/Makefile
-@@ -4,4 +4,4 @@ obj-y				+= ioctl.o common.o
+diff --git a/include/uapi/linux/net_tstamp.h b/include/uapi/linux/net_tstamp.h
+index e5b39721c6e4..e5b0472c4416 100644
+--- a/include/uapi/linux/net_tstamp.h
++++ b/include/uapi/linux/net_tstamp.h
+@@ -30,6 +30,9 @@ enum {
+ 	SOF_TIMESTAMPING_OPT_STATS = (1<<12),
+ 	SOF_TIMESTAMPING_OPT_PKTINFO = (1<<13),
+ 	SOF_TIMESTAMPING_OPT_TX_SWHW = (1<<14),
++	/* when adding a flag, please update so_timestamping_labels array
++	 * in net/ethtool/info.c
++	 */
  
- obj-$(CONFIG_ETHTOOL_NETLINK)	+= ethtool_nl.o
+ 	SOF_TIMESTAMPING_LAST = SOF_TIMESTAMPING_OPT_TX_SWHW,
+ 	SOF_TIMESTAMPING_MASK = (SOF_TIMESTAMPING_LAST - 1) |
+@@ -90,6 +93,11 @@ enum hwtstamp_tx_types {
+ 	 * queue.
+ 	 */
+ 	HWTSTAMP_TX_ONESTEP_SYNC,
++	/* when adding a value, please update tstamp_tx_type_labels array
++	 * in net/ethtool/info.c
++	 */
++
++	HWTSTAMP_TX_LAST = HWTSTAMP_TX_ONESTEP_SYNC
+ };
  
--ethtool_nl-y	:= netlink.o bitset.o strset.o
-+ethtool_nl-y	:= netlink.o bitset.o strset.o info.o
+ /* possible values for hwtstamp_config->rx_filter */
+@@ -132,6 +140,11 @@ enum hwtstamp_rx_filters {
+ 
+ 	/* NTP, UDP, all versions and packet modes */
+ 	HWTSTAMP_FILTER_NTP_ALL,
++	/* when adding a value, please update tstamp_rx_filter_labels array
++	 * in net/ethtool/info.c
++	 */
++
++	HWTSTAMP_FILTER_LAST = HWTSTAMP_FILTER_NTP_ALL
+ };
+ 
+ /* SCM_TIMESTAMPING_PKTINFO control message */
 diff --git a/net/ethtool/common.c b/net/ethtool/common.c
-index 73f721a1c557..8da992129321 100644
+index 8da992129321..7e846f4151f9 100644
 --- a/net/ethtool/common.c
 +++ b/net/ethtool/common.c
-@@ -1,5 +1,7 @@
+@@ -1,6 +1,8 @@
  // SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note
  
-+#include <linux/rtnetlink.h>
-+#include <net/devlink.h>
+ #include <linux/rtnetlink.h>
++#include <linux/phy.h>
++#include <linux/net_tstamp.h>
+ #include <net/devlink.h>
  #include "common.h"
  
- const char netdev_features_strings[NETDEV_FEATURE_COUNT][ETH_GSTRING_LEN] = {
-@@ -81,3 +83,53 @@ phy_tunable_strings[__ETHTOOL_PHY_TUNABLE_COUNT][ETH_GSTRING_LEN] = {
- 	[ETHTOOL_ID_UNSPEC]     = "Unspec",
- 	[ETHTOOL_PHY_DOWNSHIFT]	= "phy-downshift",
- };
+@@ -133,3 +135,25 @@ int __ethtool_get_drvinfo(struct net_device *dev, struct ethtool_drvinfo *info)
+ 
+ 	return 0;
+ }
 +
-+int __ethtool_get_drvinfo(struct net_device *dev, struct ethtool_drvinfo *info)
++int __ethtool_get_ts_info(struct net_device *dev, struct ethtool_ts_info *info)
 +{
 +	const struct ethtool_ops *ops = dev->ethtool_ops;
++	struct phy_device *phydev = dev->phydev;
++	int err = 0;
 +
 +	memset(info, 0, sizeof(*info));
-+	info->cmd = ETHTOOL_GDRVINFO;
-+	if (ops->get_drvinfo) {
-+		ops->get_drvinfo(dev, info);
-+	} else if (dev->dev.parent && dev->dev.parent->driver) {
-+		strlcpy(info->bus_info, dev_name(dev->dev.parent),
-+			sizeof(info->bus_info));
-+		strlcpy(info->driver, dev->dev.parent->driver->name,
-+			sizeof(info->driver));
++	info->cmd = ETHTOOL_GET_TS_INFO;
++
++	if (phydev && phydev->drv && phydev->drv->ts_info) {
++		err = phydev->drv->ts_info(phydev, info);
++	} else if (ops->get_ts_info) {
++		err = ops->get_ts_info(dev, info);
 +	} else {
-+		return -EOPNOTSUPP;
++		info->so_timestamping = SOF_TIMESTAMPING_RX_SOFTWARE |
++					SOF_TIMESTAMPING_SOFTWARE;
++		info->phc_index = -1;
 +	}
 +
-+	/* this method of obtaining string set info is deprecated;
-+	 * Use ETHTOOL_GSSET_INFO instead.
-+	 */
-+	if (ops->get_sset_count) {
-+		int rc;
-+
-+		rc = ops->get_sset_count(dev, ETH_SS_TEST);
-+		if (rc >= 0)
-+			info->testinfo_len = rc;
-+		rc = ops->get_sset_count(dev, ETH_SS_STATS);
-+		if (rc >= 0)
-+			info->n_stats = rc;
-+		rc = ops->get_sset_count(dev, ETH_SS_PRIV_FLAGS);
-+		if (rc >= 0)
-+			info->n_priv_flags = rc;
-+	}
-+	if (ops->get_regs_len) {
-+		int ret = ops->get_regs_len(dev);
-+
-+		if (ret > 0)
-+			info->regdump_len = ret;
-+	}
-+
-+	if (ops->get_eeprom_len)
-+		info->eedump_len = ops->get_eeprom_len(dev);
-+
-+	if (!info->fw_version[0])
-+		devlink_compat_running_version(dev, info->fw_version,
-+					       sizeof(info->fw_version));
-+
-+	return 0;
++	return err;
 +}
 diff --git a/net/ethtool/common.h b/net/ethtool/common.h
-index 41b2efc1e4e1..e87e58b3a274 100644
+index e87e58b3a274..02cbee79da35 100644
 --- a/net/ethtool/common.h
 +++ b/net/ethtool/common.h
-@@ -3,6 +3,7 @@
- #ifndef _ETHTOOL_COMMON_H
- #define _ETHTOOL_COMMON_H
- 
-+#include <linux/netdevice.h>
- #include <linux/ethtool.h>
- 
- extern const char
-@@ -14,4 +15,5 @@ tunable_strings[__ETHTOOL_TUNABLE_COUNT][ETH_GSTRING_LEN];
- extern const char
+@@ -16,4 +16,6 @@ extern const char
  phy_tunable_strings[__ETHTOOL_PHY_TUNABLE_COUNT][ETH_GSTRING_LEN];
  
-+int __ethtool_get_drvinfo(struct net_device *dev, struct ethtool_drvinfo *info);
+ int __ethtool_get_drvinfo(struct net_device *dev, struct ethtool_drvinfo *info);
++int __ethtool_get_ts_info(struct net_device *dev, struct ethtool_ts_info *info);
++
  #endif /* _ETHTOOL_COMMON_H */
 diff --git a/net/ethtool/info.c b/net/ethtool/info.c
-new file mode 100644
-index 000000000000..cc42993bb05b
---- /dev/null
+index cc42993bb05b..68de78533ec7 100644
+--- a/net/ethtool/info.c
 +++ b/net/ethtool/info.c
-@@ -0,0 +1,158 @@
-+// SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note
+@@ -1,15 +1,61 @@
+ // SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note
+ 
++#include <linux/net_tstamp.h>
 +
-+#include "netlink.h"
-+#include "common.h"
-+#include "bitset.h"
-+
-+struct info_data {
-+	struct common_req_info		reqinfo_base;
-+
-+	/* everything below here will be reset for each device in dumps */
-+	struct common_reply_data	repdata_base;
-+	struct ethtool_drvinfo		drvinfo;
+ #include "netlink.h"
+ #include "common.h"
+ #include "bitset.h"
+ 
++const char *const so_timestamping_labels[] = {
++	"hardware-transmit",		/* SOF_TIMESTAMPING_TX_HARDWARE */
++	"software-transmit",		/* SOF_TIMESTAMPING_TX_SOFTWARE */
++	"hardware-receive",		/* SOF_TIMESTAMPING_RX_HARDWARE */
++	"software-receive",		/* SOF_TIMESTAMPING_RX_SOFTWARE */
++	"software-system-clock",	/* SOF_TIMESTAMPING_SOFTWARE */
++	"hardware-legacy-clock",	/* SOF_TIMESTAMPING_SYS_HARDWARE */
++	"hardware-raw-clock",		/* SOF_TIMESTAMPING_RAW_HARDWARE */
++	"option-id",			/* SOF_TIMESTAMPING_OPT_ID */
++	"sched-transmit",		/* SOF_TIMESTAMPING_TX_SCHED */
++	"ack-transmit",			/* SOF_TIMESTAMPING_TX_ACK */
++	"option-cmsg",			/* SOF_TIMESTAMPING_OPT_CMSG */
++	"option-tsonly",		/* SOF_TIMESTAMPING_OPT_TSONLY */
++	"option-stats",			/* SOF_TIMESTAMPING_OPT_STATS */
++	"option-pktinfo",		/* SOF_TIMESTAMPING_OPT_PKTINFO */
++	"option-tx-swhw",		/* SOF_TIMESTAMPING_OPT_TX_SWHW */
 +};
 +
-+static const struct nla_policy get_info_policy[ETHA_INFO_MAX + 1] = {
-+	[ETHA_INFO_UNSPEC]		= { .type = NLA_REJECT },
-+	[ETHA_INFO_DEV]			= { .type = NLA_NESTED },
-+	[ETHA_INFO_INFOMASK]		= { .type = NLA_U32 },
-+	[ETHA_INFO_COMPACT]		= { .type = NLA_FLAG },
-+	[ETHA_INFO_DRVINFO]		= { .type = NLA_REJECT },
++const char *const tstamp_tx_type_labels[] = {
++	[HWTSTAMP_TX_OFF]		= "off",
++	[HWTSTAMP_TX_ON]		= "on",
++	[HWTSTAMP_TX_ONESTEP_SYNC]	= "one-step-sync",
 +};
 +
-+/* parse_request() handler */
-+static int parse_info(struct common_req_info *req_info, struct sk_buff *skb,
-+		      struct genl_info *info, const struct nlmsghdr *nlhdr)
-+{
-+	struct nlattr *tb[ETHA_INFO_MAX + 1];
-+	int ret;
++const char *const tstamp_rx_filter_labels[] = {
++	[HWTSTAMP_FILTER_NONE]			= "none",
++	[HWTSTAMP_FILTER_ALL]			= "all",
++	[HWTSTAMP_FILTER_SOME]			= "some",
++	[HWTSTAMP_FILTER_PTP_V1_L4_EVENT]	= "ptpv1-l4-event",
++	[HWTSTAMP_FILTER_PTP_V1_L4_SYNC]	= "ptpv1-l4-sync",
++	[HWTSTAMP_FILTER_PTP_V1_L4_DELAY_REQ]	= "ptpv1-l4-delay-req",
++	[HWTSTAMP_FILTER_PTP_V2_L4_EVENT]	= "ptpv2-l4-event",
++	[HWTSTAMP_FILTER_PTP_V2_L4_SYNC]	= "ptpv2-l4-sync",
++	[HWTSTAMP_FILTER_PTP_V2_L4_DELAY_REQ]	= "ptpv2-l4-delay-req",
++	[HWTSTAMP_FILTER_PTP_V2_L2_EVENT]	= "ptpv2-l2-event",
++	[HWTSTAMP_FILTER_PTP_V2_L2_SYNC]	= "ptpv2-l2-sync",
++	[HWTSTAMP_FILTER_PTP_V2_L2_DELAY_REQ]	= "ptpv2-l2-delay-req",
++	[HWTSTAMP_FILTER_PTP_V2_EVENT]		= "ptpv2-event",
++	[HWTSTAMP_FILTER_PTP_V2_SYNC]		= "ptpv2-sync",
++	[HWTSTAMP_FILTER_PTP_V2_DELAY_REQ]	= "ptpv2-delay-req",
++	[HWTSTAMP_FILTER_NTP_ALL]		= "ntp-all",
++};
 +
-+	ret = ethnlmsg_parse(nlhdr, tb, ETHA_INFO_MAX, get_info_policy, info);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (tb[ETHA_INFO_DEV]) {
-+		req_info->dev = ethnl_dev_get(info, tb[ETHA_INFO_DEV]);
-+		if (IS_ERR(req_info->dev)) {
-+			ret = PTR_ERR(req_info->dev);
-+			req_info->dev = NULL;
-+			return ret;
-+		}
-+	}
-+	if (tb[ETHA_INFO_INFOMASK])
-+		req_info->req_mask = nla_get_u32(tb[ETHA_INFO_INFOMASK]);
-+	if (tb[ETHA_INFO_COMPACT])
-+		req_info->compact = true;
-+	if (req_info->req_mask == 0)
-+		req_info->req_mask = ETH_INFO_IM_ALL;
-+
-+	return 0;
-+}
-+
-+/* prepare_data() handler */
-+static int prepare_info(struct common_req_info *req_info,
-+			struct genl_info *info)
-+{
-+	struct info_data *data =
-+		container_of(req_info, struct info_data, reqinfo_base);
-+	struct net_device *dev = data->repdata_base.dev;
-+	u32 req_mask = req_info->req_mask & ETH_INFO_IM_ALL;
-+	int ret;
-+
-+	ret = ethnl_before_ops(dev);
-+	if (ret < 0)
-+		return ret;
-+	if (req_mask & ETH_INFO_IM_DRVINFO) {
-+		ret = __ethtool_get_drvinfo(dev, &data->drvinfo);
+ struct info_data {
+ 	struct common_req_info		reqinfo_base;
+ 
+ 	/* everything below here will be reset for each device in dumps */
+ 	struct common_reply_data	repdata_base;
+ 	struct ethtool_drvinfo		drvinfo;
++	struct ethtool_ts_info		tsinfo;
+ };
+ 
+ static const struct nla_policy get_info_policy[ETHA_INFO_MAX + 1] = {
+@@ -18,6 +64,7 @@ static const struct nla_policy get_info_policy[ETHA_INFO_MAX + 1] = {
+ 	[ETHA_INFO_INFOMASK]		= { .type = NLA_U32 },
+ 	[ETHA_INFO_COMPACT]		= { .type = NLA_FLAG },
+ 	[ETHA_INFO_DRVINFO]		= { .type = NLA_REJECT },
++	[ETHA_INFO_TSINFO]		= { .type = NLA_REJECT },
+ };
+ 
+ /* parse_request() handler */
+@@ -67,6 +114,11 @@ static int prepare_info(struct common_req_info *req_info,
+ 		if (ret < 0)
+ 			req_mask &= ~ETH_INFO_IM_DRVINFO;
+ 	}
++	if (req_mask & ETH_INFO_IM_TSINFO) {
++		ret = __ethtool_get_ts_info(dev, &data->tsinfo);
 +		if (ret < 0)
-+			req_mask &= ~ETH_INFO_IM_DRVINFO;
++			req_mask &= ~ETH_INFO_IM_TSINFO;
 +	}
-+	ethnl_after_ops(dev);
-+
-+	data->repdata_base.info_mask = req_mask;
-+	if (req_info->req_mask & ~req_mask)
-+		warn_partial_info(info);
-+	return 0;
-+}
-+
-+static int drvinfo_size(const struct ethtool_drvinfo *drvinfo)
+ 	ethnl_after_ops(dev);
+ 
+ 	data->repdata_base.info_mask = req_mask;
+@@ -87,6 +139,42 @@ static int drvinfo_size(const struct ethtool_drvinfo *drvinfo)
+ 	return nla_total_size(len);
+ }
+ 
++static int tsinfo_size(const struct ethtool_ts_info *tsinfo, bool compact)
 +{
++	const unsigned int flags = compact ? ETHNL_BITSET_COMPACT : 0;
 +	int len = 0;
++	int ret;
 +
-+	len += ethnl_str_ifne_size(drvinfo->driver);
-+	len += ethnl_str_ifne_size(drvinfo->fw_version);
-+	len += ethnl_str_ifne_size(drvinfo->bus_info);
-+	len += ethnl_str_ifne_size(drvinfo->erom_version);
++	/* if any of these exceeds 32, we need a different interface to talk to
++	 * NIC drivers anyway
++	 */
++	BUILD_BUG_ON(__SOF_TIMESTAMPING_COUNT > 32);
++	BUILD_BUG_ON(__HWTSTAMP_TX_COUNT > 32);
++	BUILD_BUG_ON(__HWTSTAMP_FILTER_COUNT > 32);
++
++	ret = ethnl_bitset32_size(__SOF_TIMESTAMPING_COUNT,
++				  &tsinfo->so_timestamping, NULL,
++				  so_timestamping_labels, flags);
++	if (ret < 0)
++		return ret;
++	len += ret;
++	ret = ethnl_bitset32_size(__HWTSTAMP_TX_COUNT,
++				  &tsinfo->tx_types, NULL,
++				  tstamp_tx_type_labels, flags);
++	if (ret < 0)
++		return ret;
++	len += ret;
++	ret = ethnl_bitset32_size(__HWTSTAMP_FILTER_COUNT,
++				  &tsinfo->rx_filters, NULL,
++				  tstamp_rx_filter_labels, flags);
++	if (ret < 0)
++		return ret;
++	len += ret;
++	len += nla_total_size(sizeof(u32));
 +
 +	return nla_total_size(len);
 +}
 +
-+/* reply_size() handler */
-+static int info_size(const struct common_req_info *req_info)
+ /* reply_size() handler */
+ static int info_size(const struct common_req_info *req_info)
+ {
+@@ -98,6 +186,13 @@ static int info_size(const struct common_req_info *req_info)
+ 	len += dev_ident_size();
+ 	if (info_mask & ETH_INFO_IM_DRVINFO)
+ 		len += drvinfo_size(&data->drvinfo);
++	if (info_mask & ETH_INFO_IM_TSINFO) {
++		int ret = tsinfo_size(&data->tsinfo, req_info->compact);
++
++		if (ret < 0)
++			return ret;
++		len += ret;
++	}
+ 
+ 	return len;
+ }
+@@ -126,6 +221,44 @@ static int fill_drvinfo(struct sk_buff *skb,
+ 	return ret;
+ }
+ 
++static int fill_tsinfo(struct sk_buff *skb,
++		       const struct ethtool_ts_info *tsinfo, bool compact)
 +{
-+	const struct info_data *data =
-+		container_of(req_info, struct info_data, reqinfo_base);
-+	u32 info_mask = data->repdata_base.info_mask;
-+	int len = 0;
-+
-+	len += dev_ident_size();
-+	if (info_mask & ETH_INFO_IM_DRVINFO)
-+		len += drvinfo_size(&data->drvinfo);
-+
-+	return len;
-+}
-+
-+static int fill_drvinfo(struct sk_buff *skb,
-+			const struct ethtool_drvinfo *drvinfo)
-+{
-+	struct nlattr *nest = ethnl_nest_start(skb, ETHA_INFO_DRVINFO);
++	const unsigned int flags = compact ? ETHNL_BITSET_COMPACT : 0;
++	struct nlattr *nest = ethnl_nest_start(skb, ETHA_INFO_TSINFO);
 +	int ret;
 +
 +	if (!nest)
 +		return -EMSGSIZE;
++	ret = ethnl_put_bitset32(skb, ETHA_TSINFO_TIMESTAMPING,
++				 __SOF_TIMESTAMPING_COUNT,
++				 &tsinfo->so_timestamping, NULL,
++				 so_timestamping_labels, flags);
++	if (ret < 0)
++		goto err;
 +	ret = -EMSGSIZE;
-+	if (ethnl_put_str_ifne(skb, ETHA_DRVINFO_DRIVER, drvinfo->driver) ||
-+	    ethnl_put_str_ifne(skb, ETHA_DRVINFO_FWVERSION,
-+			       drvinfo->fw_version) ||
-+	    ethnl_put_str_ifne(skb, ETHA_DRVINFO_BUSINFO, drvinfo->bus_info) ||
-+	    ethnl_put_str_ifne(skb, ETHA_DRVINFO_EROM_VER,
-+			       drvinfo->erom_version))
++	if (tsinfo->phc_index >= 0 &&
++	    nla_put_u32(skb, ETHA_TSINFO_PHC_INDEX, tsinfo->phc_index))
++		goto err;
++
++	ret = ethnl_put_bitset32(skb, ETHA_TSINFO_TX_TYPES, __HWTSTAMP_TX_COUNT,
++				 &tsinfo->tx_types, NULL, tstamp_tx_type_labels,
++				 flags);
++	if (ret < 0)
++		goto err;
++	ret = ethnl_put_bitset32(skb, ETHA_TSINFO_RX_FILTERS,
++				 __HWTSTAMP_FILTER_COUNT, &tsinfo->rx_filters,
++				 NULL, tstamp_rx_filter_labels, flags);
++	if (ret < 0)
 +		goto err;
 +
 +	nla_nest_end(skb, nest);
@@ -409,137 +438,113 @@ index 000000000000..cc42993bb05b
 +	return ret;
 +}
 +
-+/* fill_reply() handler */
-+static int fill_info(struct sk_buff *skb,
-+		     const struct common_req_info *req_info)
-+{
-+	const struct info_data *data =
-+		container_of(req_info, struct info_data, reqinfo_base);
-+	u32 info_mask = data->repdata_base.info_mask;
-+	int ret;
-+
-+	if (info_mask & ETH_INFO_IM_DRVINFO) {
-+		ret = fill_drvinfo(skb, &data->drvinfo);
+ /* fill_reply() handler */
+ static int fill_info(struct sk_buff *skb,
+ 		     const struct common_req_info *req_info)
+@@ -140,6 +273,11 @@ static int fill_info(struct sk_buff *skb,
+ 		if (ret < 0)
+ 			return ret;
+ 	}
++	if (info_mask & ETH_INFO_IM_TSINFO) {
++		ret = fill_tsinfo(skb, &data->tsinfo, req_info->compact);
 +		if (ret < 0)
 +			return ret;
 +	}
-+
-+	return 0;
-+}
-+
-+const struct get_request_ops info_request_ops = {
-+	.request_cmd		= ETHNL_CMD_GET_INFO,
-+	.reply_cmd		= ETHNL_CMD_SET_INFO,
-+	.dev_attrtype		= ETHA_INFO_DEV,
-+	.data_size		= sizeof(struct info_data),
-+	.repdata_offset		= offsetof(struct info_data, repdata_base),
-+
-+	.parse_request		= parse_info,
-+	.prepare_data		= prepare_info,
-+	.reply_size		= info_size,
-+	.fill_reply		= fill_info,
-+};
-diff --git a/net/ethtool/ioctl.c b/net/ethtool/ioctl.c
-index 04d747056070..844a4f4b1552 100644
---- a/net/ethtool/ioctl.c
-+++ b/net/ethtool/ioctl.c
-@@ -685,54 +685,14 @@ static noinline_for_stack int ethtool_get_drvinfo(struct net_device *dev,
- 						  void __user *useraddr)
- {
- 	struct ethtool_drvinfo info;
--	const struct ethtool_ops *ops = dev->ethtool_ops;
--
--	memset(&info, 0, sizeof(info));
--	info.cmd = ETHTOOL_GDRVINFO;
--	if (ops->get_drvinfo) {
--		ops->get_drvinfo(dev, &info);
--	} else if (dev->dev.parent && dev->dev.parent->driver) {
--		strlcpy(info.bus_info, dev_name(dev->dev.parent),
--			sizeof(info.bus_info));
--		strlcpy(info.driver, dev->dev.parent->driver->name,
--			sizeof(info.driver));
--	} else {
--		return -EOPNOTSUPP;
--	}
--
--	/*
--	 * this method of obtaining string set info is deprecated;
--	 * Use ETHTOOL_GSSET_INFO instead.
--	 */
--	if (ops->get_sset_count) {
--		int rc;
--
--		rc = ops->get_sset_count(dev, ETH_SS_TEST);
--		if (rc >= 0)
--			info.testinfo_len = rc;
--		rc = ops->get_sset_count(dev, ETH_SS_STATS);
--		if (rc >= 0)
--			info.n_stats = rc;
--		rc = ops->get_sset_count(dev, ETH_SS_PRIV_FLAGS);
--		if (rc >= 0)
--			info.n_priv_flags = rc;
--	}
--	if (ops->get_regs_len) {
--		int ret = ops->get_regs_len(dev);
--
--		if (ret > 0)
--			info.regdump_len = ret;
--	}
--
--	if (ops->get_eeprom_len)
--		info.eedump_len = ops->get_eeprom_len(dev);
--
--	if (!info.fw_version[0])
--		devlink_compat_running_version(dev, info.fw_version,
--					       sizeof(info.fw_version));
-+	int rc;
  
-+	rc = __ethtool_get_drvinfo(dev, &info);
-+	if (rc < 0)
-+		return rc;
- 	if (copy_to_user(useraddr, &info, sizeof(info)))
- 		return -EFAULT;
-+
  	return 0;
  }
+diff --git a/net/ethtool/ioctl.c b/net/ethtool/ioctl.c
+index 844a4f4b1552..18721b5aa353 100644
+--- a/net/ethtool/ioctl.c
++++ b/net/ethtool/ioctl.c
+@@ -2027,28 +2027,12 @@ static int ethtool_get_dump_data(struct net_device *dev,
  
-diff --git a/net/ethtool/netlink.c b/net/ethtool/netlink.c
-index 63ee0f846b50..7f9597c0c7a7 100644
---- a/net/ethtool/netlink.c
-+++ b/net/ethtool/netlink.c
-@@ -155,6 +155,7 @@ struct sk_buff *ethnl_reply_init(size_t payload, struct net_device *dev, u8 cmd,
+ static int ethtool_get_ts_info(struct net_device *dev, void __user *useraddr)
+ {
+-	int err = 0;
++	int err;
+ 	struct ethtool_ts_info info;
+-	const struct ethtool_ops *ops = dev->ethtool_ops;
+-	struct phy_device *phydev = dev->phydev;
+-
+-	memset(&info, 0, sizeof(info));
+-	info.cmd = ETHTOOL_GET_TS_INFO;
+-
+-	if (phydev && phydev->drv && phydev->drv->ts_info) {
+-		err = phydev->drv->ts_info(phydev, &info);
+-	} else if (ops->get_ts_info) {
+-		err = ops->get_ts_info(dev, &info);
+-	} else {
+-		info.so_timestamping =
+-			SOF_TIMESTAMPING_RX_SOFTWARE |
+-			SOF_TIMESTAMPING_SOFTWARE;
+-		info.phc_index = -1;
+-	}
  
- const struct get_request_ops *get_requests[__ETHNL_CMD_CNT] = {
- 	[ETHNL_CMD_GET_STRSET]		= &strset_request_ops,
-+	[ETHNL_CMD_GET_INFO]		= &info_request_ops,
- };
++	err = __ethtool_get_ts_info(dev, &info);
+ 	if (err)
+ 		return err;
+-
+ 	if (copy_to_user(useraddr, &info, sizeof(info)))
+ 		err = -EFAULT;
  
- /**
-@@ -568,6 +569,13 @@ static const struct genl_ops ethtool_genl_ops[] = {
- 		.dumpit	= ethnl_get_dumpit,
- 		.done	= ethnl_get_done,
+diff --git a/net/ethtool/netlink.h b/net/ethtool/netlink.h
+index 48980ae9e963..4ad9a3eee3e5 100644
+--- a/net/ethtool/netlink.h
++++ b/net/ethtool/netlink.h
+@@ -7,14 +7,23 @@
+ #include <linux/netdevice.h>
+ #include <net/genetlink.h>
+ #include <net/sock.h>
++#include <linux/net_tstamp.h>
+ 
+ #define ETHNL_SET_ERRMSG(info, msg) \
+ 	do { if (info) GENL_SET_ERR_MSG(info, msg); } while (0)
+ 
++#define __SOF_TIMESTAMPING_COUNT (const_ilog2(SOF_TIMESTAMPING_LAST) + 1)
++#define __HWTSTAMP_TX_COUNT (HWTSTAMP_TX_LAST + 1)
++#define __HWTSTAMP_FILTER_COUNT (HWTSTAMP_FILTER_LAST + 1)
++
+ extern u32 ethnl_bcast_seq;
+ 
+ extern struct genl_family ethtool_genl_family;
+ 
++extern const char *const so_timestamping_labels[];
++extern const char *const tstamp_tx_type_labels[];
++extern const char *const tstamp_rx_filter_labels[];
++
+ struct net_device *ethnl_dev_get(struct genl_info *info, struct nlattr *nest);
+ int ethnl_fill_dev(struct sk_buff *msg, struct net_device *dev, u16 attrtype);
+ 
+diff --git a/net/ethtool/strset.c b/net/ethtool/strset.c
+index 808ab6b4b387..e1b831097ca7 100644
+--- a/net/ethtool/strset.c
++++ b/net/ethtool/strset.c
+@@ -67,6 +67,24 @@ static const struct strset_info info_template[] = {
+ 		.count		= ARRAY_SIZE(phy_tunable_strings),
+ 		.data		= { .legacy = phy_tunable_strings },
  	},
-+	{
-+		.cmd	= ETHNL_CMD_GET_INFO,
-+		.doit	= ethnl_get_doit,
-+		.start	= ethnl_get_start,
-+		.dumpit	= ethnl_get_dumpit,
-+		.done	= ethnl_get_done,
++	[ETH_SS_TSTAMP_SOF] = {
++		.type		= ETH_SS_TYPE_SIMPLE,
++		.per_dev	= false,
++		.count		= __SOF_TIMESTAMPING_COUNT,
++		.data		= { .simple = so_timestamping_labels },
++	},
++	[ETH_SS_TSTAMP_TX_TYPE] = {
++		.type		= ETH_SS_TYPE_SIMPLE,
++		.per_dev	= false,
++		.count		= __HWTSTAMP_TX_COUNT,
++		.data		= { .simple = tstamp_tx_type_labels },
++	},
++	[ETH_SS_TSTAMP_RX_FILTER] = {
++		.type		= ETH_SS_TYPE_SIMPLE,
++		.per_dev	= false,
++		.count		= __HWTSTAMP_FILTER_COUNT,
++		.data		= { .simple = tstamp_rx_filter_labels },
 +	},
  };
  
- static const struct genl_multicast_group ethtool_nl_mcgrps[] = {
-diff --git a/net/ethtool/netlink.h b/net/ethtool/netlink.h
-index 32d85bb5c49a..48980ae9e963 100644
---- a/net/ethtool/netlink.h
-+++ b/net/ethtool/netlink.h
-@@ -278,5 +278,6 @@ struct get_request_ops {
- /* request handlers */
- 
- extern const struct get_request_ops strset_request_ops;
-+extern const struct get_request_ops info_request_ops;
- 
- #endif /* _NET_ETHTOOL_NETLINK_H */
+ struct strset_data {
 -- 
 2.21.0
 
