@@ -2,98 +2,107 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68A93C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 10:15:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF501C4360F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 10:15:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40FB720870
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 10:15:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 884CA20870
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 10:15:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="VTRPpUxs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730871AbfCYKPT (ORCPT
+        id S1730499AbfCYKPZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 06:15:19 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59052 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730559AbfCYKPR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 06:15:17 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 56678307FBCB;
-        Mon, 25 Mar 2019 10:15:17 +0000 (UTC)
-Received: from dhcp-128-65.nay.redhat.com (ovpn-12-119.pek2.redhat.com [10.72.12.119])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A7AB126562;
-        Mon, 25 Mar 2019 10:15:13 +0000 (UTC)
-Date:   Mon, 25 Mar 2019 18:15:09 +0800
-From:   Dave Young <dyoung@redhat.com>
-To:     Boris Petkov <bp@alien8.de>
-Cc:     Junichi Nomura <j-nomura@ce.jp.nec.com>,
-        "fanc.fnst@cn.fujitsu.com" <fanc.fnst@cn.fujitsu.com>,
-        "bp@suse.de" <bp@suse.de>, "bhe@redhat.com" <bhe@redhat.com>,
-        "kasong@redhat.com" <kasong@redhat.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] x86/boot: Use EFI setup data if provided
-Message-ID: <20190325101509.GA13160@dhcp-128-65.nay.redhat.com>
-References: <20190322110342.GA16202@jeru.linux.bs1.fc.nec.co.jp>
- <20190322152328.GD12472@zn.tnic>
- <20190325002740.GA6637@jeru.linux.bs1.fc.nec.co.jp>
- <20190325060128.GB9385@dhcp-128-65.nay.redhat.com>
- <20190325061929.GC9385@dhcp-128-65.nay.redhat.com>
- <bcb5bd29-a3b8-e42d-8da7-a8501f695c21@ce.jp.nec.com>
- <20190325065921.GA11096@dhcp-128-65.nay.redhat.com>
- <20190325082720.GA20771@jeru.linux.bs1.fc.nec.co.jp>
- <51D9A7D1-49BF-4679-B102-0FC5AC300C9F@alien8.de>
+        Mon, 25 Mar 2019 06:15:25 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:32797 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730456AbfCYKPD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 06:15:03 -0400
+Received: by mail-wr1-f68.google.com with SMTP id q1so9416868wrp.0
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 03:15:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=yEQc6Wg8CZcOFKxbK8s1T4WXh2s7N0+F2je28egpEkM=;
+        b=VTRPpUxsdWXbvv7s+emAjTBvA/MqASJ8uvpD//UsmZrVF4PxfkW/Flq3+RtLo6M4Q5
+         mA+18RfAY4Wq0AZW/5NQuAQjVSqpGenpGOwhByGggapCMKigQua+t+dE5G1J18yLbih4
+         qEgO7KH00eq9d7xjbxqeU5oLR7YnByL2UqgWZ38CprGg+DIsBoWHzZf4di/GYI5wseku
+         VDeaX6iRVxu+0Kf4mAuAVOkjzKEWgWyHNy305nrnJNsjDet4L1LYsKDQ7ImBmVOjdCLM
+         Wt1VZnnjz/uNmbkD7VGZj/6ozwKiLiIR7LQFaZX7iUjPIBtt7YkvSxDY5ZYliu8ekvnZ
+         apAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=yEQc6Wg8CZcOFKxbK8s1T4WXh2s7N0+F2je28egpEkM=;
+        b=lE0QClINefEPQ0XiXYEQ3bj6f0OBwglinlo/1D5/AXWcsNrrZHuEniZDdwRIB2PHFF
+         gXB2RnZHH7ymyTYaclmShMgRAU2wAnS3YQCr3eL4hAIXqQSjA3foaL1MjMOUeRfbVfbb
+         hwMfbMCCeiKlDqOQkXv+HMQj8Rh4bGi/LJetraZvpewfU+22BNqUqgOx/PVNW7NZG075
+         1sxNMY18g2kZTWTelC6beQttqqup520eB6vhAl4ih3T1BE9SZlhsCmPCxSIGI/6C32ya
+         m5sDXtLYn2YxXhrj/rBVGTf8ZfRS97XaujAj0Y3wugfv5CyVe2/Yg3zFKxNU85VIY5BZ
+         lGcQ==
+X-Gm-Message-State: APjAAAXGJoW9wQKM9PNQdq7lQ1JMHwgf0r1PqTTGMTQs7RDkAVwoS2g9
+        oJEiARvu6WOKxtxjFBQEDhjY9g==
+X-Google-Smtp-Source: APXvYqw+efCxqUDAf3UmoXIoYX8pvXaCy+7DXnJZURVRZ797iHI/qbzdgU+ufRqjODLA/Ddjc/AsOw==
+X-Received: by 2002:a5d:4a87:: with SMTP id o7mr10621233wrq.306.1553508901246;
+        Mon, 25 Mar 2019 03:15:01 -0700 (PDT)
+Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id v14sm20049484wrr.20.2019.03.25.03.15.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 25 Mar 2019 03:15:00 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     khilman@baylibre.com
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH v3 5/6] arm64: dts: meson-g12a-u200: Enable USB
+Date:   Mon, 25 Mar 2019 11:14:52 +0100
+Message-Id: <20190325101453.3009-6-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190325101453.3009-1-narmstrong@baylibre.com>
+References: <20190325101453.3009-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <51D9A7D1-49BF-4679-B102-0FC5AC300C9F@alien8.de>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Mon, 25 Mar 2019 10:15:17 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/25/19 at 09:54am, Boris Petkov wrote:
-> On March 25, 2019 9:27:21 AM GMT+01:00, Junichi Nomura <j-nomura@ce.jp.nec.com> wrote:
-> >On 3/25/19 3:59 PM, Dave Young wrote:
-> >> On 03/25/19 at 06:47am, Junichi Nomura wrote:
-> >>> On 3/25/19 3:19 PM, Dave Young wrote:
-> >>>> On 03/25/19 at 02:01pm, Dave Young wrote:
-> >>>> I think normally people do not see this bug, because kernel will
-> >set the
-> >>>> rsdp in boot_params->acpi_rsdp_addr.  Maybe you are testing with
-> >>>
-> >>> I think it's only done for file-based kexec interface.
-> >> 
-> >> Saw Kairui's another reply, yes, kexec-tools need a patch to fill the
-> >> value as well then.
-> >> 
-> >> I would vote for a repost of your old patch with some #ifdef
-> >
-> >Thanks for comments, Dave, Kairui and Baoquan.
-> >
-> >The problem for me is it's a regression in v5.1-rc1, that breaks
-> >existing setup. If early parsing of RSDP is required only for newly
-> >supported configuration, I'm fine such configuration requires
-> >new tools or new options.
-> >
-> >This is the 1st version plus #ifdef around the EFI code.
-> 
-> I'm going to repeat that again until you get it:
-> 
-> If the kexec kernel should continue to use efi_systab_init() then you
-> should make efi_get_rsdp_addr() exit early in the kexec-ed kernel.
+Enable the USB2 OTG and USB3 Host ports on the S905D2 Reference Design.
 
-In that way, early parsing will fail in kexeced kernel, am I missing
-something?  The early code become complicated but since we have already
-the early acpi parsing why not to make it consistent in kexeced kernel?
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+---
+ arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-Thanks
-Dave
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts
+index c69328d16333..2240e365af27 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts
+@@ -108,3 +108,15 @@
+ 	pinctrl-names = "default";
+ };
+ 
++&usb {
++	status = "okay";
++	vbus-supply = <&usb_pwr_en>;
++};
++
++&usb2_phy0 {
++	phy-supply = <&vcc_5v>;
++};
++
++&usb2_phy1 {
++	phy-supply = <&vcc_5v>;
++};
+-- 
+2.21.0
+
