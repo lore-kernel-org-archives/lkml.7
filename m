@@ -2,45 +2,44 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 342D2C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:24:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82218C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:24:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E38420848
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:24:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D86520848
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:24:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730519AbfCYVYv (ORCPT
+        id S1730540AbfCYVYz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 17:24:51 -0400
-Received: from smtprelay0169.hostedemail.com ([216.40.44.169]:41429 "EHLO
+        Mon, 25 Mar 2019 17:24:55 -0400
+Received: from smtprelay0186.hostedemail.com ([216.40.44.186]:36846 "EHLO
         smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729569AbfCYVYv (ORCPT
+        by vger.kernel.org with ESMTP id S1729569AbfCYVYy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 17:24:51 -0400
+        Mon, 25 Mar 2019 17:24:54 -0400
 Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 8C424182CF66A;
-        Mon, 25 Mar 2019 21:24:49 +0000 (UTC)
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 8477A180A8867;
+        Mon, 25 Mar 2019 21:24:52 +0000 (UTC)
 X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: laugh28_cd10bac20c50
-X-Filterd-Recvd-Size: 2956
+X-HE-Tag: note99_d528fa80be60
+X-Filterd-Recvd-Size: 3741
 Received: from joe-laptop.perches.com (unknown [47.151.153.53])
         (Authenticated sender: joe@perches.com)
-        by omf01.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 25 Mar 2019 21:24:47 +0000 (UTC)
+        by omf06.hostedemail.com (Postfix) with ESMTPA;
+        Mon, 25 Mar 2019 21:24:51 +0000 (UTC)
 From:   Joe Perches <joe@perches.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     Avi Fishman <avifishman70@gmail.com>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Patrick Venture <venture@google.com>,
-        Nancy Yuen <yuenn@google.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        openbmc@lists.ozlabs.org, Arnd Bergmann <arnd@arndb.de>
-Subject: Bad file pattern in MAINTAINERS section 'ARM/NUVOTON NPCM ARCHITECTURE'
-Date:   Mon, 25 Mar 2019 14:24:46 -0700
-Message-Id: <20190325212446.25795-1-joe@perches.com>
+Cc:     Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        linux-arm-msm@vger.kernel.org,
+        Amit Kucheria <amit.kucheria@linaro.org>
+Subject: Bad file pattern in MAINTAINERS section 'ARM/QUALCOMM SUPPORT'
+Date:   Mon, 25 Mar 2019 14:24:50 -0700
+Message-Id: <20190325212450.25865-1-joe@perches.com>
 X-Mailer: git-send-email 2.15.0
 In-Reply-To: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com>
 References: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com>
@@ -64,41 +63,68 @@ Please fix this defect appropriately.
 
 linux-next MAINTAINERS section:
 
-	1893	ARM/NUVOTON NPCM ARCHITECTURE
-	1894	M:	Avi Fishman <avifishman70@gmail.com>
-	1895	M:	Tomer Maimon <tmaimon77@gmail.com>
-	1896	R:	Patrick Venture <venture@google.com>
-	1897	R:	Nancy Yuen <yuenn@google.com>
-	1898	R:	Brendan Higgins <brendanhiggins@google.com>
-	1899	L:	openbmc@lists.ozlabs.org (moderated for non-subscribers)
-	1900	S:	Supported
-	1901	F:	arch/arm/mach-npcm/
-	1902	F:	arch/arm/boot/dts/nuvoton-npcm*
--->	1903	F:	include/dt-bindings/clock/nuvoton,npcm7xx-clks.h
-	1904	F:	drivers/*/*npcm*
-	1905	F:	Documentation/devicetree/bindings/*/*npcm*
-	1906	F:	Documentation/devicetree/bindings/*/*/*npcm*
+	1986	ARM/QUALCOMM SUPPORT
+	1987	M:	Andy Gross <andy.gross@linaro.org>
+	1988	M:	David Brown <david.brown@linaro.org>
+	1989	L:	linux-arm-msm@vger.kernel.org
+	1990	S:	Maintained
+	1991	F:	Documentation/devicetree/bindings/soc/qcom/
+	1992	F:	Documentation/devicetree/bindings/*/qcom*
+	1993	F:	arch/arm/boot/dts/qcom-*.dts
+	1994	F:	arch/arm/boot/dts/qcom-*.dtsi
+	1995	F:	arch/arm/mach-qcom/
+	1996	F:	arch/arm64/boot/dts/qcom/
+	1997	F:	drivers/*/qcom/
+	1998	F:	drivers/*/qcom*
+	1999	F:	drivers/*/*/qcom/
+	2000	F:	drivers/*/*/qcom*
+	2001	F:	drivers/*/pm8???-*
+	2002	F:	drivers/bluetooth/btqcomsmd.c
+	2003	F:	drivers/clocksource/timer-qcom.c
+	2004	F:	drivers/extcon/extcon-qcom*
+	2005	F:	drivers/iommu/msm*
+	2006	F:	drivers/i2c/busses/i2c-qup.c
+	2007	F:	drivers/i2c/busses/i2c-qcom-geni.c
+	2008	F:	drivers/mfd/ssbi.c
+	2009	F:	drivers/mmc/host/mmci_qcom*
+-->	2010	F:	drivers/mmc/host/sdhci_msm.c
+	2011	F:	drivers/pci/controller/dwc/pcie-qcom.c
+	2012	F:	drivers/phy/qualcomm/
+	2013	F:	drivers/power/*/msm*
+	2014	F:	drivers/reset/reset-qcom-*
+	2015	F:	drivers/scsi/ufs/ufs-qcom.*
+	2016	F:	drivers/spi/spi-qup.c
+	2017	F:	drivers/spi/spi-geni-qcom.c
+	2018	F:	drivers/spi/spi-qcom-qspi.c
+	2019	F:	drivers/tty/serial/msm_serial.c
+	2020	F:	drivers/usb/dwc3/dwc3-qcom.c
+	2021	F:	include/dt-bindings/*/qcom*
+	2022	F:	include/linux/*/qcom*
+	2023	T:	git git://git.kernel.org/pub/scm/linux/kernel/git/agross/linux.git
 
 2: ---------------------------------------------------------------------------
 
-The most recent commit that added or modified file pattern 'include/dt-bindings/clock/nuvoton,npcm7xx-clks.h':
+The most recent commit that added or modified file pattern 'drivers/mmc/host/sdhci_msm.c':
 
-commit 6a498e06ba22872d3a27cc0dae77b9314b1de48b
-Author: Brendan Higgins <brendanhiggins@google.com>
-Date:   Thu Aug 17 09:44:32 2017 -0700
+commit e31f941cf977f4ed7882358de2f513cac5865330
+Author: Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Tue Jan 15 01:15:49 2019 +0530
 
-    MAINTAINERS: Add entry for the Nuvoton NPCM architecture
+    MAINTAINERS: update list of qcom drivers
     
-    Add maintainers and reviewers for the Nuvoton NPCM architecture.
+    Several drivers didn't have a specific maintainer (other than the
+    subsystem maintainer). Add some generic regex patterns to capture most
+    qcom drivers in the list of supported drivers. For the rest, add
+    explicit filenames.
     
-    Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-    Reviewed-by: Tomer Maimon <tmaimon77@gmail.com>
-    Reviewed-by: Avi Fishman <avifishman70@gmail.com>
-    Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+    Sort the entries, while we're at it.
+    
+    Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+    Signed-off-by: Andy Gross <andy.gross@linaro.org>
 
- MAINTAINERS | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ MAINTAINERS | 32 +++++++++++++++++++++++++-------
+ 1 file changed, 25 insertions(+), 7 deletions(-)
 
 3: ---------------------------------------------------------------------------
 
-No commit with file pattern 'include/dt-bindings/clock/nuvoton,npcm7xx-clks.h' was found
+No commit with file pattern 'drivers/mmc/host/sdhci_msm.c' was found
