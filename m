@@ -2,290 +2,104 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8768C10F03
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:58:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB54BC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:59:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1C2F20830
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:58:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553518717;
-	bh=N83MK0ZwmWb+hiS0Gliv7t5YuZgORyoIMZTA86CXAgY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qYJ8HMKekA0CUfBAchXyy7B5doWrwBTM0X4UPPxlOURPOV0b0h/4rdhqPjkdyO3np
-	 l5gVhqhAw9UPbkXMXNYyG+UrhxIP1eKwSpqKy7u4h5eZVzMTXmRmeLTJFn4PKuLHKm
-	 m6+0/r/Bdo1Ku5OPqFeqmNfp8TsDwvvbZvLLGoAw=
+	by mail.kernel.org (Postfix) with ESMTP id 7509A20830
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:59:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731339AbfCYM6g (ORCPT
+        id S1731333AbfCYM7J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 08:58:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42640 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731076AbfCYM6f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 08:58:35 -0400
-Received: from localhost (173-25-63-173.client.mchsi.com [173.25.63.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2047220823;
-        Mon, 25 Mar 2019 12:58:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553518714;
-        bh=N83MK0ZwmWb+hiS0Gliv7t5YuZgORyoIMZTA86CXAgY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=s74ZNKYAKC/kbryT3hDlFnBZTW/yn/RgWbE8rWmzuQZBnsrLnBtmX7V41Z3JBbyxS
-         mO/n2G4ySyiTd99YsotiHrUT6TylSzSehR5gtqTi3QYxjnPdAlAX9KHcVSmcUlM2a7
-         NvTJ1/dKdrb1JwjhTdWBydQwnCSghgpCZ2138ikM=
-Date:   Mon, 25 Mar 2019 07:58:32 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     jonnyc@amazon.com
-Cc:     linux-pci@vger.kernel.org, lorenzo.pieralisi@arm.com,
-        linux-kernel@vger.kernel.org, vaerov@amazon.com, dwmw@amazon.co.uk,
-        benh@kernel.crashing.org, alisaidi@amazon.com, zeev@amazon.com,
-        ronenk@amazon.com, barakw@amazon.com
-Subject: Re: [PATCH] PCI: al: add pcie-al.c
-Message-ID: <20190325125832.GP251185@google.com>
-References: <1553512040-4453-1-git-send-email-jonnyc@amazon.com>
+        Mon, 25 Mar 2019 08:59:09 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:37757 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731076AbfCYM7J (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 08:59:09 -0400
+Received: from wuerfel.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1N7AAk-1gtvjC2hYa-017WsT; Mon, 25 Mar 2019 13:58:10 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>
+Cc:     clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Waiman Long <longman@redhat.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] lockdep: avoid bogus clang warning
+Date:   Mon, 25 Mar 2019 13:57:57 +0100
+Message-Id: <20190325125807.1437049-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1553512040-4453-1-git-send-email-jonnyc@amazon.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:0JalITWuNlbGqFMWf9YPNNXCWWUj21kBnB2vH7FtjIP/ktkihCw
+ 5HK5xvrpIjZDO4dtalArBgT5e8vsk0eqzK+BGsRPdkYpl3T9ElR3Fm946BO+r/k/DRRsapw
+ 5Wyiu1+Rz9NnxYd4TfYJPZa5DC3joUl5P+j5u1Tt++fjU7nS3x+hHRQYc/c9a494JY5uTiu
+ IZbq8xmlU8kwg0zN7EunA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:vuakBT5w3FA=:hSdnnqgKKJeV+VQOcavrmK
+ maXlRfkopN986NZHq/koC9j58NRJ1Nx/chb5Uaz0sQ+gk+6eKY0WbiGg4VQ4+8H4g6qxyrb27
+ q7vlGWXhPDVc5I2kT7fHKvDIW1nqto8VTR1nbKnqbCBpIZfRfmB+yPCEvFnuZstjuMp6XSG/k
+ DW5Mo6+6/m0d3wWRf2BDKGPIGGZ79+hVmwdtuxhJKBsvoFTg4ka/KJLHWJCWfgAwixWe7IiQU
+ m3T4Dq2Omfzp4WehUPffL06XWRi29S2++OgpjeyOy/HwP+t6WUU39Ti2k7MdDmYh4PWNLa1Eb
+ nuhN+6mQ6vz09O60+GvM/ABEZvexRebYwNp+xNcS/jQ3t9RWf+9vOYsoIoOuaSXZfDVybzAx2
+ DXmc2O4VqRLIA1qe1F5d+EfLkwTbV9J8C6A8gIPDGeajS4jfG+CPZDtGK6QXztl0JMyrWOV4i
+ kfbXAex/3RmyJcPTKxXhP31ncaIBLOm+beunBoG+dkFOQeYPxX/Y/IkSV+MKFls/WsrpgvYRr
+ koQ34AlqLwEEvKt8c3aJrfiqgOdSKUa3tIJX5n/fd59BXmLsPBZhbZn+R2zUbxlF3cTtGqfsf
+ C3CQFuF6xbD182nqDjQxtXOBopNtw+Jn7DLUc9rIw7KVXBU0q+eqdq45qfCjRgeTuCbcjWXpS
+ yzME8HQ6/HM7wO+fRoLB3CPDV6x3QaeGAdG1uUIF9qMpZeeqrDT4jMp/fv3V8FQ0rQ9AnjxGC
+ cfsU+FsPUY3VKXF78xczqJTPIodkbtjDZIy8Pw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jonathan,
+When lockdep is enabled, and -Wuninitialized warnings are enabled,
+clang produces a silly warning for every file we compile:
 
-Looks good to me.  Looks like this hardware is sooooo close to Just
-Working with the generic driver; it's too bad we have to add more ECAM
-quirks, but sometimes life gives us lemons.  Trivial comments below.
-Lorenzo may have additional comments.
+In file included from  kernel/sched/fair.c:23:
+ kernel/sched/sched.h:1094:15: error: variable 'cookie' is uninitialized when used here [-Werror,-Wuninitialized]
+        rf->cookie = lockdep_pin_lock(&rq->lock);
+                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+ include/linux/lockdep.h:474:60: note: expanded from macro 'lockdep_pin_lock'
+ #define lockdep_pin_lock(l)                     ({ struct pin_cookie cookie; cookie; })
+                                                                             ^~~~~~
+ kernel/sched/sched.h:1094:15: note: variable 'cookie' is declared here
+ include/linux/lockdep.h:474:34: note: expanded from macro 'lockdep_pin_lock'
+ #define lockdep_pin_lock(l)                     ({ struct pin_cookie cookie; cookie; })
+                                                   ^
+As the 'struct pin_cookie' structure is empty in this configuration,
+there is no need to initialize it for correctness, but it also
+does not hurt to set it to an empty structure, so do that to
+avoid the warning.
 
-The subject should be something like:
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ include/linux/lockdep.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-  PCI: al: Add Amazon Annapurna Labs PCIe host controller driver
+diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
+index 79c3873d58ac..31d7549933eb 100644
+--- a/include/linux/lockdep.h
++++ b/include/linux/lockdep.h
+@@ -471,7 +471,7 @@ struct pin_cookie { };
+ 
+ #define NIL_COOKIE (struct pin_cookie){ }
+ 
+-#define lockdep_pin_lock(l)			({ struct pin_cookie cookie; cookie; })
++#define lockdep_pin_lock(l)			({ struct pin_cookie cookie = {}; cookie; })
+ #define lockdep_repin_lock(l, c)		do { (void)(l); (void)(c); } while (0)
+ #define lockdep_unpin_lock(l, c)		do { (void)(l); (void)(c); } while (0)
+ 
+-- 
+2.20.0
 
-On Mon, Mar 25, 2019 at 01:07:20PM +0200, jonnyc@amazon.com wrote:
-> From: Jonathan Chocron <jonnyc@amazon.com>
-> 
-> Adding support for Amazon's Annapurna Labs pcie driver.
-
-s/pcie/PCIe/
-
-> The HW controller is based on Designware's IP.
-> 
-> The HW doesn't support accessing the Root port's config space via
-> ECAM, so we obtain its base address via a PNP0C02 device.
-
-s/port's/Port's/
-
-I think you're actually looking for a AMZN0001 device, not a PNP0C02
-device.  Your firmware might have a PNP0C02 _HID and AMZN0001 _CID, but
-that's not relevant here since you're only filtering by AMZN0001.
-
-> Furthermore, the DesignWare PCIe controller doesn't filter out
-> config transactions sent to devices 1 and up on its bus, so they
-> are filtered by the driver.
-
-Separate paragraphs with blank lines.
-
-> All subordinate buses do support ECAM access.
-> 
-> Implementing specific PCI config access functions involves:
->  - Adding an init function to obtain the Root Port's base address
->    from a PNP0C02 device.
-
-s/PNP0C02/AMZN0001/
-
->  - Adding a new entry in the mcfg quirk array
-> 
-> Co-developed-by: Vladimir Aerov <vaerov@amazon.com>
-> Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
-> Signed-off-by: Vladimir Aerov <vaerov@amazon.com>
-> Reviewed-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Reviewed-by: David Woodhouse <dwmw@amazon.co.uk>
-> ---
->  MAINTAINERS                          |  6 +++
->  drivers/acpi/pci_mcfg.c              | 12 +++++
->  drivers/pci/controller/dwc/Makefile  |  1 +
->  drivers/pci/controller/dwc/pcie-al.c | 92 ++++++++++++++++++++++++++++++++++++
->  include/linux/pci-ecam.h             |  1 +
->  5 files changed, 112 insertions(+)
->  create mode 100644 drivers/pci/controller/dwc/pcie-al.c
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 32d444476a90..7a17017f9f82 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -11769,6 +11769,12 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git/
->  S:	Supported
->  F:	drivers/pci/controller/
->  
-> +PCIE DRIVER FOR ANNAPURNA LABS
-> +M:	Jonathan Chocron <jonnyc@amazon.com>
-> +L:	linux-pci@vger.kernel.org
-> +S:	Maintained
-> +F:	drivers/pci/controller/dwc/pcie-al.c
-> +
->  PCIE DRIVER FOR AMLOGIC MESON
->  M:	Yue Wang <yue.wang@Amlogic.com>
->  L:	linux-pci@vger.kernel.org
-> diff --git a/drivers/acpi/pci_mcfg.c b/drivers/acpi/pci_mcfg.c
-> index a4e8432fc2fb..b42be067fb83 100644
-> --- a/drivers/acpi/pci_mcfg.c
-> +++ b/drivers/acpi/pci_mcfg.c
-> @@ -52,6 +52,18 @@ struct mcfg_fixup {
->  static struct mcfg_fixup mcfg_quirks[] = {
->  /*	{ OEM_ID, OEM_TABLE_ID, REV, SEGMENT, BUS_RANGE, ops, cfgres }, */
->  
-> +#define AL_ECAM(table_id, rev, seg, ops) \
-> +	{ "AMAZON", table_id, rev, seg, MCFG_BUS_ANY, ops }
-> +
-> +	AL_ECAM("GRAVITON", 0, 0, &al_pcie_ops),
-> +	AL_ECAM("GRAVITON", 0, 1, &al_pcie_ops),
-> +	AL_ECAM("GRAVITON", 0, 2, &al_pcie_ops),
-> +	AL_ECAM("GRAVITON", 0, 3, &al_pcie_ops),
-> +	AL_ECAM("GRAVITON", 0, 4, &al_pcie_ops),
-> +	AL_ECAM("GRAVITON", 0, 5, &al_pcie_ops),
-> +	AL_ECAM("GRAVITON", 0, 6, &al_pcie_ops),
-> +	AL_ECAM("GRAVITON", 0, 7, &al_pcie_ops),
-> +
->  #define QCOM_ECAM32(seg) \
->  	{ "QCOM  ", "QDF2432 ", 1, seg, MCFG_BUS_ANY, &pci_32b_ops }
->  
-> diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
-> index 7bcdcdf5024e..1ea773c0070d 100644
-> --- a/drivers/pci/controller/dwc/Makefile
-> +++ b/drivers/pci/controller/dwc/Makefile
-> @@ -28,5 +28,6 @@ obj-$(CONFIG_PCIE_UNIPHIER) += pcie-uniphier.o
->  # depending on whether ACPI, the DT driver, or both are enabled.
->  
->  ifdef CONFIG_PCI
-> +obj-$(CONFIG_ARM64) += pcie-al.o
->  obj-$(CONFIG_ARM64) += pcie-hisi.o
->  endif
-> diff --git a/drivers/pci/controller/dwc/pcie-al.c b/drivers/pci/controller/dwc/pcie-al.c
-> new file mode 100644
-> index 000000000000..019497c2c714
-> --- /dev/null
-> +++ b/drivers/pci/controller/dwc/pcie-al.c
-> @@ -0,0 +1,92 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * PCIe host controller driver for Amazon's Annapurna Labs IP (used in chips
-> + * such as Graviton and Alpine)
-> + *
-> + * Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-> + *
-> + * Author: Jonathan Chocron <jonnyc@amazon.com>
-> + */
-> +
-> +#include <linux/pci.h>
-> +#include <linux/pci-ecam.h>
-> +#include <linux/pci-acpi.h>
-> +#include "../../pci.h"
-> +
-> +#if defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS)
-> +
-> +struct al_pcie_acpi  {
-> +	void __iomem *dbi_base;
-> +};
-> +
-> +static void __iomem *al_pcie_map_bus(struct pci_bus *bus, unsigned int devfn,
-> +				     int where)
-> +{
-> +	struct pci_config_window *cfg = bus->sysdata;
-> +	struct al_pcie_acpi *pcie = cfg->priv;
-> +	void __iomem *dbi_base = pcie->dbi_base;
-> +
-> +	if (bus->number == cfg->busr.start) {
-> +		/* The DW PCIe core doesn't filter out transactions to other
-> +		 * devices/functions on the primary bus num, so we do this here.
-> +		 */
-
-Use usual multi-line comment style:
-
-    /*
-     * text ..
-     */
-
-> +		if (PCI_SLOT(devfn) > 0)
-> +			return NULL;
-> +		else
-> +			return dbi_base + where;
-> +	}
-> +
-> +	return pci_ecam_map_bus(bus, devfn, where);
-> +}
-> +
-> +static int al_pcie_init(struct pci_config_window *cfg)
-> +{
-> +	struct device *dev = cfg->parent;
-> +	struct acpi_device *adev = to_acpi_device(dev);
-> +	struct acpi_pci_root *root = acpi_driver_data(adev);
-> +	struct al_pcie_acpi *al_pcie;
-> +	struct resource *res;
-> +	int ret;
-> +
-> +	al_pcie = devm_kzalloc(dev, sizeof(*al_pcie), GFP_KERNEL);
-> +	if (!al_pcie)
-> +		return -ENOMEM;
-> +
-> +	res = devm_kzalloc(dev, sizeof(*res), GFP_KERNEL);
-> +	if (!res)
-> +		return -ENOMEM;
-> +
-> +	ret = acpi_get_rc_resources(dev, "AMZN0001", root->segment, res);
-> +	if (ret) {
-> +		dev_err(dev, "can't get rc dbi base address for SEG %d\n",
-> +			root->segment);
-> +		return ret;
-> +	}
-> +
-> +	dev_dbg(dev, "Root port dbi res: %pR\n", res);
-> +
-> +	al_pcie->dbi_base = devm_pci_remap_cfg_resource(dev, res);
-> +	if (IS_ERR(al_pcie->dbi_base)) {
-> +		long err = PTR_ERR(al_pcie->dbi_base);
-> +
-> +		dev_err(dev, "couldn't remap dbi base %pR (err:%ld)\n",
-> +			res, err);
-> +		return err;
-> +	}
-> +
-> +	cfg->priv = al_pcie;
-> +
-> +	return 0;
-> +}
-> +
-> +struct pci_ecam_ops al_pcie_ops = {
-> +	.bus_shift    = 20,
-> +	.init         =  al_pcie_init,
-> +	.pci_ops      = {
-> +		.map_bus    = al_pcie_map_bus,
-> +		.read       = pci_generic_config_read,
-> +		.write      = pci_generic_config_write,
-> +	}
-> +};
-> +
-> +#endif /* defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS) */
-> diff --git a/include/linux/pci-ecam.h b/include/linux/pci-ecam.h
-> index 29efa09d686b..a73164c85e78 100644
-> --- a/include/linux/pci-ecam.h
-> +++ b/include/linux/pci-ecam.h
-> @@ -56,6 +56,7 @@ void __iomem *pci_ecam_map_bus(struct pci_bus *bus, unsigned int devfn,
->  extern struct pci_ecam_ops pci_thunder_ecam_ops; /* Cavium ThunderX 1.x */
->  extern struct pci_ecam_ops xgene_v1_pcie_ecam_ops; /* APM X-Gene PCIe v1 */
->  extern struct pci_ecam_ops xgene_v2_pcie_ecam_ops; /* APM X-Gene PCIe v2.x */
-> +extern struct pci_ecam_ops al_pcie_ops; /* Amazon Annapurna Labs PCIe */
->  #endif
->  
->  #ifdef CONFIG_PCI_HOST_COMMON
-> -- 
-> 1.9.1
-> 
