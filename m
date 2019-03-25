@@ -3,117 +3,146 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4774AC10F03
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 23:09:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F6B3C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 23:11:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B79D2084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 23:09:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D9FE2083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 23:11:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730375AbfCYXJn (ORCPT
+        id S1730061AbfCYXL5 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 19:09:43 -0400
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:23604 "EHLO
-        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726010AbfCYXJn (ORCPT
+        Mon, 25 Mar 2019 19:11:57 -0400
+Received: from tyo162.gate.nec.co.jp ([114.179.232.162]:35786 "EHLO
+        tyo162.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726010AbfCYXL5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 19:09:43 -0400
-X-IronPort-AV: E=Sophos;i="5.60,270,1549926000"; 
-   d="scan'208";a="375705032"
-Received: from 91-160-5-165.subs.proxad.net (HELO [192.168.44.23]) ([91.160.5.165])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/AES128-SHA; 26 Mar 2019 00:09:40 +0100
-Subject: Re: [RFC PATCH 0/10] Another Approach to Use PMEM as NUMA Node
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Yang Shi <yang.shi@linux.alibaba.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Rik van Riel <riel@surriel.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Fengguang Wu <fengguang.wu@intel.com>,
-        "Du, Fan" <fan.du@intel.com>, "Huang, Ying" <ying.huang@intel.com>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <1553316275-21985-1-git-send-email-yang.shi@linux.alibaba.com>
- <cc6f44e2-48b5-067f-9685-99d8ae470b50@inria.fr>
- <CAPcyv4it1w7SdDVBV24cRCVHtLb3s1pVB5+SDM02Uw4RbahKiA@mail.gmail.com>
- <3df2bf0e-0b1d-d299-3b8e-51c306cdc559@inria.fr>
- <CAPcyv4gNrFOQJhKUV7crZqNfg8LQFZRVO04Z+Fo50kzswVQ=TA@mail.gmail.com>
-From:   Brice Goglin <Brice.Goglin@inria.fr>
-Openpgp: preference=signencrypt
-Autocrypt: addr=Brice.Goglin@inria.fr; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <ac409eac-d2fa-8e93-6a18-14516b05632f@inria.fr>
-Date:   Tue, 26 Mar 2019 00:09:40 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Mon, 25 Mar 2019 19:11:57 -0400
+Received: from mailgate01.nec.co.jp ([114.179.233.122])
+        by tyo162.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x2PNBP3r032569
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Tue, 26 Mar 2019 08:11:25 +0900
+Received: from mailsv01.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
+        by mailgate01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x2PNBPMq003911;
+        Tue, 26 Mar 2019 08:11:25 +0900
+Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
+        by mailsv01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x2PN9a3f020489;
+        Tue, 26 Mar 2019 08:11:25 +0900
+Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.136] [10.38.151.136]) by mail03.kamome.nec.co.jp with ESMTP id BT-MMP-3658210; Tue, 26 Mar 2019 08:10:02 +0900
+Received: from BPXM12GP.gisp.nec.co.jp ([10.38.151.204]) by
+ BPXC08GP.gisp.nec.co.jp ([10.38.151.136]) with mapi id 14.03.0319.002; Tue,
+ 26 Mar 2019 08:10:01 +0900
+From:   Junichi Nomura <j-nomura@ce.jp.nec.com>
+To:     Borislav Petkov <bp@alien8.de>, Dave Young <dyoung@redhat.com>
+CC:     "fanc.fnst@cn.fujitsu.com" <fanc.fnst@cn.fujitsu.com>,
+        "bhe@redhat.com" <bhe@redhat.com>,
+        "kasong@redhat.com" <kasong@redhat.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] x86/boot: Use EFI setup data if provided
+Thread-Topic: [PATCH v2] x86/boot: Use EFI setup data if provided
+Thread-Index: AQHU4uSRSF49+PGwf02T2oxnk4CVXaYbdAGAgAAWloCAAAX6gIAAF9OAgAAF7gCAAAKjgIAAsh8A
+Date:   Mon, 25 Mar 2019 23:10:01 +0000
+Message-ID: <20190325231000.GA9184@jeru.linux.bs1.fc.nec.co.jp>
+References: <20190325061929.GC9385@dhcp-128-65.nay.redhat.com>
+ <bcb5bd29-a3b8-e42d-8da7-a8501f695c21@ce.jp.nec.com>
+ <20190325065921.GA11096@dhcp-128-65.nay.redhat.com>
+ <20190325082720.GA20771@jeru.linux.bs1.fc.nec.co.jp>
+ <51D9A7D1-49BF-4679-B102-0FC5AC300C9F@alien8.de>
+ <20190325101509.GA13160@dhcp-128-65.nay.redhat.com>
+ <701c8e69-e1d4-c653-1d87-1c41789d3d54@ce.jp.nec.com>
+ <20190325120149.GI12016@zn.tnic>
+ <20190325122302.GC13160@dhcp-128-65.nay.redhat.com>
+ <20190325123229.GL12016@zn.tnic>
+In-Reply-To: <20190325123229.GL12016@zn.tnic>
+Accept-Language: en-US, ja-JP
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.34.125.85]
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-ID: <438C23D6AA3FC84F84B3753EDDE5A2C3@gisp.nec.co.jp>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-In-Reply-To: <CAPcyv4gNrFOQJhKUV7crZqNfg8LQFZRVO04Z+Fo50kzswVQ=TA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+X-TM-AS-MML: disable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 3/25/19 9:32 PM, Borislav Petkov wrote:
+> On Mon, Mar 25, 2019 at 08:23:02PM +0800, Dave Young wrote:
+>> Kexec saved the original physical addresses, and pass them to kexeced
+>> kernel via x86 setup_data, so  both the early parsing or efi init code
+>> need to get those physical values from setup_data.
+> 
+> So efi_get_rsdp_addr() needs to be refactored in such a way so that at
+> least the loop towards the end gets carved out into a separate function
+> - __efi_get_rsdp_addr() or so - which gets config_tables, nr_tables and
+> size as arguments and finds the RSDP address in the kexec-ed kernel.
 
-Le 25/03/2019 à 20:29, Dan Williams a écrit :
-> Perhaps "path" might be a suitable replacement identifier rather than
-> type. I.e. memory that originates from an ACPI.NFIT root device is
-> likely "pmem".
+Since we still need to read systab for nr_tables and do signature
+check to determine if it's 32bit or 64bit for kexec-ed kernel,
+everything except the address of config_tables are common between
+normal boot and kexec boot.
 
+> So we'd need something like that:
+> 
+> acpi_physical_address get_rsdp_addr(void)
+> {
+>         acpi_physical_address pa;
+> 
+>         pa = get_acpi_rsdp();
+> 
+>         if (!pa)
+>                 pa = boot_params->acpi_rsdp_addr;
+> 
+>         if (!pa)
+>                 pa = efi_get_rsdp_addr();
+> 
+> 	if (!pa)
+> 		pa = kexec_get_rdsp_addr();		<--- new function
+> 
+>         if (!pa)
+>                 pa = bios_get_rsdp_addr();
+> 
+>         return pa;
+> }
+> 
+> which would get config_tables from setup_data and call
+> __efi_get_rsdp_addr() to dig it out in the kexec'ed kernel.
+> 
+> Junichi, ask if it is still unclear what needs to be done.
 
-Could work.
+efi_get_rsdp_addr() and kexec_get_rsdp_addr() could be implemented
+like this (sorry about the pseudo code):
 
-What kind of "path" would we get for other types of memory? (DDR,
-non-ACPI-based based PMEM if any, NVMe PMR?)
+  /* This is also used to check if the kernel is kexec-ed. */
+  unsigned long efi_get_setup_data_addr(void) {
+    return the address of efi_setup_data if kexec-ed or 0 if not;
+  }
 
-Thanks
+  acpi_physical_address __efi_get_rsdp_addr(unsigned long config_tables) {
+    // Do mostly same as the current efi_get_rsdp_addr().
+    // If config_tables is non-zero, use it instead of systab->tables.
+  }
 
-Brice
+  acpi_physical_address efi_get_rsdp_addr(void) {
+    if (efi_get_setup_data_addr())
+      return 0;
+    return __efi_get_rsdp_addr(0);
+  }
 
+  acpi_physical_address kexec_get_rsdp_addr(void) {
+    esd = (struct efi_setup_data *) efi_get_setup_data_addr();
+    if (esd && esd->tables)
+      return __efi_get_rsdp_addr((unsigned long) esd->tables);
+    return 0;
+  }
+
+I don't think it looks nice.. Does this match what you envisage?
+
+-- 
+Jun'ichi Nomura, NEC Corporation / NEC Solution Innovators, Ltd.
