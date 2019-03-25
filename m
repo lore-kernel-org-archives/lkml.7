@@ -3,195 +3,185 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D6F8C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 02:09:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB9AFC10F00
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 02:09:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFA632075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 02:08:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9326B2080F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 02:09:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729321AbfCYCI6 (ORCPT
+        id S1729336AbfCYCJU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 22:08:58 -0400
-Received: from mga04.intel.com ([192.55.52.120]:36878 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729154AbfCYCI5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 22:08:57 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Mar 2019 19:08:56 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,256,1549958400"; 
-   d="scan'208";a="129847836"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
-  by orsmga006.jf.intel.com with ESMTP; 24 Mar 2019 19:08:55 -0700
-Cc:     baolu.lu@linux.intel.com, iommu@lists.linux-foundation.org,
-        Tom Murphy <tmurphy@arista.com>,
-        Dmitry Safonov <dima@arista.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/7] iommu/vt-d: Expose ISA direct mapping region via
- iommu_get_resv_regions
-To:     James Sewart <jamessewart@arista.com>
-References: <0F0C82BE-86E5-4BAC-938C-6F7629E18D27@arista.com>
- <83B82113-8AE5-4B0C-A079-F389520525BD@arista.com>
- <F531CABB-FFDA-4E0A-A3D5-095FF338DD5A@arista.com>
- <b6b3dda7-31e3-c1e8-16cb-07feb7d5431d@linux.intel.com>
- <A489539F-4DD4-438A-AD9A-1A2F50404DB9@arista.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <fb1565dc-d991-acf9-e275-c0090f69f47e@linux.intel.com>
-Date:   Mon, 25 Mar 2019 10:03:18 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Sun, 24 Mar 2019 22:09:20 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:55862 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729262AbfCYCJU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Mar 2019 22:09:20 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id CF0CFB22BA7B5C24D554;
+        Mon, 25 Mar 2019 10:09:17 +0800 (CST)
+Received: from [10.151.23.176] (10.151.23.176) by smtp.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server (TLS) id 14.3.408.0; Mon, 25 Mar
+ 2019 10:09:12 +0800
+Subject: Re: [PATCH 1/3] staging: erofs: fix error handling when failed to
+ read compresssed data
+To:     Chao Yu <yuchao0@huawei.com>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <devel@driverdev.osuosl.org>, LKML <linux-kernel@vger.kernel.org>,
+        <linux-erofs@lists.ozlabs.org>, Chao Yu <chao@kernel.org>,
+        Miao Xie <miaoxie@huawei.com>, <weidu.du@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>, <stable@vger.kernel.org>
+References: <20190319135501.28712-1-gaoxiang25@huawei.com>
+ <8966fa2c-5357-c472-ebb7-a3f3abcf60e8@huawei.com>
+ <cd482202-78fa-e02a-92f4-be31137f344f@huawei.com>
+From:   Gao Xiang <gaoxiang25@huawei.com>
+Message-ID: <48c3d34f-dd0a-6fc7-2e2e-482605835492@huawei.com>
+Date:   Mon, 25 Mar 2019 10:08:48 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.3.0
 MIME-Version: 1.0
-In-Reply-To: <A489539F-4DD4-438A-AD9A-1A2F50404DB9@arista.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <cd482202-78fa-e02a-92f4-be31137f344f@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.151.23.176]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi James,
+Hi Chao,
 
-On 3/22/19 5:57 PM, James Sewart wrote:
-> Hey Lu,
+On 2019/3/25 10:05, Chao Yu wrote:
+> On 2019/3/22 11:25, Gao Xiang wrote:
+>> ping?
+>>
+>> Hi Chao,
+>> could you take some time looking into this series?
 > 
->> On 15 Mar 2019, at 02:19, Lu Baolu <baolu.lu@linux.intel.com> wrote:
+> Done, sorry for the delay.
+
+It doesn't matter. It is helpful for our kernel upgrade
+since it keeps up with the latest community code now ;)
+
+Thanks for keeping on taking time on erofs. *thumb*
+
+Thanks,
+Gao Xiang
+
+> 
+> Thanks,
+> 
 >>
->> Hi James,
+>> Thanks,
+>> Gao Xiang
 >>
->> On 3/14/19 7:58 PM, James Sewart wrote:
->>> To support mapping ISA region via iommu_group_create_direct_mappings,
->>> make sure its exposed by iommu_get_resv_regions. This allows
->>> deduplication of reserved region mappings
->>> Signed-off-by: James Sewart <jamessewart@arista.com>
+>> On 2019/3/19 21:54, Gao Xiang wrote:
+>>> Complete read error handling paths for all three kinds of
+>>> compressed pages:
+>>>
+>>>  1) For cache-managed pages, PG_uptodate will be checked since
+>>>     read_endio will unlock and SetPageUptodate for these pages;
+>>>
+>>>  2) For inplaced pages, read_endio cannot SetPageUptodate directly
+>>>     since it should be used to mark the final decompressed data,
+>>>     PG_error will be set with page locked for IO error instead;
+>>>
+>>>  3) For staging pages, PG_error is used, which is similar to
+>>>     what we do for inplaced pages.
+>>>
+>>> Fixes: 3883a79abd02 ("staging: erofs: introduce VLE decompression support")
+>>> Cc: <stable@vger.kernel.org> # 4.19+
+>>> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 >>> ---
->>>   drivers/iommu/intel-iommu.c | 42 +++++++++++++++++++++++++++++--------
->>>   1 file changed, 33 insertions(+), 9 deletions(-)
->>> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
->>> index 8e0a4e2ff77f..2e00e8708f06 100644
->>> --- a/drivers/iommu/intel-iommu.c
->>> +++ b/drivers/iommu/intel-iommu.c
->>> @@ -337,6 +337,8 @@ static LIST_HEAD(dmar_rmrr_units);
->>>   #define for_each_rmrr_units(rmrr) \
->>>   	list_for_each_entry(rmrr, &dmar_rmrr_units, list)
->>>   +static struct iommu_resv_region *isa_resv_region;
+>>>
+>>> This series focus on fixing error handling when failed to read
+>>> compresssed data due to previous incomplete paths.
+>>>
+>>> In addition, the last 2 patches add IO error fault injection
+>>> for reading paths, which I have used to test the first patch as well.
+>>>
+>>> Thanks,
+>>> Gao Xiang
+>>>
+>>>  drivers/staging/erofs/unzip_vle.c | 41 ++++++++++++++++++++++++++-------------
+>>>  1 file changed, 28 insertions(+), 13 deletions(-)
+>>>
+>>> diff --git a/drivers/staging/erofs/unzip_vle.c b/drivers/staging/erofs/unzip_vle.c
+>>> index 8715bc50e09c..3416d3f10324 100644
+>>> --- a/drivers/staging/erofs/unzip_vle.c
+>>> +++ b/drivers/staging/erofs/unzip_vle.c
+>>> @@ -972,6 +972,7 @@ static int z_erofs_vle_unzip(struct super_block *sb,
+>>>  	overlapped = false;
+>>>  	compressed_pages = grp->compressed_pages;
+>>>  
+>>> +	err = 0;
+>>>  	for (i = 0; i < clusterpages; ++i) {
+>>>  		unsigned int pagenr;
+>>>  
+>>> @@ -981,26 +982,39 @@ static int z_erofs_vle_unzip(struct super_block *sb,
+>>>  		DBG_BUGON(!page);
+>>>  		DBG_BUGON(!page->mapping);
+>>>  
+>>> -		if (z_erofs_is_stagingpage(page))
+>>> -			continue;
+>>> +		if (!z_erofs_is_stagingpage(page)) {
+>>>  #ifdef EROFS_FS_HAS_MANAGED_CACHE
+>>> -		if (page->mapping == MNGD_MAPPING(sbi)) {
+>>> -			DBG_BUGON(!PageUptodate(page));
+>>> -			continue;
+>>> -		}
+>>> +			if (page->mapping == MNGD_MAPPING(sbi)) {
+>>> +				if (unlikely(!PageUptodate(page)))
+>>> +					err = -EIO;
+>>> +				continue;
+>>> +			}
+>>>  #endif
+>>>  
+>>> -		/* only non-head page could be reused as a compressed page */
+>>> -		pagenr = z_erofs_onlinepage_index(page);
+>>> +			/*
+>>> +			 * only if non-head page can be selected
+>>> +			 * for inplace decompression
+>>> +			 */
+>>> +			pagenr = z_erofs_onlinepage_index(page);
+>>>  
+>>> -		DBG_BUGON(pagenr >= nr_pages);
+>>> -		DBG_BUGON(pages[pagenr]);
+>>> -		++sparsemem_pages;
+>>> -		pages[pagenr] = page;
+>>> +			DBG_BUGON(pagenr >= nr_pages);
+>>> +			DBG_BUGON(pages[pagenr]);
+>>> +			++sparsemem_pages;
+>>> +			pages[pagenr] = page;
 >>> +
->>>   /* bitmap for indexing intel_iommus */
->>>   static int g_num_of_iommus;
->>>   @@ -2780,26 +2782,34 @@ static inline int iommu_prepare_rmrr_dev(struct dmar_rmrr_unit *rmrr,
->>>   					  rmrr->end_address);
->>>   }
->>>   +static inline struct iommu_resv_region *iommu_get_isa_resv_region(void)
->>> +{
->>> +	if (!isa_resv_region)
->>> +		isa_resv_region = iommu_alloc_resv_region(0,
->>> +				16*1024*1024,
->>> +				0, IOMMU_RESV_DIRECT);
->>> +
->>> +	return isa_resv_region;
->>> +}
->>> +
->>>   #ifdef CONFIG_INTEL_IOMMU_FLOPPY_WA
->>> -static inline void iommu_prepare_isa(void)
->>> +static inline void iommu_prepare_isa(struct pci_dev *pdev)
->>>   {
->>> -	struct pci_dev *pdev;
->>>   	int ret;
->>> +	struct iommu_resv_region *reg = iommu_get_isa_resv_region();
->>>   -	pdev = pci_get_class(PCI_CLASS_BRIDGE_ISA << 8, NULL);
->>> -	if (!pdev)
->>> +	if (!reg)
->>>   		return;
->>>     	pr_info("Prepare 0-16MiB unity mapping for LPC\n");
->>> -	ret = iommu_prepare_identity_map(&pdev->dev, 0, 16*1024*1024 - 1);
->>> +	ret = iommu_prepare_identity_map(&pdev->dev, reg->start,
->>> +			reg->start + reg->length - 1);
->>>     	if (ret)
->>>   		pr_err("Failed to create 0-16MiB identity map - floppy might not work\n");
->>> -
->>> -	pci_dev_put(pdev);
->>>   }
->>>   #else
->>> -static inline void iommu_prepare_isa(void)
->>> +static inline void iommu_prepare_isa(struct pci_dev *pdev)
->>>   {
->>>   	return;
->>>   }
->>> @@ -3289,6 +3299,7 @@ static int __init init_dmars(void)
->>>   	struct dmar_rmrr_unit *rmrr;
->>>   	bool copied_tables = false;
->>>   	struct device *dev;
->>> +	struct pci_dev *pdev;
->>>   	struct intel_iommu *iommu;
->>>   	int i, ret;
->>>   @@ -3469,7 +3480,11 @@ static int __init init_dmars(void)
->>>   		}
->>>   	}
->>>   -	iommu_prepare_isa();
->>> +	pdev = pci_get_class(PCI_CLASS_BRIDGE_ISA << 8, NULL);
->>> +	if (pdev) {
->>> +		iommu_prepare_isa(pdev);
->>> +		pci_dev_put(pdev);
->>> +	}
->>>     domains_done:
->>>   @@ -5266,6 +5281,7 @@ static void intel_iommu_get_resv_regions(struct device *device,
->>>   	struct iommu_resv_region *reg;
->>>   	struct dmar_rmrr_unit *rmrr;
->>>   	struct device *i_dev;
->>> +	struct pci_dev *pdev;
->>>   	int i;
->>>     	rcu_read_lock();
->>> @@ -5280,6 +5296,14 @@ static void intel_iommu_get_resv_regions(struct device *device,
->>>   	}
->>>   	rcu_read_unlock();
->>>   +	if (dev_is_pci(device)) {
->>> +		pdev = to_pci_dev(device);
->>> +		if ((pdev->class >> 8) == PCI_CLASS_BRIDGE_ISA) {
->>> +			reg = iommu_get_isa_resv_region();
->>> +			list_add_tail(&reg->list, head);
+>>> +			overlapped = true;
 >>> +		}
->>> +	}
+>>>  
+>>> -		overlapped = true;
+>>> +		/* PG_error needs checking for inplaced and staging pages */
+>>> +		if (unlikely(PageError(page))) {
+>>> +			DBG_BUGON(PageUptodate(page));
+>>> +			err = -EIO;
+>>> +		}
+>>>  	}
+>>>  
+>>> +	if (unlikely(err))
+>>> +		goto out;
 >>> +
+>>>  	llen = (nr_pages << PAGE_SHIFT) - work->pageofs;
+>>>  
+>>>  	if (z_erofs_vle_workgrp_fmt(grp) == Z_EROFS_VLE_WORKGRP_FMT_PLAIN) {
+>>> @@ -1194,6 +1208,7 @@ pickup_page_for_submission(struct z_erofs_vle_workgroup *grp,
+>>>  	if (page->mapping == mc) {
+>>>  		WRITE_ONCE(grp->compressed_pages[nr], page);
+>>>  
+>>> +		ClearPageError(page);
+>>>  		if (!PagePrivate(page)) {
+>>>  			/*
+>>>  			 * impossible to be !PagePrivate(page) for
+>>>
+>> .
 >>
->> Just wondering why not just
->>
->> +#ifdef CONFIG_INTEL_IOMMU_FLOPPY_WA
->> +	if (dev_is_pci(device)) {
->> +		pdev = to_pci_dev(device);
->> +		if ((pdev->class >> 8) == PCI_CLASS_BRIDGE_ISA) {
->> +			reg = iommu_alloc_resv_region(0,
->> +				16*1024*1024,
->> +				0, IOMMU_RESV_DIRECT);
->> +			if (reg)
->> +				list_add_tail(&reg->list, head);
->> +		}
->> +	}
->> +#endif
->>
->> and, remove all other related code?
-> 
-> At this point in the patchset if we remove iommu_prepare_isa then the ISA
-> region won’t be mapped to the device. Only once the dma domain is allocable
-> will the reserved regions be mapped by iommu_group_create_direct_mappings.
-
-Yes. So if we put the allocation code here, it won't impact anything and
-will take effect as soon as the dma domain is allocatable.
-
-> 
-> Theres an issue that if we choose to alloc a new resv_region with type
-> IOMMU_RESV_DIRECT, we will need to refactor intel_iommu_put_resv_regions
-> to free this entry type which means refactoring the rmrr regions in
-> get_resv_regions. Should this work be in this patchset?
-
-Do you mean the rmrr regions are not allocated in get_resv_regions, but
-are freed in put_resv_regions? I think we should fix this in this patch
-set since this might impact the device passthrough if we don't do it.
-
-Best regards,
-Lu Baolu
