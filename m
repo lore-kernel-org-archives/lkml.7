@@ -7,39 +7,37 @@ X-Spam-Status: No, score=-11.0 required=3.0
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82218C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:24:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 838F4C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:25:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D86520848
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:24:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ECC020848
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:25:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730540AbfCYVYz (ORCPT
+        id S1730084AbfCYVY6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 17:24:55 -0400
-Received: from smtprelay0186.hostedemail.com ([216.40.44.186]:36846 "EHLO
+        Mon, 25 Mar 2019 17:24:58 -0400
+Received: from smtprelay0096.hostedemail.com ([216.40.44.96]:36852 "EHLO
         smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729569AbfCYVYy (ORCPT
+        by vger.kernel.org with ESMTP id S1729569AbfCYVY4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 17:24:54 -0400
+        Mon, 25 Mar 2019 17:24:56 -0400
 Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 8477A180A8867;
-        Mon, 25 Mar 2019 21:24:52 +0000 (UTC)
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 17663180A8867;
+        Mon, 25 Mar 2019 21:24:55 +0000 (UTC)
 X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: note99_d528fa80be60
-X-Filterd-Recvd-Size: 3741
+X-HE-Tag: place45_db53fa961c00
+X-Filterd-Recvd-Size: 3412
 Received: from joe-laptop.perches.com (unknown [47.151.153.53])
         (Authenticated sender: joe@perches.com)
-        by omf06.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 25 Mar 2019 21:24:51 +0000 (UTC)
+        by omf01.hostedemail.com (Postfix) with ESMTPA;
+        Mon, 25 Mar 2019 21:24:54 +0000 (UTC)
 From:   Joe Perches <joe@perches.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        linux-arm-msm@vger.kernel.org,
-        Amit Kucheria <amit.kucheria@linaro.org>
-Subject: Bad file pattern in MAINTAINERS section 'ARM/QUALCOMM SUPPORT'
-Date:   Mon, 25 Mar 2019 14:24:50 -0700
-Message-Id: <20190325212450.25865-1-joe@perches.com>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-arm-kernel@lists.infradead.org, Vinod Koul <vkoul@kernel.org>
+Subject: Bad file pattern in MAINTAINERS section 'ARM/UNIPHIER ARCHITECTURE'
+Date:   Mon, 25 Mar 2019 14:24:53 -0700
+Message-Id: <20190325212453.25934-1-joe@perches.com>
 X-Mailer: git-send-email 2.15.0
 In-Reply-To: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com>
 References: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com>
@@ -63,68 +61,53 @@ Please fix this defect appropriately.
 
 linux-next MAINTAINERS section:
 
-	1986	ARM/QUALCOMM SUPPORT
-	1987	M:	Andy Gross <andy.gross@linaro.org>
-	1988	M:	David Brown <david.brown@linaro.org>
-	1989	L:	linux-arm-msm@vger.kernel.org
-	1990	S:	Maintained
-	1991	F:	Documentation/devicetree/bindings/soc/qcom/
-	1992	F:	Documentation/devicetree/bindings/*/qcom*
-	1993	F:	arch/arm/boot/dts/qcom-*.dts
-	1994	F:	arch/arm/boot/dts/qcom-*.dtsi
-	1995	F:	arch/arm/mach-qcom/
-	1996	F:	arch/arm64/boot/dts/qcom/
-	1997	F:	drivers/*/qcom/
-	1998	F:	drivers/*/qcom*
-	1999	F:	drivers/*/*/qcom/
-	2000	F:	drivers/*/*/qcom*
-	2001	F:	drivers/*/pm8???-*
-	2002	F:	drivers/bluetooth/btqcomsmd.c
-	2003	F:	drivers/clocksource/timer-qcom.c
-	2004	F:	drivers/extcon/extcon-qcom*
-	2005	F:	drivers/iommu/msm*
-	2006	F:	drivers/i2c/busses/i2c-qup.c
-	2007	F:	drivers/i2c/busses/i2c-qcom-geni.c
-	2008	F:	drivers/mfd/ssbi.c
-	2009	F:	drivers/mmc/host/mmci_qcom*
--->	2010	F:	drivers/mmc/host/sdhci_msm.c
-	2011	F:	drivers/pci/controller/dwc/pcie-qcom.c
-	2012	F:	drivers/phy/qualcomm/
-	2013	F:	drivers/power/*/msm*
-	2014	F:	drivers/reset/reset-qcom-*
-	2015	F:	drivers/scsi/ufs/ufs-qcom.*
-	2016	F:	drivers/spi/spi-qup.c
-	2017	F:	drivers/spi/spi-geni-qcom.c
-	2018	F:	drivers/spi/spi-qcom-qspi.c
-	2019	F:	drivers/tty/serial/msm_serial.c
-	2020	F:	drivers/usb/dwc3/dwc3-qcom.c
-	2021	F:	include/dt-bindings/*/qcom*
-	2022	F:	include/linux/*/qcom*
-	2023	T:	git git://git.kernel.org/pub/scm/linux/kernel/git/agross/linux.git
+	2344	ARM/UNIPHIER ARCHITECTURE
+	2345	M:	Masahiro Yamada <yamada.masahiro@socionext.com>
+	2346	L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+	2347	T:	git git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-uniphier.git
+	2348	S:	Maintained
+	2349	F:	Documentation/devicetree/bindings/arm/socionext/uniphier.txt
+	2350	F:	Documentation/devicetree/bindings/gpio/gpio-uniphier.txt
+	2351	F:	Documentation/devicetree/bindings/pinctrl/socionext,uniphier-pinctrl.txt
+	2352	F:	arch/arm/boot/dts/uniphier*
+	2353	F:	arch/arm/include/asm/hardware/cache-uniphier.h
+	2354	F:	arch/arm/mach-uniphier/
+	2355	F:	arch/arm/mm/cache-uniphier.c
+	2356	F:	arch/arm64/boot/dts/socionext/uniphier*
+	2357	F:	drivers/bus/uniphier-system-bus.c
+	2358	F:	drivers/clk/uniphier/
+-->	2359	F:	drivers/dmaengine/uniphier-mdmac.c
+	2360	F:	drivers/gpio/gpio-uniphier.c
+	2361	F:	drivers/i2c/busses/i2c-uniphier*
+	2362	F:	drivers/irqchip/irq-uniphier-aidet.c
+	2363	F:	drivers/mmc/host/uniphier-sd.c
+	2364	F:	drivers/pinctrl/uniphier/
+	2365	F:	drivers/reset/reset-uniphier.c
+	2366	F:	drivers/tty/serial/8250/8250_uniphier.c
+	2367	N:	uniphier
 
 2: ---------------------------------------------------------------------------
 
-The most recent commit that added or modified file pattern 'drivers/mmc/host/sdhci_msm.c':
+The most recent commit that added or modified file pattern 'drivers/dmaengine/uniphier-mdmac.c':
 
-commit e31f941cf977f4ed7882358de2f513cac5865330
-Author: Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Tue Jan 15 01:15:49 2019 +0530
+commit 32e74aabebc8d045a11452d2de0ac9d2625fcd45
+Author: Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Fri Oct 12 01:41:03 2018 +0900
 
-    MAINTAINERS: update list of qcom drivers
+    dmaengine: uniphier-mdmac: add UniPhier MIO DMAC driver
     
-    Several drivers didn't have a specific maintainer (other than the
-    subsystem maintainer). Add some generic regex patterns to capture most
-    qcom drivers in the list of supported drivers. For the rest, add
-    explicit filenames.
+    The MIO DMAC (Media IO DMA Controller) is used in UniPhier LD4,
+    Pro4, and sLD8 SoCs.
     
-    Sort the entries, while we're at it.
-    
-    Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-    Signed-off-by: Andy Gross <andy.gross@linaro.org>
+    Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+    Signed-off-by: Vinod Koul <vkoul@kernel.org>
 
- MAINTAINERS | 32 +++++++++++++++++++++++++-------
- 1 file changed, 25 insertions(+), 7 deletions(-)
+ MAINTAINERS                  |   1 +
+ drivers/dma/Kconfig          |  11 +
+ drivers/dma/Makefile         |   1 +
+ drivers/dma/uniphier-mdmac.c | 506 +++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 519 insertions(+)
 
 3: ---------------------------------------------------------------------------
 
-No commit with file pattern 'drivers/mmc/host/sdhci_msm.c' was found
+No commit with file pattern 'drivers/dmaengine/uniphier-mdmac.c' was found
