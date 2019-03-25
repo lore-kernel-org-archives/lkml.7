@@ -2,88 +2,113 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A58E8C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 01:28:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB9B1C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 01:35:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61B1E21019
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 01:28:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B40120863
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 01:35:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="P71m8OOk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729242AbfCYB2D (ORCPT
+        id S1729199AbfCYBfp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 21:28:03 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5180 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729105AbfCYB2D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 21:28:03 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id E5DF6D5923D1EF27965C;
-        Mon, 25 Mar 2019 09:28:00 +0800 (CST)
-Received: from [10.151.23.176] (10.151.23.176) by smtp.huawei.com
- (10.3.19.207) with Microsoft SMTP Server (TLS) id 14.3.408.0; Mon, 25 Mar
- 2019 09:27:51 +0800
-Subject: Re: [PATCH 1/3] staging: erofs: fix error handling when failed to
- read compresssed data
-To:     Sasha Levin <sashal@kernel.org>, Chao Yu <yuchao0@huawei.com>
-CC:     LKML <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
-        Miao Xie <miaoxie@huawei.com>
-References: <20190319135501.28712-1-gaoxiang25@huawei.com>
- <20190325003840.2176F2133F@mail.kernel.org>
-From:   Gao Xiang <gaoxiang25@huawei.com>
-Message-ID: <cf08567f-6a18-9d32-a9e4-c77f8c4fcd1f@huawei.com>
-Date:   Mon, 25 Mar 2019 09:27:44 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.3.0
+        Sun, 24 Mar 2019 21:35:45 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:60420 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729093AbfCYBfo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Mar 2019 21:35:44 -0400
+Received: from pendragon.ideasonboard.com (30.net042126252.t-com.ne.jp [42.126.252.30])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 93B0CE2;
+        Mon, 25 Mar 2019 02:35:41 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1553477742;
+        bh=uVv2BnxOvPEtDyxqJzQuBCekV7R/hZ+h6ZqFjdp8zf8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=P71m8OOkFmaqXPjrgI69CN0Zfy8U4NrN8cmCXI/G2cwplcoEGeQA3UqvF7BOj4/zt
+         spokaCPHUM1Dy3ytodbtlPYGa5sTrtfRxuJ+2peXKysRAOhgQ6t2EhJvjnqDHuHmVR
+         7LcanhwPz98SL373g8c/BOllmB5rex5ogVHWnPu0=
+Date:   Mon, 25 Mar 2019 03:35:31 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Jernej Skrabec <jernej.skrabec@siol.net>
+Cc:     maxime.ripard@bootlin.com, a.hajda@samsung.com, airlied@linux.ie,
+        daniel@ffwll.ch, wens@csie.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/2] drm/bridge/synopsys: dw-hdmi: Add an option to
+ suppress loading CEC driver
+Message-ID: <20190325013531.GB4540@pendragon.ideasonboard.com>
+References: <20190324212144.3652-1-jernej.skrabec@siol.net>
+ <20190324212144.3652-2-jernej.skrabec@siol.net>
 MIME-Version: 1.0
-In-Reply-To: <20190325003840.2176F2133F@mail.kernel.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.151.23.176]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190324212144.3652-2-jernej.skrabec@siol.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Jernej,
 
-On 2019/3/25 8:38, Sasha Levin wrote:
-> Hi,
-> 
-> [This is an automated email]
-> 
-> This commit has been processed because it contains a "Fixes:" tag,
-> fixing commit: 3883a79abd02 staging: erofs: introduce VLE decompression support.
-> 
-> The bot has tested the following trees: v5.0.3, v4.19.30.
-> 
-> v5.0.3: Build OK!
-> v4.19.30: Failed to apply! Possible dependencies:
->     390c642e1264 ("staging: erofs: fix integer overflow on 32-bit platform")
->     42d40b4ad840 ("staging: erofs: unzip_vle.c: Replace comparison to NULL.")
->     6e78901a9f23 ("staging: erofs: separate erofs_get_meta_page")
->     7dd68b147d60 ("staging: erofs: use explicit unsigned int type")
->     8be31270362b ("staging: erofs: introduce erofs_grab_bio")
->     9248fce714d5 ("staging: erofs: revisit the page submission flow")
->     a07eeddf5b63 ("staging: erofs: clean up z_erofs_map_blocks_iter")
->     ab47dd2b0819 ("staging: erofs: cleanup z_erofs_vle_work_{lookup, register}")
->     b27661cf99c2 ("staging: erofs: fold in `__update_workgrp_llen'")
->     c1448fa88025 ("staging: erofs: introduce MNGD_MAPPING helper")
-> 
-> 
-> How should we proceed with this patch?
+Thank you for the patch.
 
-I will do the 4.19 backport patch after get a "Reviewed-by: " tag,
-thanks for the reminder.
-
-Thanks,
-Gao Xiang
-
+On Sun, Mar 24, 2019 at 10:21:42PM +0100, Jernej Skrabec wrote:
+> DW HDMI controller on some Allwinner SoCs has support for CEC, but due
+> to additional logic put between CEC controller and pins, it doesn't work
+> correctly, at least not with a lot of instrusive changes. Fortunately,
+> it's still possible to bitbang protocol.
 > 
-> --
-> Thanks,
-> Sasha
+> For such cases, add a platform option to suppress loading CEC driver. If
+> DW HDMI CEC driver would be loaded, it wouldn't work anyway and only
+> cause a confusion with multiple /dev entries.
 > 
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> ---
+>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 2 +-
+>  include/drm/bridge/dw_hdmi.h              | 2 ++
+>  2 files changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> index a63e5f0dae56..fdda26f8b056 100644
+> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> @@ -2634,7 +2634,7 @@ __dw_hdmi_probe(struct platform_device *pdev,
+>  		hdmi->audio = platform_device_register_full(&pdevinfo);
+>  	}
+>  
+> -	if (config0 & HDMI_CONFIG0_CEC) {
+> +	if (!plat_data->is_cec_unusable && (config0 & HDMI_CONFIG0_CEC)) {
+>  		cec.hdmi = hdmi;
+>  		cec.ops = &dw_hdmi_cec_ops;
+>  		cec.irq = irq;
+> diff --git a/include/drm/bridge/dw_hdmi.h b/include/drm/bridge/dw_hdmi.h
+> index 66e70770cce5..764b8bcfa62c 100644
+> --- a/include/drm/bridge/dw_hdmi.h
+> +++ b/include/drm/bridge/dw_hdmi.h
+> @@ -144,6 +144,8 @@ struct dw_hdmi_plat_data {
+>  	int (*configure_phy)(struct dw_hdmi *hdmi,
+>  			     const struct dw_hdmi_plat_data *pdata,
+>  			     unsigned long mpixelclock);
+> +
+> +	unsigned int is_cec_unusable : 1;
+
+Strictly speaking your CEC controller isn't unusable, it's just a bit
+difficult to use it according to your commit message. Would disable_cec
+be a more appropriate field name ? And how difficult would it be to
+support the hardware CEC controller, would that result in changes that
+could be useful to other vendors too ?
+
+>  };
+>  
+>  struct dw_hdmi *dw_hdmi_probe(struct platform_device *pdev,
+
+-- 
+Regards,
+
+Laurent Pinchart
