@@ -4,43 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 175C1C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:25:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70F67C10F03
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:25:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E546F20848
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:25:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B5942084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:25:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730674AbfCYVZU (ORCPT
+        id S1730700AbfCYVZV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 17:25:20 -0400
-Received: from smtprelay0018.hostedemail.com ([216.40.44.18]:50070 "EHLO
+        Mon, 25 Mar 2019 17:25:21 -0400
+Received: from smtprelay0165.hostedemail.com ([216.40.44.165]:34603 "EHLO
         smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729714AbfCYVZR (ORCPT
+        by vger.kernel.org with ESMTP id S1730199AbfCYVZU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 17:25:17 -0400
+        Mon, 25 Mar 2019 17:25:20 -0400
 Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 09E8A181D3403;
-        Mon, 25 Mar 2019 21:25:16 +0000 (UTC)
+        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 0D63B1804E3D4;
+        Mon, 25 Mar 2019 21:25:19 +0000 (UTC)
 X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: shape38_10b3cb287165c
-X-Filterd-Recvd-Size: 4492
+X-HE-Tag: plant67_111b552e3740e
+X-Filterd-Recvd-Size: 3465
 Received: from joe-laptop.perches.com (unknown [47.151.153.53])
         (Authenticated sender: joe@perches.com)
-        by omf18.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 25 Mar 2019 21:25:14 +0000 (UTC)
+        by omf14.hostedemail.com (Postfix) with ESMTPA;
+        Mon, 25 Mar 2019 21:25:17 +0000 (UTC)
 From:   Joe Perches <joe@perches.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Bad file pattern in MAINTAINERS section 'FUTEX SUBSYSTEM'
-Date:   Mon, 25 Mar 2019 14:25:13 -0700
-Message-Id: <20190325212513.26420-1-joe@perches.com>
+Cc:     "K . Y . Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org,
+        Michael Kelley <mikelley@microsoft.com>,
+        Lan Tianyu <Tianyu.Lan@microsoft.com>,
+        Joerg Roedel <jroedel@suse.de>
+Subject: Bad file pattern in MAINTAINERS section 'Hyper-V CORE AND DRIVERS'
+Date:   Mon, 25 Mar 2019 14:25:16 -0700
+Message-Id: <20190325212516.26489-1-joe@perches.com>
 X-Mailer: git-send-email 2.15.0
 In-Reply-To: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com>
 References: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com>
@@ -64,80 +66,55 @@ Please fix this defect appropriately.
 
 linux-next MAINTAINERS section:
 
-	6410	FUTEX SUBSYSTEM
-	6411	M:	Thomas Gleixner <tglx@linutronix.de>
-	6412	M:	Ingo Molnar <mingo@redhat.com>
-	6413	R:	Peter Zijlstra <peterz@infradead.org>
-	6414	R:	Darren Hart <dvhart@infradead.org>
-	6415	L:	linux-kernel@vger.kernel.org
-	6416	T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git locking/core
-	6417	S:	Maintained
-	6418	F:	kernel/futex.c
--->	6419	F:	kernel/futex_compat.c
-	6420	F:	include/asm-generic/futex.h
-	6421	F:	include/linux/futex.h
-	6422	F:	include/uapi/linux/futex.h
-	6423	F:	tools/testing/selftests/futex/
-	6424	F:	tools/perf/bench/futex*
-	6425	F:	Documentation/*futex*
+	7164	Hyper-V CORE AND DRIVERS
+	7165	M:	"K. Y. Srinivasan" <kys@microsoft.com>
+	7166	M:	Haiyang Zhang <haiyangz@microsoft.com>
+	7167	M:	Stephen Hemminger <sthemmin@microsoft.com>
+	7168	M:	Sasha Levin <sashal@kernel.org>
+	7169	T:	git git://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git
+	7170	L:	linux-hyperv@vger.kernel.org
+	7171	S:	Supported
+	7172	F:	Documentation/networking/device_drivers/microsoft/netvsc.txt
+	7173	F:	arch/x86/include/asm/mshyperv.h
+	7174	F:	arch/x86/include/asm/trace/hyperv.h
+	7175	F:	arch/x86/include/asm/hyperv-tlfs.h
+	7176	F:	arch/x86/kernel/cpu/mshyperv.c
+	7177	F:	arch/x86/hyperv
+	7178	F:	drivers/hid/hid-hyperv.c
+	7179	F:	drivers/hv/
+	7180	F:	drivers/input/serio/hyperv-keyboard.c
+	7181	F:	drivers/pci/controller/pci-hyperv.c
+	7182	F:	drivers/net/hyperv/
+	7183	F:	drivers/scsi/storvsc_drv.c
+	7184	F:	drivers/uio/uio_hv_generic.c
+	7185	F:	drivers/video/fbdev/hyperv_fb.c
+-->	7186	F:	drivers/iommu/hyperv_iommu.c
+	7187	F:	net/vmw_vsock/hyperv_transport.c
+	7188	F:	include/linux/hyperv.h
+	7189	F:	include/uapi/linux/hyperv.h
+	7190	F:	tools/hv/
+	7191	F:	Documentation/ABI/stable/sysfs-bus-vmbus
 
 2: ---------------------------------------------------------------------------
 
-The most recent commit that added or modified file pattern 'kernel/futex_compat.c':
+The most recent commit that added or modified file pattern 'drivers/iommu/hyperv_iommu.c':
 
-commit 59cd42c29618c45cd3c56da43402b14f611888dd
-Author: Darren Hart (VMware) <dvhart@infradead.org>
-Date:   Fri Apr 14 15:46:08 2017 -0700
+commit 32d5860a9e3c98b5043716fff05a7b20b15918f9
+Author: Lan Tianyu <Tianyu.Lan@microsoft.com>
+Date:   Wed Feb 27 22:54:05 2019 +0800
 
-    MAINTAINERS: Add FUTEX SUBSYSTEM
+    MAINTAINERS: Add Hyper-V IOMMU driver into Hyper-V CORE AND DRIVERS scope
     
-    Add a MAINTAINERS block for the FUTEX SUBSYSTEM which includes the core
-    kernel code, include headers, testing code, and Documentation. Excludes
-    arch files, and higher level test code.
+    This patch is to add Hyper-V IOMMU driver file into Hyper-V CORE and
+    DRIVERS scope.
     
-    I added tglx and mingo as M as they have made the tip commits and peterz
-    and myself as R.
-    
-    Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
-    Cc: Peter Zijlstra <peterz@infradead.org>
-    Cc: Shuah Khan <shuah@kernel.org>
-    Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-    Link: http://lkml.kernel.org/r/20170414224608.GA5180@fury
-    Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+    Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+    Signed-off-by: Lan Tianyu <Tianyu.Lan@microsoft.com>
+    Signed-off-by: Joerg Roedel <jroedel@suse.de>
 
- MAINTAINERS | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
 
 3: ---------------------------------------------------------------------------
 
-The last commit with a real presence of file pattern 'kernel/futex_compat.c':
-
-commit 04e7712f4460585e5eed5b853fd8b82a9943958f
-Author: Arnd Bergmann <arnd@arndb.de>
-Date:   Tue Apr 17 16:31:07 2018 +0200
-
-    y2038: futex: Move compat implementation into futex.c
-    
-    We are going to share the compat_sys_futex() handler between 64-bit
-    architectures and 32-bit architectures that need to deal with both 32-bit
-    and 64-bit time_t, and this is easier if both entry points are in the
-    same file.
-    
-    In fact, most other system call handlers do the same thing these days, so
-    let's follow the trend here and merge all of futex_compat.c into futex.c.
-    
-    In the process, a few minor changes have to be done to make sure everything
-    still makes sense: handle_futex_death() and futex_cmpxchg_enabled() become
-    local symbol, and the compat version of the fetch_robust_entry() function
-    gets renamed to compat_fetch_robust_entry() to avoid a symbol clash.
-    
-    This is intended as a purely cosmetic patch, no behavior should
-    change.
-    
-    Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-
- include/linux/futex.h |   8 --
- kernel/Makefile       |   3 -
- kernel/futex.c        | 195 +++++++++++++++++++++++++++++++++++++++++++++++-
- kernel/futex_compat.c | 202 --------------------------------------------------
- 4 files changed, 192 insertions(+), 216 deletions(-)
+No commit with file pattern 'drivers/iommu/hyperv_iommu.c' was found
