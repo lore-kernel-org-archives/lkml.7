@@ -2,125 +2,102 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37485C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 22:00:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1D60C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 22:00:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E19320645
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 22:00:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBEF8205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 22:00:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=tobin.cc header.i=@tobin.cc header.b="r1rvW6wj";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="GHFFkGDG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730934AbfCYWAL (ORCPT
+        id S1730957AbfCYWAP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 25 Mar 2019 18:00:15 -0400
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:60377 "EHLO
+        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729693AbfCYWAL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 25 Mar 2019 18:00:11 -0400
-Received: from muru.com ([72.249.23.125]:42594 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730501AbfCYV7C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 17:59:02 -0400
-Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id 77EAD819C;
-        Mon, 25 Mar 2019 21:59:14 +0000 (UTC)
-From:   Tony Lindgren <tony@atomide.com>
-To:     linux-omap@vger.kernel.org
-Cc:     Dave Gerlach <d-gerlach@ti.com>, Faiz Abbas <faiz_abbas@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>,
-        Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH 02/14] bus: ti-sysc: Handle missed no-idle property in addition to no-idle-on-init
-Date:   Mon, 25 Mar 2019 14:58:37 -0700
-Message-Id: <20190325215849.13182-3-tony@atomide.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190325215849.13182-1-tony@atomide.com>
-References: <20190325215849.13182-1-tony@atomide.com>
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.nyi.internal (Postfix) with ESMTP id 18E2D25AF7;
+        Mon, 25 Mar 2019 18:00:10 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute5.internal (MEProxy); Mon, 25 Mar 2019 18:00:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tobin.cc; h=date
+        :from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=U6QhMlb/WNmihfV9JJAwe1/emPv
+        8GDBLCIX6hdWzMYY=; b=r1rvW6wjkctDOgkEXCCzoY40SCD00L5TOZ+Yh3oRpoc
+        Blx97VYxBwLRXmCBSdYz7WtFYM8PcPl9Ozd82zBAfMW3tgW9cDq+iwZLi6VvFiNP
+        P55pNT3Wlzvnv5PB9WpyOykBDkOADDTMIPVdH/dsvaR0ns/HIVmuxygPGMer8ceS
+        2XLjkTzeWAiqgswpDH1l9DqRpQbQpB16ynE+mbiuVU//pPeyiDtkLxjAVcISjLwR
+        T6gbfdpZ5ppFY3BHrbi5po58GfGv4eCCgrlX+O9RbF9BEWWjvUtp/r8StsPS5jPA
+        RxC9SFnIphSmRqGOpBlM6dXVJR83egPnUUfqclfLmxw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=U6QhMl
+        b/WNmihfV9JJAwe1/emPv8GDBLCIX6hdWzMYY=; b=GHFFkGDGhD+LX/8MXJmjts
+        PMlGXrGsozhXdJS2/JgR9oNhh69oBQX6833mKK9uG7ltLFf1p0fhYJvkRukEn/MJ
+        MWjTLF+hBxPEsO6pkqV+kQA8CBdpavuZFAjUmNMV0cwx49ku5mqhyRI5bAkGIMsw
+        ant+5WLJOY3Y058Y3Uil1O9s3C5WXNTsXos0VGvB8beM2ngTgQZsoGF/pYUALVRj
+        rtBN4QXe4LxFwoLVRy1Ze/Xls8UXX5hVP2aKsiq+larrcIB7T817twrRUG3r8lsT
+        UwC22ZHFtYxsl424pro1dUVsY6sER9peK/g6xKhKRVLo5uHuSS+2aBEbTyMIpZYQ
+        ==
+X-ME-Sender: <xms:aU-ZXIpOBkGKW74VYGs-7FwZIg8RRqrbS6lkxMTDTbrzK28mY0Kwsg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedutddrjeekgdduheejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    gfrhhlucfvnfffucdludehmdenucfjughrpeffhffvuffkfhggtggujgfofgesthdtredt
+    ofervdenucfhrhhomhepfdfvohgsihhnucevrdcujfgrrhguihhnghdfuceomhgvsehtoh
+    gsihhnrdgttgeqnecukfhppeduvdegrddugeelrdduvddtrddutddunecurfgrrhgrmhep
+    mhgrihhlfhhrohhmpehmvgesthhosghinhdrtggtnecuvehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:aU-ZXMVM0xaKdms0qgXA7L-sHpRTnbBBWQhXiGR2JdqpWsgFR50Hbg>
+    <xmx:aU-ZXFSVG5mld8dcXaJTcFMUcDTrhNGx-_XcKvKiwxlKcJMxtpWj4w>
+    <xmx:aU-ZXITvyLUvRGPvuXkjoawbDTZE4jO79ZI_ZB1PorbXQ12UP9dJtA>
+    <xmx:ak-ZXP9BbwSPuUSuEyACpXRuUt4-mnI6U_GzaKJWSfkG0fMh2KtMpA>
+Received: from localhost (124-149-120-101.dyn.iinet.net.au [124.149.120.101])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 7A4E710397;
+        Mon, 25 Mar 2019 18:00:07 -0400 (EDT)
+Date:   Tue, 26 Mar 2019 08:59:38 +1100
+From:   "Tobin C. Harding" <me@tobin.cc>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     "Tobin C. Harding" <tobin@kernel.org>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/9] docs: Fix various build warnings/errors
+Message-ID: <20190325215938.GA19088@eros.localdomain>
+References: <20190307211153.28400-1-tobin@kernel.org>
+ <20190325103333.700c2772@lwn.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190325103333.700c2772@lwn.net>
+X-Mailer: Mutt 1.11.4 (2019-03-13)
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We have ti,no-idle in use in addition to ti,no-idle-on-init but we're
-missing handling for it in the ti-sysc interconnect target module driver.
+On Mon, Mar 25, 2019 at 10:33:33AM -0600, Jonathan Corbet wrote:
+> On Fri,  8 Mar 2019 08:11:44 +1100
+> "Tobin C. Harding" <tobin@kernel.org> wrote:
+> 
+> > I had a few hours to spare so I thought I'd clear some Sphinx build
+> > warnings/errors.
+> 
+> So there were comments on various parts of this series; were you planning
+> to respin it with those taken into account?  Certainly we're all in favor
+> of fewer warnings!
 
-Let's also group the idle defines together and update the binding
-documentation for it.
+Oh I thought this was dead.  I was under the impression that because I'd
+worked off the wrong tree Randy had fixed all these already.
 
-Cc: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Tony Lindgren <tony@atomide.com>
----
- Documentation/devicetree/bindings/bus/ti-sysc.txt | 2 ++
- arch/arm/mach-omap2/omap_hwmod.c                  | 2 ++
- drivers/bus/ti-sysc.c                             | 5 ++++-
- include/linux/platform_data/ti-sysc.h             | 5 +++--
- 4 files changed, 11 insertions(+), 3 deletions(-)
+I'll go back and check if any of these fixes are useful still.
 
-diff --git a/Documentation/devicetree/bindings/bus/ti-sysc.txt b/Documentation/devicetree/bindings/bus/ti-sysc.txt
---- a/Documentation/devicetree/bindings/bus/ti-sysc.txt
-+++ b/Documentation/devicetree/bindings/bus/ti-sysc.txt
-@@ -94,6 +94,8 @@ Optional properties:
- 
- - ti,no-idle-on-init	interconnect target module should not be idled at init
- 
-+- ti,no-idle		interconnect target module should not be idled
-+
- Example: Single instance of MUSB controller on omap4 using interconnect ranges
- using offsets from l4_cfg second segment (0x4a000000 + 0x80000 = 0x4a0ab000):
- 
-diff --git a/arch/arm/mach-omap2/omap_hwmod.c b/arch/arm/mach-omap2/omap_hwmod.c
---- a/arch/arm/mach-omap2/omap_hwmod.c
-+++ b/arch/arm/mach-omap2/omap_hwmod.c
-@@ -3675,6 +3675,8 @@ int omap_hwmod_init_module(struct device *dev,
- 	if (error)
- 		return error;
- 
-+	if (data->cfg->quirks & SYSC_QUIRK_NO_IDLE)
-+		oh->flags |= HWMOD_NO_IDLE;
- 	if (data->cfg->quirks & SYSC_QUIRK_NO_IDLE_ON_INIT)
- 		oh->flags |= HWMOD_INIT_NO_IDLE;
- 	if (data->cfg->quirks & SYSC_QUIRK_NO_RESET_ON_INIT)
-diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
---- a/drivers/bus/ti-sysc.c
-+++ b/drivers/bus/ti-sysc.c
-@@ -920,7 +920,8 @@ static int sysc_init_module(struct sysc *ddata)
- {
- 	int error;
- 
--	if (ddata->cfg.quirks & SYSC_QUIRK_NO_IDLE_ON_INIT) {
-+	if (ddata->cfg.quirks &
-+	    (SYSC_QUIRK_NO_IDLE | SYSC_QUIRK_NO_IDLE_ON_INIT)) {
- 		ddata->revision = sysc_read_revision(ddata);
- 		goto rev_quirks;
- 	}
-@@ -1281,6 +1282,8 @@ static const struct sysc_dts_quirk sysc_dts_quirks[] = {
- 	  .mask = SYSC_QUIRK_NO_IDLE_ON_INIT, },
- 	{ .name = "ti,no-reset-on-init",
- 	  .mask = SYSC_QUIRK_NO_RESET_ON_INIT, },
-+	{ .name = "ti,no-idle",
-+	  .mask = SYSC_QUIRK_NO_IDLE, },
- };
- 
- static void sysc_parse_dts_quirks(struct sysc *ddata, struct device_node *np,
-diff --git a/include/linux/platform_data/ti-sysc.h b/include/linux/platform_data/ti-sysc.h
---- a/include/linux/platform_data/ti-sysc.h
-+++ b/include/linux/platform_data/ti-sysc.h
-@@ -46,8 +46,9 @@ struct sysc_regbits {
- 	s8 emufree_shift;
- };
- 
--#define SYSC_QUIRK_LEGACY_IDLE		BIT(8)
--#define SYSC_QUIRK_RESET_STATUS		BIT(7)
-+#define SYSC_QUIRK_LEGACY_IDLE		BIT(9)
-+#define SYSC_QUIRK_RESET_STATUS		BIT(8)
-+#define SYSC_QUIRK_NO_IDLE		BIT(7)
- #define SYSC_QUIRK_NO_IDLE_ON_INIT	BIT(6)
- #define SYSC_QUIRK_NO_RESET_ON_INIT	BIT(5)
- #define SYSC_QUIRK_OPT_CLKS_NEEDED	BIT(4)
--- 
-2.21.0
+Thanks,
+Tobin.
