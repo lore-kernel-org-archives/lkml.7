@@ -2,161 +2,126 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A50C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B8F4C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:21:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F3DA20830
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:19:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="GmXreevD"
+	by mail.kernel.org (Postfix) with ESMTP id 6C90F20830
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:21:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731173AbfCYMTE (ORCPT
+        id S1731020AbfCYMVW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 08:19:04 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:46301 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730827AbfCYMTD (ORCPT
+        Mon, 25 Mar 2019 08:21:22 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:56424 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729831AbfCYMVW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 08:19:03 -0400
-Received: by mail-wr1-f67.google.com with SMTP id o1so9831937wrs.13
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 05:19:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:openpgp:autocrypt:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=1qrD0pNedO545Z6zR3UYJpdgBiHehdBG64YXNUKI7/Y=;
-        b=GmXreevDd2SZAWhlCT80ULbwSzpQur8YzEgZZ+h8LzwgkFbDf6/sOIoTr59FsIygo6
-         qyf3NkhW4rlSaUgFyKsGC8gS7rPbejQRYrxmR04k+HvQJYA2/GaaHAv4RgovyU/8OKgB
-         Ew0ehD+hp+pkSgGu2GMpf2hxiREFHcwpxP9+zNvH7fzgYv4ldLXren98V/eUWRT7hS1B
-         zF8XH2OMi8t1AYp4PP2kFEb3FbILCeW2P99Vwl8HoWV/3G2gh5m9Nq75VHbOt2QdWb3M
-         cclS0bJHLhFm0u7yqCINFtqUP4xZdQ0rNk5ropL158QZX/53CpiMI/gvvFSqrVOv0CKx
-         0Vtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=1qrD0pNedO545Z6zR3UYJpdgBiHehdBG64YXNUKI7/Y=;
-        b=njxL4W/QtnBs7d3x8/6mHHhCuqDnUSs1nvp4f1XZ3JGziTKKXLqulfIo/wcpZfkyPc
-         DVrRt25s9KqWL8M8VEEJEGy+VQXczUsP8SRjmRkNOFxWYFyvuYtjJLseYyOG3IXu2uxO
-         MooOPZqPuTGZ8fS/H5/BvXwYZAYA8zCoauBOxcKg8zWT8TUf0NkmUqj1pzDRlkZyCeit
-         PU4XmL4iTpMAsOHf1ybpu5NTcLvcwU/XKanvCwpqEnkDhmE3g2Babi1aSxurpEmGkBLQ
-         tG9gQZTqNPnYhIboYzD7rDvuWCVPi9+IoN0rAYS8KWROqfhlyTqatp/U/hwAlEH2HgFf
-         BXBQ==
-X-Gm-Message-State: APjAAAX4JYnpaRZbq4Vhem6xGPHI07JFrHoe1l48xlGq3MTzgcbBuI81
-        PYPvZn5CEjQpGHTa2IirNTulHbmls9Yabw==
-X-Google-Smtp-Source: APXvYqwJfdZgPAONI8e0/G1XG5qlwzZn/xbrpkhoUKToCGCBv43KLic98OAQKAPI4R2A6AmEEH3PHw==
-X-Received: by 2002:adf:f1ce:: with SMTP id z14mr15225249wro.152.1553516340696;
-        Mon, 25 Mar 2019 05:19:00 -0700 (PDT)
-Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id 204sm23160312wmc.1.2019.03.25.05.18.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 25 Mar 2019 05:19:00 -0700 (PDT)
-Subject: Re: [PATCH] clk: meson: g12a: fix gp0 and hifi ranges
-To:     Jerome Brunet <jbrunet@baylibre.com>
-Cc:     linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190325104230.11245-1-jbrunet@baylibre.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- ZaTUOEkgIor5losDrePdPgE=
-Organization: Baylibre
-Message-ID: <823ef5d3-3da8-2be0-5bef-ed9b601d287b@baylibre.com>
-Date:   Mon, 25 Mar 2019 13:18:59 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Mon, 25 Mar 2019 08:21:22 -0400
+Received: from 79.184.253.239.ipv4.supernova.orange.pl (79.184.253.239) (HELO aspire.rjw.lan)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.213)
+ id db5a24e253bd52a7; Mon, 25 Mar 2019 13:21:18 +0100
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     linux-pm@vger.kernel.org, Frederic Weisbecker <fweisbec@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "Raju P . L . S . S . S . N" <rplsssn@codeaurora.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Kevin Hilman <khilman@kernel.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v12 3/4] cpuidle: Export the next timer/tick expiration for a CPU
+Date:   Mon, 25 Mar 2019 13:19:22 +0100
+Message-ID: <2942111.nn8VVVUCAL@aspire.rjw.lan>
+In-Reply-To: <20190227195836.24739-4-ulf.hansson@linaro.org>
+References: <20190227195836.24739-1-ulf.hansson@linaro.org> <20190227195836.24739-4-ulf.hansson@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20190325104230.11245-1-jbrunet@baylibre.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25/03/2019 11:42, Jerome Brunet wrote:
-> While some SoC samples are able to lock with a PLL factor of 55, others
-> samples can't. ATM, a minimum of 60 appears to work on all the samples
-> I have tried, so lets use this value until we have a good reason to put
-> something else.
+On Wednesday, February 27, 2019 8:58:35 PM CET Ulf Hansson wrote:
+> To be able to predict the sleep duration for a CPU that is entering idle,
+> knowing when the next timer/tick is going to expire, is extremely useful.
+> Both the teo and the menu cpuidle governors already makes use of this
+> information, while selecting an idle state.
 > 
-> Fixes: 085a4ea93d54 ("clk: meson: g12a: add peripheral clock controller")
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> Moving forward, the similar prediction needs to be done, but for a group of
+> idle CPUs rather than for a single idle CPU. Following changes implements a
+> new genpd governor, which needs this.
+> 
+> Support this, by sharing a new function called
+> tick_nohz_get_next_hrtimer(), which returns the next hrtimer or the next
+> tick, whatever that expires first.
+> 
+> Additionally, when cpuidle is about to invoke the ->enter() callback, then
+> call tick_nohz_get_next_hrtimer() and store its return value in the per CPU
+> struct cpuidle_device, as to make it available outside cpuidle.
+> 
+> Do note, at the point when cpuidle calls tick_nohz_get_next_hrtimer(), the
+> governor's ->select() callback has already made a decision whether to stop
+> the tick or not. In this way, tick_nohz_get_next_hrtimer() actually returns
+> the next timer expiration, whatever origin.
+> 
+> Cc: Lina Iyer <ilina@codeaurora.org>
+> Co-developed-by: Lina Iyer <lina.iyer@linaro.org>
+> Co-developed-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 > ---
->  drivers/clk/meson/g12a.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/clk/meson/g12a.c b/drivers/clk/meson/g12a.c
-> index 0e1ce8c03259..d3f53a9b97dc 100644
-> --- a/drivers/clk/meson/g12a.c
-> +++ b/drivers/clk/meson/g12a.c
-> @@ -151,7 +151,7 @@ static struct clk_regmap g12a_sys_pll = {
->  };
->  
->  static const struct pll_mult_range g12a_gp0_pll_mult_range = {
-> -	.min = 55,
-> +	.min = 60,
->  	.max = 255,
->  };
->  
+> Changes in v12:
+> 	- New patch.
 > 
+> ---
+>  drivers/cpuidle/cpuidle.c |  8 ++++++++
+>  include/linux/cpuidle.h   |  1 +
+>  include/linux/tick.h      |  7 ++++++-
+>  kernel/time/tick-sched.c  | 12 ++++++++++++
+>  4 files changed, 27 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/cpuidle/cpuidle.c b/drivers/cpuidle/cpuidle.c
+> index 7f108309e871..255365b1a6ab 100644
+> --- a/drivers/cpuidle/cpuidle.c
+> +++ b/drivers/cpuidle/cpuidle.c
+> @@ -328,6 +328,14 @@ int cpuidle_select(struct cpuidle_driver *drv, struct cpuidle_device *dev,
+>  int cpuidle_enter(struct cpuidle_driver *drv, struct cpuidle_device *dev,
+>  		  int index)
+>  {
+> +	/*
+> +	 * Store the next hrtimer, which becomes either next tick or the next
+> +	 * timer event, whatever expires first. Additionally, to make this data
+> +	 * useful for consumers outside cpuidle, we rely on that the governor's
+> +	 * ->select() callback have decided, whether to stop the tick or not.
+> +	 */
+> +	dev->next_hrtimer = tick_nohz_get_next_hrtimer();
 
-Acked-by: Neil Armstrong <narmstrong@baylibre.com>
+I would use WRITE_ONCE() to set next_hrtimer here and READ_ONCE() for
+reading that value in the next patch, as a matter of annotation if
+nothing else.
 
-And applied to fixes/drivers !
+> +
+>  	if (cpuidle_state_is_coupled(drv, index))
+>  		return cpuidle_enter_state_coupled(dev, drv, index);
+>  	return cpuidle_enter_state(dev, drv, index);
 
-Neil
+Also I would clear next_hrtimer here to avoid dragging stale values
+around.
+
+Apart from this the series LGTM.
+
+Thanks!
+
