@@ -2,153 +2,311 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F459C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:31:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EB6CC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:32:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4201B205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:31:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hF9oT9PX"
+	by mail.kernel.org (Postfix) with ESMTP id 32031205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:32:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729935AbfCYRbX (ORCPT
+        id S1729825AbfCYRcd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 13:31:23 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:42959 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725788AbfCYRbW (ORCPT
+        Mon, 25 Mar 2019 13:32:33 -0400
+Received: from 12.mo4.mail-out.ovh.net ([178.33.104.253]:35824 "EHLO
+        12.mo4.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725788AbfCYRcc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 13:31:22 -0400
-Received: by mail-pl1-f196.google.com with SMTP id cv12so274539plb.9
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 10:31:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fIU86oE+jQ0Yd0olvbzoJq3YAdF1N4vYXbtyrqL8kZg=;
-        b=hF9oT9PXzvQRfqIGbtMUuKcXVNKxOSQ+cfEyJ9956lqnZANaQcnGcjUPnnmdRkGZUg
-         Ko9WAE8X2CDPkX1iPOTbnSIiQjZ0dBE7ZmZpXjOh5RM8TT2lTXT5aO1SV967FZS+LHBT
-         sEmhTzRl9q/0+Ihny+YK26I85deCiHsB0/Ye/M+EwDlGe+vHT8an4PICssjLG4CC7BLk
-         QuW74fl6/MMwSJe9/R7Lj3SQ01SHZxNQb1F3j1saFmZBjPrSUcJ6607im8OQvK7zQ/2O
-         iBYO6cx31uPgrvD4Bdm58XmTNRTYI55ZqKJdTclc7sJO76EgzfxWPtilZdA4/PJH4pvq
-         UFmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fIU86oE+jQ0Yd0olvbzoJq3YAdF1N4vYXbtyrqL8kZg=;
-        b=oD+H0Mvu4D7VrfDiOhyU4jgtoWUJ0wEhKZNtQSCxWxDK3QHJDOrnYipZ5NthFaq/DR
-         VAmLdrj6YywA2zfJ5j6INDQKLQrariXS+qxk0wxIdojqUCUhWtdIVTH4+oOS0t/MbJBE
-         c3Aj911u70XlsHHVMF82/w2nHKbS209WTNMtX+BLQruHD34wHt/fu+PGnHlJSYlf9DxX
-         V4tFkHVkUSqrSdGrPJmRV3r9G2d/E/yxVRog1tGHKMPVD1eVyaPHdq/74wJqC/0pVJ5G
-         cZpY7Hjoa4uouJvtgteflZpSWSxTGi+ZM9WmFW1/RP4oleG8I+GtyA3ld5migvCo5i/g
-         dOdA==
-X-Gm-Message-State: APjAAAWXD9BV6ZVHpjoxcDoyapLDwPsR/E37FGWJ39jz/qjI05AXQnLY
-        1RqyOUMuCRYBIIgzJsWNQYXipzl3SLEF8OXghvhcvw==
-X-Google-Smtp-Source: APXvYqz/KOpaTDmJ9VQq3Z6oKCoOoFlqX6ADB2ovXmR9prFEc3vYCBBKoxW+xhjH5BLjVNDA4ObaEFbByPkH3r2vjyM=
-X-Received: by 2002:a17:902:8e82:: with SMTP id bg2mr26684589plb.217.1553535081625;
- Mon, 25 Mar 2019 10:31:21 -0700 (PDT)
+        Mon, 25 Mar 2019 13:32:32 -0400
+X-Greylist: delayed 2224 seconds by postgrey-1.27 at vger.kernel.org; Mon, 25 Mar 2019 13:32:27 EDT
+Received: from player778.ha.ovh.net (unknown [10.109.160.232])
+        by mo4.mail-out.ovh.net (Postfix) with ESMTP id AAB511E011B
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 17:55:21 +0100 (CET)
+Received: from kaod.org (lns-bzn-46-82-253-208-248.adsl.proxad.net [82.253.208.248])
+        (Authenticated sender: groug@kaod.org)
+        by player778.ha.ovh.net (Postfix) with ESMTPSA id 26F163F9C8DF;
+        Mon, 25 Mar 2019 16:55:14 +0000 (UTC)
+Date:   Mon, 25 Mar 2019 17:55:13 +0100
+From:   Greg Kurz <groug@kaod.org>
+To:     "Alastair D'Silva" <alastair@au1.ibm.com>
+Cc:     alastair@d-silva.org, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org,
+        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v4 3/4] ocxl: Remove superfluous 'extern' from headers
+Message-ID: <20190325175513.72fb3173@bahia.lab.toulouse-stg.fr.ibm.com>
+In-Reply-To: <20190325053456.14599-4-alastair@au1.ibm.com>
+References: <20190320053448.2098-1-alastair@au1.ibm.com>
+        <20190325053456.14599-1-alastair@au1.ibm.com>
+        <20190325053456.14599-4-alastair@au1.ibm.com>
+X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <20190325124930.1435409-1-arnd@arndb.de>
-In-Reply-To: <20190325124930.1435409-1-arnd@arndb.de>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 25 Mar 2019 10:31:10 -0700
-Message-ID: <CAKwvOdkLmJaDH8XdCQBJkiFztme3_c7-AE+Z47imkdYA0n4ShQ@mail.gmail.com>
-Subject: Re: [PATCH] chelsio: use BUG() instead of BUG_ON(1)
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Vishal Kulkarni <vishal@chelsio.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Ganesh Goudar <ganeshgr@chelsio.com>,
-        Casey Leedom <leedom@chelsio.com>,
-        Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>,
-        Arjun Vynipadath <arjun@chelsio.com>, netdev@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Ovh-Tracer-Id: 574490427766577483
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedutddrjeekgdeljecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 5:49 AM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> clang warns about possible bugs in a dead code branch after
-> BUG_ON(1) when CONFIG_PROFILE_ALL_BRANCHES is enabled:
->
->  drivers/net/ethernet/chelsio/cxgb4/sge.c:479:3: error: variable 'buf_size' is used uninitialized whenever 'if'
->       condition is false [-Werror,-Wsometimes-uninitialized]
->                 BUG_ON(1);
->                 ^~~~~~~~~
->  include/asm-generic/bug.h:61:36: note: expanded from macro 'BUG_ON'
->  #define BUG_ON(condition) do { if (unlikely(condition)) BUG(); } while (0)
->                                    ^~~~~~~~~~~~~~~~~~~
->  include/linux/compiler.h:48:23: note: expanded from macro 'unlikely'
->  #  define unlikely(x)   (__branch_check__(x, 0, __builtin_constant_p(x)))
->                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->  drivers/net/ethernet/chelsio/cxgb4/sge.c:482:9: note: uninitialized use occurs here
->         return buf_size;
->                ^~~~~~~~
->  drivers/net/ethernet/chelsio/cxgb4/sge.c:479:3: note: remove the 'if' if its condition is always true
->                 BUG_ON(1);
->                 ^
->  include/asm-generic/bug.h:61:32: note: expanded from macro 'BUG_ON'
->  #define BUG_ON(condition) do { if (unlikely(condition)) BUG(); } while (0)
->                                ^
->  drivers/net/ethernet/chelsio/cxgb4/sge.c:459:14: note: initialize the variable 'buf_size' to silence this warning
->         int buf_size;
->                     ^
->                      = 0
->
-> Use BUG() here to create simpler code that clang understands
-> correctly.
+On Mon, 25 Mar 2019 16:34:54 +1100
+"Alastair D'Silva" <alastair@au1.ibm.com> wrote:
 
-This is more concise and better expresses what we want to do here.
-Thanks for the patch.
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-
->
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> From: Alastair D'Silva <alastair@d-silva.org>
+> 
+> The 'extern' keyword adds no value here.
+> 
+> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
 > ---
->  drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c | 2 +-
->  drivers/net/ethernet/chelsio/cxgb4/sge.c           | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c
-> index 3130b43bba52..02959035ed3f 100644
-> --- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c
-> +++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c
-> @@ -2620,7 +2620,7 @@ static inline struct port_info *ethqset2pinfo(struct adapter *adap, int qset)
->         }
->
->         /* should never happen! */
-> -       BUG_ON(1);
-> +       BUG();
->         return NULL;
->  }
->
-> diff --git a/drivers/net/ethernet/chelsio/cxgb4/sge.c b/drivers/net/ethernet/chelsio/cxgb4/sge.c
-> index 88773ca58e6b..b3da81e90132 100644
-> --- a/drivers/net/ethernet/chelsio/cxgb4/sge.c
-> +++ b/drivers/net/ethernet/chelsio/cxgb4/sge.c
-> @@ -476,7 +476,7 @@ static inline int get_buf_size(struct adapter *adapter,
->                 break;
->
->         default:
-> -               BUG_ON(1);
-> +               BUG();
->         }
->
->         return buf_size;
-> --
-> 2.20.0
->
 
+Reviewed-by: Greg Kurz <groug@kaod.org>
 
--- 
-Thanks,
-~Nick Desaulniers
+>  drivers/misc/ocxl/ocxl_internal.h | 54 +++++++++++++++----------------
+>  include/misc/ocxl.h               | 36 ++++++++++-----------
+>  2 files changed, 44 insertions(+), 46 deletions(-)
+> 
+> diff --git a/drivers/misc/ocxl/ocxl_internal.h b/drivers/misc/ocxl/ocxl_internal.h
+> index a32f2151029f..321b29e77f45 100644
+> --- a/drivers/misc/ocxl/ocxl_internal.h
+> +++ b/drivers/misc/ocxl/ocxl_internal.h
+> @@ -16,7 +16,6 @@
+>  
+>  extern struct pci_driver ocxl_pci_driver;
+>  
+> -
+>  struct ocxl_fn {
+>  	struct device dev;
+>  	int bar_used[3];
+> @@ -92,41 +91,40 @@ struct ocxl_process_element {
+>  	__be32 software_state;
+>  };
+>  
+> +struct ocxl_afu *ocxl_afu_get(struct ocxl_afu *afu);
+> +void ocxl_afu_put(struct ocxl_afu *afu);
+>  
+> -extern struct ocxl_afu *ocxl_afu_get(struct ocxl_afu *afu);
+> -extern void ocxl_afu_put(struct ocxl_afu *afu);
+> -
+> -extern int ocxl_create_cdev(struct ocxl_afu *afu);
+> -extern void ocxl_destroy_cdev(struct ocxl_afu *afu);
+> -extern int ocxl_register_afu(struct ocxl_afu *afu);
+> -extern void ocxl_unregister_afu(struct ocxl_afu *afu);
+> +int ocxl_create_cdev(struct ocxl_afu *afu);
+> +void ocxl_destroy_cdev(struct ocxl_afu *afu);
+> +int ocxl_register_afu(struct ocxl_afu *afu);
+> +void ocxl_unregister_afu(struct ocxl_afu *afu);
+>  
+> -extern int ocxl_file_init(void);
+> -extern void ocxl_file_exit(void);
+> +int ocxl_file_init(void);
+> +void ocxl_file_exit(void);
+>  
+> -extern int ocxl_pasid_afu_alloc(struct ocxl_fn *fn, u32 size);
+> -extern void ocxl_pasid_afu_free(struct ocxl_fn *fn, u32 start, u32 size);
+> -extern int ocxl_actag_afu_alloc(struct ocxl_fn *fn, u32 size);
+> -extern void ocxl_actag_afu_free(struct ocxl_fn *fn, u32 start, u32 size);
+> +int ocxl_pasid_afu_alloc(struct ocxl_fn *fn, u32 size);
+> +void ocxl_pasid_afu_free(struct ocxl_fn *fn, u32 start, u32 size);
+> +int ocxl_actag_afu_alloc(struct ocxl_fn *fn, u32 size);
+> +void ocxl_actag_afu_free(struct ocxl_fn *fn, u32 start, u32 size);
+>  
+> -extern struct ocxl_context *ocxl_context_alloc(void);
+> -extern int ocxl_context_init(struct ocxl_context *ctx, struct ocxl_afu *afu,
+> +struct ocxl_context *ocxl_context_alloc(void);
+> +int ocxl_context_init(struct ocxl_context *ctx, struct ocxl_afu *afu,
+>  			struct address_space *mapping);
+> -extern int ocxl_context_attach(struct ocxl_context *ctx, u64 amr);
+> -extern int ocxl_context_mmap(struct ocxl_context *ctx,
+> +int ocxl_context_attach(struct ocxl_context *ctx, u64 amr);
+> +int ocxl_context_mmap(struct ocxl_context *ctx,
+>  			struct vm_area_struct *vma);
+> -extern int ocxl_context_detach(struct ocxl_context *ctx);
+> -extern void ocxl_context_detach_all(struct ocxl_afu *afu);
+> -extern void ocxl_context_free(struct ocxl_context *ctx);
+> +int ocxl_context_detach(struct ocxl_context *ctx);
+> +void ocxl_context_detach_all(struct ocxl_afu *afu);
+> +void ocxl_context_free(struct ocxl_context *ctx);
+>  
+> -extern int ocxl_sysfs_add_afu(struct ocxl_afu *afu);
+> -extern void ocxl_sysfs_remove_afu(struct ocxl_afu *afu);
+> +int ocxl_sysfs_add_afu(struct ocxl_afu *afu);
+> +void ocxl_sysfs_remove_afu(struct ocxl_afu *afu);
+>  
+> -extern int ocxl_afu_irq_alloc(struct ocxl_context *ctx, u64 *irq_offset);
+> -extern int ocxl_afu_irq_free(struct ocxl_context *ctx, u64 irq_offset);
+> -extern void ocxl_afu_irq_free_all(struct ocxl_context *ctx);
+> -extern int ocxl_afu_irq_set_fd(struct ocxl_context *ctx, u64 irq_offset,
+> +int ocxl_afu_irq_alloc(struct ocxl_context *ctx, u64 *irq_offset);
+> +int ocxl_afu_irq_free(struct ocxl_context *ctx, u64 irq_offset);
+> +void ocxl_afu_irq_free_all(struct ocxl_context *ctx);
+> +int ocxl_afu_irq_set_fd(struct ocxl_context *ctx, u64 irq_offset,
+>  			int eventfd);
+> -extern u64 ocxl_afu_irq_get_addr(struct ocxl_context *ctx, u64 irq_offset);
+> +u64 ocxl_afu_irq_get_addr(struct ocxl_context *ctx, u64 irq_offset);
+>  
+>  #endif /* _OCXL_INTERNAL_H_ */
+> diff --git a/include/misc/ocxl.h b/include/misc/ocxl.h
+> index 9ff6ddc28e22..4544573cc93c 100644
+> --- a/include/misc/ocxl.h
+> +++ b/include/misc/ocxl.h
+> @@ -53,7 +53,7 @@ struct ocxl_fn_config {
+>   * Read the configuration space of a function and fill in a
+>   * ocxl_fn_config structure with all the function details
+>   */
+> -extern int ocxl_config_read_function(struct pci_dev *dev,
+> +int ocxl_config_read_function(struct pci_dev *dev,
+>  				struct ocxl_fn_config *fn);
+>  
+>  /*
+> @@ -62,14 +62,14 @@ extern int ocxl_config_read_function(struct pci_dev *dev,
+>   * AFU indexes can be sparse, so a driver should check all indexes up
+>   * to the maximum found in the function description
+>   */
+> -extern int ocxl_config_check_afu_index(struct pci_dev *dev,
+> +int ocxl_config_check_afu_index(struct pci_dev *dev,
+>  				struct ocxl_fn_config *fn, int afu_idx);
+>  
+>  /*
+>   * Read the configuration space of a function for the AFU specified by
+>   * the index 'afu_idx'. Fills in a ocxl_afu_config structure
+>   */
+> -extern int ocxl_config_read_afu(struct pci_dev *dev,
+> +int ocxl_config_read_afu(struct pci_dev *dev,
+>  				struct ocxl_fn_config *fn,
+>  				struct ocxl_afu_config *afu,
+>  				u8 afu_idx);
+> @@ -77,7 +77,7 @@ extern int ocxl_config_read_afu(struct pci_dev *dev,
+>  /*
+>   * Get the max PASID value that can be used by the function
+>   */
+> -extern int ocxl_config_get_pasid_info(struct pci_dev *dev, int *count);
+> +int ocxl_config_get_pasid_info(struct pci_dev *dev, int *count);
+>  
+>  /*
+>   * Tell an AFU, by writing in the configuration space, the PASIDs that
+> @@ -87,7 +87,7 @@ extern int ocxl_config_get_pasid_info(struct pci_dev *dev, int *count);
+>   * 'afu_control_offset' is the offset of the AFU control DVSEC which
+>   * can be found in the function configuration
+>   */
+> -extern void ocxl_config_set_afu_pasid(struct pci_dev *dev,
+> +void ocxl_config_set_afu_pasid(struct pci_dev *dev,
+>  				int afu_control_offset,
+>  				int pasid_base, u32 pasid_count_log);
+>  
+> @@ -98,7 +98,7 @@ extern void ocxl_config_set_afu_pasid(struct pci_dev *dev,
+>   * 'supported' is the total number of actags desired by all the AFUs
+>   *             of the function.
+>   */
+> -extern int ocxl_config_get_actag_info(struct pci_dev *dev,
+> +int ocxl_config_get_actag_info(struct pci_dev *dev,
+>  				u16 *base, u16 *enabled, u16 *supported);
+>  
+>  /*
+> @@ -108,7 +108,7 @@ extern int ocxl_config_get_actag_info(struct pci_dev *dev,
+>   * 'func_offset' is the offset of the Function DVSEC that can found in
+>   * the function configuration
+>   */
+> -extern void ocxl_config_set_actag(struct pci_dev *dev, int func_offset,
+> +void ocxl_config_set_actag(struct pci_dev *dev, int func_offset,
+>  				u32 actag_base, u32 actag_count);
+>  
+>  /*
+> @@ -118,7 +118,7 @@ extern void ocxl_config_set_actag(struct pci_dev *dev, int func_offset,
+>   * 'afu_control_offset' is the offset of the AFU control DVSEC for the
+>   * desired AFU. It can be found in the AFU configuration
+>   */
+> -extern void ocxl_config_set_afu_actag(struct pci_dev *dev,
+> +void ocxl_config_set_afu_actag(struct pci_dev *dev,
+>  				int afu_control_offset,
+>  				int actag_base, int actag_count);
+>  
+> @@ -128,7 +128,7 @@ extern void ocxl_config_set_afu_actag(struct pci_dev *dev,
+>   * 'afu_control_offset' is the offset of the AFU control DVSEC for the
+>   * desired AFU. It can be found in the AFU configuration
+>   */
+> -extern void ocxl_config_set_afu_state(struct pci_dev *dev,
+> +void ocxl_config_set_afu_state(struct pci_dev *dev,
+>  				int afu_control_offset, int enable);
+>  
+>  /*
+> @@ -139,7 +139,7 @@ extern void ocxl_config_set_afu_state(struct pci_dev *dev,
+>   * between the host and device, and set the Transaction Layer on both
+>   * accordingly.
+>   */
+> -extern int ocxl_config_set_TL(struct pci_dev *dev, int tl_dvsec);
+> +int ocxl_config_set_TL(struct pci_dev *dev, int tl_dvsec);
+>  
+>  /*
+>   * Request an AFU to terminate a PASID.
+> @@ -152,7 +152,7 @@ extern int ocxl_config_set_TL(struct pci_dev *dev, int tl_dvsec);
+>   * 'afu_control_offset' is the offset of the AFU control DVSEC for the
+>   * desired AFU. It can be found in the AFU configuration
+>   */
+> -extern int ocxl_config_terminate_pasid(struct pci_dev *dev,
+> +int ocxl_config_terminate_pasid(struct pci_dev *dev,
+>  				int afu_control_offset, int pasid);
+>  
+>  /*
+> @@ -165,13 +165,13 @@ extern int ocxl_config_terminate_pasid(struct pci_dev *dev,
+>   * Returns a 'link handle' that should be used for further calls for
+>   * the link
+>   */
+> -extern int ocxl_link_setup(struct pci_dev *dev, int PE_mask,
+> +int ocxl_link_setup(struct pci_dev *dev, int PE_mask,
+>  			void **link_handle);
+>  
+>  /*
+>   * Remove the association between the function and its link.
+>   */
+> -extern void ocxl_link_release(struct pci_dev *dev, void *link_handle);
+> +void ocxl_link_release(struct pci_dev *dev, void *link_handle);
+>  
+>  /*
+>   * Add a Process Element to the Shared Process Area for a link.
+> @@ -183,7 +183,7 @@ extern void ocxl_link_release(struct pci_dev *dev, void *link_handle);
+>   * 'xsl_err_data' is an argument passed to the above callback, if
+>   * defined
+>   */
+> -extern int ocxl_link_add_pe(void *link_handle, int pasid, u32 pidr, u32 tidr,
+> +int ocxl_link_add_pe(void *link_handle, int pasid, u32 pidr, u32 tidr,
+>  		u64 amr, struct mm_struct *mm,
+>  		void (*xsl_err_cb)(void *data, u64 addr, u64 dsisr),
+>  		void *xsl_err_data);
+> @@ -195,12 +195,12 @@ extern int ocxl_link_add_pe(void *link_handle, int pasid, u32 pidr, u32 tidr,
+>   * pasid: the PASID for the AFU context
+>   * tid: the new thread id for the process element
+>   */
+> -extern int ocxl_link_update_pe(void *link_handle, int pasid, __u16 tid);
+> +int ocxl_link_update_pe(void *link_handle, int pasid, __u16 tid);
+>  
+>  /*
+>   * Remove a Process Element from the Shared Process Area for a link
+>   */
+> -extern int ocxl_link_remove_pe(void *link_handle, int pasid);
+> +int ocxl_link_remove_pe(void *link_handle, int pasid);
+>  
+>  /*
+>   * Allocate an AFU interrupt associated to the link.
+> @@ -212,12 +212,12 @@ extern int ocxl_link_remove_pe(void *link_handle, int pasid);
+>   * interrupt. It is an MMIO address which needs to be remapped (one
+>   * page).
+>   */
+> -extern int ocxl_link_irq_alloc(void *link_handle, int *hw_irq,
+> +int ocxl_link_irq_alloc(void *link_handle, int *hw_irq,
+>  			u64 *obj_handle);
+>  
+>  /*
+>   * Free a previously allocated AFU interrupt
+>   */
+> -extern void ocxl_link_free_irq(void *link_handle, int hw_irq);
+> +void ocxl_link_free_irq(void *link_handle, int hw_irq);
+>  
+>  #endif /* _MISC_OCXL_H_ */
+
