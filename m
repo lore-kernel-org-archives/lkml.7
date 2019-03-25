@@ -3,90 +3,105 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F116CC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:01:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFEF8C10F03
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:02:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2B2520850
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:01:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="QPLjSQUH"
+	by mail.kernel.org (Postfix) with ESMTP id AA7FD20850
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:02:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553515341;
+	bh=BbaDHuCIjHwVA5COxU8wmejBxP5gbahV6kfZi/s8e78=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=raN1Z6j/rhgNo4/ALkdQ5jWhDiKYLPdvlE3Up/ABzx+FNQmm5s4e8QjCBLsIWnrns
+	 WJcOM7vgZPDpligOpGeNjn6byUJpw3NsF4O22y/n65vF53POKd8l9iEC4a+89NR84i
+	 HJTTTl7qG1CfCPVfa1JDwe4jl1e2TyUcTFFsC4KI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730996AbfCYMBs (ORCPT
+        id S1731026AbfCYMCU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 08:01:48 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:43918 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730837AbfCYMBs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 08:01:48 -0400
-Received: from zn.tnic (p200300EC2F098000329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:8000:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 2A9A71EC0AB1;
-        Mon, 25 Mar 2019 13:01:46 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1553515306;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=Jj6OEgUdGyvK5Ruk41VfP7owdlNji7XDwQ7O4kfF5lY=;
-        b=QPLjSQUHWurhFY+IkMVdAZZqFLoiFvts8ooYgQl1VhQ+SwfvCngJHD9/M0j3hCE6BhyGcR
-        txPmFaL5EOGuXoHEZIyvZfsmAdh79GeV7cS/8+UjJJZO85m2geq2Z43Gw2p0b+ICj2CcmC
-        Q0lzwAOkvDRmUxMy/NLD2ZvaGyQEFS8=
-Date:   Mon, 25 Mar 2019 13:01:49 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Junichi Nomura <j-nomura@ce.jp.nec.com>
-Cc:     Dave Young <dyoung@redhat.com>,
-        "fanc.fnst@cn.fujitsu.com" <fanc.fnst@cn.fujitsu.com>,
-        "bhe@redhat.com" <bhe@redhat.com>,
-        "kasong@redhat.com" <kasong@redhat.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] x86/boot: Use EFI setup data if provided
-Message-ID: <20190325120149.GI12016@zn.tnic>
-References: <20190322152328.GD12472@zn.tnic>
- <20190325002740.GA6637@jeru.linux.bs1.fc.nec.co.jp>
- <20190325060128.GB9385@dhcp-128-65.nay.redhat.com>
- <20190325061929.GC9385@dhcp-128-65.nay.redhat.com>
- <bcb5bd29-a3b8-e42d-8da7-a8501f695c21@ce.jp.nec.com>
- <20190325065921.GA11096@dhcp-128-65.nay.redhat.com>
- <20190325082720.GA20771@jeru.linux.bs1.fc.nec.co.jp>
- <51D9A7D1-49BF-4679-B102-0FC5AC300C9F@alien8.de>
- <20190325101509.GA13160@dhcp-128-65.nay.redhat.com>
- <701c8e69-e1d4-c653-1d87-1c41789d3d54@ce.jp.nec.com>
+        Mon, 25 Mar 2019 08:02:20 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:59020 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730917AbfCYMCU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 08:02:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=9w2Bbs9+ekSlIlBp8qIOgTdmVVPDYvUGgXHwpgsR5Us=; b=vpWVzpzmnJd8q0zuPFlohCSS+
+        dYiPHeLd1bYF2FQR6NJFzeBGvThUSboZTwRSV/8YYiTmR81IYpuDV678jsHG4iqOxnZ2P6Hoel+m/
+        z76c88i/bKO6vUPrzNYPNdwi7YPdyD+uMo2f2ga7uQMujSphi0wjACklwbSv//fA5fhiI=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1h8OIu-00020m-OX; Mon, 25 Mar 2019 12:02:12 +0000
+Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
+        id 11E3811288F1; Mon, 25 Mar 2019 12:02:12 +0000 (GMT)
+Date:   Mon, 25 Mar 2019 12:02:12 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Curtis Malainey <cujomalainey@chromium.org>
+Subject: Re: [PATCH] ASoC: intel: Fix crash at suspend/resume after failed
+ codec registration
+Message-ID: <20190325120212.GD7284@sirena.org.uk>
+References: <1553294388-25293-1-git-send-email-linux@roeck-us.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="0IvGJv3f9h+YhkrH"
 Content-Disposition: inline
-In-Reply-To: <701c8e69-e1d4-c653-1d87-1c41789d3d54@ce.jp.nec.com>
+In-Reply-To: <1553294388-25293-1-git-send-email-linux@roeck-us.net>
+X-Cookie: Short people get rained on last.
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 10:36:33AM +0000, Junichi Nomura wrote:
-> AFAIU, early parsing is new code in v5.1-rc1 to support kexec on systems
-> with hotpluggable memory with KASLR enabled. For systems that requires the
-> new feature, it may be ok to say "you need to use another kexec interface"
-> and/or "you need new kexec-tools".
 
-No, this exactly should *not* happen. kexec is already full of duct tape
-- don't need any more of that.
+--0IvGJv3f9h+YhkrH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-So I suggested that efi_get_rsdp_addr() should exit early on in the
-kexeced kernel but making this all play nice with the kexec-ed kernel,
-as Dave suggests, is better.
+On Fri, Mar 22, 2019 at 03:39:48PM -0700, Guenter Roeck wrote:
 
-Now, my next question is: why does the RDSP address need to come from
-kexec(1) (by way of efi_setup_data) and why can't the kexec'ed kernel
-figure it out itself by parsing the EFI tables in a similar way to
-efi_get_rsdp_addr ?
+> general protection fault: 0000 [#1] PREEMPT SMP KASAN PTI
+> CPU: 1 PID: 2811 Comm: cat Tainted: G        W         4.19.30 #15
+> Hardware name: GOOGLE Clapper, BIOS Google_Clapper.5216.199.7 08/22/2014
+> RIP: 0010:snd_soc_suspend+0x5a/0xd21
+> Code: 03 80 3c 10 00 49 89 d7 74 0b 48 89 df e8 71 72 c4 fe 4c 89
+> fa 48 8b 03 48 89 45 d0 48 8d 98 a0 01 00 00 48 89 d8 48 c1 e8 03
+> <8a> 04 10 84 c0 0f 85 85 0c 00 00 80 3b 00 0f 84 6b 0c 00 00 48 8b
 
--- 
-Regards/Gruss,
-    Boris.
+Please think hard before including complete backtraces in upstream
+reports, they are very large and contain almost no useful information
+relative to their size so often obscure the relevant content in your
+message. If part of the backtrace is usefully illustrative then it's
+usually better to pull out the relevant sections.
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
+--0IvGJv3f9h+YhkrH
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlyYw0MACgkQJNaLcl1U
+h9BpXQf/XfEhm9WgqLCoQ+xlQVQEw2hewJ8Wk1PV54Fj6bBmRWT+tth9k6itaC31
+DZzkoO6uBFN7Oke8ca1GiIhZGMjunhdPw1/qz0XWAlxdTog8HxkQTUKnbBCPJ7NR
+3ju+/14lNBj8/mwmmVMnSquEwpdbLqzNkRhvi2bIwVggirTkzPSYDWa+lJkhVIUm
+fonPORs/dNw2AZL4l4ZsjSdfAg1CDF+U7BwoiWqwahCSWFYmx8xk1k721idiFBwg
+emR8gaozeE2TVTxUuUWrjbL7jbfuqcI27z4M6LoLLWCqgQa+QGkv0VwfSCfvCuMk
+lR9K+ideBQjls3GBiMawPDqyNvyWFQ==
+=ggRp
+-----END PGP SIGNATURE-----
+
+--0IvGJv3f9h+YhkrH--
