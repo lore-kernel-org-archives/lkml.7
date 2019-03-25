@@ -2,165 +2,109 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED740C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 08:07:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C267C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 08:09:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C243120830
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 08:07:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56CF920830
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 08:09:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Psj4wxyZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730009AbfCYIHY (ORCPT
+        id S1729944AbfCYIJP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 04:07:24 -0400
-Received: from mga17.intel.com ([192.55.52.151]:50930 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729986AbfCYIHW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 04:07:22 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Mar 2019 01:07:21 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,256,1549958400"; 
-   d="scan'208";a="134474072"
-Received: from lxy-server.sh.intel.com ([10.239.48.11])
-  by fmsmga008.fm.intel.com with ESMTP; 25 Mar 2019 01:07:19 -0700
-From:   Xiaoyao Li <xiaoyao.li@linux.intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Xiaoyao Li <xiaoyao.li@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        chao.gao@intel.com,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: [PATCH v3 2/2] x86/vmx: optimize MSR_MISC_FEATURES_ENABLES switch
-Date:   Mon, 25 Mar 2019 16:06:50 +0800
-Message-Id: <20190325080650.19896-3-xiaoyao.li@linux.intel.com>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190325080650.19896-1-xiaoyao.li@linux.intel.com>
-References: <20190325080650.19896-1-xiaoyao.li@linux.intel.com>
+        Mon, 25 Mar 2019 04:09:15 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:47926 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729812AbfCYIJP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 04:09:15 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2P89DR9091474;
+        Mon, 25 Mar 2019 03:09:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1553501353;
+        bh=oUfur7Dh5WwdUELYllZejC2ZQ68HLchmGXW59YNN6Co=;
+        h=From:To:CC:Subject:Date;
+        b=Psj4wxyZDHcRWKMHgHAJRIHFdy4ta+oUGNFgiegI90qL6cCQ3CJeYnsC2BdYX45s7
+         Kirph7fy2agUckuxSN9x1WnipXHxKPH7YnF+PLXhxKbg80YfayIC3NwgYh1NUxfQja
+         uRevHdvFgiCN/AT8Yr7xTW9h9RaYA8ofpFfEVizw=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2P89DYG053823
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 25 Mar 2019 03:09:13 -0500
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 25
+ Mar 2019 03:09:13 -0500
+Received: from dflp32.itg.ti.com (10.64.6.15) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_0,
+ cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5 via Frontend Transport;
+ Mon, 25 Mar 2019 03:09:13 -0500
+Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by dflp32.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2P89AkW019470;
+        Mon, 25 Mar 2019 03:09:11 -0500
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Rob Herring <robh+dt@kernel.org>, Roger Quadros <rogerq@ti.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+CC:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+Subject: [PATCH v3 0/5] PHY: Add support for SERDES in TI's AM654 platform
+Date:   Mon, 25 Mar 2019 13:38:10 +0530
+Message-ID: <20190325080815.6056-1-kishon@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-KVM needs to switch MSR_MISC_FEATURES_ENABLES between host and guest in
-every pcpu/vcpu context switch. Since WRMSR is expensive, this patch tries
-to save cycles by avoiding WRMSR MSR_MISC_FEATURES_ENABLES whenever possible.
+This patch series
+  *) adds support for SERDES module in am654
+  *) modifies phy_reset API to invoke pm_runtime_get/pm_runtime_put since
+the reset callback can access registers.
+  *) Add *release* phy_ops to be invoked when the consumer relinquishes
+PHY
 
-If host's value is zero, nothing needs to be done, since guest can use
-kvm emulated cpuid faulting.
+Changes from v2:
+  *) Fix typos pointed out by rOGER
+  *) Add dt-binding Documentation in a new file ti,phy-am654-serdes.txt
+  *) Add Roger's patch to support all CLKSEL values.
 
-If host's value is non-zero, it need not clear MSR_MISC_FEATURES_ENABLES
-unconditionally. We can use hardware cpuid faulting if guest's
-value is equal to host'value, thus avoid WRMSR
-MSR_MISC_FEATURES_ENABLES.
+Changes from v1:
+  *) Add *release* phy ops
+  *) Populate release phy_ops in phy-am654-serdes to cleanup
+initializations done in of_xlate
 
-Since hardware cpuid faulting takes higher priority than CPUID vm exit,
-it should be updated to hardware while guest wrmsr and hardware cpuid
-faulting is used for guest.
+Kishon Vijay Abraham I (4):
+  phy: core: Add *release* phy_ops invoked when the consumer
+    relinquishes PHY
+  phy: core: Invoke pm_runtime_get_*/pm_runtime_put_* before invoking
+    reset callback
+  dt-bindings: phy: ti: Add dt binding documentation for SERDES in
+    AM654x SoC
+  phy: ti: Add a new SERDES driver for TI's AM654x SoC
 
-Signed-off-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
----
- arch/x86/include/asm/kvm_host.h |  2 ++
- arch/x86/kvm/vmx/vmx.c          | 13 ++++++++++---
- arch/x86/kvm/x86.c              | 15 ++++++++++++---
- 3 files changed, 24 insertions(+), 6 deletions(-)
+Roger Quadros (1):
+  phy: ti: am654-serdes: Support all clksel values
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 2c53df4a5a2a..9bcb444b903d 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1343,6 +1343,8 @@ void kvm_lmsw(struct kvm_vcpu *vcpu, unsigned long msw);
- void kvm_get_cs_db_l_bits(struct kvm_vcpu *vcpu, int *db, int *l);
- int kvm_set_xcr(struct kvm_vcpu *vcpu, u32 index, u64 xcr);
- 
-+int kvm_supported_msr_misc_features_enables(struct kvm_vcpu *vcpu, u64 data);
-+
- int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr);
- int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr);
- 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 65aa947947ba..73bb11f74b36 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -1035,10 +1035,10 @@ static void vmx_prepare_guest_misc_features_enables(struct vcpu_vmx *vmx)
- {
- 	u64 msrval = this_cpu_read(msr_misc_features_shadow);
- 
--	if (!msrval)
-+	if (!msrval || msrval == vmx->vcpu.arch.msr_misc_features_enables)
- 		return;
- 
--	wrmsrl(MSR_MISC_FEATURES_ENABLES, 0ULL);
-+	wrmsrl(MSR_MISC_FEATURES_ENABLES, vmx->vcpu.arch.msr_misc_features_enables);
- }
- 
- void vmx_prepare_switch_to_guest(struct kvm_vcpu *vcpu)
-@@ -1136,7 +1136,7 @@ static void vmx_load_host_misc_features_enables(struct vcpu_vmx *vmx)
- {
- 	u64 msrval = this_cpu_read(msr_misc_features_shadow);
- 
--	if (!msrval)
-+	if (!msrval || msrval == vmx->vcpu.arch.msr_misc_features_enables)
- 		return;
- 
- 	wrmsrl(MSR_MISC_FEATURES_ENABLES, msrval);
-@@ -2043,6 +2043,13 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 		else
- 			vmx->pt_desc.guest.addr_a[index / 2] = data;
- 		break;
-+	case MSR_MISC_FEATURES_ENABLES:
-+		if (!kvm_supported_msr_misc_features_enables(vcpu, data))
-+			return 1;
-+		if (this_cpu_read(msr_misc_features_shadow) && vmx->loaded_cpu_state)
-+			wrmsrl(MSR_MISC_FEATURES_ENABLES, data);
-+		vcpu->arch.msr_misc_features_enables = data;
-+		break;
- 	case MSR_TSC_AUX:
- 		if (!msr_info->host_initiated &&
- 		    !guest_cpuid_has(vcpu, X86_FEATURE_RDTSCP))
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index ad1df965574e..d2af90422a51 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -2449,6 +2449,17 @@ static void record_steal_time(struct kvm_vcpu *vcpu)
- 		&vcpu->arch.st.steal, sizeof(struct kvm_steal_time));
- }
- 
-+int kvm_supported_msr_misc_features_enables(struct kvm_vcpu *vcpu, u64 data)
-+{
-+	if (data & ~MSR_MISC_FEATURES_ENABLES_CPUID_FAULT ||
-+	    (data & MSR_MISC_FEATURES_ENABLES_CPUID_FAULT &&
-+	     !supports_cpuid_fault(vcpu)))
-+		return 0;
-+	else
-+		return 1;
-+}
-+EXPORT_SYMBOL_GPL(kvm_supported_msr_misc_features_enables);
-+
- int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- {
- 	bool pr = false;
-@@ -2669,9 +2680,7 @@ int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 		vcpu->arch.msr_platform_info = data;
- 		break;
- 	case MSR_MISC_FEATURES_ENABLES:
--		if (data & ~MSR_MISC_FEATURES_ENABLES_CPUID_FAULT ||
--		    (data & MSR_MISC_FEATURES_ENABLES_CPUID_FAULT &&
--		     !supports_cpuid_fault(vcpu)))
-+		if (!kvm_supported_msr_misc_features_enables(vcpu, data))
- 			return 1;
- 		vcpu->arch.msr_misc_features_enables = data;
- 		break;
+ .../bindings/phy/ti,phy-am654-serdes.txt      |  81 +++
+ drivers/phy/phy-core.c                        |  11 +
+ drivers/phy/ti/Kconfig                        |  12 +
+ drivers/phy/ti/Makefile                       |   1 +
+ drivers/phy/ti/phy-am654-serdes.c             | 573 ++++++++++++++++++
+ include/dt-bindings/phy/phy-am654-serdes.h    |  13 +
+ include/linux/phy/phy.h                       |   2 +
+ 7 files changed, 693 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/ti,phy-am654-serdes.txt
+ create mode 100644 drivers/phy/ti/phy-am654-serdes.c
+ create mode 100644 include/dt-bindings/phy/phy-am654-serdes.h
+
 -- 
-2.19.1
+2.17.1
 
