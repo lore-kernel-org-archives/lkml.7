@@ -2,98 +2,178 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=FSL_HELO_FAKE,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_SBL,URIBL_SBL_A autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81AD3C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:51:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F6C9C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:52:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EDAF2075D
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:51:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3EB52075D
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:52:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730048AbfCYSvC (ORCPT
+        id S1730056AbfCYSwm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 14:51:02 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:48687 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728912AbfCYSvB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 14:51:01 -0400
-Received: from mail-wr1-f69.google.com ([209.85.221.69])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <christian.brauner@canonical.com>)
-        id 1h8UgV-0004Ma-JO
-        for linux-kernel@vger.kernel.org; Mon, 25 Mar 2019 18:50:59 +0000
-Received: by mail-wr1-f69.google.com with SMTP id h12so5778912wrx.23
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 11:50:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9r0jGrCDcv9BMohTYQe8tG94UpG+gRVwfqvwa4BxdJI=;
-        b=C7qleENDTJfAd/LqY6EIYq6w8ObkZ1ZNPb262+cujQ5IOiBK6TY245Hsk3oSLesNKQ
-         F6LQ3KPNK9O0GXQgw49W8y/08NgGuWA1K21jQi+F09NokRpqSBjdBEkW+fOr5AU4zXO2
-         lORXODL1wLpu/ESQPh+AELZrxxULXmDAtvTJj7DWPr3MgbL6vKeXIrliYGQ3TOab1lg+
-         7RUaXUyH1k7o7DCg4QgvjPVgQ5d5EN5opc9vBnyl9k1gKcgMzokAwlxA81YUAgtHV4cm
-         Un7fDq/2vkac75W8N58cOy2uekDTqCU18ug+/X7V12TtJrhNM+SQkXs17Im5ZKR23w02
-         5/wA==
-X-Gm-Message-State: APjAAAU2Y0v8UBnmLDOw13AmDEbCITeL8M//JQmyz2zRADGWBIIYx0+V
-        K4VJ0O73Wy4Hs3gjmJ7b+rLkyeYfiMVUVQxwLWBvTXiEAFNbSNutCn1r2m2pugSNv5cSUgrI0z9
-        x16BS0km5KLGW31iQAW6gO8dc5NinHUpS8pD7ee13Jw==
-X-Received: by 2002:a5d:4f11:: with SMTP id c17mr17471796wru.34.1553539859293;
-        Mon, 25 Mar 2019 11:50:59 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwhp4eQG6++Pvp7utaInJXRrXp+MXuslPCb0ablCVxWPs7SPzNkhpPeIsRVd73rJpYyoRvtLQ==
-X-Received: by 2002:a5d:4f11:: with SMTP id c17mr17471781wru.34.1553539859035;
-        Mon, 25 Mar 2019 11:50:59 -0700 (PDT)
-Received: from gmail.com (p200300EA6F14663DB13635B07C8C280A.dip0.t-ipconnect.de. [2003:ea:6f14:663d:b136:35b0:7c8c:280a])
-        by smtp.gmail.com with ESMTPSA id f1sm13245817wmh.44.2019.03.25.11.50.57
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 25 Mar 2019 11:50:58 -0700 (PDT)
-From:   Christian Brauner <christian.brauner@canonical.com>
-X-Google-Original-From: Christian Brauner <christian@brauner.io>
-Date:   Mon, 25 Mar 2019 19:50:56 +0100
-To:     Michael Tirado <mtirado418@gmail.com>
-Cc:     Alexey Dobriyan <adobriyan@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: pidfd design
-Message-ID: <20190325185055.oyqxztnbwrzmp5bm@gmail.com>
-References: <20190320200702.GA27111@avx2>
- <CAMkWEXPsikD8uvMSxQH=RUx-qPHO1UBtKgXsg=p9hY_bD2u2ow@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAMkWEXPsikD8uvMSxQH=RUx-qPHO1UBtKgXsg=p9hY_bD2u2ow@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+        Mon, 25 Mar 2019 14:52:42 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:44098 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728912AbfCYSwl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 14:52:41 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 649C2AB965;
+        Mon, 25 Mar 2019 18:52:40 +0000 (UTC)
+Received: from maximlenovopc.usersys.redhat.com (unknown [10.35.206.72])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4E8115DC1B;
+        Mon, 25 Mar 2019 18:52:33 +0000 (UTC)
+Message-ID: <dbec1f2bee53ab786bb4f6204f9a930eac279970.camel@redhat.com>
+Subject: Re: [PATCH 0/9] RFC: NVME VFIO mediated device [BENCHMARKS]
+From:   Maxim Levitsky <mlevitsk@redhat.com>
+To:     linux-nvme@lists.infradead.org
+Cc:     Fam Zheng <fam@euphon.net>, Keith Busch <keith.busch@intel.com>,
+        Sagi Grimberg <sagi@grimberg.me>, kvm@vger.kernel.org,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Liang Cunming <cunming.liang@intel.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        linux-kernel@vger.kernel.org,
+        Kirti Wankhede <kwankhede@nvidia.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jens Axboe <axboe@fb.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        John Ferlan <jferlan@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Liu Changpeng <changpeng.liu@intel.com>,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>,
+        Amnon Ilan <ailan@redhat.com>, Christoph Hellwig <hch@lst.de>
+Date:   Mon, 25 Mar 2019 20:52:32 +0200
+In-Reply-To: <d41484848b1832192c6978c7054bec5c326afa6d.camel@redhat.com>
+References: <20190319144116.400-1-mlevitsk@redhat.com>
+         <d41484848b1832192c6978c7054bec5c326afa6d.camel@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Mon, 25 Mar 2019 18:52:40 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 22, 2019 at 02:04:35PM +0000, Michael Tirado wrote:
-> On Wed, Mar 20, 2019 at 8:08 PM Alexey Dobriyan <adobriyan@gmail.com> wrote:
-> >
-> > pidfd code should be backed out immediately. Forget about /proc.
-> 
-> Seems like Torvalds just merges this sort of "stuff" without reading
-> it now, or there's something that auto accepted pull request to RC tree?
+Hi
 
-I don't mind controversy around patchsets but I'd appreciate it that
-when they are started the Cc is not modified and main people who
-maintain the code that is critized are removed. I'd like to be able to
-respond without other people having to notify me that there's a
-discussion going on I should be involved in.
+This is first round of benchmarks.
 
-Christian
+The system is Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
 
-> 
-> > The pull request you sent on Tue,  5 Mar 2019 18:13:01 +0100:
-> >
-> >>  git://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux.git tags/pidfd-v5.1-rc1
-> >
-> > has been merged into torvalds/linux.git:
-> > https://git.kernel.org/torvalds/c/a9dce6679d736cb3d612af39bab9f31f8db66f9b
-> >
-> >Thank you!
+The system has 2 numa nodes, but only cpus and memory from node 0 were used to
+avoid noise from numa.
+
+The SSD is Intel® Optane™ SSD 900P Series, 280 GB version
+
+
+https://ark.intel.com/content/www/us/en/ark/products/123628/intel-optane-ssd-900p-series-280gb-1-2-height-pcie-x4-20nm-3d-xpoint.html
+
+
+** Latency benchmark with no interrupts at all **
+
+spdk was complited with fio plugin in the host and in the guest.
+spdk was first run in the host
+then vm was started with one of spdk,pci passthrough, mdev and inside the
+vm spdk was run with fio plugin.
+
+spdk was taken from my branch on gitlab, and fio was complied from source for
+3.4 branch as needed by the spdk fio plugin.
+
+The following spdk command line was used:
+
+$WORK/fio/fio \
+	--name=job --runtime=40 --ramp_time=0 --time_based \
+	 --filename="trtype=PCIe traddr=$DEVICE_FOR_FIO ns=1" --ioengine=spdk  \
+	--direct=1 --rw=randread --bs=4K --cpus_allowed=0 \
+	--iodepth=1 --thread
+
+The average values for slat (submission latency), clat (completion latency) and
+its sum (slat+clat) were noted.
+
+The results:
+
+spdk fio host: 
+	573 Mib/s - slat 112.00ns, clat 6.400us, lat 6.52ms
+	573 Mib/s - slat 111.50ns, clat 6.406us, lat 6.52ms
+
+
+pci passthough host/
+spdk fio guest
+	571 Mib/s - slat 124.56ns, clat 6.422us  lat 6.55ms
+	571 Mib/s - slat 122.86ns, clat 6.410us  lat 6.53ms
+	570 Mib/s - slat 124.95ns, clat 6.425us  lat 6.55ms
+
+spdk host/
+spdk fio guest:
+	535 Mib/s - slat 125.00ns, clat 6.895us  lat 7.02ms
+	534 Mib/s - slat 125.36ns, clat 6.896us  lat 7.02ms
+	534 Mib/s - slat 125.82ns, clat 6.892us  lat 7.02ms
+
+mdev host/
+spdk fio guest:
+	534 Mib/s - slat 128.04ns, clat 6.902us  lat 7.03ms
+	535 Mib/s - slat 126.97ns, clat 6.900us  lat 7.03ms
+	535 Mib/s - slat 127.00ns, clat 6.898us  lat 7.03ms
+
+
+As you see, native latency is 6.52ms, pci passthrough barely adds any latency,
+while both mdev/spdk added about (7.03/2 - 6.52) - 0.51ms/0.50ms of latency.
+
+In addtion to that I added few 'rdtsc' into my mdev driver to strategically
+capture the cycle count it takes it to do 3 things:
+
+1. translate a just received command (till it is copied to the hardware
+submission queue)
+
+2. receive a completion (divided by the number of completion received in one
+round of polling)
+
+3. deliver an interupt to the guest (call to eventfd_signal)
+
+This is not the whole latency as there is also a latency between the point the
+submission entry is written and till it is visible on the polling cpu, plus
+latency till polling cpu gets to the code which reads the submission entry,
+and of course latency of interrupt delivery, but the above measurements mostly
+capture the latency I can control.
+
+The results are:
+
+commands translated : avg cycles: 459.844     avg time(usec): 0.135        
+commands completed  : avg cycles: 354.61      avg time(usec): 0.104        
+interrupts sent     : avg cycles: 590.227     avg time(usec): 0.174
+
+avg time total: 0.413 usec
+
+All measurmenets done in the host kernel. the time calculated using tsc_khz
+kernel variable.
+
+The biggest take from this is that both spdk and my driver are very fast and
+overhead is just a  thousand of cpu cycles give it or take.
+
+*** Throughput benchmarks ***
+
+https://paste.fedoraproject.org/paste/ecijclLMG2B11MVCVIst-w
+
+Here you can find the throughput benchmarks.
+
+The biggest take is that when using no interrupts (spdk fio in guest or spdk fio
+in host), the bottelneck is in the device, and througput is about 2290 Mib/s
+
+And mdev vs spdk, with interrupts, my driver sligly wins by giving throughput of
+about 2015 Mib/s while spdk is about 2005 Mib/s
+mostly due to slightly different timings as the latency of both is about the
+same.
+
+Disabling meltdown mitigation didn't had much effect on the performance.
+
+Best regards,
+	Maxim Levitsky
+
