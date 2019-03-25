@@ -2,108 +2,346 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92BCDC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 09:25:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A23CC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 09:27:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BEBF2085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 09:25:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFE052085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 09:27:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730285AbfCYJZt (ORCPT
+        id S1730205AbfCYJ1J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 05:25:49 -0400
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:38200 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730147AbfCYJZs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 05:25:48 -0400
-Received: by mail-ua1-f67.google.com with SMTP id d4so2735755uap.5
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 02:25:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YyXgsi7Hmr4fSWEM1/z6vwIkuMzubjld/R4CuByIhuo=;
-        b=C72Srl15sQKD2sAfjw8LlZyhhFH5SwvNbCyhPAOTALnFcZdSaCWA6C906sKRwvdakp
-         5C5zCawLqN8LoSORQJQyeS9xldiBvBMCSx6XsqsaEMWejbdDJqWNLfPMTZKvL9M/9gWR
-         sghzuUq8X6txHCzgNJfKbnjen/BYA37ZkOffof4RlnMSqbEwZhy5xvTLzAfgZbd9rRHs
-         jHoRmxV5Pa3c/rUOoT+EcG4+7SsKY4SKWH1Xny+5sy1Ln/ksFbOF9NdH9ueFGyngY522
-         kG+QhpW43mDe5XqSbg94Aql5yjueg0pTt2ZM69fcMvPYqDAlP8pyjg4xCvm0vTQYGG7+
-         6S7A==
-X-Gm-Message-State: APjAAAUyR7Zh8Bsi+JncIQ6POunNm38toByZ4629lXOxtA6Ay7QsGMW9
-        Dmd3mBemFsidHckznmrnN5gmY7p0OqJtxjmJX6s=
-X-Google-Smtp-Source: APXvYqwSswZxYDvJ7jKlJvXdykHaAYG5nqWq2RuDufDuUtO4DhUL0Xt5Ej2am2q5BX+wvZ6Z5HQRqmjkba2Fpys7THI=
-X-Received: by 2002:ab0:6419:: with SMTP id x25mr8914472uao.86.1553505947478;
- Mon, 25 Mar 2019 02:25:47 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1543625590.git.fthain@telegraphics.com.au>
- <alpine.LNX.2.21.1903051706060.145@nippy.intranet> <CAMuHMdW60DhofaVqdts-TmJbgpwVD7NOY4Hp9bbXD5K6-gp5GA@mail.gmail.com>
- <alpine.LNX.2.21.1903052027020.147@nippy.intranet>
-In-Reply-To: <alpine.LNX.2.21.1903052027020.147@nippy.intranet>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 25 Mar 2019 10:25:36 +0100
-Message-ID: <CAMuHMdUX7cvM4NSJpEPN=kDg49EzeC3CvdDJsz0NQTnMkPdOrw@mail.gmail.com>
-Subject: Re: [PATCH v4 00/14] m68k: Drop arch_gettimeoffset and adopt
- clocksource API
-To:     Finn Thain <fthain@telegraphics.com.au>
-Cc:     Andreas Schwab <schwab@linux-m68k.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Stephen N Chivers <schivers@csc.com.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kars de Jong <jongk@linux-m68k.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 25 Mar 2019 05:27:09 -0400
+Received: from foss.arm.com ([217.140.101.70]:43138 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729597AbfCYJ1I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 05:27:08 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9868815AB;
+        Mon, 25 Mar 2019 02:27:07 -0700 (PDT)
+Received: from big-swifty.misterjones.org (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4FE6A3F614;
+        Mon, 25 Mar 2019 02:27:06 -0700 (PDT)
+Date:   Mon, 25 Mar 2019 09:27:03 +0000
+Message-ID: <8636nbs3rs.wl-marc.zyngier@arm.com>
+From:   Marc Zyngier <marc.zyngier@arm.com>
+To:     Qiang Zhao <qiang.zhao@nxp.com>
+Cc:     "tglx@linutronix.de" <tglx@linutronix.de>,
+        "jason@lakedaemon.net" <jason@lakedaemon.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [patch v14 4/4] irqchip/qeic: remove PPCisms for QEIC
+In-Reply-To: <20190325035418.19065-5-qiang.zhao@nxp.com>
+References: <20190325035418.19065-1-qiang.zhao@nxp.com>
+        <20190325035418.19065-5-qiang.zhao@nxp.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+Organization: ARM Ltd
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Finn,
+On Mon, 25 Mar 2019 03:53:48 +0000,
+Qiang Zhao <qiang.zhao@nxp.com> wrote:
+> 
+> QEIC was supported on PowerPC, and dependent on PPC,
+> Now it is supported on other platforms, so remove PPCisms.
+> 
+> Signed-off-by: Zhao Qiang <qiang.zhao@nxp.com>
+> ---
+>  arch/powerpc/platforms/83xx/km83xx.c          |    1 -
+>  arch/powerpc/platforms/83xx/misc.c            |    1 -
+>  arch/powerpc/platforms/83xx/mpc832x_mds.c     |    1 -
+>  arch/powerpc/platforms/83xx/mpc832x_rdb.c     |    1 -
+>  arch/powerpc/platforms/83xx/mpc836x_mds.c     |    1 -
+>  arch/powerpc/platforms/83xx/mpc836x_rdk.c     |    1 -
+>  arch/powerpc/platforms/85xx/corenet_generic.c |    1 -
+>  arch/powerpc/platforms/85xx/mpc85xx_mds.c     |    1 -
+>  arch/powerpc/platforms/85xx/mpc85xx_rdb.c     |    1 -
+>  arch/powerpc/platforms/85xx/twr_p102x.c       |    1 -
+>  drivers/irqchip/irq-qeic.c                    |  188 +++++++++++--------------
+>  include/soc/fsl/qe/qe_ic.h                    |  132 -----------------
+>  12 files changed, 80 insertions(+), 250 deletions(-)
+>  delete mode 100644 include/soc/fsl/qe/qe_ic.h
+> 
+> diff --git a/arch/powerpc/platforms/83xx/km83xx.c b/arch/powerpc/platforms/83xx/km83xx.c
+> index d8642a4..b1cef0a 100644
+> --- a/arch/powerpc/platforms/83xx/km83xx.c
+> +++ b/arch/powerpc/platforms/83xx/km83xx.c
+> @@ -38,7 +38,6 @@
+>  #include <sysdev/fsl_soc.h>
+>  #include <sysdev/fsl_pci.h>
+>  #include <soc/fsl/qe/qe.h>
+> -#include <soc/fsl/qe/qe_ic.h>
+>  
+>  #include "mpc83xx.h"
+>  
+> diff --git a/arch/powerpc/platforms/83xx/misc.c b/arch/powerpc/platforms/83xx/misc.c
+> index 4150b56..b033a10 100644
+> --- a/arch/powerpc/platforms/83xx/misc.c
+> +++ b/arch/powerpc/platforms/83xx/misc.c
+> @@ -18,7 +18,6 @@
+>  #include <asm/io.h>
+>  #include <asm/hw_irq.h>
+>  #include <asm/ipic.h>
+> -#include <soc/fsl/qe/qe_ic.h>
+>  #include <sysdev/fsl_soc.h>
+>  #include <sysdev/fsl_pci.h>
+>  
+> diff --git a/arch/powerpc/platforms/83xx/mpc832x_mds.c b/arch/powerpc/platforms/83xx/mpc832x_mds.c
+> index 74c154e..f86371b 100644
+> --- a/arch/powerpc/platforms/83xx/mpc832x_mds.c
+> +++ b/arch/powerpc/platforms/83xx/mpc832x_mds.c
+> @@ -37,7 +37,6 @@
+>  #include <sysdev/fsl_soc.h>
+>  #include <sysdev/fsl_pci.h>
+>  #include <soc/fsl/qe/qe.h>
+> -#include <soc/fsl/qe/qe_ic.h>
+>  
+>  #include "mpc83xx.h"
+>  
+> diff --git a/arch/powerpc/platforms/83xx/mpc832x_rdb.c b/arch/powerpc/platforms/83xx/mpc832x_rdb.c
+> index 4389865..da91395 100644
+> --- a/arch/powerpc/platforms/83xx/mpc832x_rdb.c
+> +++ b/arch/powerpc/platforms/83xx/mpc832x_rdb.c
+> @@ -26,7 +26,6 @@
+>  #include <asm/ipic.h>
+>  #include <asm/udbg.h>
+>  #include <soc/fsl/qe/qe.h>
+> -#include <soc/fsl/qe/qe_ic.h>
+>  #include <sysdev/fsl_soc.h>
+>  #include <sysdev/fsl_pci.h>
+>  
+> diff --git a/arch/powerpc/platforms/83xx/mpc836x_mds.c b/arch/powerpc/platforms/83xx/mpc836x_mds.c
+> index fd44dd0..9b8bc8b 100644
+> --- a/arch/powerpc/platforms/83xx/mpc836x_mds.c
+> +++ b/arch/powerpc/platforms/83xx/mpc836x_mds.c
+> @@ -45,7 +45,6 @@
+>  #include <sysdev/fsl_pci.h>
+>  #include <sysdev/simple_gpio.h>
+>  #include <soc/fsl/qe/qe.h>
+> -#include <soc/fsl/qe/qe_ic.h>
+>  
+>  #include "mpc83xx.h"
+>  
+> diff --git a/arch/powerpc/platforms/83xx/mpc836x_rdk.c b/arch/powerpc/platforms/83xx/mpc836x_rdk.c
+> index 93f024f..82fa344 100644
+> --- a/arch/powerpc/platforms/83xx/mpc836x_rdk.c
+> +++ b/arch/powerpc/platforms/83xx/mpc836x_rdk.c
+> @@ -21,7 +21,6 @@
+>  #include <asm/ipic.h>
+>  #include <asm/udbg.h>
+>  #include <soc/fsl/qe/qe.h>
+> -#include <soc/fsl/qe/qe_ic.h>
+>  #include <sysdev/fsl_soc.h>
+>  #include <sysdev/fsl_pci.h>
+>  
+> diff --git a/arch/powerpc/platforms/85xx/corenet_generic.c b/arch/powerpc/platforms/85xx/corenet_generic.c
+> index e44bb44..ac2478d 100644
+> --- a/arch/powerpc/platforms/85xx/corenet_generic.c
+> +++ b/arch/powerpc/platforms/85xx/corenet_generic.c
+> @@ -28,7 +28,6 @@
+>  #include <asm/mpic.h>
+>  #include <asm/ehv_pic.h>
+>  #include <asm/swiotlb.h>
+> -#include <soc/fsl/qe/qe_ic.h>
+>  
+>  #include <linux/of_platform.h>
+>  #include <sysdev/fsl_soc.h>
+> diff --git a/arch/powerpc/platforms/85xx/mpc85xx_mds.c b/arch/powerpc/platforms/85xx/mpc85xx_mds.c
+> index 6892bc1..809266d 100644
+> --- a/arch/powerpc/platforms/85xx/mpc85xx_mds.c
+> +++ b/arch/powerpc/platforms/85xx/mpc85xx_mds.c
+> @@ -49,7 +49,6 @@
+>  #include <sysdev/fsl_pci.h>
+>  #include <sysdev/simple_gpio.h>
+>  #include <soc/fsl/qe/qe.h>
+> -#include <soc/fsl/qe/qe_ic.h>
+>  #include <asm/mpic.h>
+>  #include <asm/swiotlb.h>
+>  #include "smp.h"
+> diff --git a/arch/powerpc/platforms/85xx/mpc85xx_rdb.c b/arch/powerpc/platforms/85xx/mpc85xx_rdb.c
+> index 000d385..f806b6b 100644
+> --- a/arch/powerpc/platforms/85xx/mpc85xx_rdb.c
+> +++ b/arch/powerpc/platforms/85xx/mpc85xx_rdb.c
+> @@ -27,7 +27,6 @@
+>  #include <asm/udbg.h>
+>  #include <asm/mpic.h>
+>  #include <soc/fsl/qe/qe.h>
+> -#include <soc/fsl/qe/qe_ic.h>
+>  
+>  #include <sysdev/fsl_soc.h>
+>  #include <sysdev/fsl_pci.h>
+> diff --git a/arch/powerpc/platforms/85xx/twr_p102x.c b/arch/powerpc/platforms/85xx/twr_p102x.c
+> index 6be9b33..4f620f2 100644
+> --- a/arch/powerpc/platforms/85xx/twr_p102x.c
+> +++ b/arch/powerpc/platforms/85xx/twr_p102x.c
+> @@ -23,7 +23,6 @@
+>  #include <asm/udbg.h>
+>  #include <asm/mpic.h>
+>  #include <soc/fsl/qe/qe.h>
+> -#include <soc/fsl/qe/qe_ic.h>
+>  
+>  #include <sysdev/fsl_soc.h>
+>  #include <sysdev/fsl_pci.h>
+> diff --git a/drivers/irqchip/irq-qeic.c b/drivers/irqchip/irq-qeic.c
+> index a6ccbfb..723c52e 100644
+> --- a/drivers/irqchip/irq-qeic.c
+> +++ b/drivers/irqchip/irq-qeic.c
+> @@ -18,8 +18,11 @@
+>  #include <linux/of_address.h>
+>  #include <linux/kernel.h>
+>  #include <linux/init.h>
+> +#include <linux/irqdomain.h>
+>  #include <linux/irqchip.h>
+>  #include <linux/errno.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_irq.h>
+>  #include <linux/reboot.h>
+>  #include <linux/slab.h>
+>  #include <linux/stddef.h>
+> @@ -27,9 +30,8 @@
+>  #include <linux/signal.h>
+>  #include <linux/device.h>
+>  #include <linux/spinlock.h>
+> -#include <asm/irq.h>
+> +#include <linux/irq.h>
+>  #include <asm/io.h>
+> -#include <soc/fsl/qe/qe_ic.h>
+>  
+>  #define NR_QE_IC_INTS		64
+>  
+> @@ -87,6 +89,43 @@
+>  #define SIGNAL_HIGH		2
+>  #define SIGNAL_LOW		0
+>  
+> +#define NUM_OF_QE_IC_GROUPS	6
+> +
+> +/* Flags when we init the QE IC */
+> +#define QE_IC_SPREADMODE_GRP_W			BIT(0)
+> +#define QE_IC_SPREADMODE_GRP_X			BIT(1)
+> +#define QE_IC_SPREADMODE_GRP_Y			BIT(2)
+> +#define QE_IC_SPREADMODE_GRP_Z			BIT(3)
+> +#define QE_IC_SPREADMODE_GRP_RISCA		BIT(4)
+> +#define QE_IC_SPREADMODE_GRP_RISCB		BIT(5)
+> +
+> +#define QE_IC_LOW_SIGNAL			BIT(8)
+> +#define QE_IC_HIGH_SIGNAL			BIT(9)
+> +
+> +#define QE_IC_GRP_W_PRI0_DEST_SIGNAL_HIGH	BIT(12)
+> +#define QE_IC_GRP_W_PRI1_DEST_SIGNAL_HIGH	BIT(13)
+> +#define QE_IC_GRP_X_PRI0_DEST_SIGNAL_HIGH	BIT(14)
+> +#define QE_IC_GRP_X_PRI1_DEST_SIGNAL_HIGH	BIT(15)
+> +#define QE_IC_GRP_Y_PRI0_DEST_SIGNAL_HIGH	BIT(16)
+> +#define QE_IC_GRP_Y_PRI1_DEST_SIGNAL_HIGH	BIT(17)
+> +#define QE_IC_GRP_Z_PRI0_DEST_SIGNAL_HIGH	BIT(18)
+> +#define QE_IC_GRP_Z_PRI1_DEST_SIGNAL_HIGH	BIT(19)
+> +#define QE_IC_GRP_RISCA_PRI0_DEST_SIGNAL_HIGH	BIT(20)
+> +#define QE_IC_GRP_RISCA_PRI1_DEST_SIGNAL_HIGH	BIT(21)
+> +#define QE_IC_GRP_RISCB_PRI0_DEST_SIGNAL_HIGH	BIT(22)
+> +#define QE_IC_GRP_RISCB_PRI1_DEST_SIGNAL_HIGH	BIT(23)
+> +#define QE_IC_GRP_W_DEST_SIGNAL_SHIFT		(12)
+> +
+> +/* QE interrupt sources groups */
+> +enum qe_ic_grp_id {
+> +	QE_IC_GRP_W = 0,	/* QE interrupt controller group W */
+> +	QE_IC_GRP_X,		/* QE interrupt controller group X */
+> +	QE_IC_GRP_Y,		/* QE interrupt controller group Y */
+> +	QE_IC_GRP_Z,		/* QE interrupt controller group Z */
+> +	QE_IC_GRP_RISCA,	/* QE interrupt controller RISC group A */
+> +	QE_IC_GRP_RISCB		/* QE interrupt controller RISC group B */
+> +};
+> +
+>  struct qe_ic {
+>  	/* Control registers offset */
+>  	u32 __iomem *regs;
+> @@ -265,15 +304,15 @@ struct qe_ic_info {
+>  		},
+>  };
+>  
+> -static inline u32 qe_ic_read(volatile __be32  __iomem * base, unsigned int reg)
+> +static u32 qe_ic_read(__be32  __iomem *base, unsigned int reg)
+>  {
+> -	return in_be32(base + (reg >> 2));
+> +	return ioread32be(base + (reg >> 2));
+>  }
+>  
+> -static inline void qe_ic_write(volatile __be32  __iomem * base, unsigned int reg,
+> +static void qe_ic_write(__be32  __iomem *base, unsigned int reg,
+>  			       u32 value)
+>  {
+> -	out_be32(base + (reg >> 2), value);
+> +	iowrite32be(value, base + (reg >> 2));
+>  }
+>  
+>  static inline struct qe_ic *qe_ic_from_irq(unsigned int virq)
+> @@ -375,8 +414,8 @@ static int qe_ic_host_map(struct irq_domain *h, unsigned int virq,
+>  	.xlate = irq_domain_xlate_onetwocell,
+>  };
+>  
+> -/* Return an interrupt vector or NO_IRQ if no interrupt is pending. */
+> -unsigned int qe_ic_get_low_irq(struct qe_ic *qe_ic)
+> +/* Return an interrupt vector or 0 if no interrupt is pending. */
+> +static unsigned int qe_ic_get_low_irq(struct qe_ic *qe_ic)
+>  {
+>  	int irq;
+>  
+> @@ -386,13 +425,13 @@ unsigned int qe_ic_get_low_irq(struct qe_ic *qe_ic)
+>  	irq = qe_ic_read(qe_ic->regs, QEIC_CIVEC) >> 26;
+>  
+>  	if (irq == 0)
+> -		return NO_IRQ;
+> +		return 0;
+>  
+>  	return irq_linear_revmap(qe_ic->irqhost, irq);
+>  }
+>  
+> -/* Return an interrupt vector or NO_IRQ if no interrupt is pending. */
+> -unsigned int qe_ic_get_high_irq(struct qe_ic *qe_ic)
+> +/* Return an interrupt vector or 0 if no interrupt is pending. */
+> +static unsigned int qe_ic_get_high_irq(struct qe_ic *qe_ic)
+>  {
+>  	int irq;
+>  
+> @@ -402,11 +441,38 @@ unsigned int qe_ic_get_high_irq(struct qe_ic *qe_ic)
+>  	irq = qe_ic_read(qe_ic->regs, QEIC_CHIVEC) >> 26;
+>  
+>  	if (irq == 0)
+> -		return NO_IRQ;
+> +		return 0;
+>  
+>  	return irq_linear_revmap(qe_ic->irqhost, irq);
+>  }
+>  
+> +static void qe_ic_cascade_mpic(struct irq_desc *desc, int is_high)
+> +{
+> +	struct qe_ic *qe_ic = irq_desc_get_handler_data(desc);
+> +	struct irq_chip *chip = irq_desc_get_chip(desc);
+> +	unsigned int cascade_irq;
+> +
+> +	if (is_high)
+> +		cascade_irq = qe_ic_get_high_irq(qe_ic);
+> +	else
+> +		cascade_irq = qe_ic_get_low_irq(qe_ic);
+> +
+> +	if (cascade_irq != 0)
+> +		generic_handle_irq(cascade_irq);
+> +
+> +	chip->irq_eoi(&desc->irq_data);
 
-On Tue, Mar 5, 2019 at 10:55 AM Finn Thain <fthain@telegraphics.com.au> wrote:
-> On Tue, 5 Mar 2019, Geert Uytterhoeven wrote:
-> > On Tue, Mar 5, 2019 at 7:13 AM Finn Thain <fthain@telegraphics.com.au> wrote:
-> > > On Sat, 1 Dec 2018, Finn Thain wrote:
-> > > > This series removes "select ARCH_USES_GETTIMEOFFSET" from arch/m68k
-> > > > and converts users of arch_gettimeoffset to the clocksource API.
-> > > > Various bugs are fixed along the way.
-> > >
-> > > Are there any plans to merge this series, Geert?
-> >
-> > Has this been tested on all/most platforms? Or do you think is it safe to
-> > apply regardless?
-> >
->
-> The amiga, atari and mac patches have been tested.
->
-> The apollo, q40, sun3 and sun3x patches are safe though untested, AFAIK. I
-> confirmed that, in qemu at least, the default jiffies clocksource will
-> work, and the patch is trivial.
->
-> That leaves bvme6000, hp300, mvme147 and mvme16x. Those have not been
-> tested. Here are some options for those platforms:
->
-> 1) Apply the patches untested (gaining new clocksources and some API
-> modernization for m68k, while fixing old bugs and potentially introducing
-> new bugs).
+NAK. This is not how we deal with chained interrupt controllers. If
+that's what you want to do, implement a proper chained irqchip, use
+and the chained_irq{enter,exit} macros.
 
-Thank you, applied and queued for v5.2.
+Thanks,
 
-Gr{oetje,eeting}s,
-
-                        Geert
+	M.
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Jazz is not dead, it just smell funny.
