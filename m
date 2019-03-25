@@ -2,117 +2,139 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCBDDC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 13:00:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CB04C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 13:00:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 891412087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 13:00:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553518828;
-	bh=QkIuCUg1TpGGMYoP+yb6nSRh3mbNuGY7tGOH4j1SGwc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mcwTBoUtGsjuaBPCNGAajoCWCTQ5uW+YfqqH1t8g2uRACaBWTy56ieBZibkWDma8G
-	 sPAxTfCGyADBPxILIbPTpciN3n7QMsDxCWkBsfGdt1sD9AcaZo/YmkEH2UYd6ryUjb
-	 rpDvqhiGACxGcDSN0lHk+jF5+Q+fosKO9SabUsAY=
+	by mail.kernel.org (Postfix) with ESMTP id 349BE20854
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 13:00:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731349AbfCYNA1 (ORCPT
+        id S1731357AbfCYNAv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 09:00:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44478 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731229AbfCYNAZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 09:00:25 -0400
-Received: from localhost.localdomain (unknown [171.61.95.149])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE0E120879;
-        Mon, 25 Mar 2019 13:00:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553518825;
-        bh=QkIuCUg1TpGGMYoP+yb6nSRh3mbNuGY7tGOH4j1SGwc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MVnZ3Cpz1HtvOZRrI9Wrc7s09NUjZEk5i5R+Lcubhg+kGTK6o2A/bhoTm3uFJALdj
-         QxX0dSfxNMQFKlCWqSXq5bXsrs7lmipPbAS2zLk11aopzV4bmsZdDl7cKR91/bFQWk
-         HHdQs0C+L+H+AzZSwUERXuc+oBO5DNSmYIX0dkKg=
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Andy Gross <andy.gross@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Olof Johansson <olof@lixom.net>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] arm64: defconfig: Enable RTC driver PM8XXX
-Date:   Mon, 25 Mar 2019 18:29:46 +0530
-Message-Id: <20190325125946.6818-2-vkoul@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190325125946.6818-1-vkoul@kernel.org>
-References: <20190325125946.6818-1-vkoul@kernel.org>
+        Mon, 25 Mar 2019 09:00:51 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:52003 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731166AbfCYNAu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 09:00:50 -0400
+Received: from wuerfel.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MYcy3-1hVBFa3ZjP-00Vckl; Mon, 25 Mar 2019 14:00:41 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     "Theodore Ts'o" <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>
+Cc:     clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Eric Whitney <enwlinux@gmail.com>,
+        Sean Fu <fxinrong@gmail.com>, Jan Kara <jack@suse.cz>,
+        Eric Biggers <ebiggers@google.com>, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] ext4: use BUG() instead of BUG_ON(1)
+Date:   Mon, 25 Mar 2019 14:00:25 +0100
+Message-Id: <20190325130040.1437445-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:XEkcvIk1pYTWgdR+sAkYhTO1RRjWg8B5vvNlB7QcoiS1tnjfmVG
+ NPe1IiRrQRvV9hkJRruQShim4S9Jspnd6/IY0wVET/d+LwgNT8B1iba+CjRBEKoZw5i6cRd
+ q5VQk2r9smg0mi+ONUBTkBGjdBFY4kS4RkfjThhQhRT8D6DMK4kDgv0hBzaq2F9WstvUfhU
+ Edkcxj4DdWAZm4ouyF95g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:xQ9yD33iYgY=:PBt945K92l971pKmGyQkhW
+ Tn9t1UZ28/jKk1IIWZJX0Tc5NsaYqQPq3w4Q7B2T1PP1XpKWIVBxMWuD33oA1fA5ieYH+wKsR
+ pz8xHFRLC3PgDrfy2aKJjFkNrfFnB3OovpaeM7ZoIDJ3qzXvpq6KQnIKIWLs5ldb9+dcS8Q3V
+ vs6bazv+eqp8Tyj4J9+jRf3Xb5kQwhsAEQktguc+sr9Od681prnmP7NVDp4W1EH4nZnaPLNDG
+ leqsVkTk5Q2QfA771hEc3amD+1djhoX3xeIKCqNelBzLiglX8sZHNmDsoKzLh5AHa4IGr0SGO
+ BZEz0ixmiU5HIOwVkw6piTdrkEiMxHRh5eZVLhT32ANF2oDKEkPeToZNJdhNDguw1lOoCc8if
+ D3BcwewlEfGnuUfW59SoEeln74ACh0w7t7YG81u6JXolnVcU4D4SzvA5hq4QS2PWOuDnZAsJP
+ Ok4w63/46y9VNz5B7gQKlP4x1tv31OJu25MBzc+utK/p/UN6OOcEdFademrPGZyBKH3GH6e5z
+ YL6q3/2bx50Q9HIPtR/XHsGnGJFK+skTFaKovzOa9WvL3ZCLMVNAJBmHFQZSe0avcHEOcPUPZ
+ B+7qZIiB3WWWnEZKpEdPDUxBhN/zbEkoPOyJEKGh5MgKdDQ030RdDmpnasiNEm/N+JOr0yKXd
+ bhGrXrsl9WPYADLB1N/mXnSqENIiXij479WZe1RmhVL3EGut1pIOJA4HLRUIzk5VrHlD7p3z+
+ bHt4cwucBRUlC1ofXZGkc8CwGk8nlkY0C3ppwQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Date: Sun, 24 Mar 2019 21:44:31 +0530
-Subject: [PATCH 2/2] arm64: defconfig: Enable stmmac qualcomm ethernet config
+BUG_ON(1) leads to bogus warnings from clang when
+CONFIG_PROFILE_ANNOTATED_BRANCHES is set:
 
-Some platforms like QCS404 sport stmmac ethernet conrollers, enable the
-configs and phy drivers for it.
+ fs/ext4/inode.c:544:4: error: variable 'retval' is used uninitialized whenever 'if' condition is false
+      [-Werror,-Wsometimes-uninitialized]
+                        BUG_ON(1);
+                        ^~~~~~~~~
+ include/asm-generic/bug.h:61:36: note: expanded from macro 'BUG_ON'
+                                   ^~~~~~~~~~~~~~~~~~~
+ include/linux/compiler.h:48:23: note: expanded from macro 'unlikely'
+                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ fs/ext4/inode.c:591:6: note: uninitialized use occurs here
+        if (retval > 0 && map->m_flags & EXT4_MAP_MAPPED) {
+            ^~~~~~
+ fs/ext4/inode.c:544:4: note: remove the 'if' if its condition is always true
+                        BUG_ON(1);
+                        ^
+ include/asm-generic/bug.h:61:32: note: expanded from macro 'BUG_ON'
+                               ^
+ fs/ext4/inode.c:502:12: note: initialize the variable 'retval' to silence this warning
 
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Change it to BUG() so clang can see that this code path can never
+continue.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- arch/arm64/configs/defconfig | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ fs/ext4/extents_status.c | 4 ++--
+ fs/ext4/inode.c          | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 5dbe372ee913..417ca71475c2 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -173,6 +173,10 @@ CONFIG_IP6_NF_NAT=m
- CONFIG_IP6_NF_TARGET_MASQUERADE=m
- CONFIG_BRIDGE=m
- CONFIG_BRIDGE_VLAN_FILTERING=y
-+CONFIG_HAVE_NET_DSA=y
-+CONFIG_NET_DSA=y
-+CONFIG_NET_DSA_LEGACY=y
-+CONFIG_NET_DSA_TAG_QCA=y
- CONFIG_VLAN_8021Q=m
- CONFIG_VLAN_8021Q_GVRP=y
- CONFIG_VLAN_8021Q_MVRP=y
-@@ -243,6 +247,7 @@ CONFIG_MACVTAP=m
- CONFIG_TUN=y
- CONFIG_VETH=m
- CONFIG_VIRTIO_NET=y
-+CONFIG_NET_DSA_QCA8K=y
- CONFIG_AMD_XGBE=y
- CONFIG_NET_XGENE=y
- CONFIG_ATL1C=m
-@@ -268,6 +273,10 @@ CONFIG_SMSC911X=y
- CONFIG_SNI_AVE=y
- CONFIG_SNI_NETSEC=y
- CONFIG_STMMAC_ETH=m
-+CONFIG_STMMAC_PLATFORM=m
-+CONFIG_DWMAC_QCOM_ETHQOS=m
-+CONFIG_MDIO_DEVICE=y
-+CONFIG_MDIO_BUS=y
- CONFIG_MDIO_BUS_MUX_MMIOREG=y
- CONFIG_AT803X_PHY=m
- CONFIG_MARVELL_PHY=m
+diff --git a/fs/ext4/extents_status.c b/fs/ext4/extents_status.c
+index 2b439afafe13..023a3eb3afa3 100644
+--- a/fs/ext4/extents_status.c
++++ b/fs/ext4/extents_status.c
+@@ -711,7 +711,7 @@ static void ext4_es_insert_extent_ind_check(struct inode *inode,
+ 			 * We don't need to check unwritten extent because
+ 			 * indirect-based file doesn't have it.
+ 			 */
+-			BUG_ON(1);
++			BUG();
+ 		}
+ 	} else if (retval == 0) {
+ 		if (ext4_es_is_written(es)) {
+@@ -780,7 +780,7 @@ static int __es_insert_extent(struct inode *inode, struct extent_status *newes)
+ 			}
+ 			p = &(*p)->rb_right;
+ 		} else {
+-			BUG_ON(1);
++			BUG();
+ 			return -EINVAL;
+ 		}
+ 	}
+diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+index b32a57bc5d5d..190f0478582a 100644
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -541,7 +541,7 @@ int ext4_map_blocks(handle_t *handle, struct inode *inode,
+ 			map->m_len = retval;
+ 			retval = 0;
+ 		} else {
+-			BUG_ON(1);
++			BUG();
+ 		}
+ #ifdef ES_AGGRESSIVE_TEST
+ 		ext4_map_blocks_es_recheck(handle, inode, map,
+@@ -1876,7 +1876,7 @@ static int ext4_da_map_blocks(struct inode *inode, sector_t iblock,
+ 		else if (ext4_es_is_unwritten(&es))
+ 			map->m_flags |= EXT4_MAP_UNWRITTEN;
+ 		else
+-			BUG_ON(1);
++			BUG();
+ 
+ #ifdef ES_AGGRESSIVE_TEST
+ 		ext4_map_blocks_es_recheck(NULL, inode, map, &orig_map, 0);
 -- 
-2.20.1
+2.20.0
 
