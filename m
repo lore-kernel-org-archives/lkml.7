@@ -2,130 +2,131 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB3E2C10F03
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:25:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5AA4C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:26:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C567F2084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:25:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74D2D20848
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:26:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="g3nxTJSL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730768AbfCYVZk (ORCPT
+        id S1730346AbfCYV0z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 17:25:40 -0400
-Received: from smtprelay0240.hostedemail.com ([216.40.44.240]:41490 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730626AbfCYVZO (ORCPT
+        Mon, 25 Mar 2019 17:26:55 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:34900 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729693AbfCYV0y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 17:25:14 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id D7190182CED28;
-        Mon, 25 Mar 2019 21:25:12 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: arch06_1041f47dfa43b
-X-Filterd-Recvd-Size: 4042
-Received: from joe-laptop.perches.com (unknown [47.151.153.53])
-        (Authenticated sender: joe@perches.com)
-        by omf12.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 25 Mar 2019 21:25:11 +0000 (UTC)
-From:   Joe Perches <joe@perches.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
-        "David S . Miller" <davem@davemloft.net>
-Subject: Bad file pattern in MAINTAINERS section 'ETHERNET PHY LIBRARY'
-Date:   Mon, 25 Mar 2019 14:25:10 -0700
-Message-Id: <20190325212510.26351-1-joe@perches.com>
-X-Mailer: git-send-email 2.15.0
-In-Reply-To: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com>
-References: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com>
+        Mon, 25 Mar 2019 17:26:54 -0400
+Received: by mail-pf1-f196.google.com with SMTP id t21so7056765pfe.2
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 14:26:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=F6eHozPPrDy+9MhKhEeFODU05GUZcOzCOEIshvHqp0U=;
+        b=g3nxTJSLig5h9ol2DHrHg/hiRutXrDsxPj0FFoQ2rPTnEtKBxSQhA5zZ4lxGviRD45
+         QGWi/QmuAS6ItBsb7WeYLP3SjkHrJ9LhV1xh8RUdxpAmtWAqXZ8Tue1vPoNVmATbdgjm
+         jQ+Mvms/roeekMt4OQb2G3OCxIUri44wMmOCj8cF+lVkXG8K3TYTOdyNqe3q9XLvkyH7
+         +Af4zdKLTJU8NHYxDphrnkCcJNx4W3HRlI2uo9jGj1FXk3FLGr1VQjw03vDkslFffv9D
+         Hf34K3REDNym5BTw2sw5AIE7eM0aDuUeFbfZuFFpvkJshPh5XylJXbx6IpYjjiNnBSA/
+         jAPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=F6eHozPPrDy+9MhKhEeFODU05GUZcOzCOEIshvHqp0U=;
+        b=XhYOVgVwwEsNWjeCxWY3fZzrdBpjUHadrcwH1fs7h5O2OWoO38vrLtdNEFuuwjIWAJ
+         JIYSqTZ57B4MS+VAKdDYPOa/98R+8ah7TdWwh9kEIYocW70iPekaiJGphhos2yulcmpe
+         ctz7ELDXb0q+uMkxbTfbLDQrLT+bARDi5oZwQbZtfpWkKa3G5vrKM87n5Sg59WJAcM21
+         MXx+60rlGO7ruUq0E1DVgYuZM9QtWSrMOelM4LHfhYZfQQHA8nyeSvOFMhtsBunp11WV
+         OJT8uXrefUz1EhONHe0lhDCkpeFgOa90ZWHpU800MR5npSqilpY48eqJQBhUvS7/hsbb
+         fpkA==
+X-Gm-Message-State: APjAAAU6Ww8vAHX3R91u81dy+ZPNDmrIQTGZlsYGlDJQgXFhVnNmf6PD
+        koyowfLr3njD5VBFBn4hCtztVw==
+X-Google-Smtp-Source: APXvYqz/ru3+hE2pBm6MANXiSA8+rV1nwi78KDf5w6HoOuJ3zwb8ayLpOBXy4XAugDeOr5cb7id9pg==
+X-Received: by 2002:a63:4750:: with SMTP id w16mr25932558pgk.256.1553549213939;
+        Mon, 25 Mar 2019 14:26:53 -0700 (PDT)
+Received: from localhost ([12.206.222.5])
+        by smtp.gmail.com with ESMTPSA id a3sm7591304pfn.182.2019.03.25.14.26.52
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 25 Mar 2019 14:26:52 -0700 (PDT)
+Date:   Mon, 25 Mar 2019 14:26:52 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Borislav Petkov <bp@alien8.de>
+cc:     Paul Walmsley <paul.walmsley@sifive.com>,
+        Yash Shah <yash.shah@sifive.com>,
+        linux-riscv@lists.infradead.org, linux-edac@vger.kernel.org,
+        palmer@sifive.com, linux-kernel@vger.kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, aou@eecs.berkeley.edu,
+        mchehab@kernel.org, devicetree@vger.kernel.org,
+        sachin.ghadi@sifive.com
+Subject: Re: [PATCH 2/2] edac: sifive: Add EDAC driver for SiFive FU540-C000
+ chip
+In-Reply-To: <20190325065737.GD12016@zn.tnic>
+Message-ID: <alpine.DEB.2.21.9999.1903251418440.8028@viisi.sifive.com>
+References: <1553082728-9232-1-git-send-email-yash.shah@sifive.com> <1553082728-9232-3-git-send-email-yash.shah@sifive.com> <alpine.DEB.2.21.9999.1903241558210.8028@viisi.sifive.com> <20190325065737.GD12016@zn.tnic>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A file pattern line in this section of the MAINTAINERS file in linux-next
-does not have a match in the linux source files.
+On Mon, 25 Mar 2019, Borislav Petkov wrote:
 
-This could occur because a matching filename was never added, was deleted
-or renamed in some other commit.
+> On Sun, Mar 24, 2019 at 05:23:27PM -0700, Paul Walmsley wrote:
+> > > +	if (!IS_ENABLED(CONFIG_EDAC_DEBUG))
+> > > +		return;
+> > 
+> > Can all of these debugfs functions be wrapped with an #if ... #endif such 
+> > that, if CONFIG_EDAC_DEBUG is not set, they will all be stripped out by 
+> > the preprocessor?
+> 
+> Why would you make the code more ugly with ifdeffery?
+> 
+> Do you have any serious code size constraints so that you absolutely
+> need to remove a couple of KBs?
 
-The commits that added and if found renamed or removed the file pattern
-are shown below.
+We'll definitely take the RAM savings that a few #ifdefs will deliver to 
+us.  They add up.  We're selling chips for embedded use cases, not just 
+big-iron x86 systems.
 
-Please fix this defect appropriately.
+Other EDAC drivers have far more #ifdef lines than the single set that I'm 
+proposing, so I don't understand why you're singling this driver out for 
+criticism.  Consider:
 
-1: ---------------------------------------------------------------------------
+./altera_edac.c:#ifdef CONFIG_EDAC_ALTERA_SDRAM
+./altera_edac.c:#ifdef CONFIG_EDAC_ALTERA_L2C
+./altera_edac.c:#ifdef CONFIG_EDAC_ALTERA_OCRAM
+./altera_edac.c:#ifdef CONFIG_EDAC_ALTERA_OCRAM
+./altera_edac.c:#ifdef CONFIG_EDAC_ALTERA_L2C
+./altera_edac.c:#ifdef CONFIG_EDAC_ALTERA_ETHERNET
+./altera_edac.c:#ifdef CONFIG_EDAC_ALTERA_NAND
+./altera_edac.c:#ifdef CONFIG_EDAC_ALTERA_DMA
+./altera_edac.c:#ifdef CONFIG_EDAC_ALTERA_USB
+./altera_edac.c:#ifdef CONFIG_EDAC_ALTERA_QSPI
+./altera_edac.c:#ifdef CONFIG_EDAC_ALTERA_SDMMC
+./altera_edac.c:#ifdef CONFIG_EDAC_ALTERA_L2C
+./altera_edac.c:#ifdef CONFIG_EDAC_ALTERA_OCRAM
+./altera_edac.c:#ifdef CONFIG_EDAC_ALTERA_ETHERNET
+./altera_edac.c:#ifdef CONFIG_EDAC_ALTERA_NAND
+./altera_edac.c:#ifdef CONFIG_EDAC_ALTERA_DMA
+./altera_edac.c:#ifdef CONFIG_EDAC_ALTERA_USB
+./altera_edac.c:#ifdef CONFIG_EDAC_ALTERA_QSPI
+./altera_edac.c:#ifdef CONFIG_EDAC_ALTERA_SDMMC
+./altera_edac.c:#ifdef CONFIG_EDAC_ALTERA_SDRAM
+./synopsys_edac.c:#ifdef CONFIG_EDAC_DEBUG
+./synopsys_edac.c:#ifdef CONFIG_EDAC_DEBUG
+./synopsys_edac.c:#ifdef CONFIG_EDAC_DEBUG
+./synopsys_edac.c:#ifdef CONFIG_EDAC_DEBUG
+./synopsys_edac.c:#ifdef CONFIG_EDAC_DEBUG
 
-linux-next MAINTAINERS section:
 
-	5836	ETHERNET PHY LIBRARY
-	5837	M:	Andrew Lunn <andrew@lunn.ch>
-	5838	M:	Florian Fainelli <f.fainelli@gmail.com>
-	5839	M:	Heiner Kallweit <hkallweit1@gmail.com>
-	5840	L:	netdev@vger.kernel.org
-	5841	S:	Maintained
-	5842	F:	Documentation/ABI/testing/sysfs-bus-mdio
-	5843	F:	Documentation/devicetree/bindings/net/mdio*
--->	5844	F:	Documentation/networking/phy.txt
-	5845	F:	drivers/net/phy/
-	5846	F:	drivers/of/of_mdio.c
-	5847	F:	drivers/of/of_net.c
-	5848	F:	include/linux/*mdio*.h
-	5849	F:	include/linux/of_net.h
-	5850	F:	include/linux/phy.h
-	5851	F:	include/linux/phy_fixed.h
-	5852	F:	include/linux/platform_data/mdio-bcm-unimac.h
-	5853	F:	include/linux/platform_data/mdio-gpio.h
-	5854	F:	include/trace/events/mdio.h
-	5855	F:	include/uapi/linux/mdio.h
-	5856	F:	include/uapi/linux/mii.h
-
-2: ---------------------------------------------------------------------------
-
-The most recent commit that added or modified file pattern 'Documentation/networking/phy.txt':
-
-commit 22f08ad9721d4d1a92061b60026144627a60d644
-Author: Florian Fainelli <f.fainelli@gmail.com>
-Date:   Tue Feb 18 09:47:49 2014 -0800
-
-    MAINTAINERS: add entry for the PHY library
-    
-    The PHY library has been subject to some changes, new drivers and DT
-    interactions over the past few months. Add myself as a maintainer for
-    the core PHY library parts and drivers. Make sure the PHY library entry
-    also covers the Device Tree files which have a close interaction with
-    the MDIO bus, PHY connection and Ethernet PHY mode parsing.
-    
-    CC: Grant Likely <grant.likely@linaro.org>
-    CC: Shaohui Xie <shaohui.xie@freescale.com>
-    CC: Andy Fleming <afleming@gmail.com>
-    Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-    Signed-off-by: David S. Miller <davem@davemloft.net>
-
- MAINTAINERS | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-3: ---------------------------------------------------------------------------
-
-The last commit with a real presence of file pattern 'Documentation/networking/phy.txt':
-
-commit 25fe02d00a1e9468e0ae995beedb99867ec6701b
-Author: Heiner Kallweit <hkallweit1@gmail.com>
-Date:   Sat Jan 26 11:25:37 2019 +0100
-
-    Documentation: net: phy: switch documentation to rst format
-    
-    Switch phylib documentation to rst format.
-    
-    Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
-    Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-    Signed-off-by: David S. Miller <davem@davemloft.net>
-
- Documentation/networking/index.rst |   1 +
- Documentation/networking/phy.rst   | 447 +++++++++++++++++++++++++++++++++++++
- Documentation/networking/phy.txt   | 429 -----------------------------------
- 3 files changed, 448 insertions(+), 429 deletions(-)
+- Paul
