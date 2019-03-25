@@ -2,87 +2,133 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55BD2C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 13:54:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEFD6C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 13:54:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EDBE20830
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 13:54:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC56120830
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 13:54:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l2N2llbz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729273AbfCYNyw (ORCPT
+        id S1729337AbfCYNy5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 09:54:52 -0400
-Received: from mout.kundenserver.de ([212.227.126.131]:57297 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726136AbfCYNyw (ORCPT
+        Mon, 25 Mar 2019 09:54:57 -0400
+Received: from mail-vk1-f196.google.com ([209.85.221.196]:42003 "EHLO
+        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729275AbfCYNyy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 09:54:52 -0400
-Received: from wuerfel.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MEFnR-1hIcf10MWD-00AI1A; Mon, 25 Mar 2019 14:54:42 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] usb: mtu3: fix EXTCON dependency
-Date:   Mon, 25 Mar 2019 14:54:30 +0100
-Message-Id: <20190325135440.2166315-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Mon, 25 Mar 2019 09:54:54 -0400
+Received: by mail-vk1-f196.google.com with SMTP id j195so1954047vkj.9
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 06:54:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=OY8WEisT05W3FWbLcHkMS2iHB9tj4RvJF+Rsv+/ieGg=;
+        b=l2N2llbzpOSfmUe6dzd+DRFsMc2AaM+9ldarqCzBRDeINz8szsRwtw9N3wum9q37Ud
+         f6Ngmxyx/xMM63ImL/REnJ7vFqEEMGLPo+CbHTYDorexpRaJgoZEnbIWLsLJg06le1mO
+         ztoUNFsxjvnfbFI1wPheGNg7sC9UqHMErvX4YDoUKInKFfAyVK4magggyjVs62JrRiHT
+         qGenQhylgJjJZpBLSJRVfdWz78lM8D0KoBMnmcq5bhaeSBYuAM/rK7a+jX0Hi48ojufB
+         0TcyrXDTWhQnIYC1T62TrzKw0ip+wLb1aiHHSw0lZ2Bi4LMRkzuZ0mrsKU2qmsXq36Fq
+         hMyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=OY8WEisT05W3FWbLcHkMS2iHB9tj4RvJF+Rsv+/ieGg=;
+        b=bZMT6ts5Bn7fcqM/Efdr1gcLsKoszSkTP/WI7RDtFAV4Puw6EIcPGgVTLKnRYRj2jE
+         0mERF947Hezs71VpGKfFCTbp/l0JUawIWDVFBaiewFT1yxMiH9GQu3CtMwpE4KRRABkQ
+         df9glYrZnrz6Rq8UN2nyToeSRrSQ4yLkL110mbyfM3bGCfbqrxBjdwoDW8QqaQx1IFtg
+         4mUXBpu1A5sxp7TbBLCXHMy1uhJGmTFOy2/Mmw/wCp5UQwIgOCPCQOcYorbP1sRvJuHQ
+         s7AZLWAC1oQiSIbLbZN84DhLX7VcVJFCu32vARU4CHY1sWTRXtruxARY4jmZUydeQ4iM
+         5DoA==
+X-Gm-Message-State: APjAAAWxoskZVHkjrIjXmpdm6iTyq5c5bwzwairpJRzmOumhFMskD+Ov
+        FZ3riuS6D3HdiZTf5DF87Jdlr/3K/DQ691ct+MiTXw==
+X-Google-Smtp-Source: APXvYqwHKdOkTnJ+AMaAugQjQ0Tb6R5TE6uPP+fSM0aESr5wO2nnB7j3OtmloxW/aWKkRowhMUY/s9UaINcATmGkDgU=
+X-Received: by 2002:a1f:3458:: with SMTP id b85mr3804716vka.4.1553522092858;
+ Mon, 25 Mar 2019 06:54:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:Zbb7MMeGdeb863Dkkf0uRINDNXGjdVZvMW1rsAu4DzSl+dH8DM1
- 7JmYSZTemXkBoWkf+P81jpmFEFmA76GMyZvvgd3MS70/0DNYHHT37c+I6jpjlrNQyfPSu0K
- SC800mUXVa4iTiHPWbm4va3Ul7XTkk44GlVwMJypx8yUgP0pm6eJKfPS4zVBeVu/e/fGzKn
- f/Gl9a9c09yPFKTZQaJyw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:t13HCCPBbyg=:sa7EMgEwsETT0X2DLSIpNq
- NaC7Gu7zoO+7XL9dnCo2Uj8/PaaV64CeXaGkSE6mzHXv+He0+bpWYC4+NUX2hwMIHJQdTOlOY
- 3Zg81F8jeCi1UIgGNiS7NQiJ6En1Wg/GGksM0tw7dg++aBCjXZok8j0Ngt5gDAfxfOvLXmSwE
- yo5TEdqePTjmNHKo6c+0Bw94R7tIlLv4tprGzoDZERhoGMwGZRZZj3/4Kr/tV9BM2PVOJZDGk
- 1Sja/l9WpLVgvpcxkF7TrlhWI6P7vjHe3dquYMI6w1EiunjJGjH83ex2UQ0zeWZzP+Y3Tz33G
- /Fj/rpFFbQ5W1n2jF99j1WF1IFmBk3q28MqgXkNCX5OXULQKV5AlIjVD+3HwTgEUme1NUoML0
- sVqg9zvlMxVM76QzOisk8HX3G98Qpeuav1FELap1lncpeGEk9ZsMHSomkdfiN2Q3Hy8CX+SNg
- KS6M0nQ4yY0p5Iv8lEhWfM3soR3Be1kQrb1w+D3b2adlFMVunquAtjMq95PEFj+aamaG6Yvf/
- Nj8IqTOe3CY5l/do59wG969fZCy2En7GlTHCfDW86kCu9aClR4GJx6fKAgvpZYx4mq+ZznZ2U
- eE2/EY26ylxTZlnMrQzw0rCSxIMN9Z52bLVlYolGVFnF4MJgxDOFvIoruQVYEimrdcRVmCgz7
- tAOMh5BYumhNfuIvRoUnk2MfdYVaEzyscp3UfRB2XZaP2bePFyvH/ffQH4UuiWZio7F6E27qT
- ZFEMAsSaHi/+lKg2vntF+t+rpGMwW5DpbDVRsg==
+References: <20190322113808.16858-1-christoph.muellner@theobroma-systems.com>
+ <20190322113808.16858-2-christoph.muellner@theobroma-systems.com>
+ <CAPDyKFrDq-zBsqqe23hj4ynfYnrGxAr0tWxvYEJu8Kvh0i=h9A@mail.gmail.com> <2D2515D6-1E11-4EA3-B016-EC37A9E3091D@theobroma-systems.com>
+In-Reply-To: <2D2515D6-1E11-4EA3-B016-EC37A9E3091D@theobroma-systems.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Mon, 25 Mar 2019 14:54:16 +0100
+Message-ID: <CAPDyKFrPBY14bvG7ZLON2xTTWEc2a1JjLdeDSkGmtdAZy5hokQ@mail.gmail.com>
+Subject: Re: [PATCH v3 2/3] mmc: sdhci-of-arasan: Add DTS property to disable DCMDs.
+To:     =?UTF-8?Q?Christoph_M=C3=BCllner?= 
+        <christoph.muellner@theobroma-systems.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Tony Xie <tony.xie@rock-chips.com>,
+        Randy Li <ayaka@soulik.info>,
+        Vicente Bergas <vicencb@gmail.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Klaus Goger <klaus.goger@theobroma-systems.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When EXTCON is a loadable module, mtu3 fails to link as built-in:
+On Mon, 25 Mar 2019 at 14:39, Christoph M=C3=BCllner
+<christoph.muellner@theobroma-systems.com> wrote:
+>
+>
+> > On 25.03.2019, at 14:27, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+> >
+> > On Fri, 22 Mar 2019 at 12:39, Christoph Muellner
+> > <christoph.muellner@theobroma-systems.com> wrote:
+> >>
+> >> Direct commands (DCMDs) are an optional feature of eMMC 5.1's command
+> >> queue engine (CQE). The Arasan eMMC 5.1 controller uses the CQHCI,
+> >> which exposes a control register bit to enable the feature.
+> >> The current implementation sets this bit unconditionally.
+> >>
+> >> This patch allows to suppress the feature activation,
+> >> by specifying the property disable-cqe-dcmd.
+> >>
+> >> Signed-off-by: Christoph Muellner <christoph.muellner@theobroma-system=
+s.com>
+> >> Signed-off-by: Philipp Tomsich <philipp.tomsich@theobroma-systems.com>
+> >> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+> >
+> > Applied for next, thanks!
+> >
+> > Perhaps both patch1 and patch2 should be tagged for stable? Then
+> > please tell me and I can add a tag.
+>
+> Hi Ulf,
+>
+> yes tagging for stable would be nice.
+> I guess, the following would fit:
+>
+> Fixes: 84362d79f436 ("mmc: sdhci-of-arasan: Add CQHCI support for arasan,=
+sdhci-5.1")
+>
 
-drivers/usb/mtu3/mtu3_plat.o: In function `mtu3_probe':
-mtu3_plat.c:(.text+0x690): undefined reference to `extcon_get_edev_by_phandle'
+Great, I have added that to both of the commits and a stable tag. Thanks!
 
-Add a Kconfig dependency to force mtu3 also to be a loadable module
-if extconn is, but still allow it to be built without extcon.
+[...]
 
-Fixes: d0ed062a8b75 ("usb: mtu3: dual-role mode support")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/usb/mtu3/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/usb/mtu3/Kconfig b/drivers/usb/mtu3/Kconfig
-index bcc23486c4ed..928c2cd6fc00 100644
---- a/drivers/usb/mtu3/Kconfig
-+++ b/drivers/usb/mtu3/Kconfig
-@@ -6,6 +6,7 @@ config USB_MTU3
- 	tristate "MediaTek USB3 Dual Role controller"
- 	depends on USB || USB_GADGET
- 	depends on ARCH_MEDIATEK || COMPILE_TEST
-+	depends on EXTCON || !EXTCON
- 	select USB_XHCI_MTK if USB_SUPPORT && USB_XHCI_HCD
- 	help
- 	  Say Y or M here if your system runs on MediaTek SoCs with
--- 
-2.20.0
-
+Kind regards
+Uffe
