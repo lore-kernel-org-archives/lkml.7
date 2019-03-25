@@ -2,243 +2,206 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 395C9C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 15:08:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECC16C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 15:09:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03B6D2082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 15:08:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD1512082C
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 15:09:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729182AbfCYPII (ORCPT
+        id S1729368AbfCYPJI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 11:08:08 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:49654 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726185AbfCYPII (ORCPT
+        Mon, 25 Mar 2019 11:09:08 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:44159 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726185AbfCYPJI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 11:08:08 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2PF0mM3094295
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 11:08:07 -0400
-Received: from e15.ny.us.ibm.com (e15.ny.us.ibm.com [129.33.205.205])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rf0ss2bby-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 11:08:06 -0400
-Received: from localhost
-        by e15.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Mon, 25 Mar 2019 15:08:05 -0000
-Received: from b01cxnp23032.gho.pok.ibm.com (9.57.198.27)
-        by e15.ny.us.ibm.com (146.89.104.202) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 25 Mar 2019 15:08:00 -0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2PF7x2d22347778
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 25 Mar 2019 15:07:59 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6396BB2065;
-        Mon, 25 Mar 2019 15:07:59 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 33F75B205F;
-        Mon, 25 Mar 2019 15:07:59 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon, 25 Mar 2019 15:07:59 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 431C516C42B1; Mon, 25 Mar 2019 08:08:00 -0700 (PDT)
-Date:   Mon, 25 Mar 2019 08:08:00 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        linux-kernel@vger.kernel.org,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>, tglx@linutronix.de,
-        Mike Galbraith <efault@gmx.de>
-Subject: Re: [PATCH v3] rcu: Allow to eliminate softirq processing from
- rcutree
-Reply-To: paulmck@linux.ibm.com
-References: <20190320173001.GM4102@linux.ibm.com>
- <20190320175952.yh6yfy64vaiurszw@linutronix.de>
- <20190320181210.GO4102@linux.ibm.com>
- <20190320181435.x3qyutwqllmq5zbk@linutronix.de>
- <20190320211333.eq7pwxnte7la67ph@linutronix.de>
- <20190322234819.GA99360@google.com>
- <20190323002519.GV4102@linux.ibm.com>
- <20190323161002.GA17112@linux.ibm.com>
- <20190324234211.GA28064@linux.ibm.com>
- <20190325134129.GB182885@google.com>
+        Mon, 25 Mar 2019 11:09:08 -0400
+Received: by mail-qt1-f196.google.com with SMTP id w5so10608845qtb.11
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 08:09:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=F0CbBSAdR00hPNq0KX5pNvYsZ16sEyj0WiDvHgddMss=;
+        b=EC1Kyr6r/5EpBvDV3K39bGpPpEyRRy8YZEsgEHVWk1ia8XQayxgpHV2iOmMbKn3aC7
+         1VP82fmsnfpqLtRI6eaNDoObyyOVEfV5BTofdXuWHWkuCHCL6HM6dRA21Xsd7ocPQ+YS
+         ef/hrurqWF1k4HwyIG3PR0ds+TyoAibO8MycyoUGE+OwSmrpGbTWr7+tagnYfmUO4Gfp
+         mp/wJzNEmepBep1vqhs5Mmozf11CLxirQk3cbf4INwBA7EH6YINchtoG5IRikP7oXPiP
+         lT8znQ8xlshimSXUA+oa5z5mcTDCVTOZmbaIlVWznoy8BncB7bOkNCkiIIOjF1hQuD31
+         t9Hg==
+X-Gm-Message-State: APjAAAX7Qntj4pATFeKWBmv8KgzHvNSgnpsLOfFW5s9lx3NFzFhUTdLK
+        DLZfTcmW0F741JuNpgpPAiS5aYq79OEonI12+d+tAcaZJjY=
+X-Google-Smtp-Source: APXvYqyv/feGls2BEctY6+DJR9VK6Pez0zPxDlnc6nytx0TnVlS/EtpS5lC40oj65MVmH/y6gLT6jI0yLuVvCIwdJYs=
+X-Received: by 2002:ac8:fd7:: with SMTP id f23mr20711193qtk.167.1553526546851;
+ Mon, 25 Mar 2019 08:09:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190325134129.GB182885@google.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19032515-0068-0000-0000-000003AACA6E
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010811; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000282; SDB=6.01179495; UDB=6.00617187; IPR=6.00960206;
- MB=3.00026147; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-25 15:08:03
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19032515-0069-0000-0000-000047EE7431
-Message-Id: <20190325150800.GB4102@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-25_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903250112
+References: <20190312093652.12829-1-nsaenzjulienne@suse.de> <CAO-hwJKo84vMDubVZM8Tye9wyGYkLC9sOVNUw=hUbzH1ktGv1A@mail.gmail.com>
+In-Reply-To: <CAO-hwJKo84vMDubVZM8Tye9wyGYkLC9sOVNUw=hUbzH1ktGv1A@mail.gmail.com>
+From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Date:   Mon, 25 Mar 2019 16:08:55 +0100
+Message-ID: <CAO-hwJ+_CBJ1tkUpcedMM8dgbzyHk2GPdhnFxFN+bAckwQytmA@mail.gmail.com>
+Subject: Re: [PATCH] HID: core: move Usage Page concatenation to hid_parser_main()
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     Jiri Kosina <jikos@kernel.org>, oneukum@suse.de,
+        "Junge, Terry" <Terry.Junge@plantronics.com>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 09:41:29AM -0400, Joel Fernandes wrote:
-> On Sun, Mar 24, 2019 at 04:42:11PM -0700, Paul E. McKenney wrote:
-> > On Sat, Mar 23, 2019 at 09:10:02AM -0700, Paul E. McKenney wrote:
-> > > On Fri, Mar 22, 2019 at 05:25:19PM -0700, Paul E. McKenney wrote:
-> > > > On Fri, Mar 22, 2019 at 07:48:19PM -0400, Joel Fernandes wrote:
-> > > > > On Wed, Mar 20, 2019 at 10:13:33PM +0100, Sebastian Andrzej Siewior wrote:
-> > > > > > Running RCU out of softirq is a problem for some workloads that would
-> > > > > > like to manage RCU core processing independently of other softirq
-> > > > > > work, for example, setting kthread priority.  This commit therefore
-> > > > > > introduces the `rcunosoftirq' option which moves the RCU core work
-> > > > > > from softirq to a per-CPU/per-flavor SCHED_OTHER kthread named rcuc.
-> > > > > > The SCHED_OTHER approach avoids the scalability problems that appeared
-> > > > > > with the earlier attempt to move RCU core processing to from softirq
-> > > > > > to kthreads.  That said, kernels built with RCU_BOOST=y will run the
-> > > > > > rcuc kthreads at the RCU-boosting priority.
-> > > > > [snip]
-> > > > > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> > > > > > index 0f31b79eb6761..05a1e42fdaf10 100644
-> > > > > > --- a/kernel/rcu/tree.c
-> > > > > > +++ b/kernel/rcu/tree.c
-> > > > > > @@ -51,6 +51,12 @@
-> > > > > >  #include <linux/tick.h>
-> > > > > >  #include <linux/sysrq.h>
-> > > > > >  #include <linux/kprobes.h>
-> > > > > > +#include <linux/gfp.h>
-> > > > > > +#include <linux/oom.h>
-> > > > > > +#include <linux/smpboot.h>
-> > > > > > +#include <linux/jiffies.h>
-> > > > > > +#include <linux/sched/isolation.h>
-> > > > > > +#include "../time/tick-internal.h"
-> > > > > >  
-> > > > > >  #include "tree.h"
-> > > > > >  #include "rcu.h"
-> > > > > > @@ -92,6 +98,9 @@ struct rcu_state rcu_state = {
-> > > > > >  /* Dump rcu_node combining tree at boot to verify correct setup. */
-> > > > > >  static bool dump_tree;
-> > > > > >  module_param(dump_tree, bool, 0444);
-> > > > > > +/* Move RCU_SOFTIRQ to rcuc kthreads. */
-> > > > > > +static bool use_softirq = 1;
-> > > > > > +module_param(use_softirq, bool, 0444);
-> > > > > >  /* Control rcu_node-tree auto-balancing at boot time. */
-> > > > > >  static bool rcu_fanout_exact;
-> > > > > >  module_param(rcu_fanout_exact, bool, 0444);
-> > > > > > @@ -2253,7 +2262,7 @@ void rcu_force_quiescent_state(void)
-> > > > > >  EXPORT_SYMBOL_GPL(rcu_force_quiescent_state);
-> > > > > >  
-> > > > > >  /* Perform RCU core processing work for the current CPU.  */
-> > > > > > -static __latent_entropy void rcu_core(struct softirq_action *unused)
-> > > > > > +static __latent_entropy void rcu_core(void)
-> > > > > >  {
-> > > > > >  	unsigned long flags;
-> > > > > >  	struct rcu_data *rdp = raw_cpu_ptr(&rcu_data);
-> > > > > > @@ -2295,6 +2304,34 @@ static __latent_entropy void rcu_core(struct softirq_action *unused)
-> > > > > >  	trace_rcu_utilization(TPS("End RCU core"));
-> > > > > >  }
-> > > > > >  
-> > > > > > +static void rcu_core_si(struct softirq_action *h)
-> > > > > > +{
-> > > > > > +	rcu_core();
-> > > > > > +}
-> > > > > > +
-> > > > > > +static void rcu_wake_cond(struct task_struct *t, int status)
-> > > > > > +{
-> > > > > > +	/*
-> > > > > > +	 * If the thread is yielding, only wake it when this
-> > > > > > +	 * is invoked from idle
-> > > > > > +	 */
-> > > > > > +	if (t && (status != RCU_KTHREAD_YIELDING || is_idle_task(current)))
-> > > > > > +		wake_up_process(t);
-> > > > > > +}
-> > > > > > +
-> > > > > > +static void invoke_rcu_core_kthread(void)
-> > > > > > +{
-> > > > > > +	struct task_struct *t;
-> > > > > > +	unsigned long flags;
-> > > > > > +
-> > > > > > +	local_irq_save(flags);
-> > > > > > +	__this_cpu_write(rcu_data.rcu_cpu_has_work, 1);
-> > > > > > +	t = __this_cpu_read(rcu_data.rcu_cpu_kthread_task);
-> > > > > > +	if (t != NULL && t != current)
-> > > > > > +		rcu_wake_cond(t, __this_cpu_read(rcu_data.rcu_cpu_kthread_status));
-> > > > > > +	local_irq_restore(flags);
-> > > > > > +}
-> > > > > > +
-> > > > > >  /*
-> > > > > >   * Schedule RCU callback invocation.  If the running implementation of RCU
-> > > > > >   * does not support RCU priority boosting, just do a direct call, otherwise
-> > > > > > @@ -2306,19 +2343,95 @@ static void invoke_rcu_callbacks(struct rcu_data *rdp)
-> > > > > >  {
-> > > > > >  	if (unlikely(!READ_ONCE(rcu_scheduler_fully_active)))
-> > > > > >  		return;
-> > > > > > -	if (likely(!rcu_state.boost)) {
-> > > > > > -		rcu_do_batch(rdp);
-> > > > > > -		return;
-> > > > > > -	}
-> > > > > > -	invoke_rcu_callbacks_kthread();
-> > > > > > +	if (rcu_state.boost || !use_softirq)
-> > > > > > +		invoke_rcu_core_kthread();
-> > > > > > +	rcu_do_batch(rdp);
-> > > > > 
-> > > > > Shouldn't there be an else before the rcu_do_batch? If we are waking up the
-> > > > > rcuc thread, then that will do the rcu_do_batch when it runs right?
-> > > > > 
-> > > > > Something like:
-> > > > > 	if (rcu_state.boost || !use_softirq)
-> > > > > 		invoke_rcu_core_kthread();
-> > > > > 	else
-> > > > > 		rcu_do_batch(rdp);
-> > > > > 
-> > > > > Previous code similarly had a return; also.
-> > > > 
-> > > > I believe that you are correct, so I will give it a shot.  Good eyes!
-> > > 
-> > > Yet rcutorture disagrees.  Actually, if we are using rcuc kthreads, this
-> > > is only ever invoked from within tha thread, so the only check we need is
-> > > for the scheduler being operational.  I am therefore trying this one out.
-> > > 
-> > > Thoughts?
-> > 
-> > And rcutorture likes this one, though at this point this function should
-> > be pulled into its sole callsite.  ;-)
-> 
-> Great, I'm glad the testing is going well.
+On Mon, Mar 25, 2019 at 11:39 AM Benjamin Tissoires
+<benjamin.tissoires@redhat.com> wrote:
+>
+> Hi Nicolas,
+>
+> On Tue, Mar 12, 2019 at 10:37 AM Nicolas Saenz Julienne
+> <nsaenzjulienne@suse.de> wrote:
+> >
+> > As seen on some USB wireless keyboards manufactured by Primax, the HID
+> > parser was using some assumptions that are not always true. In this case
+> > it's s the fact that, inside the scope of a main item, an Usage Page
+> > will always precede an Usage.
+> >
+> > The spec is not pretty clear as 6.2.2.7 states "Any usage that follows
+> > is interpreted as a Usage ID and concatenated with the Usage Page".
+> > While 6.2.2.8 states "When the parser encounters a main item it
+> > concatenates the last declared Usage Page with a Usage to form a
+> > complete usage value." Being somewhat contradictory it was decided to
+> > match Window's implementation, which follows 6.2.2.8.
+> >
+> > In summary, the patch moves the Usage Page concatenation from the local
+> > item parsing function to the main item parsing function.
+> >
+> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> > ---
+>
+> Patch looks good to me.
+>
+> Terry, did you have time to review it?
+>
+> Cheers,
+> Benjamin
+>
+> >
+> > Note: A PR in hid-tools shoud show up anytime soon
+> >
+> >  drivers/hid/hid-core.c | 30 ++++++++++++++++++------------
+> >  include/linux/hid.h    |  1 +
+> >  2 files changed, 19 insertions(+), 12 deletions(-)
+> >
+> > diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
+> > index 9993b692598f..158468ef23a6 100644
+> > --- a/drivers/hid/hid-core.c
+> > +++ b/drivers/hid/hid-core.c
+> > @@ -218,13 +218,14 @@ static unsigned hid_lookup_collection(struct hid_parser *parser, unsigned type)
+> >   * Add a usage to the temporary parser table.
+> >   */
+> >
+> > -static int hid_add_usage(struct hid_parser *parser, unsigned usage)
+> > +static int hid_add_usage(struct hid_parser *parser, unsigned usage, __u8 size)
+> >  {
+> >         if (parser->local.usage_index >= HID_MAX_USAGES) {
+> >                 hid_err(parser->device, "usage index exceeded\n");
+> >                 return -1;
+> >         }
+> >         parser->local.usage[parser->local.usage_index] = usage;
+> > +       parser->local.usage_size[parser->local.usage_index] = size;
+> >         parser->local.collection_index[parser->local.usage_index] =
+> >                 parser->collection_stack_ptr ?
+> >                 parser->collection_stack[parser->collection_stack_ptr - 1] : 0;
+> > @@ -486,10 +487,7 @@ static int hid_parser_local(struct hid_parser *parser, struct hid_item *item)
+> >                         return 0;
+> >                 }
+> >
+> > -               if (item->size <= 2)
+> > -                       data = (parser->global.usage_page << 16) + data;
+> > -
+> > -               return hid_add_usage(parser, data);
+> > +               return hid_add_usage(parser, data, item->size);
+> >
+> >         case HID_LOCAL_ITEM_TAG_USAGE_MINIMUM:
+> >
+> > @@ -498,9 +496,6 @@ static int hid_parser_local(struct hid_parser *parser, struct hid_item *item)
+> >                         return 0;
+> >                 }
+> >
+> > -               if (item->size <= 2)
+> > -                       data = (parser->global.usage_page << 16) + data;
+> > -
+> >                 parser->local.usage_minimum = data;
+> >                 return 0;
+> >
+> > @@ -511,9 +506,6 @@ static int hid_parser_local(struct hid_parser *parser, struct hid_item *item)
+> >                         return 0;
+> >                 }
+> >
+> > -               if (item->size <= 2)
+> > -                       data = (parser->global.usage_page << 16) + data;
+> > -
+> >                 count = data - parser->local.usage_minimum;
+> >                 if (count + parser->local.usage_index >= HID_MAX_USAGES) {
+> >                         /*
+> > @@ -533,7 +525,7 @@ static int hid_parser_local(struct hid_parser *parser, struct hid_item *item)
+> >                 }
+> >
+> >                 for (n = parser->local.usage_minimum; n <= data; n++)
+> > -                       if (hid_add_usage(parser, n)) {
+> > +                       if (hid_add_usage(parser, n, item->size)) {
+> >                                 dbg_hid("hid_add_usage failed\n");
+> >                                 return -1;
+> >                         }
+> > @@ -553,8 +545,22 @@ static int hid_parser_local(struct hid_parser *parser, struct hid_item *item)
+> >
+> >  static int hid_parser_main(struct hid_parser *parser, struct hid_item *item)
+> >  {
+> > +       unsigned int usages;
+> >         __u32 data;
+> >         int ret;
+> > +       int i;
+> > +
+> > +       usages = max_t(unsigned, parser->local.usage_index,
+> > +                                parser->global.report_count);
+> > +
+> > +       /*
+> > +        * As per specification, 6.2.2.8:
+> > +        * "When the parser encounters a main item it concatenates the last
+> > +        * declared Usage Page with a Usage to form a complete usage value."
+> > +        */
+> > +       for (i = 0; i < usages; i++)
+> > +               if (parser->local.usage_size[i] <= 2)
+> > +                       parser->local.usage[i] += parser->global.usage_page << 16;
 
-Which reminds me...  I have been assuming that Frederic Weisbecker's
-split-softirq patches were stalled for the time being.
+Actually, the good thing of having a test suite, is that it raises bugs :)
 
-http://lkml.kernel.org/r/20190228171242.32144-1-frederic@kernel.org
+You are also missing the computation of the usage in hid_scan_main().
+This makes the autoloading of hid-multitouch fail, and thus the test
+suite failing.
 
-If those were to show up soonish, perhaps that would allow per-softirq
-control of priority.
+Cheers,
+Benjamin
 
-My thought is not to wait, but I figured I should mention it.
-
-> By the way I enlightened that jitter.sh script about CPU offline issues as
-> well (sent patch last week).  Let me know if you agree with it.
-
-I just sent a reply.  Still trying to remember why I excluded CPU 0.  ;-)
-
-Perhaps because of issues with single-CPU rcutorture runs?
-
-							Thanx, Paul
-
+> >
+> >         data = item_udata(item);
+> >
+> > diff --git a/include/linux/hid.h b/include/linux/hid.h
+> > index f9707d1dcb58..d1fb4b678873 100644
+> > --- a/include/linux/hid.h
+> > +++ b/include/linux/hid.h
+> > @@ -417,6 +417,7 @@ struct hid_global {
+> >
+> >  struct hid_local {
+> >         unsigned usage[HID_MAX_USAGES]; /* usage array */
+> > +       __u8 usage_size[HID_MAX_USAGES]; /* usage size array */
+> >         unsigned collection_index[HID_MAX_USAGES]; /* collection index array */
+> >         unsigned usage_index;
+> >         unsigned usage_minimum;
+> > --
+> > 2.21.0
+> >
