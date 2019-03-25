@@ -2,239 +2,99 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1158C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 15:41:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02B05C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 15:42:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBA4B20879
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 15:41:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A34AB20896
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 15:42:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729367AbfCYPlo (ORCPT
+        id S1729427AbfCYPmH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 11:41:44 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:49886 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725747AbfCYPlo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 11:41:44 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2PFdbF0128011
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 11:41:42 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rf1tqg494-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 11:41:41 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <fbarrat@linux.ibm.com>;
-        Mon, 25 Mar 2019 15:41:40 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 25 Mar 2019 15:41:37 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2PFfamm48431280
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 25 Mar 2019 15:41:36 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C6810A4067;
-        Mon, 25 Mar 2019 15:41:35 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6C66DA4064;
-        Mon, 25 Mar 2019 15:41:35 +0000 (GMT)
-Received: from [9.145.37.149] (unknown [9.145.37.149])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 25 Mar 2019 15:41:35 +0000 (GMT)
-Subject: Re: [PATCH v3 6/7] ocxl: move event_fd handling to frontend
-To:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
-Cc:     Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <20190320053448.2098-1-alastair@au1.ibm.com>
- <20190325054438.15022-1-alastair@au1.ibm.com>
- <20190325054438.15022-7-alastair@au1.ibm.com>
-From:   Frederic Barrat <fbarrat@linux.ibm.com>
-Date:   Mon, 25 Mar 2019 16:41:34 +0100
+        Mon, 25 Mar 2019 11:42:07 -0400
+Received: from mail1.perex.cz ([77.48.224.245]:33362 "EHLO mail1.perex.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725747AbfCYPmG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 11:42:06 -0400
+X-Greylist: delayed 397 seconds by postgrey-1.27 at vger.kernel.org; Mon, 25 Mar 2019 11:42:05 EDT
+Received: from mail1.perex.cz (localhost [127.0.0.1])
+        by smtp1.perex.cz (Perex's E-mail Delivery System) with ESMTP id 1C7AEA0040;
+        Mon, 25 Mar 2019 16:35:27 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.11.0 smtp1.perex.cz 1C7AEA0040
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=perex.cz; s=default;
+        t=1553528127; bh=ArdR1bWGLqLRpQ1UHn68TtXN7V2LypRqM23CXi3SprU=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=vsI3ReodvI9uyFojLoDuRYKlUD6ahw11QrpyTQN8XeoU7Yhkt56L/2kRO21fncyKr
+         dKsfLiQE83GRy+gTleZf/joELPIwBSw06NJsdyFMkepK75chNd4OGVSdURDTJYuFqk
+         4cvrcm6NlFdq8rEvvrcb4KlQHy6pdVmdGeC5yf9k=
+Received: from p50.perex-int.cz (unknown [192.168.100.94])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: perex)
+        by mail1.perex.cz (Perex's E-mail Delivery System) with ESMTPSA;
+        Mon, 25 Mar 2019 16:35:21 +0100 (CET)
+Subject: Re: [PATCH] ALSA: aloop: Support S24 sample formats
+To:     twischer@de.adit-jv.com, patch@alsa-project.org,
+        broonie@kernel.org, tiwai@suse.com
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+References: <1553526854-16921-1-git-send-email-twischer@de.adit-jv.com>
+From:   Jaroslav Kysela <perex@perex.cz>
+Message-ID: <5e015489-8705-0aa4-dfde-78854a49f6be@perex.cz>
+Date:   Mon, 25 Mar 2019 16:35:20 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+ Thunderbird/60.5.0
 MIME-Version: 1.0
-In-Reply-To: <20190325054438.15022-7-alastair@au1.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <1553526854-16921-1-git-send-email-twischer@de.adit-jv.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19032515-0020-0000-0000-000003275E85
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19032515-0021-0000-0000-000021799583
-Message-Id: <f990a76d-76e4-32ac-e618-5bfe2a267cb6@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-25_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903250116
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Le 25/03/2019 à 06:44, Alastair D'Silva a écrit :
-> From: Alastair D'Silva <alastair@d-silva.org>
+Dne 25. 03. 19 v 16:14 twischer@de.adit-jv.com napsal(a):
+> From: Timo Wischer <twischer@de.adit-jv.com>
 > 
-> Event_fd is only used in the driver frontend, so it does not
-> need to exist in the backend code. Relocate it to the frontend
-> and provide an opaque mechanism for consumers instead.
+> Currently snd_aloop supports only S16 and S32 audio sample formats. With
+> this patch the S24 formats are also supported.
+
+Reviewed-by: Jaroslav Kysela <perex@perex.cz>
+
 > 
-> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> Signed-off-by: Timo Wischer <twischer@de.adit-jv.com>
 > ---
->   drivers/misc/ocxl/afu_irq.c       | 76 ++++++++++++++++++-------------
->   drivers/misc/ocxl/file.c          | 22 ++++++++-
->   drivers/misc/ocxl/ocxl_internal.h |  5 --
->   include/misc/ocxl.h               | 46 +++++++++++++++++++
->   4 files changed, 111 insertions(+), 38 deletions(-)
+>  sound/drivers/aloop.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/misc/ocxl/afu_irq.c b/drivers/misc/ocxl/afu_irq.c
-> index 2d410cd6f817..d71e62df7d31 100644
-> --- a/drivers/misc/ocxl/afu_irq.c
-> +++ b/drivers/misc/ocxl/afu_irq.c
-> @@ -1,7 +1,7 @@
->   // SPDX-License-Identifier: GPL-2.0+
->   // Copyright 2017 IBM Corp.
->   #include <linux/interrupt.h>
-> -#include <linux/eventfd.h>
-> +#include <asm/pnv-ocxl.h>
->   #include "ocxl_internal.h"
->   #include "trace.h"
->   
-> @@ -11,7 +11,9 @@ struct afu_irq {
->   	unsigned int virq;
->   	char *name;
->   	u64 trigger_page;
-> -	struct eventfd_ctx *ev_ctx;
-> +	irqreturn_t (*handler)(void *private);
-> +	void (*free_private)(void *private);
-> +	void *private;
->   };
->   
->   int ocxl_irq_offset_to_id(struct ocxl_context *ctx, u64 offset)
-> @@ -24,14 +26,43 @@ u64 ocxl_irq_id_to_offset(struct ocxl_context *ctx, int irq_id)
->   	return ctx->afu->irq_base_offset + (irq_id << PAGE_SHIFT);
->   }
->   
-> +int ocxl_irq_set_handler(struct ocxl_context *ctx, int irq_id,
-> +		irqreturn_t (*handler)(void *private),
-> +		void (*free_private)(void *private),
-> +		void *private)
-> +{
-> +	struct afu_irq *irq;
-> +	int rc;
-> +
-> +	mutex_lock(&ctx->irq_lock);
-> +	irq = idr_find(&ctx->irq_idr, irq_id);
-> +	if (!irq) {
-> +		rc = -EINVAL;
-> +		goto unlock;
-> +	}
-> +
-> +	irq->handler = handler;
-> +	irq->private = private;
-> +
-> +	rc = 0;
-> +	goto unlock;
+> diff --git a/sound/drivers/aloop.c b/sound/drivers/aloop.c
+> index 8c3fbe1..c14e57b 100644
+> --- a/sound/drivers/aloop.c
+> +++ b/sound/drivers/aloop.c
+> @@ -337,7 +337,7 @@ static int loopback_prepare(struct snd_pcm_substream *substream)
+>  
+>  	loopback_timer_stop_sync(dpcm);
+>  
+> -	salign = (snd_pcm_format_width(runtime->format) *
+> +	salign = (snd_pcm_format_physical_width(runtime->format) *
+>  						runtime->channels) / 8;
+>  	bps = salign * runtime->rate;
+>  	if (bps <= 0 || salign <= 0)
+> @@ -562,6 +562,8 @@ static const struct snd_pcm_hardware loopback_pcm_hardware =
+>  			 SNDRV_PCM_INFO_MMAP_VALID | SNDRV_PCM_INFO_PAUSE |
+>  			 SNDRV_PCM_INFO_RESUME),
+>  	.formats =	(SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S16_BE |
+> +			 SNDRV_PCM_FMTBIT_S24_LE | SNDRV_PCM_FMTBIT_S24_BE |
+> +			 SNDRV_PCM_FMTBIT_S24_3LE | SNDRV_PCM_FMTBIT_S24_3BE |
+>  			 SNDRV_PCM_FMTBIT_S32_LE | SNDRV_PCM_FMTBIT_S32_BE |
+>  			 SNDRV_PCM_FMTBIT_FLOAT_LE | SNDRV_PCM_FMTBIT_FLOAT_BE),
+>  	.rates =	SNDRV_PCM_RATE_CONTINUOUS | SNDRV_PCM_RATE_8000_192000,
+> 
 
 
-That goto is too much.
-
-
-> +
-> +unlock:
-> +	mutex_unlock(&ctx->irq_lock);
-> +	return rc;
-> +}
-> +EXPORT_SYMBOL_GPL(ocxl_irq_set_handler);
-> +
->   static irqreturn_t afu_irq_handler(int virq, void *data)
->   {
->   	struct afu_irq *irq = (struct afu_irq *) data;
->   
->   	trace_ocxl_afu_irq_receive(virq);
-> -	if (irq->ev_ctx)
-> -		eventfd_signal(irq->ev_ctx, 1);
-> -	return IRQ_HANDLED;
-> +
-> +	if (irq->handler)
-> +		return irq->handler(irq->private);
-> +
-> +	return IRQ_HANDLED; // Just drop it on the ground
->   }
->   
->   static int setup_afu_irq(struct ocxl_context *ctx, struct afu_irq *irq)
-> @@ -118,6 +149,8 @@ int ocxl_afu_irq_alloc(struct ocxl_context *ctx, int *irq_id)
->   	return rc;
->   }
->   
-> +EXPORT_SYMBOL_GPL(ocxl_afu_irq_alloc);
-
-
-nit: checkpatch doesn't like the empty line between the function and its 
-symbol export. Also true for a few other symbols in that file.
-
-
-
-> diff --git a/include/misc/ocxl.h b/include/misc/ocxl.h
-> index a8fe0ce4ea67..1b48e9d63abb 100644
-> --- a/include/misc/ocxl.h
-> +++ b/include/misc/ocxl.h
-> @@ -161,6 +161,52 @@ int ocxl_context_attach(struct ocxl_context *ctx, u64 amr,
->    */
->   int ocxl_context_detach(struct ocxl_context *ctx);
->   
-> +// AFU IRQs
-> +
-> +/**
-> + * Allocate an IRQ associated with an AFU context
-> + * @ctx: the AFU context
-> + * @irq_id: out, the IRQ ID
-> + *
-> + * Returns 0 on success, negative on failure
-> + */
-> +extern int ocxl_afu_irq_alloc(struct ocxl_context *ctx, int *irq_id);
-> +
-> +/**
-> + * Frees an IRQ associated with an AFU context
-> + * @ctx: the AFU context
-> + * @irq_id: the IRQ ID
-> + *
-> + * Returns 0 on success, negative on failure
-> + */
-> +extern int ocxl_afu_irq_free(struct ocxl_context *ctx, int irq_id);
-> +
-> +/**
-> + * Gets the address of the trigger page for an IRQ
-> + * This can then be provided to an AFU which will write to that
-> + * page to trigger the IRQ.
-> + * @ctx: The AFU context that the IRQ is associated with
-> + * @irq_id: The IRQ ID
-> + *
-> + * returns the trigger page address, or 0 if the IRQ is not valid
-> + */
-> +extern u64 ocxl_afu_irq_get_addr(struct ocxl_context *ctx, int irq_id);
-> +
-> +/**
-> + * Provide a callback to be called when an IRQ is triggered
-> + * @ctx: The AFU context that the IRQ is associated with
-> + * @irq_id: The IRQ ID
-> + * @handler: the callback to be called when the IRQ is triggered
-> + * @free_private: the callback to be called when the IRQ is freed
-
-We should mention free_private can be NULL, in which case it is ignored.
-
-   Fred
-
+-- 
+Jaroslav Kysela <perex@perex.cz>
+Linux Sound Maintainer; ALSA Project; Red Hat, Inc.
