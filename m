@@ -2,99 +2,182 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F134C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:05:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF9E7C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:07:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2168A20830
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:05:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="kM1bDTqX"
+	by mail.kernel.org (Postfix) with ESMTP id 9A3CE20830
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:07:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729665AbfCYQFw (ORCPT
+        id S1729489AbfCYQHF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 12:05:52 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:55708 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728991AbfCYQFu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 12:05:50 -0400
-Received: by mail-it1-f196.google.com with SMTP id z126so14750446itd.5
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 09:05:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=GUFOU35B7Gwb+O4xskamxpAhcSVh6PbVKYXgEQZRO+Q=;
-        b=kM1bDTqX+FdEgontXPPC6ql34nIFdD/piaDRq0c/Cs2rKWiCOhnFJW5Lm5ptAS8SyD
-         6Qs4XdfgxFfd3pxNTH/XqahXowd6jHWotlBI67CMaXhVwVl8UY6GFmxevIaCOzO+cjU9
-         20TOaUpKyKruMyZDdR6fdGeOkkRfkO2oL4nN0S++VXtUvgUxs4VXmgWb4VrT+QnneYyL
-         mxziuRyJqgNr+hAP1/xfh1II/vuMILF8GCi/n0gKg1NW9kvez5xi3ZX3EF3aUdSKTUN/
-         01WES8nwQ2jqrtcVhWbZRw9XKxylLbI9RQPyFWwFmuMuaJfeAVmEIPK7WsITLTH35GkM
-         jvPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=GUFOU35B7Gwb+O4xskamxpAhcSVh6PbVKYXgEQZRO+Q=;
-        b=kgSVYOlJjSV80vGOgk4DRt0EnT6n3q2fYS/bnQ/YEnmi4cljgEmgP+FrZDTC8n/mR5
-         x0N353wpTNkmm+yPNDnhw+mnTQIYydm4peQgvKi1sWjEIo6MqubDGtYBw1MM5+dHcsqJ
-         FxCUHxXFrCnm16y3XGDM+Bks4iCCX+yz2x8R+mCotvqMw8TbbqhFSl7fyMrtWapb+GCh
-         cf0RHb2HiybK27KSx18ZJvAuuiGByaERLfEByQORP79F/ORktV1e0wYGJgTmpiSr1BTn
-         5IjIcw1AcZ2BSp9eku7hHi8vEEXdb3SxRNLZodOkf5nq0JYNS64/jwLKLutAq5Bj4/U8
-         OfNQ==
-X-Gm-Message-State: APjAAAXhQdPmJTFQVlHau+S67bCIqD//P8nJFSwS/acx7GpKSj1iIBJ2
-        fzJqKwVUBjK/uO51Aa02hDMW1dnH8uTw3w==
-X-Google-Smtp-Source: APXvYqxS56INjeKLDTNRuTu+ckQ00rmslbDoij1E90Td+4AqDD384cKRSx3Nevu0YXARPVl4BcYAjw==
-X-Received: by 2002:a02:b55d:: with SMTP id z29mr18751043jaj.49.1553529949326;
-        Mon, 25 Mar 2019 09:05:49 -0700 (PDT)
-Received: from [192.168.1.158] ([216.160.245.98])
-        by smtp.gmail.com with ESMTPSA id s124sm5911042itb.42.2019.03.25.09.05.47
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 25 Mar 2019 09:05:48 -0700 (PDT)
-Subject: Re: [PATCH 1/2] io_uring: fix big-endian compat signal mask handling
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Hannes Reinecke <hare@suse.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        David Hildenbrand <david@redhat.com>,
-        Nikolay Borisov <nborisov@suse.com>,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190325143521.34928-1-arnd@arndb.de>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <a29338b9-60ad-a4da-da9d-a0c522a5b9df@kernel.dk>
-Date:   Mon, 25 Mar 2019 10:05:47 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <20190325143521.34928-1-arnd@arndb.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mon, 25 Mar 2019 12:07:05 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39942 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725788AbfCYQHE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 12:07:04 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id C90EEAFCC;
+        Mon, 25 Mar 2019 16:07:02 +0000 (UTC)
+Date:   Mon, 25 Mar 2019 17:07:02 +0100
+Message-ID: <s5htvfr6iqh.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     <twischer@de.adit-jv.com>
+Cc:     <broonie@kernel.org>, <perex@perex.cz>,
+        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 04/10] ALSA: aloop: Use always spin_lock_irqsave() for cable->lock
+In-Reply-To: <1553529644-5654-5-git-send-email-twischer@de.adit-jv.com>
+References: <1553529644-5654-1-git-send-email-twischer@de.adit-jv.com>
+        <1553529644-5654-5-git-send-email-twischer@de.adit-jv.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/25/19 8:34 AM, Arnd Bergmann wrote:
-> On big-endian architectures, the signal masks are differnet
-> between 32-bit and 64-bit tasks, so we have to use a different
-> function for reading them from user space.
+On Mon, 25 Mar 2019 17:00:38 +0100,
+<twischer@de.adit-jv.com> wrote:
 > 
-> io_cqring_wait() initially got this wrong, and always interprets
-> this as a native structure. This is ok on x86 and most arm64,
-> but not on s390, ppc64be, mips64be, sparc64 and parisc.
+> From: Timo Wischer <twischer@de.adit-jv.com>
+> 
+> to allow the usage of timer callbacks from interrupt context.
+> For example the sound timer.
 
-Thanks Arnd, applied.
+The trigger callback is already irq-disabled.  And, open/close must
+not be irq-disabled OTOH.  So these changes must be superfluous.
 
-Was there a 2/2 patch? I only received this one, 1/2.
 
--- 
-Jens Axboe
+thanks,
 
+Takashi
+
+
+> 
+> Signed-off-by: Timo Wischer <twischer@de.adit-jv.com>
+> ---
+>  sound/drivers/aloop.c | 33 +++++++++++++++++++--------------
+>  1 file changed, 19 insertions(+), 14 deletions(-)
+> 
+> diff --git a/sound/drivers/aloop.c b/sound/drivers/aloop.c
+> index 11e8ed6..c6217c4 100644
+> --- a/sound/drivers/aloop.c
+> +++ b/sound/drivers/aloop.c
+> @@ -272,6 +272,7 @@ static int loopback_trigger(struct snd_pcm_substream *substream, int cmd)
+>  	struct loopback_pcm *dpcm = runtime->private_data;
+>  	struct loopback_cable *cable = dpcm->cable;
+>  	int err = 0, stream = 1 << substream->stream;
+> +	unsigned long flags;
+>  
+>  	switch (cmd) {
+>  	case SNDRV_PCM_TRIGGER_START:
+> @@ -281,39 +282,39 @@ static int loopback_trigger(struct snd_pcm_substream *substream, int cmd)
+>  		dpcm->last_jiffies = jiffies;
+>  		dpcm->pcm_rate_shift = 0;
+>  		dpcm->last_drift = 0;
+> -		spin_lock(&cable->lock);	
+> +		spin_lock_irqsave(&cable->lock, flags);
+>  		cable->running |= stream;
+>  		cable->pause &= ~stream;
+>  		err = loopback_timer_start(dpcm);
+> -		spin_unlock(&cable->lock);
+> +		spin_unlock_irqrestore(&cable->lock, flags);
+>  		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
+>  			loopback_active_notify(dpcm);
+>  		break;
+>  	case SNDRV_PCM_TRIGGER_STOP:
+> -		spin_lock(&cable->lock);	
+> +		spin_lock_irqsave(&cable->lock, flags);
+>  		cable->running &= ~stream;
+>  		cable->pause &= ~stream;
+>  		err = loopback_timer_stop(dpcm);
+> -		spin_unlock(&cable->lock);
+> +		spin_unlock_irqrestore(&cable->lock, flags);
+>  		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
+>  			loopback_active_notify(dpcm);
+>  		break;
+>  	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
+>  	case SNDRV_PCM_TRIGGER_SUSPEND:
+> -		spin_lock(&cable->lock);	
+> +		spin_lock_irqsave(&cable->lock, flags);
+>  		cable->pause |= stream;
+>  		err = loopback_timer_stop(dpcm);
+> -		spin_unlock(&cable->lock);
+> +		spin_unlock_irqrestore(&cable->lock, flags);
+>  		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
+>  			loopback_active_notify(dpcm);
+>  		break;
+>  	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
+>  	case SNDRV_PCM_TRIGGER_RESUME:
+> -		spin_lock(&cable->lock);
+> +		spin_lock_irqsave(&cable->lock, flags);
+>  		dpcm->last_jiffies = jiffies;
+>  		cable->pause &= ~stream;
+>  		err = loopback_timer_start(dpcm);
+> -		spin_unlock(&cable->lock);
+> +		spin_unlock_irqrestore(&cable->lock, flags);
+>  		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
+>  			loopback_active_notify(dpcm);
+>  		break;
+> @@ -557,12 +558,13 @@ static snd_pcm_uframes_t loopback_pointer(struct snd_pcm_substream *substream)
+>  {
+>  	struct snd_pcm_runtime *runtime = substream->runtime;
+>  	struct loopback_pcm *dpcm = runtime->private_data;
+> +	unsigned long flags;
+>  	snd_pcm_uframes_t pos;
+>  
+> -	spin_lock(&dpcm->cable->lock);
+> +	spin_lock_irqsave(&dpcm->cable->lock, flags);
+>  	loopback_pos_update(dpcm->cable);
+>  	pos = dpcm->buf_pos;
+> -	spin_unlock(&dpcm->cable->lock);
+> +	spin_unlock_irqrestore(&dpcm->cable->lock, flags);
+>  	return bytes_to_frames(runtime, pos);
+>  }
+>  
+> @@ -679,10 +681,12 @@ static void free_cable(struct snd_pcm_substream *substream)
+>  	if (!cable)
+>  		return;
+>  	if (cable->streams[!substream->stream]) {
+> +		unsigned long flags;
+> +
+>  		/* other stream is still alive */
+> -		spin_lock_irq(&cable->lock);
+> +		spin_lock_irqsave(&cable->lock, flags);
+>  		cable->streams[substream->stream] = NULL;
+> -		spin_unlock_irq(&cable->lock);
+> +		spin_unlock_irqrestore(&cable->lock, flags);
+>  	} else {
+>  		/* free the cable */
+>  		loopback->cables[substream->number][dev] = NULL;
+> @@ -698,6 +702,7 @@ static int loopback_open(struct snd_pcm_substream *substream)
+>  	struct loopback_cable *cable = NULL;
+>  	int err = 0;
+>  	int dev = get_cable_index(substream);
+> +	unsigned long flags;
+>  
+>  	mutex_lock(&loopback->cable_lock);
+>  	dpcm = kzalloc(sizeof(*dpcm), GFP_KERNEL);
+> @@ -753,9 +758,9 @@ static int loopback_open(struct snd_pcm_substream *substream)
+>  	else
+>  		runtime->hw = cable->hw;
+>  
+> -	spin_lock_irq(&cable->lock);
+> +	spin_lock_irqsave(&cable->lock, flags);
+>  	cable->streams[substream->stream] = dpcm;
+> -	spin_unlock_irq(&cable->lock);
+> +	spin_unlock_irqrestore(&cable->lock, flags);
+>  
+>   unlock:
+>  	if (err < 0) {
+> -- 
+> 2.7.4
+> 
+> 
