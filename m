@@ -2,132 +2,143 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE35DC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:18:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36961C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:19:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A91FF20879
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:18:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEA37205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:19:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eTLci50O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729890AbfCYRSb (ORCPT
+        id S1729977AbfCYRS7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 13:18:31 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:38900 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729106AbfCYRSa (ORCPT
+        Mon, 25 Mar 2019 13:18:59 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:41929 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729036AbfCYRS7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 13:18:30 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 1678C280B03
-Subject: Re: [PATCH 1/3] platform/chrome: wilco_ec: Split core and mailbox
- into separate modules
-To:     Nick Crews <ncrews@chromium.org>, bleung@chromium.org,
-        linux-leds@vger.kernel.org, jacek.anaszewski@gmail.com,
-        pavel@ucw.cz
-Cc:     linux-kernel@vger.kernel.org, dlaurie@chromium.org, sjg@google.com,
-        groeck@google.com, dtor@google.com
-References: <20190321221334.240059-1-ncrews@chromium.org>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <33e0da93-18aa-5ddc-5bdb-a73336392e2a@collabora.com>
-Date:   Mon, 25 Mar 2019 18:18:23 +0100
+        Mon, 25 Mar 2019 13:18:59 -0400
+Received: by mail-wr1-f68.google.com with SMTP id r4so3428013wrq.8;
+        Mon, 25 Mar 2019 10:18:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=EGYeRyQbwsv7/IAsK8IQoUxEHGvbQxq43oiDB0TWesQ=;
+        b=eTLci50OuT/rE0MAs9t5Xkzdakxn286DVyRdNHMIEJ0UFQ65jBfMoi8srb9dCIa+vQ
+         QIifnrzxMU48MjN1CQQyFGg73yGbkOFLEEQEdQjGcnUU3FARZKqUKyW0nYgESXv9ZY4T
+         IYplf0W8O8nDZD69j2JvHFTZfVMm/ui9BWqEq/qncbY4gK+yvr/jJ5t8ojCoj0MnoAb8
+         CpLf5lqvRofRb7p9tNawqLssLF/jbE9z/rOnMsV2ACXnw7HlA6dR37h6Fnvl5arv5IXV
+         HEW3ZZWjfXVAbjqoKNFEsSiPs/Fs3Y2YWUmH4hT0Ak/qWNAAoJKc972K9kqoMEkDh8qs
+         y0rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=EGYeRyQbwsv7/IAsK8IQoUxEHGvbQxq43oiDB0TWesQ=;
+        b=RbT0ZPN80OTpt7FqrkrEZDKcS9kGfo03LfK4+ahY7SopRtmr5+DgxosrRTiG3VZ1wU
+         oi/n3/3ahq0+CrnqZky8+LOwbCDlTHT3FYA5G05N7GHXcsF08a/OSmGkAxnQAwiYHFnM
+         k2+XbpPLsp6EOh4w8+eWb0+AzPYhMbrK2F3nbD+XkkcM3K4KAT5friMvGfXe7ysPKDHW
+         U+wW7PWiTknrbseU7sXsb4Z0Yo2sPrd5MIqlB2HeP+vvLIinUr6xX099ujXTLJUqfFEq
+         7jyDAxW9gFieDJDCrwOCmWhOjKlnzPEv1P0aIEHMxKcN/JoDSGwA9Xg/XaOqu1iISJsf
+         bzuQ==
+X-Gm-Message-State: APjAAAUNZN9JlgfqJhNLHLpMPA2BrBbnVpK8fON78O4epeJBOVeajkgu
+        YbsW5B+SuxhMeqkmFstUaBGj8kLG
+X-Google-Smtp-Source: APXvYqy64hxLpeYu0fGoen2ShHdMuWlccFlmQsT9cJaZWgBV3bydD/Yvy4Rs8TqAvEr66cj1ziffyg==
+X-Received: by 2002:adf:ebce:: with SMTP id v14mr16091098wrn.69.1553534336152;
+        Mon, 25 Mar 2019 10:18:56 -0700 (PDT)
+Received: from [10.67.48.231] ([192.19.223.250])
+        by smtp.googlemail.com with ESMTPSA id h2sm30541418wro.11.2019.03.25.10.18.54
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 25 Mar 2019 10:18:55 -0700 (PDT)
+Subject: Re: [PATCH v2] rtc: brcmstb-waketimer: switch to rtc_time64_to_tm
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-rtc@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org
+References: <20190325171719.31316-1-alexandre.belloni@bootlin.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
+Message-ID: <09706545-8836-d216-5abe-7ad7fd2226a0@gmail.com>
+Date:   Mon, 25 Mar 2019 10:18:47 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <20190321221334.240059-1-ncrews@chromium.org>
+In-Reply-To: <20190325171719.31316-1-alexandre.belloni@bootlin.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nick,
-
-Thanks for the patch, some comments below.
-
-On 21/3/19 23:13, Nick Crews wrote:
-> It was bad design to lump the mailbox interface to the Wilco EC into the
-> same module as the code module, which loads all the subdrivers:
-
-Typo: s/code/core/?
-
-> - This required the sub-drivers to depend on the core, which doesn't
-> really make sense, they should just depend on the mailbox interface.
-> - It caused problems with circular dependencies: An upcoming keyboard
-> backlight driver depends on the mailbox interface, which in the old
-> architecture makes it also depend on the core driver. However, the core
-> driver should be able to detect whether or not the keyboard
-> backlight is available, so the core module depends on the backlight
-> driver. This created a circular dependency.
+On 3/25/19 10:17 AM, Alexandre Belloni wrote:
+> Call the 64bit version of rtc_time_to_tm as the range is enforced by the
+> core.
 > 
-> By splitting up the mailbox interface and core driver into separate
-> modules, it fixes both of these problems.
-> 
-> Signed-off-by: Nick Crews <ncrews@chromium.org>
-> ---
->  drivers/platform/chrome/wilco_ec/Makefile  | 6 ++++--
->  drivers/platform/chrome/wilco_ec/core.c    | 2 +-
->  drivers/platform/chrome/wilco_ec/mailbox.c | 6 ++++++
->  3 files changed, 11 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/platform/chrome/wilco_ec/Makefile b/drivers/platform/chrome/wilco_ec/Makefile
-> index 063e7fb4ea17..9706aeb20ccb 100644
-> --- a/drivers/platform/chrome/wilco_ec/Makefile
-> +++ b/drivers/platform/chrome/wilco_ec/Makefile
-> @@ -1,6 +1,8 @@
->  # SPDX-License-Identifier: GPL-2.0
->  
-> -wilco_ec-objs				:= core.o mailbox.o
-> -obj-$(CONFIG_WILCO_EC)			+= wilco_ec.o
-> +wilco_ec_mailbox-objs			:= mailbox.o
-> +obj-$(CONFIG_WILCO_EC)			+= wilco_ec_mailbox.o
-> +wilco_ec_core-objs			:= core.o
-> +obj-$(CONFIG_WILCO_EC)			+= wilco_ec_core.o
+> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-Odd, same config definition (CONFIG_WILCO_EC) for two different kernel modules?
-
->  wilco_ec_debugfs-objs			:= debugfs.o
->  obj-$(CONFIG_WILCO_EC_DEBUGFS)		+= wilco_ec_debugfs.o
-> diff --git a/drivers/platform/chrome/wilco_ec/core.c b/drivers/platform/chrome/wilco_ec/core.c
-> index 05e1e2be1c91..ece30874f35f 100644
-> --- a/drivers/platform/chrome/wilco_ec/core.c
-> +++ b/drivers/platform/chrome/wilco_ec/core.c
-> @@ -20,7 +20,7 @@
->  
->  #include "../cros_ec_lpc_mec.h"
->  
-> -#define DRV_NAME "wilco-ec"
-> +#define DRV_NAME "wilco-ec-core"
->  
->  static struct resource *wilco_get_resource(struct platform_device *pdev,
->  					   int index)
-> diff --git a/drivers/platform/chrome/wilco_ec/mailbox.c b/drivers/platform/chrome/wilco_ec/mailbox.c
-> index 14355668ddfa..ca6b92ce7e6d 100644
-> --- a/drivers/platform/chrome/wilco_ec/mailbox.c
-> +++ b/drivers/platform/chrome/wilco_ec/mailbox.c
-> @@ -18,6 +18,7 @@
->  #include <linux/delay.h>
->  #include <linux/device.h>
->  #include <linux/io.h>
-> +#include <linux/module.h>
->  #include <linux/platform_data/wilco-ec.h>
->  #include <linux/platform_device.h>
->  
-> @@ -235,3 +236,8 @@ int wilco_ec_mailbox(struct wilco_ec_device *ec, struct wilco_ec_message *msg)
->  
->  }
->  EXPORT_SYMBOL_GPL(wilco_ec_mailbox);
-> +
-> +MODULE_AUTHOR("Nick Crews <ncrews@chromium.org>");
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_DESCRIPTION("ChromeOS Wilco Embedded Controller mailbox interface");
-> +MODULE_ALIAS("platform:wilco-ec-mailbox");
-> 
-
-Thanks,
-- Enric
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
