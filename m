@@ -6,30 +6,31 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28DDDC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:08:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1294C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:08:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0390F2087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:08:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70C5C2087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:08:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730023AbfCYRIL (ORCPT
+        id S1730089AbfCYRIR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 13:08:11 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50900 "EHLO mx1.suse.de"
+        Mon, 25 Mar 2019 13:08:17 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50956 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729489AbfCYRII (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 13:08:08 -0400
+        id S1730030AbfCYRIP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 13:08:15 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id F1EBEAFE1;
-        Mon, 25 Mar 2019 17:08:06 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id 0DB4CB009;
+        Mon, 25 Mar 2019 17:08:13 +0000 (UTC)
 Received: by unicorn.suse.cz (Postfix, from userid 1000)
-        id A07D7E1404; Mon, 25 Mar 2019 18:08:06 +0100 (CET)
-Message-Id: <9f7e273e8dbba11b085dda960f16223cd5d716ed.1553532199.git.mkubecek@suse.cz>
+        id ADBEFE1404; Mon, 25 Mar 2019 18:08:12 +0100 (CET)
+Message-Id: <043188fe4776b9420a11116af5e6bad8925b9ee7.1553532199.git.mkubecek@suse.cz>
 In-Reply-To: <cover.1553532199.git.mkubecek@suse.cz>
 References: <cover.1553532199.git.mkubecek@suse.cz>
 From:   Michal Kubecek <mkubecek@suse.cz>
-Subject: [PATCH net-next v5 04/22] ethtool: move to its own directory
+Subject: [PATCH net-next v5 06/22] ethtool: helper functions for netlink
+ interface
 To:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org
 Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
         Jiri Pirko <jiri@resnulli.us>, Andrew Lunn <andrew@lunn.ch>,
@@ -37,66 +38,356 @@ Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
         John Linville <linville@tuxdriver.com>,
         Stephen Hemminger <stephen@networkplumber.org>,
         linux-kernel@vger.kernel.org
-Date:   Mon, 25 Mar 2019 18:08:06 +0100 (CET)
+Date:   Mon, 25 Mar 2019 18:08:12 +0100 (CET)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ethtool netlink interface is going to be split into multiple files so
-that it will be more convenient to put all of them in a separate directory
-net/ethtool. Start by moving current ethtool.c with ioctl interface into
-this directory and renaming it to ioctl.c.
+Various helpers used by ethtool netlink code.
 
 Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
 ---
- net/Makefile                            | 2 +-
- net/core/Makefile                       | 2 +-
- net/ethtool/Makefile                    | 3 +++
- net/{core/ethtool.c => ethtool/ioctl.c} | 0
- 4 files changed, 5 insertions(+), 2 deletions(-)
- create mode 100644 net/ethtool/Makefile
- rename net/{core/ethtool.c => ethtool/ioctl.c} (100%)
+ include/uapi/linux/ethtool_netlink.h |  11 ++
+ net/ethtool/netlink.c                | 144 +++++++++++++++++++++++++++
+ net/ethtool/netlink.h                | 144 +++++++++++++++++++++++++++
+ 3 files changed, 299 insertions(+)
 
-diff --git a/net/Makefile b/net/Makefile
-index 449fc0b221f8..848303d98d3d 100644
---- a/net/Makefile
-+++ b/net/Makefile
-@@ -13,7 +13,7 @@ obj-$(CONFIG_NET)		+= $(tmp-y)
+diff --git a/include/uapi/linux/ethtool_netlink.h b/include/uapi/linux/ethtool_netlink.h
+index 6aa267451542..59240a2cda56 100644
+--- a/include/uapi/linux/ethtool_netlink.h
++++ b/include/uapi/linux/ethtool_netlink.h
+@@ -18,6 +18,17 @@ enum {
+ 	ETHNL_CMD_MAX = (__ETHNL_CMD_CNT - 1)
+ };
  
- # LLC has to be linked before the files in net/802/
- obj-$(CONFIG_LLC)		+= llc/
--obj-$(CONFIG_NET)		+= ethernet/ 802/ sched/ netlink/ bpf/
-+obj-$(CONFIG_NET)		+= ethernet/ 802/ sched/ netlink/ bpf/ ethtool/
- obj-$(CONFIG_NETFILTER)		+= netfilter/
- obj-$(CONFIG_INET)		+= ipv4/
- obj-$(CONFIG_TLS)		+= tls/
-diff --git a/net/core/Makefile b/net/core/Makefile
-index f97d6254e564..9ddc2f3ecd97 100644
---- a/net/core/Makefile
-+++ b/net/core/Makefile
-@@ -8,7 +8,7 @@ obj-y := sock.o request_sock.o skbuff.o datagram.o stream.o scm.o \
- 
- obj-$(CONFIG_SYSCTL) += sysctl_net_core.o
- 
--obj-y		     += dev.o ethtool.o dev_addr_lists.o dst.o netevent.o \
-+obj-y		     += dev.o dev_addr_lists.o dst.o netevent.o \
- 			neighbour.o rtnetlink.o utils.o link_watch.o filter.o \
- 			sock_diag.o dev_ioctl.o tso.o sock_reuseport.o \
- 			fib_notifier.o xdp.o flow_offload.o
-diff --git a/net/ethtool/Makefile b/net/ethtool/Makefile
-new file mode 100644
-index 000000000000..3ebfab2bca66
---- /dev/null
-+++ b/net/ethtool/Makefile
-@@ -0,0 +1,3 @@
-+# SPDX-License-Identifier: GPL-2.0
++/* device specification */
 +
-+obj-y		+= ioctl.o
-diff --git a/net/core/ethtool.c b/net/ethtool/ioctl.c
-similarity index 100%
-rename from net/core/ethtool.c
-rename to net/ethtool/ioctl.c
++enum {
++	ETHA_DEV_UNSPEC,
++	ETHA_DEV_INDEX,				/* u32 */
++	ETHA_DEV_NAME,				/* string */
++
++	__ETHA_DEV_CNT,
++	ETHA_DEV_MAX = (__ETHA_DEV_CNT - 1)
++};
++
+ /* generic netlink info */
+ #define ETHTOOL_GENL_NAME "ethtool"
+ #define ETHTOOL_GENL_VERSION 1
+diff --git a/net/ethtool/netlink.c b/net/ethtool/netlink.c
+index 85dd6dac71a2..cc6829ba4331 100644
+--- a/net/ethtool/netlink.c
++++ b/net/ethtool/netlink.c
+@@ -1,8 +1,152 @@
+ // SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note
+ 
++#include <net/sock.h>
+ #include <linux/ethtool_netlink.h>
+ #include "netlink.h"
+ 
++static const struct nla_policy dev_policy[ETHA_DEV_MAX + 1] = {
++	[ETHA_DEV_UNSPEC]	= { .type = NLA_REJECT },
++	[ETHA_DEV_INDEX]	= { .type = NLA_U32 },
++	[ETHA_DEV_NAME]		= { .type = NLA_NUL_STRING,
++				    .len = IFNAMSIZ - 1 },
++};
++
++/**
++ * ethnl_dev_get() - get device identified by nested attribute
++ * @info: genetlink info (also used for extack error reporting)
++ * @nest: nest attribute with device identification
++ *
++ * Finds the network device identified by ETHA_DEV_INDEX (ifindex) or
++ * ETHA_DEV_NAME (name) attributes in a nested attribute @nest. If both
++ * are supplied, they must identify the same device. If successful, takes
++ * a reference to the device which is to be released by caller.
++ *
++ * Return: pointer to the device if successful, ERR_PTR(err) on error
++ */
++struct net_device *ethnl_dev_get(struct genl_info *info, struct nlattr *nest)
++{
++	struct net *net = genl_info_net(info);
++	struct nlattr *tb[ETHA_DEV_MAX + 1];
++	struct net_device *dev;
++	int ret;
++
++	if (!nest) {
++		ETHNL_SET_ERRMSG(info,
++				 "mandatory device identification missing");
++		return ERR_PTR(-EINVAL);
++	}
++	ret = nla_parse_nested_strict(tb, ETHA_DEV_MAX, nest, dev_policy,
++				      info->extack);
++	if (ret < 0)
++		return ERR_PTR(ret);
++
++	if (tb[ETHA_DEV_INDEX]) {
++		dev = dev_get_by_index(net, nla_get_u32(tb[ETHA_DEV_INDEX]));
++		if (!dev)
++			return ERR_PTR(-ENODEV);
++		/* if both ifindex and ifname are passed, they must match */
++		if (tb[ETHA_DEV_NAME]) {
++			const char *nl_name = nla_data(tb[ETHA_DEV_NAME]);
++
++			if (strncmp(dev->name, nl_name, IFNAMSIZ)) {
++				dev_put(dev);
++				ETHNL_SET_ERRMSG(info,
++						 "ifindex and ifname do not match");
++				return ERR_PTR(-ENODEV);
++			}
++		}
++		return dev;
++	} else if (tb[ETHA_DEV_NAME]) {
++		dev = dev_get_by_name(net, nla_data(tb[ETHA_DEV_NAME]));
++		if (!dev)
++			return ERR_PTR(-ENODEV);
++	} else {
++		ETHNL_SET_ERRMSG(info, "either ifindex or ifname required");
++		return ERR_PTR(-EINVAL);
++	}
++
++	if (!netif_device_present(dev)) {
++		dev_put(dev);
++		ETHNL_SET_ERRMSG(info, "device not present");
++		return ERR_PTR(-ENODEV);
++	}
++	return dev;
++}
++
++/**
++ * ethnl_fill_dev() - Put device identification nest into a message
++ * @msg:      skb with the message
++ * @dev:      network device to describe
++ * @attrtype: attribute type to use for the nest
++ *
++ * Create a nested attribute with attributes describing given network device.
++ * Clean up on error.
++ *
++ * Return: 0 on success, error value (-EMSGSIZE only) on error
++ */
++int ethnl_fill_dev(struct sk_buff *msg, struct net_device *dev, u16 attrtype)
++{
++	struct nlattr *nest;
++	int ret = -EMSGSIZE;
++
++	nest = ethnl_nest_start(msg, attrtype);
++	if (!nest)
++		return -EMSGSIZE;
++
++	if (nla_put_u32(msg, ETHA_DEV_INDEX, (u32)dev->ifindex))
++		goto err;
++	if (nla_put_string(msg, ETHA_DEV_NAME, dev->name))
++		goto err;
++
++	nla_nest_end(msg, nest);
++	return 0;
++err:
++	nla_nest_cancel(msg, nest);
++	return ret;
++}
++
++/**
++ * ethnl_reply_init() - Create skb for a reply and fill device identification
++ * @payload: payload length (without netlink and genetlink header)
++ * @dev:     device the reply is about (may be null)
++ * @cmd:     ETHNL_CMD_* command for reply
++ * @info:    genetlink info of the received packet we respond to
++ * @ehdrp:   place to store payload pointer returned by genlmsg_new()
++ *
++ * Return: pointer to allocated skb on success, NULL on error
++ */
++struct sk_buff *ethnl_reply_init(size_t payload, struct net_device *dev, u8 cmd,
++				 u16 dev_attrtype, struct genl_info *info,
++				 void **ehdrp)
++{
++	struct sk_buff *rskb;
++	void *ehdr;
++
++	rskb = genlmsg_new(payload, GFP_KERNEL);
++	if (!rskb) {
++		ETHNL_SET_ERRMSG(info,
++				 "failed to allocate reply message");
++		return NULL;
++	}
++
++	ehdr = genlmsg_put_reply(rskb, info, &ethtool_genl_family, 0, cmd);
++	if (!ehdr)
++		goto err;
++	if (ehdrp)
++		*ehdrp = ehdr;
++	if (dev) {
++		int ret = ethnl_fill_dev(rskb, dev, dev_attrtype);
++
++		if (ret < 0)
++			goto err;
++	}
++
++	return rskb;
++err:
++	nlmsg_free(rskb);
++	return NULL;
++}
++
+ /* genetlink setup */
+ 
+ static const struct genl_ops ethtool_genl_ops[] = {
+diff --git a/net/ethtool/netlink.h b/net/ethtool/netlink.h
+index 63063b582ca2..db90d95410b1 100644
+--- a/net/ethtool/netlink.h
++++ b/net/ethtool/netlink.h
+@@ -6,7 +6,151 @@
+ #include <linux/ethtool_netlink.h>
+ #include <linux/netdevice.h>
+ #include <net/genetlink.h>
++#include <net/sock.h>
++
++#define ETHNL_SET_ERRMSG(info, msg) \
++	do { if (info) GENL_SET_ERR_MSG(info, msg); } while (0)
+ 
+ extern struct genl_family ethtool_genl_family;
+ 
++struct net_device *ethnl_dev_get(struct genl_info *info, struct nlattr *nest);
++int ethnl_fill_dev(struct sk_buff *msg, struct net_device *dev, u16 attrtype);
++
++struct sk_buff *ethnl_reply_init(size_t payload, struct net_device *dev, u8 cmd,
++				 u16 dev_attrtype, struct genl_info *info,
++				 void **ehdrp);
++
++static inline int ethnl_str_size(const char *s)
++{
++	return nla_total_size(strlen(s) + 1);
++}
++
++static inline int ethnl_str_ifne_size(const char *s)
++{
++	return s[0] ? ethnl_str_size(s) : 0;
++}
++
++static inline int ethnl_put_str_ifne(struct sk_buff *skb, int attrtype,
++				     const char *s)
++{
++	if (!s[0])
++		return 0;
++	return nla_put_string(skb, attrtype, s);
++}
++
++static inline struct nlattr *ethnl_nest_start(struct sk_buff *skb,
++					      int attrtype)
++{
++	return nla_nest_start(skb, attrtype | NLA_F_NESTED);
++}
++
++static inline int ethnlmsg_parse(const struct nlmsghdr *nlh,
++				 struct nlattr *tb[], int maxtype,
++				 const struct nla_policy *policy,
++				 struct genl_info *info)
++{
++	return nlmsg_parse_strict(nlh, GENL_HDRLEN, tb, maxtype, policy,
++				  info ? info->extack : NULL);
++}
++
++/* ethnl_update_* return true if the value is changed */
++static inline bool ethnl_update_u32(u32 *dst, struct nlattr *attr)
++{
++	u32 val;
++
++	if (!attr)
++		return false;
++	val = nla_get_u32(attr);
++	if (*dst == val)
++		return false;
++
++	*dst = val;
++	return true;
++}
++
++static inline bool ethnl_update_u8(u8 *dst, struct nlattr *attr)
++{
++	u8 val;
++
++	if (!attr)
++		return false;
++	val = nla_get_u8(attr);
++	if (*dst == val)
++		return false;
++
++	*dst = val;
++	return true;
++}
++
++/* update u32 value used as bool from NLA_U8 */
++static inline bool ethnl_update_bool32(u32 *dst, struct nlattr *attr)
++{
++	u8 val;
++
++	if (!attr)
++		return false;
++	val = !!nla_get_u8(attr);
++	if (!!*dst == val)
++		return false;
++
++	*dst = val;
++	return true;
++}
++
++static inline bool ethnl_update_binary(u8 *dst, unsigned int len,
++				       struct nlattr *attr)
++{
++	if (!attr)
++		return false;
++	if (nla_len(attr) < len)
++		len = nla_len(attr);
++	if (!memcmp(dst, nla_data(attr), len))
++		return false;
++
++	memcpy(dst, nla_data(attr), len);
++	return true;
++}
++
++static inline bool ethnl_update_bitfield32(u32 *dst, struct nlattr *attr)
++{
++	struct nla_bitfield32 change;
++	u32 newval;
++
++	if (!attr)
++		return false;
++	change = nla_get_bitfield32(attr);
++	newval = (*dst & ~change.selector) | (change.value & change.selector);
++	if (*dst == newval)
++		return false;
++
++	*dst = newval;
++	return true;
++}
++
++static inline void warn_partial_info(struct genl_info *info)
++{
++	ETHNL_SET_ERRMSG(info, "not all requested data could be retrieved");
++}
++
++/* Check user privileges explicitly to allow finer access control based on
++ * context of the request or hiding part of the information from unprivileged
++ * users
++ */
++static inline bool ethnl_is_privileged(struct sk_buff *skb)
++{
++	struct net *net = sock_net(skb->sk);
++
++	return netlink_ns_capable(skb, net->user_ns, CAP_NET_ADMIN);
++}
++
++/* total size of ETHA_*_DEV nested attribute; this is an upper estimate so that
++ * we do not need to hold RTNL longer than necessary to prevent rename between
++ * estimating the size and composing the message
++ */
++static inline unsigned int dev_ident_size(void)
++{
++	return nla_total_size(nla_total_size(sizeof(u32)) +
++			      nla_total_size(IFNAMSIZ));
++}
++
+ #endif /* _NET_ETHTOOL_NETLINK_H */
 -- 
 2.21.0
 
