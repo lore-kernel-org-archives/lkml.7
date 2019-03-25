@@ -2,491 +2,120 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD889C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 15:49:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E183C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 15:51:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 773082087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 15:49:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F08BC20896
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 15:51:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553529085;
+	bh=h2lbgB6xmFtCpQqsLhpRNTsIO/EMUe89EXhRz+pi9rA=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=2LAU/oeLgd/FqVjF1qW52ZL41C6FEXwuWsBnGdcyNjLw5iIvc+tGhhJGzQWvQsxIM
+	 LPXab39MaUzsrX8fX9FYOSBaFxt0gRcz+ENine0CsB2jzmpq46b/v5WbkOvvs0Evs9
+	 KfJ+dae9toul9buMQw/Nj2rNI4mniiqXQruuFLKU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729348AbfCYPtd (ORCPT
+        id S1729450AbfCYPvX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 11:49:33 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:56660 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728563AbfCYPtc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 11:49:32 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2PFctTF093703
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 11:49:30 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rf1dxsxc2-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 11:49:29 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <fbarrat@linux.ibm.com>;
-        Mon, 25 Mar 2019 15:49:27 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 25 Mar 2019 15:49:23 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2PFnMuR28377146
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 25 Mar 2019 15:49:22 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1B8BCA405C;
-        Mon, 25 Mar 2019 15:49:22 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9BCC8A405F;
-        Mon, 25 Mar 2019 15:49:21 +0000 (GMT)
-Received: from [9.145.37.149] (unknown [9.145.37.149])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 25 Mar 2019 15:49:21 +0000 (GMT)
-Subject: Re: [PATCH v3 7/7] ocxl: Provide global MMIO accessors for external
- drivers
-To:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
-Cc:     Greg Kurz <groug@kaod.org>,
-        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
+        Mon, 25 Mar 2019 11:51:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50762 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725795AbfCYPvX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 11:51:23 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F385120896;
+        Mon, 25 Mar 2019 15:51:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553529082;
+        bh=h2lbgB6xmFtCpQqsLhpRNTsIO/EMUe89EXhRz+pi9rA=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=1rL7bYKQPCGWvoNzUFbAzLqCvBjMm7RzZjjR+Nxwa4BKHahMoxeeR7MBBnvZywJ3G
+         Ltg4fw70pk9ja+FpwR3h8jYIJNNH4nSf6Tm9l4pP3dFTKRrk6YWPlile5EiICQ5Xy8
+         nTl6w+Y4nhUvDKhx9c2D3BUrvnjHDjJpXfCYktCI=
+Subject: Re: [PATCH] tools: usb: usbip: adding support for older kernel
+ versions
+To:     Brian Norris <briannorris@chromium.org>
+Cc:     David Valleau <valleau@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux USB Mailing List <linux-usb@vger.kernel.org>,
+        Michael Grzeschik <m.grzeschik@pengutronix.de>,
+        Valentina Manea <valentina.manea.m@gmail.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <20190320053448.2098-1-alastair@au1.ibm.com>
- <20190325054438.15022-1-alastair@au1.ibm.com>
- <20190325054438.15022-8-alastair@au1.ibm.com>
-From:   Frederic Barrat <fbarrat@linux.ibm.com>
-Date:   Mon, 25 Mar 2019 16:49:21 +0100
+        Sasha Levin <alexander.levin@microsoft.com>,
+        shuah <shuah@kernel.org>
+References: <20190306214730.6545-1-valleau@chromium.org>
+ <44e151af-b6c4-d0af-3ef1-a5632d079915@kernel.org>
+ <CA+ASDXMcnEfZzTjDGsDbZxX2Xknv6dt3H-3kN79WdKFzif2zsA@mail.gmail.com>
+From:   shuah <shuah@kernel.org>
+Message-ID: <caee30e2-ddc4-0076-907e-558dbcfe7c52@kernel.org>
+Date:   Mon, 25 Mar 2019 09:51:21 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <20190325054438.15022-8-alastair@au1.ibm.com>
+In-Reply-To: <CA+ASDXMcnEfZzTjDGsDbZxX2Xknv6dt3H-3kN79WdKFzif2zsA@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19032515-0016-0000-0000-00000266EF0D
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19032515-0017-0000-0000-000032C21FC3
-Message-Id: <baa18ac3-9c76-dd54-4774-380c6ed55663@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-25_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903250116
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Le 25/03/2019 à 06:44, Alastair D'Silva a écrit :
-> From: Alastair D'Silva <alastair@d-silva.org>
+On 3/18/19 12:23 PM, Brian Norris wrote:
+> On Sat, Mar 16, 2019 at 4:40 PM shuah <shuah@kernel.org> wrote:
+>> usbip tool is tied to the kernel version. This is reason why it is
+>> co-located with the usbip driver in the kernel sources. This is not
+>> a typical tool scenario to be able to use new tool on old kernels.
+>>
+>> I would like to understand the reasons for wanting to run new tool on
+>> old kernels.
 > 
-> External drivers that communicate via OpenCAPI will need to make
-> MMIO calls to interact with the devices.
+> On Chromium OS, we ship more or less the same user space for a variety
+> of systems, but not all of those run the same kernel. That's not
+> exactly a novel concept -- many good tools are written such that they
+> degrade gracefully when running with reduced feature sets (e.g., older
+> kernels). While we are working on reducing the divergence and number
+> of kernels we ship, it's currently a fact of life that we have to
+> support multiple target kernel versions.
+
+Thanks for the context for this change.
+
 > 
-> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> Reviewed-by: Greg Kurz <groug@kaod.org>
-> ---
-
-
-Acked-by: Frederic Barrat <fbarrat@linux.ibm.com>
-
-
->   drivers/misc/ocxl/Makefile |   2 +-
->   drivers/misc/ocxl/mmio.c   | 234 +++++++++++++++++++++++++++++++++++++
->   include/misc/ocxl.h        | 110 +++++++++++++++++
->   3 files changed, 345 insertions(+), 1 deletion(-)
->   create mode 100644 drivers/misc/ocxl/mmio.c
-> 
-> diff --git a/drivers/misc/ocxl/Makefile b/drivers/misc/ocxl/Makefile
-> index bc4e39bfda7b..d07d1bb8e8d4 100644
-> --- a/drivers/misc/ocxl/Makefile
-> +++ b/drivers/misc/ocxl/Makefile
-> @@ -1,7 +1,7 @@
->   # SPDX-License-Identifier: GPL-2.0+
->   ccflags-$(CONFIG_PPC_WERROR)	+= -Werror
->   
-> -ocxl-y				+= main.o pci.o config.o file.o pasid.o
-> +ocxl-y				+= main.o pci.o config.o file.o pasid.o mmio.o
->   ocxl-y				+= link.o context.o afu_irq.o sysfs.o trace.o
->   ocxl-y				+= core.o
->   obj-$(CONFIG_OCXL)		+= ocxl.o
-> diff --git a/drivers/misc/ocxl/mmio.c b/drivers/misc/ocxl/mmio.c
-> new file mode 100644
-> index 000000000000..aae713db4ebe
-> --- /dev/null
-> +++ b/drivers/misc/ocxl/mmio.c
-> @@ -0,0 +1,234 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +// Copyright 2019 IBM Corp.
-> +#include <linux/sched/mm.h>
-> +#include "trace.h"
-> +#include "ocxl_internal.h"
-> +
-> +int ocxl_global_mmio_read32(struct ocxl_afu *afu, size_t offset,
-> +				enum ocxl_endian endian, u32 *val)
-> +{
-> +	if (offset > afu->config.global_mmio_size - 4)
-> +		return -EINVAL;
-> +
-> +#ifdef __BIG_ENDIAN__
-> +	if (endian == OCXL_HOST_ENDIAN)
-> +		endian = OCXL_BIG_ENDIAN;
-> +#endif
-> +
-> +	switch (endian) {
-> +	case OCXL_BIG_ENDIAN:
-> +		*val = readl_be((char *)afu->global_mmio_ptr + offset);
-> +		break;
-> +
-> +	default:
-> +		*val = readl((char *)afu->global_mmio_ptr + offset);
-> +		break;
-> +	}
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(ocxl_global_mmio_read32);
-> +
-> +int ocxl_global_mmio_read64(struct ocxl_afu *afu, size_t offset,
-> +				enum ocxl_endian endian, u64 *val)
-> +{
-> +	if (offset > afu->config.global_mmio_size - 8)
-> +		return -EINVAL;
-> +
-> +#ifdef __BIG_ENDIAN__
-> +	if (endian == OCXL_HOST_ENDIAN)
-> +		endian = OCXL_BIG_ENDIAN;
-> +#endif
-> +
-> +	switch (endian) {
-> +	case OCXL_BIG_ENDIAN:
-> +		*val = readq_be((char *)afu->global_mmio_ptr + offset);
-> +		break;
-> +
-> +	default:
-> +		*val = readq((char *)afu->global_mmio_ptr + offset);
-> +		break;
-> +	}
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(ocxl_global_mmio_read64);
-> +
-> +int ocxl_global_mmio_write32(struct ocxl_afu *afu, size_t offset,
-> +				enum ocxl_endian endian, u32 val)
-> +{
-> +	if (offset > afu->config.global_mmio_size - 4)
-> +		return -EINVAL;
-> +
-> +#ifdef __BIG_ENDIAN__
-> +	if (endian == OCXL_HOST_ENDIAN)
-> +		endian = OCXL_BIG_ENDIAN;
-> +#endif
-> +
-> +	switch (endian) {
-> +	case OCXL_BIG_ENDIAN:
-> +		writel_be(val, (char *)afu->global_mmio_ptr + offset);
-> +		break;
-> +
-> +	default:
-> +		writel(val, (char *)afu->global_mmio_ptr + offset);
-> +		break;
-> +	}
-> +
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(ocxl_global_mmio_write32);
-> +
-> +int ocxl_global_mmio_write64(struct ocxl_afu *afu, size_t offset,
-> +				enum ocxl_endian endian, u64 val)
-> +{
-> +	if (offset > afu->config.global_mmio_size - 8)
-> +		return -EINVAL;
-> +
-> +#ifdef __BIG_ENDIAN__
-> +	if (endian == OCXL_HOST_ENDIAN)
-> +		endian = OCXL_BIG_ENDIAN;
-> +#endif
-> +
-> +	switch (endian) {
-> +	case OCXL_BIG_ENDIAN:
-> +		writeq_be(val, (char *)afu->global_mmio_ptr + offset);
-> +		break;
-> +
-> +	default:
-> +		writeq(val, (char *)afu->global_mmio_ptr + offset);
-> +		break;
-> +	}
-> +
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(ocxl_global_mmio_write64);
-> +
-> +int ocxl_global_mmio_set32(struct ocxl_afu *afu, size_t offset,
-> +				enum ocxl_endian endian, u32 mask)
-> +{
-> +	u32 tmp;
-> +
-> +	if (offset > afu->config.global_mmio_size - 4)
-> +		return -EINVAL;
-> +
-> +#ifdef __BIG_ENDIAN__
-> +	if (endian == OCXL_HOST_ENDIAN)
-> +		endian = OCXL_BIG_ENDIAN;
-> +#endif
-> +
-> +	switch (endian) {
-> +	case OCXL_BIG_ENDIAN:
-> +		tmp = readl_be((char *)afu->global_mmio_ptr + offset);
-> +		tmp |= mask;
-> +		writel_be(tmp, (char *)afu->global_mmio_ptr + offset);
-> +		break;
-> +
-> +	default:
-> +		tmp = readl((char *)afu->global_mmio_ptr + offset);
-> +		tmp |= mask;
-> +		writel(tmp, (char *)afu->global_mmio_ptr + offset);
-> +		break;
-> +	}
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(ocxl_global_mmio_set32);
-> +
-> +int ocxl_global_mmio_set64(struct ocxl_afu *afu, size_t offset,
-> +				enum ocxl_endian endian, u64 mask)
-> +{
-> +	u64 tmp;
-> +
-> +	if (offset > afu->config.global_mmio_size - 8)
-> +		return -EINVAL;
-> +
-> +#ifdef __BIG_ENDIAN__
-> +	if (endian == OCXL_HOST_ENDIAN)
-> +		endian = OCXL_BIG_ENDIAN;
-> +#endif
-> +
-> +	switch (endian) {
-> +	case OCXL_BIG_ENDIAN:
-> +		tmp = readq_be((char *)afu->global_mmio_ptr + offset);
-> +		tmp |= mask;
-> +		writeq_be(tmp, (char *)afu->global_mmio_ptr + offset);
-> +		break;
-> +
-> +	default:
-> +		tmp = readq((char *)afu->global_mmio_ptr + offset);
-> +		tmp |= mask;
-> +		writeq(tmp, (char *)afu->global_mmio_ptr + offset);
-> +		break;
-> +	}
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(ocxl_global_mmio_set64);
-> +
-> +int ocxl_global_mmio_clear32(struct ocxl_afu *afu, size_t offset,
-> +				enum ocxl_endian endian, u32 mask)
-> +{
-> +	u32 tmp;
-> +
-> +	if (offset > afu->config.global_mmio_size - 4)
-> +		return -EINVAL;
-> +
-> +#ifdef __BIG_ENDIAN__
-> +	if (endian == OCXL_HOST_ENDIAN)
-> +		endian = OCXL_BIG_ENDIAN;
-> +#endif
-> +
-> +	switch (endian) {
-> +	case OCXL_BIG_ENDIAN:
-> +		tmp = readl_be((char *)afu->global_mmio_ptr + offset);
-> +		tmp &= ~mask;
-> +		writel_be(tmp, (char *)afu->global_mmio_ptr + offset);
-> +		break;
-> +
-> +	default:
-> +		tmp = readl((char *)afu->global_mmio_ptr + offset);
-> +		tmp &= ~mask;
-> +		writel(tmp, (char *)afu->global_mmio_ptr + offset);
-> +		break;
-> +	}
-> +
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(ocxl_global_mmio_clear32);
-> +
-> +int ocxl_global_mmio_clear64(struct ocxl_afu *afu, size_t offset,
-> +				enum ocxl_endian endian, u64 mask)
-> +{
-> +	u64 tmp;
-> +
-> +	if (offset > afu->config.global_mmio_size - 8)
-> +		return -EINVAL;
-> +
-> +#ifdef __BIG_ENDIAN__
-> +	if (endian == OCXL_HOST_ENDIAN)
-> +		endian = OCXL_BIG_ENDIAN;
-> +#endif
-> +
-> +	switch (endian) {
-> +	case OCXL_BIG_ENDIAN:
-> +		tmp = readq_be((char *)afu->global_mmio_ptr + offset);
-> +		tmp &= ~mask;
-> +		writeq_be(tmp, (char *)afu->global_mmio_ptr + offset);
-> +		break;
-> +
-> +	default:
-> +		tmp = readq((char *)afu->global_mmio_ptr + offset);
-> +		tmp &= ~mask;
-> +		writeq(tmp, (char *)afu->global_mmio_ptr + offset);
-> +		break;
-> +	}
-> +
-> +	writeq(tmp, (char *)afu->global_mmio_ptr + offset);
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(ocxl_global_mmio_clear64);
-> diff --git a/include/misc/ocxl.h b/include/misc/ocxl.h
-> index 1b48e9d63abb..e0742c00fb72 100644
-> --- a/include/misc/ocxl.h
-> +++ b/include/misc/ocxl.h
-> @@ -45,6 +45,12 @@ struct ocxl_fn_config {
->   	s8 max_afu_index;
->   };
->   
-> +enum ocxl_endian {
-> +	OCXL_BIG_ENDIAN = 0,    /**< AFU data is big-endian */
-> +	OCXL_LITTLE_ENDIAN = 1, /**< AFU data is little-endian */
-> +	OCXL_HOST_ENDIAN = 2,   /**< AFU data is the same endianness as the host */
-> +};
-> +
->   // These are opaque outside the ocxl driver
->   struct ocxl_afu;
->   struct ocxl_fn;
-> @@ -236,6 +242,110 @@ void ocxl_afu_set_private(struct ocxl_afu *afu, void *private);
->    */
->   void *ocxl_afu_get_private(struct ocxl_afu *dev);
->   
-> +// Global MMIO
-> +/**
-> + * Read a 32 bit value from global MMIO
-> + *
-> + * @afu: The AFU
-> + * @offset: The Offset from the start of MMIO
-> + * @endian: the endianness that the MMIO data is in
-> + * @val: returns the value
-> + *
-> + * Returns 0 for success, negative on error
-> + */
-> +int ocxl_global_mmio_read32(struct ocxl_afu *afu, size_t offset,
-> +				enum ocxl_endian endian, u32 *val);
-> +
-> +/**
-> + * Read a 64 bit value from global MMIO
-> + *
-> + * @afu: The AFU
-> + * @offset: The Offset from the start of MMIO
-> + * @endian: the endianness that the MMIO data is in
-> + * @val: returns the value
-> + *
-> + * Returns 0 for success, negative on error
-> + */
-> +int ocxl_global_mmio_read64(struct ocxl_afu *afu, size_t offset,
-> +				enum ocxl_endian endian, u64 *val);
-> +
-> +/**
-> + * Write a 32 bit value to global MMIO
-> + *
-> + * @afu: The AFU
-> + * @offset: The Offset from the start of MMIO
-> + * @endian: the endianness that the MMIO data is in
-> + * @val: The value to write
-> + *
-> + * Returns 0 for success, negative on error
-> + */
-> +int ocxl_global_mmio_write32(struct ocxl_afu *afu, size_t offset,
-> +				enum ocxl_endian endian, u32 val);
-> +
-> +/**
-> + * Write a 64 bit value to global MMIO
-> + *
-> + * @afu: The AFU
-> + * @offset: The Offset from the start of MMIO
-> + * @endian: the endianness that the MMIO data is in
-> + * @val: The value to write
-> + *
-> + * Returns 0 for success, negative on error
-> + */
-> +int ocxl_global_mmio_write64(struct ocxl_afu *afu, size_t offset,
-> +				enum ocxl_endian endian, u64 val);
-> +
-> +/**
-> + * Set bits in a 32 bit global MMIO register
-> + *
-> + * @afu: The AFU
-> + * @offset: The Offset from the start of MMIO
-> + * @endian: the endianness that the MMIO data is in
-> + * @mask: a mask of the bits to set
-> + *
-> + * Returns 0 for success, negative on error
-> + */
-> +int ocxl_global_mmio_set32(struct ocxl_afu *afu, size_t offset,
-> +				enum ocxl_endian endian, u32 mask);
-> +
-> +/**
-> + * Set bits in a 64 bit global MMIO register
-> + *
-> + * @afu: The AFU
-> + * @offset: The Offset from the start of MMIO
-> + * @endian: the endianness that the MMIO data is in
-> + * @mask: a mask of the bits to set
-> + *
-> + * Returns 0 for success, negative on error
-> + */
-> +int ocxl_global_mmio_set64(struct ocxl_afu *afu, size_t offset,
-> +				enum ocxl_endian endian, u64 mask);
-> +
-> +/**
-> + * Set bits in a 32 bit global MMIO register
-> + *
-> + * @afu: The AFU
-> + * @offset: The Offset from the start of MMIO
-> + * @endian: the endianness that the MMIO data is in
-> + * @mask: a mask of the bits to set
-> + *
-> + * Returns 0 for success, negative on error
-> + */
-> +int ocxl_global_mmio_clear32(struct ocxl_afu *afu, size_t offset,
-> +				enum ocxl_endian endian, u32 mask);
-> +
-> +/**
-> + * Set bits in a 64 bit global MMIO register
-> + *
-> + * @afu: The AFU
-> + * @offset: The Offset from the start of MMIO
-> + * @endian: the endianness that the MMIO data is in
-> + * @mask: a mask of the bits to set
-> + *
-> + * Returns 0 for success, negative on error
-> + */
-> +int ocxl_global_mmio_clear64(struct ocxl_afu *afu, size_t offset,
-> +				enum ocxl_endian endian, u64 mask);
->   
->   // Functions left here are for compatibility with the cxlflash driver
->   
+> Is there a fundamental problem with VHCI such that it doesn't have a
+> stable ABI that tools can be written against?
 > 
 
+In general the ABI is stable.
+
++#define V3_18_STATUS_HEADER "prt sta spd bus dev socket 
+local_busid"
+
+What's your 3.18 kernel version? I think you are missing security
+fixes that prevent socket address leak in the status file.
+
++#define V4_4_STATUS_HEADER "prt sta spd dev      sockfd local_busid"
++#define V4_14_STATUS_HEADER "hub port sta spd dev      sockfd local_busid"
+
+The difference here is the high speed support. Let's find a better
+way to fix this than hard-coding kernel revisions in the tool.
+
+> If stability is possible but you just don't care, then I guess we can
+> fork our own version...
+> 
+> Or even worse, we could build N copies of usbip for N kernels. But we
+> don't do that for any other user space component.
+> 
+
+It might be easier to build N versions than maintaining the fork :)
+
+In any case, let's find ways to fix the problem with a constructive
+approach.
+
+thanks,
+-- Shuah
