@@ -2,99 +2,93 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4427FC10F03
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 15:04:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95F95C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 15:04:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 015FE2082C
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 15:04:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="to1WT3ty"
+	by mail.kernel.org (Postfix) with ESMTP id 70D612082C
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 15:04:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729250AbfCYPEE (ORCPT
+        id S1729427AbfCYPEy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 11:04:04 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:39546 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726166AbfCYPEE (ORCPT
+        Mon, 25 Mar 2019 11:04:54 -0400
+Received: from imap1.codethink.co.uk ([176.9.8.82]:34005 "EHLO
+        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726166AbfCYPEy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 11:04:04 -0400
-Received: by mail-pg1-f195.google.com with SMTP id k3so3025962pga.6;
-        Mon, 25 Mar 2019 08:04:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MIjPQMEfFNnmxk2sYVSDBV/lHK9Z5CZQPf5ScXHK5UE=;
-        b=to1WT3tyTEQ2fO+l4y5negMx9c9JuPTWVqDx7+A63y3E2+lzzJbKsyRnTsWOgBttq4
-         5uPZDISOrvmMd/+ATJ6Y+v6tf+mNGjyuCRlUUPZreILU5j2k5+1yFtLK7ijDJsCPLaST
-         iVz1ClHFb+icEIE8YkgmnWlTrSKge9C8IXnanMoeUHs6w01dkP8jbnEk6KZyYF3JJMrc
-         4ONPMccBmBPxzAuoVSLZkik+gcmR6rTyBH7UEWN6pRz7C7C9+NgWCHGdLa8dmG22An0r
-         XU/fgHy/JqkBQ/5FMY51Za82ID7FuMhbFBFkT/WbsTbtyRHZE6iX6+5N69/Iw9CNDK8w
-         pxZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MIjPQMEfFNnmxk2sYVSDBV/lHK9Z5CZQPf5ScXHK5UE=;
-        b=ph88LuVWLbkA3HaS/RqrEPtKDYnxB2uxiaWeMW5sef10KVcNsRSfU3C1grkkJ30ecE
-         uLpxLDn4u2RayLAxYnh6/UNpwVpunT+aVNz6+4YQxmR29iBxjuDij/thY0Rpp/SGyA7H
-         pWJO1q1VxIOJuoYh88VvWoRKIJsELI+KnuiaS1Z/P4ULR7A54Hpi+eIn9UeXI0JhH5FE
-         sQa2dmqKL8Nojrw+EO76qUHQRPh8CQ5JpjAEDWyR41bxQ6leN72aY6RSAbJGJsPthuFd
-         97bCHf/fP+vj0SpqaJZIVC5mwZ0Q+qWdT9QL+tYIkC0A5ZYuzcB5zEHhCg1Js+Qxpkuv
-         /R4g==
-X-Gm-Message-State: APjAAAWfMRwslaV96tqvdFEbyW0V7At80bstp5UEPv2ofOuyCBTTxuxL
-        OJNRQMMbqADteoa8/WoxIM9z21Sn595Gs8ay1Pw=
-X-Google-Smtp-Source: APXvYqzfAjm+v/MQ9UL6O5LFSlvho5wVwwMVpDD9Ecal2842bUMubnitMXOnJDXd6zoRLHwoqrTy/+sWdINzzOfRMzk=
-X-Received: by 2002:a65:5acc:: with SMTP id d12mr23972047pgt.337.1553526243650;
- Mon, 25 Mar 2019 08:04:03 -0700 (PDT)
+        Mon, 25 Mar 2019 11:04:54 -0400
+Received: from [167.98.27.226] (helo=[10.35.5.150])
+        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
+        id 1h8R9f-0005ZN-OW; Mon, 25 Mar 2019 15:04:51 +0000
+Subject: Re: [PATCH] Documentation: acpi: Add an example for PRP0001
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190322134705.27994-1-thomas.preston@codethink.co.uk>
+ <CAJZ5v0isa7x+XPAregcKtMxtgsNw43JuBhGB_1x3eHkvaV8HRg@mail.gmail.com>
+ <20190325115118.GP9224@smile.fi.intel.com>
+ <20190325130413.GT9224@smile.fi.intel.com>
+ <d67bb260-863c-1131-1323-711c3d2e227d@codethink.co.uk>
+ <20190325150142.GE9224@smile.fi.intel.com>
+From:   Thomas Preston <thomas.preston@codethink.co.uk>
+Message-ID: <5b06cafb-f1c7-768a-22f5-bb69a877ea64@codethink.co.uk>
+Date:   Mon, 25 Mar 2019 15:04:50 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <1553105650-28012-1-git-send-email-john.garry@huawei.com>
- <1553105650-28012-4-git-send-email-john.garry@huawei.com> <CAHp75VfyU5ZDqCZ55SoxW1pQt1KXZQZJeYixHQf8Kw2EZcXWrQ@mail.gmail.com>
- <1a26586d-803b-5fad-e611-449bdb49096e@huawei.com>
-In-Reply-To: <1a26586d-803b-5fad-e611-449bdb49096e@huawei.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 25 Mar 2019 17:03:52 +0200
-Message-ID: <CAHp75VefTFx-HdaVhVG9uYO4Ec_S20eMjGRPeso+raCU4XEjeg@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] lib: logic_pio: Make some prints explicitly hex
-To:     John Garry <john.garry@huawei.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Borislav Petkov <bp@suse.de>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Linuxarm <linuxarm@huawei.com>, Alexander Graf <agraf@suse.de>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190325150142.GE9224@smile.fi.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 11:49 AM John Garry <john.garry@huawei.com> wrote:
-> On 23/03/2019 19:12, Andy Shevchenko wrote:
-> > On Wed, Mar 20, 2019 at 8:14 PM John Garry <john.garry@huawei.com> wrote:
-> >>
-> >> Some prints in the code are for a hex number, but don't prefix "0x". Add
-> >> the prefix, as is the norm.
-> >
-> >> -       pr_err("addr %llx not registered in io_range_list\n",
-> >> +       pr_err("addr 0x%llx not registered in io_range_list\n",
-> >>                (unsigned long long) addr);
-> >
-> > Can we use %pa at the same time?
+On 25/03/2019 15:01, Andy Shevchenko wrote:
+> On Mon, Mar 25, 2019 at 02:42:09PM +0000, Thomas Preston wrote:
+>> On 25/03/2019 13:04, Andy Shevchenko wrote:
+>>> On Mon, Mar 25, 2019 at 01:51:18PM +0200, Andy Shevchenko wrote:
+>>>> On Mon, Mar 25, 2019 at 10:31:13AM +0100, Rafael J. Wysocki wrote:
+> 
+>>>> Though one thing I would like to add (not directly related to the patch
+>>>> per se), i.e. it would be nice to keep such examples under meta-acpi [1]
+>>>> umbrella as a database for such excerpts.
+>>>>
+>>>> Thomas, can you do that?
+>>>>
+>>>> [1]: https://github.com/westeri/meta-acpi
+>>
+>> I will :)
+> 
+> Thank you! I will take either GH PR, or you may send an email to maintainers,
+> i.e. Mika and me (PR is preferable because it would be seen publicly)
+> 
 
-> OK, I think that we can use %pa and drop the casting to unsigned long long.
+I will get around to this, later this week.
 
-Yes, that it is the point.
+>>>>>> +               Name (_HID, "TITMP75") /* _HID will appear in sysfs */
+>>>
+>>> Sorry for not noticing earlier.
+>>>
+>>> Is this an official ID for the chip? We discourage people to invent ACPI IDs on
+>>> their own.
+> 
+>> The device is a TI tmp75b temperature sensor [0]. The HID is completely
+>> made up, I'm afraid. It doesn't exist in the registry.
+> 
+> Thanks for clarification. In that case I would rather recommend to use simple
+> PRP0001 as a _HID.
+> 
 
--- 
-With Best Regards,
-Andy Shevchenko
+Alright, I will resend with this modification.
+
+>> [0] http://www.ti.com/lit/ds/symlink/tmp75b.pdf
+> 
