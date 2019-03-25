@@ -2,150 +2,93 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDA69C4360F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 14:41:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D5ECC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 14:42:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC7A520879
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 14:41:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="yqTQAioe"
+	by mail.kernel.org (Postfix) with ESMTP id 2E28E2085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 14:42:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729644AbfCYOlH (ORCPT
+        id S1729132AbfCYOmN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 10:41:07 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:35779 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726010AbfCYOlE (ORCPT
+        Mon, 25 Mar 2019 10:42:13 -0400
+Received: from imap1.codethink.co.uk ([176.9.8.82]:33070 "EHLO
+        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725788AbfCYOmM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 10:41:04 -0400
-Received: by mail-lj1-f193.google.com with SMTP id t13so8043696lji.2
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 07:41:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Youh5qKLBar4PTWYzgdvYi2dhgM3EondF10RxT99Kvs=;
-        b=yqTQAioe4vZrHbWH9dxQwMX0zBiHkRd5p9UMokjLpK7CYTpWjnjslpWhqMuaPLdnIA
-         QRzI4W2CIu/mAd16TQ89rg7fJFfdwoqf+uM7OTerzN2wveaUSr3+2xOxhs6NLglO3PWL
-         A8rRcq9yJEzv1Z9z0ewka7a8+dS30dsT4qg39pIvYizOXJMfFEuzD90es5RpN1X41LQt
-         w+hh575UNtbH0k0+3fnQcLlM6fFtzmuvI0K++u1NWZhMt3cZGHrTuhgVIkhH1HXwpKeC
-         SdeZh3qx5ansllA9p1VXPAeE/rxLwuzzPxVEHkUhlA5vOFkdewURJbN5tRFgcRCN5Hf1
-         10/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Youh5qKLBar4PTWYzgdvYi2dhgM3EondF10RxT99Kvs=;
-        b=f/K1RHuVlkvZkrRGsRmmjzY2Y35lB6BBWsBR88uoLZqXRpwEFLiFivC8g40O4sjeSv
-         sZ13I1H/wm/XmOsO2FH7Xkd1g1xA8RCJkMGSABhhRPXSepbsTHVJ7bhUG0SdK91CcmAU
-         Cxo/HMc9sVC2BNL3n8IOg2l4FNdj3Td9UyYMKMC8qysxzKZ3Q2zjd8V13bD4U7RjiE7Z
-         J8DMfHURE+IgNB0YKyiz/cGlTlxYoiWxfHreT7Kn7gsrOxbZOND2Zv9o6alggPK5FeGL
-         scwUcjaYIMcUxDJyW/eb+4K10+35go1WWpZueoCnV/nKfzd2JisTSbN5UxUxJ4WDhJUy
-         gbSw==
-X-Gm-Message-State: APjAAAW23aWmfwWplQmna9o1pITKdLGC68pqo4nukC73LV7+xnUmHtHX
-        VuYXNvvmDYOnIDXugIYWjSROTgy1AdcWYDNmZ/UJgvs=
-X-Google-Smtp-Source: APXvYqz2kIwYS+Cn9ieZen3HqTBofVYcyvC3cOHOtpRUcKLyKJYfdgPI/VkslaQ8XS0pj6464Pw4baHOdfBso/EEu/k=
-X-Received: by 2002:a2e:91d2:: with SMTP id u18mr13559936ljg.161.1553524860700;
- Mon, 25 Mar 2019 07:41:00 -0700 (PDT)
+        Mon, 25 Mar 2019 10:42:12 -0400
+Received: from [167.98.27.226] (helo=[10.35.5.150])
+        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
+        id 1h8Qni-0004gR-Bm; Mon, 25 Mar 2019 14:42:10 +0000
+Subject: Re: [PATCH] Documentation: acpi: Add an example for PRP0001
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190322134705.27994-1-thomas.preston@codethink.co.uk>
+ <CAJZ5v0isa7x+XPAregcKtMxtgsNw43JuBhGB_1x3eHkvaV8HRg@mail.gmail.com>
+ <20190325115118.GP9224@smile.fi.intel.com>
+ <20190325130413.GT9224@smile.fi.intel.com>
+From:   Thomas Preston <thomas.preston@codethink.co.uk>
+Message-ID: <d67bb260-863c-1131-1323-711c3d2e227d@codethink.co.uk>
+Date:   Mon, 25 Mar 2019 14:42:09 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <20190325142317.3666259-1-arnd@arndb.de>
-In-Reply-To: <20190325142317.3666259-1-arnd@arndb.de>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Mon, 25 Mar 2019 10:40:49 -0400
-Message-ID: <CAHC9VhTyVXMxqDvSQs5skCjAOwkjjQxENyv8UQUSMftkDBiTZg@mail.gmail.com>
-Subject: Re: [PATCH] [v3] selinux: avoid uninitialized variable warning
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
-        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190325130413.GT9224@smile.fi.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 10:23 AM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> clang correctly points out a code path that would lead
-> to an uninitialized variable use:
->
-> security/selinux/netlabel.c:310:6: error: variable 'addr' is used uninitialized whenever 'if' condition is false
->       [-Werror,-Wsometimes-uninitialized]
->         if (ip_hdr(skb)->version == 4) {
->             ^~~~~~~~~~~~~~~~~~~~~~~~~
-> security/selinux/netlabel.c:322:40: note: uninitialized use occurs here
->         rc = netlbl_conn_setattr(ep->base.sk, addr, &secattr);
->                                               ^~~~
-> security/selinux/netlabel.c:310:2: note: remove the 'if' if its condition is always true
->         if (ip_hdr(skb)->version == 4) {
->         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> security/selinux/netlabel.c:291:23: note: initialize the variable 'addr' to silence this warning
->         struct sockaddr *addr;
->                              ^
->                               = NULL
->
-> This is probably harmless since we should not see ipv6 packets
-> of CONFIG_IPV6 is disabled, but it's better to rearrange the code
-> so this cannot happen.
->
-> Link: https://lore.kernel.org/patchwork/patch/1053663/
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
-> v3: add missing ip_hdr(skb)->version == 6 check
-> v2: revise after discussing with Paul Moore
-> ---
->  security/selinux/netlabel.c | 14 +++++---------
->  1 file changed, 5 insertions(+), 9 deletions(-)
+Hi,
+Thanks for looking at this.
 
-Better, thank you; merged into selinux/next.  FYI, I had to fix a
-couple of style errors that checkpatch.pl was complaining about ("void
-*" not "void*").
+On 25/03/2019 13:04, Andy Shevchenko wrote:
+> On Mon, Mar 25, 2019 at 01:51:18PM +0200, Andy Shevchenko wrote:
+>> On Mon, Mar 25, 2019 at 10:31:13AM +0100, Rafael J. Wysocki wrote:
+>>> On Fri, Mar 22, 2019 at 2:47 PM Thomas Preston
+>>> <thomas.preston@codethink.co.uk> wrote:
+>>>>
+>>>> Add an example for the magic PRP0001 device ID which allows matching
+>>>> ACPI devices against drivers using OF Device Tree compatible property.
+>>>> It wasn't clear to me that PRP0001 could be used in _CID.
+>>>
+>>> Mika, Andy, can you have a look at this, please?
+>>
+>> Good to me,
+>> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+>>
+>> Though one thing I would like to add (not directly related to the patch
+>> per se), i.e. it would be nice to keep such examples under meta-acpi [1]
+>> umbrella as a database for such excerpts.
+>>
+>> Thomas, can you do that?
+>>
+>> [1]: https://github.com/westeri/meta-acpi
 
-> diff --git a/security/selinux/netlabel.c b/security/selinux/netlabel.c
-> index 186e727b737b..f10813e54d07 100644
-> --- a/security/selinux/netlabel.c
-> +++ b/security/selinux/netlabel.c
-> @@ -288,11 +288,8 @@ int selinux_netlbl_sctp_assoc_request(struct sctp_endpoint *ep,
->         int rc;
->         struct netlbl_lsm_secattr secattr;
->         struct sk_security_struct *sksec = ep->base.sk->sk_security;
-> -       struct sockaddr *addr;
->         struct sockaddr_in addr4;
-> -#if IS_ENABLED(CONFIG_IPV6)
->         struct sockaddr_in6 addr6;
-> -#endif
->
->         if (ep->base.sk->sk_family != PF_INET &&
->                                 ep->base.sk->sk_family != PF_INET6)
-> @@ -310,16 +307,15 @@ int selinux_netlbl_sctp_assoc_request(struct sctp_endpoint *ep,
->         if (ip_hdr(skb)->version == 4) {
->                 addr4.sin_family = AF_INET;
->                 addr4.sin_addr.s_addr = ip_hdr(skb)->saddr;
-> -               addr = (struct sockaddr *)&addr4;
-> -#if IS_ENABLED(CONFIG_IPV6)
-> -       } else {
-> +               rc = netlbl_conn_setattr(ep->base.sk, (void*)&addr4, &secattr);
-> +       } else if (IS_ENABLED(CONFIG_IPV6) && ip_hdr(skb)->version == 6) {
->                 addr6.sin6_family = AF_INET6;
->                 addr6.sin6_addr = ipv6_hdr(skb)->saddr;
-> -               addr = (struct sockaddr *)&addr6;
-> -#endif
-> +               rc = netlbl_conn_setattr(ep->base.sk, (void*)&addr6, &secattr);
-> +       } else {
-> +               rc = -EAFNOSUPPORT;
->         }
->
-> -       rc = netlbl_conn_setattr(ep->base.sk, addr, &secattr);
->         if (rc == 0)
->                 sksec->nlbl_state = NLBL_LABELED;
->
-> --
-> 2.20.0
+I will :)
 
--- 
-paul moore
-www.paul-moore.com
+>>
+>>>> +               Name (_HID, "TITMP75") /* _HID will appear in sysfs */
+> 
+> Sorry for not noticing earlier.
+> 
+> Is this an official ID for the chip? We discourage people to invent ACPI IDs on
+> their own.
+> 
+> 
+
+The device is a TI tmp75b temperature sensor [0]. The HID is completely
+made up, I'm afraid. It doesn't exist in the registry.
+
+[0] http://www.ti.com/lit/ds/symlink/tmp75b.pdf
