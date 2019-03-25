@@ -2,44 +2,45 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-11.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3125C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:25:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 175C1C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:25:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F6EB20854
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:25:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E546F20848
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:25:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730649AbfCYVZP (ORCPT
+        id S1730674AbfCYVZU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 17:25:15 -0400
-Received: from smtprelay0025.hostedemail.com ([216.40.44.25]:58144 "EHLO
+        Mon, 25 Mar 2019 17:25:20 -0400
+Received: from smtprelay0018.hostedemail.com ([216.40.44.18]:50070 "EHLO
         smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729714AbfCYVZL (ORCPT
+        by vger.kernel.org with ESMTP id S1729714AbfCYVZR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 17:25:11 -0400
+        Mon, 25 Mar 2019 17:25:17 -0400
 Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 009513CF6;
-        Mon, 25 Mar 2019 21:25:09 +0000 (UTC)
+        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 09E8A181D3403;
+        Mon, 25 Mar 2019 21:25:16 +0000 (UTC)
 X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: back78_fabd18bcf92e
-X-Filterd-Recvd-Size: 4240
+X-HE-Tag: shape38_10b3cb287165c
+X-Filterd-Recvd-Size: 4492
 Received: from joe-laptop.perches.com (unknown [47.151.153.53])
         (Authenticated sender: joe@perches.com)
-        by omf12.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 25 Mar 2019 21:25:07 +0000 (UTC)
+        by omf18.hostedemail.com (Postfix) with ESMTPA;
+        Mon, 25 Mar 2019 21:25:14 +0000 (UTC)
 From:   Joe Perches <joe@perches.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     Tony Luck <tony.luck@intel.com>, linux-edac@vger.kernel.org,
-        Aristeu Rozanski <aris@redhat.com>,
-        Borislav Petkov <bp@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Subject: Bad file pattern in MAINTAINERS section 'EDAC-SKYLAKE'
-Date:   Mon, 25 Mar 2019 14:25:06 -0700
-Message-Id: <20190325212506.26282-1-joe@perches.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Bad file pattern in MAINTAINERS section 'FUTEX SUBSYSTEM'
+Date:   Mon, 25 Mar 2019 14:25:13 -0700
+Message-Id: <20190325212513.26420-1-joe@perches.com>
 X-Mailer: git-send-email 2.15.0
 In-Reply-To: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com>
 References: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com>
@@ -63,73 +64,80 @@ Please fix this defect appropriately.
 
 linux-next MAINTAINERS section:
 
-	5684	EDAC-SKYLAKE
-	5685	M:	Tony Luck <tony.luck@intel.com>
-	5686	L:	linux-edac@vger.kernel.org
-	5687	S:	Maintained
--->	5688	F:	drivers/edac/skx_edac.c
+	6410	FUTEX SUBSYSTEM
+	6411	M:	Thomas Gleixner <tglx@linutronix.de>
+	6412	M:	Ingo Molnar <mingo@redhat.com>
+	6413	R:	Peter Zijlstra <peterz@infradead.org>
+	6414	R:	Darren Hart <dvhart@infradead.org>
+	6415	L:	linux-kernel@vger.kernel.org
+	6416	T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git locking/core
+	6417	S:	Maintained
+	6418	F:	kernel/futex.c
+-->	6419	F:	kernel/futex_compat.c
+	6420	F:	include/asm-generic/futex.h
+	6421	F:	include/linux/futex.h
+	6422	F:	include/uapi/linux/futex.h
+	6423	F:	tools/testing/selftests/futex/
+	6424	F:	tools/perf/bench/futex*
+	6425	F:	Documentation/*futex*
 
 2: ---------------------------------------------------------------------------
 
-The most recent commit that added or modified file pattern 'drivers/edac/skx_edac.c':
+The most recent commit that added or modified file pattern 'kernel/futex_compat.c':
 
-commit 4ec656bdf43a13a655a8259b79dd63bc1f0b1e41
-Author: Tony Luck <tony.luck@intel.com>
-Date:   Sat Aug 20 16:27:58 2016 -0700
+commit 59cd42c29618c45cd3c56da43402b14f611888dd
+Author: Darren Hart (VMware) <dvhart@infradead.org>
+Date:   Fri Apr 14 15:46:08 2017 -0700
 
-    EDAC, skx_edac: Add EDAC driver for Skylake
+    MAINTAINERS: Add FUTEX SUBSYSTEM
     
-    This is an entirely new driver instead of yet another set of patches
-    to sb_edac.c because:
+    Add a MAINTAINERS block for the FUTEX SUBSYSTEM which includes the core
+    kernel code, include headers, testing code, and Documentation. Excludes
+    arch files, and higher level test code.
     
-    1) Mapping from PCI devices to socket/memory controller is significantly
-       different. Skylake scatters devices on a socket across a number of
-       PCI buses.
-    2) There is an extra level of interleaving via the "mcroute" register
-       that would be a little messy to squeeze into the old driver.
-    3) Validation is getting too expensive. Changes to sb_edac need to
-       be checked against Sandy Bridge, Ivy Bridge, Haswell, Broadwell and
-       Knights Landing.
+    I added tglx and mingo as M as they have made the tip commits and peterz
+    and myself as R.
     
-    Acked-by: Aristeu Rozanski <aris@redhat.com>
-    Acked-by: Borislav Petkov <bp@suse.de>
-    Signed-off-by: Tony Luck <tony.luck@intel.com>
-    Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+    Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
+    Cc: Peter Zijlstra <peterz@infradead.org>
+    Cc: Shuah Khan <shuah@kernel.org>
+    Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+    Link: http://lkml.kernel.org/r/20170414224608.GA5180@fury
+    Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
- MAINTAINERS             |    6 +
- drivers/edac/Kconfig    |    8 +
- drivers/edac/Makefile   |    1 +
- drivers/edac/skx_edac.c | 1121 +++++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 1136 insertions(+)
+ MAINTAINERS | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
 3: ---------------------------------------------------------------------------
 
-The last commit with a real presence of file pattern 'drivers/edac/skx_edac.c':
+The last commit with a real presence of file pattern 'kernel/futex_compat.c':
 
-commit 98f2fc829e3b55a0ff1b82753fc1e10941535cb9
-Author: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Date:   Wed Jan 30 11:15:18 2019 -0800
+commit 04e7712f4460585e5eed5b853fd8b82a9943958f
+Author: Arnd Bergmann <arnd@arndb.de>
+Date:   Tue Apr 17 16:31:07 2018 +0200
 
-    EDAC, skx_edac: Delete duplicated code
+    y2038: futex: Move compat implementation into futex.c
     
-    Delete the duplicated code from skx_edac.c and rename skx_edac.c to
-    skx_base.c. Update the Makefile to build the skx_edac driver from
-    skx_base.c and skx_common.c.
+    We are going to share the compat_sys_futex() handler between 64-bit
+    architectures and 32-bit architectures that need to deal with both 32-bit
+    and 64-bit time_t, and this is easier if both entry points are in the
+    same file.
     
-    Add SPDX to skx_base.c and clean out unnecessary #include lines.
+    In fact, most other system call handlers do the same thing these days, so
+    let's follow the trend here and merge all of futex_compat.c into futex.c.
     
-     [ bp: Drop the license boilerplate - there's an SPDX identifier now. ]
+    In the process, a few minor changes have to be done to make sure everything
+    still makes sense: handle_futex_death() and futex_cmpxchg_enabled() become
+    local symbol, and the compat version of the fetch_robust_entry() function
+    gets renamed to compat_fetch_robust_entry() to avoid a symbol clash.
     
-    Co-developed-by: Tony Luck <tony.luck@intel.com>
-    Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-    Signed-off-by: Tony Luck <tony.luck@intel.com>
-    Signed-off-by: Borislav Petkov <bp@suse.de>
-    Cc: James Morse <james.morse@arm.com>
-    Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-    Cc: linux-edac <linux-edac@vger.kernel.org>
-    Link: https://lkml.kernel.org/r/20190130191519.15393-4-tony.luck@intel.com
+    This is intended as a purely cosmetic patch, no behavior should
+    change.
+    
+    Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
- drivers/edac/Makefile   |    4 +-
- drivers/edac/skx_base.c |  650 +++++++++++++++++++++++
- drivers/edac/skx_edac.c | 1358 -----------------------------------------------
- 3 files changed, 653 insertions(+), 1359 deletions(-)
+ include/linux/futex.h |   8 --
+ kernel/Makefile       |   3 -
+ kernel/futex.c        | 195 +++++++++++++++++++++++++++++++++++++++++++++++-
+ kernel/futex_compat.c | 202 --------------------------------------------------
+ 4 files changed, 192 insertions(+), 216 deletions(-)
