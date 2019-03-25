@@ -2,445 +2,186 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65217C10F03
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:16:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F91EC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:17:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 318A020896
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:16:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553537780;
-	bh=5hDyB4GlQ6iIfznKq7MlpI4A1uMGVNd03W7Ln0Gyj3E=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ekYHeOxG+TGOx9uR6TA3xd8nE8tyKclZjg/j+UFpQrF8XJZihql46mkXxLArglWzG
-	 8kLetBkio8yUqVsKJsnyMPnxKlFaj9ysMefO7iY4TY/8t9XCgIoT4gibqD45tgSmFj
-	 SW5YAtJveHvtLZ8vZKam0pAP/iGXJFeiuVp+zvEc=
+	by mail.kernel.org (Postfix) with ESMTP id 0437320896
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:17:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730130AbfCYSQT (ORCPT
+        id S1729898AbfCYSRZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 14:16:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50902 "EHLO mail.kernel.org"
+        Mon, 25 Mar 2019 14:17:25 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:23470 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726217AbfCYSQS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 14:16:18 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726217AbfCYSRZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 14:17:25 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3B8720896;
-        Mon, 25 Mar 2019 18:16:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553537777;
-        bh=5hDyB4GlQ6iIfznKq7MlpI4A1uMGVNd03W7Ln0Gyj3E=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=syIRYZAa9jI4ad4hVMj+UAOzJQ2KExFz9I5XgbLIyViHLn4Oh4roztVrlfBeomHsr
-         cbX38NQjvhVihG3TIb8Z9T0Kp3MCDuYUQroALmLAOnktrCIF1JT94W2Z2DV4DonVJz
-         SDLHpvxPfNYR0UjQFiUNivCT/+YmM/raswNaLbxs=
-From:   helgaas@kernel.org
-To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH 4/4] CPER: Remove unnecessary use of user-space types
-Date:   Mon, 25 Mar 2019 13:14:25 -0500
-Message-Id: <20190325181425.247227-5-helgaas@kernel.org>
-X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
-In-Reply-To: <20190325181425.247227-1-helgaas@kernel.org>
-References: <20190325181425.247227-1-helgaas@kernel.org>
+        by mx1.redhat.com (Postfix) with ESMTPS id 3FE494E908;
+        Mon, 25 Mar 2019 18:17:24 +0000 (UTC)
+Received: from x1.home (ovpn-116-33.phx2.redhat.com [10.3.116.33])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4B71B5F9CD;
+        Mon, 25 Mar 2019 18:17:21 +0000 (UTC)
+Date:   Mon, 25 Mar 2019 12:17:20 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     "Liu, Yi L" <yi.l.liu@intel.com>
+Cc:     "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "jean-philippe.brucker@arm.com" <jean-philippe.brucker@arm.com>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC v2 1/2] vfio/pci: export common symbols in vfio-pci
+Message-ID: <20190325121720.53935577@x1.home>
+In-Reply-To: <A2975661238FB949B60364EF0F2C257439E4BBF2@SHSMSX104.ccr.corp.intel.com>
+References: <1552378703-11202-1-git-send-email-yi.l.liu@intel.com>
+        <1552378703-11202-2-git-send-email-yi.l.liu@intel.com>
+        <20190319121416.27495651@x1.home>
+        <A2975661238FB949B60364EF0F2C257439E48CA9@SHSMSX104.ccr.corp.intel.com>
+        <20190320132202.6279a190@x1.home>
+        <A2975661238FB949B60364EF0F2C257439E4BBF2@SHSMSX104.ccr.corp.intel.com>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Mon, 25 Mar 2019 18:17:24 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+On Sat, 23 Mar 2019 11:06:44 +0000
+"Liu, Yi L" <yi.l.liu@intel.com> wrote:
 
-"__u32" and similar types are intended for things exported to user-space,
-including structs used in ioctls; see include/uapi/asm-generic/int-l64.h.
+> > From: Alex Williamson [mailto:alex.williamson@redhat.com]
+> > Sent: Thursday, March 21, 2019 3:22 AM
+> > To: Liu, Yi L <yi.l.liu@intel.com>
+> > Subject: Re: [RFC v2 1/2] vfio/pci: export common symbols in vfio-pci
+> > 
+> > On Wed, 20 Mar 2019 11:49:37 +0000
+> > "Liu, Yi L" <yi.l.liu@intel.com> wrote:
+> >   
+> > > > From: Alex Williamson [mailto:alex.williamson@redhat.com]
+> > > > Sent: Wednesday, March 20, 2019 2:14 AM
+> > > > To: Liu, Yi L <yi.l.liu@intel.com>
+> > > > Subject: Re: [RFC v2 1/2] vfio/pci: export common symbols in vfio-pci
+> > > >
+> > > > On Tue, 12 Mar 2019 16:18:22 +0800
+> > > > "Liu, Yi L" <yi.l.liu@intel.com> wrote:
+> > > >  
+> > > > > This patch exports the following symbols from vfio-pci driver
+> > > > > for vfio-pci alike driver. e.g. vfio-pci-mdev driver
+> > > > >
+> > > > > *) vfio_pci_set_vga_decode();
+> > > > > *) vfio_pci_release();
+> > > > > *) vfio_pci_open();
+> > > > > *) vfio_pci_register_dev_region();
+> > > > > *) vfio_pci_ioctl();
+> > > > > *) vfio_pci_rw();
+> > > > > *) vfio_pci_mmap();
+> > > > > *) vfio_pci_request();
+> > > > > *) vfio_pci_probe_misc();
+> > > > > *) vfio_pci_remove_misc();
+> > > > > *) vfio_err_handlers;
+> > > > > *) vfio_pci_reflck_attach();
+> > > > > *) vfio_pci_reflck_put();  
+> > > >
+> > > > Exporting all these symbols scares me a bit.  They're GPL and we don't
+> > > > guarantee a kernel ABI, but I don't really want to support arbitrary
+> > > > use cases either.  What if we re-factored the shared bits into a common
+> > > > file and just linked them together?  Thanks,  
+> > >
+> > > Hi, Alex,
+> > >
+> > > Before refactor the code, I'd like to check with you on the module
+> > > parameters for the two modules. The existing vfio-pci driver has
+> > > some module parameters. e.g. ids, nointxmask, disable_idle_d3.
+> > > For future usage and maintain, I think it is better to let the two
+> > > drivers have same parameters. However, I'm not 100% on whether
+> > > we want to allow user load vfio-pci.ko and vfio-pci-mdev.ko with
+> > > different parameter value? e.g. load vfio-pci.ko with nointxmask=false
+> > > while load vfio-pci-mdev.ko with nointxmask=true. How about your
+> > > opinion on it?  
+> > 
+> > Hi Yi,
+> > 
+> > I agree that it makes sense to retain the module options for the mdev
+> > wrapped version, but I expect we should also allow dissimilar user
+> > settings.  If those lived in the common code that gets linked separately
+> > with each module, that should work fine, I think.  We can worry about
+> > refactoring for future driver that might not want those options later.  
+> 
+> Hi Alex,
+> 
+> I tried to get a common file which includes the definitions of the module
+> options and the common interfaces and get it linked separately with each
+> module. It works well when linked separately by config the
+> CONFIG_VFIO_PCI=m and CONFIG_VFIO_PCI_MDEV=m in kernel
+> configuration file. CONFIG_VFIO_PCI_MDEV is a new Kconfig macro
+> for the mdev wrapped version driver. However, if building the vfio-pci
+> and the mdev wrapped version into kernel image (config the
+> CONFIG_VFIO_PCI=y and CONFIG_VFIO_PCI_MDEV=y), then the symbols
+> defined in the common file will be shared thus doesn't allow dissimilar
+> user settings.
+> 
+> Per my understanding, I think we expect to allow simultaneous usage of
+> the two drivers. So I think the way above doesn't meet our expectation.
 
-They are not needed for the CPER struct definitions, which not exported to
-user-space and not used in ioctls.  Replace them with the typical "u32" and
-similar types.  No functional change intended.
+I agree.  They should be related in implementation only, from a user
+perspective they should be entirely separate.
 
-The reason for changing this is to remove the question of "why do we use
-__u32 here instead of u32?"  We should use __u32 when there's a reason for
-it; otherwise, we should prefer u32 for consistency.
+> I considered a possible proposal as below. May listen to your opinion
+> on it before heading to cook. Also, better idea is welcomed. :-)
+> 
+> - get a common file includes interfaces which are common and have
+>   input parameters to differentiate the calling from vfio-pci and the
+>   wrapped version. e.g. vfio_pci_rw(). may call it as vfio_pci_common.c.
+> 
+> - get another common file includes the definitions of the module options,
+>   and the functions which referred the options. Define all of them as static.
+>   may call it as common.c
+> 
+> - get vfio_pci.c which includes the module_init/exit interfaces and driver
+>   registration operations of vfio-pci.ko. This file should include the common.c
+>   above to have same module options with the mdev wrapped version.
+> 
+> - get vfio_pci_mdev.c which includes the module_init/exit interfaces and
+>   driver registration operations of vfio-pci-mdev.ko. It should also include
+>   the common.c above to have same module options with vfio-pci.ko.
+> 
+> - Makefile:
+> vfio-pci-y := vfio_pci.o vfio_pci_common.o vfio_pci_intrs.o vfio_pci_rdwr.o vfio_pci_config.o
+> vfio-pci-$(CONFIG_VFIO_PCI_IGD) += vfio_pci_igd.o
+> vfio-pci-$(CONFIG_VFIO_PCI_NVLINK2) += vfio_pci_nvlink2.o
+> 
+> vfio-pci-mdev-y := vfio_pci_mdev.o vfio_pci_common.o vfio_pci_intrs.o vfio_pci_rdwr.o vfio_pci_config.o
+> vfio-pci-mdev-$(CONFIG_VFIO_PCI_IGD) += vfio_pci_igd.o
+> vfio-pci-mdev-$(CONFIG_VFIO_PCI_NVLINK2) += vfio_pci_nvlink2.o
+> 
+> obj-$(CONFIG_VFIO_PCI) += vfio-pci.o
+> obj-$(CONFIG_VFIO_PCI_MDEV) += vfio-pci-mdev.o
 
-Reference: Documentation/process/coding-style.rst
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-CC: Masahiro Yamada <yamada.masahiro@socionext.com>
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: Andrew Morton <akpm@linux-foundation.org>
----
- include/linux/cper.h | 286 +++++++++++++++++++++----------------------
- 1 file changed, 143 insertions(+), 143 deletions(-)
+Each module needs it's own module_init/exit and will register its own
+struct pci_driver, which gives us separate control of the probe and
+remove callbacks.  I think we want the drivers to have the same module
+parameters initially, but we don't necessarily want to require it for
+any future options, so we can duplicate the parameter declarations.
+Then to support the shared code, I think we can easily push nointxmask,
+disable_vga, and disable_idle_d3 into bools on the struct
+vfio_pci_device, which would be allocated and set by each module's
+probe function before calling the shared probe function.
+vfio_fill_ids() could take a pointer to the array to keep them separate
+between modules.  I think that just leaves the config permission bits,
+vfio_pci_{un}init_perm_bits().  Could we use a simple atomic reference
+counter on those to potentially share them so they get initialized by
+the first caller and freed by the last user, at least in the case of
+both drivers being compiled statically into the kernel?  Thanks,
 
-diff --git a/include/linux/cper.h b/include/linux/cper.h
-index 2f361a96dc76..cc4980bb0f65 100644
---- a/include/linux/cper.h
-+++ b/include/linux/cper.h
-@@ -323,214 +323,214 @@ enum {
- /* Record Header, UEFI v2.7 sec N.2.1 */
- struct cper_record_header {
- 	char	signature[CPER_SIG_SIZE];	/* must be CPER_SIG_RECORD */
--	__u16	revision;			/* must be CPER_RECORD_REV */
--	__u32	signature_end;			/* must be CPER_SIG_END */
--	__u16	section_count;
--	__u32	error_severity;
--	__u32	validation_bits;
--	__u32	record_length;
--	__u64	timestamp;
-+	u16	revision;			/* must be CPER_RECORD_REV */
-+	u32	signature_end;			/* must be CPER_SIG_END */
-+	u16	section_count;
-+	u32	error_severity;
-+	u32	validation_bits;
-+	u32	record_length;
-+	u64	timestamp;
- 	guid_t	platform_id;
- 	guid_t	partition_id;
- 	guid_t	creator_id;
- 	guid_t	notification_type;
--	__u64	record_id;
--	__u32	flags;
--	__u64	persistence_information;
--	__u8	reserved[12];			/* must be zero */
-+	u64	record_id;
-+	u32	flags;
-+	u64	persistence_information;
-+	u8	reserved[12];			/* must be zero */
- };
- 
- /* Section Descriptor, UEFI v2.7 sec N.2.2 */
- struct cper_section_descriptor {
--	__u32	section_offset;		/* Offset in bytes of the
-+	u32	section_offset;		/* Offset in bytes of the
- 					 *  section body from the base
- 					 *  of the record header */
--	__u32	section_length;
--	__u16	revision;		/* must be CPER_RECORD_REV */
--	__u8	validation_bits;
--	__u8	reserved;		/* must be zero */
--	__u32	flags;
-+	u32	section_length;
-+	u16	revision;		/* must be CPER_RECORD_REV */
-+	u8	validation_bits;
-+	u8	reserved;		/* must be zero */
-+	u32	flags;
- 	guid_t	section_type;
- 	guid_t	fru_id;
--	__u32	section_severity;
--	__u8	fru_text[20];
-+	u32	section_severity;
-+	u8	fru_text[20];
- };
- 
- /* Generic Processor Error Section, UEFI v2.7 sec N.2.4.1 */
- struct cper_sec_proc_generic {
--	__u64	validation_bits;
--	__u8	proc_type;
--	__u8	proc_isa;
--	__u8	proc_error_type;
--	__u8	operation;
--	__u8	flags;
--	__u8	level;
--	__u16	reserved;
--	__u64	cpu_version;
-+	u64	validation_bits;
-+	u8	proc_type;
-+	u8	proc_isa;
-+	u8	proc_error_type;
-+	u8	operation;
-+	u8	flags;
-+	u8	level;
-+	u16	reserved;
-+	u64	cpu_version;
- 	char	cpu_brand[128];
--	__u64	proc_id;
--	__u64	target_addr;
--	__u64	requestor_id;
--	__u64	responder_id;
--	__u64	ip;
-+	u64	proc_id;
-+	u64	target_addr;
-+	u64	requestor_id;
-+	u64	responder_id;
-+	u64	ip;
- };
- 
- /* IA32/X64 Processor Error Section, UEFI v2.7 sec N.2.4.2 */
- struct cper_sec_proc_ia {
--	__u64	validation_bits;
--	__u64	lapic_id;
--	__u8	cpuid[48];
-+	u64	validation_bits;
-+	u64	lapic_id;
-+	u8	cpuid[48];
- };
- 
- /* IA32/X64 Processor Error Information Structure, UEFI v2.7 sec N.2.4.2.1 */
- struct cper_ia_err_info {
- 	guid_t	err_type;
--	__u64	validation_bits;
--	__u64	check_info;
--	__u64	target_id;
--	__u64	requestor_id;
--	__u64	responder_id;
--	__u64	ip;
-+	u64	validation_bits;
-+	u64	check_info;
-+	u64	target_id;
-+	u64	requestor_id;
-+	u64	responder_id;
-+	u64	ip;
- };
- 
- /* IA32/X64 Processor Context Information Structure, UEFI v2.7 sec N.2.4.2.2 */
- struct cper_ia_proc_ctx {
--	__u16	reg_ctx_type;
--	__u16	reg_arr_size;
--	__u32	msr_addr;
--	__u64	mm_reg_addr;
-+	u16	reg_ctx_type;
-+	u16	reg_arr_size;
-+	u32	msr_addr;
-+	u64	mm_reg_addr;
- };
- 
- /* ARM Processor Error Section, UEFI v2.7 sec N.2.4.4 */
- struct cper_sec_proc_arm {
--	__u32	validation_bits;
--	__u16	err_info_num;		/* Number of Processor Error Info */
--	__u16	context_info_num;	/* Number of Processor Context Info Records*/
--	__u32	section_length;
--	__u8	affinity_level;
--	__u8	reserved[3];		/* must be zero */
--	__u64	mpidr;
--	__u64	midr;
--	__u32	running_state;		/* Bit 0 set - Processor running. PSCI = 0 */
--	__u32	psci_state;
-+	u32	validation_bits;
-+	u16	err_info_num;		/* Number of Processor Error Info */
-+	u16	context_info_num;	/* Number of Processor Context Info Records*/
-+	u32	section_length;
-+	u8	affinity_level;
-+	u8	reserved[3];		/* must be zero */
-+	u64	mpidr;
-+	u64	midr;
-+	u32	running_state;		/* Bit 0 set - Processor running. PSCI = 0 */
-+	u32	psci_state;
- };
- 
- /* ARM Processor Error Information Structure, UEFI v2.7 sec N.2.4.4.1 */
- struct cper_arm_err_info {
--	__u8	version;
--	__u8	length;
--	__u16	validation_bits;
--	__u8	type;
--	__u16	multiple_error;
--	__u8	flags;
--	__u64	error_info;
--	__u64	virt_fault_addr;
--	__u64	physical_fault_addr;
-+	u8	version;
-+	u8	length;
-+	u16	validation_bits;
-+	u8	type;
-+	u16	multiple_error;
-+	u8	flags;
-+	u64	error_info;
-+	u64	virt_fault_addr;
-+	u64	physical_fault_addr;
- };
- 
- /* ARM Processor Context Information Structure, UEFI v2.7 sec N.2.4.4.2 */
- struct cper_arm_ctx_info {
--	__u16	version;
--	__u16	type;
--	__u32	size;
-+	u16	version;
-+	u16	type;
-+	u32	size;
- };
- 
- /* Old Memory Error Section, UEFI v2.1, v2.2 */
- struct cper_sec_mem_err_old {
--	__u64	validation_bits;
--	__u64	error_status;
--	__u64	physical_addr;
--	__u64	physical_addr_mask;
--	__u16	node;
--	__u16	card;
--	__u16	module;
--	__u16	bank;
--	__u16	device;
--	__u16	row;
--	__u16	column;
--	__u16	bit_pos;
--	__u64	requestor_id;
--	__u64	responder_id;
--	__u64	target_id;
--	__u8	error_type;
-+	u64	validation_bits;
-+	u64	error_status;
-+	u64	physical_addr;
-+	u64	physical_addr_mask;
-+	u16	node;
-+	u16	card;
-+	u16	module;
-+	u16	bank;
-+	u16	device;
-+	u16	row;
-+	u16	column;
-+	u16	bit_pos;
-+	u64	requestor_id;
-+	u64	responder_id;
-+	u64	target_id;
-+	u8	error_type;
- };
- 
- /* Memory Error Section (UEFI >= v2.3), UEFI v2.7 sec N.2.5 */
- struct cper_sec_mem_err {
--	__u64	validation_bits;
--	__u64	error_status;
--	__u64	physical_addr;
--	__u64	physical_addr_mask;
--	__u16	node;
--	__u16	card;
--	__u16	module;
--	__u16	bank;
--	__u16	device;
--	__u16	row;
--	__u16	column;
--	__u16	bit_pos;
--	__u64	requestor_id;
--	__u64	responder_id;
--	__u64	target_id;
--	__u8	error_type;
--	__u8	reserved;
--	__u16	rank;
--	__u16	mem_array_handle;	/* "card handle" in UEFI 2.4 */
--	__u16	mem_dev_handle;		/* "module handle" in UEFI 2.4 */
-+	u64	validation_bits;
-+	u64	error_status;
-+	u64	physical_addr;
-+	u64	physical_addr_mask;
-+	u16	node;
-+	u16	card;
-+	u16	module;
-+	u16	bank;
-+	u16	device;
-+	u16	row;
-+	u16	column;
-+	u16	bit_pos;
-+	u64	requestor_id;
-+	u64	responder_id;
-+	u64	target_id;
-+	u8	error_type;
-+	u8	reserved;
-+	u16	rank;
-+	u16	mem_array_handle;	/* "card handle" in UEFI 2.4 */
-+	u16	mem_dev_handle;		/* "module handle" in UEFI 2.4 */
- };
- 
- struct cper_mem_err_compact {
--	__u64	validation_bits;
--	__u16	node;
--	__u16	card;
--	__u16	module;
--	__u16	bank;
--	__u16	device;
--	__u16	row;
--	__u16	column;
--	__u16	bit_pos;
--	__u64	requestor_id;
--	__u64	responder_id;
--	__u64	target_id;
--	__u16	rank;
--	__u16	mem_array_handle;
--	__u16	mem_dev_handle;
-+	u64	validation_bits;
-+	u16	node;
-+	u16	card;
-+	u16	module;
-+	u16	bank;
-+	u16	device;
-+	u16	row;
-+	u16	column;
-+	u16	bit_pos;
-+	u64	requestor_id;
-+	u64	responder_id;
-+	u64	target_id;
-+	u16	rank;
-+	u16	mem_array_handle;
-+	u16	mem_dev_handle;
- };
- 
- /* PCI Express Error Section, UEFI v2.7 sec N.2.7 */
- struct cper_sec_pcie {
--	__u64		validation_bits;
--	__u32		port_type;
-+	u64		validation_bits;
-+	u32		port_type;
- 	struct {
--		__u8	minor;
--		__u8	major;
--		__u8	reserved[2];
-+		u8	minor;
-+		u8	major;
-+		u8	reserved[2];
- 	}		version;
--	__u16		command;
--	__u16		status;
--	__u32		reserved;
-+	u16		command;
-+	u16		status;
-+	u32		reserved;
- 	struct {
--		__u16	vendor_id;
--		__u16	device_id;
--		__u8	class_code[3];
--		__u8	function;
--		__u8	device;
--		__u16	segment;
--		__u8	bus;
--		__u8	secondary_bus;
--		__u16	slot;
--		__u8	reserved;
-+		u16	vendor_id;
-+		u16	device_id;
-+		u8	class_code[3];
-+		u8	function;
-+		u8	device;
-+		u16	segment;
-+		u8	bus;
-+		u8	secondary_bus;
-+		u16	slot;
-+		u8	reserved;
- 	}		device_id;
- 	struct {
--		__u32	lower;
--		__u32	upper;
-+		u32	lower;
-+		u32	upper;
- 	}		serial_number;
- 	struct {
--		__u16	secondary_status;
--		__u16	control;
-+		u16	secondary_status;
-+		u16	control;
- 	}		bridge;
--	__u8	capability[60];
--	__u8	aer_info[96];
-+	u8	capability[60];
-+	u8	aer_info[96];
- };
- 
- /* Reset to default packing */
--- 
-2.21.0.392.gf8f6787159e-goog
-
+Alex
