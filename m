@@ -2,124 +2,89 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68C60C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 23:01:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAC23C4360F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 23:02:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 373A12084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 23:01:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ukL8f7P6"
+	by mail.kernel.org (Postfix) with ESMTP id 9B1C020828
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 23:02:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730614AbfCYXBv (ORCPT
+        id S1730643AbfCYXCU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 19:01:51 -0400
-Received: from ozlabs.org ([203.11.71.1]:44877 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726010AbfCYXBu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 19:01:50 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44SqWt4g8hz9sS1;
-        Tue, 26 Mar 2019 10:01:46 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1553554907;
-        bh=k9s4Yo7CHNVY89a8LFnGMcGLpLc6rdQVwMKHPogdcnU=;
-        h=Date:From:To:Cc:Subject:From;
-        b=ukL8f7P6lRVvPB8uJCec1oa7MjoNoYn84wp7nIWRKntncYiAeNEnXqqU9nVJ9gnWC
-         lWxtOX2DyutJg7aho8D0mjcC2SZ8rIam7YGPTxFEXeq8i9jECK3OB9gRqbzPG5ZNEW
-         VewoqpPeNMf/AuGvD1tTZhUtZboyijWtDq4iDsbCRjfZPiwAEUEZ/jAySLaDF0BYTR
-         qpKWPzO2SQbaWXN+/dN/IQOa9LGH8EKTKp7K3eLCm3Jk8P7OAQhZbJ1IZC0ukau6Vq
-         dRPcZ8WKv7SemNS9xSethyIZfERXHn2NMB0IhnBtuexUwQHNiHMJgIv/KvvcfiZ//y
-         dv+cwGV4oK5MA==
-Date:   Tue, 26 Mar 2019 10:01:45 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Annaliese McDermond <nh6z@nh6z.net>
-Subject: linux-next: build warning after merge of the sound-asoc tree
-Message-ID: <20190326100145.3ee50933@canb.auug.org.au>
+        Mon, 25 Mar 2019 19:02:20 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:56772 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726010AbfCYXCU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 19:02:20 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1h8Ybb-0000ti-QB; Mon, 25 Mar 2019 23:02:11 +0000
+Date:   Mon, 25 Mar 2019 23:02:11 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        syzbot <syzbot+7a8ba368b47fdefca61e@syzkaller.appspotmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Jan Kara <jack@suse.cz>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Joel Becker <jlbec@evilplan.org>, Mark Fasheh <mark@fasheh.com>
+Subject: Re: KASAN: use-after-free Read in path_lookupat
+Message-ID: <20190325230211.GR2217@ZenIV.linux.org.uk>
+References: <0000000000006946d2057bbd0eef@google.com>
+ <CAHk-=wiijJMTw=nTj_ED+YWMCrvHzh3ezfVYRxvzcW6+trgyPA@mail.gmail.com>
+ <20190325045744.GK2217@ZenIV.linux.org.uk>
+ <CAHk-=wg4iJsMHBzK52WzP+5_92HbwvX_vh_s4mMUuN0FJGdM5A@mail.gmail.com>
+ <20190325194332.GO2217@ZenIV.linux.org.uk>
+ <20190325224823.GF26298@dastard>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/Ii3hkwhZ5D44rD1XYfWX67q"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190325224823.GF26298@dastard>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Ii3hkwhZ5D44rD1XYfWX67q
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, Mar 26, 2019 at 09:48:23AM +1100, Dave Chinner wrote:
 
-Hi all,
+> And when it comes to VFS inode reclaim, XFS does not implement
+> ->evict_inode because there is nothing at the VFS level to do.
+> And ->destroy_inode ends up doing cleanup work (e.g. freeing on-disk
+> inodes) which is non-trivial, blocking work, but then still requires
+> the struct xfs_inode to be written back to disk before it can bei
+> freed. So it just gets marked "reclaimable" and background reclaim
+> then takes care of it from there so we avoid synchronous IO in inode
+> reclaim...
+> 
+> This works because don't track dirty inode metadata in the VFS
+> writeback code (it's tracked with much more precision in the XFS log
+> infrastructure) and we don't write back inodes from the VFS
+> infrastructure, either. It's all done based on internal state
+> outside the VFS.
+> 
+> And, because of this, the VFS cannot assume that it can free
+> the struct inode after calling ->destroy_inode or even use
+> call_rcu() to run a filesystem destructor because the filesystem
+> may need to do work that needs to block and that's not allowed in an
+> RCU callback...
 
-After merging the sound-asoc tree, today's linux-next build (x86_64
-allmodconfig) produced this warning:
+In Linus' patch that's what you get with non-NULL ->destroy_inode
++ NULL ->destroy_inode_rcu, so XFS won't be screwed by that.
+Said that, yes, XFS adds another fun twist there (AFAICS, it's
+the only in-tree filesystem that pulls that off).
 
-sound/soc/codecs/tlv320aic32x4-clk.c: In function 'clk_aic32x4_pll_recalc_r=
-ate':
-sound/soc/codecs/tlv320aic32x4-clk.c:149:38: warning: 'settings.d' may be u=
-sed uninitialized in this function [-Wmaybe-uninitialized]
-     ((settings->j * 10000) + settings->d);
-                              ~~~~~~~~^~~
-sound/soc/codecs/tlv320aic32x4-clk.c:197:32: note: 'settings.d' was declare=
-d here
-  struct clk_aic32x4_pll_muldiv settings;
-                                ^~~~~~~~
-sound/soc/codecs/tlv320aic32x4-clk.c:149:15: warning: 'settings.j' may be u=
-sed uninitialized in this function [-Wmaybe-uninitialized]
-     ((settings->j * 10000) + settings->d);
-       ~~~~~~~~^~~
-sound/soc/codecs/tlv320aic32x4-clk.c:197:32: note: 'settings.j' was declare=
-d here
-  struct clk_aic32x4_pll_muldiv settings;
-                                ^~~~~~~~
-sound/soc/codecs/tlv320aic32x4-clk.c:148:37: warning: 'settings.r' may be u=
-sed uninitialized in this function [-Wmaybe-uninitialized]
-  rate =3D (u64) parent_rate * settings->r *
-                             ~~~~~~~~^~~
-sound/soc/codecs/tlv320aic32x4-clk.c:197:32: note: 'settings.r' was declare=
-d here
-  struct clk_aic32x4_pll_muldiv settings;
-                                ^~~~~~~~
-sound/soc/codecs/tlv320aic32x4-clk.c:151:56: warning: 'settings.p' may be u=
-sed uninitialized in this function [-Wmaybe-uninitialized]
-  return (unsigned long) DIV_ROUND_UP_ULL(rate, settings->p * 10000);
-                                                        ^~
-sound/soc/codecs/tlv320aic32x4-clk.c:197:32: note: 'settings.p' was declare=
-d here
-  struct clk_aic32x4_pll_muldiv settings;
-                                ^~~~~~~~
-
-Introduced by commit
-
-  514b044cba66 ("ASoC: tlv320aic32x4: Model PLL in CCF")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/Ii3hkwhZ5D44rD1XYfWX67q
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlyZXdkACgkQAVBC80lX
-0Gw68ggAmJf+6gDljC6i4xZOK5rdcZ/ACrJTCXojm8RWeGzQgqFoO/97rdg+ar1q
-7/NnCTxXh+XN8T/0Eb8WN1ZN9eeloFhG2EQWDga6uhaxjdENPpPsrq1hup3mUIv1
-q+8rK3b5JP7Rs4/u7t/V4Xdt4/giJVI9bfs8Wsv8tPW2FcYqRsEEME03Kzcex32/
-M/h12HBBumtazMLR4YQU3j5WgOz5NEd/uWJZjJo5tB32Oii2VutdjxVx2swYk70o
-lncG/M3iPilmDZPnu1Urj00P4yNy73hvQDWjjHQUxjJFiCSBL7n5vD/xFPpb+g6g
-V6W07Wk9pwEprzWA6dWR8GqhF1hBsA==
-=H3fs
------END PGP SIGNATURE-----
-
---Sig_/Ii3hkwhZ5D44rD1XYfWX67q--
+I would really like some comments from f2fs and ocfs2 folks, as well
+as Jan - he's had much more recent contact with writeback code than
+I have...  Could somebody explain what's going on in f2fs and ocfs2
+->drop_inode()?  It _should_ be just a predicate; looks like both
+are playing very odd games to work around writeback problems and
+I wonder if there's a cleaner solution for that.  I can try and dig
+through maillist(s) archives, but I would really appreciate it
+if somebody could give a braindump on the issues dealt with in there...
