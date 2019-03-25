@@ -2,301 +2,149 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEEDAC4360F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:02:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D890C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:03:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E703208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:02:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5799320896
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:03:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Mj6jSPmU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729875AbfCYRCM (ORCPT
+        id S1729883AbfCYRDA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 13:02:12 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:15513 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729283AbfCYRCJ (ORCPT
+        Mon, 25 Mar 2019 13:03:00 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:40203 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729106AbfCYRC7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 13:02:09 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2PGwMAB031507;
-        Mon, 25 Mar 2019 18:01:58 +0100
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2rddht4y4k-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Mon, 25 Mar 2019 18:01:58 +0100
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C055A31;
-        Mon, 25 Mar 2019 17:01:57 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 84E23111F;
-        Mon, 25 Mar 2019 17:01:57 +0000 (GMT)
-Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by SAFEX1HUBCAS21.st.com
- (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.361.1; Mon, 25 Mar
- 2019 18:01:57 +0100
-Received: from lmecxl0923.lme.st.com (10.48.0.237) by webmail-ga.st.com
- (10.75.90.48) with Microsoft SMTP Server (TLS) id 14.3.435.0; Mon, 25 Mar
- 2019 18:01:57 +0100
-From:   Ludovic Barre <ludovic.Barre@st.com>
-To:     Mark Brown <broonie@kernel.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        <linux-mtd@lists.infradead.org>, <linux-spi@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <devicetree@vger.kernel.org>, Ludovic Barre <ludovic.barre@st.com>
-Subject: [PATCH V2 2/2] spi: stm32-qspi: add dma support
-Date:   Mon, 25 Mar 2019 18:01:40 +0100
-Message-ID: <1553533300-29999-3-git-send-email-ludovic.Barre@st.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1553533300-29999-1-git-send-email-ludovic.Barre@st.com>
-References: <1553533300-29999-1-git-send-email-ludovic.Barre@st.com>
+        Mon, 25 Mar 2019 13:02:59 -0400
+Received: by mail-io1-f66.google.com with SMTP id d201so8253213iof.7
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 10:02:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HLoK6GXlNnGP4K5SxZmU2mM4NxfIC8P7/iZfrmZJlFY=;
+        b=Mj6jSPmUpB5kL6Ipz3ma6OMrOYO2ZIWcsGpEXosoT+ncrmyiVYrYrai75tO+wxcKgK
+         2QLWeTb27Y9EoXNk66PHYSubqM+5Ki+RIpUhTDlE9df29+aGK0tkmSJ/bP4r3TaJPYmV
+         S19AzaTmmEeUqsLg/M4yG3SdSaUCL8yRnERVY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HLoK6GXlNnGP4K5SxZmU2mM4NxfIC8P7/iZfrmZJlFY=;
+        b=UEKvofyilBOtJTkxn9+dIFGVhJDaEYORDW2YyjyCX3QIykxwrPqYew36Np1xjpu5zP
+         V7L7cS2sUKPcVMprJMLyQahdeDV70+InAM4YHNT9BN4msPNBimrBtxbbRSIIQSC/zkUx
+         iJUKG+V9s082uy0OU0BAgzIMtSxJ5E1rpKrwOyD07SGskLvEJH4P4UU5cy+LA1ysXPWN
+         zU5AtR/F6xh7zusBQEdBIq42QLlc8KU6ZAOLv/7GDW15MW3FbuJy65xPnsb7Ey37NY8o
+         VvipDuDTrcgEgkopQ9cGW9HvRXW4sCnsNVFLFRKKimsbx/W5Eum8gfTGBPocXhRGwR+0
+         bOfQ==
+X-Gm-Message-State: APjAAAXfWdORwwrDiQb7hg5f6QKJ8SUoBVYM5OBR7Lux6cf6v/Y5DAIq
+        CsT+WE0PLbIeS8SvPWrR2LGHanE0ZFjwtA==
+X-Google-Smtp-Source: APXvYqw6QVY/eQvuWDdCWNiXTdoo8BsTn3zXpkBesl8dARCXE6ELG2dQWuuSeAdLUf11b/51gFz6tg==
+X-Received: by 2002:a5e:db48:: with SMTP id r8mr17770800iop.220.1553533378987;
+        Mon, 25 Mar 2019 10:02:58 -0700 (PDT)
+Received: from twawrzynczak.bld.corp.google.com ([2620:15c:183:200:3175:8c2d:44b6:cfea])
+        by smtp.gmail.com with ESMTPSA id t62sm5872797ita.35.2019.03.25.10.02.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 25 Mar 2019 10:02:58 -0700 (PDT)
+From:   twawrzynczak@chromium.org
+Cc:     Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        linux-kernel@vger.kernel.org,
+        Tim Wawrzynczak <twawrzynczak@chromium.org>
+Subject: [PATCH v2] platform/chrome: mfd/cros_ec_sysfs: Add sysfs entry to retrieve EC uptime.
+Date:   Mon, 25 Mar 2019 11:02:50 -0600
+Message-Id: <20190325170250.2547-1-twawrzynczak@chromium.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.48.0.237]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-25_09:,,
- signatures=0
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ludovic Barre <ludovic.barre@st.com>
+From: Tim Wawrzynczak <twawrzynczak@chromium.org>
 
-This patch adds the dma support for the stm32-qspi hardware.
-The memory buffer constraints (lowmem, vmalloc, kmap) are taken into
-account by framework. In read mode, the memory map is preferred vs
-dma (due to better throughput). If the dma transfer fails the buffer
-is sent by polling.
+The new sysfs entry 'uptime' is being made available to userspace so that
+a userspace daemon can synchronize EC logs with host time.
 
-Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+Signed-off-by: Tim Wawrzynczak <twawrzynczak@chromium.org>
 ---
- drivers/spi/spi-stm32-qspi.c | 136 ++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 135 insertions(+), 1 deletion(-)
+Enric, the use case for this is ChromeOS's userspace daemon, timberslide,
+which collects the EC logs for sending bug reports, etc.  This is part of
+a series of patches which is prefixing host timestamps before each EC
+log line.  The daemon matches up the EC log lines' seconds-since-boot
+with the time gotten from the new 'uptime' node and calculates the
+host time that the log line was printed at.
+---
+ drivers/platform/chrome/cros_ec_sysfs.c | 34 +++++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
 
-diff --git a/drivers/spi/spi-stm32-qspi.c b/drivers/spi/spi-stm32-qspi.c
-index 9875139..11a89aa 100644
---- a/drivers/spi/spi-stm32-qspi.c
-+++ b/drivers/spi/spi-stm32-qspi.c
-@@ -5,6 +5,8 @@
-  */
- #include <linux/bitfield.h>
- #include <linux/clk.h>
-+#include <linux/dmaengine.h>
-+#include <linux/dma-mapping.h>
- #include <linux/errno.h>
- #include <linux/io.h>
- #include <linux/iopoll.h>
-@@ -84,6 +86,7 @@
- #define STM32_FIFO_TIMEOUT_US 30000
- #define STM32_BUSY_TIMEOUT_US 100000
- #define STM32_ABT_TIMEOUT_US 100000
-+#define STM32_COMP_TIMEOUT_MS 1000
- 
- struct stm32_qspi_flash {
- 	struct stm32_qspi *qspi;
-@@ -94,6 +97,7 @@ struct stm32_qspi_flash {
- struct stm32_qspi {
- 	struct device *dev;
- 	struct spi_controller *ctrl;
-+	phys_addr_t phys_base;
- 	void __iomem *io_base;
- 	void __iomem *mm_base;
- 	resource_size_t mm_size;
-@@ -103,6 +107,10 @@ struct stm32_qspi {
- 	struct completion data_completion;
- 	u32 fmode;
- 
-+	struct dma_chan *dma_chtx;
-+	struct dma_chan *dma_chrx;
-+	struct completion dma_completion;
-+
- 	u32 cr_reg;
- 	u32 dcr_reg;
- 
-@@ -181,6 +189,81 @@ static int stm32_qspi_tx_mm(struct stm32_qspi *qspi,
- 	return 0;
+diff --git a/drivers/platform/chrome/cros_ec_sysfs.c b/drivers/platform/chrome/cros_ec_sysfs.c
+index fe0b7614ae1b..b3915d3287c5 100644
+--- a/drivers/platform/chrome/cros_ec_sysfs.c
++++ b/drivers/platform/chrome/cros_ec_sysfs.c
+@@ -107,6 +107,38 @@ static ssize_t reboot_store(struct device *dev,
+ 	return count;
  }
  
-+static void stm32_qspi_dma_callback(void *arg)
++static ssize_t uptime_show(struct device *dev,
++			   struct device_attribute *attr, char *buf)
 +{
-+	struct completion *dma_completion = arg;
++	struct ec_response_uptime_info *resp;
++	struct cros_ec_command *msg;
++	int ret;
++	struct cros_ec_dev *ec = to_cros_ec_dev(dev);
++	u32 time_since_ec_boot_ms;
 +
-+	complete(dma_completion);
-+}
++	msg = kmalloc(sizeof(*msg) + sizeof(*resp), GFP_KERNEL);
++	if (!msg)
++		return -ENOMEM;
 +
-+static int stm32_qspi_tx_dma(struct stm32_qspi *qspi,
-+			     const struct spi_mem_op *op)
-+{
-+	struct dma_async_tx_descriptor *desc;
-+	enum dma_transfer_direction dma_dir;
-+	struct dma_chan *dma_ch;
-+	struct sg_table sgt;
-+	dma_cookie_t cookie;
-+	u32 cr, t_out;
-+	int err;
-+
-+	if (op->data.dir == SPI_MEM_DATA_IN) {
-+		dma_dir = DMA_DEV_TO_MEM;
-+		dma_ch = qspi->dma_chrx;
++	/* Get EC uptime information */
++	msg->version = 0;
++	msg->command = EC_CMD_GET_UPTIME_INFO + ec->cmd_offset;
++	msg->insize = sizeof(*resp);
++	msg->outsize = 0;
++	ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
++	if (ret < 0) {
++		time_since_ec_boot_ms = 0;
 +	} else {
-+		dma_dir = DMA_MEM_TO_DEV;
-+		dma_ch = qspi->dma_chtx;
++		resp = (struct ec_response_uptime_info *)msg->data;
++		time_since_ec_boot_ms = resp->time_since_ec_boot_ms;
 +	}
 +
-+	/*
-+	 * spi_map_buf return -EINVAL if the buffer is not DMA-able
-+	 * (DMA-able: in vmalloc | kmap | virt_addr_valid)
-+	 */
-+	err = spi_controller_dma_map_mem_op_data(qspi->ctrl, op, &sgt);
-+	if (err)
-+		return err;
++	ret = scnprintf(buf, PAGE_SIZE, "%u\n", time_since_ec_boot_ms);
 +
-+	desc = dmaengine_prep_slave_sg(dma_ch, sgt.sgl, sgt.nents,
-+				       dma_dir, DMA_PREP_INTERRUPT);
-+	if (!desc) {
-+		err = -ENOMEM;
-+		goto out_unmap;
-+	}
-+
-+	cr = readl_relaxed(qspi->io_base + QSPI_CR);
-+
-+	reinit_completion(&qspi->dma_completion);
-+	desc->callback = stm32_qspi_dma_callback;
-+	desc->callback_param = &qspi->dma_completion;
-+	cookie = dmaengine_submit(desc);
-+	err = dma_submit_error(cookie);
-+	if (err)
-+		goto out;
-+
-+	dma_async_issue_pending(dma_ch);
-+
-+	writel_relaxed(cr | CR_DMAEN, qspi->io_base + QSPI_CR);
-+
-+	t_out = sgt.nents * STM32_COMP_TIMEOUT_MS;
-+	if (!wait_for_completion_interruptible_timeout(&qspi->dma_completion,
-+						       msecs_to_jiffies(t_out)))
-+		err = -ETIMEDOUT;
-+
-+	if (dma_async_is_tx_complete(dma_ch, cookie,
-+				     NULL, NULL) != DMA_COMPLETE)
-+		err = -ETIMEDOUT;
-+
-+	if (err)
-+		dmaengine_terminate_all(dma_ch);
-+
-+out:
-+	writel_relaxed(cr & ~CR_DMAEN, qspi->io_base + QSPI_CR);
-+out_unmap:
-+	spi_controller_dma_unmap_mem_op_data(qspi->ctrl, op, &sgt);
-+
-+	return err;
++	kfree(msg);
++	return ret;
 +}
 +
- static int stm32_qspi_tx(struct stm32_qspi *qspi, const struct spi_mem_op *op)
+ static ssize_t version_show(struct device *dev,
+ 			    struct device_attribute *attr, char *buf)
  {
- 	if (!op->data.nbytes)
-@@ -188,6 +271,10 @@ static int stm32_qspi_tx(struct stm32_qspi *qspi, const struct spi_mem_op *op)
+@@ -314,12 +346,14 @@ static DEVICE_ATTR_RW(reboot);
+ static DEVICE_ATTR_RO(version);
+ static DEVICE_ATTR_RO(flashinfo);
+ static DEVICE_ATTR_RW(kb_wake_angle);
++static DEVICE_ATTR_RO(uptime);
  
- 	if (qspi->fmode == CCR_FMODE_MM)
- 		return stm32_qspi_tx_mm(qspi, op);
-+	else if ((op->data.dir == SPI_MEM_DATA_IN && qspi->dma_chrx) ||
-+		 (op->data.dir == SPI_MEM_DATA_OUT && qspi->dma_chtx))
-+		if (!stm32_qspi_tx_dma(qspi, op))
-+			return 0;
+ static struct attribute *__ec_attrs[] = {
+ 	&dev_attr_kb_wake_angle.attr,
+ 	&dev_attr_reboot.attr,
+ 	&dev_attr_version.attr,
+ 	&dev_attr_flashinfo.attr,
++	&dev_attr_uptime.attr,
+ 	NULL,
+ };
  
- 	return stm32_qspi_tx_poll(qspi, op);
- }
-@@ -218,7 +305,7 @@ static int stm32_qspi_wait_cmd(struct stm32_qspi *qspi,
- 	writel_relaxed(cr | CR_TCIE | CR_TEIE, qspi->io_base + QSPI_CR);
- 
- 	if (!wait_for_completion_interruptible_timeout(&qspi->data_completion,
--						msecs_to_jiffies(1000))) {
-+				msecs_to_jiffies(STM32_COMP_TIMEOUT_MS))) {
- 		err = -ETIMEDOUT;
- 	} else {
- 		sr = readl_relaxed(qspi->io_base + QSPI_SR);
-@@ -387,6 +474,49 @@ static int stm32_qspi_setup(struct spi_device *spi)
- 	return 0;
- }
- 
-+static void stm32_qspi_dma_setup(struct stm32_qspi *qspi)
-+{
-+	struct dma_slave_config dma_cfg;
-+	struct device *dev = qspi->dev;
-+
-+	memset(&dma_cfg, 0, sizeof(dma_cfg));
-+
-+	dma_cfg.src_addr_width = DMA_SLAVE_BUSWIDTH_1_BYTE;
-+	dma_cfg.dst_addr_width = DMA_SLAVE_BUSWIDTH_1_BYTE;
-+	dma_cfg.src_addr = qspi->phys_base + QSPI_DR;
-+	dma_cfg.dst_addr = qspi->phys_base + QSPI_DR;
-+	dma_cfg.src_maxburst = 4;
-+	dma_cfg.dst_maxburst = 4;
-+
-+	qspi->dma_chrx = dma_request_slave_channel(dev, "rx");
-+	if (qspi->dma_chrx) {
-+		if (dmaengine_slave_config(qspi->dma_chrx, &dma_cfg)) {
-+			dev_err(dev, "dma rx config failed\n");
-+			dma_release_channel(qspi->dma_chrx);
-+			qspi->dma_chrx = NULL;
-+		}
-+	}
-+
-+	qspi->dma_chtx = dma_request_slave_channel(dev, "tx");
-+	if (qspi->dma_chtx) {
-+		if (dmaengine_slave_config(qspi->dma_chtx, &dma_cfg)) {
-+			dev_err(dev, "dma tx config failed\n");
-+			dma_release_channel(qspi->dma_chtx);
-+			qspi->dma_chtx = NULL;
-+		}
-+	}
-+
-+	init_completion(&qspi->dma_completion);
-+}
-+
-+static void stm32_qspi_dma_free(struct stm32_qspi *qspi)
-+{
-+	if (qspi->dma_chtx)
-+		dma_release_channel(qspi->dma_chtx);
-+	if (qspi->dma_chrx)
-+		dma_release_channel(qspi->dma_chrx);
-+}
-+
- /*
-  * no special host constraint, so use default spi_mem_default_supports_op
-  * to check supported mode.
-@@ -399,6 +529,7 @@ static void stm32_qspi_release(struct stm32_qspi *qspi)
- {
- 	/* disable qspi */
- 	writel_relaxed(0, qspi->io_base + QSPI_CR);
-+	stm32_qspi_dma_free(qspi);
- 	mutex_destroy(&qspi->lock);
- 	clk_disable_unprepare(qspi->clk);
- 	spi_master_put(qspi->ctrl);
-@@ -427,6 +558,8 @@ static int stm32_qspi_probe(struct platform_device *pdev)
- 		goto err;
- 	}
- 
-+	qspi->phys_base = res->start;
-+
- 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "qspi_mm");
- 	qspi->mm_base = devm_ioremap_resource(dev, res);
- 	if (IS_ERR(qspi->mm_base)) {
-@@ -477,6 +610,7 @@ static int stm32_qspi_probe(struct platform_device *pdev)
- 
- 	qspi->dev = dev;
- 	platform_set_drvdata(pdev, qspi);
-+	stm32_qspi_dma_setup(qspi);
- 	mutex_init(&qspi->lock);
- 
- 	ctrl->mode_bits = SPI_RX_DUAL | SPI_RX_QUAD
 -- 
-2.7.4
+2.20.1
 
