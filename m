@@ -2,185 +2,104 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 022E0C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 06:45:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F172C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 06:45:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8D6A206C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 06:45:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 006A720883
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 06:45:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="HHWJD6ig";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="gRMta95R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729768AbfCYGpR (ORCPT
+        id S1729786AbfCYGp3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 02:45:17 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:46397 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729373AbfCYGpR (ORCPT
+        Mon, 25 Mar 2019 02:45:29 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:53310 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729373AbfCYGp3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 02:45:17 -0400
-Received: by mail-io1-f68.google.com with SMTP id b9so6661032iot.13
-        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2019 23:45:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=enF9DflGLDQAPbNv0/xls8CGSRcf4jR4fLMKq/Nio+I=;
-        b=AZKlPb4b8H60sEqnt02OzSn0kXeH+Mo4SWI6VfnpxOFUWnTB24IiAHfwVWSd2yW7jm
-         OGn1L7Bw4XEJMeE3EtEZi/7q9P9Jeo6LphQ63OkADu9ZlrXc5e2ZmvSkdbj8YdUDQzi9
-         5I4e1XwwFCDIYx0K6TIvTKBnL3Don5ZbefWTooHmTjO8+ZBrDRLJbw2orHiPy8jQ1/Rv
-         NYy4PiDvN41RvJrGXBIngyxNsLiQgSf0O9o7Hj7TmtGSGsXSAeGX0pTYSE0MdVzm4H0V
-         8ztYp2n7QQN4AwcT1A6HHOkWiUfHOF10f3rtrNjrCFimVtH/42ux47KzZOBTTuj2tsns
-         dd0Q==
-X-Gm-Message-State: APjAAAUKhURU7yjCIwhdfD+nmFt0+ZtinfqB6WnwM0afMt2mJaFUt8Ri
-        u7vgH/WO1rxVwwqEEHmtMiBWuQpNHyM/byixD2d5BQ==
-X-Google-Smtp-Source: APXvYqxH/JAIEId79AcqE+RX+jMIccqMIsLdQlY8kBpLlz9XI3FB28XRXxW/37FrKUClyVe0KQj6L68uiJpz01ENUjA=
-X-Received: by 2002:a6b:7e04:: with SMTP id i4mr15778384iom.137.1553496316204;
- Sun, 24 Mar 2019 23:45:16 -0700 (PDT)
+        Mon, 25 Mar 2019 02:45:29 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id E57C360312; Mon, 25 Mar 2019 06:45:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553496328;
+        bh=aARSQyq5Fgdwgd4A3EeTZD2+IQbttbtbeR3xJGhGQwE=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=HHWJD6igRWbcq6TzmBELc8EE9znmN1A7zjRYMK5w1dwdxh5ZjdEphIFmIGAbwf+2s
+         NjLtVgJ3LdRzEIvDbCnGl+8m2RphMnuhqFouilFe+7Rl4dfYZlFrl00jGpc3NFw+FR
+         ghj+mDfNVq4I0NeSs2rmpTNfFa9DnS71tjmQPtbg=
+Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mojha@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id DE72C60159;
+        Mon, 25 Mar 2019 06:45:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553496327;
+        bh=aARSQyq5Fgdwgd4A3EeTZD2+IQbttbtbeR3xJGhGQwE=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=gRMta95RnHekkLpyqsoqOQaaAVymDAy37SldhV78OQLv9ZmrzMGJv49lz5qpZxPhC
+         pCt0Te+c4BDZIg23rKrLrnpqToPfuVGaLElKnBwdFR1ShU03qwI1T0GeshkLKeHS5G
+         o5Jyn2nL4yqH53DX/skYqHbnvWBoRH1FqfCYZCTA=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DE72C60159
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
+Subject: Re: [PATCH] sound: codecs: fix a potential NULL pointer dereference
+To:     Kangjie Lu <kjlu@umn.edu>
+Cc:     pakki001@umn.edu, Bard Liao <bardliao@realtek.com>,
+        Oder Chiou <oder_chiou@realtek.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org
+References: <20190324231237.2246-1-kjlu@umn.edu>
+From:   Mukesh Ojha <mojha@codeaurora.org>
+Message-ID: <4fa0e2cb-7044-12e1-33b3-14015c94e48d@codeaurora.org>
+Date:   Mon, 25 Mar 2019 12:15:20 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.0
 MIME-Version: 1.0
-References: <20190322110342.GA16202@jeru.linux.bs1.fc.nec.co.jp>
- <20190322152328.GD12472@zn.tnic> <20190325002740.GA6637@jeru.linux.bs1.fc.nec.co.jp>
- <20190325060128.GB9385@dhcp-128-65.nay.redhat.com> <20190325061929.GC9385@dhcp-128-65.nay.redhat.com>
-In-Reply-To: <20190325061929.GC9385@dhcp-128-65.nay.redhat.com>
-From:   Kairui Song <kasong@redhat.com>
-Date:   Mon, 25 Mar 2019 14:45:04 +0800
-Message-ID: <CACPcB9eWuWzS-+-qZ6EP0h08+c_x2w+_Cm-+WrDZR96X_WKSUQ@mail.gmail.com>
-Subject: Re: [PATCH] x86/boot: Use EFI setup data if provided
-To:     Dave Young <dyoung@redhat.com>
-Cc:     Junichi Nomura <j-nomura@ce.jp.nec.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "fanc.fnst@cn.fujitsu.com" <fanc.fnst@cn.fujitsu.com>,
-        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Borislav Petkov <bp@alien8.de>, "bp@suse.de" <bp@suse.de>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190324231237.2246-1-kjlu@umn.edu>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 2:20 PM Dave Young <dyoung@redhat.com> wrote:
->
-> On 03/25/19 at 02:01pm, Dave Young wrote:
-> > On 03/25/19 at 12:27am, Junichi Nomura wrote:
-> > > On Fri, Mar 22, 2019 at 04:23:28PM +0100, Borislav Petkov wrote:
-> > > > On Fri, Mar 22, 2019 at 11:03:43AM +0000, Junichi Nomura wrote:
-> > > > > Commit 3a63f70bf4c3a ("x86/boot: Early parse RSDP and save it in
-> > > > > boot_params") broke kexec boot on EFI systems.  efi_get_rsdp_addr()
-> > > > > in the early parsing code tries to search RSDP from EFI table but
-> > > > > whose address is virtual.
-> > > > >
-> > > > > Since kexec(1) provides physical address of config_table via boot_params,
-> > > > > efi_get_rsdp_addr() should look for setup_data in the same way as
-> > > > > efi_systab_init() in arch/x86/platform/efi/efi.c does.
-> > > >
-> > > > If the kexec kernel should continue to use efi_systab_init() then you
-> > > > should make efi_get_rsdp_addr() exit early in the kexec-ed kernel.
-> > >
-> > > I'm not sure which way kexec devel is going. Added kexec list.
-> > > Here is the version that exits early in efi_get_rsdp_addr().
-> > >
-> > > [PATCH] x86/boot: Don't try to search RSDP from EFI when kexec-booted
-> > >
-> > > Commit 3a63f70bf4c3a ("x86/boot: Early parse RSDP and save it in
-> > > boot_params") broke kexec boot on EFI systems.  efi_get_rsdp_addr()
-> > > in the early parsing code tries to search RSDP from EFI table but
-> > > whose address is virtual.
-> > >
-> > > Normally kexec(1) provides physical address of config_table via boot_params
-> > > and EFI code uses that during initialization.
-> > > For the early boot code, we just exit efi_get_rsdp_addr() early if the kernel
-> > > is booted by kexec.
-> > >
-> > > Fixes: 3a63f70bf4c3a ("x86/boot: Early parse RSDP and save it in boot_params")
-> > > Signed-off-by: Jun'ichi Nomura <j-nomura@ce.jp.nec.com>
-> > > Cc: Chao Fan <fanc.fnst@cn.fujitsu.com>
-> > > Cc: Borislav Petkov <bp@suse.de>
-> > >
-> > > diff --git a/arch/x86/boot/compressed/acpi.c b/arch/x86/boot/compressed/acpi.c
-> > > index 0ef4ad5..1cefc43 100644
-> > > --- a/arch/x86/boot/compressed/acpi.c
-> > > +++ b/arch/x86/boot/compressed/acpi.c
-> > > @@ -44,6 +44,24 @@ static acpi_physical_address get_acpi_rsdp(void)
-> > >     return addr;
-> > >  }
-> > >
-> > > +static bool is_kexec_booted(void)
-> > > +{
-> > > +   struct setup_data *data;
-> > > +
-> > > +   /*
-> > > +    * kexec-tools provides EFI setup data so that kexec-ed kernel
-> > > +    * can find proper tables.
-> > > +    */
-> > > +   data = (struct setup_data *) boot_params->hdr.setup_data;
-> > > +   while (data) {
-> > > +           if (data->type == SETUP_EFI)
-> > > +                   return true;
-> > > +           data = (struct setup_data *) data->next;
-> > > +   }
-> > > +
-> > > +   return false;
-> > > +}
-> > > +
-> > >  /* Search EFI system tables for RSDP. */
-> > >  static acpi_physical_address efi_get_rsdp_addr(void)
-> > >  {
-> > > @@ -57,6 +75,10 @@ static acpi_physical_address efi_get_rsdp_addr(void)
-> > >     int size, i;
-> > >     char *sig;
-> > >
-> > > +   /* If the system is kexec-booted, poking EFI systab may not work. */
-> > > +   if (is_kexec_booted())
-> > > +           return 0;
-> > > +
-> > >     ei = &boot_params->efi_info;
-> > >     sig = (char *)&ei->efi_loader_signature;
-> > >
-> > >
-> > > _______________________________________________
-> > > kexec mailing list
-> > > kexec@lists.infradead.org
-> > > http://lists.infradead.org/mailman/listinfo/kexec
-> >
-> > Good catch, this way looks good to me.  But the function
-> > is_kexec_booted can be compiled when #ifdef CONFIG_EFI
-> >
-> > Otherwise:
-> >
-> > Acked-by: Dave Young <dyoung@redhat.com>
-> >
->
-> Hold on, I replied too quick.  One question is does the above patch
-> passed your test?   It can workaround and skip the wrong phys addr
-> issue, but the acpi early parsing still fails because efi_get_rsdp_addr
-> return 0?
->
-> If this is the case you may need go with your old patch.
->
-> I think normally people do not see this bug, because kernel will set the
-> rsdp in boot_params->acpi_rsdp_addr.  Maybe you are testing with
-> different kernel versions, eg.
->
-> old kernel kexec to new kernel.
->
-> And the old kernel does not set boot_params->acpi_rsdp_addr
->
-> Is this correct?
->
-> Thanks
-> Dave
 
-Hi Dave, actually only kexec_file_load will always set the
-boot_params->acpi_rsdp_addr. Can't guarantee how user space tools will
-prepare the boot_prams if kexec_load is used, so it's should very
-likely to happen.
+On 3/25/2019 4:42 AM, Kangjie Lu wrote:
+> In case devm_kzalloc fails, the patch returns -ENOMEM to avoid
+> potential NULL pointer dereference.
+>
+> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+> ---
+>   sound/soc/codecs/rt5663.c | 2 ++
+>   1 file changed, 2 insertions(+)
+>
+> diff --git a/sound/soc/codecs/rt5663.c b/sound/soc/codecs/rt5663.c
+> index da6647015708..909ab99a1995 100644
+> --- a/sound/soc/codecs/rt5663.c
+> +++ b/sound/soc/codecs/rt5663.c
+> @@ -3480,6 +3480,8 @@ static int rt5663_parse_dp(struct rt5663_priv *rt5663, struct device *dev)
+>   		table_size = sizeof(struct impedance_mapping_table) *
+>   			rt5663->pdata.impedance_sensing_num;
+>   		rt5663->imp_table = devm_kzalloc(dev, table_size, GFP_KERNEL);
+> +		if (!rt5663->imp_table)
+> +			return -ENOMEM;
 
-And for the patch, I also think the first patch looks better, if we
-just return 0 early in efi_get_rsdp_addr aren't we still failing to
-parse the rsdp in early code?
+add checks in rt5663_parse_dp  as well.
 
--- 
-Best Regards,
-Kairui Song
+Thanks.
+Mukesh
+
+
+>   		device_property_read_u32_array(dev,
+>   			"realtek,impedance_sensing_table",
+>   			(u32 *)rt5663->imp_table, table_size);
