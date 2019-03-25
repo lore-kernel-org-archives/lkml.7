@@ -2,138 +2,117 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
 	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85CFCC10F03
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 06:10:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71DF6C4360F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 06:11:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F5C220693
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 06:10:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4223220693
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 06:11:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kaHKlsuQ"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="xX3/HJVi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729631AbfCYGKU (ORCPT
+        id S1729648AbfCYGLQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 02:10:20 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:37585 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729373AbfCYGKU (ORCPT
+        Mon, 25 Mar 2019 02:11:16 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:52602 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729373AbfCYGLQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 02:10:20 -0400
-Received: by mail-pf1-f193.google.com with SMTP id 8so5614083pfr.4;
-        Sun, 24 Mar 2019 23:10:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=oSCUOZlSY6vaMGpU4UD/nvMNxeOvjUMJdTN55leir58=;
-        b=kaHKlsuQFP8J1RCshf3bMHdH4ffM7i6LAklxr9+3SNp+OYySeJclujBa/7+ygMDpPy
-         7SLPkQx6PyPx2qJXuLFmyu+ggfBjZ7ksMSOgqPgJw9sNbXJ67MWUlo7gs84C+BhTAA8M
-         aniqDtugiYID2SdKZ/9FaiRjq61EhGZjqnab1VWdaWtN88trtMXt1oDylTU2mps42ri4
-         Xz86zmL3Li9nTjMemO1TvMyUh+xl2Y0iFuWOCjVTPIwg+Hakdh1KUtEq20xZaqjhmuN5
-         8BRg8lmS8k+4HcZxGfRAN7xHZ8TFQC4BuwyJDi8rXvE2PkNy6E+NhK8z1BIO2ZVAAYaJ
-         gojQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=oSCUOZlSY6vaMGpU4UD/nvMNxeOvjUMJdTN55leir58=;
-        b=qB8quPMhFWSuIPTeieUPA/uqmrw2vT3wZ4HeuCARDfhBW5NEVUSLODeOHaVNMKZ6Uv
-         8hL6jdV3r+RigztArJRxi9itR9Nswt2j/4w6MbnPZ1sBOS6P/LP+nvQd3qL10jB8uRfx
-         Ieok0eaJlfKtdgNqDZd7kiqLoUweX+9X1StNrrYRUpAb6mGwpUs/MDounj5EtfbUPiNv
-         6kSQ9HLIPnQlP9UpqgVC3b5N0rbBm6veA3UeRdG/loe4PF9XgykM5d4za5QPycLnPEN4
-         R1BATJj23L/G+On8/9PmYNgQ2e0br3Qt3u9cQtPkj7QcfRkpGXPFPpTcgvhlLRxN86p9
-         4UDA==
-X-Gm-Message-State: APjAAAU5BaRRjGCFalM6EXIb5103o7+ahrCFZ1iLR+0onn5QG32NZSMN
-        1Q7zy/ao6vnGVqI9rNqc8Xb1LvCB
-X-Google-Smtp-Source: APXvYqxVxGdale1mOBvgnO33LFdO9uv5fQl5SP6wIIm17iX+ppiNST1EVqe4o7R0hn0DHRXgeBb/eg==
-X-Received: by 2002:a62:484:: with SMTP id 126mr22596687pfe.91.1553494219196;
-        Sun, 24 Mar 2019 23:10:19 -0700 (PDT)
-Received: from [192.168.1.58] (59-120-186-245.HINET-IP.hinet.net. [59.120.186.245])
-        by smtp.gmail.com with ESMTPSA id q62sm18127269pga.32.2019.03.24.23.10.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 24 Mar 2019 23:10:18 -0700 (PDT)
-Subject: Re: [PATCH V1 1/1] watchdog: f71808e_wdt: fix F81866 bit operation
-To:     Guenter Roeck <linux@roeck-us.net>, wim@linux-watchdog.orgw
-Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Ji-Ze Hong (Peter Hong)" <hpeter+linux_kernel@gmail.com>
-References: <1553225816-24375-1-git-send-email-hpeter+linux_kernel@gmail.com>
- <af4fba18-da99-2b48-7bbe-d59222081ab4@roeck-us.net>
-From:   "Ji-Ze Hong (Peter Hong)" <hpeter@gmail.com>
-Message-ID: <cf37ee27-593c-b809-62d4-8d38265cb710@gmail.com>
-Date:   Mon, 25 Mar 2019 14:10:15 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+        Mon, 25 Mar 2019 02:11:16 -0400
+Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id x2P6B3ao022765;
+        Mon, 25 Mar 2019 15:11:04 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x2P6B3ao022765
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1553494264;
+        bh=M5yB2IL6rUVfb6KdDylKlG225AGtoW93SAI13OU0scI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=xX3/HJVi67ZE7O+YgUqY300T00eUjNmJmXP8bCXfoQHa5Air4JM6GFt/6oBaczpj/
+         u11TINIB7G2truNMRO5GcWSbfQSL1zf1IeAED2pmVCAzEPfwkett3y4nd6iZ8G0rHD
+         gDwKNHBAnpvcqHz+cUlBgFdd2Dt3ZqYf/800h8o4bipHysPCxBBgReoo84esXAs2tE
+         v3YifwN1shxb3mR95hOrNLP5oiGOjTO08WNyZOUo6iwL49DbeCPGekShiCb62o+ahl
+         JdPg0gXqHCc2MEe1FgcA9Dnz0Zr7qfil5TTERII2lmrZR2L0Qb27qhVxDYEF1d632b
+         o0O0IBkTWJ30Q==
+X-Nifty-SrcIP: [209.85.221.173]
+Received: by mail-vk1-f173.google.com with SMTP id s80so677281vke.6;
+        Sun, 24 Mar 2019 23:11:04 -0700 (PDT)
+X-Gm-Message-State: APjAAAXATT4kBG7iBUkl0BTlawGZZctYVCOITH7RSX3A5RJqwxVlWKy/
+        e3GNVKgfzb9Pc5xuXP9ZGjeYVvxUBkvNOWfPHTM=
+X-Google-Smtp-Source: APXvYqz8qUhdfpRv8vBpRrajP0ICg/lHdRAAg6gG/ToNJOJ/LPtsBzM8huHn1TCODJl7fUVHytYK1YSBZrnQ8QJK2r0=
+X-Received: by 2002:a1f:9350:: with SMTP id v77mr13352129vkd.84.1553494263012;
+ Sun, 24 Mar 2019 23:11:03 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <af4fba18-da99-2b48-7bbe-d59222081ab4@roeck-us.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <1553062828-27798-1-git-send-email-yamada.masahiro@socionext.com>
+ <CAK8P3a3BG_mxYxxCx4S_+ZKAer_+5FpmkzLk0VrACZekuD=2GQ@mail.gmail.com> <CAK8P3a0GEYTbw5XCwzVeZe_-pGF=7e=1kXhH3U+fidnMZeP0CA@mail.gmail.com>
+In-Reply-To: <CAK8P3a0GEYTbw5XCwzVeZe_-pGF=7e=1kXhH3U+fidnMZeP0CA@mail.gmail.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Mon, 25 Mar 2019 15:10:27 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQvvCVsQtd9ZYkechOSCg4HAeZFaNXCgaBbWWxBYXOgaQ@mail.gmail.com>
+Message-ID: <CAK7LNAQvvCVsQtd9ZYkechOSCg4HAeZFaNXCgaBbWWxBYXOgaQ@mail.gmail.com>
+Subject: Re: [PATCH] compiler: allow all arches to enable CONFIG_OPTIMIZE_INLINING
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     linux-arch <linux-arch@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Dave Hansen <dave@sr71.net>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        linux-mips@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Guenter Roeck 於 2019/3/22 下午 09:06 寫道:
-> On 3/21/19 8:36 PM, Ji-Ze Hong (Peter Hong) wrote:
->> Fix error bit operation in watchdog_start()
->>
-> 
-> Hmm ... does that mean it never worked ? Did you test it this time ?
+Hi Arnd,
 
-Sorry for lacking test procedure. I had only test the functional (reset)
-, not to test the register value.
 
-The F81866 PIN70 (WDTRST#/GPIO15) is default set to WDTRST# function and
-the old code only change register 27h bit(4) - PORT_4E_EN.
 
-If the mainboard entry port is 4Eh, the old code is equal to nothing
-done, but when the mainboard entry port is 2Eh, this code will make the
-change from entry port 2Eh to 4Eh.
 
-https://html.alldatasheet.com/html-pdf/459086/FINTEK/F81866AD/26531/119/F81866AD.html
+On Wed, Mar 20, 2019 at 10:34 PM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> On Wed, Mar 20, 2019 at 10:41 AM Arnd Bergmann <arnd@arndb.de> wrote:
+> >
+> > I've added your patch to my randconfig test setup and will let you
+> > know if I see anything noticeable. I'm currently testing clang-arm32,
+> > clang-arm64 and gcc-x86.
+>
+> This is the only additional bug that has come up so far:
+>
+> `.exit.text' referenced in section `.alt.smp.init' of
+> drivers/char/ipmi/ipmi_msghandler.o: defined in discarded section
+> `exit.text' of drivers/char/ipmi/ipmi_msghandler.o
+>
+> diff --git a/arch/arm/kernel/atags.h b/arch/arm/kernel/atags.h
+> index 201100226301..84b12e33104d 100644
+> --- a/arch/arm/kernel/atags.h
+> +++ b/arch/arm/kernel/atags.h
+> @@ -5,7 +5,7 @@ void convert_to_tag_list(struct tag *tags);
+>  const struct machine_desc *setup_machine_tags(phys_addr_t __atags_pointer,
+>         unsigned int machine_nr);
+>  #else
+> -static inline const struct machine_desc *
+> +static __always_inline const struct machine_desc *
+>  setup_machine_tags(phys_addr_t __atags_pointer, unsigned int machine_nr)
+>  {
+>         early_print("no ATAGS support: can't continue\n");
+>
 
-> A secondary concern is that the watchdog doesn't _have_ to trigger WDTRST,
-> but may also trigger PWOK. But that may be a separate issue.
 
-Out watchdog is only support WDTRST#.
+I do not know why to reproduce it,
+but is "__init __noreturn" more sensible than
+"__always_inline" here?
 
-> Please add:
-> 
-> Fixes: 14b24a88a3660 ("watchdog: f71808e_wdt: Add F81866 support")
 
-OK, I'll add to v2
-
->> diff --git a/drivers/watchdog/f71808e_wdt.c 
->> b/drivers/watchdog/f71808e_wdt.c
->> index 9a1c761258ce..9129485732c7 100644
->> --- a/drivers/watchdog/f71808e_wdt.c
->> +++ b/drivers/watchdog/f71808e_wdt.c
->> @@ -387,18 +387,17 @@ static int watchdog_start(void)
->>       case f81866:
->>           /* Set pin 70 to WDTRST# */
->> -        superio_clear_bit(watchdog.sioaddr, SIO_F81866_REG_PORT_SEL,
->> -                  BIT(3) | BIT(0));
->> -        superio_set_bit(watchdog.sioaddr, SIO_F81866_REG_PORT_SEL,
->> -                BIT(2));
->> +        superio_clear_bit(watchdog.sioaddr, SIO_F81866_REG_PORT_SEL, 3);
->> +        superio_clear_bit(watchdog.sioaddr, SIO_F81866_REG_PORT_SEL, 0);
->> +        superio_set_bit(watchdog.sioaddr, SIO_F81866_REG_PORT_SEL, 2);
-> 
-> Better use superio_inb()/superio_outb(). The above is (much) more 
-> expensive,
-> and  we have no real idea what the impact of changing one bit at a time 
-> may be.
-
-Could I add a superio_mask_write(reg, mask, data) with v2 patch like
-following fintek driver ?
-https://elixir.bootlin.com/linux/latest/source/drivers/tty/serial/8250/8250_fintek.c#L113
-
-Thanks
 -- 
-With Best Regards,
-Peter Hong
+Best Regards
+Masahiro Yamada
