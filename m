@@ -2,106 +2,79 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFEF8C10F03
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:02:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56074C10F03
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:03:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA7FD20850
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:02:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553515341;
-	bh=BbaDHuCIjHwVA5COxU8wmejBxP5gbahV6kfZi/s8e78=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=raN1Z6j/rhgNo4/ALkdQ5jWhDiKYLPdvlE3Up/ABzx+FNQmm5s4e8QjCBLsIWnrns
-	 WJcOM7vgZPDpligOpGeNjn6byUJpw3NsF4O22y/n65vF53POKd8l9iEC4a+89NR84i
-	 HJTTTl7qG1CfCPVfa1JDwe4jl1e2TyUcTFFsC4KI=
+	by mail.kernel.org (Postfix) with ESMTP id 2667220850
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:03:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731026AbfCYMCU (ORCPT
+        id S1731055AbfCYMDV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 08:02:20 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:59020 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730917AbfCYMCU (ORCPT
+        Mon, 25 Mar 2019 08:03:21 -0400
+Received: from orcrist.hmeau.com ([104.223.48.154]:51452 "EHLO
+        deadmen.hmeau.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731035AbfCYMDV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 08:02:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=9w2Bbs9+ekSlIlBp8qIOgTdmVVPDYvUGgXHwpgsR5Us=; b=vpWVzpzmnJd8q0zuPFlohCSS+
-        dYiPHeLd1bYF2FQR6NJFzeBGvThUSboZTwRSV/8YYiTmR81IYpuDV678jsHG4iqOxnZ2P6Hoel+m/
-        z76c88i/bKO6vUPrzNYPNdwi7YPdyD+uMo2f2ga7uQMujSphi0wjACklwbSv//fA5fhiI=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1h8OIu-00020m-OX; Mon, 25 Mar 2019 12:02:12 +0000
-Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 11E3811288F1; Mon, 25 Mar 2019 12:02:12 +0000 (GMT)
-Date:   Mon, 25 Mar 2019 12:02:12 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Curtis Malainey <cujomalainey@chromium.org>
-Subject: Re: [PATCH] ASoC: intel: Fix crash at suspend/resume after failed
- codec registration
-Message-ID: <20190325120212.GD7284@sirena.org.uk>
-References: <1553294388-25293-1-git-send-email-linux@roeck-us.net>
+        Mon, 25 Mar 2019 08:03:21 -0400
+Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
+        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1h8OJy-0001IY-TC; Mon, 25 Mar 2019 20:03:18 +0800
+Received: from herbert by gondobar with local (Exim 4.89)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1h8OJv-0000Py-HL; Mon, 25 Mar 2019 20:03:15 +0800
+Date:   Mon, 25 Mar 2019 20:03:15 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc:     Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        David Miller <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Samuel Neves <samuel.c.p.neves@gmail.com>
+Subject: Re: [PATCH net-next v9 00/19] WireGuard: Secure Network Tunnel
+Message-ID: <20190325120315.lvwvvfe4pi4jlqlc@gondor.apana.org.au>
+References: <20190322071122.6677-1-Jason@zx2c4.com>
+ <20190325115156.wj4verbfdd2rspo5@gondor.apana.org.au>
+ <CAHmME9pAgi=Li_C5xEq7EfmNq5p4BRc3rDxXjiz+xz0rSYikXA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="0IvGJv3f9h+YhkrH"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1553294388-25293-1-git-send-email-linux@roeck-us.net>
-X-Cookie: Short people get rained on last.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAHmME9pAgi=Li_C5xEq7EfmNq5p4BRc3rDxXjiz+xz0rSYikXA@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Jason:
 
---0IvGJv3f9h+YhkrH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Mon, Mar 25, 2019 at 12:57:20PM +0100, Jason A. Donenfeld wrote:
+>
+> I think we're slightly closer to being same page, but I haven't
+> followed up here yet because I was waiting for something else first.
+> 
+> Your previous patchset left out a few implementations and wasn't
+> totally complete with regards to the glue code. I'm going to whip
+> something up now that is Zinc, but where there's already an existing
+> assembly implementation in the tree (i.e. Martin's code), it uses that
+> instead of what I've been posting until now. Then, after that lands, I
+> can post stand-alone patches for replacing the various
+> implementations, and we can discuss those separately, alongside all
+> the various discussion of verification and benchmarks and so forth.
+> 
+> So, I'll have something to examine somewhat soon. Working on it now.
 
-On Fri, Mar 22, 2019 at 03:39:48PM -0700, Guenter Roeck wrote:
+Great, looking forward to seeing it!
 
-> general protection fault: 0000 [#1] PREEMPT SMP KASAN PTI
-> CPU: 1 PID: 2811 Comm: cat Tainted: G        W         4.19.30 #15
-> Hardware name: GOOGLE Clapper, BIOS Google_Clapper.5216.199.7 08/22/2014
-> RIP: 0010:snd_soc_suspend+0x5a/0xd21
-> Code: 03 80 3c 10 00 49 89 d7 74 0b 48 89 df e8 71 72 c4 fe 4c 89
-> fa 48 8b 03 48 89 45 d0 48 8d 98 a0 01 00 00 48 89 d8 48 c1 e8 03
-> <8a> 04 10 84 c0 0f 85 85 0c 00 00 80 3b 00 0f 84 6b 0c 00 00 48 8b
-
-Please think hard before including complete backtraces in upstream
-reports, they are very large and contain almost no useful information
-relative to their size so often obscure the relevant content in your
-message. If part of the backtrace is usefully illustrative then it's
-usually better to pull out the relevant sections.
-
---0IvGJv3f9h+YhkrH
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlyYw0MACgkQJNaLcl1U
-h9BpXQf/XfEhm9WgqLCoQ+xlQVQEw2hewJ8Wk1PV54Fj6bBmRWT+tth9k6itaC31
-DZzkoO6uBFN7Oke8ca1GiIhZGMjunhdPw1/qz0XWAlxdTog8HxkQTUKnbBCPJ7NR
-3ju+/14lNBj8/mwmmVMnSquEwpdbLqzNkRhvi2bIwVggirTkzPSYDWa+lJkhVIUm
-fonPORs/dNw2AZL4l4ZsjSdfAg1CDF+U7BwoiWqwahCSWFYmx8xk1k721idiFBwg
-emR8gaozeE2TVTxUuUWrjbL7jbfuqcI27z4M6LoLLWCqgQa+QGkv0VwfSCfvCuMk
-lR9K+ideBQjls3GBiMawPDqyNvyWFQ==
-=ggRp
------END PGP SIGNATURE-----
-
---0IvGJv3f9h+YhkrH--
+Thanks,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
