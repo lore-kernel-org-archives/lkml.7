@@ -2,195 +2,198 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 273A6C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:46:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F5F7C4360F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:47:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E20E720863
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:46:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 461C920863
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:47:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jN414jHk"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="JnAr0PRj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729819AbfCYQqJ (ORCPT
+        id S1729845AbfCYQrR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 12:46:09 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:37052 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725795AbfCYQqJ (ORCPT
+        Mon, 25 Mar 2019 12:47:17 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:41543 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729095AbfCYQrQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 12:46:09 -0400
-Received: by mail-wr1-f67.google.com with SMTP id w10so11004835wrm.4;
-        Mon, 25 Mar 2019 09:46:06 -0700 (PDT)
+        Mon, 25 Mar 2019 12:47:16 -0400
+Received: by mail-qt1-f193.google.com with SMTP id w30so11069321qta.8
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 09:47:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=ziepe.ca; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=5EXv13zgz9awdVE1sfJydYAP6tyRfZcRZHPg1eXafgU=;
-        b=jN414jHktHenpLw3VrcmuB2FN+xMxhVa5Q6nA3aqJocDqwo/X7TJR9tuTx1Q3rqWJY
-         BpzDVd4gBi+ee1d0IdAtx1bOfpDte+t3q80SEBSd6JYzfOKi8WPObKO7q4yTKy9yFfXH
-         GQ0IZlHSORuqAhC8mtQ/7jG/q2YGZVLDgxxBH9Y6wgzyhiNxRFRKMn9PTEcsxBCCdmlp
-         u/TiofQIP44vh5zkyfgE4GMbiQCy0GHFGJQHvIBVjKcanJE4onjzy8Icj0HymWYh5zH/
-         ylgUhivO8sKxJ8wUcpM+gSXvvI8j3gH6SnlpVUoaHt1bYHzVliPLqcNmUw3VP7sw9PN7
-         EmtQ==
+        bh=aW91dn9nuPfOXD4t7dRzfb0dMVTbNhA56lMZa1MF4+k=;
+        b=JnAr0PRjqUbU63OKfPbizP+KqQ3+NBp3Hl9xEGo+e0G3nrDd2HGKgCPDVvAtgDDGgq
+         2KqoA2jx2HYsmwe0GjaGFLziEseA4OyTXFW2tSuxSlIej8IyT2qvfN0dQbNRQisxqgjv
+         YyjWs4or4Fb+acXC3N1tVR1kd3hrkJmWqdorNYmhoaj/k41Isg08w6zsZvRJANzGWc/A
+         EJ647jSN/xbRcwr26WHD7ybePy8t3s7A4gLWDx47XPWQwWwNd0vcZuvCEmzRsRVkB2ae
+         vIuQxoFE06doqkYM87BYQF+Q/Y/tCVL0HxbvDGkDI49yextuAdRbm4bB0Z5jwF0TR+zK
+         Xgkw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5EXv13zgz9awdVE1sfJydYAP6tyRfZcRZHPg1eXafgU=;
-        b=R0fRe+8+Si2o7xqWYaamAQIVroxqATJ9ga/f5rnR6C8YLYbVM6PlYqVp/w1hmojKaK
-         TqUZrCsBlj11YNnQeVQExi771i3y/QTrbUDHmcxse+KAFnJ/60uvlYKcFQ1rwNkv3nrR
-         0AHo9J7R3G3ZTgdNg70sMCKuZpqpOwNGFQcyIFFz4+5T+yshULaHhwgrgnGN6tACDl1x
-         9+ChEzUDFsDjVIYmlG9dpzRZwTucrvYsib0cCfW0J3RfxaLXNi/4UM4bfDTbdPwKSPbz
-         g4YITW7/35fUr1g5+L37V0oKnkkb+gsVXzexhKKZTWTRFfyX2JydqbvVEfnOQFUTVHOB
-         VZTA==
-X-Gm-Message-State: APjAAAXQgumNP0sg5JTALG0GM/RKUuhK47xvHDsllcqgMVzAZE27Buma
-        YbXJFxvP+goy4zdURRepP58=
-X-Google-Smtp-Source: APXvYqxSaGWiIbgtoBdrr54YZN+flkccenR14KnEE8TOvs21B0mOQGYBicNMhPHm0jhzVYb2gftrbQ==
-X-Received: by 2002:a5d:5192:: with SMTP id k18mr16710143wrv.171.1553532366166;
-        Mon, 25 Mar 2019 09:46:06 -0700 (PDT)
-Received: from localhost ([51.15.41.238])
-        by smtp.gmail.com with ESMTPSA id z1sm7467999wrs.52.2019.03.25.09.46.04
+        bh=aW91dn9nuPfOXD4t7dRzfb0dMVTbNhA56lMZa1MF4+k=;
+        b=aFbbJ390RsqRGgJwuvw7eIl5FThN0b7mJDlSv7Ko976lzeYTqYy6Ay6Qr7WSBgkytj
+         5ZvJwGWgRhNeAlsOw2XClX7CcVBF2M1rf04dDrrwt3T+RK+6b+SiRhE1Xqh9n0kE+Dgx
+         u2nTHKaa6/XcgrX0LVQE/UtKEdq8RCHYpRji0k6Li9Y4jJ+ZlKk7bdv5eIpPfhVBZCkq
+         h7IuE3vvWJ3XZHIh8uFVpTjFolkCaiGLzhx8KMuZ41LYyLOSngarfsFpjakLxkewNm1/
+         wP69VScnT/07dknh4udsjf6E79jGN3NPBzDE7AYIBQJ+AmaXwVAy0jR9CrER1I7qLRSh
+         v9zA==
+X-Gm-Message-State: APjAAAWHlw6z4uKXLp8dqLHsU+A6mAE0/jV+VU8xBuMlTvCL6cl+f5T0
+        LqvHltzaOKyyiUpsE9Cj6ME7kA==
+X-Google-Smtp-Source: APXvYqzOo9mFR4RSXVRCnnLwhZ0gTiLUKzXoKvrAWJbTVN22MCNVY7LjLthjFhx1EBSjcGadXts77A==
+X-Received: by 2002:aed:3562:: with SMTP id b31mr22334515qte.154.1553532435230;
+        Mon, 25 Mar 2019 09:47:15 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-49-251.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.49.251])
+        by smtp.gmail.com with ESMTPSA id u18sm9956618qka.25.2019.03.25.09.47.14
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 25 Mar 2019 09:46:04 -0700 (PDT)
-Date:   Mon, 25 Mar 2019 16:46:03 +0000
-From:   Stefan Hajnoczi <stefanha@gmail.com>
-To:     Maxim Levitsky <mlevitsk@redhat.com>
-Cc:     linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, Jens Axboe <axboe@fb.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Kirti Wankhede <kwankhede@nvidia.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Liang Cunming <cunming.liang@intel.com>,
-        Liu Changpeng <changpeng.liu@intel.com>,
-        Fam Zheng <fam@euphon.net>, Amnon Ilan <ailan@redhat.com>,
-        John Ferlan <jferlan@redhat.com>
-Subject: Re: your mail
-Message-ID: <20190325164603.GB10732@stefanha-x1.localdomain>
-References: <20190319144116.400-1-mlevitsk@redhat.com>
- <20190321161352.GA21682@stefanha-x1.localdomain>
- <a4dc67e66cd126892468011311ff516853754cdb.camel@redhat.com>
+        Mon, 25 Mar 2019 09:47:14 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1h8Skj-0005QU-Qs; Mon, 25 Mar 2019 13:47:13 -0300
+Date:   Mon, 25 Mar 2019 13:47:13 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Michal Hocko <mhocko@suse.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Rich Felker <dalias@libc.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>, linux-mm <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-mips@vger.kernel.org,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Linux-sh <linux-sh@vger.kernel.org>, sparclinux@vger.kernel.org,
+        linux-rdma@vger.kernel.org,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: Re: [RESEND 4/7] mm/gup: Add FOLL_LONGTERM capability to GUP fast
+Message-ID: <20190325164713.GC9949@ziepe.ca>
+References: <20190317183438.2057-1-ira.weiny@intel.com>
+ <20190317183438.2057-5-ira.weiny@intel.com>
+ <CAA9_cmcx-Bqo=CFuSj7Xcap3e5uaAot2reL2T74C47Ut6_KtQw@mail.gmail.com>
+ <20190325084225.GC16366@iweiny-DESK2.sc.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="l76fUT7nc3MelDdI"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a4dc67e66cd126892468011311ff516853754cdb.camel@redhat.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190325084225.GC16366@iweiny-DESK2.sc.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Mar 25, 2019 at 01:42:26AM -0700, Ira Weiny wrote:
+> On Fri, Mar 22, 2019 at 03:12:55PM -0700, Dan Williams wrote:
+> > On Sun, Mar 17, 2019 at 7:36 PM <ira.weiny@intel.com> wrote:
+> > >
+> > > From: Ira Weiny <ira.weiny@intel.com>
+> > >
+> > > DAX pages were previously unprotected from longterm pins when users
+> > > called get_user_pages_fast().
+> > >
+> > > Use the new FOLL_LONGTERM flag to check for DEVMAP pages and fall
+> > > back to regular GUP processing if a DEVMAP page is encountered.
+> > >
+> > > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> > >  mm/gup.c | 29 +++++++++++++++++++++++++----
+> > >  1 file changed, 25 insertions(+), 4 deletions(-)
+> > >
+> > > diff --git a/mm/gup.c b/mm/gup.c
+> > > index 0684a9536207..173db0c44678 100644
+> > > +++ b/mm/gup.c
+> > > @@ -1600,6 +1600,9 @@ static int gup_pte_range(pmd_t pmd, unsigned long addr, unsigned long end,
+> > >                         goto pte_unmap;
+> > >
+> > >                 if (pte_devmap(pte)) {
+> > > +                       if (unlikely(flags & FOLL_LONGTERM))
+> > > +                               goto pte_unmap;
+> > > +
+> > >                         pgmap = get_dev_pagemap(pte_pfn(pte), pgmap);
+> > >                         if (unlikely(!pgmap)) {
+> > >                                 undo_dev_pagemap(nr, nr_start, pages);
+> > > @@ -1739,8 +1742,11 @@ static int gup_huge_pmd(pmd_t orig, pmd_t *pmdp, unsigned long addr,
+> > >         if (!pmd_access_permitted(orig, flags & FOLL_WRITE))
+> > >                 return 0;
+> > >
+> > > -       if (pmd_devmap(orig))
+> > > +       if (pmd_devmap(orig)) {
+> > > +               if (unlikely(flags & FOLL_LONGTERM))
+> > > +                       return 0;
+> > >                 return __gup_device_huge_pmd(orig, pmdp, addr, end, pages, nr);
+> > > +       }
+> > >
+> > >         refs = 0;
+> > >         page = pmd_page(orig) + ((addr & ~PMD_MASK) >> PAGE_SHIFT);
+> > > @@ -1777,8 +1783,11 @@ static int gup_huge_pud(pud_t orig, pud_t *pudp, unsigned long addr,
+> > >         if (!pud_access_permitted(orig, flags & FOLL_WRITE))
+> > >                 return 0;
+> > >
+> > > -       if (pud_devmap(orig))
+> > > +       if (pud_devmap(orig)) {
+> > > +               if (unlikely(flags & FOLL_LONGTERM))
+> > > +                       return 0;
+> > >                 return __gup_device_huge_pud(orig, pudp, addr, end, pages, nr);
+> > > +       }
+> > >
+> > >         refs = 0;
+> > >         page = pud_page(orig) + ((addr & ~PUD_MASK) >> PAGE_SHIFT);
+> > > @@ -2066,8 +2075,20 @@ int get_user_pages_fast(unsigned long start, int nr_pages,
+> > >                 start += nr << PAGE_SHIFT;
+> > >                 pages += nr;
+> > >
+> > > -               ret = get_user_pages_unlocked(start, nr_pages - nr, pages,
+> > > -                                             gup_flags);
+> > > +               if (gup_flags & FOLL_LONGTERM) {
+> > > +                       down_read(&current->mm->mmap_sem);
+> > > +                       ret = __gup_longterm_locked(current, current->mm,
+> > > +                                                   start, nr_pages - nr,
+> > > +                                                   pages, NULL, gup_flags);
+> > > +                       up_read(&current->mm->mmap_sem);
+> > > +               } else {
+> > > +                       /*
+> > > +                        * retain FAULT_FOLL_ALLOW_RETRY optimization if
+> > > +                        * possible
+> > > +                        */
+> > > +                       ret = get_user_pages_unlocked(start, nr_pages - nr,
+> > > +                                                     pages, gup_flags);
+> > 
+> > I couldn't immediately grok why this path needs to branch on
+> > FOLL_LONGTERM? Won't get_user_pages_unlocked(..., FOLL_LONGTERM) do
+> > the right thing?
+> 
+> Unfortunately holding the lock is required to support FOLL_LONGTERM (to check
+> the VMAs) but we don't want to hold the lock to be optimal (specifically allow
+> FAULT_FOLL_ALLOW_RETRY).  So I'm maintaining the optimization for *_fast users
+> who do not specify FOLL_LONGTERM.
+> 
+> Another way to do this would have been to define __gup_longterm_unlocked with
+> the above logic, but that seemed overkill at this point.
 
---l76fUT7nc3MelDdI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+get_user_pages_unlocked() is an exported symbol, shouldn't it work
+with the FOLL_LONGTERM flag?
 
-On Thu, Mar 21, 2019 at 07:07:38PM +0200, Maxim Levitsky wrote:
-> On Thu, 2019-03-21 at 16:13 +0000, Stefan Hajnoczi wrote:
-> > On Tue, Mar 19, 2019 at 04:41:07PM +0200, Maxim Levitsky wrote:
-> > > Date: Tue, 19 Mar 2019 14:45:45 +0200
-> > > Subject: [PATCH 0/9] RFC: NVME VFIO mediated device
-> > >=20
-> > > Hi everyone!
-> > >=20
-> > > In this patch series, I would like to introduce my take on the proble=
-m of
-> > > doing=20
-> > > as fast as possible virtualization of storage with emphasis on low la=
-tency.
-> > >=20
-> > > In this patch series I implemented a kernel vfio based, mediated devi=
-ce
-> > > that=20
-> > > allows the user to pass through a partition and/or whole namespace to=
- a
-> > > guest.
-> > >=20
-> > > The idea behind this driver is based on paper you can find at
-> > > https://www.usenix.org/conference/atc18/presentation/peng,
-> > >=20
-> > > Although note that I stared the development prior to reading this pap=
-er,=20
-> > > independently.
-> > >=20
-> > > In addition to that implementation is not based on code used in the p=
-aper
-> > > as=20
-> > > I wasn't being able at that time to make the source available to me.
-> > >=20
-> > > ***Key points about the implementation:***
-> > >=20
-> > > * Polling kernel thread is used. The polling is stopped after a=20
-> > > predefined timeout (1/2 sec by default).
-> > > Support for all interrupt driven mode is planned, and it shows promis=
-ing
-> > > results.
-> > >=20
-> > > * Guest sees a standard NVME device - this allows to run guest with=
-=20
-> > > unmodified drivers, for example windows guests.
-> > >=20
-> > > * The NVMe device is shared between host and guest.
-> > > That means that even a single namespace can be split between host=20
-> > > and guest based on different partitions.
-> > >=20
-> > > * Simple configuration
-> > >=20
-> > > *** Performance ***
-> > >=20
-> > > Performance was tested on Intel DC P3700, With Xeon E5-2620 v2=20
-> > > and both latency and throughput is very similar to SPDK.
-> > >=20
-> > > Soon I will test this on a better server and nvme device and provide
-> > > more formal performance numbers.
-> > >=20
-> > > Latency numbers:
-> > > ~80ms - spdk with fio plugin on the host.
-> > > ~84ms - nvme driver on the host
-> > > ~87ms - mdev-nvme + nvme driver in the guest
-> >=20
-> > You mentioned the spdk numbers are with vhost-user-nvme.  Have you
-> > measured SPDK's vhost-user-blk?
->=20
-> I had lot of measuments of vhost-user-blk vs vhost-user-nvme.
-> vhost-user-nvme was always a bit faster but only a bit.
-> Thus I don't think it makes sense to benchamrk against vhost-user-blk.
+I think it should even though we have no user..
 
-It's interesting because mdev-nvme is closest to the hardware while
-vhost-user-blk is closest to software.  Doing things at the NVMe level
-isn't buying much performance because it's still going through a
-software path comparable to vhost-user-blk.
+Otherwise the GUP API just gets more confusing.
 
-=46rom what you say it sounds like there isn't much to optimize away :(.
-
-Stefan
-
---l76fUT7nc3MelDdI
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEcBAEBAgAGBQJcmQXLAAoJEJykq7OBq3PIc7sIAIYuXgpCWd+RMCuZEacVyF40
-Vn3LiQpyPwgDYEY0SY5jvaAEWl/oSSF9zwxg54VvvvVqbeHOvjxKkQ2fUYGdmmGT
-uRuNVN+QX01Nw5QYhPeRXIHZhvmk8Hi3REJJ3I5dc1UukGs2h+2fSvuhR9v76OnI
-TBFMYL1l3ru8e+YEF8kxHUXMYxMw1284GMK+Up/gtO3I0tkK07tq2ciLTDvVZ1ol
-av/82aJio1BDA3/ivMJN8+7J1GwO1n1OiWTGM07rA385A9MeTz2CtvG7fX/dug5m
-jgMgJpwZPOJUusRIVsgcwPamQ0OtGwr81Q01weD9JOskdKWtB/2W4KnY1nfRp48=
-=YMup
------END PGP SIGNATURE-----
-
---l76fUT7nc3MelDdI--
+Jason
