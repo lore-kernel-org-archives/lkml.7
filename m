@@ -2,135 +2,138 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FF90C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:51:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7030EC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:53:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73A8A20896
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:51:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42C2620823
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:53:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="mcakECUM"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="LPYmDytc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729980AbfCYRvy (ORCPT
+        id S1729914AbfCYRw6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 13:51:54 -0400
-Received: from mail-qk1-f179.google.com ([209.85.222.179]:41162 "EHLO
-        mail-qk1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726024AbfCYRvx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 13:51:53 -0400
-Received: by mail-qk1-f179.google.com with SMTP id o129so5873154qke.8
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 10:51:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=00Ms6NJY8XZVY3PTifw/DWKACkhTufevyM9oDDMnZ98=;
-        b=mcakECUMzfnWJTjHKTgjHkQ3p5HiWz1AVOeK/ghfgih69htVJO9HDrS54A121ygzVY
-         gWLEZMejpsvVFhPFvHwICPJEGrqNyF2/qZcA0NNQdr9DSe7lhxSeAsy3AlI8/ilXz0Wy
-         iMjTD05URcYKbnMgowRxCxL/DBUygVp3Sma1XI81k+r9M7o2AAzJzmYJzZpoi21aczm0
-         eJeHxiLWuI7hbyS8S+/ZQ0NvTbpWGm3bLAR63L4Lfuo8GetXjU127prX/mYb1aNddl8p
-         PasZzEsnYa7YcrBr5PZX7TvDDfzStRfR4EBtHmAXdccRPyo5CD2MDBXpy7Y6pvzdL9FQ
-         Mskw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=00Ms6NJY8XZVY3PTifw/DWKACkhTufevyM9oDDMnZ98=;
-        b=CYqtk/pIAqOvl7QHh+biBdNqbNbY9SLG6ejh12AbOSRF6zfYIaQm1VWbgywTWJZo7y
-         sJkUXGMs06PVdTiEk5oHFc9uYpsYY/XCex16Xwf121DhhL808uXuoFsJDqrNoAmgC5vh
-         oTLd8qboUQNO/1VNkyT4kzTyuSRWRf1ubjYMmFX5zRBoIecJr32cuuuSBNHF7saSV5Y4
-         AMz5JOz8gofkA4ah4Wh/1gA1b0CD+RJA2n41p3EUBQw/6ONgkugnqc1RAfHJaXPE/+AG
-         +qCGKA0+A82qJDs45Fqfor3lBbUn0nymXLJR0JuC0qrvn89NiJNBQ54QtWUFQmzRv9N4
-         UWdA==
-X-Gm-Message-State: APjAAAUKFzxfkg0Yl1Qg+gDZAbyit/8mYJ6N4w1XwagjmyAcjPQp7AYg
-        aXk+sx/GoAVBjLtUzH/v1TpTAg==
-X-Google-Smtp-Source: APXvYqyPXE4H1Qt/wLb7MTNtAAHDbeoOG7ue4zLWhXEM5KYve0v2wSXPQ09LZ4L0EFTQCEmHdQgrlA==
-X-Received: by 2002:a37:7d86:: with SMTP id y128mr20700103qkc.36.1553536312325;
-        Mon, 25 Mar 2019 10:51:52 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-49-251.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.49.251])
-        by smtp.gmail.com with ESMTPSA id 56sm5277027qto.57.2019.03.25.10.51.50
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 25 Mar 2019 10:51:51 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1h8TlG-0005vR-FG; Mon, 25 Mar 2019 14:51:50 -0300
-Date:   Mon, 25 Mar 2019 14:51:50 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Michal Hocko <mhocko@suse.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Rich Felker <dalias@libc.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>, linux-mm <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-mips@vger.kernel.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Linux-sh <linux-sh@vger.kernel.org>, sparclinux@vger.kernel.org,
-        linux-rdma@vger.kernel.org,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: Re: [RESEND 4/7] mm/gup: Add FOLL_LONGTERM capability to GUP fast
-Message-ID: <20190325175150.GA21008@ziepe.ca>
-References: <20190317183438.2057-1-ira.weiny@intel.com>
- <20190317183438.2057-5-ira.weiny@intel.com>
- <CAA9_cmcx-Bqo=CFuSj7Xcap3e5uaAot2reL2T74C47Ut6_KtQw@mail.gmail.com>
- <20190325084225.GC16366@iweiny-DESK2.sc.intel.com>
- <20190325164713.GC9949@ziepe.ca>
- <20190325092314.GF16366@iweiny-DESK2.sc.intel.com>
+        Mon, 25 Mar 2019 13:52:58 -0400
+Received: from mail-eopbgr770101.outbound.protection.outlook.com ([40.107.77.101]:43558
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726024AbfCYRw6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 13:52:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6EeYMdW6Osx+UhhevIA4KH4wyzgVgLD04KCbsq4YOfM=;
+ b=LPYmDytc+tdecUQLSDY/1FdoPNJfM4qMpfYdVBicmZcut5xtArjsjCPM3rKPDGsMfI96zd24CjBqCqpDe90QjgibUR1wuBwTCRPKOpG6RimO9p8c+Uu3Rxb/jY98PmMkYLh0oUne9J7nM50z+nrxNteMGtI6DjcvMGnFCtqIrzY=
+Received: from DM6PR21MB1305.namprd21.prod.outlook.com (20.179.52.94) by
+ DM6PR21MB1324.namprd21.prod.outlook.com (20.179.53.75) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1771.1; Mon, 25 Mar 2019 17:52:52 +0000
+Received: from DM6PR21MB1305.namprd21.prod.outlook.com
+ ([fe80::5d7:1d10:7a44:6620]) by DM6PR21MB1305.namprd21.prod.outlook.com
+ ([fe80::5d7:1d10:7a44:6620%7]) with mapi id 15.20.1771.002; Mon, 25 Mar 2019
+ 17:52:52 +0000
+From:   Lakshmi Ramasubramanian <nramas@microsoft.com>
+To:     "zohar@linux.ibm.com" <zohar@linux.ibm.com>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: Portable Executable (PE) Signature Validation and Measurement for
+ KEXEC system call using IMA
+Thread-Topic: Portable Executable (PE) Signature Validation and Measurement
+ for KEXEC system call using IMA
+Thread-Index: AdTg1clupl0uJvoTS1+4SCE/Pu8WqwCXSF5g
+Date:   Mon, 25 Mar 2019 17:52:52 +0000
+Message-ID: <DM6PR21MB130526848C86A7390FB3BF53C35E0@DM6PR21MB1305.namprd21.prod.outlook.com>
+References: <BYAPR21MB1301CBCD4956476F8F2F0FC4C3430@BYAPR21MB1301.namprd21.prod.outlook.com>
+In-Reply-To: <BYAPR21MB1301CBCD4956476F8F2F0FC4C3430@BYAPR21MB1301.namprd21.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=nramas@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-03-22T17:39:21.5499995Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=a4e10f41-6446-49fa-9371-9e0f7fbb42e6;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+x-originating-ip: [2001:4898:80e8:7:1078:7225:fd33:4f42]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 23202640-6d6f-4c5c-f589-08d6b14ab3ed
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DM6PR21MB1324;
+x-ms-traffictypediagnostic: DM6PR21MB1324:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <DM6PR21MB1324C744CC946DB7D261BC6BC35E0@DM6PR21MB1324.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0987ACA2E2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(376002)(346002)(396003)(366004)(39860400002)(13464003)(189003)(199004)(316002)(33656002)(14444005)(229853002)(8990500004)(10090500001)(53546011)(52536014)(110136005)(6436002)(256004)(6506007)(22452003)(7696005)(81156014)(305945005)(99286004)(105586002)(14454004)(966005)(10290500003)(71190400001)(2906002)(86362001)(102836004)(76176011)(476003)(71200400001)(8676002)(486006)(25786009)(11346002)(2201001)(6306002)(186003)(53936002)(478600001)(106356001)(6116002)(6246003)(6346003)(86612001)(46003)(55016002)(81166006)(8936002)(9686003)(97736004)(2501003)(68736007)(74316002)(5660300002)(7736002)(446003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR21MB1324;H:DM6PR21MB1305.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=nramas@microsoft.com; 
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: pWCKIuECeCw78GHKpvEOe94Y9G5D3nCjPjkv9KyOxSSJlCee8pmhTYokHfm4z1zetZfH6KKoHBv4wcHw1I3m3pS1O3MXdrUd7qoHWNpGJylBXuQc31VKVTT9XkQyUBjRn05+DDwSKsjWlV9vvqBJcTM1VmkP5Kds5R7/jAIp7RAadzb/K6wKw+37fX/IO3cO0f3rHlBIXhCov5OZLO35woGYgTyikZXOmyRcZ3FBOa73tEK4b7CrC03xa7STauXKI3F4HAjJen6Fjy85OeUNA1AqiNm7Y7s6ILx3Be3ISplE6uxt99j2gIjgjsehNcyWyFhM0I1+qLqajPCdhFZpxFwhugS8TEz3gVZCWwhHCfctjGlas3D8o/dcwQ6CgAP4xVQlNb/8Gwjy0PKcVInyF99LEMwu5AeSLK3OCS/2D6Y=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190325092314.GF16366@iweiny-DESK2.sc.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 23202640-6d6f-4c5c-f589-08d6b14ab3ed
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Mar 2019 17:52:52.3436
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1324
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 02:23:15AM -0700, Ira Weiny wrote:
-> > > Unfortunately holding the lock is required to support FOLL_LONGTERM (to check
-> > > the VMAs) but we don't want to hold the lock to be optimal (specifically allow
-> > > FAULT_FOLL_ALLOW_RETRY).  So I'm maintaining the optimization for *_fast users
-> > > who do not specify FOLL_LONGTERM.
-> > > 
-> > > Another way to do this would have been to define __gup_longterm_unlocked with
-> > > the above logic, but that seemed overkill at this point.
-> > 
-> > get_user_pages_unlocked() is an exported symbol, shouldn't it work
-> > with the FOLL_LONGTERM flag?
-> > 
-> > I think it should even though we have no user..
-> > 
-> > Otherwise the GUP API just gets more confusing.
-> 
-> I agree WRT to the API.  But I think callers of get_user_pages_unlocked() are
-> not going to get the behavior they want if they specify FOLL_LONGTERM.
+Hello Mimi,
 
-Oh? Isn't the only thing FOLL_LONGTERM does is block the call on DAX?
-Why does the locking mode matter to this test?
+Could you please let me know if you have any concerns with this approach?
 
-> What I could do is BUG_ON (or just WARN_ON) if unlocked is called with
-> FOLL_LONGTERM similar to the code in get_user_pages_locked() which does not
-> allow locked and vmas to be passed together:
+Thanks,
+ -lakshmi
 
-The GUP call should fail if you are doing something like this. But I'd
-rather not see confusing specialc cases in code without a clear
-comment explaining why it has to be there.
+-----Original Message-----
+From: linux-integrity-owner@vger.kernel.org <linux-integrity-owner@vger.ker=
+nel.org> On Behalf Of Lakshmi Ramasubramanian
+Sent: Friday, March 22, 2019 10:39 AM
+To: linux-integrity@vger.kernel.org; linux-kernel@vger.kernel.org
+Subject: Portable Executable (PE) Signature Validation and Measurement for =
+KEXEC system call using IMA
 
-Jason
+Hello,
+
+When loading the new kernel image file for executing KEXEC system call, we =
+would like to verify that the kernel image file is signed and the signer ce=
+rtificate is valid.=20
+
+If the kernel image file is in Portable Executable (PE) format we want to v=
+alidate the PE Signature and measure the signer X.509 certificate (Extend a=
+s part of IMA Template defaulting to PCR 10, if not otherwise set,  and the=
+ IMA measurement log).
+
+We plan to use Integrity Measurement Architecture (IMA) for the above.
+
+Please let us know if anyone is already working on a patch set for such a f=
+unctionality.
+
+I am aware of the work that Thiago Jung Bauermann @ IBM is doing for "Appen=
+ded signatures support for IMA appraisal"=20
+(Web link given below)
+
+    https://nam06.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Flkm=
+l.org%2Flkml%2F2018%2F12%2F12%2F1049&amp;data=3D02%7C01%7Cnramas%40microsof=
+t.com%7C2791f20f548e4502060108d6aeed54a8%7C72f988bf86f141af91ab2d7cd011db47=
+%7C1%7C0%7C636888731683001667&amp;sdata=3Dai2KrDlnyyEqJfLS9kYUw0ebUTbq7Y5dT=
+qMciwSRZ%2BM%3D&amp;reserved=3D0
+
+Thank You.
+ -lakshmi
