@@ -2,83 +2,150 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8928FC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 11:10:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F094C10F03
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 11:10:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 627CE2063F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 11:10:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0E9C2063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 11:10:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LdhsIEq/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730824AbfCYLKk (ORCPT
+        id S1730856AbfCYLKw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 07:10:40 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:45530 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729727AbfCYLKk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 07:10:40 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2EA2C15AB;
-        Mon, 25 Mar 2019 04:10:40 -0700 (PDT)
-Received: from [10.1.196.69] (e112269-lin.cambridge.arm.com [10.1.196.69])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7E78C3F575;
-        Mon, 25 Mar 2019 04:10:38 -0700 (PDT)
-Subject: Re: [PATCH v3] ASoC: sirf-audio: Remove redundant of_match_node call
-To:     Aditya Pakki <pakki001@umn.edu>
-Cc:     Barry Song <baohua@kernel.org>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, kjlu@umn.edu,
-        Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        linux-arm-kernel@lists.infradead.org
-References: <20190322220031.13773-1-pakki001@umn.edu>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <31ca2c4d-668d-9448-bb67-516d1a45b6a7@arm.com>
-Date:   Mon, 25 Mar 2019 11:10:37 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Mon, 25 Mar 2019 07:10:52 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:43001 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730666AbfCYLKw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 07:10:52 -0400
+Received: by mail-io1-f68.google.com with SMTP id c4so7216470ioh.9;
+        Mon, 25 Mar 2019 04:10:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XdcK+7ybdBXm2Dc31iQ691Y34fxFAlh93ocycClmkGc=;
+        b=LdhsIEq/+pLXic7tWDG/kbcGhSKSQtZq+sJrbU6JQ6sCvcD4h8YNpXyCxz/7BAdfFb
+         Fmxg1Zc4HAH4bW0T+iGx5sa8JJoiY30DnMEGB8+DJeynA7mrUGyHm9GnBU4Tl8MdYtqc
+         HnAszlg4XJMYuCqcWleUA8RrOVREIXLPT/Uq9hKR/l5Bu9WUr41CGdoLDzbxZDEgL3L5
+         BpL2jTH/EyGP5hD2lOYtW/NY2hMNzCNBfkIsgFnqm68F1z6pcIZmNXcEOKD1Y04QUyrD
+         ufUXvz79o7QUzENr4CWTWYFS+U0LdsPShQR+yYX19H70GsHnKUO2qAC3tr+7scGx02I5
+         +ekw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XdcK+7ybdBXm2Dc31iQ691Y34fxFAlh93ocycClmkGc=;
+        b=O7EuNUQH/NQIxX32NJs5SQdfWDRqRyAx14detu2ICY6ZIBJ62xyFBRdr/LLTgZ/CbC
+         AFZ1L7S0UDNCQG4GBdytd02W3g2kD7zF8Kt8b9hQ3u8omh64izaYYi8FAOr7ST0g25+h
+         roquXu3xwKQROnu4n7CYloOvGOHV86WFe4rcw15a5x/RrZyEUmWss3SGiVXPulua6O4B
+         faqSgCwB+YUkZwrTETaiiOJ+D8Hssg5txFU/+eO5ioD/uWF2zynqbIBZGZKva3/NJbDp
+         2AOwJrHPUqAiWnIwReuHNg1mVo2qlFsUKoueYk1oJcuEB5dEmyKMDosjBEnBXQ/3Tb9R
+         iuIA==
+X-Gm-Message-State: APjAAAUD0x1qv9rHFI7MOH+zjB0tJl3vlVYW/os5rGiXaYNUHUQWdxO/
+        TA5lMF9EaeZQ9DTGV7eXmpLbrD3xzYX8T6V1jDI=
+X-Google-Smtp-Source: APXvYqwjphE6fhNhzNGJstt12luS7nAsbuJSDJOEsOxutQTiWuETkw9bQBib0LDC+/F4nojXp53NLUCK/AULX91J0Z4=
+X-Received: by 2002:a6b:7112:: with SMTP id q18mr16294600iog.5.1553512251655;
+ Mon, 25 Mar 2019 04:10:51 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190322220031.13773-1-pakki001@umn.edu>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <20190322165404.2859356-1-arnd@arndb.de>
+In-Reply-To: <20190322165404.2859356-1-arnd@arndb.de>
+From:   Ilya Dryomov <idryomov@gmail.com>
+Date:   Mon, 25 Mar 2019 12:12:09 +0100
+Message-ID: <CAOi1vP_KXQd5=YCGvO4m-WbnPDdpeBS5gTVKkdkBZvR=N-d7fg@mail.gmail.com>
+Subject: Re: [PATCH] rdb: convert all rbd_assert(0) to BUG()
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Sage Weil <sage@redhat.com>, Alex Elder <elder@kernel.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Jason Dillaman <dillaman@redhat.com>,
+        Ceph Development <ceph-devel@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22/03/2019 22:00, Aditya Pakki wrote:
-> Unlike other drivers probe method, of_match_node return value
-> is not used or checked. This patch removes the redundant code.
-> 
-> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-
-Reviewed-by: Steven Price <steven.price@arm.com>
-
-> 
+On Fri, Mar 22, 2019 at 5:54 PM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> rbd_assert(0) has caused different issues depending on
+> the compiler version in the past, so it seems better to avoid it
+> completely.
+>
+> Replace the remaining instances.
+>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 > ---
-> v2: Move the signed by above the version change log
-> v1: A check is unnecessary as match is never used.
-> ---
->  sound/soc/codecs/sirf-audio-codec.c | 3 ---
->  1 file changed, 3 deletions(-)
-> 
-> diff --git a/sound/soc/codecs/sirf-audio-codec.c b/sound/soc/codecs/sirf-audio-codec.c
-> index e424499a8450..e0af21050078 100644
-> --- a/sound/soc/codecs/sirf-audio-codec.c
-> +++ b/sound/soc/codecs/sirf-audio-codec.c
-> @@ -461,9 +461,6 @@ static int sirf_audio_codec_driver_probe(struct platform_device *pdev)
->  	struct sirf_audio_codec *sirf_audio_codec;
->  	void __iomem *base;
->  	struct resource *mem_res;
-> -	const struct of_device_id *match;
-> -
-> -	match = of_match_node(sirf_audio_codec_of_match, pdev->dev.of_node);
->  
->  	sirf_audio_codec = devm_kzalloc(&pdev->dev,
->  		sizeof(struct sirf_audio_codec), GFP_KERNEL);
-> 
+>  drivers/block/rbd.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/block/rbd.c b/drivers/block/rbd.c
+> index cbcc3baf3807..564c5069cc78 100644
+> --- a/drivers/block/rbd.c
+> +++ b/drivers/block/rbd.c
+> @@ -1342,7 +1342,7 @@ static void rbd_obj_zero_range(struct rbd_obj_request *obj_req, u32 off,
+>                 zero_bvecs(&obj_req->bvec_pos, off, bytes);
+>                 break;
+>         default:
+> -               rbd_assert(0);
+> +               BUG();
+>         }
+>  }
+>
+> @@ -1597,7 +1597,7 @@ static void rbd_obj_request_destroy(struct kref *kref)
+>                 kfree(obj_request->bvec_pos.bvecs);
+>                 break;
+>         default:
+> -               rbd_assert(0);
+> +               BUG();
+>         }
+>
+>         kfree(obj_request->img_extents);
+> @@ -1797,7 +1797,7 @@ static void rbd_osd_req_setup_data(struct rbd_obj_request *obj_req, u32 which)
+>                                                     &obj_req->bvec_pos);
+>                 break;
+>         default:
+> -               rbd_assert(0);
+> +               BUG();
+>         }
+>  }
+>
+> @@ -2052,7 +2052,7 @@ static int __rbd_img_fill_request(struct rbd_img_request *img_req)
+>                         ret = rbd_obj_setup_zeroout(obj_req);
+>                         break;
+>                 default:
+> -                       rbd_assert(0);
+> +                       BUG();
+>                 }
+>                 if (ret < 0)
+>                         return ret;
+> @@ -2531,7 +2531,7 @@ static int rbd_obj_issue_copyup_ops(struct rbd_obj_request *obj_req, u32 bytes)
+>                 num_osd_ops += count_zeroout_ops(obj_req);
+>                 break;
+>         default:
+> -               rbd_assert(0);
+> +               BUG();
+>         }
+>
+>         obj_req->osd_req = rbd_osd_req_create(obj_req, num_osd_ops);
+> @@ -2558,7 +2558,7 @@ static int rbd_obj_issue_copyup_ops(struct rbd_obj_request *obj_req, u32 bytes)
+>                 __rbd_obj_setup_zeroout(obj_req, which);
+>                 break;
+>         default:
+> -               rbd_assert(0);
+> +               BUG();
+>         }
+>
+>         ret = ceph_osdc_alloc_messages(obj_req->osd_req, GFP_NOIO);
 
+Applied.
+
+Thanks,
+
+                Ilya
