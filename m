@@ -2,135 +2,98 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA7FCC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 23:42:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E41C10F03
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 23:44:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9666B2083D
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 23:42:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553557351;
-	bh=9HKKstgDeo0vs0rQiPhWD1UARtFAZEryCAqL281TzC8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=0XDoLdejgMEQJjpXLyW9rjs4hNWFD2a1CGxdX8iicp1RP9yFkmndQ66ATp+SZ1Q/H
-	 oywXWugvQSe8ujzLbljnvk+tpQ7uhydZFRV8xc6ms5cwYXZmq1IXIn7xmoPdwFd/F9
-	 jQc+4IK2x7jGhpxWmaBhxbC0yTVin+9bGh9NW54k=
+	by mail.kernel.org (Postfix) with ESMTP id 5D1792083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 23:44:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z9UfVDgP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727506AbfCYXma (ORCPT
+        id S1727626AbfCYXoo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 19:42:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50232 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726553AbfCYXm2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 19:42:28 -0400
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D3AE20854
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 23:42:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553557347;
-        bh=9HKKstgDeo0vs0rQiPhWD1UARtFAZEryCAqL281TzC8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Ep/KL1+deZDNfjqGXtXYY2NdhRdebRBYCVkEuBUYdm/oXouy1NtxYOcVOzWAQt4dt
-         zCssZYorC9vIBLmbaA4sjJHg3cA3l3jDlLpzPNPfBQCKQIbAFXZb1KvlvSPJ5ayGnl
-         iqDJ+CmHgaz9JQmvjSoazOPgJWtxNJDMqP6yQUMk=
-Received: by mail-wm1-f47.google.com with SMTP id y197so10956617wmd.0
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 16:42:27 -0700 (PDT)
-X-Gm-Message-State: APjAAAUX3ML+Xz/Bp9aMDNTsLwn0kRlj3FP50IAwCYl7uSx8dXE4XRxi
-        gZtsh0fufFiM5eyRpFcnFf2xgWfgVr8JFiYSduCZpw==
-X-Google-Smtp-Source: APXvYqy7TwbBmkrbCD21UGhsWd3I+1cLabNvWbVw1JXomyD6gXIFMeYNYciXeA+MXQTdQH5VQE5zd3Brjbbfn57vN+s=
-X-Received: by 2002:a7b:c257:: with SMTP id b23mr12729658wmj.83.1553557345804;
- Mon, 25 Mar 2019 16:42:25 -0700 (PDT)
+        Mon, 25 Mar 2019 19:44:44 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:34943 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726186AbfCYXon (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 19:44:43 -0400
+Received: by mail-pg1-f196.google.com with SMTP id g8so7355266pgf.2;
+        Mon, 25 Mar 2019 16:44:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=etDxjsM9Oq3NHJQ+SQ3jlnMOWQWp78+pUjuw+dnW+Ds=;
+        b=Z9UfVDgPKmnVQMFOE1ahz/vuUM9OipGgovWywGGS54Fui1y/9MZp4KoFSl5eEEcMGC
+         yw777vb4DDkBSPbVXMm1EkSxj+ikmqJlaGbFTgTvps5/AW095qIs3QCm9mSwFNMaDvfm
+         LZkUETeqaerHg/iGhESrZNn9ckQm3NlNIH2G6Udfv2VwiFTjYBesQm/Ysp1B0DSbjE5U
+         G3zyc0rHqUfW6iknywwl8oYgCYKpTd9Bb3Y4guDms8ovwFyQatq74+tpR73l8brND9qG
+         8DE0N60fsh3Qg3otrpUhZlUA9H3C+XpwTjHR649FBxe9lukFhSWTV7jv/4b9bJbp7+Fp
+         N1ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=etDxjsM9Oq3NHJQ+SQ3jlnMOWQWp78+pUjuw+dnW+Ds=;
+        b=n5bPLEhg8BI//qGGsmJ6QE3rMUa24dzmvI95RG+mXGkxqY5NwL4GqHMhp9lOn85BnD
+         2BtsFIDHTk2es5uYxgpUVPpw/NByq70bKsvk/Gmp4TfzH24joO8TwE0aHqxrVIqU0Vc8
+         f/XCY0RFCcXQScX9VhaODgRsw5kD5eFU8Uz/2ezorQyvCxaSFi9Y5m+bFs9X0CDgRbYB
+         MBSvUp0P/OwusYEd3fXOPqLT8M72rt1OteAPi1Cl+ZOr0V52DX/J6NQul5j4eUMINjHO
+         GOxVKpGtKPn658UtdN/WELNNjR0QceSNuveHthLop2DQ6DNlx98idqP9djfZ6V1f6j8M
+         wMoA==
+X-Gm-Message-State: APjAAAW+Gi5zfc0zLknjL6bw26j8SwwC5jYUDPmu4eKio2oyJGR/KHm/
+        zGqWIBhtQPMCmJO1mQ8B7sg=
+X-Google-Smtp-Source: APXvYqxzAkcO2M9gqyLaJ+VvG0z0Hjh2W32jd1R5CTgEuPPEucbQwjqugLgKcinqDxapICJCl5/M+g==
+X-Received: by 2002:a62:2a97:: with SMTP id q145mr27320245pfq.22.1553557483270;
+        Mon, 25 Mar 2019 16:44:43 -0700 (PDT)
+Received: from ast-mbp ([2620:10d:c090:200::3:b0d9])
+        by smtp.gmail.com with ESMTPSA id a7sm20671208pfc.45.2019.03.25.16.44.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 25 Mar 2019 16:44:42 -0700 (PDT)
+Date:   Mon, 25 Mar 2019 16:44:40 -0700
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        syzbot <syzbot+7a8ba368b47fdefca61e@syzkaller.appspotmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Subject: Re: KASAN: use-after-free Read in path_lookupat
+Message-ID: <20190325234439.jimxj6q4bs5ndrwf@ast-mbp>
+References: <0000000000006946d2057bbd0eef@google.com>
+ <CAHk-=wiijJMTw=nTj_ED+YWMCrvHzh3ezfVYRxvzcW6+trgyPA@mail.gmail.com>
+ <20190325045744.GK2217@ZenIV.linux.org.uk>
+ <CAHk-=wg4iJsMHBzK52WzP+5_92HbwvX_vh_s4mMUuN0FJGdM5A@mail.gmail.com>
+ <CAHk-=whJ4M5FegOLvnjUtJ0+pHv4L8UNFt+9jJDhox3Ada8kwA@mail.gmail.com>
+ <20190325211405.GP2217@ZenIV.linux.org.uk>
+ <CAHk-=wj+-e=X9cvvNwc5+QuvBOyYT7OtZTBzy-Wg8zGrUwxSbw@mail.gmail.com>
+ <20190325233731.GS2217@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-References: <20190319231020.tdcttojlbmx57gke@brauner.io> <20190320015249.GC129907@google.com>
- <CAKOZuetJzg_EiyuK7Pa13X3LKuBbreg7zJ5g4uQv_uV4wpmZjg@mail.gmail.com>
- <20190320035953.mnhax3vd47ya4zzm@brauner.io> <CAKOZuet3-VhmC3oHtEbPPvdiar_k_QXTf0TkgmH9LiwmW-_oNA@mail.gmail.com>
- <4A06C5BB-9171-4E70-BE31-9574B4083A9F@joelfernandes.org> <20190320182649.spryp5uaeiaxijum@brauner.io>
- <CAKOZuevHbQtrq+Nb-jw1L7O72BmAzcXmbUnfnseeXZjX4PE4tg@mail.gmail.com>
- <20190320185156.7bq775vvtsxqlzfn@brauner.io> <CALCETrXO=V=+qEdLDVPf8eCgLZiB9bOTrUfe0V-U-tUZoeoRDA@mail.gmail.com>
- <20190320191412.5ykyast3rgotz3nu@brauner.io> <CAKOZuesRwQ4=Svu1KgHWY=HZSS8mF8uFmuzuVOSH0QpJoy7a5w@mail.gmail.com>
- <CALCETrUFrFKC2YTLH7ViM_7XPYk3LNmNiaz6s8wtWo1pmJQXzg@mail.gmail.com>
- <CAG48ez3VMjLJBC_F3BxC2sc2s-28NdsrUduR=jX66XH0w2O-Qg@mail.gmail.com> <CAKOZueuNGn31QYpRa5G-OP_S=G3f9TBQ-w27giABn7UVgPQ8Ng@mail.gmail.com>
-In-Reply-To: <CAKOZueuNGn31QYpRa5G-OP_S=G3f9TBQ-w27giABn7UVgPQ8Ng@mail.gmail.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Mon, 25 Mar 2019 16:42:14 -0700
-X-Gmail-Original-Message-ID: <CALCETrV-52TXKbAim06Fr7vvFeOvk0SczneeV_Rtqr6-LN7-GQ@mail.gmail.com>
-Message-ID: <CALCETrV-52TXKbAim06Fr7vvFeOvk0SczneeV_Rtqr6-LN7-GQ@mail.gmail.com>
-Subject: Re: pidfd design
-To:     Daniel Colascione <dancol@google.com>
-Cc:     Jann Horn <jannh@google.com>, Andy Lutomirski <luto@kernel.org>,
-        Christian Brauner <christian@brauner.io>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sultan Alsawaf <sultan@kerneltoast.com>,
-        Tim Murray <timmurray@google.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
-        kernel-team <kernel-team@android.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Kees Cook <keescook@chromium.org>,
-        Jonathan Kowalski <bl0pbl33p@gmail.com>,
-        Linux API <linux-api@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190325233731.GS2217@ZenIV.linux.org.uk>
+User-Agent: NeoMutt/20180223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 1:23 PM Daniel Colascione <dancol@google.com> wrote:
->
-> On Mon, Mar 25, 2019 at 1:14 PM Jann Horn <jannh@google.com> wrote:
-> >
-> > On Mon, Mar 25, 2019 at 8:44 PM Andy Lutomirski <luto@kernel.org> wrote:
+On Mon, Mar 25, 2019 at 11:37:32PM +0000, Al Viro wrote:
+> 
+> For debugfs it's clearly "use default ->evict_inode(), have explicit
+> ->destroy_inode() using free_inode_nonrcu()" - there we have nothing
+> else done in ->evict_inode() and kfree is obviously safe in softirq.
+> I'll post that (or push to vfs.git#fixes), along with minimal fixes
+> for other 3.  If bpf_any_put() is softirq-safe, we'll have the full
+> set for -stable and the rest could be done on top of that.
 
-> > One ioctl on procfs roots to translate pidfds into that procfs,
-> > subject to both the normal lookup permission checks and only working
-> > if the pidfd has a translation into the procfs:
-> >
-> > int proc_root_fd = open("/proc", O_RDONLY);
-> > int proc_dir_fd = ioctl(proc_root_fd, PROC_PIDFD_TO_PROCFSFD, pidfd);
-> >
-> > And one ioctl on procfs directories to translate from PGIDs and PIDs to pidfds:
-> >
-> > int proc_pgid_fd = open("/proc/self", O_RDONLY);
-> > int self_pg_pidfd = ioctl(proc_pgid_fd, PROC_PROCFSFD_TO_PIDFD, 0);
-> > int proc_pid_fd = open("/proc/thread-self", O_RDONLY);
-> > int self_p_pidfd = ioctl(proc_pid_fd, PROC_PROCFSFD_TO_PIDFD, 0);
-> >
+Yes. bpf_any_put() is safe to be called from softirq.
 
-This sounds okay to me.  Or we could make it so that a procfs
-directory fd also works as a pidfd, but that seems more likely to be
-problematic than just allowing two-way translation like this
-
-> >
-> > And then, as you proposed, the new sys_clone() can just return a
-> > pidfd, and you can convert it into a procfs fd yourself if you want.
->
-> I think that's the consensus we reached on the other thread. The
-> O_DIRECTORY open on /proc/self/fd/mypidfd seems like it'd work well
-> enough.
-
-I must have missed this particular email.
-
-IMO, if /proc/self/fd/mypidfd allows O_DIRECTORY open to work, then it
-really ought to do function just like /proc/self/fd/mypidfd/. and
-/proc/self/fd/mypidfd/status should work.  And these latter two
-options seem nutty.
-
-Also, this O_DIRECTORY thing is missing the entire point of the ioctl
-interface -- it doesn't require procfs access.
-
---Andy
