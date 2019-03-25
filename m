@@ -2,119 +2,128 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4EC0C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:49:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A95EEC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:49:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 662F0205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:49:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="VHy58OKL"
+	by mail.kernel.org (Postfix) with ESMTP id 813D020854
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:49:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731360AbfCYMs7 (ORCPT
+        id S1731362AbfCYMtr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 08:48:59 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40797 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731302AbfCYMs6 (ORCPT
+        Mon, 25 Mar 2019 08:49:47 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:43679 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731088AbfCYMtq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 08:48:58 -0400
-Received: by mail-wr1-f67.google.com with SMTP id t5so9943495wri.7
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 05:48:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nmYmF1rE18fG3Rlx04uuJ/vHCzEwQZmoDYft6UmHsgo=;
-        b=VHy58OKLgp+OKOD3PlGUO9Dayq94gLzcy46KSCSIgdzQg7RkOwxW4LnU9n4zA7RpTd
-         tWzoY8LgsYExSLWq48c+D9+TAxOGi472iHmRb11VBKY+wiRlGJE5E6AHVMKegsAmAdHU
-         l9Pi0rwitMHjkYjEZIx9MPvb0cKuQIZrm9GX5rNzkBhiHhd3mfkbXU7RFBOofXg8I3ap
-         u4CArOCkneMu7SJ0nKU4phz/tpxZER0KMmcU0p7oIPYrv8UrEbyYVZJFK/NCZZb6eFtP
-         hUNnMkxft6hEhwo0qQudhrfkmo84LhW68KSCZaUZHN83PCxu3SLNZoCQm4MT1NnLdFmE
-         i5oQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nmYmF1rE18fG3Rlx04uuJ/vHCzEwQZmoDYft6UmHsgo=;
-        b=SZqS8T8AAUl+20xYZRf8/xvcUnx0xi57Rkbvo/p95Ilcs6i7x8nEgm/pwSDsWeUdcB
-         HW+Qmf3xzELmM8sivtLtK1ZAFxrhoKWlB6SB9YaxHgSR0nJIFpvCTEsJxwaqzEfDxkJU
-         h8f/Pb+4FvdTZ2wcJECRTB+FNWDVDIKCUNkAO8sx0jiXs3rYCtwcpCdVX1e8qvmXitI/
-         qPXtM09MhUgIJ5xryqOkLwZTArMRCVovhM5yTCKsfCC1E+reTAUN4t8Vew1DR2GTiVEq
-         Usff310NgAmF3ituLHR+G8Fkx9obEnu7oRhbpHNF315yA17OMg5kHuytgt95taiBhlWu
-         fZzg==
-X-Gm-Message-State: APjAAAXZJOPZdPrIyUsVbVJAtWp/1yX7H9NegcDp7zm+DW7l/PMcn4bm
-        xFhl9weSGr9DD8b1+L1CMS50zbh/mZv1x4m2FLRrXw==
-X-Google-Smtp-Source: APXvYqxg01ImCE822MGGI0rIgz8Ae6A/LRFHbW+pCoCyB5tVDcH0f2I5D7+B3ZtTJMOirALfWs8DYtBEcNedPlkr+yE=
-X-Received: by 2002:adf:fe03:: with SMTP id n3mr3360051wrr.59.1553518136709;
- Mon, 25 Mar 2019 05:48:56 -0700 (PDT)
+        Mon, 25 Mar 2019 08:49:46 -0400
+Received: from wuerfel.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MYNW6-1hUvqI2maA-00VPkJ; Mon, 25 Mar 2019 13:49:32 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Vishal Kulkarni <vishal@chelsio.com>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Ganesh Goudar <ganeshgr@chelsio.com>,
+        Casey Leedom <leedom@chelsio.com>,
+        Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>,
+        Arjun Vynipadath <arjun@chelsio.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] chelsio: use BUG() instead of BUG_ON(1)
+Date:   Mon, 25 Mar 2019 13:49:16 +0100
+Message-Id: <20190325124930.1435409-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-References: <20190325092234.5451-1-anup.patel@wdc.com> <20190325092234.5451-5-anup.patel@wdc.com>
- <20190325113935.GD27843@infradead.org>
-In-Reply-To: <20190325113935.GD27843@infradead.org>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Mon, 25 Mar 2019 18:18:45 +0530
-Message-ID: <CAAhSdy2dds7pp8=XX+zbKbMoWbgjPxP6r4aMZJeHyqHV2MP4CQ@mail.gmail.com>
-Subject: Re: [PATCH v3 4/4] RISC-V: Allow booting kernel from any 4KB aligned address
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Anup Patel <Anup.Patel@wdc.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:PNTkGRuCd5wNhzroBHRqUL0XYRFAORHUb1U4ZwjFcxgkNSiS2LB
+ rVcKnQH4LVKiDbYxw1e/7Gsd/nC5I7tg5SUjRhlZqqvd0tzPLSOHbuscZeG/yx/lvKueyjo
+ rr3nGP2YXQnh6kayprJ+1hf8G2P4wMw8gdMhY5GWHN/HdXKuz7tCo+6vok8eNrC4y/g6HS2
+ PDs7QpBijpHhAxgmF5f7g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:7DwBwJLjbCI=:4ROudwibWg1irKYwbIhP98
+ LUlgwQTKvCWSigbJOJ+h7n9vHGnhOSeF4ZirJvw+7DF9TvuDPpIMI+P5dZE0G/+EQ/1XdsFbi
+ YFXcyLkH6HsCAIlb6Q9sq3H7ihDRulq6c1U8qYcbkzs9GbedMQn+Oge4AmssPDNeMSoSujYwl
+ x2SssNGAb1jfiOdwT8qrG5SiaWu1QA4epTAxf8ovDPesMBI0opUuCRbOUnsg7rPsPr85pha8r
+ FV/1G70/ywa/iIX/OTMi1D8Nu06ubkyfRDb47RH/nTpHgE+rGfh7+MbVT1EC99IARBoXr2DAO
+ H+mRR3QKCVsXzyoTXniwGJAxNMlGODcrqvFIwEDZLZDTanIxwhIuRf1eeemxqAUMNVCmRkAZU
+ ncNN3+DVuUNRePOyC2YXpRarHlVk44LlNcagdrnsMF0LOfo3PzHSPowaDIBV6LscOm0uCAg0e
+ gYFHevJdHjLokyglFo+ixbbVZ3N1ZF4/pqWXzbLemkOetmPz0uw8c2agNEbjCn01cja4JGGI7
+ 7pjzfb5D6V4jQ6uspYjXlRgABV5EwQ7AxmDavPilBS9DTUSJQ7aKStnk6NhamE+f0VK8nozpI
+ CJMgIPWxCT+DEZqSG0qa0v8QVs7kEZBjLn2DJsaLyZ8FynUAerRTewTQ9j/42D3Zt5Z2SRNtr
+ yasIDn02M7HHTKcBOHLuIx5kWJBDrhCAU1KycO1esZ1fA5uyRmq7jEwGZdKf/eMJ6JWl4luoK
+ 3Izktbv7a/rGdF7/OUPtFd2Yt8nZUIIFezZ+bQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 5:09 PM Christoph Hellwig <hch@infradead.org> wrote:
->
-> I'm still not sold on this at all.  It is a lot more code, a lot harder
-> to read code and all for a very narrow corner case that isn't even
-> going to be enabled in default configs.
+clang warns about possible bugs in a dead code branch after
+BUG_ON(1) when CONFIG_PROFILE_ALL_BRANCHES is enabled:
 
-In case you missed my previous response about why its not just
-about a very narrow corner case ......
+ drivers/net/ethernet/chelsio/cxgb4/sge.c:479:3: error: variable 'buf_size' is used uninitialized whenever 'if'
+      condition is false [-Werror,-Wsometimes-uninitialized]
+                BUG_ON(1);
+                ^~~~~~~~~
+ include/asm-generic/bug.h:61:36: note: expanded from macro 'BUG_ON'
+ #define BUG_ON(condition) do { if (unlikely(condition)) BUG(); } while (0)
+                                   ^~~~~~~~~~~~~~~~~~~
+ include/linux/compiler.h:48:23: note: expanded from macro 'unlikely'
+ #  define unlikely(x)   (__branch_check__(x, 0, __builtin_constant_p(x)))
+                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ drivers/net/ethernet/chelsio/cxgb4/sge.c:482:9: note: uninitialized use occurs here
+        return buf_size;
+               ^~~~~~~~
+ drivers/net/ethernet/chelsio/cxgb4/sge.c:479:3: note: remove the 'if' if its condition is always true
+                BUG_ON(1);
+                ^
+ include/asm-generic/bug.h:61:32: note: expanded from macro 'BUG_ON'
+ #define BUG_ON(condition) do { if (unlikely(condition)) BUG(); } while (0)
+                               ^
+ drivers/net/ethernet/chelsio/cxgb4/sge.c:459:14: note: initialize the variable 'buf_size' to silence this warning
+        int buf_size;
+                    ^
+                     = 0
 
+Use BUG() here to create simpler code that clang understands
+correctly.
 
-We trying to addresses following issues in current code:
-1. The current setup_vm() maps all possible kernel virtual addresses (128GB
-on 64bit system and 1GB on 32bit system). The amount RAM present on
-real systems might be much less so we should not have kernel mappings for
-non-existent RAM. Of course, we don't know amount of RAM available in
-setup_vm() so we have to split page table setup in two parts and do minimal
-required mapping in setup_vm().
-2. NOMMU kernel requires a swapper_pg_dir with identity mapping (VA == PA)
-and without it we get boot-time crash so we cannot skip it for NOMMU case. For
-NOMMU, the PAGE_OFFSET will typically be 0x80020000 (or 0x80xxxxxx). This
-means swapper_pmd array (which uses -PAGE_OFFSET) will be over-sized
-causing compile errors.
-3. For both NOMMU with tiny memory and MMU with tiny memory, the current
-setup_vm() is not allowing us to place kernel on non-2M (or non-4M) aligned
-addressed there by causing memory below kernel to be wasted.
-4. For MMU based kernel, the current setup_vm() is hard-wired for fixed 2M
-mapping size. It will require more changes if we want to do 1G mappings.
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c | 2 +-
+ drivers/net/ethernet/chelsio/cxgb4/sge.c           | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-The above issues motivated us to re-write setup_vm().
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c
+index 3130b43bba52..02959035ed3f 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c
+@@ -2620,7 +2620,7 @@ static inline struct port_info *ethqset2pinfo(struct adapter *adap, int qset)
+ 	}
+ 
+ 	/* should never happen! */
+-	BUG_ON(1);
++	BUG();
+ 	return NULL;
+ }
+ 
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/sge.c b/drivers/net/ethernet/chelsio/cxgb4/sge.c
+index 88773ca58e6b..b3da81e90132 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/sge.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/sge.c
+@@ -476,7 +476,7 @@ static inline int get_buf_size(struct adapter *adapter,
+ 		break;
+ 
+ 	default:
+-		BUG_ON(1);
++		BUG();
+ 	}
+ 
+ 	return buf_size;
+-- 
+2.20.0
 
-We are trying to make initial page table setup more flexible and robust so that:
-1. We don't have any unwanted mappings pointing to non-existent RAM
-2. We can have any value of PAGE_OFFSET for NOMMU case without the
-page table arrays becoming oversized
-3. We can create mappings of best possible size to get good performance
-4. We can boot from any 4K/2M/1G (or just 4K) aligned load address
-
-Also, the end result of all this is a much more readable page table setup code
-shared between setup_vm() an setup_vm_final() where the differences are
-abstracted via mapping ops.
-
-
-Regards,
-Anup
