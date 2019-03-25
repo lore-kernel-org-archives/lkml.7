@@ -2,194 +2,442 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC5B7C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:32:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B50C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:32:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82AD620879
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:32:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="G5g/mI+b"
+	by mail.kernel.org (Postfix) with ESMTP id F087820848
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:32:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730048AbfCYScW (ORCPT
+        id S1730113AbfCYSc0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 14:32:22 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:35354 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729572AbfCYScV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 14:32:21 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2PIOP1p084410;
-        Mon, 25 Mar 2019 18:31:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=suxbTCmF+HEgiXqzH4ga0Yl4/3by9ypkLgqXUuCJH8E=;
- b=G5g/mI+bQehMMtA8yH7hz5QAADZK+HWSKfeyXjn/ujq1sBNIoZCjhrp7aywSWTJZfJgB
- Xq1aI1//ppYCHrdsMqxAVcm/dI5vclrMVpJpibJq9rtMOwaHmE65R0JdqBcX206Trq/N
- M4qKrJ/WEz+pLzu1NNfX+EzvZ4eaJStQumodwfAftSnhs2fwRy7rSJoWdvqPWOoD7w0d
- woQBY0pCnf61rsIOUA4UxTqNi9m9q6NN4Rb49m4WvEzj77tW3yn1j4cAaYawBTutsIUQ
- bRV3SbzXKn5NdMVGaN+4hgemHnxG0UT4fcZjzSAH730My2ikLiI/wZeAf4xFhf1LiVEJ Bg== 
-Received: from aserv0021.oracle.com (aserv0021.oracle.com [141.146.126.233])
-        by aserp2130.oracle.com with ESMTP id 2re6g0num8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 25 Mar 2019 18:31:53 +0000
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x2PIVrr0030136
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 25 Mar 2019 18:31:53 GMT
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x2PIVqKh024393;
-        Mon, 25 Mar 2019 18:31:52 GMT
-Received: from dhcp-burlington7-2nd-B-east-10-152-55-162.usdhcp.oraclecorp.com (/10.152.32.65)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 25 Mar 2019 11:31:52 -0700
-Subject: Re: [PATCH] x86/xen: Add "xen_timer_slop" command line option
-To:     Ryan Thibodeaux <thibodux@gmail.com>
-Cc:     luca abeni <luca.abeni@santannapisa.it>,
-        Dario Faggioli <dfaggioli@suse.com>,
-        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
-        oleksandr_andrushchenko@epam.com, tglx@linutronix.de,
-        jgross@suse.com, ryan.thibodeaux@starlab.io
-References: <1553279397-130201-1-git-send-email-ryan.thibodeaux@starlab.io>
- <abf65a68-9463-0f0e-1f51-6eefd3cacc88@oracle.com>
- <52bfeae7c256faec444b69efe58d363ad60c3fc5.camel@suse.com>
- <20190323114151.5cebf31b@sweethome> <20190325130530.56603806@luca64>
- <69e40698-f7ae-11c3-e4b7-dda4f1fadcf6@oracle.com>
- <20190325141138.GA44413@centos-dev.localdomain>
-From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=boris.ostrovsky@oracle.com; prefer-encrypt=mutual; keydata=
- mQINBFH8CgsBEAC0KiOi9siOvlXatK2xX99e/J3OvApoYWjieVQ9232Eb7GzCWrItCzP8FUV
- PQg8rMsSd0OzIvvjbEAvaWLlbs8wa3MtVLysHY/DfqRK9Zvr/RgrsYC6ukOB7igy2PGqZd+M
- MDnSmVzik0sPvB6xPV7QyFsykEgpnHbvdZAUy/vyys8xgT0PVYR5hyvhyf6VIfGuvqIsvJw5
- C8+P71CHI+U/IhsKrLrsiYHpAhQkw+Zvyeml6XSi5w4LXDbF+3oholKYCkPwxmGdK8MUIdkM
- d7iYdKqiP4W6FKQou/lC3jvOceGupEoDV9botSWEIIlKdtm6C4GfL45RD8V4B9iy24JHPlom
- woVWc0xBZboQguhauQqrBFooHO3roEeM1pxXjLUbDtH4t3SAI3gt4dpSyT3EvzhyNQVVIxj2
- FXnIChrYxR6S0ijSqUKO0cAduenhBrpYbz9qFcB/GyxD+ZWY7OgQKHUZMWapx5bHGQ8bUZz2
- SfjZwK+GETGhfkvNMf6zXbZkDq4kKB/ywaKvVPodS1Poa44+B9sxbUp1jMfFtlOJ3AYB0WDS
- Op3d7F2ry20CIf1Ifh0nIxkQPkTX7aX5rI92oZeu5u038dHUu/dO2EcuCjl1eDMGm5PLHDSP
- 0QUw5xzk1Y8MG1JQ56PtqReO33inBXG63yTIikJmUXFTw6lLJwARAQABtDNCb3JpcyBPc3Ry
- b3Zza3kgKFdvcmspIDxib3Jpcy5vc3Ryb3Zza3lAb3JhY2xlLmNvbT6JAjgEEwECACIFAlH8
- CgsCGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEIredpCGysGyasEP/j5xApopUf4g
- 9Fl3UxZuBx+oduuw3JHqgbGZ2siA3EA4bKwtKq8eT7ekpApn4c0HA8TWTDtgZtLSV5IdH+9z
- JimBDrhLkDI3Zsx2CafL4pMJvpUavhc5mEU8myp4dWCuIylHiWG65agvUeFZYK4P33fGqoaS
- VGx3tsQIAr7MsQxilMfRiTEoYH0WWthhE0YVQzV6kx4wj4yLGYPPBtFqnrapKKC8yFTpgjaK
- jImqWhU9CSUAXdNEs/oKVR1XlkDpMCFDl88vKAuJwugnixjbPFTVPyoC7+4Bm/FnL3iwlJVE
- qIGQRspt09r+datFzPqSbp5Fo/9m4JSvgtPp2X2+gIGgLPWp2ft1NXHHVWP19sPgEsEJXSr9
- tskM8ScxEkqAUuDs6+x/ISX8wa5Pvmo65drN+JWA8EqKOHQG6LUsUdJolFM2i4Z0k40BnFU/
- kjTARjrXW94LwokVy4x+ZYgImrnKWeKac6fMfMwH2aKpCQLlVxdO4qvJkv92SzZz4538az1T
- m+3ekJAimou89cXwXHCFb5WqJcyjDfdQF857vTn1z4qu7udYCuuV/4xDEhslUq1+GcNDjAhB
- nNYPzD+SvhWEsrjuXv+fDONdJtmLUpKs4Jtak3smGGhZsqpcNv8nQzUGDQZjuCSmDqW8vn2o
- hWwveNeRTkxh+2x1Qb3GT46uuQINBFH8CgsBEADGC/yx5ctcLQlB9hbq7KNqCDyZNoYu1HAB
- Hal3MuxPfoGKObEktawQPQaSTB5vNlDxKihezLnlT/PKjcXC2R1OjSDinlu5XNGc6mnky03q
- yymUPyiMtWhBBftezTRxWRslPaFWlg/h/Y1iDuOcklhpr7K1h1jRPCrf1yIoxbIpDbffnuyz
- kuto4AahRvBU4Js4sU7f/btU+h+e0AcLVzIhTVPIz7PM+Gk2LNzZ3/on4dnEc/qd+ZZFlOQ4
- KDN/hPqlwA/YJsKzAPX51L6Vv344pqTm6Z0f9M7YALB/11FO2nBB7zw7HAUYqJeHutCwxm7i
- BDNt0g9fhviNcJzagqJ1R7aPjtjBoYvKkbwNu5sWDpQ4idnsnck4YT6ctzN4I+6lfkU8zMzC
- gM2R4qqUXmxFIS4Bee+gnJi0Pc3KcBYBZsDK44FtM//5Cp9DrxRQOh19kNHBlxkmEb8kL/pw
- XIDcEq8MXzPBbxwHKJ3QRWRe5jPNpf8HCjnZz0XyJV0/4M1JvOua7IZftOttQ6KnM4m6WNIZ
- 2ydg7dBhDa6iv1oKdL7wdp/rCulVWn8R7+3cRK95SnWiJ0qKDlMbIN8oGMhHdin8cSRYdmHK
- kTnvSGJNlkis5a+048o0C6jI3LozQYD/W9wq7MvgChgVQw1iEOB4u/3FXDEGulRVko6xCBU4
- SQARAQABiQIfBBgBAgAJBQJR/AoLAhsMAAoJEIredpCGysGyfvMQAIywR6jTqix6/fL0Ip8G
- jpt3uk//QNxGJE3ZkUNLX6N786vnEJvc1beCu6EwqD1ezG9fJKMl7F3SEgpYaiKEcHfoKGdh
- 30B3Hsq44vOoxR6zxw2B/giADjhmWTP5tWQ9548N4VhIZMYQMQCkdqaueSL+8asp8tBNP+TJ
- PAIIANYvJaD8xA7sYUXGTzOXDh2THWSvmEWWmzok8er/u6ZKdS1YmZkUy8cfzrll/9hiGCTj
- u3qcaOM6i/m4hqtvsI1cOORMVwjJF4+IkC5ZBoeRs/xW5zIBdSUoC8L+OCyj5JETWTt40+lu
- qoqAF/AEGsNZTrwHJYu9rbHH260C0KYCNqmxDdcROUqIzJdzDKOrDmebkEVnxVeLJBIhYZUd
- t3Iq9hdjpU50TA6sQ3mZxzBdfRgg+vaj2DsJqI5Xla9QGKD+xNT6v14cZuIMZzO7w0DoojM4
- ByrabFsOQxGvE0w9Dch2BDSI2Xyk1zjPKxG1VNBQVx3flH37QDWpL2zlJikW29Ws86PHdthh
- Fm5PY8YtX576DchSP6qJC57/eAAe/9ztZdVAdesQwGb9hZHJc75B+VNm4xrh/PJO6c1THqdQ
- 19WVJ+7rDx3PhVncGlbAOiiiE3NOFPJ1OQYxPKtpBUukAlOTnkKE6QcA4zckFepUkfmBV1wM
- Jg6OxFYd01z+a+oL
-Message-ID: <48d80239-08ca-6bd0-84b0-95d0d0ab689c@oracle.com>
-Date:   Mon, 25 Mar 2019 14:31:36 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Mon, 25 Mar 2019 14:32:26 -0400
+Received: from foss.arm.com ([217.140.101.70]:53526 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729072AbfCYScY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 14:32:24 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 557901596;
+        Mon, 25 Mar 2019 11:32:23 -0700 (PDT)
+Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1B2493F575;
+        Mon, 25 Mar 2019 11:32:20 -0700 (PDT)
+Subject: Re: [PATCH v2 1/2] EDAC: add EDAC driver for DMC520
+To:     Rui Zhao <ruizhao@outlook.com>
+Cc:     "bp@alien8.de" <bp@alien8.de>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "okaya@kernel.org" <okaya@kernel.org>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "hangl@microsoft.com" <hangl@microsoft.com>,
+        "lewan@microsoft.com" <lewan@microsoft.com>,
+        Rui Zhao <ruizhao@microsoft.com>
+References: <BN7PR08MB5572D3A5217C4749AC4E7DC4AE4C0@BN7PR08MB5572.namprd08.prod.outlook.com>
+From:   James Morse <james.morse@arm.com>
+Message-ID: <95fe6765-ef70-99df-5fa3-703cb0c1af0f@arm.com>
+Date:   Mon, 25 Mar 2019 18:32:19 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <20190325141138.GA44413@centos-dev.localdomain>
+In-Reply-To: <BN7PR08MB5572D3A5217C4749AC4E7DC4AE4C0@BN7PR08MB5572.namprd08.prod.outlook.com>
 Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9206 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=877 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903250132
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/25/19 10:11 AM, Ryan Thibodeaux wrote:
-> On Mon, Mar 25, 2019 at 09:43:20AM -0400, Boris Ostrovsky wrote:
->> On 3/25/19 8:05 AM, luca abeni wrote:
->>> Hi all,
->>>
->>> On Sat, 23 Mar 2019 11:41:51 +0100
->>> luca abeni <luca.abeni@santannapisa.it> wrote:
->>> [...]
->>>>>> Is there any data that shows effects of using this new parameter?
->>>>>>     
->>>>> Yes, I've done some research and experiments on this. I did it
->>>>> together with a friend, which I'm Cc-ing, as I'm not sure we're
->>>>> ready/capable to share the results, yet (Luca?).  
->>>> I think we can easily share the experimental data (cyclictest output
->>>> and plots).
->>>>
->>>> Moreover, we can share the scripts and tools for running the
->>>> experiments (so, everyone can easily reproduce the numbers by simply
->>>> typing "make" and waiting for some time :)
->>>>
->>>>
->>>> I'll try to package the results and the scripts/tools this evening,
->>>> and I'll send them.
->>> Sorry for the delay. I put some quick results here:
->>> http://retis.santannapisa.it/luca/XenTimers/
->>> (there also is a link to the scripts to be used for reproducing the
->>> results). The latencies have been measured by running cyclictest in the
->>> guest (see the scripts for details).
->>>
->>> The picture shows the latencies measured with an unpatched guest kernel
->>> and with a guest kernel having TIMER_SLOP set to 1000 (arbitrary small
->>> value :).
->>> All the experiments have been performed booting the hypervisor with a
->>> small timer_slop (the hypervisor's one) value. So, they show that
->>> decreasing the hypervisor's timer_slop is not enough to measure low
->>> latencies with cyclictest.
->>
->>
->> I have a couple of questions:
->> * Does it make sense to make this a tunable for other clockevent devices
->> as well?
-> I gather that would be on a case-by-case basis for very specific 
-> ones.
->
-> For many timers in the kernel, the minimums are determined by the
-> actual hardware  backing the timer, and the minimum can be
-> adjusted by the clockevent code. This case is special since it 
-> is entirely a software-based implementation in the kernel, where 
-> the actual timer implementation is in the Xen hypervisor.
->
->> * This patch adjusts min value. Could max value (ever) need a similar
->> adjustment?
-> I cannot think of such a case where that would be helpful, but I
-> cannot rule that out or speak as an authority.
+Hi Rui,
+
+On 07/03/2019 01:24, Rui Zhao wrote:
+> From: Rui Zhao <ruizhao@microsoft.com>
+> New driver supports error detection and correction on
+> the devices with ARM DMC-520 memory controller.
 
 
-I am asking mostly because you are introducing new interface and I don't
-want it to change in the future. I suppose if later we decide to add
-control for the max value we could just expand your current proposal to
-xen_timer_slop=[min],[max] and keep it to be back-compatible.
+> diff --git a/drivers/edac/dmc520_edac.c b/drivers/edac/dmc520_edac.c
+> new file mode 100644
+> index 0000000..c70ce4e
+> --- /dev/null
+> +++ b/drivers/edac/dmc520_edac.c
+> @@ -0,0 +1,619 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +// EDAC driver for DMC-520
 
-For the patch:
+[..]
 
-Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+> +// DMC-520 types, masks and bitfields
+> +#define MEMORY_TYPE_LPDDR3			0
+> +#define MEMORY_TYPE_DDR3			1
+> +#define MEMORY_TYPE_DDR4			2
+> +#define MEMORY_TYPE_LPDDR4			3
+
+(this might be better as an enum as it hints to the compiler that only these
+values can ever happen. An example of where this is handy further down...)
+
+
+> +#define MEMORY_DEV_WIDTH_X4			0
+> +#define MEMORY_DEV_WIDTH_X8			1
+> +#define MEMORY_DEV_WIDTH_X16			2
+> +#define MEMORY_DEV_WIDTH_X32			3
+
+(this might be better as an enum)
+
+
+> +struct dmc520_edac {
+> +	void __iomem *reg_base;
+
+> +	char message[EDAC_MSG_BUF_SIZE];
+
+Does there need to be an irq-safe lock for this mesage buffer?
+Your snprintf() into it in dmc520_handle_dram_ecc_errors(), which is called from both
+dmc520_edac_dram_ue_isr() and dmc520_edac_dram_ce_isr()... if these are wired up as
+different irqs, they could happen on different CPUs concurrently...
+
+
+> +};
+
+
+> +static bool dmc520_get_dram_ecc_error_info(struct dmc520_edac *edac,
+> +					   bool is_ce,
+> +					   struct ecc_error_info *info)
+> +{
+> +	u32 reg_offset_low, reg_offset_high;
+> +	u32 reg_val_low, reg_val_high;
+> +	bool valid;
+> +
+> +	reg_offset_low = is_ce ? REG_OFFSET_DRAM_ECC_ERRC_INT_INFO_31_00 :
+> +				 REG_OFFSET_DRAM_ECC_ERRD_INT_INFO_31_00;
+> +	reg_offset_high = is_ce ? REG_OFFSET_DRAM_ECC_ERRC_INT_INFO_63_32 :
+> +				  REG_OFFSET_DRAM_ECC_ERRD_INT_INFO_63_32;
+> +
+> +	reg_val_low = dmc520_read_reg(edac, reg_offset_low);
+> +	reg_val_high = dmc520_read_reg(edac, reg_offset_high);
+> +
+> +	valid = (FIELD_GET(REG_FIELD_ERR_INFO_LOW_VALID, reg_val_low) != 0) &&
+> +		(FIELD_GET(REG_FIELD_ERR_INFO_HIGH_VALID, reg_val_high) != 0);
+> +
+> +	if (info) {
+
+I see one caller, dmc520_handle_dram_ecc_errors(), which has info on the stack... is it
+possible for info to be NULL here?
+
+
+> +		if (valid) {
+> +			info->col = FIELD_GET(REG_FIELD_ERR_INFO_LOW_COL,
+> +					      reg_val_low);
+> +			info->row = FIELD_GET(REG_FIELD_ERR_INFO_LOW_ROW,
+> +					      reg_val_low);
+> +			info->rank = FIELD_GET(REG_FIELD_ERR_INFO_LOW_RANK,
+> +					       reg_val_low);
+> +			info->bank = FIELD_GET(REG_FIELD_ERR_INFO_HIGH_BANK,
+> +					       reg_val_high);
+> +		} else {
+> +			memset(info, 0, sizeof(struct ecc_error_info));
+> +		}
+> +	}
+> +
+> +	return valid;
+> +}
+
+> +static enum mem_type dmc520_get_mtype(struct dmc520_edac *edac)
+> +{
+> +	enum mem_type mt;
+> +	u32 reg_val, type;
+> +
+> +	reg_val = dmc520_read_reg(edac, REG_OFFSET_MEMORY_TYPE_NOW);
+> +	type = FIELD_GET(REG_FIELD_MEMORY_TYPE, reg_val);
+> +
+> +	switch (type) {
+> +	case MEMORY_TYPE_LPDDR3:
+> +	case MEMORY_TYPE_DDR3:
+> +		mt = MEM_DDR3;
+> +		break;
+> +
+> +	case MEMORY_TYPE_DDR4:
+> +	case MEMORY_TYPE_LPDDR4:
+> +	default:
+
+Is this default just to shut the compiler warning up?
+If so, you could use an enum and the compiler won't warn for a switch() that has all the
+cases covered.
+
+
+> +		mt = MEM_DDR4;
+> +		break;
+> +	}
+> +	return mt;
+> +}
+
+
+> +static irqreturn_t dmc520_edac_dram_ce_isr(int irq, void *data)
+> +{
+> +	return dmc520_edac_dram_ecc_isr(irq, data, true);
+> +}
+> +
+> +static irqreturn_t dmc520_edac_dram_ue_isr(int irq, void *data)
+> +{
+> +	return dmc520_edac_dram_ecc_isr(irq, data, false);
+> +}
+
+How come these calls aren't folded into the one-size fits all irq handler below?
+If the hardware always sets the status register, does the irqchip driver need to call a
+different helper?
+
+
+> +static irqreturn_t dmc520_edac_all_isr(int irq, void *data)
+> +{
+> +	struct mem_ctl_info *mci;
+> +	struct dmc520_edac *edac;
+> +	u32 status;
+> +
+> +	mci = data;
+> +	edac = mci->pvt_info;
+> +
+> +	status = dmc520_read_reg(edac, REG_OFFSET_INTERRUPT_STATUS);
+> +
+> +	if (status & DRAM_ECC_INT_CE_MASK)
+> +		dmc520_edac_dram_ce_isr(irq, data);
+> +
+> +	if (status & DRAM_ECC_INT_UE_MASK)
+> +		dmc520_edac_dram_ue_isr(irq, data);
+> +
+> +	// Other interrupt handlers can be added
+> +
+> +	return IRQ_HANDLED;
+
+
+Shouldn't there be a way of getting IRQ_NONE out of this?
+
+
+> +}
+
+[...]
+
+
+> +static int count_set_bits(u32 n)
+> +{
+> +	int count;
+> +
+> +	for (count = 0; n != 0; n &= (n - 1))
+> +		count++;
+> +
+> +	return count;
+> +}
+
+Isn't this what hweight() does?
 
 
 
+> +static int dmc520_edac_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev;
+> +	struct dmc520_edac *edac;
+> +	struct mem_ctl_info *mci;
+> +	struct edac_mc_layer layers[1];
+> +	int ret, irq, nintr;
+> +	struct resource *res;
+> +	void __iomem *reg_base;
+> +	u32 status, current_bit, interrupt_mask;
+> +	bool interrupt_shared;
+> +
+> +	dev = &pdev->dev;
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	reg_base = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(reg_base))
+> +		return PTR_ERR(reg_base);
+> +
+> +	layers[0].type = EDAC_MC_LAYER_CHIP_SELECT;
+> +	layers[0].size = dmc520_get_rank_count(reg_base);
+> +	layers[0].is_virt_csrow = true;
+> +
+> +	mci = edac_mc_alloc(dmc520_mc_idx++, ARRAY_SIZE(layers), layers,
+> +			    sizeof(struct dmc520_edac));
+> +	if (!mci) {
+> +		edac_printk(KERN_ERR, EDAC_MOD_NAME,
+> +			    "Failed to allocate memory for mc instance\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	edac = mci->pvt_info;
+> +	edac->reg_base = reg_base;
+> +
+> +	if (!dmc520_is_ecc_enabled(edac)) {
+> +		edac_printk(KERN_ERR, EDAC_MOD_NAME, "ECC not enabled\n");
+> +		ret = -ENXIO;
+> +		goto err;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, mci);
+> +
+> +	mci->pdev = dev;
+> +	mci->mtype_cap = MEM_FLAG_DDR3 | MEM_FLAG_DDR4;
+> +	mci->edac_ctl_cap = EDAC_FLAG_NONE | EDAC_FLAG_SECDED;
+> +	mci->edac_cap = EDAC_FLAG_SECDED;
+> +	mci->scrub_cap = SCRUB_FLAG_HW_SRC;
+> +	mci->scrub_mode = dmc520_is_scrub_configured(edac) ?
+> +			  SCRUB_HW_SRC : SCRUB_NONE;
+> +	mci->ctl_name = EDAC_CTL_NAME;
+> +	mci->dev_name = dev_name(mci->pdev);
+> +	mci->mod_name = EDAC_MOD_NAME;
+> +	mci->ctl_page_to_phys = NULL;
+> +
+> +	edac_op_state = EDAC_OPSTATE_INT;
+> +
+> +	dmc520_init_csrow(mci);
+> +
+> +	ret = edac_mc_add_mc(mci);
+> +	if (ret) {
+> +		edac_printk(KERN_ERR, EDAC_MOD_NAME,
+> +			    "Failed to register with EDAC core\n");
+> +		goto err;
+> +	}
+> +
+> +	interrupt_shared = false;
+> +	interrupt_mask = DRAM_ECC_INT_CE_MASK | DRAM_ECC_INT_UE_MASK;
+> +
+> +	if (dev->of_node) {
+> +		if (of_find_property(dev->of_node, "interrupt-shared", NULL))
+> +			interrupt_shared = true;
+> +
+> +		if (of_property_read_u32(dev->of_node,
+> +					 "interrupt-mask",
+> +					 &interrupt_mask)) {
+> +			edac_printk(KERN_INFO, EDAC_MOD_NAME,
+> +				    "Use default interrupt mask 0x%X\n",
+> +				    interrupt_mask);
+> +		}
+> +
+> +		interrupt_mask &= ALL_INT_MASK;
+> +	}
+> +
+> +	// Clear interrupts
+> +	status = dmc520_read_reg(edac, REG_OFFSET_INTERRUPT_STATUS);
+> +	dmc520_write_reg(edac, 0, REG_OFFSET_INTERRUPT_CONTROL);
+> +	dmc520_write_reg(edac, ALL_INT_MASK, REG_OFFSET_INTERRUPT_CLR);
+> +
+> +	// Reset DRAM CE/UE counters
+> +	if (interrupt_mask & DRAM_ECC_INT_CE_MASK)
+> +		dmc520_get_dram_ecc_error_count(edac, true);
+> +
+> +	if (interrupt_mask & DRAM_ECC_INT_UE_MASK)
+> +		dmc520_get_dram_ecc_error_count(edac, false);
+> +
+> +	nintr = count_set_bits(interrupt_mask);
+> +	if (nintr == 0) {
+> +		edac_printk(KERN_ERR, EDAC_MC,
+> +			    "Invalid interrupt mask 0x%X\n",
+> +			    interrupt_mask);
+> +		ret = -EINVAL;
+> +		goto err;
+
+This is after edac_mc_add_mc(), and on your remove path you have a edac_mc_del_mc(). Is
+that necessary here? Do you need an err_del_mc?
+
+
+
+> +	}
+> +
+> +	current_bit = BIT(0);
+> +	for (irq = 0; irq < nintr; ++irq) {
+> +		irq_handler_t edac_isr;
+> +		int irq_id = platform_get_irq(pdev, irq);
+> +
+> +		if (irq_id < 0) {
+> +			edac_printk(KERN_ERR, EDAC_MC,
+> +				    "Failed to get %s irq\n",
+> +				    irq == 0 ? "CE" : "UE");
+> +			ret = -ENODEV;
+> +			goto err;
+
+err_del_mc?
+
+
+> +		}
+> +
+> +		if (interrupt_shared) {
+> +			edac_isr = dmc520_edac_all_isr;
+> +		} else {
+> +			while (current_bit & ALL_INT_MASK) {
+> +				if (current_bit & interrupt_mask)
+> +					break;
+> +
+> +				current_bit <<= 1;
+> +			}
+> +
+> +			if (current_bit & DRAM_ECC_INT_CE_MASK) {
+> +				edac_isr = dmc520_edac_dram_ce_isr;
+> +			} else if (current_bit & DRAM_ECC_INT_UE_MASK) {
+> +				edac_isr = dmc520_edac_dram_ue_isr;
+> +			} else {
+> +				edac_printk(KERN_ERR, EDAC_MC,
+> +					    "Invalid interrupt bit 0x%X\n",
+> +					    current_bit);
+> +				ret = -EINVAL;
+> +				goto err;
+
+err_del_mc?
+
+> +			}
+> +
+> +			current_bit <<= 1;
+> +		}
+> +
+> +		ret = devm_request_irq(&pdev->dev,
+> +				       irq_id,
+> +				       edac_isr,
+> +				       0,
+> +				       dev_name(&pdev->dev),
+> +				       mci);
+> +		if (ret < 0) {
+> +			edac_printk(KERN_ERR, EDAC_MC,
+> +				    "Failed to request irq %d\n", irq_id);
+> +			goto err;
+
+err_del_mc?
+
+> +		}
+> +
+> +		// Only one irq for all interrupts
+> +		if (interrupt_shared)
+> +			break;
+> +	}
+> +
+> +	// Enable interrupts
+> +	dmc520_write_reg(edac, interrupt_mask, REG_OFFSET_INTERRUPT_CONTROL);
+> +
+> +	return 0;
+> +
+> +err:
+> +	edac_mc_free(mci);
+> +
+> +	return ret;
+> +}
+
+
+[...]
+
+> +MODULE_AUTHOR("Rui Zhao <ruizhao@microsoft.com>");
+> +MODULE_DESCRIPTION("DMC-520 ECC driver");
+
+> +MODULE_LICENSE("GPL v2");
+
+This doesn't match your SPDX tag above:
+| // SPDX-License-Identifier: GPL-2.0+
+
+Can I use a later version?
+
+
+
+Thanks,
+
+James
