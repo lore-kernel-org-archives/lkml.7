@@ -2,468 +2,378 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13171C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 10:13:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1501CC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 10:13:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF8B520870
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 10:13:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C58E620870
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 10:13:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="bdfhX6yO"
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="ZDAC+2CB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730696AbfCYKNc (ORCPT
+        id S1730721AbfCYKNj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 06:13:32 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:46164 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730659AbfCYKNb (ORCPT
+        Mon, 25 Mar 2019 06:13:39 -0400
+Received: from esa4.microchip.iphmx.com ([68.232.154.123]:59705 "EHLO
+        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730700AbfCYKNi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 06:13:31 -0400
-Received: by mail-pf1-f195.google.com with SMTP id 9so6049392pfj.13
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 03:13:31 -0700 (PDT)
+        Mon, 25 Mar 2019 06:13:38 -0400
+X-IronPort-AV: E=Sophos;i="5.60,256,1549954800"; 
+   d="scan'208";a="28506127"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 25 Mar 2019 03:13:37 -0700
+Received: from NAM05-BY2-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.76.107) with Microsoft SMTP Server (TLS) id
+ 14.3.352.0; Mon, 25 Mar 2019 03:13:37 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=RdU0HXcdNPeRJH0qDIHvqh6U/3Vd325g1P7G8YSBZL0=;
-        b=bdfhX6yO9yWDvYsshVaUqT01Gf1QzM9QyF5wkzB0+vc52bDXNbV5cBDMaB2qWnvHod
-         34Ql6V4FiwYYeqIjvTJWDatot4/wLApwjwQWSkX/mR3j+uLQA7M88gd2UbPiCN5s7SKF
-         dND9MgGyblzdm/CCaELF4M0SATfnFynnKKMDAkw0We9hqOgbAeCnj5ClDIMvcnFR5vo5
-         n5BPQagi2mGGymNyYSqT1MIBRRg2ER8bceTg+afnXuHxq0nDrTLJb07W2+TM2VTKGb1M
-         fhMg7OzukA6+MiweLL/TaWzY7Cpa+Y50MLa5YKXoUPFPnpZRRBbN5rT4GcS/XbqZQ8tY
-         /b8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=RdU0HXcdNPeRJH0qDIHvqh6U/3Vd325g1P7G8YSBZL0=;
-        b=ak3O3e0SDJDsszz+gEGVptz1jv/Cm3O3Squ3/78bAK4evvc90vRZUSKovXMaoETDDC
-         05RbhlZVAFhqkylQYgiJ6wJ7z6h/KECLFAY4SdgrBivGHJjXCYcMnYctR4TwNFNgDICo
-         DpI9F6zhj+6Pg5KxQ+sW6oVDsoteb/8YiwVM9QTqi6nWXp/MC6kWUhyzf4np3CpPHJiT
-         0VOknL6ZU4MMIeqs0WSbzxTKOumtfa02m49ogSwHwI2Y1bfDpmLfr6PfBPNIw2eQT1Hj
-         06jiQkTfVcKW/ONqacbvOPSiR8E1WB2JNsSGjUVjBtihoqVX1kQYaMUj3b2y1XVeBs+G
-         3eLQ==
-X-Gm-Message-State: APjAAAXIsPMD8wle/SsG+s1xknuPqHSg3ExlUOOCMV2XrO3IyMbhlKwF
-        Z4BqMcKdCeiP/bAZFZ3mHW+0Lg==
-X-Google-Smtp-Source: APXvYqwg7Lqdgoj4HVrlDCutw4/Rl7GxACjHdnfoSr3nPhwTGWn8e3GJjiDI89Mi4gZK6pZ6buLoUQ==
-X-Received: by 2002:a63:6ac1:: with SMTP id f184mr3271371pgc.25.1553508810560;
-        Mon, 25 Mar 2019 03:13:30 -0700 (PDT)
-Received: from buildserver-90.open-silicon.com ([114.143.65.226])
-        by smtp.googlemail.com with ESMTPSA id v82sm30151298pfa.170.2019.03.25.03.13.26
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 25 Mar 2019 03:13:29 -0700 (PDT)
-From:   Yash Shah <yash.shah@sifive.com>
-To:     palmer@sifive.com, linux-pwm@vger.kernel.org,
-        linux-riscv@lists.infradead.org
-Cc:     thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sachin.ghadi@sifive.com, paul.walmsley@sifive.com,
-        Yash Shah <yash.shah@sifive.com>
-Subject: [PATCH v11 2/2] pwm: sifive: Add a driver for SiFive SoC PWM
-Date:   Mon, 25 Mar 2019 15:42:59 +0530
-Message-Id: <1553508779-9685-3-git-send-email-yash.shah@sifive.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1553508779-9685-1-git-send-email-yash.shah@sifive.com>
-References: <1553508779-9685-1-git-send-email-yash.shah@sifive.com>
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector1-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WLrDlO+E2+1XaIO9P84fw+i07S8zEnxq0vBwIXmH4/g=;
+ b=ZDAC+2CBT+PLDPtZ3i1sCQp3xHH4iNFIag9EAawFV9HeAxWPm49gUy3ZXOO/Tc4MbMkDRZ/plVBDvDbfuRY4qgBz6ukeOkedLjJow9Dohe8auaT8CUNefLV2bmVnhRYlk+ept/bq01Q6dFzJ5knyR2aiYIOjB53xZ97rVGfW3a8=
+Received: from BY5PR11MB4119.namprd11.prod.outlook.com (10.255.162.219) by
+ BY5PR11MB4118.namprd11.prod.outlook.com (10.255.162.218) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1730.18; Mon, 25 Mar 2019 10:13:34 +0000
+Received: from BY5PR11MB4119.namprd11.prod.outlook.com
+ ([fe80::4454:7962:5f5a:72e9]) by BY5PR11MB4119.namprd11.prod.outlook.com
+ ([fe80::4454:7962:5f5a:72e9%2]) with mapi id 15.20.1730.019; Mon, 25 Mar 2019
+ 10:13:34 +0000
+From:   <Kavyasree.Kotagiri@microchip.com>
+To:     <kishon@ti.com>, <davem@davemloft.net>
+CC:     <linux-kernel@vger.kernel.org>, <Chakri.Ponnuri@microchip.com>,
+        <Kavyasree.Kotagiri@microchip.com>, <quentin.schulz@bootlin.com>,
+        <Steen.Hegelund@microchip.com>
+Subject: [PATCH] phy: ocelot-serdes: Add support for SERDES6G muxing
+Thread-Topic: [PATCH] phy: ocelot-serdes: Add support for SERDES6G muxing
+Thread-Index: AQHU4vNn9r8Rt4Fbg02c0i2JdM80sA==
+Date:   Mon, 25 Mar 2019 10:13:33 +0000
+Message-ID: <20190325101214.30283-1-kavyasree.kotagiri@microchip.com>
+Accept-Language: en-IN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BYAPR11CA0052.namprd11.prod.outlook.com
+ (2603:10b6:a03:80::29) To BY5PR11MB4119.namprd11.prod.outlook.com
+ (2603:10b6:a03:18f::27)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Kavyasree.Kotagiri@microchip.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-originating-ip: [182.72.246.220]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a54a3e2e-22b5-403a-2764-08d6b10a8975
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:BY5PR11MB4118;
+x-ms-traffictypediagnostic: BY5PR11MB4118:
+x-microsoft-antispam-prvs: <BY5PR11MB411829F54F3F1EC14D77FFED925E0@BY5PR11MB4118.namprd11.prod.outlook.com>
+x-forefront-prvs: 0987ACA2E2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(136003)(39860400002)(376002)(346002)(396003)(189003)(199004)(36756003)(110136005)(26005)(66066001)(50226002)(1076003)(72206003)(478600001)(186003)(25786009)(8936002)(14454004)(14444005)(256004)(55236004)(71200400001)(71190400001)(6506007)(386003)(68736007)(52116002)(6512007)(86362001)(105586002)(78486014)(2616005)(81166006)(476003)(8676002)(81156014)(53936002)(7736002)(305945005)(486006)(6436002)(106356001)(102836004)(107886003)(6486002)(6116002)(3846002)(99286004)(97736004)(316002)(4326008)(2906002)(5660300002)(54906003)(2501003)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:BY5PR11MB4118;H:BY5PR11MB4119.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: Ksf6dZEqFrTbfrAYFmIJvhmmyMHhW/ZfbhE90dX7f+/Io1WVlNfTiODIV6Avdyppfk0yaibi9uBGjD6VKSDWp8frIae6Q4KYZUt+5693dp2fKTbCsF4WjMr2xDL7SabZIqVyQYUFIRk+blhOfzpW8hAKoZmVJYejjgkPz3yILHlZ6EsEoyt5I0xd1FQs8sRvM+kVV/QtTGcGA5CD7J8k+bzV17UdAb8YGCcmMufZ1O7BnZqWpmKJn7YevjJuxqAb3v0Cmp1Ndk1iGn+CaGindzcLQ8nlWzgdImgWQ4XjJbOGLMtE5FTbjnvvuBYkcyfAJCd/tC5O6sUSpaENcSV1kUhtiERhWQxSdKE2wOJ8E/S2ZInqrSXL3l4L3vqAOcBic7kd4ziyh/Qp9lH/ZQCQRQDued9sROehiGMk2yra7SM=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: a54a3e2e-22b5-403a-2764-08d6b10a8975
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Mar 2019 10:13:34.1605
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR11MB4118
+X-OriginatorOrg: microchip.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adds a PWM driver for PWM chip present in SiFive's HiFive Unleashed SoC.
+From: Kavya Sree Kotagiri <kavyasree.kotagiri@microchip.com>
 
-Signed-off-by: Wesley W. Terpstra <wesley@sifive.com>
-[Atish: Various fixes and code cleanup]
-Signed-off-by: Atish Patra <atish.patra@wdc.com>
-Signed-off-by: Yash Shah <yash.shah@sifive.com>
+Adding support for SERDES6G muxing required for QSGMII mode of operation.
+
+Signed-off-by: Kavya Sree Kotagiri <kavyasree.kotagiri@microchip.com>
+Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
+Signed-off-by: Steen Hegelund <Steen.Hegelund@microchip.com>
+Co-developed-by: Quentin Schulz <quentin.schulz@bootlin.com>
+Co-developed-by: Steen Hegelund <Steen.Hegelund@microchip.com>
 ---
- drivers/pwm/Kconfig      |  11 ++
- drivers/pwm/Makefile     |   1 +
- drivers/pwm/pwm-sifive.c | 338 +++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 350 insertions(+)
- create mode 100644 drivers/pwm/pwm-sifive.c
+ drivers/phy/mscc/phy-ocelot-serdes.c | 240 ++++++++++++++++++++++++++-
+ 1 file changed, 238 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index a8f47df..4a61d1a 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -380,6 +380,17 @@ config PWM_SAMSUNG
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called pwm-samsung.
- 
-+config PWM_SIFIVE
-+	tristate "SiFive PWM support"
-+	depends on OF
-+	depends on COMMON_CLK
-+	depends on RISCV || COMPILE_TEST
-+	help
-+	  Generic PWM framework driver for SiFive SoCs.
+diff --git a/drivers/phy/mscc/phy-ocelot-serdes.c b/drivers/phy/mscc/phy-oc=
+elot-serdes.c
+index 77c46f639fbf..76f596365176 100644
+--- a/drivers/phy/mscc/phy-ocelot-serdes.c
++++ b/drivers/phy/mscc/phy-ocelot-serdes.c
+@@ -31,6 +31,238 @@ struct serdes_macro {
+ 	struct serdes_ctrl	*ctrl;
+ };
+=20
++#define MCB_S6G_CFG_TIMEOUT     50
 +
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called pwm-sifive.
-+
- config PWM_SPEAR
- 	tristate "STMicroelectronics SPEAr PWM support"
- 	depends on PLAT_SPEAR
-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index 9c676a0..30089ca 100644
---- a/drivers/pwm/Makefile
-+++ b/drivers/pwm/Makefile
-@@ -37,6 +37,7 @@ obj-$(CONFIG_PWM_RCAR)		+= pwm-rcar.o
- obj-$(CONFIG_PWM_RENESAS_TPU)	+= pwm-renesas-tpu.o
- obj-$(CONFIG_PWM_ROCKCHIP)	+= pwm-rockchip.o
- obj-$(CONFIG_PWM_SAMSUNG)	+= pwm-samsung.o
-+obj-$(CONFIG_PWM_SIFIVE)	+= pwm-sifive.o
- obj-$(CONFIG_PWM_SPEAR)		+= pwm-spear.o
- obj-$(CONFIG_PWM_STI)		+= pwm-sti.o
- obj-$(CONFIG_PWM_STM32)		+= pwm-stm32.o
-diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
-new file mode 100644
-index 0000000..1921e6ea
---- /dev/null
-+++ b/drivers/pwm/pwm-sifive.c
-@@ -0,0 +1,338 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2017-2018 SiFive
-+ * For SiFive's PWM IP block documentation please refer Chapter 14 of
-+ * Reference Manual : https://static.dev.sifive.com/FU540-C000-v1.0.pdf
-+ *
-+ * Limitations:
-+ * - When changing both duty cycle and period, we cannot prevent in
-+ *   software that the output might produce a period with mixed
-+ *   settings (new period length and old duty cycle).
-+ * - The hardware cannot generate a 100% duty cycle.
-+ * - The hardware generates only inverted output.
-+ */
-+#include <linux/clk.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/pwm.h>
-+#include <linux/slab.h>
-+#include <linux/bitfield.h>
-+
-+/* Register offsets */
-+#define PWM_SIFIVE_PWMCFG		0x0
-+#define PWM_SIFIVE_PWMCOUNT		0x8
-+#define PWM_SIFIVE_PWMS			0x10
-+#define PWM_SIFIVE_PWMCMP0		0x20
-+
-+/* PWMCFG fields */
-+#define PWM_SIFIVE_PWMCFG_SCALE		GENMASK(3, 0)
-+#define PWM_SIFIVE_PWMCFG_STICKY	BIT(8)
-+#define PWM_SIFIVE_PWMCFG_ZERO_CMP	BIT(9)
-+#define PWM_SIFIVE_PWMCFG_DEGLITCH	BIT(10)
-+#define PWM_SIFIVE_PWMCFG_EN_ALWAYS	BIT(12)
-+#define PWM_SIFIVE_PWMCFG_EN_ONCE	BIT(13)
-+#define PWM_SIFIVE_PWMCFG_CENTER	BIT(16)
-+#define PWM_SIFIVE_PWMCFG_GANG		BIT(24)
-+#define PWM_SIFIVE_PWMCFG_IP		BIT(28)
-+
-+/* PWM_SIFIVE_SIZE_PWMCMP is used to calculate offset for pwmcmpX registers */
-+#define PWM_SIFIVE_SIZE_PWMCMP		4
-+#define PWM_SIFIVE_CMPWIDTH		16
-+#define PWM_SIFIVE_DEFAULT_PERIOD	10000000
-+
-+struct pwm_sifive_ddata {
-+	struct pwm_chip	chip;
-+	struct mutex lock; /* lock to protect user_count */
-+	struct notifier_block notifier;
-+	struct clk *clk;
-+	void __iomem *regs;
-+	unsigned int real_period;
-+	unsigned int approx_period;
-+	int user_count;
-+};
-+
-+static inline
-+struct pwm_sifive_ddata *pwm_sifive_chip_to_ddata(struct pwm_chip *c)
++static int __serdes_write_mcb_s6g(struct regmap *regmap, u8 macro, u32 op)
 +{
-+	return container_of(c, struct pwm_sifive_ddata, chip);
++	unsigned int regval =3D 0;
++
++	regmap_write(regmap, HSIO_MCB_S6G_ADDR_CFG, op |
++		     HSIO_MCB_S6G_ADDR_CFG_SERDES6G_ADDR(BIT(macro)));
++
++	return regmap_read_poll_timeout(regmap, HSIO_MCB_S6G_ADDR_CFG, regval,
++					(regval & op) !=3D op, 100,
++					MCB_S6G_CFG_TIMEOUT * 1000);
 +}
 +
-+static int pwm_sifive_request(struct pwm_chip *chip, struct pwm_device *pwm)
++static int serdes_commit_mcb_s6g(struct regmap *regmap, u8 macro)
 +{
-+	struct pwm_sifive_ddata *ddata = pwm_sifive_chip_to_ddata(chip);
-+
-+	mutex_lock(&ddata->lock);
-+	ddata->user_count++;
-+	mutex_unlock(&ddata->lock);
-+
-+	return 0;
++	return __serdes_write_mcb_s6g(regmap, macro,
++		HSIO_MCB_S6G_ADDR_CFG_SERDES6G_WR_ONE_SHOT);
 +}
 +
-+static void pwm_sifive_free(struct pwm_chip *chip, struct pwm_device *pwm)
++static int serdes_update_mcb_s6g(struct regmap *regmap, u8 macro)
 +{
-+	struct pwm_sifive_ddata *ddata = pwm_sifive_chip_to_ddata(chip);
-+
-+	mutex_lock(&ddata->lock);
-+	ddata->user_count--;
-+	mutex_unlock(&ddata->lock);
++	return __serdes_write_mcb_s6g(regmap, macro,
++		HSIO_MCB_S6G_ADDR_CFG_SERDES6G_RD_ONE_SHOT);
 +}
 +
-+static void pwm_sifive_update_clock(struct pwm_sifive_ddata *ddata,
-+				    unsigned long rate)
++static int serdes_init_s6g(struct regmap *regmap, u8 serdes, int mode)
 +{
-+	unsigned long long num;
-+	unsigned long scale_pow;
-+	int scale;
-+	u32 val;
-+	/*
-+	 * The PWM unit is used with pwmzerocmp=0, so the only way to modify the
-+	 * period length is using pwmscale which provides the number of bits the
-+	 * counter is shifted before being feed to the comparators. A period
-+	 * lasts (1 << (PWM_SIFIVE_CMPWIDTH + pwmscale)) clock ticks.
-+	 * (1 << (PWM_SIFIVE_CMPWIDTH + scale)) * 10^9/rate = period
-+	 */
-+	scale_pow = div64_ul(ddata->approx_period * (u64)rate, NSEC_PER_SEC);
-+	scale = clamp(ilog2(scale_pow) - PWM_SIFIVE_CMPWIDTH, 0, 0xf);
-+
-+	val = PWM_SIFIVE_PWMCFG_EN_ALWAYS |
-+	      FIELD_PREP(PWM_SIFIVE_PWMCFG_SCALE, scale);
-+	writel(val, ddata->regs + PWM_SIFIVE_PWMCFG);
-+
-+	/* As scale <= 15 the shift operation cannot overflow. */
-+	num = (unsigned long long)NSEC_PER_SEC << (PWM_SIFIVE_CMPWIDTH + scale);
-+	ddata->real_period = div64_ul(num, rate);
-+	dev_dbg(ddata->chip.dev,
-+		"New real_period = %u ns\n", ddata->real_period);
-+}
-+
-+static void pwm_sifive_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
-+				 struct pwm_state *state)
-+{
-+	struct pwm_sifive_ddata *ddata = pwm_sifive_chip_to_ddata(chip);
-+	u32 duty, val;
-+
-+	duty = readl(ddata->regs + PWM_SIFIVE_PWMCMP0 +
-+		     pwm->hwpwm * PWM_SIFIVE_SIZE_PWMCMP);
-+
-+	state->enabled = duty > 0;
-+
-+	val = readl(ddata->regs + PWM_SIFIVE_PWMCFG);
-+	if (!(val & PWM_SIFIVE_PWMCFG_EN_ALWAYS))
-+		state->enabled = false;
-+
-+	state->period = ddata->real_period;
-+	state->duty_cycle =
-+		(u64)duty * ddata->real_period >> PWM_SIFIVE_CMPWIDTH;
-+	state->polarity = PWM_POLARITY_INVERSED;
-+}
-+
-+static int pwm_sifive_enable(struct pwm_chip *chip, bool enable)
-+{
-+	struct pwm_sifive_ddata *ddata = pwm_sifive_chip_to_ddata(chip);
++	u32 pll_fsm_ctrl_data;
++	u32 ob_ena1v_mode;
++	u32 des_bw_ana;
++	u32 ob_ena_cas;
++	u32 if_mode;
++	u32 ob_lev;
++	u32 qrate;
 +	int ret;
 +
-+	if (enable) {
-+		ret = clk_enable(ddata->clk);
-+		if (ret) {
-+			dev_err(ddata->chip.dev, "Enable clk failed\n");
-+			return ret;
-+		}
++	if (mode =3D=3D PHY_INTERFACE_MODE_QSGMII) {
++		pll_fsm_ctrl_data =3D 120;
++		ob_ena1v_mode =3D 0;
++		ob_ena_cas =3D 0;
++		des_bw_ana =3D 5;
++		ob_lev =3D 24;
++		if_mode =3D 3;
++		qrate =3D 0;
++	} else {
++		pll_fsm_ctrl_data =3D 60;
++		ob_ena1v_mode =3D 1;
++		ob_ena_cas =3D 2;
++		des_bw_ana =3D 3;
++		ob_lev =3D 48;
++		if_mode =3D 1;
++		qrate =3D 1;
 +	}
 +
-+	if (!enable)
-+		clk_disable(ddata->clk);
++	ret =3D serdes_update_mcb_s6g(regmap, serdes);
++	if (ret)
++		return ret;
++
++	/* Test pattern */
++
++	regmap_update_bits(regmap, HSIO_S6G_COMMON_CFG,
++			   HSIO_S6G_COMMON_CFG_SYS_RST, 0);
++
++	regmap_update_bits(regmap, HSIO_S6G_PLL_CFG,
++			   HSIO_S6G_PLL_CFG_PLL_FSM_ENA, 0);
++
++	regmap_update_bits(regmap, HSIO_S6G_IB_CFG,
++			   HSIO_S6G_IB_CFG_IB_SIG_DET_ENA |
++			   HSIO_S6G_IB_CFG_IB_REG_ENA |
++			   HSIO_S6G_IB_CFG_IB_SAM_ENA |
++			   HSIO_S6G_IB_CFG_IB_EQZ_ENA |
++			   HSIO_S6G_IB_CFG_IB_CONCUR |
++			   HSIO_S6G_IB_CFG_IB_CAL_ENA,
++			   HSIO_S6G_IB_CFG_IB_SIG_DET_ENA |
++			   HSIO_S6G_IB_CFG_IB_REG_ENA |
++			   HSIO_S6G_IB_CFG_IB_SAM_ENA |
++			   HSIO_S6G_IB_CFG_IB_EQZ_ENA |
++			   HSIO_S6G_IB_CFG_IB_CONCUR);
++
++	regmap_update_bits(regmap, HSIO_S6G_IB_CFG1,
++			   HSIO_S6G_IB_CFG1_IB_FRC_OFFSET |
++			   HSIO_S6G_IB_CFG1_IB_FRC_LP |
++			   HSIO_S6G_IB_CFG1_IB_FRC_MID |
++			   HSIO_S6G_IB_CFG1_IB_FRC_HP |
++			   HSIO_S6G_IB_CFG1_IB_FILT_OFFSET |
++			   HSIO_S6G_IB_CFG1_IB_FILT_LP |
++			   HSIO_S6G_IB_CFG1_IB_FILT_MID |
++			   HSIO_S6G_IB_CFG1_IB_FILT_HP,
++			   HSIO_S6G_IB_CFG1_IB_FILT_OFFSET |
++			   HSIO_S6G_IB_CFG1_IB_FILT_HP |
++			   HSIO_S6G_IB_CFG1_IB_FILT_LP |
++			   HSIO_S6G_IB_CFG1_IB_FILT_MID);
++
++	regmap_update_bits(regmap, HSIO_S6G_IB_CFG2,
++			   HSIO_S6G_IB_CFG2_IB_UREG_M,
++			   HSIO_S6G_IB_CFG2_IB_UREG(4));
++
++	regmap_update_bits(regmap, HSIO_S6G_IB_CFG3,
++			   HSIO_S6G_IB_CFG3_IB_INI_OFFSET_M |
++			   HSIO_S6G_IB_CFG3_IB_INI_LP_M |
++			   HSIO_S6G_IB_CFG3_IB_INI_MID_M |
++			   HSIO_S6G_IB_CFG3_IB_INI_HP_M,
++			   HSIO_S6G_IB_CFG3_IB_INI_OFFSET(31) |
++			   HSIO_S6G_IB_CFG3_IB_INI_LP(1) |
++			   HSIO_S6G_IB_CFG3_IB_INI_MID(31) |
++			   HSIO_S6G_IB_CFG3_IB_INI_HP(0));
++
++	regmap_update_bits(regmap, HSIO_S6G_MISC_CFG,
++			   HSIO_S6G_MISC_CFG_LANE_RST,
++			   HSIO_S6G_MISC_CFG_LANE_RST);
++
++	ret =3D serdes_commit_mcb_s6g(regmap, serdes);
++	if (ret)
++		return ret;
++
++	/* OB + DES + IB + SER CFG */
++	regmap_update_bits(regmap, HSIO_S6G_OB_CFG,
++			   HSIO_S6G_OB_CFG_OB_IDLE |
++			   HSIO_S6G_OB_CFG_OB_ENA1V_MODE |
++			   HSIO_S6G_OB_CFG_OB_POST0_M |
++			   HSIO_S6G_OB_CFG_OB_PREC_M,
++			   (ob_ena1v_mode ? HSIO_S6G_OB_CFG_OB_ENA1V_MODE : 0) |
++			   HSIO_S6G_OB_CFG_OB_POST0(0) |
++			   HSIO_S6G_OB_CFG_OB_PREC(0));
++
++	regmap_update_bits(regmap, HSIO_S6G_OB_CFG1,
++			   HSIO_S6G_OB_CFG1_OB_ENA_CAS_M |
++			   HSIO_S6G_OB_CFG1_OB_LEV_M,
++			   HSIO_S6G_OB_CFG1_OB_LEV(ob_lev) |
++			   HSIO_S6G_OB_CFG1_OB_ENA_CAS(ob_ena_cas));
++
++	regmap_update_bits(regmap, HSIO_S6G_DES_CFG,
++			   HSIO_S6G_DES_CFG_DES_PHS_CTRL_M |
++			   HSIO_S6G_DES_CFG_DES_CPMD_SEL_M |
++			   HSIO_S6G_DES_CFG_DES_BW_ANA_M,
++			   HSIO_S6G_DES_CFG_DES_PHS_CTRL(2) |
++			   HSIO_S6G_DES_CFG_DES_CPMD_SEL(0) |
++			   HSIO_S6G_DES_CFG_DES_BW_ANA(des_bw_ana));
++
++	regmap_update_bits(regmap, HSIO_S6G_IB_CFG,
++			   HSIO_S6G_IB_CFG_IB_SIG_DET_CLK_SEL_M |
++			   HSIO_S6G_IB_CFG_IB_REG_PAT_SEL_OFFSET_M,
++			   HSIO_S6G_IB_CFG_IB_REG_PAT_SEL_OFFSET(0) |
++			   HSIO_S6G_IB_CFG_IB_SIG_DET_CLK_SEL(0));
++
++	regmap_update_bits(regmap, HSIO_S6G_IB_CFG1,
++			   HSIO_S6G_IB_CFG1_IB_TSDET_M,
++			   HSIO_S6G_IB_CFG1_IB_TSDET(16));
++
++	regmap_update_bits(regmap, HSIO_S6G_SER_CFG,
++			   HSIO_S6G_SER_CFG_SER_ALISEL_M |
++			   HSIO_S6G_SER_CFG_SER_ENALI,
++			   HSIO_S6G_SER_CFG_SER_ALISEL(0));
++
++	regmap_update_bits(regmap, HSIO_S6G_PLL_CFG,
++			   HSIO_S6G_PLL_CFG_PLL_DIV4 |
++			   HSIO_S6G_PLL_CFG_PLL_ENA_ROT |
++			   HSIO_S6G_PLL_CFG_PLL_FSM_CTRL_DATA_M |
++			   HSIO_S6G_PLL_CFG_PLL_ROT_DIR |
++			   HSIO_S6G_PLL_CFG_PLL_ROT_FRQ,
++			   HSIO_S6G_PLL_CFG_PLL_FSM_CTRL_DATA
++			   (pll_fsm_ctrl_data));
++
++	regmap_update_bits(regmap, HSIO_S6G_COMMON_CFG,
++			   HSIO_S6G_COMMON_CFG_SYS_RST |
++			   HSIO_S6G_COMMON_CFG_ENA_LANE |
++			   HSIO_S6G_COMMON_CFG_PWD_RX |
++			   HSIO_S6G_COMMON_CFG_PWD_TX |
++			   HSIO_S6G_COMMON_CFG_HRATE |
++			   HSIO_S6G_COMMON_CFG_QRATE |
++			   HSIO_S6G_COMMON_CFG_ENA_ELOOP |
++			   HSIO_S6G_COMMON_CFG_ENA_FLOOP |
++			   HSIO_S6G_COMMON_CFG_IF_MODE_M,
++			   HSIO_S6G_COMMON_CFG_SYS_RST |
++			   HSIO_S6G_COMMON_CFG_ENA_LANE |
++			   (qrate ? HSIO_S6G_COMMON_CFG_QRATE : 0) |
++			   HSIO_S6G_COMMON_CFG_IF_MODE(if_mode));
++
++	regmap_update_bits(regmap, HSIO_S6G_MISC_CFG,
++			   HSIO_S6G_MISC_CFG_LANE_RST |
++			   HSIO_S6G_MISC_CFG_DES_100FX_CPMD_ENA |
++			   HSIO_S6G_MISC_CFG_RX_LPI_MODE_ENA |
++			   HSIO_S6G_MISC_CFG_TX_LPI_MODE_ENA,
++			   HSIO_S6G_MISC_CFG_LANE_RST |
++			   HSIO_S6G_MISC_CFG_RX_LPI_MODE_ENA);
++
++
++	ret =3D serdes_commit_mcb_s6g(regmap, serdes);
++	if (ret)
++		return ret;
++
++	regmap_update_bits(regmap, HSIO_S6G_PLL_CFG,
++			   HSIO_S6G_PLL_CFG_PLL_FSM_ENA,
++			   HSIO_S6G_PLL_CFG_PLL_FSM_ENA);
++
++	ret =3D serdes_commit_mcb_s6g(regmap, serdes);
++	if (ret)
++		return ret;
++
++	/* Wait for PLL bringup */
++	msleep(20);
++
++	regmap_update_bits(regmap, HSIO_S6G_IB_CFG,
++			   HSIO_S6G_IB_CFG_IB_CAL_ENA,
++			   HSIO_S6G_IB_CFG_IB_CAL_ENA);
++
++	regmap_update_bits(regmap, HSIO_S6G_MISC_CFG,
++			   HSIO_S6G_MISC_CFG_LANE_RST, 0);
++
++	ret =3D serdes_commit_mcb_s6g(regmap, serdes);
++	if (ret)
++		return ret;
++
++	/* Wait for calibration */
++	msleep(60);
++
++	regmap_update_bits(regmap, HSIO_S6G_IB_CFG,
++			   HSIO_S6G_IB_CFG_IB_REG_PAT_SEL_OFFSET_M |
++			   HSIO_S6G_IB_CFG_IB_SIG_DET_CLK_SEL_M,
++			   HSIO_S6G_IB_CFG_IB_REG_PAT_SEL_OFFSET(0) |
++			   HSIO_S6G_IB_CFG_IB_SIG_DET_CLK_SEL(7));
++
++	regmap_update_bits(regmap, HSIO_S6G_IB_CFG1,
++			   HSIO_S6G_IB_CFG1_IB_TSDET_M,
++			   HSIO_S6G_IB_CFG1_IB_TSDET(3));
++
++	/* IB CFG */
 +
 +	return 0;
 +}
 +
-+static int pwm_sifive_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-+			    struct pwm_state *state)
-+{
-+	struct pwm_sifive_ddata *ddata = pwm_sifive_chip_to_ddata(chip);
-+	struct pwm_state cur_state;
-+	unsigned int duty_cycle;
-+	unsigned long long num;
-+	bool enabled;
-+	int ret = 0;
-+	u32 frac;
-+
-+	if (state->polarity != PWM_POLARITY_INVERSED)
-+		return -EINVAL;
-+
-+	ret = clk_enable(ddata->clk);
-+	if (ret) {
-+		dev_err(ddata->chip.dev, "Enable clk failed\n");
-+		return ret;
-+	}
-+
-+	mutex_lock(&ddata->lock);
-+	cur_state = pwm->state;
-+	enabled = cur_state.enabled;
-+
-+	duty_cycle = state->duty_cycle;
-+	if (!state->enabled)
-+		duty_cycle = 0;
-+
-+	/*
-+	 * The problem of output producing mixed setting as mentioned at top,
-+	 * occurs here. To minimize the window for this problem, we are
-+	 * calculating the register values first and then writing them
-+	 * consecutively
-+	 */
-+	num = (u64)duty_cycle * (1U << PWM_SIFIVE_CMPWIDTH);
-+	frac = DIV_ROUND_CLOSEST_ULL(num, state->period);
-+	/* The hardware cannot generate a 100% duty cycle */
-+	frac = min(frac, (1U << PWM_SIFIVE_CMPWIDTH) - 1);
-+
-+	if (state->period != ddata->approx_period) {
-+		if (ddata->user_count != 1) {
-+			ret = -EBUSY;
-+			goto exit;
-+		}
-+		ddata->approx_period = state->period;
-+		pwm_sifive_update_clock(ddata, clk_get_rate(ddata->clk));
-+	}
-+
-+	writel(frac, ddata->regs + PWM_SIFIVE_PWMCMP0 +
-+	       pwm->hwpwm * PWM_SIFIVE_SIZE_PWMCMP);
-+
-+	if (state->enabled != enabled)
-+		pwm_sifive_enable(chip, state->enabled);
-+
-+exit:
-+	clk_disable(ddata->clk);
-+	mutex_unlock(&ddata->lock);
-+	return ret;
-+}
-+
-+static const struct pwm_ops pwm_sifive_ops = {
-+	.request = pwm_sifive_request,
-+	.free = pwm_sifive_free,
-+	.get_state = pwm_sifive_get_state,
-+	.apply = pwm_sifive_apply,
-+	.owner = THIS_MODULE,
-+};
-+
-+static int pwm_sifive_clock_notifier(struct notifier_block *nb,
-+				     unsigned long event, void *data)
-+{
-+	struct clk_notifier_data *ndata = data;
-+	struct pwm_sifive_ddata *ddata =
-+		container_of(nb, struct pwm_sifive_ddata, notifier);
-+
-+	if (event == POST_RATE_CHANGE)
-+		pwm_sifive_update_clock(ddata, ndata->new_rate);
-+
-+	return NOTIFY_OK;
-+}
-+
-+static int pwm_sifive_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct pwm_sifive_ddata *ddata;
-+	struct pwm_chip *chip;
-+	struct resource *res;
-+	int ret;
-+
-+	ddata = devm_kzalloc(dev, sizeof(*ddata), GFP_KERNEL);
-+	if (!ddata)
-+		return -ENOMEM;
-+
-+	mutex_init(&ddata->lock);
-+	chip = &ddata->chip;
-+	chip->dev = dev;
-+	chip->ops = &pwm_sifive_ops;
-+	chip->of_xlate = of_pwm_xlate_with_flags;
-+	chip->of_pwm_n_cells = 3;
-+	chip->base = -1;
-+	chip->npwm = 4;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	ddata->regs = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(ddata->regs)) {
-+		dev_err(dev, "Unable to map IO resources\n");
-+		return PTR_ERR(ddata->regs);
-+	}
-+
-+	ddata->clk = devm_clk_get(dev, NULL);
-+	if (IS_ERR(ddata->clk)) {
-+		if (PTR_ERR(ddata->clk) != -EPROBE_DEFER)
-+			dev_err(dev, "Unable to find controller clock\n");
-+		return PTR_ERR(ddata->clk);
-+	}
-+
-+	ret = clk_prepare_enable(ddata->clk);
-+	if (ret) {
-+		dev_err(dev, "failed to enable clock for pwm: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Watch for changes to underlying clock frequency */
-+	ddata->notifier.notifier_call = pwm_sifive_clock_notifier;
-+	ret = clk_notifier_register(ddata->clk, &ddata->notifier);
-+	if (ret) {
-+		dev_err(dev, "failed to register clock notifier: %d\n", ret);
-+		goto disable_clk;
-+	}
-+
-+	ret = pwmchip_add(chip);
-+	if (ret < 0) {
-+		dev_err(dev, "cannot register PWM: %d\n", ret);
-+		goto unregister_clk;
-+	}
-+
-+	platform_set_drvdata(pdev, ddata);
-+	dev_dbg(dev, "SiFive PWM chip registered %d PWMs\n", chip->npwm);
-+
-+	return 0;
-+
-+unregister_clk:
-+	clk_notifier_unregister(ddata->clk, &ddata->notifier);
-+disable_clk:
-+	clk_disable_unprepare(ddata->clk);
-+
-+	return ret;
-+}
-+
-+static int pwm_sifive_remove(struct platform_device *dev)
-+{
-+	struct pwm_sifive_ddata *ddata = platform_get_drvdata(dev);
-+	bool is_enabled = false;
-+	struct pwm_device *pwm;
-+	int ret, ch;
-+
-+	ret = pwmchip_remove(&ddata->chip);
-+	clk_notifier_unregister(ddata->clk, &ddata->notifier);
-+
-+	for (ch = 0; ch < ddata->chip.npwm; ch++) {
-+		pwm = &ddata->chip.pwms[ch];
-+		if (pwm->state.enabled) {
-+			is_enabled = true;
-+			break;
-+		}
-+	}
-+	if (is_enabled)
-+		clk_disable(ddata->clk);
-+	clk_disable_unprepare(ddata->clk);
-+	return ret;
-+}
-+
-+static const struct of_device_id pwm_sifive_of_match[] = {
-+	{ .compatible = "sifive,pwm0" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, pwm_sifive_of_match);
-+
-+static struct platform_driver pwm_sifive_driver = {
-+	.probe = pwm_sifive_probe,
-+	.remove = pwm_sifive_remove,
-+	.driver = {
-+		.name = "pwm-sifive",
-+		.of_match_table = pwm_sifive_of_match,
-+	},
-+};
-+module_platform_driver(pwm_sifive_driver);
-+
-+MODULE_DESCRIPTION("SiFive PWM driver");
-+MODULE_LICENSE("GPL v2");
--- 
-1.9.1
+ #define MCB_S1G_CFG_TIMEOUT     50
+=20
+ static int __serdes_write_mcb_s1g(struct regmap *regmap, u8 macro, u32 op)
+@@ -110,7 +342,7 @@ struct serdes_mux {
+ 	u32			mux;
+ };
+=20
+-#define SERDES_MUX(_idx, _port, _mode, _submode, _mask, _mux) {		\
++#define SERDES_MUX(_idx, _port, _mode, _submode, _mask, _mux) { \
+ 	.idx =3D _idx,						\
+ 	.port =3D _port,						\
+ 	.mode =3D _mode,						\
+@@ -191,8 +423,12 @@ static int serdes_set_mode(struct phy *phy, enum phy_m=
+ode mode, int submode)
+=20
+ 		if (macro->idx <=3D SERDES1G_MAX)
+ 			return serdes_init_s1g(macro->ctrl->regs, macro->idx);
++		else if (macro->idx <=3D SERDES6G_MAX)
++			return serdes_init_s6g(macro->ctrl->regs,
++					       macro->idx - (SERDES1G_MAX + 1),
++					       ocelot_serdes_muxes[i].submode);
+=20
+-		/* SERDES6G and PCIe not supported yet */
++		/* PCIe not supported yet */
+ 		return -EOPNOTSUPP;
+ 	}
+=20
+--=20
+2.17.1
 
