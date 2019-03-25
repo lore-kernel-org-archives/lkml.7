@@ -2,199 +2,157 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F59DC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:37:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AE02C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:37:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6656E2087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:37:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D701205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:37:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BThurLjC"
+	dkim=pass (1024-bit key) header.d=wavesemi.onmicrosoft.com header.i=@wavesemi.onmicrosoft.com header.b="ainsoJHS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730035AbfCYRhR (ORCPT
+        id S1730106AbfCYRhX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 13:37:17 -0400
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:39939 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729946AbfCYRhR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 13:37:17 -0400
-Received: by mail-yw1-f65.google.com with SMTP id p64so7675287ywg.7
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 10:37:16 -0700 (PDT)
+        Mon, 25 Mar 2019 13:37:23 -0400
+Received: from mail-eopbgr750102.outbound.protection.outlook.com ([40.107.75.102]:57229
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729946AbfCYRhV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 13:37:21 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=WxoUsmPwyK1IBH8uKnC+MfHwcWYXzZuIGR2L0W6IfFA=;
-        b=BThurLjCqtieSEwWuIB/bMWgmg8xO/9FOm69avdgl0K+P+Uq2VRzEW+6dHsxa+28xQ
-         kuse844Lb6BCVsqJ1Em2FghM9LiTKCtLj+xuBjeemgv2/2uNxCsC3wLUxNeAV1UyP10W
-         NkPI2rP2Q9HgPNz144XP3UJecuv0RflLx9v3PHdUHl2lgpifsBGlxU1hRo5i+RmUQABc
-         wDXlmU9pLHqgtFWmiFJT1k9RBlT7M22Bo6RoTH2rbPODM8wYevr5tkira5kEpwTqrBAQ
-         ZdxAnVRda4MiRJZX8/MePDy1rBabEneMgwdO85F/6b6JGlSvpc+dyLHi6jS8Bizv/GbY
-         HFtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WxoUsmPwyK1IBH8uKnC+MfHwcWYXzZuIGR2L0W6IfFA=;
-        b=Z0uCBK+KBf2zwz8n3hGs66gQsBAflJNzge+HM8JskOG/MPHdIrQIfPcJKkINStqg73
-         iHrH5MHdFabYNTsHUd7OzCBptcRHC2fOgjky3MlCM6RN+TxYpJu8bZUwDPeRKLf+NKR0
-         K1CY8460KA7wTFg+cqUMfxq7Cc4RAkudRutWPf+Tt+GqXLKYUJ8qOJGxCTiUpYpDwiXN
-         XGoZZ5JzXNxauXxrYKDvrh/i/y/nS6jNDRjbzsUje/443iYr5q2bCWupnd3n5T0oWfKp
-         6I2ph3JzrTg6MkKuteJmeUcu/wTKtUZ93NR4vsKfLU2ISg49aSsMAqh+4ydXxolSKMUI
-         znuw==
-X-Gm-Message-State: APjAAAV9dtaEsBK4BwiR5ZqnNBfMlS4FfgtkEqDtfcd5FRUNcABTLTvm
-        RTamcd5VsJfFQX1OqpWEUho=
-X-Google-Smtp-Source: APXvYqwD7G27tXXAwStYbN3TcOO7uasAMmj2p7eZdA4Pj00XB9k+PvF9YBCUgp4HbRpjDloW4INn1g==
-X-Received: by 2002:a25:d394:: with SMTP id e142mr20731934ybf.190.1553535436501;
-        Mon, 25 Mar 2019 10:37:16 -0700 (PDT)
-Received: from centos-dev.localdomain (pool-173-66-89-81.washdc.fios.verizon.net. [173.66.89.81])
-        by smtp.gmail.com with ESMTPSA id l123sm6087537ywe.85.2019.03.25.10.37.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 25 Mar 2019 10:37:15 -0700 (PDT)
-Date:   Mon, 25 Mar 2019 13:36:58 -0400
-From:   Ryan Thibodeaux <thibodux@gmail.com>
-To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc:     luca abeni <luca.abeni@santannapisa.it>,
-        Dario Faggioli <dfaggioli@suse.com>,
-        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
-        oleksandr_andrushchenko@epam.com, tglx@linutronix.de,
-        jgross@suse.com, ryan.thibodeaux@starlab.io
-Subject: Re: [PATCH] x86/xen: Add "xen_timer_slop" command line option
-Message-ID: <20190325173658.GA46618@centos-dev.localdomain>
-References: <1553279397-130201-1-git-send-email-ryan.thibodeaux@starlab.io>
- <abf65a68-9463-0f0e-1f51-6eefd3cacc88@oracle.com>
- <52bfeae7c256faec444b69efe58d363ad60c3fc5.camel@suse.com>
- <20190323114151.5cebf31b@sweethome>
- <20190325130530.56603806@luca64>
- <69e40698-f7ae-11c3-e4b7-dda4f1fadcf6@oracle.com>
- <20190325141138.GA44413@centos-dev.localdomain>
+ d=wavesemi.onmicrosoft.com; s=selector1-wavecomp-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KxdGHDqM2Hob1Ge4ufd+xg2dLJBLXLGIts1F7o/D6L0=;
+ b=ainsoJHSuV4wQILShvNFOJKL3XQ5olD9sSMos4w92z0ZAEx9VxfDXjIU5Hs6RXlY13RVBEd2eRDcTdczi690f2Rgxpd4lunYwEQPsrkliqCKuZZDndAjxEKz0Y9tnWOP8HMDgxjHwH+5Kg4DJfJbJdFYnnijGu12VCfH87Aj+fg=
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.174.162.17) by
+ MWHPR2201MB1392.namprd22.prod.outlook.com (10.172.63.10) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1730.18; Mon, 25 Mar 2019 17:37:12 +0000
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::b8d4:8f0d:d6d1:4018]) by MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::b8d4:8f0d:d6d1:4018%3]) with mapi id 15.20.1730.019; Mon, 25 Mar 2019
+ 17:37:12 +0000
+From:   Paul Burton <paul.burton@mips.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Richard Henderson <rth@twiddle.net>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Michal Simek <monstr@monstr.eu>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        "James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Rich Felker <dalias@libc.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Firoz Khan <firoz.khan@linaro.org>,
+        "linux-alpha@vger.kernel.org" <linux-alpha@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
+        "linux-m68k@lists.linux-m68k.org" <linux-m68k@lists.linux-m68k.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>,
+        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>
+Subject: Re: [PATCH 2/2] arch: add pidfd and io_uring syscalls everywhere
+Thread-Topic: [PATCH 2/2] arch: add pidfd and io_uring syscalls everywhere
+Thread-Index: AQHU4xnDP1dzfUK3kECwl5vlzfGO86YcnIQA
+Date:   Mon, 25 Mar 2019 17:37:11 +0000
+Message-ID: <20190325173704.mun2cj2ulswv7s3i@pburton-laptop>
+References: <20190325143521.34928-1-arnd@arndb.de>
+ <20190325144737.703921-1-arnd@arndb.de>
+In-Reply-To: <20190325144737.703921-1-arnd@arndb.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BYAPR07CA0093.namprd07.prod.outlook.com
+ (2603:10b6:a03:12b::34) To MWHPR2201MB1277.namprd22.prod.outlook.com
+ (2603:10b6:301:24::17)
+user-agent: NeoMutt/20180716
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=pburton@wavecomp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [67.207.99.198]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b77b85e2-738a-4beb-6f17-08d6b14882f6
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600127)(711020)(4605104)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:MWHPR2201MB1392;
+x-ms-traffictypediagnostic: MWHPR2201MB1392:
+x-microsoft-antispam-prvs: <MWHPR2201MB139298757EF5E1EE94647489C15E0@MWHPR2201MB1392.namprd22.prod.outlook.com>
+x-forefront-prvs: 0987ACA2E2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(7916004)(39840400004)(346002)(376002)(396003)(366004)(136003)(189003)(199004)(1076003)(68736007)(478600001)(6486002)(14454004)(256004)(4326008)(52116002)(6506007)(386003)(106356001)(66066001)(102836004)(76176011)(8936002)(71190400001)(71200400001)(186003)(105586002)(26005)(99286004)(305945005)(54906003)(486006)(81156014)(6512007)(9686003)(446003)(25786009)(6246003)(42882007)(6916009)(81166006)(58126008)(33716001)(97736004)(8676002)(11346002)(44832011)(476003)(111086002)(7416002)(316002)(7406005)(53936002)(229853002)(3846002)(6116002)(2906002)(5660300002)(7736002)(6436002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1392;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: wavecomp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 2+cUWKxJxdo+gG43J3egSpOoVxfSvfkRRxwHFW1Gcf5cr74uFP4A1HnuCcCx0BVWC9Nm0DI8GfbgBWCfCIjk99T6WqqS29wa7CIo0Ddnac3kM0SXjo9cfXnsqT+qa7uu8Mw5KMLyvOEcF3HzGV95rei1eHjMwb8voN9KgI0pzquq0mU919nohnWilH6h4PqCBb3rWtFiLS1yH9/s0qVv47dFfjoLMhv+l9YBrQPLOVggTkNpLJ7Aaaw1hH+046Ld34QD62zFd7XwrAl500gW4RRk3nppWyI6t3TBQVSLMjBVGfGAFKGeqDIbwm4YAb1W6HKwOLsh8M4B/pW7ZwEBdZ6E1QL0CjNhpMcS3qtSOx+un62AqkL6jaRx3vjYApk/0RLbyWEnKOA3sQ/yQtKHqnmnVNDvzpaKqC0/18le5ic=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <925CEF0D081FD04088D61AE526A67361@namprd22.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190325141138.GA44413@centos-dev.localdomain>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+X-OriginatorOrg: mips.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b77b85e2-738a-4beb-6f17-08d6b14882f6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Mar 2019 17:37:11.6927
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1392
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 10:11:38AM -0400, Ryan Thibodeaux wrote:
-> > > [...]
-> > >>>> Is there any data that shows effects of using this new parameter?
-> > >>>> 
+Hi Arnd,
 
-Continuing with the experimental data conversation (thanks to Luca and
-Dario for being so generous), I am providing more results from quick
-tests this morning.
+On Mon, Mar 25, 2019 at 03:47:37PM +0100, Arnd Bergmann wrote:
+> Add the io_uring and pidfd_send_signal system calls to all architectures.
+>=20
+> These system calls are designed to handle both native and compat tasks,
+> so all entries are the same across architectures, only arm-compat and
+> the generic tale still use an old format.
+>=20
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>%
+> diff --git a/arch/mips/kernel/syscalls/syscall_n64.tbl b/arch/mips/kernel=
+/syscalls/syscall_n64.tbl
+> index c85502e67b44..c4a49f7d57bb 100644
+> --- a/arch/mips/kernel/syscalls/syscall_n64.tbl
+> +++ b/arch/mips/kernel/syscalls/syscall_n64.tbl
+> @@ -338,3 +338,7 @@
+>  327	n64	rseq				sys_rseq
+>  328	n64	io_pgetevents			sys_io_pgetevents
+>  # 329 through 423 are reserved to sync up with other architectures
+> +424	common	pidfd_send_signal		sys_pidfd_send_signal
+> +425	common	io_uring_setup			sys_io_uring_setup
+> +426	common	io_uring_enter			sys_io_uring_enter
+> +427	common	io_uring_register		sys_io_uring_register
 
-I ran the same sequence of tests four times with the same hardware,
-hypervisor, and Linux guest setup. Only changes between runs was 
-adjusting the slop settings in Xen and Linux. This was on a 
-build of Xen 4.10 and a Linux guest running the current Xen 
-tip.git kernel with my patch.
+Shouldn't these declare the ABI as "n64"?
 
-For each sequence, I ran two variations of cyclictest on an isolated
-processor. The first test used an interval of 50 microseconds and
-second test used an interval of 1000 microseconds, passing "-i50"
-and "-10000" arguments to cyclictest respectively.
+I don't see anywhere that it would actually change the generated code,
+but a comment at the top of the file says that every entry should use
+"n64" and so far they all do. Did you have something else in mind here?
 
-The variations of the sequences are as follows:
-#1 - default slops:  Xen@50000, Linux@100000
-#2 - lowering Linux: Xen@50000, Linux@5000
-#3 - lowering Xen:   Xen@5000,  Linux@100000
-#4 - lowering both:  Xen@5000,  Linux@5000
-
-The cleaned up test output is below. Only showing the total
-stats for each run and the number of spikes / samples that went 
-over 100 microseconds. I do not record each sample value like
-Luca and Dario, because I want to eliminate as many variables as
-possible, e.g., eliminating overhead of writing out raw results.
-
-Looking at the results, you can see that only lowering the Linux
-slop (with my proposed patch) does reduce the overall PDL stats for
-the shorter interval, but it especially lowers the spikes, in both
-cases. Even in test #3 where the Xen slop was lowered, the spikes 
-are a problem at the default Linux slop.
-
-Reiterating what Luca and Dario said, lowering both slops is the 
-way to consisten results for both interval configurations.
-
-Note: even better stats can likely be achieved with more tuning
-and using the RT patchset. These results were just focusing on
-a non-specialized configuration.
-
-...
-##############################
-
-# Timer Slop: Xen (default, 50000) | Guest (default, 100000)
-
-# Cyclictest Interval (-i50)
-Min: 62
-Avg: 127
-Max: 212
-Spikes (over 100): 3892034
-
-# Cyclictest Interval (-i1000)
-Min: 24
-Avg: 45
-Max: 156
-Spikes (over 100): 27
-
-
-##############################
-
-# Timer Slop: Xen (default, 50000) | Guest (5000)
-
-# Cyclictest Interval (-i50)
-Min: 25
-Avg: 78
-Max: 230
-Spikes (over 100): 274549
-
-# Cyclictest Interval (-i1000)
-Min: 37
-Avg: 45
-Max: 82
-Spikes (over 100): 0
-
-
-##############################
-
-# Timer Slop: Xen (5000) | Guest (default, 100000)
-
-# Cyclictest Interval (-i50)
-Min: 61
-Avg: 126
-Max: 226
-Spikes (over 100): 3877860
-
-# Cyclictest Interval (-i1000)
-Min: 37
-Avg: 45
-Max: 74
-Spikes (over 100): 0
-
-
-##############################
-
-# Timer Slop: Xen (5000) | Guest (5000)
-
-# Cyclictest Interval (-i50)
-Min: 13
-Avg: 30
-Max: 150
-Spikes (over 100): 120
-
-# Cyclictest Interval (-i1000)
-Min: 37
-Avg: 45
-Max: 97
-Spikes (over 100): 0
-...
-
-- Ryan
+Thanks,
+    Paul
