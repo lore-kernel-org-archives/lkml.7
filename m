@@ -2,154 +2,119 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.8 required=3.0 tests=FSL_HELO_FAKE,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1129DC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 20:45:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4F94C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 20:46:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E088D20645
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 20:45:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B710620651
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 20:46:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553546773;
+	bh=FKtBPNcIKijzFQjvkDgnG+GGPZrFrBFv9p72QLWYDnk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JU66OhPwWUZl2VBeVnIrqI6oirhUGmZeXmZsW1sy4GQ9fx8yc2ODQYzvYsklurb/F
+	 wN7oDTwPjQgRlu/oIuv/ud0iPz1xaaFykFmjNm0T2x0X0nVbpp5z1ask+qvscjxY49
+	 x2Odeck50tWvVZeQ3hW6O1MIt7Gcod87k6QmXZIM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730273AbfCYUpt (ORCPT
+        id S1730339AbfCYUqM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 16:45:49 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:50594 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729238AbfCYUpt (ORCPT
+        Mon, 25 Mar 2019 16:46:12 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:42582 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729238AbfCYUqL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 16:45:49 -0400
-Received: from mail-wr1-f70.google.com ([209.85.221.70])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <christian.brauner@canonical.com>)
-        id 1h8WTa-0002OI-OO
-        for linux-kernel@vger.kernel.org; Mon, 25 Mar 2019 20:45:46 +0000
-Received: by mail-wr1-f70.google.com with SMTP id z9so5253570wrn.21
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 13:45:46 -0700 (PDT)
+        Mon, 25 Mar 2019 16:46:11 -0400
+Received: by mail-ot1-f66.google.com with SMTP id 103so9386238otd.9;
+        Mon, 25 Mar 2019 13:46:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZfYWktENAW+kI/Voulf51S1RT5ubuNG6eEsN4U97xkY=;
-        b=uVFUaSDDqQt4HzzEGzldMk1QX4mv8Yp4lW92SYHfUHlhq6PraTLCZA4NaXzoj+sAz+
-         io43ZdA+rRPpOtMwtlwUv4BeRwLhIUPe2Dz8BuFWMJSpw/USvnBdeJC7B+r/UK8Z0vrQ
-         Rh1J0iRc1En1eY49LM1673NYlOKNqTxw/F1zS4Is5HcbEHKS2QcqYDHtqpUiUS2jNV6T
-         m9YejzYnTsGu/wOynbsGC2S0UMdHTNHewKkFiJdJP4tGlTWuWa/7F+/EKml1j7xkV59S
-         7sCBFufgSZb0E7jBz4xE7lPkpEOJUylZutHxbZhpcjwJ9R3//emNAZtRjkmZXlNK12Y2
-         e/Ig==
-X-Gm-Message-State: APjAAAXzuPsl61YxXo7UMg2NZQsC5jIIDKD3HegqQok1V98FYTN2aSLy
-        odAFtPg3nlS/gic/mgNhSM1ioerlKYJopfJl5MxnWmmaYf5ESCz1b0uBYeCQQPCgtb+77Z1Tq3Q
-        VvugGEX5j7uw4Mg+faR7MUmPPEcsJ04LkD8fG2BvEdg==
-X-Received: by 2002:adf:f88c:: with SMTP id u12mr15487358wrp.235.1553546746443;
-        Mon, 25 Mar 2019 13:45:46 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzuKRepDQOhbJ2yNfMyFSy3FBawWdvdk3pcRC7FoSlOq7ZowgY9p4ZWzXvNLXF8AL6ZsZN9Jg==
-X-Received: by 2002:adf:f88c:: with SMTP id u12mr15487339wrp.235.1553546746123;
-        Mon, 25 Mar 2019 13:45:46 -0700 (PDT)
-Received: from gmail.com (p200300EA6F14663DB13635B07C8C280A.dip0.t-ipconnect.de. [2003:ea:6f14:663d:b136:35b0:7c8c:280a])
-        by smtp.gmail.com with ESMTPSA id v13sm15422602wmj.43.2019.03.25.13.45.45
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 25 Mar 2019 13:45:45 -0700 (PDT)
-From:   Christian Brauner <christian.brauner@canonical.com>
-X-Google-Original-From: Christian Brauner <christian@brauner.io>
-Date:   Mon, 25 Mar 2019 21:45:44 +0100
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Michael Tirado <mtirado418@gmail.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: pidfd design
-Message-ID: <20190325204543.rfpy2cbcfnmd5hst@gmail.com>
-References: <20190320200702.GA27111@avx2>
- <CAMkWEXPsikD8uvMSxQH=RUx-qPHO1UBtKgXsg=p9hY_bD2u2ow@mail.gmail.com>
- <CAHk-=wgmKZm-fESEiLq_W37sKpqCY89nQkPNfWhvF_CQ1ANgcw@mail.gmail.com>
+        bh=zdf5EB6CNOqo3DOcKbvb6wdZWjeg6eqEknQqmVyJi1o=;
+        b=Qgx4YMdIabHzO3clTKmRfqR9PGsz85YL4q7QJGayU7oDHR6otneCqLPv4Fg2UrzOTR
+         oMQui9Cbjb1hLgAxOMga1SeXCRFp/KWVo1nnOjPyu49+gzbKoJpXASFPe8wkSSI/VJ5T
+         BE/aBJpsIVuBfzJe7LgSDO+QAX2h/lCfN7wbY7DC8rFVh7k1hpFLQ/cYKZ8FM7DQQdff
+         LlXMC0h19EF/YbkGAFClG3lAAFRl9kPE9ntptqZuWlyv88HUb5Q3solpZpRFWJ2tkvKt
+         rHSORsO9prjvNJX0RPSFOD0UGfukcQNYMXsATMV9JDwczz6Q1XfuL/0clUGCMV1831YG
+         BJhQ==
+X-Gm-Message-State: APjAAAU6LxuxSzdjfYxo3rBZfKT+pot/nwK+EGd5cpggyfCzepD5/teC
+        XP1ljFQ0aDEpI7OtmqLhEA==
+X-Google-Smtp-Source: APXvYqyK2QmqBs8MOCe/9TElPWxzpl6/Dyzz8Ykeb4dCD+6qcyD3oGI8ijSdmubnQsCvCa84ltD4wA==
+X-Received: by 2002:a9d:7f89:: with SMTP id t9mr19083673otp.169.1553546770791;
+        Mon, 25 Mar 2019 13:46:10 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id i9sm6461718oth.13.2019.03.25.13.46.09
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 25 Mar 2019 13:46:10 -0700 (PDT)
+Date:   Mon, 25 Mar 2019 15:46:09 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Lee Jones <lee.jones@linaro.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-pm@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [RESEND PATCH v6 02/11] dt-bindings: power: supply: add DT
+ bindings for max77650
+Message-ID: <20190325204609.GA29935@bogus>
+References: <20190318174228.18194-1-brgl@bgdev.pl>
+ <20190318174228.18194-3-brgl@bgdev.pl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wgmKZm-fESEiLq_W37sKpqCY89nQkPNfWhvF_CQ1ANgcw@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190318174228.18194-3-brgl@bgdev.pl>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 10:45:29AM -0700, Linus Torvalds wrote:
-> On Fri, Mar 22, 2019 at 11:34 AM Michael Tirado <mtirado418@gmail.com> wrote:
-> >
-> > On Wed, Mar 20, 2019 at 8:08 PM Alexey Dobriyan <adobriyan@gmail.com> wrote:
-> > >
-> > > pidfd code should be backed out immediately. Forget about /proc.
-> >
-> > Seems like Torvalds just merges this sort of "stuff" without reading
-> > it now, or there's something that auto accepted pull request to RC tree?
+On Mon, Mar 18, 2019 at 06:42:19PM +0100, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > 
-> There is no auto-accept.
+> Add the DT binding document for the battery charger module of max77650.
 > 
-> But there also didn't seem to be any valid arguments against it, and
-> the android people had arguments for it.
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
+>  .../power/supply/max77650-charger.txt         | 27 +++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/supply/max77650-charger.txt
 > 
-> Arguing against it based on "I don't like /proc" is pointless. The
-> fact is, /proc is our system interface for a lot of things.
-> 
-> Arguing against it based on "I worry about the _other_
-> non-signal-sending things that could be done with this" is also
-> pointless. What other things? The only thing that got merged was the
-> signalling.
+> diff --git a/Documentation/devicetree/bindings/power/supply/max77650-charger.txt b/Documentation/devicetree/bindings/power/supply/max77650-charger.txt
+> new file mode 100644
+> index 000000000000..d25c95369616
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/supply/max77650-charger.txt
+> @@ -0,0 +1,27 @@
+> +Battery charger driver for MAX77650 PMIC from Maxim Integrated.
+> +
+> +This module is part of the MAX77650 MFD device. For more details
+> +see Documentation/devicetree/bindings/mfd/max77650.txt.
+> +
+> +The charger is represented as a sub-node of the PMIC node on the device tree.
+> +
+> +Required properties:
+> +--------------------
+> +- compatible:		Must be "maxim,max77650-charger"
+> +
+> +Optional properties:
+> +--------------------
+> +- min-microvolt:	Minimum CHGIN regulation voltage (in microvolts). Must be
+> +			one of: 4000000, 4100000, 4200000, 4300000, 4400000,
+> +			4500000, 4600000, 4700000.
+> +- curr-lim-microamp:	CHGIN input current limit (in microamps). Must be one of:
+> +			95000, 190000, 285000, 380000, 475000.
 
-To back Linus defense up with a glimpse into the future.
+These should be common charger properties IMO.
 
-We will not be to rely on dirfds from proc to do general process
-management. That is even in the commit message for the pidfd_send_signal
-syscall, that we intend to decouple this from procfs, i.e. decouple
-process management from process metadata reading.
-We have an ongoing discussion and what a lot of people agree upon is
-that pidfds will be anon inode file descriptors that stash a reference
-to struct pid in their private_data member. They can be pollable if ever
-need be and they are just conceptually cleaner and way simpler and
-mirror what will happen in the new mount api as well.
-The idea is to translate these pidfds e.g. via a simple ioctl()
-interface that takes a pidfd and gives back - with standard permissions
-applied as are today - a corresponding /proc/<pid> fd that can be used
-to read metadata of a process (see the suggestion by Andy and Jann [1]).
-The advantage is that this means that pidfd_clone() or something similar
-can simply return a pidfd and does not need to care about what procfs
-the process is supposed to be located in/reference and is in general way
-safer.
-
-But there is absolutely nothing wrong with allowing users to use
-/proc/<pid> to signal processes. One of the reasons why I did this is
-that it is so intuitive to users that non-kernel people have requested
-this be possible over and over.
-As mentioned in the orignal patchset the future was always to decouple
-this from procfs (see the references in there) and this is what the new
-pidctl() syscall is for that transparently translates between the
-pid-based api and the pidfd-based api.
-
-[1]: https://lore.kernel.org/lkml/CAG48ez3VMjLJBC_F3BxC2sc2s-28NdsrUduR=jX66XH0w2O-Qg@mail.gmail.com/ 
-
-> 
-> Now, arguing that signalling should use the open-time credentials
-> might make sense, but this isn't read/write. You can't fool some suid
-> program to do magic randon system calls for you, and if you can, then
-> arguing about pidfd is kind of pointless.
-> 
-> So the model of using a file descriptor instead of a 'pid' for signal
-> handling is actually very unix-like. Maybe that's how pid's should
-> have worked to begin with. Remember that whole "everything is a file"
-> thing?
-> 
-> Now, the fact that fork() and clone() return a pid obviously means
-> that pidfd isn't the primary model (not to decades of just history),
-> but that doesn't make pidfd wrong.
-> 
-> And namespace issues etc are all also kind of irrelevant. If you open
-> random files in /proc and randomly do pidfd_send_signal() on those,
-> you get random results. If that worries you, then DON'T DO THAT THEN,
-> for chrissake! That's not a sane model to begin with, but it's not the
-> usage model for this, so it's another completely specious argument.
-> 
-> So yes, I thought about the pidfd pull (which was why it happened at
-> the very end of the merge window), and I found the arguments against
-> it bad.
-> 
->                 Linus
+Rob
