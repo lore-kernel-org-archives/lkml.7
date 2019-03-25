@@ -2,158 +2,82 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 523C3C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 23:54:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C220C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 23:56:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E7DD20854
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 23:54:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553558079;
-	bh=7IXy9PmaCQVWs3dr2OsZDsoJ+4vRKTCXqWnIvRBz76k=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=XD2mH3vExnnKyKorlg3CNcVrRjs5OozYmdm1+983yes5H70XAIJje6GxiIJ9WRkvO
-	 2qwSFcCpIkolr913fYN9xxiZH/JBflrXnknHebeyY4FM6yMvD7133UdWk7dgxdScUi
-	 qvaFIFi5JXts8nwA6ynTwOtja1BNaMqvx/1rbtJc=
+	by mail.kernel.org (Postfix) with ESMTP id 095DD206DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 23:56:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729250AbfCYXyh (ORCPT
+        id S1727988AbfCYX43 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 19:54:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53122 "EHLO mail.kernel.org"
+        Mon, 25 Mar 2019 19:56:29 -0400
+Received: from mga01.intel.com ([192.55.52.88]:43326 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726301AbfCYXyh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 19:54:37 -0400
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFFEF20870
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 23:54:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553558076;
-        bh=7IXy9PmaCQVWs3dr2OsZDsoJ+4vRKTCXqWnIvRBz76k=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=XzC69H/tN4lPBbDrQRBTbjkRY6pxU0kBw05NZkNo+WwxSSCEW+YwwBkPfcL+qKXc7
-         DJ0EU73PLPfGHUC2u0kMPObp5DuSB1wL4y1Cvg6PeFGwRd0jd25QMTAt3j45p/DmMS
-         2ofeIPxMjX+kFyYDBDh/oQrIshVWbKj7oRQpLq10=
-Received: by mail-wr1-f54.google.com with SMTP id k11so4810241wro.5
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 16:54:35 -0700 (PDT)
-X-Gm-Message-State: APjAAAWlyHBkEERK8Z5a39mM52fMG8fFcPUcNvt/8zrJtCuhH0ZhfvJ8
-        ozUz1I//4a8MdBzNUwRS3frbtmEKlNr3hK8P74zjLQ==
-X-Google-Smtp-Source: APXvYqyAwesAdogoyPBQ9Lxod/+wH/aY0JfqLt7v1iZAm0KdKDvtbjsSoVTIYoTo1koKcclzFlN3HyDGjBZx1lh/tOE=
-X-Received: by 2002:adf:f011:: with SMTP id j17mr15065852wro.330.1553558074255;
- Mon, 25 Mar 2019 16:54:34 -0700 (PDT)
+        id S1726301AbfCYX43 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 19:56:29 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Mar 2019 16:56:28 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,270,1549958400"; 
+   d="scan'208";a="285848205"
+Received: from agluck-desk.sc.intel.com (HELO agluck-desk) ([10.3.52.160])
+  by orsmga004.jf.intel.com with ESMTP; 25 Mar 2019 16:56:28 -0700
+Date:   Mon, 25 Mar 2019 16:56:27 -0700
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     Joe Perches <joe@perches.com>
+Cc:     linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+        Aristeu Rozanski <aris@redhat.com>,
+        Borislav Petkov <bp@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Subject: [PATCH] MAINTAINERS: Add entry for EDAC-I10NM
+Message-ID: <20190325235627.GA11938@agluck-desk>
+References: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com>
+ <20190325212506.26282-1-joe@perches.com>
 MIME-Version: 1.0
-References: <20190320162119.4469-1-jarkko.sakkinen@linux.intel.com>
- <20190320162119.4469-25-jarkko.sakkinen@linux.intel.com> <960B34DE67B9E140824F1DCDEC400C0F4E85C484@ORSMSX116.amr.corp.intel.com>
- <20190320191318.GF30469@linux.intel.com> <960B34DE67B9E140824F1DCDEC400C0F4E85C5AB@ORSMSX116.amr.corp.intel.com>
- <20190322215903.GE12666@linux.intel.com> <960B34DE67B9E140824F1DCDEC400C0F4E85E481@ORSMSX116.amr.corp.intel.com>
- <CALCETrV589POrG3RaPHBWOFuytkWjeJgJgLHk4OKbizOgJVKZQ@mail.gmail.com> <960B34DE67B9E140824F1DCDEC400C0F4E85E989@ORSMSX116.amr.corp.intel.com>
-In-Reply-To: <960B34DE67B9E140824F1DCDEC400C0F4E85E989@ORSMSX116.amr.corp.intel.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Mon, 25 Mar 2019 16:54:23 -0700
-X-Gmail-Original-Message-ID: <CALCETrWdc2d2HJ-aoE7-889sHN-YJiKXrEkssyWJ6QQTykb+EQ@mail.gmail.com>
-Message-ID: <CALCETrWdc2d2HJ-aoE7-889sHN-YJiKXrEkssyWJ6QQTykb+EQ@mail.gmail.com>
-Subject: Re: [PATCH v19,RESEND 24/27] x86/vdso: Add __vdso_sgx_enter_enclave()
- to wrap SGX enclave transitions
-To:     "Xing, Cedric" <cedric.xing@intel.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "Svahn, Kai" <kai.svahn@intel.com>, "bp@alien8.de" <bp@alien8.de>,
-        "josh@joshtriplett.org" <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        "rientjes@google.com" <rientjes@google.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Haitao Huang <haitao.huang@linux.intel.com>,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Dr . Greg Wettstein" <greg@enjellic.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190325212506.26282-1-joe@perches.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 24, 2019 at 1:59 AM Xing, Cedric <cedric.xing@intel.com> wrote:
->
-> Hi Andy,
->
-> Thank you for your valuable feedbacks!
->
-> Per what you have been saying, your feedbacks come from different angles =
-- i.e. functionality vs. security, but they are mixed up somehow.
+We forgot to update the MAINTAINERS file when adding this
+new driver.
 
-I think you're misunderstanding me.  I'm not talking about security at
-all here.  SGX isn't a sandbox, full stop.  I'm talking about the
-degree to which an SGX enclave acts like a well-behaved black box.
+Fixes: d4dc89d069aa ("EDAC, i10nm: Add a driver for Intel 10nm server processors")
+Signed-off-by: Tony Luck <tony.luck@intel.com>
+---
+ MAINTAINERS | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
->
-> > I=E2=80=99m going to put my vDSO maintainer hat on for a minute.  Cedri=
-c, your
-> > proposal has the following issues related specifically to the vDSO:
-> >
-> > It inherently contains indirect branches.  This means that, on retpolin=
-e
-> > configurations, it probably needs to use retpolines.  This is doable,
-> > but it=E2=80=99s nasty, and you need to worry about register clobbers.
->
-> Only the weakest link matters in security. With dynamic linking in use, t=
-his additional indirect CALL can't make things worse. But I'm open to, and =
-in fact also willing to, apply whatever mitigation that you think is satisf=
-actory (or that has been applied to other indirect branches, such as in PLT=
-), such as retpoline. Btw, don't worry about register clobbers because we h=
-ave at least %rax at our disposal.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e5f3230d3f14..86c4a5d95cca 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -5596,6 +5596,12 @@ L:	linux-edac@vger.kernel.org
+ S:	Maintained
+ F:	drivers/edac/ghes_edac.c
+ 
++EDAC-I10NM
++M:	Tony Luck <tony.luck@intel.com>
++L:	linux-edac@vger.kernel.org
++S:	Maintained
++F:	drivers/edac/i10nm_base.c
++
+ EDAC-I3000
+ L:	linux-edac@vger.kernel.org
+ S:	Orphan
+-- 
+2.19.1
 
-There is no actual fundamental reason that dynamic linking has to work
-this way, and in principle, one could even use retpolines to the call
-the vDSO.  In any event, the vDSO is currently compiled with
-retpolines enabled, and if we decide to turn that off, it would be
-decision to be made independently of SGX.
-
->
-> >
-> > It uses effectively unbounded stack space. The vDSO timing functions ar=
-e
-> > already a problem for Go, and this is worse.
->
-> If targeting the same functionality (i.e. no exit callback), my API uses =
-exactly 24 bytes more than Sean's. Is it really the case that those 24 byte=
-s will break Go?
-
-You're counting wrong.  Your version uses 24 bytes + the stack size of
-the exit handler + the amount of stack consumed by the enclave, which
-is effectively unbounded.  So this whole scheme becomes unusable on
-anything other than a stack that is "large" for a totally undefined
-value of large and that has guard pages.
-
->
-> >
-> > Cedric, your proposal allows an enclave to muck with RSP, but not in a
-> > way that=E2=80=99s particularly pleasant.
->
-> From security perspective, it is SGX ISA, but NOT any particular ABI, tha=
-t allows enclaves "to muck with RSP".
-
-Again, this has nothing to do with security.  With your proposal, it's
-not possible for the caller of an enclave to decide, in an ocall
-handler, to pause and do something else.  This isn't just theoretical.
-Suppose someone wants to send a network request in an ocall handler.
-With the current RSP approach, it's difficult to do this in a program
-that uses poll / select / epoll -- you can't return out from the ocall
-until you have an answer.
