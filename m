@@ -2,121 +2,83 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90F58C4360F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:12:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 374B0C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:12:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 626AF2083D
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:12:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553530332;
-	bh=guaJe1WSyuBLUepkTNXhV1v7/amRWCzvk5TEIKqXw+8=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=QAqd+WxuVSyyoimKDAzP2FagDUwxUKy5uXQwrGgNYkoqcPXHRKNkSuToYuca8Pcxe
-	 +0hGmcf1zMqmwGmeNpW4inzuQInDGD4Cvhp2wuoDhvQAmZfdyj8X8TNBOfMbmXbnyC
-	 ovyjrw6crNxq38qQmhS0toczYYLEI2R9M0Va3X+w=
+	by mail.kernel.org (Postfix) with ESMTP id 118752083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:12:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729493AbfCYQML (ORCPT
+        id S1729322AbfCYQML (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 25 Mar 2019 12:12:11 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:54958 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfCYQMK (ORCPT
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:41416 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726024AbfCYQMK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 25 Mar 2019 12:12:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=neBUgRha04DoVyeD1cBHZmtECLOLmAOFTOQTyjL0MUU=; b=wpGb9WZfx5Qc
-        4LbuQITaUgeYQbboFJClih875h58JYI+bis2tMI3RlvEqzXaXRwQi64C/QqcazT/wYMQsFovpYcBu
-        4Ys2M2l7xUDIwcmczVn3bQfTg0k13ycYdbHJEYXfTOFUiMzi4CbKQWmyuHymS7xkMasoN/TaQkORq
-        +Fwp8=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1h8SCU-0002g5-FJ; Mon, 25 Mar 2019 16:11:50 +0000
-Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 0ABA511288F1; Mon, 25 Mar 2019 16:11:45 +0000 (GMT)
-From:   Mark Brown <broonie@kernel.org>
-To:     Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>
-Cc:     Mark Brown <broonie@kernel.org>, lgirdwood@gmail.com,
-        broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
-        alsa-devel@alsa-project.org,
-        pankaj.laxminarayan.bharadiya@intel.com,
-        linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
-Subject: Applied "ASoC: dapm: Initialize private_value in snd_soc_dapm_new_dai" to the asoc tree
-In-Reply-To:  <1553271819-24576-1-git-send-email-pankaj.laxminarayan.bharadiya@intel.com>
-X-Patchwork-Hint: ignore
-Message-Id: <20190325161145.0ABA511288F1@debutante.sirena.org.uk>
-Date:   Mon, 25 Mar 2019 16:11:45 +0000 (GMT)
+Received: by mail-qt1-f194.google.com with SMTP id w30so10916820qta.8;
+        Mon, 25 Mar 2019 09:12:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2v+nseKEWXfRLDncZfQd6dsrneZmghTnCjmrBpyewVo=;
+        b=o5Ct/pHv1rATybGrmIAPma1SeJHPuJpwrHkTFd6hm/NCcdUyy9B2+R1fPgz03Vmvgc
+         fGfYadZC7tGImGyB5NtjNm9uCdkl5tsITaXm7uUQ95ulHuabX+HcnqLqkabwa0f5CXKM
+         Sj8CQNsy362FIiWWuR8r7Rw+87KQSqNK2Ag9n0IQTnSKIVQ1r7OFPR9WiCtPbIixV5rQ
+         fzrhspUx+QRCf9iApE7UmODha1ozw4JjydIUC7hELi/4uDOzWMahAh4k57Mx+HgN2LBZ
+         Fdf6+n0USzRCtheyQACmxMPEIgNb/FVl21dURgIupuTo/hNEs5MWsTzlMNvG/vIkiYHW
+         c3Vg==
+X-Gm-Message-State: APjAAAXU45imZl6FEFOwT/MwRs6srG5im973kdPy3UWL519J9+OCa6X0
+        uaTS19+MVOoJRhX0iRCnGfnwGO5ixrm22Bm6glg=
+X-Google-Smtp-Source: APXvYqyz/9FaNDscQbTl3GH0T08Q5bfZHRR7Epq9ybOvAWf03beutHWMFG+edO9SkgwZD7twKWhFWMSrYFAC5XABt6k=
+X-Received: by 2002:a0c:af02:: with SMTP id i2mr20472975qvc.40.1553530329632;
+ Mon, 25 Mar 2019 09:12:09 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190325143521.34928-1-arnd@arndb.de> <a29338b9-60ad-a4da-da9d-a0c522a5b9df@kernel.dk>
+In-Reply-To: <a29338b9-60ad-a4da-da9d-a0c522a5b9df@kernel.dk>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 25 Mar 2019 17:11:53 +0100
+Message-ID: <CAK8P3a2SpydaLZijzUXxCzMKSEv3ymfpOCO4xSZOVfz2cwFxAQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] io_uring: fix big-endian compat signal mask handling
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Hannes Reinecke <hare@suse.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        David Hildenbrand <david@redhat.com>,
+        Nikolay Borisov <nborisov@suse.com>,
+        linux-block <linux-block@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+On Mon, Mar 25, 2019 at 5:05 PM Jens Axboe <axboe@kernel.dk> wrote:
+>
+> On 3/25/19 8:34 AM, Arnd Bergmann wrote:
+> > On big-endian architectures, the signal masks are differnet
+> > between 32-bit and 64-bit tasks, so we have to use a different
+> > function for reading them from user space.
+> >
+> > io_cqring_wait() initially got this wrong, and always interprets
+> > this as a native structure. This is ok on x86 and most arm64,
+> > but not on s390, ppc64be, mips64be, sparc64 and parisc.
+>
+> Thanks Arnd, applied.
+>
+> Was there a 2/2 patch? I only received this one, 1/2.
 
-   ASoC: dapm: Initialize private_value in snd_soc_dapm_new_dai
+Sorry I missed you on Cc:
+https://lore.kernel.org/lkml/20190325144737.703921-1-arnd@arndb.de/T/#u
 
-has been applied to the asoc tree at
+This one went out to all the affected arch maintainers.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From 8633d44002ba5c98f44bacc1397190adba832fd6 Mon Sep 17 00:00:00 2001
-From: Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>
-Date: Fri, 22 Mar 2019 21:53:39 +0530
-Subject: [PATCH] ASoC: dapm: Initialize private_value in snd_soc_dapm_new_dai
-
-In case of single config, private_value is left uninitialized.
-
-The private_value does need to be initialized or in
-snd_soc_dapm_new_control_unlocked() call failure case, it leads to a
-bogus free in snd_soc_dapm_free_kcontrol()
-
-Signed-off-by: Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- sound/soc/soc-dapm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/sound/soc/soc-dapm.c b/sound/soc/soc-dapm.c
-index 1ec06ef6d161..74a6f5705f66 100644
---- a/sound/soc/soc-dapm.c
-+++ b/sound/soc/soc-dapm.c
-@@ -4038,7 +4038,7 @@ snd_soc_dapm_new_dai(struct snd_soc_card *card, struct snd_soc_pcm_runtime *rtd,
- 	struct snd_soc_dapm_widget template;
- 	struct snd_soc_dapm_widget *w;
- 	const char **w_param_text;
--	unsigned long private_value;
-+	unsigned long private_value = 0;
- 	char *link_name;
- 	int ret;
- 
--- 
-2.20.1
-
+    Arnd
