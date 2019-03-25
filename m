@@ -2,122 +2,148 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7975C4360F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 11:37:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFD95C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 11:37:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4A112085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 11:37:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ZEqwZSxv";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="N5+N1qLT"
+	by mail.kernel.org (Postfix) with ESMTP id A04742087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 11:37:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553513852;
+	bh=sABU5pJFeKsGZzAfz8LSKtGwlpZiWNFGphElSw14hmI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qJvVUeAg0axo0bxnhaeWJwgO7OA/piFtHmGNGmXO+kDcr5qd2UJLJ9/cths4bfD7R
+	 66nXnACvQgs+Rf3fvCfGH3udcgcGzWIEiEV8cbFjCbRX69lLWqIsdWtpm7L7NZ/jHa
+	 sND02h7bhQ7GUfxR6UMb21s+pfF9wNoImGj5YuCc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730991AbfCYLhO (ORCPT
+        id S1731006AbfCYLhb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 07:37:14 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:44538 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730972AbfCYLhM (ORCPT
+        Mon, 25 Mar 2019 07:37:31 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:44627 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730730AbfCYLha (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 07:37:12 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id D824061AD9; Mon, 25 Mar 2019 11:37:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553513830;
-        bh=Dz8FaXrVhpDCXbQzJbkKdLMFWrvC0wqlUNveWiT/xFQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZEqwZSxv8PR2XlPUFjNlcWyr/bMV3P6r2hN84sceUVwlG2W1sB7rXuQ9unDSFL83y
-         C3QyFVOt0TKdJfKEpmhzGPtcLzFxrbg0aAaznSx1ED8qoRBjPwCVAv7eEpH6uVZQb0
-         p11qXYgooguvKmH1NFNaZK+ItF//vCKW2gsiiSv4=
-Received: from c-hbandi-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: c-hbandi@codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 906EA619C9;
-        Mon, 25 Mar 2019 11:37:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553513829;
-        bh=Dz8FaXrVhpDCXbQzJbkKdLMFWrvC0wqlUNveWiT/xFQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N5+N1qLTGSXVnyre9OMZrftw6rJPZnKuIfKBDkkMMGSvTe125T0o3tfmWcDGvli44
-         qdPjDqLsprxrOvUvld0MUqEOfBxeMHFYihKXdaQjnJ6D355AEqU5Arjfr9dicg7gBf
-         qaw8IRUncQV9VTDm1TLLs+yeNcdvTTdNkof5cHzw=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 906EA619C9
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=c-hbandi@codeaurora.org
-From:   Harish Bandi <c-hbandi@codeaurora.org>
-To:     marcel@holtmann.org, johan.hedberg@gmail.com
-Cc:     mka@chromium.org, linux-kernel@vger.kernel.org,
-        linux-bluetooth@vger.kernel.org, hemantg@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
-        anubhavg@codeaurora.org, devicetree@vger.kernel.org,
-        mark.rutland@arm.com, robh+dt@kernel.org,
-        Harish Bandi <c-hbandi@codeaurora.org>
-Subject: [PATCH v4 2/2] dt-bindings: net: bluetooth: Add device tree bindings for QTI chip WCN3998
-Date:   Mon, 25 Mar 2019 17:06:40 +0530
-Message-Id: <1553513800-27611-3-git-send-email-c-hbandi@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1553513800-27611-1-git-send-email-c-hbandi@codeaurora.org>
-References: <1553513800-27611-1-git-send-email-c-hbandi@codeaurora.org>
+        Mon, 25 Mar 2019 07:37:30 -0400
+Received: by mail-pf1-f193.google.com with SMTP id y13so103693pfm.11;
+        Mon, 25 Mar 2019 04:37:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=VeB+s6gWFMe8AMsJYz9XJ7GxfqU/tchEME0t2nEdTkc=;
+        b=j5Wi1G2g73H6BjfoopYU/Cs+92FhE9yb6X/i+cpoc/k5EqGF9WmSQjFF27UoK5iKiY
+         wkU3c6Vzpe0JHvQF3Mu08ovywIwswyRTRD7hMFyy/aWQo8xuAP/wahXezgJHik40x26y
+         TVa/BoSyuNVpMdkyqFaMFEb21Sw7fyk4zbuHE+UGKr3tjrj946n9iQfGhcqooSTY9L+X
+         tEl+pxuM6LYEeXokxk54+5hW6QLGtr1lcTOH05t/RiEfANriQu/mAK7Gy06qQjkrRGzF
+         rVLSpmzzVOXXNnlukxOf/YMFzXtCFzgQIe5AvaPbC0iNFReIy0+IMB7oPfyFvPmrZcm8
+         ahXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VeB+s6gWFMe8AMsJYz9XJ7GxfqU/tchEME0t2nEdTkc=;
+        b=ohZgWrhwHZGgcfBCHFsyiIEwqimhbK5xguJS0dFS92s9mq5sb5UirL59L1XVhb+H+2
+         G3+g5Ddpw8mPCpuSxmTUdrV62b5GiWVH7Z7bS+/uxvuXzxLSHk5ZgF7b9T8kYKqWMlmU
+         kCd5upV5XxgYixCXHWWI2HbbO1qcLOzZb7i3Y4ULAZoimVNSNXH3J93HLJuxwfQEODlH
+         m4iJxvjP0/yv7TFjwfqjDwsM3kFeO4mbPdGqrGgmatvV8Abd2v3yMjcpbhJPrj1vJfuC
+         tFs46pF3Nc0OJr+iPNu0PvyT2Pea6elUp3/ZZUmyXkRZdxEk1MKCSmo8rBQLRdT9LJO/
+         FgRw==
+X-Gm-Message-State: APjAAAXBGmvoq0RYabkkQwsSyXuzwqpryfRC66DREhPbzzo6TwHfrS5O
+        gjoXggvmoWf19TdX6loCCbs=
+X-Google-Smtp-Source: APXvYqzW9PuUq4Fjo5ChWDXBx07b4hPLjXXjWCoo7+LTwfQMy26YlLkJJmdgfDQmjuROex8M2N3+wg==
+X-Received: by 2002:a65:4344:: with SMTP id k4mr22478900pgq.20.1553513849985;
+        Mon, 25 Mar 2019 04:37:29 -0700 (PDT)
+Received: from google.com ([2401:fa00:d:10:75ad:a5d:715f:f6d8])
+        by smtp.gmail.com with ESMTPSA id i79sm33798306pfj.28.2019.03.25.04.37.26
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 25 Mar 2019 04:37:28 -0700 (PDT)
+Date:   Mon, 25 Mar 2019 20:37:23 +0900
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Tom Zanussi <zanussi@kernel.org>
+Cc:     rostedt@goodmis.org, tglx@linutronix.de, mhiramat@kernel.org,
+        bigeasy@linutronix.de, joel@joelfernandes.org,
+        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
+Subject: Re: [PATCH v4 04/11] tracing: Use tracing error_log with trace event
+ filters
+Message-ID: <20190325111724.GB211529@google.com>
+References: <cover.1553268040.git.tom.zanussi@linux.intel.com>
+ <f0895856a61d95aba80f9668d6828234d33b5d7c.1553268040.git.tom.zanussi@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <f0895856a61d95aba80f9668d6828234d33b5d7c.1553268040.git.tom.zanussi@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch enables regulators for the Qualcomm Bluetooth WCN3998
-controller.
+Hi Tom,
 
-Signed-off-by: Harish Bandi <c-hbandi@codeaurora.org>
----
-Changes in V4:
-- Removed new compatible WCN3998
-- changed wcn3990 to wcn399* to represent wcn399* family
----
- Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+On Fri, Mar 22, 2019 at 10:34:30AM -0500, Tom Zanussi wrote:
+> From: Tom Zanussi <tom.zanussi@linux.intel.com>
+> 
+> Use tracing_log_err() from the new tracing error_log mechanism to send
+> filter parse errors to tracing/error_log.
+> 
+> With this change, users will be able to see filter errors by looking
+> at tracing/error_log.
+> 
+> The same errors will also be available in the filter file, as
+> expected.
+> 
+> Signed-off-by: Tom Zanussi <tom.zanussi@linux.intel.com>
+> ---
+>  kernel/trace/trace_events_filter.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
+> index ade606c33231..3a1ed8631aa0 100644
+> --- a/kernel/trace/trace_events_filter.c
+> +++ b/kernel/trace/trace_events_filter.c
+> @@ -66,7 +66,8 @@ static const char * ops[] = { OPS };
+>  	C(INVALID_FILTER,	"Meaningless filter expression"),	\
+>  	C(IP_FIELD_ONLY,	"Only 'ip' field is supported for function trace"), \
+>  	C(INVALID_VALUE,	"Invalid value (did you forget quotes)?"), \
+> -	C(NO_FILTER,		"No filter found"),
+> +	C(ERRNO,		"Error"),				\
+> +	C(NO_FILTER,		"No filter found")
+>  
+>  #undef C
+>  #define C(a, b)		FILT_ERR_##a
+> @@ -76,7 +77,7 @@ enum { ERRORS };
+>  #undef C
+>  #define C(a, b)		b
+>  
+> -static char *err_text[] = { ERRORS };
+> +static const char *err_text[] = { ERRORS };
+>  
+>  /* Called after a '!' character but "!=" and "!~" are not "not"s */
+>  static bool is_not(const char *str)
+> @@ -947,8 +948,10 @@ static void append_filter_err(struct filter_parse_error *pe,
+>  	if (pe->lasterr > 0) {
+>  		trace_seq_printf(s, "\n%*s", pos, "^");
+>  		trace_seq_printf(s, "\nparse_error: %s\n", err_text[pe->lasterr]);
+> +		tracing_log_err("event filter parse error", filter->filter_string, err_text, pe->lasterr, pe->lasterr_pos);
+>  	} else {
+>  		trace_seq_printf(s, "\nError: (%d)\n", pe->lasterr);
+> +		tracing_log_err("event filter parse error", filter->filter_string, err_text, FILT_ERR_ERRNO, 0);
 
-diff --git a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-index 824c0e2..de9cefa 100644
---- a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-+++ b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-@@ -11,20 +11,21 @@ Required properties:
-  - compatible: should contain one of the following:
-    * "qcom,qca6174-bt"
-    * "qcom,wcn3990-bt"
-+   * "qcom,wcn3998-bt"
- 
- Optional properties for compatible string qcom,qca6174-bt:
- 
-  - enable-gpios: gpio specifier used to enable chip
-  - clocks: clock provided to the controller (SUSCLK_32KHZ)
- 
--Required properties for compatible string qcom,wcn3990-bt:
-+Required properties for compatible string qcom,wcn399*-bt:
- 
-  - vddio-supply: VDD_IO supply regulator handle.
-  - vddxo-supply: VDD_XO supply regulator handle.
-  - vddrf-supply: VDD_RF supply regulator handle.
-  - vddch0-supply: VDD_CH0 supply regulator handle.
- 
--Optional properties for compatible string qcom,wcn3990-bt:
-+Optional properties for compatible string qcom,wcn399*-bt:
- 
-  - max-speed: see Documentation/devicetree/bindings/serial/slave-device.txt
- 
-@@ -44,7 +45,7 @@ serial@7570000 {
- 
- serial@898000 {
- 	bluetooth {
--		compatible = "qcom,wcn3990-bt";
-+		compatible = "qcom,wcn399*-bt";
- 
- 		vddio-supply = <&vreg_s4a_1p8>;
- 		vddxo-supply = <&vreg_l7a_1p8>;
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+These lines are too long, could you please wrap?
+Otherwise, the whole series look good to me.
 
+Acked-by: Namhyung Kim <namhyung@kernel.org>
+
+Thanks,
+Namhyung
+
+
+>  	}
+>  	trace_seq_putc(s, 0);
+>  	buf = kmemdup_nul(s->buffer, s->seq.len, GFP_KERNEL);
+> -- 
+> 2.14.1
+> 
