@@ -2,141 +2,132 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9922C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 14:11:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF2DCC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 14:12:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A26822085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 14:11:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lQqJdZHJ"
+	by mail.kernel.org (Postfix) with ESMTP id 9BB892084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 14:12:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726182AbfCYOL6 (ORCPT
+        id S1729009AbfCYOMb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 10:11:58 -0400
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:46928 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725355AbfCYOL5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 10:11:57 -0400
-Received: by mail-yw1-f66.google.com with SMTP id v127so7102532ywe.13
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 07:11:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=KTt93h75wJmE7jV6jCleD3fv2thkBfT2D18E2mIVZzA=;
-        b=lQqJdZHJ6UcPCjywy2RwjHTQh0ANBIl+04G15xC+jF06ooEmgZg4AJYpJ3UgX9nlhb
-         UWrv2nOqqhCcoWXRs+3jxpOfuGdbIEiXCETU2ZwXzVM6Ybn4AT/spneX6zcCeNqAy+VY
-         ClDPIrjs4m8Z61P3TzyIXEmYUyR+4UuuNobyBjU5AiZX+Fgd5mP4Z8fAvvhMhNRAyNak
-         atOPMmu/uH17V9Tn6R+NQgnlGzO1exy9RbnulNsl/xtVi80dh9K57BZXJUMcpcLinSI5
-         QcHyd0zlEo0ocHb0UIFCNEIoYRGzslm+o6REHXetwyp2Ivx6m9V6ttvpUAJy4RsAkaha
-         353A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=KTt93h75wJmE7jV6jCleD3fv2thkBfT2D18E2mIVZzA=;
-        b=i1Jj6+b2CgPD1M8Tna9aZW0fcz78wVuCPD6wkG5HVilxSrovwz8WzOhA4yKQ3RYdM2
-         Hp34fd/P2bt2M2EBEeht8fS5/Q6K1jSWaZwa4p9qMHUVvcy2LdPgW6fkpL7TjO0KQSOg
-         +pAIgRDS4K/KK8n5evN56eOiYijIw3Bllp27O95eWDTiaasSmhSb4JMluUpXE7naZKbd
-         H236HcIoMQYCeQjuOwenJ9aSqyvRWMSyBhne49695IMB7fWMQ+lS23ft3n4IpNhczlfu
-         mO7gKPjGK2x1vkuSdDlXfC+P3w1Mmn8U2duwLykvV+T6zypX2v2Zpy5Uv/14t0bB3QNz
-         gxYg==
-X-Gm-Message-State: APjAAAWgUn9frAdBxKAhdMtc1+GRzvJeevmH2+twRCZv216mNooqwj6R
-        L+iroInVCsUFuzk0RV30xeI=
-X-Google-Smtp-Source: APXvYqya9JwKLI0eSzN4/2JY+RsLV0Z9pV4cQyE55E/XHyGB5dYTs9BGyLg0FV/Z/rONODHAQBrpeg==
-X-Received: by 2002:a25:d20d:: with SMTP id j13mr21035429ybg.417.1553523117103;
-        Mon, 25 Mar 2019 07:11:57 -0700 (PDT)
-Received: from centos-dev.localdomain (pool-173-66-89-81.washdc.fios.verizon.net. [173.66.89.81])
-        by smtp.gmail.com with ESMTPSA id i189sm5631147ywa.73.2019.03.25.07.11.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 25 Mar 2019 07:11:56 -0700 (PDT)
-Date:   Mon, 25 Mar 2019 10:11:38 -0400
-From:   Ryan Thibodeaux <thibodux@gmail.com>
-To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc:     luca abeni <luca.abeni@santannapisa.it>,
-        Dario Faggioli <dfaggioli@suse.com>,
-        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
-        oleksandr_andrushchenko@epam.com, tglx@linutronix.de,
-        jgross@suse.com, ryan.thibodeaux@starlab.io
-Subject: Re: [PATCH] x86/xen: Add "xen_timer_slop" command line option
-Message-ID: <20190325141138.GA44413@centos-dev.localdomain>
-References: <1553279397-130201-1-git-send-email-ryan.thibodeaux@starlab.io>
- <abf65a68-9463-0f0e-1f51-6eefd3cacc88@oracle.com>
- <52bfeae7c256faec444b69efe58d363ad60c3fc5.camel@suse.com>
- <20190323114151.5cebf31b@sweethome>
- <20190325130530.56603806@luca64>
- <69e40698-f7ae-11c3-e4b7-dda4f1fadcf6@oracle.com>
+        Mon, 25 Mar 2019 10:12:31 -0400
+Received: from mga11.intel.com ([192.55.52.93]:23489 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725355AbfCYOMb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 10:12:31 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Mar 2019 07:12:27 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,269,1549958400"; 
+   d="scan'208";a="158193995"
+Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.97])
+  by fmsmga001.fm.intel.com with ESMTP; 25 Mar 2019 07:12:24 -0700
+Date:   Mon, 25 Mar 2019 16:12:23 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Roberto Sassu <roberto.sassu@huawei.com>,
+        James Bottomley <jejb@linux.ibm.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        David Howells <dhowells@redhat.com>, keyrings@vger.kernel.org,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
+Subject: Re: [PATCH] security/keys/trusted: Allow operation without hardware
+ TPM
+Message-ID: <20190325141223.GA13766@linux.intel.com>
+References: <155295271345.1945351.6465460744078693578.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20190321135451.GD4603@linux.intel.com>
+ <809e827b-fdbe-fbb8-8acf-2878ae9f7777@huawei.com>
+ <CAPcyv4gc_KWedC12bTcX24KwjKiBCF=yvouRNzCbJKaLrgJdDg@mail.gmail.com>
+ <d0434a90-4010-8c76-c02e-bb1a6ec831ef@huawei.com>
+ <20190322101227.GB3122@linux.intel.com>
+ <CAPcyv4g=W9Fc=nfYjXG9-mpzn2cfiYEz4J7ksP3ziFUc_5k1OQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <69e40698-f7ae-11c3-e4b7-dda4f1fadcf6@oracle.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <CAPcyv4g=W9Fc=nfYjXG9-mpzn2cfiYEz4J7ksP3ziFUc_5k1OQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 09:43:20AM -0400, Boris Ostrovsky wrote:
-> On 3/25/19 8:05 AM, luca abeni wrote:
-> > Hi all,
+On Fri, Mar 22, 2019 at 08:24:01AM -0700, Dan Williams wrote:
+> On Fri, Mar 22, 2019 at 3:12 AM Jarkko Sakkinen
+> <jarkko.sakkinen@linux.intel.com> wrote:
 > >
-> > On Sat, 23 Mar 2019 11:41:51 +0100
-> > luca abeni <luca.abeni@santannapisa.it> wrote:
-> > [...]
-> >>>> Is there any data that shows effects of using this new parameter?
-> >>>>     
-> >>> Yes, I've done some research and experiments on this. I did it
-> >>> together with a friend, which I'm Cc-ing, as I'm not sure we're
-> >>> ready/capable to share the results, yet (Luca?).  
-> >> I think we can easily share the experimental data (cyclictest output
-> >> and plots).
-> >>
-> >> Moreover, we can share the scripts and tools for running the
-> >> experiments (so, everyone can easily reproduce the numbers by simply
-> >> typing "make" and waiting for some time :)
-> >>
-> >>
-> >> I'll try to package the results and the scripts/tools this evening,
-> >> and I'll send them.
-> > Sorry for the delay. I put some quick results here:
-> > http://retis.santannapisa.it/luca/XenTimers/
-> > (there also is a link to the scripts to be used for reproducing the
-> > results). The latencies have been measured by running cyclictest in the
-> > guest (see the scripts for details).
+> > On Thu, Mar 21, 2019 at 06:45:47PM +0100, Roberto Sassu wrote:
+> > > On 3/21/2019 5:30 PM, Dan Williams wrote:
+> > > > On Thu, Mar 21, 2019 at 7:27 AM Roberto Sassu <roberto.sassu@huawei.com> wrote:
+> > > > >
+> > > > > On 3/21/2019 2:54 PM, Jarkko Sakkinen wrote:
+> > > > > > On Mon, Mar 18, 2019 at 04:45:13PM -0700, Dan Williams wrote:
+> > > > > > > Rather than fail initialization of the trusted.ko module, arrange for
+> > > > > > > the module to load, but rely on trusted_instantiate() to fail
+> > > > > > > trusted-key operations.
+> > > > > > >
+> > > > > > > Fixes: 240730437deb ("KEYS: trusted: explicitly use tpm_chip structure...")
+> > > > > > > Cc: Roberto Sassu <roberto.sassu@huawei.com>
+> > > > > > > Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > > > > > > Cc: James Bottomley <jejb@linux.ibm.com>
+> > > > > > > Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > > > > > > Cc: Mimi Zohar <zohar@linux.ibm.com>
+> > > > > > > Cc: David Howells <dhowells@redhat.com>
+> > > > > > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> > > > > >
+> > > > > > It should check for chip in each function that uses TPM now that
+> > > > > > the code does not rely on default chip. Otherwise, the semantics
+> > > > > > are kind of inconsistent.
+> > > > >
+> > > > > If no other TPM function can be used before a successful key
+> > > > > instantiate, checking for a chip only in trusted_instantiate() seems
+> > > > > sufficient. Then, the same chip will be used by all TPM functions until
+> > > > > module unloading, since we incremented the reference count.
+> > > > >
+> > > > > I would suggest to move the tpm_default_chip() and init_digests() calls
+> > > > > to trusted_instantiate() to restore the old behavior of init_trusted().
+> > > > >
+> > > > > trusted_instantiate() should look like:
+> > > > > ---
+> > > > > if (!chip) {
+> > > > >          chip = tpm_default_chip();
+> > > > >          if (!chip)
+> > > > >                  return -ENODEV;
+> > > > > }
+> > > > >
+> > > > > if (!digests) {
+> > > > >          ret = init_digests();
+> > > > >          if (ret < 0)
+> > > > >                  return ret;
+> > > > > }
+> > > >
+> > > > This patch already achieves that because tpm_find_get_ops() will fail
+> > > > and cause tpm_is_tpm2() to return NULL.
+> > >
+> > > In addition, the changes I proposed would allow users to create trusted
+> > > keys if a TPM is added later. CONFIG_TRUSTED_KEYS=y and
+> > > CONFIG_TCG_TPM=m is a valid configuration.
+> > >
+> > > Jarkko, Dan's patch seems sufficient to fix the issue. He could include
+> > > the changes I proposed in his patch. What is your opinion?
 > >
-> > The picture shows the latencies measured with an unpatched guest kernel
-> > and with a guest kernel having TIMER_SLOP set to 1000 (arbitrary small
-> > value :).
-> > All the experiments have been performed booting the hypervisor with a
-> > small timer_slop (the hypervisor's one) value. So, they show that
-> > decreasing the hypervisor's timer_slop is not enough to measure low
-> > latencies with cyclictest.
+> > Agreed.
 > 
+> What changes?
 > 
-> 
-> I have a couple of questions:
-> * Does it make sense to make this a tunable for other clockevent devices
-> as well?
+> Robert, please feel free to re-author the proposed patch however you
+> see fit, I just want whatever will get libnvdimm operational again in
+> the shortest amount of time.
 
-I gather that would be on a case-by-case basis for very specific 
-ones.
+I've decided go with a patch of least innovation i.e. one that simply reverts
+the old behavior. Sending patch soon.
 
-For many timers in the kernel, the minimums are determined by the
-actual hardware  backing the timer, and the minimum can be
-adjusted by the clockevent code. This case is special since it 
-is entirely a software-based implementation in the kernel, where 
-the actual timer implementation is in the Xen hypervisor.
-
-> * This patch adjusts min value. Could max value (ever) need a similar
-> adjustment?
-
-I cannot think of such a case where that would be helpful, but I
-cannot rule that out or speak as an authority.
-
-- Ryan
+/Jarkko
