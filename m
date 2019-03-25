@@ -2,86 +2,100 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1EC3C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 08:50:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47EACC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 08:53:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA9F220863
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 08:50:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15A1C20863
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 08:53:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730152AbfCYIup (ORCPT
+        id S1730067AbfCYIxb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 04:50:45 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:49487 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730076AbfCYIuo (ORCPT
+        Mon, 25 Mar 2019 04:53:31 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:45018 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726234AbfCYIxb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 04:50:44 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1h8LJW-0001dy-02; Mon, 25 Mar 2019 09:50:38 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1h8LJV-0005sp-LY; Mon, 25 Mar 2019 09:50:37 +0100
-Date:   Mon, 25 Mar 2019 09:50:37 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     thierry.reding@gmail.com, narmstrong@baylibre.com,
-        jbrunet@baylibre.com, linux-pwm@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/1] pwm: meson: fix scheduling while atomic issue
-Message-ID: <20190325085037.f4weycbhaa7yyurt@pengutronix.de>
-References: <20190324220217.15813-1-martin.blumenstingl@googlemail.com>
- <20190325084153.l44pzfewcqlkoaoe@pengutronix.de>
+        Mon, 25 Mar 2019 04:53:31 -0400
+Received: from p5492e2fc.dip0.t-ipconnect.de ([84.146.226.252] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1h8LMG-0005e8-SB; Mon, 25 Mar 2019 09:53:29 +0100
+Date:   Mon, 25 Mar 2019 09:53:28 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Ming Lei <ming.lei@redhat.com>
+cc:     Peter Xu <peterx@redhat.com>, Christoph Hellwig <hch@lst.de>,
+        Jason Wang <jasowang@redhat.com>,
+        Luiz Capitulino <lcapitulino@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>, minlei@redhat.com
+Subject: Re: Virtio-scsi multiqueue irq affinity
+In-Reply-To: <20190325070616.GA9642@ming.t460p>
+Message-ID: <alpine.DEB.2.21.1903250948490.1798@nanos.tec.linutronix.de>
+References: <20190318062150.GC6654@xz-x1> <alpine.DEB.2.21.1903231805310.1798@nanos.tec.linutronix.de> <20190325050213.GH9149@xz-x1> <20190325070616.GA9642@ming.t460p>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190325084153.l44pzfewcqlkoaoe@pengutronix.de>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Ming,
 
-On Mon, Mar 25, 2019 at 09:41:53AM +0100, Uwe Kleine-König wrote:
-> If you want to implement further cleanups, my questions and propositions
-> are:
+On Mon, 25 Mar 2019, Ming Lei wrote:
+> On Mon, Mar 25, 2019 at 01:02:13PM +0800, Peter Xu wrote:
+> > One thing I can think of is the real-time scenario where "isolcpus="
+> > is provided, then logically we should not allow any isolated CPUs to
+> > be bound to any of the multi-queue IRQs.  Though Ming Lei and I had a
 > 
->  - Is there a publicly available manual for this hardware? If yes, you
->    can add a link to it in the header of the driver.
+> So far, this behaviour is made by user-space.
 > 
->  - Why do you handle reparenting of the PWM's clk in .request? Wouldn't
->    this be more suitable in .apply?
+> >From my understanding, IRQ subsystem doesn't handle "isolcpus=", even
+> though the Kconfig help doesn't mention irq affinity affect:
 > 
->  - Does stopping the PWM (i.e. clearing MISC_{A,B}_EN in the MISC_AB
->    register) freeze the output, or is the currently running period
->    completed first? (The latter is the right behaviour.)
-> 
->  - Please point out in the header that for changing period/duty
->    cycle/polarity the hardware must be stopped. (I suggest to apply the
->    style used in https://www.spinics.net/lists/linux-pwm/msg09262.html
->    for some consistency.)
+>           Make sure that CPUs running critical tasks are not disturbed by
+>           any source of "noise" such as unbound workqueues, timers, kthreads...
+>           Unbound jobs get offloaded to housekeeping CPUs. This is driven by
+>           the "isolcpus=" boot parameter.
 
-Another thing I just noted: The .get_state callback only sets .enabled
-but nothing of the remaining information is provided.
+isolcpus has no effect on the interupts. That's what 'irqaffinity=' is for.
 
-Best regards
-Uwe
+> Yeah, some RT application may exclude 'isolcpus=' from some IRQ's
+> affinity via /proc/irq interface, and now it becomes not possible any
+> more to do that for managed IRQ.
+> 
+> > discussion offlist before and Ming explained to me that as long as the
+> > isolated CPUs do not generate any IO then there will be no IRQ on
+> > those isolated (real-time) CPUs at all.  Can we guarantee that?  Now
+> 
+> It is only guaranteed for 1:1 mapping.
+> 
+> blk-mq uses managed IRQ's affinity to setup queue mapping, for example:
+> 
+> 1) single hardware queue
+> - this queue's IRQ affinity includes all CPUs, then the hardware queue's
+> IRQ is only fired on one specific CPU for IO submitted from any CPU
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Right. We can special case that for single HW queue to honor the default
+affinity setting. That's not hard to achieve.
+ 
+> 2) multi hardware queue
+> - there are N hardware queues
+> - for each hardware queue i(i < N), its IRQ's affinity may include N(i) CPUs,
+> then IRQ for this hardware queue i is fired on one specific CPU among N(i).
+
+Correct and that's the sane case where it does not matter much, because if
+your task on an isolated CPU does I/O then redirecting it through some
+other CPU does not make sense. If it doesn't do I/O it wont be affected by
+the dormant queue.
+
+Thanks,
+
+	tglx
