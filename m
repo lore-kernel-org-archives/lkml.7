@@ -2,188 +2,123 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1102C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:46:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FF4DC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:47:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7C1C20700
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:46:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 565C920700
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:47:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="oIECdQaV"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ApsvyUbV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730492AbfCYSqo (ORCPT
+        id S1730325AbfCYSrf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 14:46:44 -0400
-Received: from mail-eopbgr20073.outbound.protection.outlook.com ([40.107.2.73]:24198
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729478AbfCYSqn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 14:46:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=B/iQ6PpkFEjj5m8MgxZyf1G5eK5pHu/UZ1XNGZqBrdQ=;
- b=oIECdQaVdUHZ/SGnBNgxIN2lXPdKL5ZnMl0L9poGCml28BkFD1mAXP1t5/+4fuN1i4JJs8DuGQ/t+dTVH9a27z4ZLoQK9beYIgvos8NyehOmQlCMft9EZQ3gtI2Ivh0/CNLwinXzlTk3MXTfT/MMw+BMUhZ3Nc3qyHAPiaeyAOQ=
-Received: from AM6PR04MB5863.eurprd04.prod.outlook.com (20.179.1.11) by
- AM6PR04MB5079.eurprd04.prod.outlook.com (20.177.34.143) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1730.18; Mon, 25 Mar 2019 18:46:39 +0000
-Received: from AM6PR04MB5863.eurprd04.prod.outlook.com
- ([fe80::4801:29e5:12d6:cbeb]) by AM6PR04MB5863.eurprd04.prod.outlook.com
- ([fe80::4801:29e5:12d6:cbeb%4]) with mapi id 15.20.1730.019; Mon, 25 Mar 2019
- 18:46:39 +0000
-From:   Leo Li <leoyang.li@nxp.com>
-To:     Vladimir Oltean <vladimir.oltean@nxp.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>
-CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>
-Subject: RE: [PATCH] ARM: dts: ls1021: Fix SGMII PCS link remaining down after
- PHY disconnect
-Thread-Topic: [PATCH] ARM: dts: ls1021: Fix SGMII PCS link remaining down
- after PHY disconnect
-Thread-Index: AQHU4u10/As1+FdGfk+r8tl5GBIdhaYcpd3A
-Date:   Mon, 25 Mar 2019 18:46:39 +0000
-Message-ID: <AM6PR04MB586318A19F0EE5D9B92B01BC8F5E0@AM6PR04MB5863.eurprd04.prod.outlook.com>
-References: <1553506240-2584-1-git-send-email-vladimir.oltean@nxp.com>
-In-Reply-To: <1553506240-2584-1-git-send-email-vladimir.oltean@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=leoyang.li@nxp.com; 
-x-originating-ip: [64.157.242.222]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 81141c80-ec1e-4cd0-2baf-08d6b1523745
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600127)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:AM6PR04MB5079;
-x-ms-traffictypediagnostic: AM6PR04MB5079:
-x-microsoft-antispam-prvs: <AM6PR04MB5079EE261D385B999183003E8F5E0@AM6PR04MB5079.eurprd04.prod.outlook.com>
-x-forefront-prvs: 0987ACA2E2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(376002)(136003)(396003)(366004)(346002)(189003)(199004)(13464003)(256004)(446003)(8936002)(97736004)(74316002)(33656002)(8676002)(316002)(9686003)(52536014)(6636002)(14444005)(99286004)(105586002)(26005)(186003)(102836004)(7736002)(305945005)(106356001)(76176011)(25786009)(5660300002)(81166006)(81156014)(2906002)(6246003)(6436002)(229853002)(4326008)(6116002)(71200400001)(11346002)(486006)(3846002)(55016002)(66066001)(478600001)(53546011)(6506007)(71190400001)(476003)(7696005)(14454004)(2501003)(53936002)(86362001)(68736007)(54906003)(110136005);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR04MB5079;H:AM6PR04MB5863.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: fvifTwJmjdF4Ktuz/JytA/U8A4R6CJOexnJzuGV8HSWm3VKgO1fN6iAVMGfTHlnlQoM7AYqj2mD10JTy1CYrj3NRAnuZgNPmXv9rX84k1EisholDM1tNqieOIo2aajKPLoNgwQh1FlIoGC6zCo3sIQAiCc4a7mZppsMo8kWEYUwAQZqzOtwF8nzGyreKfPNUHZWrI4Jzph1zM7Y8lQFcGbEOsdB2hIMLRBpCjcedfvyPSoec+ipgWZlxqDsB+FEjpd41mrbfuyQ4nR2yt1uQzKObQaotN1Cna6ZdelX74MdXkv5z6abxNHN0HT+HMXZeiq4TWS7luRjzZEvzQP8qNkWROi6eNmbd5bBthLKS/+AWM28yyFEX0guhZ7qAmdvGrkIz1h1qa9Anxm0r1ue+iJTjiyPwil5hipPXaRCMpa8=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 25 Mar 2019 14:47:35 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:40956 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730212AbfCYSre (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 14:47:34 -0400
+Received: by mail-pg1-f195.google.com with SMTP id u9so6999593pgo.7
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 11:47:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:user-agent:mime-version;
+        bh=fRdq63OhSxm5cgv8tRdBJK1Sff/Wou+7tzmBvJBIrrU=;
+        b=ApsvyUbVLS4sN8mLCNZ0dSvTIL37bi8ZAKmmhCRHCqF/YOYbXxBHnlpBmimIgdrjPZ
+         D8eX4iQR/iV7vwrlu/a1q9PTDnqrdazDIhqfIeyA1Zg47+toNQdIqMFLg3UBE4mpqyVF
+         2FrrfdiEIWJ8keELyAaOmLJMLXl1PeU+CSezjU1LsmJGKP1IhUR0aL3UrSCyNM2OiUkD
+         72all7OweA4O7qWPv6WmgeSzrIlLAFy/A0TZ8kcFnQiEZfThjLFe/ff9lcIiU5VFwxI2
+         04F7YUp1RyoQOaijNWFANSlS+h/QH0+i/ufdYHwY/Pt1O3BitMDRMKBzwwfE7OnBN6FX
+         k1dQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:user-agent
+         :mime-version;
+        bh=fRdq63OhSxm5cgv8tRdBJK1Sff/Wou+7tzmBvJBIrrU=;
+        b=ejBjOGCcnw0IzO2ag753AEdXx2CD1Gd0fwQ/BJ/gP8ZPuIVAroo6OboRmeAtwNIsQr
+         99P3ynWODEbc7bYQwDDb1QENDZN1/ZqPp0AaXodQD2A252ydeRn7+Qsk9W4Z9ey+bB77
+         XZ2E85sDujDNYsjfUetQXWLcKFxZG53PyB60S309om9HI5FWaRqqZ6yQGHDiquioaNPz
+         dMIWI3py3bO7fIp5L2G+ZJiC2YZ7bVJ8gESeahC4RsikuVoIbWqLdA4/QSTEm4gHRZD9
+         IkaIbo7wRQpXWVdA7zS85pk+/25++b3cudhfdjHUVvQgsd2HJeYnJjI2JjOvg5MagALI
+         y5yg==
+X-Gm-Message-State: APjAAAVJ9OLIHjib/Vd4J2oPwzroMnDyY41ElgvkWAYCiJcdmxRqLmbV
+        5ypPprY+yD3bPbxg1mxvb2vuDg==
+X-Google-Smtp-Source: APXvYqxYG0EDdOeSHsVt+srIwGgDgZV5j2oAGIcoS+zCeAb0HoExNgRBQxX/Am1W5yFZrJ2AyVMS3Q==
+X-Received: by 2002:a63:c145:: with SMTP id p5mr25246258pgi.248.1553539652886;
+        Mon, 25 Mar 2019 11:47:32 -0700 (PDT)
+Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
+        by smtp.gmail.com with ESMTPSA id f14sm20714146pfn.3.2019.03.25.11.47.31
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 25 Mar 2019 11:47:32 -0700 (PDT)
+Date:   Mon, 25 Mar 2019 11:47:31 -0700 (PDT)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     Brijesh Singh <brijesh.singh@amd.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?Q?Radim_Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
+cc:     Borislav Petkov <bp@suse.de>, x86@kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [patch] KVM: SVM: prevent DBG_DECRYPT and DBG_ENCRYPT overflow
+Message-ID: <alpine.DEB.2.21.1903251146160.188887@chino.kir.corp.google.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 81141c80-ec1e-4cd0-2baf-08d6b1523745
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Mar 2019 18:46:39.1397
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB5079
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This ensures that the address and length provided to DBG_DECRYPT and
+DBG_ENCRYPT do not cause an overflow.
 
+At the same time, pass the actual number of pages pinned in memory to
+sev_unpin_memory() as a cleanup.
 
-> -----Original Message-----
-> From: Vladimir Oltean
-> Sent: Monday, March 25, 2019 4:31 AM
-> To: shawnguo@kernel.org; Leo Li <leoyang.li@nxp.com>; Claudiu Manoil
-> <claudiu.manoil@nxp.com>
-> Cc: robh+dt@kernel.org; linux-arm-kernel@lists.infradead.org;
-> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
-> netdev@vger.kernel.org; davem@davemloft.net; Vladimir Oltean
-> <vladimir.oltean@nxp.com>
-> Subject: [PATCH] ARM: dts: ls1021: Fix SGMII PCS link remaining down afte=
-r
-> PHY disconnect
->=20
-> Each eTSEC MAC has its own TBI (SGMII) PCS and private MDIO bus.
-> But due to a DTS oversight, both SGMII-compatible MACs of the LS1021 SoC
-> are pointing towards the same internal PCS. Therefore nobody is controlli=
-ng
-> the internal PCS of eTSEC0.
->=20
-> Upon initial ndo_open, the SGMII link is ok by virtue of U-boot initializ=
-ation.
-> But upon an ifdown/ifup sequence, the code path from ndo_open ->
-> init_phy -> gfar_configure_serdes does not get executed for the PCS of
-> eTSEC0 (and is executed twice for MAC eTSEC1). So the SGMII link remains
-> down for eTSEC0. On the LS1021A-TWR board, to signal this failure conditi=
-on,
-> the PHY driver keeps printing
-> '803x_aneg_done: SGMII link is not ok'.
->=20
-> Fixes: 055223d4d22d ("ARM: dts: ls1021a: Enable the eTSEC ports on QDS
-> and TWR")
-> Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-> ---
->  arch/arm/boot/dts/ls1021a-twr.dts | 9 ++++++++-
->  arch/arm/boot/dts/ls1021a.dtsi    | 9 +++++++++
->  2 files changed, 17 insertions(+), 1 deletion(-)
->=20
-> diff --git a/arch/arm/boot/dts/ls1021a-twr.dts
-> b/arch/arm/boot/dts/ls1021a-twr.dts
-> index 97e1fb7..9b1fe99 100644
-> --- a/arch/arm/boot/dts/ls1021a-twr.dts
-> +++ b/arch/arm/boot/dts/ls1021a-twr.dts
-> @@ -145,7 +145,7 @@
->  };
->=20
->  &enet0 {
-> -	tbi-handle =3D <&tbi1>;
-> +	tbi-handle =3D <&tbi0>;
->  	phy-handle =3D <&sgmii_phy2>;
->  	phy-connection-type =3D "sgmii";
->  	status =3D "okay";
-> @@ -225,6 +225,13 @@
->  	sgmii_phy2: ethernet-phy@2 {
->  		reg =3D <0x2>;
->  	};
-> +	tbi0: tbi-phy@1f {
-> +		reg =3D <0x1f>;
-> +		device_type =3D "tbi-phy";
-> +	};
-> +};
-> +
-> +&mdio1 {
->  	tbi1: tbi-phy@1f {
->  		reg =3D <0x1f>;
->  		device_type =3D "tbi-phy";
-> diff --git a/arch/arm/boot/dts/ls1021a.dtsi
-> b/arch/arm/boot/dts/ls1021a.dtsi index b4f2723..3a3d264 100644
-> --- a/arch/arm/boot/dts/ls1021a.dtsi
-> +++ b/arch/arm/boot/dts/ls1021a.dtsi
-> @@ -709,6 +709,15 @@
->  			      <0x0 0x2d10030 0x0 0x4>;
->  		};
->=20
-> +		mdio1: mdio@2d64000 {
-> +			compatible =3D "gianfar";
+Reported-by: Cfir Cohen <cfir@google.com>
+Signed-off-by: David Rientjes <rientjes@google.com>
+---
+ arch/x86/kvm/svm.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-I know it is not your fault to use this compatible string as it already use=
-d this for mdio node in the device tree, but it is somewhat ambiguous to us=
-e the same compatible string as the ethernet controller.  And this dts is t=
-he only one in all kernel device trees using this compatible string for mdi=
-o node.  I would think it will be more clear to use "fsl,etsec2-mdio" or "f=
-sl,etsec2-tbi".
-
-> +			device_type =3D "mdio";
-> +			#address-cells =3D <1>;
-> +			#size-cells =3D <0>;
-> +			reg =3D <0x0 0x2d64000 0x0 0x4000>,
-> +			      <0x0 0x2d50030 0x0 0x4>;
-> +		};
-> +
->  		ptp_clock@2d10e00 {
->  			compatible =3D "fsl,etsec-ptp";
->  			reg =3D <0x0 0x2d10e00 0x0 0xb0>;
-> --
-> 2.7.4
-
+diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -6799,7 +6799,8 @@ static int sev_dbg_crypt(struct kvm *kvm, struct kvm_sev_cmd *argp, bool dec)
+ 	struct page **src_p, **dst_p;
+ 	struct kvm_sev_dbg debug;
+ 	unsigned long n;
+-	int ret, size;
++	unsigned int size;
++	int ret;
+ 
+ 	if (!sev_guest(kvm))
+ 		return -ENOTTY;
+@@ -6807,6 +6808,11 @@ static int sev_dbg_crypt(struct kvm *kvm, struct kvm_sev_cmd *argp, bool dec)
+ 	if (copy_from_user(&debug, (void __user *)(uintptr_t)argp->data, sizeof(debug)))
+ 		return -EFAULT;
+ 
++	if (!debug.len || debug.src_uaddr + debug.len < debug.src_uaddr)
++		return -EINVAL;
++	if (!debug.dst_uaddr)
++		return -EINVAL;
++
+ 	vaddr = debug.src_uaddr;
+ 	size = debug.len;
+ 	vaddr_end = vaddr + size;
+@@ -6857,8 +6863,8 @@ static int sev_dbg_crypt(struct kvm *kvm, struct kvm_sev_cmd *argp, bool dec)
+ 						     dst_vaddr,
+ 						     len, &argp->error);
+ 
+-		sev_unpin_memory(kvm, src_p, 1);
+-		sev_unpin_memory(kvm, dst_p, 1);
++		sev_unpin_memory(kvm, src_p, n);
++		sev_unpin_memory(kvm, dst_p, n);
+ 
+ 		if (ret)
+ 			goto err;
