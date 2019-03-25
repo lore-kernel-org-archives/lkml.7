@@ -2,124 +2,114 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A8B2C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 13:10:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CBF5C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 13:11:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25E0320830
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 13:10:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="cSQ5+f4K"
+	by mail.kernel.org (Postfix) with ESMTP id E6AC420854
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 13:11:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731282AbfCYNKQ (ORCPT
+        id S1731222AbfCYNLy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 09:10:16 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:43432 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730694AbfCYNKQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 09:10:16 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2PD9nlQ043189;
-        Mon, 25 Mar 2019 08:09:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1553519389;
-        bh=IxbMSmB9fWUk28Qr+hYgtEhPGpHFWiMIqwBf+ODBVPI=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=cSQ5+f4KE9OmXRYN4G5024Bi0IYuo0jbpH/1UowrZUuOdXQ9haVwwOvG9hAZOshBv
-         tw0SOeaWrVktBmIOBSrl6rrFhanv8E2WC2QH8yX3DnxVivtv4XNh9gloceZqninyol
-         gCzXtBtM2CgpDQmnzhMF7QVM0U2CdtyaZv37z91M=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2PD9nWZ019112
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 25 Mar 2019 08:09:49 -0500
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 25
- Mar 2019 08:09:49 -0500
-Received: from dlep32.itg.ti.com (157.170.170.100) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_0,
- cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5 via Frontend Transport;
- Mon, 25 Mar 2019 08:09:49 -0500
-Received: from [172.24.190.89] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by dlep32.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2PD9hmO020477;
-        Mon, 25 Mar 2019 08:09:44 -0500
-Subject: Re: [RFC PATCH v2 2/5] dt-bindings: mtd: Add binding documentation
- for Hyperbus memory devices
-To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, <linux-mtd@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <tudor.ambarus@microchip.com>, <nsekhar@ti.com>,
-        Mason Yang <masonccyang@mxic.com.tw>
-References: <20190321174548.9288-1-vigneshr@ti.com>
- <20190321174548.9288-3-vigneshr@ti.com>
- <ca3326cb-1b37-cf9a-f196-3288a539d064@cogentembedded.com>
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-Message-ID: <43af4200-7734-733a-a227-f3b75bf40457@ti.com>
-Date:   Mon, 25 Mar 2019 18:40:41 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Mon, 25 Mar 2019 09:11:54 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33590 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726166AbfCYNLy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 09:11:54 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 0AB0BAE80;
+        Mon, 25 Mar 2019 13:11:52 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id 3BDC3DA86C; Mon, 25 Mar 2019 14:13:05 +0100 (CET)
+Date:   Mon, 25 Mar 2019 14:13:05 +0100
+From:   David Sterba <dsterba@suse.cz>
+To:     Nikolay Borisov <nborisov@suse.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com,
+        Liu Bo <bo.liu@linux.alibaba.com>,
+        Anand Jain <Anand.Jain@oracle.com>,
+        Filipe Manana <FdManana@suse.com>, WenRuo Qu <wqu@suse.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] btrfs: use BUG() instead of BUG_ON(1)
+Message-ID: <20190325131305.GD10640@suse.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz, Nikolay Borisov <nborisov@suse.com>,
+        Arnd Bergmann <arnd@arndb.de>, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com,
+        Liu Bo <bo.liu@linux.alibaba.com>,
+        Anand Jain <Anand.Jain@oracle.com>,
+        Filipe Manana <FdManana@suse.com>, WenRuo Qu <wqu@suse.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190325130256.1437810-1-arnd@arndb.de>
+ <78cd318c-2094-87ca-4843-46af5e3d11ef@suse.com>
 MIME-Version: 1.0
-In-Reply-To: <ca3326cb-1b37-cf9a-f196-3288a539d064@cogentembedded.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <78cd318c-2094-87ca-4843-46af5e3d11ef@suse.com>
+User-Agent: Mutt/1.5.23.1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Mon, Mar 25, 2019 at 03:06:12PM +0200, Nikolay Borisov wrote:
+> 
+> 
+> On 25.03.19 г. 15:02 ч., Arnd Bergmann wrote:
+> > BUG_ON(1) leads to bogus warnings from clang when
+> > CONFIG_PROFILE_ANNOTATED_BRANCHES is set:
+> > 
+> > fs/btrfs/volumes.c:5041:3: error: variable 'max_chunk_size' is used uninitialized whenever 'if' condition is false
+> >       [-Werror,-Wsometimes-uninitialized]
+> >                 BUG_ON(1);
+> >                 ^~~~~~~~~
+> > include/asm-generic/bug.h:61:36: note: expanded from macro 'BUG_ON'
+> >  #define BUG_ON(condition) do { if (unlikely(condition)) BUG(); } while (0)
+> >                                    ^~~~~~~~~~~~~~~~~~~
+> > include/linux/compiler.h:48:23: note: expanded from macro 'unlikely'
+> >  #  define unlikely(x)   (__branch_check__(x, 0, __builtin_constant_p(x)))
+> >                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > fs/btrfs/volumes.c:5046:9: note: uninitialized use occurs here
+> >                              max_chunk_size);
+> >                              ^~~~~~~~~~~~~~
+> > include/linux/kernel.h:860:36: note: expanded from macro 'min'
+> >  #define min(x, y)       __careful_cmp(x, y, <)
+> >                                          ^
+> > include/linux/kernel.h:853:17: note: expanded from macro '__careful_cmp'
+> >                 __cmp_once(x, y, __UNIQUE_ID(__x), __UNIQUE_ID(__y), op))
+> >                               ^
+> > include/linux/kernel.h:847:25: note: expanded from macro '__cmp_once'
+> >                 typeof(y) unique_y = (y);               \
+> >                                       ^
+> > fs/btrfs/volumes.c:5041:3: note: remove the 'if' if its condition is always true
+> >                 BUG_ON(1);
+> >                 ^
+> > include/asm-generic/bug.h:61:32: note: expanded from macro 'BUG_ON'
+> >  #define BUG_ON(condition) do { if (unlikely(condition)) BUG(); } while (0)
+> >                                ^
+> > fs/btrfs/volumes.c:4993:20: note: initialize the variable 'max_chunk_size' to silence this warning
+> >         u64 max_chunk_size;
+> >                           ^
+> >                            = 0
+> > 
+> > Change it to BUG() so clang can see that this code path can never
+> > continue.
+> 
+> Long-term we have to eliminate to bug_on's but until then:
 
-On 24/03/19 9:48 PM, Sergei Shtylyov wrote:
-> Hello!
-> 
-> On 03/21/2019 08:45 PM, Vignesh Raghavendra wrote:
-> 
->> Add DT binding documentation for Hyperbus memory devices. Only
->> Hyperflash is supported at the moment.
->>
->> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
->> ---
->>  Documentation/devicetree/bindings/mtd/cypress,hyperbus.txt | 6 ++++++
->>  1 file changed, 6 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/mtd/cypress,hyperbus.txt
->>
->> diff --git a/Documentation/devicetree/bindings/mtd/cypress,hyperbus.txt b/Documentation/devicetree/bindings/mtd/cypress,hyperbus.txt
->> new file mode 100644
->> index 000000000000..cb408f80b868
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mtd/cypress,hyperbus.txt
->> @@ -0,0 +1,6 @@
->> +Bindings for Hyperflash NOR flash chips compliant with Cypress Hyperbus
->> +specification and supports Cypress CFI specification 1.5 command set.
->> +
->> +Required properties:
->> +- compatible : "cypress,hyperflash" for Hyperflash NOR chips
-> 
->    What about "cfi-flash", shouldn't it be also specified?
-
-Oh, right. I missed that. Hyperflash is CFI compliant.
-Will add that next time. Thanks!
-
-> 
->> +- reg : Address where flash's memory mapped space
-> 
-> MBR, Sergei
-> 
-
--- 
-Regards
-Vignesh
+I think in those places it's "this must never happen", so it's not the
+the typical example of BUG_ON misuse we want to eliminate. Fixing the
+compiler waring is ok though.
