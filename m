@@ -2,121 +2,96 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CFC4C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 10:32:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA9DAC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 10:33:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5866420850
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 10:32:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 716EE20850
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 10:33:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="erwGFrez"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730729AbfCYKcy (ORCPT
+        id S1730745AbfCYKdb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 06:32:54 -0400
-Received: from mail.netline.ch ([148.251.143.178]:59041 "EHLO
-        netline-mail3.netline.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730491AbfCYKcx (ORCPT
+        Mon, 25 Mar 2019 06:33:31 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:45781 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729634AbfCYKda (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 06:32:53 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by netline-mail3.netline.ch (Postfix) with ESMTP id 9FA2E2A6059;
-        Mon, 25 Mar 2019 11:32:50 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at netline-mail3.netline.ch
-Received: from netline-mail3.netline.ch ([127.0.0.1])
-        by localhost (netline-mail3.netline.ch [127.0.0.1]) (amavisd-new, port 10024)
-        with LMTP id Xu6BH_Qdarew; Mon, 25 Mar 2019 11:32:50 +0100 (CET)
-Received: from thor (116.245.63.188.dynamic.wline.res.cust.swisscom.ch [188.63.245.116])
-        by netline-mail3.netline.ch (Postfix) with ESMTPSA id 94B2E2A6058;
-        Mon, 25 Mar 2019 11:32:49 +0100 (CET)
-Received: from [::1]
-        by thor with esmtp (Exim 4.92)
-        (envelope-from <michel@daenzer.net>)
-        id 1h8MuP-0002tK-0W; Mon, 25 Mar 2019 11:32:49 +0100
-Subject: Re: [PATCH] gpu: radeon: fix a potential NULL-pointer dereference
-To:     Kangjie Lu <kjlu@umn.edu>
-Cc:     David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        Daniel Vetter <daniel@ffwll.ch>, pakki001@umn.edu,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
-References: <20190323022955.14326-1-kjlu@umn.edu>
-From:   =?UTF-8?Q?Michel_D=c3=a4nzer?= <michel@daenzer.net>
-Openpgp: preference=signencrypt
-Autocrypt: addr=michel@daenzer.net; prefer-encrypt=mutual; keydata=
- mQGiBDsehS8RBACbsIQEX31aYSIuEKxEnEX82ezMR8z3LG8ktv1KjyNErUX9Pt7AUC7W3W0b
- LUhu8Le8S2va6hi7GfSAifl0ih3k6Bv1Itzgnd+7ZmSrvCN8yGJaHNQfAevAuEboIb+MaVHo
- 9EMJj4ikOcRZCmQWw7evu/D9uQdtkCnRY9iJiAGxbwCguBHtpoGMxDOINCr5UU6qt+m4O+UD
- /355ohBBzzyh49lTj0kTFKr0Ozd20G2FbcqHgfFL1dc1MPyigej2gLga2osu2QY0ObvAGkOu
- WBi3LTY8Zs8uqFGDC4ZAwMPoFy3yzu3ne6T7d/68rJil0QcdQjzzHi6ekqHuhst4a+/+D23h
- Za8MJBEcdOhRhsaDVGAJSFEQB1qLBACOs0xN+XblejO35gsDSVVk8s+FUUw3TSWJBfZa3Imp
- V2U2tBO4qck+wqbHNfdnU/crrsHahjzBjvk8Up7VoY8oT+z03sal2vXEonS279xN2B92Tttr
- AgwosujguFO/7tvzymWC76rDEwue8TsADE11ErjwaBTs8ZXfnN/uAANgPLQjTWljaGVsIERh
- ZW56ZXIgPG1pY2hlbEBkYWVuemVyLm5ldD6IXgQTEQIAHgUCQFXxJgIbAwYLCQgHAwIDFQID
- AxYCAQIeAQIXgAAKCRBaga+OatuyAIrPAJ9ykonXI3oQcX83N2qzCEStLNW47gCeLWm/QiPY
- jqtGUnnSbyuTQfIySkK5AQ0EOx6FRRAEAJZkcvklPwJCgNiw37p0GShKmFGGqf/a3xZZEpjI
- qNxzshFRFneZze4f5LhzbX1/vIm5+ZXsEWympJfZzyCmYPw86QcFxyZflkAxHx9LeD+89Elx
- bw6wT0CcLvSv8ROfU1m8YhGbV6g2zWyLD0/naQGVb8e4FhVKGNY2EEbHgFBrAAMGA/0VktFO
- CxFBdzLQ17RCTwCJ3xpyP4qsLJH0yCoA26rH2zE2RzByhrTFTYZzbFEid3ddGiHOBEL+bO+2
- GNtfiYKmbTkj1tMZJ8L6huKONaVrASFzLvZa2dlc2zja9ZSksKmge5BOTKWgbyepEc5qxSju
- YsYrX5xfLgTZC5abhhztpYhGBBgRAgAGBQI7HoVFAAoJEFqBr45q27IAlscAn2Ufk2d6/3p4
- Cuyz/NX7KpL2dQ8WAJ9UD5JEakhfofed8PSqOM7jOO3LCA==
-Message-ID: <0fc81efe-186b-3207-e0d0-b0bb95626069@daenzer.net>
-Date:   Mon, 25 Mar 2019 11:32:48 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Mon, 25 Mar 2019 06:33:30 -0400
+Received: by mail-pf1-f195.google.com with SMTP id e24so5247275pfi.12;
+        Mon, 25 Mar 2019 03:33:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Olh6FGvB5iAKqIVmq/9M4GY/Pmghh0Ho/NAjNxudRBo=;
+        b=erwGFrez9dfEhb0ta3Ew24ImORva5+K59kcX93MK6NYBZyALHhvCTbUpopea1H6dj4
+         w6lMfpVVAmSJ4tUrjD6Bp4jceYF8BOi4tNGKuvCG1JuD2Atpn/a1hu2bAUueFcHNuaq2
+         HcqRYiNwV//JrT1mSCCWnClIpjx0Qy/cN7aZGdoxH1Am2xP2FoemNSnfy5UQwgCF8qu3
+         yqoJiHViVxCPxXvmaz+bkyEKafXyhrcRo77fJpYQVRMsQQtQG4OzLX9jcLy1K8zumnUB
+         AtB91f4zGKt7rB7QxZaMTTqztDQQU6OJLsfsfYyzF2ys9NYIRZGmYCnJnJBdaTf7hm8i
+         aN0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=Olh6FGvB5iAKqIVmq/9M4GY/Pmghh0Ho/NAjNxudRBo=;
+        b=rG+DZ/Pv20cLE4D1mxon4esWF7OXRE0xZaYQXeJkQZEOm4gDZTLV005q8PiPD3+5/D
+         4MFKUw8pqxiqP4a6XLblvtLO4lo+80mKANBYo581PHrvGg97nsoA2ous1GaLSo1TGf86
+         jRdVTFcPQrnheHnHmaPuN1QobaMNOY4qJSYDBOyHJQh+psmbH7biCjla00dbn5uZxF8b
+         l8bF6adlzh8q2JuGkKPHsfV+8JBjJ7xjdGILWaCacj0W+rNUiDAe+Y1Ea0BcFxtkZLdJ
+         bI21KelT7fS9TrIa7/2IlvoD75Qhf73jbi8YD2u9md3V2PAJyK/Vf8BBJnvXVHTAaemC
+         EiGg==
+X-Gm-Message-State: APjAAAVfoeALt/Y2GjBXyf9Ii8ZoTVWXFWtOkoNk//O0JG1lQav6Er4K
+        l7SCfexUbrdFn6/yPN0PAbmo8l8W
+X-Google-Smtp-Source: APXvYqxdq6I9Or7EqCqWlAPuDB/aj6ePj5PruJ87dyN1mrLqAYEfVPje5mbPccdZWB8DGfQsTZLRjA==
+X-Received: by 2002:a17:902:70cc:: with SMTP id l12mr5963347plt.10.1553510010099;
+        Mon, 25 Mar 2019 03:33:30 -0700 (PDT)
+Received: from voyager.jms.id.au ([45.124.203.18])
+        by smtp.gmail.com with ESMTPSA id 1sm19221470pfi.99.2019.03.25.03.33.26
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 25 Mar 2019 03:33:29 -0700 (PDT)
+Received: by voyager.jms.id.au (sSMTP sendmail emulation); Mon, 25 Mar 2019 21:03:22 +1030
+From:   Joel Stanley <joel@jms.id.au>
+To:     Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] Documentation: rtc: Correct location of rtctest.c
+Date:   Mon, 25 Mar 2019 21:03:22 +1030
+Message-Id: <20190325103322.2578-1-joel@jms.id.au>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190323022955.14326-1-kjlu@umn.edu>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The useful little rtctest program moved location a while back.
 
-Hi Kangjie,
+Fixes: a12ab9e125f1 ("selftests: move RTC tests to rtc subfolder")
+Signed-off-by: Joel Stanley <joel@jms.id.au>
+---
+ Documentation/rtc.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-
-thanks for your patch.
-
-
-On 2019-03-23 3:29 a.m., Kangjie Lu wrote:
-> In case alloc_workqueue fails, the fix frees memory and
-> returns to avoid potential NULL pointer dereference.
-> 
-> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-> ---
->  drivers/gpu/drm/radeon/radeon_display.c | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/radeon/radeon_display.c b/drivers/gpu/drm/radeon/radeon_display.c
-> index aa898c699101..a31305755a77 100644
-> --- a/drivers/gpu/drm/radeon/radeon_display.c
-> +++ b/drivers/gpu/drm/radeon/radeon_display.c
-> @@ -678,6 +678,11 @@ static void radeon_crtc_init(struct drm_device *dev, int index)
->  	drm_mode_crtc_set_gamma_size(&radeon_crtc->base, 256);
->  	radeon_crtc->crtc_id = index;
->  	radeon_crtc->flip_queue = alloc_workqueue("radeon-crtc", WQ_HIGHPRI, 0);
-> +	if (!radeon_crtc->flip_queue) {
-> +		DRM_ERROR("failed to allocate the flip queue\n");
-> +		kfree(radeon_crtc);
-
-This would leak some memory referenced by struct drm_crtc. To solve
-this, I suggest calling radeon_crtc_destroy here and making that cope
-with radeon_crtc->flip_queue being NULL.
-
-
-Also, I'm not sure all driver code can handle some CRTCs not
-initializing. Given that, and as alloc_workqueue presumably only fails
-if the system is essentially out of memory anyway, it's probably better
-for radeon_crtc_init to return -ENOMEM in this case and for
-radeon_modeset_init to propagate that, which will prevent the driver as
-a whole from initializing.
-
-
+diff --git a/Documentation/rtc.txt b/Documentation/rtc.txt
+index a129acf38537..688c95b11919 100644
+--- a/Documentation/rtc.txt
++++ b/Documentation/rtc.txt
+@@ -136,5 +136,5 @@ a high functionality RTC is integrated into the SOC.  That system might read
+ the system clock from the discrete RTC, but use the integrated one for all
+ other tasks, because of its greater functionality.
+ 
+-Check out tools/testing/selftests/timers/rtctest.c for an example usage of the
++Check out tools/testing/selftests/rtc/rtctest.c for an example usage of the
+ ioctl interface.
 -- 
-Earthling Michel Dänzer               |              https://www.amd.com
-Libre software enthusiast             |             Mesa and X developer
+2.20.1
+
