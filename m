@@ -3,33 +3,33 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07588C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:27:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92A74C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:27:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8CB02084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:27:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DB212084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:27:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729693AbfCYV1O (ORCPT
+        id S1730691AbfCYV1U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 17:27:14 -0400
-Received: from smtprelay0160.hostedemail.com ([216.40.44.160]:41777 "EHLO
+        Mon, 25 Mar 2019 17:27:20 -0400
+Received: from smtprelay0030.hostedemail.com ([216.40.44.30]:50369 "EHLO
         smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730511AbfCYV1O (ORCPT
+        by vger.kernel.org with ESMTP id S1730556AbfCYV1S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 17:27:14 -0400
+        Mon, 25 Mar 2019 17:27:18 -0400
 Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 024EB182CED5B;
-        Mon, 25 Mar 2019 21:27:13 +0000 (UTC)
+        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 4C149181D341C;
+        Mon, 25 Mar 2019 21:27:16 +0000 (UTC)
 X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: ghost66_2196121266b06
-X-Filterd-Recvd-Size: 3843
+X-HE-Tag: arch56_22330c841341e
+X-Filterd-Recvd-Size: 3835
 Received: from joe-laptop.perches.com (unknown [47.151.153.53])
         (Authenticated sender: joe@perches.com)
-        by omf10.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 25 Mar 2019 21:27:10 +0000 (UTC)
+        by omf08.hostedemail.com (Postfix) with ESMTPA;
+        Mon, 25 Mar 2019 21:27:14 +0000 (UTC)
 From:   Joe Perches <joe@perches.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Boris Pismenny <borisp@mellanox.com>, netdev@vger.kernel.org,
@@ -38,8 +38,8 @@ Cc:     Boris Pismenny <borisp@mellanox.com>, netdev@vger.kernel.org,
         Yevgeny Kliteynik <kliteyn@mellanox.com>,
         Saeed Mahameed <saeedm@mellanox.com>
 Subject: Bad file pattern in MAINTAINERS section 'MELLANOX ETHERNET INNOVA IPSEC DRIVER'
-Date:   Mon, 25 Mar 2019 14:27:09 -0700
-Message-Id: <20190325212709.26906-1-joe@perches.com>
+Date:   Mon, 25 Mar 2019 14:27:13 -0700
+Message-Id: <20190325212713.26975-1-joe@perches.com>
 X-Mailer: git-send-email 2.15.0
 In-Reply-To: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com>
 References: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com>
@@ -69,12 +69,12 @@ linux-next MAINTAINERS section:
 	9890	S:	Supported
 	9891	W:	http://www.mellanox.com
 	9892	Q:	http://patchwork.ozlabs.org/project/netdev/list/
--->	9893	F:	drivers/net/ethernet/mellanox/mlx5/core/en_ipsec/*
-	9894	F:	drivers/net/ethernet/mellanox/mlx5/core/ipsec*
+	9893	F:	drivers/net/ethernet/mellanox/mlx5/core/en_ipsec/*
+-->	9894	F:	drivers/net/ethernet/mellanox/mlx5/core/ipsec*
 
 2: ---------------------------------------------------------------------------
 
-The most recent commit that added or modified file pattern 'drivers/net/ethernet/mellanox/mlx5/core/en_ipsec/*':
+The most recent commit that added or modified file pattern 'drivers/net/ethernet/mellanox/mlx5/core/ipsec*':
 
 commit 547eede070eb981f1442e494f08f4567dcf1d1c7
 Author: Ilan Tayari <ilant@mellanox.com>
@@ -115,4 +115,4 @@ Date:   Tue Apr 18 16:04:28 2017 +0300
 
 3: ---------------------------------------------------------------------------
 
-No commit with file pattern 'drivers/net/ethernet/mellanox/mlx5/core/en_ipsec/*' was found
+No commit with file pattern 'drivers/net/ethernet/mellanox/mlx5/core/ipsec*' was found
