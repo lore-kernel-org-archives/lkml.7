@@ -2,163 +2,124 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 016E2C10F03
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 10:03:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13807C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 10:03:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA8CD20870
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 10:03:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D75E7206DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 10:03:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="eICupXCS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730531AbfCYKDN (ORCPT
+        id S1730559AbfCYKDo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 06:03:13 -0400
-Received: from mail-sz.amlogic.com ([211.162.65.117]:27672 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730250AbfCYKDN (ORCPT
+        Mon, 25 Mar 2019 06:03:44 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:39655 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730250AbfCYKDn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 06:03:13 -0400
-Received: from [10.28.18.125] (10.28.18.125) by mail-sz.amlogic.com
- (10.28.11.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Mon, 25 Mar
- 2019 18:04:17 +0800
-Subject: Re: 32-bit Amlogic (ARM) SoC: kernel BUG in kfree()
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Matthew Wilcox <willy@infradead.org>
-CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <akpm@linux-foundation.org>, <mhocko@suse.com>,
-        <rppt@linux.ibm.com>, <linux-amlogic@lists.infradead.org>,
-        <linux@armlinux.org.uk>, <linux-mtd@lists.infradead.org>
-References: <CAFBinCBOX8HyY-UocsVQvsnTr4XWXyE9oU+f2xhO1=JU0i_9ow@mail.gmail.com>
- <20190321214401.GC19508@bombadil.infradead.org>
- <CAFBinCA6oK5UhDAt9kva5qRisxr2gxMF26AMK8vC4b1DN5RXrw@mail.gmail.com>
-From:   Liang Yang <liang.yang@amlogic.com>
-Message-ID: <5cad2529-8776-687e-58d0-4fb9e2ec59b1@amlogic.com>
-Date:   Mon, 25 Mar 2019 18:04:17 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+        Mon, 25 Mar 2019 06:03:43 -0400
+Received: by mail-wr1-f66.google.com with SMTP id j9so9340948wrn.6
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 03:03:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BEySt4vCv34IdyGWOMiVdKBVLMjCgxH48wqT3pqewH4=;
+        b=eICupXCSEYozREncd20DXAs/NYwW6m9XSCcupAu446YgCAMIltU37EdmAKBlILklyk
+         Zm0vv8c+dLvy+89g1hS1DXCjwRfrLTXsdDtWVZ7pqvzAfu9tYcN6jqbq6ckww7JWEcGT
+         oDK0ONzwa3pvFWJjT2l7eIc4buYnWWqk63aCp8qh3IBhzmMKM2kOyZ0IAJfZUlWgSyu0
+         FfLeAMEKILTKi4b8gSqCloyyFMw31yZV5G4uIkcz7UwsQl9OBgw7xbP+MQg0oFOFN9ky
+         BmrdRjAaLUCJM5ijRV5sA3gKNZe+EDW2hD03kcMsKTWg4G+mXIDmjxouLKrdPC4t5Xp0
+         nuIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BEySt4vCv34IdyGWOMiVdKBVLMjCgxH48wqT3pqewH4=;
+        b=dIg0PaTFgFjUJh4cXQr3x4LW7WFDQRrgLkOunk6ayyxTKF0a5wJShFah642rAAXQAz
+         kUwf/iO3lWaWKJnrYRMzaD46HppZ1ivDgR0+ktgR7GYnLZzuc8qzlS6hyxUYM9w0efaU
+         qyRjFDwcIt+Xi2qUKdl6/e//tuBpzva2xHpm2xUMu0uVclz0h+6q2rvFypO9240jyQhW
+         XK7IeciPTQBMkDdWypMsQY9ryrSNk44wlJ9qoNEgdXAsj/aECWeHC+mB1KglY4mamX5X
+         VVVCMzxJiwmhqxvRSBaCJJXbZbZzpCR7AHHISsux/F0KBxO754QESKLUKQVpvErymGJY
+         Vs5A==
+X-Gm-Message-State: APjAAAVDX30xMGq3yUZFOadvGJfp7r44SLO4bEuoEzbXlsFB8K1CJoqS
+        lHUBxuMFnq8kDitQLJ5stsgX7w==
+X-Google-Smtp-Source: APXvYqxEwjlaBKKaKcRUvQR9inpAKfsnGGUQe+AippB05cgJ7HhVWMNcaAqvgT2N42V9PI+5r6/i0w==
+X-Received: by 2002:adf:b68d:: with SMTP id j13mr10633095wre.50.1553508222174;
+        Mon, 25 Mar 2019 03:03:42 -0700 (PDT)
+Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id g12sm11581215wrw.40.2019.03.25.03.03.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 25 Mar 2019 03:03:41 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     khilman@baylibre.com
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/3] arm64: dts: g12a: Add peripherals
+Date:   Mon, 25 Mar 2019 11:03:36 +0100
+Message-Id: <20190325100339.749-1-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <CAFBinCA6oK5UhDAt9kva5qRisxr2gxMF26AMK8vC4b1DN5RXrw@mail.gmail.com>
-Content-Type: multipart/mixed;
-        boundary="------------65F66B8BEFB8B57F8555B6FE"
-Content-Language: en-US
-X-Originating-IP: [10.28.18.125]
-X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
- (10.28.11.5)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---------------65F66B8BEFB8B57F8555B6FE
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Add following peripherals :
+- SAR-ADC
+- USB
+- Mali GPU
 
-Hi Martin,
+Dependencies :
+- ADC
 
-On 2019/3/23 5:07, Martin Blumenstingl wrote:
-> Hi Matthew,
-> 
-> On Thu, Mar 21, 2019 at 10:44 PM Matthew Wilcox <willy@infradead.org> wrote:
->>
->> On Thu, Mar 21, 2019 at 09:17:34PM +0100, Martin Blumenstingl wrote:
->>> Hello,
->>>
->>> I am experiencing the following crash:
->>>    ------------[ cut here ]------------
->>>    kernel BUG at mm/slub.c:3950!
->>
->>          if (unlikely(!PageSlab(page))) {
->>                  BUG_ON(!PageCompound(page));
->>
->> You called kfree() on the address of a page which wasn't allocated by slab.
->>
->>> I have traced this crash to the kfree() in meson_nfc_read_buf().
->>> my observation is as follows:
->>> - meson_nfc_read_buf() is called 7 times without any crash, the
->>> kzalloc() call returns 0xe9e6c600 (virtual address) / 0x29e6c600
->>> (physical address)
->>> - the eight time meson_nfc_read_buf() is called kzalloc() call returns
->>> 0xee39a38b (virtual address) / 0x2e39a38b (physical address) and the
->>> final kfree() crashes
->>> - changing the size in the kzalloc() call from PER_INFO_BYTE (= 8) to
->>> PAGE_SIZE works around that crash
->>
->> I suspect you're doing something which corrupts memory.  Overrunning
->> the end of your allocation or something similar.  Have you tried KASAN
->> or even the various slab debugging (eg redzones)?
-> KASAN is not available on 32-bit ARM. there was some progress last
-> year [0] but it didn't make it into mainline. I tried to make the
-> patches apply again and got it to compile (and my kernel is still
-> booting) but I have no idea if it's still working. for anyone
-> interested, my patches are here: [1] (I consider this a HACK because I
-> don't know anything about the code which is being touched in the
-> patches, I only made it compile)
-> 
-> SLAB debugging (redzones) were a great hint, thank you very much for
-> that Matthew! I enabled:
->    CONFIG_SLUB_DEBUG=y
->    CONFIG_SLUB_DEBUG_ON=y
-> and with that I now get "BUG kmalloc-64 (Not tainted): Redzone
-> overwritten" (a larger kernel log extract is attached).
-> 
-> I'm starting to wonder if the NAND controller (hardware) writes more
-> than 8 bytes.
-> some context: the "info" buffer allocated in meson_nfc_read_buf is
-> then passed to the NAND controller IP (after using dma_map_single).
-> 
-> Liang, how does the NAND controller know that it only has to send
-> PER_INFO_BYTE (= 8) bytes when called from meson_nfc_read_buf? all
-> other callers of meson_nfc_dma_buffer_setup (which passes the info
-> buffer to the hardware) are using (nand->ecc.steps * PER_INFO_BYTE)
-> bytes?
-> 
-NFC_CMD_N2M and CMDRWGEN are different commands. CMDRWGEN needs to set 
-the ecc page size (1KB or 512B) and Pages(2, 4, 8, ...), so 
-PER_INFO_BYTE(= 8) bytes for each ecc page.
-I have never used NFC_CMD_N2M to transfer data before, because it is 
-very low efficient. And I do a experiment with the attachment and find 
-on overwritten on my meson axg platform.
+Depends on CLKID_AO_SAR_ADC_SEL, stable clk headers tags will be
+available after v5.1-rc4
 
-Martin, I would appreciate it very much if you would try the attachment 
-on your meson m8b platform.
+Bindings has been merged for 5.2-rc1
 
-> 
-> Regards
-> Martin
-> 
-> 
-> [0] https://lore.kernel.org/patchwork/cover/913212/
-> [1] https://github.com/xdarklight/linux/tree/arm-kasan-hack-v5.1-rc1
-> 
+- USB
 
---------------65F66B8BEFB8B57F8555B6FE
-Content-Type: text/plain; charset="UTF-8"; name="nand_debug.diff"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="nand_debug.diff"
+USB depends on the CLKID_PCIE_PLL, stable clk headers tags will be
+available after v5.1-rc4
 
-ZGlmZiAtLWdpdCBhL2RyaXZlcnMvbXRkL25hbmQvcmF3L21lc29uX25hbmQuYyBiL2RyaXZl
-cnMvbXRkL25hbmQvcmF3L21lc29uX25hbmQuYwpvbGQgbW9kZSAxMDA2NDQKbmV3IG1vZGUg
-MTAwNzU1CmluZGV4IGU4NThkNTguLjkwNWVmMzkKLS0tIGEvZHJpdmVycy9tdGQvbmFuZC9y
-YXcvbWVzb25fbmFuZC5jCisrKyBiL2RyaXZlcnMvbXRkL25hbmQvcmF3L21lc29uX25hbmQu
-YwpAQCAtNTI3LDExICs1MjcsMTIgQEAgc3RhdGljIHZvaWQgbWVzb25fbmZjX2RtYV9idWZm
-ZXJfcmVsZWFzZShzdHJ1Y3QgbmFuZF9jaGlwICpuYW5kLAogc3RhdGljIGludCBtZXNvbl9u
-ZmNfcmVhZF9idWYoc3RydWN0IG5hbmRfY2hpcCAqbmFuZCwgdTggKmJ1ZiwgaW50IGxlbikK
-IHsKIAlzdHJ1Y3QgbWVzb25fbmZjICpuZmMgPSBuYW5kX2dldF9jb250cm9sbGVyX2RhdGEo
-bmFuZCk7Ci0JaW50IHJldCA9IDA7CisJaW50IHJldCA9IDAsIGk7CiAJdTMyIGNtZDsKIAl1
-OCAqaW5mbzsKIAotCWluZm8gPSBremFsbG9jKFBFUl9JTkZPX0JZVEUsIEdGUF9LRVJORUwp
-OworCWluZm8gPSBremFsbG9jKDIgKiBQRVJfSU5GT19CWVRFLCBHRlBfS0VSTkVMKTsKKwlt
-ZW1zZXQoaW5mbywgMHhGRCwgMiAqIFBFUl9JTkZPX0JZVEUpOwogCXJldCA9IG1lc29uX25m
-Y19kbWFfYnVmZmVyX3NldHVwKG5hbmQsIGJ1ZiwgbGVuLCBpbmZvLAogCQkJCQkgUEVSX0lO
-Rk9fQllURSwgRE1BX0ZST01fREVWSUNFKTsKIAlpZiAocmV0KQpAQCAtNTQzLDYgKzU0NCwx
-MiBAQCBzdGF0aWMgaW50IG1lc29uX25mY19yZWFkX2J1ZihzdHJ1Y3QgbmFuZF9jaGlwICpu
-YW5kLCB1OCAqYnVmLCBpbnQgbGVuKQogCW1lc29uX25mY19kcmFpbl9jbWQobmZjKTsKIAlt
-ZXNvbl9uZmNfd2FpdF9jbWRfZmluaXNoKG5mYywgMTAwMCk7CiAJbWVzb25fbmZjX2RtYV9i
-dWZmZXJfcmVsZWFzZShuYW5kLCBsZW4sIFBFUl9JTkZPX0JZVEUsIERNQV9GUk9NX0RFVklD
-RSk7CisKKwlmb3IgKGkgPSAwOyBpIDwgMiAqIFBFUl9JTkZPX0JZVEU7IGkrKyl7CisJCXBy
-aW50aygiMHgleCAiLCBpbmZvW2ldKTsNCisJfQorCXByaW50aygiXG4iKTsKKwogCWtmcmVl
-KGluZm8pOwogCiAJcmV0dXJuIHJldDsK
---------------65F66B8BEFB8B57F8555B6FE--
+USB2 PHY depends on missing Reset bindings, have been applied to
+reset/fixes, waiting to be merge into master or immutable branch/tag
+
+Bindings has been Reviewed, waiting to be applied
+
+- Mali
+
+No Clk or Reset dependencies
+
+Mali GPU bindings are still in review.
+
+Changes since v2 :
+- dropped applied patches
+- collected review tags
+
+Changes since v1 :
+- dropped already applied "Add AO Secure node"
+- dropped meson-g12a-u200.dts uart_AO change
+- fixed includes overall to fix build for each patches
+- removed disabled status in dwc2 node
+- removed uart_ao_a_c pinctrl
+- fixed uart pinctrl node name
+
+Neil Armstrong (3):
+  arm64: dts: meson: g12a: Add SAR ADC node
+  arm64: dts: meson: g12a: Add G12A USB nodes
+  arm64: dts: meson: g12a: Add mali-g31 gpu node
+
+ arch/arm64/boot/dts/amlogic/meson-g12a.dtsi | 117 ++++++++++++++++++++
+ 1 file changed, 117 insertions(+)
+
+-- 
+2.21.0
+
