@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A1C2C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 08:38:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF003C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 08:39:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12DF42085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 08:38:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A0C32085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 08:39:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NqE3o8qc"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="azTQ0AGm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730456AbfCYIiZ (ORCPT
+        id S1730109AbfCYIg3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 04:38:25 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:52500 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730012AbfCYIiW (ORCPT
+        Mon, 25 Mar 2019 04:36:29 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:54822 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729965AbfCYIg1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 04:38:22 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2P8bf8m106815;
-        Mon, 25 Mar 2019 03:37:41 -0500
+        Mon, 25 Mar 2019 04:36:27 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2P8aCpZ106411;
+        Mon, 25 Mar 2019 03:36:12 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1553503061;
-        bh=c3UBlJ2/J/eUILjH1LmTrngxtCdjzgHiiyV0ibrE7Fc=;
+        s=ti-com-17Q1; t=1553502972;
+        bh=TXLdx2SAosMFqyOjlSQie8ZcUaPTkakA6by1/PgLXHo=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=NqE3o8qcgqm2HW6kTsHid2Tm+7EFwnjMpb2Pi4nvllaEE3OJBSWE3PVhOOa7voKDn
-         zNE7hB3gb2Z/nZwPcN5gKzUF4mYZF+sMbpu1RBGVPoLOpGcya7au2d7OgQPU+zJogq
-         wX8cSrUoQOuCFx/rHI5jxU3JWFa5hc8zcVhJDHEQ=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2P8bfPq054520
+        b=azTQ0AGmsp4+BAkPd/6ewSMKH63GZ0o5P4D6DseFRL5X6k7/6OK84uARHwhUGvdM9
+         GNrFSEWe+s+zEKD3utzivbVQQDYQF/I615Q+dDOmZyWnimnOIqkqyJ2D+1cwVoabV3
+         3rVetJZ8kBOnVeVUSXpbQiArpNw2S3Y47XQYVbOg=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2P8aBWu091356
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 25 Mar 2019 03:37:41 -0500
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+        Mon, 25 Mar 2019 03:36:11 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 25
- Mar 2019 03:37:40 -0500
-Received: from dlep33.itg.ti.com (157.170.170.75) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_0,
+ Mar 2019 03:36:11 -0500
+Received: from dlep33.itg.ti.com (157.170.170.75) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_0,
  cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5 via Frontend Transport;
- Mon, 25 Mar 2019 03:37:40 -0500
+ Mon, 25 Mar 2019 03:36:11 -0500
 Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by dlep33.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2P8ZsG6006534;
-        Mon, 25 Mar 2019 03:37:37 -0500
+        by dlep33.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2P8ZsFj006534;
+        Mon, 25 Mar 2019 03:36:07 -0500
 From:   Kishon Vijay Abraham I <kishon@ti.com>
 To:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -61,9 +61,9 @@ CC:     Kishon Vijay Abraham I <kishon@ti.com>,
         <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>, <linux-arm-kernel@axis.com>
-Subject: [PATCH v2 24/26] PCI: designware-ep: Use aligned ATU window for raising MSI interrupts
-Date:   Mon, 25 Mar 2019 14:04:59 +0530
-Message-ID: <20190325083501.8088-25-kishon@ti.com>
+Subject: [PATCH v2 03/26] dt-bindings: PCI: keystone: Add "reg-names" binding information
+Date:   Mon, 25 Mar 2019 14:04:38 +0530
+Message-ID: <20190325083501.8088-4-kishon@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190325083501.8088-1-kishon@ti.com>
 References: <20190325083501.8088-1-kishon@ti.com>
@@ -75,48 +75,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Certain platforms like K2G reguires the outbound ATU window to be
-aligned. The alignment size is already present in mem->page_size.
-Use the alignment size present in mem->page_size to configre a
-aligned ATU window. In order to raise an interrupt, CPU has to write
-to address offset from the start of the window unlike before where
-writes were always to the beginning of the ATU window.
+Add "reg-names" binding information in order for device tree node
+to be populated with the correct register strings. This will break
+old dt compatibility. However Keystone PCI has never worked
+in upstream kernel due to lack of SERDES support. Before SERDES
+support is added, cleanup the Keystone PCI dt-bindngs. This new
+binding will also be used by PCI in AM654 platform.
 
 Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
- drivers/pci/controller/dwc/pcie-designware-ep.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/pci/pci-keystone.txt | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-index 0c208b9bda43..2bf5a35c0570 100644
---- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-@@ -397,6 +397,7 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
- {
- 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
- 	struct pci_epc *epc = ep->epc;
-+	unsigned int aligned_offset;
- 	u16 msg_ctrl, msg_data;
- 	u32 msg_addr_lower, msg_addr_upper, reg;
- 	u64 msg_addr;
-@@ -422,13 +423,15 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
- 		reg = ep->msi_cap + PCI_MSI_DATA_32;
- 		msg_data = dw_pcie_readw_dbi(pci, reg);
- 	}
--	msg_addr = ((u64) msg_addr_upper) << 32 | msg_addr_lower;
-+	aligned_offset = msg_addr_lower & (epc->mem->page_size - 1);
-+	msg_addr = ((u64)msg_addr_upper) << 32 |
-+			(msg_addr_lower & ~aligned_offset);
- 	ret = dw_pcie_ep_map_addr(epc, func_no, ep->msi_mem_phys, msg_addr,
- 				  epc->mem->page_size);
- 	if (ret)
- 		return ret;
+diff --git a/Documentation/devicetree/bindings/pci/pci-keystone.txt b/Documentation/devicetree/bindings/pci/pci-keystone.txt
+index 2030ee0dc4f9..3a551687cfa2 100644
+--- a/Documentation/devicetree/bindings/pci/pci-keystone.txt
++++ b/Documentation/devicetree/bindings/pci/pci-keystone.txt
+@@ -12,8 +12,10 @@ described here as well as properties that are not applicable.
+ Required Properties:-
  
--	writel(msg_data | (interrupt_num - 1), ep->msi_mem);
-+	writel(msg_data | (interrupt_num - 1), ep->msi_mem + aligned_offset);
+ compatibility: "ti,keystone-pcie"
+-reg:	index 1 is the base address and length of DW application registers.
+-	index 2 is the base address and length of PCI device ID register.
++reg: Three register ranges as listed in the reg-names property
++reg-names: "dbics" for the DesignWare PCIe registers, "app" for the
++	   TI specific application registers, "config" for the
++	   configuration space address
  
- 	dw_pcie_ep_unmap_addr(epc, func_no, ep->msi_mem_phys);
- 
+ pcie_msi_intc : Interrupt controller device node for MSI IRQ chip
+ 	interrupt-cells: should be set to 1
 -- 
 2.17.1
 
