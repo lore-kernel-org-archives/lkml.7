@@ -2,207 +2,206 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B33C4360F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 03:31:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 405DDC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 03:37:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0161320879
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 03:31:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D42F4207DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 03:37:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="TFMUB0+B";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="X1eAz4yB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729517AbfCYDbG (ORCPT
+        id S1729452AbfCYDhm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 23:31:06 -0400
-Received: from mail-it1-f197.google.com ([209.85.166.197]:44788 "EHLO
-        mail-it1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729399AbfCYDbG (ORCPT
+        Sun, 24 Mar 2019 23:37:42 -0400
+Received: from esa4.hgst.iphmx.com ([216.71.154.42]:57013 "EHLO
+        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729298AbfCYDhm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 23:31:06 -0400
-Received: by mail-it1-f197.google.com with SMTP id v193so1762819itv.9
-        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2019 20:31:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=oQjXmVMaP/oyvUBqnjIWAYRirnW0VYKegubWsao+q50=;
-        b=NruVCuL238YFJSe+QK78kq5k3RiBc1eIYcwfIIZK2VNNXm+sxn4TcCWIZql9cNkxGi
-         QB85QjNSDmlCorLcPGxXjU/CHrYR/QO3qw09sIYZ5mycqaRraA+NlwNy0ld3GYed9nkV
-         4TQUPPsJPBnZEGCzlEEH037w7SdWmbH3eKKfNAtxIBwsFsmJRoOrFhUEPghnDdfEn+ap
-         NyJSAHy//wxzBsC0wrO5u6/+7XRFZEzYnSjMFJaC85xKeQKa6keyfmsdbYmD6/ns5Dgc
-         yMfcKcvrU12lZRZEXztbKMZkYpD/UdK5xIz1wYr4yOpJ3L/ajXNsKRXbGZL99yb5GA3g
-         MhWg==
-X-Gm-Message-State: APjAAAUCigzo4Na5DzMhwtRS77UZn+P9o6Zn+2R34weQclzeRw7FzTS2
-        K9jQxYGd7a49IBsgIfIX5yat4/tTW24i7ct9IJqBfWrLDn/m
-X-Google-Smtp-Source: APXvYqwHGyHNcj+AGYFy2PzPQaLu90/OFlcoN5SnxygMSOUqBD5IAeSbWdVXY1HOje7rAzD5DSVlRKh/I8QRiAuT0zVib8FQCbgU
+        Sun, 24 Mar 2019 23:37:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1553485061; x=1585021061;
+  h=from:to:cc:subject:date:message-id:
+   content-transfer-encoding:mime-version;
+  bh=TfmepOhyJeE0yehEKOnibXLafO3NC5vO2plbc4PlvHY=;
+  b=TFMUB0+BYPtIxE9zOB/ZJ2mHO3zTCa8XMWDDkhLWCTgWua2R2oR8Ds/i
+   /lcjyzxwGukC3tdGsT+Oa8eiR69RC6LkFLS2Fd2YZO1LaJIJlyqM3pBKz
+   nctvMMQadHo7K/Z4cqlZipGTWeklPQgAJmoF6nv9PBVCkalBeJ+YjYGyB
+   s16p/FBVqNWwVFOfVZJ7kJscwNU3Blcddjjuv2L2aQJ1SzqTMl3cO8rii
+   IWTPH0y/3I4CXhPMHCyiQoN5NXivBfX+gJcSMZStw2gbh4z0qvdA91J3a
+   /h4S5H1LurGfOnzOoV1QXQue66bpOSyyEpJedwdiqdgFUMNGsSK1N1eB6
+   w==;
+X-IronPort-AV: E=Sophos;i="5.60,256,1549900800"; 
+   d="scan'208";a="104123089"
+Received: from mail-bl2nam02lp2058.outbound.protection.outlook.com (HELO NAM02-BL2-obe.outbound.protection.outlook.com) ([104.47.38.58])
+  by ob1.hgst.iphmx.com with ESMTP; 25 Mar 2019 11:37:40 +0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector1-wdc-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=I53eXxemKZ1PFmYvPHCg8eCpa2BCFyiY21hTuMF/318=;
+ b=X1eAz4yBkLSPpr6KTlx/hMNiVNxwyRkgstnqAZNgi6Zq8FzJ7ASiSJJXihNAWOEn5MXVFhxi/9riFH74u4aSL+t9kVCVncf9NJdONti7nFDl7mfbSvRQc3FpJ1epK0CNZhqlG8BpebrjO30xzIKPMQS0oFauC5VNXmTBofNjV2k=
+Received: from MN2PR04MB6061.namprd04.prod.outlook.com (20.178.246.15) by
+ MN2PR04MB5550.namprd04.prod.outlook.com (20.178.246.25) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1730.16; Mon, 25 Mar 2019 03:37:38 +0000
+Received: from MN2PR04MB6061.namprd04.prod.outlook.com
+ ([fe80::d197:7b59:7e0d:e819]) by MN2PR04MB6061.namprd04.prod.outlook.com
+ ([fe80::d197:7b59:7e0d:e819%4]) with mapi id 15.20.1730.019; Mon, 25 Mar 2019
+ 03:37:38 +0000
+From:   Anup Patel <Anup.Patel@wdc.com>
+To:     Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>
+CC:     Atish Patra <Atish.Patra@wdc.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Anup Patel <Anup.Patel@wdc.com>
+Subject: [PATCH v2] RISC-V: Always compile mm/init.c with cmodel=medany
+Thread-Topic: [PATCH v2] RISC-V: Always compile mm/init.c with cmodel=medany
+Thread-Index: AQHU4rwXs4RtZydT70SSHW0egh7FOg==
+Date:   Mon, 25 Mar 2019 03:37:38 +0000
+Message-ID: <20190325033648.16171-1-anup.patel@wdc.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MA1PR0101CA0067.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a00:20::29) To MN2PR04MB6061.namprd04.prod.outlook.com
+ (2603:10b6:208:d8::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Anup.Patel@wdc.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-originating-ip: [129.253.179.161]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 4f65981a-68f4-4588-dda5-08d6b0d33a3d
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:MN2PR04MB5550;
+x-ms-traffictypediagnostic: MN2PR04MB5550:
+wdcipoutbound: EOP-TRUE
+x-microsoft-antispam-prvs: <MN2PR04MB5550C8013C273D4C5D6E6ED18D5E0@MN2PR04MB5550.namprd04.prod.outlook.com>
+x-forefront-prvs: 0987ACA2E2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(376002)(366004)(346002)(136003)(39850400004)(199004)(189003)(2616005)(186003)(476003)(6512007)(26005)(72206003)(99286004)(5660300002)(66066001)(316002)(478600001)(386003)(52116002)(6506007)(102836004)(2171002)(6436002)(50226002)(71200400001)(71190400001)(44832011)(486006)(105586002)(14444005)(256004)(36756003)(53936002)(14454004)(8936002)(1076003)(106356001)(97736004)(8676002)(305945005)(7736002)(81166006)(68736007)(81156014)(86362001)(110136005)(54906003)(6116002)(4326008)(25786009)(3846002)(2906002)(6486002);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB5550;H:MN2PR04MB6061.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: N5hgv9IkCDcfrctM+wJ0aEFSHzmO98uNhWg29KjLy0fSAwYj84Q9ueU1PE50LSxI1wVdKMIAd0t3Ty3Fo7o1VxvjcS+Y0C1aKXCTpvp2PYFeud1B6c4qvByN318fpFUPZ6IlX7HtPPSCFUhTmZE7SPQk4O6+PMP6TXjsLSvfQLDE/VHUjXl0YqLW8Ufazq+apdfa2BSdfuhB37khURlB4Nhv/tL4Ou3/3FF11GqAIUd8ZXPvhJTbB70VwIz8LjA34tby9WNFxT7R3Tc2F2LnCOS/HsAri7MwcoLfVtdWcuuzMaGzn1Yu0PX4M+1fvlSegkwmYu9DxuK6Q4RpP6Vy1Hi/sjfCha8DvXWdssTbp7+jHyvCzGipbyrx/ZBsGFziaIxCvHrharagnfJOjFc7XCPxrpdGgGNLEiWgnuyd6BA=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-Received: by 2002:a05:660c:985:: with SMTP id z5mr8884888itj.39.1553484664811;
- Sun, 24 Mar 2019 20:31:04 -0700 (PDT)
-Date:   Sun, 24 Mar 2019 20:31:04 -0700
-In-Reply-To: <0000000000003ba80905783e9189@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000009c39fb0584e2d532@google.com>
-Subject: Re: KASAN: use-after-free Write in skb_release_data (2)
-From:   syzbot <syzbot+580be3953ed99133804f@syzkaller.appspotmail.com>
-To:     alexander.h.duyck@intel.com, ast@kernel.org, bpf@vger.kernel.org,
-        daniel@iogearbox.net, davem@davemloft.net, dvyukov@google.com,
-        edumazet@google.com, kafai@fb.com, kuznet@ms2.inr.ac.ru,
-        linux-kernel@vger.kernel.org, lirongqing@baidu.com,
-        magnus.karlsson@intel.com, maximmi@mellanox.com,
-        netdev@vger.kernel.org, pabeni@redhat.com, songliubraving@fb.com,
-        syzkaller-bugs@googlegroups.com, vincent.whitchurch@axis.com,
-        willemb@google.com, yhs@fb.com, yoshfuji@linux-ipv6.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4f65981a-68f4-4588-dda5-08d6b0d33a3d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Mar 2019 03:37:38.4036
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB5550
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
+The Linux RISC-V 32bit kernel is broken after we moved setup_vm() from
+kernel/setup.c to mm/init.c because Linux RISC-V 32bit kernel by default
+uses cmodel=3Dmedlow which results in a non-position-independent setup_vm()=
+.
 
-HEAD commit:    68cc2999 Merge branch 'devlink-small-spring-cleanup'
-git tree:       net-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=13737c07200000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=9ab5bbbbf283c99a
-dashboard link: https://syzkaller.appspot.com/bug?extid=580be3953ed99133804f
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=123a3d3b200000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11d34f93200000
+This patch fixes Linux RISC-V 32bit kernel booting by:
+1. Forcing cmodel=3Dmedany for mm/init.c
+2. Moving remaing MM-related stuff va_pa_offset, pfn_base and
+   empty_zero_page from kernel/setup.c to mm/init.c
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+580be3953ed99133804f@syzkaller.appspotmail.com
+Fixes: 6f1e9e946f0b ("RISC-V: Move setup_vm() to mm/init.c")
+Suggested-by: Christoph Hellwig <hch@lst.de>
+Suggested-by: Mike Rapoport <rppt@linux.ibm.com>
+Signed-off-by: Anup Patel <anup.patel@wdc.com>
+---
+v2: Removed CFLAGS_setup.o from kernel/Makefile and replaced SoBs
+---
+ arch/riscv/kernel/Makefile | 2 --
+ arch/riscv/kernel/setup.c  | 8 --------
+ arch/riscv/mm/Makefile     | 2 ++
+ arch/riscv/mm/init.c       | 9 +++++++++
+ 4 files changed, 11 insertions(+), 10 deletions(-)
 
-==================================================================
-BUG: KASAN: use-after-free in atomic_sub_return  
-include/asm-generic/atomic-instrumented.h:159 [inline]
-BUG: KASAN: use-after-free in skb_release_data+0x11d/0x7a0  
-net/core/skbuff.c:566
-Write of size 4 at addr ffff88808dee74e0 by task syz-executor887/7877
-
-CPU: 0 PID: 7877 Comm: syz-executor887 Not tainted 5.0.0+ #108
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  print_address_description.cold+0x7c/0x20d mm/kasan/report.c:187
-  kasan_report.cold+0x1b/0x40 mm/kasan/report.c:317
-  check_memory_region_inline mm/kasan/generic.c:185 [inline]
-  check_memory_region+0x123/0x190 mm/kasan/generic.c:191
-  kasan_check_write+0x14/0x20 mm/kasan/common.c:108
-  atomic_sub_return include/asm-generic/atomic-instrumented.h:159 [inline]
-  skb_release_data+0x11d/0x7a0 net/core/skbuff.c:566
-  skb_release_all+0x4d/0x60 net/core/skbuff.c:631
-  __kfree_skb net/core/skbuff.c:645 [inline]
-  kfree_skb net/core/skbuff.c:663 [inline]
-  kfree_skb+0xe8/0x390 net/core/skbuff.c:657
-  skb_queue_purge+0x19/0x40 net/core/skbuff.c:2906
-  packet_release+0x8eb/0xbf0 net/packet/af_packet.c:3026
-  __sock_release+0xd3/0x2b0 net/socket.c:599
-  sock_close+0x1b/0x30 net/socket.c:1247
-  __fput+0x2e5/0x8d0 fs/file_table.c:278
-  ____fput+0x16/0x20 fs/file_table.c:309
-  task_work_run+0x14a/0x1c0 kernel/task_work.c:113
-  exit_task_work include/linux/task_work.h:22 [inline]
-  do_exit+0x90a/0x2fa0 kernel/exit.c:876
-  do_group_exit+0x135/0x370 kernel/exit.c:980
-  get_signal+0x399/0x1d50 kernel/signal.c:2575
-  do_signal+0x87/0x1940 arch/x86/kernel/signal.c:816
-  exit_to_usermode_loop+0x244/0x2c0 arch/x86/entry/common.c:162
-  prepare_exit_to_usermode arch/x86/entry/common.c:197 [inline]
-  syscall_return_slowpath arch/x86/entry/common.c:268 [inline]
-  do_syscall_64+0x52d/0x610 arch/x86/entry/common.c:293
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4474d9
-Code: 7a 6c 69 62 77 00 73 74 72 65 61 6d 2e 63 00 6f 70 65 6e 20 65 72 72  
-6f 72 20 25 64 2c 20 66 69 6c 65 20 27 25 73 27 3a 20 25 <73> 0a 00 66 69  
-6c 65 20 25 64 20 69 73 20 61 20 74 74 79 2d 74 79
-RSP: 002b:00007f7ce163fdb8 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
-RAX: fffffffffffffe00 RBX: 00000000006ddc38 RCX: 00000000004474d9
-RDX: 0000000000000000 RSI: 0000000000000080 RDI: 00000000006ddc38
-RBP: 00000000006ddc30 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006ddc3c
-R13: 00007ffe04f36bbf R14: 00007f7ce16409c0 R15: 000000000000002d
-
-Allocated by task 7876:
-  save_stack+0x45/0xd0 mm/kasan/common.c:75
-  set_track mm/kasan/common.c:87 [inline]
-  __kasan_kmalloc mm/kasan/common.c:497 [inline]
-  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:470
-  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:511
-  __do_kmalloc_node mm/slab.c:3686 [inline]
-  __kmalloc_node_track_caller+0x4e/0x70 mm/slab.c:3700
-  __kmalloc_reserve.isra.0+0x40/0xf0 net/core/skbuff.c:140
-  __alloc_skb+0x10b/0x5e0 net/core/skbuff.c:208
-  alloc_skb_fclone include/linux/skbuff.h:1107 [inline]
-  sk_stream_alloc_skb+0x113/0xd10 net/ipv4/tcp.c:889
-  tcp_connect+0xfd8/0x4280 net/ipv4/tcp_output.c:3521
-  tcp_v4_connect+0x1514/0x1c40 net/ipv4/tcp_ipv4.c:315
-  __inet_stream_connect+0x83f/0xea0 net/ipv4/af_inet.c:659
-  tcp_sendmsg_fastopen net/ipv4/tcp.c:1158 [inline]
-  tcp_sendmsg_locked+0x2314/0x34d0 net/ipv4/tcp.c:1200
-  tcp_sendmsg+0x30/0x50 net/ipv4/tcp.c:1434
-  inet_sendmsg+0x147/0x5e0 net/ipv4/af_inet.c:802
-  sock_sendmsg_nosec net/socket.c:651 [inline]
-  sock_sendmsg+0xdd/0x130 net/socket.c:661
-  __sys_sendto+0x262/0x380 net/socket.c:1932
-  __do_sys_sendto net/socket.c:1944 [inline]
-  __se_sys_sendto net/socket.c:1940 [inline]
-  __x64_sys_sendto+0xe1/0x1a0 net/socket.c:1940
-  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Freed by task 7877:
-  save_stack+0x45/0xd0 mm/kasan/common.c:75
-  set_track mm/kasan/common.c:87 [inline]
-  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:459
-  kasan_slab_free+0xe/0x10 mm/kasan/common.c:467
-  __cache_free mm/slab.c:3498 [inline]
-  kfree+0xcf/0x230 mm/slab.c:3821
-  skb_free_head+0x93/0xb0 net/core/skbuff.c:557
-  skb_release_data+0x576/0x7a0 net/core/skbuff.c:577
-  skb_release_all+0x4d/0x60 net/core/skbuff.c:631
-  __kfree_skb net/core/skbuff.c:645 [inline]
-  kfree_skb net/core/skbuff.c:663 [inline]
-  kfree_skb+0xe8/0x390 net/core/skbuff.c:657
-  skb_queue_purge+0x19/0x40 net/core/skbuff.c:2906
-  packet_release+0x8eb/0xbf0 net/packet/af_packet.c:3026
-  __sock_release+0xd3/0x2b0 net/socket.c:599
-  sock_close+0x1b/0x30 net/socket.c:1247
-  __fput+0x2e5/0x8d0 fs/file_table.c:278
-  ____fput+0x16/0x20 fs/file_table.c:309
-  task_work_run+0x14a/0x1c0 kernel/task_work.c:113
-  exit_task_work include/linux/task_work.h:22 [inline]
-  do_exit+0x90a/0x2fa0 kernel/exit.c:876
-  do_group_exit+0x135/0x370 kernel/exit.c:980
-  get_signal+0x399/0x1d50 kernel/signal.c:2575
-  do_signal+0x87/0x1940 arch/x86/kernel/signal.c:816
-  exit_to_usermode_loop+0x244/0x2c0 arch/x86/entry/common.c:162
-  prepare_exit_to_usermode arch/x86/entry/common.c:197 [inline]
-  syscall_return_slowpath arch/x86/entry/common.c:268 [inline]
-  do_syscall_64+0x52d/0x610 arch/x86/entry/common.c:293
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-The buggy address belongs to the object at ffff88808dee7200
-  which belongs to the cache kmalloc-1k of size 1024
-The buggy address is located 736 bytes inside of
-  1024-byte region [ffff88808dee7200, ffff88808dee7600)
-The buggy address belongs to the page:
-page:ffffea000237b980 count:1 mapcount:0 mapping:ffff88812c3f0ac0 index:0x0  
-compound_mapcount: 0
-flags: 0x1fffc0000010200(slab|head)
-raw: 01fffc0000010200 ffffea000224ba08 ffffea0002a63288 ffff88812c3f0ac0
-raw: 0000000000000000 ffff88808dee6000 0000000100000007 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff88808dee7380: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff88808dee7400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> ffff88808dee7480: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                                        ^
-  ffff88808dee7500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff88808dee7580: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
+diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
+index f13f7f276639..8b9780b6bd7f 100644
+--- a/arch/riscv/kernel/Makefile
++++ b/arch/riscv/kernel/Makefile
+@@ -29,8 +29,6 @@ obj-y	+=3D vdso.o
+ obj-y	+=3D cacheinfo.o
+ obj-y	+=3D vdso/
+=20
+-CFLAGS_setup.o :=3D -mcmodel=3Dmedany
+-
+ obj-$(CONFIG_FPU)		+=3D fpu.o
+ obj-$(CONFIG_SMP)		+=3D smpboot.o
+ obj-$(CONFIG_SMP)		+=3D smp.o
+diff --git a/arch/riscv/kernel/setup.c b/arch/riscv/kernel/setup.c
+index ecb654f6a79e..540a331d1376 100644
+--- a/arch/riscv/kernel/setup.c
++++ b/arch/riscv/kernel/setup.c
+@@ -48,14 +48,6 @@ struct screen_info screen_info =3D {
+ };
+ #endif
+=20
+-unsigned long va_pa_offset;
+-EXPORT_SYMBOL(va_pa_offset);
+-unsigned long pfn_base;
+-EXPORT_SYMBOL(pfn_base);
+-
+-unsigned long empty_zero_page[PAGE_SIZE / sizeof(unsigned long)] __page_al=
+igned_bss;
+-EXPORT_SYMBOL(empty_zero_page);
+-
+ /* The lucky hart to first increment this variable will boot the other cor=
+es */
+ atomic_t hart_lottery;
+ unsigned long boot_cpu_hartid;
+diff --git a/arch/riscv/mm/Makefile b/arch/riscv/mm/Makefile
+index eb22ab49b3e0..7307609d405b 100644
+--- a/arch/riscv/mm/Makefile
++++ b/arch/riscv/mm/Makefile
+@@ -3,3 +3,5 @@ obj-y +=3D fault.o
+ obj-y +=3D extable.o
+ obj-y +=3D ioremap.o
+ obj-y +=3D cacheflush.o
++
++CFLAGS_init.o :=3D -mcmodel=3Dmedany
+diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+index b379a75ac6a6..7a7c454378cb 100644
+--- a/arch/riscv/mm/init.c
++++ b/arch/riscv/mm/init.c
+@@ -25,6 +25,10 @@
+ #include <asm/pgtable.h>
+ #include <asm/io.h>
+=20
++unsigned long empty_zero_page[PAGE_SIZE / sizeof(unsigned long)]
++							__page_aligned_bss;
++EXPORT_SYMBOL(empty_zero_page);
++
+ static void __init zone_sizes_init(void)
+ {
+ 	unsigned long max_zone_pfns[MAX_NR_ZONES] =3D { 0, };
+@@ -143,6 +147,11 @@ void __init setup_bootmem(void)
+ 	}
+ }
+=20
++unsigned long va_pa_offset;
++EXPORT_SYMBOL(va_pa_offset);
++unsigned long pfn_base;
++EXPORT_SYMBOL(pfn_base);
++
+ pgd_t swapper_pg_dir[PTRS_PER_PGD] __page_aligned_bss;
+ pgd_t trampoline_pg_dir[PTRS_PER_PGD] __initdata __aligned(PAGE_SIZE);
+=20
+--=20
+2.17.1
 
