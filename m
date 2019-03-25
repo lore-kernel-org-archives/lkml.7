@@ -3,120 +3,115 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFB39C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 10:36:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AB70C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 10:38:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90EFC2064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 10:36:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D86F22064A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 10:38:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730711AbfCYKgc (ORCPT
+        id S1730739AbfCYKiE convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 06:36:32 -0400
-Received: from smtp.nue.novell.com ([195.135.221.5]:58000 "EHLO
-        smtp.nue.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730484AbfCYKgb (ORCPT
-        <rfc822;groupwise-linux-kernel@vger.kernel.org:0:0>);
-        Mon, 25 Mar 2019 06:36:31 -0400
-Received: from emea4-mta.ukb.novell.com ([10.120.13.87])
-        by smtp.nue.novell.com with ESMTP (TLS encrypted); Mon, 25 Mar 2019 11:36:30 +0100
-Received: from [192.168.0.30] (nwb-a10-snat.microfocus.com [10.120.13.201])
-        by emea4-mta.ukb.novell.com with ESMTP (TLS encrypted); Mon, 25 Mar 2019 10:36:02 +0000
-Message-ID: <8eec0949bac18d8ee6f151027ff68de9827f143d.camel@suse.com>
-Subject: Re: [PATCH] x86/xen: Add "xen_timer_slop" command line option
-From:   Dario Faggioli <dfaggioli@suse.com>
-To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Ryan Thibodeaux <thibodux@gmail.com>
-Cc:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
-        oleksandr_andrushchenko@epam.com, tglx@linutronix.de,
-        jgross@suse.com, ryan.thibodeaux@starlab.io,
-        "luca.abeni" <luca.abeni@santannapisa.it>
-Date:   Mon, 25 Mar 2019 11:36:00 +0100
-In-Reply-To: <20190324180724.GA4400@nat-wireless-guest-reg-153-50.bu.edu>
-References: <1553279397-130201-1-git-send-email-ryan.thibodeaux@starlab.io>
-         <abf65a68-9463-0f0e-1f51-6eefd3cacc88@oracle.com>
-         <20190323120052.GB11100@centos-dev.localdomain>
-         <20190324180724.GA4400@nat-wireless-guest-reg-153-50.bu.edu>
-Organization: SUSE
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-2Aj+Mypawqc5P5Mv2XTx"
-User-Agent: Evolution 3.30.5 
+        Mon, 25 Mar 2019 06:38:04 -0400
+Received: from tyo161.gate.nec.co.jp ([114.179.232.161]:39215 "EHLO
+        tyo161.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730588AbfCYKiE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 06:38:04 -0400
+Received: from mailgate02.nec.co.jp ([114.179.233.122])
+        by tyo161.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x2PAbON7012663
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Mon, 25 Mar 2019 19:37:24 +0900
+Received: from mailsv01.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
+        by mailgate02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x2PAbOXC016891;
+        Mon, 25 Mar 2019 19:37:24 +0900
+Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
+        by mailsv01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x2PAZbg3023627;
+        Mon, 25 Mar 2019 19:37:24 +0900
+Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.139] [10.38.151.139]) by mail03.kamome.nec.co.jp with ESMTP id BT-MMP-3646920; Mon, 25 Mar 2019 19:36:34 +0900
+Received: from BPXM12GP.gisp.nec.co.jp ([10.38.151.204]) by
+ BPXC11GP.gisp.nec.co.jp ([10.38.151.139]) with mapi id 14.03.0319.002; Mon,
+ 25 Mar 2019 19:36:34 +0900
+From:   Junichi Nomura <j-nomura@ce.jp.nec.com>
+To:     Dave Young <dyoung@redhat.com>, Boris Petkov <bp@alien8.de>
+CC:     "fanc.fnst@cn.fujitsu.com" <fanc.fnst@cn.fujitsu.com>,
+        "bp@suse.de" <bp@suse.de>, "bhe@redhat.com" <bhe@redhat.com>,
+        "kasong@redhat.com" <kasong@redhat.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] x86/boot: Use EFI setup data if provided
+Thread-Topic: [PATCH v2] x86/boot: Use EFI setup data if provided
+Thread-Index: AQHU4uSRSF49+PGwf02T2oxnk4CVXaYbdAGAgAAWloCAAAX6gA==
+Date:   Mon, 25 Mar 2019 10:36:33 +0000
+Message-ID: <701c8e69-e1d4-c653-1d87-1c41789d3d54@ce.jp.nec.com>
+References: <20190322110342.GA16202@jeru.linux.bs1.fc.nec.co.jp>
+ <20190322152328.GD12472@zn.tnic>
+ <20190325002740.GA6637@jeru.linux.bs1.fc.nec.co.jp>
+ <20190325060128.GB9385@dhcp-128-65.nay.redhat.com>
+ <20190325061929.GC9385@dhcp-128-65.nay.redhat.com>
+ <bcb5bd29-a3b8-e42d-8da7-a8501f695c21@ce.jp.nec.com>
+ <20190325065921.GA11096@dhcp-128-65.nay.redhat.com>
+ <20190325082720.GA20771@jeru.linux.bs1.fc.nec.co.jp>
+ <51D9A7D1-49BF-4679-B102-0FC5AC300C9F@alien8.de>
+ <20190325101509.GA13160@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <20190325101509.GA13160@dhcp-128-65.nay.redhat.com>
+Accept-Language: en-US, ja-JP
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.34.125.85]
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-ID: <895ABBA05F13AC4E969AC80CB8C41395@gisp.nec.co.jp>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
+X-TM-AS-MML: disable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 3/25/19 7:15 PM, Dave Young wrote:
+> On 03/25/19 at 09:54am, Boris Petkov wrote:
+>> On March 25, 2019 9:27:21 AM GMT+01:00, Junichi Nomura <j-nomura@ce.jp.nec.com> wrote:
+>>> On 3/25/19 3:59 PM, Dave Young wrote:
+>>>> On 03/25/19 at 06:47am, Junichi Nomura wrote:
+>>>>> On 3/25/19 3:19 PM, Dave Young wrote:
+>>>>>> On 03/25/19 at 02:01pm, Dave Young wrote:
+>>>>>> I think normally people do not see this bug, because kernel will
+>>> set the
+>>>>>> rsdp in boot_params->acpi_rsdp_addr.  Maybe you are testing with
+>>>>>
+>>>>> I think it's only done for file-based kexec interface.
+>>>>
+>>>> Saw Kairui's another reply, yes, kexec-tools need a patch to fill the
+>>>> value as well then.
+>>>>
+>>>> I would vote for a repost of your old patch with some #ifdef
+>>>
+>>> Thanks for comments, Dave, Kairui and Baoquan.
+>>>
+>>> The problem for me is it's a regression in v5.1-rc1, that breaks
+>>> existing setup. If early parsing of RSDP is required only for newly
+>>> supported configuration, I'm fine such configuration requires
+>>> new tools or new options.
+>>>
+>>> This is the 1st version plus #ifdef around the EFI code.
+>>
+>> I'm going to repeat that again until you get it:
+>>
+>> If the kexec kernel should continue to use efi_systab_init() then you
+>> should make efi_get_rsdp_addr() exit early in the kexec-ed kernel.
+> 
+> In that way, early parsing will fail in kexeced kernel, am I missing
+> something?  The early code become complicated but since we have already
+> the early acpi parsing why not to make it consistent in kexeced kernel?
 
---=-2Aj+Mypawqc5P5Mv2XTx
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+AFAIU, early parsing is new code in v5.1-rc1 to support kexec on systems
+with hotpluggable memory with KASLR enabled. For systems that requires the
+new feature, it may be ok to say "you need to use another kexec interface"
+and/or "you need new kexec-tools".
 
-On Sun, 2019-03-24 at 14:07 -0400, Boris Ostrovsky wrote:
-> On Sat, Mar 23, 2019 at 08:00:52AM -0400, Ryan Thibodeaux wrote:
-> > This test system was configured to use a TSC clocksource, disabled
-> > C states, and lowered the timer slop. I am not claiming the timer
-> > slop change was solely responsible for the best results.
->=20
-> How can we then be sure that the proposed change will indeed provide
-> some sort of benefit?
->=20
-> Were there any other changes between your tests to think that slop
-> time modification may not be responsible for better results?
->=20
-FWIW, in mine and Luca's experiments, changing lowering both timer_slop
-in Xen and TIMER_SLOP in Linux, improved latency dramatically, without
-any other change.
-
-We also tried _only_ playing with the Xen tunable (as there's a Xen
-boot parameter for it already) but that wasn't enough. It was only when
-we also tuned TIMER_SLOP in Linux's Xen clockevent device that we got
-decent numbers (i.e., comparable to KVM ones).
-
-Reason why we had not share these results yet was that we were still
-"polishing" them, and because we also found a couple of other issues,
-and we were trying to understand them better, before sending anything
-out. But those other issues were --although still about achieving low
-latencies-- orthogonal from this, and lowering the default slop is
-absolute prerequisite for even talking about having a reasonable vcpu
-response time.
-
-A patch like this one, was something we were thinking to submit ourself
-sooner or later (backed up by our results). Personally, in addition to
-making the value tunable, which I think is a good thing, I also would
-lower the default.
-
-Regards,
-Dario
---=20
-<<This happens because I choose it to happen!>> (Raistlin Majere)
------------------------------------------------------------------
-Dario Faggioli, Ph.D, http://about.me/dario.faggioli
-Software Engineer @ SUSE https://www.suse.com/
-
---=-2Aj+Mypawqc5P5Mv2XTx
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEES5ssOj3Vhr0WPnOLFkJ4iaW4c+4FAlyYrxAACgkQFkJ4iaW4
-c+4RBw/+Jb25t+D3NqB7raaBYvuDFoFlEdJJEBtsPLe8HNDFU3aD8p3Mr+v9m0KU
-hWiWBcAfqISbCk3gsb4Qfw5met5E1hg9EsA1qJVhsKdPiwPUrDnRfwxOHRgLSw/6
-FPZ+MKo0REE9VvXPkuhcebmM7Ec98Q4iiqXS9POF0iTlDnu1NqiQ2e1II9Eu2/L7
-+Bdaq6kbSsTLRuI5HBNdOCcoFMJ74NcI+p6xSvVZOkHTyPFlNiXfhc/tXVXvkPJP
-jdJPyqGvVNUtawG/AtEDDwIUxhrEbr+iq4tFRGpVqEQBlYfqI1DbJMCRInEEGA+v
-n2bMWJGGSYTteIe1pyxnanCNrVr4q7IdIip0AIxnur6mwx2TDTdzTFI9kBjWZtGb
-VfzzXt6YXYiCAtcOIYNdd81xtVJukYsmuWLy8kG2/SCDLTSK1EaBidmUJzcydmfY
-pkpN2rS/4SyIw/uiAFxLuC3DaDNumVmiB+kJSJd0sOw+381YDmKr9O0YtiFD8E8K
-sgHSaaev73etzvIDawbZJ/6zwVp4wGzzll+lnLEqenzNaq7oPVc1AXag3JWU5dwU
-hT11iJseaqIcDhDZHJjQug//9enDk6gBDTcsCX/pGNi3wqrCm1BSSrD8fFqfCJWO
-Gc69tHtjXCUjJpOBign0HbJuni4P6LJcklcKyejceSCBwcaUsi8=
-=0s/V
------END PGP SIGNATURE-----
-
---=-2Aj+Mypawqc5P5Mv2XTx--
-
+-- 
+Jun'ichi Nomura, NEC Corporation / NEC Solution Innovators, Ltd.
