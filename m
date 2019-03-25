@@ -2,289 +2,121 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DATE_IN_PAST_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CC49C4360F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 14:20:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 948B9C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 14:21:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 236812087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 14:20:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64CA92084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 14:21:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QGByz+C1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729273AbfCYOU5 (ORCPT
+        id S1729339AbfCYOVG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 10:20:57 -0400
-Received: from mga14.intel.com ([192.55.52.115]:12458 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725747AbfCYOU4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 10:20:56 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Mar 2019 07:20:55 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,269,1549958400"; 
-   d="scan'208";a="145054827"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by orsmga002.jf.intel.com with ESMTP; 25 Mar 2019 07:20:54 -0700
-Date:   Sun, 24 Mar 2019 23:19:42 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Michal Hocko <mhocko@suse.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Rich Felker <dalias@libc.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-mips@vger.kernel.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Linux-sh <linux-sh@vger.kernel.org>, sparclinux@vger.kernel.org,
-        linux-rdma@vger.kernel.org,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: Re: [RESEND 1/7] mm/gup: Replace get_user_pages_longterm() with
- FOLL_LONGTERM
-Message-ID: <20190325061941.GA16366@iweiny-DESK2.sc.intel.com>
-References: <20190317183438.2057-1-ira.weiny@intel.com>
- <20190317183438.2057-2-ira.weiny@intel.com>
- <CAA9_cmffz1VBOJ0ykBtcj+hiznn-kbbuotu1uUhPiJtXiFjJXg@mail.gmail.com>
+        Mon, 25 Mar 2019 10:21:06 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:32886 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbfCYOVF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 10:21:05 -0400
+Received: by mail-pl1-f195.google.com with SMTP id bg8so24710plb.0;
+        Mon, 25 Mar 2019 07:21:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=+UnF/9honZDd8DVGfAvHXwlIlHr1wXerQv6yjnIO6gU=;
+        b=QGByz+C1six86cJd2DABX9eothnWDpeO4m9JBHeiNWG0FjbRdY3mTyKVU9jOMTb41H
+         Byjlpjsg6311YyiNiK+6XXnGI3Pi6cpdMHuvpiQjXBRVWVhFxlzl0o21Z59AHX01EXvC
+         bSrabRkb42u8xQoo+8Cv2nhrFU9dZgLTRld+euwVpbrWU7Qq83rqDs+HNnadMTisCwxF
+         7Vpbsj0t10KV3bG94GH6vaI9pikSh1HEDZVEuLQtwdWcvIcYrsYMrlDvZYnqHYcY5XMd
+         WkeC7Wfm5jze5dTkq3Iobt4CPwPIocgjTwgcxsNihIMZ5f3FWG/U3x0b8UVRO/r3CReh
+         wsAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+UnF/9honZDd8DVGfAvHXwlIlHr1wXerQv6yjnIO6gU=;
+        b=n3oFYQQWhfX1MMN4kPPkhwkQG+tsttQE7Ok3Qkn5ySH0p5OtdQfZgh3iH8Ixme7Uqt
+         a89uppEciumR9pHaAH40AcAxEpShIl08RRQ0ixLAeUu7ox18uxDMI0aGlv545nNx8DMN
+         nprtPAIBsazrnPGEt+3dkCjtnYyg28NfM99Q9BpPgQ7tAtwuM+N7JZja8q0CM/Od/x8T
+         hv3LpSV47eREh+2X/w1NHNeL5Eoj0G3jXS6+QybkFreAc4M6iXBL/kQja96hobU/zuS5
+         7lKz50RgGiJta2fEiqP67WeT03ljNOI+oIaAQMB2Y1zWYZiUXgqRw0u3fpB3A0pAnVCL
+         9OOQ==
+X-Gm-Message-State: APjAAAVv3Kg4XkVxq0sJcYfoTVpuPHLzFwQlw1avAOXAzbQllCmXlCJX
+        9mYlnJnBWiDVGfUkAQ1v/2o=
+X-Google-Smtp-Source: APXvYqwaz2gxs2rMs5SDRr4BxlM2pN33OPV7pQYUwwufc1v72dCMJMzwmTZU0FzO9rIzMpa6Uk1zAw==
+X-Received: by 2002:a17:902:4101:: with SMTP id e1mr26088330pld.25.1553523664176;
+        Mon, 25 Mar 2019 07:21:04 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id 139sm20393158pfw.98.2019.03.25.07.21.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 25 Mar 2019 07:21:02 -0700 (PDT)
+Subject: Re: [alsa-devel] [PATCH] ASoC: intel: Fix crash at suspend/resume
+ after failed codec registration
+To:     Mark Brown <broonie@kernel.org>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, Jie Yang <yang.jie@linux.intel.com>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Curtis Malainey <cujomalainey@chromium.org>
+References: <1553294388-25293-1-git-send-email-linux@roeck-us.net>
+ <5451ba5b-1a5d-41b0-2b39-772c326de785@linux.intel.com>
+ <20190325121232.GF7284@sirena.org.uk>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <50fafc60-0ee4-ab33-8d24-dfc149215bee@roeck-us.net>
+Date:   Mon, 25 Mar 2019 07:21:00 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAA9_cmffz1VBOJ0ykBtcj+hiznn-kbbuotu1uUhPiJtXiFjJXg@mail.gmail.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+In-Reply-To: <20190325121232.GF7284@sirena.org.uk>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 22, 2019 at 02:24:40PM -0700, Dan Williams wrote:
-> On Sun, Mar 17, 2019 at 7:36 PM <ira.weiny@intel.com> wrote:
-> >
-> > From: Ira Weiny <ira.weiny@intel.com>
-> >
-> > Rather than have a separate get_user_pages_longterm() call,
-> > introduce FOLL_LONGTERM and change the longterm callers to use
-> > it.
-> >
-> > This patch does not change any functionality.
-> >
-> > FOLL_LONGTERM can only be supported with get_user_pages() as it
-> > requires vmas to determine if DAX is in use.
-> >
-> > CC: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-> > CC: Andrew Morton <akpm@linux-foundation.org>
-> > CC: Michal Hocko <mhocko@kernel.org>
-> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> [..]
-> > diff --git a/include/linux/mm.h b/include/linux/mm.h
-> > index 2d483dbdffc0..6831077d126c 100644
-> > --- a/include/linux/mm.h
-> > +++ b/include/linux/mm.h
-> [..]
-> > @@ -2609,6 +2596,7 @@ struct page *follow_page(struct vm_area_struct *vma, unsigned long address,
-> >  #define FOLL_REMOTE    0x2000  /* we are working on non-current tsk/mm */
-> >  #define FOLL_COW       0x4000  /* internal GUP flag */
-> >  #define FOLL_ANON      0x8000  /* don't do file mappings */
-> > +#define FOLL_LONGTERM  0x10000 /* mapping is intended for a long term pin */
+On 3/25/19 5:12 AM, Mark Brown wrote:
+> On Sat, Mar 23, 2019 at 09:55:46AM -0400, Pierre-Louis Bossart wrote:
 > 
-> Let's change this comment to say something like /* mapping lifetime is
-> indefinite / at the discretion of userspace */, since "longterm is not
-> well defined.
+>> I'd like to highlight that there is a fundamental flaw in the way the
+>> machine drivers are handled. Since we don't have a hook for the machine
+>> driver in the BIOS, the DSP driver creates a platform_device which will
+>> instantiate the machine driver. When errors happen in the machine driver
+>> probe, they are suppressed due to a 'feature' of the device model, so you
+>> can end-up with a broken configuration that is still reported as a
+>> successful strobe.
 > 
-> I think it should also include a /* FIXME: */ to say something about
-> the havoc a long term pin might wreak on fs and mm code paths.
-
-Will do.
-
+> These are driver specific issues not device model issues as far as I can
+> see?  The issue fixed by this as is that you're storing a pointer in the
+> ASoC level (not device model level) probe that you don't free when the
+> component is unbound, causing you to dereference it later during
+> suspend.  There is absolutely no problem with the machine driver not
+> being guaranteed to bind at the time it's initially registered, that's
+> perfectly normal and should cause no problems.
 > 
-> >  static inline int vm_fault_to_errno(vm_fault_t vm_fault, int foll_flags)
-> >  {
-> > diff --git a/mm/gup.c b/mm/gup.c
-> > index f84e22685aaa..8cb4cff067bc 100644
-> > --- a/mm/gup.c
-> > +++ b/mm/gup.c
-> > @@ -1112,26 +1112,7 @@ long get_user_pages_remote(struct task_struct *tsk, struct mm_struct *mm,
-> >  }
-> >  EXPORT_SYMBOL(get_user_pages_remote);
-> >
-> > -/*
-> > - * This is the same as get_user_pages_remote(), just with a
-> > - * less-flexible calling convention where we assume that the task
-> > - * and mm being operated on are the current task's and don't allow
-> > - * passing of a locked parameter.  We also obviously don't pass
-> > - * FOLL_REMOTE in here.
-> > - */
-> > -long get_user_pages(unsigned long start, unsigned long nr_pages,
-> > -               unsigned int gup_flags, struct page **pages,
-> > -               struct vm_area_struct **vmas)
-> > -{
-> > -       return __get_user_pages_locked(current, current->mm, start, nr_pages,
-> > -                                      pages, vmas, NULL,
-> > -                                      gup_flags | FOLL_TOUCH);
-> > -}
-> > -EXPORT_SYMBOL(get_user_pages);
-> > -
-> >  #if defined(CONFIG_FS_DAX) || defined (CONFIG_CMA)
-> > -
-> > -#ifdef CONFIG_FS_DAX
-> >  static bool check_dax_vmas(struct vm_area_struct **vmas, long nr_pages)
-> >  {
-> >         long i;
-> > @@ -1150,12 +1131,6 @@ static bool check_dax_vmas(struct vm_area_struct **vmas, long nr_pages)
-> >         }
-> >         return false;
-> >  }
-> > -#else
-> > -static inline bool check_dax_vmas(struct vm_area_struct **vmas, long nr_pages)
-> > -{
-> > -       return false;
-> > -}
-> > -#endif
-> >
-> >  #ifdef CONFIG_CMA
-> >  static struct page *new_non_cma_page(struct page *page, unsigned long private)
-> > @@ -1209,10 +1184,13 @@ static struct page *new_non_cma_page(struct page *page, unsigned long private)
-> >         return __alloc_pages_node(nid, gfp_mask, 0);
-> >  }
-> >
-> > -static long check_and_migrate_cma_pages(unsigned long start, long nr_pages,
-> > -                                       unsigned int gup_flags,
-> > +static long check_and_migrate_cma_pages(struct task_struct *tsk,
-> > +                                       struct mm_struct *mm,
-> > +                                       unsigned long start,
-> > +                                       unsigned long nr_pages,
-> >                                         struct page **pages,
-> > -                                       struct vm_area_struct **vmas)
-> > +                                       struct vm_area_struct **vmas,
-> > +                                       unsigned int gup_flags)
-> >  {
-> >         long i;
-> >         bool drain_allow = true;
-> > @@ -1268,10 +1246,14 @@ static long check_and_migrate_cma_pages(unsigned long start, long nr_pages,
-> >                                 putback_movable_pages(&cma_page_list);
-> >                 }
-> >                 /*
-> > -                * We did migrate all the pages, Try to get the page references again
-> > -                * migrating any new CMA pages which we failed to isolate earlier.
-> > +                * We did migrate all the pages, Try to get the page references
-> > +                * again migrating any new CMA pages which we failed to isolate
-> > +                * earlier.
-> >                  */
-> > -               nr_pages = get_user_pages(start, nr_pages, gup_flags, pages, vmas);
-> > +               nr_pages = __get_user_pages_locked(tsk, mm, start, nr_pages,
-> > +                                                  pages, vmas, NULL,
-> > +                                                  gup_flags);
-> > +
-> 
-> Why did this need to change to __get_user_pages_locked?
+It is actually a bit more complicated than that. The stored pointer (drv->soc_card)
+isn't released. The problem is that dev_get_drvdata(drv->soc_card->dev) is NULL,
+which causes the crash. I don't think there is a UAF involved - I built the
+test image with KASAN enabled and it did not barf at me.
 
-__get_uer_pages_locked() is now the "internal call" for get_user_pages.
+It may of course well be that there _should_ be a UAF but it doesn't happen
+because some pointer that should be released isn't released due to some memory
+or reference count leak. But that would be a different problem.
 
-Technically it did not _have_ to change but there is no need to call
-get_user_pages() again because the FOLL_TOUCH flags is already set.  Also this
-call then matches the __get_user_pages_locked() which was called on the pages
-we migrated from.  Mostly this keeps the code "symmetrical" in that we called
-__get_user_pages_locked() on the pages we are migrating from and the same call
-on the pages we migrated to.
+Overall the implementation does seem a bit suspicious to me. I don't really
+understand why the platform driver handles suspend/resume for the cards.
+But that may just be my lack of understanding. However, either case, I think the
+Haswell driver (sst-haswell-pcm.c) has a similar problem. I am also not sure if
+there are more problems lurking - I see a similar but different crash in v4.4.y
+but have not been able to track it down. Actually, I found the problem fixed here
+while trying to reproduce that crash with the latest kernel.
 
-While the change here looks funny I think the final code is better.
-
-> 
-> >                 if ((nr_pages > 0) && migrate_allow) {
-> >                         drain_allow = true;
-> >                         goto check_again;
-> > @@ -1281,66 +1263,115 @@ static long check_and_migrate_cma_pages(unsigned long start, long nr_pages,
-> >         return nr_pages;
-> >  }
-> >  #else
-> > -static inline long check_and_migrate_cma_pages(unsigned long start, long nr_pages,
-> > -                                              unsigned int gup_flags,
-> > -                                              struct page **pages,
-> > -                                              struct vm_area_struct **vmas)
-> > +static long check_and_migrate_cma_pages(struct task_struct *tsk,
-> > +                                       struct mm_struct *mm,
-> > +                                       unsigned long start,
-> > +                                       unsigned long nr_pages,
-> > +                                       struct page **pages,
-> > +                                       struct vm_area_struct **vmas,
-> > +                                       unsigned int gup_flags)
-> >  {
-> >         return nr_pages;
-> >  }
-> >  #endif
-> >
-> >  /*
-> > - * This is the same as get_user_pages() in that it assumes we are
-> > - * operating on the current task's mm, but it goes further to validate
-> > - * that the vmas associated with the address range are suitable for
-> > - * longterm elevated page reference counts. For example, filesystem-dax
-> > - * mappings are subject to the lifetime enforced by the filesystem and
-> > - * we need guarantees that longterm users like RDMA and V4L2 only
-> > - * establish mappings that have a kernel enforced revocation mechanism.
-> > + * __gup_longterm_locked() is a wrapper for __get_uer_pages_locked which
-> 
-> s/uer/user/
-
-Check
-
-> 
-> > + * allows us to process the FOLL_LONGTERM flag if present.
-> > + *
-> > + * FOLL_LONGTERM Checks for either DAX VMAs or PPC CMA regions and either fails
-> > + * the pin or attempts to migrate the page as appropriate.
-> > + *
-> > + * In the filesystem-dax case mappings are subject to the lifetime enforced by
-> > + * the filesystem and we need guarantees that longterm users like RDMA and V4L2
-> > + * only establish mappings that have a kernel enforced revocation mechanism.
-> > + *
-> > + * In the CMA case pages can't be pinned in a CMA region as this would
-> > + * unnecessarily fragment that region.  So CMA attempts to migrate the page
-> > + * before pinning.
-> >   *
-> >   * "longterm" == userspace controlled elevated page count lifetime.
-> >   * Contrast this to iov_iter_get_pages() usages which are transient.
-> 
-> Ah, here's the longterm documentation, but if I was a developer
-> considering whether to use FOLL_LONGTERM or not I would expect to find
-> the documentation at the flag definition site.
-> 
-> I think it has become more clear since get_user_pages_longterm() was
-> initially merged that we need to warn people not to use it, or at
-> least seriously reconsider whether they want an interface to support
-> indefinite pins.
-
-Good point will move
-
-> 
-> >   */
-> > -long get_user_pages_longterm(unsigned long start, unsigned long nr_pages,
-> > -                            unsigned int gup_flags, struct page **pages,
-> > -                            struct vm_area_struct **vmas_arg)
-> > +static __always_inline long __gup_longterm_locked(struct task_struct *tsk,
-> 
-> ...why the __always_inline?
- 
-This was because it was only called from get_user_pages() in this patch.  But
-later on I use it elsewhere so __always_inline is wrong.
-
-Ira
-
+Guenter
