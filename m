@@ -2,154 +2,289 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DATE_IN_PAST_06_12,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B462C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 14:20:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CC49C4360F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 14:20:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 399262084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 14:20:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AgX6rDSr"
+	by mail.kernel.org (Postfix) with ESMTP id 236812087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 14:20:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729191AbfCYOUW (ORCPT
+        id S1729273AbfCYOU5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 10:20:22 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39291 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfCYOUW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 10:20:22 -0400
-Received: by mail-wm1-f68.google.com with SMTP id t124so9263645wma.4;
-        Mon, 25 Mar 2019 07:20:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=7cUqakoGwW9v2V+piiFQS3g8t87PA5xNvW5kZqir9uA=;
-        b=AgX6rDSr1NxOEoBGnEuR05Z5RhyEzjC839L5eQxHkHukx2E7cChdNC+d0rybL6E1Dx
-         k1OQGb/Q0qghZHzh2zWaLH9JkEfv0rMcJARK/a7asrAebzQZtVX3gLaPB1EkMg0FDS8K
-         Q/S+qsnCfWof4ME+SUrW8KH2j0p7TYmdzZf3xfaNnCNufcreFQYeSlyuvwaZ5MwBcPjJ
-         byalfieVD+2rjHCCtFxlaCaAwgpu9bAZQCAlMR9h4TVM8nQe6e5C+B6c61C+Tg7uLs1L
-         XXY4fGSZ85gP9TLiFIIz/1Zm76vUTPEv5nsHhJzZjAI9rUlb07pnuot3sCHopf4Zf+pO
-         lbKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=7cUqakoGwW9v2V+piiFQS3g8t87PA5xNvW5kZqir9uA=;
-        b=h5eWv9SyksRW/mUtw2LVHbtMUkxLj0fD9l7hsAREgmKZvhAmjsbQRNOTewC+ofIWyC
-         0+hC7rEHFWQDRMMqZEcLRe++p8puwTCb1PLEUWdLxYyG0BrDoa5jMHZST59t6J/u2+6G
-         6tn5yclKjznj3AftELOQY7B/vpXjvHG0m08i977GYNW9GQ9AxoKyNOIxGTsppHZAEaq5
-         bblRRxZDX2BqQ6b7a9zeP/JlNzPY56YU4fI7jho5tokQRA4GXSN8hhlXe2OK4DAmsyi/
-         EBMeeVHHiXSJeNMdkTos0v7p0PzMcGfOn0U7aqM07Smf0rKx8C8sYk+USWmDkEKPnRGT
-         mv2Q==
-X-Gm-Message-State: APjAAAUCPWGHY6dP3qRAFTXXKlc9L+MFHgizDgkypQFkCIT08eyUOqad
-        ejp8R4JTPjaAaQzcGUmpQno=
-X-Google-Smtp-Source: APXvYqzowF1ICCpiNoLPRrwzK5kNhmqFO7Xuw4fwKhmp1cQ4+uXY0cP2fIy2Y6Lbbr+nSfoCjW9xYQ==
-X-Received: by 2002:a7b:c7d0:: with SMTP id z16mr12222967wmk.136.1553523619602;
-        Mon, 25 Mar 2019 07:20:19 -0700 (PDT)
-Received: from debian64.daheim (p4FD09746.dip0.t-ipconnect.de. [79.208.151.70])
-        by smtp.gmail.com with ESMTPSA id 13sm2941499wmf.23.2019.03.25.07.20.18
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 25 Mar 2019 07:20:18 -0700 (PDT)
-Received: from localhost.daheim ([127.0.0.1] helo=debian64.localnet)
-        by debian64.daheim with esmtp (Exim 4.92)
-        (envelope-from <chunkeey@gmail.com>)
-        id 1h8QSI-0006ww-Fs; Mon, 25 Mar 2019 15:20:02 +0100
-From:   Christian Lamparter <chunkeey@gmail.com>
-To:     Arnd Bergmann <arnd@arndb.de>, Kalle Valo <kvalo@codeaurora.org>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        clang-built-linux@googlegroups.com,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] wireless: carl9170: fix clang build warning
-Date:   Mon, 25 Mar 2019 15:20:02 +0100
-Message-ID: <10158331.jkizvXajyz@debian64>
-In-Reply-To: <20190325124354.1413529-1-arnd@arndb.de>
-References: <20190325124354.1413529-1-arnd@arndb.de>
+        Mon, 25 Mar 2019 10:20:57 -0400
+Received: from mga14.intel.com ([192.55.52.115]:12458 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725747AbfCYOU4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 10:20:56 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Mar 2019 07:20:55 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,269,1549958400"; 
+   d="scan'208";a="145054827"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by orsmga002.jf.intel.com with ESMTP; 25 Mar 2019 07:20:54 -0700
+Date:   Sun, 24 Mar 2019 23:19:42 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Michal Hocko <mhocko@suse.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Rich Felker <dalias@libc.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-mips@vger.kernel.org,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Linux-sh <linux-sh@vger.kernel.org>, sparclinux@vger.kernel.org,
+        linux-rdma@vger.kernel.org,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: Re: [RESEND 1/7] mm/gup: Replace get_user_pages_longterm() with
+ FOLL_LONGTERM
+Message-ID: <20190325061941.GA16366@iweiny-DESK2.sc.intel.com>
+References: <20190317183438.2057-1-ira.weiny@intel.com>
+ <20190317183438.2057-2-ira.weiny@intel.com>
+ <CAA9_cmffz1VBOJ0ykBtcj+hiznn-kbbuotu1uUhPiJtXiFjJXg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAA9_cmffz1VBOJ0ykBtcj+hiznn-kbbuotu1uUhPiJtXiFjJXg@mail.gmail.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday, March 25, 2019 1:43:44 PM CET Arnd Bergmann wrote:
-> clang fails to eliminate some dead code with always-taken branches
-> when CONFIG_PROFILE_ANNOTATED_BRANCHES is set, leading to a false-positive
-> warning:
+On Fri, Mar 22, 2019 at 02:24:40PM -0700, Dan Williams wrote:
+> On Sun, Mar 17, 2019 at 7:36 PM <ira.weiny@intel.com> wrote:
+> >
+> > From: Ira Weiny <ira.weiny@intel.com>
+> >
+> > Rather than have a separate get_user_pages_longterm() call,
+> > introduce FOLL_LONGTERM and change the longterm callers to use
+> > it.
+> >
+> > This patch does not change any functionality.
+> >
+> > FOLL_LONGTERM can only be supported with get_user_pages() as it
+> > requires vmas to determine if DAX is in use.
+> >
+> > CC: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+> > CC: Andrew Morton <akpm@linux-foundation.org>
+> > CC: Michal Hocko <mhocko@kernel.org>
+> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> [..]
+> > diff --git a/include/linux/mm.h b/include/linux/mm.h
+> > index 2d483dbdffc0..6831077d126c 100644
+> > --- a/include/linux/mm.h
+> > +++ b/include/linux/mm.h
+> [..]
+> > @@ -2609,6 +2596,7 @@ struct page *follow_page(struct vm_area_struct *vma, unsigned long address,
+> >  #define FOLL_REMOTE    0x2000  /* we are working on non-current tsk/mm */
+> >  #define FOLL_COW       0x4000  /* internal GUP flag */
+> >  #define FOLL_ANON      0x8000  /* don't do file mappings */
+> > +#define FOLL_LONGTERM  0x10000 /* mapping is intended for a long term pin */
 > 
-> drivers/net/wireless/ath/carl9170/mac.c:522:3: error: variable 'power' is used uninitialized whenever 'if' condition is
->       false [-Werror,-Wsometimes-uninitialized]
->                 BUG_ON(1);
->                 ^~~~~~~~~
+> Let's change this comment to say something like /* mapping lifetime is
+> indefinite / at the discretion of userspace */, since "longterm is not
+> well defined.
 > 
-> Change both instances of BUG_ON(1) in carl9170 to the simpler BUG()
-> to avoid the warning.
+> I think it should also include a /* FIXME: */ to say something about
+> the havoc a long term pin might wreak on fs and mm code paths.
+
+Will do.
+
 > 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Heh, I added these "default:" cases back in the day to make gcc
-shut-up about "switch is missing cases" warnings. And now I
-guess it's clangs time to complain. (-; 
-
-Especially the "default case" in carl9170_rx_untie_data is hilarious.
-Since all the possible cases (just 4!) have been addressed and the
-"default" is deadcode. I think gcc did not consider the
-AR9170_RX_STATUS_MPDU mask in the 
-| switch (mac_status & AR9170_RX_STATUS_MPDU) {
-
-statement. However I'll be waiting for the day until the deadcode
-elimination warnings will show up.
-
-Anyway,
-
-Acked-by: Christian Lamparter <chunkeey@gmail.com>
-
-Regards,
-Christian
-
-> ---
->  drivers/net/wireless/ath/carl9170/mac.c | 2 +-
->  drivers/net/wireless/ath/carl9170/rx.c  | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
+> >  static inline int vm_fault_to_errno(vm_fault_t vm_fault, int foll_flags)
+> >  {
+> > diff --git a/mm/gup.c b/mm/gup.c
+> > index f84e22685aaa..8cb4cff067bc 100644
+> > --- a/mm/gup.c
+> > +++ b/mm/gup.c
+> > @@ -1112,26 +1112,7 @@ long get_user_pages_remote(struct task_struct *tsk, struct mm_struct *mm,
+> >  }
+> >  EXPORT_SYMBOL(get_user_pages_remote);
+> >
+> > -/*
+> > - * This is the same as get_user_pages_remote(), just with a
+> > - * less-flexible calling convention where we assume that the task
+> > - * and mm being operated on are the current task's and don't allow
+> > - * passing of a locked parameter.  We also obviously don't pass
+> > - * FOLL_REMOTE in here.
+> > - */
+> > -long get_user_pages(unsigned long start, unsigned long nr_pages,
+> > -               unsigned int gup_flags, struct page **pages,
+> > -               struct vm_area_struct **vmas)
+> > -{
+> > -       return __get_user_pages_locked(current, current->mm, start, nr_pages,
+> > -                                      pages, vmas, NULL,
+> > -                                      gup_flags | FOLL_TOUCH);
+> > -}
+> > -EXPORT_SYMBOL(get_user_pages);
+> > -
+> >  #if defined(CONFIG_FS_DAX) || defined (CONFIG_CMA)
+> > -
+> > -#ifdef CONFIG_FS_DAX
+> >  static bool check_dax_vmas(struct vm_area_struct **vmas, long nr_pages)
+> >  {
+> >         long i;
+> > @@ -1150,12 +1131,6 @@ static bool check_dax_vmas(struct vm_area_struct **vmas, long nr_pages)
+> >         }
+> >         return false;
+> >  }
+> > -#else
+> > -static inline bool check_dax_vmas(struct vm_area_struct **vmas, long nr_pages)
+> > -{
+> > -       return false;
+> > -}
+> > -#endif
+> >
+> >  #ifdef CONFIG_CMA
+> >  static struct page *new_non_cma_page(struct page *page, unsigned long private)
+> > @@ -1209,10 +1184,13 @@ static struct page *new_non_cma_page(struct page *page, unsigned long private)
+> >         return __alloc_pages_node(nid, gfp_mask, 0);
+> >  }
+> >
+> > -static long check_and_migrate_cma_pages(unsigned long start, long nr_pages,
+> > -                                       unsigned int gup_flags,
+> > +static long check_and_migrate_cma_pages(struct task_struct *tsk,
+> > +                                       struct mm_struct *mm,
+> > +                                       unsigned long start,
+> > +                                       unsigned long nr_pages,
+> >                                         struct page **pages,
+> > -                                       struct vm_area_struct **vmas)
+> > +                                       struct vm_area_struct **vmas,
+> > +                                       unsigned int gup_flags)
+> >  {
+> >         long i;
+> >         bool drain_allow = true;
+> > @@ -1268,10 +1246,14 @@ static long check_and_migrate_cma_pages(unsigned long start, long nr_pages,
+> >                                 putback_movable_pages(&cma_page_list);
+> >                 }
+> >                 /*
+> > -                * We did migrate all the pages, Try to get the page references again
+> > -                * migrating any new CMA pages which we failed to isolate earlier.
+> > +                * We did migrate all the pages, Try to get the page references
+> > +                * again migrating any new CMA pages which we failed to isolate
+> > +                * earlier.
+> >                  */
+> > -               nr_pages = get_user_pages(start, nr_pages, gup_flags, pages, vmas);
+> > +               nr_pages = __get_user_pages_locked(tsk, mm, start, nr_pages,
+> > +                                                  pages, vmas, NULL,
+> > +                                                  gup_flags);
+> > +
 > 
-> diff --git a/drivers/net/wireless/ath/carl9170/mac.c b/drivers/net/wireless/ath/carl9170/mac.c
-> index 7d4a72dc98db..b2eeb9fd68d2 100644
-> --- a/drivers/net/wireless/ath/carl9170/mac.c
-> +++ b/drivers/net/wireless/ath/carl9170/mac.c
-> @@ -519,7 +519,7 @@ int carl9170_set_mac_tpc(struct ar9170 *ar, struct ieee80211_channel *channel)
->  		power = ar->power_5G_leg[0] & 0x3f;
->  		break;
->  	default:
-> -		BUG_ON(1);
-> +		BUG();
->  	}
->  
->  	power = min_t(unsigned int, power, ar->hw->conf.power_level * 2);
-> diff --git a/drivers/net/wireless/ath/carl9170/rx.c b/drivers/net/wireless/ath/carl9170/rx.c
-> index 8e154f6364a3..23ab8a80c18c 100644
-> --- a/drivers/net/wireless/ath/carl9170/rx.c
-> +++ b/drivers/net/wireless/ath/carl9170/rx.c
-> @@ -795,7 +795,7 @@ static void carl9170_rx_untie_data(struct ar9170 *ar, u8 *buf, int len)
->  		break;
->  
->  	default:
-> -		BUG_ON(1);
-> +		BUG();
->  		break;
->  	}
->  
+> Why did this need to change to __get_user_pages_locked?
+
+__get_uer_pages_locked() is now the "internal call" for get_user_pages.
+
+Technically it did not _have_ to change but there is no need to call
+get_user_pages() again because the FOLL_TOUCH flags is already set.  Also this
+call then matches the __get_user_pages_locked() which was called on the pages
+we migrated from.  Mostly this keeps the code "symmetrical" in that we called
+__get_user_pages_locked() on the pages we are migrating from and the same call
+on the pages we migrated to.
+
+While the change here looks funny I think the final code is better.
+
 > 
+> >                 if ((nr_pages > 0) && migrate_allow) {
+> >                         drain_allow = true;
+> >                         goto check_again;
+> > @@ -1281,66 +1263,115 @@ static long check_and_migrate_cma_pages(unsigned long start, long nr_pages,
+> >         return nr_pages;
+> >  }
+> >  #else
+> > -static inline long check_and_migrate_cma_pages(unsigned long start, long nr_pages,
+> > -                                              unsigned int gup_flags,
+> > -                                              struct page **pages,
+> > -                                              struct vm_area_struct **vmas)
+> > +static long check_and_migrate_cma_pages(struct task_struct *tsk,
+> > +                                       struct mm_struct *mm,
+> > +                                       unsigned long start,
+> > +                                       unsigned long nr_pages,
+> > +                                       struct page **pages,
+> > +                                       struct vm_area_struct **vmas,
+> > +                                       unsigned int gup_flags)
+> >  {
+> >         return nr_pages;
+> >  }
+> >  #endif
+> >
+> >  /*
+> > - * This is the same as get_user_pages() in that it assumes we are
+> > - * operating on the current task's mm, but it goes further to validate
+> > - * that the vmas associated with the address range are suitable for
+> > - * longterm elevated page reference counts. For example, filesystem-dax
+> > - * mappings are subject to the lifetime enforced by the filesystem and
+> > - * we need guarantees that longterm users like RDMA and V4L2 only
+> > - * establish mappings that have a kernel enforced revocation mechanism.
+> > + * __gup_longterm_locked() is a wrapper for __get_uer_pages_locked which
+> 
+> s/uer/user/
 
+Check
 
+> 
+> > + * allows us to process the FOLL_LONGTERM flag if present.
+> > + *
+> > + * FOLL_LONGTERM Checks for either DAX VMAs or PPC CMA regions and either fails
+> > + * the pin or attempts to migrate the page as appropriate.
+> > + *
+> > + * In the filesystem-dax case mappings are subject to the lifetime enforced by
+> > + * the filesystem and we need guarantees that longterm users like RDMA and V4L2
+> > + * only establish mappings that have a kernel enforced revocation mechanism.
+> > + *
+> > + * In the CMA case pages can't be pinned in a CMA region as this would
+> > + * unnecessarily fragment that region.  So CMA attempts to migrate the page
+> > + * before pinning.
+> >   *
+> >   * "longterm" == userspace controlled elevated page count lifetime.
+> >   * Contrast this to iov_iter_get_pages() usages which are transient.
+> 
+> Ah, here's the longterm documentation, but if I was a developer
+> considering whether to use FOLL_LONGTERM or not I would expect to find
+> the documentation at the flag definition site.
+> 
+> I think it has become more clear since get_user_pages_longterm() was
+> initially merged that we need to warn people not to use it, or at
+> least seriously reconsider whether they want an interface to support
+> indefinite pins.
 
+Good point will move
+
+> 
+> >   */
+> > -long get_user_pages_longterm(unsigned long start, unsigned long nr_pages,
+> > -                            unsigned int gup_flags, struct page **pages,
+> > -                            struct vm_area_struct **vmas_arg)
+> > +static __always_inline long __gup_longterm_locked(struct task_struct *tsk,
+> 
+> ...why the __always_inline?
+ 
+This was because it was only called from get_user_pages() in this patch.  But
+later on I use it elsewhere so __always_inline is wrong.
+
+Ira
 
