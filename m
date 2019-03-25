@@ -2,126 +2,142 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EDE4C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 20:33:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60F99C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 20:34:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40A2120848
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 20:33:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FD3020848
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 20:34:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="ZuN9CWU/"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JQcLdfA5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730361AbfCYUdg (ORCPT
+        id S1730298AbfCYUe1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 16:33:36 -0400
-Received: from mail-eopbgr710043.outbound.protection.outlook.com ([40.107.71.43]:29472
-        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729610AbfCYUdg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 16:33:36 -0400
+        Mon, 25 Mar 2019 16:34:27 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:39922 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729610AbfCYUe1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 16:34:27 -0400
+Received: by mail-ot1-f67.google.com with SMTP id f10so9357843otb.6
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 13:34:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector1-amd-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ak1EREfgwjlRSrD7jhgtd8LGkb3UXP7QxLbDUMBpyDs=;
- b=ZuN9CWU/tJXgXLZb4eW7OhPwc5L/tEAgimIg+lhL1dOIvsQeW2tMRlYodRgwGE8/HlQcP9ToCVZyQfc+TIXFXy3i52e75bD4qZ8EFtENzTKTiCr7tAZCD3HP8xYkLMlhOZftIwSwdVogFkuw7RxnZWLoenLyk14hvKJq1mBkJZA=
-Received: from SN6PR12MB2639.namprd12.prod.outlook.com (52.135.103.16) by
- SN6PR12MB2782.namprd12.prod.outlook.com (52.135.107.145) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1730.18; Mon, 25 Mar 2019 20:33:31 +0000
-Received: from SN6PR12MB2639.namprd12.prod.outlook.com
- ([fe80::d49d:a1ee:9bcf:20e2]) by SN6PR12MB2639.namprd12.prod.outlook.com
- ([fe80::d49d:a1ee:9bcf:20e2%5]) with mapi id 15.20.1730.019; Mon, 25 Mar 2019
- 20:33:31 +0000
-From:   "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
-To:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
-CC:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bp@alien8.de" <bp@alien8.de>
-Subject: [PATCH] EDAC/amd64: Use maximum channel count for the EDAC channel
- layer size
-Thread-Topic: [PATCH] EDAC/amd64: Use maximum channel count for the EDAC
- channel layer size
-Thread-Index: AQHU40oCFvOyy4xqaEiYK0CJr0cY8Q==
-Date:   Mon, 25 Mar 2019 20:33:30 +0000
-Message-ID: <20190325203319.7603-1-Yazen.Ghannam@amd.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SN6PR05CA0008.namprd05.prod.outlook.com
- (2603:10b6:805:de::21) To SN6PR12MB2639.namprd12.prod.outlook.com
- (2603:10b6:805:6f::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Yazen.Ghannam@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [165.204.78.1]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: dfa4a9ee-6e93-4443-5180-08d6b16124ba
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600127)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:SN6PR12MB2782;
-x-ms-traffictypediagnostic: SN6PR12MB2782:
-x-microsoft-antispam-prvs: <SN6PR12MB278263D8BF78934A92A0D08FF85E0@SN6PR12MB2782.namprd12.prod.outlook.com>
-x-forefront-prvs: 0987ACA2E2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(346002)(376002)(39860400002)(396003)(136003)(199004)(189003)(316002)(81156014)(53936002)(8676002)(54906003)(7736002)(305945005)(8936002)(81166006)(66066001)(6916009)(68736007)(386003)(99286004)(97736004)(71200400001)(72206003)(478600001)(4326008)(50226002)(106356001)(14454004)(105586002)(2351001)(71190400001)(2501003)(5660300002)(14444005)(1076003)(486006)(2616005)(25786009)(476003)(86362001)(36756003)(6512007)(6486002)(6436002)(2906002)(6116002)(3846002)(186003)(256004)(102836004)(26005)(52116002)(5640700003)(6506007);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2782;H:SN6PR12MB2639.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: IFXqzm58GaGiTMls2QRANXRH3Jv28WM4I00FS7NhV6WDU2AsvBfe61mmB2kS3GSWmyExdNzPHhWFD1Iktmibp1KeJ2hzV2OqXeBFwCCEZGJFfXsAzrxepzYGfmieN+tkq3gEwYlDsdn5AdSccTbA5TwrvhsrtWGzsSa0HscobbjgMsb8t24H4133AYu+JOR89DOrgbj9+9M3i2g/1JssOr6vVyj2B5ociL6oC+AZABYA0CKB4P3YJFk/qTb9WCZozhIh9Lexix1q/4uExhITpjCmfXy9NbW3NXXoYuLdykPWdLMJX53OJ/uAf8FhXa0Y9FDJEZWdnYjoYp/hnBVvHNeUbh15pO1oAvwxSAF/5Lm5V3LSl3e31DhmzfFTYU5o4PsaAvAPMNJUz8skexWeQQb8NbGhMudC+2Xb77dxOzY=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=epcnJRVRcwZXdSQ+iTPglDNMRevkUZIbnelduCAg4CI=;
+        b=JQcLdfA5zk+hKV/2XesKq9vYN6WriVOLPAgTeMkFYqiUJakkOKoHWuS0lOfdXl7AUQ
+         neRHS1hJTHTUfpuxDz33edboR36JwF4UYdGQH8TNf3Xswg3ql0XIpc5KbYclXdeI5RhP
+         5LOchdkEhF2aQDEQoXxHWisRvYlMaL4M826rBCSuXGxtXXE/6xo2SzqFMW+eRaqU0QPt
+         pbXdSkNGtt+JfKkCHhGT15UEJRgZKCt1iHCEhbep3xO1l2KsiXaAdaKcoZAnus23HiCb
+         14y4FD++oZA2tsyjCWPMhHWLGvNkyRFPX52G1IBVdbda37dAww8Y/cEAWSdPmX6bzz86
+         U7vw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=epcnJRVRcwZXdSQ+iTPglDNMRevkUZIbnelduCAg4CI=;
+        b=E30gNRkLlDBVXqxXN+pWOJFtEAuNIH5U14ta6Fn7C+etl9UPpLAohv3mzOUP4Q7uqT
+         FpepiaDgmKWxl6nju1j8I0V/mDRM2QZ0XJljFnT+2kqfYdbMwaQyhCFBqzW51xdNn0nQ
+         D7+We0nn4x8Qe7IAf6DaJnbjO3cUr8i7y1OQBnRfHFHKNApZzVYF4oO47+ZzEHscunnQ
+         8YMh/b6nwcJcmEekYeHNwKpT/a8O2OaYrvi5pv4aYffHMUHsBfH9ucIqzrbBef0Zo1ML
+         99RhW5Dh1QelNHFWW1WScYAkNXC+bSXi/XqygrqUv26/Ukh9TQPbZEbXOgEoSjXuC19q
+         3PEg==
+X-Gm-Message-State: APjAAAVkcGWRDJQbW19MLz6ns/OciR9L0ST959bFWDAhus7pifgS68DY
+        +2X0d4ML1rRS/Db2bSfL+iKgZ4TvQ+4nnoRVMO3+YA==
+X-Google-Smtp-Source: APXvYqzgCphFNrNTc11DzBHpjdZyhg1otvncX7I6pKbqFwUre5EIKczbS8KXhJMtjJRp/ql3UF2OQhUFIN02JASYyaI=
+X-Received: by 2002:a05:6830:1216:: with SMTP id r22mr20490544otp.198.1553546066315;
+ Mon, 25 Mar 2019 13:34:26 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dfa4a9ee-6e93-4443-5180-08d6b16124ba
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Mar 2019 20:33:30.9471
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2782
+References: <20190325162052.28987-1-christian@brauner.io> <CAKOZueuJSAiKU7fZR2FNDKKCktdyE-sADtWprpsNMAqYQvD9Jw@mail.gmail.com>
+ <20190325173614.GB25975@google.com> <CAKOZuetbZOs1Yur4OrW6hh3wVYdoKNkSqTszbpTWnuRBTmT9zA@mail.gmail.com>
+ <CAGLj2rE1f4x36KFUjFLiFq8tF1RUmFuCSRTg_tCQ9W2G6LtizA@mail.gmail.com>
+ <CAKOZuetCFgu0B53+mGmQ3+539MPT_tiu-PACx2ATvihHrrmUKg@mail.gmail.com>
+ <CAGLj2rHETs+FjkOVP6PJ_EiePP7FKiDwxaWyjwg1gMZPYpU1fQ@mail.gmail.com> <CAKOZueuYMKdkt8BoSj1+p7=mpe2PA8r7xT5QiF6q3cTK+6HsAA@mail.gmail.com>
+In-Reply-To: <CAKOZueuYMKdkt8BoSj1+p7=mpe2PA8r7xT5QiF6q3cTK+6HsAA@mail.gmail.com>
+From:   Jann Horn <jannh@google.com>
+Date:   Mon, 25 Mar 2019 21:34:00 +0100
+Message-ID: <CAG48ez1ZVKgwfQDYT1k4pB4-8Y8Ywv12dabh5KFFxtKmT-e7Cw@mail.gmail.com>
+Subject: Re: [PATCH 0/4] pid: add pidctl()
+To:     Daniel Colascione <dancol@google.com>
+Cc:     Jonathan Kowalski <bl0pbl33p@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Christian Brauner <christian@brauner.io>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Andy Lutomirski <luto@kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Kees Cook <keescook@chromium.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Michael Kerrisk-manpages <mtk.manpages@gmail.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Nagarathnam Muthusamy <nagarathnam.muthusamy@oracle.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yazen Ghannam <yazen.ghannam@amd.com>
+On Mon, Mar 25, 2019 at 9:15 PM Daniel Colascione <dancol@google.com> wrote:
+> On Mon, Mar 25, 2019 at 12:42 PM Jonathan Kowalski <bl0pbl33p@gmail.com> wrote:
+> > On Mon, Mar 25, 2019 at 6:57 PM Daniel Colascione <dancol@google.com> wrote:
+[...]
+> > Yes, but everything in /proc is not equivalent to an attribute, or an
+> > option, and depending on its configuration, you may not want to allow
+> > processes to even be able to see /proc for any PIDs other than those
+> > running as their own user (hidepid). This means, even if this new
+> > system call is added, to respect hidepid, it must, depending on if
+> > /proc is mounted (and what hidepid is set to, and what gid= is set
+> > to), return EPERM, because then there is a discrepancy between how the
+> > two entrypoints to acquire a process handle do access control.
+>
+> That's why I proposed that this translation mechanism accept a procfs
+> root directory --- so you'd specify *which* procfs you want and let
+> the kernel apply whatever hidepid access restrictions it wants.
+[...]
+> > > and 2) it's
+> > > "fail unsafe": IMHO, most users in practice will skip the line marked
+> > > "LIVENESS CHECK", and as a result, their code will appear to work but
+> > > contain subtle race conditions. An explicit interface to translate
+> > > from a (PIDFD, PROCFS_ROOT) tuple to a /proc/pid directory file
+> > > descriptor would be both more efficient and fail-safe.
+> > >
+> > > [1] as a separate matter, it'd be nice to have a batch version of close(2).
+> >
+> > Since /proc is full of gunk,
+>
+> People keep saying /proc is bad, but I haven't seen any serious
+> proposals for a clean replacement. :-)
+>
+> > how about adding more to it and making
+> > the magic symlink of /proc/self/fd for the pidfd to lead to the dirfd
+> > of the /proc entry of the process it maps to, when one uses
+> > O_DIRECTORY while opening it? Otherwise, it behaves as it does today.
+> > It would be equivalent to opening the proc entry with usual access
+> > restrictions (and hidepid made to work) but without the races, and
+> > because for processes outside your and children pid ns, it shouldn't
+> > work anyway, and since they wouldn't have their entry on this procfs
+> > instance, it would all just fit in nicely?
+>
+> Thanks. That'll work. It's a bit magical, but /proc/self/fd is magical
+> anyway, so that's okay.
 
-The AMD64 EDAC module current hardcodes the EDAC channel layer size
-(count) to two. Future AMD systems may have more channels than this.
-
-Set the EDAC channel layer size equal to the maximum number of channels
-possible for the system. On Family 17h and later, this is set in the
-num_umcs variable. Older systems will continue to use two as the
-default.
-
-Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
----
- drivers/edac/amd64_edac.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/edac/amd64_edac.c b/drivers/edac/amd64_edac.c
-index b7617fad282c..4c0239aeff2f 100644
---- a/drivers/edac/amd64_edac.c
-+++ b/drivers/edac/amd64_edac.c
-@@ -3357,8 +3357,14 @@ static int init_one_instance(unsigned int nid)
- 	 * Always allocate two channels since we can have setups with DIMMs on
- 	 * only one channel. Also, this simplifies handling later for the price
- 	 * of a couple of KBs tops.
-+	 *
-+	 * On Fam17h+, the number of controllers may be greater than two. So set
-+	 * the size equal to the maximum number of UMCs.
- 	 */
--	layers[1].size =3D 2;
-+	if (pvt->fam >=3D 0x17)
-+		layers[1].size =3D num_umcs;
-+	else
-+		layers[1].size =3D 2;
- 	layers[1].is_virt_csrow =3D false;
-=20
- 	mci =3D edac_mc_alloc(nid, ARRAY_SIZE(layers), layers, 0);
---=20
-2.17.1
-
+Please don't do that. /proc/$pid/fd refers to the set of file
+descriptors the process has open, and semantically doesn't have much
+to do with the identity of the process. If you want to have a procfs
+directory entry for getting a pidfd, please add a new entry. (Although
+I don't see the point in adding a new procfs entry for this when you
+could instead have an ioctl or syscall operating on the procfs
+directory fd.)
