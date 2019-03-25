@@ -2,188 +2,74 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD1A4C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 06:48:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11BD3C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 06:48:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71969213F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 06:48:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6C9320854
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 06:48:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="olO/J+sa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729778AbfCYGsa convert rfc822-to-8bit (ORCPT
+        id S1729803AbfCYGse (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 02:48:30 -0400
-Received: from tyo161.gate.nec.co.jp ([114.179.232.161]:44181 "EHLO
-        tyo161.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729373AbfCYGs3 (ORCPT
+        Mon, 25 Mar 2019 02:48:34 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:41402 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729373AbfCYGsd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 02:48:29 -0400
-Received: from mailgate01.nec.co.jp ([114.179.233.122])
-        by tyo161.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x2P6lbm1014545
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Mon, 25 Mar 2019 15:47:37 +0900
-Received: from mailsv02.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
-        by mailgate01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x2P6lbhg010691;
-        Mon, 25 Mar 2019 15:47:37 +0900
-Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
-        by mailsv02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x2P6j38q020969;
-        Mon, 25 Mar 2019 15:47:37 +0900
-Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.138] [10.38.151.138]) by mail02.kamome.nec.co.jp with ESMTP id BT-MMP-3639919; Mon, 25 Mar 2019 15:47:17 +0900
-Received: from BPXM12GP.gisp.nec.co.jp ([10.38.151.204]) by
- BPXC10GP.gisp.nec.co.jp ([10.38.151.138]) with mapi id 14.03.0319.002; Mon,
- 25 Mar 2019 15:47:16 +0900
-From:   Junichi Nomura <j-nomura@ce.jp.nec.com>
-To:     Dave Young <dyoung@redhat.com>
-CC:     "fanc.fnst@cn.fujitsu.com" <fanc.fnst@cn.fujitsu.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+        Mon, 25 Mar 2019 02:48:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=8rpLasmbiJ7ziHUN94ZL8fhLEAosgWo5wBt1r3c4Zdk=; b=olO/J+sa95d9F2zTUgBRzSXLN
+        9AaPeoWDInp4AMVdQQFBCHPvMlB6B1/HWNrHsAKGB/5lqNGA0pFq264PYME9Ka0JHmWk7JBdaJsJE
+        Dhf5jEPglVdhBQQfqd+i0cqqqnEmSf2iBWffgkJDdKUGJsl6ypRMG6V1CV1GajdaqeM6ma9kpJAg4
+        8aiRnb8JDedkf9Cw4jXrCoKqimL6EPQdc6AilTmnDVkwpydyYD9mNt+lKvx1uIxX3sEMjumnFcqBM
+        KsPfwCWLn+YlxppFnQWnzXzf6Uai5O2ttzhdwIyJBbiI8A8ChU6t2owfBchQhX5I45JZSwuKiWrml
+        1u/ZujpBA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h8JPG-00018s-TX; Mon, 25 Mar 2019 06:48:26 +0000
+Date:   Sun, 24 Mar 2019 23:48:26 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Alan Kao <alankao@andestech.com>
+Cc:     Anup Patel <Anup.Patel@wdc.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Borislav Petkov" <bp@alien8.de>, "bp@suse.de" <bp@suse.de>
-Subject: Re: [PATCH] x86/boot: Use EFI setup data if provided
-Thread-Topic: [PATCH] x86/boot: Use EFI setup data if provided
-Thread-Index: AQHU4J7q4uHsPFz2IEST45iCmNXrz6YXLkgAgAO8tgCAAF1DAIAABQmAgAAHwoA=
-Date:   Mon, 25 Mar 2019 06:47:16 +0000
-Message-ID: <bcb5bd29-a3b8-e42d-8da7-a8501f695c21@ce.jp.nec.com>
-References: <20190322110342.GA16202@jeru.linux.bs1.fc.nec.co.jp>
- <20190322152328.GD12472@zn.tnic>
- <20190325002740.GA6637@jeru.linux.bs1.fc.nec.co.jp>
- <20190325060128.GB9385@dhcp-128-65.nay.redhat.com>
- <20190325061929.GC9385@dhcp-128-65.nay.redhat.com>
-In-Reply-To: <20190325061929.GC9385@dhcp-128-65.nay.redhat.com>
-Accept-Language: en-US, ja-JP
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.34.125.85]
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-ID: <DF65BB6FE75B984091147D2A297E7562@gisp.nec.co.jp>
-Content-Transfer-Encoding: 8BIT
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
+Subject: Re: [PATCH v2] RISC-V: Always compile mm/init.c with cmodel=medany
+Message-ID: <20190325064826.GA29111@infradead.org>
+References: <20190325033648.16171-1-anup.patel@wdc.com>
+ <20190325052550.GA30996@andestech.com>
 MIME-Version: 1.0
-X-TM-AS-MML: disable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190325052550.GA30996@andestech.com>
+User-Agent: Mutt/1.9.2 (2017-12-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/25/19 3:19 PM, Dave Young wrote:
-> On 03/25/19 at 02:01pm, Dave Young wrote:
->> On 03/25/19 at 12:27am, Junichi Nomura wrote:
->>> On Fri, Mar 22, 2019 at 04:23:28PM +0100, Borislav Petkov wrote:
->>>> On Fri, Mar 22, 2019 at 11:03:43AM +0000, Junichi Nomura wrote:
->>>>> Commit 3a63f70bf4c3a ("x86/boot: Early parse RSDP and save it in
->>>>> boot_params") broke kexec boot on EFI systems.  efi_get_rsdp_addr()
->>>>> in the early parsing code tries to search RSDP from EFI table but
->>>>> whose address is virtual.
->>>>>
->>>>> Since kexec(1) provides physical address of config_table via boot_params,
->>>>> efi_get_rsdp_addr() should look for setup_data in the same way as
->>>>> efi_systab_init() in arch/x86/platform/efi/efi.c does.
->>>>
->>>> If the kexec kernel should continue to use efi_systab_init() then you
->>>> should make efi_get_rsdp_addr() exit early in the kexec-ed kernel.
->>>
->>> I'm not sure which way kexec devel is going. Added kexec list.
->>> Here is the version that exits early in efi_get_rsdp_addr().
->>>
->>> [PATCH] x86/boot: Don't try to search RSDP from EFI when kexec-booted
->>>
->>> Commit 3a63f70bf4c3a ("x86/boot: Early parse RSDP and save it in
->>> boot_params") broke kexec boot on EFI systems.  efi_get_rsdp_addr()
->>> in the early parsing code tries to search RSDP from EFI table but
->>> whose address is virtual.
->>>
->>> Normally kexec(1) provides physical address of config_table via boot_params
->>> and EFI code uses that during initialization.
->>> For the early boot code, we just exit efi_get_rsdp_addr() early if the kernel
->>> is booted by kexec.
->>>
->>> Fixes: 3a63f70bf4c3a ("x86/boot: Early parse RSDP and save it in boot_params")
->>> Signed-off-by: Jun'ichi Nomura <j-nomura@ce.jp.nec.com>
->>> Cc: Chao Fan <fanc.fnst@cn.fujitsu.com>
->>> Cc: Borislav Petkov <bp@suse.de>
->>>
->>> diff --git a/arch/x86/boot/compressed/acpi.c b/arch/x86/boot/compressed/acpi.c
->>> index 0ef4ad5..1cefc43 100644
->>> --- a/arch/x86/boot/compressed/acpi.c
->>> +++ b/arch/x86/boot/compressed/acpi.c
->>> @@ -44,6 +44,24 @@ static acpi_physical_address get_acpi_rsdp(void)
->>>  	return addr;
->>>  }
->>>  
->>> +static bool is_kexec_booted(void)
->>> +{
->>> +	struct setup_data *data;
->>> +
->>> +	/*
->>> +	 * kexec-tools provides EFI setup data so that kexec-ed kernel
->>> +	 * can find proper tables.
->>> +	 */
->>> +	data = (struct setup_data *) boot_params->hdr.setup_data;
->>> +	while (data) {
->>> +		if (data->type == SETUP_EFI)
->>> +			return true;
->>> +		data = (struct setup_data *) data->next;
->>> +	}
->>> +
->>> +	return false;
->>> +}
->>> +
->>>  /* Search EFI system tables for RSDP. */
->>>  static acpi_physical_address efi_get_rsdp_addr(void)
->>>  {
->>> @@ -57,6 +75,10 @@ static acpi_physical_address efi_get_rsdp_addr(void)
->>>  	int size, i;
->>>  	char *sig;
->>>  
->>> +	/* If the system is kexec-booted, poking EFI systab may not work. */
->>> +	if (is_kexec_booted())
->>> +		return 0;
->>> +
->>>  	ei = &boot_params->efi_info;
->>>  	sig = (char *)&ei->efi_loader_signature;
->>>  
->>>
->>> _______________________________________________
->>> kexec mailing list
->>> kexec@lists.infradead.org
->>> http://lists.infradead.org/mailman/listinfo/kexec
->>
->> Good catch, this way looks good to me.  But the function
->> is_kexec_booted can be compiled when #ifdef CONFIG_EFI
->>
->> Otherwise:
->>
->> Acked-by: Dave Young <dyoung@redhat.com>
->>
+On Mon, Mar 25, 2019 at 01:25:50PM +0800, Alan Kao wrote:
+> Hi Anup,
 > 
-> Hold on, I replied too quick.  One question is does the above patch
-> passed your test?   It can workaround and skip the wrong phys addr
-> issue, but the acpi early parsing still fails because efi_get_rsdp_addr
-> return 0? 
+> Sorry for being late to the party.  I think one more thing should
+> move together with setup_vm():
 
-The patch works for me.
-Early parsing fails with the 2nd patch but it boots fine.
-EFI initialization is done later without boot_params->acpi_rsdp_addr.
-I think that's how v5.0 and earlier kernels work.
-
-> If this is the case you may need go with your old patch.
-> 
-> I think normally people do not see this bug, because kernel will set the
-> rsdp in boot_params->acpi_rsdp_addr.  Maybe you are testing with
-
-I think it's only done for file-based kexec interface.
-
-> different kernel versions, eg.
-> 
-> old kernel kexec to new kernel.
-> 
-> And the old kernel does not set boot_params->acpi_rsdp_addr
-> 
-> Is this correct?
-
-I'm testing kexec from v5.1-rc1 to v5.1-rc1, i.e. same kernel.
-
--- 
-Jun'ichi Nomura, NEC Corporation / NEC Solution Innovators, Ltd.
+Ah, I wonded about that yesterday but wasn't sure.  Maybe notrace
+is a little cleaner?  Either way we should probably document both
+the mcmodel and notrace assumptions in source comments for the next
+person touching this code.
