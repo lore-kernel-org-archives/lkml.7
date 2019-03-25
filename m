@@ -2,238 +2,104 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E0B5C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 09:15:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92CFFC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 09:16:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62EF72087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 09:15:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C4B12085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 09:16:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730141AbfCYJPs (ORCPT
+        id S1730214AbfCYJQX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 05:15:48 -0400
-Received: from www62.your-server.de ([213.133.104.62]:36888 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730076AbfCYJPr (ORCPT
+        Mon, 25 Mar 2019 05:16:23 -0400
+Received: from mout.kundenserver.de ([212.227.126.130]:50689 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730076AbfCYJQW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 05:15:47 -0400
-Received: from [78.46.172.3] (helo=sslproxy06.your-server.de)
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1h8Lhm-0003Zi-55; Mon, 25 Mar 2019 10:15:42 +0100
-Received: from [178.197.248.24] (helo=linux.home)
-        by sslproxy06.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1h8Lhl-000PoA-U8; Mon, 25 Mar 2019 10:15:42 +0100
-Subject: Re: KASAN: use-after-free Read in path_lookupat
-To:     Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     syzbot <syzbot+7a8ba368b47fdefca61e@syzkaller.appspotmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-References: <0000000000006946d2057bbd0eef@google.com>
- <CAHk-=wiijJMTw=nTj_ED+YWMCrvHzh3ezfVYRxvzcW6+trgyPA@mail.gmail.com>
- <20190325045744.GK2217@ZenIV.linux.org.uk>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <717eaff9-1f49-28f3-bbb6-c8f14ebbe03b@iogearbox.net>
-Date:   Mon, 25 Mar 2019 10:15:40 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.3.0
+        Mon, 25 Mar 2019 05:16:22 -0400
+Received: from [192.168.178.52] ([109.104.40.77]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MIxBa-1hOMOB0cyg-00KLf7; Mon, 25 Mar 2019 10:15:53 +0100
+Subject: Re: [PATCH] vc04_services: vchiq_arm: fix a NULL pointer dereference
+To:     Kangjie Lu <kjlu@umn.edu>
+Cc:     devel@driverdev.osuosl.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Phil Elwell <phil@raspberrypi.org>,
+        linux-kernel@vger.kernel.org,
+        =?UTF-8?Q?Tobias_B=c3=bcttner?= <tobias.buettner@fau.de>,
+        Eric Anholt <eric@anholt.net>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        linux-rpi-kernel@lists.infradead.org, pakki001@umn.edu,
+        Dominic Braun <inf.braun@fau.de>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        linux-arm-kernel@lists.infradead.org
+References: <20190324224331.1163-1-kjlu@umn.edu>
+From:   Stefan Wahren <stefan.wahren@i2se.com>
+Message-ID: <61d81106-ec5a-c5a1-4757-85cdc7944f41@i2se.com>
+Date:   Mon, 25 Mar 2019 10:15:50 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <20190325045744.GK2217@ZenIV.linux.org.uk>
+In-Reply-To: <20190324224331.1163-1-kjlu@umn.edu>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.100.2/25399/Mon Mar 25 08:46:48 2019)
+Content-Language: en-US
+X-Provags-ID: V03:K1:9uuwymMZl51TYvO3F/CzGTAwI2xnDWTNJqMa/098EHmEjagAuY2
+ DOkR7ftkM3w5K5UAZCWkafD0lMX/aq6vvfZrLQm6OVmWLREKl2pdXBIZMS1YcNKwjt6TWUA
+ hP3y7wox8lKDDYzdOI6sxF1niQwQwk3+HR3mp98pR4GhVsOdfEXYAU+v2p9x6jrIkkWBfTS
+ Crs1/7U3Oo2I4rPx4ilQw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:fNl+24C9bGM=:wvZgp9etrvla3y5funjoBy
+ ziTKAy+5ERZWlBxdjR9+MZkjBpfEeWIFm2Nj7BTSgpPqREBOS/sZmfFthF7/NkkLmBrlBMlUk
+ 4chooValJDKgZNnbf5qUTUCM1vpMD+g/cg6EhRcmwaCx9N32r1RuI85K4BEFPFzA7RqpVZdF4
+ 9MPUso27U2E2ER1TIvTzFALwLelVhGTSaecJfqvLevgb0VnTuz0zajsMVn/+ZBHmollzaiQt2
+ II73yfip9fylWfFsxkHWbu6q+gBN/eDlWfXYvzcr895AQUeNlJTTwzd+Kme/puZI+IBHq/5zM
+ 7y92/DJfJkzP4d+lj6tzOrveh06naGrKhQtIdbO1BJCo7lK5MRvDXsQ0d86ypVTFssgS8W8Ip
+ GReprMspPg9nhesv2H3FExr8x86puq6iy4AyKpAMDx/Klk70PK+x3g1gqrhK50RfN5knyrzDN
+ P7wxMsv2s7yDAjIrT+pLYn2Igf99rTxyePX0phvuYl+sXKYGQauXYv863F96H9vJ8lQi2e3+R
+ ZTTaN6QUY0r/37wtsT05yJkbhHI5Z7ssstd5qVVh632pXHGtXk6T5slfz9exp1X9qLRrbpY10
+ 4vmm3egmfO0ZfaPhlPNL/GcnvJQjl7FSq4h1ZTrV6YoIP50SnjE8eH1kAJnmaV1K7uxLeJEW3
+ jUhU96S2sVgb+LS0W7ZTgoQJm/eegFf40Xa4GrurbJoa68pH1nPabObjbi2mD96kV7xQ/9HpL
+ 2vIpVeMXUnmgsn+V43NO/+hG00MBR2Vdy+OLXe4tSRVI2+dUUsCbJtH5jHQ=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Al, hi Linus,
+Hi Kangjie,
 
-On 03/25/2019 05:57 AM, Al Viro wrote:
-> On Sun, Mar 24, 2019 at 06:23:24PM -0700, Linus Torvalds wrote:
-> 
->> Al, comments? At the very least, if we don't make
->> simple_symlink_inode_operations() do that, we should have a *big*
->> comment that if it's not part of the inode data, it needs to be
->> RCU-delayed.
-> 
-> simple_symlink_inode_operations is red herring here - what matters
-> is ->i_link being set; those have ->get_link == simple_get_link,
-> but note that it is *not* called:
->         res = inode->i_link;
->         if (!res) {
->                 const char * (*get)(struct dentry *, struct inode *,
->                                 struct delayed_call *);
->                 get = inode->i_op->get_link;
->                 if (nd->flags & LOOKUP_RCU) {
->                         res = get(NULL, inode, &last->done);
->                         if (res == ERR_PTR(-ECHILD)) {
->                                 if (unlikely(unlazy_walk(nd)))
->                                         return ERR_PTR(-ECHILD);
->                                 res = get(dentry, inode, &last->done);
->                         }
->                 } else {
->                         res = get(dentry, inode, &last->done);
->                 }
->                 if (IS_ERR_OR_NULL(res))
->                         return res;
-> 	}
-> for traversal and similar for readlink(2).  And we certainly don't want
-> to allocate copies in those cases - it would fuck RCU traversals for
-> all fast symlinks (i.e. for the majority of symlinks out there).
-> 
-> Actual situation:
-> 
-> * shmem, erofs: OK, kfree() from the thing ->destroy_inode() is calling via
-> call_rcu().
-> * befs, ext2, ext4, freevxfs, jfs, orangefs, ufs: OK, coallocated with inode
-> * debugfs: broken
-> * jffs2: broken, freeing of f->target should be moved to jffs2_i_callback().
-> * ubifs: broken, ought to move kfree(ui->data); from ubifs_destroy_inode() to
-> ubifs_i_callback()
-> * ceph: broken, needs to move kfree(ci->symlink) from ceph_destroy_inode()
-> to ceph_i_callback().
-> * bpf: broken
-> 
-> So we have 5 broken cases, all with the same kind of fix: move freeing
-> into the RCU-delayed part of ->destroy_inode(); for debugfs and bpf
-> that requires adding ->alloc_inode()/->destroy_inode(), rather than
-> relying upon the defaults from fs/inode.c
+Am 24.03.19 um 23:43 schrieb Kangjie Lu:
+> When kzalloc fails, "platform_state->inited = 1" is a NULL pointer
+> dereference. The fix returns VCHIQ_ERROR in case it failed to
+> avoid NULL pointer dereference.
+>
+> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+please add a proper fixes tag.
+> ---
+>  .../staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c  | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
+> index dd4898861b83..0f12fe617575 100644
+> --- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
+> +++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
+> @@ -209,6 +209,8 @@ vchiq_platform_init_state(struct vchiq_state *state)
+>  	struct vchiq_2835_state *platform_state;
+>  
+>  	state->platform_state = kzalloc(sizeof(*platform_state), GFP_KERNEL);
+> +	if (!state->platform_state)
+> +		return VCHIQ_ERROR;
 
-I believe I copied that logic from one of the other fs'es back then, sigh.
-Thanks for the analysis and hints for fixing. Would the below (only compile
-tested for now) look reasonable to you? I believe there is no other way
-around than to add our own inode cache, but so be it. The freeing of the
-i_link is then RCU-deferred in bpf_destroy_inode_deferred():
+this change is good, but vchiq_init_state doesn't bail out immediately
+in case vchiq_platform_init_state fails.
 
- kernel/bpf/inode.c | 57 +++++++++++++++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 52 insertions(+), 5 deletions(-)
+Could you please fix that, too?
 
-diff --git a/kernel/bpf/inode.c b/kernel/bpf/inode.c
-index 2ada5e2..69fcaf6 100644
---- a/kernel/bpf/inode.c
-+++ b/kernel/bpf/inode.c
-@@ -80,6 +80,47 @@ static const struct inode_operations bpf_dir_iops;
- static const struct inode_operations bpf_prog_iops = { };
- static const struct inode_operations bpf_map_iops  = { };
+Thanks Stefan
 
-+static struct kmem_cache *bpf_inode_cache __read_mostly;
-+
-+struct inode *bpf_alloc_inode(struct super_block *sb)
-+{
-+	return kmem_cache_alloc(bpf_inode_cache, GFP_KERNEL);
-+}
-+
-+static void bpf_destroy_inode_deferred(struct rcu_head *head)
-+{
-+	struct inode *inode = container_of(head, struct inode, i_rcu);
-+
-+	if (S_ISLNK(inode->i_mode))
-+		kfree(inode->i_link);
-+	kmem_cache_free(bpf_inode_cache, inode);
-+}
-+
-+static void bpf_destroy_inode(struct inode *inode)
-+{
-+	call_rcu(&inode->i_rcu, bpf_destroy_inode_deferred);
-+}
-+
-+static void bpf_inode_init_once(void *inode)
-+{
-+	inode_init_once(inode);
-+}
-+
-+static int bpf_init_inode_cache(void)
-+{
-+	bpf_inode_cache = kmem_cache_create("bpf_inode_cache",
-+					    sizeof(struct inode), 0,
-+					    (SLAB_RECLAIM_ACCOUNT|
-+					     SLAB_MEM_SPREAD|SLAB_ACCOUNT),
-+					    bpf_inode_init_once);
-+	return !bpf_inode_cache ? -ENOMEM : 0;
-+}
-+
-+static void bpf_destroy_inode_cache(void)
-+{
-+	kmem_cache_destroy(bpf_inode_cache);
-+}
-+
- static struct inode *bpf_get_inode(struct super_block *sb,
- 				   const struct inode *dir,
- 				   umode_t mode)
-@@ -561,8 +602,6 @@ static void bpf_evict_inode(struct inode *inode)
- 	truncate_inode_pages_final(&inode->i_data);
- 	clear_inode(inode);
-
--	if (S_ISLNK(inode->i_mode))
--		kfree(inode->i_link);
- 	if (!bpf_inode_type(inode, &type))
- 		bpf_any_put(inode->i_private, type);
- }
-@@ -580,6 +619,8 @@ static int bpf_show_options(struct seq_file *m, struct dentry *root)
- }
-
- static const struct super_operations bpf_super_ops = {
-+	.alloc_inode	= bpf_alloc_inode,
-+	.destroy_inode	= bpf_destroy_inode,
- 	.statfs		= simple_statfs,
- 	.drop_inode	= generic_delete_inode,
- 	.show_options	= bpf_show_options,
-@@ -671,13 +712,19 @@ static int __init bpf_init(void)
- {
- 	int ret;
-
--	ret = sysfs_create_mount_point(fs_kobj, "bpf");
-+	ret = bpf_init_inode_cache();
- 	if (ret)
- 		return ret;
--
-+	ret = sysfs_create_mount_point(fs_kobj, "bpf");
-+	if (ret) {
-+		bpf_destroy_inode_cache();
-+		return ret;
-+	}
- 	ret = register_filesystem(&bpf_fs_type);
--	if (ret)
-+	if (ret) {
- 		sysfs_remove_mount_point(fs_kobj, "bpf");
-+		bpf_destroy_inode_cache();
-+	}
-
- 	return ret;
- }
--- 
-2.9.5
-
->> Or maybe we could add a final inode callback function for "rcu_free"
->> that is called as the RCU-delayed freeing of the inode itself happens?
->> And then people could hook into that for freeing the inode->i_link
->> data.
-> 
-> You mean, split ->destroy_inode() into immediate and RCU-delayed parts?
-> There are filesystems where both parts are non-empty - we can't just
-> switch all ->destroy_inode() work to call_rcu().
-> 
->> So many choices.. But the current situation seems unnecessarily
->> complex for the filesystem, and isn't really documented.
->>
->> Our documentation currently says for get_link(): "If the body won't go
->> away until the inode is gone, nothing else is needed", which is wrong
->> (or at least very misleading, since the last "inode is gone" callback
->> we have is that evict() function).
-> 
-> s/inode is gone/struct inode is freed/, but it's obviously not clear
-> enough.
-> 
+>  	platform_state = (struct vchiq_2835_state *)state->platform_state;
+>  
+>  	platform_state->inited = 1;
 
