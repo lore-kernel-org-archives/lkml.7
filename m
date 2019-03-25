@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF8F5C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:09:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED362C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:10:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CC402082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:09:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B383420823
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:10:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="P1laP61N"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bcDIpWgL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730363AbfCYVJq (ORCPT
+        id S1730437AbfCYVKB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 17:09:46 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:35715 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729569AbfCYVJp (ORCPT
+        Mon, 25 Mar 2019 17:10:01 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:35914 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729569AbfCYVKA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 17:09:45 -0400
-Received: by mail-pl1-f194.google.com with SMTP id p19so535004plo.2
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 14:09:45 -0700 (PDT)
+        Mon, 25 Mar 2019 17:10:00 -0400
+Received: by mail-pg1-f194.google.com with SMTP id r124so7174908pgr.3
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 14:10:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=W9paaqLgIowNzDLuzsh4dINSOzA1yebQK8v3bWaDjdc=;
-        b=P1laP61NRjiV+8uruabKr5ViMurK1g4wGK08sTbggYyRHLHjIezwWfeHeCtbrKfMAt
-         Fr0Ks5BCufh6psqZi+PbLVHX7UMbM9ufsf8xY/5AD0rshPCMUBdprL+2wAVVHm+EO3+d
-         lzVDnxl/7uxx7xRUeha5ndCF2rnsTwrGETga+CB8R7qbvs1Qz/WWWmszirN1u4SG7TlP
-         Ay5vdldwRuoGR451+HSUwz8lXpm8fL++YIW6k8rCX5A9ERzrBGiahodYsu+VhY27uKy9
-         N2f0xb4QRjlES2UXgSLH8m0PCv2cNlpQls1x9xDigWzhVyzLvIm5YdVEOsgFR9fNzO9b
-         kOOA==
+        bh=qopcgsVUd5ssY+n+hvqgdW7SDAg5pHr/Qm0Sgeo6Pr0=;
+        b=bcDIpWgL9K1dUH1jXmT3fVasyTpQ7fxfhLBI0Vmb/lDY/5ZKyINRIKhFEy0F9eL91R
+         rW2mIXEdesMZ0SwzlxpK/UnHxNyn3xrnqUxSu+hu+/W727Pv9bmxxzSfN2U57uq4nk9v
+         7gSAbB4HOuPfHrpH3hP7dKxwQiQKNv8CvoIL/E+cdOmOKX931naCoyMFDLB06odpDm1x
+         gAt+/cmA7xG10wB7ur68CXnjwzrtTZCHroMS5uUOJjUuF1Uk5A75+DjAtJvgdwNyCCby
+         kA8gz07Blfss7eu2laghmGeWtuVjGMVaaeXmJlONwoQl4MsQGvJFtomErc0yDuWs1fh7
+         2Ltg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=W9paaqLgIowNzDLuzsh4dINSOzA1yebQK8v3bWaDjdc=;
-        b=e8cQyc1DSLPAdP69DTyaMOsg1HEVIvRa1f+uUqipNqF0ZmgFL1011p/meDoeoBpRCY
-         K8nijTLHPEaPviYVDweRRVcFFmn3Vv18tqoXeB5S2EFKKo1ji9/F/9jPkXhd4ROyluwU
-         BV0CYoIOElWs9nAd1jpjOpA85mb4/jD9lMiiA6bAHFfIdaxH4TVKYSMY3E4UzhKijhB/
-         dug0fFsqZEaFmwRFpNki+8w8/tD/BCsBzA9z4IMua90PPMwTpICb2Asx0akL4fkIliPZ
-         GiADMicOGAKLpSRjVCyTmw/9CvM8QyUcfFdgYoKvgQlHPT33orgos7QyjU2WzglFtS5/
-         +4zg==
-X-Gm-Message-State: APjAAAUqBJhOlBOlxbe39EsFu7unUgD8rXWOr6fMp9euv8R04AWQhI7W
-        tC52tSwh2T+M3Tv4qxvqr3OzXrhXq8E=
-X-Google-Smtp-Source: APXvYqwhMqb1qrtWBuiQ/VGGZhGRe4DdBxWq6vroFReB2rdal1xKheGZKQxqoeFIy8oZhVHGtyJZIw==
-X-Received: by 2002:a17:902:8c81:: with SMTP id t1mr27762950plo.309.1553548184641;
-        Mon, 25 Mar 2019 14:09:44 -0700 (PDT)
+        bh=qopcgsVUd5ssY+n+hvqgdW7SDAg5pHr/Qm0Sgeo6Pr0=;
+        b=brRcTJM9bKDJfNLysTBNGABUVKz1jHJvYB76UWgKEwKQ0V4/lkHS810ja1GKnchRUK
+         vV5h0fIiEKW5+DWt3ZlCQpevGTeHk+YLYcx5Rpjpkp7hyjy1zSD67UHSIN54ODC9wFbB
+         isfYfdLBdvi2IlwBLtBq39d5HqeFytB+qTDGFg6GEMi1wztbWP0KcL4zScQ7omctGTT4
+         VOrsma8ht2iE/M7mZGdPib4wt7FU2oSbPxaCv1vDH5R8CaYZUYreOFGLf/5xdA6fR8M5
+         GqZWfdp01t/EmhKucW3Cb33CjG6o+AoAFYKZTbS1ZrtMfy6+Pj67Ytc4nxdnt1gPN+VG
+         rt4g==
+X-Gm-Message-State: APjAAAXs3NA6KAFJPFFZ2uQUmbmEJ9W6B58mTqVGCcKYSeQ29o/QFd8M
+        FIMOWHDczIgbdfB0viB3aELPmg==
+X-Google-Smtp-Source: APXvYqzHMBAOUsIdSYY/UulX3THsIrCOKLrTmno6p5EXN/6/JBajMEOPl5vQuGVSLFI1P6Tmz0ClCA==
+X-Received: by 2002:a62:121c:: with SMTP id a28mr25734989pfj.58.1553548199703;
+        Mon, 25 Mar 2019 14:09:59 -0700 (PDT)
 Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id y12sm13213948pgq.64.2019.03.25.14.09.26
+        by smtp.gmail.com with ESMTPSA id k72sm46194475pfb.122.2019.03.25.14.09.57
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 25 Mar 2019 14:09:41 -0700 (PDT)
-Date:   Mon, 25 Mar 2019 14:09:25 -0700
+        Mon, 25 Mar 2019 14:09:58 -0700 (PDT)
+Date:   Mon, 25 Mar 2019 14:09:56 -0700
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
 To:     Vivek Gautam <vivek.gautam@codeaurora.org>
 Cc:     joro@8bytes.org, andy.gross@linaro.org, will.deacon@arm.com,
@@ -64,15 +64,15 @@ Cc:     joro@8bytes.org, andy.gross@linaro.org, will.deacon@arm.com,
         linux-arm-kernel@lists.infradead.org, david.brown@linaro.org,
         tfiga@chromium.org, swboyd@chromium.org,
         linux-kernel@vger.kernel.org, robdclark@gmail.com
-Subject: Re: [PATCH v2 1/4] firmware: qcom_scm-64: Add atomic version of
- qcom_scm_call
-Message-ID: <20190325210925.GA2899@builder>
+Subject: Re: [PATCH v2 2/4] firmware/qcom_scm: Add atomic version of io
+ read/write APIs
+Message-ID: <20190325210956.GB2899@builder>
 References: <20180910062551.28175-1-vivek.gautam@codeaurora.org>
- <20180910062551.28175-2-vivek.gautam@codeaurora.org>
+ <20180910062551.28175-3-vivek.gautam@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20180910062551.28175-2-vivek.gautam@codeaurora.org>
+In-Reply-To: <20180910062551.28175-3-vivek.gautam@codeaurora.org>
 User-Agent: Mutt/1.10.0 (2018-05-17)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -81,12 +81,8 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Sun 09 Sep 23:25 PDT 2018, Vivek Gautam wrote:
 
-> There are scnenarios where drivers are required to make a
-> scm call in atomic context, such as in one of the qcom's
-> arm-smmu-500 errata [1].
-> 
-> [1] ("https://source.codeaurora.org/quic/la/kernel/msm-4.9/
->       tree/drivers/iommu/arm-smmu.c?h=msm-4.9#n4842")
+> Add atomic versions of qcom_scm_io_readl/writel to enable
+> reading/writing secure registers from atomic context.
 > 
 > Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
 
@@ -96,179 +92,132 @@ Regards,
 Bjorn
 
 > ---
->  drivers/firmware/qcom_scm-64.c | 136 ++++++++++++++++++++++++++++-------------
->  1 file changed, 92 insertions(+), 44 deletions(-)
+>  drivers/firmware/qcom_scm-32.c | 12 ++++++++++++
+>  drivers/firmware/qcom_scm-64.c | 32 ++++++++++++++++++++++++++++++++
+>  drivers/firmware/qcom_scm.c    | 12 ++++++++++++
+>  drivers/firmware/qcom_scm.h    |  4 ++++
+>  include/linux/qcom_scm.h       |  4 ++++
+>  5 files changed, 64 insertions(+)
 > 
+> diff --git a/drivers/firmware/qcom_scm-32.c b/drivers/firmware/qcom_scm-32.c
+> index 4e24e591ae74..7293e5efad69 100644
+> --- a/drivers/firmware/qcom_scm-32.c
+> +++ b/drivers/firmware/qcom_scm-32.c
+> @@ -627,3 +627,15 @@ int __qcom_scm_io_writel(struct device *dev, phys_addr_t addr, unsigned int val)
+>  	return qcom_scm_call_atomic2(QCOM_SCM_SVC_IO, QCOM_SCM_IO_WRITE,
+>  				     addr, val);
+>  }
+> +
+> +int __qcom_scm_io_readl_atomic(struct device *dev, phys_addr_t addr,
+> +			       unsigned int *val)
+> +{
+> +	return -ENODEV;
+> +}
+> +
+> +int __qcom_scm_io_writel_atomic(struct device *dev, phys_addr_t addr,
+> +				unsigned int val)
+> +{
+> +	return -ENODEV;
+> +}
 > diff --git a/drivers/firmware/qcom_scm-64.c b/drivers/firmware/qcom_scm-64.c
-> index 688525dd4aee..3a8c867cdf51 100644
+> index 3a8c867cdf51..6bf55403f6e3 100644
 > --- a/drivers/firmware/qcom_scm-64.c
 > +++ b/drivers/firmware/qcom_scm-64.c
-> @@ -70,32 +70,71 @@ static DEFINE_MUTEX(qcom_scm_lock);
->  #define FIRST_EXT_ARG_IDX 3
->  #define N_REGISTER_ARGS (MAX_QCOM_SCM_ARGS - N_EXT_QCOM_SCM_ARGS + 1)
->  
-> -/**
-> - * qcom_scm_call() - Invoke a syscall in the secure world
-> - * @dev:	device
-> - * @svc_id:	service identifier
-> - * @cmd_id:	command identifier
-> - * @desc:	Descriptor structure containing arguments and return values
-> - *
-> - * Sends a command to the SCM and waits for the command to finish processing.
-> - * This should *only* be called in pre-emptible context.
-> -*/
-> -static int qcom_scm_call(struct device *dev, u32 svc_id, u32 cmd_id,
-> -			 const struct qcom_scm_desc *desc,
-> -			 struct arm_smccc_res *res)
-> +static void __qcom_scm_call_do(const struct qcom_scm_desc *desc,
-> +			       struct arm_smccc_res *res, u32 fn_id,
-> +			       u64 x5, u32 type)
-> +{
-> +	u64 cmd;
-> +	struct arm_smccc_quirk quirk = {.id = ARM_SMCCC_QUIRK_QCOM_A6};
-> +
-> +	cmd = ARM_SMCCC_CALL_VAL(type, qcom_smccc_convention,
-> +				 ARM_SMCCC_OWNER_SIP, fn_id);
-> +
-> +	quirk.state.a6 = 0;
-> +
-> +	do {
-> +		arm_smccc_smc_quirk(cmd, desc->arginfo, desc->args[0],
-> +				    desc->args[1], desc->args[2], x5,
-> +				    quirk.state.a6, 0, res, &quirk);
-> +
-> +		if (res->a0 == QCOM_SCM_INTERRUPTED)
-> +			cmd = res->a0;
-> +
-> +	} while (res->a0 == QCOM_SCM_INTERRUPTED);
-> +}
-> +
-> +static void qcom_scm_call_do(const struct qcom_scm_desc *desc,
-> +			     struct arm_smccc_res *res, u32 fn_id,
-> +			     u64 x5, bool atomic)
-> +{
-> +	int retry_count = 0;
-> +
-> +	if (!atomic) {
-> +		do {
-> +			mutex_lock(&qcom_scm_lock);
-> +
-> +			__qcom_scm_call_do(desc, res, fn_id, x5,
-> +					   ARM_SMCCC_STD_CALL);
-> +
-> +			mutex_unlock(&qcom_scm_lock);
-> +
-> +			if (res->a0 == QCOM_SCM_V2_EBUSY) {
-> +				if (retry_count++ > QCOM_SCM_EBUSY_MAX_RETRY)
-> +					break;
-> +				msleep(QCOM_SCM_EBUSY_WAIT_MS);
-> +			}
-> +		}  while (res->a0 == QCOM_SCM_V2_EBUSY);
-> +	} else {
-> +		__qcom_scm_call_do(desc, res, fn_id, x5, ARM_SMCCC_FAST_CALL);
-> +	}
-> +}
-> +
-> +static int ___qcom_scm_call(struct device *dev, u32 svc_id, u32 cmd_id,
-> +			    const struct qcom_scm_desc *desc,
-> +			    struct arm_smccc_res *res, bool atomic)
->  {
->  	int arglen = desc->arginfo & 0xf;
-> -	int retry_count = 0, i;
-> +	int i;
->  	u32 fn_id = QCOM_SCM_FNID(svc_id, cmd_id);
-> -	u64 cmd, x5 = desc->args[FIRST_EXT_ARG_IDX];
-> +	u64 x5 = desc->args[FIRST_EXT_ARG_IDX];
->  	dma_addr_t args_phys = 0;
->  	void *args_virt = NULL;
->  	size_t alloc_len;
-> -	struct arm_smccc_quirk quirk = {.id = ARM_SMCCC_QUIRK_QCOM_A6};
-> +	gfp_t flag = atomic ? GFP_ATOMIC : GFP_KERNEL;
->  
->  	if (unlikely(arglen > N_REGISTER_ARGS)) {
->  		alloc_len = N_EXT_QCOM_SCM_ARGS * sizeof(u64);
-> -		args_virt = kzalloc(PAGE_ALIGN(alloc_len), GFP_KERNEL);
-> +		args_virt = kzalloc(PAGE_ALIGN(alloc_len), flag);
->  
->  		if (!args_virt)
->  			return -ENOMEM;
-> @@ -125,33 +164,7 @@ static int qcom_scm_call(struct device *dev, u32 svc_id, u32 cmd_id,
->  		x5 = args_phys;
->  	}
->  
-> -	do {
-> -		mutex_lock(&qcom_scm_lock);
-> -
-> -		cmd = ARM_SMCCC_CALL_VAL(ARM_SMCCC_STD_CALL,
-> -					 qcom_smccc_convention,
-> -					 ARM_SMCCC_OWNER_SIP, fn_id);
-> -
-> -		quirk.state.a6 = 0;
-> -
-> -		do {
-> -			arm_smccc_smc_quirk(cmd, desc->arginfo, desc->args[0],
-> -				      desc->args[1], desc->args[2], x5,
-> -				      quirk.state.a6, 0, res, &quirk);
-> -
-> -			if (res->a0 == QCOM_SCM_INTERRUPTED)
-> -				cmd = res->a0;
-> -
-> -		} while (res->a0 == QCOM_SCM_INTERRUPTED);
-> -
-> -		mutex_unlock(&qcom_scm_lock);
-> -
-> -		if (res->a0 == QCOM_SCM_V2_EBUSY) {
-> -			if (retry_count++ > QCOM_SCM_EBUSY_MAX_RETRY)
-> -				break;
-> -			msleep(QCOM_SCM_EBUSY_WAIT_MS);
-> -		}
-> -	}  while (res->a0 == QCOM_SCM_V2_EBUSY);
-> +	qcom_scm_call_do(desc, res, fn_id, x5, atomic);
->  
->  	if (args_virt) {
->  		dma_unmap_single(dev, args_phys, alloc_len, DMA_TO_DEVICE);
-> @@ -164,6 +177,41 @@ static int qcom_scm_call(struct device *dev, u32 svc_id, u32 cmd_id,
->  	return 0;
+> @@ -558,3 +558,35 @@ int __qcom_scm_io_writel(struct device *dev, phys_addr_t addr, unsigned int val)
+>  	return qcom_scm_call(dev, QCOM_SCM_SVC_IO, QCOM_SCM_IO_WRITE,
+>  			     &desc, &res);
 >  }
+> +
+> +int __qcom_scm_io_readl_atomic(struct device *dev, phys_addr_t addr,
+> +			       unsigned int *val)
+> +{
+> +	struct qcom_scm_desc desc = {0};
+> +	struct arm_smccc_res res;
+> +	int ret;
+> +
+> +	desc.args[0] = addr;
+> +	desc.arginfo = QCOM_SCM_ARGS(1);
+> +
+> +	ret = qcom_scm_call_atomic(dev, QCOM_SCM_SVC_IO, QCOM_SCM_IO_READ,
+> +				   &desc, &res);
+> +	if (ret >= 0)
+> +		*val = res.a1;
+> +
+> +	return ret < 0 ? ret : 0;
+> +}
+> +
+> +int __qcom_scm_io_writel_atomic(struct device *dev, phys_addr_t addr,
+> +				unsigned int val)
+> +{
+> +	struct qcom_scm_desc desc = {0};
+> +	struct arm_smccc_res res;
+> +
+> +	desc.args[0] = addr;
+> +	desc.args[1] = val;
+> +	desc.arginfo = QCOM_SCM_ARGS(2);
+> +
+> +	return qcom_scm_call_atomic(dev, QCOM_SCM_SVC_IO, QCOM_SCM_IO_WRITE,
+> +				    &desc, &res);
+> +}
+> diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
+> index e778af766fae..36da0000b37f 100644
+> --- a/drivers/firmware/qcom_scm.c
+> +++ b/drivers/firmware/qcom_scm.c
+> @@ -365,6 +365,18 @@ int qcom_scm_io_writel(phys_addr_t addr, unsigned int val)
+>  }
+>  EXPORT_SYMBOL(qcom_scm_io_writel);
 >  
-> +/**
-> + * qcom_scm_call() - Invoke a syscall in the secure world
-> + * @dev:	device
-> + * @svc_id:	service identifier
-> + * @cmd_id:	command identifier
-> + * @desc:	Descriptor structure containing arguments and return values
-> + *
-> + * Sends a command to the SCM and waits for the command to finish processing.
-> + * This should *only* be called in pre-emptible context.
-> + */
-> +static int qcom_scm_call(struct device *dev, u32 svc_id, u32 cmd_id,
-> +			 const struct qcom_scm_desc *desc,
-> +			 struct arm_smccc_res *res)
+> +int qcom_scm_io_readl_atomic(phys_addr_t addr, unsigned int *val)
 > +{
-> +	return ___qcom_scm_call(dev, svc_id, cmd_id, desc, res, false);
+> +	return __qcom_scm_io_readl_atomic(__scm->dev, addr, val);
 > +}
+> +EXPORT_SYMBOL(qcom_scm_io_readl_atomic);
 > +
-> +/**
-> + * qcom_scm_call_atomic() - atomic variation of qcom_scm_call()
-> + * @dev:	device
-> + * @svc_id:	service identifier
-> + * @cmd_id:	command identifier
-> + * @desc:	Descriptor structure containing arguments and return values
-> + * @res:	Structure containing results from SMC/HVC call
-> + *
-> + * Sends a command to the SCM and waits for the command to finish processing.
-> + * This should be called in atomic context only.
-> + */
-> +static int qcom_scm_call_atomic(struct device *dev, u32 svc_id, u32 cmd_id,
-> +				const struct qcom_scm_desc *desc,
-> +				struct arm_smccc_res *res)
+> +int qcom_scm_io_writel_atomic(phys_addr_t addr, unsigned int val)
 > +{
-> +	return ___qcom_scm_call(dev, svc_id, cmd_id, desc, res, true);
+> +	return __qcom_scm_io_writel_atomic(__scm->dev, addr, val);
 > +}
+> +EXPORT_SYMBOL(qcom_scm_io_writel_atomic);
 > +
->  /**
->   * qcom_scm_set_cold_boot_addr() - Set the cold boot address for cpus
->   * @entry: Entry point function for the cpus
+>  static void qcom_scm_set_download_mode(bool enable)
+>  {
+>  	bool avail;
+> diff --git a/drivers/firmware/qcom_scm.h b/drivers/firmware/qcom_scm.h
+> index dcd7f7917fc7..bb176107f51e 100644
+> --- a/drivers/firmware/qcom_scm.h
+> +++ b/drivers/firmware/qcom_scm.h
+> @@ -37,6 +37,10 @@ extern void __qcom_scm_cpu_power_down(u32 flags);
+>  #define QCOM_SCM_IO_WRITE		0x2
+>  extern int __qcom_scm_io_readl(struct device *dev, phys_addr_t addr, unsigned int *val);
+>  extern int __qcom_scm_io_writel(struct device *dev, phys_addr_t addr, unsigned int val);
+> +extern int __qcom_scm_io_readl_atomic(struct device *dev, phys_addr_t addr,
+> +				      unsigned int *val);
+> +extern int __qcom_scm_io_writel_atomic(struct device *dev, phys_addr_t addr,
+> +				       unsigned int val);
+>  
+>  #define QCOM_SCM_SVC_INFO		0x6
+>  #define QCOM_IS_CALL_AVAIL_CMD		0x1
+> diff --git a/include/linux/qcom_scm.h b/include/linux/qcom_scm.h
+> index 5d65521260b3..6a5d0c98b328 100644
+> --- a/include/linux/qcom_scm.h
+> +++ b/include/linux/qcom_scm.h
+> @@ -64,6 +64,8 @@ extern int qcom_scm_iommu_secure_ptbl_size(u32 spare, size_t *size);
+>  extern int qcom_scm_iommu_secure_ptbl_init(u64 addr, u32 size, u32 spare);
+>  extern int qcom_scm_io_readl(phys_addr_t addr, unsigned int *val);
+>  extern int qcom_scm_io_writel(phys_addr_t addr, unsigned int val);
+> +extern int qcom_scm_io_readl_atomic(phys_addr_t addr, unsigned int *val);
+> +extern int qcom_scm_io_writel_atomic(phys_addr_t addr, unsigned int val);
+>  #else
+>  static inline
+>  int qcom_scm_set_cold_boot_addr(void *entry, const cpumask_t *cpus)
+> @@ -100,5 +102,7 @@ static inline int qcom_scm_iommu_secure_ptbl_size(u32 spare, size_t *size) { ret
+>  static inline int qcom_scm_iommu_secure_ptbl_init(u64 addr, u32 size, u32 spare) { return -ENODEV; }
+>  static inline int qcom_scm_io_readl(phys_addr_t addr, unsigned int *val) { return -ENODEV; }
+>  static inline int qcom_scm_io_writel(phys_addr_t addr, unsigned int val) { return -ENODEV; }
+> +static inline int qcom_scm_io_readl_atomic(phys_addr_t addr, unsigned int *val) { return -ENODEV; }
+> +static inline int qcom_scm_io_writel_atomic(phys_addr_t addr, unsigned int val) { return -ENODEV; }
+>  #endif
+>  #endif
 > -- 
 > QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
 > of Code Aurora Forum, hosted by The Linux Foundation
