@@ -2,88 +2,134 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01986C4360F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:33:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B930C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:36:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8C662070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:33:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAFF52070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:36:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="a+YHEmd6"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="FVYdD+cU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730412AbfCYVdu (ORCPT
+        id S1730450AbfCYVgX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 17:33:50 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:41183 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730075AbfCYVdu (ORCPT
+        Mon, 25 Mar 2019 17:36:23 -0400
+Received: from mta-p5.oit.umn.edu ([134.84.196.205]:45088 "EHLO
+        mta-p5.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729761AbfCYVgX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 17:33:50 -0400
-Received: by mail-ot1-f66.google.com with SMTP id 64so9489342otb.8
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 14:33:50 -0700 (PDT)
+        Mon, 25 Mar 2019 17:36:23 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p5.oit.umn.edu (Postfix) with ESMTP id A4973A2C
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 21:36:21 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p5.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p5.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id yC0itTaAB4vX for <linux-kernel@vger.kernel.org>;
+        Mon, 25 Mar 2019 16:36:21 -0500 (CDT)
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p5.oit.umn.edu (Postfix) with ESMTPS id 7DDD5A42
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 16:36:21 -0500 (CDT)
+Received: by mail-io1-f72.google.com with SMTP id r21so8746717iod.12
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 14:36:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kI1cgbogsjrEoGMCL0RQUjw+UhPR/W1g5aVXTRUmpEM=;
-        b=a+YHEmd6q3x3r7xhfe5V6NBMKGgOubkzc1Gs+RX1Ls/aa4luvDZvUwlgoUsTgwbm3o
-         j0MnE2lTvC96noGsvcANxNnW0mjwsjQUHDS+ychSCn85FwLPdCYwUOmIHVN2ghgUetoN
-         TSXdzmVFE93EZIW4idpDHfbM9IdxF0VTg7H4vFgOabUsNjEkuIZIoFmTxbXR62Vlji7+
-         jMxZeKGI+Vy/8oLTyVlFSGLVOP6W92hGBiO7Yoqxc8x5w5daqtpydmsTDDvhXxgmHDFd
-         CQoOPVGXQEuFard+91BssIsbm7nc7s0CuLayrqyDh7TLBIfGGK3i10wsdQpWl0x+ExTY
-         z2NA==
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=g601nBRwh4LxhUF6344o5lBNrR46nPwpXk2iHQObz+U=;
+        b=FVYdD+cUCKCIxxkEq41vsBRkbkNrPKHNwdzUcvQLOqWGVzAW8hxZZTc/iubZm+Vvlu
+         2f+HipoRBwl2ka7QLI/Sy+zRf7GWUUk8cwIPRf8EVLs2zLFHyeDflbLaLlFI2xadi3LG
+         TAI+gqDzEhw6K5y/HLUv6R1RHwqLCNMUV/HPpFBwg0b7bM1Kajwu0FMpTXLfoyxAvO/R
+         31GEXC075gH42GO1WKQx+b3euuKAaiEZ33zqBMCQANIo26p5dEhSU+DI80hTRApNrSpg
+         7ZAcHyJM1VBnITYVjMI3Qk0d6hB8+eS4Sqx9Gb6kM49jan/WXFwZJXoNYWAvGitY8BL4
+         tCjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kI1cgbogsjrEoGMCL0RQUjw+UhPR/W1g5aVXTRUmpEM=;
-        b=WslaPMQfeOWOLp30x+hAWkyXphgRnXG+4KiPcwHqYV2KQ/mK/H6ztx0Gc2Qy7SxWpT
-         fT0mcC0zpAR0MgKSDF6eTDdVL4IzIGE/TTep9Ai6NkS/ubaYMR2AJebJQwOJJrvTXCgf
-         wRLcpyY2rqW1r0NgR3hbXpUSgDYqf6SWS5G2bopbCABwvvmMvoh0siHMaMym+ib1/etT
-         0Ms/Jm3pzNvhdE1t9D9/VpnWnV/n5RR1QNs/BXLz4c+Q6Szc8uC9HSOWBXRL9gUGSG7h
-         9sFySbo1jAN4vY0p3Wiz4I9vjhx1yvdhl48obB6r1MrNAFqyKckGmi9M+46Lh0G0vjHJ
-         yfBA==
-X-Gm-Message-State: APjAAAWwjY7QV/DT4D/l8H2i2ncJQ7ytWQi4cDAc1QRkt9SMlTuuRI2j
-        1YJ2eFvdfcGOv5ZwYXqcXk4vj7q5MiROR4NaOxePwA==
-X-Google-Smtp-Source: APXvYqyPHqiNfzE9hZgC5qTZcOdyG7VxnXKECXCqkUFHSwHYzZniEM6XzuLj/8PbFOAbmnmWuZjd2RSZHiQDURb0HGQ=
-X-Received: by 2002:a9d:224a:: with SMTP id o68mr20457271ota.214.1553549629694;
- Mon, 25 Mar 2019 14:33:49 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190325144735.30443-1-jarkko.sakkinen@linux.intel.com>
-In-Reply-To: <20190325144735.30443-1-jarkko.sakkinen@linux.intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 25 Mar 2019 14:33:38 -0700
-Message-ID: <CAPcyv4gCvqkAUSb2sC1+hoHF=bu5X8AXvJuRoqcEt4OQGvWk5A@mail.gmail.com>
-Subject: Re: [PATCH] KEYS: trusted: allow trusted.ko to initialize w/o a TPM
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        stable <stable@vger.kernel.org>,
-        James Bottomley <jejb@linux.ibm.com>,
-        Mimi Zohar <zohar@linuxibm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        "open list:KEYS-TRUSTED" <keyrings@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=g601nBRwh4LxhUF6344o5lBNrR46nPwpXk2iHQObz+U=;
+        b=XIQy9dY+FRCLQlHwzEfAuNvgBqYnemItIhBK3YSFyHdp3JJXLhadB7Aby9QuFuEWc1
+         6gBK6LdUClB7Wqkn0BqwshMAikcHwkBc7xHAJ6J3Y53mB20Qr6C+Hc5BFWhlMr0LhIHU
+         jSKM9Rqety0GRnnkXB3VmwBocZk0IvxAk7C/jWQbunx0ztd1IvKEvJ/l3Y6vqspr3cia
+         SyMtjd6UUmV4QqG80klHtX3xojUPtJicMhdwmFqLhcYhxywYe84cITV04drzYedk9KZU
+         0c/3BZIHvjvXv1IZv0oGC66EOlShC+4grbVpt8k0wc6EBtjsG6boowZOPtK3+iYKm7XL
+         f6Bw==
+X-Gm-Message-State: APjAAAVk4l3ufz5C67214KeJSWpSeGeqHhemXpe9dGwrZaP4u7cGHPv5
+        AVd87JrgJD/3oxXTCgx0lsaxlrKvkXH3KymaibXHKlO38cjcCnF2g2zSn59dIdNrm5+PG1D6tcJ
+        Ez2cixJA7Z78LUIWCpBu2vX0ufBps
+X-Received: by 2002:a02:ab95:: with SMTP id t21mr18461977jan.89.1553549780965;
+        Mon, 25 Mar 2019 14:36:20 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwy1O1hpDfyTCF9/VtofsWjpIk8HUOoCBLDx2F4KIZnVPA9TgidPvxLa5Jw8GRXLocDUJGvNQ==
+X-Received: by 2002:a02:ab95:: with SMTP id t21mr18461960jan.89.1553549780791;
+        Mon, 25 Mar 2019 14:36:20 -0700 (PDT)
+Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
+        by smtp.gmail.com with ESMTPSA id p18sm6375798itp.10.2019.03.25.14.36.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 25 Mar 2019 14:36:20 -0700 (PDT)
+From:   Aditya Pakki <pakki001@umn.edu>
+To:     pakki001@umn.edu
+Cc:     kjlu@umn.edu, Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>, linux-nvdimm@lists.01.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3] nvdimm: btt_devs: fix a NULL pointer dereference
+Date:   Mon, 25 Mar 2019 16:36:18 -0500
+Message-Id: <20190325213618.12139-1-pakki001@umn.edu>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 7:48 AM Jarkko Sakkinen
-<jarkko.sakkinen@linux.intel.com> wrote:
->
-> Allow trusted.ko to initialize w/o a TPM. This commit adds checks to the
-> key type callbacks and exported functions to fail when a TPM is not
-> available.
->
-> Cc: Dan Williams <dan.j.williams@intel.com>
+In case kmemdup fails, the fix releases resources and returns to
+avoid the NULL pointer dereference.
 
-Reported-and-tested-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
 
-Thanks Jarkko!
+---
+v2: Replace incorrect kfree with ida_simple_remove, suggested by
+Johannes Thumshirn
+v1: Free nd_btt->id in case of failure and avoid double free, suggested
+by Dan Williams
+---
+ drivers/nvdimm/btt_devs.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/nvdimm/btt_devs.c b/drivers/nvdimm/btt_devs.c
+index b72a303176c7..f73fb5fdc93f 100644
+--- a/drivers/nvdimm/btt_devs.c
++++ b/drivers/nvdimm/btt_devs.c
+@@ -204,8 +204,11 @@ static struct device *__nd_btt_create(struct nd_region *nd_region,
+ 	}
+ 
+ 	nd_btt->lbasize = lbasize;
+-	if (uuid)
++	if (uuid) {
+ 		uuid = kmemdup(uuid, 16, GFP_KERNEL);
++		if (!uuid)
++			goto out_put_id;
++	}
+ 	nd_btt->uuid = uuid;
+ 	dev = &nd_btt->dev;
+ 	dev_set_name(dev, "btt%d.%d", nd_region->id, nd_btt->id);
+@@ -220,6 +223,11 @@ static struct device *__nd_btt_create(struct nd_region *nd_region,
+ 		return NULL;
+ 	}
+ 	return dev;
++
++out_put_id:
++	ida_simple_remove(&nd_region->btt_ida, nd_btt->id);
++	kfree(nd_btt);
++	return NULL;
+ }
+ 
+ struct device *nd_btt_create(struct nd_region *nd_region)
+-- 
+2.17.1
+
