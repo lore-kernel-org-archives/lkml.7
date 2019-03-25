@@ -2,53 +2,68 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C389DC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 15:59:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A40CC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:01:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C0EE2075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 15:59:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 137EE20830
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:01:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729571AbfCYP7P (ORCPT
+        id S1729322AbfCYQBD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 11:59:15 -0400
-Received: from ms.lwn.net ([45.79.88.28]:43026 "EHLO ms.lwn.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725788AbfCYP7O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 11:59:14 -0400
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 25 Mar 2019 12:01:03 -0400
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:46800 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726743AbfCYQBD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 12:01:03 -0400
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 95F9E3C00D1;
+        Mon, 25 Mar 2019 17:01:01 +0100 (CET)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id IUdq-zcC11Ge; Mon, 25 Mar 2019 17:00:54 +0100 (CET)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 3919D9AC;
-        Mon, 25 Mar 2019 15:59:14 +0000 (UTC)
-Date:   Mon, 25 Mar 2019 09:59:13 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Federico Vaga <federico.vaga@vaga.pv.it>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] doc: minor fixes to translation's disclaimer
-Message-ID: <20190325095913.52e1d9e6@lwn.net>
-In-Reply-To: <20190323175416.6348-1-federico.vaga@vaga.pv.it>
-References: <20190323175416.6348-1-federico.vaga@vaga.pv.it>
-Organization: LWN.net
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id D2EEF3C00C4;
+        Mon, 25 Mar 2019 17:00:54 +0100 (CET)
+Received: from vmlxhi-087.adit-jv.com (10.72.93.172) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.435.0; Mon, 25 Mar
+ 2019 17:00:54 +0100
+From:   <twischer@de.adit-jv.com>
+To:     <patch@alsa-project.org>, <broonie@kernel.org>, <perex@perex.cz>,
+        <tiwai@suse.com>
+CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH 00/10] ALSA: aloop: Support selection of snd_timer
+Date:   Mon, 25 Mar 2019 17:00:34 +0100
+Message-ID: <1553529644-5654-1-git-send-email-twischer@de.adit-jv.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.72.93.172]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 23 Mar 2019 18:54:16 +0100
-Federico Vaga <federico.vaga@vaga.pv.it> wrote:
+With the following patch set any sound timer can be used as timer source
+for the aloop devices if selected. It can be select by the additional
+timer_source kernel module parameter:
+-2   the jiffies timer will be used as done without this patch (default)
+-1   the sound timer will be selected depending on the linked sound cards
+     (snd_pcm_link()). The sound timer of the first linked card which is not
+     a aloop device nor a dummy device will be used.
+0..N Select the sound timer by the card number.
 
-> - move TOC on top because that's the most interesting part
-> - a couple of minor fixes
-> 
-> Signed-off-by: Federico Vaga <federico.vaga@vaga.pv.it>
+This patch set is required for forwarding audio data between a HW sound card
+and an aloop device without the usage of an asynchronous sample rate converter.
 
-Applied, thanks.
 
-jon
+Best regards,
+
+Timo
+
