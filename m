@@ -4,198 +4,247 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F056FC10F03
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 13:02:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC383C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 13:03:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C84E920830
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 13:02:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB24020830
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 13:03:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731304AbfCYNCb (ORCPT
+        id S1731308AbfCYNDX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 09:02:31 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:46941 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731076AbfCYNCa (ORCPT
+        Mon, 25 Mar 2019 09:03:23 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:38333 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731076AbfCYNDW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 09:02:30 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2PD1WWR029054;
-        Mon, 25 Mar 2019 14:02:06 +0100
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2rddhabsqw-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Mon, 25 Mar 2019 14:02:06 +0100
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B0CBB38;
-        Mon, 25 Mar 2019 13:02:05 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 8A04A5779;
-        Mon, 25 Mar 2019 13:02:05 +0000 (GMT)
-Received: from localhost (10.75.127.48) by SFHDAG5NODE3.st.com (10.75.127.15)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 25 Mar 2019 14:02:05
- +0100
-From:   Fabrice Gasnier <fabrice.gasnier@st.com>
-To:     <jic23@kernel.org>
-CC:     <lars@metafoo.de>, <knaack.h@gmx.de>, <pmeerw@pmeerw.net>,
-        <fabrice.gasnier@st.com>, <linux-kernel@vger.kernel.org>,
-        <linux-iio@vger.kernel.org>
-Subject: [PATCH v2] iio: core: fix a possible circular locking dependency
-Date:   Mon, 25 Mar 2019 14:01:23 +0100
-Message-ID: <1553518883-27972-1-git-send-email-fabrice.gasnier@st.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 25 Mar 2019 09:03:22 -0400
+Received: from wuerfel.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MMGVE-1hRapZ3ztO-00JKql; Mon, 25 Mar 2019 14:03:00 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Cc:     clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, Qu Wenruo <wqu@suse.com>,
+        Nikolay Borisov <nborisov@suse.com>,
+        Liu Bo <bo.liu@linux.alibaba.com>,
+        Filipe Manana <fdmanana@suse.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Anand Jain <Anand.Jain@oracle.com>,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] btrfs: use BUG() instead of BUG_ON(1)
+Date:   Mon, 25 Mar 2019 14:02:25 +0100
+Message-Id: <20190325130256.1437810-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.48]
-X-ClientProxiedBy: SFHDAG8NODE1.st.com (10.75.127.22) To SFHDAG5NODE3.st.com
- (10.75.127.15)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-25_08:,,
- signatures=0
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:WqqCRr9aq0/fLvIfqpd28fO+ZL8fbeXMaYJ9mlmB6vGx3b7d52g
+ Mrjh0HviXccZpcSBkqiCFR2I4XUqKw67MI9W3ERfs8+LjSPRXaBDRL6ltvjLkAq5nDpmZei
+ uyCz7Q3P2IJE+hEG76WUx8rWEV2DLmYF5KqMaBKMYaBu6MuW/lZIMgxNBP/0jqXvPJ1AVWD
+ NaV9rNUulQjkLPc60OqTw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:98ogSmodF9g=:wSV1b4N3opQzNtjzrfAO+P
+ LuKJWRgwm7hVqKDQIxAGaFQUIxT+7DKH0/dyWQpOBt3CQntyIl19uCp8ZhPSToiqIwrQ5SnE/
+ E8emxS3opGD7E11lEg3+OzS2RXlagfwFPf0jq0iCsSq+3loe7Roj62QxvRtW0Gv6M3vPFOtk7
+ q8c+ULmmejsXw2y2NPGuiZIPQowmwfllOk0fuYGZboToNFC4rgge3ZoiM0S5fm8XoOFoDvEvF
+ UEFLGi7T5DnCpnR89f9z3c8dyX6qIASgpyU7UtQu5zuOvEpEZDbCn90LsKFS0jKZN/2mBZ1WT
+ uELH/y9YODouaeSPOrIafYqdZaYZepsgrXV+x2MKT71mEq5IuVZPCHAvcGVgX5qCNiy5ZzZQt
+ R28x+Z5v+JyGO/k3yHkmg0NlR0kiduzOPHBzkO8hZKMMJFabAxF+crimMqWUWnv+LItubMje5
+ p8/L8GqzDv3HioHe28MC7NTxZ4Rt7PPOcjTPQhxK8i7Tn3+GcAybUkW0QVA1WZfZYPhfnOFLI
+ Mn+My4UeUFOveeY0B7htLaaKOLV3AHG/akt0A6wDL23ZY5RtDxuo3P9+CoxuLbjJlw8KRMlKh
+ bb8ZGg4Z4c8g9s/sPdnRIyY0ljRNrRR9tdORyDOw1cqgG5/kmhdchUVBLl79/OCnDz0CQWbaP
+ OQPF52pKk7FQ5x//fl3Vp0ozIXBgeXxrFa1MALxRwmoAiptaXMUkTjRunR8PJfX4t6qng9RzG
+ ZOsTFGyjev1ZMhQnd+BCFu74LnaZQEmRTkF+vQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This fixes a possible circular locking dependency detected warning seen
-with:
-- CONFIG_PROVE_LOCKING=y
-- consumer/provider IIO devices (ex: "voltage-divider" consumer of "adc")
+BUG_ON(1) leads to bogus warnings from clang when
+CONFIG_PROFILE_ANNOTATED_BRANCHES is set:
 
-When using the IIO consumer interface, e.g. iio_channel_get(), the consumer
-device will likely call iio_read_channel_raw() or similar that rely on
-'info_exist_lock' mutex.
+fs/btrfs/volumes.c:5041:3: error: variable 'max_chunk_size' is used uninitialized whenever 'if' condition is false
+      [-Werror,-Wsometimes-uninitialized]
+                BUG_ON(1);
+                ^~~~~~~~~
+include/asm-generic/bug.h:61:36: note: expanded from macro 'BUG_ON'
+ #define BUG_ON(condition) do { if (unlikely(condition)) BUG(); } while (0)
+                                   ^~~~~~~~~~~~~~~~~~~
+include/linux/compiler.h:48:23: note: expanded from macro 'unlikely'
+ #  define unlikely(x)   (__branch_check__(x, 0, __builtin_constant_p(x)))
+                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+fs/btrfs/volumes.c:5046:9: note: uninitialized use occurs here
+                             max_chunk_size);
+                             ^~~~~~~~~~~~~~
+include/linux/kernel.h:860:36: note: expanded from macro 'min'
+ #define min(x, y)       __careful_cmp(x, y, <)
+                                         ^
+include/linux/kernel.h:853:17: note: expanded from macro '__careful_cmp'
+                __cmp_once(x, y, __UNIQUE_ID(__x), __UNIQUE_ID(__y), op))
+                              ^
+include/linux/kernel.h:847:25: note: expanded from macro '__cmp_once'
+                typeof(y) unique_y = (y);               \
+                                      ^
+fs/btrfs/volumes.c:5041:3: note: remove the 'if' if its condition is always true
+                BUG_ON(1);
+                ^
+include/asm-generic/bug.h:61:32: note: expanded from macro 'BUG_ON'
+ #define BUG_ON(condition) do { if (unlikely(condition)) BUG(); } while (0)
+                               ^
+fs/btrfs/volumes.c:4993:20: note: initialize the variable 'max_chunk_size' to silence this warning
+        u64 max_chunk_size;
+                          ^
+                           = 0
 
-typically:
-...
-	mutex_lock(&chan->indio_dev->info_exist_lock);
-	if (chan->indio_dev->info == NULL) {
-		ret = -ENODEV;
-		goto err_unlock;
-	}
-	ret = do_some_ops()
-err_unlock:
-	mutex_unlock(&chan->indio_dev->info_exist_lock);
-	return ret;
-...
+Change it to BUG() so clang can see that this code path can never
+continue.
 
-Same mutex is also hold in iio_device_unregister().
-
-The following deadlock warning happens when:
-- the consumer device has called an API like iio_read_channel_raw()
-  at least once.
-- the consumer driver is unregistered, removed (unbind from sysfs)
-
-======================================================
-WARNING: possible circular locking dependency detected
-4.19.24 #577 Not tainted
-------------------------------------------------------
-sh/372 is trying to acquire lock:
-(kn->count#30){++++}, at: kernfs_remove_by_name_ns+0x3c/0x84
-
-but task is already holding lock:
-(&dev->info_exist_lock){+.+.}, at: iio_device_unregister+0x18/0x60
-
-which lock already depends on the new lock.
-
-the existing dependency chain (in reverse order) is:
-
--> #1 (&dev->info_exist_lock){+.+.}:
-       __mutex_lock+0x70/0xa3c
-       mutex_lock_nested+0x1c/0x24
-       iio_read_channel_raw+0x1c/0x60
-       iio_read_channel_info+0xa8/0xb0
-       dev_attr_show+0x1c/0x48
-       sysfs_kf_seq_show+0x84/0xec
-       seq_read+0x154/0x528
-       __vfs_read+0x2c/0x15c
-       vfs_read+0x8c/0x110
-       ksys_read+0x4c/0xac
-       ret_fast_syscall+0x0/0x28
-       0xbedefb60
-
--> #0 (kn->count#30){++++}:
-       lock_acquire+0xd8/0x268
-       __kernfs_remove+0x288/0x374
-       kernfs_remove_by_name_ns+0x3c/0x84
-       remove_files+0x34/0x78
-       sysfs_remove_group+0x40/0x9c
-       sysfs_remove_groups+0x24/0x34
-       device_remove_attrs+0x38/0x64
-       device_del+0x11c/0x360
-       cdev_device_del+0x14/0x2c
-       iio_device_unregister+0x24/0x60
-       release_nodes+0x1bc/0x200
-       device_release_driver_internal+0x1a0/0x230
-       unbind_store+0x80/0x130
-       kernfs_fop_write+0x100/0x1e4
-       __vfs_write+0x2c/0x160
-       vfs_write+0xa4/0x17c
-       ksys_write+0x4c/0xac
-       ret_fast_syscall+0x0/0x28
-       0xbe906840
-
-other info that might help us debug this:
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&dev->info_exist_lock);
-                               lock(kn->count#30);
-                               lock(&dev->info_exist_lock);
-  lock(kn->count#30);
-
- *** DEADLOCK ***
-...
-
-cdev_device_del() can be called without holding the lock. It should be safe
-as info_exist_lock prevents kernelspace consumers to use the exported
-routines during/after provider removal. cdev_device_del() is for userspace.
-
-Help to reproduce:
-See example: Documentation/devicetree/bindings/iio/afe/voltage-divider.txt
-sysv {
-	compatible = "voltage-divider";
-	io-channels = <&adc 0>;
-	output-ohms = <22>;
-	full-ohms = <222>;
-};
-
-First, go to iio:deviceX for the "voltage-divider", do one read:
-$ cd /sys/bus/iio/devices/iio:deviceX
-$ cat in_voltage0_raw
-
-Then, unbind the consumer driver. It triggers above deadlock warning.
-$ cd /sys/bus/platform/drivers/iio-rescale/
-$ echo sysv > unbind
-
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
-Changes in v2:
-- call cdev_device_del() without holding the lock, as proposed by Jonathan
-  without reordering the unregister routine.
----
- drivers/iio/industrialio-core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/btrfs/backref.c   | 4 ++--
+ fs/btrfs/ctree.c     | 4 ++--
+ fs/btrfs/extent_io.c | 8 ++++----
+ fs/btrfs/file.c      | 2 +-
+ fs/btrfs/inode.c     | 2 +-
+ fs/btrfs/root-tree.c | 2 +-
+ fs/btrfs/volumes.c   | 2 +-
+ 7 files changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
-index 4700fd5..9c4d921 100644
---- a/drivers/iio/industrialio-core.c
-+++ b/drivers/iio/industrialio-core.c
-@@ -1743,10 +1743,10 @@ EXPORT_SYMBOL(__iio_device_register);
-  **/
- void iio_device_unregister(struct iio_dev *indio_dev)
- {
--	mutex_lock(&indio_dev->info_exist_lock);
--
- 	cdev_device_del(&indio_dev->chrdev, &indio_dev->dev);
+diff --git a/fs/btrfs/backref.c b/fs/btrfs/backref.c
+index 11459fe84a29..2602072ed906 100644
+--- a/fs/btrfs/backref.c
++++ b/fs/btrfs/backref.c
+@@ -791,7 +791,7 @@ static int add_delayed_refs(const struct btrfs_fs_info *fs_info,
+ 			count = node->ref_mod * -1;
+ 			break;
+ 		default:
+-			BUG_ON(1);
++			BUG();
+ 		}
+ 		*total_refs += count;
+ 		switch (node->type) {
+@@ -1747,7 +1747,7 @@ int extent_from_logical(struct btrfs_fs_info *fs_info, u64 logical,
+ 		else if (flags & BTRFS_EXTENT_FLAG_DATA)
+ 			*flags_ret = BTRFS_EXTENT_FLAG_DATA;
+ 		else
+-			BUG_ON(1);
++			BUG();
+ 		return 0;
+ 	}
  
-+	mutex_lock(&indio_dev->info_exist_lock);
-+
- 	iio_device_unregister_debugfs(indio_dev);
+diff --git a/fs/btrfs/ctree.c b/fs/btrfs/ctree.c
+index 324df36d28bf..75c69829d975 100644
+--- a/fs/btrfs/ctree.c
++++ b/fs/btrfs/ctree.c
+@@ -4674,7 +4674,7 @@ void btrfs_extend_item(struct btrfs_fs_info *fs_info, struct btrfs_path *path,
+ 		btrfs_print_leaf(leaf);
+ 		btrfs_crit(fs_info, "slot %d too large, nritems %d",
+ 			   slot, nritems);
+-		BUG_ON(1);
++		BUG();
+ 	}
  
- 	iio_disable_all_buffers(indio_dev);
+ 	/*
+@@ -4754,7 +4754,7 @@ void setup_items_for_insert(struct btrfs_root *root, struct btrfs_path *path,
+ 			btrfs_print_leaf(leaf);
+ 			btrfs_crit(fs_info, "slot %d old_data %d data_end %d",
+ 				   slot, old_data, data_end);
+-			BUG_ON(1);
++			BUG();
+ 		}
+ 		/*
+ 		 * item0..itemN ... dataN.offset..dataN.size .. data0.size
+diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
+index ca8b8e785cf3..610a98857e22 100644
+--- a/fs/btrfs/extent_io.c
++++ b/fs/btrfs/extent_io.c
+@@ -5746,13 +5746,13 @@ void memcpy_extent_buffer(struct extent_buffer *dst, unsigned long dst_offset,
+ 		btrfs_err(fs_info,
+ 			"memmove bogus src_offset %lu move len %lu dst len %lu",
+ 			 src_offset, len, dst->len);
+-		BUG_ON(1);
++		BUG();
+ 	}
+ 	if (dst_offset + len > dst->len) {
+ 		btrfs_err(fs_info,
+ 			"memmove bogus dst_offset %lu move len %lu dst len %lu",
+ 			 dst_offset, len, dst->len);
+-		BUG_ON(1);
++		BUG();
+ 	}
+ 
+ 	while (len > 0) {
+@@ -5793,13 +5793,13 @@ void memmove_extent_buffer(struct extent_buffer *dst, unsigned long dst_offset,
+ 		btrfs_err(fs_info,
+ 			  "memmove bogus src_offset %lu move len %lu len %lu",
+ 			  src_offset, len, dst->len);
+-		BUG_ON(1);
++		BUG();
+ 	}
+ 	if (dst_offset + len > dst->len) {
+ 		btrfs_err(fs_info,
+ 			  "memmove bogus dst_offset %lu move len %lu len %lu",
+ 			  dst_offset, len, dst->len);
+-		BUG_ON(1);
++		BUG();
+ 	}
+ 	if (dst_offset < src_offset) {
+ 		memcpy_extent_buffer(dst, dst_offset, src_offset, len);
+diff --git a/fs/btrfs/file.c b/fs/btrfs/file.c
+index 34fe8a58b0e9..f28aed471693 100644
+--- a/fs/btrfs/file.c
++++ b/fs/btrfs/file.c
+@@ -1025,7 +1025,7 @@ int __btrfs_drop_extents(struct btrfs_trans_handle *trans,
+ 			continue;
+ 		}
+ 
+-		BUG_ON(1);
++		BUG();
+ 	}
+ 
+ 	if (!ret && del_nr > 0) {
+diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
+index 82fdda8ff5ab..98bc66d34e6c 100644
+--- a/fs/btrfs/inode.c
++++ b/fs/btrfs/inode.c
+@@ -1451,7 +1451,7 @@ static noinline int run_delalloc_nocow(struct inode *inode,
+ 			extent_end = ALIGN(extent_end,
+ 					   fs_info->sectorsize);
+ 		} else {
+-			BUG_ON(1);
++			BUG();
+ 		}
+ out_check:
+ 		if (extent_end <= start) {
+diff --git a/fs/btrfs/root-tree.c b/fs/btrfs/root-tree.c
+index 893d12fbfda0..552efc88a016 100644
+--- a/fs/btrfs/root-tree.c
++++ b/fs/btrfs/root-tree.c
+@@ -141,7 +141,7 @@ int btrfs_update_root(struct btrfs_trans_handle *trans, struct btrfs_root
+ 		btrfs_print_leaf(path->nodes[0]);
+ 		btrfs_crit(fs_info, "unable to update root key %llu %u %llu",
+ 			   key->objectid, key->type, key->offset);
+-		BUG_ON(1);
++		BUG();
+ 	}
+ 
+ 	l = path->nodes[0];
+diff --git a/fs/btrfs/volumes.c b/fs/btrfs/volumes.c
+index 9024eee889b9..95223fd9f9d0 100644
+--- a/fs/btrfs/volumes.c
++++ b/fs/btrfs/volumes.c
+@@ -5038,7 +5038,7 @@ static int __btrfs_alloc_chunk(struct btrfs_trans_handle *trans,
+ 	} else {
+ 		btrfs_err(info, "invalid chunk type 0x%llx requested",
+ 		       type);
+-		BUG_ON(1);
++		BUG();
+ 	}
+ 
+ 	/* We don't want a chunk larger than 10% of writable space */
 -- 
-2.7.4
+2.20.0
 
