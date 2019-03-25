@@ -2,137 +2,120 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56670C10F03
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 06:05:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94624C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 06:07:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E6D8205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 06:05:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jqumGuL+"
+	by mail.kernel.org (Postfix) with ESMTP id 6F00320850
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 06:07:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729759AbfCYGFz (ORCPT
+        id S1729623AbfCYGHX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 02:05:55 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:44248 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729373AbfCYGFy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 02:05:54 -0400
-Received: by mail-pf1-f193.google.com with SMTP id a3so5587351pff.11;
-        Sun, 24 Mar 2019 23:05:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=p6jZFM4uKZmmd8N/chkful+ZD8FsiAd/9uwJICIJ0zk=;
-        b=jqumGuL+igo/SkIi2aID93fjdQzDHtjSSvtucpTKc92SzXwZT4k5G+kymX27UTh541
-         d0B+WYVS4FKTQFfwoolGxbR8dwqIp+3BE/22l0q2wEDoOxsBxqqae8QyqJycRidrZWI0
-         ACclu19uKMz4gcTlU873cG9+xs1K+5DGzeLcxzYRRwbxkiXAnZ1Lq/KZMdGvRkG4cNJN
-         hwGvJWSx6fTXA39+0VSWWwTmjUnRT4s/NU3g4i/tfiLCQiOb99NVKOA1mvnwRHS+PjyG
-         C0I1Kg8eizZA/SJrgWlrKs68LwenOWrg7n1bS87ydxx0jrwZZnNZmYX1YwHxV6xwzLp1
-         75tQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=p6jZFM4uKZmmd8N/chkful+ZD8FsiAd/9uwJICIJ0zk=;
-        b=KK2A27C79S+o6plLBXlSYhLmoyNWcZnJEXCSEclWQe4J28AYetjfNZBBjjO+aGT88v
-         dmjK6Vd3zYX2R5HzMaxSFHOgcNnbTkEsutg3RHUN/7/jR0W5PUG1gwseltEpD9xzGKSA
-         qzg+cI/U0iT17ULnwNzi1DmOecEUJTH7qX4Hdc6VeHlIZxmKf8uW1g3fJ0Nh/n2MbzxO
-         k0nu54hKZ6pMhQD5Ga2WuuqX3Tia04gjFd++7f9FpunYqGOjz9nrtYdRv2ka2BlHkD7j
-         OABmhSqhqG8coaSzHSLws3yXukF0UBWzQGVRkHUYQc5SSvO5adnklDVGB76tgJjdaeZz
-         DZMw==
-X-Gm-Message-State: APjAAAU8uoMPHc/m36M2uSRwAoUgS0RLOWY1QYSNkJRp0Pp5flsDMopK
-        73WazdJAyBZEJjafG9IFFn8=
-X-Google-Smtp-Source: APXvYqwDxykQkjuOKa1oZBlXM1NHkyoBvXV+7ZgKvU3Rmy/U4UOsNXSh3i4l6XjRsDUy5ImRcJfMow==
-X-Received: by 2002:a17:902:282b:: with SMTP id e40mr23266401plb.111.1553493953557;
-        Sun, 24 Mar 2019 23:05:53 -0700 (PDT)
-Received: from localhost.localdomain ([2001:268:c0a5:e068:c70:4af9:86e2:2])
-        by smtp.gmail.com with ESMTPSA id k22sm20299064pfi.90.2019.03.24.23.05.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 24 Mar 2019 23:05:53 -0700 (PDT)
-From:   William Breathitt Gray <vilhelm.gray@gmail.com>
-To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com
-Cc:     akpm@linux-foundation.org, linux-gpio@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andriy.shevchenko@linux.intel.com, linux@rasmusvillemoes.dk,
-        yamada.masahiro@socionext.com,
-        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
-        geert@linux-m68k.org, preid@electromag.com.au,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v11 11/11] gpio: 74x164: Utilize the for_each_set_clump8 macro
-Date:   Mon, 25 Mar 2019 15:06:47 +0900
-Message-Id: <8a2e010aa62e00e1fd56802d6c842ae972d2f283.1553492741.git.vilhelm.gray@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <cover.1553492741.git.vilhelm.gray@gmail.com>
-References: <cover.1553492741.git.vilhelm.gray@gmail.com>
+        Mon, 25 Mar 2019 02:07:23 -0400
+Received: from mga17.intel.com ([192.55.52.151]:11639 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729373AbfCYGHW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 02:07:22 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Mar 2019 23:07:21 -0700
+X-IronPort-AV: E=Sophos;i="5.60,256,1549958400"; 
+   d="scan'208";a="128373226"
+Received: from likexu-mobl1.ccr.corp.intel.com (HELO [10.239.196.197]) ([10.239.196.197])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/AES128-SHA; 24 Mar 2019 23:07:18 -0700
+Subject: Re: [RFC] [PATCH v2 0/5] Intel Virtual PMU Optimization
+To:     Andi Kleen <ak@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        like.xu@intel.com, wei.w.wang@intel.com,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+References: <1553350688-39627-1-git-send-email-like.xu@linux.intel.com>
+ <20190323172800.GD6058@hirez.programming.kicks-ass.net>
+ <20190323231543.GE18020@tassilo.jf.intel.com>
+From:   Like Xu <like.xu@linux.intel.com>
+Organization: Intel OTC
+Message-ID: <0559a810-c0e6-16f6-fa15-7baec707a2ad@linux.intel.com>
+Date:   Mon, 25 Mar 2019 14:07:17 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190323231543.GE18020@tassilo.jf.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace verbose implementation in set_multiple callback with
-for_each_set_clump8 macro to simplify code and improve clarity.
+On 2019/3/24 7:15, Andi Kleen wrote:
+>>> We optimize the current vPMU to work in this manner:
+>>>
+>>> (1) rely on the existing host perf (perf_event_create_kernel_counter)
+>>>      to allocate counters for in-use vPMC and always try to reuse events;
+>>> (2) vPMU captures guest accesses to the eventsel and fixctrl msr directly
+>>>      to the hardware msr that the corresponding host event is scheduled on
+>>>      and avoid pollution from host is also needed in its partial runtime;
+>>
+>> If you do pass-through; how do you deal with event constraints?
+> 
+> The guest has to deal with them. It already needs to know
+> the model number to program the right events, can as well know
+> the constraints too.
+> 
+> For architectural events that don't need the model number it's
+> not a problem because they don't have constraints.
+> 
+> -Andi
+> 
 
-Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Phil Reid <preid@electromag.com.au>
-Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
----
- drivers/gpio/gpio-74x164.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+I agree this version doesn't seem to keep an eye on host perf event 
+constraints deliberately:
 
-diff --git a/drivers/gpio/gpio-74x164.c b/drivers/gpio/gpio-74x164.c
-index fb7b620763a2..e43a6de3b6eb 100644
---- a/drivers/gpio/gpio-74x164.c
-+++ b/drivers/gpio/gpio-74x164.c
-@@ -9,6 +9,7 @@
-  *  published by the Free Software Foundation.
-  */
- 
-+#include <linux/bitops.h>
- #include <linux/init.h>
- #include <linux/mutex.h>
- #include <linux/spi/spi.h>
-@@ -75,20 +76,19 @@ static void gen_74x164_set_multiple(struct gpio_chip *gc, unsigned long *mask,
- 				    unsigned long *bits)
- {
- 	struct gen_74x164_chip *chip = gpiochip_get_data(gc);
--	unsigned int i, idx, shift;
--	u8 bank, bankmask;
-+	unsigned int offset;
-+	unsigned long bankmask;
-+	const unsigned int ngpio = chip->registers * 8;
-+	size_t bank;
-+	unsigned int bitmask;
- 
- 	mutex_lock(&chip->lock);
--	for (i = 0, bank = chip->registers - 1; i < chip->registers;
--	     i++, bank--) {
--		idx = i / sizeof(*mask);
--		shift = i % sizeof(*mask) * BITS_PER_BYTE;
--		bankmask = mask[idx] >> shift;
--		if (!bankmask)
--			continue;
-+	for_each_set_clump8(offset, bankmask, mask, ngpio) {
-+		bank = (chip->registers - 1) - (offset / 8);
-+		bitmask = bitmap_get_value8(bits, ngpio, offset) & bankmask;
- 
- 		chip->buffer[bank] &= ~bankmask;
--		chip->buffer[bank] |= bankmask & (bits[idx] >> shift);
-+		chip->buffer[bank] |= bitmask;
- 	}
- 	__gen_74x164_write_config(chip);
- 	mutex_unlock(&chip->lock);
--- 
-2.21.0
+1. Based on my limited knowledge, assuming the model number means hwc->idx.
+2. The guest event constraints would be constructed into 
+hwc->config_base value which is pmc->eventsel and pmu->fixed_ctr_ctrl 
+from KVM point of view.
+3. The guest PMU has same semantic model on virt hardware limitation as 
+the host does with real PMU (related CPUID/PERF_MSR expose this part of 
+information to guest).
+3. Guest perf scheduler would make sure the guest event constraints 
+could dance with right guest model number.
+4. vPMU would make sure the guest vPMC get the right guest model number 
+by hard-code EVENT_PINNED or just fail with creation.
+5. This patch directly apply the guest hwc->config_base value to host 
+assigned hardware without consent from host perf(a bit deceptive but 
+practical for reducing the number of reprogram calls).
+
+=== OR ====
+
+If we insist on passing guest event constraints to host perf,
+this proposal may need the following changes:
+
+Because the guest configuration of hwc->config_base mostly only toggles 
+the enable bit of eventsel or fixctrl,it is not necessary to do 
+reprogram_counter because it's serving the same guest perf event.
+
+The event creation is only needed when guest writes a complete new value 
+to eventsel or fixctrl.Codes for guest MSR_P6_EVNTSEL0 trap for example 
+may be modified to be like this:
+
+	u64 diff = pmc->eventsel ^ data;
+	if (intel_pmc_is_assigned(pmc)
+		&& diff	!= ARCH_PERFMON_EVENTSEL_ENABLE) {
+		intel_pmu_save_guest_pmc(pmu, pmc->idx);
+		intel_pmc_stop_counter(pmc);
+	}
+	reprogram_gp_counter(pmc, data);
+
+Does this seem to satisfy our needs?
+
+
+It makes everything easier to correct me if I'm wrong.
 
