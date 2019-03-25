@@ -4,96 +4,75 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D1EBC10F03
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 20:12:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F345C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 20:12:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBED520879
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 20:12:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3F1521473
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 20:12:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553544760;
-	bh=+YtJAzMwVrQKVqNDxH5zf87X6cik+yHaqvGJ7C6urKc=;
+	s=default; t=1553544766;
+	bh=zT7hyeF7U5b4pqyNBbtP4AsLn6u9mwqL+b2KBgQvA70=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=B71uXKup85HwGNvgKyN7kBA6KlBNzcItg3dCmsS3m7SrpQAe7Nm1Sh1naFM+5m5DU
-	 L/9ehDwseCnJnnpbITLZGcC2ZcT1uRPP35DTKm9z/rwPvt3MZ20OX2X6rLXVzqrjDt
-	 AW665Gei9MVdueEgMcjymM5aXS26vbZHXiXYqEUI=
+	b=xbYf+povnjG+eJeNr4obdCEUAuMjRShjMArlOiRDFYCWbyvHU6YqUNekrZuXjdmp9
+	 4ftqaoyPNjbN0b9+7iVmlEUMmX0jtsoz66/cb4fistVQvVpSBcwIk90a6ykHrdpi9b
+	 xDks3mqjUdlF1gs1yxmlLLNzFE/sCIG9vPTeYZzI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730263AbfCYUMi (ORCPT
+        id S1730298AbfCYUMo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 16:12:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49792 "EHLO mail.kernel.org"
+        Mon, 25 Mar 2019 16:12:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49874 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729283AbfCYUMi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 16:12:38 -0400
+        id S1729283AbfCYUMo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 16:12:44 -0400
 Received: from localhost (unknown [218.237.54.8])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EFD8F2087C;
-        Mon, 25 Mar 2019 20:12:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C46E2087E;
+        Mon, 25 Mar 2019 20:12:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553544757;
-        bh=+YtJAzMwVrQKVqNDxH5zf87X6cik+yHaqvGJ7C6urKc=;
+        s=default; t=1553544763;
+        bh=zT7hyeF7U5b4pqyNBbtP4AsLn6u9mwqL+b2KBgQvA70=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=r2jqTnS/qt63TU/pW06pRHyY3CP1t+2zymRi6bVai16JJCf0+U/6yxPMk9pGNuEd6
-         wzhrpauxe55fV1SuccYQnl+twaUJnSUMXDNruNjhgO+Qaurl/syqbbYgzKrpeM9k6q
-         kBBW0Q7GMU8YIz4bIy5iboAIcvBDr3tsU1Ux3o1E=
-Date:   Tue, 26 Mar 2019 04:31:13 +0900
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     lantianyu1986@gmail.com
-Cc:     tglx@linutronix.de, mingo@kernel.org, konrad.wilk@oracle.com,
-        jpoimboe@redhat.com, peterz@infraded.org, mojha@codeaurora.org,
-        peterz@infradead.org, jkosina@suse.cz, riel@surriel.com,
-        luto@kernel.org, Tianyu.Lan@microsoft.com,
-        michael.h.kelley@microsoft.com, kys@microsoft.com,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [Fix PATCH] cpu/hotplug: Fix bug report when add "nosmt"
- parameter with CONFIG_HOTPLUG_CPU=N
-Message-ID: <20190325193113.GA14852@kroah.com>
-References: <1553521883-20868-1-git-send-email-Tianyu.Lan@microsoft.com>
+        b=c2lLuZ3/5TFpbbomB01M1Z7b7ZGn5AyTO4HPp8qTNe29HWDoDo8Hvt5NMhOF3rUOz
+         grrIUNRfOvjCpvNrrd/w2fqSxhHeWFoPh0W46IWvZrCjwrWbCPih6EAYmVj/QoQraB
+         goomOa9AqUEYWK3o1zr2jWz/yoI0wuu5dWL4ZViw=
+Date:   Tue, 26 Mar 2019 04:38:51 +0900
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Ojaswin Mujoo <ojaswin25111998@gmail.com>
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        Forest Bond <forest@alittletooquiet.net>
+Subject: Re: [PATCH] drivers/staging: fix styling of the comment related to
+ SPDX-License-Identifier in vt6656/*.h
+Message-ID: <20190325193851.GB27571@kroah.com>
+References: <20190324195714.GA8262@kroah.com>
+ <1553522934-7366-1-git-send-email-ojaswin25111998@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1553521883-20868-1-git-send-email-Tianyu.Lan@microsoft.com>
+In-Reply-To: <1553522934-7366-1-git-send-email-ojaswin25111998@gmail.com>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 09:51:23PM +0800, lantianyu1986@gmail.com wrote:
-> From: Lan Tianyu <Tianyu.Lan@microsoft.com>
+On Mon, Mar 25, 2019 at 07:36:53PM +0530, Ojaswin Mujoo wrote:
+> From: ojaswin <ojaswin25111998@gmail.com>
 > 
-> When add "nosmt" parameter, kernel still boots up all logical cpus once
-> and set CR4.MCE on each CPU. This is to avoid shutting down machine
-> when a broadacasted MCE is observed CR4.MCE=0b. (Detail please see comment
-> in the cpu_smt_allowed()). Smt cpus will bring up and bring down during
-> kernel boot with "nosmt" parameter.
+> Fix checkpatch.pl styling error related to SPDX-License-Identifier comment 
+> in vt6656/*.h
 > 
-> When CONFIG_HOTPLUG_CPU=Y, CPU_DYING callbacks will be called inside
-> stop-machine and irq is disabled. This happens in the take_cpu_down()
-> callback. When CONFIG_HOTPLUG_CPU=N,CPU_DYING callbacks will be called
-> with irq enabled.
-> 
-> smpcfd_dying_cpu() is one of CPU_DYING callbacks and it assumes to be
-> called when irq is disabled. smpcfd_dying_cpu() calls flush_smp_call_
-> function_queue() which requires to be called with irq disabled.
-> 
-> When CONFIG_HOTPLUG_CPU=N and add "nosmt" parameter, smpcfd_dying_cpu()
-> is called with irq enalbed and this triggers BUG_ON(!irqs_disabled())
-> in the irq_work_run_list(). This patch is to fix the issue.
-> 
-> Fixes: 0cc3cd21657b ("cpu/hotplug: Boot HT siblings at least once")
-> Signed-off-by: Lan Tianyu <Tianyu.Lan@microsoft.com>
-> ---
->  kernel/smp.c | 5 +++++
->  1 file changed, 5 insertions(+)
+> Signed-off-by: Ojaswin Mujoo <ojaswin25111998@gmail.com>
 
-<formletter>
+This also has to match the "From:" line :)
 
-This is not the correct way to submit patches for inclusion in the
-stable kernel tree.  Please read:
-    https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
-for how to do this properly.
+And you have trailing whitespace in your changelog comment :(
 
-</formletter>
+And finally, when resending a patch, please properly "version" it, as
+described in the Documentation for how to do this.
+
+thanks,
+
+greg k-h
