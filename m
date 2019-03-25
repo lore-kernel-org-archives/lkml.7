@@ -2,168 +2,121 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10D1CC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 09:31:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07379C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 09:31:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2C3E20863
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 09:31:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="sFNJL44v"
+	by mail.kernel.org (Postfix) with ESMTP id C88D82085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 09:31:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553506286;
+	bh=wLyZ8ZhlRqUs4zntW7EdVCgDPoIy+jM+ep1Zk/cTSPg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=OxV/bzVa+2k7sra8QgTjPhd1iSFRk9Fk5b5PQ7+1QY0Cc7MBEul8giQ1UXKM6cQ1b
+	 zw7u+6+1aa135kNQtBKAxS1fGBA+bnd30kvuvjDyN1+zWC3xQSXWtQRYUdq5Le0pi1
+	 yeJuAhL0FYkywtSPEAKshuiBtGTE1RLv5CyZ0y70=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730345AbfCYJbE (ORCPT
+        id S1730360AbfCYJbZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 05:31:04 -0400
-Received: from mail-eopbgr20071.outbound.protection.outlook.com ([40.107.2.71]:8686
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730137AbfCYJbD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 05:31:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZMGjj8DEBrM1TwZWr9oOYH3d/mVjI1y5t+lANt0POas=;
- b=sFNJL44vtnLeXmH8Z6eNmELk/rte5hD43INkV55TUwE5K/vKc7hTgxZUK8z/p3Frsl2EqWsTjqX6+RLC0kXtPMF5AK9WA3vLtLiPaYkQ9jpUG8d3/e7TFiemjFfP6fbwxR+EtetZDzOlZPOsYJwKGfZ8oSStgDYaz7oTJ5kPd+A=
-Received: from DB7PR04MB5163.eurprd04.prod.outlook.com (20.176.235.75) by
- DB7PR04MB5308.eurprd04.prod.outlook.com (20.176.236.144) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1730.16; Mon, 25 Mar 2019 09:30:58 +0000
-Received: from DB7PR04MB5163.eurprd04.prod.outlook.com
- ([fe80::6869:c937:7d2:d60b]) by DB7PR04MB5163.eurprd04.prod.outlook.com
- ([fe80::6869:c937:7d2:d60b%5]) with mapi id 15.20.1730.019; Mon, 25 Mar 2019
- 09:30:58 +0000
-From:   Vladimir Oltean <vladimir.oltean@nxp.com>
-To:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>
-CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>
-Subject: [PATCH] ARM: dts: ls1021: Fix SGMII PCS link remaining down after PHY
- disconnect
-Thread-Topic: [PATCH] ARM: dts: ls1021: Fix SGMII PCS link remaining down
- after PHY disconnect
-Thread-Index: AQHU4u10/As1+FdGfk+r8tl5GBIdhQ==
-Date:   Mon, 25 Mar 2019 09:30:58 +0000
-Message-ID: <1553506240-2584-1-git-send-email-vladimir.oltean@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.7.4
-x-clientproxiedby: VI1PR03CA0071.eurprd03.prod.outlook.com
- (2603:10a6:803:50::42) To DB7PR04MB5163.eurprd04.prod.outlook.com
- (2603:10a6:10:1d::11)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=vladimir.oltean@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: fefcc352-356e-420b-f935-08d6b10496ab
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:DB7PR04MB5308;
-x-ms-traffictypediagnostic: DB7PR04MB5308:
-x-microsoft-antispam-prvs: <DB7PR04MB5308E4D566FFA27D2D3DBF58E05E0@DB7PR04MB5308.eurprd04.prod.outlook.com>
-x-forefront-prvs: 0987ACA2E2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(39860400002)(396003)(346002)(376002)(366004)(199004)(189003)(71200400001)(71190400001)(4326008)(102836004)(476003)(2616005)(486006)(97736004)(86362001)(44832011)(6506007)(14454004)(386003)(6512007)(6116002)(53936002)(26005)(68736007)(186003)(3846002)(256004)(14444005)(5660300002)(7736002)(305945005)(99286004)(6636002)(25786009)(316002)(478600001)(110136005)(54906003)(2906002)(106356001)(8936002)(2501003)(105586002)(66066001)(52116002)(6486002)(36756003)(50226002)(6436002)(81156014)(8676002)(81166006);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB5308;H:DB7PR04MB5163.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: l17En+ejIEF9Rele+N292iRCSRocbPow5b7oL1LtuwFBzq4yxaSeYNK0ExPCTmrIfQ3SyCOax0O5ZamybXJKMmtPFKjPeAUZ8Lot3btzHDBwN9/bk7/dGNoP06JYM8BCvFm2WVUBxhL1vVXODaJgYsmGc5JYuNoWcDjOkHGPi3pQ1pRN4pL71pIzD4AajCu/JjKZD+tTsN+YiCQKT6ABx5ACJYPniYY4B2PanpiTFHSHe/j5Uiw97HezYfODgtFEkHoTLkqtcp7yx/HgelS4+uNYtri/avIQiBAz7/389IJr5Vd2mKl2H/IBjUmMJoD1jYFkJNOnHHLBJXehTjN1fV/ynP4/fXzAkD/DM9GshlD8EzbcO+3AlJDAivV0xHCtAaIWdpMITTMItPV9oIEUK/b/ABbuKt3kfZa5LGJlLGU=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 25 Mar 2019 05:31:25 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:46065 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730147AbfCYJbZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 05:31:25 -0400
+Received: by mail-ot1-f65.google.com with SMTP id e5so7352854otk.12;
+        Mon, 25 Mar 2019 02:31:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EokbbCNypUQRj97LEIrYreQHlxeyCDH0r7kVx5EfcRI=;
+        b=Kh1B9f+botDvSwpE885yEtUb4tKL9/ItJXbwJaDtzangB43mlX5KQ41+y2r78q+uTM
+         l9+ChcoG4dy3vx7ec3Gk2hORK64tQ0uNjqLQh4zuPS3wRJGcYbLIlS0v6XZxefVmv3fq
+         0oQ3+3fTthJFfUvoPbm6QoEcUnYyLY+v56C/o5J1l2keqHdMFnPqmfKPD5crWBdyTdje
+         ZyNGGlYddyeJdyE+J1Nid14w/U+yEE2BbltpX3Y5q9eCYX+egbtAAsh4yTJZn83voynh
+         aG9IloLtJwXZr5ZBd0NAXIP9Lx5U45euUVSly186iw3ClJnm4RHoGjiiOFVGilmvp7uN
+         SVKg==
+X-Gm-Message-State: APjAAAXYZFulRJ7p/ij8D/sV5B3pRs1EyF90vBkXIcfGhFOdC9niQa6g
+        5Ad7HFJviiUhQGsdjO2LE3QvBcXu/AQC/JfkgqNNfg==
+X-Google-Smtp-Source: APXvYqwu7YweWa8X1gplgQBHJgdlXgIF71t5974E2SUR+6vL9ZuUUqtef5jASbXV2aSs4CDoz81ngsDYXpmSnDXKWDo=
+X-Received: by 2002:a9d:738c:: with SMTP id j12mr16252144otk.119.1553506284446;
+ Mon, 25 Mar 2019 02:31:24 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fefcc352-356e-420b-f935-08d6b10496ab
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Mar 2019 09:30:58.8924
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB5308
+References: <20190322134705.27994-1-thomas.preston@codethink.co.uk>
+In-Reply-To: <20190322134705.27994-1-thomas.preston@codethink.co.uk>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 25 Mar 2019 10:31:13 +0100
+Message-ID: <CAJZ5v0isa7x+XPAregcKtMxtgsNw43JuBhGB_1x3eHkvaV8HRg@mail.gmail.com>
+Subject: Re: [PATCH] Documentation: acpi: Add an example for PRP0001
+To:     Thomas Preston <thomas.preston@codethink.co.uk>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Each eTSEC MAC has its own TBI (SGMII) PCS and private MDIO bus.
-But due to a DTS oversight, both SGMII-compatible MACs of the LS1021 SoC
-are pointing towards the same internal PCS. Therefore nobody is
-controlling the internal PCS of eTSEC0.
+On Fri, Mar 22, 2019 at 2:47 PM Thomas Preston
+<thomas.preston@codethink.co.uk> wrote:
+>
+> Add an example for the magic PRP0001 device ID which allows matching
+> ACPI devices against drivers using OF Device Tree compatible property.
+> It wasn't clear to me that PRP0001 could be used in _CID.
 
-Upon initial ndo_open, the SGMII link is ok by virtue of U-boot
-initialization. But upon an ifdown/ifup sequence, the code path from
-ndo_open -> init_phy -> gfar_configure_serdes does not get executed for
-the PCS of eTSEC0 (and is executed twice for MAC eTSEC1). So the SGMII
-link remains down for eTSEC0. On the LS1021A-TWR board, to signal this
-failure condition, the PHY driver keeps printing
-'803x_aneg_done: SGMII link is not ok'.
+Mika, Andy, can you have a look at this, please?
 
-Fixes: 055223d4d22d ("ARM: dts: ls1021a: Enable the eTSEC ports on QDS and =
-TWR")
-Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
----
- arch/arm/boot/dts/ls1021a-twr.dts | 9 ++++++++-
- arch/arm/boot/dts/ls1021a.dtsi    | 9 +++++++++
- 2 files changed, 17 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/ls1021a-twr.dts b/arch/arm/boot/dts/ls1021a-=
-twr.dts
-index 97e1fb7..9b1fe99 100644
---- a/arch/arm/boot/dts/ls1021a-twr.dts
-+++ b/arch/arm/boot/dts/ls1021a-twr.dts
-@@ -145,7 +145,7 @@
- };
-=20
- &enet0 {
--	tbi-handle =3D <&tbi1>;
-+	tbi-handle =3D <&tbi0>;
- 	phy-handle =3D <&sgmii_phy2>;
- 	phy-connection-type =3D "sgmii";
- 	status =3D "okay";
-@@ -225,6 +225,13 @@
- 	sgmii_phy2: ethernet-phy@2 {
- 		reg =3D <0x2>;
- 	};
-+	tbi0: tbi-phy@1f {
-+		reg =3D <0x1f>;
-+		device_type =3D "tbi-phy";
-+	};
-+};
-+
-+&mdio1 {
- 	tbi1: tbi-phy@1f {
- 		reg =3D <0x1f>;
- 		device_type =3D "tbi-phy";
-diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dts=
-i
-index b4f2723..3a3d264 100644
---- a/arch/arm/boot/dts/ls1021a.dtsi
-+++ b/arch/arm/boot/dts/ls1021a.dtsi
-@@ -709,6 +709,15 @@
- 			      <0x0 0x2d10030 0x0 0x4>;
- 		};
-=20
-+		mdio1: mdio@2d64000 {
-+			compatible =3D "gianfar";
-+			device_type =3D "mdio";
-+			#address-cells =3D <1>;
-+			#size-cells =3D <0>;
-+			reg =3D <0x0 0x2d64000 0x0 0x4000>,
-+			      <0x0 0x2d50030 0x0 0x4>;
-+		};
-+
- 		ptp_clock@2d10e00 {
- 			compatible =3D "fsl,etsec-ptp";
- 			reg =3D <0x0 0x2d10e00 0x0 0xb0>;
---=20
-2.7.4
-
+> Signed-off-by: Thomas Preston <thomas.preston@codethink.co.uk>
+> ---
+>  Documentation/acpi/enumeration.txt | 27 +++++++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+>
+> diff --git a/Documentation/acpi/enumeration.txt b/Documentation/acpi/enumeration.txt
+> index 7bcf9c3d9fbe..391db643065a 100644
+> --- a/Documentation/acpi/enumeration.txt
+> +++ b/Documentation/acpi/enumeration.txt
+> @@ -410,6 +410,33 @@ Specifically, the device IDs returned by _HID and preceding PRP0001 in the _CID
+>  return package will be checked first.  Also in that case the bus type the device
+>  will be enumerated to depends on the device ID returned by _HID.
+>
+> +For example, the following ACPI sample might be used to enumerate an lm75-type
+> +I2C temperature sensor and match it to the driver using the Device Tree
+> +namespace link:
+> +
+> +       Device (TMP0)
+> +       {
+> +               Name (_HID, "TITMP75") /* _HID will appear in sysfs */
+> +               Name (_CID, "PRP0001")
+> +               Name (_DSD, Package() {
+> +                       ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+> +                       Package () {
+> +                               Package (2) { "compatible", "ti,tmp75" },
+> +                       }
+> +               })
+> +               Method (_CRS, 0, Serialized)
+> +               {
+> +                       Name (SBUF, ResourceTemplate ()
+> +                       {
+> +                               I2cSerialBusV2 (0x48, ControllerInitiated,
+> +                                       400000, AddressingMode7Bit,
+> +                                       "\\_SB.PCI0.I2C1", 0x00,
+> +                                       ResourceConsumer, , Exclusive,)
+> +                       })
+> +                       Return (SBUF)
+> +               }
+> +       }
+> +
+>  It is valid to define device objects with a _HID returning PRP0001 and without
+>  the "compatible" property in the _DSD or a _CID as long as one of their
+>  ancestors provides a _DSD with a valid "compatible" property.  Such device
+> --
+> 2.11.0
+>
