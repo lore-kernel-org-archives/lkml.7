@@ -2,72 +2,167 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84EC2C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:12:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F4D0C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:14:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58E762064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:12:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23AF7206DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:14:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="N3XRBKtT"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="DvrjHK7z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729749AbfCYSME (ORCPT
+        id S1729993AbfCYSOo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 14:12:04 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:44338 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729095AbfCYSME (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 14:12:04 -0400
-Received: from zn.tnic (p200300EC2F098000329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:8000:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 30C1C1EC06CA;
-        Mon, 25 Mar 2019 19:12:03 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1553537523;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=RbbXfzuezoD7Op9HDM8ogvN/lNcOeJSlYV4LqWriCRs=;
-        b=N3XRBKtTwX9vRTVC4eJBQC1Ep3QhUb08ezB/BD4q0Nkiq/LS7J5gcgB6nAsp2V3vKk1PuJ
-        Z5TnBb4vYBiC6vQtMdCP4g5EqtFfNy3HOUQSA674t1GBpPVVy559As3kevIIpuQFlXH69r
-        /BuyDzp/sxV3yWOa1U2zXGvljfE8N2Y=
-Date:   Mon, 25 Mar 2019 19:12:05 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Jim Mattson <jmattson@google.com>
-Cc:     KVM <kvm@vger.kernel.org>, Joerg Roedel <joro@8bytes.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Yazen Ghannam <Yazen.Ghannam@amd.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] kvm/x86: Move MSR_K7_HWCR to svm.c
-Message-ID: <20190325181205.GP12016@zn.tnic>
-References: <20190325171649.7311-1-bp@alien8.de>
- <20190325171649.7311-2-bp@alien8.de>
- <CALMp9eTX5x9vchMje6J-Fji6jGfHnz=sPVmSKwO-3zdChAZz=g@mail.gmail.com>
+        Mon, 25 Mar 2019 14:14:44 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:43648 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729238AbfCYSOo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 14:14:44 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2PIE5MO074994;
+        Mon, 25 Mar 2019 18:14:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=jo3Bob4cdRs1bV5NhlO4YDp1KXeRPUJkiPauAObNPMo=;
+ b=DvrjHK7z9J5drV3Qp/wqaxKhVuE1hBjVK3cI7XpW57tRNG4VsOwHTFJ+NaNp6NjNDPvA
+ 0KV9JD5oqzCHlO4GLpC8vON4OYS/TRzncbQcSLNNE68PhNZcD4lDbGeHx02Poumt5xGS
+ RHjanLynevuDxjRtxbqGUxVs5jwtMr0V9Locj8ohnceXZXHOoMBy45XwCT6/QDclmdRc
+ fvSMrHgWJISmVHb+k68DL83cHxmMMtcmYffF7Jz25aQDBYdXvK05ubi1ep9n9kUoa/7m
+ sGEK2OChytMGT73NkMbWH2ZDc+CD5qjDtXflt+/eKjCAQvL7N9ONFCHuQkyJ9SIeFhYi Dw== 
+Received: from userv0022.oracle.com (userv0022.oracle.com [156.151.31.74])
+        by aserp2130.oracle.com with ESMTP id 2re6g0nrhm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 25 Mar 2019 18:14:30 +0000
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x2PIERmM016767
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 25 Mar 2019 18:14:30 GMT
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x2PIEOYP030352;
+        Mon, 25 Mar 2019 18:14:24 GMT
+Received: from localhost (/10.159.240.244)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 25 Mar 2019 11:14:24 -0700
+Date:   Mon, 25 Mar 2019 11:14:22 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     "Theodore Ts'o" <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Eric Whitney <enwlinux@gmail.com>,
+        Sean Fu <fxinrong@gmail.com>, Jan Kara <jack@suse.cz>,
+        Eric Biggers <ebiggers@google.com>, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ext4: use BUG() instead of BUG_ON(1)
+Message-ID: <20190325181422.GH1173@magnolia>
+References: <20190325130040.1437445-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CALMp9eTX5x9vchMje6J-Fji6jGfHnz=sPVmSKwO-3zdChAZz=g@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190325130040.1437445-1-arnd@arndb.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9206 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903250131
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 11:05:48AM -0700, Jim Mattson wrote:
-> If the guest has written a non-zero value to this MSR, shouldn't it be
-> able to read that value back?
+On Mon, Mar 25, 2019 at 02:00:25PM +0100, Arnd Bergmann wrote:
+> BUG_ON(1) leads to bogus warnings from clang when
+> CONFIG_PROFILE_ANNOTATED_BRANCHES is set:
+> 
+>  fs/ext4/inode.c:544:4: error: variable 'retval' is used uninitialized whenever 'if' condition is false
+>       [-Werror,-Wsometimes-uninitialized]
+>                         BUG_ON(1);
+>                         ^~~~~~~~~
+>  include/asm-generic/bug.h:61:36: note: expanded from macro 'BUG_ON'
+>                                    ^~~~~~~~~~~~~~~~~~~
+>  include/linux/compiler.h:48:23: note: expanded from macro 'unlikely'
+>                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>  fs/ext4/inode.c:591:6: note: uninitialized use occurs here
+>         if (retval > 0 && map->m_flags & EXT4_MAP_MAPPED) {
+>             ^~~~~~
+>  fs/ext4/inode.c:544:4: note: remove the 'if' if its condition is always true
+>                         BUG_ON(1);
+>                         ^
+>  include/asm-generic/bug.h:61:32: note: expanded from macro 'BUG_ON'
+>                                ^
+>  fs/ext4/inode.c:502:12: note: initialize the variable 'retval' to silence this warning
+> 
+> Change it to BUG() so clang can see that this code path can never
+> continue.
 
-See the second patch.
+I grok that most of these look like "should never get here" assertions,
+but shouldn't we be converting these BUG*() calls to "shut down fs,
+bounce error back to userspace" instead of killing the whole kernel?
 
--- 
-Regards/Gruss,
-    Boris.
+(He says knowing that ripping all of those out is its own project... :P)
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
+--D
+
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  fs/ext4/extents_status.c | 4 ++--
+>  fs/ext4/inode.c          | 4 ++--
+>  2 files changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/fs/ext4/extents_status.c b/fs/ext4/extents_status.c
+> index 2b439afafe13..023a3eb3afa3 100644
+> --- a/fs/ext4/extents_status.c
+> +++ b/fs/ext4/extents_status.c
+> @@ -711,7 +711,7 @@ static void ext4_es_insert_extent_ind_check(struct inode *inode,
+>  			 * We don't need to check unwritten extent because
+>  			 * indirect-based file doesn't have it.
+>  			 */
+> -			BUG_ON(1);
+> +			BUG();
+>  		}
+>  	} else if (retval == 0) {
+>  		if (ext4_es_is_written(es)) {
+> @@ -780,7 +780,7 @@ static int __es_insert_extent(struct inode *inode, struct extent_status *newes)
+>  			}
+>  			p = &(*p)->rb_right;
+>  		} else {
+> -			BUG_ON(1);
+> +			BUG();
+>  			return -EINVAL;
+>  		}
+>  	}
+> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+> index b32a57bc5d5d..190f0478582a 100644
+> --- a/fs/ext4/inode.c
+> +++ b/fs/ext4/inode.c
+> @@ -541,7 +541,7 @@ int ext4_map_blocks(handle_t *handle, struct inode *inode,
+>  			map->m_len = retval;
+>  			retval = 0;
+>  		} else {
+> -			BUG_ON(1);
+> +			BUG();
+>  		}
+>  #ifdef ES_AGGRESSIVE_TEST
+>  		ext4_map_blocks_es_recheck(handle, inode, map,
+> @@ -1876,7 +1876,7 @@ static int ext4_da_map_blocks(struct inode *inode, sector_t iblock,
+>  		else if (ext4_es_is_unwritten(&es))
+>  			map->m_flags |= EXT4_MAP_UNWRITTEN;
+>  		else
+> -			BUG_ON(1);
+> +			BUG();
+>  
+>  #ifdef ES_AGGRESSIVE_TEST
+>  		ext4_map_blocks_es_recheck(NULL, inode, map, &orig_map, 0);
+> -- 
+> 2.20.0
+> 
