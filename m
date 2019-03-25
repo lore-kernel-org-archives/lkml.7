@@ -2,344 +2,458 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5610C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:25:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93676C10F03
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:26:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70D5820685
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:25:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TGQlwMT5"
+	by mail.kernel.org (Postfix) with ESMTP id 5520E20685
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:26:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553538373;
+	bh=3X8JXJhzhuaNy8yAYnEdzs3VSjFwjhv1E67iAuh95ug=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JkzwEWuNa45EdsCyGs8etPDMUa9HdrOwXeYet/9mz1D5QUE8vhNWC8YSz5xkWE2rN
+	 L8ohca61XZEZ1CLu/Me+j8aJUKwHPQ5FwZPUrc+kDM8C/oL5l3G9DgRXiW91/USPaK
+	 yL0Af0OYTf+/+FqnUyjOd4MQ5XtNYpUGNuYl9MWs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729994AbfCYSZV (ORCPT
+        id S1730035AbfCYS0M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 14:25:21 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:36112 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729283AbfCYSZU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 14:25:20 -0400
-Received: by mail-qt1-f195.google.com with SMTP id y36so11509086qtb.3
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 11:25:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tHd/yOQ4vI7JZ+LktW3pXFi1l+q5YqpUFBZXm47gewQ=;
-        b=TGQlwMT5saB7skx4Xax1JDJFegFINr4VkDzVFxSPKTN6q7Gx7+dEKw9V5K7GiIcVpj
-         wFcoTjG9zy4acWwLH0zBg6+nuDIYf7D4DK+uuUOhP/r5P8a2ywlG5r8ukXX4pDwvO1Nf
-         ubV7l15t39JK7e3k99AbWQw12CG7pF+rOz6Ec=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tHd/yOQ4vI7JZ+LktW3pXFi1l+q5YqpUFBZXm47gewQ=;
-        b=H9t6eyvvlhTxq6b/aJaNMMwupO2J6pM6JLdTBTtQKcVG0LOBSCRAsqDbQJN09WyWLp
-         03iII4sEB2S932nX5gl+bHjQE2rp0wHHvL9QGQB45cR2+Tayvjuo/bP65G0tJ8Y3q2w7
-         OnwLQ4+ED6zsVQzwvARA+JlI4RsAJaVj0ZiVtYtfkC3YKZnXWHiVoekizygudSR2r8l3
-         kPOV7gAexB8CTGMPlx9WwoF2L94kGA/UQMXXPYp8XWcc5xNQopNKLYpQtwW2UcQcNMPI
-         vSX/ko6BExl44nTeWtzG+Mw8RNaCOW8k/WorLW/Bhdck98zI3vKUjK6/QlY03Dl6YDfD
-         bvuw==
-X-Gm-Message-State: APjAAAUA+ZnR7VkYZMaCOtVzAwEo/FmQK2PlcmYY7OH7miG5yxGPm/Pd
-        n1N4YOEZ4sexosmbokptoxcD3E4ZSMHlM1ioMdAh4g==
-X-Google-Smtp-Source: APXvYqztHuzQvSJG7cGobCGOghfWOAJ1OvO62iLHNr/9kH1FffeEtC6pFAyMYaAeBOBGm2xDOVJlkAZYRMDGDOCLdlA=
-X-Received: by 2002:aed:35f7:: with SMTP id d52mr21534805qte.335.1553538318525;
- Mon, 25 Mar 2019 11:25:18 -0700 (PDT)
+        Mon, 25 Mar 2019 14:26:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56332 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729632AbfCYS0L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 14:26:11 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0010920685;
+        Mon, 25 Mar 2019 18:26:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553538370;
+        bh=3X8JXJhzhuaNy8yAYnEdzs3VSjFwjhv1E67iAuh95ug=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fwxk2ETt+AA42EQ7CkpkY7ADenqGmoFaQ10oqxPDBOWqq1jX8LYUER1wFq+1Htn7u
+         ykrxj49bPJ0svuTigatgNiXI6/Bnz3wkClioiGW4qYAO6IgfT+O1nFeShadDBBPo2U
+         2v2b4Voz21FSgFva0TYtZ5sraA1/Z/S+pqPyAvUo=
+Date:   Mon, 25 Mar 2019 13:26:08 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH 4/4] CPER: Remove unnecessary use of user-space types
+Message-ID: <20190325182608.GS251185@google.com>
+References: <20190325181425.247227-1-helgaas@kernel.org>
+ <20190325181425.247227-5-helgaas@kernel.org>
 MIME-Version: 1.0
-References: <20190325122302.5483-1-zhiyong.tao@mediatek.com> <20190325122302.5483-5-zhiyong.tao@mediatek.com>
-In-Reply-To: <20190325122302.5483-5-zhiyong.tao@mediatek.com>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Mon, 25 Mar 2019 11:25:07 -0700
-Message-ID: <CANMq1KBwjNxi2fMLFna5r0ak56+8paMq1YbLWHEScTzzLqf+Bw@mail.gmail.com>
-Subject: Re: [PATCH 4/4] pinctrl: add drive for I2C related pins on MT8183
-To:     Zhiyong Tao <zhiyong.tao@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        hui.liu@mediatek.com, Eddie Huang <eddie.huang@mediatek.com>,
-        chuanjia.liu@mediatek.com, biao.huang@mediatek.com,
-        hongzhou.yang@mediatek.com, Erin Lo <erin.lo@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>, devicetree@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190325181425.247227-5-helgaas@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 5:23 AM Zhiyong Tao <zhiyong.tao@mediatek.com> wrote:
->
-> This patch provides the advanced drive for I2C used pins on MT8183.
-> The detail strength specification description of the I2C pin:
-> When E1=0/E0=0, the strength is 0.125mA.
-> When E1=0/E0=1, the strength is 0.25mA.
-> When E1=1/E0=0, the strength is 0.5mA.
-> When E1=1/E0=1, the strength is 1mA.
-> For I2C pins, there are existing generic driving setup and the above
-> specific driving setup. I2C pins can only support 2/4/6/8/10/12/14/16mA
-> driving adjustment in generic driving setup. But in specific driving
-> setup, they can support 0.125/0.25/0.5/1mA adjustment.
-> If we enable specific driving setup for I2C pins,
-> the existing generic driving setup will be disabled.
-> For some special features, we need the I2C pins specific driving setup.
-> The specific driving setup is controlled by E1E0EN.
-> So we need add extra vendor driving preperty instead of the generic
-> driving property. We can add "mediatek,drive-strength-adv = <XXX>;"
-> to describe the specific driving setup property.
-> "XXX" means the value of E1E0EN. So the valid arguments of
-> "mediatek,drive-strength-adv" are from 0 to 7.
->
-> Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
+On Mon, Mar 25, 2019 at 01:14:25PM -0500, helgaas@kernel.org wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
+> 
+> "__u32" and similar types are intended for things exported to user-space,
+> including structs used in ioctls; see include/uapi/asm-generic/int-l64.h.
+> 
+> They are not needed for the CPER struct definitions, which not exported to
+> user-space and not used in ioctls.  Replace them with the typical "u32" and
+> similar types.  No functional change intended.
+> 
+> The reason for changing this is to remove the question of "why do we use
+> __u32 here instead of u32?"  We should use __u32 when there's a reason for
+> it; otherwise, we should prefer u32 for consistency.
+> 
+> Reference: Documentation/process/coding-style.rst
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> CC: Masahiro Yamada <yamada.masahiro@socionext.com>
+> CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> CC: Andrew Morton <akpm@linux-foundation.org>
+
+I cc'd you folks because you were part of this conversation:
+
+  https://lore.kernel.org/lkml/1526350925-14922-3-git-send-email-yamada.masahiro@socionext.com/T/#u
+
+I *think* the conclusion there was that this sort of change makes
+sense, but I want to make sure.  If it does make sense, I'm surprised
+at how much stuff in include/linux/ still uses __u32 when it doesn't
+appear to need it.
+
 > ---
->  drivers/pinctrl/mediatek/pinctrl-mt8183.c        | 50 ++++++++++++++++++++++++
->  drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c | 47 ++++++++++++++++++++++
->  drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h | 11 ++++++
->  drivers/pinctrl/mediatek/pinctrl-paris.c         | 12 ++++++
->  4 files changed, 120 insertions(+)
->
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-mt8183.c b/drivers/pinctrl/mediatek/pinctrl-mt8183.c
-> index 6262fd3678ea..2c7409ed16fa 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-mt8183.c
-> +++ b/drivers/pinctrl/mediatek/pinctrl-mt8183.c
-> @@ -472,6 +472,51 @@ static const struct mtk_pin_field_calc mt8183_pin_r1_range[] = {
->         PIN_FIELD_BASE(133, 133, 8, 0x0D0, 0x10, 13, 1),
+>  include/linux/cper.h | 286 +++++++++++++++++++++----------------------
+>  1 file changed, 143 insertions(+), 143 deletions(-)
+> 
+> diff --git a/include/linux/cper.h b/include/linux/cper.h
+> index 2f361a96dc76..cc4980bb0f65 100644
+> --- a/include/linux/cper.h
+> +++ b/include/linux/cper.h
+> @@ -323,214 +323,214 @@ enum {
+>  /* Record Header, UEFI v2.7 sec N.2.1 */
+>  struct cper_record_header {
+>  	char	signature[CPER_SIG_SIZE];	/* must be CPER_SIG_RECORD */
+> -	__u16	revision;			/* must be CPER_RECORD_REV */
+> -	__u32	signature_end;			/* must be CPER_SIG_END */
+> -	__u16	section_count;
+> -	__u32	error_severity;
+> -	__u32	validation_bits;
+> -	__u32	record_length;
+> -	__u64	timestamp;
+> +	u16	revision;			/* must be CPER_RECORD_REV */
+> +	u32	signature_end;			/* must be CPER_SIG_END */
+> +	u16	section_count;
+> +	u32	error_severity;
+> +	u32	validation_bits;
+> +	u32	record_length;
+> +	u64	timestamp;
+>  	guid_t	platform_id;
+>  	guid_t	partition_id;
+>  	guid_t	creator_id;
+>  	guid_t	notification_type;
+> -	__u64	record_id;
+> -	__u32	flags;
+> -	__u64	persistence_information;
+> -	__u8	reserved[12];			/* must be zero */
+> +	u64	record_id;
+> +	u32	flags;
+> +	u64	persistence_information;
+> +	u8	reserved[12];			/* must be zero */
 >  };
->
-> +static const struct mtk_pin_field_calc mt8183_pin_e1e0en_range[] = {
-> +       PIN_FIELD_BASE(48, 48, 3, 0x0F0, 0x10, 20, 1),
-> +       PIN_FIELD_BASE(49, 49, 3, 0x0F0, 0x10, 15, 1),
-> +       PIN_FIELD_BASE(50, 50, 4, 0x0F0, 0x10, 12, 1),
-> +       PIN_FIELD_BASE(51, 51, 4, 0x0F0, 0x10, 7, 1),
-> +       PIN_FIELD_BASE(81, 81, 5, 0x0F0, 0x10, 12, 1),
-> +       PIN_FIELD_BASE(82, 82, 5, 0x0F0, 0x10, 9, 1),
-> +       PIN_FIELD_BASE(83, 83, 5, 0x0F0, 0x10, 19, 1),
-> +       PIN_FIELD_BASE(84, 84, 5, 0x0F0, 0x10, 22, 1),
-> +       PIN_FIELD_BASE(103, 103, 6, 0x0F0, 0x10, 24, 1),
-> +       PIN_FIELD_BASE(104, 104, 6, 0x0F0, 0x10, 14, 1),
-> +       PIN_FIELD_BASE(105, 105, 6, 0x0F0, 0x10, 27, 1),
-> +       PIN_FIELD_BASE(106, 106, 6, 0x0F0, 0x10, 17, 1),
-> +};
-> +
-> +static const struct mtk_pin_field_calc mt8183_pin_e0_range[] = {
-> +       PIN_FIELD_BASE(48, 48, 3, 0x0F0, 0x10, 21, 1),
-> +       PIN_FIELD_BASE(49, 49, 3, 0x0F0, 0x10, 16, 1),
-> +       PIN_FIELD_BASE(50, 50, 4, 0x0F0, 0x10, 13, 1),
-> +       PIN_FIELD_BASE(51, 51, 4, 0x0F0, 0x10, 8, 1),
-> +       PIN_FIELD_BASE(81, 81, 5, 0x0F0, 0x10, 13, 1),
-> +       PIN_FIELD_BASE(82, 82, 5, 0x0F0, 0x10, 10, 1),
-> +       PIN_FIELD_BASE(83, 83, 5, 0x0F0, 0x10, 20, 1),
-> +       PIN_FIELD_BASE(84, 84, 5, 0x0F0, 0x10, 23, 1),
-> +       PIN_FIELD_BASE(103, 103, 6, 0x0F0, 0x10, 25, 1),
-> +       PIN_FIELD_BASE(104, 104, 6, 0x0F0, 0x10, 15, 1),
-> +       PIN_FIELD_BASE(105, 105, 6, 0x0F0, 0x10, 28, 1),
-> +       PIN_FIELD_BASE(106, 106, 6, 0x0F0, 0x10, 18, 1),
-> +};
-> +
-> +static const struct mtk_pin_field_calc mt8183_pin_e1_range[] = {
-> +       PIN_FIELD_BASE(48, 48, 3, 0x0F0, 0x10, 22, 1),
-> +       PIN_FIELD_BASE(49, 49, 3, 0x0F0, 0x10, 17, 1),
-> +       PIN_FIELD_BASE(50, 50, 4, 0x0F0, 0x10, 14, 1),
-> +       PIN_FIELD_BASE(51, 51, 4, 0x0F0, 0x10, 9, 1),
-> +       PIN_FIELD_BASE(81, 81, 5, 0x0F0, 0x10, 14, 1),
-> +       PIN_FIELD_BASE(82, 82, 5, 0x0F0, 0x10, 11, 1),
-> +       PIN_FIELD_BASE(83, 83, 5, 0x0F0, 0x10, 21, 1),
-> +       PIN_FIELD_BASE(84, 84, 5, 0x0F0, 0x10, 24, 1),
-> +       PIN_FIELD_BASE(103, 103, 6, 0x0F0, 0x10, 26, 1),
-> +       PIN_FIELD_BASE(104, 104, 6, 0x0F0, 0x10, 16, 1),
-> +       PIN_FIELD_BASE(105, 105, 6, 0x0F0, 0x10, 29, 1),
-> +       PIN_FIELD_BASE(106, 106, 6, 0x0F0, 0x10, 19, 1),
-> +};
-> +
->  static const struct mtk_pin_reg_calc mt8183_reg_cals[PINCTRL_PIN_REG_MAX] = {
->         [PINCTRL_PIN_REG_MODE] = MTK_RANGE(mt8183_pin_mode_range),
->         [PINCTRL_PIN_REG_DIR] = MTK_RANGE(mt8183_pin_dir_range),
-> @@ -485,6 +530,9 @@ static const struct mtk_pin_reg_calc mt8183_reg_cals[PINCTRL_PIN_REG_MAX] = {
->         [PINCTRL_PIN_REG_PUPD] = MTK_RANGE(mt8183_pin_pupd_range),
->         [PINCTRL_PIN_REG_R0] = MTK_RANGE(mt8183_pin_r0_range),
->         [PINCTRL_PIN_REG_R1] = MTK_RANGE(mt8183_pin_r1_range),
-> +       [PINCTRL_PIN_REG_DRV_EN] = MTK_RANGE(mt8183_pin_e1e0en_range),
-> +       [PINCTRL_PIN_REG_DRV_E0] = MTK_RANGE(mt8183_pin_e0_range),
-> +       [PINCTRL_PIN_REG_DRV_E1] = MTK_RANGE(mt8183_pin_e1_range),
+>  
+>  /* Section Descriptor, UEFI v2.7 sec N.2.2 */
+>  struct cper_section_descriptor {
+> -	__u32	section_offset;		/* Offset in bytes of the
+> +	u32	section_offset;		/* Offset in bytes of the
+>  					 *  section body from the base
+>  					 *  of the record header */
+> -	__u32	section_length;
+> -	__u16	revision;		/* must be CPER_RECORD_REV */
+> -	__u8	validation_bits;
+> -	__u8	reserved;		/* must be zero */
+> -	__u32	flags;
+> +	u32	section_length;
+> +	u16	revision;		/* must be CPER_RECORD_REV */
+> +	u8	validation_bits;
+> +	u8	reserved;		/* must be zero */
+> +	u32	flags;
+>  	guid_t	section_type;
+>  	guid_t	fru_id;
+> -	__u32	section_severity;
+> -	__u8	fru_text[20];
+> +	u32	section_severity;
+> +	u8	fru_text[20];
 >  };
->
->  static const char * const mt8183_pinctrl_register_base_names[] = {
-> @@ -517,6 +565,8 @@ static const struct mtk_pin_soc mt8183_data = {
->         .drive_get = mtk_pinconf_drive_get_rev1,
->         .adv_pull_get = mtk_pinconf_adv_pull_get,
->         .adv_pull_set = mtk_pinconf_adv_pull_set,
-> +       .adv_drive_get = mtk_pinconf_adv_drive_get,
-> +       .adv_drive_set = mtk_pinconf_adv_drive_set,
+>  
+>  /* Generic Processor Error Section, UEFI v2.7 sec N.2.4.1 */
+>  struct cper_sec_proc_generic {
+> -	__u64	validation_bits;
+> -	__u8	proc_type;
+> -	__u8	proc_isa;
+> -	__u8	proc_error_type;
+> -	__u8	operation;
+> -	__u8	flags;
+> -	__u8	level;
+> -	__u16	reserved;
+> -	__u64	cpu_version;
+> +	u64	validation_bits;
+> +	u8	proc_type;
+> +	u8	proc_isa;
+> +	u8	proc_error_type;
+> +	u8	operation;
+> +	u8	flags;
+> +	u8	level;
+> +	u16	reserved;
+> +	u64	cpu_version;
+>  	char	cpu_brand[128];
+> -	__u64	proc_id;
+> -	__u64	target_addr;
+> -	__u64	requestor_id;
+> -	__u64	responder_id;
+> -	__u64	ip;
+> +	u64	proc_id;
+> +	u64	target_addr;
+> +	u64	requestor_id;
+> +	u64	responder_id;
+> +	u64	ip;
 >  };
->
->  static const struct of_device_id mt8183_pinctrl_of_match[] = {
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> index b1c368455d30..ef8732e8966b 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> @@ -674,3 +674,50 @@ int mtk_pinconf_adv_pull_get(struct mtk_pinctrl *hw,
->
->         return 0;
->  }
-> +
-> +int mtk_pinconf_adv_drive_set(struct mtk_pinctrl *hw,
-> +                             const struct mtk_pin_desc *desc, u32 arg)
-> +{
-> +       int err;
-> +
-> +       err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_DRV_EN, arg & 1);
-
-Should 1, 2, 4 masks be defined as masks somewhere above in this file?
-
-> +       if (err)
-> +               return err;
-> +
-> +       if (arg & 1) {
-
-It's the second time you use arg & 1.
-
-Maybe define:
-int en = arg & 1;
-int e0 = !!(arg & 2);
-int e1 = !!(arg & 4);
-
-Also, I feel that the code looks a little cleaner if you just return early here:
-if (!(arg & 1))
-   return err;
-
-> +               err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_DRV_E0,
-> +                                      !!(arg & 2));
-> +               if (err)
-> +                       return err;
-> +
-> +               err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_DRV_E1,
-> +                                      !!(arg & 4));
-> +               if (err)
-> +                       return err;
-> +       }
-> +
-> +       return err;
-> +}
-> +
-> +int mtk_pinconf_adv_drive_get(struct mtk_pinctrl *hw,
-> +                             const struct mtk_pin_desc *desc, u32 *val)
-
-Is there any user for this function? If not, why do we even define it?
-
-> +{
-> +       u32 en, e0, e1;
-> +       int err;
-> +
-> +       err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DRV_EN, &en);
-> +       if (err)
-> +               return err;
-> +
-> +       err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DRV_E0, &e0);
-> +       if (err)
-> +               return err;
-> +
-> +       err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DRV_E1, &e1);
-> +       if (err)
-> +               return err;
-> +
-> +       *val = (e0 | e1 << 1 | en << 2) & 0x7;
-
-I'm confused. Here, e0 is bit 0, e1 is bit 1, end is bit 2. But above
-in mtk_pinconf_adv_drive_set, it seems to be in this order: en, e0,
-e1?
-
-> +
-> +       return 0;
-> +}
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
-> index 6d24522739d9..1b7da42aa1d5 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
-> +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
-> @@ -63,6 +63,9 @@ enum {
->         PINCTRL_PIN_REG_IES,
->         PINCTRL_PIN_REG_PULLEN,
->         PINCTRL_PIN_REG_PULLSEL,
-> +       PINCTRL_PIN_REG_DRV_EN,
-> +       PINCTRL_PIN_REG_DRV_E0,
-> +       PINCTRL_PIN_REG_DRV_E1,
->         PINCTRL_PIN_REG_MAX,
+>  
+>  /* IA32/X64 Processor Error Section, UEFI v2.7 sec N.2.4.2 */
+>  struct cper_sec_proc_ia {
+> -	__u64	validation_bits;
+> -	__u64	lapic_id;
+> -	__u8	cpuid[48];
+> +	u64	validation_bits;
+> +	u64	lapic_id;
+> +	u8	cpuid[48];
 >  };
->
-> @@ -224,6 +227,10 @@ struct mtk_pin_soc {
->         int (*adv_pull_get)(struct mtk_pinctrl *hw,
->                             const struct mtk_pin_desc *desc, bool pullup,
->                             u32 *val);
-> +       int (*adv_drive_set)(struct mtk_pinctrl *hw,
-> +                            const struct mtk_pin_desc *desc, u32 arg);
-> +       int (*adv_drive_get)(struct mtk_pinctrl *hw,
-> +                            const struct mtk_pin_desc *desc, u32 *val);
->
->         /* Specific driver data */
->         void                            *driver_data;
-> @@ -287,5 +294,9 @@ int mtk_pinconf_adv_pull_set(struct mtk_pinctrl *hw,
->  int mtk_pinconf_adv_pull_get(struct mtk_pinctrl *hw,
->                              const struct mtk_pin_desc *desc, bool pullup,
->                              u32 *val);
-> +int mtk_pinconf_adv_drive_set(struct mtk_pinctrl *hw,
-> +                             const struct mtk_pin_desc *desc, u32 arg);
-> +int mtk_pinconf_adv_drive_get(struct mtk_pinctrl *hw,
-> +                             const struct mtk_pin_desc *desc, u32 *val);
->
->  #endif /* __PINCTRL_MTK_COMMON_V2_H */
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
-> index b59e10852bfb..dcd295f0eb4b 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-paris.c
-> +++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
-> @@ -20,12 +20,14 @@
->  #define MTK_PIN_CONFIG_RDSEL   (PIN_CONFIG_END + 2)
->  #define MTK_PIN_CONFIG_PU_ADV  (PIN_CONFIG_END + 3)
->  #define MTK_PIN_CONFIG_PD_ADV  (PIN_CONFIG_END + 4)
-> +#define MTK_PIN_CONFIG_DRV_ADV (PIN_CONFIG_END + 5)
->
->  static const struct pinconf_generic_params mtk_custom_bindings[] = {
->         {"mediatek,tdsel",      MTK_PIN_CONFIG_TDSEL,           0},
->         {"mediatek,rdsel",      MTK_PIN_CONFIG_RDSEL,           0},
->         {"mediatek,pull-up-adv", MTK_PIN_CONFIG_PU_ADV,         1},
->         {"mediatek,pull-down-adv", MTK_PIN_CONFIG_PD_ADV,       1},
-> +       {"mediatek,drive-strength-adv", MTK_PIN_CONFIG_DRV_ADV, 2},
+>  
+>  /* IA32/X64 Processor Error Information Structure, UEFI v2.7 sec N.2.4.2.1 */
+>  struct cper_ia_err_info {
+>  	guid_t	err_type;
+> -	__u64	validation_bits;
+> -	__u64	check_info;
+> -	__u64	target_id;
+> -	__u64	requestor_id;
+> -	__u64	responder_id;
+> -	__u64	ip;
+> +	u64	validation_bits;
+> +	u64	check_info;
+> +	u64	target_id;
+> +	u64	requestor_id;
+> +	u64	responder_id;
+> +	u64	ip;
 >  };
->
->  #ifdef CONFIG_DEBUG_FS
-> @@ -34,6 +36,7 @@ static const struct pin_config_item mtk_conf_items[] = {
->         PCONFDUMP(MTK_PIN_CONFIG_RDSEL, "rdsel", NULL, true),
->         PCONFDUMP(MTK_PIN_CONFIG_PU_ADV, "pu-adv", NULL, true),
->         PCONFDUMP(MTK_PIN_CONFIG_PD_ADV, "pd-adv", NULL, true),
-> +       PCONFDUMP(MTK_PIN_CONFIG_DRV_ADV, "drive-strengt-adv", NULL, true),
-
-drive-strength-adv
-
+>  
+>  /* IA32/X64 Processor Context Information Structure, UEFI v2.7 sec N.2.4.2.2 */
+>  struct cper_ia_proc_ctx {
+> -	__u16	reg_ctx_type;
+> -	__u16	reg_arr_size;
+> -	__u32	msr_addr;
+> -	__u64	mm_reg_addr;
+> +	u16	reg_ctx_type;
+> +	u16	reg_arr_size;
+> +	u32	msr_addr;
+> +	u64	mm_reg_addr;
 >  };
->  #endif
->
-> @@ -311,6 +314,15 @@ static int mtk_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
->                         return -ENOTSUPP;
->                 }
->                 break;
-> +       case MTK_PIN_CONFIG_DRV_ADV:
-> +               if (hw->soc->adv_drive_set) {
-> +                       err = hw->soc->adv_drive_set(hw, desc, arg);
-> +                       if (err)
-> +                               return err;
-> +               } else {
-> +                       return -ENOTSUPP;
-> +               }
-> +               break;
->         default:
->                 err = -ENOTSUPP;
->         }
-> --
-> 2.12.5
->
+>  
+>  /* ARM Processor Error Section, UEFI v2.7 sec N.2.4.4 */
+>  struct cper_sec_proc_arm {
+> -	__u32	validation_bits;
+> -	__u16	err_info_num;		/* Number of Processor Error Info */
+> -	__u16	context_info_num;	/* Number of Processor Context Info Records*/
+> -	__u32	section_length;
+> -	__u8	affinity_level;
+> -	__u8	reserved[3];		/* must be zero */
+> -	__u64	mpidr;
+> -	__u64	midr;
+> -	__u32	running_state;		/* Bit 0 set - Processor running. PSCI = 0 */
+> -	__u32	psci_state;
+> +	u32	validation_bits;
+> +	u16	err_info_num;		/* Number of Processor Error Info */
+> +	u16	context_info_num;	/* Number of Processor Context Info Records*/
+> +	u32	section_length;
+> +	u8	affinity_level;
+> +	u8	reserved[3];		/* must be zero */
+> +	u64	mpidr;
+> +	u64	midr;
+> +	u32	running_state;		/* Bit 0 set - Processor running. PSCI = 0 */
+> +	u32	psci_state;
+>  };
+>  
+>  /* ARM Processor Error Information Structure, UEFI v2.7 sec N.2.4.4.1 */
+>  struct cper_arm_err_info {
+> -	__u8	version;
+> -	__u8	length;
+> -	__u16	validation_bits;
+> -	__u8	type;
+> -	__u16	multiple_error;
+> -	__u8	flags;
+> -	__u64	error_info;
+> -	__u64	virt_fault_addr;
+> -	__u64	physical_fault_addr;
+> +	u8	version;
+> +	u8	length;
+> +	u16	validation_bits;
+> +	u8	type;
+> +	u16	multiple_error;
+> +	u8	flags;
+> +	u64	error_info;
+> +	u64	virt_fault_addr;
+> +	u64	physical_fault_addr;
+>  };
+>  
+>  /* ARM Processor Context Information Structure, UEFI v2.7 sec N.2.4.4.2 */
+>  struct cper_arm_ctx_info {
+> -	__u16	version;
+> -	__u16	type;
+> -	__u32	size;
+> +	u16	version;
+> +	u16	type;
+> +	u32	size;
+>  };
+>  
+>  /* Old Memory Error Section, UEFI v2.1, v2.2 */
+>  struct cper_sec_mem_err_old {
+> -	__u64	validation_bits;
+> -	__u64	error_status;
+> -	__u64	physical_addr;
+> -	__u64	physical_addr_mask;
+> -	__u16	node;
+> -	__u16	card;
+> -	__u16	module;
+> -	__u16	bank;
+> -	__u16	device;
+> -	__u16	row;
+> -	__u16	column;
+> -	__u16	bit_pos;
+> -	__u64	requestor_id;
+> -	__u64	responder_id;
+> -	__u64	target_id;
+> -	__u8	error_type;
+> +	u64	validation_bits;
+> +	u64	error_status;
+> +	u64	physical_addr;
+> +	u64	physical_addr_mask;
+> +	u16	node;
+> +	u16	card;
+> +	u16	module;
+> +	u16	bank;
+> +	u16	device;
+> +	u16	row;
+> +	u16	column;
+> +	u16	bit_pos;
+> +	u64	requestor_id;
+> +	u64	responder_id;
+> +	u64	target_id;
+> +	u8	error_type;
+>  };
+>  
+>  /* Memory Error Section (UEFI >= v2.3), UEFI v2.7 sec N.2.5 */
+>  struct cper_sec_mem_err {
+> -	__u64	validation_bits;
+> -	__u64	error_status;
+> -	__u64	physical_addr;
+> -	__u64	physical_addr_mask;
+> -	__u16	node;
+> -	__u16	card;
+> -	__u16	module;
+> -	__u16	bank;
+> -	__u16	device;
+> -	__u16	row;
+> -	__u16	column;
+> -	__u16	bit_pos;
+> -	__u64	requestor_id;
+> -	__u64	responder_id;
+> -	__u64	target_id;
+> -	__u8	error_type;
+> -	__u8	reserved;
+> -	__u16	rank;
+> -	__u16	mem_array_handle;	/* "card handle" in UEFI 2.4 */
+> -	__u16	mem_dev_handle;		/* "module handle" in UEFI 2.4 */
+> +	u64	validation_bits;
+> +	u64	error_status;
+> +	u64	physical_addr;
+> +	u64	physical_addr_mask;
+> +	u16	node;
+> +	u16	card;
+> +	u16	module;
+> +	u16	bank;
+> +	u16	device;
+> +	u16	row;
+> +	u16	column;
+> +	u16	bit_pos;
+> +	u64	requestor_id;
+> +	u64	responder_id;
+> +	u64	target_id;
+> +	u8	error_type;
+> +	u8	reserved;
+> +	u16	rank;
+> +	u16	mem_array_handle;	/* "card handle" in UEFI 2.4 */
+> +	u16	mem_dev_handle;		/* "module handle" in UEFI 2.4 */
+>  };
+>  
+>  struct cper_mem_err_compact {
+> -	__u64	validation_bits;
+> -	__u16	node;
+> -	__u16	card;
+> -	__u16	module;
+> -	__u16	bank;
+> -	__u16	device;
+> -	__u16	row;
+> -	__u16	column;
+> -	__u16	bit_pos;
+> -	__u64	requestor_id;
+> -	__u64	responder_id;
+> -	__u64	target_id;
+> -	__u16	rank;
+> -	__u16	mem_array_handle;
+> -	__u16	mem_dev_handle;
+> +	u64	validation_bits;
+> +	u16	node;
+> +	u16	card;
+> +	u16	module;
+> +	u16	bank;
+> +	u16	device;
+> +	u16	row;
+> +	u16	column;
+> +	u16	bit_pos;
+> +	u64	requestor_id;
+> +	u64	responder_id;
+> +	u64	target_id;
+> +	u16	rank;
+> +	u16	mem_array_handle;
+> +	u16	mem_dev_handle;
+>  };
+>  
+>  /* PCI Express Error Section, UEFI v2.7 sec N.2.7 */
+>  struct cper_sec_pcie {
+> -	__u64		validation_bits;
+> -	__u32		port_type;
+> +	u64		validation_bits;
+> +	u32		port_type;
+>  	struct {
+> -		__u8	minor;
+> -		__u8	major;
+> -		__u8	reserved[2];
+> +		u8	minor;
+> +		u8	major;
+> +		u8	reserved[2];
+>  	}		version;
+> -	__u16		command;
+> -	__u16		status;
+> -	__u32		reserved;
+> +	u16		command;
+> +	u16		status;
+> +	u32		reserved;
+>  	struct {
+> -		__u16	vendor_id;
+> -		__u16	device_id;
+> -		__u8	class_code[3];
+> -		__u8	function;
+> -		__u8	device;
+> -		__u16	segment;
+> -		__u8	bus;
+> -		__u8	secondary_bus;
+> -		__u16	slot;
+> -		__u8	reserved;
+> +		u16	vendor_id;
+> +		u16	device_id;
+> +		u8	class_code[3];
+> +		u8	function;
+> +		u8	device;
+> +		u16	segment;
+> +		u8	bus;
+> +		u8	secondary_bus;
+> +		u16	slot;
+> +		u8	reserved;
+>  	}		device_id;
+>  	struct {
+> -		__u32	lower;
+> -		__u32	upper;
+> +		u32	lower;
+> +		u32	upper;
+>  	}		serial_number;
+>  	struct {
+> -		__u16	secondary_status;
+> -		__u16	control;
+> +		u16	secondary_status;
+> +		u16	control;
+>  	}		bridge;
+> -	__u8	capability[60];
+> -	__u8	aer_info[96];
+> +	u8	capability[60];
+> +	u8	aer_info[96];
+>  };
+>  
+>  /* Reset to default packing */
+> -- 
+> 2.21.0.392.gf8f6787159e-goog
+> 
