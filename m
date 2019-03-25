@@ -3,48 +3,46 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 276C5C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 14:40:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B92F5C4360F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 14:40:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E56682087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 14:40:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94EB620879
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 14:40:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729322AbfCYOkQ (ORCPT
+        id S1729364AbfCYOkU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 10:40:16 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:51496 "EHLO mx1.redhat.com"
+        Mon, 25 Mar 2019 10:40:20 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40634 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726143AbfCYOkP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 10:40:15 -0400
+        id S1729329AbfCYOkR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 10:40:17 -0400
 Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5683946289;
-        Mon, 25 Mar 2019 14:40:15 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id E301E3092657;
+        Mon, 25 Mar 2019 14:40:16 +0000 (UTC)
 Received: from localhost.localdomain.com (unknown [10.20.6.236])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9254F1001DC8;
-        Mon, 25 Mar 2019 14:40:14 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 53D421001DE4;
+        Mon, 25 Mar 2019 14:40:16 +0000 (UTC)
 From:   jglisse@redhat.com
 To:     linux-mm@kvack.org
 Cc:     linux-kernel@vger.kernel.org,
         =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
         Dan Williams <dan.j.williams@intel.com>
-Subject: [PATCH v2 01/11] mm/hmm: select mmu notifier when selecting HMM
-Date:   Mon, 25 Mar 2019 10:40:01 -0400
-Message-Id: <20190325144011.10560-2-jglisse@redhat.com>
+Subject: [PATCH v2 03/11] mm/hmm: do not erase snapshot when a range is invalidated
+Date:   Mon, 25 Mar 2019 10:40:03 -0400
+Message-Id: <20190325144011.10560-4-jglisse@redhat.com>
 In-Reply-To: <20190325144011.10560-1-jglisse@redhat.com>
 References: <20190325144011.10560-1-jglisse@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Mon, 25 Mar 2019 14:40:15 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Mon, 25 Mar 2019 14:40:16 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -52,32 +50,42 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jérôme Glisse <jglisse@redhat.com>
 
-To avoid random config build issue, select mmu notifier when HMM is
-selected. In any cases when HMM get selected it will be by users that
-will also wants the mmu notifier.
+Users of HMM might be using the snapshot information to do
+preparatory step like dma mapping pages to a device before
+checking for invalidation through hmm_vma_range_done() so
+do not erase that information and assume users will do the
+right thing.
 
 Signed-off-by: Jérôme Glisse <jglisse@redhat.com>
-Acked-by: Balbir Singh <bsingharora@gmail.com>
-Cc: Ralph Campbell <rcampbell@nvidia.com>
+Reviewed-by: Ralph Campbell <rcampbell@nvidia.com>
+Reviewed-by: John Hubbard <jhubbard@nvidia.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: John Hubbard <jhubbard@nvidia.com>
 Cc: Dan Williams <dan.j.williams@intel.com>
 ---
- mm/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ mm/hmm.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
-diff --git a/mm/Kconfig b/mm/Kconfig
-index 25c71eb8a7db..0d2944278d80 100644
---- a/mm/Kconfig
-+++ b/mm/Kconfig
-@@ -694,6 +694,7 @@ config DEV_PAGEMAP_OPS
+diff --git a/mm/hmm.c b/mm/hmm.c
+index 306e57f7cded..213b0beee8d3 100644
+--- a/mm/hmm.c
++++ b/mm/hmm.c
+@@ -170,16 +170,10 @@ static int hmm_invalidate_range(struct hmm *hmm, bool device,
  
- config HMM
- 	bool
-+	select MMU_NOTIFIER
- 	select MIGRATE_VMA_HELPER
+ 	spin_lock(&hmm->lock);
+ 	list_for_each_entry(range, &hmm->ranges, list) {
+-		unsigned long addr, idx, npages;
+-
+ 		if (update->end < range->start || update->start >= range->end)
+ 			continue;
  
- config HMM_MIRROR
+ 		range->valid = false;
+-		addr = max(update->start, range->start);
+-		idx = (addr - range->start) >> PAGE_SHIFT;
+-		npages = (min(range->end, update->end) - addr) >> PAGE_SHIFT;
+-		memset(&range->pfns[idx], 0, sizeof(*range->pfns) * npages);
+ 	}
+ 	spin_unlock(&hmm->lock);
+ 
 -- 
 2.17.2
 
