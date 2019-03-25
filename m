@@ -2,158 +2,378 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D8FBC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:10:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 570C7C4360F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:10:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 236362087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:10:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="busLAZEv"
+	by mail.kernel.org (Postfix) with ESMTP id 1F1A7207DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:10:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730113AbfCYRK1 (ORCPT
+        id S1730054AbfCYRIP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 13:10:27 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:34258 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729095AbfCYRK0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 13:10:26 -0400
-Received: by mail-wr1-f65.google.com with SMTP id p10so11116479wrq.1
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 10:10:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:openpgp:autocrypt:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=Pnjm8OG3xHQqwDoOVoJAF8ckIIFqtI/1FGkL/POEmGw=;
-        b=busLAZEvCXEuC42xne133zkXsRDfcl7+URw/0zTH17gHz/SA81nAS36YSnuW//ihtI
-         7abEvUFDzbUPIm9ezuMWfSGbN922d+1azPjcgJppcjDs6rtxLYy1lQTq6n35thGLB9KH
-         8Ns+daISTlbeSHm9kVjCM6Otxkl1mLKtRDMV1Si1DdhsqZC9aG/fGudwPsmgiQ+jiByp
-         G1DMbn71BP/EeNl8XbXIUXolHxcQQoCzuiW4mLiVkuOM2+j6wbfUUIeTO1XTrLeBSOrl
-         vXK/8yi+Yn0hAPK2Z8BoSFXuxurYo2b7epbojyNXbxz9ya5f1i3N3Mv8QImuvGdbIiRu
-         Nfug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=Pnjm8OG3xHQqwDoOVoJAF8ckIIFqtI/1FGkL/POEmGw=;
-        b=Z6ZRSMY/8oX8cIeT3HM4MJjz9SME7g2YJ4gIzoYy8I7hX7ZMGmTFWUzTlTi5smORhf
-         HkMuu84xMO2gCnghQjclHIqfEjY83CxrcQRtPJ+1rKwfAnImPMemD2EvaP2+AjkXul+m
-         vH2hK2cA2+VfQMEUdxOQiJbrdAKkIhKwDY1Z77MDFnrw8kckIO7naNYu0eK64VRSThYk
-         qBE4AgkjUF9PRxie0D4ZnFyv2S7lm/8YfU+KuDYc7ZgWw1jMIdTVex3fXACsFQORy1Y8
-         K9P8bA7hVF9o8BPMwC4cs0PRv46VaD//MKFxT2gcnX2/+H7KKlLUiO56gx7u2Qb+en7j
-         F/Ww==
-X-Gm-Message-State: APjAAAVypJ8ytqnZfOuVKr4Ze1UQ4LYuSnZimIWKGU4mhZXD5x2ErWvQ
-        Bu2CvEvbOFTIdEfsK5oBgA/WeTl4w+r9J3+h
-X-Google-Smtp-Source: APXvYqw0q0Q4nxDBzc0XiuoeHR0kX7pz9YJrGE2hIIGbpFdhnO9Gt6n0Dq4JlO79mm4syla7p8lsBw==
-X-Received: by 2002:a5d:5287:: with SMTP id c7mr17269250wrv.127.1553533823321;
-        Mon, 25 Mar 2019 10:10:23 -0700 (PDT)
-Received: from [192.168.1.62] (176-150-251-154.abo.bbox.fr. [176.150.251.154])
-        by smtp.gmail.com with ESMTPSA id z129sm15896494wmc.33.2019.03.25.10.10.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 25 Mar 2019 10:10:22 -0700 (PDT)
-Subject: Re: [PATCH] soc: amlogic: meson-gx-pwrc-vpu: Add support for G12A
-To:     Kevin Hilman <khilman@baylibre.com>
-Cc:     linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20190325145537.31697-1-narmstrong@baylibre.com>
- <7hva06q3v5.fsf@baylibre.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- ZaTUOEkgIor5losDrePdPgE=
-Organization: Baylibre
-Message-ID: <42df47f2-f565-5b85-c3aa-3ea70b595e4e@baylibre.com>
-Date:   Mon, 25 Mar 2019 18:10:21 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <7hva06q3v5.fsf@baylibre.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mon, 25 Mar 2019 13:08:15 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50936 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730013AbfCYRIL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 13:08:11 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 0589DAFE2;
+        Mon, 25 Mar 2019 17:08:10 +0000 (UTC)
+Received: by unicorn.suse.cz (Postfix, from userid 1000)
+        id A7237E1404; Mon, 25 Mar 2019 18:08:09 +0100 (CET)
+Message-Id: <8795d07d3315b232b4e7ebc7d109c9aa3185e555.1553532199.git.mkubecek@suse.cz>
+In-Reply-To: <cover.1553532199.git.mkubecek@suse.cz>
+References: <cover.1553532199.git.mkubecek@suse.cz>
+From:   Michal Kubecek <mkubecek@suse.cz>
+Subject: [PATCH net-next v5 05/22] ethtool: introduce ethtool netlink
+ interface
+To:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org
+Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jiri Pirko <jiri@resnulli.us>, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        John Linville <linville@tuxdriver.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        linux-kernel@vger.kernel.org
+Date:   Mon, 25 Mar 2019 18:08:09 +0100 (CET)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25/03/2019 18:07, Kevin Hilman wrote:
-> Neil Armstrong <narmstrong@baylibre.com> writes:
-> 
->> The Amlogic G12A SoC has a very similar VPU Power Controller setup
->> than the older GXBB, GXL & GXm SoCs.
->>
->> This patch adds the variant support for G12A.
->>
->> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> 
-> This patch not only adds support for G12A, but changes the functionality
-> for GX SoCs too, but that is not explained.
+Basic genetlink and init infrastructure for the netlink interface, register
+genetlink family "ethtool". Introduce CONFIG_ETHTOOL_NETLINK Kconfig
+option. Add interface description into Documentation/networking.
 
-Indeed, I forgot to split in two.
+Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
+---
+ Documentation/networking/ethtool-netlink.txt | 168 +++++++++++++++++++
+ include/linux/ethtool_netlink.h              |   9 +
+ include/uapi/linux/ethtool_netlink.h         |  25 +++
+ net/Kconfig                                  |   8 +
+ net/ethtool/Makefile                         |   6 +-
+ net/ethtool/netlink.c                        |  34 ++++
+ net/ethtool/netlink.h                        |  12 ++
+ 7 files changed, 261 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/networking/ethtool-netlink.txt
+ create mode 100644 include/linux/ethtool_netlink.h
+ create mode 100644 include/uapi/linux/ethtool_netlink.h
+ create mode 100644 net/ethtool/netlink.c
+ create mode 100644 net/ethtool/netlink.h
 
-Will resend.
-
-Neil
-
-> 
-> Based on what I see below, I would expect two patches:
-> 
-> 1) improve/modify the GX functions (with descriptive changelog)
-> 2) add G12A support
-> 
-> Kevin
-> 
+diff --git a/Documentation/networking/ethtool-netlink.txt b/Documentation/networking/ethtool-netlink.txt
+new file mode 100644
+index 000000000000..377d64c9b7fa
+--- /dev/null
++++ b/Documentation/networking/ethtool-netlink.txt
+@@ -0,0 +1,168 @@
++                        Netlink interface for ethtool
++                        =============================
++
++
++Basic information
++-----------------
++
++Netlink interface for ethtool uses generic netlink family "ethtool" (userspace
++application should use macros ETHTOOL_GENL_NAME and ETHTOOL_GENL_VERSION
++defined in <linux/ethtool_netlink.h> uapi header). This family does not use
++a specific header, all information in requests and replies is passed using
++netlink attributes.
++
++In requests, device can be identified by ifindex or by name; if both are used,
++they must match. In replies, kernel fills both. The meaning of flags,
++info_mask and index fields depends on request type.
++
++The ethtool netlink interface uses extended ACK for error and warning
++reporting, userspace application developers are encouraged to make these
++messages available to user in a suitable way.
++
++Requests can be divided into three categories: "get" (retrieving information),
++"set" (setting parameters) and "action" (invoking an action).
++
++All "set" and "action" type requests require admin privileges (CAP_NET_ADMIN
++in the namespace). Most "get" type request are allowed for anyone but there
++are exceptions (where the response contains sensitive information). In some
++cases, the request as such is allowed for anyone but unprivileged users have
++attributes with sensitive information (e.g. wake-on-lan password) omitted.
++
++
++Conventions
++-----------
++
++Attributes which represent a boolean value usually use u8 type so that we can
++distinguish three states: "on", "off" and "not present" (meaning the
++information is not available in "get" requests or value is not to be changed
++in "set" requests). For these attributes, the "true" value should be passed as
++number 1 but any non-zero value should be understood as "true" by recipient.
++
++Some request types allow passing an attribute named ETHA_*_INFOMASK with
++a bitmask telling kernel that we are only interested in some parts of the
++information. If info mask is omitted, all available information is returned.
++Meaning of info mask bits depends on request type and is listed below.
++
++
++Device identification
++---------------------
++
++When appropriate, network device is identified by a nested attribute named
++ETHA_*_DEV. This attribute can contain
++
++    ETHA_DEV_INDEX	(u32)		device ifindex
++    ETHA_DEV_NAME	(string)	device name
++
++In device related requests, one of these is sufficient; if both are used, they
++must match (i.e. identify the same device). In device related replies both are
++provided by kernel. In dump requests, device is not specified and kernel
++replies with one message per network device (only those for which the request
++is supported).
++
++
++List of message types
++---------------------
++
++All constants use ETHNL_CMD_ prefix, usually followed by "GET", "SET" or "ACT"
++to indicate the type.
++
++Messages of type "get" are used by userspace to request information and
++usually do not contain any attributes (that may be added later for dump
++filtering). Kernel response is in the form of corresponding "set" message;
++the same message can be also used to set (some of) the parameters, except for
++messages marked as "response only" in the table above. "Get" messages with
++NLM_F_DUMP flags and no device identification dump the information for all
++devices supporting the request.
++
++Later sections describe the format and semantics of these request messages.
++
++
++Request translation
++-------------------
++
++The following table maps iosctl commands to netlink commands providing their
++functionality. Entries with "n/a" in right column are commands which do not
++have their netlink replacement yet.
++
++ioctl command			netlink command
++---------------------------------------------------------------------
++ETHTOOL_GSET			n/a
++ETHTOOL_SSET			n/a
++ETHTOOL_GDRVINFO		n/a
++ETHTOOL_GREGS			n/a
++ETHTOOL_GWOL			n/a
++ETHTOOL_SWOL			n/a
++ETHTOOL_GMSGLVL			n/a
++ETHTOOL_SMSGLVL			n/a
++ETHTOOL_NWAY_RST		n/a
++ETHTOOL_GLINK			n/a
++ETHTOOL_GEEPROM			n/a
++ETHTOOL_SEEPROM			n/a
++ETHTOOL_GCOALESCE		n/a
++ETHTOOL_SCOALESCE		n/a
++ETHTOOL_GRINGPARAM		n/a
++ETHTOOL_SRINGPARAM		n/a
++ETHTOOL_GPAUSEPARAM		n/a
++ETHTOOL_SPAUSEPARAM		n/a
++ETHTOOL_GRXCSUM			n/a
++ETHTOOL_SRXCSUM			n/a
++ETHTOOL_GTXCSUM			n/a
++ETHTOOL_STXCSUM			n/a
++ETHTOOL_GSG			n/a
++ETHTOOL_SSG			n/a
++ETHTOOL_TEST			n/a
++ETHTOOL_GSTRINGS		n/a
++ETHTOOL_PHYS_ID			n/a
++ETHTOOL_GSTATS			n/a
++ETHTOOL_GTSO			n/a
++ETHTOOL_STSO			n/a
++ETHTOOL_GPERMADDR		rtnetlink RTM_GETLINK
++ETHTOOL_GUFO			n/a
++ETHTOOL_SUFO			n/a
++ETHTOOL_GGSO			n/a
++ETHTOOL_SGSO			n/a
++ETHTOOL_GFLAGS			n/a
++ETHTOOL_SFLAGS			n/a
++ETHTOOL_GPFLAGS			n/a
++ETHTOOL_SPFLAGS			n/a
++ETHTOOL_GRXFH			n/a
++ETHTOOL_SRXFH			n/a
++ETHTOOL_GGRO			n/a
++ETHTOOL_SGRO			n/a
++ETHTOOL_GRXRINGS		n/a
++ETHTOOL_GRXCLSRLCNT		n/a
++ETHTOOL_GRXCLSRULE		n/a
++ETHTOOL_GRXCLSRLALL		n/a
++ETHTOOL_SRXCLSRLDEL		n/a
++ETHTOOL_SRXCLSRLINS		n/a
++ETHTOOL_FLASHDEV		n/a
++ETHTOOL_RESET			n/a
++ETHTOOL_SRXNTUPLE		n/a
++ETHTOOL_GRXNTUPLE		n/a
++ETHTOOL_GSSET_INFO		n/a
++ETHTOOL_GRXFHINDIR		n/a
++ETHTOOL_SRXFHINDIR		n/a
++ETHTOOL_GFEATURES		n/a
++ETHTOOL_SFEATURES		n/a
++ETHTOOL_GCHANNELS		n/a
++ETHTOOL_SCHANNELS		n/a
++ETHTOOL_SET_DUMP		n/a
++ETHTOOL_GET_DUMP_FLAG		n/a
++ETHTOOL_GET_DUMP_DATA		n/a
++ETHTOOL_GET_TS_INFO		n/a
++ETHTOOL_GMODULEINFO		n/a
++ETHTOOL_GMODULEEEPROM		n/a
++ETHTOOL_GEEE			n/a
++ETHTOOL_SEEE			n/a
++ETHTOOL_GRSSH			n/a
++ETHTOOL_SRSSH			n/a
++ETHTOOL_GTUNABLE		n/a
++ETHTOOL_STUNABLE		n/a
++ETHTOOL_GPHYSTATS		n/a
++ETHTOOL_PERQUEUE		n/a
++ETHTOOL_GLINKSETTINGS		n/a
++ETHTOOL_SLINKSETTINGS		n/a
++ETHTOOL_PHY_GTUNABLE		n/a
++ETHTOOL_PHY_STUNABLE		n/a
++ETHTOOL_GFECPARAM		n/a
++ETHTOOL_SFECPARAM		n/a
+diff --git a/include/linux/ethtool_netlink.h b/include/linux/ethtool_netlink.h
+new file mode 100644
+index 000000000000..0412adb4f42f
+--- /dev/null
++++ b/include/linux/ethtool_netlink.h
+@@ -0,0 +1,9 @@
++/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
++
++#ifndef _LINUX_ETHTOOL_NETLINK_H_
++#define _LINUX_ETHTOOL_NETLINK_H_
++
++#include <uapi/linux/ethtool_netlink.h>
++#include <linux/ethtool.h>
++
++#endif /* _LINUX_ETHTOOL_NETLINK_H_ */
+diff --git a/include/uapi/linux/ethtool_netlink.h b/include/uapi/linux/ethtool_netlink.h
+new file mode 100644
+index 000000000000..6aa267451542
+--- /dev/null
++++ b/include/uapi/linux/ethtool_netlink.h
+@@ -0,0 +1,25 @@
++/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
++/*
++ * include/uapi/linux/ethtool_netlink.h - netlink interface for ethtool
++ *
++ * See Documentation/networking/ethtool-netlink.txt in kernel source tree for
++ * doucumentation of the interface.
++ */
++
++#ifndef _UAPI_LINUX_ETHTOOL_NETLINK_H_
++#define _UAPI_LINUX_ETHTOOL_NETLINK_H_
++
++#include <linux/ethtool.h>
++
++enum {
++	ETHNL_CMD_NOOP,
++
++	__ETHNL_CMD_CNT,
++	ETHNL_CMD_MAX = (__ETHNL_CMD_CNT - 1)
++};
++
++/* generic netlink info */
++#define ETHTOOL_GENL_NAME "ethtool"
++#define ETHTOOL_GENL_VERSION 1
++
++#endif /* _UAPI_LINUX_ETHTOOL_NETLINK_H_ */
+diff --git a/net/Kconfig b/net/Kconfig
+index 3e8fdd688329..75c600b45775 100644
+--- a/net/Kconfig
++++ b/net/Kconfig
+@@ -448,6 +448,14 @@ config FAILOVER
+ 	  migration of VMs with direct attached VFs by failing over to the
+ 	  paravirtual datapath when the VF is unplugged.
+ 
++config ETHTOOL_NETLINK
++	bool "Netlink interface for ethtool"
++	default y
++	help
++	  An alternative userspace interface for ethtool based on generic
++	  netlink. It provides better extensibility and some new features,
++	  e.g. notification messages.
++
+ endif   # if NET
+ 
+ # Used by archs to tell that they support BPF JIT compiler plus which flavour.
+diff --git a/net/ethtool/Makefile b/net/ethtool/Makefile
+index 3ebfab2bca66..f30e0da88be5 100644
+--- a/net/ethtool/Makefile
++++ b/net/ethtool/Makefile
+@@ -1,3 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ 
+-obj-y		+= ioctl.o
++obj-y				+= ioctl.o
++
++obj-$(CONFIG_ETHTOOL_NETLINK)	+= ethtool_nl.o
++
++ethtool_nl-y	:= netlink.o
+diff --git a/net/ethtool/netlink.c b/net/ethtool/netlink.c
+new file mode 100644
+index 000000000000..85dd6dac71a2
+--- /dev/null
++++ b/net/ethtool/netlink.c
+@@ -0,0 +1,34 @@
++// SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note
++
++#include <linux/ethtool_netlink.h>
++#include "netlink.h"
++
++/* genetlink setup */
++
++static const struct genl_ops ethtool_genl_ops[] = {
++};
++
++struct genl_family ethtool_genl_family = {
++	.hdrsize	= 0,
++	.name		= ETHTOOL_GENL_NAME,
++	.version	= ETHTOOL_GENL_VERSION,
++	.netnsok	= true,
++	.parallel_ops	= true,
++	.ops		= ethtool_genl_ops,
++	.n_ops		= ARRAY_SIZE(ethtool_genl_ops),
++};
++
++/* module setup */
++
++static int __init ethnl_init(void)
++{
++	int ret;
++
++	ret = genl_register_family(&ethtool_genl_family);
++	if (WARN(ret < 0, "ethtool: genetlink family registration failed"))
++		return ret;
++
++	return 0;
++}
++
++subsys_initcall(ethnl_init);
+diff --git a/net/ethtool/netlink.h b/net/ethtool/netlink.h
+new file mode 100644
+index 000000000000..63063b582ca2
+--- /dev/null
++++ b/net/ethtool/netlink.h
+@@ -0,0 +1,12 @@
++/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
++
++#ifndef _NET_ETHTOOL_NETLINK_H
++#define _NET_ETHTOOL_NETLINK_H
++
++#include <linux/ethtool_netlink.h>
++#include <linux/netdevice.h>
++#include <net/genetlink.h>
++
++extern struct genl_family ethtool_genl_family;
++
++#endif /* _NET_ETHTOOL_NETLINK_H */
+-- 
+2.21.0
 
