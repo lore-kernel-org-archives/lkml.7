@@ -6,24 +6,24 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A23C5C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:30:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31144C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:30:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 789B02085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:30:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A0592085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:30:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731133AbfCYMaN convert rfc822-to-8bit (ORCPT
+        id S1731140AbfCYMaU convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 08:30:13 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:52274 "EHLO gloria.sntech.de"
+        Mon, 25 Mar 2019 08:30:20 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:52308 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730989AbfCYMaN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 08:30:13 -0400
+        id S1730996AbfCYMaT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 08:30:19 -0400
 Received: from [94.134.91.136] (helo=phil.localnet)
         by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <heiko@sntech.de>)
-        id 1h8Ojz-0006ms-0Z; Mon, 25 Mar 2019 13:30:11 +0100
+        id 1h8Ok5-0006n3-0v; Mon, 25 Mar 2019 13:30:17 +0100
 From:   Heiko Stuebner <heiko@sntech.de>
 To:     Douglas Anderson <dianders@chromium.org>
 Cc:     mka@chromium.org, ryandcase@chromium.org,
@@ -32,11 +32,11 @@ Cc:     mka@chromium.org, ryandcase@chromium.org,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] ARM: dts: rockchip: Add dvs-gpios to rk3288-veyron-jerry
-Date:   Mon, 25 Mar 2019 13:30:10 +0100
-Message-ID: <2671225.FaCa6N3cA0@phil>
-In-Reply-To: <20190322165209.196926-1-dianders@chromium.org>
-References: <20190322165209.196926-1-dianders@chromium.org>
+Subject: Re: [PATCH] ARM: dts: rockchip: Add vdd_logic to rk3288-veyron
+Date:   Mon, 25 Mar 2019 13:30:16 +0100
+Message-ID: <4531156.B27Co0TEWW@phil>
+In-Reply-To: <20190321201944.34684-1-dianders@chromium.org>
+References: <20190321201944.34684-1-dianders@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8BIT
 Content-Type: text/plain; charset="iso-8859-1"
@@ -45,21 +45,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Freitag, 22. März 2019, 17:52:09 CET schrieb Douglas Anderson:
-> When the rk3288-jerry device tree was first submitted we left out the
-> dvs-gpios because I pointed out that the property "dvs-gpios" wasn't
-> yet supported upstream [1].  Soon after that the property was added in
-> commit bad47ad2eef3 ("regulator: rk808: fixed the overshoot when
-> adjust voltage").  ...but we forgot to go back and add the property to
-> the jerry device tree file.  Let's do so now.
+Am Donnerstag, 21. März 2019, 21:19:44 CET schrieb Douglas Anderson:
+> The vdd_logic rail controls the voltage supplied to misc logic on
+> rk3288, including the voltage supplied to the memory controller.  The
+> vcc logic is implemented by a PWM regulator.
 > 
-> NOTE: without this patch, jerry is likely still stable (thanks to the
-> fallback of making many small jumps in the rk808 regulator code) but
-> it'll take quite a bit longer to make voltage transitions.
+> Right now there are no consumers of vdd_logic on veyron but if anyone
+> ever wants to try to add DDR Freq they'd need it.
 > 
-> [1] https://lore.kernel.org/linux-arm-kernel/CAD=FV=WwFgjzbk9xF5TU_ie6UnHQMyrZ176D4+jJTWWOoaKC2Q@mail.gmail.com/
+> Note that in the downstream Chrome OS kernel the PWM regulator has
+> a voltage table with these points:
+>   1350000 0%
+>   1300000 10%
+>   1250000 20%
+>   1200000 31%
+>   1150000 41%
+>   1125000 46%
+>   1100000 52%
+>   1050000 62%
+>   1000000 72%
+>    950000 83%
 > 
-> Fixes: f3ee390e4ef2 ("ARM: dts: rockchip: add veyron-jerry board")
+> The DDR Freq driver in the downstream kernel only uses some of those
+> points, namely:
+>   DDR3:  1200000, 1150000, 1100000, 1050000
+>   LPDDR:          1150000, 1100000, 1050000
+> 
+> When adapting the downstream kernel to upstream I have opted to switch
+> to using the "continuous" mode of the PWM regulator driver.  This was
+> the only way I could get the upstream driver to achieve _exactly_ the
+> same voltages as the downstream driver could.  Specifically note that
+> the old driver in downstream Chrome OS 3.14 _didn't_ have the
+> DIV_ROUND_CLOSEST_ULL() in the Rockchip PLL driver.  That means if I
+> use the same (downstream) table I might end up with a duty cycle
+> that's 1 larger than was used downstream, leading to a slightly
+> different voltage.  Due to the way the rounding worked I couldn't even
+> just adjust the "percent" by 1 for a given voltage level--certain duty
+> cycles just aren't achievable with the upstream math for voltage
+> tables.
+> 
+> Using continuous mode you can achieve the exact same duty cycle by
+> simply adjusting the voltage you use by a tad bit.  The voltages that
+> are equivalent to the ones used in the downstream kernel's table are:
+>   1350000, 1304472, 1255691, 1200407, 1154878,
+>   1128862, 1099593, 1050813, 1005285, 950000
+> 
+> Note that the top/bottom voltage is exactly the same just due to the
+> way that continuous mode is calculated and the fact that I used those
+> as anchors.  I didn't make any attempt to do the resistor math (as was
+> done on rk3399-gru).
+> 
+> If anyone ever gets DDRFreq working on veyron upstream they should
+> thus adjust the voltage specified in the DDRFreq operating points
+> slightly (as per the above) to obtain the existing/tested values.  AKA
+> you'd use:
+>   DDR3:  1200407, 1154878, 1099593, 1050813
+>   LPDDR:          1154878, 1099593, 1050813
+> 
+> A few other notes:
+> - The "period" here (1994) is different than the "period" downstream
+>   (2000) for similar reasons: there's a DIV_ROUND_CLOSEST_ULL() that
+>   wasn't downstream.  With 1994 upstream comes up with the same value
+>   (0x94) to program into the hardware that downstream put there.  As
+>   far as I can tell 0x94 actually means 1993.27.
+> - The duty cycle unit of 0x94 was picked by just matching the period
+>   which nicely allows us to insert 0x7b as that value to program into
+>   the hardware for 950mV.  The 0x7b was found by observing what the
+>   downstream kernel calculated (not that the system can actually run
+>   with vdd_log at 950 mV).
+> - The downstream kernel can also be seen to program a different value
+>   into the CTRL field.  Upstream achieves 0x0b and downstream 0x1b.
+>   This is because the upstream commit bc834d7b07b4 ("pwm: rockchip:
+>   Move the configuration of polarity") fixed a bug by adding "ctrl &=
+>   ~PWM_POLARITY_MASK".  Downstream accidentally left bit 4 set.
+>   Luckily this bit doesn't matter--it's only used when the PWM goes
+>   inactive (AKA if it's in oneshot mode or is disabled) and we don't
+>   do that for the PWM regulator.
+> 
+> I measured the voltage of vdd_log while adjusting it and found that
+> with the upstream kernel voltage difference between requested and
+> actual was 9.2 mV at 950 mV and 13.4 mV at 1350 mV with in-between
+> voltages consistently showing ~1% error.  This error is likely
+> expected as voltage can be seen to sag a bit when more load is put on
+> the rail.
+> 
 > Signed-off-by: Douglas Anderson <dianders@chromium.org>
 
 applied for 5.2
