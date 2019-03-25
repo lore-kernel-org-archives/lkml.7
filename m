@@ -6,45 +6,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0EBAC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 22:12:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76112C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 22:12:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF09E20830
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 22:12:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4402020848
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 22:12:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553551964;
-	bh=OWN/jqhesfE1HkP8a7BA/Kjrn1+4nFDAPOEv261Jnrg=;
+	s=default; t=1553551967;
+	bh=rTPQhfrv7doYYXbwR07pPwkE5fVuYjpCBPbp0u558+8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GS+6saOax+VkDLaX7GTPXtig5An3Q/sFDMvwt152hErEHlVONPzUxYHVltduPJad5
-	 JHHHm/dlNUn5F57RjtpDP6HXSOvqiava39kLiKJ2w67xFKWBGpvl9ENKy+2YE83VtD
-	 x6BQelsXS3l9PVQdfGSOM3/RA9fx5pNNm1mxrBD8=
+	b=ez6+7XdvfnhpEDgqSEmpf5tBnKIUC7EVtIfIdo9sVd4d68u9Fmb4c0vQP8r3r1zUn
+	 DHK565lTE/qUqy71BeZ/oBM2mMcE9u74m/JLqgc6bL+QTAXeDFBljXdcWw29pBABVr
+	 KlBaY8OnuWQSxQhhBf0wVyRpWLpHoXehC2w1oILQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730616AbfCYWMn (ORCPT
+        id S1731098AbfCYWMq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 18:12:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50340 "EHLO mail.kernel.org"
+        Mon, 25 Mar 2019 18:12:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730996AbfCYWMk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 18:12:40 -0400
+        id S1729297AbfCYWMn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 18:12:43 -0400
 Received: from localhost (unknown [69.71.4.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1786720848;
-        Mon, 25 Mar 2019 22:12:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 731B52075E;
+        Mon, 25 Mar 2019 22:12:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553551960;
-        bh=OWN/jqhesfE1HkP8a7BA/Kjrn1+4nFDAPOEv261Jnrg=;
+        s=default; t=1553551962;
+        bh=rTPQhfrv7doYYXbwR07pPwkE5fVuYjpCBPbp0u558+8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uus1KLQUzuOFa7IJaDI+M6QWQ4PcPbOAIfjwBz2cHpf0HYt/MVJoD04b1xjtSFcZJ
-         Qf5NGmVYGE9qj0JEsaqOIK7aCorCIemXVcoh1muY1fdAWHaSNaf+Sn5o7yOhUhnmIP
-         d9n1XqV7T2fLyVLXptjw00S0vTuLO6pdZsQkBV8M=
+        b=vyeSezvLBh8mPd1P9CsZmmOK0Mw3djSHfglhwhQ44KWmYPDYI+FyAKMFIPhURgAnR
+         N3S2ySfCRRLJX8jwaNPhty/g4FrBPJhlho/smnr91XmlMSYQe0V64DkGqrsDxHTi06
+         fb9aFKG+Nb0FrUC8pqmW+amKddfbRTeJC9FLH2vo=
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     linux-pci@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Jiang Liu <jiang.liu@linux.intel.com>
-Subject: [PATCH 1/2] PCI/MSI: Remove unused __write_msi_msg() and write_msi_msg()
-Date:   Mon, 25 Mar 2019 17:12:28 -0500
-Message-Id: <20190325221229.36930-2-helgaas@kernel.org>
+        Michal Simek <michal.simek@xilinx.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 2/2] PCI/MSI: Remove unused mask_msi_irq() and unmask_msi_irq()
+Date:   Mon, 25 Mar 2019 17:12:29 -0500
+Message-Id: <20190325221229.36930-3-helgaas@kernel.org>
 X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
 In-Reply-To: <20190325221229.36930-1-helgaas@kernel.org>
 References: <20190325221229.36930-1-helgaas@kernel.org>
@@ -57,38 +58,58 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bjorn Helgaas <bhelgaas@google.com>
 
-Remove unused __write_msi_msg() and write_msi_msg().
-
-These were added by 83a18912b0e8 ("PCI/MSI: Rename write_msi_msg() to
-pci_write_msi_msg()"), they served their purpose, and they're no longer
-needed.
+Change pcie-xilinx-nwl.c to use pci_msi_mask_irq() and pci_msi_unmask_irq()
+like all other PCI host controller drivers.  Remove the now-unused
+mask_msi_irq() and unmask_msi_irq().
 
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-CC: Jiang Liu <jiang.liu@linux.intel.com>	# 83a18912b0e8 author
+CC: Michal Simek <michal.simek@xilinx.com>
+CC: linux-arm-kernel@lists.infradead.org
 ---
- include/linux/msi.h | 9 ---------
- 1 file changed, 9 deletions(-)
+ drivers/pci/controller/pcie-xilinx-nwl.c | 9 ++++-----
+ include/linux/msi.h                      | 9 ---------
+ 2 files changed, 4 insertions(+), 14 deletions(-)
 
+diff --git a/drivers/pci/controller/pcie-xilinx-nwl.c b/drivers/pci/controller/pcie-xilinx-nwl.c
+index 81538d77f790..3b031f00a94a 100644
+--- a/drivers/pci/controller/pcie-xilinx-nwl.c
++++ b/drivers/pci/controller/pcie-xilinx-nwl.c
+@@ -438,11 +438,10 @@ static const struct irq_domain_ops legacy_domain_ops = {
+ #ifdef CONFIG_PCI_MSI
+ static struct irq_chip nwl_msi_irq_chip = {
+ 	.name = "nwl_pcie:msi",
+-	.irq_enable = unmask_msi_irq,
+-	.irq_disable = mask_msi_irq,
+-	.irq_mask = mask_msi_irq,
+-	.irq_unmask = unmask_msi_irq,
+-
++	.irq_enable = pci_msi_unmask_irq,
++	.irq_disable = pci_msi_mask_irq,
++	.irq_mask = pci_msi_mask_irq,
++	.irq_unmask = pci_msi_unmask_irq,
+ };
+ 
+ static struct msi_domain_info nwl_msi_domain_info = {
 diff --git a/include/linux/msi.h b/include/linux/msi.h
-index 7e9b81c3b50d..f934982a0e68 100644
+index f934982a0e68..052f04fcf953 100644
 --- a/include/linux/msi.h
 +++ b/include/linux/msi.h
 @@ -148,15 +148,6 @@ u32 __pci_msi_desc_mask_irq(struct msi_desc *desc, u32 mask, u32 flag);
  void pci_msi_mask_irq(struct irq_data *data);
  void pci_msi_unmask_irq(struct irq_data *data);
  
--/* Conversion helpers. Should be removed after merging */
--static inline void __write_msi_msg(struct msi_desc *entry, struct msi_msg *msg)
+-static inline void mask_msi_irq(struct irq_data *data)
 -{
--	__pci_write_msi_msg(entry, msg);
+-	pci_msi_mask_irq(data);
 -}
--static inline void write_msi_msg(int irq, struct msi_msg *msg)
+-static inline void unmask_msi_irq(struct irq_data *data)
 -{
--	pci_write_msi_msg(irq, msg);
+-	pci_msi_unmask_irq(data);
 -}
- static inline void mask_msi_irq(struct irq_data *data)
- {
- 	pci_msi_mask_irq(data);
+-
+ /*
+  * The arch hooks to setup up msi irqs. Those functions are
+  * implemented as weak symbols so that they /can/ be overriden by
 -- 
 2.21.0.392.gf8f6787159e-goog
 
