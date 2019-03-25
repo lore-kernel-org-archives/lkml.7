@@ -2,123 +2,152 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1328BC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 08:00:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76170C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 08:00:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E125F2087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 08:00:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4018B20830
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 08:00:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729925AbfCYIAG (ORCPT
+        id S1729942AbfCYIAs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 04:00:06 -0400
-Received: from mail-it1-f199.google.com ([209.85.166.199]:39089 "EHLO
-        mail-it1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729812AbfCYIAG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 04:00:06 -0400
-Received: by mail-it1-f199.google.com with SMTP id e124so8043677ita.4
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 01:00:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=6K/hkoOV5Rq1rRjxV3zTpaRUeKYp9Wt4WWKr0Elh8Ls=;
-        b=CkFr8Kh8VdjiAvq5qcmHVb2IBLe3TyUwIzNh3lNC/hw/gqB4bOKzbCzwX8sD242zrO
-         wpuEGFbIvlZwuXQEi4l67U65CVh2rp8xnqb56tGAQno7u39+LHzGWLcKDsNXTyKvdiZP
-         LfnobBBBcaHP7BnucESSUlWGXMK8V+IZbx9StGJcYTjYttQZbWcGJrYwx1cDENfwUFyq
-         Q0h6HPYW0dWzTrkZ3RRBRB2x0wYUotyDR88IkL5FdvgPvdLE5QBx7VsNEJZVf3vmcDI2
-         A8VR1O4Ji7J1zjEe75wjocXOFtZaFN0cwaFOq3EyfHZ6gjPWSfCVKBD0XuMd45XKMmQ1
-         XFyg==
-X-Gm-Message-State: APjAAAWkYBJU3Pc6ybP8ouyaBL3EAXMLHf9mlcqHPbLTLoB3gFe/gdz+
-        dnj3l0CJY6WmD8GKQXbrAQKA/QP+6FmClzxxpXhuioDfhQ5D
-X-Google-Smtp-Source: APXvYqyB8xmFCnOZnuqOzp5OgBLa2WV6EdOycFcMeTIEp0zLMNNg4Ec7Mcqv9iAm7XqbD+60zmvHOclF6+m4vfc6mTa4oVQAKc1F
+        Mon, 25 Mar 2019 04:00:48 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34336 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729812AbfCYIAs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 04:00:48 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 69E9EAE8B;
+        Mon, 25 Mar 2019 08:00:46 +0000 (UTC)
+Subject: Re: [PATCH] firmware: edd: fix a NULL pointer dereference
+To:     Kangjie Lu <kjlu@umn.edu>
+Cc:     pakki001@umn.edu, Jiri Kosina <jkosina@suse.cz>,
+        linux-kernel@vger.kernel.org
+References: <20190323221018.13026-1-kjlu@umn.edu>
+From:   Johannes Thumshirn <jthumshirn@suse.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jthumshirn@suse.de; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <1455ed3c-a77d-41de-436f-621169403f94@suse.de>
+Date:   Mon, 25 Mar 2019 09:00:45 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.0
 MIME-Version: 1.0
-X-Received: by 2002:a6b:ab05:: with SMTP id u5mr11776935ioe.180.1553500805228;
- Mon, 25 Mar 2019 01:00:05 -0700 (PDT)
-Date:   Mon, 25 Mar 2019 01:00:05 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000a7944f0584e697e2@google.com>
-Subject: WARNING in zap_class
-From:   syzbot <syzbot+740dcc3824577fb40563@syzkaller.appspotmail.com>
-To:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <20190323221018.13026-1-kjlu@umn.edu>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-syzbot found the following crash on:
-
-HEAD commit:    babf09c3 Merge tag 'tag-chrome-platform-fixes-for-v5.1-rc2..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1509f28b200000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=9a31fb246de2a622
-dashboard link: https://syzkaller.appspot.com/bug?extid=740dcc3824577fb40563
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+740dcc3824577fb40563@syzkaller.appspotmail.com
-
-WARNING: CPU: 0 PID: 24046 at kernel/locking/lockdep.c:4548  
-remove_class_from_lock_chain kernel/locking/lockdep.c:4528 [inline]
-WARNING: CPU: 0 PID: 24046 at kernel/locking/lockdep.c:4548  
-remove_class_from_lock_chains kernel/locking/lockdep.c:4568 [inline]
-WARNING: CPU: 0 PID: 24046 at kernel/locking/lockdep.c:4548  
-zap_class+0x741/0xe20 kernel/locking/lockdep.c:4607
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 24046 Comm: kworker/0:1 Not tainted 5.1.0-rc1+ #30
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: events pwq_unbound_release_workfn
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  panic+0x2cb/0x65c kernel/panic.c:214
-  __warn.cold+0x20/0x45 kernel/panic.c:571
-  report_bug+0x263/0x2b0 lib/bug.c:186
-  fixup_bug arch/x86/kernel/traps.c:179 [inline]
-  fixup_bug arch/x86/kernel/traps.c:174 [inline]
-  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
-  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
-  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:973
-RIP: 0010:remove_class_from_lock_chain kernel/locking/lockdep.c:4548  
-[inline]
-RIP: 0010:remove_class_from_lock_chains kernel/locking/lockdep.c:4568  
-[inline]
-RIP: 0010:zap_class+0x741/0xe20 kernel/locking/lockdep.c:4607
-Code: 0f b6 14 38 4c 89 e0 83 e0 07 83 c0 01 38 d0 0f 8c 79 ff ff ff 84 d2  
-0f 84 71 ff ff ff 4c 89 e7 e8 04 e8 51 00 e9 64 ff ff ff <0f> 0b e8 78 82  
-d6 01 e9 4e fb ff ff 48 89 55 c0 4c 89 4d c8 e8 26
-RSP: 0018:ffff88807a9e7c10 EFLAGS: 00010012
-RAX: 0000000000010000 RBX: 11a523fb5c4fd01d RCX: ffffffff832ee40e
-RDX: 00000000000035a5 RSI: ffffffff832ee45a RDI: 0000000000000006
-RBP: ffff88807a9e7c68 R08: ffff88805a856280 R09: ffffffff8a08a408
-R10: 0000000000960392 R11: 0000000003920adb R12: ffffffff89c19ec8
-R13: 0000000000000000 R14: ffffffff89c19ec0 R15: dffffc0000000000
-  __lockdep_free_key_range+0x64/0x120 kernel/locking/lockdep.c:4730
-  lockdep_unregister_key+0x201/0x4c0 kernel/locking/lockdep.c:4926
-  wq_unregister_lockdep kernel/workqueue.c:3455 [inline]
-  pwq_unbound_release_workfn+0x233/0x2f0 kernel/workqueue.c:3675
-  process_one_work+0x98e/0x1790 kernel/workqueue.c:2269
-  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
-  kthread+0x357/0x430 kernel/kthread.c:253
-  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+On 23/03/2019 23:10, Kangjie Lu wrote:
+> As other functions in this module do, edev should be checked to
+> ensure that it is not NULL.
+> The fix inserts such as check to avoid potential NULL pointer
+> dereference.
+> 
+> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+> ---
+>  drivers/firmware/edd.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/firmware/edd.c b/drivers/firmware/edd.c
+> index 1b82c89a49df..7ebfaca53721 100644
+> --- a/drivers/firmware/edd.c
+> +++ b/drivers/firmware/edd.c
+> @@ -279,6 +279,8 @@ static ssize_t
+>  edd_show_mbr_signature(struct edd_device *edev, char *buf)
+>  {
+>  	char *p = buf;
+> +	if (!edev)
+> +		return -EINVAL;
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+I don't think this can ever be NULL.
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+edd_show_mbr_signature() is called from edd_attr_show(), which
+simplified looks like this:
+
+define to_edd_device(obj) container_of(obj,struct edd_device,kobj)
+
+edd_attr_show(struct kobject * kobj, struct attribute *attr, char *buf)
+{
+        struct edd_device *dev = to_edd_device(kobj);
+        [...]
+
+        if (edd_attr->show)
+                ret = edd_attr->show(dev, buf);
+        [...]
+}
+
+The edd_device structure has the kobject embedded, otherwise the up-cast
+won't work.
+
+Byte,
+	Johannes
+-- 
+Johannes Thumshirn                            SUSE Labs Filesystems
+jthumshirn@suse.de                                +49 911 74053 689
+SUSE LINUX GmbH, Maxfeldstr. 5, 90409 Nürnberg
+GF: Felix Imendörffer, Mary Higgins, Sri Rasiah
+HRB 21284 (AG Nürnberg)
+Key fingerprint = EC38 9CAB C2C4 F25D 8600 D0D0 0393 969D 2D76 0850
