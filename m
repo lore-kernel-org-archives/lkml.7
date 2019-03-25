@@ -2,104 +2,95 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DEF6C10F03
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 10:25:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F115C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 10:25:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E64E20863
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 10:25:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zV2sfJ5O"
+	by mail.kernel.org (Postfix) with ESMTP id 28C7B20863
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 10:25:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730650AbfCYKZB (ORCPT
+        id S1730679AbfCYKZx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 06:25:01 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:43249 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730484AbfCYKZA (ORCPT
+        Mon, 25 Mar 2019 06:25:53 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:45552 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730491AbfCYKZw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 06:25:00 -0400
-Received: by mail-lj1-f196.google.com with SMTP id f18so7270889lja.10
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 03:24:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hcOI01Wr/+3DxH7WXfJEA8V1OyEeebKPMWO9OvVYzmQ=;
-        b=zV2sfJ5OSOoelT6/jHfOWvo0LwWj7t+4JCuKx2tLrHjftzv/5+RIAXBhO4PfDZxV2J
-         zIlBuQRsgMPCsGhf4aIJCmTRy9jRMQV/iS/A+G2PRERgw4LnHeQYzovXhV9vq/L1qw1o
-         OCIEnK5YuxIXcWabWZ10aBozMoIlttSVf35rryYv3++dajdG4w3Ea675W3CCcl33hffT
-         UYWbSBcbR5qHYiZ+82pSL5KkXKMpVU2cxLbgZIGf+9Em4AMGXyFt1U7p+/jgEnQJzRRm
-         2SA+HA2yRvVze5SYagvkSlPXSbk7sVaB0CqWK4iPtP4wwjmU3gcyYhoCI3LNUnHLcbZd
-         8Wrg==
+        Mon, 25 Mar 2019 06:25:52 -0400
+Received: by mail-qt1-f195.google.com with SMTP id v20so9505308qtv.12;
+        Mon, 25 Mar 2019 03:25:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hcOI01Wr/+3DxH7WXfJEA8V1OyEeebKPMWO9OvVYzmQ=;
-        b=U2yZzVcupcmDeYmEqXN8E+7ZZcnoOlnK6C8/05V4SAuatkKe5kt7gi/G7ctBpTJkJB
-         mZ4Lc3WgwaHkOOayhV+muaMUN0hqcMWQn5Q2h/IWi8xSBDWsPk8vw3ra3bRv0sb9o7KY
-         bVHLBQ/jGPmlryFZ7C+/x2K3UBBQLYKhd2GZECfRWHuUsd07LsJe8iUDpr47tdyNJjV8
-         dGHlCRyMKUkcbuPCU0L4Ze5RyG+NZoPU3n18Sw4qR+4Fl+gfkoLd2Mm0EoRT9BTJR18J
-         /fyDbcB+HKAvEVjhQGJSsSIkEi/HfEyjI17H7FuATeB1l6a+6s913cdUpYCBA+I8X175
-         zR1g==
-X-Gm-Message-State: APjAAAUNDJtTPsFzNN/CtRHlACHc2cd6OmpZLWGUKrhMC9HXyKwWAGDf
-        N22tOBnv73EBXGC4K+FirnNsSw==
-X-Google-Smtp-Source: APXvYqxcqBiPnY8+yX0CyOz6ed03aUetxiGJghuiH8kObnHSdu1k6zWJvTX0wsvWi8hdKpFn4AjOrw==
-X-Received: by 2002:a2e:6e14:: with SMTP id j20mr2129423ljc.172.1553509498786;
-        Mon, 25 Mar 2019 03:24:58 -0700 (PDT)
-Received: from localhost (c-573670d5.07-21-73746f28.bbcust.telenor.se. [213.112.54.87])
-        by smtp.gmail.com with ESMTPSA id r77sm2256964ljb.29.2019.03.25.03.24.58
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 25 Mar 2019 03:24:58 -0700 (PDT)
-From:   Anders Roxell <anders.roxell@linaro.org>
-To:     a.zummo@towertech.it, alexandre.belloni@bootlin.com
-Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Anders Roxell <anders.roxell@linaro.org>
-Subject: [PATCH] rtc: sh: fix unused variable warning
-Date:   Mon, 25 Mar 2019 11:24:53 +0100
-Message-Id: <20190325102453.8349-1-anders.roxell@linaro.org>
-X-Mailer: git-send-email 2.20.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uptj+eh0cd0E1jTQT2RebCWvCgUIjjYNwZDO+zjMQlo=;
+        b=lUqOnEdOCoIcOKuT1HF4j/lsylMmEVt9nPiJFmiV1Y/7JRwPpD/l6qTbytC9TkmcLE
+         BxWDgSMnpyIi3NsJ+G7VQTr26hppthKdT1NFaY//cet2wrGTAjF54YrMYbrYMVDMkZTI
+         hZOo2Kuy9gYLzoAxFIIQx+cFGuYvqYDH+z/Tp1Oz6ZR3APcS8P3Cl4SHgQuETiXoiq5l
+         ZHnBIz4cWofml2Ah1uC0+8anEi9VC0QfMR5p68ZHQomhGWMjLTtcVydjKj7mLbX1LZap
+         7zVTsC7PTgNp2kGZHRFXsHMMMdxkveZ9iU7GzvRIuRpY9Z6BfANaNFo2FiZ8DmF8HynT
+         bOPg==
+X-Gm-Message-State: APjAAAXhYCm9kAo55Uf+i+sUPvZlbDQT8IfSnkhX9GS9UBgQBTP40kZz
+        V9taWvfBJeUx1SraM3nPE9/2gOnnHeFCvIaQQo4=
+X-Google-Smtp-Source: APXvYqzGC36CS17RsbRIMSM2NUx4KUTTuXGfJCXxY4s1a67ibbIU6+K0CM3qgDFINgtkxQIR4biGlim06jrN/EGtVB0=
+X-Received: by 2002:ac8:2692:: with SMTP id 18mr19682479qto.343.1553509551667;
+ Mon, 25 Mar 2019 03:25:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <1553062828-27798-1-git-send-email-yamada.masahiro@socionext.com>
+ <CAK8P3a3BG_mxYxxCx4S_+ZKAer_+5FpmkzLk0VrACZekuD=2GQ@mail.gmail.com>
+ <CAK8P3a0GEYTbw5XCwzVeZe_-pGF=7e=1kXhH3U+fidnMZeP0CA@mail.gmail.com>
+ <CAK7LNAQvvCVsQtd9ZYkechOSCg4HAeZFaNXCgaBbWWxBYXOgaQ@mail.gmail.com>
+ <CAK8P3a1P812avY8reSSguYB0jPzgjs+30dSJpKZCnWwzyLoSVQ@mail.gmail.com> <CAK7LNARatcRQ2u0JhiZHx4qU+mzS=SUv-kj7F-7-Vx--RFX5tw@mail.gmail.com>
+In-Reply-To: <CAK7LNARatcRQ2u0JhiZHx4qU+mzS=SUv-kj7F-7-Vx--RFX5tw@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 25 Mar 2019 11:25:33 +0100
+Message-ID: <CAK8P3a1QQeK1cBN2O8=p+zceQ7tw-ovYtWq6sBeavDucDWA7Lg@mail.gmail.com>
+Subject: Re: [PATCH] compiler: allow all arches to enable CONFIG_OPTIMIZE_INLINING
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     linux-arch <linux-arch@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Dave Hansen <dave@sr71.net>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        linux-mips@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When building the driver rtc/rtc-sh a warning about unused variable
-shows up:
+On Mon, Mar 25, 2019 at 8:55 AM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+>
+> On Mon, Mar 25, 2019 at 4:33 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> >
+> > On Mon, Mar 25, 2019 at 7:11 AM Masahiro Yamada
+> > <yamada.masahiro@socionext.com> wrote:
+> > > I do not know why to reproduce it,
+> > > but is "__init __noreturn" more sensible than
+> > > "__always_inline" here?
+> >
+> > It's in a header file, so it has to be 'inline'. We could make it
+> > static inline __init __noreturn,
+>
+> Yes, I like 'static inline __init __noreturn'
+>
+> > but I don't see an advantage over
+> > __always_inline there.
+>
+> __always_inline takes away the compiler's freedom.
+>
+> I'd like to leave it up to the compiler where possible.
 
-../drivers/rtc/rtc-sh.c: In function ‘sh_rtc_probe’:
-../drivers/rtc/rtc-sh.c:472:18: warning: unused variable ‘r’ [-Wunused-variable]
-  struct rtc_time r;
-                  ^
+Ok, fair enough.
 
-Remove the declaration of the unused varable 'r'.
-
-Fixes: 373f7f4bf4a5 ("rtc: sh: stop resetting time to epoch")
-Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
----
- drivers/rtc/rtc-sh.c | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/drivers/rtc/rtc-sh.c b/drivers/rtc/rtc-sh.c
-index d72ee3a841ea..579b3ff5c644 100644
---- a/drivers/rtc/rtc-sh.c
-+++ b/drivers/rtc/rtc-sh.c
-@@ -469,7 +469,6 @@ static int __init sh_rtc_probe(struct platform_device *pdev)
- {
- 	struct sh_rtc *rtc;
- 	struct resource *res;
--	struct rtc_time r;
- 	char clk_name[6];
- 	int clk_id, ret;
- 
--- 
-2.20.1
-
+      Arnd
