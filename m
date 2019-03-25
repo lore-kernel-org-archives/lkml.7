@@ -2,114 +2,122 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27814C4360F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 07:56:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06CA9C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 07:56:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 012F42085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 07:56:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C088D2085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 07:56:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iO8XCTbu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729955AbfCYH4D (ORCPT
+        id S1729972AbfCYH4N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 03:56:03 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:55887 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729849AbfCYH4C (ORCPT
+        Mon, 25 Mar 2019 03:56:13 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:40825 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729849AbfCYH4N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 03:56:02 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2P7kA4l026013;
-        Mon, 25 Mar 2019 08:55:29 +0100
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2rddhb9t12-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Mon, 25 Mar 2019 08:55:29 +0100
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 6BB6B31;
-        Mon, 25 Mar 2019 07:55:26 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas22.st.com [10.75.90.92])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0F2F226D1;
-        Mon, 25 Mar 2019 07:55:26 +0000 (GMT)
-Received: from SAFEX1HUBCAS21.st.com (10.75.90.45) by Safex1hubcas22.st.com
- (10.75.90.92) with Microsoft SMTP Server (TLS) id 14.3.361.1; Mon, 25 Mar
- 2019 08:55:25 +0100
-Received: from localhost (10.129.172.100) by Webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.361.1; Mon, 25 Mar 2019 08:55:25
- +0100
-From:   Mickael Guene <mickael.guene@st.com>
-To:     <linux-media@vger.kernel.org>
-CC:     <hugues.fruchet@st.com>, Mickael Guene <mickael.guene@st.com>,
-        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, <devicetree@vger.kernel.org>,
-        Todor Tomov <todor.tomov@linaro.org>,
-        "Nicolas Ferre" <nicolas.ferre@microchip.com>,
-        Tianshu Qiu <tian.shu.qiu@intel.com>,
-        Ben Kao <ben.kao@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Matt Ranostay <matt.ranostay@konsulko.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        Bingbu Cao <bingbu.cao@intel.com>,
-        <linux-kernel@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        Rui Miguel Silva <rui.silva@linaro.org>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        Ricardo Ribalda Delgado <ricardo@ribalda.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH v2 0/2] Add support for MIPID02 CSI-2 to PARALLEL bridge I2C device
-Date:   Mon, 25 Mar 2019 08:55:08 +0100
-Message-ID: <1553500510-153260-1-git-send-email-mickael.guene@st.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1552373045-134493-1-git-send-email-mickael.guene@st.com>
-References: <1552373045-134493-1-git-send-email-mickael.guene@st.com>
+        Mon, 25 Mar 2019 03:56:13 -0400
+Received: by mail-wm1-f68.google.com with SMTP id z24so4591172wmi.5
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 00:56:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=943/7EoKTX9sXFDlxc5BfKmi1xG6lYHKX+P4ihoJG5o=;
+        b=iO8XCTbuWx7RXR3iSwAiT0NnOEBH0pYoFGfmQX+0kwMnCJnm13ce6n1EzBe9hg3dGK
+         dt3QV49gGJilCjuwdXQSPw0oVoQJd7MF/kyQhHCpkWMyBv9tx1GPJaLDIj4xviNcKYXM
+         QPhArbBPZ5g/jnMXLk00+SHdpUkslFVsaR1pUXs7JT7WQ6mWUTyLaAhrO/200lyMsrrl
+         7h1TNbkhArZPcvxrGdhKSGKjOXQKlr6yOlY32VSlP+2AugkK06XwORnQPDQ7w3QJipQF
+         w6eL6GgmQJsheaXKVKpUFlWVYc8FAKQ5cELzkEu8BlknVQFSA/g/TbIPTKzevKotgCQo
+         B+mA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=943/7EoKTX9sXFDlxc5BfKmi1xG6lYHKX+P4ihoJG5o=;
+        b=qiS6Ex1VFq/jw1rt+Efbxb0+5kd3xFGsXitNEqjk2Ntd1Ew7I3zwjAuQbd3FKggdvN
+         zPMaJD+zN9UTdrLIZMbZZ3Ns2456wL6hCB/PuqvI9J0X6yQwvEdgHlcmasf/Hvl2IerT
+         RJ4gzqyccB4OgiMUzof4mcdZWJIAin5mxKo0qNcSFzaZiIFULUuN3wc3ryiPallCr1Cn
+         Tbgid0qK5nGeDTsrrs783xlqRI0teTLaLFwwyYHVg62v+w75FfSXW7kmAFL9VK08GYsh
+         Vrz1CNdmuAvjdRq5UVGSjrGWv3Por4CZzbXfNPr/V9DMdR45YHmvFUh+knxD29dU6xbE
+         7a/g==
+X-Gm-Message-State: APjAAAXgI5nIVmbGSOGzojJXLibr+UuEyLaaoMgWlmLWCEFcPV1Edt91
+        UH389l2C8+g12zw9lJS2mRTMlF+vqNw=
+X-Google-Smtp-Source: APXvYqzuoJorHIxCTlxc9ewsCpAeuRMT+9Z1EYvjpPd0Pb0WuhLqbogx0LV0Y+4MSKqK2rUKC6UEzQ==
+X-Received: by 2002:a1c:1c5:: with SMTP id 188mr4278401wmb.52.1553500571524;
+        Mon, 25 Mar 2019 00:56:11 -0700 (PDT)
+Received: from dell ([2.27.167.37])
+        by smtp.gmail.com with ESMTPSA id d9sm12519549wmb.8.2019.03.25.00.56.10
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 25 Mar 2019 00:56:10 -0700 (PDT)
+Date:   Mon, 25 Mar 2019 07:56:08 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Kangjie Lu <kjlu@umn.edu>
+Cc:     pakki001@umn.edu, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mfd: fix a potential NULL pointer dereference
+Message-ID: <20190325075608.GY4731@dell>
+References: <20190309080456.8579-1-kjlu@umn.edu>
+ <C71F9E7E-5EF8-4AE5-92D4-4596D25B1D9B@umn.edu>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.129.172.100]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-25_05:,,
- signatures=0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <C71F9E7E-5EF8-4AE5-92D4-4596D25B1D9B@umn.edu>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Fri, 22 Mar 2019, Kangjie Lu wrote:
 
-This is the v2 of my MIPID02 series which introduces support of
-STMicroelectronics MIPID02 CSI-2 to PARALLEL I2C bridge. It allows using a CSI-2
-sensor with a PARALLEL interface. Current driver implementation doesn't support
-CSI-2 second input port usage. It doesn't support also YUV420, RGB565 and RGB444
-input formats.
+> Hi Lee Jones,
+> 
+> Can you review this patch?
 
-Thanks to Sakari for v1 series review.
+Don't poke.
 
-Changes in v2:
-- Add precision about first CSI-2 port data rate
-- Document endpoints supported properties
-- Rename 'mipid02@14' into generic 'csi2rx@14' in example
-- Merge MAINTAINERS patch 3 into patch 1 and 2
-- Fix line too long in Kconfig
-- Add missing delay after reset release
-- Various style fixes
-- Fix mipid02_stream_enable returning no error when mipid02_find_sensor failed
+I have a very long list of reviews on my TODO.  Poking only surfaces
+your patch to the top of my Inbox, and since I review patches in
+reverse chronological order, it puts the review to the back of the
+queue.
 
-Mickael Guene (2):
-  dt-bindings: Document MIPID02 bindings
-  media:st-mipid02: MIPID02 CSI-2 to PARALLEL bridge driver
-
- .../bindings/media/i2c/st,st-mipid02.txt           |  83 ++
- MAINTAINERS                                        |   8 +
- drivers/media/i2c/Kconfig                          |  14 +
- drivers/media/i2c/Makefile                         |   1 +
- drivers/media/i2c/st-mipid02.c                     | 877 +++++++++++++++++++++
- 5 files changed, 983 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/st,st-mipid02.txt
- create mode 100644 drivers/media/i2c/st-mipid02.c
+> > On Mar 9, 2019, at 2:04 AM, Kangjie Lu <kjlu@umn.edu> wrote:
+> > 
+> > In case devm_kzalloc fails, the fix does NULL check and returns
+> > -ENOMEM upon failure so as to avoid NULL pointer dereference.
+> > 
+> > Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+> > ---
+> > drivers/mfd/sm501.c | 3 +++
+> > 1 file changed, 3 insertions(+)
+> > 
+> > diff --git a/drivers/mfd/sm501.c b/drivers/mfd/sm501.c
+> > index a530972c5a7e..e0173bf4b0dc 100644
+> > --- a/drivers/mfd/sm501.c
+> > +++ b/drivers/mfd/sm501.c
+> > @@ -1145,6 +1145,9 @@ static int sm501_register_gpio_i2c_instance(struct sm501_devdata *sm,
+> > 	lookup = devm_kzalloc(&pdev->dev,
+> > 			      sizeof(*lookup) + 3 * sizeof(struct gpiod_lookup),
+> > 			      GFP_KERNEL);
+> > +	if (!lookup)
+> > +		return -ENOMEM;
+> > +
+> > 	lookup->dev_id = "i2c-gpio";
+> > 	if (iic->pin_sda < 32)
+> > 		lookup->table[0].chip_label = "SM501-LOW";
+> 
 
 -- 
-2.7.4
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
