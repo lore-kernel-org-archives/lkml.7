@@ -2,162 +2,148 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C937C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:03:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C836C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:03:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BF062087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:03:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AEF520896
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:03:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729877AbfCYSDr (ORCPT
+        id S1729957AbfCYSDw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 14:03:47 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53860 "EHLO mx1.redhat.com"
+        Mon, 25 Mar 2019 14:03:52 -0400
+Received: from mga18.intel.com ([134.134.136.126]:57186 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729095AbfCYSDq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 14:03:46 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D7D7436807;
-        Mon, 25 Mar 2019 18:03:40 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-47.bos.redhat.com [10.18.17.47])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6926860CCC;
-        Mon, 25 Mar 2019 18:03:38 +0000 (UTC)
-Subject: Re: [PATCH] x86/paravirt: Guard against invalid cpu # in
- pv_vcpu_is_preempted()
-To:     Juergen Gross <jgross@suse.com>,
-        Alok Kataria <akataria@vmware.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will.deacon@arm.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Paolo Bonzini <pbonzini@redhat.com>
-References: <20190325155706.26987-1-longman@redhat.com>
- <e01da674-cbf0-22f1-7aba-6041f892b689@suse.com>
-From:   Waiman Long <longman@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=longman@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- weim8xU=
-Organization: Red Hat
-Message-ID: <5a48f5fb-799e-84f8-1fa7-eda851878d50@redhat.com>
-Date:   Mon, 25 Mar 2019 14:03:38 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        id S1729095AbfCYSDw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 14:03:52 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Mar 2019 11:03:50 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,269,1549958400"; 
+   d="scan'208";a="137308080"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
+  by fmsmga007.fm.intel.com with ESMTP; 25 Mar 2019 11:03:49 -0700
+Date:   Mon, 25 Mar 2019 11:03:49 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     "Xing, Cedric" <cedric.xing@intel.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "Svahn, Kai" <kai.svahn@intel.com>, "bp@alien8.de" <bp@alien8.de>,
+        "josh@joshtriplett.org" <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        "rientjes@google.com" <rientjes@google.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Haitao Huang <haitao.huang@linux.intel.com>,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Dr . Greg Wettstein" <greg@enjellic.com>
+Subject: Re: [PATCH v19,RESEND 24/27] x86/vdso: Add
+ __vdso_sgx_enter_enclave() to wrap SGX enclave transitions
+Message-ID: <20190325180349.GF31069@linux.intel.com>
+References: <20190320162119.4469-1-jarkko.sakkinen@linux.intel.com>
+ <20190320162119.4469-25-jarkko.sakkinen@linux.intel.com>
+ <960B34DE67B9E140824F1DCDEC400C0F4E85C484@ORSMSX116.amr.corp.intel.com>
+ <20190320191318.GF30469@linux.intel.com>
+ <960B34DE67B9E140824F1DCDEC400C0F4E85C5AB@ORSMSX116.amr.corp.intel.com>
+ <20190322215903.GE12666@linux.intel.com>
+ <960B34DE67B9E140824F1DCDEC400C0F4E85E481@ORSMSX116.amr.corp.intel.com>
+ <CALCETrV589POrG3RaPHBWOFuytkWjeJgJgLHk4OKbizOgJVKZQ@mail.gmail.com>
+ <960B34DE67B9E140824F1DCDEC400C0F4E85E989@ORSMSX116.amr.corp.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <e01da674-cbf0-22f1-7aba-6041f892b689@suse.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: base64
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Mon, 25 Mar 2019 18:03:46 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <960B34DE67B9E140824F1DCDEC400C0F4E85E989@ORSMSX116.amr.corp.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMDMvMjUvMjAxOSAxMjo0MCBQTSwgSnVlcmdlbiBHcm9zcyB3cm90ZToKPiBPbiAyNS8w
-My8yMDE5IDE2OjU3LCBXYWltYW4gTG9uZyB3cm90ZToKPj4gSXQgd2FzIGZvdW5kIHRoYXQg
-cGFzc2luZyBhbiBpbnZhbGlkIGNwdSBudW1iZXIgdG8gcHZfdmNwdV9pc19wcmVlbXB0ZWQo
-KQo+PiBtaWdodCBwYW5pYyB0aGUga2VybmVsIGluIGEgVk0gZ3Vlc3QuIEZvciBleGFtcGxl
-LAo+Pgo+PiBbICAgIDIuNTMxMDc3XSBPb3BzOiAwMDAwIFsjMV0gU01QIFBUSQo+PiAgIDoK
-Pj4gWyAgICAyLjUzMjU0NV0gSGFyZHdhcmUgbmFtZTogUmVkIEhhdCBLVk0sIEJJT1MgMC41
-LjEgMDEvMDEvMjAxMQo+PiBbICAgIDIuNTMzMzIxXSBSSVA6IDAwMTA6X19yYXdfY2FsbGVl
-X3NhdmVfX19rdm1fdmNwdV9pc19wcmVlbXB0ZWQrMHgwLzB4MjAKPj4KPj4gVG8gZ3VhcmQg
-YWdhaW5zdCB0aGlzIGtpbmQgb2Yga2VybmVsIHBhbmljLCBjaGVjayBpcyBhZGRlZCB0bwo+
-PiBwdl92Y3B1X2lzX3ByZWVtcHRlZCgpIHRvIG1ha2Ugc3VyZSB0aGF0IG5vIGludmFsaWQg
-Y3B1IG51bWJlciB3aWxsCj4+IGJlIHVzZWQuCj4+Cj4+IFNpZ25lZC1vZmYtYnk6IFdhaW1h
-biBMb25nIDxsb25nbWFuQHJlZGhhdC5jb20+Cj4+IC0tLQo+PiAgYXJjaC94ODYvaW5jbHVk
-ZS9hc20vcGFyYXZpcnQuaCB8IDYgKysrKysrCj4+ICAxIGZpbGUgY2hhbmdlZCwgNiBpbnNl
-cnRpb25zKCspCj4+Cj4+IGRpZmYgLS1naXQgYS9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9wYXJh
-dmlydC5oIGIvYXJjaC94ODYvaW5jbHVkZS9hc20vcGFyYXZpcnQuaAo+PiBpbmRleCBjMjVj
-MzhhMDVjMWMuLjRjZmI0NjVkY2RlNCAxMDA2NDQKPj4gLS0tIGEvYXJjaC94ODYvaW5jbHVk
-ZS9hc20vcGFyYXZpcnQuaAo+PiArKysgYi9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9wYXJhdmly
-dC5oCj4+IEBAIC02NzEsNiArNjcxLDEyIEBAIHN0YXRpYyBfX2Fsd2F5c19pbmxpbmUgdm9p
-ZCBwdl9raWNrKGludCBjcHUpCj4+ICAKPj4gIHN0YXRpYyBfX2Fsd2F5c19pbmxpbmUgYm9v
-bCBwdl92Y3B1X2lzX3ByZWVtcHRlZChsb25nIGNwdSkKPj4gIHsKPj4gKwkvKgo+PiArCSAq
-IEd1YXJkIGFnYWluc3QgaW52YWxpZCBjcHUgbnVtYmVyIG9yIHRoZSBrZXJuZWwgbWlnaHQg
-cGFuaWMuCj4+ICsJICovCj4+ICsJaWYgKFdBUk5fT05fT05DRSgodW5zaWduZWQgbG9uZylj
-cHUgPj0gbnJfY3B1X2lkcykpCj4+ICsJCXJldHVybiBmYWxzZTsKPj4gKwo+PiAgCXJldHVy
-biBQVk9QX0NBTExFRTEoYm9vbCwgbG9jay52Y3B1X2lzX3ByZWVtcHRlZCwgY3B1KTsKPj4g
-IH0KPiBDYW4gdGhpcyByZWFsbHkgaGFwcGVuIHdpdGhvdXQgYmVpbmcgYSBwcm9ncmFtbWlu
-ZyBlcnJvcj8KClRoaXMgc2hvdWxkbid0IGhhcHBlbiB3aXRob3V0IGEgcHJvZ3JhbW1pbmcg
-ZXJyb3IsIEkgdGhpbmsuIEluIG15IGNhc2UsCml0IHdhcyBjYXVzZWQgYnkgYSByYWNlIGNv
-bmRpdGlvbiBsZWFkaW5nIHRvIHVzZS1hZnRlci1mcmVlIG9mIHRoZSBjcHUKbnVtYmVyLiBI
-b3dldmVyLCBteSBwb2ludCBpcyB0aGF0IGVycm9yIGxpa2UgdGhhdCBzaG91bGRuJ3QgY2F1
-c2UgdGhlCmtlcm5lbCB0byBwYW5pYy4KCj4gQmFzaWNhbGx5IHlvdSdkIG5lZWQgdG8gZ3Vh
-cmQgYWxsIHBlcmNwdSBhcmVhIGFjY2Vzc2VzIHRvIGZvcmVpZ24gY3B1cwo+IHRoaXMgd2F5
-LiBXaHkgaXMgdGhpcyBvbmUgc3BlY2lhbD8KCkl0IGRlcGVuZHMuIElmIG91dC1vZi1ib3Vu
-ZCBhY2Nlc3MgY2FuIG9ubHkgaGFwcGVuIHdpdGggb2J2aW91cwpwcm9ncmFtbWluZyBlcnJv
-ciwgSSBkb24ndCB0aGluayB3ZSBuZWVkIHRvIGd1YXJkIGFnYWluc3QgdGhlbS4gSW4gdGhp
-cwpjYXNlLCBJIGFtIG5vdCB0b3RhbGx5IHN1cmUgaWYgdGhlIHJhY2UgY29uZGl0aW9uIHRo
-YXQgSSBmb3VuZCBtYXkKaGFwcGVuIHdpdGggZXhpc3RpbmcgY29kZSBvciBub3QuIFRvIGJl
-IHBydWRlbnQsIEkgZGVjaWRlIHRvIHNlbmQgdGhpcwpwYXRjaCBvdXQuCgpUaGUgcmFjZSBj
-b25kaXRpb24gdGhhdCBJIGFtIGxvb2tpbmcgYXQgaXMgYXMgZm9sbG93czoKCsKgIENQVSAw
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIENQVSAx
-CsKgIC0tLS0twqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgIC0tLS0tCnVwX3dyaXRlOgrCoCBvd25lciA9IE5VTEw7CsKgIDxyZWxlYXNlLWJhcnJp
-ZXI+CsKgIGNvdW50ID0gMDsKCjxyY3UtZnJlZSB0YXNrIHN0cnVjdHVyZT4KwqAKwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcndzZW1fY2Fu
-X3NwaW5fb25fb3duZXI6CsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoCByY3VfcmVhZF9sb2NrKCk7CsKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCByZWFkIG93bmVyOwrCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIDoK
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-IHZjcHVfaXNfcHJlZW1wdGVkKG93bmVyLT5jcHUpOwrCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIDoKwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHJjdV9yZWFkX3VubG9j
-aygpCgpXaGVuIEkgdHJpZWQgdG8gbWVyZ2UgdGhlIG93bmVyIGludG8gdGhlIGNvdW50IChj
-bGVhciB0aGUgb3duZXIgYWZ0ZXIKdGhlIGJhcnJpZXIpLCBJIGNhbiByZXByb2R1Y2UgdGhl
-IGNyYXNoIDEwMCUgd2hlbiBib290aW5nIHVwIHRoZSBrZXJuZWwKaW4gYSBWTSBndWVzdC4g
-SG93ZXZlciwgSSBhbSBub3Qgc3VyZSBpZiB0aGUgY29uZmlndXJhdGlvbiBhYm92ZSBpcyBz
-YWZlCmFuZCBpcyBqdXN0IHZlcnkgaGFyZCB0byByZXByb2R1Y2UuCgpBbHRlcm5hdGl2ZWx5
-LCBJIGNhbiBhbHNvIGRvIHRoZSBjcHUgY2hlY2sgYmVmb3JlIGNhbGxpbmcKdmNwdV9pc19w
-cmVlbXB0ZWQoKS4KCkNoZWVycywKTG9uZ21hbgoKCg==
+On Sun, Mar 24, 2019 at 01:59:48AM -0700, Xing, Cedric wrote:
+> As said in my previous email, this vDSO API isn't even compliant to
+> x86_64 ABI and is absolutely NOT for average developers. Instead,
+> host/enclave communications are expected to be handled by SDKs and
+> those developers will be very aware of the limitations of their targeted
+> environments, and will need the freedom to deploy optimal solutions. 
+
+This statement epitomizes the difference in philosophies between Intel's
+SGX SDK and much of the Linux community.  The SDK, from edger8r to its
+stack stitching, believes that it should dumb things down for the so
+called "average" developer, even if doing so significantly increases the
+complexity of the implementation.  Linux generally favors the opposite
+approach, preferring simplicitly in its implementations even if it means
+setting a higher bar for the "average" developer/user.
+
+That's not to say that that Linux doesn't have its fair share of complex
+code or dumbed down interfaces, far from it.  But generally speaking,
+there is an emphasis on making the code itself approachable that I don't
+see in Intel's SDK.
+
+> I understand your intention to advocate the programming model that you
+> believe is "right". But there are 7 billion people on this planet and
+> the "right" thing for you could be "wrong" for others, especially in
+> future usages/situations that can't be foreseen today.
+
+IMO modifying SSA.U_R{B,SP} from within the enclave is akin to modifying
+VMCS fields from the guest, which is technically possible on processors
+that don't support VMCS caching, but I digress...
+
+The above statements aren't intended to fan the flames or send us down
+a rat hole of philosophical arguments.  My intent is to point out that
+I think we're at an impasse due to philosophical differences, i.e. no
+amount of arguing will convince me that mucking with the untrusted stack
+is anything short of insanity, and vice versa I doubt that Andy, I or
+anyone else will convince you and the SDK team that forcing the SDK to
+use an alternative form of enclave communication is a good thing.
+
+> Software is stacked, with the lower layers being more generic and higher
+> layers being more specific. This vDSO API is sitting at the bottom of
+> the stack, therefore shall be as generic as possible. A better approach
+> to advocate your idea is to wrap it (i.e. to implement it using the more
+> generic vDSO API as a
+
+It's not more generic, just different, e.g. uses %rbp instead of %rsp as
+the anchor.  Or am I missing something?  
+
+> subroutine) in a library for the public to choose (and you can imagine
+> others bearing different ideas will do the same). Then good ideas will
+> stand out!
+
+I'd rather support two disparate vDSO implementations than implement the
+barebones ABI as a wrapper to something heavier.  E.g. I really don't want
+to have to wade through a bunch of conditionals and stack accesses, (or
+save/restore code if you're talking about making it compliant with the
+x86_64 ABI) when I inevitably break something during kernel development.
+
+Given all above, and that everyone involved wants to see SGX get accepted
+into mainline sooner rather than later, I propose the following:
+
+  - Keep the barebones __vdso_sgx_enter_enclave() as is
+  - Explicitly state in the SGX documentation that userspace does *not*
+    have to use the vDSO, e.g. can enter enclaves directly and use signals
+  - Submit a patch to add second vDSO function to support the Intel SDK
+    use case (from Cedric or anyone from the SDK team)
+
+I fully realize that the above approach saddles Cedric and the SDK team
+with the extra task of justifying the need for two vDSO interfaces, and
+likely reduces the probability of their proposal being accepted.  But, we
+don't *force* the SDK to be rewritten, and we gain a vDSO interface that
+many people want and is acceptable to the maintainers (unless I've
+horribly misread Andy's position).
