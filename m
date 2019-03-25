@@ -2,89 +2,76 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B29AC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 14:07:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1C08C4360F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 14:09:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46FA22087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 14:07:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C22C72085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 14:09:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729129AbfCYOHJ (ORCPT
+        id S1726243AbfCYOJ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 10:07:09 -0400
-Received: from ms01.santannapisa.it ([193.205.80.98]:43764 "EHLO
-        mail.santannapisa.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726059AbfCYOHJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 10:07:09 -0400
-Received: from [10.30.3.184] (account l.abeni@santannapisa.it HELO luca64)
-  by santannapisa.it (CommuniGate Pro SMTP 6.1.11)
-  with ESMTPSA id 137597243; Mon, 25 Mar 2019 15:07:08 +0100
-Date:   Mon, 25 Mar 2019 15:07:03 +0100
-From:   luca abeni <luca.abeni@santannapisa.it>
-To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc:     Dario Faggioli <dfaggioli@suse.com>, thibodux@gmail.com,
-        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
-        oleksandr_andrushchenko@epam.com, tglx@linutronix.de,
-        jgross@suse.com, ryan.thibodeaux@starlab.io
-Subject: Re: [PATCH] x86/xen: Add "xen_timer_slop" command line option
-Message-ID: <20190325150703.3774b92d@luca64>
-In-Reply-To: <69e40698-f7ae-11c3-e4b7-dda4f1fadcf6@oracle.com>
-References: <1553279397-130201-1-git-send-email-ryan.thibodeaux@starlab.io>
-        <abf65a68-9463-0f0e-1f51-6eefd3cacc88@oracle.com>
-        <52bfeae7c256faec444b69efe58d363ad60c3fc5.camel@suse.com>
-        <20190323114151.5cebf31b@sweethome>
-        <20190325130530.56603806@luca64>
-        <69e40698-f7ae-11c3-e4b7-dda4f1fadcf6@oracle.com>
-Organization: Scuola Superiore S. Anna
-X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 25 Mar 2019 10:09:59 -0400
+Received: from mga18.intel.com ([134.134.136.126]:41285 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725355AbfCYOJ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 10:09:58 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Mar 2019 07:09:57 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,269,1549958400"; 
+   d="scan'208";a="143654251"
+Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.97])
+  by FMSMGA003.fm.intel.com with ESMTP; 25 Mar 2019 07:09:55 -0700
+Date:   Mon, 25 Mar 2019 16:09:54 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Tadeusz Struk <tadeusz.struk@intel.com>
+Cc:     grawity@gmail.com, James.Bottomley@HansenPartnership.com,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH RESEND v3] tpm: fix an invalid condition in
+ tpm_common_poll
+Message-ID: <20190325140954.GA13699@linux.intel.com>
+References: <155326553839.17270.7997105682830234546.stgit@tstruk-mobl1.jf.intel.com>
+ <20190322155917.GA6987@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190322155917.GA6987@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Mon, 25 Mar 2019 09:43:20 -0400
-Boris Ostrovsky <boris.ostrovsky@oracle.com> wrote:
-[...]
-> > http://retis.santannapisa.it/luca/XenTimers/
-> > (there also is a link to the scripts to be used for reproducing the
-> > results). The latencies have been measured by running cyclictest in
-> > the guest (see the scripts for details).
-> >
-> > The picture shows the latencies measured with an unpatched guest
-> > kernel and with a guest kernel having TIMER_SLOP set to 1000
-> > (arbitrary small value :).
-> > All the experiments have been performed booting the hypervisor with
-> > a small timer_slop (the hypervisor's one) value. So, they show that
-> > decreasing the hypervisor's timer_slop is not enough to measure low
-> > latencies with cyclictest.  
+On Fri, Mar 22, 2019 at 05:59:17PM +0200, Jarkko Sakkinen wrote:
+> On Fri, Mar 22, 2019 at 07:38:58AM -0700, Tadeusz Struk wrote:
+> > The poll condition should only check response_length,
+> > because reads should only be issued if there is data to read.
+> > The response_read flag only prevents double writes.
+> > The problem was that the write set the response_read to false,
+> > enqued a tpm job, and returned. Then application called poll
+> > which checked the response_read flag and returned EPOLLIN.
+> > Then the application called read, but got nothing.
+> > After all that the async_work kicked in.
+> > Added also mutex_lock around the poll check to prevent
+> > other possible race conditions.
+> > 
+> > Cc: stable@vger.kernel.org
+> > Fixes: 9488585b21bef0df12 ("tpm: add support for partial reads")
+> > Reported-by: Mantas Mikulėnas <grawity@gmail.com>
+> > Tested-by: Mantas Mikulėnas <grawity@gmail.com>
+> > Signed-off-by: Tadeusz Struk <tadeusz.struk@intel.com>
 > 
-> 
-> 
-> I have a couple of questions:
-> * Does it make sense to make this a tunable for other clockevent
-> devices as well?
-> * This patch adjusts min value. Could max value (ever) need a similar
-> adjustment?
+> Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 
-Sorry, I do not know much about clockevent devices, so I have no answers
-to these questions...
+It is still missing the comment I asked to add. Otherwise, it is good.
 
-What I can say is that when I repeated the cyclictest experiments on
-VMs using a different clockevent device (lapic) I did not measure large
-latencies.
-So, I guess the "lapic" clockevent device already defaults to a smaller
-min value (not sure about other clockevent devices, I do not know how
-to test them).
-
-
-
-				Luca
+/Jarkko
