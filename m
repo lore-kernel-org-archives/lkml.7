@@ -2,131 +2,109 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE441C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 13:39:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A541CC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 13:40:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CDCD2084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 13:39:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DFDF2084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 13:40:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728907AbfCYNjl convert rfc822-to-8bit (ORCPT
+        id S1729003AbfCYNkY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 09:39:41 -0400
-Received: from vegas.theobroma-systems.com ([144.76.126.164]:40717 "EHLO
-        mail.theobroma-systems.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726059AbfCYNjl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 09:39:41 -0400
-Received: from ip092042140082.rev.nessus.at ([92.42.140.82]:62031 helo=[10.2.146.249])
-        by mail.theobroma-systems.com with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <christoph.muellner@theobroma-systems.com>)
-        id 1h8Pot-0001Ei-2Z; Mon, 25 Mar 2019 14:39:21 +0100
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 11.5 \(3445.9.1\))
-Subject: Re: [PATCH v3 2/3] mmc: sdhci-of-arasan: Add DTS property to disable
- DCMDs.
-From:   =?utf-8?Q?Christoph_M=C3=BCllner?= 
-        <christoph.muellner@theobroma-systems.com>
-In-Reply-To: <CAPDyKFrDq-zBsqqe23hj4ynfYnrGxAr0tWxvYEJu8Kvh0i=h9A@mail.gmail.com>
-Date:   Mon, 25 Mar 2019 14:39:14 +0100
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Tony Xie <tony.xie@rock-chips.com>,
-        Randy Li <ayaka@soulik.info>,
-        Vicente Bergas <vicencb@gmail.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Klaus Goger <klaus.goger@theobroma-systems.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
+        Mon, 25 Mar 2019 09:40:24 -0400
+Received: from sauhun.de ([88.99.104.3]:46124 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726059AbfCYNkX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 09:40:23 -0400
+Received: from localhost (p54B33284.dip0.t-ipconnect.de [84.179.50.132])
+        by pokefinder.org (Postfix) with ESMTPSA id 06A7E2C0963;
+        Mon, 25 Mar 2019 14:40:20 +0100 (CET)
+Date:   Mon, 25 Mar 2019 14:40:20 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <2D2515D6-1E11-4EA3-B016-EC37A9E3091D@theobroma-systems.com>
-References: <20190322113808.16858-1-christoph.muellner@theobroma-systems.com>
- <20190322113808.16858-2-christoph.muellner@theobroma-systems.com>
- <CAPDyKFrDq-zBsqqe23hj4ynfYnrGxAr0tWxvYEJu8Kvh0i=h9A@mail.gmail.com>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-X-Mailer: Apple Mail (2.3445.9.1)
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Keerthy <j-keerthy@ti.com>, Peter Rosin <peda@axentia.se>,
+        Tony Lindgren <tony@atomide.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Stefan Lengfeld <contact@stefanchrist.eu>,
+        Phil Reid <preid@electromag.com.au>,
+        Tero Kristo <t-kristo@ti.com>,
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        linux-tegra@vger.kernel.org
+Subject: Re: [RFC PATCH v2 0/7] i2c: core: introduce atomic transfers
+Message-ID: <20190325134020.GA3375@kunai>
+References: <20190302134735.4393-1-wsa+renesas@sang-engineering.com>
+ <CAHp75Vc-WYUJgaDPuWUn-_0Cizq=MG7N2cdHJxaEbad+xntcjQ@mail.gmail.com>
+ <20190312154501.6v2symbq6eutp6dj@ninjato>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="5mCyUwZo2JvN/JJP"
+Content-Disposition: inline
+In-Reply-To: <20190312154501.6v2symbq6eutp6dj@ninjato>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-> On 25.03.2019, at 14:27, Ulf Hansson <ulf.hansson@linaro.org> wrote:
-> 
-> On Fri, 22 Mar 2019 at 12:39, Christoph Muellner
-> <christoph.muellner@theobroma-systems.com> wrote:
->> 
->> Direct commands (DCMDs) are an optional feature of eMMC 5.1's command
->> queue engine (CQE). The Arasan eMMC 5.1 controller uses the CQHCI,
->> which exposes a control register bit to enable the feature.
->> The current implementation sets this bit unconditionally.
->> 
->> This patch allows to suppress the feature activation,
->> by specifying the property disable-cqe-dcmd.
->> 
->> Signed-off-by: Christoph Muellner <christoph.muellner@theobroma-systems.com>
->> Signed-off-by: Philipp Tomsich <philipp.tomsich@theobroma-systems.com>
->> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-> 
-> Applied for next, thanks!
-> 
-> Perhaps both patch1 and patch2 should be tagged for stable? Then
-> please tell me and I can add a tag.
+--5mCyUwZo2JvN/JJP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hi Ulf,
 
-yes tagging for stable would be nice.
-I guess, the following would fit:
+> This series seems like a valid approach to me if we still want to
+> respect the locking.
 
-Fixes: 84362d79f436 ("mmc: sdhci-of-arasan: Add CQHCI support for arasan,sdhci-5.1")
+And I am leaning to that it is good enough. I think pragmatism is OK
+here: The users who want this feature simply want to reboot their
+system, mostly development systems. They can't reboot otherwise. Except
+for the HW switch they are currently using anyhow.
 
-Thanks,
-Christoph
+The panic fault-injector can create an inconsistent situation on the I2C
+bus when you want to reboot after an OOPS while a transfer was in
+progress. However, if rebooting in such scenarios is critical for you,
+you a) shouldn't reboot via I2C, and/or b) should have a watchdog in
+place. We can't guarantee to always fix this sitution. At best, we could
+just try to be better for some cases. However, this would mean having a
+backdoor to skip the locking scheme which doesn't sound right. Maybe
+just accepting the deadlock is not too bad because it will reliably
+point out a design flaw of the system (hopefully during the development
+stage)?
 
-> 
-> Kind regards
-> Uffe
-> 
-> 
-> 
->> ---
->> drivers/mmc/host/sdhci-of-arasan.c | 5 ++++-
->> 1 file changed, 4 insertions(+), 1 deletion(-)
->> 
->> diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
->> index c9e3e050ccc8..88dc3f00a5be 100644
->> --- a/drivers/mmc/host/sdhci-of-arasan.c
->> +++ b/drivers/mmc/host/sdhci-of-arasan.c
->> @@ -832,7 +832,10 @@ static int sdhci_arasan_probe(struct platform_device *pdev)
->>                host->mmc_host_ops.start_signal_voltage_switch =
->>                                        sdhci_arasan_voltage_switch;
->>                sdhci_arasan->has_cqe = true;
->> -               host->mmc->caps2 |= MMC_CAP2_CQE | MMC_CAP2_CQE_DCMD;
->> +               host->mmc->caps2 |= MMC_CAP2_CQE;
->> +
->> +               if (!of_property_read_bool(np, "disable-cqe-dcmd"))
->> +                       host->mmc->caps2 |= MMC_CAP2_CQE_DCMD;
->>        }
->> 
->>        ret = sdhci_arasan_add_host(sdhci_arasan);
->> --
->> 2.11.0
->> 
+Final call for other thoughts/comments.
 
+PS: I am still interested in the use of in_atomic() here. I wonder if it is
+correct. If a change is needed, it should probably be a seperate series,
+though.
+
+
+--5mCyUwZo2JvN/JJP
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlyY2kAACgkQFA3kzBSg
+KbZo2g//dCNbQqq7JCJ5Lv/VujuOvXfvIAhTdixDdvjH0OB63oi+g7uOczVtHA3C
+MwOtHz0SzrK28zgFKP54noME6BxsaNA/wkFGRidTz5e1SbxgEuDBefLKTjo6eXWV
+w4qE87SZteJtKQhMTu2fMELiwDQoI3mVfWuBEucdhIqa9zumT6RALS5z/miAzr6E
+M53RUZ+k/tOanoOyuDN99mvhL3YSKNqPXe6Ixayx5VX9tVZAi+ua2nl9STbdsIio
+lwiBv3A4i/DEw7SMl3hxJfyQs2CE3y7Ix7EDJE85pGGruCY7QD9HpH6KNadmhg2q
+YMtSymts2f5jy1ZKtdrd9R7oR/Ihw6ZyaUME3qU92igmnAdIOJsDXPVoWQruSsLE
+6z0v5rsqQ6Vk+hSUbKEC6Ild80zEuKOcuQW12dHeZI+m6+7duLlvafp9RnKBK0pO
+bkmJchXcOTwLUUT/Y93zmI2cbPrGwx6Bjkbyv2I5O7asAxDHTJBG6qjBeaLaxrpq
+8PoNHnbrfNburNrmt90qCM/5MTT1B1VK+ghoy2vLD0mjf0Y9DQd4WyCyK1+p781Q
+CdqGh08ptk2VCdnRe8/WBjHIJ4T4FVM43nrDx+86nVXbgmHYhjYF5LPEl1K9svpe
+loGz64ibwn+UIG/8rZZaYauCzqdgYjGRHtp807khprYzC/KfHI0=
+=gywM
+-----END PGP SIGNATURE-----
+
+--5mCyUwZo2JvN/JJP--
