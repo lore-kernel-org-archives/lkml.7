@@ -2,205 +2,99 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A7CFC4360F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 10:04:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2121BC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 10:04:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E397420693
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 10:03:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="geI4nahi"
+	by mail.kernel.org (Postfix) with ESMTP id EBBD520811
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 10:04:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730659AbfCYKD6 (ORCPT
+        id S1730673AbfCYKEE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 06:03:58 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:33279 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730250AbfCYKDq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 06:03:46 -0400
-Received: by mail-wr1-f66.google.com with SMTP id q1so9373032wrp.0
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 03:03:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=BiYphHszT1boPmgsGMzckEzxrSJiGDBV9O9U53D5dZ0=;
-        b=geI4nahiemLBvlYgY6ecMbNBRWOJ//sJ600WY8df4KI+6Qx3CxptZzTJRYUcl8z3qN
-         YsegQc0vLr62CEwDK+0bWZNFPWJFuHBqbcmNZranYf9lvlRM+ApujvAxYjbI3RX4SBnQ
-         aDsPfNXg/N2qldzMTNXZpLJF2BdtjUHQ6FVBoOnNHTqe4ncMAaOPJ9Vqae9tZAzViS2a
-         K+WQoOF2sKMZTUtGWYVQ9pHHL8YrBrVYW0qBy4wfcktbwb18zkLJHggGnnn2CQytzkDs
-         uNLn/QpgvA4e2Nn4WKQWLddFnvHVOGldpALsznmnrJYzXnzbxqlyqOwucmRA8zfGDHu0
-         0jTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=BiYphHszT1boPmgsGMzckEzxrSJiGDBV9O9U53D5dZ0=;
-        b=HBih7H3o5xG41sYvjQVg5S8GE5fi3OGel8MkpkVA5kvK7d5xwxoLpCs3D0jfPCLvXx
-         fXU4HxWXFP689CklcMXDLDtxKN7phQzenyQ8zZZ4GGAPQZmHpT8tHOKqpVQzPuBqsWyZ
-         8U7lJkpE/SDIqQDTXmwd6Od+5BouXdTW+R6vv59hXgLBoo/Npzas/Yehi/vlt9rNr7xW
-         HLjFNGYoIHv/s5h2z/vUlCcdoE2QPTf3baB1lNdawL3RAWetmg+YhgtKbLOrdIsf1LfV
-         2StlJiLcJNet1HH6vBCWFa1jYi6LFmD1M4Q2BKA19cczAjUj+mmuGUR1oFzGUCgShyrx
-         VH5g==
-X-Gm-Message-State: APjAAAWMeS9R0c5OFCGEWnSUm4oOF1wXTYIE9bVosQCtQ7aMDAtBrYyj
-        e7wdkoUlZohH/UBa2h8+wgRWCg==
-X-Google-Smtp-Source: APXvYqy7CSyp6ENjlTRU7AfpXx927Bz4QGMg9seXy80C6ZW+rZthEBOe+nqe+Ue913Cf1TtSNDiHsg==
-X-Received: by 2002:a5d:6246:: with SMTP id m6mr15820702wrv.184.1553508224451;
-        Mon, 25 Mar 2019 03:03:44 -0700 (PDT)
-Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id g12sm11581215wrw.40.2019.03.25.03.03.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 25 Mar 2019 03:03:43 -0700 (PDT)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     khilman@baylibre.com
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v3 2/3] arm64: dts: meson: g12a: Add G12A USB nodes
-Date:   Mon, 25 Mar 2019 11:03:38 +0100
-Message-Id: <20190325100339.749-3-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190325100339.749-1-narmstrong@baylibre.com>
-References: <20190325100339.749-1-narmstrong@baylibre.com>
+        Mon, 25 Mar 2019 06:04:04 -0400
+Received: from mga18.intel.com ([134.134.136.126]:29025 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730362AbfCYKEE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 06:04:04 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Mar 2019 03:04:03 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,256,1549958400"; 
+   d="scan'208";a="134499773"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.198]) ([10.237.72.198])
+  by fmsmga008.fm.intel.com with ESMTP; 25 Mar 2019 03:04:00 -0700
+Subject: Re: [bug report][stable] perf probe: failed to add events
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        luto@kernel.org, Jiufei Xue <jiufei.xue@linux.alibaba.com>,
+        Xu Yu <xuyu@linux.alibaba.com>, peterz@infradead.org,
+        mingo@redhat.com
+References: <1a4240a8-288b-45d0-073d-d5cb8f0c63eb@linux.alibaba.com>
+ <20190226090505.GA24409@kroah.com>
+ <c7ccd9cb-3a66-98a9-faa1-7ee5ed20ff88@linux.alibaba.com>
+ <20190226130802.GA10343@kroah.com> <20190226142009.GC26786@kernel.org>
+ <3b233ff2-e87a-1c61-d516-6c4cdecb4f01@intel.com>
+ <8e798942-0e71-c88f-866f-88e55177e286@linux.alibaba.com>
+ <fea29ce5-b410-27cc-045e-feeecbc4a7f5@intel.com>
+ <20190321101029.GA3650@kroah.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <cf860b89-5678-c113-f8b1-bfb4d19bc6fb@intel.com>
+Date:   Mon, 25 Mar 2019 12:02:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190321101029.GA3650@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds the nodes for the USB Complex found in the Amlogic
-G12A SoC.
+On 21/03/19 12:10 PM, Greg KH wrote:
+> On Thu, Feb 28, 2019 at 09:19:08AM +0200, Adrian Hunter wrote:
+>> On 28/02/19 4:07 AM, Joseph Qi wrote:
+>>> Hi Adrian,
+>>>
+>>> On 19/2/27 20:39, Adrian Hunter wrote:
+>>>> Seems to be fixed by this:
+>>>>
+>>>> From: Adrian Hunter <adrian.hunter@intel.com>
+>>>> Date: Wed, 27 Feb 2019 05:35:25 +0200
+>>>> Subject: [PATCH] perf probe: Fix getting the kernel map
+>>>>
+>>>> Since commit 4d99e4136580 ("perf machine: Workaround missing maps for x86
+>>>> PTI entry trampolines"), perf tools has been creating more than one kernel
+>>>> map, however 'perf probe' assumed there could be only one.
+>>>>
+>>>> Fix by using machine__kernel_map() to get the main kernel map.
+>>>>
+>>>> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+>>>> Fixes: 4d99e4136580 ("perf machine: Workaround missing maps for x86 PTI entry trampolines")
+>>>
+>>> Below is my investigation result before, FYI.
+>>> the first bad commit (v4.18 ~ v4.19):
+>>> d83212d5dd67 kallsyms, x86: Export addresses of PTI entry trampolines
+>>
+>> Yes we should add a fixes tag for that also.
+> 
+> So, what do I need to do here for the stable tree(s) to resolve this
+> issue?
 
-It includes the :
-- 2 USB2 PHYs
-- 1 USB3 + PCIE Combo PHY
-- the USB Glue with it's DWC2 and DWC3 sub-nodes
+Nothing.
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- arch/arm64/boot/dts/amlogic/meson-g12a.dtsi | 75 +++++++++++++++++++++
- 1 file changed, 75 insertions(+)
+Patch was re-sent with a stable tag so will go through like normal:
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-index 4b3be7e60b4d..a9cd91f033f2 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-@@ -3,11 +3,13 @@
-  * Copyright (c) 2018 Amlogic, Inc. All rights reserved.
-  */
- 
-+#include <dt-bindings/phy/phy.h>
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/clock/g12a-clkc.h>
- #include <dt-bindings/clock/g12a-aoclkc.h>
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/reset/amlogic,meson-g12a-reset.h>
- 
- / {
- 	compatible = "amlogic,g12a";
-@@ -175,6 +177,26 @@
- 				};
- 			};
- 
-+			usb2_phy0: phy@36000 {
-+				compatible = "amlogic,g12a-usb2-phy";
-+				reg = <0x0 0x36000 0x0 0x2000>;
-+				clocks = <&xtal>;
-+				clock-names = "xtal";
-+				resets = <&reset RESET_USB_PHY20>;
-+				reset-names = "phy";
-+				#phy-cells = <0>;
-+			};
-+
-+			usb2_phy1: phy@3a000 {
-+				compatible = "amlogic,g12a-usb2-phy";
-+				reg = <0x0 0x3a000 0x0 0x2000>;
-+				clocks = <&xtal>;
-+				clock-names = "xtal";
-+				resets = <&reset RESET_USB_PHY21>;
-+				reset-names = "phy";
-+				#phy-cells = <0>;
-+			};
-+
- 			hiu: bus@3c000 {
- 				compatible = "simple-bus";
- 				reg = <0x0 0x3c000 0x0 0x1400>;
-@@ -195,6 +217,18 @@
- 					};
- 				};
- 			};
-+
-+			usb3_pcie_phy: phy@46000 {
-+				compatible = "amlogic,g12a-usb3-pcie-phy";
-+				reg = <0x0 0x46000 0x0 0x2000>;
-+				clocks = <&clkc CLKID_PCIE_PLL>;
-+				clock-names = "ref_clk";
-+				resets = <&reset RESET_PCIE_PHY>;
-+				reset-names = "phy";
-+				assigned-clocks = <&clkc CLKID_PCIE_PLL>;
-+				assigned-clock-rates = <100000000>;
-+				#phy-cells = <1>;
-+			};
- 		};
- 
- 		aobus: bus@ff800000 {
-@@ -358,6 +392,47 @@
- 				status = "disabled";
- 			};
- 		};
-+
-+		usb: usb@ffe09000 {
-+			status = "disabled";
-+			compatible = "amlogic,meson-g12a-usb-ctrl";
-+			reg = <0x0 0xffe09000 0x0 0xa0>;
-+			interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges;
-+
-+			clocks = <&clkc CLKID_USB>;
-+			resets = <&reset RESET_USB>;
-+
-+			dr_mode = "otg";
-+
-+			phys = <&usb2_phy0>, <&usb2_phy1>,
-+			       <&usb3_pcie_phy PHY_TYPE_USB3>;
-+			phy-names = "usb2-phy0", "usb2-phy1", "usb3-phy0";
-+
-+			dwc2: usb@ff400000 {
-+				compatible = "amlogic,meson-g12a-usb", "snps,dwc2";
-+				reg = <0x0 0xff400000 0x0 0x40000>;
-+				interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&clkc CLKID_USB1_DDR_BRIDGE>;
-+				clock-names = "ddr";
-+				phys = <&usb2_phy1>;
-+				dr_mode = "peripheral";
-+				g-rx-fifo-size = <192>;
-+				g-np-tx-fifo-size = <128>;
-+				g-tx-fifo-size = <128 128 16 16 16>;
-+			};
-+
-+			dwc3: usb@ff500000 {
-+				compatible = "snps,dwc3";
-+				reg = <0x0 0xff500000 0x0 0x100000>;
-+				interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
-+				dr_mode = "host";
-+				snps,dis_u2_susphy_quirk;
-+				snps,quirk-frame-length-adjustment;
-+			};
-+		};
- 	};
- 
- 	timer {
--- 
-2.21.0
+	https://lore.kernel.org/lkml/2ed432de-e904-85d2-5c36-5897ddc5b23b@intel.com/
 
