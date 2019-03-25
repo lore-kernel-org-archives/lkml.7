@@ -2,131 +2,97 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 592F1C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 11:51:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F2AFC10F03
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 11:52:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31D2C20850
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 11:51:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08FCF2087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 11:52:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731018AbfCYLvW (ORCPT
+        id S1731020AbfCYLwH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 07:51:22 -0400
-Received: from mga01.intel.com ([192.55.52.88]:64326 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730831AbfCYLvV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 07:51:21 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Mar 2019 04:51:21 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,256,1549958400"; 
-   d="scan'208";a="330460711"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
-  by fmsmga006.fm.intel.com with ESMTP; 25 Mar 2019 04:51:19 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1h8O8M-0005AY-A3; Mon, 25 Mar 2019 13:51:18 +0200
-Date:   Mon, 25 Mar 2019 13:51:18 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Thomas Preston <thomas.preston@codethink.co.uk>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] Documentation: acpi: Add an example for PRP0001
-Message-ID: <20190325115118.GP9224@smile.fi.intel.com>
-References: <20190322134705.27994-1-thomas.preston@codethink.co.uk>
- <CAJZ5v0isa7x+XPAregcKtMxtgsNw43JuBhGB_1x3eHkvaV8HRg@mail.gmail.com>
+        Mon, 25 Mar 2019 07:52:07 -0400
+Received: from orcrist.hmeau.com ([104.223.48.154]:51386 "EHLO
+        deadmen.hmeau.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730605AbfCYLwH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 07:52:07 -0400
+Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
+        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1h8O96-000159-O0; Mon, 25 Mar 2019 19:52:04 +0800
+Received: from herbert by gondobar with local (Exim 4.89)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1h8O8y-0000Ok-TE; Mon, 25 Mar 2019 19:51:56 +0800
+Date:   Mon, 25 Mar 2019 19:51:56 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, Jason@zx2c4.com,
+        torvalds@linux-foundation.org, davem@davemloft.net,
+        gregkh@linuxfoundation.org, ebiggers@kernel.org,
+        ard.biesheuvel@linaro.org, samuel.c.p.neves@gmail.com
+Subject: Re: [PATCH net-next v9 00/19] WireGuard: Secure Network Tunnel
+Message-ID: <20190325115156.wj4verbfdd2rspo5@gondor.apana.org.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAJZ5v0isa7x+XPAregcKtMxtgsNw43JuBhGB_1x3eHkvaV8HRg@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190322071122.6677-1-Jason@zx2c4.com>
+X-Newsgroups: apana.lists.os.linux.cryptoapi,apana.lists.os.linux.kernel,apana.lists.os.linux.netdev
+Organization: Core
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 10:31:13AM +0100, Rafael J. Wysocki wrote:
-> On Fri, Mar 22, 2019 at 2:47 PM Thomas Preston
-> <thomas.preston@codethink.co.uk> wrote:
-> >
-> > Add an example for the magic PRP0001 device ID which allows matching
-> > ACPI devices against drivers using OF Device Tree compatible property.
-> > It wasn't clear to me that PRP0001 could be used in _CID.
-> 
-> Mika, Andy, can you have a look at this, please?
+Jason A. Donenfeld <Jason@zx2c4.com> wrote:
+> Changes v8->v9, along with who suggested it.
+> --------------------------------------------
+> - [EVERYBODY] Zinc no longer ships generated assembly code. Rather, we now
+>  bundle in the original perlasm generator for it. This is ongoing joint work
+>  with Andy Polyakov upstream, so that the same .pl files can live in our tree
+>  as well as in the CRYPTOGAMS tree. I personally find that the code required
+>  to share this in both repositories to be a tiny bit ugly. I think there would
+>  be some degree of an advantage to removing that and making the .pl
+>  kernel-only, and then carefully tracking Andy's changes (as we already
+>  do). Previous opinions on the list, though, were that there's also
+>  significant advantage to being able to share the exact same code in both.
+>  And I think there's a decent amount of wisdom in that too. Since that
+>  appeared to be the prevailing view, and since it also has good reasons
+>  arguments, we'll go with that for now.
 
-Good to me,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Thanks for the update.
+ 
+> - Following the Adiantum merge, the two commits that port the old crypto API
+>  over to use Zinc have been removed from this series. We can certainly add
+>  them back in at some point, but I thought it'd be favorable to at least
+>  begin to receive some sign-offs on the Zinc-specific commits, now that
+>  (hopefully all of) the previous feedback has been taken care of. The two
+>  commits porting it over are fairly standalone as well, so that shouldn't
+>  impact the ability to review this. For now those are living in the
+>  jd/with-cryptoapi-port branch of kernel.org's zx2c4/linux.git tree. This
+>  also allows us to move this all forward a little bit.
 
-Though one thing I would like to add (not directly related to the patch
-per se), i.e. it would be nice to keep such examples under meta-acpi [1]
-umbrella as a database for such excerpts.
+Sorry but adding new implementations of chacha20/poly1305 without
+removing the existing ones is not acceptable.  I really think
+we ought to separate the zinc interface from these new crypto
+implementations.  They have nothing to do with each other.
 
-Thomas, can you do that?
+As we've been stuck on this point for so long, let's get the
+ball rolling by first merging just the zinc interface itself
+with the existing chacha20/poly1305 code.  Then we can replace
+these implementations with your implementations without getting
+bogged down by all these other discussions.
 
-[1]: https://github.com/westeri/meta-acpi
+AFAICS once we resolve Thomas's concerns with regards to the simd
+patch, then we can merge the zinc interface right away and go from
+there.
 
-> > Signed-off-by: Thomas Preston <thomas.preston@codethink.co.uk>
-> > ---
-> >  Documentation/acpi/enumeration.txt | 27 +++++++++++++++++++++++++++
-> >  1 file changed, 27 insertions(+)
-> >
-> > diff --git a/Documentation/acpi/enumeration.txt b/Documentation/acpi/enumeration.txt
-> > index 7bcf9c3d9fbe..391db643065a 100644
-> > --- a/Documentation/acpi/enumeration.txt
-> > +++ b/Documentation/acpi/enumeration.txt
-> > @@ -410,6 +410,33 @@ Specifically, the device IDs returned by _HID and preceding PRP0001 in the _CID
-> >  return package will be checked first.  Also in that case the bus type the device
-> >  will be enumerated to depends on the device ID returned by _HID.
-> >
-> > +For example, the following ACPI sample might be used to enumerate an lm75-type
-> > +I2C temperature sensor and match it to the driver using the Device Tree
-> > +namespace link:
-> > +
-> > +       Device (TMP0)
-> > +       {
-> > +               Name (_HID, "TITMP75") /* _HID will appear in sysfs */
-> > +               Name (_CID, "PRP0001")
-> > +               Name (_DSD, Package() {
-> > +                       ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-> > +                       Package () {
-> > +                               Package (2) { "compatible", "ti,tmp75" },
-> > +                       }
-> > +               })
-> > +               Method (_CRS, 0, Serialized)
-> > +               {
-> > +                       Name (SBUF, ResourceTemplate ()
-> > +                       {
-> > +                               I2cSerialBusV2 (0x48, ControllerInitiated,
-> > +                                       400000, AddressingMode7Bit,
-> > +                                       "\\_SB.PCI0.I2C1", 0x00,
-> > +                                       ResourceConsumer, , Exclusive,)
-> > +                       })
-> > +                       Return (SBUF)
-> > +               }
-> > +       }
-> > +
-> >  It is valid to define device objects with a _HID returning PRP0001 and without
-> >  the "compatible" property in the _DSD or a _CID as long as one of their
-> >  ancestors provides a _DSD with a valid "compatible" property.  Such device
-> > --
-> > 2.11.0
-> >
-
+Cheers,
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
