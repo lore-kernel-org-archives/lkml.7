@@ -2,91 +2,82 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30332C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 00:28:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3B7FC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 00:35:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDC0620870
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 00:28:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B46B920989
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 00:35:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AUMz+FjM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729217AbfCYA2S (ORCPT
+        id S1729232AbfCYAfq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 20:28:18 -0400
-Received: from ol.sdf.org ([205.166.94.20]:58438 "EHLO mx.sdf.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729149AbfCYA2S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 20:28:18 -0400
-Received: from sdf.org (IDENT:lkml@sdf.lonestar.org [205.166.94.16])
-        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id x2P0SD4i014183
-        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits) verified NO);
-        Mon, 25 Mar 2019 00:28:13 GMT
-Received: (from lkml@localhost)
-        by sdf.org (8.15.2/8.12.8/Submit) id x2P0SDH3026861;
-        Mon, 25 Mar 2019 00:28:13 GMT
-Date:   Mon, 25 Mar 2019 00:28:13 GMT
-From:   George Spelvin <lkml@sdf.org>
-Message-Id: <201903250028.x2P0SDH3026861@sdf.org>
-To:     Jason@zx2c4.com, lkml@sdf.org
-Subject: Re: [RFC PATCH] random: add get_random_max() function
-Cc:     linux-kernel@vger.kernel.org, tytso@mit.edu
-In-Reply-To: <CAHmME9p3TR6ESekKRQxFsfQe3rZp7T4-4WLOn-SL98zUnAo2DQ@mail.gmail.com>
-References: <201903241244.x2OCiL8P011277@sdf.org>,
-    <CAHmME9p3TR6ESekKRQxFsfQe3rZp7T4-4WLOn-SL98zUnAo2DQ@mail.gmail.com>
+        Sun, 24 Mar 2019 20:35:46 -0400
+Received: from mail-lf1-f44.google.com ([209.85.167.44]:39508 "EHLO
+        mail-lf1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729146AbfCYAfq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Mar 2019 20:35:46 -0400
+Received: by mail-lf1-f44.google.com with SMTP id m13so4750472lfb.6;
+        Sun, 24 Mar 2019 17:35:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DwJZ5Bop6r1egQ8vzySSqZuV+GwSZPn5rseOtqa/qog=;
+        b=AUMz+FjM7fwI6o2UEKrsTaPSmQMTyQEpMEMu9DiwcSzEg6SnEC71Ee0CUxXP1h5iOD
+         XuHkdE3VovQhzsZY1SE2OD1CKIU04wlI8SgJzPlgRb+FNb1Rz1XSti6sVWvXl+fkBGZT
+         E9D2LW2vrc9usVjBLgn+asuPs2DSWVqXgUtE3sz51UTWKyJENAl0TH+NOaKrN808QfNk
+         Oo9gccAJZ09QUA5VJhmBE8bh89IJXc9wV76csrRcPVwhMdGlkiwYMAwXY9gxLIlih6lg
+         Enz7VY7efr7P2t7GYZBoXSzq9Q6p8bVsibl2W4pg7Y7ihWlsjf+33JQ5jSCzL/PNs1RU
+         mSxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DwJZ5Bop6r1egQ8vzySSqZuV+GwSZPn5rseOtqa/qog=;
+        b=lOsWUMy2qCBRe1cWlb1XthQDsyxTW+8/68/I0am2N2UsbGTG7CzM4MAmei9kJl3sQa
+         /mj0etEGpVt/1FAmyo/Eu9aYBCy9aMLjo9Vw4NhK9Yxuu5baBbxTxm6M/fCXYsXP3Sfr
+         FEo/fn5OKXszOswvWFEnUgjU1FSTv+7ty5EoSQZGYirMGsi2wO3R1nUQwH3qBZHtQDnd
+         WOgQlSuXiTeShnEqWkxH2KMgfWtWkjxGm9X9mcPPj0kMRkN3/rTQ8y0UqUkJEhY6tf29
+         McZuchHIVsWQAf8bJ/86SXVXACK+VKky0QXpfTvbWPKDXGXr+mQcKfa5TiIEFSO7v3U8
+         /rqg==
+X-Gm-Message-State: APjAAAU0sys6Ta/x2ZbUY1vmpqZccpjUFHYwTT6Ww7rtYYAkBNv1OaDm
+        w7Yb8j+oBo+Wt8+nb5N15fSkHoAe
+X-Google-Smtp-Source: APXvYqzM3eSXTf3zC+UP4PVwwEosBMPkElD0Vfi/tK2Drhq+Rg7xz3iJe/NppTu+5L6dnc+FpfWSyg==
+X-Received: by 2002:ac2:5961:: with SMTP id h1mr6397642lfp.167.1553474144530;
+        Sun, 24 Mar 2019 17:35:44 -0700 (PDT)
+Received: from z50.gdansk-morena.vectranet.pl (109241207190.gdansk.vectranet.pl. [109.241.207.190])
+        by smtp.gmail.com with ESMTPSA id y17sm1217993ljd.54.2019.03.24.17.35.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 24 Mar 2019 17:35:43 -0700 (PDT)
+From:   Janusz Krzysztofik <jmkrzyszt@gmail.com>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Hans Verkuil <hans.verkuil@cisco.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Janusz Krzysztofik <jmkrzyszt@gmail.com>
+Subject: [PATCH 0/2] media: ov6650: Add V4L2 asynchronous subdevice support
+Date:   Mon, 25 Mar 2019 01:34:59 +0100
+Message-Id: <20190325003501.14687-1-jmkrzyszt@gmail.com>
+X-Mailer: git-send-email 2.19.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 24 Mar 2019 at 21:47:50 +0100, Jason A. Donenfeld wrote:
-> I generally use a slightly simpler algorithm in various different projects:
-> 
-> //[0, bound)
-> static unsigned long random_bounded(unsigned long bound)
-> {
->        unsigned long ret;
->        const unsigned long max_mod_bound = (1 + ~bound) % bound;
-> 
->        if (bound < 2)
->                return 0;
->        do
->                ret = random_integer();
->        while (ret < max_mod_bound);
->        return ret % bound;
-> }
->
-> Is the motivation behind using Lemire that you avoid the division (via
-> the modulo) in favor of a multiplication?
+Janusz Krzysztofik (2):
+      media: ov6650: Move v4l2_clk_get() to ov6650_video_probe() helper
+      media: ov6650: Register with asynchronous subdevice framework
 
-Yes.  If we define eps = max_mod_bound * ldexp(1.0, -BITS_PER_LONG) as
-the probability of one retry, and retries = eps / (1 - eps) as the
-expected number of retries, then both algorithms take 1+retries
-random_integer()s.
-
-The above agorithm takes 2 divisions, always.  Divides are slow, and
-usually not pipelined, so two in short succession gets a latency penalty.
-
-Lemire's mutiplicative algorithm takes 1 multiplication on the fast
-path (probability 1 - 2*eps on average), 1 additional division on the slow
-path (probability 2*eps), and 1 multiplication per retry.
-
-In the common case when bound is much less than ULONG_MAX, eps is
-tiny and the fast path is taken almost all the time, and it's
-a huge win.
-
-Even in the absolute worst case of bound = ULONG_MAX/2 + 2 when
-eps ~ 0.5 (2 multiplies, 0.5 divide; there's no 2*eps penalty in
-this case), it's faster as long as 2 mutiplies cost less than 1.5
-divides.
-
-I you want simpler code, we could omit the fast path and stil get
-a speedup.  But a predictable branch for a divide seemed like
-a worthwhile trade.
+ ov6650.c |   45 +++++++++++++++++++++++++++++----------------
+ 1 file changed, 29 insertions(+), 16 deletions(-)
 
 
-(FYI, this all came about as a side project of a kernel-janitor project
-to replace "prandom_u32() % range" by "prandom_u32() * range >> 32".
-I'm also annoyed that get_random_u32() and get_random_u64() have
-separate buffers, even if EFFICIENT_UNALIGNED_ACCESS, but that's
-a separate complaint.)
