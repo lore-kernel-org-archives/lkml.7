@@ -2,260 +2,153 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11AB0C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 20:59:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 222BCC10F03
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:00:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B22020811
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 20:59:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD7DD20811
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:00:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="AcOSEnNM"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="aiI8jAeH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730326AbfCYU7s (ORCPT
+        id S1730346AbfCYVAm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 16:59:48 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:38472 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729123AbfCYU7r (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 16:59:47 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 6D89C806CB;
-        Tue, 26 Mar 2019 09:59:44 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1553547584;
-        bh=/S/G4Ky7Klbycq7TmSpcm+I+QDJkflSCIBZ7Avhq3qM=;
-        h=From:To:Cc:Subject:Date;
-        b=AcOSEnNMkjSREy57QS/+MpZ8jUXhSguz0GYMVK4bly8cglKmL4bHkjtH4hD2nWRQv
-         7m1MJxs4139mLj20bOX9b8orXAdR7xge7gWXNUJrmyjWh4H0qlqjNGkYVU1mAGxo8l
-         Vam4RE7Ljq90TPmTGhkwAWNxFpDtoHehG9mdneHEeCcV1W2FcFyZg7299AOHsB+Pc/
-         Xwznxwqnxd1yS0ZhZymTIVl85ZIWP4aR5bMozKCoxwSX3LNyMIK3MquxgNOzA26F5F
-         g4F+1Y5ldcYxkh0IvU2qftBPAbT+2CNbg2WcmEaTQQKBIxkQ0iI5kUSSqlXlSL6BiO
-         f+ZZaXJSBb+xA==
-Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5c9941400000>; Tue, 26 Mar 2019 09:59:44 +1300
-Received: from richardl-dl.ws.atlnz.lc (richardl-dl.ws.atlnz.lc [10.33.23.10])
-        by smtp (Postfix) with ESMTP id 5598D13EC56;
-        Tue, 26 Mar 2019 09:59:44 +1300 (NZDT)
-Received: by richardl-dl.ws.atlnz.lc (Postfix, from userid 1481)
-        id 30CB04C03FC; Tue, 26 Mar 2019 09:59:44 +1300 (NZDT)
-From:   Richard Laing <richard.laing@alliedtelesis.co.nz>
-To:     rjui@broadcom.com, bcm-kernel-feedback-list@broadcom.com
-Cc:     linux-kernel@vger.kernel.org,
-        Richard Laing <richard.laing@alliedtelesis.co.nz>
-Subject: [PATCH v2] Add i2c recovery handling for bcm-iproc based devices.
-Date:   Tue, 26 Mar 2019 09:59:33 +1300
-Message-Id: <20190325205933.2726-1-richard.laing@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.21.0
+        Mon, 25 Mar 2019 17:00:42 -0400
+Received: from mail-eopbgr690106.outbound.protection.outlook.com ([40.107.69.106]:53824
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729123AbfCYVAl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 17:00:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QnhMcKoUYAcC65LqpnTkteBejltTql7XI5FRJC1UKJw=;
+ b=aiI8jAeHkS9T3sEObX+d69M+gcSzRcEL/pf7QqSpUhhbm7m6cfJ1WoRT5RC015itgRPy2Ijhr/fkCPlYn7zB//kor1XU+ujxvPOiRzJ5Ip1hd7upzLWeYX4PUDpjoGN6sgsqZWnSU4Z4ImL/jo5R8AAkWxvzfWMZxCuiXIWGCeA=
+Received: from DM6PR21MB1305.namprd21.prod.outlook.com (20.179.52.94) by
+ DM6PR21MB1243.namprd21.prod.outlook.com (20.179.50.87) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1771.2; Mon, 25 Mar 2019 21:00:37 +0000
+Received: from DM6PR21MB1305.namprd21.prod.outlook.com
+ ([fe80::5d7:1d10:7a44:6620]) by DM6PR21MB1305.namprd21.prod.outlook.com
+ ([fe80::5d7:1d10:7a44:6620%7]) with mapi id 15.20.1771.002; Mon, 25 Mar 2019
+ 21:00:37 +0000
+From:   Lakshmi Ramasubramanian <nramas@microsoft.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: Portable Executable (PE) Signature Validation and Measurement for
+ KEXEC system call using IMA
+Thread-Topic: Portable Executable (PE) Signature Validation and Measurement
+ for KEXEC system call using IMA
+Thread-Index: AdTg1clupl0uJvoTS1+4SCE/Pu8WqwCawh8AAAMIjWA=
+Date:   Mon, 25 Mar 2019 21:00:36 +0000
+Message-ID: <DM6PR21MB13056915DA6AFF16C3753915C35E0@DM6PR21MB1305.namprd21.prod.outlook.com>
+References: <BYAPR21MB1301CBCD4956476F8F2F0FC4C3430@BYAPR21MB1301.namprd21.prod.outlook.com>
+ <1553542064.3929.69.camel@linux.ibm.com>
+In-Reply-To: <1553542064.3929.69.camel@linux.ibm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=nramas@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-03-25T21:00:33.7664497Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=2675b61c-7cd5-4d33-96ed-3a3cf30233d5;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+x-originating-ip: [2001:4898:80e8:7:1078:7225:fd33:4f42]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 4264a87c-d6ca-4bf6-d766-08d6b164ee79
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600127)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DM6PR21MB1243;
+x-ms-traffictypediagnostic: DM6PR21MB1243:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <DM6PR21MB1243562DF34483B7BB7E8A17C35E0@DM6PR21MB1243.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0987ACA2E2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(366004)(136003)(346002)(396003)(39860400002)(199004)(189003)(13464003)(51914003)(486006)(446003)(476003)(7736002)(11346002)(81156014)(9686003)(229853002)(97736004)(33656002)(6246003)(305945005)(53936002)(22452003)(46003)(316002)(478600001)(6306002)(256004)(105586002)(966005)(55016002)(8936002)(52536014)(10090500001)(8990500004)(6436002)(5660300002)(6116002)(99286004)(6506007)(186003)(76176011)(7696005)(102836004)(6346003)(2501003)(14444005)(86612001)(110136005)(2906002)(14454004)(68736007)(86362001)(2201001)(71200400001)(71190400001)(8676002)(10290500003)(25786009)(81166006)(74316002)(106356001);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR21MB1243;H:DM6PR21MB1305.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=nramas@microsoft.com; 
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: Cu0V/d1xc8A6yfAAm9eAdOHrp4sbJhxPrVNsUlU1wG17sW4RXYajAdCp26RNn/BDFqVWuKT9as+At4XD7h5EKG5qshX0jnHgVmwX4Tgx88ygaO53O8W967R20IWjen13neuZ5VeWGjGsfszXy3k1xjcCR+gAc1hF975RUm3LwMFOpKGb0a9V/PES3oCr91ooIRXaSx8QOYq5iDc2n0Ukto77Y6m5VdEhAyA60LK80gIwikWajmU8hm0kahrCNwtSsL4/FR2dM6mUhTfS95RkO83U5S97Dl4gDboUlRso4GTK/QOS8TJiz51ff1weQGI3TPzAWpHJ1/cC98ne/zj12mWsnykq/EfksIBTD5ot7sON4pG13S4a/nqEn6dDQKjt88p5CJ/3YyqphNJLSLcQosJ8QADyBIaVAfsRRD47Zgo=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-x-atlnz-ls: pat
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4264a87c-d6ca-4bf6-d766-08d6b164ee79
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Mar 2019 21:00:37.3703
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1243
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is possible for the i2c bus to become locked up preventing
-communication with devices on the bus. This can occur when
-another i2c device fails to be reset correctly. In this case
-the SDA line will be held low preventing further communication
-on the bus.
-
-This situation can be corrected by sending a series of clock
-pulses to allow the blocking device to complete the transaction
-and release the bus.
-
-Add the hooks required to allow the existing i2c recovery code
-to be used to clear the lock up.
-
-Before the recovery can be performed the device needs to be configured in
-the bit-bang mode allow the clock line to be controlled directly by the
-i2c_generic_recovery() in i2c-core.c. Access routines are provided to get
-and set the clock line state and on completion the device is returned to
-normal operations and initialized.
-
-Signed-off-by: Richard Laing <richard.laing@alliedtelesis.co.nz>
----
-changes in v2:
-- fix typos/spelling
-- change M_BB_CTRL_DATA_SHIFT to M_BB_CTRL_DATA_IN_SHIFT
-- change from int to bool for bcm_iproc_i2c_set_scl was NOT done, the typ=
-e for
-  the function pointer does not match and compilation therefore fails.
-- updated calls to i2c_recover_bus
-
- drivers/i2c/busses/i2c-bcm-iproc.c | 111 +++++++++++++++++++++++++++++
- 1 file changed, 111 insertions(+)
-
-diff --git a/drivers/i2c/busses/i2c-bcm-iproc.c b/drivers/i2c/busses/i2c-=
-bcm-iproc.c
-index 4c8c3bc4669c..78393c3b5e83 100644
---- a/drivers/i2c/busses/i2c-bcm-iproc.c
-+++ b/drivers/i2c/busses/i2c-bcm-iproc.c
-@@ -23,6 +23,7 @@
- #define CFG_OFFSET                   0x00
- #define CFG_RESET_SHIFT              31
- #define CFG_EN_SHIFT                 30
-+#define CFG_BIT_BANG_SHIFT           29
- #define CFG_M_RETRY_CNT_SHIFT        16
- #define CFG_M_RETRY_CNT_MASK         0x0f
-=20
-@@ -78,6 +79,11 @@
- #define M_RX_DATA_SHIFT              0
- #define M_RX_DATA_MASK               0xff
-=20
-+#define M_BB_CTRL_OFFSET             0x14
-+#define M_BB_CTRL_CLK_IN_SHIFT       31
-+#define M_BB_CTRL_CLK_SHIFT          30
-+#define M_BB_CTRL_DATA_IN_SHIFT      29
-+
- #define I2C_TIMEOUT_MSEC             50000
- #define M_TX_RX_FIFO_SIZE            64
-=20
-@@ -208,6 +214,108 @@ static void bcm_iproc_i2c_enable_disable(struct bcm=
-_iproc_i2c_dev *iproc_i2c,
- 	writel(val, iproc_i2c->base + CFG_OFFSET);
- }
-=20
-+/*
-+ * Switch to bit bang mode to prepare for i2c generic recovery.
-+ */
-+static void bcm_iproc_i2c_prepare_recovery(struct i2c_adapter *adap)
-+{
-+	struct bcm_iproc_i2c_dev *iproc_i2c =3D i2c_get_adapdata(adap);
-+	u32 tmp;
-+
-+	dev_dbg(iproc_i2c->device, "Prepare recovery\n");
-+
-+	/* Disable interrupts */
-+	writel(0, iproc_i2c->base + IE_OFFSET);
-+	readl(iproc_i2c->base + IE_OFFSET);
-+	synchronize_irq(iproc_i2c->irq);
-+
-+	/* Put the i2c controller into reset. */
-+	tmp =3D readl(iproc_i2c->base + CFG_OFFSET);
-+	tmp |=3D BIT(CFG_RESET_SHIFT);
-+	writel(tmp, iproc_i2c->base + CFG_OFFSET);
-+	udelay(100);
-+
-+	/* Switch to bit-bang mode */
-+	tmp =3D readl(iproc_i2c->base + CFG_OFFSET);
-+	tmp |=3D BIT(CFG_BIT_BANG_SHIFT);
-+	writel(tmp, iproc_i2c->base + CFG_OFFSET);
-+}
-+
-+/*
-+ * Return to normal i2c operation following recovery.
-+ */
-+static void bcm_iproc_i2c_unprepare_recovery(struct i2c_adapter *adap)
-+{
-+	struct bcm_iproc_i2c_dev *iproc_i2c =3D i2c_get_adapdata(adap);
-+	u32 tmp;
-+
-+	/* Switch to normal mode */
-+	tmp =3D readl(iproc_i2c->base + CFG_OFFSET);
-+	tmp &=3D ~BIT(CFG_BIT_BANG_SHIFT);
-+	writel(tmp, iproc_i2c->base + CFG_OFFSET);
-+	udelay(100);
-+
-+	bcm_iproc_i2c_init(iproc_i2c);
-+	bcm_iproc_i2c_enable_disable(iproc_i2c, true);
-+
-+	dev_dbg(iproc_i2c->device, "Recovery complete\n");
-+}
-+
-+/*
-+ * Return the SCL state, we must be configured in bit bang mode for this
-+ * to work.
-+ */
-+static int bcm_iproc_i2c_get_scl(struct i2c_adapter *adap)
-+{
-+	struct bcm_iproc_i2c_dev *iproc_i2c =3D i2c_get_adapdata(adap);
-+	u32 tmp;
-+
-+	tmp =3D readl(iproc_i2c->base + M_BB_CTRL_OFFSET);
-+
-+	return tmp & BIT(M_BB_CTRL_CLK_IN_SHIFT);
-+}
-+
-+/*
-+ * Set the SCL state, we must be configured in bit bang mode for this
-+ * to work.
-+ */
-+static void bcm_iproc_i2c_set_scl(struct i2c_adapter *adap, int val)
-+{
-+	struct bcm_iproc_i2c_dev *iproc_i2c =3D i2c_get_adapdata(adap);
-+	u32 tmp;
-+
-+	tmp =3D readl(iproc_i2c->base + M_BB_CTRL_OFFSET);
-+	if (val)
-+		tmp |=3D BIT(M_BB_CTRL_CLK_SHIFT);
-+	else
-+		tmp &=3D ~BIT(M_BB_CTRL_CLK_SHIFT);
-+
-+	writel(tmp, iproc_i2c->base + M_BB_CTRL_OFFSET);
-+}
-+
-+/*
-+ * Return the SDA state, we must be configured in bit bang mode for this
-+ * to work.
-+ */
-+static int bcm_iproc_i2c_get_sda(struct i2c_adapter *adap)
-+{
-+	struct bcm_iproc_i2c_dev *iproc_i2c =3D i2c_get_adapdata(adap);
-+	u32 tmp;
-+
-+	tmp =3D readl(iproc_i2c->base + M_BB_CTRL_OFFSET);
-+
-+	return tmp & BIT(M_BB_CTRL_DATA_IN_SHIFT);
-+}
-+
-+static struct i2c_bus_recovery_info bcm_iproc_recovery_info =3D {
-+	.recover_bus =3D i2c_generic_scl_recovery,
-+	.prepare_recovery =3D bcm_iproc_i2c_prepare_recovery,
-+	.unprepare_recovery =3D bcm_iproc_i2c_unprepare_recovery,
-+	.set_scl =3D bcm_iproc_i2c_set_scl,
-+	.get_scl =3D bcm_iproc_i2c_get_scl,
-+	.get_sda =3D bcm_iproc_i2c_get_sda,
-+};
-+
- static int bcm_iproc_i2c_check_status(struct bcm_iproc_i2c_dev *iproc_i2=
-c,
- 				      struct i2c_msg *msg)
- {
-@@ -341,6 +449,7 @@ static int bcm_iproc_i2c_xfer_single_msg(struct bcm_i=
-proc_i2c_dev *iproc_i2c,
- 		val =3D (1 << M_FIFO_RX_FLUSH_SHIFT) |
- 		      (1 << M_FIFO_TX_FLUSH_SHIFT);
- 		writel(val, iproc_i2c->base + M_FIFO_CTRL_OFFSET);
-+		i2c_recover_bus(&iproc_i2c->adapter);
- 		return -ETIMEDOUT;
- 	}
-=20
-@@ -350,6 +459,7 @@ static int bcm_iproc_i2c_xfer_single_msg(struct bcm_i=
-proc_i2c_dev *iproc_i2c,
- 		val =3D (1 << M_FIFO_RX_FLUSH_SHIFT) |
- 		      (1 << M_FIFO_TX_FLUSH_SHIFT);
- 		writel(val, iproc_i2c->base + M_FIFO_CTRL_OFFSET);
-+		i2c_recover_bus(&iproc_i2c->adapter);
- 		return ret;
- 	}
-=20
-@@ -487,6 +597,7 @@ static int bcm_iproc_i2c_probe(struct platform_device=
- *pdev)
- 	adap->quirks =3D &bcm_iproc_i2c_quirks;
- 	adap->dev.parent =3D &pdev->dev;
- 	adap->dev.of_node =3D pdev->dev.of_node;
-+	adap->bus_recovery_info =3D &bcm_iproc_recovery_info;
-=20
- 	return i2c_add_adapter(adap);
- }
---=20
-2.21.0
-
+VGhhbmtzIGZvciB5b3VyIHJlc3BvbnNlIE1pbWkuDQoNClBsZWFzZSBzZWUgbXkgcmVzcG9uc2Vz
+IHRvIHlvdXIgcXVlcmllcyBpbmxpbmUuIA0KDQpUaGFua3MsDQogLWxha3NobWkNCg0KPi0tLS0t
+T3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+RnJvbTogTWltaSBab2hhciA8em9oYXJAbGludXguaWJt
+LmNvbT4gDQo+U2VudDogTW9uZGF5LCBNYXJjaCAyNSwgMjAxOSAxMjoyOCBQTQ0KPlRvOiBMYWtz
+aG1pIFJhbWFzdWJyYW1hbmlhbiA8bnJhbWFzQG1pY3Jvc29mdC5jb20+OyBsaW51eC1pbnRlZ3Jp
+dHlAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+U3ViamVj
+dDogUmU6IFBvcnRhYmxlIEV4ZWN1dGFibGUgKFBFKSBTaWduYXR1cmUgVmFsaWRhdGlvbiBhbmQg
+TWVhc3VyZW1lbnQgZm9yIEtFWEVDIHN5c3RlbSBjYWxsIHVzaW5nIElNQQ0KDQo+SGkgTGFrc2ht
+aSwNCg0KPk9uIEZyaSwgMjAxOS0wMy0yMiBhdCAxNzozOSArMDAwMCwgTGFrc2htaSBSYW1hc3Vi
+cmFtYW5pYW4gd3JvdGU6DQo+PiBIZWxsbywNCj4+IA0KPj4gV2hlbiBsb2FkaW5nIHRoZSBuZXcg
+a2VybmVsIGltYWdlIGZpbGUgZm9yIGV4ZWN1dGluZyBLRVhFQyBzeXN0ZW0gY2FsbCwgDQo+PiB3
+ZSB3b3VsZCBsaWtlIHRvIHZlcmlmeSB0aGF0IHRoZSBrZXJuZWwgaW1hZ2UgZmlsZSBpcyBzaWdu
+ZWQgYW5kIA0KPj4gdGhlIHNpZ25lciBjZXJ0aWZpY2F0ZSBpcyB2YWxpZC4NCj4+DQoNCj4gSSdt
+IG5vdCBzdXJlIHdoYXQgaXMgbWVhbnQgYnkgImFuZCB0aGUgc2lnbmVyIGNlcnRpZmljYXRlIGlz
+IHZhbGlkIi4NCg0KPiBUaGUga2V4ZWMga2VybmVsIGltYWdlIHNpZ25hdHVyZSBjYW4gYmUgdmVy
+aWZpZWQgYnkga2V5cyBlaXRoZXIgb24gdGhlDQo+IElNQSBrZXlyaW5nIG9yIHRoZSBwbGF0Zm9y
+bSBrZXlyaW5nLiDCoFRoZSBjdXJyZW50IG1ldGhvZCBvZiB2ZXJpZnlpbmcNCj4ga2V5cyBiZWlu
+ZyBhZGRlZCB0byB0aGUgSU1BIGtleXJpbmcgaXMgYnkgcmVxdWlyaW5nIHRoZW0gdG8gYmUgc2ln
+bmVkDQo+IGJ5IGEga2V5IG9uIHRoZSBidWlsdGluIHRydXN0ZWQga2V5cmluZy4gwqBUaGlzIHBy
+b3ZpZGVzIGEgc2lnbmF0dXJlDQo+IGNoYWluIG9mIHRydXN0IGZyb20gYm9vdCB0byB0aGUga2Vy
+bmVsLCBiYXNlZCBvbiBhIEhXIHJvb3Qgb2YgdHJ1c3QsDQo+IGFuZCB0aGVuIHRyYW5zaXRpb25z
+IHRvIHRoZSBrZXJuZWwgaW1hZ2UncyBlbWJlZGRlZCBrZXlzLiDCoFlvdQ0KPiBwcm9iYWJseSBh
+bHJlYWR5IGtub3cgYXMgdG8gd2h5L2hvdyB0aGUgcGxhdGZvcm0ga2V5cyBhcmUgdHJ1c3RlZC4N
+Cg0KW0xha3NobWldIEJ5ICJzaWduZXIgY2VydGlmaWNhdGUgaXMgdmFsaWQiIEkgbWVhbnQsIHRo
+ZSBrZXkgdXNlZCB0byBzaWduIHRoZSBrZXhlYyBrZXJuZWwgaW1hZ2UgaXMgdHJ1c3RlZC4gDQog
+ICAgICAgICAgICAgICAgICBXZSB3aWxsIHZlcmlmeSB0aGUgc2lnbmF0dXJlIHVzaW5nIHRoZSBr
+ZXkgaW4gdGhlIElNQSBrZXlyaW5nIA0KICAgICAgICAgICAgICAgICAgKGxpa2UgdGhlIHdheSB5
+b3UgaGF2ZSBkZXNjcmliZWQgYWJvdmUpDQoNCj4+IA0KPj4gSWYgdGhlIGtlcm5lbCBpbWFnZSBm
+aWxlIGlzIGluIFBvcnRhYmxlIEV4ZWN1dGFibGUgKFBFKSBmb3JtYXQgd2Ugd2FudCB0byANCj4+
+IHZhbGlkYXRlIHRoZSBQRSBTaWduYXR1cmUgYW5kIG1lYXN1cmUgdGhlIHNpZ25lciBYLjUwOSBj
+ZXJ0aWZpY2F0ZSANCj4+IChFeHRlbmQgYXMgcGFydCBvZiBJTUEgVGVtcGxhdGUgZGVmYXVsdGlu
+ZyB0byBQQ1IgMTAsIGlmIG5vdCBvdGhlcndpc2Ugc2V0LCANCj4+ICBhbmQgdGhlIElNQSBtZWFz
+dXJlbWVudCBsb2cpLg0KDQo+IEhvdy93aGVuIGRvIHlvdSBwbGFuIHRvICJtZWFzdXJlIHRoZSBz
+aWduZXIgWC41MDkgY2VydGlmaWNhdGUiPyDCoElzDQo+IHRoaXMgd2hlbiB0aGUgY2VydGlmaWNh
+dGUgaXMgYmVpbmcgbG9hZGVkIG9udG8gdGhlIGtleXJpbmcgb3IgYXQgdXNlPw0KPsKgSSdtIG5v
+dCBzdXJlIGhvdyBtdWNoIG9mIHRoZSBjZXJ0aWZpY2F0ZSBpcyBhdmFpbGFibGUgb25jZSBsb2Fk
+ZWQNCj4gb250byB0aGUga2V5cmluZy4NCg0KW0xha3NobWldIFdlIHdpbGwgbWVhc3VyZSB0aGUg
+c2lnbmVyIGNlcnRpZmljYXRlIHdoZW4gdGhlIGZpbGUgaXMgbG9hZGVkIC0gaW4gb3RoZXIgd29y
+ZHMsICJhdCB1c2UiLg0KVGhlIGtlcm5lbCBpbWFnZSBzaWduZXIgaW5mb3JtYXRpb24gbWVhc3Vy
+ZWQgaW4gdG8gdGhlIElNQSBsb2cgd2lsbCB0aGVuIGJlIHVzZWQgYXMgb25lIG9mIHRoZSBhdHRl
+c3RhdGlvbiBjcml0ZXJpYS4NCg0KPj4gDQo+PiBXZSBwbGFuIHRvIHVzZSBJbnRlZ3JpdHkgTWVh
+c3VyZW1lbnQgQXJjaGl0ZWN0dXJlIChJTUEpIGZvciB0aGUgYWJvdmUuDQo+PiANCj4+IFBsZWFz
+ZSBsZXQgdXMga25vdyBpZiBhbnlvbmUgaXMgYWxyZWFkeSB3b3JraW5nIG9uIGEgcGF0Y2ggc2V0
+DQo+PiBmb3Igc3VjaCBhIGZ1bmN0aW9uYWxpdHkuDQo+PiANCj4+IEkgYW0gYXdhcmUgb2YgdGhl
+IHdvcmsgdGhhdCBUaGlhZ28gSnVuZyBCYXVlcm1hbm4gQCBJQk0gaXMgZG9pbmcgZm9yIA0KPj4g
+IkFwcGVuZGVkIHNpZ25hdHVyZXMgc3VwcG9ydCBmb3IgSU1BIGFwcHJhaXNhbCIgDQo+PiAoV2Vi
+IGxpbmsgZ2l2ZW4gYmVsb3cpDQo+PiANCj4+ICAgICBodHRwczovL25hbTA2LnNhZmVsaW5rcy5w
+cm90ZWN0aW9uLm91dGxvb2suY29tLz91cmw9aHR0cHMlM0ElMkYlMkZsa21sLm9yZyUyRmxrbWwl
+MkYyMDE4JTJGMTIlMkYxMiUyRjEwNDkmYW1wO2RhdGE9MDIlN0MwMSU3Q25yYW1hcyU0MG1pY3Jv
+c29mdC5jb20lN0NjMzZkNDJjYjkxMjE0Y2MzY2ExMzA4ZDZiMTU3Zjk2MiU3QzcyZjk4OGJmODZm
+MTQxYWY5MWFiMmQ3Y2QwMTFkYjQ3JTdDMSU3QzAlN0M2MzY4OTEzODg3NDU1NDg4NzkmYW1wO3Nk
+YXRhPU9MdGt1cHRYUVlaSHV2bFZtbjNlaiUyRnBFazUwMVR4elRvRWNiT3JlZjBVVSUzRCZhbXA7
+cmVzZXJ2ZWQ9MA0KDQo+IE90aGVyIHRoYW4gVGhpYWdvLCBJJ20gbm90IGF3YXJlIG9mIGFueW9u
+ZSBlbHNlIHdvcmtpbmcgb24gdGhpcy4NCj4gwqBUaGlhZ28gaXMgYWN0aXZlbHkgd29ya2luZyBv
+biB0aGVzZSBwYXRjaGVzIGFuZCB3aWxsIGJlIHJlLXBvc3RpbmcNCj4gdGhlbSBzaG9ydGx5Lg0K
+DQpbTGFrc2htaV0gVGhhbmtzIGZvciB0aGUgaW5mb3JtYXRpb24uDQoNCj4gTWltaQ0KDQpUaGFu
+a3MsDQogLWxha3NobWkNCg0K
