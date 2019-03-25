@@ -2,83 +2,92 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 391E4C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 20:20:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7BCEC4360F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 20:22:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1328520854
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 20:20:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AAB020854
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 20:22:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729959AbfCYUUx (ORCPT
+        id S1730273AbfCYUWG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 16:20:53 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58134 "EHLO mx1.redhat.com"
+        Mon, 25 Mar 2019 16:22:06 -0400
+Received: from sauhun.de ([88.99.104.3]:48778 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727003AbfCYUUx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 16:20:53 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 017383082A51;
-        Mon, 25 Mar 2019 20:20:53 +0000 (UTC)
-Received: from x1.home (ovpn-116-33.phx2.redhat.com [10.3.116.33])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AA961619AA;
-        Mon, 25 Mar 2019 20:20:52 +0000 (UTC)
-Date:   Mon, 25 Mar 2019 14:20:52 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Parav Pandit <parav@mellanox.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kwankhede@nvidia.com
-Subject: Re: [PATCH 6/8] vfio/mdev: Follow correct remove sequence
-Message-ID: <20190325142052.423badda@x1.home>
-In-Reply-To: <1553296835-37522-7-git-send-email-parav@mellanox.com>
-References: <1553296835-37522-1-git-send-email-parav@mellanox.com>
-        <1553296835-37522-7-git-send-email-parav@mellanox.com>
-Organization: Red Hat
+        id S1729283AbfCYUWF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 16:22:05 -0400
+Received: from localhost (p54B33284.dip0.t-ipconnect.de [84.179.50.132])
+        by pokefinder.org (Postfix) with ESMTPSA id 2CD872C0963;
+        Mon, 25 Mar 2019 21:22:04 +0100 (CET)
+Date:   Mon, 25 Mar 2019 21:22:03 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Simon Horman <horms@verge.net.au>
+Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Lee Jones <lee.jones@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Support Opensource <support.opensource@diasemi.com>
+Subject: Re: [PATCH 3/6] mfd: da9063: remove platform_data support
+Message-ID: <20190325202203.GA7749@kunai>
+References: <20190318154759.21978-1-wsa+renesas@sang-engineering.com>
+ <20190318154759.21978-4-wsa+renesas@sang-engineering.com>
+ <20190319122556.7wpabcnwklv3fg3v@verge.net.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Mon, 25 Mar 2019 20:20:53 +0000 (UTC)
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="WIyZ46R2i8wDzkSu"
+Content-Disposition: inline
+In-Reply-To: <20190319122556.7wpabcnwklv3fg3v@verge.net.au>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 22 Mar 2019 18:20:33 -0500
-Parav Pandit <parav@mellanox.com> wrote:
 
-> mdev_remove_sysfs_files() should follow exact mirror sequence of a
-> create, similar to what is followed in error unwinding path of
-> mdev_create_sysfs_files().
-> 
-> Fixes: 7b96953bc640 ("vfio: Mediated device Core driver")
-> Signed-off-by: Parav Pandit <parav@mellanox.com>
-> ---
->  drivers/vfio/mdev/mdev_sysfs.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/vfio/mdev/mdev_sysfs.c b/drivers/vfio/mdev/mdev_sysfs.c
-> index ce5dd21..c782fa9 100644
-> --- a/drivers/vfio/mdev/mdev_sysfs.c
-> +++ b/drivers/vfio/mdev/mdev_sysfs.c
-> @@ -280,7 +280,7 @@ int  mdev_create_sysfs_files(struct device *dev, struct mdev_type *type)
->  
->  void mdev_remove_sysfs_files(struct device *dev, struct mdev_type *type)
->  {
-> +	sysfs_remove_files(&dev->kobj, mdev_device_attrs);
->  	sysfs_remove_link(&dev->kobj, "mdev_type");
->  	sysfs_remove_link(type->devices_kobj, dev_name(dev));
-> -	sysfs_remove_files(&dev->kobj, mdev_device_attrs);
->  }
+--WIyZ46R2i8wDzkSu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Ok, I agree this is good practice, but what qualifies a "Fixes:" tag
-here?  The fixes reference is incorrect in any case, 6a62c1dfb5c7
-changed the creation ordering and didn't update the remove ordering to
-match, but I still don't see an actual problem with the remove ordering
-that necessitates the tag.  Please clarify.  Thanks,
 
-Alex
+> > -	if (pdata) {
+> > -		da9063->flags =3D pdata->flags;
+> > -		da9063->irq_base =3D pdata->irq_base;
+> > -	} else {
+> > -		da9063->flags =3D 0;
+> > -		da9063->irq_base =3D -1;
+> > -	}
+> > +	da9063->flags =3D 0;
+> > +	da9063->irq_base =3D -1;
+>=20
+> If the flag and irq_base fields have fixed values can
+> they be removed? As a follow-up?
+
+There is likely more simplification possible. But yes, it should be a
+follow up patch, I think.
+
+
+--WIyZ46R2i8wDzkSu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlyZOGcACgkQFA3kzBSg
+KbZt7Q/+ORnpb67l6sGMv5O5vgPK9uXv9lSOu7wR9M4URAhOtZRWO9L8/z966SaI
+KYH041CJZij6odFXtHf2xOK65ZjM7TOBFTtNeg1VQf+q4U9GQK0UERGWw+DSjOwJ
+g0myfiJKhTBAXNl4tO3cU6noF2rosJuxEMX4CXqgFG9PhhVuYZ3IU/ftoQ7+eAMw
+uavKsQR3jEdAWY8IrKlSanWg+21Ky0LipVmX3Y9SrPoUYV89zhwQJtaT0p7zN15d
+tJKwc/LuR9IBPRPU56qHIgppmcQ1exi4gy1z0Wf0nvbo74KIV9MVAOYohIVbV4bo
+4ciDwbJWeXlCMynZ8N3WNcfYaMng5wWfCSz/lE+ckt1aLna6OFugOQsUuVLXB5Jp
+f8pPpZl47aSxv1XWBIL2QW7BEqlBD4SUCYk2Aj7Hg0h7kl+A2PMZYPMOQacyOSpn
+sN4mFKrVCv4zTryi1crPhgaWhWz2bgXPMrrusv6FfU1I3PBvMNVA2esoJQsDD6pv
+JK0wwg4oBQeLrUNeyzt/P+B+47xEIprbhIHabBxE16QVRm9lt3gRHbOIKkwct6+c
+tSN6pX9wUHN96XbDu1kG9CKmtW9hcouJJ7ayc9Vckru6W+s8vk/7a5Xz8s81pzLi
+8IO0EibivOP3rC1yIBi99ke+7a6zSwEIwERWXQGG2KotKRq1CoE=
+=fdoN
+-----END PGP SIGNATURE-----
+
+--WIyZ46R2i8wDzkSu--
