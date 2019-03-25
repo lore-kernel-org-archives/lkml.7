@@ -6,93 +6,136 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37CDAC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 10:48:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3391EC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 10:48:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DB862085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 10:48:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 066AC2085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 10:48:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730891AbfCYKsC (ORCPT
+        id S1730909AbfCYKsF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 06:48:02 -0400
-Received: from ozlabs.org ([203.11.71.1]:33609 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730677AbfCYKr7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 06:47:59 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44SWF75kn8z9sSq;
-        Mon, 25 Mar 2019 21:47:55 +1100 (AEDT)
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Peng Hao <peng.hao2@zte.com.cn>, vitb@kernel.crashing.org,
-        benh@kernel.crashing.org, paulus@samba.org, christophe.leroy@c-s.fr
-Cc:     Wen Yang <wen.yang99@zte.com.cn>, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] powerpc/8xx: fix possible object reference leak
-In-Reply-To: <1553533919-75527-1-git-send-email-peng.hao2@zte.com.cn>
-References: <1553533919-75527-1-git-send-email-peng.hao2@zte.com.cn>
-Date:   Mon, 25 Mar 2019 21:47:53 +1100
-Message-ID: <87d0mfp6w6.fsf@concordia.ellerman.id.au>
+        Mon, 25 Mar 2019 06:48:05 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:45246 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730895AbfCYKsE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 06:48:04 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D69191596;
+        Mon, 25 Mar 2019 03:48:03 -0700 (PDT)
+Received: from donnerap.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 181E43F575;
+        Mon, 25 Mar 2019 03:48:02 -0700 (PDT)
+Date:   Mon, 25 Mar 2019 10:47:59 +0000
+From:   Andre Przywara <andre.przywara@arm.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Vladimir Kondratiev <vladimir.kondratiev@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] kbuild: gitignore output directory
+Message-ID: <20190325104759.079a18ec@donnerap.cambridge.arm.com>
+In-Reply-To: <CAK7LNAT3Yf1_3L77VNjtcr5SP2eM0x19hid0J45PcHqf8Fwcwg@mail.gmail.com>
+References: <20190203084840.6113-1-vladimir.kondratiev@intel.com>
+        <20190322155212.133029-1-andre.przywara@arm.com>
+        <CAK7LNAT3Yf1_3L77VNjtcr5SP2eM0x19hid0J45PcHqf8Fwcwg@mail.gmail.com>
+Organization: ARM
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Peng Hao <peng.hao2@zte.com.cn> writes:
+On Sun, 24 Mar 2019 11:22:11 +0900
+Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
 
-> From: Wen Yang <wen.yang99@zte.com.cn>
->
-> The call to of_find_compatible_node returns a node pointer with refcount
-> incremented thus it must be explicitly decremented after the last
-> usage.
-> irq_domain_add_linear also calls of_node_get to increase refcount,
-> so irq_domain will not be affected when it is released.
->
-> Detected by coccinelle with the following warnings:
-> ./arch/powerpc/platforms/8xx/pic.c:158:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 136, but without a corresponding object release within this function.
->
-> Fixes: a8db8cf0d894 ("irq_domain: Replace irq_alloc_host() with
-> revmap-specific initializers")
-> Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-> Suggested-by: Christophe Leroy <christophe.leroy@c-s.fr>
-> Reviewed-by: Peng Hao <peng.hao2@zte.com.cn>
-> Cc: Vitaly Bordug <vitb@kernel.crashing.org>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  arch/powerpc/platforms/8xx/pic.c | 2 --
->  1 file changed, 2 deletions(-)
->
-> diff --git a/arch/powerpc/platforms/8xx/pic.c b/arch/powerpc/platforms/8xx/pic.c
-> index 8d5a25d..4453df6 100644
-> --- a/arch/powerpc/platforms/8xx/pic.c
-> +++ b/arch/powerpc/platforms/8xx/pic.c
-> @@ -153,9 +153,7 @@ int mpc8xx_pic_init(void)
->  	if (mpc8xx_pic_host == NULL) {
->  		printk(KERN_ERR "MPC8xx PIC: failed to allocate irq host!\n");
->  		ret = -ENOMEM;
-> -		goto out;
->  	}
-> -	return 0;
+Hi Masahiro,
 
-It's fragile to rely on ret being equal to zero here. If the code
-further up is changed it's easy enough to miss that ret is expected to
-be zero.
+> On Sat, Mar 23, 2019 at 12:53 AM Andre Przywara <andre.przywara@arm.com> wrote:
+> >
+> > Hi,
+> >  
+> > > When compiling into output directory using O=, many files
+> > > created under KBUILD_OUTPUT that git considers
+> > > as new ones; git clients, ex. "git gui" lists it, and it clutters
+> > > file list making it difficult to see what was really changed
+> > >
+> > > Generate .gitignore in output directory that ignores all
+> > > its content  
+> >
+> > just found this when testing -rc1.
+> > Unfortunately this breaks my setup, because I keep a totally separate
+> > git repository in my build directories to track (various versions of)
+> > .config. So .gitignore there is carefully crafted to ignore most build
+> > artefacts, but not .config, for instance.
+> >
+> > I am not sure how git would interact with the build directory for you?
+> > Do you build into a subdirectory of the kernel tree?
+> >
+> > I was hoping that we would not overwrite unrelated files in directories
+> > outside of the kernel tree. In case this is about a subdirectory of the
+> > source tree, can we somehow check for this case?  
+> 
+> 
+> I am not sure if it is worthwhile
+> adjusting the upstream kernel to
+> the workflow of an individual like this.
 
-Better to set it to zero here explicitly, this is the success path after
-all, eg:
+I would argue that we should not overwrite files in the build directory
+which are unrelated to the actual kernel *build*.
+Another point is that one could easily add the build (sub-)directory
+to .git/info/exclude to make git ignore it, without touching any git
+monitored file at all. But I couldn't find an easy way to keep
+my .gitignore file in place.
 
-	ret = 0;
+> If it is, we could like this:
+> 
+> outputmakefile:
+> ifneq ($(KBUILD_SRC),)
+>         $(Q)ln -fsn $(srctree) source
+>         $(Q)$(CONFIG_SHELL) $(srctree)/scripts/mkmakefile $(srctree)
+>         $(Q)test -e .gitignore || \
+>         { echo "# this is build directory, ignore it"; echo "*"; } > .gitignore
 
->  out:
->  	of_node_put(np);
+Thanks, that looks good and fixes it for me!
 
+Cheers,
+Andre.
 
-cheers
+> endif
+> 
+> 
+> > Cheers,
+> > Andre.
+> >  
+> > >
+> > > Signed-off-by: Vladimir Kondratiev <vladimir.kondratiev@linux.intel.com>
+> > > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > > ---
+> > >  Makefile | 3 +++
+> > >  1 file changed, 3 insertions(+)
+> > >
+> > > diff --git a/Makefile b/Makefile
+> > > index 97ee0be24d52..d487fca342c4 100644
+> > > --- a/Makefile
+> > > +++ b/Makefile
+> > > @@ -483,10 +483,13 @@ PHONY += outputmakefile
+> > >  # outputmakefile generates a Makefile in the output directory, if using a
+> > >  # separate output directory. This allows convenient use of make in the
+> > >  # output directory.
+> > > +# At the same time when output Makefile generated, generate .gitignore to
+> > > +# ignore whole output directory
+> > >  outputmakefile:
+> > >  ifneq ($(KBUILD_SRC),)
+> > >       $(Q)ln -fsn $(srctree) source
+> > >       $(Q)$(CONFIG_SHELL) $(srctree)/scripts/mkmakefile $(srctree)
+> > > +     $(Q){ echo "# this is build directory, ignore it"; echo "*"; } > .gitignore
+> > >  endif
+> > >
+> > >  ifneq ($(shell $(CC) --version 2>&1 | head -n 1 | grep clang),)
+> > > --
+> > > 2.17.1  
+> >  
+> 
+> 
+
