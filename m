@@ -2,110 +2,158 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB90C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:11:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A024C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:12:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BAB220879
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:11:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20B6E20879
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:12:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730214AbfCYRLx (ORCPT
+        id S1729855AbfCYRMh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 13:11:53 -0400
-Received: from mga07.intel.com ([134.134.136.100]:2008 "EHLO mga07.intel.com"
+        Mon, 25 Mar 2019 13:12:37 -0400
+Received: from foss.arm.com ([217.140.101.70]:52230 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729680AbfCYRLw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 13:11:52 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Mar 2019 10:11:52 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,269,1549958400"; 
-   d="scan'208";a="128531641"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
-  by orsmga008.jf.intel.com with ESMTP; 25 Mar 2019 10:11:50 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1h8T8X-0008Pv-BS; Mon, 25 Mar 2019 19:11:49 +0200
-Date:   Mon, 25 Mar 2019 19:11:49 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Thomas Preston <thomas.preston@codethink.co.uk>
-Cc:     rjw@rjwysocki.net, lenb@kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mika.westerberg@linux.intel.com
-Subject: Re: [PATCH v3] Documentation: acpi: Add an example for PRP0001
-Message-ID: <20190325171149.GM9224@smile.fi.intel.com>
-References: <20190325165338.5826-1-thomas.preston@codethink.co.uk>
+        id S1729036AbfCYRMh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 13:12:37 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EFB1280D;
+        Mon, 25 Mar 2019 10:12:36 -0700 (PDT)
+Received: from [10.1.196.69] (e112269-lin.cambridge.arm.com [10.1.196.69])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 021FF3F575;
+        Mon, 25 Mar 2019 10:12:34 -0700 (PDT)
+Subject: Re: [RESEND] i2c: imx: defer probing on dma channel request
+To:     laurentiu.tudor@nxp.com, linux-i2c@vger.kernel.org,
+        ying.zhang22455@nxp.com
+Cc:     upstream-release@linux.nxdi.nxp.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, linux-kernel@vger.kernel.org,
+        leoyang.li@nxp.com, linux-imx@nxp.com, kernel@pengutronix.de,
+        festevam@gmail.com, linux-arm-kernel@lists.infradead.org
+References: <20190325153016.12626-1-laurentiu.tudor@nxp.com>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <873b5aeb-e20a-de6b-515e-bc8fcc263452@arm.com>
+Date:   Mon, 25 Mar 2019 17:12:33 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190325165338.5826-1-thomas.preston@codethink.co.uk>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190325153016.12626-1-laurentiu.tudor@nxp.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 04:53:38PM +0000, Thomas Preston wrote:
-> Add an example for the magic PRP0001 device ID which allows matching
-> ACPI devices against drivers using OF Device Tree compatible property.
-
-Thank you!
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
+On 25/03/2019 15:30, laurentiu.tudor@nxp.com wrote:
+> From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 > 
-> Signed-off-by: Thomas Preston <thomas.preston@codethink.co.uk>
+> If the dma controller is not yet probed, defer i2c probe.
+> The error path in probe was slightly modified (no functional change)
+
+There is a functional change for cases like:
+
+> 	ret = pm_runtime_get_sync(&pdev->dev);
+> 	if (ret < 0)
+> 		goto rpm_disable;
+
+...as rpm_disable will no longer fall through to the call of
+clk_disable_unprepare().
+
+> to avoid triggering this WARN_ON():
+> "cg-pll0-div1 already disabled
+> WARNING: CPU: 1 PID: 1 at drivers/clk/clk.c:828 clk_core_disable+0xa8/0xb0"
+
+I'm also not sure how this WARN_ON was hit. i2c_imx_probe() calls
+clk_prepare_enable() which should increment the reference count. So it
+should always be possible to decrememt the enable_count. What am I missing?
+
+> Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 > ---
->  Documentation/acpi/enumeration.txt | 26 ++++++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
+>  drivers/i2c/busses/i2c-imx.c | 21 +++++++++++++--------
+>  1 file changed, 13 insertions(+), 8 deletions(-)
 > 
-> diff --git a/Documentation/acpi/enumeration.txt b/Documentation/acpi/enumeration.txt
-> index 7bcf9c3d9fbe..1395b844649c 100644
-> --- a/Documentation/acpi/enumeration.txt
-> +++ b/Documentation/acpi/enumeration.txt
-> @@ -410,6 +410,32 @@ Specifically, the device IDs returned by _HID and preceding PRP0001 in the _CID
->  return package will be checked first.  Also in that case the bus type the device
->  will be enumerated to depends on the device ID returned by _HID.
+> diff --git a/drivers/i2c/busses/i2c-imx.c b/drivers/i2c/busses/i2c-imx.c
+> index 42fed40198a0..4e34b1572756 100644
+> --- a/drivers/i2c/busses/i2c-imx.c
+> +++ b/drivers/i2c/busses/i2c-imx.c
+> @@ -1111,7 +1111,8 @@ static int i2c_imx_probe(struct platform_device *pdev)
+>  				pdev->name, i2c_imx);
+>  	if (ret) {
+>  		dev_err(&pdev->dev, "can't claim irq %d\n", irq);
+> -		goto clk_disable;
+> +		clk_disable_unprepare(i2c_imx->clk);
+> +		return ret;
+>  	}
 >  
-> +For example, the following ACPI sample might be used to enumerate an lm75-type
-> +I2C temperature sensor and match it to the driver using the Device Tree
-> +namespace link:
-> +
-> +	Device (TMP0)
-> +	{
-> +		Name (_HID, "PRP0001")
-> +		Name (_DSD, Package() {
-> +			ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-> +			Package () {
-> +				Package (2) { "compatible", "ti,tmp75" },
-> +			}
-> +		})
-> +		Method (_CRS, 0, Serialized)
-> +		{
-> +			Name (SBUF, ResourceTemplate ()
-> +			{
-> +				I2cSerialBusV2 (0x48, ControllerInitiated,
-> +					400000, AddressingMode7Bit,
-> +					"\\_SB.PCI0.I2C1", 0x00,
-> +					ResourceConsumer, , Exclusive,)
-> +			})
-> +			Return (SBUF)
-> +		}
+>  	/* Init queue */
+> @@ -1161,19 +1162,25 @@ static int i2c_imx_probe(struct platform_device *pdev)
+>  	pm_runtime_mark_last_busy(&pdev->dev);
+>  	pm_runtime_put_autosuspend(&pdev->dev);
+>  
+> +	/* Init DMA config if supported */
+> +	ret = i2c_imx_dma_request(i2c_imx, phy_addr);
+> +	if (ret) {
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_info(&pdev->dev, "can't use DMA, using PIO instead.\n");
+> +		else
+> +			goto del_adapter;
 > +	}
 > +
->  It is valid to define device objects with a _HID returning PRP0001 and without
->  the "compatible" property in the _DSD or a _CID as long as one of their
->  ancestors provides a _DSD with a valid "compatible" property.  Such device
-> -- 
-> 2.11.0
+
+This can be simplified by reversing the condition:
+
+	if (ret) {
+		if (ret == -EPROBE_DEFER)
+			goto del_adapter;
+		dev_info();
+	}
+
+or even:
+
+	if (ret == -EPROBE_DEFER)
+		goto del_adapter;
+	else if (ret)
+		dev_info();
+
+>  	dev_dbg(&i2c_imx->adapter.dev, "claimed irq %d\n", irq);
+>  	dev_dbg(&i2c_imx->adapter.dev, "device resources: %pR\n", res);
+>  	dev_dbg(&i2c_imx->adapter.dev, "adapter name: \"%s\"\n",
+>  		i2c_imx->adapter.name);
+>  
+> -	/* Init DMA config if supported */
+> -	ret = i2c_imx_dma_request(i2c_imx, phy_addr);
+> -	if (ret < 0)
+> -		goto clk_notifier_unregister;
+> -
+>  	dev_info(&i2c_imx->adapter.dev, "IMX I2C adapter registered\n");
+>  	return 0;   /* Return OK */
+>  
+> +del_adapter:
+> +	i2c_del_adapter(&i2c_imx->adapter);
+
+This looks like a separate fix (previously the call to
+i2c_add_numbered_adapter() was not undone in case of later errors). It
+worth spelling this out in the commit message.
+
+Thanks,
+
+Steve
+
+>  clk_notifier_unregister:
+>  	clk_notifier_unregister(i2c_imx->clk, &i2c_imx->clk_change_nb);
+>  rpm_disable:
+> @@ -1182,8 +1189,6 @@ static int i2c_imx_probe(struct platform_device *pdev)
+>  	pm_runtime_set_suspended(&pdev->dev);
+>  	pm_runtime_dont_use_autosuspend(&pdev->dev);
+>  
+> -clk_disable:
+> -	clk_disable_unprepare(i2c_imx->clk);
+>  	return ret;
+>  }
+>  
 > 
-
--- 
-With Best Regards,
-Andy Shevchenko
-
 
