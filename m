@@ -2,111 +2,129 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FF49C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 05:37:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD185C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 05:45:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20B432075D
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 05:37:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="KN8jdOaE"
+	by mail.kernel.org (Postfix) with ESMTP id AD8A420870
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 05:45:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729653AbfCYFhl (ORCPT
+        id S1729429AbfCYFpG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 01:37:41 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:59454 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729373AbfCYFhC (ORCPT
+        Mon, 25 Mar 2019 01:45:06 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:56028 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729275AbfCYFpG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 01:37:02 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2P5Y6EU005450;
-        Mon, 25 Mar 2019 05:36:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2018-07-02;
- bh=HFHaBCUZ8wMa3FAx2XARpXITPf6N64mPFcEnLvMxejg=;
- b=KN8jdOaEzAIIATdulddaZagWt6aHyaKy+rnq10LI5mfOFE8hJYP9/QeJ4wRCg6sJrZSg
- 961+SRJY6O0mOQE1VRPLeSEhBjOSkSWhS03tSadtM/bb0hdx70dSuUlN3y+NLqHrrnm7
- ZAoJit5+DpNf1AJyysuM4ngZCtL/Ly78XJICprJuMybggwrJRmtb6y8W7eGT4NJObSZS
- jGadtHUpcjhKzTEqrz4s6uZxl+HquhhY6++2V+57pg8+gJdQ9dIQeRJBVLbrW1T5VMHZ
- X8sJfFqjPK5kCNnwop9nRH7VsVY/aPoEl7JG8cuCEynraQpO9mnlw2Hbq/raD5PEKM8k 5w== 
-Received: from aserv0022.oracle.com (aserv0022.oracle.com [141.146.126.234])
-        by userp2120.oracle.com with ESMTP id 2re6dj1tqd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 25 Mar 2019 05:36:40 +0000
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x2P5adEV021312
+        Mon, 25 Mar 2019 01:45:06 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2P5inHB004298
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 01:45:04 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rejdxnraj-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 01:45:04 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
+        Mon, 25 Mar 2019 05:45:02 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 25 Mar 2019 05:44:59 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2P5ixQB37552246
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 25 Mar 2019 05:36:39 GMT
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x2P5adXf025252;
-        Mon, 25 Mar 2019 05:36:39 GMT
-Received: from will-ThinkCentre-M93p.cn.oracle.com (/10.182.71.12)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sun, 24 Mar 2019 22:36:39 -0700
-From:   Jianchao Wang <jianchao.w.wang@oracle.com>
-To:     axboe@kernel.dk
-Cc:     hch@lst.de, jthumshirn@suse.de, hare@suse.de, josef@toxicpanda.com,
-        bvanassche@acm.org, sagi@grimberg.me, keith.busch@intel.com,
-        jsmart2021@gmail.com, linux-nvme@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH V2 4/8] mtip32xx: use blk_mq_queue_tag_inflight_iter
-Date:   Mon, 25 Mar 2019 13:28:05 +0800
-Message-Id: <1553491689-1730-5-git-send-email-jianchao.w.wang@oracle.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1553491689-1730-1-git-send-email-jianchao.w.wang@oracle.com>
-References: <1553491689-1730-1-git-send-email-jianchao.w.wang@oracle.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9205 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=920 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903250043
+        Mon, 25 Mar 2019 05:44:59 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DF82542049;
+        Mon, 25 Mar 2019 05:44:58 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9722F42042;
+        Mon, 25 Mar 2019 05:44:58 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 25 Mar 2019 05:44:58 +0000 (GMT)
+Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 5C150A0161;
+        Mon, 25 Mar 2019 16:44:57 +1100 (AEDT)
+From:   "Alastair D'Silva" <alastair@au1.ibm.com>
+To:     alastair@d-silva.org
+Cc:     Frederic Barrat <fbarrat@linux.ibm.com>,
+        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH v3 0/7] Refactor OCXL driver to allow external drivers to use it
+Date:   Mon, 25 Mar 2019 16:44:29 +1100
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190320053448.2098-1-alastair@au1.ibm.com>
+References: <20190320053448.2098-1-alastair@au1.ibm.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19032505-0012-0000-0000-00000306B144
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19032505-0013-0000-0000-0000213DD341
+Message-Id: <20190325054438.15022-1-alastair@au1.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-25_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=385 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903250044
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-blk_mq_tagset_busy_iter is not safe that it could get stale request
-in tags->rqs[]. Use blk_mq_queue_tag_inflight_iter here.
+From: Alastair D'Silva <alastair@d-silva.org>
 
-Signed-off-by: Jianchao Wang <jianchao.w.wang@oracle.com>
----
- drivers/block/mtip32xx/mtip32xx.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Changelog:
+V3:
+  - For: 'ocxl: Create a clear delineation between ocxl backend & frontend'
+      - Integrate Frederick Barrat's suggestions
+      - Further cleanup on error paths
+      - Remove release handler for AFU private data
+      - Make ocxl_file_make_(in)visibile static & call from ocxl_file_(un)register
+V2:
+  - Reorder patches as some required structs that were only available later
+  - Add dev.release implementation for ocxl_file_info to address warning on
+    driver unload (ocxl: Create a clear delineation...)
+  - Set output var irq_id in ocxl_afu_irq_alloc (ocxl: afu_irq only deals...)
+  - Bump copyright year (ocxl: Provide global MMIO accessors...,
+        ocxl: Split pci.c)
 
-diff --git a/drivers/block/mtip32xx/mtip32xx.c b/drivers/block/mtip32xx/mtip32xx.c
-index 83302ec..103e691 100644
---- a/drivers/block/mtip32xx/mtip32xx.c
-+++ b/drivers/block/mtip32xx/mtip32xx.c
-@@ -2771,12 +2771,12 @@ static int mtip_service_thread(void *data)
- 
- 			blk_mq_quiesce_queue(dd->queue);
- 
--			blk_mq_tagset_busy_iter(&dd->tags, mtip_queue_cmd, dd);
-+			blk_mq_queue_tag_inflight_iter(dd->queue, mtip_queue_cmd, dd);
- 
- 			set_bit(MTIP_PF_ISSUE_CMDS_BIT, &dd->port->flags);
- 
- 			if (mtip_device_reset(dd))
--				blk_mq_tagset_busy_iter(&dd->tags,
-+				blk_mq_queue_tag_inflight_iter(dd->queue,
- 							mtip_abort_cmd, dd);
- 
- 			clear_bit(MTIP_PF_TO_ACTIVE_BIT, &dd->port->flags);
-@@ -3903,7 +3903,7 @@ static int mtip_block_remove(struct driver_data *dd)
- 
- 	blk_freeze_queue_start(dd->queue);
- 	blk_mq_quiesce_queue(dd->queue);
--	blk_mq_tagset_busy_iter(&dd->tags, mtip_no_dev_cleanup, dd);
-+	blk_mq_queue_tag_inflight_iter(dd->queue, mtip_no_dev_cleanup, dd);
- 	blk_mq_unquiesce_queue(dd->queue);
- 
- 	/*
+Alastair D'Silva (7):
+  ocxl: Split pci.c
+  ocxl: Don't pass pci_dev around
+  ocxl: Create a clear delineation between ocxl backend & frontend
+  ocxl: Allow external drivers to use OpenCAPI contexts
+  ocxl: afu_irq only deals with IRQ IDs, not offsets
+  ocxl: move event_fd handling to frontend
+  ocxl: Provide global MMIO accessors for external drivers
+
+ drivers/misc/ocxl/Makefile        |   3 +-
+ drivers/misc/ocxl/afu_irq.c       | 104 +++---
+ drivers/misc/ocxl/context.c       |  18 +-
+ drivers/misc/ocxl/core.c          | 574 ++++++++++++++++++++++++++++++
+ drivers/misc/ocxl/file.c          | 172 ++++++---
+ drivers/misc/ocxl/mmio.c          | 234 ++++++++++++
+ drivers/misc/ocxl/ocxl_internal.h |  46 ++-
+ drivers/misc/ocxl/pci.c           | 565 ++---------------------------
+ drivers/misc/ocxl/sysfs.c         |  59 +--
+ drivers/misc/ocxl/trace.h         |  12 +-
+ include/misc/ocxl.h               | 320 ++++++++++++++++-
+ 11 files changed, 1406 insertions(+), 701 deletions(-)
+ create mode 100644 drivers/misc/ocxl/core.c
+ create mode 100644 drivers/misc/ocxl/mmio.c
+
 -- 
-2.7.4
+2.20.1
 
