@@ -2,99 +2,110 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95258C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 11:57:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CF82C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 11:57:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61E2C20863
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 11:57:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 689392087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 11:57:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="2yr4VexP"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gMNXpYuL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731028AbfCYL5k (ORCPT
+        id S1731062AbfCYL5o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 07:57:40 -0400
-Received: from frisell.zx2c4.com ([192.95.5.64]:43551 "EHLO frisell.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730730AbfCYL5f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 07:57:35 -0400
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 3409dd19;
-        Mon, 25 Mar 2019 11:35:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type; s=mail; bh=DBwobPcp+XLi0JlgbvkNQ17mcME=; b=2yr4Ve
-        xPiz3LpBl2Bhgzo7jdpsaP1//wQjyutECetZ1BPl3xzFRQGrciVGNwzVBLaFdK7a
-        4DNxcgJ57h9zF5ebfQkd1ilzV0Um4H0rdhrRPd8MMlslVMWxo83eXYrLp97VwJu0
-        fIjDW6xI54faIoP8iXePRAPFmXnVpvi4885BI3j+7croJE5vlY43182yiAbO8eKH
-        GHD9AlE/N3/VU6BLfJif8jOuzZDskQpe2RXORNqE+5QUZ1Ol2Tt7tnjYKlxY2y4r
-        etUtfGoor7mfX2xKLfS2mjZiX2TvqRmIxTmnxC5ECN/BzTxyx324wNwpDx2E57tp
-        aXj+cUKz+MY9K55w==
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id f598297d (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
-        Mon, 25 Mar 2019 11:35:25 +0000 (UTC)
-Received: by mail-oi1-f176.google.com with SMTP id i21so6661336oib.11;
-        Mon, 25 Mar 2019 04:57:32 -0700 (PDT)
-X-Gm-Message-State: APjAAAWaho2e5zd2vKL4K08I13U9ihb+N4NXaALTzpPTkTMvY2e9FjiB
-        EWHRy+CleSwjpW6IGLDglJH3keuAh0w+VBIWaDw=
-X-Google-Smtp-Source: APXvYqwsR4oRu/q5zmvku3tlrxsPBR4U8hytDrtQpHuYbuiN+CKKpHpvCTmm0QeH44olD5ncivfvHGnqzKxKivEVpSM=
-X-Received: by 2002:aca:61d6:: with SMTP id v205mr6056387oib.122.1553515052019;
- Mon, 25 Mar 2019 04:57:32 -0700 (PDT)
+        Mon, 25 Mar 2019 07:57:44 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:60742 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731031AbfCYL5i (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 07:57:38 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2PBvClf004672;
+        Mon, 25 Mar 2019 06:57:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1553515032;
+        bh=THLHzYaL2qNz12734MQVtCxdRhLPXqxOoWZ82S+kNMk=;
+        h=Subject:To:References:From:Date:In-Reply-To;
+        b=gMNXpYuL5tLC6q6gc/UQk4OPk83tYqkwhp9rvky4oo3WjsP/8qmACUs1zTW7Znuwg
+         Rt/hirdXI6r2J8sHdTGuxN/LmJbl0c3rbSU0ofDfrXXlHNESu92BooimIb3Hy4I8C/
+         Fdq3l4KvxOwtZgqWbDMYwML0M+5k4FF3HwSH9aPE=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2PBvCBj053554
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 25 Mar 2019 06:57:12 -0500
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 25
+ Mar 2019 06:57:11 -0500
+Received: from dflp33.itg.ti.com (10.64.6.16) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_0,
+ cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5 via Frontend Transport;
+ Mon, 25 Mar 2019 06:57:11 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by dflp33.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2PBv84X028607;
+        Mon, 25 Mar 2019 06:57:09 -0500
+Subject: Re: INFO: task hung in process_measurement
+To:     syzbot <syzbot+cdc562bc26a2b2b0a94f@syzkaller.appspotmail.com>,
+        <airlied@linux.ie>, <dmitry.kasatkin@gmail.com>,
+        <dri-devel@lists.freedesktop.org>, <james.l.morris@oracle.com>,
+        <jmorris@namei.org>, <jsarha@ti.com>,
+        <linux-ima-devel@lists.sourceforge.net>,
+        <linux-ima-user@lists.sourceforge.net>,
+        <linux-integrity@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-security-module@vger.kernel.org>, <serge@hallyn.com>,
+        <syzkaller-bugs@googlegroups.com>, <zohar@linux.vnet.ibm.com>
+References: <000000000000f8654a0584bd7d5d@google.com>
+From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
+Message-ID: <26a884b5-8fbe-57cd-a31e-ab1597681a03@ti.com>
+Date:   Mon, 25 Mar 2019 13:57:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <20190322071122.6677-1-Jason@zx2c4.com> <20190325115156.wj4verbfdd2rspo5@gondor.apana.org.au>
-In-Reply-To: <20190325115156.wj4verbfdd2rspo5@gondor.apana.org.au>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Mon, 25 Mar 2019 12:57:20 +0100
-X-Gmail-Original-Message-ID: <CAHmME9pAgi=Li_C5xEq7EfmNq5p4BRc3rDxXjiz+xz0rSYikXA@mail.gmail.com>
-Message-ID: <CAHmME9pAgi=Li_C5xEq7EfmNq5p4BRc3rDxXjiz+xz0rSYikXA@mail.gmail.com>
-Subject: Re: [PATCH net-next v9 00/19] WireGuard: Secure Network Tunnel
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        David Miller <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Samuel Neves <samuel.c.p.neves@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <000000000000f8654a0584bd7d5d@google.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Herbert,
+On 23/03/2019 08:58, syzbot wrote:
+> syzbot has bisected this bug to:
+> 
+> commit 8fe5616b20e5742bb5fee0e77dffe2fc76ac92a0
+> Author: Jyri Sarha <jsarha@ti.com>
+> Date:   Tue Jun 14 08:43:30 2016 +0000
+> 
+>     drm/tilcdc: Restore old dpms state in pm_resume()
+> 
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10daff1b200000
+> start commit:   291d0e5d Merge tag 'for-linus-20180929' of
+> git://git.kerne..
+> git tree:       upstream
+> final crash:    https://syzkaller.appspot.com/x/report.txt?x=12daff1b200000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=14daff1b200000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=a8212f992609a887
+> dashboard link:
+> https://syzkaller.appspot.com/bug?extid=cdc562bc26a2b2b0a94f
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=140e285e400000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1237fe81400000
+> 
+> Reported-by: syzbot+cdc562bc26a2b2b0a94f@syzkaller.appspotmail.com
+> Fixes: 8fe5616b20e5 ("drm/tilcdc: Restore old dpms state in pm_resume()")
+> 
+> For information about bisection process see:
+> https://goo.gl/tpsmEJ#bisection
 
-On Mon, Mar 25, 2019 at 12:52 PM Herbert Xu <herbert@gondor.apana.org.au> wrote:
-> Sorry but adding new implementations of chacha20/poly1305 without
-> removing the existing ones is not acceptable.  I really think
-> we ought to separate the zinc interface from these new crypto
-> implementations.  They have nothing to do with each other.
->
-> As we've been stuck on this point for so long, let's get the
-> ball rolling by first merging just the zinc interface itself
-> with the existing chacha20/poly1305 code.  Then we can replace
-> these implementations with your implementations without getting
-> bogged down by all these other discussions.
->
-> AFAICS once we resolve Thomas's concerns with regards to the simd
-> patch, then we can merge the zinc interface right away and go from
-> there.
+I don't think the patch from Jyri is related to the crash here.
 
-I think we're slightly closer to being same page, but I haven't
-followed up here yet because I was waiting for something else first.
+ Tomi
 
-Your previous patchset left out a few implementations and wasn't
-totally complete with regards to the glue code. I'm going to whip
-something up now that is Zinc, but where there's already an existing
-assembly implementation in the tree (i.e. Martin's code), it uses that
-instead of what I've been posting until now. Then, after that lands, I
-can post stand-alone patches for replacing the various
-implementations, and we can discuss those separately, alongside all
-the various discussion of verification and benchmarks and so forth.
-
-So, I'll have something to examine somewhat soon. Working on it now.
-
-Jason
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
