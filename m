@@ -2,137 +2,113 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B8AAC4360F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:27:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D5C4C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:27:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E17D92070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:27:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nBITszvE"
+	by mail.kernel.org (Postfix) with ESMTP id 179302087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:27:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730091AbfCYS1S (ORCPT
+        id S1730163AbfCYS15 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 14:27:18 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:42176 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728912AbfCYS1S (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 14:27:18 -0400
-Received: by mail-oi1-f194.google.com with SMTP id w139so7779739oie.9;
-        Mon, 25 Mar 2019 11:27:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=8LyoMGjH5c+Hqc7iI1IZsTrpuCorPYvhv9hg2JSJwSw=;
-        b=nBITszvEWj8DRmYma0AyC5LGgUdys732rnp6Oh2KnVZVRvuaiBtcC89iz9v6MiZjDp
-         ux870q29YxJO4upBrKiMpsCL2ZHAhDGsYOhFwHHPurLkefL9y5O+I8x3qCljGn3hy6SC
-         TMwCyxmMZIJ+pkVT8D3q8Qcmn0uOKcmFoMRvjD3rKk4GLmO+Sb9kYxbEURDmwKsZCCtp
-         B98mRKqLnXi5gO/4i1vB3Hh+RuJf8lC5pOzpYS3g6YLzdRkPHHk45RgqUyjrpT0QG3DT
-         yL9yh5+oSXwU9H6G+6uAsaI4WjO65cmV+NdYZ84TeJ0Wk2DkOjk6J2z74paw8BAgDPEY
-         Qabw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8LyoMGjH5c+Hqc7iI1IZsTrpuCorPYvhv9hg2JSJwSw=;
-        b=QRFYSG87+MqP+A+Cwb0oAQmJost5fJrirxws8GnJ/hhWeetBYmqd8BrhviA3HDwhdG
-         OEV4d/SUnqnILLL5StSSvsBxV/wZad6BZgVyQhOqfrNOMJwKy1BrWuAzhY5ep8rSuV5e
-         bRPt5ibYc0uCvdXmzyJ+JO1auut7YqmXIPidskuI48L69cN7VnnjvNYRQ5wDJMNfR73+
-         v91uU5QSZ1Ghkbkna2UrOGT5ihIWV9I+DGeJ7UnqSf2EnPn3gKGX5+uTVWL9CrRZPWTN
-         0Q2YBtsjis/LGVdZ5jcRDaD5MqFwN7W3vU7EfzDV4DI2VJ3mWCOdfGgoaNWBESOSIgjx
-         vxcQ==
-X-Gm-Message-State: APjAAAUWc9FP110RIHy6IkAvm3ylKzkZouzXI9QIR7AOYn45lYRK1cuW
-        8yQUCMK8kmj5jI8opIpW/bUFfkfW
-X-Google-Smtp-Source: APXvYqzpjUaKNdJVApHeCRz53b3qgfvovrnVg6vc/JYL1WRPAo8MPvNmlvRb/xjMSnRAO85G2KcOWw==
-X-Received: by 2002:aca:550c:: with SMTP id j12mr13054899oib.52.1553538437122;
-        Mon, 25 Mar 2019 11:27:17 -0700 (PDT)
-Received: from nuclearis2-1.gtech (c-98-195-139-126.hsd1.tx.comcast.net. [98.195.139.126])
-        by smtp.gmail.com with ESMTPSA id x89sm5255326ota.30.2019.03.25.11.27.16
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 25 Mar 2019 11:27:16 -0700 (PDT)
-Subject: Re: [PATCH] PCI/LINK: Request a one-shot IRQ with NULL handler
-To:     Borislav Petkov <bp@alien8.de>, LKML <linux-kernel@vger.kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lukas Wunner <lukas@wunner.de>, linux-pci@vger.kernel.org
-References: <20190325182338.13609-1-bp@alien8.de>
-From:   "Alex G." <mr.nuke.me@gmail.com>
-Message-ID: <0340b2f8-1301-2c3f-54a0-69a24c9e0d20@gmail.com>
-Date:   Mon, 25 Mar 2019 13:27:15 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.1
+        Mon, 25 Mar 2019 14:27:57 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:53238 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728912AbfCYS15 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 14:27:57 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 766A91596;
+        Mon, 25 Mar 2019 11:27:56 -0700 (PDT)
+Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3BE513F575;
+        Mon, 25 Mar 2019 11:27:54 -0700 (PDT)
+Subject: Re: [PATCH v2 1/2] EDAC: add EDAC driver for DMC520
+To:     Borislav Petkov <bp@alien8.de>, Rui Zhao <ruizhao@outlook.com>
+Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "okaya@kernel.org" <okaya@kernel.org>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "hangl@microsoft.com" <hangl@microsoft.com>,
+        "lewan@microsoft.com" <lewan@microsoft.com>,
+        Rui Zhao <ruizhao@microsoft.com>
+References: <BN7PR08MB5572D3A5217C4749AC4E7DC4AE4C0@BN7PR08MB5572.namprd08.prod.outlook.com>
+ <20190323092342.GD23698@zn.tnic>
+From:   James Morse <james.morse@arm.com>
+Message-ID: <c1a16ab4-72d9-f736-065c-b80858f85b7b@arm.com>
+Date:   Mon, 25 Mar 2019 18:27:52 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <20190325182338.13609-1-bp@alien8.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+In-Reply-To: <20190323092342.GD23698@zn.tnic>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Borislav,
+Hi guys,
 
-Thanks for the update. We've settled on a different fix [1], since Lukas 
-was not happy with IRQF_ONESHOT [2].
+On 23/03/2019 09:23, Borislav Petkov wrote:
+> On Thu, Mar 07, 2019 at 01:24:01AM +0000, Rui Zhao wrote:
+>> From: Rui Zhao <ruizhao@microsoft.com>
+>>
+>> New driver supports error detection and correction on
+>> the devices with ARM DMC-520 memory controller.
 
-Alex
+A question/suggestion on the direction...
 
-[1] 
-https://lore.kernel.org/linux-pci/20190323003700.7294-1-mr.nuke.me@gmail.com/
-[2] 
-https://lore.kernel.org/linux-pci/20190318043314.noyj6t4sh26spuzt@wunner.de/
+Could we avoid probing the driver based on the root hardware compatible?
+Could we use the device/chip/platform specific one instead?
 
-On 3/25/19 1:23 PM, Borislav Petkov wrote:
-> From: Borislav Petkov <bp@suse.de>
-> 
-> Booting v5.1-rc1 causes these new messages in dmesg here:
-> 
->    genirq: Threaded irq requested with handler=NULL and !ONESHOT for irq 24
->    pcie_bw_notification: probe of 0000:00:02.0:pcie010 failed with error -22
-> 
-> because requesting a threaded IRQ with NULL handler needs to be oneshot.
-> Otherwise a level-triggered interrupt endless loop can happen, see the
-> detailed explanation above the "Threaded irq... " error message in
-> kernel/irq/manage.c.
-> 
-> And PCI-MSI type interrupts are one-shot safe but not in the IOAPIC
-> case:
-> 
->    24: ... IO-APIC   28-fasteoi   PCIe BW notif, PCIe BW notif, PCIe BW notif
->    25: ... IO-APIC   29-fasteoi   PCIe BW notif, PCIe BW notif
-> 
-> Make the BW notification handler oneshot too.
-> 
-> Fixes: e8303bb7a75c ("PCI/LINK: Report degraded links via link bandwidth notification")
-> Suggested-by: Thomas Gleixner <tglx@linutronix.de>
-> Signed-off-by: Borislav Petkov <bp@suse.de>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Lukas Wunner <lukas@wunner.de>
-> Cc: Alexandru Gagniuc <mr.nuke.me@gmail.com>
-> Cc: linux-pci@vger.kernel.org
-> ---
->   drivers/pci/pcie/bw_notification.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/pcie/bw_notification.c b/drivers/pci/pcie/bw_notification.c
-> index d2eae3b7cc0f..16e11c09f6bd 100644
-> --- a/drivers/pci/pcie/bw_notification.c
-> +++ b/drivers/pci/pcie/bw_notification.c
-> @@ -81,7 +81,7 @@ static int pcie_bandwidth_notification_probe(struct pcie_device *srv)
->   		return -ENODEV;
->   
->   	ret = request_threaded_irq(srv->irq, NULL, pcie_bw_notification_handler,
-> -				   IRQF_SHARED, "PCIe BW notif", srv);
-> +				   IRQF_SHARED | IRQF_ONESHOT, "PCIe BW notif", srv);
->   	if (ret)
->   		return ret;
->   
-> 
+
+We want to avoid per-function edac drivers. If ${my_chip} has edac support for L3 and
+memory, I should have a ${my_chip}_edac driver that pulls in the appropriate L3 and memory
+code, and presents a sensible view to edac_core.
+
+Thinking out loud...
+
+You have:
+
+>> +static const struct of_device_id dmc520_edac_driver_id[] = {
+>> +	{ .compatible = "arm,dmc-520", },
+>> +	{ /* end of table */ }
+>> +};
+>> +
+
+If you wanted to add another device with edac support, we'd ask you to create
+${your_chip}_edac driver and pull in the DMC520 and the other device.
+
+But probing the 'arm,dmc-520' compatible like this leaves us in a tricky place if someone
+else does this: ${their_device} probes the dmc520 like this too, but they can't stop it on
+their platform as it will break yours...
+
+
+It's normal to have a specific compatible, vexpress has:
+| compatible = "arm,vexpress,v2f-2xv6,ca7x3", "arm,vexpress,v2f-2xv6", "arm,vexpress";
+
+Could we do the same here:
+| compatible = "vendor,soc-name-dmc520", "arm,dmc-520";
+
+or even:
+| compatible = "microsoft,product-name-dmc520", "arm,dmc-520";
+if there is some firmware/board configuration that means vendor/soc isn't precise enough.
+
+Then we always probe the driver from "vendor,soc-name-dmc520", never from "arm,dmc520".
+
+This means we grow a list of vendor/soc-name that are using this driver, but if one of
+them wants to support a second edac device, we can remove their vendor/soc-name from the
+list without affecting anyone else.
+
+
+Thanks,
+
+James
