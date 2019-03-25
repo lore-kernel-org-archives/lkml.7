@@ -2,98 +2,94 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA5F1C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 20:58:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87005C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 20:59:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF43F2075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 20:58:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zP9rSMgv"
+	by mail.kernel.org (Postfix) with ESMTP id 6128020823
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 20:59:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730075AbfCYU6p (ORCPT
+        id S1730260AbfCYU7c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 16:58:45 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:37043 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729123AbfCYU6o (ORCPT
+        Mon, 25 Mar 2019 16:59:32 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:46399 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729123AbfCYU7c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 16:58:44 -0400
-Received: by mail-it1-f194.google.com with SMTP id u65so6987893itc.2
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 13:58:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7WABXDHFfA2+4GTjIuzshcueyLCiO4qduoh74EQpZQQ=;
-        b=zP9rSMgvmPiNRLj61JpnLrdrNr9BBcJrHTI3bPwYg5fV5bcrfnS2C3kZJ5nimSRXN2
-         sfo3cuzkyBBGFROSgVkf627n0/P1V2+bez04xrjgMUsCVHogBPDY87Ehar2zW/7/3/EZ
-         sHrIze9hNKNYQ7HpjV1QQODkl915Upwqmww1oOxxpCZg+8a7EdnjbdZ++EM5pRrN8mpT
-         s8JJjWmqcAOaxb3oIEzPrpJh8dS/LC/fdAcGaKwP/YF4kp1F6TV/jlZDaZ4ueTTNrQ66
-         rdGEzNk5pkXHRC4triCfNnmEW91uRwPf/55lg4ViR+26txha7u42J8u5eho37Vh6qppn
-         iZiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7WABXDHFfA2+4GTjIuzshcueyLCiO4qduoh74EQpZQQ=;
-        b=gF2Qe1IRNV9ESOszp76jTo6pE4hxsOZaDSjwPB+jlLMKeT77xYhpnR2q+4tsqN7T5v
-         jR8gTdTP3dgCe6J8YC81SvB12B/k1rKutommmbOU0LZTaBTNf5TsNBlMG0+M2JhxDB4h
-         zY6w8e2TuKQDkSqIPEHShUVNjeky/YZU8ofsrvuvJNOnaAC9usGJlpHaEI9Q10B/e/QN
-         Imssrst9M+IqWhyCraLTv0q66UfD4jl7xwxBI50AwO56rhFrknSaFSOtDUPE4IubySZ+
-         mTRWOZZ7WDRYuOFeGl7N1BZUBbFwGO/Z4ExUjDPbzeC0b3qUGYws0cgWwtkInqIS2gef
-         QhdQ==
-X-Gm-Message-State: APjAAAVg0D2eXCiT2ThjO2vMnzqKzVmRbAAf0MuXlu030KGggjiv2dNE
-        J040tsVcLk8EO4bBFX05rsnCieJdwL/CV7agfe0cIw==
-X-Google-Smtp-Source: APXvYqzy/ZSjCKJO3tqxAGrTwIa84dBUZgsw76w/LhxnJabIiRBQ/S1m0zc34MNlsOz7NZHzmMkfDGIVH6hwUzy2N5A=
-X-Received: by 2002:a02:cd02:: with SMTP id g2mr19723382jaq.70.1553547523853;
- Mon, 25 Mar 2019 13:58:43 -0700 (PDT)
+        Mon, 25 Mar 2019 16:59:32 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1h8Wge-00010f-GZ; Mon, 25 Mar 2019 21:59:16 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1h8Wgc-0005DZ-Fi; Mon, 25 Mar 2019 21:59:14 +0100
+Date:   Mon, 25 Mar 2019 21:59:14 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Anson Huang <anson.huang@nxp.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "stefan@agner.ch" <stefan@agner.ch>,
+        "otavio@ossystems.com.br" <otavio@ossystems.com.br>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Robin Gong <yibin.gong@nxp.com>,
+        "jan.tuerk@emtrion.com" <jan.tuerk@emtrion.com>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH V9 1/5] dt-bindings: pwm: Add i.MX TPM PWM binding
+Message-ID: <20190325205914.4gd5tzfyryvbthea@pengutronix.de>
+References: <1553218974-20464-1-git-send-email-Anson.Huang@nxp.com>
+ <1553218974-20464-2-git-send-email-Anson.Huang@nxp.com>
+ <20190325204137.GA19824@bogus>
 MIME-Version: 1.0
-References: <20190225065044.11023-1-vaishali.thakkar@linaro.org>
- <20190225065044.11023-5-vaishali.thakkar@linaro.org> <155138953788.16805.6820097041346672619@swboyd.mtv.corp.google.com>
- <CANNG1HWDc-PraBwG=8TBcfJSFFe+X+k6oVhOqyU=i5fAjpuoLw@mail.gmail.com>
- <155257912871.20095.1653828341120157988@swboyd.mtv.corp.google.com>
- <CANNG1HV0Ai9oeUr55uk+wAf456vDn1qiYmeXYc3=rkpqhdoM4g@mail.gmail.com>
- <155329931528.20095.6505466693897029315@swboyd.mtv.corp.google.com>
- <CANNG1HUCvL3=mtitvDZ3fOtt3u5oK7kr=9Nftov71aOsUn3nXA@mail.gmail.com> <155352968162.20095.9900815050896900150@swboyd.mtv.corp.google.com>
-In-Reply-To: <155352968162.20095.9900815050896900150@swboyd.mtv.corp.google.com>
-From:   Vaishali Thakkar <vaishali.thakkar@linaro.org>
-Date:   Tue, 26 Mar 2019 02:28:30 +0530
-Message-ID: <CANNG1HXSRnHTj4ZeWFA4ggaHytR+Zt+Fvb0hEE_Qrs3McaKFvQ@mail.gmail.com>
-Subject: Re: [PATCH v4 4/5] soc: qcom: socinfo: Expose custom attributes
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        rafael@kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190325204137.GA19824@bogus>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 25 Mar 2019 at 21:31, Stephen Boyd <swboyd@chromium.org> wrote:
->
-> Quoting Vaishali Thakkar (2019-03-24 10:42:36)
-> > On Sat, 23 Mar 2019 at 05:31, Stephen Boyd <swboyd@chromium.org> wrote:
-> >
-> > > debugfs_create_devm_seqfile() which may work to print a string from some
-> > > struct member. I'm not sure why you're using simple_attr_read(). Where
-> > > does that become important?
-> >
-> > DEFINE_DEBUGFS_ATTRIBUTE has simple_attr helpers which
-> > expects int value. So, in the case of a string it requires to implement
-> > similar macro and separate helpers for the same.
->
-> Why does DEFINE_DEBUGFS_ATTRIBUTE need to be used?
+On Mon, Mar 25, 2019 at 03:41:37PM -0500, Rob Herring wrote:
+> On Fri, Mar 22, 2019 at 01:48:05AM +0000, Anson Huang wrote:
+> > Add i.MX TPM(Low Power Timer/Pulse Width Modulation Module) PWM binding.
+> > 
+> > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> > ---
+> > No changes.
+> 
+> v9? I don't recall seeing any previous versions.
 
-For defining files inside the debugfs code [with get/set functions].
-Also, most of the similar functions in the debugfs core seems to be
-using it.
+Not sure it actually matters, but you were on Cc: for v7 and v8 at
+least:
 
->
+https://www.spinics.net/lists/linux-pwm/msg09300.html
+https://www.spinics.net/lists/linux-pwm/msg09321.html
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
