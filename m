@@ -2,68 +2,70 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 262C6C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 14:59:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9D11C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 14:59:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D12C72075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 14:59:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7997E2084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 14:59:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Rqt6f9n5"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="cxptG/8m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729010AbfCYO7U (ORCPT
+        id S1729359AbfCYO70 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 10:59:20 -0400
-Received: from mail-wr1-f51.google.com ([209.85.221.51]:33593 "EHLO
-        mail-wr1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725355AbfCYO7U (ORCPT
+        Mon, 25 Mar 2019 10:59:26 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:37492 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725355AbfCYO7W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 10:59:20 -0400
-Received: by mail-wr1-f51.google.com with SMTP id q1so10563931wrp.0
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 07:59:18 -0700 (PDT)
+        Mon, 25 Mar 2019 10:59:22 -0400
+Received: by mail-wr1-f67.google.com with SMTP id w10so10551022wrm.4
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 07:59:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vlkR8cS9veKc4DBkyJ0Dz8LYpBdCv0R0a/FSIyLYoHU=;
-        b=Rqt6f9n5FrrAQkazqeHSi0rCZC9HpVSK3p0kWpMHiiPDs9MGUp1lV1TE/fYwJ74nUb
-         rNz49iJKFIq1KWuLZQvQLXkvrbe2LVoMAfPnRb5a/ANkiq8Vio9tHy/mlIJ/kQ5ktFxG
-         Rh8bHkiwsW0rJotMVPqiPhwWPE4F4FVzh/AhvEsnEHUZbN0PGDGCpBsup279t3cOQS7Z
-         SBdPC99eycltCJBI3VK+hp1h0g1dkFkt8c27Ml3LIdlHlhfL2JN6XsV3cApRc1ALsecp
-         gIf7KDrM5a7b2T0/IlLBJT/drXvaVirghgrPJKwbcOsO+OHdVD7CdhOi1t9ax+/0qAKJ
-         pvyQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=ufyFUHV9MYGt1xCCC/qB6iPXh5pMY/z0nQhLBwQ98yE=;
+        b=cxptG/8mWah8bEph4tDrzfs4MMIET6v3/pp4JpGq68S/DTcPil9NN6P8BdHT8OaZad
+         BFVZU1j4r29YVd2PLL6sNrC9qAX/SjEwD4o20qUMKOt1wPvFK3em4Z14cm3s8ffl1gLw
+         xbWd1qw9ygu4Zhp1T/S+9kEegwGKnQQtM1AzahakmYv55XVv2TmDfQomTWOWB498h7EV
+         XcZaFvdzm+UNsNZIByg5lI5+gaGJJjJzW85txBd/VZqoOroOqdGsb4DfB3XueJI9C/dC
+         6jrC8BdaHFkGqWSTr8ZXdapj1QV7fGBWNQnReN4REIHEwKMFZSmI7dIB2JHu61B9IKNu
+         EKfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vlkR8cS9veKc4DBkyJ0Dz8LYpBdCv0R0a/FSIyLYoHU=;
-        b=WiRLCu/aQfkuYuf6XUD2PSy/xt/R2Mfm7GuEnnuotS9nHABWqVBxnbQc8ujfXlbCZJ
-         Cf4iVBULUgtV8UQS/HIGp6IkAPWNrjLn5S9bmI+XibCG9MXjF4YJqWg6rjp1K0vtTjj3
-         /8vQNsWgKgf1AOO08SZM0bvhJ5EQBC6iNgNiVwMguFin5sKm6NTrSJlqi74pdqOq4129
-         18DGkmWcyl2+6rma2BV9pJb0bXfmiKjdCerjvF4ARiau2HEnR2Dvh0oP4zUsknszL8+6
-         D/JSvL/Q4BKbT7rVMmszTX6wNMA61Qg/dDLjjvNDpawNbbtqQq/o5uC49gcFUvFabUHr
-         QOeQ==
-X-Gm-Message-State: APjAAAVqvGzi1TYpOu7YxaNgv4Nmbr9PVfK6H/BXRrrnzpib6COSmzeW
-        KfBruP4c1qeQpPufpcic8Fq61g==
-X-Google-Smtp-Source: APXvYqwh0JeEjGa/4T+EwMcccP1D8+Rt9OYAbnAc45hn7AqWmP4FOEEZLIqbT0r4h90cmmY40rKjEw==
-X-Received: by 2002:adf:e443:: with SMTP id t3mr17025185wrm.257.1553525957734;
-        Mon, 25 Mar 2019 07:59:17 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ufyFUHV9MYGt1xCCC/qB6iPXh5pMY/z0nQhLBwQ98yE=;
+        b=Yz/OEwdb1jBLM9hqzO74rGcjJZBFyk6CCHHayG08A9c1yxsMzgmQoPVpo1sCMKmQ5p
+         UbSCz0DGHsOxK4Ar5HjxfVreRCnmutEFukM94KNu25Hp3AxJR9kCQg/549BcJhLqyppG
+         aQCl9TYRCwM4GbHZ7LlTKJ56+zwO4lQWzI75L9wVkuqnQyHsr+n6+OHl118bjaWCf17l
+         T5TP4sKrykKJtdWzyWZBHuKJx00Z1rJ3lnmeXfcs/dMKvJDl+Nxyj12eL5xjP9JkP2M5
+         w1JhLzamDZzKBcYvLZe/qxh9C2zxXKl/tqd9GAnw9jRYOioj7ElptObt3b7NifyX6YuC
+         iDsQ==
+X-Gm-Message-State: APjAAAV02zNqu0tuV6856pV4F5lQOpoQkUzWodDlGovu+cHdub72STOi
+        1bsY0VqctrpyaSnY+2ubZwKpsA==
+X-Google-Smtp-Source: APXvYqwQuNjHn/LKrhYAODYvi5Z6dbejaSh7FedfsWLyzHYS6Qri97GbLnYtEWnSqs8PVKGA2bswmw==
+X-Received: by 2002:adf:f309:: with SMTP id i9mr11048923wro.258.1553525959906;
+        Mon, 25 Mar 2019 07:59:19 -0700 (PDT)
 Received: from localhost.localdomain (176-150-251-154.abo.bbox.fr. [176.150.251.154])
-        by smtp.gmail.com with ESMTPSA id d11sm12836156wmb.19.2019.03.25.07.59.16
+        by smtp.gmail.com with ESMTPSA id d11sm12836156wmb.19.2019.03.25.07.59.18
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 25 Mar 2019 07:59:17 -0700 (PDT)
+        Mon, 25 Mar 2019 07:59:19 -0700 (PDT)
 From:   Neil Armstrong <narmstrong@baylibre.com>
 To:     khilman@baylibre.com
 Cc:     Neil Armstrong <narmstrong@baylibre.com>,
         linux-amlogic@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 0/5] arm64: dts: meson-g12a: Add support for Video Display
-Date:   Mon, 25 Mar 2019 15:59:09 +0100
-Message-Id: <20190325145914.32391-1-narmstrong@baylibre.com>
+Subject: [PATCH 2/5] arm64: dts: meson-g12a: Add AO-CEC-A nodes
+Date:   Mon, 25 Mar 2019 15:59:11 +0100
+Message-Id: <20190325145914.32391-3-narmstrong@baylibre.com>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190325145914.32391-1-narmstrong@baylibre.com>
+References: <20190325145914.32391-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -71,28 +73,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset adds nodes for Video Display support.
+Amlogic G12A embeds 2 CEC controllers :
+- AO-CEC-A the same controller as in GXBB, GXL & GXM SoCs
+- AO-CEC-B a new controller
 
-Dependencies :
-- patch 1: VPU, HDMI & Power Controller bindings still in reviewe at [1]
-- patch 2: None
-- patch 3, 4, 5: Patch 1
+Note, the two controller can work simultanously since 2 Pads can
+handle CEC, thus this SoC can handle 2 distinct CEC busses.
 
-[1] https://lkml.kernel.org/r/20190313141030.5958-1-narmstrong@baylibre.com
+This patch adds the nodes for the AO-CEC-A controller until AO-CEC-B
+is supported.
 
-Neil Armstrong (5):
-  arm64: dts: meson-g12a: Add VPU and HDMI related nodes
-  arm64: dts: meson-g12a: Add AO-CEC-A nodes
-  arm64: dts: meson-g12a-x96-max: Add support for Video Display
-  arm64: dts: meson-g12a-sei510: Add support for Video Display
-  arm64: dts: meson-g12a-u200: Add support for Video Display
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ arch/arm64/boot/dts/amlogic/meson-g12a.dtsi | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
- .../boot/dts/amlogic/meson-g12a-sei510.dts    |  46 ++++++
- .../boot/dts/amlogic/meson-g12a-u200.dts      |  47 ++++++
- .../boot/dts/amlogic/meson-g12a-x96-max.dts   |  47 ++++++
- arch/arm64/boot/dts/amlogic/meson-g12a.dtsi   | 149 ++++++++++++++++++
- 4 files changed, 289 insertions(+)
-
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+index b0ff649bca46..915e00833718 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+@@ -161,6 +161,14 @@
+ 						gpio-ranges = <&periphs_pinctrl 0 0 86>;
+ 					};
+ 
++					cec_ao_a_h_pins: cec_ao_a_h {
++						mux {
++							groups = "cec_ao_a_h";
++							function = "cec_ao_a_h";
++							bias-disable;
++						};
++					};
++
+ 					hdmitx_ddc_pins: hdmitx_ddc {
+ 						mux {
+ 							groups = "hdmitx_sda",
+@@ -397,6 +405,16 @@
+ 				};
+ 			};
+ 
++			cec_AO: cec@100 {
++				compatible = "amlogic,meson-gx-ao-cec",
++					     "amlogic,meson-g12a-ao-cec";
++				reg = <0x0 0x00100 0x0 0x14>;
++				interrupts = <GIC_SPI 199 IRQ_TYPE_EDGE_RISING>;
++				clocks = <&clkc_AO CLKID_AO_CEC>;
++				clock-names = "core";
++				status = "disabled";
++			};
++
+ 			sec_AO: ao-secure@140 {
+ 				compatible = "amlogic,meson-gx-ao-secure", "syscon";
+ 				reg = <0x0 0x140 0x0 0x140>;
 -- 
 2.21.0
 
