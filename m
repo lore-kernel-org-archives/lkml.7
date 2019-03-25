@@ -2,229 +2,128 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC24FC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 20:23:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72598C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 20:24:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71A8820854
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 20:23:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FE2920854
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 20:24:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QwvnpVMB"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UcG0ndZT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730376AbfCYUXg (ORCPT
+        id S1730421AbfCYUYY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 16:23:36 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:42570 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729283AbfCYUXf (ORCPT
+        Mon, 25 Mar 2019 16:24:24 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:39071 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729610AbfCYUYX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 16:23:35 -0400
-Received: by mail-vs1-f68.google.com with SMTP id f15so6230202vsk.9
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 13:23:34 -0700 (PDT)
+        Mon, 25 Mar 2019 16:24:23 -0400
+Received: by mail-ot1-f68.google.com with SMTP id f10so9330592otb.6
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 13:24:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=kuf/CUjb0V2c8RpjecXsYX3PuKA2P32xcFIq/XDvi5E=;
-        b=QwvnpVMBEZMGRpiWTRxsXyNB5PxDFVkuyqmbE67I1rC2UnROIBvXYnIL6DJ+8b6yqO
-         JFT00w7KeBFM7DW3ZagIAc23itGj09Fl0Y4xSDTadFzPxZHL7HX9eFSSOEjpme7x78+B
-         LChv18LYTDo2ZwM5zer8BLFcKPrcgvgCpGgLuxt10On3tFJWvOS3lRnYtcBz5t9n3d0Y
-         a4DrJg1BDUMiKUERqNUzPRgQjQ83oSKBWh9QE1mt+1joSsTOTAbihkwxQ+ZdqfqiDExb
-         vlnnoMjOpmpPqnYt34v12hvCutUdIIDyJDJk/EO0zpgdbI4vjUe2HpK4Znzsdw9XpZqZ
-         DVsQ==
+        bh=0qqEdTBCa53HzZOTNKKThV+l9a01PHbQ1KmHoVXZuXQ=;
+        b=UcG0ndZTLjH1l7Ig3qKmsjzdKKkshlF1n4ZQbheWBm9YeXQB0hoqPNpsRJvdD+YeSr
+         Vy2iNIUsPw3wE86izayielcKoplMIykGVrj6WwVrl+zyvZ8YHfi9S2J8pGFHJJAwSwgH
+         ypBp8AS/zzK/rgORftpPSpIn1hRrfGgHDwxh8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=kuf/CUjb0V2c8RpjecXsYX3PuKA2P32xcFIq/XDvi5E=;
-        b=cXWsXkKfqmaIds3z0+//IZgsH3zDVjibgRDQto4etpd7CrUguL8KUAzfEivOqzYxGz
-         jvYWOSxO9I1cRnP1vHPFRPqFy+Ac9F+EJPntgd9XQPGAGu2pXoDV7Wi+/WiXh/I3jmD2
-         RJfxX0l8odpstW85N2nmqjYfrcJr847OSz9eXjmGZsxleHlsnC4/pWr6noT8dPmmKBKj
-         zyts0NhpJJ3yBn5sNevSki/e1JTUMHuD9UzwgmHANqq5TuYjeW64pz97oEbPjvjBMMhO
-         69B84spYo9apjaaukdSHD6xMwT/FspR4knPlkjKu32WgM3/cBboCxfZGcxNW+bwU5CJ1
-         EkXw==
-X-Gm-Message-State: APjAAAWbxs5SjS5vbuOKN0CWHqqPNyQ6PK9cXNqf8ChY67X6dSHUQCto
-        LBurYf7/3GsCIIZaDs6CfLFR3RWom7+4CFEX/xVUEA==
-X-Google-Smtp-Source: APXvYqxZeIdPxoGbyR0dxUgNZ7pSUPhxIFL3JffKVE7sAH1QOtWpl8laXyx7+hoBhrkowXkpmo0Uhz08r7Ju4xfJfRo=
-X-Received: by 2002:a67:cc2:: with SMTP id 185mr16474350vsm.77.1553545413970;
- Mon, 25 Mar 2019 13:23:33 -0700 (PDT)
+        bh=0qqEdTBCa53HzZOTNKKThV+l9a01PHbQ1KmHoVXZuXQ=;
+        b=WZXUeSfhvS5wW5M8MH7ZYBXO9RqdTr0ZEOFXhOf8I7b7G4LGZe0TX9WpAZ04radnuF
+         GxacIlynyuG8ew/QNVbagGa+ulePJ94Mvkc48aEzK/gVYLUEJ2qGUURaDrAPHoFM1GGr
+         N8VIDMI+MCSd09NjDgbYeU+XP+lJt7/rCV13FuebBxnOeqoTR5Uq5JF6gIcPs5O6vSsz
+         pP39YD0CvXTjp/PgMlYcwtQcxA1H0TU89CvCou/Fu9VPObG5zYS7xqShR/CUkdYd1GuD
+         Ekudz/haOcYRhIItSGGcJxGibakFqrT3GTnIyiwc/1FrJ/FwuF5z4LRxBRPRE7AWItTD
+         isRg==
+X-Gm-Message-State: APjAAAUwVitVxW3e5PIzN/9nDNaSqgf2eKuHn8RAX8MULYesQAe7gh/T
+        9gutdWo9n2Vz/kvvvSekgyxo2XiFnQc=
+X-Google-Smtp-Source: APXvYqylmvA6/lECl05UsQHN6U2DD1Y2yxaQEMj7NtqQN3bbxPrUOgR123VQUpHyApRMQOGwx96/og==
+X-Received: by 2002:a9d:5509:: with SMTP id l9mr18717814oth.195.1553545462533;
+        Mon, 25 Mar 2019 13:24:22 -0700 (PDT)
+Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com. [209.85.167.181])
+        by smtp.gmail.com with ESMTPSA id q19sm6544841otf.81.2019.03.25.13.24.21
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 25 Mar 2019 13:24:21 -0700 (PDT)
+Received: by mail-oi1-f181.google.com with SMTP id v84so8112252oif.4
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 13:24:21 -0700 (PDT)
+X-Received: by 2002:aca:c483:: with SMTP id u125mr12388878oif.148.1553545460910;
+ Mon, 25 Mar 2019 13:24:20 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190319231020.tdcttojlbmx57gke@brauner.io> <20190320015249.GC129907@google.com>
- <CAKOZuetJzg_EiyuK7Pa13X3LKuBbreg7zJ5g4uQv_uV4wpmZjg@mail.gmail.com>
- <20190320035953.mnhax3vd47ya4zzm@brauner.io> <CAKOZuet3-VhmC3oHtEbPPvdiar_k_QXTf0TkgmH9LiwmW-_oNA@mail.gmail.com>
- <4A06C5BB-9171-4E70-BE31-9574B4083A9F@joelfernandes.org> <20190320182649.spryp5uaeiaxijum@brauner.io>
- <CAKOZuevHbQtrq+Nb-jw1L7O72BmAzcXmbUnfnseeXZjX4PE4tg@mail.gmail.com>
- <20190320185156.7bq775vvtsxqlzfn@brauner.io> <CALCETrXO=V=+qEdLDVPf8eCgLZiB9bOTrUfe0V-U-tUZoeoRDA@mail.gmail.com>
- <20190320191412.5ykyast3rgotz3nu@brauner.io> <CAKOZuesRwQ4=Svu1KgHWY=HZSS8mF8uFmuzuVOSH0QpJoy7a5w@mail.gmail.com>
- <CALCETrUFrFKC2YTLH7ViM_7XPYk3LNmNiaz6s8wtWo1pmJQXzg@mail.gmail.com> <CAG48ez3VMjLJBC_F3BxC2sc2s-28NdsrUduR=jX66XH0w2O-Qg@mail.gmail.com>
-In-Reply-To: <CAG48ez3VMjLJBC_F3BxC2sc2s-28NdsrUduR=jX66XH0w2O-Qg@mail.gmail.com>
-From:   Daniel Colascione <dancol@google.com>
-Date:   Mon, 25 Mar 2019 13:23:21 -0700
-Message-ID: <CAKOZueuNGn31QYpRa5G-OP_S=G3f9TBQ-w27giABn7UVgPQ8Ng@mail.gmail.com>
-Subject: Re: pidfd design
-To:     Jann Horn <jannh@google.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Christian Brauner <christian@brauner.io>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sultan Alsawaf <sultan@kerneltoast.com>,
-        Tim Murray <timmurray@google.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
-        kernel-team <kernel-team@android.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Kees Cook <keescook@chromium.org>,
-        Jonathan Kowalski <bl0pbl33p@gmail.com>,
-        Linux API <linux-api@vger.kernel.org>
+References: <20190321221334.240059-3-ncrews@chromium.org> <20190322113509.GE8681@amd>
+ <CAHX4x85L_WONddW3gCUBm4d99xD8AEUfrh8JFd=gn3m7wyF6Lg@mail.gmail.com>
+In-Reply-To: <CAHX4x85L_WONddW3gCUBm4d99xD8AEUfrh8JFd=gn3m7wyF6Lg@mail.gmail.com>
+From:   Nick Crews <ncrews@chromium.org>
+Date:   Mon, 25 Mar 2019 14:24:09 -0600
+X-Gmail-Original-Message-ID: <CAHX4x84qSZxZ51FiYZ4ELEmUKJnUvMy7OGQVSQv2xh7x-nC57A@mail.gmail.com>
+Message-ID: <CAHX4x84qSZxZ51FiYZ4ELEmUKJnUvMy7OGQVSQv2xh7x-nC57A@mail.gmail.com>
+Subject: Re: [PATCH 3/3] platform/chrome: Add Wilco EC keyboard backlight LEDs support
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Benson Leung <bleung@chromium.org>, linux-leds@vger.kernel.org,
+        jacek.anaszewski@gmail.com,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Duncan Laurie <dlaurie@chromium.org>,
+        Simon Glass <sjg@google.com>,
+        Guenter Roeck <groeck@google.com>,
+        Dmitry Torokhov <dtor@google.com>, Simon Que <sque@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 1:14 PM Jann Horn <jannh@google.com> wrote:
+On Fri, Mar 22, 2019 at 9:49 AM Nick Crews <ncrews@chromium.org> wrote:
 >
-> On Mon, Mar 25, 2019 at 8:44 PM Andy Lutomirski <luto@kernel.org> wrote:
-> > On Wed, Mar 20, 2019 at 12:40 PM Daniel Colascione <dancol@google.com> wrote:
-> > > On Wed, Mar 20, 2019 at 12:14 PM Christian Brauner <christian@brauner.io> wrote:
-> > > > On Wed, Mar 20, 2019 at 11:58:57AM -0700, Andy Lutomirski wrote:
-> > > > > On Wed, Mar 20, 2019 at 11:52 AM Christian Brauner <christian@brauner.io> wrote:
-> > > > > >
-> > > > > > You're misunderstanding. Again, I said in my previous mails it should
-> > > > > > accept pidfds optionally as arguments, yes. But I don't want it to
-> > > > > > return the status fds that you previously wanted pidfd_wait() to return.
-> > > > > > I really want to see Joel's pidfd_wait() patchset and have more people
-> > > > > > review the actual code.
-> > > > >
-> > > > > Just to make sure that no one is forgetting a material security consideration:
-> > > >
-> > > > Andy, thanks for commenting!
-> > > >
-> > > > >
-> > > > > $ ls /proc/self
-> > > > > attr             exe        mountinfo      projid_map    status
-> > > > > autogroup        fd         mounts         root          syscall
-> > > > > auxv             fdinfo     mountstats     sched         task
-> > > > > cgroup           gid_map    net            schedstat     timers
-> > > > > clear_refs       io         ns             sessionid     timerslack_ns
-> > > > > cmdline          latency    numa_maps      setgroups     uid_map
-> > > > > comm             limits     oom_adj        smaps         wchan
-> > > > > coredump_filter  loginuid   oom_score      smaps_rollup
-> > > > > cpuset           map_files  oom_score_adj  stack
-> > > > > cwd              maps       pagemap        stat
-> > > > > environ          mem        personality    statm
-> > > > >
-> > > > > A bunch of this stuff makes sense to make accessible through a syscall
-> > > > > interface that we expect to be used even in sandboxes.  But a bunch of
-> > > > > it does not.  For example, *_map, mounts, mountstats, and net are all
-> > > > > namespace-wide things that certain policies expect to be unavailable.
-> > > > > stack, for example, is a potential attack surface.  Etc.
-> > >
-> > > If you can access these files sources via open(2) on /proc/<pid>, you
-> > > should be able to access them via a pidfd. If you can't, you
-> > > shouldn't. Which /proc? The one you'd get by mounting procfs. I don't
-> > > see how pidfd makes any material changes to anyone's security. As far
-> > > as I'm concerned, if a sandbox can't mount /proc at all, it's just a
-> > > broken and unsupported configuration.
+> On Fri, Mar 22, 2019 at 5:35 AM Pavel Machek <pavel@ucw.cz> wrote:
 > >
-> > It's not "broken and unsupported".  I know of an actual working,
-> > deployed container-ish sandbox that does exactly this.  I would also
-> > guess that quite a few not-at-all-container-like sandboxes work like
-> > this.  (The obvious seccomp + unshare + pivot_root
-> > deny-myself-access-to-lots-of-things trick results in no /proc, which
-> > is by dsign.)
+> > Hi!
 > >
-> > >
-> > > An actual threat model and real thought paid to access capabilities
-> > > would help. Almost everything around the interaction of Linux kernel
-> > > namespaces and security feels like a jumble of ad-hoc patches added as
-> > > afterthoughts in response to random objections.
+> > > The EC is in charge of controlling the keyboard backlight on
+> > > the Wilco platform. We expose a standard LED class device at
+> > > /sys/class/leds/wilco::kbd_backlight. This driver is modeled
+> > > after the standard Chrome OS keyboard backlight driver at
+> > > drivers/platform/chrome/cros_kbd_led_backlight.c
 > >
-> > I fully agree.  But if you start thinking for real about access
-> > capabilities, there's no way that you're going to conclude that a
-> > capability to access some process implies a capability to access the
-> > settings of its network namespace.
-> >
-> > >
-> > > >> All these new APIs either need to
-> > > > > return something more restrictive than a proc dirfd or they need to
-> > > > > follow the same rules.
-> > >
-> >
-> > ...
-> >
-> > > What's special about libraries? How is a library any worse-off using
-> > > openat(2) on a pidfd than it would be just opening the file called
-> > > "/proc/$apid"?
-> >
-> > Because most libraries actually work, right now, without /proc.  Even
-> > libraries that spawn subprocesses.  If we make the new API have the
-> > property that it doesn't work if you're in a non-root user namespace
-> > and /proc isn't mounted, the result will be an utter mess.
-> >
-> > >
-> > > > > Yes, this is unfortunate, but it is indeed the current situation.  I
-> > > > > suppose that we could return magic restricted dirfds, or we could
-> > > > > return things that aren't dirfds and all and have some API that gives
-> > > > > you the dirfd associated with a procfd but only if you can see
-> > > > > /proc/PID.
-> > > >
-> > > > What would be your opinion to having a
-> > > > /proc/<pid>/handle
-> > > > file instead of having a dirfd. Essentially, what I initially proposed
-> > > > at LPC. The change on what we currently have in master would be:
-> > > > https://gist.github.com/brauner/59eec91550c5624c9999eaebd95a70df
-> > >
-> > > And how do you propose, given one of these handle objects, getting a
-> > > process's current priority, or its current oom score, or its list of
-> > > memory maps? As I mentioned in my original email, and which nobody has
-> > > addressed, if you don't use a dirfd as your process handle or you
-> > > don't provide an easy way to get one of these proc directory FDs, you
-> > > need to duplicate a lot of metadata access interfaces.
-> >
-> > An API that takes a process handle object and an fd pointing at /proc
-> > (the root of the proc fs) and gives you back a proc dirfd would do the
-> > trick.  You could do this with no new kernel features at all if you're
-> > willing to read the pid, call openat(2), and handle the races in user
-> > code.
+> > Please make it platform::kbd_backlight . Userland should not need to
+> > know what wilco is...
 >
-> This seems like something that might be a good fit for two ioctls?
+> The corresponding device for normal chromeos devices is
+> "chromeos::kbd_backlight". I wanted to differentiate this device from
+> that one, so I thought that "wilco" a similar level of specific-ness as
+> "chromeos". Using "platform" seems too general. The power manager
+> daemon that controls the backlight just searches for LEDs ending with
+> "*:kbd_backlight" so it should work for that, and I figured any user just
+> browsing through sysfs would be able to guess what the LED does.
+>
+> This is maybe a question for those who will need to maintain the
+> Chrome OS system after adding this? Could some more
+> Chrome OS-specific people chime in on this? I also CC'ed Simon
+> Que, the author of the original driver (Simon, we are talking about
+> https://lkml.org/lkml/2019/3/21/999)
 
-As an aside, we had a long discussion about why fundamental facilities
-like this should be system calls, not ioctls. I think the arguments
-still apply.
+From talking to Simon, since the interface is the same, I'll just keep the name
+as "chromeos::kbd_backlight". This makes sense to me too. I'll send out a
+patch fixing this.
 
-> One ioctl on procfs roots to translate pidfds into that procfs,
-> subject to both the normal lookup permission checks and only working
-> if the pidfd has a translation into the procfs:
 >
-> int proc_root_fd = open("/proc", O_RDONLY);
-> int proc_dir_fd = ioctl(proc_root_fd, PROC_PIDFD_TO_PROCFSFD, pidfd);
+> >
+> > What is wilco, anyway?
 >
-> And one ioctl on procfs directories to translate from PGIDs and PIDs to pidfds:
+> Wilco is a new Chrome OS device which does not use the same embedded
+> controller as the rest of the Chrome OS ecosystem. Thus, we need this new
+> driver because the old one will not be compatible.
 >
-> int proc_pgid_fd = open("/proc/self", O_RDONLY);
-> int self_pg_pidfd = ioctl(proc_pgid_fd, PROC_PROCFSFD_TO_PIDFD, 0);
-> int proc_pid_fd = open("/proc/thread-self", O_RDONLY);
-> int self_p_pidfd = ioctl(proc_pid_fd, PROC_PROCFSFD_TO_PIDFD, 0);
->
->
-> And then, as you proposed, the new sys_clone() can just return a
-> pidfd, and you can convert it into a procfs fd yourself if you want.
-
-I think that's the consensus we reached on the other thread. The
-O_DIRECTORY open on /proc/self/fd/mypidfd seems like it'd work well
-enough.
+> >
+> >                                                                         Pavel
+> > --
+> > (english) http://www.livejournal.com/~pavelmachek
+> > (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
