@@ -2,241 +2,305 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B99DBC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 19:42:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC965C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 19:42:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77ED920879
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 19:42:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hxN1DAwL"
+	by mail.kernel.org (Postfix) with ESMTP id 9727320879
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 19:42:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553542956;
+	bh=S+X954cAvehM+/g45FSNQTmjkYk83iziLad4M9BmTN0=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=EX4QTACBNto9ILZj2MiWXHOSmnkna1xK16kZMg/dPtSLruikVjMDeyBBgfa4CkEoh
+	 g9LgDOUJDuF8hKCKFOjoIHj3EKDW+fePat3n+53rqDnfZ/7/T/B+B/XJ5sqJXc+GiM
+	 iPt4sds8g3nLNuRc7zOs10LQBrQc/HGNRIAqMefg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730084AbfCYTmb (ORCPT
+        id S1730211AbfCYTmf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 15:42:31 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:45113 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728912AbfCYTma (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 15:42:30 -0400
-Received: by mail-qt1-f196.google.com with SMTP id v20so11752484qtv.12;
-        Mon, 25 Mar 2019 12:42:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zIcail1q0Vj9y3ZxkGiNoq0bOit/ZXD2J+TAZmW+YZQ=;
-        b=hxN1DAwLOQEb0uILnk/dx4xPBTyasoOOVsbh+Fi1vgANtH7/ieicXcRq0TyV0GnNN0
-         A4QjyJq+agF9+EATBnVaHTWr7MPWHrs9hodEwaIRUYd5ot2O9KTwEIpoI7/rOMULsYyL
-         i4IPoshHFxCKD0d3ny3LY0uPMVLWFbxBv/1W7mI7a6P2n0wHNnc1ebVeFI0JhZzJ34v7
-         I3IDV2M5zga0Psmxo+8Crdvnc/EP99GL/z9AHBIiCNFi1Emaub3DN6ZmtRH9CiQLdyev
-         v+EWwuB6loc7lgK/NYVmSzOZ2IVVAvrBl4r8moyKmxLK5iuOVpJAEJt/yIsnd4jaApQU
-         PgXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zIcail1q0Vj9y3ZxkGiNoq0bOit/ZXD2J+TAZmW+YZQ=;
-        b=nznegCMCOwgDDLoyQGoVR57j4mpWB6Uh73Oe/7qpEYR1J+RBT3RMHyjOFjoFxzqKhP
-         k7Jp8qm/SLSOFgyh9loDBAHu/VPaMrMUKsIVrREwk9bE+eh7uTXFXdy1ORcaHSpfC64c
-         TVVTakYYkuo5IyrzlhU3QOc8NExpue//aYdi9XlE4V/I71MtwrUkWCq9eSyIW2p2J9VG
-         8Nr3M+HoXy/XmriERfuzTFED0TZKUFDwz4s4ts0D8MWQk9XFBJgRgEyu1qAvrajgG2t7
-         JmCQjLt/Iyd3jyXYQXWfD6SkYJ3OZk57HN4Xw0OhA5+a3jjsCNHOHGDLeZBRO/+rmXl3
-         7ncQ==
-X-Gm-Message-State: APjAAAX6PWXXjKKLtELYHBHsMhZuzLO89gqxcOocrzldARDtBcWOY/me
-        wRJpK6NThjA+P/ZBazVXJdiCinfrAPoXMp/qrCc=
-X-Google-Smtp-Source: APXvYqzD5TEW1S2XHb/FstAfyVRup0LdNLj5OW6Hddp+xktokkmi5KablGJczMIZdf2QnAClQyr7IFzQGvBqCbdklD8=
-X-Received: by 2002:ac8:2b53:: with SMTP id 19mr22717611qtv.374.1553542949602;
- Mon, 25 Mar 2019 12:42:29 -0700 (PDT)
+        Mon, 25 Mar 2019 15:42:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41232 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728912AbfCYTmc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 15:42:32 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32B48206C0;
+        Mon, 25 Mar 2019 19:42:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553542951;
+        bh=S+X954cAvehM+/g45FSNQTmjkYk83iziLad4M9BmTN0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=EXCZfg7pCoboFKpso22PZu18iBIIi3eM8IIjH8oIBuhZXeu5KtJJX482qPlDgz2Ga
+         ggNHxHBpTACjWDlemMHeCl/5tJiEU6Ls+54jEn9/AYAtbOz+Kac2pNEKbLe3I8BVaZ
+         01OiYgztWrpgsNxeX79vG7R+9FHdoMLhdDcQQ5zE=
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH] vfio: Use dev_printk() when possible
+Date:   Mon, 25 Mar 2019 14:42:20 -0500
+Message-Id: <20190325194220.5873-1-helgaas@kernel.org>
+X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
 MIME-Version: 1.0
-References: <20190325162052.28987-1-christian@brauner.io> <CAKOZueuJSAiKU7fZR2FNDKKCktdyE-sADtWprpsNMAqYQvD9Jw@mail.gmail.com>
- <20190325173614.GB25975@google.com> <CAKOZuetbZOs1Yur4OrW6hh3wVYdoKNkSqTszbpTWnuRBTmT9zA@mail.gmail.com>
- <CAGLj2rE1f4x36KFUjFLiFq8tF1RUmFuCSRTg_tCQ9W2G6LtizA@mail.gmail.com> <CAKOZuetCFgu0B53+mGmQ3+539MPT_tiu-PACx2ATvihHrrmUKg@mail.gmail.com>
-In-Reply-To: <CAKOZuetCFgu0B53+mGmQ3+539MPT_tiu-PACx2ATvihHrrmUKg@mail.gmail.com>
-From:   Jonathan Kowalski <bl0pbl33p@gmail.com>
-Date:   Mon, 25 Mar 2019 19:42:14 +0000
-Message-ID: <CAGLj2rHETs+FjkOVP6PJ_EiePP7FKiDwxaWyjwg1gMZPYpU1fQ@mail.gmail.com>
-Subject: Re: [PATCH 0/4] pid: add pidctl()
-To:     Daniel Colascione <dancol@google.com>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Andy Lutomirski <luto@kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Kees Cook <keescook@chromium.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Michael Kerrisk-manpages <mtk.manpages@gmail.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Nagarathnam Muthusamy <nagarathnam.muthusamy@oracle.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 6:57 PM Daniel Colascione <dancol@google.com> wrote:
->
-> On Mon, Mar 25, 2019 at 11:19 AM Jonathan Kowalski <bl0pbl33p@gmail.com> wrote:
-> >
-> > On Mon, Mar 25, 2019 at 5:53 PM Daniel Colascione <dancol@google.com> wrote:
-> > >
-> > > [..snip..]
-> > >
-> > > I don't like the idea of having one kind of pollfd be pollable and
-> > > another not. Such an interface would be confusing for users. If, as
-> > > you suggest below, we instead make the procfs-less FD the only thing
-> > > we call a "pidfd", then this proposal becomes less confusing and more
-> > > viable.
-> >
-> > That's certainly on the table, we remove the ability to open
-> > /proc/<PID> and use the dir fd with pidfd_send_signal. I'm in favor of
-> > this.
-> >
-> > > > But.. one thing we could do for Daniel usecase is if a /proc/pid directory fd
-> > > > can be translated into a "pidfd" using another syscall or even a node, like
-> > > > /proc/pid/handle or something. I think this is what Christian suggested in
-> > > > the previous threads.
-> > >
-> > > /proc/pid/handle, if I understand correctly, "translates" a
-> > > procfs-based pidfd to a non-pidfd one. The needed interface would have
-> > > to perform the opposite translation, providing a procfs directory for
-> > > a given pidfd.
-> > >
-> > > > And also for the translation the other way, add a syscall or modify
-> > > > translate_fd or something, to covert a anon_inode pidfd into a /proc/pid
-> > > > directory fd. Then the user is welcomed to do openat(2) on _that_ directory fd.
-> > > > Then we modify pidfd_send_signal to only send signals to pure pidfd fds, not
-> > > > to /proc/pid directory fds.
-> > >
-> > > This approach would work, but there's one subtlety to take into
-> > > account: which procfs? You'd want to take, as inputs, 1) the procfs
-> > > root you want, and 2) the pidfd, this way you could return to the user
-> > > a directory FD in the right procfs.
-> > >
-> >
-> > I don't think metadata access is in the scope of such a pidfd itself.
->
-> It should be possible to write a race-free pkill(1) using pidfds.
-> Without metadata access tied to the pidfd somehow, that can't be done.
->
->
-> > > > Should we work on patches for these? Please let us know if this idea makes
-> > > > sense and thanks a lot for adding us to the review as well.
-> > >
-> > > I would strongly prefer that we not merge pidctl (or whatever it is)
-> > > without a story for metadata access, be it your suggestion or
-> > > something else.
-> >
-> > IMO, this is out of scope for a process handle. Hence, the need for
-> > metadata access musn't stall it as is.
->
-> On the contrary, rather than metadata being out of scope, metadata
-> access is essential. Given a file handle (an FD), you can learn about
-> the file backing that handle by using fstat(2). Given a socket handle
-> (a socket FD), you can learn about the socket with getsockopt(2) and
-> ioctl(2). It would be strange not to be able, similarly, to learn
-> things about a process given a handle (a pidfd) to that process. I
-> want process handles to be "boring" in that they let users query and
-> manipulate processes mostly like they manipulate other resources.
->
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-Yes, but everything in /proc is not equivalent to an attribute, or an
-option, and depending on its configuration, you may not want to allow
-processes to even be able to see /proc for any PIDs other than those
-running as their own user (hidepid). This means, even if this new
-system call is added, to respect hidepid, it must, depending on if
-/proc is mounted (and what hidepid is set to, and what gid= is set
-to), return EPERM, because then there is a discrepancy between how the
-two entrypoints to acquire a process handle do access control. This is
-ugly, but ideally should work the way it is described above.
-Otherwise, things would be able to bypass the restrictions made
-therein, because we also want a system call.
+Use dev_printk() when possible to make messages consistent with other
+device-related messages.
 
-PIDs however are addressable with kill(2) even with hidepid enabled.
-For good reason, the capabilities you can exercise using a PID is
-limited in that case. The same logic applies to a process reference
-like pidfd.
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+---
+ drivers/vfio/pci/vfio_pci.c                   |  8 ++---
+ drivers/vfio/pci/vfio_pci_config.c            | 29 +++++++++----------
+ .../platform/reset/vfio_platform_amdxgbe.c    |  5 ++--
+ drivers/vfio/platform/vfio_platform_common.c  | 12 ++++----
+ drivers/vfio/vfio.c                           | 29 +++++++++----------
+ 5 files changed, 40 insertions(+), 43 deletions(-)
 
-I agree there should be some way (if you can take care of the hidepid
-gotcha) to return a dir fd of /proc entry, but I don't think it should
-be the pidfd itself. You can get it to work using the fdinfo thing for
-now.
+diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+index a25659b5a5d1..a538fd995429 100644
+--- a/drivers/vfio/pci/vfio_pci.c
++++ b/drivers/vfio/pci/vfio_pci.c
+@@ -287,8 +287,8 @@ static int vfio_pci_enable(struct vfio_pci_device *vdev)
+ 	pci_save_state(pdev);
+ 	vdev->pci_saved_state = pci_store_saved_state(pdev);
+ 	if (!vdev->pci_saved_state)
+-		pr_debug("%s: Couldn't store %s saved state\n",
+-			 __func__, dev_name(&pdev->dev));
++		dev_dbg(&pdev->dev, "%s: Couldn't store saved state\n",
++			__func__);
+ 
+ 	if (likely(!nointxmask)) {
+ 		if (vfio_pci_nointx(pdev)) {
+@@ -429,8 +429,8 @@ static void vfio_pci_disable(struct vfio_pci_device *vdev)
+ 	 * is just busy work.
+ 	 */
+ 	if (pci_load_and_free_saved_state(pdev, &vdev->pci_saved_state)) {
+-		pr_info("%s: Couldn't reload %s saved state\n",
+-			__func__, dev_name(&pdev->dev));
++		dev_info(&pdev->dev, "%s: Couldn't reload saved state\n",
++			 __func__);
+ 
+ 		if (!vdev->reset_works)
+ 			goto out;
+diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
+index e82b51114687..44d865576a92 100644
+--- a/drivers/vfio/pci/vfio_pci_config.c
++++ b/drivers/vfio/pci/vfio_pci_config.c
+@@ -412,8 +412,7 @@ static void vfio_bar_restore(struct vfio_pci_device *vdev)
+ 	if (pdev->is_virtfn)
+ 		return;
+ 
+-	pr_info("%s: %s reset recovery - restoring bars\n",
+-		__func__, dev_name(&pdev->dev));
++	dev_info(&pdev->dev, "%s: reset recovery - restoring BARs\n", __func__);
+ 
+ 	for (i = PCI_BASE_ADDRESS_0; i <= PCI_BASE_ADDRESS_5; i += 4, rbar++)
+ 		pci_user_write_config_dword(pdev, i, *rbar);
+@@ -1298,8 +1297,8 @@ static int vfio_cap_len(struct vfio_pci_device *vdev, u8 cap, u8 pos)
+ 		else
+ 			return PCI_SATA_SIZEOF_SHORT;
+ 	default:
+-		pr_warn("%s: %s unknown length for pci cap 0x%x@0x%x\n",
+-			dev_name(&pdev->dev), __func__, cap, pos);
++		dev_warn(&pdev->dev, "%s: unknown length for PCI cap %#x@%#x\n",
++			 __func__, cap, pos);
+ 	}
+ 
+ 	return 0;
+@@ -1372,8 +1371,8 @@ static int vfio_ext_cap_len(struct vfio_pci_device *vdev, u16 ecap, u16 epos)
+ 		}
+ 		return PCI_TPH_BASE_SIZEOF;
+ 	default:
+-		pr_warn("%s: %s unknown length for pci ecap 0x%x@0x%x\n",
+-			dev_name(&pdev->dev), __func__, ecap, epos);
++		dev_warn(&pdev->dev, "%s: unknown length for PCI ecap %#x@%#x\n",
++			 __func__, ecap, epos);
+ 	}
+ 
+ 	return 0;
+@@ -1474,8 +1473,8 @@ static int vfio_cap_init(struct vfio_pci_device *vdev)
+ 		}
+ 
+ 		if (!len) {
+-			pr_info("%s: %s hiding cap 0x%x\n",
+-				__func__, dev_name(&pdev->dev), cap);
++			dev_info(&pdev->dev, "%s: hiding cap %#x@%#x\n",
++				 __func__, cap, pos);
+ 			*prev = next;
+ 			pos = next;
+ 			continue;
+@@ -1486,9 +1485,8 @@ static int vfio_cap_init(struct vfio_pci_device *vdev)
+ 			if (likely(map[pos + i] == PCI_CAP_ID_INVALID))
+ 				continue;
+ 
+-			pr_warn("%s: %s pci config conflict @0x%x, was cap 0x%x now cap 0x%x\n",
+-				__func__, dev_name(&pdev->dev),
+-				pos + i, map[pos + i], cap);
++			dev_warn(&pdev->dev, "%s: PCI config conflict @%#x, was cap %#x now cap %#x\n",
++				 __func__, pos + i, map[pos + i], cap);
+ 		}
+ 
+ 		BUILD_BUG_ON(PCI_CAP_ID_MAX >= PCI_CAP_ID_INVALID_VIRT);
+@@ -1549,8 +1547,8 @@ static int vfio_ecap_init(struct vfio_pci_device *vdev)
+ 		}
+ 
+ 		if (!len) {
+-			pr_info("%s: %s hiding ecap 0x%x@0x%x\n",
+-				__func__, dev_name(&pdev->dev), ecap, epos);
++			dev_info(&pdev->dev, "%s: hiding ecap %#x@%#x\n",
++				 __func__, ecap, epos);
+ 
+ 			/* If not the first in the chain, we can skip over it */
+ 			if (prev) {
+@@ -1572,9 +1570,8 @@ static int vfio_ecap_init(struct vfio_pci_device *vdev)
+ 			if (likely(map[epos + i] == PCI_CAP_ID_INVALID))
+ 				continue;
+ 
+-			pr_warn("%s: %s pci config conflict @0x%x, was ecap 0x%x now ecap 0x%x\n",
+-				__func__, dev_name(&pdev->dev),
+-				epos + i, map[epos + i], ecap);
++			dev_warn(&pdev->dev, "%s: PCI config conflict @%#x, was ecap %#x now ecap %#x\n",
++				 __func__, epos + i, map[epos + i], ecap);
+ 		}
+ 
+ 		/*
+diff --git a/drivers/vfio/platform/reset/vfio_platform_amdxgbe.c b/drivers/vfio/platform/reset/vfio_platform_amdxgbe.c
+index 3ddb2704221d..5ee06f1ff597 100644
+--- a/drivers/vfio/platform/reset/vfio_platform_amdxgbe.c
++++ b/drivers/vfio/platform/reset/vfio_platform_amdxgbe.c
+@@ -89,7 +89,8 @@ static int vfio_platform_amdxgbe_reset(struct vfio_platform_device *vdev)
+ 	} while ((pcs_value & MDIO_CTRL1_RESET) && --count);
+ 
+ 	if (pcs_value & MDIO_CTRL1_RESET)
+-		pr_warn("%s XGBE PHY reset timeout\n", __func__);
++		dev_warn(&vdev->device, "%s XGBE PHY reset timeout\n",
++			 __func__);
+ 
+ 	/* disable auto-negotiation */
+ 	value = xmdio_read(xpcs_regs->ioaddr, MDIO_MMD_AN, MDIO_CTRL1);
+@@ -114,7 +115,7 @@ static int vfio_platform_amdxgbe_reset(struct vfio_platform_device *vdev)
+ 		usleep_range(500, 600);
+ 
+ 	if (!count)
+-		pr_warn("%s MAC SW reset failed\n", __func__);
++		dev_warn(&vdev->device, "%s MAC SW reset failed\n", __func__);
+ 
+ 	return 0;
+ }
+diff --git a/drivers/vfio/platform/vfio_platform_common.c b/drivers/vfio/platform/vfio_platform_common.c
+index c0cd824be2b7..438aa40c5bde 100644
+--- a/drivers/vfio/platform/vfio_platform_common.c
++++ b/drivers/vfio/platform/vfio_platform_common.c
+@@ -63,7 +63,7 @@ static int vfio_platform_acpi_probe(struct vfio_platform_device *vdev,
+ 
+ 	adev = ACPI_COMPANION(dev);
+ 	if (!adev) {
+-		pr_err("VFIO: ACPI companion device not found for %s\n",
++		dev_err(dev, "VFIO: ACPI companion device not found for %s\n",
+ 			vdev->name);
+ 		return -ENODEV;
+ 	}
+@@ -638,7 +638,8 @@ static int vfio_platform_of_probe(struct vfio_platform_device *vdev,
+ 	ret = device_property_read_string(dev, "compatible",
+ 					  &vdev->compat);
+ 	if (ret)
+-		pr_err("VFIO: Cannot retrieve compat for %s\n", vdev->name);
++		dev_err(dev, "VFIO: Cannot retrieve compat for %s\n",
++			vdev->name);
+ 
+ 	return ret;
+ }
+@@ -680,14 +681,15 @@ int vfio_platform_probe_common(struct vfio_platform_device *vdev,
+ 
+ 	ret = vfio_platform_get_reset(vdev);
+ 	if (ret && vdev->reset_required) {
+-		pr_err("VFIO: No reset function found for device %s\n",
+-		       vdev->name);
++		dev_err(dev, "VFIO: No reset function found for device %s\n",
++		        vdev->name);
+ 		return ret;
+ 	}
+ 
+ 	group = vfio_iommu_group_get(dev);
+ 	if (!group) {
+-		pr_err("VFIO: No IOMMU group for device %s\n", vdev->name);
++		dev_err(dev, "VFIO: No IOMMU group for device %s\n",
++			vdev->name);
+ 		ret = -EINVAL;
+ 		goto put_reset;
+ 	}
+diff --git a/drivers/vfio/vfio.c b/drivers/vfio/vfio.c
+index a3030cdf3c18..7fb68968097a 100644
+--- a/drivers/vfio/vfio.c
++++ b/drivers/vfio/vfio.c
+@@ -704,8 +704,8 @@ static int vfio_group_nb_add_dev(struct vfio_group *group, struct device *dev)
+ 		return 0;
+ 
+ 	/* TODO Prevent device auto probing */
+-	WARN(1, "Device %s added to live group %d!\n", dev_name(dev),
+-	     iommu_group_id(group->iommu_group));
++	dev_WARN(dev, "Device added to live group %d!\n",
++		 iommu_group_id(group->iommu_group));
+ 
+ 	return 0;
+ }
+@@ -748,25 +748,22 @@ static int vfio_iommu_group_notifier(struct notifier_block *nb,
+ 		 */
+ 		break;
+ 	case IOMMU_GROUP_NOTIFY_BIND_DRIVER:
+-		pr_debug("%s: Device %s, group %d binding to driver\n",
+-			 __func__, dev_name(dev),
+-			 iommu_group_id(group->iommu_group));
++		dev_dbg(dev, "%s: group %d binding to driver\n", __func__,
++			iommu_group_id(group->iommu_group));
+ 		break;
+ 	case IOMMU_GROUP_NOTIFY_BOUND_DRIVER:
+-		pr_debug("%s: Device %s, group %d bound to driver %s\n",
+-			 __func__, dev_name(dev),
+-			 iommu_group_id(group->iommu_group), dev->driver->name);
++		dev_dbg(dev, "%s: group %d bound to driver %s\n", __func__,
++			iommu_group_id(group->iommu_group), dev->driver->name);
+ 		BUG_ON(vfio_group_nb_verify(group, dev));
+ 		break;
+ 	case IOMMU_GROUP_NOTIFY_UNBIND_DRIVER:
+-		pr_debug("%s: Device %s, group %d unbinding from driver %s\n",
+-			 __func__, dev_name(dev),
+-			 iommu_group_id(group->iommu_group), dev->driver->name);
++		dev_dbg(dev, "%s: group %d unbinding from driver %s\n",
++			__func__, iommu_group_id(group->iommu_group),
++			dev->driver->name);
+ 		break;
+ 	case IOMMU_GROUP_NOTIFY_UNBOUND_DRIVER:
+-		pr_debug("%s: Device %s, group %d unbound from driver\n",
+-			 __func__, dev_name(dev),
+-			 iommu_group_id(group->iommu_group));
++		dev_dbg(dev, "%s: group %d unbound from driver\n", __func__,
++			iommu_group_id(group->iommu_group));
+ 		/*
+ 		 * XXX An unbound device in a live group is ok, but we'd
+ 		 * really like to avoid the above BUG_ON by preventing other
+@@ -830,8 +827,8 @@ int vfio_add_group_dev(struct device *dev,
+ 
+ 	device = vfio_group_get_device(group, dev);
+ 	if (device) {
+-		WARN(1, "Device %s already exists on group %d\n",
+-		     dev_name(dev), iommu_group_id(iommu_group));
++		dev_WARN(dev, "Device already exists on group %d\n",
++			 iommu_group_id(iommu_group));
+ 		vfio_device_put(device);
+ 		vfio_group_put(group);
+ 		return -EBUSY;
+-- 
+2.21.0.392.gf8f6787159e-goog
 
-> > If you really need this, the pid this pidfd is mapped to can be
-> > exposed through fdinfo (which is perfectly fine for your case as you
-> > use /proc anyway). This means you can reliably determine if you're
-> > opening it for the same pid (and it hasn't been recycled) because this
-> > pidfd will be pollable for state change (in the future). Exposing it
-> > through fdinfo isn't a problem, pid ns is bound to the process during
-> > its lifetime, it's a process creation time property, so the value
-> > isn't going to change anyway. So you can do all metadata access you
-> > want subsequently.
->
-> Thanks for the proposal. I'm a bit confused. Are you suggesting that
-> we report the numeric FD in fdinfo? Are you saying it should work
-> basically like this?
->
-
-Yes, numeric PID that you would see from your namespace for the said
-process the pidfd is for. It could be -1 if this process is not in any
-of the namespaces (current or children) (which would happen, say if
-you pass it to some other pidns residing process, during fd
-installation on ithe target process we set that up properly).
-
-> int get_oom_score_adj(int pidfd) {
->   unique_fd fdinfo_fd = open(fmt("/proc/self/fdinfo/%d", pidfd));
->   string fdinfo = read_all(fdinfo_fd);
->   numeric_pid = parse_fdinfo_for_line("pid");
->   unique_fd procdir_fd = open(fmt("/proc/%d", numeric_pid), O_DIRECTORY);
->   if(!is_pidfd_alive(pidfd)) { return -1; /* process died */ } /*
-> LIVENESS CHECK */
->   // We know the process named by pidfd was called NUMERIC_PID
->   // in our namespace (because fdinfo told us) and we know that the
-> named process
->   // was alive after we successfully opened its /proc/pid directory, therefore,
->   // PROCDIR_FD and PIDFD must refer to the same underlying process.
->   unique_fd oom_adj_score_fd = openat(procdir_fd, "oom_score_adj");
->   return parse_int(read_all(oom_adj_score_fd));
-> }
->
-> While this interface functions correctly, I have two concerns: 1) the
-> number of system calls necessary is very large -- by my count,
-> starting with the pifd, we need six, not counting the follow-on
-> close(2) calls (which would bring the total to nine[1]),
-
-But hey, that's a bit rich if you're planning to collect metadata from
-/proc ;-).
-
-> and 2) it's
-> "fail unsafe": IMHO, most users in practice will skip the line marked
-> "LIVENESS CHECK", and as a result, their code will appear to work but
-> contain subtle race conditions. An explicit interface to translate
-> from a (PIDFD, PROCFS_ROOT) tuple to a /proc/pid directory file
-> descriptor would be both more efficient and fail-safe.
->
-> [1] as a separate matter, it'd be nice to have a batch version of close(2).
-
-Since /proc is full of gunk, how about adding more to it and making
-the magic symlink of /proc/self/fd for the pidfd to lead to the dirfd
-of the /proc entry of the process it maps to, when one uses
-O_DIRECTORY while opening it? Otherwise, it behaves as it does today.
-It would be equivalent to opening the proc entry with usual access
-restrictions (and hidepid made to work) but without the races, and
-because for processes outside your and children pid ns, it shouldn't
-work anyway, and since they wouldn't have their entry on this procfs
-instance, it would all just fit in nicely?
