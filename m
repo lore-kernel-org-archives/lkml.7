@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E17B9C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 14:24:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23714C10F03
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 14:24:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A36FD2084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 14:24:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9C3520863
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 14:24:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Wd/7cm64"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="IKw73r2a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729382AbfCYOYk (ORCPT
+        id S1729413AbfCYOYl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 10:24:40 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:52134 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725788AbfCYOYi (ORCPT
+        Mon, 25 Mar 2019 10:24:41 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:50180 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729127AbfCYOYk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 10:24:38 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2PEOX9k086486;
-        Mon, 25 Mar 2019 09:24:33 -0500
+        Mon, 25 Mar 2019 10:24:40 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2PEOYiM032329;
+        Mon, 25 Mar 2019 09:24:34 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1553523873;
-        bh=2tNH029d2WgJzWvKk3HYEvryLXUNAiUtv4dumFwU0kA=;
+        s=ti-com-17Q1; t=1553523874;
+        bh=nnIfJ25WbVxUJiykPnKUsPj+REjqbsQSb7RuuLFTEuw=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=Wd/7cm64JosFDXAMEfR8zgO1ch9Podhl0CkPnzkNS+m59E9VgJ7Czp7RRgzLZa0BW
-         s4BpdOmBxNtBCUJjP1QOYiYElXC6sDzJ0FkGEF4QiJ1hKWzc62+2+EqqxChi2fO98o
-         SEvtJqfBOX6t/HwGiNuHCk0BnJDqVbCxBlxFGG/4=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2PEOXbA124705
+        b=IKw73r2ayTMCT+kmor7iGPdt6Cnv3uFgbcGEPdwb97FDLPyz2dLUJu29rUq8UJCez
+         Q5KSrqHl5hxc4mTymELa3ytVDrIWHu42/eIlFAGUHG625aMsjaVyTTE44adH08Zt7J
+         R83WHZsY61Ow/wWyZdEfgLDgyFelPlot8KYJLaWE=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2PEOYFW023285
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 25 Mar 2019 09:24:33 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+        Mon, 25 Mar 2019 09:24:34 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 25
  Mar 2019 09:24:33 -0500
-Received: from dflp33.itg.ti.com (10.64.6.16) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_0,
+Received: from dflp32.itg.ti.com (10.64.6.15) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_0,
  cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5 via Frontend Transport;
  Mon, 25 Mar 2019 09:24:33 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by dflp33.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2PEOXBQ032259;
+        by dflp32.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2PEOXdm000848;
         Mon, 25 Mar 2019 09:24:33 -0500
 From:   Dan Murphy <dmurphy@ti.com>
 To:     <robh+dt@kernel.org>, <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
 CC:     <linux-kernel@vger.kernel.org>, <linux-leds@vger.kernel.org>,
         Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH 2/5] leds: TI LMU: Add common code for TI LMU devices
-Date:   Mon, 25 Mar 2019 09:24:00 -0500
-Message-ID: <20190325142403.30447-3-dmurphy@ti.com>
+Subject: [PATCH 3/5] dt-bindings: ti-lmu: Modify dt bindings for the LM3697
+Date:   Mon, 25 Mar 2019 09:24:01 -0500
+Message-ID: <20190325142403.30447-4-dmurphy@ti.com>
 X-Mailer: git-send-email 2.12.2
 In-Reply-To: <20190325142403.30447-1-dmurphy@ti.com>
 References: <20190325142403.30447-1-dmurphy@ti.com>
@@ -66,242 +66,164 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Create a TI LMU common framework for TI LMU devices that share
-common features.
+The LM3697 is a single function LED driver. The single function LED
+driver needs to reside in the LED directory as a dedicated LED driver
+and not as a MFD device.  The device does have common brightness and ramp
+features and those can be accomodated by a TI LMU framework.
 
-Currently the runtime ramp and brightness setting have
-been identified as common features with common register settings.
-
-This work is derived from Milo Kims TI LMU MFD code.
+The LM3697 dt binding needs to be moved from the ti-lmu.txt and a dedicated
+LED dt binding needs to be added.  The new LM3697 LED dt binding will then
+reside in the Documentation/devicetree/bindings/leds directory and follow the
+current LED and general bindings guidelines.
 
 Signed-off-by: Dan Murphy <dmurphy@ti.com>
 ---
- drivers/leds/Kconfig              |   8 ++
- drivers/leds/Makefile             |   1 +
- drivers/leds/ti-lmu-led-common.c  | 131 ++++++++++++++++++++++++++++++
- include/linux/ti-lmu-led-common.h |  44 ++++++++++
- 4 files changed, 184 insertions(+)
- create mode 100644 drivers/leds/ti-lmu-led-common.c
- create mode 100644 include/linux/ti-lmu-led-common.h
+ .../devicetree/bindings/leds/leds-lm3697.txt  | 77 +++++++++++++++++++
+ .../devicetree/bindings/mfd/ti-lmu.txt        | 26 +------
+ 2 files changed, 78 insertions(+), 25 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-lm3697.txt
 
-diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-index da00b9ed5a5c..3ae24eaf4cde 100644
---- a/drivers/leds/Kconfig
-+++ b/drivers/leds/Kconfig
-@@ -776,6 +776,14 @@ config LEDS_NIC78BX
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called leds-nic78bx.
- 
-+config LEDS_TI_LMU_COMMON
-+	tristate "LED driver for TI LMU"
-+	depends on REGMAP
-+	help
-+          Say Y to enable the LED driver for TI LMU devices.
-+          This supports common features between the TI LM3532, LM3631, LM3632,
-+	  LM3633, LM3695 and LM3697.
-+
- comment "LED Triggers"
- source "drivers/leds/trigger/Kconfig"
- 
-diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
-index 7a8b1f55d459..85fd449c002d 100644
---- a/drivers/leds/Makefile
-+++ b/drivers/leds/Makefile
-@@ -80,6 +80,7 @@ obj-$(CONFIG_LEDS_MT6323)		+= leds-mt6323.o
- obj-$(CONFIG_LEDS_LM3692X)		+= leds-lm3692x.o
- obj-$(CONFIG_LEDS_SC27XX_BLTC)		+= leds-sc27xx-bltc.o
- obj-$(CONFIG_LEDS_LM3601X)		+= leds-lm3601x.o
-+obj-$(CONFIG_LEDS_TI_LMU_COMMON)	+= ti-lmu-led-common.o
- 
- # LED SPI Drivers
- obj-$(CONFIG_LEDS_CR0014114)		+= leds-cr0014114.o
-diff --git a/drivers/leds/ti-lmu-led-common.c b/drivers/leds/ti-lmu-led-common.c
+diff --git a/Documentation/devicetree/bindings/leds/leds-lm3697.txt b/Documentation/devicetree/bindings/leds/leds-lm3697.txt
 new file mode 100644
-index 000000000000..65d44bde9050
+index 000000000000..a780f11acd38
 --- /dev/null
-+++ b/drivers/leds/ti-lmu-led-common.c
-@@ -0,0 +1,131 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright 2015 Texas Instruments
-+// Copyright 2018 Sebastian Reichel
-+// Copyright 2018 Pavel Machek <pavel@ucw.cz>
-+// TI LMU LED common framework, based on previous work from
-+// Milo Kim <milo.kim@ti.com>
++++ b/Documentation/devicetree/bindings/leds/leds-lm3697.txt
+@@ -0,0 +1,77 @@
++* Texas Instruments - LM3697 Highly Efficient White LED Driver
 +
-+#include <linux/bitops.h>
-+#include <linux/err.h>
-+#include <linux/of_device.h>
++The LM3697 11-bit LED driver provides high-
++performance backlight dimming for 1, 2, or 3 series
++LED strings while delivering up to 90% efficiency.
 +
-+#include <linux/ti-lmu-led-common.h>
++This device is suitable for display and keypad Lighting
 +
-+const static int ramp_table[16] = { 2, 262, 524, 1049, 2090, 4194, 8389,
-+				16780, 33550, 41940, 50330, 58720,
-+				67110, 83880, 100660, 117440};
++Required properties:
++	- compatible:
++		"ti,lm3697"
++	- reg :  I2C slave address
++	- #address-cells : 1
++	- #size-cells : 0
 +
-+static int ti_lmu_common_update_brightness(struct ti_lmu_bank *lmu_bank,
-+					   int brightness)
-+{
-+	struct regmap *regmap = lmu_bank->regmap;
-+	u8 reg, val;
-+	int ret;
++Optional properties:
++	- enable-gpios : GPIO pin to enable/disable the device
++	- vled-supply : LED supply
 +
-+	/*
-+	 * Brightness register update
-+	 *
-+	 * 11 bit dimming: update LSB bits and write MSB byte.
-+	 *		   MSB brightness should be shifted.
-+	 *  8 bit dimming: write MSB byte.
-+	 */
-+	if (lmu_bank->max_brightness == MAX_BRIGHTNESS_11BIT) {
-+		reg = lmu_bank->lsb_brightness_reg;
-+		ret = regmap_update_bits(regmap, reg,
-+					 LMU_11BIT_LSB_MASK,
-+					 brightness);
-+		if (ret)
-+			return ret;
++Required child properties:
++	- reg : 0 - LED is Controlled by bank A
++		1 - LED is Controlled by bank B
++	- led-sources : Indicates which HVLED string is associated to which
++			control bank.  This is a zero based property so
++			HVLED1 = 0, HVLED2 = 1, HVLED3 = 2.
++			Additional information is contained
++			in Documentation/devicetree/bindings/leds/common.txt
 +
-+		val = brightness >> LMU_11BIT_MSB_SHIFT;
-+	} else {
-+		val = brightness;
-+	}
++Optional child properties:
++	- max_brightness - This determines whether to use 8 bit brightness mode
++			   or 11 bit brightness mode.  If this value is not
++			   set the device is defaulted to the preferred 8bit
++			   brightness mode per 7.3.4.1 of the data sheet.
++			   The values are 255 (8bit) or 2047 (11bit).
++	- ramp-up-ms: see Documentation/devicetree/bindings/mfd/ti-lmu.txt
++	- ramp-down-ms: see Documentation/devicetree/bindings/mfd/ti-lmu.txt
++	- label : see Documentation/devicetree/bindings/leds/common.txt
++	- linux,default-trigger :
++	   see Documentation/devicetree/bindings/leds/common.txt
 +
-+	reg = lmu_bank->msb_brightness_reg;
++Example:
 +
-+	return regmap_write(regmap, reg, val);
++HVLED string 1 and 3 are controlled by control bank A and HVLED 2 string is
++controlled by control bank B.
++
++led-controller@36 {
++	compatible = "ti,lm3697";
++	#address-cells = <1>;
++	#size-cells = <0>;
++	reg = <0x36>;
++
++	enable-gpios = <&gpio1 28 GPIO_ACTIVE_HIGH>;
++	vled-supply = <&vbatt>;
++
++	led@0 {
++		reg = <0>;
++		led-sources = <0 2>;
++		max_brightness = <2047>;
++		ramp-up-ms = <5000>;
++		ramp-down-ms = <1000>;
++		label = "white:first_backlight_cluster";
++		linux,default-trigger = "backlight";
++	};
++
++	led@1 {
++		reg = <1>;
++		led-sources = <1>;
++		max_brightness = <255>;
++		ramp-up-ms = <500>;
++		ramp-down-ms = <1000>;
++		label = "white:second_backlight_cluster";
++		linux,default-trigger = "backlight";
++	};
 +}
 +
-+int ti_lmu_common_set_brightness(struct ti_lmu_bank *lmu_bank, int brightness)
-+{
-+	return ti_lmu_common_update_brightness(lmu_bank, brightness);
-+}
-+EXPORT_SYMBOL(ti_lmu_common_set_brightness);
-+
-+static int ti_lmu_common_convert_ramp_to_index(unsigned int msec)
-+{
-+	int size = ARRAY_SIZE(ramp_table);
-+	int i;
-+
-+	if (msec <= ramp_table[0])
-+		return 0;
-+
-+	if (msec > ramp_table[size - 1])
-+		return size - 1;
-+
-+	for (i = 1; i < size; i++) {
-+		if (msec == ramp_table[i])
-+			return i;
-+
-+		/* Find an approximate index by looking up the table */
-+		if (msec > ramp_table[i - 1] && msec < ramp_table[i]) {
-+			if (msec - ramp_table[i - 1] < ramp_table[i] - msec)
-+				return i - 1;
-+			else
-+				return i;
-+		}
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+int ti_lmu_common_set_ramp(struct ti_lmu_bank *lmu_bank)
-+{
-+	struct regmap *regmap = lmu_bank->regmap;
-+	u8 ramp, ramp_up, ramp_down;
-+
-+	if (lmu_bank->ramp_up_msec == 0 && lmu_bank->ramp_down_msec == 0) {
-+		ramp_up = 0;
-+		ramp_down = 0;
-+	} else {
-+		ramp_up = ti_lmu_common_convert_ramp_to_index(lmu_bank->ramp_up_msec);
-+		ramp_down = ti_lmu_common_convert_ramp_to_index(lmu_bank->ramp_down_msec);
-+	}
-+
-+	if (ramp_up < 0 || ramp_down < 0)
-+		return -EINVAL;
-+
-+	ramp = (ramp_up << 4) | ramp_down;
-+
-+	return regmap_write(regmap, lmu_bank->runtime_ramp_reg, ramp);
-+
-+}
-+EXPORT_SYMBOL(ti_lmu_common_set_ramp);
-+
-+int ti_lmu_common_get_ramp_params(struct device *dev,
-+				  struct fwnode_handle *child,
-+				  struct ti_lmu_bank *lmu_data)
-+{
-+	int ret;
-+
-+	ret = fwnode_property_read_u32(child, "ramp-up-ms",
-+				 &lmu_data->ramp_up_msec);
-+	if (ret)
-+		dev_warn(dev, "ramp-up-ms property missing\n");
-+
-+
-+	ret = fwnode_property_read_u32(child, "ramp-down-ms",
-+				 &lmu_data->ramp_down_msec);
-+	if (ret)
-+		dev_warn(dev, "ramp-down-ms property missing\n");
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(ti_lmu_common_get_ramp_params);
-+
-+MODULE_DESCRIPTION("TI LMU common LED framework");
-+MODULE_AUTHOR("Sebastian Reichel");
-+MODULE_AUTHOR("Dan Murphy <dmurphy@ti.com>");
-+MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("ti-lmu-led-common");
-diff --git a/include/linux/ti-lmu-led-common.h b/include/linux/ti-lmu-led-common.h
-new file mode 100644
-index 000000000000..510c07025117
---- /dev/null
-+++ b/include/linux/ti-lmu-led-common.h
-@@ -0,0 +1,44 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+// TI LMU Common Core
-+// Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
-+
-+#ifndef _TI_LMU_COMMON_H_
-+#define _TI_LMU_COMMON_H_
-+
-+#include <linux/delay.h>
-+#include <linux/device.h>
-+#include <linux/init.h>
-+#include <linux/leds.h>
-+#include <linux/module.h>
-+#include <linux/regmap.h>
-+#include <linux/slab.h>
-+#include <uapi/linux/uleds.h>
-+
-+#define LMU_11BIT_LSB_MASK	(BIT(0) | BIT(1) | BIT(2))
-+#define LMU_11BIT_MSB_SHIFT	3
-+
-+#define MAX_BRIGHTNESS_8BIT	255
-+#define MAX_BRIGHTNESS_11BIT	2047
-+
-+struct ti_lmu_bank {
-+	struct regmap *regmap;
-+
-+	int max_brightness;
-+
-+	u8 lsb_brightness_reg;
-+	u8 msb_brightness_reg;
-+
-+	u8 runtime_ramp_reg;
-+	u32 ramp_up_msec;
-+	u32 ramp_down_msec;
-+};
-+
-+int ti_lmu_common_set_brightness(struct ti_lmu_bank *lmu_bank, int brightness);
-+
-+int ti_lmu_common_set_ramp(struct ti_lmu_bank *lmu_bank);
-+
-+int ti_lmu_common_get_ramp_params(struct device *dev,
-+				  struct fwnode_handle *child,
-+				  struct ti_lmu_bank *lmu_data);
-+
-+#endif /* _TI_LMU_COMMON_H_ */
++For more product information please see the link below:
++http://www.ti.com/lit/ds/symlink/lm3697.pdf
+diff --git a/Documentation/devicetree/bindings/mfd/ti-lmu.txt b/Documentation/devicetree/bindings/mfd/ti-lmu.txt
+index d9d529de6dc1..4b2dc0ccfe26 100644
+--- a/Documentation/devicetree/bindings/mfd/ti-lmu.txt
++++ b/Documentation/devicetree/bindings/mfd/ti-lmu.txt
+@@ -8,7 +8,6 @@ TI LMU driver supports lighting devices below.
+   LM3632       Backlight and regulator
+   LM3633       Backlight, LED and fault monitor
+   LM3695       Backlight
+-  LM3697       Backlight and fault monitor
+ 
+ Required properties:
+   - compatible: Should be one of:
+@@ -16,11 +15,10 @@ Required properties:
+                 "ti,lm3632"
+                 "ti,lm3633"
+                 "ti,lm3695"
+-                "ti,lm3697"
+   - reg: I2C slave address.
+          0x11 for LM3632
+          0x29 for LM3631
+-         0x36 for LM3633, LM3697
++         0x36 for LM3633
+          0x63 for LM3695
+ 
+ Optional property:
+@@ -41,7 +39,6 @@ Optional nodes:
+     Required properties:
+       - compatible: Should be one of:
+                     "ti,lm3633-fault-monitor"
+-                    "ti,lm3697-fault-monitor"
+   - leds: LED properties for LM3633. Please refer to [2].
+   - regulators: Regulator properties for LM3631 and LM3632.
+                 Please refer to [3].
+@@ -206,24 +203,3 @@ lm3695@63 {
+ 		};
+ 	};
+ };
+-
+-lm3697@36 {
+-	compatible = "ti,lm3697";
+-	reg = <0x36>;
+-
+-	enable-gpios = <&pioC 2 GPIO_ACTIVE_HIGH>;
+-
+-	backlight {
+-		compatible = "ti,lm3697-backlight";
+-
+-		lcd {
+-			led-sources = <0 1 2>;
+-			ramp-up-ms = <200>;
+-			ramp-down-ms = <200>;
+-		};
+-	};
+-
+-	fault-monitor {
+-		compatible = "ti,lm3697-fault-monitor";
+-	};
+-};
 -- 
 2.19.0
 
