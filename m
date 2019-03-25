@@ -2,42 +2,42 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 838F4C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:25:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C1E1C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:25:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ECC020848
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:25:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67D3620848
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:25:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730084AbfCYVY6 (ORCPT
+        id S1730581AbfCYVZC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 17:24:58 -0400
-Received: from smtprelay0096.hostedemail.com ([216.40.44.96]:36852 "EHLO
+        Mon, 25 Mar 2019 17:25:02 -0400
+Received: from smtprelay0181.hostedemail.com ([216.40.44.181]:41460 "EHLO
         smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729569AbfCYVY4 (ORCPT
+        by vger.kernel.org with ESMTP id S1730560AbfCYVY7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 17:24:56 -0400
+        Mon, 25 Mar 2019 17:24:59 -0400
 Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 17663180A8867;
-        Mon, 25 Mar 2019 21:24:55 +0000 (UTC)
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 21883182CF66A;
+        Mon, 25 Mar 2019 21:24:58 +0000 (UTC)
 X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: place45_db53fa961c00
-X-Filterd-Recvd-Size: 3412
+X-HE-Tag: earth07_e201de3cbd2f
+X-Filterd-Recvd-Size: 4231
 Received: from joe-laptop.perches.com (unknown [47.151.153.53])
         (Authenticated sender: joe@perches.com)
-        by omf01.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 25 Mar 2019 21:24:54 +0000 (UTC)
+        by omf14.hostedemail.com (Postfix) with ESMTPA;
+        Mon, 25 Mar 2019 21:24:56 +0000 (UTC)
 From:   Joe Perches <joe@perches.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-arm-kernel@lists.infradead.org, Vinod Koul <vkoul@kernel.org>
-Subject: Bad file pattern in MAINTAINERS section 'ARM/UNIPHIER ARCHITECTURE'
-Date:   Mon, 25 Mar 2019 14:24:53 -0700
-Message-Id: <20190325212453.25934-1-joe@perches.com>
+Cc:     Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Richard Fitzgerald <rf@opensource.cirrus.com>,
+        patches@opensource.cirrus.com, Lee Jones <lee.jones@linaro.org>
+Subject: Bad file pattern in MAINTAINERS section 'CIRRUS LOGIC LOCHNAGAR DRIVER'
+Date:   Mon, 25 Mar 2019 14:24:55 -0700
+Message-Id: <20190325212455.26003-1-joe@perches.com>
 X-Mailer: git-send-email 2.15.0
 In-Reply-To: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com>
 References: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com>
@@ -61,53 +61,63 @@ Please fix this defect appropriately.
 
 linux-next MAINTAINERS section:
 
-	2344	ARM/UNIPHIER ARCHITECTURE
-	2345	M:	Masahiro Yamada <yamada.masahiro@socionext.com>
-	2346	L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
-	2347	T:	git git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-uniphier.git
-	2348	S:	Maintained
-	2349	F:	Documentation/devicetree/bindings/arm/socionext/uniphier.txt
-	2350	F:	Documentation/devicetree/bindings/gpio/gpio-uniphier.txt
-	2351	F:	Documentation/devicetree/bindings/pinctrl/socionext,uniphier-pinctrl.txt
-	2352	F:	arch/arm/boot/dts/uniphier*
-	2353	F:	arch/arm/include/asm/hardware/cache-uniphier.h
-	2354	F:	arch/arm/mach-uniphier/
-	2355	F:	arch/arm/mm/cache-uniphier.c
-	2356	F:	arch/arm64/boot/dts/socionext/uniphier*
-	2357	F:	drivers/bus/uniphier-system-bus.c
-	2358	F:	drivers/clk/uniphier/
--->	2359	F:	drivers/dmaengine/uniphier-mdmac.c
-	2360	F:	drivers/gpio/gpio-uniphier.c
-	2361	F:	drivers/i2c/busses/i2c-uniphier*
-	2362	F:	drivers/irqchip/irq-uniphier-aidet.c
-	2363	F:	drivers/mmc/host/uniphier-sd.c
-	2364	F:	drivers/pinctrl/uniphier/
-	2365	F:	drivers/reset/reset-uniphier.c
-	2366	F:	drivers/tty/serial/8250/8250_uniphier.c
-	2367	N:	uniphier
+	3792	CIRRUS LOGIC LOCHNAGAR DRIVER
+	3793	M:	Charles Keepax <ckeepax@opensource.cirrus.com>
+	3794	M:	Richard Fitzgerald <rf@opensource.cirrus.com>
+	3795	L:	patches@opensource.cirrus.com
+	3796	S:	Supported
+-->	3797	F:	drivers/clk/clk-lochnagar.c
+	3798	F:	drivers/mfd/lochnagar-i2c.c
+	3799	F:	drivers/pinctrl/cirrus/pinctrl-lochnagar.c
+	3800	F:	drivers/regulator/lochnagar-regulator.c
+	3801	F:	sound/soc/codecs/lochnagar-sc.c
+	3802	F:	include/dt-bindings/clk/lochnagar.h
+	3803	F:	include/dt-bindings/pinctrl/lochnagar.h
+	3804	F:	include/linux/mfd/lochnagar*
+	3805	F:	Documentation/devicetree/bindings/mfd/cirrus,lochnagar.txt
+	3806	F:	Documentation/devicetree/bindings/clock/cirrus,lochnagar.txt
+	3807	F:	Documentation/devicetree/bindings/pinctrl/cirrus,lochnagar.txt
+	3808	F:	Documentation/devicetree/bindings/regulator/cirrus,lochnagar.txt
+	3809	F:	Documentation/devicetree/bindings/sound/cirrus,lochnagar.txt
 
 2: ---------------------------------------------------------------------------
 
-The most recent commit that added or modified file pattern 'drivers/dmaengine/uniphier-mdmac.c':
+The most recent commit that added or modified file pattern 'drivers/clk/clk-lochnagar.c':
 
-commit 32e74aabebc8d045a11452d2de0ac9d2625fcd45
-Author: Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Fri Oct 12 01:41:03 2018 +0900
+commit 422dcafe477c7240d03c7b150704c45e0b17be57
+Author: Charles Keepax <ckeepax@opensource.cirrus.com>
+Date:   Wed Jan 30 11:41:26 2019 +0000
 
-    dmaengine: uniphier-mdmac: add UniPhier MIO DMAC driver
+    mfd: lochnagar: Add support for the Cirrus Logic Lochnagar
     
-    The MIO DMAC (Media IO DMA Controller) is used in UniPhier LD4,
-    Pro4, and sLD8 SoCs.
+    Lochnagar is an evaluation and development board for Cirrus
+    Logic Smart CODEC and Amp devices. It allows the connection of
+    most Cirrus Logic devices on mini-cards, as well as allowing
+    connection of various application processor systems to provide a
+    full evaluation platform. This driver supports the board
+    controller chip on the Lochnagar board. Audio system topology,
+    clocking and power can all be controlled through the Lochnagar
+    controller chip, allowing the device under test to be used in
+    a variety of possible use cases.
     
-    Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-    Signed-off-by: Vinod Koul <vkoul@kernel.org>
+    As the Lochnagar is a fairly complex device this MFD driver
+    allows the drivers for the various features to be bound
+    in. Initially clocking, regulator and pinctrl will be added as
+    these are necessary to configure the system. But in time at least
+    audio and voltage/current monitoring will also be added.
+    
+    Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+    Signed-off-by: Lee Jones <lee.jones@linaro.org>
 
- MAINTAINERS                  |   1 +
- drivers/dma/Kconfig          |  11 +
- drivers/dma/Makefile         |   1 +
- drivers/dma/uniphier-mdmac.c | 506 +++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 519 insertions(+)
+ MAINTAINERS                         |  17 ++
+ drivers/mfd/Kconfig                 |   8 +
+ drivers/mfd/Makefile                |   2 +
+ drivers/mfd/lochnagar-i2c.c         | 398 ++++++++++++++++++++++++++++++++++++
+ include/linux/mfd/lochnagar.h       |  55 +++++
+ include/linux/mfd/lochnagar1_regs.h | 157 ++++++++++++++
+ include/linux/mfd/lochnagar2_regs.h | 291 ++++++++++++++++++++++++++
+ 7 files changed, 928 insertions(+)
 
 3: ---------------------------------------------------------------------------
 
-No commit with file pattern 'drivers/dmaengine/uniphier-mdmac.c' was found
+No commit with file pattern 'drivers/clk/clk-lochnagar.c' was found
