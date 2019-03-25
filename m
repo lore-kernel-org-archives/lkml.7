@@ -2,186 +2,491 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30761C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 15:47:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD889C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 15:49:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0856820896
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 15:47:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 773082087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 15:49:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729459AbfCYPrG (ORCPT
+        id S1729348AbfCYPtd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 11:47:06 -0400
-Received: from mga02.intel.com ([134.134.136.20]:43920 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726203AbfCYPrG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 11:47:06 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Mar 2019 08:47:05 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,269,1549958400"; 
-   d="scan'208";a="128509561"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
-  by orsmga008.jf.intel.com with ESMTP; 25 Mar 2019 08:47:05 -0700
-Date:   Mon, 25 Mar 2019 08:47:05 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Xiaoyao Li <xiaoyao.li@linux.intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        chao.gao@intel.com
-Subject: Re: [PATCH v3 2/2] x86/vmx: optimize MSR_MISC_FEATURES_ENABLES switch
-Message-ID: <20190325154705.GD31069@linux.intel.com>
-References: <20190325080650.19896-1-xiaoyao.li@linux.intel.com>
- <20190325080650.19896-3-xiaoyao.li@linux.intel.com>
+        Mon, 25 Mar 2019 11:49:33 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:56660 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728563AbfCYPtc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 11:49:32 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2PFctTF093703
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 11:49:30 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rf1dxsxc2-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 11:49:29 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <fbarrat@linux.ibm.com>;
+        Mon, 25 Mar 2019 15:49:27 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 25 Mar 2019 15:49:23 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2PFnMuR28377146
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 25 Mar 2019 15:49:22 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1B8BCA405C;
+        Mon, 25 Mar 2019 15:49:22 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9BCC8A405F;
+        Mon, 25 Mar 2019 15:49:21 +0000 (GMT)
+Received: from [9.145.37.149] (unknown [9.145.37.149])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 25 Mar 2019 15:49:21 +0000 (GMT)
+Subject: Re: [PATCH v3 7/7] ocxl: Provide global MMIO accessors for external
+ drivers
+To:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
+Cc:     Greg Kurz <groug@kaod.org>,
+        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <20190320053448.2098-1-alastair@au1.ibm.com>
+ <20190325054438.15022-1-alastair@au1.ibm.com>
+ <20190325054438.15022-8-alastair@au1.ibm.com>
+From:   Frederic Barrat <fbarrat@linux.ibm.com>
+Date:   Mon, 25 Mar 2019 16:49:21 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190325080650.19896-3-xiaoyao.li@linux.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190325054438.15022-8-alastair@au1.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19032515-0016-0000-0000-00000266EF0D
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19032515-0017-0000-0000-000032C21FC3
+Message-Id: <baa18ac3-9c76-dd54-4774-380c6ed55663@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-25_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903250116
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 04:06:50PM +0800, Xiaoyao Li wrote:
-> KVM needs to switch MSR_MISC_FEATURES_ENABLES between host and guest in
-> every pcpu/vcpu context switch. Since WRMSR is expensive, this patch tries
-> to save cycles by avoiding WRMSR MSR_MISC_FEATURES_ENABLES whenever possible.
+
+
+Le 25/03/2019 à 06:44, Alastair D'Silva a écrit :
+> From: Alastair D'Silva <alastair@d-silva.org>
 > 
-> If host's value is zero, nothing needs to be done, since guest can use
-> kvm emulated cpuid faulting.
+> External drivers that communicate via OpenCAPI will need to make
+> MMIO calls to interact with the devices.
 > 
-> If host's value is non-zero, it need not clear MSR_MISC_FEATURES_ENABLES
-> unconditionally. We can use hardware cpuid faulting if guest's
-> value is equal to host'value, thus avoid WRMSR
-> MSR_MISC_FEATURES_ENABLES.
-> 
-> Since hardware cpuid faulting takes higher priority than CPUID vm exit,
-> it should be updated to hardware while guest wrmsr and hardware cpuid
-> faulting is used for guest.
-> 
-> Signed-off-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
+> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> Reviewed-by: Greg Kurz <groug@kaod.org>
 > ---
->  arch/x86/include/asm/kvm_host.h |  2 ++
->  arch/x86/kvm/vmx/vmx.c          | 13 ++++++++++---
->  arch/x86/kvm/x86.c              | 15 ++++++++++++---
->  3 files changed, 24 insertions(+), 6 deletions(-)
+
+
+Acked-by: Frederic Barrat <fbarrat@linux.ibm.com>
+
+
+>   drivers/misc/ocxl/Makefile |   2 +-
+>   drivers/misc/ocxl/mmio.c   | 234 +++++++++++++++++++++++++++++++++++++
+>   include/misc/ocxl.h        | 110 +++++++++++++++++
+>   3 files changed, 345 insertions(+), 1 deletion(-)
+>   create mode 100644 drivers/misc/ocxl/mmio.c
 > 
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index 2c53df4a5a2a..9bcb444b903d 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -1343,6 +1343,8 @@ void kvm_lmsw(struct kvm_vcpu *vcpu, unsigned long msw);
->  void kvm_get_cs_db_l_bits(struct kvm_vcpu *vcpu, int *db, int *l);
->  int kvm_set_xcr(struct kvm_vcpu *vcpu, u32 index, u64 xcr);
->  
-> +int kvm_supported_msr_misc_features_enables(struct kvm_vcpu *vcpu, u64 data);
+> diff --git a/drivers/misc/ocxl/Makefile b/drivers/misc/ocxl/Makefile
+> index bc4e39bfda7b..d07d1bb8e8d4 100644
+> --- a/drivers/misc/ocxl/Makefile
+> +++ b/drivers/misc/ocxl/Makefile
+> @@ -1,7 +1,7 @@
+>   # SPDX-License-Identifier: GPL-2.0+
+>   ccflags-$(CONFIG_PPC_WERROR)	+= -Werror
+>   
+> -ocxl-y				+= main.o pci.o config.o file.o pasid.o
+> +ocxl-y				+= main.o pci.o config.o file.o pasid.o mmio.o
+>   ocxl-y				+= link.o context.o afu_irq.o sysfs.o trace.o
+>   ocxl-y				+= core.o
+>   obj-$(CONFIG_OCXL)		+= ocxl.o
+> diff --git a/drivers/misc/ocxl/mmio.c b/drivers/misc/ocxl/mmio.c
+> new file mode 100644
+> index 000000000000..aae713db4ebe
+> --- /dev/null
+> +++ b/drivers/misc/ocxl/mmio.c
+> @@ -0,0 +1,234 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +// Copyright 2019 IBM Corp.
+> +#include <linux/sched/mm.h>
+> +#include "trace.h"
+> +#include "ocxl_internal.h"
 > +
->  int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr);
->  int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr);
->  
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index 65aa947947ba..73bb11f74b36 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -1035,10 +1035,10 @@ static void vmx_prepare_guest_misc_features_enables(struct vcpu_vmx *vmx)
->  {
->  	u64 msrval = this_cpu_read(msr_misc_features_shadow);
->  
-> -	if (!msrval)
-> +	if (!msrval || msrval == vmx->vcpu.arch.msr_misc_features_enables)
->  		return;
->  
-> -	wrmsrl(MSR_MISC_FEATURES_ENABLES, 0ULL);
-> +	wrmsrl(MSR_MISC_FEATURES_ENABLES, vmx->vcpu.arch.msr_misc_features_enables);
->  }
->  
->  void vmx_prepare_switch_to_guest(struct kvm_vcpu *vcpu)
-> @@ -1136,7 +1136,7 @@ static void vmx_load_host_misc_features_enables(struct vcpu_vmx *vmx)
->  {
->  	u64 msrval = this_cpu_read(msr_misc_features_shadow);
->  
-> -	if (!msrval)
-> +	if (!msrval || msrval == vmx->vcpu.arch.msr_misc_features_enables)
->  		return;
->  
->  	wrmsrl(MSR_MISC_FEATURES_ENABLES, msrval);
-> @@ -2043,6 +2043,13 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->  		else
->  			vmx->pt_desc.guest.addr_a[index / 2] = data;
->  		break;
-> +	case MSR_MISC_FEATURES_ENABLES:
-> +		if (!kvm_supported_msr_misc_features_enables(vcpu, data))
-> +			return 1;
-> +		if (this_cpu_read(msr_misc_features_shadow) && vmx->loaded_cpu_state)
-> +			wrmsrl(MSR_MISC_FEATURES_ENABLES, data);
-> +		vcpu->arch.msr_misc_features_enables = data;
-> +		break;
->  	case MSR_TSC_AUX:
->  		if (!msr_info->host_initiated &&
->  		    !guest_cpuid_has(vcpu, X86_FEATURE_RDTSCP))
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index ad1df965574e..d2af90422a51 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -2449,6 +2449,17 @@ static void record_steal_time(struct kvm_vcpu *vcpu)
->  		&vcpu->arch.st.steal, sizeof(struct kvm_steal_time));
->  }
->  
-> +int kvm_supported_msr_misc_features_enables(struct kvm_vcpu *vcpu, u64 data)
-
-The name kvm_supported_msr_misc_features_enables() is a bit confusing,
-e.g. I expected it to return a bitmask of the supported features.  Maybe
-kvm_misc_features_enables_msr_valid() to be consistent with
-vmx_feature_control_msr_valid()?
-
+> +int ocxl_global_mmio_read32(struct ocxl_afu *afu, size_t offset,
+> +				enum ocxl_endian endian, u32 *val)
 > +{
-> +	if (data & ~MSR_MISC_FEATURES_ENABLES_CPUID_FAULT ||
-> +	    (data & MSR_MISC_FEATURES_ENABLES_CPUID_FAULT &&
-> +	     !supports_cpuid_fault(vcpu)))
-> +		return 0;
-> +	else
-> +		return 1;
-
-No need for the if-else, you can simply do:
-
-	return (data & ~MSR_MISC_FEATURES_ENABLES_CPUID_FAULT) ||
-	       (data & MSR_MISC_FEATURES_ENABLES_CPUID_FAULT &&
-		!supports_cpuid_fault(vcpu));
-
-You could even shorten it to:
-
-        return (data & ~MSR_MISC_FEATURES_ENABLES_CPUID_FAULT) ||
-               (data && !supports_cpuid_fault(vcpu));
-
-although that might be getting a bit too cute.
-
-> +}
-> +EXPORT_SYMBOL_GPL(kvm_supported_msr_misc_features_enables);
+> +	if (offset > afu->config.global_mmio_size - 4)
+> +		return -EINVAL;
 > +
->  int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->  {
->  	bool pr = false;
-> @@ -2669,9 +2680,7 @@ int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->  		vcpu->arch.msr_platform_info = data;
->  		break;
->  	case MSR_MISC_FEATURES_ENABLES:
-> -		if (data & ~MSR_MISC_FEATURES_ENABLES_CPUID_FAULT ||
-> -		    (data & MSR_MISC_FEATURES_ENABLES_CPUID_FAULT &&
-> -		     !supports_cpuid_fault(vcpu)))
-> +		if (!kvm_supported_msr_misc_features_enables(vcpu, data))
->  			return 1;
->  		vcpu->arch.msr_misc_features_enables = data;
->  		break;
-> -- 
-> 2.19.1
+> +#ifdef __BIG_ENDIAN__
+> +	if (endian == OCXL_HOST_ENDIAN)
+> +		endian = OCXL_BIG_ENDIAN;
+> +#endif
+> +
+> +	switch (endian) {
+> +	case OCXL_BIG_ENDIAN:
+> +		*val = readl_be((char *)afu->global_mmio_ptr + offset);
+> +		break;
+> +
+> +	default:
+> +		*val = readl((char *)afu->global_mmio_ptr + offset);
+> +		break;
+> +	}
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(ocxl_global_mmio_read32);
+> +
+> +int ocxl_global_mmio_read64(struct ocxl_afu *afu, size_t offset,
+> +				enum ocxl_endian endian, u64 *val)
+> +{
+> +	if (offset > afu->config.global_mmio_size - 8)
+> +		return -EINVAL;
+> +
+> +#ifdef __BIG_ENDIAN__
+> +	if (endian == OCXL_HOST_ENDIAN)
+> +		endian = OCXL_BIG_ENDIAN;
+> +#endif
+> +
+> +	switch (endian) {
+> +	case OCXL_BIG_ENDIAN:
+> +		*val = readq_be((char *)afu->global_mmio_ptr + offset);
+> +		break;
+> +
+> +	default:
+> +		*val = readq((char *)afu->global_mmio_ptr + offset);
+> +		break;
+> +	}
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(ocxl_global_mmio_read64);
+> +
+> +int ocxl_global_mmio_write32(struct ocxl_afu *afu, size_t offset,
+> +				enum ocxl_endian endian, u32 val)
+> +{
+> +	if (offset > afu->config.global_mmio_size - 4)
+> +		return -EINVAL;
+> +
+> +#ifdef __BIG_ENDIAN__
+> +	if (endian == OCXL_HOST_ENDIAN)
+> +		endian = OCXL_BIG_ENDIAN;
+> +#endif
+> +
+> +	switch (endian) {
+> +	case OCXL_BIG_ENDIAN:
+> +		writel_be(val, (char *)afu->global_mmio_ptr + offset);
+> +		break;
+> +
+> +	default:
+> +		writel(val, (char *)afu->global_mmio_ptr + offset);
+> +		break;
+> +	}
+> +
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(ocxl_global_mmio_write32);
+> +
+> +int ocxl_global_mmio_write64(struct ocxl_afu *afu, size_t offset,
+> +				enum ocxl_endian endian, u64 val)
+> +{
+> +	if (offset > afu->config.global_mmio_size - 8)
+> +		return -EINVAL;
+> +
+> +#ifdef __BIG_ENDIAN__
+> +	if (endian == OCXL_HOST_ENDIAN)
+> +		endian = OCXL_BIG_ENDIAN;
+> +#endif
+> +
+> +	switch (endian) {
+> +	case OCXL_BIG_ENDIAN:
+> +		writeq_be(val, (char *)afu->global_mmio_ptr + offset);
+> +		break;
+> +
+> +	default:
+> +		writeq(val, (char *)afu->global_mmio_ptr + offset);
+> +		break;
+> +	}
+> +
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(ocxl_global_mmio_write64);
+> +
+> +int ocxl_global_mmio_set32(struct ocxl_afu *afu, size_t offset,
+> +				enum ocxl_endian endian, u32 mask)
+> +{
+> +	u32 tmp;
+> +
+> +	if (offset > afu->config.global_mmio_size - 4)
+> +		return -EINVAL;
+> +
+> +#ifdef __BIG_ENDIAN__
+> +	if (endian == OCXL_HOST_ENDIAN)
+> +		endian = OCXL_BIG_ENDIAN;
+> +#endif
+> +
+> +	switch (endian) {
+> +	case OCXL_BIG_ENDIAN:
+> +		tmp = readl_be((char *)afu->global_mmio_ptr + offset);
+> +		tmp |= mask;
+> +		writel_be(tmp, (char *)afu->global_mmio_ptr + offset);
+> +		break;
+> +
+> +	default:
+> +		tmp = readl((char *)afu->global_mmio_ptr + offset);
+> +		tmp |= mask;
+> +		writel(tmp, (char *)afu->global_mmio_ptr + offset);
+> +		break;
+> +	}
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(ocxl_global_mmio_set32);
+> +
+> +int ocxl_global_mmio_set64(struct ocxl_afu *afu, size_t offset,
+> +				enum ocxl_endian endian, u64 mask)
+> +{
+> +	u64 tmp;
+> +
+> +	if (offset > afu->config.global_mmio_size - 8)
+> +		return -EINVAL;
+> +
+> +#ifdef __BIG_ENDIAN__
+> +	if (endian == OCXL_HOST_ENDIAN)
+> +		endian = OCXL_BIG_ENDIAN;
+> +#endif
+> +
+> +	switch (endian) {
+> +	case OCXL_BIG_ENDIAN:
+> +		tmp = readq_be((char *)afu->global_mmio_ptr + offset);
+> +		tmp |= mask;
+> +		writeq_be(tmp, (char *)afu->global_mmio_ptr + offset);
+> +		break;
+> +
+> +	default:
+> +		tmp = readq((char *)afu->global_mmio_ptr + offset);
+> +		tmp |= mask;
+> +		writeq(tmp, (char *)afu->global_mmio_ptr + offset);
+> +		break;
+> +	}
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(ocxl_global_mmio_set64);
+> +
+> +int ocxl_global_mmio_clear32(struct ocxl_afu *afu, size_t offset,
+> +				enum ocxl_endian endian, u32 mask)
+> +{
+> +	u32 tmp;
+> +
+> +	if (offset > afu->config.global_mmio_size - 4)
+> +		return -EINVAL;
+> +
+> +#ifdef __BIG_ENDIAN__
+> +	if (endian == OCXL_HOST_ENDIAN)
+> +		endian = OCXL_BIG_ENDIAN;
+> +#endif
+> +
+> +	switch (endian) {
+> +	case OCXL_BIG_ENDIAN:
+> +		tmp = readl_be((char *)afu->global_mmio_ptr + offset);
+> +		tmp &= ~mask;
+> +		writel_be(tmp, (char *)afu->global_mmio_ptr + offset);
+> +		break;
+> +
+> +	default:
+> +		tmp = readl((char *)afu->global_mmio_ptr + offset);
+> +		tmp &= ~mask;
+> +		writel(tmp, (char *)afu->global_mmio_ptr + offset);
+> +		break;
+> +	}
+> +
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(ocxl_global_mmio_clear32);
+> +
+> +int ocxl_global_mmio_clear64(struct ocxl_afu *afu, size_t offset,
+> +				enum ocxl_endian endian, u64 mask)
+> +{
+> +	u64 tmp;
+> +
+> +	if (offset > afu->config.global_mmio_size - 8)
+> +		return -EINVAL;
+> +
+> +#ifdef __BIG_ENDIAN__
+> +	if (endian == OCXL_HOST_ENDIAN)
+> +		endian = OCXL_BIG_ENDIAN;
+> +#endif
+> +
+> +	switch (endian) {
+> +	case OCXL_BIG_ENDIAN:
+> +		tmp = readq_be((char *)afu->global_mmio_ptr + offset);
+> +		tmp &= ~mask;
+> +		writeq_be(tmp, (char *)afu->global_mmio_ptr + offset);
+> +		break;
+> +
+> +	default:
+> +		tmp = readq((char *)afu->global_mmio_ptr + offset);
+> +		tmp &= ~mask;
+> +		writeq(tmp, (char *)afu->global_mmio_ptr + offset);
+> +		break;
+> +	}
+> +
+> +	writeq(tmp, (char *)afu->global_mmio_ptr + offset);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(ocxl_global_mmio_clear64);
+> diff --git a/include/misc/ocxl.h b/include/misc/ocxl.h
+> index 1b48e9d63abb..e0742c00fb72 100644
+> --- a/include/misc/ocxl.h
+> +++ b/include/misc/ocxl.h
+> @@ -45,6 +45,12 @@ struct ocxl_fn_config {
+>   	s8 max_afu_index;
+>   };
+>   
+> +enum ocxl_endian {
+> +	OCXL_BIG_ENDIAN = 0,    /**< AFU data is big-endian */
+> +	OCXL_LITTLE_ENDIAN = 1, /**< AFU data is little-endian */
+> +	OCXL_HOST_ENDIAN = 2,   /**< AFU data is the same endianness as the host */
+> +};
+> +
+>   // These are opaque outside the ocxl driver
+>   struct ocxl_afu;
+>   struct ocxl_fn;
+> @@ -236,6 +242,110 @@ void ocxl_afu_set_private(struct ocxl_afu *afu, void *private);
+>    */
+>   void *ocxl_afu_get_private(struct ocxl_afu *dev);
+>   
+> +// Global MMIO
+> +/**
+> + * Read a 32 bit value from global MMIO
+> + *
+> + * @afu: The AFU
+> + * @offset: The Offset from the start of MMIO
+> + * @endian: the endianness that the MMIO data is in
+> + * @val: returns the value
+> + *
+> + * Returns 0 for success, negative on error
+> + */
+> +int ocxl_global_mmio_read32(struct ocxl_afu *afu, size_t offset,
+> +				enum ocxl_endian endian, u32 *val);
+> +
+> +/**
+> + * Read a 64 bit value from global MMIO
+> + *
+> + * @afu: The AFU
+> + * @offset: The Offset from the start of MMIO
+> + * @endian: the endianness that the MMIO data is in
+> + * @val: returns the value
+> + *
+> + * Returns 0 for success, negative on error
+> + */
+> +int ocxl_global_mmio_read64(struct ocxl_afu *afu, size_t offset,
+> +				enum ocxl_endian endian, u64 *val);
+> +
+> +/**
+> + * Write a 32 bit value to global MMIO
+> + *
+> + * @afu: The AFU
+> + * @offset: The Offset from the start of MMIO
+> + * @endian: the endianness that the MMIO data is in
+> + * @val: The value to write
+> + *
+> + * Returns 0 for success, negative on error
+> + */
+> +int ocxl_global_mmio_write32(struct ocxl_afu *afu, size_t offset,
+> +				enum ocxl_endian endian, u32 val);
+> +
+> +/**
+> + * Write a 64 bit value to global MMIO
+> + *
+> + * @afu: The AFU
+> + * @offset: The Offset from the start of MMIO
+> + * @endian: the endianness that the MMIO data is in
+> + * @val: The value to write
+> + *
+> + * Returns 0 for success, negative on error
+> + */
+> +int ocxl_global_mmio_write64(struct ocxl_afu *afu, size_t offset,
+> +				enum ocxl_endian endian, u64 val);
+> +
+> +/**
+> + * Set bits in a 32 bit global MMIO register
+> + *
+> + * @afu: The AFU
+> + * @offset: The Offset from the start of MMIO
+> + * @endian: the endianness that the MMIO data is in
+> + * @mask: a mask of the bits to set
+> + *
+> + * Returns 0 for success, negative on error
+> + */
+> +int ocxl_global_mmio_set32(struct ocxl_afu *afu, size_t offset,
+> +				enum ocxl_endian endian, u32 mask);
+> +
+> +/**
+> + * Set bits in a 64 bit global MMIO register
+> + *
+> + * @afu: The AFU
+> + * @offset: The Offset from the start of MMIO
+> + * @endian: the endianness that the MMIO data is in
+> + * @mask: a mask of the bits to set
+> + *
+> + * Returns 0 for success, negative on error
+> + */
+> +int ocxl_global_mmio_set64(struct ocxl_afu *afu, size_t offset,
+> +				enum ocxl_endian endian, u64 mask);
+> +
+> +/**
+> + * Set bits in a 32 bit global MMIO register
+> + *
+> + * @afu: The AFU
+> + * @offset: The Offset from the start of MMIO
+> + * @endian: the endianness that the MMIO data is in
+> + * @mask: a mask of the bits to set
+> + *
+> + * Returns 0 for success, negative on error
+> + */
+> +int ocxl_global_mmio_clear32(struct ocxl_afu *afu, size_t offset,
+> +				enum ocxl_endian endian, u32 mask);
+> +
+> +/**
+> + * Set bits in a 64 bit global MMIO register
+> + *
+> + * @afu: The AFU
+> + * @offset: The Offset from the start of MMIO
+> + * @endian: the endianness that the MMIO data is in
+> + * @mask: a mask of the bits to set
+> + *
+> + * Returns 0 for success, negative on error
+> + */
+> +int ocxl_global_mmio_clear64(struct ocxl_afu *afu, size_t offset,
+> +				enum ocxl_endian endian, u64 mask);
+>   
+>   // Functions left here are for compatibility with the cxlflash driver
+>   
 > 
+
