@@ -2,178 +2,120 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD86DC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:34:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15467C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:34:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95D5420863
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:34:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC07E20989
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:34:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="aAfmBPQR"
+	dkim=pass (1024-bit key) header.d=ericsson.com header.i=@ericsson.com header.b="gSlczPVq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729859AbfCYQeg (ORCPT
+        id S1729889AbfCYQej (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 12:34:36 -0400
-Received: from mail-eopbgr700057.outbound.protection.outlook.com ([40.107.70.57]:26849
-        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
+        Mon, 25 Mar 2019 12:34:39 -0400
+Received: from mail-eopbgr710068.outbound.protection.outlook.com ([40.107.71.68]:2209
+        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729824AbfCYQed (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 12:34:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector1-amd-com;
+        id S1729648AbfCYQeg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 12:34:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ericsson.com;
+ s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oCoWTXjpjzRli6KZQeHsUg8+5YdI3sAncaHV27c1AVc=;
- b=aAfmBPQRw5zyzHphEvL9is5D5wap/4UpNXxhYSFhRDjJucrTuqCZjFfYfwQO+U/0WNi0DEILI9nT7eF7Axqt19yxWTzQAN60OjV+cBlifWZgp/SG+ovl/EPVogWZWboMJH8KNLPncj0wWelWxdOPJs9yxw8HOUz9Wi9ZE8OmJgY=
-Received: from SN6PR12MB2639.namprd12.prod.outlook.com (52.135.103.16) by
- SN6PR12MB2749.namprd12.prod.outlook.com (52.135.107.28) with Microsoft SMTP
+ bh=07fsGvYmVhq4sIBJpvb+eSbUdcuHZPzfkbJNzH+Q3f8=;
+ b=gSlczPVqA54OnnGtxDApb3e6Jcj7vIeTU5DZO6Y7hB3n8yvrMEc+xmBeQUG/uu3towljTHHFHRHDALPyYjgx15Me+mN4oiT0gs09QtXpk8ZD9+YYiypK2DH7QSGdAoXNHCKofJ0KLJoEZ7z+laYIfLsEmHbJ5+tsssV84HVc6+c=
+Received: from BL0PR1501MB2003.namprd15.prod.outlook.com (52.132.21.33) by
+ BL0PR1501MB2068.namprd15.prod.outlook.com (52.132.21.154) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1730.19; Mon, 25 Mar 2019 16:34:22 +0000
-Received: from SN6PR12MB2639.namprd12.prod.outlook.com
- ([fe80::d49d:a1ee:9bcf:20e2]) by SN6PR12MB2639.namprd12.prod.outlook.com
- ([fe80::d49d:a1ee:9bcf:20e2%5]) with mapi id 15.20.1730.019; Mon, 25 Mar 2019
- 16:34:22 +0000
-From:   "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
-To:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
-CC:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>,
+ 15.20.1730.16; Mon, 25 Mar 2019 16:34:32 +0000
+Received: from BL0PR1501MB2003.namprd15.prod.outlook.com
+ ([fe80::54bc:4aab:4230:3047]) by BL0PR1501MB2003.namprd15.prod.outlook.com
+ ([fe80::54bc:4aab:4230:3047%4]) with mapi id 15.20.1730.019; Mon, 25 Mar 2019
+ 16:34:32 +0000
+From:   Jon Maloy <jon.maloy@ericsson.com>
+To:     syzbot <syzbot+ba21d65f55b562432c58@syzkaller.appspotmail.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "kuznet@ms2.inr.ac.ru" <kuznet@ms2.inr.ac.ru>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bp@suse.de" <bp@suse.de>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "rafal@milecki.pl" <rafal@milecki.pl>,
-        "clemej@gmail.com" <clemej@gmail.com>
-Subject: [PATCH v4 1/2] x86/MCE: Add function to allow filtering of MCA errors
-Thread-Topic: [PATCH v4 1/2] x86/MCE: Add function to allow filtering of MCA
- errors
-Thread-Index: AQHU4yiZZ+0d48CL0U+6DDOUp4sfcA==
-Date:   Mon, 25 Mar 2019 16:34:22 +0000
-Message-ID: <20190325163410.171021-1-Yazen.Ghannam@amd.com>
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "syzkaller-bugs@googlegroups.com" <syzkaller-bugs@googlegroups.com>,
+        "tipc-discussion@lists.sourceforge.net" 
+        <tipc-discussion@lists.sourceforge.net>,
+        "ying.xue@windriver.com" <ying.xue@windriver.com>,
+        "yoshfuji@linux-ipv6.org" <yoshfuji@linux-ipv6.org>
+Subject: RE: WARNING: locking bug in icmp_send
+Thread-Topic: WARNING: locking bug in icmp_send
+Thread-Index: AQHU4aKtpv/H8KwmQkaYLwC8x05gkaYcjZhg
+Date:   Mon, 25 Mar 2019 16:34:32 +0000
+Message-ID: <BL0PR1501MB20033F21FB21816CC2F50AA49A5E0@BL0PR1501MB2003.namprd15.prod.outlook.com>
+References: <000000000000bc227a0582464e62@google.com>
+ <0000000000003d44980584c6c82a@google.com>
+In-Reply-To: <0000000000003d44980584c6c82a@google.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-clientproxiedby: SN1PR12CA0106.namprd12.prod.outlook.com
- (2603:10b6:802:21::41) To SN6PR12MB2639.namprd12.prod.outlook.com
- (2603:10b6:805:6f::16)
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Yazen.Ghannam@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [165.204.78.1]
+ smtp.mailfrom=jon.maloy@ericsson.com; 
+x-originating-ip: [24.225.233.31]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f62fec10-3d8f-4a22-f399-08d6b13fbc29
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:SN6PR12MB2749;
-x-ms-traffictypediagnostic: SN6PR12MB2749:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <SN6PR12MB2749E45F546F6072F73BD8BDF85E0@SN6PR12MB2749.namprd12.prod.outlook.com>
+x-ms-office365-filtering-correlation-id: d4b11083-f8e8-4203-2e8b-08d6b13fc2b0
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:BL0PR1501MB2068;
+x-ms-traffictypediagnostic: BL0PR1501MB2068:
+x-ms-exchange-purlcount: 7
+x-microsoft-antispam-prvs: <BL0PR1501MB2068B9830AB5A3CF7415F9299A5E0@BL0PR1501MB2068.namprd15.prod.outlook.com>
 x-forefront-prvs: 0987ACA2E2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(396003)(346002)(39860400002)(136003)(376002)(199004)(189003)(81166006)(36756003)(54906003)(86362001)(7736002)(50226002)(476003)(81156014)(478600001)(8676002)(8936002)(305945005)(486006)(2501003)(71190400001)(71200400001)(105586002)(102836004)(26005)(2351001)(66066001)(106356001)(6916009)(4326008)(97736004)(186003)(386003)(2906002)(6306002)(6506007)(6436002)(72206003)(2616005)(68736007)(14444005)(53936002)(256004)(5640700003)(966005)(14454004)(5660300002)(6116002)(6512007)(316002)(3846002)(52116002)(99286004)(25786009)(6486002)(1076003);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2749;H:SN6PR12MB2639.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(376002)(396003)(346002)(39850400004)(366004)(199004)(189003)(13464003)(8676002)(68736007)(81166006)(6246003)(102836004)(106356001)(105586002)(81156014)(6506007)(76176011)(14454004)(53546011)(3846002)(5660300002)(110136005)(25786009)(316002)(33656002)(66066001)(7696005)(86362001)(2501003)(99286004)(2201001)(476003)(8936002)(305945005)(6306002)(9686003)(97736004)(6116002)(55016002)(53936002)(486006)(74316002)(11346002)(7736002)(478600001)(966005)(186003)(229853002)(6436002)(44832011)(26005)(71200400001)(52536014)(256004)(446003)(2906002)(14444005)(71190400001)(99710200001);DIR:OUT;SFP:1101;SCL:1;SRVR:BL0PR1501MB2068;H:BL0PR1501MB2003.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: ericsson.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: xqIWbAK8HghXll+GbmJoOAUIDbLXtyVErWJyd1yA5QIq1xHlLFOn/bD6wS3hi/dCxVTCIiBLLEpocjRq4ALQxm4WhrsQ2942j3ASaGAXv52RPecYX9pMLF/3BXnvD+yEp6apeMD960M2jod71qXnOkfBE33AyPYmedFo49lvedI+qrDC8NgtmImXs0etAjp+ePzPCtOyvsPIA41Bix9ez+cXlTuzww4V5zWt5Eot6ALileF4jJfxt8rbzuRrxrW98go4p1ToiWcVlGVTVjLmlXYevUPSBiegkxpveJ/xkP5eOaF6pbV+TdWu2DON+Ae3LlsyNi6B/KOOn9xMhJqv4OPeJRiC8/Mq0tm+iKqbaLoK4yT/MPA59ws+f3MwMhevugfQcJm0to0hljTIXgxdKOxYYyzepfS1htZ2A9D+zuQ=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+x-microsoft-antispam-message-info: RcYR9gKFa20h2CAqwUSTjlZCwad98i2Pi1IPha31HpJXWZGWAEB32yI7ZQf9s8ojgK2hNGOvLVGQsaT1vkamdPJNlBpkl+AmgXj/8JKESZmmqKM8m2/eKA2xSoY78EBcOMBkzDgHdqPGYet3We2UfhyxFz5mUH1bOgb9WP1VrN19QeeAiIVvhm1qTjXHRSqcVlq8704ziighidwyD+fo6mEDJf/X6rt1KqeRj4pRtna+IQ7mpqG/P1NOj9a2h3b/LYGgVEam8LciuOGjuGX++0md0CcuqCqsWMRPZGeegzI6Zm9k9QAhWlTOW7nT0cLnUBlYRa+fBUeZwpZly8+EOVXe15jrY3NHtp+aigBoY788PXqJM2be8oKM2TT+5sg4gKc8BWfyTgXsna/Q1CFnBVHagy6xjEFBX7wYAjyOBHU=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f62fec10-3d8f-4a22-f399-08d6b13fbc29
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Mar 2019 16:34:22.0998
+X-OriginatorOrg: ericsson.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d4b11083-f8e8-4203-2e8b-08d6b13fc2b0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Mar 2019 16:34:32.4754
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-id: 92e84ceb-fbfd-47ab-be52-080c6b87953f
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2749
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR1501MB2068
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yazen Ghannam <yazen.ghannam@amd.com>
-
-Some systems may report spurious MCA errors. In general, spurious MCA
-errors may be disabled by clearing a particular bit in MCA_CTL. However,
-clearing a bit in MCA_CTL may not be recommended for some errors, so the
-only option is to ignore them.
-
-An MCA error is printed and handled after it has been added to the MCE
-event pool. So an MCA error can be ignored by not adding it to the pool.
-
-Define a default function that does not filter any errors.
-
-Check if an MCA error should be filtered out when adding it to the MCE
-event pool.
-
-Cc: <stable@vger.kernel.org> # 5.0.x
-Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
----
-Link:
-https://lkml.kernel.org/r/20190322202848.20749-1-Yazen.Ghannam@amd.com
-
-v3->v4:
-* No change.
-
-v2->v3:
-* Define a regular function rather than function pointer.
-* Update comment in header file.
-
-v1->v2:
-* This is a new patch replacing V1 Patch 1 which is no longer needed.
-
- arch/x86/include/asm/mce.h        | 3 +++
- arch/x86/kernel/cpu/mce/core.c    | 5 +++++
- arch/x86/kernel/cpu/mce/genpool.c | 3 +++
- 3 files changed, 11 insertions(+)
-
-diff --git a/arch/x86/include/asm/mce.h b/arch/x86/include/asm/mce.h
-index dc2d4b206ab7..446919cb4ca8 100644
---- a/arch/x86/include/asm/mce.h
-+++ b/arch/x86/include/asm/mce.h
-@@ -243,6 +243,9 @@ extern void mce_disable_bank(int bank);
- extern void (*machine_check_vector)(struct pt_regs *, long error_code);
- void do_machine_check(struct pt_regs *, long);
-=20
-+/* Decide whether to add MCE record to MCE event pool or filter it out. */
-+extern bool filter_mce(struct mce *m);
-+
- /*
-  * Threshold handler
-  */
-diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.=
-c
-index b7fb541a4873..12d61b8f8154 100644
---- a/arch/x86/kernel/cpu/mce/core.c
-+++ b/arch/x86/kernel/cpu/mce/core.c
-@@ -1771,6 +1771,11 @@ static void __mcheck_cpu_init_timer(void)
- 	mce_start_timer(t);
- }
-=20
-+bool filter_mce(struct mce *m)
-+{
-+	return false;
-+}
-+
- /* Handle unconfigured int18 (should never happen) */
- static void unexpected_machine_check(struct pt_regs *regs, long error_code=
-)
- {
-diff --git a/arch/x86/kernel/cpu/mce/genpool.c b/arch/x86/kernel/cpu/mce/ge=
-npool.c
-index 3395549c51d3..64d1d5a00f39 100644
---- a/arch/x86/kernel/cpu/mce/genpool.c
-+++ b/arch/x86/kernel/cpu/mce/genpool.c
-@@ -99,6 +99,9 @@ int mce_gen_pool_add(struct mce *mce)
- {
- 	struct mce_evt_llist *node;
-=20
-+	if (filter_mce(mce))
-+		return -EINVAL;
-+
- 	if (!mce_evt_pool)
- 		return -EINVAL;
-=20
---=20
-2.17.1
-
+WWV0IGFub3RoZXIgZHVwbGljYXRlIG9mICBzeXpib3QrYTI1MzA3YWQwOTkzMDlmMWMyYjlAc3l6
+a2FsbGVyLmFwcHNwb3RtYWlsLmNvbQ0KDQpBIGZpeCBoYXMgYmVlbiBwb3N0ZWQuDQoNCi8vL2pv
+bg0KDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogbmV0ZGV2LW93bmVy
+QHZnZXIua2VybmVsLm9yZyA8bmV0ZGV2LW93bmVyQHZnZXIua2VybmVsLm9yZz4NCj4gT24gQmVo
+YWxmIE9mIHN5emJvdA0KPiBTZW50OiAyMy1NYXItMTkgMTk6MDMNCj4gVG86IGRhdmVtQGRhdmVt
+bG9mdC5uZXQ7IEpvbiBNYWxveSA8am9uLm1hbG95QGVyaWNzc29uLmNvbT47DQo+IGt1em5ldEBt
+czIuaW5yLmFjLnJ1OyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiBuZXRkZXZAdmdl
+ci5rZXJuZWwub3JnOyBzeXprYWxsZXItYnVnc0Bnb29nbGVncm91cHMuY29tOyB0aXBjLQ0KPiBk
+aXNjdXNzaW9uQGxpc3RzLnNvdXJjZWZvcmdlLm5ldDsgeWluZy54dWVAd2luZHJpdmVyLmNvbTsg
+eW9zaGZ1amlAbGludXgtDQo+IGlwdjYub3JnDQo+IFN1YmplY3Q6IFJlOiBXQVJOSU5HOiBsb2Nr
+aW5nIGJ1ZyBpbiBpY21wX3NlbmQNCj4gDQo+IHN5emJvdCBoYXMgYmlzZWN0ZWQgdGhpcyBidWcg
+dG86DQo+IA0KPiBjb21taXQgNTJkZmFlNWM4NWE0YzEwNzhlOWYxZDVlODk0N2Q0YTI1ZjczZGQ4
+MQ0KPiBBdXRob3I6IEpvbiBNYWxveSA8am9uLm1hbG95QGVyaWNzc29uLmNvbT4NCj4gRGF0ZTog
+ICBUaHUgTWFyIDIyIDE5OjQyOjUyIDIwMTggKzAwMDANCj4gDQo+ICAgICAgdGlwYzogb2J0YWlu
+IG5vZGUgaWRlbnRpdHkgZnJvbSBpbnRlcmZhY2UgYnkgZGVmYXVsdA0KPiANCj4gYmlzZWN0aW9u
+IGxvZzogIGh0dHBzOi8vc3l6a2FsbGVyLmFwcHNwb3QuY29tL3gvYmlzZWN0LnR4dD94PTExYjZk
+YzVkMjAwMDAwDQo+IHN0YXJ0IGNvbW1pdDogICBiNTM3MmZlNSBleGVjOiBsb2FkX3NjcmlwdDog
+RG8gbm90IGV4ZWMgdHJ1bmNhdGVkIGludGVycHJlLi4NCj4gZ2l0IHRyZWU6ICAgICAgIHVwc3Ry
+ZWFtDQo+IGZpbmFsIGNyYXNoOiAgICBodHRwczovL3N5emthbGxlci5hcHBzcG90LmNvbS94L3Jl
+cG9ydC50eHQ/eD0xM2I2ZGM1ZDIwMDAwMA0KPiBjb25zb2xlIG91dHB1dDogaHR0cHM6Ly9zeXpr
+YWxsZXIuYXBwc3BvdC5jb20veC9sb2cudHh0P3g9MTViNmRjNWQyMDAwMDANCj4ga2VybmVsIGNv
+bmZpZzogIGh0dHBzOi8vc3l6a2FsbGVyLmFwcHNwb3QuY29tL3gvLmNvbmZpZz94PTcxMzIzNDQ3
+MjhlN2VjM2YNCj4gZGFzaGJvYXJkIGxpbms6DQo+IGh0dHBzOi8vc3l6a2FsbGVyLmFwcHNwb3Qu
+Y29tL2J1Zz9leHRpZD1iYTIxZDY1ZjU1YjU2MjQzMmM1OA0KPiBzeXogcmVwcm86ICAgICAgaHR0
+cHM6Ly9zeXprYWxsZXIuYXBwc3BvdC5jb20veC9yZXByby5zeXo/eD0xNGM5MGZhNzQwMDAwMA0K
+PiANCj4gUmVwb3J0ZWQtYnk6IHN5emJvdCtiYTIxZDY1ZjU1YjU2MjQzMmM1OEBzeXprYWxsZXIu
+YXBwc3BvdG1haWwuY29tDQo+IEZpeGVzOiA1MmRmYWU1Yzg1YTQgKCJ0aXBjOiBvYnRhaW4gbm9k
+ZSBpZGVudGl0eSBmcm9tIGludGVyZmFjZSBieSBkZWZhdWx0IikNCj4gDQo+IEZvciBpbmZvcm1h
+dGlvbiBhYm91dCBiaXNlY3Rpb24gcHJvY2VzcyBzZWU6DQo+IGh0dHBzOi8vZ29vLmdsL3Rwc21F
+SiNiaXNlY3Rpb24NCg==
