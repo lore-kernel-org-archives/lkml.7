@@ -6,42 +6,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 602E6C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:27:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40559C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:27:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38AEA2070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:27:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A21A2070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:27:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730949AbfCYV1w (ORCPT
+        id S1730979AbfCYV15 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 17:27:52 -0400
-Received: from smtprelay0057.hostedemail.com ([216.40.44.57]:45157 "EHLO
+        Mon, 25 Mar 2019 17:27:57 -0400
+Received: from smtprelay0236.hostedemail.com ([216.40.44.236]:45170 "EHLO
         smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730260AbfCYV1v (ORCPT
+        by vger.kernel.org with ESMTP id S1730260AbfCYV14 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 17:27:51 -0400
+        Mon, 25 Mar 2019 17:27:56 -0400
 Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 26948100E86CD;
-        Mon, 25 Mar 2019 21:27:50 +0000 (UTC)
+        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 7328B100E86CC;
+        Mon, 25 Mar 2019 21:27:55 +0000 (UTC)
 X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: cent87_26fa9457d0750
-X-Filterd-Recvd-Size: 3831
+X-HE-Tag: leg70_27a9b3a88a542
+X-Filterd-Recvd-Size: 2991
 Received: from joe-laptop.perches.com (unknown [47.151.153.53])
         (Authenticated sender: joe@perches.com)
-        by omf02.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 25 Mar 2019 21:27:47 +0000 (UTC)
+        by omf17.hostedemail.com (Postfix) with ESMTPA;
+        Mon, 25 Mar 2019 21:27:52 +0000 (UTC)
 From:   Joe Perches <joe@perches.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
-        linux-media@vger.kernel.org,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: Bad file pattern in MAINTAINERS section 'ROCKCHIP VPU CODEC DRIVER'
-Date:   Mon, 25 Mar 2019 14:27:46 -0700
-Message-Id: <20190325212747.27463-1-joe@perches.com>
+Cc:     =?UTF-8?q?=C5=81ukasz=20Stelmach?= <l.stelmach@samsung.com>,
+        linux-samsung-soc@vger.kernel.org,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Philippe Ombredanne <pombredanne@nexb.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: Bad file pattern in MAINTAINERS section 'SAMSUNG EXYNOS TRUE RANDOM NUMBER GENERATOR (TRNG) DRIVER'
+Date:   Mon, 25 Mar 2019 14:27:51 -0700
+Message-Id: <20190325212751.27532-1-joe@perches.com>
 X-Mailer: git-send-email 2.15.0
 In-Reply-To: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com>
 References: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -62,53 +66,37 @@ Please fix this defect appropriately.
 
 linux-next MAINTAINERS section:
 
-	13312	ROCKCHIP VPU CODEC DRIVER
-	13313	M:	Ezequiel Garcia <ezequiel@collabora.com>
-	13314	L:	linux-media@vger.kernel.org
-	13315	S:	Maintained
--->	13316	F:	drivers/staging/media/platform/rockchip/vpu/
-	13317	F:	Documentation/devicetree/bindings/media/rockchip-vpu.txt
+	13589	SAMSUNG EXYNOS TRUE RANDOM NUMBER GENERATOR (TRNG) DRIVER
+	13590	M:	Łukasz Stelmach <l.stelmach@samsung.com>
+	13591	L:	linux-samsung-soc@vger.kernel.org
+	13592	S:	Maintained
+	13593	F:	drivers/char/hw_random/exynos-trng.c
+-->	13594	F:	Documentation/devicetree/bindings/rng/samsung,exynos5250-trng.txt
 
 2: ---------------------------------------------------------------------------
 
-The most recent commit that added or modified file pattern 'drivers/staging/media/platform/rockchip/vpu/':
+The most recent commit that added or modified file pattern 'Documentation/devicetree/bindings/rng/samsung,exynos5250-trng.txt':
 
-commit 775fec69008d30ed5e4ce9fa7701c5591e424c87
-Author: Ezequiel Garcia <ezequiel@collabora.com>
-Date:   Wed Dec 5 11:09:52 2018 -0500
+commit 6cd225cc5d8a6526b2bea41955882be55d4f109e
+Author: Łukasz Stelmach <l.stelmach@samsung.com>
+Date:   Fri Dec 22 17:48:35 2017 +0100
 
-    media: add Rockchip VPU JPEG encoder driver
+    hwrng: exynos - add Samsung Exynos True RNG driver
     
-    Add a mem2mem driver for the VPU available on Rockchip SoCs.
-    Currently only JPEG encoding is supported, for RK3399 and RK3288
-    platforms.
+    Add support for True Random Number Generator found in Samsung Exynos
+    5250+ SoCs.
     
-    Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-    Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-    [hverkuil-cisco@xs4all.nl: fix checkpatch.pl alignment warning]
-    Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+    Signed-off-by: Łukasz Stelmach <l.stelmach@samsung.com>
+    Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+    Acked-by: Philippe Ombredanne <pombredanne@nexb.com>
+    Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 
- MAINTAINERS                                        |   7 +
- drivers/staging/media/Kconfig                      |   2 +
- drivers/staging/media/Makefile                     |   1 +
- drivers/staging/media/rockchip/vpu/Kconfig         |  13 +
- drivers/staging/media/rockchip/vpu/Makefile        |  10 +
- drivers/staging/media/rockchip/vpu/TODO            |  13 +
- drivers/staging/media/rockchip/vpu/rk3288_vpu_hw.c | 118 ++++
- .../media/rockchip/vpu/rk3288_vpu_hw_jpeg_enc.c    | 130 ++++
- .../staging/media/rockchip/vpu/rk3288_vpu_regs.h   | 442 ++++++++++++++
- drivers/staging/media/rockchip/vpu/rk3399_vpu_hw.c | 118 ++++
- .../media/rockchip/vpu/rk3399_vpu_hw_jpeg_enc.c    | 164 +++++
- .../staging/media/rockchip/vpu/rk3399_vpu_regs.h   | 600 ++++++++++++++++++
- drivers/staging/media/rockchip/vpu/rockchip_vpu.h  | 232 +++++++
- .../media/rockchip/vpu/rockchip_vpu_common.h       |  29 +
- .../staging/media/rockchip/vpu/rockchip_vpu_drv.c  | 537 ++++++++++++++++
- .../staging/media/rockchip/vpu/rockchip_vpu_enc.c  | 676 +++++++++++++++++++++
- .../staging/media/rockchip/vpu/rockchip_vpu_hw.h   |  58 ++
- .../staging/media/rockchip/vpu/rockchip_vpu_jpeg.c | 290 +++++++++
- .../staging/media/rockchip/vpu/rockchip_vpu_jpeg.h |  14 +
- 19 files changed, 3454 insertions(+)
+ MAINTAINERS                          |   7 ++
+ drivers/char/hw_random/Kconfig       |  12 ++
+ drivers/char/hw_random/Makefile      |   1 +
+ drivers/char/hw_random/exynos-trng.c | 237 +++++++++++++++++++++++++++++++++++
+ 4 files changed, 257 insertions(+)
 
 3: ---------------------------------------------------------------------------
 
-No commit with file pattern 'drivers/staging/media/platform/rockchip/vpu/' was found
+No commit with file pattern 'Documentation/devicetree/bindings/rng/samsung,exynos5250-trng.txt' was found
