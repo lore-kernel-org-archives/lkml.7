@@ -2,162 +2,174 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7597C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:06:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 486ECC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:06:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 980CE20811
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:06:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="m0RspacW"
+	by mail.kernel.org (Postfix) with ESMTP id 2242F20811
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:06:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730006AbfCYVGU (ORCPT
+        id S1730260AbfCYVGX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 17:06:20 -0400
-Received: from mta-p6.oit.umn.edu ([134.84.196.206]:43174 "EHLO
-        mta-p6.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729283AbfCYVGT (ORCPT
+        Mon, 25 Mar 2019 17:06:23 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:41328 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729283AbfCYVGW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 17:06:19 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p6.oit.umn.edu (Postfix) with ESMTP id 55DAB744
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 21:06:18 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p6.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p6.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id szpUh4Pp7qqJ for <linux-kernel@vger.kernel.org>;
-        Mon, 25 Mar 2019 16:06:18 -0500 (CDT)
-Received: from mail-it1-f199.google.com (mail-it1-f199.google.com [209.85.166.199])
-        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p6.oit.umn.edu (Postfix) with ESMTPS id 1F4C4837
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 16:06:18 -0500 (CDT)
-Received: by mail-it1-f199.google.com with SMTP id q184so9646784itd.6
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 14:06:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=iELtKhPzIshZDbvaluvxOSSlfieDKoYqR5/gISsqtL4=;
-        b=m0RspacWboH26LXyLuz33+dSBEjUKG0ypxjT4LqXg+U4WL3PS9ejPqRXerKU7OGpYt
-         P03Tk4b7N4qVE3FVwCISOwdiV3y46lWFbzZOJauQhzX1kMhz0PXltXs1yKUnrEaaPxkJ
-         +nea06u7Q48zgb9V02xp+gXChOsQbRn2nn7DnH7Q8hVfepdDKfejiDNY56sa9C64jjxP
-         TLuVQW03ujx5z2MFYEx0tslqYVOQs1gnW872LEayQsU08Ljw7S9BkFF6w8UoSGoWi7qI
-         MI2cD5xPG0npV9KT8KRp/PR2jo3grxomjlFLjNw9l5Iw5tUEp1j7JoLpMPuPpgk8yXwI
-         tyBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=iELtKhPzIshZDbvaluvxOSSlfieDKoYqR5/gISsqtL4=;
-        b=mKMeb1kcpo/cYVMk0LZe+tHxVqd7gTn5sX01OcneZnzsF2BtqwRlD5L27Io7KfMoBj
-         /GoOMrIfZ124qJcBSpATeKas3WEhEvx4e9U/CnAshlcY9koQKlhApZSSwywwZW7ufxOf
-         Y60IhR9JmvhjWqI2Ew19Bpn0l8Gv/PN4hHA6vYKE/hTs455OmIyeM+smvsTfKsLDIDKu
-         Xob7GNzrbyLYKsZ0OQunqi80CsXO/1Z6XqJRiqa1wF8lk3x6GJB5SozczypqAX0LBWmw
-         TuXycdlaD2mBqHXYs0nEcG81iPS+3ec/VIUQG9Ptaw9HGHqg4tqOGxwNzql83Xn6/+Z0
-         VsIA==
-X-Gm-Message-State: APjAAAXzY9uT2Z+as4pjwMouT048Loigrg16j0Es4TocyO/k4xyLv2VL
-        ayxlaJ+sxgwoOel0gKfF1vvBshOFmFVFaDVufHogCGp+EMDH4xlYlBpQpFbHztJ5ZbXvxwMweqP
-        XLpU+3279KGVt/0sQ/j99v9zjiL4u
-X-Received: by 2002:a6b:8f4f:: with SMTP id r76mr20156290iod.161.1553547977724;
-        Mon, 25 Mar 2019 14:06:17 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxa51MJEwH2NRG/AJhC3SjhLoIINKCIt7AHZdr94gaiVEYmz7ty6GdPuXwiVdzvHjrNPc3HOQ==
-X-Received: by 2002:a6b:8f4f:: with SMTP id r76mr20156268iod.161.1553547977484;
-        Mon, 25 Mar 2019 14:06:17 -0700 (PDT)
-Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
-        by smtp.gmail.com with ESMTPSA id a80sm6326396ita.0.2019.03.25.14.06.16
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 25 Mar 2019 14:06:16 -0700 (PDT)
-From:   Kangjie Lu <kjlu@umn.edu>
-To:     kjlu@umn.edu
-Cc:     pakki001@umn.edu, Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] gpu: radeon: fix a potential NULL-pointer dereference
-Date:   Mon, 25 Mar 2019 16:05:52 -0500
-Message-Id: <20190325210552.12797-1-kjlu@umn.edu>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <0fc81efe-186b-3207-e0d0-b0bb95626069@daenzer.net>
-References: <0fc81efe-186b-3207-e0d0-b0bb95626069@daenzer.net>
+        Mon, 25 Mar 2019 17:06:22 -0400
+Received: from fsav402.sakura.ne.jp (fsav402.sakura.ne.jp [133.242.250.101])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x2PL5wHn010870;
+        Tue, 26 Mar 2019 06:05:58 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav402.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav402.sakura.ne.jp);
+ Tue, 26 Mar 2019 06:05:58 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav402.sakura.ne.jp)
+Received: from [192.168.1.8] (softbank126094122116.bbtec.net [126.94.122.116])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x2PL5rJm010855
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
+        Tue, 26 Mar 2019 06:05:58 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: Linux 5.1-rc2
+To:     James Morris <jmorris@namei.org>,
+        Randy Dunlap <rdunlap@infradead.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>
+References: <CAHk-=wgg_PRWs3a6u2gnFLQjhxOJcrFkqqWVnLw60eQAwD-DNw@mail.gmail.com>
+ <2d4f3bfa-22c7-a18c-3902-fe1b6ac401f7@infradead.org>
+ <alpine.LRH.2.21.1903260607500.13529@namei.org>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <8811b2e4-28e1-2f01-024b-fb7d0196483f@i-love.sakura.ne.jp>
+Date:   Tue, 26 Mar 2019 06:05:51 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <alpine.LRH.2.21.1903260607500.13529@namei.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case alloc_workqueue fails, the fix frees memory and
-returns -ENOMEM to avoid potential NULL pointer dereference.
+On 2019/03/26 4:08, James Morris wrote:
+> On Sun, 24 Mar 2019, Randy Dunlap wrote:
+> 
+>> On 3/24/19 2:26 PM, Linus Torvalds wrote:
+>>> Well, we're a week away from the merge window close, and here's rc2.
+>>> Things look fairly normal, but honestly, rc2 is usually too early to
+>>> tell.  People haven't necessarily had time to notice problems yet.
+>>> Which is just another way of saying "please test harder".
+>>>
+>>> Nothing particularly stands out. Yes, we had some fixes for the new
+>>> io_ring code for issues that were discussed when merging it. Other
+>>> than that, worth noting is that the bulk of the patches are for
+>>> tooling, not the core kernel. In fact, about two thirds of the patch
+>>> is just for the tools/ subdirectory, most of it due to some late perf
+>>> tool updates. The people involved promise they're done.
+>>
+>> Hmph.  I'm still looking for the patch that restores the various
+>> CONFIG_DEFAULT_<security> kconfig options to be merged.
+>>
+>> https://lore.kernel.org/linux-security-module/2bf23acd-22c4-a260-7648-845887a409d5@i-love.sakura.ne.jp/
+>>
+>> since commit 70b62c25665f636c9f6c700b26af7df296b0887e dropped them somehow.
+> 
+> AFAICT we don't have a finalized version of the patch yet.
+> 
+> Kees?
+> 
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
----
-v2: use radeon_crtc_destroy to properly clean up resources as
-suggested by Michel Dänzer <michel@daenzer.net>
----
- drivers/gpu/drm/radeon/radeon_display.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+As far as I can tell, Kees's comment
 
-diff --git a/drivers/gpu/drm/radeon/radeon_display.c b/drivers/gpu/drm/radeon/radeon_display.c
-index aa898c699101..3c6d3289316b 100644
---- a/drivers/gpu/drm/radeon/radeon_display.c
-+++ b/drivers/gpu/drm/radeon/radeon_display.c
-@@ -663,7 +663,7 @@ static const struct drm_crtc_funcs radeon_crtc_funcs = {
- 	.page_flip_target = radeon_crtc_page_flip_target,
- };
+  It breaks the backward-compat for the "security=" line. If a system is
+  booted with CONFIG_LSM="minors...,apparmor" and "security=selinux",
+  neither apparmor nor selinux will be initialized. The logic on
+  "security=..." depends on the other LSMs being present in the list.
+
+was just a confusion, and I think that this version can become
+the finalized version.
+
+From 72f5f21b800c87f9ec3600f6e3acfb654690d8f0 Mon Sep 17 00:00:00 2001
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Date: Tue, 26 Mar 2019 05:56:30 +0900
+Subject: [PATCH] LSM: Revive CONFIG_DEFAULT_SECURITY_* for "make oldconfig"
+
+Commit 70b62c25665f636c ("LoadPin: Initialize as ordered LSM") removed
+CONFIG_DEFAULT_SECURITY_{SELINUX,SMACK,TOMOYO,APPARMOR,DAC} from
+security/Kconfig and changed CONFIG_LSM to provide a fixed ordering as a
+default value. That commit expected that existing users (upgrading from
+Linux 5.0 and earlier) will edit CONFIG_LSM value in accordance with
+their CONFIG_DEFAULT_SECURITY_* choice in their old kernel configs. But
+since users might forget to edit CONFIG_LSM value, this patch revives
+the choice (only for providing the default value for CONFIG_LSM) in order
+to make sure that CONFIG_LSM reflects CONFIG_DEFAULT_SECURITY_* from their
+old kernel configs.
+
+Reported-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Acked-by: Casey Schaufler <casey@schaufler-ca.com>
+---
+ security/Kconfig | 37 ++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 36 insertions(+), 1 deletion(-)
+
+diff --git a/security/Kconfig b/security/Kconfig
+index 1d6463f..2f29805 100644
+--- a/security/Kconfig
++++ b/security/Kconfig
+@@ -239,9 +239,44 @@ source "security/safesetid/Kconfig"
  
--static void radeon_crtc_init(struct drm_device *dev, int index)
-+static int radeon_crtc_init(struct drm_device *dev, int index)
- {
- 	struct radeon_device *rdev = dev->dev_private;
- 	struct radeon_crtc *radeon_crtc;
-@@ -671,13 +671,18 @@ static void radeon_crtc_init(struct drm_device *dev, int index)
+ source "security/integrity/Kconfig"
  
- 	radeon_crtc = kzalloc(sizeof(struct radeon_crtc) + (RADEONFB_CONN_LIMIT * sizeof(struct drm_connector *)), GFP_KERNEL);
- 	if (radeon_crtc == NULL)
--		return;
-+		return -ENOMEM;
- 
- 	drm_crtc_init(dev, &radeon_crtc->base, &radeon_crtc_funcs);
- 
- 	drm_mode_crtc_set_gamma_size(&radeon_crtc->base, 256);
- 	radeon_crtc->crtc_id = index;
- 	radeon_crtc->flip_queue = alloc_workqueue("radeon-crtc", WQ_HIGHPRI, 0);
-+	if (!radeon_crtc->flip_queue) {
-+		DRM_ERROR("failed to allocate the flip queue\n");
-+		radeon_crtc_destroy(&radeon_crtc->base);
-+		return -ENOMEM;
-+	}
- 	rdev->mode_info.crtcs[index] = radeon_crtc;
- 
- 	if (rdev->family >= CHIP_BONAIRE) {
-@@ -706,6 +711,8 @@ static void radeon_crtc_init(struct drm_device *dev, int index)
- 		radeon_atombios_init_crtc(dev, radeon_crtc);
- 	else
- 		radeon_legacy_init_crtc(dev, radeon_crtc);
++choice
++	prompt "Default security module [superseded by 'Ordered list of enabled LSMs' below]"
++	default DEFAULT_SECURITY_SELINUX if SECURITY_SELINUX
++	default DEFAULT_SECURITY_SMACK if SECURITY_SMACK
++	default DEFAULT_SECURITY_TOMOYO if SECURITY_TOMOYO
++	default DEFAULT_SECURITY_APPARMOR if SECURITY_APPARMOR
++	default DEFAULT_SECURITY_DAC
 +
-+	return 0;
- }
- 
- static const char *encoder_names[38] = {
-@@ -1612,7 +1619,9 @@ int radeon_modeset_init(struct radeon_device *rdev)
- 
- 	/* allocate crtcs */
- 	for (i = 0; i < rdev->num_crtc; i++) {
--		radeon_crtc_init(rdev->ddev, i);
-+		ret = radeon_crtc_init(rdev->ddev, i);
-+		if (ret)
-+			return ret;
- 	}
- 
- 	/* okay we should have all the bios connectors */
++	help
++	  This choice is there only for converting CONFIG_DEFAULT_SECURITY in old
++	  kernel config to CONFIG_LSM in new kernel config. Don't change this choice
++	  unless you are creating a fresh kernel config, for this choice will be
++	  ignored after CONFIG_LSM is once defined.
++
++	config DEFAULT_SECURITY_SELINUX
++		bool "SELinux" if SECURITY_SELINUX=y
++
++	config DEFAULT_SECURITY_SMACK
++		bool "Simplified Mandatory Access Control" if SECURITY_SMACK=y
++
++	config DEFAULT_SECURITY_TOMOYO
++		bool "TOMOYO" if SECURITY_TOMOYO=y
++
++	config DEFAULT_SECURITY_APPARMOR
++		bool "AppArmor" if SECURITY_APPARMOR=y
++
++	config DEFAULT_SECURITY_DAC
++		bool "Unix Discretionary Access Controls"
++
++endchoice
++
+ config LSM
+ 	string "Ordered list of enabled LSMs"
+-	default "yama,loadpin,safesetid,integrity,selinux,smack,tomoyo,apparmor"
++	default "yama,loadpin,safesetid,integrity,selinux" if DEFAULT_SECURITY_SELINUX
++	default "yama,loadpin,safesetid,integrity,smack" if DEFAULT_SECURITY_SMACK
++	default "yama,loadpin,safesetid,integrity,tomoyo" if DEFAULT_SECURITY_TOMOYO
++	default "yama,loadpin,safesetid,integrity,apparmor" if DEFAULT_SECURITY_APPARMOR
++	default "yama,loadpin,safesetid,integrity"
+ 	help
+ 	  A comma-separated list of LSMs, in initialization order.
+ 	  Any LSMs left off this list will be ignored. This can be
 -- 
-2.17.1
-
+1.8.3.1
