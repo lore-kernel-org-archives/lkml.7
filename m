@@ -2,88 +2,89 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51D3FC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:52:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81EE8C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:53:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 234CA20879
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:52:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553532759;
-	bh=ybU7r+76kzhq4f+CrI/2NL4khhqXfEcTc/1tgHMwTv0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vGFNfHVWhZqvm5rt22Ke67qcJACapB4EuWS1C4kxdCxc/lzrqtIa8AonSwXbr1gg0
-	 dN6l5DGeb0cmHVBbtJewtdfVQlEt3+6d/jTMWCnZNBYK5F/MQluXHqTDTZr11iPBDR
-	 chgHSVlcYLY8vKauSaNszMT5CBpu/dlhPbkOrdRY=
+	by mail.kernel.org (Postfix) with ESMTP id 5324A20879
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:53:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729669AbfCYQwh (ORCPT
+        id S1729658AbfCYQxm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 12:52:37 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38143 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725788AbfCYQwh (ORCPT
+        Mon, 25 Mar 2019 12:53:42 -0400
+Received: from imap1.codethink.co.uk ([176.9.8.82]:38137 "EHLO
+        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725788AbfCYQxm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 12:52:37 -0400
-Received: by mail-wr1-f66.google.com with SMTP id k11so3611753wro.5;
-        Mon, 25 Mar 2019 09:52:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1Tm39GqRBHEezd9J++lwHbAdYBP0HBub4ZQAOjnxpho=;
-        b=gp6WCLPiNqfqmOIpk4KDZh6VjJkI5IbwemNcTLtgnFdJlBmmYfJ6j7QOMBNFKmn9Vk
-         sQROcBaQoDT65xnGUrvpkHg/OrX9yfjQUbWhkbVjMqAdNbRouNyDmXFW07xUTkLN1+VR
-         qSXuiieYGvdjDxTyaZPnHP/uEp69sYQTqOOd+c2dCo4sxbTeC8FH1EeBausBk7KwBWGq
-         EBUAakXGgukq7Ug/eh4UXgZ7p1HAdYwhjVxWimWJo1fQYrW+iHuJm+0PoJ2tpcgwXqgf
-         SDAwKE2n9WkZ/hMcIw1r5ar5ipj5rD9fC29BF4L/P0knMT0pWHU+PA9xzV66m/UJ66f2
-         mdUQ==
-X-Gm-Message-State: APjAAAV2+agJJ+gXRORSCxFi0YF2jFoSIQmi23tks2wnLe1fM+6FkRmZ
-        FytxEMDlJfI4N7OVwLWrjEA=
-X-Google-Smtp-Source: APXvYqw8o5JM7QGXoq8KEVz91yI+BGb0vDXtORn0/lC3nDW6yTyHiZYWWqG5unqLBTVkVxdrVf8p6A==
-X-Received: by 2002:adf:afd7:: with SMTP id y23mr15960719wrd.254.1553532755622;
-        Mon, 25 Mar 2019 09:52:35 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.153])
-        by smtp.googlemail.com with ESMTPSA id k4sm8668725wro.33.2019.03.25.09.52.34
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 25 Mar 2019 09:52:35 -0700 (PDT)
-Date:   Mon, 25 Mar 2019 17:52:33 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Benjamin Drung <bdrung@posteo.de>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ARM: dts: exynos: Fix spelling mistake of EXYNOS5420
-Message-ID: <20190325165233.GA16322@kozik-lap>
-References: <bb0903e066484e02f5dcd0e9cbe94a491a179fba.camel@posteo.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <bb0903e066484e02f5dcd0e9cbe94a491a179fba.camel@posteo.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Mon, 25 Mar 2019 12:53:42 -0400
+Received: from [167.98.27.226] (helo=ct-lt-1124)
+        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
+        id 1h8Sqx-0000QV-TT; Mon, 25 Mar 2019 16:53:40 +0000
+Received: from tpreston by ct-lt-1124 with local (Exim 4.89)
+        (envelope-from <tpreston@ct-lt-1124>)
+        id 1h8Sqx-0001Wg-H2; Mon, 25 Mar 2019 16:53:39 +0000
+From:   Thomas Preston <thomas.preston@codethink.co.uk>
+To:     rjw@rjwysocki.net, lenb@kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, andriy.shevchenko@linux.intel.com,
+        mika.westerberg@linux.intel.com
+Cc:     Thomas Preston <thomas.preston@codethink.co.uk>
+Subject: [PATCH v3] Documentation: acpi: Add an example for PRP0001
+Date:   Mon, 25 Mar 2019 16:53:38 +0000
+Message-Id: <20190325165338.5826-1-thomas.preston@codethink.co.uk>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 03, 2019 at 09:13:30PM +0100, Benjamin Drung wrote:
-> The SoC name EXYNOS5420 was misspelled.
-> 
-> Signed-off-by: Benjamin Drung <bdrung@posteo.de>
-> ---
->  arch/arm/boot/dts/exynos5420.dtsi | 2 +-
+Add an example for the magic PRP0001 device ID which allows matching
+ACPI devices against drivers using OF Device Tree compatible property.
 
-Sorry for late apply but you never sent it to samsung-soc maling list so
-it was not present on Patchwork (and somehow slipped through my filters).
+Signed-off-by: Thomas Preston <thomas.preston@codethink.co.uk>
+---
+ Documentation/acpi/enumeration.txt | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-The easiest way is to use scripts/get_maintainers.pl - it will print all
-necessary Cc-addresses.
-
-Thanks, applied now.
-
-Best regards,
-Krzysztof
+diff --git a/Documentation/acpi/enumeration.txt b/Documentation/acpi/enumeration.txt
+index 7bcf9c3d9fbe..1395b844649c 100644
+--- a/Documentation/acpi/enumeration.txt
++++ b/Documentation/acpi/enumeration.txt
+@@ -410,6 +410,32 @@ Specifically, the device IDs returned by _HID and preceding PRP0001 in the _CID
+ return package will be checked first.  Also in that case the bus type the device
+ will be enumerated to depends on the device ID returned by _HID.
+ 
++For example, the following ACPI sample might be used to enumerate an lm75-type
++I2C temperature sensor and match it to the driver using the Device Tree
++namespace link:
++
++	Device (TMP0)
++	{
++		Name (_HID, "PRP0001")
++		Name (_DSD, Package() {
++			ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
++			Package () {
++				Package (2) { "compatible", "ti,tmp75" },
++			}
++		})
++		Method (_CRS, 0, Serialized)
++		{
++			Name (SBUF, ResourceTemplate ()
++			{
++				I2cSerialBusV2 (0x48, ControllerInitiated,
++					400000, AddressingMode7Bit,
++					"\\_SB.PCI0.I2C1", 0x00,
++					ResourceConsumer, , Exclusive,)
++			})
++			Return (SBUF)
++		}
++	}
++
+ It is valid to define device objects with a _HID returning PRP0001 and without
+ the "compatible" property in the _DSD or a _CID as long as one of their
+ ancestors provides a _DSD with a valid "compatible" property.  Such device
+-- 
+2.11.0
 
