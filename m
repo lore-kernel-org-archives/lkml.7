@@ -2,288 +2,250 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5775C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 06:04:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B512AC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 06:04:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0E59205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 06:04:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 759FE205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 06:04:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="bx/TV7JT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ryg5WfZW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729719AbfCYGEo (ORCPT
+        id S1729735AbfCYGE4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 02:04:44 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:54607 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729342AbfCYGEn (ORCPT
+        Mon, 25 Mar 2019 02:04:56 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:34581 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729342AbfCYGEz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 02:04:43 -0400
-Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com [209.85.222.42]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id x2P64chw020585;
-        Mon, 25 Mar 2019 15:04:38 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x2P64chw020585
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1553493879;
-        bh=B4ChcblG4ZQCd4nPunH/ssjXK/AEQyd4y8j5fV5njEw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=bx/TV7JTsBNMGbuPK8R+CBCP0wAOOn3oY13hgQhR+xfNOD4GwNNodI7oD/duPafHg
-         tZqBqM6AbapEEnpRLV+uu2OEWpQo8LK3w+bNaaT8pfJ+p0Ddrnv8CVma9V6Lb8O9/7
-         7DJGRUycWOtHNs3skGj4DQWdRmO6hvoYmqkSnLbuQqNvAFRbM10WCqdbsyQLPc/Kwo
-         nU76uLlp9G1NwPBNrWttm1LZ1E0yyWCufbUgUIoDjcqY8LO8+H+LSBvXHlshN3kpnj
-         35bdc9kJ/cF3GN4CCMEfdWPoYgi+T3QchavqTZYm7uAuNWHcJDaKuUD/Qji/oHpxGQ
-         G4eBS+RohBA6Q==
-X-Nifty-SrcIP: [209.85.222.42]
-Received: by mail-ua1-f42.google.com with SMTP id x1so2604045uaj.4;
-        Sun, 24 Mar 2019 23:04:38 -0700 (PDT)
-X-Gm-Message-State: APjAAAVqwj5f347CBMjCOL6bca95YXSDKesYxfSrT8GH4cRypC0DWZjK
-        rcjyJqDLcmueqGfThmSywwp2BW1b3NSGvEJGPAA=
-X-Google-Smtp-Source: APXvYqx/S8UOKUHBbtCAjh/Xto7MQMzfktT9FG80DWAu/KsZ84Kmo/5ph+OPt43eFgITDysVhkw/Jr0iRpDR7nqg7EU=
-X-Received: by 2002:ab0:7493:: with SMTP id n19mr12913419uap.121.1553493877627;
- Sun, 24 Mar 2019 23:04:37 -0700 (PDT)
+        Mon, 25 Mar 2019 02:04:55 -0400
+Received: by mail-pf1-f194.google.com with SMTP id b3so4228734pfd.1;
+        Sun, 24 Mar 2019 23:04:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=lo/y4LVrDbirngV8ZQJtGQjH8jQRyE53ymUz3wq08xM=;
+        b=ryg5WfZWRCdggnxmMinSCT4uHdXW9ujOrE7WO/i/SiuGIeLNk/0H06mUkmn59gDYBA
+         tCqEAXoZMemt9Zu8uZMqr52y54hDldz5qH3NggOsK1at1mavOdgS1y12kBuy770StvVK
+         aSc/8mh+9FYkY9XRcQY70nRInfP/4aMDk7Ss5zDiLtS1MKNY5IvnqYBRTCjq6a/bIKI4
+         Z4C8lj6K8R4JY8pONH1PKNRP7OwDF+uFBIyHlpgas9ZlvYwKwXW+pTUrmDPi0dIFflu3
+         zL4TOJm9dqwyyALNQmSzdUy1Q34nELpiRO6nA/Tx8l2munD1npTqS6gUbjW/cLq6B3Kz
+         8OuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=lo/y4LVrDbirngV8ZQJtGQjH8jQRyE53ymUz3wq08xM=;
+        b=JRvHSJXx/DmU3ESiAULnvlAoD6w8WpMFbUCZHTn7yvDmGVMZvNNuxlrbIKZPP1nS7w
+         Rop9MMpy9YDpbG9klLoMip48RnuLpN9ba3WETx37iyoDjYt1Aj0ZaZItb1AAxbFlRf3R
+         ULJFtjI3Z8mm+2TS58AlZtj/I+A7arAgeLOb39dwwqZlMfJtgGuONq+EL5smKTP/oYFS
+         BAgFv5EhVZ2GqYZUKwhFhIfbopLlQHKUh5bc7+OyAqUZcWpbIo5sojMYoJPH7cI5CdpH
+         QLyotr0dcB+EgDnf0N+pow3GWOu86l2beyXJDZLAJrGH5sG639aiibaaEB9ZTxi3Y9L5
+         5BaQ==
+X-Gm-Message-State: APjAAAUzQg9SVROccEU753NOjxJEtYsEG737CHpwhM6aeWFX5l4k2qie
+        ONMRgkIxPomiBYk7117mqtc=
+X-Google-Smtp-Source: APXvYqzFhzHd2Jxz0COAG4rEDOkX/DQLp/PHNeDIqAzJs9KxeLlCrjKi73Y0vhgkOcYbZfwwQoCyqA==
+X-Received: by 2002:a17:902:6a89:: with SMTP id n9mr22786402plk.223.1553493895062;
+        Sun, 24 Mar 2019 23:04:55 -0700 (PDT)
+Received: from localhost.localdomain ([2001:268:c0a5:e068:c70:4af9:86e2:2])
+        by smtp.gmail.com with ESMTPSA id s4sm16613629pgp.89.2019.03.24.23.04.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 24 Mar 2019 23:04:54 -0700 (PDT)
+From:   William Breathitt Gray <vilhelm.gray@gmail.com>
+To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com
+Cc:     akpm@linux-foundation.org, linux-gpio@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andriy.shevchenko@linux.intel.com, linux@rasmusvillemoes.dk,
+        yamada.masahiro@socionext.com,
+        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
+        geert@linux-m68k.org, preid@electromag.com.au,
+        William Breathitt Gray <vilhelm.gray@gmail.com>
+Subject: [PATCH v11 08/11] gpio: pcie-idio-24: Utilize for_each_set_clump8 macro
+Date:   Mon, 25 Mar 2019 15:05:46 +0900
+Message-Id: <d117b75484d5b32469652404bd74e1f657daf410.1553492741.git.vilhelm.gray@gmail.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <cover.1553492741.git.vilhelm.gray@gmail.com>
+References: <cover.1553492741.git.vilhelm.gray@gmail.com>
 MIME-Version: 1.0
-References: <1553062828-27798-1-git-send-email-yamada.masahiro@socionext.com>
- <CAK7LNAQu9hmeSgKO_B1LhXqq9Z923H25HXNS9XYNvFi55WrFYw@mail.gmail.com>
- <CAK8P3a0-7LRE4ByO2Uf4tb5mR49SbZzBu0AgHpS=03FAMWFLgQ@mail.gmail.com>
- <CAK7LNATjXoNrbt2SSgR4omiQEBppOkF6mdcVJjpw2B+ihGQvGw@mail.gmail.com> <CAK8P3a3Y+r95FNpHjPznD5g1PSS=OuYdzT8VH9XNY2DTUhB-Tw@mail.gmail.com>
-In-Reply-To: <CAK8P3a3Y+r95FNpHjPznD5g1PSS=OuYdzT8VH9XNY2DTUhB-Tw@mail.gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Mon, 25 Mar 2019 15:04:01 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATJMtDpu9vRcZ+EZxRw9LSfNihCrNi_o0JKLqP-PjcOHg@mail.gmail.com>
-Message-ID: <CAK7LNATJMtDpu9vRcZ+EZxRw9LSfNihCrNi_o0JKLqP-PjcOHg@mail.gmail.com>
-Subject: Re: [PATCH] compiler: allow all arches to enable CONFIG_OPTIMIZE_INLINING
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     linux-arch <linux-arch@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Dave Hansen <dave@sr71.net>,
-        Michael Ellerman <mpe@ellerman.id.au>, X86 ML <x86@kernel.org>,
-        linux-mips@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnd,
+Replace verbose implementation in get_multiple/set_multiple callbacks
+with for_each_set_clump8 macro to simplify code and improve clarity.
 
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
+---
+ drivers/gpio/gpio-pcie-idio-24.c | 111 ++++++++++++-------------------
+ 1 file changed, 42 insertions(+), 69 deletions(-)
 
-
-
-On Wed, Mar 20, 2019 at 10:05 PM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Wed, Mar 20, 2019 at 11:19 AM Masahiro Yamada
-> <yamada.masahiro@socionext.com> wrote:
-> > On Wed, Mar 20, 2019 at 6:39 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> > >
-> > > On Wed, Mar 20, 2019 at 7:41 AM Masahiro Yamada
-> > > <yamada.masahiro@socionext.com> wrote:
-> > >
-> > > > It is unclear to me how to fix it.
-> > > > That's why I ended up with "depends on !MIPS".
-> > > >
-> > > >
-> > > >   MODPOST vmlinux.o
-> > > > arch/mips/mm/sc-mips.o: In function `mips_sc_prefetch_enable.part.2':
-> > > > sc-mips.c:(.text+0x98): undefined reference to `mips_gcr_base'
-> > > > sc-mips.c:(.text+0x9c): undefined reference to `mips_gcr_base'
-> > > > sc-mips.c:(.text+0xbc): undefined reference to `mips_gcr_base'
-> > > > sc-mips.c:(.text+0xc8): undefined reference to `mips_gcr_base'
-> > > > sc-mips.c:(.text+0xdc): undefined reference to `mips_gcr_base'
-> > > > arch/mips/mm/sc-mips.o:sc-mips.c:(.text.unlikely+0x44): more undefined
-> > > > references to `mips_gcr_base'
-> > > >
-> > > >
-> > > > Perhaps, MIPS folks may know how to fix it.
-> > >
-> > > I would guess like this:
-> > >
-> > > diff --git a/arch/mips/include/asm/mips-cm.h b/arch/mips/include/asm/mips-cm.h
-> > > index 8bc5df49b0e1..a27483fedb7d 100644
-> > > --- a/arch/mips/include/asm/mips-cm.h
-> > > +++ b/arch/mips/include/asm/mips-cm.h
-> > > @@ -79,7 +79,7 @@ static inline int mips_cm_probe(void)
-> > >   *
-> > >   * Returns true if a CM is present in the system, else false.
-> > >   */
-> > > -static inline bool mips_cm_present(void)
-> > > +static __always_inline bool mips_cm_present(void)
-> > >  {
-> > >  #ifdef CONFIG_MIPS_CM
-> > >         return mips_gcr_base != NULL;
-> > > @@ -93,7 +93,7 @@ static inline bool mips_cm_present(void)
-> > >   *
-> > >   * Returns true if the system implements an L2-only sync region, else false.
-> > >   */
-> > > -static inline bool mips_cm_has_l2sync(void)
-> > > +static __always_inline bool mips_cm_has_l2sync(void)
-> > >  {
-> > >  #ifdef CONFIG_MIPS_CM
-> > >         return mips_cm_l2sync_base != NULL;
-> > >
-> >
-> >
-> > Thanks, I applied the above, but I still see
-> >  undefined reference to `mips_gcr_base'
-> >
-> >
-> > I attached .config to produce this error.
-> >
-> > I use prebuilt mips-linux-gcc from
-> > https://mirrors.edge.kernel.org/pub/tools/crosstool/files/bin/x86_64/8.1.0/
->
-> I got to this patch experimentally, it fixes the problem for me:
->
-> diff --git a/arch/mips/mm/sc-mips.c b/arch/mips/mm/sc-mips.c
-> index 394673991bab..d70d02da038b 100644
-> --- a/arch/mips/mm/sc-mips.c
-> +++ b/arch/mips/mm/sc-mips.c
-> @@ -181,7 +181,7 @@ static int __init mips_sc_probe_cm3(void)
->         return 0;
->  }
->
-> -static inline int __init mips_sc_probe(void)
-> +static __always_inline int __init mips_sc_probe(void)
->  {
->         struct cpuinfo_mips *c = &current_cpu_data;
->         unsigned int config1, config2;
-> diff --git a/arch/mips/include/asm/bitops.h b/arch/mips/include/asm/bitops.h
-> index 830c93a010c3..186c28463bf3 100644
-> --- a/arch/mips/include/asm/bitops.h
-> +++ b/arch/mips/include/asm/bitops.h
-> @@ -548,7 +548,7 @@ static inline unsigned long __fls(unsigned long word)
->   * Returns 0..SZLONG-1
->   * Undefined if no bit exists, so code should check against 0 first.
->   */
-> -static inline unsigned long __ffs(unsigned long word)
-> +static __always_inline unsigned long __ffs(unsigned long word)
->  {
->         return __fls(word & -word);
->  }
->
->
-> It does look like a gcc bug though, as at least some of the references
-> are from a function that got split out from an inlined function but that
-> has no remaining call sites.
->
->        Arnd
-
-
-I applied it, but
-"undefined reference to `mips_gcr_base'" still remains.
-
-
-Then, I got a solution. This is it:
-
-diff --git a/arch/mips/include/asm/bitops.h b/arch/mips/include/asm/bitops.h
-index 830c93a..6a26ead 100644
---- a/arch/mips/include/asm/bitops.h
-+++ b/arch/mips/include/asm/bitops.h
-@@ -482,7 +482,7 @@ static inline void __clear_bit_unlock(unsigned
-long nr, volatile unsigned long *
-  * Return the bit position (0..63) of the most significant 1 bit in a word
-  * Returns -1 if no 1 bit exists
-  */
--static inline unsigned long __fls(unsigned long word)
-+static __always_inline unsigned long __fls(unsigned long word)
+diff --git a/drivers/gpio/gpio-pcie-idio-24.c b/drivers/gpio/gpio-pcie-idio-24.c
+index 52f1647a46fd..2ceff1f5d8fd 100644
+--- a/drivers/gpio/gpio-pcie-idio-24.c
++++ b/drivers/gpio/gpio-pcie-idio-24.c
+@@ -198,52 +198,35 @@ static int idio_24_gpio_get_multiple(struct gpio_chip *chip,
+ 	unsigned long *mask, unsigned long *bits)
  {
-        int num;
-
-
-
-LEROY Christophe provided me a tip
-to find out the cause of the error.
-
--Winline pin-points which function
-was not inlined despite of its inline marker.
-
-
-
-$ make -j8  ARCH=mips CROSS_COMPILE=mips-linux- KCFLAGS=-Winline
-arch/mips/mm/sc-mips.o
-  CC      scripts/mod/devicetable-offsets.s
-  CC      scripts/mod/empty.o
-  MKELF   scripts/mod/elfconfig.h
-  HOSTCC  scripts/mod/modpost.o
-  HOSTCC  scripts/mod/sumversion.o
-  HOSTCC  scripts/mod/file2alias.o
-  HOSTLD  scripts/mod/modpost
-  CC      kernel/bounds.s
-  CALL    scripts/atomic/check-atomics.sh
-  CC      arch/mips/kernel/asm-offsets.s
-  CALL    scripts/checksyscalls.sh
-<stdin>:1478:2: warning: #warning syscall pidfd_send_signal not
-implemented [-Wcpp]
-<stdin>:1481:2: warning: #warning syscall io_uring_setup not implemented [-Wcpp]
-<stdin>:1484:2: warning: #warning syscall io_uring_enter not implemented [-Wcpp]
-<stdin>:1487:2: warning: #warning syscall io_uring_register not
-implemented [-Wcpp]
-  CC      arch/mips/mm/sc-mips.o
-In file included from ./include/linux/bitops.h:19,
-                 from ./include/linux/kernel.h:12,
-                 from arch/mips/mm/sc-mips.c:6:
-./arch/mips/include/asm/bitops.h: In function 'mips_sc_init':
-./arch/mips/include/asm/bitops.h:485:29: warning: inlining failed in
-call to '__fls': call is unlikely and code size would grow [-Winline]
- static inline unsigned long __fls(unsigned long word)
-                             ^~~~~
-./arch/mips/include/asm/bitops.h:553:9: note: called from here
-  return __fls(word & -word);
-         ^~~~~~~~~~~~~~~~~~~
-./arch/mips/include/asm/bitops.h:485:29: warning: inlining failed in
-call to '__fls': call is unlikely and code size would grow [-Winline]
- static inline unsigned long __fls(unsigned long word)
-                             ^~~~~
-./arch/mips/include/asm/bitops.h:553:9: note: called from here
-  return __fls(word & -word);
-         ^~~~~~~~~~~~~~~~~~~
-./arch/mips/include/asm/bitops.h:485:29: warning: inlining failed in
-call to '__fls': call is unlikely and code size would grow [-Winline]
- static inline unsigned long __fls(unsigned long word)
-                             ^~~~~
-./arch/mips/include/asm/bitops.h:553:9: note: called from here
-  return __fls(word & -word);
-         ^~~~~~~~~~~~~~~~~~~
-./arch/mips/include/asm/bitops.h:485:29: warning: inlining failed in
-call to '__fls': call is unlikely and code size would grow [-Winline]
- static inline unsigned long __fls(unsigned long word)
-                             ^~~~~
-./arch/mips/include/asm/bitops.h:553:9: note: called from here
-  return __fls(word & -word);
-         ^~~~~~~~~~~~~~~~~~~
-./arch/mips/include/asm/bitops.h:485:29: warning: inlining failed in
-call to '__fls': call is unlikely and code size would grow [-Winline]
- static inline unsigned long __fls(unsigned long word)
-                             ^~~~~
-./arch/mips/include/asm/bitops.h:553:9: note: called from here
-  return __fls(word & -word);
-         ^~~~~~~~~~~~~~~~~~~
-./arch/mips/include/asm/bitops.h:485:29: warning: inlining failed in
-call to '__fls': call is unlikely and code size would grow [-Winline]
- static inline unsigned long __fls(unsigned long word)
-                             ^~~~~
-./arch/mips/include/asm/bitops.h:553:9: note: called from here
-  return __fls(word & -word);
-         ^~~~~~~~~~~~~~~~~~~
-./arch/mips/include/asm/bitops.h:485:29: warning: inlining failed in
-call to '__fls': call is unlikely and code size would grow [-Winline]
- static inline unsigned long __fls(unsigned long word)
-                             ^~~~~
-./arch/mips/include/asm/bitops.h:553:9: note: called from here
-  return __fls(word & -word);
-         ^~~~~~~~~~~~~~~~~~~
-
-
-
+ 	struct idio_24_gpio *const idio24gpio = gpiochip_get_data(chip);
+-	size_t i;
+-	const unsigned int gpio_reg_size = 8;
+-	unsigned int bits_offset;
+-	size_t word_index;
+-	unsigned int word_offset;
+-	unsigned long word_mask;
+-	const unsigned long port_mask = GENMASK(gpio_reg_size - 1, 0);
+-	unsigned long port_state;
++	unsigned int offset;
++	unsigned long gpio_mask;
+ 	void __iomem *ports[] = {
+ 		&idio24gpio->reg->out0_7, &idio24gpio->reg->out8_15,
+ 		&idio24gpio->reg->out16_23, &idio24gpio->reg->in0_7,
+ 		&idio24gpio->reg->in8_15, &idio24gpio->reg->in16_23,
+ 	};
++	const unsigned int ngpio = ARRAY_SIZE(ports) * 8;
++	size_t index;
++	unsigned long port_state;
+ 	const unsigned long out_mode_mask = BIT(1);
+ 
+ 	/* clear bits array to a clean slate */
+ 	bitmap_zero(bits, chip->ngpio);
+ 
+-	/* get bits are evaluated a gpio port register at a time */
+-	for (i = 0; i < ARRAY_SIZE(ports) + 1; i++) {
+-		/* gpio offset in bits array */
+-		bits_offset = i * gpio_reg_size;
+-
+-		/* word index for bits array */
+-		word_index = BIT_WORD(bits_offset);
+-
+-		/* gpio offset within current word of bits array */
+-		word_offset = bits_offset % BITS_PER_LONG;
+-
+-		/* mask of get bits for current gpio within current word */
+-		word_mask = mask[word_index] & (port_mask << word_offset);
+-		if (!word_mask) {
+-			/* no get bits in this port so skip to next one */
+-			continue;
+-		}
++	for_each_set_clump8(offset, gpio_mask, mask, ngpio) {
++		index = offset / 8;
+ 
+ 		/* read bits from current gpio port (port 6 is TTL GPIO) */
+-		if (i < 6)
+-			port_state = ioread8(ports[i]);
++		if (index < 6)
++			port_state = ioread8(ports[index]);
+ 		else if (ioread8(&idio24gpio->reg->ctl) & out_mode_mask)
+ 			port_state = ioread8(&idio24gpio->reg->ttl_out0_7);
+ 		else
+ 			port_state = ioread8(&idio24gpio->reg->ttl_in0_7);
+ 
+-		/* store acquired bits at respective bits array offset */
+-		bits[word_index] |= (port_state << word_offset) & word_mask;
++		port_state &= gpio_mask;
++
++		bitmap_set_value8(bits, ngpio, port_state, offset);
+ 	}
+ 
+ 	return 0;
+@@ -294,59 +277,49 @@ static void idio_24_gpio_set_multiple(struct gpio_chip *chip,
+ 	unsigned long *mask, unsigned long *bits)
+ {
+ 	struct idio_24_gpio *const idio24gpio = gpiochip_get_data(chip);
+-	size_t i;
+-	unsigned long bits_offset;
++	unsigned int offset;
+ 	unsigned long gpio_mask;
+-	const unsigned int gpio_reg_size = 8;
+-	const unsigned long port_mask = GENMASK(gpio_reg_size, 0);
+-	unsigned long flags;
+-	unsigned int out_state;
+ 	void __iomem *ports[] = {
+ 		&idio24gpio->reg->out0_7, &idio24gpio->reg->out8_15,
+ 		&idio24gpio->reg->out16_23
+ 	};
++	const unsigned int ngpio = ARRAY_SIZE(ports) * 8;
++	size_t index;
++	unsigned int bitmask;
++	unsigned long flags;
++	unsigned int out_state;
+ 	const unsigned long out_mode_mask = BIT(1);
+-	const unsigned int ttl_offset = 48;
+-	const size_t ttl_i = BIT_WORD(ttl_offset);
+-	const unsigned int word_offset = ttl_offset % BITS_PER_LONG;
+-	const unsigned long ttl_mask = (mask[ttl_i] >> word_offset) & port_mask;
+-	const unsigned long ttl_bits = (bits[ttl_i] >> word_offset) & ttl_mask;
+-
+-	/* set bits are processed a gpio port register at a time */
+-	for (i = 0; i < ARRAY_SIZE(ports); i++) {
+-		/* gpio offset in bits array */
+-		bits_offset = i * gpio_reg_size;
+-
+-		/* check if any set bits for current port */
+-		gpio_mask = (*mask >> bits_offset) & port_mask;
+-		if (!gpio_mask) {
+-			/* no set bits for this port so move on to next port */
+-			continue;
+-		}
+ 
+-		raw_spin_lock_irqsave(&idio24gpio->lock, flags);
++	for_each_set_clump8(offset, gpio_mask, mask, ngpio) {
++		index = offset / 8;
+ 
+-		/* process output lines */
+-		out_state = ioread8(ports[i]) & ~gpio_mask;
+-		out_state |= (*bits >> bits_offset) & gpio_mask;
+-		iowrite8(out_state, ports[i]);
++		bitmask = bitmap_get_value8(bits, ngpio, offset) & gpio_mask;
+ 
+-		raw_spin_unlock_irqrestore(&idio24gpio->lock, flags);
+-	}
++		raw_spin_lock_irqsave(&idio24gpio->lock, flags);
+ 
+-	/* check if setting TTL lines and if they are in output mode */
+-	if (!ttl_mask || !(ioread8(&idio24gpio->reg->ctl) & out_mode_mask))
+-		return;
++		/* read bits from current gpio port (port 6 is TTL GPIO) */
++		if (index < 6) {
++			out_state = ioread8(ports[index]);
++		} else if (ioread8(&idio24gpio->reg->ctl) & out_mode_mask) {
++			out_state = ioread8(&idio24gpio->reg->ttl_out0_7);
++		} else {
++			/* skip TTL GPIO if set for input */
++			raw_spin_unlock_irqrestore(&idio24gpio->lock, flags);
++			continue;
++		}
+ 
+-	/* handle TTL output */
+-	raw_spin_lock_irqsave(&idio24gpio->lock, flags);
++		/* set requested bit states */
++		out_state &= ~gpio_mask;
++		out_state |= bitmask;
+ 
+-	/* process output lines */
+-	out_state = ioread8(&idio24gpio->reg->ttl_out0_7) & ~ttl_mask;
+-	out_state |= ttl_bits;
+-	iowrite8(out_state, &idio24gpio->reg->ttl_out0_7);
++		/* write bits for current gpio port (port 6 is TTL GPIO) */
++		if (index < 6)
++			iowrite8(out_state, ports[index]);
++		else
++			iowrite8(out_state, &idio24gpio->reg->ttl_out0_7);
+ 
+-	raw_spin_unlock_irqrestore(&idio24gpio->lock, flags);
++		raw_spin_unlock_irqrestore(&idio24gpio->lock, flags);
++	}
+ }
+ 
+ static void idio_24_irq_ack(struct irq_data *data)
 -- 
-Best Regards
-Masahiro Yamada
+2.21.0
+
