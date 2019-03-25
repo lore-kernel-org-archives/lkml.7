@@ -2,238 +2,338 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 293D7C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 10:22:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E5EDC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 10:23:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0D6120870
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 10:22:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="UkLtuJqK"
+	by mail.kernel.org (Postfix) with ESMTP id 1157020879
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 10:23:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730685AbfCYKWn (ORCPT
+        id S1730689AbfCYKXa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 06:22:43 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:44037 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730465AbfCYKWm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 06:22:42 -0400
-Received: by mail-wr1-f65.google.com with SMTP id y7so5304617wrn.11
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 03:22:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:openpgp:autocrypt:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=tHA7tV9asEvjrWcZfPQYwPMquyudhnWUuWlK5p2/1NQ=;
-        b=UkLtuJqKIawhW1lT6MbfkPZPY2KqSkJYCFM0VcbbEZNIOg4wXnqnfcbM9IruKP9oDD
-         v52ykYsnb7IhwglDzuaMRxT4rZDffphKUwqVkawbVYi0jsULS73TiY8Fo/XPSfFY5YB0
-         SfPeGbkdTUR7ByNReFaWUFL0ubIavJMKrgDoMU/rS/wXZQ3klJvtK0ayHQxwe8TsTqu3
-         NfzQmoYp6OnyPZZ4pkUi93ex+fbn5+Yi2/upTkAwCWPZuKszfZvF5Rn4OQESBvdm2vJe
-         rjAeqaNIy8iyJ0uoXDcbGa3+RzCctRTeMC2eUbhANRy7kedRUVOkdvTdcOytXYhiy4Ez
-         2bfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=tHA7tV9asEvjrWcZfPQYwPMquyudhnWUuWlK5p2/1NQ=;
-        b=BiF57/s9I81qh37RKqfq27YJ5O2LNbMSrjh0aRjxX2d+ywaIFAoTzpYWTOMs0cktLC
-         lm3vZxN0Qs2VWOuAtrnQmgUlOx0KV/e+hbQjkhO6PDG9IKxjVba/6e5jDj/Z5lpNg/1s
-         8pzaCJhpKooo3DOvsWEfd2fVJk8Ar/gLYZdk+wp5WJZz4ZDTEwBrwovlvrPufJaqaBkv
-         yLxMW/3cCIo4WsjVVhmWdjsHX24CuvAk3GRfLmhzVdAmUT5ZhDX2nP1OMEOhhM3pnQDB
-         PN8hRL+whnXVqY2/lizI6XKIEfK/xVlHm4p6Sk8r5Fbfo+4zIKUnBnCXTj+/CVC2J8/9
-         bp9w==
-X-Gm-Message-State: APjAAAWiNh0Tc7RUnIubF+gWmFDTEvpJYTDVR1//YFvNM0MapKsCvuk3
-        T7Qp0l9t1s8GZHKAQKf5Hntojw==
-X-Google-Smtp-Source: APXvYqyJHAeUrSXstycbF3liIzwkOTMhLfWDvtzVBK5bnmXBc/od3wPG8J6VmXrroG9NbBex2Qa4ag==
-X-Received: by 2002:a5d:6a87:: with SMTP id s7mr16006798wru.81.1553509360128;
-        Mon, 25 Mar 2019 03:22:40 -0700 (PDT)
-Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id r9sm3309956wrv.82.2019.03.25.03.22.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 25 Mar 2019 03:22:39 -0700 (PDT)
-Subject: Re: [PATCH] drm/bridge: dw-hdmi: disable SCDC configuration for
- invalid setups
-To:     a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com,
-        heiko@sntech.de, robh@kernel.org
-Cc:     linux-amlogic@lists.infradead.org,
-        linux-rockchip@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        jernej.skrabec@siol.net
-References: <20190315095414.28520-1-narmstrong@baylibre.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- ZaTUOEkgIor5losDrePdPgE=
-Organization: Baylibre
-Message-ID: <c4032279-3cc5-aeb8-a255-2715bc130e11@baylibre.com>
-Date:   Mon, 25 Mar 2019 11:22:34 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Mon, 25 Mar 2019 06:23:30 -0400
+Received: from mga03.intel.com ([134.134.136.65]:51851 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730491AbfCYKX3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 06:23:29 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Mar 2019 03:23:28 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,256,1549958400"; 
+   d="scan'208";a="330441007"
+Received: from rbhardw1-mobl.gar.corp.intel.com (HELO [10.67.174.150]) ([10.67.174.150])
+  by fmsmga006.fm.intel.com with ESMTP; 25 Mar 2019 03:23:24 -0700
+Subject: Re: [PATCH 1/2] platform/x86: intel_pmc_core: Convert to a
+ platform_driver
+To:     Rajat Jain <rajatja@google.com>
+Cc:     Rajat Jain <rajatxjain@gmail.com>,
+        Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>,
+        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
+        Vishwanath Somayaji <vishwanath.somayaji@intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Furquan Shaikh <furquan@google.com>,
+        Evan Green <evgreen@google.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        "Box, David E" <david.e.box@intel.com>
+References: <20190313222124.229371-1-rajatja@google.com>
+ <20190316081752.GA21812@raj-desk2.iind.intel.com>
+ <CAA93t1qoQx2B9=KuNpuXL_PvdpgGJPzZk8N-KWqS4XyO8qrS5g@mail.gmail.com>
+ <3fc03e60-492a-e9b5-ac9b-caa17f8a8e27@linux.intel.com>
+ <CACK8Z6HGEeM_0AnM1eJcUgNPwFz6_wsT8oFAG2rkV4UZczDi3g@mail.gmail.com>
+From:   "Bhardwaj, Rajneesh" <rajneesh.bhardwaj@linux.intel.com>
+Message-ID: <c98af2ef-5800-0dee-7b58-3be48f612d07@linux.intel.com>
+Date:   Mon, 25 Mar 2019 15:53:23 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.0
 MIME-Version: 1.0
-In-Reply-To: <20190315095414.28520-1-narmstrong@baylibre.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <CACK8Z6HGEeM_0AnM1eJcUgNPwFz6_wsT8oFAG2rkV4UZczDi3g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrzej, Laurent,
+Hi Rajat
 
-Gentle ping,
-Did you have time to review this fix ?
+On 23-Mar-19 6:00 AM, Rajat Jain wrote:
+> Hi Rajneesh,
+>
+>
+>
+> On Fri, Mar 22, 2019 at 12:56 PM Bhardwaj, Rajneesh
+> <rajneesh.bhardwaj@linux.intel.com> wrote:
+>> Some suggestions below
+>>
+>> On 18-Mar-19 8:36 PM, Rajat Jain wrote:
+>>
+>> On Sat, Mar 16, 2019 at 1:30 AM Rajneesh Bhardwaj
+>> <rajneesh.bhardwaj@intel.com> wrote:
+>>
+>> On Wed, Mar 13, 2019 at 03:21:23PM -0700, Rajat Jain wrote:
+>>
+>> Convert the intel_pmc_core driver to a platform driver. There is no
+>> functional change. Some code that tries to determine what kind of
+>> CPU this is, has been moved code is moved from pmc_core_probe() to
+>>
+>> Possible typo here.
+>>
+>> Ummm, you mean grammar error I guess? Sure, I will rephrase.
+>>
+>> pmc_core_init().
+>>
+>> Signed-off-by: Rajat Jain <rajatja@google.com>
+>>
+>> Thanks for sending this. This is certainly useful to support suspend-resume
+>> functionality for this driver which is otherwise only possible with PM
+>> notifiers otherwise and that is not desirable. Initially this was a PCI
+>> driver and after design discussion it was converted to module. I would like
+>> to consult Andy and Srinivas for their opinion about binding it to actual
+>> platform bus instead of the virtual bus as in its current form. In one of the
+>> internal versions, we used a known acpi PNP HID.
+>>
+>> Sure, if there is an established ACPI PNP HID, then we could bind it
+>> using that, on platforms where we are still developing BIOS /
+>> coreboot. However, this might not be possible for shipping systems
+>> (Kabylake / skylake) where there is no plan to change the BIOS.
+>>
+>> In one of our internal patches, i had used HID of power engine plugin. IIRC, During my testing it was working on KBL, CNL with UEFI BIOS but i highly recommend testing it.
+>>
+>> ---8<----8<-----
+>>
+>> +static const struct acpi_device_id pmc_acpi_ids[] = {
+>>
+>> +             {"INT33A1", 0}, /* _HID for Intel Power Engine, _CID PNP0D80*/
+>>
+>> +             { }
+>>
+>>   };
+> We do not have this device in any of our ACPI tables today. If Intel
+> can confirm that this is a well known HID to be used for attaching
+> this driver, we can start putting it on our platform's ACPI going
+> forward (Whiskeylake, Cometlake, Cannonlake, Icelake ...). But I
+> believe we also need to have this driver attach with the device on
+> older platforms (Skylake, Kabylake, Amberlake) that are already
+> shipping, and running a Non UEFI BIOS (that may not have this HID
+> since it is not published).
+>
+> Currently the intel_pmc_core driver attaches itself to the following
+> table of CPU families, without regard to whether it has that HID in
+> the ACPI or not:
+>
+> static const struct x86_cpu_id intel_pmc_core_ids[] = {
+>          INTEL_CPU_FAM6(SKYLAKE_MOBILE, spt_reg_map),
+>          INTEL_CPU_FAM6(SKYLAKE_DESKTOP, spt_reg_map),
+>          INTEL_CPU_FAM6(KABYLAKE_MOBILE, spt_reg_map),
+>          INTEL_CPU_FAM6(KABYLAKE_DESKTOP, spt_reg_map),
+>          INTEL_CPU_FAM6(CANNONLAKE_MOBILE, cnp_reg_map),
+>          INTEL_CPU_FAM6(ICELAKE_MOBILE, icl_reg_map),
+>          {}
+> };
 
-Thanks !
-Neil
+In the past i tried one hybrid approach i.e. PCI and Platform driver at 
+the same time. Based on that, i feel that this idea of spilling probe 
+like this may not be the best option. The ACPI CID that i suggested is 
+available on most Intel Core Platforms that i have worked on and i can 
+help you in verifying it with UEFI BIOS if you want. Meanwhile, please 
+see this https://patchwork.kernel.org/patch/9806565/ it gives some 
+background about this ACPI ID and also points to the LPIT spec.
 
-On 15/03/2019 10:54, Neil Armstrong wrote:
-> This patch is an attempt to limit HDMI 2.0 SCDC setup when :
-> - the SoC embeds an HDMI 1.4 only controller
-> - the EDID supports SCDC but not scrambling
-> - the EDID supports SCDC scrambling but not for low TMDS bit rates,
->   while only supporting low TMDS bit rates
-> 
-> This to avoid communicating with the SCDC DDC slave uncessary, and
-> setting the DW-HDMI TMDS Scrambler setup when not supported by the
-> underlying hardware.
-> 
-> Reported-by: Rob Herring <robh@kernel.org>
-> Fixes: 264fce6cc2c1 ("drm/bridge: dw-hdmi: Add SCDC and TMDS Scrambling support")
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> ---
-> 
-> Rob,
-> 
-> this patch should also solve your issue with your 11' display, could you
-> test it ?
-> If this works, I will focus on the underlying issue where the RK3399 SoC
-> freezes in your setup.
-> 
+>
+> So to avoid a regression, I suggest that we still maintain the above
+> table (may be eliminate few entries) and always attach if the CPU is
+> among the table, and if the CPU is not among the table, use the ACPI
+> HID to attach. I propose to attach to at least Skylake and Kabylake
+> systems using the table above, and for Canonlake and Icelake and
+> newer, we can rely on BIOS providing the ACPI HID. Of course I do not
+> know if all non-Google Canonlake/Icelake platforms will have this HID
+> in their BIOS. If we are not sure, we can include Canonlake and
+> Icelake also in that list, an. Please let me know what do you think.
+
+If Coreboot firmware can not be updated for the shipping devices, then 
+can Chromium kernel take the suggested deviation which i think gets 
+updated OTA periodically? For upstream,  I am waiting to hear from 
+Rafael, Andi, David and Srinivas for their inputs.
+
+>
 > Thanks,
-> Neil
-> 
->  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 34 ++++++++++++++++++++---
->  1 file changed, 30 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> index a63e5f0dae56..db761329a1e3 100644
-> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> @@ -1037,6 +1037,31 @@ void dw_hdmi_phy_i2c_write(struct dw_hdmi *hdmi, unsigned short data,
->  }
->  EXPORT_SYMBOL_GPL(dw_hdmi_phy_i2c_write);
->  
-> +/* Filter out invalid setups to avoid configuring SCDC and scrambling */
-> +static bool dw_hdmi_support_scdc(struct dw_hdmi *hdmi)
-> +{
-> +	struct drm_display_info *display = &hdmi->connector.display_info;
-> +
-> +	/* Completely disable SCDC support for older controllers */
-> +	if (hdmi->version < 0x200a)
-> +		return false;
-> +
-> +	/* Disable if SCDC is not supported, or if an HF-VSDB block is absent */
-> +	if (!display->hdmi.scdc.supported ||
-> +	    !display->hdmi.scdc.scrambling.supported)
-> +		return false;
-> +
-> +	/*
-> +	 * Disable if display only support low TMDS rates and scrambling
-> +	 * for low rates is not supported either
-> +	 */
-> +	if (!display->hdmi.scdc.scrambling.low_rates &&
-> +	    display->max_tmds_clock <= 340000)
-> +		return false;
-> +
-> +	return true;
-> +}
-> +
->  /*
->   * HDMI2.0 Specifies the following procedure for High TMDS Bit Rates:
->   * - The Source shall suspend transmission of the TMDS clock and data
-> @@ -1055,7 +1080,7 @@ void dw_hdmi_set_high_tmds_clock_ratio(struct dw_hdmi *hdmi)
->  	unsigned long mtmdsclock = hdmi->hdmi_data.video_mode.mtmdsclock;
->  
->  	/* Control for TMDS Bit Period/TMDS Clock-Period Ratio */
-> -	if (hdmi->connector.display_info.hdmi.scdc.supported) {
-> +	if (dw_hdmi_support_scdc(hdmi)) {
->  		if (mtmdsclock > HDMI14_MAX_TMDSCLK)
->  			drm_scdc_set_high_tmds_clock_ratio(hdmi->ddc, 1);
->  		else
-> @@ -1579,8 +1604,9 @@ static void hdmi_av_composer(struct dw_hdmi *hdmi,
->  
->  	/* Set up HDMI_FC_INVIDCONF */
->  	inv_val = (hdmi->hdmi_data.hdcp_enable ||
-> -		   vmode->mtmdsclock > HDMI14_MAX_TMDSCLK ||
-> -		   hdmi_info->scdc.scrambling.low_rates ?
-> +		   (dw_hdmi_support_scdc(hdmi) &&
-> +		    (vmode->mtmdsclock > HDMI14_MAX_TMDSCLK ||
-> +		     hdmi_info->scdc.scrambling.low_rates)) ?
->  		HDMI_FC_INVIDCONF_HDCP_KEEPOUT_ACTIVE :
->  		HDMI_FC_INVIDCONF_HDCP_KEEPOUT_INACTIVE);
->  
-> @@ -1646,7 +1672,7 @@ static void hdmi_av_composer(struct dw_hdmi *hdmi,
->  	}
->  
->  	/* Scrambling Control */
-> -	if (hdmi_info->scdc.supported) {
-> +	if (dw_hdmi_support_scdc(hdmi)) {
->  		if (vmode->mtmdsclock > HDMI14_MAX_TMDSCLK ||
->  		    hdmi_info->scdc.scrambling.low_rates) {
->  			/*
-> 
-
+>
+> Rajat
+>
+>>
+>>
+>> -builtin_pci_driver(intel_pmc_core_driver);
+>>
+>> +static struct platform_driver pmc_plat_driver = {
+>>
+>> +             .remove = pmc_plat_remove,
+>>
+>> +             .probe = pmc_plat_probe,
+>>
+>> +             .driver = {
+>>
+>> +                             .name = "pmc_core_driver",
+>>
+>> +                             .acpi_match_table = ACPI_PTR(pmc_acpi_ids),
+>>
+>> +             },
+>>
+>> +};
+>>
+>> ---
+>> This is rebased off
+>> git://git.infradead.org/linux-platform-drivers-x86.git/for-next
+>>
+>>   drivers/platform/x86/intel_pmc_core.c | 93 ++++++++++++++++++++-------
+>>   1 file changed, 68 insertions(+), 25 deletions(-)
+>>
+>> diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+>> index f2c621b55f49..55578d07610c 100644
+>> --- a/drivers/platform/x86/intel_pmc_core.c
+>> +++ b/drivers/platform/x86/intel_pmc_core.c
+>> @@ -19,6 +19,7 @@
+>>   #include <linux/io.h>
+>>   #include <linux/module.h>
+>>   #include <linux/pci.h>
+>> +#include <linux/platform_device.h>
+>>   #include <linux/uaccess.h>
+>>
+>>   #include <asm/cpu_device_id.h>
+>> @@ -854,12 +855,59 @@ static const struct dmi_system_id pmc_core_dmi_table[]  = {
+>>        {}
+>>   };
+>>
+>> -static int __init pmc_core_probe(void)
+>> +static int pmc_core_probe(struct platform_device *pdev)
+>>   {
+>> -     struct pmc_dev *pmcdev = &pmc;
+>> +     struct pmc_dev *pmcdev = platform_get_drvdata(pdev);
+>> +     int err;
+>> +
+>> +     pmcdev->regbase = ioremap(pmcdev->base_addr,
+>> +                               pmcdev->map->regmap_length);
+>> +     if (!pmcdev->regbase)
+>> +             return -ENOMEM;
+>> +
+>> +     mutex_init(&pmcdev->lock);
+>> +     pmcdev->pmc_xram_read_bit = pmc_core_check_read_lock_bit();
+>> +
+>> +     err = pmc_core_dbgfs_register(pmcdev);
+>> +     if (err < 0) {
+>> +             dev_warn(&pdev->dev, "debugfs register failed.\n");
+>> +             iounmap(pmcdev->regbase);
+>> +             return err;
+>> +     }
+>> +
+>> +     dmi_check_system(pmc_core_dmi_table);
+>> +     dev_info(&pdev->dev, " initialized\n");
+>> +     return 0;
+>> +}
+>> +
+>> +static int pmc_core_remove(struct platform_device *pdev)
+>> +{
+>> +     struct pmc_dev *pmcdev = platform_get_drvdata(pdev);
+>> +
+>> +     pmc_core_dbgfs_unregister(pmcdev);
+>> +     mutex_destroy(&pmcdev->lock);
+>> +     iounmap(pmcdev->regbase);
+>> +     return 0;
+>> +}
+>> +
+>> +static struct platform_driver pmc_core_driver = {
+>> +     .driver = {
+>> +             .name = "pmc_core",
+>> +     },
+>> +     .probe = pmc_core_probe,
+>> +     .remove = pmc_core_remove,
+>> +};
+>> +
+>> +static struct platform_device pmc_core_device = {
+>> +     .name           = "pmc_core",
+>> +};
+>> +
+>> +static int __init pmc_core_init(void)
+>> +{
+>> +     int ret;
+>>
+>> Please use reverse x-mas tree style.
+>>
+>> OK, will do.
+>>
+>>        const struct x86_cpu_id *cpu_id;
+>> +     struct pmc_dev *pmcdev = &pmc;
+>>        u64 slp_s0_addr;
+>> -     int err;
+>>
+>>        cpu_id = x86_match_cpu(intel_pmc_core_ids);
+>>        if (!cpu_id)
+>> @@ -880,36 +928,31 @@ static int __init pmc_core_probe(void)
+>>        else
+>>                pmcdev->base_addr = slp_s0_addr - pmcdev->map->slp_s0_offset;
+>>
+>> -     pmcdev->regbase = ioremap(pmcdev->base_addr,
+>> -                               pmcdev->map->regmap_length);
+>> -     if (!pmcdev->regbase)
+>> -             return -ENOMEM;
+>> +     platform_set_drvdata(&pmc_core_device, pmcdev);
+>>
+>> -     mutex_init(&pmcdev->lock);
+>> -     pmcdev->pmc_xram_read_bit = pmc_core_check_read_lock_bit();
+>> +     ret = platform_device_register(&pmc_core_device);
+>> +     if (ret)
+>> +             return ret;
+>>
+>> -     err = pmc_core_dbgfs_register(pmcdev);
+>> -     if (err < 0) {
+>> -             pr_warn(" debugfs register failed.\n");
+>> -             iounmap(pmcdev->regbase);
+>> -             return err;
+>> -     }
+>> +     ret = platform_driver_register(&pmc_core_driver);
+>> +     if (ret)
+>> +             goto out_remove_dev;
+>>
+>> -     dmi_check_system(pmc_core_dmi_table);
+>> -     pr_info(" initialized\n");
+>>        return 0;
+>> +
+>> +out_remove_dev:
+>> +     platform_device_unregister(&pmc_core_device);
+>> +     return ret;
+>>   }
+>> -module_init(pmc_core_probe)
+>>
+>> -static void __exit pmc_core_remove(void)
+>> +static void __init pmc_core_exit(void)
+>>   {
+>> -     struct pmc_dev *pmcdev = &pmc;
+>> -
+>> -     pmc_core_dbgfs_unregister(pmcdev);
+>> -     mutex_destroy(&pmcdev->lock);
+>> -     iounmap(pmcdev->regbase);
+>> +     platform_driver_unregister(&pmc_core_driver);
+>> +     platform_device_unregister(&pmc_core_device);
+>>   }
+>> -module_exit(pmc_core_remove)
+>> +
+>> +module_init(pmc_core_init);
+>> +module_exit(pmc_core_exit);
+>>
+>>   MODULE_LICENSE("GPL v2");
+>>   MODULE_DESCRIPTION("Intel PMC Core Driver");
+>> --
+>> 2.21.0.360.g471c308f928-goog
+>>
+>> --
+>> Best Regards,
+>> Rajneesh
