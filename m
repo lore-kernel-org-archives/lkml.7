@@ -2,258 +2,215 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B17C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 19:34:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD379C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 19:35:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4881420854
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 19:34:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8187E20854
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 19:35:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="G4RgJG5n"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KdmTXOOz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729985AbfCYTed (ORCPT
+        id S1730159AbfCYTfO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 15:34:33 -0400
-Received: from mail-eopbgr730053.outbound.protection.outlook.com ([40.107.73.53]:9579
-        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729238AbfCYTed (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 15:34:33 -0400
+        Mon, 25 Mar 2019 15:35:14 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:36885 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729238AbfCYTfN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 15:35:13 -0400
+Received: by mail-lf1-f67.google.com with SMTP id u2so6864601lfd.4
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 12:35:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector1-amd-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=a0zZfMbm+YcSKGAEq2NQWVUSf5g25Md+tcBny7BgXuk=;
- b=G4RgJG5nmR3nnVzsBAj9LX4eWzqVqbmAdErGZUYHGwtAy/sw1vqJ0kuHpFoQCPvVQxY6jv63kms9mu/bj57FY2QhuGpeSASeDHihLjLHV77+/HpRJc8BLMd0pJTEOBXMV2VYICSVMLKA8HzHNi8vh/gvBXhHKqg91N/dysVoH3E=
-Received: from DM6PR12MB3163.namprd12.prod.outlook.com (20.179.104.150) by
- DM6PR12MB2875.namprd12.prod.outlook.com (20.179.71.84) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1730.15; Mon, 25 Mar 2019 19:34:26 +0000
-Received: from DM6PR12MB3163.namprd12.prod.outlook.com
- ([fe80::a8aa:c9af:1f69:2a89]) by DM6PR12MB3163.namprd12.prod.outlook.com
- ([fe80::a8aa:c9af:1f69:2a89%6]) with mapi id 15.20.1730.019; Mon, 25 Mar 2019
- 19:34:26 +0000
-From:   "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
-To:     lijiang <lijiang@redhat.com>
-CC:     Dave Young <dyoung@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
-        "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "fenghua.yu@intel.com" <fenghua.yu@intel.com>,
-        "bhe@redhat.com" <bhe@redhat.com>, Toshi Kani <toshi.kani@hp.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH 1/2 v8] resource: add the new I/O resource descriptor
- 'IORES_DESC_RESERVED'
-Thread-Topic: [PATCH 1/2 v8] resource: add the new I/O resource descriptor
- 'IORES_DESC_RESERVED'
-Thread-Index: AQHUh7sebOERADepwUKSHOBpdzfKKaVnrHSAgAcRbwCAn8cOAIAO7xcA
-Date:   Mon, 25 Mar 2019 19:34:25 +0000
-Message-ID: <b1556461-fe83-2ba0-00a3-e8ecf3e286fe@amd.com>
-References: <20181129080956.20776-1-lijiang@redhat.com>
- <20181129080956.20776-2-lijiang@redhat.com>
- <20181130033703.GA23624@dhcp-128-65.nay.redhat.com>
- <b8936194-01ef-8b8f-254e-039fc951855d@amd.com>
- <95661569-d9c9-af13-11c4-c0d752710a1f@redhat.com>
-In-Reply-To: <95661569-d9c9-af13-11c4-c0d752710a1f@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SN2PR01CA0036.prod.exchangelabs.com (2603:10b6:804:2::46)
- To DM6PR12MB3163.namprd12.prod.outlook.com (2603:10b6:5:182::22)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Thomas.Lendacky@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [165.204.78.1]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 748baa01-739f-4164-672b-08d6b158e3ae
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600127)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:DM6PR12MB2875;
-x-ms-traffictypediagnostic: DM6PR12MB2875:
-x-microsoft-antispam-prvs: <DM6PR12MB2875838D45B62E25AB2B574EEC5E0@DM6PR12MB2875.namprd12.prod.outlook.com>
-x-forefront-prvs: 0987ACA2E2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(346002)(39860400002)(366004)(376002)(136003)(189003)(199004)(7736002)(68736007)(72206003)(486006)(8936002)(11346002)(446003)(14454004)(66066001)(305945005)(81156014)(8676002)(81166006)(478600001)(186003)(386003)(53546011)(76176011)(102836004)(6506007)(25786009)(26005)(2616005)(229853002)(6512007)(2906002)(97736004)(36756003)(3846002)(6916009)(6116002)(71200400001)(71190400001)(106356001)(256004)(14444005)(99286004)(54906003)(6436002)(105586002)(93886005)(31696002)(316002)(52116002)(31686004)(5660300002)(476003)(7416002)(6486002)(6246003)(4326008)(86362001)(53936002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB2875;H:DM6PR12MB3163.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: wmhZC2sWpNE/d5JBg2GvDMZSoPKfheJRuKn1REcJnmNg3oo5C0Wgdy9H062CN62fOg+Aw0CuF+DNUIaiI7ogOgYG3H2SpMwKsio9YD2qCw8e87LL1sCPt+t1i9hcqzytT4p33rs1r35sk5v6RJ1G5L8mQ6/Y1UeOw41+QiJ6+91/solWNTkJ/ejG5Ut0vMSF+nt8vqTum0EUszYO4AdCVOiuW+WJpwe6ILGB1ezgWaqMtc8TfWfE3TDUHoW1TA/RrwgwmwDUwTiNj3DGZcsGXBkRvPU1Aucfz3oicbyZYaSrDAyJvToH1x9Y15ghw3LNMvrWjp105TPq/wNigllC4hnOFJEUDoumkNwQW5PwOE4OVa3NgjWGo+QpLjW5cJIK5aB6JAJ8PXS+bo2wVXe3zDsJLXjPwwskyyyy1gmTcls=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <70854FCF16E9814599C1A02D27926501@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1V2TBpf4mBTv3oZaglCvmwS8kXWBH6fe8riO+XqIb4M=;
+        b=KdmTXOOzGmCi8B3wS0D/ReguE8n9KnZ3BQc0WXLad003u549+lLsm5fWpf0n9tsYG7
+         o5K3SP/+6f5T/DPTYuf9XASsMHgbAjmqM44OtxMCwKhDzraJ/74M1OwsSIVye6Zj1zMm
+         vS2rEwEDjowP+H9PH3gwGyQ5mbK4zCV4CDehTKkmKEdvpykbFgPauXqZ2psCF8UctyX5
+         jq0r1BSbIIM8cdDDuVKXYFtubGTquqcRRf0qUUWaBBs9Lhqkvs/98d7rSWbjiZHEaJaZ
+         KpYbIL1e+91EXylGsYhfq+IrVRFVGDd/FfUY9KxEQ0CfaksK1turwHUdlCR0JQYlSiKi
+         vYYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1V2TBpf4mBTv3oZaglCvmwS8kXWBH6fe8riO+XqIb4M=;
+        b=iEl6SLavclhz5F5o62yC12/iXQtEbYQxwWAJDtl2RckNCCe23g4aiw1+uojxMG+BrT
+         t4aVg7n1mPQ8yJ1FaWDM6qaVJgITW2kNXr0Fe7pBvybIGX4xyx2zM80WNRTwc3zT8/12
+         TOAt99OuY0NtR4XB4j80ejFoKPMR84CVKq7kdfuFs8rc4Uo5RKAJhL/nN+xIHpLTJf3F
+         /EIp9mERXkeS1oHxsZl9FlqN22u99iazWXa3QhnvSJ7DerSJAv08+jqVtXUjooRAaVBH
+         rk4sPuvZxLeafIHvPZKEkYxJUUr0KIh1bFuG9LlxXRQ2wg1/piQb4vyHZjxa2Hdwv8aO
+         5U0Q==
+X-Gm-Message-State: APjAAAVfB/yEHGhgiFNg6RNfyJjI+f1MzuAGpBEHf3wSabMBCQQJDm0u
+        Kg6KUFRkk6ykCFqITvL4XO9MZmER+Lx4+Z4N0LS6qQ==
+X-Google-Smtp-Source: APXvYqzYK2KaaUCNsPwRmzJtWAUbip1/iKgyVkOQhyXiXy4IwjgnvcnFxZiuCYKvhgHAAiD836xtA4Bv2g/UO/B1z10=
+X-Received: by 2002:a19:5006:: with SMTP id e6mr12961393lfb.29.1553542510462;
+ Mon, 25 Mar 2019 12:35:10 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 748baa01-739f-4164-672b-08d6b158e3ae
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Mar 2019 19:34:26.0464
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2875
+References: <20190322025135.118201-1-fengc@google.com> <20190322025135.118201-2-fengc@google.com>
+ <20190322150255.GA76423@google.com> <20190324175633.GA5826@google.com> <20190324204454.GA102207@google.com>
+In-Reply-To: <20190324204454.GA102207@google.com>
+From:   Chenbo Feng <fengc@google.com>
+Date:   Mon, 25 Mar 2019 12:34:59 -0700
+Message-ID: <CAMOXUJmB50ChULNFYQuamzyw1iiLaQ7GTL-fukom82p=VFgngg@mail.gmail.com>
+Subject: Re: [RFC v2 1/3] dma-buf: give each buffer a full-fledged inode
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Sandeep Patil <sspatil@android.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        DRI mailing list <dri-devel@lists.freedesktop.org>,
+        linux-media@vger.kernel.org, kernel-team@android.com,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Erick Reyes <erickreyes@google.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        John Stultz <john.stultz@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMy8xNi8xOSAyOjMxIEFNLCBsaWppYW5nIHdyb3RlOg0KPiANCj4gDQo+IOWcqCAyMDE45bm0
-MTLmnIgwNeaXpSAwNTozMywgTGVuZGFja3ksIFRob21hcyDlhpnpgZM6DQo+PiBPbiAxMS8yOS8y
-MDE4IDA5OjM3IFBNLCBEYXZlIFlvdW5nIHdyb3RlOg0KPj4+ICsgbW9yZSBwZW9wbGUNCj4+Pg0K
-Pj4+IE9uIDExLzI5LzE4IGF0IDA0OjA5cG0sIExpYW5ibyBKaWFuZyB3cm90ZToNCj4+Pj4gV2hl
-biBkb2luZyBrZXhlY19maWxlX2xvYWQsIHRoZSBmaXJzdCBrZXJuZWwgbmVlZHMgdG8gcGFzcyB0
-aGUgZTgyMA0KPj4+PiByZXNlcnZlZCByYW5nZXMgdG8gdGhlIHNlY29uZCBrZXJuZWwuIEJ1dCBr
-ZXJuZWwgY2FuIG5vdCBleGFjdGx5DQo+Pj4+IG1hdGNoIHRoZSBlODIwIHJlc2VydmVkIHJhbmdl
-cyB3aGVuIHdhbGtpbmcgdGhyb3VnaCB0aGUgaW9tZW0gcmVzb3VyY2VzDQo+Pj4+IHdpdGggdGhl
-IGRlc2NyaXB0b3IgJ0lPUkVTX0RFU0NfTk9ORScsIGJlY2F1c2Ugc2V2ZXJhbCBlODIwIHR5cGVz
-KA0KPj4+PiBlLmcuIEU4MjBfVFlQRV9SRVNFUlZFRF9LRVJOL0U4MjBfVFlQRV9SQU0vRTgyMF9U
-WVBFX1VOVVNBQkxFL0U4MjANCj4+Pj4gX1RZUEVfUkVTRVJWRUQpIGFyZSBjb252ZXJ0ZWQgdG8g
-dGhlIGRlc2NyaXB0b3IgJ0lPUkVTX0RFU0NfTk9ORScuIEl0DQo+Pj4+IG1heSBwYXNzIHRoZXNl
-IGZvdXIgdHlwZXMgdG8gdGhlIGtkdW1wIGtlcm5lbCwgdGhhdCBpcyBub3QgZGVzaXJlZCByZXN1
-bHQuDQo+Pj4+DQo+Pj4+IFNvLCB0aGlzIHBhdGNoIGFkZHMgYSBuZXcgSS9PIHJlc291cmNlIGRl
-c2NyaXB0b3IgJ0lPUkVTX0RFU0NfUkVTRVJWRUQnDQo+Pj4+IGZvciB0aGUgaW9tZW0gcmVzb3Vy
-Y2VzIHNlYXJjaCBpbnRlcmZhY2VzLiBJdCBpcyBoZWxwZnVsIHRvIGV4YWN0bHkNCj4+Pj4gbWF0
-Y2ggdGhlIHJlc2VydmVkIHJlc291cmNlIHJhbmdlcyB3aGVuIHdhbGtpbmcgdGhyb3VnaCBpb21l
-bSByZXNvdXJjZXMuDQo+Pj4+DQo+Pj4+IEluIGFkZGl0aW9uLCBzaW5jZSB0aGUgbmV3IGRlc2Ny
-aXB0b3IgJ0lPUkVTX0RFU0NfUkVTRVJWRUQnIGlzIGludHJvZHVjZWQsDQo+Pj4+IHRoZXNlIGNv
-ZGUgb3JpZ2luYWxseSByZWxhdGVkIHRvIHRoZSBkZXNjcmlwdG9yICdJT1JFU19ERVNDX05PTkUn
-IG5lZWQgdG8NCj4+Pj4gYmUgdXBkYXRlZC4gT3RoZXJ3aXNlLCBpdCB3aWxsIGJlIGVhc2lseSBj
-b25mdXNlZCBhbmQgYWxzbyBjYXVzZSBzb21lDQo+Pj4+IGVycm9ycy4gQmVjYXVzZSB0aGUgJ0U4
-MjBfVFlQRV9SRVNFUlZFRCcgdHlwZSBpcyBjb252ZXJ0ZWQgdG8gdGhlIG5ldw0KPj4+PiBkZXNj
-cmlwdG9yICdJT1JFU19ERVNDX1JFU0VSVkVEJyBpbnN0ZWFkIG9mICdJT1JFU19ERVNDX05PTkUn
-LCBpdCBoYXMgYmVlbg0KPj4+PiBjaGFuZ2VkLg0KPj4+Pg0KPj4+PiBTdWdnZXN0ZWQtYnk6IERh
-dmUgWW91bmcgPGR5b3VuZ0ByZWRoYXQuY29tPg0KPj4+PiBTaWduZWQtb2ZmLWJ5OiBMaWFuYm8g
-SmlhbmcgPGxpamlhbmdAcmVkaGF0LmNvbT4NCj4+Pj4gLS0tDQo+Pj4+ICBhcmNoL2lhNjQva2Vy
-bmVsL2VmaS5jIHwgIDQgKysrKw0KPj4+PiAgYXJjaC94ODYva2VybmVsL2U4MjAuYyB8ICAyICst
-DQo+Pj4+ICBhcmNoL3g4Ni9tbS9pb3JlbWFwLmMgIHwgMTMgKysrKysrKysrKysrLQ0KPj4+PiAg
-aW5jbHVkZS9saW51eC9pb3BvcnQuaCB8ICAxICsNCj4+Pj4gIGtlcm5lbC9yZXNvdXJjZS5jICAg
-ICAgfCAgNiArKystLS0NCj4+Pj4gIDUgZmlsZXMgY2hhbmdlZCwgMjEgaW5zZXJ0aW9ucygrKSwg
-NSBkZWxldGlvbnMoLSkNCj4+Pj4NCj4+Pj4gZGlmZiAtLWdpdCBhL2FyY2gvaWE2NC9rZXJuZWwv
-ZWZpLmMgYi9hcmNoL2lhNjQva2VybmVsL2VmaS5jDQo+Pj4+IGluZGV4IDhmMTA2NjM4OTEzYy4u
-MTg0MWU5YjRkYjMwIDEwMDY0NA0KPj4+PiAtLS0gYS9hcmNoL2lhNjQva2VybmVsL2VmaS5jDQo+
-Pj4+ICsrKyBiL2FyY2gvaWE2NC9rZXJuZWwvZWZpLmMNCj4+Pj4gQEAgLTEyMzEsNiArMTIzMSwx
-MCBAQCBlZmlfaW5pdGlhbGl6ZV9pb21lbV9yZXNvdXJjZXMoc3RydWN0IHJlc291cmNlICpjb2Rl
-X3Jlc291cmNlLA0KPj4+PiAgCQkJCWJyZWFrOw0KPj4+PiAgDQo+Pj4+ICAJCQljYXNlIEVGSV9S
-RVNFUlZFRF9UWVBFOg0KPj4+PiArCQkJCW5hbWUgPSAicmVzZXJ2ZWQiOw0KPj4+DQo+Pj4gSW5n
-byB1cGRhdGVkIFg4NiBjb2RlIHRvIHVzZSAiUmVzZXJ2ZWQiLCAgSSB0aGluayBpdCB3b3VsZCBi
-ZSBnb29kIHRvIGRvDQo+Pj4gc2FtZSBmb3IgdGhpcyBjYXNlIGFzIHdlbGwNCj4+Pg0KPj4+PiAr
-CQkJCWRlc2MgPSBJT1JFU19ERVNDX1JFU0VSVkVEOw0KPj4+PiArCQkJCWJyZWFrOw0KPj4+PiAr
-DQo+Pj4+ICAJCQljYXNlIEVGSV9SVU5USU1FX1NFUlZJQ0VTX0NPREU6DQo+Pj4+ICAJCQljYXNl
-IEVGSV9SVU5USU1FX1NFUlZJQ0VTX0RBVEE6DQo+Pj4+ICAJCQljYXNlIEVGSV9BQ1BJX1JFQ0xB
-SU1fTUVNT1JZOg0KPj4+DQo+Pj4gT3JpZ2luYWxseSwgYWJvdmUgMyBhcmUgYWxsICJyZXNlcnZl
-ZCIsIHNvIHByb2JhYmx5IHRoZXkgYWxsIHNob3VsZCBiZQ0KPj4+IElPUkVTX0RFU0NfUkVTRVJW
-RUQuDQo+Pj4NCj4+PiBDYW4gYW55IElBNjQgcGVvcGxlIHRvIHJldmlldyB0aGlzPw0KPj4+DQo+
-Pj4+IGRpZmYgLS1naXQgYS9hcmNoL3g4Ni9rZXJuZWwvZTgyMC5jIGIvYXJjaC94ODYva2VybmVs
-L2U4MjAuYw0KPj4+PiBpbmRleCA1MDg5NWMyZjkzN2QuLjU3ZmFmZGFmYjg2MCAxMDA2NDQNCj4+
-Pj4gLS0tIGEvYXJjaC94ODYva2VybmVsL2U4MjAuYw0KPj4+PiArKysgYi9hcmNoL3g4Ni9rZXJu
-ZWwvZTgyMC5jDQo+Pj4+IEBAIC0xMDQ4LDEwICsxMDQ4LDEwIEBAIHN0YXRpYyB1bnNpZ25lZCBs
-b25nIF9faW5pdCBlODIwX3R5cGVfdG9faW9yZXNfZGVzYyhzdHJ1Y3QgZTgyMF9lbnRyeSAqZW50
-cnkpDQo+Pj4+ICAJY2FzZSBFODIwX1RZUEVfTlZTOgkJcmV0dXJuIElPUkVTX0RFU0NfQUNQSV9O
-Vl9TVE9SQUdFOw0KPj4+PiAgCWNhc2UgRTgyMF9UWVBFX1BNRU06CQlyZXR1cm4gSU9SRVNfREVT
-Q19QRVJTSVNURU5UX01FTU9SWTsNCj4+Pj4gIAljYXNlIEU4MjBfVFlQRV9QUkFNOgkJcmV0dXJu
-IElPUkVTX0RFU0NfUEVSU0lTVEVOVF9NRU1PUllfTEVHQUNZOw0KPj4+PiArCWNhc2UgRTgyMF9U
-WVBFX1JFU0VSVkVEOglyZXR1cm4gSU9SRVNfREVTQ19SRVNFUlZFRDsNCj4+Pj4gIAljYXNlIEU4
-MjBfVFlQRV9SRVNFUlZFRF9LRVJOOgkvKiBGYWxsLXRocm91Z2g6ICovDQo+Pj4+ICAJY2FzZSBF
-ODIwX1RZUEVfUkFNOgkJLyogRmFsbC10aHJvdWdoOiAqLw0KPj4+PiAgCWNhc2UgRTgyMF9UWVBF
-X1VOVVNBQkxFOgkvKiBGYWxsLXRocm91Z2g6ICovDQo+Pj4+IC0JY2FzZSBFODIwX1RZUEVfUkVT
-RVJWRUQ6CS8qIEZhbGwtdGhyb3VnaDogKi8NCj4+Pj4gIAlkZWZhdWx0OgkJCXJldHVybiBJT1JF
-U19ERVNDX05PTkU7DQo+Pj4+ICAJfQ0KPj4+PiAgfQ0KPj4+PiBkaWZmIC0tZ2l0IGEvYXJjaC94
-ODYvbW0vaW9yZW1hcC5jIGIvYXJjaC94ODYvbW0vaW9yZW1hcC5jDQo+Pj4+IGluZGV4IDUzNzhk
-MTBmMWQzMS4uZmVhMmVmOTk0MTVkIDEwMDY0NA0KPj4+PiAtLS0gYS9hcmNoL3g4Ni9tbS9pb3Jl
-bWFwLmMNCj4+Pj4gKysrIGIvYXJjaC94ODYvbW0vaW9yZW1hcC5jDQo+Pj4+IEBAIC04Myw3ICs4
-MywxOCBAQCBzdGF0aWMgYm9vbCBfX2lvcmVtYXBfY2hlY2tfcmFtKHN0cnVjdCByZXNvdXJjZSAq
-cmVzKQ0KPj4+PiAgDQo+Pj4+ICBzdGF0aWMgaW50IF9faW9yZW1hcF9jaGVja19kZXNjX290aGVy
-KHN0cnVjdCByZXNvdXJjZSAqcmVzKQ0KPj4+PiAgew0KPj4+PiAtCXJldHVybiAocmVzLT5kZXNj
-ICE9IElPUkVTX0RFU0NfTk9ORSk7DQo+Pj4+ICsJLyoNCj4+Pj4gKwkgKiBCdXQgbm93LCB0aGUg
-J0U4MjBfVFlQRV9SRVNFUlZFRCcgdHlwZSBpcyBjb252ZXJ0ZWQgdG8gdGhlIG5ldw0KPj4+PiAr
-CSAqIGRlc2NyaXB0b3IgJ0lPUkVTX0RFU0NfUkVTRVJWRUQnIGluc3RlYWQgb2YgJ0lPUkVTX0RF
-U0NfTk9ORScsDQo+Pj4+ICsJICogaXQgaGFzIGJlZW4gY2hhbmdlZC4gQW5kIHRoZSB2YWx1ZSBv
-ZiAnbWVtX2ZsYWdzLmRlc2Nfb3RoZXInDQo+Pj4+ICsJICogaXMgZXF1YWwgdG8gJ3RydWUnIGlm
-IHdlIGRvbid0IHN0cmVuZ3RoZW4gdGhlIGNvbmRpdGlvbiBpbiB0aGlzDQo+Pj4+ICsJICogZnVu
-Y3Rpb24sIHRoYXQgaXMgd3JvbmcuIEJlY2F1c2Ugb3JpZ2luYWxseSBpdCBpcyBlcXVhbCB0bw0K
-Pj4+PiArCSAqICdmYWxzZScgZm9yIHRoZSBzYW1lIHJlc2VydmVkIHR5cGUuDQo+Pj4+ICsJICoN
-Cj4+Pj4gKwkgKiBTbywgdGhhdCB3b3VsZCBiZSBuaWNlIHRvIGtlZXAgaXQgdGhlIHNhbWUgYXMg
-YmVmb3JlLg0KPj4+PiArCSAqLw0KPj4+PiArCXJldHVybiAoKHJlcy0+ZGVzYyAhPSBJT1JFU19E
-RVNDX05PTkUpICYmDQo+Pj4+ICsJCShyZXMtPmRlc2MgIT0gSU9SRVNfREVTQ19SRVNFUlZFRCkp
-Ow0KPj4+PiAgfQ0KPj4+DQo+Pj4gQWRkZWQgVG9tIHNpbmNlIGhlIGFkZGVkIHRoZSBjaGVjayBm
-dW5jdGlvbi4gIElzIGl0IHBvc3NpYmxlIHRvIG9ubHkNCj4+PiBjaGVjayBleHBsaWN0IHZhbGlk
-IGRlc2MgdHlwZXMgaW5zdGVhZCBvZiBleGNsdWRlIElPUkVTX0RFU0NfTk9ORT8NCj4+DQo+PiBT
-b3JyeSBmb3IgdGhlIGRlbGF5Li4uDQo+Pg0KPj4gVGhlIG9yaWdpbmFsIGludGVudCBvZiB0aGUg
-Y2hlY2sgd2FzIHRvIG1hcCBtb3N0IG1lbW9yeSBhcyBlbmNyeXB0ZWQgdW5kZXINCj4+IFNFViBp
-ZiBpdCB3YXMgbWFya2VkIHdpdGggYSBzcGVjaWZpYyBkZXNjcmlwdG9yLCBzaW5jZSBpdCB3YXMg
-bGlrZWx5IHRvDQo+PiBub3QgYmUgTU1JTy4gSSB0cmllZCBjb252ZXJ0aW5nIG1vc3QgdGhpbmdz
-IHRoYXQgbWFwcGVkIG1lbW9yeSB0byBtZW1yZW1hcA0KPj4gdnMgaW9yZW1hcCwgYnV0IEFDUEkg
-d2FzIG9uZSBhcmVhIHRoYXQgSSBsZWZ0IGFsb25lIGFuZCB0aGlzIGNoZWNrIGNhdGNoZXMNCj4+
-IHRoZSBtYXBwaW5nIG9mIHRoZSBBQ1BJIHRhYmxlcy4gSSBzdXBwb3NlIGl0J3MgcG9zc2libGUg
-dG8gY2hhbmdlIHRoaXMgdG8NCj4+IGNoZWNrIGp1c3QgZm9yIElPUkVTX0RFU0NfQUNQSV8qIHZh
-bHVlcywgYnV0IEkgd291bGQgaGF2ZSB0byBkbyBzb21lDQo+PiB0ZXN0aW5nLg0KPiANCj4gUmVj
-ZW50bHksIGkgdGVzdGVkIGl0IGFjY29yZGluZyB0byB5b3VyIGFkdmljZSwgaGVyZSBpdCBpcyBy
-ZWFsbHkgY2hlY2tpbmcgZm9yIHRoZQ0KPiAnSU9SRVNfREVTQ19BQ1BJXyonIHZhbHVlcy4gIElm
-IHlvdSBhZ3JlZSB0byB0aGlzIGNoYW5nZSwgaSB3b3VsZCBhZGQgdGhlIGZvbGxvd2luZw0KPiBw
-YXRjaCBpbnRvIHRoaXMgcGF0Y2ggc2V0IGFuZCBwb3N0IHRoZW0gYWdhaW4uDQo+IA0KPiBbcm9v
-dEBsb2NhbGhvc3QgbGludXhdIyBnaXQgZGlmZiBhcmNoL3g4Ni9tbS9pb3JlbWFwLmMNCj4gZGlm
-ZiAtLWdpdCBhL2FyY2gveDg2L21tL2lvcmVtYXAuYyBiL2FyY2gveDg2L21tL2lvcmVtYXAuYw0K
-PiBpbmRleCAwMDI5NjA0YWY4YTQuLjBlM2JhNjIwNjEyZCAxMDA2NDQNCj4gLS0tIGEvYXJjaC94
-ODYvbW0vaW9yZW1hcC5jDQo+ICsrKyBiL2FyY2gveDg2L21tL2lvcmVtYXAuYw0KPiBAQCAtODMs
-NyArODMsOCBAQCBzdGF0aWMgYm9vbCBfX2lvcmVtYXBfY2hlY2tfcmFtKHN0cnVjdCByZXNvdXJj
-ZSAqcmVzKQ0KPiAgDQo+ICBzdGF0aWMgaW50IF9faW9yZW1hcF9jaGVja19kZXNjX290aGVyKHN0
-cnVjdCByZXNvdXJjZSAqcmVzKQ0KPiAgew0KPiAtICAgICAgIHJldHVybiAocmVzLT5kZXNjICE9
-IElPUkVTX0RFU0NfTk9ORSk7DQo+ICsgICAgICAgcmV0dXJuICgocmVzLT5kZXNjID09IElPUkVT
-X0RFU0NfQUNQSV9UQUJMRVMpIHx8DQo+ICsgICAgICAgICAgICAgICAocmVzLT5kZXNjID09IElP
-UkVTX0RFU0NfQUNQSV9OVl9TVE9SQUdFKSk7DQoNCkknbSBub3QgYSBiaWcgZmFuIG9mIHRoaXMu
-IEkgdGhpbmsgeW91IHNob3VsZCBsZWF2ZSBpdCBhcyB0aGUgcHJldmlvdXMNCmNoZWNrIHlvdSBo
-YWQgZm9yIElPUkVTX0RFU0NfTk9ORSBhbmQgSU9SRVNfREVTQ19SRVNFUlZFRC4gVGhlcmUncyBu
-bw0KdGVsbGluZyB3aGF0IHR5cGUgb2YgcmVzb3VyY2VzIG1heSBiZSBtYXBwZWQgaW4gdGhlIGZ1
-dHVyZSB3aGVyZSB0aGlzDQp3aWxsIGJyZWFrLg0KDQpBZGRpbmcgYSBuaWNlIGNvbW1lbnQgaGVy
-ZSBhYm91dCBob3cgSU9SRVNfREVTQ19OT05FIG9yaWdpbmFsbHkgd2FzIHRvDQppZGVudGlmeSBN
-TUlPIGFuZCByZXNlcnZlZCBhcmVhcy4gTm93IElPUkVTX0RFU0NfUkVTRVJWRUQgaGFzIGJlZW4g
-Y3JlYXRlZA0KZm9yIHRoZSByZXNlcnZlZCBhcmVhcyBzbyB0aGUgY2hlY2sgbmVlZHMgdG8gYmUg
-ZXhwYW5kZWQgc28gdGhhdCB0aGVzZQ0KYXJlYXMgYXJlbid0IG1hcHBlZCBlbmNyeXB0ZWQgd2hl
-biB1c2luZyBpb3JlbWFwLg0KDQpUaGFua3MsDQpUb20NCg0KPiAgfQ0KPiANCj4gDQo+IFRoYW5r
-cy4NCj4gTGlhbmJvDQo+IA0KPj4NCj4+IFRoYW5rcywNCj4+IFRvbQ0KPj4NCj4+Pg0KPj4+PiAg
-DQo+Pj4+ICBzdGF0aWMgaW50IF9faW9yZW1hcF9yZXNfY2hlY2soc3RydWN0IHJlc291cmNlICpy
-ZXMsIHZvaWQgKmFyZykNCj4+Pj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvaW9wb3J0Lmgg
-Yi9pbmNsdWRlL2xpbnV4L2lvcG9ydC5oDQo+Pj4+IGluZGV4IGRhMGViYWVjMjVmMC4uNmVkNTlk
-ZTQ4YmQ1IDEwMDY0NA0KPj4+PiAtLS0gYS9pbmNsdWRlL2xpbnV4L2lvcG9ydC5oDQo+Pj4+ICsr
-KyBiL2luY2x1ZGUvbGludXgvaW9wb3J0LmgNCj4+Pj4gQEAgLTEzMyw2ICsxMzMsNyBAQCBlbnVt
-IHsNCj4+Pj4gIAlJT1JFU19ERVNDX1BFUlNJU1RFTlRfTUVNT1JZX0xFR0FDWQk9IDUsDQo+Pj4+
-ICAJSU9SRVNfREVTQ19ERVZJQ0VfUFJJVkFURV9NRU1PUlkJPSA2LA0KPj4+PiAgCUlPUkVTX0RF
-U0NfREVWSUNFX1BVQkxJQ19NRU1PUlkJCT0gNywNCj4+Pj4gKwlJT1JFU19ERVNDX1JFU0VSVkVE
-CQkJPSA4LA0KPj4+PiAgfTsNCj4+Pj4gIA0KPj4+PiAgLyogaGVscGVycyB0byBkZWZpbmUgcmVz
-b3VyY2VzICovDQo+Pj4+IGRpZmYgLS1naXQgYS9rZXJuZWwvcmVzb3VyY2UuYyBiL2tlcm5lbC9y
-ZXNvdXJjZS5jDQo+Pj4+IGluZGV4IGIwZmJmNjg1Yzc3YS4uZjM0YTYzMmM0MTY5IDEwMDY0NA0K
-Pj4+PiAtLS0gYS9rZXJuZWwvcmVzb3VyY2UuYw0KPj4+PiArKysgYi9rZXJuZWwvcmVzb3VyY2Uu
-Yw0KPj4+PiBAQCAtOTk0LDcgKzk5NCw3IEBAIF9fcmVzZXJ2ZV9yZWdpb25fd2l0aF9zcGxpdChz
-dHJ1Y3QgcmVzb3VyY2UgKnJvb3QsIHJlc291cmNlX3NpemVfdCBzdGFydCwNCj4+Pj4gIAlyZXMt
-PnN0YXJ0ID0gc3RhcnQ7DQo+Pj4+ICAJcmVzLT5lbmQgPSBlbmQ7DQo+Pj4+ICAJcmVzLT5mbGFn
-cyA9IHR5cGUgfCBJT1JFU09VUkNFX0JVU1k7DQo+Pj4+IC0JcmVzLT5kZXNjID0gSU9SRVNfREVT
-Q19OT05FOw0KPj4+PiArCXJlcy0+ZGVzYyA9IElPUkVTX0RFU0NfUkVTRVJWRUQ7DQo+Pj4+ICAN
-Cj4+Pj4gIAl3aGlsZSAoMSkgew0KPj4+PiAgDQo+Pj4+IEBAIC0xMDI5LDcgKzEwMjksNyBAQCBf
-X3Jlc2VydmVfcmVnaW9uX3dpdGhfc3BsaXQoc3RydWN0IHJlc291cmNlICpyb290LCByZXNvdXJj
-ZV9zaXplX3Qgc3RhcnQsDQo+Pj4+ICAJCQkJbmV4dF9yZXMtPnN0YXJ0ID0gY29uZmxpY3QtPmVu
-ZCArIDE7DQo+Pj4+ICAJCQkJbmV4dF9yZXMtPmVuZCA9IGVuZDsNCj4+Pj4gIAkJCQluZXh0X3Jl
-cy0+ZmxhZ3MgPSB0eXBlIHwgSU9SRVNPVVJDRV9CVVNZOw0KPj4+PiAtCQkJCW5leHRfcmVzLT5k
-ZXNjID0gSU9SRVNfREVTQ19OT05FOw0KPj4+PiArCQkJCW5leHRfcmVzLT5kZXNjID0gSU9SRVNf
-REVTQ19SRVNFUlZFRDsNCj4+Pj4gIAkJCX0NCj4+Pj4gIAkJfSBlbHNlIHsNCj4+Pj4gIAkJCXJl
-cy0+c3RhcnQgPSBjb25mbGljdC0+ZW5kICsgMTsNCj4+Pj4gQEAgLTE0NzcsNyArMTQ3Nyw3IEBA
-IHN0YXRpYyBpbnQgX19pbml0IHJlc2VydmVfc2V0dXAoY2hhciAqc3RyKQ0KPj4+PiAgCQkJcmVz
-LT5zdGFydCA9IGlvX3N0YXJ0Ow0KPj4+PiAgCQkJcmVzLT5lbmQgPSBpb19zdGFydCArIGlvX251
-bSAtIDE7DQo+Pj4+ICAJCQlyZXMtPmZsYWdzIHw9IElPUkVTT1VSQ0VfQlVTWTsNCj4+Pj4gLQkJ
-CXJlcy0+ZGVzYyA9IElPUkVTX0RFU0NfTk9ORTsNCj4+Pj4gKwkJCXJlcy0+ZGVzYyA9IElPUkVT
-X0RFU0NfUkVTRVJWRUQ7DQo+Pj4+ICAJCQlyZXMtPmNoaWxkID0gTlVMTDsNCj4+Pj4gIAkJCWlm
-IChyZXF1ZXN0X3Jlc291cmNlKHBhcmVudCwgcmVzKSA9PSAwKQ0KPj4+PiAgCQkJCXJlc2VydmVk
-ID0geCsxOw0KPj4+PiAtLSANCj4+Pj4gMi4xNy4xDQo+Pj4+DQo+Pj4NCj4+Pg0KPj4+IFRoZXJl
-IGFyZSBhIGxvdCBvZiBwbGFjZXMgY2FsbCByZWdpb25faW50ZXJzZWN0cyB3aGljaCB1c2UgREVT
-Q19OT05FLA0KPj4+IEknbSBub3Qgc3VyZSBpZiBuZWVkZWQgY2hhbmdlcyBhY2NvcmRpbmdseS4g
-IENjZWQgRGFuIGFuZCBUb3NoaS4NCj4+Pg0KPj4+DQo+Pj4gVGhhbmtzDQo+Pj4gRGF2ZQ0KPj4+
-DQo=
+On Sun, Mar 24, 2019 at 1:45 PM Joel Fernandes <joel@joelfernandes.org> wrote:
+>
+> Hi Sandeep,
+>
+> On Sun, Mar 24, 2019 at 10:56:33AM -0700, Sandeep Patil wrote:
+> > On Fri, Mar 22, 2019 at 11:02:55AM -0400, Joel Fernandes wrote:
+> > > On Thu, Mar 21, 2019 at 07:51:33PM -0700, Chenbo Feng wrote:
+> > > > From: Greg Hackmann <ghackmann@google.com>
+> > > >
+> > > > By traversing /proc/*/fd and /proc/*/map_files, processes with CAP_ADMIN
+> > > > can get a lot of fine-grained data about how shmem buffers are shared
+> > > > among processes.  stat(2) on each entry gives the caller a unique
+> > > > ID (st_ino), the buffer's size (st_size), and even the number of pages
+> > > > currently charged to the buffer (st_blocks / 512).
+> > > >
+> > > > In contrast, all dma-bufs share the same anonymous inode.  So while we
+> > > > can count how many dma-buf fds or mappings a process has, we can't get
+> > > > the size of the backing buffers or tell if two entries point to the same
+> > > > dma-buf.  On systems with debugfs, we can get a per-buffer breakdown of
+> > > > size and reference count, but can't tell which processes are actually
+> > > > holding the references to each buffer.
+> > > >
+> > > > Replace the singleton inode with full-fledged inodes allocated by
+> > > > alloc_anon_inode().  This involves creating and mounting a
+> > > > mini-pseudo-filesystem for dma-buf, following the example in fs/aio.c.
+> > > >
+> > > > Signed-off-by: Greg Hackmann <ghackmann@google.com>
+> > >
+> > > I believe Greg's address needs to be updated on this patch otherwise the
+> > > emails would just bounce, no? I removed it from the CC list. You can still
+> > > keep the SOB I guess but remove it from the CC list when sending.
+> > >
+> > > Also about the minifs, just playing devil's advocate for why this is needed.
+> > >
+> > > Since you are already adding the size information to /proc/pid/fdinfo/<fd> ,
+> > > can just that not be used to get the size of the buffer? What is the benefit
+> > > of getting this from stat? The other way to get the size would be through
+> > > another IOCTL and that can be used to return other unique-ness related metadata
+> > > as well.  Neither of these need creation of a dedicated inode per dmabuf.
+> >
+> > Can you give an example of "unique-ness related data" here? The inode seems
+> > like the best fit cause its already unique, no?
+>
+> I was thinking dma_buf file pointer, but I agree we need the per-inode now (see below).
+>
+> > > Also what is the benefit of having st_blocks from stat? AFAIK, that is the
+> > > same as the buffer's size which does not change for the lifetime of the
+> > > buffer. In your patch you're doing this when 'struct file' is created which
+> > > AIUI is what reflects in the st_blocks:
+> > > +   inode_set_bytes(inode, dmabuf->size);
+> >
+> > Can some of the use cases / data be trimmed down? I think so. For example, I
+> > never understood what we do with map_files here (or why). It is perfectly
+> > fine to just get the data from /proc/<pid>/fd and /proc/<pid>/maps. I guess
+> > the map_files bit is for consistency?
+>
+> It just occured to me that since /proc/<pid/maps provides an inode number as
+> one of the fields, so indeed an inode per buf is a very good idea for the
+> user to distinguish buffers just by reading /proc/<pid/<maps> alone..
+>
+> I also, similar to you, don't think map_files is useful for this usecase.
+> map_files are just symlinks named as memory ranges and pointing to a file. In
+> this case the symlink will point to default name "dmabuf" that doesn't exist.
+> If one does stat(2) on a map_file link, then it just returns the inode number
+> of the symlink, not what the map_file is pointing to, which seems kind of
+> useless.
+>
+I might be wrong but I don't think we did anything special for the
+map_files in this patch. I think the confusion might be from commit
+message where Greg mentioned the map_files to describe the behavior of
+shmem buffer when comparing it with dma-buf. The file system
+implementation and the file allocation action in this patch are just
+some minimal effort to associate each dma_buf object with an inode and
+properly populate the size information in the file object. And we
+didn't use proc/pid/map_files at all in the android implementation
+indeed.
+>
+> Which makes me think both maps and map_files can be made more useful if we can
+> also make DMA_BUF_SET_NAME in the patch change the underlying dentry's name
+> from the default "dmabuf" to "dmabuf:<name>" ?
+>
+> That would be useful because:
+> 1. It should make /proc/pid/maps also have the name than always showing
+> "dmabuf".
+> 2. It should make map_files also point to the name of the buffer than just
+> "dmabuf". Note that memfd_create(2) already takes a name and the maps_file
+> for this points to the name of the buffer created and showing it in both maps
+> and map_files.
+>
+> I think this also removes the need for DMA_BUF_GET_NAME ioctl since the
+> dentry's name already has the information. I can try to look into that...
+> BTW any case we should not need GET_NAME ioctl since fdinfo already has the
+> name after SET_NAME is called. So let us drop that API?
+>
+> > May be, to make it generic, we make the tracking part optional somehow to
+> > avoid the apparent wastage on other systems.
+>
+> Yes, that's also fine. But I think if we can bake tracking into existing
+> mechanism and keep it always On, then that's also good for all other dmabuf
+> users as well and simplifies the kernel configuration for vendors.
+>
+> > > I am not against adding of inode per buffer, but I think we should have this
+> > > debate and make the right design choice here for what we really need.
+> >
+> > sure.
+>
+> Right, so just to summarize:
+> - The intention here is /proc/<pid>/maps will give uniqueness (via the inode
+>   number) between different memory ranges. That I think is the main benefit
+>   of the patch.
+> - stat gives the size of buffer as does fdinfo
+> - fdinfo is useful to get the reference count of number of sharers of the
+>   buffer.
+> - map_files is not that useful for this usecase but can be made useful if
+>   we can name the underlying file's dentry to something other than "dmabuf".
+> - GET_NAME is not needed since fdinfo already has the SET_NAMEd name.
+>
+> Do you agree?
+>
+Thanks for summarize it, I will look into the GET_NAME/SET_NAME ioctl
+to make it more useful as you suggested above. Also, I will try to add
+some test to verify the behavior.
+>
+> Just to lay it out, there is a cost to unique inode. Each struct inode is 560
+> bytes on mainline with x86_64_defconfig. With 1000 buffers, we're looking at
+> ~ 0.5MB of allocation. However I think I am convinced we need to do it
+> considering the advantages, and the size is trivial considering advantages.
+> Arguably large number dmabuf allocations are more likely to succeed with
+> devices with larger memory resources anyway :)
+>
+> It is good to have this discussion.
+>
+> thanks,
+>
+>  - Joel
+>
+> --
+> You received this message because you are subscribed to the Google Groups "kernel-team" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to kernel-team+unsubscribe@android.com.
+>
