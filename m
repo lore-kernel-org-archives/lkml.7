@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06724C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 08:37:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74EADC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 08:37:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C865F2085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 08:37:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 415EE2085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 08:37:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gJQ+yQEX"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Ke9kO7Mr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730325AbfCYIhY (ORCPT
+        id S1729985AbfCYIh2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 04:37:24 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:33998 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730289AbfCYIhW (ORCPT
+        Mon, 25 Mar 2019 04:37:28 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:36682 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730323AbfCYIhY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 04:37:22 -0400
+        Mon, 25 Mar 2019 04:37:24 -0400
 Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2P8ajCH030863;
-        Mon, 25 Mar 2019 03:36:45 -0500
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2P8bBjV039834;
+        Mon, 25 Mar 2019 03:37:11 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1553503005;
-        bh=Z5FsYHz2+eCaWuP/Fr5+/R+9oCvd7mzmcItqNVxbMQU=;
+        s=ti-com-17Q1; t=1553503031;
+        bh=chMDM1S73N5348Ke4wiey3wF6sgdC3UveRlW6BwAUuY=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=gJQ+yQEXu9b9udaGcXG/OL3a15kiZaOfNPDu/VsuhsuN6DIQKF95A4ZvkeBHbwcj4
-         CMMO1rzAXxQv3TpHNKOyoNXCjEWuAyJRgfqKl8B4YuHmXjwt9PixjFrFCgT1pWnXZl
-         0QUHwk+cx+rnM/yv9NWELUBCtGYJ7jt6dY1W/6mU=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2P8ajHU088947
+        b=Ke9kO7MrjIUhvbMmukZbWdEHyvEo7M3LIS+G7eg0BaR0QBDlF0PonhhK8+xZClZzx
+         24oWqUPuyTU4GwFQllys/7ZWLRmmfjwTmoynfxyliQkvqKiUWGP93cIh5m2SPgx5ZK
+         vdw9ae3vGe/D3k7lFm+f7135VhOXn+bG4eWplxCQ=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2P8bBNN089549
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 25 Mar 2019 03:36:45 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+        Mon, 25 Mar 2019 03:37:11 -0500
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 25
- Mar 2019 03:36:45 -0500
-Received: from dlep33.itg.ti.com (157.170.170.75) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_0,
+ Mar 2019 03:37:11 -0500
+Received: from dlep33.itg.ti.com (157.170.170.75) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_0,
  cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5 via Frontend Transport;
- Mon, 25 Mar 2019 03:36:45 -0500
+ Mon, 25 Mar 2019 03:37:11 -0500
 Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by dlep33.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2P8ZsFr006534;
-        Mon, 25 Mar 2019 03:36:41 -0500
+        by dlep33.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2P8ZsFx006534;
+        Mon, 25 Mar 2019 03:37:07 -0500
 From:   Kishon Vijay Abraham I <kishon@ti.com>
 To:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -61,9 +61,9 @@ CC:     Kishon Vijay Abraham I <kishon@ti.com>,
         <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>, <linux-arm-kernel@axis.com>
-Subject: [PATCH v2 11/26] PCI: dwc: Fix ATU identification for designware version >= 4.80
-Date:   Mon, 25 Mar 2019 14:04:46 +0530
-Message-ID: <20190325083501.8088-12-kishon@ti.com>
+Subject: [PATCH v2 17/26] PCI: keystone: Add support to set the max link speed from DT
+Date:   Mon, 25 Mar 2019 14:04:52 +0530
+Message-ID: <20190325083501.8088-18-kishon@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190325083501.8088-1-kishon@ti.com>
 References: <20190325083501.8088-1-kishon@ti.com>
@@ -75,62 +75,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Synopsys designware version >= 4.80 uses a separate register space
-for programming ATU. The current code identifies if there exists a
-separate register space by accessing the register address of ATUs
-in designware version < 4.80. Accessing this address results in
-abort in the case of K2G.
+PCIe in TI's AM654 devices is by default configured to work in GEN3 mode.
+However PCIe doesn't work reliably in GEN3 mode because of SERDES
+configuration.
 
-Fix it here by adding "version" member to struct dw_pcie. This should
-be set by platform specific drivers and designware core will use it
-to identify if the platform has a separate ATU space. For platforms
-which hasn't populated the version member, the old method of
-identification will still be used.
+Add support to set the link speed to GEN1, GEN2 or GEN3 based on
+"max-link-speed" dt property with GEN2 as the default speed if
+"max-link-speed" is absent.
 
 Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
- drivers/pci/controller/dwc/pcie-designware.c | 14 ++++++++------
- drivers/pci/controller/dwc/pcie-designware.h |  1 +
- 2 files changed, 9 insertions(+), 6 deletions(-)
+ drivers/pci/controller/dwc/pci-keystone.c | 35 +++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index a14ca00f72aa..4e2f7946da89 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -358,13 +358,15 @@ void dw_pcie_setup(struct dw_pcie *pci)
- 	struct device *dev = pci->dev;
- 	struct device_node *np = dev->of_node;
+diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
+index e4a816f53b8e..312fd0c49bbb 100644
+--- a/drivers/pci/controller/dwc/pci-keystone.c
++++ b/drivers/pci/controller/dwc/pci-keystone.c
+@@ -28,6 +28,7 @@
+ #include <linux/resource.h>
+ #include <linux/signal.h>
  
--	/* Get iATU unroll support */
--	pci->iatu_unroll_enabled = dw_pcie_iatu_unroll_enabled(pci);
--	dev_dbg(pci->dev, "iATU unroll: %s\n",
--		pci->iatu_unroll_enabled ? "enabled" : "disabled");
-+	if (pci->version >= 0x480A || (!pci->version &&
-+				       dw_pcie_iatu_unroll_enabled(pci))) {
-+		pci->iatu_unroll_enabled = true;
-+		if (!pci->atu_base)
-+			pci->atu_base = pci->dbi_base + DEFAULT_DBI_ATU_OFFSET;
++#include "../../pci.h"
+ #include "pcie-designware.h"
+ 
+ #define PCIE_VENDORID_MASK	0xffff
+@@ -89,6 +90,8 @@
+ #define LEG_EP				0x1
+ #define RC				0x2
+ 
++#define EXP_CAP_ID_OFFSET		0x70
++
+ #define KS_PCIE_SYSCLOCKOUTEN		BIT(0)
+ 
+ #define AM654_PCIE_DEV_TYPE_MASK	0x3
+@@ -971,6 +974,31 @@ static int ks_pcie_am654_set_mode(struct device *dev)
+ 	return 0;
+ }
+ 
++static void ks_pcie_set_link_speed(struct dw_pcie *pci, int link_speed)
++{
++	u32 val;
++
++	dw_pcie_dbi_ro_wr_en(pci);
++
++	val = dw_pcie_readl_dbi(pci, EXP_CAP_ID_OFFSET + PCI_EXP_LNKCAP);
++	if ((val & PCI_EXP_LNKCAP_SLS) != link_speed) {
++		val &= ~((u32)PCI_EXP_LNKCAP_SLS);
++		val |= link_speed;
++		dw_pcie_writel_dbi(pci, EXP_CAP_ID_OFFSET + PCI_EXP_LNKCAP,
++				   val);
 +	}
-+	dev_dbg(pci->dev, "iATU unroll: %s\n", pci->iatu_unroll_enabled ?
-+		"enabled" : "disabled");
++
++	val = dw_pcie_readl_dbi(pci, EXP_CAP_ID_OFFSET + PCI_EXP_LNKCTL2);
++	if ((val & PCI_EXP_LNKCAP_SLS) != link_speed) {
++		val &= ~((u32)PCI_EXP_LNKCAP_SLS);
++		val |= link_speed;
++		dw_pcie_writel_dbi(pci, EXP_CAP_ID_OFFSET + PCI_EXP_LNKCTL2,
++				   val);
++	}
++
++	dw_pcie_dbi_ro_wr_dis(pci);
++}
++
+ static const struct ks_pcie_of_data ks_pcie_rc_of_data = {
+ 	.host_ops = &ks_pcie_host_ops,
+ 	.version = 0x365A,
+@@ -1011,6 +1039,7 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
+ 	void __iomem *base;
+ 	u32 num_viewport;
+ 	struct phy **phy;
++	int link_speed;
+ 	u32 num_lanes;
+ 	char name[10];
+ 	int ret;
+@@ -1165,6 +1194,12 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
+ 		gpiod_set_value_cansleep(gpiod, 1);
+ 	}
  
--	if (pci->iatu_unroll_enabled && !pci->atu_base)
--		pci->atu_base = pci->dbi_base + DEFAULT_DBI_ATU_OFFSET;
- 
- 	ret = of_property_read_u32(np, "num-lanes", &lanes);
- 	if (ret)
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index ca3a3190a6f5..90a5b1215344 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -234,6 +234,7 @@ struct dw_pcie {
- 	struct pcie_port	pp;
- 	struct dw_pcie_ep	ep;
- 	const struct dw_pcie_ops *ops;
-+	unsigned int		version;
- };
- 
- #define to_dw_pcie_from_pp(port) container_of((port), struct dw_pcie, pp)
++	link_speed = of_pci_get_max_link_speed(np);
++	if (link_speed < 0)
++		link_speed = 2;
++
++	ks_pcie_set_link_speed(pci, link_speed);
++
+ 	pci->pp.ops = host_ops;
+ 	ret = ks_pcie_add_pcie_port(ks_pcie, pdev);
+ 	if (ret < 0)
 -- 
 2.17.1
 
