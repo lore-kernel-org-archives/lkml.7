@@ -2,175 +2,234 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7EBFC10F03
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:44:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFCC6C4360F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:44:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C28720863
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:44:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BDFD20879
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:44:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uWq2IC7v"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="MOvLGG5t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729836AbfCYQob (ORCPT
+        id S1729862AbfCYQoo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 12:44:31 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:37884 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726024AbfCYQoa (ORCPT
+        Mon, 25 Mar 2019 12:44:44 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:43980 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726024AbfCYQon (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 12:44:30 -0400
-Received: by mail-wr1-f68.google.com with SMTP id w10so10998415wrm.4;
-        Mon, 25 Mar 2019 09:44:28 -0700 (PDT)
+        Mon, 25 Mar 2019 12:44:43 -0400
+Received: by mail-pg1-f196.google.com with SMTP id z9so563416pgu.10
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 09:44:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=NSY5EkU+HnGH2HB3kclwoIJRstfiL3cyMYhG7Hik+t4=;
-        b=uWq2IC7v80rd2dDJL2ZGY2d6q0F0j+4eANf+70QxyHjeKCR92EC59ZJTvB51S83KJs
-         VchT1a9/rEPKp1XeLd4LQnMzKyRBj3Y5PgiNhudWPgD/Dze7L6UTX4iikiPHnu0WrMZc
-         G37NEIswHw3otFUXGmslgIZxX3QSEbCbdusgrUmdqDfRYc3pcFXykZySqh4enVrtiUU9
-         BMmK0ANt47eYDD7dnlpTto3rYf/diccySvN7lKMURFakmIFo+II8xBs/8+foQLKWSeUM
-         BFQGAxbLAsLXfRfXgVRo4epx5dxxx0nXpmY8WuSWlnSxZXq6O1InMTOHdc04XjDfsC15
-         zdUg==
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=t9zy/7o/wXxn8o9xiennO56tqny6qYj28o2PkgbCnMU=;
+        b=MOvLGG5tLn0biNvCmTTbgLuQZ4wsa0zeH2hjvDbu6XPQNhHyKLPuvOWEmvKaJL2Wtm
+         P6+tZ/8XD+nwYi+BNde9/qrPsgN/VrpKZLhQ7VSMDb6xO6xH2yRxmUd+LXSQYQc8odOz
+         EiVLbFLi4VQvv2j9LDA6TOIbjhaOaml7u5p/4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=NSY5EkU+HnGH2HB3kclwoIJRstfiL3cyMYhG7Hik+t4=;
-        b=E9dgO2CxYm2UtsSMpbfW66VNeDY4i38VMR6Gq/b8uorWJyMjML8CVonngqOoba0BXm
-         vsDsnlPepwrwtj1G2ger31czxAEybbI/MpSU6urWEFBvntuzwZYtl6gu1JrCs1wJB1qF
-         PRtpLBlzPcy/wswrMC20TQBbbryVZJFqv9VjIQ6M64TM+EzkhWHbzBKHw7vN/wHe8SAi
-         g58MtU3kU/M5DokRxkKlqSB3CGswX4BgVK7ppH76ibxIQvBIDlewq3SNuzVMyFe0+1Pj
-         33ZbtOoVBHvaS89rdNKUbT6QdJeXOtpdC1bL/3LGTKnXz/Xf6yHu4Qi2Qage1UuHscr/
-         6QGQ==
-X-Gm-Message-State: APjAAAWwJ2xkNqZaxhsbX0xVnKf3XTFLKrEbzf5H99l21hXcQ1mlpb+o
-        lv06EwCNfFnNFs+t+68G2w4=
-X-Google-Smtp-Source: APXvYqyY6oZz4yWnt5x5aPIVtRQfDGGu8qZyPlOF/+TkRHBLNmgRijjVW43+yKepgDP95t9lQrc4ow==
-X-Received: by 2002:a5d:4646:: with SMTP id j6mr5841417wrs.56.1553532267961;
-        Mon, 25 Mar 2019 09:44:27 -0700 (PDT)
-Received: from [10.67.48.231] ([192.19.223.250])
-        by smtp.googlemail.com with ESMTPSA id b134sm35248839wmd.26.2019.03.25.09.44.24
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 25 Mar 2019 09:44:27 -0700 (PDT)
-Subject: Re: Why CMA allocater fails if there is a signal pending?
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Peter Chen <hzpeterchen@gmail.com>
-Cc:     Michal Nazarewicz <mina86@mina86.com>, peter.chen@nxp.com,
-        fugang.duan@nxp.com, linux-usb@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        linux-arm-kernel@lists.infradead.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-References: <CAL411-pwHq4Df-FsBu=Vzd4CR6Pzee2yR579hHeZuh8T7fBNJA@mail.gmail.com>
- <20190325102633.v6hkvda6q7462wza@shell.armlinux.org.uk>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
-Message-ID: <7905eeb4-51ce-956b-31ed-33313bcfe7eb@gmail.com>
-Date:   Mon, 25 Mar 2019 09:44:17 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=t9zy/7o/wXxn8o9xiennO56tqny6qYj28o2PkgbCnMU=;
+        b=OepltJCPL/6xDoFvaF+2h0rspyAl3F1UNgXYANXbplkJhNcuL1j7iECxYUGCY72esz
+         ygzRySCdeV/qk0KLGmSwm1EpMfpG9zRsFpYxyRpsBt1S/a3eyqB0ggavv0w2iqy0tajv
+         0++5XTOUJoT4u3kmY1QdgH2/I8yEcUF/RfG13uZypJV8F7mBA1IU83RsiiY9SjQJL4Hh
+         g8fasNL5kCbrJszpmEe5bP7suOWGoVhctOL/nAss8O51vIgV0e3k6dLcLUHO+tWt3Lmm
+         PLJ9m3+qVbQEU9jXZHh5yo+XFYHZiyDKfgqvWo++HHidzCAMJhWndjW8FxVxY1QjlaYe
+         82oA==
+X-Gm-Message-State: APjAAAWNMC/4kt0fKYwp36tHSWtyNPG+Zox1kxtM3rLd++QFy/6QYaOR
+        PLrc4/qaCIEFyofButxXM6iESw==
+X-Google-Smtp-Source: APXvYqz4GmgKSuLoWMlEHsTlpg6TaOd4kBaJQALreNIV1Nd1+OY7jww4ruWKlGKq60XFMFS8Iqs5ow==
+X-Received: by 2002:a62:7049:: with SMTP id l70mr25082091pfc.78.1553532282631;
+        Mon, 25 Mar 2019 09:44:42 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id e21sm10803828pfd.177.2019.03.25.09.44.41
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 25 Mar 2019 09:44:41 -0700 (PDT)
+Date:   Mon, 25 Mar 2019 12:44:40 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, byungchul.park@lge.com,
+        kernel-team@android.com, rcu@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Will Deacon <will.deacon@arm.com>
+Subject: Re: [RFC 2/2] rcutree: Add checks for dynticks counters in
+ rcu_is_cpu_rrupt_from_idle
+Message-ID: <20190325164440.GA25975@google.com>
+References: <20190323012939.15185-1-joel@joelfernandes.org>
+ <20190323012939.15185-2-joel@joelfernandes.org>
+ <20190323030251.GB136835@google.com>
+ <20190324234351.GX4102@linux.ibm.com>
+ <20190325133646.GA182885@google.com>
+ <20190325155341.GC4102@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <20190325102633.v6hkvda6q7462wza@shell.armlinux.org.uk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190325155341.GC4102@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/25/19 3:26 AM, Russell King - ARM Linux admin wrote:
-> On Mon, Mar 25, 2019 at 04:37:09PM +0800, Peter Chen wrote:
->> Hi Michal & Marek,
->>
->> I meet an issue that the DMA (CMA used) allocation failed if there is a user
->> signal, Eg Ctrl+C, it causes the USB xHCI stack fails to resume due to
->> dma_alloc_coherent
->> failed. It can be easy to reproduce if the user press Ctrl+C at
->> suspend/resume test.
+On Mon, Mar 25, 2019 at 08:53:41AM -0700, Paul E. McKenney wrote:
+> On Mon, Mar 25, 2019 at 09:36:46AM -0400, Joel Fernandes wrote:
+> > On Sun, Mar 24, 2019 at 04:43:51PM -0700, Paul E. McKenney wrote:
+> > > On Fri, Mar 22, 2019 at 11:02:51PM -0400, Joel Fernandes wrote:
+> > > > On Fri, Mar 22, 2019 at 09:29:39PM -0400, Joel Fernandes (Google) wrote:
+> > > > > In the future we would like to combine the dynticks and dynticks_nesting
+> > > > > counters thus leading to simplifying the code. At the moment we cannot
+> > > > > do that due to concerns about usermode upcalls appearing to RCU as half
+> > > > > of an interrupt. Byungchul tried to do it in [1] but the
+> > > > > "half-interrupt" concern was raised. It is half because, what RCU
+> > > > > expects is rcu_irq_enter() and rcu_irq_exit() pairs when the usermode
+> > > > > exception happens. However, only rcu_irq_enter() is observed. This
+> > > > > concern may not be valid anymore, but at least it used to be the case.
+> > > > > 
+> > > > > Out of abundance of caution, Paul added warnings [2] in the RCU code
+> > > > > which if not fired by 2021 may allow us to assume that such
+> > > > > half-interrupt scenario cannot happen any more, which can lead to
+> > > > > simplification of this code.
+> > > > > 
+> > > > > Summary of the changes are the following:
+> > > > > 
+> > > > > (1) In preparation for this combination of counters in the future, we
+> > > > > first need to first be sure that rcu_rrupt_from_idle cannot be called
+> > > > > from anywhere but a hard-interrupt because previously, the comments
+> > > > > suggested otherwise so let us be sure. We discussed this here [3]. We
+> > > > > use the services of lockdep to accomplish this.
+> > > > > 
+> > > > > (2) Further rcu_rrupt_from_idle() is not explicit about how it is using
+> > > > > the counters which can lead to weird future bugs. This patch therefore
+> > > > > makes it more explicit about the specific counter values being tested
+> > > > > 
+> > > > > (3) Lastly, we check for counter underflows just to be sure these are
+> > > > > not happening, because the previous code in rcu_rrupt_from_idle() was
+> > > > > allowing the case where the counters can underflow, and the function
+> > > > > would still return true. Now we are checking for specific values so let
+> > > > > us be confident by additional checking, that such underflows don't
+> > > > > happen. Any case, if they do, we should fix them and the screaming
+> > > > > warning is appropriate. All these checks checks are NOOPs if PROVE_RCU
+> > > > > and PROVE_LOCKING are disabled.
+> > > > > 
+> > > > > [1] https://lore.kernel.org/patchwork/patch/952349/
+> > > > > [2] Commit e11ec65cc8d6 ("rcu: Add warning to detect half-interrupts")
+> > > > > [3] https://lore.kernel.org/lkml/20190312150514.GB249405@google.com/
+> > > > > 
+> > > > > Cc: byungchul.park@lge.com
+> > > > > Cc: kernel-team@android.com
+> > > > > Cc: rcu@vger.kernel.org
+> > > > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > > > > ---
+> > > > >  kernel/rcu/tree.c | 21 +++++++++++++++++----
+> > > > >  1 file changed, 17 insertions(+), 4 deletions(-)
+> > > > > 
+> > > > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> > > > > index 9180158756d2..d94c8ed29f6b 100644
+> > > > > --- a/kernel/rcu/tree.c
+> > > > > +++ b/kernel/rcu/tree.c
+> > > > > @@ -381,16 +381,29 @@ static void __maybe_unused rcu_momentary_dyntick_idle(void)
+> > > > >  }
+> > > > >  
+> > > > >  /**
+> > > > > - * rcu_is_cpu_rrupt_from_idle - see if idle or immediately interrupted from idle
+> > > > > + * rcu_is_cpu_rrupt_from_idle - see if interrupted from idle
+> > > > >   *
+> > > > > - * If the current CPU is idle or running at a first-level (not nested)
+> > > > > + * If the current CPU is idle and running at a first-level (not nested)
+> > > > >   * interrupt from idle, return true.  The caller must have at least
+> > > > >   * disabled preemption.
+> > > > >   */
+> > > > >  static int rcu_is_cpu_rrupt_from_idle(void)
+> > > > >  {
+> > > > > -	return __this_cpu_read(rcu_data.dynticks_nesting) <= 0 &&
+> > > > > -	       __this_cpu_read(rcu_data.dynticks_nmi_nesting) <= 1;
+> > > > > +	/* Called only from within the scheduling-clock interrupt */
+> > > > > +	lockdep_assert_in_irq();
+> > > > > +
+> > > > > +	/* Check for counter underflows */
+> > > > > +	RCU_LOCKDEP_WARN(
+> > > > > +		(__this_cpu_read(rcu_data.dynticks_nesting) < 0) &&
+> > > > > +		(__this_cpu_read(rcu_data.dynticks_nmi_nesting) < 0),
+> > > > 
+> > > >  
+> > > > This condition for the warning is supposed to be || instead of &&. Sorry.
+> > > > 
+> > > > Or, I will just use 2 RCU_LOCKDEP_WARN(s) here, that's better.
+> > > 
+> > > Also, the dynticks_nmi_nesting being zero is a bug given that we know
+> > > we are in an interrupt handler, right?  Or am I off by one again?
+> > 
+> > You are right, we can do additional checking for making sure its never zero.
+> > I refreshed the patch as below, does this look Ok?
+> > 
+> > ---8<-----------------------
+> > 
+> > From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
+> > Subject: [RFC v2] rcutree: Add checks for dynticks counters in
+> > 
+> > In the future we would like to combine the dynticks and dynticks_nesting
+> > counters thus leading to simplifying the code. At the moment we cannot
+> > do that due to concerns about usermode upcalls appearing to RCU as half
+> > of an interrupt. Byungchul tried to do it in [1] but the
+> > "half-interrupt" concern was raised. It is half because, what RCU
+> > expects is rcu_irq_enter() and rcu_irq_exit() pairs when the usermode
+> > exception happens. However, only rcu_irq_enter() is observed. This
+> > concern may not be valid anymore, but at least it used to be the case.
+> > 
+> > Out of abundance of caution, Paul added warnings [2] in the RCU code
+> > which if not fired by 2021 may allow us to assume that such
+> > half-interrupt scenario cannot happen any more, which can lead to
+> > simplification of this code.
+> > 
+> > Summary of the changes are the following:
+> > 
+> > (1) In preparation for this combination of counters in the future, we
+> > first need to first be sure that rcu_rrupt_from_idle cannot be called
+> > from anywhere but a hard-interrupt because previously, the comments
+> > suggested otherwise so let us be sure. We discussed this here [3]. We
+> > use the services of lockdep to accomplish this.
+> > 
+> > (2) Further rcu_rrupt_from_idle() is not explicit about how it is using
+> > the counters which can lead to weird future bugs. This patch therefore
+> > makes it more explicit about the specific counter values being tested
+> > 
+> > (3) Lastly, we check for counter underflows just to be sure these are
+> > not happening, because the previous code in rcu_rrupt_from_idle() was
+> > allowing the case where the counters can underflow, and the function
+> > would still return true. Now we are checking for specific values so let
+> > us be confident by additional checking, that such underflows don't
+> > happen. Any case, if they do, we should fix them and the screaming
+> > warning is appropriate. All these checks checks are NOOPs if PROVE_RCU
+> > and PROVE_LOCKING are disabled.
+> > 
+> > [1] https://lore.kernel.org/patchwork/patch/952349/
+> > [2] Commit e11ec65cc8d6 ("rcu: Add warning to detect half-interrupts")
+> > [3] https://lore.kernel.org/lkml/20190312150514.GB249405@google.com/
+> > 
+> > Cc: byungchul.park@lge.com
+> > Cc: kernel-team@android.com
+> > Cc: rcu@vger.kernel.org
+> > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 > 
-> It has been possible in the past for cma_alloc() to take seconds or
-> longer to allocate, depending on the size of the CMA area and the
-> number of pinned GFP_MOVABLE pages within the CMA area.  Whether that
-> is true of today's CMA or not, I don't know.
+> Looks better!  I have applied this and its predecessor, if in backwards
+> order.  (Will fix, rebase coming up anyway.)
 > 
-> It's probably there to allow such a situation to be recoverable, but
-> is not a good idea if we're expecting dma_alloc_*() not to fail in
-> those scenarios.
-> 
+> I do like your Cc-ing kernel-team@android.com -- one less thing for me
+> to remember!  ;-)
+ 
+Thanks a lot Paul! :)
 
-This is a known issue that was discussed here before:
-
-http://lists.infradead.org/pipermail/linux-arm-kernel/2014-November/299265.html
-
-one issue is that the process that is responsible for putting the system
-asleep and is being resumed (which can be as simple as your shell doing
-an 'echo "standby" > /sys/power/state' can be killed, and that
-propagates throughout dpm_resume(). It is debatable whether the signal
-should be ignored or not, probably not.
-
-You can work around this by wrapping your echo to /sys/power/state with
-a shell script that trap the signal and say, does an exit 1. AFAIR there
-are many places where a dma_alloc_* allocation can fail, and not all
-drivers are designed to recover correctly.
--- 
-Florian
+ - Joel
