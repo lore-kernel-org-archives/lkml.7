@@ -6,108 +6,132 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 656C3C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:17:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E060EC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:17:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A07D21773
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:17:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B695B20896
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:17:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="B0UsyfwR"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="a8IbOPkX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730023AbfCYSRo (ORCPT
+        id S1730158AbfCYSRv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 14:17:44 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:14025 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726217AbfCYSRn (ORCPT
+        Mon, 25 Mar 2019 14:17:51 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:41321 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730054AbfCYSRt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 14:17:43 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5c991b4a0000>; Mon, 25 Mar 2019 11:17:46 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 25 Mar 2019 11:17:43 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 25 Mar 2019 11:17:43 -0700
-Received: from [10.24.70.95] (172.20.13.39) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 25 Mar
- 2019 18:17:39 +0000
-Subject: Re: [PATCH 1/8] vfio/mdev: Fix to not do put_device on
- device_register failure
-To:     Parav Pandit <parav@mellanox.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>
-References: <1553296835-37522-1-git-send-email-parav@mellanox.com>
- <1553296835-37522-2-git-send-email-parav@mellanox.com>
-X-Nvconfidentiality: public
-From:   Kirti Wankhede <kwankhede@nvidia.com>
-Message-ID: <2c096714-74cd-48ff-496f-b3919990e3e5@nvidia.com>
-Date:   Mon, 25 Mar 2019 23:47:30 +0530
+        Mon, 25 Mar 2019 14:17:49 -0400
+Received: by mail-qt1-f196.google.com with SMTP id w30so11443681qta.8
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 11:17:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yEDHhlU9kUtW59S2GYGE8OrxQMGqUWph5lX1gbrO9q0=;
+        b=a8IbOPkXxXExB5zE7jE8WL4ECxSPU2uGG1m82SkUxBxHQCTpfPVwJRn9FjxzKCqFS6
+         t+0uPPlm4nyKjSxWtdc4jrRYsFyEj/35rkR1LuV6dYmO1hlTuFA7gr+O2+Y6PheC8f5h
+         04mg7d2IR3mcgnamlF5Omz6CC/glca+pWXlyE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yEDHhlU9kUtW59S2GYGE8OrxQMGqUWph5lX1gbrO9q0=;
+        b=KrOEoMH+7XaDqWGEAIF81LxtZZG9eL/t3p89NXZlbQWMJhkYhsF1j9H46OgXCPiZ20
+         rBCHJsBdge/zbgWTYGSAOm5b+Covch/ACoDf03kFOn+ebNTB7mgwN43WCoFhU8YjuPjx
+         r3WFGh2dRCFDYBtIFoSNHKnvvId5Gj7uEMScQDlf3bFU7h9MHZK4mALAcm2LBdaVizXz
+         8hzuBWNEOgbGBCbkfW/Sc5tOCJolMSHkJqbl9RoCHiKQ9nJyp3w5hsoeE9sIyrImn/Jz
+         vVWsLIXiMD7wagoG2YyrO65t7xcZcEjH/IVN2X8r802DDIK2rId2077JU1jX4oDfY8Tn
+         1rwQ==
+X-Gm-Message-State: APjAAAVV2ACtcLRfuuCvcExyxCJZVcpGg2uU8kBMIL9VTrzzPcxC/IHf
+        AoJYtzqLZFglcajnKnASuBNct8R0U/ROn1yW4tB7LA==
+X-Google-Smtp-Source: APXvYqyIyKuwTmHCNxxqJh7nWohG21bsDEM+b+Ju6QZgnpkln/tmm1VZhUBwH4MzXqaFrgsHC4wXSoNw7vSLyc8Febg=
+X-Received: by 2002:ac8:f3c:: with SMTP id e57mr21635392qtk.75.1553537868163;
+ Mon, 25 Mar 2019 11:17:48 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1553296835-37522-2-git-send-email-parav@mellanox.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL101.nvidia.com (172.20.187.10)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1553537866; bh=n8aOmaum8O5EURR1+dIqqyVtEbw7F9E4JKC/95mTe5A=;
-        h=X-PGP-Universal:Subject:To:References:X-Nvconfidentiality:From:
-         Message-ID:Date:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=B0UsyfwRhFq9SY0IogYxRthIxWcvu/aEryy4VwaMa1UlppxnOWmhFgylufA1dfCKa
-         xDG7utLpMO4033vto5XxIZovm7gKQf1Pea7XY4ri92ZA1qzi1BwonrYdHv1ERDoMBo
-         3lFDdQgvKPmK89t/iruu6JL86+gkkcP1/BSnKbi6wszi+2EysxaAr03efqec5Izsuu
-         iBb51uBWs0/Z7D4K6b6TVR3Ev0FVSUyTJ22OAQ+kJiSPVqSgbBxRlnSpqDYyTYvhAE
-         x+qFxLP+ZNXypObDc7wjP3ZLqY8AGwptnyc0p1WgBEOMlZZdUdJfzB70h5nAiMqJtD
-         z/lNlZBk2KkIg==
+References: <20190325124137.6117-1-zhiyong.tao@mediatek.com> <20190325124137.6117-4-zhiyong.tao@mediatek.com>
+In-Reply-To: <20190325124137.6117-4-zhiyong.tao@mediatek.com>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Mon, 25 Mar 2019 11:17:37 -0700
+Message-ID: <CANMq1KCSN11fH0JS72iheDwKjo06ShKiFu+Yn51xVObcvV37GA@mail.gmail.com>
+Subject: Re: [PATCH RESEND v3 3/4] arm64: dts: mt8183: add pintcrl device node
+To:     Zhiyong Tao <zhiyong.tao@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sean Wang <sean.wang@kernel.org>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        hui.liu@mediatek.com, Eddie Huang <eddie.huang@mediatek.com>,
+        chuanjia.liu@mediatek.com, biao.huang@mediatek.com,
+        hongzhou.yang@mediatek.com, Erin Lo <erin.lo@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>, devicetree@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Mar 25, 2019 at 5:41 AM Zhiyong Tao <zhiyong.tao@mediatek.com> wrote:
+>
+> The commit adds pintcrl device node for mt8183
 
+Minor nit: This should say pinctrl (in the commit title as well).
 
-On 3/23/2019 4:50 AM, Parav Pandit wrote:
-> device_register() performs put_device() if device_add() fails.
-> This balances with device_initialize().
-> 
-> mdev core performing put_device() when device_register() fails,
-> is an error that puts already released device again.
-> Therefore, don't put the device on error.
-> 
-
-device_add() on all errors doesn't call put_device(dev). It releases
-reference to its parent, put_device(parent), but not the device itself,
-put_device(dev).
-
-Thanks,
-Kirti
-
-
-> Fixes: 7b96953bc640 ("vfio: Mediated device Core driver")
-> Signed-off-by: Parav Pandit <parav@mellanox.com>
+>
+> Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
 > ---
->  drivers/vfio/mdev/mdev_core.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
-> index 0212f0e..3e5880a 100644
-> --- a/drivers/vfio/mdev/mdev_core.c
-> +++ b/drivers/vfio/mdev/mdev_core.c
-> @@ -318,10 +318,8 @@ int mdev_device_create(struct kobject *kobj, struct device *dev, uuid_le uuid)
->  	dev_set_name(&mdev->dev, "%pUl", uuid.b);
->  
->  	ret = device_register(&mdev->dev);
-> -	if (ret) {
-> -		put_device(&mdev->dev);
-> +	if (ret)
->  		goto mdev_fail;
-> -	}
->  
->  	ret = mdev_device_create_ops(kobj, mdev);
->  	if (ret)
-> 
+>  arch/arm64/boot/dts/mediatek/mt8183.dtsi | 26 +++++++++++++++++++++++++-
+>  1 file changed, 25 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> index 75c4881bbe5e..cf92504e2a9b 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> @@ -9,7 +9,7 @@
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  #include <dt-bindings/interrupt-controller/irq.h>
+>  #include <dt-bindings/power/mt8183-power.h>
+> -
+> +#include "mt8183-pinfunc.h"
+>  / {
+>         compatible = "mediatek,mt8183";
+>         interrupt-parent = <&sysirq>;
+> @@ -197,6 +197,30 @@
+>                         #clock-cells = <1>;
+>                 };
+>
+> +               pio: pinctrl@10005000 {
+> +                       compatible = "mediatek,mt8183-pinctrl";
+> +                       reg = <0 0x10005000 0 0x1000>,
+> +                             <0 0x11f20000 0 0x1000>,
+> +                             <0 0x11e80000 0 0x1000>,
+> +                             <0 0x11e70000 0 0x1000>,
+> +                             <0 0x11e90000 0 0x1000>,
+> +                             <0 0x11d30000 0 0x1000>,
+> +                             <0 0x11d20000 0 0x1000>,
+> +                             <0 0x11c50000 0 0x1000>,
+> +                             <0 0x11f30000 0 0x1000>,
+> +                             <0 0x1000b000 0 0x1000>;
+> +                       reg-names = "iocfg0", "iocfg1", "iocfg2",
+> +                                   "iocfg3", "iocfg4", "iocfg5",
+> +                                   "iocfg6", "iocfg7", "iocfg8",
+> +                                   "eint";
+> +                       gpio-controller;
+> +                       #gpio-cells = <2>;
+> +                       gpio-ranges = <&pio 0 0 192>;
+> +                       interrupt-controller;
+> +                       interrupts = <GIC_SPI 177 IRQ_TYPE_LEVEL_HIGH>;
+> +                       #interrupt-cells = <2>;
+> +               };
+> +
+>                 scpsys: syscon@10006000 {
+>                         compatible = "mediatek,mt8183-scpsys", "syscon";
+>                         #power-domain-cells = <1>;
+> --
+> 2.12.5
+>
