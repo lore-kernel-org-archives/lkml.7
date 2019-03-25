@@ -2,118 +2,83 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 713A2C4360F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 11:10:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8928FC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 11:10:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 410BA2063F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 11:10:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qrS34rOi"
+	by mail.kernel.org (Postfix) with ESMTP id 627CE2063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 11:10:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730815AbfCYLKR (ORCPT
+        id S1730824AbfCYLKk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 07:10:17 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:40662 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729727AbfCYLKQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 07:10:16 -0400
-Received: by mail-io1-f67.google.com with SMTP id d201so7229614iof.7;
-        Mon, 25 Mar 2019 04:10:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oAueFEIqCD9AhXmVlTTPGBWAf4NW1uC3bpMLU2svQXw=;
-        b=qrS34rOikrfVr5ZViCsef8iowfUfG+rwWJqB+oI7kwL5X79mlZVc5jlKzjEP4YcqaS
-         rjJvLkVmXgUlsBdAzdWNuRkn8pzmLCkqWhm6PSKADeuYIbpCTuxgl9HX/Id/J/SG2pR3
-         fFsUFq0NICyrEQHiyRBRHVwBBW3W0TWTvota064CEBNApAxbLIsKKfmd7X2VmwZpWnPm
-         Zr+Zsx7GdxAVP9jLNKpYS9lmL2fwyXvZ8mBgtztO2Ft384tVvzT16rf3694Fqf8rIlsD
-         q0SMJ+3e3J10MVtKrHjzP+Fn/1Gb5dbRMun5NUD8CXQrqMx/h5rkYapNLzOLCB1N62B4
-         2YiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oAueFEIqCD9AhXmVlTTPGBWAf4NW1uC3bpMLU2svQXw=;
-        b=eUGagWnaRp+YXxi4k/rdckc3nf2mh59yeQ5s0YVVSpdRzxTftpd6yrtyvAgbxVYjA5
-         g5LlHn0NdWQUmPUSYYTeXm36QGAGD3DMTs4dL1IxNICFOs+wqjmjdgAG0p4/46c/0R/5
-         AoGf71vOpTE2j/5uXOJcmqoTR+7p2pPegac3ewE2Rzt3n/M6JOG7mOYhCyFkws+liSn1
-         c8pTGjgJsp1dUnQdpna2yqm/V5k6gIKUHlik4VT0jw8I/nwDYCf9dykxY0aDqy+2nqw4
-         jUO/i+901h1/66ruoauBpq0gs7E+6Kh1nuvu2O1bB0l0Y2YoYnB73bD/PwalCVGmWh7G
-         LpGQ==
-X-Gm-Message-State: APjAAAUikaV5Xs/bmnIGRDvjqbmU/o2EJkANu8vSGThgptSkhu1TPg9u
-        kWKOpmuEUHezcaxU/+OjOxtxnOY4OvZHIJ9SoE2JIZDV
-X-Google-Smtp-Source: APXvYqxurMcVvllu5vSwBlwo1iIIHbjfzW6jz4eekPxogfbBvPT53bFo/zuysyB2/qZX381CSibLA4DoJhvkSOPDkPc=
-X-Received: by 2002:a5d:984a:: with SMTP id p10mr16351129ios.217.1553512216107;
- Mon, 25 Mar 2019 04:10:16 -0700 (PDT)
+        Mon, 25 Mar 2019 07:10:40 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:45530 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729727AbfCYLKk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 07:10:40 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2EA2C15AB;
+        Mon, 25 Mar 2019 04:10:40 -0700 (PDT)
+Received: from [10.1.196.69] (e112269-lin.cambridge.arm.com [10.1.196.69])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7E78C3F575;
+        Mon, 25 Mar 2019 04:10:38 -0700 (PDT)
+Subject: Re: [PATCH v3] ASoC: sirf-audio: Remove redundant of_match_node call
+To:     Aditya Pakki <pakki001@umn.edu>
+Cc:     Barry Song <baohua@kernel.org>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, kjlu@umn.edu,
+        Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        linux-arm-kernel@lists.infradead.org
+References: <20190322220031.13773-1-pakki001@umn.edu>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <31ca2c4d-668d-9448-bb67-516d1a45b6a7@arm.com>
+Date:   Mon, 25 Mar 2019 11:10:37 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <20190322143643.1317312-1-arnd@arndb.de> <CAOi1vP9scH+DECa1udToEvtYMRTZ1-VMuVajAh8uwpxzuMq0RA@mail.gmail.com>
- <CAK8P3a2mZ-zyAMrR2zesAUoLO0BiDcmr6VnJzuJb=PFSHj4PWg@mail.gmail.com>
-In-Reply-To: <CAK8P3a2mZ-zyAMrR2zesAUoLO0BiDcmr6VnJzuJb=PFSHj4PWg@mail.gmail.com>
-From:   Ilya Dryomov <idryomov@gmail.com>
-Date:   Mon, 25 Mar 2019 12:11:34 +0100
-Message-ID: <CAOi1vP9GdfiT5WffcdRN=dLYpW8dwocO8sHLw_S0FphiJjPvbQ@mail.gmail.com>
-Subject: Re: [PATCH] rbd: avoid clang -Wuninitialized warning
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Sage Weil <sage@redhat.com>, Alex Elder <elder@kernel.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        clang-built-linux@googlegroups.com,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Jason Dillaman <dillaman@redhat.com>,
-        Ceph Development <ceph-devel@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190322220031.13773-1-pakki001@umn.edu>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 22, 2019 at 5:55 PM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Fri, Mar 22, 2019 at 5:33 PM Ilya Dryomov <idryomov@gmail.com> wrote:
-> >
-> > On Fri, Mar 22, 2019 at 3:36 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> > >
-> > > diff --git a/drivers/block/rbd.c b/drivers/block/rbd.c
-> > > index 4ba967d65cf9..cbcc3baf3807 100644
-> > > --- a/drivers/block/rbd.c
-> > > +++ b/drivers/block/rbd.c
-> > > @@ -2399,7 +2399,7 @@ static int rbd_obj_read_from_parent(struct rbd_obj_request *obj_req)
-> > >                                                       &obj_req->bvec_pos);
-> > >                         break;
-> > >                 default:
-> > > -                       rbd_assert(0);
-> > > +                       BUG();
-> > >                 }
-> > >         } else {
-> > >                 ret = rbd_img_fill_from_bvecs(child_img_req,
-> >
-> > Hi Arnd,
-> >
-> > You did a couple of these last year in commit c6244b3b2377 ("rbd: avoid
-> > Wreturn-type warnings").
->
-> Ah, I had completely forgotten about that. Different bug and different
-> compiler, but same solution ;-)
->
-> >  Let's change all of those default cases to BUG
-> > in one go.  Do you want to do that or should I?
->
-> I've prepared another patch now and sent it out, please
-> apply it on top. I'd like this one-line patch to stay separate though
-> since it captures the warning message and may need to
-> be backported to stable kernels later.
+On 22/03/2019 22:00, Aditya Pakki wrote:
+> Unlike other drivers probe method, of_match_node return value
+> is not used or checked. This patch removes the redundant code.
+> 
+> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
 
-Applied.
+Reviewed-by: Steven Price <steven.price@arm.com>
 
-Thanks,
+> 
+> ---
+> v2: Move the signed by above the version change log
+> v1: A check is unnecessary as match is never used.
+> ---
+>  sound/soc/codecs/sirf-audio-codec.c | 3 ---
+>  1 file changed, 3 deletions(-)
+> 
+> diff --git a/sound/soc/codecs/sirf-audio-codec.c b/sound/soc/codecs/sirf-audio-codec.c
+> index e424499a8450..e0af21050078 100644
+> --- a/sound/soc/codecs/sirf-audio-codec.c
+> +++ b/sound/soc/codecs/sirf-audio-codec.c
+> @@ -461,9 +461,6 @@ static int sirf_audio_codec_driver_probe(struct platform_device *pdev)
+>  	struct sirf_audio_codec *sirf_audio_codec;
+>  	void __iomem *base;
+>  	struct resource *mem_res;
+> -	const struct of_device_id *match;
+> -
+> -	match = of_match_node(sirf_audio_codec_of_match, pdev->dev.of_node);
+>  
+>  	sirf_audio_codec = devm_kzalloc(&pdev->dev,
+>  		sizeof(struct sirf_audio_codec), GFP_KERNEL);
+> 
 
-                Ilya
