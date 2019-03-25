@@ -6,102 +6,77 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
 	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC7ADC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 07:53:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ECB8C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 07:53:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99DCE2085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 07:53:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B2862085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 07:53:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ziQbKpah"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="MGkYENT8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729887AbfCYHxW (ORCPT
+        id S1729905AbfCYHxu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 03:53:22 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:40773 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729819AbfCYHxW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 03:53:22 -0400
-Received: by mail-wr1-f68.google.com with SMTP id t5so8841141wri.7
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 00:53:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=WwxHs9gNN2oayYIsOpyLynhSLaOqx4Hgj4wWzDLjm+w=;
-        b=ziQbKpahiEr27faX5KWlmjulgu+h6kB+eKxwQsgRHyye5EWKOYFrxBC2tz0GpkyIwH
-         BAF0K9Eda3S80i2btCOaaEF7mLhplQhsaWKKNeooVgTnZlbOaed4NDAvqUba2q9z79Y7
-         JFbl34yVxU+2ilRsg5VUf7lXinHLOqECFp0b56cT087oYVA7rukCFRFJhgBH5Zb2yo0Y
-         bAM2sth2GB4xkNAS2xeqIHv3c2E5p/geNB8vG3jsiwVaUH7Eikjrf2aGIPkOdu1HnEW0
-         GWF1160icl58FXnH6ReiJDo9wjc0xkpVvS+SMY1h2fwy9nNxq7xwwSCcgDS/2D81+H3m
-         8gYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=WwxHs9gNN2oayYIsOpyLynhSLaOqx4Hgj4wWzDLjm+w=;
-        b=VGVaGdUb2uzJ8n8CAYINZNJyolk49ATAVx37o3Pw4v2wYabqpBJ+9eL6dbUH2fQFoT
-         qIg+UyIhkGxpssfW5mfd2JZ7ePTTwyhzdgHN175qchVHBDJRwvr8oD7nQlDdChMYY7fn
-         3rOVSKBAVMWu22CZSASj7RibQuVrx1Kzgedrl0/KsxT5/iKl1LTPX2DNJiSD6XgldcxX
-         6u7Ofwz1IS9cUulQ3ZtbBgLOGUcNxIt1GOSzWO5xein66+GY2jZd/YZvy/v9cCJasHbi
-         VU5RM/EwX5nXw1jl5k87ElWzul3NyBxhfhf0Qk95ZrMtlz5FQZY8MiSd0XdrJuqqaIg4
-         fnuQ==
-X-Gm-Message-State: APjAAAWOmw+eqG6rE00b5C6CGKvc5mBgVyXsHnG2XQ1Oxl1XDOkHFhqN
-        +qtjpuCcHrgXiV/1rtdV7/UbWg==
-X-Google-Smtp-Source: APXvYqxnhzw0RwTGCkNmlKFbu7BLPYSX4nLK0ULvy6F+WfFsboL75U8zPiYdW1uUFmw4y70rlp81og==
-X-Received: by 2002:adf:b3d1:: with SMTP id x17mr14826984wrd.15.1553500400326;
-        Mon, 25 Mar 2019 00:53:20 -0700 (PDT)
-Received: from dell ([2.27.167.37])
-        by smtp.gmail.com with ESMTPSA id y197sm24589511wmd.34.2019.03.25.00.53.19
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 25 Mar 2019 00:53:19 -0700 (PDT)
-Date:   Mon, 25 Mar 2019 07:53:17 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc:     Dan Murphy <dmurphy@ti.com>, robh+dt@kernel.org, pavel@ucw.cz,
-        tony@atomide.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
-Subject: Re: [PATCH 3/4] mfd: ti-lmu: Remove LM3532 backlight driver
- references
-Message-ID: <20190325075317.GW4731@dell>
-References: <20190321142838.22985-1-dmurphy@ti.com>
- <20190321142838.22985-3-dmurphy@ti.com>
- <8769a95d-179f-6219-0a63-9dd623cdd297@gmail.com>
+        Mon, 25 Mar 2019 03:53:50 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:34758 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729822AbfCYHxt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 03:53:49 -0400
+Received: from zn.tnic (p200300EC2F098000329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:8000:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5CBF11EC0310;
+        Mon, 25 Mar 2019 08:53:48 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1553500428;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=wCQ2sMH0EHR963ttG8Fg9nl/R+S87SD1MCvCqoc6kvY=;
+        b=MGkYENT8mlyY8sGSYfQj5VMNWzwF19EHrqpcNpTeUapDB3A0YM8CwC5mV/gT+VRupBFgJQ
+        KSOzCSwJxI/fccFetmLEJgTwMSp4ytroKQRY1OfFMwTWpMDJoQUleNH5LiBAyTwIjh5JaO
+        a8kfRN5SGUELmYI8JOdU8QEvl9aFlKY=
+Date:   Mon, 25 Mar 2019 08:53:51 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Baoquan He <bhe@redhat.com>
+Cc:     Junichi Nomura <j-nomura@ce.jp.nec.com>,
+        "fanc.fnst@cn.fujitsu.com" <fanc.fnst@cn.fujitsu.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>
+Subject: Re: [PATCH] x86/boot: Use EFI setup data if provided
+Message-ID: <20190325075342.GE12016@zn.tnic>
+References: <20190322110342.GA16202@jeru.linux.bs1.fc.nec.co.jp>
+ <20190322152328.GD12472@zn.tnic>
+ <20190325072710.GA31828@MiWiFi-R3L-srv>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8769a95d-179f-6219-0a63-9dd623cdd297@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190325072710.GA31828@MiWiFi-R3L-srv>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 23 Mar 2019, Jacek Anaszewski wrote:
-
-> Hi Lee,
+On Mon, Mar 25, 2019 at 03:27:10PM +0800, Baoquan He wrote:
+> Kexec kernel also need to get rsdp to get SRAT tables so that KASLR can
+> avoid those hotpluggable regions in boot compression stage.
 > 
-> Can we have your ack for this going via LED tree, please?
+> The kexec_file_load has filled in acpi_rsdp_addr of kexec kernel in
+> below code. It will return direclty in get_rsdp_addr() since
+> acpi_rsdp_addr is got from boot_params->acpi_rsdp_addr.
+> 
+> arch/x86/kernel/kexec-bzimage64.c <<setup_boot_parameters>>
+> 	params->acpi_rsdp_addr = boot_params.acpi_rsdp_addr;
+> 
+> The other interface, kexec_load, its boot_params filling is done in user
+> space kexec_tools. And we haven't made the acpi_rsdp_addr filling yet.
+> And the old kexec_tools utility can also cause the new kexec kernel to
+> search efi rspd pointer even thought it's fixed.
 
-Patch looks okay.
-
-You can take it through the LED, but if you do I will need you to send
-me a pull-request to a minimised immutable branch please.
-
-If you cannot do this, I can apply the set and provide the same to
-you.
-
-If you choose the former:
-
-  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
-
-Please let me know what you decide
+Yes, kexec is a pile of ugly and fragile hackery.
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
