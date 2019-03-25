@@ -2,121 +2,73 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5A7BC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:22:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E9E6C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:22:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9417220854
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:22:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553516569;
-	bh=DV4nYIDNvdRAp4ZT5RiKv81EUZ1gfiADBaVQAIrtkWM=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=Uj5szrTimfKheLs/1lhJIHsqs9aZQdHrmNqjTIoqtKukcnq7yPfHiAHRlmTp24RFl
-	 GB+NEL3lo8hV/fIheCvjKqifwobGHymkRf1C2fSfyohdswYdC1y61VTCZe6yRLxHee
-	 8qa7HFbxg4owK96q8sW6lwXY89A3HRl0OVby9TXk=
+	by mail.kernel.org (Postfix) with ESMTP id EB49220854
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:22:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731229AbfCYMWs (ORCPT
+        id S1731246AbfCYMWx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 08:22:48 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:37038 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731010AbfCYMWr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 08:22:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=bVt1CA26reaScpiomvMqOebzq5c2f/4rSBhkk2+4CWo=; b=Pti2UQi7/2iH
-        SI4T+P+MDdT+b+fJ6KqUK/lqc7kSQd3XdO9GojclgSpfbJUf0dxJiCbKmABTpY1LacYyVItnPuwqh
-        d8YH5Y2NDF8NvXvsqFwa4TxNpiuQgMWTw2rBXS46AAk0qka3dKECAe0HCRU0xkBsMi61lOWqexTuY
-        mpJKc=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1h8Occ-000257-UY; Mon, 25 Mar 2019 12:22:34 +0000
-Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 3BA8011288F1; Mon, 25 Mar 2019 12:22:34 +0000 (GMT)
-From:   Mark Brown <broonie@kernel.org>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     Mark Brown <broonie@kernel.org>, broonie@kernel.org,
-        nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
-        ludovic.desroches@microchip.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org,
-        linux-spi@vger.kernel.org
-Subject: Applied "spi: atmel-quadspi: Make atmel_qspi_get_name static" to the spi tree
-In-Reply-To:  <20190321151656.16816-1-yuehaibing@huawei.com>
-X-Patchwork-Hint: ignore
-Message-Id: <20190325122234.3BA8011288F1@debutante.sirena.org.uk>
-Date:   Mon, 25 Mar 2019 12:22:34 +0000 (GMT)
+        Mon, 25 Mar 2019 08:22:53 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:46566 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731231AbfCYMWw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 08:22:52 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 938CE80D;
+        Mon, 25 Mar 2019 05:22:52 -0700 (PDT)
+Received: from mbp (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 54BBA3F575;
+        Mon, 25 Mar 2019 05:22:50 -0700 (PDT)
+Date:   Mon, 25 Mar 2019 12:22:47 +0000
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Jeremy Linton <jeremy.linton@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, will.deacon@arm.com,
+        marc.zyngier@arm.com, suzuki.poulose@arm.com, Dave.Martin@arm.com,
+        shankerd@codeaurora.org, julien.thierry@arm.com,
+        mlangsdo@redhat.com, stefan.wahren@i2e.com, Andre.Przywara@arm.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 00/10] arm64: add system vulnerability sysfs entries
+Message-ID: <20190325122247.5zyinkqmixmqg425@mbp>
+References: <20190321230557.45107-1-jeremy.linton@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190321230557.45107-1-jeremy.linton@arm.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+On Thu, Mar 21, 2019 at 06:05:47PM -0500, Jeremy Linton wrote:
+> Arm64 machines should be displaying a human readable
+> vulnerability status to speculative execution attacks in
+> /sys/devices/system/cpu/vulnerabilities 
+> 
+> This series enables that behavior by providing the expected
+> functions. Those functions expose the cpu errata and feature
+> states, as well as whether firmware is responding appropriately
+> to display the overall machine status. This means that in a
+> heterogeneous machine we will only claim the machine is mitigated
+> or safe if we are confident all booted cores are safe or
+> mitigated.
+> 
+> v5->v6:
+> 	Invert meltdown logic to display that a core is safe rather
+> 	       than mitigated if the mitigation has been enabled on
+> 	       machines that are safe. This can happen when the
+> 	       mitigation was forced on via command line or KASLR.
+> 	       This means that in order to detect if kpti is enabled
+> 	       other methods must be used (look at dmesg) when the
+> 	       machine isn't itself susceptible to meltdown.
+> 	Trivial whitespace tweaks.
 
-   spi: atmel-quadspi: Make atmel_qspi_get_name static
+The v6 logic looks fine to me. For the whole series:
 
-has been applied to the spi tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From 55e3dacaf538745b7d57dce43b9950687ff878ab Mon Sep 17 00:00:00 2001
-From: YueHaibing <yuehaibing@huawei.com>
-Date: Thu, 21 Mar 2019 23:16:56 +0800
-Subject: [PATCH] spi: atmel-quadspi: Make atmel_qspi_get_name static
-
-Fix sparse warning:
-
-drivers/spi/atmel-quadspi.c:369:12: warning:
- symbol 'atmel_qspi_get_name' was not declared. Should it be static?
-
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/spi/atmel-quadspi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/spi/atmel-quadspi.c b/drivers/spi/atmel-quadspi.c
-index fffc21cd5f79..e54109759d34 100644
---- a/drivers/spi/atmel-quadspi.c
-+++ b/drivers/spi/atmel-quadspi.c
-@@ -366,7 +366,7 @@ static int atmel_qspi_exec_op(struct spi_mem *mem, const struct spi_mem_op *op)
- 	return err;
- }
- 
--const char *atmel_qspi_get_name(struct spi_mem *spimem)
-+static const char *atmel_qspi_get_name(struct spi_mem *spimem)
- {
- 	return dev_name(spimem->spi->dev.parent);
- }
--- 
-2.20.1
-
+Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
