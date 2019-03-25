@@ -2,139 +2,204 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC453C4360F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 10:29:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C39B7C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 10:32:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B81A20850
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 10:29:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jtd8H/wD"
+	by mail.kernel.org (Postfix) with ESMTP id 92D0A20850
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 10:32:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730708AbfCYK3r (ORCPT
+        id S1730700AbfCYKcV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 06:29:47 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:37480 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730491AbfCYK3q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 06:29:46 -0400
-Received: by mail-pg1-f196.google.com with SMTP id q206so6242333pgq.4;
-        Mon, 25 Mar 2019 03:29:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ey9xQ+MI67kM6+LSZpUvDw46PAf2djwmiWErMwnyCJg=;
-        b=jtd8H/wDMBZOnQh3mccznAxMR5nsbhqx5XoDXzAbIGPfN0gaX3v9lGhuz240WDd5hH
-         xstAq+wZoG7zZBhO8H2cWUF0XYuMitbZs8GL7HQBg3FWL0rZeb5/9STJWp08gnv9eyJs
-         oFbMdtFpMza7KpCHS0zZTlQ4B+Oxxu4zAumHNeQo4XK7r9HYniklvbDx1dzb68RyygXv
-         Pov4qDBRXgL+k0W+j4GQFnly5AXhEOmNjzyxh888wuJEFuiZEWibgGz8bfwk/DEEA0Qe
-         GkPKpaLSZ79rvnEZhFE7Rqy9cSbpwJGKc2EGzeCvFcPSLw+hsfgdz+xv1Syor5pSnp2q
-         v2cw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ey9xQ+MI67kM6+LSZpUvDw46PAf2djwmiWErMwnyCJg=;
-        b=Ez5L+bQF2ZpoPuDF8s9mDXYMUOllhehSrsAl1M4xQUj44gmJMGj4N7kad1ReilE49T
-         M5e0Un5/9mU3NyKRbj7q4Q2GCW6mILoxd+TKYQ0T9lGc4ah2O9MMCkvw3uE8Sh77vOM6
-         P60sW2n+0FQybOOxH+qKPvIRNbiNLZpiHbt3Xd2wci6Vx/KKrNGVzOBRmIgWHegOrtkC
-         DuVB61DUbTA4ygmXJqSnunhEeWU+dq0TjNyotR+QCCakVZrGw/lr6456RgpFeokerQCN
-         t0PAYNUj3+zsF0cbO34A31oYvutzvLU87twu1yLErCr+cPh2MIvywUuM4O+XQ7L2toQq
-         3lMw==
-X-Gm-Message-State: APjAAAW3J0kse1Q9TX569omDikhFnGDlMaTzuoFvxNlWyDbs+kRGlaze
-        MVZECQEHrpFQ+mUQA5mUBq4=
-X-Google-Smtp-Source: APXvYqyzS6/yV0VoCEuMYNhkVH9OTjKQ0/BbwR0yKEd8cRhuzHSIQVHycth0ZnVT/R5UGAGj4uIhwQ==
-X-Received: by 2002:a63:36cb:: with SMTP id d194mr23032609pga.426.1553509785440;
-        Mon, 25 Mar 2019 03:29:45 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id i135sm15089982pgd.41.2019.03.25.03.29.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 25 Mar 2019 03:29:44 -0700 (PDT)
-Subject: Re: [PATCH V1 1/1] watchdog: f71808e_wdt: fix F81866 bit operation
-To:     "Ji-Ze Hong (Peter Hong)" <hpeter@gmail.com>,
-        wim@linux-watchdog.orgw
-Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Ji-Ze Hong (Peter Hong)" <hpeter+linux_kernel@gmail.com>
-References: <1553225816-24375-1-git-send-email-hpeter+linux_kernel@gmail.com>
- <af4fba18-da99-2b48-7bbe-d59222081ab4@roeck-us.net>
- <cf37ee27-593c-b809-62d4-8d38265cb710@gmail.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <3f6c755d-c2ff-01cb-ac67-3a899737cbde@roeck-us.net>
-Date:   Mon, 25 Mar 2019 03:29:43 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Mon, 25 Mar 2019 06:32:21 -0400
+Received: from foss.arm.com ([217.140.101.70]:45020 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730491AbfCYKcU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 06:32:20 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3CED71596;
+        Mon, 25 Mar 2019 03:32:20 -0700 (PDT)
+Received: from donnerap.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 022E63F575;
+        Mon, 25 Mar 2019 03:32:17 -0700 (PDT)
+Date:   Mon, 25 Mar 2019 10:32:14 +0000
+From:   Andre Przywara <andre.przywara@arm.com>
+To:     Jeremy Linton <jeremy.linton@arm.com>
+Cc:     <linux-arm-kernel@lists.infradead.org>, <catalin.marinas@arm.com>,
+        <will.deacon@arm.com>, <marc.zyngier@arm.com>,
+        <suzuki.poulose@arm.com>, <Dave.Martin@arm.com>,
+        <shankerd@codeaurora.org>, <julien.thierry@arm.com>,
+        <mlangsdo@redhat.com>, <stefan.wahren@i2e.com>,
+        <linux-kernel@vger.kernel.org>,
+        Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH v6 03/10] arm64: add sysfs vulnerability show for
+ meltdown
+Message-ID: <20190325103214.33401868@donnerap.cambridge.arm.com>
+In-Reply-To: <20190321230557.45107-4-jeremy.linton@arm.com>
+References: <20190321230557.45107-1-jeremy.linton@arm.com>
+        <20190321230557.45107-4-jeremy.linton@arm.com>
+Organization: ARM
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <cf37ee27-593c-b809-62d4-8d38265cb710@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/24/19 11:10 PM, Ji-Ze Hong (Peter Hong) wrote:
-> Guenter Roeck 於 2019/3/22 下午 09:06 寫道:
->> On 3/21/19 8:36 PM, Ji-Ze Hong (Peter Hong) wrote:
->>> Fix error bit operation in watchdog_start()
->>>
->>
->> Hmm ... does that mean it never worked ? Did you test it this time ?
-> 
-> Sorry for lacking test procedure. I had only test the functional (reset)
-> , not to test the register value.
-> 
-> The F81866 PIN70 (WDTRST#/GPIO15) is default set to WDTRST# function and
-> the old code only change register 27h bit(4) - PORT_4E_EN.
-> 
-> If the mainboard entry port is 4Eh, the old code is equal to nothing
-> done, but when the mainboard entry port is 2Eh, this code will make the
-> change from entry port 2Eh to 4Eh.
-> 
-> https://html.alldatasheet.com/html-pdf/459086/FINTEK/F81866AD/26531/119/F81866AD.html
-> 
->> A secondary concern is that the watchdog doesn't _have_ to trigger WDTRST,
->> but may also trigger PWOK. But that may be a separate issue.
-> 
-> Out watchdog is only support WDTRST#.
-> 
->> Please add:
->>
->> Fixes: 14b24a88a3660 ("watchdog: f71808e_wdt: Add F81866 support")
-> 
-> OK, I'll add to v2
-> 
->>> diff --git a/drivers/watchdog/f71808e_wdt.c b/drivers/watchdog/f71808e_wdt.c
->>> index 9a1c761258ce..9129485732c7 100644
->>> --- a/drivers/watchdog/f71808e_wdt.c
->>> +++ b/drivers/watchdog/f71808e_wdt.c
->>> @@ -387,18 +387,17 @@ static int watchdog_start(void)
->>>       case f81866:
->>>           /* Set pin 70 to WDTRST# */
->>> -        superio_clear_bit(watchdog.sioaddr, SIO_F81866_REG_PORT_SEL,
->>> -                  BIT(3) | BIT(0));
->>> -        superio_set_bit(watchdog.sioaddr, SIO_F81866_REG_PORT_SEL,
->>> -                BIT(2));
->>> +        superio_clear_bit(watchdog.sioaddr, SIO_F81866_REG_PORT_SEL, 3);
->>> +        superio_clear_bit(watchdog.sioaddr, SIO_F81866_REG_PORT_SEL, 0);
->>> +        superio_set_bit(watchdog.sioaddr, SIO_F81866_REG_PORT_SEL, 2);
->>
->> Better use superio_inb()/superio_outb(). The above is (much) more expensive,
->> and  we have no real idea what the impact of changing one bit at a time may be.
-> 
-> Could I add a superio_mask_write(reg, mask, data) with v2 patch like
-> following fintek driver ?
-> https://elixir.bootlin.com/linux/latest/source/drivers/tty/serial/8250/8250_fintek.c#L113
-> 
+On Thu, 21 Mar 2019 18:05:50 -0500
+Jeremy Linton <jeremy.linton@arm.com> wrote:
 
-If you wish. but not necessary. For the fix it would be better to have only the fix.
-You could introduce the function in a second patch and use it wherever read/modify/write
-of a mask is used in the driver (I think it was used at least in one other place).
+Hi,
 
-Guenter
+> Display the system vulnerability status. This means that
+> while its possible to have the mitigation enabled, the
+> sysfs entry won't indicate that status. This is because
+> the core ABI doesn't express the concept of mitigation
+> when the system isn't vulnerable.
+> 
+> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
+> Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Tested-by: Stefan Wahren <stefan.wahren@i2se.com>
+
+Thanks for the changes, look good to me now for all the cases I tried on
+the logic.
+
+Reviewed-by: Andre Przywara <andre.przywara@arm.com>
+
+Cheers,
+Andre.
+
+> ---
+>  arch/arm64/kernel/cpufeature.c | 58 ++++++++++++++++++++++++++--------
+>  1 file changed, 44 insertions(+), 14 deletions(-)
+> 
+> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+> index 4061de10cea6..6b7e1556460a 100644
+> --- a/arch/arm64/kernel/cpufeature.c
+> +++ b/arch/arm64/kernel/cpufeature.c
+> @@ -947,7 +947,7 @@ has_useable_cnp(const struct arm64_cpu_capabilities *entry, int scope)
+>  	return has_cpuid_feature(entry, scope);
+>  }
+>  
+> -#ifdef CONFIG_UNMAP_KERNEL_AT_EL0
+> +static bool __meltdown_safe = true;
+>  static int __kpti_forced; /* 0: not forced, >0: forced on, <0: forced off */
+>  
+>  static bool unmap_kernel_at_el0(const struct arm64_cpu_capabilities *entry,
+> @@ -967,6 +967,16 @@ static bool unmap_kernel_at_el0(const struct arm64_cpu_capabilities *entry,
+>  		{ /* sentinel */ }
+>  	};
+>  	char const *str = "command line option";
+> +	bool meltdown_safe;
+> +
+> +	meltdown_safe = is_midr_in_range_list(read_cpuid_id(), kpti_safe_list);
+> +
+> +	/* Defer to CPU feature registers */
+> +	if (has_cpuid_feature(entry, scope))
+> +		meltdown_safe = true;
+> +
+> +	if (!meltdown_safe)
+> +		__meltdown_safe = false;
+>  
+>  	/*
+>  	 * For reasons that aren't entirely clear, enabling KPTI on Cavium
+> @@ -978,6 +988,19 @@ static bool unmap_kernel_at_el0(const struct arm64_cpu_capabilities *entry,
+>  		__kpti_forced = -1;
+>  	}
+>  
+> +	/* Useful for KASLR robustness */
+> +	if (IS_ENABLED(CONFIG_RANDOMIZE_BASE) && kaslr_offset() > 0) {
+> +		if (!__kpti_forced) {
+> +			str = "KASLR";
+> +			__kpti_forced = 1;
+> +		}
+> +	}
+> +
+> +	if (!IS_ENABLED(CONFIG_UNMAP_KERNEL_AT_EL0)) {
+> +		pr_info_once("kernel page table isolation disabled by CONFIG\n");
+> +		return false;
+> +	}
+> +
+>  	/* Forced? */
+>  	if (__kpti_forced) {
+>  		pr_info_once("kernel page table isolation forced %s by %s\n",
+> @@ -985,18 +1008,10 @@ static bool unmap_kernel_at_el0(const struct arm64_cpu_capabilities *entry,
+>  		return __kpti_forced > 0;
+>  	}
+>  
+> -	/* Useful for KASLR robustness */
+> -	if (IS_ENABLED(CONFIG_RANDOMIZE_BASE))
+> -		return kaslr_offset() > 0;
+> -
+> -	/* Don't force KPTI for CPUs that are not vulnerable */
+> -	if (is_midr_in_range_list(read_cpuid_id(), kpti_safe_list))
+> -		return false;
+> -
+> -	/* Defer to CPU feature registers */
+> -	return !has_cpuid_feature(entry, scope);
+> +	return !meltdown_safe;
+>  }
+>  
+> +#ifdef CONFIG_UNMAP_KERNEL_AT_EL0
+>  static void
+>  kpti_install_ng_mappings(const struct arm64_cpu_capabilities *__unused)
+>  {
+> @@ -1026,6 +1041,12 @@ kpti_install_ng_mappings(const struct arm64_cpu_capabilities *__unused)
+>  
+>  	return;
+>  }
+> +#else
+> +static void
+> +kpti_install_ng_mappings(const struct arm64_cpu_capabilities *__unused)
+> +{
+> +}
+> +#endif	/* CONFIG_UNMAP_KERNEL_AT_EL0 */
+>  
+>  static int __init parse_kpti(char *str)
+>  {
+> @@ -1039,7 +1060,6 @@ static int __init parse_kpti(char *str)
+>  	return 0;
+>  }
+>  early_param("kpti", parse_kpti);
+> -#endif	/* CONFIG_UNMAP_KERNEL_AT_EL0 */
+>  
+>  #ifdef CONFIG_ARM64_HW_AFDBM
+>  static inline void __cpu_enable_hw_dbm(void)
+> @@ -1306,7 +1326,6 @@ static const struct arm64_cpu_capabilities arm64_features[] = {
+>  		.field_pos = ID_AA64PFR0_EL0_SHIFT,
+>  		.min_field_value = ID_AA64PFR0_EL0_32BIT_64BIT,
+>  	},
+> -#ifdef CONFIG_UNMAP_KERNEL_AT_EL0
+>  	{
+>  		.desc = "Kernel page table isolation (KPTI)",
+>  		.capability = ARM64_UNMAP_KERNEL_AT_EL0,
+> @@ -1322,7 +1341,6 @@ static const struct arm64_cpu_capabilities arm64_features[] = {
+>  		.matches = unmap_kernel_at_el0,
+>  		.cpu_enable = kpti_install_ng_mappings,
+>  	},
+> -#endif
+>  	{
+>  		/* FP/SIMD is not implemented */
+>  		.capability = ARM64_HAS_NO_FPSIMD,
+> @@ -2101,3 +2119,15 @@ static int __init enable_mrs_emulation(void)
+>  }
+>  
+>  core_initcall(enable_mrs_emulation);
+> +
+> +ssize_t cpu_show_meltdown(struct device *dev, struct device_attribute *attr,
+> +			  char *buf)
+> +{
+> +	if (__meltdown_safe)
+> +		return sprintf(buf, "Not affected\n");
+> +
+> +	if (arm64_kernel_unmapped_at_el0())
+> +		return sprintf(buf, "Mitigation: KPTI\n");
+> +
+> +	return sprintf(buf, "Vulnerable\n");
+> +}
+
