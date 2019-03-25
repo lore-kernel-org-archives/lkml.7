@@ -2,133 +2,82 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6587C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 22:02:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3743C4360F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 22:02:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72E51205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 22:02:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="e6cTJJ1h"
+	by mail.kernel.org (Postfix) with ESMTP id A0CF9205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 22:02:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730494AbfCYWCl (ORCPT
+        id S1730525AbfCYWCw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 18:02:41 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:37966 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726217AbfCYWCk (ORCPT
+        Mon, 25 Mar 2019 18:02:52 -0400
+Received: from smtprelay0229.hostedemail.com ([216.40.44.229]:45511 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729664AbfCYWCw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 18:02:40 -0400
-Received: by mail-pf1-f193.google.com with SMTP id 10so7080094pfo.5
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 15:02:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=w1Z3yOLyzoNaa8lbFmf3r9M0cN5wEcz+ayAGY+V0CZE=;
-        b=e6cTJJ1hmHecBiwpNEzYR3yiC0UaiqYUuTyiLysf1rSBhRVE6zqCbJM6NPUg5kYpTg
-         mo3AFiYA8FfjDtWCCuxailHCgXZyAnNIzxq/5JR2GxfZoEt9WjfICrX6VND7iBPqElaq
-         j9nut6MsU5KJhnsYr/KEaL4rgxRZESQOG6hlQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=w1Z3yOLyzoNaa8lbFmf3r9M0cN5wEcz+ayAGY+V0CZE=;
-        b=iahg27atAAIkytuFUQPAIqba8bHCy2HjaYUPEzQ5ThkC0c18LwaicGgSGT488NicRy
-         YyAvva8x6/y++gqelYJsapSGbSKDg1UefgR1nLXAOhpY42OpSYLHw0jzy99wHq+zTBJt
-         5AJDEJrmOek6DyaFBCPr+YM07H6krHsyJ3HyVunor/fzFavp0muIUsI2jy8eS/nWomlz
-         aEWCRiufPEOVA4cmryCu/8PHBl6Qkf4UJc6f3nPxyPkx7dHX4UQ0dfkNyA3QyKQPkFfY
-         7IH0+7XrjAn4Tgm97yR9H6BuLFkBBJlawhWQNnFgadSUohSpbx39nQC2ECLIx052+nl+
-         //1Q==
-X-Gm-Message-State: APjAAAWbG+vrlwwGxvWxu2OaGzIox4R9ZE81Xp0Ti9d2mDoUSZYGi3NJ
-        d4kd4a+SkAqBpzdbwsafRK8PSw==
-X-Google-Smtp-Source: APXvYqy3gzwt+pyalFecirWib/srJLKVpjZ9zy4HZriyzC+wLFMIyTdWxpg/7qy2lA2G1e/5yNKNlA==
-X-Received: by 2002:a63:3244:: with SMTP id y65mr25457794pgy.417.1553551359901;
-        Mon, 25 Mar 2019 15:02:39 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id v1sm1738943pff.81.2019.03.25.15.02.38
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 25 Mar 2019 15:02:38 -0700 (PDT)
-Date:   Mon, 25 Mar 2019 18:02:37 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        linux-kselftest <linux-kselftest@vger.kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH] rcutorture: Select from only online CPUs
-Message-ID: <20190325220237.GA22743@google.com>
-References: <20190323034619.15792-1-joel@joelfernandes.org>
- <20190325150133.GA4102@linux.ibm.com>
- <CAEXW_YRDfOEr-hdbKGDC6amRaaqTCCBsowRhVwDqJd-1BoO17g@mail.gmail.com>
- <20190325164253.GE4102@linux.ibm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190325164253.GE4102@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 25 Mar 2019 18:02:52 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 0B507182CED34;
+        Mon, 25 Mar 2019 22:02:51 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: teeth41_35cd99897ba57
+X-Filterd-Recvd-Size: 1924
+Received: from XPS-9350.home (unknown [47.151.153.53])
+        (Authenticated sender: joe@perches.com)
+        by omf01.hostedemail.com (Postfix) with ESMTPA;
+        Mon, 25 Mar 2019 22:02:49 +0000 (UTC)
+Message-ID: <8a54298538371340d0a7fe762e742a88e12f43ba.camel@perches.com>
+Subject: Re: [PATCH] Bad file pattern in MAINTAINERS section 'SELINUX
+ SECURITY MODULE'
+From:   Joe Perches <joe@perches.com>
+To:     Casey Schaufler <casey@schaufler-ca.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Paul Moore <paul@paul-moore.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>
+Date:   Mon, 25 Mar 2019 15:02:48 -0700
+In-Reply-To: <a0847fd8-0b9b-69f5-e9b8-1e1cd3b5052d@schaufler-ca.com>
+References: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com>
+         <20190325212756.27603-1-joe@perches.com>
+         <a0847fd8-0b9b-69f5-e9b8-1e1cd3b5052d@schaufler-ca.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.1-1build1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 09:42:53AM -0700, Paul E. McKenney wrote:
-> On Mon, Mar 25, 2019 at 12:33:37PM -0400, Joel Fernandes wrote:
-> > On Mon, Mar 25, 2019 at 11:02 AM Paul E. McKenney <paulmck@linux.ibm.com> wrote:
-> > >
-> > > On Fri, Mar 22, 2019 at 11:46:19PM -0400, Joel Fernandes (Google) wrote:
-> > > > The rcutorture jitter.sh script selects a random CPU but does not check
-> > > > if it is offline or online. This leads to taskset errors many times. On
-> > > > my machine, hyper threading is disabled so half the cores are offline
-> > > > causing taskset errors a lot of times. Let us fix this by checking from
-> > > > only the online CPUs on the system.
-> > > >
-> > > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > >
-> > > Good catch!
-> > >
-> > > Please see below for one suggestion for simplification.
-> > >
-> > >                                                         Thanx, Paul
-> > >
-> > > > ---
-> > > >  tools/testing/selftests/rcutorture/bin/jitter.sh | 11 ++++++++++-
-> > > >  1 file changed, 10 insertions(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/tools/testing/selftests/rcutorture/bin/jitter.sh b/tools/testing/selftests/rcutorture/bin/jitter.sh
-> > > > index 3633828375e3..53bf9d99b5cd 100755
-> > > > --- a/tools/testing/selftests/rcutorture/bin/jitter.sh
-> > > > +++ b/tools/testing/selftests/rcutorture/bin/jitter.sh
-> > > > @@ -47,10 +47,19 @@ do
-> > > >               exit 0;
-> > > >       fi
-> > > >
-> > > > -     # Set affinity to randomly selected CPU
-> > > > +     # Set affinity to randomly selected online CPU
-> > > >       cpus=`ls /sys/devices/system/cpu/*/online |
-> > >
-> > >         cpus=`grep 1 /sys/devices/system/cpu/*/online |
-> > 
-> > Yes, this is better. Lets do it this way :)
-> > 
-> > > >               sed -e 's,/[^/]*$,,' -e 's/^[^0-9]*//' |
-> > > >               grep -v '^0*$'`
-> > >
-> > > Of course, now I have no idea why I excluded CPU 0...  :-/
-> > 
-> > Yes, I was wondering as well about that :-)
+On Mon, 2019-03-25 at 14:58 -0700, Casey Schaufler wrote:
+> The include/linux/selinux.h file has been removed.
+> Remove the entry from the MAINTAINERS file.
+
+This looks like it doesn't apply correctly as there
+are one too many spaces before each context lines.
+
+> Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
+> ---
+>   MAINTAINERS | 1 -
+>   1 file changed, 1 deletion(-)
 > 
-> Please feel free to try including CPU 0 and running the set of single-CPU
-> rcutorture scenarios.  ;-)
-
-Sounds good, I will test that out on your latest dev branch. Thanks,
-
-- Joel
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 3e5a5d263f29..1039c34dff3c 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -13947,7 +13947,6 @@ W:	https://selinuxproject.org
+>   W:	https://github.com/SELinuxProject
+>   T:	git git://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/selinux.git
+>   S:	Supported
+> -F:	include/linux/selinux*
+>   F:	security/selinux/
+>   F:	scripts/selinux/
+>   F:	Documentation/admin-guide/LSM/SELinux.rst
+> 
 
