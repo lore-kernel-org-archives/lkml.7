@@ -2,138 +2,118 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31144C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:30:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3F75C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:32:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A0592085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:30:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C47932085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:32:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="bdsqhcpW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731140AbfCYMaU convert rfc822-to-8bit (ORCPT
+        id S1731150AbfCYMcY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 08:30:20 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:52308 "EHLO gloria.sntech.de"
+        Mon, 25 Mar 2019 08:32:24 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:49054 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730996AbfCYMaT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 08:30:19 -0400
-Received: from [94.134.91.136] (helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1h8Ok5-0006n3-0v; Mon, 25 Mar 2019 13:30:17 +0100
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     mka@chromium.org, ryandcase@chromium.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] ARM: dts: rockchip: Add vdd_logic to rk3288-veyron
-Date:   Mon, 25 Mar 2019 13:30:16 +0100
-Message-ID: <4531156.B27Co0TEWW@phil>
-In-Reply-To: <20190321201944.34684-1-dianders@chromium.org>
-References: <20190321201944.34684-1-dianders@chromium.org>
+        id S1730603AbfCYMcY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 08:32:24 -0400
+Received: from zn.tnic (p200300EC2F098000329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:8000:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5ACA01EC0AE4;
+        Mon, 25 Mar 2019 13:32:22 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1553517142;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=JS+Ee3Bndpk+yP17/8CvyL26zTtYYsT8dWbdtkBI3cU=;
+        b=bdsqhcpWXVHhCREk/CW43c6nG0DrN+iAvIEO+8Adpd1czVvYH3VzMZuIefQtn6pWWs29xO
+        dlHlKmsQ01U8p6ojNPlXpYXNGIuDaAQiRPSBnXVh+kFqMOlunvzMofupFGWNi5dEOClrvl
+        f+KVewpVXSiwXA0fx2K2DJspJOTDnyU=
+Date:   Mon, 25 Mar 2019 13:32:29 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Dave Young <dyoung@redhat.com>,
+        Junichi Nomura <j-nomura@ce.jp.nec.com>
+Cc:     "fanc.fnst@cn.fujitsu.com" <fanc.fnst@cn.fujitsu.com>,
+        "bhe@redhat.com" <bhe@redhat.com>,
+        "kasong@redhat.com" <kasong@redhat.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] x86/boot: Use EFI setup data if provided
+Message-ID: <20190325123229.GL12016@zn.tnic>
+References: <20190325060128.GB9385@dhcp-128-65.nay.redhat.com>
+ <20190325061929.GC9385@dhcp-128-65.nay.redhat.com>
+ <bcb5bd29-a3b8-e42d-8da7-a8501f695c21@ce.jp.nec.com>
+ <20190325065921.GA11096@dhcp-128-65.nay.redhat.com>
+ <20190325082720.GA20771@jeru.linux.bs1.fc.nec.co.jp>
+ <51D9A7D1-49BF-4679-B102-0FC5AC300C9F@alien8.de>
+ <20190325101509.GA13160@dhcp-128-65.nay.redhat.com>
+ <701c8e69-e1d4-c653-1d87-1c41789d3d54@ce.jp.nec.com>
+ <20190325120149.GI12016@zn.tnic>
+ <20190325122302.GC13160@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190325122302.GC13160@dhcp-128-65.nay.redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Donnerstag, 21. März 2019, 21:19:44 CET schrieb Douglas Anderson:
-> The vdd_logic rail controls the voltage supplied to misc logic on
-> rk3288, including the voltage supplied to the memory controller.  The
-> vcc logic is implemented by a PWM regulator.
-> 
-> Right now there are no consumers of vdd_logic on veyron but if anyone
-> ever wants to try to add DDR Freq they'd need it.
-> 
-> Note that in the downstream Chrome OS kernel the PWM regulator has
-> a voltage table with these points:
->   1350000 0%
->   1300000 10%
->   1250000 20%
->   1200000 31%
->   1150000 41%
->   1125000 46%
->   1100000 52%
->   1050000 62%
->   1000000 72%
->    950000 83%
-> 
-> The DDR Freq driver in the downstream kernel only uses some of those
-> points, namely:
->   DDR3:  1200000, 1150000, 1100000, 1050000
->   LPDDR:          1150000, 1100000, 1050000
-> 
-> When adapting the downstream kernel to upstream I have opted to switch
-> to using the "continuous" mode of the PWM regulator driver.  This was
-> the only way I could get the upstream driver to achieve _exactly_ the
-> same voltages as the downstream driver could.  Specifically note that
-> the old driver in downstream Chrome OS 3.14 _didn't_ have the
-> DIV_ROUND_CLOSEST_ULL() in the Rockchip PLL driver.  That means if I
-> use the same (downstream) table I might end up with a duty cycle
-> that's 1 larger than was used downstream, leading to a slightly
-> different voltage.  Due to the way the rounding worked I couldn't even
-> just adjust the "percent" by 1 for a given voltage level--certain duty
-> cycles just aren't achievable with the upstream math for voltage
-> tables.
-> 
-> Using continuous mode you can achieve the exact same duty cycle by
-> simply adjusting the voltage you use by a tad bit.  The voltages that
-> are equivalent to the ones used in the downstream kernel's table are:
->   1350000, 1304472, 1255691, 1200407, 1154878,
->   1128862, 1099593, 1050813, 1005285, 950000
-> 
-> Note that the top/bottom voltage is exactly the same just due to the
-> way that continuous mode is calculated and the fact that I used those
-> as anchors.  I didn't make any attempt to do the resistor math (as was
-> done on rk3399-gru).
-> 
-> If anyone ever gets DDRFreq working on veyron upstream they should
-> thus adjust the voltage specified in the DDRFreq operating points
-> slightly (as per the above) to obtain the existing/tested values.  AKA
-> you'd use:
->   DDR3:  1200407, 1154878, 1099593, 1050813
->   LPDDR:          1154878, 1099593, 1050813
-> 
-> A few other notes:
-> - The "period" here (1994) is different than the "period" downstream
->   (2000) for similar reasons: there's a DIV_ROUND_CLOSEST_ULL() that
->   wasn't downstream.  With 1994 upstream comes up with the same value
->   (0x94) to program into the hardware that downstream put there.  As
->   far as I can tell 0x94 actually means 1993.27.
-> - The duty cycle unit of 0x94 was picked by just matching the period
->   which nicely allows us to insert 0x7b as that value to program into
->   the hardware for 950mV.  The 0x7b was found by observing what the
->   downstream kernel calculated (not that the system can actually run
->   with vdd_log at 950 mV).
-> - The downstream kernel can also be seen to program a different value
->   into the CTRL field.  Upstream achieves 0x0b and downstream 0x1b.
->   This is because the upstream commit bc834d7b07b4 ("pwm: rockchip:
->   Move the configuration of polarity") fixed a bug by adding "ctrl &=
->   ~PWM_POLARITY_MASK".  Downstream accidentally left bit 4 set.
->   Luckily this bit doesn't matter--it's only used when the PWM goes
->   inactive (AKA if it's in oneshot mode or is disabled) and we don't
->   do that for the PWM regulator.
-> 
-> I measured the voltage of vdd_log while adjusting it and found that
-> with the upstream kernel voltage difference between requested and
-> actual was 9.2 mV at 950 mV and 13.4 mV at 1350 mV with in-between
-> voltages consistently showing ~1% error.  This error is likely
-> expected as voltage can be seen to sag a bit when more load is put on
-> the rail.
-> 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+On Mon, Mar 25, 2019 at 08:23:02PM +0800, Dave Young wrote:
+> efi_enter_virtual_mode() can only run once because of efi firmware/spec
+> limitation,  and after entered virtual mode, efi firmware just updated
 
-applied for 5.2
+I should remember that - I did it at the time.
 
-Thanks
-Heiko
+> Kexec saved the original physical addresses, and pass them to kexeced
+> kernel via x86 setup_data, so  both the early parsing or efi init code
+> need to get those physical values from setup_data.
 
+So efi_get_rsdp_addr() needs to be refactored in such a way so that at
+least the loop towards the end gets carved out into a separate function
+- __efi_get_rsdp_addr() or so - which gets config_tables, nr_tables and
+size as arguments and finds the RSDP address in the kexec-ed kernel.
 
+So we'd need something like that:
+
+acpi_physical_address get_rsdp_addr(void)
+{
+        acpi_physical_address pa;
+
+        pa = get_acpi_rsdp();
+
+        if (!pa)
+                pa = boot_params->acpi_rsdp_addr;
+
+        if (!pa)
+                pa = efi_get_rsdp_addr();
+
+	if (!pa)
+		pa = kexec_get_rdsp_addr();		<--- new function
+
+        if (!pa)
+                pa = bios_get_rsdp_addr();
+
+        return pa;
+}
+
+which would get config_tables from setup_data and call
+__efi_get_rsdp_addr() to dig it out in the kexec'ed kernel.
+
+Junichi, ask if it is still unclear what needs to be done.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
