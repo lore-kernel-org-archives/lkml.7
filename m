@@ -6,38 +6,39 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9EA2C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:25:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB3E2C10F03
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:25:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92FC520863
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:25:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C567F2084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:25:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730633AbfCYVZO (ORCPT
+        id S1730768AbfCYVZk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 17:25:14 -0400
-Received: from smtprelay0035.hostedemail.com ([216.40.44.35]:53654 "EHLO
+        Mon, 25 Mar 2019 17:25:40 -0400
+Received: from smtprelay0240.hostedemail.com ([216.40.44.240]:41490 "EHLO
         smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730603AbfCYVZH (ORCPT
+        by vger.kernel.org with ESMTP id S1730626AbfCYVZO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 17:25:07 -0400
+        Mon, 25 Mar 2019 17:25:14 -0400
 Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 3724D18224D67;
-        Mon, 25 Mar 2019 21:25:06 +0000 (UTC)
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id D7190182CED28;
+        Mon, 25 Mar 2019 21:25:12 +0000 (UTC)
 X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: drum17_f4f8a4a31f27
-X-Filterd-Recvd-Size: 4301
+X-HE-Tag: arch06_1041f47dfa43b
+X-Filterd-Recvd-Size: 4042
 Received: from joe-laptop.perches.com (unknown [47.151.153.53])
         (Authenticated sender: joe@perches.com)
         by omf12.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 25 Mar 2019 21:25:05 +0000 (UTC)
+        Mon, 25 Mar 2019 21:25:11 +0000 (UTC)
 From:   Joe Perches <joe@perches.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Richard Fitzgerald <rf@opensource.cirrus.com>,
-        patches@opensource.cirrus.com, Lee Jones <lee.jones@linaro.org>
-Subject: Bad file pattern in MAINTAINERS section 'CIRRUS LOGIC LOCHNAGAR DRIVER'
-Date:   Mon, 25 Mar 2019 14:25:04 -0700
-Message-Id: <20190325212504.26213-1-joe@perches.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
+        "David S . Miller" <davem@davemloft.net>
+Subject: Bad file pattern in MAINTAINERS section 'ETHERNET PHY LIBRARY'
+Date:   Mon, 25 Mar 2019 14:25:10 -0700
+Message-Id: <20190325212510.26351-1-joe@perches.com>
 X-Mailer: git-send-email 2.15.0
 In-Reply-To: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com>
 References: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com>
@@ -61,63 +62,70 @@ Please fix this defect appropriately.
 
 linux-next MAINTAINERS section:
 
-	3792	CIRRUS LOGIC LOCHNAGAR DRIVER
-	3793	M:	Charles Keepax <ckeepax@opensource.cirrus.com>
-	3794	M:	Richard Fitzgerald <rf@opensource.cirrus.com>
-	3795	L:	patches@opensource.cirrus.com
-	3796	S:	Supported
-	3797	F:	drivers/clk/clk-lochnagar.c
-	3798	F:	drivers/mfd/lochnagar-i2c.c
-	3799	F:	drivers/pinctrl/cirrus/pinctrl-lochnagar.c
-	3800	F:	drivers/regulator/lochnagar-regulator.c
-	3801	F:	sound/soc/codecs/lochnagar-sc.c
-	3802	F:	include/dt-bindings/clk/lochnagar.h
-	3803	F:	include/dt-bindings/pinctrl/lochnagar.h
-	3804	F:	include/linux/mfd/lochnagar*
-	3805	F:	Documentation/devicetree/bindings/mfd/cirrus,lochnagar.txt
-	3806	F:	Documentation/devicetree/bindings/clock/cirrus,lochnagar.txt
--->	3807	F:	Documentation/devicetree/bindings/pinctrl/cirrus,lochnagar.txt
-	3808	F:	Documentation/devicetree/bindings/regulator/cirrus,lochnagar.txt
-	3809	F:	Documentation/devicetree/bindings/sound/cirrus,lochnagar.txt
+	5836	ETHERNET PHY LIBRARY
+	5837	M:	Andrew Lunn <andrew@lunn.ch>
+	5838	M:	Florian Fainelli <f.fainelli@gmail.com>
+	5839	M:	Heiner Kallweit <hkallweit1@gmail.com>
+	5840	L:	netdev@vger.kernel.org
+	5841	S:	Maintained
+	5842	F:	Documentation/ABI/testing/sysfs-bus-mdio
+	5843	F:	Documentation/devicetree/bindings/net/mdio*
+-->	5844	F:	Documentation/networking/phy.txt
+	5845	F:	drivers/net/phy/
+	5846	F:	drivers/of/of_mdio.c
+	5847	F:	drivers/of/of_net.c
+	5848	F:	include/linux/*mdio*.h
+	5849	F:	include/linux/of_net.h
+	5850	F:	include/linux/phy.h
+	5851	F:	include/linux/phy_fixed.h
+	5852	F:	include/linux/platform_data/mdio-bcm-unimac.h
+	5853	F:	include/linux/platform_data/mdio-gpio.h
+	5854	F:	include/trace/events/mdio.h
+	5855	F:	include/uapi/linux/mdio.h
+	5856	F:	include/uapi/linux/mii.h
 
 2: ---------------------------------------------------------------------------
 
-The most recent commit that added or modified file pattern 'Documentation/devicetree/bindings/pinctrl/cirrus,lochnagar.txt':
+The most recent commit that added or modified file pattern 'Documentation/networking/phy.txt':
 
-commit 422dcafe477c7240d03c7b150704c45e0b17be57
-Author: Charles Keepax <ckeepax@opensource.cirrus.com>
-Date:   Wed Jan 30 11:41:26 2019 +0000
+commit 22f08ad9721d4d1a92061b60026144627a60d644
+Author: Florian Fainelli <f.fainelli@gmail.com>
+Date:   Tue Feb 18 09:47:49 2014 -0800
 
-    mfd: lochnagar: Add support for the Cirrus Logic Lochnagar
+    MAINTAINERS: add entry for the PHY library
     
-    Lochnagar is an evaluation and development board for Cirrus
-    Logic Smart CODEC and Amp devices. It allows the connection of
-    most Cirrus Logic devices on mini-cards, as well as allowing
-    connection of various application processor systems to provide a
-    full evaluation platform. This driver supports the board
-    controller chip on the Lochnagar board. Audio system topology,
-    clocking and power can all be controlled through the Lochnagar
-    controller chip, allowing the device under test to be used in
-    a variety of possible use cases.
+    The PHY library has been subject to some changes, new drivers and DT
+    interactions over the past few months. Add myself as a maintainer for
+    the core PHY library parts and drivers. Make sure the PHY library entry
+    also covers the Device Tree files which have a close interaction with
+    the MDIO bus, PHY connection and Ethernet PHY mode parsing.
     
-    As the Lochnagar is a fairly complex device this MFD driver
-    allows the drivers for the various features to be bound
-    in. Initially clocking, regulator and pinctrl will be added as
-    these are necessary to configure the system. But in time at least
-    audio and voltage/current monitoring will also be added.
-    
-    Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-    Signed-off-by: Lee Jones <lee.jones@linaro.org>
+    CC: Grant Likely <grant.likely@linaro.org>
+    CC: Shaohui Xie <shaohui.xie@freescale.com>
+    CC: Andy Fleming <afleming@gmail.com>
+    Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+    Signed-off-by: David S. Miller <davem@davemloft.net>
 
- MAINTAINERS                         |  17 ++
- drivers/mfd/Kconfig                 |   8 +
- drivers/mfd/Makefile                |   2 +
- drivers/mfd/lochnagar-i2c.c         | 398 ++++++++++++++++++++++++++++++++++++
- include/linux/mfd/lochnagar.h       |  55 +++++
- include/linux/mfd/lochnagar1_regs.h | 157 ++++++++++++++
- include/linux/mfd/lochnagar2_regs.h | 291 ++++++++++++++++++++++++++
- 7 files changed, 928 insertions(+)
+ MAINTAINERS | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
 3: ---------------------------------------------------------------------------
 
-No commit with file pattern 'Documentation/devicetree/bindings/pinctrl/cirrus,lochnagar.txt' was found
+The last commit with a real presence of file pattern 'Documentation/networking/phy.txt':
+
+commit 25fe02d00a1e9468e0ae995beedb99867ec6701b
+Author: Heiner Kallweit <hkallweit1@gmail.com>
+Date:   Sat Jan 26 11:25:37 2019 +0100
+
+    Documentation: net: phy: switch documentation to rst format
+    
+    Switch phylib documentation to rst format.
+    
+    Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+    Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+    Signed-off-by: David S. Miller <davem@davemloft.net>
+
+ Documentation/networking/index.rst |   1 +
+ Documentation/networking/phy.rst   | 447 +++++++++++++++++++++++++++++++++++++
+ Documentation/networking/phy.txt   | 429 -----------------------------------
+ 3 files changed, 448 insertions(+), 429 deletions(-)
