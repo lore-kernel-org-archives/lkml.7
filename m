@@ -4,53 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60003C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:22:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5A7BC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:22:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EB0920830
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:22:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9417220854
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:22:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553516557;
-	bh=uZ/W2akIcGhdV7mMdHXw317uhp5FGdLa7uqnIUccw7c=;
+	s=default; t=1553516569;
+	bh=DV4nYIDNvdRAp4ZT5RiKv81EUZ1gfiADBaVQAIrtkWM=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=vq+Z61WvIgSepkk8SbvbTJdiWqOwAvl+jXUCvnGhUvdpuR5C0wcGr0uzkv5uEgK3f
-	 Qt4YAfDSFL1AXKInJ4pm4PBYf5dqqpw9y+TlPgJWPNZsVfbysyxajXG0sFM0eN/Lo0
-	 +5vhrBFyhHzHv24Uj2culbuLvKtCoI0ji3jpXYEM=
+	b=Uj5szrTimfKheLs/1lhJIHsqs9aZQdHrmNqjTIoqtKukcnq7yPfHiAHRlmTp24RFl
+	 GB+NEL3lo8hV/fIheCvjKqifwobGHymkRf1C2fSfyohdswYdC1y61VTCZe6yRLxHee
+	 8qa7HFbxg4owK96q8sW6lwXY89A3HRl0OVby9TXk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731214AbfCYMWf (ORCPT
+        id S1731229AbfCYMWs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 08:22:35 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:36612 "EHLO
+        Mon, 25 Mar 2019 08:22:48 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:37038 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731184AbfCYMWc (ORCPT
+        with ESMTP id S1731010AbfCYMWr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 08:22:32 -0400
+        Mon, 25 Mar 2019 08:22:47 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=KF74b/xDgZ45PFKqr9aWq/eap9AoXio0TSdIUKa7W1s=; b=jU8jOzHE96V2
-        +PNlL7Z9dAARIFTjFSUF/aIDsobUPWQjTOqW0wKAUdb/C0NS+72gN3AGwF9+mAMvnZaAwyw3GUh8M
-        HRNDhemz+cjPFD6sXLR7Z7oiuEHu2jjKe+p3bidFe3Fhz26k0NDs4hJxq5vPgxI6pOKMUbb6GSiq2
-        ublkU=;
+        List-Archive; bh=bVt1CA26reaScpiomvMqOebzq5c2f/4rSBhkk2+4CWo=; b=Pti2UQi7/2iH
+        SI4T+P+MDdT+b+fJ6KqUK/lqc7kSQd3XdO9GojclgSpfbJUf0dxJiCbKmABTpY1LacYyVItnPuwqh
+        d8YH5Y2NDF8NvXvsqFwa4TxNpiuQgMWTw2rBXS46AAk0qka3dKECAe0HCRU0xkBsMi61lOWqexTuY
+        mpJKc=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1h8OcT-00024V-AD; Mon, 25 Mar 2019 12:22:25 +0000
+        id 1h8Occ-000257-UY; Mon, 25 Mar 2019 12:22:34 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id AE5DF11288F1; Mon, 25 Mar 2019 12:22:19 +0000 (GMT)
+        id 3BA8011288F1; Mon, 25 Mar 2019 12:22:34 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
-To:     Axel Lin <axel.lin@ingics.com>
-Cc:     Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Applied "regulator: tps65217: Constify regulator_ops" to the regulator tree
-In-Reply-To: 
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     Mark Brown <broonie@kernel.org>, broonie@kernel.org,
+        nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
+        ludovic.desroches@microchip.com, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org,
+        linux-spi@vger.kernel.org
+Subject: Applied "spi: atmel-quadspi: Make atmel_qspi_get_name static" to the spi tree
+In-Reply-To:  <20190321151656.16816-1-yuehaibing@huawei.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190325122219.AE5DF11288F1@debutante.sirena.org.uk>
-Date:   Mon, 25 Mar 2019 12:22:19 +0000 (GMT)
+Message-Id: <20190325122234.3BA8011288F1@debutante.sirena.org.uk>
+Date:   Mon, 25 Mar 2019 12:22:34 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -58,11 +63,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: tps65217: Constify regulator_ops
+   spi: atmel-quadspi: Make atmel_qspi_get_name static
 
-has been applied to the regulator tree at
+has been applied to the spi tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -83,42 +88,35 @@ to this mail.
 Thanks,
 Mark
 
-From 2c33b50e6201881709b092b9b8566ae4b6dfc3ab Mon Sep 17 00:00:00 2001
-From: Axel Lin <axel.lin@ingics.com>
-Date: Sun, 24 Mar 2019 14:00:05 +0800
-Subject: [PATCH] regulator: tps65217: Constify regulator_ops
+From 55e3dacaf538745b7d57dce43b9950687ff878ab Mon Sep 17 00:00:00 2001
+From: YueHaibing <yuehaibing@huawei.com>
+Date: Thu, 21 Mar 2019 23:16:56 +0800
+Subject: [PATCH] spi: atmel-quadspi: Make atmel_qspi_get_name static
 
-These regulator_ops variables never need to be modified, make them const so
-compiler can put them to .rodata.
+Fix sparse warning:
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
+drivers/spi/atmel-quadspi.c:369:12: warning:
+ symbol 'atmel_qspi_get_name' was not declared. Should it be static?
+
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/tps65217-regulator.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/spi/atmel-quadspi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/regulator/tps65217-regulator.c b/drivers/regulator/tps65217-regulator.c
-index ada62f792258..b0f5d8dcd741 100644
---- a/drivers/regulator/tps65217-regulator.c
-+++ b/drivers/regulator/tps65217-regulator.c
-@@ -149,7 +149,7 @@ static int tps65217_pmic_set_suspend_disable(struct regulator_dev *dev)
+diff --git a/drivers/spi/atmel-quadspi.c b/drivers/spi/atmel-quadspi.c
+index fffc21cd5f79..e54109759d34 100644
+--- a/drivers/spi/atmel-quadspi.c
++++ b/drivers/spi/atmel-quadspi.c
+@@ -366,7 +366,7 @@ static int atmel_qspi_exec_op(struct spi_mem *mem, const struct spi_mem_op *op)
+ 	return err;
  }
  
- /* Operations permitted on DCDCx, LDO2, LDO3 and LDO4 */
--static struct regulator_ops tps65217_pmic_ops = {
-+static const struct regulator_ops tps65217_pmic_ops = {
- 	.is_enabled		= regulator_is_enabled_regmap,
- 	.enable			= tps65217_pmic_enable,
- 	.disable		= tps65217_pmic_disable,
-@@ -162,7 +162,7 @@ static struct regulator_ops tps65217_pmic_ops = {
- };
- 
- /* Operations permitted on LDO1 */
--static struct regulator_ops tps65217_pmic_ldo1_ops = {
-+static const struct regulator_ops tps65217_pmic_ldo1_ops = {
- 	.is_enabled		= regulator_is_enabled_regmap,
- 	.enable			= tps65217_pmic_enable,
- 	.disable		= tps65217_pmic_disable,
+-const char *atmel_qspi_get_name(struct spi_mem *spimem)
++static const char *atmel_qspi_get_name(struct spi_mem *spimem)
+ {
+ 	return dev_name(spimem->spi->dev.parent);
+ }
 -- 
 2.20.1
 
