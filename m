@@ -2,155 +2,139 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC4DCC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 10:28:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC453C4360F
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 10:29:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FAAF20850
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 10:28:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B81A20850
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 10:29:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jtd8H/wD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730653AbfCYK2z (ORCPT
+        id S1730708AbfCYK3r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 06:28:55 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:45228 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730512AbfCYK2y (ORCPT
+        Mon, 25 Mar 2019 06:29:47 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:37480 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730491AbfCYK3q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 06:28:54 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2PAIwHs065238
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 06:28:53 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2retfp11uq-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 06:28:52 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ldufour@linux.ibm.com>;
-        Mon, 25 Mar 2019 10:28:51 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 25 Mar 2019 10:28:47 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2PASk4n60948666
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 25 Mar 2019 10:28:46 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 678324C04E;
-        Mon, 25 Mar 2019 10:28:46 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BD0F54C046;
-        Mon, 25 Mar 2019 10:28:45 +0000 (GMT)
-Received: from [9.145.180.32] (unknown [9.145.180.32])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 25 Mar 2019 10:28:45 +0000 (GMT)
-Subject: Re: [PATCH] mm/slab: protect cache_reap() against CPU and memory hot
- plug operations
-To:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-Cc:     stable@vger.kernel.org, Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20190311191701.24325-1-ldufour@linux.ibm.com>
- <20190325003841.503582148D@mail.kernel.org>
-From:   Laurent Dufour <ldufour@linux.ibm.com>
-Date:   Mon, 25 Mar 2019 11:28:45 +0100
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.5.3
+        Mon, 25 Mar 2019 06:29:46 -0400
+Received: by mail-pg1-f196.google.com with SMTP id q206so6242333pgq.4;
+        Mon, 25 Mar 2019 03:29:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ey9xQ+MI67kM6+LSZpUvDw46PAf2djwmiWErMwnyCJg=;
+        b=jtd8H/wDMBZOnQh3mccznAxMR5nsbhqx5XoDXzAbIGPfN0gaX3v9lGhuz240WDd5hH
+         xstAq+wZoG7zZBhO8H2cWUF0XYuMitbZs8GL7HQBg3FWL0rZeb5/9STJWp08gnv9eyJs
+         oFbMdtFpMza7KpCHS0zZTlQ4B+Oxxu4zAumHNeQo4XK7r9HYniklvbDx1dzb68RyygXv
+         Pov4qDBRXgL+k0W+j4GQFnly5AXhEOmNjzyxh888wuJEFuiZEWibgGz8bfwk/DEEA0Qe
+         GkPKpaLSZ79rvnEZhFE7Rqy9cSbpwJGKc2EGzeCvFcPSLw+hsfgdz+xv1Syor5pSnp2q
+         v2cw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ey9xQ+MI67kM6+LSZpUvDw46PAf2djwmiWErMwnyCJg=;
+        b=Ez5L+bQF2ZpoPuDF8s9mDXYMUOllhehSrsAl1M4xQUj44gmJMGj4N7kad1ReilE49T
+         M5e0Un5/9mU3NyKRbj7q4Q2GCW6mILoxd+TKYQ0T9lGc4ah2O9MMCkvw3uE8Sh77vOM6
+         P60sW2n+0FQybOOxH+qKPvIRNbiNLZpiHbt3Xd2wci6Vx/KKrNGVzOBRmIgWHegOrtkC
+         DuVB61DUbTA4ygmXJqSnunhEeWU+dq0TjNyotR+QCCakVZrGw/lr6456RgpFeokerQCN
+         t0PAYNUj3+zsF0cbO34A31oYvutzvLU87twu1yLErCr+cPh2MIvywUuM4O+XQ7L2toQq
+         3lMw==
+X-Gm-Message-State: APjAAAW3J0kse1Q9TX569omDikhFnGDlMaTzuoFvxNlWyDbs+kRGlaze
+        MVZECQEHrpFQ+mUQA5mUBq4=
+X-Google-Smtp-Source: APXvYqyzS6/yV0VoCEuMYNhkVH9OTjKQ0/BbwR0yKEd8cRhuzHSIQVHycth0ZnVT/R5UGAGj4uIhwQ==
+X-Received: by 2002:a63:36cb:: with SMTP id d194mr23032609pga.426.1553509785440;
+        Mon, 25 Mar 2019 03:29:45 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id i135sm15089982pgd.41.2019.03.25.03.29.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 25 Mar 2019 03:29:44 -0700 (PDT)
+Subject: Re: [PATCH V1 1/1] watchdog: f71808e_wdt: fix F81866 bit operation
+To:     "Ji-Ze Hong (Peter Hong)" <hpeter@gmail.com>,
+        wim@linux-watchdog.orgw
+Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Ji-Ze Hong (Peter Hong)" <hpeter+linux_kernel@gmail.com>
+References: <1553225816-24375-1-git-send-email-hpeter+linux_kernel@gmail.com>
+ <af4fba18-da99-2b48-7bbe-d59222081ab4@roeck-us.net>
+ <cf37ee27-593c-b809-62d4-8d38265cb710@gmail.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <3f6c755d-c2ff-01cb-ac67-3a899737cbde@roeck-us.net>
+Date:   Mon, 25 Mar 2019 03:29:43 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <20190325003841.503582148D@mail.kernel.org>
+In-Reply-To: <cf37ee27-593c-b809-62d4-8d38265cb710@gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19032510-0008-0000-0000-000002D135C5
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19032510-0009-0000-0000-0000223D5CE7
-Message-Id: <bcca778f-646c-378e-68ef-fde3e17c842c@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-25_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903250077
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le 25/03/2019 à 01:38, Sasha Levin a écrit :
-> Hi,
+On 3/24/19 11:10 PM, Ji-Ze Hong (Peter Hong) wrote:
+> Guenter Roeck 於 2019/3/22 下午 09:06 寫道:
+>> On 3/21/19 8:36 PM, Ji-Ze Hong (Peter Hong) wrote:
+>>> Fix error bit operation in watchdog_start()
+>>>
+>>
+>> Hmm ... does that mean it never worked ? Did you test it this time ?
 > 
-> [This is an automated email]
+> Sorry for lacking test procedure. I had only test the functional (reset)
+> , not to test the register value.
 > 
-> This commit has been processed because it contains a -stable tag.
-> The stable tag indicates that it's relevant for the following trees: all
+> The F81866 PIN70 (WDTRST#/GPIO15) is default set to WDTRST# function and
+> the old code only change register 27h bit(4) - PORT_4E_EN.
 > 
-> The bot has tested the following trees: v5.0.3, v4.19.30, v4.14.107, v4.9.164, v4.4.176, v3.18.136.
+> If the mainboard entry port is 4Eh, the old code is equal to nothing
+> done, but when the mainboard entry port is 2Eh, this code will make the
+> change from entry port 2Eh to 4Eh.
 > 
-> v5.0.3: Build OK!
-> v4.19.30: Build OK!
-> v4.14.107: Build OK!
-> v4.9.164: Build OK!
-> v4.4.176: Failed to apply! Possible dependencies:
->      27590dc17b34 ("hrtimer: Convert to hotplug state machine")
->      31487f8328f2 ("smp/cfd: Convert core to hotplug state machine")
->      512089d98457 ("perf/x86/intel/rapl: Clean up the printk output")
->      55f2890f0726 ("perf/x86/intel/rapl: Add proper error handling")
->      57ecde42cc74 ("powerpc/perf: Convert book3s notifier to state machine callbacks")
->      6731d4f12315 ("slab: Convert to hotplug state machine")
->      6b2c28471de5 ("x86/x2apic: Convert to CPU hotplug state machine")
->      7162b8fea630 ("perf/x86/intel/rapl: Refactor the code some more")
->      75c7003fbf41 ("perf/x86/intel/rapl: Calculate timing once")
->      7ee681b25284 ("workqueue: Convert to state machine callbacks")
->      8a6d2f8f73ca ("perf/x86/intel/rapl: Utilize event->pmu_private")
->      8b5b773d6245 ("perf/x86/intel/rapl: Convert to hotplug state machine")
->      9de8d686955b ("perf/x86/intel/rapl: Convert it to a per package facility")
->      a208749c6426 ("perf/x86/intel/rapl: Make PMU lock raw")
->      a409f5ee2937 ("blackfin/perf: Convert hotplug notifier to state machine")
->      b8b3319a471b ("perf/x86/intel/rapl: Sanitize the quirk handling")
->      e3cfce17d309 ("sh/perf: Convert the hotplug notifiers to state machine callbacks")
->      e6d4989a9ad1 ("relayfs: Convert to hotplug state machine")
->      e722d8daafb9 ("profile: Convert to hotplug state machine")
+> https://html.alldatasheet.com/html-pdf/459086/FINTEK/F81866AD/26531/119/F81866AD.html
 > 
-> v3.18.136: Failed to apply! Possible dependencies:
->      13ca62b243f6 ("ACPI: Fix minor syntax issues in processor_core.c")
->      27590dc17b34 ("hrtimer: Convert to hotplug state machine")
->      31487f8328f2 ("smp/cfd: Convert core to hotplug state machine")
->      4daa832d9987 ("x86: Drop bogus __ref / __refdata annotations")
->      57ecde42cc74 ("powerpc/perf: Convert book3s notifier to state machine callbacks")
->      645523960102 ("perf/x86/intel/rapl: Fix energy counter measurements but supporing per domain energy units")
->      6731d4f12315 ("slab: Convert to hotplug state machine")
->      6b2c28471de5 ("x86/x2apic: Convert to CPU hotplug state machine")
->      7162b8fea630 ("perf/x86/intel/rapl: Refactor the code some more")
->      7ee681b25284 ("workqueue: Convert to state machine callbacks")
->      828aef376d7a ("ACPI / processor: Introduce phys_cpuid_t for CPU hardware ID")
->      8b5b773d6245 ("perf/x86/intel/rapl: Convert to hotplug state machine")
->      9de8d686955b ("perf/x86/intel/rapl: Convert it to a per package facility")
->      a409f5ee2937 ("blackfin/perf: Convert hotplug notifier to state machine")
->      af8f3f514d19 ("ACPI / processor: Convert apic_id to phys_id to make it arch agnostic")
->      d02dc27db0dc ("ACPI / processor: Rename acpi_(un)map_lsapic() to acpi_(un)map_cpu()")
->      d089f8e97d37 ("x86: fix up obsolete cpu function usage.")
->      e3cfce17d309 ("sh/perf: Convert the hotplug notifiers to state machine callbacks")
->      e6d4989a9ad1 ("relayfs: Convert to hotplug state machine")
->      e722d8daafb9 ("profile: Convert to hotplug state machine")
->      ecf5636dcd59 ("ACPI: Add interfaces to parse IOAPIC ID for IOAPIC hotplug")
->      fdaf3a6539d6 ("x86: fix more deprecated cpu function usage.")
+>> A secondary concern is that the watchdog doesn't _have_ to trigger WDTRST,
+>> but may also trigger PWOK. But that may be a separate issue.
 > 
+> Out watchdog is only support WDTRST#.
 > 
-> How should we proceed with this patch?
+>> Please add:
+>>
+>> Fixes: 14b24a88a3660 ("watchdog: f71808e_wdt: Add F81866 support")
+> 
+> OK, I'll add to v2
+> 
+>>> diff --git a/drivers/watchdog/f71808e_wdt.c b/drivers/watchdog/f71808e_wdt.c
+>>> index 9a1c761258ce..9129485732c7 100644
+>>> --- a/drivers/watchdog/f71808e_wdt.c
+>>> +++ b/drivers/watchdog/f71808e_wdt.c
+>>> @@ -387,18 +387,17 @@ static int watchdog_start(void)
+>>>       case f81866:
+>>>           /* Set pin 70 to WDTRST# */
+>>> -        superio_clear_bit(watchdog.sioaddr, SIO_F81866_REG_PORT_SEL,
+>>> -                  BIT(3) | BIT(0));
+>>> -        superio_set_bit(watchdog.sioaddr, SIO_F81866_REG_PORT_SEL,
+>>> -                BIT(2));
+>>> +        superio_clear_bit(watchdog.sioaddr, SIO_F81866_REG_PORT_SEL, 3);
+>>> +        superio_clear_bit(watchdog.sioaddr, SIO_F81866_REG_PORT_SEL, 0);
+>>> +        superio_set_bit(watchdog.sioaddr, SIO_F81866_REG_PORT_SEL, 2);
+>>
+>> Better use superio_inb()/superio_outb(). The above is (much) more expensive,
+>> and  we have no real idea what the impact of changing one bit at a time may be.
+> 
+> Could I add a superio_mask_write(reg, mask, data) with v2 patch like
+> following fintek driver ?
+> https://elixir.bootlin.com/linux/latest/source/drivers/tty/serial/8250/8250_fintek.c#L113
+> 
 
-Please forget about it.
+If you wish. but not necessary. For the fix it would be better to have only the fix.
+You could introduce the function in a second patch and use it wherever read/modify/write
+of a mask is used in the driver (I think it was used at least in one other place).
 
-As reported by Michal, this patch is useless.
-Sorry for the noise.
-
-Thanks,
-Laurent.
-
+Guenter
