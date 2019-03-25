@@ -2,177 +2,120 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19EEEC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 05:26:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55B84C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 05:35:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3D252083D
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 05:26:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 269422075D
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 05:35:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729327AbfCYF0k (ORCPT
+        id S1729342AbfCYFfi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 01:26:40 -0400
-Received: from 59-120-53-16.HINET-IP.hinet.net ([59.120.53.16]:29535 "EHLO
-        ATCSQR.andestech.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726242AbfCYF0k (ORCPT
+        Mon, 25 Mar 2019 01:35:38 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:34552 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726242AbfCYFfi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 01:26:40 -0400
-Received: from mail.andestech.com (atcpcs16.andestech.com [10.0.1.222])
-        by ATCSQR.andestech.com with ESMTP id x2P5PPRR037015;
-        Mon, 25 Mar 2019 13:25:25 +0800 (GMT-8)
-        (envelope-from alankao@andestech.com)
-Received: from andestech.com (10.0.15.65) by ATCPCS16.andestech.com
- (10.0.1.222) with Microsoft SMTP Server id 14.3.123.3; Mon, 25 Mar 2019
- 13:25:49 +0800
-Date:   Mon, 25 Mar 2019 13:25:50 +0800
-From:   Alan Kao <alankao@andestech.com>
-To:     Anup Patel <Anup.Patel@wdc.com>
-CC:     Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
-Subject: Re: [PATCH v2] RISC-V: Always compile mm/init.c with cmodel=medany
-Message-ID: <20190325052550.GA30996@andestech.com>
-References: <20190325033648.16171-1-anup.patel@wdc.com>
+        Mon, 25 Mar 2019 01:35:38 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2P5Z4Oo044713
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 01:35:37 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2reqrpapt0-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 01:35:36 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
+        Mon, 25 Mar 2019 05:35:35 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 25 Mar 2019 05:35:33 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2P5ZWFa59899954
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 25 Mar 2019 05:35:32 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9040F4203F;
+        Mon, 25 Mar 2019 05:35:32 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3D8E042047;
+        Mon, 25 Mar 2019 05:35:32 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 25 Mar 2019 05:35:32 +0000 (GMT)
+Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 8CE1CA0161;
+        Mon, 25 Mar 2019 16:35:30 +1100 (AEDT)
+From:   "Alastair D'Silva" <alastair@au1.ibm.com>
+To:     alastair@d-silva.org
+Cc:     Frederic Barrat <fbarrat@linux.ibm.com>,
+        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/4] ocxl: OpenCAPI Cleanup
+Date:   Mon, 25 Mar 2019 16:34:51 +1100
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190320053448.2098-1-alastair@au1.ibm.com>
+References: <20190320053448.2098-1-alastair@au1.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20190325033648.16171-1-anup.patel@wdc.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Originating-IP: [10.0.15.65]
-X-DNSRBL: 
-X-MAIL: ATCSQR.andestech.com x2P5PPRR037015
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19032505-0008-0000-0000-000002D11AE0
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19032505-0009-0000-0000-0000223D40FA
+Message-Id: <20190325053456.14599-1-alastair@au1.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-25_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=802 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903250043
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Anup,
+From: Alastair D'Silva <alastair@d-silva.org>
 
-Sorry for being late to the party.  I think one more thing should
-move together with setup_vm():
+Some minor cleanups for the OpenCAPI driver as a prerequisite
+for an ocxl driver refactoring to allow the driver core to
+be utilised by external drivers.
 
-On Mon, Mar 25, 2019 at 03:37:38AM +0000, Anup Patel wrote:
-> The Linux RISC-V 32bit kernel is broken after we moved setup_vm() from
-> kernel/setup.c to mm/init.c because Linux RISC-V 32bit kernel by default
-> uses cmodel=medlow which results in a non-position-independent setup_vm().
-> 
-> This patch fixes Linux RISC-V 32bit kernel booting by:
-> 1. Forcing cmodel=medany for mm/init.c
-> 2. Moving remaing MM-related stuff va_pa_offset, pfn_base and
->    empty_zero_page from kernel/setup.c to mm/init.c
-> 
-> Fixes: 6f1e9e946f0b ("RISC-V: Move setup_vm() to mm/init.c")
-> Suggested-by: Christoph Hellwig <hch@lst.de>
-> Suggested-by: Mike Rapoport <rppt@linux.ibm.com>
-> Signed-off-by: Anup Patel <anup.patel@wdc.com>
-> ---
-> v2: Removed CFLAGS_setup.o from kernel/Makefile and replaced SoBs
-> ---
->  arch/riscv/kernel/Makefile | 2 --
->  arch/riscv/kernel/setup.c  | 8 --------
->  arch/riscv/mm/Makefile     | 2 ++
->  arch/riscv/mm/init.c       | 9 +++++++++
->  4 files changed, 11 insertions(+), 10 deletions(-)
-> 
-> diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
-> index f13f7f276639..8b9780b6bd7f 100644
-> --- a/arch/riscv/kernel/Makefile
-> +++ b/arch/riscv/kernel/Makefile
+Changelog:
+V4:
+  - Drop printf format changes as they omit the format indicator for '0'
+V3:
+  - Add missed header in 'ocxl: Remove some unused exported symbols'.
+    This addresses the introduced sparse warnings
+V2:
+  - remove intermediate assignment of 'link' var in
+                'Rename struct link to ocxl_link'
+  - Don't shift definition of ocxl_context_attach in
+                'Remove some unused exported symbols'
 
-earlier in this file, there are four lines about ftrace,
 
-  5 ifdef CONFIG_FTRACE
-  6 CFLAGS_REMOVE_ftrace.o = -pg
-  7 CFLAGS_REMOVE_setup.o = -pg
-  8 endif
+Alastair D'Silva (4):
+  ocxl: Rename struct link to ocxl_link
+  ocxl: read_pasid never returns an error, so make it void
+  ocxl: Remove superfluous 'extern' from headers
+  ocxl: Remove some unused exported symbols
 
-removing "-pg" flag from setup.o was necessary for ftrace to work, since
-setup_vm() cannot process the trampoline of ftrace properly.
+ drivers/misc/ocxl/config.c        | 13 ++---
+ drivers/misc/ocxl/file.c          |  5 +-
+ drivers/misc/ocxl/link.c          | 36 ++++++-------
+ drivers/misc/ocxl/ocxl_internal.h | 85 +++++++++++++++++++------------
+ include/misc/ocxl.h               | 53 ++++++-------------
+ 5 files changed, 91 insertions(+), 101 deletions(-)
 
-As setup_vm() is being moved to mm/init.c, you may either mark it with a
-"notrace" attribute with its declaration, or adding corresponding CFLAGS_REMOVE*
-to mm/Makefile.
+-- 
+2.20.1
 
-> @@ -29,8 +29,6 @@ obj-y	+= vdso.o
->  obj-y	+= cacheinfo.o
->  obj-y	+= vdso/
->  
-> -CFLAGS_setup.o := -mcmodel=medany
-> -
->  obj-$(CONFIG_FPU)		+= fpu.o
->  obj-$(CONFIG_SMP)		+= smpboot.o
->  obj-$(CONFIG_SMP)		+= smp.o
-> diff --git a/arch/riscv/kernel/setup.c b/arch/riscv/kernel/setup.c
-> index ecb654f6a79e..540a331d1376 100644
-> --- a/arch/riscv/kernel/setup.c
-> +++ b/arch/riscv/kernel/setup.c
-> @@ -48,14 +48,6 @@ struct screen_info screen_info = {
->  };
->  #endif
->  
-> -unsigned long va_pa_offset;
-> -EXPORT_SYMBOL(va_pa_offset);
-> -unsigned long pfn_base;
-> -EXPORT_SYMBOL(pfn_base);
-> -
-> -unsigned long empty_zero_page[PAGE_SIZE / sizeof(unsigned long)] __page_aligned_bss;
-> -EXPORT_SYMBOL(empty_zero_page);
-> -
->  /* The lucky hart to first increment this variable will boot the other cores */
->  atomic_t hart_lottery;
->  unsigned long boot_cpu_hartid;
-> diff --git a/arch/riscv/mm/Makefile b/arch/riscv/mm/Makefile
-> index eb22ab49b3e0..7307609d405b 100644
-> --- a/arch/riscv/mm/Makefile
-> +++ b/arch/riscv/mm/Makefile
-> @@ -3,3 +3,5 @@ obj-y += fault.o
->  obj-y += extable.o
->  obj-y += ioremap.o
->  obj-y += cacheflush.o
-> +
-> +CFLAGS_init.o := -mcmodel=medany
-> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-> index b379a75ac6a6..7a7c454378cb 100644
-> --- a/arch/riscv/mm/init.c
-> +++ b/arch/riscv/mm/init.c
-> @@ -25,6 +25,10 @@
->  #include <asm/pgtable.h>
->  #include <asm/io.h>
->  
-> +unsigned long empty_zero_page[PAGE_SIZE / sizeof(unsigned long)]
-> +							__page_aligned_bss;
-> +EXPORT_SYMBOL(empty_zero_page);
-> +
->  static void __init zone_sizes_init(void)
->  {
->  	unsigned long max_zone_pfns[MAX_NR_ZONES] = { 0, };
-> @@ -143,6 +147,11 @@ void __init setup_bootmem(void)
->  	}
->  }
->  
-> +unsigned long va_pa_offset;
-> +EXPORT_SYMBOL(va_pa_offset);
-> +unsigned long pfn_base;
-> +EXPORT_SYMBOL(pfn_base);
-> +
->  pgd_t swapper_pg_dir[PTRS_PER_PGD] __page_aligned_bss;
->  pgd_t trampoline_pg_dir[PTRS_PER_PGD] __initdata __aligned(PAGE_SIZE);
->  
-> -- 
-> 2.17.1
-> 
-> 
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
-
-Alan
