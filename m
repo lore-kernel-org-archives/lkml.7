@@ -2,100 +2,93 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47EACC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 08:53:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC939C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 08:54:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15A1C20863
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 08:53:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74F4A20863
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 08:54:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="edUGzOpp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730067AbfCYIxb (ORCPT
+        id S1730123AbfCYIyX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 04:53:31 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:45018 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726234AbfCYIxb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 04:53:31 -0400
-Received: from p5492e2fc.dip0.t-ipconnect.de ([84.146.226.252] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1h8LMG-0005e8-SB; Mon, 25 Mar 2019 09:53:29 +0100
-Date:   Mon, 25 Mar 2019 09:53:28 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Ming Lei <ming.lei@redhat.com>
-cc:     Peter Xu <peterx@redhat.com>, Christoph Hellwig <hch@lst.de>,
-        Jason Wang <jasowang@redhat.com>,
-        Luiz Capitulino <lcapitulino@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>, minlei@redhat.com
-Subject: Re: Virtio-scsi multiqueue irq affinity
-In-Reply-To: <20190325070616.GA9642@ming.t460p>
-Message-ID: <alpine.DEB.2.21.1903250948490.1798@nanos.tec.linutronix.de>
-References: <20190318062150.GC6654@xz-x1> <alpine.DEB.2.21.1903231805310.1798@nanos.tec.linutronix.de> <20190325050213.GH9149@xz-x1> <20190325070616.GA9642@ming.t460p>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 25 Mar 2019 04:54:23 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:43766 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726234AbfCYIyW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 04:54:22 -0400
+Received: from [192.168.0.14] (pd95c0187.dip0.t-ipconnect.de [217.92.1.135])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 7E5231EC02D1;
+        Mon, 25 Mar 2019 09:54:21 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1553504061;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=z53EwizmjIyxN10SgYjxj3UycnodzftL3CAyddh94Xs=;
+        b=edUGzOppLyx7tUFB94Vly2sQwm9VqtBIhYlkOP49RBq6xI8o56blNZ//T/TDKm0Wg6L7Gi
+        pb8rwxi7g41CLCfq/uN2wBqO2NgH+XEAERA2Dpr0ivOGPmLXGK67T//PcbZGz7C/ObHnds
+        OOy8a0bvScJZFHQ32kXGHGJqtxv71HE=
+Date:   Mon, 25 Mar 2019 09:54:19 +0100
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20190325082720.GA20771@jeru.linux.bs1.fc.nec.co.jp>
+References: <20190322110342.GA16202@jeru.linux.bs1.fc.nec.co.jp> <20190322152328.GD12472@zn.tnic> <20190325002740.GA6637@jeru.linux.bs1.fc.nec.co.jp> <20190325060128.GB9385@dhcp-128-65.nay.redhat.com> <20190325061929.GC9385@dhcp-128-65.nay.redhat.com> <bcb5bd29-a3b8-e42d-8da7-a8501f695c21@ce.jp.nec.com> <20190325065921.GA11096@dhcp-128-65.nay.redhat.com> <20190325082720.GA20771@jeru.linux.bs1.fc.nec.co.jp>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2] x86/boot: Use EFI setup data if provided
+To:     Junichi Nomura <j-nomura@ce.jp.nec.com>,
+        Dave Young <dyoung@redhat.com>,
+        "fanc.fnst@cn.fujitsu.com" <fanc.fnst@cn.fujitsu.com>,
+        "bp@suse.de" <bp@suse.de>, "bhe@redhat.com" <bhe@redhat.com>,
+        "kasong@redhat.com" <kasong@redhat.com>
+CC:     "x86@kernel.org" <x86@kernel.org>,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From:   Boris Petkov <bp@alien8.de>
+Message-ID: <51D9A7D1-49BF-4679-B102-0FC5AC300C9F@alien8.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ming,
+On March 25, 2019 9:27:21 AM GMT+01:00, Junichi Nomura <j-nomura@ce=2Ejp=2E=
+nec=2Ecom> wrote:
+>On 3/25/19 3:59 PM, Dave Young wrote:
+>> On 03/25/19 at 06:47am, Junichi Nomura wrote:
+>>> On 3/25/19 3:19 PM, Dave Young wrote:
+>>>> On 03/25/19 at 02:01pm, Dave Young wrote:
+>>>> I think normally people do not see this bug, because kernel will
+>set the
+>>>> rsdp in boot_params->acpi_rsdp_addr=2E  Maybe you are testing with
+>>>
+>>> I think it's only done for file-based kexec interface=2E
+>>=20
+>> Saw Kairui's another reply, yes, kexec-tools need a patch to fill the
+>> value as well then=2E
+>>=20
+>> I would vote for a repost of your old patch with some #ifdef
+>
+>Thanks for comments, Dave, Kairui and Baoquan=2E
+>
+>The problem for me is it's a regression in v5=2E1-rc1, that breaks
+>existing setup=2E If early parsing of RSDP is required only for newly
+>supported configuration, I'm fine such configuration requires
+>new tools or new options=2E
+>
+>This is the 1st version plus #ifdef around the EFI code=2E
 
-On Mon, 25 Mar 2019, Ming Lei wrote:
-> On Mon, Mar 25, 2019 at 01:02:13PM +0800, Peter Xu wrote:
-> > One thing I can think of is the real-time scenario where "isolcpus="
-> > is provided, then logically we should not allow any isolated CPUs to
-> > be bound to any of the multi-queue IRQs.  Though Ming Lei and I had a
-> 
-> So far, this behaviour is made by user-space.
-> 
-> >From my understanding, IRQ subsystem doesn't handle "isolcpus=", even
-> though the Kconfig help doesn't mention irq affinity affect:
-> 
->           Make sure that CPUs running critical tasks are not disturbed by
->           any source of "noise" such as unbound workqueues, timers, kthreads...
->           Unbound jobs get offloaded to housekeeping CPUs. This is driven by
->           the "isolcpus=" boot parameter.
+I'm going to repeat that again until you get it:
 
-isolcpus has no effect on the interupts. That's what 'irqaffinity=' is for.
-
-> Yeah, some RT application may exclude 'isolcpus=' from some IRQ's
-> affinity via /proc/irq interface, and now it becomes not possible any
-> more to do that for managed IRQ.
-> 
-> > discussion offlist before and Ming explained to me that as long as the
-> > isolated CPUs do not generate any IO then there will be no IRQ on
-> > those isolated (real-time) CPUs at all.  Can we guarantee that?  Now
-> 
-> It is only guaranteed for 1:1 mapping.
-> 
-> blk-mq uses managed IRQ's affinity to setup queue mapping, for example:
-> 
-> 1) single hardware queue
-> - this queue's IRQ affinity includes all CPUs, then the hardware queue's
-> IRQ is only fired on one specific CPU for IO submitted from any CPU
-
-Right. We can special case that for single HW queue to honor the default
-affinity setting. That's not hard to achieve.
- 
-> 2) multi hardware queue
-> - there are N hardware queues
-> - for each hardware queue i(i < N), its IRQ's affinity may include N(i) CPUs,
-> then IRQ for this hardware queue i is fired on one specific CPU among N(i).
-
-Correct and that's the sane case where it does not matter much, because if
-your task on an isolated CPU does I/O then redirecting it through some
-other CPU does not make sense. If it doesn't do I/O it wont be affected by
-the dormant queue.
-
-Thanks,
-
-	tglx
+If the kexec kernel should continue to use efi_systab_init() then you
+should make efi_get_rsdp_addr() exit early in the kexec-ed kernel=2E
+--=20
+Sent from a small device: formatting sux and brevity is inevitable=2E 
