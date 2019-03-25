@@ -2,127 +2,104 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 719C7C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:18:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9498BC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:18:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B6F02083D
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:18:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C6DA2083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:18:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SvxECnfS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729668AbfCYQSI (ORCPT
+        id S1729697AbfCYQSb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 12:18:08 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:24674 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725788AbfCYQSI (ORCPT
+        Mon, 25 Mar 2019 12:18:31 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:40917 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725788AbfCYQSa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 12:18:08 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2PGH3Vo000343;
-        Mon, 25 Mar 2019 17:17:53 +0100
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2rddht4rpe-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Mon, 25 Mar 2019 17:17:53 +0100
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 2CC7831;
-        Mon, 25 Mar 2019 16:17:53 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag5node2.st.com [10.75.127.14])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 07394E7D;
-        Mon, 25 Mar 2019 16:17:53 +0000 (GMT)
-Received: from [10.48.1.93] (10.75.127.47) by SFHDAG5NODE2.st.com
- (10.75.127.14) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 25 Mar
- 2019 17:17:51 +0100
-Subject: Re: [PATCH v1] Revert "dmaengine: stm32-mdma: Add a check on
- read_u32_array"
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     Dan Williams <dan.j.williams@intel.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        <dmaengine@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1553525187-13533-1-git-send-email-pierre-yves.mordret@st.com>
- <20190325152552.GQ5348@vkoul-mobl>
-From:   Pierre Yves MORDRET <pierre-yves.mordret@st.com>
-Message-ID: <dbe0445f-863c-913d-cd95-7fa71baf2d27@st.com>
-Date:   Mon, 25 Mar 2019 17:17:51 +0100
+        Mon, 25 Mar 2019 12:18:30 -0400
+Received: by mail-oi1-f196.google.com with SMTP id 3so7419099oir.7
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 09:18:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=RLDRoiBNbIAcIdIMLPqBzAQAHLBoEDdVU4Q4wOwG8Ms=;
+        b=SvxECnfSRkC11p+C5ALfZTkc9meVsdEhIfzq7trghnm0/pb2EXiT6M9azSNm1JOYZk
+         qPvdzYkGFaVFlK5Jij1L+zl+09EhR/TWwrQ+ODeYvEkhGt9injuE83BpO88WiRy9Y239
+         qPpHGNdkvE3mvxd02l696jBoLuE9Qh5MT8iRqi55Y2oHSY0RXLOc/EhNiWFKl8Y0CO1j
+         /jVStQo4fwar6VJZnTzu/lVyUQKEe1GAM92oZBmShgoC65F+stAEzurPhILNWg2lvPln
+         GbVEF+bMA6jDWIJPewjXX/HwnLXYOmXcx0rLyecXHdyCBQs/e5KLZ9v1XaTmRvDcaECl
+         LLkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=RLDRoiBNbIAcIdIMLPqBzAQAHLBoEDdVU4Q4wOwG8Ms=;
+        b=ucgz8WOfMBxpDJQfqWxrR6jauxvNTvDFBUTFFAwxovpk79ENVehcgncZchKHLB4ybS
+         C3trivEQjcHo7MK7CEwS7aa9+N9qeFQBDJ84xWFxDBMMWAECRHSxsReII74/cRse0GfA
+         wIzbwnag4A6Do56tNPtLVfSWwX91+tvTCq1jdHftllLet41I5y02cJ+KjgW70CIUQelt
+         6cXPsB+rVum+s8DGcgy/w1+W6B2DlDjhB1uMkvLeP2u1TppGVbGJsbC+fGZwwhLikLJN
+         ODoetsA4x+2StmhX3oXxW0vcvpkxAKk0ZrIFYVtFMwkeDGB9j1SPq7ydrw1Q3lSC0N8o
+         6h7w==
+X-Gm-Message-State: APjAAAW2FIRc3xu1uBiLjD8dAnyDuGLXyq8661/wpwSdE6Yr79qMnxqA
+        u4EfYtK/wbnbJBxmRgOvhug=
+X-Google-Smtp-Source: APXvYqzS7odJS1ZMxA3shGVmeIIDMUwsBye/FsKIe8gQKuJ71NTAV2ToHkYbPlits7tnpLa/fXvOJg==
+X-Received: by 2002:aca:b3d5:: with SMTP id c204mr12392419oif.91.1553530709863;
+        Mon, 25 Mar 2019 09:18:29 -0700 (PDT)
+Received: from [192.168.1.112] (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
+        by smtp.gmail.com with ESMTPSA id g17sm2288215otq.45.2019.03.25.09.18.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 25 Mar 2019 09:18:29 -0700 (PDT)
+Subject: Re: [PATCH] powerpc/rtas: fix early boot failure.
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <aab41779cac995ebdc03e700a9dc7cfc30a28770.1553503163.git.christophe.leroy@c-s.fr>
+From:   Larry Finger <Larry.Finger@lwfinger.net>
+Message-ID: <04c77eea-bda1-2bad-062f-d86d2ce6f192@lwfinger.net>
+Date:   Mon, 25 Mar 2019 11:18:28 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+ Thunderbird/60.5.2
 MIME-Version: 1.0
-In-Reply-To: <20190325152552.GQ5348@vkoul-mobl>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <aab41779cac995ebdc03e700a9dc7cfc30a28770.1553503163.git.christophe.leroy@c-s.fr>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG5NODE1.st.com (10.75.127.13) To SFHDAG5NODE2.st.com
- (10.75.127.14)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-25_09:,,
- signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 3/25/19 4:25 PM, Vinod Koul wrote:
-> On 25-03-19, 15:46, Pierre-Yves MORDRET wrote:
+On 3/25/19 3:43 AM, Christophe Leroy wrote:
+> Commit 0df977eafc79 ("powerpc/6xx: Don't use SPRN_SPRG2 for storing
+> stack pointer while in RTAS") changes the code to use a field in
+> thread struct to store the stack pointer while in RTAS instead of
+> using SPRN_SPRG2. It therefore converts all places which were
+> manipulating SPRN_SPRG2 to use that field. During early startup,
+> the zeroing of SPRN_SPRG2 has been replaced by a zeroing of that
+> field in thread struct. But at least in start_here, that's done
+> wrongly because it used the physical address of the fields while
+> MMU is on at that time.
 > 
-> Please use the right subsystem name dmaengine, revert is not a subsystem
-> name!
-
-ok. sorry. I thought revert keyword was correct.
-
+> So the virtual address of the field should be used instead, but in
+> the meantime, thread struct has already been zeroised and initialised
+> so we can just drop this initialisation.
 > 
->> This reverts commit 906b40b246b0acb54c4dc97e815cf734761c9820.
-> 
-> This should use the cannonical form for commits commit-sha1: ("title....") 
+> Reported-by: Larry Finger <Larry.Finger@lwfinger.net>
+> Fixes: 0df977eafc79 ("powerpc/6xx: Don't use SPRN_SPRG2 for storing stack pointer while in RTAS")
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 
-ok.
+Tested-by: Larry Finger <Larry.Finger@lwfinger.net>
 
->>
->> As stated by bindings "st,ahb-addr-masks" is optional.
->> The statement inserted by this commit makes this property
->> mandatory and prevents MDMA to be probed in case property not present.
->>
->> Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
->> ---
->>  drivers/dma/stm32-mdma.c | 4 +---
->>  1 file changed, 1 insertion(+), 3 deletions(-)
->>
->> diff --git a/drivers/dma/stm32-mdma.c b/drivers/dma/stm32-mdma.c
->> index 4e0eede..ac0301b 100644
->> --- a/drivers/dma/stm32-mdma.c
->> +++ b/drivers/dma/stm32-mdma.c
->> @@ -1578,11 +1578,9 @@ static int stm32_mdma_probe(struct platform_device *pdev)
->>  
->>  	dmadev->nr_channels = nr_channels;
->>  	dmadev->nr_requests = nr_requests;
->> -	ret = device_property_read_u32_array(&pdev->dev, "st,ahb-addr-masks",
->> +	device_property_read_u32_array(&pdev->dev, "st,ahb-addr-masks",
->>  				       dmadev->ahb_addr_masks,
->>  				       count);
->> -	if (ret)
->> -		return ret;
->>  	dmadev->nr_ahb_addr_masks = count;
-> 
-> so if st,ahb-addr-masks is not present what value does count contain?
+My PPC box now boots OK.
 
-whether "st,ahb-addr-masks" present count will hold the number of mask.
-otherwise sets to "0" by driver.
+Larry
 
-	count = device_property_read_u32_array(&pdev->dev, "st,ahb-addr-masks",
-					       NULL, 0);
-	if (count < 0)
-		count = 0;
-> 
->>  
->>  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> -- 
->> 2.7.4
-> 
