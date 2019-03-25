@@ -2,104 +2,88 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA602C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:08:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0DB6C10F03
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:10:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88E0020830
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:08:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83937208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 16:10:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729548AbfCYQIP (ORCPT
+        id S1728957AbfCYQKe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 12:08:15 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:49074 "EHLO honk.sigxcpu.org"
+        Mon, 25 Mar 2019 12:10:34 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:49121 "EHLO honk.sigxcpu.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725788AbfCYQIP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 12:08:15 -0400
+        id S1725788AbfCYQKd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 12:10:33 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id 57E4BFB03;
-        Mon, 25 Mar 2019 17:08:12 +0100 (CET)
+        by honk.sigxcpu.org (Postfix) with ESMTP id E9288FB03;
+        Mon, 25 Mar 2019 17:10:31 +0100 (CET)
 X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
 Received: from honk.sigxcpu.org ([127.0.0.1])
         by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 1hbNicdu3xHO; Mon, 25 Mar 2019 17:08:10 +0100 (CET)
+        with ESMTP id VCxZE6-8OXHJ; Mon, 25 Mar 2019 17:10:30 +0100 (CET)
 Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 91D8540385; Mon, 25 Mar 2019 17:08:10 +0100 (CET)
-From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
-To:     Thierry Reding <thierry.reding@gmail.com>,
+        id 6E7A740385; Mon, 25 Mar 2019 17:10:30 +0100 (CET)
+Date:   Mon, 25 Mar 2019 17:10:30 +0100
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Fabio Estevam <festevam@gmail.com>
-Subject: [PATCH] dt-bindings: display/panel: Add missing unit names
-Date:   Mon, 25 Mar 2019 17:08:10 +0100
-Message-Id: <901e836ea06889a9d91a799102b2a6b836d93dcd.1553529797.git.agx@sigxcpu.org>
-X-Mailer: git-send-email 2.20.1
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        DRI mailing list <dri-devel@lists.freedesktop.org>,
+        Sam Ravnborg <sam@ravnborg.org>
+Subject: Re: [PATCH v4 2/3] dt-bindings: Add Rocktech jh057n00900 panel
+ bindings
+Message-ID: <20190325161030.GA30679@bogon.m.sigxcpu.org>
+References: <cover.1553522676.git.agx@sigxcpu.org>
+ <6a50cfdf0fd68aa120f7d8b67357ab45a2275355.1553522676.git.agx@sigxcpu.org>
+ <CAOMZO5BfhaR2BjBKvLwGk_=ULtGUx_x46jskX1WiAOY5vzxgbw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOMZO5BfhaR2BjBKvLwGk_=ULtGUx_x46jskX1WiAOY5vzxgbw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some examples were missing the unit names triggering
+Hi,
+On Mon, Mar 25, 2019 at 11:10:47AM -0300, Fabio Estevam wrote:
+> On Mon, Mar 25, 2019 at 11:06 AM Guido Günther <agx@sigxcpu.org> wrote:
+> 
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.txt
+> > @@ -0,0 +1,18 @@
+> > +Rocktech jh057n00900 5.5" 720x1440 TFT LCD panel
+> > +
+> > +Required properties:
+> > +- compatible: should be "rocktech,jh057n00900"
+> > +- reg: DSI virtual channel of the peripheral
+> > +- reset-gpios: panel reset gpio
+> > +- backlight: phandle of the backlight device attached to the panel
+> > +
+> > +Example:
+> > +
+> > +       &mipi_dsi {
+> > +               panel {
+> > +                       compatible = "rocktech,jh057n00900";
+> > +                       reg = <0>;
+> 
+> Passing the reg property without its corresponding @0 would cause a
+> dtc warning when building with W=1.
 
- Warning (unit_address_vs_reg): .../panel: node has a reg or ranges property, but no unit name
+Thanks, I've put that in for v5 and sent a patch to correct
+the other drivers in display/panel:
 
-warnings when used verbatim in DTs and running dtc with W=1.
+  https://patchwork.kernel.org/patch/10869563/
 
-Signed-off-by: Guido GÃ¼nther <agx@sigxcpu.org>
----
- .../devicetree/bindings/display/panel/innolux,p079zca.txt       | 2 +-
- .../devicetree/bindings/display/panel/innolux,p097pfg.txt       | 2 +-
- .../devicetree/bindings/display/panel/kingdisplay,kd097d04.txt  | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/display/panel/innolux,p079zca.txt b/Documentation/devicetree/bindings/display/panel/innolux,p079zca.txt
-index d0f55161579a..3ab8c7412cf6 100644
---- a/Documentation/devicetree/bindings/display/panel/innolux,p079zca.txt
-+++ b/Documentation/devicetree/bindings/display/panel/innolux,p079zca.txt
-@@ -12,7 +12,7 @@ Optional properties:
- Example:
- 
- 	&mipi_dsi {
--		panel {
-+		panel@0 {
- 			compatible = "innolux,p079zca";
- 			reg = <0>;
- 			power-supply = <...>;
-diff --git a/Documentation/devicetree/bindings/display/panel/innolux,p097pfg.txt b/Documentation/devicetree/bindings/display/panel/innolux,p097pfg.txt
-index 595d9dfeffd3..d1cab3a8f0fb 100644
---- a/Documentation/devicetree/bindings/display/panel/innolux,p097pfg.txt
-+++ b/Documentation/devicetree/bindings/display/panel/innolux,p097pfg.txt
-@@ -13,7 +13,7 @@ Optional properties:
- Example:
- 
- 	&mipi_dsi {
--		panel {
-+		panel@0 {
- 			compatible = "innolux,p079zca";
- 			reg = <0>;
- 			avdd-supply = <...>;
-diff --git a/Documentation/devicetree/bindings/display/panel/kingdisplay,kd097d04.txt b/Documentation/devicetree/bindings/display/panel/kingdisplay,kd097d04.txt
-index 164a5fa236da..cfefff688614 100644
---- a/Documentation/devicetree/bindings/display/panel/kingdisplay,kd097d04.txt
-+++ b/Documentation/devicetree/bindings/display/panel/kingdisplay,kd097d04.txt
-@@ -12,7 +12,7 @@ Optional properties:
- Example:
- 
- 	&mipi_dsi {
--		panel {
-+		panel@0 {
- 			compatible = "kingdisplay,kd097d04";
- 			reg = <0>;
- 			power-supply = <...>;
--- 
-2.20.1
-
+Cheers,
+ -- Guido
+    
