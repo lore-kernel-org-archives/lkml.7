@@ -2,100 +2,143 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A744C4360F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:47:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05B4BC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:51:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B43920823
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:47:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="PyRggYx2"
+	by mail.kernel.org (Postfix) with ESMTP id C566D20823
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:51:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553536280;
+	bh=YXo5aNrKEK0EVlMeYrxPR4GBMUR8+qdSey7Xzlh+O/U=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Mo8nUHs2y5ailsA7UoMyXhMHPLfLImVp+ujlQf41/WgBX3BEyIpiXow1MLfv+YqSm
+	 UNFgbCnHOaO+nRcmgoTjv1jp6BZGtFsbBsOSsOnZ0HFlZaNAi0dlOpdnQS3YZ2Pwey
+	 SyDkll45//MrQd7vWF0+SC7aaXL2dBGVAIz13Ndk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729994AbfCYRrK (ORCPT
+        id S1729829AbfCYRvT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 13:47:10 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:46644 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729632AbfCYRrJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 13:47:09 -0400
-Received: by mail-lf1-f66.google.com with SMTP id r25so6640274lfn.13
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 10:47:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=S5UyRuHVuUXWaWvAftQ+RrqzdKeuAGFwRT50Ta/UFFE=;
-        b=PyRggYx2GW8cFTkwGf+23DBrjm8VfNC9im6QUs3L7YKc1g47iMrwGUqn/LCdy3SHXU
-         Tzf52VRbxta4oKJjbhCO//gQeGGY+Q9UbmxrrQ8LuZM3DHDhRhs/BCKugbOhwV/umQS5
-         IstwLZ2JSHjQgCYtOiTeUyv3/Fjvg7vyJQ9ho/Sj2A0kYeKknn3Zi0tHNmIhBmZY4DKE
-         H6ExWJI8ehIDb++0P/xmJ1eN0M8h7ClmEJolf6q4NoSPXcpb/eGj/SUxUiuVGzwBDZZ4
-         a2j9XRDe0+wtiLxBxjW81gkY2ZK9qi5pHtqoPxhYQJQue2bx4xs5zkJlh9K38QsIVeTW
-         c0nA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=S5UyRuHVuUXWaWvAftQ+RrqzdKeuAGFwRT50Ta/UFFE=;
-        b=NgNIz9wgGOeJRBIvLLW+hx+8sN+rdzhQMqV7ZE6bAo76J5txyMnjOhe0q/TuDCVs3N
-         Ow3O5hPsaWykjGML1InDWmr5wtVJJtdCrr+CCTqWrQ6RnAOvbbhSR5vgFjvzKTQB6CXD
-         3PjUloFX5cssXGmZXoUQO1VK0CZ+opkFG3hJqwo2Z7dfdDldaImUQmKD+6omXwtoZLQh
-         hhY+c7yUoaULrh1crFGxhk3tqvkSChHnE/2FtjPyIPpTgJW/umskGCLox3JE474SqTnF
-         XahC3IejYuxBFzpUbP6/0Mb3G+1Ugjlv5TxwbGOJmmAwH8eVkfXTNITftdBY9dOO4qb5
-         Y+2A==
-X-Gm-Message-State: APjAAAUxZ+wQD6vzO3RB4ITYFqcr2z++WZq74H62I0fH36vQmUJvFMlv
-        ehLslw+zJD+Wud5mlQ58mKV8Zw==
-X-Google-Smtp-Source: APXvYqytSJnUFavFZw5eVVWaDeACX8dZsBE5EoTKe8L3dSu9GqqzRHfiBAgLpS6WDJ0fPicGEjzWTg==
-X-Received: by 2002:ac2:4304:: with SMTP id l4mr4978413lfh.168.1553536027619;
-        Mon, 25 Mar 2019 10:47:07 -0700 (PDT)
-Received: from kshutemo-mobl1.localdomain ([178.127.192.30])
-        by smtp.gmail.com with ESMTPSA id z73sm3468533lff.31.2019.03.25.10.47.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 25 Mar 2019 10:47:06 -0700 (PDT)
-Received: by kshutemo-mobl1.localdomain (Postfix, from userid 1000)
-        id B0BA230123C; Mon, 25 Mar 2019 20:47:03 +0300 (+03)
-Date:   Mon, 25 Mar 2019 20:47:03 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     TongZhang <ztong@vt.edu>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-security-module@vger.kernel.org, akpm@linux-foundation.org,
-        mhocko@suse.com, dan.j.williams@intel.com, rientjes@google.com,
-        aarcange@redhat.com, dave@stgolabs.net,
-        kirill.shutemov@linux.intel.com,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Shen Wenbo <shenwenbosmile@gmail.com>
-Subject: Re: Repost: Missing security_mmap_file() in remap_file_pages syscall
-Message-ID: <20190325174703.5cxfgif3z7gdfqhu@kshutemo-mobl1>
-References: <A6FCC3DA-C72C-4B59-A27E-E91F85949608@vt.edu>
+        Mon, 25 Mar 2019 13:51:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40982 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726024AbfCYRvT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 13:51:19 -0400
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BCAF2087E;
+        Mon, 25 Mar 2019 17:51:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553536278;
+        bh=YXo5aNrKEK0EVlMeYrxPR4GBMUR8+qdSey7Xzlh+O/U=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=QYEofgxwTNcuoA3hpYeV20JlMdKEOorB1Q7ctsVKuJytn7Fgxs/AiISFgF+5Lv/gC
+         oWo1EBEWre+153b1fOBv4ioOZmkzrWSWIaHQuM2LJy9NZwqBldcg7rpsLMiCOwlAnF
+         bbXr4kcD/Oa6BVTm0Q0zMv9G2L/zqkGec38tWUpE=
+Received: by mail-ed1-f45.google.com with SMTP id x14so5693888eds.1;
+        Mon, 25 Mar 2019 10:51:18 -0700 (PDT)
+X-Gm-Message-State: APjAAAU6tdyt77lOoRBBTy7oueUMSYawVQcYuphldd6SEqgN40Zf5/5K
+        QjeluU2VL32iUq43Jlqs/zvvXBSkNyX9YcXFJOk=
+X-Google-Smtp-Source: APXvYqyz5f/froJTIgktYkNmr58HIacuDbVwRCfWQPPNZ0ymy3ueB/f/3N4ixNahUuXNy4ScWUinxmK5qCeD1t79/sw=
+X-Received: by 2002:a17:906:5949:: with SMTP id g9mr14883618ejr.15.1553536276904;
+ Mon, 25 Mar 2019 10:51:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <A6FCC3DA-C72C-4B59-A27E-E91F85949608@vt.edu>
-User-Agent: NeoMutt/20180716
+References: <1553483264-5379-1-git-send-email-hao.wu@intel.com> <1553483264-5379-3-git-send-email-hao.wu@intel.com>
+In-Reply-To: <1553483264-5379-3-git-send-email-hao.wu@intel.com>
+From:   Alan Tull <atull@kernel.org>
+Date:   Mon, 25 Mar 2019 12:50:40 -0500
+X-Gmail-Original-Message-ID: <CANk1AXSUMkfQu8QnN-T0B5qeA4vaGxDTvGur9EGyLbGsBFBeKQ@mail.gmail.com>
+Message-ID: <CANk1AXSUMkfQu8QnN-T0B5qeA4vaGxDTvGur9EGyLbGsBFBeKQ@mail.gmail.com>
+Subject: Re: [PATCH 02/17] fpga: dfl: fme: align PR buffer size per PR datawidth
+To:     Wu Hao <hao.wu@intel.com>
+Cc:     Moritz Fischer <mdf@kernel.org>, linux-fpga@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-api@vger.kernel.org, Xu Yilun <yilun.xu@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 01:33:51PM -0400, TongZhang wrote:
-> Dear Kernel Developers,
-> 
-> We’d like to bring this up for a discussion again.
-> 
-> Several months ago we posted an email discussing a case where remap_file_pages() has no security_mmap_file() check.
-> At that time we were told that do_mmap_pgoff() will base the new VMA permission on the old one.
-> But somehow we still think the check is needed, for the reason that the advisory could first do a 
-> mmap() which can pass SELinux check then remap using a completely different file or region of file,
-> which could possibly pose a risk.
+On Sun, Mar 24, 2019 at 10:23 PM Wu Hao <hao.wu@intel.com> wrote:
 
-Could you elabarote on the risk you see? A bad scenario that could be
-prevented with SELinux check would be helpful.
+Hi Hao,
 
--- 
- Kirill A. Shutemov
+Looks good, one question below.
+
+>
+> Current driver checks if input bitstream file size is aligned or
+> not per PR data width (default 32bits). It requires one additional
+> step for end user when they generate the bitstream file, padding
+> extra zeros to bitstream file to align its size per PR data width,
+> but they don't have to as hardware will drop extra padding bytes
+> automatically.
+>
+> In order to simplify the user steps, this patch aligns PR buffer
+> size per PR data width in driver, to allow user to pass unaligned
+> size bitstream files to driver.
+>
+> Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+> Signed-off-by: Wu Hao <hao.wu@intel.com>
+> ---
+>  drivers/fpga/dfl-fme-pr.c | 14 +++++++++-----
+>  1 file changed, 9 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/fpga/dfl-fme-pr.c b/drivers/fpga/dfl-fme-pr.c
+> index d9ca955..c1fb1fe 100644
+> --- a/drivers/fpga/dfl-fme-pr.c
+> +++ b/drivers/fpga/dfl-fme-pr.c
+> @@ -74,6 +74,7 @@ static int fme_pr(struct platform_device *pdev, unsigned long arg)
+>         struct dfl_fme *fme;
+>         unsigned long minsz;
+>         void *buf = NULL;
+> +       size_t length;
+>         int ret = 0;
+>         u64 v;
+>
+> @@ -85,9 +86,6 @@ static int fme_pr(struct platform_device *pdev, unsigned long arg)
+>         if (port_pr.argsz < minsz || port_pr.flags)
+>                 return -EINVAL;
+>
+> -       if (!IS_ALIGNED(port_pr.buffer_size, 4))
+> -               return -EINVAL;
+> -
+>         /* get fme header region */
+>         fme_hdr = dfl_get_feature_ioaddr_by_id(&pdev->dev,
+>                                                FME_FEATURE_ID_HEADER);
+> @@ -103,7 +101,13 @@ static int fme_pr(struct platform_device *pdev, unsigned long arg)
+>                        port_pr.buffer_size))
+>                 return -EFAULT;
+>
+> -       buf = vmalloc(port_pr.buffer_size);
+> +       /*
+> +        * align PR buffer per PR bandwidth, as HW ignores the extra padding
+> +        * data automatically.
+> +        */
+> +       length = ALIGN(port_pr.buffer_size, 4);
+> +
+> +       buf = vmalloc(length);
+
+Since it may not be completely filled, would it be worthwhile to alloc
+a zero'ed buff?
+
+Alan
+
+>         if (!buf)
+>                 return -ENOMEM;
+>
+> @@ -140,7 +144,7 @@ static int fme_pr(struct platform_device *pdev, unsigned long arg)
+>         fpga_image_info_free(region->info);
+>
+>         info->buf = buf;
+> -       info->count = port_pr.buffer_size;
+> +       info->count = length;
+>         info->region_id = port_pr.port_id;
+>         region->info = info;
+>
+> --
+> 2.7.4
+>
