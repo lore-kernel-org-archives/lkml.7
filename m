@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA783C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 08:38:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8787CC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 08:38:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99DF020880
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 08:38:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57A122085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 08:38:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="IgnQdBJi"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="CL/HInyt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730433AbfCYIiF (ORCPT
+        id S1730451AbfCYIiO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 04:38:05 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:52466 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730077AbfCYIiD (ORCPT
+        Mon, 25 Mar 2019 04:38:14 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:36852 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730012AbfCYIiL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 04:38:03 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2P8bn3Y106880;
-        Mon, 25 Mar 2019 03:37:49 -0500
+        Mon, 25 Mar 2019 04:38:11 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2P8bbgt040030;
+        Mon, 25 Mar 2019 03:37:37 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1553503069;
-        bh=2++9Tg54a9f6hIecMipMBo4Cbzj6epb7v0EYAzsW2ns=;
+        s=ti-com-17Q1; t=1553503057;
+        bh=q3j+eLddVjEWh3KTfPJhB6vOyzvGXKalq1Td4n5w/YE=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=IgnQdBJi3zFYki0xHFr0RyibZFhJjE5eyKc/XnbAZiZ4dwNMUpex7UZn+eB2UfT16
-         /dVMHRc9PtPRiqJnxVqtiACzdf/3Ybgyn2TDvlNRAn9monCSdHbQGyE5IPsH+TZJXx
-         ND+Pgw3z3lwjMWqPeLwcM/9l7AI4h9x064L/QL7A=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2P8bni8090171
+        b=CL/HInytVykafhYka/XXTXKvqidSBo80CmlUPc1DhcekQ3aSFn6ws/7rSMB55fDmS
+         ic7eK3xzSrs9gZzt+agu33/2NOHHqjDjwKDQpgYOTVtZ0KyKJe5J4UB26Q7M+yJb0/
+         syEQ/neq/6F6lr1BK3EXPKYjE97BbWuxtxOtb0Aw=
+Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2P8bbY2093041
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 25 Mar 2019 03:37:49 -0500
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+        Mon, 25 Mar 2019 03:37:37 -0500
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 25
- Mar 2019 03:37:49 -0500
-Received: from dlep33.itg.ti.com (157.170.170.75) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_0,
+ Mar 2019 03:37:36 -0500
+Received: from dlep33.itg.ti.com (157.170.170.75) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_0,
  cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5 via Frontend Transport;
- Mon, 25 Mar 2019 03:37:49 -0500
+ Mon, 25 Mar 2019 03:37:36 -0500
 Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by dlep33.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2P8ZsG8006534;
-        Mon, 25 Mar 2019 03:37:45 -0500
+        by dlep33.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2P8ZsG5006534;
+        Mon, 25 Mar 2019 03:37:32 -0500
 From:   Kishon Vijay Abraham I <kishon@ti.com>
 To:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -61,9 +61,9 @@ CC:     Kishon Vijay Abraham I <kishon@ti.com>,
         <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>, <linux-arm-kernel@axis.com>
-Subject: [PATCH v2 26/26] misc: pci_endpoint_test: Fix test_reg_bar to be updated in pci_endpoint_test
-Date:   Mon, 25 Mar 2019 14:05:01 +0530
-Message-ID: <20190325083501.8088-27-kishon@ti.com>
+Subject: [PATCH v2 23/26] PCI: designware-ep: Configure RESBAR to advertise the smallest size
+Date:   Mon, 25 Mar 2019 14:04:58 +0530
+Message-ID: <20190325083501.8088-24-kishon@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190325083501.8088-1-kishon@ti.com>
 References: <20190325083501.8088-1-kishon@ti.com>
@@ -75,32 +75,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit 834b9051992580ac8fd3966d023b ("misc: pci_endpoint_test: Add support
-for PCI_ENDPOINT_TEST regs to be mapped to any BAR") while adding
-test_reg_bar in order to map PCI_ENDPOINT_TEST regs to be mapped to any
-BAR failed to update test_reg_bar in pci_endpoint_test. This results in
-test_reg_bar having invalid value when used outside probe. Fix it here.
-
-Fixes: 834b9051992580ac8fd3966d023b ("misc: pci_endpoint_test: Add support
-for PCI_ENDPOINT_TEST regs to be mapped to any BAR")
+Configure RESBAR capability to advertise the smallest size (1MB) for
+couple of reasons. A) Host side resource allocation of BAR fails for
+larger sizes. B) Endpoint function driver does not allocate memory
+for all supported sizes in RESBAR capability.
+If and when there is a usecase required to add more flexibility using
+RESBAR, this can be revisited.
 
 Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
- drivers/misc/pci_endpoint_test.c | 1 +
- 1 file changed, 1 insertion(+)
+ .../pci/controller/dwc/pcie-designware-ep.c   | 34 +++++++++++++++++++
+ 1 file changed, 34 insertions(+)
 
-diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-index e015e8fa9bd3..7b015f2a1c6f 100644
---- a/drivers/misc/pci_endpoint_test.c
-+++ b/drivers/misc/pci_endpoint_test.c
-@@ -670,6 +670,7 @@ static int pci_endpoint_test_probe(struct pci_dev *pdev,
- 	data = (struct pci_endpoint_test_data *)ent->driver_data;
- 	if (data) {
- 		test_reg_bar = data->test_reg_bar;
-+		test->test_reg_bar = test_reg_bar;
- 		test->alignment = data->alignment;
- 		irq_type = data->irq_type;
- 	}
+diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+index 74477ad7467f..0c208b9bda43 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-ep.c
++++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+@@ -504,10 +504,32 @@ void dw_pcie_ep_exit(struct dw_pcie_ep *ep)
+ 	pci_epc_mem_exit(epc);
+ }
+ 
++static unsigned int dw_pcie_ep_find_ext_capability(struct dw_pcie *pci, int cap)
++{
++	u32 header;
++	int pos = PCI_CFG_SPACE_SIZE;
++
++	while (pos) {
++		header = dw_pcie_readl_dbi(pci, pos);
++		if (PCI_EXT_CAP_ID(header) == cap)
++			return pos;
++
++		pos = PCI_EXT_CAP_NEXT(header);
++		if (!pos)
++			break;
++	}
++
++	return 0;
++}
++
+ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+ {
++	int i;
+ 	int ret;
++	u32 reg;
+ 	void *addr;
++	unsigned int nbars;
++	unsigned int offset;
+ 	struct pci_epc *epc;
+ 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+ 	struct device *dev = pci->dev;
+@@ -591,6 +613,18 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+ 
+ 	ep->msix_cap = dw_pcie_ep_find_capability(pci, PCI_CAP_ID_MSIX);
+ 
++	offset = dw_pcie_ep_find_ext_capability(pci, PCI_EXT_CAP_ID_REBAR);
++	if (offset) {
++		reg = dw_pcie_readl_dbi(pci, offset + PCI_REBAR_CTRL);
++		nbars = (reg & PCI_REBAR_CTRL_NBAR_MASK) >>
++			PCI_REBAR_CTRL_NBAR_SHIFT;
++
++		dw_pcie_dbi_ro_wr_en(pci);
++		for (i = 0; i < nbars; i++, offset += PCI_REBAR_CTRL)
++			dw_pcie_writel_dbi(pci, offset + PCI_REBAR_CAP, 0x0);
++		dw_pcie_dbi_ro_wr_dis(pci);
++	}
++
+ 	dw_pcie_setup(pci);
+ 
+ 	return 0;
 -- 
 2.17.1
 
