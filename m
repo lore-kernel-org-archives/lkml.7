@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE1F1C10F03
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:45:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 933E8C10F03
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:45:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AF2320700
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:45:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6770020700
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 18:45:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="W/UVp40u"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="b/qmNqaY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730368AbfCYSpj (ORCPT
+        id S1730418AbfCYSpx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 14:45:39 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:33364 "EHLO
+        Mon, 25 Mar 2019 14:45:53 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:35598 "EHLO
         mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730267AbfCYSp1 (ORCPT
+        with ESMTP id S1730261AbfCYSp0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 14:45:27 -0400
-Received: by mail-pl1-f193.google.com with SMTP id bg8so365607plb.0
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 11:45:27 -0700 (PDT)
+        Mon, 25 Mar 2019 14:45:26 -0400
+Received: by mail-pl1-f193.google.com with SMTP id p19so365020plo.2
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 11:45:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=1kmsHVHwRW2GoUjDq2HMnJ2B6KfhAjdgdc6GgqJtMbY=;
-        b=W/UVp40u5rpLdWo11qSsK1lLhrrnjrGZ2Qu0ID3ehdNvlRg6FF6W8AoIgFfIqhQYmh
-         9uHggIvfbF/HzSo5LrfI0nbgkK9bRF5Bq7seJnxU8HhEF6g5Fc7k4HiTM1I+VN/BtOFW
-         brOTKy7Ac+QR0cwOzjkytiaervP+N1SsscRIo=
+        bh=HU7yuDm8Y1RRdsoUGwsej4fqxozu4cJsDeGBIryMkHY=;
+        b=b/qmNqaY1Sneu02VrFzYXfLnTX4W3+n6LQE8UZvUtWTr9Uai7zgvAqY9rLCSWmYiKi
+         TQKQGC8V9iXNg4siXEdtNjkFKe7apc7pDoDheRFh0CsbmWyAZyo66AbKCouv8vQ576R2
+         1eZUJjS8LFlQrbH9oMmMLIsuhx5K1ZVKzJnaA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=1kmsHVHwRW2GoUjDq2HMnJ2B6KfhAjdgdc6GgqJtMbY=;
-        b=I3ulXM78y9y/T/rDr7jYDTr1pLFUd2RV5IQNWBi13Dd0zGn5rqGA86I35GpRQZg+2A
-         AgV0affocQkzf0nRZnfIbYjSEv+D5uBBcmkx2V3kzTMvektboF2xfcSb4G1umPzVR3dr
-         vp5dz99KUZ+WnTECKCJSEY8AkZQML79G+FAJlo1AWHoeNDzAZjoXRYuEhS30bO3kEKrg
-         al2bKCvqsu81j/GYQo8ePiRWi44/LSOP0IShcEn6gWQ0h1RQzqa8ofCDaBiBMzeJ28Nr
-         tPtqjJa/LJtb920Up+cdSQloGdINZudmKoDWOp1jFfjCGtR0T6K/F2eUfWLh5Q9m2TzB
-         Xl6Q==
-X-Gm-Message-State: APjAAAWB5fYhSsrYFexKeNbV3XXvsVVyAQm7AjWtqoSNa4KyCPD1rz2W
-        zUb4cnT26toOexlQXenUV5m3mQ==
-X-Google-Smtp-Source: APXvYqwWgUxC/tyW+5KDXQlOhGy5c+v1BE4kRzaPRDI8uis1jyNs8dxgjh84Dj93HNDHo2sLnJmEOg==
-X-Received: by 2002:a17:902:848f:: with SMTP id c15mr26795259plo.240.1553539527172;
-        Mon, 25 Mar 2019 11:45:27 -0700 (PDT)
-Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id h3sm27505108pfb.31.2019.03.25.11.45.26
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        bh=HU7yuDm8Y1RRdsoUGwsej4fqxozu4cJsDeGBIryMkHY=;
+        b=ge3JzXyjZjTCjIrJhV+DxT+oXCWxmynWJPmKCbK8sO6uPNVNAZKk3pMOovUajSIJfu
+         9ccY/Tb5NiODXcRYIKiWRyQlGczIQ1s20ePvA3VLXMuamTJqr6EXC9hgeG0ZhxLoXJro
+         LqY3Z+yuJp4+eQcTGmktJG8vNGQjfDeUAOtltlMO35gb0nhhOw7aClK9aHjPvP3DmYST
+         LL25T9hTZVNvjyAvJngHHzlsO6JTv/XYNZ/1HMU3EtuHDGCTVSNKS1UKV/b6cX35eZwi
+         RCnEs7LZD0EJDHFTg8SG+VEREFx1gM3Gi4rHMNw0MPrag8WsL2KA4IcN29glQ33wEA1y
+         CA3A==
+X-Gm-Message-State: APjAAAV3w/4Lvy5pojy3ePKBgO9XwLHcM5sNOvov5CO+qHmC49nXc1Kx
+        9G0XrOZkPFV5T3b53Lzo5Tpk7g==
+X-Google-Smtp-Source: APXvYqwzIsTQ12Af8tucvjP1WMRJqPzNmgYegWhY+TyKe4r3Gbldkl5PB4G4kHfCiXqSyWmwsUpMng==
+X-Received: by 2002:a17:902:7896:: with SMTP id q22mr27385924pll.66.1553539526223;
         Mon, 25 Mar 2019 11:45:26 -0700 (PDT)
+Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id h3sm27505108pfb.31.2019.03.25.11.45.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 25 Mar 2019 11:45:25 -0700 (PDT)
 From:   Stephen Boyd <swboyd@chromium.org>
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     linux-kernel@vger.kernel.org,
@@ -62,9 +62,9 @@ Cc:     linux-kernel@vger.kernel.org,
         Kieran Bingham <kbingham@kernel.org>,
         Jan Kiszka <jan.kiszka@siemens.com>,
         Jackie Liu <liuyun01@kylinos.cn>
-Subject: [PATCH 3/4] scripts/gdb: Add rb tree iterating utilities
-Date:   Mon, 25 Mar 2019 11:45:21 -0700
-Message-Id: <20190325184522.260535-4-swboyd@chromium.org>
+Subject: [PATCH 2/4] scripts/gdb: Add kernel config dumping command
+Date:   Mon, 25 Mar 2019 11:45:20 -0700
+Message-Id: <20190325184522.260535-3-swboyd@chromium.org>
 X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
 In-Reply-To: <20190325184522.260535-1-swboyd@chromium.org>
 References: <20190325184522.260535-1-swboyd@chromium.org>
@@ -75,9 +75,17 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement gdb functions for rb_first(), rb_last(), rb_next(), and
-rb_prev(). These can be useful to iterate through the kernel's red-black
-trees.
+lx-configdump <file> dumps the contents of the gzipped .config to a text
+file when the config is included in the kernel with CONFIG_IKCONFIG. By
+default, the file written is called config.txt, but it can be any user
+supplied filename as well. If the kernel config is in a module
+(configs.ko), then it can be loaded along with symbols for the module
+loaded with 'lx-symbols' and then this command will still work.
+
+Obviously if you have the whole vmlinux then this can also be achieved
+with scripts/extract-ikconfig, but this gdb script can be useful to
+confirm that the memory contents of the config in memory and the vmlinux
+contents on disk match what is expected.
 
 Cc: Douglas Anderson <dianders@chromium.org>
 Cc: Nikolay Borisov <n.borisov.lkml@gmail.com>
@@ -86,197 +94,77 @@ Cc: Jan Kiszka <jan.kiszka@siemens.com>
 Cc: Jackie Liu <liuyun01@kylinos.cn> 
 Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 ---
- scripts/gdb/linux/rbtree.py | 169 ++++++++++++++++++++++++++++++++++++
- scripts/gdb/vmlinux-gdb.py  |   1 +
- 2 files changed, 170 insertions(+)
- create mode 100644 scripts/gdb/linux/rbtree.py
+ scripts/gdb/linux/config.py | 48 +++++++++++++++++++++++++++++++++++++
+ scripts/gdb/vmlinux-gdb.py  |  1 +
+ 2 files changed, 49 insertions(+)
+ create mode 100644 scripts/gdb/linux/config.py
 
-diff --git a/scripts/gdb/linux/rbtree.py b/scripts/gdb/linux/rbtree.py
+diff --git a/scripts/gdb/linux/config.py b/scripts/gdb/linux/config.py
 new file mode 100644
-index 000000000000..fd7b0b961ca1
+index 000000000000..400f09bb2665
 --- /dev/null
-+++ b/scripts/gdb/linux/rbtree.py
-@@ -0,0 +1,169 @@
++++ b/scripts/gdb/linux/config.py
+@@ -0,0 +1,48 @@
 +# SPDX-License-Identifier: GPL-2.0
 +#
 +# Copyright 2019 Google LLC.
 +
 +import gdb
++import zlib
 +
 +from linux import utils
 +
-+rb_root_type = utils.CachedType("struct rb_root")
-+rb_node_type = utils.CachedType("struct rb_node")
-+
-+
-+def rb_first(root):
-+    if root.type == rb_root_type.get_type():
-+        node = node.address.cast(rb_root_type.get_type().pointer())
-+    elif root.type != rb_root_type.get_type().pointer():
-+        raise gdb.GdbError("Must be struct rb_root not {}"
-+                .format(root.type))
-+
-+    node = root['rb_node']
-+    if node is 0:
-+        return None
-+
-+    while node['rb_left']:
-+        node = node['rb_left']
-+
-+    return node
-+
-+def rb_last(root):
-+    if root.type == rb_root_type.get_type():
-+        node = node.address.cast(rb_root_type.get_type().pointer())
-+    elif root.type != rb_root_type.get_type().pointer():
-+        raise gdb.GdbError("Must be struct rb_root not {}"
-+                .format(root.type))
-+
-+    node = root['rb_node']
-+    if node is 0:
-+        return None
-+
-+    while node['rb_right']:
-+        node = node['rb_right']
-+
-+    return node
-+
-+def rb_parent(node):
-+    parent = gdb.Value(node['__rb_parent_color'] & ~3)
-+    return parent.cast(rb_node_type.get_type().pointer())
-+
-+def rb_empty_node(node):
-+    return node['__rb_parent_color'] == node.address
-+
-+def rb_next(node):
-+    if node.type == rb_node_type.get_type():
-+        node = node.address.cast(rb_node_type.get_type().pointer())
-+    elif node.type != rb_node_type.get_type().pointer():
-+        raise gdb.GdbError("Must be struct rb_node not {}"
-+                .format(node.type))
-+
-+    if rb_empty_node(node):
-+        return None
-+
-+    if node['rb_right']:
-+        node = node['rb_right']
-+        while node['rb_left']:
-+            node = node['rb_left']
-+        return node
-+
-+    parent = rb_parent(node)
-+    while parent and node == parent['rb_right']:
-+            node = parent
-+            parent = rb_parent(node)
-+
-+    return parent
-+
-+def rb_prev(node):
-+    if node.type == rb_node_type.get_type():
-+        node = node.address.cast(rb_node_type.get_type().pointer())
-+    elif node.type != rb_node_type.get_type().pointer():
-+        raise gdb.GdbError("Must be struct rb_node not {}"
-+                .format(node.type))
-+
-+    if rb_empty_node(node):
-+        return None
-+
-+    if node['rb_left']:
-+        node = node['rb_left']
-+        while node['rb_right']:
-+            node = node['rb_right']
-+        return node.dereference()
-+
-+    parent = rb_parent(node)
-+    while parent and node == parent['rb_left'].dereference():
-+            node = parent
-+            parent = rb_parent(node)
-+
-+    return parent
-+
-+
-+class LxRbFirst(gdb.Function):
-+    """Lookup and return a node from an RBTree
-+
-+$lx_rb_first(root): Return the node at the given index.
-+If index is omitted, the root node is dereferenced and returned."""
++class LxConfigDump(gdb.Command):
++    """Output kernel config to the filename specified as the command
++       argument. Equivalent to 'zcat /proc/config.gz > config.txt' on
++       a running target"""
 +
 +    def __init__(self):
-+        super(LxRbFirst, self).__init__("lx_rb_first")
++        super(LxConfigDump, self).__init__("lx-configdump", gdb.COMMAND_DATA,
++                                        gdb.COMPLETE_FILENAME)
 +
-+    def invoke(self, root):
-+        result = rb_first(root)
-+        if result is None:
-+            raise gdb.GdbError("No entry in tree")
++    def invoke(self, arg, from_tty):
++        if len(arg) == 0:
++            filename = "config.txt"
++        else:
++            filename = arg
 +
-+        return result
++        try:
++            py_config_ptr = gdb.parse_and_eval(
++                "kernel_config_data + 8")
++            py_config_size = gdb.parse_and_eval(
++                "sizeof(kernel_config_data) - 2 - 8 * 2")
++        except:
++            raise gdb.GdbError("Can't find config, enable CONFIG_IKCONFIG?")
 +
-+LxRbFirst()
++        inf = gdb.inferiors()[0]
++        zconfig_buf = utils.read_memoryview(inf, py_config_ptr,
++                                        py_config_size).tobytes()
 +
-+class LxRbLast(gdb.Function):
-+    """Lookup and return a node from an RBTree.
++        config_buf = zlib.decompress(zconfig_buf, 16)
++        try:
++            f = open(filename, 'wb')
++        except:
++            raise gdb.GdbError("Could not open file to dump config")
 +
-+$lx_rb_last(root): Return the node at the given index.
-+If index is omitted, the root node is dereferenced and returned."""
++        f.write(config_buf)
++        f.close()
 +
-+    def __init__(self):
-+        super(LxRbLast, self).__init__("lx_rb_last")
++        gdb.write("Dumped config to " + filename + "\n")
 +
-+    def invoke(self, root):
-+        result = rb_last(root)
-+        if result is None:
-+            raise gdb.GdbError("No entry in tree")
-+
-+        return result
-+
-+LxRbLast()
-+
-+class LxRbNext(gdb.Function):
-+    """Lookup and return a node from an RBTree.
-+
-+$lx_rb_next(node): Return the node at the given index.
-+If index is omitted, the root node is dereferenced and returned."""
-+
-+    def __init__(self):
-+        super(LxRbNext, self).__init__("lx_rb_next")
-+
-+    def invoke(self, node):
-+        result = rb_next(node)
-+        if result is None:
-+            raise gdb.GdbError("No entry in tree")
-+
-+        return result
-+
-+LxRbNext()
-+
-+class LxRbPrev(gdb.Function):
-+    """Lookup and return a node from an RBTree.
-+
-+$lx_rb_prev(node): Return the node at the given index.
-+If index is omitted, the root node is dereferenced and returned."""
-+
-+    def __init__(self):
-+        super(LxRbPrev, self).__init__("lx_rb_prev")
-+
-+    def invoke(self, node):
-+        result = rb_prev(node)
-+        if result is None:
-+            raise gdb.GdbError("No entry in tree")
-+
-+        return result
-+
-+LxRbPrev()
++LxConfigDump()
 diff --git a/scripts/gdb/vmlinux-gdb.py b/scripts/gdb/vmlinux-gdb.py
-index be0efb5dda5b..89e4aa4f8966 100644
+index 6e0b0afd888a..be0efb5dda5b 100644
 --- a/scripts/gdb/vmlinux-gdb.py
 +++ b/scripts/gdb/vmlinux-gdb.py
-@@ -30,5 +30,6 @@ else:
-     import linux.config
+@@ -27,6 +27,7 @@ else:
+     import linux.modules
+     import linux.dmesg
+     import linux.tasks
++    import linux.config
      import linux.cpus
      import linux.lists
-+    import linux.rbtree
      import linux.proc
-     import linux.constants
 -- 
 Sent by a computer through tubes
 
