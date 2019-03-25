@@ -2,96 +2,89 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3678C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 15:20:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F090C10F06
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 15:24:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A346A20879
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 15:20:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A59F2147C
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 15:24:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729036AbfCYPUe (ORCPT
+        id S1729273AbfCYPYU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 11:20:34 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:48910 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726182AbfCYPUe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 11:20:34 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 0D811CBEAF8702F401B7;
-        Mon, 25 Mar 2019 23:20:27 +0800 (CST)
-Received: from [127.0.0.1] (10.184.227.228) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.408.0; Mon, 25 Mar 2019
- 23:20:19 +0800
-Subject: Re: kernel BUG at net/core/net-sysfs.c:LINE!
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        syzbot <syzbot+6024817a931b2830bc93@syzkaller.appspotmail.com>
-CC:     <alexander.h.duyck@intel.com>, <amritha.nambiar@intel.com>,
-        <davem@davemloft.net>, <dmitry.torokhov@gmail.com>,
-        <f.fainelli@gmail.com>, <idosch@mellanox.com>, <joe@perches.com>,
-        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <stephen@networkplumber.org>, <syzkaller-bugs@googlegroups.com>,
-        <tyhicks@canonical.com>, <yuehaibing@huawei.com>
-References: <000000000000e644ba0584bdf7e8@google.com>
- <20190323171621.GF9224@smile.fi.intel.com>
-From:   "wanghai (M)" <wanghai26@huawei.com>
-Message-ID: <280fdb18-4948-968d-faa6-23197cd2b23e@huawei.com>
-Date:   Mon, 25 Mar 2019 23:20:01 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+        Mon, 25 Mar 2019 11:24:20 -0400
+Received: from mga02.intel.com ([134.134.136.20]:41697 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726127AbfCYPYT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 11:24:19 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Mar 2019 08:24:17 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,269,1549958400"; 
+   d="scan'208";a="128504383"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
+  by orsmga008.jf.intel.com with ESMTP; 25 Mar 2019 08:24:11 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1h8RSL-0007EQ-PF; Mon, 25 Mar 2019 17:24:09 +0200
+Date:   Mon, 25 Mar 2019 17:24:09 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        scsi <linux-scsi@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Linux MMC List <linux-mmc@vger.kernel.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-block@vger.kernel.org,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        linux-btrfs <linux-btrfs@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        sparclinux <sparclinux@vger.kernel.org>,
+        xen-devel@lists.xenproject.org,
+        ceph-devel <ceph-devel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Lars Ellenberg <drbd-dev@lists.linbit.com>
+Subject: Re: [PATCH 0/2] Remove support for deprecated %pf and %pF in vsprintf
+Message-ID: <20190325152409.GF9224@smile.fi.intel.com>
+References: <20190322132108.25501-1-sakari.ailus@linux.intel.com>
+ <CAMuHMdVmqqjVx7As9AAywYxYXG=grijF5rF77OBn6TUjM9+xKw@mail.gmail.com>
+ <20190322135350.2btpno7vspvewxvk@paasikivi.fi.intel.com>
+ <20190322170550.GX9224@smile.fi.intel.com>
+ <20190324211008.lypghym3gqcp62th@mara.localdomain>
+ <20190324211932.GK9224@smile.fi.intel.com>
+ <20190325151259.2w22y4ijqilrbaxj@kekkonen.localdomain>
 MIME-Version: 1.0
-In-Reply-To: <20190323171621.GF9224@smile.fi.intel.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.184.227.228]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190325151259.2w22y4ijqilrbaxj@kekkonen.localdomain>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-thanks , Can it be fixed like this?
+On Mon, Mar 25, 2019 at 05:13:00PM +0200, Sakari Ailus wrote:
 
-diff --git a/net/core/net-sysfs.c b/net/core/net-sysfs.c
-index 4ff661f..e609c8d 100644
---- a/net/core/net-sysfs.c
-+++ b/net/core/net-sysfs.c
-@@ -1745,16 +1745,21 @@ int netdev_register_kobject(struct net_device *ndev)
+> All other invalid pointer conversion specifiers currently result into a
+> warning only. I see that as an orthogonal change to this set. I found
+> another issue in checkpatch.pl that may require some discussion; would you
+> be ok with addressing this in another set?
 
-         error = device_add(dev);
-         if (error)
--               return error;
-+               goto error_put_device;
+If it looks better that way, I have no objection.
 
-         error = register_queue_kobjects(ndev);
--       if (error) {
--               device_del(dev);
--               return error;
--       }
-+       if (error)
-+               goto error_device_del;
+-- 
+With Best Regards,
+Andy Shevchenko
 
-         pm_runtime_set_memalloc_noio(dev, true);
-
-+       return 0;
-+
-+error_device_del:
-+       device_del(dev);
-+error_put_device:
-+       ndev->reg_state = NETREG_RELEASED;
-+       put_device(dev);
-         return error;
-  }
-
-在 2019/3/24 1:16, Andy Shevchenko 写道:
-> Nice.
->
-> I looked briefly in the flow of this report and it looks like the patch above
-> should be reverted.
->
-> The problem is not so easy to fix. One approach is to initialize device
-> (and thus kobject) somewhere in alloc_netdev() and put device in free_netdev()
-> respectively, but this might produce more interesting regressions.
 
