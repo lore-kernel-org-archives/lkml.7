@@ -4,176 +4,113 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A952C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:45:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9350FC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:45:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC9EE20693
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:45:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553550324;
-	bh=kB9igm/FCAW80YnJMskcdFGh4XZxwEvYpPqFQaP+aBo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=SoHMvpdUghitlTAQKeESe/66IDDWbvgCFimKuOlGHMxrYKtnlnu1SysJVRmhjNV/M
-	 gGtvJY28G5sf/e3TDWjXtmtdP95sKps4fEr6UnejlNsKmj6JAFLmfob4liC+whyhbI
-	 jbGjKrHLmrPeHWikRkqbItPY4OfOFh+JnHHouK+c=
+	by mail.kernel.org (Postfix) with ESMTP id 541AE20693
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 21:45:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (4096-bit key) header.d=d-silva.org header.i=@d-silva.org header.b="A65bYuxO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730180AbfCYVpW (ORCPT
+        id S1730361AbfCYVpg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 17:45:22 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:36554 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729106AbfCYVpV (ORCPT
+        Mon, 25 Mar 2019 17:45:36 -0400
+Received: from ushosting.nmnhosting.com ([167.160.173.127]:54220 "EHLO
+        ushosting.nmnhosting.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729106AbfCYVpf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 17:45:21 -0400
-Received: by mail-lf1-f68.google.com with SMTP id d18so7138637lfn.3
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 14:45:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RyrGMeVONhvfWoKfN08XEzZDL45w36KigWKOTw1mc3I=;
-        b=Uz0aIzxx/3EgWDjsNP/gnfIPI2LVbLni/Kmq7pLXtN7Ip3sVQMgxHR3LDF4zfNwEbJ
-         eOAKhAIb+QUbOmu4vwn04d+2RgFG7hT04bLNwtW22w9kkJKfQ46cFKG2SwvQnIOV1Xyf
-         /homDzyLih6emk2h3yM48/WKn/oFK/YFsuKek=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RyrGMeVONhvfWoKfN08XEzZDL45w36KigWKOTw1mc3I=;
-        b=iQe1BZ/RTTbX+zg1etI+1c3+Ni9bWPeIz0E/atdW2cdQL12n/Gr7CC1eyL2pKGVIdy
-         DJmXtXMtZxTBWd+eFqF19F4KvoNlMTsd+HYZloBJlCPjpwv9nwVxBN3ExhFPDzWvDlj/
-         b7tMBT/h7eKr7B44TfSbYWsHhnMRdfXPZRxvoQus49slZv0HhWFz8ipDBBP/Ss2mLnrQ
-         KcHKfvr2CY/Lab/6xk5MHyPBH7B/p5u8EcZu5pbKpGGbz0JmX5T7YnH9g6EyYdKu6zBZ
-         n8lAzLydKLXmx0BByFZXWbDGtEGJ8muauu3HcWWSqGtbch5D8uvkW1UkHDaTkw0PkAQD
-         Rw3A==
-X-Gm-Message-State: APjAAAVbgxru1mgyfVcdJExS2qFhk40L+K5DIPcvJ8nGDmtZ9d0SisGE
-        vfakMy2dqodH2Ptv8oezWlK5WWt9faE=
-X-Google-Smtp-Source: APXvYqzh8wIdxzsbqFY0DIhkTDTMHAy092DXE6ZC4N8VYjVpeqQAUvTiX6jOBPgacehlAp90GsiA+w==
-X-Received: by 2002:a19:9209:: with SMTP id u9mr14256463lfd.71.1553550317937;
-        Mon, 25 Mar 2019 14:45:17 -0700 (PDT)
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
-        by smtp.gmail.com with ESMTPSA id c7sm3931498lja.90.2019.03.25.14.45.16
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 25 Mar 2019 14:45:16 -0700 (PDT)
-Received: by mail-lj1-f180.google.com with SMTP id l7so9249329ljg.6
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 14:45:16 -0700 (PDT)
-X-Received: by 2002:a2e:960b:: with SMTP id v11mr4509575ljh.135.1553550316377;
- Mon, 25 Mar 2019 14:45:16 -0700 (PDT)
+        Mon, 25 Mar 2019 17:45:35 -0400
+Received: from mail2.nmnhosting.com (unknown [202.169.106.97])
+        by ushosting.nmnhosting.com (Postfix) with ESMTPS id E3ACB2F287F0;
+        Mon, 25 Mar 2019 17:45:33 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=d-silva.org;
+        s=201810a; t=1553550334;
+        bh=bxDjUeTmvb4ejswIF03RrXxYLx7YRmxOTuDyR4F4ONs=;
+        h=From:To:Cc:References:In-Reply-To:Subject:Date:From;
+        b=A65bYuxOR6G484SPOsMLInQgQbbBid24SyFe7qVU42e6EhFfKR8FwajL37HTOKQJW
+         GkYrJsA2/BXGPY7GZqqX5G2kuOP63kcxhuyIF/rWTRln3qBEgV4dBiTw9/5sTtJPHl
+         QcDIlPHTMlzPq8532YkAgJO6lPkG0ubOje9BgUXe/eew0GaBZHW2ZVQHWfoVJ4RGa2
+         v9TmqDVpL6Ah7e00RHR7ubb1P+5fot5IA2IIW6YT5cDcj32Gnk1smz2DTGrPOeTgbj
+         Vf6dpwdel0iLgMaO4T/7/5m9nO/ZZdJso9nyP10D59sLdRyhg3nvWP6vvkVuvhGnMy
+         k+DeOEEWDOnbPMIvpJMmooBQJI/6MlwFgKPOWH1ssem2q3TGmOqpfr6/wOIkFPs9qW
+         CGRcbRoauE9wvRVn+1JzSrm55JRUG4WgmbKGPl8I27+VpkZwT12T9ca98mQ16KV6rA
+         g8mMeFx3XCBRpd7Wsk4FEhZwjqldp0NzJ0JJJ4mkTw5e1d5ZLCD7hgzAEHAkm9SYzc
+         yCYtJUdNZdlTcDch9uXt5PGCCrkPnIGP94C/8nPRKOal2Zzwm78QghdyODI6FXvUfO
+         aUw5APLiEHp2czBavEqGkTHthwxT/4fCml2+zY4yXzMZ2xIys+T/5V70bJJqloExe3
+         oj6DfPeGYB51kWy1JnqKoMu0=
+Received: from Hawking (ntp.lan [10.0.1.1])
+        (authenticated bits=0)
+        by mail2.nmnhosting.com (8.15.2/8.15.2) with ESMTPSA id x2PLjRKH071802
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Tue, 26 Mar 2019 08:45:28 +1100 (AEDT)
+        (envelope-from alastair@d-silva.org)
+From:   "Alastair D'Silva" <alastair@d-silva.org>
+To:     "'Frederic Barrat'" <fbarrat@linux.ibm.com>,
+        "'Greg Kurz'" <groug@kaod.org>,
+        "'Alastair D'Silva'" <alastair@au1.ibm.com>
+Cc:     "'Arnd Bergmann'" <arnd@arndb.de>,
+        "'Greg Kroah-Hartman'" <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>,
+        "'Andrew Donnellan'" <andrew.donnellan@au1.ibm.com>,
+        <linuxppc-dev@lists.ozlabs.org>
+References: <20190320053448.2098-1-alastair@au1.ibm.com> <20190325053456.14599-1-alastair@au1.ibm.com> <20190325174919.5c877cf9@bahia.lab.toulouse-stg.fr.ibm.com> <5d6792fe-f4db-b973-c654-460533f69f2f@linux.ibm.com>
+In-Reply-To: <5d6792fe-f4db-b973-c654-460533f69f2f@linux.ibm.com>
+Subject: RE: [PATCH v4 0/4] ocxl: OpenCAPI Cleanup
+Date:   Tue, 26 Mar 2019 08:45:31 +1100
+Message-ID: <1121601d4e354$126a2050$373e60f0$@d-silva.org>
 MIME-Version: 1.0
-References: <0000000000006946d2057bbd0eef@google.com> <CAHk-=wiijJMTw=nTj_ED+YWMCrvHzh3ezfVYRxvzcW6+trgyPA@mail.gmail.com>
- <20190325045744.GK2217@ZenIV.linux.org.uk> <CAHk-=wg4iJsMHBzK52WzP+5_92HbwvX_vh_s4mMUuN0FJGdM5A@mail.gmail.com>
- <CAHk-=whJ4M5FegOLvnjUtJ0+pHv4L8UNFt+9jJDhox3Ada8kwA@mail.gmail.com> <20190325211405.GP2217@ZenIV.linux.org.uk>
-In-Reply-To: <20190325211405.GP2217@ZenIV.linux.org.uk>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 25 Mar 2019 14:45:00 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wj+-e=X9cvvNwc5+QuvBOyYT7OtZTBzy-Wg8zGrUwxSbw@mail.gmail.com>
-Message-ID: <CAHk-=wj+-e=X9cvvNwc5+QuvBOyYT7OtZTBzy-Wg8zGrUwxSbw@mail.gmail.com>
-Subject: Re: KASAN: use-after-free Read in path_lookupat
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     syzbot <syzbot+7a8ba368b47fdefca61e@syzkaller.appspotmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+        charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQJxQ5zc/X54GvcuUabOLzZoxv3nuQHodgkHAh5VXE0CmKCoGqSvJWGw
+Content-Language: en-au
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.2 (mail2.nmnhosting.com [10.0.1.20]); Tue, 26 Mar 2019 08:45:28 +1100 (AEDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 2:14 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
->
-> Maybe, but we really need to come up with sane documentation on the
-> entire drop_inode/evict_inode/destroy_inode/rcu_destroy_inode
-> group ;-/
+> -----Original Message-----
+> From: Frederic Barrat <fbarrat@linux.ibm.com>
+> Sent: Tuesday, 26 March 2019 4:34 AM
+> To: Greg Kurz <groug@kaod.org>; Alastair D'Silva =
+<alastair@au1.ibm.com>
+> Cc: alastair@d-silva.org; Arnd Bergmann <arnd@arndb.de>; Greg Kroah-
+> Hartman <gregkh@linuxfoundation.org>; linux-kernel@vger.kernel.org;
+> Andrew Donnellan <andrew.donnellan@au1.ibm.com>; linuxppc-
+> dev@lists.ozlabs.org
+> Subject: Re: [PATCH v4 0/4] ocxl: OpenCAPI Cleanup
+>=20
+>=20
+>=20
+> Le 25/03/2019 =C3=A0 17:49, Greg Kurz a =C3=A9crit :
+> > Hi Alastair,
+> >
+> > I forgot to mention it during v3 but please don't link new version =
+of
+> > a patchset to the previous one with --in-reply-to. This is to ensure =
+I
+> > can see them in my email client without having to scroll back many
+> > days in the past (which likely means a fair number of e-mails on
+> > linuxppc-dev).
+>=20
+>=20
+> I'm also seeing the other series (ocxl refactoring) somehow under the =
+same
+> thread. I haven't checked why, and there may be some mail client bug =
+in the
+> way, I just mention it in case you see a reason for it in the way you =
+submit
+> the patch set.
+>=20
 
-Yeah.
+I probably grabbed the wrong message-id.
 
-I actually think the "destroy_inode/rcu_destroy_inode" part is the
-simplest one to understand: it's just tearing down the inode, and the
-RCU part is (obviously, as shown by this thread) somewhat subtle, but
-at the same time not really all that hard to explain: "inodes that can
-be looked up through RCU lookup need to be destroyed with RCU delay".
+--=20
+Alastair D'Silva           mob: 0423 762 819
+skype: alastair_dsilva     msn: alastair@d-silva.org
+blog: http://alastair.d-silva.org    Twitter: @EvilDeece
 
-I think drop_inode->evict_inode is arguably the much more subtle
-stuff. That's the "we're not destroying things, we're making decisions
-about the state" kind of thing.
-
-And we actually don't have any documentation at all for those two.
-Well, there's the "porting" thing, but..
-
-> And I want to understand the writeback-related issues
-> in ocfs2 and f2fs - the current kludges in those smell fishy.
-
-I'm assuming you're talking about exactly that drop_inode() kind of subtlety.
-
-At least for ocfs2, the whole "rcu_destroy_inode()" patch I sent out
-would simplify things a lot. *All* that the ocfs2_destroy_inode()
-function does is to schedule the inode freeing for RCU delay.
-
-Assuming my patch is fine (as mentioned, it was entirely untested),
-that patch would actually simplify that a lot. Get rid of
-ocfs2_destroy_inode() entirely, and just make
-ocfs2_rcu_destroy_inode() do that kmem_cache_free(). Mucho clean-up
-(we have that ocfs2_rcu_destroy_inode() currently as
-ocfs2_i_callback(), but with the ugly rcu-head interface).
-
-> >       if (unlikely(inode_init_always(sb, inode))) {
-> > -             if (inode->i_sb->s_op->destroy_inode)
-> > +             if (inode->i_sb->s_op->destroy_inode) {
-> >                       inode->i_sb->s_op->destroy_inode(inode);
-> > -             else
-> > +                     if (!inode->i_sb->s_op->rcu_destroy_inode)
-> > +                             return NULL;
-> > +             }
-> > +             if (!inode->i_sb->s_op->rcu_destroy_inode ||
-> > +                 !inode->i_sb->s_op->rcu_destroy_inode(inode))
-> >                       kmem_cache_free(inode_cachep, inode);
->
-> ITYM  i_callback(inode); here, possibly suitably renamed.
-
-Yeah, I guess we could just call that i_callback() directly. I wrote
-it that way because it was how the code was organized (it didn't call
-i_callback() before either), but yes, it woudl avoid some duplicate
-code to do it that way.
-
-And yes, at that point we'd probably want to rename it too.
-
-On the whole, looking at a few filesystems, I really think that
-'rcu_destroy_inode()" would simplify several of them.  That ocfs2 case
-I already mentioned, but looking around the exact same is trye in
-v9fs, vxfs, dlmfs, hostfs, bfs, coda, fatfs, isofs, minix, nfs,
-openprom, proc, qnx4, qnx6, sysv, befs, adfs, affs, efs, ext2, f2fs,
-gfs2, hfs, hfsplus, hpfs, jffs2, nilfs, reiserfs, romfs, squashfs)
-
-And in other filesystems that actually *do* have a real
-destroy_inode() that does other things too, they still want the rcu
-delayed part as well (eg btrfs, ceph, fuse, hugetlbfs, afs, ecryptfs,
-ext4, jfs, organgefs, ovl, ubifs).
-
-In fact, every single filesystem I looked at (and I looked at most)
-would be simplified by that patch.
-
-And for some it would make it easier to fix bugs in the process (ie
-bpf) because they don't currently have that rcu delay and they need
-it.
-
-So looking at all the existing users of destroy_inode(), I really do
-think we should have that rcu_destroy_inode() callback. Because that
-
- 3 files changed, 28 insertions(+), 6 deletions(-)
-
-will allow quite a lot of lines to be removed from low-level
-filesystems with all the call_rcu() and callback container_of(head,
-struct inode, i_rcu) noise just going away.
-
-But yes, it would be good to have more documentation fo the drop/evict
-phase. As mentioned, I think the destroy phase is actually the easy
-one, with the RCU part being the most complex one that this would
-actually simplify.
-
-                   Linus
