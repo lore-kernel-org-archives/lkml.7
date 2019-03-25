@@ -6,155 +6,176 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04939C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 01:58:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9004FC10F00
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 02:04:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBFCB2087F
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 01:58:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A77320883
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 02:04:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729280AbfCYB6b (ORCPT
+        id S1729289AbfCYCEo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 24 Mar 2019 21:58:31 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39316 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729231AbfCYB6b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 24 Mar 2019 21:58:31 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 408F13084295;
-        Mon, 25 Mar 2019 01:58:30 +0000 (UTC)
-Received: from localhost.localdomain (ovpn-12-53.pek2.redhat.com [10.72.12.53])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B0E4710018F9;
-        Mon, 25 Mar 2019 01:58:15 +0000 (UTC)
-Subject: Re: [PATCH 1/3] kexec: Do not map the kexec area as decrypted when
- SEV is active
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
-        tglx@linutronix.de, mingo@redhat.com, x86@kernel.org,
-        hpa@zytor.com, akpm@linux-foundation.org, dyoung@redhat.com,
-        brijesh.singh@amd.com, thomas.lendacky@amd.com, bhe@redhat.com
-References: <20190315103203.13128-1-lijiang@redhat.com>
- <20190315103203.13128-2-lijiang@redhat.com> <20190324150034.GH23289@zn.tnic>
-From:   lijiang <lijiang@redhat.com>
-Message-ID: <7b115829-40d9-e55e-dee3-ec8e4766971f@redhat.com>
-Date:   Mon, 25 Mar 2019 09:58:07 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+        Sun, 24 Mar 2019 22:04:44 -0400
+Received: from szxga08-in.huawei.com ([45.249.212.255]:52326 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729154AbfCYCEo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 24 Mar 2019 22:04:44 -0400
+Received: from DGGEMM401-HUB.china.huawei.com (unknown [172.30.72.53])
+        by Forcepoint Email with ESMTP id AED623DA7237F3D6C672;
+        Mon, 25 Mar 2019 10:04:41 +0800 (CST)
+Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
+ DGGEMM401-HUB.china.huawei.com (10.3.20.209) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Mon, 25 Mar 2019 10:04:41 +0800
+Received: from [10.134.22.195] (10.134.22.195) by
+ dggeme763-chm.china.huawei.com (10.3.19.109) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Mon, 25 Mar 2019 10:04:40 +0800
+Subject: Re: [PATCH 1/3] staging: erofs: fix error handling when failed to
+ read compresssed data
+To:     Gao Xiang <gaoxiang25@huawei.com>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <devel@driverdev.osuosl.org>, LKML <linux-kernel@vger.kernel.org>,
+        <linux-erofs@lists.ozlabs.org>, Chao Yu <chao@kernel.org>,
+        Miao Xie <miaoxie@huawei.com>, <weidu.du@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>, <stable@vger.kernel.org>
+References: <20190319135501.28712-1-gaoxiang25@huawei.com>
+ <8966fa2c-5357-c472-ebb7-a3f3abcf60e8@huawei.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <cd482202-78fa-e02a-92f4-be31137f344f@huawei.com>
+Date:   Mon, 25 Mar 2019 10:05:04 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
  Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <20190324150034.GH23289@zn.tnic>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <8966fa2c-5357-c472-ebb7-a3f3abcf60e8@huawei.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Mon, 25 Mar 2019 01:58:30 +0000 (UTC)
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-ClientProxiedBy: dggeme701-chm.china.huawei.com (10.1.199.97) To
+ dggeme763-chm.china.huawei.com (10.3.19.109)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-在 2019年03月24日 23:00, Borislav Petkov 写道:
->> Subject: Re: [PATCH 1/3] kexec: Do not map the kexec area as decrypted when SEV is active
+On 2019/3/22 11:25, Gao Xiang wrote:
+> ping?
 > 
-> The tip tree preferred format for patch subject prefixes is
-> 'subsys/component:', e.g. 'x86/apic:', 'x86/mm/fault:', 'sched/fair:',
-> 'genirq/core:'. Please do not use file names or complete file paths as
-> prefix. 'git log path/to/file' should give you a reasonable hint in most
-> cases.
+> Hi Chao,
+> could you take some time looking into this series?
 
-Fine, thanks for your advice.
+Done, sorry for the delay.
 
-> 
-> On Fri, Mar 15, 2019 at 06:32:01PM +0800, Lianbo Jiang wrote:
->> Currently, the arch_kexec_post_{alloc,free}_pages unconditionally
-> 
-> Please end function names with parentheses.
-
-Ok, i will improve them next post.
+Thanks,
 
 > 
->> maps the kexec area as decrypted. This works fine when SME is active.
->> Because in SME, the first kernel is loaded in decrypted area by the
->> BIOS, so the second kernel must be also loaded into the decrypted
->> memory.
+> Thanks,
+> Gao Xiang
+> 
+> On 2019/3/19 21:54, Gao Xiang wrote:
+>> Complete read error handling paths for all three kinds of
+>> compressed pages:
 >>
->> When SEV is active, the first kernel is loaded into the encrypted
->> area, so the second kernel must be also loaded into the encrypted
->> memory. Lets make sure that arch_kexec_post_{alloc,free}_pages does
->> not clear the memory encryption mask from the kexec area when SEV
->> is active.
-> 
-> Hold on, wait a minute!
-> 
-> Why do we even need this? As usual, you guys never explain what the big
-> picture is. So you mention SEV, which sounds to me like you want to be
-> able to kexec the SEV *guest*. Yes?
-
-Yes. Just like the physical machines support kdump, the virtual machines also
-need kdump. When a virtual machine panic, we also need to dump its memory for
-analysis.
-
-> 
-> First of all, why?
-
-For the SEV virtual machine, the memory is also encrypted. When SEV is enabled,
-the first kernel is loaded into the encrypted area. Unlike the SME, the first
-kernel is loaded into the decrypted area.
-
-Because of this difference between SME and SEV, we need to properly map the kexec
-memory area in order to correctly access it.
-
-> 
-> Then, if so...
-> 
->> Co-developed-by: Brijesh Singh <brijesh.singh@amd.com>
->> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
->> Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
+>>  1) For cache-managed pages, PG_uptodate will be checked since
+>>     read_endio will unlock and SetPageUptodate for these pages;
+>>
+>>  2) For inplaced pages, read_endio cannot SetPageUptodate directly
+>>     since it should be used to mark the final decompressed data,
+>>     PG_error will be set with page locked for IO error instead;
+>>
+>>  3) For staging pages, PG_error is used, which is similar to
+>>     what we do for inplaced pages.
+>>
+>> Fixes: 3883a79abd02 ("staging: erofs: introduce VLE decompression support")
+>> Cc: <stable@vger.kernel.org> # 4.19+
+>> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 >> ---
->>  arch/x86/kernel/machine_kexec_64.c | 8 ++++++--
->>  1 file changed, 6 insertions(+), 2 deletions(-)
 >>
->> diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
->> index ceba408ea982..bcebf4993da4 100644
->> --- a/arch/x86/kernel/machine_kexec_64.c
->> +++ b/arch/x86/kernel/machine_kexec_64.c
->> @@ -566,7 +566,10 @@ int arch_kexec_post_alloc_pages(void *vaddr, unsigned int pages, gfp_t gfp)
->>  	 * not encrypted because when we boot to the new kernel the
->>  	 * pages won't be accessed encrypted (initially).
->>  	 */
->> -	return set_memory_decrypted((unsigned long)vaddr, pages);
->> +	if (sme_active())
->> +		return set_memory_decrypted((unsigned long)vaddr, pages);
-> 
-> ... then this looks yucky. Because, you're adding an sme_active() check here
-> but then __set_memory_enc_dec() checks
-
-For the SEV virtual machine, it maps the kexec memroy area as encrypted, so, no need to invoke
-this function to change anything.
-
-
-> 
-> 	if (!mem_encrypt_active())
-> 
-> and heads will spin from all the checking of memory encryption aspects.
-> 
-> So this would need a rework so that there are no multiple confusing
-> checks.
-
-About the three functions, here i copied their comment from the arch/x86/mm/mem_encrypt.c
-Please refer to it.
-
-/*
- * SME and SEV are very similar but they are not the same, so there are
- * times that the kernel will need to distinguish between SME and SEV. The
- * sme_active() and sev_active() functions are used for this.  When a
- * distinction isn't needed, the mem_encrypt_active() function can be used.
- *
-
-
-Thanks.
-Lianbo
-
-> 
-> Thx.
+>> This series focus on fixing error handling when failed to read
+>> compresssed data due to previous incomplete paths.
+>>
+>> In addition, the last 2 patches add IO error fault injection
+>> for reading paths, which I have used to test the first patch as well.
+>>
+>> Thanks,
+>> Gao Xiang
+>>
+>>  drivers/staging/erofs/unzip_vle.c | 41 ++++++++++++++++++++++++++-------------
+>>  1 file changed, 28 insertions(+), 13 deletions(-)
+>>
+>> diff --git a/drivers/staging/erofs/unzip_vle.c b/drivers/staging/erofs/unzip_vle.c
+>> index 8715bc50e09c..3416d3f10324 100644
+>> --- a/drivers/staging/erofs/unzip_vle.c
+>> +++ b/drivers/staging/erofs/unzip_vle.c
+>> @@ -972,6 +972,7 @@ static int z_erofs_vle_unzip(struct super_block *sb,
+>>  	overlapped = false;
+>>  	compressed_pages = grp->compressed_pages;
+>>  
+>> +	err = 0;
+>>  	for (i = 0; i < clusterpages; ++i) {
+>>  		unsigned int pagenr;
+>>  
+>> @@ -981,26 +982,39 @@ static int z_erofs_vle_unzip(struct super_block *sb,
+>>  		DBG_BUGON(!page);
+>>  		DBG_BUGON(!page->mapping);
+>>  
+>> -		if (z_erofs_is_stagingpage(page))
+>> -			continue;
+>> +		if (!z_erofs_is_stagingpage(page)) {
+>>  #ifdef EROFS_FS_HAS_MANAGED_CACHE
+>> -		if (page->mapping == MNGD_MAPPING(sbi)) {
+>> -			DBG_BUGON(!PageUptodate(page));
+>> -			continue;
+>> -		}
+>> +			if (page->mapping == MNGD_MAPPING(sbi)) {
+>> +				if (unlikely(!PageUptodate(page)))
+>> +					err = -EIO;
+>> +				continue;
+>> +			}
+>>  #endif
+>>  
+>> -		/* only non-head page could be reused as a compressed page */
+>> -		pagenr = z_erofs_onlinepage_index(page);
+>> +			/*
+>> +			 * only if non-head page can be selected
+>> +			 * for inplace decompression
+>> +			 */
+>> +			pagenr = z_erofs_onlinepage_index(page);
+>>  
+>> -		DBG_BUGON(pagenr >= nr_pages);
+>> -		DBG_BUGON(pages[pagenr]);
+>> -		++sparsemem_pages;
+>> -		pages[pagenr] = page;
+>> +			DBG_BUGON(pagenr >= nr_pages);
+>> +			DBG_BUGON(pages[pagenr]);
+>> +			++sparsemem_pages;
+>> +			pages[pagenr] = page;
+>> +
+>> +			overlapped = true;
+>> +		}
+>>  
+>> -		overlapped = true;
+>> +		/* PG_error needs checking for inplaced and staging pages */
+>> +		if (unlikely(PageError(page))) {
+>> +			DBG_BUGON(PageUptodate(page));
+>> +			err = -EIO;
+>> +		}
+>>  	}
+>>  
+>> +	if (unlikely(err))
+>> +		goto out;
+>> +
+>>  	llen = (nr_pages << PAGE_SHIFT) - work->pageofs;
+>>  
+>>  	if (z_erofs_vle_workgrp_fmt(grp) == Z_EROFS_VLE_WORKGRP_FMT_PLAIN) {
+>> @@ -1194,6 +1208,7 @@ pickup_page_for_submission(struct z_erofs_vle_workgroup *grp,
+>>  	if (page->mapping == mc) {
+>>  		WRITE_ONCE(grp->compressed_pages[nr], page);
+>>  
+>> +		ClearPageError(page);
+>>  		if (!PagePrivate(page)) {
+>>  			/*
+>>  			 * impossible to be !PagePrivate(page) for
+>>
+> .
 > 
