@@ -5,151 +5,83 @@ X-Spam-Level:
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA0E4C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 13:05:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EA3EC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 13:05:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94E2320830
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 13:05:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF63A20830
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 13:05:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731336AbfCYNFB (ORCPT
+        id S1731341AbfCYNFy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 09:05:01 -0400
-Received: from mx2.mailbox.org ([80.241.60.215]:27230 "EHLO mx2.mailbox.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731076AbfCYNFA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 09:05:00 -0400
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mx2.mailbox.org (Postfix) with ESMTPS id 1543EA11A6;
-        Mon, 25 Mar 2019 14:04:54 +0100 (CET)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp1.mailbox.org ([80.241.60.240])
-        by hefe.heinlein-support.de (hefe.heinlein-support.de [91.198.250.172]) (amavisd-new, port 10030)
-        with ESMTP id Wz3oPpdRvpC1; Mon, 25 Mar 2019 14:04:47 +0100 (CET)
-Date:   Tue, 26 Mar 2019 00:04:29 +1100
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Jann Horn <jannh@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        David Drysdale <drysdale@google.com>,
-        Tycho Andersen <tycho@tycho.ws>,
-        Kees Cook <keescook@chromium.org>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mon, 25 Mar 2019 09:05:54 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:45796 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731076AbfCYNFy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 09:05:54 -0400
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1h8PIK-0004fJ-Sv; Mon, 25 Mar 2019 14:05:41 +0100
+Date:   Mon, 25 Mar 2019 14:05:40 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     "Chang S. Bae" <chang.seok.bae@intel.com>
+cc:     Ingo Molnar <mingo@kernel.org>, Andy Lutomirski <luto@kernel.org>,
+        "H . Peter Anvin" <hpa@zytor.com>, Andi Kleen <ak@linux.intel.com>,
+        Ravi Shankar <ravi.v.shankar@intel.com>,
         LKML <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>
-Subject: Re: [PATCH RESEND v5 0/5] namei: vfs flags to restrict path
- resolution
-Message-ID: <20190325130429.dbrgjxnvq3w5cpb3@yavin>
-References: <20190320143717.2523-1-cyphar@cyphar.com>
- <CALCETrV-Q4qZXGeavBPQbF6-VVz7hqvjRkbhFeYmbGiQgu5Omg@mail.gmail.com>
+        Andrew Cooper <andrew.cooper3@citrix.com>, x86@kernel.org
+Subject: Re: [RESEND PATCH v6 04/12] x86/fsgsbase/64: Enable FSGSBASE
+ instructions in the helper functions
+In-Reply-To: <alpine.DEB.2.21.1903251345180.1656@nanos.tec.linutronix.de>
+Message-ID: <alpine.DEB.2.21.1903251401580.1656@nanos.tec.linutronix.de>
+References: <1552680405-5265-1-git-send-email-chang.seok.bae@intel.com> <1552680405-5265-5-git-send-email-chang.seok.bae@intel.com> <alpine.DEB.2.21.1903251107300.1798@nanos.tec.linutronix.de> <alpine.DEB.2.21.1903251345180.1656@nanos.tec.linutronix.de>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="57yveyjfb6o3za6g"
-Content-Disposition: inline
-In-Reply-To: <CALCETrV-Q4qZXGeavBPQbF6-VVz7hqvjRkbhFeYmbGiQgu5Omg@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 25 Mar 2019, Thomas Gleixner wrote:
 
---57yveyjfb6o3za6g
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On Mon, 25 Mar 2019, Thomas Gleixner wrote:
+> > The whole point of FSGSBASE support is performance, right?
+> > 
+> > So can please someone explain why having the following in the context
+> > switch path when it can be completely avoided is enhancing performance:
+> > 
+> >   - 4 x SWAPGS
+> >   - 1 x RDMSR
+> >   - 1 x WRMSR
+> 
+> Corrrecting myself. That should be:
+> 
+>      RDGSBASE
+>      WRGSBASE
+> 
+> obviously. Still the point remains.
+> 
+> >   - 2 x local_irq_save()
+> >   - 2 x local_irq_restore()
+> > 
+> > Of course the local_irq_save/restore() pairs are utterly pointless because
+> > switch_to() runs with interrupts disabled already.
+> > 
+> > SWAPGS instead needs:
+> > 
+> >   1 x WRMSR
+> > 
+> > and nothing else.
+> > 
+> > So trading the single WRMSR against the above in the context switch path is
+> > gaining performance, right?
 
-On 2019-03-21, Andy Lutomirski <luto@kernel.org> wrote:
-> On Wed, Mar 20, 2019 at 7:38 AM Aleksa Sarai <cyphar@cyphar.com> wrote:
-> > Now that the holiday break is over, it's time to re-send this patch
-> > series (with a few additions, due to new information we got from
-> > CVE-2019-5736 -- which this patchset mostly protected against but had
-> > some holes with regards to #!-style scripts).
->=20
-> I generally like this, but, as Linus pointed out, it will be
-> unfortunate if application authors see this as just another
-> non-portable weird Linux API and don't use it.  Would it be worthwhile
-> to put some thought into making it an API that other OSes might be
-> willing to implement?  As it stands, the openat(2) flags are getting
-> rather crazy in this patch set.
->=20
-> Aleksa had a resolveat(2) proposal that really didn't seem too bad.
+And even IF the sequences are faster than the single WRMSR, this does not
+justify the mixed bag of SWAPGS/FSGSBASE usage at all.
 
-I agree having a bunch of O_* flags for resolution feels quite ugly (and
-crazy) -- but the last time I pitched resolveat(2) the reaction was
-lukewarm to say the least. It's basically an O_PATHv2 and I don't know
-how popular that suggestion might be. I wouldn't mind pitching it again
-though (now that I have a better idea of how to handle some of the UX
-worries I had).
+Thanks,
 
-But, if we have a resolveat(2) we'll need to add O_EMPTYPATH support for
-openat(2) so that you can open scoped paths without using the
-/proc/self/fd/$n trick. However, you run into reopening permission
-issues (as we saw in CVE-2019-5736 and countless other CVEs). There
-might be a solution for this which Andy and I have talked about
-off-list.
-
-There is also the problem of the execveat(2) attack -- which is dealt
-with in patch 5 of this series. In order to scope #!-script resolution
-we need to have AT_* flags for the same resolution restriction
-(defeating the point of a resolveat(2) slightly).
-
-There is an argument that we shouldn't need AT_THIS_ROOT or AT_BENEATH
-support (because ideally you should be doing execve(2) in a pivot_root
-anyway) but AT_NO_MAGICLINKS is pretty important -- since it allows you
-to block the circumvention mm->dumpable in certain situations (as we saw
-in CVE-2019-5736).
-
-The solution Andy and I have discussed is a way to make fd-reopening (a
-seemingly little-known trick outside of container runtimes) much safer
-such that we don't need mitigations like AT_NO_MAGICLINKS on
-execveat(2). If we assume that idea works out (I'm still trying to get a
-working patch for that idea) then resolveat(2) would be sufficient and
-we don't need AT_* flags on execveat(2).
-
-tl;dr: I think resolveat(2) is much nicer, and assuming it's not an
-	   unpopular idea I think we should go for it. But there are several
-	   other threads of discussion that we might want to have first
-	   (such as how to improve the fd-reopening design so it's safer
-	   before we expose it to everyone).
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---57yveyjfb6o3za6g
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEb6Gz4/mhjNy+aiz1Snvnv3Dem58FAlyY0doACgkQSnvnv3De
-m5/H1Q//S6p57BAirsEx/gjAUOkKIGGK1zQ034Jjplmx7/gAOWKECS86LhV9c6We
-IBDVMVXfeG+iL7yRT7lk2wRTwpeB4DBrqrqD2lpDj2dhzB8b8yzPU4rY027k5r+e
-L/caAoPI6X0NX1nyFiK3MkuQtUNR0GbBI1LOwdwcxFDH0SrCNOrJMCD2VSOtVo5Z
-ktHED0T7KIEDdwS9ZTvEw4yhaxyWhoNGj/V5uU8av1Hbceq8MIxW+Y7aUytr9l4d
-XT0VJWaC9cjEuZWzmZDuZlqTFKFuiupHgE22O4prPJZOAhOMiqrQr76hbSz1ChbN
-iFsHU7JYnUcFd1rPhKwI25kKq2eGWvaj0VLCylQ/ZluMRLPrD3blYJYB9BYIaSss
-XVn9rjdRJG5t3tNKOMEDF9GYuVAE5w9Y+ZZJ1l8eZlUf3C7V6jISDkzvtfYu7xs+
-ish7dFWE3CKrrMJR9eR2zQ0ZoFicCPxBkp7beThQ7JVV24gno7EMS+wF7NdNHKFc
-HwWq6hk1e9wh2FHxQfvloBlFr2FV+lGWhFNFdZ0LzOFJu5Swa1BsPn93KoHi2T7F
-5XK+WAQBtzWuq7J8GN8T9LlhMlXs11QH6FKzt/vsuwEV35M3F4tKgur81bfkdsau
-w+prkX7aetu9qGthO9AFicPDXOXY6HyBcPTDMbGNkHz2/zILvpY=
-=Hj/g
------END PGP SIGNATURE-----
-
---57yveyjfb6o3za6g--
+	tglx
