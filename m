@@ -2,139 +2,152 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50C5AC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 22:58:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B0F9C10F03
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 22:59:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DBA020828
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 22:58:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 476BC20828
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 22:59:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553554785;
+	bh=654SGUtIm/tCjDGh60nT3GMT369dJ1alkPyEBzEb0Dw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=y5bhjFsIiAlCvyjnxOK5aPyTwfVG+EZr15FUU6Sq2j4lqclOePw5IJ2G59d+3TquR
+	 uLs6fMHfCMovuATzOb5vqtauTa2SwJwDB0GOwsJXR66280yv6aEpVsFIVitMN5KsnE
+	 A+mMp8zbk9cKmrykVXpWYf/YMtczvFzuWHWuk/Hs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730587AbfCYW6j (ORCPT
+        id S1730617AbfCYW7o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 18:58:39 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:48954 "EHLO mx1.redhat.com"
+        Mon, 25 Mar 2019 18:59:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726010AbfCYW6i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 18:58:38 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726010AbfCYW7n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 18:59:43 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 644554E916;
-        Mon, 25 Mar 2019 22:58:38 +0000 (UTC)
-Received: from ovpn-118-18.phx2.redhat.com (ovpn-118-18.phx2.redhat.com [10.3.118.18])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 84DF719C56;
-        Mon, 25 Mar 2019 22:58:37 +0000 (UTC)
-Message-ID: <655bf2991a4f8bf6a473c91218d6dba7748520aa.camel@redhat.com>
-Subject: Re: [PATCH 03/17] fpga: dfl: fme: support 512bit data width PR
-From:   Scott Wood <swood@redhat.com>
-To:     Wu Hao <hao.wu@intel.com>, atull@kernel.org, mdf@kernel.org,
-        linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     linux-api@vger.kernel.org, Ananda Ravuri <ananda.ravuri@intel.com>,
-        Xu Yilun <yilun.xu@intel.com>
-Date:   Mon, 25 Mar 2019 17:58:36 -0500
-In-Reply-To: <127a9356a7bf597d35dd361f2b16bf80460f0370.camel@redhat.com>
-References: <1553483264-5379-1-git-send-email-hao.wu@intel.com>
-         <1553483264-5379-4-git-send-email-hao.wu@intel.com>
-         <127a9356a7bf597d35dd361f2b16bf80460f0370.camel@redhat.com>
-Organization: Red Hat
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B90420828;
+        Mon, 25 Mar 2019 22:59:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553554782;
+        bh=654SGUtIm/tCjDGh60nT3GMT369dJ1alkPyEBzEb0Dw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bJQf+Oup8U0dZcjMBv1TVsRGdBFKlHROVO/ldpqcOH0jXytDlHf2nw8CnxN6/G+7H
+         Kr+rjDDz9X5A64lTYOAQeGNAqUBwpnpokgJ30avf6rIsEanS6SHbUtaYh9ozL32+cL
+         9RYz3PVuov55LfHRIYMCt1c1eYFH38+mIcL6KvEs=
+Date:   Mon, 25 Mar 2019 17:59:41 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Alexandru Gagniuc <mr.nuke.me@gmail.com>
+Cc:     austin_bolen@dell.com, alex_gagniuc@dellteam.com,
+        keith.busch@intel.com, Shyam_Iyer@Dell.com, lukas@wunner.de,
+        okaya@kernel.org, torvalds@linux-foundation.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Borislav Petkov <bp@suse.de>
+Subject: Re: [PATCH v2] PCI/LINK: bw_notification: Do not leave interrupt
+ handler NULL
+Message-ID: <20190325225941.GE24180@google.com>
+References: <20190320193504.GC251185@google.com>
+ <20190323003700.7294-1-mr.nuke.me@gmail.com>
+ <20190325222502.GC24180@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Mon, 25 Mar 2019 22:58:38 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190325222502.GC24180@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-03-25 at 17:53 -0500, Scott Wood wrote:
-> On Mon, 2019-03-25 at 11:07 +0800, Wu Hao wrote:
-> > In early partial reconfiguration private feature, it only
-> > supports 32bit data width when writing data to hardware for
-> > PR. 512bit data width PR support is an important optimization
-> > for some specific solutions (e.g. XEON with FPGA integrated),
-> > it allows driver to use AVX512 instruction to improve the
-> > performance of partial reconfiguration. e.g. programming one
-> > 100MB bitstream image via this 512bit data width PR hardware
-> > only takes ~300ms, but 32bit revision requires ~3s per test
-> > result.
+[+cc Borislav]
+
+Hi Borislav, sorry; I meant to cc: you when I applied the patch below.
+I did add a Reported-by for you.
+
+On Mon, Mar 25, 2019 at 05:25:02PM -0500, Bjorn Helgaas wrote:
+> On Fri, Mar 22, 2019 at 07:36:51PM -0500, Alexandru Gagniuc wrote:
+> > A threaded IRQ with a NULL handler does not work with level-triggered
+> > interrupts. request_threaded_irq() will return an error:
 > > 
-> > Please note now this optimization is only done on revision 2
-> > of this PR private feature which is only used in integrated
-> > solution that AVX512 is always supported.
+> >   genirq: Threaded irq requested with handler=NULL and !ONESHOT for irq 16
+> >   pcie_bw_notification: probe of 0000:00:1b.0:pcie010 failed with error -22
 > > 
-> > Signed-off-by: Ananda Ravuri <ananda.ravuri@intel.com>
-> > Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-> > Signed-off-by: Wu Hao <hao.wu@intel.com>
+> > For level interrupts we need to silence the interrupt before exiting
+> > the IRQ handler, so just clear the PCI_EXP_LNKSTA_LBMS bit there.
+> > 
+> > Fixes: e8303bb7a75c ("PCI/LINK: Report degraded links via link bandwidth notification")
+> > Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+> > Signed-off-by: Alexandru Gagniuc <mr.nuke.me@gmail.com>
+> 
+> Applied with the following subject line to for-linus for v5.1, thanks!
+> 
+>   PCI/LINK: Supply IRQ handler so level-triggered IRQs are acked
+> 
 > > ---
-> >  drivers/fpga/dfl-fme-main.c |  3 ++
-> >  drivers/fpga/dfl-fme-mgr.c  | 75 +++++++++++++++++++++++++++++++++++++-
-> > --
-> > -----
-> >  drivers/fpga/dfl-fme-pr.c   | 45 ++++++++++++++++-----------
-> >  drivers/fpga/dfl-fme.h      |  2 ++
-> >  drivers/fpga/dfl.h          |  5 +++
-> >  5 files changed, 99 insertions(+), 31 deletions(-)
-> > 
-> > diff --git a/drivers/fpga/dfl-fme-main.c b/drivers/fpga/dfl-fme-main.c
-> > index 086ad24..076d74f 100644
-> > --- a/drivers/fpga/dfl-fme-main.c
-> > +++ b/drivers/fpga/dfl-fme-main.c
-> > @@ -21,6 +21,8 @@
-> >  #include "dfl.h"
-> >  #include "dfl-fme.h"
+> > Changes since v1:
+> >  - move pcie_update_link_speed() to irq to prevent duplicate read of link_status
+> >  - Add Fixes: to commit message
 > >  
-> > +#define DRV_VERSION	"0.8"
-> 
-> What is this going to be used for?  Under what circumstances will the
-> driver version be bumped?  What does it have to do with 512-bit writes?
-> 
-> > +#if defined(CONFIG_X86) && defined(CONFIG_AS_AVX512)
-> > +
-> > +#include <asm/fpu/api.h>
-> > +
-> > +static inline void copy512(void *src, void __iomem *dst)
-> > +{
-> > +	kernel_fpu_begin();
-> > +
-> > +	asm volatile("vmovdqu64 (%0), %%zmm0;"
-> > +		     "vmovntdq %%zmm0, (%1);"
-> > +		     :
-> > +		     : "r"(src), "r"(dst));
-> > +
-> > +	kernel_fpu_end();
+> >  drivers/pci/pcie/bw_notification.c | 19 ++++++++++++++-----
+> >  1 file changed, 14 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/drivers/pci/pcie/bw_notification.c b/drivers/pci/pcie/bw_notification.c
+> > index d2eae3b7cc0f..c48746f1cf3c 100644
+> > --- a/drivers/pci/pcie/bw_notification.c
+> > +++ b/drivers/pci/pcie/bw_notification.c
+> > @@ -44,11 +44,10 @@ static void pcie_disable_link_bandwidth_notification(struct pci_dev *dev)
+> >  	pcie_capability_write_word(dev, PCI_EXP_LNKCTL, lnk_ctl);
+> >  }
+> >  
+> > -static irqreturn_t pcie_bw_notification_handler(int irq, void *context)
+> > +static irqreturn_t pcie_bw_notification_irq(int irq, void *context)
+> >  {
+> >  	struct pcie_device *srv = context;
+> >  	struct pci_dev *port = srv->port;
+> > -	struct pci_dev *dev;
+> >  	u16 link_status, events;
+> >  	int ret;
+> >  
+> > @@ -58,6 +57,17 @@ static irqreturn_t pcie_bw_notification_handler(int irq, void *context)
+> >  	if (ret != PCIBIOS_SUCCESSFUL || !events)
+> >  		return IRQ_NONE;
+> >  
+> > +	pcie_capability_write_word(port, PCI_EXP_LNKSTA, events);
+> > +	pcie_update_link_speed(port->subordinate, link_status);
+> > +	return IRQ_WAKE_THREAD;
 > > +}
-> 
-> Shouldn't there be some sort of check that AVX512 is actually supported
-> on the running system?
-> 
-> Also, src should be const, and the asm statement should have a memory
-> clobber.
-> 
-> > +#else
-> > +static inline void copy512(void *src, void __iomem *dst)
+> > +
+> > +static irqreturn_t pcie_bw_notification_handler(int irq, void *context)
 > > +{
-> > +	WARN_ON_ONCE(1);
-> > +}
-> > +#endif
-> 
-> Likewise, this will be called if a revision 2 device is used on non-x86
-> (or on x86 with an old binutils).  The driver should fall back to 32-bit
-> in such cases.
-
-Sorry, I missed the comment about revision 2 only being on integrated
-devices -- but will that always be the case?  Seems worthwhile to check for
-AVX512 support anyway.  And there's still the possibility of being built
-with an old binutils such that CONFIG_AS_AVX512 is not set, or running on a
-kernel where avx512 was disabled via a boot option.
-
-What about future revisions >= 2?  Currently the driver will treat them as
-if they were revision < 2.  Is that intended?
-
--Scott
-
-
+> > +	struct pcie_device *srv = context;
+> > +	struct pci_dev *port = srv->port;
+> > +	struct pci_dev *dev;
+> > +
+> >  	/*
+> >  	 * Print status from downstream devices, not this root port or
+> >  	 * downstream switch port.
+> > @@ -67,8 +77,6 @@ static irqreturn_t pcie_bw_notification_handler(int irq, void *context)
+> >  		__pcie_print_link_status(dev, false);
+> >  	up_read(&pci_bus_sem);
+> >  
+> > -	pcie_update_link_speed(port->subordinate, link_status);
+> > -	pcie_capability_write_word(port, PCI_EXP_LNKSTA, events);
+> >  	return IRQ_HANDLED;
+> >  }
+> >  
+> > @@ -80,7 +88,8 @@ static int pcie_bandwidth_notification_probe(struct pcie_device *srv)
+> >  	if (!pcie_link_bandwidth_notification_supported(srv->port))
+> >  		return -ENODEV;
+> >  
+> > -	ret = request_threaded_irq(srv->irq, NULL, pcie_bw_notification_handler,
+> > +	ret = request_threaded_irq(srv->irq, pcie_bw_notification_irq,
+> > +				   pcie_bw_notification_handler,
+> >  				   IRQF_SHARED, "PCIe BW notif", srv);
+> >  	if (ret)
+> >  		return ret;
+> > -- 
+> > 2.19.2
+> > 
