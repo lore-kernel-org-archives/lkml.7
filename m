@@ -2,102 +2,165 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F1F7C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:29:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DB2BC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:29:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD3B0205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:29:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553534942;
-	bh=EmGSsHSiWmDdbwNYs/8yVnqQwNno7Gna9nJ4yVYsLtQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=K36K2S5cfYiAZhypMLZ5SahV/kpIOfRfLArHwLifrkEP9uH236J2TYaOSKFTvPxF4
-	 /TzW1dOIX8VdS/ZzQZtOdWalqgEyW/7xx+Q6FFrNIjFyueh8mbc3A7SbqioUeM94sU
-	 jQuiTinuIlIej6bzoGPCiKVzC9ri3wHd8jRK3j7o=
+	by mail.kernel.org (Postfix) with ESMTP id 3CC1A2087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 17:29:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rRhCl6Ic"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729632AbfCYR3B (ORCPT
+        id S1729867AbfCYR3b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 13:29:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60646 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725788AbfCYR3A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 13:29:00 -0400
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B267B205C9;
-        Mon, 25 Mar 2019 17:28:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553534940;
-        bh=EmGSsHSiWmDdbwNYs/8yVnqQwNno7Gna9nJ4yVYsLtQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=wchuxvIxqVNAJ5sx+hOD8ZzFFbBuyi/0eSdd6qDLobpv4BhlC+pFA+eyDZYHakem+
-         A+cUxcEFgAgIdkxRhi0WOV0pTB3YwRNcFpFuwRGwNHrxAaAQInqNfZ2uAnzt3DjkRT
-         ALK5kT/NDK6Hg2FlFFZ8Cn55Cd2NxmO1Y06VEYZ0=
-Received: by mail-ed1-f47.google.com with SMTP id d1so8256906edd.13;
-        Mon, 25 Mar 2019 10:28:59 -0700 (PDT)
-X-Gm-Message-State: APjAAAW7y/P4QwW60QHx3q+6ktgt5+pneyd3Vrsbus+Fk3eRWH0K+kic
-        h9NXL14ioK+05i7j7QYCEDjBeo/HTaTnNxAcil0=
-X-Google-Smtp-Source: APXvYqzCTNAzgFjwgioHWE83ttM5vHsZiaCoL+4Qa/Q65zAQ2lRGE0ejSd/FKAUTqMkqMZqYL/OYB0OhNd+uQxNqCNM=
-X-Received: by 2002:aa7:c70a:: with SMTP id i10mr17327757edq.153.1553534938297;
- Mon, 25 Mar 2019 10:28:58 -0700 (PDT)
+        Mon, 25 Mar 2019 13:29:31 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:42646 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729473AbfCYR3a (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 13:29:30 -0400
+Received: by mail-pf1-f193.google.com with SMTP id r15so6752401pfn.9
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 10:29:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=u0WZcwjJqQggkCrQ+/+tUTFaxWK1rSC0xhtoYTl+KFA=;
+        b=rRhCl6IckDK/nSQz27C2cKYoeRTYkLETTM5IDKRm820N5T54vHvZdvbnP9QPVJQbqJ
+         9a+WHmWpryscHm49tHjXQOKNE/+sv17lLFoF5PRSn7Z2/hMhVqu8w0F4d0GZNZyc0RAc
+         5t9F8BiLX2HfXaz6+NY6+1x4vyAk1qz0lR3BsPCaCVuBxAJTXRcFNSvoI9gfRrQZRjO8
+         sCz4B6/YXGJCaPUnpOu9ER0ty30f9Rk4/0qc51kbI2i+hn7YOq3jwGvQsbbOangnEg9r
+         2nMRPvA89GcWcr4d7nR7CctOPH5hDTl/ur8B+TQln763ifNQu7NGNVpfxVNS+mjiiwh+
+         kC4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=u0WZcwjJqQggkCrQ+/+tUTFaxWK1rSC0xhtoYTl+KFA=;
+        b=qBIGf8v/o8YsPNQ52sH4gFoEu3481fg52Q0HJsTavaiLhuULLaR2DkQzW4DRkmDXlE
+         apQvNWGiCJyAu//DXoFHmpYwncAPJnxmRCLoFu17uktMMf7CxvRSFHW4kaXcCUFieD1q
+         /CLwEp2sbddwTH5HLaiQkSdgytOO8LzavfXa/BUstpAPKw82Lvfwng9MRcV49SWb6LQG
+         fI6X3Z9pLBqLLxM2v3kjgC27OPN2RlrRXtAptNeBvWZ8H86ZwZ/dh9A2SXYw4kE6U6Gg
+         GDYHQ9AM5+t2GgqpB/NLxxl1bX/bk1oOBUU6dRcTmsuXUNez4QbwuFx4JGVowQGeNhNp
+         FSlg==
+X-Gm-Message-State: APjAAAXv4ROJjRHr25cBFXPWRikxOerIY0LvnNOFqzi/1KeRZS4a4caL
+        INXx5JJ6/Yuz4IfSOVivvUnXZVgT0R9Yj67gLT0YGA==
+X-Google-Smtp-Source: APXvYqwSauUoiCe/n9CIkx2/tiQEARlpM4vXmrqDlzevKT9HcmblozxMRQDf/VaH8JqpqsttycqJxaZDFmk9BrNG0Vc=
+X-Received: by 2002:a62:209c:: with SMTP id m28mr12332914pfj.94.1553534968992;
+ Mon, 25 Mar 2019 10:29:28 -0700 (PDT)
 MIME-Version: 1.0
-References: <1553483264-5379-1-git-send-email-hao.wu@intel.com> <1553483264-5379-2-git-send-email-hao.wu@intel.com>
-In-Reply-To: <1553483264-5379-2-git-send-email-hao.wu@intel.com>
-From:   Alan Tull <atull@kernel.org>
-Date:   Mon, 25 Mar 2019 12:28:22 -0500
-X-Gmail-Original-Message-ID: <CANk1AXRCdd_AwXj1aMwzu7ff4yxuBtN21mju62skbJnhXDwtcw@mail.gmail.com>
-Message-ID: <CANk1AXRCdd_AwXj1aMwzu7ff4yxuBtN21mju62skbJnhXDwtcw@mail.gmail.com>
-Subject: Re: [PATCH 01/17] fpga: dfl-fme-mgr: fix FME_PR_INTFC_ID register address.
-To:     Wu Hao <hao.wu@intel.com>
-Cc:     Moritz Fischer <mdf@kernel.org>, linux-fpga@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api@vger.kernel.org
+References: <20190325130040.1437445-1-arnd@arndb.de>
+In-Reply-To: <20190325130040.1437445-1-arnd@arndb.de>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 25 Mar 2019 10:29:17 -0700
+Message-ID: <CAKwvOd=8Vgv-OUxj09zReaXUZEGKsGzHGNzHnr7J8k90Qf0H1A@mail.gmail.com>
+Subject: Re: [PATCH] ext4: use BUG() instead of BUG_ON(1)
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     "Theodore Ts'o" <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Eric Whitney <enwlinux@gmail.com>,
+        Sean Fu <fxinrong@gmail.com>, Jan Kara <jack@suse.cz>,
+        Eric Biggers <ebiggers@google.com>, linux-ext4@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 24, 2019 at 10:23 PM Wu Hao <hao.wu@intel.com> wrote:
+On Mon, Mar 25, 2019 at 6:00 AM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> BUG_ON(1) leads to bogus warnings from clang when
+> CONFIG_PROFILE_ANNOTATED_BRANCHES is set:
+>
+>  fs/ext4/inode.c:544:4: error: variable 'retval' is used uninitialized whenever 'if' condition is false
+>       [-Werror,-Wsometimes-uninitialized]
+>                         BUG_ON(1);
+>                         ^~~~~~~~~
+>  include/asm-generic/bug.h:61:36: note: expanded from macro 'BUG_ON'
+>                                    ^~~~~~~~~~~~~~~~~~~
+>  include/linux/compiler.h:48:23: note: expanded from macro 'unlikely'
+>                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>  fs/ext4/inode.c:591:6: note: uninitialized use occurs here
+>         if (retval > 0 && map->m_flags & EXT4_MAP_MAPPED) {
+>             ^~~~~~
+>  fs/ext4/inode.c:544:4: note: remove the 'if' if its condition is always true
+>                         BUG_ON(1);
+>                         ^
+>  include/asm-generic/bug.h:61:32: note: expanded from macro 'BUG_ON'
+>                                ^
+>  fs/ext4/inode.c:502:12: note: initialize the variable 'retval' to silence this warning
+>
+> Change it to BUG() so clang can see that this code path can never
+> continue.
 
-Hi Hao,
+Thanks for the patch; I suspect the definition of `unlikely` is tricky
+to "see through."  This is more concise about what we want to do in
+these cases anyways.
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 
 >
-> FME_PR_INTFC_ID is used as compat_id for fpga manager and region,
-> but high 64 bits and low 64 bits of the compat_id are swapped by
-> mistake. This patch fixes this problem by fixing register address.
->
-> Signed-off-by: Wu Hao <hao.wu@intel.com>
-
-Acked-by: Alan Tull <atull@kernel.org>
-
-Thanks,
-Alan
-
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 > ---
->  drivers/fpga/dfl-fme-mgr.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  fs/ext4/extents_status.c | 4 ++--
+>  fs/ext4/inode.c          | 4 ++--
+>  2 files changed, 4 insertions(+), 4 deletions(-)
 >
-> diff --git a/drivers/fpga/dfl-fme-mgr.c b/drivers/fpga/dfl-fme-mgr.c
-> index 76f3770..b3f7eee 100644
-> --- a/drivers/fpga/dfl-fme-mgr.c
-> +++ b/drivers/fpga/dfl-fme-mgr.c
-> @@ -30,8 +30,8 @@
->  #define FME_PR_STS             0x10
->  #define FME_PR_DATA            0x18
->  #define FME_PR_ERR             0x20
-> -#define FME_PR_INTFC_ID_H      0xA8
-> -#define FME_PR_INTFC_ID_L      0xB0
-> +#define FME_PR_INTFC_ID_L      0xA8
-> +#define FME_PR_INTFC_ID_H      0xB0
+> diff --git a/fs/ext4/extents_status.c b/fs/ext4/extents_status.c
+> index 2b439afafe13..023a3eb3afa3 100644
+> --- a/fs/ext4/extents_status.c
+> +++ b/fs/ext4/extents_status.c
+> @@ -711,7 +711,7 @@ static void ext4_es_insert_extent_ind_check(struct inode *inode,
+>                          * We don't need to check unwritten extent because
+>                          * indirect-based file doesn't have it.
+>                          */
+> -                       BUG_ON(1);
+> +                       BUG();
+>                 }
+>         } else if (retval == 0) {
+>                 if (ext4_es_is_written(es)) {
+> @@ -780,7 +780,7 @@ static int __es_insert_extent(struct inode *inode, struct extent_status *newes)
+>                         }
+>                         p = &(*p)->rb_right;
+>                 } else {
+> -                       BUG_ON(1);
+> +                       BUG();
+>                         return -EINVAL;
+>                 }
+>         }
+> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+> index b32a57bc5d5d..190f0478582a 100644
+> --- a/fs/ext4/inode.c
+> +++ b/fs/ext4/inode.c
+> @@ -541,7 +541,7 @@ int ext4_map_blocks(handle_t *handle, struct inode *inode,
+>                         map->m_len = retval;
+>                         retval = 0;
+>                 } else {
+> -                       BUG_ON(1);
+> +                       BUG();
+>                 }
+>  #ifdef ES_AGGRESSIVE_TEST
+>                 ext4_map_blocks_es_recheck(handle, inode, map,
+> @@ -1876,7 +1876,7 @@ static int ext4_da_map_blocks(struct inode *inode, sector_t iblock,
+>                 else if (ext4_es_is_unwritten(&es))
+>                         map->m_flags |= EXT4_MAP_UNWRITTEN;
+>                 else
+> -                       BUG_ON(1);
+> +                       BUG();
 >
->  /* FME PR Control Register Bitfield */
->  #define FME_PR_CTRL_PR_RST     BIT_ULL(0)  /* Reset PR engine */
+>  #ifdef ES_AGGRESSIVE_TEST
+>                 ext4_map_blocks_es_recheck(NULL, inode, map, &orig_map, 0);
 > --
-> 2.7.4
+> 2.20.0
 >
+
+
+-- 
+Thanks,
+~Nick Desaulniers
