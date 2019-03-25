@@ -2,105 +2,160 @@ Return-Path: <SRS0=yZjE=R4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NO_DNS_FOR_FROM,SIGNED_OFF_BY,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0AB1C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:05:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DB12C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:05:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9434920850
-	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:05:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E52C820863
+	for <linux-kernel@archiver.kernel.org>; Mon, 25 Mar 2019 12:05:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731145AbfCYMFk (ORCPT
+        id S1731162AbfCYMFn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 25 Mar 2019 08:05:43 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:39185 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730837AbfCYMFk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 25 Mar 2019 08:05:40 -0400
-Received: from ns.iliad.fr ([212.27.33.1]:51572 "EHLO ns.iliad.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731014AbfCYMFk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 08:05:40 -0400
-Received: from ns.iliad.fr (localhost [127.0.0.1])
-        by ns.iliad.fr (Postfix) with ESMTP id 971B3207E5;
-        Mon, 25 Mar 2019 13:05:38 +0100 (CET)
-Received: from [192.168.108.8] (freebox.vlq16.iliad.fr [213.36.7.13])
-        by ns.iliad.fr (Postfix) with ESMTP id 55E271FF14;
-        Mon, 25 Mar 2019 13:05:38 +0100 (CET)
-Subject: Re: [PATCH v5 0/3] UFS on APQ8098/MSM8998
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <andy.gross@linaro.org>
-Cc:     MSM <linux-arm-msm@vger.kernel.org>,
-        SCSI <linux-scsi@vger.kernel.org>,
-        Jeffrey Hugo <jhugo@codeaurora.org>,
-        David Brown <david.brown@linaro.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lee Jones <lee.jones@linaro.org>
-References: <43768d77-80b7-9cdc-b6e0-08ec4a026c21@free.fr>
-Message-ID: <56e3d3d8-700d-867b-b23c-06da2248ebdc@free.fr>
-Date:   Mon, 25 Mar 2019 13:05:37 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+Received: by mail-lf1-f65.google.com with SMTP id m13so5793258lfb.6;
+        Mon, 25 Mar 2019 05:05:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+vrV0eq8plGYoxVHP9w64smHeY0x6nQMHZAbLphqTIE=;
+        b=nDP/piHbTsN/W09q1mjVK1h94ofmoQ9Z7mGHA83SBqZ72q0F24BFsbRvZ4kZpNlGcr
+         9xG+HkM18x8QNzXMm6B7psxQqvy46i8Utvr3xBMXHcHghVHYZxh0Fz8nHa5R42faVDAz
+         ugTsuouNE/MhyRYGORakFxPdKFR3aQf64+ZozH1/0wT1uwIinY6gd9bOGoMhc3HzGl+B
+         s+4cdGuiz4XMivaNUIMkNc9boS/CVrPWdsmobpDGZq8ppge2fFFxexmZDDF9NbDNQA0r
+         QJwiHL5WdEslbIJ9tNcHfIFs6VXwRi27XapinpSVt7W5SLKxxCMG3Lql0E8BUGBhXtOh
+         vGpA==
+X-Gm-Message-State: APjAAAXgrgwxXyvbsncw7Oi1o9zvZ6LZJLbK1jGyXfqC3wxteu+utU60
+        sIgUd4tU2ZRTfD8R2i+f2bg=
+X-Google-Smtp-Source: APXvYqwss9p2OYFvR9vOB57LXiYFjf/CY/+MwDarotzKofpWazahGgzN2KREE5raZ6Fmow8hHWYirg==
+X-Received: by 2002:a19:c0d:: with SMTP id 13mr2079950lfm.132.1553515537376;
+        Mon, 25 Mar 2019 05:05:37 -0700 (PDT)
+Received: from localhost.localdomain ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id s64sm3472930lje.49.2019.03.25.05.05.35
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 25 Mar 2019 05:05:36 -0700 (PDT)
+Date:   Mon, 25 Mar 2019 14:05:24 +0200
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com
+Subject: [PATCH v11 3/8] clk: bd718x7: Support ROHM BD70528 clk block
+Message-ID: <005223e676e5d100625d87acb196b56f551e16f3.1553515333.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1553515333.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-In-Reply-To: <43768d77-80b7-9cdc-b6e0-08ec4a026c21@free.fr>
-Content-Type: text/plain; charset=iso-8859-15
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Mon Mar 25 13:05:38 2019 +0100 (CET)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1553515333.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+ROHM BD70528 is an ultra low power PMIC with similar 32K clk as
+bd718x7. Only difference (from clk perspective) is register address.
+Add support for controlling BD70528 clk using bd718x7 driver.
 
-What is the status for this series?
-https://patchwork.kernel.org/project/linux-arm-msm/list/?series=84611
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Acked-by: Stephen Boyd <sboyd@kernel.org>
+---
+ drivers/clk/Kconfig       |  6 +++---
+ drivers/clk/clk-bd718x7.c | 20 ++++++++++++++++----
+ 2 files changed, 19 insertions(+), 7 deletions(-)
 
-Regards.
+diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+index e705aab9e38b..86828939d095 100644
+--- a/drivers/clk/Kconfig
++++ b/drivers/clk/Kconfig
+@@ -285,10 +285,10 @@ config COMMON_CLK_STM32H7
+ 
+ config COMMON_CLK_BD718XX
+ 	tristate "Clock driver for ROHM BD718x7 PMIC"
+-	depends on MFD_ROHM_BD718XX
++	depends on MFD_ROHM_BD718XX || MFD_ROHM_BD70528
+ 	help
+-	  This driver supports ROHM BD71837 and ROHM BD71847
+-	  PMICs clock gates.
++	  This driver supports ROHM BD71837, ROHM BD71847 and
++	  ROHM BD70528 PMICs clock gates.
+ 
+ config COMMON_CLK_FIXED_MMIO
+ 	bool "Clock driver for Memory Mapped Fixed values"
+diff --git a/drivers/clk/clk-bd718x7.c b/drivers/clk/clk-bd718x7.c
+index 461228ebf703..ae6e5baee330 100644
+--- a/drivers/clk/clk-bd718x7.c
++++ b/drivers/clk/clk-bd718x7.c
+@@ -8,6 +8,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+ #include <linux/mfd/rohm-bd718x7.h>
++#include <linux/mfd/rohm-bd70528.h>
+ #include <linux/clk-provider.h>
+ #include <linux/clkdev.h>
+ #include <linux/regmap.h>
+@@ -86,9 +87,20 @@ static int bd71837_clk_probe(struct platform_device *pdev)
+ 		dev_err(&pdev->dev, "No parent clk found\n");
+ 		return -EINVAL;
+ 	}
+-
+-	c->reg = BD718XX_REG_OUT32K;
+-	c->mask = BD718XX_OUT32K_EN;
++	switch (mfd->chip_type) {
++	case ROHM_CHIP_TYPE_BD71837:
++	case ROHM_CHIP_TYPE_BD71847:
++		c->reg = BD718XX_REG_OUT32K;
++		c->mask = BD718XX_OUT32K_EN;
++		break;
++	case ROHM_CHIP_TYPE_BD70528:
++		c->reg = BD70528_REG_CLK_OUT;
++		c->mask = BD70528_CLK_OUT_EN_MASK;
++		break;
++	default:
++		dev_err(&pdev->dev, "Unknown clk chip\n");
++		return -EINVAL;
++	}
+ 	c->mfd = mfd;
+ 	c->pdev = pdev;
+ 	c->hw.init = &init;
+@@ -119,5 +131,5 @@ static struct platform_driver bd71837_clk = {
+ module_platform_driver(bd71837_clk);
+ 
+ MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>");
+-MODULE_DESCRIPTION("BD71837/BD71847 chip clk driver");
++MODULE_DESCRIPTION("BD71837/BD71847/BD70528 chip clk driver");
+ MODULE_LICENSE("GPL");
+-- 
+2.17.2
 
-On 25/02/2019 13:16, Marc Gonzalez wrote:
 
-> Hello,
-> 
-> This series adds support for the UFS host controller on APQ8098/MSM8998-based boards.
-> 
-> This should be the final rev ;-)
-> 
-> Differences between v4 and v5:
-> - Drop patches that have already been accepted or spun off
-> 
-> Differences between v3 and v4:
-> - Rebase on top of -next
-> - Pick up Douglas Anderson's UFSHC doc fix
-> - Document 8998 UFSHC binding
-> - Improve UFS PHY binding doc
-> - Put the UFS DT patch at the end of the series
-> 
-> Difference between v2 and v3:
-> - Add qcom,msm8998-qmp-ufs-phy compat string and match it in the PHY driver
-> - Drop vdd-hba-fixed-regulator
-> - Write the reg addresses with full 32-bit width
-> - Set regulator-allow-set-load only on the 3 rails used by UFS.
-> - Revert the patch introducing ufshcd_set_vccq_rail_unused
-> 
-> Difference between v1 and v2:
-> - New patch to add 'regulator-allow-set-load' prop to all vreg nodes
-> - Rename rpmcc node to 'clock-controller' + Add Review tags
-> - Drop UFS pinctrl gymnastics (not required, probably left enabled in bootloader)
-> - Delete GCC_UFS_ICE_CORE_CLK (ICE not used upstream, I think)
-> - Fix sizes of ufsphy register areas based on Jeffrey's feedback
-> - Hack ufshcd_set_vccq_rail_unused into a NOP to work around lock up + reboot
-> 
-> 
-> Marc Gonzalez (3):
->   dt-bindings: ufs: Add msm8998 compatible string
->   arm64: dts: qcom: msm8998: Allow UFSHC driver to set-load
->   arm64: dts: qcom: msm8998: Add UFS nodes
-> 
->  .../devicetree/bindings/ufs/ufshcd-pltfrm.txt |  1 +
->  arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi     | 22 +++++++
->  arch/arm64/boot/dts/qcom/msm8998.dtsi         | 65 +++++++++++++++++++
->  3 files changed, 88 insertions(+)
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
