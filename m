@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D7F6C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:12:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62419C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:12:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 771332070D
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:12:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38FF820811
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:12:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732391AbfCZQMd (ORCPT
+        id S1732188AbfCZQLe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 12:12:33 -0400
-Received: from mga02.intel.com ([134.134.136.20]:55266 "EHLO mga02.intel.com"
+        Tue, 26 Mar 2019 12:11:34 -0400
+Received: from mga02.intel.com ([134.134.136.20]:55265 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732203AbfCZQLf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 12:11:35 -0400
+        id S1732147AbfCZQLa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 12:11:30 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Mar 2019 09:11:35 -0700
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Mar 2019 09:11:30 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,273,1549958400"; 
-   d="scan'208";a="217714775"
+   d="scan'208";a="217714742"
 Received: from otc-icl-cdi187.jf.intel.com ([10.54.55.103])
-  by orsmga001.jf.intel.com with ESMTP; 26 Mar 2019 09:11:35 -0700
+  by orsmga001.jf.intel.com with ESMTP; 26 Mar 2019 09:11:29 -0700
 From:   kan.liang@linux.intel.com
 To:     peterz@infradead.org, acme@kernel.org, mingo@redhat.com,
         linux-kernel@vger.kernel.org
 Cc:     tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
         alexander.shishkin@linux.intel.com, ak@linux.intel.com,
         Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V4 14/23] perf/x86/intel: Support overflows on SLOTS
-Date:   Tue, 26 Mar 2019 09:08:52 -0700
-Message-Id: <20190326160901.4887-15-kan.liang@linux.intel.com>
+Subject: [PATCH V4 08/23] perf/x86/intel/cstate: Add Icelake support
+Date:   Tue, 26 Mar 2019 09:08:46 -0700
+Message-Id: <20190326160901.4887-9-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190326160901.4887-1-kan.liang@linux.intel.com>
 References: <20190326160901.4887-1-kan.liang@linux.intel.com>
@@ -45,61 +45,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andi Kleen <ak@linux.intel.com>
+From: Kan Liang <kan.liang@linux.intel.com>
 
-The internal counters used for the metrics can overflow. If this happens
-an overflow is triggered on the SLOTS fixed counter. Add special code
-that resets all the slave metric counters in this case.
+Icelake uses the same C-state residency events as Sandy Bridge.
 
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 ---
 
 No changes since V3.
 
- arch/x86/events/intel/core.c | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ arch/x86/events/intel/cstate.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 5c8f0df137bc..2da822414627 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -2231,12 +2231,35 @@ static void intel_pmu_add_event(struct perf_event *event)
- 		intel_pmu_lbr_add(event);
- }
+diff --git a/arch/x86/events/intel/cstate.c b/arch/x86/events/intel/cstate.c
+index 94a4b7fc75d0..dd5658ec31d5 100644
+--- a/arch/x86/events/intel/cstate.c
++++ b/arch/x86/events/intel/cstate.c
+@@ -578,6 +578,8 @@ static const struct x86_cpu_id intel_cstates_match[] __initconst = {
+ 	X86_CSTATES_MODEL(INTEL_FAM6_ATOM_GOLDMONT_X, glm_cstates),
  
-+/* When SLOTS overflowed update all the active topdown-* events */
-+static void intel_pmu_update_metrics(struct perf_event *event)
-+{
-+	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-+	int idx;
-+	u64 slots_events;
+ 	X86_CSTATES_MODEL(INTEL_FAM6_ATOM_GOLDMONT_PLUS, glm_cstates),
 +
-+	slots_events = *(u64 *)cpuc->enabled_events & INTEL_PMC_MSK_ANY_SLOTS;
-+
-+	for_each_set_bit(idx, (unsigned long *)&slots_events, 64) {
-+		struct perf_event *ev = cpuc->events[idx];
-+
-+		if (ev == event)
-+			continue;
-+		x86_perf_event_update(event);
-+	}
-+}
-+
- /*
-  * Save and restart an expired event. Called by NMI contexts,
-  * so it has to be careful about preempting normal event ops:
-  */
- int intel_pmu_save_and_restart(struct perf_event *event)
- {
-+	struct hw_perf_event *hwc = &event->hw;
-+
-+	if (unlikely(hwc->reg_idx == INTEL_PMC_IDX_FIXED_SLOTS))
-+		intel_pmu_update_metrics(event);
-+
- 	x86_perf_event_update(event);
- 	/*
- 	 * For a checkpointed counter always reset back to 0.  This
++	X86_CSTATES_MODEL(INTEL_FAM6_ICELAKE_MOBILE, snb_cstates),
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(x86cpu, intel_cstates_match);
 -- 
 2.17.1
 
