@@ -3,36 +3,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC499C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 19:59:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82887C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 19:59:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EE782075C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 19:59:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59A102075C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 19:59:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732362AbfCZT7f (ORCPT
+        id S1732579AbfCZT7j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 15:59:35 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44076 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726207AbfCZT7f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 15:59:35 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D132DAEFE;
-        Tue, 26 Mar 2019 19:59:32 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc:     oneukum@suse.de, Terry.Junge@plantronics.com,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] HID: core: move Usage Page concatenation to hid_parser_main()
-Date:   Tue, 26 Mar 2019 20:59:27 +0100
-Message-Id: <20190326195928.25112-1-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.21.0
+        Tue, 26 Mar 2019 15:59:39 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:36755 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726207AbfCZT7i (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 15:59:38 -0400
+Received: by mail-pl1-f196.google.com with SMTP id k2so2128591plt.3
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 12:59:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AH4vvTxixdh92C0weTxwlBQL8wg6WuWvfq2/y6RXgBE=;
+        b=luoBzne8GlKRqYkxWoLctMcjTgHtroPbQa+fh7IPrS20dj+QT0a9Vpyi0tfzazFECp
+         LQ5594uTxnYXbKmJnN6WJ6fSNuXtzgDL/IdYwe1Ox1RUE0ZQMD0vld7039UzzN48AUFc
+         ZNBnH3dhspSAljytqXNj4vIs+4hCSSpTBmP2KuGavJuuxcG2VysBwtNavoZ94YB004VD
+         bNI0z/hGMOZHf/zLjJ2hAfx2Vjnbte04F1/e2aaoWTCYZxvsF2hNzY/Bi4GODtvo3OCj
+         O+0jz1LjTZHYxx9UlhTvhc6MbV/ZjBfe8tcuMVqSfuP7GJMvH1rjjLb3t8O6zsXBlDgB
+         gfwQ==
+X-Gm-Message-State: APjAAAWLr450xAa6td0vGzyMqvDTPowBm1WfPXv3RGu5ME8yoqE0amnI
+        c7FNOXmT0Whkgu1pZDEXeTo=
+X-Google-Smtp-Source: APXvYqzs35m7RzBhMCpnSOD5eVB4OV1pOwueBsGeSnTN4hjObHE/JnlYADo/qzFMUD5oM1RBnzMHEA==
+X-Received: by 2002:a17:902:9884:: with SMTP id s4mr33089215plp.110.1553630377175;
+        Tue, 26 Mar 2019 12:59:37 -0700 (PDT)
+Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:203:5cdc:422c:7b28:ebb5])
+        by smtp.gmail.com with ESMTPSA id o2sm29400278pgq.29.2019.03.26.12.59.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 26 Mar 2019 12:59:36 -0700 (PDT)
+From:   Bart Van Assche <bvanassche@acm.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Waiman Long <longman@redhat.com>, shenghui <shhuiw@foxmail.com>
+Subject: [PATCH] locking/lockdep: Zap lock classes even with lock debugging disabled
+Date:   Tue, 26 Mar 2019 12:59:12 -0700
+Message-Id: <20190326195912.43316-1-bvanassche@acm.org>
+X-Mailer: git-send-email 2.20.GIT
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -40,149 +60,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As seen on some USB wireless keyboards manufactured by Primax, the HID
-parser was using some assumptions that are not always true. In this case
-it's s the fact that, inside the scope of a main item, an Usage Page
-will always precede an Usage.
+Commit a0b0fd53e1e6 ("locking/lockdep: Free lock classes that are no longer
+in use") changed the behavior of lockdep_free_key_range() from
+unconditionally zapping lock classes into only zapping lock classes if
+debug_lock == true. Since the new behavior can cause cat /proc/lockdep to
+crash due to a NULL pointer dereference, restore the pre-v5.1 behavior.
 
-The spec is not pretty clear as 6.2.2.7 states "Any usage that follows
-is interpreted as a Usage ID and concatenated with the Usage Page".
-While 6.2.2.8 states "When the parser encounters a main item it
-concatenates the last declared Usage Page with a Usage to form a
-complete usage value." Being somewhat contradictory it was decided to
-match Window's implementation, which follows 6.2.2.8.
-
-In summary, the patch moves the Usage Page concatenation from the local
-item parsing function to the main item parsing function.
-
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Waiman Long <longman@redhat.com>
+Cc: shenghui <shhuiw@foxmail.com>
+Reported-by: shenghui <shhuiw@foxmail.com>
+Fixes: a0b0fd53e1e6 ("locking/lockdep: Free lock classes that are no longer in use") # v5.1-rc1.
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
 ---
+ kernel/locking/lockdep.c | 23 ++++++-----------------
+ 1 file changed, 6 insertions(+), 17 deletions(-)
 
-v1->v2: - Add usage concatenation to hid_scan_main()
-	- Rework tests in hid-tools, making sure no-one is failing
-
- drivers/hid/hid-core.c | 40 ++++++++++++++++++++++++++++------------
- include/linux/hid.h    |  1 +
- 2 files changed, 29 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
-index 9993b692598f..40c836ce3248 100644
---- a/drivers/hid/hid-core.c
-+++ b/drivers/hid/hid-core.c
-@@ -218,13 +218,14 @@ static unsigned hid_lookup_collection(struct hid_parser *parser, unsigned type)
-  * Add a usage to the temporary parser table.
-  */
+diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+index 34cdcbedda49..70480e4f8f5d 100644
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -4689,8 +4689,7 @@ static void free_zapped_rcu(struct rcu_head *ch)
+ 		return;
  
--static int hid_add_usage(struct hid_parser *parser, unsigned usage)
-+static int hid_add_usage(struct hid_parser *parser, unsigned usage, __u8 size)
- {
- 	if (parser->local.usage_index >= HID_MAX_USAGES) {
- 		hid_err(parser->device, "usage index exceeded\n");
- 		return -1;
- 	}
- 	parser->local.usage[parser->local.usage_index] = usage;
-+	parser->local.usage_size[parser->local.usage_index] = size;
- 	parser->local.collection_index[parser->local.usage_index] =
- 		parser->collection_stack_ptr ?
- 		parser->collection_stack[parser->collection_stack_ptr - 1] : 0;
-@@ -486,10 +487,7 @@ static int hid_parser_local(struct hid_parser *parser, struct hid_item *item)
- 			return 0;
- 		}
+ 	raw_local_irq_save(flags);
+-	if (!graph_lock())
+-		goto out_irq;
++	arch_spin_lock(&lockdep_lock);
  
--		if (item->size <= 2)
--			data = (parser->global.usage_page << 16) + data;
--
--		return hid_add_usage(parser, data);
-+		return hid_add_usage(parser, data, item->size);
+ 	/* closed head */
+ 	pf = delayed_free.pf + (delayed_free.index ^ 1);
+@@ -4702,8 +4701,7 @@ static void free_zapped_rcu(struct rcu_head *ch)
+ 	 */
+ 	call_rcu_zapped(delayed_free.pf + delayed_free.index);
  
- 	case HID_LOCAL_ITEM_TAG_USAGE_MINIMUM:
- 
-@@ -498,9 +496,6 @@ static int hid_parser_local(struct hid_parser *parser, struct hid_item *item)
- 			return 0;
- 		}
- 
--		if (item->size <= 2)
--			data = (parser->global.usage_page << 16) + data;
--
- 		parser->local.usage_minimum = data;
- 		return 0;
- 
-@@ -511,9 +506,6 @@ static int hid_parser_local(struct hid_parser *parser, struct hid_item *item)
- 			return 0;
- 		}
- 
--		if (item->size <= 2)
--			data = (parser->global.usage_page << 16) + data;
--
- 		count = data - parser->local.usage_minimum;
- 		if (count + parser->local.usage_index >= HID_MAX_USAGES) {
- 			/*
-@@ -533,7 +525,7 @@ static int hid_parser_local(struct hid_parser *parser, struct hid_item *item)
- 		}
- 
- 		for (n = parser->local.usage_minimum; n <= data; n++)
--			if (hid_add_usage(parser, n)) {
-+			if (hid_add_usage(parser, n, item->size)) {
- 				dbg_hid("hid_add_usage failed\n");
- 				return -1;
- 			}
-@@ -547,6 +539,26 @@ static int hid_parser_local(struct hid_parser *parser, struct hid_item *item)
- 	return 0;
+-	graph_unlock();
+-out_irq:
++	arch_spin_unlock(&lockdep_lock);
+ 	raw_local_irq_restore(flags);
  }
  
-+/*
-+ * Concatenate Usage Pages into Usages where relevant:
-+ * As per specification, 6.2.2.8: "When the parser encounters a main item it
-+ * concatenates the last declared Usage Page with a Usage to form a complete
-+ * usage value."
-+ */
-+
-+static void hid_concatenate_usage_page(struct hid_parser *parser)
-+{
-+	unsigned usages;
-+	int i;
-+
-+	usages = max_t(unsigned, parser->local.usage_index,
-+				 parser->global.report_count);
-+
-+	for (i = 0; i < usages; i++)
-+		if (parser->local.usage_size[i] <= 2)
-+			parser->local.usage[i] += parser->global.usage_page << 16;
-+}
-+
- /*
-  * Process a main item.
-  */
-@@ -556,6 +568,8 @@ static int hid_parser_main(struct hid_parser *parser, struct hid_item *item)
- 	__u32 data;
- 	int ret;
+@@ -4744,21 +4742,15 @@ static void lockdep_free_key_range_reg(void *start, unsigned long size)
+ {
+ 	struct pending_free *pf;
+ 	unsigned long flags;
+-	int locked;
  
-+	hid_concatenate_usage_page(parser);
-+
- 	data = item_udata(item);
+ 	init_data_structures_once();
  
- 	switch (item->tag) {
-@@ -765,6 +779,8 @@ static int hid_scan_main(struct hid_parser *parser, struct hid_item *item)
- 	__u32 data;
- 	int i;
+ 	raw_local_irq_save(flags);
+-	locked = graph_lock();
+-	if (!locked)
+-		goto out_irq;
+-
++	arch_spin_lock(&lockdep_lock);
+ 	pf = get_pending_free();
+ 	__lockdep_free_key_range(pf, start, size);
+ 	call_rcu_zapped(pf);
+-
+-	graph_unlock();
+-out_irq:
++	arch_spin_unlock(&lockdep_lock);
+ 	raw_local_irq_restore(flags);
  
-+	hid_concatenate_usage_page(parser);
-+
- 	data = item_udata(item);
+ 	/*
+@@ -4911,9 +4903,7 @@ void lockdep_unregister_key(struct lock_class_key *key)
+ 		return;
  
- 	switch (item->tag) {
-diff --git a/include/linux/hid.h b/include/linux/hid.h
-index f9707d1dcb58..d1fb4b678873 100644
---- a/include/linux/hid.h
-+++ b/include/linux/hid.h
-@@ -417,6 +417,7 @@ struct hid_global {
+ 	raw_local_irq_save(flags);
+-	if (!graph_lock())
+-		goto out_irq;
+-
++	arch_spin_lock(&lockdep_lock);
+ 	pf = get_pending_free();
+ 	hlist_for_each_entry_rcu(k, hash_head, hash_entry) {
+ 		if (k == key) {
+@@ -4925,8 +4915,7 @@ void lockdep_unregister_key(struct lock_class_key *key)
+ 	WARN_ON_ONCE(!found);
+ 	__lockdep_free_key_range(pf, key, 1);
+ 	call_rcu_zapped(pf);
+-	graph_unlock();
+-out_irq:
++	arch_spin_unlock(&lockdep_lock);
+ 	raw_local_irq_restore(flags);
  
- struct hid_local {
- 	unsigned usage[HID_MAX_USAGES]; /* usage array */
-+	__u8 usage_size[HID_MAX_USAGES]; /* usage size array */
- 	unsigned collection_index[HID_MAX_USAGES]; /* collection index array */
- 	unsigned usage_index;
- 	unsigned usage_minimum;
+ 	/* Wait until is_dynamic_key() has finished accessing k->hash_entry. */
 -- 
-2.21.0
+2.21.0.196.g041f5ea1cf98
 
