@@ -2,139 +2,97 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24AFCC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:58:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75C8CC4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:59:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED0CC2070D
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:58:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 430FE20863
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:59:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="jeaL76ao"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732114AbfCZP6r (ORCPT
+        id S1731489AbfCZP7P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 11:58:47 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:39016 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726127AbfCZP6r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 11:58:47 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 464001596;
-        Tue, 26 Mar 2019 08:58:46 -0700 (PDT)
-Received: from e107981-ln.cambridge.arm.com (e107981-ln.cambridge.arm.com [10.1.197.40])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0E6143F614;
-        Tue, 26 Mar 2019 08:58:43 -0700 (PDT)
-Date:   Tue, 26 Mar 2019 15:58:37 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     David Woodhouse <dwmw2@infradead.org>
-Cc:     Jonathan Chocron <jonnyc@amazon.com>, linux-pci@vger.kernel.org,
-        bhelgaas@google.com, linux-kernel@vger.kernel.org,
-        vaerov@amazon.com, benh@kernel.crashing.org, alisaidi@amazon.com,
-        zeev@amazon.com, ronenk@amazon.com, barakw@amazon.com,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Zhou Wang <wangzhou1@hisilicon.com>
-Subject: Re: [PATCH v2] PCI: al: Add Amazon Annapurna Labs PCIe host
- controller driver
-Message-ID: <20190326155837.GA8820@e107981-ln.cambridge.arm.com>
-References: <1553512040-4453-1-git-send-email-jonnyc@amazon.com>
- <1553594455-30436-1-git-send-email-jonnyc@amazon.com>
- <20190326121727.GA4171@e107981-ln.cambridge.arm.com>
- <07838dad0e0cdb14c42080ef19c11829f72c8814.camel@infradead.org>
+        Tue, 26 Mar 2019 11:59:15 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:52523 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726127AbfCZP7N (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 11:59:13 -0400
+Received: by mail-wm1-f67.google.com with SMTP id a184so13210834wma.2
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 08:59:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=KvLvYQ8To9vnE8+/chaGT7oUCER7SYfH+KoD75hlshE=;
+        b=jeaL76aojADDCFOSBXXt0XmST0oQR1XTZNIyNuFeG/4lsPEmF20iM2oSC9/C1yYwUQ
+         ShJC7lUWkVwfaL6BN+A7Nt8zfM+eybDCCfRFpCC7qHX1pbgLhPpQNHjbNDh35NCkLP3Y
+         URnXqNPjPP7pUqE3oh1o1Bpx9wzD5saGdjBvyFp7kxZyFTkiEuEeDCYmWxL/lfsRtwLJ
+         whkRIycdMXSprftUznuWfMS19x6dA+JPV+btQAWbz0uvL/F7+QbHpkxM0bRVbHGAUuey
+         L9QDdd0BPhzI1tEAtEiIedzAmZYMcYK1uoktiUI+mt+7cnPo+1eshAy/xbi29byM2P5F
+         r5wQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=KvLvYQ8To9vnE8+/chaGT7oUCER7SYfH+KoD75hlshE=;
+        b=pzRJWpnqr7KrsxjBztBsHmRKrxVUPbC19FI7n/m5MvCEV36OGy5OGSkcW+wlbk0C+B
+         uzpoXWa6sG0DgoMwruVEVephCYBMBberx7jEVX+K3VZ8xO+0fVHFoSmC9HQjswA5G056
+         +z4CWuIMrssYdLZf8FBzre9R7hAwwm1DE04Hq4uwqjLuSVJSRXpEZpiZnQsqJbbTldmO
+         gwGKQDrm3HSLQh4S1uUIsUTiqMrurERTYRIxfqJgiQXvPn6j7a5EH6R7ZdEJWckwT9E1
+         OR1g2jU4xIakEPz2DJwEyO1KgeliojMaqIDB6LweeElwDH2J02YFa6wUETfsjDY3Hmrl
+         R6eQ==
+X-Gm-Message-State: APjAAAUcPlTnME3nLvfb2o5gje1JjqwMKkXRv3JKxEH+HK/UTnSN8K4O
+        p4LV8t8V/q/SODkBde6UihdBKg==
+X-Google-Smtp-Source: APXvYqx0VLE2SqTpxDnTTedfDiOi3xMbbu8jujt0Nf7moivF12Z7LAL/tS5ByQ7Mn5HVjGWy4cPINA==
+X-Received: by 2002:a1c:ca06:: with SMTP id a6mr13965175wmg.14.1553615952187;
+        Tue, 26 Mar 2019 08:59:12 -0700 (PDT)
+Received: from localhost (jirka.pirko.cz. [84.16.102.26])
+        by smtp.gmail.com with ESMTPSA id x5sm21572993wrt.72.2019.03.26.08.59.11
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 26 Mar 2019 08:59:11 -0700 (PDT)
+Date:   Tue, 26 Mar 2019 16:59:11 +0100
+From:   Jiri Pirko <jiri@resnulli.us>
+To:     Michal Kubecek <mkubecek@suse.cz>
+Cc:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        John Linville <linville@tuxdriver.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v5 07/22] ethtool: netlink bitset handling
+Message-ID: <20190326155911.GA4958@nanopsycho.orion>
+References: <cover.1553532199.git.mkubecek@suse.cz>
+ <9123f942b484ef4bbb684bb1f4aa2b70d673a259.1553532199.git.mkubecek@suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <07838dad0e0cdb14c42080ef19c11829f72c8814.camel@infradead.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <9123f942b484ef4bbb684bb1f4aa2b70d673a259.1553532199.git.mkubecek@suse.cz>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 01:24:41PM +0000, David Woodhouse wrote:
-> On Tue, 2019-03-26 at 12:17 +0000, Lorenzo Pieralisi wrote:
-> > [+Zhou, Gustavo]
-> > 
-> > On Tue, Mar 26, 2019 at 12:00:55PM +0200, Jonathan Chocron wrote:
-> > > Adding support for Amazon's Annapurna Labs PCIe driver.
-> > > The HW controller is based on DesignWare's IP.
-> > > 
-> > > The HW doesn't support accessing the Root Port's config space via
-> > > ECAM, so we obtain its base address via an AMZN0001 device.
-> > > 
-> > > Furthermore, the DesignWare PCIe controller doesn't filter out
-> > > config transactions sent to devices 1 and up on its bus, so they
-> > > are filtered by the driver.
-> > > All subordinate buses do support ECAM access.
-> > > 
-> > > Implementing specific PCI config access functions involves:
-> > >  - Adding an init function to obtain the Root Port's base address
-> > >    from an AMZN0001 device.
-> > >  - Adding a new entry in the mcfg quirk array
-> > > 
-> > > Co-developed-by: Vladimir Aerov <vaerov@amazon.com>
-> > > Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
-> > > Signed-off-by: Vladimir Aerov <vaerov@amazon.com>
-> > > Reviewed-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> > > Reviewed-by: David Woodhouse <dwmw@amazon.co.uk>
-> > 
-> > Review tags should be given on public mailing lists for public
-> > review and I have not seen them (they were already there in v1) so
-> > you should drop them.
-> 
-> We did that internally. You really don't want me telling engineers to
-> post to the list *first* without running things by me to get the basics
-> right. Not to start with, at least.
+Mon, Mar 25, 2019 at 06:08:15PM CET, mkubecek@suse.cz wrote:
+>Declare attribute type constants and add helper functions to generate and
+>parse arbitrary length bit sets.
 
-Hi David,
-
-I am obviously in favour of internal review and I do not question it was
-carried out internally, I just kindly ask developers to drop review tags
-given internally when going to public mailing lists - I understand it is
-churn for you but I prefer them to be given explicitly.
-
-Thanks !
-Lorenzo
-
-> Reviewed-by: David Woodhouse <dwmw@amazon.co.uk>
-> 
-> 
-> > > Changes from v1:
-> > >   - Fix commit message comments (incl. using AMZN0001
-> > >     instead of PNP0C02)
-> > >   - Use the usual multi-line comment style
-> > > 
-> > >  MAINTAINERS                          |  6 +++
-> > >  drivers/acpi/pci_mcfg.c              | 12 +++++
-> > >  drivers/pci/controller/dwc/Makefile  |  1 +
-> > >  drivers/pci/controller/dwc/pcie-al.c | 93 ++++++++++++++++++++++++++++++++++++
-> > >  include/linux/pci-ecam.h             |  1 +
-> > >  5 files changed, 113 insertions(+)
-> > >  create mode 100644 drivers/pci/controller/dwc/pcie-al.c
-> > > 
-> > > diff --git a/MAINTAINERS b/MAINTAINERS
-> > > index 32d444476a90..7a17017f9f82 100644
-> > > --- a/MAINTAINERS
-> > > +++ b/MAINTAINERS
-> > > @@ -11769,6 +11769,12 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git/
-> > >  S:	Supported
-> > >  F:	drivers/pci/controller/
-> > >  
-> > > +PCIE DRIVER FOR ANNAPURNA LABS
-> > > +M:	Jonathan Chocron <jonnyc@amazon.com>
-> > > +L:	linux-pci@vger.kernel.org
-> > > +S:	Maintained
-> > > +F:	drivers/pci/controller/dwc/pcie-al.c
-> > 
-> > I do not think we need a maintainer file for that see below, and
-> > actually this quirk should be handled by DWC maintainers since it is a
-> > DWC quirk, not a platform one.
-> 
-> Many of the others already have this, it seems.
-> 
-> It's also fine to drop it, and include it when we add the rest of the
-> Alpine SOC support and a MAINTAINERS entry for that.
-> 
-
+Hmm, this looks like a lot of work. Two things:
+1) This is generic. Not really related to ethtool in any way. Could this
+   be done in netlink common code?
+2) Did you think about leveraging NLA_BITFIELD32? What I mean is this:
+NEST_START
+   NLA_BITFIELD32 index 0 (bit 0-31)
+   NLA_BITFIELD32 index 1 (bit 32-63)
+   NLA_BITFIELD32 index 2 (bit 64-95)
+   NLA_BITFIELD32 index 3 (bit 96-127)
+   ....
+NEST_END
+It is basically an array of NLA_BITFIELD32.
 
