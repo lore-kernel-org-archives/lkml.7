@@ -6,46 +6,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1A71C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:39:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32490C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:40:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C00CC20863
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:39:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F217520879
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:40:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553582398;
-	bh=KjP2SYEcLH8bZdAliLGOf8HxYrY/Euj2bi/etasqFQs=;
+	s=default; t=1553582406;
+	bh=oMlX4xK4SGILUUWJiC+v2HFP0vljZY/NVTbeUbJhf5M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SAzrAIKlIoHjxLgumxuHLcR/A8xMUns+9noaIarRh2vrGAwebQi42cKOIkL+oD2ec
-	 dUV9Gat0lv8M2/N1nXeOPJvP55tRAslchmFU7tyX1NUaFkxGl8I+wcL9nv+9D5kqRG
-	 Ooq/Itc/QwlcDqQfJoR/t7GmJPVzQHXPkrdZHBUY=
+	b=sunKGbQeziaHJjNFzQPNgEMpJR92bDwMGiBdkIY1wjQiMArHwaoE4pRx6Fud0DDOs
+	 A/9uHtea1LM/92XejhvUx+LaYT70srXHroYawEQVr4rRDpa2xvJ4ydA79SJp740e6m
+	 cKKPqe/Vg7bmSFV306qkjtDf6N1MCw7ikK0OJM8o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732781AbfCZGj5 (ORCPT
+        id S1732323AbfCZGkE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:39:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55750 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 02:40:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732763AbfCZGjy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:39:54 -0400
+        id S1732776AbfCZGj4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:39:56 -0400
 Received: from localhost (unknown [104.132.152.111])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5BC820879;
-        Tue, 26 Mar 2019 06:39:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9DCD20879;
+        Tue, 26 Mar 2019 06:39:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553582393;
-        bh=KjP2SYEcLH8bZdAliLGOf8HxYrY/Euj2bi/etasqFQs=;
+        s=default; t=1553582396;
+        bh=oMlX4xK4SGILUUWJiC+v2HFP0vljZY/NVTbeUbJhf5M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VUL2wBbl5i/LFUR1DDwgT4Fp7dC/fvpDxDUlNwB4If3Ao6da5+drhf3RpEEFeC+YV
-         eWHDNvktnSKx7niofdYTOD2NoVbndllDJbYhffQ9e905Jn02DLnNhGj+5VTudTpb+L
-         lWk5SwwGnj12c8cs/npe21P5h1EcYbhjLFiFPjS0=
+        b=Pd/VDcIDWUxZA/Vuk4t+l7efRDalNVpR6fnzXZm4CY5YbqnlYGChcKt7wO85zFZuQ
+         ru+gKIzKj0NjcmdZ5S3Q7vAscqzlyI8sGhk6ZfEzhy4snoE7L62+p9bUwXLEvE/SWE
+         8gICm7yurAIyw3ebzkTDLVxnoFEdgzTLqUADtFAo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tyrel Datwyler <tyreld@linux.vnet.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 5.0 23/52] scsi: ibmvscsi: Fix empty event pool access during host removal
-Date:   Tue, 26 Mar 2019 15:30:10 +0900
-Message-Id: <20190326042702.076902917@linuxfoundation.org>
+        stable@vger.kernel.org, Chen Jie <chenjie6@huawei.com>,
+        Thomas Gleixner <tglx@linutronix.de>, dvhart@infradead.org,
+        peterz@infradead.org, zengweilin@huawei.com
+Subject: [PATCH 5.0 24/52] futex: Ensure that futex address is aligned in handle_futex_death()
+Date:   Tue, 26 Mar 2019 15:30:11 +0900
+Message-Id: <20190326042702.128836317@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190326042700.963224437@linuxfoundation.org>
 References: <20190326042700.963224437@linuxfoundation.org>
@@ -64,93 +65,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
+From: Chen Jie <chenjie6@huawei.com>
 
-commit 7f5203c13ba8a7b7f9f6ecfe5a4d5567188d7835 upstream.
+commit 5a07168d8d89b00fe1760120714378175b3ef992 upstream.
 
-The event pool used for queueing commands is destroyed fairly early in the
-ibmvscsi_remove() code path. Since, this happens prior to the call so
-scsi_remove_host() it is possible for further calls to queuecommand to be
-processed which manifest as a panic due to a NULL pointer dereference as
-seen here:
+The futex code requires that the user space addresses of futexes are 32bit
+aligned. sys_futex() checks this in futex_get_keys() but the robust list
+code has no alignment check in place.
 
-PANIC: "Unable to handle kernel paging request for data at address
-0x00000000"
+As a consequence the kernel crashes on architectures with strict alignment
+requirements in handle_futex_death() when trying to cmpxchg() on an
+unaligned futex address which was retrieved from the robust list.
 
-Context process backtrace:
+[ tglx: Rewrote changelog, proper sizeof() based alignement check and add
+  	comment ]
 
-DSISR: 0000000042000000 ????Syscall Result: 0000000000000000
-4 [c000000002cb3820] memcpy_power7 at c000000000064204
-[Link Register] [c000000002cb3820] ibmvscsi_send_srp_event at d000000003ed14a4
-5 [c000000002cb3920] ibmvscsi_send_srp_event at d000000003ed14a4 [ibmvscsi] ?(unreliable)
-6 [c000000002cb39c0] ibmvscsi_queuecommand at d000000003ed2388 [ibmvscsi]
-7 [c000000002cb3a70] scsi_dispatch_cmd at d00000000395c2d8 [scsi_mod]
-8 [c000000002cb3af0] scsi_request_fn at d00000000395ef88 [scsi_mod]
-9 [c000000002cb3be0] __blk_run_queue at c000000000429860
-10 [c000000002cb3c10] blk_delay_work at c00000000042a0ec
-11 [c000000002cb3c40] process_one_work at c0000000000dac30
-12 [c000000002cb3cd0] worker_thread at c0000000000db110
-13 [c000000002cb3d80] kthread at c0000000000e3378
-14 [c000000002cb3e30] ret_from_kernel_thread at c00000000000982c
-
-The kernel buffer log is overfilled with this log:
-
-[11261.952732] ibmvscsi: found no event struct in pool!
-
-This patch reorders the operations during host teardown. Start by calling
-the SRP transport and Scsi_Host remove functions to flush any outstanding
-work and set the host offline. LLDD teardown follows including destruction
-of the event pool, freeing the Command Response Queue (CRQ), and unmapping
-any persistent buffers. The event pool destruction is protected by the
-scsi_host lock, and the pool is purged prior of any requests for which we
-never received a response. Finally, move the removal of the scsi host from
-our global list to the end so that the host is easily locatable for
-debugging purposes during teardown.
-
-Cc: <stable@vger.kernel.org> # v2.6.12+
-Signed-off-by: Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 0771dfefc9e5 ("[PATCH] lightweight robust futexes: core")
+Signed-off-by: Chen Jie <chenjie6@huawei.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: <dvhart@infradead.org>
+Cc: <peterz@infradead.org>
+Cc: <zengweilin@huawei.com>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/1552621478-119787-1-git-send-email-chenjie6@huawei.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/ibmvscsi/ibmvscsi.c |   22 ++++++++++++++++------
- 1 file changed, 16 insertions(+), 6 deletions(-)
+ kernel/futex.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/scsi/ibmvscsi/ibmvscsi.c
-+++ b/drivers/scsi/ibmvscsi/ibmvscsi.c
-@@ -2295,17 +2295,27 @@ static int ibmvscsi_probe(struct vio_dev
- static int ibmvscsi_remove(struct vio_dev *vdev)
+--- a/kernel/futex.c
++++ b/kernel/futex.c
+@@ -3440,6 +3440,10 @@ static int handle_futex_death(u32 __user
  {
- 	struct ibmvscsi_host_data *hostdata = dev_get_drvdata(&vdev->dev);
--	spin_lock(&ibmvscsi_driver_lock);
--	list_del(&hostdata->host_list);
--	spin_unlock(&ibmvscsi_driver_lock);
--	unmap_persist_bufs(hostdata);
-+	unsigned long flags;
-+
-+	srp_remove_host(hostdata->host);
-+	scsi_remove_host(hostdata->host);
-+
-+	purge_requests(hostdata, DID_ERROR);
-+
-+	spin_lock_irqsave(hostdata->host->host_lock, flags);
- 	release_event_pool(&hostdata->pool, hostdata);
-+	spin_unlock_irqrestore(hostdata->host->host_lock, flags);
-+
- 	ibmvscsi_release_crq_queue(&hostdata->queue, hostdata,
- 					max_events);
+ 	u32 uval, uninitialized_var(nval), mval;
  
- 	kthread_stop(hostdata->work_thread);
--	srp_remove_host(hostdata->host);
--	scsi_remove_host(hostdata->host);
-+	unmap_persist_bufs(hostdata);
++	/* Futex address must be 32bit aligned */
++	if ((((unsigned long)uaddr) % sizeof(*uaddr)) != 0)
++		return -1;
 +
-+	spin_lock(&ibmvscsi_driver_lock);
-+	list_del(&hostdata->host_list);
-+	spin_unlock(&ibmvscsi_driver_lock);
-+
- 	scsi_host_put(hostdata->host);
- 
- 	return 0;
+ retry:
+ 	if (get_user(uval, uaddr))
+ 		return -1;
 
 
