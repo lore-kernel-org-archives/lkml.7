@@ -2,86 +2,102 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CA66C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 11:34:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 267E2C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 11:34:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8AA52070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 11:34:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFCED2070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 11:34:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sqe9YIte"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731374AbfCZLer (ORCPT
+        id S1731428AbfCZLe5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 07:34:47 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:34850 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730133AbfCZLeq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 07:34:46 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4B8AA1596;
-        Tue, 26 Mar 2019 04:34:45 -0700 (PDT)
-Received: from [10.1.196.69] (e112269-lin.cambridge.arm.com [10.1.196.69])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 444183F59C;
-        Tue, 26 Mar 2019 04:34:44 -0700 (PDT)
-Subject: Re: [PATCH] firmware: arm_scmi: check return value of idr_find
-To:     Kangjie Lu <kjlu@umn.edu>
-Cc:     Sudeep Holla <sudeep.holla@arm.com>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, pakki001@umn.edu
-References: <225abd6e-4551-213d-367b-93d938789188@arm.com>
- <20190325204823.5428-1-kjlu@umn.edu>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <94d8e411-1eef-1450-4828-5faabb03a3d1@arm.com>
-Date:   Tue, 26 Mar 2019 11:34:42 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <20190325204823.5428-1-kjlu@umn.edu>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+        Tue, 26 Mar 2019 07:34:57 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:43078 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729662AbfCZLe4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 07:34:56 -0400
+Received: by mail-pg1-f193.google.com with SMTP id z9so1823376pgu.10
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 04:34:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=W5keWG+8K9pttGbYqwXZCypQPjjw0jSk0AFl/SzzcYw=;
+        b=Sqe9YItea5PtBB7UuyLeBfak/0y7o3/RT4Lzj7sZHxBPzzbzEMgm9/hELBw0Hjjn2V
+         lWLqiJ9IcWeIbz9zlkhh2g1e3xF+TfN159YB5tD1nAWNIah1sEs7GLW9y595VFr4esTJ
+         G2H7HTuV3Wi273ioj7Tc51ZMmjLulW2qk14Lp0OEqNs8xH0uQrT9iJwgXyOI8TxgNROb
+         iGPYRyBevPXITgm/c232LLeReSEhS2WvEJdL3ij02U4B6lu1zGVcl4wDxcrSM7p19J85
+         YJSNc63p5fx5IqlMTlJ8ZYklR5y64fBbz1OET6lg5gBYcW69D8KTPxiL2oFqANmxLmEF
+         HZEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=W5keWG+8K9pttGbYqwXZCypQPjjw0jSk0AFl/SzzcYw=;
+        b=TF0bmx+oEasHLWgkr0jXcwLvgY9xlJP8bUpawZk3WtUsmXBxOJr+sjjWDK7xAINDKr
+         6AR3P7WEW3JIdsbwH6uRlTGsdPu2o5vfzbKo7OZIrm7M6iCbBf6NnbblSsiSZO0GPVj6
+         zf6QU6SN3g/xskl3gvx5qdHhZMCgEebTJDVjLmQPxkqH5z5C9Vhl+UEPFIqWjH+/Y8E2
+         qFAuWJoZAH7HKn8Jo//JH2y3kxMH5cCNJ5BkdFBIxOVfIq+Cw8h3lUdiATdVyAUeiF1+
+         dUrKxniy95ejbGOSVg90DjQlVj0oO2Wg+L0nmCovVg29cIrhuRB3QZ1uXG9ksSzdprrp
+         R1dQ==
+X-Gm-Message-State: APjAAAXX/hU5bODb5LLt7SOYImshM9JyMZcEaKi3h+RbjfGcmMjkWkT3
+        fqgyB1pa+fogOJ3ZC+7PEVw=
+X-Google-Smtp-Source: APXvYqweiTwgX9ZgW1WC/LW8XRsOajO51AoliMqLI4a65EF6ilmmTyB6WTEmEoHpUNnqUSSdAC7ixg==
+X-Received: by 2002:a62:7049:: with SMTP id l70mr29352963pfc.78.1553600095800;
+        Tue, 26 Mar 2019 04:34:55 -0700 (PDT)
+Received: from VM_67_44_centos.localdomain ([150.109.46.178])
+        by smtp.gmail.com with ESMTPSA id v18sm23139858pfm.165.2019.03.26.04.34.54
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 26 Mar 2019 04:34:55 -0700 (PDT)
+From:   Yongkai Wu <nic.wuyk@gmail.com>
+X-Google-Original-From: Yongkai Wu <nic_w@163.com>
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org,
+        nic_w@163.com
+Subject: [PATCH] clocksource: Make clocksource insert entry more efficient
+Date:   Tue, 26 Mar 2019 19:34:19 +0800
+Message-Id: <1553600059-13193-1-git-send-email-nic_w@163.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25/03/2019 20:48, Kangjie Lu wrote:
-> Thanks for Steven Price's review of this patch. In the current code,
+In clocksource_enqueue(), it is unnecessary to do
+entry = &tmp->list
+in every loop,do it once in the last loop is enough.
 
-There's no need to include a "thanks" message in the commit message -
-the "Reviewed-by" tag is sufficient. Please also remember to include an
-appropriate version tag in the subject - this should be "v2".
+Signed-off-by: Yongkai Wu <nic_w@163.com>
+---
+ kernel/time/clocksource.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-Thanks,
-
-Steve
-
-> idr_find won't return NULL because the SCMI_PROTOCOL_BASE id must 
-> exist. However, it might return NULL in the future code if the check
-> is on another node while processing the children in subsequent calls 
-> to scmi_mbox_chan_setup().
-> Therefore, the patch conservatively checks the return value and 
-> returns -EINVAL when it indeed failed.
-> 
-> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-> Reviewed-by: Steven Price <steven.price@arm.com>
-> ---
->  drivers/firmware/arm_scmi/driver.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
-> index 8f952f2f1a29..35faa203d549 100644
-> --- a/drivers/firmware/arm_scmi/driver.c
-> +++ b/drivers/firmware/arm_scmi/driver.c
-> @@ -709,6 +709,8 @@ scmi_mbox_chan_setup(struct scmi_info *info, struct device *dev, int prot_id)
->  
->  	if (scmi_mailbox_check(np)) {
->  		cinfo = idr_find(&info->tx_idr, SCMI_PROTOCOL_BASE);
-> +		if (!cinfo)
-> +			return -EINVAL;
->  		goto idr_alloc;
->  	}
->  
-> 
+diff --git a/kernel/time/clocksource.c b/kernel/time/clocksource.c
+index 3bcc19c..da4829b 100644
+--- a/kernel/time/clocksource.c
++++ b/kernel/time/clocksource.c
+@@ -829,11 +829,12 @@ static void clocksource_enqueue(struct clocksource *cs)
+ 
+ 	list_for_each_entry(tmp, &clocksource_list, list) {
+ 		/* Keep track of the place, where to insert */
+-		if (tmp->rating < cs->rating)
++		if (tmp->rating < cs->rating) {
++			entry = &tmp->list;
+ 			break;
+-		entry = &tmp->list;
++		}
+ 	}
+-	list_add(&cs->list, entry);
++	list_add_tail(&cs->list, entry);
+ }
+ 
+ /**
+-- 
+1.8.3.1
 
