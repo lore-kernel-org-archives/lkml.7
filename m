@@ -2,145 +2,211 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09D67C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 17:33:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C19A4C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 17:33:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC9EB20866
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 17:33:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9398920866
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 17:33:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732430AbfCZRdO (ORCPT
+        id S1732446AbfCZRdU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 13:33:14 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:43575 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732406AbfCZRdL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 13:33:11 -0400
-Received: by mail-oi1-f195.google.com with SMTP id 67so10541542oif.10
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 10:33:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DLuJ0wj4n+0ibLZZrTu59HKM35jmmkFdA9L8eoJFKoI=;
-        b=DMLEWF6zC6/ibMk1LzlT+q8t++w/QByoFKd2SQB/tvNZzjlwjnflaB/8kmZDq75/NN
-         bl6F8RguWM8/GGRumtnsFAoor4Am43I6b8z1KRVA6riu1bC+p9hbX/zxzYTQGK5ixUvH
-         U0wSDmNbq3Arpr6DCuZfAydEHdv/bDmFOUTJby985VQwwq1bHRXGTgk0TfHsQ/4zfA+K
-         Fxfu+5F0gBfMOKwcMrW4mvXcMR/Ypx3EBhELDV/QXJEz0ljmgRgqXBfh79hQKWt0f7Un
-         v5RL5gJc08BtlOiySndhCX6N8/NTNnC3cEY/TmVuwkialkCjh2mglUBLJLyz4frxa6iW
-         zR7g==
-X-Gm-Message-State: APjAAAXwUJ9WCujQ1VrfXy9RGOu+/oWsUGzSVMnctJe8CGcOmkHJYvVO
-        VjzQf2m6XO/MgV4uFqDRc0hK6jMTy2BBGtkFYBvCpqj0Spo=
-X-Google-Smtp-Source: APXvYqwIuytPfhe+n/RkAPtIMrXJZ4YLCKPK2Wow3k34QLxB1AIGO91xLdgpHSYF7/tcPYr80iYOFXbEGKFHsXYuLJk=
-X-Received: by 2002:aca:af56:: with SMTP id y83mr16730188oie.17.1553621590480;
- Tue, 26 Mar 2019 10:33:10 -0700 (PDT)
+        Tue, 26 Mar 2019 13:33:20 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41910 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732431AbfCZRdQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 13:33:16 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 83DFE8666B;
+        Tue, 26 Mar 2019 17:33:12 +0000 (UTC)
+Received: from redhat.com (dhcp-17-208.bos.redhat.com [10.18.17.208])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7F2465C28D;
+        Tue, 26 Mar 2019 17:33:10 +0000 (UTC)
+Date:   Tue, 26 Mar 2019 13:33:08 -0400
+From:   Joe Lawrence <joe.lawrence@redhat.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: [PATCH v2] kbuild: strip whitespace in cmd_record_mcount findstring
+Message-ID: <20190326173308.GA26546@redhat.com>
+References: <20190325160438.8982-1-joe.lawrence@redhat.com>
+ <CAK7LNARyD=tG0JhwN_mjdyDRSPAF8UoZKvqAT3Ah_v7GfymCPg@mail.gmail.com>
 MIME-Version: 1.0
-References: <1551920088-30685-1-git-send-email-jsavitz@redhat.com>
- <CAL1p7m5e6HwFQVur+XVKWnpoMRPg0qFs0QkJ_5mnkUoxG_gwMw@mail.gmail.com> <CAL1p7m7n7+wwHsrxywnUYpOKvT6N+5ewCjaZXLPLCsBk+t+oNw@mail.gmail.com>
-In-Reply-To: <CAL1p7m7n7+wwHsrxywnUYpOKvT6N+5ewCjaZXLPLCsBk+t+oNw@mail.gmail.com>
-From:   Joel Savitz <jsavitz@redhat.com>
-Date:   Tue, 26 Mar 2019 13:32:59 -0400
-Message-ID: <CAL1p7m6e8KgfM79+biL0HPRofnaghJmrUdX6zX4b0ef=cYbEdg@mail.gmail.com>
-Subject: Re: [PATCH] cpuset: restore sanity to cpuset_cpus_allowed_fallback()
-To:     linux-kernel@vger.kernel.org
-Cc:     Li Zefan <lizefan@huawei.com>, cgroups@vger.kernel.org,
-        Philip Auld <pauld@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK7LNARyD=tG0JhwN_mjdyDRSPAF8UoZKvqAT3Ah_v7GfymCPg@mail.gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Tue, 26 Mar 2019 17:33:15 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Forgot to add cc's... my bad.
-
-Best,
-Joel Savitz
-
-On Tue, Mar 26, 2019 at 1:31 PM Joel Savitz <jsavitz@redhat.com> wrote:
->
-> Ping!
->
-> Does anyone have any comments or concerns about this patch?
->
-> Best,
-> Joel Savitz
->
-> Best,
-> Joel Savitz
->
->
-> On Thu, Mar 7, 2019 at 9:42 AM Joel Savitz <jsavitz@redhat.com> wrote:
+On Tue, Mar 26, 2019 at 02:29:47PM +0900, Masahiro Yamada wrote:
+> On Tue, Mar 26, 2019 at 1:05 AM Joe Lawrence <joe.lawrence@redhat.com> wrote:
 > >
-> > On Wed, Mar 6, 2019 at 7:55 PM Joel Savitz <jsavitz@redhat.com> wrote:
-> > >
-> > > If a process is limited by taskset (i.e. cpuset) to only be allowed to
-> > > run on cpu N, and then cpu N is offlined via hotplug, the process will
-> > > be assigned the current value of its cpuset cgroup's effective_cpus field
-> > > in a call to do_set_cpus_allowed() in cpuset_cpus_allowed_fallback().
-> > > This argument's value does not makes sense for this case, because
-> > > task_cs(tsk)->effective_cpus is modified by cpuset_hotplug_workfn()
-> > > to reflect the new value of cpu_active_mask after cpu N is removed from
-> > > the mask. While this may make sense for the cgroup affinity mask, it
-> > > does not make sense on a per-task basis, as a task that was previously
-> > > limited to only be run on cpu N will be limited to every cpu _except_ for
-> > > cpu N after it is offlined/onlined via hotplug.
-> > >
-> > > Pre-patch behavior:
-> > >
-> > >         $ grep Cpus /proc/$$/status
-> > >         Cpus_allowed:   ff
-> > >         Cpus_allowed_list:      0-7
-> > >
-> > >         $ taskset -p 4 $$
-> > >         pid 19202's current affinity mask: f
-> > >         pid 19202's new affinity mask: 4
-> > >
-> > >         $ grep Cpus /proc/self/status
-> > >         Cpus_allowed:   04
-> > >         Cpus_allowed_list:      2
-> > >
-> > >         # echo off > /sys/devices/system/cpu/cpu2/online
-> > >         $ grep Cpus /proc/$$/status
-> > >         Cpus_allowed:   0b
-> > >         Cpus_allowed_list:      0-1,3
-> > >
-> > >         # echo on > /sys/devices/system/cpu/cpu2/online
-> > >         $ grep Cpus /proc/$$/status
-> > >         Cpus_allowed:   0b
-> > >         Cpus_allowed_list:      0-1,3
-> > >
-> > > On a patched system, the final grep produces the following
-> > > output instead:
-> > >
-> > >         $ grep Cpus /proc/$$/status
-> > >         Cpus_allowed:   ff
-> > >         Cpus_allowed_list:      0-7
-> > >
-> > > This patch changes the above behavior by instead simply resetting the mask
-> > > to cpu_possible_mask.
-> > >
-> > > Signed-off-by: Joel Savitz <jsavitz@redhat.com>
-> > > ---
-> > >  kernel/cgroup/cpuset.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
-> > > index 479743db6c37..5f65a2167bdf 100644
-> > > --- a/kernel/cgroup/cpuset.c
-> > > +++ b/kernel/cgroup/cpuset.c
-> > > @@ -3243,7 +3243,7 @@ void cpuset_cpus_allowed(struct task_struct *tsk, struct cpumask *pmask)
-> > >  void cpuset_cpus_allowed_fallback(struct task_struct *tsk)
-> > >  {
-> > >         rcu_read_lock();
-> > > -       do_set_cpus_allowed(tsk, task_cs(tsk)->effective_cpus);
-> > > +       do_set_cpus_allowed(tsk, cpu_possible_mask);
-> > >         rcu_read_unlock();
-> > >
-> > >         /*
-> > > --
-> > > 2.20.1
-> > >
+> > CC_FLAGS_FTRACE may contain trailing whitespace that interferes with
+> > findstring.
+> >
+> > For example, commit 6977f95e63b9 ("powerpc: avoid -mno-sched-epilog on
+> > GCC 4.9 and newer") introduced a change such that on my ppc64le box,
+> > CC_FLAGS_FTRACE="-pg -mprofile-kernel ".  (Note the trailing space.)
+> > When cmd_record_mcount is now invoked, findstring fails as the ftrace
+> > flags were found at very end of _c_flags, without the trailing space.
+> >
+> >   _c_flags=" ... -pg -mprofile-kernel"
+> >   CC_FLAGS_FTRACE="-pg -mprofile-kernel "
+> >                                        ^
+> >     findstring is looking for this extra space
+> >
+> > Remove the redundant whitespaces from CC_FLAGS_FTRACE in
+> > cmd_record_mcount to avoid this problem.
+> >
+> > Fixes: 6977f95e63b9 ("powerpc: avoid -mno-sched-epilog on GCC 4.9 and newer").
+> > Signed-off-by: Joe Lawrence <joe.lawrence@redhat.com>
+> > ---
+> >
+> > Standard disclaimer: I'm not a kbuild expert, but this works around the
+> > problem I reported where ftrace and livepatch self-tests were failing as
+> > specified object files were not run through the recordmcount.pl script:
+> >
+> > ppc64le: ftrace self-tests and $(CC_FLAGS_FTRACE) broken?
+> > https://lists.ozlabs.org/pipermail/linuxppc-dev/2019-March/187298.html
+> >
+> >  scripts/Makefile.build | 8 ++++----
+> >  1 file changed, 4 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+> > index 2554a15ecf2b..74d402b5aa3c 100644
+> > --- a/scripts/Makefile.build
+> > +++ b/scripts/Makefile.build
+> > @@ -199,10 +199,10 @@ sub_cmd_record_mcount = perl $(srctree)/scripts/recordmcount.pl "$(ARCH)" \
+> >         "$(if $(part-of-module),1,0)" "$(@)";
+> >  recordmcount_source := $(srctree)/scripts/recordmcount.pl
+> >  endif # BUILD_C_RECORDMCOUNT
+> > -cmd_record_mcount =                                            \
+> > -       if [ "$(findstring $(CC_FLAGS_FTRACE),$(_c_flags))" =   \
+> > -            "$(CC_FLAGS_FTRACE)" ]; then                       \
+> > -               $(sub_cmd_record_mcount)                        \
+> > +cmd_record_mcount =                                                    \
+> > +       if [ "$(findstring $(strip $(CC_FLAGS_FTRACE)),$(_c_flags))" =  \
+> > +            "$(strip $(CC_FLAGS_FTRACE))" ]; then                      \
+> > +               $(sub_cmd_record_mcount)                                \
+> >         fi
+> >  endif # CC_USING_RECORD_MCOUNT
+> >  endif # CONFIG_FTRACE_MCOUNT_RECORD
+> > --
+> > 2.20.1
+> >
+> 
+> 
+> 
+> I do not see a point in using the shell command here
+> in the first place.
+> 
+> Instead of adding crappy workarounds,
+> I guess the following simple code should work:
+> 
+> 
+> index 2554a15..5f13021 100644
+> --- a/scripts/Makefile.build
+> +++ b/scripts/Makefile.build
+> @@ -199,11 +199,8 @@ sub_cmd_record_mcount = perl
+> $(srctree)/scripts/recordmcount.pl "$(ARCH)" \
+>         "$(if $(part-of-module),1,0)" "$(@)";
+>  recordmcount_source := $(srctree)/scripts/recordmcount.pl
+>  endif # BUILD_C_RECORDMCOUNT
+> -cmd_record_mcount =                                            \
+> -       if [ "$(findstring $(CC_FLAGS_FTRACE),$(_c_flags))" =   \
+> -            "$(CC_FLAGS_FTRACE)" ]; then                       \
+> -               $(sub_cmd_record_mcount)                        \
+> -       fi
+> +cmd_record_mcount = $(if $(findstring $(CC_FLAGS_FTRACE),$(_c_flags)),\
+> +                 $(sub_cmd_record_mcount))
+>  endif # CC_USING_RECORD_MCOUNT
+>  endif # CONFIG_FTRACE_MCOUNT_RECORD
+> 
+
+Hi Masahiro,
+
+Agreed on the shell command ugliness, however I still think we need to
+strip the search pattern here.  With your suggestion:
+
+% rm -f kernel/trace/trace_selftest_dynamic.o 
+% make kernel/trace/trace_selftest_dynamic.o
+  CALL    scripts/checksyscalls.sh
+  CALL    scripts/atomic/check-atomics.sh
+  CC      kernel/trace/trace_selftest_dynamic.o
+
+% eu-readelf --sections kernel/trace/trace_selftest_dynamic.o | grep mcount
+(nothing)
+
+Adding it back as, as below, restores those sections and the self tests
+work again.
+
+Regards,
+
+-- Joe
+
+-->8-- -->8-- -->8-- -->8-- -->8-- -->8-- -->8-- -->8-- -->8-- -->8--
+
+From 6a85e8ecf4179b3e80601a327ec43d8d49f0e3cd Mon Sep 17 00:00:00 2001
+From: Joe Lawrence <joe.lawrence@redhat.com>
+Date: Tue, 26 Mar 2019 10:50:28 -0400
+Subject: [PATCH v2] kbuild: strip whitespace in cmd_record_mcount findstring
+
+CC_FLAGS_FTRACE may contain trailing whitespace that interferes with
+findstring.
+
+For example, commit 6977f95e63b9 ("powerpc: avoid -mno-sched-epilog on
+GCC 4.9 and newer") introduced a change such that on my ppc64le box,
+CC_FLAGS_FTRACE="-pg -mprofile-kernel ".  (Note the trailing space.)
+When cmd_record_mcount is now invoked, findstring fails as the ftrace
+flags were found at very end of _c_flags, without the trailing space.
+
+  _c_flags=" ... -pg -mprofile-kernel"
+  CC_FLAGS_FTRACE="-pg -mprofile-kernel "
+                                       ^
+    findstring is looking for this extra space
+
+Remove the redundant whitespaces from CC_FLAGS_FTRACE in
+cmd_record_mcount to avoid this problem.
+
+Suggested-by: Masahiro Yamada <yamada.masahiro@socionext.com> (refactoring)
+Fixes: 6977f95e63b9 ("powerpc: avoid -mno-sched-epilog on GCC 4.9 and newer").
+Signed-off-by: Joe Lawrence <joe.lawrence@redhat.com>
+---
+ scripts/Makefile.build | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
+
+diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+index 2554a15ecf2b..76ca30cc4791 100644
+--- a/scripts/Makefile.build
++++ b/scripts/Makefile.build
+@@ -199,11 +199,8 @@ sub_cmd_record_mcount = perl $(srctree)/scripts/recordmcount.pl "$(ARCH)" \
+ 	"$(if $(part-of-module),1,0)" "$(@)";
+ recordmcount_source := $(srctree)/scripts/recordmcount.pl
+ endif # BUILD_C_RECORDMCOUNT
+-cmd_record_mcount =						\
+-	if [ "$(findstring $(CC_FLAGS_FTRACE),$(_c_flags))" =	\
+-	     "$(CC_FLAGS_FTRACE)" ]; then			\
+-		$(sub_cmd_record_mcount)			\
+-	fi
++cmd_record_mcount = $(if $(findstring $(strip $(CC_FLAGS_FTRACE)),$(_c_flags)),	\
++	$(sub_cmd_record_mcount))
+ endif # CC_USING_RECORD_MCOUNT
+ endif # CONFIG_FTRACE_MCOUNT_RECORD
+ 
+-- 
+2.20.1
+
