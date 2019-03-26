@@ -2,384 +2,260 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 232A8C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:30:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBD54C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:31:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D022120866
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:30:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84F2A20866
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:31:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="inAjRHxP"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="IWQFNivu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731840AbfCZPat (ORCPT
+        id S1732210AbfCZPbE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 11:30:49 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:40071 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732066AbfCZPad (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 11:30:33 -0400
-Received: by mail-ed1-f67.google.com with SMTP id h22so11138005edw.7
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 08:30:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=googlenew;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=/RqmWo28JW2clwB4Gt/VepomkIt6hea2E0CtBSqiPnc=;
-        b=inAjRHxPIQ+irCWZ7SEoSkYaS0rOJ9J/urBPRydWhX4FurEkB/I8sLRg/hBKO1z8XZ
-         BNgf5ASqV1N+yByh9AUbM2el/zlDCYUTRXpLK9Jdi0qSmAYpBLxy4HYJk3N6JnwtWO4C
-         WwSywzAWU/ocX1E3MA/vRi4vVH0QuTRjiYp0xoj19d72q28ERxXzKhES0xhQXmxW272z
-         fnKXtRAAs6D9E7fjM4EV84yDRZEVXO97vXS2NlWcYBH2leNz1Gdf6lH13/nr7jeYg/3G
-         fs2i9sWnw/ZBCNgbocrqy3DOzXy8RTv20LoG3qPk5kqdL0Riwa71d+JvH6NvDiKTqV7y
-         qCAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=/RqmWo28JW2clwB4Gt/VepomkIt6hea2E0CtBSqiPnc=;
-        b=BD6ZNSlgzfRbZluI82jjUOoEpzx6tX84rYYVgRgup4U1bvZEpGKOptfV6qJ4qZy2Ab
-         BBAMbgRmEFULbRptM8gn62p0eeFd4CBNysWaHmXZ3FByGYm/Oj3Q2ybFyjMwGwuTWW+X
-         ea0ZMXtUFOPnT8IukEtYsDkOzMILAEJJQuCaaXwkJynH1I26uEfpdDCxQoazJicaV7Jm
-         AOYgF0+8ScJ6SHlB3JVqnUTkB6vtmXo4fceOq/ai9josvuz6QH+0tm1xL5qTow9k3IM7
-         i9YFR6dsZWl7E55GC9YIOcT4wPdtAXps8cX3wr4ckYAm9oZnG80rEEPOu3dQ4tS3L3Gn
-         wKKw==
-X-Gm-Message-State: APjAAAX+MOwQQrjLp0sYfAcN/57bzc+QrCIc4pLv8oNDuQE0DEcJhSv5
-        UZTJ5hTuqrKh3FUXo0yuIxkrwd7TT52pqg==
-X-Google-Smtp-Source: APXvYqwqlWChpnwD65Z/LGYIe6DuGEUtTKTV7h6YnYZ8jdwZo/3YNzljZpWbLZRhdGR+LFD7QgWhcg==
-X-Received: by 2002:a50:be01:: with SMTP id a1mr17051112edi.22.1553614230686;
-        Tue, 26 Mar 2019 08:30:30 -0700 (PDT)
-Received: from Mindolluin.ire.aristanetworks.com ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id b2sm5310830eda.36.2019.03.26.08.30.29
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 26 Mar 2019 08:30:30 -0700 (PDT)
-From:   Dmitry Safonov <dima@arista.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Dmitry Safonov <dima@arista.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        David Ahern <dsahern@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Ido Schimmel <idosch@mellanox.com>, netdev@vger.kernel.org,
-        linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [RFC 2/4] net/fib: Provide fib_balance_budget sysctl
-Date:   Tue, 26 Mar 2019 15:30:23 +0000
-Message-Id: <20190326153026.24493-3-dima@arista.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190326153026.24493-1-dima@arista.com>
-References: <20190326153026.24493-1-dima@arista.com>
+        Tue, 26 Mar 2019 11:31:04 -0400
+Received: from mail-eopbgr20075.outbound.protection.outlook.com ([40.107.2.75]:20233
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731998AbfCZPbD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 11:31:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GAjaKpRHrkItrAVY+68k4C2z28W4K1aKow67aUxj43o=;
+ b=IWQFNivuPvL/juoyf37ro1zDy5+6+aB0wHThLcz7PAhAQMsmoa+yIocFcmCpp0LYdZqtgue0d3ktHjbGq7cg8wfT8VQWM3twb48WnJ+8eTgJQfnuxdy9s2DIEuFUgpnXsDtPGeUfDSkiCJY9Oa1yOQlsGhUCmc4fKifojCotkyo=
+Received: from VI1PR0501MB2271.eurprd05.prod.outlook.com (10.169.135.8) by
+ VI1PR0501MB2670.eurprd05.prod.outlook.com (10.172.13.20) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1730.16; Tue, 26 Mar 2019 15:30:45 +0000
+Received: from VI1PR0501MB2271.eurprd05.prod.outlook.com
+ ([fe80::a0b8:7ed8:d657:2f59]) by VI1PR0501MB2271.eurprd05.prod.outlook.com
+ ([fe80::a0b8:7ed8:d657:2f59%6]) with mapi id 15.20.1730.019; Tue, 26 Mar 2019
+ 15:30:45 +0000
+From:   Parav Pandit <parav@mellanox.com>
+To:     Kirti Wankhede <kwankhede@nvidia.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>
+CC:     Neo Jia <cjia@nvidia.com>
+Subject: RE: [PATCH 8/8] vfio/mdev: Improve the create/remove sequence
+Thread-Topic: [PATCH 8/8] vfio/mdev: Improve the create/remove sequence
+Thread-Index: AQHU4QXvNq2tSD+YZ0aNNrE4+GOfm6YdgsoAgACH4PA=
+Date:   Tue, 26 Mar 2019 15:30:44 +0000
+Message-ID: <VI1PR0501MB2271EB7C5A92CEA195A2FA59D15F0@VI1PR0501MB2271.eurprd05.prod.outlook.com>
+References: <1553296835-37522-1-git-send-email-parav@mellanox.com>
+ <1553296835-37522-9-git-send-email-parav@mellanox.com>
+ <244348f7-4d72-b7c5-9d82-34db296ff885@nvidia.com>
+In-Reply-To: <244348f7-4d72-b7c5-9d82-34db296ff885@nvidia.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [208.176.44.194]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ca4921f3-a80d-4351-93c1-08d6b20003ae
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600127)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:VI1PR0501MB2670;
+x-ms-traffictypediagnostic: VI1PR0501MB2670:
+x-microsoft-antispam-prvs: <VI1PR0501MB26701C3D890375ED5B7B943DD15F0@VI1PR0501MB2670.eurprd05.prod.outlook.com>
+x-forefront-prvs: 09888BC01D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(136003)(396003)(39860400002)(366004)(346002)(199004)(13464003)(189003)(316002)(53546011)(55016002)(6506007)(9686003)(71190400001)(6246003)(8936002)(14454004)(305945005)(7736002)(26005)(102836004)(53936002)(6346003)(66066001)(2501003)(5660300002)(33656002)(110136005)(478600001)(76176011)(25786009)(68736007)(7696005)(186003)(486006)(2201001)(229853002)(2906002)(476003)(99286004)(86362001)(3846002)(4326008)(52536014)(81156014)(105586002)(71200400001)(74316002)(81166006)(6436002)(97736004)(8676002)(11346002)(6116002)(446003)(256004)(14444005)(106356001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0501MB2670;H:VI1PR0501MB2271.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=parav@mellanox.com; 
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: qejdFpf7LWVj17sQvE7mwIhVzGwahgflO2N1HPjUS0/of1QA8PfIenJ797CrFwxcPTkjmrv+Zotij6MRDt9r4wRqewZU/xWfNlPEqZZBV5Tb9gHmyPgkcbLCW6M3I9m273DDY0ZS8tsdKc2G06sTSvpda8CyvK7PdCAKvBhx0jCvWcSLJVM3OQngOExngHurEDeF6H/eE3cPxyvqkq8e8zAw+S97tnUmCYTlDKX0/FhgkPQKKUVYX73EseKRpmovtrJ8TM8nO6LttUPN5SkdxQ3beWVAxDfAeK/+8cS5+//nLq4PRfO06pXhIKM8blyqaGMBwcot0SZivGoxaGEesoqH6RmPSfAbQXarNL0KY95MgD82wNXOWJQ2tzlsxufMQfFHI4FfT7NFkkgKezcMcLoT8rWtYZ9UALMoJ5x6VvQ=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ca4921f3-a80d-4351-93c1-08d6b20003ae
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Mar 2019 15:30:44.9359
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0501MB2670
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Unfortunately, MAX_WORK at this moment is broken: during
-trie_rebalance() climbing upwards resize() is being called for each
-tnode. Which makes the limit useless the bigger trie gets: at each level
-there are 10 attempts to balance tnode and childs, resulting in
-O(10^n + 10^{n-1} + ... 10^{n-k}) complexity to balance trie, where k - is
-the level where we changed the trie originally (adding/removing
-alias/route).
-
-Which results in the following price of removing one route under big
-trie (similar for some other single routes that results in reallocating
-tnodes by hitting the threshold limits for halve/inflate resize):
-
-Before:
-   Basic info: size of leaf: 40 bytes, size of tnode: 40 bytes.
-   Main:
-           Aver depth:     1.99
-           Max depth:      2
-           Leaves:         77825
-           Prefixes:       77825
-           Internal nodes: 77
-             9: 1  10: 76
-           Pointers: 78336
-   Null ptrs: 435
-   Total size: 7912  kB
-   Local:
-   [omitted]
-
-After:
-   Basic info: size of leaf: 40 bytes, size of tnode: 40 bytes.
-   Main:
-           Aver depth:     3.00
-           Max depth:      3
-           Leaves:         77824
-           Prefixes:       77824
-           Internal nodes: 20491
-             1: 2048  2: 18432  6: 1  11: 10
-           Pointers: 98368
-   Null ptrs: 54
-   Total size: 8865  kB
-   Local:
-   [omitted]
-
-Provide a sysctl to control amount of pending balancing work.
-(by default unlimited as it was)
-
-Cc: linux-doc@vger.kernel.org
-Cc: Jonathan Corbet <corbet@lwn.net>
-Fixes: ff181ed8768f ("fib_trie: Push assignment of child to parent down
-into inflate/halve")
-Signed-off-by: Dmitry Safonov <dima@arista.com>
----
- Documentation/networking/ip-sysctl.txt |  6 +++
- include/net/ip.h                       |  1 +
- net/ipv4/fib_trie.c                    | 60 +++++++++++++++-----------
- net/ipv4/sysctl_net_ipv4.c             |  7 +++
- 4 files changed, 49 insertions(+), 25 deletions(-)
-
-diff --git a/Documentation/networking/ip-sysctl.txt b/Documentation/networking/ip-sysctl.txt
-index acdfb5d2bcaa..fb71dacff4dd 100644
---- a/Documentation/networking/ip-sysctl.txt
-+++ b/Documentation/networking/ip-sysctl.txt
-@@ -81,6 +81,12 @@ fib_multipath_hash_policy - INTEGER
- 	0 - Layer 3
- 	1 - Layer 4
- 
-+fib_balance_budget - UNSIGNED INTEGER
-+	Limits the number of resize attempts during balancing fib trie
-+	on adding/removing new routes.
-+	Possible values:
-+	Default: UINT_MAX (0xFFFFFFFF)
-+
- ip_forward_update_priority - INTEGER
- 	Whether to update SKB priority from "TOS" field in IPv4 header after it
- 	is forwarded. The new SKB priority is mapped from TOS field value
-diff --git a/include/net/ip.h b/include/net/ip.h
-index be3cad9c2e4c..305d0e43088b 100644
---- a/include/net/ip.h
-+++ b/include/net/ip.h
-@@ -421,6 +421,7 @@ static inline unsigned int ip_skb_dst_mtu(struct sock *sk,
- 	return min(READ_ONCE(skb_dst(skb)->dev->mtu), IP_MAX_MTU);
- }
- 
-+extern unsigned int fib_balance_budget;
- struct dst_metrics *ip_fib_metrics_init(struct net *net, struct nlattr *fc_mx,
- 					int fc_mx_len,
- 					struct netlink_ext_ack *extack);
-diff --git a/net/ipv4/fib_trie.c b/net/ipv4/fib_trie.c
-index ad7d56c421cb..d90cf9dfd443 100644
---- a/net/ipv4/fib_trie.c
-+++ b/net/ipv4/fib_trie.c
-@@ -182,8 +182,10 @@ struct trie {
- #endif
- };
- 
--static struct key_vector *resize(struct trie *t, struct key_vector *tn);
-+static struct key_vector *resize(struct trie *t, struct key_vector *tn,
-+				 unsigned int *budget);
- static size_t tnode_free_size;
-+unsigned int fib_balance_budget = UINT_MAX;
- 
- /*
-  * synchronize_rcu after call_rcu for that many pages; it should be especially
-@@ -506,7 +508,8 @@ static void tnode_free(struct key_vector *tn)
- 
- static struct key_vector *replace(struct trie *t,
- 				  struct key_vector *oldtnode,
--				  struct key_vector *tn)
-+				  struct key_vector *tn,
-+				  unsigned int *budget)
- {
- 	struct key_vector *tp = node_parent(oldtnode);
- 	unsigned long i;
-@@ -522,19 +525,19 @@ static struct key_vector *replace(struct trie *t,
- 	tnode_free(oldtnode);
- 
- 	/* resize children now that oldtnode is freed */
--	for (i = child_length(tn); i;) {
-+	for (i = child_length(tn); i && *budget;) {
- 		struct key_vector *inode = get_child(tn, --i);
- 
- 		/* resize child node */
- 		if (tnode_full(tn, inode))
--			tn = resize(t, inode);
-+			tn = resize(t, inode, budget);
- 	}
- 
- 	return tp;
- }
- 
--static struct key_vector *inflate(struct trie *t,
--				  struct key_vector *oldtnode)
-+static struct key_vector *inflate(struct trie *t, struct key_vector *oldtnode,
-+				  unsigned int *budget)
- {
- 	struct key_vector *tn;
- 	unsigned long i;
-@@ -621,7 +624,7 @@ static struct key_vector *inflate(struct trie *t,
- 	}
- 
- 	/* setup the parent pointers into and out of this node */
--	return replace(t, oldtnode, tn);
-+	return replace(t, oldtnode, tn, budget);
- nomem:
- 	/* all pointers should be clean so we are done */
- 	tnode_free(tn);
-@@ -629,8 +632,8 @@ static struct key_vector *inflate(struct trie *t,
- 	return NULL;
- }
- 
--static struct key_vector *halve(struct trie *t,
--				struct key_vector *oldtnode)
-+static struct key_vector *halve(struct trie *t, struct key_vector *oldtnode,
-+				unsigned int *budget)
- {
- 	struct key_vector *tn;
- 	unsigned long i;
-@@ -676,7 +679,7 @@ static struct key_vector *halve(struct trie *t,
- 	}
- 
- 	/* setup the parent pointers into and out of this node */
--	return replace(t, oldtnode, tn);
-+	return replace(t, oldtnode, tn, budget);
- nomem:
- 	/* all pointers should be clean so we are done */
- 	tnode_free(tn);
-@@ -843,15 +846,15 @@ static inline bool should_collapse(struct key_vector *tn)
- 	return used < 2;
- }
- 
--#define MAX_WORK 10
--static struct key_vector *resize(struct trie *t, struct key_vector *tn)
-+static struct key_vector *resize(struct trie *t, struct key_vector *tn,
-+				 unsigned int *budget)
- {
- #ifdef CONFIG_IP_FIB_TRIE_STATS
- 	struct trie_use_stats __percpu *stats = t->stats;
- #endif
- 	struct key_vector *tp = node_parent(tn);
- 	unsigned long cindex = get_index(tn->key, tp);
--	int max_work = MAX_WORK;
-+	bool inflated = false;
- 
- 	pr_debug("In tnode_resize %p inflate_threshold=%d threshold=%d\n",
- 		 tn, inflate_threshold, halve_threshold);
-@@ -865,8 +868,8 @@ static struct key_vector *resize(struct trie *t, struct key_vector *tn)
- 	/* Double as long as the resulting node has a number of
- 	 * nonempty nodes that are above the threshold.
- 	 */
--	while (should_inflate(tp, tn) && max_work) {
--		tp = inflate(t, tn);
-+	while (should_inflate(tp, tn) && *budget) {
-+		tp = inflate(t, tn, budget);
- 		if (!tp) {
- #ifdef CONFIG_IP_FIB_TRIE_STATS
- 			this_cpu_inc(stats->resize_node_skipped);
-@@ -874,22 +877,25 @@ static struct key_vector *resize(struct trie *t, struct key_vector *tn)
- 			break;
- 		}
- 
--		max_work--;
-+		(*budget)--;
-+		inflated = true;
- 		tn = get_child(tp, cindex);
- 	}
- 
- 	/* update parent in case inflate failed */
- 	tp = node_parent(tn);
- 
--	/* Return if at least one inflate is run */
--	if (max_work != MAX_WORK)
-+	/* Return if at least one inflate is run:
-+	 * microoptimization to not recalculate thresholds
-+	 */
-+	if (inflated)
- 		return tp;
- 
- 	/* Halve as long as the number of empty children in this
- 	 * node is above threshold.
- 	 */
--	while (should_halve(tp, tn) && max_work) {
--		tp = halve(t, tn);
-+	while (should_halve(tp, tn) && *budget) {
-+		tp = halve(t, tn, budget);
- 		if (!tp) {
- #ifdef CONFIG_IP_FIB_TRIE_STATS
- 			this_cpu_inc(stats->resize_node_skipped);
-@@ -897,7 +903,7 @@ static struct key_vector *resize(struct trie *t, struct key_vector *tn)
- 			break;
- 		}
- 
--		max_work--;
-+		(*budget)--;
- 		tn = get_child(tp, cindex);
- 	}
- 
-@@ -1005,8 +1011,10 @@ static struct fib_alias *fib_find_alias(struct hlist_head *fah, u8 slen,
- 
- static void trie_rebalance(struct trie *t, struct key_vector *tn)
- {
--	while (!IS_TRIE(tn))
--		tn = resize(t, tn);
-+	unsigned int budget = fib_balance_budget;
-+
-+	while (budget && !IS_TRIE(tn))
-+		tn = resize(t, tn, &budget);
- }
- 
- static int fib_insert_node(struct trie *t, struct key_vector *tp,
-@@ -1784,6 +1792,7 @@ struct fib_table *fib_trie_unmerge(struct fib_table *oldtb)
- void fib_table_flush_external(struct fib_table *tb)
- {
- 	struct trie *t = (struct trie *)tb->tb_data;
-+	unsigned int budget = fib_balance_budget;
- 	struct key_vector *pn = t->kv;
- 	unsigned long cindex = 1;
- 	struct hlist_node *tmp;
-@@ -1806,7 +1815,7 @@ void fib_table_flush_external(struct fib_table *tb)
- 				update_suffix(pn);
- 
- 			/* resize completed node */
--			pn = resize(t, pn);
-+			pn = resize(t, pn, &budget);
- 			cindex = get_index(pkey, pn);
- 
- 			continue;
-@@ -1853,6 +1862,7 @@ void fib_table_flush_external(struct fib_table *tb)
- int fib_table_flush(struct net *net, struct fib_table *tb, bool flush_all)
- {
- 	struct trie *t = (struct trie *)tb->tb_data;
-+	unsigned int budget = fib_balance_budget;
- 	struct key_vector *pn = t->kv;
- 	unsigned long cindex = 1;
- 	struct hlist_node *tmp;
-@@ -1876,7 +1886,7 @@ int fib_table_flush(struct net *net, struct fib_table *tb, bool flush_all)
- 				update_suffix(pn);
- 
- 			/* resize completed node */
--			pn = resize(t, pn);
-+			pn = resize(t, pn, &budget);
- 			cindex = get_index(pkey, pn);
- 
- 			continue;
-diff --git a/net/ipv4/sysctl_net_ipv4.c b/net/ipv4/sysctl_net_ipv4.c
-index ba0fc4b18465..d7274cc442af 100644
---- a/net/ipv4/sysctl_net_ipv4.c
-+++ b/net/ipv4/sysctl_net_ipv4.c
-@@ -443,6 +443,13 @@ static struct ctl_table ipv4_table[] = {
- 		.mode		= 0644,
- 		.proc_handler	= proc_dointvec
- 	},
-+	{
-+		.procname	= "fib_balance_budget",
-+		.data		= &fib_balance_budget,
-+		.maxlen		= sizeof(fib_balance_budget),
-+		.mode		= 0644,
-+		.proc_handler	= proc_douintvec,
-+	},
- 	{
- 		.procname	= "inet_peer_threshold",
- 		.data		= &inet_peer_threshold,
--- 
-2.21.0
-
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogS2lydGkgV2Fua2hlZGUg
+PGt3YW5raGVkZUBudmlkaWEuY29tPg0KPiBTZW50OiBUdWVzZGF5LCBNYXJjaCAyNiwgMjAxOSAy
+OjA2IEFNDQo+IFRvOiBQYXJhdiBQYW5kaXQgPHBhcmF2QG1lbGxhbm94LmNvbT47IGt2bUB2Z2Vy
+Lmtlcm5lbC5vcmc7IGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5rZXJuZWwub3JnOyBhbGV4LndpbGxp
+YW1zb25AcmVkaGF0LmNvbQ0KPiBDYzogTmVvIEppYSA8Y2ppYUBudmlkaWEuY29tPg0KPiBTdWJq
+ZWN0OiBSZTogW1BBVENIIDgvOF0gdmZpby9tZGV2OiBJbXByb3ZlIHRoZSBjcmVhdGUvcmVtb3Zl
+IHNlcXVlbmNlDQo+IA0KPiANCj4gDQo+IE9uIDMvMjMvMjAxOSA0OjUwIEFNLCBQYXJhdiBQYW5k
+aXQgd3JvdGU6DQo+ID4gVGhlcmUgYXJlIGZpdmUgcHJvYmxlbXMgd2l0aCBjdXJyZW50IGNvZGUg
+c3RydWN0dXJlLg0KPiA+IDEuIG1kZXYgZGV2aWNlIGlzIHBsYWNlZCBvbiB0aGUgbWRldiBidXMg
+YmVmb3JlIGl0IGlzIGNyZWF0ZWQgaW4gdGhlDQo+ID4gdmVuZG9yIGRyaXZlci4gT25jZSBhIGRl
+dmljZSBpcyBwbGFjZWQgb24gdGhlIG1kZXYgYnVzIHdpdGhvdXQNCj4gPiBjcmVhdGluZyBpdHMg
+c3VwcG9ydGluZyB1bmRlcmx5aW5nIHZlbmRvciBkZXZpY2UsIGFuIG9wZW4oKSBjYW4gZ2V0DQo+
+ID4gdHJpZ2dlcmVkIGJ5IHVzZXJzcGFjZSBvbiBwYXJ0aWFsbHkgaW5pdGlhbGl6ZWQgZGV2aWNl
+Lg0KPiA+IEJlbG93IGxhZGRlciBkaWFncmFtIGhpZ2hsaWdodCBpdC4NCj4gPg0KPiA+ICAgICAg
+IGNwdS0wICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY3B1LTENCj4gPiAg
+ICAgICAtLS0tLSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0tLS0tDQo+
+ID4gICAgY3JlYXRlX3N0b3JlKCkNCj4gPiAgICAgIG1kZXZfY3JlYXRlX2RldmljZSgpDQo+ID4g
+ICAgICAgIGRldmljZV9yZWdpc3RlcigpDQo+ID4gICAgICAgICAgIC4uLg0KPiA+ICAgICAgICAg
+IHZmaW9fbWRldl9wcm9iZSgpDQo+ID4gICAgICAgICAgLi4uY3JlYXRlcyBjaGFyIGRldmljZQ0K
+PiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB2ZmlvX21kZXZfb3Bl
+bigpDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcGFyZW50
+LT5vcHMtPm9wZW4obWRldikNCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgIHZmaW9fYXBfbWRldl9vcGVuKCkNCj4gPiAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgbWF0cml4X21kZXYgPSBOVUxMDQo+ID4gICAgICAgICBb
+Li4uXQ0KPiA+ICAgICAgICAgcGFyZW50LT5vcHMtPmNyZWF0ZSgpDQo+ID4gICAgICAgICAgIHZm
+aW9fYXBfbWRldl9jcmVhdGUoKQ0KPiA+ICAgICAgICAgICAgIG1kZXZfc2V0X2RydmRhdGEobWRl
+diwgbWF0cml4X21kZXYpOw0KPiA+ICAgICAgICAgICAgIC8qIFZhbGlkIHBvaW50ZXIgc2V0IGFi
+b3ZlICovDQo+ID4NCj4gDQo+IFZGSU8gaW50ZXJmYWNlIHVzZXMgc3lzZnMgcGF0aCBvZiBkZXZp
+Y2Ugb3IgUENJIGRldmljZSdzIEJERiB3aGVyZSBpdCBjaGVja3MNCj4gc3lzZnMgZmlsZSBmb3Ig
+dGhhdCBkZXZpY2UgZXhpc3QuDQo+IEluIGNhc2Ugb2YgVkZJTyBtZGV2IGRldmljZSwgYWJvdmUg
+c2l0dWF0aW9uIHdpbGwgbmV2ZXIgaGFwcGVuIGFzIG9wZW4gd2lsbA0KPiBvbmx5IGdldCBjYWxs
+ZWQgaWYgc3lzZnMgZW50cnkgZm9yIHRoYXQgZGV2aWNlIGV4aXN0Lg0KPiANCj4gSWYgeW91IGRv
+bid0IHVzZSBWRklPIGludGVyZmFjZSB0aGVuIHRoaXMgc2l0dWF0aW9uIGNhbiBhcmlzZS4gSW4g
+dGhhdCBjYXNlDQo+IHByb2JlKCkgY2FuIGJlIHVzZWQgZm9yIHZlcnkgYmFzaWMgaW5pdGlhbGl6
+YXRpb24gdGhlbiBjcmVhdGUgYWN0dWFsIGNoYXINCj4gZGV2aWNlIGZyb20gY3JlYXRlKCkuDQo+
+IA0KSSBleHBsYWluZWQgeW91IHRoYXQgY3JlYXRlKCkgY2Fubm90IGRvIHRoZSBoZWF2eSBsaWZ0
+aW5nIHdvcmsgb2YgY3JlYXRpbmcgbmV0ZGV2IGFuZCByZG1hIGRldiBiZWNhdXNlIGF0IHRoYXQg
+c3RhZ2UgZHJpdmVyIGRvZXNuJ3Qga25vdyB3aGV0aGVyIGl0cyBnZXR0aW5nIHVzZWQgZm9yIFZN
+IG9yIGhvc3QuDQpjcmVhdGUoKSBuZWVkcyB0byBjcmVhdGUgdGhlIGRldmljZSB0aGF0IHByb2Jl
+KCkgY2FuIHdvcmsgb24gaW4gc3RhYmxlIG1hbm5lci4NCg0KPiANCj4gPiAyLiBDdXJyZW50IGNy
+ZWF0aW9uIHNlcXVlbmNlIGlzLA0KPiA+ICAgIHBhcmVudC0+b3BzX2NyZWF0ZSgpDQo+ID4gICAg
+Z3JvdXBzX3JlZ2lzdGVyKCkNCj4gPg0KPiA+IFJlbW92ZSBzZXF1ZW5jZSBpcywNCj4gPiAgICBw
+YXJlbnQtPm9wcy0+cmVtb3ZlKCkNCj4gPiAgICBncm91cHNfdW5yZWdpc3RlcigpDQo+ID4gSG93
+ZXZlciwgcmVtb3ZlIHNlcXVlbmNlIHNob3VsZCBiZSBleGFjdCBtaXJyb3Igb2YgY3JlYXRpb24g
+c2VxdWVuY2UuDQo+ID4gT25jZSB0aGlzIGlzIGFjaGlldmVkLCBhbGwgdXNlcnMgb2YgdGhlIG1k
+ZXYgd2lsbCBiZSB0ZXJtaW5hdGVkIGZpcnN0DQo+ID4gYmVmb3JlIHJlbW92aW5nIHVuZGVybHlp
+bmcgdmVuZG9yIGRldmljZS4NCj4gPiAoRm9sbG93IHN0YW5kYXJkIGxpbnV4IGRyaXZlciBtb2Rl
+bCkuDQo+ID4gQXQgdGhhdCBwb2ludCB2ZW5kb3IncyByZW1vdmUoKSBvcHMgc2hvdWxkbid0IGZh
+aWxlZCBiZWNhdXNlIGRldmljZSBpcw0KPiA+IHRha2VuIG9mZiB0aGUgYnVzIHRoYXQgc2hvdWxk
+IHRlcm1pbmF0ZSB0aGUgdXNlcnMuDQo+ID4NCj4gDQo+IElmIFZNTSBvciB1c2VyIHNwYWNlIGFw
+cGxpY2F0aW9uIGlzIHVzaW5nIG1kZXYgZGV2aWNlLA0KPiBwYXJlbnQtPm9wcy0+cmVtb3ZlKCkg
+Y2FuIHJldHVybiBmYWlsdXJlLiBJbiB0aGF0IGNhc2Ugc3lzZnMgZmlsZXMNCj4gc2hvdWxkbid0
+IGJlIHJlbW92ZWQuIEhlbmNlIGFib3ZlIHNlcXVlbmNlIGlzIGZvbGxvd2VkIGZvciByZW1vdmUu
+DQo+IA0KPiBTdGFuZGFyZCBsaW51eCBkcml2ZXIgbW9kZWwgZG9lc24ndCBhbGxvdyByZW1vdmUo
+KSB0byBmYWlsLCBidXQgaW4gb2YgbWRldg0KPiBmcmFtZXdvcmssIGludGVyZmFjZSBpcyBkZWZp
+bmVkIHRvIGhhbmRsZSBzdWNoIGVycm9yIGNhc2UuDQo+IA0KQnV0IHRoZSBzZXF1ZW5jZSBpcyBp
+bmNvcnJlY3QgZm9yIHdpZGVyIHVzZSBjYXNlLg0KPiANCj4gPiAzLiBBZGRpdGlvbmFsbHkgYW55
+IG5ldyBtZGV2IGRyaXZlciB0aGF0IHdhbnRzIHRvIHdvcmsgb24gbWRldiBkZXZpY2UNCj4gPiBk
+dXJpbmcgcHJvYmUoKSByb3V0aW5lIHJlZ2lzdGVyZWQgdXNpbmcgbWRldl9yZWdpc3Rlcl9kcml2
+ZXIoKSBuZWVkcw0KPiA+IHRvIGdldCBzdGFibGUgbWRldiBzdHJ1Y3R1cmUuDQo+ID4NCj4gDQo+
+IFRoaW5ncyB0aGF0IHlvdSBhcmUgdHJ5aW5nIHRvIGhhbmRsZSB3aXRoIG1kZXYgc3RydWN0dXJl
+IGZyb20gcHJvYmUoKSwNCj4gY291bGRuJ3QgdGhhdCBiZSBtb3ZlZCB0byBjcmVhdGUoKT8NCj4g
+DQpObywgYXMgZXhwbGFpbmVkIGJlZm9yZSBhbmQgYWJvdmUuDQpUaGF0IGFwcHJvYWNoIGp1c3Qg
+ZG9lc24ndCBsb29rIHJpZ2h0Lg0KIA0KPiANCj4gPiA0LiBJbiBmb2xsb3dpbmcgc2VxdWVuY2Us
+IGNoaWxkIGRldmljZXMgY3JlYXRlZCB3aGlsZSByZW1vdmluZyBtZGV2DQo+ID4gcGFyZW50IGRl
+dmljZSBjYW4gYmUgbGVmdCBvdXQsIG9yIGl0IG1heSBsZWFkIHRvIHJhY2Ugb2YgcmVtb3Zpbmcg
+aGFsZg0KPiA+IGluaXRpYWxpemVkIGNoaWxkIG1kZXYgZGV2aWNlcy4NCj4gPg0KPiA+IGlzc3Vl
+LTE6DQo+ID4gLS0tLS0tLS0NCj4gPiAgICAgICAgY3B1LTAgICAgICAgICAgICAgICAgICAgICAg
+ICAgY3B1LTENCj4gPiAgICAgICAgLS0tLS0gICAgICAgICAgICAgICAgICAgICAgICAgLS0tLS0N
+Cj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbWRldl91bnJlZ2lzdGVyX2Rl
+dmljZSgpDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGRldmljZV9m
+b3JfZWFjaF9jaGlsZCgpDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIG1kZXZfZGV2aWNlX3JlbW92ZV9jYigpDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICBtZGV2X2RldmljZV9yZW1vdmUoKQ0KPiA+IGNyZWF0ZV9zdG9y
+ZSgpDQo+ID4gICBtZGV2X2RldmljZV9jcmVhdGUoKSAgICAgICAgICAgICAgICAgICBbLi4uXQ0K
+PiA+ICAgICAgICBkZXZpY2VfcmVnaXN0ZXIoKQ0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICBwYXJlbnRfcmVtb3ZlX3N5c2ZzX2ZpbGVzKCkNCj4gPiAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgLyogQlVHOiBkZXZpY2UgYWRkZWQgYnkgY3B1LTANCj4gPiAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICogd2hvc2UgcGFyZW50IGlzIGdldHRp
+bmcgcmVtb3ZlZC4NCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICovDQo+
+ID4NCj4gPiBpc3N1ZS0yOg0KPiA+IC0tLS0tLS0tDQo+ID4gICAgICAgIGNwdS0wICAgICAgICAg
+ICAgICAgICAgICAgICAgIGNwdS0xDQo+ID4gICAgICAgIC0tLS0tICAgICAgICAgICAgICAgICAg
+ICAgICAgIC0tLS0tDQo+ID4gY3JlYXRlX3N0b3JlKCkNCj4gPiAgIG1kZXZfZGV2aWNlX2NyZWF0
+ZSgpICAgICAgICAgICAgICAgICAgIFsuLi5dDQo+ID4gICAgICAgIGRldmljZV9yZWdpc3Rlcigp
+DQo+ID4NCj4gPiAgICAgICAgWy4uLl0gICAgICAgICAgICAgICAgICAgICAgbWRldl91bnJlZ2lz
+dGVyX2RldmljZSgpDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGRl
+dmljZV9mb3JfZWFjaF9jaGlsZCgpDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgIG1kZXZfZGV2aWNlX3JlbW92ZV9jYigpDQo+ID4gICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICBtZGV2X2RldmljZV9yZW1vdmUoKQ0KPiA+DQo+ID4g
+ICAgICAgIG1kZXZfY3JlYXRlX3N5c2ZzX2ZpbGVzKCkNCj4gPiAgICAgICAgLyogQlVHOiBjcmVh
+dGUgaXMgYWRkaW5nDQo+ID4gICAgICAgICAqIHN5c2ZzIGZpbGVzIGZvciBhIGRldmljZQ0KPiA+
+ICAgICAgICAgKiB3aGljaCBpcyB1bmRlcmdvaW5nIHJlbW92YWwuDQo+ID4gICAgICAgICAqLw0K
+PiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBhcmVudF9yZW1vdmVfc3lzZnNf
+ZmlsZXMoKQ0KPiA+DQo+ID4gNS4gQmVsb3cgY3Jhc2ggaXMgb2JzZXJ2ZWQgd2hlbiB1c2VyIGlu
+aXRpYXRlZCByZW1vdmUgaXMgaW4gcHJvZ3Jlc3MNCj4gPiBhbmQgbWRldl91bnJlZ2lzdGVyX2Ry
+aXZlcigpIGNvbXBsZXRlcyBwYXJlbnQgdW5yZWdpc3RyYXRpb24uDQo+ID4NCj4gPiAgICAgICAg
+Y3B1LTAgICAgICAgICAgICAgICAgICAgICAgICAgY3B1LTENCj4gPiAgICAgICAgLS0tLS0gICAg
+ICAgICAgICAgICAgICAgICAgICAgLS0tLS0NCj4gPiByZW1vdmVfc3RvcmUoKQ0KPiA+ICAgIG1k
+ZXZfZGV2aWNlX3JlbW92ZSgpDQo+ID4gICAgYWN0aXZlID0gZmFsc2U7DQo+ID4gICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIG1kZXZfdW5yZWdpc3Rlcl9kZXZpY2UoKQ0KPiA+ICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlbW92ZSB0eXBlDQo+ID4gICAgWy4u
+Ll0NCj4gPiAgICBtZGV2X3JlbW92ZV9vcHMoKSBjcmFzaGVzLg0KPiA+DQo+ID4gVGhpcyBpcyBz
+aW1pbGFyIHJhY2UgbGlrZSBjcmVhdGUoKSByYWNpbmcgd2l0aCBtZGV2X3VucmVnaXN0ZXJfZGV2
+aWNlKCkuDQo+ID4NCj4gPiBtdHR5IG10dHk6IE1ERVY6IFJlZ2lzdGVyZWQNCj4gPiBpb21tdTog
+QWRkaW5nIGRldmljZSA4M2I4ZjRmMi01MDlmLTM4MmYtM2MxZS1lNmJmZTBmYTEwMDEgdG8gZ3Jv
+dXAgNTcNCj4gPiB2ZmlvX21kZXYgODNiOGY0ZjItNTA5Zi0zODJmLTNjMWUtZTZiZmUwZmExMDAx
+OiBNREVWOiBncm91cF9pZCA9IDU3DQo+ID4gbWRldl9kZXZpY2VfcmVtb3ZlIHNsZWVwIHN0YXJ0
+ZWQgbXR0eSBtdHR5OiBNREVWOiBVbnJlZ2lzdGVyaW5nDQo+ID4gbXR0eV9kZXY6IFVubG9hZGVk
+IQ0KPiA+IEJVRzogdW5hYmxlIHRvIGhhbmRsZSBrZXJuZWwgcGFnaW5nIHJlcXVlc3QgYXQgZmZm
+ZmZmZmZjMDI3ZDY2OCBQR0QNCj4gPiBhZjk4MTgwNjcgUDREIGFmOTgxODA2NyBQVUQgYWY5ODFh
+MDY3IFBNRCA4NTgzYzMwNjcgUFRFIDANCj4gPiBPb3BzOiAwMDAwIFsjMV0gU01QIFBUSQ0KPiA+
+IENQVTogMTUgUElEOiAzNTE3IENvbW06IGJhc2ggS2R1bXA6IGxvYWRlZCBOb3QgdGFpbnRlZA0K
+PiA+IDUuMC4wLXJjNy12ZGV2YnVzKyAjMiBIYXJkd2FyZSBuYW1lOiBTdXBlcm1pY3JvDQo+ID4g
+U1lTLTYwMjhVLVRSNCsvWDEwRFJVLWkrLCBCSU9TIDIuMGIgMDgvMDkvMjAxNg0KPiA+IFJJUDog
+MDAxMDptZGV2X2RldmljZV9yZW1vdmVfb3BzKzB4MWEvMHg1MCBbbWRldl0gQ2FsbCBUcmFjZToN
+Cj4gPiAgbWRldl9kZXZpY2VfcmVtb3ZlKzB4ZWYvMHgxMzAgW21kZXZdDQo+ID4gIHJlbW92ZV9z
+dG9yZSsweDc3LzB4YTAgW21kZXZdDQo+ID4gIGtlcm5mc19mb3Bfd3JpdGUrMHgxMTMvMHgxYTAN
+Cj4gPiAgX192ZnNfd3JpdGUrMHgzMy8weDFiMA0KPiA+ICA/IHJjdV9yZWFkX2xvY2tfc2NoZWRf
+aGVsZCsweDY0LzB4NzANCj4gPiAgPyByY3Vfc3luY19sb2NrZGVwX2Fzc2VydCsweDJhLzB4NTAN
+Cj4gPiAgPyBfX3NiX3N0YXJ0X3dyaXRlKzB4MTIxLzB4MWIwDQo+ID4gID8gdmZzX3dyaXRlKzB4
+MTdjLzB4MWIwDQo+ID4gIHZmc193cml0ZSsweGFkLzB4MWIwDQo+ID4gID8gdHJhY2VfaGFyZGly
+cXNfb25fdGh1bmsrMHgxYS8weDFjDQo+ID4gIGtzeXNfd3JpdGUrMHg1NS8weGMwDQo+ID4gIGRv
+X3N5c2NhbGxfNjQrMHg1YS8weDIxMA0KPiA+DQo+ID4gVGhlcmVmb3JlLCBtZGV2IGNvcmUgaXMg
+aW1wcm92ZWQgaW4gZm9sbG93aW5nIHdheXMgdG8gb3ZlcmNvbWUgYWJvdmUNCj4gPiBpc3N1ZXMu
+DQo+ID4NCj4gPiAxLiBCZWZvcmUgcGxhY2luZyBtZGV2IGRldmljZXMgb24gdGhlIGJ1cywgcGVy
+Zm9ybSB2ZW5kb3IgZHJpdmVycw0KPiA+IGNyZWF0aW9uIHdoaWNoIHN1cHBvcnRzIHRoZSBtZGV2
+IGNyZWF0aW9uLg0KPiA+IFRoaXMgZW5zdXJlcyB0aGF0IG1kZXYgc3BlY2lmaWMgYWxsIG5lY2Vz
+c2FyeSBmaWVsZHMgYXJlIGluaXRpYWxpemVkDQo+ID4gYmVmb3JlIGEgZ2l2ZW4gbWRldiBjYW4g
+YmUgYWNjZXNzZWQgYnkgYnVzIGRyaXZlci4NCj4gPg0KPiA+IDIuIER1cmluZyByZW1vdmUgZmxv
+dywgZmlyc3QgcmVtb3ZlIHRoZSBkZXZpY2UgZnJvbSB0aGUgYnVzLiBUaGlzDQo+ID4gZW5zdXJl
+cyB0aGF0IGFueSBidXMgc3BlY2lmaWMgZGV2aWNlcyBhbmQgZGF0YSBpcyBjbGVhcmVkLg0KPiA+
+IE9uY2UgZGV2aWNlIGlzIHRha2VuIG9mIHRoZSBtZGV2IGJ1cywgcGVyZm9ybSByZW1vdmUoKSBv
+ZiBtZGV2IGZyb20NCj4gPiB0aGUgdmVuZG9yIGRyaXZlci4NCj4gPg0KPiANCj4gSWYgdXNlciBz
+cGFjZSBhcHBsaWNhdGlvbiBpcyB1c2luZyB0aGUgZGV2aWNlIGFuZCBzb21lb25lIHVuZGVybmVh
+dGgNCj4gcmVtb3ZlIHRoZSBkZXZpY2UgZnJvbSBidXMsIGhvdyB3b3VsZCB1c2Ugc3BhY2UgYXBw
+bGljYXRpb24ga25vdyB0aGF0DQo+IGRldmljZSBpcyBiZWluZyByZW1vdmVkPw0KdmZpb19tZGV2
+IGd1YXJkcyBhbmQgd2FpdCBmb3IgZGV2aWNlIHRvIGdldCBjbG9zZWQuDQoNCk9uZSBzYW1wbGUg
+dHJhY2UgaXMgYmVsb3cuDQpbPDA+XSB2ZmlvX2RlbF9ncm91cF9kZXYrMHgzNGEvMHgzYzAgW3Zm
+aW9dDQpbPDA+XSBtZGV2X3JlbW92ZSsweDIxLzB4NDAgW21kZXZdDQpbPDA+XSBkZXZpY2VfcmVs
+ZWFzZV9kcml2ZXJfaW50ZXJuYWwrMHhlOC8weDFiMA0KWzwwPl0gYnVzX3JlbW92ZV9kZXZpY2Ur
+MHhmOS8weDE3MA0KWzwwPl0gZGV2aWNlX2RlbCsweDE2OC8weDM1MA0KWzwwPl0gbWRldl9kZXZp
+Y2VfcmVtb3ZlX2NvbW1vbisweDFlLzB4NjAgW21kZXZdDQpbPDA+XSBtZGV2X2RldmljZV9yZW1v
+dmVfY2IrMHgxYS8weDMwIFttZGV2XQ0KWzwwPl0gZGV2aWNlX2Zvcl9lYWNoX2NoaWxkKzB4NDcv
+MHg5MA0KWzwwPl0gbWRldl91bnJlZ2lzdGVyX2RldmljZSsweGRiLzB4MTAwIFttZGV2XQ0KWzww
+Pl0gbXR0eV9kZXZfZXhpdCsweDE3LzB4ODQzIFttdHR5XQ0KWzwwPl0gX194NjRfc3lzX2RlbGV0
+ZV9tb2R1bGUrMHgxNmIvMHgyNDANCls8MD5dIGRvX3N5c2NhbGxfNjQrMHg1YS8weDIxMA0KWzww
+Pl0gZW50cnlfU1lTQ0FMTF82NF9hZnRlcl9od2ZyYW1lKzB4NDkvMHhiZQ0KWzwwPl0gMHhmZmZm
+ZmZmZmZmZmZmZmZmDQoNCj4gSWYgRE1BIGlzIHNldHVwLCB1c2VyIHNwYWNlIGFwcGxpY2F0aW9u
+IGlzIGFjY2Vzc2luZyB0aGF0IG1lbW9yeSBhbmQgZGV2aWNlDQo+IGlzIHJlbW92ZWQgZnJvbSBi
+dXMgLSBob3cgd2lsbCB5b3UgcmVzdHJpY3QgdG8gbm90IHRvIHJlbW92ZSB0aGF0IGRldmljZT8g
+SWYNCj4gcmVtb3ZlKCkgaXMgbm90IHJlc3RyaWN0ZWQgdGhlbiBob3N0IG1pZ2h0IGNyYXNoLg0K
+PiBJIGtub3cgTGludXgga2VybmVsIGRldmljZSBjb3JlIG1vZGVsIGRvZXNuJ3QgYWxsb3cgcmVt
+b3ZlKCkgdG8gZmFpbCwgYnV0IHdlDQo+IGhhZCB0YWNrbGVkIHRoYXQgcHJvYmxlbSBmb3IgbWRl
+diBkZXZpY2VzIGluIHRoaXMgZnJhbWV3b3JrLiBJIHByZWZlciBub3QgdG8NCj4gY2hhbmdlIHRo
+aXMgYmVoYXZpb3IuIFRoaXMgd2lsbCByZWdyZXNzIGV4aXN0aW5nIHdvcmtpbmcgZHJpdmVycy4N
+Cj4gDQp2ZmlvIGxheWVyIGVuc3VyZXMgdGhhdCBvcGVuIGRldmljZSBjYW5ub3QgYmUgcmVtb3Zl
+ZCBmcm9tIGFib3ZlIHRyYWNlLg0KDQpPdGhlciBkcml2ZXJzIHdpbGwgZm9sbG93IHNpbWlsYXIg
+bWV0aG9kLiBJbiBjYXNlIG9mIG1seDUgZHJpdmVyIHdoaWNoIGJpbmRzDQp0byBtZGV2IGZvbGxv
+d3Mgc3RhbmRhcmQgZHJpdmVyIG1vZGVsIHRvIHRlcm1pbmF0ZSBmb3IgdGhpcyBtZGV2IGRldmlj
+ZSwNCnNpbWlsYXIgd2F5IGZvciBwY2kgZGV2aWNlLg0KDQo+IA0KPiA+IDMuIExpbnV4IGNvcmUg
+ZGV2aWNlIG1vZGVsIHByb3ZpZGVzIHdheSB0byByZWdpc3RlciBhbmQgYXV0bw0KPiA+IHVucmVn
+aXN0ZXIgdGhlIGRldmljZSBzeXNmcyBhdHRyaWJ1dGUgZ3JvdXBzIGF0IGRldi0+Z3JvdXBzLg0K
+PiA+IE1ha2UgdXNlIG9mIHRoaXMgZ3JvdXBzIHRvIGxldCBjb3JlIGNyZWF0ZSB0aGUgZ3JvdXBz
+IGFuZCBzaW1wbGlmeQ0KPiA+IGNvZGUgdG8gYXZvaWQgZXhwbGljaXQgZ3JvdXBzIGNyZWF0aW9u
+IGFuZCByZW1vdmFsLg0KPiA+DQo+ID4gNC4gV2FpdCBmb3IgYW55IG9uZ29pbmcgbWRldiBjcmVh
+dGUoKSBhbmQgcmVtb3ZlKCkgdG8gZmluaXNoIGJlZm9yZQ0KPiA+IHVucmVnaXN0ZXJpbmcgcGFy
+ZW50IGRldmljZSB1c2luZyBzcmN1LiBUaGlzIGNvbnRpbnVlcyB0byBhbGxvdw0KPiA+IG11bHRp
+cGxlIGNyZWF0ZSBhbmQgcmVtb3ZlIHRvIHByb2dyZXNzIGluIHBhcmFsbGVsLiBBdCB0aGUgc2Ft
+ZSB0aW1lDQo+ID4gZ3VhcmQgcGFyZW50IHJlbW92YWwgd2hpbGUgcGFyZW50IGlzIGJlaW5nIGFj
+Y2VzcyBieSBjcmVhdGUoKSBhbmQgcmVtb3ZlDQo+IGNhbGxiYWNrcy4NCj4gPg0KPiANCj4gQWdy
+ZWVkIHdpdGggdGhpcy4NCj4gQWxleCBhbHJlYWR5IG1lbnRpb25lZCwgaXQgd291bGQgYmUgYmV0
+dGVyIHRvIGhhdmUgc2VwYXJhdGUgcGF0Y2ggZm9yIHRoaXMNCj4gZml4Lg0KPiANClBhdGNoZXMg
+YXJlIHJlYWR5LCBJIGFtIHdhaXRpbmcgZm9yIGFib3ZlIGRpc2N1c3Npb24gdG8gY2xvc2UgYmVm
+b3JlIHBvc3RpbmcgdjEuDQo=
