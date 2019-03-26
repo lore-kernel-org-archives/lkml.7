@@ -2,86 +2,267 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 913FBC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 17:32:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DBDDC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 17:32:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6660820823
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 17:32:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62B8620823
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 17:32:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="IpghrISP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731873AbfCZRcU (ORCPT
+        id S1732170AbfCZRc3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 13:32:20 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51772 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726207AbfCZRcU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 13:32:20 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id DEEA9AF45;
-        Tue, 26 Mar 2019 17:32:18 +0000 (UTC)
-Received: by unicorn.suse.cz (Postfix, from userid 1000)
-        id 1A71AE1404; Tue, 26 Mar 2019 18:32:15 +0100 (CET)
-Date:   Tue, 26 Mar 2019 18:32:15 +0100
-From:   Michal Kubecek <mkubecek@suse.cz>
-To:     Jiri Pirko <jiri@resnulli.us>
-Cc:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        John Linville <linville@tuxdriver.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v5 05/22] ethtool: introduce ethtool netlink
- interface
-Message-ID: <20190326173215.GM26076@unicorn.suse.cz>
-References: <cover.1553532199.git.mkubecek@suse.cz>
- <8795d07d3315b232b4e7ebc7d109c9aa3185e555.1553532199.git.mkubecek@suse.cz>
- <20190326163640.GD4958@nanopsycho.orion>
+        Tue, 26 Mar 2019 13:32:29 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:39328 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731940AbfCZRcX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 13:32:23 -0400
+Received: by mail-wm1-f67.google.com with SMTP id t124so13818749wma.4
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 10:32:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=U6mNJVRahN3/698cZnbbqdiNFXCb+H8dbQ6cUR21avs=;
+        b=IpghrISP5oKHl7m5A4Tha7uekQmYhSZp185/et+HW5FIsQSs/nWjpCmm2uRb9z1noc
+         INVzxsvGFnEpksOd0TnO2mTjrx2Zt7DPFHHuOSupfMbZcGEx86nS1j7MqCqf9HXMf5mD
+         Fx/3fw+xlde3yW723wf5JI+nNm1a1XNmUto7ZgYG4eMJeY3wEVdmzyaBqIZtmo2YhvbW
+         +RFFRCbhcna/jxqnsaLNPEkATBRf0VCBWd4fL7G1UxUcnW/XeCxWd7BDGGgiwLtMmpKA
+         HJpjYWJ/gBei7lsLryt7KfqNp/WBVFc0EqnDYda1EnEz7bubbMd4IYT+Q707E8RtfM9J
+         Ab3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=U6mNJVRahN3/698cZnbbqdiNFXCb+H8dbQ6cUR21avs=;
+        b=X9mjCF6hBiaOXXtwSLvHttJ016PCh3f0xAZ6ET7NCzDPSHNpIvrdX2zZXYt/31YHTt
+         2G+tJ0AYti+Zon65VJjQPbOw+DADHnFNWvMl2Xpy1SoJ5z3xlruCpKTocFhZoWM6mjUs
+         CmDA0+gJzYou5Xte8dpQPU+zpkFANkYvQP37RyBO0/K01O73Gj/PrlHe9DSap1mwUPCg
+         INsCGYfhfxmrmAsdFdowoBjhi5w2n+oo+SmaOXRI4xZlXyxFCBcP9CXjdl1xJQb7wKGP
+         Mv3va4Yik3iPH1b5ObCBGRSZHvoHG18qTLidx/3xkd3/U2ZK3RpWnEJG24tU6wUCWMx6
+         9IQw==
+X-Gm-Message-State: APjAAAWmC48Rz8ebHGxqwU4mdxgkNA2G8xQckfm8jeWVp7eYejd8fDsy
+        ISIq+WPyQGX9PCOV5pf5m+BGDg==
+X-Google-Smtp-Source: APXvYqwi00ZuNH9xjVNUexGJVIsPrAnsgsFhSuDEWCP9kNlplLPLDdbXkUhutIkEFDxTw6opXoOtPA==
+X-Received: by 2002:a1c:9d8f:: with SMTP id g137mr16308998wme.26.1553621540824;
+        Tue, 26 Mar 2019 10:32:20 -0700 (PDT)
+Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
+        by smtp.gmail.com with ESMTPSA id 4sm2534541wmg.12.2019.03.26.10.32.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 26 Mar 2019 10:32:20 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Lee Jones <lee.jones@linaro.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-pm@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH v7 00/11] mfd: add support for max77650 PMIC
+Date:   Tue, 26 Mar 2019 18:31:57 +0100
+Message-Id: <20190326173208.30614-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190326163640.GD4958@nanopsycho.orion>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 05:36:40PM +0100, Jiri Pirko wrote:
-> Mon, Mar 25, 2019 at 06:08:09PM CET, mkubecek@suse.cz wrote:
-> >+/* genetlink setup */
-> >+
-> >+static const struct genl_ops ethtool_genl_ops[] = {
-> 
-> Please be consistent with prefixes. Either use "ethtool_" or "ethnl_"
-> for all functions and variables in this code.
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-OK
+This series adds support for max77650 ultra low-power PMIC. It provides
+the core mfd driver and a set of five sub-drivers for the regulator,
+power supply, gpio, leds and input subsystems.
 
-> >+/* module setup */
-> >+
-> >+static int __init ethnl_init(void)
-> >+{
-> >+	int ret;
-> >+
-> >+	ret = genl_register_family(&ethtool_genl_family);
-> >+	if (WARN(ret < 0, "ethtool: genetlink family registration failed"))
-> 
-> Why do you need this warning? Please avoid it.
+Patches 1-4 add the DT binding documents. Patch 5 documents mfd_add_devices().
+Patches 6-10 add all drivers. Last patch adds a MAINTAINERS entry for this
+device.
 
-I'm confused now... few days ago you replied "+1" to the idea:
+The regulator part is already upstream.
 
-  http://lkml.kernel.org/r/20190321162105.GU2087@nanopsycho
+v1 -> v2:
+=========
 
-I agreed that panic() (which is what e.g. rtnetlink does) would be an
-overkill but I would be definitely opposed to not having anything in the
-log at all and just silently going on without the interface (which may
-result in misconfigured network). I believe that if this fails, it is
-a sign of something going very wrong inside the kernel so that the "W"
-taint flag would be appropriate.
+General:
+- use C++ style comments for the SPDX license identifier and the
+  copyright header
+- s/MODULE_LICENSE("GPL")/MODULE_LICENSE("GPL v2")/
+- lookup the virtual interrupt numbers in the MFD driver, setup
+  resources for child devices and use platform_get_irq_byname()
+  in sub-drivers
+- picked up review tags
+- use devm_request_any_context_irq() for interrupt requests
 
-Michal
+LEDs:
+- changed the max77650_leds_ prefix to max77650_led_
+- drop the max77650_leds structure as the only field it held was the
+  regmap pointer, move said pointer to struct max77650_led
+- change the driver name to "max77650-led"
+- drop the last return value check and return the result of
+  regmap_write() directly
+- change the labeling scheme to one consistent with other LED drivers
+
+ONKEY:
+- drop the key reporting helper and call the input functions directly
+  from interrupt handlers
+- rename the rv local variable to error
+- drop parent device asignment
+
+Regulator:
+- drop the unnecessary init_data lookup from the driver code
+- drop unnecessary include
+
+Charger:
+- disable the charger on driver remove
+- change the power supply type to POWER_SUPPLY_TYPE_USB
+
+GPIO:
+- drop interrupt support until we have correct implementation of hierarchical
+  irqs in gpiolib
+
+v2 -> v3:
+=========
+
+General:
+- dropped regulator patches as they're already in Mark Brown's branch
+
+LED:
+- fix the compatible string in the DT binding example
+- use the max_brightness property
+- use a common prefix ("MAX77650_LED") for all defines in the driver
+
+MFD:
+- add the MODULE_DEVICE_TABLE()
+- add a sentinel to the of_device_id array
+- constify the pointers to irq names
+- use an enum instead of defines for interrupt indexes
+
+v3 -> v4:
+=========
+
+GPIO:
+- as discussed with Linus Walleij: the gpio-controller is now part of
+  the core mfd module (we don't spawn a sub-node anymore), the binding
+  document for GPIO has been dropped, the GPIO properties have been
+  defined in the binding document for the mfd core, the interrupt
+  functionality has been reintroduced with the irq directly passed from
+  the mfd part
+- due to the above changes the Reviewed-by tag from Linus was dropped
+
+v4 -> v5:
+=========
+
+General:
+- add a patch documenting mfd_add_devices()
+
+MFD:
+- pass the regmap irq_chip irq domain to mfd over mfd_add_devices so that
+  the hw interrupts from resources can be correctly mapped to virtual irqs
+- remove the enum listing cell indexes
+- extend Kconfig help
+- add a link to the programming manual
+- use REGMAP_IRQ_REG() for regmap interrupts (except for GPI which has
+  is composed of two hw interrupts for rising and falling edge)
+- add error messages in probe
+- use PLATFORM_DEVID_NONE constant in devm_mfd_add_devices()
+- set irq_base to 0 in regmap_add_irq_chip() as other users to, it's only
+  relevant if it's > 0
+
+Charger:
+- use non-maxim specific property names for minimum input voltage and current
+  limit
+- code shrink by using the enable/disable charger helpers everywhere
+- use more descriptive names for constants
+
+Onkey:
+- use EV_SW event type for slide mode
+
+LED:
+- remove stray " from Kconfig help
+
+v5 -> v6:
+=========
+
+MFD:
+- remove stray spaces in the binding document
+- rename the example dt node
+- remove unnecessary interrupt-parent property from the bindings
+
+LED:
+- add a missing dependency on LEDS_CLASS to Kconfig
+
+Onkey:
+- use boolean for the slide button property
+
+Charger:
+- fix the property names in DT example
+- make constants even more readable
+
+v6 -> v7:
+=========
+
+Charger:
+- rename the current limit property to current-limit-microamp
+
+Bartosz Golaszewski (11):
+  dt-bindings: mfd: add DT bindings for max77650
+  dt-bindings: power: supply: add DT bindings for max77650
+  dt-bindings: leds: add DT bindings for max77650
+  dt-bindings: input: add DT bindings for max77650
+  mfd: core: document mfd_add_devices()
+  mfd: max77650: new core mfd driver
+  power: supply: max77650: add support for battery charger
+  gpio: max77650: add GPIO support
+  leds: max77650: add LEDs support
+  input: max77650: add onkey support
+  MAINTAINERS: add an entry for max77650 mfd driver
+
+ .../bindings/input/max77650-onkey.txt         |  26 ++
+ .../bindings/leds/leds-max77650.txt           |  57 +++
+ .../devicetree/bindings/mfd/max77650.txt      |  46 +++
+ .../power/supply/max77650-charger.txt         |  27 ++
+ MAINTAINERS                                   |  14 +
+ drivers/gpio/Kconfig                          |   7 +
+ drivers/gpio/Makefile                         |   1 +
+ drivers/gpio/gpio-max77650.c                  | 190 +++++++++
+ drivers/input/misc/Kconfig                    |   9 +
+ drivers/input/misc/Makefile                   |   1 +
+ drivers/input/misc/max77650-onkey.c           | 121 ++++++
+ drivers/leds/Kconfig                          |   6 +
+ drivers/leds/Makefile                         |   1 +
+ drivers/leds/leds-max77650.c                  | 147 +++++++
+ drivers/mfd/Kconfig                           |  14 +
+ drivers/mfd/Makefile                          |   1 +
+ drivers/mfd/max77650.c                        | 234 +++++++++++
+ drivers/mfd/mfd-core.c                        |  14 +
+ drivers/power/supply/Kconfig                  |   7 +
+ drivers/power/supply/Makefile                 |   1 +
+ drivers/power/supply/max77650-charger.c       | 367 ++++++++++++++++++
+ include/linux/mfd/max77650.h                  |  59 +++
+ 22 files changed, 1350 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/max77650-onkey.txt
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-max77650.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/max77650.txt
+ create mode 100644 Documentation/devicetree/bindings/power/supply/max77650-charger.txt
+ create mode 100644 drivers/gpio/gpio-max77650.c
+ create mode 100644 drivers/input/misc/max77650-onkey.c
+ create mode 100644 drivers/leds/leds-max77650.c
+ create mode 100644 drivers/mfd/max77650.c
+ create mode 100644 drivers/power/supply/max77650-charger.c
+ create mode 100644 include/linux/mfd/max77650.h
+
+-- 
+2.20.1
+
